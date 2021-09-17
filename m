@@ -2,171 +2,155 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0639F40F282
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Sep 2021 08:38:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B4AFB40F33F
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Sep 2021 09:28:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232688AbhIQGjU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Sep 2021 02:39:20 -0400
-Received: from so254-9.mailgun.net ([198.61.254.9]:16156 "EHLO
-        so254-9.mailgun.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229600AbhIQGjT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Sep 2021 02:39:19 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1631860677; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=KpNmHEE+/4g91dVa8j0rXZUOEaQm94+OYFqDL1vIVhs=; b=EUM0pZYR0I9ycU9sq1G9wrWsvYdOVuAOZSma4c7EkHWtWXUSUoqvD0dKd5ecCqMCd9D4OQ6P
- 8E4nQrX9gBdVLW4TQXPPuSf/N6yzSL1P3t4dzPR2Zc283XDj45MwJ0/vKl4HrN133dRh0oc2
- cLt86cPrKU/KCiL+HC1wtluKN/8=
-X-Mailgun-Sending-Ip: 198.61.254.9
-X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
- 614437c2e0f78151d6ad05cd (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 17 Sep 2021 06:37:54
- GMT
-Sender: rnayak=codeaurora.org@mg.codeaurora.org
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8EA35C4338F; Fri, 17 Sep 2021 06:37:54 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,SPF_FAIL,
-        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
-Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 47A0AC4338F;
-        Fri, 17 Sep 2021 06:37:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org 47A0AC4338F
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-To:     bjorn.andersson@linaro.org, agross@kernel.org,
-        linus.walleij@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Prasad Sodagudi <psodagud@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH] pinctrl: qcom: Add egpio feature support
-Date:   Fri, 17 Sep 2021 12:07:28 +0530
-Message-Id: <1631860648-31774-1-git-send-email-rnayak@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        id S240172AbhIQH3Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Sep 2021 03:29:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52640 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240199AbhIQH3X (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Sep 2021 03:29:23 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAB55C0613CF
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Sep 2021 00:28:01 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mR8Ht-0006D4-G5; Fri, 17 Sep 2021 09:27:57 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mR8Hr-0006Xr-8F; Fri, 17 Sep 2021 09:27:55 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mR8Hr-0004PR-6m; Fri, 17 Sep 2021 09:27:55 +0200
+Date:   Fri, 17 Sep 2021 09:27:55 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "D, Lakshmi Sowjanya" <lakshmi.sowjanya.d@intel.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Saha, Tamal" <tamal.saha@intel.com>, bala.senthil@intel.com,
+        Dipen Patel <dipenp@nvidia.com>
+Subject: Re: [RFC PATCH v1 07/20] gpio: Add output event generation method to
+ GPIOLIB and PMC Driver
+Message-ID: <20210917072755.d4ynxkp4scxrk6rq@pengutronix.de>
+References: <20210824164801.28896-1-lakshmi.sowjanya.d@intel.com>
+ <20210824164801.28896-8-lakshmi.sowjanya.d@intel.com>
+ <CACRpkdYJkPgaz-BvQ1X0PHRCCbn0hrMDabouDwHkn+pr9d-dSQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="riqk2pxwp7ut5zxn"
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYJkPgaz-BvQ1X0PHRCCbn0hrMDabouDwHkn+pr9d-dSQ@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Prasad Sodagudi <psodagud@codeaurora.org>
 
-egpio is a scheme which allows special power Island Domain IOs
-(LPASS,SSC) to be reused as regular chip GPIOs by muxing regular
-TLMM functions with Island Domain functions.
-With this scheme, an IO can be controlled both by the cpu running
-linux and the Island processor. This provides great flexibility to
-re-purpose the Island IOs for regular TLMM usecases.
+--riqk2pxwp7ut5zxn
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-2 new bits are added to ctl_reg, egpio_present is a read only bit
-which shows if egpio feature is available or not on a given gpio.
-egpio_enable is the read/write bit and only effective if egpio_present
-is 1. Once its set, the Island IO is controlled from Chip TLMM.
-egpio_enable when set to 0 means the GPIO is used as Island Domain IO.
+Hello,
 
-The support exists on most recent qcom SoCs, and we add support
-for sm8150/sm8250/sm8350 and sc7280 as part of this patch.
+On Thu, Sep 16, 2021 at 11:42:04PM +0200, Linus Walleij wrote:
+> Hi Lakshmi,
+>=20
+> On Tue, Aug 24, 2021 at 6:48 PM <lakshmi.sowjanya.d@intel.com> wrote:
+>=20
+> > From: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
+> >
+> > Intel Timed I/O hardware supports output scheduled in hardware. Enable
+> > this functionality using GPIOlib
+> >
+> > Adds GPIOlib generate_output() hook into the driver. The driver is
+> > supplied with a timestamp in terms of realtime system clock (the same
+> > used for input timestamping). The driver must know how to translate this
+> > into a timebase meaningful for the hardware.
+> >
+> > Adds userspace write() interface. Output can be selected using the line
+> > event create ioctl. The write() interface takes a single timestamp
+> > event request parameter. An output edge rising or falling is generated
+> > for each event request.
+> >
+> > The user application supplies a trigger time in terms of the realtime
+> > clock the driver converts this into the corresponding ART clock value
+> > that is used to 'arm' the output.
+> >
+> > Work around device quirk that doesn't allow the output to be explicitly
+> > set. Instead, count the output edges and insert an additional edge as
+> > needed to reset the output to zero.
+> >
+> > Co-developed-by: Christopher Hall <christopher.s.hall@intel.com>
+> > Signed-off-by: Christopher Hall <christopher.s.hall@intel.com>
+> > Signed-off-by: Tamal Saha <tamal.saha@intel.com>
+> > Signed-off-by: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
+> > Reviewed-by: Mark Gross <mgross@linux.intel.com>
+>=20
+> So this is some street organ machine that generates sequences
+> with determined timing between positive and negative edges
+> right?
+>=20
+> I can't see how this hardware is different from a PWM, or well
+> I do to some extent, you can control the period of several
+> subsequent waves, but that is really just an elaborate version
+> of PWM in my book.
 
-Signed-off-by: Prasad Sodagudi <psodagud@codeaurora.org>
-[rnayak: rewrite commit log, minor rebase]
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
----
- drivers/pinctrl/qcom/pinctrl-msm.c    | 4 ++++
- drivers/pinctrl/qcom/pinctrl-msm.h    | 2 ++
- drivers/pinctrl/qcom/pinctrl-sc7280.c | 2 ++
- drivers/pinctrl/qcom/pinctrl-sm8150.c | 2 ++
- drivers/pinctrl/qcom/pinctrl-sm8250.c | 2 ++
- drivers/pinctrl/qcom/pinctrl-sm8350.c | 2 ++
- 6 files changed, 14 insertions(+)
+=46rom looking in the patch I think this is more versatile than the PWM
+framework abstracts. I wonder if there is a usecase for the
+functionality that cannot be expressed using pwm_apply_state?!
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index 8476a8a..f4a2343 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -220,6 +220,10 @@ static int msm_pinmux_set_mux(struct pinctrl_dev *pctldev,
- 	val = msm_readl_ctl(pctrl, g);
- 	val &= ~mask;
- 	val |= i << g->mux_bit;
-+	/* Check if egpio present and enable that feature */
-+	if (val & BIT(g->egpio_present))
-+		val |= BIT(g->egpio_enable);
-+
- 	msm_writel_ctl(val, pctrl, g);
- 
- 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
-index e31a516..3635b31 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.h
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.h
-@@ -77,6 +77,8 @@ struct msm_pingroup {
- 	unsigned drv_bit:5;
- 
- 	unsigned od_bit:5;
-+	unsigned egpio_enable:5;
-+	unsigned egpio_present:5;
- 	unsigned oe_bit:5;
- 	unsigned in_bit:5;
- 	unsigned out_bit:5;
-diff --git a/drivers/pinctrl/qcom/pinctrl-sc7280.c b/drivers/pinctrl/qcom/pinctrl-sc7280.c
-index afddf6d..607d459 100644
---- a/drivers/pinctrl/qcom/pinctrl-sc7280.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sc7280.c
-@@ -43,6 +43,8 @@
- 		.mux_bit = 2,			\
- 		.pull_bit = 0,			\
- 		.drv_bit = 6,			\
-+		.egpio_enable = 12,		\
-+		.egpio_present = 11,		\
- 		.oe_bit = 9,			\
- 		.in_bit = 0,			\
- 		.out_bit = 1,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm8150.c b/drivers/pinctrl/qcom/pinctrl-sm8150.c
-index 7359bae..63a625a 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm8150.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm8150.c
-@@ -56,6 +56,8 @@ enum {
- 		.mux_bit = 2,			\
- 		.pull_bit = 0,			\
- 		.drv_bit = 6,			\
-+		.egpio_enable = 12,		\
-+		.egpio_present = 11,		\
- 		.oe_bit = 9,			\
- 		.in_bit = 0,			\
- 		.out_bit = 1,			\
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm8250.c b/drivers/pinctrl/qcom/pinctrl-sm8250.c
-index af144e7..ad4fd94 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm8250.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm8250.c
-@@ -57,6 +57,8 @@ enum {
- 		.mux_bit = 2,				\
- 		.pull_bit = 0,				\
- 		.drv_bit = 6,				\
-+		.egpio_enable = 12,			\
-+		.egpio_present = 11,			\
- 		.oe_bit = 9,				\
- 		.in_bit = 0,				\
- 		.out_bit = 1,				\
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm8350.c b/drivers/pinctrl/qcom/pinctrl-sm8350.c
-index 4d8f863..bb436dc 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm8350.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm8350.c
-@@ -46,6 +46,8 @@
- 		.mux_bit = 2,			\
- 		.pull_bit = 0,			\
- 		.drv_bit = 6,			\
-+		.egpio_enable = 12,		\
-+		.egpio_present = 11,		\
- 		.oe_bit = 9,			\
- 		.in_bit = 0,			\
- 		.out_bit = 1,			\
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+I remember we had approaches before that implemented repeating patterns
+(something like: active for 5ms, inactive for 10 ms, active for 30 ms,
+inactive for 10 ms, repeat) and limiting the number of periods
+(something like: .duty_cycle =3D 5ms, .period =3D 20ms, after 5 periods go
+into inactive state). These were considered to be too special to be
+abstracted in drivers/pwm.
 
+> It seems to me that this part of the functionality belongs in the
+> PWM subsystem which already has interfaces for similar
+> things, and you should probably extend PWM to handle
+> random waveforms rather than trying to shoehorn this
+> into the GPIO subsystem.
+
+I agree that GPIO is a worse candidate than PWM to abstract that. But
+I'm not convinced (yet?) that it's a good idea to extend PWM
+accordingly.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--riqk2pxwp7ut5zxn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmFEQ3cACgkQwfwUeK3K
+7AnLYQf9GjzSXlKt9YzS04WE2zmEQ28c5pFcvP2AuC1KNzcI+jIIAdp5e4IUltNL
+U9n1Ghs7cUbiHNelhrSfCD3RYZU2uDJ8zyFa5gbQU2CYnNbDzQghefSWphfepB3s
+XABiqd7KSB8nV7ozZJjnA0Df8XDmPvZ7hJ7nOU3Fp19wW0qm28KJ+Dmof+8EzRf2
+kd3QMMdzFZaHvMt14T5uYr205VdwYhZBVntnqNHoXBVMFGkwPhCx18fzZ+5LXBTW
+KcpveBgQPV7U2y9oXpGH7gsi85SfmpBQ+BCaDmSvfNQ6CXfBmClBFV1fUKfHxKsi
+AqZ/iyU9HybkRXEYZfJM6NnL4iE3Vw==
+=s0o9
+-----END PGP SIGNATURE-----
+
+--riqk2pxwp7ut5zxn--
