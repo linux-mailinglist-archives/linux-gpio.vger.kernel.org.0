@@ -2,123 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4183A40F68C
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Sep 2021 13:11:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1418940F6EB
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Sep 2021 13:53:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243200AbhIQLMZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Sep 2021 07:12:25 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:36644 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243123AbhIQLMZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Sep 2021 07:12:25 -0400
-Received: from ironmsg08-lv.qualcomm.com ([10.47.202.152])
-  by alexa-out.qualcomm.com with ESMTP; 17 Sep 2021 04:11:03 -0700
-X-QCInternal: smtphost
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by ironmsg08-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 17 Sep 2021 04:11:01 -0700
-X-QCInternal: smtphost
-Received: from c-skakit-linux.ap.qualcomm.com (HELO c-skakit-linux.qualcomm.com) ([10.242.51.242])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 17 Sep 2021 16:40:44 +0530
-Received: by c-skakit-linux.qualcomm.com (Postfix, from userid 2344709)
-        id 3D10C51D5; Fri, 17 Sep 2021 16:40:43 +0530 (IST)
-From:   Satya Priya <skakit@codeaurora.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     swboyd@chromium.org, David Collins <collinsd@codeaurora.org>,
-        kgunda@codeaurora.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, satya priya <skakit@codeaurora.org>
-Subject: [PATCH V6] arm64: dts: sc7280: Add volume up support for sc7280-idp
-Date:   Fri, 17 Sep 2021 16:40:40 +0530
-Message-Id: <1631877040-26587-1-git-send-email-skakit@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        id S242541AbhIQLwd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Sep 2021 07:52:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56022 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242098AbhIQLwc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Sep 2021 07:52:32 -0400
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34D16C061574;
+        Fri, 17 Sep 2021 04:51:10 -0700 (PDT)
+Received: by mail-lf1-x129.google.com with SMTP id p29so31606349lfa.11;
+        Fri, 17 Sep 2021 04:51:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=e2DNnwzlvtG/HPrhpkKUSv+yJrAjP70ES9zuh8E5fTw=;
+        b=FXm3rmMC3CIybxIvOxqusIn8oQ3om07WPtq7VLKNs0eccPwkl2KPXH9mtGKWs0rNZg
+         9bGQT4pShYQHC6reWntgirW/Ew6ZTOw78cuP8AvwV5yWk5bcgv5GxQoUJ/7JkWZgZpg5
+         oRWBP6WIw3yk/Q0samRU6NnVQ7BGgd4ELUSlS1BjiPjveFzt0+wUc7Ei+dnepg5+gs6A
+         mgSwN7hYUDp0AsY+cMc3m+8ems2UPssoX8KS1Qg/6pMv4z2RIgvLJy1oNf3bMRo76f0v
+         9C6gCrV0OLVe1AvAtNg0qnXOfvIBVEehGTZIeh+rCnJ9+tQzTK80n12PEZuM+HnKzs6R
+         TO8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=e2DNnwzlvtG/HPrhpkKUSv+yJrAjP70ES9zuh8E5fTw=;
+        b=ikDKUKuwHqzMdv2JjkMCwdZ3Udv7Yr2xppFNa6H2DBRfWk/+f4egkBOO1Kmvfib4cA
+         +g+QFTR/rAVcXjyADsopkzyonAZ/JUFoTBlDUzIfs0thbbcMBivHqJOrT6OoJmJ7rTcK
+         K+F769iLI7gh6SXHObecuPdIkY7M3PPuqyxNoA0aQoi5NN0MaYguYOdNQaZkSCsFmq1f
+         7S6cwLJ5YX2hePcDz1dPnY80jRq/UPx/2s1yeRzeebcFf0RIjZyIjkRZZx4XCAp0SCHP
+         y3COky/EYB0cgxo9Fq7IFmjgq0kpKnzZNp3J2wK6rskosIH0peaWpJ2HTkDiXLQf4blP
+         UvdQ==
+X-Gm-Message-State: AOAM531ZLbTTqvpH+rKu53rTgogDz7QBERNxc8rzkbrXFUT3OvZwnhi1
+        xWEot7mLi2kIBlb4mLf81JcMLIKws8HY2/Am2P4=
+X-Google-Smtp-Source: ABdhPJyUxXbVy8zR9c8DoyTCEhHYI5jfyQjw8fgc+MBtICE5o2dF83lXCyh+0xLbW4yjD+mFZoAC2K8OE6GU0DR2BU8=
+X-Received: by 2002:ac2:4bc1:: with SMTP id o1mr7777620lfq.113.1631879466248;
+ Fri, 17 Sep 2021 04:51:06 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210825082251.2484-1-caihuoqing@baidu.com>
+In-Reply-To: <20210825082251.2484-1-caihuoqing@baidu.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Fri, 17 Sep 2021 08:50:55 -0300
+Message-ID: <CAOMZO5DKGv1GQBpwr0ff0YC1yDmCH2A5Xpq7jzUA2h75bmN6eQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: freescale: Add helper dependency on COMPILE_TEST
+To:     Cai Huoqing <caihuoqing@baidu.com>
+Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: satya priya <skakit@codeaurora.org>
+Hi Cai,
 
-Add pm7325 PMIC gpio support for vol+ on sc7280-idp.
+On Wed, Aug 25, 2021 at 5:23 AM Cai Huoqing <caihuoqing@baidu.com> wrote:
+>
+> it's helpful for complie test in other platform(e.g.X86)
+>
+> Signed-off-by: Cai Huoqing <caihuoqing@baidu.com>
+> ---
+>  drivers/pinctrl/freescale/Kconfig | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/pinctrl/freescale/Kconfig b/drivers/pinctrl/freescale/Kconfig
+> index 21fa21c6547b..defc1f38efc7 100644
+> --- a/drivers/pinctrl/freescale/Kconfig
+> +++ b/drivers/pinctrl/freescale/Kconfig
+> @@ -119,28 +119,28 @@ config PINCTRL_IMX7ULP
+>
+>  config PINCTRL_IMX8MM
+>         tristate "IMX8MM pinctrl driver"
+> -       depends on ARCH_MXC
+> +       depends on ARCH_MXC || (COMPILE_TEST && OF)
+>         select PINCTRL_IMX
 
-Signed-off-by: satya priya <skakit@codeaurora.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
----
-Changes in V2:
- - No changes.
+I am not sure why you need the && OF, as we have a "select PINCTRL_IMX",
+that already depends on OF.
 
-Changes in V3:
- - Sorted the nodes alphabetically.
+Also, why was PINCTRL_IMX8DXL not updated?
 
-Changes in V4:
- - Updated the node names to replace underscores with hipens
-
-Changes in V5:
- - Moved the gpio-keys node under root node.
-
-Changes in V6:
- - Added linux-event-codes.h explicitly in sc7280-idp.dtsi
-
- arch/arm64/boot/dts/qcom/sc7280-idp.dtsi | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi b/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
-index 99f9ee5..8f0958d 100644
---- a/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
-@@ -7,11 +7,32 @@
- 
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/iio/qcom,spmi-adc7-pmk8350.h>
-+#include <dt-bindings/input/linux-event-codes.h>
- #include "sc7280.dtsi"
- #include "pm7325.dtsi"
- #include "pm8350c.dtsi"
- #include "pmk8350.dtsi"
- 
-+/ {
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		label = "gpio-keys";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&key_vol_up_default>;
-+
-+		volume-up {
-+			label = "volume_up";
-+			gpios = <&pm7325_gpios 6 GPIO_ACTIVE_LOW>;
-+			linux,input-type = <1>;
-+			linux,code = <KEY_VOLUMEUP>;
-+			gpio-key,wakeup;
-+			debounce-interval = <15>;
-+			linux,can-disable;
-+		};
-+	};
-+};
-+
- &apps_rsc {
- 	pm7325-regulators {
- 		compatible = "qcom,pm7325-rpmh-regulators";
-@@ -288,6 +309,17 @@
- 
- /* PINCTRL - additions to nodes defined in sc7280.dtsi */
- 
-+&pm7325_gpios {
-+	key_vol_up_default: key-vol-up-default {
-+		pins = "gpio6";
-+		function = "normal";
-+		input-enable;
-+		bias-pull-up;
-+		power-source = <0>;
-+		qcom,drive-strength = <3>;
-+	};
-+};
-+
- &qup_uart5_default {
- 	tx {
- 		pins = "gpio46";
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-of Code Aurora Forum, hosted by The Linux Foundation
-
+Thanks
