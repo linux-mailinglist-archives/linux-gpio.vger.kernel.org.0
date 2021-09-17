@@ -2,134 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FB7D40F0EA
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Sep 2021 06:10:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D8B440F1AB
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Sep 2021 07:38:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244132AbhIQEMH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Sep 2021 00:12:07 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:13493 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244635AbhIQEJh (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 17 Sep 2021 00:09:37 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1631851696; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=YRrg8XUL8FJqo8KoauQn9l5TvQY7Cfbt6ieu0fU9ExE=;
- b=BIkeAxKe3YBPvChm/GJcBxHRff0QoQXCXIwIRomVDlRlxwZ+GwYnCcXMBkd4TJpiYIxZcBH4
- /67cGF/UrmF70grMYaE1Ppa9Qi6IaTWDag7UvOtezpv0Zd4PKPIBrXNwcEzJm+/p9GHcqYxj
- sZdkVFoCbI3DGDm5hQHLoOZTupc=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
- 614414acb585cc7d2468e1db (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 17 Sep 2021 04:08:12
- GMT
-Sender: skakit=codeaurora.org@mg.codeaurora.org
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5FBA1C4361A; Fri, 17 Sep 2021 04:08:12 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00
-        autolearn=unavailable autolearn_force=no version=3.4.0
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: skakit)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 85DDBC4360C;
-        Fri, 17 Sep 2021 04:08:11 +0000 (UTC)
+        id S244890AbhIQFjc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Sep 2021 01:39:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55834 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229704AbhIQFjc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Sep 2021 01:39:32 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A12DCC061574
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Sep 2021 22:38:10 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id w1so9130328ilv.1
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Sep 2021 22:38:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
+        bh=RzIkdEm5aJl66a3p0t6hmEQ+Qv+8MFJLxj5JlLxnEbs=;
+        b=K0E/4zH7XGIxHTM+biWzSlC8S60kalurevr/LWxvjOmt2WagSSKoMhbQ6bUmTzbTAf
+         YeM1w/waXS6jrfWNwAGq4cprWFdiZVLq2pL0+E2eoOz+kFOJdwU94inXtGhMqT5kNqh9
+         y3XV3QvoGz9ud8/6USKrjfjiC8xrtYUFXOlizT1pRslyOxfbiuqiPyl5pNJ8joOCZcR1
+         NU44LOYGwhIpqk6pw+U+A2ZPESNLDMuw2k431B1rSBextkbajNPVSgjJKCfUjdHnsWVA
+         SVsJR0mi/Bj3UPABc5tZJ+YIeg4HeJ3uKgOGr/6Lqj9DlB24neSQ17wbC1FEgFLysst3
+         gvJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to;
+        bh=RzIkdEm5aJl66a3p0t6hmEQ+Qv+8MFJLxj5JlLxnEbs=;
+        b=KTgPSZQkMuNP+F64iKkBLx8F99I7ORvjmwdwqeCecxVeXdlSKRsZSNmE9jM1vSUAlv
+         VRqUZSkgzjV54aSTuQl/CWNNW8ixb8z2Qh3ioAvT1vnqkyiJeYzIG2653JytC5dh/IFv
+         7W0TLV8c13uV9xRHvpbXQx3UmU9IxiAFfu/jUgdiBGYN0w18oIycOnGzKhROszg8RizD
+         EByiy0PVLkgm7qBsRyb9ZuWnWqAOAhaJ9ksPFhTQyacTFxRlLNElGNCWqmRGQazNTbQN
+         I+u+f6dRnPJLuWrlH3kVmRKef1QE1z49RU/GTzqzoPAwTL78GXOhN6n0JKTCkU9FNSMz
+         SmhA==
+X-Gm-Message-State: AOAM533Pq7MWFk1vXLRwrbIURa+AIXB293LlagHTIzymgJ410asm5wm1
+        tWYCiCI1V/02WJQGAr/FdhnmYI7pLIq9XyFkfg8=
+X-Google-Smtp-Source: ABdhPJypAMgr7DsPgIMLXulWyQqljkXXRsr4JOts9oxqUX7zB3IgZTCmrf4ITRsqN/GVCQC2RQIH3pDqVefKC0rty6c=
+X-Received: by 2002:a05:6e02:1b88:: with SMTP id h8mr499714ili.40.1631857089943;
+ Thu, 16 Sep 2021 22:38:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 17 Sep 2021 09:38:11 +0530
-From:   skakit@codeaurora.org
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        David Collins <collinsd@codeaurora.org>, kgunda@codeaurora.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH V5 2/2] arm64: dts: sc7280: Add volume up support for
- sc7280-idp
-In-Reply-To: <CAE-0n53i4pU==W-dc=md_x+0Tqbd1gtwkPBFode+rtupSFi0WQ@mail.gmail.com>
-References: <1631798498-10864-1-git-send-email-skakit@codeaurora.org>
- <1631798498-10864-3-git-send-email-skakit@codeaurora.org>
- <CAE-0n53i4pU==W-dc=md_x+0Tqbd1gtwkPBFode+rtupSFi0WQ@mail.gmail.com>
-Message-ID: <baa5c4b4dd19e0a24d28b8bff559b868@codeaurora.org>
-X-Sender: skakit@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Reply-To: godwinppter@gmail.com
+Sender: mrs.raissaomar11@gmail.com
+Received: by 2002:a05:6e02:1032:0:0:0:0 with HTTP; Thu, 16 Sep 2021 22:38:09
+ -0700 (PDT)
+From:   Godwin Pete <godwinnpeter@gmail.com>
+Date:   Fri, 17 Sep 2021 07:38:09 +0200
+X-Google-Sender-Auth: 57A21HB_jZlvWiiFOgX5Jv501tc
+Message-ID: <CAONac3H=dEuN6UjTKWBeJXStYOHtWowxm1_jwsfmaPCityr8Zw@mail.gmail.com>
+Subject: I want to use this opportunity to inform you
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2021-09-17 00:32, Stephen Boyd wrote:
-> Quoting Satya Priya (2021-09-16 06:21:38)
->> diff --git a/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi 
->> b/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
->> index 371a2a9..cbbb0ee 100644
->> --- a/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sc7280-idp.dtsi
->> @@ -12,6 +12,26 @@
->>  #include "pm8350c.dtsi"
->>  #include "pmk8350.dtsi"
->> 
->> +/ {
->> +       gpio-keys {
->> +               compatible = "gpio-keys";
->> +               label = "gpio-keys";
->> +
->> +               pinctrl-names = "default";
->> +               pinctrl-0 = <&key_vol_up_default>;
->> +
->> +               volume-up {
->> +                       label = "volume_up";
->> +                       gpios = <&pm7325_gpios 6 GPIO_ACTIVE_LOW>;
->> +                       linux,input-type = <1>;
->> +                       linux,code = <KEY_VOLUMEUP>;
-> 
-> Is there an include for this define? Looks like
-> <dt-bindings/input/input.h> should be added as well? Did you try
-> compiling?
-> 
+Hi,
 
-Yeah, it needs <dt-bindings/input/linux-event-codes.h> to be included. 
-This header was included in pmk8350.dtsi which is added in this file.
+I just want to use this little opportunity to inform you about my
+success towards the transfer. I'm currently out of the country for an
+investment with part of my share, after completing the transfer with
+an Indian business man. But i will visit your country, next year.
+After the completion of my project. Please, contact my secretary to
+send you the (ATM) card which I've already credited with the sum of
+($500,000.00). Just contact her to help you in receiving the (ATM)
+card. I've explained everything to her before my trip. This is what I
+can do for you because, you couldn't help in the transfer, but for the
+fact that you're the person whom I've contacted initially, for the
+transfer. I decided to give this ($500,000.00) as a compensation for
+being contacted initially for the transfer. I always try to make the
+difference, in dealing with people any time I come in contact with
+them. I'm also trying to show that I'm quite a different person from
+others whose may have a different purpose within them. I believe that
+you will render some help to me when I, will visit your country, for
+another investment there. So contact my secretary for the card, Her
+contact are as follows,
 
->> +                       gpio-key,wakeup;
->> +                       debounce-interval = <15>;
->> +                       linux,can-disable;
->> +               };
->> +       };
->> +};
->> +
->>  &apps_rsc {
->>         pm7325-regulators {
->>                 compatible = "qcom,pm7325-rpmh-regulators";
->> @@ -284,6 +304,17 @@
->> 
->>  /* PINCTRL - additions to nodes defined in sc7280.dtsi */
->> 
->> +&pm7325_gpios {
->> +       key_vol_up_default: key-vol-up-default {
->> +               pins = "gpio6";
->> +               function = "normal";
->> +               input-enable;
->> +               bias-pull-up;
->> +               power-source = <0>;
->> +               qcom,drive-strength = <3>;
->> +       };
->> +};
->> +
->>  &qup_uart5_default {
->>         tx {
->>                 pins = "gpio46";
->> --
->> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
->> member
->> of Code Aurora Forum, hosted by The Linux Foundation
->> 
+Full name: Mrs, Jovita Dumuije,
+Country: Burkina Faso
+Email: jovitadumuije@gmail.com
+
+Thanks, and hope for a good corporation with you in future.
+
+Godwin Peter,
