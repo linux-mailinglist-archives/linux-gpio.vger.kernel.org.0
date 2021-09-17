@@ -2,71 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7542740FE4D
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Sep 2021 19:00:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ADB10410140
+	for <lists+linux-gpio@lfdr.de>; Sat, 18 Sep 2021 00:32:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244204AbhIQRBW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Sep 2021 13:01:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43632 "EHLO
+        id S236791AbhIQWdf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Sep 2021 18:33:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244064AbhIQRBV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Sep 2021 13:01:21 -0400
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64BF8C061767
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Sep 2021 09:59:59 -0700 (PDT)
-Received: by mail-ed1-x533.google.com with SMTP id n10so31643637eda.10
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Sep 2021 09:59:59 -0700 (PDT)
+        with ESMTP id S236595AbhIQWde (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Sep 2021 18:33:34 -0400
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EEF0C061574
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Sep 2021 15:32:12 -0700 (PDT)
+Received: by mail-lf1-x130.google.com with SMTP id t10so32565253lfd.8
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Sep 2021 15:32:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=AVuqCuI69lB47qlkpjuLyHlg8ssakPl2Ecl3HCf4XMg=;
-        b=c6lNrMRhr/IZR+PbUHJqKQVXZw+9sX1NyFCDiBRYoa6cFq0XS7rRHNBPtOK6xI+/LP
-         0pWQTd3t4ZzB6TrJZMSSMlSdCVuvo4Siv9JmyTZoayUb05SP2tcIbYa2/agp9wJ0g6vz
-         8EpQvBmBzTOe73Ihf9mTv5NhgUKBsX2pD3fHAs+tct+TnJ88iKIprSK91rU3fg/w6F6J
-         Na9iE7K2OryLFonsYxY2B/d4wMmEdtTEGV0Y7G5R8Yj1BPKxz/eyZlQ+sYbKZaYH47ao
-         Z4/BLmhTZ1eTSwxwMdEzLNstag5faUo0bVCWeusLCDik4I4XwvaKrgjQHipY/Qan/oig
-         kCTQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bMlZupJaaOmfM5kF68bTasQo1i9K/JwY+k5KTnrWPMo=;
+        b=pWYIgc9VNNCeJNC1e9/VkHmZBez2EDmS2PcdErOeXRN4xgp6uos4SYg+4oTI+xm4MT
+         o/zG4Kp2V6OwWmQfKNejC4Jp4UFf49i52/KggwAVAp3nSgnXUBl3OimLMYRR8N+Guuu+
+         YyqT5xOg/JsSu2Am/ua1o2bTQe+Jo4AAwrA9lE2cUlD31Zmavd3W+qdmu93lAXZ+vEVq
+         Rn06xp31zNd/5lLFgCKFqj+TJ2dInOCeO2IDIlvety25M+zxpby7VCL883/l+GHal/rQ
+         Uc7nsN2PIFsRJSNa0fwlGcrkG3oiyyEkBG5R812ndCQAXpeZwZczo6ecra3yLoYZYD2g
+         1q3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=AVuqCuI69lB47qlkpjuLyHlg8ssakPl2Ecl3HCf4XMg=;
-        b=7ggIAS7SS0nDc1JoG/hp21fLhOriSyalGVex/Tg/HRXLRsxPUUpdmfyHiDrVqXHr0S
-         qqG3l9JWeDUJSzMETpZhlpIUlQ2AvQuY9Y2oSTmhkWkWWIj6xrNaELJmSg4gY+IxbNKJ
-         fDnqUcj4WnixNrHvXnNCHuD6HTtZwFC9gTu11casBAAtosRKJzKaD+Uht4xKSSvpnaa5
-         7yL9kj/3BC/l3oxqbAQM42sif8P5PVW+h88blRJiBKCHsV+HdLJJgbq0qY/EC7M2wzS3
-         nuLG/jd6VwBMjMYREBvzVjIefRkK53MD+oghZG6HRX5L6EEK6xpqTF0kOnfLOMd3UZf1
-         x+Hw==
-X-Gm-Message-State: AOAM530Ps4DVDta8LpTeOASGBWDCmRE1EpLDpSE9xE4hbjfuEspXcQCX
-        di3l5RQ/kmdH1HYTXF45QiU4D3YUiOlQH78hDsM=
-X-Google-Smtp-Source: ABdhPJzZ5pbwiuCiWCiB2jyipG1BD5zybcKfABnNIGMyeUqHBEMd2hOL2YTQvFPI1Gim1amexvS0KDIZL8lR6eTkgbQ=
-X-Received: by 2002:a17:906:5855:: with SMTP id h21mr13021238ejs.230.1631897998011;
- Fri, 17 Sep 2021 09:59:58 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bMlZupJaaOmfM5kF68bTasQo1i9K/JwY+k5KTnrWPMo=;
+        b=4AhtYYhYZzZu4yF4nwBZlglGZNKD3h6QWYQFOGIc7eUWhue5nLGXJWnsPpDAwzNRVi
+         BsO+MKSz4Y8pHWl73kaDU4LNmVuA6yNNgP2CTFFQAVSn5jkgTEPXrEWCjzb6b1xwaS7W
+         dWUkXfypqYJhoWgLU6wi17jWBVryG8tMFqZfb2KKVsnAaZIsFyUdikGoTLq3SsZjm7eN
+         1Z6tdFIRjM4hiw2Quv9XxKJ9lZPJAHV+cyU7RCX2MjIlNqIc07+Dwh6Ne1vA5UtHQ7Ua
+         uFRLpRumnCcjKruawyMhUhfBUN3zIU0mFcmc41r+6p4Nqq9PtcgEJJ4Wh8CCYqfT4oXf
+         afsw==
+X-Gm-Message-State: AOAM530lwB1EY9JRIj+JKkSkE35FIbgGaduqP5VVpC7dQpvGfaPxoP0E
+        OvWGcUGWgxb0oBuXdTNYkJ7GKH584/pBeY5SXdx93Tun5fg=
+X-Google-Smtp-Source: ABdhPJxiLoB+28Pv7LKUWwQryIaYhXX8k0rQZhkj/JY1U969yvs0oB5ymnY+t7DiPA5DrZOSoyLVccmJ69BS74kuhkQ=
+X-Received: by 2002:ac2:4651:: with SMTP id s17mr4952713lfo.584.1631917929456;
+ Fri, 17 Sep 2021 15:32:09 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:a54:3209:0:0:0:0:0 with HTTP; Fri, 17 Sep 2021 09:59:57
- -0700 (PDT)
-Reply-To: ms.lisahugh000@gmail.com
-From:   MS LISA HUGH <olivier.folly0@gmail.com>
-Date:   Fri, 17 Sep 2021 18:59:57 +0200
-Message-ID: <CAG_GOAu=ROb3LrC=vOq5bqAJo3ZFFxvRPy4-x1_DKOoZJcTvCw@mail.gmail.com>
-Subject: YOU WILL HAVE THE FULL DETAILS >>MS LISA HUGH.
-To:     undisclosed-recipients:;
+References: <20210911232707.259615-1-luca@z3ntu.xyz> <20210911232707.259615-2-luca@z3ntu.xyz>
+In-Reply-To: <20210911232707.259615-2-luca@z3ntu.xyz>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 18 Sep 2021 00:31:58 +0200
+Message-ID: <CACRpkda0Jm=JwxpsmU63m94hFsL1Lhuk3mfjgFuXLNJ3RjdUnA@mail.gmail.com>
+Subject: Re: [PATCH 1/8] pinctrl: qcom: msm8226: fill in more functions
+To:     Luca Weiss <luca@z3ntu.xyz>
+Cc:     MSM <linux-arm-msm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+        <devicetree@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Andy
+        Shevchenko <andy.shevchenko@gmail.com>," 
+        <~postmarketos/upstreaming@lists.sr.ht>,
+        Bartosz Dudziak <bartosz.dudziak@snejp.pl>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dear Friend,
+On Sun, Sep 12, 2021 at 1:28 AM Luca Weiss <luca@z3ntu.xyz> wrote:
 
-I am Ms Lisa Hugh, work in the department of Audit and accounting
-manager here in the Bank.
+> Add the functions for QUP4 (spi, uart, uim & i2c), sdc3 and audio_pcm as
+> derived from the downstream gpiomux configuration.
+>
+> Also sort the functions alphabetically, while we're at it.
+>
+> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
 
-I need Your help for this transfer($4,500,000,00 ,U.S.DOLLARS)to your
-bank account with your co-operation for both of us benefit.
+This patch applied to the pinctrl tree for v5.16.
 
-Please send the follow below,
-
-1)AGE....2)TELEPHONE NUMBER,,,,,...,3)COUNTRY.....4)OCCUPATION......
-
-Thanks.
-Ms Lisa Hugh
+Yours,
+Linus Walleij
