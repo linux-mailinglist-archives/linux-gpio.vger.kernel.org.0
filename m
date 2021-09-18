@@ -2,78 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A39841043A
-	for <lists+linux-gpio@lfdr.de>; Sat, 18 Sep 2021 07:46:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EB05410524
+	for <lists+linux-gpio@lfdr.de>; Sat, 18 Sep 2021 10:33:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232976AbhIRFsJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 18 Sep 2021 01:48:09 -0400
-Received: from mx24.baidu.com ([111.206.215.185]:32908 "EHLO baidu.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229627AbhIRFsJ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 18 Sep 2021 01:48:09 -0400
-Received: from BC-Mail-Ex29.internal.baidu.com (unknown [172.31.51.23])
-        by Forcepoint Email with ESMTPS id 93716261FD2CCB86037C;
-        Sat, 18 Sep 2021 13:46:36 +0800 (CST)
-Received: from BJHW-MAIL-EX27.internal.baidu.com (10.127.64.42) by
- BC-Mail-Ex29.internal.baidu.com (172.31.51.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2242.12; Sat, 18 Sep 2021 13:46:36 +0800
-Received: from LAPTOP-UKSR4ENP.internal.baidu.com (172.31.63.8) by
- BJHW-MAIL-EX27.internal.baidu.com (10.127.64.42) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.14; Sat, 18 Sep 2021 13:46:35 +0800
-From:   Cai Huoqing <caihuoqing@baidu.com>
-To:     <caihuoqing@baidu.com>
-CC:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
+        id S237838AbhIRIeh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 18 Sep 2021 04:34:37 -0400
+Received: from www.zeus03.de ([194.117.254.33]:45230 "EHLO mail.zeus03.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S237824AbhIRIeg (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 18 Sep 2021 04:34:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=k1; bh=xcgHZW1fn8JNYZk7NWnhJxUbZkD
+        WeQrcJqzkNGP8+rQ=; b=Iox+zPqPtcQMBCrsiEYb1ESMfJnMu3bx7Dcp0D5+MI+
+        kBBQn/TIDvJlcQSpYeewu4m23iy1imYXxbDSYfw8dgx7d5+65v7jGd+2VR5g80Y/
+        oau9IrG1DXHieqzWo7Gb1N2ovYY7J7i/ffYywzKNmWMw9jBCnkaPFPxyog49HLXM
+        =
+Received: (qmail 1828668 invoked from network); 18 Sep 2021 10:33:11 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 18 Sep 2021 10:33:11 +0200
+X-UD-Smtp-Session: l3s3148p1@D5rH5UDMbrEgAwDPXyF2APs7JXaA4etD
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     linux-gpio@vger.kernel.org
+Cc:     linux-renesas-soc@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3] pinctrl: intel: Kconfig: Add configuration menu to Intel pin control
-Date:   Sat, 18 Sep 2021 13:46:29 +0800
-Message-ID: <20210918054630.18544-1-caihuoqing@baidu.com>
-X-Mailer: git-send-email 2.17.1
+        linux-kernel@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>
+Subject: [PATCH v2 0/1] gpio: add simple logic analyzer using polling
+Date:   Sat, 18 Sep 2021 10:33:06 +0200
+Message-Id: <20210918083307.3195-1-wsa+renesas@sang-engineering.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.31.63.8]
-X-ClientProxiedBy: BC-Mail-Ex30.internal.baidu.com (172.31.51.24) To
- BJHW-MAIL-EX27.internal.baidu.com (10.127.64.42)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Adding a configuration menu to hold many Intel pin control drivers
-helps to make the display more concise.
+The bravery continues with the next update of the in-kernel logic
+analyzer based on GPIO polling with local irqs disabled. It has been
+been tested locally and remotely. It provided satisfactory results.
+Besides the driver, there is also a script which isolates a CPU to
+achieve the best possible result. I am aware of the latency limitations.
+However, the intention is for debugging only, not mass production.
+Especially for remote debugging and to get a first impression, this has
+already been useful. Documentation is within the patch, to get a better
+idea what this is all about.
 
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Cai Huoqing <caihuoqing@baidu.com>
----
-v1->v2: Revert to "select PINCTRL_INTE" for PINCTRL_TIGERLAKE config.
-v2->v3: Update commit message.
+Changes since v1:
 
- drivers/pinctrl/intel/Kconfig | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+* addressed Andy's review comments (thanks!)
+  * mutex gets destroyed on remove
+  * make use of the snprintf return value
+  * improved errno
+  * script: use only progname instead of $0
+  * script: refactor 'shift' usage in command line handling
+  * spelling fixes
+* script: fixed a bug when using '--instance'
+* short success message after proper initialization
 
-diff --git a/drivers/pinctrl/intel/Kconfig b/drivers/pinctrl/intel/Kconfig
-index fb1495bd77c4..64f8b37fd705 100644
---- a/drivers/pinctrl/intel/Kconfig
-+++ b/drivers/pinctrl/intel/Kconfig
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- # Intel pin control drivers
--
--if (X86 || COMPILE_TEST)
-+menu "Intel pinctrl drivers"
-+	depends on X86 || COMPILE_TEST
- 
- config PINCTRL_BAYTRAIL
- 	bool "Intel Baytrail GPIO pin control"
-@@ -168,4 +168,5 @@ config PINCTRL_TIGERLAKE
- 	  This pinctrl driver provides an interface that allows configuring
- 	  of Intel Tiger Lake PCH pins and using them as GPIOs.
- 
--endif
-+endmenu
-+
+I had a look at Andy's other suggestion, too, but decided against them.
+Either I liked the current style better or they can be added later when
+we actually need them.
+
+I've used the analyzer in a few more scenarios and was happy with the
+outcome. Looking forward to other tests and comments. From my side this
+looks good to go.
+
+Happy hacking,
+
+   Wolfram
+
+
+Wolfram Sang (1):
+  gpio: add sloppy logic analyzer using polling
+
+ .../dev-tools/gpio-sloppy-logic-analyzer.rst  |  71 ++++
+ Documentation/dev-tools/index.rst             |   1 +
+ drivers/gpio/Kconfig                          |  17 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-sloppy-logic-analyzer.c     | 341 ++++++++++++++++++
+ tools/gpio/gpio-sloppy-logic-analyzer         | 221 ++++++++++++
+ 6 files changed, 652 insertions(+)
+ create mode 100644 Documentation/dev-tools/gpio-sloppy-logic-analyzer.rst
+ create mode 100644 drivers/gpio/gpio-sloppy-logic-analyzer.c
+ create mode 100755 tools/gpio/gpio-sloppy-logic-analyzer
+
 -- 
-2.25.1
+2.30.2
 
