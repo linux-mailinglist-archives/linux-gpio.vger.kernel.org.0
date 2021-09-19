@@ -2,35 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 66088410BCE
+	by mail.lfdr.de (Postfix) with ESMTP id 1AEB5410BCD
 	for <lists+linux-gpio@lfdr.de>; Sun, 19 Sep 2021 15:47:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230520AbhISNsy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S231608AbhISNsy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Sun, 19 Sep 2021 09:48:54 -0400
-Received: from mga18.intel.com ([134.134.136.126]:62113 "EHLO mga18.intel.com"
+Received: from mga05.intel.com ([192.55.52.43]:39962 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231531AbhISNsx (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        id S231549AbhISNsx (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
         Sun, 19 Sep 2021 09:48:53 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10111"; a="210102794"
+X-IronPort-AV: E=McAfee;i="6200,9189,10111"; a="308558949"
 X-IronPort-AV: E=Sophos;i="5.85,305,1624345200"; 
-   d="scan'208";a="210102794"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2021 06:47:27 -0700
+   d="scan'208";a="308558949"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2021 06:47:27 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.85,305,1624345200"; 
-   d="scan'208";a="700377608"
+   d="scan'208";a="652330724"
 Received: from lkp-server01.sh.intel.com (HELO 285e7b116627) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 19 Sep 2021 06:47:26 -0700
+  by orsmga005.jf.intel.com with ESMTP; 19 Sep 2021 06:47:26 -0700
 Received: from kbuild by 285e7b116627 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1mRxAD-0005VL-Lq; Sun, 19 Sep 2021 13:47:25 +0000
-Date:   Sun, 19 Sep 2021 21:46:30 +0800
+        id 1mRxAD-0005VI-LA; Sun, 19 Sep 2021 13:47:25 +0000
+Date:   Sun, 19 Sep 2021 21:46:39 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:fixes] BUILD SUCCESS
- 59dd178e1d7cb6cac03b32aba7ed9bbce6761b6f
-Message-ID: <61473f36.hb3SXAFE4ZN669wI%lkp@intel.com>
+Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
+ 788ac97efa9405174e9417ecf2ca4d90d298b73f
+Message-ID: <61473f3f.r4gyVeyLqcaHcJdH%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -39,10 +39,10 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git fixes
-branch HEAD: 59dd178e1d7cb6cac03b32aba7ed9bbce6761b6f  gpio/rockchip: fetch deferred output settings on probe
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: 788ac97efa9405174e9417ecf2ca4d90d298b73f  Merge branch 'devel' into for-next
 
-elapsed time: 2237m
+elapsed time: 2236m
 
 configs tested: 226
 configs skipped: 4
@@ -63,6 +63,7 @@ mips                             allyesconfig
 um                             i386_defconfig
 mips                             allmodconfig
 riscv                            allmodconfig
+sparc                            allyesconfig
 arc                              allyesconfig
 nios2                            allyesconfig
 alpha                            allyesconfig
@@ -188,12 +189,11 @@ alpha                               defconfig
 h8300                            allyesconfig
 sh                               allmodconfig
 xtensa                           allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
 parisc                              defconfig
 s390                                defconfig
+s390                             allmodconfig
+parisc                           allyesconfig
 s390                             allyesconfig
-sparc                            allyesconfig
 sparc                               defconfig
 i386                                defconfig
 i386                             allyesconfig
