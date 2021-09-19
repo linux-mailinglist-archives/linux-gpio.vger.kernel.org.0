@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B610410D27
-	for <lists+linux-gpio@lfdr.de>; Sun, 19 Sep 2021 21:41:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A197410D29
+	for <lists+linux-gpio@lfdr.de>; Sun, 19 Sep 2021 21:42:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231871AbhISTmz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 19 Sep 2021 15:42:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55872 "EHLO
+        id S231929AbhISTna (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 19 Sep 2021 15:43:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231848AbhISTmx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 19 Sep 2021 15:42:53 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1872C061760
-        for <linux-gpio@vger.kernel.org>; Sun, 19 Sep 2021 12:41:26 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id i4so58208566lfv.4
-        for <linux-gpio@vger.kernel.org>; Sun, 19 Sep 2021 12:41:26 -0700 (PDT)
+        with ESMTP id S231913AbhISTn2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 19 Sep 2021 15:43:28 -0400
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84348C061574
+        for <linux-gpio@vger.kernel.org>; Sun, 19 Sep 2021 12:42:02 -0700 (PDT)
+Received: by mail-lf1-x12f.google.com with SMTP id g41so24703008lfv.1
+        for <linux-gpio@vger.kernel.org>; Sun, 19 Sep 2021 12:42:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=LYTzOdcrX47mnET/O6IbbirI1g0RFSgGZ65Y7f58LeQ=;
-        b=spwp/KpEFJhDnqy54onPk162/G5pw8dUturgYEWZX1FMOfciExMa+ChSfIm0Gy8Tp7
-         RNSSNAW0C+T4WiMO9tsEYzDiJxApm2db0Lb18vFiJkAV7CXWDtn1ZQIUcel6NuhM6XO0
-         E2sfuU7GPsSaC3q+V8/6z/J+CXq3s+xXYp7LsdlTVP7y5Kljis25gsYra++pXnn8PUFN
-         Hr0J0gZOrwJKACWnGNs2mThrmdJ4MVHy+kRHw674eHZZ7d419xVC3Uq1nhQ3jvAackV9
-         0yw9zsy+BNOq6NecZQqOLfpn/7rax4qcEgSGCOrJyTaNhjGQBZked2iOG8LBCcWpqwkZ
-         zyOg==
+        bh=267Y5GG4wv3jBVNFLCjYNg4eEpoY547mjd1IsPwkZZ4=;
+        b=aCEfsATQGKUcZ6Gbf07F1Ad396sTKdrW+S3XJ9iraG9sqiyz/afeQxWCIk/lwOXWWu
+         vmHOByZNuk5iXVZOfH39JWTuJ43DVu5kYyEflMaLVzqKsLtvGXOT5Z5MH7JYhHgR2Vg7
+         0+uN2m38f58OtVTQBeetop+lFeFnf9ATVg1sHCh9OsjFUIHSd7e/f33b171Sch/cqbQ1
+         5KdGzTp0kNomZzOClhbZFDzi0Cf8L3whqyfMhoIe9RgyAuYV3bA5/j3l4kQhBIkCgIWm
+         kvE825n+8A0Ad3rA/rnww53FxHBs6uWAoPA6JCYRETNN/Sn0KDQ3VuyQV314Qby5eqZ1
+         dAOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=LYTzOdcrX47mnET/O6IbbirI1g0RFSgGZ65Y7f58LeQ=;
-        b=qZSEU1wODPnnoO9ChT5TW/7TrSCHfRaxUUvgfGzV/Ynga1Iwf2ZU3RdBiMiUJEO/0k
-         ukBx7lmNRt1J+k49YROKDmczEkemDCw2drpYeN6+PTDKcEMQ+F6mzdliGsJ3J8n4u8qc
-         O2tzNw0WD+o5Kco2T987v+3S3G0ebxHqolu1o06prOAT/xsVIuF7PeKpMZyA4ZpPyUd6
-         HkZ9UU2j4Oe/qKRw278A4nhMJJqgfn/rO7lSmKMW2BHolQvfA7aS/1mM1vSa/JjqKeIc
-         dG4mpHzlssAbhEHpeHpqs0Tr6yPYGrtvWwkMjhR5yQno7Fbd/d9PaWdaNyhw9knCe1zo
-         zSjQ==
-X-Gm-Message-State: AOAM533f1wGIJj9a4CsjdfSqEQDQah32ZIvexXzdWjMARZ7SbJx5tZ3b
-        mGOdHa5dZcYt4t/MaxMtUIkLkFYvSKtJhBeRSZPpjg==
-X-Google-Smtp-Source: ABdhPJw+a+RYqW7LREzMJdZrkeqv0faFTmrJBsxG9VYISXMESJvXoq5ic1siEmlwm2VnTvDad1sJr+wxcffypYWMwso=
-X-Received: by 2002:a05:651c:11c7:: with SMTP id z7mr18829959ljo.288.1632080484878;
- Sun, 19 Sep 2021 12:41:24 -0700 (PDT)
+        bh=267Y5GG4wv3jBVNFLCjYNg4eEpoY547mjd1IsPwkZZ4=;
+        b=SdAOcfMfQqJh5NHMbbw8xgKfnH2+alqz/7B2z/SHMLX7i5ZVIY435wnRNbTlp3zOHY
+         OhUScoCdzuIANf7Dy980WMjiZEi9qHa8ZZ5aQiu3QCq72NZoJ5x4ctQ5FnlvHZ4Vaq43
+         PSSmZr71IahjltBrRLKjkhimfMyDrhksgqIZlR3AhceJC+v7JR9jx8bpPQKsOiJVRd/M
+         HJbEj3oay+s561lX9dvrdaCTd92GptUHY9lo46L87gzI+ZzFKM09jBBhVD1CJi2KZw8H
+         9jGfKMPb2mgcCavr1Hb46onBlNONv+XFDZozkcNeuW+p1vHG8kkFkMmUM1qNEKLZDv0S
+         zmbQ==
+X-Gm-Message-State: AOAM531itVb6vxtG7dLvDBzLfAjAYSgsqXa78G22IZNHsxuZubwFdZmD
+        8hDlqNspDXLp1zZ7gWWp8Or4a2VT5Sh1cZwoXCswfA==
+X-Google-Smtp-Source: ABdhPJyOo0GRxViJevniGs7x1CN7wVCSU7UZCda+WhFRVhOAhvLyfjPAJB50V+BaC7FyiDJ/fYxFy0KgzWfbWa2BcZw=
+X-Received: by 2002:a2e:4c19:: with SMTP id z25mr13156944lja.145.1632080520043;
+ Sun, 19 Sep 2021 12:42:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210917105412.595539-1-thierry.reding@gmail.com>
-In-Reply-To: <20210917105412.595539-1-thierry.reding@gmail.com>
+References: <20210917105412.595539-1-thierry.reding@gmail.com> <20210917105412.595539-2-thierry.reding@gmail.com>
+In-Reply-To: <20210917105412.595539-2-thierry.reding@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 19 Sep 2021 21:41:14 +0200
-Message-ID: <CACRpkdb+-6dQ4F-asb0K+_9d2JtP7LXyMgjC45V=C0kpBiuAJA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] gpio: tegra186: Force one interrupt per bank
+Date:   Sun, 19 Sep 2021 21:41:49 +0200
+Message-ID: <CACRpkdboaxpVhLHRmWw8vtuXNZB8z5okSYLCBae-WzNjpbyK-Q@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpio: tegra186: Support multiple interrupts per bank
 To:     Thierry Reding <thierry.reding@gmail.com>
 Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Jon Hunter <jonathanh@nvidia.com>,
@@ -67,11 +67,13 @@ On Fri, Sep 17, 2021 at 12:54 PM Thierry Reding
 
 > From: Thierry Reding <treding@nvidia.com>
 >
-> Newer chips support up to 8 interrupts per bank, which can be useful to
-> balance the load and decrease latency. However, it also required a very
-> complicated interrupt routing to be set up. To keep things simple for
-> now, ensure that a single interrupt per bank is enforced, even if all
-> possible interrupts are described in device tree.
+> Tegra194 and later support more than a single interrupt per bank. This
+> is primarily useful for virtualization but can also be helpful for more
+> fine-grained CPU affinity control. To keep things simple for now, route
+> all pins to the first interrupt.
+>
+> For backwards-compatibility, support old device trees that specify only
+> one interrupt per bank by counting the interrupts at probe time.
 >
 > Signed-off-by: Thierry Reding <treding@nvidia.com>
 
