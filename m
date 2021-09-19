@@ -2,156 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 56579410D21
-	for <lists+linux-gpio@lfdr.de>; Sun, 19 Sep 2021 21:39:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B610410D27
+	for <lists+linux-gpio@lfdr.de>; Sun, 19 Sep 2021 21:41:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231828AbhISTkh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 19 Sep 2021 15:40:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55362 "EHLO
+        id S231871AbhISTmz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 19 Sep 2021 15:42:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231805AbhISTkh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 19 Sep 2021 15:40:37 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A72FFC06175F
-        for <linux-gpio@vger.kernel.org>; Sun, 19 Sep 2021 12:39:11 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id e15so19532618lfr.10
-        for <linux-gpio@vger.kernel.org>; Sun, 19 Sep 2021 12:39:11 -0700 (PDT)
+        with ESMTP id S231848AbhISTmx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 19 Sep 2021 15:42:53 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1872C061760
+        for <linux-gpio@vger.kernel.org>; Sun, 19 Sep 2021 12:41:26 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id i4so58208566lfv.4
+        for <linux-gpio@vger.kernel.org>; Sun, 19 Sep 2021 12:41:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=bIadyDkpE6/316LTUnCC0TidBZ9oY71WMCqOc1yZgNY=;
-        b=O9f2iQI2X3s1wDFqyFd0sJX49hp282luX4LbypgppHKUptIf/KBZ70MYkrGGgHK+93
-         uyl4BFoIrEIMeKOczO7/web1DyzdrB0Kliu7nlmQNIwl45FDvOWlAyWzJVXwQedfp9ri
-         0dhF+4SjmVnwgK5Gmh5Ez3mv/npNqZ2vCftH4UPufVAP0pV+tPZzvUd/x1snzJlreLAa
-         ywTmDwEAApVKvg8nECIW52/OgdI5vet7wcaun7vXQry+ut65hNUDShjEB2d/7zVsmdPR
-         yuz8jWG3V9D9bBalcudTmz7lShE8W83WUqdTU2zUJrmHm0KPIQHAtbW7Cs8+V1+ew+HP
-         /LFw==
+         :cc;
+        bh=LYTzOdcrX47mnET/O6IbbirI1g0RFSgGZ65Y7f58LeQ=;
+        b=spwp/KpEFJhDnqy54onPk162/G5pw8dUturgYEWZX1FMOfciExMa+ChSfIm0Gy8Tp7
+         RNSSNAW0C+T4WiMO9tsEYzDiJxApm2db0Lb18vFiJkAV7CXWDtn1ZQIUcel6NuhM6XO0
+         E2sfuU7GPsSaC3q+V8/6z/J+CXq3s+xXYp7LsdlTVP7y5Kljis25gsYra++pXnn8PUFN
+         Hr0J0gZOrwJKACWnGNs2mThrmdJ4MVHy+kRHw674eHZZ7d419xVC3Uq1nhQ3jvAackV9
+         0yw9zsy+BNOq6NecZQqOLfpn/7rax4qcEgSGCOrJyTaNhjGQBZked2iOG8LBCcWpqwkZ
+         zyOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=bIadyDkpE6/316LTUnCC0TidBZ9oY71WMCqOc1yZgNY=;
-        b=dJ/eBM6gpSo1/2Nx7lHBKNdDZin/CDi8brNtJz99ZWy9hPiEF7JplMqI50KSu7TwUp
-         JJbH3vlcIuvxmv4YM8VFXlhly8GGiDZsz81PM6dW1RMKwZowTVdry0NRR5vE/7vtKzpH
-         9oaWK6IvQ4ezW3ycfUotXBKUVFXLp5u5pu4+TlyIL114t0dqIsLTRMOwHP6VBUQcEZy/
-         MSjpJzSLzIhw8p+/5RvMrvLTMGLh7QrOKqkpjHCERl0JY7v0ZtajD2icjeIQEelaBbA4
-         4JnzlsAqE7Qzm7ZBAxKfEvbXpSQTZZxOITc3MpV4psdQ0cMzkRcLq+hQDE2O/Ed8RYGX
-         iSfw==
-X-Gm-Message-State: AOAM531propgdLHMeuyAdbI2Uvouh+5R/vQvOVIHh5rRn400xIo+RjqM
-        QDNNhkn4k7DP3ttJEgZEwQRerKWBKhkOVW8F/wP1jA==
-X-Google-Smtp-Source: ABdhPJyz4cky0jxoPTuDxUR8dY9mZOd7WkP1nRGWzE0e0eTJJnP9izQDD7Qpnp3dqnTK/tfvTuy545H9s8yRoFlbTx0=
-X-Received: by 2002:a05:6512:3c92:: with SMTP id h18mr15954960lfv.656.1632080349911;
- Sun, 19 Sep 2021 12:39:09 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=LYTzOdcrX47mnET/O6IbbirI1g0RFSgGZ65Y7f58LeQ=;
+        b=qZSEU1wODPnnoO9ChT5TW/7TrSCHfRaxUUvgfGzV/Ynga1Iwf2ZU3RdBiMiUJEO/0k
+         ukBx7lmNRt1J+k49YROKDmczEkemDCw2drpYeN6+PTDKcEMQ+F6mzdliGsJ3J8n4u8qc
+         O2tzNw0WD+o5Kco2T987v+3S3G0ebxHqolu1o06prOAT/xsVIuF7PeKpMZyA4ZpPyUd6
+         HkZ9UU2j4Oe/qKRw278A4nhMJJqgfn/rO7lSmKMW2BHolQvfA7aS/1mM1vSa/JjqKeIc
+         dG4mpHzlssAbhEHpeHpqs0Tr6yPYGrtvWwkMjhR5yQno7Fbd/d9PaWdaNyhw9knCe1zo
+         zSjQ==
+X-Gm-Message-State: AOAM533f1wGIJj9a4CsjdfSqEQDQah32ZIvexXzdWjMARZ7SbJx5tZ3b
+        mGOdHa5dZcYt4t/MaxMtUIkLkFYvSKtJhBeRSZPpjg==
+X-Google-Smtp-Source: ABdhPJw+a+RYqW7LREzMJdZrkeqv0faFTmrJBsxG9VYISXMESJvXoq5ic1siEmlwm2VnTvDad1sJr+wxcffypYWMwso=
+X-Received: by 2002:a05:651c:11c7:: with SMTP id z7mr18829959ljo.288.1632080484878;
+ Sun, 19 Sep 2021 12:41:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210824164801.28896-1-lakshmi.sowjanya.d@intel.com>
- <20210824164801.28896-8-lakshmi.sowjanya.d@intel.com> <CACRpkdYJkPgaz-BvQ1X0PHRCCbn0hrMDabouDwHkn+pr9d-dSQ@mail.gmail.com>
- <20210917072755.d4ynxkp4scxrk6rq@pengutronix.de>
-In-Reply-To: <20210917072755.d4ynxkp4scxrk6rq@pengutronix.de>
+References: <20210917105412.595539-1-thierry.reding@gmail.com>
+In-Reply-To: <20210917105412.595539-1-thierry.reding@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 19 Sep 2021 21:38:58 +0200
-Message-ID: <CACRpkdZmjWQ_mNw_JOZnkvvU15qS26gB3GL_9k=Vao3m=w_N9w@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 07/20] gpio: Add output event generation method to
- GPIOLIB and PMC Driver
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     "D, Lakshmi Sowjanya" <lakshmi.sowjanya.d@intel.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
+Date:   Sun, 19 Sep 2021 21:41:14 +0200
+Message-ID: <CACRpkdb+-6dQ4F-asb0K+_9d2JtP7LXyMgjC45V=C0kpBiuAJA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpio: tegra186: Force one interrupt per bank
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Prathamesh Shete <pshete@nvidia.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Saha, Tamal" <tamal.saha@intel.com>, bala.senthil@intel.com,
-        Dipen Patel <dipenp@nvidia.com>
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 17, 2021 at 9:27 AM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
-> On Thu, Sep 16, 2021 at 11:42:04PM +0200, Linus Walleij wrote:
-> > On Tue, Aug 24, 2021 at 6:48 PM <lakshmi.sowjanya.d@intel.com> wrote:
-> >
-> > > From: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
-> > >
-> > > Intel Timed I/O hardware supports output scheduled in hardware. Enabl=
-e
-> > > this functionality using GPIOlib
-> > >
-> > > Adds GPIOlib generate_output() hook into the driver. The driver is
-> > > supplied with a timestamp in terms of realtime system clock (the same
-> > > used for input timestamping). The driver must know how to translate t=
-his
-> > > into a timebase meaningful for the hardware.
-> > >
-> > > Adds userspace write() interface. Output can be selected using the li=
-ne
-> > > event create ioctl. The write() interface takes a single timestamp
-> > > event request parameter. An output edge rising or falling is generate=
-d
-> > > for each event request.
-> > >
-> > > The user application supplies a trigger time in terms of the realtime
-> > > clock the driver converts this into the corresponding ART clock value
-> > > that is used to 'arm' the output.
-> > >
-> > > Work around device quirk that doesn't allow the output to be explicit=
-ly
-> > > set. Instead, count the output edges and insert an additional edge as
-> > > needed to reset the output to zero.
-> > >
-> > > Co-developed-by: Christopher Hall <christopher.s.hall@intel.com>
-> > > Signed-off-by: Christopher Hall <christopher.s.hall@intel.com>
-> > > Signed-off-by: Tamal Saha <tamal.saha@intel.com>
-> > > Signed-off-by: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
-> > > Reviewed-by: Mark Gross <mgross@linux.intel.com>
-> >
-> > So this is some street organ machine that generates sequences
-> > with determined timing between positive and negative edges
-> > right?
-> >
-> > I can't see how this hardware is different from a PWM, or well
-> > I do to some extent, you can control the period of several
-> > subsequent waves, but that is really just an elaborate version
-> > of PWM in my book.
->
-> From looking in the patch I think this is more versatile than the PWM
-> framework abstracts. I wonder if there is a usecase for the
-> functionality that cannot be expressed using pwm_apply_state?!
->
-> I remember we had approaches before that implemented repeating patterns
-> (something like: active for 5ms, inactive for 10 ms, active for 30 ms,
-> inactive for 10 ms, repeat) and limiting the number of periods
-> (something like: .duty_cycle =3D 5ms, .period =3D 20ms, after 5 periods g=
-o
-> into inactive state). These were considered to be too special to be
-> abstracted in drivers/pwm.
->
-> > It seems to me that this part of the functionality belongs in the
-> > PWM subsystem which already has interfaces for similar
-> > things, and you should probably extend PWM to handle
-> > random waveforms rather than trying to shoehorn this
-> > into the GPIO subsystem.
->
-> I agree that GPIO is a worse candidate than PWM to abstract that. But
-> I'm not convinced (yet?) that it's a good idea to extend PWM
-> accordingly.
+On Fri, Sep 17, 2021 at 12:54 PM Thierry Reding
+<thierry.reding@gmail.com> wrote:
 
-Yeah it is a bit unfortunate.
+> From: Thierry Reding <treding@nvidia.com>
+>
+> Newer chips support up to 8 interrupts per bank, which can be useful to
+> balance the load and decrease latency. However, it also required a very
+> complicated interrupt routing to be set up. To keep things simple for
+> now, ensure that a single interrupt per bank is enforced, even if all
+> possible interrupts are described in device tree.
+>
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
 
-I think we need to fully understand the intended usecase before
-we can deal with this: exactly what was this hardware constructed
-to handle? Sound? Robotic stepper motors? It must be something
-and apparently there are users.
-
-Maybe even a new subsystem is needed, like a
-drivers/gpio-patterns or drivers/stepper-motor or whatever this
-is supposed to drive.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
