@@ -2,154 +2,179 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 237BC411616
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Sep 2021 15:52:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA107411645
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Sep 2021 16:06:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234347AbhITNyV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Sep 2021 09:54:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43040 "EHLO
+        id S237938AbhITOHq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Sep 2021 10:07:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233679AbhITNyU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Sep 2021 09:54:20 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99B8FC061574
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Sep 2021 06:52:53 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id g8so61829930edt.7
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Sep 2021 06:52:53 -0700 (PDT)
+        with ESMTP id S237868AbhITOHp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Sep 2021 10:07:45 -0400
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCCF9C061760
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Sep 2021 07:06:18 -0700 (PDT)
+Received: by mail-wr1-x42e.google.com with SMTP id g16so30077809wrb.3
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Sep 2021 07:06:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=obVRoftcDuhZYho01Pyjw8RFLVPn5ohhUmNKObu2Jrc=;
-        b=AmbSH11TcK6t8VKvEiW1KxtlaiPigIO0Pmm0IDZ+zPCcxqgzQFL17DrbVwyWxMzSCa
-         z5mgZUg9E+IGmAyFnIM56oefLS7KAF7WXoyeIIc5Hl7VZRVDHPn6IxuyYTLG0oiPV7s1
-         n6sElmcCWvWb6J4rWZCnKxD27Wdzu37+PQV2HlV9ETa74rDUMvFP1DSAZdBd9NbY7P6A
-         w9W30uT2oZAksy8Fx0YCIHTdiHSJ9vNNb+LmGp0vxPQAIed4GFfkbGSIRunKHWfwHO2l
-         SBGOud2nEFHDzzUJC4DGq4xf7BtTgTWj8vsArIKuH+7+KvyeXdgoliK637+oaIyADeR7
-         u57w==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=O2SeWerZdXltMhfaTVsZCSNIABxYcOcCcm3hDyprnBE=;
+        b=1ldbWaNh+BiIxk7g7i+HjTQHdfnb+yjLErf/mNF0xSPpwyEWsxApwjfXK1whheI0aK
+         W1E6VsEy7KpgM/sC8ddOdVaOieimfT+tuvXejannAluyIu+k5UIo7QXxXtIFLJB3AYgd
+         7dlchvc5oKEPm8u+t4d0MaZFYfm3zGIukoVOMa3sUezMu9xvKwEoAdM/COwhT8r6r+ts
+         cCnTIJXYak+vmUQVeJO1PP0GMbAjk4e5/eNka5lJ0myV9HVfmzPXspwQfBxZ6cQrrLFh
+         HdggW5bCI4M8MsnGGVT5wIoGkMLnw5icK4bKMZVliUJmryc3K1fwbkVlWg7mHCv92T9B
+         9k2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=obVRoftcDuhZYho01Pyjw8RFLVPn5ohhUmNKObu2Jrc=;
-        b=xGTmfrwU6RXsm1XwQ4bggD5bXr5mi9zLLuAN2XagV+mv7ntZpsv1ZSrktNxD4d5aR5
-         wfSqsa92TcjGPCjEpLy7IGEL8Ez7BuLZnGmucMbllJQxNY/DYHIu6UZIzrTSjkpDcYkg
-         DCPpp6oJHZ0Xqco5HGUAcXOCOv9uQHajTMxbX9K2VAYqTyoeGP9t3cIhS7F4426IMWKv
-         jVub2zViFTX6aIq9R/R3RApv7WEZVLSeXfCA+HoOQWdNyadFG8SAhGxGR205Ttk0Nv94
-         xPfVJlDWOQaJP89TpxfRU5d8ahQsF0lEBV5bQZNVrqhxNbu36qLBgboNnVPeTwTa8Tj9
-         FxTg==
-X-Gm-Message-State: AOAM531f56guRbQyTUDV+u1TUIIYuVovGmarBTUORRumBjJraBWMYXOV
-        Y7ec78qa9ne7V6t5WsCt5QUfskF2O92NTS1Eh07P0J3YPtk=
-X-Google-Smtp-Source: ABdhPJx4rns+7tZ6nBirC2bpuqFnz44QpOL5H9jNC3ZuV/RaPk8+MBkie9oaJ8jfxbwn4nh3fM09ZrGda8qiY6xyHew=
-X-Received: by 2002:a17:906:9401:: with SMTP id q1mr28989865ejx.313.1632145947669;
- Mon, 20 Sep 2021 06:52:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210728234607.GC14442@cephalopod>
-In-Reply-To: <20210728234607.GC14442@cephalopod>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=O2SeWerZdXltMhfaTVsZCSNIABxYcOcCcm3hDyprnBE=;
+        b=HHXkWebsnBlOM2absuC2Lcye1iPrAEG4QVtNU2T6VqBlu5QFrjlLcAPJdDX7+8K1cF
+         54ZESaTb3Y0dExQXPW1FUGWw660gNdnTsfMrmjIZ4dn450LQjme7FEpiqRNfQU2B8IrS
+         xQyI1FbrOQbb0x/5VK0tae9dxcQghQ2HrOb655Qpvo3cgNSixtq3DBroAEVYWeeGVqvv
+         hoOqlLifyCy9l7Mg6sGqYmlsFmb4Efr+WT/ClQdoLv3CJa9b6Pp+k6p30FuHx9IiyT1V
+         VMM66xo1As0eCIy0vx72CafVd8G/Q+af0sRa27K7tABd+cNXYWLtP2YJ0Poemj7NpBDY
+         YPnQ==
+X-Gm-Message-State: AOAM533G+73HPzPwihEs+yBD3Fav+HMJe3PqdOFO7Rj4JcrA3u4/YDgO
+        c66mdE0i7h+phT2P1qcgWte2UA==
+X-Google-Smtp-Source: ABdhPJysPjXLxur6W7ycDbArcws+8iD5fvL6oIa1hfq5qrNaDU5lf7XiK0rX9RvmFEC8KWRhn2vEkw==
+X-Received: by 2002:a1c:a5d8:: with SMTP id o207mr29328254wme.104.1632146777179;
+        Mon, 20 Sep 2021 07:06:17 -0700 (PDT)
+Received: from debian-brgl.home ([2a01:cb1d:334:ac00:7d50:ff5:f5c1:e225])
+        by smtp.gmail.com with ESMTPSA id h18sm15801461wrb.33.2021.09.20.07.06.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Sep 2021 07:06:16 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 20 Sep 2021 15:52:17 +0200
-Message-ID: <CAMRc=Me_UsY8b2wJx3CopJ2eX1Qb=fdSRqq_sRyR2vGXVULTbg@mail.gmail.com>
-Subject: Re: [PATCH libgpiod-v2] gpioinfo: Show edge detection and debounce
- period if enabled
-To:     Ben Hutchings <ben.hutchings@mind.be>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>,
+        Shuah Khan <shuah@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jack Winch <sunt.un.morcov@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v5 0/8] gpio: implement the configfs testing module
+Date:   Mon, 20 Sep 2021 16:05:01 +0200
+Message-Id: <20210920140509.5177-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.30.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jul 29, 2021 at 1:46 AM Ben Hutchings <ben.hutchings@mind.be> wrote:
->
-> gpioinfo shows most settings for each GPIO line, but currently misses
-> edge detection and debouncing.
->
-> * If edge detection is enabled, report it as an additional flag
-> * If debouncing is enabled, report the duration
->
-> Signed-off-by: Ben Hutchings <ben.hutchings@mind.be>
-> ---
->  tools/gpioinfo.c | 33 +++++++++++++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
->
-> diff --git a/tools/gpioinfo.c b/tools/gpioinfo.c
-> index cd2b9e4..ed0018c 100644
-> --- a/tools/gpioinfo.c
-> +++ b/tools/gpioinfo.c
-> @@ -44,6 +44,21 @@ static bool line_drive_is_open_source(struct gpiod_line_info *info)
->         return gpiod_line_info_get_drive(info) == GPIOD_LINE_DRIVE_OPEN_SOURCE;
->  }
->
-> +static bool edge_detection_is_rising(struct gpiod_line_info *info)
-> +{
-> +       return gpiod_line_info_get_edge_detection(info) == GPIOD_LINE_EDGE_RISING;
-> +}
-> +
-> +static bool edge_detection_is_falling(struct gpiod_line_info *info)
-> +{
-> +       return gpiod_line_info_get_edge_detection(info) == GPIOD_LINE_EDGE_FALLING;
-> +}
-> +
-> +static bool edge_detection_is_both(struct gpiod_line_info *info)
-> +{
-> +       return gpiod_line_info_get_edge_detection(info) == GPIOD_LINE_EDGE_BOTH;
-> +}
-> +
->  static const struct flag flags[] = {
->         {
->                 .name = "used",
-> @@ -69,6 +84,18 @@ static const struct flag flags[] = {
->                 .name = "bias-disabled",
->                 .is_set = line_bias_is_disabled,
->         },
-> +       {
-> +               .name = "edge-rising",
-> +               .is_set = edge_detection_is_rising,
-> +       },
-> +       {
-> +               .name = "edge-failling",
-> +               .is_set = edge_detection_is_falling,
-> +       },
-> +       {
-> +               .name = "edge-both",
-> +               .is_set = edge_detection_is_both,
-> +       },
->  };
->
->  static const struct option longopts[] = {
-> @@ -129,6 +156,7 @@ static void list_lines(struct gpiod_chip *chip)
->         const char *name, *consumer;
->         unsigned int i, offset;
->         int direction;
-> +       unsigned long debounce_period;
->
->         printf("%s - %u lines:\n",
->                gpiod_chip_get_name(chip), gpiod_chip_get_num_lines(chip));
-> @@ -142,6 +170,8 @@ static void list_lines(struct gpiod_chip *chip)
->                 consumer = gpiod_line_info_get_consumer(info);
->                 direction = gpiod_line_info_get_direction(info);
->                 active_low = gpiod_line_info_is_active_low(info);
-> +               debounce_period = gpiod_line_info_is_debounced(info) ?
-> +                       gpiod_line_info_get_debounce_period(info) : 0;
->
->                 of = false;
->
-> @@ -166,6 +196,9 @@ static void list_lines(struct gpiod_chip *chip)
->                 prinfo(&of, 13, "%s ",
->                        active_low ? "active-low" : "active-high");
->
-> +               if (debounce_period)
-> +                       printf("debounce=%lu ", debounce_period);
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-You should use prinfo here for formatting. But it would be even better
-if this became a flag - like the bias, drive etc settings and be shown
-inside the [] brackets at the end of the line - something like:
-"[pull-up, used, debounce-period=1000us]".
+I'm respinning this series now because I noticed that I need to start writing
+tests for my work on the new libgpiod v2 code to make sense (it's just becoming
+too complicated to make even remotely functional without test coverage). At the
+same time I don't want to rewrite the tests using gpio-mockup if the goal is to
+replace it with gpio-sim anyway.
 
-Bart
+I fixed issues pointed out by Al Viro and made sure that references are
+correctly counted (including error paths) and that memory allocated for the
+pending and live groups gets freed.
 
-> +
->                 flag_printed = false;
->                 for (i = 0; i < ARRAY_SIZE(flags); i++) {
->                         if (flags[i].is_set(info)) {
-> --
-> 2.20.1
+===
+
+This series adds a new GPIO testing module based on configfs committable items
+and sysfs. The goal is to provide a testing driver that will be configurable
+at runtime (won't need module reload) and easily extensible. The control over
+the attributes is also much more fine-grained than in gpio-mockup.
+
+This series also contains a respin of the patches I sent separately to the
+configfs maintainers - these patches implement the concept of committable
+items that was well defined for a long time but never actually completed.
+
+Apart from the new driver itself, its selftests and the configfs patches, this
+series contains some changes to the bitmap API - most importantly: it adds
+devres managed variants of bitmap_alloc() and bitmap_zalloc().
+
+v1 -> v2:
+- add selftests for gpio-sim
+- add helper programs for selftests
+- update the configfs rename callback to work with the new API introduced in
+  v5.11
+- fix a missing quote in the documentation
+- use !! whenever using bits operation that are required to return 0 or 1
+- use provided bitmap API instead of reimplementing copy or fill operations
+- fix a deadlock in gpio_sim_direction_output()
+- add new read-only configfs attributes for mapping of configfs items to GPIO
+  device names
+- and address other minor issues pointed out in reviews of v1
+
+v2 -> v3:
+- use devm_bitmap_alloc() instead of the zalloc variant if we're initializing
+  the bitmap with 1s
+- drop the patch exporting device_is_bound()
+- don't return -ENODEV from dev_nam and chip_name configfs attributes, return
+  a string indicating that the device is not available yet ('n/a')
+- fix indentation where it makes sense
+- don't protect IDA functions which use their own locking and where it's not
+  needed
+- use kmemdup() instead of kzalloc() + memcpy()
+- collected review tags
+- minor coding style fixes
+
+v3 -> v4:
+- return 'none' instead of 'n/a' from dev_name and chip_name before the device
+  is registered
+- use sysfs_emit() instead of s*printf()
+- drop GPIO_SIM_MAX_PROP as it's only used in an array's definition where it's
+  fine to hardcode the value
+
+v4 -> v5:
+- drop lib patches that are already upstream
+- use BIT() instead of (1UL << bit) for flags
+- fix refcounting for the configfs_dirent in rename()
+- drop d_move() from the rename() callback
+- free memory allocated for the live and pending groups in configfs_d_iput()
+  and not in detach_groups()
+- make sure that if a group of some name is in the live directory, a new group
+  with the same name cannot be created in the pending directory
+
+Bartosz Golaszewski (8):
+  configfs: increase the item name length
+  configfs: use BIT() for internal flags
+  configfs: implement committable items
+  samples: configfs: add a committable group
+  gpio: sim: new testing module
+  selftests: gpio: provide a helper for reading chip info
+  selftests: gpio: add a helper for reading GPIO line names
+  selftests: gpio: add test cases for gpio-sim
+
+ Documentation/admin-guide/gpio/gpio-sim.rst   |  72 ++
+ Documentation/filesystems/configfs.rst        |   6 +-
+ drivers/gpio/Kconfig                          |   8 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-sim.c                       | 877 ++++++++++++++++++
+ fs/configfs/configfs_internal.h               |  22 +-
+ fs/configfs/dir.c                             | 277 +++++-
+ include/linux/configfs.h                      |   3 +-
+ samples/configfs/configfs_sample.c            | 153 +++
+ tools/testing/selftests/gpio/.gitignore       |   2 +
+ tools/testing/selftests/gpio/Makefile         |   4 +-
+ tools/testing/selftests/gpio/config           |   1 +
+ tools/testing/selftests/gpio/gpio-chip-info.c |  57 ++
+ tools/testing/selftests/gpio/gpio-line-name.c |  55 ++
+ tools/testing/selftests/gpio/gpio-sim.sh      | 229 +++++
+ 15 files changed, 1744 insertions(+), 23 deletions(-)
+ create mode 100644 Documentation/admin-guide/gpio/gpio-sim.rst
+ create mode 100644 drivers/gpio/gpio-sim.c
+ create mode 100644 tools/testing/selftests/gpio/gpio-chip-info.c
+ create mode 100644 tools/testing/selftests/gpio/gpio-line-name.c
+ create mode 100755 tools/testing/selftests/gpio/gpio-sim.sh
+
+-- 
+2.30.1
+
