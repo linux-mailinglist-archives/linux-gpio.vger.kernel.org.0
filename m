@@ -2,59 +2,183 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 72D9041170F
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Sep 2021 16:30:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15583411724
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Sep 2021 16:33:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236949AbhITOcV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Sep 2021 10:32:21 -0400
-Received: from verein.lst.de ([213.95.11.211]:51729 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237053AbhITOcU (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 20 Sep 2021 10:32:20 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 3D66A68AFE; Mon, 20 Sep 2021 16:30:47 +0200 (CEST)
-Date:   Mon, 20 Sep 2021 16:30:46 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Joel Becker <jlbec@evilplan.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Kent Gibson <warthog618@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jack Winch <sunt.un.morcov@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH v5 2/8] configfs: use BIT() for internal flags
-Message-ID: <20210920143046.GA26163@lst.de>
-References: <20210920140509.5177-1-brgl@bgdev.pl> <20210920140509.5177-3-brgl@bgdev.pl> <20210920140938.GA24424@lst.de> <CAMuHMdXoZdhSydMpbW8B6oQJNnpYpTxmhHrV5CJNTUP7T1KsoA@mail.gmail.com>
+        id S240419AbhITOe6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Sep 2021 10:34:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52738 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237264AbhITOet (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Sep 2021 10:34:49 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96048C061574
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Sep 2021 07:33:22 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id h17so62395723edj.6
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Sep 2021 07:33:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=M85n9+HdjcguC5a8vNAivAuHLA/HH1/W1cziXiOVcZo=;
+        b=QLV9jeVPh5kEdqXZwQ/LJy4U95ba/abhHHDf+fy/Q9i0oxecaI2pDrMRaUGwqwLsp0
+         kLFGMoV8SrPrdo0Nqi5W9GGi2Ey2gXsscl8vP8AZSwdCaKHg8XeJQDAY/EoJw8zH0LDY
+         xW7IHnwBekzOwHds5lYAQtcXQT2MQFWbW75IJVLzROIh3I0U2gvyW1dB7HH7qGbZPbqh
+         RfIYqLvkqAEFIhak5CmHMA7jk3UHm2MfbvYydv/pZu8EzbPsh8ifYckXmBI8jaKYUqRv
+         TxToSR/9daL5IES4tgS+yodp6YQaRrYZvJyhllx0VYL0XsVuzG1E61/K8+cke48VhUu+
+         Ojbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=M85n9+HdjcguC5a8vNAivAuHLA/HH1/W1cziXiOVcZo=;
+        b=5uOr+HB8MkLLW741lofxmNlZGw3zDb/FvUfXsFE6pS6V6/SBnGDwSTfOBO8aAw4LPY
+         UdE1RUR6vme0N7yOxJp64McpsVxeKM/ONX/gF8oTEm3ZGjHO/j5cq6rgY9+SDJlXEaGB
+         KWWu9E0z/fEQlOTlu8ZUtskTs1Oi1nZDGWeVjwHTWxUFZxhaTQNs2tQEsTDLeZaMy2to
+         FqERmEKWc+1tDcVFMUPw6v/hHQNjvvbwsrgqgztuIzlnPooR3Kw8RM/kewDxZ1bEa19a
+         yb/dI4/nw5LomQx9wZ0/sYBkQqEO3Rhiq6OGNx5P6yZrimWSD3pe1kVMM5StUNFCmNpS
+         Mo9g==
+X-Gm-Message-State: AOAM530jGMrSjmwCWyj3PgBUtx1GmT3wmCDdoxrFXexWtI6i8dVMfAFT
+        iTpc37aONXy/SwHIsfXmMMpIeRWYKlqoTynkM3BfOxfkJXc=
+X-Google-Smtp-Source: ABdhPJwK9T9p89aTgaFMjgYYYmuJFoD2gaY650Q8PdbOs79zV9BIxOwJIm58md3nm5KhRA5HJPhnZxKwAzzAjUFSSpo=
+X-Received: by 2002:a17:907:785a:: with SMTP id lb26mr29565718ejc.77.1632148353178;
+ Mon, 20 Sep 2021 07:32:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXoZdhSydMpbW8B6oQJNnpYpTxmhHrV5CJNTUP7T1KsoA@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <20210728211916.GB14442@cephalopod>
+In-Reply-To: <20210728211916.GB14442@cephalopod>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 20 Sep 2021 16:32:22 +0200
+Message-ID: <CAMRc=McdCUmqny7d11pdf6ShSEbMRf+V0od-SrKmmE7NrjG2Qg@mail.gmail.com>
+Subject: Re: [PATCH libgpiod-v2] tools: Restore support for opening chips by label
+To:     Ben Hutchings <ben.hutchings@mind.be>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 20, 2021 at 04:29:30PM +0200, Geert Uytterhoeven wrote:
-> Hi Christoph,
-> 
-> On Mon, Sep 20, 2021 at 4:09 PM Christoph Hellwig <hch@lst.de> wrote:
-> > On Mon, Sep 20, 2021 at 04:05:03PM +0200, Bartosz Golaszewski wrote:
-> > > For better readability and maintenance: use the BIT() macro for flag
-> > > definitions.
-> >
-> > NAK.  BIT() is the stupidest macro in the kernel and shall not be used
-> > ever.  And I'm pretty sure we had this discussion a few times.
-> 
-> Care to explain why it is a stupid macro?
+On Wed, Jul 28, 2021 at 11:19 PM Ben Hutchings <ben.hutchings@mind.be> wrote:
+>
+> Support for opening chips by label was removed because labels
+> are not necessarily unique and lookup by label requires opening
+> every GPIO device.
+>
+> I don't think these concerns apply to the tools.  They will normally
+> be run by root, and if a label is specified it's because it's known to
+> be unique.
+>
+> This adds a chip_open_by_label() function to tools-common.c, which:
+>
+> 1. Scans the /dev/ directory for GPIO devices, and opens each in turn
+> 2. Checks whether the label matches, and that the label isn't used by
+>    two distinct devices
+> 3. If all devices can be opened and exactly one matches the label,
+>    return that device
+>
+> It changes chip_open_lookup() to call chip_open_by_label() as a final
+> fallback, rather than the previous behaviour.  This should avoid
+> producing spurious error messages if a tool is run by a user that can
+> only access a subset of GPIO devices.
+>
+> Signed-off-by: Ben Hutchings <ben.hutchings@mind.be>
+> ---
+>  tools/tools-common.c | 63 ++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 63 insertions(+)
+>
+> diff --git a/tools/tools-common.c b/tools/tools-common.c
+> index 36724d5..d2665e8 100644
+> --- a/tools/tools-common.c
+> +++ b/tools/tools-common.c
+> @@ -4,6 +4,7 @@
+>  /* Common code for GPIO tools. */
+>
+>  #include <ctype.h>
+> +#include <dirent.h>
+>  #include <errno.h>
+>  #include <gpiod.h>
+>  #include <libgen.h>
+> @@ -146,6 +147,66 @@ static struct gpiod_chip *chip_open_by_number(unsigned int num)
+>         return chip;
+>  }
+>
+> +struct gpiod_chip *chip_open_by_label(const char *label)
+> +{
+> +       struct gpiod_chip *chip = NULL, *next = NULL;
+> +       struct dirent **entries;
+> +       int num_chips, i, error = 0;
+> +
+> +       num_chips = scandir("/dev/", &entries, chip_dir_filter, alphasort);
+> +       if (num_chips < 0) {
+> +               error = errno;
+> +               fprintf(stderr, "unable to scan /dev: %s\n", strerror(error));
+> +               goto out;
+> +       }
+> +
+> +       for (i = 0; i < num_chips; i++) {
+> +               next = chip_open_by_name(entries[i]->d_name);
+> +               if (!next) {
+> +                       error = errno;
+> +                       fprintf(stderr, "unable to open %s: %s\n",
+> +                               entries[i]->d_name, strerror(error));
 
-Please look at the previous thread.  I'm tired of this discussion.
+How about using access() to check the permissions first? This way we
+wouldn't need to spam the user with error messages - we'd just
+silently ignore chips we don't have access to.
+
+Bart
+
+> +                       break;
+> +               }
+> +
+> +               if (chip && !strcmp(gpiod_chip_get_name(chip),
+> +                                   gpiod_chip_get_name(next))) {
+> +                       /* chip and next are actually the same device */
+> +                       gpiod_chip_close(next);
+> +               } else if (!strcmp(gpiod_chip_get_label(next), label)) {
+> +                       /* label matches; check it's not a duplicate */
+> +                       if (chip) {
+> +                               fprintf(stderr,
+> +                                       "multiple chips have the label \"%s\"\n",
+> +                                       label);
+> +                               error = EINVAL;
+> +                               break;
+> +                       }
+> +                       chip = next;
+> +               } else {
+> +                       gpiod_chip_close(next);
+> +               }
+> +       }
+> +
+> +       if (error) {
+> +               if (chip)
+> +                       gpiod_chip_close(chip);
+> +               if (next)
+> +                       gpiod_chip_close(next);
+> +               chip = NULL;
+> +       } else if (!chip) {
+> +               error = ENOENT;
+> +       }
+> +
+> +       for (i = 0; i < num_chips; i++)
+> +               free(entries[i]);
+> +       free(entries);
+> +
+> +out:
+> +       errno = error;
+> +       return chip;
+> +}
+> +
+>  static bool isuint(const char *str)
+>  {
+>         for (; *str && isdigit(*str); str++)
+> @@ -166,6 +227,8 @@ struct gpiod_chip *chip_open_lookup(const char *device)
+>                 else
+>                         chip = gpiod_chip_open(device);
+>         }
+> +       if (!chip)
+> +               chip = chip_open_by_label(device);
+>
+>         return chip;
+>  }
+> --
+> 2.20.1
