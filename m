@@ -2,202 +2,236 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5008C410E0B
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Sep 2021 02:44:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D0EA410FDF
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Sep 2021 09:14:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231578AbhITAqA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 19 Sep 2021 20:46:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36628 "EHLO
+        id S234658AbhITHQH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Sep 2021 03:16:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231551AbhITAp7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 19 Sep 2021 20:45:59 -0400
-Received: from mail-ot1-x336.google.com (mail-ot1-x336.google.com [IPv6:2607:f8b0:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92DFEC061764
-        for <linux-gpio@vger.kernel.org>; Sun, 19 Sep 2021 17:44:33 -0700 (PDT)
-Received: by mail-ot1-x336.google.com with SMTP id k12-20020a056830150c00b0051abe7f680bso21376803otp.1
-        for <linux-gpio@vger.kernel.org>; Sun, 19 Sep 2021 17:44:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=lzKqB+hvLZ/JMccnjIuEIhViBFYa45nTJzf1VzPKkQM=;
-        b=geuYnnJgB8GKQG9MHXQWQ9qCeznG/2qiKgr26NIQ2RlTKID2Ai8AQTzC3FHNsffvYm
-         xFN1q2LncnS//Ppt4czKmDJrFUaKFoGGrYNGfSAFV1rHAGpX6VbQHBHZCAeJvMAUukme
-         n+5jxW4GOHoZrPsQ9IJFXuF53SOqYumNaLk00sAzPmCiRFrhvfheG5AcgE4EPYbXrAYc
-         foy2vaQbKs6ykHcdMPF3c0+3ZJNbrKi9sd54wmJ5sCQXx3kAnzmQTew0dDLyuvbdSUMm
-         Mj+Ij/We8jLSmbGR25LHHIYRTEPjqyN7XUufwr59RgN4DDL2OH8bTm7l5BUiZaip99d1
-         Q3oA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=lzKqB+hvLZ/JMccnjIuEIhViBFYa45nTJzf1VzPKkQM=;
-        b=AlTAJaTJA9XSmrxlhhmmiEpCwggt2hsaVEDUyXBmWVJcYAx3DAq9dzxb6mWBF0c5mh
-         ceNrM3ltstWG6CjAcZpFZzWVNaDqw+KkLVktr+zZ/VGg8ot79YJ6ziwJCnzr2LJiAZ6E
-         r+kQhykOZPxA67Ud4cWKZTdM+E5ibcgZ041o4oelga2XRMf3wgtu6llJs7qRQ+NoxbUj
-         18OdJJ6+PiL62w/UsI5omDWPEYYqMdqgjQBbfDqJ+6achcQY303n6XN8Z7lIACYpi2Fc
-         GE8uYKcl8b3XvwoFS3Qp9IyEC6g956pwTblBEmtZO6y40B0hi3eOaoZgi6bHmlYEA+X4
-         mE8w==
-X-Gm-Message-State: AOAM531wHZ7oMPXGKfkCc8Ii8INQ0+cao6GO1ySuGXbggNGkGhe6WYyR
-        rf+ih4laM2Oq6VIps9IpDeZ8i6Tx8Hu9fQ==
-X-Google-Smtp-Source: ABdhPJyURgRw9OC2NNBTkmOgiOvyzID7Xviw5xcTBH6RmvJCkZ+rCi5FGlZoYceTmyxZphPwzV4JBw==
-X-Received: by 2002:a9d:5a9b:: with SMTP id w27mr18814468oth.29.1632098672900;
-        Sun, 19 Sep 2021 17:44:32 -0700 (PDT)
-Received: from builder.lan (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id f17sm1884382ook.9.2021.09.19.17.44.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Sep 2021 17:44:32 -0700 (PDT)
-Date:   Sun, 19 Sep 2021 19:44:30 -0500
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     agross@kernel.org, linus.walleij@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Prasad Sodagudi <psodagud@codeaurora.org>
-Subject: Re: [PATCH] pinctrl: qcom: Add egpio feature support
-Message-ID: <YUfZbsf3MX1aQJ2+@builder.lan>
-References: <1631860648-31774-1-git-send-email-rnayak@codeaurora.org>
+        with ESMTP id S234659AbhITHQH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Sep 2021 03:16:07 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEECBC061760
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Sep 2021 00:14:40 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mSDVb-00026U-OY; Mon, 20 Sep 2021 09:14:35 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mSDVY-000630-AX; Mon, 20 Sep 2021 09:14:32 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1mSDVY-00039R-9L; Mon, 20 Sep 2021 09:14:32 +0200
+Date:   Mon, 20 Sep 2021 09:14:32 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Clemens Gruber <clemens.gruber@pqgruber.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "D, Lakshmi Sowjanya" <lakshmi.sowjanya.d@intel.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Mark Gross <mgross@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Saha, Tamal" <tamal.saha@intel.com>, bala.senthil@intel.com,
+        Dipen Patel <dipenp@nvidia.com>
+Subject: Re: [RFC PATCH v1 07/20] gpio: Add output event generation method to
+ GPIOLIB and PMC Driver
+Message-ID: <20210920071432.cxjjlsjsfo4n2vgg@pengutronix.de>
+References: <20210824164801.28896-1-lakshmi.sowjanya.d@intel.com>
+ <20210824164801.28896-8-lakshmi.sowjanya.d@intel.com>
+ <CACRpkdYJkPgaz-BvQ1X0PHRCCbn0hrMDabouDwHkn+pr9d-dSQ@mail.gmail.com>
+ <20210917072755.d4ynxkp4scxrk6rq@pengutronix.de>
+ <CACRpkdZmjWQ_mNw_JOZnkvvU15qS26gB3GL_9k=Vao3m=w_N9w@mail.gmail.com>
+ <YUep0gtZkc6D3ukt@workstation.tuxnet>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="xaedf33eqad6fiyv"
 Content-Disposition: inline
-In-Reply-To: <1631860648-31774-1-git-send-email-rnayak@codeaurora.org>
+In-Reply-To: <YUep0gtZkc6D3ukt@workstation.tuxnet>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri 17 Sep 01:37 CDT 2021, Rajendra Nayak wrote:
 
-> From: Prasad Sodagudi <psodagud@codeaurora.org>
-> 
-> egpio is a scheme which allows special power Island Domain IOs
-> (LPASS,SSC) to be reused as regular chip GPIOs by muxing regular
-> TLMM functions with Island Domain functions.
-> With this scheme, an IO can be controlled both by the cpu running
-> linux and the Island processor. This provides great flexibility to
-> re-purpose the Island IOs for regular TLMM usecases.
-> 
-> 2 new bits are added to ctl_reg, egpio_present is a read only bit
-> which shows if egpio feature is available or not on a given gpio.
-> egpio_enable is the read/write bit and only effective if egpio_present
-> is 1. Once its set, the Island IO is controlled from Chip TLMM.
-> egpio_enable when set to 0 means the GPIO is used as Island Domain IO.
-> 
-> The support exists on most recent qcom SoCs, and we add support
-> for sm8150/sm8250/sm8350 and sc7280 as part of this patch.
-> 
+--xaedf33eqad6fiyv
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I was under the impression that this feature would allow you to
-repurpose pins for use either by the remote island or by apps.
+On Sun, Sep 19, 2021 at 11:21:22PM +0200, Clemens Gruber wrote:
+> On Sun, Sep 19, 2021 at 09:38:58PM +0200, Linus Walleij wrote:
+> > On Fri, Sep 17, 2021 at 9:27 AM Uwe Kleine-K=F6nig
+> > <u.kleine-koenig@pengutronix.de> wrote:
+> > > On Thu, Sep 16, 2021 at 11:42:04PM +0200, Linus Walleij wrote:
+> > > > On Tue, Aug 24, 2021 at 6:48 PM <lakshmi.sowjanya.d@intel.com> wrot=
+e:
+> > > >
+> > > > > From: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
+> > > > >
+> > > > > Intel Timed I/O hardware supports output scheduled in hardware. E=
+nable
+> > > > > this functionality using GPIOlib
+> > > > >
+> > > > > Adds GPIOlib generate_output() hook into the driver. The driver is
+> > > > > supplied with a timestamp in terms of realtime system clock (the =
+same
+> > > > > used for input timestamping). The driver must know how to transla=
+te this
+> > > > > into a timebase meaningful for the hardware.
+> > > > >
+> > > > > Adds userspace write() interface. Output can be selected using th=
+e line
+> > > > > event create ioctl. The write() interface takes a single timestamp
+> > > > > event request parameter. An output edge rising or falling is gene=
+rated
+> > > > > for each event request.
+> > > > >
+> > > > > The user application supplies a trigger time in terms of the real=
+time
+> > > > > clock the driver converts this into the corresponding ART clock v=
+alue
+> > > > > that is used to 'arm' the output.
+> > > > >
+> > > > > Work around device quirk that doesn't allow the output to be expl=
+icitly
+> > > > > set. Instead, count the output edges and insert an additional edg=
+e as
+> > > > > needed to reset the output to zero.
+> > > > >
+> > > > > Co-developed-by: Christopher Hall <christopher.s.hall@intel.com>
+> > > > > Signed-off-by: Christopher Hall <christopher.s.hall@intel.com>
+> > > > > Signed-off-by: Tamal Saha <tamal.saha@intel.com>
+> > > > > Signed-off-by: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
+> > > > > Reviewed-by: Mark Gross <mgross@linux.intel.com>
+> > > >
+> > > > So this is some street organ machine that generates sequences
+> > > > with determined timing between positive and negative edges
+> > > > right?
+> > > >
+> > > > I can't see how this hardware is different from a PWM, or well
+> > > > I do to some extent, you can control the period of several
+> > > > subsequent waves, but that is really just an elaborate version
+> > > > of PWM in my book.
+> > >
+> > > From looking in the patch I think this is more versatile than the PWM
+> > > framework abstracts. I wonder if there is a usecase for the
+> > > functionality that cannot be expressed using pwm_apply_state?!
+> > >
+> > > I remember we had approaches before that implemented repeating patter=
+ns
+> > > (something like: active for 5ms, inactive for 10 ms, active for 30 ms,
+> > > inactive for 10 ms, repeat) and limiting the number of periods
+> > > (something like: .duty_cycle =3D 5ms, .period =3D 20ms, after 5 perio=
+ds go
+> > > into inactive state). These were considered to be too special to be
+> > > abstracted in drivers/pwm.
+> > >
+> > > > It seems to me that this part of the functionality belongs in the
+> > > > PWM subsystem which already has interfaces for similar
+> > > > things, and you should probably extend PWM to handle
+> > > > random waveforms rather than trying to shoehorn this
+> > > > into the GPIO subsystem.
+> > >
+> > > I agree that GPIO is a worse candidate than PWM to abstract that. But
+> > > I'm not convinced (yet?) that it's a good idea to extend PWM
+> > > accordingly.
+> >=20
+> > Yeah it is a bit unfortunate.
+> >=20
+> > I think we need to fully understand the intended usecase before
+> > we can deal with this: exactly what was this hardware constructed
+> > to handle? Sound? Robotic stepper motors? It must be something
+> > and apparently there are users.
+> >=20
+> > Maybe even a new subsystem is needed, like a
+> > drivers/gpio-patterns or drivers/stepper-motor or whatever this
+> > is supposed to drive.
+>=20
+> This would be interesting. Maybe even more abstract, not just supporting
+> GPIO patterns but also PWM patterns.
+>=20
+> E.g. Set gpiochip1 line 2 to 1, wait 5ms, set it to 0
+> Or set pwmchip1 pwm 2 to 100%, wait 250ms, set it back to 50% duty cycle
 
-But if I understand your proposal, you check to see if the pin is
-"egpio capable" for a pin and if so just sets the bit - muxing it to
-apps (or the island?).
+Note that adding support to drive PWMs in this "GPIO command sequence"
+framework would not increase its expressiveness assuming this framework
+has loop support. That's because the sequence "set pwmchip1 pwm 2 to
+100% (with a period of X), wait 250ms, set it back to 50% duty cycle
+with a period of Y" can be expressed using a GPIO as:
 
+	set GPIO to active
+	wait 250 ms + Y/2
+	while True:
+	    toggle GPIO
+	    wait Y/2
 
-It seems reasonable that this would be another pinmux state for these
-pins, rather than just flipping them all in one or the other direction.
+That's because this framework could provide a PWM from a GPIO.
 
+(Also note that the original command sequence has some problems. That's
+because (depending on the PWM in use and X) doing
 
-PS. When I spoke with Prasad about this a couple of years ago, I think
-we talked about representing this as a pinconf property, but it seems to
-make more sense to me now that it would be a pinmux state.
+	pwm_apply_state(mypwm, &(struct pwm_state){ .period =3D X, .duty_cycle =3D=
+ X, .enabled =3D 1 });
 
-Regards,
-Bjorn
+and then 250ms later
 
-> Signed-off-by: Prasad Sodagudi <psodagud@codeaurora.org>
-> [rnayak: rewrite commit log, minor rebase]
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
->  drivers/pinctrl/qcom/pinctrl-msm.c    | 4 ++++
->  drivers/pinctrl/qcom/pinctrl-msm.h    | 2 ++
->  drivers/pinctrl/qcom/pinctrl-sc7280.c | 2 ++
->  drivers/pinctrl/qcom/pinctrl-sm8150.c | 2 ++
->  drivers/pinctrl/qcom/pinctrl-sm8250.c | 2 ++
->  drivers/pinctrl/qcom/pinctrl-sm8350.c | 2 ++
->  6 files changed, 14 insertions(+)
-> 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-> index 8476a8a..f4a2343 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> @@ -220,6 +220,10 @@ static int msm_pinmux_set_mux(struct pinctrl_dev *pctldev,
->  	val = msm_readl_ctl(pctrl, g);
->  	val &= ~mask;
->  	val |= i << g->mux_bit;
-> +	/* Check if egpio present and enable that feature */
-> +	if (val & BIT(g->egpio_present))
-> +		val |= BIT(g->egpio_enable);
-> +
->  	msm_writel_ctl(val, pctrl, g);
->  
->  	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
-> index e31a516..3635b31 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm.h
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm.h
-> @@ -77,6 +77,8 @@ struct msm_pingroup {
->  	unsigned drv_bit:5;
->  
->  	unsigned od_bit:5;
-> +	unsigned egpio_enable:5;
-> +	unsigned egpio_present:5;
->  	unsigned oe_bit:5;
->  	unsigned in_bit:5;
->  	unsigned out_bit:5;
-> diff --git a/drivers/pinctrl/qcom/pinctrl-sc7280.c b/drivers/pinctrl/qcom/pinctrl-sc7280.c
-> index afddf6d..607d459 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-sc7280.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-sc7280.c
-> @@ -43,6 +43,8 @@
->  		.mux_bit = 2,			\
->  		.pull_bit = 0,			\
->  		.drv_bit = 6,			\
-> +		.egpio_enable = 12,		\
-> +		.egpio_present = 11,		\
->  		.oe_bit = 9,			\
->  		.in_bit = 0,			\
->  		.out_bit = 1,			\
-> diff --git a/drivers/pinctrl/qcom/pinctrl-sm8150.c b/drivers/pinctrl/qcom/pinctrl-sm8150.c
-> index 7359bae..63a625a 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-sm8150.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-sm8150.c
-> @@ -56,6 +56,8 @@ enum {
->  		.mux_bit = 2,			\
->  		.pull_bit = 0,			\
->  		.drv_bit = 6,			\
-> +		.egpio_enable = 12,		\
-> +		.egpio_present = 11,		\
->  		.oe_bit = 9,			\
->  		.in_bit = 0,			\
->  		.out_bit = 1,			\
-> diff --git a/drivers/pinctrl/qcom/pinctrl-sm8250.c b/drivers/pinctrl/qcom/pinctrl-sm8250.c
-> index af144e7..ad4fd94 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-sm8250.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-sm8250.c
-> @@ -57,6 +57,8 @@ enum {
->  		.mux_bit = 2,				\
->  		.pull_bit = 0,				\
->  		.drv_bit = 6,				\
-> +		.egpio_enable = 12,			\
-> +		.egpio_present = 11,			\
->  		.oe_bit = 9,				\
->  		.in_bit = 0,				\
->  		.out_bit = 1,				\
-> diff --git a/drivers/pinctrl/qcom/pinctrl-sm8350.c b/drivers/pinctrl/qcom/pinctrl-sm8350.c
-> index 4d8f863..bb436dc 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-sm8350.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-sm8350.c
-> @@ -46,6 +46,8 @@
->  		.mux_bit = 2,			\
->  		.pull_bit = 0,			\
->  		.drv_bit = 6,			\
-> +		.egpio_enable = 12,		\
-> +		.egpio_present = 11,		\
->  		.oe_bit = 9,			\
->  		.in_bit = 0,			\
->  		.out_bit = 1,			\
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
-> 
+	pwm_apply_state(mypwm, &(struct pwm_state){ .period =3D Y, .duty_cycle =3D=
+ Y / 2, .enabled =3D 1 });
+
+might give you an initially active phase that is considerably longer
+than 250 ms + Y/2 because the PWM cannot implement .period =3D X exactly
+and completes the period that is currently running at time 250 ms.
+
+> This subsystem could then implement the patterns with hrtimers and be
+> usable with every GPIO or PWM device supported in Linux, and for
+> special hardware like the Intel Timed I/O, it could configure it to
+> output the pattern itself.
+>=20
+> One usecase besides stepper motors and Robotics would be solenoid
+> valves: You often have different sequences for opening, closing and
+> maintenance. E.g. for liquid valves, especially if the liquid is
+> viscuous, you have to first use 100% duty cycle PWM for e.g. 250ms to
+> get it open and then dial back to 50% to keep it open without
+> overheating it.
+>=20
+> Of course this can be done in userspace.. but it may also be useful to
+> have some kind of pattern generator in the kernel. What do you think?
+
+Without hearing the usecases of the original idea my feeling is:
+Implement it in userspace, than the sequences can even contain network
+interaction and access to SPI eeproms.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--xaedf33eqad6fiyv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmFINNUACgkQwfwUeK3K
+7AlsBQf/Zs4LoJCKXSwbkuLjWCsmpP+lx/ihkiXzEvGtOmOwdc2mJMAG2gakJ0+w
+SKtUl46Ee6q82/KeEPWqColHGMf+VIBmJ+3L9zYf7z24s5oFhlYOfZvXjbHIbTX9
+eV+8PojbGCcW3Ps74AR/h6bla53bUTt1I+H0O1261b0PEz+oE9EiON0rhqXVEum1
+vHEUg/CZlB4G/jtB+c3CEh/OPWs+K6t+yPfcBIVGUEkYd3u/D4AohSSvnwaREvIi
+6KQ2gYYtvYIBlmPDUuSjvL4NrYLzN6R16WKs9ehjFF1r23ENNVftBKgCXai2eYz3
+55urbAMOkRa6ZewLGXKTiUEXRUBMSw==
+=4Se7
+-----END PGP SIGNATURE-----
+
+--xaedf33eqad6fiyv--
