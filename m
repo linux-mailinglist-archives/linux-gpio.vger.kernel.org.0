@@ -2,124 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 40FAA413A38
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Sep 2021 20:42:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E608413ABD
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Sep 2021 21:30:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229499AbhIUSoR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Sep 2021 14:44:17 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:51503 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229462AbhIUSoR (ORCPT
+        id S231465AbhIUTcI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Sep 2021 15:32:08 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:18568 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S229519AbhIUTcH (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 21 Sep 2021 14:44:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1632249767;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8HouoNmzn27J/0fv070uPp9hTkvlffeabyb1Jv/MTjg=;
-        b=JjmlqQbqRzRJd+uzB/aG3mNDyWXHUrqLPku+TJTC0oj4kyNVA65cyanSVzS6fMk/QmeMqW
-        zMYdM/W+zfaGCY2IpCuC8hA6haTMRmfMgXF33fg6OLQRh8Qo8hIq1StgmxGMnTHUApZVHF
-        FtWijFBb4iR2n5zPtCJnI4z3gYzg0bA=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-160-70BccfMDMSedGI338sWbBg-1; Tue, 21 Sep 2021 14:42:46 -0400
-X-MC-Unique: 70BccfMDMSedGI338sWbBg-1
-Received: by mail-ed1-f70.google.com with SMTP id o18-20020a056402439200b003d2b11eb0a9so19965449edc.23
-        for <linux-gpio@vger.kernel.org>; Tue, 21 Sep 2021 11:42:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8HouoNmzn27J/0fv070uPp9hTkvlffeabyb1Jv/MTjg=;
-        b=h27W47JbjMoDZw5aAfMVgdhn40q1yEjXEAvganS2NX1biTboPIs1XXcttvugGlU7Gt
-         m/z+njB6EEeF/34sVS/8dzPfBuIFliAzHHc4LDCqnD+EiixfL6KWSdr2pvOAYgedhOmP
-         dsnTPxHIt5DaduWOoG4P6imbKOhgSmlIClHohqRBM41N1XLSS+2Yodt/9mLgr3Kwhgnz
-         RgKyoPMHz5Hjqj7w/Mu4O/NFdk8aMZCkYpmBBx63zNHx5ubVENL37fXlnv/dIY1R+hkl
-         4Y3h5tvv/Q7z4sqMC8lnbfrNrlWsqmBTTJ8I4T63/UAoKtVmkRqULeZJusFSpn7eVkKw
-         U0Zg==
-X-Gm-Message-State: AOAM532VroSGMkL53KZvxco+UykCtLAIZEdMZzLM3isP77jIOWCK4mSF
-        X1nNmS6hyWW0tTC6KXYonVOXhpVQVAucLnhWGT8ANd0yx47m00Y3dWcyfZ7y5TLltZ/54ruhqog
-        mtGMDYByuKvBzLBxWcKduZA==
-X-Received: by 2002:a17:906:68c2:: with SMTP id y2mr36544550ejr.18.1632249765145;
-        Tue, 21 Sep 2021 11:42:45 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxuBPMHmTMuwFTnF8rZ0qOoDFoKOkrKAfszAgiITljXWzifTWeCsz91t1XxQwM7dV6fAVOLXg==
-X-Received: by 2002:a17:906:68c2:: with SMTP id y2mr36544529ejr.18.1632249764971;
-        Tue, 21 Sep 2021 11:42:44 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id w25sm8932092edi.22.2021.09.21.11.42.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Sep 2021 11:42:44 -0700 (PDT)
-Subject: Re: [PATCH regression fix] gpiolib: acpi: Make set-debounce-timeout
- failures non fatal
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-References: <20210816093856.12313-1-hdegoede@redhat.com>
- <CACRpkdZ8ngakZhbrJp=OjcayLJ4j7C9gqb72N18fHExtMT7gNg@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <86fafc6f-113c-2ea9-579b-ea29343865da@redhat.com>
-Date:   Tue, 21 Sep 2021 20:42:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
-MIME-Version: 1.0
-In-Reply-To: <CACRpkdZ8ngakZhbrJp=OjcayLJ4j7C9gqb72N18fHExtMT7gNg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 21 Sep 2021 15:32:07 -0400
+X-IronPort-AV: E=Sophos;i="5.85,311,1624287600"; 
+   d="scan'208";a="94721283"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 22 Sep 2021 04:30:36 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 504CE40E82D7;
+        Wed, 22 Sep 2021 04:30:34 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [RFC PATCH v2 0/4] Renesas RZ/G2L IRQC support
+Date:   Tue, 21 Sep 2021 20:30:24 +0100
+Message-Id: <20210921193028.13099-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+Hi All,
 
-On 9/21/21 8:28 PM, Linus Walleij wrote:
-> On Mon, Aug 16, 2021 at 11:39 AM Hans de Goede <hdegoede@redhat.com> wrote:
-> 
->> Commit 8dcb7a15a585 ("gpiolib: acpi: Take into account debounce settings")
->> made the gpiolib-acpi code call gpio_set_debounce_timeout() when requesting
->> GPIOs.
->>
->> This in itself is fine, but it also made gpio_set_debounce_timeout()
->> errors fatal, causing the requesting of the GPIO to fail. This is causing
->> regressions. E.g. on a HP ElitePad 1000 G2 various _AEI specified GPIO
->> ACPI event sources specify a debouncy timeout of 20 ms, but the
->> pinctrl-baytrail.c only supports certain fixed values, the closest
->> ones being 12 or 14 ms and pinctrl-baytrail.c responds with -EINVAL
->> when specified a value which is not one of the fixed values.
->>
->> This is causing the acpi_request_own_gpiod() call to fail for 3
->> ACPI event sources on the HP ElitePad 1000 G2, which in turn is causing
->> e.g. the battery charging vs discharging status to never get updated,
->> even though a charger has been plugged-in or unplugged.
->>
->> Make gpio_set_debounce_timeout() errors non fatal, warning about the
->> failure instead, to fix this regression.
->>
->> Note we should probably also fix various pinctrl drivers to just
->> pick the first bigger discrete value rather then returning -EINVAL but
->> this will need to be done on a per driver basis, where as this fix
->> at least gets us back to where things were before and thus restores
->> functionality on devices where this was lost due to
->> gpio_set_debounce_timeout() errors.
->>
->> Fixes: 8dcb7a15a585 ("gpiolib: acpi: Take into account debounce settings")
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> 
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> 
-> Bartosz will pick this up I think, I'm a bit off duty with GPIO right now.
+The RZ/G2L Interrupt Controller is a front-end for the GIC found on
+Renesas RZ/G2L SoC's with below pins:
+- IRQ sense select for 8 external interrupts, mapped to 8 GIC SPI interrupts
+- GPIO pins used as external interrupt input pins out of GPIOINT0-122 a
+  maximum of only 32 can be mapped to 32 GIC SPI interrupts,
+- NMI edge select.
 
-Added Bartosz to the To: list, to make sure that he actually
-sees this. I somehow did not add him in the To/Cc when sending out
-the patch, sorry about that.
+                                                                _____________
+                                                                |    GIC     |
+                                                                |  ________  |
+                                         ____________           | |        | |
+NMI ------------------------------------>|          |  SPI0-479 | | GIC-600| |
+                _______                  |          |------------>|        | |
+                |      |                 |          |  PPI16-31 | |        | |
+                |      | IRQ0-IRQ8       |   IRQC   |------------>|        | |
+P0_P48_4 ------>| GPIO |---------------->|          |           | |________| |
+                |      |GPIOINT0-122     |          |           |            |
+                |      |---------------->| TINT0-31 |           |            |
+                |______|                 |__________|           |____________|
 
-Regards,
+The proposed RFC patches, add the IRQ domains in GPIO (pinctrl driver) and the
+IRQC driver. The IRQC domain handles the actual SPI interrupt and upon reception
+of the interrupt it propagates to the GPIO IRQ domain to handle virq.
+Out of GPIOINT0-122 only 32 can be mapped to GIC SPI, this mapping is handled by
+the IRQC driver.
 
-Hans
+Current implementation only supports TINT interrupts.
+
+Cheers,
+Prabhakar
+
+Changes for v2:
+-> Re-structured the driver as a chained handler
+-> Moved gpio verification to pinctrl driver
+-> Added locks to protect read/write
+-> Fixed propagating of irq (v1 queried the pinctrl irq domain to propagate)
+-> To keep it simple dropped edge both support
+-> Used relaxed accessors
+-> Switched to use generic_handle_domain_irq()
+-> Used irq_domain_translate_twocell() instead of custom callback
+
+Lad Prabhakar (4):
+  dt-bindings: interrupt-controller: Add Renesas RZ/G2L Interrupt
+    Controller
+  irqchip: Add RZ/G2L IA55 Interrupt Controller driver
+  pinctrl: renesas: pinctrl-rzg2l: Add IRQ domain to handle GPIO
+    interrupt
+  arm64: dts: renesas: r9a07g044: Add IRQC node to SoC DTSI
+
+ .../renesas,rzg2l-irqc.yaml                   | 130 ++++++
+ arch/arm64/boot/dts/renesas/r9a07g044.dtsi    |  58 +++
+ drivers/irqchip/Kconfig                       |   9 +
+ drivers/irqchip/Makefile                      |   1 +
+ drivers/irqchip/irq-renesas-rzg2l.c           | 393 ++++++++++++++++++
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c       | 214 ++++++++++
+ drivers/soc/renesas/Kconfig                   |   1 +
+ 7 files changed, 806 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rzg2l-irqc.yaml
+ create mode 100644 drivers/irqchip/irq-renesas-rzg2l.c
+
+-- 
+2.17.1
 
