@@ -2,104 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C7DD1412DFB
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Sep 2021 06:40:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 549B2412F11
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Sep 2021 09:09:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230214AbhIUElf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Sep 2021 00:41:35 -0400
-Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:60749 "EHLO
-        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229988AbhIUEle (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 21 Sep 2021 00:41:34 -0400
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.west.internal (Postfix) with ESMTP id BC2DB2B01433;
-        Tue, 21 Sep 2021 00:40:05 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Tue, 21 Sep 2021 00:40:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=from
-        :to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=UMFOw7vbwhDOl
-        T/6/dntbRu7oRn9RKWKLkg+EamTaYY=; b=R0T9Pb5SZ+4yxZc07SWcc2cgpW4Ei
-        GjRBNl5luMuLSwhYzK0M6b4O289/LCQp1YHlC1W2v3LQddoi8xObda/Y2niNBp5V
-        49NjstgoULPBXBGG4raqp7ZGi0WOLB1QinMIJjco4FEPiQF23tX8AYBU4uHqbJ+V
-        Y7OOMrRJybrTUutdYNN/Eha1NPKA3wCLg1S3Va8/7VPH8lv9rjrZpIZILWWAyGyq
-        deFa4Sfrt0hUTPR7xAX9m7Oi+wWq8j1wzQHa1sHU+byowM/jhZbmkjx9/Ix94rmt
-        joVqLmpMmure/uZsOj4Iinzxj9oWVG0iajwAwh7GblgnhjowH+QI43mXw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=UMFOw7vbwhDOlT/6/dntbRu7oRn9RKWKLkg+EamTaYY=; b=cP6M/PE0
-        +9ReKlONMlBaU4X07LBpC8imUWgWAK9IG8zLrxXudSrHJyk45CWJJlIC6GSTheja
-        ILwrsx2fV+f2rYMMOyHJ/9iXEA/eCs1AA8ENhiktkJJOTtY8E913vz0FPJr4lOl/
-        3doxcADRUGKCz5fSN6pmRs0NKFdHEYKkeT6vCEqZzIhhR6xRprclTwjyc2+fgq6k
-        FulVx6ZayP7FhtrjdAdAL+swUjsFq9ok9fLko7cXdRO5brAGvPuDb9c1eFuvg/HQ
-        0NuaOs8FZwZtDRDDln1CWHFlh44+zdDWe5C1YMIDFx33lFm4IkvIBPFM5cbln/n9
-        k1+IDCcCYiervw==
-X-ME-Sender: <xms:JGJJYb_Kwwv4eSON9kMtZgL4XlO-k9KVjFA_GBxA6jJ01IpFYnmH8A>
-    <xme:JGJJYXsJj7z-thxhTufz1LOe7G4gqyNLBLpOlvOVa3dlVTpq6FKsfcxWfysznQq6y
-    Z61OWF52fJiVH92Wg>
-X-ME-Received: <xmr:JGJJYZDjLyqMOsUmLsVP-bZxEwfwyqCiOUgn_vPs0C2tlEw-F1EMtOrlHC6wohm4R1qxsmtqtr15XD4WEdX2Ba-2G0ojaEGW0-sVbajYiwWqd9_Mi405OPIWCU4n8GKu>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrudeifedgkeehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgjfhgggfestdekre
-    dtredttdenucfhrhhomheptehnughrvgifucflvghffhgvrhihuceorghnughrvgifsegr
-    jhdrihgurdgruheqnecuggftrfgrthhtvghrnhepjefgvdevheetkeevgeegleelgfelte
-    etjeffleffvdduudevieffgeetleevhfetnecuvehluhhsthgvrhfuihiivgeptdenucfr
-    rghrrghmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruh
-X-ME-Proxy: <xmx:JGJJYXeweurpS3bg_med2GjX-hkOd-RGQsVJNTqGMedrftvykvTqqg>
-    <xmx:JGJJYQPRvyyFL5x-W5q3xP66PldTCvNzinPdpqwjbXtybc0BK96Gng>
-    <xmx:JGJJYZlMHy0zp36jc4j0EfiL5s4e_GTiTlg7dWVrymXEF0rJmFgYig>
-    <xmx:JWJJYRGqGEJw5XxS3fK35STFU730lNNhdDrCFz2M23SRYMA6N5UKk0Q-e2A>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 21 Sep 2021 00:40:00 -0400 (EDT)
-From:   Andrew Jeffery <andrew@aj.id.au>
-To:     linux-leds@vger.kernel.org, linux-gpio@vger.kernel.org
-Cc:     clg@kaod.org, robh+dt@kernel.org, joel@jms.id.au, pavel@ucw.cz,
-        linus.walleij@linaro.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        andy.shevchenko@gmail.com
-Subject: [PATCH 2/2] leds: pca955x: Allow zero LEDs to be specified
-Date:   Tue, 21 Sep 2021 14:09:36 +0930
-Message-Id: <20210921043936.468001-3-andrew@aj.id.au>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210921043936.468001-1-andrew@aj.id.au>
-References: <20210921043936.468001-1-andrew@aj.id.au>
+        id S230078AbhIUHKe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Sep 2021 03:10:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48438 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230107AbhIUHK3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Sep 2021 03:10:29 -0400
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 047E0C061575
+        for <linux-gpio@vger.kernel.org>; Tue, 21 Sep 2021 00:08:49 -0700 (PDT)
+Received: by mail-wr1-x435.google.com with SMTP id q11so36191601wrr.9
+        for <linux-gpio@vger.kernel.org>; Tue, 21 Sep 2021 00:08:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Cyc6wAvsiYvYVdHCei88zIBgag7U9mJqxcUyH3r1CWM=;
+        b=EQ6/tvjLOGJ2R/hFuNnnTCnC3AcN5Ge1Dz3gKT8j2pYOuibo305AQJBZ28DeSmOwey
+         kgy2cyVUs/8oOsaprC3nuq2fBpukx47phqrIvU2glPkoMWq6t2gzOWSs0Mn+9RwHiJN+
+         lwvpXENzFUrZYGWwtwbWjOxPsO5d32qtFdDIca8DcC8yUYzTKLm63eiTUO0iUM/NkMiG
+         OzuWjrwmGZWqvOiP7z+RCa6OI/vzA19wb+zFsyJeiYrIVOOEepCGECJ4jmHQ61b9k+8p
+         pATfcSEH8tYyMdeTvkMn76kTisaNd4zYTqVyTA7j7Ir+87DSM8yr6SBWe01TN3GpzQ+T
+         VlNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Cyc6wAvsiYvYVdHCei88zIBgag7U9mJqxcUyH3r1CWM=;
+        b=FLgom/vMxZwlkeDNLLL8wPxE4w2sJL0DTOe3jVNONhmCy9+BM6oOb0qcMh27kcRuML
+         R+r2HFMzVRjRrvtm4imh40P5bXUVfHBunls4ihTvE4ihMa4lvbib1DvEpN1M9YGmHhJ1
+         9LEOn0MmgFzpIJEdBBr5ra9wwRKjbWVRuPG5Ivt7FZYF1IN1UY+rtpzM5P/ixZmvxuSQ
+         4Q3SWoXqmRpVA9uLOlm8XeZ98bIJMusR72SRqKMkXBkaiLdKaKK8IVX/ojv43FHj55QY
+         GvQQiIcgred573v6DKofxJQPEV6DR57Bc5PMSpZ3mfD1uH/KlZ0uAb/L//T0qXZf0Plo
+         vP/w==
+X-Gm-Message-State: AOAM533KA9yPNMCJ8r0GpyX9KaKOw2A5y5kEXtMu3obuqmUaRnSuXImW
+        aC3jpi8E5TPw2QMCeVHzVBxaEA==
+X-Google-Smtp-Source: ABdhPJyPQ/o1Rh01pdww1XQiFIlGSq+2ub4xW3Lao90e3fivXN469GPYJVCY/MaD/ditL/22MZeDcw==
+X-Received: by 2002:a1c:28b:: with SMTP id 133mr2886271wmc.14.1632208127619;
+        Tue, 21 Sep 2021 00:08:47 -0700 (PDT)
+Received: from google.com ([95.148.6.233])
+        by smtp.gmail.com with ESMTPSA id g22sm1654479wmp.39.2021.09.21.00.08.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Sep 2021 00:08:47 -0700 (PDT)
+Date:   Tue, 21 Sep 2021 08:08:44 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Will McVicker <willmcvicker@google.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        kernel-team@android.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v1 0/4] arm64: Kconfig: Update ARCH_EXYNOS select configs
+Message-ID: <YUmE/LqlFCiongfn@google.com>
+References: <20210920190350.3860821-1-willmcvicker@google.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210920190350.3860821-1-willmcvicker@google.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-It's valid to use the PCA955x devices just for GPIOs and not for LEDs.
-In this case, as PCA955X_TYPE_GPIO is now equivalent to
-PCA955X_TYPE_NONE, remove the test for whether we have any child nodes
-specified in the devicetree.
+On Mon, 20 Sep 2021, Will McVicker wrote:
 
-A consequence of this is it's now possible to bind the driver to a
-PCA955x device when dynamically instantiated through the I2C subsystem's
-`new_device` interface.
+> This patch series tries to address the issue of ARCH_EXYNOS force selecting
+> a handful of drivers without allowing the vendor to override any of the
+> default configs. This takes away from the flexibilty of compiling a generic
+> kernel with exynos kernel modules. For example, it doesn't allow vendors to
+> modularize these drivers out of the core kernel in order to share a generic
+> kernel image across multiple devices that require device-specific kernel
+> modules.
+> 
+> To address this without impacting the existing behavior, this series
+> switches the default config logic for the offending configs to use "default
+> y if ARCH_EXYNOS" versus having ARCH_EXYNOS directly select them. I have
+> verified that these patches do not impact the default aarch64 .config.
+> 
+> Will McVicker (4):
+>   clk: samsung: change COMMON_CLK_SAMSUNG default config logic
+>   soc: samsung: change SOC_SAMSUNG default config logic
+>   pinctrl: samsung: change PINCTRL_EXYNOS default config logic
+>   rtc: change HAVE_S3C_RTC default config logic
+> 
+>  arch/arm64/Kconfig.platforms    | 7 -------
+>  drivers/clk/samsung/Kconfig     | 1 +
+>  drivers/pinctrl/samsung/Kconfig | 1 +
+>  drivers/rtc/Kconfig             | 1 +
+>  drivers/soc/samsung/Kconfig     | 4 ++++
+>  5 files changed, 7 insertions(+), 7 deletions(-)
 
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
----
- drivers/leds/leds-pca955x.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+For all patches in the series:
 
-diff --git a/drivers/leds/leds-pca955x.c b/drivers/leds/leds-pca955x.c
-index 77c0f461ab95..81aaf21212d7 100644
---- a/drivers/leds/leds-pca955x.c
-+++ b/drivers/leds/leds-pca955x.c
-@@ -429,7 +429,7 @@ pca955x_get_pdata(struct i2c_client *client, struct pca955x_chipdef *chip)
- 	int count;
- 
- 	count = device_get_child_node_count(&client->dev);
--	if (!count || count > chip->bits)
-+	if (count > chip->bits)
- 		return ERR_PTR(-ENODEV);
- 
- 	pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
+Reviewed-by: Lee Jones <lee.jones@linaro.org>
+
 -- 
-2.30.2
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
