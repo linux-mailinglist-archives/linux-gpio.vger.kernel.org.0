@@ -2,128 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 01AC8413AC9
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Sep 2021 21:30:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D54A0413B41
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Sep 2021 22:23:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234524AbhIUTcT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Sep 2021 15:32:19 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:18568 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S233960AbhIUTcS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 21 Sep 2021 15:32:18 -0400
-X-IronPort-AV: E=Sophos;i="5.85,311,1624287600"; 
-   d="scan'208";a="94721296"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 22 Sep 2021 04:30:48 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 2883940E82C9;
-        Wed, 22 Sep 2021 04:30:45 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh+dt@kernel.org>,
+        id S234802AbhIUUYw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Sep 2021 16:24:52 -0400
+Received: from mail-ot1-f48.google.com ([209.85.210.48]:36746 "EHLO
+        mail-ot1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230348AbhIUUYv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Sep 2021 16:24:51 -0400
+Received: by mail-ot1-f48.google.com with SMTP id 5-20020a9d0685000000b0054706d7b8e5so250498otx.3;
+        Tue, 21 Sep 2021 13:23:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=eAPlaFllVauSFXh1QwSW2AiMtJcGPxVfXAMwNAaKx/w=;
+        b=yLfg5yBlfg+Wm93QjzOJ6Q1pKz/TFPlrQuGaOy2mdwSkoad2tnMAnJQ6WY0XWa/vZz
+         iAnRLLkf1jfXeCekSc7MSYN7U/O6qrmbuU+p2prZBkLbKjpixc6zdFlB0SBJ8C7nGHkv
+         QptHDMtst6lSp5Mrp5r/T5K6DyZ0tahrgeyz9k5V4aZ9232QbZPj2N45JBVepR46Ar88
+         VgChcQABX3uB0+Prs/GMfl9r8GDjiN2dFmmN+wmncJGV9FhAIZfVpIXueM8t4o94wxWf
+         RK0ZS4+cb446EgXtVswUl5kuBkVCWMWxtyEy3AysoAjy9r9m1gi2UWmnYrIXPsxSN5NG
+         FhMA==
+X-Gm-Message-State: AOAM533ddwi7f/YBY5XFnWvp4pRShtLIYmOCAguXjZVsvSw873c+4uRy
+        6rhVDHdG2kgSNCEGso54xQ==
+X-Google-Smtp-Source: ABdhPJwlCzT76A2X71MUUHuBQHrdQeBr9zZo6I0T3GGGu8t0KhUopsg+GWBWrkBZGY5Tfh7Vwamwcw==
+X-Received: by 2002:a9d:7759:: with SMTP id t25mr27689033otl.245.1632255802377;
+        Tue, 21 Sep 2021 13:23:22 -0700 (PDT)
+Received: from robh.at.kernel.org (rrcs-192-154-179-36.sw.biz.rr.com. [192.154.179.36])
+        by smtp.gmail.com with ESMTPSA id i25sm9958otf.31.2021.09.21.13.23.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Sep 2021 13:23:21 -0700 (PDT)
+Received: (nullmailer pid 3268058 invoked by uid 1000);
+        Tue, 21 Sep 2021 20:23:19 -0000
+Date:   Tue, 21 Sep 2021 15:23:19 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Subbaraman Narayanamurthy <quic_subbaram@quicinc.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [RFC PATCH v2 4/4] arm64: dts: renesas: r9a07g044: Add IRQC node to SoC DTSI
-Date:   Tue, 21 Sep 2021 20:30:28 +0100
-Message-Id: <20210921193028.13099-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210921193028.13099-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20210921193028.13099-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom-pmic-gpio: Add
+ output-{enable,disable} properties
+Message-ID: <YUo/N4Y3drE63+6n@robh.at.kernel.org>
+References: <1631588246-4811-1-git-send-email-quic_subbaram@quicinc.com>
+ <1631588246-4811-2-git-send-email-quic_subbaram@quicinc.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1631588246-4811-2-git-send-email-quic_subbaram@quicinc.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add IRQC node to R9A07G044 (RZ/G2L) SoC DTSI.
+On Mon, 13 Sep 2021 19:57:25 -0700, Subbaraman Narayanamurthy wrote:
+> Add support for the pinconf DT property output-enable, output-disable
+> so that output can be enabled/disabled.
+> 
+> Signed-off-by: Subbaraman Narayanamurthy <quic_subbaram@quicinc.com>
+> ---
+>  Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- arch/arm64/boot/dts/renesas/r9a07g044.dtsi | 58 ++++++++++++++++++++++
- 1 file changed, 58 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/renesas/r9a07g044.dtsi b/arch/arm64/boot/dts/renesas/r9a07g044.dtsi
-index 9c170db544d2..d10cedeb5880 100644
---- a/arch/arm64/boot/dts/renesas/r9a07g044.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r9a07g044.dtsi
-@@ -388,6 +388,8 @@
- 			reg = <0 0x11030000 0 0x10000>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
-+			interrupt-parent = <&irqc>;
-+			interrupt-controller;
- 			gpio-ranges = <&pinctrl 0 0 392>;
- 			clocks = <&cpg CPG_MOD R9A07G044_GPIO_HCLK>;
- 			power-domains = <&cpg>;
-@@ -396,6 +398,62 @@
- 				 <&cpg R9A07G044_GPIO_SPARE_RESETN>;
- 		};
- 
-+		irqc: interrupt-controller@110a0000 {
-+			compatible = "renesas,r9a07g044-irqc",
-+				     "renesas,rzg2l-irqc";
-+			#interrupt-cells = <2>;
-+			#address-cells = <0>;
-+			interrupt-controller;
-+			reg = <0 0x110a0000 0 0x10000>;
-+			interrupts =
-+				<GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 444 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 445 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 446 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 447 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 448 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 449 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 450 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 451 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 452 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 453 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 454 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 455 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 456 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 457 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 458 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 459 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 460 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 461 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 462 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 463 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 464 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 465 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 466 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 467 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 468 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 469 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 470 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 471 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 472 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 473 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 474 IRQ_TYPE_LEVEL_HIGH>,
-+				<GIC_SPI 475 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD R9A07G044_IA55_CLK>,
-+				 <&cpg CPG_MOD R9A07G044_IA55_PCLK>;
-+			clock-names = "clk", "pclk";
-+			power-domains = <&cpg>;
-+			resets = <&cpg R9A07G044_IA55_RESETN>;
-+		};
-+
- 		dmac: dma-controller@11820000 {
- 			compatible = "renesas,r9a07g044-dmac",
- 				     "renesas,rz-dmac";
--- 
-2.17.1
-
+Acked-by: Rob Herring <robh@kernel.org>
