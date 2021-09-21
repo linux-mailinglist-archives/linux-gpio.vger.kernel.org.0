@@ -2,23 +2,23 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E608413ABD
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Sep 2021 21:30:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 57F1E413ABF
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Sep 2021 21:30:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231465AbhIUTcI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Sep 2021 15:32:08 -0400
-Received: from relmlor2.renesas.com ([210.160.252.172]:18568 "EHLO
-        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S229519AbhIUTcH (ORCPT
+        id S234584AbhIUTcP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Sep 2021 15:32:15 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:29954 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S229519AbhIUTcK (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 21 Sep 2021 15:32:07 -0400
+        Tue, 21 Sep 2021 15:32:10 -0400
 X-IronPort-AV: E=Sophos;i="5.85,311,1624287600"; 
-   d="scan'208";a="94721283"
+   d="scan'208";a="94607066"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 22 Sep 2021 04:30:36 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 22 Sep 2021 04:30:39 +0900
 Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 504CE40E82D7;
-        Wed, 22 Sep 2021 04:30:34 +0900 (JST)
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 499C840E82C9;
+        Wed, 22 Sep 2021 04:30:37 +0900 (JST)
 From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To:     Marc Zyngier <maz@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -31,76 +31,160 @@ Cc:     linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         Prabhakar <prabhakar.csengg@gmail.com>,
         Biju Das <biju.das.jz@bp.renesas.com>,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [RFC PATCH v2 0/4] Renesas RZ/G2L IRQC support
-Date:   Tue, 21 Sep 2021 20:30:24 +0100
-Message-Id: <20210921193028.13099-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [RFC PATCH v2 1/4] dt-bindings: interrupt-controller: Add Renesas RZ/G2L Interrupt Controller
+Date:   Tue, 21 Sep 2021 20:30:25 +0100
+Message-Id: <20210921193028.13099-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20210921193028.13099-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20210921193028.13099-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi All,
+Add DT bindings for the Renesas RZ/G2L Interrupt Controller.
 
-The RZ/G2L Interrupt Controller is a front-end for the GIC found on
-Renesas RZ/G2L SoC's with below pins:
-- IRQ sense select for 8 external interrupts, mapped to 8 GIC SPI interrupts
-- GPIO pins used as external interrupt input pins out of GPIOINT0-122 a
-  maximum of only 32 can be mapped to 32 GIC SPI interrupts,
-- NMI edge select.
-
-                                                                _____________
-                                                                |    GIC     |
-                                                                |  ________  |
-                                         ____________           | |        | |
-NMI ------------------------------------>|          |  SPI0-479 | | GIC-600| |
-                _______                  |          |------------>|        | |
-                |      |                 |          |  PPI16-31 | |        | |
-                |      | IRQ0-IRQ8       |   IRQC   |------------>|        | |
-P0_P48_4 ------>| GPIO |---------------->|          |           | |________| |
-                |      |GPIOINT0-122     |          |           |            |
-                |      |---------------->| TINT0-31 |           |            |
-                |______|                 |__________|           |____________|
-
-The proposed RFC patches, add the IRQ domains in GPIO (pinctrl driver) and the
-IRQC driver. The IRQC domain handles the actual SPI interrupt and upon reception
-of the interrupt it propagates to the GPIO IRQ domain to handle virq.
-Out of GPIOINT0-122 only 32 can be mapped to GIC SPI, this mapping is handled by
-the IRQC driver.
-
-Current implementation only supports TINT interrupts.
-
-Cheers,
-Prabhakar
-
-Changes for v2:
--> Re-structured the driver as a chained handler
--> Moved gpio verification to pinctrl driver
--> Added locks to protect read/write
--> Fixed propagating of irq (v1 queried the pinctrl irq domain to propagate)
--> To keep it simple dropped edge both support
--> Used relaxed accessors
--> Switched to use generic_handle_domain_irq()
--> Used irq_domain_translate_twocell() instead of custom callback
-
-Lad Prabhakar (4):
-  dt-bindings: interrupt-controller: Add Renesas RZ/G2L Interrupt
-    Controller
-  irqchip: Add RZ/G2L IA55 Interrupt Controller driver
-  pinctrl: renesas: pinctrl-rzg2l: Add IRQ domain to handle GPIO
-    interrupt
-  arm64: dts: renesas: r9a07g044: Add IRQC node to SoC DTSI
-
- .../renesas,rzg2l-irqc.yaml                   | 130 ++++++
- arch/arm64/boot/dts/renesas/r9a07g044.dtsi    |  58 +++
- drivers/irqchip/Kconfig                       |   9 +
- drivers/irqchip/Makefile                      |   1 +
- drivers/irqchip/irq-renesas-rzg2l.c           | 393 ++++++++++++++++++
- drivers/pinctrl/renesas/pinctrl-rzg2l.c       | 214 ++++++++++
- drivers/soc/renesas/Kconfig                   |   1 +
- 7 files changed, 806 insertions(+)
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+ .../renesas,rzg2l-irqc.yaml                   | 130 ++++++++++++++++++
+ 1 file changed, 130 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rzg2l-irqc.yaml
- create mode 100644 drivers/irqchip/irq-renesas-rzg2l.c
 
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,rzg2l-irqc.yaml b/Documentation/devicetree/bindings/interrupt-controller/renesas,rzg2l-irqc.yaml
+new file mode 100644
+index 000000000000..ab1848d537aa
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rzg2l-irqc.yaml
+@@ -0,0 +1,130 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/interrupt-controller/renesas,rzg2l-irqc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Renesas RZ/G2L Interrupt Controller
++
++maintainers:
++  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
++  - Geert Uytterhoeven <geert+renesas@glider.be>
++
++description: |
++  The RZ/G2L Interrupt Controller is a front-end for the GIC found on Renesas RZ/G2L SoC's
++    - IRQ sense select for 8 external interrupts, mapped to 8 GIC SPI interrupts
++    - GPIO pins used as external interrupt input pins, mapped to 32 GIC SPI interrupts
++    - NMI edge select (NMI is not treated as NMI exception and supports fall edge and
++      stand-up edge detection interrupts)
++
++allOf:
++  - $ref: /schemas/interrupt-controller.yaml#
++
++properties:
++  compatible:
++    items:
++      - enum:
++          - renesas,r9a07g044-irqc # RZ/G2L
++      - const: renesas,rzg2l-irqc
++
++  '#interrupt-cells':
++    const: 2
++
++  '#address-cells':
++    const: 0
++
++  interrupt-controller: true
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    description: Specifies the GIC interrupts.
++    maxItems: 41
++
++  clocks:
++    maxItems: 2
++
++  clock-names:
++    items:
++      - const: clk
++      - const: pclk
++
++  power-domains:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++required:
++  - compatible
++  - '#interrupt-cells'
++  - '#address-cells'
++  - interrupt-controller
++  - reg
++  - interrupts
++  - clocks
++  - clock-names
++  - power-domains
++  - resets
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/clock/r9a07g044-cpg.h>
++
++    irqc: interrupt-controller@110a0000 {
++            compatible = "renesas,r9a07g044-irqc", "renesas,rzg2l-irqc";
++            #interrupt-cells = <2>;
++            #address-cells = <0>;
++            interrupt-controller;
++            reg = <0x110a0000 0x10000>;
++            interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 444 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 445 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 446 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 447 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 448 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 449 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 450 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 451 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 452 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 453 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 454 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 455 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 456 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 457 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 458 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 459 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 460 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 461 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 462 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 463 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 464 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 465 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 466 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 467 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 468 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 469 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 470 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 471 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 472 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 473 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 474 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 475 IRQ_TYPE_LEVEL_HIGH>;
++                        clocks = <&cpg CPG_MOD R9A07G044_IA55_CLK>,
++                                 <&cpg CPG_MOD R9A07G044_IA55_PCLK>;
++                        clock-names = "clk", "pclk";
++                        power-domains = <&cpg>;
++                        resets = <&cpg R9A07G044_IA55_RESETN>;
++    };
 -- 
 2.17.1
 
