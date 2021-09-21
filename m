@@ -2,95 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 53DA241333E
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Sep 2021 14:14:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 655C9413621
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Sep 2021 17:25:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231773AbhIUMPg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Sep 2021 08:15:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33266 "EHLO
+        id S234013AbhIUP1Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Sep 2021 11:27:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231211AbhIUMPf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Sep 2021 08:15:35 -0400
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74E4BC061574;
-        Tue, 21 Sep 2021 05:14:07 -0700 (PDT)
-Received: by mail-ed1-x52f.google.com with SMTP id v24so73536048eda.3;
-        Tue, 21 Sep 2021 05:14:07 -0700 (PDT)
+        with ESMTP id S233857AbhIUP1Q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Sep 2021 11:27:16 -0400
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7425C061575
+        for <linux-gpio@vger.kernel.org>; Tue, 21 Sep 2021 08:25:47 -0700 (PDT)
+Received: by mail-wr1-x42c.google.com with SMTP id t18so40347287wrb.0
+        for <linux-gpio@vger.kernel.org>; Tue, 21 Sep 2021 08:25:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EA2T5sDryf1wshg82J637OYfNBLeVAzy/N9k8uhkKT8=;
-        b=qZ6jLDrl1r/sGyHAotEko+QsWepOgK3neypqxen2BDwFbOyCNiD9DZZReBipSyZTKT
-         /HOeM4NPjWDsmGxDjphfovxqkD/d14Z7fM+h2ZA/8T9HeZcsKLW6BHJ1cqyN0SX73Zn7
-         jHZW693e1ONmRgl0WCnh6kEkwGUsWBmuKyKpy1SNr448N2wyrL2B9ZgLmepokfWtP4e2
-         3Knmk7jAIgBey5wfCM75OofTo/Swa2MkfVNn+H5gAoL0c9xK2oPPln0bwTBZJYbmgt2c
-         lDOs8hOio67hYgybSBI7mgZUVMtHvBltLbBvqs5PZaFOE0rDdVke74vywzEOJrYtYdYS
-         0m+g==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=dDzxxa5Lvo+gSE3fdEoxI3ZuoRWBLEBLy8XJ81TyYDY=;
+        b=ZjfSk25cctACsOQ1pNXcEn8R/vERSKAX2EStYiFxTKO4SwFRhuhsBfmdkdPdBHTICI
+         NuYIkES8OvoKCS+2Qiba9QQ38pmUPuZoCLNLjQEoGHFTqBXLeDhkvDTXnNtADmonzUQR
+         MiVDMPZD/DbYvWiCe66lotjzSfyBpleeYLZURbAUc37ovouVt9PsQUXsJsdPF/bsUOhj
+         sbbStA4MoZIA9GGNZ6c0qHvqtpjrziosKw6S9i5wGp/9Lfh/1p7WT+53slB1MTaw5VrI
+         fBnlbgMgblD+RlM0GMsnoXMLfZK0qKrDtnEJT3SCncPICmlg8uCEBj3qE2uWVjBL7aZF
+         HGPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EA2T5sDryf1wshg82J637OYfNBLeVAzy/N9k8uhkKT8=;
-        b=8JRFM0PWMae4z+5qZ3xwMqhMFxYAtFDHfrMqktlAUDpG9lrxzLBanYO+LYGxb/Kt+V
-         q9LQJaM2HVyUBKZOLQppB7Lxg8A82p+9vdxDByi5cI/5xxh9lWy0hxSnVIRCtVhMGnvG
-         9OViNeMODVjc4ETnSILQ+wk8CSPOnKI4leKWxjab2rWYNneTThf8Dt1EKu6lKBzY1zQz
-         KdQph8dMPZztXm1JR20OrRNCVyJTwqKxnDn+UCiRtvXOWYnZXIqgvMmX3OYx+Rm6mtJw
-         ircg6dfz/x6HYmxg0mPGu6mNH7YVtPAzvb6sEniCMEzo1Drvle/deayKbejIvdk26ACm
-         l2WA==
-X-Gm-Message-State: AOAM5312WFcCbrcaOZN7JgZRKakXCrozZFEVzUJavAreL6W8ihcZB/X9
-        4/bdlNBr524oeJYsTurnbIsuQJa2sODKdNpAB1A=
-X-Google-Smtp-Source: ABdhPJzYckj7Qew5qhg3H25MAZrv1yE2lUHXGxCKD0KdGmz+WWCcporJRB70briSvnRZrWy+dQE8/VzVKcELZ0f7iLg=
-X-Received: by 2002:a50:e188:: with SMTP id k8mr14443733edl.119.1632226442003;
- Tue, 21 Sep 2021 05:14:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210816104119.75019-1-hdegoede@redhat.com> <YRpWxnZvM2kzjcX/@smile.fi.intel.com>
- <e7c1b41a-4d11-21f4-0add-9b6dd00a8da6@redhat.com> <16df7a43-919b-5ad7-7ca7-025c669ba32f@redhat.com>
-In-Reply-To: <16df7a43-919b-5ad7-7ca7-025c669ba32f@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 21 Sep 2021 15:13:23 +0300
-Message-ID: <CAHp75VfhCswzUQA0veYE0OmqOitbnqYo5EnmycV2j69+0n+unw@mail.gmail.com>
-Subject: Re: [PATCH regression fix v2] gpiolib: acpi: Make set-debounce-timeout
- failures non fatal
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=dDzxxa5Lvo+gSE3fdEoxI3ZuoRWBLEBLy8XJ81TyYDY=;
+        b=ErqIlT0F0vJNB3VwmfWR9sOqpUNFVoc+PER8GQd8CtBoBPo1fOrKLdkH9ztAcMLTXQ
+         CoZ/ZC5CnMErNmO8bUX/V/8XLFw0BTPQufdnHbp6y0ocISjK+/XhweR5tcuMB1/Xpehg
+         W6WO/FA1Qd1pxBsWPZyxyG1/zVRL6j53R8XIAmwX9YU/Q/jkCt8Dp0qEDtN3wCL7l0wL
+         Hz1HTzqDNoLW5wmwBbSHKPTXi9HmD0Lv9KcWTLQYIINb6x7sjMuQW4rwOXpU2Gt04FZ5
+         1YV09Fevu52CEy5sspx6/RigVKom2UyNGbSfHbL1a2f+m3cXBMWu27Of7XK23EF6aML8
+         eMjA==
+X-Gm-Message-State: AOAM531nX5G17IpEHOGB+XlfNnEWm4/JZx+yW67kWYrphOd1+LSkaUQR
+        L5TLUdUpEtyRzkadNzpkoGqrnQ==
+X-Google-Smtp-Source: ABdhPJyoLJdvyxpRfhWBg1ob+t87CcgTMBV5MNdCG8EfJsU+Hj/gKLDqQtpSNcrNpBCGddHrnYdcTg==
+X-Received: by 2002:adf:f4ca:: with SMTP id h10mr35948315wrp.159.1632237945765;
+        Tue, 21 Sep 2021 08:25:45 -0700 (PDT)
+Received: from google.com ([95.148.6.233])
+        by smtp.gmail.com with ESMTPSA id i18sm19614209wrn.64.2021.09.21.08.25.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Sep 2021 08:25:45 -0700 (PDT)
+Date:   Tue, 21 Sep 2021 16:25:43 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v1 3/4] mfd: intel_quark_i2c_gpio: Convert GPIO to use
+ software nodes
+Message-ID: <YUn5d6157uUHpDRz@google.com>
+References: <20210726125436.58685-1-andriy.shevchenko@linux.intel.com>
+ <20210726125436.58685-3-andriy.shevchenko@linux.intel.com>
+ <YRpihHP3kDz5nYV9@google.com>
+ <CAHp75VdcWsNFervoU7e4_m7qVKAnWXzF2z2mUgKg06-qmwn-2A@mail.gmail.com>
+ <YRppKOxp4Jya5iEI@google.com>
+ <YRpva4gS1LfncPUj@smile.fi.intel.com>
+ <YRpz5UEDQbpewq5o@google.com>
+ <CAHp75VczCKwNQE8k6_e9Trk0qkD2EumFVxxG5w2BTYhiOTDUzA@mail.gmail.com>
+ <YRtkt8e25ZSeOICx@google.com>
+ <CAHp75Ve-24wno-z8rQSCtgBdf6_a70TFf3aCJPP7JSFPG8sfhg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75Ve-24wno-z8rQSCtgBdf6_a70TFf3aCJPP7JSFPG8sfhg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 20, 2021 at 7:47 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> On 8/16/21 2:28 PM, Hans de Goede wrote:
-> > On 8/16/21 2:15 PM, Andy Shevchenko wrote:
-> >> On Mon, Aug 16, 2021 at 12:41:19PM +0200, Hans de Goede wrote:
+On Tue, 17 Aug 2021, Andy Shevchenko wrote:
 
-...
-
-> >> Yes, I also think that we need to choose upper debounce instead of rejecting
-> >> the settings. And yes, I agree that for now it's not suitable as a fix.
-> >>
-> >> That said,
-> >> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> On Tue, Aug 17, 2021 at 10:26 AM Lee Jones <lee.jones@linaro.org> wrote:
+> > On Mon, 16 Aug 2021, Andy Shevchenko wrote:
+> > > On Mon, Aug 16, 2021 at 5:19 PM Lee Jones <lee.jones@linaro.org> wrote:
+> > > > On Mon, 16 Aug 2021, Andy Shevchenko wrote:
+> 
+> ...
+> 
+> > > > > > > Would it be okay for you to pull the immutable tag?
+> > > > > >
+> > > > > > What immutable tag?
+> > > > >
+> > > > > It's here:
+> > > > > https://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel.git/tag/?h=intel-gpio-v5.15-1
+> > > >
+> > > > My Ack can't be merged like that.
+> > >
+> > > Which one? There are two on different patches.
 > >
-> > Thank you.
+> > The one that I specifically said was "for my own reference".
 > >
-> > FYI, I've prepared a patch to choose the upper debounce time for
-> > pintctrl-baytrail . I'll test it when I'm back home tonight and
-> > then submit it upstream.
->
-> Ugh, I just noticed that this is still not upstream (not in v5.15-rc2), while this is
-> a regression fix!
+> > > Do you have any documentation on the rules you imply by MFD?
+> >
+> > No, the documentation is provided with the tag.
+> 
+> I see.
 
-I think it was late for Bart to pick this up.
-
-> Can we please get this merged and send to Linus ASAP ?
-
-I'm on vacations now, but if Mika or Bart or Linus can handle this, my
-tag is there :)
+And now the patch is merged with an invalid tag! *facepalm*
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
