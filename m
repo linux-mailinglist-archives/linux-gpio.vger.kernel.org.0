@@ -2,396 +2,406 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AF3874129BA
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Sep 2021 02:03:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 92C9E4129FC
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Sep 2021 02:35:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343557AbhIUAE4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Sep 2021 20:04:56 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:38976 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S239629AbhIUACz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Sep 2021 20:02:55 -0400
-Received: from Internal Mail-Server by MTLPINE1 (envelope-from asmaa@mellanox.com)
-        with SMTP; 21 Sep 2021 00:22:39 +0300
-Received: from farm-0002.mtbu.labs.mlnx (farm-0002.mtbu.labs.mlnx [10.15.2.32])
-        by mtbu-labmailer.labs.mlnx (8.14.4/8.14.4) with ESMTP id 18KLMd2Z030017;
-        Mon, 20 Sep 2021 17:22:39 -0400
-Received: (from asmaa@localhost)
-        by farm-0002.mtbu.labs.mlnx (8.14.7/8.13.8/Submit) id 18KLMdLu019407;
-        Mon, 20 Sep 2021 17:22:39 -0400
-From:   Asmaa Mnebhi <asmaa@nvidia.com>
-To:     andy.shevchenko@gmail.com, linux-gpio@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Cc:     Asmaa Mnebhi <asmaa@nvidia.com>, andrew@lunn.ch, kuba@kernel.org,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        davem@davemloft.net, rjw@rjwysocki.net, davthompson@nvidia.com
-Subject: [PATCH v2 2/2] net: mellanox: mlxbf_gige: Replace non-standard interrupt handling
-Date:   Mon, 20 Sep 2021 17:22:27 -0400
-Message-Id: <20210920212227.19358-3-asmaa@nvidia.com>
-X-Mailer: git-send-email 2.30.1
-In-Reply-To: <20210920212227.19358-1-asmaa@nvidia.com>
-References: <20210920212227.19358-1-asmaa@nvidia.com>
+        id S232982AbhIUAhO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Sep 2021 20:37:14 -0400
+Received: from mail-ot1-f44.google.com ([209.85.210.44]:33507 "EHLO
+        mail-ot1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230220AbhIUAfO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Sep 2021 20:35:14 -0400
+Received: by mail-ot1-f44.google.com with SMTP id c42-20020a05683034aa00b0051f4b99c40cso26081297otu.0;
+        Mon, 20 Sep 2021 17:33:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VIa4zdp3kh2TcYzsvkaVK/0mnbZVdr+MD6ZR4rOXDGU=;
+        b=J14FyAx5K3itruOSuXEdOFG9zoadcZXgH7NnTrtjwycEQsG1M6BC/on+z9y6/QB1I0
+         9eEnBefkFdtc4eGXsIhyuofYa7pdNZncTNR6e9R/Paymmc+l3DzSWwm7fh1LGpfkyGgF
+         UtIiPIr7BWqe6sPUn57tkh9GZMA3uYJsltJsdLL1dGMYAXbqwl3J64pRbZZEhfTRlwDB
+         bpGXgtNL/DJSz0Xs0v+WrNL8lJTPF065bLR+aO6xryQ6eVVTPSfRLctmL/XKWtbCD1+4
+         HqJxxyKY+JFRwB3CoetdcEPIugJ3UVx1B3hghdCyzj0yOw8Io4jVEN43HXUbsihIkagx
+         roKA==
+X-Gm-Message-State: AOAM530qZoA0gjs+lTY+w9s+/bzZ1vxbCIlzfOeL2OIPLX6ndhMYJQ9V
+        Z3D4rG+xyxvJDWpxEtpZ1w==
+X-Google-Smtp-Source: ABdhPJwDdWkoSRHqQ7lpkmLFCB50sfEprcHRmxYJjWVSK9KvLHqBEe2JV4sLzjMzXUY2p437Flyv0w==
+X-Received: by 2002:a9d:4042:: with SMTP id o2mr21775787oti.332.1632184426218;
+        Mon, 20 Sep 2021 17:33:46 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id d23sm3110339ook.47.2021.09.20.17.33.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Sep 2021 17:33:45 -0700 (PDT)
+Received: (nullmailer pid 1135344 invoked by uid 1000);
+        Tue, 21 Sep 2021 00:33:44 -0000
+Date:   Mon, 20 Sep 2021 19:33:44 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     heiko@sntech.de, linus.walleij@linaro.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] dt-bindings: pinctrl: convert rockchip,pinctrl.txt to
+ YAML
+Message-ID: <YUkoaGU60xXKQmyf@robh.at.kernel.org>
+References: <20210908151246.8781-1-jbx6244@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210908151246.8781-1-jbx6244@gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Since the GPIO driver (gpio-mlxbf2.c) supports interrupt
-handling, replace the custom routine with simple IRQ
-request.
+On Wed, Sep 08, 2021 at 05:12:46PM +0200, Johan Jonker wrote:
+> Convert rockchip,pinctrl.txt to YAML
+> 
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> ---
+> 
+> Note for rob+dt:
+> 
+> To reduce notifications and to support legacy DT the patternProperties
+> regex is:
+> "gpio[0-8]?@[0-9a-f]+$"
+> 
+> or should we move to:
+> "gpio@[0-9a-f]+$"
+> and change all Rockchip pinctrl DT nodes?
 
-Signed-off-by: Asmaa Mnebhi <asmaa@nvidia.com>
----
- .../net/ethernet/mellanox/mlxbf_gige/Makefile |   1 -
- .../ethernet/mellanox/mlxbf_gige/mlxbf_gige.h |  12 -
- .../mellanox/mlxbf_gige/mlxbf_gige_gpio.c     | 212 ------------------
- .../mellanox/mlxbf_gige/mlxbf_gige_main.c     |  22 +-
- 4 files changed, 9 insertions(+), 238 deletions(-)
- delete mode 100644 drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_gpio.c
+Better to have the warnings as a todo to fix than appear to endorse 
+'gpio[0-8]' IMO.
 
-diff --git a/drivers/net/ethernet/mellanox/mlxbf_gige/Makefile b/drivers/net/ethernet/mellanox/mlxbf_gige/Makefile
-index e57c1375f236..a97c2bef846b 100644
---- a/drivers/net/ethernet/mellanox/mlxbf_gige/Makefile
-+++ b/drivers/net/ethernet/mellanox/mlxbf_gige/Makefile
-@@ -3,7 +3,6 @@
- obj-$(CONFIG_MLXBF_GIGE) += mlxbf_gige.o
- 
- mlxbf_gige-y := mlxbf_gige_ethtool.o \
--		mlxbf_gige_gpio.o \
- 		mlxbf_gige_intr.o \
- 		mlxbf_gige_main.o \
- 		mlxbf_gige_mdio.o \
-diff --git a/drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige.h b/drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige.h
-index e3509e69ed1c..86826a70f9dd 100644
---- a/drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige.h
-+++ b/drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige.h
-@@ -51,11 +51,6 @@
- #define MLXBF_GIGE_ERROR_INTR_IDX       0
- #define MLXBF_GIGE_RECEIVE_PKT_INTR_IDX 1
- #define MLXBF_GIGE_LLU_PLU_INTR_IDX     2
--#define MLXBF_GIGE_PHY_INT_N            3
--
--#define MLXBF_GIGE_MDIO_DEFAULT_PHY_ADDR 0x3
--
--#define MLXBF_GIGE_DEFAULT_PHY_INT_GPIO 12
- 
- struct mlxbf_gige_stats {
- 	u64 hw_access_errors;
-@@ -81,11 +76,7 @@ struct mlxbf_gige {
- 	struct platform_device *pdev;
- 	void __iomem *mdio_io;
- 	struct mii_bus *mdiobus;
--	void __iomem *gpio_io;
--	struct irq_domain *irqdomain;
--	u32 phy_int_gpio_mask;
- 	spinlock_t lock;      /* for packet processing indices */
--	spinlock_t gpio_lock; /* for GPIO bus access */
- 	u16 rx_q_entries;
- 	u16 tx_q_entries;
- 	u64 *tx_wqe_base;
-@@ -184,7 +175,4 @@ int mlxbf_gige_poll(struct napi_struct *napi, int budget);
- extern const struct ethtool_ops mlxbf_gige_ethtool_ops;
- void mlxbf_gige_update_tx_wqe_next(struct mlxbf_gige *priv);
- 
--int mlxbf_gige_gpio_init(struct platform_device *pdev, struct mlxbf_gige *priv);
--void mlxbf_gige_gpio_free(struct mlxbf_gige *priv);
--
- #endif /* !defined(__MLXBF_GIGE_H__) */
-diff --git a/drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_gpio.c b/drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_gpio.c
-deleted file mode 100644
-index a8d966db5715..000000000000
---- a/drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_gpio.c
-+++ /dev/null
-@@ -1,212 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only OR BSD-3-Clause
--
--/* Initialize and handle GPIO interrupt triggered by INT_N PHY signal.
-- * This GPIO interrupt triggers the PHY state machine to bring the link
-- * up/down.
-- *
-- * Copyright (C) 2021 NVIDIA CORPORATION & AFFILIATES
-- */
--
--#include <linux/acpi.h>
--#include <linux/bitfield.h>
--#include <linux/device.h>
--#include <linux/err.h>
--#include <linux/gpio/driver.h>
--#include <linux/interrupt.h>
--#include <linux/io.h>
--#include <linux/irq.h>
--#include <linux/irqdomain.h>
--#include <linux/irqreturn.h>
--#include <linux/platform_device.h>
--#include <linux/property.h>
--
--#include "mlxbf_gige.h"
--#include "mlxbf_gige_regs.h"
--
--#define MLXBF_GIGE_GPIO_CAUSE_FALL_EN		0x48
--#define MLXBF_GIGE_GPIO_CAUSE_OR_CAUSE_EVTEN0	0x80
--#define MLXBF_GIGE_GPIO_CAUSE_OR_EVTEN0		0x94
--#define MLXBF_GIGE_GPIO_CAUSE_OR_CLRCAUSE	0x98
--
--static void mlxbf_gige_gpio_enable(struct mlxbf_gige *priv)
--{
--	unsigned long flags;
--	u32 val;
--
--	spin_lock_irqsave(&priv->gpio_lock, flags);
--	val = readl(priv->gpio_io + MLXBF_GIGE_GPIO_CAUSE_OR_CLRCAUSE);
--	val |= priv->phy_int_gpio_mask;
--	writel(val, priv->gpio_io + MLXBF_GIGE_GPIO_CAUSE_OR_CLRCAUSE);
--
--	/* The INT_N interrupt level is active low.
--	 * So enable cause fall bit to detect when GPIO
--	 * state goes low.
--	 */
--	val = readl(priv->gpio_io + MLXBF_GIGE_GPIO_CAUSE_FALL_EN);
--	val |= priv->phy_int_gpio_mask;
--	writel(val, priv->gpio_io + MLXBF_GIGE_GPIO_CAUSE_FALL_EN);
--
--	/* Enable PHY interrupt by setting the priority level */
--	val = readl(priv->gpio_io + MLXBF_GIGE_GPIO_CAUSE_OR_EVTEN0);
--	val |= priv->phy_int_gpio_mask;
--	writel(val, priv->gpio_io + MLXBF_GIGE_GPIO_CAUSE_OR_EVTEN0);
--	spin_unlock_irqrestore(&priv->gpio_lock, flags);
--}
--
--static void mlxbf_gige_gpio_disable(struct mlxbf_gige *priv)
--{
--	unsigned long flags;
--	u32 val;
--
--	spin_lock_irqsave(&priv->gpio_lock, flags);
--	val = readl(priv->gpio_io + MLXBF_GIGE_GPIO_CAUSE_OR_EVTEN0);
--	val &= ~priv->phy_int_gpio_mask;
--	writel(val, priv->gpio_io + MLXBF_GIGE_GPIO_CAUSE_OR_EVTEN0);
--	spin_unlock_irqrestore(&priv->gpio_lock, flags);
--}
--
--static irqreturn_t mlxbf_gige_gpio_handler(int irq, void *ptr)
--{
--	struct mlxbf_gige *priv;
--	u32 val;
--
--	priv = ptr;
--
--	/* Check if this interrupt is from PHY device.
--	 * Return if it is not.
--	 */
--	val = readl(priv->gpio_io + MLXBF_GIGE_GPIO_CAUSE_OR_CAUSE_EVTEN0);
--	if (!(val & priv->phy_int_gpio_mask))
--		return IRQ_NONE;
--
--	/* Clear interrupt when done, otherwise, no further interrupt
--	 * will be triggered.
--	 */
--	val = readl(priv->gpio_io + MLXBF_GIGE_GPIO_CAUSE_OR_CLRCAUSE);
--	val |= priv->phy_int_gpio_mask;
--	writel(val, priv->gpio_io + MLXBF_GIGE_GPIO_CAUSE_OR_CLRCAUSE);
--
--	generic_handle_irq(priv->phy_irq);
--
--	return IRQ_HANDLED;
--}
--
--static void mlxbf_gige_gpio_mask(struct irq_data *irqd)
--{
--	struct mlxbf_gige *priv = irq_data_get_irq_chip_data(irqd);
--
--	mlxbf_gige_gpio_disable(priv);
--}
--
--static void mlxbf_gige_gpio_unmask(struct irq_data *irqd)
--{
--	struct mlxbf_gige *priv = irq_data_get_irq_chip_data(irqd);
--
--	mlxbf_gige_gpio_enable(priv);
--}
--
--static struct irq_chip mlxbf_gige_gpio_chip = {
--	.name			= "mlxbf_gige_phy",
--	.irq_mask		= mlxbf_gige_gpio_mask,
--	.irq_unmask		= mlxbf_gige_gpio_unmask,
--};
--
--static int mlxbf_gige_gpio_domain_map(struct irq_domain *d,
--				      unsigned int irq,
--				      irq_hw_number_t hwirq)
--{
--	irq_set_chip_data(irq, d->host_data);
--	irq_set_chip_and_handler(irq, &mlxbf_gige_gpio_chip, handle_simple_irq);
--	irq_set_noprobe(irq);
--
--	return 0;
--}
--
--static const struct irq_domain_ops mlxbf_gige_gpio_domain_ops = {
--	.map    = mlxbf_gige_gpio_domain_map,
--	.xlate	= irq_domain_xlate_twocell,
--};
--
--#ifdef CONFIG_ACPI
--static int mlxbf_gige_gpio_resources(struct acpi_resource *ares,
--				     void *data)
--{
--	struct acpi_resource_gpio *gpio;
--	u32 *phy_int_gpio = data;
--
--	if (ares->type == ACPI_RESOURCE_TYPE_GPIO) {
--		gpio = &ares->data.gpio;
--		*phy_int_gpio = gpio->pin_table[0];
--	}
--
--	return 1;
--}
--#endif
--
--void mlxbf_gige_gpio_free(struct mlxbf_gige *priv)
--{
--	irq_dispose_mapping(priv->phy_irq);
--	irq_domain_remove(priv->irqdomain);
--}
--
--int mlxbf_gige_gpio_init(struct platform_device *pdev,
--			 struct mlxbf_gige *priv)
--{
--	struct device *dev = &pdev->dev;
--	struct resource *res;
--	u32 phy_int_gpio = 0;
--	int ret;
--
--	LIST_HEAD(resources);
--
--	res = platform_get_resource(pdev, IORESOURCE_MEM, MLXBF_GIGE_RES_GPIO0);
--	if (!res)
--		return -ENODEV;
--
--	priv->gpio_io = devm_ioremap(dev, res->start, resource_size(res));
--	if (!priv->gpio_io)
--		return -ENOMEM;
--
--#ifdef CONFIG_ACPI
--	ret = acpi_dev_get_resources(ACPI_COMPANION(dev),
--				     &resources, mlxbf_gige_gpio_resources,
--				     &phy_int_gpio);
--	acpi_dev_free_resource_list(&resources);
--	if (ret < 0 || !phy_int_gpio) {
--		dev_err(dev, "Error retrieving the gpio phy pin");
--		return -EINVAL;
--	}
--#endif
--
--	priv->phy_int_gpio_mask = BIT(phy_int_gpio);
--
--	mlxbf_gige_gpio_disable(priv);
--
--	priv->hw_phy_irq = platform_get_irq(pdev, MLXBF_GIGE_PHY_INT_N);
--
--	priv->irqdomain = irq_domain_add_simple(NULL, 1, 0,
--						&mlxbf_gige_gpio_domain_ops,
--						priv);
--	if (!priv->irqdomain) {
--		dev_err(dev, "Failed to add IRQ domain\n");
--		return -ENOMEM;
--	}
--
--	priv->phy_irq = irq_create_mapping(priv->irqdomain, 0);
--	if (!priv->phy_irq) {
--		irq_domain_remove(priv->irqdomain);
--		priv->irqdomain = NULL;
--		dev_err(dev, "Error mapping PHY IRQ\n");
--		return -EINVAL;
--	}
--
--	ret = devm_request_irq(dev, priv->hw_phy_irq, mlxbf_gige_gpio_handler,
--			       IRQF_ONESHOT | IRQF_SHARED, "mlxbf_gige_phy", priv);
--	if (ret) {
--		dev_err(dev, "Failed to request PHY IRQ");
--		mlxbf_gige_gpio_free(priv);
--		return ret;
--	}
--
--	return ret;
--}
-diff --git a/drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_main.c b/drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_main.c
-index 3e85b17f5857..4382ec8f7d64 100644
---- a/drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_main.c
-+++ b/drivers/net/ethernet/mellanox/mlxbf_gige/mlxbf_gige_main.c
-@@ -273,8 +273,8 @@ static int mlxbf_gige_probe(struct platform_device *pdev)
- 	void __iomem *llu_base;
- 	void __iomem *plu_base;
- 	void __iomem *base;
-+	int addr, phy_irq;
- 	u64 control;
--	int addr;
- 	int err;
- 
- 	base = devm_platform_ioremap_resource(pdev, MLXBF_GIGE_RES_MAC);
-@@ -309,20 +309,12 @@ static int mlxbf_gige_probe(struct platform_device *pdev)
- 	priv->pdev = pdev;
- 
- 	spin_lock_init(&priv->lock);
--	spin_lock_init(&priv->gpio_lock);
- 
- 	/* Attach MDIO device */
- 	err = mlxbf_gige_mdio_probe(pdev, priv);
- 	if (err)
- 		return err;
- 
--	err = mlxbf_gige_gpio_init(pdev, priv);
--	if (err) {
--		dev_err(&pdev->dev, "PHY IRQ initialization failed\n");
--		mlxbf_gige_mdio_remove(priv);
--		return -ENODEV;
--	}
--
- 	priv->base = base;
- 	priv->llu_base = llu_base;
- 	priv->plu_base = plu_base;
-@@ -343,6 +335,12 @@ static int mlxbf_gige_probe(struct platform_device *pdev)
- 	priv->rx_irq = platform_get_irq(pdev, MLXBF_GIGE_RECEIVE_PKT_INTR_IDX);
- 	priv->llu_plu_irq = platform_get_irq(pdev, MLXBF_GIGE_LLU_PLU_INTR_IDX);
- 
-+	phy_irq = acpi_dev_gpio_irq_get_by(ACPI_COMPANION(&pdev->dev), "phy-gpios", 0);
-+	if (phy_irq < 0) {
-+		dev_err(&pdev->dev, "Error getting PHY irq. Use polling instead");
-+		phy_irq = PHY_POLL;
-+	}
-+
- 	phydev = phy_find_first(priv->mdiobus);
- 	if (!phydev) {
- 		err = -ENODEV;
-@@ -350,8 +348,8 @@ static int mlxbf_gige_probe(struct platform_device *pdev)
- 	}
- 
- 	addr = phydev->mdio.addr;
--	priv->mdiobus->irq[addr] = priv->phy_irq;
--	phydev->irq = priv->phy_irq;
-+	priv->mdiobus->irq[addr] = phy_irq;
-+	phydev->irq = phy_irq;
- 
- 	err = phy_connect_direct(netdev, phydev,
- 				 mlxbf_gige_adjust_link,
-@@ -387,7 +385,6 @@ static int mlxbf_gige_probe(struct platform_device *pdev)
- 	return 0;
- 
- out:
--	mlxbf_gige_gpio_free(priv);
- 	mlxbf_gige_mdio_remove(priv);
- 	return err;
- }
-@@ -398,7 +395,6 @@ static int mlxbf_gige_remove(struct platform_device *pdev)
- 
- 	unregister_netdev(priv->netdev);
- 	phy_disconnect(priv->netdev->phydev);
--	mlxbf_gige_gpio_free(priv);
- 	mlxbf_gige_mdio_remove(priv);
- 	platform_set_drvdata(pdev, NULL);
- 
--- 
-2.30.1
+> Is the Linux driver / U-boot ready for it now?
 
+I don't think the drivers should care. If they do, then we're stuck with 
+the current names.
+
+> ---
+>  .../bindings/pinctrl/rockchip,pinctrl.txt     | 114 -----------
+>  .../bindings/pinctrl/rockchip,pinctrl.yaml    | 178 ++++++++++++++++++
+>  2 files changed, 178 insertions(+), 114 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
+> deleted file mode 100644
+> index 84c411129..000000000
+> --- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
+> +++ /dev/null
+> @@ -1,114 +0,0 @@
+> -* Rockchip Pinmux Controller
+> -
+> -The Rockchip Pinmux Controller, enables the IC
+> -to share one PAD to several functional blocks. The sharing is done by
+> -multiplexing the PAD input/output signals. For each PAD there are several
+> -muxing options with option 0 being the use as a GPIO.
+> -
+> -Please refer to pinctrl-bindings.txt in this directory for details of the
+> -common pinctrl bindings used by client devices, including the meaning of the
+> -phrase "pin configuration node".
+> -
+> -The Rockchip pin configuration node is a node of a group of pins which can be
+> -used for a specific device or function. This node represents both mux and
+> -config of the pins in that group. The 'pins' selects the function mode(also
+> -named pin mode) this pin can work on and the 'config' configures various pad
+> -settings such as pull-up, etc.
+> -
+> -The pins are grouped into up to 5 individual pin banks which need to be
+> -defined as gpio sub-nodes of the pinmux controller.
+> -
+> -Required properties for iomux controller:
+> -  - compatible: should be
+> -		"rockchip,px30-pinctrl":    for Rockchip PX30
+> -		"rockchip,rv1108-pinctrl":  for Rockchip RV1108
+> -		"rockchip,rk2928-pinctrl":  for Rockchip RK2928
+> -		"rockchip,rk3066a-pinctrl": for Rockchip RK3066a
+> -		"rockchip,rk3066b-pinctrl": for Rockchip RK3066b
+> -		"rockchip,rk3128-pinctrl":  for Rockchip RK3128
+> -		"rockchip,rk3188-pinctrl":  for Rockchip RK3188
+> -		"rockchip,rk3228-pinctrl":  for Rockchip RK3228
+> -		"rockchip,rk3288-pinctrl":  for Rockchip RK3288
+> -		"rockchip,rk3308-pinctrl":  for Rockchip RK3308
+> -		"rockchip,rk3328-pinctrl":  for Rockchip RK3328
+> -		"rockchip,rk3368-pinctrl":  for Rockchip RK3368
+> -		"rockchip,rk3399-pinctrl":  for Rockchip RK3399
+> -		"rockchip,rk3568-pinctrl":  for Rockchip RK3568
+> -
+> -  - rockchip,grf: phandle referencing a syscon providing the
+> -	 "general register files"
+> -
+> -Optional properties for iomux controller:
+> -  - rockchip,pmu: phandle referencing a syscon providing the pmu registers
+> -	 as some SoCs carry parts of the iomux controller registers there.
+> -	 Required for at least rk3188 and rk3288. On the rk3368 this should
+> -	 point to the PMUGRF syscon.
+> -
+> -Deprecated properties for iomux controller:
+> -  - reg: first element is the general register space of the iomux controller
+> -	 It should be large enough to contain also separate pull registers.
+> -	 second element is the separate pull register space of the rk3188.
+> -	 Use rockchip,grf and rockchip,pmu described above instead.
+> -
+> -Required properties for gpio sub nodes:
+> -See rockchip,gpio-bank.yaml
+> -
+> -Required properties for pin configuration node:
+> -  - rockchip,pins: 3 integers array, represents a group of pins mux and config
+> -    setting. The format is rockchip,pins = <PIN_BANK PIN_BANK_IDX MUX &phandle>.
+> -    The MUX 0 means gpio and MUX 1 to N mean the specific device function.
+> -    The phandle of a node containing the generic pinconfig options
+> -    to use, as described in pinctrl-bindings.txt in this directory.
+> -
+> -Examples:
+> -
+> -#include <dt-bindings/pinctrl/rockchip.h>
+> -
+> -...
+> -
+> -pinctrl@20008000 {
+> -	compatible = "rockchip,rk3066a-pinctrl";
+> -	rockchip,grf = <&grf>;
+> -
+> -	#address-cells = <1>;
+> -	#size-cells = <1>;
+> -	ranges;
+> -
+> -	gpio0: gpio0@20034000 {
+> -		compatible = "rockchip,gpio-bank";
+> -		reg = <0x20034000 0x100>;
+> -		interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
+> -		clocks = <&clk_gates8 9>;
+> -
+> -		gpio-controller;
+> -		#gpio-cells = <2>;
+> -
+> -		interrupt-controller;
+> -		#interrupt-cells = <2>;
+> -	};
+> -
+> -	...
+> -
+> -	pcfg_pull_default: pcfg_pull_default {
+> -		bias-pull-pin-default
+> -	};
+> -
+> -	uart2 {
+> -		uart2_xfer: uart2-xfer {
+> -			rockchip,pins = <1 RK_PB0 1 &pcfg_pull_default>,
+> -					<1 RK_PB1 1 &pcfg_pull_default>;
+> -		};
+> -	};
+> -};
+> -
+> -uart2: serial@20064000 {
+> -	compatible = "snps,dw-apb-uart";
+> -	reg = <0x20064000 0x400>;
+> -	interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+> -	reg-shift = <2>;
+> -	reg-io-width = <1>;
+> -	clocks = <&mux_uart2>;
+> -
+> -	pinctrl-names = "default";
+> -	pinctrl-0 = <&uart2_xfer>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
+> new file mode 100644
+> index 000000000..7c45122d3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
+> @@ -0,0 +1,178 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/rockchip,pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Rockchip Pinmux Controller
+> +
+> +maintainers:
+> +  - Heiko Stuebner <heiko@sntech.de>
+> +
+> +description:
+
+Needs a '|' to maintain the paragraphs.
+
+> +  The Rockchip Pinmux Controller enables the IC to share one PAD
+> +  to several functional blocks. The sharing is done by multiplexing
+> +  the PAD input/output signals. For each PAD there are several muxing
+> +  options with option 0 being the use as a GPIO.
+> +
+> +  Please refer to pinctrl-bindings.txt in this directory for details of the
+> +  common pinctrl bindings used by client devices, including the meaning of the
+> +  phrase "pin configuration node".
+> +
+> +  The Rockchip pin configuration node is a node of a group of pins which can be
+> +  used for a specific device or function. This node represents both mux and
+> +  config of the pins in that group. The 'pins' selects the function mode(also
+> +  named pin mode) this pin can work on and the 'config' configures various pad
+> +  settings such as pull-up, etc.
+> +
+> +  The pins are grouped into up to 9 individual pin banks which need to be
+> +  defined as gpio sub-nodes of the pinmux controller.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - rockchip,px30-pinctrl
+> +      - rockchip,rk2928-pinctrl
+> +      - rockchip,rk3066a-pinctrl
+> +      - rockchip,rk3066b-pinctrl
+> +      - rockchip,rk3128-pinctrl
+> +      - rockchip,rk3188-pinctrl
+> +      - rockchip,rk3228-pinctrl
+> +      - rockchip,rk3288-pinctrl
+> +      - rockchip,rk3308-pinctrl
+> +      - rockchip,rk3328-pinctrl
+> +      - rockchip,rk3368-pinctrl
+> +      - rockchip,rk3399-pinctrl
+> +      - rockchip,rk3568-pinctrl
+> +      - rockchip,rv1108-pinctrl
+> +
+> +  rockchip,grf:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      The phandle of the syscon node for the GRF registers.
+> +
+> +  rockchip,pmu:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description:
+> +      The phandle of the syscon node for the PMU registers,
+> +      as some SoCs carry parts of the iomux controller registers there.
+> +      Required for at least rk3188 and rk3288. On the rk3368 this should
+> +      point to the PMUGRF syscon.
+> +
+> +  "#address-cells":
+> +    enum: [1, 2]
+> +
+> +  "#size-cells":
+> +    enum: [1, 2]
+> +
+> +  ranges: true
+> +
+> +patternProperties:
+> +  "gpio[0-8]?@[0-9a-f]+$":
+> +    type: object
+> +
+> +    $ref: "/schemas/gpio/rockchip,gpio-bank.yaml#"
+> +
+> +    unevaluatedProperties: false
+> +
+> +  "pcfg-[a-z0-9-]+$":
+> +    type: object
+> +    properties:
+> +      bias-disable: true
+> +
+> +      bias-pull-down: true
+> +
+> +      bias-pull-pin-default: true
+> +
+> +      bias-pull-up: true
+> +
+> +      drive-strength:
+> +        minimum: 0
+> +        maximum: 20
+> +
+> +      input-enable: true
+> +
+> +      input-schmitt-enable: true
+> +
+> +      output-high: true
+> +
+> +      output-low: true
+> +
+> +    additionalProperties: false
+> +
+> +additionalProperties:
+> +  type: object
+> +  additionalProperties:
+> +    type: object
+> +    properties:
+> +      rockchip,pins:
+> +        type: array
+
+That shouldn't be allowed... It should be a type $ref.
+
+> +        minItems: 1
+> +        items:
+> +          items:
+> +            - minimum: 0
+> +              maximum: 8
+> +            - minimum: 0
+> +              maximum: 31
+> +            - minimum: 0
+> +              maximum: 6
+> +            - maximum: 0xffffffff
+
+I'd add a description on each entry.
+
+> +        description:
+> +          A 3 integers array represents a group of pins mux and
+
+Looks like 4 integers to me. '3 integers and a phandle array'
+
+> +          config setting. The format is
+> +
+> +          rockchip,pins = <PIN_BANK PIN_BANK_IDX MUX &phandle>
+> +
+> +          The MUX 0 means gpio and MUX 1 to N mean the specific
+> +          device function. The phandle of a node contains the
+> +          generic pinconfig options to use, as described in
+> +          pinctrl-bindings.txt in this directory.
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/pinctrl/rockchip.h>
+> +
+> +    pinctrl: pinctrl {
+> +      compatible = "rockchip,rk3066a-pinctrl";
+> +      rockchip,grf = <&grf>;
+> +
+> +      #address-cells = <1>;
+> +      #size-cells = <1>;
+> +      ranges;
+> +
+> +      gpio0: gpio@20034000 {
+> +        compatible = "rockchip,gpio-bank";
+> +        reg = <0x20034000 0x100>;
+> +        interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
+> +        clocks = <&clk_gates8 9>;
+> +
+> +        gpio-controller;
+> +        #gpio-cells = <2>;
+> +
+> +        interrupt-controller;
+> +        #interrupt-cells = <2>;
+> +      };
+> +
+> +      pcfg_pull_default: pcfg-pull-default {
+> +        bias-pull-pin-default;
+> +      };
+> +
+> +      uart2 {
+> +        uart2_xfer: uart2-xfer {
+> +          rockchip,pins = <1 RK_PB0 1 &pcfg_pull_default>,
+> +                          <1 RK_PB1 1 &pcfg_pull_default>;
+> +        };
+> +      };
+> +    };
+> +
+> +    uart2: serial@20064000 {
+> +      compatible = "snps,dw-apb-uart";
+> +      reg = <0x20064000 0x400>;
+> +      interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
+> +      clocks = <&mux_uart2>;
+> +      pinctrl-0 = <&uart2_xfer>;
+> +      pinctrl-names = "default";
+> +      reg-io-width = <1>;
+> +      reg-shift = <2>;
+> +    };
+> -- 
+> 2.20.1
+> 
+> 
