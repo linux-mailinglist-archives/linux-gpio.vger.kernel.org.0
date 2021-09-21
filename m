@@ -2,84 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A56E412F50
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Sep 2021 09:23:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B799C412F5C
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Sep 2021 09:27:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230165AbhIUHY0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Sep 2021 03:24:26 -0400
-Received: from smtp-relay-internal-1.canonical.com ([185.125.188.123]:60850
+        id S230168AbhIUH3O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Sep 2021 03:29:14 -0400
+Received: from smtp-relay-internal-1.canonical.com ([185.125.188.123]:32908
         "EHLO smtp-relay-internal-1.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230071AbhIUHY0 (ORCPT
+        by vger.kernel.org with ESMTP id S230129AbhIUH3N (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 21 Sep 2021 03:24:26 -0400
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
+        Tue, 21 Sep 2021 03:29:13 -0400
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 81DD53F4B9
-        for <linux-gpio@vger.kernel.org>; Tue, 21 Sep 2021 07:22:57 +0000 (UTC)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 1A44F3FE01
+        for <linux-gpio@vger.kernel.org>; Tue, 21 Sep 2021 07:27:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1632208977;
-        bh=Cve5VR1QaxZM6zIVHTuhZn6XwrsbWxHHOPyFzizDJOw=;
-        h=Subject:From:To:Cc:References:Message-ID:Date:MIME-Version:
+        s=20210705; t=1632209265;
+        bh=i7xVOY9cswgNsb9rWd2OfLK5tguMPWFz/JQqL1RwXvg=;
+        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
          In-Reply-To:Content-Type;
-        b=LSaX+NNYmtKaMHZc+jMNh4LhvdiDlQ/00FmmBttIsHz4Y/Ako8b9QQh4eIfUxOrlw
-         B4fh/vPlUzc5UA4G0DVRJrFMFaU9QCoWksfkw2/h+4eOFpbgHWCEEibf79nql9343W
-         YbbTUv+h6kKTYCc2YLD4852GuwHKUI6FvvGQ5KPbeOEwIgYNvi4hmRcej5yvPqDxx6
-         s+2RXlcO+NfK/QOa6+ZboKadWRppvDdB6pYxptW7Qz4iYfjdrbV+A1dzrK/zxlbP8R
-         F+gE7NkWY3oXyYlrCI2kRxib6iyqi+mkHY+SvLj+FxPzky9BwaUPo7Nsj+OgbrHal6
-         vS2kBkdSsG9uw==
-Received: by mail-wr1-f69.google.com with SMTP id m1-20020a056000180100b0015e1ec30ac3so8039731wrh.8
-        for <linux-gpio@vger.kernel.org>; Tue, 21 Sep 2021 00:22:57 -0700 (PDT)
+        b=AgJl9KCOrfjxEYR9IExFDwkbVGoeNochyMesGk5jn9AFZG/Csv10yzqGPTdCM++cY
+         oLhM4xgd2tWQUMCC1JGbi5ZYogHufqt06DwFj2Ol5k256uaD9bur/tTI8g4q7LKZM2
+         DTz+XlrQWfyBiHQmumW/PxLv7BSHm+JcvEeUgKGdhkoDnHYEJTrpLXw6mW+KUBPQcI
+         qgTPPuZ3TQZYHmbb/iPdKj7bcZ8c9HUeveISmlZ+SQOCP7TU1INYfhfo2N+FAEgxHl
+         1bbDV9RUWoQl9vkYBqNjfIOhjuAuUGErUM0QcZAz5UGjb0kYv8QngH4g7XJYEraZ8i
+         FPnWPEKsf8i4A==
+Received: by mail-wr1-f71.google.com with SMTP id m18-20020adfe952000000b0015b0aa32fd6so8047975wrn.12
+        for <linux-gpio@vger.kernel.org>; Tue, 21 Sep 2021 00:27:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Cve5VR1QaxZM6zIVHTuhZn6XwrsbWxHHOPyFzizDJOw=;
-        b=bW3G0n+5U6bK64y6HtzokCuf/jSo/cbFsDFjDLw/XJuQ4/ProQXfCqTRT/+ooJfm4j
-         odJeRmNklZy6utAXSotMGzsSXZIwXStPeKEITbm7qJV+hFq+QhhcAgvovi4pAIO4YMgB
-         EIqsYxeRckcn0f7q7tsWxie9enUSXO4Hf7vPxjgqXpR9Sb3lWG5/ZVIDhWMpRxvr+R4l
-         mE+SBF1+JImxFufnGFMCGNTTBlLPU/FE7EjxZsx0raNo4HmEm6iaHrX3chg1VGYVZfF2
-         57eUJXz7QRywXl/o78XVzIrgcEOnl0Mzq9XJINN+FOrMgBB5XEIm/RKIVocNMBmvMmBV
-         Klsw==
-X-Gm-Message-State: AOAM5303ffpc7pDUMcxz2aattdJ1w8XrHWhp4sAKrCHoOeWmO6tddIzV
-        TUL3plL+QU+84E56YmUaJa3ryYNZfiDspC2T/BP5zZzh3aVz5V2vQwkPqXx33j8wm9BRbeE9c6o
-        gR/gfJ40C6ySmHabfW0rMaOmy3zmyWIQ7XRmoPGE=
-X-Received: by 2002:adf:dcc1:: with SMTP id x1mr33377409wrm.415.1632208977226;
-        Tue, 21 Sep 2021 00:22:57 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxQw4dtnG2X2Nu2HkIk4oUuLyQI/VIi+qePjIbZ3WhkVu2uRQwXc5Ujx3o3WSA5Z6k2UAzRxA==
-X-Received: by 2002:adf:dcc1:: with SMTP id x1mr33377384wrm.415.1632208977082;
-        Tue, 21 Sep 2021 00:22:57 -0700 (PDT)
+        bh=i7xVOY9cswgNsb9rWd2OfLK5tguMPWFz/JQqL1RwXvg=;
+        b=3nVnkvCPMbc/gDO4/ZLtJD7dBVdytlnxBoCHZUwshbAc3NnJ5tqHeP0TnZscNHpr0B
+         1vu9fu3j5tJ02A9Kw/qrEOLy0j0RUwmmBSPqhW+Ufbab4G+N/dOrkwhbt3E5guEZ7Zxu
+         UWza9NBRIMh+Xn6AmB6TakiJ6TnVeS5y3fF8XeWqKL1+kSHYaCIZ3hQtwmGAp9/6Nbzh
+         NFoKIpeULcZYKo2nutRu06lwRJkwEhfVfOfe1bReorfs7OzUyop4ez7lFH2izPg5iJk6
+         4UDqijQDsZYQqQUCFA0g0qAEd2wzONz5Tt6gOUqcdUNpak3coLv8kLhqrPCnZv5dG/1j
+         mEQg==
+X-Gm-Message-State: AOAM530UTQR8kL4wLGQbLwp+ETDXXxlWITs7NCfmmA34sVYdPhc4CQJy
+        AP1hGOtj1xnK/W+erBwwKeNeXx+OadfcFMmjnU1TSA12CVu8bS8k71hGesdwD0POUvUfKkYGN8Z
+        WF5ikgscvC36btj5IQG5OtYcQobMtmxv8LTBEClk=
+X-Received: by 2002:adf:fe0b:: with SMTP id n11mr33312234wrr.371.1632209264349;
+        Tue, 21 Sep 2021 00:27:44 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzil+vY8RVd7ISnKg7wzJr13+3UggzlkbmenwjowhYp7j04/Gvh/nntwfWnHjrLAQD5yVbfiQ==
+X-Received: by 2002:adf:fe0b:: with SMTP id n11mr33312212wrr.371.1632209264162;
+        Tue, 21 Sep 2021 00:27:44 -0700 (PDT)
 Received: from [192.168.0.134] (lk.84.20.244.219.dc.cable.static.lj-kabel.net. [84.20.244.219])
-        by smtp.gmail.com with ESMTPSA id r9sm10592653wru.2.2021.09.21.00.22.55
+        by smtp.gmail.com with ESMTPSA id c14sm12634040wrd.50.2021.09.21.00.27.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Sep 2021 00:22:56 -0700 (PDT)
-Subject: Re: [PATCH v1 0/4] arm64: Kconfig: Update ARCH_EXYNOS select configs
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+        Tue, 21 Sep 2021 00:27:43 -0700 (PDT)
+Subject: Re: [PATCH v1 3/4] pinctrl: samsung: change PINCTRL_EXYNOS default
+ config logic
 To:     Will McVicker <willmcvicker@google.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
         Tomasz Figa <tomasz.figa@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>
 Cc:     Lee Jones <lee.jones@linaro.org>, kernel-team@android.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
+        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org
 References: <20210920190350.3860821-1-willmcvicker@google.com>
- <7735b09c-cf1c-5e37-a737-9a330fbacf1e@canonical.com>
-Message-ID: <96e7f057-c505-e5d7-d89a-345b98d44448@canonical.com>
-Date:   Tue, 21 Sep 2021 09:22:55 +0200
+ <20210920190350.3860821-4-willmcvicker@google.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Message-ID: <e178ae7b-6956-94f5-535b-067e1915c5fb@canonical.com>
+Date:   Tue, 21 Sep 2021 09:27:42 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.13.0
 MIME-Version: 1.0
-In-Reply-To: <7735b09c-cf1c-5e37-a737-9a330fbacf1e@canonical.com>
+In-Reply-To: <20210920190350.3860821-4-willmcvicker@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -87,43 +82,56 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 21/09/2021 09:19, Krzysztof Kozlowski wrote:
-> On 20/09/2021 21:03, Will McVicker wrote:
->> This patch series tries to address the issue of ARCH_EXYNOS force selecting
->> a handful of drivers without allowing the vendor to override any of the
->> default configs. This takes away from the flexibilty of compiling a generic
->> kernel with exynos kernel modules. For example, it doesn't allow vendors to
->> modularize these drivers out of the core kernel in order to share a generic
->> kernel image across multiple devices that require device-specific kernel
->> modules.
-> 
-> You do not address the issue in these patches. The problem you describe
-> is that drivers are not modules and you are not changing them into modules.
-> 
->>
->> To address this without impacting the existing behavior, this series
->> switches the default config logic for the offending configs to use "default
->> y if ARCH_EXYNOS" versus having ARCH_EXYNOS directly select them. I have
->> verified that these patches do not impact the default aarch64 .config.
-> 
-> Yep, this is what you did but it does not match the described problem.
-> You are not solving it but doing something else.
-> 
->>
->> Will McVicker (4):
->>   clk: samsung: change COMMON_CLK_SAMSUNG default config logic
->>   soc: samsung: change SOC_SAMSUNG default config logic
->>   pinctrl: samsung: change PINCTRL_EXYNOS default config logic
->>   rtc: change HAVE_S3C_RTC default config logic
->>
-> 
-> 
-> I received only two patches from this set. Please resend following
-> get_maintainers.pl script.
+On 20/09/2021 21:03, Will McVicker wrote:
+> Switching the default config logic of PINCTRL_EXYNOS to use "default
+> y if ARCH_EXYNOS" versus having ARCH_EXYNOS directly select the config.
+> This gives vendors the flexibility to disable the config or modularize
+> it in the presence of a generic kernel.
 
-For the record - samsung-soc list also did not get all your patches.
+Reasoning is incorrect. This is an essential driver which CANNOT be
+disabled for any kernel having ARCH_EXYNOS or ARCH_S5PV210. You are
+trying to prepare it for some out-of-tree code? Please, upstream your
+code instead.
 
-NAK, please use get_maintainers.pl.
+> 
+> Verified this change doesn't effect the .config.
+> 
+> Signed-off-by: Will McVicker <willmcvicker@google.com>
+> ---
+>  arch/arm64/Kconfig.platforms    | 1 -
+>  drivers/pinctrl/samsung/Kconfig | 1 +
+>  2 files changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+> index 6a006490c9b9..a884e5da8b0f 100644
+> --- a/arch/arm64/Kconfig.platforms
+> +++ b/arch/arm64/Kconfig.platforms
+> @@ -93,7 +93,6 @@ config ARCH_EXYNOS
+>  	bool "ARMv8 based Samsung Exynos SoC family"
+>  	select HAVE_S3C_RTC if RTC_CLASS
+>  	select PINCTRL
+> -	select PINCTRL_EXYNOS
+>  	select PM_GENERIC_DOMAINS if PM
+>  	help
+>  	  This enables support for ARMv8 based Samsung Exynos SoC family.
+> diff --git a/drivers/pinctrl/samsung/Kconfig b/drivers/pinctrl/samsung/Kconfig
+> index dfd805e76862..483acb8ac1f6 100644
+> --- a/drivers/pinctrl/samsung/Kconfig
+> +++ b/drivers/pinctrl/samsung/Kconfig
+> @@ -12,6 +12,7 @@ config PINCTRL_EXYNOS
+>  	bool "Pinctrl common driver part for Samsung Exynos SoCs"
+>  	depends on OF_GPIO
+>  	depends on ARCH_EXYNOS || ARCH_S5PV210 || COMPILE_TEST
+> +	default y if ARCH_EXYNOS
+
+default ARCH_EXYNOS || ARCH_S5PV210
+... and update all mach Kconfigs.
+
+>  	select PINCTRL_SAMSUNG
+>  	select PINCTRL_EXYNOS_ARM if ARM && (ARCH_EXYNOS || ARCH_S5PV210)
+>  	select PINCTRL_EXYNOS_ARM64 if ARM64 && ARCH_EXYNOS
+> 
+
 
 Best regards,
 Krzysztof
