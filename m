@@ -2,85 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 70A2A4146FA
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Sep 2021 12:52:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35EB341470F
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Sep 2021 12:56:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234987AbhIVKyD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Sep 2021 06:54:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33946 "EHLO
+        id S235047AbhIVK5q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Sep 2021 06:57:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234760AbhIVKyD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Sep 2021 06:54:03 -0400
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33A38C061574;
-        Wed, 22 Sep 2021 03:52:33 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id v22so8123473edd.11;
-        Wed, 22 Sep 2021 03:52:33 -0700 (PDT)
+        with ESMTP id S235274AbhIVK5n (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Sep 2021 06:57:43 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C97E6C0613C1;
+        Wed, 22 Sep 2021 03:56:06 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id ee50so8098391edb.13;
+        Wed, 22 Sep 2021 03:56:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=u6QWPY0ZEqxeGsKxeqJpYnJqXioykY6+tbSHoyOs44g=;
-        b=q6DINLrg5LLskeE9coe+6hSwLKilWo4+SuMaLl1kl2bAHsOeGaIqSskzc7tjoP6FQ8
-         Pji4wKKWhDo1UxIwWDw0LJWGmv7BnF9DHuiiCgqq5C9vvaqTakVgxrQXv/IUN6IXllkD
-         GozAlJfYruN042VNsYT1VEcdFpV0KzlmGkq3gIzK61o8d7DZC0LPVysCs4klRpObSozn
-         ufIMlYIznXuboSEXZipSqX1mdDFKrNOt+08cCD670yV/aqFxSgQtDTDnOGrWaaGdBphT
-         3IlpqbqIlJgY8FHFqe39vKO6/6peaCe3z48Ywu207EI5qASyN/t5wvGfOaASHhjyGblX
-         qQpA==
+        bh=ZzvueIk88GImLWt+oE2Hwp6q2+HV7chxzi1E3ng8KFU=;
+        b=PHN3LKMIrfJ1OaeUX9nk64X5r02gFW0ngbrSWZz8yw0D3p3GgYcuG5Oyoc6rG073py
+         b5DcLiJ07WqYvfWsvrARAuxD2ywpk7s9CKJKPYsQvkgb0MS40AR/+q1Mu4qrG1WxpoVv
+         dabSUF9daUjHyJiJE8QYNPZcg7O428VgPgi3r1rJCwHZ0pSz1BWR9r3L+Q6413a3bOA7
+         n4PuOo4UADz9H2cdPgrcRBJg8gr/34D9UddIM/KB8+b58BybZ/pefEOnos0wwg8Wc/NB
+         yK9F7DCGVCMebRtK9T03ha0Cg+M3G8bJJkpXiMct0/DtQoplLSbEQmidwt2cmqwMvyvF
+         Kxwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=u6QWPY0ZEqxeGsKxeqJpYnJqXioykY6+tbSHoyOs44g=;
-        b=rP9Z1jr9siP42Ww+420pZZckSDEPFGs0w3HmgYpu/TiPSbjQ5y3GdH/ODDDK2EcvSj
-         lf3G4ymoMH7CXl64n7Cq5x9nNqwbN4iB6rAgiMyoJgDMIDvlM97WK5JaAMxbcRB4fZlI
-         PSfMz0J2b3SRlu003BL59umR4rKzNuYu0wiIbtOZkp6WrBmKNT8pwIGGr41rjN16OO+M
-         Pws1+VCcD7HM5Fv5bZHzqNqx9TqeT6DdDHKsHHfFnXM5MT3OcoXDA1IkJQ3FJxuKrouC
-         GjTEsUSSdvx5TXm9Qpnek6U1sHBZe5WDKRvE990RqvlWRFHdHxF8BUeAq41iCfgwu42B
-         pdgw==
-X-Gm-Message-State: AOAM533axxyGDqsUSu2ujVOeTulb3YRvox9QBGwEldoLnco0+7PWtQWN
-        7l7c5k2RY+v521NhfkKZmbObfIpfLTGu8B8inDs=
-X-Google-Smtp-Source: ABdhPJzbGf59JFRJIr0Wb+quTkgdDGmPv69vUBeTyKKxGJWNQ4RjQwYMm+TUllVO7at2zWDAgppsP+th7ItY6p/tN74=
-X-Received: by 2002:a17:907:7601:: with SMTP id jx1mr39985455ejc.69.1632307951585;
- Wed, 22 Sep 2021 03:52:31 -0700 (PDT)
+        bh=ZzvueIk88GImLWt+oE2Hwp6q2+HV7chxzi1E3ng8KFU=;
+        b=FRCqvGh/5BNfSBjhoIN6xPwqlvNdDRjVzlVuS+br9uBGaNA3WPZvscTme1Gpes4pUl
+         qAncSObygnKi3UMtiTPw7JbuUD4Dm5O+lqPONN1nIMbIpaN2OFr4ckIKzrndv9/Jpe1P
+         G3s6h0lqHAuavjXj5d6Om7c7/YxI29o5eT68kc3nnUMwVPoSl9z9D0ySwyMzexpXPDGf
+         WBD0/Dit0FSWn4V7bloyviJDzW+jFc/0ARUrYR1dNs1zGc33JtCd+PQSUfprvUZhb6Z3
+         GEuDnodijUKsZ8qpK3EwE93f/1MtsB426DGc8dzSk/uvwF/F8GH2bVvZIIr8A3Pt+umV
+         RpPA==
+X-Gm-Message-State: AOAM530NCX4JumulZw6VwElo4Teuv2DfyGGaG9DMvyEksMCSDmHcGXAC
+        GqWUe5Haq65vcvG1iXsU7Xmeflp1q9DWisbCL6w=
+X-Google-Smtp-Source: ABdhPJyrSjopnHz/kohS0lzG2/3mkFjdcbS9Y1ar0+wSAdqNRuGaVFb646QgAu8C6O7eu1XYa2+V514T+CATTncNn84=
+X-Received: by 2002:a17:907:6004:: with SMTP id fs4mr2121936ejc.567.1632308165331;
+ Wed, 22 Sep 2021 03:56:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210717045627.1739959-1-daniel@0x0f.com> <CACRpkdbE+_DJFhBCmtz5JwJupf7QkkWZhXrgf1KG_3rPqvEm0w@mail.gmail.com>
- <CAFr9PXmFHanrx4Frg3hQwo-RbAY-UXxC=FOAj++cshSHa99z3g@mail.gmail.com> <CAMpxmJUoG7qPhy2CxapCn1M=w_AssOQsEmyvXO18OpedM6hBjw@mail.gmail.com>
-In-Reply-To: <CAMpxmJUoG7qPhy2CxapCn1M=w_AssOQsEmyvXO18OpedM6hBjw@mail.gmail.com>
+References: <20210816093856.12313-1-hdegoede@redhat.com> <CACRpkdZ8ngakZhbrJp=OjcayLJ4j7C9gqb72N18fHExtMT7gNg@mail.gmail.com>
+ <86fafc6f-113c-2ea9-579b-ea29343865da@redhat.com> <CAMpxmJUtYoq1tX060dw6sKNpAf+D73Dr_s-pMhUdpeOKSr22gg@mail.gmail.com>
+In-Reply-To: <CAMpxmJUtYoq1tX060dw6sKNpAf+D73Dr_s-pMhUdpeOKSr22gg@mail.gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 22 Sep 2021 13:51:54 +0300
-Message-ID: <CAHp75VdU52rwKY3AA0Nxt3VGOFr71XtjCDqZbSxR4GNczSqihQ@mail.gmail.com>
-Subject: Re: [PATCH 00/10] gpio: msc313: Add gpio support for ssd20xd
+Date:   Wed, 22 Sep 2021 13:55:27 +0300
+Message-ID: <CAHp75Vf4mjDoiVCZ=z7QS5oDMsPQM1rTQUTFps5fKRsNEj99Ug@mail.gmail.com>
+Subject: Re: [PATCH regression fix] gpiolib: acpi: Make set-debounce-timeout
+ failures non fatal
 To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Daniel Palmer <daniel@0x0f.com>,
+Cc:     Hans de Goede <hdegoede@redhat.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Romain Perier <romain.perier@gmail.com>
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 22, 2021 at 1:21 PM Bartosz Golaszewski
+On Wed, Sep 22, 2021 at 12:17 PM Bartosz Golaszewski
 <bgolaszewski@baylibre.com> wrote:
-> On Wed, Aug 25, 2021 at 1:50 PM Daniel Palmer <daniel@0x0f.com> wrote:
-> > Hi Linus, Bartosz,
+> On Tue, Sep 21, 2021 at 8:42 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> > On 9/21/21 8:28 PM, Linus Walleij wrote:
+> > > On Mon, Aug 16, 2021 at 11:39 AM Hans de Goede <hdegoede@redhat.com> wrote:
 
 ...
 
-> > I just noticed I hadn't to'd Bartosz about these. Is there anything I
-> > need to do for the first patches?
+> > >> Fixes: 8dcb7a15a585 ("gpiolib: acpi: Take into account debounce settings")
+> > >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> > >
+> > > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> > >
+> > > Bartosz will pick this up I think, I'm a bit off duty with GPIO right now.
+> >
+> > Added Bartosz to the To: list, to make sure that he actually
+> > sees this. I somehow did not add him in the To/Cc when sending out
+> > the patch, sorry about that.
 >
-> I only have a part of this series in my inbox and patchwork doesn't
-> have it at all - can you resend it with me in Cc?
+> Yep, I only process patches that are directed to me personally (TO or CC).
 
-Have you tried to use the `b4` tool? It is capable of getting
-everything from the lore archive.
+Hmm... It's then strange that GPIO lib ACPI is not listed for you in
+MAINTAINERS.
+Perhaps we need to update MAINTAINERS as well.
+
+> Now applied but I'll only be able to send it out for v5.15-rc3.
+
+Thanks!
 
 -- 
 With Best Regards,
