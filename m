@@ -2,71 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5AF6D4151E8
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Sep 2021 22:55:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AFB2C415439
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Sep 2021 01:51:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237904AbhIVU4q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Sep 2021 16:56:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34004 "EHLO
+        id S238598AbhIVXwh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Sep 2021 19:52:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237862AbhIVU4i (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Sep 2021 16:56:38 -0400
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3DC4C0613D3
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Sep 2021 13:55:06 -0700 (PDT)
-Received: by mail-lf1-x131.google.com with SMTP id i25so17427011lfg.6
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Sep 2021 13:55:06 -0700 (PDT)
+        with ESMTP id S238558AbhIVXwg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Sep 2021 19:52:36 -0400
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB2B6C061574
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Sep 2021 16:51:05 -0700 (PDT)
+Received: by mail-lf1-x12e.google.com with SMTP id g41so18771385lfv.1
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Sep 2021 16:51:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:sender:from:date:message-id:subject:to;
-        bh=ijKrByR1/KtEp2Ut8Wj0vMi00kBZm/A/r1gPwOEYZIg=;
-        b=fr8lNb1tzuroNDnbJJtYWeXOCGZbssrkZvaRy8HVdYCeSSxS96vSwd3R2+r1vg3M6/
-         ex66FoD7Oi9BZ+eroN2ctcLno3UxJhL89X1t6yEsFayGc2q4Pz0zZQBaUGqcHr3s/S1+
-         lgIwwHuJ4O8SDnA5oR3zC/CFwa9fWO84703n6I2aQyNKP1VzeqgyNRTdZaVTG81gy6Vx
-         t6u58+esbUQxWBZY5IFD1w784RDrV2U7d72/V+RQAoF8LyHU+KHsqwJTuZK+RI9xoYHQ
-         hU/k+XKo5P60J+yjbN5r0LQMnBzU5qvJitpMdoh7dt6f9DChJ/lZbweVN/xESakomSrI
-         Tc/A==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=X6DdH0xnghaB9Dt/aDxkwOs5ayvQ920sKlagKXTBlV0=;
+        b=iUpf03D4/FlCV4qFLHKa1g+SmrJe1teeAzesCA3+8k69/vwBegVS8voipKW99acdJd
+         4Zfw0jdQ9EV7+e7gEr8950niZxnpnzf0Y53qOL+fTgP57jc3xvhQ4NKBVQfaouDK21k+
+         masfKB7xBMPIKbp3er5DSVV37LhvrjmdyB5vQI/JTSUDMFthVo+/HtiJgSEH73sVrNww
+         a3TJrmrQD8zgbeUR0TSiTKbr5JKaOZDaMz/973V0Df6pnU158KgKaRRw14OZ+S0clp59
+         DGw10xpNF8dkxCRwE/MD8InhywHNsS8zmOnf5PBctLEYsUnFdtDsFVW/3oGwXRJo2Zwf
+         Q7vA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to;
-        bh=ijKrByR1/KtEp2Ut8Wj0vMi00kBZm/A/r1gPwOEYZIg=;
-        b=Bd+Sk+dF94bFuM/xeCdLm9HpVc6IYQFlM+hIdmKm6P65/sMGR7kYf1xIKVBixaz+0L
-         GA6Kb2If+KYSz7uq6qAslw5JJy7iFznLbrBBBcnXDp9cZPQRvdE0Xub7XviWu2xGehdL
-         53Sy7O5v8fwSesYiVxknsccLGW2Wn5K8jVW5bxgdzF+tQXq3Imk6n2I3f33YHwmXoXFX
-         w7amDrdeTZ+/aspdctBR1vTKvRyuu1Ry7e2IoK28m4lVHVeEyf3mjNdkNpUpapvFR3PW
-         pAs2Z6QEZyQuj0xsWiQjX/JV49WO6GYm+zZ7bwrJBCCuK82Ic4DxJ/Cy51Ix7tFHtE1w
-         jZYg==
-X-Gm-Message-State: AOAM530WB9puz2NYCX9S33iCNKxoXwPhewf6W1REYe2b+gnCJa1pozJE
-        uHmlnTxMS6D5TmvgLN3T5MmPiU9rmQTXo8NPe7h0Xv72qyo=
-X-Google-Smtp-Source: ABdhPJwYYn7ZwazUxB30/XTxKCOf4dlZaC6TfP1ljKsU4ZNb40cpLRsdAvw7sAb51nYQkeG7S6W5vU7Cgq+lC3FYxgE=
-X-Received: by 2002:a05:651c:1546:: with SMTP id y6mr1383813ljp.53.1632344095088;
- Wed, 22 Sep 2021 13:54:55 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=X6DdH0xnghaB9Dt/aDxkwOs5ayvQ920sKlagKXTBlV0=;
+        b=wx9MFuD6VIJORicxe6IBv5XVHqFXbAB6u9lEtvJjpxh+nTOXzkMCYUjNQwA6fzCsWh
+         Mz07B9HqcBv2/QlFGM1ubZgSkkUuhSVGc6S6miVc+15NVFCGgvC6me4p/q8EV8DRsPx0
+         lgI4WqiyKMyp81P6T4I6GJurDGrgxeVwBEpdTUR34SJSZH3W05Gy//Sh/crQr07UIcr9
+         K2aZNHpsDxnn+n9umrABPAShy63CmDoh7BRcMVALD8Zn5wQhpUqHNm+zdMIyp0+CNM8i
+         AOpFVfae96sb3a0dGwuKYL07qxNdMarvI8kiC5kb/HU5OOu8sLU15cAlzRRVzutyrl2j
+         HRvg==
+X-Gm-Message-State: AOAM530gLYLAqF9RMYoDzVq6sIvuhYwERSHS+Qmren42pMEgcgfW+Qv3
+        xRO12BsXKDVAUgxVRuRsYJGZ2ENTc4rqt4+U0PJdfQ==
+X-Google-Smtp-Source: ABdhPJwP0jQYm2qHzZkkETLwbgCuF3BpNy8NQFc9OF4emblJl1PauuJ9+IpNO3fApqvvgiNo+eSll9OtWwFQZ38MSdA=
+X-Received: by 2002:a05:6512:e82:: with SMTP id bi2mr1479994lfb.95.1632354664167;
+ Wed, 22 Sep 2021 16:51:04 -0700 (PDT)
 MIME-Version: 1.0
-Sender: ratcliffijames58@gmail.com
-Received: by 2002:a05:6504:5067:0:0:0:0 with HTTP; Wed, 22 Sep 2021 13:54:54
- -0700 (PDT)
-From:   Aisha Al-Qaddafi <aisha.gdaffi24@gmail.com>
-Date:   Wed, 22 Sep 2021 21:54:54 +0100
-X-Google-Sender-Auth: B3PIuwFz7UcaHNCffYC8akvbLEk
-Message-ID: <CAKVTYWSPSMf085dB7FkhkLr9XtoZHkjbvunoMard5qsSPn4ZOg@mail.gmail.com>
-Subject: My Dear Friend
-To:     undisclosed-recipients:;
+References: <20210717045627.1739959-1-daniel@0x0f.com> <CACRpkdbE+_DJFhBCmtz5JwJupf7QkkWZhXrgf1KG_3rPqvEm0w@mail.gmail.com>
+ <CAFr9PXmFHanrx4Frg3hQwo-RbAY-UXxC=FOAj++cshSHa99z3g@mail.gmail.com>
+ <CAMpxmJUoG7qPhy2CxapCn1M=w_AssOQsEmyvXO18OpedM6hBjw@mail.gmail.com>
+ <CAHp75VdU52rwKY3AA0Nxt3VGOFr71XtjCDqZbSxR4GNczSqihQ@mail.gmail.com> <CAMpxmJUSvBSa=T1a1Bq_YhAGib9BcXf4xYMSOfyprHbG0t_QWw@mail.gmail.com>
+In-Reply-To: <CAMpxmJUSvBSa=T1a1Bq_YhAGib9BcXf4xYMSOfyprHbG0t_QWw@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 23 Sep 2021 01:50:53 +0200
+Message-ID: <CACRpkdZSdCuA59O5CYjb9FvXA_+ZSBcrp2tc2Hu5=gzCrFBnEg@mail.gmail.com>
+Subject: Re: [PATCH 00/10] gpio: msc313: Add gpio support for ssd20xd
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Daniel Palmer <daniel@0x0f.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Romain Perier <romain.perier@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Assalamu alaikum,
-I came across your e-mail contact prior to a private search while in
-need of your assistance. I am Aisha Al-Qaddafi, the only biological,
-Daughter of Former President of Libya Col. Muammar Al-Qaddafi. Am a
-single Mother and a Widow with three Children. I have investment funds
-worth Twenty Seven Million Five Hundred Thousand United State Dollar
-($27.500.000.00 ) and i need a trusted  investment Manager/Partner
-because of my current refugee status, however, I am interested in you
-for investment project assistance in your country. If you are willing
-to handle this project on my behalf kindly reply urgently to enable me
-to provide you more information about the investment
-funds.
-Best Regards
+On Wed, Sep 22, 2021 at 2:50 PM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+> On Wed, Sep 22, 2021 at 12:52 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+
+> > Have you tried to use the `b4` tool? It is capable of getting
+> > everything from the lore archive.
+>
+> I haven't tried it because I have never heard of it. :) Thanks for the heads-up.
+
+I use this all the time, it is awesome.
+
+Yours,
+Linus Walleij
