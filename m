@@ -2,169 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0495A41512F
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Sep 2021 22:11:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AF6D4151E8
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Sep 2021 22:55:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237381AbhIVUML (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Sep 2021 16:12:11 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:53674 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237402AbhIVUMK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Sep 2021 16:12:10 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 18MKAcV8016902;
-        Wed, 22 Sep 2021 15:10:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1632341438;
-        bh=HwsQ1px6ElVAM7E7RMWeh+ei1nZgXj6vInZm6WaZNw8=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=YPVkgH20ROH3+t8VxnCiy/LKUh9/64L6wI6Gl66Nz9s3aRtUj7huPfD62/X+b+p55
-         P98NzFFSnqThEGDmBaAXyyC+YRvgn6cPFj2aCvWGGmSXd7VBzZMIcvT+qDD6OAXvFV
-         gIX81trDCc8J1nfpeX8ZuyUnZkViqKfqCgz5ITf8=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 18MKAcEX034008
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 22 Sep 2021 15:10:38 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Wed, 22
- Sep 2021 15:10:37 -0500
-Received: from DFLE111.ent.ti.com ([fe80::6c89:b1ca:ee8f:1a6f]) by
- DFLE111.ent.ti.com ([fe80::6c89:b1ca:ee8f:1a6f%17]) with mapi id
- 15.01.2308.014; Wed, 22 Sep 2021 15:10:37 -0500
-From:   "M, Aparna" <a-m1@ti.com>
-To:     "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "Govindraju, Aswath" <a-govindraju@ti.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "Raghavendra, Vignesh" <vigneshr@ti.com>,
-        "Strashko, Grygorii" <grygorii.strashko@ti.com>
-Subject: RE: [PATCH RESEND] dt-bindings: gpio: Convert TI TPIC2810 GPIO
- Controller bindings to yaml
-Thread-Topic: [PATCH RESEND] dt-bindings: gpio: Convert TI TPIC2810 GPIO
- Controller bindings to yaml
-Thread-Index: AQHXr6pP3EiJdIl1NkOu403Qgaj9n6uwezcw
-Date:   Wed, 22 Sep 2021 20:10:37 +0000
-Message-ID: <90c368f366e440a58928e222e1683139@ti.com>
-References: <20210922120631.21948-1-a-m1@ti.com>
-In-Reply-To: <20210922120631.21948-1-a-m1@ti.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.250.235.184]
-x-exclaimer-md-config: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S237904AbhIVU4q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Sep 2021 16:56:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34004 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237862AbhIVU4i (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Sep 2021 16:56:38 -0400
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3DC4C0613D3
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Sep 2021 13:55:06 -0700 (PDT)
+Received: by mail-lf1-x131.google.com with SMTP id i25so17427011lfg.6
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Sep 2021 13:55:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:sender:from:date:message-id:subject:to;
+        bh=ijKrByR1/KtEp2Ut8Wj0vMi00kBZm/A/r1gPwOEYZIg=;
+        b=fr8lNb1tzuroNDnbJJtYWeXOCGZbssrkZvaRy8HVdYCeSSxS96vSwd3R2+r1vg3M6/
+         ex66FoD7Oi9BZ+eroN2ctcLno3UxJhL89X1t6yEsFayGc2q4Pz0zZQBaUGqcHr3s/S1+
+         lgIwwHuJ4O8SDnA5oR3zC/CFwa9fWO84703n6I2aQyNKP1VzeqgyNRTdZaVTG81gy6Vx
+         t6u58+esbUQxWBZY5IFD1w784RDrV2U7d72/V+RQAoF8LyHU+KHsqwJTuZK+RI9xoYHQ
+         hU/k+XKo5P60J+yjbN5r0LQMnBzU5qvJitpMdoh7dt6f9DChJ/lZbweVN/xESakomSrI
+         Tc/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to;
+        bh=ijKrByR1/KtEp2Ut8Wj0vMi00kBZm/A/r1gPwOEYZIg=;
+        b=Bd+Sk+dF94bFuM/xeCdLm9HpVc6IYQFlM+hIdmKm6P65/sMGR7kYf1xIKVBixaz+0L
+         GA6Kb2If+KYSz7uq6qAslw5JJy7iFznLbrBBBcnXDp9cZPQRvdE0Xub7XviWu2xGehdL
+         53Sy7O5v8fwSesYiVxknsccLGW2Wn5K8jVW5bxgdzF+tQXq3Imk6n2I3f33YHwmXoXFX
+         w7amDrdeTZ+/aspdctBR1vTKvRyuu1Ry7e2IoK28m4lVHVeEyf3mjNdkNpUpapvFR3PW
+         pAs2Z6QEZyQuj0xsWiQjX/JV49WO6GYm+zZ7bwrJBCCuK82Ic4DxJ/Cy51Ix7tFHtE1w
+         jZYg==
+X-Gm-Message-State: AOAM530WB9puz2NYCX9S33iCNKxoXwPhewf6W1REYe2b+gnCJa1pozJE
+        uHmlnTxMS6D5TmvgLN3T5MmPiU9rmQTXo8NPe7h0Xv72qyo=
+X-Google-Smtp-Source: ABdhPJwYYn7ZwazUxB30/XTxKCOf4dlZaC6TfP1ljKsU4ZNb40cpLRsdAvw7sAb51nYQkeG7S6W5vU7Cgq+lC3FYxgE=
+X-Received: by 2002:a05:651c:1546:: with SMTP id y6mr1383813ljp.53.1632344095088;
+ Wed, 22 Sep 2021 13:54:55 -0700 (PDT)
 MIME-Version: 1.0
+Sender: ratcliffijames58@gmail.com
+Received: by 2002:a05:6504:5067:0:0:0:0 with HTTP; Wed, 22 Sep 2021 13:54:54
+ -0700 (PDT)
+From:   Aisha Al-Qaddafi <aisha.gdaffi24@gmail.com>
+Date:   Wed, 22 Sep 2021 21:54:54 +0100
+X-Google-Sender-Auth: B3PIuwFz7UcaHNCffYC8akvbLEk
+Message-ID: <CAKVTYWSPSMf085dB7FkhkLr9XtoZHkjbvunoMard5qsSPn4ZOg@mail.gmail.com>
+Subject: My Dear Friend
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Bart,
-
-This is the latest patch resend. I'm not sure why patchwork has not been ab=
-le to pick it up.
-
-
-Regards,
-Aparna
-
------Original Message-----
-From: M, Aparna=20
-Sent: Wednesday, September 22, 2021 5:37 PM
-To: Govindraju, Aswath <a-govindraju@ti.com>; linus.walleij@linaro.org; rob=
-h+dt@kernel.org; Raghavendra, Vignesh <vigneshr@ti.com>; Strashko, Grygorii=
- <grygorii.strashko@ti.com>
-Cc: devicetree@vger.kernel.org; linux-gpio@vger.kernel.org; bgolaszewski@ba=
-ylibre.com; M, Aparna <a-m1@ti.com>
-Subject: [PATCH RESEND] dt-bindings: gpio: Convert TI TPIC2810 GPIO Control=
-ler bindings to yaml
-
-* Convert gpio-tpic2810 bindings to yaml format
-* Remove outdated gpio-tpic2810 bindings in .txt format
-
-Signed-off-by: Aparna M <a-m1@ti.com>
----
- .../bindings/gpio/gpio-tpic2810.txt           | 16 --------
- .../bindings/gpio/gpio-tpic2810.yaml          | 41 +++++++++++++++++++
- 2 files changed, 41 insertions(+), 16 deletions(-)  delete mode 100644 Doc=
-umentation/devicetree/bindings/gpio/gpio-tpic2810.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-tpic2810.ya=
-ml
-
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-tpic2810.txt b/Doc=
-umentation/devicetree/bindings/gpio/gpio-tpic2810.txt
-deleted file mode 100644
-index 1afc2de7a537..000000000000
---- a/Documentation/devicetree/bindings/gpio/gpio-tpic2810.txt
-+++ /dev/null
-@@ -1,16 +0,0 @@
--TPIC2810 GPIO controller bindings
--
--Required properties:
-- - compatible		: Should be "ti,tpic2810".
-- - reg			: The I2C address of the device
-- - gpio-controller	: Marks the device node as a GPIO controller.
-- - #gpio-cells		: Should be two. For consumer use see gpio.txt.
--
--Example:
--
--	gpio@60 {
--		compatible =3D "ti,tpic2810";
--		reg =3D <0x60>;
--		gpio-controller;
--		#gpio-cells =3D <2>;
--	};
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-tpic2810.yaml b/Do=
-cumentation/devicetree/bindings/gpio/gpio-tpic2810.yaml
-new file mode 100644
-index 000000000000..64f475eb4278
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-tpic2810.yaml
-@@ -0,0 +1,41 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) %YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/gpio-tpic2810.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: TPIC2810 GPIO controller bindings
-+
-+maintainers:
-+   - Aswath Govindraju <a-govindraju@ti.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ti,tpic2810
-+
-+  reg:
-+    maxItems: 1
-+    description: The I2C address of the device
-+
-+  gpio-controller: true
-+
-+  "#gpio-cells":
-+    const: 2
-+
-+required:
-+    - compatible
-+    - reg
-+    - gpio-controller
-+    - "#gpio-cells"
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    gpio1: gpio@60 {
-+        compatible =3D "ti,tpic2810";
-+        reg =3D <0x60>;
-+        gpio-controller;
-+        #gpio-cells =3D <2>;
-+    };
---
-2.17.1
-
+Assalamu alaikum,
+I came across your e-mail contact prior to a private search while in
+need of your assistance. I am Aisha Al-Qaddafi, the only biological,
+Daughter of Former President of Libya Col. Muammar Al-Qaddafi. Am a
+single Mother and a Widow with three Children. I have investment funds
+worth Twenty Seven Million Five Hundred Thousand United State Dollar
+($27.500.000.00 ) and i need a trusted  investment Manager/Partner
+because of my current refugee status, however, I am interested in you
+for investment project assistance in your country. If you are willing
+to handle this project on my behalf kindly reply urgently to enable me
+to provide you more information about the investment
+funds.
+Best Regards
