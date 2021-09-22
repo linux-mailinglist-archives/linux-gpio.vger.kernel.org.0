@@ -2,49 +2,49 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AA8BD414417
+	by mail.lfdr.de (Postfix) with ESMTP id DF148414419
 	for <lists+linux-gpio@lfdr.de>; Wed, 22 Sep 2021 10:48:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233950AbhIVIt1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Sep 2021 04:49:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32836 "EHLO
+        id S234051AbhIVIt2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Sep 2021 04:49:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234018AbhIVIt0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Sep 2021 04:49:26 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28465C061574
+        with ESMTP id S234044AbhIVIt1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Sep 2021 04:49:27 -0400
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98256C061757
         for <linux-gpio@vger.kernel.org>; Wed, 22 Sep 2021 01:47:57 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id u15so4497252wru.6
+Received: by mail-wr1-x430.google.com with SMTP id t7so4363248wrw.13
         for <linux-gpio@vger.kernel.org>; Wed, 22 Sep 2021 01:47:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=JDZbXCl9bSoGyZWgwef05HDv8VNeS1jh792KUo3neRA=;
-        b=DZoVchhLRFdzVUSe0yYXFAwpDBWfu1vFZ0e8QBzM0DJRTQ/1IIRN8+wkYnyQ675Stt
-         fvnYdZ2fO47NjBy82ZYQNVLi07vzSSdAAQnhqqL6lxF/OHNJiXVVlMF4a7/Y/pqK5I/E
-         XeTXT93CXdY3TWrNl1gQ3HfjfPgtdsfqOxY/x1O6NXBWcow6ZNvykFwMk1RpIILJug+z
-         5JofUn0Vz7jdiul7TFF1XgvvJR8oJWfa2WJhCxyD2Mnz4jV7AYPOBwCno3ejcw1UhUwW
-         wj0WCf7mJjiKIgZIy8hXOmM3jHoJWMRNfSkXyjeQW+HqCcm8cYBY20j120GHWI/t4/zh
-         L2GQ==
+        bh=N6iEJB4pcSblX4SdZfQ+pj8u1PpQ7EP4J6z216v/Emw=;
+        b=tJKMqR5mV6wQkO1Lza9pUv78xCcjFGuTCtRfzTema92Ynf7feAO24op8X3hH6poRpE
+         DakjujpKp+jInIV5/J9lcGXeOgXQde8+B3dn+vCdCdxKqeeVCS1hNFS3mY5Zhb7raXSj
+         yObtyTKy/YvDwryomYl8MBIiXtGyZD+PzGDDyUYG1xSzWC8KACYr00TqywLpUDqHCqpM
+         YSqiu5Bls0Xf4S/To4g8CoHk9pK/3OkcXrsJE6J9yZMNwyYlIEMBgUfiukUxno619duo
+         hCcSpS8MmJSE8Vjnuv/B4yNlSfSr93lQLH7Rm6JdKCyyLynYLRopHWn9pImMzzH5yK+W
+         dyEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=JDZbXCl9bSoGyZWgwef05HDv8VNeS1jh792KUo3neRA=;
-        b=Gijp7GLXAPNLbK4YHKk9vMPnJPGShLfut/QMALRGr8lVHElTDTG9U5Pwpk4zM+lg9t
-         Y0Zt6TCFkjl6X2qxmGLuDPK6yALuQYK9wwTsQA8f0tSRfr/a+jU8nU47T5JtUqSoveAE
-         eF4ucmVQ6INlB5erNSD/M1BMMG7RlwXrurv6TiSRqew+S8QqOcWnBQizSdBG5HcdkvVS
-         KW0rXOhsncon4wTuNhGZSCfFqqD4x2S4KmBVzHYwx3LMejVki3wzADDHVlNe1XTX6gtM
-         EHaH03UaB5DxEI8N7MAQLqyJL+GRBQh97ylQUZ75xovTsMjv63JyFPex3TRmFvkTLpTY
-         OrUQ==
-X-Gm-Message-State: AOAM5320HupYcxkgvp6EfoC890nHApMkxZ9gMvjGrczz74qBYwALHLKX
-        IZV83rhoZTRi7f9vQgpksHd7Ng==
-X-Google-Smtp-Source: ABdhPJxeOvXJdOxLLJLg+I0IFMJsUNCZoiM3vmEEn5yFUSosTs2xx+btmuYiAJ/mjC10thMN/vVaPQ==
-X-Received: by 2002:a5d:58c9:: with SMTP id o9mr41027703wrf.279.1632300475255;
-        Wed, 22 Sep 2021 01:47:55 -0700 (PDT)
+        bh=N6iEJB4pcSblX4SdZfQ+pj8u1PpQ7EP4J6z216v/Emw=;
+        b=6qvzzU+XRfvCjubJ5GdWK9beB4KYadoPuK5KJSiwESS5MuBC0+0K2Yh/PAZIrT3Gjp
+         jUxNbCzcuKSY1J8tbM+nIK/Q6xWBUs4HmoDYEiuSeEs0sSbW69DbKS/6Oe40MmtgShU2
+         JnrDLJjDetS3e6OIA/CW1hD+cObVivP3wBETfSRiAaQwH+pj/8ALi4WPAMW7G3bL8PUP
+         NttAUPNvCGnTWwxOS74OVt/Ybpmna0uyUXBtqPcIBVI5Gnjf4GzQ6xj3GIKkmxpoaxOi
+         f/1jk+Z8EpkH/jvSgYEqb1cP/h0ri7cpVvg5BQdtIOyTUjiQfVwoircvk/POgrLFp9V+
+         0zuw==
+X-Gm-Message-State: AOAM531aHtVGwdeO8oIGTQi6JIJbZWnBN1apW1Xj4RTYoxDSE7yN8CyZ
+        WlHg052rYByaCW8n86Krm4y4kw==
+X-Google-Smtp-Source: ABdhPJzIjFIrWLY62HZf8v0OwqqfJZJHyXwQZUI280qylKxTHsPq6XHv+8UmsKmrzvEac/gDv2fJUw==
+X-Received: by 2002:a5d:4d92:: with SMTP id b18mr40511080wru.245.1632300476151;
+        Wed, 22 Sep 2021 01:47:56 -0700 (PDT)
 Received: from debian-brgl.home ([2a01:cb1d:334:ac00:7d50:ff5:f5c1:e225])
-        by smtp.gmail.com with ESMTPSA id v10sm1591048wri.29.2021.09.22.01.47.54
+        by smtp.gmail.com with ESMTPSA id v10sm1591048wri.29.2021.09.22.01.47.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Wed, 22 Sep 2021 01:47:55 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
@@ -63,9 +63,9 @@ To:     Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>,
         Viresh Kumar <viresh.kumar@linaro.org>
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-doc@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v6 1/8] configfs: increase the item name length
-Date:   Wed, 22 Sep 2021 10:47:26 +0200
-Message-Id: <20210922084733.5547-2-brgl@bgdev.pl>
+Subject: [PATCH v6 2/8] configfs: use (1UL << bit) for internal flags
+Date:   Wed, 22 Sep 2021 10:47:27 +0200
+Message-Id: <20210922084733.5547-3-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.30.1
 In-Reply-To: <20210922084733.5547-1-brgl@bgdev.pl>
 References: <20210922084733.5547-1-brgl@bgdev.pl>
@@ -75,30 +75,46 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-20 characters limit for item name is relatively small. Let's increase it
-to 32 to fit '04-committable-children' - a name we'll use in the sample
-code for committable items.
+For better readability and maintenance: use the (1UL << bit) for flag
+definitions.
 
 Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
 Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- include/linux/configfs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/configfs/configfs_internal.h | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/include/linux/configfs.h b/include/linux/configfs.h
-index 97cfd13bae51..e398fb2e83b2 100644
---- a/include/linux/configfs.h
-+++ b/include/linux/configfs.h
-@@ -25,7 +25,7 @@
- #include <linux/kref.h>   /* struct kref */
- #include <linux/mutex.h>  /* struct mutex */
+diff --git a/fs/configfs/configfs_internal.h b/fs/configfs/configfs_internal.h
+index c0395363eab9..0c7a3d857fde 100644
+--- a/fs/configfs/configfs_internal.h
++++ b/fs/configfs/configfs_internal.h
+@@ -44,16 +44,16 @@ struct configfs_dirent {
+ 	struct configfs_fragment *s_frag;
+ };
  
--#define CONFIGFS_ITEM_NAME_LEN	20
-+#define CONFIGFS_ITEM_NAME_LEN	32
+-#define CONFIGFS_ROOT		0x0001
+-#define CONFIGFS_DIR		0x0002
+-#define CONFIGFS_ITEM_ATTR	0x0004
+-#define CONFIGFS_ITEM_BIN_ATTR	0x0008
+-#define CONFIGFS_ITEM_LINK	0x0020
+-#define CONFIGFS_USET_DIR	0x0040
+-#define CONFIGFS_USET_DEFAULT	0x0080
+-#define CONFIGFS_USET_DROPPING	0x0100
+-#define CONFIGFS_USET_IN_MKDIR	0x0200
+-#define CONFIGFS_USET_CREATING	0x0400
++#define CONFIGFS_ROOT			(1UL << 0)
++#define CONFIGFS_DIR			(1UL << 1)
++#define CONFIGFS_ITEM_ATTR		(1UL << 2)
++#define CONFIGFS_ITEM_BIN_ATTR		(1UL << 3)
++#define CONFIGFS_ITEM_LINK		(1UL << 5)
++#define CONFIGFS_USET_DIR		(1UL << 6)
++#define CONFIGFS_USET_DEFAULT		(1UL << 7)
++#define CONFIGFS_USET_DROPPING		(1UL << 8)
++#define CONFIGFS_USET_IN_MKDIR		(1UL << 9)
++#define CONFIGFS_USET_CREATING		(1UL << 10)
+ #define CONFIGFS_NOT_PINNED	(CONFIGFS_ITEM_ATTR | CONFIGFS_ITEM_BIN_ATTR)
  
- struct module;
- 
+ extern struct mutex configfs_symlink_mutex;
 -- 
 2.30.1
 
