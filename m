@@ -2,102 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D29C41450B
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Sep 2021 11:24:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51A30414514
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Sep 2021 11:27:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234321AbhIVJZx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Sep 2021 05:25:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41246 "EHLO
+        id S234331AbhIVJ2h (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Sep 2021 05:28:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234233AbhIVJZt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Sep 2021 05:25:49 -0400
-Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D72F0C061574
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Sep 2021 02:24:19 -0700 (PDT)
-Received: by mail-qk1-x72e.google.com with SMTP id i132so7660423qke.1
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Sep 2021 02:24:19 -0700 (PDT)
+        with ESMTP id S232258AbhIVJ2g (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Sep 2021 05:28:36 -0400
+Received: from mail-qk1-x72b.google.com (mail-qk1-x72b.google.com [IPv6:2607:f8b0:4864:20::72b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F041FC061574
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Sep 2021 02:27:06 -0700 (PDT)
+Received: by mail-qk1-x72b.google.com with SMTP id d207so7805195qkg.0
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Sep 2021 02:27:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qQjS+YUNUrQvd5p8/QPjpYBhtl8QQcNn03ovFra/KVc=;
-        b=hdQl6Jhv3nKZPrRqxUD2kabVRg98+lvqgn0CoqSwGnnrDujQzC69v6nON0dRjJfVec
-         52e8QEZnDENir/5Twp754+5olSRwaYd0d5E/NnqVPxxjpekU2VL/Odg2EWucQDC3/zwZ
-         GOIxWYwg42AitFyF696e21sf16kvS2qJAH6Tmk4y0gd2wig/p+DTZ2Nyh2ddnLuFPnvF
-         pw1zBFHBP6s8LCkmIwy/WSMjvdSVi8OUdLSArKRpuafTBOy0bEPLl9SRuC0vBfL7iLKv
-         PG4LJhWp+8brmA7zsWKrcgqOJxYHGIB4OKydFwYovbcsFc0C4zhQBuP3bplk6SoLP/VW
-         opbw==
+        bh=Q5r+ZHmLBKiHQX70H5Ts56LudGzMirgnfs/7sEqKhoI=;
+        b=bVtsQFphxv+PMBaFYpCnAOxW+4TF/zNObKBiv3jRnZJdKhXF+sN8iULpqlK7nv2udy
+         EFb/O1TB3/yIDF4rt46bIctXU6lPtU6iMvapZQmNuvknsnEDRnHgSWodFUUGViCMXghP
+         1OzvUxhpmggDrW2jiODD41+Dzdk54eUo2x+FRmoYy2myVV5x4bPNVjs5RJ2RqJieRDfk
+         3a9GgMgnnNVwWw+TWLF3ueERRzIHuEXN/MqGTYOJaQhhwNlOs95vBIKE5CYhR9rxL91c
+         O2KJJbKrbsU8N8ypJhrTM0lI6dxSxjzYVumuURPCeYmmV7vUHm94aFDIYwsGQ5gKVBSQ
+         HagA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qQjS+YUNUrQvd5p8/QPjpYBhtl8QQcNn03ovFra/KVc=;
-        b=rrWeN3FYYKiWBju2Jz3T33oognTKukZpWx9/UaY9Woj1hPHBnGsaHzMlTLL7oVVXZb
-         VvR7NE2vFtgjOtfiPdNEB8L4HvVRshAT8h4d+rQzjBB3xZT8iaeBBnjYOf1XOk9/fWcl
-         syaagEkVsg3tgz+ka0rdZVNW65HK+T45T5GkB7MqeBCqlGf7V1jVAimf1xAiWYzn3RP5
-         VyOspRnfY7jLgdU+v1vEFdFhGprEQ53OVvpoQoD/d9Cp5IYDAKLrlAXj+aTBXQWz8BS/
-         RQtabLOHy8AZDavGnSb3ipmaPWN++FXZX3TQL8Uiow4uiBqePma54jssSYvt9XO8eL+F
-         iyTQ==
-X-Gm-Message-State: AOAM532RKqghTqj7YfuUQEYigUn5wMVodHlW6b6giODSjyjzzdMTZNYW
-        WZMimukyYv86IdVU1qOjliENEDArWXFxCQZjhGLrt9ijaNc=
-X-Google-Smtp-Source: ABdhPJwLDef2xFFrYqwxuqRg5CszN9RklipON1tm1Qj57SF5l366b9nDgkBGGoz51etUG4uuzzrqW2ZyVSSBfmmG7JM=
-X-Received: by 2002:a25:7146:: with SMTP id m67mr43571579ybc.353.1632302659089;
- Wed, 22 Sep 2021 02:24:19 -0700 (PDT)
+        bh=Q5r+ZHmLBKiHQX70H5Ts56LudGzMirgnfs/7sEqKhoI=;
+        b=aWz02rsgnSACIC1qB8OJ4KkFjh2e+eTerTp0LzsycbG6ZZuWBo/226ix68pAAPGNTq
+         S4nOP+iD+4WB58GsRUHS7W2mmO4CVXD3jV0Z3kOBh1jrdYQfAZO2ZTBDdlpLS6Of/6Co
+         aG+ZGisGrZVA+q6tcSyIzwK/hcDmTnsyip1iwO0pGDa9zeAB71g99ZvrqkC6GTj3wU47
+         8mw5XiA/1/bfTDRScjN+r9hCP8Qa8ivDN06+e2xm+8mmnAwx2C9bog/zdPcEiNc0ohH4
+         WNMF+iE6gOCr2ha6/StRcKSBTD5G8nPxMH0xsfLYEHvLCBqq0T7j8Ymh8xpznGYfrP3Y
+         /oXA==
+X-Gm-Message-State: AOAM530zkbMMshLLaX5hAyCaAw+g6vRGVlEtPUwZKkGifpQMQqSiriBJ
+        gZvoVEmpO5O1yq80oaG1EXf+6TaLQCDpbveoq2Y1cQ==
+X-Google-Smtp-Source: ABdhPJwH8elDXf5KgspL13jX2tuE0QijykSs4P2ooWi/01P1LoJpz19UTo89aNkMG8go0fKysFrVB+WfuWILVnzwYu4=
+X-Received: by 2002:a25:cbc3:: with SMTP id b186mr42620852ybg.199.1632302826203;
+ Wed, 22 Sep 2021 02:27:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210907095525.24668-1-steven_lee@aspeedtech.com> <20210907095525.24668-2-steven_lee@aspeedtech.com>
-In-Reply-To: <20210907095525.24668-2-steven_lee@aspeedtech.com>
+References: <20210917105412.595539-1-thierry.reding@gmail.com>
+In-Reply-To: <20210917105412.595539-1-thierry.reding@gmail.com>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 22 Sep 2021 11:24:08 +0200
-Message-ID: <CAMpxmJVzAiZvg2xfUGgt5RqTyRbZggkxUTGZJod_5Tq2pzsS8g@mail.gmail.com>
-Subject: Re: [PATCH -next v1 1/1] gpio: gpio-aspeed-sgpio: Fix wrong hwirq in
- irq handler.
-To:     Steven Lee <steven_lee@aspeedtech.com>
+Date:   Wed, 22 Sep 2021 11:26:55 +0200
+Message-ID: <CAMpxmJVhmeiE7vR4T+U7zDeqounqRNdTh9sZ6SEdqtyVM3E+og@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpio: tegra186: Force one interrupt per bank
+To:     Thierry Reding <thierry.reding@gmail.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/ASPEED MACHINE SUPPORT" 
-        <linux-aspeed@lists.ozlabs.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Hongwei Zhang <Hongweiz@ami.com>,
-        Ryan Chen <ryan_chen@aspeedtech.com>,
-        Billy Tsai <billy_tsai@aspeedtech.com>
+        Jon Hunter <jonathanh@nvidia.com>,
+        Prathamesh Shete <pshete@nvidia.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 7, 2021 at 11:55 AM Steven Lee <steven_lee@aspeedtech.com> wrote:
+On Fri, Sep 17, 2021 at 12:54 PM Thierry Reding
+<thierry.reding@gmail.com> wrote:
 >
-> The current hwirq is calculated based on the old GPIO pin order(input
-> GPIO range is from 0 to ngpios - 1).
-> It should be calculated based on the current GPIO input pin order(input
-> GPIOs are 0, 2, 4, ..., (ngpios - 1) * 2).
+> From: Thierry Reding <treding@nvidia.com>
 >
-> Signed-off-by: Steven Lee <steven_lee@aspeedtech.com>
+> Newer chips support up to 8 interrupts per bank, which can be useful to
+> balance the load and decrease latency. However, it also required a very
+> complicated interrupt routing to be set up. To keep things simple for
+> now, ensure that a single interrupt per bank is enforced, even if all
+> possible interrupts are described in device tree.
+>
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
 > ---
->  drivers/gpio/gpio-aspeed-sgpio.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpio-aspeed-sgpio.c b/drivers/gpio/gpio-aspeed-sgpio.c
-> index 10f303d15225..3d6ef37a7702 100644
-> --- a/drivers/gpio/gpio-aspeed-sgpio.c
-> +++ b/drivers/gpio/gpio-aspeed-sgpio.c
-> @@ -395,7 +395,7 @@ static void aspeed_sgpio_irq_handler(struct irq_desc *desc)
->                 reg = ioread32(bank_reg(data, bank, reg_irq_status));
->
->                 for_each_set_bit(p, &reg, 32)
-> -                       generic_handle_domain_irq(gc->irq.domain, i * 32 + p);
-> +                       generic_handle_domain_irq(gc->irq.domain, i * 32 + p * 2);
->         }
->
->         chained_irq_exit(ic, desc);
-> --
-> 2.17.1
->
 
-Applied for fixes, thanks!
+Applied, thanks!
 
 Bart
