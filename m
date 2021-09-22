@@ -2,103 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 217A4414998
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Sep 2021 14:48:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB4F84149A2
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Sep 2021 14:50:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236181AbhIVMtr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Sep 2021 08:49:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32836 "EHLO
+        id S236084AbhIVMvs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Sep 2021 08:51:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236108AbhIVMtm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Sep 2021 08:49:42 -0400
-Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FF87C061762
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Sep 2021 05:48:07 -0700 (PDT)
-Received: by mail-qk1-x734.google.com with SMTP id b65so8743561qkc.13
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Sep 2021 05:48:07 -0700 (PDT)
+        with ESMTP id S236050AbhIVMvs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Sep 2021 08:51:48 -0400
+Received: from mail-qk1-x72b.google.com (mail-qk1-x72b.google.com [IPv6:2607:f8b0:4864:20::72b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65792C061757
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Sep 2021 05:50:18 -0700 (PDT)
+Received: by mail-qk1-x72b.google.com with SMTP id c7so9331960qka.2
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Sep 2021 05:50:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=BOd6h/Yrxn5Oodi5c84PARcC+Qmls9Bjqxy6D0i0gaE=;
-        b=LC7zuodttu1Ldc3PmL3UjrqEjro5G6YVm2qOGl003DTcVkLTUSdUIWa6OKtoqRkVlf
-         j0ix+QBTVVqcUWeSRjxxdHn0lUBzQDHL1DaxnWnr42cDle3K84/oSTERXmEtLJMtKP6M
-         OoYuft2DDLGK0prGGnNr1uZnivFMmzG7rNuwcy3JHyVbF/z5s66uSVqfTK3KYd0YL13t
-         ZctY/pAkNrCAH7GJIlnrmJ3QmfQUn7nKkErG+aoaOOiFG0aTyO4yca+PjuvvVdUxT8cI
-         7XUYavZXn3IsH5DtnoN2GGF8iePvcaZ/K8REn7ultKz6EXUTBkxY7ozBVjNoKmoihyBC
-         hEQw==
+        bh=HndHJ7ZUEW+xisuoTw70puWbLmjsMn7XD42T3lfhJeA=;
+        b=5ZeAMwUCt0ve0hDwYkIUvwCnhz/Gl9TGdTKCjpoZqDQpIvi5WGyVoZabBgdRCrUCP6
+         QgfvEUIrnEQhybPkp7uerSQzcwEdY3ILVWHzm6WFJtSImwJ+zV31ZHsgjhG43G35rQKK
+         BGrbs+gROzLtW+mpFjBw7ts0zkx3vPl3qD9gI4xANVXJTfWvELo6YewiNFbA0ESAQAOW
+         CV+LdO9KZXaJbmNhg/PSiBCPUrZHfHT1mRHfEM4tNmgKXLargI36mgRgw5l9Ry/4GBuP
+         Q0JY5PPyoTNaeNOANoAz3PJJdbNzbCXj8mt3MAsyKA1SVo4rKGO0/AopD8wenhSGtSon
+         Gw0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=BOd6h/Yrxn5Oodi5c84PARcC+Qmls9Bjqxy6D0i0gaE=;
-        b=rRcTj2y2HMprz96oLz1I5wf9aVw2uSvffB7U9vKE/esx2nf/0Mo9NwE+WWNg9vwOLu
-         3NPi5/LL6i7qUbs34xgjW0BFr0TZHH5zjfrLObFBpwk0WhjCMf3oD+SGPmPTlZm/FDYD
-         8eNWyDFuzxBAa0argxfqauQK6VCQJAw3KKZKTnBJl/BOtiH6mCv3tRJly5l9oFb2MQVT
-         1l6EJ7l/x+mvDQ3/t0ajuPAwTOoLJmbZKh4O2s/s8R0iUnxp7LXyy7XSaq12Yons3a4v
-         S6zJMNSR3yYVVz/yHD7BhUpp4ow44d9vBzh6hQH+atojW+5kPkEUKlAVNWTooc4MSJQ5
-         sXtA==
-X-Gm-Message-State: AOAM531EV8XDEANi6LnrA++04USHgajnOgvxkGnFql+0uld5i4h+wM2E
-        muph1LqmlUgvhT+V2foUzFwFJrxJEJV+xiESvyG4Lw==
-X-Google-Smtp-Source: ABdhPJzOnb/1MbqqxB20FR/qra6sz62kiRapIfLwVRJgk660z7HoheEro+RuNYOomgpi6g87ak9y0dwq/PN9fFl4EzI=
-X-Received: by 2002:a25:14d6:: with SMTP id 205mr1886426ybu.93.1632314886788;
- Wed, 22 Sep 2021 05:48:06 -0700 (PDT)
+        bh=HndHJ7ZUEW+xisuoTw70puWbLmjsMn7XD42T3lfhJeA=;
+        b=CnPL6O926RCK1yNDeIht/kQJIBM/0OBlYRXq1eYocF0IrPLU65w5wZGgqkcm3kkG7j
+         Ie6alQ76BoSuYU8/isPAE9K+XAmUDZbDgOCPdHrx+K58pU9n9Lxcre14di1mUVM7tq7+
+         ncyvIk5D/ftDMlZvHH1v3sA+g9AzeI+KrbNoCIMgL+Ao71heJrv7+R44MB5WUSbxJ212
+         xjb276AXgglxo6h/uzYqqjstdnL5NhDrcBHIwRcwB+kxCtHCy3gbof+jB712N9qQJVCE
+         hR9fQ6c9jk6Fye45nq5wGxOiOwsuBn8PSMY74LS6pD0KLC3cZjgP+GOm6fZ1IQZ0eGsz
+         RnxA==
+X-Gm-Message-State: AOAM530s2pWROCZeNC8msaSq6UrfRN1zFbARL48HONIIXzcLSJ0lsto0
+        rywC1oragmlsqN2CmaHQq1eWr6qpvsBRheYkSoeYoA==
+X-Google-Smtp-Source: ABdhPJxUFVjiblcTCC3jDe1LZWVRPuDRtn1tONvxJnHGP+NBYcE7+e8ypUKHjLNNSF4K1K/9XsQ3iVtcmdJ5U6C8VME=
+X-Received: by 2002:a5b:783:: with SMTP id b3mr41042313ybq.328.1632315017572;
+ Wed, 22 Sep 2021 05:50:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210816093856.12313-1-hdegoede@redhat.com> <CACRpkdZ8ngakZhbrJp=OjcayLJ4j7C9gqb72N18fHExtMT7gNg@mail.gmail.com>
- <86fafc6f-113c-2ea9-579b-ea29343865da@redhat.com> <CAMpxmJUtYoq1tX060dw6sKNpAf+D73Dr_s-pMhUdpeOKSr22gg@mail.gmail.com>
- <CAHp75Vf4mjDoiVCZ=z7QS5oDMsPQM1rTQUTFps5fKRsNEj99Ug@mail.gmail.com>
-In-Reply-To: <CAHp75Vf4mjDoiVCZ=z7QS5oDMsPQM1rTQUTFps5fKRsNEj99Ug@mail.gmail.com>
+References: <20210717045627.1739959-1-daniel@0x0f.com> <CACRpkdbE+_DJFhBCmtz5JwJupf7QkkWZhXrgf1KG_3rPqvEm0w@mail.gmail.com>
+ <CAFr9PXmFHanrx4Frg3hQwo-RbAY-UXxC=FOAj++cshSHa99z3g@mail.gmail.com>
+ <CAMpxmJUoG7qPhy2CxapCn1M=w_AssOQsEmyvXO18OpedM6hBjw@mail.gmail.com> <CAHp75VdU52rwKY3AA0Nxt3VGOFr71XtjCDqZbSxR4GNczSqihQ@mail.gmail.com>
+In-Reply-To: <CAHp75VdU52rwKY3AA0Nxt3VGOFr71XtjCDqZbSxR4GNczSqihQ@mail.gmail.com>
 From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 22 Sep 2021 14:47:56 +0200
-Message-ID: <CAMpxmJWwXR=T8Sd9fuzSF5hpX5V-cbtP_eqiUoA8L+eJ2Bx-2w@mail.gmail.com>
-Subject: Re: [PATCH regression fix] gpiolib: acpi: Make set-debounce-timeout
- failures non fatal
+Date:   Wed, 22 Sep 2021 14:50:06 +0200
+Message-ID: <CAMpxmJUSvBSa=T1a1Bq_YhAGib9BcXf4xYMSOfyprHbG0t_QWw@mail.gmail.com>
+Subject: Re: [PATCH 00/10] gpio: msc313: Add gpio support for ssd20xd
 To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
+Cc:     Daniel Palmer <daniel@0x0f.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Romain Perier <romain.perier@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 22, 2021 at 12:56 PM Andy Shevchenko
+On Wed, Sep 22, 2021 at 12:52 PM Andy Shevchenko
 <andy.shevchenko@gmail.com> wrote:
 >
-> On Wed, Sep 22, 2021 at 12:17 PM Bartosz Golaszewski
+> On Wed, Sep 22, 2021 at 1:21 PM Bartosz Golaszewski
 > <bgolaszewski@baylibre.com> wrote:
-> > On Tue, Sep 21, 2021 at 8:42 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> > > On 9/21/21 8:28 PM, Linus Walleij wrote:
-> > > > On Mon, Aug 16, 2021 at 11:39 AM Hans de Goede <hdegoede@redhat.com> wrote:
+> > On Wed, Aug 25, 2021 at 1:50 PM Daniel Palmer <daniel@0x0f.com> wrote:
+> > > Hi Linus, Bartosz,
 >
 > ...
 >
-> > > >> Fixes: 8dcb7a15a585 ("gpiolib: acpi: Take into account debounce settings")
-> > > >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> > > >
-> > > > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> > > >
-> > > > Bartosz will pick this up I think, I'm a bit off duty with GPIO right now.
-> > >
-> > > Added Bartosz to the To: list, to make sure that he actually
-> > > sees this. I somehow did not add him in the To/Cc when sending out
-> > > the patch, sorry about that.
+> > > I just noticed I hadn't to'd Bartosz about these. Is there anything I
+> > > need to do for the first patches?
 > >
-> > Yep, I only process patches that are directed to me personally (TO or CC).
+> > I only have a part of this series in my inbox and patchwork doesn't
+> > have it at all - can you resend it with me in Cc?
 >
-> Hmm... It's then strange that GPIO lib ACPI is not listed for you in
-> MAINTAINERS.
-> Perhaps we need to update MAINTAINERS as well.
+> Have you tried to use the `b4` tool? It is capable of getting
+> everything from the lore archive.
 >
 
-With the following line in MAINTAINERS:
+I haven't tried it because I have never heard of it. :) Thanks for the heads-up.
 
-    7998 F:      drivers/gpio/
+At the same time - is it too much to ask of people to just use
+scripts/get_maintainer.pl? It's so much easier to just actually get
+the patches in my inbox than to have to look for them manually.
 
-My name should pop up for all patches aimed at the GPIO subsystem if
-one uses scripts/get_maintainer.pl.
-
-Bart
+Bartosz
