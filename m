@@ -2,460 +2,210 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B7B76414A2F
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Sep 2021 15:09:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 233D2414A80
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Sep 2021 15:25:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230309AbhIVNLS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Sep 2021 09:11:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41136 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230246AbhIVNLS (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 22 Sep 2021 09:11:18 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D30326103C;
-        Wed, 22 Sep 2021 13:09:47 +0000 (UTC)
-Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <maz@kernel.org>)
-        id 1mT20P-00CKXt-Ht; Wed, 22 Sep 2021 14:09:45 +0100
-Date:   Wed, 22 Sep 2021 14:09:44 +0100
-Message-ID: <87bl4kvjs7.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Joey Gouly <joey.gouly@arm.com>
-Cc:     <linux-gpio@vger.kernel.org>,
+        id S231660AbhIVN1A (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Sep 2021 09:27:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42484 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230512AbhIVN1A (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Sep 2021 09:27:00 -0400
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68C6DC061574;
+        Wed, 22 Sep 2021 06:25:30 -0700 (PDT)
+Received: by mail-wr1-x42a.google.com with SMTP id t8so6901043wri.1;
+        Wed, 22 Sep 2021 06:25:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Y36K6bPDxpy/zwfLP47l15jg47JT44a6c0meP9UjwOg=;
+        b=Oi0Vk/H4LR+Mt1fhkW1VciGkU3+lAL1M/G9hlORMYYPJJtP+0mgmDUjKaaQFSZNyJ2
+         NExaWa4D2yKwnWvcIw18vw4WZeE8DyTxgBvZ8tkz7dccCzMoXsTZ0ZYyco0Bc0VQPZOW
+         yNhBfmcGaJoW306ElKF1AbPgCWmOxzqHA4uA1sk8DuBhtShOcZFeAe5C+OMZYK25/O4n
+         EB2V3oJZlxNqZAtn0FsRhie7GYQryaAvKed24kBsChZweXmCTCwHa0wkQYV5ra9e/Pzw
+         ib8+S5KzxlDpAlwDSjQJAEIWaox6/fgVpxfx8/6lg2RdQu+C7enEdUN/ObQK8rBg/TBG
+         ar2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Y36K6bPDxpy/zwfLP47l15jg47JT44a6c0meP9UjwOg=;
+        b=lqD6GTkKhy6L85PPEPTn2lOVaJJtdbQXLTgIgbVAm0r/V2s0ud+gIDZv9N5xUS2Uf8
+         12PB7he4AE480eS1LihogQ3/wU73ZCRBms6TxjF8uCa/EqRFKW+6JCsjEDxcaSiQpUZi
+         quODCOxNJ9InvmEF3SlXXU+THFz9VzPbNgb9DxjkiyriQzHstNNdQInEqUt/KcZcFqxn
+         6od6VPM/52b1CeW6yD18sLoVwNdTBSBg+LW2zKC59ns4mJvjle9WggkXZaRb3u8EOLbW
+         uQLVD/TiU4Gft8ueMFfrsNF9hYv1cPZymo9AKY+ZnLRkimHd5e5LO2zD3Kd7NtZIWRF1
+         F/zw==
+X-Gm-Message-State: AOAM530m+pa2W8B1rRimzSNeQXH/HyfFXKEhJXVXSnMavWYkENNE3G+l
+        3xZ6eWdPRLY2DpcolZHOjcc=
+X-Google-Smtp-Source: ABdhPJxklTnpEoamKeDaCyghdtkVhqfhVkLVAeKdHXtzzEL72GVxr1UfMNwcYhs/cXc6CEN2M0hjxQ==
+X-Received: by 2002:adf:ec4b:: with SMTP id w11mr41734333wrn.389.1632317128992;
+        Wed, 22 Sep 2021 06:25:28 -0700 (PDT)
+Received: from localhost ([217.111.27.204])
+        by smtp.gmail.com with ESMTPSA id k22sm2290355wrd.59.2021.09.22.06.25.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Sep 2021 06:25:27 -0700 (PDT)
+Date:   Wed, 22 Sep 2021 15:25:26 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Prathamesh Shete <pshete@nvidia.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Hector Martin <marcan@marcan.st>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Sven Peter <sven@svenpeter.dev>, <nd@arm.com>,
-        Stan Skowronek <stan@corellium.com>
-Subject: Re: [PATCH v1 1/1] pinctrl: add pinctrl/GPIO driver for Apple SoCs
-In-Reply-To: <20210921222956.40719-2-joey.gouly@arm.com>
-References: <20210921222956.40719-1-joey.gouly@arm.com>
-        <20210921222956.40719-2-joey.gouly@arm.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: joey.gouly@arm.com, linux-gpio@vger.kernel.org, linus.walleij@linaro.org, marcan@marcan.st, alyssa.rosenzweig@collabora.com, sven@svenpeter.dev, nd@arm.com, stan@corellium.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, smangipudi@nvidia.com
+Subject: Re: [PATCH v3 2/2] arm64: tegra: GPIO Interrupt entries
+Message-ID: <YUsuxvLWgVZpjNpE@orome.fritz.box>
+References: <YTWeSJ7jGamxx9Uu@orome.fritz.box>
+ <20210907073224.3070-1-pshete@nvidia.com>
+ <20210907073224.3070-3-pshete@nvidia.com>
+ <CAMpxmJWyepTvUQEAVDB2b=uocFTq49=yRiCXrxnwyLMe7LY_1Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="TZWXuD58jiQlRBqH"
+Content-Disposition: inline
+In-Reply-To: <CAMpxmJWyepTvUQEAVDB2b=uocFTq49=yRiCXrxnwyLMe7LY_1Q@mail.gmail.com>
+User-Agent: Mutt/2.1.3 (987dde4c) (2021-09-10)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Joey,
 
-On Tue, 21 Sep 2021 23:29:56 +0100,
-Joey Gouly <joey.gouly@arm.com> wrote:
-> 
-> From: Stan Skowronek <stan@corellium.com>
-> 
-> This driver adds support for the pinctrl / GPIO hardware found
-> on some Apple SoCs.
-> 
-> Co-authored-by: Joey Gouly <joey.gouly@arm.com>
-> Signed-off-by: Stan Skowronek <stan@corellium.com>
-> Signed-off-by: Joey Gouly <joey.gouly@arm.com>
-> ---
->  MAINTAINERS                          |   1 +
->  drivers/pinctrl/Kconfig              |  13 +
->  drivers/pinctrl/Makefile             |   1 +
->  drivers/pinctrl/pinctrl-apple-gpio.c | 652 +++++++++++++++++++++++++++
->  4 files changed, 667 insertions(+)
->  create mode 100644 drivers/pinctrl/pinctrl-apple-gpio.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ca6d6fde85cf..e83e992b8ada 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1722,6 +1722,7 @@ F:	Documentation/devicetree/bindings/interrupt-controller/apple,aic.yaml
->  F:	Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
->  F:	arch/arm64/boot/dts/apple/
->  F:	drivers/irqchip/irq-apple-aic.c
-> +F:	drivers/pinctrl/pinctrl-apple-gpio.c
->  F:	include/dt-bindings/interrupt-controller/apple-aic.h
->  F:	include/dt-bindings/pinctrl/apple.h
->  
-> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-> index 31921108e456..7269614c85a1 100644
-> --- a/drivers/pinctrl/Kconfig
-> +++ b/drivers/pinctrl/Kconfig
-> @@ -31,6 +31,19 @@ config DEBUG_PINCTRL
->  	help
->  	  Say Y here to add some extra checks and diagnostics to PINCTRL calls.
->  
-> +config PINCTRL_APPLE_GPIO
-> +	bool "Apple SoC GPIO pin controller driver"
-> +	depends on ARCH_APPLE
-> +	select PINMUX
-> +	select GPIOLIB
-> +	select GPIOLIB_IRQCHIP
-> +	select GENERIC_PINCTRL_GROUPS
-> +	select GENERIC_PINMUX_FUNCTIONS
-> +	select OF_GPIO
-> +	help
-> +	  This is the driver for the GPIO controller found on Apple ARM SoCs,
-> +	  including M1.
-> +
->  config PINCTRL_ARTPEC6
->  	bool "Axis ARTPEC-6 pin controller driver"
->  	depends on MACH_ARTPEC6
-> diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-> index 200073bcc2c1..5e63de2ffcf4 100644
-> --- a/drivers/pinctrl/Makefile
-> +++ b/drivers/pinctrl/Makefile
-> @@ -8,6 +8,7 @@ obj-$(CONFIG_PINMUX)		+= pinmux.o
->  obj-$(CONFIG_PINCONF)		+= pinconf.o
->  obj-$(CONFIG_OF)		+= devicetree.o
->  obj-$(CONFIG_GENERIC_PINCONF)	+= pinconf-generic.o
-> +obj-$(CONFIG_PINCTRL_APPLE_GPIO) += pinctrl-apple-gpio.o
->  obj-$(CONFIG_PINCTRL_ARTPEC6)	+= pinctrl-artpec6.o
->  obj-$(CONFIG_PINCTRL_AS3722)	+= pinctrl-as3722.o
->  obj-$(CONFIG_PINCTRL_AXP209)	+= pinctrl-axp209.o
-> diff --git a/drivers/pinctrl/pinctrl-apple-gpio.c b/drivers/pinctrl/pinctrl-apple-gpio.c
-> new file mode 100644
-> index 000000000000..a27d21682f3a
-> --- /dev/null
-> +++ b/drivers/pinctrl/pinctrl-apple-gpio.c
-> @@ -0,0 +1,652 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Apple SoC pinctrl+GPIO+external IRQ driver
-> + *
-> + * Copyright (C) 2021 The Asahi Linux Contributors
-> + * Copyright (C) 2020 Corellium LLC
-> + *
-> + * Based on: pinctrl-pistachio.c
-> + * Copyright (C) 2014 Imagination Technologies Ltd.
-> + * Copyright (C) 2014 Google, Inc.
-> + */
-> +
-> +#define USE_PINMUX_GENERIC_FN 1
-> +#define USE_PINCTRL_GENERIC_FN 1
-> +
-> +#include <dt-bindings/pinctrl/apple.h>
-> +#include <linux/clk.h>
-> +#include <linux/gpio/driver.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/irq.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/pinctrl/pinctrl.h>
-> +#include <linux/pinctrl/pinmux.h>
-> +#include <linux/platform_device.h>
-> +
-> +#include "pinctrl-utils.h"
-> +#include "core.h"
-> +#include "pinmux.h"
-> +
-> +struct apple_gpio_pincfg {
-> +	uint8_t irqtype;
-> +	uint8_t stat;
-> +};
-> +
-> +#define PINCFG_STAT_OUTVAL	0x01
-> +#define PINCFG_STAT_OUTEN	0x02
-> +#define PINCFG_STAT_PERIPH	0x20
-> +#define PINCFG_STAT_IRQEN	0x80
-> +
-> +struct apple_gpio_pinctrl {
-> +	struct device *dev;
-> +	struct pinctrl_dev *pctldev;
-> +
-> +	unsigned int npins;
-> +	struct pinctrl_pin_desc *pins;
-> +	struct apple_gpio_pincfg *pin_cfgs;
-> +	const char **pin_names;
-> +	unsigned *pin_nums;
-> +
-> +	void __iomem *base;
-> +	unsigned int nirqgrps;
-> +
-> +	struct pinctrl_desc pinctrl_desc;
-> +	struct gpio_chip gpio_chip;
-> +	struct irq_chip irq_chip;
-> +};
-> +
-> +#define REG_GPIO(x)		(4 * (x))
-> +#define  REG_GPIOx_DATA		BIT(0)
-> +#define  REG_GPIOx_MODE_MASK	GENMASK(3, 1)
-> +#define REG_GPIOx_OUT	(1 << REG_GPIOx_DATA)
-> +#define REG_GPIOx_IN_IRQ_HI	(2 << REG_GPIOx_DATA)
-> +#define REG_GPIOx_IN_IRQ_LO	(3 << REG_GPIOx_DATA)
-> +#define REG_GPIOx_IN_IRQ_UP	(4 << REG_GPIOx_DATA)
-> +#define REG_GPIOx_IN_IRQ_DN	(5 << REG_GPIOx_DATA)
-> +#define REG_GPIOx_IN_IRQ_ANY	(6 << REG_GPIOx_DATA)
-> +#define REG_GPIOx_IN_IRQ_OFF	(7 << REG_GPIOx_DATA)
-> +#define  REG_GPIOx_PERIPH	BIT(5)
-> +#define  REG_GPIOx_CFG_DONE	BIT(9)
-> +#define  REG_GPIOx_GRP_MASK	GENMASK(18, 16)
-> +#define REG_IRQ(g,x)		(0x800 + 0x40 * (g) + 4 * ((x) >> 5))
-> +
-> +static void apple_gpio_set_reg(struct apple_gpio_pinctrl *pctl, unsigned pin, uint32_t clr, uint32_t set)
-> +{
-> +	void __iomem *ppin = pctl->base + pin * 4;
-> +	uint32_t prev, cfg;
-> +
-> +	prev = readl(ppin);
-> +	cfg = (prev & ~clr) | set;
-> +
-> +	if(!(prev & REG_GPIOx_CFG_DONE))
-> +		writel(cfg & ~REG_GPIOx_CFG_DONE, ppin);
-> +	writel(cfg, ppin);
+--TZWXuD58jiQlRBqH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I'll add my usual rant about the use of relaxed accessors, or lack
-thereof. Unless there is a compelling reason for spitting out
-barriers everywhere, please use the _relaxed version.
+On Wed, Sep 22, 2021 at 11:29:21AM +0200, Bartosz Golaszewski wrote:
+> On Tue, Sep 7, 2021 at 9:32 AM Prathamesh Shete <pshete@nvidia.com> wrote:
+> >
+> > From: pshete <pshete@nvidia.com>
+> >
+> > Tegra19x supports 8 entries for GPIO controller.
+> > This change adds the required interrupt entires for all GPIO controller=
+s.
+> >
+> > Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
+> > ---
+> >  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 49 +++++++++++++++++++++++-
+> >  1 file changed, 47 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot=
+/dts/nvidia/tegra194.dtsi
+> > index b7d532841390..c681a79c44ec 100644
+> > --- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+> > +++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+> > @@ -34,11 +34,53 @@
+> >                         reg =3D <0x2200000 0x10000>,
+> >                               <0x2210000 0x10000>;
+> >                         interrupts =3D <GIC_SPI 288 IRQ_TYPE_LEVEL_HIGH=
+>,
+> > +                                    <GIC_SPI 289 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 290 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 291 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 292 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 293 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 294 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 295 IRQ_TYPE_LEVEL_HIGH>,
+> >                                      <GIC_SPI 296 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 297 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 298 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 299 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 300 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 301 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 302 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 303 IRQ_TYPE_LEVEL_HIGH>,
+> >                                      <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 306 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 307 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 308 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 309 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 310 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 311 IRQ_TYPE_LEVEL_HIGH>,
+> >                                      <GIC_SPI 312 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 313 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 314 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 316 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 318 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 319 IRQ_TYPE_LEVEL_HIGH>,
+> >                                      <GIC_SPI 320 IRQ_TYPE_LEVEL_HIGH>,
+> > -                                    <GIC_SPI 328 IRQ_TYPE_LEVEL_HIGH>;
+> > +                                    <GIC_SPI 321 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 322 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 323 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 324 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 325 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 326 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 327 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 328 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 329 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 331 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 333 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>;
+> >                         #interrupt-cells =3D <2>;
+> >                         interrupt-controller;
+> >                         #gpio-cells =3D <2>;
+> > @@ -1273,7 +1315,10 @@
+> >                         reg-names =3D "security", "gpio";
+> >                         reg =3D <0xc2f0000 0x1000>,
+> >                               <0xc2f1000 0x1000>;
+> > -                       interrupts =3D <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
+> > +                       interrupts =3D <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
+> >                         gpio-controller;
+> >                         #gpio-cells =3D <2>;
+> >                         interrupt-controller;
+> > --
+> > 2.17.1
+> >
+>=20
+> Prathamesh: what are the changes between the three versions of this
+> patch I have in my inbox? Please always include a brief list of
+> updates when resending.
+>=20
+> Thierry: does this make sense to you?
 
-> +}
-> +
-> +static void apple_gpio_refresh_reg(struct apple_gpio_pinctrl *pctl, unsigned pin)
-> +{
-> +	struct apple_gpio_pincfg *pincfg = &pctl->pin_cfgs[pin];
-> +
-> +	int stat = pincfg->stat;
-> +	int outval = (stat & PINCFG_STAT_OUTVAL);
-> +
-> +	int clear = REG_GPIOx_MODE_MASK | REG_GPIOx_DATA;
-> +	int set = REG_GPIOx_CFG_DONE | outval;
-> +
-> +	if (stat & PINCFG_STAT_PERIPH) {
-> +		set |= REG_GPIOx_PERIPH;
-> +	} else {
-> +		clear |= REG_GPIOx_PERIPH;
-> +		if (stat & PINCFG_STAT_OUTEN)
-> +			set |= REG_GPIOx_OUT;
-> +		else if (stat & PINCFG_STAT_IRQEN)
-> +			set |= pincfg->irqtype;
-> +		else
-> +			set |= REG_GPIOx_IN_IRQ_OFF;
-> +	}
-> +
-> +	apple_gpio_set_reg(pctl, pin, clear, set);
+Hi Bartosz,
 
-Please add some documentation on how these bits behave. This is
-specially important as the mask/unmask operations can be used
-concurrently. Unless the HW ensures mutual exclusion one way or
-another (such as separate registers per interrupts?), you'll need some
-locking here.
+the following patches from me that you applied earlier:
 
-[...]
+	[PATCH 1/2] gpio: tegra186: Force one interrupt per bank
+	[PATCH 2/2] gpio: tegra186: Support multiple interrupts per bank
 
-I know nothing about pinctrl and GPIO, so I'll skip directly to my own
-turf...
+are replacements for patch 1 in this series, so that should no longer be
+needed. Patch 2 of this series (the DT change) I plan to pick up into
+the Tegra tree for v5.16.
 
-> +/* IRQ chip functions */
-> +
-> +static void apple_gpio_gpio_irq_ack(struct irq_data *data)
-> +{
-> +	struct apple_gpio_pinctrl *pctl = gpiochip_get_data(irq_data_get_irq_chip_data(data));
-> +	unsigned irqgrp = FIELD_GET(REG_GPIOx_GRP_MASK, apple_gpio_get_reg(pctl, data->hwirq));
-> +
-> +	writel(1u << (data->hwirq & 31), pctl->base + REG_IRQ(irqgrp, data->hwirq));
+Thierry
 
-Use BIT().
+--TZWXuD58jiQlRBqH
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +}
-> +
-> +static void apple_gpio_gpio_irq_mask(struct irq_data *data)
-> +{
-> +	struct apple_gpio_pinctrl *pctl = gpiochip_get_data(irq_data_get_irq_chip_data(data));
-> +
-> +	pctl->pin_cfgs[data->hwirq].stat &= ~PINCFG_STAT_IRQEN;
-> +	apple_gpio_refresh_reg(pctl, data->hwirq);
+-----BEGIN PGP SIGNATURE-----
 
-See my above note about the potential requirement for locking.
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmFLLsQACgkQ3SOs138+
+s6H1IxAAs2MG8Sjg2u/ML2lglBekLE+MEl+e+TGzJPTVmckSesk/sbcdkPqenHso
+frfGukBgQy4nBeYaF0sYcuAvBctIdiRjJSG33P0SOUDM5eihF9PcEvZQNXY+rLl6
+HquKqkz1qhyDTHv0jaooSWStOyittpSL2hZ2jSJ3HETMPOZyiuNy9IOWc61J78yB
+HgKGHSKvZsHDk1vcH+hn+NAD4k4lKlut6D0Ijf+KLqQGjc8Z7QEUyXf5ipXVt7Bh
+/+yxTHW9lQBpwb7jlekD0fPa88g5UyFcS1vwgD7zLNsCx0tk5W5FPtJxa+Vlso1q
+zDqxAmlUoYOnlgr2zepIksv7Yv+ga/Bej+sibjrkd4gOcTuXyrQ7Nn10JC0Ja3Vo
+Go9nDcT8a8v9UkM1o2WhuJM8S2dawvykIsq47eT9vF5cmJKUErNfQ0EnW8ZtaDg9
+Xk6ScDbAD/nEGBefrWF7dyGrciHZI8PEgE5ZBqkn0HY1+7KWxVo9/mtsuPKh3oNt
+3np+BwPRtOgYT49I72Y7FeGwUVBISPW6pd9F1cpk9yM/pTceG52r+ycbtsT0JhXL
+ef2T99e5Mr/TOb9G8Ck4hoAc/sRopShby8kPuSpw6MtEEr/x13f+u9YRCypStgIG
+vOQyCDNl8QLYMiE0pqTWf5G2R9Sh0vmyJ1NAIkUu97Mmj9hli4M=
+=zlYR
+-----END PGP SIGNATURE-----
 
-> +}
-> +
-> +static void apple_gpio_gpio_irq_unmask(struct irq_data *data)
-> +{
-> +	struct apple_gpio_pinctrl *pctl = gpiochip_get_data(irq_data_get_irq_chip_data(data));
-> +
-> +	pctl->pin_cfgs[data->hwirq].stat |= PINCFG_STAT_IRQEN;
-> +	apple_gpio_refresh_reg(pctl, data->hwirq);
-> +}
-> +
-> +static unsigned int apple_gpio_gpio_irq_startup(struct irq_data *data)
-> +{
-> +	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
-> +	struct apple_gpio_pinctrl *pctl = gpiochip_get_data(chip);
-> +	unsigned irqgrp = 0;
-
-Useless variable?
-
-> +
-> +	apple_gpio_set_reg(pctl, data->hwirq, REG_GPIOx_GRP_MASK, FIELD_PREP(REG_GPIOx_GRP_MASK, irqgrp));
-> +
-> +	apple_gpio_gpio_direction_input(chip, data->hwirq);
-> +	apple_gpio_gpio_irq_unmask(data);
-> +
-> +	return 0;
-> +}
-> +
-> +static int apple_gpio_gpio_irq_set_type(struct irq_data *data, unsigned int type)
-> +{
-> +	struct apple_gpio_pinctrl *pctl = gpiochip_get_data(irq_data_get_irq_chip_data(data));
-> +
-> +	switch(type & IRQ_TYPE_SENSE_MASK) {
-> +	case IRQ_TYPE_EDGE_RISING:
-> +		pctl->pin_cfgs[data->hwirq].irqtype = REG_GPIOx_IN_IRQ_UP;
-> +		break;
-> +	case IRQ_TYPE_EDGE_FALLING:
-> +		pctl->pin_cfgs[data->hwirq].irqtype = REG_GPIOx_IN_IRQ_DN;
-> +		break;
-> +	case IRQ_TYPE_EDGE_BOTH:
-> +		pctl->pin_cfgs[data->hwirq].irqtype = REG_GPIOx_IN_IRQ_ANY;
-> +		break;
-> +	case IRQ_TYPE_LEVEL_HIGH:
-> +		pctl->pin_cfgs[data->hwirq].irqtype = REG_GPIOx_IN_IRQ_HI;
-> +		break;
-> +	case IRQ_TYPE_LEVEL_LOW:
-> +		pctl->pin_cfgs[data->hwirq].irqtype = REG_GPIOx_IN_IRQ_LO;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	apple_gpio_refresh_reg(pctl, data->hwirq);
-
-A general question about how the HW works: you seem to shadow some of
-the state in memory, only to end-up committing it into the HW at a
-later point. Why the indirection? I don't think a RMW operation is
-going to hurt.
-
-> +
-> +	if(type & IRQ_TYPE_LEVEL_MASK)
-> +		irq_set_handler_locked(data, handle_level_irq);
-> +	else
-> +		irq_set_handler_locked(data, handle_edge_irq);
-> +	return 0;
-> +}
-> +
-> +static void apple_gpio_gpio_irq_handler(struct irq_desc *desc)
-> +{
-> +	struct gpio_chip *gc = irq_desc_get_handler_data(desc);
-> +	struct apple_gpio_pinctrl *pctl = gpiochip_get_data(gc);
-> +	struct irq_chip *chip = irq_desc_get_chip(desc);
-> +	unsigned irqgrp, pinh, pinl;
-> +	unsigned long pending;
-> +	unsigned int parent = irq_desc_get_irq(desc);
-> +
-> +	for (irqgrp = 0; irqgrp < pctl->nirqgrps; ++irqgrp) {
-> +		if (parent == gc->irq.parents[irqgrp])
-> +			break;
-> +	}
-
-This seems counter-productive. Why can't the handler data give you the
-correct context without having to iterate on internal data structures?
-
-> +
-> +	WARN_ON(irqgrp == pctl->nirqgrps);
-
-WARN_ON(), followed by the dereferencing of random data? If that
-cannot happen, please drop it. If it can happen, just fix it. See
-below for my take on this.
-
-> +
-> +	chained_irq_enter(chip, desc);
-> +	for(pinh=0; pinh<pctl->npins; pinh+=32) {
-
-Coding style, please (all over the file).
-
-> +		pending = readl(pctl->base + REG_IRQ(irqgrp, pinh));
-> +		for_each_set_bit(pinl, &pending, 32)
-> +			generic_handle_irq(irq_linear_revmap(gc->irq.domain, pinh + pinl));
-
-This should be a call to generic_handle_domain_irq().
-irq_linear_revmap() is going away soon.
-
-> +	}
-> +	chained_irq_exit(chip, desc);
-> +}
-> +
-> +/* Probe & register */
-> +
-> +static int apple_gpio_gpio_register(struct apple_gpio_pinctrl *pctl)
-> +{
-> +	struct device_node *node = pctl->dev->of_node;
-> +	struct gpio_irq_chip *girq;
-> +	int i, ret = 0;
-> +
-> +	if(!of_find_property(node, "gpio-controller", NULL)) {
-> +		dev_err(pctl->dev, "Apple GPIO must have 'gpio-controller' property.\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	pctl->gpio_chip.label = dev_name(pctl->dev);
-> +	pctl->gpio_chip.request = gpiochip_generic_request;
-> +	pctl->gpio_chip.free = gpiochip_generic_free;
-> +	pctl->gpio_chip.get_direction = apple_gpio_gpio_get_direction;
-> +	pctl->gpio_chip.direction_input = apple_gpio_gpio_direction_input;
-> +	pctl->gpio_chip.direction_output = apple_gpio_gpio_direction_output;
-> +	pctl->gpio_chip.get = apple_gpio_gpio_get;
-> +	pctl->gpio_chip.set = apple_gpio_gpio_set;
-> +	pctl->gpio_chip.base = -1;
-> +	pctl->gpio_chip.ngpio = pctl->npins;
-> +	pctl->gpio_chip.parent = pctl->dev;
-> +	pctl->gpio_chip.of_node = node;
-> +
-> +	if (of_find_property(node, "interrupt-controller", NULL)) {
-> +		ret = platform_irq_count(to_platform_device(pctl->dev));
-> +		if(ret < 0)
-> +			return ret;
-> +
-> +		pctl->nirqgrps = ret;
-> +
-> +		pctl->irq_chip.name = dev_name(pctl->dev);
-
-No, please. We don't need a massively long name that will make
-/proc/interrupts more messy than it needs to be (and creates ABI
-issues when someone repaints the DT). Just say "GPIO".
-
-> +		pctl->irq_chip.irq_startup = apple_gpio_gpio_irq_startup;
-> +		pctl->irq_chip.irq_ack = apple_gpio_gpio_irq_ack;
-> +		pctl->irq_chip.irq_mask = apple_gpio_gpio_irq_mask;
-> +		pctl->irq_chip.irq_unmask = apple_gpio_gpio_irq_unmask;
-> +		pctl->irq_chip.irq_set_type = apple_gpio_gpio_irq_set_type;
-> +
-> +		girq = &pctl->gpio_chip.irq;
-> +		girq->chip = &pctl->irq_chip;
-> +		girq->parent_handler = apple_gpio_gpio_irq_handler;
-> +		girq->num_parents = pctl->nirqgrps;
-> +
-> +		girq->parents = devm_kmalloc_array(pctl->dev, pctl->nirqgrps,
-> +			sizeof(girq->parents[0]), GFP_KERNEL);
-> +		if (!girq->parents)
-> +			return -ENOMEM;
-> +
-> +		for(i = 0; i < pctl->nirqgrps; i++) {
-> +			ret = platform_get_irq(to_platform_device(pctl->dev), i);
-> +			if(ret < 0) {
-> +				if(ret != -EPROBE_DEFER)
-> +					dev_err(pctl->dev, "Failed to map IRQ %d (%d).\n", i, ret);
-> +				return ret;
-> +			}
-> +			girq->parents[i] = ret;
-> +		}
-
-In general, keeping track of the parent interrupts in an interrupt
-controller driver is a sure sign that things are badly organised.
-Here, you have a single irqchip context that handles multiple muxes.
-You really should have one context per mux, which would simplify your
-interrupt handling.
-
-An alternative is to use the fact that all the interrupts to the AIC
-form a contiguous space, and use that to directly index into the array.
-
-Thanks,
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+--TZWXuD58jiQlRBqH--
