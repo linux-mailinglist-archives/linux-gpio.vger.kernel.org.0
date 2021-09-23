@@ -2,161 +2,196 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D3667415EA3
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Sep 2021 14:43:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A00534160F8
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Sep 2021 16:25:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240911AbhIWMpO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Sep 2021 08:45:14 -0400
-Received: from mail-dm6nam10on2089.outbound.protection.outlook.com ([40.107.93.89]:5344
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S240787AbhIWMpN (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 23 Sep 2021 08:45:13 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Zy+yFVMy+ia+d2sEg2iTF9FWLHy7vY8S0z/U/LKrPoFt5MNYVirZv3U4MO9Co8kTFd8EAZ9eFf421OvYS+3Zi8+ZaKKUJ4Drcs1lCuBTOGAmUDGQ/euQwQ+QaewSDjIcuvLEIgLAXEJeZVe2veaRGylaYfo6CgwcDAxr6OA8tCn3OSaK3XBmaNyoVKlINMgEFhYUN2/pUMIlEu47DGdfBdAH9NfE9pjgLJvVKuNTx7ZIAkgg7OhZ8nmonvzEOb3ajys9EdTP4sjisK/8E4tDK4DjXfRoEe+AArH11IRV/CcCV1/Kgf8ELS+D14XTPOmM3zVvTBZ3bT1bzWfyo+J6vg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
- bh=QFy45rdekizq2LkU37JP/WndpjRfDJif5hqMQMqcchA=;
- b=E4qHf7Zgm0c9sECCj2RLe3ufOUUrjoR5+Bs292tYTtK744EkVPNGgnkNaYtXYK63nl3E8Xk8GkZSBYTEQidacutWtIf+vrfWAOxTDUoh9Vx74JEWiqKllH0aYrpPP93rrElFdWj1z+aBFnmLnGD8hhJ2JtqGmnq0eiyzlJO6J8iD/6sEwudpsGOFUm0BqYnNUgy9Ryhz/6Rkbo/uo3Q3G7lPnnkgyVkihOFGhVaRfRvTZEyxtcZjNNV2BK6RYAbENmWRG+KrE6UiO9RV3vTvMK/aztwxCj9yW1WMmyFPX6oeTHC0C4AsU0N3nO5xyUqPGKS3RVl286ic6LT7kdc65A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QFy45rdekizq2LkU37JP/WndpjRfDJif5hqMQMqcchA=;
- b=ueIEBjVtlP1RahvcbE9UW31S47TQDp78tvl0pKMC90S9CilwGm1GgYxxR+PePv+k/8k+QrTEQ4hNu8LWs0uEfzqe3lnIr1Tqy253AEZg09bvOeoW4iCqsbfMKOC1lqzXth3xLs3ZhovCuv7GVlPoZXhQmAdt1FiZUCwff49gJAFOX+sz8wthMF+5Sh9IvgoYWkppEzGxKqnbEngrh2TbWQzH8Gv3VFQTTMbF708fNa6pldTGQc6eePsmuE8XDYzE4ubX94zv8+JstoNtyWVWwBQVHdvy8v7kp1QXaryewmyAxBaNcN54dz6b0fS6Ce/pQZjYN0hfISgwgM7XDklzpw==
-Received: from CH2PR12MB3895.namprd12.prod.outlook.com (2603:10b6:610:2a::13)
- by CH2PR12MB4053.namprd12.prod.outlook.com (2603:10b6:610:7c::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4544.14; Thu, 23 Sep
- 2021 12:43:39 +0000
-Received: from CH2PR12MB3895.namprd12.prod.outlook.com
- ([fe80::a46b:a8b7:59d:9142]) by CH2PR12MB3895.namprd12.prod.outlook.com
- ([fe80::a46b:a8b7:59d:9142%5]) with mapi id 15.20.4523.018; Thu, 23 Sep 2021
- 12:43:39 +0000
-From:   Asmaa Mnebhi <asmaa@nvidia.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        David Thompson <davthompson@nvidia.com>
-Subject: RE: [PATCH v2 1/2] gpio: mlxbf2: Introduce IRQ support
-Thread-Topic: [PATCH v2 1/2] gpio: mlxbf2: Introduce IRQ support
-Thread-Index: AQHXrmWkzr3ID0dlqEu/CHaf9JymsquvFGcAgAAAj5CAARKhAIABbCOQ
-Date:   Thu, 23 Sep 2021 12:43:39 +0000
-Message-ID: <CH2PR12MB3895D489497D7F45B4A45A34D7A39@CH2PR12MB3895.namprd12.prod.outlook.com>
-References: <20210920212227.19358-1-asmaa@nvidia.com>
- <20210920212227.19358-2-asmaa@nvidia.com> <YUpdjh8dtjz29TWU@lunn.ch>
- <CH2PR12MB38951F1A008AE68A6FE7ED96D7A29@CH2PR12MB3895.namprd12.prod.outlook.com>
- <YUtEZvkI7ZPzfffo@lunn.ch>
-In-Reply-To: <YUtEZvkI7ZPzfffo@lunn.ch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: lunn.ch; dkim=none (message not signed)
- header.d=none;lunn.ch; dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a81fe7e1-1ace-4d34-b933-08d97e8fc496
-x-ms-traffictypediagnostic: CH2PR12MB4053:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR12MB40533E5BA810E39213A0C46ED7A39@CH2PR12MB4053.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 9MZeXyuZbt+GHuLucpdIVWmtbfpOnvIox5N6gk0J2QTw11/ojY6a1T5MrRYBDMUqzrKzK659trmTClMD93BEWheQk198kcdjt7Qf5Cg4poHipRy8xk49+kVkzDheaXynAlfh6iuiHW9XGytz+dtVHefoe2VsLBFeWny/Urz9E5f/3hU9zZkc8ZgRWSTEIv+V4xovOcckk1IY37i7Ug+INl+9bqtJd02l2kmQksEPTJtKkMmZQlfIg6a5F2N60BNqkkDjB8FTMHwjIyfpF0nFZ196Yos59smZrIjuxX2+GwiSXqQ/pQIcxEAbFyD282vRAJf/Y9+zRLiWsbJufXQPSLXzATT64D+h5sqeudQDMSidz7VlBHTfdIkWxDtlkiQMv5GEF/YuGMG+K9ACQRfweJzQvihs3N+t4Io9ra2o43+kUpxdPGH+n72qnrYhIBQ3gSYOj/cbBGla9g5RhQUQdPpPsmwgMVqjOncqx+Y3aJQ57xJjZlDIKiu840mED0jRQm9lNMo004OEusZkYK6aQLcceGdnkOPpMYPtMZzp9m1G7OzMkZnURU6r9hcvZl6yYWlTybANiAK4LEH1fkOX/KUDoCGlxqJGpvgewXG/tL8wO3nXb5lt3N7M85Chc7jLN3YPtBtoPs07/xFhG/Nu0b0M9F/l5CNh417NYz3JYmjNGgI6OyY039XP4vXvRmimuCNHEOUkuQVh1UyIDWDbHg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3895.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(2906002)(316002)(8936002)(83380400001)(86362001)(186003)(52536014)(8676002)(54906003)(6916009)(38070700005)(5660300002)(122000001)(38100700002)(64756008)(66946007)(107886003)(66446008)(33656002)(66476007)(66556008)(9686003)(4326008)(76116006)(7416002)(55016002)(508600001)(71200400001)(6506007)(7696005)(26005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?13ZCIiTnbTKG+HRqoKq+1kdoqK3+bT5IOyWxRH1DjvHtUr0yHOcvwexmQeMb?=
- =?us-ascii?Q?LFN0QD5maT9VZhEmA+V61xJQ4mhofpHpFuFregx3ZYRYHAgBJpcPpHEER9ff?=
- =?us-ascii?Q?9jR+DfEB9uHnj/qT9BqZoWZKGV4wA9wEB7RPVicd4Q3v3ZgrAWKnoww7oZwK?=
- =?us-ascii?Q?CerYTM9s3mnB/5qkFynsHzQHM5FnpuOcdqHZ6xK9aAcNsQeW6kkaFNXx4PhR?=
- =?us-ascii?Q?yEQagute32fRXxM8cZVcIYg5v/vSInk2hNB0tr/CUonVcor1TIFFyip8gQUx?=
- =?us-ascii?Q?g5p6+lei/ee9XsKRA2/7zTkhS5zLDY/fiT2em6DGrIAW5H0AN685lYwrzCY6?=
- =?us-ascii?Q?4pQsFxjlIS6SRByKmTrj1jQdXBo2aPqDqebkLR2yks1oUOhTz4gAOFRapHCM?=
- =?us-ascii?Q?l1vm3RICmfTok4UhIBpBiL1bwUuMXtbtcZkMioOeIK+3smjdPJw77q28ndp7?=
- =?us-ascii?Q?bLFsiu0149bKMmlokNcHF4Wptj3YiSn70vZNl/xSrz8T8m45btiy15aODww+?=
- =?us-ascii?Q?HN024JPbqeOdWir03YNL6lT31+TCbARxD0gsTCshjA/UlprQHNn0YklLjw4N?=
- =?us-ascii?Q?526hahqUBAOOS4MDBngyc4GTPlUPG0J8Lr9feT5uhCRLuqLcJNG3FEv64EH4?=
- =?us-ascii?Q?iAdfVgvV1f/zxgDTOKJQ7CJMV9P6h7Lm4XHBG0GPaE3BHmttxfZlKENG9Itb?=
- =?us-ascii?Q?vUIjL826wyTsEs2Fk79n1ift8u7Gab6Ys9BfYfIbFgTjLWge11DWkkONpC3C?=
- =?us-ascii?Q?RgCPeQfuZZD//RIo/6/NeJz2kVrFFXSulbawfEMg3ti3O0tCfRbdqtvwtoFP?=
- =?us-ascii?Q?nFJbMXpFmH0l7WUypRTzW8g+29yqY2qcsp+ZVtF6Ld29OJStxC0/VyzxoriO?=
- =?us-ascii?Q?cum0qrQ5NtPB/7mwEblczdBrfyDtrukZJJLfH+96wk/S5CZiyqkME9DX843H?=
- =?us-ascii?Q?g5mi1c1loLoDHeA2pRFKvM79+0l2ZwSTlYhQjTwtMQuAmlIpz4ey3n3qnt7M?=
- =?us-ascii?Q?PTQCYzLc9sSmuusDLYtwCtK8YEwui/OYGK/anUpQpap4l17FdNDdnSI147qg?=
- =?us-ascii?Q?sBNGLmheK+ne8xCKgLXOPEjXtFeqduk9xua9CW2WqzD4F470vYiSPy2MWuEm?=
- =?us-ascii?Q?TXDeoLPGuhtlGGqs+Zz9VRJW8EEEkrfZm4Pu9EHHi8JQFSIIUCeidALXKDnF?=
- =?us-ascii?Q?OgLyaXudvnCCy1vvfOMkV3dfRlMxmR2PtxDkpSmsyeiAU+7D0/SgrjvpfXjj?=
- =?us-ascii?Q?++i6tnpDXuR9VYAvIQ0xWXMK6mgbtFgBwcgJI9A5ARbgb/mIH/3pAg+fnsjJ?=
- =?us-ascii?Q?fbc/ot5D5uV4Al+Iyuf5dLjn?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S241517AbhIWO0u (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Sep 2021 10:26:50 -0400
+Received: from mxout70.expurgate.net ([194.37.255.70]:41681 "EHLO
+        mxout70.expurgate.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241308AbhIWO0u (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Sep 2021 10:26:50 -0400
+X-Greylist: delayed 473 seconds by postgrey-1.27 at vger.kernel.org; Thu, 23 Sep 2021 10:26:49 EDT
+Received: from [127.0.0.1] (helo=localhost)
+        by relay.expurgate.net with smtp (Exim 4.92)
+        (envelope-from <fe@dev.tdt.de>)
+        id 1mTPXM-0004Hd-1D; Thu, 23 Sep 2021 16:17:20 +0200
+Received: from [195.243.126.94] (helo=securemail.tdt.de)
+        by relay.expurgate.net with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <fe@dev.tdt.de>)
+        id 1mTPXL-000465-13; Thu, 23 Sep 2021 16:17:19 +0200
+Received: from securemail.tdt.de (localhost [127.0.0.1])
+        by securemail.tdt.de (Postfix) with ESMTP id 44992240041;
+        Thu, 23 Sep 2021 16:17:18 +0200 (CEST)
+Received: from mail.dev.tdt.de (unknown [10.2.4.42])
+        by securemail.tdt.de (Postfix) with ESMTP id A9CD2240040;
+        Thu, 23 Sep 2021 16:17:17 +0200 (CEST)
+Received: from mail.dev.tdt.de (localhost [IPv6:::1])
+        by mail.dev.tdt.de (Postfix) with ESMTP id 6971620110;
+        Thu, 23 Sep 2021 16:17:13 +0200 (CEST)
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3895.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a81fe7e1-1ace-4d34-b933-08d97e8fc496
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Sep 2021 12:43:39.1282
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: fzlYqvulIGKmXdgMhJ3DuEdehJDPvNZxBXfGXqWJTYYd+rHH3AYuXOrzNVBPs0lc3rXnkpy1mUvoSH2Az8XwTg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4053
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 23 Sep 2021 16:17:13 +0200
+From:   Florian Eckert <fe@dev.tdt.de>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Enrico Weigelt <info@metux.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean Delvare <jdelvare@suse.com>, Florian.Eckert@googlemail.com
+Cc:     linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-i2c@vger.kernel.org
+Subject: Add a SSDT ACPI description to recognize my I2C device connected via
+ SMBus
+In-Reply-To: <YUrg6TfVhk+TIxDz@smile.fi.intel.com>
+References: <20200407173849.43628-1-andriy.shevchenko@linux.intel.com>
+ <290741faab199d3e43b6255bf2282075@dev.tdt.de>
+ <YUrO5ajlS9wS6xYU@smile.fi.intel.com> <YUrg6TfVhk+TIxDz@smile.fi.intel.com>
+Message-ID: <d84fb798722762862a7fb08f1e343b6a@dev.tdt.de>
+X-Sender: fe@dev.tdt.de
+User-Agent: Roundcube Webmail/1.3.16
+X-Spam-Status: No, score=-1.0 required=5.0 tests=ALL_TRUSTED,
+        T_FILL_THIS_FORM_SHORT autolearn=ham autolearn_force=no version=3.4.2
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on mail.dev.tdt.de
+X-purgate: clean
+X-purgate-ID: 151534::1632406639-000081E6-9F458C7C/0/0
+X-purgate-type: clean
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> > +static int
-> > +mlxbf2_gpio_irq_set_type(struct irq_data *irqd, unsigned int type)=20
-> > +{
-> > +
-> > +	switch (type & IRQ_TYPE_SENSE_MASK) {
-> > +	case IRQ_TYPE_EDGE_BOTH:
-> > +		fall =3D true;
-> > +		rise =3D true;
-> > +		break;
-> > +	case IRQ_TYPE_EDGE_RISING:
-> > +		rise =3D true;
-> > +		break;
-> > +	case IRQ_TYPE_EDGE_FALLING:
-> > +		fall =3D true;
-> > +		break;
-> > +	default:
-> > +		return -EINVAL;
-> > +	}
->=20
-> > What PHY are you using? I think every one i've looked at are level=20
-> > triggered, not edge. Using an edge interrupt might work 99% of the=20
-> > time, but when the timing is just wrong, you can loose an interrupt.
-> > Which might mean phylib thinks the link is down, when it fact it is up.=
-=20
-> > You will need to unplug and replug to recover from that.
->=20
-> It is the micrel PHY KSZ9031 so it is an active low level interrupt.
-> Here, IRQ_TYPE_EDGE* macros are mainly used to decide whether to write=20
-> the YU_GPIO_CAUSE_FALL_EN register vs the YU_GPIO_CAUSE_RISE_EN register.
-> These 2 registers are used in both LEVEL/EDGE interrupts.
+I am working wit OpenWrt which has recently switched the kernel version
+from 5.4 to 5.10 on x86 Target [1] in its master branch.
 
-> I assume you also have an YU_GPIO_CAUSE_LOW_EN and
+I am using a APU3 board from PC-Engine [2].
 
-> YU_GPIO_CAUSE_HIGH_EN registers? These registers need to
+The APU3 board has an SMBus [3] device (Intel PIIX4 and compatible
+(ATI/AMD/Serverworks/Broadcom/SMSC) to communicate with additional 
+connected I2C devices.
 
-> be set for IRQ_TYPE_LEVEL_LOW and IRQ_TYPE_LEVEL_HIGH.
+On This SMBus there is a IO expander from microchip connect [4] via the 
+SMBus (i2c).
+I used this microchip IO expander to control additional LEDs, as the 
+APU3 only has 3.
 
-No we don't. I double checked with the HW team and they confirmed that
-YU_GPIO_CAUSE_FALL_EN and YU_GPIO_CAUSE_RISE_EN are used in
-Both level and edge interrupts cases.
+So far, everything has worked fine, because I had wirten a platform 
+device for this.
+Everything was recognized and compiled cleanly and I could control the 
+LEDs from the user-land.
 
-Thanks.
-Asnaa
+Due to the following change [5] between 5.4 and 5.10 by removing the 
+platform data support in
+the IO expander mcp23s08, my plaform device does not compile anymore,
+I can no longer use the platform device pattern for this kind of device.
+
+The only possibility I can think of now is to make this device known
+to the kernel via a dynamic ACPI SSDT table. I have already tried 
+various
+things but I can't get the driver [4] to feel responsible for this 
+device.
+
+I have used the following links that were provided by "Andy Shevchenko" 
+to me
+to understand the concept begind ACPI SSDT handling. Thanks for that.
+
+https://connect.linaro.org/resources/lvc21f/lvc21f-304/
+https://www.youtube.com/watch?v=nlKjUAv3RL0&ab_channel=OSDNConf
+https://stackoverflow.com/questions/65727454/
+https://stackoverflow.com/questions/60105101/
+https://stackoverflow.com/questions/54768841/
+https://stackoverflow.com/questions/46095840/
+https://github.com/westeri/meta-acpi/tree/master/recipes-bsp/acpi-tables/samples/
+
+This is my aml file that I tried with. It loads but nothing happens.
+
+DefinitionBlock ("mcp23s08.aml", "SSDT", 5, "", "IO", 2)
+{
+     External (\_SB.PCI0.SBUS, DeviceObj)
+
+     Device (\_SB.PCI0.SBUS.BUS0)
+     {
+         Name (_CID, "smbus")
+         NAME (_ADR, Zero)
+         Device (PIN)
+         {
+             Name (_HID, "PRP0001")
+             Name (_DDN, "io expander")
+             Name (_CRS, ResourceTemplate () {
+                 I2cSerialBus (
+                     0x24,                   // Bus address
+                     ControllerInitiated,    // Don't care
+                     400000,                 // Fast mode (400 kHz)
+                     AddressingMode7Bit,     // 7-bit addressing
+                     "\\_SB.PCI0.SBUS.BUS0", // I2C host controller
+                     0                       // Must be 0
+                 )
+             })
+
+             Name (_DSD, Package () {
+                 ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+                 Package () {
+                     Package () { "compatible", Package () { 
+"microchip,mcp23017" } },
+                 }
+             })
+         }
+     }
+}
+
+In Coreboot the SMBus named SBUS and is on address 0x0014000 [7].
+
+But I'm not sure if that's right at all.
+Somehow I don't understand how the io expander is connected to SMBus.
+According to my research, however, it should fit.
+
+The SMBus device driver i2c-piix4 creates 3 I2C devices:
+ls -la /sys/bus/i2c/devices/
+../../../devices/pci0000:00/0000:00:14.0/i2c-0 (SMBus PIIX4 adapter port 
+0 at 0b00)
+../../../devices/pci0000:00/0000:00:14.0/i2c-1 (SMBus PIIX4 adapter port 
+2 at 0b00)
+../../../devices/pci0000:00/0000:00:14.0/i2c-2 (SMBus PIIX4 adapter port 
+1 at 0b20)
+
+
+The mcp23s08 is connected to the i2c-0 with address 0x24
+
+Therefore I believe the following applies
+
++------+    +------+
+| PCI0 |--->| SMB0 |--> i2c client A (0x24)
+|      |    |      |
++------+    +------+
+
+
+I have enabled the following kernel config parameters for ACPI SSDT:
+CONFIG_ACPI_CUSTOM_METHOD
+CONFIG_CONFIGFS_FS
+CONFIG_ACPI_CONFIGFS
+CONFIG_ACPI_DEBUG
+
+The goal would be that the ACPI mapping for the i2c-pii4 and the 
+connected pinctrl-mcp23s08 exactly works as
+show in the video [5] from Andy Shevchenko.
+
+I think others will have the same problem in the future when they update 
+the kernel on an X86 embedded device
+which does not support device trees and also now no platform data 
+handling.
+
+
+- Florian
+
+[1] 
+https://git.openwrt.org/?p=openwrt/openwrt.git;a=commit;h=64be0eadc17988f29d0a4b89569840d917746498
+[2] https://pcengines.ch/apu.htm
+[3] 
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/i2c/busses/i2c-piix4.c?h=v5.10.68
+[4] 
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/pinctrl/pinctrl-max77620.c?h=v5.10.68
+[5] 
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/drivers/pinctrl/pinctrl-mcp23s08.c?h=v5.10.68&id=6aba6ed879b3471903c8ada28ba968a268df6143
+[6] https://www.youtube.com/watch?v=nlKjUAv3RL0&ab_channel=OSDNConf
+[7] 
+https://review.coreboot.org/plugins/gitiles/coreboot/+/refs/heads/master/src/southbridge/amd/pi/hudson/acpi/fch.asl#29
