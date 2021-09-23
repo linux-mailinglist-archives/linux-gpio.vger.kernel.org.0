@@ -2,166 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 832E7416328
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Sep 2021 18:25:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 638FB41644B
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Sep 2021 19:22:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241982AbhIWQ0b (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Sep 2021 12:26:31 -0400
-Received: from mga14.intel.com ([192.55.52.115]:15667 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232675AbhIWQ0b (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 23 Sep 2021 12:26:31 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10116"; a="223533867"
-X-IronPort-AV: E=Sophos;i="5.85,316,1624345200"; 
-   d="scan'208";a="223533867"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2021 09:24:59 -0700
-X-IronPort-AV: E=Sophos;i="5.85,316,1624345200"; 
-   d="scan'208";a="614009871"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2021 09:24:56 -0700
-Received: by lahna (sSMTP sendmail emulation); Thu, 23 Sep 2021 19:24:54 +0300
-Date:   Thu, 23 Sep 2021 19:24:54 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Florian Eckert <fe@dev.tdt.de>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Enrico Weigelt <info@metux.net>,
-        Jean Delvare <jdelvare@suse.com>,
-        Florian.Eckert@googlemail.com, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-i2c@vger.kernel.org
-Subject: Re: Add a SSDT ACPI description to recognize my I2C device connected
- via SMBus
-Message-ID: <YUyqVsYs5oajm//6@lahna>
-References: <20200407173849.43628-1-andriy.shevchenko@linux.intel.com>
- <290741faab199d3e43b6255bf2282075@dev.tdt.de>
- <YUrO5ajlS9wS6xYU@smile.fi.intel.com>
- <YUrg6TfVhk+TIxDz@smile.fi.intel.com>
- <d84fb798722762862a7fb08f1e343b6a@dev.tdt.de>
+        id S242401AbhIWRYa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Sep 2021 13:24:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60866 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242288AbhIWRY3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Sep 2021 13:24:29 -0400
+Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96662C061574
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Sep 2021 10:22:57 -0700 (PDT)
+Received: by mail-lj1-x230.google.com with SMTP id c33so3125272ljr.8
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Sep 2021 10:22:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Kqgy4XtrAnXd2pwfNj+EfVSyKbIEO/VB+6CmCbnUb58=;
+        b=I0Kwhlf34TW1DuoQ+RwuO0yue27TE8Y7tMoc11qLpjk3yW+l4/DoYG5Xbpo3g5lny9
+         EdX1P8Wl7quuPC1PpeLn3GTeLsg72juTpB+uK8w1y7xwPqRnpSX8/NrGWBXK78wLqLeG
+         DuePTk38DGSo+FISTCPDNL2Ct/vKeicrYeT2Ye33scu7jMYTchYgrkThMGGxf+TGBVZy
+         zb3iwKBNKBHCDr5rNz1YniOfyQAnGaNNj2/3agCZtiwX9yXuM0eZWivvwHb24mkMLTw0
+         ioeDk4qPERuaQlcffNtk8/U6zVtRGTVJi+P44P34uwV47wzSqGy7G1uCwNoBVV2wfJhj
+         yt8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Kqgy4XtrAnXd2pwfNj+EfVSyKbIEO/VB+6CmCbnUb58=;
+        b=b6pctg0+vB1O2HfGpxT7+U7nB6D9oMBuJCyfuuDa50BxFtwy2DB6cNHNcv2yR1aFOl
+         U3oplTBrOnXYynFCMwD+Zc5Frt1iL9L/81JxPX19o9yxz0S72cVstd+9RCuosnwU5LVX
+         QPQcUuw19NnQUkuau+JIscrUqE/8tVTcQW+tbG8mtZAtcsCKEsH0kAdJBXagsL1tlTSO
+         jw136SMsUlAbY/mf2SQ3vTOGoLsPByMfu5KnxTL9bmL0V9agOLX74JfR3GZbdS+tbxOx
+         Ay3hgvc7t/c+id48JF/H7GmTz5G5zaaNppTNOutfz+RtDORIVdTWLpmg8lFW/3TiEX7/
+         BX9A==
+X-Gm-Message-State: AOAM530Z2Nf6blxX7t1R38ap49PPrO0PWVAI80RO8DvtWEPpajTkXNuZ
+        1kZAdV4xo50yAJ9mCdg5aJxC0Q==
+X-Google-Smtp-Source: ABdhPJyVseVGMDpMEEMzWfb3vbFS/Cx90+7pdNZah6YXtDvtAQ/Ml0GNuMXYIGzuanIC4dHHeOF/fw==
+X-Received: by 2002:a2e:944d:: with SMTP id o13mr6618922ljh.419.1632417775933;
+        Thu, 23 Sep 2021 10:22:55 -0700 (PDT)
+Received: from cobook.home (nikaet.starlink.ru. [94.141.168.29])
+        by smtp.gmail.com with ESMTPSA id p23sm336660ljm.127.2021.09.23.10.22.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Sep 2021 10:22:55 -0700 (PDT)
+From:   Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
+        Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Subject: [PATCH] gpio: pca953x: do not ignore i2c errors
+Date:   Thu, 23 Sep 2021 20:22:16 +0300
+Message-Id: <20210923172215.18376-1-nikita.yoush@cogentembedded.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d84fb798722762862a7fb08f1e343b6a@dev.tdt.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+From: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
 
-On Thu, Sep 23, 2021 at 04:17:13PM +0200, Florian Eckert wrote:
-> I am working wit OpenWrt which has recently switched the kernel version
-> from 5.4 to 5.10 on x86 Target [1] in its master branch.
-> 
-> I am using a APU3 board from PC-Engine [2].
-> 
-> The APU3 board has an SMBus [3] device (Intel PIIX4 and compatible
-> (ATI/AMD/Serverworks/Broadcom/SMSC) to communicate with additional connected
-> I2C devices.
-> 
-> On This SMBus there is a IO expander from microchip connect [4] via the
-> SMBus (i2c).
-> I used this microchip IO expander to control additional LEDs, as the APU3
-> only has 3.
-> 
-> So far, everything has worked fine, because I had wirten a platform device
-> for this.
-> Everything was recognized and compiled cleanly and I could control the LEDs
-> from the user-land.
-> 
-> Due to the following change [5] between 5.4 and 5.10 by removing the
-> platform data support in
-> the IO expander mcp23s08, my plaform device does not compile anymore,
-> I can no longer use the platform device pattern for this kind of device.
-> 
-> The only possibility I can think of now is to make this device known
-> to the kernel via a dynamic ACPI SSDT table. I have already tried various
-> things but I can't get the driver [4] to feel responsible for this device.
-> 
-> I have used the following links that were provided by "Andy Shevchenko" to
-> me
-> to understand the concept begind ACPI SSDT handling. Thanks for that.
-> 
-> https://connect.linaro.org/resources/lvc21f/lvc21f-304/
-> https://www.youtube.com/watch?v=nlKjUAv3RL0&ab_channel=OSDNConf
-> https://stackoverflow.com/questions/65727454/
-> https://stackoverflow.com/questions/60105101/
-> https://stackoverflow.com/questions/54768841/
-> https://stackoverflow.com/questions/46095840/
-> https://github.com/westeri/meta-acpi/tree/master/recipes-bsp/acpi-tables/samples/
-> 
-> This is my aml file that I tried with. It loads but nothing happens.
-> 
-> DefinitionBlock ("mcp23s08.aml", "SSDT", 5, "", "IO", 2)
-> {
->     External (\_SB.PCI0.SBUS, DeviceObj)
-> 
->     Device (\_SB.PCI0.SBUS.BUS0)
->     {
->         Name (_CID, "smbus")
->         NAME (_ADR, Zero)
->         Device (PIN)
->         {
->             Name (_HID, "PRP0001")
->             Name (_DDN, "io expander")
->             Name (_CRS, ResourceTemplate () {
->                 I2cSerialBus (
->                     0x24,                   // Bus address
->                     ControllerInitiated,    // Don't care
->                     400000,                 // Fast mode (400 kHz)
->                     AddressingMode7Bit,     // 7-bit addressing
->                     "\\_SB.PCI0.SBUS.BUS0", // I2C host controller
->                     0                       // Must be 0
->                 )
->             })
-> 
->             Name (_DSD, Package () {
->                 ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
->                 Package () {
->                     Package () { "compatible", Package () {
-> "microchip,mcp23017" } },
->                 }
->             })
->         }
->     }
-> }
-> 
-> In Coreboot the SMBus named SBUS and is on address 0x0014000 [7].
-> 
-> But I'm not sure if that's right at all.
-> Somehow I don't understand how the io expander is connected to SMBus.
-> According to my research, however, it should fit.
-> 
-> The SMBus device driver i2c-piix4 creates 3 I2C devices:
-> ls -la /sys/bus/i2c/devices/
-> ../../../devices/pci0000:00/0000:00:14.0/i2c-0 (SMBus PIIX4 adapter port 0
-> at 0b00)
-> ../../../devices/pci0000:00/0000:00:14.0/i2c-1 (SMBus PIIX4 adapter port 2
-> at 0b00)
-> ../../../devices/pci0000:00/0000:00:14.0/i2c-2 (SMBus PIIX4 adapter port 1
-> at 0b20)
-> 
-> 
-> The mcp23s08 is connected to the i2c-0 with address 0x24
-> 
-> Therefore I believe the following applies
-> 
-> +------+    +------+
-> | PCI0 |--->| SMB0 |--> i2c client A (0x24)
-> |      |    |      |
-> +------+    +------+
-> 
-> 
-> I have enabled the following kernel config parameters for ACPI SSDT:
-> CONFIG_ACPI_CUSTOM_METHOD
-> CONFIG_CONFIGFS_FS
-> CONFIG_ACPI_CONFIGFS
-> CONFIG_ACPI_DEBUG
+Per gpio_chip interface, error shall be proparated to the caller.
 
-How do you load the SSDT? Via initrd or something else? You may need to
-enable CONFIG_ACPI_TABLE_UPGRADE too. Also do you see in dmesg that the
-SSDT is loaded?
+Attempt to silent diagnostics by returning zero (as written in the
+comment) is plain wrong, because the zero return can be interpreted by
+the caller as the gpio value.
 
-Then I suggest checking the below attributes:
+Signed-off-by: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
+Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+---
+ drivers/gpio/gpio-pca953x.c | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
- ../../../devices/pci0000:00/0000:00:14.0/firmware_node/path
- ../../../devices/pci0000:00/0000:00:14.0/i2c-0/firmware_node/path
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index f5cfc0698799..8ebf369b3ba0 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -468,15 +468,8 @@ static int pca953x_gpio_get_value(struct gpio_chip *gc, unsigned off)
+ 	mutex_lock(&chip->i2c_lock);
+ 	ret = regmap_read(chip->regmap, inreg, &reg_val);
+ 	mutex_unlock(&chip->i2c_lock);
+-	if (ret < 0) {
+-		/*
+-		 * NOTE:
+-		 * diagnostic already emitted; that's all we should
+-		 * do unless gpio_*_value_cansleep() calls become different
+-		 * from their nonsleeping siblings (and report faults).
+-		 */
+-		return 0;
+-	}
++	if (ret < 0)
++		return ret;
+ 
+ 	return !!(reg_val & bit);
+ }
+-- 
+2.30.2
+
