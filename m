@@ -2,74 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C1D2241546F
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Sep 2021 02:10:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 972F94155AF
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Sep 2021 05:01:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238669AbhIWAMM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Sep 2021 20:12:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50680 "EHLO
+        id S238958AbhIWDCu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Sep 2021 23:02:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238652AbhIWAML (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Sep 2021 20:12:11 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F54AC061756
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Sep 2021 17:10:41 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id g41so18940033lfv.1
-        for <linux-gpio@vger.kernel.org>; Wed, 22 Sep 2021 17:10:40 -0700 (PDT)
+        with ESMTP id S238955AbhIWDCu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Sep 2021 23:02:50 -0400
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EDE0C061757
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Sep 2021 20:01:19 -0700 (PDT)
+Received: by mail-pj1-x1034.google.com with SMTP id il14-20020a17090b164e00b0019c7a7c362dso4897146pjb.0
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Sep 2021 20:01:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EvOlB0r3FuqDhudXTyF9BaPbYvDMAbce9BxNCnXMzUY=;
-        b=cy08gT2CO5xLGpdaFt4dHN5Z3IisOK0kVkLBJOeTlp3itOsIcxG4ABvuKp5pyOsYxg
-         bUsXR4cXLnhObVwtRLvM2iixJmK+1l+MN9AZwGE80HzXE7YtI3A6N+JY87BNi9Xr8sM+
-         9xPGm3uWJe+/18nWSfbP5LSiIs7iizfFitHI/J6z7oCxMBlAQJ3g5oElJbqmTF/zk3Dn
-         ViYFGOza0GyLv1b4RWFQzmvPbdx1uUxPXhmguy289L+PvT8T1LzRx5fRj8zt4ZU87cw2
-         Meveez17KcH7NwcpjORrRYdXQQ2hbwmebJTEwf8TYK1OF7AI8ZoLDrbAK22UwUF2PpSI
-         r66g==
+        h=from:to:cc:subject:date:message-id;
+        bh=Rsco8rJJnmLAZwuOl5TFQP4xk+kS1llqY9y42TeLc7k=;
+        b=ZDVmwjwpxM1L0d9KchLJG+3f3jTvhiSmAQOgPf2/GA2T3yLlD3ZeqZqyaz4LBgKfXJ
+         fibnn7uSUtltU7Xni6VWAQQs4a5ZPaVU8QQAOcVHM5cQ8MCMynuamPDCBwFK35Tbz9eC
+         gpVwWqU8N7kwsLbZKowKhY7Rl72MsHClzjEmbAXF4NI+TKEfjLwo5dDjQaElwIjycsgb
+         /8n1z9zGYXwuWYML9esdwfJCEzMI8OteF8y5pPMV7pa0UQDbq+2zzKjBpGwD16mxVPfd
+         deH1ODs+gubjOXufAAQOHlhTpfjWDKVKA/TRX1pEwhxBc7Ec2hk1OzWeFZ2oZiZlesoV
+         xI4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EvOlB0r3FuqDhudXTyF9BaPbYvDMAbce9BxNCnXMzUY=;
-        b=rT/9OnSJbpLsDzkE65ssgrLU0uirxLyDxVIWQkTmc5lsJBamILTrUKb95oAFd7fMnO
-         ePXDygQBPwhHcXyY+vQ3RES3wH0xJjwwksaV3sIbCMjp3db6frQ3p09r1y5qlHJTXeMH
-         2he49somIxmZQI2IP/fxYicIM+OtUJiV6+y+xKZDFba7VL+G1CTVaP8pFMGB8SSm9dku
-         cM+ipIlgqiFvoTtdHRqe52k8iVQM5UpIPOTiPcNwa0T24f+2aWGdc1qtVn5L6iddbHLe
-         FiguNPhG/nUnyvFFllrqe5k4j/KMQVS2PdympiVHwNutFKUcw/HU/IHgoQ0jkW+wew3F
-         zTxQ==
-X-Gm-Message-State: AOAM530lz2W6OcayeVgbA25pLemE97gkPs5fWhsWruUTixQ1s0k6UG+l
-        hpR0VYYWC+eONJUt154u+4HTJ8jj7KJnGVrzpX7wXQ==
-X-Google-Smtp-Source: ABdhPJzfg45la9NSsDEaaeeJhQ8OvJtxhwFWWq0/+tCGrqvAtCG/VDNwY89Ys+R/0FGH7r4mdcu29Y7vpDdiSZJCXzQ=
-X-Received: by 2002:a2e:4c19:: with SMTP id z25mr2105723lja.145.1632355839428;
- Wed, 22 Sep 2021 17:10:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210921222956.40719-1-joey.gouly@arm.com>
-In-Reply-To: <20210921222956.40719-1-joey.gouly@arm.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 23 Sep 2021 02:10:28 +0200
-Message-ID: <CACRpkdbsgb8_VPZhTJpc8Xbx1uo_gH0=uo+YC26HRachLSawxg@mail.gmail.com>
-Subject: Re: [PATCH v1 0/1] pinctrl/GPIO driver for Apple SoCs
-To:     Joey Gouly <joey.gouly@arm.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Hector Martin <marcan@marcan.st>,
-        Marc Zyngier <maz@kernel.org>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Sven Peter <sven@svenpeter.dev>, nd <nd@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Rsco8rJJnmLAZwuOl5TFQP4xk+kS1llqY9y42TeLc7k=;
+        b=nHdBUoUgV8wZPguE7TAfOnvdeyYzZBvnBE2YUSbvoZwSEp9One6aWl3L24XRCE4KDH
+         ZwkcT0CiJM7JKJETL5IbLsdz6VcLArUSs4lOb1XM9DXgwEDf29Ywwrfymz5TyEm7QfWg
+         UlJRWorD+fZc5uu4asf4x76HfxTjt+gTz8hzAk/Pz/RaqwICguTmov70vxv8EWDsdgPy
+         4KfhwZBkZoktbRWH0mUueKFaNciRk0bxC30JS3uswx3RzF3peaMyLQXr8fsmD+3gT6/0
+         +YkBhVkOVGLnHfjXKq8Icr3X/TSaAmZjjHNsAqfr6oR5W+xtLfyJKx734pYsGuCMf0bN
+         wFKg==
+X-Gm-Message-State: AOAM531U61jKxFJsTU+E3Rm+TVDCBlCHIFmGIZrNsSOKc2vxQF+lK6Lt
+        FZJUUcchWybCADGNc05KHf2HIg==
+X-Google-Smtp-Source: ABdhPJybJbLzIo5B2ipqXGGUZDnneckSq02xnZlDHPOc08LSdrQ2583QYBqxR429xY65u76mkmJKxA==
+X-Received: by 2002:a17:90a:19d2:: with SMTP id 18mr15085854pjj.122.1632366078854;
+        Wed, 22 Sep 2021 20:01:18 -0700 (PDT)
+Received: from localhost.localdomain (80.251.214.228.16clouds.com. [80.251.214.228])
+        by smtp.gmail.com with ESMTPSA id i7sm4226869pgp.39.2021.09.22.20.01.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Sep 2021 20:01:18 -0700 (PDT)
+From:   Shawn Guo <shawn.guo@linaro.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Loic Poulain <loic.poulain@linaro.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shawn Guo <shawn.guo@linaro.org>
+Subject: [PATCH v2 0/2] Add pinctrl driver for QCM2290
+Date:   Thu, 23 Sep 2021 11:01:00 +0800
+Message-Id: <20210923030102.29148-1-shawn.guo@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 22, 2021 at 12:30 AM Joey Gouly <joey.gouly@arm.com> wrote:
+The series adds QCM2290 pinctrl driver and bindings.
 
-> I left two defines at the top 'USE_PINMUX_GENERIC_FN' and
-> 'USE_PINCTRL_GENERIC_FN', I wasn't sure if I should use the generic functions for
-> getting the groups/functions, so I left both approaches in and will remove one
-> of them for the next version! Which approach should I use?
+Changes for v2:
+- Update pattern in bindings to cover entire GPIO space.
+- Sort qcm2290 functions.
+- Group phase_flagN into a single function, and same to qdss_gpio, atest
+  and dac_calib.
+- Correct .compatible to be qcom,qcm2290-tlmm.
 
-I think you should go with generic as far as possible, it usually
-gives less code to maintain.
 
-Yours,
-Linus Walleij
+Shawn Guo (2):
+  dt-bindings: pinctrl: qcom: Add QCM2290 pinctrl bindings
+  pinctrl: qcom: Add QCM2290 pinctrl driver
+
+ .../pinctrl/qcom,qcm2290-pinctrl.yaml         |  186 +++
+ drivers/pinctrl/qcom/Kconfig                  |    8 +
+ drivers/pinctrl/qcom/Makefile                 |    1 +
+ drivers/pinctrl/qcom/pinctrl-qcm2290.c        | 1129 +++++++++++++++++
+ 4 files changed, 1324 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,qcm2290-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-qcm2290.c
+
+-- 
+2.17.1
+
