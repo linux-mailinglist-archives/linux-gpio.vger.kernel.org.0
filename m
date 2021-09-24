@@ -2,101 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 705CA416F9F
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Sep 2021 11:53:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E3C08416FC1
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Sep 2021 11:57:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245329AbhIXJzL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 Sep 2021 05:55:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59478 "EHLO
+        id S245451AbhIXJ67 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 Sep 2021 05:58:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245306AbhIXJzK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Sep 2021 05:55:10 -0400
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A541C061574
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Sep 2021 02:53:37 -0700 (PDT)
-Received: by mail-ed1-x533.google.com with SMTP id y89so23175878ede.2
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Sep 2021 02:53:37 -0700 (PDT)
+        with ESMTP id S245454AbhIXJ6v (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Sep 2021 05:58:51 -0400
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB649C061756
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Sep 2021 02:57:18 -0700 (PDT)
+Received: by mail-ed1-x52e.google.com with SMTP id bx4so34080373edb.4
+        for <linux-gpio@vger.kernel.org>; Fri, 24 Sep 2021 02:57:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Id80sjK4OQ4kA7sB5sMIolgMPxWgM7jgcO0GKg3mVBY=;
-        b=qLMwH9jspDZBKXgLfvvSbt6nyGGRM4DJKnnMJqe4btOrFxPekf/eh9++NcoyLGF0Gh
-         np7sVhLSLC5tootJFYEAEDwuq9WT63yrxTB3JSdGF54VkFSJv2RodKXNN7WqybPMcjIJ
-         bV0DpF1CwBjoCmr8VtfdZ6WGOvq3N/rXlECUyV/3G8f2uGpuk4KAnGU1zCq/eOj/dyBh
-         oHxhiQrv6S0rTre4KEH/jpC7LFD0lVs4mnwwUYrjvyiLrzGe6y0H2kfOxUxQ8rez2OtM
-         pNhOUOI6ZX27QhvHvZk41QK0W5KPDbRtDmOyP6vS6gKfZlm+isg7F+1+aF2lZjJ39QI+
-         B6Tw==
+         :cc:content-transfer-encoding;
+        bh=PCgz1sXW2cXehxuYSw97DLmB72DUcCsESVIojwNuwVc=;
+        b=A/N8TFAw7XunR63r8HzRGmSLXvtMGotUbwMblvnxgFeLZTt7tVtm0lZVyWQW3c1PI9
+         nG6uWeZdmlE5ROn/T9Fezvhuqa0SGTvT/FsZyY6Us7+CCy8Udpanjs8SzCdJxmsPWYZI
+         tzfK5BG1+AksbazGFzXiAI03m9MUu7/KOBkvZjPr6zKhV5Yo4FyIHma4EyCB+06Ajqw7
+         BAA1V2oUP9gIZJJu2KMs8RsUnxmBymS/hac6bmC4RC6N5AV4DWwPqHXdaL5D4+aEE+FJ
+         3wX5dVoANpsirJNYNjIwZ7YkZSgFOUFWFcwdsjjtKJ1GT9zvx9mAhJW4s4FlgRgzRDHE
+         mfhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Id80sjK4OQ4kA7sB5sMIolgMPxWgM7jgcO0GKg3mVBY=;
-        b=7tDsjnDcB7PwB84B4omLyTez0iCivr0rmUC6woEZuvxrGBIz+6fDRGOHzHlnizHRz9
-         3QQe9MSfKhX8GvqfSfup4OO6/1oXlzUksl43X1Q/F6oNDsaW7wEAM22Aj/NTyAT+h3ki
-         4fNJh2KWIALTYw7BEVmCCGJc1Zjl+qe5fNq8pEjkRsf0FfOlu5kJav02JcZ8mjBIjbKb
-         kpy89L1SBn+gk9ipwD/THrSeFhJ3FDgMsf3FK8mQBxU2pVEYZ/+oQviZBwrc/V9CsDiW
-         JzfCkuWXL8pndhmlurXg0bpSdXXjUpMa1JJ50jEBN5mTCww4qRM5qb0nP95l4ta4NfYd
-         0T2A==
-X-Gm-Message-State: AOAM533SyhW9SKKKNOG1lB/olE1DJWzt0RuhW0dLMGxB6ZPyAd3m4krh
-        +7y+X0Q0H3AfZ2npfry1OS7kdbdVGe/Et/UWNwPgB/kzVwc=
-X-Google-Smtp-Source: ABdhPJyr24KNjTqo6Jvr16UhTMre84Cz1Lq9TebpnITDDxXKB/f9pJQrPrb5DFX3JH6Z3PSTiuSgZF0ETHwd1ampbnM=
-X-Received: by 2002:a17:906:9401:: with SMTP id q1mr10246410ejx.313.1632477216028;
- Fri, 24 Sep 2021 02:53:36 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=PCgz1sXW2cXehxuYSw97DLmB72DUcCsESVIojwNuwVc=;
+        b=QrMZ4YX5bWo1lgWdj1OCHQ+09z+DMFtu5NACdXd0m8yPEdTogKdqPYGPPgGXqALryW
+         R6we2SS+S+YAcclE8DhI2P9kSuu6c+nQZS1f5buY5RqM11tiQXpiO9cAd+WOr3ll62b1
+         TcmISzmQShDWR69m1JuTYX8vloDsbgr3bOv/8Tywr8LGmsgRSKq8ewGadX1ynd7E/3d9
+         R1Km1hWZ1I6hER/i6pIAVkkqxpjtt6o2eogiczuGuIKDEJpy5i2+TJrjlqNYf5PqUHiq
+         F49SRJKItXNfOnPWF8BuY2gBoS93K3aGUtaU7uXHk5tw2CBn6NPIcfsZVQdQhBzhREOE
+         TOZQ==
+X-Gm-Message-State: AOAM531RAD7/hPvCDgRjp5rCp2HRs7R+AZqkWKj19z5O9bSJ989YsuIP
+        vi+JuIGepgadJK9aaA29gdSaXQRCnhbH/wWnExBMFMH/nTQ=
+X-Google-Smtp-Source: ABdhPJyxkPPlczvwm7k8n0cLeoorgpeYZrJPH5I2p5EiwOyVWD6BdxdSLwd8d6vVlACcIaYtKFeS4E95X49Vz+J1qPY=
+X-Received: by 2002:a50:e0c3:: with SMTP id j3mr4002088edl.60.1632477437418;
+ Fri, 24 Sep 2021 02:57:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAFKLa4+CB5Of1T-fjvtxtzBoeB8xYVENsAZCShRPmBmkGe6ZKQ@mail.gmail.com>
-In-Reply-To: <CAFKLa4+CB5Of1T-fjvtxtzBoeB8xYVENsAZCShRPmBmkGe6ZKQ@mail.gmail.com>
+References: <BN8PR17MB3025D723599B15E5AFB208DAA1A29@BN8PR17MB3025.namprd17.prod.outlook.com>
+In-Reply-To: <BN8PR17MB3025D723599B15E5AFB208DAA1A29@BN8PR17MB3025.namprd17.prod.outlook.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 24 Sep 2021 11:53:25 +0200
-Message-ID: <CAMRc=Mc_P3G7jZYXEVfRGH4UJhera3+oRQ5-vDaoA9GKz5vJZQ@mail.gmail.com>
-Subject: Re: [libgpiod PATCH v3] Add cmake support
-To:     Andreas Pokorny <andreas.pokorny@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Date:   Fri, 24 Sep 2021 11:57:06 +0200
+Message-ID: <CAMRc=Mewmbqo+y++j4iFEn36NMW3xL7AG9Vd+pLt6-PLE3cn0Q@mail.gmail.com>
+Subject: Re: GPIO Bulk Request Problem
+To:     Kenneth Sloat <ksloat@designlinxhs.com>
+Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 16, 2021 at 4:27 PM Andreas Pokorny
-<andreas.pokorny@gmail.com> wrote:
+On Wed, Sep 22, 2021 at 6:27 PM Kenneth Sloat <ksloat@designlinxhs.com> wro=
+te:
 >
-> This is a wip cmake support for libgpiod. It allows to integrate
-> libgpiod as part of a bigger cmake project built via the new package
-> management feature of cmake called FetchContent or as git submodule.
-> This work is motivated by the fact that not all distributions offer
-> proper development packages with bindings enabled and for the different
-> kernel api versions of gpio. This change can be provided/used as an
-> external build script, or conveniently shipped with libgpiod if desired.
-> Both ways I felt the urge to share it with upstream and potential users.
+> Hello,
 >
-> It does offer various build options to control whether tests, C++
-> bindings, tools, python bindings or examples are built. Furthermore
-> you can control if the libraries are built as archives or shared
-> libraries. Basic install support is available.
+> I am using libgpiod v1.4.1 and am having trouble using a bulk request of =
+gpio lines as outputs from a chip. I am using the C++ bindings. I have conf=
+irmed that I can individually request lines and set them as expected. Howev=
+er, if I use the bulk request, while I get the expected number of lines (an=
+d defaulted value is set correctly), iterating through them (with array ope=
+rator in this case) and trying to set the values is not working as expected=
+. I find that for every index/position, line 0 is the one being toggled.
 >
-> The options are:
->  * GPIOD_TOOLS_ENABLED (OFF)
->  * GPIOD_TESTS_ENABLED (OFF)
->  * GPIOD_CXX_BINDINGS_ENABLED (ON)
->  * GPIOD_PYTHON_BINDINGS_ENABLED (ON)
->  * GPIOD_EXAMPLES_ENABLED (OFF)
+> A simple example is below:
 >
-> This change is still wip, not everything works well enough:
->  * examples are not built
->  * tests are built but not integrated properly
->  * install location of the python module is still incorrect
->  * man page generation is missing
-> ---
+>     gpiod::chip *mychip;
+>
+>     mychip =3D new gpiod::chip("1");
 
-Hi! Thanks for the patch.
+Why would you need to allocate it with new?
 
-I'm not sure having two build systems in parallel is a good idea
-frankly. Whenever we add a new file or rearrange anything we'd need to
-remember to change it in both systems. This is the same issue I had
-with meson except that meson is more modern and I would consider it as
-a replacement of autotools first before cmake.
+>
+>     gpiod::line_bulk lines =3D mychip->get_all_lines();
+>     lines.request({std::string("gpio-test"),
+>         gpiod::line_request::DIRECTION_OUTPUT, 0});
+>
+>     for (unsigned int i =3D 0; i < lines.size(); i++) {
+>         printf("Set line %d\n", i);
+>         lines[i].set_value(1);
+>         usleep(1000 * 1000);
+>         printf("Clear line %d\n", i);
+>         lines[i].set_value(0);
+>         usleep(1000 * 1000);
+>         printf("\n");
+>     }
+>
+>     return 0;
+>
+> Not sure if this is a usage problem on my part or an actual issue.
+>
 
-Why is that needed anyway? Doesn't CMake support pkgconfig? I would
-like to learn more about the reasoning.
+I'll see if I can confirm the behavior here but it looks like a bug indeed.
 
 Bart
+
+> Thanks
+>
+> Sincerely,
+> Ken Sloat
