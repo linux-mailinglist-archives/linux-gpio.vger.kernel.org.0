@@ -2,247 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 69922416C9C
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Sep 2021 09:16:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D301416D5E
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Sep 2021 10:07:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244284AbhIXHRw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 Sep 2021 03:17:52 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:55721 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S244264AbhIXHRv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 24 Sep 2021 03:17:51 -0400
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 066A4581053;
-        Fri, 24 Sep 2021 03:16:18 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Fri, 24 Sep 2021 03:16:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm3; bh=zZM521bnoteBXt18EX4cYveNye
-        GG0eHjvsT/OD8iDnw=; b=eCmEKBNOFx4p3EZSw1LNbapiiDa8HmiU4bJbkxWvzv
-        jnnaT68mC6JowhCKSmnETcQ/MvUngR4bEiqzTx2scw1fbgNOqyDVgHG4VaSDNIDh
-        Zw1k2lVY+2O40X+ugUdTruCgtVy4mr1hXPr45ozIV3tD277mSbxA7qlLtHdkGZ0J
-        KdwNtpEY3CWiPCuiQrA4bbyX3QW9vOKx7jW35JhxvXw6Da85+Gr3jLLnT18Nf1qX
-        p34W8meLPN0/nklmrPDgbJCG052Zlgs4vDoht/0Vul3v4uBVAYAVutTdBtkp2IMM
-        AGAVe67LA3Nlm0bGf+AYluXRG9eLSsQrAFUN3LGOf+8Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=zZM521bnoteBXt18E
-        X4cYveNyeGG0eHjvsT/OD8iDnw=; b=wnkMbVvgc7OHMM0YqySkoIEn4Vmv048gW
-        lsy+BY1kpDWg/MhurcKJslPjyZIU4dAMCjNSshuJhG1Ity+CqcbK3TpteHju9AZY
-        ekE314ea2lumdTJqG6c8qqdNfIOI0JOekAh+9xxltghehakjueP93u1kVnU+CE6c
-        GFgeRaHe+NpmVkRZjkUEeLvwZ4lKcb7ktFVQ31IQbV2RKPs98jXdfyCxdFEMwQJr
-        kg5TIahXqGuvNtNMl25+YNSfCMecOIBeySKLqpiBmUKn4AV5XS20CxBtUWvdVeSt
-        j1MPEBBsUWJ3gTTXOaGsWkyOWEbtiw6txIapwXofesKVVlyauDssA==
-X-ME-Sender: <xms:QXtNYZJF9gGBY3EnSl1cB-7AuT40_C9o9q03Fr1KFEHC7-stzvrNpg>
-    <xme:QXtNYVLn6h4mKAY0Ssq_q6KV7Iw_zuEIn4Us_n6ol-MokNHorlnOmoUEBpTr9dBWm
-    1mwCC0q9AQ0EfY3nrc>
-X-ME-Received: <xmr:QXtNYRuC0IhR5bvlMws5AIdp_kTyU0HE6OTngP5xZIZ_u4a-jbWPh-WcUcpbIZ0Vo6cr1fR9RBhZNDwFCWqpJ3_fiPPQsCguiRF_>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrudejtddguddugecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enogevohgrshhtrghlqdfhgeduvddqtddvucdludehtddmnecujfgurhephffvufffkffo
-    ggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcutfhiphgrrhguuceomhgrgi
-    himhgvsegtvghrnhhordhtvggthheqnecuggftrfgrthhtvghrnhephffhhfevtddthefg
-    ieeigeffudehkefgtdeufedvtdduheduieekvddvfedvkeetnecuffhomhgrihhnpeguvg
-    hvihgtvghtrhgvvgdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhep
-    mhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
-X-ME-Proxy: <xmx:QXtNYaYTczXTxr_9gR-eQXmX5TlLCzT1yIWapAKTZ0Cixt2oBQSUTQ>
-    <xmx:QXtNYQZG8nLrXCQXaWlOTVt0Oxe-R136pGOVfMIgTPUj101QtIfVsQ>
-    <xmx:QXtNYeDQf97ZKxWFafSs1am3h4I8C2zjkvsCO0o1WtTQ6nah6PQz2w>
-    <xmx:QntNYaDbK2JoEUlvYkZq9uJH2XzwSTQxtjV3mnrg1_3S06XCnmVeGw>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 24 Sep 2021 03:16:17 -0400 (EDT)
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime@cerno.tech>,
-        =?UTF-8?q?Jernej=20=C5=A0krabec?= <jernej.skrabec@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-sunxi@lists.linux.dev,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh@kernel.org>
-Subject: [RESEND v2 1/3] dt-bindings: gpio: Convert X-Powers AXP209 GPIO binding to a schema
-Date:   Fri, 24 Sep 2021 09:16:12 +0200
-Message-Id: <20210924071614.868307-1-maxime@cerno.tech>
-X-Mailer: git-send-email 2.31.1
+        id S244544AbhIXIIX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 Sep 2021 04:08:23 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:53652 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S237965AbhIXIIW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Sep 2021 04:08:22 -0400
+X-UUID: 2b071b8f61d24529ba1c1b5f85e63a0b-20210924
+X-UUID: 2b071b8f61d24529ba1c1b5f85e63a0b-20210924
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <zhiyong.tao@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1855317345; Fri, 24 Sep 2021 16:06:45 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 24 Sep 2021 16:06:44 +0800
+Received: from localhost.localdomain (10.17.3.154) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 24 Sep 2021 16:06:43 +0800
+From:   Zhiyong Tao <zhiyong.tao@mediatek.com>
+To:     <robh+dt@kernel.org>, <linus.walleij@linaro.org>,
+        <mark.rutland@arm.com>, <matthias.bgg@gmail.com>,
+        <sean.wang@kernel.org>
+CC:     <srv_heupstream@mediatek.com>, <zhiyong.tao@mediatek.com>,
+        <hui.liu@mediatek.com>, <light.hsieh@mediatek.com>,
+        <biao.huang@mediatek.com>, <hongzhou.yang@mediatek.com>,
+        <sean.wang@mediatek.com>, <seiya.wang@mediatek.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>
+Subject: [PATCH v14 0/5] Mediatek pinctrl patch on mt8195 
+Date:   Fri, 24 Sep 2021 16:06:27 +0800
+Message-ID: <20210924080632.28410-1-zhiyong.tao@mediatek.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-MTK:  N
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The X-Powers AXP PMICs feature a GPIO Controller supported by Linux
-thanks to its device tree binding.
+This series includes 5 patches:
+1.add rsel define.
+2.change pull up/down description
+3.fix coding style
+4.support rsel feature for common ICs
+5.add rsel setting on MT8195
 
-Now that we have the DT validation in place, let's convert the device
-tree bindings for that driver over to a YAML schema.
+Changes in patch v14:
+1)add a schema and new property "mediatek, rsel_resistance_in_si_unit"
+  on patch 2/5.
+2)fix kernel-doc style comment on patch 4/5.
+3)add review-by on patch 3/5 and 5/5.
 
-Cc: Chen-Yu Tsai <wens@csie.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Acked-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Changes in patch v13:
+1)change "-EOPNOTSUPP" to "-ENOTSUPP" in patch 4/5.
+2)fix description on 2/5.
 
----
+Changes in patch v12:
+1)add "ack-by" on "rsel define" patch.
+2)add "change reason" in commit message and write a shema
+  on patch document patch 2/5.
+3)separate eint pm_ops fucntion support patch
+4)separate rsel patch, the common parts as patch 4/5 to support
+  common ICs. The mt8195 specific changes as patch 5/5.
+5)add fix coding style patch to fix Camel spelling to avoid checkpatch
+  warning in a following patch.
+6)remove unrelated changes in rsel patch.
+7)change ternary ops in resel patch
+8)add "rsel_is_unit" property on struct mtk_pinctrl, and itendify
+  "mediatek,rsel_resistance_in_si_unit" property in probe function.
+9)add explanation for "MTK_PULL_RSEL_TYPE" and "MTK_PULL_PU_PD_RSEL_TYPE".
+10) fix spell warning in rsel patch.
 
-Changes from v1:
-  - Removed the example and moved it in the mfd schema
----
- .../devicetree/bindings/gpio/gpio-axp209.txt  | 75 -------------------
- .../bindings/gpio/x-powers,axp209-gpio.yaml   | 55 ++++++++++++++
- 2 files changed, 55 insertions(+), 75 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-axp209.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/x-powers,axp209-gpio.yaml
+Changes in patch v11:
+1)add pm_ops fucntion support
+2)change pull up/down description
+3)add resistance value feature support.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-axp209.txt b/Documentation/devicetree/bindings/gpio/gpio-axp209.txt
-deleted file mode 100644
-index fc42b2caa06d..000000000000
---- a/Documentation/devicetree/bindings/gpio/gpio-axp209.txt
-+++ /dev/null
-@@ -1,75 +0,0 @@
--AXP209 GPIO & pinctrl controller
--
--This driver follows the usual GPIO bindings found in
--Documentation/devicetree/bindings/gpio/gpio.txt
--
--This driver follows the usual pinctrl bindings found in
--Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
--
--This driver employs the per-pin muxing pattern.
--
--Required properties:
--- compatible: Should be one of:
--	- "x-powers,axp209-gpio"
--	- "x-powers,axp813-gpio"
--- #gpio-cells: Should be two. The first cell is the pin number and the
--  second is the GPIO flags.
--- gpio-controller: Marks the device node as a GPIO controller.
--
--This node must be a subnode of the axp20x PMIC, documented in
--Documentation/devicetree/bindings/mfd/axp20x.txt
--
--Example:
--
--axp209: pmic@34 {
--	compatible = "x-powers,axp209";
--	reg = <0x34>;
--	interrupt-parent = <&nmi_intc>;
--	interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
--	interrupt-controller;
--	#interrupt-cells = <1>;
--
--	axp_gpio: gpio {
--		compatible = "x-powers,axp209-gpio";
--		gpio-controller;
--		#gpio-cells = <2>;
--	};
--};
--
--The GPIOs can be muxed to other functions and therefore, must be a subnode of
--axp_gpio.
--
--Example:
--
--&axp_gpio {
--	gpio0_adc: gpio0-adc {
--		pins = "GPIO0";
--		function = "adc";
--	};
--};
--
--&example_node {
--	pinctrl-names = "default";
--	pinctrl-0 = <&gpio0_adc>;
--};
--
--GPIOs and their functions
---------------------------
--
--Each GPIO is independent from the other (i.e. GPIO0 in gpio_in function does
--not force GPIO1 and GPIO2 to be in gpio_in function as well).
--
--axp209
--------
--GPIO	|	Functions
--------------------------
--GPIO0	|	gpio_in, gpio_out, ldo, adc
--GPIO1	|	gpio_in, gpio_out, ldo, adc
--GPIO2	|	gpio_in, gpio_out
--
--axp813
--------
--GPIO	|	Functions
--------------------------
--GPIO0	|	gpio_in, gpio_out, ldo, adc
--GPIO1	|	gpio_in, gpio_out, ldo
-diff --git a/Documentation/devicetree/bindings/gpio/x-powers,axp209-gpio.yaml b/Documentation/devicetree/bindings/gpio/x-powers,axp209-gpio.yaml
-new file mode 100644
-index 000000000000..0f628b088cec
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/x-powers,axp209-gpio.yaml
-@@ -0,0 +1,55 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/gpio/x-powers,axp209-gpio.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: X-Powers AXP209 GPIO Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+
-+properties:
-+  "#gpio-cells":
-+    const: 2
-+    description: >
-+      The first cell is the pin number and the second is the GPIO flags.
-+
-+  compatible:
-+    oneOf:
-+      - enum:
-+          - x-powers,axp209-gpio
-+          - x-powers,axp813-gpio
-+      - items:
-+          - const: x-powers,axp803-gpio
-+          - const: x-powers,axp813-gpio
-+
-+  gpio-controller: true
-+
-+patternProperties:
-+  "^.*-pins?$":
-+    $ref: /schemas/pinctrl/pinmux-node.yaml#
-+
-+    properties:
-+      pins:
-+        items:
-+          enum:
-+            - GPIO0
-+            - GPIO1
-+            - GPIO2
-+
-+      function:
-+        enum:
-+          - adc
-+          - ldo
-+          - gpio_in
-+          - gpio_out
-+
-+required:
-+  - compatible
-+  - "#gpio-cells"
-+  - gpio-controller
-+
-+additionalProperties: false
-+
-+...
--- 
-2.31.1
+Changes in patch v10:
+1)fix PARENTHESIS_ALIGNMENT of mtk_pinconf_bias_set_rsel
+2)fix LONG_LINE warning in 615 in pinctrl-paris.c.
+
+Changes in patch v9:
+1)fix "mtk_pinconf_bias_set_rsel" build warning.
+
+Changes in patch v8:
+1)add rsel define patch
+2)avoid  CamelCase
+3)add pinctrl rsel setting patch which is another resistance selection
+  solution for I2C on MT8195.
+
+Changes in patch v7:
+1)add version in patch and fix spelling mistakes.
+
+Changes in patch v6:
+1)add "pintcrl: mediatek" as prefix.
+
+Changes in patch v5:
+1)document and driver patch are apploed.
+2)change '-EOPNOTSUPP' to '-ENOTSUPP'
+
+Changes in patch v4:
+1)fix pinctrl-mt8195.yaml warning error.
+2)remove pinctrl device node patch which is based on "mt8195.dtsi".
+
+Changes in patch v3:
+1)change '^pins' to '-pins$'.
+2)change 'state_0_node_a' to 'gpio_pin' which is defined in dts.
+3)change 'state_0_node_b' to 'i2c0_pin' which is defined in dts.
+4)reorder this series patches. change pinctrl file and binding document
+together in one patch.
+
+There are no changes in v1 & v2.
+
+Zhiyong Tao (5):
+  dt-bindings: pinctrl: mt8195: add rsel define
+  dt-bindings: pinctrl: mt8195: change pull up/down description
+  pinctrl: mediatek: fix coding style
+  pinctrl: mediatek: support rsel feature
+  pinctrl: mediatek: add rsel setting on MT8195
+
+ .../bindings/pinctrl/pinctrl-mt8195.yaml      |  86 ++++++-
+ drivers/pinctrl/mediatek/pinctrl-mt8195.c     | 133 ++++++++++
+ .../pinctrl/mediatek/pinctrl-mtk-common-v2.c  | 231 +++++++++++++++---
+ .../pinctrl/mediatek/pinctrl-mtk-common-v2.h  |  46 ++++
+ drivers/pinctrl/mediatek/pinctrl-paris.c      |  68 ++++--
+ include/dt-bindings/pinctrl/mt65xx.h          |   9 +
+ 6 files changed, 519 insertions(+), 54 deletions(-)
+
+--
+2.18.0
+
 
