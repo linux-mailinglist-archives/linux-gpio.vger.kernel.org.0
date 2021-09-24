@@ -2,161 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 01C56416925
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Sep 2021 03:00:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 39003416A9D
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Sep 2021 05:49:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243676AbhIXBB5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Sep 2021 21:01:57 -0400
-Received: from mail-oi1-f173.google.com ([209.85.167.173]:42500 "EHLO
-        mail-oi1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243678AbhIXBB5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Sep 2021 21:01:57 -0400
-Received: by mail-oi1-f173.google.com with SMTP id x124so12237425oix.9;
-        Thu, 23 Sep 2021 18:00:25 -0700 (PDT)
+        id S244053AbhIXDur (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Sep 2021 23:50:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33266 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S244019AbhIXDuq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Sep 2021 23:50:46 -0400
+Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C689C061574;
+        Thu, 23 Sep 2021 20:49:14 -0700 (PDT)
+Received: by mail-qt1-x834.google.com with SMTP id e16so5746717qts.4;
+        Thu, 23 Sep 2021 20:49:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aeqPl8lRAJi/jngCXcVyekAXBb4CJKVOEfw9KCRibJE=;
+        b=bL87uALhnZQ7xyPEXWDW+jMNYZp8S1nxJnEOCde4kDE2gW+iIKz1JpNCa8ITDhxB4+
+         vxSC6lBz8iFjEU1lWVimNSvB70bTO+uHyq/8juHZ2lM9KnsmHh+ntXKCa9cowFJ7mciB
+         gKG7YAO2bN9c2+K1TtAvImHkI6wTRX8tVt7pM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=GasIhLti856Ga5HeR4f+cGNysCxF+XCkHYY1M/ZuBiw=;
-        b=4mVsfYxG8qdry4qRKnb+PrIMsa+n4O9bja5YsRRWWi5Y0PlAxw0S3Op6hurzGa4Ebn
-         nBe0Li0u4rlHuBuYKB41IN15Y9ZXNpx1rj3EDY/ObbdJDuY30PODF8jsCwI1LTDfApsE
-         YVEQtnOdwjxAiA8XJhvTVEZOert/hJE0IZFfObMlG28nBpwu/z1IOSGFkNt5I6IQoXx3
-         Q8sgYlKeEGWUiDQDXwWTv5WTd6YBOrGuyElNnzCJTazAC05qnoLYMHnqgpwjOtcMzGL0
-         7U040FWSlIdxsk1XqRsuB3xblE/+mJM4og3naOEybWLJFOFhkjtEUtGFuZDCyJ+wIb98
-         kALg==
-X-Gm-Message-State: AOAM533LTPlqTtbBGYiCw+Wx+XyUYBnrDCZAZVTKbWUpbqw7uFqXish7
-        HSNz40CdeOj+crd5CLWcmA==
-X-Google-Smtp-Source: ABdhPJy3EwyotTQdzk+VORpqXwWszcJ9ggeJI7ThwmlybV4Y5HuNAm/UZzWsGRrWkehKfWCCmXAX7w==
-X-Received: by 2002:a05:6808:ec8:: with SMTP id q8mr7842887oiv.94.1632445224741;
-        Thu, 23 Sep 2021 18:00:24 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id a23sm1676644otp.44.2021.09.23.18.00.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Sep 2021 18:00:24 -0700 (PDT)
-Received: (nullmailer pid 3848448 invoked by uid 1000);
-        Fri, 24 Sep 2021 01:00:23 -0000
-Date:   Thu, 23 Sep 2021 20:00:23 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Zhiyong Tao <zhiyong.tao@mediatek.com>
-Cc:     linus.walleij@linaro.org, mark.rutland@arm.com,
-        matthias.bgg@gmail.com, sean.wang@kernel.org,
-        srv_heupstream@mediatek.com, hui.liu@mediatek.com,
-        light.hsieh@mediatek.com, biao.huang@mediatek.com,
-        hongzhou.yang@mediatek.com, sean.wang@mediatek.com,
-        seiya.wang@mediatek.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v13 2/5] dt-bindings: pinctrl: mt8195: change pull
- up/down description
-Message-ID: <YU0jJxr0OJoqahHr@robh.at.kernel.org>
-References: <20210922025640.11600-1-zhiyong.tao@mediatek.com>
- <20210922025640.11600-3-zhiyong.tao@mediatek.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aeqPl8lRAJi/jngCXcVyekAXBb4CJKVOEfw9KCRibJE=;
+        b=kIpC0SBcacuOl+gwWKyYmMdt+I6ieYmCwNVv5gSDFBXAL1sIrf9xkpQr+Jo3huBKyw
+         mPi8rwO2ZMWPTBvFjLy51CXF86XNI2sZgODUYqIN40nUyHWIr3aVlYJiOvfJ/9mvVxFE
+         MmYIMQmnHUyo54LSv/Top9Q6OEYAlzrkIavYDIhEr/uCfWCOzXJCHRuoQ33dCfuxbiEF
+         kEgtoP/ATekzUANQn3hNA4tnqJIyD/l53ogcqdUhH/1eoSQH954AUV53FcjhyM+FKxg9
+         YLFvxi5jyZtZ6Op+LuRuJe4I0GQPvsDso/K6MDcEs/EQMAoL495fKOVcqB2/kdAEdXH2
+         Il1g==
+X-Gm-Message-State: AOAM532ouypu7V3Yno0EfGpNegMtXJawkMJkOlUJmoN0wHFgS+QVAFZ5
+        mx2y7uDXHR657I7G2Al+L8k4p44IpAmWEmFVeVI=
+X-Google-Smtp-Source: ABdhPJxpnTgNiXHwv0NhWyHlGgi4NFqri8IWBT5HGvaXlbmezTaEoOzlqXTHAWdP3EPM4UyatB9FeyfhDIuRLao8CAU=
+X-Received: by 2002:a05:622a:45:: with SMTP id y5mr2109484qtw.145.1632455352824;
+ Thu, 23 Sep 2021 20:49:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210922025640.11600-3-zhiyong.tao@mediatek.com>
+References: <20210921043936.468001-1-andrew@aj.id.au>
+In-Reply-To: <20210921043936.468001-1-andrew@aj.id.au>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Fri, 24 Sep 2021 03:49:01 +0000
+Message-ID: <CACPK8XdTCfXVqDnBHcmbp4Zy=UKW5pZGAi1eiiDsUwu6=_+sig@mail.gmail.com>
+Subject: Re: [PATCH 0/2] leds: pca955x: Expose GPIOs for all pins
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     linux-leds@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>,
+        Rob Herring <robh+dt@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 22, 2021 at 10:56:37AM +0800, Zhiyong Tao wrote:
-> For supporting SI units in "bias-pull-down" & "bias-pull-up",
-> Change pull up/down description
-> 
-> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
-> ---
->  .../bindings/pinctrl/pinctrl-mt8195.yaml      | 65 ++++++++++++++++++-
->  1 file changed, 63 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml
-> index 2f12ec59eee5..2f2afabbe4fc 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml
-> @@ -85,9 +85,70 @@ patternProperties:
->            2/4/6/8/10/12/14/16mA in mt8195.
->          enum: [0, 1, 2, 3, 4, 5, 6, 7]
->  
-> -      bias-pull-down: true
-> +      bias-pull-down:
-> +        description: |
-> +          For pull down type is normal, it don't need add RSEL & R1R0 define
-> +          and resistance value.
-> +          For pull down type is PUPD/R0/R1 type, it can add R1R0 define to
-> +          set different resistance. It can support "MTK_PUPD_SET_R1R0_00" &
-> +          "MTK_PUPD_SET_R1R0_01" & "MTK_PUPD_SET_R1R0_10" & "MTK_PUPD_SET_R1R0_11"
-> +          define in mt8195.
-> +          For pull down type is RSEL, it can add RSEL define & resistance value(ohm)
-> +          to set different resistance by identifying property "mediatek,rsel_resistance_in_si_unit".
-> +          It can support "MTK_PULL_SET_RSEL_000" & "MTK_PULL_SET_RSEL_001"
-> +          & "MTK_PULL_SET_RSEL_010" & "MTK_PULL_SET_RSEL_011" & "MTK_PULL_SET_RSEL_100"
-> +          & "MTK_PULL_SET_RSEL_101" & "MTK_PULL_SET_RSEL_110" & "MTK_PULL_SET_RSEL_111"
-> +          define in mt8195. It can also support resistance value(ohm) "75000" & "5000" in mt8195.
+On Tue, 21 Sept 2021 at 04:39, Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+> Hello,
+>
+> This is a rework of a Rube Goldberg-inspired RFC I posted previously:
+>
+> https://lore.kernel.org/lkml/20210723075858.376378-1-andrew@aj.id.au/
+>
+> This time around there's a lot less Rube - the series:
+>
+> 1. Contains no (ab)use of pinctrl
+> 2. Always exposes all pins as GPIOs
+> 3. Internally tracks the active pins
+>
+> Without these patches the driver limits the number of pins exposed on
+> the gpiochip to the number of pins specified as GPIO in the devicetree,
+> but doesn't map between the GPIO and pin number spaces. The result is
+> that specifying offset or interleaved GPIOs in the devicetree gives
+> unexpected behaviour in userspace.
+>
+> By always exposing all pins as GPIOs the patches resolve the lack of
+> mapping between GPIO offsets and pins on the package in the driver by
+> ensuring we always have a 1-to-1 mapping.
+>
+> The issue is primarily addressed by patch 1/2. Patch 2/2 makes it
+> possible to not expose any pins as LEDs (and therefore make them all
+> accessible as GPIOs). This has a follow-on effect of allowing the driver
+> to bind to a device instantiated at runtime without requiring a
+> description in the devicetree.
+>
+> I've tested the series under qemu to inspect the various interactions
+> between LEDs vs GPIOs as well as conflicting GPIO requests.
+>
+> Please review!
 
-Please make a schema:
+Reviewed-by: Joel Stanley <joel@jms.id.au>
 
-oneOf:
-  - enum: [ 0, 1, ...7 ]
-  - description: MT8195...
-    enum: [ 5000, 75000 ]
+Cheers,
 
-> +          An example of using RSEL define:
-> +          pincontroller {
-> +            i2c0_pin {
-> +              pinmux = <PINMUX_GPIO8__FUNC_SDA0>;
-> +              bias-pull-down = <MTK_PULL_SET_RSEL_001>;
-> +            };
-> +          };
-> +          An example of using si unit resistance value(ohm):
-> +          &pio {
-> +            mediatek,rsel_resistance_in_si_unit;
-> +          }
-> +          pincontroller {
-> +            i2c0_pin {
-> +              pinmux = <PINMUX_GPIO8__FUNC_SDA0>;
-> +              bias-pull-down = <75000>;
-> +            };
-> +          };
->  
-> -      bias-pull-up: true
-> +      bias-pull-up:
-> +        description: |
-> +          For pull up type is normal, it don't need add RSEL & R1R0 define
-> +          and resistance value.
-> +          For pull up type is PUPD/R0/R1 type, it can add R1R0 define to
-> +          set different resistance. It can support "MTK_PUPD_SET_R1R0_00" &
-> +          "MTK_PUPD_SET_R1R0_01" & "MTK_PUPD_SET_R1R0_10" & "MTK_PUPD_SET_R1R0_11"
-> +          define in mt8195.
-> +          For pull up type is RSEL, it can add RSEL define & resistance value(ohm)
-> +          to set different resistance by identifying property "mediatek,rsel_resistance_in_si_unit".
-> +          It can support "MTK_PULL_SET_RSEL_000" & "MTK_PULL_SET_RSEL_001"
-> +          & "MTK_PULL_SET_RSEL_010" & "MTK_PULL_SET_RSEL_011" & "MTK_PULL_SET_RSEL_100"
-> +          & "MTK_PULL_SET_RSEL_101" & "MTK_PULL_SET_RSEL_110" & "MTK_PULL_SET_RSEL_111"
-> +          define in mt8195. It can also support resistance value(ohm)
-> +          "1000" & "1500" & "2000" & "3000" & "4000" & "5000" & "10000" & "75000" in mt8195.
-
-Same here.
-
-> +          An example of using RSEL define:
-> +          pincontroller {
-> +            i2c0_pin {
-> +              pinmux = <PINMUX_GPIO8__FUNC_SDA0>;
-> +              bias-pull-up = <MTK_PULL_SET_RSEL_001>;
-> +            };
-> +          };
-> +          An example of using si unit resistance value(ohm):
-> +          &pio {
-> +            mediatek,rsel_resistance_in_si_unit;
-> +          }
-> +          pincontroller {
-> +            i2c0_pin {
-> +              pinmux = <PINMUX_GPIO8__FUNC_SDA0>;
-> +              bias-pull-up = <1000>;
-> +            };
-> +          };
->  
->        bias-disable: true
->  
-> -- 
-> 2.25.1
-> 
-> 
+Joel
