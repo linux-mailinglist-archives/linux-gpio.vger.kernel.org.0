@@ -2,121 +2,200 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C504D418280
-	for <lists+linux-gpio@lfdr.de>; Sat, 25 Sep 2021 16:08:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 929654182D4
+	for <lists+linux-gpio@lfdr.de>; Sat, 25 Sep 2021 16:47:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233738AbhIYOJz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 25 Sep 2021 10:09:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41658 "EHLO
+        id S1343786AbhIYOss (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 25 Sep 2021 10:48:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237777AbhIYOJz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 25 Sep 2021 10:09:55 -0400
-Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64ABFC061570
-        for <linux-gpio@vger.kernel.org>; Sat, 25 Sep 2021 07:08:20 -0700 (PDT)
-Received: by mail-yb1-xb33.google.com with SMTP id y13so12343388ybi.6
-        for <linux-gpio@vger.kernel.org>; Sat, 25 Sep 2021 07:08:20 -0700 (PDT)
+        with ESMTP id S240444AbhIYOsr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 25 Sep 2021 10:48:47 -0400
+Received: from mail-io1-xd2f.google.com (mail-io1-xd2f.google.com [IPv6:2607:f8b0:4864:20::d2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5335AC061570
+        for <linux-gpio@vger.kernel.org>; Sat, 25 Sep 2021 07:47:13 -0700 (PDT)
+Received: by mail-io1-xd2f.google.com with SMTP id i62so556168ioa.6
+        for <linux-gpio@vger.kernel.org>; Sat, 25 Sep 2021 07:47:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=FELeHWRLzFEBrq4obhX73D1BquHMgJ/7I3UYNELg8LY=;
-        b=cTBGcS4iuGmidZANnz4BFOwoRGovLcOvlT+f4FO6B/MWBbBkIC0TW63r5vXnh0Rwge
-         4az+TBVbl7yWRvjDpyZ2qa7+a1+UVMximK4VKijI5wiwUnlKAZE7iCYsx+t9HtyMNjhh
-         UtBeZk7BdJVkl19Dj8GJPLf05HUg1W3sWQBVTosvpUVz6V4DG8UNBShJAfZAnSrz9qHr
-         kjyeXhtsamvPiPpLbvzzl/F9QDnWXp3+hTwTX+0sGr8GNkgCMYgOKyOx8eP9cd2IZe5c
-         g6FGjXFq+8BYJHfadXoaJyaTqxKew/m8qF/Hn5oZUB3JgpC+OkmFsSndDst0eUbnDoR0
-         xaQQ==
+        d=sartura-hr.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UtpI8bkA4DIUDYf0Om9w5i1QkTs/FeOohDrQdIrJOwY=;
+        b=wiOATbyh/UTsI9zK+GX4w+Bn9cXCcYCoCkdO5cOCwwwjD54jJ0VLTjLtMyDJHiUsdM
+         FSIKW5mEc6U0CSB68rACNzOeXbf5jMPuofnCof87JGXXhwz4WMpaRS+Hc2vgSA2BslGg
+         esDk4y+/C3Sf/T6vUipwwSVqNsHKMRNgOIP9EYMg5/qDEMpYSz9j6jAx7tSJUTsg+ZWf
+         M104/jvSSedx/7rFpD0AGXyAQ8MFh+yC46Dw5ciuDzOuvcu6bFeI9bf9fo1aqwwfSXAD
+         0nsUVI4crQdsYHlMqHe4mIAylOkcu1SN0maYGkWP2uiQvRoNZl1XJBsy3/126LYJBf97
+         4TxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=FELeHWRLzFEBrq4obhX73D1BquHMgJ/7I3UYNELg8LY=;
-        b=ymsdZ0m6mLDXZw4WAgcc4srwNvvVJd/tcKambpV9nK+KXbfSst3+POREtmuOZwEAbZ
-         OjCIMGvQ638LMtj7QfwGnyPmaOSuoDsjcSOpykfCRtjm0k3jeKaWzvGd+OV32F+M6Jbq
-         qWqAd32HJme3m4h8YLp42NAVXxgl0CJDZQE6CQSrMOW5yms/rizAKPy9B+izIxYFGsRi
-         y6t6HtpiFb1pjRkdYF/y22h27gqnse9asAz63vRm27MWWNbmclF4g3o16PaMDspizOu2
-         yDaIGBXpOe35BEQIEIJhqPF2sl7zhMLLcwTn+Vaza0mjt2F4Ds0B+UfbP3Tjy5xXlkpN
-         cdQw==
-X-Gm-Message-State: AOAM533sZU3S32mH032GQCVu+i7av8klY8/EIoUls8ehsz6SCgTyfFlk
-        vhtN9y3wDeOvG4p2vebs+vq07vPLTLaA0TtjbXq0Zs86diI=
-X-Google-Smtp-Source: ABdhPJyOph4I0bJUDFc7/az76cNcEmu9LvkVLjYU7vT7gag3DjWLAO7ZCwfmvjqpzfNIhDES0tSdgpFHjwE48fCzVds=
-X-Received: by 2002:a25:fc24:: with SMTP id v36mr8237193ybd.23.1632578899518;
- Sat, 25 Sep 2021 07:08:19 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UtpI8bkA4DIUDYf0Om9w5i1QkTs/FeOohDrQdIrJOwY=;
+        b=mI4FW55EEmtJqXKVyBhBor8FIqOZaArfIObWQjtXxRq37hYy1i4TY5eCa+8nxSCn9w
+         vnlX5oqT+HN/BlCnQIxN75NhQj4avebGeeRigUEaU4ZoZJpYGkmsjJlwk8Qzrr3i2HI7
+         8ovgbTOaoWFyqknLTtV0Hs4ebJLLNodTXlHcxSepg30bri7cdrSBwHMkCTMTNJb63eiE
+         1dqziGE5oNS3bjzq7RuSAoCKfkn68t6xlBlxq2B5U0Xx7yQA8JIhaBOKMhokIjT+Jrd3
+         UNuOP6p09r06hD+UvticCqvKJh7ZwQgp/W8Do3T6XdM+r/u8llkdEGfIHeUBI2jNN1Vw
+         jHTA==
+X-Gm-Message-State: AOAM530FX1SHEVp9w3HuW+Cub1pm14SdrlFl5cDOHZ5pgeNnaR/jdcZA
+        i3oyk5uXfumVC99ckC24wGXmqRSR8T3lHgioIep17w==
+X-Google-Smtp-Source: ABdhPJxYlMVqhTHmXIeFSA26uPZxn8sqEZoUBpak5MOZjsz61Ohz12gpQcsOh3K5Oa+01TS/+X0S8m9QldsXTehpDLQ=
+X-Received: by 2002:a02:710d:: with SMTP id n13mr13686326jac.31.1632581232663;
+ Sat, 25 Sep 2021 07:47:12 -0700 (PDT)
 MIME-Version: 1.0
-From:   Turritopsis Dohrnii Teo En Ming <ceo.teo.en.ming@gmail.com>
-Date:   Sat, 25 Sep 2021 22:08:09 +0800
-Message-ID: <CAMEJMGEeAQLk9V1-ScJM8aNZtvVgdVzThxX7Uwszmzz-cXhf4g@mail.gmail.com>
-Subject: Introduction: I am a Linux and open source software enthusiast
-To:     linux-gpio@vger.kernel.org
-Cc:     ceo@teo-en-ming-corp.com
+References: <20210607123317.3242031-1-robert.marko@sartura.hr>
+ <20210607123317.3242031-5-robert.marko@sartura.hr> <CA+HBbNH7wcpfQOX2=vZmW78GoWy_WL3Pz-dMKe0N0ebZDp+oUw@mail.gmail.com>
+ <20210713222528.GA952399@robh.at.kernel.org> <CA+HBbNFj5+6sLKxmL8XtsZQ48ch8OjTbJ1bwkDC8dfRiOyWY1Q@mail.gmail.com>
+ <20210719225906.GA2769608@robh.at.kernel.org> <CACRpkdbq6Jow6AT9OpsR7Q0JVCWVMcmamh9KHPXMtUnkoe7ZFw@mail.gmail.com>
+ <CA+HBbNFEs-=5XTK7PUL+LsgBCcPfwHsCPe4v6byK0x=O_7TRPA@mail.gmail.com>
+ <CACRpkdZfZLQMgpMAF2FwSVt1YAzhQJ9ZWkVUjVc2xpmWL7yEvQ@mail.gmail.com>
+ <CA+HBbNHZyYnnyz9=4Hgav96ZH8-R-nYoi300j2x3fgei8aa4zQ@mail.gmail.com> <CA+HBbNE_U3dbnWh-8QasaxfQrQHS4YK8TEr0YebH9mCJsc0JTQ@mail.gmail.com>
+In-Reply-To: <CA+HBbNE_U3dbnWh-8QasaxfQrQHS4YK8TEr0YebH9mCJsc0JTQ@mail.gmail.com>
+From:   Robert Marko <robert.marko@sartura.hr>
+Date:   Sat, 25 Sep 2021 16:47:02 +0200
+Message-ID: <CA+HBbNH5Bybts2n6S3DrigNa_ZA-7_rgSZVgHZtoS27W9ZCtig@mail.gmail.com>
+Subject: Re: [PATCH v6 5/6] dt-bindings: mfd: Add Delta TN48M CPLD drivers bindings
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Luka Perkov <luka.perkov@sartura.hr>, jmp@epiphyte.org,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Donald Buczek <buczek@molgen.mpg.de>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Subject: Introduction: I am a Linux and open source software enthusiast
+On Tue, Sep 7, 2021 at 11:02 PM Robert Marko <robert.marko@sartura.hr> wrote:
+>
+> On Tue, Aug 24, 2021 at 10:03 AM Robert Marko <robert.marko@sartura.hr> wrote:
+> >
+> > On Wed, Aug 11, 2021 at 2:17 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> > >
+> > > On Tue, Aug 3, 2021 at 9:23 PM Robert Marko <robert.marko@sartura.hr> wrote:
+> > >
+> > > > The pins that this driver wants to expose are used for SFP-s only,
+> > > > they are provided by the Lattice CPLD which also does other things.
+> > > >
+> > > > Linux has a generic SFP driver which is used to manage these SFP
+> > > > ports, but it only supports GPIO-s, it has no concept of anything else.
+> > > > Since the driver is fully generic, I have no idea how could one extend it
+> > > > to effectively handle these pins internally, especially since I have more
+> > > > switches that use the CPLD for SFP-s as well, even for 48 ports and 192
+> > > > pins for them.
+> > >
+> > > Which file is this driver in so I can look?
+> >
+> > Hi Linus,
+> > Sorry for the late reply.
+> >
+> > Sure, here is the generic Linux driver that is used for SFP handling:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/net/phy/sfp.c?h=v5.14-rc7
+> >
+> > >
+> > > Maybe it is not a good idea to look for generic code just because
+> > > it is convenient? I have had this problem before with GPIO, along
+> > > the lines "lemme just do this dirty thing this one time because it
+> > > is so convenient for me" (more or less) and the answer is still
+> > > "no".
+> > >
+> > > Can you either augment the driver to handle a regmap with bit indices
+> > > instead or write a new similar driver for that or refactor it some other
+> > > way?
+> > >
+> > > It is not a simple solution to your problem, but it might be the right
+> > > solution even if it means some more work.
+> >
+> > I understand your position, believe me, I spend some time looking at
+> > what would be the logical way for these switches.
+> > But I see no way how could the SFP driver be extended in a generic way
+> > that would allow supporting different register layouts when it comes to pins.
+> >
+> > >
+> > > > GPIO regmap works perfectly for this as its generic enough to cover all of
+> > > > these cases.
+> > >
+> > > Yeah but it might be the wrong thing to do even if it is simple
+> > > to use and works.
+> > >
+> > > > CPLD also provides pins to test the port LED-s per color as well,
+> > > > but I have chosen not to expose them so far.
+> > >
+> > > Have you considered
+> > > Documentation/devicetree/bindings/leds/register-bit-led.txt
+> >
+> > Yeah, but unfortunately in this case it wont work as the LED-s
+> > are for debugging/test purposes only and you first need to switch
+> > the CPLD out of it interpreting the LED state with a BIT flip.
+> >
+> > Regards,
+> > Robert
+> > >
+> > > > > If it is a regmap in Linux then that is fine, just pass the regmap
+> > > > > around inside the kernel, OK finished. But really that is an OS
+> > > > > detail.
+> > > >
+> > > > Yes, its regmap but I cant really pass it to the SFP driver as I don't have
+> > > > special driver handling the SFP but rather the generic kernel one.
+> > > > It only knows how to handle GPIO-s.
+> > >
+> > > Of course you have to program it. If I know which driver it
+> > > is it is easier to provide architecture ideas.
+> > >
+> > > Yours,
+> > > Linus Walleij
+>
+> Linus,
+>
+> can I offer some further explanation?
+>
+> Regards,
+> Robert
 
-Greetings from Singapore,
+Hi Linus,
 
-My name is Mr. Turritopsis Dohrnii Teo En Ming, 43 years old as of 25
-September 2021. My country is Singapore. Presently I am an IT
-Consultant with a System Integrator (SI)/computer firm in Singapore. I
-am also a Linux and open source software and information technology
-enthusiast.
+I would really like to move forward with this somehow.
 
-You can read my autobiography on my redundant blogs. The title of my
-autobiography is:
+I have multiple switches depending on the outcome of this series.
 
-"Autobiography of Singaporean Targeted Individual Mr. Turritopsis
-Dohrnii Teo En Ming (Very First Draft, Lots More to Add in Future)"
-
-Links to my redundant blogs (Blogger and Wordpress) can be found in my
-email signature below. These are my main blogs.
-
-I have three other redundant blogs, namely:
-
-https://teo-en-ming.tumblr.com/
-
-https://teo-en-ming.medium.com/
-
-https://teo-en-ming.livejournal.com/
-
-Future/subsequent versions of my autobiography will be published on my
-redundant blogs.
-
-My Blog Books (in PDF format) are also available for download on my
-redundant blogs.
-
-I have also published many guides, howtos, tutorials, and information
-technology articles on my redundant blogs.
-
-Thank you very much.
+Regards,
+Robert
+> >
+> >
+> >
+> > --
+> > Robert Marko
+> > Staff Embedded Linux Engineer
+> > Sartura Ltd.
+> > Lendavska ulica 16a
+> > 10000 Zagreb, Croatia
+> > Email: robert.marko@sartura.hr
+> > Web: www.sartura.hr
+>
+>
+>
+> --
+> Robert Marko
+> Staff Embedded Linux Engineer
+> Sartura Ltd.
+> Lendavska ulica 16a
+> 10000 Zagreb, Croatia
+> Email: robert.marko@sartura.hr
+> Web: www.sartura.hr
 
 
 
-
-
-
------BEGIN EMAIL SIGNATURE-----
-
-The Gospel for all Targeted Individuals (TIs):
-
-[The New York Times] Microwave Weapons Are Prime Suspect in Ills of
-U.S. Embassy Workers
-
-Link:
-https://www.nytimes.com/2018/09/01/science/sonic-attack-cuba-microwave.html
-
-********************************************************************************************
-
-Singaporean Targeted Individual Mr. Turritopsis Dohrnii Teo En Ming's
-Academic Qualifications as at 14 Feb 2019 and refugee seeking attempts
-at the United Nations Refugee Agency Bangkok (21 Mar 2017), in Taiwan
-(5 Aug 2019) and Australia (25 Dec 2019 to 9 Jan 2020):
-
-[1] https://tdtemcerts.wordpress.com/
-
-[2] https://tdtemcerts.blogspot.sg/
-
-[3] https://www.scribd.com/user/270125049/Teo-En-Ming
-
------END EMAIL SIGNATURE-----
+-- 
+Robert Marko
+Staff Embedded Linux Engineer
+Sartura Ltd.
+Lendavska ulica 16a
+10000 Zagreb, Croatia
+Email: robert.marko@sartura.hr
+Web: www.sartura.hr
