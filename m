@@ -2,404 +2,207 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A9ADB4180CD
-	for <lists+linux-gpio@lfdr.de>; Sat, 25 Sep 2021 11:31:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DA69418275
+	for <lists+linux-gpio@lfdr.de>; Sat, 25 Sep 2021 15:45:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235512AbhIYJdC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 25 Sep 2021 05:33:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53682 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229870AbhIYJdC (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 25 Sep 2021 05:33:02 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 843E261279;
-        Sat, 25 Sep 2021 09:31:21 +0000 (UTC)
-Received: from sofa.misterjones.org ([185.219.108.64] helo=wait-a-minute.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <maz@kernel.org>)
-        id 1mU41f-00CujH-C2; Sat, 25 Sep 2021 10:31:19 +0100
-Date:   Sat, 25 Sep 2021 10:31:19 +0100
-Message-ID: <87a6k1atnc.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rob Herring <robh+dt@kernel.org>,
+        id S239261AbhIYNqd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 25 Sep 2021 09:46:33 -0400
+Received: from mail-eopbgr50046.outbound.protection.outlook.com ([40.107.5.46]:1637
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S236876AbhIYNqd (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 25 Sep 2021 09:46:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MQEvTatS3nQe8F1ka5hC7TOuQyBf0XgtUsbOzR1NDuk=;
+ b=K0w7SfM8vqlJLfBtigObLRBmPBMqolQJ9xjBmX4pGa1pZYqxNxc582OffYxVmuP4q93rkMdTRuagQqEaEy95kQYnez4N5XhVve44Yes0Hg7nAC32pgCrGTXMRSy/TQH2gvx/UMwjxum5+UvIS5WIxpxoK9q26TiXnKJQlUn9bXQ=
+Received: from AM7PR02CA0003.eurprd02.prod.outlook.com (2603:10a6:20b:100::13)
+ by DB6PR08MB2790.eurprd08.prod.outlook.com (2603:10a6:6:1d::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4544.18; Sat, 25 Sep
+ 2021 13:44:53 +0000
+Received: from AM5EUR03FT060.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:20b:100:cafe::2f) by AM7PR02CA0003.outlook.office365.com
+ (2603:10a6:20b:100::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4544.13 via Frontend
+ Transport; Sat, 25 Sep 2021 13:44:53 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.33.187.114)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=pass action=none
+ header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.33.187.114 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.33.187.114; helo=64aa7808-outbound-2.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-2.mta.getcheckrecipient.com (63.33.187.114)
+ by AM5EUR03FT060.mail.protection.outlook.com (10.152.16.160) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4544.13 via Frontend Transport; Sat, 25 Sep 2021 13:44:53 +0000
+Received: ("Tessian outbound 3c48586a377f:v103"); Sat, 25 Sep 2021 13:44:50 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: c5403a165d3433bd
+X-CR-MTA-TID: 64aa7808
+Received: from 77261313c5dc.1
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 0F438EE3-7A01-4AAB-8AA7-47F677AD85DB.1;
+        Sat, 25 Sep 2021 13:44:39 +0000
+Received: from EUR03-VE1-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 77261313c5dc.1
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Sat, 25 Sep 2021 13:44:39 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OhZ4M2n7dA4E/Y2crOwewyrBFX498DlkNKFdgRsr7bVJV84JB/0qQuy0ZzDiS26ZIdoTOuliL30TDGV+H3M74EueasC/3hw4bCWgJ8PyVQ0IcTZzqtFZN4aN8LMiBVa5aNoSTIAxlvmzYRFf8kcOLhZkCp5gErOOZfolu4JaJJ+pkwJftW4dpXciIxtWBroH1z9dv24qxA7XxnnurC1kRBN1mSisHYZ9Q5ZpD2IS2n5DwSK9rivzjaVj72jJTCK+X3jpw4L22eBtRNIfMFI1JWoJB6Dwl7a2JqHvpW3b2/rWFRNIlHN/D5SLJ/EIiDQfIhw2O5gndEoGK/xOIn0z9Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
+ bh=MQEvTatS3nQe8F1ka5hC7TOuQyBf0XgtUsbOzR1NDuk=;
+ b=ML/nFGq3sM0hYPximv3QT7HJjVISATghnEfaRhlqoi/aRomGOzXTrhejY2h8pnjT/2mYSpLKto7oQQN9YH+r7b6w7X0D4+0pCGbf4vCgQK7s3JKLiQ+ziprrsQzxSesAvzEb5+ufOprnEayc+V11yho1oiMoo5aOhRCICZQHPEoq8uN9otXAneOkCJAO+RhEDUl3fT0eYq/E5hfg7NMAQk1wGIZDFTWLIyVpastv6XXUil/k9mqrldiWcRNqy+URsodwLA61zw3RSWvWtzJvSlvyC0k+jIJefDyMKaMh4gkLYgk2xZ1qutHgTLYQ4rWiMJml9c0qjbR2MCNVEP+O6w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MQEvTatS3nQe8F1ka5hC7TOuQyBf0XgtUsbOzR1NDuk=;
+ b=K0w7SfM8vqlJLfBtigObLRBmPBMqolQJ9xjBmX4pGa1pZYqxNxc582OffYxVmuP4q93rkMdTRuagQqEaEy95kQYnez4N5XhVve44Yes0Hg7nAC32pgCrGTXMRSy/TQH2gvx/UMwjxum5+UvIS5WIxpxoK9q26TiXnKJQlUn9bXQ=
+Authentication-Results-Original: intel.com; dkim=none (message not signed)
+ header.d=none;intel.com; dmarc=none action=none header.from=arm.com;
+Received: from DB8PR08MB5433.eurprd08.prod.outlook.com (2603:10a6:10:118::13)
+ by DBAPR08MB5672.eurprd08.prod.outlook.com (2603:10a6:10:1ad::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4544.13; Sat, 25 Sep
+ 2021 13:44:36 +0000
+Received: from DB8PR08MB5433.eurprd08.prod.outlook.com
+ ([fe80::951e:f504:6b46:28a3]) by DB8PR08MB5433.eurprd08.prod.outlook.com
+ ([fe80::951e:f504:6b46:28a3%9]) with mapi id 15.20.4544.020; Sat, 25 Sep 2021
+ 13:44:36 +0000
+Date:   Sat, 25 Sep 2021 14:44:25 +0100
+From:   Joey Gouly <joey.gouly@arm.com>
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     linux-gpio@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>
-Subject: Re: [RFC PATCH v2 2/4] irqchip: Add RZ/G2L IA55 Interrupt Controller driver
-In-Reply-To: <CA+V-a8vQ5J-Y4PdL5ZrEqbM-ohS1RRZvD8=7JL6GJCkg7ZOJwQ@mail.gmail.com>
-References: <20210921193028.13099-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-        <20210921193028.13099-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-        <87v92pu7ad.wl-maz@kernel.org>
-        <CA+V-a8vQ5J-Y4PdL5ZrEqbM-ohS1RRZvD8=7JL6GJCkg7ZOJwQ@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: prabhakar.csengg@gmail.com, prabhakar.mahadev-lad.rj@bp.renesas.com, tglx@linutronix.de, geert+renesas@glider.be, robh+dt@kernel.org, linus.walleij@linaro.org, magnus.damm@gmail.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, biju.das.jz@bp.renesas.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Hector Martin <marcan@marcan.st>,
+        Marc Zyngier <maz@kernel.org>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Sven Peter <sven@svenpeter.dev>, nd@arm.com,
+        Stan Skowronek <stan@corellium.com>
+Subject: Re: [PATCH v1 1/1] pinctrl: add pinctrl/GPIO driver for Apple SoCs
+Message-ID: <20210925134425.GA4681@e124191.cambridge.arm.com>
+References: <20210921222956.40719-1-joey.gouly@arm.com>
+ <20210921222956.40719-2-joey.gouly@arm.com>
+ <YUrZR/Tl7obfehXP@smile.fi.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YUrZR/Tl7obfehXP@smile.fi.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: SN4PR0201CA0033.namprd02.prod.outlook.com
+ (2603:10b6:803:2e::19) To DB8PR08MB5433.eurprd08.prod.outlook.com
+ (2603:10a6:10:118::13)
+MIME-Version: 1.0
+Received: from e124191.cambridge.arm.com (217.140.106.55) by SN4PR0201CA0033.namprd02.prod.outlook.com (2603:10b6:803:2e::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4544.13 via Frontend Transport; Sat, 25 Sep 2021 13:44:33 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 3f623a74-63d1-467f-5606-08d9802aa727
+X-MS-TrafficTypeDiagnostic: DBAPR08MB5672:|DB6PR08MB2790:
+X-Microsoft-Antispam-PRVS: <DB6PR08MB2790D54201D1702B536781E994A59@DB6PR08MB2790.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;OLM:7691;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: C7HOhLQcsjamW6SLwjjHkEiMC6P3vL8amEaAI0J7SdoevSyU4nwjTud3/9Cb9COBiauNYAmgPU3ViCA64vhA68i9LLRg2f3rfms0YLObT4EFihyTkOXnlvzYF95Hy12ZcgWERZ6ZUHA71wVg4hldZVhdgqtLJVf0Y6/aOlEUGNXs1qVPCQ9Fv1ZJgS2DWw7kS8k/9RPLf+NxOTmW1ckAcg+sGDUEGtm1AsxzcpNOnTxZfz37IZTCblv4cmXKkNax0R17P/YH2o1kaLR13HmP1/foBljd0qKvB8pyw5bL+LGD0PhkTHkpglU86wynNLWdURlFQgy2OTrPissLnUQC/SArsCjXfaC/X3IRoa9Z+5GbZ2TYgt9Ay9WGiNWUm9mdKsoXdPyf8G3nZLGsZPSoLfne1bsf1LKCIayACdQf9AimPIa1MZYsyU/XcBpY8S213L/yre1WjPxLdnyVfTqK2SH8RNjDoi4w5TEBIlF19eMKCX0lN2VxFlj453advB2X4kiiakloLolIlkJ7GQTuEzsmyFQSEqmuZ5nhrc08KWqa8pnDiRXkleRooR+7pmsQgSWKBe8uXEB4jQizVcZl6uwP7RGZ3jFAEGOURAlLpbcW5U2yqbJH9QcNuMjXUXypMdGeKx+RG3CLEnpqEiM4Nd/OBVu1cvla0USpD9sMNficz7Bauu6eXLRIjPBgeIV9SRuQgyYn+NkkeS1KVRNgPevDnvRPgzO9JLgiKnIyHBI=
+X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR08MB5433.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(6029001)(4636009)(366004)(47660400002)(956004)(44832011)(2906002)(66946007)(186003)(52116002)(7696005)(33656002)(66476007)(1076003)(8936002)(54906003)(6916009)(66556008)(6666004)(316002)(4326008)(86362001)(26005)(38100700002)(508600001)(5660300002)(8676002)(38350700002)(55016002)(46800400005);DIR:OUT;SFP:1101;
+X-MS-Exchange-Transport-Forked: True
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR08MB5672
+Original-Authentication-Results: intel.com; dkim=none (message not signed)
+ header.d=none;intel.com; dmarc=none action=none header.from=arm.com;
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM5EUR03FT060.eop-EUR03.prod.protection.outlook.com
+X-MS-Office365-Filtering-Correlation-Id-Prvs: d226f685-4ae2-440e-261d-08d9802a9cd3
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: O2F5VgSjiNNxg0ll7B6k/Two/3s1+Y7n/oN9XjRRka07uNjHkNYrvD44j46Liihl+U30+vLlKE3R12ISIHZP+6W6VTu3GwUSrS6utvcHLatlZtR5xs5HOwsuz4LvCJfY9QSzdTqZzexkLU1C07/g5IFeVGHCbf2XSwM7V/83KCLevd8ngMGeQ2iMplpUuY8i8h/r2+OXKAOX9db7qgR4r0rP3SW/s0djkaUgZtyjGRofOYgeGbM3PyKBInoHfMQhte2Te34hRfDIxfJONIO+jOeO0W5gYU1+yCIleTRB2TmgrrpvYRBDLeaXLfSyJvgoXm5LkJJCpK4HEeyaIALDQW4qPFi46o7jAH/rBKNWLPZqPzsXNT9Q/TSL3v6aSRkyLe5fs8zvBZIZV8DIqEszqGY22K/O5CC+YvpG+7bfXc+aqBu5n33Pi7M5aRQLe2o34lOZ66aBloiSDOBz/j+aR67luYMPWTyGG8zJT6yiCQtQf4zJkkyb38iP4a5kJQJe/JjgMw3K0YbrWQV/+qpx3S4AGuW12GR6oWoOEinme95HEsGUi6QVRfW3z6o8S8Ynu9Y+lN0EDA9ee3wyUHObK53EinP72d5hVcy8A8BClslYzxCGap3rKDLdUaf8NypTPQxuZy766AguzKVg1K4g95SD09zAbgOYWiXEoUW7z9/jzYZWwi4sv0nOAGxZPAaRJhmsoYwedh7itWcJVBtc79bb757RbQGHuxp4D2dkG50=
+X-Forefront-Antispam-Report: CIP:63.33.187.114;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-2.mta.getcheckrecipient.com;PTR:ec2-63-33-187-114.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(6029001)(4636009)(47660400002)(46966006)(36840700001)(44832011)(70586007)(6862004)(26005)(70206006)(336012)(6666004)(8936002)(4326008)(36860700001)(356005)(316002)(47076005)(5660300002)(81166007)(186003)(82310400003)(2906002)(7696005)(1076003)(86362001)(8676002)(508600001)(54906003)(956004)(33656002)(55016002)(107886003)(46800400005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Sep 2021 13:44:53.0380
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3f623a74-63d1-467f-5606-08d9802aa727
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.33.187.114];Helo=[64aa7808-outbound-2.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-AuthSource: AM5EUR03FT060.eop-EUR03.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR08MB2790
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 24 Sep 2021 23:27:21 +0100,
-"Lad, Prabhakar" <prabhakar.csengg@gmail.com> wrote:
-> 
-> Hi Marc,
-> 
-> Thank you for the review.
-> 
-> On Fri, Sep 24, 2021 at 8:01 PM Marc Zyngier <maz@kernel.org> wrote:
-> >
-> > On Tue, 21 Sep 2021 20:30:26 +0100,
-> > Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > >
-> > > Add a driver for the Renesas RZ/G2L Interrupt Controller.
-> > >
-> > > This supports external pins being used as interrupts. It supports
-> > > one line for NMI, 8 external pins and 32 GPIO pins (out of 123)
-> > > to be used as IRQ lines.
-> > >
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > ---
-> > >  drivers/irqchip/Kconfig             |   9 +
-> > >  drivers/irqchip/Makefile            |   1 +
-> > >  drivers/irqchip/irq-renesas-rzg2l.c | 393 ++++++++++++++++++++++++++++
-> > >  drivers/soc/renesas/Kconfig         |   1 +
-> > >  4 files changed, 404 insertions(+)
-> > >  create mode 100644 drivers/irqchip/irq-renesas-rzg2l.c
-> > >
-> > > diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-> > > index 4d5924e9f766..b61dceac8628 100644
-> > > --- a/drivers/irqchip/Kconfig
-> > > +++ b/drivers/irqchip/Kconfig
-> > > @@ -236,6 +236,15 @@ config RENESAS_RZA1_IRQC
-> > >         Enable support for the Renesas RZ/A1 Interrupt Controller, to use up
-> > >         to 8 external interrupts with configurable sense select.
-> > >
-> > > +config RENESAS_RZG2L_IRQC
-> > > +     bool "Renesas RZ/G2L IRQC support" if COMPILE_TEST
-> > > +     select GENERIC_IRQ_CHIP
-> > > +     select IRQ_DOMAIN
-> > > +     select IRQ_DOMAIN_HIERARCHY
-> > > +     help
-> > > +       Enable support for the Renesas RZ/G2L Interrupt Controller for external
-> > > +       devices.
-> > > +
-> > >  config SL28CPLD_INTC
-> > >       bool "Kontron sl28cpld IRQ controller"
-> > >       depends on MFD_SL28CPLD=y || COMPILE_TEST
-> > > diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-> > > index f88cbf36a9d2..8017786fbdac 100644
-> > > --- a/drivers/irqchip/Makefile
-> > > +++ b/drivers/irqchip/Makefile
-> > > @@ -51,6 +51,7 @@ obj-$(CONFIG_RDA_INTC)                      += irq-rda-intc.o
-> > >  obj-$(CONFIG_RENESAS_INTC_IRQPIN)    += irq-renesas-intc-irqpin.o
-> > >  obj-$(CONFIG_RENESAS_IRQC)           += irq-renesas-irqc.o
-> > >  obj-$(CONFIG_RENESAS_RZA1_IRQC)              += irq-renesas-rza1.o
-> > > +obj-$(CONFIG_RENESAS_RZG2L_IRQC)     += irq-renesas-rzg2l.o
-> > >  obj-$(CONFIG_VERSATILE_FPGA_IRQ)     += irq-versatile-fpga.o
-> > >  obj-$(CONFIG_ARCH_NSPIRE)            += irq-zevio.o
-> > >  obj-$(CONFIG_ARCH_VT8500)            += irq-vt8500.o
-> > > diff --git a/drivers/irqchip/irq-renesas-rzg2l.c b/drivers/irqchip/irq-renesas-rzg2l.c
-> > > new file mode 100644
-> > > index 000000000000..8057fdf6781b
-> > > --- /dev/null
-> > > +++ b/drivers/irqchip/irq-renesas-rzg2l.c
-> > > @@ -0,0 +1,393 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * Renesas RZ/G2L IRQC Driver
-> > > + *
-> > > + * Copyright (C) 2021 Renesas Electronics Corporation.
-> > > + */
-> > > +
-> > > +#include <linux/err.h>
-> > > +#include <linux/init.h>
-> > > +#include <linux/interrupt.h>
-> > > +#include <linux/io.h>
-> > > +#include <linux/irq.h>
-> > > +#include <linux/irqchip/chained_irq.h>
-> > > +#include <linux/irqdesc.h>
-> > > +#include <linux/irqdomain.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/of_irq.h>
-> > > +#include <linux/platform_device.h>
-> > > +#include <linux/pm_runtime.h>
-> > > +
-> > > +#define IRQC_IRQ_START                       1
-> > > +#define IRQC_IRQ_COUNT                       8
-> > > +#define IRQC_TINT_START                      9
-> > > +#define IRQC_TINT_COUNT                      32
-> > > +#define IRQC_NUM_IRQ                 41
-> > > +
-> > > +#define ISCR                         0x10
-> > > +#define IITSR                                0x14
-> > > +#define TSCR                         0x20
-> > > +#define TITSR0                               0x24
-> > > +#define TITSR1                               0x28
-> > > +#define TITSR0_MAX_INT                       16
-> > > +#define TITSEL_WIDTH                 0x2
-> > > +#define TSSR(n)                              (0x30 + ((n) * 4))
-> > > +#define TIEN                         BIT(7)
-> > > +#define TSSEL_SHIFT(n)                       (8 * (n))
-> > > +#define TSSEL_MASK                   GENMASK(7, 0)
-> > > +#define IRQ_MASK                     0x3
-> > > +
-> > > +#define TSSR_OFFSET(n)                       ((n) % 4)
-> > > +#define TSSR_INDEX(n)                        ((n) / 4)
-> > > +
-> > > +#define TITSR_TITSEL_EDGE_RISING     0
-> > > +#define TITSR_TITSEL_EDGE_FALLING    1
-> > > +#define TITSR_TITSEL_LEVEL_HIGH              2
-> > > +#define TITSR_TITSEL_LEVEL_LOW               3
-> > > +
-> > > +struct rzg2l_irqc_priv {
-> > > +     void __iomem *base;
-> > > +     struct device *dev;
-> > > +     struct irq_chip chip;
-> > > +     struct irq_domain *irq_domain;
-> > > +     struct resource *irq[IRQC_NUM_IRQ];
-> > > +     struct mutex irqc_mutex;
-> > > +     struct mutex tint_mutex; /* Mutex to protect tint_slot bitmap */
-> > > +     DECLARE_BITMAP(tint_slot, IRQC_TINT_COUNT);
-> > > +};
-> > > +
-> > > +struct rzg2l_irqc_chip_data {
-> > > +     struct rzg2l_irqc_priv *priv;
-> > > +     int tint;
-> > > +     int hwirq;
-> > > +};
-> > > +
-> > > +static int rzg2l_tint_set_edge(struct rzg2l_irqc_priv *priv,
-> > > +                            unsigned int hwirq, unsigned int type)
-> > > +{
-> > > +     u32 port = hwirq - IRQC_TINT_START;
-> > > +     u8 sense;
-> > > +     u32 reg;
-> > > +
-> > > +     switch (type & IRQ_TYPE_SENSE_MASK) {
-> > > +     case IRQ_TYPE_EDGE_RISING:
-> > > +             sense = TITSR_TITSEL_EDGE_RISING;
-> > > +             break;
-> > > +
-> > > +     case IRQ_TYPE_EDGE_FALLING:
-> > > +             sense = TITSR_TITSEL_EDGE_FALLING;
-> > > +             break;
-> > > +
-> > > +     case IRQ_TYPE_LEVEL_HIGH:
-> > > +             sense = TITSR_TITSEL_LEVEL_HIGH;
-> > > +             break;
-> > > +
-> > > +     case IRQ_TYPE_LEVEL_LOW:
-> > > +             sense = TITSR_TITSEL_LEVEL_LOW;
-> > > +             break;
-> > > +
-> > > +     default:
-> > > +             return -EINVAL;
-> > > +     }
-> > > +
-> > > +     mutex_lock(&priv->irqc_mutex);
-> >
-> > Have you tested this code with lockdep? This cannot possibly work,
-> > since all the irqchip callbacks are running under a per-irq raw
-> > spinlock.
-> >
-> Yes I have tested with a GPIO pin being set as an interrupt.
+Hi Andy,
+
+Thanks for the review!
+
+On Wed, Sep 22, 2021 at 10:20:39AM +0300, Andy Shevchenko wrote:
 
 [...]
 
-You seem to have missed the key element above. *lockdep* is the
-crucial part (and more specifically CONFIG_PROVE_LOCKING). My bet is
-that you will get a huge splat telling you that your locking is bogus.
+> > +F:	drivers/pinctrl/pinctrl-apple-gpio.c
+> 
+> Are you sure it's a good naming? Have you guaranteed that next Apple silicons
+> will use the same / compatible IP?
+We don't know what will be in future Apple SoCs, however this same GPIO
+HW has been in iPhones dating back to at least the iPhone 7 (2016). If
+there are minor changes we can add a new compatible, and if there is new
+HW in the future we can introduce a new file for it.
 
-> > > +static void rzg2l_irqc_irq_enable(struct irq_data *d)
-> > > +{
-> > > +     struct rzg2l_irqc_chip_data *chip_data = d->chip_data;
-> > > +     struct rzg2l_irqc_priv *priv = chip_data->priv;
-> > > +
-> > > +     if (chip_data->tint != -EINVAL) {
-> > > +             u32 offset = chip_data->hwirq - IRQC_TINT_START;
-> > > +             u32 tssr_offset = TSSR_OFFSET(offset);
-> > > +             u8 tssr_index = TSSR_INDEX(offset);
-> > > +             u32 reg;
-> > > +
-> > > +             irq_set_chained_handler_and_data(priv->irq[chip_data->hwirq]->start,
-> > > +                                              rzg2l_irqc_tint_irq_handler,
-> > > +                                              chip_data);
-> > > +
-> > > +             mutex_lock(&priv->irqc_mutex);
-> > > +             reg = readl_relaxed(priv->base + TSSR(tssr_index));
-> > > +             reg |= (TIEN | chip_data->tint) << TSSEL_SHIFT(tssr_offset);
-> > > +             writel_relaxed(reg, priv->base + TSSR(tssr_index));
-> > > +             mutex_unlock(&priv->irqc_mutex);
-> > > +     }
-> > > +}
-> >
-> > These two function make little sense. Why isn't the chained handler
-> > wired once and for all?
-> >
-> you mean to move this during alloc callback? chained handler is
-> registered only when an GPIO line is requested as interrupt as a
-> result I am wiring only upon requests.
+[...]
 
-Why? Wiring a chained handler can be done as soon as the output
-interrupt is known (which is probe time). There is no need to do that
-on demand. However, this is the wrong model anyway, see below.
+> > +	prev = readl(ppin);
+> > +	cfg = (prev & ~clr) | set;
+> > +
+> > +	if(!(prev & REG_GPIOx_CFG_DONE))
+> > +		writel(cfg & ~REG_GPIOx_CFG_DONE, ppin);
+> > +	writel(cfg, ppin);
+> 
+> Is it IP requirement to have sequential writes? Can it be done in one?
+We unfortunately don't have the documentation for this HW, so this behaviour is
+based on observing what macOS does.
+
+[...]
+
+> > +	if(!of_find_property(node, "gpio-controller", NULL)) {
+> > +		dev_err(pctl->dev, "Apple GPIO must have 'gpio-controller' property.\n");
+> > +		return -ENODEV;
+> > +	}
+> 
+> How is it possible?
+This is possible if booted with an invalid DTB. "gpio-controller" is a
+required property according to Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml.
+
+[...]
 
 > 
-> > > +
-> > > +static int rzg2l_irqc_set_type(struct irq_data *d, unsigned int type)
-> > > +{
-> > > +     struct rzg2l_irqc_chip_data *chip_data = d->chip_data;
-> > > +     struct rzg2l_irqc_priv *priv = chip_data->priv;
-> > > +
-> > > +     if (chip_data->tint != EINVAL)
-> > > +             return rzg2l_tint_set_edge(priv, chip_data->hwirq, type);
-> >
-> > Inline this function here. There is no point in having this helper on
-> > its own with a single call site.
-> >
-> Ok, I will make this inline.
+> ...
 > 
-> > > +
-> > > +     return -EINVAL;
-> > > +}
-> > > +
-> > > +static int rzg2l_irqc_domain_alloc(struct irq_domain *domain, unsigned int virq,
-> > > +                                unsigned int nr_irqs, void *arg)
-> > > +{
-> > > +     struct rzg2l_irqc_priv *priv = domain->host_data;
-> > > +     struct rzg2l_irqc_chip_data *chip_data = NULL;
-> > > +     struct irq_fwspec parent_fwspec;
-> > > +     struct irq_fwspec *fwspec = arg;
-> > > +     int tint = -EINVAL;
-> > > +     irq_hw_number_t hwirq;
-> > > +     int irq = -EINVAL;
-> > > +     unsigned int type;
-> > > +     int ret;
-> > > +
-> > > +     chip_data = kzalloc(sizeof(*chip_data), GFP_KERNEL);
-> > > +     if (!chip_data)
-> > > +             return -ENOMEM;
-> >
-> > Why do you need to allocate per interrupt chip-specific data?
-> >
-> To ack and trigger the virq in the domain. Let me know if there is a
-> much better way of doing this.
-
-This makes zero sense. The data structure associated with the irq_desc
-should already give you everything you need.
-
-And what is this 'virq'? If you are talking about the hwirq of the
-triggering interrupt, you totally have the wrong end of the stick. A
-chained interrupt controller shouldn't need to know that.
-
-It really looks like you are abusing a chained interrupt controller,
-while this really should be a hierarchical controller which maps a set
-of input pins to a set of output pins, as you never seem to map
-multiple inputs to a single output.
-
-A hierarchical interrupt controller would give you the correct context
-by construction, without having to add any extra data structure.
-
+> > +	if (of_find_property(node, "interrupt-controller", NULL)) {
 > 
-> > > +
-> > > +     ret = irq_domain_translate_twocell(domain, arg, &hwirq, &type);
-> > > +     if (ret)
-> > > +             return ret;
-> > > +
-> > > +     /*
-> > > +      * When alloc has landed from pinctrl driver:
-> > > +      * fwspec->param_count = 3
-> > > +      * fwspec->param[0] = tint
-> > > +      * fwspec->param[1] = type
-> > > +      * fwspec->param[2] = 1
-> > > +      */
-> > > +     if (fwspec->param_count == 3 && fwspec->param[2]) {
-> > > +             mutex_lock(&priv->tint_mutex);
-> > > +             irq = bitmap_find_free_region(priv->tint_slot, IRQC_TINT_COUNT, get_order(1));
-> >
-> > I think you can replace this get_order() with the result.
-> >
-> > > +             if (irq < 0) {
-> > > +                     mutex_unlock(&priv->tint_mutex);
-> > > +                     return -ENOSPC;
-> > > +             }
-> > > +             mutex_unlock(&priv->tint_mutex);
-> > > +             tint = hwirq;
-> > > +             hwirq = irq + IRQC_TINT_START;
-> > > +     }
-> > > +
-> > > +     chip_data->priv = priv;
-> > > +     chip_data->tint = tint;
-> > > +     chip_data->hwirq = hwirq;
-> >
-> > Really?
-> Could you please elaborate here.
+> Are you sure you need this check and OF core doesn't provide a generic way for this?
 > 
-> As per the current implementation here
-> pinctrl->irqc->GIC
-> The SoC supports 123 GPIO pins out of which a max of 32 can be
-> configured as an interrupt line into the irqc.
+I don't think so, and pinctrl-equilibrium.c does something similar in
+`gpiochip_setup`.
+
+[...] 
+
+> > +	if (of_parse_phandle_with_fixed_args(pdev->dev.of_node, "gpio-ranges",
+> > +			3, 0, &pinspec)) {
+> > +		dev_err(&pdev->dev, "gpio-ranges property not found\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	pctl->npins = pinspec.args[2];
+> > +	pin_base = pinspec.args[1];
 > 
-> keyboard {
->     compatible = "gpio-keys";
->     status = "okay";
 > 
->    key-3 {
->        gpios = <&pinctrl RZG2L_GPIO(9, 0) GPIO_ACTIVE_HIGH>;
->        linux,code = <KEY_3>;
->        label = "SW3";
->         wakeup-source;
->     };
-> };
-> For example with the above the pinctrl driver passes interrupt number
-> to be programmed into irqc corresponding to RZG2L_GPIO(9, 0),  type
-> and third parameter tint indicating this is coming from pinctrl (as
-> irqc supports gpio/irq/nmi). When this lands in the irqc domain with
-> the above we find the first available slot from 32 interrupts and
-> hwirq is set to  irq + IRQC_TINT_START if its first slot it would be
-> 0+9.
+> Isn't this being provided by pin control?
+Not that I am aware of. It is a similar pattern to other pinctrl drivers
+like pinctrl-rza1.c and pinctrl-npcm7xx.c. The driver needs to get the
+number of pins/base from the DT to setup the internal data structures.
 
-Which proves my point. This isn't a chained interrupt controller *at
-all*. this is just a mapper between 8 (out of 32) inputs to 8 outputs.
-
-> 
-> >
-> > > +     ret = irq_domain_set_hwirq_and_chip(domain, virq, hwirq, &priv->chip, chip_data);
-> > > +     if (ret)
-> > > +             goto release_bitmap;
-> > > +
-> > > +     /* parent is GIC */
-> > > +     parent_fwspec.fwnode = domain->parent->fwnode;
-> > > +     parent_fwspec.param_count = 3;
-> > > +     parent_fwspec.param[0] = 0; /* SPI */
-> > > +     parent_fwspec.param[1] = priv->irq[hwirq]->start;
-> > > +     parent_fwspec.param[2] = IRQ_TYPE_LEVEL_HIGH;
-> > > +     ret = irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, &parent_fwspec);
-> This is the bit which is I am unclear about as I am requesting a
-> chained handler I believe this should be done automatically and is not
-> required. Is my understanding correct here?
-
-Because you are mixing chained and hierarchical models. I even missed
-the use of irq_domain_alloc_irqs_parent here, as the whole logic is
-completely messed up.
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+Thanks,
+Joey
