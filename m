@@ -2,209 +2,404 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 213BE417F49
-	for <lists+linux-gpio@lfdr.de>; Sat, 25 Sep 2021 04:18:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9ADB4180CD
+	for <lists+linux-gpio@lfdr.de>; Sat, 25 Sep 2021 11:31:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347505AbhIYCTn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 Sep 2021 22:19:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58296 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347456AbhIYCTm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Sep 2021 22:19:42 -0400
-Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 443F3C061571
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Sep 2021 19:18:08 -0700 (PDT)
-Received: by mail-yb1-xb36.google.com with SMTP id r4so9800488ybp.4
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Sep 2021 19:18:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Di1Rj4i8NNjxp2cBpfWHuge/r4aFHPc9tdM1Aqn2uaQ=;
-        b=RULTTSYMpzcMqu/lH9m6RVVkMZSgo7xVxk3vvJHNciAYlpw3OcPwxtQgIXTjpe38RX
-         7l8F3CYKnC/ZqznIXnYleT84WVwUYxQWbpL/QRwl1zVAnxB1+6i6CfmJ+l6HWo5ZzwVI
-         egpZWT1Cxk4+oj2abOTPYGu5ux4vFsUGgBrbXySios1hXai0Z5G88cVwzn8M92umkF6W
-         q7jlU9+lrFzukDQxNIqE5/k2NjtLs0l6gj6Lvvc6BVOn3FH2Mg1nCkXQuYbnmG+mI4N6
-         AZoG5Ip7TZZ+8R8kTqhCmei83qs1dDLiIBtw80jdRQAsDoL3gz22daS5g7ihzFvsVaNK
-         ASdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Di1Rj4i8NNjxp2cBpfWHuge/r4aFHPc9tdM1Aqn2uaQ=;
-        b=flX21aJgHElUOH5FtUkAEbo9VT1dsxDvrVATrnn1mEKrQTpa6VisUumEOcrAxRIhJm
-         ZGoUrMRd11M282G80BNPsFpaqpL3mRwel/wfcyIPbXw2vSQ7R3ohMJok5I054EgUpgcJ
-         hhPiBvIn8GXjlVr6tH1H5OKerUz1EMlzZGXJgeOguumU0llAGy6egmB3SmYEi5Lyoqxf
-         xWDJ8Ossn1Z4s8L1/ubpXxfiDmca5zhfw7y7oUuzdOoKCDpgqHwI5ZeVY2prNfPQ34hb
-         H5Coe7XjxYRrNVcC5ywd/rYwUdN4x7xwLXoNAugMgTgmtDDjg+ficuRTPNAvjcpH3ABl
-         LcYQ==
-X-Gm-Message-State: AOAM533uxcI/ba0NINach6NrWKwd/2i1FEbGY22aBskC2VEUfGm8jmNI
-        1JnRgsSUuMTHnbi7VULwFce2aBUHVvlEGB2f8Q3voA==
-X-Google-Smtp-Source: ABdhPJwpkpI/4ynNoGZO3Tt2LHq14lHoq8y03inXj18wPF7a5sbJjd+FrJ61pEThOJCudT8JzVygtlCV8utFiPdOG1E=
-X-Received: by 2002:a25:5606:: with SMTP id k6mr15946697ybb.476.1632536287181;
- Fri, 24 Sep 2021 19:18:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210920190350.3860821-1-willmcvicker@google.com>
- <7735b09c-cf1c-5e37-a737-9a330fbacf1e@canonical.com> <YUmTwZPqrCfRMekd@google.com>
- <d6212801-f2a0-a6a7-6154-0f99b57f1c4d@canonical.com>
-In-Reply-To: <d6212801-f2a0-a6a7-6154-0f99b57f1c4d@canonical.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Fri, 24 Sep 2021 19:17:30 -0700
-Message-ID: <CAGETcx9wp3cbsehODj=oAd658hF6KNL5Qiy2nVc=7Bxqxxwimw@mail.gmail.com>
-Subject: Re: [PATCH v1 0/4] arm64: Kconfig: Update ARCH_EXYNOS select configs
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Will McVicker <willmcvicker@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        id S235512AbhIYJdC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 25 Sep 2021 05:33:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53682 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229870AbhIYJdC (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 25 Sep 2021 05:33:02 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 843E261279;
+        Sat, 25 Sep 2021 09:31:21 +0000 (UTC)
+Received: from sofa.misterjones.org ([185.219.108.64] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1mU41f-00CujH-C2; Sat, 25 Sep 2021 10:31:19 +0100
+Date:   Sat, 25 Sep 2021 10:31:19 +0100
+Message-ID: <87a6k1atnc.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        kernel-team@android.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kevin Hilman <khilman@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+Subject: Re: [RFC PATCH v2 2/4] irqchip: Add RZ/G2L IA55 Interrupt Controller driver
+In-Reply-To: <CA+V-a8vQ5J-Y4PdL5ZrEqbM-ohS1RRZvD8=7JL6GJCkg7ZOJwQ@mail.gmail.com>
+References: <20210921193028.13099-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        <20210921193028.13099-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        <87v92pu7ad.wl-maz@kernel.org>
+        <CA+V-a8vQ5J-Y4PdL5ZrEqbM-ohS1RRZvD8=7JL6GJCkg7ZOJwQ@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: prabhakar.csengg@gmail.com, prabhakar.mahadev-lad.rj@bp.renesas.com, tglx@linutronix.de, geert+renesas@glider.be, robh+dt@kernel.org, linus.walleij@linaro.org, magnus.damm@gmail.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, biju.das.jz@bp.renesas.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 21, 2021 at 1:25 AM Krzysztof Kozlowski
-<krzysztof.kozlowski@canonical.com> wrote:
->
-> On 21/09/2021 10:11, Lee Jones wrote:
-> > On Tue, 21 Sep 2021, Krzysztof Kozlowski wrote:
+On Fri, 24 Sep 2021 23:27:21 +0100,
+"Lad, Prabhakar" <prabhakar.csengg@gmail.com> wrote:
+> 
+> Hi Marc,
+> 
+> Thank you for the review.
+> 
+> On Fri, Sep 24, 2021 at 8:01 PM Marc Zyngier <maz@kernel.org> wrote:
 > >
-> >> On 20/09/2021 21:03, Will McVicker wrote:
-> >>> This patch series tries to address the issue of ARCH_EXYNOS force selecting
-> >>> a handful of drivers without allowing the vendor to override any of the
-> >>> default configs. This takes away from the flexibilty of compiling a generic
-> >>> kernel with exynos kernel modules. For example, it doesn't allow vendors to
-> >>> modularize these drivers out of the core kernel in order to share a generic
-> >>> kernel image across multiple devices that require device-specific kernel
-> >>> modules.
-> >>
-> >> You do not address the issue in these patches. The problem you describe
-> >> is that drivers are not modules and you are not changing them into modules.
+> > On Tue, 21 Sep 2021 20:30:26 +0100,
+> > Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > >
+> > > Add a driver for the Renesas RZ/G2L Interrupt Controller.
+> > >
+> > > This supports external pins being used as interrupts. It supports
+> > > one line for NMI, 8 external pins and 32 GPIO pins (out of 123)
+> > > to be used as IRQ lines.
+> > >
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > ---
+> > >  drivers/irqchip/Kconfig             |   9 +
+> > >  drivers/irqchip/Makefile            |   1 +
+> > >  drivers/irqchip/irq-renesas-rzg2l.c | 393 ++++++++++++++++++++++++++++
+> > >  drivers/soc/renesas/Kconfig         |   1 +
+> > >  4 files changed, 404 insertions(+)
+> > >  create mode 100644 drivers/irqchip/irq-renesas-rzg2l.c
+> > >
+> > > diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> > > index 4d5924e9f766..b61dceac8628 100644
+> > > --- a/drivers/irqchip/Kconfig
+> > > +++ b/drivers/irqchip/Kconfig
+> > > @@ -236,6 +236,15 @@ config RENESAS_RZA1_IRQC
+> > >         Enable support for the Renesas RZ/A1 Interrupt Controller, to use up
+> > >         to 8 external interrupts with configurable sense select.
+> > >
+> > > +config RENESAS_RZG2L_IRQC
+> > > +     bool "Renesas RZ/G2L IRQC support" if COMPILE_TEST
+> > > +     select GENERIC_IRQ_CHIP
+> > > +     select IRQ_DOMAIN
+> > > +     select IRQ_DOMAIN_HIERARCHY
+> > > +     help
+> > > +       Enable support for the Renesas RZ/G2L Interrupt Controller for external
+> > > +       devices.
+> > > +
+> > >  config SL28CPLD_INTC
+> > >       bool "Kontron sl28cpld IRQ controller"
+> > >       depends on MFD_SL28CPLD=y || COMPILE_TEST
+> > > diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> > > index f88cbf36a9d2..8017786fbdac 100644
+> > > --- a/drivers/irqchip/Makefile
+> > > +++ b/drivers/irqchip/Makefile
+> > > @@ -51,6 +51,7 @@ obj-$(CONFIG_RDA_INTC)                      += irq-rda-intc.o
+> > >  obj-$(CONFIG_RENESAS_INTC_IRQPIN)    += irq-renesas-intc-irqpin.o
+> > >  obj-$(CONFIG_RENESAS_IRQC)           += irq-renesas-irqc.o
+> > >  obj-$(CONFIG_RENESAS_RZA1_IRQC)              += irq-renesas-rza1.o
+> > > +obj-$(CONFIG_RENESAS_RZG2L_IRQC)     += irq-renesas-rzg2l.o
+> > >  obj-$(CONFIG_VERSATILE_FPGA_IRQ)     += irq-versatile-fpga.o
+> > >  obj-$(CONFIG_ARCH_NSPIRE)            += irq-zevio.o
+> > >  obj-$(CONFIG_ARCH_VT8500)            += irq-vt8500.o
+> > > diff --git a/drivers/irqchip/irq-renesas-rzg2l.c b/drivers/irqchip/irq-renesas-rzg2l.c
+> > > new file mode 100644
+> > > index 000000000000..8057fdf6781b
+> > > --- /dev/null
+> > > +++ b/drivers/irqchip/irq-renesas-rzg2l.c
+> > > @@ -0,0 +1,393 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * Renesas RZ/G2L IRQC Driver
+> > > + *
+> > > + * Copyright (C) 2021 Renesas Electronics Corporation.
+> > > + */
+> > > +
+> > > +#include <linux/err.h>
+> > > +#include <linux/init.h>
+> > > +#include <linux/interrupt.h>
+> > > +#include <linux/io.h>
+> > > +#include <linux/irq.h>
+> > > +#include <linux/irqchip/chained_irq.h>
+> > > +#include <linux/irqdesc.h>
+> > > +#include <linux/irqdomain.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/of_irq.h>
+> > > +#include <linux/platform_device.h>
+> > > +#include <linux/pm_runtime.h>
+> > > +
+> > > +#define IRQC_IRQ_START                       1
+> > > +#define IRQC_IRQ_COUNT                       8
+> > > +#define IRQC_TINT_START                      9
+> > > +#define IRQC_TINT_COUNT                      32
+> > > +#define IRQC_NUM_IRQ                 41
+> > > +
+> > > +#define ISCR                         0x10
+> > > +#define IITSR                                0x14
+> > > +#define TSCR                         0x20
+> > > +#define TITSR0                               0x24
+> > > +#define TITSR1                               0x28
+> > > +#define TITSR0_MAX_INT                       16
+> > > +#define TITSEL_WIDTH                 0x2
+> > > +#define TSSR(n)                              (0x30 + ((n) * 4))
+> > > +#define TIEN                         BIT(7)
+> > > +#define TSSEL_SHIFT(n)                       (8 * (n))
+> > > +#define TSSEL_MASK                   GENMASK(7, 0)
+> > > +#define IRQ_MASK                     0x3
+> > > +
+> > > +#define TSSR_OFFSET(n)                       ((n) % 4)
+> > > +#define TSSR_INDEX(n)                        ((n) / 4)
+> > > +
+> > > +#define TITSR_TITSEL_EDGE_RISING     0
+> > > +#define TITSR_TITSEL_EDGE_FALLING    1
+> > > +#define TITSR_TITSEL_LEVEL_HIGH              2
+> > > +#define TITSR_TITSEL_LEVEL_LOW               3
+> > > +
+> > > +struct rzg2l_irqc_priv {
+> > > +     void __iomem *base;
+> > > +     struct device *dev;
+> > > +     struct irq_chip chip;
+> > > +     struct irq_domain *irq_domain;
+> > > +     struct resource *irq[IRQC_NUM_IRQ];
+> > > +     struct mutex irqc_mutex;
+> > > +     struct mutex tint_mutex; /* Mutex to protect tint_slot bitmap */
+> > > +     DECLARE_BITMAP(tint_slot, IRQC_TINT_COUNT);
+> > > +};
+> > > +
+> > > +struct rzg2l_irqc_chip_data {
+> > > +     struct rzg2l_irqc_priv *priv;
+> > > +     int tint;
+> > > +     int hwirq;
+> > > +};
+> > > +
+> > > +static int rzg2l_tint_set_edge(struct rzg2l_irqc_priv *priv,
+> > > +                            unsigned int hwirq, unsigned int type)
+> > > +{
+> > > +     u32 port = hwirq - IRQC_TINT_START;
+> > > +     u8 sense;
+> > > +     u32 reg;
+> > > +
+> > > +     switch (type & IRQ_TYPE_SENSE_MASK) {
+> > > +     case IRQ_TYPE_EDGE_RISING:
+> > > +             sense = TITSR_TITSEL_EDGE_RISING;
+> > > +             break;
+> > > +
+> > > +     case IRQ_TYPE_EDGE_FALLING:
+> > > +             sense = TITSR_TITSEL_EDGE_FALLING;
+> > > +             break;
+> > > +
+> > > +     case IRQ_TYPE_LEVEL_HIGH:
+> > > +             sense = TITSR_TITSEL_LEVEL_HIGH;
+> > > +             break;
+> > > +
+> > > +     case IRQ_TYPE_LEVEL_LOW:
+> > > +             sense = TITSR_TITSEL_LEVEL_LOW;
+> > > +             break;
+> > > +
+> > > +     default:
+> > > +             return -EINVAL;
+> > > +     }
+> > > +
+> > > +     mutex_lock(&priv->irqc_mutex);
 > >
-> > The wording is unfortunate.  The reason for this change doesn't have
-> > much to do with kernel modules.
+> > Have you tested this code with lockdep? This cannot possibly work,
+> > since all the irqchip callbacks are running under a per-irq raw
+> > spinlock.
 > >
-> > Let's go back in time 18 months or so when Greg KH submitted this [0]
-> > patch, which you Acked.  Greg was trying to solve the problem of not
-> > having to enable ARCH_EXYNOS on kernels which are designed to be
-> > platform agnostic (sometimes called Generic Kernels).  For some reason
-> > SERIAL_SAMSUNG is the only symbol with these dependencies, so the
-> > solution seemed simple and straight forward at the time.
+> Yes I have tested with a GPIO pin being set as an interrupt.
+
+[...]
+
+You seem to have missed the key element above. *lockdep* is the
+crucial part (and more specifically CONFIG_PROVE_LOCKING). My bet is
+that you will get a huge splat telling you that your locking is bogus.
+
+> > > +static void rzg2l_irqc_irq_enable(struct irq_data *d)
+> > > +{
+> > > +     struct rzg2l_irqc_chip_data *chip_data = d->chip_data;
+> > > +     struct rzg2l_irqc_priv *priv = chip_data->priv;
+> > > +
+> > > +     if (chip_data->tint != -EINVAL) {
+> > > +             u32 offset = chip_data->hwirq - IRQC_TINT_START;
+> > > +             u32 tssr_offset = TSSR_OFFSET(offset);
+> > > +             u8 tssr_index = TSSR_INDEX(offset);
+> > > +             u32 reg;
+> > > +
+> > > +             irq_set_chained_handler_and_data(priv->irq[chip_data->hwirq]->start,
+> > > +                                              rzg2l_irqc_tint_irq_handler,
+> > > +                                              chip_data);
+> > > +
+> > > +             mutex_lock(&priv->irqc_mutex);
+> > > +             reg = readl_relaxed(priv->base + TSSR(tssr_index));
+> > > +             reg |= (TIEN | chip_data->tint) << TSSEL_SHIFT(tssr_offset);
+> > > +             writel_relaxed(reg, priv->base + TSSR(tssr_index));
+> > > +             mutex_unlock(&priv->irqc_mutex);
+> > > +     }
+> > > +}
 > >
-> > However, For sound reasons Geert NACKed the patch.
+> > These two function make little sense. Why isn't the chained handler
+> > wired once and for all?
 > >
-> > Quoting from [1] he says:
+> you mean to move this during alloc callback? chained handler is
+> registered only when an GPIO line is requested as interrupt as a
+> result I am wiring only upon requests.
+
+Why? Wiring a chained handler can be done as soon as the output
+interrupt is known (which is probe time). There is no need to do that
+on demand. However, this is the wrong model anyway, see below.
+
+> 
+> > > +
+> > > +static int rzg2l_irqc_set_type(struct irq_data *d, unsigned int type)
+> > > +{
+> > > +     struct rzg2l_irqc_chip_data *chip_data = d->chip_data;
+> > > +     struct rzg2l_irqc_priv *priv = chip_data->priv;
+> > > +
+> > > +     if (chip_data->tint != EINVAL)
+> > > +             return rzg2l_tint_set_edge(priv, chip_data->hwirq, type);
 > >
-> >   "A generic kernel will include Samsung SoC support, hence
-> >   PLAT_SAMSUNG or ARCH_EXYNOS will be enabled."
->
-> Yes, it's correct reasoning. There is also one more use-case -
-> non-upstreamed (out of tree) platform which wants to use Exynos-specific
-> drivers. Something like was happening with Apple M1 except that it got
-> upstreamed and we do not care much about out-of-tree.
->
+> > Inline this function here. There is no point in having this helper on
+> > its own with a single call site.
 > >
-> > However, since the entry for ARCH_EXYNOS *insists* on building-in a
-> > bunch of other symbols (via 'select') which will be unused in most
-> > cases, this is not a currently acceptable approach for many Generic
-> > Kernels due to size constraints.
->
-> In the mainline kernel there is no such use case. If you want to have
-> Exynos-whatever-driver (e.g. SERIAL_SAMSUNG or S3C RTC), you should
-> select ARCH_EXYNOS because otherwise it does not make any sense. Zero
-> sense. Such kernel won't work.
->
-> It makes sense only if there is some other work, hidden here, where
-> someone might want to have SERIAL_SAMSUNG or S3C RTC without
-> ARCH_EXYNOS. Although GKI is not that work because GKI kernel will
-> select ARCH_EXYNOS. It must select ARCH_EXYNOS if it wants to support
-> Exynos platforms.
->
-> Therefore I expect first to bring this "some other work, hidden here" to
-> broader audience, so we can review its use case.
->
+> Ok, I will make this inline.
+> 
+> > > +
+> > > +     return -EINVAL;
+> > > +}
+> > > +
+> > > +static int rzg2l_irqc_domain_alloc(struct irq_domain *domain, unsigned int virq,
+> > > +                                unsigned int nr_irqs, void *arg)
+> > > +{
+> > > +     struct rzg2l_irqc_priv *priv = domain->host_data;
+> > > +     struct rzg2l_irqc_chip_data *chip_data = NULL;
+> > > +     struct irq_fwspec parent_fwspec;
+> > > +     struct irq_fwspec *fwspec = arg;
+> > > +     int tint = -EINVAL;
+> > > +     irq_hw_number_t hwirq;
+> > > +     int irq = -EINVAL;
+> > > +     unsigned int type;
+> > > +     int ret;
+> > > +
+> > > +     chip_data = kzalloc(sizeof(*chip_data), GFP_KERNEL);
+> > > +     if (!chip_data)
+> > > +             return -ENOMEM;
 > >
-> > What this patch does is migrates those symbols from being 'select'ed
-> > (always built-in with no recourse) to 'default y'.  Where the former
-> > cannot be over-ridden, but the latter can be via a vendor's
-> > defconfig/fragment.
->
-> It cannot be overridden by vendor fragment because options are not
-> visible. You cannot change them.
->
-> The patch does nothing in this regard (making them selectable/possible
-> to disable), which is why I complained.
->
+> > Why do you need to allocate per interrupt chip-specific data?
 > >
-> > I doubt many (any?) of these symbols can be converted to kernel
-> > modules anyway, as they are required very early on in the boot
-> > sequence.
->
-> True, some could, some not. Also some platforms are set up via
-> bootloader, so actually could "survive" till module is loaded from some
-> initrd.
+> To ack and trigger the virq in the domain. Let me know if there is a
+> much better way of doing this.
 
-Hi Krzysztof,
+This makes zero sense. The data structure associated with the irq_desc
+should already give you everything you need.
 
-I was trying to chime in, but the discussion got spread out across all
-the patches. Since the cover letter seems to have everyone, I thought
-I'd reply here. Hope you don't mind. I'll try to respond/chime in on
-the various topics that were raised across the patches.
+And what is this 'virq'? If you are talking about the hwirq of the
+triggering interrupt, you totally have the wrong end of the stick. A
+chained interrupt controller shouldn't need to know that.
 
-Yes, the next patch series would To/Cc folks correctly. William simply
-forgot to use the --to-cover and --cc-cover options when using git
-send-email.
+It really looks like you are abusing a chained interrupt controller,
+while this really should be a hierarchical controller which maps a set
+of input pins to a set of output pins, as you never seem to map
+multiple inputs to a single output.
 
-I agree with you that it doesn't make sense to have ARCH_EXYNOS
-enabled but to have all the clock drivers exynos compiled out. Then
-one obviously can't boot an exynos platform using that kernel. I think
-William is going to send out a new patch series with a few drivers
-modularized. That'll ensure all the common exynos clock code is
-modularized and we have a few examples of exynos clock modules.
+A hierarchical interrupt controller would give you the correct context
+by construction, without having to add any extra data structure.
 
-Speaking of modules, a fully modularized generic ARM64 kernel where
-everything is modularized out and we only load the necessary modules
-is a great goal. And this is where I can chime in the most since I
-wrote fw_devlink and tested this out. Such a kernel is not
-hypothetical. IIRC hikey960 can already do this. There's an upstream
-amlogic(?) board that can do this (Kevin Hilman has done that). A more
-complex/recent/powerful, but downstream example is the Pixel 5 -- it
-has a fully modular kernel. 320+ modules! Including interrupt
-controllers, timers, pinctrl and clocks.
+> 
+> > > +
+> > > +     ret = irq_domain_translate_twocell(domain, arg, &hwirq, &type);
+> > > +     if (ret)
+> > > +             return ret;
+> > > +
+> > > +     /*
+> > > +      * When alloc has landed from pinctrl driver:
+> > > +      * fwspec->param_count = 3
+> > > +      * fwspec->param[0] = tint
+> > > +      * fwspec->param[1] = type
+> > > +      * fwspec->param[2] = 1
+> > > +      */
+> > > +     if (fwspec->param_count == 3 && fwspec->param[2]) {
+> > > +             mutex_lock(&priv->tint_mutex);
+> > > +             irq = bitmap_find_free_region(priv->tint_slot, IRQC_TINT_COUNT, get_order(1));
+> >
+> > I think you can replace this get_order() with the result.
+> >
+> > > +             if (irq < 0) {
+> > > +                     mutex_unlock(&priv->tint_mutex);
+> > > +                     return -ENOSPC;
+> > > +             }
+> > > +             mutex_unlock(&priv->tint_mutex);
+> > > +             tint = hwirq;
+> > > +             hwirq = irq + IRQC_TINT_START;
+> > > +     }
+> > > +
+> > > +     chip_data->priv = priv;
+> > > +     chip_data->tint = tint;
+> > > +     chip_data->hwirq = hwirq;
+> >
+> > Really?
+> Could you please elaborate here.
+> 
+> As per the current implementation here
+> pinctrl->irqc->GIC
+> The SoC supports 123 GPIO pins out of which a max of 32 can be
+> configured as an interrupt line into the irqc.
+> 
+> keyboard {
+>     compatible = "gpio-keys";
+>     status = "okay";
+> 
+>    key-3 {
+>        gpios = <&pinctrl RZG2L_GPIO(9, 0) GPIO_ACTIVE_HIGH>;
+>        linux,code = <KEY_3>;
+>        label = "SW3";
+>         wakeup-source;
+>     };
+> };
+> For example with the above the pinctrl driver passes interrupt number
+> to be programmed into irqc corresponding to RZG2L_GPIO(9, 0),  type
+> and third parameter tint indicating this is coming from pinctrl (as
+> irqc supports gpio/irq/nmi). When this lands in the irqc domain with
+> the above we find the first available slot from 32 interrupts and
+> hwirq is set to  irq + IRQC_TINT_START if its first slot it would be
+> 0+9.
 
-I can assure you any of the framework code related to pulling off
-booting a fully modular ARM64 kernel is already upstreamed
-(fw_devlink, irq framework changes, etc) or sent upstream (timer -- by
-a SoC vendor, etc) and being worked on. As for fw_devlink, I've
-extended it way past what GKI or Android would need. It would have
-been super trivial if all I wanted to do was support Android devices.
-I've also upstreamed changes that improve module loading time for all
-ARM64 modules. All of this and more upstream work came out of GKI and
-our push to be upstream first -- so I think it's reasonable to say the
-GKI effort helps and cares to get more work upstreamed.
+Which proves my point. This isn't a chained interrupt controller *at
+all*. this is just a mapper between 8 (out of 32) inputs to 8 outputs.
 
-Speaking of GKI, let's not speak of it. It really doesn't matter.
-Android is just yet another distribution (albeit a very popular one).
-The part that's relevant to upstream/all the other distributions is
-the fully modular generic ARM64 kernel and that's what we should focus
-on.
+> 
+> >
+> > > +     ret = irq_domain_set_hwirq_and_chip(domain, virq, hwirq, &priv->chip, chip_data);
+> > > +     if (ret)
+> > > +             goto release_bitmap;
+> > > +
+> > > +     /* parent is GIC */
+> > > +     parent_fwspec.fwnode = domain->parent->fwnode;
+> > > +     parent_fwspec.param_count = 3;
+> > > +     parent_fwspec.param[0] = 0; /* SPI */
+> > > +     parent_fwspec.param[1] = priv->irq[hwirq]->start;
+> > > +     parent_fwspec.param[2] = IRQ_TYPE_LEVEL_HIGH;
+> > > +     ret = irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, &parent_fwspec);
+> This is the bit which is I am unclear about as I am requesting a
+> chained handler I believe this should be done automatically and is not
+> required. Is my understanding correct here?
 
-In that context, I think William's attempts are reasonable and I think
-he'll be glad to fix up any technical issues that people point out. So
-hopefully we can focus on that?
+Because you are mixing chained and hierarchical models. I even missed
+the use of irq_domain_alloc_irqs_parent here, as the whole logic is
+completely messed up.
 
-Cheers,
-Saravana
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
