@@ -2,137 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F2754419218
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Sep 2021 12:18:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BFEE141941B
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Sep 2021 14:23:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233782AbhI0KTs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Sep 2021 06:19:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55250 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233757AbhI0KTs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Sep 2021 06:19:48 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9440C061575;
-        Mon, 27 Sep 2021 03:18:10 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: gtucker)
-        with ESMTPSA id B21C91F427CE
-Subject: Re: [PATCH v8 9/9] pinctrl/rockchip: drop the gpio related codes
-To:     Jianqun Xu <jay.xu@rock-chips.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     bgolaszewski@baylibre.com, robh+dt@kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-References: <20210816011948.1118959-1-jay.xu@rock-chips.com>
- <20210816012146.1119289-1-jay.xu@rock-chips.com>
-From:   Guillaume Tucker <guillaume.tucker@collabora.com>
-Message-ID: <f13ff971-8af2-be9b-fa5d-7913c0ff1351@collabora.com>
-Date:   Mon, 27 Sep 2021 12:18:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
-MIME-Version: 1.0
-In-Reply-To: <20210816012146.1119289-1-jay.xu@rock-chips.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S234244AbhI0MZA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Sep 2021 08:25:00 -0400
+Received: from mail-ot1-f47.google.com ([209.85.210.47]:38909 "EHLO
+        mail-ot1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234181AbhI0MY7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Sep 2021 08:24:59 -0400
+Received: by mail-ot1-f47.google.com with SMTP id c6-20020a9d2786000000b005471981d559so24141917otb.5;
+        Mon, 27 Sep 2021 05:23:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=M1JxjeIOmKat6HvCouZk2WyJoVDL3ELYlgAx1y+djF4=;
+        b=7Dr0bB4vGoaJvaSBAUBkx9KtKsSxZfB/vn4GVTjzd3CfOSl5Iwqp/Hh5IuMRBL06d+
+         uTcMftoEpr91DfDdp7SVYLnnLLM484w+tDj9V8zrObYSZwSIAsKw0IdSgq5/f0N3BX7l
+         S0/O0Y5/luYHWHqCj8v/e5FNzpbY65175L0QUhY/C5JCjyUU5yFFadzqjtfHuryQahIm
+         7/AcyukH2XgWHg6HqoUFRMjWGKv2st+fUmTng2WHuP2G2WogBgV/QzYqMcKs+orklLg7
+         BuLlDGHtxxhlhnm0wzUxNExE9ymhzOboEXHr35l4Gy1tYNa4/iJzHoPV6ZcQROWKergD
+         VHDQ==
+X-Gm-Message-State: AOAM532DbWgQuNY4xsZ7Yz305Qgr2HmuLmISGFgBArR3tWazJEkdyZR8
+        /88d6n4zDBKM8r/I0B/VXw==
+X-Google-Smtp-Source: ABdhPJxPboMBJ7atlf4V2758iIymolXl+RlULWf5ZVJnB5v+aaNUyKh+KewyhDhEFZ50jt9f77a3wA==
+X-Received: by 2002:a9d:27a4:: with SMTP id c33mr17216398otb.283.1632745401264;
+        Mon, 27 Sep 2021 05:23:21 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id o126sm3844592oig.21.2021.09.27.05.23.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Sep 2021 05:23:20 -0700 (PDT)
+Received: (nullmailer pid 3097152 invoked by uid 1000);
+        Mon, 27 Sep 2021 12:23:19 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Sam Shih <sam.shih@mediatek.com>
+Cc:     herbert@gondor.apana.org.au, linux-serial@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux@roeck-us.net,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, hsinyi@chromium.org,
+        mpm@selenic.com, seiya.wang@mediatek.com,
+        enric.balletbo@collabora.com, fparent@baylibre.com,
+        john@phrozen.org, sboyd@kernel.org, devicetree@vger.kernel.org,
+        linux-crypto@vger.kernel.org, gregkh@linuxfoundation.org,
+        mturquette@baylibre.com, linux-watchdog@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com,
+        wim@linux-watchdog.org, robh+dt@kernel.org,
+        linus.walleij@linaro.org, sean.wang@kernel.org,
+        Ryder.Lee@mediatek.com
+In-Reply-To: <20210927023419.17994-1-sam.shih@mediatek.com>
+References: <1632491961.645727.1195978.nullmailer@robh.at.kernel.org> <20210927023419.17994-1-sam.shih@mediatek.com>
+Subject: Re: [v5,5/9] dt-bindings: pinctrl: update bindings for MT7986 SoC
+Date:   Mon, 27 Sep 2021 07:23:19 -0500
+Message-Id: <1632745399.256353.3097151.nullmailer@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Jianqun,
-
-On 16/08/2021 02:21, Jianqun Xu wrote:
-> With the patch to separate the gpio driver from the pinctrl driver, now
-> the pinctrl-rockchip can drop the gpio related codes now.
+On Mon, 27 Sep 2021 10:34:19 +0800, Sam Shih wrote:
+> This updates bindings for MT7986 pinctrl driver. The
+> difference of pinctrl between mt7986a and mt7986b is that pin-41 to pin-65
+> do not exist on mt7986b
 > 
-> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+> 
 > ---
-> v8:
->  - none
-> v7:
->  - none, from v1
+> v5 : fixed yamllint warnings/errors
+> v4 : used yaml format instead of txt format document
+> v3 : make mt7986 pinctrl bindings as a separate file
+> v2 : deleted the redundant description of mt7986a/mt7986b
+> ---
+>  .../pinctrl/mediatek,mt7986-pinctrl.yaml      | 353 ++++++++++++++++++
+>  1 file changed, 353 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml
 > 
->  drivers/pinctrl/pinctrl-rockchip.c | 645 +----------------------------
->  1 file changed, 17 insertions(+), 628 deletions(-)
 
-[...]
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-Please see the bisection report below about a boot failure on
-rk3288-veyron-jaq which is pointing to this patch.  The issue
-appears to be present on mainline but not on linux-next as of
-next-20210924.
+yamllint warnings/errors:
 
-Reports aren't automatically sent to the public while we're
-trialing new bisection features on kernelci.org but this one
-looks valid.
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.example.dts:25.13-32.43: Warning (reg_format): /example-0/soc/pinctrl@1001f000:reg: property has invalid length (128 bytes) (#address-cells == 2, #size-cells == 1)
+Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.example.dt.yaml: Warning (pci_device_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.example.dt.yaml: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.example.dt.yaml: Warning (simple_bus_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.example.dt.yaml: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
+Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.example.dts:23.33-58.13: Warning (avoid_default_addr_size): /example-0/soc/pinctrl@1001f000: Relying on default #address-cells value
+Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.example.dts:23.33-58.13: Warning (avoid_default_addr_size): /example-0/soc/pinctrl@1001f000: Relying on default #size-cells value
+Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.example.dt.yaml: Warning (unique_unit_address): Failed prerequisite 'avoid_default_addr_size'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.example.dt.yaml: pinctrl@1001f000: 'gpio-ranges' does not match any of the regexes: '-[0-9]+$', 'pinctrl-[0-9]+'
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml
 
-Some more details can be found here:
+doc reference errors (make refcheckdocs):
 
-  https://linux.kernelci.org/test/case/id/614f19a33f5497c2bc99a2df/
+See https://patchwork.ozlabs.org/patch/1533169
 
-Please let us know if you need help debugging the issue or if you
-have a fix to try.
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
 
-Best wishes,
-Guillaume
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
+pip3 install dtschema --upgrade
 
-GitHub: https://github.com/kernelci/kernelci-project/issues/58
+Please check and re-submit.
 
--------------------------------------------------------------------------------
-
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-* This automated bisection report was sent to you on the basis  *
-* that you may be involved with the breaking commit it has      *
-* found.  No manual investigation has been done to verify it,   *
-* and the root cause of the problem may be somewhere else.      *
-*                                                               *
-* If you do send a fix, please include this trailer:            *
-*   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
-*                                                               *
-* Hope this helps!                                              *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-
-mainline/master bisection: baseline.login on rk3288-veyron-jaq
-
-Summary:
-  Start:      7d42e9818258 Merge tag 'gpio-fixes-for-v5.15-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux
-  Plain log:  https://storage.kernelci.org/mainline/master/v5.15-rc2-159-g7d42e9818258/arm/multi_v7_defconfig+CONFIG_EFI=y+CONFIG_ARM_LPAE=y/gcc-8/lab-collabora/baseline-rk3288-veyron-jaq.txt
-  HTML log:   https://storage.kernelci.org/mainline/master/v5.15-rc2-159-g7d42e9818258/arm/multi_v7_defconfig+CONFIG_EFI=y+CONFIG_ARM_LPAE=y/gcc-8/lab-collabora/baseline-rk3288-veyron-jaq.html
-  Result:     9ce9a02039de pinctrl/rockchip: drop the gpio related codes
-
-Checks:
-  revert:     PASS
-  verify:     PASS
-
-Parameters:
-  Tree:       mainline
-  URL:        https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-  Branch:     master
-  Target:     rk3288-veyron-jaq
-  CPU arch:   arm
-  Lab:        lab-collabora
-  Compiler:   gcc-8
-  Config:     multi_v7_defconfig+CONFIG_EFI=y+CONFIG_ARM_LPAE=y
-  Test case:  baseline.login
-
-Breaking commit found:
-
--------------------------------------------------------------------------------
-commit 9ce9a02039de72ec8af1bd4bff14f1780337ffcc
-Author: Jianqun Xu <jay.xu@rock-chips.com>
-Date:   Mon Aug 16 09:21:46 2021 +0800
-
-    pinctrl/rockchip: drop the gpio related codes
-    
-    With the patch to separate the gpio driver from the pinctrl driver, now
-    the pinctrl-rockchip can drop the gpio related codes now.
-    
-    Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
-    Link: https://lore.kernel.org/r/20210816012146.1119289-1-jay.xu@rock-chips.com
-    Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
