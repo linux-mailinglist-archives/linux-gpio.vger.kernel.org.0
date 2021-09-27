@@ -2,154 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E35C4419183
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Sep 2021 11:27:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CBF1E419187
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Sep 2021 11:30:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233663AbhI0J2p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Sep 2021 05:28:45 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:37644 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233693AbhI0J2n (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 27 Sep 2021 05:28:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1632734825;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=YlrOZk8y1zMynRshDEkgt0MkHN8FV305szIAzfFZEqo=;
-        b=UUBemqZaOg2O7U7l59+K+iNE7TfbbkP/soTL+d+2nZguu8ggy+9zuDEF+GKQH0nnM+yPz1
-        IHQaNEeHety6uH4nDH8FcH+p+Z24IzsTlU/rPw63yxIVipU/lt9xIw+G5zY0vv4YOKxDhX
-        tk9sT8+zEAzhquvedJEuGlmb7FkIFVk=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-549-FpdUN4pjO9iyWHlvyGWy2g-1; Mon, 27 Sep 2021 05:27:03 -0400
-X-MC-Unique: FpdUN4pjO9iyWHlvyGWy2g-1
-Received: by mail-ed1-f69.google.com with SMTP id a7-20020a509e87000000b003da71d1b065so3104239edf.4
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Sep 2021 02:27:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YlrOZk8y1zMynRshDEkgt0MkHN8FV305szIAzfFZEqo=;
-        b=02Y3WySSh8oBcXn/YJDmP721tlUAqrU2n8dpradLmavIxwo+cZ05pzpxXiasnQ8GxD
-         UChMmO9Il3jDiRZo282y1N+JSnwJxypAwM9nO14yZ5cDW8TER1mp39JQrfNXa4hHCFyB
-         adrQUTqiw4OiynsSzmt+mVIUpRXzICyGaOzNG8Z3ypMHrNiBWA+wAhtE+Gy0P+1cHSAV
-         qJhKG+ehP+HIRbulZ8Inc1l9gqj78tcrtfTUQfYahK3D5jpSvkb3rBwrjRiBVA34HZJ4
-         fShs0vDwgpk8rMi40lpGmqqjNvWi9goOJejS4HO92y05EnfCbwpH42s03n/N30+tOl0T
-         wWhA==
-X-Gm-Message-State: AOAM531zMDeq07vclbLakP7VC9XzJBjE4GSwnhuMdVwZwsvQ2yD21Yw0
-        wH6AejGhl0aeUfCEUJFlVLfe/U+aHJwZ29NjiB4l0bKH86r8A68J8vsQrBIoH3gewVTguvtREDf
-        ihAWCQqPnMfVXWnKUT6zpmQ==
-X-Received: by 2002:aa7:d897:: with SMTP id u23mr9598237edq.116.1632734822660;
-        Mon, 27 Sep 2021 02:27:02 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyis0N+S682n3VVmDEAxIHbM5PwlX3ZpUurHpwkBC8rmtwF8BfwJ166SIUT9RCYOIHBlJjg+g==
-X-Received: by 2002:aa7:d897:: with SMTP id u23mr9598226edq.116.1632734822508;
-        Mon, 27 Sep 2021 02:27:02 -0700 (PDT)
-Received: from x1.localdomain (2001-1c00-0c1e-bf00-1054-9d19-e0f0-8214.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1054:9d19:e0f0:8214])
-        by smtp.gmail.com with ESMTPSA id w11sm10472960edl.12.2021.09.27.02.27.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Sep 2021 02:27:02 -0700 (PDT)
-Subject: Re: [PATCH v1 1/1] pinctrl: add pinctrl/GPIO driver for Apple SoCs
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Sven Peter <sven@svenpeter.dev>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Joey Gouly <joey.gouly@arm.com>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Hector Martin <marcan@marcan.st>,
-        Marc Zyngier <maz@kernel.org>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        nd <nd@arm.com>, Stan Skowronek <stan@corellium.com>
-References: <20210921222956.40719-1-joey.gouly@arm.com>
- <20210921222956.40719-2-joey.gouly@arm.com>
- <YUrZR/Tl7obfehXP@smile.fi.intel.com>
- <20210925134425.GA4681@e124191.cambridge.arm.com>
- <CAHp75VecEoUnNLx_tw3Fa=9jaDQaXbaaN=gGfFSXPkvpUOihoQ@mail.gmail.com>
- <CACRpkdY01KsAo1OP=MF0LKWt1r5UDXDW=U0Bce1ZMPQGcXmrjg@mail.gmail.com>
- <50d6a8f0-c515-43dc-af06-b31bf8f863df@www.fastmail.com>
- <CACRpkdb-TZfjyonddfHjOFqZXuLSGi7ER3_onnom-5VYm5GsgQ@mail.gmail.com>
- <9e7842b6-eff5-440d-b97a-175bd8e37fa6@www.fastmail.com>
- <CAHp75Vc0CyhuqbVhpO-2xnjM5ZR2px5psZTVsKGdhx++OFB-kg@mail.gmail.com>
- <79b0a69f-bb30-4f7d-afbd-8d635870f6b3@www.fastmail.com>
- <CAHp75Vc+uA-G2+aT_U10BDo8krhahYgTSWdxQt8iffn9angL_w@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <7f8e0480-c6af-8a09-86d6-6234429ffa68@redhat.com>
-Date:   Mon, 27 Sep 2021 11:27:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
-MIME-Version: 1.0
-In-Reply-To: <CAHp75Vc+uA-G2+aT_U10BDo8krhahYgTSWdxQt8iffn9angL_w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+        id S233651AbhI0JcH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Sep 2021 05:32:07 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:35712 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233587AbhI0JcG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Sep 2021 05:32:06 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 18R9URIn037673;
+        Mon, 27 Sep 2021 04:30:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1632735027;
+        bh=kQY6nvv6nW8S8liam7cExP+iV05+kCnTvAYyAy/GMr0=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=RGvX3TKzU7OMVgdBTZhZ4l+pWOsZDVOKuOUY1zWJQW5pjmjMIsw7sUJ8Qc2ExAsx4
+         tTNVgI+iv1sHuVnGMqfaNXHFW1r7t5XMZgACclnd6trnPJ+0pL1SIjvm23eDGMWliE
+         UnT7SB6dbRAHN9CpfBLtFq9SGopuNca0na82wxFs=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 18R9UQus086374
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 27 Sep 2021 04:30:27 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Mon, 27
+ Sep 2021 04:30:26 -0500
+Received: from DFLE111.ent.ti.com ([fe80::6c89:b1ca:ee8f:1a6f]) by
+ DFLE111.ent.ti.com ([fe80::6c89:b1ca:ee8f:1a6f%17]) with mapi id
+ 15.01.2308.014; Mon, 27 Sep 2021 04:30:26 -0500
+From:   "M, Aparna" <a-m1@ti.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+CC:     "Strashko, Grygorii" <grygorii.strashko@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Raghavendra, Vignesh" <vigneshr@ti.com>,
+        linux-devicetree <devicetree@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
+Subject: RE: [EXTERNAL] Re: [PATCH RESEND] dt-bindings: gpio: Convert TI
+ TPIC2810 GPIO Controller bindings to yaml
+Thread-Topic: [EXTERNAL] Re: [PATCH RESEND] dt-bindings: gpio: Convert TI
+ TPIC2810 GPIO Controller bindings to yaml
+Thread-Index: AQHXovlyzsK14weibk+K/AlN3LkSD6uaiRCAgBW38gD//84LwIAAXowAgAdQzPA=
+Date:   Mon, 27 Sep 2021 09:30:26 +0000
+Message-ID: <b3780494775c44f092f35b62789b157d@ti.com>
+References: <20210906083020.6038-1-a-m1@ti.com>
+ <422f7ccd-348b-8023-37db-803339684054@ti.com>
+ <CAMpxmJV_DJRtuHH7V86WOi+Rd5fZ0uOf=jNBY7XvJa_5f4h9bQ@mail.gmail.com>
+ <91aa4468575143c9bb6a8b6a56ab2995@ti.com>
+ <CAMpxmJUam3ZQeizGWaswTy=ziYMh0R5cH+b5F2tdPgWKAuGTDA@mail.gmail.com>
+In-Reply-To: <CAMpxmJUam3ZQeizGWaswTy=ziYMh0R5cH+b5F2tdPgWKAuGTDA@mail.gmail.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.250.232.178]
+x-exclaimer-md-config: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
-
-On 9/27/21 11:00 AM, Andy Shevchenko wrote:
-> +Cc: Hans (just for a bit offtopic comment below)
-> 
-> On Mon, Sep 27, 2021 at 8:46 AM Sven Peter <sven@svenpeter.dev> wrote:
->> On Sun, Sep 26, 2021, at 18:28, Andy Shevchenko wrote:
->>> On Sun, Sep 26, 2021 at 5:36 PM Sven Peter <sven@svenpeter.dev> wrote:
->>>> On Sun, Sep 26, 2021, at 15:10, Linus Walleij wrote:
->>>>> On Sun, Sep 26, 2021 at 2:56 PM Sven Peter <sven@svenpeter.dev> wrote:
->>>>>> On Sun, Sep 26, 2021, at 14:48, Linus Walleij wrote:
-> 
-> ...
-> 
->>>> I'd prefer to have a single compatible and get the npins from some
->>>> property and I don't think that's necessarily over-generalizing.
->>>> AFAICT Apple has been using the exact same MMIO interface for years
->>>> and I'd expect them to continue using it in the future. The only thing
->>>> that seems to change is the number of pins available and their assignment.
->>>> If we just have a single compatible we can likely support the M1X/2 or
->>>> however Apple calls the next SoCs with just a simple DTB change without
->>>> touching any driver code.
->>>
->>> Hmm... Dunno the details, but at least AOP GPIO is definitely ca[able
->>> of waking a system from a deep sleep (that's what SUS == suspend do on
->>> Intel). Haven't checked if you implemented ->irq_set_wake() callbacks,
->>> though.
->>
->> I don't think Joey implemented the set_wake callback because we didn't
->> even consider that the AOP GPIOs might be able to wake the system from
->> deep sleep. I'll see if I can figure out some details about that though.
-> 
-> I have checked Intel drivers and above mentioned do not implement
-> ->irq_set_wake() callback. Hmm... Maybe Hans can share his thoughts
-> why it's so
-> (note, the Skylake and newest are all based on pinctrl-intel.c which
-> implements it. So does Merrifield) and if we also need to consider
-> adding it.
-
-Bay Trail and Cherry Trail always use suspend2idle, which means any
-IRQ is a wake IRQ, since the CPU is in a S0ix (deep-idle, rather
-then full suspended) state.
-
-Drivers still need to make irq_set_irq_wake() calls
-though, to avoid the IRQ code disabling the IRQ on suspend.
-
-To allow those calls to succeed the baytrail and cherryview
-pinctrl drivers set IRQCHIP_SKIP_SET_WAKE in their irqchip.flags.
-
-There are also some more standard (non tablet targetting)
-CPUs which are using the same GPIO IP block, e.g.
-the Celeron N2840 uses the pinctrl-baytrail.c code but
-laptops using this will typically use normal S3 suspend.
-
-I assume that in this case configuring which IRQs are wakeup
-sources is actually controlled the BIOS, since S3 suspend is
-heavily BIOS assisted. I would not even be surprised if the
-BIOS even completely reprograms all IRQ settings (including
-IRQs left enabled) on suspend.
-
-Regards,
-
-Hans
-
+VGhpcyBvbmUgOiBiZ29sYXN6ZXdza2lAYmF5bGlicmUuY29tDQoNCkkgc2VudCBhIHBpbmcgb24g
+dGhlIG1haWwsIG5vdCBzdXJlIHdoeSB0aGlzIGlzIGhhcHBlbmluZy4NCg0KLS0tLS1PcmlnaW5h
+bCBNZXNzYWdlLS0tLS0NCkZyb206IEJhcnRvc3ogR29sYXN6ZXdza2kgPGJnb2xhc3pld3NraUBi
+YXlsaWJyZS5jb20+IA0KU2VudDogV2VkbmVzZGF5LCBTZXB0ZW1iZXIgMjIsIDIwMjEgNjoxNyBQ
+TQ0KVG86IE0sIEFwYXJuYSA8YS1tMUB0aS5jb20+DQpDYzogU3RyYXNoa28sIEdyeWdvcmlpIDxn
+cnlnb3JpaS5zdHJhc2hrb0B0aS5jb20+OyBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxp
+bmFyby5vcmc+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgUmFnaGF2ZW5kcmEs
+IFZpZ25lc2ggPHZpZ25lc2hyQHRpLmNvbT47IGxpbnV4LWRldmljZXRyZWUgPGRldmljZXRyZWVA
+dmdlci5rZXJuZWwub3JnPjsgbGludXgtZ3BpbyA8bGludXgtZ3Bpb0B2Z2VyLmtlcm5lbC5vcmc+
+DQpTdWJqZWN0OiBSZTogW0VYVEVSTkFMXSBSZTogW1BBVENIIFJFU0VORF0gZHQtYmluZGluZ3M6
+IGdwaW86IENvbnZlcnQgVEkgVFBJQzI4MTAgR1BJTyBDb250cm9sbGVyIGJpbmRpbmdzIHRvIHlh
+bWwNCg0KT24gV2VkLCBTZXAgMjIsIDIwMjEgYXQgMjoxMSBQTSBNLCBBcGFybmEgPGEtbTFAdGku
+Y29tPiB3cm90ZToNCj4NCj4gSGkgQmFydCwNCj4NCj4gSSBoYXZlIHJlc2VudCB0aGUgcGF0Y2gu
+DQo+DQo+IFJlZ2FyZHMsDQo+IEFwYXJuYQ0KPg0KDQpUbyB3aGljaCBhZGRyZXNzPyBJIHN0aWxs
+IGRvbid0IGhhdmUgaXQgb24gYm90aCBvZiBteSBlbWFpbCBhZGRyZXNzZXMgKG5vdCBpbiBzcGFt
+IHRvbykgYW5kIHBhdGNod29yayBzdGlsbCBkb2Vzbid0IHNlZSBpdC4NCg0KQmFydA0K
