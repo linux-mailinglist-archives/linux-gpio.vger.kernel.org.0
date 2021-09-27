@@ -2,197 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E2235419F92
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Sep 2021 21:55:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 75E7D419FF2
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Sep 2021 22:16:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236677AbhI0T4j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Sep 2021 15:56:39 -0400
-Received: from mail-vs1-f50.google.com ([209.85.217.50]:35487 "EHLO
-        mail-vs1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235711AbhI0T4j (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Sep 2021 15:56:39 -0400
-Received: by mail-vs1-f50.google.com with SMTP id f18so19525067vsp.2;
-        Mon, 27 Sep 2021 12:55:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/qYkJdocNMf64y4DQpFrkh7ip501uJ0j8evhtC6TmAM=;
-        b=0fIY7wtBFrQO+SJMseuDECznpzHwKHekKh0hLdqAmfbIwq0B6mYPQzgMDu2YxuPqtf
-         amtLQq4QS89LY5IjgacQpn7QsqiNBPPSeqcrEz1/F0i09mGdaA37xnPPoJ1AsLpbmLoA
-         NiJNivANXR9p/MGRcc4tdm77YIkdyhfG9MSo32tSYU6o+KF4yM366uT6qPOQnwfCI0CO
-         4dpj/lq7ugfLv/SmhXgs1WJGZarmOZ4YRmzCa+zzYdriHtgkZ5vY96nbVny+VnqFl7qa
-         pxXCvGQnEio1lyLqX9NfneZVH0XFjOj6xS5pdReCzKAXTj56Og/cQfoCrzBuaQICP/tf
-         OaXQ==
-X-Gm-Message-State: AOAM531kFbQND+BtLqfVYl43pKZXCMPWNYEx6Bxi0KBY5dVNsYimYBPH
-        4jUp+sQNEt02YeqhtElmm+rgzXgxYg6dcXeXx2g=
-X-Google-Smtp-Source: ABdhPJwPJmXU/Uf1MApSAaImmnQ49AfoZTTvSJ9EYE8DADK73laAy0lsWW8ZIuxb0TKgP4nWS1QiGkDkmY8p1587B1s=
-X-Received: by 2002:a67:cc1c:: with SMTP id q28mr1689183vsl.37.1632772500240;
- Mon, 27 Sep 2021 12:55:00 -0700 (PDT)
+        id S236931AbhI0URm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Sep 2021 16:17:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35706 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236763AbhI0URl (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 27 Sep 2021 16:17:41 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 46BD5611C3;
+        Mon, 27 Sep 2021 20:16:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1632773763;
+        bh=Lb3LIgfAEjVXdf1vE2V7OoMMbogeWMravjEabJ1Nxyg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=aoqynUkGyB6ZPUI0PZbhRVWrRQEh4dUFl+HnGRbJEjz36swl07OI+waO5juXrxZEL
+         jHlAKLJtp7vLEn53dGPq9ybdvqoV7skp3bnJ2v0dt7b3LCLaWszZoJwfgXGV5CewIZ
+         EeT9Puax/p5vO3xFfjNQpP/s5z+vV6IucH/tDVc9OrhV9apJ4xfqmWfbZVQ6mT6zds
+         T7V/1iyHvtmaHFbCozBGLs87R9buQKkqhGe1GFJbwuhVxRAw/14pw6aQABaZ9IXQ/3
+         OdqLZFHV5ZJBQxWkAwNJ0thZGMxGk74lNv+sDueBnQKqvqp7vbKRWok7c77AtHcBAs
+         PL2/kpsfVk1jA==
+Received: by mail-wr1-f53.google.com with SMTP id g16so54027899wrb.3;
+        Mon, 27 Sep 2021 13:16:03 -0700 (PDT)
+X-Gm-Message-State: AOAM533A9Dlo5xlQ9wTe8lwQ5Rw/y18zWiNA8hEYg0fKcAx9F0YYwwjL
+        WQIZl1vHv7uaSF3bXhgVCcdRMt2ZOCzYk9VWg9E=
+X-Google-Smtp-Source: ABdhPJxhSUG+xfsMcnYBJG/aU9zQ/jW83Rbf6e2ezlqzSM1qdDuC1ur8sa8pPTTU3lbMghJJfkyUaLecI/p3sCcMSis=
+X-Received: by 2002:a5d:6cb4:: with SMTP id a20mr1431020wra.428.1632773761805;
+ Mon, 27 Sep 2021 13:16:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210920190350.3860821-1-willmcvicker@google.com>
- <7735b09c-cf1c-5e37-a737-9a330fbacf1e@canonical.com> <YUmTwZPqrCfRMekd@google.com>
- <d6212801-f2a0-a6a7-6154-0f99b57f1c4d@canonical.com> <CAGETcx9wp3cbsehODj=oAd658hF6KNL5Qiy2nVc=7Bxqxxwimw@mail.gmail.com>
- <5ec72235-add4-d6dd-f89f-ca3941c9878e@canonical.com> <CAGETcx-b9nPjq2PqUYoXohU-WE1PAPzy4Mz5M99CzNfqvGTOsA@mail.gmail.com>
-In-Reply-To: <CAGETcx-b9nPjq2PqUYoXohU-WE1PAPzy4Mz5M99CzNfqvGTOsA@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 27 Sep 2021 21:54:48 +0200
-Message-ID: <CAMuHMdXKcbBEpXbbc8eret8oOndwnqRq0d17e5qWpRmLH1SBgg@mail.gmail.com>
-Subject: Re: [PATCH v1 0/4] arm64: Kconfig: Update ARCH_EXYNOS select configs
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Will McVicker <willmcvicker@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+References: <20210927152412.2900928-1-arnd@kernel.org> <YVIg9CxJGaJr1vpp@ripper>
+In-Reply-To: <YVIg9CxJGaJr1vpp@ripper>
+From:   Arnd Bergmann <arnd@kernel.org>
+Date:   Mon, 27 Sep 2021 22:15:45 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1fEuFsQVY9b1oGdTOHzr8pu9wvrSBCMn2iOvgWqtHNnA@mail.gmail.com>
+Message-ID: <CAK8P3a1fEuFsQVY9b1oGdTOHzr8pu9wvrSBCMn2iOvgWqtHNnA@mail.gmail.com>
+Subject: Re: [PATCH] [RFC] qcom_scm: hide Kconfig symbol
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Alex Elder <elder@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Android Kernel Team <kernel-team@android.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless <linux-wireless@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-rtc@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-sunxi@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Saravana,
-
-On Mon, Sep 27, 2021 at 8:07 PM Saravana Kannan <saravanak@google.com> wrote:
-> On Mon, Sep 27, 2021 at 1:08 AM Krzysztof Kozlowski
-> <krzysztof.kozlowski@canonical.com> wrote:
-> > On 25/09/2021 04:17, Saravana Kannan wrote:
-> > > On Tue, Sep 21, 2021 at 1:25 AM Krzysztof Kozlowski
-> > > <krzysztof.kozlowski@canonical.com> wrote:
-> > >> On 21/09/2021 10:11, Lee Jones wrote:
-> > >>> On Tue, 21 Sep 2021, Krzysztof Kozlowski wrote:
-> > >>>> On 20/09/2021 21:03, Will McVicker wrote:
-> > >>>>> This patch series tries to address the issue of ARCH_EXYNOS force selecting
-> > >>>>> a handful of drivers without allowing the vendor to override any of the
-> > >>>>> default configs. This takes away from the flexibilty of compiling a generic
-> > >>>>> kernel with exynos kernel modules. For example, it doesn't allow vendors to
-> > >>>>> modularize these drivers out of the core kernel in order to share a generic
-> > >>>>> kernel image across multiple devices that require device-specific kernel
-> > >>>>> modules.
-> > >>>>
-> > >>>> You do not address the issue in these patches. The problem you describe
-> > >>>> is that drivers are not modules and you are not changing them into modules.
-> > >>>
-> > >>> The wording is unfortunate.  The reason for this change doesn't have
-> > >>> much to do with kernel modules.
-> > >>>
-> > >>> Let's go back in time 18 months or so when Greg KH submitted this [0]
-> > >>> patch, which you Acked.  Greg was trying to solve the problem of not
-> > >>> having to enable ARCH_EXYNOS on kernels which are designed to be
-> > >>> platform agnostic (sometimes called Generic Kernels).  For some reason
-> > >>> SERIAL_SAMSUNG is the only symbol with these dependencies, so the
-> > >>> solution seemed simple and straight forward at the time.
-> > >>>
-> > >>> However, For sound reasons Geert NACKed the patch.
-> > >>>
-> > >>> Quoting from [1] he says:
-> > >>>
-> > >>>   "A generic kernel will include Samsung SoC support, hence
-> > >>>   PLAT_SAMSUNG or ARCH_EXYNOS will be enabled."
-> > >>
-> > >> Yes, it's correct reasoning. There is also one more use-case -
-> > >> non-upstreamed (out of tree) platform which wants to use Exynos-specific
-> > >> drivers. Something like was happening with Apple M1 except that it got
-> > >> upstreamed and we do not care much about out-of-tree.
-> > >>
-> > >>>
-> > >>> However, since the entry for ARCH_EXYNOS *insists* on building-in a
-> > >>> bunch of other symbols (via 'select') which will be unused in most
-> > >>> cases, this is not a currently acceptable approach for many Generic
-> > >>> Kernels due to size constraints.
-> > >>
-> > >> In the mainline kernel there is no such use case. If you want to have
-> > >> Exynos-whatever-driver (e.g. SERIAL_SAMSUNG or S3C RTC), you should
-> > >> select ARCH_EXYNOS because otherwise it does not make any sense. Zero
-> > >> sense. Such kernel won't work.
-> > >>
-> > >> It makes sense only if there is some other work, hidden here, where
-> > >> someone might want to have SERIAL_SAMSUNG or S3C RTC without
-> > >> ARCH_EXYNOS. Although GKI is not that work because GKI kernel will
-> > >> select ARCH_EXYNOS. It must select ARCH_EXYNOS if it wants to support
-> > >> Exynos platforms.
-> > >>
-> > >> Therefore I expect first to bring this "some other work, hidden here" to
-> > >> broader audience, so we can review its use case.
-> > >>
-> > >>>
-> > >>> What this patch does is migrates those symbols from being 'select'ed
-> > >>> (always built-in with no recourse) to 'default y'.  Where the former
-> > >>> cannot be over-ridden, but the latter can be via a vendor's
-> > >>> defconfig/fragment.
-> > >>
-> > >> It cannot be overridden by vendor fragment because options are not
-> > >> visible. You cannot change them.
-> > >>
-> > >> The patch does nothing in this regard (making them selectable/possible
-> > >> to disable), which is why I complained.
-> > >>
-> > >>>
-> > >>> I doubt many (any?) of these symbols can be converted to kernel
-> > >>> modules anyway, as they are required very early on in the boot
-> > >>> sequence.
-> > >>
-> > >> True, some could, some not. Also some platforms are set up via
-> > >> bootloader, so actually could "survive" till module is loaded from some
-> > >> initrd.
-> > >
-> > > I was trying to chime in, but the discussion got spread out across all
-> > > the patches. Since the cover letter seems to have everyone, I thought
-> > > I'd reply here. Hope you don't mind. I'll try to respond/chime in on
-> > > the various topics that were raised across the patches.
-> > >
-> > > Yes, the next patch series would To/Cc folks correctly. William simply
-> > > forgot to use the --to-cover and --cc-cover options when using git
-> > > send-email.
-> > >
-> > > I agree with you that it doesn't make sense to have ARCH_EXYNOS
-> > > enabled but to have all the clock drivers exynos compiled out. Then
-> > > one obviously can't boot an exynos platform using that kernel.
+On Mon, Sep 27, 2021 at 9:52 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+> On Mon 27 Sep 08:22 PDT 2021, Arnd Bergmann wrote:
+> > From: Arnd Bergmann <arnd@arndb.de>
 > >
-> > If downstream kernel does not use any upstream platforms (e.g.
-> > Exynos5433 or Exynos7) and has its own drivers for everything, then
-> > downstream does not even need ARCH_EXYNOS. Just disable it.
+> >  - To avoid a circular dependency chain involving RESET_CONTROLLER
+> >    and PINCTRL_SUNXI, change the 'depends on RESET_CONTROLLER' in
+> >    the latter one to 'select'.
 >
-> As Geert pointed out in another reply, that prevents the use of
-> earlyconsole on an exynos SoC + fully modular generic kernel. Are we
-> okay with removing the ARCH_EXYNOS dependency on the early console
-> driver now?
+> Can you please help me understand why this is part of the same patch?
 
-IMHO not in upstream, as there is no upstream use yet for not having
-the dependencies.
+This can be done as a preparatory patch if we decide to do it this way,
+for the review it seemed better to spell out that this is required.
 
-Even if there was, I think it is good to have dependencies like
-ARCH_EXYNOS, as they let us partition the (19000, as Arnd said recently)
-Kconfig symbols into better manageable groups.  Without these, we cannot
-do better than "depends on ARM || ARM64 || COMPILE_TEST".
+I still hope that we can avoid adding another 'select RESET_CONTROLLER'
+if someone can figure out what to do instead.
 
-Greg says that's what defconfig files are for, but the arm64 policy is
-to have a single defconfig file only.  But thanks to the ARCH_* symbol,
-you can take arm64 defconfig, disable the ARCH_* symbols not applicable
-to your platform, and have a good start for a config file tailored to
-your platform. Note that works for the arm multi_v*_defconfigs, too.
+The problem here is that QCOM_SCM selects RESET_CONTROLLER,
+and turning that into 'depends on' would in turn mean that any driver that
+wants to select QCOM_SCM would have to have the same RESET_CONTROLLER
+dependency.
 
-Gr{oetje,eeting}s,
+An easier option might be to find a way to build QCOM_SCM without
+RESET_CONTROLLER for compile testing purposes. I don't know
+what would break from that.
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+     Arnd
