@@ -2,153 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FEB441A11D
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Sep 2021 23:05:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF8FC41A350
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Sep 2021 00:49:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237367AbhI0VGQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Sep 2021 17:06:16 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:42970 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237235AbhI0VGP (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 27 Sep 2021 17:06:15 -0400
-Received: from user91-192-32-221.grape.cz ([91.192.32.221] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1mUxnb-00057F-JB; Mon, 27 Sep 2021 23:04:31 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Jianqun Xu <jay.xu@rock-chips.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Guillaume Tucker <guillaume.tucker@collabora.com>
-Cc:     bgolaszewski@baylibre.com, robh+dt@kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: Re: [PATCH v8 9/9] pinctrl/rockchip: drop the gpio related codes
-Date:   Mon, 27 Sep 2021 23:04:26 +0200
-Message-ID: <46772783.fMDQidcC6G@phil>
-In-Reply-To: <f13ff971-8af2-be9b-fa5d-7913c0ff1351@collabora.com>
-References: <20210816011948.1118959-1-jay.xu@rock-chips.com> <20210816012146.1119289-1-jay.xu@rock-chips.com> <f13ff971-8af2-be9b-fa5d-7913c0ff1351@collabora.com>
+        id S238015AbhI0WvR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Sep 2021 18:51:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33832 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238014AbhI0WvR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Sep 2021 18:51:17 -0400
+Received: from mail-ua1-x935.google.com (mail-ua1-x935.google.com [IPv6:2607:f8b0:4864:20::935])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A37E4C061740
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Sep 2021 15:49:38 -0700 (PDT)
+Received: by mail-ua1-x935.google.com with SMTP id 10so13336340uae.10
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Sep 2021 15:49:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=0x0f.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=l3Govj1Ggv6fnK3dXfFXh4R4w4mAAKZUo/5Lt6qGfhI=;
+        b=Iq5vAXCv2EMz7F+Lo3dTfVrteNUNq7v81PHVhbhOsX5XpUjjgXfRLR72Oozo+4Rd28
+         avv9yUHE6tuOtdTZvzc9WXaYi+m9yRhkz0esk2t4hBvj2j9/iNMEYnDKiLQv27KlzGnU
+         KNtCEtConX/KW5Z8fpL4XbTssq9e8C35PemeE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=l3Govj1Ggv6fnK3dXfFXh4R4w4mAAKZUo/5Lt6qGfhI=;
+        b=HvmrbCFKuh54vO+5ybZ1rEwf06zlr7KCeMxDzwsLJfIWjhlPmuFYzgUSB1enUN0DaV
+         eb933XKJnwekPUkI8wcrCcq0gPVlxPGJFOO5qtd/SNq/eOaURi7dwSIA8FnfFaPPxJ8m
+         DhHZ2qa+V9HtTD1+DJZwPLxLaebCrbSTIR78wvg5GtbUMW+nI6aKMqWDjl6sA9CceIsL
+         wY6zKUqZ/Um5IoWLOk9f0vF8nfodFY8qd9gE3+tqvLuCmbhA5hAXwFkrPCziH/tWC2jW
+         uc9dUEvBTU5Mz+mnt0H+PE3ri4fvxsd3PlMu55Fx8HrMK6/cZuga+kLjS4y0msbjyCne
+         X5/g==
+X-Gm-Message-State: AOAM531ezB5AsPjDGy6tPPBg7SEdNUSklcULh1y1DtPx2/RQp9TFcgD7
+        YgTt9RaFMeNyMIMuGFqiYulKlFbmJkGeP2zP95QWKw==
+X-Google-Smtp-Source: ABdhPJw93xHWEfPQbedVUspaJQ+Kpz4lDjxMsiLCz9VQF0pLxWLXngzwY9I3WjVpCLk0lSx8d9/HMX6++hBMj4ge2eY=
+X-Received: by 2002:ab0:8c1:: with SMTP id o1mr2454160uaf.113.1632782977502;
+ Mon, 27 Sep 2021 15:49:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20210923065500.2284347-1-daniel@0x0f.com> <20210923065500.2284347-4-daniel@0x0f.com>
+ <YVIhEJCJ9lr3ZKzM@robh.at.kernel.org>
+In-Reply-To: <YVIhEJCJ9lr3ZKzM@robh.at.kernel.org>
+From:   Daniel Palmer <daniel@0x0f.com>
+Date:   Tue, 28 Sep 2021 07:51:40 +0900
+Message-ID: <CAFr9PXnowBM-jAh4cnnngR00eJtB+dXArpircntEth0TU0UnjQ@mail.gmail.com>
+Subject: Re: [PATCH v2 03/11] dt-bindings: leds: Document "activity" trigger
+To:     Rob Herring <robh@kernel.org>
+Cc:     DTML <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-leds@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>, pavel@ucw.cz,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Guillaume,
+Hi Rob,
 
-Am Montag, 27. September 2021, 12:18:04 CEST schrieb Guillaume Tucker:
-> On 16/08/2021 02:21, Jianqun Xu wrote:
-> > With the patch to separate the gpio driver from the pinctrl driver, now
-> > the pinctrl-rockchip can drop the gpio related codes now.
-> > 
-> > Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
-> > ---
-> > v8:
-> >  - none
-> > v7:
-> >  - none, from v1
-> > 
-> >  drivers/pinctrl/pinctrl-rockchip.c | 645 +----------------------------
-> >  1 file changed, 17 insertions(+), 628 deletions(-)
-> 
-> [...]
-> 
-> Please see the bisection report below about a boot failure on
-> rk3288-veyron-jaq which is pointing to this patch.  The issue
-> appears to be present on mainline but not on linux-next as of
-> next-20210924.
-> 
-> Reports aren't automatically sent to the public while we're
-> trialing new bisection features on kernelci.org but this one
-> looks valid.
-> 
-> Some more details can be found here:
-> 
->   https://linux.kernelci.org/test/case/id/614f19a33f5497c2bc99a2df/
-> 
-> Please let us know if you need help debugging the issue or if you
-> have a fix to try.
+On Tue, 28 Sept 2021 at 04:52, Rob Herring <robh@kernel.org> wrote:
+>
+> On Thu, Sep 23, 2021 at 03:54:52PM +0900, Daniel Palmer wrote:
+> > The "activity" trigger can be used as the default but it's currently
+> > undocumented so validating a devicetree that uses it causes a warning.
+>
+> It is preferred to use 'function' and LED_FUNCTION_CPU. Is there some
+> reason that can't be used?
 
-This is probably the issue I had on veyron-pinky as well, pinctrl-hogs
-grabbing things with output-enable configs before the gpio driver are
-probed. I've already submitted a fix series for this and all patches
-have at least reached maintainer trees.
+LED_FUNCTION_CPU seems to be tied to
+drivers/leds/trigger/ledtrig-cpu.c which I think serves the same
+purpose but does it a slightly different way.
+Would adding LED_FUNCTION_ACTIVITY work?
 
-See https://lore.kernel.org/all/20210913224926.1260726-1-heiko@sntech.de/
-for reference.
+Thanks,
 
-So in theory that issue should go away with hopefully the next -rc kernek.
-
-
-Heiko
-
-
-> 
-> Best wishes,
-> Guillaume
-> 
-> 
-> GitHub: https://github.com/kernelci/kernelci-project/issues/58
-> 
-> -------------------------------------------------------------------------------
-> 
-> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-> * This automated bisection report was sent to you on the basis  *
-> * that you may be involved with the breaking commit it has      *
-> * found.  No manual investigation has been done to verify it,   *
-> * and the root cause of the problem may be somewhere else.      *
-> *                                                               *
-> * If you do send a fix, please include this trailer:            *
-> *   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
-> *                                                               *
-> * Hope this helps!                                              *
-> * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-> 
-> mainline/master bisection: baseline.login on rk3288-veyron-jaq
-> 
-> Summary:
->   Start:      7d42e9818258 Merge tag 'gpio-fixes-for-v5.15-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux
->   Plain log:  https://storage.kernelci.org/mainline/master/v5.15-rc2-159-g7d42e9818258/arm/multi_v7_defconfig+CONFIG_EFI=y+CONFIG_ARM_LPAE=y/gcc-8/lab-collabora/baseline-rk3288-veyron-jaq.txt
->   HTML log:   https://storage.kernelci.org/mainline/master/v5.15-rc2-159-g7d42e9818258/arm/multi_v7_defconfig+CONFIG_EFI=y+CONFIG_ARM_LPAE=y/gcc-8/lab-collabora/baseline-rk3288-veyron-jaq.html
->   Result:     9ce9a02039de pinctrl/rockchip: drop the gpio related codes
-> 
-> Checks:
->   revert:     PASS
->   verify:     PASS
-> 
-> Parameters:
->   Tree:       mainline
->   URL:        https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
->   Branch:     master
->   Target:     rk3288-veyron-jaq
->   CPU arch:   arm
->   Lab:        lab-collabora
->   Compiler:   gcc-8
->   Config:     multi_v7_defconfig+CONFIG_EFI=y+CONFIG_ARM_LPAE=y
->   Test case:  baseline.login
-> 
-> Breaking commit found:
-> 
-> -------------------------------------------------------------------------------
-> commit 9ce9a02039de72ec8af1bd4bff14f1780337ffcc
-> Author: Jianqun Xu <jay.xu@rock-chips.com>
-> Date:   Mon Aug 16 09:21:46 2021 +0800
-> 
->     pinctrl/rockchip: drop the gpio related codes
->     
->     With the patch to separate the gpio driver from the pinctrl driver, now
->     the pinctrl-rockchip can drop the gpio related codes now.
->     
->     Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
->     Link: https://lore.kernel.org/r/20210816012146.1119289-1-jay.xu@rock-chips.com
->     Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> 
-
-
-
-
+Daniel
