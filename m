@@ -2,111 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BFEE141941B
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Sep 2021 14:23:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AEFDF419475
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Sep 2021 14:41:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234244AbhI0MZA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Sep 2021 08:25:00 -0400
-Received: from mail-ot1-f47.google.com ([209.85.210.47]:38909 "EHLO
-        mail-ot1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234181AbhI0MY7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Sep 2021 08:24:59 -0400
-Received: by mail-ot1-f47.google.com with SMTP id c6-20020a9d2786000000b005471981d559so24141917otb.5;
-        Mon, 27 Sep 2021 05:23:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
-         :message-id;
-        bh=M1JxjeIOmKat6HvCouZk2WyJoVDL3ELYlgAx1y+djF4=;
-        b=7Dr0bB4vGoaJvaSBAUBkx9KtKsSxZfB/vn4GVTjzd3CfOSl5Iwqp/Hh5IuMRBL06d+
-         uTcMftoEpr91DfDdp7SVYLnnLLM484w+tDj9V8zrObYSZwSIAsKw0IdSgq5/f0N3BX7l
-         S0/O0Y5/luYHWHqCj8v/e5FNzpbY65175L0QUhY/C5JCjyUU5yFFadzqjtfHuryQahIm
-         7/AcyukH2XgWHg6HqoUFRMjWGKv2st+fUmTng2WHuP2G2WogBgV/QzYqMcKs+orklLg7
-         BuLlDGHtxxhlhnm0wzUxNExE9ymhzOboEXHr35l4Gy1tYNa4/iJzHoPV6ZcQROWKergD
-         VHDQ==
-X-Gm-Message-State: AOAM532DbWgQuNY4xsZ7Yz305Qgr2HmuLmISGFgBArR3tWazJEkdyZR8
-        /88d6n4zDBKM8r/I0B/VXw==
-X-Google-Smtp-Source: ABdhPJxPboMBJ7atlf4V2758iIymolXl+RlULWf5ZVJnB5v+aaNUyKh+KewyhDhEFZ50jt9f77a3wA==
-X-Received: by 2002:a9d:27a4:: with SMTP id c33mr17216398otb.283.1632745401264;
-        Mon, 27 Sep 2021 05:23:21 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id o126sm3844592oig.21.2021.09.27.05.23.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Sep 2021 05:23:20 -0700 (PDT)
-Received: (nullmailer pid 3097152 invoked by uid 1000);
-        Mon, 27 Sep 2021 12:23:19 -0000
-From:   Rob Herring <robh@kernel.org>
+        id S234373AbhI0Mm5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Sep 2021 08:42:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60550 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234333AbhI0Mm5 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 27 Sep 2021 08:42:57 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C64260F46;
+        Mon, 27 Sep 2021 12:41:19 +0000 (UTC)
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1mUpwb-00DF4m-GL; Mon, 27 Sep 2021 13:41:17 +0100
+MIME-Version: 1.0
+Date:   Mon, 27 Sep 2021 13:41:17 +0100
+From:   Marc Zyngier <maz@kernel.org>
 To:     Sam Shih <sam.shih@mediatek.com>
-Cc:     herbert@gondor.apana.org.au, linux-serial@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux@roeck-us.net,
+Cc:     matthias.bgg@gmail.com, Ryder.Lee@mediatek.com,
+        devicetree@vger.kernel.org, enric.balletbo@collabora.com,
+        fparent@baylibre.com, gregkh@linuxfoundation.org,
+        herbert@gondor.apana.org.au, hsinyi@chromium.org, john@phrozen.org,
+        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, hsinyi@chromium.org,
-        mpm@selenic.com, seiya.wang@mediatek.com,
-        enric.balletbo@collabora.com, fparent@baylibre.com,
-        john@phrozen.org, sboyd@kernel.org, devicetree@vger.kernel.org,
-        linux-crypto@vger.kernel.org, gregkh@linuxfoundation.org,
-        mturquette@baylibre.com, linux-watchdog@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com,
-        wim@linux-watchdog.org, robh+dt@kernel.org,
-        linus.walleij@linaro.org, sean.wang@kernel.org,
-        Ryder.Lee@mediatek.com
-In-Reply-To: <20210927023419.17994-1-sam.shih@mediatek.com>
-References: <1632491961.645727.1195978.nullmailer@robh.at.kernel.org> <20210927023419.17994-1-sam.shih@mediatek.com>
-Subject: Re: [v5,5/9] dt-bindings: pinctrl: update bindings for MT7986 SoC
-Date:   Mon, 27 Sep 2021 07:23:19 -0500
-Message-Id: <1632745399.256353.3097151.nullmailer@robh.at.kernel.org>
+        linux-mediatek@lists.infradead.org, linux-serial@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, linux@roeck-us.net,
+        mpm@selenic.com, mturquette@baylibre.com, robh+dt@kernel.org,
+        sboyd@kernel.org, sean.wang@kernel.org, seiya.wang@mediatek.com,
+        wim@linux-watchdog.org
+Subject: Re: [v3,8/9] arm64: dts: mediatek: add mt7986a support
+In-Reply-To: <20210924112017.14107-1-sam.shih@mediatek.com>
+References: <016b501b-a4bf-c74d-9f7f-8145800ca6e0@gmail.com>
+ <20210924112017.14107-1-sam.shih@mediatek.com>
+User-Agent: Roundcube Webmail/1.4.11
+Message-ID: <0459da08cddc579f069a28e659e614fd@kernel.org>
+X-Sender: maz@kernel.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: sam.shih@mediatek.com, matthias.bgg@gmail.com, Ryder.Lee@mediatek.com, devicetree@vger.kernel.org, enric.balletbo@collabora.com, fparent@baylibre.com, gregkh@linuxfoundation.org, herbert@gondor.apana.org.au, hsinyi@chromium.org, john@phrozen.org, linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-serial@vger.kernel.org, linux-watchdog@vger.kernel.org, linux@roeck-us.net, mpm@selenic.com, mturquette@baylibre.com, robh+dt@kernel.org, sboyd@kernel.org, sean.wang@kernel.org, seiya.wang@mediatek.com, wim@linux-watchdog.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 27 Sep 2021 10:34:19 +0800, Sam Shih wrote:
-> This updates bindings for MT7986 pinctrl driver. The
-> difference of pinctrl between mt7986a and mt7986b is that pin-41 to pin-65
-> do not exist on mt7986b
+On 2021-09-24 12:20, Sam Shih wrote:
+> Add basic chip support for Mediatek mt7986a, include
+> uart nodes with correct clocks, rng node with correct clock,
+> and watchdog node and mt7986a pinctrl node.
+> 
+> Add cpu node, timer node, gic node, psci and reserved-memory node
+> for ARM Trusted Firmware,
+> 
+> Add clock controller nodes, include 40M clock source, topckgen, 
+> infracfg,
+> apmixedsys and ethernet subsystem.
 > 
 > Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-> 
 > ---
-> v5 : fixed yamllint warnings/errors
-> v4 : used yaml format instead of txt format document
-> v3 : make mt7986 pinctrl bindings as a separate file
-> v2 : deleted the redundant description of mt7986a/mt7986b
+> v3: used the stdout-path instead of console=ttyS0
+> v2: modified clock and uart node due to clock driver updated
 > ---
->  .../pinctrl/mediatek,mt7986-pinctrl.yaml      | 353 ++++++++++++++++++
->  1 file changed, 353 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml
-> 
+>  arch/arm64/boot/dts/mediatek/Makefile        |   1 +
+>  arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts |  54 +++++
+>  arch/arm64/boot/dts/mediatek/mt7986a.dtsi    | 227 +++++++++++++++++++
+>  3 files changed, 282 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt7986a.dtsi
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+[...]
 
-yamllint warnings/errors:
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupt-parent = <&gic>;
+> +		clock-frequency = <13000000>;
 
-dtschema/dtc warnings/errors:
-Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.example.dts:25.13-32.43: Warning (reg_format): /example-0/soc/pinctrl@1001f000:reg: property has invalid length (128 bytes) (#address-cells == 2, #size-cells == 1)
-Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.example.dt.yaml: Warning (pci_device_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.example.dt.yaml: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.example.dt.yaml: Warning (simple_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.example.dt.yaml: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.example.dts:23.33-58.13: Warning (avoid_default_addr_size): /example-0/soc/pinctrl@1001f000: Relying on default #address-cells value
-Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.example.dts:23.33-58.13: Warning (avoid_default_addr_size): /example-0/soc/pinctrl@1001f000: Relying on default #size-cells value
-Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.example.dt.yaml: Warning (unique_unit_address): Failed prerequisite 'avoid_default_addr_size'
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.example.dt.yaml: pinctrl@1001f000: 'gpio-ranges' does not match any of the regexes: '-[0-9]+$', 'pinctrl-[0-9]+'
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml
+No. Please fix your firmware to program CNTFRQ_EL0 on all CPUs.
+This may have been OK in 2011, but not anymore.
 
-doc reference errors (make refcheckdocs):
+> +		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
+> +	};
+> +
+> +	soc {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		compatible = "simple-bus";
+> +		ranges;
+> +
+> +		gic: interrupt-controller@c000000 {
+> +			compatible = "arm,gic-v3";
+> +			#interrupt-cells = <3>;
+> +			interrupt-parent = <&gic>;
+> +			interrupt-controller;
+> +			reg = <0 0x0c000000 0 0x40000>,
+> +			      <0 0x0c080000 0 0x200000>;
 
-See https://patchwork.ozlabs.org/patch/1533169
+This looks wrong. 128kB per redistributor frames and 4 CPUs do
+no result in 2MB worth of MMIO.
 
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
+This is also missing the GICV/GICV/GICH regions that are exposed
+by the CPUs directly.
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit.
-
+         M.
+-- 
+Jazz is not dead. It just smells funny...
