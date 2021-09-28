@@ -2,122 +2,163 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 10C8B41B9F1
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Sep 2021 00:11:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AEB9241BB3E
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Sep 2021 01:56:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243024AbhI1WNI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Sep 2021 18:13:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47308 "EHLO
+        id S243330AbhI1X6d (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Sep 2021 19:58:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243025AbhI1WNH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Sep 2021 18:13:07 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 242E1C061745
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Sep 2021 15:11:26 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id g7so869760edv.1
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Sep 2021 15:11:26 -0700 (PDT)
+        with ESMTP id S243238AbhI1X6c (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Sep 2021 19:58:32 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66661C061749
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Sep 2021 16:56:52 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 83-20020a251956000000b0059948f541cbso1111523ybz.7
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Sep 2021 16:56:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=xpxr3RAhQnlxdqPs5z2YzYADDLX6tSSmdU82c8YOdl8=;
-        b=HJwRmoevoSoyVu5/9HqZ0Kqe6kfGDRd9JpIEKI94u50c0A29R9CwPhCLc3Guci3B4T
-         k2hT8mgzDV9xheA7tPao/OPFSzs1F2v39o+DIZyVsXwsS9ibN38eoDz8/lyyWjMC7lPb
-         06MTR/doGz6psPOLD0Ahetjlmdj/TBuifsev0M+ITxKN/42et8zX8L/8P6GZY9wRjIjA
-         CoMZHGv6ypB9y8sWKGesO+gStbYtvKmMy6jySWsJ6eXt0j0wyoj5TFb3hgntT9zHrieX
-         s+PwDgNG0fGIMrOM839A7ptkAJMDzrcMhq5Y1qlAXsamu5Na4FfXaLHdPWuGkFG5lKoU
-         tUZA==
+        d=google.com; s=20210112;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=n/4ji2XuxpZN636ga4YIidKk8OUAj8FasKFOyipQUCs=;
+        b=I824tzwXK4ArJM33zKh8o41jaDjDUrDwRpvfINUp1+mgEb5E+73AhhO7xB2aGXDHYN
+         RHFI+0EmQVLvawHS6MK/NJHIx+ksKZm/NBOoZt8qYkipjxv6FREv0V8BlNPi0UNotPyK
+         jelAwquik+M3dN82rRK9qNJqatBYNi95BqfB0ZaJ909diQpb9I9WE1xpoydt7Wl9HOJS
+         tLnkvR02vXmMUpakGUA7yNLzrY9JxZ9np72xou6mg+LWNetAWUilreJ7GSbotmzIVX54
+         iA+Jv0m/Qj8ED6rqsfyEEwsXDa60y5SPuILXh7bmGelUhv84dRGMz+K3X7RJKgOVyjQ1
+         H6Sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=xpxr3RAhQnlxdqPs5z2YzYADDLX6tSSmdU82c8YOdl8=;
-        b=x/XpJis1tR6HZBYnR6ZHypu6cisop9HYXqaeDYm4jJt7Ip64ayo4rME92wMmN69CI5
-         mXb8q2dVaUE0tafAfvIAY23JbgkpOHNCz4rKfWucLMmCVvXreD9hsmq2nkKr+B1fzYtm
-         FTPHjappK01GKToZsaMXP6S2uFQMfdXj9JgEQtXz97g+1JlnZlkpsqlMiPda+8YH4rRv
-         n5VGcZXdtw2Q2mKeI2ZUG6W7g2RQcJ+OgGqnU6D3JtmbxeW90lXQPVzHDRubiCMD2zua
-         iVKvkoFCFOv16kFeaOSG02S8ewzyzulkqnqlJV628m+5ZZpWEvfWjuPCXUTKNnPeixe6
-         awyA==
-X-Gm-Message-State: AOAM531j/PcLKp1tgKbC+0sF/hw4ryWvJ9tB+mebx8bD7GJ+cWrRZZ3w
-        VLXib0RVGMvS3bVmP16ImVexNj39p7kOjCq/KQtFNT5NoOIkgA==
-X-Google-Smtp-Source: ABdhPJxjhHEWSfAEH8e4e9l4H6wkl5+PC3y6ZtbJ/AlfC9hhDDvEIEin8x4ZDCx/DB9pZtYLF4VUEwtpmqWYr/XH4F4=
-X-Received: by 2002:a50:e10d:: with SMTP id h13mr10605739edl.77.1632867084648;
- Tue, 28 Sep 2021 15:11:24 -0700 (PDT)
-MIME-Version: 1.0
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 29 Sep 2021 00:11:13 +0200
-Message-ID: <CACRpkdYa_patWBGC=gnVHkPQeo5BtvKrG2hzNKi3vZGvo5bKQA@mail.gmail.com>
-Subject: [GIT PULL] pin control fixes for v5.15
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
-        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=n/4ji2XuxpZN636ga4YIidKk8OUAj8FasKFOyipQUCs=;
+        b=OhQLf+kF8sQh4VB87yeJKeqDzDD6van9OrFw0Fu7JaUn8fGtT7VZ7idMjDM1O54BAN
+         HAY4SHLJtUmmuyhk5uQgg6wTO6wg7oCTH6vd7HPPW1cdfAUYINm/8rn0yn+smu2p48V5
+         Ux+v03xY0kHuHrk6J+tI+qwmsCds5vd+1d/VegEinMmPTGBJonIfl3Gfo8S3of8NK7dz
+         UK6918/eVuY7LZNF9seC7ZspaoibCi0rVD7p31r/5FsQqi14zcsX3beyR5ZhD5MRAWsX
+         cNkaC5oUwlgRO4pkBPMjLoPNCyTk/cFhq55VY48OkpVnc7/oKWN6/T6b5UjjoPzWtY7H
+         Ighg==
+X-Gm-Message-State: AOAM532geC+9YhcN+pIWQkSEKaCBK7fTzFhY7IjZaudQk5fSRvBXjTxk
+        uHRG1+UCUFXOVJkgkErymdMJhFm9JjYhBhnZ410=
+X-Google-Smtp-Source: ABdhPJwiBWkFSrRZjL9CwMHS4p+dCQodZ0zYKtZ+o0uIxNB3pJVtsnCdQl0dwzC+XK2dm4Dr78SZgIrssykhmy8RZNc=
+X-Received: from willmcvicker.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:2dd0])
+ (user=willmcvicker job=sendgmr) by 2002:a25:2e07:: with SMTP id
+ u7mr9785709ybu.1.1632873411609; Tue, 28 Sep 2021 16:56:51 -0700 (PDT)
+Date:   Tue, 28 Sep 2021 23:56:17 +0000
+Message-Id: <20210928235635.1348330-1-willmcvicker@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.33.0.685.g46640cef36-goog
+Subject: [PATCH v2 00/12] arm64: Kconfig: Update ARCH_EXYNOS select configs
+From:   Will McVicker <willmcvicker@google.com>
+To:     Russell King <linux@armlinux.org.uk>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Will McVicker <willmcvicker@google.com>,
+        kernel-team@android.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+This is v2 of the series of patches that modularizes a number of core
+ARCH_EXYNOS drivers. Based off of the feedback from the v1 series, I have
+modularized all of the drivers that are removed from the ARCH_EXYNOS
+series of "select XXX". This includes setting the following configs as
+tristate:
 
-here are some few pin control fixes for the v5.15 kernel cycle.
-The most critical is the AMD fixes.
+ * COMMON_CLK_SAMSUNG
+ * EXYNOS_ARM64_COMMON_CLK
+ * PINCTRL_SAMSUNG
+ * PINCTRL_EXYNOS
+ * EXYNOS_PMU_ARM64
+ * EXYNOS_PM_DOMAINS
 
-Please pull it in!
+Additionally, it introduces the config EXYNOS_PMU_ARM64 and EXYNOS_PMU_ARM
+which was previously EXYNOS_PMU and EXYNOS_PMU_ARM_DRIVERS respectively.
+The reason for these new configs is because we are not able to easily
+modularize the ARMv7 PMU driver due to built-in arch dependencies on
+pmu_base_addr under arch/arm/mach-exynos/*. So the new configs split up
+the ARM and ARM64 portions into two separate configs.
 
-Yours,
-Linus Walleij
+Overall, these drivers didn't require much refactoring and converted to
+modules relatively easily. However, due to my lack of exynos hardware, I
+was not able to boot test these changes. I'm mostly concerned about the
+CLK_OF_DECLARE() changes having dependencies on early timers. So I'm
+requesting help for testing these changes on the respective hardware.
 
-The following changes since commit 6880fa6c56601bb8ed59df6c30fd390cc5f6dd8f:
+Lastly, this series is based off of [1] since there are dependencies on
+EXYNOS_CHIPID from that series..
 
-  Linux 5.15-rc1 (2021-09-12 16:28:37 -0700)
+[1] https://lore.kernel.org/lkml/20210919093114.35987-1-krzysztof.kozlowski@canonical.com/
 
-are available in the Git repository at:
+* From v1:
+  - Fixed modifying hidden configs
+  - Modularized all the drivers that were touched
+  - Removed HAVE_S3C_RTC
+  - Updated all Samsung ARCH_XXX configs as suggested from reviews
+  - Rebased on top of 5.15-rc3 and pulled in [1]
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-tags/pinctrl-v5.15-2
+Will McVicker (12):
+  arm64: don't have ARCH_EXYNOS select EXYNOS_CHIPID
+  timekeeping: add API for getting timekeeping_suspended
+  clk: samsung: add support for CPU clocks
+  clk: samsung: exynos5433: update apollo and atlas clock probing
+  clk: export __clk_lookup
+  clk: samsung: modularize exynos arm64 clk drivers
+  clk: samsung: set exynos arm64 clk driver as tristate
+  pinctrl: samsung: modularize the ARM and ARM64 pinctrls
+  pinctrl: samsung: set PINCTRL_EXYNOS and PINCTRL_SAMSUNG as tristate
+  soc: samsung: pmu: modularize the Exynos ARMv8 PMU driver
+  soc: samsung: pm_domains: modularize EXYNOS_PM_DOMAINS
+  ARM: rtc: remove HAVE_S3C_RTC in favor of direct dependencies
 
-for you to fetch changes up to 28406a21999152ff7faa30b194f734565bdd8e0d:
+ arch/arm/Kconfig                              |   1 -
+ arch/arm/mach-exynos/Kconfig                  |   6 +-
+ arch/arm/mach-s3c/Kconfig.s3c64xx             |   1 -
+ arch/arm/mach-s5pv210/Kconfig                 |   3 -
+ arch/arm64/Kconfig.platforms                  |   6 -
+ drivers/clk/clk.c                             |   1 +
+ drivers/clk/samsung/Kconfig                   |   5 +-
+ drivers/clk/samsung/Makefile                  |   3 +-
+ drivers/clk/samsung/clk-cpu.c                 |  28 +-
+ drivers/clk/samsung/clk-cpu.h                 |   2 +-
+ drivers/clk/samsung/clk-exynos5433.c          | 465 ++++++++----------
+ drivers/clk/samsung/clk-exynos7.c             | 177 +++----
+ drivers/clk/samsung/clk-pll.c                 |   6 +-
+ drivers/clk/samsung/clk.c                     |  35 +-
+ drivers/clk/samsung/clk.h                     |  50 +-
+ drivers/pinctrl/samsung/Kconfig               |   5 +-
+ drivers/pinctrl/samsung/Makefile              |  13 +-
+ drivers/pinctrl/samsung/pinctrl-exynos-arm.c  | 102 ++--
+ .../pinctrl/samsung/pinctrl-exynos-arm64.c    |  73 +--
+ drivers/pinctrl/samsung/pinctrl-exynos.c      |  17 +-
+ drivers/pinctrl/samsung/pinctrl-samsung.c     |  11 +-
+ drivers/rtc/Kconfig                           |  10 +-
+ drivers/soc/samsung/Kconfig                   |  18 +-
+ drivers/soc/samsung/Makefile                  |   8 +-
+ drivers/soc/samsung/exynos-pmu.c              |  13 +-
+ drivers/soc/samsung/exynos-pmu.h              |   2 +-
+ drivers/soc/samsung/pm_domains.c              |  12 +-
+ include/linux/soc/samsung/exynos-pmu.h        |   2 +-
+ include/linux/timekeeping.h                   |   1 +
+ kernel/time/timekeeping.c                     |  11 +
+ 30 files changed, 553 insertions(+), 534 deletions(-)
 
-  pinctrl: qcom: sc7280: Add PM suspend callbacks (2021-09-23 23:09:14 +0200)
+-- 
+2.33.0.685.g46640cef36-goog
 
-----------------------------------------------------------------
-Pin control fixes for v5.15:
-
-- Fix wakeup interrupts in the AMD driver affecting AMD laptops.
-
-- Fix parent irqspec translation in the Qualcomm SPMI GPIO driver.
-
-- Fix deferred probe handling in the Rockchip driver, this is a
-  stopgap solution while we look for something more elegant.
-
-- Add PM suspend callbacks to the Qualcomm SC7280 driver.
-
-- Some minor doc fix (should have come in earlier, sorry)
-
-----------------------------------------------------------------
-Basavaraj Natikar (2):
-      pinctrl: amd: Add irq field data
-      pinctrl: amd: Handle wake-up interrupt
-
-David Collins (1):
-      pinctrl: qcom: spmi-gpio: correct parent irqspec translation
-
-Heiko Stuebner (2):
-      pinctrl/rockchip: add a queue for deferred pin output settings on probe
-      gpio/rockchip: fetch deferred output settings on probe
-
-Michal Simek (1):
-      pinctrl: core: Remove duplicated word from devm_pinctrl_unregister()
-
-Rajendra Nayak (1):
-      pinctrl: qcom: sc7280: Add PM suspend callbacks
-
- drivers/gpio/gpio-rockchip.c             | 22 +++++++++++
- drivers/pinctrl/core.c                   |  2 +-
- drivers/pinctrl/pinctrl-amd.c            | 19 ++++++---
- drivers/pinctrl/pinctrl-amd.h            |  1 +
- drivers/pinctrl/pinctrl-rockchip.c       | 67 ++++++++++++++++++++++++++++++++
- drivers/pinctrl/pinctrl-rockchip.h       | 10 +++++
- drivers/pinctrl/qcom/pinctrl-sc7280.c    |  1 +
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 37 ++++++++++++++++--
- 8 files changed, 150 insertions(+), 9 deletions(-)
