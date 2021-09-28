@@ -2,97 +2,155 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2E9C41A3D5
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Sep 2021 01:34:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC31F41A941
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Sep 2021 09:04:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238086AbhI0Xgb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Sep 2021 19:36:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44196 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238012AbhI0Xga (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Sep 2021 19:36:30 -0400
-Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44E9DC061575
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Sep 2021 16:34:52 -0700 (PDT)
-Received: by mail-lf1-x12e.google.com with SMTP id i4so84361462lfv.4
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Sep 2021 16:34:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=p7CVYFYB6IScMOhinp3eAsjdEnQjzCUu4WAwVsai6UI=;
-        b=ARTNOmegDd2cYQVwVGZVZRUiqMIC096e1dNKRcQ75TeYZ3hrY4z2gyQ1O8isDXWQF7
-         u2tCIyZn1TKlYnOA8bPFSY0JiJvqK6NCEG6EhTP1ZZs2+GGUENijb5LSCsGYapqCcMy1
-         Lbn8PIUsAaJDjNV5beQph21T6CkWFYkw4802TtDvNtWcyuxCTQti9Q+QSa8XO+465CRa
-         6qaU7qpM2E1iDwHJ2KZM090E5Qk42OxTlx+LHHj0NMJt3dX7qmq/+3uVtCtcASsFqQJm
-         4ozNDUXXyAZgkfxPZs34wj/dxrEdkjDUknTRmNsd/IbztPQUuVp8WjmIxgHyz8x+pcJA
-         VOew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p7CVYFYB6IScMOhinp3eAsjdEnQjzCUu4WAwVsai6UI=;
-        b=L/bAdPWl504wp6mz4iIwvY9Zc0/BsNLuw8UCj/kcTEBKFl00ZlMHYkFgVskV7tn2AG
-         PXhufA71I2iNip36e+4dxu1c+H+KWXyPcWBYFO/K6JM7OYoWY63dQHYJM3WZPxAdEhR9
-         KcyjZujhpn1f6WLdevfFgolO1FuC7Z67MFKOxTZFv3ugcyaxuxBZuVCXZGRgj1eWv72X
-         2sptzTUoCsNvqAGEPNb9Cf0b1OqJojU+b8VgZi9oqPEbJhKPVAgTGxXWvazVeF1EdHiW
-         x1WBuobeHsWkfxAVPBqP8qzCsWV3JtKsJ1S8pCm2SuMtBmSbyl4+Rx6EGaQUoO0fK3QG
-         F0yQ==
-X-Gm-Message-State: AOAM531I5/YbD9P5kIpSQDWLcwTtB3FdZGQM1kp2tTb7WNie1WAOOhgV
-        aRtWJSHlFFVAYIDnBrS1s9FMApVA8VjOpBLkPGbwAA==
-X-Google-Smtp-Source: ABdhPJzMLGSoR5x/ReVFQpoyvOZVuGs4vKSdd7fgqjJp7B1S+/Dj8KSMv0NAhAQ7+QePasooWbdF8yxoTjJZy27FGp8=
-X-Received: by 2002:a05:6512:1303:: with SMTP id x3mr2408184lfu.291.1632785690654;
- Mon, 27 Sep 2021 16:34:50 -0700 (PDT)
+        id S239080AbhI1HGQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Sep 2021 03:06:16 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:25206 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S239050AbhI1HGP (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 28 Sep 2021 03:06:15 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1632812676; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=mcC+NI9lbMYVHDFKxEvKMLG3JdbT8e+is/T3jV6QeT8=; b=xMadentVRXOrfgWoF/8roy6TCoMrmXxVaK5KsZqtyDKVP9VcwN0N7yAfdlEWschpTh8UOVVA
+ cgik8PxJmevdPl7xzNT3YHikH6jnCmvLNMnl2d5fKk3dux2F67LLnsMO07bO13FPM3uqHe0Z
+ gad9m5uuVzUs07Wt2FEmAkifwn0=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
+ 6152be4b605ecf100b924373 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 28 Sep 2021 07:03:39
+ GMT
+Sender: kvalo=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 30C25C4360C; Tue, 28 Sep 2021 07:03:39 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,SPF_FAIL
+        autolearn=no autolearn_force=no version=3.4.0
+Received: from tykki (tynnyri.adurom.net [51.15.11.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9DA53C4338F;
+        Tue, 28 Sep 2021 07:03:29 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org 9DA53C4338F
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Arnd Bergmann <arnd@kernel.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Alex Elder <elder@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        iommu@lists.linux-foundation.org, linux-media@vger.kernel.org,
+        linux-mmc@vger.kernel.org, netdev@vger.kernel.org,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@lists.linux.dev
+Subject: Re: [PATCH] [RFC] qcom_scm: hide Kconfig symbol
+References: <20210927152412.2900928-1-arnd@kernel.org>
+Date:   Tue, 28 Sep 2021 10:03:25 +0300
+In-Reply-To: <20210927152412.2900928-1-arnd@kernel.org> (Arnd Bergmann's
+        message of "Mon, 27 Sep 2021 17:22:13 +0200")
+Message-ID: <87k0j1qj0i.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-References: <20210921222956.40719-1-joey.gouly@arm.com> <20210921222956.40719-2-joey.gouly@arm.com>
- <YUrZR/Tl7obfehXP@smile.fi.intel.com> <20210925134425.GA4681@e124191.cambridge.arm.com>
- <CAHp75VecEoUnNLx_tw3Fa=9jaDQaXbaaN=gGfFSXPkvpUOihoQ@mail.gmail.com>
- <CACRpkdY01KsAo1OP=MF0LKWt1r5UDXDW=U0Bce1ZMPQGcXmrjg@mail.gmail.com>
- <50d6a8f0-c515-43dc-af06-b31bf8f863df@www.fastmail.com> <CACRpkdb-TZfjyonddfHjOFqZXuLSGi7ER3_onnom-5VYm5GsgQ@mail.gmail.com>
- <9e7842b6-eff5-440d-b97a-175bd8e37fa6@www.fastmail.com>
-In-Reply-To: <9e7842b6-eff5-440d-b97a-175bd8e37fa6@www.fastmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 28 Sep 2021 01:34:39 +0200
-Message-ID: <CACRpkdZp_SNZEvLW=mYTJxaTdnX=mL0tbC6hnSkr1kht67ufZA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] pinctrl: add pinctrl/GPIO driver for Apple SoCs
-To:     Sven Peter <sven@svenpeter.dev>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Joey Gouly <joey.gouly@arm.com>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Hector Martin <marcan@marcan.st>,
-        Marc Zyngier <maz@kernel.org>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        nd <nd@arm.com>, Stan Skowronek <stan@corellium.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Sep 26, 2021 at 4:36 PM Sven Peter <sven@svenpeter.dev> wrote:
-> On Sun, Sep 26, 2021, at 15:10, Linus Walleij wrote:
+Arnd Bergmann <arnd@kernel.org> writes:
 
-> > If these four blocks in the SoC are different, they should have
-> > different compatible strings, because they are not, by
-> > definition, compatible.
+> From: Arnd Bergmann <arnd@arndb.de>
 >
-> I'd prefer to have a single compatible and get the npins from some
-> property and I don't think that's necessarily over-generalizing.
-> AFAICT Apple has been using the exact same MMIO interface for years
-> and I'd expect them to continue using it in the future. The only thing
-> that seems to change is the number of pins available and their assignment.
-> If we just have a single compatible we can likely support the M1X/2 or
-> however Apple calls the next SoCs with just a simple DTB change without
-> touching any driver code.
+> Now that SCM can be a loadable module, we have to add another
+> dependency to avoid link failures when ipa or adreno-gpu are
+> built-in:
+>
+> aarch64-linux-ld: drivers/net/ipa/ipa_main.o: in function `ipa_probe':
+> ipa_main.c:(.text+0xfc4): undefined reference to `qcom_scm_is_available'
+>
+> ld.lld: error: undefined symbol: qcom_scm_is_available
+>>>> referenced by adreno_gpu.c
+>>>>               gpu/drm/msm/adreno/adreno_gpu.o:(adreno_zap_shader_load)
+>>>> in archive drivers/built-in.a
+>
+> This can happen when CONFIG_ARCH_QCOM is disabled and we don't select
+> QCOM_MDT_LOADER, but some other module selects QCOM_SCM. Ideally we'd
+> use a similar dependency here to what we have for QCOM_RPROC_COMMON,
+> but that causes dependency loops from other things selecting QCOM_SCM.
+>
+> This appears to be an endless problem, so try something different this
+> time:
+>
+>  - CONFIG_QCOM_SCM becomes a hidden symbol that nothing 'depends on'
+>    but that is simply selected by all of its users
+>
+>  - All the stubs in include/linux/qcom_scm.h can go away
+>
+>  - arm-smccc.h needs to provide a stub for __arm_smccc_smc() to
+>    allow compile-testing QCOM_SCM on all architectures.
+>
+>  - To avoid a circular dependency chain involving RESET_CONTROLLER
+>    and PINCTRL_SUNXI, change the 'depends on RESET_CONTROLLER' in
+>    the latter one to 'select'.
+>
+> The last bit is rather annoying, as drivers should generally never
+> 'select' another subsystem, and about half the users of the reset
+> controller interface do this anyway.
+>
+> Nevertheless, this version seems to pass all my randconfig tests
+> and is more robust than any of the prior versions.
+>
+> Comments?
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Admittedly the word "compatible" in DT context is a bit fuzzy around the
-edges. Sometimes it is more like "parameterizable" which is what you
-are saying here.
+[...]
 
-I don't have a very strong opinion on it, both approaches are possible.
-Being able to define new SoCs are not always helpful for developers
-as the data in DT can become opaque and hard to understand if it
-is too general.
+> diff --git a/drivers/net/wireless/ath/ath10k/Kconfig b/drivers/net/wireless/ath/ath10k/Kconfig
+> index 741289e385d5..ca007b800f75 100644
+> --- a/drivers/net/wireless/ath/ath10k/Kconfig
+> +++ b/drivers/net/wireless/ath/ath10k/Kconfig
+> @@ -44,7 +44,7 @@ config ATH10K_SNOC
+>  	tristate "Qualcomm ath10k SNOC support"
+>  	depends on ATH10K
+>  	depends on ARCH_QCOM || COMPILE_TEST
+> -	depends on QCOM_SCM || !QCOM_SCM #if QCOM_SCM=m this can't be =y
+> +	select QCOM_SCM
+>  	select QCOM_QMI_HELPERS
+>  	help
+>  	  This module adds support for integrated WCN3990 chip connected
 
-Yours,
-Linus Walleij
+I assume I can continue to build test ATH10K_SNOC with x86 as before?
+That's important for me. If yes, then:
+
+Acked-by: Kalle Valo <kvalo@codeaurora.org>
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
