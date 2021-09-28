@@ -2,38 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 39D3441AFBB
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Sep 2021 15:16:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E8EC41AFC6
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Sep 2021 15:16:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240746AbhI1NRi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Sep 2021 09:17:38 -0400
-Received: from mail-lf1-f45.google.com ([209.85.167.45]:42753 "EHLO
-        mail-lf1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240816AbhI1NRh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Sep 2021 09:17:37 -0400
-Received: by mail-lf1-f45.google.com with SMTP id x27so7713705lfa.9;
-        Tue, 28 Sep 2021 06:15:57 -0700 (PDT)
+        id S240884AbhI1NST (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Sep 2021 09:18:19 -0400
+Received: from mail-lf1-f46.google.com ([209.85.167.46]:45904 "EHLO
+        mail-lf1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240887AbhI1NSS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Sep 2021 09:18:18 -0400
+Received: by mail-lf1-f46.google.com with SMTP id u18so90992310lfd.12;
+        Tue, 28 Sep 2021 06:16:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=J70y0RcekLuAThWi+dMOpKgCkAPkQ5ZoKIWdISoAhmM=;
-        b=H1LdWtp+87xuT59Q5ZsyClNzGL5zjXKtMrBXvUaQAPHgGeibDg2knbk+pHzR5oZ61q
-         PmqcSjV3/1fqf3/Rs7FGE07SN8yDLGHFNXLUPRn34jjBPTKrl9EqzficebUDxP98BdKg
-         Nkkfv5ce54VLz+wydOifNM6iFgd5O8QTKv7gOX8C1R6DKYjqi9rertubRwCHnlvVkhAV
-         IhU9sm07N5MqTtGIuYWkAV9MjC3KjSy/QxTzBJZOx/8A427CX0edVA3U/0NreUjAhkxn
-         aarSSIsZqUp5K5SZ38bsl8ig+hlrrW1kycABf2wMUOrutc6SDuiW5qwyYnEnAdoV9f3g
-         X3Ag==
-X-Gm-Message-State: AOAM530LYfXuUOwQQTRP6kpsK8W6mdAN9Ss1unfE4XBB5tSGj3yE+RvI
-        pw8XTAA5mDKRAU6W4wZ/NX8=
-X-Google-Smtp-Source: ABdhPJw0sAVm7KJEpvXwDoIfUK771x4WbMBMxoJ/RcfrNGY5B2To4ZQWDsqiYmVd2pCEADL6ASKenA==
-X-Received: by 2002:a05:651c:4ca:: with SMTP id e10mr6000344lji.259.1632834956475;
-        Tue, 28 Sep 2021 06:15:56 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Ue7KN/ejnJ6Twjq8u+MC86qEGjaDt9I6RkU5ABc6vKg=;
+        b=lEe64RMVaq/BXotJcXSsypRsvZ7Q9mt2cQ/s7dhSyvb4NA2bO/6yp/yoe06HRivM0V
+         EUFTpEBr6plEXY2dDLtfRjagv+5fTVGXitQHqZZ6kJZTs5t21xmob47Xw6TkyA2s3iFW
+         B7y34rQuknuPW9wX4EveHeaHN2+CB82XwSv3CZO7PWFrkWQ/aEjBBY4+LLO/h6IdRIc0
+         ctaSbDuytfwZ8U8sSAiz4bbACmOtJxqNcAokwZ21r6+HFFNw7H8NjgYwjdHy+nUdF4oV
+         Xp85US2k+id2D7TkjkGfTrVLQ0hB4evhH5yXFjoCTz04ww3hN0FTZgj+hCQnfE78TGXE
+         ycwQ==
+X-Gm-Message-State: AOAM5319NFLysMetmz6UnvonvGjdjoj0PKOL+P/hdja7mawdosTfrcnH
+        7JfQVluuywQmPuf7LUqUWfo6N7TUwONPpg==
+X-Google-Smtp-Source: ABdhPJxvv/PKIEMiVsj5dNAjNi/hWRKA5eHUE6x9tnk/KqKLbwr9VO7h3Km+MnCguEnWLr/WsuDMiQ==
+X-Received: by 2002:a05:651c:228:: with SMTP id z8mr5602116ljn.507.1632834989360;
+        Tue, 28 Sep 2021 06:16:29 -0700 (PDT)
 Received: from fedora (dc7vkhyyyyyyyyyyyyydy-3.rev.dnainternet.fi. [2001:14ba:16e2:8300::6])
-        by smtp.gmail.com with ESMTPSA id p8sm1739774lft.242.2021.09.28.06.15.55
+        by smtp.gmail.com with ESMTPSA id 1sm1922133lfq.49.2021.09.28.06.16.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Sep 2021 06:15:55 -0700 (PDT)
-Date:   Tue, 28 Sep 2021 16:15:48 +0300
+        Tue, 28 Sep 2021 06:16:28 -0700 (PDT)
+Date:   Tue, 28 Sep 2021 16:16:21 +0300
 From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 To:     matti.vaittinen@fi.rohmeurope.com
 Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
@@ -44,143 +44,228 @@ Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
         Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-power@fi.rohmeurope.com,
-        Matti Vaittinen <mazziesaccount@gmail.com>,
-        lukas.bulwahn@gmail.com
-Subject: [PATCH 0/4] Drop ROHM BD70528 support
-Message-ID: <cover.1632833622.git.matti.vaittinen@fi.rohmeurope.com>
+        Matti Vaittinen <mazziesaccount@gmail.com>
+Subject: [PATCH 1/4] dt-bindings: mfd: regulator: Drop BD70528 support
+Message-ID: <451dce9a738d1437f31fd32753b24a11461bb355.1632833622.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1632833622.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="1XNZ1F0Pgb03K+Pi"
+        protocol="application/pgp-signature"; boundary="Oza5UbXA+kaWh/Ac"
 Content-Disposition: inline
+In-Reply-To: <cover.1632833622.git.matti.vaittinen@fi.rohmeurope.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
---1XNZ1F0Pgb03K+Pi
+--Oza5UbXA+kaWh/Ac
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Drop ROHM BD70528 support
+The only known BD70528 use-cases are such that the PMIC is controlled
+=66rom separate MCU which is not running Linux. I am not aware of
+any Linux driver users. Furthermore, it seems there is no demand for
+this IC. Let's ease the maintenance burden and drop the driver. We can
+always add it back if there is sudden need for it.
 
-Unfortunately there has not been a big demand for ROHM BD70528
-IC. The few users I know control PMIC from separate M4-core,
-which is not running Linux. I am not aware of any users of this
-Linux driver.
-
-While I did really like this IC and writing the drivers for it,
-seems like these drivers are becoming useless burden. So, I see
-no point in maintaining them. Let's just drop the drivers if
-there is no objections to this series. :(
-
-The regulator, WDG and power-supply drivers were already dropped.
-
-The RTC and clk drivers remain in use by few other ROHM IC drivers.
-Nevertheless, they are already converted to not depend the BD70528
-defines during previous cycle.
-
-This series cleans the remaining pieces, GPIO, MFD, dt-bindings and
-MAINTAINER entries. The GPIO code uses defines from MFD - but the GPIO
-part is also depending on MFD KConfig entry - so there should be no
-breakages even if the patches were applied to respective subsystem trees
-and were not carried via single tree.
-
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 ---
-
-Matti Vaittinen (9):
-  dt-bindings: mfd: regulator: Drop BD70528 support
-  rtc: bd70528: Drop BD70528 support
-  watchdog: bd70528 drop bd70528 support
-  regulator: bd70528: Drop BD70528 support
-  clk: bd718xx: Drop BD70528 support
-  gpio: bd70528 Drop BD70528 support
-  power: supply: Drop BD70528 support
-  mfd: bd70528: Drop BD70528 support
-  MAINTAINERS: bd70528: Drop ROHM BD70528 drivers
-
- .../bindings/mfd/rohm,bd70528-pmic.txt        | 102 ---
- .../regulator/rohm,bd70528-regulator.txt      |  68 --
- MAINTAINERS                                   |   8 -
- drivers/clk/Kconfig                           |   6 +-
- drivers/clk/clk-bd718x7.c                     |  11 +-
- drivers/gpio/Kconfig                          |  11 -
- drivers/gpio/Makefile                         |   1 -
- drivers/gpio/gpio-bd70528.c                   | 230 ------
- drivers/mfd/Kconfig                           |  17 -
- drivers/mfd/Makefile                          |   1 -
- drivers/mfd/rohm-bd70528.c                    | 314 --------
- drivers/power/supply/Kconfig                  |   9 -
- drivers/power/supply/Makefile                 |   1 -
- drivers/power/supply/bd70528-charger.c        | 710 ------------------
- drivers/regulator/Kconfig                     |  11 -
- drivers/regulator/Makefile                    |   1 -
- drivers/regulator/bd70528-regulator.c         | 283 -------
- drivers/rtc/Kconfig                           |   4 +-
- drivers/rtc/rtc-bd70528.c                     | 316 +-------
- drivers/watchdog/Kconfig                      |  12 -
- drivers/watchdog/Makefile                     |   1 -
- drivers/watchdog/bd70528_wdt.c                | 291 -------
- include/linux/mfd/rohm-bd70528.h              | 391 ----------
- include/linux/mfd/rohm-generic.h              |   1 -
- 24 files changed, 18 insertions(+), 2782 deletions(-)
+ .../bindings/mfd/rohm,bd70528-pmic.txt        | 102 ------------------
+ .../regulator/rohm,bd70528-regulator.txt      |  68 ------------
+ 2 files changed, 170 deletions(-)
  delete mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic=
 =2Etxt
  delete mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd7052=
 8-regulator.txt
- delete mode 100644 drivers/gpio/gpio-bd70528.c
- delete mode 100644 drivers/mfd/rohm-bd70528.c
- delete mode 100644 drivers/power/supply/bd70528-charger.c
- delete mode 100644 drivers/regulator/bd70528-regulator.c
- delete mode 100644 drivers/watchdog/bd70528_wdt.c
- delete mode 100644 include/linux/mfd/rohm-bd70528.h
 
-
-base-commit: c4681547bcce777daf576925a966ffa824edd09d
---=20
-2.25.4
-
-
---=20
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =3D]=20
-
-Matti Vaittinen (4):
-  dt-bindings: mfd: regulator: Drop BD70528 support
-  gpio: bd70528 Drop BD70528 support
-  mfd: bd70528: Drop BD70528 support
-  MAINTAINERS: bd70528: Drop ROHM BD70528 drivers
-
- .../bindings/mfd/rohm,bd70528-pmic.txt        | 102 -----
- .../regulator/rohm,bd70528-regulator.txt      |  68 ---
- MAINTAINERS                                   |   8 -
- drivers/gpio/Kconfig                          |  11 -
- drivers/gpio/Makefile                         |   1 -
- drivers/gpio/gpio-bd70528.c                   | 230 -----------
- drivers/mfd/Kconfig                           |  17 -
- drivers/mfd/Makefile                          |   1 -
- drivers/mfd/rohm-bd70528.c                    | 314 --------------
- include/linux/mfd/rohm-bd70528.h              | 389 ------------------
- include/linux/mfd/rohm-generic.h              |   1 -
- 11 files changed, 1142 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic=
-=2Etxt
- delete mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd7052=
-8-regulator.txt
- delete mode 100644 drivers/gpio/gpio-bd70528.c
- delete mode 100644 drivers/mfd/rohm-bd70528.c
- delete mode 100644 include/linux/mfd/rohm-bd70528.h
-
-
-base-commit: 5816b3e6577eaa676ceb00a848f0fd65fe2adc29
+diff --git a/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt b/=
+Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
+deleted file mode 100644
+index 386eec06cf08..000000000000
+--- a/Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
++++ /dev/null
+@@ -1,102 +0,0 @@
+-* ROHM BD70528 Power Management Integrated Circuit bindings
+-
+-BD70528MWV is an ultra-low quiescent current general purpose, single-chip,
+-power management IC for battery-powered portable devices. The IC
+-integrates 3 ultra-low current consumption buck converters, 3 LDOs and 2
+-LED Drivers. Also included are 4 GPIOs, a real-time clock (RTC), a 32kHz
+-clock gate, high-accuracy VREF for use with an external ADC, flexible
+-dual-input power path, 10 bit SAR ADC for battery temperature monitor and
+-1S battery charger with scalable charge currents.
+-
+-Required properties:
+- - compatible		: Should be "rohm,bd70528"
+- - reg			: I2C slave address.
+- - interrupts		: The interrupt line the device is connected to.
+- - interrupt-controller	: To indicate BD70528 acts as an interrupt control=
+ler.
+- - #interrupt-cells	: Should be 2. Usage is compliant to the 2 cells
+-			  variant of ../interrupt-controller/interrupts.txt
+- - gpio-controller	: To indicate BD70528 acts as a GPIO controller.
+- - #gpio-cells		: Should be 2. The first cell is the pin number and
+-			  the second cell is used to specify flags. See
+-			  ../gpio/gpio.txt for more information.
+- - #clock-cells		: Should be 0.
+- - regulators:		: List of child nodes that specify the regulators.
+-			  Please see ../regulator/rohm,bd70528-regulator.txt
+-
+-Optional properties:
+- - clock-output-names	: Should contain name for output clock.
+-
+-Example:
+-/* External oscillator */
+-osc: oscillator {
+-	compatible =3D "fixed-clock";
+-	#clock-cells =3D <1>;
+-	clock-frequency  =3D <32768>;
+-	clock-output-names =3D "osc";
+-};
+-
+-pmic: pmic@4b {
+-	compatible =3D "rohm,bd70528";
+-	reg =3D <0x4b>;
+-	interrupt-parent =3D <&gpio1>;
+-	interrupts =3D <29 IRQ_TYPE_LEVEL_LOW>;
+-	clocks =3D <&osc 0>;
+-	#clock-cells =3D <0>;
+-	clock-output-names =3D "bd70528-32k-out";
+-	#gpio-cells =3D <2>;
+-	gpio-controller;
+-	interrupt-controller;
+-	#interrupt-cells =3D <2>;
+-
+-	regulators {
+-		buck1: BUCK1 {
+-			regulator-name =3D "buck1";
+-			regulator-min-microvolt =3D <1200000>;
+-			regulator-max-microvolt =3D <3400000>;
+-			regulator-boot-on;
+-			regulator-ramp-delay =3D <125>;
+-		};
+-		buck2: BUCK2 {
+-			regulator-name =3D "buck2";
+-			regulator-min-microvolt =3D <1200000>;
+-			regulator-max-microvolt =3D <3300000>;
+-			regulator-boot-on;
+-			regulator-ramp-delay =3D <125>;
+-		};
+-		buck3: BUCK3 {
+-			regulator-name =3D "buck3";
+-			regulator-min-microvolt =3D <800000>;
+-			regulator-max-microvolt =3D <1800000>;
+-			regulator-boot-on;
+-			regulator-ramp-delay =3D <250>;
+-		};
+-		ldo1: LDO1 {
+-			regulator-name =3D "ldo1";
+-			regulator-min-microvolt =3D <1650000>;
+-			regulator-max-microvolt =3D <3300000>;
+-			regulator-boot-on;
+-		};
+-		ldo2: LDO2 {
+-			regulator-name =3D "ldo2";
+-			regulator-min-microvolt =3D <1650000>;
+-			regulator-max-microvolt =3D <3300000>;
+-			regulator-boot-on;
+-		};
+-
+-		ldo3: LDO3 {
+-			regulator-name =3D "ldo3";
+-			regulator-min-microvolt =3D <1650000>;
+-			regulator-max-microvolt =3D <3300000>;
+-		};
+-		led_ldo1: LED_LDO1 {
+-			regulator-name =3D "led_ldo1";
+-			regulator-min-microvolt =3D <200000>;
+-			regulator-max-microvolt =3D <300000>;
+-		};
+-		led_ldo2: LED_LDO2 {
+-			regulator-name =3D "led_ldo2";
+-			regulator-min-microvolt =3D <200000>;
+-			regulator-max-microvolt =3D <300000>;
+-		};
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/regulator/rohm,bd70528-regul=
+ator.txt b/Documentation/devicetree/bindings/regulator/rohm,bd70528-regulat=
+or.txt
+deleted file mode 100644
+index 698cfc3bc3dd..000000000000
+--- a/Documentation/devicetree/bindings/regulator/rohm,bd70528-regulator.txt
++++ /dev/null
+@@ -1,68 +0,0 @@
+-ROHM BD70528 Power Management Integrated Circuit regulator bindings
+-
+-Required properties:
+- - regulator-name: should be "buck1", "buck2", "buck3", "ldo1", "ldo2", "l=
+do3",
+-		   "led_ldo1", "led_ldo2"
+-
+-List of regulators provided by this controller. BD70528 regulators node
+-should be sub node of the BD70528 MFD node. See BD70528 MFD bindings at
+-Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
+-
+-The valid names for BD70528 regulator nodes are:
+-BUCK1, BUCK2, BUCK3, LDO1, LDO2, LDO3, LED_LDO1, LED_LDO2
+-
+-Optional properties:
+-- Any optional property defined in bindings/regulator/regulator.txt
+-
+-Example:
+-regulators {
+-	buck1: BUCK1 {
+-		regulator-name =3D "buck1";
+-		regulator-min-microvolt =3D <1200000>;
+-		regulator-max-microvolt =3D <3400000>;
+-		regulator-boot-on;
+-		regulator-ramp-delay =3D <125>;
+-	};
+-	buck2: BUCK2 {
+-		regulator-name =3D "buck2";
+-		regulator-min-microvolt =3D <1200000>;
+-		regulator-max-microvolt =3D <3300000>;
+-		regulator-boot-on;
+-		regulator-ramp-delay =3D <125>;
+-	};
+-	buck3: BUCK3 {
+-		regulator-name =3D "buck3";
+-		regulator-min-microvolt =3D <800000>;
+-		regulator-max-microvolt =3D <1800000>;
+-		regulator-boot-on;
+-		regulator-ramp-delay =3D <250>;
+-	};
+-	ldo1: LDO1 {
+-		regulator-name =3D "ldo1";
+-		regulator-min-microvolt =3D <1650000>;
+-		regulator-max-microvolt =3D <3300000>;
+-		regulator-boot-on;
+-	};
+-	ldo2: LDO2 {
+-		regulator-name =3D "ldo2";
+-		regulator-min-microvolt =3D <1650000>;
+-		regulator-max-microvolt =3D <3300000>;
+-		regulator-boot-on;
+-	};
+-
+-	ldo3: LDO3 {
+-		regulator-name =3D "ldo3";
+-		regulator-min-microvolt =3D <1650000>;
+-		regulator-max-microvolt =3D <3300000>;
+-	};
+-	led_ldo1: LED_LDO1 {
+-		regulator-name =3D "led_ldo1";
+-		regulator-min-microvolt =3D <200000>;
+-		regulator-max-microvolt =3D <300000>;
+-	};
+-	led_ldo2: LED_LDO2 {
+-		regulator-name =3D "led_ldo2";
+-		regulator-min-microvolt =3D <200000>;
+-		regulator-max-microvolt =3D <300000>;
+-	};
+-};
 --=20
 2.31.1
 
@@ -197,19 +282,19 @@ Simon says - in Latin please.
 ~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
 Thanks to Simon Glass for the translation =3D]=20
 
---1XNZ1F0Pgb03K+Pi
+--Oza5UbXA+kaWh/Ac
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmFTFW4ACgkQeFA3/03a
-ocVaAQgAuleT1MPoHWCfXjiRCNhHg+YdUJvOE2OFKH1xzQbOe8VDlQ1EJHsd6GkR
-RIvs9fi5lgLvH0JUAseqcMlASQUWyO7UyiZwSno6O12TX5wRHa36S3wW067PvOq2
-yx901Y6o9Kh2ItTxa2c1VuJPrYkhmbXFGBJiWhXGbTX+TUqyLHI0c+/HJj959NmS
-s1/khU20m0hCScSn/gao/XLKi77FYxTsBcXKgFveiY01G9GmODw+OFmelQRKgU0/
-7z+MeExPL5Z51fg2u7HHB0h9eBtWIFfL8aM9EHCeIsVdB3i2Im6fnrS4U0mSAxVG
-GjTYZX3hZ9qs5Uok1r/TxOctck6o9w==
-=U8Jj
+iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmFTFaUACgkQeFA3/03a
+ocUNeggA1XfIPhOVwyXugNrKEnoSEpUR9n+x/uNQoF1CZh6oXBfKQ5r3BdjQKtlF
+KidyVRTVpomS75XG9wVx4ahoLIe2aNmn/H8waJSSTs83py5dilrdB4ErbTx4Ogwa
+Y1j/SpZbzs5VTetYIoXoW5v1f5BgIjqholpfJlqUfepnqN27RKcyIj0t9T0coOzw
+RrCGwwxIiZ/0Llh1oQXIJdazLZVDtAEr/ddjeE3cr9IKQr/jQ8CIcfYiGCqk/kKk
+3lfpalfs0w39qY7BbUZYT2Stkj3zkbaxkm6KWIktdtnczU7sOzRL6PIs6p0fHWuX
+ZtdHihAiB5bGnJOLXq/yAqk32FwlSA==
+=r633
 -----END PGP SIGNATURE-----
 
---1XNZ1F0Pgb03K+Pi--
+--Oza5UbXA+kaWh/Ac--
