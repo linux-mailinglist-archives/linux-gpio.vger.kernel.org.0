@@ -2,141 +2,170 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 69BEE41AFD4
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Sep 2021 15:18:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C66141B010
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Sep 2021 15:30:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240839AbhI1NT6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Sep 2021 09:19:58 -0400
-Received: from mail-lf1-f54.google.com ([209.85.167.54]:36615 "EHLO
-        mail-lf1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240659AbhI1NT6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Sep 2021 09:19:58 -0400
-Received: by mail-lf1-f54.google.com with SMTP id b20so92896022lfv.3;
-        Tue, 28 Sep 2021 06:18:18 -0700 (PDT)
+        id S240937AbhI1Nbg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Sep 2021 09:31:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38178 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240908AbhI1Nbb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Sep 2021 09:31:31 -0400
+Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B8EBC06176F
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Sep 2021 06:29:52 -0700 (PDT)
+Received: by mail-il1-x134.google.com with SMTP id q6so9356060ilm.3
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Sep 2021 06:29:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ieee.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KV5AEITggXzrcUqW0Pn0JDUCXvtzQQd7nfX6VcyNvh0=;
+        b=gsEil9aJ5ZOw0ASchzCW/AY/NlZwbg7FdvHHAbffANcuyVgNVj8F3r/I3y/OyqwIbk
+         QkY/gO8vfPAMQp75rG6vgEG7NkfLO4ZNSWbXrGEOjX3dKqow4MOof9p7GrAO13Ckl/VP
+         f8/C6WiPIW+rxE9R7UiZnONtD/dro2yaem2kM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=i/lR6NwimiIzuHfvOiHLk3GhSnmADt6zy4H/L/R1gHo=;
-        b=N8ugTcAgxxx9YYY7OBA7HKbpofGOAYT0xQsQ4cd2IWt4LBpBwIzDCvoIaTwRVK+Xfz
-         K3MJxCC7KVUkTJN6A4qo9IklisLuruJHVP06jxvL+EZyai5hlB27qTEPd4WzlqGF4pcA
-         0QzIuu12wwYnfO4D2Nqx3P7zrv330hskpeCaTw8IhxBO45Vw4PoriVXKkF27FdgyFw/J
-         Whr/ibwbb17bydH8zo63CS8CuzBhPUEThXpQt6lKrYj2x3qgBFg8TgsN44KXkpylRfkx
-         Kxt2VH4I8cSfa3+awl9LxhHmgLyARd1517qpoRzB9yvcvVe6PCGjEBlACTV8DShyyYwF
-         OwiA==
-X-Gm-Message-State: AOAM5304/D4XiMSonyI9l6Fxq11eJjryMbn+G3s+XtdlgPEXKBsVEP+3
-        WzegoCg0J55ayCKroA1kziU=
-X-Google-Smtp-Source: ABdhPJw3ztTksAhFbPw0+WdjRo5UpgolYMK9FwsHpRW9NEpgUFDLv8wW1sdKbIuYchR7KWak4R+v9w==
-X-Received: by 2002:ac2:4c4e:: with SMTP id o14mr5917896lfk.482.1632835097454;
-        Tue, 28 Sep 2021 06:18:17 -0700 (PDT)
-Received: from fedora (dc7vkhyyyyyyyyyyyyydy-3.rev.dnainternet.fi. [2001:14ba:16e2:8300::6])
-        by smtp.gmail.com with ESMTPSA id n9sm1915364lfe.188.2021.09.28.06.18.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Sep 2021 06:18:16 -0700 (PDT)
-Date:   Tue, 28 Sep 2021 16:18:10 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KV5AEITggXzrcUqW0Pn0JDUCXvtzQQd7nfX6VcyNvh0=;
+        b=e8Se/fuHmJbMGK36ElZah6xGUiBOnZqOXc92iqnw8vdJnS/OQXuG6LD94+Wh/0Jis3
+         vVeJPYcHR+w+5xQhYAWcEqclevvDhR0FEDQfgpuUvzhBY+jtEFzwHDWJeyu/YrfiElcM
+         YCE9hKthKWfUsKq0a0Y8RV5qBQsjWhTzx+majBP3r3jJYltx54fXFznTIClWB/7y5hxg
+         PYNAbsflz6WOUQDFRPNtHQuSKwneoMqGiBJckz3ZRUH80guCtZm0iLTzy3N+U/p0Qbs4
+         zEsWzd4z5gmlPXqXjZlLsbze8EQc1f1u3/ntuGPFSuo1sa1Vi1qM/Z2zpDW1N+7lax5N
+         92hA==
+X-Gm-Message-State: AOAM533L7hITge7v7AxtLQwKuC8lu7Blci8OiJB4XotulRwIQkbwvOnz
+        aFEAUp5NNZJITqs9BURaXRC4Fs3LJYSyIJDQ
+X-Google-Smtp-Source: ABdhPJz3qmL3tZ3U3XkVDcDl9dtP+yn06EspPEdsou0GIPYBieCdKEZlaSYFieS9Yrw1uFrX87cOuw==
+X-Received: by 2002:a92:c744:: with SMTP id y4mr4108077ilp.288.1632835791399;
+        Tue, 28 Sep 2021 06:29:51 -0700 (PDT)
+Received: from [172.22.22.4] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.googlemail.com with ESMTPSA id m13sm11831997ilh.45.2021.09.28.06.29.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Sep 2021 06:29:50 -0700 (PDT)
+Subject: Re: [PATCH 2/2] [v2] qcom_scm: hide Kconfig symbol
+To:     Arnd Bergmann <arnd@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Simon Trimmer <simont@opensource.cirrus.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-power@fi.rohmeurope.com,
-        Matti Vaittinen <mazziesaccount@gmail.com>,
-        lukas.bulwahn@gmail.com
-Subject: [PATCH 4/4] MAINTAINERS: bd70528: Drop ROHM BD70528 drivers
-Message-ID: <63213170d8b2a481879bd67b2fac4d9784dd7d55.1632833622.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1632833622.git.matti.vaittinen@fi.rohmeurope.com>
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Joerg Roedel <joro@8bytes.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Alex Elder <elder@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        netdev@vger.kernel.org, ath10k@lists.infradead.org,
+        linux-wireless@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <20210928075216.4193128-1-arnd@kernel.org>
+ <20210928075216.4193128-2-arnd@kernel.org>
+From:   Alex Elder <elder@ieee.org>
+Message-ID: <19bbc40d-3f13-7e9d-72c0-5d206b016bb7@ieee.org>
+Date:   Tue, 28 Sep 2021 08:29:48 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="drLU7DZbqH3AMVuR"
-Content-Disposition: inline
-In-Reply-To: <cover.1632833622.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <20210928075216.4193128-2-arnd@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On 9/28/21 2:50 AM, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> Now that SCM can be a loadable module, we have to add another
+> dependency to avoid link failures when ipa or adreno-gpu are
+> built-in:
+> 
+> aarch64-linux-ld: drivers/net/ipa/ipa_main.o: in function `ipa_probe':
+> ipa_main.c:(.text+0xfc4): undefined reference to `qcom_scm_is_available'
+> 
+> ld.lld: error: undefined symbol: qcom_scm_is_available
+>>>> referenced by adreno_gpu.c
+>>>>                gpu/drm/msm/adreno/adreno_gpu.o:(adreno_zap_shader_load) in archive drivers/built-in.a
+> 
+> This can happen when CONFIG_ARCH_QCOM is disabled and we don't select
+> QCOM_MDT_LOADER, but some other module selects QCOM_SCM. Ideally we'd
+> use a similar dependency here to what we have for QCOM_RPROC_COMMON,
+> but that causes dependency loops from other things selecting QCOM_SCM.
+> 
+> This appears to be an endless problem, so try something different this
+> time:
+> 
+>   - CONFIG_QCOM_SCM becomes a hidden symbol that nothing 'depends on'
+>     but that is simply selected by all of its users
+> 
+>   - All the stubs in include/linux/qcom_scm.h can go away
+> 
+>   - arm-smccc.h needs to provide a stub for __arm_smccc_smc() to
+>     allow compile-testing QCOM_SCM on all architectures.
+> 
+>   - To avoid a circular dependency chain involving RESET_CONTROLLER
+>     and PINCTRL_SUNXI, drop the 'select RESET_CONTROLLER' statement.
+>     According to my testing this still builds fine, and the QCOM
+>     platform selects this symbol already.
+> 
+> Acked-by: Kalle Valo <kvalo@codeaurora.org>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> Changes in v2:
+>    - drop the 'select RESET_CONTROLLER' line, rather than adding
+>      more of the same
+> ---
+>   drivers/firmware/Kconfig                |  5 +-
+>   drivers/gpu/drm/msm/Kconfig             |  4 +-
+>   drivers/iommu/Kconfig                   |  2 +-
+>   drivers/media/platform/Kconfig          |  2 +-
+>   drivers/mmc/host/Kconfig                |  2 +-
+>   drivers/net/ipa/Kconfig                 |  1 +
 
---drLU7DZbqH3AMVuR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+For drivers/net/ipa/Kconfig, looks good to me.
+Nice simplification.
 
-The only known BD70528 use-cases are such that the PMIC is controlled
-=66rom separate MCU which is not running Linux. I am not aware of
-any Linux driver users. Furthermore, it seems there is no demand for
-this IC.
+Acked-by: Alex Elder <elder@linaro.org>
 
-Ease the maintenance burden and drop the driver.
+>   drivers/net/wireless/ath/ath10k/Kconfig |  2 +-
+>   drivers/pinctrl/qcom/Kconfig            |  3 +-
+>   include/linux/arm-smccc.h               | 10 ++++
+>   include/linux/qcom_scm.h                | 71 -------------------------
+>   10 files changed, 20 insertions(+), 82 deletions(-)
+> 
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
- MAINTAINERS | 8 --------
- 1 file changed, 8 deletions(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5b33791bb8e9..22c30775b218 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16166,27 +16166,19 @@ ROHM POWER MANAGEMENT IC DEVICE DRIVERS
- R:	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
- L:	linux-power@fi.rohmeurope.com
- S:	Supported
--F:	Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
--F:	Documentation/devicetree/bindings/regulator/rohm,bd70528-regulator.txt
- F:	drivers/clk/clk-bd718x7.c
--F:	drivers/gpio/gpio-bd70528.c
- F:	drivers/gpio/gpio-bd71815.c
- F:	drivers/gpio/gpio-bd71828.c
--F:	drivers/mfd/rohm-bd70528.c
- F:	drivers/mfd/rohm-bd71828.c
- F:	drivers/mfd/rohm-bd718x7.c
- F:	drivers/mfd/rohm-bd9576.c
--F:	drivers/power/supply/bd70528-charger.c
--F:	drivers/regulator/bd70528-regulator.c
- F:	drivers/regulator/bd71815-regulator.c
- F:	drivers/regulator/bd71828-regulator.c
- F:	drivers/regulator/bd718x7-regulator.c
- F:	drivers/regulator/bd9576-regulator.c
- F:	drivers/regulator/rohm-regulator.c
- F:	drivers/rtc/rtc-bd70528.c
--F:	drivers/watchdog/bd70528_wdt.c
- F:	drivers/watchdog/bd9576_wdt.c
--F:	include/linux/mfd/rohm-bd70528.h
- F:	include/linux/mfd/rohm-bd71815.h
- F:	include/linux/mfd/rohm-bd71828.h
- F:	include/linux/mfd/rohm-bd718x7.h
---=20
-2.31.1
-
-
---=20
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =3D]=20
-
---drLU7DZbqH3AMVuR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmFTFhIACgkQeFA3/03a
-ocW7fAgAlMZaa9eYvTBvF/WFaeGADRyXKe1gEYIrcUZJtIEEmgIQAAIbTLIoSYy+
-37QBku/fC81dBN0ruNvU3oUhrEHRXyWm/2aKejSLgNjAv1dvCj0EEHJDvoe6O2uC
-H73AhxVqdqd+XxOvf46K+LUVC4WE18bIx4Rxdt2XpYJf3L9LJrvml9FVqqYPF9xQ
-SU5y52W2D1UEcbGofU2ebI8ZvNnm/UcyMunFjyZri6b3Zp7FNIG87vypVUByPD7x
-NfrjnvlBN8Xqs5P+7REnwtKu3OyaiZg2sh2OlZWi4QJQH9fXw4RxVCcXKLeXcmBP
-w7f8ODshEAwswcatUUGeXG2acXQvuw==
-=7Sn6
------END PGP SIGNATURE-----
-
---drLU7DZbqH3AMVuR--
+. . .
