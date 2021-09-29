@@ -2,106 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E19241CD0E
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Sep 2021 22:01:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C2FC641CD5B
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Sep 2021 22:24:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345111AbhI2UDb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Sep 2021 16:03:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36208 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245758AbhI2UDb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Sep 2021 16:03:31 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94EC0C061764
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Sep 2021 13:01:49 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id bd28so12902143edb.9
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Sep 2021 13:01:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QVoV53fmEUeXJCW4y56wBFPMYAfyeaHxeC0GyF+IsHY=;
-        b=WFb2peLCM29bT5fbZcRB1U1qwkmqtZpPMoiIUeVEM+cFVB1Pqfaa7JcXjT4vRxCxaE
-         JMZ+Y6UbyxD+/o6VARqaK7WDFv6cdUhWIDwb4YSQTVV4Xd4qJ1++jl7QlH3R3cN4Hhda
-         CMd3R4O/jkL8PK5rvcU5Sc8JC/tYvGThln9yHqwTqZ8MgExUKyFBya7UOiSX9fnjXNs/
-         3oQms6XsgLw5dZkH4QZ9aWd32To0Xf/9lPgvK2dRN1LZCdAULaNBTjcl+lpZ2sd75vff
-         fS0VJb3UJy4PvbIjpXj5Lrqinvu4UVhNYmfBmILb9ieH3ZIbeBqkCCcydiKrjYnKe0pZ
-         UIqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QVoV53fmEUeXJCW4y56wBFPMYAfyeaHxeC0GyF+IsHY=;
-        b=sl5o3fGRTbwHOU8optwGosEDhOIWRSaPH/Wc9hhYky/2Eqk8S8hcMwihOWaYsNF4cm
-         5EDoTpYFksW+3KJl61k7ojOMTlIUbbNuRAd9EdwWmFwSFoFnFjasfeSfWOvUTKNErPl3
-         iMTV/xsjxUjTXsk88Bfkn/2pROpcl2QPTS7elJXp1qj9aseefeY7a+E0EW8Lsxy9AjJl
-         zg2eaGwnhVUJnlh/wik+jha3c3j1pZZnEF6uS+jrnu5jwsxcZBicLZG2zg4mVDbJbtdT
-         m9k/6pYgkmUlBrNUwKshAGwXfLtIRNc6GXPG7GVIVrIZWUa4d8tNlK/ezwFsG6EamZVb
-         ueQA==
-X-Gm-Message-State: AOAM532i4feZeZCGTDf4ZfGOtcL1IgaoDbcRCbKpPwyX4iLpq+znJmOH
-        EqxApPGc5v1JWaZCGFQrytCO7UBCHr9kZIYlH1+yxQ==
-X-Google-Smtp-Source: ABdhPJxW/5c5Zm0f6VzlmAE5ubXryikV3fZZQv6MmG3s5nD+j3ke3SZ3s5Of1FQgOZu0GnjUf+fda8e2ZNlPw37L3uQ=
-X-Received: by 2002:a05:6402:1b8d:: with SMTP id cc13mr2169435edb.235.1632945707418;
- Wed, 29 Sep 2021 13:01:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210928235635.1348330-1-willmcvicker@google.com>
- <20210928235635.1348330-3-willmcvicker@google.com> <CALAqxLUju1Bw0dDpi_oK6-eOiP6B2Xm1MV19G53WaRFm3Z_AWw@mail.gmail.com>
-In-Reply-To: <CALAqxLUju1Bw0dDpi_oK6-eOiP6B2Xm1MV19G53WaRFm3Z_AWw@mail.gmail.com>
-From:   Will McVicker <willmcvicker@google.com>
-Date:   Wed, 29 Sep 2021 13:01:31 -0700
-Message-ID: <CABYd82Z4pgJpYVhJEGjgbWgSQp7if_=Rf03VmTu+U9D3b=dVzA@mail.gmail.com>
-Subject: Re: [PATCH v2 02/12] timekeeping: add API for getting timekeeping_suspended
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Android Kernel Team <kernel-team@android.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>,
-        "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>,
+        id S1346687AbhI2U0d (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Sep 2021 16:26:33 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:39554 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1346361AbhI2U0d (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 29 Sep 2021 16:26:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+        Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+        bh=Lh+F5ZjCx0bOA0ZJvvdGRxDGTO4CVU+5ejZ1orJFARo=; b=MUWnnwDTA13YTmHBToqcVGDNT5
+        ePCd5dqFdM8DbuueNSvx9nvtXef2xRllw5xAQodxwVgSP22IWwn95jfAu9MY5mjXm9tczXEM+7wi5
+        fLdgN9nLR2ly4pwjSQgu4+siBw1mWaxFZfmDlbTr8cBJQkGWuVNAcjPhvYO8ya8Hc7oQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1mVg8E-008qF0-Kf; Wed, 29 Sep 2021 22:24:46 +0200
+Date:   Wed, 29 Sep 2021 22:24:46 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Asmaa Mnebhi <asmaa@nvidia.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-rtc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        netdev <netdev@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        David Thompson <davthompson@nvidia.com>
+Subject: Re: [PATCH v3 1/2] gpio: mlxbf2: Introduce IRQ support
+Message-ID: <YVTLjp1RSPGNZlUJ@lunn.ch>
+References: <20210923202216.16091-1-asmaa@nvidia.com>
+ <20210923202216.16091-2-asmaa@nvidia.com>
+ <YU26lIUayYXU/x9l@lunn.ch>
+ <CACRpkdbUJF6VUPk9kCMPBvjeL3frJAbHq+h0-z7P-a1pSU+fiw@mail.gmail.com>
+ <CH2PR12MB38951F2326196AB5B573A73DD7A79@CH2PR12MB3895.namprd12.prod.outlook.com>
+ <YVHQQcv2M6soJR6u@lunn.ch>
+ <CH2PR12MB389585F7D5EFE5E2453593DBD7A79@CH2PR12MB3895.namprd12.prod.outlook.com>
+ <YVHbo/cJcHzxUk+d@lunn.ch>
+ <CH2PR12MB389530F4A65840FE04DC8628D7A89@CH2PR12MB3895.namprd12.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CH2PR12MB389530F4A65840FE04DC8628D7A89@CH2PR12MB3895.namprd12.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 28, 2021 at 8:42 PM John Stultz <john.stultz@linaro.org> wrote:
->
-> On Tue, Sep 28, 2021 at 4:56 PM Will McVicker <willmcvicker@google.com> wrote:
-> >
-> > This allows modules to access the value of timekeeping_suspended without
-> > giving them write access to the variable.
-> >
->
-> It's important to cover "the why" not "the what" in these commit
-> messages, so you might add a note as to what code will be the user of
-> this (the samsung/clk-pll.c code changed later in this series).
->
-> thanks
-> -john
+> In KSZ9031, Register MII_KSZPHY_INTCS=0x1B reports all interrupt events and
+> clear on read. So if there are 4 different interrupts, once it is read once, all 4 clear at once.
+> The micrel.c driver has defined ack_interrupt to read the above reg and is called every time the
+> interrupt handler phy_interrupt is called. So in this case, we should be good.
+> The code flow in our case would look like this:
+> - 2 interrupt sources (for example, link down followed by link up) set in MII_KSZPHY_INTCS
+> - interrupt handler (phy_interrupt) reads MII_KSZPHY_INT which automatically clears both
+> interrupts
+> - another internal source triggers and sets the register.
+> - The second edge will be caught accordingly by the GPIO.
 
-Thanks John for the tip. I will try to be better at that in the followup.
+I still think there is a small race window. You product manager needs
+to decide if that is acceptable, or if you should poll the PHY.
 
-For this specific patch, I am adding this new API because the Samsung
-PLL driver (drivers/clk/samsung/clk-pll.c) currently is using the
-variable 'timekeeping_suspended' to detect timeouts before the
-clocksource is initialized or timekeeping itself is suspended. My
-patch series aims to modularize the Samsung PLL driver. So to keep the
-driver's functionality intact, I need to add this additional API.
+Anyway, it is clear the hardware only does level interrupts, so the
+GPIO driver should only accept level interrupts. -EINVAL otherwise.
 
---Will
+I also assume you have a ACPI blob which indicates what sort of
+interrupts that should be used, level low, falling edge etc. Since
+that is outside of the kernel, i will never know what you decide to
+put there. Ideally, until the hardware is fixed, you should not list
+any interrupt and fallback to polling.
+
+    Andrew
