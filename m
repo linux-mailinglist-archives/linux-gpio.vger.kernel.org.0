@@ -2,200 +2,208 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 58A6741CC76
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Sep 2021 21:14:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 987A341CCDA
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Sep 2021 21:48:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344395AbhI2TQc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Sep 2021 15:16:32 -0400
-Received: from mail-co1nam11on2042.outbound.protection.outlook.com ([40.107.220.42]:38657
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1343734AbhI2TQb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 29 Sep 2021 15:16:31 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MM+8KeO+85U5JRvLJ9FMKI0flNav+hzKvYUM3/v8utwSBaPiuDqbUz2SNCyCMShEuOPVUt5Rc90tvH75TeIA/b5lsN7czEwTEg2yeBGdiK/qz8RE94N1mplWtGo7BSLsa820JlYo1rMEsea0oNpXops8Lt50JO179Fhwfm2m1aTfCFQOBqCH592e0tDfF6motQ0Hhy6ucvHME9Punu75ssEmzOaxSIg86SrZWbG0tyKoEivuy9m8SK7fq9rZzDFn40czNTktEUTreWEIUMGeuNMG0EI0eOo9xjXvcDbsVDx37CMZIhcFKCPLIoZm/QQRrmJXxMb46Y6QaUkaUKAOng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
- bh=QeKQnhOFmjy+rfUzeL+/9SYI275SGkujxtpY5+I5nuQ=;
- b=hETm1uSVC+Mr2yj1mQeIl+LX+48brMyxgCG3GpIUvRGS7GHj3Ehplu2R1rEDoNwGi3QwEKAd1ruRvZU2pRscx46xMPMsDg2WTY87Yxjsh3/ic7Q+zvS2+e7eJYw1PL+wa391LDkTsyiSL6YCo+NWY0DFNpNHFAXS6zg6cHrsharOsB7eT556ZVx9LOY35aWVTyW4k3lGx0DizpOm3iz5N0Iylqt9uUFLyiDXmE2Ix+p8OfDZRC6paiZJ5quU0fb+6Pt0zFBIdygs9VcSxAxRd1h6ym4BsoYp9B3/YbuFjXgxCE502L4tDY3ZOS0h+B3txg3T5tlXsejprBnVPn+Vow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QeKQnhOFmjy+rfUzeL+/9SYI275SGkujxtpY5+I5nuQ=;
- b=q1bTEus5wge+9II5DnbT29AL7B8A5SstAgv+0hQg2hqEzgVOsfOn+eSM8JQyNUHgqZYMY5IRzzCP9WK+koF7nNzCAmlhg42BWn3gYr6wKnMMeqW60cgd7JtZotwS2ix1oKs7Qfyv9ZNbGSdQk/fDrKTaVrXCk95nYyySsGomM0bCmrWY/4f2cuJbKldFGFNMq+bIsXfNO8Fb9WJs5OrmwRmDkkonekYjbTdEZgdEtldg4vvKHLC1TEUqjpViuP9xOLok7OEzxRanmkXnxOhl6YTMIC0jpDViT5HALjCE0CH3E2Vo5ns8mzjYiE3OBclYr3XOZM9p1+quUckxw27yDg==
-Received: from CH2PR12MB3895.namprd12.prod.outlook.com (2603:10b6:610:2a::13)
- by CH2PR12MB4038.namprd12.prod.outlook.com (2603:10b6:610:7b::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4544.20; Wed, 29 Sep
- 2021 19:14:48 +0000
-Received: from CH2PR12MB3895.namprd12.prod.outlook.com
- ([fe80::a46b:a8b7:59d:9142]) by CH2PR12MB3895.namprd12.prod.outlook.com
- ([fe80::a46b:a8b7:59d:9142%5]) with mapi id 15.20.4544.021; Wed, 29 Sep 2021
- 19:14:48 +0000
-From:   Asmaa Mnebhi <asmaa@nvidia.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        David Thompson <davthompson@nvidia.com>
-Subject: RE: [PATCH v3 1/2] gpio: mlxbf2: Introduce IRQ support
-Thread-Topic: [PATCH v3 1/2] gpio: mlxbf2: Introduce IRQ support
-Thread-Index: AQHXsLi5/ezHFM2t80qMnoiP1wWjOauzEi0AgADJmACABBI7EIAAAriAgAACbtCAAAsjgIAAAWRQgABFnwCAAxBt0A==
-Date:   Wed, 29 Sep 2021 19:14:48 +0000
-Message-ID: <CH2PR12MB3895BD75A1BD0048A93B4A51D7A99@CH2PR12MB3895.namprd12.prod.outlook.com>
-References: <20210923202216.16091-1-asmaa@nvidia.com>
- <20210923202216.16091-2-asmaa@nvidia.com> <YU26lIUayYXU/x9l@lunn.ch>
- <CACRpkdbUJF6VUPk9kCMPBvjeL3frJAbHq+h0-z7P-a1pSU+fiw@mail.gmail.com>
- <CH2PR12MB38951F2326196AB5B573A73DD7A79@CH2PR12MB3895.namprd12.prod.outlook.com>
- <YVHQQcv2M6soJR6u@lunn.ch>
- <CH2PR12MB389585F7D5EFE5E2453593DBD7A79@CH2PR12MB3895.namprd12.prod.outlook.com>
- <YVHbo/cJcHzxUk+d@lunn.ch>
- <CH2PR12MB3895E69636DDB3811C0EAE3DD7A79@CH2PR12MB3895.namprd12.prod.outlook.com>
- <YVIXNEmhoMW7c1S/@lunn.ch>
-In-Reply-To: <YVIXNEmhoMW7c1S/@lunn.ch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: lunn.ch; dkim=none (message not signed)
- header.d=none;lunn.ch; dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9407d020-c849-4b8f-5a41-08d9837d6799
-x-ms-traffictypediagnostic: CH2PR12MB4038:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR12MB4038B769C499A66A529F2FD8D7A99@CH2PR12MB4038.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: EJ7TCUOZuGLiLK9o26EeXFMqNr/EDuaB+YSVrUOgbYlEJBIuuR5vdpyJegn+O8iPbG1ej1wr06tPcuGG+pfH7ZS6m5aGUDPlvnuFTaKnci0KeGZF8bZTBce7YWENThFCUX4hS6T+CcI3hRo3VObj+D5/3YP22ILTX+H0Qk7fCEcAUla/SKey3Qg8m8UBCox5sSJYtcaBfKD5p2qtkWC8Z8C5T9CEXJJ+ITiqG/DzwROwaSDmn8IZEplrRQCIl9uLZ3bIAwL46dkki/uDAVDmTjupPbxtU9W4Pvz2+pJocYkhaqaU80/4R55BbASsXc+lbb563f4QQhfSIYO9JgNp/to0EWys0QcSZ+raKSArjZA8ac1GPhyJbhEif8BBUi4WUcINulpudtrDcdwnnGz9O/2/tn9iUpape9+g/YMNw7y4q0Yi6rNIS5xcy7rcWAc0YFlqFtwbRIF3sRrm735ecPoSIvWaIdWX4p967WpVs7YYkiG659j0YWH7gF/UjI989qQhbSAAVUqyjHmDFWYBRaTpCf+Ywltp9wdA4FC8MjOTZ8euf5hVa/5tlQqNet/fs86spoMNVYBm33FA8FHD62hXQ12CsEqVjicYmb16ZLzx9rMZZF9hiR7ZAY7WlJRH92o42Buv2pVolC2jyBtKMoxaM+1M2fSOMW3ylDULEaT7JOUNJyMy0Kzv2Og66Hpgqjyo1InWqamLfdWk0Lv5wA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3895.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(186003)(64756008)(7696005)(76116006)(2906002)(9686003)(66556008)(8936002)(38070700005)(7416002)(66476007)(508600001)(5660300002)(66946007)(55016002)(66446008)(86362001)(4326008)(83380400001)(52536014)(33656002)(8676002)(6916009)(122000001)(38100700002)(71200400001)(107886003)(6506007)(26005)(54906003)(316002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?cts3kknhtMMeEPa/3/T5rqP0Fi2xYTXUuP8OpaNEmQO2omekRlNK6IwNpQ0U?=
- =?us-ascii?Q?NNCE02t8E7kfuDd9SDSoOZpJlUwH8o/DOc3+lNYz7PZAGLlNmIGAsu/CC1To?=
- =?us-ascii?Q?cJkze3hWXuGEwIqb/B5HqOmabmb2oh1PCyyi8OXcB1csnswmXZ/DklCimRpL?=
- =?us-ascii?Q?uo7xY2r5fYwIWQeRTTqhqy3T2ptHE7WFYcBuf/Vg0hMgY6eAqG1gFyJ1eDbA?=
- =?us-ascii?Q?gEDic1ba8EF66MXpkmRjaSk6acpO7KMr3jyuSLhweAQwnjNrn03R5+pMgFsj?=
- =?us-ascii?Q?bmuhkcutVXs/n12ljCWIiCWOvDBIep1DQ/Ch62hnjLvAuNJYPBDyGa/7AT+a?=
- =?us-ascii?Q?etx1t8TgRJPCIQvyXUTqOk3zJz7v0QOttYutwEKEadCQ59bjtjCbC5Vustzb?=
- =?us-ascii?Q?ZF1zNp9EL6v7Y5ZS3d1D0yfkk76zDB5rb5M0xl5aLCgdxwtNxEMkkHrE5X5x?=
- =?us-ascii?Q?3qu84+VnCb0J0Rlumz5cO9Sg5QcUbGAGI6NvuqNgGzzAdgRGfzsZs4aGyM9u?=
- =?us-ascii?Q?ujRQfL7vkxr8GaEtAx6JtHFX1UT3KjR3RPWI3vVpWre08+jsoSQF1f2nGd4h?=
- =?us-ascii?Q?YDCVHQCM0id8E2eSQ7gOmIfmv9vjyK99vm91JpeuP6EN9oYBbMXj6AP9oxYV?=
- =?us-ascii?Q?vidAz/Rkkxq8yqlnUFucIHOPONSyA4QpHbXkGEruG+AjTH+vqYmSccvGy/RC?=
- =?us-ascii?Q?GwXmkpn6xMkgUYiUYL3IaJCkEn04PYt7XN9eYxLpms67BPyY+3l8aoQoeIwA?=
- =?us-ascii?Q?XjGy5A6azXYys0siZ5NBUiGmfX/TLvK7HlewFkWWYaOz5JgVMy0sY7hhdS4s?=
- =?us-ascii?Q?uz3ZI4QSeNonnrHgvMM129KujT2RvQZb9yEXoyoYvDg1J9HOrYjGnwBBXQQH?=
- =?us-ascii?Q?dimyo0cpFCY7fmwF59+FApOczufym+Sg9VXiPE+ifbuO6DMQB8Qt8iRYk05n?=
- =?us-ascii?Q?joomQQF11j3wAUN291YY6tuyZ7GlXOJO1TGDdNrzZVWbES+CavCxmq9QJJQj?=
- =?us-ascii?Q?gsHCxQWVWNSrl/2gWUR6eXt2ghpShkZ3WxwZkhM/Eqh3RwfIp9nqLNy06Q1B?=
- =?us-ascii?Q?vesg1+b61ZjAqhGU76I24C80kS6C5luIMzYWTA8OHh8DqXmUGL6I9vtoY4an?=
- =?us-ascii?Q?dDwrO+w8hK5X8BqFpFlNEjeISsUuCNHD5bVkBbKWDcT6jA1eel7tuIqLfCzV?=
- =?us-ascii?Q?KTLiI/+/bgoJ/XoxxcIutq8bcV2wxbMdukllja+xQppOLdcTsfeT12bRkAfi?=
- =?us-ascii?Q?rqrkbrfu8/Sag8fckdbUhUkEuwXwtgkEN3Yag90QECKBZW9uaGuEb7Bdps4X?=
- =?us-ascii?Q?X/FXli5Fo+BIZVDQdpwN4GVj?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1345390AbhI2TuC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Sep 2021 15:50:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33118 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1345332AbhI2TuA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Sep 2021 15:50:00 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8D79C061765
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Sep 2021 12:48:17 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id g7so12820518edv.1
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Sep 2021 12:48:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3th2hUjvmiLPXNLmRnZX/EchQR6aXc4YsFVE304670Q=;
+        b=IaYLjPbFd6hwOEKnD3borADXZUAdBFhcU7NQsIc83/Kmivk0MUFZHiLULqzAcZwoYH
+         qgly0aAYe4/jrm2dq+AAqH7xrXWTyOu873UoXqA9WMnouuXtrzKdnoLmt/25r2KCYSmy
+         JlExGC4JrIen5ukSpZnE5amYh6LCDJ0KQ1XpqVsmk2ejUkv8+jPHPVjKyAOC5Cz4qgpY
+         6bT2hVDCBfl9XAYzeR2N0NKYwspYQ9NwfPoMneZu0g8DOzqtaKxaOPwB9oJPa4keQvv2
+         2kdnMxrbE2qa97FpIqy4/AppfVkBDN2apsainGdq2uZcZchTkzZ+wH5+vQ5O50wkEC4u
+         CZqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3th2hUjvmiLPXNLmRnZX/EchQR6aXc4YsFVE304670Q=;
+        b=NpJDnRPOShkCB0K9nETIwZErfFxPEJJOBuiIIsQnMHgwZJj+b+iyKkGxSuetBcwPt3
+         A+D+Ix5t7G/+FIdCFsI17iKwYF60PQA7KzGjABQh6Fh/xpqKl+7dFNfrIyRPCeQ76/rs
+         qa2Tey8PQHwcJfxupLsLul1GF1o6idxSNoMZX7SiLHGY4kh7wuXXDtxUFSnV/46caPvE
+         nWorij7zj+BMRAd2Q98Vo5HtLhv3M0nutuOvvsWuhDDJN49iwKUhuaHRnu3CcuY0zzNz
+         UCKMBGHgfn36k2SDr8vDKu8fubBS/IbOBKczlhbhVS8qClJ0LHodCT3rjqtVjz7X6LXw
+         Imhw==
+X-Gm-Message-State: AOAM533e4fYuTIxwEUvkBEbkqiDksyHwKn6SnjsVo2/Mn8uzIkVHV34y
+        lC4qviao/7jTstYjgUbeUVfktDM/9iRmxgzo7nUNmg==
+X-Google-Smtp-Source: ABdhPJzXsuFmp5jw2/gm+EE7SK7HrZyR0YkqtXCspdsR4fqquN6AoJLxVqpUYBYuw+OkilrsfXKcWu9Sh8ae4M6O/gs=
+X-Received: by 2002:a17:906:fa8c:: with SMTP id lt12mr1832859ejb.204.1632944896124;
+ Wed, 29 Sep 2021 12:48:16 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3895.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9407d020-c849-4b8f-5a41-08d9837d6799
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Sep 2021 19:14:48.0550
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 4Y83w33/2CJmK487zDo74lfd9wbc9ZfapUQNM/3RD3syeypA7xCSBtcm1anLL1/vBpFXa65ZU1Da+mwFSFOWoA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4038
+References: <20210928235635.1348330-1-willmcvicker@google.com> <7766faf8-2dd1-6525-3b9a-8ba790c29cff@canonical.com>
+In-Reply-To: <7766faf8-2dd1-6525-3b9a-8ba790c29cff@canonical.com>
+From:   Will McVicker <willmcvicker@google.com>
+Date:   Wed, 29 Sep 2021 12:48:00 -0700
+Message-ID: <CABYd82YodFDwBxexCv+0hpYrdYEX1Z1CvnRkmnBPkEJNJ4bssQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/12] arm64: Kconfig: Update ARCH_EXYNOS select configs
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Saravana Kannan <saravanak@google.com>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Wed, Sep 29, 2021 at 6:02 AM Krzysztof Kozlowski
+<krzysztof.kozlowski@canonical.com> wrote:
+>
+> On 29/09/2021 01:56, Will McVicker wrote:
+> > This is v2 of the series of patches that modularizes a number of core
+> > ARCH_EXYNOS drivers. Based off of the feedback from the v1 series, I have
+> > modularized all of the drivers that are removed from the ARCH_EXYNOS
+> > series of "select XXX". This includes setting the following configs as
+> > tristate:
+> >
+> >  * COMMON_CLK_SAMSUNG
+> >  * EXYNOS_ARM64_COMMON_CLK
+> >  * PINCTRL_SAMSUNG
+> >  * PINCTRL_EXYNOS
+> >  * EXYNOS_PMU_ARM64
+> >  * EXYNOS_PM_DOMAINS
+> >
+> > Additionally, it introduces the config EXYNOS_PMU_ARM64 and EXYNOS_PMU_ARM
+> > which was previously EXYNOS_PMU and EXYNOS_PMU_ARM_DRIVERS respectively.
+> > The reason for these new configs is because we are not able to easily
+> > modularize the ARMv7 PMU driver due to built-in arch dependencies on
+> > pmu_base_addr under arch/arm/mach-exynos/*. So the new configs split up
+> > the ARM and ARM64 portions into two separate configs.
+> >
+> > Overall, these drivers didn't require much refactoring and converted to
+> > modules relatively easily. However, due to my lack of exynos hardware, I
+> > was not able to boot test these changes. I'm mostly concerned about the
+> > CLK_OF_DECLARE() changes having dependencies on early timers. So I'm
+> > requesting help for testing these changes on the respective hardware.
+> >
+>
+> These are all not tested at all? In such case, since these are not
+> trivial changes, please mark the series as RFT.
+>
+> I will not be able to test these for some days, so it must wait.
+>
+>
+> Best regards,
+> Krzysztof
 
-> Asmaa>> Thank you very much for the detailed and clear explanation!
-> we only enable/support link up/down interrupts. QA has tested bringing=20
-> up/down the network interface +200 times in a loop.
++Cc Arnd and Olof,
 
-The micrel driver currently only uses two interrupts of the available 8.=20
-So it will be hard to trigger the problem with the current driver. Your=20
+Hi Krzysztof,
 
-best way to trigger it is going to bring the link down as soon as it goes u=
-p.
+To avoid the scrambled conversation from the first patchset, I'm going
+to address all your general questions here in the cover letter thread
+so that it's easier for everyone to follow and reference in the
+future.
 
- So you get first a link up, and then a link down very shortly afterwards.
+>What is more, it seems you entirely ignored Geert's comments. I pointed
+>attention to it last time and you just said you will send v2 instead of
+>joining discussion.
+>
+>It's a NAK for this reason - ignoring what Geert brought: you just broke
+>distro configs for Exynos.
 
-There is however nothing stopping developers making use of the other interr=
-upts.=20
+First off I did want to chime into the discussion from the previous
+patchset, but I felt that Lee and Saravana addressed all your concerns
+regarding the intent and feasibility. You also made it clear what the
+next steps were that I needed to take.
 
-That will then increase the likelihood of problems.
+>Please also explain why Exynos is so special that we deviate from the
+>policy for all SoC that critical SoC-related drivers have to be enabled
+>(built-in or as module).
 
-What does help you is that the interrupt register is clear on read. So the =
-race condition=20
-window is small.
+I am not actually changing ANY default build configurations here and
+I'm not removing any existing configuration. I tried to make it pretty
+clear in my original patch series commit messages that none of my
+changes modify the default behavior. The .config is the same with and
+without my patches. All of these drivers remain enabled as built-in.
+So if there is a distro that requires all of these drivers to be
+built-in, then they can continue as is without noticing any
+difference. IOW, all of these changes are/should be backwards
+compatible.
 
-Asmaa>> Hi Andrew,
+I really appreciate yours and John Stultz's comments regarding
+including the "why" in my commit message wording. I will spend more
+time on the next series on trying to write a more meaningful commit
+message, but before that we can surely discuss the "why" here.
 
-I had a meeting today with the HW folks to explain the problem at stake.
-The flow for this issue is like this:
-1) PHY issues INT_N signal (active low level interrupt)
-2) falling edge detected on the GPIO and transmitted to software
-3) the first thing mlxbf2_gpio_irq_handler does is to clear the GPIO interr=
-upt.
-However even if we clear the GPIO interrupt, the GPIO value itself
-will be low as long as the INT_N signal is low. The GPIO HW triggers
-the interrupt by detecting the falling edge of the GPIO pin.
-4) mlxbf2_gpio_irq_handler triggers phy_interrupt which
-calls drv->handler_interrupt.
-handle_interrupt in our case =3D kszphy_handle_interrupt, which reads
-MII_KSZPHY_INTCS regs and hence clears all interrupts at once.=20
+As mentioned by Lee and Saravana, our common goal is to make it easier
+for everyone to contribute upstream. In particular, this series of
+patches is laying the ground work for distros to have more flexibility
+in supporting a wider range of platforms without forcing everyone to
+include unnecessary drivers. You said that upstream supports a generic
+kernel, but I argue that the upstream "generic" arm64 kernel can't be
+considered generic if it builds in SoC specific drivers that can be
+modules. This patch series is addressing exactly that -- allow distros
+to move SoC specific drivers out of the core kernel and into modules.
+Ultimately, our goal is to be able to directly develop with the
+upstream kernel on new and old SoCs by not including SoC specific
+drivers in our generic kernel distro. This helps the upstream
+community in a number of ways:
 
-- if no other interrupt happens within this time frame, INT_N goes
-back to 1 and the next interrupt will trigger another GPIO falling edge
+(1) It makes the ARM64 generic kernel smaller by converting more
+drivers into modules
+(2) It makes it a lot easier for everyone to develop upstream if they
+can directly use the upstream kernel without carrying downstream
+changes.
 
-- if the interrupt happens after the MDIO read, then it is not a problem. T=
-he
-read would have already cleared the register and INT_N would go back to 1.
-So the new interrupt will trigger a new GPIO falling edge interrupt.
+>Even if there was, I think it is good to have dependencies like
+>ARCH_EXYNOS, as they let us partition the (19000, as Arnd said recently)
+>Kconfig symbols into better manageable groups.  Without these, we cannot
+>do better than "depends on ARM || ARM64 || COMPILE_TEST".
 
-Problem:
-- however, if there is a second interrupt right before or during the MDIO r=
-ead of
-MII_KSZPHY_INTCS, it might not be detected by our GPIO HW.
+My patch series still keeps the dependencies on ARCH_EXYNOS. I am
+totally fine with "depends on ARCH_EXYNOS" and totally fine with
+"default ARCH_EXYNOS". The problem we have is that ARCH_EXYNOS
+forcefully selects SoC specific drivers to be built-in because it just
+adds more and more SoC-specific drivers to a generic kernel.
 
-Anyways, the HW folks agreed that this is a problem since indeed they do no=
-t
-support LEVEL interrupts on the GPIOs at the moment.
-They suggested to read the GPIO pin value to check if it has returned to hi=
-gh
-in mlxbf2_gpio_irq_handler, then trigger the phy_interrupt handler.
-But I don't think it is a good workaround because there could be a chain
-of interrupts which hold the  LEVEL low for a long time, and we don't want =
-to
-be waiting too long in an interrupt handler routine.
-I would greatly appreciate some more feedback on what is the best way to de=
-al
-With this in the upstreamed version of the driver.
-HW folks said they will fix this in future BlueField generations.
+I know you are asking for me to only push changes that have proven to
+work. The theory behind these changes has been proven downstream on
+other devices and I'm more than willing to help debug any issues that
+arise out of this patch series, but since I don't have the hardware
+myself I do need help with device testing these changes. We are not
+trying to trick upstream in anyway to accept something that is not
+functional or going to hurt the upstream community. I am more than
+willing to help upstream and am totally willing to work with upstream
+to verify all of these changes before they are accepted (feel free to
+send me any dusty, unused hardware lying around if you want the extra
+help with device testing).
 
+I hope that helps clarifies things! I will address other patch
+specific comments in those threads as well.
 
-> The software interrupt and handler is not registered based on the GPIO=20
-> interrupt but rather a HW interrupt which is common to all GPIO pins=20
-> (irrelevant here, but this is edge triggered):
-> ret =3D devm_request_irq(dev, irq, mlxbf2_gpio_irq_handler,
->                                         IRQF_SHARED, name, gs);
-
-IRQF_SHARED implied level. You cannot have a shared interrupt which is usin=
-g edges.
-
-      Andrew
+Thanks,
+Will
