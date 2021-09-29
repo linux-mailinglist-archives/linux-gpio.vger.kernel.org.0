@@ -2,125 +2,150 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5909041C23A
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Sep 2021 12:05:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D7DD41C3CF
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Sep 2021 13:52:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245269AbhI2KHC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Sep 2021 06:07:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44624 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S245248AbhI2KGz (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 29 Sep 2021 06:06:55 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3326B61439;
-        Wed, 29 Sep 2021 10:05:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1632909914;
-        bh=Xxn9/SD1dYhlDwttos3PuGBQ5U/2yCNeeOkyqW/lvMU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ORjEaY8oVoBe/kc1cZJj2pdtkHjlj8HbwEZxZTWQ2RJxE3GmpxNBmdNmOnphEgvSX
-         ZOxvvBYGhy3vPJuqA7LfPTEfGfZd04jb5pa8GODKkdyshK6wcZoWwPGMWC+MS9U+hB
-         xbVhK4m/Jq2Iwa6W/3givlEv93HsBHlrwK8xareW519JavUdMcvSDsFayE2ZD0oN8U
-         pIltEb8rvFoy0z9I8Y2vMLwBlDucBVUKGTbifrVUXnBcQOBZxHm/pShHiIlrwCdByI
-         22paW8ns7SMXCobLPJLkLp0xaLAaB7vuo8aCGQL+Oy4kg80h0CJMOIrD0tYnYvfS9M
-         gE71ALaohzM2g==
-Received: by mail-wm1-f54.google.com with SMTP id z184-20020a1c7ec1000000b003065f0bc631so4803714wmc.0;
-        Wed, 29 Sep 2021 03:05:14 -0700 (PDT)
-X-Gm-Message-State: AOAM532yZxt2Ugc20fx35XlU9lIw+2q6Dr19g/YRF6FloXm4Uy/5/Wnj
-        SBExSeBq1sMLRQCFM4vh42Bvw3zFo4f0jCdPZvo=
-X-Google-Smtp-Source: ABdhPJxj45zzIMnN/HHyq+6nU2KpFjlg3Tr2+Q2ZpxFzEZguNBmccSscTdNWt05AmI9I9AwUnU3a/laQUUwcLa8ETFA=
-X-Received: by 2002:a05:600c:896:: with SMTP id l22mr9378065wmp.173.1632909912585;
- Wed, 29 Sep 2021 03:05:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210927152412.2900928-1-arnd@kernel.org> <20210929095107.GA21057@willie-the-truck>
-In-Reply-To: <20210929095107.GA21057@willie-the-truck>
-From:   Arnd Bergmann <arnd@kernel.org>
-Date:   Wed, 29 Sep 2021 12:04:55 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2QnJkYCoEWhziYYXQusb-25_wUhA5ZTGtBsyfFx3NWzQ@mail.gmail.com>
-Message-ID: <CAK8P3a2QnJkYCoEWhziYYXQusb-25_wUhA5ZTGtBsyfFx3NWzQ@mail.gmail.com>
-Subject: Re: [PATCH] [RFC] qcom_scm: hide Kconfig symbol
-To:     Will Deacon <will@kernel.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Joerg Roedel <joro@8bytes.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Alex Elder <elder@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
+        id S244663AbhI2LyR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Sep 2021 07:54:17 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:41739 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S244263AbhI2LyQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Sep 2021 07:54:16 -0400
+Received: (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id E0EBE20000D;
+        Wed, 29 Sep 2021 11:52:30 +0000 (UTC)
+Date:   Wed, 29 Sep 2021 13:52:30 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Will McVicker <willmcvicker@google.com>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, ath10k@lists.infradead.org,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-sunxi@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+        Alessandro Zummo <a.zummo@towertech.it>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Saravana Kannan <saravanak@google.com>,
+        kernel-team@android.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v2 12/12] ARM: rtc: remove HAVE_S3C_RTC in favor of
+ direct dependencies
+Message-ID: <YVRTfuoC8TxtFTEO@piout.net>
+References: <20210928235635.1348330-1-willmcvicker@google.com>
+ <20210928235635.1348330-13-willmcvicker@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210928235635.1348330-13-willmcvicker@google.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 29, 2021 at 11:51 AM Will Deacon <will@kernel.org> wrote:
-> On Mon, Sep 27, 2021 at 05:22:13PM +0200, Arnd Bergmann wrote:
-> >
-> > diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> > index 124c41adeca1..989c83acbfee 100644
-> > --- a/drivers/iommu/Kconfig
-> > +++ b/drivers/iommu/Kconfig
-> > @@ -308,7 +308,7 @@ config APPLE_DART
-> >  config ARM_SMMU
-> >       tristate "ARM Ltd. System MMU (SMMU) Support"
-> >       depends on ARM64 || ARM || (COMPILE_TEST && !GENERIC_ATOMIC64)
-> > -     depends on QCOM_SCM || !QCOM_SCM #if QCOM_SCM=m this can't be =y
-> > +     select QCOM_SCM
-> >       select IOMMU_API
-> >       select IOMMU_IO_PGTABLE_LPAE
-> >       select ARM_DMA_USE_IOMMU if ARM
->
-> I don't want to get in the way of this patch because I'm also tired of the
-> randconfig failures caused by QCOM_SCM. However, ARM_SMMU is applicable to
-> a wide variety of (non-qcom) SoCs and so it seems a shame to require the
-> QCOM_SCM code to be included for all of those when it's not strictly needed
-> at all.
+Hi,
 
-Good point, I agree that needs to be fixed. I think this additional
-change should do the trick:
+I'd argue that the subject should be rtc: s3c: ...
 
---- a/drivers/iommu/Kconfig
-+++ b/drivers/iommu/Kconfig
-@@ -308,7 +308,6 @@ config APPLE_DART
- config ARM_SMMU
-        tristate "ARM Ltd. System MMU (SMMU) Support"
-        depends on ARM64 || ARM || (COMPILE_TEST && !GENERIC_ATOMIC64)
--       select QCOM_SCM
-        select IOMMU_API
-        select IOMMU_IO_PGTABLE_LPAE
-        select ARM_DMA_USE_IOMMU if ARM
-@@ -438,7 +437,7 @@ config QCOM_IOMMU
-        # Note: iommu drivers cannot (yet?) be built as modules
-        bool "Qualcomm IOMMU Support"
-        depends on ARCH_QCOM || (COMPILE_TEST && !GENERIC_ATOMIC64)
--       depends on QCOM_SCM=y
-+       select QCOM_SCM
-        select IOMMU_API
-        select IOMMU_IO_PGTABLE_LPAE
-        select ARM_DMA_USE_IOMMU
+On 28/09/2021 23:56:29+0000, Will McVicker wrote:
+> The config HAVE_S3C_RTC is not really needed since we can simply just
+> add the dependencies directly to RTC_DRV_S3C. Also, one less config to
+> keep track of!
+> 
+> Signed-off-by: Will McVicker <willmcvicker@google.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-I'll see if that causes any problems for the randconfig builds.
+> ---
+>  arch/arm/Kconfig              |  1 -
+>  arch/arm/mach-exynos/Kconfig  |  1 -
+>  arch/arm/mach-s5pv210/Kconfig |  1 -
+>  arch/arm64/Kconfig.platforms  |  1 -
+>  drivers/rtc/Kconfig           | 10 ++--------
+>  5 files changed, 2 insertions(+), 12 deletions(-)
+> 
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index fc196421b2ce..5ed6b5de981e 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -475,7 +475,6 @@ config ARCH_S3C24XX
+>  	select GPIOLIB
+>  	select GENERIC_IRQ_MULTI_HANDLER
+>  	select HAVE_S3C2410_I2C if I2C
+> -	select HAVE_S3C_RTC if RTC_CLASS
+>  	select NEED_MACH_IO_H
+>  	select S3C2410_WATCHDOG
+>  	select SAMSUNG_ATAGS
+> diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
+> index 2ad19a08bf06..8b72a70b6c43 100644
+> --- a/arch/arm/mach-exynos/Kconfig
+> +++ b/arch/arm/mach-exynos/Kconfig
+> @@ -19,7 +19,6 @@ menuconfig ARCH_EXYNOS
+>  	select HAVE_ARM_ARCH_TIMER if ARCH_EXYNOS5
+>  	select HAVE_ARM_SCU if SMP
+>  	select HAVE_S3C2410_I2C if I2C
+> -	select HAVE_S3C_RTC if RTC_CLASS
+>  	select PINCTRL
+>  	select PM_GENERIC_DOMAINS if PM
+>  	select S5P_DEV_MFC
+> diff --git a/arch/arm/mach-s5pv210/Kconfig b/arch/arm/mach-s5pv210/Kconfig
+> index 62b90dda571f..681823687018 100644
+> --- a/arch/arm/mach-s5pv210/Kconfig
+> +++ b/arch/arm/mach-s5pv210/Kconfig
+> @@ -12,7 +12,6 @@ config ARCH_S5PV210
+>  	select CLKSRC_SAMSUNG_PWM
+>  	select GPIOLIB
+>  	select HAVE_S3C2410_I2C if I2C
+> -	select HAVE_S3C_RTC if RTC_CLASS
+>  	select PINCTRL
+>  	select SOC_SAMSUNG
+>  	help
+> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+> index e44d5e9f5058..02c8637d3f09 100644
+> --- a/arch/arm64/Kconfig.platforms
+> +++ b/arch/arm64/Kconfig.platforms
+> @@ -91,7 +91,6 @@ config ARCH_BRCMSTB
+>  
+>  config ARCH_EXYNOS
+>  	bool "ARMv8 based Samsung Exynos SoC family"
+> -	select HAVE_S3C_RTC if RTC_CLASS
+>  	select PINCTRL
+>  	select PM_GENERIC_DOMAINS if PM
+>  	select SOC_SAMSUNG
+> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+> index e1bc5214494e..7208eeb8459a 100644
+> --- a/drivers/rtc/Kconfig
+> +++ b/drivers/rtc/Kconfig
+> @@ -1404,16 +1404,10 @@ config RTC_DRV_OMAP
+>  	  This driver can also be built as a module, if so, module
+>  	  will be called rtc-omap.
+>  
+> -config HAVE_S3C_RTC
+> -	bool
+> -	help
+> -	  This will include RTC support for Samsung SoCs. If
+> -	  you want to include RTC support for any machine, kindly
+> -	  select this in the respective mach-XXXX/Kconfig file.
+> -
+>  config RTC_DRV_S3C
+>  	tristate "Samsung S3C series SoC RTC"
+> -	depends on ARCH_S3C64XX || HAVE_S3C_RTC || COMPILE_TEST
+> +	depends on ARCH_EXYNOS || ARCH_S3C64XX || ARCH_S3C24XX || ARCH_S5PV210 || \
+> +		   COMPILE_TEST
+>  	help
+>  	  RTC (Realtime Clock) driver for the clock inbuilt into the
+>  	  Samsung S3C24XX series of SoCs. This can provide periodic
+> -- 
+> 2.33.0.685.g46640cef36-goog
+> 
 
-       Arnd
+-- 
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
