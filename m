@@ -2,172 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 36B3D41C5C5
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Sep 2021 15:37:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F40241C633
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Sep 2021 16:00:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344282AbhI2Nim (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Sep 2021 09:38:42 -0400
-Received: from smtp-relay-internal-0.canonical.com ([185.125.188.122]:55260
-        "EHLO smtp-relay-internal-0.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1344278AbhI2Nil (ORCPT
+        id S244929AbhI2OC3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Sep 2021 10:02:29 -0400
+Received: from smtp-relay-internal-1.canonical.com ([185.125.188.123]:51336
+        "EHLO smtp-relay-internal-1.canonical.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S244761AbhI2OC2 (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 29 Sep 2021 09:38:41 -0400
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com [209.85.167.71])
+        Wed, 29 Sep 2021 10:02:28 -0400
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com [209.85.208.72])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id B400940600
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Sep 2021 13:36:59 +0000 (UTC)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id F1A0F3F4BC
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Sep 2021 14:00:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1632922619;
-        bh=IJ3OurHG/eMoa5Ez3cxwk82+OEdomsIA6378FAznzbU=;
-        h=To:Cc:References:From:Subject:Message-ID:Date:MIME-Version:
-         In-Reply-To:Content-Type;
-        b=Jgcjd3gzUNd9zvgicFXZyfLywA2NCZRDDkZNlb2PygLc8Ec9nYRiTYt2a/jrrOo3g
-         kwVf5ZCxCYApy/GLxXRCiAZN6/5NUH42DBwb65Cfg0nBXGZ+f393wvPzRCTZgPlqyT
-         ODpFTWYaHn6RQ2bE7y5lIyPajGF9RKcWjXA3vnRWot+wzMGYQjFblcTC7bGnuIc26J
-         z1ea8HokGuluH1QzfKTzNz+GBjaZsmq8TONoJBzMM9gX+UbQLFkzvi7sv6cgo7XAT2
-         9NtO+0AjczK5oyUM1BzbGN0j7RJY76ETMt2z1TMp4H36pR6bkFe4QVTiBVX3oTSUf4
-         9qLIMaZ5kl2Ew==
-Received: by mail-lf1-f71.google.com with SMTP id 12-20020ac2484c000000b003fcb3298d00so2386662lfy.13
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Sep 2021 06:36:59 -0700 (PDT)
+        s=20210705; t=1632924046;
+        bh=mf2QkVX2ZzY2roVO0lt54DiqIHZ/KT4mIU4bIZQY7eA=;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+         MIME-Version:Content-Type;
+        b=qtleohm1B1pwNSS2f1MKsyxLyMrkhRgGGrtG/EnhxoDFDY8no7PmsvFW2QNN2hTyA
+         R1zAwtOu0Y7M1tPCI3+J8L4+RPHlALcvPEoFkAgmrmiNiznSB8eMKjfpyBwacrjPtG
+         WRI5+2QrxUJGJ3Do7GCmscH9jvcQ988rN5RGyKIZnKxz/DoWHcWkmMGKYn0Yf3KBPO
+         p5+zz/XelhTrM+rP4K7o680btvFHf8CQ+hVTJxGoTXaAQ5dFiO/8eiGCWpRcJ6at5S
+         R269OK53HhIRj+wSbcD1uW/uDW4NDes10dm4Ozm6zeHvLeYQoin5g3S6BBNdJgQxkY
+         cFPpJAbk7KTZQ==
+Received: by mail-ed1-f72.google.com with SMTP id s12-20020a05640217cc00b003cde58450f1so2526047edy.9
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Sep 2021 07:00:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IJ3OurHG/eMoa5Ez3cxwk82+OEdomsIA6378FAznzbU=;
-        b=VhpEVPrHhuX9YEtwleBO/fYJzEr8DdurKPzEzpHNssZt84vMeobhEwX6PCbq7fPUVW
-         C5A+qRvbK3NzHA8wTro0eQO//j4dV2aiXp58wyT/sEirJykEnkFJMqSsoH525m1k1hwD
-         N0TiK8pgMNvFtVyRXu7Jgkm6YW6ztHSlS4Pb9N6LyYX92Kle/4i9LgQPQc2EWa0e0N5R
-         u9rAn7ML4tqOuhpm/9lMFdFqOW9arP7AzUXc+OtGYLC6I/wthZPyHtluZHR0kPn83zRs
-         So2EGHBcXFOK/JdhSyCnVjh3Vkh0OG7s0sg7AKEtlpT1jsqmxq101etOQ2T4bK35RlyU
-         X+Lw==
-X-Gm-Message-State: AOAM530awMoAIq9fACs6AHYu8hfQQecLzMUlnHDNqVtZdsQ0XYspoP6p
-        zzJLKYk4cnW3sZ/Lm8jwexIou7QUX7BhTg0W7uwr7qUBe/c/JdhUBgeaGYMsgucYbs1e35r954P
-        Kg364OyDxMXjcpQmHAmzG+Si9pSY5J7mKC4TWuzI=
-X-Received: by 2002:a05:6512:b0f:: with SMTP id w15mr11643569lfu.164.1632922618897;
-        Wed, 29 Sep 2021 06:36:58 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwV4mq82/bhZJUlEzYmX1tokizPArBTUd0Xy49dVS7VRmuCrClBqisSQWT0uvmf1nzwqca1yA==
-X-Received: by 2002:a05:6512:b0f:: with SMTP id w15mr11643554lfu.164.1632922618705;
-        Wed, 29 Sep 2021 06:36:58 -0700 (PDT)
-Received: from [192.168.0.197] ([193.178.187.25])
-        by smtp.gmail.com with ESMTPSA id v26sm269056lja.22.2021.09.29.06.36.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Sep 2021 06:36:58 -0700 (PDT)
-To:     Will McVicker <willmcvicker@google.com>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=mf2QkVX2ZzY2roVO0lt54DiqIHZ/KT4mIU4bIZQY7eA=;
+        b=2LbLGEqAS9kRrvT+VrLqG+RNKXB/Cq5rzHV6mmAfgpqlblBn871JncMLK0p6/V/ap6
+         BPFKc+4S8JvpWSkI8DXTpL9Cs6OWK0NN3wa5L9SVT7sbrfIYRj62xK1dB5kSe1ayo2kN
+         ws6T/Y/NM8gY+PKH3v2KNjok7QT30ALOGMw7vXBBNEFD2ziRqNP00rzlRp1Gtflr3J1E
+         j3AstIqK4pyQxFcr7OQrVUJ99Cc4Cntc407/9QcLmXfU5PPLqmd8l2NrQ+XPEtfNNeqr
+         tFGsEwgIATwqsrd6QCdvSO3RHuJe6m0GG0u4CSQtox0k/1nIhnAYLhThjc5vWhIAMsJR
+         zDeQ==
+X-Gm-Message-State: AOAM532kosWESXxkTFZZexVR6T7N3u8aDD+l41k4Zm1OsX7tuTslUy/h
+        FkuDh6sf7HK+qK10934mC0HDuj5MgAINEknOQN6aYzHkg/MKW2ViJNj7FLdAprV0nijzs5dJ1Ch
+        vFSis8/SLKwA9dbSZNtHpHslBbc3QmL2zr6th+1w=
+X-Received: by 2002:a2e:a238:: with SMTP id i24mr61880ljm.474.1632924036574;
+        Wed, 29 Sep 2021 07:00:36 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwKt5l2t81qxHBKi3o/CZN3L1oKUtNTtom/CYUokyE0JkQifqqKnv7EtIY4e4dm53UQ6EHscA==
+X-Received: by 2002:a2e:a238:: with SMTP id i24mr61835ljm.474.1632924036320;
+        Wed, 29 Sep 2021 07:00:36 -0700 (PDT)
+Received: from localhost.localdomain ([193.178.187.25])
+        by smtp.gmail.com with ESMTPSA id t135sm252900lff.203.2021.09.29.07.00.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Sep 2021 07:00:35 -0700 (PDT)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+To:     Chanwoo Choi <cw00.choi@samsung.com>,
         Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
         Alessandro Zummo <a.zummo@towertech.it>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Will Deacon <will@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
         John Stultz <john.stultz@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Cc:     Lee Jones <lee.jones@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will McVicker <willmcvicker@google.com>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        kernel-team@android.com, linux-samsung-soc@vger.kernel.org,
         Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-rtc@vger.kernel.org, linux-gpio@vger.kernel.org,
         Saravana Kannan <saravanak@google.com>,
-        kernel-team@android.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org
-References: <20210928235635.1348330-1-willmcvicker@google.com>
- <20210928235635.1348330-12-willmcvicker@google.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Subject: Re: [PATCH v2 11/12] soc: samsung: pm_domains: modularize
- EXYNOS_PM_DOMAINS
-Message-ID: <976e57f8-07ee-4698-b29d-dd854b79e570@canonical.com>
-Date:   Wed, 29 Sep 2021 15:36:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        Lee Jones <lee.jones@linaro.org>, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: (subset) [PATCH v2 01/12] arm64: don't have ARCH_EXYNOS select EXYNOS_CHIPID
+Date:   Wed, 29 Sep 2021 15:58:49 +0200
+Message-Id: <163292392314.29281.7860159491587813094.b4-ty@canonical.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210928235635.1348330-2-willmcvicker@google.com>
+References: <20210928235635.1348330-1-willmcvicker@google.com> <20210928235635.1348330-2-willmcvicker@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20210928235635.1348330-12-willmcvicker@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 29/09/2021 01:56, Will McVicker wrote:
-> Convert the Exynos PM Domains driver into a module. This includes
-> setting EXYNOS_PM_DOMAINS as tristate and removing it from being
-> auto-selected by ARCH_EXYNOS. Instead, the config will use
-> "default y if ARCH_EXYNOS" which allows us to set it to a module via the
-> defconfig now.
+On Tue, 28 Sep 2021 23:56:18 +0000, Will McVicker wrote:
+> Now that EXYNOS_CHIPID can be a module and is enabled by default via
+> ARCH_EXYNOS, we don't need to have ARCH_EXYNOS directly select it. So
+> remove that.
 > 
-> Signed-off-by: Will McVicker <willmcvicker@google.com>
-> ---
->  arch/arm/mach-exynos/Kconfig     |  1 -
->  arch/arm64/Kconfig.platforms     |  1 -
->  drivers/soc/samsung/Kconfig      |  3 ++-
->  drivers/soc/samsung/pm_domains.c | 12 +++++++-----
->  4 files changed, 9 insertions(+), 8 deletions(-)
 > 
-> diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
-> index e97e1d8f7b00..2ad19a08bf06 100644
-> --- a/arch/arm/mach-exynos/Kconfig
-> +++ b/arch/arm/mach-exynos/Kconfig
-> @@ -15,7 +15,6 @@ menuconfig ARCH_EXYNOS
->  	select EXYNOS_THERMAL
->  	select EXYNOS_PMU_ARM
->  	select EXYNOS_SROM
-> -	select EXYNOS_PM_DOMAINS if PM_GENERIC_DOMAINS
->  	select GPIOLIB
->  	select HAVE_ARM_ARCH_TIMER if ARCH_EXYNOS5
->  	select HAVE_ARM_SCU if SMP
-> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-> index e5e4b9b2fb97..e44d5e9f5058 100644
-> --- a/arch/arm64/Kconfig.platforms
-> +++ b/arch/arm64/Kconfig.platforms
-> @@ -91,7 +91,6 @@ config ARCH_BRCMSTB
->  
->  config ARCH_EXYNOS
->  	bool "ARMv8 based Samsung Exynos SoC family"
-> -	select EXYNOS_PM_DOMAINS if PM_GENERIC_DOMAINS
->  	select HAVE_S3C_RTC if RTC_CLASS
->  	select PINCTRL
->  	select PM_GENERIC_DOMAINS if PM
-> diff --git a/drivers/soc/samsung/Kconfig b/drivers/soc/samsung/Kconfig
-> index fdf1162ec98b..e4743c29f73c 100644
-> --- a/drivers/soc/samsung/Kconfig
-> +++ b/drivers/soc/samsung/Kconfig
-> @@ -37,8 +37,9 @@ config EXYNOS_PMU_ARM
->  	depends on ARCH_EXYNOS || (ARM && COMPILE_TEST)
->  
->  config EXYNOS_PM_DOMAINS
-> -	bool "Exynos PM domains" if COMPILE_TEST
-> +	tristate "Exynos PM domains"
 
-+Cc Arnd and Olof,
+Applied, thanks!
 
-Unlike in clocks and soc drivers changes, you mentioned the removal of
-"if", however it is not explained why you do it.
-
-Why is the most important part of commit message, not "what". Because
-"What" we can easily see. But "why" is sometimes trickier.
-
-Please also explain why Exynos is so special that we deviate from the
-policy for all SoC that critical SoC-related drivers have to be enabled
-(built-in or as module).
-https://lore.kernel.org/lkml/CAK8P3a1TY+XT1vF=wAh0XA5BXU5Z6Ab1d4DekXbVsN9aj3aL5w@mail.gmail.com/
-
-We follow specific convention or policy and changing it requires some
-discussion, not silently under the "modularize" hood. It really looks
-like you want to sneak it in.
-
-P.S. I recommend also to Cc Soc maintainers, because their point of view
-here is crucial.
-
->  	depends on (ARCH_EXYNOS && PM_GENERIC_DOMAINS) || COMPILE_TEST
-> +	default y if ARCH_EXYNOS
-
+[01/12] arm64: don't have ARCH_EXYNOS select EXYNOS_CHIPID
+        commit: 6ad4185220e6e3b7ebac7c7a5f55197aedd000da
 
 Best regards,
-Krzysztof
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
