@@ -2,127 +2,157 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 64A4141C63B
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Sep 2021 16:02:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A69C41C725
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Sep 2021 16:46:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245141AbhI2OCg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Sep 2021 10:02:36 -0400
-Received: from smtp-relay-internal-1.canonical.com ([185.125.188.123]:51394
-        "EHLO smtp-relay-internal-1.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S244995AbhI2OCf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 29 Sep 2021 10:02:35 -0400
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com [209.85.167.71])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id BDCBA40260
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Sep 2021 14:00:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1632924053;
-        bh=WjyM9zf1nCEYn+RK+0ge3r02uUICdD54a8plMbZb68M=;
-        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-         In-Reply-To:Content-Type;
-        b=vv3Rrt8YyQ1dvYwWxYyLPXKvALKBSpkoRh4+dLT/a8o1ZCpkDiAZKCRHJEUQKrDgn
-         Aet/UDbTcIGroVlzCgqjz2jHqvA4NSN8aAmJnA/9wRKRfw1o4SHnXV/cv/0wHAyPzD
-         +u3iAvT/yHxZRWM1XFFEHQQTN6eJJbSIxGfBXVk2GMaFWLyDW/fYqAJ492QRjJjXH/
-         oHNp9E1nO284XHali3zgYJrW9brrmYEQpgJO3QihvWylTGHDTAdUdePh16tyNDT7Oc
-         aspp1NwbNSuxZU+Maq65IoW+6G1OQ1VarATh8fhVO9As5CD4ygcs9f7x0RR/zMUd1c
-         s5bc6Lt/4EceQ==
-Received: by mail-lf1-f71.google.com with SMTP id n22-20020a0565120ad600b003fcc09af59fso2442288lfu.21
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Sep 2021 07:00:53 -0700 (PDT)
+        id S1344616AbhI2OsN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Sep 2021 10:48:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47344 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1344558AbhI2OsM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Sep 2021 10:48:12 -0400
+Received: from mail-ot1-x330.google.com (mail-ot1-x330.google.com [IPv6:2607:f8b0:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3390FC061765
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Sep 2021 07:46:31 -0700 (PDT)
+Received: by mail-ot1-x330.google.com with SMTP id c26-20020a056830349a00b0054d96d25c1eso3136274otu.9
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Sep 2021 07:46:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=JgcoX77LyqJgFfCrFyyxOmmlaV13zT4pyPZ6+xdzSpA=;
+        b=spTZQ2DbWP0psTWqELtDKdf3ctbS0vkigNQvxkRIwhOKUH8KugD69eFtioiLkoK3Gy
+         wtqV+fvcjNiD9+cDbUIXJF+qCw7Y3d8YdkSsHI7IVobxU9CSf3vqhqyWu/Oq2SRFBdHo
+         neDrQGuVYezgzLNIKMm1q/0+ChFeu07DQsXdVBLPC5Qj84WxDssil2uJW+0l+TPuEHxn
+         Ll6FKrKdGbGmGBGxLGRQmQdKBljtf5QtFgK2eTl3cDvLsBHoaJmId4Ifl7rnnbvBhn0D
+         LTj441MSq8B+PPi3TmUJ+3vz8OX7s4Ovl41Aj0dWJafRLB3UbpVpcLmdU8ARwxFqFRiP
+         nSKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WjyM9zf1nCEYn+RK+0ge3r02uUICdD54a8plMbZb68M=;
-        b=2sro1D50pMZZSI48is8AwWMMoXNIzfqZTEhFWNXgEiTpAVi41SsKibXqr9Cv0sPNsE
-         I0khic3aCTeUsjgJHkF1dVjj5wAAKb8DfDJFEYA0XlO/zeleN152Y3GCewdUnwPd24dV
-         UdsQw6f2ggrbvoj/XpOya22dlXdgEZ8Qr6Cu3KOkLhAhKF1bducvTL8Mrom9496WPX5/
-         2VsJwIM/SsVtrUmlSLJNu2sUzVcLagfag52mT4NLeQkpMRfe9BUhngh1ZXbQbo8UpEbU
-         s4r6et+PSmb1KAfr0aNPljk8xCWWYzKz5qoICuyBnXMWjBtKPLtFxj/m7oJXoPKp+P8/
-         t2pg==
-X-Gm-Message-State: AOAM5324cXX9RIkubXkZq5E6suFtNkwA89pc+tJodlRm+9+XJgpK3klo
-        ZNf54fLlHyxkQ3tCdpwoG/UtNhftVPy9HkyUZLzahw281r2ftTMe+k7W1EVUk/9VBeNVrhb4M4g
-        CUh9ygHemorJ1TKzgdK+dBCC9LeazArONpNWkPd8=
-X-Received: by 2002:a05:6512:220f:: with SMTP id h15mr11115761lfu.398.1632924051601;
-        Wed, 29 Sep 2021 07:00:51 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzcRnIuhOY7CK9oDbVjvF9edjRx8oUhEpxRb6E1YojrS2Sfi3b7BVTyNWXrzfXxMSAityt0PQ==
-X-Received: by 2002:a05:6512:220f:: with SMTP id h15mr11115725lfu.398.1632924051401;
-        Wed, 29 Sep 2021 07:00:51 -0700 (PDT)
-Received: from [192.168.0.197] ([193.178.187.25])
-        by smtp.gmail.com with ESMTPSA id 8sm763ljr.10.2021.09.29.07.00.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Sep 2021 07:00:50 -0700 (PDT)
-Subject: Re: [PATCH v2 01/12] arm64: don't have ARCH_EXYNOS select
- EXYNOS_CHIPID
-To:     Will McVicker <willmcvicker@google.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=JgcoX77LyqJgFfCrFyyxOmmlaV13zT4pyPZ6+xdzSpA=;
+        b=VBlJY2JrWg70VszjxIoNcXlkEiy3q6PMplb2JXkVz8cCKF1gj98wqy62StMCO/djjL
+         q8k1nORJQU10Z1NTjN0JQZa7png0g52h/9423iubY3/XIng62ihodve6pGT7JtIubm/Z
+         A1/aOLQrPL3S0ckV46yDg0sUXJEIglWQ1qASvZgBb19BNDrxQnQZHB3gGVL1B+lFAWok
+         Wfbi11khgbHgfLHdauwm86aH6S4HFMPqwQR0ZzMupw2er0cUDu6AjclHaiuXG+3lN1AM
+         +wN8jqSLQTro4K9APuvyqIlwp0YDlnrfL7/8hwXXgRz0Og2rNz5xokP1FBbARm29WmG7
+         F1+Q==
+X-Gm-Message-State: AOAM5329QhywcEkvFp9++3zMKlNdP3XlZjVmFaCoGLqSnn8yBee7ADm0
+        6h831GiUmTphQojCz6rEDVfKtA==
+X-Google-Smtp-Source: ABdhPJy1xutLgHZ1k75FBuuFr8v0/9rSKe4U8iMaiX+gLlBxKTV+rJxW6+Z2BJ3/QZooCn7GiUFhFA==
+X-Received: by 2002:a9d:6254:: with SMTP id i20mr324075otk.349.1632926790406;
+        Wed, 29 Sep 2021 07:46:30 -0700 (PDT)
+Received: from yoga (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id v14sm5473ook.2.2021.09.29.07.46.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Sep 2021 07:46:29 -0700 (PDT)
+Date:   Wed, 29 Sep 2021 09:46:27 -0500
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Arnd Bergmann <arnd@kernel.org>
+Cc:     Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Joerg Roedel <joro@8bytes.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Alex Elder <elder@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Saravana Kannan <saravanak@google.com>,
-        kernel-team@android.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org
-References: <20210928235635.1348330-1-willmcvicker@google.com>
- <20210928235635.1348330-2-willmcvicker@google.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Message-ID: <3274ed53-6058-323f-be3b-a90de479183c@canonical.com>
-Date:   Wed, 29 Sep 2021 16:00:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, ath10k@lists.infradead.org,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-sunxi@lists.linux.dev
+Subject: Re: [PATCH] [RFC] qcom_scm: hide Kconfig symbol
+Message-ID: <YVR8Q7LO0weiFin+@yoga>
+References: <20210927152412.2900928-1-arnd@kernel.org>
+ <20210929095107.GA21057@willie-the-truck>
+ <CAK8P3a2QnJkYCoEWhziYYXQusb-25_wUhA5ZTGtBsyfFx3NWzQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20210928235635.1348330-2-willmcvicker@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a2QnJkYCoEWhziYYXQusb-25_wUhA5ZTGtBsyfFx3NWzQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 29/09/2021 01:56, Will McVicker wrote:
-> Now that EXYNOS_CHIPID can be a module and is enabled by default via
-> ARCH_EXYNOS, we don't need to have ARCH_EXYNOS directly select it. So
-> remove that.
+On Wed 29 Sep 05:04 CDT 2021, Arnd Bergmann wrote:
+
+> On Wed, Sep 29, 2021 at 11:51 AM Will Deacon <will@kernel.org> wrote:
+> > On Mon, Sep 27, 2021 at 05:22:13PM +0200, Arnd Bergmann wrote:
+> > >
+> > > diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+> > > index 124c41adeca1..989c83acbfee 100644
+> > > --- a/drivers/iommu/Kconfig
+> > > +++ b/drivers/iommu/Kconfig
+> > > @@ -308,7 +308,7 @@ config APPLE_DART
+> > >  config ARM_SMMU
+> > >       tristate "ARM Ltd. System MMU (SMMU) Support"
+> > >       depends on ARM64 || ARM || (COMPILE_TEST && !GENERIC_ATOMIC64)
+> > > -     depends on QCOM_SCM || !QCOM_SCM #if QCOM_SCM=m this can't be =y
+> > > +     select QCOM_SCM
+> > >       select IOMMU_API
+> > >       select IOMMU_IO_PGTABLE_LPAE
+> > >       select ARM_DMA_USE_IOMMU if ARM
+> >
+> > I don't want to get in the way of this patch because I'm also tired of the
+> > randconfig failures caused by QCOM_SCM. However, ARM_SMMU is applicable to
+> > a wide variety of (non-qcom) SoCs and so it seems a shame to require the
+> > QCOM_SCM code to be included for all of those when it's not strictly needed
+> > at all.
 > 
-> Signed-off-by: Will McVicker <willmcvicker@google.com>
-> ---
->  arch/arm64/Kconfig.platforms | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-> index b0ce18d4cc98..90c5cf4856e1 100644
-> --- a/arch/arm64/Kconfig.platforms
-> +++ b/arch/arm64/Kconfig.platforms
-> @@ -92,7 +92,6 @@ config ARCH_BRCMSTB
->  config ARCH_EXYNOS
->  	bool "ARMv8 based Samsung Exynos SoC family"
->  	select COMMON_CLK_SAMSUNG
-> -	select EXYNOS_CHIPID
->  	select EXYNOS_PM_DOMAINS if PM_GENERIC_DOMAINS
->  	select EXYNOS_PMU
->  	select HAVE_S3C_RTC if RTC_CLASS
+> Good point, I agree that needs to be fixed. I think this additional
+> change should do the trick:
 > 
 
-This actually should be part of my series converting ChipID driver to a
-module:
-https://lore.kernel.org/linux-samsung-soc/4aee1b0d-91a1-75ac-d2b7-6dab3d7a301f@kernel.org/T/#t
+ARM_SMMU and QCOM_IOMMU are two separate implementations and both uses
+QCOM_SCM. So both of them should select QCOM_SCM.
 
-Applied it, thanks.
+"Unfortunately" the Qualcomm portion of ARM_SMMU is builtin
+unconditionally, so going with something like select QCOM_SCM if
+ARCH_QCOM would still require the stubs in qcom_scm.h.
 
-Best regards,
-Krzysztof
+Regards,
+Bjorn
+
+> --- a/drivers/iommu/Kconfig
+> +++ b/drivers/iommu/Kconfig
+> @@ -308,7 +308,6 @@ config APPLE_DART
+>  config ARM_SMMU
+>         tristate "ARM Ltd. System MMU (SMMU) Support"
+>         depends on ARM64 || ARM || (COMPILE_TEST && !GENERIC_ATOMIC64)
+> -       select QCOM_SCM
+>         select IOMMU_API
+>         select IOMMU_IO_PGTABLE_LPAE
+>         select ARM_DMA_USE_IOMMU if ARM
+> @@ -438,7 +437,7 @@ config QCOM_IOMMU
+>         # Note: iommu drivers cannot (yet?) be built as modules
+>         bool "Qualcomm IOMMU Support"
+>         depends on ARCH_QCOM || (COMPILE_TEST && !GENERIC_ATOMIC64)
+> -       depends on QCOM_SCM=y
+> +       select QCOM_SCM
+>         select IOMMU_API
+>         select IOMMU_IO_PGTABLE_LPAE
+>         select ARM_DMA_USE_IOMMU
+> 
+> I'll see if that causes any problems for the randconfig builds.
+> 
+>        Arnd
