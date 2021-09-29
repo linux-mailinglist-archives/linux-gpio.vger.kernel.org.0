@@ -2,167 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4608741BB75
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Sep 2021 01:57:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CB9541BBED
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Sep 2021 02:56:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243606AbhI1X7W (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Sep 2021 19:59:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43184 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243608AbhI1X7M (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 28 Sep 2021 19:59:12 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 367E1C06174E
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Sep 2021 16:57:20 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id s6-20020a254506000000b005b6b6434cd6so1093671yba.9
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Sep 2021 16:57:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=ihkiWIdVP9dVl3VzYiirCjeRk2Jnoz/1Mr1zuXgTp3A=;
-        b=aGCho/ZT42f9FJECHoQ5FwNACnqrnDRQrW3EZKeZ8fMIZkWu9yfckiBil2MSAfl1PW
-         /XBdnPIKQnx/ix06HKtL5uVNePgfm8jPP9VtjIOEYpkEiTwq/AVAykTzhcNRk1+EOro+
-         o8x070TidaiwQUry0PIVobVy853jKSi5f1/Lw13QXlS/cfAxchUAcdwUDHShJCVFkomf
-         C8HnzTJKPNSqepRR+sGptuGANLleuLWjxsNAeYOISEVcQKaEVk6++FDcaAJUUe7XIxQP
-         LEGeoyhx/s+PRWt7SIOXarb6g3PV1VWl3xMRO0HfcoTrOz4BaWi8RB+QiuWaf2ikXyGe
-         i0qA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=ihkiWIdVP9dVl3VzYiirCjeRk2Jnoz/1Mr1zuXgTp3A=;
-        b=dMSCP+MopkKi9x83qphVw/kLKpI/NCtEHYRCf2w2cRTFczu4Xu5Bg50Mx0Wgdmyk92
-         xQpsBzYr36ot8pk0s06tLY33JhD5J2kGPXIZv0kpmfYpuzN43PGifbbtwJ+/suTJuhMJ
-         rrz/SsOQIf+EQhLqIwXZ9iA8xyQgRTtLekwzMVAvsjvpIw3PmtBMBtnMz/MYlcEdfpCU
-         /BQkUMx6VPXdzJQaLhUzhfKyc+pn4bdudujnsOwcyg+G8QStrzOrggFudry83N+MO1Xj
-         J2hj/TwOSeOcjrhOeW9QuMbtDYWouL2rE/VupI1K7zJDjgtaphtnJg4+31oLMGtvO4w2
-         AfLA==
-X-Gm-Message-State: AOAM530Je2QqrPezZOP9/Ra9NYNtxBAi4DbED2w4D4xsd61vZW8RO/5T
-        fCUGibA+0wd8jY8UsY6OLIq1OMSnIWDpqfwa554=
-X-Google-Smtp-Source: ABdhPJy1ak/rbpUYju2D4z+JFHyh/My10IdIhBzBl3vMZ2iJUIcpwrdRjCAU6M7zNko3A+i42IClCJSTWrIcUgd9klk=
-X-Received: from willmcvicker.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:2dd0])
- (user=willmcvicker job=sendgmr) by 2002:a25:ac1:: with SMTP id
- 184mr10211657ybk.381.1632873439393; Tue, 28 Sep 2021 16:57:19 -0700 (PDT)
-Date:   Tue, 28 Sep 2021 23:56:29 +0000
-In-Reply-To: <20210928235635.1348330-1-willmcvicker@google.com>
-Message-Id: <20210928235635.1348330-13-willmcvicker@google.com>
-Mime-Version: 1.0
-References: <20210928235635.1348330-1-willmcvicker@google.com>
-X-Mailer: git-send-email 2.33.0.685.g46640cef36-goog
-Subject: [PATCH v2 12/12] ARM: rtc: remove HAVE_S3C_RTC in favor of direct dependencies
-From:   Will McVicker <willmcvicker@google.com>
-To:     Russell King <linux@armlinux.org.uk>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Will McVicker <willmcvicker@google.com>,
-        kernel-team@android.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        id S243472AbhI2A57 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Sep 2021 20:57:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51064 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S242694AbhI2A56 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 28 Sep 2021 20:57:58 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPS id 9BBBB613D1;
+        Wed, 29 Sep 2021 00:56:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1632876978;
+        bh=gXOrLl0XVSljc9cDH2RdYW+Hd305HHntfoljlnUsx7Y=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=KhxCn8e3lhNxnRDGNE3DA+bzDKBxzmWYMuBWIuVUyb5aRJS/O6RXsxdTgrVXHwrH1
+         BF+Vt3/NbuzZZxuAwKWiPOwF8DY8yndJwuBaPknfYfZtFOi4R1l/2+mwxcjetfDFTl
+         16ua4w5wckH/OW7M8/5+4RbR7PuSPNk8NfKPSIRliTQ4Ef819fdqFa25uVXGcBMhFB
+         +WRM4ywi7wvJZTkJvL4A8tX2MCjGfl3S82ckailS3POzPsfz7mzeVKgLwQQkR38VmI
+         eeP+WiFQf60vGmuL85AASPM75lcebBBGmc0/sDNi4nElmEcXouEn/ngYjkeWYdZxv2
+         iNzwoH53NsY6A==
+Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 88DC8608FE;
+        Wed, 29 Sep 2021 00:56:18 +0000 (UTC)
+Subject: Re: [GIT PULL] pin control fixes for v5.15
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CACRpkdYa_patWBGC=gnVHkPQeo5BtvKrG2hzNKi3vZGvo5bKQA@mail.gmail.com>
+References: <CACRpkdYa_patWBGC=gnVHkPQeo5BtvKrG2hzNKi3vZGvo5bKQA@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CACRpkdYa_patWBGC=gnVHkPQeo5BtvKrG2hzNKi3vZGvo5bKQA@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5.15-2
+X-PR-Tracked-Commit-Id: 28406a21999152ff7faa30b194f734565bdd8e0d
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: a4e6f95a891ac08bd09d62e3e6dae239b150f4c1
+Message-Id: <163287697855.31747.10921981462418607901.pr-tracker-bot@kernel.org>
+Date:   Wed, 29 Sep 2021 00:56:18 +0000
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The config HAVE_S3C_RTC is not really needed since we can simply just
-add the dependencies directly to RTC_DRV_S3C. Also, one less config to
-keep track of!
+The pull request you sent on Wed, 29 Sep 2021 00:11:13 +0200:
 
-Signed-off-by: Will McVicker <willmcvicker@google.com>
----
- arch/arm/Kconfig              |  1 -
- arch/arm/mach-exynos/Kconfig  |  1 -
- arch/arm/mach-s5pv210/Kconfig |  1 -
- arch/arm64/Kconfig.platforms  |  1 -
- drivers/rtc/Kconfig           | 10 ++--------
- 5 files changed, 2 insertions(+), 12 deletions(-)
+> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5.15-2
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index fc196421b2ce..5ed6b5de981e 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -475,7 +475,6 @@ config ARCH_S3C24XX
- 	select GPIOLIB
- 	select GENERIC_IRQ_MULTI_HANDLER
- 	select HAVE_S3C2410_I2C if I2C
--	select HAVE_S3C_RTC if RTC_CLASS
- 	select NEED_MACH_IO_H
- 	select S3C2410_WATCHDOG
- 	select SAMSUNG_ATAGS
-diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
-index 2ad19a08bf06..8b72a70b6c43 100644
---- a/arch/arm/mach-exynos/Kconfig
-+++ b/arch/arm/mach-exynos/Kconfig
-@@ -19,7 +19,6 @@ menuconfig ARCH_EXYNOS
- 	select HAVE_ARM_ARCH_TIMER if ARCH_EXYNOS5
- 	select HAVE_ARM_SCU if SMP
- 	select HAVE_S3C2410_I2C if I2C
--	select HAVE_S3C_RTC if RTC_CLASS
- 	select PINCTRL
- 	select PM_GENERIC_DOMAINS if PM
- 	select S5P_DEV_MFC
-diff --git a/arch/arm/mach-s5pv210/Kconfig b/arch/arm/mach-s5pv210/Kconfig
-index 62b90dda571f..681823687018 100644
---- a/arch/arm/mach-s5pv210/Kconfig
-+++ b/arch/arm/mach-s5pv210/Kconfig
-@@ -12,7 +12,6 @@ config ARCH_S5PV210
- 	select CLKSRC_SAMSUNG_PWM
- 	select GPIOLIB
- 	select HAVE_S3C2410_I2C if I2C
--	select HAVE_S3C_RTC if RTC_CLASS
- 	select PINCTRL
- 	select SOC_SAMSUNG
- 	help
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index e44d5e9f5058..02c8637d3f09 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -91,7 +91,6 @@ config ARCH_BRCMSTB
- 
- config ARCH_EXYNOS
- 	bool "ARMv8 based Samsung Exynos SoC family"
--	select HAVE_S3C_RTC if RTC_CLASS
- 	select PINCTRL
- 	select PM_GENERIC_DOMAINS if PM
- 	select SOC_SAMSUNG
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index e1bc5214494e..7208eeb8459a 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -1404,16 +1404,10 @@ config RTC_DRV_OMAP
- 	  This driver can also be built as a module, if so, module
- 	  will be called rtc-omap.
- 
--config HAVE_S3C_RTC
--	bool
--	help
--	  This will include RTC support for Samsung SoCs. If
--	  you want to include RTC support for any machine, kindly
--	  select this in the respective mach-XXXX/Kconfig file.
--
- config RTC_DRV_S3C
- 	tristate "Samsung S3C series SoC RTC"
--	depends on ARCH_S3C64XX || HAVE_S3C_RTC || COMPILE_TEST
-+	depends on ARCH_EXYNOS || ARCH_S3C64XX || ARCH_S3C24XX || ARCH_S5PV210 || \
-+		   COMPILE_TEST
- 	help
- 	  RTC (Realtime Clock) driver for the clock inbuilt into the
- 	  Samsung S3C24XX series of SoCs. This can provide periodic
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/a4e6f95a891ac08bd09d62e3e6dae239b150f4c1
+
+Thank you!
+
 -- 
-2.33.0.685.g46640cef36-goog
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
