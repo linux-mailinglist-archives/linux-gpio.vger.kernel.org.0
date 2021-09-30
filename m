@@ -2,55 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A8AC641E4CB
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Oct 2021 01:26:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B2A7F41E4D8
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Oct 2021 01:26:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350247AbhI3X2c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 30 Sep 2021 19:28:32 -0400
-Received: from mail-bn8nam12on2088.outbound.protection.outlook.com ([40.107.237.88]:51232
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        id S1350610AbhI3X2h (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 30 Sep 2021 19:28:37 -0400
+Received: from mail-sn1anam02on2049.outbound.protection.outlook.com ([40.107.96.49]:60105
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1350111AbhI3X2X (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 30 Sep 2021 19:28:23 -0400
+        id S1350124AbhI3X2Y (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 30 Sep 2021 19:28:24 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fRgAJzomb9Ttg7twxJSzC/KZDb86ML4L/4M1MyNVFsib5l1BC1qdbxmJlPP43SLfWLKVPIjad5k8qHmvkaWx3ysv6x5gxh45DNQukOrx9nkhMfEBJC47/pfAokryD3nGBSIzOHVobC70m0s4LaAO5FVvFDVvEvVhB2+lTeRQhX7dw9dQvAqLOi5Lmo70kVY6qYkLIbjtw88Hz2OY1ym5lIU3cOrM9/5zDHfxxYrjW86b0fQVo7goxjQkljnKav7XmLYZnhdL/LM0DjgvF4GmjWfy/W9hrF9rETpgi5X3gGE2QNdYz61HUzB9xYKljtpHiIMDn+T8jqktmQPcs5mj1w==
+ b=h3AH1hJcXWW8H5v46EsVdUSmIdnwswTEHh8Z4gG/+vnVV/Qvnh1AmvLnVcYLvzhyPmpxCFPP0GhPOsBFhiIP+IGHQFuYqQ2SY58xh8VzAMxEmZe/FPnMbig90vzOG2Vqf2inNBZz9O/om8fouXhezBuUKf3mhdDdi+DSOyIu2GH5CQuvoiUaV0IttHymJlDJV93iGqNQv8NENU7usAziMH++n5Otuegs8QLVOHgy0v43skt8eXovtnSUnl5B5ALvCEJz7ZluoViKbouYkzwuaHoG1AdHd9OmkDdAZVQOHpIozBocf9Ma0us01Rxt7TkBwkwio5EiYdkRWUbAe+52JA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VDtlkRnoWkzwcuagPb7OqfTqEqYL6Ii1kESGkErISX0=;
- b=Q2lVzYfYXzlM5ph2MMLyKzXguPe2O0f4xPaV2DBxC6caJRCAPAqevsEagDP2jeh7H9lKc9cr14oWl02asmlo3tXpJeeeFo3xdkRWQeoN0XXt+Er6zTIqJLi4QmnFsB1b6WEjiGT4h3AQ72APs84/+Sn2yGW5awnUtibazH6Ses8sL2rnJk6KyGiTFb4sarnzpfpswylluX4QDlGfcrpzA4jPeA3blpH9NOUwHVJaiw03lCfSBbxMUSNTaKbxd1lehnvrmDjNwjpI7MLM1sbuyF/JO5G/HEv4gvylM6JN74rBIp9KGVPYWeaPQ8aT6c146kFKHS5EyYn4/8DLIOnclA==
+ bh=U8ONeYEZwu7oMHAnpono4GUYkjRRIByFNsWyWHGDCZ0=;
+ b=U9zXG+luTStH/rDpFY5QU6QwzVr9J8H2da+FochNOLIqkDFido//5UeqsWzYHnAbKV6wNxNXLxK/PRsZCLm0ktjL5/jAf+MmEe/u+eXDYADHqVZzLsLo3OnTJn8aPOWHha9HlXM0QxB2U1WgBW1hyGC6j5LpXXM/Bj+fFm19vypHT89hai83Zj86VMTqXLP7CPpy54AbY55dW2QaH7gSi8DAB8CUNLdV1f9B+cUhRzLI7TnXb946f87XkWzdGRKnEA4L1vBavRtyuKoYc297LXdT/5wWGEO0KhxZ6rnfDJAdb6HXJ0xu7+pJOAunTUOSFdi/0PvCt2jlYOYcjKfG1g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.34) smtp.rcpttodomain=gmail.com smtp.mailfrom=nvidia.com;
+ 216.228.112.36) smtp.rcpttodomain=gmail.com smtp.mailfrom=nvidia.com;
  dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VDtlkRnoWkzwcuagPb7OqfTqEqYL6Ii1kESGkErISX0=;
- b=NzIcBxF7l5VG76gRUkCl8lryafi87/Lw5kXgMB96tAknKOVA+Odn3rvS4JKvMAzmic0VDPUDxwerLrj/s165gumxetpF2g8U0rMUg9v2JKAuYPb81hOpsQMRMde89mKXPLTVrUnrQ53XtDc+HeYrewyXtBW/HfT2k23L3Z3ZSk8bmgLJ/WduQfBs+pO6CVFi3cSjDn164qIOmIXL6lTKjl2VKAfGweHk+WV9WyazVQcrLYoTXOZwCEqiWJNzo8ZCz5VxawdJJXRrHtcVG1dGzbRuSmAmBqLuMjgORC1B+NgMx5/ZWcU+Z4/2tHW7h9IMvM7rXTS/oVNSPaAVCPOVGw==
-Received: from BN9PR03CA0630.namprd03.prod.outlook.com (2603:10b6:408:106::35)
- by SA0PR12MB4445.namprd12.prod.outlook.com (2603:10b6:806:95::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.14; Thu, 30 Sep
- 2021 23:26:37 +0000
-Received: from BN8NAM11FT009.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:106:cafe::8d) by BN9PR03CA0630.outlook.office365.com
- (2603:10b6:408:106::35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.14 via Frontend
- Transport; Thu, 30 Sep 2021 23:26:37 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.34)
+ bh=U8ONeYEZwu7oMHAnpono4GUYkjRRIByFNsWyWHGDCZ0=;
+ b=Vh5eXhhPeP+jTttCuAO7Ty/1oz8EZTTxK32fwKnMYwF/5nxLA5pAxf7XlrGnXhhx51KiIM028wLkNodGTxWtuY8f4dBM9xIc6b6WCd0MK2LWAlpSyHUM07wHebUvjlK70SDHP3vDu4xkeb+ogPQRdVetE3vGS1+5X1+K73EzqM6PqOlcYloQuw+bOX/oQ1B3y/dMKeORCfA4S2nc6td1OAiS6VOLEXyG0blqaTJh4zwkP6farBYkOpt64FPeiA6JBj+rY8B5nSBpqNTc+UCO0tVhJh+3BBFaP2gmSTO4mifK/lodH+/nIB16cU1o8e1uqIlySYfVfv92J5AyTf948Q==
+Received: from DM5PR16CA0031.namprd16.prod.outlook.com (2603:10b6:4:15::17) by
+ BYAPR12MB4760.namprd12.prod.outlook.com (2603:10b6:a03:9c::13) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4566.15; Thu, 30 Sep 2021 23:26:38 +0000
+Received: from DM6NAM11FT066.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:4:15:cafe::6b) by DM5PR16CA0031.outlook.office365.com
+ (2603:10b6:4:15::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.15 via Frontend
+ Transport; Thu, 30 Sep 2021 23:26:38 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.36)
  smtp.mailfrom=nvidia.com; gmail.com; dkim=none (message not signed)
  header.d=none;gmail.com; dmarc=pass action=none header.from=nvidia.com;
 Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.34 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.34; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.34) by
- BN8NAM11FT009.mail.protection.outlook.com (10.13.176.65) with Microsoft SMTP
+ 216.228.112.36 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.112.36; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (216.228.112.36) by
+ DM6NAM11FT066.mail.protection.outlook.com (10.13.173.179) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
  15.20.4566.14 via Frontend Transport; Thu, 30 Sep 2021 23:26:37 +0000
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Thu, 30 Sep
- 2021 23:26:36 +0000
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Thu, 30 Sep
+ 2021 23:26:37 +0000
 Received: from dipenp.nvidia.com (172.20.187.6) by mail.nvidia.com
  (172.20.187.13) with Microsoft SMTP Server id 15.0.1497.18 via Frontend
  Transport; Thu, 30 Sep 2021 23:26:36 +0000
@@ -62,9 +61,9 @@ To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <devicetree@vger.kernel.org>, <linux-doc@vger.kernel.org>,
         <robh+dt@kernel.org>
 CC:     Dipen Patel <dipenp@nvidia.com>
-Subject: [RFC v2 04/11] dt-bindings: Add HTE bindings
-Date:   Thu, 30 Sep 2021 16:26:10 -0700
-Message-ID: <20210930232617.6396-5-dipenp@nvidia.com>
+Subject: [RFC v2 05/11] hte: Add Tegra194 IRQ HTE test driver
+Date:   Thu, 30 Sep 2021 16:26:11 -0700
+Message-ID: <20210930232617.6396-6-dipenp@nvidia.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20210930232617.6396-1-dipenp@nvidia.com>
 References: <20210930232617.6396-1-dipenp@nvidia.com>
@@ -73,222 +72,257 @@ MIME-Version: 1.0
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e46deb14-e15c-4c1a-66f6-08d98469bfdf
-X-MS-TrafficTypeDiagnostic: SA0PR12MB4445:
-X-Microsoft-Antispam-PRVS: <SA0PR12MB4445E962AFEEAA8130F773A8AEAA9@SA0PR12MB4445.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Office365-Filtering-Correlation-Id: 89d6c5fa-e32b-44a6-0b00-08d98469bffa
+X-MS-TrafficTypeDiagnostic: BYAPR12MB4760:
+X-Microsoft-Antispam-PRVS: <BYAPR12MB4760A0C57468FB66267F3FE4AEAA9@BYAPR12MB4760.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: aqS3SDsaax7DYXDYZLBjwXLzPDLzaTNJfuzq5RLY8dfiaoBlWAuf2AZV0ToxgpBEqWuTEP4Vv8Lso5Nn889PlcDH1MeqxZjSmp3uZ47baqfJgHM5nJIwCeVpVkXsrjselKfAsFuWoG9z3pDt/Pzz5EUwiQj6gynrA0Eim0xjyFgCV12xqTieqkjFK7/xhXzXl0UxUzYa96cqpN84vqfMKIWcn1jr0OlJv6tKyg0Cb6lSrLJLxs/EJW+ou7TJ37L6hlQKhaRtXRh8sXsrBAe11l67+bGCpjJUC+OGF7yH/L1AJr4TJePnknmjFHsPg5JM1hg7m7WrNPvMJIg24agKLUrJHv/AimS8t/klHiezuZO3J5iWUEvaq8GKmHIKPO1IF8BesGGyaI6bUxRan46Lj0Y0I8gVjC1wli18gqeqM0o//ebxKyLbJCDuWGwFiP/jqlbMpzQD+jl5SbUnZhGKiL2shx+676/SKMkI1GdVhEYrlGYeJryCcfMn4naqUgvdWOAa+fr03WNoaj+ZWe0l/yY4za04bsX2+qA/pQVD7qw1B6DZJF50eMjZs/QIikQymjiJmZc4/Q58hKTH+u7+gWD4APMN0UNn0Tcivr8lKYhiJ7cYlJVlLdPumq3OuQU0TfjtgiQGJ+W0iucqpCEGF3qSviZn2T9CjfcdlpT3fgsFWPC4tW1w1qePS+7AA5pRgG7EKciU5wnRQAyHkWEraKjHjZBH/DY7S+09i9Oa5Qn5p3scPMPP77hcwQL1CL7Fn4N8Aw/VLgAfz8IoaRBtx+8BuQiHw4VKsqM2lPfFX8x8hu2l9GLGXqWIFkENeiBFPQBDhKNAK4ShP1nVj+jWoFbFr5o9iL260xWvRwKtaQRntvuhkd2vcLev1QzxBNn3zvFQvDKGc17P53LfWDyjXA==
-X-Forefront-Antispam-Report: CIP:216.228.112.34;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid03.nvidia.com;CAT:NONE;SFS:(4636009)(46966006)(36840700001)(426003)(7416002)(508600001)(4326008)(8936002)(47076005)(2616005)(921005)(83380400001)(82310400003)(356005)(110136005)(36860700001)(966005)(7696005)(70206006)(70586007)(86362001)(36756003)(186003)(5660300002)(107886003)(316002)(26005)(336012)(6666004)(2906002)(1076003)(7636003)(8676002)(2101003)(83996005);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: l8GFvzmVeYYYmtECaTM5u6UwakIeu5Hjk9RjrbXOooE30TpusMem+c4GgBrHzVROg5DGtjZqiI1OmBzaomwx2cYVwmzunevyFDMyq4bLNO/EhYOsF/FORKLTiWYxgi5VMGN1q8HVsQOBSJkKUAdjcsTH2rYYkgyCRaho5Dg2x5kv5RNtNwFUOvqzBwKu0XZl9No5CZKl++zdtMtWcChprxjqD3gaCu/DdvUL4/rHpqWhcnJDVQGRnMhR3i2OpgPpefnrmXUfDuBR39aD6ovUptFq+G4Rn1iCU0X5MfeZcxKhT6QfRfyx6kYV5uUOayB05fyAZR7gk/na0DEhvBdmd91D5xUHxWR4hty3xp/CqONFL/aulkGRmqMA+UktI1N5ncb225BSnt+wSo9YN+eXsP8FdGHd7QIHRZnu6K2YFFKP9b464NKAXICwtOG8VuGbZ0GKfrpTL9VckQYpmA2DRDP22ebP/fehV90itm7rUC6YLeGalyPcaja51IXHYoQ3VtDDMAMdp+UJ6N19/tbZ9QJi2CeVWJSca12dpLLMGaN/em9dceD4yfO5KaR8Ju+ndgJUn6OM6wnOMbTSTK2KtFkXl3m961stsebY698Jets5JGG8+cCRBGFslSQQq8B+az/AA44R8DJ2lfVwBEdkNQ9XJGY0i4rHgyIDVjnz8zAL1PNglRRfGm/r2LUFcXfDP2pQaiiWZEvRgXNV+tT8BilxrRxlgplZNeuuRRINto/Lol0vdbWjXVw+G3IJ2efpyRfG3k2At2Wc9lzdWwB6TQ==
+X-Forefront-Antispam-Report: CIP:216.228.112.36;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid05.nvidia.com;CAT:NONE;SFS:(4636009)(46966006)(36840700001)(86362001)(186003)(2616005)(316002)(26005)(7416002)(6666004)(110136005)(356005)(508600001)(7636003)(921005)(5660300002)(426003)(8676002)(47076005)(8936002)(83380400001)(82310400003)(36860700001)(7696005)(1076003)(336012)(2906002)(36756003)(107886003)(70206006)(4326008)(70586007)(83996005)(2101003);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Sep 2021 23:26:37.3508
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Sep 2021 23:26:37.5604
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e46deb14-e15c-4c1a-66f6-08d98469bfdf
+X-MS-Exchange-CrossTenant-Network-Message-Id: 89d6c5fa-e32b-44a6-0b00-08d98469bffa
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.34];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT009.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.36];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT066.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4445
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB4760
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Introduces HTE devicetree binding details for the HTE subsystem. It
-includes examples for the consumers, binding details for the providers
-and specific binding details for the Tegra194 based HTE providers.
+Tegra194 has IRQ HTE provider which can timestamp IRQ lines in realtime
+, this test driver implements consumer side which tests such provider
+through HTE subsystem. During its probe, it registers sysfs interface
+to easily navigate from userspace as below.
+
+All the files are at /sys/kernel/tegra_hte_irq_test/.
+
+- en_dis - Write only, Value 1 enables HTE line, 0 disables it
+
+Its devicetree detail can be accessed from
+Documentation/hte/tegra194-hte.rst.
+
+This driver can be compiled as loadable module and is tested on Jetson
+AGX platform using 0x19 IRQ line which belongs to i2c controller
+3160000.i2c.
+
+i2cdetect -y 1 from the userspace on this platform should be enough to
+generate LIC I2C IRQ. The HTE should be able to generate
+timestamps in realtime for each interrupts.
 
 Signed-off-by: Dipen Patel <dipenp@nvidia.com>
 ---
-Changes in v2:
-- Replace hte with hardware-timestamp for property names
-- Renamed file
-- Removed example from the common dt binding file.
+ drivers/hte/Kconfig                 |   7 ++
+ drivers/hte/Makefile                |   1 +
+ drivers/hte/hte-tegra194-irq-test.c | 169 ++++++++++++++++++++++++++++
+ 3 files changed, 177 insertions(+)
+ create mode 100644 drivers/hte/hte-tegra194-irq-test.c
 
- .../hte/hardware-timestamps-common.yaml       | 29 +++++++
- .../devicetree/bindings/hte/hte-consumer.yaml | 48 +++++++++++
- .../bindings/hte/nvidia,tegra194-hte.yaml     | 79 +++++++++++++++++++
- 3 files changed, 156 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hte/hardware-timestamps-common.yaml
- create mode 100644 Documentation/devicetree/bindings/hte/hte-consumer.yaml
- create mode 100644 Documentation/devicetree/bindings/hte/nvidia,tegra194-hte.yaml
-
-diff --git a/Documentation/devicetree/bindings/hte/hardware-timestamps-common.yaml b/Documentation/devicetree/bindings/hte/hardware-timestamps-common.yaml
+diff --git a/drivers/hte/Kconfig b/drivers/hte/Kconfig
+index bf375a5a8f8e..eb339526f141 100644
+--- a/drivers/hte/Kconfig
++++ b/drivers/hte/Kconfig
+@@ -31,4 +31,11 @@ config HTE_TEGRA194
+ 	  systems-on-chip. The driver supports 352 LIC IRQs and 39 AON GPIOs
+ 	  lines for timestamping in realtime.
+ 
++config HTE_TEGRA194_IRQ_TEST
++        tristate "NVIDIA Tegra194 HTE LIC IRQ Test"
++        depends on HTE_TEGRA194
++        help
++	  The NVIDIA Tegra194 GTE IRQ test driver demonstrates HTE subsystem
++	  usage for the LIC IRQ hardware timestamp.
++
+ endif
+diff --git a/drivers/hte/Makefile b/drivers/hte/Makefile
+index 3ae7c4029991..75b7932c2ffc 100644
+--- a/drivers/hte/Makefile
++++ b/drivers/hte/Makefile
+@@ -1,3 +1,4 @@
+ obj-$(CONFIG_HTE)		+= hte.o
+ obj-$(CONFIG_HTE_TEGRA194)	+= hte-tegra194.o
++obj-$(CONFIG_HTE_TEGRA194_IRQ_TEST) += hte-tegra194-irq-test.o
+ 
+diff --git a/drivers/hte/hte-tegra194-irq-test.c b/drivers/hte/hte-tegra194-irq-test.c
 new file mode 100644
-index 000000000000..8b8db3bc4dcf
+index 000000000000..e43991321172
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/hte/hardware-timestamps-common.yaml
-@@ -0,0 +1,29 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/hte/hardware-timestamps-common.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/hte/hte-tegra194-irq-test.c
+@@ -0,0 +1,169 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2021 NVIDIA Corporation
++ *
++ * Author: Dipen Patel <dipenp@nvidia.com>
++ */
 +
-+title: Hardware timestamp providers
++#include <linux/version.h>
++#include <linux/err.h>
++#include <linux/module.h>
++#include <linux/moduleparam.h>
++#include <linux/interrupt.h>
++#include <linux/hte.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/workqueue.h>
 +
-+maintainers:
-+  - Dipen Patel <dipenp@nvidia.com>
++/*
++ * Tegra194 On chip HTE (hardware timestamping engine) also known as GTE
++ * (generic timestamping engine) can monitor LIC (Legacy interrupt controller)
++ * IRQ lines for the event and timestamp accordingly in realtime. Follow
++ * technical reference manual for the IRQ numbers and descriptions.
++ *
++ * This sample HTE IRQ test driver demonstrating HTE API usage by enabling
++ * lic irq line in HTE to monitor and timestamp.
++ */
 +
-+description: |
-+  Some devices/SoCs have hardware time stamping engines which can use hardware
-+  means to timestamp entity in realtime. The entity could be anything from
-+  GPIOs, IRQs, Bus and so on. The hardware timestamp engine (HTE) present
-+  itself as a provider with the bindings described in this document.
++static struct tegra_hte_test {
++	struct hte_ts_desc desc;
++	struct kobject *kobj;
++	struct device *pdev;
++} hte;
 +
-+properties:
-+  $nodename:
-+    pattern: "^hardware-timestamps(@.*|-[0-9a-f])*$"
++static hte_return_t process_hw_ts(struct hte_ts_data *ts, void *p)
++{
++	char *edge;
++	(void)p;
 +
-+  "#hardware-timestamps-cells":
-+    description:
-+      Number of cells in a HTE specifier.
++	if (!ts)
++		return HTE_CB_ERROR;
 +
-+required:
-+  - "#hardware-timestamps-cells"
++	switch (ts->dir) {
++	case HTE_FALLING_EDGE_TS:
++		edge = "falling";
++		break;
++	case HTE_RISING_EDGE_TS:
++		edge = "rising";
++		break;
++	default:
++		edge = "unknown";
++		break;
++	}
 +
-+additionalProperties: true
-diff --git a/Documentation/devicetree/bindings/hte/hte-consumer.yaml b/Documentation/devicetree/bindings/hte/hte-consumer.yaml
-new file mode 100644
-index 000000000000..cf65d1d44a18
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hte/hte-consumer.yaml
-@@ -0,0 +1,48 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/hte/hte-consumer.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++	dev_info(hte.pdev, "IRQ HW timestamp(%llu): %llu, edge: %s\n",
++		 ts->seq, ts->tsc, edge);
 +
-+title: HTE Consumer Device Tree Bindings
++	return HTE_CB_HANDLED;
++}
 +
-+maintainers:
-+  - Dipen Patel <dipenp@nvidia.com>
++/*
++ * Sysfs attribute to request/release HTE IRQ line.
++ */
++static ssize_t store_en_dis(struct kobject *kobj,
++			    struct kobj_attribute *attr,
++			    const char *buf, size_t count)
++{
++	int ret = count;
++	unsigned long val = 0;
++	struct hte_clk_info ci;
++	(void)kobj;
++	(void)attr;
 +
-+description: |
-+  HTE properties should be named "hardware-timestamps". The exact meaning of
-+  each hardware-timestamps property must be documented in the device tree
-+  binding for each device. An optional property "hardware-timestamps-names" may
-+  contain a list of strings to label each of the HTE devices listed in the
-+  "hardware-timestamps" property.
++	if (kstrtoul(buf, 10, &val) < 0) {
++		ret = -EINVAL;
++		goto error;
++	}
 +
-+  The "hardware-timestamps-names" property if specified is used to map the name
-+  of the HTE device requested by the devm_of_hte_request_ts() or of_hte_request_ts
-+  call to an index into the list given by the "hardware-timestamps" property.
++	if (val == 1) {
++		ret = devm_of_hte_request_ts(hte.pdev, &hte.desc,
++					     process_hw_ts, NULL, NULL);
++		if (ret)
++			goto error;
 +
-+properties:
-+  hardware-timestamps:
-+    $ref: /schemas/types.yaml#/definitions/phandle-array
-+    description:
-+      The list of HTE provider phandle. The provider must document the number
-+      of cell that must be passed in this property along with phandle.
++		hte_get_clk_src_info(&hte.desc, &ci);
++		dev_info(hte.pdev, "clk rate:%llu, clk type: %d\n",
++			 ci.hz, ci.type);
++	} else if (val == 0) {
++		ret = hte_release_ts(&hte.desc);
++		if (ret)
++			goto error;
++	}
 +
-+  hardware-timestamps-names:
-+    $ref: /schemas/types.yaml#/definitions/string-array
-+    description:
-+      An optional string property.
++	ret = count;
 +
-+required:
-+  - "hardware-timestamps"
++error:
++	return ret;
++}
 +
-+dependencies:
-+  hardware-timestamps-names: [ hardware-timestamps ]
++struct kobj_attribute en_dis_attr =
++		__ATTR(en_dis, 0220, NULL, store_en_dis);
 +
-+additionalProperties: true
++static struct attribute *attrs[] = {
++	&en_dis_attr.attr,
++	NULL,
++};
 +
-+examples:
-+  - |
-+    hte_irq_consumer {
-+              hardware-timestamps = <&tegra_hte_lic 0x19>;
-+              hardware-timestamps-names = "hte-irq";
-+    };
-diff --git a/Documentation/devicetree/bindings/hte/nvidia,tegra194-hte.yaml b/Documentation/devicetree/bindings/hte/nvidia,tegra194-hte.yaml
-new file mode 100644
-index 000000000000..529926118f35
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hte/nvidia,tegra194-hte.yaml
-@@ -0,0 +1,79 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/hte/nvidia,tegra194-hte.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++static struct attribute_group tegra_hte_test_attr_group = {
++	.attrs = attrs,
++};
 +
-+title: Tegra194 on chip generic hardware timestamping engine (HTE)
++static int tegra_hte_test_sysfs_create(void)
++{
++	int ret;
 +
-+maintainers:
-+  - Dipen Patel <dipenp@nvidia.com>
++	/* Creates /sys/kernel/tegra_hte_irq_test */
++	hte.kobj = kobject_create_and_add("tegra_hte_irq_test", kernel_kobj);
++	if (!hte.kobj)
++		return -ENOMEM;
 +
-+description: |
-+  Tegra194 SoC has multiple generic hardware timestamping engines which can
-+  monitor subset of GPIO and on chip IRQ lines for the state change, upon
-+  detection it will record timestamp (taken from system counter) in its
-+  internal hardware FIFO. It has bitmap array arranged in 32bit slices where
-+  each bit represent signal/line to enable or disable for the hardware
-+  timestamping.
++	ret = sysfs_create_group(hte.kobj, &tegra_hte_test_attr_group);
++	if (ret)
++		kobject_put(hte.kobj);
 +
-+properties:
-+  compatible:
-+    enum:
-+      - nvidia,tegra194-gte-aon
-+      - nvidia,tegra194-gte-lic
++	return ret;
++}
 +
-+  reg:
-+    maxItems: 1
++static const struct of_device_id tegra_hte_irq_test_of_match[] = {
++	{ .compatible = "nvidia,tegra194-hte-irq-test"},
++	{ }
++};
++MODULE_DEVICE_TABLE(of, tegra_hte_irq_test_of_match);
 +
-+  interrupts:
-+    maxItems: 1
++static int tegra_hte_test_probe(struct platform_device *pdev)
++{
++	int ret;
 +
-+  int-threshold:
-+    description:
-+      HTE device generates its interrupt based on this u32 FIFO threshold
-+      value. The recommended value is 1.
-+    minimum: 1
-+    maximum: 256
++	dev_set_drvdata(&pdev->dev, &hte);
++	hte.pdev = &pdev->dev;
 +
-+  slices:
-+    description:
-+      HTE lines are arranged in 32 bit slice where each bit represents different
-+      line/signal that it can enable/configure for the timestamp. It is u32
-+      property and depends on the HTE instance in the chip.
-+    enum: [3, 11]
++	ret = tegra_hte_test_sysfs_create();
++	if (ret != 0) {
++		dev_err(hte.pdev, "sysfs creation failed\n");
++		return -ENXIO;
++	}
 +
-+  '#hardware-timestamps-cells':
-+    const: 1
++	return 0;
++}
 +
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - slices
-+  - "#hardware-timestamps-cells"
++static int tegra_hte_test_remove(struct platform_device *pdev)
++{
++	(void)pdev;
 +
-+additionalProperties: false
++	kobject_put(hte.kobj);
 +
-+examples:
-+  - |
-+    tegra_hte_aon: hardware-timestamps@c1e0000 {
-+              compatible = "nvidia,tegra194-gte-aon";
-+              reg = <0xc1e0000 0x10000>;
-+              interrupts = <0 13 0x4>;
-+              int-threshold = <1>;
-+              slices = <3>;
-+              #hardware-timestamps-cells = <1>;
-+    };
++	return 0;
++}
 +
-+  - |
-+    tegra_hte_lic: hardware-timestamps@3aa0000 {
-+              compatible = "nvidia,tegra194-gte-lic";
-+              reg = <0x3aa0000 0x10000>;
-+              interrupts = <0 11 0x4>;
-+              int-threshold = <1>;
-+              slices = <11>;
-+              #hardware-timestamps-cells = <1>;
-+    };
++static struct platform_driver tegra_hte_irq_test_driver = {
++	.probe = tegra_hte_test_probe,
++	.remove = tegra_hte_test_remove,
++	.driver = {
++		.name = "tegra_hte_irq_test",
++		.of_match_table = tegra_hte_irq_test_of_match,
++	},
++};
++module_platform_driver(tegra_hte_irq_test_driver);
 +
-+...
++MODULE_AUTHOR("Dipen Patel <dipenp@nvidia.com>");
++MODULE_LICENSE("GPL v2");
 -- 
 2.17.1
 
