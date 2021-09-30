@@ -2,62 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4848341D9B6
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Sep 2021 14:22:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C7C541D9D9
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Sep 2021 14:32:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349889AbhI3MXf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 30 Sep 2021 08:23:35 -0400
-Received: from smtp-relay-internal-0.canonical.com ([185.125.188.122]:43054
-        "EHLO smtp-relay-internal-0.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1350773AbhI3MXf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 30 Sep 2021 08:23:35 -0400
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com [209.85.167.71])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id F285B402D9
-        for <linux-gpio@vger.kernel.org>; Thu, 30 Sep 2021 12:21:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1633004512;
-        bh=psXH7e13JGze4Ceqpc/FfNuVUHKJpQgMmOPZqTVq+O8=;
-        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-         In-Reply-To:Content-Type;
-        b=oRQ9upTmEhMbHAcyC6USwVUNw9Eu3DjS0Sfale+QKsdYg1rFDGgXYzhHZTy3EP/ns
-         2sVTuIJZnaqQ6wL3io3ZVtPGqYuibqgVn9/le2op9JJHo66lNujl6LVJkWKZSrTn8l
-         y/GUD9azw0okZsBnPgKfb1nAUH399dJBdTUcqCwCJGLc3Bi8fk7mQvquE1l/Kv35OX
-         RmsmeZREt5wokizJzASeZuDWDyoDknCCb8ZZgE5qvMLjCd8DZRiYBwVVvvwHmU4ZnR
-         b7joazan3Lgi0WrfCnT/SoukD5+mRt54w3lvu3UiA6TSne5r6WFpzgzUggkCDQKbbd
-         Y4jKWxyLfN5cQ==
-Received: by mail-lf1-f71.google.com with SMTP id s8-20020ac25c48000000b003faf62e104eso5396723lfp.22
-        for <linux-gpio@vger.kernel.org>; Thu, 30 Sep 2021 05:21:51 -0700 (PDT)
+        id S1350353AbhI3MeX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 30 Sep 2021 08:34:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35920 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1350326AbhI3MeX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Sep 2021 08:34:23 -0400
+Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8918CC06176D
+        for <linux-gpio@vger.kernel.org>; Thu, 30 Sep 2021 05:32:40 -0700 (PDT)
+Received: by mail-wm1-x329.google.com with SMTP id 205-20020a1c01d6000000b0030cd17ffcf8so8287969wmb.3
+        for <linux-gpio@vger.kernel.org>; Thu, 30 Sep 2021 05:32:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=En+5YrjM9LlGpDVk1qLlFN9D0UbWW1q5lQuQYRqATW0=;
+        b=yfsE6YBweYWAU+QUeuH3l8VsYBkS4YRRfFTAUbjlBj1cbRhLGuilAthUvCDsjVG6qG
+         dh7Un3DHfvuQkyyrFJFwq8AhY5EmkfL6gZH3T0qH6kCuP3dY11JPJ+zYBLNlHJOa4WbJ
+         WDoUGO7Mwssy6Pk5zzLVJuz5p4EHEt91JchNU2FJrwVuE4ymbJdvsdY1Lid6mWlO8oMD
+         CvwDNMTaO4Fkcb4/5p5pN7CsXquoA27mdQL5XssFNF+X5SmKC+b4vhrZvb9Bq6SVzKQE
+         4O+RpT/FLQgl5/RMerb1fzqgCamevlhivoXdQi+9CIBJcpRSYPnYF0EsbwK16966zetB
+         t16Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=psXH7e13JGze4Ceqpc/FfNuVUHKJpQgMmOPZqTVq+O8=;
-        b=PK0nvKL+6fhzMBmejm3fMa7tBALQZ914/iM77FYD1sp1l7xFRsLZ+Vj9XkrZwzQbzU
-         5tolLwprjzxCOIoTzFN9SdTQ3s/QyyBFnrx2yK+bE0V1qgapVQLpLR4MTG8UvVYoVEUg
-         NyUQeBoktIjkdZadgBNLWYp8XMvlrjeVQod2hsn6OY19F3/tgwh6dM96E+CDa24IXaz/
-         1fguWRBvr0SQNKYNVoFrg8pE2sTTv6juJ4kATSr9WUMxVjPOQmqGf7vPh4ohax5x27fi
-         ilXYDvb3yr67xvn2fZC4LRzX9Ux+96hsAtm4yPiYHPLqLI0jkLMGTmjGC3/8B9nEuSqi
-         5eQQ==
-X-Gm-Message-State: AOAM533qrdXsmbtAUlg6LduGbE+iKvkYtrXQt3YPbnlU80f77pYv+cY0
-        0cuyKKoY1vFtiSHZZ2PaG4dIXVy8VYpKpCan6QKn+mJnBNqhCreeE/+JXGFktPFfUtlVEg9+vQ5
-        eP5gAKxeRO8apoZd0TmTxalpzMOw4T+GZ3CY0eDc=
-X-Received: by 2002:ac2:4305:: with SMTP id l5mr5441275lfh.231.1633004499572;
-        Thu, 30 Sep 2021 05:21:39 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxpPzoro/RcXsP62t0RoXfe8Sb1d3Eh5d1ulxEp+yM4aqAVEsPnMfSfprUv/3yeGRa/w+mMuw==
-X-Received: by 2002:ac2:4305:: with SMTP id l5mr5441240lfh.231.1633004499341;
-        Thu, 30 Sep 2021 05:21:39 -0700 (PDT)
-Received: from [192.168.0.197] ([193.178.187.25])
-        by smtp.gmail.com with ESMTPSA id o27sm352431lfi.263.2021.09.30.05.21.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Sep 2021 05:21:38 -0700 (PDT)
-Subject: Re: [PATCH v2 00/12] arm64: Kconfig: Update ARCH_EXYNOS select
- configs
-To:     Lee Jones <lee.jones@linaro.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=En+5YrjM9LlGpDVk1qLlFN9D0UbWW1q5lQuQYRqATW0=;
+        b=lcwTneqoNm54akyXPOWwGspB+QA9/pV9vfwyaOfR2u1bYKf0XqByO8jKw2/+Cdb4DZ
+         O6Ih8QNqvyTEaX3M36xt+7dzIDP0KPv3rJwj+RvD/XRS2k2UYKEFPV4aVoKRG3drKsCj
+         NYBEDFa8YHLktmZuAYn6PYZavRV9h/xnV9HGzz6ev9r9h4n01E6yjxUJNlI3b/cX3Odk
+         LTCrJbJ6vgzzPKO0rdbcw9TFEKWFIi9lSxwgkS1wE0aIiA4Y2smc/26HQ+UFU8s/daFw
+         lMlcXXBK4rfY77NzDoyh2RPYuHAnbSCtmJ+0epAUrXKzwo8t2GSwzcqPkxAz/18qTkKS
+         G3Tg==
+X-Gm-Message-State: AOAM533/VMkdYMG4j3Wd4MAf77SnCEVnTg+THEm4CDU8BjAQZJ7fDWyM
+        oesx4eokiSLBIMqYTUmuebGjbg==
+X-Google-Smtp-Source: ABdhPJypzNOV6MSKCZRk58YQppRsxlxVtOIMAQuJ+ppbdRDySWcSJDA77/Nq8JTkyQcJRwpBLZSNMg==
+X-Received: by 2002:a05:600c:1911:: with SMTP id j17mr2845306wmq.149.1633005159069;
+        Thu, 30 Sep 2021 05:32:39 -0700 (PDT)
+Received: from google.com ([95.148.6.233])
+        by smtp.gmail.com with ESMTPSA id i7sm2958529wrp.5.2021.09.30.05.32.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Sep 2021 05:32:38 -0700 (PDT)
+Date:   Thu, 30 Sep 2021 13:32:36 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
 Cc:     Will McVicker <willmcvicker@google.com>,
         Russell King <linux@armlinux.org.uk>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -81,43 +74,164 @@ Cc:     Will McVicker <willmcvicker@google.com>,
         linux-clk <linux-clk@vger.kernel.org>,
         linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org,
         Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v2 00/12] arm64: Kconfig: Update ARCH_EXYNOS select
+ configs
+Message-ID: <YVWuZN/CcApCDE0g@google.com>
 References: <20210928235635.1348330-1-willmcvicker@google.com>
  <7766faf8-2dd1-6525-3b9a-8ba790c29cff@canonical.com>
  <CABYd82YodFDwBxexCv+0hpYrdYEX1Z1CvnRkmnBPkEJNJ4bssQ@mail.gmail.com>
  <c65bf0db-6fd1-eb05-f407-37c41f9125f4@canonical.com>
  <YVWCK5QO331rfhJJ@google.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Message-ID: <72d27a82-9d4d-1f91-bd1f-ebead3b75ffa@canonical.com>
-Date:   Thu, 30 Sep 2021 14:21:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+ <d79df9ff-fc22-8d29-011d-c3cb7dbbfa4e@canonical.com>
 MIME-Version: 1.0
-In-Reply-To: <YVWCK5QO331rfhJJ@google.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d79df9ff-fc22-8d29-011d-c3cb7dbbfa4e@canonical.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 30/09/2021 11:23, Lee Jones wrote:
-> [0] Full disclosure: part of my role at Linaro is to keep the Android
-> kernel running as close to Mainline as possible and encourage/push the
-> upstream-first mantra, hence my involvement with this and other sets.
-> I assure you all intentions are good and honourable.  If you haven't
-> already seen it, please see Todd's most recent update on the goals and
-> status of GKI:
-> 
->   Article: https://tinyurl.com/saaen3sp
->   Video:   https://youtu.be/O_lCFGinFPM
-> 
+On Thu, 30 Sep 2021, Krzysztof Kozlowski wrote:
 
-Side topic, why this patchset is in your scope or Will's/Google's scope?
-Just drop it from Android main kernel, it will not be your problem. I
-mean, really, you don't need this patchset in your tree at all. The only
-platform which needs it, the only platform which will loose something
-will be one specific vendor. Therefore this will be an incentive for
-them to join both discussions and upstream development. :)
+> On 30/09/2021 11:23, Lee Jones wrote:
+> > I've taken the liberty of cherry-picking some of the points you have
+> > reiteratted a few times.  Hopefully I can help to address them
+> > adequently.
+> > 
+> > On Thu, 30 Sep 2021, Krzysztof Kozlowski wrote:
+> >> Reminder: these are essential drivers and all Exynos platforms must have
+> >> them as built-in (at least till someone really tests this on multiple
+> >> setups).
+> > 
+> >> Therefore I don't agree with calling it a "problem" that we select
+> >> *necessary* drivers for supported platforms. It's by design - supported
+> >> platforms should receive them without ability to remove.
+> > 
+> >> The selected drivers are essential for supported platforms.
+> > 
+> > SoC specific drivers are only essential/necessary/required in
+> > images designed to execute solely on a platform that requires them.
+> > For a kernel image which is designed to be generic i.e. one that has
+> > the ability to boot on vast array of platforms, the drivers simply
+> > have to be *available*.
+> 
+> By "essential", I meant drivers which are needed for supported platform
+> to boot properly.
 
-Best regards,
-Krzysztof
+Yes, I know what you meant by essential.
+
+My comment still stands.  As long as they are provided, it should work.
+
+> Also without significant performance penalty due to
+> probe deferrals.
+
+Agreed.  We will try to find a way to test this.
+
+> > Forcing all H/W drivers that are only *potentially* utilised on *some*
+> > platforms as core binary built-ins doesn't make any technical sense.
+> > The two most important issues this causes are image size and a lack of
+> > configurability/flexibility relating to real-world application i.e.
+> > the one issue we already agreed upon; H/W or features that are too
+> > new (pre-release).
+> 
+> Geert responded here. If drivers are essential for supported platforms
+> to boot, having them built-in has technical sense.
+
+We're going to have to agree to disagree here.
+
+None of us are currently aware of any technical reasons why these
+particular drivers have to be built-in.  Hopefully we can prove this
+out with testing.
+
+> > By insisting on drivers (most of which will not be executed in the
+> > vast majority of cases) to be built-in, you are insisting on a
+> > downstream kernel fork, which all of us would like to avoid [0].
+> 
+> The same with all the DTS and hundreds of drivers you keep out of tree.
+
+I do not keep any drivers out of tree. :)
+
+> >> We don't even know what are these unsupported, downstream platforms
+> >> you want customize kernel for. They cannot be audited, cannot be
+> >> compared.  Affecting upstream platforms just because
+> >> vendor/downstream does not want to mainline some code is
+> >> unacceptable.
+> >>
+> >> Please upstream your drivers and DTS.
+> > 
+> > Accepting changes based on the proviso that vendors upstream all of
+> > their work-in-progress solutions is an unfair position.  
+> 
+> You twisted (or ignored) my words here. I said before - sacrificing any
+> mainline platform (e.g. reliable boot for distro) for an out-of-tree
+> vendor which does no want to upstream drivers is the unfair position.
+> One of the incentives of upstreaming is to be able to shape kernel and
+> be considered in kernel upstream decisions. That's the privileged for
+> upstreamed platforms - they have an impact.
+> 
+> Vendor decides to stay out - fine, vendor's choice. You loose impact.
+> Any sad words like "oh upstream does not want to change for me" should
+> receive a message: "please join the upstream :), so we will change
+> together".
+
+No one is proposing to sacrifice anything.
+
+This change is believed to be benign.
+
+> > We already
+> > discussed why upstreaming support for bleeding edge H/W and
+> > functionality is unrealistic in terms of competitive advantage.
+> 
+> Nope, my last point was not responded to. You said that there is no
+> point for vendor to upstream bleeding edge HW. Then you said that there
+> is also little point to upstream older HW.
+
+The driver in question is already upstream.
+
+It is my hope that the vendor will realign with Mainline and upstream
+the differences (providing the current competitive edge).  Although I
+have no real influence in this regard, as I have no contact with
+them.
+
+> Basically following this approach you agree that vendor does not have to
+> do anything because it is inconvenient for him.
+> 
+> However upstream has to adapt to downstream vendor, right?
+> 
+> No, this is *unfair to all the platforms we upstreamed*.
+
+The point here is that this change should not be a determent to
+anyone.
+
+> > Exynos isn't special in this regard.  This applies to any vendor who
+> > releases Android images and wishes to be solve all of the issues the
+> > GKI project addresses (please read the article above for more about
+> > this).
+> 
+> We have then slightly different goals, because you are driven by Android
+> release images and this is why you are less interested in NXP and
+> Renesas. Only some vendors should receive such changes? No, in upstream
+> we are not focusing on any specific distro and there are other uses of
+> Exynos (and NXP and Renesas) platforms. Therefore the choice/policy and
+> overall design tries to match all vendors, not only some subset
+> convenient to Android.
+> 
+> If Android (or some vendor) wants to have exception for a specific
+> driver/platform, it must do it in upstream way, by contributing, not by
+> changing to match downstream needs while ignoring other users.
+
+No users are being ignored.  No damaging changes are being proposed.
+
+This has little to do with Android and everything to do with the
+possibly of a more generic kernel.  Moving drivers out of platform
+code and into /drivers along with enabling components as modules has
+been an on-going effort for many years now.
+
+I'm struggling to see how this is different.
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
