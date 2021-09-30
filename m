@@ -2,142 +2,180 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 858CB41DB14
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Sep 2021 15:30:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03DB441DCBA
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Sep 2021 16:53:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351458AbhI3Nba (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 30 Sep 2021 09:31:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49938 "EHLO
+        id S1351528AbhI3Oz0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 30 Sep 2021 10:55:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351438AbhI3Nb3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Sep 2021 09:31:29 -0400
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9467C06176F
-        for <linux-gpio@vger.kernel.org>; Thu, 30 Sep 2021 06:29:46 -0700 (PDT)
-Received: by mail-wr1-x436.google.com with SMTP id w29so10073122wra.8
-        for <linux-gpio@vger.kernel.org>; Thu, 30 Sep 2021 06:29:46 -0700 (PDT)
+        with ESMTP id S1351530AbhI3OzZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Sep 2021 10:55:25 -0400
+Received: from mail-oi1-x235.google.com (mail-oi1-x235.google.com [IPv6:2607:f8b0:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A178C06176A
+        for <linux-gpio@vger.kernel.org>; Thu, 30 Sep 2021 07:53:43 -0700 (PDT)
+Received: by mail-oi1-x235.google.com with SMTP id e24so7552108oig.11
+        for <linux-gpio@vger.kernel.org>; Thu, 30 Sep 2021 07:53:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=q+R3lw9hSs/DZNzD1ywHyamm1IrGhxmkV4ENbV1GCU4=;
-        b=DgISTWDu6rOHfzRjV6Qlml3/7p6txDssydTajODz+GlRBwZnnZJ+mHqxja6SLqqzZS
-         eyqevG/RTJ1e19LvzUSviCvcRdY/ZQlLzVjdheF0j9oYG2VCjjxYzy70fFH6h8wQFIl1
-         heZTwo8Ij6lQSgsdYl1dZiwV3X78qZHJLVBF7Te55QST9l020nZl0zdexD6cQxRMEf6W
-         SRIUEGew9SLXCrM/mV3q/VEp2npSKkXBbZ5+s2TfsplI/1q6wc/x7KyW1mrI5x5IDs/H
-         NBJzxCeq6cVp7HZB2iCl43ejKQHiNBQy43JZ3VV5ezx4T/8upAw3Pc/u2fcrSEWOZw/o
-         CpiA==
+         :content-disposition:in-reply-to;
+        bh=VIxcNt9zqnRNapqvBD226bMsuD2C6DbQkjAikT4Sfbs=;
+        b=EZLK+026N367xK6Of3/3GFxZQGgcXh52/fAR/gMfyylEAMSLOjaGozS4BXHjQ0K/0K
+         LUGvtSWNBkGbj3vK3NaM3SSlSlmXhEBUukIBUMcuNDEBcaKo29JVDhFwVhFH5z1k0Gvo
+         Ejswi89qmuPtm2VivBxcTHW0bvbYqPLLm6Tc3PzXOGXXcHhChpAuSOGvtGhsYNz0v3KQ
+         BCmp3DFDvaFHNeB2EP8FOGXDwgmbJCMGTjiU4uOYAgFnK7ihgh13gwKXhmDN4C7/EHGa
+         0rhUVaPzBMur7fhj0lIC2F9eei/bW7mAO/kPsVadZyD1N39peE9xlYhe4pUyXEryKfZq
+         A7Yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=q+R3lw9hSs/DZNzD1ywHyamm1IrGhxmkV4ENbV1GCU4=;
-        b=72ixy3MfDJ2Iw7OW9tbXdkd0F5TeJM2vRgEUVdFPAxfH/FMYfq2mWdwI+3kr40/n0X
-         6LmxjZH2UdEK+whObF6ZJsyMSJs1Hn+56SWrAx+9EY/+Ohg/JiRLDOHx/UGgEquGLrOs
-         Jq9ysVzxadQZ/0tHPbCgrzZ1o0xXMva7/li8S98S0bg71vVRIMV0MLmneCNYlt3Ih3Zm
-         BXhkbgq9v6B4rql60TA4a6nHOOU+EaddqgXlZCaX/iAW9gEvav/EUzcKuWJxgGaCd+MJ
-         bMXNFz4ktzUvWI0XxQhgn6mIcnjycoCv4eHXqy9z2HUlINb4XGlxwfshsJ3CO5vC2Rnl
-         f0dA==
-X-Gm-Message-State: AOAM531V1PWYR+RDsD9pzSrRs6g6sQB8WS+afrefka6iNKcQVOa2ydka
-        ZSqZfJtkFO4CWZZUneOEBJ4qwQ==
-X-Google-Smtp-Source: ABdhPJy/y/6uR/KPQ8dQ/+hV2n00qqTbyI2pfOM4zKq4a5jrPB98oGnv1D/dr/8czG2Kuq8YEDugGw==
-X-Received: by 2002:adf:eac8:: with SMTP id o8mr5785614wrn.273.1633008585451;
-        Thu, 30 Sep 2021 06:29:45 -0700 (PDT)
-Received: from google.com ([95.148.6.233])
-        by smtp.gmail.com with ESMTPSA id x21sm4825619wmc.14.2021.09.30.06.29.44
+         :mime-version:content-disposition:in-reply-to;
+        bh=VIxcNt9zqnRNapqvBD226bMsuD2C6DbQkjAikT4Sfbs=;
+        b=TR5h5XAPTQaLTl8hI5rBqn4gA1adyGL2wEHghbYOiCBfzc/vf+JJGrqyi8lvYBzkTF
+         zxglWHwlyHnaKsbpo3PHOkiYfi+tn5AchJiZO6QDQFbhpBtIKCNO2DrL/D5DPZo8XVbf
+         i1CUekQFoB2NL62/OFYOvBb8NwMk02q03rmRIWZLpHTjHuyN+vOJGBeuuXlEb4OvfZ4J
+         WtVCA/lCuS9S7Bk4cOaClgAxZq0x+JLfoOLn9u7swVZ7YM9CdziqA+1ecFlL8ttlPd4w
+         +HyKSBQZmUqis1An/Vke/bOZMoFjyI6WAqFDUizekQIth0laee4Wi+7Ji3Cu0HYFdhVr
+         6eDA==
+X-Gm-Message-State: AOAM530yjcBSU6QIN2iSd4Uu7fSA+xWXht8mWmtKEI0lYnVxIvHCwvsb
+        h5CT5O4HMg/Zbi0VOyuHPbhub+oPX3wL9g==
+X-Google-Smtp-Source: ABdhPJxoDnNjjvVhWww8Ms5gJnrwtghVKekf8KDWX4JcOvmCGqZvKZBxs7JTCgp9mPP+WeYCpgBpGA==
+X-Received: by 2002:aca:744:: with SMTP id 65mr3319322oih.174.1633013622716;
+        Thu, 30 Sep 2021 07:53:42 -0700 (PDT)
+Received: from ripper (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id m26sm606177otf.12.2021.09.30.07.53.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Sep 2021 06:29:44 -0700 (PDT)
-Date:   Thu, 30 Sep 2021 14:29:42 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Cc:     Will McVicker <willmcvicker@google.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Saravana Kannan <saravanak@google.com>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH v2 00/12] arm64: Kconfig: Update ARCH_EXYNOS select
- configs
-Message-ID: <YVW7xoHaLdGHBoEQ@google.com>
-References: <20210928235635.1348330-1-willmcvicker@google.com>
- <7766faf8-2dd1-6525-3b9a-8ba790c29cff@canonical.com>
- <CABYd82YodFDwBxexCv+0hpYrdYEX1Z1CvnRkmnBPkEJNJ4bssQ@mail.gmail.com>
- <c65bf0db-6fd1-eb05-f407-37c41f9125f4@canonical.com>
- <YVWCK5QO331rfhJJ@google.com>
- <72d27a82-9d4d-1f91-bd1f-ebead3b75ffa@canonical.com>
- <YVWwBz8jrznqXah4@google.com>
- <8d260548-176e-d76b-6f05-d4d02ddd4f67@canonical.com>
+        Thu, 30 Sep 2021 07:53:42 -0700 (PDT)
+Date:   Thu, 30 Sep 2021 07:55:31 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     agross@kernel.org, linus.walleij@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Prasad Sodagudi <psodagud@codeaurora.org>
+Subject: Re: [PATCH] pinctrl: qcom: Add egpio feature support
+Message-ID: <YVXP46FvzmZ1xDvY@ripper>
+References: <1631860648-31774-1-git-send-email-rnayak@codeaurora.org>
+ <YUfZbsf3MX1aQJ2+@builder.lan>
+ <d2f28d34-99b3-30f8-8504-bc819946876f@codeaurora.org>
+ <YUoHr0F9qjr2Toeb@ripper>
+ <2d2891e2-0cdf-1938-f9a1-77135066f5de@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8d260548-176e-d76b-6f05-d4d02ddd4f67@canonical.com>
+In-Reply-To: <2d2891e2-0cdf-1938-f9a1-77135066f5de@codeaurora.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 30 Sep 2021, Krzysztof Kozlowski wrote:
+On Thu 30 Sep 02:46 PDT 2021, Rajendra Nayak wrote:
 
-> On 30/09/2021 14:39, Lee Jones wrote:
-> > On Thu, 30 Sep 2021, Krzysztof Kozlowski wrote:
-> > 
-> >> On 30/09/2021 11:23, Lee Jones wrote:
-> >>> [0] Full disclosure: part of my role at Linaro is to keep the Android
-> >>> kernel running as close to Mainline as possible and encourage/push the
-> >>> upstream-first mantra, hence my involvement with this and other sets.
-> >>> I assure you all intentions are good and honourable.  If you haven't
-> >>> already seen it, please see Todd's most recent update on the goals and
-> >>> status of GKI:
-> >>>
-> >>>   Article: https://tinyurl.com/saaen3sp
-> >>>   Video:   https://youtu.be/O_lCFGinFPM
-> >>>
-> >>
-> >> Side topic, why this patchset is in your scope or Will's/Google's scope?
-> >> Just drop it from Android main kernel, it will not be your problem. I
-> >> mean, really, you don't need this patchset in your tree at all. The only
-> >> platform which needs it, the only platform which will loose something
-> >> will be one specific vendor. Therefore this will be an incentive for
-> >> them to join both discussions and upstream development. :)
-> > 
-> > How would they fix this besides upstreaming support for unreleased
-> > work-in-progress H/W?
-> > 
-> > Haven't I explained this several times already? :)
 > 
-> Either that way or the same as Will's doing but that's not my question.
-> I understand you flush the queue of your GKI patches to be closer to
-> upstream. Reduce the backlog/burden. you can achieve your goal by simply
-> dropping such patch and making it not your problem. :)
+> 
+> On 9/21/2021 9:56 PM, Bjorn Andersson wrote:
+> > On Tue 21 Sep 03:39 PDT 2021, Rajendra Nayak wrote:
+> > 
+> > > 
+> > > 
+> > > On 9/20/2021 6:14 AM, Bjorn Andersson wrote:
+> > > > On Fri 17 Sep 01:37 CDT 2021, Rajendra Nayak wrote:
+> > > > 
+> > > > > From: Prasad Sodagudi <psodagud@codeaurora.org>
+> > > > > 
+> > > > > egpio is a scheme which allows special power Island Domain IOs
+> > > > > (LPASS,SSC) to be reused as regular chip GPIOs by muxing regular
+> > > > > TLMM functions with Island Domain functions.
+> > > > > With this scheme, an IO can be controlled both by the cpu running
+> > > > > linux and the Island processor. This provides great flexibility to
+> > > > > re-purpose the Island IOs for regular TLMM usecases.
+> > > > > 
+> > > > > 2 new bits are added to ctl_reg, egpio_present is a read only bit
+> > > > > which shows if egpio feature is available or not on a given gpio.
+> > > > > egpio_enable is the read/write bit and only effective if egpio_present
+> > > > > is 1. Once its set, the Island IO is controlled from Chip TLMM.
+> > > > > egpio_enable when set to 0 means the GPIO is used as Island Domain IO.
+> > > > > 
+> > > > > The support exists on most recent qcom SoCs, and we add support
+> > > > > for sm8150/sm8250/sm8350 and sc7280 as part of this patch.
+> > > > > 
+> > > > 
+> > > > I was under the impression that this feature would allow you to
+> > > > repurpose pins for use either by the remote island or by apps.
+> > > 
+> > > thats right, you can repurpose the pins for usage by apps by setting
+> > > the egpio_enable to 1, when set to 0 its owned by the island processor.
+> > 
+> > Good.
+> > 
+> > > > 
+> > > > But if I understand your proposal, you check to see if the pin is
+> > > > "egpio capable" for a pin and if so just sets the bit - muxing it to
+> > > > apps (or the island?).
+> > > 
+> > > Right, so if there is a request for a egpio-capable pin, the driver
+> > > flips the ownership. Are you suggesting having some kind of checks to determine
+> > > who should own it?
+> > > 
+> > 
+> > I see, I missed that nuance. So Linux will steal any pins that are
+> > mentioned in DT. But that would mean that you're relying on someone else
+> > to ensure that this bit is cleared for the other pins and you would not
+> > be able to explicitly flip the state back to island mode in runtime.
+> > 
+> > I would prefer that this was more explicit.
+> > 
+> > > > It seems reasonable that this would be another pinmux state for these
+> > > > pins, rather than just flipping them all in one or the other direction.
+> > > 
+> > > hmm, I don't understand. This is not a pinmux state, its a switch to decide
+> > > the ownership.
+> > 
+> > But does it mux the pin to the island, or does it state that the island
+> > is now in charge of the associated TLMM registers?
+> 
+> The island processor does not access the APPS TLMM register space, it has its
+> own TLMM register space that it configures. APPS TLMM registers control its
+> mux/conf settings and Island TLMM registers controls its mux/conf. So essentially
+> there are 2 sets of registers to control the same pin.
+> This bit is more like a top level mux which decides what register settings
+> take affect.
+> 
 
-git reset --hard mainline/master   # job done - tea break  :)
+"One mux to rule them all" :)
 
-Seriously though, we wish to encourage the use of GKI so all vendors
-can enjoy the benefits of more easily updateable/secure code-bases.
+When we switch this mux towards the Island TLMM, do we need to configure
+the APPS TLMM in a particular way, or does the state of that not matter?
 
-I can't see how pushing back on seamlessly benign changes would
-benefit them or anyone else.
+Would it be reasonable to say that when muxed towards the island the
+apps should always be in gpio mux with some predetermined properties, to
+save power?
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+
+To reiterate, as proposed, mentioning a egpio-capable pin in the apps
+DTS will cause it to be muxed to the APSS TLMM. But I'm not convinced
+that we don't have scenarios where one might want to dynamically mux the
+pin between island and apss tlmm.
+
+My suggestion is that even that it's two independent muxes controlled in
+the apps tlmm, we'd express them in the same pinmux, i.e. we'd have
+something like:
+
+some-local-state {
+	pins = "gpio1";
+	function = "gpio";
+	output-high;
+};
+
+some-remote-state {
+	pins = "gpio1";
+	function = "island"; /* or just egpio... ? */
+};
+
+One case I imaging where this could be useful is to allow Linux to
+configure a known state of pins when the island isn't running, from the
+remoteproc driver and then flip it over to island mode before booting
+the remote.
+
+Regards,
+Bjorn
