@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D7CCD41DEA6
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Sep 2021 18:16:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B241441DEB0
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Sep 2021 18:17:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349323AbhI3QS2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 30 Sep 2021 12:18:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33430 "EHLO
+        id S1349630AbhI3QTV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 30 Sep 2021 12:19:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349120AbhI3QS1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Sep 2021 12:18:27 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6F8EC06176A
-        for <linux-gpio@vger.kernel.org>; Thu, 30 Sep 2021 09:16:44 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id m3so27116057lfu.2
-        for <linux-gpio@vger.kernel.org>; Thu, 30 Sep 2021 09:16:44 -0700 (PDT)
+        with ESMTP id S1349611AbhI3QTV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Sep 2021 12:19:21 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B056C06176C
+        for <linux-gpio@vger.kernel.org>; Thu, 30 Sep 2021 09:17:38 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id x27so27679357lfu.5
+        for <linux-gpio@vger.kernel.org>; Thu, 30 Sep 2021 09:17:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=wrVVL6Q5oh52S40J0qY1IDd3nrzVJ/J8U0I1hgcarO4=;
-        b=GGcKF1QOHQHdbK27J87+CXDf1OO+VZ4YO3NuP9kI2G8+4sWkeEA0OekFLzxL/L0w6H
-         9nYnWC1zP7NmSdzsSEPUjMqDV5kXvs4oyZRlY+aUdk/RSgbjfZMi94mmTJTuz0cIMU9p
-         CTHp6440J8LeqZSNzjqs6YNApx5rLH2OIRa3Jm1dJP+FE3e2aiK2ldl/2ss/r6oTcIfC
-         7lXCk1V9kPA0b2fDE6xrjG7VoSAIAvbe8gVQUH2KDZT/66mrPBoSnKqW0oJzO54mqO21
-         WYS+EE7VCVS+OxSjVYJ4cUrVK/qlUuYyTmB6bHW6Z7ZCkD5cXSRWMjDiSLmNxLiEoAbu
-         JtzQ==
+        bh=9AydplMO/OhchranFJNxsujjEB+Eo9pfrveqj6lBlFg=;
+        b=qUffUWOuFP3/0X04i77M7wE7tr9M3z9zUShjb3xRJsb7HIXmRnl2l3AxGvVjar7aFA
+         unF5eCBPPT8czCY8/I4w32GSWCvamltkC677hJ2bFllO97iK036m/SlqreWhRTvmPLHQ
+         4s2kSLW1ppCmS1NeQY3xYj2+0YKirmOPQhblVrGWGe+t4ZjIGZIP7wSWoJrRdXG7wSuW
+         xL48DAlsGwZkwhAl3NEq4/XTb8i9C/M9x0JWQZw1pJ2ii6viWDd/GD+dghS7TTzjTKGa
+         cPHyik+7LLS2fCB3XJkPyzqyg53L8yltVZITOkM4M/zR9KPrXiSqbMWZD9JeST//3i11
+         9rSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wrVVL6Q5oh52S40J0qY1IDd3nrzVJ/J8U0I1hgcarO4=;
-        b=ZFMqVOZMkZLNrcaCdUG8I1NOcHht3naqtbiGhnno91I3h5UwKKqb1LjW40JRXXybx6
-         L5CFaM8HwV7Y2T+Hyr+p531QpQTK+gfHGYhUrXPqUo9ngTx7kBCPli7GWWmq1MiZaBxP
-         FvnPDeDb3a8NsLkABsnPc5y0l//EgbOe6jpqyxDeuFlPY6uJxXysTfbrYjcMoqrbMapV
-         jeXXkaddwLwU7lSw3ggf/SQZIzgOSL+v1gHATV4QjK+jJj6UFFY5MJjls/mNafkpiM/4
-         O7kpH/knm7jH/Hivm2BHwRfuhihiVH1uvNh1cj6UaOaCS/Gs8WhHi02jluy0Dz+Gi/zq
-         DpLw==
-X-Gm-Message-State: AOAM530h42+yHCYCE2WNO9cEz5v+YfDCfI+OEgEJctb7Turt7sCP1vOW
-        CW7Puqi6G0s4oAEN4N80uy66ohF1Ec+i7FM+uROSzw==
-X-Google-Smtp-Source: ABdhPJzral1Se1YwknQbfsFc4flERKu85KncR+/GFdjE4b1oI/LFJgmnco2+Q+rENklt6Pbapdku3puvBG55dvJW1y4=
-X-Received: by 2002:a2e:510a:: with SMTP id f10mr6681946ljb.358.1633018603142;
- Thu, 30 Sep 2021 09:16:43 -0700 (PDT)
+        bh=9AydplMO/OhchranFJNxsujjEB+Eo9pfrveqj6lBlFg=;
+        b=rs7g4DdYvQv2qUV/He+OcyOISyKdrJtb3A5oGUOu6SlTgUMJo5ajXQFGHoT+gcHNpO
+         kB7XQbzHRuJ8qvPWJl5S8nyENbu8T66oiUyCt23EG2MxORb+iH2lilhiWPikHAJJNv10
+         QcEy+sXk4VH9iwlYXFAmTfeZAzi5Era11cnOCuIUV583B14U14tT+n+Suw4YfnDphB1M
+         wccVdelzaEYfT4COz3wPC4atH7p5C61dZSDLNbLIvpREu8VFp1h5y4KdT227ZZ7n6k/a
+         LvT4Nt3qCwg2bWIrVSovV+yqLTuNq1TXPaOZ1E5xpnQbogOiSh+R7fwoIS5tDee1cl6S
+         8quw==
+X-Gm-Message-State: AOAM532dlFA2xt/VHhZkOklQsUczzDn5u+25tOCHunyxoe5SZplMMG6P
+        KSMptKzpXXcCDyFtIA9MLT4U4gINbnJy8ap6rgXllsyP/us=
+X-Google-Smtp-Source: ABdhPJy+kwam2qnCIJA421Yva4o4+CPlZrt6f87kDQGjhOta3fQWnFUPvQVO3ABPx0RiMmhb2e/ysCCV5bMgqrYfB1A=
+X-Received: by 2002:a2e:4e11:: with SMTP id c17mr6598678ljb.19.1633018656196;
+ Thu, 30 Sep 2021 09:17:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210930095225.9718-1-jbx6244@gmail.com> <20210930095225.9718-2-jbx6244@gmail.com>
-In-Reply-To: <20210930095225.9718-2-jbx6244@gmail.com>
+References: <20210930095225.9718-1-jbx6244@gmail.com> <20210930095225.9718-3-jbx6244@gmail.com>
+In-Reply-To: <20210930095225.9718-3-jbx6244@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 30 Sep 2021 18:16:32 +0200
-Message-ID: <CACRpkdYvKiO_jU5rakwpkpDNq=gCjqtqnVebSECGuWioBOG4wg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] ARM: dts: rockchip: change gpio nodenames
+Date:   Thu, 30 Sep 2021 18:17:24 +0200
+Message-ID: <CACRpkdZfzQK4LcwkwY-AbfXUaMssfUpKSa4VOSnuVLQPdapCYg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] arm64: dts: rockchip: change gpio nodenames
 To:     Johan Jonker <jbx6244@gmail.com>
 Cc:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
         Rob Herring <robh+dt@kernel.org>,
@@ -72,7 +72,8 @@ On Thu, Sep 30, 2021 at 11:52 AM Johan Jonker <jbx6244@gmail.com> wrote:
 > Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Please funnel this patch through the SoC tree.
+
+Please funnel this through the SoC tree.
 
 Yours,
 Linus Walleij
