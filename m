@@ -2,62 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C657E41E36B
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Sep 2021 23:34:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 712C141E409
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Oct 2021 00:39:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346215AbhI3VgY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 30 Sep 2021 17:36:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45638 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1346099AbhI3VgW (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 30 Sep 2021 17:36:22 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 7394761A08;
-        Thu, 30 Sep 2021 21:34:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633037679;
-        bh=6qiqqtaFUmsbEzR9gXZw02ewjS63+mSJ0Lh4Gl3qjMU=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=VcSYwFNVnb8nqDUbw7ZQ5qcCDoQ/bjmeIm0/uV7ziyUAIGHopFRVOUONTWEVuXYHZ
-         hN+9P+Yb5UVmVkNZr9vk1Q9hGj86gbSXLt5Vt9kTlD903dGQWrzjoh/sRhIRTKQGd3
-         9gYS0Nbm3Axv8O+TD3C9LroUsZIhNmNMuCZ6ct0dfa7sHy24KCX9OXFQkQoML6ZaVI
-         A3jsZ2hD267/T2gFTfOpLYI13bs3+fMvjsLwJWmtHaz9NL5sI7HKrapOnrXvqeWBda
-         Q8MXGl+0rssJBU0XWNAvoDrII0Nr7jFdSpr0KMBlh+THC8RiG6454YpWM4IFPDJr0a
-         zHQw8J+Rpqh/g==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 6D68760A7E;
-        Thu, 30 Sep 2021 21:34:39 +0000 (UTC)
-Subject: Re: [GIT PULL] gpio: fixes for v5.15-rc4
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20210930075421.13146-1-brgl@bgdev.pl>
-References: <20210930075421.13146-1-brgl@bgdev.pl>
-X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20210930075421.13146-1-brgl@bgdev.pl>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.15-rc4
-X-PR-Tracked-Commit-Id: 040d985e27dc39353d50d0f75a6be3330f4fece2
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 115f6134a050bb098414f38555a5ab780ebbfef0
-Message-Id: <163303767944.5240.5538848633086183181.pr-tracker-bot@kernel.org>
-Date:   Thu, 30 Sep 2021 21:34:39 +0000
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>
+        id S1344246AbhI3Wlk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 30 Sep 2021 18:41:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36544 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1343926AbhI3Wli (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Sep 2021 18:41:38 -0400
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B8ECC06176D
+        for <linux-gpio@vger.kernel.org>; Thu, 30 Sep 2021 15:39:55 -0700 (PDT)
+Received: by mail-lf1-x12c.google.com with SMTP id i25so31331080lfg.6
+        for <linux-gpio@vger.kernel.org>; Thu, 30 Sep 2021 15:39:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=vpEK1RK+z1DYVOyk9DbEX3Qy0CptNAutN/+eoXhnNAg=;
+        b=MPcV1nKTG41YsS6nzyECLzS8XJcpcOFfbS7VcjU0nJu/vyyILaiw89TNbZRdv06fp/
+         Su2MmLA9dka8g53MV7Nlkf5KlBiC8susP2eemNZkkZ6deq7x1t0rsM+v1MbBcgAk5rBO
+         9wS9iw6ysXstOGP3itVu6SHxJoTKmTvSCEE99X50nF7tSPbEXiG3VsfZ0n9sYNzhlpz5
+         iWlmE7HHx0SjYIqoa6LfJiyqxsTCwSsw5Dq4iWAufzv11x0kG3zJGCH7FPkzlsLJvttm
+         nuq2hv0yG8538ZdydG/D4n44TePQPrpr69XoaMMfk46zVgUlx4+VnNTnaJ9/bjPyJE8w
+         IYvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=vpEK1RK+z1DYVOyk9DbEX3Qy0CptNAutN/+eoXhnNAg=;
+        b=0LG5/8uQ+Wgjvb8Fl2sWkRvO3IDREPpU/O1ttK1JU3MAmtwmlhX1lEaRndv0y3aRwK
+         IQl/95lDvdOwLZxCTrZVbwI0RHKrnuJdgSet0xUra29sDjl+VFFcUhntfSTyjqnp4sbe
+         dWHPj/2qpFgJHBzDoKt3jopz6ev5AIP7EAzFs0rQ4luXU37mSSj7bf4y2sv5+HvfhCDt
+         NhsR5dCGapE9YCyyUOmIdyvA5Jff6Pu1+GotCASXazFTl+URp/Ls0bh9KJrr6B1gwH3R
+         PCzF9nIJT3/fWIJnWEbDwRHeCINrHO9HE6k12dxV/GxW3II3UlX2eRajs25ZHfJKPdVs
+         vpZA==
+X-Gm-Message-State: AOAM530d3C/FLar9kLaZaVGL6avPXM4e9N5P0pcm4/JtME9oDvGxago+
+        0ucUQYhwHZAXMMav3eziPKpCOEh97tOCO7nnDQIlSw==
+X-Google-Smtp-Source: ABdhPJysr58yCMlOKQdoTUQe1CpCXlV7Z0NZ/4XMkU/oHfVF8EPT50KZPM/Gvlr1q5u8LKPCiV9rRwIUOUwRmWuXU5E=
+X-Received: by 2002:a05:6512:1303:: with SMTP id x3mr1728584lfu.291.1633041593380;
+ Thu, 30 Sep 2021 15:39:53 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210903012236.160858-1-lizhijian@cn.fujitsu.com>
+In-Reply-To: <20210903012236.160858-1-lizhijian@cn.fujitsu.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 1 Oct 2021 00:39:42 +0200
+Message-ID: <CACRpkdaMYdc4WLcLFMKd3MyyKnQpdhP3Wxkx6YPoR+0YmH8ifw@mail.gmail.com>
+Subject: Re: [PATCH v2] selftests/gpio: Fix gpio compiling error
+To:     Li Zhijian <lizhijian@cn.fujitsu.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Shuah Khan <shuah@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Philip Li <philip.li@intel.com>,
+        kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pull request you sent on Thu, 30 Sep 2021 09:54:21 +0200:
+Hi Li,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.15-rc4
+thanks for your patch!
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/115f6134a050bb098414f38555a5ab780ebbfef0
+It needs to be sent directly to Bartosz Golaszewski so he can apply
+it to the GPIO tree.
 
-Thank you!
+Thanks!
+Linus Walleij
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+On Fri, Sep 3, 2021 at 3:18 AM Li Zhijian <lizhijian@cn.fujitsu.com> wrote:
+>
+> [root@iaas-rpma gpio]# make
+> gcc     gpio-mockup-cdev.c  -o /home/lizhijian/linux/tools/testing/selfte=
+sts/gpio/gpio-mockup-cdev
+> gpio-mockup-cdev.c: In function =E2=80=98request_line_v2=E2=80=99:
+> gpio-mockup-cdev.c:24:30: error: storage size of =E2=80=98req=E2=80=99 is=
+n=E2=80=99t known
+>    24 |  struct gpio_v2_line_request req;
+>       |                              ^~~
+> gpio-mockup-cdev.c:32:14: error: =E2=80=98GPIO_V2_LINE_FLAG_OUTPUT=E2=80=
+=99 undeclared (first use in this function); did you mean =E2=80=98GPIOLINE=
+_FLAG_IS_OUT=E2=80=99?
+>    32 |  if (flags & GPIO_V2_LINE_FLAG_OUTPUT) {
+>       |              ^~~~~~~~~~~~~~~~~~~~~~~~
+>
+> gpio-mockup-cdev.c includes <linux/gpio.h> which could be provided by
+> kernel-headers package, and where it's expected to declare
+> GPIO_V2_LINE_FLAG_OUTPUT. However distros or developers will not always
+> install the same kernel-header as we are compiling.
+>
+> So we can tell compiler to search headers from linux tree simply like oth=
+ers,
+> such as sched.
+>
+> CC: Philip Li <philip.li@intel.com>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Li Zhijian <lizhijian@cn.fujitsu.com>
+>
+> ---
+> V2: add more details about the fix
+> ---
+>  tools/testing/selftests/gpio/Makefile | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/tools/testing/selftests/gpio/Makefile b/tools/testing/selfte=
+sts/gpio/Makefile
+> index 39f2bbe8dd3d..42ea7d2aa844 100644
+> --- a/tools/testing/selftests/gpio/Makefile
+> +++ b/tools/testing/selftests/gpio/Makefile
+> @@ -3,5 +3,6 @@
+>  TEST_PROGS :=3D gpio-mockup.sh
+>  TEST_FILES :=3D gpio-mockup-sysfs.sh
+>  TEST_GEN_PROGS_EXTENDED :=3D gpio-mockup-cdev
+> +CFLAGS +=3D -I../../../../usr/include
+>
+>  include ../lib.mk
+> --
+> 2.31.1
+>
+>
+>
