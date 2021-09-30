@@ -2,137 +2,150 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 37C2841DEF8
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Sep 2021 18:26:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33C7041DF58
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Sep 2021 18:41:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245512AbhI3Q21 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 30 Sep 2021 12:28:27 -0400
-Received: from mail-ua1-f49.google.com ([209.85.222.49]:45612 "EHLO
-        mail-ua1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350828AbhI3Q21 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Sep 2021 12:28:27 -0400
-Received: by mail-ua1-f49.google.com with SMTP id 64so4644356uab.12;
-        Thu, 30 Sep 2021 09:26:44 -0700 (PDT)
+        id S1352232AbhI3Qni (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 30 Sep 2021 12:43:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39600 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1352236AbhI3Qnh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Sep 2021 12:43:37 -0400
+Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3B57C061770
+        for <linux-gpio@vger.kernel.org>; Thu, 30 Sep 2021 09:41:54 -0700 (PDT)
+Received: by mail-vs1-xe41.google.com with SMTP id 188so8209303vsv.0
+        for <linux-gpio@vger.kernel.org>; Thu, 30 Sep 2021 09:41:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=/T9drlD1s9vO6lHEMs4LJzmDo2MKXEHBXvFYaWoQWpk=;
+        b=pOaGKNYWfb4v0nwXyM4HQq5RhcHrgKkGxtXo9Ik9BWPtid2/WmjZyIl8LN1E6Sy1Yf
+         pdaezqCdtmbXNhV2+jv14JS+cyaV20spfm1Fv4CY7xN469gxbewLOgQJSg5+wzdJ7OTd
+         oGXlJUu2ADfKtdc2WvEWFBMIT6STlKwELS+QDAfJBm6Bf8TVRSON1fAlNczO1tSHH01Q
+         GhTm4uQSsW0kgUhMRFDXDpEy8bE6luXh1c2Z256gr1SWIS5gM95NLiiyVLRL356TMpBS
+         rhPTgcVllOzU9WYGJ0gotOkBzNbX3/Qb+LZOTv6W285uvxFIy/Xpl7bOeXWzBn+A2Tlr
+         Vofw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JiF0/ZgjKWbd99LN0jFcf3oajDZ2ssdc3I0XUDxzEhU=;
-        b=5wBSQiAfAi8nlZ4+HZXYjDS5ca3XisOSNQqyjHlmPl+WuD98ULpkHVSHEYsjk8GR3P
-         YNChRoTCT24rMQ+CclzV6joyfX3o8eqpvbufXmsrqcjxNxvQCVQdiNbv9d/SXaR25iwv
-         7V6Q0ajfSSwKzCsPE78376f4BLYJHtRXD91UiP/4HTr9si0uQk8yEXGmxzNZO9YnivXV
-         uP8u8DnNeBb3LygoeJ6MZyyQzYY0wLF2+jOaMMQgdj5ZFL0lH08gv7mSCLjuEAQwUbY7
-         wzY+aYxYgBmmlbvwdXhxU68hzyY5YjJKoM66vO73XWxIdcyY3A3R8m1sT4Bk9qISbq2O
-         1Rkg==
-X-Gm-Message-State: AOAM533ubi3RHAzaGp0c7dclA6w6IqGQP+OQygq9rhg/6n/bhkzn7bj5
-        lnDV8FvYlu9MwLAtQHZiZW+IAlOsiftgJD/xMiM=
-X-Google-Smtp-Source: ABdhPJxXKENqdoBP7B9ZGTIy/mSCP2ayP3D8cOsCZjbfOGW3dAAimFFBEtD7kMLVg//tPmAC5MEnBkgUBT1EBe51f7Y=
-X-Received: by 2002:ab0:58c1:: with SMTP id r1mr6402945uac.89.1633019203566;
- Thu, 30 Sep 2021 09:26:43 -0700 (PDT)
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=/T9drlD1s9vO6lHEMs4LJzmDo2MKXEHBXvFYaWoQWpk=;
+        b=znSzZrlTNTYc4iecIsi8gHO0fdg+jc1sdy0+pa/N8HxySZ6z2KIX4De8G8xPMoRLqi
+         szOcIhpTCQ8W6dhiZuF37iDZQrEGG0kLBJHne4Hpi5eHon11mqzYMc2pbMiUCam3KLJA
+         cIl2p73mOw8ms99ktsfjK2rX0D077Iht8Sbw42ggwiQJotxdelh2WMtEtX75XzPWIUbX
+         b1gETURFoQOm06Bc4cSZffRxon2YUeVEm907e9efDyKu6PG1OH4GV6hcxTdI7NDq59ck
+         TDFaF6vrOl6f/pw4/vTw54OTJ0Og5l187IhF92j549MPcbpFJCUos68VU6X9zV+/U30B
+         JX2g==
+X-Gm-Message-State: AOAM532lRLxa3D7POenvVVMDg/tAvEsFNLZHRLy04Ib9ky3HU7yqfFy3
+        b7PEY9ppf/1feNbC0X1fDO9xFMkcGpxxCQ6NA7U=
+X-Google-Smtp-Source: ABdhPJyXJBR94aCQkDR2nyB9qUV3pduaZl7pZqBCOwpPstHXzcZti+KikFV2xiLcEDgbELfK9GtfAOGhGFV38IzhWX4=
+X-Received: by 2002:a67:d589:: with SMTP id m9mr267626vsj.30.1633020113945;
+ Thu, 30 Sep 2021 09:41:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210928235635.1348330-1-willmcvicker@google.com>
- <7766faf8-2dd1-6525-3b9a-8ba790c29cff@canonical.com> <CABYd82YodFDwBxexCv+0hpYrdYEX1Z1CvnRkmnBPkEJNJ4bssQ@mail.gmail.com>
- <c65bf0db-6fd1-eb05-f407-37c41f9125f4@canonical.com> <YVWCK5QO331rfhJJ@google.com>
- <72d27a82-9d4d-1f91-bd1f-ebead3b75ffa@canonical.com> <YVWwBz8jrznqXah4@google.com>
- <8d260548-176e-d76b-6f05-d4d02ddd4f67@canonical.com> <YVW7xoHaLdGHBoEQ@google.com>
- <CAMuHMdU_dbQYHF=8uOZ3e_v4+Li0bHfQABdLVSpJJPG4XkwhZw@mail.gmail.com> <YVXkGiwAV3kGiBd3@google.com>
-In-Reply-To: <YVXkGiwAV3kGiBd3@google.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 30 Sep 2021 18:26:31 +0200
-Message-ID: <CAMuHMdXTp_cv4Ry0XBzCkv+-Gh3RY-HPZ8uDiNkxqK227+cozw@mail.gmail.com>
-Subject: Re: [PATCH v2 00/12] arm64: Kconfig: Update ARCH_EXYNOS select configs
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Will McVicker <willmcvicker@google.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Saravana Kannan <saravanak@google.com>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-rtc@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Olof Johansson <olof@lixom.net>
+Received: by 2002:a59:ab2e:0:b0:22d:7f44:603a with HTTP; Thu, 30 Sep 2021
+ 09:41:53 -0700 (PDT)
+Reply-To: irenezakari24@gmail.com
+From:   Irene zakari <irenezakari88@gmail.com>
+Date:   Thu, 30 Sep 2021 09:41:53 -0700
+Message-ID: <CAFT8PFHpXMWJg2tokhnCJ-6xrLEBPe7kzvKSH=Q-ze3yy8WSPw@mail.gmail.com>
+Subject: PLEASE I NEED YOUR HELP
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Lee,
+Hello   ..
 
-On Thu, Sep 30, 2021 at 6:21 PM Lee Jones <lee.jones@linaro.org> wrote:
-> On Thu, 30 Sep 2021, Geert Uytterhoeven wrote:
-> > On Thu, Sep 30, 2021 at 3:29 PM Lee Jones <lee.jones@linaro.org> wrote:
-> > > On Thu, 30 Sep 2021, Krzysztof Kozlowski wrote:
-> > > > On 30/09/2021 14:39, Lee Jones wrote:
-> > > > > On Thu, 30 Sep 2021, Krzysztof Kozlowski wrote:
-> > > > >> On 30/09/2021 11:23, Lee Jones wrote:
-> > > > >>> [0] Full disclosure: part of my role at Linaro is to keep the Android
-> > > > >>> kernel running as close to Mainline as possible and encourage/push the
-> > > > >>> upstream-first mantra, hence my involvement with this and other sets.
-> > > > >>> I assure you all intentions are good and honourable.  If you haven't
-> > > > >>> already seen it, please see Todd's most recent update on the goals and
-> > > > >>> status of GKI:
-> > > > >>>
-> > > > >>>   Article: https://tinyurl.com/saaen3sp
-> > > > >>>   Video:   https://youtu.be/O_lCFGinFPM
-> > > > >>>
-> > > > >>
-> > > > >> Side topic, why this patchset is in your scope or Will's/Google's scope?
-> > > > >> Just drop it from Android main kernel, it will not be your problem. I
-> > > > >> mean, really, you don't need this patchset in your tree at all. The only
-> > > > >> platform which needs it, the only platform which will loose something
-> > > > >> will be one specific vendor. Therefore this will be an incentive for
-> > > > >> them to join both discussions and upstream development. :)
-> > > > >
-> > > > > How would they fix this besides upstreaming support for unreleased
-> > > > > work-in-progress H/W?
-> > > > >
-> > > > > Haven't I explained this several times already? :)
-> > > >
-> > > > Either that way or the same as Will's doing but that's not my question.
-> > > > I understand you flush the queue of your GKI patches to be closer to
-> > > > upstream. Reduce the backlog/burden. you can achieve your goal by simply
-> > > > dropping such patch and making it not your problem. :)
-> > >
-> > > git reset --hard mainline/master   # job done - tea break  :)
-> > >
-> > > Seriously though, we wish to encourage the use of GKI so all vendors
-> > > can enjoy the benefits of more easily updateable/secure code-bases.
-> > >
-> > > I can't see how pushing back on seamlessly benign changes would
-> > > benefit them or anyone else.
-> >
-> > I like your wording ;-)
-> >
-> > Indeed, seamlessly benign changes, which are (1) not tested, and (2)
-> > some believed by the platform maintainer to break the platform.
-> > What can possibly go wrong? ;-)
->
-> William has already shown a willingness to test the series.
+How do you do over there? I hope you are doing well?
 
-I'm looking forward to the results!
+My name is Irene. (24 years), i am single, from Gambia, the only child
+of late Eng. Bernard Bakary Zakaria. the Director of Bajam Enterprise
+(Building Construction Company in The Gambia) also the CEO of Bernard
+Import and Export (GAMBIA).
 
-Gr{oetje,eeting}s,
+As a matter of fact my mother died when i was barely 4 years old
+according to my late father and because of the type of love he had for
+my mother made him to remain UN-married till he left the ghost..
 
-                        Geert
+So after the death of my father as a result of assassinate, his brother (My
+Uncle) who is the purchasing and marketing sale manager of my late
+fathers company named (Mr. James Tokunbo Oriade Zakaria) wanted to
+convert all the properties and resources of my late father into his
+which i quarreled with him and it made him to lay his anger on me to
+the extent of hiring an assassins to kill me but to God be the glory i
+succeeded by making a way to Burkina faso for my dear life.
+Honestly i do live a fearful life even here in Burkina faso because of
+those Assassins coming after me .
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+I would want to live and study in your country for my better future.
+because my father same blood brother wanted to force me into undecided
+marriage, just for me to leave my father home and went and live with
+another man I never know as he want to occupied all my father home
+and maybe to sold it as my father no longer alive, I'm the only child
+daughter my father born, '' but he don't know that i am not
+interesting in any of my father properties or early marriage for now,
+because i still have future to think about and to focus on my studies
+first as i was doing my first year in the University before the death
+of my father.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Actually what I want to discuss with you is about my personal issue
+concern funds my late father deposited in a bank outside my country,
+worth $4.5 million united state dollars. i need your assistance to
+receive and invest this funds in your country.
+
+Please help me, I am sincere to you and I want to be member of your
+family as well if you wouldn't mind to accept me and lead me to better
+future in your country.
+
+All the documents the bank issue to my father during time of deposit
+is with me now.
+I already notify the bank on phone about the death of my father and
+they are surprise for the news and accept that my father is their good
+customer.
+I will be happy if this money can be invested in any business of your
+choice and it will be under your control till i finished my education,
+also I'm assuring you good relationship and I am ready to discuss the
+amount of money to give you from this money for your help.
+
+Therefore, I shall give you the bank contact and other necessary
+information in my next email if you will only promise me that you will
+not/never betray and disclosed this matter to anybody, because, this
+money is the only hope i have for survival on earth since I have lost
+my parents.
+
+Moreover I have the FUND PLACEMENT CERTIFICATE and the DEATH
+CERTIFICATE here with me, but before I give you further information, i
+will like to know your full data
+
+1. Full Name: ........................
+2. Address: ..................
+3. Nationality: ........... Sex................
+4. Age:........... Date of Birth:................
+5. Occupation:...................
+.....
+6. Phone: ........... Fax:.........................
+7. State of Origin: .......Country:..............
+8. Occupation:...................
+................
+9. Marital status........... E-mail address's: ............
+10. Scan copy of your ID card or Driving License/Photo:............
+DECLARATION:
+
+so that i will be fully sure that i am not trusting the wrong person.
+and it will also give me the mind to send you the bank contact for you
+to communicate with them for more verification about this money. and
+to know you more better.
+
+Meanwhile, you can reach me through my pastor,his name is Pastor Paul
+any time you call, tell him that you want to speak with me because
+right now i am living in the church here in Burkina faso and i don't
+want to stay here any longer,
+send for me to speak with you his phone number is this(+226 75213646)
+
+I will stop here and i will be waiting for your reply and feel free
+ask any thing you want to know about me.
+Please help me, I would be highly appreciated
+Have nice day.
+From Irene
