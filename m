@@ -2,294 +2,224 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0395341D31A
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Sep 2021 08:15:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A50AC41D320
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Sep 2021 08:16:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348227AbhI3GQq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 30 Sep 2021 02:16:46 -0400
-Received: from smtp-relay-internal-0.canonical.com ([185.125.188.122]:56966
-        "EHLO smtp-relay-internal-0.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1347847AbhI3GQq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 30 Sep 2021 02:16:46 -0400
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com [209.85.208.72])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 600B2402D9
-        for <linux-gpio@vger.kernel.org>; Thu, 30 Sep 2021 06:15:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1632982503;
-        bh=l4P1yQgHmK4IoeNIUGcmxpjGHV2AL8XAWEflVAlKCuA=;
-        h=To:Cc:References:From:Subject:Message-ID:Date:MIME-Version:
-         In-Reply-To:Content-Type;
-        b=ih/GKOgES5bbB9lqXk55cx3IkymGd0z9ss5VnOtRVO2TxtljoXBm0Yk/HxIeVgTBd
-         DfqeQOQxr9Hl4UQE+T47SeI1FSCZZ+/Dqxe7ICDnl5SgebbtuYKCOQov2SSeAeikjA
-         yqUpE0huQ6/cVrBmR7B+d+1UNeX+rhxpLoUNbxhFWunqy8ftCUPTykUfAsN/cqmrm6
-         PqFjeMKOFKbE70pkMfuT18Tfww2WAs3pr6W+WZwO8GIG6OV0TBHotpE2Rw8HFMSXcr
-         cbh9V/ZYXm/lK2nOlD8nHYkFkYNydCFgVvl97KaJUILsJcHpoJ6ZiwZvBuT/i9eBZv
-         KiuIWkkaIpz8A==
-Received: by mail-ed1-f72.google.com with SMTP id x26-20020a50f19a000000b003da81cce93bso5060298edl.19
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Sep 2021 23:15:03 -0700 (PDT)
+        id S1348242AbhI3GRo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 30 Sep 2021 02:17:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33078 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1348217AbhI3GRo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Sep 2021 02:17:44 -0400
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 159FFC06161C;
+        Wed, 29 Sep 2021 23:16:02 -0700 (PDT)
+Received: by mail-ed1-x52e.google.com with SMTP id ba1so17807487edb.4;
+        Wed, 29 Sep 2021 23:16:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+je6x5elkPbn/OrVuyHzg5kSHlABzrNC5YEtV4KwUY0=;
+        b=Qqt3DwTmYVgavT+bkSOapqelbrkGa9ZI9JD/Wxmq2MQz9nf2kvr7Aanua4UQmeDCqX
+         t6djPS7RK4Bz+AWLf+Ba6Qifr/W4KOnzWlV+jPEkBJhpeGkJIbAyvSX/moy8SVrTbN//
+         pBy+ckwWcBrf7IoqU3aIsMcYjJgGQlHqs+Ebf1XIfPEmu4tSUkLU/6I9KSuySxfCracI
+         QKasonTCfYbvbKNNOfJVkg/xyR38M3Ckgir7UPdDNsN7y+CsdCQ+wRLMSuQqRLdQMYlv
+         vxfCR/HMf/fgRwB0qDO9yFQInMQlHWr1tkP23qLzCsrJSgj5lqiK2h0o5JWn4vD4DU4U
+         NSVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=l4P1yQgHmK4IoeNIUGcmxpjGHV2AL8XAWEflVAlKCuA=;
-        b=HUnUQ2z2ZNz8x3OWnJ+wm6wzUM9DPfxZOm11uT9KyVGwedaZ1f1egt2jwiMItKrbMo
-         xyx6zp+Mn59vnIDvPEZFJcBi/QXhws/rs8PzLfZLfYNuZ2G1+XBZy+ydDYH3XNdMfOjH
-         FztgSEK3usiiF3vsneMwythZcaBglHk0JODakxtnCnZaZaZA5sHCNC3gAD/DtddOXf1a
-         fG4xMbJuzyH5BD9TSeevS6nCgE8TfIYICSSrVoaXiazpKV/c9IWzfpH7WSjoPf55DXXE
-         A4/uhSYltXXXaNvxEmrK6po2jOanQz21vsjeMOtMrgQuFcy8wSFMYbmesbAkGIahwl+/
-         MEvg==
-X-Gm-Message-State: AOAM532cEh/MlCDXyc5XJt5A05ymI5xvJArTFkjwrdBOlKBwie3d/Qmo
-        ynGF+ujqCHWpTPhJuV5nIVOiBkDp95p5ZG50Iu7PQ/qD4/+WjqIAiToc7qyQGPO0MsexnMSh6kG
-        vthH7QGq8SuAyz8ymusAOccaL7f0xOPoH2Uj4rXY=
-X-Received: by 2002:a05:6512:3193:: with SMTP id i19mr1482838lfe.485.1632982492890;
-        Wed, 29 Sep 2021 23:14:52 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw2ed5i0IuL5p++CT70JdS9PYYz1vbD+xm+23BVhAAobKjG9WLM+ErIJYhEnSrjoPv18RAJXQ==
-X-Received: by 2002:a05:6512:3193:: with SMTP id i19mr1482787lfe.485.1632982492506;
-        Wed, 29 Sep 2021 23:14:52 -0700 (PDT)
-Received: from [192.168.0.197] ([193.178.187.25])
-        by smtp.gmail.com with ESMTPSA id l6sm252964lfp.143.2021.09.29.23.14.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Sep 2021 23:14:51 -0700 (PDT)
-To:     Will McVicker <willmcvicker@google.com>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Saravana Kannan <saravanak@google.com>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-References: <20210928235635.1348330-1-willmcvicker@google.com>
- <7766faf8-2dd1-6525-3b9a-8ba790c29cff@canonical.com>
- <CABYd82YodFDwBxexCv+0hpYrdYEX1Z1CvnRkmnBPkEJNJ4bssQ@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Subject: Re: [PATCH v2 00/12] arm64: Kconfig: Update ARCH_EXYNOS select
- configs
-Message-ID: <c65bf0db-6fd1-eb05-f407-37c41f9125f4@canonical.com>
-Date:   Thu, 30 Sep 2021 08:14:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+je6x5elkPbn/OrVuyHzg5kSHlABzrNC5YEtV4KwUY0=;
+        b=JPTTjLgIWgW8tDLbLD+UVtxlMWgVuUpF9d6UK9BwpZEP1+lt2kvd0vfz5BEH9tyIeZ
+         dLBJLgWnN2YVoW8D9RLtA8r2EZDv7XI5QPU4OZWFnf8rWHeifUL2//qOHIndaAKPZyBM
+         ZcT4FtDVgkyo7v/1TqDQTDW06cX3Nm1FNgaB2rLeqhHVlDUV8LAy0EWH3rO9avNk0ozX
+         bXy9mSyvLy9nzdrARYSN3JaQuQxkjyohUGhqPpjHhbxlRoRirJP9idO8hBnvi0SeR5cg
+         Wtd+j8hunJrHyvAADoadn4V8IQtDgRBL5EFSwhmMpTe48PWi1aaNYmcv7hpuj2T7esS7
+         w2kA==
+X-Gm-Message-State: AOAM533gfi6eToNfolChNusbQ+qGtT7vwOR4V8yTJH6bOGjF+NBR8ZKl
+        +TluE7xNtYIkl7ShXOdrCnJkzHIpZoftaDMVSQ65JRe9U9B+Q4Ia
+X-Google-Smtp-Source: ABdhPJyZw/wkAxeRSgTS1Fs1pWRL2rR5oEHTfIiRIhDtpnmEFiM0M2C6/vdo5dUOY3hn03ypVZ53zFrvfXKhipMNxWs=
+X-Received: by 2002:a17:907:7601:: with SMTP id jx1mr4658417ejc.69.1632982560555;
+ Wed, 29 Sep 2021 23:16:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CABYd82YodFDwBxexCv+0hpYrdYEX1Z1CvnRkmnBPkEJNJ4bssQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200407173849.43628-1-andriy.shevchenko@linux.intel.com>
+ <290741faab199d3e43b6255bf2282075@dev.tdt.de> <YUrO5ajlS9wS6xYU@smile.fi.intel.com>
+ <YUrg6TfVhk+TIxDz@smile.fi.intel.com> <d84fb798722762862a7fb08f1e343b6a@dev.tdt.de>
+ <CAHp75Vcc_6mcR4gC-MzVTjTBpuozMJMFTosQjpXN8A25pndNpg@mail.gmail.com> <e221dce908c5ebffa2970c918b45428d@dev.tdt.de>
+In-Reply-To: <e221dce908c5ebffa2970c918b45428d@dev.tdt.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 30 Sep 2021 09:15:26 +0300
+Message-ID: <CAHp75VdALPTzQE-tKj40Ft2b+13AyQKh-Scia_EjYyp54mJtPA@mail.gmail.com>
+Subject: Re: Add a SSDT ACPI description to recognize my I2C device connected
+ via SMBus
+To:     Florian Eckert <fe@dev.tdt.de>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Enrico Weigelt <info@metux.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Eckert.Florian@googlemail.com, linux-gpio@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-i2c@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 29/09/2021 21:48, Will McVicker wrote:
-> On Wed, Sep 29, 2021 at 6:02 AM Krzysztof Kozlowski
-> <krzysztof.kozlowski@canonical.com> wrote:
->>
->> On 29/09/2021 01:56, Will McVicker wrote:
->>> This is v2 of the series of patches that modularizes a number of core
->>> ARCH_EXYNOS drivers. Based off of the feedback from the v1 series, I have
->>> modularized all of the drivers that are removed from the ARCH_EXYNOS
->>> series of "select XXX". This includes setting the following configs as
->>> tristate:
->>>
->>>  * COMMON_CLK_SAMSUNG
->>>  * EXYNOS_ARM64_COMMON_CLK
->>>  * PINCTRL_SAMSUNG
->>>  * PINCTRL_EXYNOS
->>>  * EXYNOS_PMU_ARM64
->>>  * EXYNOS_PM_DOMAINS
->>>
->>> Additionally, it introduces the config EXYNOS_PMU_ARM64 and EXYNOS_PMU_ARM
->>> which was previously EXYNOS_PMU and EXYNOS_PMU_ARM_DRIVERS respectively.
->>> The reason for these new configs is because we are not able to easily
->>> modularize the ARMv7 PMU driver due to built-in arch dependencies on
->>> pmu_base_addr under arch/arm/mach-exynos/*. So the new configs split up
->>> the ARM and ARM64 portions into two separate configs.
->>>
->>> Overall, these drivers didn't require much refactoring and converted to
->>> modules relatively easily. However, due to my lack of exynos hardware, I
->>> was not able to boot test these changes. I'm mostly concerned about the
->>> CLK_OF_DECLARE() changes having dependencies on early timers. So I'm
->>> requesting help for testing these changes on the respective hardware.
->>>
->>
->> These are all not tested at all? In such case, since these are not
->> trivial changes, please mark the series as RFT.
->>
->> I will not be able to test these for some days, so it must wait.
->>
->>
->> Best regards,
->> Krzysztof
-> 
-> +Cc Arnd and Olof,
-> 
-> Hi Krzysztof,
-> 
-> To avoid the scrambled conversation from the first patchset, I'm going
-> to address all your general questions here in the cover letter thread
-> so that it's easier for everyone to follow and reference in the
-> future.
-> 
->> What is more, it seems you entirely ignored Geert's comments. I pointed
->> attention to it last time and you just said you will send v2 instead of
->> joining discussion.
->>
->> It's a NAK for this reason - ignoring what Geert brought: you just broke
->> distro configs for Exynos.
-> 
-> First off I did want to chime into the discussion from the previous
-> patchset, but I felt that Lee and Saravana addressed all your concerns
-> regarding the intent and feasibility. You also made it clear what the
-> next steps were that I needed to take.
+On Thu, Sep 30, 2021 at 1:40 AM Florian Eckert <fe@dev.tdt.de> wrote:
 
-One of the steps was problem with distros using everything as modules.
-They should not receive these drivers as modules.
-Reminder: these are essential drivers and all Exynos platforms must have
-them as built-in (at least till someone really tests this on multiple
-setups).
+...
 
-> 
->> Please also explain why Exynos is so special that we deviate from the
->> policy for all SoC that critical SoC-related drivers have to be enabled
->> (built-in or as module).
-> 
-> I am not actually changing ANY default build configurations here and
-> I'm not removing any existing configuration.
+> > 2) driver seems supports the _ADR schema which you have used in ASL;
+>
+> This refers to the i2c-0, doesn't it?
 
-You are changing not default, but selectability which is part of the
-enforced configuration to make platforms working. The distros do not
-always choose defaults but rather all as modules. Kernel configuration
-is huge and complex, so by mistake they could now even disable
-potentially essential driver. There is no need to disable for example
-essential clock driver on a supported Exynos platform.
+Quite likely, but no guarantees. The number of the controller is
+issued in order of enumeration which may be not deterministic. What is
+real _ADR mapping here is that:
 
-> I tried to make it pretty
-> clear in my original patch series commit messages that none of my
-> changes modify the default behavior. The .config is the same with and
-> without my patches. All of these drivers remain enabled as built-in.
-> So if there is a distro that requires all of these drivers to be
-> built-in, then they can continue as is without noticing any
-> difference. IOW, all of these changes are/should be backwards
-> compatible.
+0 == physical port 0
+1 == physical port 1
+...
+n == physical port n
 
-I was not referring to default neither to backwards compatibility.
-Please explain why Exynos is special that it does not require essential
-drivers to be selected as built-in. For example why aren't same changes
-done for Renesas?
+> My mcp23s08 device is located at the i2c-0 on address 0x24.
 
-Is that now a new global approach that all SoC drivers should be allowed
-to be disabled for ARCH_XXX?
+...
 
-> 
-> I really appreciate yours and John Stultz's comments regarding
-> including the "why" in my commit message wording. I will spend more
-> time on the next series on trying to write a more meaningful commit
-> message, but before that we can surely discuss the "why" here.
-> 
-> As mentioned by Lee and Saravana, our common goal is to make it easier
-> for everyone to contribute upstream. In particular, this series of
-> patches is laying the ground work for distros to have more flexibility
-> in supporting a wider range of platforms without forcing everyone to
-> include unnecessary drivers. 
+> > 4) it's unclear what you did with ASL to get it loaded;
+>
+> On my development device I did a `iasl dsl/mcp23017.dsl`
+> Of the following dsl
+>
+> $ cat dsl/mcp23017.dsl
+> DefinitionBlock ("mcp23017.aml", "SSDT", 5, "", "MCP23017", 4)
+> {
+>      External (\_SB.PCI0.SBUS, DeviceObj)
+>
+>      Scope (\_SB.PCI0.SBUS)
+>      {
 
-The drivers are usually necessary. Actually, you admitted you didn't
-test patchset, so how do you even know that they are unnecessary? How do
- you judge?
+According to the 2) above and as we learnt from the actual code this
+missed one level of the devices, i.e. I2C port
 
-> You said that upstream supports a generic
-> kernel, but I argue that the upstream "generic" arm64 kernel can't be
-> considered generic if it builds in SoC specific drivers that can be
-> modules.
+Device (I2C0)
+{
+        Name (_ADR, Zero)
 
-Good point, but since having them as modules was not tested, I consider
-it as theoretical topic.
+>          Device (GPIO)
+>          {
 
-> This patch series is addressing exactly that -- allow distros
-> to move SoC specific drivers out of the core kernel and into modules.
-> Ultimately, our goal is to be able to directly develop with the
-> upstream kernel on new and old SoCs by not including SoC specific
-> drivers in our generic kernel distro. This helps the upstream
-> community in a number of ways:
-> 
-> (1) It makes the ARM64 generic kernel smaller by converting more
-> drivers into modules
-> (2) It makes it a lot easier for everyone to develop upstream if they
-> can directly use the upstream kernel without carrying downstream
-> changes.
+>              Name (_HID, "PRP0001")
+>              Name (_ADR, Zero)
 
-I don't understand the point (2) here. Anyone can use upstream kernel
-for supported and unsupported platforms. How upstream benefits from a
-change affecting supported platforms made for unsupported, downstream
-platforms.
+This is against specification as I told you already. _CID/_HID may not
+be together with _ADR.
 
-> 
->> Even if there was, I think it is good to have dependencies like
->> ARCH_EXYNOS, as they let us partition the (19000, as Arnd said recently)
->> Kconfig symbols into better manageable groups.  Without these, we cannot
->> do better than "depends on ARM || ARM64 || COMPILE_TEST".
-> 
-> My patch series still keeps the dependencies on ARCH_EXYNOS. I am
-> totally fine with "depends on ARCH_EXYNOS" and totally fine with
-> "default ARCH_EXYNOS". The problem we have is that ARCH_EXYNOS
-> forcefully selects SoC specific drivers to be built-in because it just
-> adds more and more SoC-specific drivers to a generic kernel.
+>              Name (_CRS, ResourceTemplate () {
+>                  I2cSerialBus (
+>                      0x24,                   // Bus address
+>                      ControllerInitiated,    // Don't care
+>                      400000,                 // Fast mode (400 kHz)
+>                      AddressingMode7Bit,     // 7-bit addressing
+>                      "\\_SB.PCI0.SBUS",      // I2C host controller
+>                      0                       // Must be 0
+>                  )
+>              })
+>
+>              Name (_DSD, Package () {
+>                  ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+>                  Package () {
+>                      Package () { "compatible", Package () {
+> "microchip,mcp23017" } },
+>                  }
+>              })
+>          }
+>      }
+> }
+>
+> After that I copied this to my APU3 Target and executed
+>   the following commands:
+> mkdir /sys/kernel/config/acpi/table/mcp23017
+>
+> cat mcp23s08.aml > /sys/kernel/config/table/mcp23017
 
-The selected drivers are essential for supported platforms. We don't
-even know what are these unsupported, downstream platforms you want
-customize kernel for. They cannot be audited, cannot be compared.
+Yeah, but your I2C controller already been enumerated, so this won't
+have any effect due to half-baked ACPI table in the firmware
+(coreboot) which should be
 
-Therefore I don't agree with calling it a "problem" that we select
-*necessary* drivers for supported platforms. It's by design - supported
-platforms should receive them without ability to remove.
+Device (SBUS)
+{
+    Name (_ADR, 0x00140000)
+    Device (PORT0)
+    {
+       Name (_ADR, Zero)
+    }
+    ...
+    Device(PORTn)
+    {
+        Name (_ADR, n)
+    }
+}
 
-If you want to change it, let me paste from previous discussion:
+...
 
-Affecting upstream platforms just because vendor/downstream does not
-want to mainline some code is unacceptable. Please upstream your drivers
-and DTS.
+> > 5) as Mika suggested, have you checked the kernel configuration?
+>
+> I have now switched on the suggested option
+> CONFIG_ACPI_CUSTOM_METHOD=y
+> CONFIG_ACPI_TABLE_UPGRADE=y
+> CONFIG_CONFIGFS_FS=y
+> CONFIG_ACPI_CONFIGFS=y
+> CONFIG_ACPI_DEBUG=y
+>
+> But this did not solved my issue loading ssdt during runtime.
 
-Everyone else are working like this. NXP, Renesas, Xilinx, TI, Rockchip,
-AllWinner. Samsung or Google is not special to receive an exception for
-this.
+It won't as explained in 4) above.
 
+> The output of the aml on the target:
+>
+> cat /sys/kernel/config/acpi/table/mcp23017/aml
 
-> 
-> I know you are asking for me to only push changes that have proven to
-> work. 
+Don't use `cat` against binary files. But we don't really need that.
+It's the same as after iasl.
 
-Yep, tested.
+...
 
-> The theory behind these changes has been proven downstream on
-> other devices and I'm more than willing to help debug any issues that
-> arise out of this patch series, but since I don't have the hardware
-> myself I do need help with device testing these changes.
+> My iasl version:
+>
+> iasl --version
+> Illegal option: --
+>
+> Intel ACPI Component Architecture
+> ASL+ Optimizing Compiler/Disassembler version 20181213
 
-Downstream uses very specific Linux "distro" or fork - Android - with
-changes not present in others. Although tests on other
-(unsupported/unupstreamed) devices is good, but it's not sufficient. For
-example I guess that half or most of Odroid devices are running standard
-Linux distro (Arch, Ubuntu).
+Please, update to something newer.
 
-You also mentioned downstream devices but without actually ever defining
-them. Please be more specific. What SoC, what hardware?
+> Copyright (c) 2000 - 2018 Intel Corporation
 
-Best regards,
-Krzysztof
+...
+
+Current summary:
+ 1) you still have issues with ASL
+ 2) there is boot ordering issues with the controller itself
+
+> What else can I do?
+
+So, the course of actions as I see is:
+- fix the asl
+- fix the coreboot to represent ports of the I2C controller
+- switch to use initramfs method (or EFI)
+- if possible, to unbind and bind back the i2c controller after AML is
+loaded via configfs (it may be not, if it's occupied by some
+peripheral devices / drivers that are crucial to system to work)
+
+> The initrd option does not work with OpenWrt.
+
+Why not? If indeed so (but I don't believe in this), OpenWRT has a bug
+/ missed feature, which must be fixed there.
+
+-- 
+With Best Regards,
+Andy Shevchenko
