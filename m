@@ -2,133 +2,164 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E54FC41F1FE
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Oct 2021 18:17:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D6EE41F284
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Oct 2021 18:51:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354858AbhJAQT0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Oct 2021 12:19:26 -0400
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:46797 "EHLO
-        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231992AbhJAQT0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Oct 2021 12:19:26 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id 4EEA632027AE;
-        Fri,  1 Oct 2021 12:17:41 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Fri, 01 Oct 2021 12:17:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nakato.io; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=fnYYp9mb27h0Z
-        dVSjyd4MQZ1/vDi7YrWJarVWcluyKA=; b=3UOrue5kAfZUv3adiKxjAunbfj1Nc
-        U/m51lyv+LgUPW7WgJMQjEuCTO/xsoN2n0wiUb6Jj9qi5nohzTMgteKIlMViBdfr
-        bvOvdZekkiqwujC4fhKMHC9PPdaS8wPlaTW8MmqPHF02hB1gYgS2X2TqhHuEfCMW
-        qPJgpFdquRhwUZWGgKmoPdx0NAHJ6okSHtvILLPNLvLR6BqiUms21XrKfrlAdSQJ
-        f2fPzqF+NqFpJSUoMTjRQmXBDpncHXVe/lfYC7/0rHgn3jojSAGh+gqmjn8Zd47n
-        tPkSoy5ocfW9QprfLpoW9bTdXKug4Bd6OMj4Vl0UcW7QWDL4FYouA+2LA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=fnYYp9mb27h0ZdVSjyd4MQZ1/vDi7YrWJarVWcluyKA=; b=JDWmubp2
-        w3ISRQfefmoY9GhcFSzzE+d5iiksLkE8eptGHDK5+BNV29OMEQZcxD2TutCDEK10
-        hckuaRiT7ViDnYzPZdrFPacolsBr0rRaymWmYbITq6pVi/brE8YxN/SgjVC+3t2Z
-        RDhwBDOYEkvhT0JkgT3wapY62QsmuGNiKsptWKSHD1pz1A02geoM8IfF/sTPvAed
-        cnkL23e3nylPLPiBL6iBnLdxz2yh4UKiIUdL4vx8qDMIc3hW3te1C0VQ1tniJspe
-        y3Y5YtuHmrpeEmKoruHj6jYxuZeLcIjKFHt8CIhdoaXk9He/2y9C0iJ+GXjr5LOw
-        mCWwB83vs0MRKQ==
-X-ME-Sender: <xms:pDRXYchD9wGEP7PjhGMSFxgXLp3tvy7NtanBpVI1yBwI0VMgNoWjvA>
-    <xme:pDRXYVCogzE-wFKZGmIlvtJUui2635GYM6PjUQqFJt49xGd1uuF8NeTo_LA2cbRCy
-    YpDp2KSL3RSxqPU9w>
-X-ME-Received: <xmr:pDRXYUHiZt9q6bK_Pc9_cR8QJc5nlsNLw0hFtCNEROlz30GMj0aTg2aC-JU8jMtF1Katy5Ol2xxFyyA1J1G9IKdXgMjI2XV2bu6nn1_k>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrudekiedgleegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgjfhgggfestdekre
-    dtredttdenucfhrhhomhepufgrtghhihcumfhinhhguceonhgrkhgrthhosehnrghkrght
-    ohdrihhoqeenucggtffrrghtthgvrhhnpedufeethfetgeektdeuvdetiefhteffuddule
-    dukeektdfhtdefudeiheejgffhhfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgr
-    mhepmhgrihhlfhhrohhmpehnrghkrghtohesnhgrkhgrthhordhioh
-X-ME-Proxy: <xmx:pDRXYdQn5MSwsrkR73ZAMH34UqFRshFZcj8M3fceDM5n_7uoUwZbGg>
-    <xmx:pDRXYZwxoZxOAnwCtpjovAlkY8O_MojDqlW02208oXeB5_yW0Bbwgg>
-    <xmx:pDRXYb7j6geo_He13aIP0amUtBFq5U2c4mi0Ubc-SHOQMxx-U7sZ-Q>
-    <xmx:pDRXYU9W7hrPOInUX1_5316xskPIL5P2W4GP5NkP6aGcOBh1EFRWmw>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 1 Oct 2021 12:17:38 -0400 (EDT)
-From:   Sachi King <nakato@nakato.io>
-To:     linux-gpio@vger.kernel.org, basavaraj.natikar@amd.com
-Cc:     linux-kernel@vger.kernel.org, Sachi King <nakato@nakato.io>
-Subject: [PATCH 1/1] pinctrl: amd: disable and mask interrupts on probe
-Date:   Sat,  2 Oct 2021 02:17:14 +1000
-Message-Id: <20211001161714.2053597-2-nakato@nakato.io>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211001161714.2053597-1-nakato@nakato.io>
-References: <20211001161714.2053597-1-nakato@nakato.io>
+        id S1355035AbhJAQxV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Oct 2021 12:53:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59172 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1354604AbhJAQxU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Oct 2021 12:53:20 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FAC5C06177E
+        for <linux-gpio@vger.kernel.org>; Fri,  1 Oct 2021 09:51:36 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id ba1so37045262edb.4
+        for <linux-gpio@vger.kernel.org>; Fri, 01 Oct 2021 09:51:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bBQZZYDYKRJHZigI6OY4bgMOmcGGR9Z1AlvP3TxeSEI=;
+        b=s24lK/qyc7Hvu7PHx1upoHIf7M9KheKCgbiY3jC4htqP4K2hL8IPfH4FJA7GIOsfqD
+         InRSTPJcDxqgsC+5JApYP6mycmEYweL32Rj80zaqoPRNmAzE9uF9o8YV2QvYI7epa10i
+         xNiKV4whJUFQCX5h1Zhutyq8rJZ4tcsRViKX1FRnG18P/nrROuRoNUdFIWlysUPKyvuB
+         a2AvXPYhYRbcOS/aWdNQLKv7maeKFw4I5cJg1t9R+SqWRh5cl3aupbc+Fdtg/KDgbbSr
+         tO46ZhS1f9zorMIz9hzXLgOnCSew8ryM+60KbdTiQAJltydRYO61mPIrL5JOT6YWHdOF
+         rsog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bBQZZYDYKRJHZigI6OY4bgMOmcGGR9Z1AlvP3TxeSEI=;
+        b=KDartUvews22rnKysCf8JjFBlQEhd2K81XesJPZdU+ik/nW/m26Zajy85oLdGloqhg
+         Bk7GJ3NkmlaiHn2JGHttVbmNboCkg4zfGncqdRYRyEeqLh3nQlOD09ij99AxA1xdrKlN
+         /CdXr/dSl6j/jNd7ZS3TLNAZHknbB/QkOumKPIJcnnT8Hy0sTACy/P8hiJFVNpUKXeK2
+         xRB6gYHwYxD1usmwJ5jPAYoY2zAalNkT4+qvHw2YyYFfTObPx2Q6CW4wEmq0gDUZkACt
+         9P5PmVXdAjDTivuR2qU/SwrFCz6DSiDpZAkXZmbd4CO87EqN9m/2NyQ/nvnnHvWCCnrZ
+         mHHw==
+X-Gm-Message-State: AOAM531UFgRTJqtx4LGd/eAGLXLBT+L7OzpvnW0/RZCUyqZXxjjw4x+8
+        7mvqhSeBo5UNTJPepMWDrlcX6XQhX3zo3KNxSuxxAg==
+X-Google-Smtp-Source: ABdhPJxpLQAYt75NaH1vdWxiIroNTAgkPN0fO2kMs4YItEm5vqCDC80CQdBK9C2906B/kcwERy3e2blHW5dUToSMBAs=
+X-Received: by 2002:a50:dacf:: with SMTP id s15mr15859419edj.385.1633107094312;
+ Fri, 01 Oct 2021 09:51:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210928235635.1348330-1-willmcvicker@google.com>
+ <7766faf8-2dd1-6525-3b9a-8ba790c29cff@canonical.com> <CABYd82YodFDwBxexCv+0hpYrdYEX1Z1CvnRkmnBPkEJNJ4bssQ@mail.gmail.com>
+ <CAOesGMgSt_mYvRzF0rC=fnjMYGO9EX0_Ow2cD1d8XKLD5pHsZA@mail.gmail.com>
+ <CAGETcx-b0ea-rqH+fj37sq9SLWY=+ePK94Y6rnLPuNbqFVBWmw@mail.gmail.com>
+ <CAOesGMhQ3YsLJeQ7aUfb=0oNa3uPCx42wO1U7-ArqJTAUq1G3Q@mail.gmail.com>
+ <CAMuHMdUkMwyA-bk7hfr7S7TE-_S9eBUxKWKmpj0rDCUvHL+fxw@mail.gmail.com> <CAOesGMg_eA5PNzsL76xv6kDQ2QUZeCwC04BNeucfGXkFSOE=Tw@mail.gmail.com>
+In-Reply-To: <CAOesGMg_eA5PNzsL76xv6kDQ2QUZeCwC04BNeucfGXkFSOE=Tw@mail.gmail.com>
+From:   Will McVicker <willmcvicker@google.com>
+Date:   Fri, 1 Oct 2021 09:51:17 -0700
+Message-ID: <CABYd82YSh=q-QrUN+nbzMZ7Z9SKq8V7eAL1=m1mg-j-f8BCbDg@mail.gmail.com>
+Subject: Re: [PATCH v2 00/12] arm64: Kconfig: Update ARCH_EXYNOS select configs
+To:     Olof Johansson <olof@lixom.net>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-rtc@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Some systems such as the Microsoft Surface Laptop 4 leave interrupts
-enabled and configured for use in sleep states on boot, which cause
-unexpected behaviour such as spurious wakes and failed resumes in
-s2idle states.
+On Fri, Oct 1, 2021 at 9:00 AM Olof Johansson <olof@lixom.net> wrote:
+>
+> On Fri, Oct 1, 2021 at 4:59 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> >
+> > Hi Olof,
+> >
+> > On Fri, Oct 1, 2021 at 7:36 AM Olof Johansson <olof@lixom.net> wrote:
+> > > A much more valuable approach would be to work towards being able to
+> > > free up memory by un-probed drivers at the end of boot. That would
+> > > possibly benefit all platforms on all architectures.
+> >
+> > We used to have such a functionality in arch/ppc (not arch/powerpc!),
+> > where code/data could be tagged __prep, __chrp, or __pmac, to put it
+> > in a special section, and to be freed with initdata when unused.  It
+> > was removed in v2.6.15[1], as the savings weren't worth the hassle.
+> > In a more fragmented space like arm the memory lost due to alignment
+> > of the sections would be even more substantial.
+>
+> Yeah, the balance between per-platform code size and overall kernel
+> code size shifted over time to a point where it wasn't as meaningful
+> on ppc.
+>
+> > Another problem is to know when is the end of the boot, especially
+> > with deferred probing.
+>
+> Most of this code either has a module_init() or an initcall that
+> actually registers the drivers and/or probes for the platform and does
+> the work.
+>
+> This means you can have a late equivalent hook/initcall that
+> determines whether this path ended up being probed/used. If it wasn't,
+> you can then unregister and flag the corresponding memory to be freed
+> at the end, and would take out the heuristics and guessing on needing
+> to do it automatically from the code path that's doing said freeing.
+>
+>
+> -Olof
 
-As interrupts should not be enabled until they are claimed and
-explicitly enabled, disabling any interrupts mistakenly left enabled by
-firmware should be safe.
+First off, I appreciate the constructive conversations and I
+understand the ask here. So I'd like to close the "we don't want this"
+and "this isn't possible" conversation. We have already proven
+downstream that it is in fact possible to modularize these drivers on
+other SoCs (mentioned earlier if you missed it) and I'd like to direct
+the conversation towards verifying/testing here instead of negatively
+arguing about how SoC vendors aren't upstreaming their drivers. I
+think everyone understands that, but unfortunately I have no control
+over that even though I would love everyone to work upstream directly.
 
-Signed-off-by: Sachi King <nakato@nakato.io>
----
- drivers/pinctrl/pinctrl-amd.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+I am fine with forcing these drivers to always be enabled in some form
+upstream even though it doesn't really make much sense for a generic
+kernel that will run on Qualcomm, Exynos, Mediatek, (you name it) SoC
+devices. I thought about how to do this yesterday and wasn't able to
+come up with a proper solution that didn't always force this driver to
+be a module when CONFIG_MODULES is enabled.
 
-diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
-index c001f2ed20f8..aa4136cd312d 100644
---- a/drivers/pinctrl/pinctrl-amd.c
-+++ b/drivers/pinctrl/pinctrl-amd.c
-@@ -830,6 +830,32 @@ static const struct pinconf_ops amd_pinconf_ops = {
- 	.pin_config_group_set = amd_pinconf_group_set,
- };
- 
-+static void amd_gpio_irq_init(struct amd_gpio *gpio_dev) {
-+	struct pinctrl_desc *desc = gpio_dev->pctrl->desc;
-+	unsigned long flags;
-+	u32 pin_reg, mask;
-+	int i;
-+
-+	mask = BIT(WAKE_CNTRL_OFF_S0I3) | BIT(WAKE_CNTRL_OFF_S3)
-+		| BIT(INTERRUPT_MASK_OFF) | BIT(INTERRUPT_ENABLE_OFF)
-+	        | BIT(INTERRUPT_MASK_OFF) | BIT(WAKE_CNTRL_OFF_S4);
-+
-+	for (i = 0; i < desc->npins; i++) {
-+		int pin = desc->pins[i].number;
-+		const struct pin_desc *pd = pin_desc_get(gpio_dev->pctrl, pin);
-+		if (!pd)
-+			continue;
-+
-+		raw_spin_lock_irqsave(&gpio_dev->lock, flags);
-+
-+		pin_reg = readl(gpio_dev->base + i * 4);
-+		pin_reg &= ~mask;
-+		writel(pin_reg, gpio_dev->base + i * 4);
-+
-+		raw_spin_unlock_irqrestore(&gpio_dev->lock, flags);
-+	}
-+}
-+
- #ifdef CONFIG_PM_SLEEP
- static bool amd_gpio_should_save(struct amd_gpio *gpio_dev, unsigned int pin)
- {
-@@ -967,6 +993,9 @@ static int amd_gpio_probe(struct platform_device *pdev)
- 		return PTR_ERR(gpio_dev->pctrl);
- 	}
- 
-+	/* Disable and mask interrupts */
-+	amd_gpio_irq_init(gpio_dev);
-+
- 	girq = &gpio_dev->gc.irq;
- 	girq->chip = &amd_gpio_irqchip;
- 	/* This will let us handle the parent IRQ in the driver */
--- 
-2.33.0
+For example, if I do this below, then we will be forcing all builds to
+use CONFIG_XXX as a module if they want just one driver as a module.
 
+config XXX
+  tristate "blah blah" if COMPILE_TEST
+  default m if (ARCH_XXX && MODULES)
+  default ARCH_XXX
+
+The best I was able to come up with was this below which would allow
+the driver to be a module or built-in; however, obviously it lets you
+disable it in EXPERT mode.
+
+config XXX
+  tristate "blah blah" if COMPILE_TEST || EXPERT
+  default ARCH_XXX
+
+Let me know if you have a better solution that doesn't force the
+driver to be a module when CONFIG_MODULES=y. Saravana did propose a
+MINIMUM_ARM64_GENERIC_KERNEL config that could solve this, but that
+too was shot down.
+
+Thanks,
+Will
