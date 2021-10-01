@@ -2,127 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 21CD141E4E7
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Oct 2021 01:27:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0303E41E670
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Oct 2021 06:03:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350849AbhI3X2m (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 30 Sep 2021 19:28:42 -0400
-Received: from mail-dm6nam12on2080.outbound.protection.outlook.com ([40.107.243.80]:43073
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1350273AbhI3X23 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 30 Sep 2021 19:28:29 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=c/9Mu7gT518u1aU5z/g2b0QMPm7KTFH/0Z1UP1P0om+orcCdHXS7Xi7EDfS1NGY9mIwn5e56mWIb25QS4gurgM2WKh6qEG+NULU3SHzCaSzAoMdNn0YFEpz3ds7GgweHvTFyz/VRcB1RflzyGFLnjexzCwglvYgtddZ2CCM97tKE2dFrd4IJbFxumap9FAG0MMv0DIVqFjMi1dvxZMTGWvbXQar9vXsK/+3VdOoPRAHU18s69oNLuL5zmkIPORYF8DpecDyRCfDUVLjwfBWpNEkHhZ/b90XtKdI3XRv/4dsTFBDQGcXSP+FPWhiUh1qVn8shaITSHjnJkUejvc1T0A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=F4jY95cdxUUioPOBCgII5cEX79seHfYCBfbue7ZUpuI=;
- b=Q8dIICles6zrtdNswCHr25nzNEz13MPYXaEXvv7B80fUqfPNJEB+13oiHuFv4boPxR08o5L8FhVRTn8v/+bFMkTUhh46CHTYJTFOdaqE2+Du0eE6t1p1vTyYJ3IUHyPCbH3XY6PnDLi5RdFyiwE6ozHMScyh+YGt0yvltH3hwvRWGkXwkY3xXSXM3ktoLR4x4Litw2GBCJFf9nS/keOc873tQfPc6ErmDVAH076tsoHxDIQ/o9uBsg9oTutiVTbT2Hio0/JyIfq2szuzO0SkYGkl+8/A+8wkX2f512uJ6jmF0yy2h0U8afU+y1ibPOoTu8t+RmJpzNXMBwoQ9WMBQw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.112.35) smtp.rcpttodomain=gmail.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=F4jY95cdxUUioPOBCgII5cEX79seHfYCBfbue7ZUpuI=;
- b=f1EhhifuaVmwPRQjh+6CTHM8Xicu/aneRYyF92O65LERz4Fy+RGMvoxGh2VTRMPoucg20RRJWw+TK3UeYDjG6pjW0o8O9OpJkBOgj+7cR6rSyKXpRfhPAFDwmjQZ1cWocw0WSsU80tQzod/lY6/UT4WtR8pjeqOYLbikFGVNZCD45LV0sa1HTr3wmSDnP6R88kUcyBKaqCCKqh5M8QLfstIy37ViJVLJkHMcMJSz7j3XXOS+HlKUEpzI9xbiD9jLjQRvUKlGxwKNsBULGARYDK2osp7rR0iDsRCmus76I8aSzcDaS0epl1VSOYP4rcnQ7WYFDO6VCS7nYXH/HfIFDw==
-Received: from MWHPR13CA0048.namprd13.prod.outlook.com (2603:10b6:300:95::34)
- by CY4PR1201MB0055.namprd12.prod.outlook.com (2603:10b6:910:1b::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.16; Thu, 30 Sep
- 2021 23:26:43 +0000
-Received: from CO1NAM11FT057.eop-nam11.prod.protection.outlook.com
- (2603:10b6:300:95:cafe::ad) by MWHPR13CA0048.outlook.office365.com
- (2603:10b6:300:95::34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4587.7 via Frontend
- Transport; Thu, 30 Sep 2021 23:26:43 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.112.35)
- smtp.mailfrom=nvidia.com; gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.112.35 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.112.35; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (216.228.112.35) by
- CO1NAM11FT057.mail.protection.outlook.com (10.13.174.205) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.4566.14 via Frontend Transport; Thu, 30 Sep 2021 23:26:42 +0000
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Thu, 30 Sep
- 2021 23:26:42 +0000
-Received: from dipenp.nvidia.com (172.20.187.6) by mail.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server id 15.0.1497.18 via Frontend
- Transport; Thu, 30 Sep 2021 23:26:42 +0000
-From:   Dipen Patel <dipenp@nvidia.com>
-To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linus.walleij@linaro.org>,
-        <bgolaszewski@baylibre.com>, <warthog618@gmail.com>,
-        <devicetree@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <robh+dt@kernel.org>
-CC:     Dipen Patel <dipenp@nvidia.com>
-Subject: [RFC v2 11/11] MAINTAINERS: Added HTE Subsystem
-Date:   Thu, 30 Sep 2021 16:26:17 -0700
-Message-ID: <20210930232617.6396-12-dipenp@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210930232617.6396-1-dipenp@nvidia.com>
-References: <20210930232617.6396-1-dipenp@nvidia.com>
-X-NVConfidentiality: public
+        id S230501AbhJAEFX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Oct 2021 00:05:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51540 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230365AbhJAEFX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Oct 2021 00:05:23 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63AE1C06176A;
+        Thu, 30 Sep 2021 21:03:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=l1N8Q92br4UA/MbVypFtkW95ihkVHD2seHhnh8CX54Y=; b=bdiZHUH9Zl9Ix8k5QUmEq5g1yk
+        P6geezCXSrKp1xmxX6Cln0BYNphiCc1tr7nPVveemsVE0O9WN06UaDAHIenHbHd1cuKFuIPBpNJaM
+        DvbL36Exb80gTm6Vym3rgHz5+1+oeCxW/mf5Rmutl0nThGlAjx6j74KHUJg8/NwSdRSJ2ZnGAp6+x
+        tTc3q0GcfeWlfM6Dy1fCJXTOdocpBcv9JbLLH7fVJMXSR+z8GEUq+DnyWpmLAtxOmcuT1RoXOeUGa
+        gj6+7mTX4f53YNkOl73mNv1rKosg25WO6tskcHiLyNyiZJ8mIXdSgsmfaq8Yk6Kx3Urk0XH6IFOmO
+        aWHzAVsw==;
+Received: from hch by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mW9jX-00DXBa-Gm; Fri, 01 Oct 2021 04:01:30 +0000
+Date:   Fri, 1 Oct 2021 05:01:15 +0100
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Tomasz Figa <tomasz.figa@gmail.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Will McVicker <willmcvicker@google.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Saravana Kannan <saravanak@google.com>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-rtc@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v2 00/12] arm64: Kconfig: Update ARCH_EXYNOS select
+ configs
+Message-ID: <YVaIC8GTzvLKmZ5z@infradead.org>
+References: <20210928235635.1348330-1-willmcvicker@google.com>
+ <7766faf8-2dd1-6525-3b9a-8ba790c29cff@canonical.com>
+ <CABYd82YodFDwBxexCv+0hpYrdYEX1Z1CvnRkmnBPkEJNJ4bssQ@mail.gmail.com>
+ <c65bf0db-6fd1-eb05-f407-37c41f9125f4@canonical.com>
+ <YVWCK5QO331rfhJJ@google.com>
+ <CA+Ln22EbXKsRFZ=3L4A_jqciRxG2hnAh9iKTfQ_Ypr2NJgDzQQ@mail.gmail.com>
+ <YVWkxnc8wTdBgRsv@google.com>
+ <CA+Ln22FBy2ks9gX3df=rQw-6W3iftMVoqsoqBPchGCqDDoMaLg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 75297164-fede-43e0-78f2-08d98469c315
-X-MS-TrafficTypeDiagnostic: CY4PR1201MB0055:
-X-Microsoft-Antispam-PRVS: <CY4PR1201MB00557E878420A87542DDDBD6AEAA9@CY4PR1201MB0055.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1728;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 5KSfr9wbLMZGUQ8hBvPYIl6xg38l9g0eHZAZZRG/uBV9z+rKCfZ1Xb85yRzSCiD8YxkjWWZaXdFgMeaQl6MQuIuFh03UYNViL0v6+1Om3JNYAjpx1+vu0ss7x0m//NMbUsjfvAHp95qKT7JdlarqSffhtUKAw+hSx2fImq4sdOyi5+31uph7MYng0zsrqlBVsThUvk99yMOadxZvRZuTD3/URNl6gsKbJXcIidI0C2exyxPTQNej8ZRVeIvGOltFw0Uv9sgOmRt6V2kWg06RzixtbE9qWXzGDL6OIe9j+77YyIYJoD1CILsj9gZbrBNF/UgUrPVMcfkoqnnfFIoVXavHrTKkUYXInjBn56z7QvemTc0csRsNwxV0f2yKL9ghMFRfxWAgZdfSTgLPqCJQo7rpisdLbLbDdH3S95f4gTEFBmRRrwGIvU2F0+3r/JpKrUlkpNYR2ZMzYilqaUyHpayMK1Q4XEJAVblH2B2iNLz39IccKDZd2arZ/lvJHQGrBT7kpO3J3gXXkSTINNpctrAghzH0a5dO9freaOrKeqHNggnxGOBPjy/YzsOCOlMtjZNZKMR0M3rWNS+hyD0ds8fgoV+LROy5T/mP7SrLT50WN1rPhpSdgPUO7TX8zabc1EYsb1DVdFRMPquZllHOzvjA4Q5QPlqki+oyxLCEkz7OggjdjNlxqCkYn8Be2mg97qB4xTy/n7rt+H4VDS2skhAUjBObLu+Af7WnNHund2jgGAd8Z/ooUz14dVBlkeDwJDp53SXvNj4hGhIhxrgzdQ==
-X-Forefront-Antispam-Report: CIP:216.228.112.35;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:schybrid02.nvidia.com;CAT:NONE;SFS:(4636009)(46966006)(36840700001)(1076003)(70206006)(110136005)(6666004)(7696005)(70586007)(82310400003)(316002)(107886003)(4744005)(186003)(426003)(36860700001)(4326008)(336012)(2616005)(26005)(7416002)(8936002)(86362001)(2906002)(921005)(5660300002)(7636003)(356005)(47076005)(36756003)(508600001)(8676002)(83996005)(2101003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Sep 2021 23:26:42.8353
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 75297164-fede-43e0-78f2-08d98469c315
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.112.35];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT057.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB0055
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+Ln22FBy2ks9gX3df=rQw-6W3iftMVoqsoqBPchGCqDDoMaLg@mail.gmail.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Added myself as a maintainer for this new Hardware Timestamping Engine
-(HTE) subsystem.
+On Thu, Sep 30, 2021 at 09:10:31PM +0900, Tomasz Figa wrote:
+> Generally, the subsystems being mentioned here are so basic (clock,
+> pinctrl, rtc), that I really can't imagine what kind of rocket science
+> one might want to hide for competitive reasons... If it's for an
+> entire SoC, I wonder why Intel and AMD don't have similar concerns and
+> contribute support for their newest hardware far before the release.
 
-Signed-off-by: Dipen Patel <dipenp@nvidia.com>
----
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index abd0dd5aa003..03ae8056c35b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8659,6 +8659,14 @@ L:	linux-input@vger.kernel.org
- S:	Maintained
- F:	drivers/input/touchscreen/htcpen.c
- 
-+HTE SUBSYSTEM
-+M:	dipenp@nvidia.com
-+S:	Maintained
-+F:	drivers/hte/*
-+F:	include/linux/hte.h
-+F:	Documentation/hte/*
-+F:	Documentation/devicetree/bindings/hte/*
-+
- HTS221 TEMPERATURE-HUMIDITY IIO DRIVER
- M:	Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>
- L:	linux-iio@vger.kernel.org
--- 
-2.17.1
-
+There is no reason at all, and to be honest this whole discussion with
+these bullshit arguments from the Google/Linaro/SoC vendor crowd just
+shows how on crack these people are, and shows a good example of why
+we should not support these models at all.  There is no good reason
+to "overide" uptream functionality EVER.  Stop digging yourselves into
+your ever bigger holes and just f***king contribute upstream NOW.  Just
+as we always have we should not give you more rope to shoot yoursel
+while ausing us extra overhead.
