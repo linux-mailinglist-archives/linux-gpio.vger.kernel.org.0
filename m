@@ -2,34 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 842AD41E679
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Oct 2021 06:06:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD5B841E6F0
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Oct 2021 06:52:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230365AbhJAEIT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Oct 2021 00:08:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52184 "EHLO
+        id S1351891AbhJAEye (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Oct 2021 00:54:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230464AbhJAEIP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Oct 2021 00:08:15 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 180BDC06176A;
-        Thu, 30 Sep 2021 21:06:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=gHTqeRkmuQ+F9S1fgl4jiNZyC8/WXLk5udP/SJxj3NE=; b=O2zZ/bz5e4NeWk2JsS5WrgIqmx
-        cna7kkW5EH+wIp0NOd5aPehRdZUvJPyyjl8XIyeGHBMUnmSS0fiCQvIGgpearoR30FWKlI+VdwPCa
-        jTBrZVbMw/+A1W+vj0znodixmnsGPk925elTvuyLJzizAC5DfPT6jfgBSz/s2cZKu1pXuKCrYDQaD
-        MsWKntIpUIwok9ZNGaR2qROlTr4lppQvhDGH1tBufU3TiQvoY6Cm/J0kfy4pbpVQEl+s0dTUD2y9f
-        +aMzSZXZ03hn6WqjVV35YtvpsZHmc58Oz0jhGpBks/xqj0itnHVf2C5gFsYDYFLT2U799BUzn8Quk
-        JomSBfGQ==;
-Received: from hch by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mW9mb-00DXJr-QF; Fri, 01 Oct 2021 04:04:33 +0000
-Date:   Fri, 1 Oct 2021 05:04:25 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        with ESMTP id S242214AbhJAEyd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Oct 2021 00:54:33 -0400
+Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8F1DC06176E
+        for <linux-gpio@vger.kernel.org>; Thu, 30 Sep 2021 21:52:49 -0700 (PDT)
+Received: by mail-yb1-xb30.google.com with SMTP id r1so17889356ybo.10
+        for <linux-gpio@vger.kernel.org>; Thu, 30 Sep 2021 21:52:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HSY5dUG0iWk0wmOHITmVmnD9YYtjGnNr2FW0qw66Pe4=;
+        b=ERvLu10phYrVrUIUT3FzdDeg2rgbZvK7s0wbD18UwtSTLHKvY+YAMQN2Z4wvYwRRiL
+         /iRsVFxQjqeYWGoJQV/Rdo+r09ydttg3pJqOhGWg3MyiGhvh/JiMTgy0TZM2cBXSmGrp
+         L0ERj0n5zOOzIzH5m/U7eBBJPWYKbnOJ5JEUDDAyXqEOrDPwvMBP1Dr/RbnG6FqSxegE
+         ulQ4x5AozNlp0wP1JYC8A3wJ0IXc4kgWceI+UcywptFCLQOaNgQeoq2dnO8oMLWez+UK
+         c2f6pDqf7TqUq0GspOOliKauJ7YJqi+MU5ExnkpEsXJxt4ahiYH6wzRY1oLkDhkvXcx3
+         yahQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HSY5dUG0iWk0wmOHITmVmnD9YYtjGnNr2FW0qw66Pe4=;
+        b=GwD9kdqH7ca5YdNl9iqouyacfxDwDOtsfFIL0r37Rn2QyJcPsNcUCk7BE/LhOLXYsH
+         lDPw5LaR8PxKn3kM8KtFO2TCG9eBEeeHybfebgG0qBBHfqbBjztHQ7hlxTvlBV35PBWE
+         i5IoM8KJZRFRsANNypubR99Yn+J0x6JA4a7YWTzAfeIG3YuAB4nnfFUbebDqFmlAUddW
+         wYtdPdet3dM467X6wEk4+iTqei5tY+Or7/R020ENO64KqxCxqTFu+WFrJS9G3EYtp/hx
+         2zZbC+GOPFgJCx+opcyEfiybzqhulfJO7B/NxWjEL9aHVP8NJc3a6pCeJsmpsWQueuk/
+         B3vg==
+X-Gm-Message-State: AOAM530GQtVMvaWOkYGg0hPz1/gYhGoyjkin4+hAH3Amcb8bjVR2f6Uk
+        VfaYmUNsKyLbLz1IUR/CmjhZtyhvRCfvoCNgSjkrFg==
+X-Google-Smtp-Source: ABdhPJygycpZauu9TFmc+TzH6Xxv9d3sYB6IkEM/HcmQ8hM9+hQo2lPA+CHRH3RKW0G4hzlav9jzO/VJG+svIlgQKNg=
+X-Received: by 2002:a25:4684:: with SMTP id t126mr3386461yba.476.1633063968846;
+ Thu, 30 Sep 2021 21:52:48 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210928235635.1348330-1-willmcvicker@google.com>
+ <7766faf8-2dd1-6525-3b9a-8ba790c29cff@canonical.com> <CABYd82YodFDwBxexCv+0hpYrdYEX1Z1CvnRkmnBPkEJNJ4bssQ@mail.gmail.com>
+ <c65bf0db-6fd1-eb05-f407-37c41f9125f4@canonical.com> <YVWCK5QO331rfhJJ@google.com>
+ <CA+Ln22EbXKsRFZ=3L4A_jqciRxG2hnAh9iKTfQ_Ypr2NJgDzQQ@mail.gmail.com>
+ <YVWkxnc8wTdBgRsv@google.com> <CA+Ln22FBy2ks9gX3df=rQw-6W3iftMVoqsoqBPchGCqDDoMaLg@mail.gmail.com>
+ <YVaIC8GTzvLKmZ5z@infradead.org>
+In-Reply-To: <YVaIC8GTzvLKmZ5z@infradead.org>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Thu, 30 Sep 2021 21:52:12 -0700
+Message-ID: <CAGETcx-5pBJK4y84QJfr7cTjsd_GhHyuZJfjmYZ8CN0vKXOxcw@mail.gmail.com>
+Subject: Re: [PATCH v2 00/12] arm64: Kconfig: Update ARCH_EXYNOS select configs
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
         Will McVicker <willmcvicker@google.com>,
         Russell King <linux@armlinux.org.uk>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -37,7 +66,6 @@ Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
         Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>,
         Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
         Chanwoo Choi <cw00.choi@samsung.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Alessandro Zummo <a.zummo@towertech.it>,
@@ -45,40 +73,37 @@ Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
         John Stultz <john.stultz@linaro.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Geert Uytterhoeven <geert@linux-m68k.org>,
-        Saravana Kannan <saravanak@google.com>,
         "Cc: Android Kernel" <kernel-team@android.com>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
         linux-clk <linux-clk@vger.kernel.org>,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH v2 00/12] arm64: Kconfig: Update ARCH_EXYNOS select
- configs
-Message-ID: <YVaIydrh/+ez669b@infradead.org>
-References: <20210928235635.1348330-1-willmcvicker@google.com>
- <7766faf8-2dd1-6525-3b9a-8ba790c29cff@canonical.com>
- <CABYd82YodFDwBxexCv+0hpYrdYEX1Z1CvnRkmnBPkEJNJ4bssQ@mail.gmail.com>
- <c65bf0db-6fd1-eb05-f407-37c41f9125f4@canonical.com>
- <YVWCK5QO331rfhJJ@google.com>
- <72d27a82-9d4d-1f91-bd1f-ebead3b75ffa@canonical.com>
- <YVWwBz8jrznqXah4@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YVWwBz8jrznqXah4@google.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-rtc@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 30, 2021 at 01:39:35PM +0100, Lee Jones wrote:
-> How would they fix this besides upstreaming support for unreleased
-> work-in-progress H/W?
-> 
-> Haven't I explained this several times already? :)
+On Thu, Sep 30, 2021 at 9:02 PM Christoph Hellwig <hch@infradead.org> wrote:
+>
+> On Thu, Sep 30, 2021 at 09:10:31PM +0900, Tomasz Figa wrote:
+> > Generally, the subsystems being mentioned here are so basic (clock,
+> > pinctrl, rtc), that I really can't imagine what kind of rocket science
+> > one might want to hide for competitive reasons... If it's for an
+> > entire SoC, I wonder why Intel and AMD don't have similar concerns and
+> > contribute support for their newest hardware far before the release.
+>
+> There is no reason at all, and to be honest this whole discussion with
+> these bullshit arguments from the Google/Linaro/SoC vendor crowd just
+> shows how on crack these people are, and shows a good example of why
+> we should not support these models at all.  There is no good reason
+> to "overide" uptream functionality EVER.  Stop digging yourselves into
+> your ever bigger holes and just f***king contribute upstream NOW.  Just
+> as we always have we should not give you more rope to shoot yoursel
+> while ausing us extra overhead.
 
-No you haven't.  Mostly likely because there is absolutely no good
-explanation.  And if google/Linaro think they want to create hooks
-for stupid vendor modules we need to do whatever we can to make your
-life as miserable as possible.
+Maybe you need to read up the code of conduct again.
+
+-Saravana
