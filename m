@@ -2,121 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AD1841F1AA
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Oct 2021 18:00:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0894E41F1FA
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Oct 2021 18:17:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355134AbhJAQBy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Oct 2021 12:01:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47108 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231434AbhJAQBx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Oct 2021 12:01:53 -0400
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86738C06177C
-        for <linux-gpio@vger.kernel.org>; Fri,  1 Oct 2021 09:00:09 -0700 (PDT)
-Received: by mail-pg1-x52f.google.com with SMTP id r201so3911993pgr.4
-        for <linux-gpio@vger.kernel.org>; Fri, 01 Oct 2021 09:00:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GNY4mCLAdh6H7+10tLD5snDvXVL71nb/jw0ZWy9yCyw=;
-        b=bB/8c+ktBYRSYiIzc1qYdiubvKawZKgIs8yj4AWJv1gFhGEflb4n8+xq7ndQLzWzsv
-         K2PoREC6WSRvpb/r1htjH2I++9Pd3MKb6hwuYz8yf4RIFihCvaomNe5Wx3EJRw9S5N1x
-         vlaKFUz5kJqPvqnvfliveUpR7z9HK41Xg2uGj0e55vVZuSNT0SF+lkXHftPTsBq2zwN7
-         R8Dz4h2MllWdZAY5yIvDO9sT/QQFFSPB3d6t+CtS3955sZSk4oMhZ1i+PfTXSjr+4lMF
-         5dHqYhbtjKCPxPxLaEthOIjBefkcIr+EoEpAyYJ72wR35YGiuIJ/za7Q4La1tnXcJot5
-         VAjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GNY4mCLAdh6H7+10tLD5snDvXVL71nb/jw0ZWy9yCyw=;
-        b=GI/Y3eviF7hwlIbnlFMl+ivDOk1p9zctcd2D8pzmdXpMNye9T+Tp1VNwx1p92YUPkz
-         2Wb2NpO3qhlCwrXbLTGN1qH9umFH3+zjRHCbNJqCl4G6LKykORm/LrAhyxAgBIbEYV52
-         zYNLtDDcRwlX3YXCLSVFrDQNh9CUAgb4eUb/1REkwpaAEXrl/EhVb2dRvoQyhMUCgGKE
-         zg3kxs9XRHgkWcLDObn8Dw3/j0rv9dYgi1VBuSKMCyUGyheyf7P0QA7mciay2ldB0lc4
-         wLh5/mwhSgSUwxdFXfgQEVlAvru9KOh2WUCnOGPHRftg5UrQvLDY8zbCcTON6EH73gm4
-         PRrg==
-X-Gm-Message-State: AOAM532SNycpwSpevskntXiKMWsoTznYvZ4q5z58eLCkOw8asDiDrQvU
-        Y0BWbAhmliwuZtUzz7UQqlntSG2ANWzFGMV7Cjuw8A==
-X-Google-Smtp-Source: ABdhPJzMhlQ+ie8HM5hyc7yInR7SfxTR/SFzyRo8unfhzRxZHrqwZrqYTWNFAYGA5eeve8rD6AbkmvK5EfkKMBQQF1k=
-X-Received: by 2002:a05:6a00:16cb:b0:44b:bd38:e068 with SMTP id
- l11-20020a056a0016cb00b0044bbd38e068mr12092458pfc.34.1633104008868; Fri, 01
- Oct 2021 09:00:08 -0700 (PDT)
+        id S231913AbhJAQTU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Oct 2021 12:19:20 -0400
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:52169 "EHLO
+        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1354781AbhJAQTT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Oct 2021 12:19:19 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id B36DB32027AE;
+        Fri,  1 Oct 2021 12:17:34 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Fri, 01 Oct 2021 12:17:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nakato.io; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm2; bh=wk0G5yb0Pu+jU8dSjG8NyghWV+
+        VHyRrTbH7tD0+2cpQ=; b=O8iIJe4bKW9pnxZDc78Y1iez/ECgJ6O2QswTg6oufb
+        gY6Ww7q7TURQa7ep8IfXfZV3GnC0+nNUxyI5u6gmCWEGCo0YpESa0IQiHW/XjBuq
+        Xp8FKfHoOOOeZIwRWP/bRk9Mlg0rKzAG5sy33OCMIQ1vibJncTWwEN644J9JWHxq
+        1ygNwkFEPZ8XUNzTZDUJ3IWJQ/IwelA9elBPcAayYyKsaFuINsFCEXNEg1Ru3Yc8
+        8GN2kzdmzLudcGRv8YyxvgViuHh1ZahbzXF2ay8fW35oEnGnqzOA8v5NgC4bWTN3
+        lEasJa1e2VcMyvszBQSVm1MF9dAbkdXngk/2Hw64/tPA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=wk0G5yb0Pu+jU8dSj
+        G8NyghWV+VHyRrTbH7tD0+2cpQ=; b=S763rGZVNBApJuqTAJvov1XIbNXA38Ums
+        D35DdoUcEaDR0dTV9zVB0RrcwzxkyEJAbJOLRO0IO8QACxBMcY74/xqC4tNsf+gs
+        0PsdaE/R6nZ5hv0EQ/IdExZYaG1GnAatEW7pW5a/ukCD/M43JyayDJj+EmWt9HHg
+        iA8AWXd16MgyfrnUleksWLgz+bTgAyPlfVtVSe+vXXCmu7lrAYFGcepDU7Ltv1Ja
+        0DKYk7+eLA0heyHE6aIrEFzBKwkNN6wEqkW0WOLarnwcMJHp7baihUsLTh8zjeHv
+        iQib6DGh+upszslID7XiDAFxTClkqwRqRTw0GJbqY3CZ0+fDlF1Yw==
+X-ME-Sender: <xms:njRXYQcX8aicc-N1_CmXAwT7riD6nd7YcOAmkYbGBX15zIQ8PFh6Fw>
+    <xme:njRXYSM0wR3Mo1tpA8C7lPvMJ6c3yj4grc4h5ztKC1rEWERD2__qW2OvQovxZxj9j
+    _ckp-A3YO1j5_PLsg>
+X-ME-Received: <xmr:njRXYRj9vqEtghC2BvjQtwYVFtczk4SpOQgjc2sA5w2Y-rP5APqfC8pV_AUasfu0AOUSLeUBwqm1oVGqkADd2VGfpUL8SVE8Uy6n12kN>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrudekiedgleegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvffufffkofgggfestdekredtre
+    dttdenucfhrhhomhepufgrtghhihcumfhinhhguceonhgrkhgrthhosehnrghkrghtohdr
+    ihhoqeenucggtffrrghtthgvrhhnpedvveetteefiefgfeejueehkeekteeigfduveduie
+    fhhfetjeejgeetvdeuhffgvdenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehl
+    uhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepnhgrkhgrthhose
+    hnrghkrghtohdrihho
+X-ME-Proxy: <xmx:njRXYV-_uNy0_CnMBskbxJvjLTazSofIygtXTCF-RTgo-O4t1V2k5A>
+    <xmx:njRXYcuZcADDC6pffLhf-S3QCHMULMWFOl6LvFXRplGYO9x5CErj2Q>
+    <xmx:njRXYcF5KKwEQ_uI9R7X2lHUClJ4LKr9wpEkn-X7JpGAo7DQ5HKonQ>
+    <xmx:njRXYV71KgoV-QTt0aC6DDICmzPdpguSv7Qntxhevp5ySQCLHV0ofA>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 1 Oct 2021 12:17:32 -0400 (EDT)
+From:   Sachi King <nakato@nakato.io>
+To:     linux-gpio@vger.kernel.org, basavaraj.natikar@amd.com
+Cc:     linux-kernel@vger.kernel.org, Sachi King <nakato@nakato.io>
+Subject: [PATCH 0/1] pinctrl: amd: pinctrl: amd: disable and mask interrupts on probe
+Date:   Sat,  2 Oct 2021 02:17:13 +1000
+Message-Id: <20211001161714.2053597-1-nakato@nakato.io>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-References: <20210928235635.1348330-1-willmcvicker@google.com>
- <7766faf8-2dd1-6525-3b9a-8ba790c29cff@canonical.com> <CABYd82YodFDwBxexCv+0hpYrdYEX1Z1CvnRkmnBPkEJNJ4bssQ@mail.gmail.com>
- <CAOesGMgSt_mYvRzF0rC=fnjMYGO9EX0_Ow2cD1d8XKLD5pHsZA@mail.gmail.com>
- <CAGETcx-b0ea-rqH+fj37sq9SLWY=+ePK94Y6rnLPuNbqFVBWmw@mail.gmail.com>
- <CAOesGMhQ3YsLJeQ7aUfb=0oNa3uPCx42wO1U7-ArqJTAUq1G3Q@mail.gmail.com> <CAMuHMdUkMwyA-bk7hfr7S7TE-_S9eBUxKWKmpj0rDCUvHL+fxw@mail.gmail.com>
-In-Reply-To: <CAMuHMdUkMwyA-bk7hfr7S7TE-_S9eBUxKWKmpj0rDCUvHL+fxw@mail.gmail.com>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Fri, 1 Oct 2021 08:59:57 -0700
-Message-ID: <CAOesGMg_eA5PNzsL76xv6kDQ2QUZeCwC04BNeucfGXkFSOE=Tw@mail.gmail.com>
-Subject: Re: [PATCH v2 00/12] arm64: Kconfig: Update ARCH_EXYNOS select configs
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Saravana Kannan <saravanak@google.com>,
-        Will McVicker <willmcvicker@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-rtc@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 1, 2021 at 4:59 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Olof,
->
-> On Fri, Oct 1, 2021 at 7:36 AM Olof Johansson <olof@lixom.net> wrote:
-> > A much more valuable approach would be to work towards being able to
-> > free up memory by un-probed drivers at the end of boot. That would
-> > possibly benefit all platforms on all architectures.
->
-> We used to have such a functionality in arch/ppc (not arch/powerpc!),
-> where code/data could be tagged __prep, __chrp, or __pmac, to put it
-> in a special section, and to be freed with initdata when unused.  It
-> was removed in v2.6.15[1], as the savings weren't worth the hassle.
-> In a more fragmented space like arm the memory lost due to alignment
-> of the sections would be even more substantial.
+On a Microsoft Surface Laptop 4, I've found that the GPIO controller is
+preconfigured with a number of interrupts.  I'm not sure if this is
+device specific, in which case I could propose a quirk, or a more
+general issue.  Prior to https://git.kernel.org/torvalds/c/acd47b9f28e5
+which will be in 5.15, this device exhibited failed resumes that would
+result in high power consumption and no reliable way to resume the
+device.  Following that patch the device exhibits spurious wakeups.
 
-Yeah, the balance between per-platform code size and overall kernel
-code size shifted over time to a point where it wasn't as meaningful
-on ppc.
+As far as I can tell interrupts should be disabled and masked as a
+default state, so ensuring this is the initial state should be safe as a
+default action.
 
-> Another problem is to know when is the end of the boot, especially
-> with deferred probing.
+Sachi King (1):
+  pinctrl: amd: disable and mask interrupts on probe
 
-Most of this code either has a module_init() or an initcall that
-actually registers the drivers and/or probes for the platform and does
-the work.
+ drivers/pinctrl/pinctrl-amd.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-This means you can have a late equivalent hook/initcall that
-determines whether this path ended up being probed/used. If it wasn't,
-you can then unregister and flag the corresponding memory to be freed
-at the end, and would take out the heuristics and guessing on needing
-to do it automatically from the code path that's doing said freeing.
+-- 
+2.33.0
 
-
--Olof
