@@ -2,61 +2,46 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 36D4341E89C
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Oct 2021 10:01:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 75AAB41E900
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Oct 2021 10:20:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352639AbhJAIDd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Oct 2021 04:03:33 -0400
-Received: from smtp-relay-internal-1.canonical.com ([185.125.188.123]:38836
-        "EHLO smtp-relay-internal-1.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1352619AbhJAIDK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Oct 2021 04:03:10 -0400
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com [209.85.167.71])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 0BB72402D7
-        for <linux-gpio@vger.kernel.org>; Fri,  1 Oct 2021 08:01:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1633075284;
-        bh=uaaKTJ0cQrh7xMJybw70gv2lO5lfz55pljrjd+/j8E8=;
-        h=To:Cc:References:From:Subject:Message-ID:Date:MIME-Version:
-         In-Reply-To:Content-Type;
-        b=A/Do87MQn1UODgqveaEHb3cPWET/V2MMcDXszH3TCLHsyVhahZNWiftjD+qasg+FI
-         f7Upw81bC9jU41/1cfIPmwHgRSOz+nzcoJeoeoo+0jRasnSdNKTfrwXh/yifMZT5u1
-         g0HkVHH+K7zCAXMziIJZVf17G3UVtnYGbDLgqLJkHTOohomHe6iazWRrnlWeWD+gn9
-         p7MMiY8Rs8y7Rlkuhyh0aSpjOMUy93/Hs1xab6ncI8FwtCJvYXmDQbxtR4k6C311bS
-         NZGPd9qDxRGvd+F9uhp9+MdNxDps/z7XHWQwpfo17o6uHBDnkRb2NiP1sbpJSw1DKl
-         nmjueqIWcsTfA==
-Received: by mail-lf1-f71.google.com with SMTP id c24-20020ac25318000000b003f257832dfdso8142274lfh.20
-        for <linux-gpio@vger.kernel.org>; Fri, 01 Oct 2021 01:01:24 -0700 (PDT)
+        id S1352290AbhJAIVz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Oct 2021 04:21:55 -0400
+Received: from mail-vs1-f46.google.com ([209.85.217.46]:39687 "EHLO
+        mail-vs1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1352084AbhJAIVy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Oct 2021 04:21:54 -0400
+Received: by mail-vs1-f46.google.com with SMTP id o124so10401459vsc.6;
+        Fri, 01 Oct 2021 01:20:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:to:cc:references:from:subject:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uaaKTJ0cQrh7xMJybw70gv2lO5lfz55pljrjd+/j8E8=;
-        b=Hbx8naOua7oXHmaVOEbklEztCLDrJvL5bjl7DPj0bIExIBu0K4OJqU1751VqaIN5MR
-         Cs5ow1j7edd2j7yEazlIArYJ002YlAVjY7KE+KL4x0vlgof+Ix/dcRPkmqIwEYnnwFa2
-         lA/9fCaRArqeFf3MsCP+IE1c8himbITP6CCx/He7rINbfBtuMj854qfytrAwj23Gy3+K
-         5MubWhyoYvb1ThxHVnhcedEACJiimtgoNsv6x0u3JsNzVPRbCS/hNbATVJY7DNCUlZZ2
-         +4YcK0IzZ60qnJ1Vr/dj8DD5jyi5ZEvXoE6dkeS43NN3xEWLTqaGeAx8mIwF9SAK34a/
-         ahXw==
-X-Gm-Message-State: AOAM531sjCQSOI7VrkjdkfiWXXq5l551YftkakZyJnnrk8uwRFcpoVtX
-        R5UhgEGqFTUSePQ2SgpJ/ZPX21vajRkcWKR1UVkjBHabphv0o4CY5xp1KDj4jopgdwhIfHXFWr4
-        kKbEubYY3vv/ehjKhfPddssT/DTmfhbg7Uj2aqDI=
-X-Received: by 2002:a05:6512:22c3:: with SMTP id g3mr3831328lfu.577.1633075283324;
-        Fri, 01 Oct 2021 01:01:23 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwnC0TWRcbTXzIlivq6kGBHxv6PT9DERXp0Gp0NMumXyFOXyX+j61vGOxB9oQtxeW3iWZpGuA==
-X-Received: by 2002:a05:6512:22c3:: with SMTP id g3mr3831286lfu.577.1633075283077;
-        Fri, 01 Oct 2021 01:01:23 -0700 (PDT)
-Received: from [192.168.0.197] ([193.178.187.25])
-        by smtp.gmail.com with ESMTPSA id t17sm642232lft.296.2021.10.01.01.01.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 Oct 2021 01:01:22 -0700 (PDT)
-To:     Will McVicker <willmcvicker@google.com>,
-        Olof Johansson <olof@lixom.net>
-Cc:     Saravana Kannan <saravanak@google.com>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DfZkNDXprgFeEDtNW0IpliJa71/Awrmxhz88BlTWGSM=;
+        b=7kmU7W9iHr2BQkCi+E53QhN9EabBeiwczez91w7THyDdWd/4LT5GJRGqgRAgxqfZkL
+         mB4j+6ftYZwJ3s13k4n1ejnq3rHZEQqXd1lbPLl6N0fWiKbZvkQRCdlxgrw0LDZRFQ/X
+         vFhERethevDWJwG8wali/rky1AclbsQMlSaeat1hYoWb/RUUUHa0Yk1JrzP0cl7CQaMA
+         pKSHXNIOtccO7ABk9G3sGcV+Wkrn8f1s8HUs3reQeuHoCw0pGXCBD5a0GgvFqdJOQbEM
+         35zhIVZlnnqIZoDyOuCM3YWcTWtKEsJfuDqKjxvIHpG446dU9wHvIuNpqA0Mrj10ag4C
+         waLg==
+X-Gm-Message-State: AOAM533O3CucH6rKXJ9YwQZXjDcOKBxpSZHkoJbfUvZZwMd+cSYaS4Tp
+        vtP209jgrdMec5QIaPJW0/hUWrhwjmQNXhDYRpA=
+X-Google-Smtp-Source: ABdhPJyNLAjrm2t54Xsm+4NoybmQdD783UH99/hZ003FsF/8QUgG9DfzJ5Ksgdg20mcspR3qLQDBaKgpvLEQU5Ud4Q0=
+X-Received: by 2002:a67:e15a:: with SMTP id o26mr1277792vsl.50.1633076409679;
+ Fri, 01 Oct 2021 01:20:09 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210928235635.1348330-1-willmcvicker@google.com>
+ <7766faf8-2dd1-6525-3b9a-8ba790c29cff@canonical.com> <CABYd82YodFDwBxexCv+0hpYrdYEX1Z1CvnRkmnBPkEJNJ4bssQ@mail.gmail.com>
+ <CAOesGMgSt_mYvRzF0rC=fnjMYGO9EX0_Ow2cD1d8XKLD5pHsZA@mail.gmail.com> <CAGETcx-b0ea-rqH+fj37sq9SLWY=+ePK94Y6rnLPuNbqFVBWmw@mail.gmail.com>
+In-Reply-To: <CAGETcx-b0ea-rqH+fj37sq9SLWY=+ePK94Y6rnLPuNbqFVBWmw@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 1 Oct 2021 10:19:58 +0200
+Message-ID: <CAMuHMdWhCB_zg6TwjYfz+=vc+_Wd5yzuAAzk=2ToZOQSAyaiJA@mail.gmail.com>
+Subject: Re: [PATCH v2 00/12] arm64: Kconfig: Update ARCH_EXYNOS select configs
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Olof Johansson <olof@lixom.net>,
+        Will McVicker <willmcvicker@google.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
         Russell King <linux@armlinux.org.uk>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
@@ -71,67 +56,86 @@ Cc:     Saravana Kannan <saravanak@google.com>,
         John Stultz <john.stultz@linaro.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Lee Jones <lee.jones@linaro.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
         "Cc: Android Kernel" <kernel-team@android.com>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
         linux-clk <linux-clk@vger.kernel.org>,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>
-References: <20210928235635.1348330-1-willmcvicker@google.com>
- <7766faf8-2dd1-6525-3b9a-8ba790c29cff@canonical.com>
- <CABYd82YodFDwBxexCv+0hpYrdYEX1Z1CvnRkmnBPkEJNJ4bssQ@mail.gmail.com>
- <CAOesGMgSt_mYvRzF0rC=fnjMYGO9EX0_Ow2cD1d8XKLD5pHsZA@mail.gmail.com>
- <CAGETcx-b0ea-rqH+fj37sq9SLWY=+ePK94Y6rnLPuNbqFVBWmw@mail.gmail.com>
- <CAOesGMhQ3YsLJeQ7aUfb=0oNa3uPCx42wO1U7-ArqJTAUq1G3Q@mail.gmail.com>
- <CABYd82b7umA2h=b2NTMU7X0u8ABOjMcmh5cHOH_gyWr=QeFFTA@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Subject: Re: [PATCH v2 00/12] arm64: Kconfig: Update ARCH_EXYNOS select
- configs
-Message-ID: <5d22846b-b2d8-e646-4b5c-732127e37f3a@canonical.com>
-Date:   Fri, 1 Oct 2021 10:01:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
-MIME-Version: 1.0
-In-Reply-To: <CABYd82b7umA2h=b2NTMU7X0u8ABOjMcmh5cHOH_gyWr=QeFFTA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-rtc@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 01/10/2021 07:59, Will McVicker wrote:
-> On Thu, Sep 30, 2021 at 10:36 PM Olof Johansson <olof@lixom.net> wrote:
->>
->>>>
->>>> GKI is a fantastic effort, since it finally seems like Google has the
->>>> backbone to put pressure on the vendors to upstream all their stuff.
->>>>
->>>> This patcheset dilutes and undermines all of that by opening up a
->>>> truck-size loophole, reducing the impact of GKI, and overall removes
->>>> leverage to get vendors to do the right thing.
->>>>
->>>> It's against our interest as a community to have this happen, since
->>>> there's no other reasonably justifiable reason to do this.
-> 
-> Are you saying that modularizing drivers is opening up a loophole? How
-> is this different from Krysztof pushing changes to modularize the
-> Exynos ChipId driver just last week [1].  
+Hi Saravana,
 
-Modularizing drivers, which can work as modules or even can be disabled
-because they are not essential for platform boot, is not opening
-loophole and is helping upstream platforms. Modularizing everything,
-even essential drivers, because downstream does not want to contribute
-rest of its drivers, is not beneficial to the upstream project. Since
-downstream does want to contribute its platforms and drivers, it decides
-to change mainline project to fits its needs. Only its needs, not others.
+On Fri, Oct 1, 2021 at 7:24 AM Saravana Kannan <saravanak@google.com> wrote:
+> I skimmed through the emails and you all make a lot of good points. It
+> looks like you all at least like the idea of being able to have a
+> minimal generic kernel where everything that can be a module is a
+> module. Please correct me if I'm wrong on that.
+>
+> I was thinking about this patch series and I was wondering if it'd be
+> good to come at it from the other end. Instead of taking the mostly
+> builtin generic kernel and trying to rip out drivers as modules (and
+> not having enough hardware to test them all) and hitting all these
+> issues, we could come at it from the other end.
+>
+> A config like ARM64_MINIMAL_GENERIC_KERNEL that's off by default. But
+> if it's selected, all the "selects" done by the various ARCH_XXX are
+> not done any more. Something like:
+>
+> ARCH_XXX
+>     select XXX_CLK1 if !ARM64_MINIMAL_GENERIC_KERNEL
+>     select XXX_PINCTRL1 if !ARM64_MINIMAL_GENERIC_KERNEL
+>
+> ARCH_YYY
+>     select YYY_CLK1 if !ARM64_MINIMAL_GENERIC_KERNEL
+>     select YYY_PINCTRL1 if !ARM64_MINIMAL_GENERIC_KERNEL
+>
+> And ARM64_MINIMAL_GENERIC_KERNEL itself would select the absolutely
+> mandatory stuff that can never be made into a module like the GIC,
+> architectured timer (as Geert mentioned) and UART early console
+> driver. I'm not sure if ARM32 has an equivalent to the standardized
 
-I was repeating this multiple times - there is no point, no incentive
-for the mainline to allow disabling essential SoC drivers. It's only
-downstream interest without any benefit to the upstream.
+While the UART early console can work (assuming the related hardware
+setup has been done by the boot loader), the actual serial driver
+usually cannot, as it relies on clocks, PM Domains, pin control, which
+won't be available until the corresponding modular drivers are loaded.
+Actually earlycon is a debug feature, so I'm wondering if you actually
+want that in your GKI kernel?
 
+> GIC and arch timer. Basically the minimal kernel would need a timer
+> for the scheduler tick and IRQ controller to get the timer IRQ and the
+> fixed clock driver if the archtimer uses one to get its frequency and
+> the early UART console is pointless as a module (so build it in to
+> allow debugging/development).
+>
+> And then all new drivers, we should make sure are implemented as
+> tristate drivers. And we can go back and slowly work on converting
+> existing drivers to modules (community effort -- not one person or
+> entity) -- at least the ones where the author has hardware or ones
+> where the change is very likely to be correct and someone else is
+> willing to test it. We'll never be able to support some/all ARM32 (do
+> they even have a GIC/arch timer standard?), but at least for ARM64,
+> this seems like a viable goal.
 
-Best regards,
-Krzysztof
+Cortex-A7/A15 and later have GIC and architectured timer, so it should
+work for contemporary systems.
+Cortex-A9 systems may have GIC, and TWD and/or Global Timer (but I've
+seen SoCs where the interrupt for the latter was not wired :-(.
+
+What are the plans for other architectures?
+I've seen similar patches being applied for e.g. MIPS.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
