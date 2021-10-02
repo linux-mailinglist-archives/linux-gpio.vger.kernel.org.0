@@ -2,74 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E6F841F990
-	for <lists+linux-gpio@lfdr.de>; Sat,  2 Oct 2021 06:06:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C75B41FB52
+	for <lists+linux-gpio@lfdr.de>; Sat,  2 Oct 2021 14:00:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229564AbhJBEIA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 2 Oct 2021 00:08:00 -0400
-Received: from smtprelay0163.hostedemail.com ([216.40.44.163]:50444 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S229560AbhJBEIA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 2 Oct 2021 00:08:00 -0400
-X-Greylist: delayed 324 seconds by postgrey-1.27 at vger.kernel.org; Sat, 02 Oct 2021 00:07:59 EDT
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave04.hostedemail.com (Postfix) with ESMTP id 99FE9180782A4;
-        Sat,  2 Oct 2021 04:00:51 +0000 (UTC)
-Received: from omf12.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 51090100E7B52;
-        Sat,  2 Oct 2021 04:00:49 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf12.hostedemail.com (Postfix) with ESMTPA id 1ED57240235;
-        Sat,  2 Oct 2021 04:00:46 +0000 (UTC)
-Message-ID: <fbab80553b993421e064b61814a7e5c634f62e6e.camel@perches.com>
-Subject: Re: [RFC v2 11/11] MAINTAINERS: Added HTE Subsystem
-From:   Joe Perches <joe@perches.com>
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Dipen Patel <dipenp@nvidia.com>, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        warthog618@gmail.com, devicetree@vger.kernel.org,
-        linux-doc@vger.kernel.org, robh+dt@kernel.org
-Date:   Fri, 01 Oct 2021 21:00:45 -0700
-In-Reply-To: <b6a968cb-1d7b-887c-8995-6e6b9fef03bf@infradead.org>
-References: <20210930232617.6396-1-dipenp@nvidia.com>
-         <20210930232617.6396-12-dipenp@nvidia.com>
-         <b6a968cb-1d7b-887c-8995-6e6b9fef03bf@infradead.org>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.40.0-1 
+        id S232965AbhJBMBs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 2 Oct 2021 08:01:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60026 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232887AbhJBMBr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 2 Oct 2021 08:01:47 -0400
+Received: from mail-il1-x133.google.com (mail-il1-x133.google.com [IPv6:2607:f8b0:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 350B6C061570
+        for <linux-gpio@vger.kernel.org>; Sat,  2 Oct 2021 05:00:02 -0700 (PDT)
+Received: by mail-il1-x133.google.com with SMTP id t11so2807164ilf.11
+        for <linux-gpio@vger.kernel.org>; Sat, 02 Oct 2021 05:00:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=nsZbpm1YBoHMpWTnzHLuE/zYZ0yg4jBiKD5Q7oCTPBE=;
+        b=QDHrJ39sMEu8BMYvZU3NCP2xVWJ3apqATlyWIgxLdN63Ytc/PmCEkUySQqDTKjki/+
+         5+tA3YRUJpZ7nDn3GJ1h0RwhhEcKvOi3Jmra6PuIdyfDp0ZSwqg9Gc2GOh0sdkdn+k0z
+         ypW5PoHh4/FmqiTV8LbbhggOTY+ppcY4Ft7Ej01n4FCqYB/VStkUn4kU/W0rZhFzOsMj
+         8iF+xGJ0SyRhCV7Q5lZGfs6YFI3ufLtHnmr29Yt22Rj0y6hyFaAzJjx5nDupaC0gEv+I
+         ZPq6a66zWvReHMJ4QKugue+wFdCNqdgameLCp+MC/PvUXTgUZoO/b5ETB2ZgVRXQPN9U
+         E7Jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=nsZbpm1YBoHMpWTnzHLuE/zYZ0yg4jBiKD5Q7oCTPBE=;
+        b=oyfFo4GMNvruDx49oLQKU8V4iGSDa9V/VQiSN1ipt1Kq+QfqHQj1tgMyWw5OC2kMat
+         4eSXI+aCvgYmvWn9EnGUjxOe2yYZB72+TmqGXCYaBiWBxViqu7ngp1BskP6YgSQAmV3e
+         Mr3TxAZTH+yvFwFA+M890h4yvW4O6skiIluH627qvHdTYmNCDOA2lLxqjTwltm7QPaBW
+         /RB1ZxLl7c110GomB8frAfymL9KtmGfIU2HWEtZ7wjyfdGucnkbF6Q81JpZLj5Go6ak5
+         e0CjrsxFhOUKBcgsHFZPN8BErgCmnce68Acawb7MzgxH3nT/1rtlvvHGjVdyY7eo8S5E
+         OV2Q==
+X-Gm-Message-State: AOAM5306wzJntXZqbVPo0XAEQjcdRJcfWgfTs7zXOKEBP2tL8xJ0nP6F
+        dAlHwREDDKVuTVHvJ5UxTh6gF98fA+o4MKLBvd0=
+X-Google-Smtp-Source: ABdhPJxOmjBAVMW2nYT5fvETxLNTAYr9I/JWo+U6VNRy1Lo7vz+8FCkgFUADts0lkCMV8QaEg6eYPcMHcMN2R9RGo3E=
+X-Received: by 2002:a92:ca06:: with SMTP id j6mr2320577ils.42.1633176001719;
+ Sat, 02 Oct 2021 05:00:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 1ED57240235
-X-Spam-Status: No, score=-0.64
-X-Stat-Signature: hgk6z5sz6jieutxqdrx7yuux4xd3imtu
-X-Rspamd-Server: rspamout02
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX19mvdfNloEqShYZNn11H8x47SYY6vDcqBg=
-X-HE-Tag: 1633147246-448701
+Received: by 2002:a4f:f90d:0:0:0:0:0 with HTTP; Sat, 2 Oct 2021 05:00:01 -0700 (PDT)
+Reply-To: unitednnation0@gmail.com
+From:   "U.n" <wadebaye33@gmail.com>
+Date:   Sat, 2 Oct 2021 00:00:01 -1200
+Message-ID: <CACE0T5XG4wnU7HGqhPD1kVCXttsusQLOaVTrByP4PnaAUtY=Zg@mail.gmail.com>
+Subject: Attention
+To:     unitednnation0@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 2021-10-01 at 17:08 -0700, Randy Dunlap wrote:
-> On 9/30/21 4:26 PM, Dipen Patel wrote:
-> > Added myself as a maintainer for this new Hardware Timestamping Engine
-> > (HTE) subsystem.
-[]
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-[]
-> > +S:	Maintained
-> > +F:	drivers/hte/*
-> > +F:	include/linux/hte.h
-> > +F:	Documentation/hte/*
-> > +F:	Documentation/devicetree/bindings/hte/*
-
-And using * does not support any possible subdirectory
-
-Likely these should be:
-
-F:	drivers/hte/
-F:	include/linux/hte.h
-F:	Documentation/hte/
-F:	Documentation/devicetree/bindings/hte/
+--=20
 
 
+Attention Sir/Madam
+This is the United Nation (UN). We the United Nations (UN) Globally
+has approved (US$2.500,000)( two Million Five hundred thousand
+dollars) compensation as part of our responsibilities for humanitarian
+Aid for fighting against CoronaVirus and you are among the lucky ones.
+
+
+This compensation is for the most affected countries, communities and
+families across the global. Your funds were deposited with Bank in USA
+to transfer your funds to you via Internet Banking. You have to send
+your full details as state below:with this email Address
+  ( unitednnation0@gmail.com )
+Your full names:
+Address:
+Telephone:
+Occupation:
+
+
+
+Yours Sincerely
+Mr. Ant=C3=B3nio Guterres
+United Nations (UN).
