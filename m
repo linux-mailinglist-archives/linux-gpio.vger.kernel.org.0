@@ -2,124 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AC7B6420443
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Oct 2021 00:16:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC123420448
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Oct 2021 00:21:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231853AbhJCWSK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 3 Oct 2021 18:18:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56900 "EHLO
+        id S231583AbhJCWX3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 3 Oct 2021 18:23:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231841AbhJCWSK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 Oct 2021 18:18:10 -0400
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9142C061780
-        for <linux-gpio@vger.kernel.org>; Sun,  3 Oct 2021 15:16:21 -0700 (PDT)
-Received: by mail-lf1-x12b.google.com with SMTP id i24so15264351lfj.13
-        for <linux-gpio@vger.kernel.org>; Sun, 03 Oct 2021 15:16:21 -0700 (PDT)
+        with ESMTP id S231778AbhJCWX0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 Oct 2021 18:23:26 -0400
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C678C061780
+        for <linux-gpio@vger.kernel.org>; Sun,  3 Oct 2021 15:21:38 -0700 (PDT)
+Received: by mail-lf1-x130.google.com with SMTP id b20so63897178lfv.3
+        for <linux-gpio@vger.kernel.org>; Sun, 03 Oct 2021 15:21:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=IzkTIQlWqZRG2Zb0hdr5rkICTLhL0XajYhtt4w+t2gY=;
-        b=nCi896ZVJ+XlHPgC/hVF3y+2DogSrixg8Iv5PKYCvEuvU71pn6aDEwNkdL3tOWmYxS
-         8w+a8aAOgj/tDt6dUZ/H0WkQCzt1gG029eDv8zeoFL1evfaLZXgL+V4mKTv6fm5J3uu5
-         zeQyieGB1SJQjv50AZg17MtTKJRnMTNl7Sevkd/1PhY/dg9ZfV8GjbcQTzKJaV6wsuPX
-         LeA2ByGzZEjDV8xvF9k+F9Q6k4uI0KitpOVCMzX2Nx5ViDo36fh9CkzDDedU//EIfpba
-         3RW7q/QiuZT58slMeqWvp4HMJqAywV/KipY0FQKmWjtYlGi2uMYTHnlLg/j67pBhovr1
-         lCgw==
+        bh=Ha4KPP96c9xEyWBTDtUnjtflOYpKDiaevgMoztxbhBw=;
+        b=uh+rwJD+WupkcQ6pMmlQv4BP8AJNpxL9ZngmxF8iDBE87FF6H3RHMBJYjQ3G8JezIA
+         pvfNv6Dly/h6UIu45XzjD2oMVOWyArQ4RnNRSuHGDmCulFQMZpLUAfNvDK57l1lxeKvG
+         ed/usCqvyRxd61ZZdT7Yd9jnUXThEza6N3CCebmPquq+lSV/ftW14/+cLZGZUtJBXz8D
+         RlbV5lXgmx7dxclUUF6yFvJKlE9UbUWFOOdvT7fUY23CQAGdqK6OVFK7462GwPGcXstS
+         mgrNAoI64RQSGBFJIBmX2PhTKIFmgi6xCEWaZ6VGxX0Rkhh8F89jvKErgkwhb7Hj0o2U
+         3D9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=IzkTIQlWqZRG2Zb0hdr5rkICTLhL0XajYhtt4w+t2gY=;
-        b=zhyV1lxGxrt9R04ZdUWm+yZcu1k20FeAzd3MvROJjNwuRYPHZy6bM0zuqgf3FXiwP4
-         d6QIIdEGxGlGoHALvQexugBNu/Pn8NXKGfY7K8MmC4dTJ4lRbTXK6RebJbp0QjlFVej2
-         0oCjCVoNvzrYDjcL0IpbtzwK7LBZ++OFgrhp4vnJeKNi9avL3qhutiP38M3WKov69b50
-         EFXz0Ry30ZiqibL67sgIwoIX/j1yGvrC0ZdE7nu55+7RFae2i8SOD5jvArGIg9GcpmPZ
-         0XrMD8smCGQQMPBEvU6tTEp2XB+90ugD3E9pcsTkA9FkfoU0hDNwBFI+P0VkUGy3cWZ/
-         n/TA==
-X-Gm-Message-State: AOAM532eiyDcgn3AE93BBPC5Zbj+/r+ZegRZfs5Q//jxlFjOpqMNQr87
-        hIGYjB+62FfuzxG4jnsJsGIyM5oymyxerDNwtx5pUQ==
-X-Google-Smtp-Source: ABdhPJzJNcxs126/Cswt/LOh3w+e3WQG9QzaKgVRFp6ZuMTVSDMfwDrCeBQ+YuPNqm3O5zUMs7QE0ShXTfpn6nb2iq0=
-X-Received: by 2002:a19:c10a:: with SMTP id r10mr9180470lff.95.1633299379618;
- Sun, 03 Oct 2021 15:16:19 -0700 (PDT)
+        bh=Ha4KPP96c9xEyWBTDtUnjtflOYpKDiaevgMoztxbhBw=;
+        b=TQVMIuAVnLKtNzTdC5ERez1F3HDQiiHXhCRmLdV8Gp8h77FUOQQ8SrFbLE3qYcZ8Yb
+         q/1vWJIZgmDBT8l0rzrG4CpBcoUDdXaH8po7kSKBsbMe8k2S6i02meAMnX71FR5/knio
+         cS33qSCokKqL8GFaBDtEqww5jcqKLxailj+IKs1hU/ADFRd6xaIedAKjRK6l4JuYW+qG
+         LLxcauktQI53pULiLStXoZgVbUd9nItup2Bp3smSJmiFe1Kz8qawjljFXJ19ofgg7V9j
+         RuMP3xczbKSBrQCadob3BnveshULavIZdB5ywgp4UqM/pU38VRXZF8cNm+f58HwHP+pd
+         VYug==
+X-Gm-Message-State: AOAM532rdonQ+KIX8L7T17FEnc5zH48JTGKfuGyfy2/kxq/0QBfHS9rp
+        lAjMI4gZINrZJcU/n+ODIX9CJdKWaQ6NYPUleW6pYA==
+X-Google-Smtp-Source: ABdhPJzAPjbQzi66RvTKB4i1hR2rwBUGWvCcNMGWE4lsj2AaSK6905q9F7ehlzINjR2URzVKnmYfqMpdoFrR/3Lp7KE=
+X-Received: by 2002:a05:6512:706:: with SMTP id b6mr10969524lfs.656.1633299696245;
+ Sun, 03 Oct 2021 15:21:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211002162000.3708238-1-daniel@0x0f.com>
-In-Reply-To: <20211002162000.3708238-1-daniel@0x0f.com>
+References: <20211001191209.29988-1-joey.gouly@arm.com> <20211001191209.29988-2-joey.gouly@arm.com>
+In-Reply-To: <20211001191209.29988-2-joey.gouly@arm.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 4 Oct 2021 00:16:08 +0200
-Message-ID: <CACRpkdZmhZcGXi2Xg=r1BGaf8-QLPDawY_7Kp3d-xmvHuDe0xQ@mail.gmail.com>
-Subject: Re: [RFC PATCH] gpiolib: Move setting the flow handler and don't set
- it at all if there is a parent domain
-To:     Daniel Palmer <daniel@0x0f.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+Date:   Mon, 4 Oct 2021 00:21:25 +0200
+Message-ID: <CACRpkdZP6=aSDegTrOd2qopUQc-ZbtmSWehs2kSN=50CPN-04w@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] gpio: Allow per-parent interrupt data
+To:     Joey Gouly <joey.gouly@arm.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Hector Martin <marcan@marcan.st>,
         Marc Zyngier <maz@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Sven Peter <sven@svenpeter.dev>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Kettenis <kettenis@openbsd.org>, nd <nd@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Daniel,
+On Fri, Oct 1, 2021 at 9:12 PM Joey Gouly <joey.gouly@arm.com> wrote:
 
-thanks for your patch!
-
-On Sat, Oct 2, 2021 at 6:20 PM Daniel Palmer <daniel@0x0f.com> wrote:
-
-> Calling irq_domain_set_info() before irq_domain_alloc_irqs_parent()
-> can cause a null pointer dereference as the parent domain isn't
-> ready yet.
+> From: Marc Zyngier <maz@kernel.org>
 >
-> Move irq_domain_set_info() to after irq_domain_alloc_irqs_parent().
-> A side effect of this is that irq_domain_set_info() will now overwrite
-> the flow handler from the parent domain. So if there is a parent
-> domain do not set the flow handler anymore.
+> The core gpiolib code is able to deal with multiple interrupt parents
+> for a single gpio irqchip. It however only allows a single piece
+> of data to be conveyed to all flow handlers (either the gpio_chip
+> or some other, driver-specific data).
 >
-> This allows gpio-msc313.c to level it's irq domain on top of the
-> new irq controller in later SigmaStar SoCs without crashing.
+> This means that drivers have to go through some interesting dance
+> to find the correct context, something that isn't great in interrupt
+> context (see aebdc8abc9db86e2bd33070fc2f961012fff74b4 for a prime
+> example).
 >
-> Link: https://lore.kernel.org/linux-arm-kernel/20210914100415.1549208-1-daniel@0x0f.com/
-> Signed-off-by: Daniel Palmer <daniel@0x0f.com>
-> Suggested-by: Marc Zyngier <maz@kernel.org>
+> Instead, offer an optional way for a pinctrl/gpio driver to provide
+> an array of pointers which gets used to provide the correct context
+> to the flow handler.
+>
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
 
-If Marc says this is the way to go I think it is the way to go!
-
->         kfree(parent_arg);
-> +
-> +       if (!ret) {
-
-Please just exit on error so invert this.
-
-if (ret)
-  return ret;
-
-and just de-indent the below code (easier to follow)
-
-> +               /* If there is a parent domain leave the flow handler alone */
-> +               if (d->parent)
-> +                       irq_domain_set_hwirq_and_chip(d,
-> +                                                     irq,
-> +                                                     hwirq,
-> +                                                     gc->irq.chip,
-> +                                                     gc);
-> +               /* Otherwise set the flow handler supplied by the gpio driver */
-> +               else
-> +                       irq_domain_set_info(d,
-> +                                           irq,
-> +                                           hwirq,
-> +                                           gc->irq.chip,
-> +                                           gc,
-> +                                           girq->handler,
-> +                                           NULL, NULL);
-> +               irq_set_probe(irq);
-> +       }
-
-Should we print an error if girq->handler is not NULL and we find
-a parent domain, like
-if (d->parent && girq->handler)
-  dev_err(dev, "parent domain and flow handler both specified\n");
+This works for me, bonus for the elegant use of union
+here to make the array optional.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
