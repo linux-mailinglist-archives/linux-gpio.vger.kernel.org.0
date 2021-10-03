@@ -2,123 +2,153 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB1E8420456
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Oct 2021 00:35:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CC88420464
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Oct 2021 00:48:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231889AbhJCWh1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 3 Oct 2021 18:37:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32970 "EHLO
+        id S231862AbhJCWuS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 3 Oct 2021 18:50:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231880AbhJCWh1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 Oct 2021 18:37:27 -0400
+        with ESMTP id S231778AbhJCWuS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 Oct 2021 18:50:18 -0400
 Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E0D6C061780
-        for <linux-gpio@vger.kernel.org>; Sun,  3 Oct 2021 15:35:39 -0700 (PDT)
-Received: by mail-lf1-x12b.google.com with SMTP id u18so63916839lfd.12
-        for <linux-gpio@vger.kernel.org>; Sun, 03 Oct 2021 15:35:38 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1806CC0613EC
+        for <linux-gpio@vger.kernel.org>; Sun,  3 Oct 2021 15:48:30 -0700 (PDT)
+Received: by mail-lf1-x12b.google.com with SMTP id y26so63997622lfa.11
+        for <linux-gpio@vger.kernel.org>; Sun, 03 Oct 2021 15:48:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=RHGeEwkIPlVKp2DkB8YqxMW8FnFDM4r2igt5Qp9dN4s=;
-        b=k7r+x8Xy/bDeEtEp+kWyr4wo2AfQkY6Pp8IIal9DKhw50f62urOlbb3Ogzq2wVaf5i
-         3DGmihVkCTOS1ZlViVKfJWrE1BLvQ90yyaiDVcivzxXDS+TDeHdKMoW2Dac7ouQ8PbgH
-         IBmt1D1z2da2hI4lMxwsYYXafcqSCdLdE+471la3kKVL4uv7x4y94LBYuVRugQTEiWOe
-         Y9+ieTu3wb1VGDosEmfUG+AoqU8kqxbpi5hZspr7WSvEFvm1Frfga1ahzp+fYFtmJu6K
-         6zqSszs/VIn039z2otrSwcVKRxuR1Fg3ap6OgbWLPXfEFPhP7wqczmv09Q1l63x4TV60
-         psDg==
+        bh=sW+crIeDmhAMH4pK5GASAaCZE8D1VZtdK5/sygrAG2k=;
+        b=lQrEOA0euWiU9H9sWtnhFM9pj1nGUVTgMmT1inlS8kcAIcWUCFr349N1dSAz2SVqFj
+         T7ORD7odD/G0eN6Z706ABNk23F2RpNaz9XiITGtS4a/oLqxc8vuWRXMazGo3kVH7nEhf
+         id6efAjoCVCJj4EHeoDcPwnvEdhdrZYcay0MmicPuvWvTC2tTU4WHwu9kmjVm1V4AwTR
+         u6HEKMibBBBYXjB040lkOfpApeYAiOmDVboF7H14zEQd2CgkvyFRV06wLTn0go2HgEcm
+         q5Ki3D4KVSRrkUBia9z2Nc7Z2wKuTuJ7Xo21FCTQ2IL9079vG1F49SrZu+4+Y7LN8iJb
+         jIIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=RHGeEwkIPlVKp2DkB8YqxMW8FnFDM4r2igt5Qp9dN4s=;
-        b=ApK7JGOZWKFW1XgTdoFbgVQ9KBPy6msMy4YXSOuilsjN+jM8C5sf0Q4eBzYN7jDEqO
-         SDCy8sO+zApmmX0acW6zx2ck1Rv0fnhIU5q+pe6e+WPbDF9H77Pw2v9U3MyWdbgtB5+H
-         3E5DAS2wgK24jaYLBwvH7omkIFZH0CZTm1cmRP8boNhhzt0lXf1wApKtCS2OjDnKY62d
-         9UwS/7yfYaQOjbBOs6/FAowyDtarnMKB5cp9tva2eGOvMexY1la2s1KL2CvrWCsdkLa9
-         VFDYYkxwN+5c5KXoPNXDEG1K5sMxokuysYlEf/xZXiOzRknKm7IaohRWQzoGDQxdlzlc
-         F4Ig==
-X-Gm-Message-State: AOAM531Fr3imxvLivQbZziBg/z9SVeBxiZ4Q/wnSDWkYo3Fv/r5lm+db
-        lDnFJJz28wQ0t4ovLl7euxW/4bIZVUMVNe8cwQBTrg==
-X-Google-Smtp-Source: ABdhPJx+Frrq+M4YcxtIzR0gTJZJddtI5aGk+nl4ThYz0rplVevirj2+Hlj6ZhzlTcNsw8/Z8tLJ0uJFlkdFANW8nOs=
-X-Received: by 2002:a05:651c:4d2:: with SMTP id e18mr12201887lji.432.1633300537365;
- Sun, 03 Oct 2021 15:35:37 -0700 (PDT)
+        bh=sW+crIeDmhAMH4pK5GASAaCZE8D1VZtdK5/sygrAG2k=;
+        b=JExxB+iu4h8Qo0e5oXyIPKwysSoH87KhLR/syN4zY+uYozxWeJ/BPEq5wXflEjt2/S
+         112WyNKfRbW06kW4JFQoERFXBWIhn9Er2WiotsSaS5OY6VwHaIeZW/97pEQ5IqYIt0Ah
+         a2lvEd3JT3W2BYT+Z2NYU4wkY434LsgkoaTI4BHnWUh1RPf+RO2SN4qBl9Mg2jAcZs12
+         b1hQYKEPPjdfPcmw2RlTeU1wUWuMhs9kG84U3r/GP+Xy8cVd/2ktUicvSPjPKUJeRqdh
+         1LJtREV/RYztjxelsBQKFLRgm/sH7iyy8ROZysvr7/ppk29nCipOpg7tC09X9bfmBNnG
+         ol1Q==
+X-Gm-Message-State: AOAM5318UTwbxYBGelxI9bsVTC9YlWp2a9RLAXdbUCLtv51r9cMrOM+5
+        MDV6STHJgrdJzNGTc/aax23svJbc59fnDIjhLfUn/Q==
+X-Google-Smtp-Source: ABdhPJwlIO3xJmMne7SA3V9EP6o49YZWJtcqreYaPVZa30sqz5Vxc/CuLZ5GbJ4uqeokuIsg0281gvTYxIzcMfCsea0=
+X-Received: by 2002:a2e:4e11:: with SMTP id c17mr11819356ljb.19.1633301308432;
+ Sun, 03 Oct 2021 15:48:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211001191209.29988-1-joey.gouly@arm.com> <20211001191209.29988-4-joey.gouly@arm.com>
-In-Reply-To: <20211001191209.29988-4-joey.gouly@arm.com>
+References: <20210607123317.3242031-1-robert.marko@sartura.hr>
+ <20210607123317.3242031-5-robert.marko@sartura.hr> <CA+HBbNH7wcpfQOX2=vZmW78GoWy_WL3Pz-dMKe0N0ebZDp+oUw@mail.gmail.com>
+ <20210713222528.GA952399@robh.at.kernel.org> <CA+HBbNFj5+6sLKxmL8XtsZQ48ch8OjTbJ1bwkDC8dfRiOyWY1Q@mail.gmail.com>
+ <20210719225906.GA2769608@robh.at.kernel.org> <CACRpkdbq6Jow6AT9OpsR7Q0JVCWVMcmamh9KHPXMtUnkoe7ZFw@mail.gmail.com>
+ <CA+HBbNFEs-=5XTK7PUL+LsgBCcPfwHsCPe4v6byK0x=O_7TRPA@mail.gmail.com>
+ <CACRpkdZfZLQMgpMAF2FwSVt1YAzhQJ9ZWkVUjVc2xpmWL7yEvQ@mail.gmail.com> <CA+HBbNHZyYnnyz9=4Hgav96ZH8-R-nYoi300j2x3fgei8aa4zQ@mail.gmail.com>
+In-Reply-To: <CA+HBbNHZyYnnyz9=4Hgav96ZH8-R-nYoi300j2x3fgei8aa4zQ@mail.gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 4 Oct 2021 00:35:26 +0200
-Message-ID: <CACRpkdYC0js+++Q4dFL4P0WiMfPOJthaH3kkf8T31UUb3OBDqQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] pinctrl: add pinctrl/GPIO driver for Apple SoCs
-To:     Joey Gouly <joey.gouly@arm.com>, Mark Brown <broonie@kernel.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Hector Martin <marcan@marcan.st>,
-        Marc Zyngier <maz@kernel.org>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Sven Peter <sven@svenpeter.dev>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Kettenis <kettenis@openbsd.org>, nd <nd@arm.com>,
-        Stan Skowronek <stan@corellium.com>
+Date:   Mon, 4 Oct 2021 00:48:17 +0200
+Message-ID: <CACRpkdaBUrgnyFnO0Tdae56PKR4pLN1boLpK0FMCk7eYshZ5LA@mail.gmail.com>
+Subject: Re: [PATCH v6 5/6] dt-bindings: mfd: Add Delta TN48M CPLD drivers bindings
+To:     Robert Marko <robert.marko@sartura.hr>
+Cc:     Rob Herring <robh@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Luka Perkov <luka.perkov@sartura.hr>, jmp@epiphyte.org,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Donald Buczek <buczek@molgen.mpg.de>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Joey!
+Hi Robert,
 
-over all this driver is much improved and using a lot of stock functions
-in the pin control core and getting really clean and compact.
-I have one major nit below:
+sorry for slow reply, I am a bit busy.
 
-On Fri, Oct 1, 2021 at 9:12 PM Joey Gouly <joey.gouly@arm.com> wrote:
+On Tue, Aug 24, 2021 at 10:03 AM Robert Marko <robert.marko@sartura.hr> wrote:
+> On Wed, Aug 11, 2021 at 2:17 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> >
+> > On Tue, Aug 3, 2021 at 9:23 PM Robert Marko <robert.marko@sartura.hr> wrote:
+> >
+> > > The pins that this driver wants to expose are used for SFP-s only,
+> > > they are provided by the Lattice CPLD which also does other things.
+> > >
+> > > Linux has a generic SFP driver which is used to manage these SFP
+> > > ports, but it only supports GPIO-s, it has no concept of anything else.
+> > > Since the driver is fully generic, I have no idea how could one extend it
+> > > to effectively handle these pins internally, especially since I have more
+> > > switches that use the CPLD for SFP-s as well, even for 48 ports and 192
+> > > pins for them.
+> >
+> > Which file is this driver in so I can look?
+>
+> Hi Linus,
+> Sorry for the late reply.
+>
+> Sure, here is the generic Linux driver that is used for SFP handling:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/net/phy/sfp.c?h=v5.14-rc7
 
-> +struct apple_gpio_pinctrl {
-> +       // Shadow the pin values, the REG_GPIOx_DATA bit can read back stale values.
-> +       u32 *pin_shadow;
-(...)
-> +// No locking needed to mask/unmask IRQs as the interrupt mode is per pin-register.
-> +static void apple_gpio_set_reg(struct apple_gpio_pinctrl *pctl,
-> +                              unsigned int pin, uint32_t clr, uint32_t set)
-> +{
-> +       void __iomem *ppin = pctl->base + REG_GPIO(pin);
-> +       uint32_t prev, cfg;
-> +
-> +       prev = pctl->pin_shadow[pin];
-> +       cfg = (prev & ~clr) | set;
-> +
-> +       if (!(prev & REG_GPIOx_CFG_DONE))
-> +               writel_relaxed(cfg & ~REG_GPIOx_CFG_DONE, ppin);
-> +       writel_relaxed(cfg, ppin);
-> +       pctl->pin_shadow[pin] = cfg;
-> +}
+So this has this:
 
-Are you not simply reinventing regmap-mmio here?
+enum {
+        GPIO_MODDEF0,
+        GPIO_LOS,
+        GPIO_TX_FAULT,
+        GPIO_TX_DISABLE,
+        GPIO_RATE_SELECT,
+        GPIO_MAX,
 
-Keeping shadows of registers including write-only registers
-is exactly what regmap does.
+        SFP_F_PRESENT = BIT(GPIO_MODDEF0),
+        SFP_F_LOS = BIT(GPIO_LOS),
+        SFP_F_TX_FAULT = BIT(GPIO_TX_FAULT),
+        SFP_F_TX_DISABLE = BIT(GPIO_TX_DISABLE),
+        SFP_F_RATE_SELECT = BIT(GPIO_RATE_SELECT),
 
-Check it out, if in doubt consult Mark Brown, I'm pretty
-sure we can add what you need to regmap if it is missing.
+        SFP_E_INSERT = 0,
+        SFP_E_REMOVE,
 
-> +static uint32_t apple_gpio_get_reg(struct apple_gpio_pinctrl *pctl,
-> +                                  unsigned int pin)
-> +{
-> +       return readl_relaxed(pctl->base + REG_GPIO(pin));
-> +}
+This does not look general purpose to me at all?
+It's just some hardware engineer that thougt "GPIO"
+was a nice thing to call this.
 
-If you use regmap-mmio I am pretty sure this will also
-return the right value for the shadowed registers which it
-currently does not IIUC.
+> > Maybe it is not a good idea to look for generic code just because
+> > it is convenient? I have had this problem before with GPIO, along
+> > the lines "lemme just do this dirty thing this one time because it
+> > is so convenient for me" (more or less) and the answer is still
+> > "no".
+> >
+> > Can you either augment the driver to handle a regmap with bit indices
+> > instead or write a new similar driver for that or refactor it some other
+> > way?
+> >
+> > It is not a simple solution to your problem, but it might be the right
+> > solution even if it means some more work.
+>
+> I understand your position, believe me, I spend some time looking at
+> what would be the logical way for these switches.
+> But I see no way how could the SFP driver be extended in a generic way
+> that would allow supporting different register layouts when it comes to pins.
 
-> +               apple_gpio_set_reg(pctl, group, 0,
-> +                                  REG_GPIOx_PERIPH | REG_GPIOx_CFG_DONE);
-> +       else
-> +               apple_gpio_set_reg(pctl, group, REG_GPIOx_PERIPH,
-> +                                  REG_GPIOx_CFG_DONE);
+Why do you think you have to use the GPIO abstraction and bindings?
+Just invent something that satisfy your needs, the bindings are just
+strings. Why does the consumer have to use the GPIO binding?
+They can just use phandle named anything. Some "sfp-foo-resource = <&...>
+or so.
 
-I think all calls to apple_gpio_set_reg() could be replaced with
-regmap_update_bits() or similar.
+For example I created this:
+Documentation/devicetree/bindings/firmware/intel,ixp4xx-network-processing-engine.yaml
+It's handling out a resource using a phandle. Nothing different than
+GPIO, regulator, clock etc. Just invent something for SFP?
 
 Yours,
 Linus Walleij
