@@ -2,71 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CBDC9420124
-	for <lists+linux-gpio@lfdr.de>; Sun,  3 Oct 2021 12:11:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85B6442041D
+	for <lists+linux-gpio@lfdr.de>; Sun,  3 Oct 2021 23:48:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229980AbhJCKNQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 3 Oct 2021 06:13:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39814 "EHLO
+        id S231739AbhJCVuS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 3 Oct 2021 17:50:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229875AbhJCKNO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 Oct 2021 06:13:14 -0400
-Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D31D7C0613EC
-        for <linux-gpio@vger.kernel.org>; Sun,  3 Oct 2021 03:11:25 -0700 (PDT)
-Received: by mail-il1-x132.google.com with SMTP id i13so15263968ilm.4
-        for <linux-gpio@vger.kernel.org>; Sun, 03 Oct 2021 03:11:25 -0700 (PDT)
+        with ESMTP id S231583AbhJCVuS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 Oct 2021 17:50:18 -0400
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 492A9C0613EC
+        for <linux-gpio@vger.kernel.org>; Sun,  3 Oct 2021 14:48:30 -0700 (PDT)
+Received: by mail-lf1-x12b.google.com with SMTP id m3so62884984lfu.2
+        for <linux-gpio@vger.kernel.org>; Sun, 03 Oct 2021 14:48:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=SaQJaLQJV1tXeTErb3iEo2Jt85n+Ln12ULE3k7m2zSU=;
-        b=ZRsVzRLCDp2jCveh0xLEZsbZKgrc1nZS9ExVADYzSoPhcd4YESeSQcehSlgVQqXtDe
-         Udvu7GpPZiE2jaYSfYfEJnB70tc3c1fOznTkruHbdR71eET30edLL5e1tj3kAU3iWGNM
-         0pFeMvcy1wZuItcmiKOYLZ6N7EiEbZwU9ICYXkH5Isgyu0Rb+W2ZJequioCLwK/zqlAg
-         ZrlMk38Z/9ZIf1YpJkwkzR9s+6dDOfqxhco4uB+LyHLBjUo9Lqk6wB6KIhbKbfuDIuvo
-         yaN2mcy7Ns3Fh0aQmt9WWPZCVj1KYXbjTXYDNH608VDVtzPfXz1yHUcrV7x9DSisGKLb
-         BxFg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=voNTUJHRu2p0UrOJPaevC7glSoKCJY7cp+CEopXnX20=;
+        b=e2jLdC8flb8LbQcSIxibdfPUHmn3/F7lbP3/na8/xQar0yZm433oYS0khqC7CxWZOy
+         ixb7ouFnpABfjTA070mGjDq4TZE+wmZLmHDwOZL89EL0QH/CD7XBcRf+qkPmlJXm9oDY
+         bF3tMUkAOIGFR2Qtl9fma8OrdF/Mv4PMs+0bve0EYY9Kb2XLtXodgENoMgcCrGgU2Fxn
+         eQKVz+vspDgUFLY8WkWZ2uKhQ1DwumInig89rSNjDmjEd18EUrHDeQhhStW1NvYJFh1k
+         cnVt0BS4Mi0cU8EIRPIahNa/yjnjlLPaMf4GQW0dKFF24aXF0nsW9QnJ5Ys+bfHbrY7i
+         P6uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=SaQJaLQJV1tXeTErb3iEo2Jt85n+Ln12ULE3k7m2zSU=;
-        b=65R6euWmLl38dYSK/8laBOJ7sZ1VhWoABDmYQlMLI+DHcWQlP//tDyr6UGLQcN3myD
-         dOaMS5qkNwKDb6jV3eiWoGl7MgZhJnRDI+jnq2OudIAWm+TyTLa9SQwTwcJCZ8e553HI
-         vgdljrd7S+4e3vpznp0rRJf8gZ7Ozt/ExHmivnst3Y4viImmSgV/5RpLxlWffEGzfstU
-         AXoPeSL6b3gZeFxKO3h/xoSiwzMC6N6dKeEK1LcNK/xdBNgJTBS+SBgpSFIh9HIsiO1G
-         gt7VKmGQiiLjQpJRTI8Xq+krCV+CNPKBmqmbyH6YzzOamvcdWSywZaRPGYsRDQrSAbbJ
-         XEWA==
-X-Gm-Message-State: AOAM531g+x3CeaoUgS0stMDAfxePPlnP3ocGnFrgTVkTFhIeDdJ2dpHt
-        rsleAwwxv36WXT9D6IyfkrHH1AgoQCTHH7xO5Q==
-X-Google-Smtp-Source: ABdhPJw+YcFKwvGGsfYjxj2b9F1pzYjbsy5phykeGXVyZXgDPU0D7kJ3vXx74Rnt9qKAkXoJicdnA8qSAftd8CXhl9s=
-X-Received: by 2002:a92:c04c:: with SMTP id o12mr5892301ilf.124.1633255885144;
- Sun, 03 Oct 2021 03:11:25 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=voNTUJHRu2p0UrOJPaevC7glSoKCJY7cp+CEopXnX20=;
+        b=cBjVZ6M/06RefhV95RjCdlX8jR8qlNg3k4CKoKF+xgu1L2YACjqF8sH2lvPMqPyYPI
+         3Bia7LAZy8qMmgj1/OXHuPW7p1x0S1/GmzJOXdcWApODJpE60bVV+0HSgnpNtoovJxzp
+         t4pKZ6q9hXFHE+LQmvCM+pSoLypmsNNBq7Lifev3mxDXYLIPhiSwILICPXLJKlnvxrb1
+         q+Zevzh6fnROqAzKg2inBePLSrkpxXt3QtWEOZMbp+bANXdrG2wpiULGH/FFLqUwf6Wm
+         BdOSkEFVlwbM5scTRK9Y7BlG4qyFlcddmxloWCneY61PfdBML9lLdP/iT3d2by5yVm3r
+         jcxA==
+X-Gm-Message-State: AOAM530K+Ma6jG1nqZZpERpIjD8WQouRPqBz//LwNfRCT8JNUNQo5Syi
+        mcXEFfP6WurvxyIP3Dv5GbjfWhw5+ZUyz3Z0As9S14fQW8Q=
+X-Google-Smtp-Source: ABdhPJwEgGAcpb775Cmq4Z4ILsnDI0eImSxuZGOBztzFK4T3jodRimaYgKJB02ynnI+EAvr3kgLgtmqriSzBRKtnsJc=
+X-Received: by 2002:a2e:8011:: with SMTP id j17mr11603489ljg.145.1633297708485;
+ Sun, 03 Oct 2021 14:48:28 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:a05:6602:2dc3:0:0:0:0 with HTTP; Sun, 3 Oct 2021 03:11:24
- -0700 (PDT)
-Reply-To: mrschantelhermans@gmail.com
-From:   Mrs Chantel Hermans <julibestene14@gmail.com>
-Date:   Sun, 3 Oct 2021 03:11:24 -0700
-Message-ID: <CAEBSGw_hPUCUiVVX282fFBNo-F8MBt4rMn47U+qNR5wrU077xg@mail.gmail.com>
-Subject: ATTENTION
-To:     undisclosed-recipients:;
+References: <cover.1633081630.git.geert+renesas@glider.be>
+In-Reply-To: <cover.1633081630.git.geert+renesas@glider.be>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sun, 3 Oct 2021 23:48:17 +0200
+Message-ID: <CACRpkdY0ZgsYKHpcRaFEVustfivt9V0UKQ1tuHgb5HXMmaYAXg@mail.gmail.com>
+Subject: Re: [GIT PULL] pinctrl: renesas: Updates for v5.16
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
--- 
-ATTENTION
+On Fri, Oct 1, 2021 at 11:48 AM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
+> The following changes since commit 6880fa6c56601bb8ed59df6c30fd390cc5f6dd8f:
+>
+>   Linux 5.15-rc1 (2021-09-12 16:28:37 -0700)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v5.16-tag1
 
-You have been compensated with the sum of 6.9 million dollars in this
-United Nation the payment will be issue into ATM Visa Card,
+Pulled in!
 
-
-and send to you from the Santander Bank of Spain we need your
-Address,Passport and your whatsapp number.
-
-
-THANKS
-Mrs Chantel Hermans
+Thanks!
+Linus Walleij
