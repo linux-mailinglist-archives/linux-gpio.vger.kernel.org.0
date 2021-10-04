@@ -2,97 +2,159 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D741F4210B5
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Oct 2021 15:49:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 11FCD420EE7
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Oct 2021 15:27:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235400AbhJDNvn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Oct 2021 09:51:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38084 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237765AbhJDNvk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Oct 2021 09:51:40 -0400
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B11FC07AE7A;
-        Mon,  4 Oct 2021 06:23:19 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id v18so63742612edc.11;
-        Mon, 04 Oct 2021 06:23:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SgYt949aZNQnDjDSm/7k761HHJhJOPWZR30o9Zy8p+g=;
-        b=PmlLfeTqBn5CPTR2/GuwESNit7xO6PYglZyMZ4jFS+vbDlU26z9OJtG5toU/kine9K
-         kLHFFE0fqBVz0SzDG6Z/yn+gVrvVeJLEgezV2/+xcBRZsjnlbBADgqg8JNc7zBMzsa/k
-         Fuy5MqY6zvXjmvhCctM3X4i4UsI0nHmhajnd6YvsggOZn2cgxuKyEV9sxI1plWajPKff
-         Sq8IOLcTQkHaFVYtE4MROmDeva/uZyoR7LNxzvz4qo7cm7VXUJnv1dH5i2fIM69cqIRa
-         nz96fVIB4FDJPVcy7be4XxfDJ1Yhi6Nus0++dbOJwoH49L5T38qS+xqOJYEHjajKKQwV
-         xPWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SgYt949aZNQnDjDSm/7k761HHJhJOPWZR30o9Zy8p+g=;
-        b=0wEZ19do4q0g30QGrUjEXkauSDlxb9xRKBnkc0E+/XxeKwJE+uww2o9AAoRx3z/82J
-         s+4H8cbsc7rXB0tVTip4zVI99S67jsuofe6Id8JJaMKmamL6l3qad4TfTsRt3U+fzzF0
-         UhHNi7/FsNttBJhnU+WEMtPsW2sDYvPJKA6E0phLd1hH7ikadHapoYK+O1XNlEpc8qes
-         qZTYGXryp99je91Ougkk9bchfjSsrqgi/TSkTKa/1D46aoQ97jzk3xlvNJPaU5PYFWFt
-         xplfa9PWVQTfSDB+510rkc2W6nt2lM0Tiikzf2kYsZhetMiMqsmgTRFsZ3M7ofSqQt2k
-         McnQ==
-X-Gm-Message-State: AOAM532GFfxgmjEcImbLA7+sdiLBkWDkzLXBRb/3Wl/ZmiISbg+npvcO
-        Z+7fyI0YmbMHUT5KdxD3gGawpDwjlgBPtPV805w=
-X-Google-Smtp-Source: ABdhPJxrFL6zXCs0m9UnE5kBHZIIjyQm6iIAm/c8N4bmqBQgxC0Es9Ls5FTysKz6s7XfddZ3Z0bzWjWCc4GJ/vunHjA=
-X-Received: by 2002:a17:907:2855:: with SMTP id el21mr17525279ejc.141.1633353774409;
- Mon, 04 Oct 2021 06:22:54 -0700 (PDT)
+        id S236978AbhJDN3Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Oct 2021 09:29:16 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:35742 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236913AbhJDN1U (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Oct 2021 09:27:20 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 194DPR8l119744;
+        Mon, 4 Oct 2021 08:25:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1633353927;
+        bh=tg65zxqAIo6JHCoBcOsaI5xso/b3UXz2yT65otS3DMQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=g7fnYEIjW++hF0XAoRjhTtdtVYRwSF7C5kH2Angb9zXroIZ3TrciqXjrQYqix60LD
+         bDNLo4SJHI/knyJ7Ot5f4zD80ovKnIUuywswZ3ymYHHdFYhYLEDhJU5lEOjWaAQ78X
+         8ywYsxXFoyXmHJX0yhs6Fy8/BaRtfxPmU+M8YadI=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 194DPRao051940
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 4 Oct 2021 08:25:27 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Mon, 4
+ Oct 2021 08:25:27 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
+ Frontend Transport; Mon, 4 Oct 2021 08:25:27 -0500
+Received: from [10.250.232.107] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 194DPOY5079224;
+        Mon, 4 Oct 2021 08:25:24 -0500
+Subject: Re: [PATCH v2] dt-bindings: gpio: Convert TI TPIC2810 GPIO Controller
+ bindings to YAML
+To:     Aparna M <a-m1@ti.com>
+CC:     <vigneshr@ti.com>, <grygorii.strashko@ti.com>,
+        <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <bgolaszewski@baylibre.com>
+References: <20211004131500.22100-1-a-m1@ti.com>
+From:   Aswath Govindraju <a-govindraju@ti.com>
+Message-ID: <d4ca4dbc-32b8-5189-adc0-ed876abfca49@ti.com>
+Date:   Mon, 4 Oct 2021 18:55:23 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-References: <a9af5139b6b8eb687495ffae69d32acd305ac2f3.1633351482.git.geert+renesas@glider.be>
-In-Reply-To: <a9af5139b6b8eb687495ffae69d32acd305ac2f3.1633351482.git.geert+renesas@glider.be>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 4 Oct 2021 16:22:17 +0300
-Message-ID: <CAHp75Vf-sRz2WMTa2SUfPr0LRnWYb=29WjcjB9rmV9Ty9WJ8zA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: aggregator: Wrap access to gpiochip_fwd.tmp[]
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20211004131500.22100-1-a-m1@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 4, 2021 at 3:47 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
->
-> The tmp[] member of the gpiochip_fwd structure is used to store both the
-> temporary values bitmap and the desc pointers for operations on multiple
-> GPIOs.  As both are arrays with sizes unknown at compile-time, accessing
-> them requires offset calculations, which are currently duplicated in
-> gpio_fwd_get_multiple() and gpio_fwd_set_multiple().
->
-> Introduce (a) accessors for both arrays and (b) a macro to calculate the
-> needed storage size.  This confines the layout of the tmp[] member into
-> a single spot, to ease maintenance.
+Hi Aparna,
 
-...
+On 04/10/21 6:45 pm, Aparna M wrote:
+> Convert gpio-tpic2810 bindings to yaml format and remove outdated
+> bindings in .txt format.
+> 
+> Signed-off-by: Aparna M <a-m1@ti.com>
+> ---
+Thank you for making the requested changes.
 
-> +#define fwd_tmp_descs(fwd)     (void *)&(fwd)->tmp[BITS_TO_LONGS((fwd)->chip.ngpio)]
+Reviewed-by: Aswath Govindraju <a-govindraju@ti.com>
+
+Thanks,
+Aswath
+
+>  .../bindings/gpio/gpio-tpic2810.txt           | 16 -------
+>  .../bindings/gpio/gpio-tpic2810.yaml          | 48 +++++++++++++++++++
+>  2 files changed, 48 insertions(+), 16 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-tpic2810.txt
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-tpic2810.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-tpic2810.txt b/Documentation/devicetree/bindings/gpio/gpio-tpic2810.txt
+> deleted file mode 100644
+> index 1afc2de7a537..000000000000
+> --- a/Documentation/devicetree/bindings/gpio/gpio-tpic2810.txt
+> +++ /dev/null
+> @@ -1,16 +0,0 @@
+> -TPIC2810 GPIO controller bindings
+> -
+> -Required properties:
+> - - compatible		: Should be "ti,tpic2810".
+> - - reg			: The I2C address of the device
+> - - gpio-controller	: Marks the device node as a GPIO controller.
+> - - #gpio-cells		: Should be two. For consumer use see gpio.txt.
+> -
+> -Example:
+> -
+> -	gpio@60 {
+> -		compatible = "ti,tpic2810";
+> -		reg = <0x60>;
+> -		gpio-controller;
+> -		#gpio-cells = <2>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-tpic2810.yaml b/Documentation/devicetree/bindings/gpio/gpio-tpic2810.yaml
+> new file mode 100644
+> index 000000000000..811aee483f43
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-tpic2810.yaml
+> @@ -0,0 +1,48 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpio/gpio-tpic2810.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +#define fwd_tmp_size(ngpios)   (BITS_TO_LONGS((ngpios)) + (ngpios))
+> +title: TPIC2810 GPIO controller bindings
+> +
+> +maintainers:
+> +  - Aswath Govindraju <a-govindraju@ti.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ti,tpic2810
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: The I2C address of the device
+> +
+> +  gpio-controller: true
+> +
+> +  "#gpio-cells":
+> +    const: 2
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - gpio-controller
+> +  - "#gpio-cells"
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    i2c1 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        gpio@60 {
+> +            compatible = "ti,tpic2810";
+> +            reg = <0x60>;
+> +            gpio-controller;
+> +            #gpio-cells = <2>;
+> +        };
+> +    };
+> 
 
-...
-
-> -       fwd = devm_kzalloc(dev, struct_size(fwd, tmp,
-> -                          BITS_TO_LONGS(ngpios) + ngpios), GFP_KERNEL);
-> +       fwd = devm_kzalloc(dev, struct_size(fwd, tmp, fwd_tmp_size(ngpios)),
-> +                          GFP_KERNEL);
-
-Shouldn't we rather use devm_bitmap_zalloc() / bitmap_free()?
-
->         if (!fwd)
->                 return ERR_PTR(-ENOMEM);
-
-
--- 
-With Best Regards,
-Andy Shevchenko
