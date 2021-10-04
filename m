@@ -2,27 +2,27 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B23A14208EA
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Oct 2021 12:00:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 698004208FD
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Oct 2021 12:08:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232698AbhJDKCX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Oct 2021 06:02:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57182 "EHLO mail.kernel.org"
+        id S230337AbhJDKJt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Oct 2021 06:09:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232487AbhJDKCV (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 4 Oct 2021 06:02:21 -0400
+        id S229945AbhJDKJs (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 4 Oct 2021 06:09:48 -0400
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A63BB61373;
-        Mon,  4 Oct 2021 10:00:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2084B61206;
+        Mon,  4 Oct 2021 10:08:00 +0000 (UTC)
 Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
         by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <maz@kernel.org>)
-        id 1mXKlq-00EaPO-LI; Mon, 04 Oct 2021 11:00:30 +0100
-Date:   Mon, 04 Oct 2021 11:00:30 +0100
-Message-ID: <87a6jprtxd.wl-maz@kernel.org>
+        id 1mXKt4-00EaTe-8C; Mon, 04 Oct 2021 11:07:58 +0100
+Date:   Mon, 04 Oct 2021 11:07:57 +0100
+Message-ID: <878rz9rtky.wl-maz@kernel.org>
 From:   Marc Zyngier <maz@kernel.org>
 To:     Sam Shih <sam.shih@mediatek.com>
 Cc:     <matthias.bgg@gmail.com>, <Ryder.Lee@mediatek.com>,
@@ -57,19 +57,24 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Mon, 04 Oct 2021 10:12:08 +0100,
 Sam Shih <sam.shih@mediatek.com> wrote:
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupt-parent = <&gic>;
-> +		clock-frequency = <13000000>;
+> 
+> +		gic: interrupt-controller@c000000 {
+> +			compatible = "arm,gic-v3";
+> +			#interrupt-cells = <3>;
+> +			interrupt-parent = <&gic>;
+> +			interrupt-controller;
+> +			reg = <0 0x0c000000 0 0x40000>,  /* GICD */
+> +			      <0 0x0c080000 0 0x80000>,  /* GICR */
+> +			      <0 0x0c400000 0 0x2000>,   /* GICC */
+> +			      <0 0x0c410000 0 0x1000>,   /* GICH */
+> +			      <0 0x0c420000 0 0x2000>;   /* GICV */
+> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
 
-I mentioned it last time[1] , but you seem to have ignored my comment.
-This property isn't an acceptable workaround on new systems. Please
-fix your firmware and drop this clock-frequency property.
+Also, the GICD region is totally wrong. It is 64kB at all times. I
+don't know where you get this 256kB figure from.
 
 	M.
-
-[1] https://lore.kernel.org/r/0459da08cddc579f069a28e659e614fd@kernel.org
 
 -- 
 Without deviation from the norm, progress is not possible.
