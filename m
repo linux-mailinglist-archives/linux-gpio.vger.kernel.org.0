@@ -2,30 +2,29 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B14B420801
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Oct 2021 11:12:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BC8F420811
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Oct 2021 11:16:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231965AbhJDJOZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Oct 2021 05:14:25 -0400
-Received: from mailgw01.mediatek.com ([60.244.123.138]:50452 "EHLO
+        id S231555AbhJDJSQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Oct 2021 05:18:16 -0400
+Received: from mailgw01.mediatek.com ([60.244.123.138]:55108 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S231329AbhJDJOZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Oct 2021 05:14:25 -0400
-X-UUID: ca3abdf83a9c4a2eb90892e73b54abf4-20211004
-X-UUID: ca3abdf83a9c4a2eb90892e73b54abf4-20211004
-Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw01.mediatek.com
+        with ESMTP id S229716AbhJDJSQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Oct 2021 05:18:16 -0400
+X-UUID: 60e116a8f75a4354a23f68056b49f6b0-20211004
+X-UUID: 60e116a8f75a4354a23f68056b49f6b0-20211004
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
         (envelope-from <sam.shih@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-        with ESMTP id 1276577297; Mon, 04 Oct 2021 17:12:32 +0800
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1590306773; Mon, 04 Oct 2021 17:16:22 +0800
 Received: from mtkcas10.mediatek.inc (172.21.101.39) by
- mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.792.3;
- Mon, 4 Oct 2021 17:12:30 +0800
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 4 Oct 2021 17:16:20 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas10.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 4 Oct 2021 17:12:30 +0800
+ Transport; Mon, 4 Oct 2021 17:16:20 +0800
 From:   Sam Shih <sam.shih@mediatek.com>
-To:     <maz@kernel.org>, <matthias.bgg@gmail.com>
+To:     <matthias.bgg@gmail.com>
 CC:     <Ryder.Lee@mediatek.com>, <devicetree@vger.kernel.org>,
         <enric.balletbo@collabora.com>, <fparent@baylibre.com>,
         <gregkh@linuxfoundation.org>, <herbert@gondor.apana.org.au>,
@@ -36,15 +35,15 @@ CC:     <Ryder.Lee@mediatek.com>, <devicetree@vger.kernel.org>,
         <linux-mediatek@lists.infradead.org>,
         <linux-serial@vger.kernel.org>, <linux-watchdog@vger.kernel.org>,
         <linux@roeck-us.net>, <mpm@selenic.com>, <mturquette@baylibre.com>,
-        <robh+dt@kernel.org>, <sam.shih@mediatek.com>, <sboyd@kernel.org>,
-        <sean.wang@kernel.org>, <seiya.wang@mediatek.com>,
-        <wim@linux-watchdog.org>
-Subject: [v4,8/9] arm64: dts: mediatek: add mt7986a support
-Date:   Mon, 4 Oct 2021 17:12:08 +0800
-Message-ID: <20211004091208.31335-1-sam.shih@mediatek.com>
+        <robh+dt@kernel.org>, <sboyd@kernel.org>, <sean.wang@kernel.org>,
+        <seiya.wang@mediatek.com>, <wim@linux-watchdog.org>,
+        Sam Shih <sam.shih@mediatek.com>
+Subject: [v4,9/9] arm64: dts: mediatek: add mt7986b support
+Date:   Mon, 4 Oct 2021 17:16:17 +0800
+Message-ID: <20211004091617.31436-1-sam.shih@mediatek.com>
 X-Mailer: git-send-email 2.18.0
-In-Reply-To: <0459da08cddc579f069a28e659e614fd@kernel.org>
-References: <0459da08cddc579f069a28e659e614fd@kernel.org>
+In-Reply-To: <20210924112701.18459-1-sam.shih@mediatek.com>
+References: <20210924112701.18459-1-sam.shih@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-MTK:  N
@@ -52,9 +51,9 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add basic chip support for Mediatek mt7986a, include
+Add basic chip support for Mediatek mt7986b, include
 uart nodes with correct clocks, rng node with correct clock,
-and watchdog node and mt7986a pinctrl node.
+and watchdog node and mt7986b pinctrl node.
 
 Add cpu node, timer node, gic node, psci and reserved-memory node
 for ARM Trusted Firmware,
@@ -69,30 +68,30 @@ v3: used the stdout-path instead of console=ttyS0
 v2: modified clock and uart node due to clock driver updated
 ---
  arch/arm64/boot/dts/mediatek/Makefile        |   1 +
- arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts |  54 +++++
- arch/arm64/boot/dts/mediatek/mt7986a.dtsi    | 230 +++++++++++++++++++
- 3 files changed, 285 insertions(+)
- create mode 100644 arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts
- create mode 100644 arch/arm64/boot/dts/mediatek/mt7986a.dtsi
+ arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts |  26 +++
+ arch/arm64/boot/dts/mediatek/mt7986b.dtsi    | 230 +++++++++++++++++++
+ 3 files changed, 257 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt7986b.dtsi
 
 diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-index 4f68ebed2e31..e6c3a73b9e4a 100644
+index e6c3a73b9e4a..d555e43d1ccc 100644
 --- a/arch/arm64/boot/dts/mediatek/Makefile
 +++ b/arch/arm64/boot/dts/mediatek/Makefile
-@@ -7,6 +7,7 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-x20-dev.dtb
+@@ -8,6 +8,7 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-x20-dev.dtb
  dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
  dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-bananapi-bpi-r64.dtb
-+dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-rfb.dtb
+ dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-rfb.dtb
++dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986b-rfb.dtb
  dtb-$(CONFIG_ARCH_MEDIATEK) += mt8167-pumpkin.dtb
  dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-elm.dtb
  dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-elm-hana.dtb
-diff --git a/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts b/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts
+diff --git a/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts b/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts
 new file mode 100644
-index 000000000000..e210d03ba70a
+index 000000000000..95a202505bb2
 --- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts
-@@ -0,0 +1,54 @@
++++ b/arch/arm64/boot/dts/mediatek/mt7986b-rfb.dts
+@@ -0,0 +1,26 @@
 +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
 +/*
 + * Copyright (C) 2021 MediaTek Inc.
@@ -100,11 +99,11 @@ index 000000000000..e210d03ba70a
 + */
 +
 +/dts-v1/;
-+#include "mt7986a.dtsi"
++#include "mt7986b.dtsi"
 +
 +/ {
-+	model = "MediaTek MT7986a RFB";
-+	compatible = "mediatek,mt7986a-rfb";
++	model = "MediaTek MT7986b RFB";
++	compatible = "mediatek,mt7986b-rfb";
 +
 +	aliases {
 +		serial0 = &uart0;
@@ -119,39 +118,11 @@ index 000000000000..e210d03ba70a
 +&uart0 {
 +	status = "okay";
 +};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_pins>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart2_pins>;
-+	status = "okay";
-+};
-+
-+&pio {
-+	uart1_pins: uart1-pins-42-to-45 {
-+		mux {
-+			function = "uart";
-+			groups = "uart1";
-+		};
-+	};
-+
-+	uart2_pins: uart1-pins-46-to-49 {
-+		mux {
-+			function = "uart";
-+			groups = "uart2";
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/mediatek/mt7986a.dtsi b/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
+diff --git a/arch/arm64/boot/dts/mediatek/mt7986b.dtsi b/arch/arm64/boot/dts/mediatek/mt7986b.dtsi
 new file mode 100644
-index 000000000000..84fd044ae673
+index 000000000000..06c3381a5170
 --- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7986b.dtsi
 @@ -0,0 +1,230 @@
 +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
 +/*
@@ -164,7 +135,7 @@ index 000000000000..84fd044ae673
 +#include <dt-bindings/clock/mt7986-clk.h>
 +
 +/ {
-+	compatible = "mediatek,mt7986a";
++	compatible = "mediatek,mt7986b";
 +	interrupt-parent = <&gic>;
 +	#address-cells = <2>;
 +	#size-cells = <2>;
@@ -285,7 +256,7 @@ index 000000000000..84fd044ae673
 +		};
 +
 +		pio: pinctrl@1001f000 {
-+			compatible = "mediatek,mt7986a-pinctrl";
++			compatible = "mediatek,mt7986b-pinctrl";
 +			reg = <0 0x1001f000 0 0x1000>,
 +			      <0 0x11c30000 0 0x1000>,
 +			      <0 0x11c40000 0 0x1000>,
@@ -299,7 +270,7 @@ index 000000000000..84fd044ae673
 +				    "iocfg_tl_base", "eint";
 +			gpio-controller;
 +			#gpio-cells = <2>;
-+			gpio-ranges = <&pio 0 0 100>;
++			gpio-ranges = <&pio 0 0 41>, <&pio 66 66 35>;
 +			interrupt-controller;
 +			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
 +			interrupt-parent = <&gic>;
