@@ -2,44 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D50C1420B1C
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Oct 2021 14:44:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 11B9A420B20
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Oct 2021 14:45:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233187AbhJDMq3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Oct 2021 08:46:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52864 "EHLO
+        id S233182AbhJDMrm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Oct 2021 08:47:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230010AbhJDMq3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Oct 2021 08:46:29 -0400
-Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC462C061745
-        for <linux-gpio@vger.kernel.org>; Mon,  4 Oct 2021 05:44:39 -0700 (PDT)
+        with ESMTP id S233212AbhJDMrl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Oct 2021 08:47:41 -0400
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30062C06174E
+        for <linux-gpio@vger.kernel.org>; Mon,  4 Oct 2021 05:45:52 -0700 (PDT)
 Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed20:9ca4:a53a:9ffa:e003])
-        by baptiste.telenet-ops.be with bizsmtp
-        id 1okb2600G11933301okbfx; Mon, 04 Oct 2021 14:44:38 +0200
+        by xavier.telenet-ops.be with bizsmtp
+        id 1olp2601B11933301olp4g; Mon, 04 Oct 2021 14:45:49 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.93)
         (envelope-from <geert@linux-m68k.org>)
-        id 1mXNKd-001rhi-9u; Mon, 04 Oct 2021 14:44:35 +0200
+        id 1mXNLn-001rl3-He; Mon, 04 Oct 2021 14:45:47 +0200
 Received: from geert by rox.of.borg with local (Exim 4.93)
         (envelope-from <geert@linux-m68k.org>)
-        id 1mXNKc-0042wr-Lg; Mon, 04 Oct 2021 14:44:34 +0200
+        id 1mXNLn-00430z-12; Mon, 04 Oct 2021 14:45:47 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>, Enrico@rox.of.borg,
-        Weigelt@rox.of.borg, metux IT consult <lkml@metux.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@kernel.org>
-Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        stratos-dev@op-lists.linaro.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] gpio: aggregator: Add interrupt support
-Date:   Mon,  4 Oct 2021 14:44:33 +0200
-Message-Id: <c987d0bf744150ca05bd952f5f9e5fb3244d27b0.1633350340.git.geert+renesas@glider.be>
+Subject: [PATCH] gpio: aggregator: Wrap access to gpiochip_fwd.tmp[]
+Date:   Mon,  4 Oct 2021 14:45:45 +0200
+Message-Id: <a9af5139b6b8eb687495ffae69d32acd305ac2f3.1633351482.git.geert+renesas@glider.be>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -47,90 +41,83 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Currently the GPIO Aggregator does not support interrupts.  This means
-that kernel drivers going from a GPIO to an IRQ using gpiod_to_irq(),
-and userspace applications using line events do not work.
+The tmp[] member of the gpiochip_fwd structure is used to store both the
+temporary values bitmap and the desc pointers for operations on multiple
+GPIOs.  As both are arrays with sizes unknown at compile-time, accessing
+them requires offset calculations, which are currently duplicated in
+gpio_fwd_get_multiple() and gpio_fwd_set_multiple().
 
-Add interrupt support by providing a gpio_chip.to_irq() callback, which
-just calls into the parent GPIO controller.
-
-Note that this does not implement full interrupt controller (irq_chip)
-support, so using e.g. gpio-keys with "interrupts" instead of "gpios"
-still does not work.
+Introduce (a) accessors for both arrays and (b) a macro to calculate the
+needed storage size.  This confines the layout of the tmp[] member into
+a single spot, to ease maintenance.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
-I would prefer to avoid implementing irq_chip support, until there is a
-real use case for this.
-
-This has been tested with gpio-keys and gpiomon on the Koelsch
-development board:
-
-  - gpio-keys, using a DT overlay[1]:
-
-	$ overlay add r8a7791-koelsch-keyboard-controlled-led
-	$ echo gpio-aggregator > /sys/devices/platform/frobnicator/driver_override
-	$ echo frobnicator > /sys/bus/platform/drivers/gpio-aggregator/bind
-
-	$ gpioinfo frobnicator
-	gpiochip12 - 3 lines:
-		line   0:      "light"      "light"  output  active-high [used]
-		line   1:         "on"         "On"   input   active-low [used]
-		line   2:        "off"        "Off"   input   active-low [used]
-
-	$ echo 255 > /sys/class/leds/light/brightness
-	$ echo 0 > /sys/class/leds/light/brightness
-
-	$ evtest /dev/input/event0
-
-  - gpiomon, using the GPIO sysfs API:
-
-	$ echo keyboard > /sys/bus/platform/drivers/gpio-keys/unbind
-	$ echo e6055800.gpio 2,6 > /sys/bus/platform/drivers/gpio-aggregator/new_device
-	$ gpiomon gpiochip12 0 1
-
-[1] "ARM: dts: koelsch: Add overlay for keyboard-controlled LED"
-    https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git/commit/?h=topic/renesas-overlays&id=c78d817869e63a3485bb4ab98aeea6ce368a396e
----
- drivers/gpio/gpio-aggregator.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/gpio/gpio-aggregator.c | 25 +++++++++++--------------
+ 1 file changed, 11 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregator.c
-index 34e35b64dcdc0581..2ff867d2a3630d3b 100644
+index 2ff867d2a3630d3b..869dc952cf45218b 100644
 --- a/drivers/gpio/gpio-aggregator.c
 +++ b/drivers/gpio/gpio-aggregator.c
-@@ -374,6 +374,13 @@ static int gpio_fwd_set_config(struct gpio_chip *chip, unsigned int offset,
- 	return gpiod_set_config(fwd->descs[offset], config);
- }
+@@ -247,6 +247,11 @@ struct gpiochip_fwd {
+ 	unsigned long tmp[];		/* values and descs for multiple ops */
+ };
  
-+static int gpio_fwd_to_irq(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
++#define fwd_tmp_values(fwd)	&(fwd)->tmp[0]
++#define fwd_tmp_descs(fwd)	(void *)&(fwd)->tmp[BITS_TO_LONGS((fwd)->chip.ngpio)]
 +
-+	return gpiod_to_irq(fwd->descs[offset]);
-+}
++#define fwd_tmp_size(ngpios)	(BITS_TO_LONGS((ngpios)) + (ngpios))
 +
- /**
-  * gpiochip_fwd_create() - Create a new GPIO forwarder
-  * @dev: Parent device pointer
-@@ -414,7 +421,8 @@ static struct gpiochip_fwd *gpiochip_fwd_create(struct device *dev,
- 	for (i = 0; i < ngpios; i++) {
- 		struct gpio_chip *parent = gpiod_to_chip(descs[i]);
+ static int gpio_fwd_get_direction(struct gpio_chip *chip, unsigned int offset)
+ {
+ 	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
+@@ -279,15 +284,11 @@ static int gpio_fwd_get(struct gpio_chip *chip, unsigned int offset)
+ static int gpio_fwd_get_multiple(struct gpiochip_fwd *fwd, unsigned long *mask,
+ 				 unsigned long *bits)
+ {
+-	struct gpio_desc **descs;
+-	unsigned long *values;
++	struct gpio_desc **descs = fwd_tmp_descs(fwd);
++	unsigned long *values = fwd_tmp_values(fwd);
+ 	unsigned int i, j = 0;
+ 	int error;
  
--		dev_dbg(dev, "%u => gpio-%d\n", i, desc_to_gpio(descs[i]));
-+		dev_dbg(dev, "%u => gpio %d irq %d\n", i,
-+			desc_to_gpio(descs[i]), gpiod_to_irq(descs[i]));
+-	/* Both values bitmap and desc pointers are stored in tmp[] */
+-	values = &fwd->tmp[0];
+-	descs = (void *)&fwd->tmp[BITS_TO_LONGS(fwd->chip.ngpio)];
+-
+ 	bitmap_clear(values, 0, fwd->chip.ngpio);
+ 	for_each_set_bit(i, mask, fwd->chip.ngpio)
+ 		descs[j++] = fwd->descs[i];
+@@ -333,14 +334,10 @@ static void gpio_fwd_set(struct gpio_chip *chip, unsigned int offset, int value)
+ static void gpio_fwd_set_multiple(struct gpiochip_fwd *fwd, unsigned long *mask,
+ 				  unsigned long *bits)
+ {
+-	struct gpio_desc **descs;
+-	unsigned long *values;
++	struct gpio_desc **descs = fwd_tmp_descs(fwd);
++	unsigned long *values = fwd_tmp_values(fwd);
+ 	unsigned int i, j = 0;
  
- 		if (gpiod_cansleep(descs[i]))
- 			chip->can_sleep = true;
-@@ -432,6 +440,7 @@ static struct gpiochip_fwd *gpiochip_fwd_create(struct device *dev,
- 	chip->get_multiple = gpio_fwd_get_multiple_locked;
- 	chip->set = gpio_fwd_set;
- 	chip->set_multiple = gpio_fwd_set_multiple_locked;
-+	chip->to_irq = gpio_fwd_to_irq;
- 	chip->base = -1;
- 	chip->ngpio = ngpios;
- 	fwd->descs = descs;
+-	/* Both values bitmap and desc pointers are stored in tmp[] */
+-	values = &fwd->tmp[0];
+-	descs = (void *)&fwd->tmp[BITS_TO_LONGS(fwd->chip.ngpio)];
+-
+ 	for_each_set_bit(i, mask, fwd->chip.ngpio) {
+ 		__assign_bit(j, values, test_bit(i, bits));
+ 		descs[j++] = fwd->descs[i];
+@@ -405,8 +402,8 @@ static struct gpiochip_fwd *gpiochip_fwd_create(struct device *dev,
+ 	unsigned int i;
+ 	int error;
+ 
+-	fwd = devm_kzalloc(dev, struct_size(fwd, tmp,
+-			   BITS_TO_LONGS(ngpios) + ngpios), GFP_KERNEL);
++	fwd = devm_kzalloc(dev, struct_size(fwd, tmp, fwd_tmp_size(ngpios)),
++			   GFP_KERNEL);
+ 	if (!fwd)
+ 		return ERR_PTR(-ENOMEM);
+ 
 -- 
 2.25.1
 
