@@ -2,159 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 11FCD420EE7
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Oct 2021 15:27:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 09BED42104A
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Oct 2021 15:41:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236978AbhJDN3Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Oct 2021 09:29:16 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:35742 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236913AbhJDN1U (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Oct 2021 09:27:20 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 194DPR8l119744;
-        Mon, 4 Oct 2021 08:25:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1633353927;
-        bh=tg65zxqAIo6JHCoBcOsaI5xso/b3UXz2yT65otS3DMQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=g7fnYEIjW++hF0XAoRjhTtdtVYRwSF7C5kH2Angb9zXroIZ3TrciqXjrQYqix60LD
-         bDNLo4SJHI/knyJ7Ot5f4zD80ovKnIUuywswZ3ymYHHdFYhYLEDhJU5lEOjWaAQ78X
-         8ywYsxXFoyXmHJX0yhs6Fy8/BaRtfxPmU+M8YadI=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 194DPRao051940
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 4 Oct 2021 08:25:27 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Mon, 4
- Oct 2021 08:25:27 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
- Frontend Transport; Mon, 4 Oct 2021 08:25:27 -0500
-Received: from [10.250.232.107] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 194DPOY5079224;
-        Mon, 4 Oct 2021 08:25:24 -0500
-Subject: Re: [PATCH v2] dt-bindings: gpio: Convert TI TPIC2810 GPIO Controller
- bindings to YAML
-To:     Aparna M <a-m1@ti.com>
-CC:     <vigneshr@ti.com>, <grygorii.strashko@ti.com>,
-        <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <bgolaszewski@baylibre.com>
-References: <20211004131500.22100-1-a-m1@ti.com>
-From:   Aswath Govindraju <a-govindraju@ti.com>
-Message-ID: <d4ca4dbc-32b8-5189-adc0-ed876abfca49@ti.com>
-Date:   Mon, 4 Oct 2021 18:55:23 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        id S238697AbhJDNmL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Oct 2021 09:42:11 -0400
+Received: from mail-vs1-f42.google.com ([209.85.217.42]:40459 "EHLO
+        mail-vs1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238456AbhJDNka (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Oct 2021 09:40:30 -0400
+Received: by mail-vs1-f42.google.com with SMTP id l19so19546224vst.7;
+        Mon, 04 Oct 2021 06:38:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dv9RspM3ctxvAuhOcHTg3KizZsDDkdv4PFnf5HpmAKA=;
+        b=QCyv1O3TbhXncu/7Q4GUriwbetQXcJ4OzFXDnArEhkepP+clgaGb62ZbALLiuY9KrW
+         Vv0MvmKzCX8BWviEHwmjmiOAqLPniuRFTiXwtIs0Mzmp7lDm42g2c7/ty4/VIN1ypTFH
+         sVZI51bQkcyzGAUkEosxFu8+cSNdulHDmRVwxahCAIU/9pTcfO3QYg9Qa41uF6PU9zc9
+         1gpRjuL32JnwN4oMV55HLWu2ZE1hTyWFvPmxsIi/ctCh1PPxI/LKJNg0zv8hmCM3hbF3
+         O3ghBwUPdmsOP0pVFS0poBesslXLkMzN5stpxWFc/gHYkPiP6zPJ6f4wUigdkK5LAqxa
+         763A==
+X-Gm-Message-State: AOAM5302zuLNNVEl6caE1qwGtJq7INqODaoCdzhiYgQwQ2gc8qva9BEI
+        YRfK5QlCHs0J6/GGRs6mzQjEbDMRgBemTBl5AG0=
+X-Google-Smtp-Source: ABdhPJz7J6VHaPk7SXHPfqZxAtC9psBA5qyOqO5LHvP7tsN5wL5nIwsLtOMTdJNfhvSiDSGZ/ysK/hrI6t5rgGqC2QQ=
+X-Received: by 2002:a67:cb0a:: with SMTP id b10mr12782999vsl.9.1633354721081;
+ Mon, 04 Oct 2021 06:38:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20211004131500.22100-1-a-m1@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <a9af5139b6b8eb687495ffae69d32acd305ac2f3.1633351482.git.geert+renesas@glider.be>
+ <CAHp75Vf-sRz2WMTa2SUfPr0LRnWYb=29WjcjB9rmV9Ty9WJ8zA@mail.gmail.com>
+In-Reply-To: <CAHp75Vf-sRz2WMTa2SUfPr0LRnWYb=29WjcjB9rmV9Ty9WJ8zA@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 4 Oct 2021 15:38:29 +0200
+Message-ID: <CAMuHMdXCJjUXA=-5YxPVhhQdBL5eNR2HJCOtB1gB2ipadFUXKQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: aggregator: Wrap access to gpiochip_fwd.tmp[]
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Aparna,
+Hi Andy,
 
-On 04/10/21 6:45 pm, Aparna M wrote:
-> Convert gpio-tpic2810 bindings to yaml format and remove outdated
-> bindings in .txt format.
-> 
-> Signed-off-by: Aparna M <a-m1@ti.com>
-> ---
-Thank you for making the requested changes.
+On Mon, Oct 4, 2021 at 3:23 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Mon, Oct 4, 2021 at 3:47 PM Geert Uytterhoeven
+> <geert+renesas@glider.be> wrote:
+> > The tmp[] member of the gpiochip_fwd structure is used to store both the
+> > temporary values bitmap and the desc pointers for operations on multiple
+> > GPIOs.  As both are arrays with sizes unknown at compile-time, accessing
+> > them requires offset calculations, which are currently duplicated in
+> > gpio_fwd_get_multiple() and gpio_fwd_set_multiple().
+> >
+> > Introduce (a) accessors for both arrays and (b) a macro to calculate the
+> > needed storage size.  This confines the layout of the tmp[] member into
+> > a single spot, to ease maintenance.
+>
+> ...
+>
+> > +#define fwd_tmp_descs(fwd)     (void *)&(fwd)->tmp[BITS_TO_LONGS((fwd)->chip.ngpio)]
+> > +
+> > +#define fwd_tmp_size(ngpios)   (BITS_TO_LONGS((ngpios)) + (ngpios))
+>
+> ...
+>
+> > -       fwd = devm_kzalloc(dev, struct_size(fwd, tmp,
+> > -                          BITS_TO_LONGS(ngpios) + ngpios), GFP_KERNEL);
+> > +       fwd = devm_kzalloc(dev, struct_size(fwd, tmp, fwd_tmp_size(ngpios)),
+> > +                          GFP_KERNEL);
+>
+> Shouldn't we rather use devm_bitmap_zalloc() / bitmap_free()?
 
-Reviewed-by: Aswath Govindraju <a-govindraju@ti.com>
+That's not sufficient: the bitmap is only one part. There are one
+fixed-size and two variable-size objects to allocate.
+Yes, they can be allocated separately, at the expense of more
+allocations, and more data (pointers) to allocate to keep track of
+all those objects.
 
-Thanks,
-Aswath
+>
+> >         if (!fwd)
+> >                 return ERR_PTR(-ENOMEM);
 
->  .../bindings/gpio/gpio-tpic2810.txt           | 16 -------
->  .../bindings/gpio/gpio-tpic2810.yaml          | 48 +++++++++++++++++++
->  2 files changed, 48 insertions(+), 16 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-tpic2810.txt
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-tpic2810.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-tpic2810.txt b/Documentation/devicetree/bindings/gpio/gpio-tpic2810.txt
-> deleted file mode 100644
-> index 1afc2de7a537..000000000000
-> --- a/Documentation/devicetree/bindings/gpio/gpio-tpic2810.txt
-> +++ /dev/null
-> @@ -1,16 +0,0 @@
-> -TPIC2810 GPIO controller bindings
-> -
-> -Required properties:
-> - - compatible		: Should be "ti,tpic2810".
-> - - reg			: The I2C address of the device
-> - - gpio-controller	: Marks the device node as a GPIO controller.
-> - - #gpio-cells		: Should be two. For consumer use see gpio.txt.
-> -
-> -Example:
-> -
-> -	gpio@60 {
-> -		compatible = "ti,tpic2810";
-> -		reg = <0x60>;
-> -		gpio-controller;
-> -		#gpio-cells = <2>;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-tpic2810.yaml b/Documentation/devicetree/bindings/gpio/gpio-tpic2810.yaml
-> new file mode 100644
-> index 000000000000..811aee483f43
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-tpic2810.yaml
-> @@ -0,0 +1,48 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/gpio-tpic2810.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: TPIC2810 GPIO controller bindings
-> +
-> +maintainers:
-> +  - Aswath Govindraju <a-govindraju@ti.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - ti,tpic2810
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: The I2C address of the device
-> +
-> +  gpio-controller: true
-> +
-> +  "#gpio-cells":
-> +    const: 2
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - gpio-controller
-> +  - "#gpio-cells"
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    i2c1 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        gpio@60 {
-> +            compatible = "ti,tpic2810";
-> +            reg = <0x60>;
-> +            gpio-controller;
-> +            #gpio-cells = <2>;
-> +        };
-> +    };
-> 
+Gr{oetje,eeting}s,
 
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
