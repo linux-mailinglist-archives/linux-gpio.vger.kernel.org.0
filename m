@@ -2,122 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 11B9A420B20
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Oct 2021 14:45:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2380F42109B
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Oct 2021 15:47:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233182AbhJDMrm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Oct 2021 08:47:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53162 "EHLO
+        id S238419AbhJDNtO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Oct 2021 09:49:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233212AbhJDMrl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Oct 2021 08:47:41 -0400
-Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30062C06174E
-        for <linux-gpio@vger.kernel.org>; Mon,  4 Oct 2021 05:45:52 -0700 (PDT)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed20:9ca4:a53a:9ffa:e003])
-        by xavier.telenet-ops.be with bizsmtp
-        id 1olp2601B11933301olp4g; Mon, 04 Oct 2021 14:45:49 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1mXNLn-001rl3-He; Mon, 04 Oct 2021 14:45:47 +0200
-Received: from geert by rox.of.borg with local (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1mXNLn-00430z-12; Mon, 04 Oct 2021 14:45:47 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] gpio: aggregator: Wrap access to gpiochip_fwd.tmp[]
-Date:   Mon,  4 Oct 2021 14:45:45 +0200
-Message-Id: <a9af5139b6b8eb687495ffae69d32acd305ac2f3.1633351482.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S238215AbhJDNtL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Oct 2021 09:49:11 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3910C0424D3
+        for <linux-gpio@vger.kernel.org>; Mon,  4 Oct 2021 06:14:32 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id dj4so65537978edb.5
+        for <linux-gpio@vger.kernel.org>; Mon, 04 Oct 2021 06:14:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:sender:from:date:message-id:subject:to;
+        bh=J9A8FXwUAXmr9wnVHtGUDB0wHCix/jpu++V81vO+0NA=;
+        b=MXSptgq5G9tApbYbPvzzskLsObDHM7UVseIpwvxa0A0S7sXPDVMIfe/tcXfcjquwEN
+         RPZEqtMRWwP+rhuFj48V5N16I/qSMCJHMcBDohWzoLrfUf1o4kv/7pyfQQL6QOtXS5aA
+         giBg+TXvXIGzWoi3ob9xMwQlDDsdQRxa/Hr2Dz1LNgYaNLfHET/6htn7wBZ/ODU2Dyt1
+         utg2/jHwLCMP2F0yC/sHsKukH/qD/zC1/YqADP5b0nA0V+320b7+JEWcv2CqEeC40Y1Q
+         6h/jKi4izeaA4BRJ+iHLZ1Vg0iExtO61qjQj1f3qFpV+KPVwVYM1f51NihTXJH2O9R7N
+         pTSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to;
+        bh=J9A8FXwUAXmr9wnVHtGUDB0wHCix/jpu++V81vO+0NA=;
+        b=NEw/ieiiEHtRtS3X1CLCTO7VUuBzAG6115EMFGLiR+/HWx/jgn50pz2CG3j7vOb5NV
+         udVEtfjAjbyaEJyeBo5p2Q4ikbImvFFe6S+kP4L53orfIVduWJvlsO8M2z7g0uvYUQA8
+         p1y0sEImKiU70DL0TBZhkRfBmisUG4/MU40qXItsugCTmERbDUFHzc43PUo+n+gyonle
+         ZVWQ94zNq1TkrrsYj6330Ko+UrfLTMgTR0THlY5EPuaE2s/DAOL//Zy3d9A3HhOeT9Oh
+         FhFuVAPFCdgX/J+WkgvgDtPcQxpFamShjrzC8pI2N0YZJBeXU2jAU6tmdR1qPI3qunpt
+         MVfg==
+X-Gm-Message-State: AOAM531Qya+flORhnBTJIFF3YYN6+7KBwaJ4hJh/pPSAb50OS539Q7+i
+        e8ISr8/+WOBo+9XbxMVFryDFY/yzJ82+pkXXoO4=
+X-Google-Smtp-Source: ABdhPJwYl6GBvPhugrvTlzmalIwx1BlGe/Og4R0U0IaWJBjqkpozLPn6qp8co/2F8V2ihnJfn/OqwWkZud6EnIg85wI=
+X-Received: by 2002:a17:906:e949:: with SMTP id jw9mr2024339ejb.209.1633353265830;
+ Mon, 04 Oct 2021 06:14:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Sender: aminatasanisu@gmail.com
+Received: by 2002:a17:906:888f:0:0:0:0 with HTTP; Mon, 4 Oct 2021 06:14:25
+ -0700 (PDT)
+From:   Mrs Aisha Al-Qaddafi <mrsaishag6555@gmail.com>
+Date:   Mon, 4 Oct 2021 06:14:25 -0700
+X-Google-Sender-Auth: eHWEXXQfTSSFQsmFozYOqBKgqfA
+Message-ID: <CAJ9jChBTp=qoB31S9G11hDM3CRq7c3VWwvuoDJ8JzRK4gp07GQ@mail.gmail.com>
+Subject: Hi Dear
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The tmp[] member of the gpiochip_fwd structure is used to store both the
-temporary values bitmap and the desc pointers for operations on multiple
-GPIOs.  As both are arrays with sizes unknown at compile-time, accessing
-them requires offset calculations, which are currently duplicated in
-gpio_fwd_get_multiple() and gpio_fwd_set_multiple().
+Hi Dear
+Assalamu Alaikum Wa Rahmatullahi Wa Barakatuh
+I came across your e-mail contact prior a private search while in need
+of your assistance. I am Aisha Al-Qaddafi, the only biological
+Daughter of Former President of Libya Col. Muammar Al-Qaddafi. Am a
+single Mother and a Widow with three Children.
 
-Introduce (a) accessors for both arrays and (b) a macro to calculate the
-needed storage size.  This confines the layout of the tmp[] member into
-a single spot, to ease maintenance.
+I have investment funds worth Twenty Seven Million Five Hundred
+Thousand United State Dollar ($27.500.000.00 ) and i need a trusted
+investment Manager/Partner because of my current refugee status,
+however, I am interested in you for investment project assistance in
+your country, may be from there, we can build business relationship in
+the nearest future.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/gpio/gpio-aggregator.c | 25 +++++++++++--------------
- 1 file changed, 11 insertions(+), 14 deletions(-)
+I am willing to negotiate investment/business profit sharing ratio
+with you base on the future investment earning profits.
+If you are willing to handle this project on my behalf kindly reply
+urgent to enable me provide you more information about the investment
+funds.
 
-diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregator.c
-index 2ff867d2a3630d3b..869dc952cf45218b 100644
---- a/drivers/gpio/gpio-aggregator.c
-+++ b/drivers/gpio/gpio-aggregator.c
-@@ -247,6 +247,11 @@ struct gpiochip_fwd {
- 	unsigned long tmp[];		/* values and descs for multiple ops */
- };
- 
-+#define fwd_tmp_values(fwd)	&(fwd)->tmp[0]
-+#define fwd_tmp_descs(fwd)	(void *)&(fwd)->tmp[BITS_TO_LONGS((fwd)->chip.ngpio)]
-+
-+#define fwd_tmp_size(ngpios)	(BITS_TO_LONGS((ngpios)) + (ngpios))
-+
- static int gpio_fwd_get_direction(struct gpio_chip *chip, unsigned int offset)
- {
- 	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
-@@ -279,15 +284,11 @@ static int gpio_fwd_get(struct gpio_chip *chip, unsigned int offset)
- static int gpio_fwd_get_multiple(struct gpiochip_fwd *fwd, unsigned long *mask,
- 				 unsigned long *bits)
- {
--	struct gpio_desc **descs;
--	unsigned long *values;
-+	struct gpio_desc **descs = fwd_tmp_descs(fwd);
-+	unsigned long *values = fwd_tmp_values(fwd);
- 	unsigned int i, j = 0;
- 	int error;
- 
--	/* Both values bitmap and desc pointers are stored in tmp[] */
--	values = &fwd->tmp[0];
--	descs = (void *)&fwd->tmp[BITS_TO_LONGS(fwd->chip.ngpio)];
--
- 	bitmap_clear(values, 0, fwd->chip.ngpio);
- 	for_each_set_bit(i, mask, fwd->chip.ngpio)
- 		descs[j++] = fwd->descs[i];
-@@ -333,14 +334,10 @@ static void gpio_fwd_set(struct gpio_chip *chip, unsigned int offset, int value)
- static void gpio_fwd_set_multiple(struct gpiochip_fwd *fwd, unsigned long *mask,
- 				  unsigned long *bits)
- {
--	struct gpio_desc **descs;
--	unsigned long *values;
-+	struct gpio_desc **descs = fwd_tmp_descs(fwd);
-+	unsigned long *values = fwd_tmp_values(fwd);
- 	unsigned int i, j = 0;
- 
--	/* Both values bitmap and desc pointers are stored in tmp[] */
--	values = &fwd->tmp[0];
--	descs = (void *)&fwd->tmp[BITS_TO_LONGS(fwd->chip.ngpio)];
--
- 	for_each_set_bit(i, mask, fwd->chip.ngpio) {
- 		__assign_bit(j, values, test_bit(i, bits));
- 		descs[j++] = fwd->descs[i];
-@@ -405,8 +402,8 @@ static struct gpiochip_fwd *gpiochip_fwd_create(struct device *dev,
- 	unsigned int i;
- 	int error;
- 
--	fwd = devm_kzalloc(dev, struct_size(fwd, tmp,
--			   BITS_TO_LONGS(ngpios) + ngpios), GFP_KERNEL);
-+	fwd = devm_kzalloc(dev, struct_size(fwd, tmp, fwd_tmp_size(ngpios)),
-+			   GFP_KERNEL);
- 	if (!fwd)
- 		return ERR_PTR(-ENOMEM);
- 
--- 
-2.25.1
-
+Your Urgent Reply Will Be Appreciated
+Best Regards
+Mrs Aisha Al-Qaddafi
