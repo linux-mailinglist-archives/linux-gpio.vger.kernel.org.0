@@ -2,128 +2,200 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 011E94214F8
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Oct 2021 19:14:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 81B05421501
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Oct 2021 19:15:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233366AbhJDRQT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Oct 2021 13:16:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32828 "EHLO
+        id S233806AbhJDRRV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Oct 2021 13:17:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238197AbhJDRQS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Oct 2021 13:16:18 -0400
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42DF6C061745
-        for <linux-gpio@vger.kernel.org>; Mon,  4 Oct 2021 10:14:29 -0700 (PDT)
-Received: by mail-ed1-x531.google.com with SMTP id bm13so17388468edb.8
-        for <linux-gpio@vger.kernel.org>; Mon, 04 Oct 2021 10:14:29 -0700 (PDT)
+        with ESMTP id S233461AbhJDRRU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Oct 2021 13:17:20 -0400
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 386CAC061749
+        for <linux-gpio@vger.kernel.org>; Mon,  4 Oct 2021 10:15:31 -0700 (PDT)
+Received: by mail-ed1-x52f.google.com with SMTP id z20so16145756edc.13
+        for <linux-gpio@vger.kernel.org>; Mon, 04 Oct 2021 10:15:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pensando.io; s=google;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=41gb7RTmm5R83BjDq5NI1aGdQX7f8HnAOeNpQ9vC3Q8=;
-        b=gFrqVsxd+2gUq0Ax770u8Y6jU6/QdutB2sCugHckshOJ8crYDGw3MXLEb3Yk4ln94X
-         TOtg0/uvf84UbDm/QlCFDvTyaGNhRAuE1ETQJTd8ITOFDvi80FRqdwMnj4e3lfpQrJ6J
-         WuShu1/x42K5QmVtXsA9xkNoUfhJ0/SWN5vimOcbv9pt1Pw+9cegglnkc5+n4pnhWTx2
-         NQp6FDO622n52v6YVBl/fLldGBBh1ubJRBj1ONQ7Pid7Woqab/1NkqR4hnj/XfFoSU4B
-         ZvHFt3Ka1WtloRZPvshyA41gbQ7GGHd0aMWs69oOaGHIGYPLflMRDhraxBg8NNmE0HFk
-         YwIg==
+        bh=JCMAyY7Zq7LI1hSn5nCf7+6dW+zdCzKjbNAz5L5GbsQ=;
+        b=XXVBC+Syf5JtEJtV8diPsrILQ3WalnFuR+1l1EQ5kffJv+dMhM4Uo5HxxnOkSYaOy6
+         ZsAnFgQGVdwj4/S+rd5QvgEPGs6UEBm+VVm83kzMwIqx9jDrY0dVx3ecW1J5jrfvUdqZ
+         5I5QkMwyah9NQM+G4RCZG5HhJRPYIU15jGZWSmJiXbFcpxqIO+EpnAGYg+4yn5Kwz9DI
+         cuG+kP9xAFgGQXYCuJ+3eQZ8qXQkISZnxZlIW7AL+jPEZimJ8v8pIS5MYa4GsVs9dQ4r
+         8QPP3l+JbmdacFkwYyLLgP0aDkEGfNnzcFgVOrz6xoe4sW0MKT0d19I8jOpFfr2npx+s
+         rZHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=41gb7RTmm5R83BjDq5NI1aGdQX7f8HnAOeNpQ9vC3Q8=;
-        b=oxYzBrvn1j/8jBuE3lBNYyUZdekBGqpjbax01abQlF7o/fI5DKrW5dM1DNnP/du/sX
-         CqBQ3QINWOP2c/dhe533X4tXi2ZBxs1/+95ftXma1P6WpJ1DOR7mO0zDr9pXIwSlSNIA
-         MnlCjx2dxebPFLYP2rUlGGsZObCF5hISglj9CsG6UGPgLSQZK4Ud41sE00enTzkAOFa3
-         RbBlr4H7puEVBD5wy1Y172s4u1TYUM/NBxNZbb3LDy4d829U5TIcrADVIh2V9JezM03r
-         FoVTGx1Jcpyytmdg4hVqCuHHFUOkoLizPoICpbW64mYWSfsV97qAsOxzNXIFQ9xZKA8S
-         5V/A==
-X-Gm-Message-State: AOAM532WwNJFUIWOzrXpA6UAUDdqf0nyIXTtw/NNSfhRZSSvZMmMhVVg
-        qx+ngFv5Djfmnrt5c6dIv7PgwplXpWvmpL9sfqs8+A==
-X-Google-Smtp-Source: ABdhPJxcQMwT6iICRwvvUdQpAva10BFNtgrS8TgkPsNJwL8K15HAcUGaaB0EAcJiLunRtR0hVfLYakwKjozWIC9mVkI=
-X-Received: by 2002:a17:906:3f83:: with SMTP id b3mr19117219ejj.233.1633367664575;
- Mon, 04 Oct 2021 10:14:24 -0700 (PDT)
+        bh=JCMAyY7Zq7LI1hSn5nCf7+6dW+zdCzKjbNAz5L5GbsQ=;
+        b=YyEw5ICZQAb3T18LYg/NjQMuYVAixhxjLZ/iMBxj73xHZjy6/53x9naPUlLR/KiqTu
+         MelsWvFT0NBwN9afnW5Z2HQcF06vxVfL+W2myFCtaMbSvP9WgHxgvK2kRxl0T+G8Pf0x
+         r80ETibOHOb+ZKFRwIPzFVGsMKz64ugbTwD/8ClFd4yki+hawL2MeIeb1US2fYwSYeGC
+         he2CXabPJwNBVq1IQx1fbtMj8s2uCfzYtJqFLNvhWNsiE85U2VqcUA3IGi2qBjTSfa2B
+         S37ta70yQn4dU6b047t/N40R4h0J2w3yfAhn56yfXn4EdX36Gnh0u2IInuiNyTJ8fYWE
+         CzLA==
+X-Gm-Message-State: AOAM530XKnt3thELfAmFEXUnMqkpNHY0qBknz4GB1WFKBBMHoP3JCjmP
+        toVU9oWeKwE3ja/MrLN9fTk31OZhceT1IXkFQyQ7FQ==
+X-Google-Smtp-Source: ABdhPJyUipKA5I1jT46xgWhTErCJBp8N844sgLKRu+eDQ4mywKuLwzL8DVo57J1RiveoEzryDzw0V+ypqvlnOdcHS88=
+X-Received: by 2002:a17:906:a018:: with SMTP id p24mr18099480ejy.349.1633367729713;
+ Mon, 04 Oct 2021 10:15:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210304034141.7062-1-brad@pensando.io> <20210304034141.7062-2-brad@pensando.io>
- <CAHp75VcG9KajNpDbewDq7QzotB6t7MfwiGk15FaobX+cmMVSzg@mail.gmail.com>
- <CAK9rFnwrA=W2Vk5yFwG4N_WS=eBXXnhtexA+tqgAYb6xOAO4oQ@mail.gmail.com>
- <CAHp75VdfrJ3JV_gL3xCLHOiw6Tj-5Ep7z5JKWUFKFbUt8gobcw@mail.gmail.com>
- <CAK9rFnx--z_pr_yR6CqGsH04ddwUtx4rxc7MxNNmy7ZSF86+Mg@mail.gmail.com>
- <CAMuHMdUz4vUQzXBHA9AiT3w6L20yBpgd0emVZJb=v_qw70qiJQ@mail.gmail.com>
- <CAK9rFnw-j8whcsK-NQ4w4+sCdrumCk7Bb=J+KfsF9ZO2Tf5r5g@mail.gmail.com> <CAMuHMdW0s=x+DBZffeuEcyifDRfy8YM3c_wEAZscO7twR2wj3Q@mail.gmail.com>
-In-Reply-To: <CAMuHMdW0s=x+DBZffeuEcyifDRfy8YM3c_wEAZscO7twR2wj3Q@mail.gmail.com>
-From:   Brad Larson <brad@pensando.io>
-Date:   Mon, 4 Oct 2021 10:14:13 -0700
-Message-ID: <CAK9rFnwCry1G7RqdWL9W1vq6Q3RV9tRxmDD6UErY=hQB6W-=_Q@mail.gmail.com>
-Subject: Re: [PATCH 1/8] gpio: Add Elba SoC gpio driver for spi cs control
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
+References: <20210922084733.5547-1-brgl@bgdev.pl>
+In-Reply-To: <20210922084733.5547-1-brgl@bgdev.pl>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 4 Oct 2021 19:15:19 +0200
+Message-ID: <CAMRc=McbVHoNxn=hx_qSVk0ygLGQomtSy1+QrqnvxgXHtt8b6g@mail.gmail.com>
+Subject: Re: [PATCH v6 0/8] gpio: implement the configfs testing module
+To:     Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>,
+        Shuah Khan <shuah@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Olof Johansson <olof@lixom.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jack Winch <sunt.un.morcov@gmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Aug 23, 2021 at 1:11 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+On Wed, Sep 22, 2021 at 10:47 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 >
-> Hi Brad,
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 >
-> On Mon, Aug 23, 2021 at 6:31 PM Brad Larson <brad@pensando.io> wrote:
-> > On Mon, Aug 23, 2021 at 12:50 AM Geert Uytterhoeven
-> > <geert@linux-m68k.org> wrote:
-> > > On Mon, Aug 23, 2021 at 3:14 AM Brad Larson <brad@pensando.io> wrote:
-> > > > On Mon, Mar 29, 2021 at 3:40 AM Andy Shevchenko
-> > [...]
-> > > > Regarding the above module question and Kconfig definition, since I
-> > > > first looked at this and reviewed the comments I realized I should be
-> > > > using builtin.  The file gpio/Kconfig is currently this
-> > > >
-> > > > config GPIO_ELBA_SPICS
-> > > >         def_bool y
-> > > >         depends on ARCH_PENSANDO_ELBA_SOC || COMPILE_TEST
-> > >
-> > > That means the driver will default to yes by merely enabling
-> > > COMPILE_TEST, which is a no-go.
-> > >
-> > >     config GPIO_ELBA_SPICS
-> > >             bool "one-line summary"
-> > >             depends on ARCH_PENSANDO_ELBA_SOC || COMPILE_TEST
-> > >             default y if ARCH_PENSANDO_ELBA_SOC
-> >
-> > Thanks Geert, changed to this
-> >
-> > --- a/drivers/gpio/Kconfig
-> > +++ b/drivers/gpio/Kconfig
-> > @@ -241,8 +241,9 @@ config GPIO_EIC_SPRD
-> >           Say yes here to support Spreadtrum EIC device.
-> >
-> >  config GPIO_ELBA_SPICS
-> > +       bool "Pensando Elba SoC SPI Chip Select as GPIO support"
-> > +       depends on ARCH_PENSANDO_ELBA_SOC
-> >         def_bool y
-> > -       depends on ARCH_PENSANDO_ELBA_SOC || COMPILE_TEST
+> I'm respinning this series now because I noticed that I need to start writing
+> tests for my work on the new libgpiod v2 code to make sense (it's just becoming
+> too complicated to make even remotely functional without test coverage). At the
+> same time I don't want to rewrite the tests using gpio-mockup if the goal is to
+> replace it with gpio-sim anyway.
 >
-> So we're losing the COMPILE_TEST ability again?
+> I fixed issues pointed out by Al Viro and made sure that references are
+> correctly counted (including error paths) and that memory allocated for the
+> pending and live groups gets freed.
+>
+> ===
+>
+> Cc'ing Viresh too.
+>
+> Viresh: while there's still a long way to go before the libgpio v2.0 release,
+> in order to merge the Rust bindings, we'll need a test-suite similar to what
+> we have now for C++ and Python bindings, except that it will have to be based
+> on the gpio-sim module when it makes its way into mainline.
+>
+> ===
+>
+> This series adds a new GPIO testing module based on configfs committable items
+> and sysfs. The goal is to provide a testing driver that will be configurable
+> at runtime (won't need module reload) and easily extensible. The control over
+> the attributes is also much more fine-grained than in gpio-mockup.
+>
+> This series also contains a respin of the patches I sent separately to the
+> configfs maintainers - these patches implement the concept of committable
+> items that was well defined for a long time but never actually completed.
+>
+> Apart from the new driver itself, its selftests and the configfs patches, this
+> series contains some changes to the bitmap API - most importantly: it adds
+> devres managed variants of bitmap_alloc() and bitmap_zalloc().
+>
+> v1 -> v2:
+> - add selftests for gpio-sim
+> - add helper programs for selftests
+> - update the configfs rename callback to work with the new API introduced in
+>   v5.11
+> - fix a missing quote in the documentation
+> - use !! whenever using bits operation that are required to return 0 or 1
+> - use provided bitmap API instead of reimplementing copy or fill operations
+> - fix a deadlock in gpio_sim_direction_output()
+> - add new read-only configfs attributes for mapping of configfs items to GPIO
+>   device names
+> - and address other minor issues pointed out in reviews of v1
+>
+> v2 -> v3:
+> - use devm_bitmap_alloc() instead of the zalloc variant if we're initializing
+>   the bitmap with 1s
+> - drop the patch exporting device_is_bound()
+> - don't return -ENODEV from dev_nam and chip_name configfs attributes, return
+>   a string indicating that the device is not available yet ('n/a')
+> - fix indentation where it makes sense
+> - don't protect IDA functions which use their own locking and where it's not
+>   needed
+> - use kmemdup() instead of kzalloc() + memcpy()
+> - collected review tags
+> - minor coding style fixes
+>
+> v3 -> v4:
+> - return 'none' instead of 'n/a' from dev_name and chip_name before the device
+>   is registered
+> - use sysfs_emit() instead of s*printf()
+> - drop GPIO_SIM_MAX_PROP as it's only used in an array's definition where it's
+>   fine to hardcode the value
+>
+> v4 -> v5:
+> - drop lib patches that are already upstream
+> - use BIT() instead of (1UL << bit) for flags
+> - fix refcounting for the configfs_dirent in rename()
+> - drop d_move() from the rename() callback
+> - free memory allocated for the live and pending groups in configfs_d_iput()
+>   and not in detach_groups()
+> - make sure that if a group of some name is in the live directory, a new group
+>   with the same name cannot be created in the pending directory
+>
+> v5 -> v6:
+> - go back to using (1UL << bit) instead of BIT()
+> - if the live group dentry doesn't exist for whatever reason at the time when
+>   mkdir() in the pending group is called (would be a BUG()), return -ENOENT
+>   instead of -EEXIST which should only be returned if given subsystem already
+>   exists in either live or pending group
+>
+> Bartosz Golaszewski (8):
+>   configfs: increase the item name length
+>   configfs: use (1UL << bit) for internal flags
+>   configfs: implement committable items
+>   samples: configfs: add a committable group
+>   gpio: sim: new testing module
+>   selftests: gpio: provide a helper for reading chip info
+>   selftests: gpio: add a helper for reading GPIO line names
+>   selftests: gpio: add test cases for gpio-sim
+>
+>  Documentation/admin-guide/gpio/gpio-sim.rst   |  72 ++
+>  Documentation/filesystems/configfs.rst        |   6 +-
+>  drivers/gpio/Kconfig                          |   8 +
+>  drivers/gpio/Makefile                         |   1 +
+>  drivers/gpio/gpio-sim.c                       | 877 ++++++++++++++++++
+>  fs/configfs/configfs_internal.h               |  22 +-
+>  fs/configfs/dir.c                             | 276 +++++-
+>  include/linux/configfs.h                      |   3 +-
+>  samples/configfs/configfs_sample.c            | 153 +++
+>  tools/testing/selftests/gpio/.gitignore       |   2 +
+>  tools/testing/selftests/gpio/Makefile         |   4 +-
+>  tools/testing/selftests/gpio/config           |   1 +
+>  tools/testing/selftests/gpio/gpio-chip-info.c |  57 ++
+>  tools/testing/selftests/gpio/gpio-line-name.c |  55 ++
+>  tools/testing/selftests/gpio/gpio-sim.sh      | 229 +++++
+>  15 files changed, 1743 insertions(+), 23 deletions(-)
+>  create mode 100644 Documentation/admin-guide/gpio/gpio-sim.rst
+>  create mode 100644 drivers/gpio/gpio-sim.c
+>  create mode 100644 tools/testing/selftests/gpio/gpio-chip-info.c
+>  create mode 100644 tools/testing/selftests/gpio/gpio-line-name.c
+>  create mode 100755 tools/testing/selftests/gpio/gpio-sim.sh
+>
+> --
+> 2.30.1
 >
 
-Hi Geert,
+Gentle ping for the entire series.
 
-The gpio-elba-spics.c driver is being deleted with the spi chip-select
-control integrated into spi-dw-mmio.c.  The GPIO_ELBA_SPICS config
-option goes away and fixes my breakage of COMPILE_TEST.
-
-Best,
-Brad
+Bart
