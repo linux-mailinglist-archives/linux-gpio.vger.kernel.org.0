@@ -2,153 +2,179 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CC88420464
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Oct 2021 00:48:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 44C82420515
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Oct 2021 05:39:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231862AbhJCWuS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 3 Oct 2021 18:50:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35884 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231778AbhJCWuS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 3 Oct 2021 18:50:18 -0400
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1806CC0613EC
-        for <linux-gpio@vger.kernel.org>; Sun,  3 Oct 2021 15:48:30 -0700 (PDT)
-Received: by mail-lf1-x12b.google.com with SMTP id y26so63997622lfa.11
-        for <linux-gpio@vger.kernel.org>; Sun, 03 Oct 2021 15:48:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sW+crIeDmhAMH4pK5GASAaCZE8D1VZtdK5/sygrAG2k=;
-        b=lQrEOA0euWiU9H9sWtnhFM9pj1nGUVTgMmT1inlS8kcAIcWUCFr349N1dSAz2SVqFj
-         T7ORD7odD/G0eN6Z706ABNk23F2RpNaz9XiITGtS4a/oLqxc8vuWRXMazGo3kVH7nEhf
-         id6efAjoCVCJj4EHeoDcPwnvEdhdrZYcay0MmicPuvWvTC2tTU4WHwu9kmjVm1V4AwTR
-         u6HEKMibBBBYXjB040lkOfpApeYAiOmDVboF7H14zEQd2CgkvyFRV06wLTn0go2HgEcm
-         q5Ki3D4KVSRrkUBia9z2Nc7Z2wKuTuJ7Xo21FCTQ2IL9079vG1F49SrZu+4+Y7LN8iJb
-         jIIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sW+crIeDmhAMH4pK5GASAaCZE8D1VZtdK5/sygrAG2k=;
-        b=JExxB+iu4h8Qo0e5oXyIPKwysSoH87KhLR/syN4zY+uYozxWeJ/BPEq5wXflEjt2/S
-         112WyNKfRbW06kW4JFQoERFXBWIhn9Er2WiotsSaS5OY6VwHaIeZW/97pEQ5IqYIt0Ah
-         a2lvEd3JT3W2BYT+Z2NYU4wkY434LsgkoaTI4BHnWUh1RPf+RO2SN4qBl9Mg2jAcZs12
-         b1hQYKEPPjdfPcmw2RlTeU1wUWuMhs9kG84U3r/GP+Xy8cVd/2ktUicvSPjPKUJeRqdh
-         1LJtREV/RYztjxelsBQKFLRgm/sH7iyy8ROZysvr7/ppk29nCipOpg7tC09X9bfmBNnG
-         ol1Q==
-X-Gm-Message-State: AOAM5318UTwbxYBGelxI9bsVTC9YlWp2a9RLAXdbUCLtv51r9cMrOM+5
-        MDV6STHJgrdJzNGTc/aax23svJbc59fnDIjhLfUn/Q==
-X-Google-Smtp-Source: ABdhPJwlIO3xJmMne7SA3V9EP6o49YZWJtcqreYaPVZa30sqz5Vxc/CuLZ5GbJ4uqeokuIsg0281gvTYxIzcMfCsea0=
-X-Received: by 2002:a2e:4e11:: with SMTP id c17mr11819356ljb.19.1633301308432;
- Sun, 03 Oct 2021 15:48:28 -0700 (PDT)
+        id S232350AbhJDDlN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 3 Oct 2021 23:41:13 -0400
+Received: from marcansoft.com ([212.63.210.85]:45770 "EHLO mail.marcansoft.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230295AbhJDDlN (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 3 Oct 2021 23:41:13 -0400
+X-Greylist: delayed 361 seconds by postgrey-1.27 at vger.kernel.org; Sun, 03 Oct 2021 23:41:12 EDT
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: marcan@marcan.st)
+        by mail.marcansoft.com (Postfix) with ESMTPSA id 36A05419C2;
+        Mon,  4 Oct 2021 03:33:15 +0000 (UTC)
+To:     Joey Gouly <joey.gouly@arm.com>, linux-gpio@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Sven Peter <sven@svenpeter.dev>, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Kettenis <kettenis@openbsd.org>, nd@arm.com,
+        Stan Skowronek <stan@corellium.com>
+References: <20211001191209.29988-1-joey.gouly@arm.com>
+ <20211001191209.29988-4-joey.gouly@arm.com>
+From:   Hector Martin <marcan@marcan.st>
+Subject: Re: [PATCH v2 3/3] pinctrl: add pinctrl/GPIO driver for Apple SoCs
+Message-ID: <e18d09cb-ec5f-0e15-e701-f6ae5108b23e@marcan.st>
+Date:   Mon, 4 Oct 2021 12:33:15 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-References: <20210607123317.3242031-1-robert.marko@sartura.hr>
- <20210607123317.3242031-5-robert.marko@sartura.hr> <CA+HBbNH7wcpfQOX2=vZmW78GoWy_WL3Pz-dMKe0N0ebZDp+oUw@mail.gmail.com>
- <20210713222528.GA952399@robh.at.kernel.org> <CA+HBbNFj5+6sLKxmL8XtsZQ48ch8OjTbJ1bwkDC8dfRiOyWY1Q@mail.gmail.com>
- <20210719225906.GA2769608@robh.at.kernel.org> <CACRpkdbq6Jow6AT9OpsR7Q0JVCWVMcmamh9KHPXMtUnkoe7ZFw@mail.gmail.com>
- <CA+HBbNFEs-=5XTK7PUL+LsgBCcPfwHsCPe4v6byK0x=O_7TRPA@mail.gmail.com>
- <CACRpkdZfZLQMgpMAF2FwSVt1YAzhQJ9ZWkVUjVc2xpmWL7yEvQ@mail.gmail.com> <CA+HBbNHZyYnnyz9=4Hgav96ZH8-R-nYoi300j2x3fgei8aa4zQ@mail.gmail.com>
-In-Reply-To: <CA+HBbNHZyYnnyz9=4Hgav96ZH8-R-nYoi300j2x3fgei8aa4zQ@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 4 Oct 2021 00:48:17 +0200
-Message-ID: <CACRpkdaBUrgnyFnO0Tdae56PKR4pLN1boLpK0FMCk7eYshZ5LA@mail.gmail.com>
-Subject: Re: [PATCH v6 5/6] dt-bindings: mfd: Add Delta TN48M CPLD drivers bindings
-To:     Robert Marko <robert.marko@sartura.hr>
-Cc:     Rob Herring <robh@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Luka Perkov <luka.perkov@sartura.hr>, jmp@epiphyte.org,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Donald Buczek <buczek@molgen.mpg.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20211001191209.29988-4-joey.gouly@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: es-ES
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Robert,
+On 02/10/2021 04.12, Joey Gouly wrote:
+> +#define REG_GPIO(x)          (4 * (x))
+> +#define REG_GPIOx_DATA       BIT(0)
+> +#define REG_GPIOx_MODE_MASK  GENMASK(3, 1)
+> +#define REG_GPIOx_OUT        1
+> +#define REG_GPIOx_IN_IRQ_HI  2
+> +#define REG_GPIOx_IN_IRQ_LO  3
+> +#define REG_GPIOx_IN_IRQ_UP  4
+> +#define REG_GPIOx_IN_IRQ_DN  5
+> +#define REG_GPIOx_IN_IRQ_ANY 6
+> +#define REG_GPIOx_IN_IRQ_OFF 7
+> +#define REG_GPIOx_PERIPH     BIT(5)
+> +#define REG_GPIOx_CFG_DONE   BIT(9)
+> +#define REG_GPIOx_GRP_MASK   GENMASK(18, 16)
+> +#define REG_IRQ(g, x)        (0x800 + 0x40 * (g) + 4 * ((x) >> 5))
 
-sorry for slow reply, I am a bit busy.
+Can we update these defines with the correct definitions and names we 
+figured out the other day and add the missing ones? We now know a bunch 
+of these are wrong (e.g. CFG_DONE is INPUT_ENABLE, PERIPH should be two 
+bits, we're missing pull-up control, drive strength, schmitt trigger and 
+lock bits). Even if we don't implement all the features in the driver 
+yet, we should have all the register bit defines for documentation 
+purposes at least.
 
-On Tue, Aug 24, 2021 at 10:03 AM Robert Marko <robert.marko@sartura.hr> wrote:
-> On Wed, Aug 11, 2021 at 2:17 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> >
-> > On Tue, Aug 3, 2021 at 9:23 PM Robert Marko <robert.marko@sartura.hr> wrote:
-> >
-> > > The pins that this driver wants to expose are used for SFP-s only,
-> > > they are provided by the Lattice CPLD which also does other things.
-> > >
-> > > Linux has a generic SFP driver which is used to manage these SFP
-> > > ports, but it only supports GPIO-s, it has no concept of anything else.
-> > > Since the driver is fully generic, I have no idea how could one extend it
-> > > to effectively handle these pins internally, especially since I have more
-> > > switches that use the CPLD for SFP-s as well, even for 48 ports and 192
-> > > pins for them.
-> >
-> > Which file is this driver in so I can look?
->
-> Hi Linus,
-> Sorry for the late reply.
->
-> Sure, here is the generic Linux driver that is used for SFP handling:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/net/phy/sfp.c?h=v5.14-rc7
+> +	if (!(prev & REG_GPIOx_CFG_DONE))
+> +		writel_relaxed(cfg & ~REG_GPIOx_CFG_DONE, ppin);
+> +	writel_relaxed(cfg, ppin);
 
-So this has this:
+We already determined this dance doesn't make any sense; if we want to 
+change the pin config before enabling the input buffer (whether this 
+serves any purpose at all is an open question) then that should be 
+handled in the upper code responsible for enabling/disabling the input 
+buffer, not in the core register wrappers.
 
-enum {
-        GPIO_MODDEF0,
-        GPIO_LOS,
-        GPIO_TX_FAULT,
-        GPIO_TX_DISABLE,
-        GPIO_RATE_SELECT,
-        GPIO_MAX,
+> +	if (func)
+> +		apple_gpio_set_reg(pctl, group, 0,
+> +				   REG_GPIOx_PERIPH | REG_GPIOx_CFG_DONE);
+> +	else
+> +		apple_gpio_set_reg(pctl, group, REG_GPIOx_PERIPH,
+> +				   REG_GPIOx_CFG_DONE);
 
-        SFP_F_PRESENT = BIT(GPIO_MODDEF0),
-        SFP_F_LOS = BIT(GPIO_LOS),
-        SFP_F_TX_FAULT = BIT(GPIO_TX_FAULT),
-        SFP_F_TX_DISABLE = BIT(GPIO_TX_DISABLE),
-        SFP_F_RATE_SELECT = BIT(GPIO_RATE_SELECT),
+Func is two bits (4 functions) :)
 
-        SFP_E_INSERT = 0,
-        SFP_E_REMOVE,
+> +static void apple_gpio_gpio_set(struct gpio_chip *chip, unsigned int offset,
+> +				int value)
+> +{
+> +	struct apple_gpio_pinctrl *pctl = gpiochip_get_data(chip);
+> +
+> +	apple_gpio_set_reg(pctl, offset, REG_GPIOx_DATA,
+> +			   REG_GPIOx_CFG_DONE | (value & REG_GPIOx_DATA));
+> +}
 
-This does not look general purpose to me at all?
-It's just some hardware engineer that thougt "GPIO"
-was a nice thing to call this.
+`value ? REG_GPIOx_DATA : 0` please, otherwise this makes assumptions 
+about value always being 1 and REG_GPIOx_DATA being the LSB.
 
-> > Maybe it is not a good idea to look for generic code just because
-> > it is convenient? I have had this problem before with GPIO, along
-> > the lines "lemme just do this dirty thing this one time because it
-> > is so convenient for me" (more or less) and the answer is still
-> > "no".
-> >
-> > Can you either augment the driver to handle a regmap with bit indices
-> > instead or write a new similar driver for that or refactor it some other
-> > way?
-> >
-> > It is not a simple solution to your problem, but it might be the right
-> > solution even if it means some more work.
->
-> I understand your position, believe me, I spend some time looking at
-> what would be the logical way for these switches.
-> But I see no way how could the SFP driver be extended in a generic way
-> that would allow supporting different register layouts when it comes to pins.
+Also as we now know, REG_GPIOx_CFG_DONE is nonsense and doesn't belong 
+here. Let's drop the cargo cult and drive the hardware based on how it 
+works, not how macOS or Corellium decided to do things.
 
-Why do you think you have to use the GPIO abstraction and bindings?
-Just invent something that satisfy your needs, the bindings are just
-strings. Why does the consumer have to use the GPIO binding?
-They can just use phandle named anything. Some "sfp-foo-resource = <&...>
-or so.
+> +static int apple_gpio_gpio_direction_input(struct gpio_chip *chip,
+> +					   unsigned int offset)
+> +{
+> +	struct apple_gpio_pinctrl *pctl = gpiochip_get_data(chip);
+> +
+> +	apple_gpio_set_reg(pctl, offset, REG_GPIOx_MODE_MASK | REG_GPIOx_DATA,
+> +			   FIELD_PREP(REG_GPIOx_MODE_MASK,
+> +				      REG_GPIOx_IN_IRQ_OFF) |
+> +				   REG_GPIOx_CFG_DONE);
 
-For example I created this:
-Documentation/devicetree/bindings/firmware/intel,ixp4xx-network-processing-engine.yaml
-It's handling out a resource using a phandle. Nothing different than
-GPIO, regulator, clock etc. Just invent something for SFP?
+Is hardcoding IRQ_OFF correct here? Shouldn't this be getting the 
+intended IRQ state from somewhere, or is it always guaranteed that that 
+gets set later?
 
-Yours,
-Linus Walleij
+> +static int apple_gpio_gpio_direction_output(struct gpio_chip *chip,
+> +					    unsigned int offset, int value)
+> +{
+> +	struct apple_gpio_pinctrl *pctl = gpiochip_get_data(chip);
+> +
+> +	apple_gpio_set_reg(pctl, offset, REG_GPIOx_PERIPH | REG_GPIOx_DATA,
+> +			   FIELD_PREP(REG_GPIOx_MODE_MASK, REG_GPIOx_OUT) |
+> +				   (value & REG_GPIOx_DATA) |
+> +				   REG_GPIOx_CFG_DONE);
+
+I actually wonder if we should even bother turning on the input buffer 
+for output pins, given we're shadowing the value anyway. Seems 
+unnecessary and might save a few nanowatts.
+
+Also, why is this clearing the peripheral (yet direction_input isn't)?
+
+> +static void apple_gpio_gpio_irq_mask(struct irq_data *data)
+> +{
+> +	struct apple_gpio_pinctrl *pctl =
+> +		gpiochip_get_data(irq_data_get_irq_chip_data(data));
+> +	apple_gpio_set_reg(pctl, data->hwirq, REG_GPIOx_MODE_MASK,
+> +			   FIELD_PREP(REG_GPIOx_MODE_MASK,
+> +				      REG_GPIOx_IN_IRQ_OFF) |
+> +				   REG_GPIOx_CFG_DONE);
+> +}
+
+-REG_GPIOx_CFG_DONE please
+
+> +
+> +static void apple_gpio_gpio_irq_unmask(struct irq_data *data)
+> +{
+> +	struct apple_gpio_pinctrl *pctl =
+> +		gpiochip_get_data(irq_data_get_irq_chip_data(data));
+> +	u32 irqtype = apple_gpio_irq_type(irqd_get_trigger_type(data));
+> +
+> +	if (WARN_ON(irqtype < 0))
+> +		return;
+> +	apple_gpio_set_reg(pctl, data->hwirq, REG_GPIOx_MODE_MASK,
+> +			   FIELD_PREP(REG_GPIOx_MODE_MASK, irqtype) |
+> +				   REG_GPIOx_CFG_DONE);
+
+Ditto
+
+> +static unsigned int apple_gpio_gpio_irq_startup(struct irq_data *data)
+> +{
+> +	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
+> +	struct apple_gpio_pinctrl *pctl = gpiochip_get_data(chip);
+> +
+> +	apple_gpio_set_reg(pctl, data->hwirq, REG_GPIOx_GRP_MASK,
+> +			   FIELD_PREP(REG_GPIOx_GRP_MASK, 0));
+
+I guess we're only using a single IRQ group right now?
+
+The driver structure looks good (though see the regmap suggestion from 
+Linus). Let's just get the actual hardware part right. I didn't spend a 
+couple hours poking register bits with a multimeter, a scope, and a 
+breadboard for nothing ;)
+
+-- 
+Hector Martin (marcan@marcan.st)
+Public Key: https://mrcn.st/pub
