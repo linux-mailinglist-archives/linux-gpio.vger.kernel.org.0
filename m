@@ -2,179 +2,387 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 44C82420515
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Oct 2021 05:39:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B14B420801
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Oct 2021 11:12:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232350AbhJDDlN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 3 Oct 2021 23:41:13 -0400
-Received: from marcansoft.com ([212.63.210.85]:45770 "EHLO mail.marcansoft.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230295AbhJDDlN (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 3 Oct 2021 23:41:13 -0400
-X-Greylist: delayed 361 seconds by postgrey-1.27 at vger.kernel.org; Sun, 03 Oct 2021 23:41:12 EDT
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: marcan@marcan.st)
-        by mail.marcansoft.com (Postfix) with ESMTPSA id 36A05419C2;
-        Mon,  4 Oct 2021 03:33:15 +0000 (UTC)
-To:     Joey Gouly <joey.gouly@arm.com>, linux-gpio@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Sven Peter <sven@svenpeter.dev>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Kettenis <kettenis@openbsd.org>, nd@arm.com,
-        Stan Skowronek <stan@corellium.com>
-References: <20211001191209.29988-1-joey.gouly@arm.com>
- <20211001191209.29988-4-joey.gouly@arm.com>
-From:   Hector Martin <marcan@marcan.st>
-Subject: Re: [PATCH v2 3/3] pinctrl: add pinctrl/GPIO driver for Apple SoCs
-Message-ID: <e18d09cb-ec5f-0e15-e701-f6ae5108b23e@marcan.st>
-Date:   Mon, 4 Oct 2021 12:33:15 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        id S231965AbhJDJOZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Oct 2021 05:14:25 -0400
+Received: from mailgw01.mediatek.com ([60.244.123.138]:50452 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S231329AbhJDJOZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Oct 2021 05:14:25 -0400
+X-UUID: ca3abdf83a9c4a2eb90892e73b54abf4-20211004
+X-UUID: ca3abdf83a9c4a2eb90892e73b54abf4-20211004
+Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw01.mediatek.com
+        (envelope-from <sam.shih@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+        with ESMTP id 1276577297; Mon, 04 Oct 2021 17:12:32 +0800
+Received: from mtkcas10.mediatek.inc (172.21.101.39) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.792.3;
+ Mon, 4 Oct 2021 17:12:30 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas10.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 4 Oct 2021 17:12:30 +0800
+From:   Sam Shih <sam.shih@mediatek.com>
+To:     <maz@kernel.org>, <matthias.bgg@gmail.com>
+CC:     <Ryder.Lee@mediatek.com>, <devicetree@vger.kernel.org>,
+        <enric.balletbo@collabora.com>, <fparent@baylibre.com>,
+        <gregkh@linuxfoundation.org>, <herbert@gondor.apana.org.au>,
+        <hsinyi@chromium.org>, <john@phrozen.org>,
+        <linus.walleij@linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-clk@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-serial@vger.kernel.org>, <linux-watchdog@vger.kernel.org>,
+        <linux@roeck-us.net>, <mpm@selenic.com>, <mturquette@baylibre.com>,
+        <robh+dt@kernel.org>, <sam.shih@mediatek.com>, <sboyd@kernel.org>,
+        <sean.wang@kernel.org>, <seiya.wang@mediatek.com>,
+        <wim@linux-watchdog.org>
+Subject: [v4,8/9] arm64: dts: mediatek: add mt7986a support
+Date:   Mon, 4 Oct 2021 17:12:08 +0800
+Message-ID: <20211004091208.31335-1-sam.shih@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <0459da08cddc579f069a28e659e614fd@kernel.org>
+References: <0459da08cddc579f069a28e659e614fd@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20211001191209.29988-4-joey.gouly@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: es-ES
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK:  N
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 02/10/2021 04.12, Joey Gouly wrote:
-> +#define REG_GPIO(x)          (4 * (x))
-> +#define REG_GPIOx_DATA       BIT(0)
-> +#define REG_GPIOx_MODE_MASK  GENMASK(3, 1)
-> +#define REG_GPIOx_OUT        1
-> +#define REG_GPIOx_IN_IRQ_HI  2
-> +#define REG_GPIOx_IN_IRQ_LO  3
-> +#define REG_GPIOx_IN_IRQ_UP  4
-> +#define REG_GPIOx_IN_IRQ_DN  5
-> +#define REG_GPIOx_IN_IRQ_ANY 6
-> +#define REG_GPIOx_IN_IRQ_OFF 7
-> +#define REG_GPIOx_PERIPH     BIT(5)
-> +#define REG_GPIOx_CFG_DONE   BIT(9)
-> +#define REG_GPIOx_GRP_MASK   GENMASK(18, 16)
-> +#define REG_IRQ(g, x)        (0x800 + 0x40 * (g) + 4 * ((x) >> 5))
+Add basic chip support for Mediatek mt7986a, include
+uart nodes with correct clocks, rng node with correct clock,
+and watchdog node and mt7986a pinctrl node.
 
-Can we update these defines with the correct definitions and names we 
-figured out the other day and add the missing ones? We now know a bunch 
-of these are wrong (e.g. CFG_DONE is INPUT_ENABLE, PERIPH should be two 
-bits, we're missing pull-up control, drive strength, schmitt trigger and 
-lock bits). Even if we don't implement all the features in the driver 
-yet, we should have all the register bit defines for documentation 
-purposes at least.
+Add cpu node, timer node, gic node, psci and reserved-memory node
+for ARM Trusted Firmware,
 
-> +	if (!(prev & REG_GPIOx_CFG_DONE))
-> +		writel_relaxed(cfg & ~REG_GPIOx_CFG_DONE, ppin);
-> +	writel_relaxed(cfg, ppin);
+Add clock controller nodes, include 40M clock source, topckgen, infracfg,
+apmixedsys and ethernet subsystem.
 
-We already determined this dance doesn't make any sense; if we want to 
-change the pin config before enabling the input buffer (whether this 
-serves any purpose at all is an open question) then that should be 
-handled in the upper code responsible for enabling/disabling the input 
-buffer, not in the core register wrappers.
+Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+---
+v4: added missing gic register bases, and fixed range of GICR
+v3: used the stdout-path instead of console=ttyS0
+v2: modified clock and uart node due to clock driver updated
+---
+ arch/arm64/boot/dts/mediatek/Makefile        |   1 +
+ arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts |  54 +++++
+ arch/arm64/boot/dts/mediatek/mt7986a.dtsi    | 230 +++++++++++++++++++
+ 3 files changed, 285 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt7986a.dtsi
 
-> +	if (func)
-> +		apple_gpio_set_reg(pctl, group, 0,
-> +				   REG_GPIOx_PERIPH | REG_GPIOx_CFG_DONE);
-> +	else
-> +		apple_gpio_set_reg(pctl, group, REG_GPIOx_PERIPH,
-> +				   REG_GPIOx_CFG_DONE);
-
-Func is two bits (4 functions) :)
-
-> +static void apple_gpio_gpio_set(struct gpio_chip *chip, unsigned int offset,
-> +				int value)
-> +{
-> +	struct apple_gpio_pinctrl *pctl = gpiochip_get_data(chip);
-> +
-> +	apple_gpio_set_reg(pctl, offset, REG_GPIOx_DATA,
-> +			   REG_GPIOx_CFG_DONE | (value & REG_GPIOx_DATA));
-> +}
-
-`value ? REG_GPIOx_DATA : 0` please, otherwise this makes assumptions 
-about value always being 1 and REG_GPIOx_DATA being the LSB.
-
-Also as we now know, REG_GPIOx_CFG_DONE is nonsense and doesn't belong 
-here. Let's drop the cargo cult and drive the hardware based on how it 
-works, not how macOS or Corellium decided to do things.
-
-> +static int apple_gpio_gpio_direction_input(struct gpio_chip *chip,
-> +					   unsigned int offset)
-> +{
-> +	struct apple_gpio_pinctrl *pctl = gpiochip_get_data(chip);
-> +
-> +	apple_gpio_set_reg(pctl, offset, REG_GPIOx_MODE_MASK | REG_GPIOx_DATA,
-> +			   FIELD_PREP(REG_GPIOx_MODE_MASK,
-> +				      REG_GPIOx_IN_IRQ_OFF) |
-> +				   REG_GPIOx_CFG_DONE);
-
-Is hardcoding IRQ_OFF correct here? Shouldn't this be getting the 
-intended IRQ state from somewhere, or is it always guaranteed that that 
-gets set later?
-
-> +static int apple_gpio_gpio_direction_output(struct gpio_chip *chip,
-> +					    unsigned int offset, int value)
-> +{
-> +	struct apple_gpio_pinctrl *pctl = gpiochip_get_data(chip);
-> +
-> +	apple_gpio_set_reg(pctl, offset, REG_GPIOx_PERIPH | REG_GPIOx_DATA,
-> +			   FIELD_PREP(REG_GPIOx_MODE_MASK, REG_GPIOx_OUT) |
-> +				   (value & REG_GPIOx_DATA) |
-> +				   REG_GPIOx_CFG_DONE);
-
-I actually wonder if we should even bother turning on the input buffer 
-for output pins, given we're shadowing the value anyway. Seems 
-unnecessary and might save a few nanowatts.
-
-Also, why is this clearing the peripheral (yet direction_input isn't)?
-
-> +static void apple_gpio_gpio_irq_mask(struct irq_data *data)
-> +{
-> +	struct apple_gpio_pinctrl *pctl =
-> +		gpiochip_get_data(irq_data_get_irq_chip_data(data));
-> +	apple_gpio_set_reg(pctl, data->hwirq, REG_GPIOx_MODE_MASK,
-> +			   FIELD_PREP(REG_GPIOx_MODE_MASK,
-> +				      REG_GPIOx_IN_IRQ_OFF) |
-> +				   REG_GPIOx_CFG_DONE);
-> +}
-
--REG_GPIOx_CFG_DONE please
-
-> +
-> +static void apple_gpio_gpio_irq_unmask(struct irq_data *data)
-> +{
-> +	struct apple_gpio_pinctrl *pctl =
-> +		gpiochip_get_data(irq_data_get_irq_chip_data(data));
-> +	u32 irqtype = apple_gpio_irq_type(irqd_get_trigger_type(data));
-> +
-> +	if (WARN_ON(irqtype < 0))
-> +		return;
-> +	apple_gpio_set_reg(pctl, data->hwirq, REG_GPIOx_MODE_MASK,
-> +			   FIELD_PREP(REG_GPIOx_MODE_MASK, irqtype) |
-> +				   REG_GPIOx_CFG_DONE);
-
-Ditto
-
-> +static unsigned int apple_gpio_gpio_irq_startup(struct irq_data *data)
-> +{
-> +	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
-> +	struct apple_gpio_pinctrl *pctl = gpiochip_get_data(chip);
-> +
-> +	apple_gpio_set_reg(pctl, data->hwirq, REG_GPIOx_GRP_MASK,
-> +			   FIELD_PREP(REG_GPIOx_GRP_MASK, 0));
-
-I guess we're only using a single IRQ group right now?
-
-The driver structure looks good (though see the regmap suggestion from 
-Linus). Let's just get the actual hardware part right. I didn't spend a 
-couple hours poking register bits with a multimeter, a scope, and a 
-breadboard for nothing ;)
-
+diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
+index 4f68ebed2e31..e6c3a73b9e4a 100644
+--- a/arch/arm64/boot/dts/mediatek/Makefile
++++ b/arch/arm64/boot/dts/mediatek/Makefile
+@@ -7,6 +7,7 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
+ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-x20-dev.dtb
+ dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
+ dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-bananapi-bpi-r64.dtb
++dtb-$(CONFIG_ARCH_MEDIATEK) += mt7986a-rfb.dtb
+ dtb-$(CONFIG_ARCH_MEDIATEK) += mt8167-pumpkin.dtb
+ dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-elm.dtb
+ dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-elm-hana.dtb
+diff --git a/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts b/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts
+new file mode 100644
+index 000000000000..e210d03ba70a
+--- /dev/null
++++ b/arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts
+@@ -0,0 +1,54 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++/*
++ * Copyright (C) 2021 MediaTek Inc.
++ * Author: Sam.Shih <sam.shih@mediatek.com>
++ */
++
++/dts-v1/;
++#include "mt7986a.dtsi"
++
++/ {
++	model = "MediaTek MT7986a RFB";
++	compatible = "mediatek,mt7986a-rfb";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++		bootargs = "earlycon=uart8250,mmio32,0x11002000 swiotlb=512";
++	};
++};
++
++&uart0 {
++	status = "okay";
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart1_pins>;
++	status = "okay";
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart2_pins>;
++	status = "okay";
++};
++
++&pio {
++	uart1_pins: uart1-pins-42-to-45 {
++		mux {
++			function = "uart";
++			groups = "uart1";
++		};
++	};
++
++	uart2_pins: uart1-pins-46-to-49 {
++		mux {
++			function = "uart";
++			groups = "uart2";
++		};
++	};
++};
+diff --git a/arch/arm64/boot/dts/mediatek/mt7986a.dtsi b/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
+new file mode 100644
+index 000000000000..84fd044ae673
+--- /dev/null
++++ b/arch/arm64/boot/dts/mediatek/mt7986a.dtsi
+@@ -0,0 +1,230 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++/*
++ * Copyright (C) 2021 MediaTek Inc.
++ * Author: Sam.Shih <sam.shih@mediatek.com>
++ */
++
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/clock/mt7986-clk.h>
++
++/ {
++	compatible = "mediatek,mt7986a";
++	interrupt-parent = <&gic>;
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	clk40m: oscillator@0 {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <40000000>;
++		clock-output-names = "clkxtal";
++	};
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			enable-method = "psci";
++			reg = <0x0>;
++			#cooling-cells = <2>;
++		};
++
++		cpu1: cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			enable-method = "psci";
++			reg = <0x1>;
++			#cooling-cells = <2>;
++		};
++
++		cpu2: cpu@2 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			enable-method = "psci";
++			reg = <0x2>;
++			#cooling-cells = <2>;
++		};
++
++		cpu3: cpu@3 {
++			device_type = "cpu";
++			enable-method = "psci";
++			compatible = "arm,cortex-a53";
++			reg = <0x3>;
++			#cooling-cells = <2>;
++		};
++	};
++
++	psci {
++		compatible  = "arm,psci-0.2";
++		method      = "smc";
++	};
++
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++		/* 192 KiB reserved for ARM Trusted Firmware (BL31) */
++		secmon_reserved: secmon@43000000 {
++			reg = <0 0x43000000 0 0x30000>;
++			no-map;
++		};
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupt-parent = <&gic>;
++		clock-frequency = <13000000>;
++		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
++	};
++
++	soc {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		compatible = "simple-bus";
++		ranges;
++
++		gic: interrupt-controller@c000000 {
++			compatible = "arm,gic-v3";
++			#interrupt-cells = <3>;
++			interrupt-parent = <&gic>;
++			interrupt-controller;
++			reg = <0 0x0c000000 0 0x40000>,  /* GICD */
++			      <0 0x0c080000 0 0x80000>,  /* GICR */
++			      <0 0x0c400000 0 0x2000>,   /* GICC */
++			      <0 0x0c410000 0 0x1000>,   /* GICH */
++			      <0 0x0c420000 0 0x2000>;   /* GICV */
++			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		infracfg: infracfg@10001000 {
++			compatible = "mediatek,mt7986-infracfg", "syscon";
++			reg = <0 0x10001000 0 0x1000>;
++			#clock-cells = <1>;
++		};
++
++		topckgen: topckgen@1001b000 {
++			compatible = "mediatek,mt7986-topckgen", "syscon";
++			reg = <0 0x1001B000 0 0x1000>;
++			#clock-cells = <1>;
++		};
++
++		watchdog: watchdog@1001c000 {
++			compatible = "mediatek,mt7986-wdt",
++				     "mediatek,mt6589-wdt";
++			reg = <0 0x1001c000 0 0x1000>;
++			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
++			#reset-cells = <1>;
++			status = "disabled";
++		};
++
++		apmixedsys: apmixedsys@1001e000 {
++			compatible = "mediatek,mt7986-apmixedsys";
++			reg = <0 0x1001E000 0 0x1000>;
++			#clock-cells = <1>;
++		};
++
++		pio: pinctrl@1001f000 {
++			compatible = "mediatek,mt7986a-pinctrl";
++			reg = <0 0x1001f000 0 0x1000>,
++			      <0 0x11c30000 0 0x1000>,
++			      <0 0x11c40000 0 0x1000>,
++			      <0 0x11e20000 0 0x1000>,
++			      <0 0x11e30000 0 0x1000>,
++			      <0 0x11f00000 0 0x1000>,
++			      <0 0x11f10000 0 0x1000>,
++			      <0 0x1000b000 0 0x1000>;
++			reg-names = "gpio_base", "iocfg_rt_base", "iocfg_rb_base",
++				    "iocfg_lt_base", "iocfg_lb_base", "iocfg_tr_base",
++				    "iocfg_tl_base", "eint";
++			gpio-controller;
++			#gpio-cells = <2>;
++			gpio-ranges = <&pio 0 0 100>;
++			interrupt-controller;
++			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-parent = <&gic>;
++			#interrupt-cells = <2>;
++		};
++
++		sgmiisys0: syscon@10060000 {
++			compatible = "mediatek,mt7986-sgmiisys_0",
++				     "syscon";
++			reg = <0 0x10060000 0 0x1000>;
++			#clock-cells = <1>;
++		};
++
++		sgmiisys1: syscon@10070000 {
++			compatible = "mediatek,mt7986-sgmiisys_1",
++				     "syscon";
++			reg = <0 0x10070000 0 0x1000>;
++			#clock-cells = <1>;
++		};
++
++		trng: trng@1020f000 {
++			compatible = "mediatek,mt7986-rng",
++				     "mediatek,mt7623-rng";
++			reg = <0 0x1020f000 0 0x100>;
++			clocks = <&infracfg CLK_INFRA_TRNG_CK>;
++			clock-names = "rng";
++			status = "disabled";
++		};
++
++		uart0: serial@11002000 {
++			compatible = "mediatek,mt7986-uart",
++				     "mediatek,mt6577-uart";
++			reg = <0 0x11002000 0 0x400>;
++			interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&infracfg CLK_INFRA_UART0_SEL>,
++				 <&infracfg CLK_INFRA_UART0_CK>;
++			clock-names = "baud", "bus";
++			assigned-clocks = <&topckgen CLK_TOP_UART_SEL>,
++					  <&infracfg CLK_INFRA_UART0_SEL>;
++			assigned-clock-parents = <&topckgen CLK_TOP_XTAL>,
++						 <&topckgen CLK_TOP_UART_SEL>;
++			status = "disabled";
++		};
++
++		uart1: serial@11003000 {
++			compatible = "mediatek,mt7986-uart",
++				     "mediatek,mt6577-uart";
++			reg = <0 0x11003000 0 0x400>;
++			interrupts = <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&infracfg CLK_INFRA_UART1_SEL>,
++				 <&infracfg CLK_INFRA_UART1_CK>;
++			clock-names = "baud", "bus";
++			assigned-clocks = <&infracfg CLK_INFRA_UART1_SEL>;
++			assigned-clock-parents = <&topckgen CLK_TOP_F26M_SEL>;
++			status = "disabled";
++		};
++
++		uart2: serial@11004000 {
++			compatible = "mediatek,mt7986-uart",
++				     "mediatek,mt6577-uart";
++			reg = <0 0x11004000 0 0x400>;
++			interrupts = <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&infracfg CLK_INFRA_UART2_SEL>,
++				 <&infracfg CLK_INFRA_UART2_CK>;
++			clock-names = "baud", "bus";
++			assigned-clocks = <&infracfg CLK_INFRA_UART2_SEL>;
++			assigned-clock-parents = <&topckgen CLK_TOP_F26M_SEL>;
++			status = "disabled";
++		};
++
++		ethsys: syscon@15000000 {
++			 #address-cells = <1>;
++			 #size-cells = <1>;
++			 compatible = "mediatek,mt7986-ethsys",
++				      "syscon";
++			 reg = <0 0x15000000 0 0x1000>;
++			 #clock-cells = <1>;
++			 #reset-cells = <1>;
++		};
++
++	};
++
++};
 -- 
-Hector Martin (marcan@marcan.st)
-Public Key: https://mrcn.st/pub
+2.29.2
+
