@@ -2,105 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E07BA422ADD
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Oct 2021 16:20:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A56FF422B50
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Oct 2021 16:43:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235917AbhJEOV4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Oct 2021 10:21:56 -0400
-Received: from mx.socionext.com ([202.248.49.38]:10312 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235640AbhJEOVz (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 5 Oct 2021 10:21:55 -0400
-Received: from unknown (HELO kinkan2-ex.css.socionext.com) ([172.31.9.52])
-  by mx.socionext.com with ESMTP; 05 Oct 2021 23:20:04 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by kinkan2-ex.css.socionext.com (Postfix) with ESMTP id 4A40B2059034;
-        Tue,  5 Oct 2021 23:20:04 +0900 (JST)
-Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Tue, 5 Oct 2021 23:20:04 +0900
-Received: from yuzu2.css.socionext.com (yuzu2 [172.31.9.57])
-        by iyokan2.css.socionext.com (Postfix) with ESMTP id 02111B62B7;
-        Tue,  5 Oct 2021 23:20:03 +0900 (JST)
-Received: from [10.212.181.36] (unknown [10.212.181.36])
-        by yuzu2.css.socionext.com (Postfix) with ESMTP id 8BB89B62B3;
-        Tue,  5 Oct 2021 23:20:02 +0900 (JST)
-Subject: Re: [PATCH 3/3] pinctrl: uniphier: Add UniPhier NX1 pinctrl driver
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
+        id S235265AbhJEOpc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Oct 2021 10:45:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48736 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234757AbhJEOpZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Oct 2021 10:45:25 -0400
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B601DC061753
+        for <linux-gpio@vger.kernel.org>; Tue,  5 Oct 2021 07:43:34 -0700 (PDT)
+Received: by mail-lf1-x133.google.com with SMTP id y23so47889440lfb.0
+        for <linux-gpio@vger.kernel.org>; Tue, 05 Oct 2021 07:43:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aQm6k61ZSp2Hab4WhNcd29dBFTSpKLfNa3/5SrkRnKE=;
+        b=nOsiEjYFl3aW6T/inaJvCgRmrFdBE7RjE+3EkIBB+LyroVbllh+TpIzWM3aluAxSNy
+         cHF4eZ4pDUB/jn4yymaNgGIo+U62VKveeFgrLOkyWbrvwmcW/dewPfFka3W2vHoVRCTI
+         RojMqoFDmo4JJa3/6U7zsj5f8xeAksoeUmFk8B7hpmqOehDKq3dnvLbDoVafGGX4OY/k
+         w1sLMUu0JVt1Uk5bo+TNSSEY5YwJQR9Bd9TY9TERtYpKc5pYdFm9JSrXWQiwc3hbvR7n
+         IoUgTz30heGeBr4ZCB5Bndjzv8Ltiq1SRJ2l4NQdJ7Fd9596C32U0/canEJC+VXDCwGY
+         bR1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aQm6k61ZSp2Hab4WhNcd29dBFTSpKLfNa3/5SrkRnKE=;
+        b=SnXkB80NnzdsLnASYUOnSFhm1QfrSvWA1xr5LkVQ5Hp6E0ozWjD2+10TLgmqo6Od36
+         GbFEl4CSRsbTMVBLRt5HlYRRyTlg3QaHVr7yiomDZfY1+sa8bFRJNv+vQ88FOLdEPHfM
+         Ksgv2qWtBFUlFI69YSGGd9pV9S19Wg54eeKK5taRZfDsugtJ9nH74da7xnDeQsE3xfmH
+         b/1OSUDogo4Vn59O1od4WoHkiqV3YCmDPj2Bz2I+PDH3bIMU9axTB5Ay26YClKEWB+5S
+         r2f7uMiZohyjm/Lrj17sN1g25w5SUdyxnm5uCVV3rMSaFBV8X21zV18zgOnJlSiEkYtM
+         P3Cw==
+X-Gm-Message-State: AOAM532gnKTPS1OnNBuSottHEt0rGHQGfUGrZhkhl4CPYHQbgcbqwJ2M
+        d7hQSGPhGBeEyUz7AGo42BXezg==
+X-Google-Smtp-Source: ABdhPJydMuD3RqETE9J8kTSbZmeJMK2Yn3+tyh1FTZ7XBbzIlE6ZfIM+dzc0ge56WVh6fbuI+kX6TQ==
+X-Received: by 2002:a2e:80ca:: with SMTP id r10mr23139626ljg.347.1633445012540;
+        Tue, 05 Oct 2021 07:43:32 -0700 (PDT)
+Received: from umbar.lan ([37.153.55.125])
+        by smtp.gmail.com with ESMTPSA id t22sm1987173ljc.120.2021.10.05.07.43.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Oct 2021 07:43:32 -0700 (PDT)
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
 Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <1633399920-1537-4-git-send-email-hayashi.kunihiko@socionext.com>
- <202110052101.CZroR9ku-lkp@intel.com>
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Message-ID: <9acc6fe3-ff06-106b-4289-92319d43f100@socionext.com>
-Date:   Tue, 5 Oct 2021 23:20:02 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        linux-arm-msm@vger.kernel.org
+Subject: [PATCH v2 0/6] pinctrl: qcom: convert ssbi-mpp and spmi-mpp to hierarchical IRQ
+Date:   Tue,  5 Oct 2021 17:43:23 +0300
+Message-Id: <20211005144329.2405315-1-dmitry.baryshkov@linaro.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-In-Reply-To: <202110052101.CZroR9ku-lkp@intel.com>
-Content-Type: text/plain; charset=iso-2022-jp; format=flowed; delsp=yes
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+In 2019 (in kernel 5.4) spmi-gpio and ssbi-gpio drivers were converted
+to hierarchical IRQ helpers, however MPP drivers were not converted at
+that moment. Complete this by converting MPP drivers.
 
-On 2021/10/05 22:06, kernel test robot wrote:
-> Hi Kunihiko,
-> 
-> I love your patch! Yet something to improve:
-> 
-> [auto build test ERROR on linusw-pinctrl/devel]
-> [also build test ERROR on robh/for-next v5.15-rc3 next-20210922]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch]
-> 
-> url:
-> https://github.com/0day-ci/linux/commits/Kunihiko-Hayashi/pinctrl-uniphier
-> -Introduce-some-features-and-NX1-support/20211005-101346
-> base:
-> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-> devel
-> config: powerpc-allyesconfig (attached as .config)
-> compiler: powerpc64-linux-gcc (GCC) 11.2.0
-> reproduce (this is a W=1 build):
->          wget
-> https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross
-> -O ~/bin/make.cross
->          chmod +x ~/bin/make.cross
->          #
-> https://github.com/0day-ci/linux/commit/c68781cbddcc323070eee04896f6f85884
-> 0a60dc
->          git remote add linux-review https://github.com/0day-ci/linux
->          git fetch --no-tags linux-review
-> Kunihiko-Hayashi/pinctrl-uniphier-Introduce-some-features-and-NX1-support/
-> 20211005-101346
->          git checkout c68781cbddcc323070eee04896f6f858840a60dc
->          # save the attached .config to linux build tree
->          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross
-> ARCH=powerpc
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> All errors (new ones prefixed by >>):
-> 
->>> drivers/pinctrl/uniphier/pinctrl-uniphier-nx1.c:429:27: error:
-> 'usb3_groups' defined but not used [-Werror=unused-const-variable=]
->       429 | static const char * const usb3_groups[] = {"usb3"};
->           |                           ^~~~~~~~~~~
->>> drivers/pinctrl/uniphier/pinctrl-uniphier-nx1.c:428:27: error:
-> 'usb2_groups' defined but not used [-Werror=unused-const-variable=]
->       428 | static const char * const usb2_groups[] = {"usb2"};
->           |                           ^~~~~~~~~~~
->     cc1: all warnings being treated as errors
+Changes since v1:
+ - Drop the interrupt-controller from initial schema conversion
+ - Add gpio-line-names to the qcom,pmic-mpp schema and to the example
 
-The usb2 and usb3 groups don't exist. I'll remove them in next.
+----------------------------------------------------------------
+Dmitry Baryshkov (6):
+      dt-bindings: pinctrl: qcom,pmic-mpp: Convert qcom pmic mpp bindings to YAML
+      dt-bindings: pinctrl: qcom,pmic-mpp: switch to #interrupt-cells
+      pinctrl: qcom: ssbi-mpp: hardcode IRQ counts
+      pinctrl: qcom: ssbi-mpp: add support for hierarchical IRQ chip
+      pinctrl: qcom: spmi-mpp: hardcode IRQ counts
+      pinctrl: qcom: spmi-mpp: add support for hierarchical IRQ chip
 
-Thank you,
+ .../devicetree/bindings/pinctrl/qcom,pmic-mpp.txt  | 187 ---------------------
+ .../devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml | 180 ++++++++++++++++++++
+ drivers/pinctrl/qcom/pinctrl-spmi-mpp.c            | 111 ++++++++----
+ drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c            | 133 +++++++++++----
+ 4 files changed, 360 insertions(+), 251 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml
 
----
-Best Regards
-Kunihiko Hayashi
+
