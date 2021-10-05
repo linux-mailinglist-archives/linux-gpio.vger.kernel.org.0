@@ -2,126 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2309C42265A
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Oct 2021 14:24:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DBE2342265C
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Oct 2021 14:25:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234761AbhJEM0k (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Oct 2021 08:26:40 -0400
-Received: from mga01.intel.com ([192.55.52.88]:53710 "EHLO mga01.intel.com"
+        id S234700AbhJEM1J (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Oct 2021 08:27:09 -0400
+Received: from mga01.intel.com ([192.55.52.88]:53766 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234744AbhJEM0j (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 5 Oct 2021 08:26:39 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10127"; a="248983455"
+        id S234358AbhJEM1J (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 5 Oct 2021 08:27:09 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10127"; a="248983569"
 X-IronPort-AV: E=Sophos;i="5.85,348,1624345200"; 
-   d="scan'208";a="248983455"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2021 05:24:47 -0700
-X-ExtLoop1: 1
+   d="scan'208";a="248983569"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2021 05:25:18 -0700
 X-IronPort-AV: E=Sophos;i="5.85,348,1624345200"; 
-   d="scan'208";a="559302890"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by FMSMGA003.fm.intel.com with ESMTP; 05 Oct 2021 05:24:45 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id AA5131C8; Tue,  5 Oct 2021 15:24:51 +0300 (EEST)
+   d="scan'208";a="589336018"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2021 05:25:16 -0700
+Received: from andy by smile with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1mXjVR-008sRw-Lt;
+        Tue, 05 Oct 2021 15:25:13 +0300
+Date:   Tue, 5 Oct 2021 15:25:13 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Bamvor Jian Zhang <bamv2005@gmail.com>,
+To:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bamvor Jian Zhang <bamv2005@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v3 1/1] gpio: mockup: Convert to use software nodes
-Date:   Tue,  5 Oct 2021 15:24:49 +0300
-Message-Id: <20211005122449.16296-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.33.0
+Subject: Re: [PATCH v2 1/1] gpio: mockup: Convert to use software nodes
+Message-ID: <YVxEKdJVvlz2iCCp@smile.fi.intel.com>
+References: <20211005093731.62743-1-andriy.shevchenko@linux.intel.com>
+ <CAHp75Vey95aSGoWg-XZtpX6UXj54208Vi4=VuiU5s7Z6w-fdtw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vey95aSGoWg-XZtpX6UXj54208Vi4=VuiU5s7Z6w-fdtw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The gpio-mockup driver creates the properties that are shared between
-platform and GPIO devices. Because of that, the properties may not
-be removed at the proper point of time without provoking a use-after-free
-as shown in the following backtrace:
+On Tue, Oct 05, 2021 at 12:43:57PM +0300, Andy Shevchenko wrote:
+> On Tue, Oct 5, 2021 at 12:37 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> 
+> > Reported-tested-by: Kent Gibson <warthog618@gmail.com>
+> 
+> Oopsista, should be "Reported-and-tested-by:". I hope you can fix it
+> when applying, but tell me if I need to send a v3.
 
-  refcount_t: underflow; use-after-free.
-  WARNING: CPU: 0 PID: 103 at lib/refcount.c:28 refcount_warn_saturate+0xd1/0x120
-  ...
-  Call Trace:
-  kobject_put+0xdc/0xf0
-  software_node_notify_remove+0xa8/0xc0
-  device_del+0x15a/0x3e0
+Nevermind. just sent a v3 to make everyone's life easier!
 
-That's why the driver has to manage the lifetime of the software nodes
-by itself.
-
-The problem originates from the old device_add_properties() API, but
-has been only revealed after the commit bd1e336aa853 ("driver core: platform:
-Remove platform_device_add_properties()"). Hence, it's used as a landmark
-for backporting.
-
-Fixes: bd1e336aa853 ("driver core: platform: Remove platform_device_add_properties()")
-Reported-and-tested-by: Kent Gibson <warthog618@gmail.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-v3: fixed tag, more grammar fixes
- drivers/gpio/gpio-mockup.c | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-index 0a9d746a0fe0..8b147b565e92 100644
---- a/drivers/gpio/gpio-mockup.c
-+++ b/drivers/gpio/gpio-mockup.c
-@@ -478,8 +478,18 @@ static void gpio_mockup_unregister_pdevs(void)
- {
- 	int i;
- 
--	for (i = 0; i < GPIO_MOCKUP_MAX_GC; i++)
--		platform_device_unregister(gpio_mockup_pdevs[i]);
-+	for (i = 0; i < GPIO_MOCKUP_MAX_GC; i++) {
-+		struct platform_device *pdev;
-+		struct fwnode_handle *fwnode;
-+
-+		pdev = gpio_mockup_pdevs[i];
-+		if (!pdev)
-+			continue;
-+
-+		fwnode = dev_fwnode(&pdev->dev);
-+		platform_device_unregister(pdev);
-+		fwnode_remove_software_node(fwnode);
-+	}
- }
- 
- static __init char **gpio_mockup_make_line_names(const char *label,
-@@ -508,6 +518,7 @@ static int __init gpio_mockup_register_chip(int idx)
- 	struct property_entry properties[GPIO_MOCKUP_MAX_PROP];
- 	struct platform_device_info pdevinfo;
- 	struct platform_device *pdev;
-+	struct fwnode_handle *fwnode;
- 	char **line_names = NULL;
- 	char chip_label[32];
- 	int prop = 0, base;
-@@ -536,13 +547,18 @@ static int __init gpio_mockup_register_chip(int idx)
- 					"gpio-line-names", line_names, ngpio);
- 	}
- 
-+	fwnode = fwnode_create_software_node(properties, NULL);
-+	if (IS_ERR(fwnode))
-+		return PTR_ERR(fwnode);
-+
- 	pdevinfo.name = "gpio-mockup";
- 	pdevinfo.id = idx;
--	pdevinfo.properties = properties;
-+	pdevinfo.fwnode = fwnode;
- 
- 	pdev = platform_device_register_full(&pdevinfo);
- 	kfree_strarray(line_names, ngpio);
- 	if (IS_ERR(pdev)) {
-+		fwnode_remove_software_node(fwnode);
- 		pr_err("error registering device");
- 		return PTR_ERR(pdev);
- 	}
 -- 
-2.33.0
+With Best Regards,
+Andy Shevchenko
+
 
