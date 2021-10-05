@@ -2,95 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 62B1F421F1D
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Oct 2021 08:53:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DD654221CF
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Oct 2021 11:10:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232108AbhJEGzB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Oct 2021 02:55:01 -0400
-Received: from mail-ua1-f49.google.com ([209.85.222.49]:38415 "EHLO
-        mail-ua1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230526AbhJEGzB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Oct 2021 02:55:01 -0400
-Received: by mail-ua1-f49.google.com with SMTP id y3so8732578uar.5;
-        Mon, 04 Oct 2021 23:53:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=n5rvDJLT46KKVmj57QzEkEkQwVXnYVpO8DvlptVRyCA=;
-        b=jWK5x5OKncZn065eh5icxcgmS3DgqPjzAeVrwZIpAj/N4g1mirSuJ2X3fm4EkhyVhX
-         jfxxUi2rhaOX3YWcU3S/7Dexp5afwOmY3JDiUossOWhWTn4li9UTVY7Dnq94CUTNoiH0
-         RhCfsHh78Nt72pN4BTDVd4H/Uv2YRemTZrfPgCZtPPbGnvkCkuzZycU/xgbFv9pLri6a
-         2XH47lYpKHyTcqMndY0FJyXTj4GFwp+9q1Q71JPcbOK2yADmMQQQpRHv8CCOkC9RR7la
-         zJYPnUXiplo+gl3+OdbgaqYL+eyH58D/8lq6nnZ/n3MDxNA38earfWNfBPo4mMwW9cSY
-         SUJw==
-X-Gm-Message-State: AOAM5306A68tqOW+hJjz9TkNgItIrb+/5DHJL0mWS78nxIcdStGUAEQz
-        DCc2gvJo+AIRXB9A29au/jU06aEHcHCIdlNEwdo=
-X-Google-Smtp-Source: ABdhPJy5k1nMkYMYkWxdc7yorDKtTzk8W9HuAKjJZVnHbBCfhiYAPghoP07JTjh7MLd8GwhUpT80oTqR0wBZYVkKy3U=
-X-Received: by 2002:ab0:16d4:: with SMTP id g20mr10581513uaf.114.1633416790751;
- Mon, 04 Oct 2021 23:53:10 -0700 (PDT)
+        id S232658AbhJEJME (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Oct 2021 05:12:04 -0400
+Received: from mga12.intel.com ([192.55.52.136]:1287 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233071AbhJEJME (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 5 Oct 2021 05:12:04 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10127"; a="205814882"
+X-IronPort-AV: E=Sophos;i="5.85,348,1624345200"; 
+   d="scan'208";a="205814882"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2021 02:10:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,348,1624345200"; 
+   d="scan'208";a="483708516"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga007.fm.intel.com with ESMTP; 05 Oct 2021 02:10:11 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 1A2E5183; Tue,  5 Oct 2021 12:10:17 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Bamvor Jian Zhang <bamv2005@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH v1 1/1] gpio: mockup: Convert to use software nodes
+Date:   Tue,  5 Oct 2021 12:10:16 +0300
+Message-Id: <20211005091016.18519-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-References: <c987d0bf744150ca05bd952f5f9e5fb3244d27b0.1633350340.git.geert+renesas@glider.be>
- <20211005055050.ggimidaqis5tfxav@vireshk-i7>
-In-Reply-To: <20211005055050.ggimidaqis5tfxav@vireshk-i7>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 5 Oct 2021 08:52:59 +0200
-Message-ID: <CAMuHMdVk6gDcHtYSM=Y8BAK=GVJuLqxTHk7zS4-MJPi0H0T=jQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: aggregator: Add interrupt support
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Enrico@rox.of.borg, Weigelt@rox.of.borg,
-        metux IT consult <lkml@metux.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        stratos-dev@op-lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Viresh,
+The gpio-mockup driver creates a properties that are shared between
+platform and GPIO devices. Because of that, the properties may not
+be removed at the proper point of time without provoking use-after-free
+as shown in the backtrace:
 
-On Tue, Oct 5, 2021 at 7:50 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> On 04-10-21, 14:44, Geert Uytterhoeven wrote:
-> > Currently the GPIO Aggregator does not support interrupts.  This means
-> > that kernel drivers going from a GPIO to an IRQ using gpiod_to_irq(),
-> > and userspace applications using line events do not work.
-> >
-> > Add interrupt support by providing a gpio_chip.to_irq() callback, which
-> > just calls into the parent GPIO controller.
-> >
-> > Note that this does not implement full interrupt controller (irq_chip)
-> > support, so using e.g. gpio-keys with "interrupts" instead of "gpios"
-> > still does not work.
->
-> Thanks for looking into this. I am not sure of the difference it makes
-> with and without full irq-chip, but lemme explain the use case that we
-> are concerned about with virtio.
->
-> Eventually the interrupt should be visible to userspace, with
-> something like libgpiod. Which can then send the information over
-> virtio to the guest.
+  refcount_t: underflow; use-after-free.
+  WARNING: CPU: 0 PID: 103 at lib/refcount.c:28 refcount_warn_saturate+0xd1/0x120
+  ...
+  Call Trace:
+  kobject_put+0xdc/0xf0
+  software_node_notify_remove+0xa8/0xc0
+  device_del+0x15a/0x3e0
 
-Exactly, that was what I had in mind, too.
+That's why the driver has to manage lifetime of the software nodes by itself.
 
-> Will the interrupts be visible in userspace with your patch ?
+The problem originates by the old device_add_properties() API, but has been
+only revealed after the commit 5aeb05b27f81 ("software node: balance refcount
+for managed software nodes"). Hence, it's used as landmark for the backporting.
 
-Yes they are.
-Before, gpiomon (test app from libgpiod) didn't work, now it does.
+Fixes: 5aeb05b27f81 ("software node: balance refcount for managed software nodes")
+Reported-by: Kent Gibson <warthog618@gmail.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/gpio/gpio-mockup.c | 22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+index 0a9d746a0fe0..8b147b565e92 100644
+--- a/drivers/gpio/gpio-mockup.c
++++ b/drivers/gpio/gpio-mockup.c
+@@ -478,8 +478,18 @@ static void gpio_mockup_unregister_pdevs(void)
+ {
+ 	int i;
+ 
+-	for (i = 0; i < GPIO_MOCKUP_MAX_GC; i++)
+-		platform_device_unregister(gpio_mockup_pdevs[i]);
++	for (i = 0; i < GPIO_MOCKUP_MAX_GC; i++) {
++		struct platform_device *pdev;
++		struct fwnode_handle *fwnode;
++
++		pdev = gpio_mockup_pdevs[i];
++		if (!pdev)
++			continue;
++
++		fwnode = dev_fwnode(&pdev->dev);
++		platform_device_unregister(pdev);
++		fwnode_remove_software_node(fwnode);
++	}
+ }
+ 
+ static __init char **gpio_mockup_make_line_names(const char *label,
+@@ -508,6 +518,7 @@ static int __init gpio_mockup_register_chip(int idx)
+ 	struct property_entry properties[GPIO_MOCKUP_MAX_PROP];
+ 	struct platform_device_info pdevinfo;
+ 	struct platform_device *pdev;
++	struct fwnode_handle *fwnode;
+ 	char **line_names = NULL;
+ 	char chip_label[32];
+ 	int prop = 0, base;
+@@ -536,13 +547,18 @@ static int __init gpio_mockup_register_chip(int idx)
+ 					"gpio-line-names", line_names, ngpio);
+ 	}
+ 
++	fwnode = fwnode_create_software_node(properties, NULL);
++	if (IS_ERR(fwnode))
++		return PTR_ERR(fwnode);
++
+ 	pdevinfo.name = "gpio-mockup";
+ 	pdevinfo.id = idx;
+-	pdevinfo.properties = properties;
++	pdevinfo.fwnode = fwnode;
+ 
+ 	pdev = platform_device_register_full(&pdevinfo);
+ 	kfree_strarray(line_names, ngpio);
+ 	if (IS_ERR(pdev)) {
++		fwnode_remove_software_node(fwnode);
+ 		pr_err("error registering device");
+ 		return PTR_ERR(pdev);
+ 	}
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.33.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
