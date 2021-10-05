@@ -2,571 +2,1306 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 87A7F421C71
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Oct 2021 04:12:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E28E421D30
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Oct 2021 06:20:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230495AbhJECN7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Oct 2021 22:13:59 -0400
-Received: from mx.socionext.com ([202.248.49.38]:41272 "EHLO mx.socionext.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231273AbhJECNx (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 4 Oct 2021 22:13:53 -0400
-Received: from unknown (HELO iyokan2-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 05 Oct 2021 11:12:01 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by iyokan2-ex.css.socionext.com (Postfix) with ESMTP id DD6AF2058B40;
-        Tue,  5 Oct 2021 11:12:01 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Tue, 5 Oct 2021 11:12:01 +0900
-Received: from plum.e01.socionext.com (unknown [10.212.243.119])
-        by kinkan2.css.socionext.com (Postfix) with ESMTP id 3C188AB192;
-        Tue,  5 Oct 2021 11:12:01 +0900 (JST)
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH 3/3] pinctrl: uniphier: Add UniPhier NX1 pinctrl driver
-Date:   Tue,  5 Oct 2021 11:12:00 +0900
-Message-Id: <1633399920-1537-4-git-send-email-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1633399920-1537-1-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1633399920-1537-1-git-send-email-hayashi.kunihiko@socionext.com>
+        id S229694AbhJEEWV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Oct 2021 00:22:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44164 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229659AbhJEEWT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Oct 2021 00:22:19 -0400
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E84CC061745
+        for <linux-gpio@vger.kernel.org>; Mon,  4 Oct 2021 21:20:29 -0700 (PDT)
+Received: by mail-pl1-x62a.google.com with SMTP id b22so1406012pls.1
+        for <linux-gpio@vger.kernel.org>; Mon, 04 Oct 2021 21:20:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9uduKlEUDMn6HCvkeYPIWSzoCZY3E1Gdo/0IuYDv2G4=;
+        b=pAlL+KPziAcQ4S14T+hRaYOLc9dKFB9xOAHQbynPEq+NReFyyuIesdQGBC4Gy07St2
+         LeBmk7GhTPv64XeTK6ujKBNIL1RObOQa0lA/E2UOQZAdinx/k3OeOKef/Q+IybH2GFxo
+         83jNvliTHleXS4XDeJFpYHOtJ4kb0KgREzkcT2/0PWDHDzFJR4gaQdBBy2XGRvA4fhWQ
+         u0UocxiNAbn5p+2XVNlsnTt74cjf59nyFGuucUwqdjietHYlYcZdbLbnFBSms4KW85ud
+         z36PTUcEGOF81wluf0XVTdJPmri1CjalaRlwcanulhc1V4vhszjm1EjaVuhVAObxgcy7
+         ZYkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9uduKlEUDMn6HCvkeYPIWSzoCZY3E1Gdo/0IuYDv2G4=;
+        b=IG0imQJNe6+kv9ZrVWBzt43WtssSzv7QQcCzNGmg0wTIHoxtLn9HjzRVLYQUbJvZH4
+         CohRxcZ6xbnvZWAC8z7do4T0B71YbkZKwStKw2KF6VCRk/wBp3XA6HeE7PCckfh14V4Z
+         eEA3QM1tDvtqfDpyIRfnzAcCDm4G2jQ45G5IZCxTUALI1fZ3neo5icPCO+rr+nYzos1D
+         tiJkwidC3bf4u6bY9txXSnMD2CNW3fTRHHniCzZsXETP8uaTMLbCSePRdfiqWDAjCwBN
+         6UNXu/WtqNWwrB4ovzXgPHgcNvOTv4rV79qvm5o6J2knOp05Mdy845jEVf3lMq4N3PKC
+         EaHA==
+X-Gm-Message-State: AOAM533rYUofn8Efy/JnN6rRcYDE6Q5QKdmBoqcb8eVoaK1hEF5cTZOo
+        2sR0qahRCDKtgU4jrXWAnbM=
+X-Google-Smtp-Source: ABdhPJzocjkd6KRGxEtrP0xsAkC+yqRGbIBArKytepucjonMZS3Cu/1rtUbk8dCdXdSSDhOvUvE1GQ==
+X-Received: by 2002:a17:90a:5108:: with SMTP id t8mr1158433pjh.201.1633407628616;
+        Mon, 04 Oct 2021 21:20:28 -0700 (PDT)
+Received: from sol (106-69-170-56.dyn.iinet.net.au. [106.69.170.56])
+        by smtp.gmail.com with ESMTPSA id b21sm17169727pfv.96.2021.10.04.21.20.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Oct 2021 21:20:28 -0700 (PDT)
+Date:   Tue, 5 Oct 2021 12:20:22 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jack Winch <sunt.un.morcov@gmail.com>,
+        Helmut Grohne <helmut.grohne@intenta.de>,
+        Ben Hutchings <ben.hutchings@essensium.com>,
+        linux-gpio@vger.kernel.org
+Subject: Re: [libgpiod v2][PATCH] line-config: rework the internal
+ implementation
+Message-ID: <20211005042022.GA109255@sol>
+References: <20210922081100.16753-1-brgl@bgdev.pl>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210922081100.16753-1-brgl@bgdev.pl>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add pin configuration and pinmux support for UniPhier NX1 SoC.
+On Wed, Sep 22, 2021 at 10:11:00AM +0200, Bartosz Golaszewski wrote:
+> This reworks how the line config objects work internally. In order to reduce
+> the size of the gpiod_line_config objects, we switch from using a set number
+> of override config structures with each storing a list of line offsets to
+> storing a smaller override object for each of the maximum of 64 lines.
+> Additionally these internal config structures are now packed and only occupy
+> the minimum required amount of memory.
+> 
+> The processing of these new overrides has become a bit more complicated but
+> should actually be more robust wrt corner cases.
+> 
+> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
- drivers/pinctrl/uniphier/Kconfig                |   4 +
- drivers/pinctrl/uniphier/Makefile               |   1 +
- drivers/pinctrl/uniphier/pinctrl-uniphier-nx1.c | 491 ++++++++++++++++++++++++
- 3 files changed, 496 insertions(+)
- create mode 100644 drivers/pinctrl/uniphier/pinctrl-uniphier-nx1.c
+Given the level of rework the diff is harder work than looking at the
+resulting code, but it all looks good to me.
+A few minor comments scattered below.
 
-diff --git a/drivers/pinctrl/uniphier/Kconfig b/drivers/pinctrl/uniphier/Kconfig
-index c51a4db..b71c07d 100644
---- a/drivers/pinctrl/uniphier/Kconfig
-+++ b/drivers/pinctrl/uniphier/Kconfig
-@@ -45,4 +45,8 @@ config PINCTRL_UNIPHIER_PXS3
- 	bool "UniPhier PXs3 SoC pinctrl driver"
- 	default ARM64
- 
-+config PINCTRL_UNIPHIER_NX1
-+	bool "UniPhier NX1 SoC pinctrl driver"
-+	default ARM64
-+
- endif
-diff --git a/drivers/pinctrl/uniphier/Makefile b/drivers/pinctrl/uniphier/Makefile
-index ec66c86..59932cb 100644
---- a/drivers/pinctrl/uniphier/Makefile
-+++ b/drivers/pinctrl/uniphier/Makefile
-@@ -10,3 +10,4 @@ obj-$(CONFIG_PINCTRL_UNIPHIER_LD6B)	+= pinctrl-uniphier-ld6b.o
- obj-$(CONFIG_PINCTRL_UNIPHIER_LD11)	+= pinctrl-uniphier-ld11.o
- obj-$(CONFIG_PINCTRL_UNIPHIER_LD20)	+= pinctrl-uniphier-ld20.o
- obj-$(CONFIG_PINCTRL_UNIPHIER_PXS3)	+= pinctrl-uniphier-pxs3.o
-+obj-$(CONFIG_PINCTRL_UNIPHIER_NX1)	+= pinctrl-uniphier-nx1.o
-diff --git a/drivers/pinctrl/uniphier/pinctrl-uniphier-nx1.c b/drivers/pinctrl/uniphier/pinctrl-uniphier-nx1.c
-new file mode 100644
-index 0000000..29ffc3c
---- /dev/null
-+++ b/drivers/pinctrl/uniphier/pinctrl-uniphier-nx1.c
-@@ -0,0 +1,491 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+//
-+// Copyright (C) 2019 Socionext Inc.
-+//   Author: Masahiro Yamada <yamada.masahiro@socionext.com>
-+
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/pinctrl/pinctrl.h>
-+#include <linux/platform_device.h>
-+
-+#include "pinctrl-uniphier.h"
-+
-+static const struct pinctrl_pin_desc uniphier_nx1_pins[] = {
-+	UNIPHIER_PINCTRL_PIN(0, "LPST", UNIPHIER_PIN_IECTRL_EXIST,
-+			     0, UNIPHIER_PIN_DRV_3BIT,
-+			     0, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(1, "SDCLK", UNIPHIER_PIN_IECTRL_EXIST,
-+			     12, UNIPHIER_PIN_DRV_2BIT,
-+			     1, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(2, "SDCMD", UNIPHIER_PIN_IECTRL_EXIST,
-+			     13, UNIPHIER_PIN_DRV_2BIT,
-+			     2, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(3, "SDDAT0", UNIPHIER_PIN_IECTRL_EXIST,
-+			     14, UNIPHIER_PIN_DRV_2BIT,
-+			     3, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(4, "SDDAT1", UNIPHIER_PIN_IECTRL_EXIST,
-+			     15, UNIPHIER_PIN_DRV_2BIT,
-+			     4, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(5, "SDDAT2", UNIPHIER_PIN_IECTRL_EXIST,
-+			     16, UNIPHIER_PIN_DRV_2BIT,
-+			     5, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(6, "SDDAT3", UNIPHIER_PIN_IECTRL_EXIST,
-+			     17, UNIPHIER_PIN_DRV_2BIT,
-+			     6, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(7, "SDCD", UNIPHIER_PIN_IECTRL_EXIST,
-+			     1, UNIPHIER_PIN_DRV_3BIT,
-+			     7, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(8, "SDWP", UNIPHIER_PIN_IECTRL_EXIST,
-+			     2, UNIPHIER_PIN_DRV_3BIT,
-+			     8, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(9, "SDVOLC", UNIPHIER_PIN_IECTRL_EXIST,
-+			     3, UNIPHIER_PIN_DRV_3BIT,
-+			     9, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(10, "XERST", UNIPHIER_PIN_IECTRL_EXIST,
-+			     0, UNIPHIER_PIN_DRV_2BIT,
-+			     10, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(11, "MDC", UNIPHIER_PIN_IECTRL_EXIST,
-+			     18, UNIPHIER_PIN_DRV_2BIT,
-+			     11, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(12, "MDIO", UNIPHIER_PIN_IECTRL_EXIST,
-+			     19, UNIPHIER_PIN_DRV_2BIT,
-+			     12, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(13, "MDIO_INTL", UNIPHIER_PIN_IECTRL_EXIST,
-+			     20, UNIPHIER_PIN_DRV_2BIT,
-+			     13, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(14, "PHYRSTL", UNIPHIER_PIN_IECTRL_EXIST,
-+			     -1, UNIPHIER_PIN_DRV_FIXED4,
-+			     -1, UNIPHIER_PIN_PULL_NONE),
-+	UNIPHIER_PINCTRL_PIN(15, "RGMII_RXCLK", UNIPHIER_PIN_IECTRL_EXIST,
-+			     22, UNIPHIER_PIN_DRV_2BIT,
-+			     15, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(16, "RGMII_RXD0", UNIPHIER_PIN_IECTRL_EXIST,
-+			     23, UNIPHIER_PIN_DRV_2BIT,
-+			     16, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(17, "RGMII_RXD1", UNIPHIER_PIN_IECTRL_EXIST,
-+			     24, UNIPHIER_PIN_DRV_2BIT,
-+			     17, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(18, "RGMII_RXD2", UNIPHIER_PIN_IECTRL_EXIST,
-+			     25, UNIPHIER_PIN_DRV_2BIT,
-+			     18, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(19, "RGMII_RXD3", UNIPHIER_PIN_IECTRL_EXIST,
-+			     26, UNIPHIER_PIN_DRV_2BIT,
-+			     19, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(20, "RGMII_RXCTL", UNIPHIER_PIN_IECTRL_EXIST,
-+			     27, UNIPHIER_PIN_DRV_2BIT,
-+			     20, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(21, "RGMII_TXCLK", UNIPHIER_PIN_IECTRL_EXIST,
-+			     28, UNIPHIER_PIN_DRV_2BIT,
-+			     21, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(22, "RGMII_TXD0", UNIPHIER_PIN_IECTRL_EXIST,
-+			     29, UNIPHIER_PIN_DRV_2BIT,
-+			     22, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(23, "RGMII_TXD1", UNIPHIER_PIN_IECTRL_EXIST,
-+			     30, UNIPHIER_PIN_DRV_2BIT,
-+			     23, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(24, "RGMII_TXD2", UNIPHIER_PIN_IECTRL_EXIST,
-+			     31, UNIPHIER_PIN_DRV_2BIT,
-+			     24, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(25, "RGMII_TXD3", UNIPHIER_PIN_IECTRL_EXIST,
-+			     32, UNIPHIER_PIN_DRV_2BIT,
-+			     25, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(26, "RGMII_TXCTL", UNIPHIER_PIN_IECTRL_EXIST,
-+			     33, UNIPHIER_PIN_DRV_2BIT,
-+			     26, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(27, "TXD0", UNIPHIER_PIN_IECTRL_EXIST,
-+			     4, UNIPHIER_PIN_DRV_3BIT,
-+			     27, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(28, "RXD0", UNIPHIER_PIN_IECTRL_EXIST,
-+			     5, UNIPHIER_PIN_DRV_3BIT,
-+			     28, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(29, "TXD1", UNIPHIER_PIN_IECTRL_EXIST,
-+			     6, UNIPHIER_PIN_DRV_3BIT,
-+			     29, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(30, "RXD1", UNIPHIER_PIN_IECTRL_EXIST,
-+			     7, UNIPHIER_PIN_DRV_3BIT,
-+			     30, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(31, "XRTS1", UNIPHIER_PIN_IECTRL_EXIST,
-+			     8, UNIPHIER_PIN_DRV_3BIT,
-+			     31, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(32, "XDTR1", UNIPHIER_PIN_IECTRL_EXIST,
-+			     9, UNIPHIER_PIN_DRV_3BIT,
-+			     32, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(33, "XCTS1", UNIPHIER_PIN_IECTRL_EXIST,
-+			     10, UNIPHIER_PIN_DRV_3BIT,
-+			     33, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(34, "XDSR1", UNIPHIER_PIN_IECTRL_EXIST,
-+			     11, UNIPHIER_PIN_DRV_3BIT,
-+			     34, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(35, "XDCD1", UNIPHIER_PIN_IECTRL_EXIST,
-+			     12, UNIPHIER_PIN_DRV_3BIT,
-+			     35, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(36, "TXD2", UNIPHIER_PIN_IECTRL_EXIST,
-+			     13, UNIPHIER_PIN_DRV_3BIT,
-+			     36, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(37, "RXD2", UNIPHIER_PIN_IECTRL_EXIST,
-+			     14, UNIPHIER_PIN_DRV_3BIT,
-+			     37, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(38, "XRTS2", UNIPHIER_PIN_IECTRL_EXIST,
-+			     15, UNIPHIER_PIN_DRV_3BIT,
-+			     38, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(39, "XCTS2", UNIPHIER_PIN_IECTRL_EXIST,
-+			     16, UNIPHIER_PIN_DRV_3BIT,
-+			     39, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(40, "TXD3", UNIPHIER_PIN_IECTRL_EXIST,
-+			     17, UNIPHIER_PIN_DRV_3BIT,
-+			     40, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(41, "RXD3", UNIPHIER_PIN_IECTRL_EXIST,
-+			     18, UNIPHIER_PIN_DRV_3BIT,
-+			     41, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(42, "SPISYNC0", UNIPHIER_PIN_IECTRL_EXIST,
-+			     19, UNIPHIER_PIN_DRV_3BIT,
-+			     42, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(43, "SPISCLK0", UNIPHIER_PIN_IECTRL_EXIST,
-+			     20, UNIPHIER_PIN_DRV_3BIT,
-+			     43, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(44, "SPITXD0", UNIPHIER_PIN_IECTRL_EXIST,
-+			     21, UNIPHIER_PIN_DRV_3BIT,
-+			     44, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(45, "SPIRXD0", UNIPHIER_PIN_IECTRL_EXIST,
-+			     22, UNIPHIER_PIN_DRV_3BIT,
-+			     45, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(46, "SPISYNC1", UNIPHIER_PIN_IECTRL_EXIST,
-+			     23, UNIPHIER_PIN_DRV_3BIT,
-+			     46, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(47, "SPISCLK1", UNIPHIER_PIN_IECTRL_EXIST,
-+			     24, UNIPHIER_PIN_DRV_3BIT,
-+			     47, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(48, "SPITXD1", UNIPHIER_PIN_IECTRL_EXIST,
-+			     25, UNIPHIER_PIN_DRV_3BIT,
-+			     48, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(49, "SPIRXD1", UNIPHIER_PIN_IECTRL_EXIST,
-+			     26, UNIPHIER_PIN_DRV_3BIT,
-+			     49, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(50, "SDA0", UNIPHIER_PIN_IECTRL_EXIST,
-+			     -1, UNIPHIER_PIN_DRV_FIXED4,
-+			     -1, UNIPHIER_PIN_PULL_NONE),
-+	UNIPHIER_PINCTRL_PIN(51, "SCL0", UNIPHIER_PIN_IECTRL_EXIST,
-+			     -1, UNIPHIER_PIN_DRV_FIXED4,
-+			     -1, UNIPHIER_PIN_PULL_NONE),
-+	UNIPHIER_PINCTRL_PIN(52, "SDA1", UNIPHIER_PIN_IECTRL_EXIST,
-+			     -1, UNIPHIER_PIN_DRV_FIXED4,
-+			     -1, UNIPHIER_PIN_PULL_NONE),
-+	UNIPHIER_PINCTRL_PIN(53, "SCL1", UNIPHIER_PIN_IECTRL_EXIST,
-+			     -1, UNIPHIER_PIN_DRV_FIXED4,
-+			     -1, UNIPHIER_PIN_PULL_NONE),
-+	UNIPHIER_PINCTRL_PIN(54, "SDA2", UNIPHIER_PIN_IECTRL_EXIST,
-+			     -1, UNIPHIER_PIN_DRV_FIXED4,
-+			     -1, UNIPHIER_PIN_PULL_NONE),
-+	UNIPHIER_PINCTRL_PIN(55, "SCL2", UNIPHIER_PIN_IECTRL_EXIST,
-+			     -1, UNIPHIER_PIN_DRV_FIXED4,
-+			     -1, UNIPHIER_PIN_PULL_NONE),
-+	UNIPHIER_PINCTRL_PIN(56, "SDA3", UNIPHIER_PIN_IECTRL_EXIST,
-+			     -1, UNIPHIER_PIN_DRV_FIXED4,
-+			     -1, UNIPHIER_PIN_PULL_NONE),
-+	UNIPHIER_PINCTRL_PIN(57, "SCL3", UNIPHIER_PIN_IECTRL_EXIST,
-+			     -1, UNIPHIER_PIN_DRV_FIXED4,
-+			     -1, UNIPHIER_PIN_PULL_NONE),
-+	UNIPHIER_PINCTRL_PIN(58, "XIRQ0", UNIPHIER_PIN_IECTRL_EXIST,
-+			     27, UNIPHIER_PIN_DRV_3BIT,
-+			     58, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(59, "XIRQ1", UNIPHIER_PIN_IECTRL_EXIST,
-+			     28, UNIPHIER_PIN_DRV_3BIT,
-+			     59, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(60, "XIRQ2", UNIPHIER_PIN_IECTRL_EXIST,
-+			     29, UNIPHIER_PIN_DRV_3BIT,
-+			     60, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(61, "XIRQ3", UNIPHIER_PIN_IECTRL_EXIST,
-+			     30, UNIPHIER_PIN_DRV_3BIT,
-+			     61, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(62, "XIRQ4", UNIPHIER_PIN_IECTRL_EXIST,
-+			     31, UNIPHIER_PIN_DRV_3BIT,
-+			     62, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(63, "XIRQ5", UNIPHIER_PIN_IECTRL_EXIST,
-+			     32, UNIPHIER_PIN_DRV_3BIT,
-+			     63, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(64, "PORT00", UNIPHIER_PIN_IECTRL_EXIST,
-+			     33, UNIPHIER_PIN_DRV_3BIT,
-+			     64, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(65, "PORT01", UNIPHIER_PIN_IECTRL_EXIST,
-+			     34, UNIPHIER_PIN_DRV_3BIT,
-+			     65, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(66, "PORT02", UNIPHIER_PIN_IECTRL_EXIST,
-+			     35, UNIPHIER_PIN_DRV_3BIT,
-+			     66, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(67, "PORT03", UNIPHIER_PIN_IECTRL_EXIST,
-+			     36, UNIPHIER_PIN_DRV_3BIT,
-+			     67, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(68, "PORT04", UNIPHIER_PIN_IECTRL_EXIST,
-+			     37, UNIPHIER_PIN_DRV_3BIT,
-+			     68, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(69, "PORT05", UNIPHIER_PIN_IECTRL_EXIST,
-+			     38, UNIPHIER_PIN_DRV_3BIT,
-+			     69, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(70, "PORT06", UNIPHIER_PIN_IECTRL_EXIST,
-+			     39, UNIPHIER_PIN_DRV_3BIT,
-+			     70, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(71, "PORT07", UNIPHIER_PIN_IECTRL_EXIST,
-+			     40, UNIPHIER_PIN_DRV_3BIT,
-+			     71, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(72, "PORT10", UNIPHIER_PIN_IECTRL_EXIST,
-+			     41, UNIPHIER_PIN_DRV_3BIT,
-+			     72, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(73, "PORT11", UNIPHIER_PIN_IECTRL_EXIST,
-+			     42, UNIPHIER_PIN_DRV_3BIT,
-+			     73, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(74, "PORT12", UNIPHIER_PIN_IECTRL_EXIST,
-+			     43, UNIPHIER_PIN_DRV_3BIT,
-+			     74, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(75, "PORT13", UNIPHIER_PIN_IECTRL_EXIST,
-+			     44, UNIPHIER_PIN_DRV_3BIT,
-+			     75, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(76, "PORT14", UNIPHIER_PIN_IECTRL_EXIST,
-+			     45, UNIPHIER_PIN_DRV_3BIT,
-+			     76, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(77, "PORT15", UNIPHIER_PIN_IECTRL_EXIST,
-+			     46, UNIPHIER_PIN_DRV_3BIT,
-+			     77, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(78, "USBAVBUS", UNIPHIER_PIN_IECTRL_EXIST,
-+			     47, UNIPHIER_PIN_DRV_3BIT,
-+			     78, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(79, "USBAOD", UNIPHIER_PIN_IECTRL_EXIST,
-+			     48, UNIPHIER_PIN_DRV_3BIT,
-+			     79, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(80, "USBBVBUS", UNIPHIER_PIN_IECTRL_EXIST,
-+			     49, UNIPHIER_PIN_DRV_3BIT,
-+			     80, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(81, "USBBOD", UNIPHIER_PIN_IECTRL_EXIST,
-+			     50, UNIPHIER_PIN_DRV_3BIT,
-+			     81, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(82, "HTDDCSDA0", UNIPHIER_PIN_IECTRL_EXIST,
-+			     -1, UNIPHIER_PIN_DRV_FIXED4,
-+			     -1, UNIPHIER_PIN_PULL_NONE),
-+	UNIPHIER_PINCTRL_PIN(83, "HTDDCSCL0", UNIPHIER_PIN_IECTRL_EXIST,
-+			     -1, UNIPHIER_PIN_DRV_FIXED4,
-+			     -1, UNIPHIER_PIN_PULL_NONE),
-+	UNIPHIER_PINCTRL_PIN(84, "HTHPDI0", UNIPHIER_PIN_IECTRL_EXIST,
-+			     -1, UNIPHIER_PIN_DRV_FIXED4,
-+			     -1, UNIPHIER_PIN_PULL_NONE),
-+	UNIPHIER_PINCTRL_PIN(85, "MMCCLK", UNIPHIER_PIN_IECTRL_EXIST,
-+			     1, UNIPHIER_PIN_DRV_2BIT,
-+			     85, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(86, "MMCCMD", UNIPHIER_PIN_IECTRL_EXIST,
-+			     2, UNIPHIER_PIN_DRV_2BIT,
-+			     86, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(87, "MMCDS", UNIPHIER_PIN_IECTRL_EXIST,
-+			     3, UNIPHIER_PIN_DRV_2BIT,
-+			     87, UNIPHIER_PIN_PULL_DOWN),
-+	UNIPHIER_PINCTRL_PIN(88, "MMCDAT0", UNIPHIER_PIN_IECTRL_EXIST,
-+			     4, UNIPHIER_PIN_DRV_2BIT,
-+			     88, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(89, "MMCDAT1", UNIPHIER_PIN_IECTRL_EXIST,
-+			     5, UNIPHIER_PIN_DRV_2BIT,
-+			     89, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(90, "MMCDAT2", UNIPHIER_PIN_IECTRL_EXIST,
-+			     6, UNIPHIER_PIN_DRV_2BIT,
-+			     90, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(91, "MMCDAT3", UNIPHIER_PIN_IECTRL_EXIST,
-+			     7, UNIPHIER_PIN_DRV_2BIT,
-+			     91, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(92, "MMCDAT4", UNIPHIER_PIN_IECTRL_EXIST,
-+			     8, UNIPHIER_PIN_DRV_2BIT,
-+			     92, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(93, "MMCDAT5", UNIPHIER_PIN_IECTRL_EXIST,
-+			     9, UNIPHIER_PIN_DRV_2BIT,
-+			     93, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(94, "MMCDAT6", UNIPHIER_PIN_IECTRL_EXIST,
-+			     10, UNIPHIER_PIN_DRV_2BIT,
-+			     94, UNIPHIER_PIN_PULL_UP),
-+	UNIPHIER_PINCTRL_PIN(95, "MMCDAT7", UNIPHIER_PIN_IECTRL_EXIST,
-+			     11, UNIPHIER_PIN_DRV_2BIT,
-+			     95, UNIPHIER_PIN_PULL_UP),
-+};
-+
-+static const unsigned int emmc_pins[] = {85, 86, 87, 88, 89, 90, 91};
-+static const int emmc_muxvals[] = {-1, -1, -1, -1, -1, -1, -1};
-+static const unsigned int emmc_dat8_pins[] = {92, 93, 94, 95};
-+static const int emmc_dat8_muxvals[] = {-1, -1, -1, -1};
-+static const unsigned int ether_rgmii_pins[] = {11, 12, 13, 14, 15, 16, 17, 18,
-+						19, 20, 21, 22, 23, 24, 25, 26};
-+static const int ether_rgmii_muxvals[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-+					  0, 0, 0};
-+static const unsigned int ether_rmii_pins[] = {11, 12, 13, 14, 15, 16, 17, 18,
-+					       20, 22, 23, 26};
-+static const int ether_rmii_muxvals[] = {0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1};
-+static const unsigned int i2c0_pins[] = {50, 51};
-+static const int i2c0_muxvals[] = {0, 0};
-+static const unsigned int i2c1_pins[] = {52, 53};
-+static const int i2c1_muxvals[] = {0, 0};
-+static const unsigned int i2c2_pins[] = {54, 55};
-+static const int i2c2_muxvals[] = {0, 0};
-+static const unsigned int i2c3_pins[] = {56, 57};
-+static const int i2c3_muxvals[] = {0, 0};
-+static const unsigned int i2c4_pins[] = {72, 73};
-+static const int i2c4_muxvals[] = {1, 1};
-+static const unsigned int i2c5_pins[] = {74, 75};
-+static const int i2c5_muxvals[] = {1, 1};
-+static const unsigned int i2c6_pins[] = {82, 83};
-+static const int i2c6_muxvals[] = {1, 1};
-+static const unsigned int sd_pins[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
-+static const int sd_muxvals[] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
-+static const unsigned spi0_pins[] = {42, 43, 44, 45};
-+static const int spi0_muxvals[] = {0, 0, 0, 0};
-+static const unsigned spi1_pins[] = {46, 47, 48, 49};
-+static const int spi1_muxvals[] = {0, 0, 0, 0};
-+static const unsigned int uart0_pins[] = {27, 28};
-+static const int uart0_muxvals[] = {0, 0};
-+static const unsigned int uart1_pins[] = {29, 30};
-+static const int uart1_muxvals[] = {0, 0};
-+static const unsigned int uart1_ctsrts_pins[] = {31, 33};
-+static const int uart1_ctsrts_muxvals[] = {0, 0};
-+static const unsigned int uart1_modem_pins[] = {32, 34, 35};
-+static const int uart1_modem_muxvals[] = {0, 0, 0};
-+static const unsigned int uart2_pins[] = {36, 37};
-+static const int uart2_muxvals[] = {0, 0};
-+static const unsigned int uart2_ctsrts_pins[] = {38, 39};
-+static const int uart2_ctsrts_muxvals[] = {0, 0};
-+static const unsigned int uart3_pins[] = {40, 41};
-+static const int uart3_muxvals[] = {0, 0};
-+static const unsigned int usb0_pins[] = {78, 79};
-+static const int usb0_muxvals[] = {0, 0};
-+static const unsigned int usb1_pins[] = {80, 81};
-+static const int usb1_muxvals[] = {0, 0};
-+static const unsigned int gpio_range0_pins[] = {
-+	64, 65, 66, 67, 68, 69, 70, 71,			/* PORT0x */
-+	72, 73, 74, 75, 76, 77, 0, 1,			/* PORT1x */
-+	2, 3, 4, 5, 6, 7, 8, 9,				/* PORT2x */
-+	10, 78, 79, 80, 81,				/* PORT30-34 */
-+};
-+static const unsigned int gpio_range1_pins[] = {
-+	11, 12, 13,					/* PORT61-63 */
-+};
-+static const unsigned int gpio_range2_pins[] = {
-+	15, 16, 17,					/* PORT65-67 */
-+	18, 19, 20, 21, 22, 23, 24, 25,			/* PORT7x */
-+	26, 27, 28, 29, 30, 31, 32, 33,			/* PORT8x */
-+	34, 35, 36, 37, 38, 39, 40, 41,			/* PORT9x */
-+	42, 43, 44, 45, 46, 47, 48, 49,			/* PORT10x */
-+};
-+static const unsigned int gpio_range3_pins[] = {
-+	58, 59, 60, 61, 62, 63,				/* PORT12x */
-+};
-+static const unsigned int gpio_range4_pins[] = {
-+	58, 59, 60, 61, 62, 63,				/* XIRQ0-5 */
-+};
-+
-+static const struct uniphier_pinctrl_group uniphier_nx1_groups[] = {
-+	UNIPHIER_PINCTRL_GROUP(emmc),
-+	UNIPHIER_PINCTRL_GROUP(emmc_dat8),
-+	UNIPHIER_PINCTRL_GROUP(ether_rgmii),
-+	UNIPHIER_PINCTRL_GROUP(ether_rmii),
-+	UNIPHIER_PINCTRL_GROUP(i2c0),
-+	UNIPHIER_PINCTRL_GROUP(i2c1),
-+	UNIPHIER_PINCTRL_GROUP(i2c2),
-+	UNIPHIER_PINCTRL_GROUP(i2c3),
-+	UNIPHIER_PINCTRL_GROUP(i2c4),
-+	UNIPHIER_PINCTRL_GROUP(i2c5),
-+	UNIPHIER_PINCTRL_GROUP(i2c6),
-+	UNIPHIER_PINCTRL_GROUP(sd),
-+	UNIPHIER_PINCTRL_GROUP(spi0),
-+	UNIPHIER_PINCTRL_GROUP(spi1),
-+	UNIPHIER_PINCTRL_GROUP(uart0),
-+	UNIPHIER_PINCTRL_GROUP(uart1),
-+	UNIPHIER_PINCTRL_GROUP(uart1_ctsrts),
-+	UNIPHIER_PINCTRL_GROUP(uart1_modem),
-+	UNIPHIER_PINCTRL_GROUP(uart2),
-+	UNIPHIER_PINCTRL_GROUP(uart2_ctsrts),
-+	UNIPHIER_PINCTRL_GROUP(uart3),
-+	UNIPHIER_PINCTRL_GROUP(usb0),
-+	UNIPHIER_PINCTRL_GROUP(usb1),
-+	UNIPHIER_PINCTRL_GROUP_GPIO(gpio_range0),
-+	UNIPHIER_PINCTRL_GROUP_GPIO(gpio_range1),
-+	UNIPHIER_PINCTRL_GROUP_GPIO(gpio_range2),
-+	UNIPHIER_PINCTRL_GROUP_GPIO(gpio_range3),
-+	UNIPHIER_PINCTRL_GROUP_GPIO(gpio_range4),
-+};
-+
-+static const char * const emmc_groups[] = {"emmc", "emmc_dat8"};
-+static const char * const ether_rgmii_groups[] = {"ether_rgmii"};
-+static const char * const ether_rmii_groups[] = {"ether_rmii"};
-+static const char * const i2c0_groups[] = {"i2c0"};
-+static const char * const i2c1_groups[] = {"i2c1"};
-+static const char * const i2c2_groups[] = {"i2c2"};
-+static const char * const i2c3_groups[] = {"i2c3"};
-+static const char * const i2c4_groups[] = {"i2c4"};
-+static const char * const i2c5_groups[] = {"i2c5"};
-+static const char * const i2c6_groups[] = {"i2c6"};
-+static const char * const sd_groups[] = {"sd"};
-+static const char * const spi0_groups[] = {"spi0"};
-+static const char * const spi1_groups[] = {"spi1"};
-+static const char * const uart0_groups[] = {"uart0"};
-+static const char * const uart1_groups[] = {"uart1", "uart1_ctsrts",
-+					    "uart1_modem"};
-+static const char * const uart2_groups[] = {"uart2", "uart2_ctsrts"};
-+static const char * const uart3_groups[] = {"uart3"};
-+static const char * const usb0_groups[] = {"usb0"};
-+static const char * const usb1_groups[] = {"usb1"};
-+static const char * const usb2_groups[] = {"usb2"};
-+static const char * const usb3_groups[] = {"usb3"};
-+
-+static const struct uniphier_pinmux_function uniphier_nx1_functions[] = {
-+	UNIPHIER_PINMUX_FUNCTION(emmc),
-+	UNIPHIER_PINMUX_FUNCTION(ether_rgmii),
-+	UNIPHIER_PINMUX_FUNCTION(ether_rmii),
-+	UNIPHIER_PINMUX_FUNCTION(i2c0),
-+	UNIPHIER_PINMUX_FUNCTION(i2c1),
-+	UNIPHIER_PINMUX_FUNCTION(i2c2),
-+	UNIPHIER_PINMUX_FUNCTION(i2c3),
-+	UNIPHIER_PINMUX_FUNCTION(i2c4),
-+	UNIPHIER_PINMUX_FUNCTION(i2c5),
-+	UNIPHIER_PINMUX_FUNCTION(i2c6),
-+	UNIPHIER_PINMUX_FUNCTION(sd),
-+	UNIPHIER_PINMUX_FUNCTION(spi0),
-+	UNIPHIER_PINMUX_FUNCTION(spi1),
-+	UNIPHIER_PINMUX_FUNCTION(uart0),
-+	UNIPHIER_PINMUX_FUNCTION(uart1),
-+	UNIPHIER_PINMUX_FUNCTION(uart2),
-+	UNIPHIER_PINMUX_FUNCTION(uart3),
-+	UNIPHIER_PINMUX_FUNCTION(usb0),
-+	UNIPHIER_PINMUX_FUNCTION(usb1),
-+};
-+
-+static int uniphier_nx1_get_gpio_muxval(unsigned int pin,
-+					unsigned int gpio_offset)
-+{
-+	if (gpio_offset >= 120)	/* XIRQx */
-+		return 14;
-+
-+	return 15;
-+}
-+
-+static const struct uniphier_pinctrl_socdata uniphier_nx1_pindata = {
-+	.pins = uniphier_nx1_pins,
-+	.npins = ARRAY_SIZE(uniphier_nx1_pins),
-+	.groups = uniphier_nx1_groups,
-+	.groups_count = ARRAY_SIZE(uniphier_nx1_groups),
-+	.functions = uniphier_nx1_functions,
-+	.functions_count = ARRAY_SIZE(uniphier_nx1_functions),
-+	.get_gpio_muxval = uniphier_nx1_get_gpio_muxval,
-+	.caps = UNIPHIER_PINCTRL_CAPS_PERPIN_IECTRL,
-+};
-+
-+static int uniphier_nx1_pinctrl_probe(struct platform_device *pdev)
-+{
-+	return uniphier_pinctrl_probe(pdev, &uniphier_nx1_pindata);
-+}
-+
-+static const struct of_device_id uniphier_nx1_pinctrl_match[] = {
-+	{ .compatible = "socionext,uniphier-nx1-pinctrl" },
-+	{ /* sentinel */ }
-+};
-+
-+static struct platform_driver uniphier_nx1_pinctrl_driver = {
-+	.probe = uniphier_nx1_pinctrl_probe,
-+	.driver = {
-+		.name = "uniphier-nx1-pinctrl",
-+		.of_match_table = uniphier_nx1_pinctrl_match,
-+		.pm = &uniphier_pinctrl_pm_ops,
-+	},
-+};
-+builtin_platform_driver(uniphier_nx1_pinctrl_driver);
--- 
-2.7.4
+> ---
+>  include/gpiod.h   |  42 +--
+>  lib/internal.h    |   6 +-
+>  lib/line-config.c | 748 ++++++++++++++++++++++++++--------------------
+>  3 files changed, 439 insertions(+), 357 deletions(-)
+> 
+> diff --git a/include/gpiod.h b/include/gpiod.h
+> index 44deafc..2a41fca 100644
+> --- a/include/gpiod.h
+> +++ b/include/gpiod.h
+> @@ -674,8 +674,8 @@ void gpiod_line_config_set_active_low_subset(struct gpiod_line_config *config,
+>   * @note If an offset is used for which no config was provided, the function
+>   *       will return the global default value.
+>   */
+> -bool gpiod_line_config_is_active_low(struct gpiod_line_config *config,
+> -				     unsigned int offset);
+> +bool gpiod_line_config_get_active_low(struct gpiod_line_config *config,
+> +				      unsigned int offset);
+>  
+>  /**
+>   * @brief Set all lines as active-high.
+> @@ -811,15 +811,6 @@ void gpiod_line_config_set_output_values(struct gpiod_line_config *config,
+>  					 const unsigned int *offsets,
+>  					 const int *values);
+>  
+> -/**
+> - * @brief Get the number of line offsets for which this config object stores
+> - *        output values.
+> - * @param config Line config object.
+> - * @return Number of output values currently configured for this object.
+> - */
+> -unsigned int
+> -gpiod_line_config_num_output_values(struct gpiod_line_config *config);
+> -
+>  /**
+>   * @brief Get the output value configured for a given line.
+>   * @param config Line config object.
+> @@ -829,35 +820,6 @@ gpiod_line_config_num_output_values(struct gpiod_line_config *config);
+>  int gpiod_line_config_get_output_value(struct gpiod_line_config *config,
+>  				       unsigned int offset);
+>  
+> -/**
+> - * @brief Get the output value mapping (offset -> value) at given index.
+> - * @param config Line config object.
+> - * @param index Position of the mapping in the internal array.
+> - * @param offset Buffer for storing the offset of the line.
+> - * @param value Buffer for storing the value corresponding to the offset.
+> - * @return Returns 0 on success, -1 if the index is out of range.
+> - *
+> - * This function together with ::gpiod_line_config_num_output_values allows to
+> - * iterate over all output value mappings currently held by this object.
+> - */
+> -int gpiod_line_config_get_output_value_index(struct gpiod_line_config *config,
+> -					     unsigned int index,
+> -					     unsigned int *offset, int *value);
+> -
+> -/**
+> - * @brief Get all output value mappings stored in this config object.
+> - * @param config Line config object.
+> - * @param offsets Buffer in which offsets will be stored.
+> - * @param values Buffer in which values will be stored.
+> - * @note Both the offsets and values buffers must be able to hold at least the
+> - *       number of elements returned by ::gpiod_line_config_num_output_values.
+> - *
+> - * Each offset in the offsets array corresponds to the value in the values
+> - * array at the same index.
+> - */
+> -void gpiod_line_config_get_output_values(struct gpiod_line_config *config,
+> -					 unsigned int *offsets, int *values);
+> -
+>  /**
+>   * @}
+>   *
+> diff --git a/lib/internal.h b/lib/internal.h
+> index a5e47e3..32f36b5 100644
+> --- a/lib/internal.h
+> +++ b/lib/internal.h
+> @@ -12,7 +12,11 @@
+>  
+>  /* For internal library use only. */
+>  
+> -#define GPIOD_API __attribute__((visibility("default")))
+> +#define GPIOD_API	__attribute__((visibility("default")))
+> +#define GPIOD_PACKED	__attribute__((packed))
+> +#define GPIOD_UNUSED	__attribute__((unused))
+> +
+> +#define GPIOD_BIT(nr)	(1UL << (nr))
+>  
+>  struct gpiod_line_info *
+>  gpiod_line_info_from_kernel(struct gpio_v2_line_info *infobuf);
+> diff --git a/lib/line-config.c b/lib/line-config.c
+> index 5f356c3..b99aeef 100644
+> --- a/lib/line-config.c
+> +++ b/lib/line-config.c
+> @@ -11,40 +11,40 @@
+>  #include "internal.h"
+>  
+>  struct base_config {
+> -	int direction;
+> -	int edge;
+> -	int drive;
+> -	int bias;
+> -	bool active_low;
+> -	int clock;
+> -	unsigned long debounce_period;
+> -};
+> -
+> -struct secondary_config {
+> -	struct base_config config;
+> -	/* Offsets are sorted and duplicates are removed. */
+> -	unsigned int offsets[GPIO_V2_LINES_MAX];
+> -	unsigned int num_offsets;
+> -};
+> -
+> -struct output_value {
+> +	unsigned int direction : 2;
+> +	unsigned int edge : 3;
+> +	unsigned int drive : 2;
+> +	unsigned int bias : 3;
+> +	bool active_low : 1;
+> +	unsigned int clock : 2;
+> +	unsigned long debounce_period_us;
+> +} GPIOD_PACKED;
+> +
+> +#define OVERRIDE_FLAG_DIRECTION		GPIOD_BIT(0)
+> +#define OVERRIDE_FLAG_EDGE		GPIOD_BIT(1)
+> +#define OVERRIDE_FLAG_DRIVE		GPIOD_BIT(2)
+> +#define OVERRIDE_FLAG_BIAS		GPIOD_BIT(3)
+> +#define OVERRIDE_FLAG_ACTIVE_LOW	GPIOD_BIT(4)
+> +#define OVERRIDE_FLAG_CLOCK		GPIOD_BIT(5)
+> +#define OVERRIDE_FLAG_DEBOUNCE_PERIOD	GPIOD_BIT(6)
+> +
+> +/*
+> + * Config overriding the defaults for a single line offset. Only flagged
+> + * settings are actually overriden for a line.
+> + */
+> +struct override_config {
+> +	struct base_config base;
+>  	unsigned int offset;
+> -	int value;
+> -};
+> +	bool value_set : 1;
+> +	unsigned int value : 1;
+> +	unsigned int override_flags : 7;
+> +} GPIOD_PACKED;
+>  
+>  struct gpiod_line_config {
+>  	bool too_complex;
+> -	struct base_config primary;
+> -	struct secondary_config secondary[GPIO_V2_LINE_NUM_ATTRS_MAX];
+> -	unsigned int num_secondary;
+> -	struct output_value output_values[GPIO_V2_LINES_MAX];
+> -	unsigned int num_output_values;
+> -	/*
+> -	 * Used to temporarily store sorted offsets when looking for existing
+> -	 * configuration
+> -	 */
+> -	unsigned int sorted_offsets[GPIO_V2_LINES_MAX];
+> -	unsigned int num_sorted_offsets;
+> +	struct base_config defaults;
+> +	struct override_config overrides[GPIO_V2_LINES_MAX];
+> +	unsigned int num_overrides;
+>  };
+>  
+>  static void init_base_config(struct base_config *config)
+> @@ -55,7 +55,7 @@ static void init_base_config(struct base_config *config)
+>  	config->drive = GPIOD_LINE_DRIVE_PUSH_PULL;
+>  	config->active_low = false;
+>  	config->clock = GPIOD_LINE_EVENT_CLOCK_MONOTONIC;
+> -	config->debounce_period = 0;
+> +	config->debounce_period_us = 0;
+>  }
+>  
+>  GPIOD_API struct gpiod_line_config *gpiod_line_config_new(void)
+
+You don't have any change to gpiod_line_config_free() here, but
+isn't free() guaranteed to be NULL aware, so you can drop the NULL
+check?
+If not, couldn't it be flipped to:
+
+	if (config)
+		free(config);
+
+Similarly gpiod_line_config_new() could have
+
+	if (config)
+		gpiod_line_config_reset(config);
+
+and that "if" could be dropped if gpiod_line_config_reset() were NULL
+aware.
+
+But the general policy is that gpiod functions are not NULL aware?
+
+> @@ -84,112 +84,73 @@ GPIOD_API void gpiod_line_config_reset(struct gpiod_line_config *config)
+>  	int i;
+>  
+>  	memset(config, 0, sizeof(*config));
+> -	init_base_config(&config->primary);
+> +	init_base_config(&config->defaults);
+>  	for (i = 0; i < GPIO_V2_LINE_NUM_ATTRS_MAX; i++)
+> -		init_base_config(&config->secondary[i].config);
+> -}
+> -
+> -static int offset_compare(const void *a_ptr, const void *b_ptr)
+> -{
+> -	unsigned int a = *((unsigned int *)a_ptr);
+> -	unsigned int b = *((unsigned int *)b_ptr);
+> -
+> -	return a - b;
+> +		init_base_config(&config->overrides[i].base);
+>  }
+>  
+> -static void sanitize_offsets(struct gpiod_line_config *config,
+> -			     unsigned int num_offsets,
+> -			     const unsigned int *offsets)
+> +static struct override_config *
+> +get_override_by_offset(struct gpiod_line_config *config, unsigned int offset)
+>  {
+> -	unsigned int i, count, *sorted = config->sorted_offsets;
+> -
+> -	if (num_offsets == 0 || num_offsets == 1)
+> -		return;
+> -
+> -	count = num_offsets > GPIO_V2_LINES_MAX ? GPIO_V2_LINES_MAX
+> -						: num_offsets;
+> -	config->num_sorted_offsets = num_offsets;
+> +	struct override_config *override;
+> +	unsigned int i;
+>  
+> -	memcpy(config->sorted_offsets, offsets, count);
+> -	qsort(sorted, count, sizeof(*sorted), offset_compare);
+> +	for (i = 0; i < config->num_overrides; i++) {
+> +		override = &config->overrides[i];
+>  
+> -	for (i = 0; i < (count - 1); i++) {
+> -		if (sorted[i] == sorted[i + 1]) {
+> -			if (i < (count - 2))
+> -				memmove(sorted + i + 1, sorted + i + 2,
+> -					sizeof(*sorted) * num_offsets - i);
+> -			config->num_sorted_offsets--;
+> -		}
+> +		if (override->offset == offset)
+> +			return override;
+>  	}
+> +
+> +	return NULL;
+>  }
+>  
+> -static struct secondary_config *
+> -find_matching_secondary_config(struct gpiod_line_config *config)
+> +static struct override_config *
+> +get_new_override(struct gpiod_line_config *config, unsigned int offset)
+>  {
+> -	unsigned int i, *offsets, num_offsets;
+> -	struct secondary_config *secondary;
+> +	struct override_config *override;
+>  
+> -	offsets = config->sorted_offsets;
+> -	num_offsets = config->num_sorted_offsets;
+> -
+> -	for (i = 0; i < config->num_secondary; i++) {
+> -		secondary = &config->secondary[i];
+> -
+> -		if (num_offsets != secondary->num_offsets)
+> -			continue;
+> -
+> -		if (memcmp(secondary->offsets, offsets,
+> -			   sizeof(*offsets) * num_offsets) == 0)
+> -			return secondary;
+> +	if (config->num_overrides == GPIO_V2_LINES_MAX) {
+> +		config->too_complex = true;
+> +		return NULL;
+>  	}
+>  
+> -	return NULL;
+> +	override = &config->overrides[config->num_overrides++];
+> +	override->offset = offset;
+> +
+> +	return override;
+>  }
+>  
+> -static struct secondary_config *
+> -get_secondary_config(struct gpiod_line_config *config,
+> -		     unsigned int num_offsets, const unsigned int *offsets)
+> +static struct override_config *
+> +get_override_config_for_writing(struct gpiod_line_config *config,
+> +				unsigned int offset)
+>  {
+> -	struct secondary_config *secondary;
+> +	struct override_config *override;
+>  
+>  	if (config->too_complex)
+>  		return NULL;
+>  
+> -	sanitize_offsets(config, num_offsets, offsets);
+> -	secondary = find_matching_secondary_config(config);
+> -	if (!secondary) {
+> -		if (config->num_secondary == GPIO_V2_LINE_NUM_ATTRS_MAX) {
+> -			config->too_complex = true;
+> +	override = get_override_by_offset(config, offset);
+> +	if (!override) {
+> +		override = get_new_override(config, offset);
+> +		if (!override)
+>  			return NULL;
+> -		}
+> -
+> -		secondary = &config->secondary[config->num_secondary++];
+>  	}
+>  
+> -	return secondary;
+> +	return override;
+>  }
+>  
+>  static struct base_config *
+> -get_base_config_for_offset(struct gpiod_line_config *config,
+> -			   unsigned int offset)
+> +get_base_config_for_reading(struct gpiod_line_config *config,
+> +			   unsigned int offset, unsigned int flag)
+>  {
+> -	struct secondary_config *secondary;
+> -	unsigned int i, j;
+> -
+> -	/*
+> -	 * We're looking backwards as the settings get overwritten if set
+> -	 * multiple times.
+> -	 */
+> -	for (i = config->num_secondary; i > 0; i--) {
+> -		secondary = &config->secondary[i - 1];
+> +	struct override_config *override;
+>  
+> -		for (j = 0; j < secondary->num_offsets; j++) {
+> -			if (secondary->offsets[j] == offset)
+> -				return &secondary->config;
+> -		}
+> -	}
+> +	override = get_override_by_offset(config, offset);
+> +	if (!override || !(override->override_flags & flag))
+> +		return &config->defaults;
+>  
+> -	return NULL;
+> +	return &override->base;
+>  }
+>  
+
+Maybe flip the logic around to make it easier to read:
+
+	if (override && (override->override_flags & flag))
+		return &override->base;
+
+    return &config->defaults;
+
+Similarly in gpiod_line_config_get_output_value().
+
+>  static void set_direction(struct base_config *config, int direction)
+
+In set_direction() you have a specific case (GPIOD_LINE_DIRECTION_AS_IS)
+that matches the default behaviour.  I generally drop that case and let
+the default handle it, but that is just personal preference.
+
+Similarly in other set_XXX switches.
+
+> @@ -209,7 +170,7 @@ static void set_direction(struct base_config *config, int direction)
+>  GPIOD_API void
+>  gpiod_line_config_set_direction(struct gpiod_line_config *config, int direction)
+>  {
+> -	set_direction(&config->primary, direction);
+> +	set_direction(&config->defaults, direction);
+>  }
+>  
+>  GPIOD_API void
+> @@ -224,13 +185,19 @@ gpiod_line_config_set_direction_subset(struct gpiod_line_config *config,
+>  				       int direction, unsigned int num_offsets,
+>  				       const unsigned int *offsets)
+>  {
+> -	struct secondary_config *secondary;
+> +	struct override_config *override;
+> +	unsigned int i, offset;
+>  
+> -	secondary = get_secondary_config(config, num_offsets, offsets);
+> -	if (!secondary)
+> -		return;
+> +	for (i = 0; i < num_offsets; i++) {
+> +		offset = offsets[i];
+>  
+
+Worth the effort given it is only used once?
+
+> -	set_direction(&secondary->config, direction);
+> +		override = get_override_config_for_writing(config, offset);
+> +		if (!override)
+> +			return;
+> +
+> +		set_direction(&override->base, direction);
+> +		override->override_flags |= OVERRIDE_FLAG_DIRECTION;
+> +	}
+>  }
+>  
+>  GPIOD_API int gpiod_line_config_get_direction(struct gpiod_line_config *config,
+> @@ -238,9 +205,8 @@ GPIOD_API int gpiod_line_config_get_direction(struct gpiod_line_config *config,
+>  {
+>  	struct base_config *base;
+>  
+> -	base = get_base_config_for_offset(config, offset);
+> -	if (!base)
+> -		return config->primary.direction;
+> +	base = get_base_config_for_reading(config, offset,
+> +					   OVERRIDE_FLAG_DIRECTION);
+>  
+>  	return base->direction;
+>  }
+> @@ -263,7 +229,7 @@ static void set_edge_detection(struct base_config *config, int edge)
+>  GPIOD_API void
+>  gpiod_line_config_set_edge_detection(struct gpiod_line_config *config, int edge)
+>  {
+> -	set_edge_detection(&config->primary, edge);
+> +	set_edge_detection(&config->defaults, edge);
+>  }
+>  
+>  GPIOD_API void
+> @@ -278,13 +244,19 @@ gpiod_line_config_set_edge_detection_subset(struct gpiod_line_config *config,
+>  					    int edge, unsigned int num_offsets,
+>  					    const unsigned int *offsets)
+>  {
+> -	struct secondary_config *secondary;
+> +	struct override_config *override;
+> +	unsigned int i, offset;
+>  
+> -	secondary = get_secondary_config(config, num_offsets, offsets);
+> -	if (!secondary)
+> -		return;
+> +	for (i = 0; i < num_offsets; i++) {
+> +		offset = offsets[i];
+>  
+> -	set_edge_detection(&secondary->config, edge);
+> +		override = get_override_config_for_writing(config, offset);
+> +		if (!override)
+> +			return;
+> +
+> +		set_edge_detection(&override->base, edge);
+> +		override->override_flags |= OVERRIDE_FLAG_EDGE;
+> +	}
+>  }
+>  
+>  GPIOD_API int
+> @@ -293,9 +265,7 @@ gpiod_line_config_get_edge_detection(struct gpiod_line_config *config,
+>  {
+>  	struct base_config *base;
+>  
+> -	base = get_base_config_for_offset(config, offset);
+> -	if (!base)
+> -		return config->primary.edge;
+> +	base = get_base_config_for_reading(config, offset, OVERRIDE_FLAG_EDGE);
+>  
+>  	return base->edge;
+>  }
+> @@ -318,7 +288,7 @@ static void set_bias(struct base_config *config, int bias)
+>  GPIOD_API void
+>  gpiod_line_config_set_bias(struct gpiod_line_config *config, int bias)
+>  {
+> -	set_bias(&config->primary, bias);
+> +	set_bias(&config->defaults, bias);
+>  }
+>  
+>  GPIOD_API void
+> @@ -333,13 +303,19 @@ gpiod_line_config_set_bias_subset(struct gpiod_line_config *config,
+>  				  int bias, unsigned int num_offsets,
+>  				  const unsigned int *offsets)
+>  {
+> -	struct secondary_config *secondary;
+> +	struct override_config *override;
+> +	unsigned int i, offset;
+>  
+> -	secondary = get_secondary_config(config, num_offsets, offsets);
+> -	if (!secondary)
+> -		return;
+> +	for (i = 0; i < num_offsets; i++) {
+> +		offset = offsets[i];
+>  
+> -	set_bias(&secondary->config, bias);
+> +		override = get_override_config_for_writing(config, offset);
+> +		if (!override)
+> +			return;
+> +
+> +		set_bias(&override->base, bias);
+> +		override->override_flags |= OVERRIDE_FLAG_BIAS;
+> +	}
+>  }
+>  
+>  GPIOD_API int gpiod_line_config_get_bias(struct gpiod_line_config *config,
+> @@ -347,9 +323,7 @@ GPIOD_API int gpiod_line_config_get_bias(struct gpiod_line_config *config,
+>  {
+>  	struct base_config *base;
+>  
+> -	base = get_base_config_for_offset(config, offset);
+> -	if (!base)
+> -		return config->primary.bias;
+> +	base = get_base_config_for_reading(config, offset, OVERRIDE_FLAG_BIAS);
+>  
+>  	return base->bias;
+>  }
+> @@ -371,7 +345,7 @@ static void set_drive(struct base_config *config, int drive)
+>  GPIOD_API void
+>  gpiod_line_config_set_drive(struct gpiod_line_config *config, int drive)
+>  {
+> -	set_drive(&config->primary, drive);
+> +	set_drive(&config->defaults, drive);
+>  }
+>  
+>  GPIOD_API void
+> @@ -386,13 +360,19 @@ gpiod_line_config_set_drive_subset(struct gpiod_line_config *config,
+>  				   int drive, unsigned int num_offsets,
+>  				   const unsigned int *offsets)
+>  {
+> -	struct secondary_config *secondary;
+> +	struct override_config *override;
+> +	unsigned int i, offset;
+>  
+> -	secondary = get_secondary_config(config, num_offsets, offsets);
+> -	if (!secondary)
+> -		return;
+> +	for (i = 0; i < num_offsets; i++) {
+> +		offset = offsets[i];
+>  
+> -	set_drive(&secondary->config, drive);
+> +		override = get_override_config_for_writing(config, offset);
+> +		if (!override)
+> +			return;
+> +
+> +		set_drive(&override->base, drive);
+> +		override->override_flags |= OVERRIDE_FLAG_DRIVE;
+> +	}
+>  }
+>  
+>  GPIOD_API int gpiod_line_config_get_drive(struct gpiod_line_config *config,
+> @@ -400,9 +380,7 @@ GPIOD_API int gpiod_line_config_get_drive(struct gpiod_line_config *config,
+>  {
+>  	struct base_config *base;
+>  
+> -	base = get_base_config_for_offset(config, offset);
+> -	if (!base)
+> -		return config->primary.drive;
+> +	base = get_base_config_for_reading(config, offset, OVERRIDE_FLAG_DRIVE);
+>  
+>  	return base->drive;
+>  }
+> @@ -410,7 +388,7 @@ GPIOD_API int gpiod_line_config_get_drive(struct gpiod_line_config *config,
+>  GPIOD_API void
+>  gpiod_line_config_set_active_low(struct gpiod_line_config *config)
+>  {
+> -	config->primary.active_low = true;
+> +	config->defaults.active_low = true;
+>  }
+>  
+>  GPIOD_API void
+> @@ -425,23 +403,29 @@ gpiod_line_config_set_active_low_subset(struct gpiod_line_config *config,
+>  					unsigned int num_offsets,
+>  					const unsigned int *offsets)
+>  {
+> -	struct secondary_config *secondary;
+> +	struct override_config *override;
+> +	unsigned int i, offset;
+>  
+> -	secondary = get_secondary_config(config, num_offsets, offsets);
+> -	if (!secondary)
+> -		return;
+> +	for (i = 0; i < num_offsets; i++) {
+> +		offset = offsets[i];
+> +
+> +		override = get_override_config_for_writing(config, offset);
+> +		if (!override)
+> +			return;
+>  
+> -	secondary->config.active_low = true;
+> +		override->base.active_low = true;
+> +		override->override_flags |= OVERRIDE_FLAG_ACTIVE_LOW;
+> +	}
+>  }
+>  
+> -GPIOD_API bool gpiod_line_config_is_active_low(struct gpiod_line_config *config,
+> -					       unsigned int offset)
+> +GPIOD_API bool
+> +gpiod_line_config_get_active_low(struct gpiod_line_config *config,
+> +				 unsigned int offset)
+>  {
+>  	struct base_config *base;
+>  
+> -	base = get_base_config_for_offset(config, offset);
+> -	if (!base)
+> -		return config->primary.active_low;
+> +	base = get_base_config_for_reading(config, offset,
+> +					   OVERRIDE_FLAG_ACTIVE_LOW);
+>  
+>  	return base->active_low;
+>  }
+> @@ -449,7 +433,7 @@ GPIOD_API bool gpiod_line_config_is_active_low(struct gpiod_line_config *config,
+>  GPIOD_API void
+>  gpiod_line_config_set_active_high(struct gpiod_line_config *config)
+>  {
+> -	config->primary.active_low = false;
+> +	config->defaults.active_low = false;
+>  }
+>  
+>  GPIOD_API void
+> @@ -464,20 +448,26 @@ gpiod_line_config_set_active_high_subset(struct gpiod_line_config *config,
+>  					 unsigned int num_offsets,
+>  					 const unsigned int *offsets)
+>  {
+> -	struct secondary_config *secondary;
+> +	struct override_config *override;
+> +	unsigned int i, offset;
+>  
+> -	secondary = get_secondary_config(config, num_offsets, offsets);
+> -	if (!secondary)
+> -		return;
+> +	for (i = 0; i < num_offsets; i++) {
+> +		offset = offsets[i];
+> +
+> +		override = get_override_config_for_writing(config, offset);
+> +		if (!override)
+> +			return;
+>  
+> -	secondary->config.active_low = false;
+> +		override->base.active_low = false;
+> +		override->override_flags |= OVERRIDE_FLAG_ACTIVE_LOW;
+> +	}
+>  }
+>  
+
+gpiod_line_config_set_active_low_subset() and
+gpiod_line_config_set_active_high_subset() could call a common helper
+that accepts the active_low as a parameter?
+
+>  GPIOD_API void
+>  gpiod_line_config_set_debounce_period_us(struct gpiod_line_config *config,
+>  				      unsigned long period)
+>  {
+> -	config->primary.debounce_period = period;
+> +	config->defaults.debounce_period_us = period;
+>  }
+>  
+>  GPIOD_API void
+> @@ -497,13 +487,19 @@ gpiod_line_config_set_debounce_period_us_subset(
+>  					unsigned int num_offsets,
+>  					const unsigned int *offsets)
+>  {
+> -	struct secondary_config *secondary;
+> +	struct override_config *override;
+> +	unsigned int i, offset;
+>  
+> -	secondary = get_secondary_config(config, num_offsets, offsets);
+> -	if (!secondary)
+> -		return;
+> +	for (i = 0; i < num_offsets; i++) {
+> +		offset = offsets[i];
+> +
+> +		override = get_override_config_for_writing(config, offset);
+> +		if (!override)
+> +			return;
+>  
+> -	secondary->config.debounce_period = period;
+> +		override->base.debounce_period_us = period;
+> +		override->override_flags |= OVERRIDE_FLAG_DEBOUNCE_PERIOD;
+> +	}
+>  }
+>  
+>  GPIOD_API unsigned long
+> @@ -512,11 +508,10 @@ gpiod_line_config_get_debounce_us_period(struct gpiod_line_config *config,
+>  {
+>  	struct base_config *base;
+>  
+> -	base = get_base_config_for_offset(config, offset);
+> -	if (!base)
+> -		return config->primary.debounce_period;
+> +	base = get_base_config_for_reading(config, offset,
+> +					   OVERRIDE_FLAG_DEBOUNCE_PERIOD);
+>  
+> -	return base->debounce_period;
+> +	return base->debounce_period_us;
+>  }
+>  
+>  static void set_event_clock(struct base_config *config, int clock)
+> @@ -535,7 +530,7 @@ static void set_event_clock(struct base_config *config, int clock)
+>  GPIOD_API void
+>  gpiod_line_config_set_event_clock(struct gpiod_line_config *config, int clock)
+>  {
+> -	set_event_clock(&config->primary, clock);
+> +	set_event_clock(&config->defaults, clock);
+>  }
+>  
+>  GPIOD_API void
+> @@ -550,43 +545,42 @@ gpiod_line_config_set_event_clock_subset(struct gpiod_line_config *config,
+>  					 int clock, unsigned int num_offsets,
+>  					 const unsigned int *offsets)
+>  {
+> -	struct secondary_config *secondary;
+> +	struct override_config *override;
+> +	unsigned int i, offset;
+>  
+> -	secondary = get_secondary_config(config, num_offsets, offsets);
+> -	if (!secondary)
+> -		return;
+> +	for (i = 0; i < num_offsets; i++) {
+> +		offset = offsets[i];
+>  
+> -	set_event_clock(&secondary->config, clock);
+> -}
+> +		override = get_override_config_for_writing(config, offset);
+> +		if (!override)
+> +			return;
+>  
+> -GPIOD_API void
+> -gpiod_line_config_set_output_value(struct gpiod_line_config *config,
+> -				   unsigned int offset, int value)
+> -{
+> -	gpiod_line_config_set_output_values(config, 1, &offset, &value);
+> +		set_event_clock(&override->base, clock);
+> +	}
+>  }
+>  
+> -static int output_value_find_offset(struct gpiod_line_config *config,
+> -				    unsigned int offset)
+> +GPIOD_API int
+> +gpiod_line_config_get_event_clock(struct gpiod_line_config *config,
+> +				  unsigned int offset)
+>  {
+> -	unsigned int i;
+> +	struct base_config *base;
+>  
+> -	for (i = 0; i < config->num_output_values; i++) {
+> -		if (config->output_values[i].offset == offset)
+> -			return i;
+> -	}
+> +	base = get_base_config_for_reading(config, offset, OVERRIDE_FLAG_CLOCK);
+>  
+> -	return -1;
+> +	return base->clock;
+>  }
+>  
+> -static void set_output_value(struct gpiod_line_config *config, unsigned int idx,
+> -			     unsigned int offset, int value, bool inc)
+> +static void set_output_value(struct override_config *override, int value)
+>  {
+> -	config->output_values[idx].offset = offset;
+> -	config->output_values[idx].value = value;
+> +	override->value = !!value;
+> +	override->value_set = true;
+> +}
+>  
+> -	if (inc)
+> -		config->num_output_values++;
+> +GPIOD_API void
+> +gpiod_line_config_set_output_value(struct gpiod_line_config *config,
+> +				   unsigned int offset, int value)
+> +{
+> +	gpiod_line_config_set_output_values(config, 1, &offset, &value);
+>  }
+>  
+>  GPIOD_API void
+> @@ -595,82 +589,40 @@ gpiod_line_config_set_output_values(struct gpiod_line_config *config,
+>  				    const unsigned int *offsets,
+>  				    const int *values)
+>  {
+> -	unsigned int i;
+> -	int pos;
+> -
+> -	if (config->too_complex)
+> -		return;
+> +	struct override_config *override;
+> +	unsigned int i, offset, val;
+>  
+>  	for (i = 0; i < num_values; i++) {
+> -		pos = output_value_find_offset(config, offsets[i]);
+> -		if (pos < 0) {
+> -			if (config->num_output_values == GPIO_V2_LINES_MAX) {
+> -				/* Too many output values specified. */
+> -				config->too_complex = true;
+> -				return;
+> -			}
+> +		offset = offsets[i];
+> +		val = values[i];
+>  
+> -			/* Add new output value. */
+> -			set_output_value(config, config->num_output_values,
+> -					 offsets[i], values[i], true);
+> -		} else {
+> -			/* Overwrite old value for this offset. */
+> -			set_output_value(config, pos,
+> -					 offsets[i], values[i], false);
+> +		override = get_override_by_offset(config, offset);
+> +		if (!override) {
+> +			override = get_new_override(config, offset);
+> +			if (!override)
+> +				return;
+>  		}
+> -	}
+> -}
+>  
+> -GPIOD_API unsigned int
+> -gpiod_line_config_num_output_values(struct gpiod_line_config *config)
+> -{
+> -	return config->num_output_values;
+> +		set_output_value(override, val);
+> +	}
+>  }
+>  
+>  GPIOD_API int
+>  gpiod_line_config_get_output_value(struct gpiod_line_config *config,
+>  				   unsigned int offset)
+>  {
+> -	unsigned int i;
+> -
+> -	for (i = 0; i < config->num_output_values; i++) {
+> -		if (config->output_values[i].offset == offset)
+> -			return config->output_values[i].value;
+> -	}
+> +	struct override_config *override;
+>  
+> -	errno = ENXIO;
+> -	return -1;
+> -}
+> -
+> -GPIOD_API int
+> -gpiod_line_config_get_output_value_index(struct gpiod_line_config *config,
+> -					 unsigned int index,
+> -					 unsigned int *offset, int *value)
+> -{
+> -	if (index >= config->num_output_values) {
+> -		errno = EINVAL;
+> +	override = get_override_by_offset(config, offset);
+> +	if (!override || !override->value_set) {
+> +		errno = ENXIO;
+>  		return -1;
+>  	}
+>  
+> -	*offset = config->output_values[index].offset;
+> -	*value = config->output_values[index].value;
+> -
+> -	return 0;
+> -}
+> -
+> -GPIOD_API void
+> -gpiod_line_config_get_output_values(struct gpiod_line_config *config,
+> -				    unsigned int *offsets, int *values)
+> -{
+> -	unsigned int i;
+> -
+> -	for (i = 0; i < config->num_output_values; i++) {
+> -		offsets[i] = config->output_values[i].offset;
+> -		values[i] = config->output_values[i].value;
+> -	}
+> +	return override->value;
+>  }
+>  
+> -static uint64_t gpiod_make_kernel_flags(struct base_config *config)
+> +static uint64_t make_kernel_flags(const struct base_config *config)
+>  {
+>  	uint64_t flags = 0;
+>  
+> @@ -753,48 +705,205 @@ static int set_kernel_output_values(uint64_t *mask, uint64_t *vals,
+>  				    unsigned int num_lines,
+>  				    const unsigned int *offsets)
+>  {
+> -	struct output_value *outval;
+> +	struct override_config *override;
+>  	unsigned int i;
+>  	int idx;
+>  
+>  	gpiod_line_mask_zero(mask);
+>  	gpiod_line_mask_zero(vals);
+>  
+> -	for (i = 0; i < config->num_output_values; i++) {
+> -		outval = &config->output_values[i];
+> +	for (i = 0; i < config->num_overrides; i++) {
+> +		override = &config->overrides[i];
+> +
+> +		if (override->value_set) {
+> +			idx = find_bitmap_index(override->offset,
+> +						num_lines, offsets);
+> +			if (idx < 0) {
+> +				errno = EINVAL;
+> +				return -1;
+> +			}
+> +
+> +			gpiod_line_mask_set_bit(mask, idx);
+> +			gpiod_line_mask_assign_bit(vals, idx,
+> +						   !!override->value);
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static bool base_config_flags_are_equal(struct base_config *base,
+> +					struct override_config *override)
+> +{
+> +	if (((override->override_flags & OVERRIDE_FLAG_DIRECTION) &&
+> +	     base->direction != override->base.direction) ||
+> +	    ((override->override_flags & OVERRIDE_FLAG_EDGE) &&
+> +	     base->edge != override->base.edge) ||
+> +	    ((override->override_flags & OVERRIDE_FLAG_DRIVE) &&
+> +	     base->drive != override->base.drive) ||
+> +	    ((override->override_flags & OVERRIDE_FLAG_BIAS) &&
+> +	     base->bias != override->base.bias) ||
+> +	    ((override->override_flags & OVERRIDE_FLAG_ACTIVE_LOW) &&
+> +	     base->active_low != override->base.active_low) ||
+> +	    ((override->override_flags & OVERRIDE_FLAG_CLOCK) &&
+> +	     base->clock != override->base.clock))
+> +		return false;
+> +
+> +	return true;
+> +}
+> +
+> +static bool override_config_flags_are_equal(struct override_config *a,
+> +					    struct override_config *b)
+> +{
+> +	if (base_config_flags_are_equal(&a->base, b) &&
+> +	    ((a->override_flags & ~OVERRIDE_FLAG_DEBOUNCE_PERIOD) ==
+> +	     (b->override_flags & ~OVERRIDE_FLAG_DEBOUNCE_PERIOD)))
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+> +static void set_base_config_flags(struct gpio_v2_line_attribute *attr,
+> +				  struct override_config *override,
+> +				  struct gpiod_line_config *config)
+> +{
+> +	struct base_config base;
+> +
+> +	memcpy(&base, &config->defaults, sizeof(base));
+> +
+> +	if (override->override_flags & OVERRIDE_FLAG_DIRECTION)
+> +		base.direction = override->base.direction;
+> +	if (override->override_flags & OVERRIDE_FLAG_EDGE)
+> +		base.edge = override->base.edge;
+> +	if (override->override_flags & OVERRIDE_FLAG_BIAS)
+> +		base.bias = override->base.bias;
+> +	if (override->override_flags & OVERRIDE_FLAG_DRIVE)
+> +		base.drive = override->base.drive;
+> +	if (override->override_flags & OVERRIDE_FLAG_ACTIVE_LOW)
+> +		base.active_low = override->base.active_low;
+> +	if (override->override_flags & OVERRIDE_FLAG_CLOCK)
+> +		base.clock = override->base.clock;
+> +
+> +	attr->id = GPIO_V2_LINE_ATTR_ID_FLAGS;
+> +	attr->flags = make_kernel_flags(&base);
+> +}
+> +
+> +static bool base_debounce_period_is_equal(struct base_config *base,
+> +					  struct override_config *override)
+> +{
+> +	if ((override->override_flags & OVERRIDE_FLAG_DEBOUNCE_PERIOD) &&
+> +	    base->debounce_period_us != override->base.debounce_period_us)
+> +		return false;
+> +
+> +	return true;
+> +}
+> +
+> +static bool override_config_debounce_period_is_equal(struct override_config *a,
+> +						     struct override_config *b)
+> +{
+> +	if (base_debounce_period_is_equal(&a->base, b) &&
+> +	    ((a->override_flags & OVERRIDE_FLAG_DEBOUNCE_PERIOD) ==
+> +	     (b->override_flags & OVERRIDE_FLAG_DEBOUNCE_PERIOD)))
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+
+To improve readability, flip the order here to test the flag equivalence
+first.
+Particularly wrt the "a" doesn't have debounce overridden case.
+
+> +static void
+> +set_base_config_debounce_period(struct gpio_v2_line_attribute *attr,
+> +				struct override_config *override,
+> +				struct gpiod_line_config *config GPIOD_UNUSED)
+> +{
+> +	attr->id = GPIO_V2_LINE_ATTR_ID_DEBOUNCE;
+> +	attr->debounce_period_us = override->base.debounce_period_us;
+> +}
+> +
+> +static int set_kernel_attr_mask(uint64_t *out, const uint64_t *in,
+> +				unsigned int num_lines,
+> +				const unsigned int *offsets,
+> +				const struct gpiod_line_config *config)
+> +{
+> +	unsigned int i, j;
+> +	int off;
+> +
+> +	gpiod_line_mask_zero(out);
+> +
+> +	for (i = 0; i < config->num_overrides; i++) {
+> +		if (!gpiod_line_mask_test_bit(in, i))
+> +			continue;
+> +
+> +		for (j = 0, off = -1; j < num_lines; j++) {
+> +			if (offsets[j] == config->overrides[i].offset) {
+> +				off = j;
+> +				break;
+> +			}
+> +		}
+>  
+> -		idx = find_bitmap_index(outval->offset, num_lines, offsets);
+> -		if (idx < 0) {
+> +		if (off < 0) {
+>  			errno = EINVAL;
+>  			return -1;
+>  		}
+>  
+> -		gpiod_line_mask_set_bit(mask, idx);
+> -		gpiod_line_mask_assign_bit(vals, idx, !!outval->value);
+> +		gpiod_line_mask_set_bit(out, off);
+>  	}
+>  
+>  	return 0;
+>  }
+>  
+> -static int set_secondary_mask(uint64_t *mask,
+> -			      struct secondary_config *sec_cfg,
+> -			      unsigned int num_lines,
+> -			      const unsigned int *offsets)
+> +static int process_overrides(struct gpiod_line_config *config,
+> +			     struct gpio_v2_line_config *cfgbuf,
+> +			     unsigned int *attr_idx,
+> +			     unsigned int num_lines,
+> +			     const unsigned int *offsets,
+> +			     bool (*defaults_equal_func)(struct base_config *,
+> +						struct override_config *),
+> +			     bool (*override_equal_func)(
+> +						struct override_config *,
+> +						struct override_config *),
+> +			     void (*set_func)(struct gpio_v2_line_attribute *,
+> +					      struct override_config *,
+> +					      struct gpiod_line_config *))
+>  {
+> -	unsigned int i;
+> -	int idx;
+> +	struct gpio_v2_line_config_attribute *attr;
+> +	uint64_t processed = 0, marked = 0, mask;
+> +	struct override_config *current, *next;
+> +	unsigned int i, j;
+>  
+> -	gpiod_line_mask_zero(mask);
+> +	for (i = 0; i < config->num_overrides; i++) {
+> +		if (gpiod_line_mask_test_bit(&processed, i))
+> +			continue;
+>  
+> -	for (i = 0; i < sec_cfg->num_offsets; i++) {
+> -		idx = find_bitmap_index(sec_cfg->offsets[i],
+> -					num_lines, offsets);
+> -		if (idx < 0) {
+> -			errno = EINVAL;
+> +		current = &config->overrides[i];
+> +		gpiod_line_mask_set_bit(&processed, i);
+> +
+> +		if (defaults_equal_func(&config->defaults, current))
+> +			continue;
+> +
+> +		marked = 0;
+> +		gpiod_line_mask_set_bit(&marked, i);
+> +
+> +		for (j = i + 1; j < config->num_overrides; j++) {
+> +			if (gpiod_line_mask_test_bit(&processed, j))
+> +				continue;
+> +
+> +			next = &config->overrides[j];
+> +
+> +			if (override_equal_func(current, next)) {
+> +				gpiod_line_mask_set_bit(&marked, j);
+> +				gpiod_line_mask_set_bit(&processed, j);
+> +			}
+> +		}
+> +
+> +		attr = &cfgbuf->attrs[(*attr_idx)++];
+> +		if (*attr_idx == GPIO_V2_LINE_NUM_ATTRS_MAX) {
+> +			errno = E2BIG;
+>  			return -1;
+>  		}
+>  
+> -		gpiod_line_mask_set_bit(mask, idx);
+> +		set_kernel_attr_mask(&mask, &marked,
+> +				     num_lines, offsets, config);
+> +		attr->mask = mask;
+> +		set_func(&attr->attr, current, config);
+>  	}
+>  
+>  	return 0;
+
+Don't see anything wrong here, but I'd like to see a bunch of tests to
+cover the corner cases you mentioned, as the bulk of the module complexity
+is here.
+Not that I expect that now.
+
+> @@ -806,7 +915,7 @@ int gpiod_line_config_to_kernel(struct gpiod_line_config *config,
+>  				const unsigned int *offsets)
+>  {
+>  	struct gpio_v2_line_config_attribute *attr;
+> -	struct secondary_config *sec_cfg;
+> +	struct override_config *override;
+>  	unsigned int attr_idx = 0, i;
+>  	uint64_t mask, values;
+>  	int ret;
+> @@ -819,59 +928,66 @@ int gpiod_line_config_to_kernel(struct gpiod_line_config *config,
+>  	if (config->too_complex)
+>  		goto err_2big;
+>  
+> -	if (config->num_output_values) {
+> -		if (config->num_output_values > num_lines)
+> -			goto err_2big;
+> +	/*
+> +	 * First check if we have at least one default output value configured.
+> +	 * If so, let's take one attribute for the default values.
+> +	 */
+> +	for (i = 0; i < config->num_overrides; i++) {
+> +		override = &config->overrides[i];
+>  
+> -		attr = &cfgbuf->attrs[attr_idx++];
+> -		attr->attr.id = GPIO_V2_LINE_ATTR_ID_OUTPUT_VALUES;
+> +		if (override->value_set) {
+> +			attr = &cfgbuf->attrs[attr_idx++];
+> +			attr->attr.id = GPIO_V2_LINE_ATTR_ID_OUTPUT_VALUES;
+>  
+> -		ret = set_kernel_output_values(&mask, &values, config,
+> -					       num_lines, offsets);
+> -		if (ret)
+> -			return ret;
+> +			ret = set_kernel_output_values(&mask, &values, config,
+> +						       num_lines, offsets);
+> +			if (ret)
+> +				return ret;
+>  
+> -		attr->attr.values = values;
+> -		attr->mask = mask;
+> +			attr->attr.values = values;
+> +			attr->mask = mask;
+> +
+> +			break;
+> +		}
+>  	}
+>  
+> -	if (config->primary.debounce_period) {
+> +	/* If we have a default debounce period - use another attribute. */
+> +	if (config->defaults.debounce_period_us) {
+>  		attr = &cfgbuf->attrs[attr_idx++];
+>  		attr->attr.id = GPIO_V2_LINE_ATTR_ID_DEBOUNCE;
+> -		attr->attr.debounce_period_us = config->primary.debounce_period;
+> +		attr->attr.debounce_period_us =
+> +				config->defaults.debounce_period_us;
+>  		gpiod_line_mask_fill(&mask);
+>  		attr->mask = mask;
+>  	}
+>  
+> -	for (i = 0; i < config->num_secondary; i++, attr_idx++) {
+> -		if (attr_idx == GPIO_V2_LINE_NUM_ATTRS_MAX)
+> -			goto err_2big;
+> -
+> -		sec_cfg = &config->secondary[i];
+> -		attr = &cfgbuf->attrs[attr_idx];
+> -
+> -		if (sec_cfg->num_offsets > num_lines)
+> -			goto err_2big;
+> -
+> -		if (sec_cfg->config.debounce_period) {
+> -			attr->attr.id = GPIO_V2_LINE_ATTR_ID_DEBOUNCE;
+> -			attr->attr.debounce_period_us =
+> -					sec_cfg->config.debounce_period;
+> -		} else {
+> -			attr->attr.id = GPIO_V2_LINE_ATTR_ID_FLAGS;
+> -
+> -			attr->attr.flags = gpiod_make_kernel_flags(
+> -							&sec_cfg->config);
+> -		}
+> +	/*
+> +	 * The overrides are processed independently for regular flags and the
+> +	 * debounce period. We iterate over the configured line overrides. We
+> +	 * first check if the given set of options is equal to the global
+> +	 * defaults. If not, we mark it and iterate over the remaining
+> +	 * overrides looking for ones that have the same config as the one
+> +	 * currently processed. We mark them too and at the end we create a
+> +	 * single kernel attribute with the translated config and the mask
+> +	 * corresponding to all marked overrides. Those are now excluded from
+> +	 * further processing.
+> +	 */
+>  
+> -		ret = set_secondary_mask(&mask, sec_cfg, num_lines, offsets);
+> -		if (ret)
+> -			return -1;
+> +	ret = process_overrides(config, cfgbuf, &attr_idx, num_lines, offsets,
+> +				base_config_flags_are_equal,
+> +				override_config_flags_are_equal,
+> +				set_base_config_flags);
+> +	if (ret)
+> +		return -1;
+>  
+> -		attr->mask = mask;
+> -	}
+> +	ret = process_overrides(config, cfgbuf, &attr_idx, num_lines, offsets,
+> +				base_debounce_period_is_equal,
+> +				override_config_debounce_period_is_equal,
+> +				set_base_config_debounce_period);
+> +	if (ret)
+> +		return -1;
+>  
+> -	cfgbuf->flags = gpiod_make_kernel_flags(&config->primary);
+> +	cfgbuf->flags = make_kernel_flags(&config->defaults);
+>  	cfgbuf->num_attrs = attr_idx;
+>  
+>  	return 0;
+> -- 
+> 2.30.1
+> 
+
+Overall it looks really good to me, so no problem with applying it,
+with or without my suggestions.
+
+Cheers,
+Kent.
 
