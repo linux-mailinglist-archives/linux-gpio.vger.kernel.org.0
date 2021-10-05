@@ -2,126 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC891422275
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Oct 2021 11:37:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 053AC422287
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Oct 2021 11:42:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233400AbhJEJjT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Oct 2021 05:39:19 -0400
-Received: from mga04.intel.com ([192.55.52.120]:42088 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232871AbhJEJjT (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 5 Oct 2021 05:39:19 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10127"; a="224471032"
-X-IronPort-AV: E=Sophos;i="5.85,348,1624345200"; 
-   d="scan'208";a="224471032"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2021 02:37:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.85,348,1624345200"; 
-   d="scan'208";a="477599877"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga007.jf.intel.com with ESMTP; 05 Oct 2021 02:37:26 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 55959183; Tue,  5 Oct 2021 12:37:33 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Bamvor Jian Zhang <bamv2005@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v2 1/1] gpio: mockup: Convert to use software nodes
-Date:   Tue,  5 Oct 2021 12:37:31 +0300
-Message-Id: <20211005093731.62743-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.33.0
+        id S232773AbhJEJoB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Oct 2021 05:44:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33466 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232658AbhJEJoA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Oct 2021 05:44:00 -0400
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56A07C061745;
+        Tue,  5 Oct 2021 02:42:10 -0700 (PDT)
+Received: by mail-ed1-x52f.google.com with SMTP id bm13so25868483edb.8;
+        Tue, 05 Oct 2021 02:42:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lQEWVSeSvtXbT1tKvPVwFqzMKyHVooMS6v9cZBWAAT4=;
+        b=B7yvR1eRxSwJe8b/O3vBDR62F6Vd30t7dvRv4UQp5aOXeIW9qLvTUrR+BaEgJveq6r
+         8oPXAV82GzoWY0GpHt7SXbFrraGkVLs359z3FsKe+/P1aVkCMx47LoMYTZK0GAWaAu5B
+         tPsFwE9pIUMvflCJwA3975gICn7WpW/+vrdJX6r8O6afF1EtgQNUnmhFEekULWL2tyLi
+         4CTSSPSYeue24CXWlq1wrtzNRpbabKV9M/qWumpFJZkPyjXhUJI8aLsGQ5/Vx/Pundb+
+         cLXCMocwN9vd4DAc1cmFn5GAEWY/ChUuVqNluf+0PvZ+6phLYapOhgsofxxMQ6pXlVOd
+         /xjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lQEWVSeSvtXbT1tKvPVwFqzMKyHVooMS6v9cZBWAAT4=;
+        b=715KN4QERsPZVEwl84CfCyvu6V+UwEzJSHZZd8XVMeD0IRR0fyPc34TkPvSOcTPDs9
+         ALAH2pwUZS8oGIf7ueqzyiddBdOKNYOFyDFOYaIeV7x2duz8SYZlo0veL0jSxDQY2nXq
+         +5HlYeYSPhVtmB8qMlmlKddD7rfLw83efxEjmmx9Z4FAO3qXuC6zXS38yUnRzcWo1kQf
+         grTQtA64WhJSNuJ92hZzHt6K62IwU7nv5jfs8vsPPr83xp8PaltuEQ887RmJeoFay+FZ
+         Ja6MAVTZiJxtWUd7tJ+mgrQxF3FpKOdUCMR/oGwJvwwwjF0arQDJUZskPYVPR2he/wse
+         HROA==
+X-Gm-Message-State: AOAM530RaP2wj4wzJqBV3TDyovWb3ZNNBwBaris9ESQ45AGmzJY5f6Fo
+        Onk2kbtF9aoaDll3GRxRxaAKSPJZEdH6oZ87Hxg=
+X-Google-Smtp-Source: ABdhPJwx30iGr1g+bcLGtgxP7CmhKNoJj7GS3hnc99rrO866tN1AOIZbs5yKCe+laMJG0ZN7ygBXgSYHKjFzTKbCPQ4=
+X-Received: by 2002:a05:6402:143b:: with SMTP id c27mr25590294edx.224.1633426928185;
+ Tue, 05 Oct 2021 02:42:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20211005091016.18519-1-andriy.shevchenko@linux.intel.com> <CAMRc=McMzezBgxGij3M51nOAzzHNza7EbQ49CwpQp2okJnXc_Q@mail.gmail.com>
+In-Reply-To: <CAMRc=McMzezBgxGij3M51nOAzzHNza7EbQ49CwpQp2okJnXc_Q@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 5 Oct 2021 12:41:31 +0300
+Message-ID: <CAHp75Vc2+N5nXPKAZyV24HQBZarWAB+FKCQ2UsgMp774AQFDog@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] gpio: mockup: Convert to use software nodes
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bamvor Jian Zhang <bamv2005@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The gpio-mockup driver creates the properties that are shared between
-platform and GPIO devices. Because of that, the properties may not
-be removed at the proper point of time without provoking a use-after-free
-as shown in the following backtrace:
+On Tue, Oct 5, 2021 at 12:35 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> On Tue, Oct 5, 2021 at 11:10 AM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
 
-  refcount_t: underflow; use-after-free.
-  WARNING: CPU: 0 PID: 103 at lib/refcount.c:28 refcount_warn_saturate+0xd1/0x120
-  ...
-  Call Trace:
-  kobject_put+0xdc/0xf0
-  software_node_notify_remove+0xa8/0xc0
-  device_del+0x15a/0x3e0
+> I suppose my gpio-sim patch is affected by this issue too. Thanks for
+> fixing that.
 
-That's why the driver has to manage the lifetime of the software nodes
-by itself.
+As far as I remember the code (it was pretty much inherited from
+gpio-mockup) yes, it's also affected.
 
-The problem originates from the old device_add_properties() API, but
-has been only revealed after the commit bd1e336aa853 ("driver core: platform:
-Remove platform_device_add_properties()"). Hence, it's used as a landmark
-for the backporting.
+Btw, I just sent a v2.
 
-Fixes: bd1e336aa853 ("driver core: platform: Remove platform_device_add_properties()")
-Reported-tested-by: Kent Gibson <warthog618@gmail.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-v2: updated Fixes (Kent), added Tested-by (Kent), amended grammar a bit
- drivers/gpio/gpio-mockup.c | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-index 0a9d746a0fe0..8b147b565e92 100644
---- a/drivers/gpio/gpio-mockup.c
-+++ b/drivers/gpio/gpio-mockup.c
-@@ -478,8 +478,18 @@ static void gpio_mockup_unregister_pdevs(void)
- {
- 	int i;
- 
--	for (i = 0; i < GPIO_MOCKUP_MAX_GC; i++)
--		platform_device_unregister(gpio_mockup_pdevs[i]);
-+	for (i = 0; i < GPIO_MOCKUP_MAX_GC; i++) {
-+		struct platform_device *pdev;
-+		struct fwnode_handle *fwnode;
-+
-+		pdev = gpio_mockup_pdevs[i];
-+		if (!pdev)
-+			continue;
-+
-+		fwnode = dev_fwnode(&pdev->dev);
-+		platform_device_unregister(pdev);
-+		fwnode_remove_software_node(fwnode);
-+	}
- }
- 
- static __init char **gpio_mockup_make_line_names(const char *label,
-@@ -508,6 +518,7 @@ static int __init gpio_mockup_register_chip(int idx)
- 	struct property_entry properties[GPIO_MOCKUP_MAX_PROP];
- 	struct platform_device_info pdevinfo;
- 	struct platform_device *pdev;
-+	struct fwnode_handle *fwnode;
- 	char **line_names = NULL;
- 	char chip_label[32];
- 	int prop = 0, base;
-@@ -536,13 +547,18 @@ static int __init gpio_mockup_register_chip(int idx)
- 					"gpio-line-names", line_names, ngpio);
- 	}
- 
-+	fwnode = fwnode_create_software_node(properties, NULL);
-+	if (IS_ERR(fwnode))
-+		return PTR_ERR(fwnode);
-+
- 	pdevinfo.name = "gpio-mockup";
- 	pdevinfo.id = idx;
--	pdevinfo.properties = properties;
-+	pdevinfo.fwnode = fwnode;
- 
- 	pdev = platform_device_register_full(&pdevinfo);
- 	kfree_strarray(line_names, ngpio);
- 	if (IS_ERR(pdev)) {
-+		fwnode_remove_software_node(fwnode);
- 		pr_err("error registering device");
- 		return PTR_ERR(pdev);
- 	}
 -- 
-2.33.0
-
+With Best Regards,
+Andy Shevchenko
