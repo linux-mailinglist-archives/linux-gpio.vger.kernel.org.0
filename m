@@ -2,74 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E55F422293
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Oct 2021 11:44:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 577BF4222DD
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Oct 2021 11:56:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232723AbhJEJqZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 5 Oct 2021 05:46:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34126 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232658AbhJEJqZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Oct 2021 05:46:25 -0400
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4A97C06161C;
-        Tue,  5 Oct 2021 02:44:34 -0700 (PDT)
-Received: by mail-ed1-x52b.google.com with SMTP id f9so13609782edx.4;
-        Tue, 05 Oct 2021 02:44:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DbpmwGOB8UZjIrH2A8gEQhTIPZbQIbes9ZyQqIS/Ums=;
-        b=iO4e+OL2CYkGpbwB2GDhfyIdB/ZcbbWoZYWb4bHNpZm4StzvqVFx5sq/1md0WmOns7
-         yGyog9ALAMG75FVDRgP1vpga7gxbQ2GLj3Mx2p3xtXT9HI8QqZUSejgYOW9E5YVhZBp7
-         SQOGHvdpc7ozWjHb9o8x/8bQoclMRdYYFqmxMNe4yXUNttOYScRen6pNm/uJ7SDLZmZu
-         bpfUDGkCYBzx+/QimSJb+GW4B/dScuQRbe7oqHA5NB4aD+a9RadF6lBYe/iYreCCldA9
-         Esz4Q4hl5K3t4nSzIhq1zz/jKKDeLJmVzl8nWNa+pYhAuw14IVRcDtBm5Il/LKhWc1Gp
-         7EWg==
+        id S233910AbhJEJ6M (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 5 Oct 2021 05:58:12 -0400
+Received: from mail-ua1-f41.google.com ([209.85.222.41]:36572 "EHLO
+        mail-ua1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233933AbhJEJ6K (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 5 Oct 2021 05:58:10 -0400
+Received: by mail-ua1-f41.google.com with SMTP id u11so14412044uaw.3;
+        Tue, 05 Oct 2021 02:56:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DbpmwGOB8UZjIrH2A8gEQhTIPZbQIbes9ZyQqIS/Ums=;
-        b=c3QqqeKDb6zUHmmfTWXdatJLcd5EcObSq6pvjQ7OITkduVsdEL8ylENWb+6xHX9Bub
-         0K12bzwGJe7GBgvLiR/AcTRjomfzIKu5avyh+UPhp6iV75YgWt4zOXzq8nYdbD8ftPQM
-         PjKhk2G+K4PXWlbPgV310QshR51fcit5srldOq1BNhuGpbHSn+IIWXs9Qs8rIsBdfbvv
-         cE1rffvvcF7L5YaBm92CXk/3ZUUHcIsl7dXFLEQ/JnwNqiD6s+Q0j9vVnAFAE6D/kpnB
-         ElRCbDccPcbx+OZ1pXvRYCjaMTZEQ11g1nhgZpr27uA3Ot1wbxJcVCEt81Hd0TFKAq/x
-         vCaw==
-X-Gm-Message-State: AOAM533DFcyDB6FpiOIY7R5ElOJdb03BwE2z+/ciPvdjicdhtAJgwiMY
-        FQVAEfDV3N1yP/yNKLPAbH1CQ344iDqgRsMQrnU=
-X-Google-Smtp-Source: ABdhPJywE3s/Nc+1mp99v/K1zxg0WXmKi7nBzRtEX4wh48HCV9HzwccOJLCj2IMHuGxILvWwksBkDUEk5uIA4ovjdHU=
-X-Received: by 2002:a17:906:2887:: with SMTP id o7mr23131365ejd.425.1633427073480;
- Tue, 05 Oct 2021 02:44:33 -0700 (PDT)
+        bh=7f7La1K3j/sf3y6WAPsiJ3HiHMfo9c5sHomKDoZBG7U=;
+        b=k2IKov7jB0n+UA2Ba6xXi/dtkzWMyvN8/oXdRDjW/TVGcXQs5GyrZCahRsU9ZUzoSk
+         qXfb3TdiyKbNjQI2i2tlB32LSBrDG2mHcucnAAPxaZatqc0lz4ujs+g4Boz1/yOTQltl
+         VVYAXO9LhU2an/YvvnzO9e59P8m8QfNu6UJOD76u5w0lmLnUzjW6Zg+pAh97G1d0YN4b
+         yIcWwqrIlfIfLGbzPUvgTgzWXD8Ec7A6n5UMWjYOtUJKQjvvxirZS1f+AGXdSYOYo4VV
+         nDZzSMEPh8sRK2DfZcqwoVFSha3/emEyeiwO/zPUntHjwzyKiYFO65GDv0Jw4gJHv3Fk
+         SCPA==
+X-Gm-Message-State: AOAM531c3rkWFNKd9MWvG9S5We1t54akg894yzQ4balVf22SemmRUco6
+        9ZKSs6prEmfXhMyF7ZWVwYcmrOJvVbbl4aU24fc=
+X-Google-Smtp-Source: ABdhPJwoedqIMTs/zp1tZCy9OstAKU8ntmrhQvtFdRYOoHyHH+E8MpEzp9P57PSyaiMXuRqdCgIgcecFKpCx4qab0jY=
+X-Received: by 2002:ab0:311a:: with SMTP id e26mr10862299ual.122.1633427779260;
+ Tue, 05 Oct 2021 02:56:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211005093731.62743-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20211005093731.62743-1-andriy.shevchenko@linux.intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 5 Oct 2021 12:43:57 +0300
-Message-ID: <CAHp75Vey95aSGoWg-XZtpX6UXj54208Vi4=VuiU5s7Z6w-fdtw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] gpio: mockup: Convert to use software nodes
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bamvor Jian Zhang <bamv2005@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kent Gibson <warthog618@gmail.com>
+References: <20210921193028.13099-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20210921193028.13099-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <CACRpkdaJk-G0YE63uvH9C=G3n7k2gZqf9QrwGfAZC2O4hhps=A@mail.gmail.com>
+In-Reply-To: <CACRpkdaJk-G0YE63uvH9C=G3n7k2gZqf9QrwGfAZC2O4hhps=A@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 5 Oct 2021 11:56:07 +0200
+Message-ID: <CAMuHMdUvThtOKrhTqW+U1qijW7dRc6GYg4_Owt_GnUxX4DrGog@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 3/4] pinctrl: renesas: pinctrl-rzg2l: Add IRQ
+ domain to handle GPIO interrupt
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 5, 2021 at 12:37 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+Hi Linus,
 
-> Reported-tested-by: Kent Gibson <warthog618@gmail.com>
+On Thu, Sep 23, 2021 at 11:38 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Tue, Sep 21, 2021 at 9:30 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > Add IRQ domian to RZ/G2L pinctrl driver to handle GPIO interrupt.
+> >
+> > GPIO0-GPIO122 pins can be used as IRQ lines but only 32 pins can be
+> > used as IRQ lines at given time. Selection of pins as IRQ lines
+> > is handled by IA55 (which is the IRQC block) which sits in between the
+> > GPIO and GIC.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Why can't you just use the hierarchical IRQ domain handling inside
+> gpiolib?
 
-Oopsista, should be "Reported-and-tested-by:". I hope you can fix it
-when applying, but tell me if I need to send a v3.
+Out of interest (not related to this patch), does this support multiple
+parent domains?
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
