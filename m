@@ -2,383 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EC8B5424878
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Oct 2021 23:07:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CAF3D4248A9
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Oct 2021 23:14:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239533AbhJFVJR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Oct 2021 17:09:17 -0400
-Received: from mail-ot1-f44.google.com ([209.85.210.44]:44825 "EHLO
-        mail-ot1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239530AbhJFVJQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Oct 2021 17:09:16 -0400
-Received: by mail-ot1-f44.google.com with SMTP id o27-20020a9d411b000000b005453f95356cso3904581ote.11;
-        Wed, 06 Oct 2021 14:07:23 -0700 (PDT)
+        id S239644AbhJFVQq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Oct 2021 17:16:46 -0400
+Received: from mail-ot1-f41.google.com ([209.85.210.41]:36810 "EHLO
+        mail-ot1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239646AbhJFVQp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Oct 2021 17:16:45 -0400
+Received: by mail-ot1-f41.google.com with SMTP id 5-20020a9d0685000000b0054706d7b8e5so4867091otx.3;
+        Wed, 06 Oct 2021 14:14:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=gmYMkMgyNF+M0/XN9qtQib3Updmh2p5yOstnRWqGc6E=;
-        b=Hkh0/0yaeBEkYVSdQyR49uhLFOWQ+fEAALDis0H98egZOLVm/ef1LqKiPbqX7qoNm8
-         QVViWmKziiarVfLAO6LeGPRHOV2miC/SxDz2y6BwC3KsUES2x0r/3CkzIJWQHali53HG
-         6DwLwT3SVr9Naf7vzu2KnAakkY7QOFjSZbaULVTgwD2waAvJyLgGVugTFxPz1m+KZQK7
-         BJ4EXvz2kEOVIvn3Mno7T5lxEpQJ2dmO2Ivy4QlsqciKd0anc0gHRnusxDmsDwHwdgFK
-         qu/es5xeQ0FDjS0kAvQ9gbawSO8CroOgzRjSlUSNHwUhP9B269Am8HM1H/YP6wCubEeo
-         4KTQ==
-X-Gm-Message-State: AOAM530aGpydpZXYWoqLNjCjbMvgHcAMCy5LiaL3QSQEm352ZmZ0kt6Z
-        fadICwwZbZN7mPO+q5tx/Q==
-X-Google-Smtp-Source: ABdhPJwXzh+9ffrFKH/vzdZhdqMJCHnAnnzLL40SLgEh6MMyIogHh5PZTtpR0sbBKncqhO7NqYoupQ==
-X-Received: by 2002:a05:6830:2706:: with SMTP id j6mr441090otu.82.1633554443383;
-        Wed, 06 Oct 2021 14:07:23 -0700 (PDT)
+        bh=lak8Kr6S28oWWnCbDixiphSYTCbXgMBHH9/qqV4Giyc=;
+        b=1Mlm9+OC7ZdJp/6YYm78hcul4b2nMToWIb94JdwE1gCoGR1M8e+Aj+CZK/y9Fbft1j
+         PYe9c/i02O0YOG9YLdp5yxNNGgj9LNwgH/3NlrVsJ/evU/vKkv6gvj7tUBz6zAHdZ7Vz
+         OvPLsPhcls2xBGpqpT8hs/1mqE9Tm3ukN4OoIdIcgeGtYAGyuk8Eugzc3kjm3lPzdhu+
+         JaPfjXtjM3dNK/XYZu6yk1KuiMSBzgTd8zsoU/kXF5GNV/0VPjL3SMBlcZ7O52WKg6pI
+         8JPD/OWTPRVMr2wyXnQrTGbsVHicVvLDL5aNox1WqcjKT/uG1o07dzxdEhiv+t9WxsUV
+         4MlA==
+X-Gm-Message-State: AOAM53066FWbw6hNWH1xZ/4h62+XCtt/Jf2LLwl/iEyighvGCy06+Kcc
+        z4Qgt3r+Sxl3l5TPInwPYdYx4bFl+Q==
+X-Google-Smtp-Source: ABdhPJwjkpOHrD8M6tpuzasy4z7/puEHow6aB3HnOWHU8azVI5+r8jJyF/JJjo6sBcNSVtVIjY967g==
+X-Received: by 2002:a9d:71d4:: with SMTP id z20mr432620otj.29.1633554892688;
+        Wed, 06 Oct 2021 14:14:52 -0700 (PDT)
 Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id k3sm3496369otn.16.2021.10.06.14.07.22
+        by smtp.gmail.com with ESMTPSA id s22sm1100539ois.32.2021.10.06.14.14.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Oct 2021 14:07:22 -0700 (PDT)
-Received: (nullmailer pid 2875966 invoked by uid 1000);
-        Wed, 06 Oct 2021 21:07:21 -0000
-Date:   Wed, 6 Oct 2021 16:07:21 -0500
+        Wed, 06 Oct 2021 14:14:51 -0700 (PDT)
+Received: (nullmailer pid 2887704 invoked by uid 1000);
+        Wed, 06 Oct 2021 21:14:50 -0000
+Date:   Wed, 6 Oct 2021 16:14:50 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     heiko@sntech.de, linus.walleij@linaro.org,
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: convert
- rockchip,pinctrl.txt to YAML
-Message-ID: <YV4QCY7wpZI7Xta3@robh.at.kernel.org>
-References: <20210930095225.9718-1-jbx6244@gmail.com>
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+Subject: Re: [RFC PATCH 1/4] dt-bindings: pincfg-node: Add "output-impedance"
+ property
+Message-ID: <YV4RypY6/n23Bl2T@robh.at.kernel.org>
+References: <20210930121630.17449-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20210930121630.17449-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210930095225.9718-1-jbx6244@gmail.com>
+In-Reply-To: <20210930121630.17449-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 30, 2021 at 11:52:23AM +0200, Johan Jonker wrote:
-> Convert rockchip,pinctrl.txt to YAML
+On Thu, Sep 30, 2021 at 01:16:27PM +0100, Lad Prabhakar wrote:
+> On RZ/G2L SoC for Group-B pins, output impedance can be configured.
+> This patch documents "output-impedance" property in pincfg-node.yaml so
+> that other platforms requiring such feature can make use of this property.
 > 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > ---
+>  Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> Changed V2:
->    Add '|' to maintain the paragraphs.
->    Change gpio patternProperties.
->    Move description to items.
->    Remove type array.
->    Restyle
-> ---
->  .../bindings/pinctrl/rockchip,pinctrl.txt     | 114 ------------
->  .../bindings/pinctrl/rockchip,pinctrl.yaml    | 176 ++++++++++++++++++
->  2 files changed, 176 insertions(+), 114 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
-> deleted file mode 100644
-> index 84c411129..000000000
-> --- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
-> +++ /dev/null
-> @@ -1,114 +0,0 @@
-> -* Rockchip Pinmux Controller
-> -
-> -The Rockchip Pinmux Controller, enables the IC
-> -to share one PAD to several functional blocks. The sharing is done by
-> -multiplexing the PAD input/output signals. For each PAD there are several
-> -muxing options with option 0 being the use as a GPIO.
-> -
-> -Please refer to pinctrl-bindings.txt in this directory for details of the
-> -common pinctrl bindings used by client devices, including the meaning of the
-> -phrase "pin configuration node".
-> -
-> -The Rockchip pin configuration node is a node of a group of pins which can be
-> -used for a specific device or function. This node represents both mux and
-> -config of the pins in that group. The 'pins' selects the function mode(also
-> -named pin mode) this pin can work on and the 'config' configures various pad
-> -settings such as pull-up, etc.
-> -
-> -The pins are grouped into up to 5 individual pin banks which need to be
-> -defined as gpio sub-nodes of the pinmux controller.
-> -
-> -Required properties for iomux controller:
-> -  - compatible: should be
-> -		"rockchip,px30-pinctrl":    for Rockchip PX30
-> -		"rockchip,rv1108-pinctrl":  for Rockchip RV1108
-> -		"rockchip,rk2928-pinctrl":  for Rockchip RK2928
-> -		"rockchip,rk3066a-pinctrl": for Rockchip RK3066a
-> -		"rockchip,rk3066b-pinctrl": for Rockchip RK3066b
-> -		"rockchip,rk3128-pinctrl":  for Rockchip RK3128
-> -		"rockchip,rk3188-pinctrl":  for Rockchip RK3188
-> -		"rockchip,rk3228-pinctrl":  for Rockchip RK3228
-> -		"rockchip,rk3288-pinctrl":  for Rockchip RK3288
-> -		"rockchip,rk3308-pinctrl":  for Rockchip RK3308
-> -		"rockchip,rk3328-pinctrl":  for Rockchip RK3328
-> -		"rockchip,rk3368-pinctrl":  for Rockchip RK3368
-> -		"rockchip,rk3399-pinctrl":  for Rockchip RK3399
-> -		"rockchip,rk3568-pinctrl":  for Rockchip RK3568
-> -
-> -  - rockchip,grf: phandle referencing a syscon providing the
-> -	 "general register files"
-> -
-> -Optional properties for iomux controller:
-> -  - rockchip,pmu: phandle referencing a syscon providing the pmu registers
-> -	 as some SoCs carry parts of the iomux controller registers there.
-> -	 Required for at least rk3188 and rk3288. On the rk3368 this should
-> -	 point to the PMUGRF syscon.
-> -
-> -Deprecated properties for iomux controller:
-> -  - reg: first element is the general register space of the iomux controller
-> -	 It should be large enough to contain also separate pull registers.
-> -	 second element is the separate pull register space of the rk3188.
-> -	 Use rockchip,grf and rockchip,pmu described above instead.
-> -
-> -Required properties for gpio sub nodes:
-> -See rockchip,gpio-bank.yaml
-> -
-> -Required properties for pin configuration node:
-> -  - rockchip,pins: 3 integers array, represents a group of pins mux and config
-> -    setting. The format is rockchip,pins = <PIN_BANK PIN_BANK_IDX MUX &phandle>.
-> -    The MUX 0 means gpio and MUX 1 to N mean the specific device function.
-> -    The phandle of a node containing the generic pinconfig options
-> -    to use, as described in pinctrl-bindings.txt in this directory.
-> -
-> -Examples:
-> -
-> -#include <dt-bindings/pinctrl/rockchip.h>
-> -
-> -...
-> -
-> -pinctrl@20008000 {
-> -	compatible = "rockchip,rk3066a-pinctrl";
-> -	rockchip,grf = <&grf>;
-> -
-> -	#address-cells = <1>;
-> -	#size-cells = <1>;
-> -	ranges;
-> -
-> -	gpio0: gpio0@20034000 {
-> -		compatible = "rockchip,gpio-bank";
-> -		reg = <0x20034000 0x100>;
-> -		interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
-> -		clocks = <&clk_gates8 9>;
-> -
-> -		gpio-controller;
-> -		#gpio-cells = <2>;
-> -
-> -		interrupt-controller;
-> -		#interrupt-cells = <2>;
-> -	};
-> -
-> -	...
-> -
-> -	pcfg_pull_default: pcfg_pull_default {
-> -		bias-pull-pin-default
-> -	};
-> -
-> -	uart2 {
-> -		uart2_xfer: uart2-xfer {
-> -			rockchip,pins = <1 RK_PB0 1 &pcfg_pull_default>,
-> -					<1 RK_PB1 1 &pcfg_pull_default>;
-> -		};
-> -	};
-> -};
-> -
-> -uart2: serial@20064000 {
-> -	compatible = "snps,dw-apb-uart";
-> -	reg = <0x20064000 0x400>;
-> -	interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-> -	reg-shift = <2>;
-> -	reg-io-width = <1>;
-> -	clocks = <&mux_uart2>;
-> -
-> -	pinctrl-names = "default";
-> -	pinctrl-0 = <&uart2_xfer>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
-> new file mode 100644
-> index 000000000..01a62245b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
-> @@ -0,0 +1,176 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/rockchip,pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Rockchip Pinmux Controller
-> +
-> +maintainers:
-> +  - Heiko Stuebner <heiko@sntech.de>
-> +
-> +description: |
-> +  The Rockchip Pinmux Controller enables the IC to share one PAD
-> +  to several functional blocks. The sharing is done by multiplexing
-> +  the PAD input/output signals. For each PAD there are several muxing
-> +  options with option 0 being used as a GPIO.
-> +
-> +  Please refer to pinctrl-bindings.txt in this directory for details of the
-> +  common pinctrl bindings used by client devices, including the meaning of the
-> +  phrase "pin configuration node".
-> +
-> +  The Rockchip pin configuration node is a node of a group of pins which can be
-> +  used for a specific device or function. This node represents both mux and
-> +  config of the pins in that group. The 'pins' selects the function mode
-> +  (also named pin mode) this pin can work on and the 'config' configures
-> +  various pad settings such as pull-up, etc.
-> +
-> +  The pins are grouped into up to 9 individual pin banks which need to be
-> +  defined as gpio sub-nodes of the pinmux controller.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - rockchip,px30-pinctrl
-> +      - rockchip,rk2928-pinctrl
-> +      - rockchip,rk3066a-pinctrl
-> +      - rockchip,rk3066b-pinctrl
-> +      - rockchip,rk3128-pinctrl
-> +      - rockchip,rk3188-pinctrl
-> +      - rockchip,rk3228-pinctrl
-> +      - rockchip,rk3288-pinctrl
-> +      - rockchip,rk3308-pinctrl
-> +      - rockchip,rk3328-pinctrl
-> +      - rockchip,rk3368-pinctrl
-> +      - rockchip,rk3399-pinctrl
-> +      - rockchip,rk3568-pinctrl
-> +      - rockchip,rv1108-pinctrl
-> +
-> +  rockchip,grf:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description:
-> +      The phandle of the syscon node for the GRF registers.
-> +
-> +  rockchip,pmu:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description:
-> +      The phandle of the syscon node for the PMU registers,
-> +      as some SoCs carry parts of the iomux controller registers there.
-> +      Required for at least rk3188 and rk3288. On the rk3368 this should
-> +      point to the PMUGRF syscon.
-> +
-> +  "#address-cells":
-> +    enum: [1, 2]
-> +
-> +  "#size-cells":
-> +    enum: [1, 2]
-> +
-> +  ranges: true
-> +
-> +patternProperties:
-> +  "gpio@[0-9a-f]+$":
-> +    type: object
-> +
-> +    $ref: "/schemas/gpio/rockchip,gpio-bank.yaml#"
-> +
-> +    unevaluatedProperties: false
-> +
-> +  "pcfg-[a-z0-9-]+$":
-> +    type: object
-> +    properties:
-> +      bias-disable: true
-> +
-> +      bias-pull-down: true
-> +
-> +      bias-pull-pin-default: true
-> +
-> +      bias-pull-up: true
-> +
-> +      drive-strength:
-> +        minimum: 0
-> +        maximum: 20
-> +
-> +      input-enable: true
-> +
-> +      input-schmitt-enable: true
-> +
-> +      output-high: true
-> +
-> +      output-low: true
-> +
-> +    additionalProperties: false
-> +
-> +additionalProperties:
-> +  type: object
-> +  additionalProperties:
-> +    type: object
-> +    properties:
-> +      rockchip,pins:
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml b/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
+> index 71ed0a9def84..cdcb23daeca2 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
+> @@ -114,6 +114,10 @@ properties:
+>      description: enable output on a pin without actively driving it
+>        (such as enabling an output buffer)
+>  
+> +  output-impedance:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
 
-Needs a type reference (uint32-matrix).
+Use standard unit suffix and drop the type.
 
-> +        minItems: 1
-> +        items:
-> +          items:
-> +            - minimum: 0
-> +              maximum: 8
-> +              description:
-> +                Pin bank.
-> +            - minimum: 0
-> +              maximum: 31
-> +              description:
-> +                Pin bank index.
-> +            - minimum: 0
-> +              maximum: 6
-> +              description:
-> +                Mux 0 means gpio and mux 1 to N means
-> +                the specific device function.
-> +            - description:
-> +                The phandle of a node contains the generic pinconfig options
-> +                to use as described in pinctrl-bindings.txt.
+> +    description: set the pins output impedance at most X ohm
 > +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/pinctrl/rockchip.h>
-> +
-> +    pinctrl: pinctrl {
-> +      compatible = "rockchip,rk3066a-pinctrl";
-> +      rockchip,grf = <&grf>;
-> +
-> +      #address-cells = <1>;
-> +      #size-cells = <1>;
-> +      ranges;
-> +
-> +      gpio0: gpio@20034000 {
-> +        compatible = "rockchip,gpio-bank";
-> +        reg = <0x20034000 0x100>;
-> +        interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
-> +        clocks = <&clk_gates8 9>;
-> +
-> +        gpio-controller;
-> +        #gpio-cells = <2>;
-> +
-> +        interrupt-controller;
-> +        #interrupt-cells = <2>;
-> +      };
-> +
-> +      pcfg_pull_default: pcfg-pull-default {
-> +        bias-pull-pin-default;
-> +      };
-> +
-> +      uart2 {
-> +        uart2_xfer: uart2-xfer {
-> +          rockchip,pins = <1 RK_PB0 1 &pcfg_pull_default>,
-> +                          <1 RK_PB1 1 &pcfg_pull_default>;
-> +        };
-> +      };
-> +    };
-> +
-> +    uart2: serial@20064000 {
-> +      compatible = "snps,dw-apb-uart";
-> +      reg = <0x20064000 0x400>;
-> +      interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
-> +      clocks = <&mux_uart2>;
-> +      pinctrl-0 = <&uart2_xfer>;
-> +      pinctrl-names = "default";
-> +      reg-io-width = <1>;
-> +      reg-shift = <2>;
-> +    };
+>    output-low:
+>      type: boolean
+>      description: set the pin to output mode with low level
 > -- 
-> 2.20.1
+> 2.17.1
 > 
 > 
