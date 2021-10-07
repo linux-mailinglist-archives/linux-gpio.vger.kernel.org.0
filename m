@@ -2,141 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C8B3425950
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Oct 2021 19:23:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF228425B69
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Oct 2021 21:14:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241663AbhJGRZi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 7 Oct 2021 13:25:38 -0400
-Received: from mail-vs1-f49.google.com ([209.85.217.49]:43982 "EHLO
-        mail-vs1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235301AbhJGRZi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Oct 2021 13:25:38 -0400
-Received: by mail-vs1-f49.google.com with SMTP id p2so7543326vst.10;
-        Thu, 07 Oct 2021 10:23:44 -0700 (PDT)
+        id S233903AbhJGTQm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 7 Oct 2021 15:16:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39734 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233889AbhJGTQm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Oct 2021 15:16:42 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05E9BC061570
+        for <linux-gpio@vger.kernel.org>; Thu,  7 Oct 2021 12:14:48 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id g8so27000845edt.7
+        for <linux-gpio@vger.kernel.org>; Thu, 07 Oct 2021 12:14:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=es7Lqt+oZlj235bOVkjIDlCKh4wi3M7l3uCVxF0IKpM=;
+        b=bENYO2Dngd0++rUcEYwO0qagMm1BD4M6p+MvZO5M6ZrJ3JjmDeYEU2L/WLw6GPyHW7
+         zTB47D73l9nJbua7DRAUSsT71ftQGSnCl4YbllJ7yfqfWwpPviyadsITMqCGLCos/gV2
+         PAgH1pyDZI7Z8gyRCzUH3Qm1nk4/Vk7i91oNa95LfnvhuwTKz9WXBKXKPmwlCl7VDG0D
+         4iHTefHGj7BV8tWOgBM/FMraUoG3ZI3dOKPM72bqUZflSh+9xDiujcchyoqye0nuD1qB
+         4LRJHfg/J7tp/hPaFnVaqFWxwTs/RBCtGXq5M3wvckTxQNPV5gPBhNvS/W6O7Cv/Pw5O
+         ZMWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V+O/Tzkp10P1T+2/uoWEpVc+uysV2odcVKV4KvQ215U=;
-        b=mUQyB0CmULvhRojj4nHZ+DkXDyV6mZVwVT+UxOlHCanmvS0wFj72FbNuB9C+86vzX6
-         oLEnJZDmg7Eizykec56R5J7iWxhA1y8shCeAx1GrbpfxdESVVpcXDgRTEEmUljdJl1HQ
-         iQ9al3xQCmloX2srfuB0WTs/ft7lrinHQwZf289W/W8VpY7WRJ5b96J8qzwcOCNDiiuO
-         Zu68P/FtRBIXNZYreZAK2f6BjohwEZlV7eHhS2WGuAwxpS06eEe5cHVXsZa5htuJo3Wy
-         g2VV0ohxotVqvdA0HHcq7y7qqV+EBXVXm/La7sgkh94/nN/v0dGF2llyuSH2N/JkWMZ9
-         Eucg==
-X-Gm-Message-State: AOAM530jm7n/LFWa4C+lCHeq2rNoJcdt1cB36hz4X77oemp3RjPAHiTn
-        l18OCVME3I/CYjG3AGAr6lrzMfxTvcXnJX3ba5g=
-X-Google-Smtp-Source: ABdhPJy4V/GXmg0AB22mdAwPWs3SRDpQ98AGJjXgLUnixh5p7JM+hRNLqYF8eYaypEWmH3xNHiXW9XwGfcfP15BVtaQ=
-X-Received: by 2002:a67:d583:: with SMTP id m3mr5601152vsj.41.1633627423685;
- Thu, 07 Oct 2021 10:23:43 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=es7Lqt+oZlj235bOVkjIDlCKh4wi3M7l3uCVxF0IKpM=;
+        b=KJivX6IH+VlINeAOAj0ifjsaTPVLxj2Lg5X5xlb3toBA5C0nd63TGzmKwR6z36+KWN
+         Xay8fF6Jv9AEct+1gBteBqq7k0dldABqPlFYJjILeb3NLPqSy52POySmnik0cKoB4eX4
+         Z0qr3Ntgh5LAw6DX6BA5/K2Za+kvza9WumTuSB1V2Sd4BFjPKyYY90eKYoHHkiQOWZFV
+         GmOD/Y7HfIVI2HrW77I5h/PIbXnqhQ2LDlbL3yCTo3xrZUd3f7RXbfutSjDAprZNQi7Q
+         zQfH3/EIcvC0RWIdxwiubu7wYLTpZpa07alCni50QiZgOn6RBmNIbk5cSYBkaKr6W2AQ
+         wA2A==
+X-Gm-Message-State: AOAM531p5FmNehLDLFHgW4f78t22j5T2yTaGUklKZDR9NlEYFXUW+qqU
+        6KMRo9DKm0RoI+hSYmDMqp6aJERTO8q/AFMoGCS+mudxYHw=
+X-Google-Smtp-Source: ABdhPJygTKQarmFVhWU1a2aB9pFIiKNd13uNAYjVEt5zr+ubFPzCuxICxjtmEJLK2wrkdyqShhPigALSxV4eDhBQXQg=
+X-Received: by 2002:a50:8d51:: with SMTP id t17mr8605631edt.205.1633634086548;
+ Thu, 07 Oct 2021 12:14:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210930121630.17449-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20210930121630.17449-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20210930121630.17449-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 7 Oct 2021 19:23:31 +0200
-Message-ID: <CAMuHMdXHv7H3xxEYFLhfBf+Pun-w=F4k5S2RAYJY6qz75QpxhQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 4/4] pinctrl: renesas: pinctrl-rzg2l: Add support to
- get/set drive-strength and output-impedance
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>
+References: <BN8PR17MB3025D723599B15E5AFB208DAA1A29@BN8PR17MB3025.namprd17.prod.outlook.com>
+ <CAMRc=Mewmbqo+y++j4iFEn36NMW3xL7AG9Vd+pLt6-PLE3cn0Q@mail.gmail.com> <BN8PR17MB302555D87D065ED3D19AB340A1A49@BN8PR17MB3025.namprd17.prod.outlook.com>
+In-Reply-To: <BN8PR17MB302555D87D065ED3D19AB340A1A49@BN8PR17MB3025.namprd17.prod.outlook.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 7 Oct 2021 21:14:35 +0200
+Message-ID: <CAMRc=McBQiOjPdJpd3RFR-EirgKHGhR+ae9V22O8nJVreT8ROA@mail.gmail.com>
+Subject: Re: GPIO Bulk Request Problem
+To:     Kenneth Sloat <ksloat@designlinxhs.com>
+Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Prabhakar,
-
-On Thu, Sep 30, 2021 at 2:17 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add support to get/set drive-strength and output-impedance of the pins.
+On Fri, Sep 24, 2021 at 2:25 PM Kenneth Sloat <ksloat@designlinxhs.com> wro=
+te:
 >
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-
-Thanks for your patch!
-
-> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> @@ -47,6 +47,7 @@
->  #define PIN_CFG_FILONOFF               BIT(9)
->  #define PIN_CFG_FILNUM                 BIT(10)
->  #define PIN_CFG_FILCLKSEL              BIT(11)
-> +#define PIN_CFG_GROUP_B                        BIT(12)
-
-Perhaps it would be easier to have separate PIN_CFG_IOLH_A and
-PIN_CFG_IOLH_B flags, instead of a PIN_CFG_IOLH flag and a
-PIN_CFG_GROUP_B modifier flag?
-
+> Hi Bart,
 >
->  #define RZG2L_MPXED_PIN_FUNCS          (PIN_CFG_IOLH | \
->                                          PIN_CFG_SR | \
-
-> @@ -484,6 +513,38 @@ static int rzg2l_pinctrl_pinconf_get(struct pinctrl_dev *pctldev,
->                 break;
->         }
+> On Wed, Sep 22, 2021 at 6:27 PM Kenneth Sloat <ksloat@designlinxhs.com> w=
+rote:
+> >>
+> >> Hello,
+> >>
+> >> I am using libgpiod v1.4.1 and am having trouble using a bulk request =
+of gpio lines as outputs from a chip. I am using the C++ bindings. I have c=
+onfirmed that I can individually request lines and set them as expected. Ho=
+wever, if I use the bulk request, while I get the expected number of lines =
+(and defaulted value is set correctly), iterating through them (with array =
+operator in this case) and trying to set the values is not working as expec=
+ted. I find that for every index/position, line 0 is the one being toggled.
+> >>
+> >> A simple example is below:
+> >>
+> >>     gpiod::chip *mychip;
+> >>
+> >>     mychip =3D new gpiod::chip("1");
 >
-> +       case PIN_CONFIG_OUTPUT_IMPEDANCE:
-> +       case PIN_CONFIG_DRIVE_STRENGTH: {
-> +               unsigned int mA[4] = { 2, 4, 8, 12 };
-> +               unsigned int oi[4] = { 100, 66, 50, 33 };
+> > Why would you need to allocate it with new?
+>
+> It's just how I chose to throw the example together.
+>
+> >>
+> >>     gpiod::line_bulk lines =3D mychip->get_all_lines();
+> >>     lines.request({std::string("gpio-test"),
+> >>         gpiod::line_request::DIRECTION_OUTPUT, 0});
+> >>
+> >>     for (unsigned int i =3D 0; i < lines.size(); i++) {
+> >>         printf("Set line %d\n", i);
+> >>         lines[i].set_value(1);
+> >>         usleep(1000 * 1000);
+> >>         printf("Clear line %d\n", i);
+> >>         lines[i].set_value(0);
+> >>         usleep(1000 * 1000);
+> >>         printf("\n");
+> >>     }
+> >>
+> >>     return 0;
+> >>
+> >> Not sure if this is a usage problem on my part or an actual issue.
+> >>
+>
+> > I'll see if I can confirm the behavior here but it looks like a bug ind=
+eed.
+>
+> > Bart
+>
+> Thanks Bart. If you use individual requests to the GPIOs as outputs first=
+, use can still use the index operator (or iterator) on a line_bulk object =
+to individually set the LEDs. It doesn't work when you only use the request=
+ through this object though:
+>     gpiod::line_bulk lines =3D mychip->get_all_lines();
+>         lines.request(......
+>
+> > Thanks
+> >
+> > Sincerely,
+> > Ken Sloat
+>
+> Thanks
+>
+> Sincerely,
+> Ken Sloat
 
-static const
+So I took a look at this and unfortunately you hit one of the major
+issues with libgpiod v1 and something that will be thoroughly
+addressed in v2. When you make a bulk request, all the lines share a
+single file descriptor. That means that any ioctl() operates on sets
+of lines rather than single lines. The only fix for that would be to
+force requesting every line on its own. Unfortunately the only "fix"
+to your problem is to always use the bulk object. Otherwise the single
+line cannot know it's being used separately.
 
-> +
-> +               if (param == PIN_CONFIG_DRIVE_STRENGTH) {
-> +                       if (!(cfg & PIN_CFG_IOLH) || groupb_pin)
-> +                               return -EINVAL;
-> +               } else {
-> +                       if (!(cfg & PIN_CFG_IOLH) || !groupb_pin)
-> +                               return -EINVAL;
-> +               }
-> +
-> +               spin_lock_irqsave(&pctrl->lock, flags);
-> +
-> +               /* handle _L/_H for 32-bit register read/write */
-> +               addr = pctrl->base + IOLH(port);
-> +               if (bit >= 4) {
-> +                       bit -= 4;
-> +                       addr += 4;
-> +               }
-> +
-> +               reg = readl(addr) & (IOLH_MASK << (bit * 8));
-> +               reg = reg >> (bit * 8);
-> +               if (param == PIN_CONFIG_DRIVE_STRENGTH)
-> +                       arg = mA[reg];
-> +               else
-> +                       arg = oi[reg];
-> +               spin_unlock_irqrestore(&pctrl->lock, flags);
+In v2 we're addressing it by associating a request explicitly with a
+set of lines (can be a single line) and never allowing this kind of
+situation.
 
-I think you've reached the point where it starts to make sense to
-have helper functions to read and modify these sub-register fields
-that may be located into the current or next register.
+Sorry for the inconvenience - I didn't know any better at the time.
 
-And after that, you can split it in two smaller separate cases for
-drive strength and output impedance.
-
-> +               break;
-> +       }
-> +
->         default:
->                 return -ENOTSUPP;
->         }
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Bart
