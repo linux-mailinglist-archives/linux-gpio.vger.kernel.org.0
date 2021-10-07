@@ -2,92 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3244D4258C9
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Oct 2021 19:04:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 601AA4258E7
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Oct 2021 19:07:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242985AbhJGRF4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 7 Oct 2021 13:05:56 -0400
-Received: from mail-vs1-f46.google.com ([209.85.217.46]:43552 "EHLO
-        mail-vs1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242964AbhJGRFz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Oct 2021 13:05:55 -0400
-Received: by mail-vs1-f46.google.com with SMTP id p2so7476087vst.10;
-        Thu, 07 Oct 2021 10:04:01 -0700 (PDT)
+        id S243049AbhJGRJZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 7 Oct 2021 13:09:25 -0400
+Received: from mail-ot1-f54.google.com ([209.85.210.54]:35441 "EHLO
+        mail-ot1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242368AbhJGRJY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Oct 2021 13:09:24 -0400
+Received: by mail-ot1-f54.google.com with SMTP id 77-20020a9d0ed3000000b00546e10e6699so8372352otj.2;
+        Thu, 07 Oct 2021 10:07:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=k/AVoCzAraA2PyKzTWn7ZFVdIxhqagP4oPTHWfnliPg=;
-        b=Sn7EL4yAcsbLp08tpuDVe6fOV9OVSnzehuCilqWIHcaQvzyAqzG4dzrOqWFCwJdw2+
-         deMm14QdQ3eHfvMVZ6GAWXGmWAWIor5SA+jETbQpzSa4B+0pLtlJGK1y24g/wapPr9Ju
-         LoT1Dh/mo8PCR4Jglfp4gwPh2oRJlQ92qC70WmTCQeynQccX+lwLP3e7/fnq258GD0Yg
-         TbMYkeSuAc119LqpLiATHZq+8+rUmmZBQlj9kcnL5z/KXWyLIhSrsp/awcetuBpPVPU8
-         sjQ7qUwkArRkYruUuINnfo0bKEbEdXNgupoD6bNE9xPNsL9n2/MpG4eiPB+LhcdLsAep
-         Mj9g==
-X-Gm-Message-State: AOAM531/E1bfPFU4m+N4YEA5MgNv0jiLH2Em8+fsN5stXwbVYrT+Xo4A
-        64/shNjHgnVuIFabB1PQh65TQGzKQQoZGZN6fKQ=
-X-Google-Smtp-Source: ABdhPJy5Ztbq7UtjQc4jDGhQctOdP9bDEDAJ6WtC0mcBbAg3k+HREuP2zESbj5HH4fd3DmHYSTWScBe/Q4rUChJQTJA=
-X-Received: by 2002:a67:ac04:: with SMTP id v4mr5747203vse.50.1633626241259;
- Thu, 07 Oct 2021 10:04:01 -0700 (PDT)
+        bh=IefJA9LBUD7adbLBoj6lhBu/BQqC/aTFaIOQ0tDZ+DQ=;
+        b=5VMHO66+Ciwq244nC8uszX8d4UYVKucH5RRnVQNiAfFQW28/z10912Zr0kWyoAwh6U
+         3H7MqcK5KCYeUJCMVYtPH1+wV7j7y0b4pZjM4csUW03tyi7+s1Nrh/zewvK5Zi6B+Eys
+         JRtsGyoZgD5HFhbx9xentsSmuopJNul4p5tEiiANdx1gxHOFk92YXYEc62HDEU9/9Dle
+         xfy6MIZUtuLoRzuMOzf1wph3l27u/2/mWul4XoGX+mLlS1icrL7I7hAMzQZSArIqPegw
+         VG9QPZXLxYNonWy0c9zFX+0gAD6sDw0PFKr36hOdVBdwbSpXzXRtuLkinBqtwnaDTMy8
+         mx6w==
+X-Gm-Message-State: AOAM531fLD+hi7pYWWy64U8L4pEYHDCMeA63Jvclx7BIavaAmVG7lnPX
+        No2PzqCAq4oBANc5sY9e0BjNjwKPdiOF0ZoJNDE=
+X-Google-Smtp-Source: ABdhPJzrrsgi8uz8zu+MUoSiFl5pa9fUsEyroZv6f/hs128KFBk/gp7uP9JpenjMSxRdtp+uu9Z2//YAVV7FkeHQ274=
+X-Received: by 2002:a9d:2f24:: with SMTP id h33mr4756669otb.254.1633626449857;
+ Thu, 07 Oct 2021 10:07:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210930121630.17449-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20210930121630.17449-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20210930121630.17449-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 7 Oct 2021 19:03:50 +0200
-Message-ID: <CAMuHMdUN-iFBAtUjvS8Bg+jqpkfcWrx=9Lif2VmYqMXLUZ5jtA@mail.gmail.com>
-Subject: Re: [RFC PATCH 3/4] dt-bindings: pinctrl: renesas,rzg2l-pinctrl: Add
- output-impedance property
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+References: <20211006173125.84423-1-andriy.shevchenko@linux.intel.com>
+ <20211006173125.84423-3-andriy.shevchenko@linux.intel.com>
+ <CAJZ5v0iN+28gccy00_Ces9bYsLCNJaHaTZGMUwRrPA6TpY3H8A@mail.gmail.com> <YV8oAThCe2dR6K1n@smile.fi.intel.com>
+In-Reply-To: <YV8oAThCe2dR6K1n@smile.fi.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 7 Oct 2021 19:07:19 +0200
+Message-ID: <CAJZ5v0hTqUnvvhEN4O-Boi-_RBFvT5mNKBn+fVdo4XWz0-XJ_Q@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] gpiolib: acpi: Replace custom code with device_match_acpi_handle()
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Saravana Kannan <saravanak@google.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Wolfram Sang <wsa@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Prabhakar,
-
-On Thu, Sep 30, 2021 at 2:17 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> RZ/G2L SoC has two groups of pins, Group-A and Group-B. RZ/G2L SoC supports
-> configuring Output Impedance for Group-B pins (valid values 33/50/66/100).
+On Thu, Oct 7, 2021 at 7:02 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> On Thu, Oct 07, 2021 at 06:50:46PM +0200, Rafael J. Wysocki wrote:
+> > On Wed, Oct 6, 2021 at 7:31 PM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+>
+> ...
+>
+> > > +       return gc->parent ? device_match_acpi_handle(gc->parent, data) : false;
+> >
+> > return gc->parent && device_match_acpi_handle(gc->parent, data);
+> >
+> > would work too if I'm not mistaken.
+>
+> Seems so.
+>
+> Thanks for review, I will update for v3.
+> Any other comments to the series?
 
-Thanks for your patch!
-
-> --- a/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
-> @@ -73,6 +73,8 @@ additionalProperties:
->          pins: true
->          drive-strength:
->            enum: [ 2, 4, 8, 12 ]
-> +        output-impedance:
-
-"output-impedance-ohms", as per DT standardized property units.
-
-> +          enum: [ 33, 50, 66, 100 ]
->          power-source:
->            enum: [ 1800, 2500, 3300 ]
->          slew-rate: true
-
-With the above fixed:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Not really.  Patch [2/3] is correct AFAICS.
