@@ -2,122 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FE6F424BB7
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Oct 2021 04:14:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C45D42555D
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Oct 2021 16:25:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230505AbhJGCQY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Oct 2021 22:16:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58940 "EHLO
+        id S242060AbhJGO1h (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 7 Oct 2021 10:27:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230443AbhJGCQY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Oct 2021 22:16:24 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EFEEC061746;
-        Wed,  6 Oct 2021 19:14:31 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id m14so3978379pfc.9;
-        Wed, 06 Oct 2021 19:14:31 -0700 (PDT)
+        with ESMTP id S242043AbhJGO1h (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Oct 2021 10:27:37 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C7AEC061570
+        for <linux-gpio@vger.kernel.org>; Thu,  7 Oct 2021 07:25:43 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id y1so4002551plk.10
+        for <linux-gpio@vger.kernel.org>; Thu, 07 Oct 2021 07:25:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=zE7hlODd6NPyiXnEakuG69lfP+QvHTUKQl/iJbEFaPM=;
-        b=GD3SSn1gy0zxUJnMRAdQxxFXRtoyqFzb+PfuuIo93r/swOQI+Pxq2p0ETTrJAGEYME
-         eRJOxeDqvK1xuIaICv9ssQU9qB4InEa1eOBgDGLzaptRcOUpu0diCXIm0ZH6kQYrIlDe
-         O7bzhOuXiQJj1zcl++uBAxnavege+K2jBQ2T9PsreKjQ80RpeSbxBSUUONxbnDumjADS
-         cs+XPUxA0M61EC04lzXvTdcUSlX0wMCCow4lBbyumG+0HTSF7k4LMbfnLL6rSnK9h4K5
-         /Eup7rTxlqWGmcvOj8qHjBTx63krdk061r3stfp4tC2YdcFEspxaMg05bsYPEflTHa4M
-         ROUQ==
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=LKMdW8eXJJQoIzur5jtUB7TYD/pVRqgw99BRVM74YbM=;
+        b=pqPuz3sJ4w86eX240AbJi2OYbK3joyS2DL7HmKH2AJA1iQ4PMyJKrggBOqZSY/2srB
+         pPWqGiUCtw/WB/pHZpdC7PtrlOcqRsyMa6b8h4YCmGzn7JWFRAVNTGRUHAyERIixkuEK
+         i0WpKz+LnzxDjkfHWEaiCd5Jp0qZGELNV9aUUMiwI8YfGT0N2CTpbjJfa9Wx+w9kLPxU
+         CVZKRpWqvLQnB/OTg8Ltvr7v/DX9lAHafiw42yV9mx3QvATGtZTyaJmM8RW2r2EwBD33
+         OGMQpbkVnWM2yY5Fk3NeikfSHnByM8WFFyMWMS5mF7xGQcgqy9KHa1hPEbn5dlTTPj+6
+         OVlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zE7hlODd6NPyiXnEakuG69lfP+QvHTUKQl/iJbEFaPM=;
-        b=pDPexeX45v91TISINLYLa0g7qJQ5bmwwCFeqb9l3sdmKcEUBgaNXtIqDbtFPyfiz3R
-         K+xuc1jXjSyKduNCjpDQrDBoGtESQ2Ppa4oFH7B9iGiIPvTIwmQTohBNUcxJHwvNOm4L
-         zjmIQU/RbifVAIroUCaHkuIDrytUBSx/dGzQXtCLJzdPA26v+a4veGgYzRzKrC154mP8
-         ZYcziVOOMLdPWCindVG55KmGyhbJPeIQN8XStkA7vUKtjT5B8d+RpfocJl10oFpDEtMg
-         syPliY/CoryfwM7946t09w7zfLa093QLYA4S9kEQFinMNPyzQygAb3ld05j0MW/7FGQx
-         qEHA==
-X-Gm-Message-State: AOAM530zd+0dwJN/FLNVqc9mT4bq9dcuYT069HTYIcMiPcWv0kgKP9vn
-        tTkRvU+qYxASvsZohAaSIgQ=
-X-Google-Smtp-Source: ABdhPJxQqVylmn8imZ+r34wMCfcyjjPD2wtrRwePCKvKmyEhmxq2TLGobVaYx+eNuIcfRkhEMzBZ9w==
-X-Received: by 2002:a05:6a00:b4d:b0:44c:b7a7:cab2 with SMTP id p13-20020a056a000b4d00b0044cb7a7cab2mr1480805pfo.20.1633572871034;
-        Wed, 06 Oct 2021 19:14:31 -0700 (PDT)
-Received: from sol (106-69-170-56.dyn.iinet.net.au. [106.69.170.56])
-        by smtp.gmail.com with ESMTPSA id z4sm22772247pfz.99.2021.10.06.19.14.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Oct 2021 19:14:30 -0700 (PDT)
-Date:   Thu, 7 Oct 2021 10:14:24 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     lakshmi.sowjanya.d@intel.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, mgross@linux.intel.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        tamal.saha@intel.com, bala.senthil@intel.com
-Subject: Re: [RFC PATCH v1 02/20] gpio: Add GPIO polling interface to GPIO lib
-Message-ID: <20211007021424.GA13920@sol>
-References: <20210824164801.28896-1-lakshmi.sowjanya.d@intel.com>
- <20210824164801.28896-3-lakshmi.sowjanya.d@intel.com>
- <CAMpxmJWeZP-f-3BoWwX7PkWNZySn5RP=rc4cVyLEwYmSb6if+w@mail.gmail.com>
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=LKMdW8eXJJQoIzur5jtUB7TYD/pVRqgw99BRVM74YbM=;
+        b=f4INjDsVyCTkp2EnTBD834vnGRjsYuaxVlJM8BwdwSVYgUyZ5MUU3KeG9p+sXzhBNz
+         gPRLhdf18QxbeOzexwV8EO4SAOf3/lu1kAR63+Cn6sRPL4RmMpKdaLXusPi8SaDdsCmW
+         nLOqBzjxtuBLv/c1YmeYaQ3F+qaW09La3z4CFl4ctKJ1/Vf6G1Sa4N8hmkMv9JxCn/Ug
+         Q2XPV0fWyvu+lbaa83yXFKGcMk1e4oie136qNlkAyNuHOb+fM5wpyCCI9JQMTnb02KBJ
+         fPRhhzDRthQhPObgI69TIDYwXu3U6qPDE1Clz44vC+vOy7zyCZ/lQ16tTGj3bE1xuWNl
+         LEgg==
+X-Gm-Message-State: AOAM531bQ2Eaek8tDErtdKul4NbWlkCp4lafuootUFnaFxxT0FYPWK+r
+        Xl5weao4/r+oMjHmupjZyvaCsfYg463MVtu99Eg=
+X-Google-Smtp-Source: ABdhPJwUVmIl0oC+fosDbupGJKC/nvrImqaGK+BG23hTR2GBUgubrBzSMBvPYEZ64RhEpdY33SKeCh+6+aJx46njoq8=
+X-Received: by 2002:a17:902:8543:b029:12d:461f:a6a8 with SMTP id
+ d3-20020a1709028543b029012d461fa6a8mr4159215plo.1.1633616743050; Thu, 07 Oct
+ 2021 07:25:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMpxmJWeZP-f-3BoWwX7PkWNZySn5RP=rc4cVyLEwYmSb6if+w@mail.gmail.com>
+Received: by 2002:a05:7300:76cb:b0:3f:de06:fa40 with HTTP; Thu, 7 Oct 2021
+ 07:25:42 -0700 (PDT)
+Reply-To: lydiawright836@gmail.com
+From:   LYDIA WRIGHT <bryanwalker534@gmail.com>
+Date:   Thu, 7 Oct 2021 17:25:42 +0300
+Message-ID: <CAKxfBbTjVMD9w0JpDEg6JYqvJCs_LyTpb3itagjAp4qH3igVzQ@mail.gmail.com>
+Subject: Best Regards
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 22, 2021 at 12:03:53PM +0200, Bartosz Golaszewski wrote:
-> On Tue, Aug 24, 2021 at 6:48 PM <lakshmi.sowjanya.d@intel.com> wrote:
-> >
-> > From: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
-> >
-> > Some Intel Timed I/O devices do not implement IRQ functionality. Augment
-> > read() interface to allow polling.
-> >
-> > Add two GPIO device methods: setup_poll() and poll():
-> > - setup_poll() configures the GPIO interface e.g. capture rising edges
-> > - poll() checks for events on the interface
-> >
-> > To implement polling, the driver must implement the two functions above
-> > and should either leave to_irq() method NULL or return irq 0.
-> >
-> > setup_poll() should configure the hardware to 'listen' for input events.
-> >
-> > poll() driver implementation must return the realtime timestamp
-> > corresponding to the event and -EAGAIN if no data is available.
-> >
-> > Co-developed-by: Christopher Hall <christopher.s.hall@intel.com>
-> > Signed-off-by: Christopher Hall <christopher.s.hall@intel.com>
-> > Signed-off-by: Tamal Saha <tamal.saha@intel.com>
-> > Signed-off-by: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
-> > Reviewed-by: Mark Gross <mgross@linux.intel.com>
-> > ---
-> 
-> Interesting. So the idea is to allow user-space to read line events as
-> if they were generated by interrupts handled in the kernel. While this
-> whole series has a long way to go and this patch looks wrong to me in
-> several places at first glance, I find the idea interesting. Cc'ing
-> Kent who's the author of most of this code - Kent: what do you think?
-> 
+Greetings dear,
 
-It is interesting that we're seeing more hardware that provides more
-detailed edge info than we get from irq.  The hte patch series can also
-provide hardware timestamps, but the Timed I/O could even provide the
-sequence numbers.
-It might be worth abstracting the edge detection so edge events could be
-more easily driven by subsystems other than irq, without festooning cdev
-with special cases.
+My name is Lydia A. Wright, and I'm from Akron, Ohio. The U.S.A, This
+message will most likely surprise you. I'm dying of cancer, which I
+was diagnosed with around two years ago, and I'm recovering from a
+stroke that has made walking difficult.
+Mr. L=C3=A9vi Wright, my husband, passed away in mid-March 2011 from a
+heart attack. I'll be having surgery soon.  I only have a few years
+left in this world, my late spouse has  $10.5 million as a family
+valuable , which I intend to gift to charity.
 
-I'm not a fan of the polling here though, particularly from userspace.
-If polling can't be avoided (why did they not provide an irq??) then I
-would do the polling in kernel and place any resulting events in the
-cdev kfifo for userspace to read as per the existing events.
+For more information, please contact me at (lydiawright836@gmail.com)
+. Thank you sincerely!
 
-Of course that is without knowing a whole lot about the hardware or use
-cases.  The Intel datasheet doesn't provide much in the way of data :|.
-
-Cheers,
-Kent.
+Mrs. Lydia A. Wright
+Rosalind Ct, Akron, Ohio , U.S.A
