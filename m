@@ -2,77 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B9A1425942
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Oct 2021 19:20:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C5084258C0
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Oct 2021 19:02:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233724AbhJGRWo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 7 Oct 2021 13:22:44 -0400
-Received: from mga14.intel.com ([192.55.52.115]:8047 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233662AbhJGRWk (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 7 Oct 2021 13:22:40 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10130"; a="226606451"
-X-IronPort-AV: E=Sophos;i="5.85,355,1624345200"; 
-   d="scan'208";a="226606451"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 10:02:00 -0700
-X-IronPort-AV: E=Sophos;i="5.85,355,1624345200"; 
-   d="scan'208";a="458863397"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 10:01:57 -0700
-Received: from andy by smile with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1mYWmH-009bZU-OW;
-        Thu, 07 Oct 2021 20:01:53 +0300
-Date:   Thu, 7 Oct 2021 20:01:53 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Wolfram Sang <wsa@kernel.org>
-Subject: Re: [PATCH v2 3/3] gpiolib: acpi: Replace custom code with
- device_match_acpi_handle()
-Message-ID: <YV8oAThCe2dR6K1n@smile.fi.intel.com>
-References: <20211006173125.84423-1-andriy.shevchenko@linux.intel.com>
- <20211006173125.84423-3-andriy.shevchenko@linux.intel.com>
- <CAJZ5v0iN+28gccy00_Ces9bYsLCNJaHaTZGMUwRrPA6TpY3H8A@mail.gmail.com>
+        id S242964AbhJGREI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 7 Oct 2021 13:04:08 -0400
+Received: from mail-vs1-f53.google.com ([209.85.217.53]:35706 "EHLO
+        mail-vs1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242929AbhJGREI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Oct 2021 13:04:08 -0400
+Received: by mail-vs1-f53.google.com with SMTP id w13so7545845vsa.2;
+        Thu, 07 Oct 2021 10:02:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Net6A8uPndAbUJ/QYF9dWGXevGNTqsRWAodqdtCMsEE=;
+        b=a3AH8lJ25c2IqDesnUpgKMiv4JLi4VTKuA6iZnJT7u9QmmFoIVZonTOimgx8Cmo5BA
+         OwQLqP9p3kgdXd46hYX8clAyPMNMYcszKnPOrYrKlP1LanjUdQfVhP4W1nlDTylqkm61
+         ouS5oD0naWRMghQeGL+RR4fTBYFnShsMiKrMdS1UV+5m6ymQTG+7/VqibVMXBkvWd6p+
+         97+qwpZfMJBusBYCtkONl9Lk9lrFqg5XZzcJT5fe1SN8BlcxwoYsn2hvJMn2STicKLPA
+         8P5BPFtzLBYghvIiAPprAgj8naSK5B+Rw4CusGEDE+JOVjKy+T2SwJM221P2Alq9xat3
+         rp6A==
+X-Gm-Message-State: AOAM532sd+ROhdggJyVf6L4py4HQSPoapEO31H6dWu6PsKbx6I9hackS
+        9Kreddm9KEN57aRyFh7IdKRo9zKkxubNJympOwcqHso6qTo=
+X-Google-Smtp-Source: ABdhPJzVmcl8PZkb76DK9qwOf9kWSU1i0RLwFeh1d7XJBpKhfCCDagP8eWWePrc2v0sVe7t2WFcWBkJeMX/uQi0Udfs=
+X-Received: by 2002:a67:2c58:: with SMTP id s85mr5480132vss.35.1633626133545;
+ Thu, 07 Oct 2021 10:02:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0iN+28gccy00_Ces9bYsLCNJaHaTZGMUwRrPA6TpY3H8A@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20210930121630.17449-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20210930121630.17449-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20210930121630.17449-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 7 Oct 2021 19:02:02 +0200
+Message-ID: <CAMuHMdVd8nhWX9__bo9oxE44_+FNYs3RhxmJNbz-kKnRzKJZYA@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/4] pinctrl: pinconf-generic: Add support for
+ "output-impedance" to be extracted from DT files
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 07, 2021 at 06:50:46PM +0200, Rafael J. Wysocki wrote:
-> On Wed, Oct 6, 2021 at 7:31 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
+Hi Prabhakar,
 
-...
+On Thu, Sep 30, 2021 at 2:17 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Add "output-impedance" property to generic options used for DT parsing
+> files. This enables drivers, which use generic pin configurations, to
+> get the value passed to this property.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-> > +       return gc->parent ? device_match_acpi_handle(gc->parent, data) : false;
-> 
-> return gc->parent && device_match_acpi_handle(gc->parent, data);
-> 
-> would work too if I'm not mistaken.
+Thanks for your patch!
 
-Seems so.
+> --- a/drivers/pinctrl/pinconf-generic.c
+> +++ b/drivers/pinctrl/pinconf-generic.c
+> @@ -46,6 +46,7 @@ static const struct pin_config_item conf_items[] = {
+>         PCONFDUMP(PIN_CONFIG_MODE_LOW_POWER, "pin low power", "mode", true),
+>         PCONFDUMP(PIN_CONFIG_OUTPUT_ENABLE, "output enabled", NULL, false),
+>         PCONFDUMP(PIN_CONFIG_OUTPUT, "pin output", "level", true),
+> +       PCONFDUMP(PIN_CONFIG_OUTPUT_IMPEDANCE, "output impedance", "ohm", true),
+>         PCONFDUMP(PIN_CONFIG_POWER_SOURCE, "pin power source", "selector", true),
+>         PCONFDUMP(PIN_CONFIG_SLEEP_HARDWARE_STATE, "sleep hardware state", NULL, false),
+>         PCONFDUMP(PIN_CONFIG_SLEW_RATE, "slew rate", NULL, true),
+> @@ -179,6 +180,7 @@ static const struct pinconf_generic_params dt_params[] = {
+>         { "output-disable", PIN_CONFIG_OUTPUT_ENABLE, 0 },
+>         { "output-enable", PIN_CONFIG_OUTPUT_ENABLE, 1 },
+>         { "output-high", PIN_CONFIG_OUTPUT, 1, },
+> +       { "output-impedance", PIN_CONFIG_OUTPUT_IMPEDANCE, 0 },
 
-Thanks for review, I will update for v3.
-Any other comments to the series?
+"output-impedance-ohms", as per DT standardized property units.
+
+>         { "output-low", PIN_CONFIG_OUTPUT, 0, },
+>         { "power-source", PIN_CONFIG_POWER_SOURCE, 0 },
+>         { "sleep-hardware-state", PIN_CONFIG_SLEEP_HARDWARE_STATE, 0 },
+
+With the above fixed:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
