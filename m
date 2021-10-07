@@ -2,90 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CAF3D4248A9
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Oct 2021 23:14:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FE6F424BB7
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Oct 2021 04:14:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239644AbhJFVQq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 6 Oct 2021 17:16:46 -0400
-Received: from mail-ot1-f41.google.com ([209.85.210.41]:36810 "EHLO
-        mail-ot1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239646AbhJFVQp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Oct 2021 17:16:45 -0400
-Received: by mail-ot1-f41.google.com with SMTP id 5-20020a9d0685000000b0054706d7b8e5so4867091otx.3;
-        Wed, 06 Oct 2021 14:14:53 -0700 (PDT)
+        id S230505AbhJGCQY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 6 Oct 2021 22:16:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58940 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230443AbhJGCQY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 6 Oct 2021 22:16:24 -0400
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EFEEC061746;
+        Wed,  6 Oct 2021 19:14:31 -0700 (PDT)
+Received: by mail-pf1-x42d.google.com with SMTP id m14so3978379pfc.9;
+        Wed, 06 Oct 2021 19:14:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=zE7hlODd6NPyiXnEakuG69lfP+QvHTUKQl/iJbEFaPM=;
+        b=GD3SSn1gy0zxUJnMRAdQxxFXRtoyqFzb+PfuuIo93r/swOQI+Pxq2p0ETTrJAGEYME
+         eRJOxeDqvK1xuIaICv9ssQU9qB4InEa1eOBgDGLzaptRcOUpu0diCXIm0ZH6kQYrIlDe
+         O7bzhOuXiQJj1zcl++uBAxnavege+K2jBQ2T9PsreKjQ80RpeSbxBSUUONxbnDumjADS
+         cs+XPUxA0M61EC04lzXvTdcUSlX0wMCCow4lBbyumG+0HTSF7k4LMbfnLL6rSnK9h4K5
+         /Eup7rTxlqWGmcvOj8qHjBTx63krdk061r3stfp4tC2YdcFEspxaMg05bsYPEflTHa4M
+         ROUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=lak8Kr6S28oWWnCbDixiphSYTCbXgMBHH9/qqV4Giyc=;
-        b=1Mlm9+OC7ZdJp/6YYm78hcul4b2nMToWIb94JdwE1gCoGR1M8e+Aj+CZK/y9Fbft1j
-         PYe9c/i02O0YOG9YLdp5yxNNGgj9LNwgH/3NlrVsJ/evU/vKkv6gvj7tUBz6zAHdZ7Vz
-         OvPLsPhcls2xBGpqpT8hs/1mqE9Tm3ukN4OoIdIcgeGtYAGyuk8Eugzc3kjm3lPzdhu+
-         JaPfjXtjM3dNK/XYZu6yk1KuiMSBzgTd8zsoU/kXF5GNV/0VPjL3SMBlcZ7O52WKg6pI
-         8JPD/OWTPRVMr2wyXnQrTGbsVHicVvLDL5aNox1WqcjKT/uG1o07dzxdEhiv+t9WxsUV
-         4MlA==
-X-Gm-Message-State: AOAM53066FWbw6hNWH1xZ/4h62+XCtt/Jf2LLwl/iEyighvGCy06+Kcc
-        z4Qgt3r+Sxl3l5TPInwPYdYx4bFl+Q==
-X-Google-Smtp-Source: ABdhPJwjkpOHrD8M6tpuzasy4z7/puEHow6aB3HnOWHU8azVI5+r8jJyF/JJjo6sBcNSVtVIjY967g==
-X-Received: by 2002:a9d:71d4:: with SMTP id z20mr432620otj.29.1633554892688;
-        Wed, 06 Oct 2021 14:14:52 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id s22sm1100539ois.32.2021.10.06.14.14.51
+        bh=zE7hlODd6NPyiXnEakuG69lfP+QvHTUKQl/iJbEFaPM=;
+        b=pDPexeX45v91TISINLYLa0g7qJQ5bmwwCFeqb9l3sdmKcEUBgaNXtIqDbtFPyfiz3R
+         K+xuc1jXjSyKduNCjpDQrDBoGtESQ2Ppa4oFH7B9iGiIPvTIwmQTohBNUcxJHwvNOm4L
+         zjmIQU/RbifVAIroUCaHkuIDrytUBSx/dGzQXtCLJzdPA26v+a4veGgYzRzKrC154mP8
+         ZYcziVOOMLdPWCindVG55KmGyhbJPeIQN8XStkA7vUKtjT5B8d+RpfocJl10oFpDEtMg
+         syPliY/CoryfwM7946t09w7zfLa093QLYA4S9kEQFinMNPyzQygAb3ld05j0MW/7FGQx
+         qEHA==
+X-Gm-Message-State: AOAM530zd+0dwJN/FLNVqc9mT4bq9dcuYT069HTYIcMiPcWv0kgKP9vn
+        tTkRvU+qYxASvsZohAaSIgQ=
+X-Google-Smtp-Source: ABdhPJxQqVylmn8imZ+r34wMCfcyjjPD2wtrRwePCKvKmyEhmxq2TLGobVaYx+eNuIcfRkhEMzBZ9w==
+X-Received: by 2002:a05:6a00:b4d:b0:44c:b7a7:cab2 with SMTP id p13-20020a056a000b4d00b0044cb7a7cab2mr1480805pfo.20.1633572871034;
+        Wed, 06 Oct 2021 19:14:31 -0700 (PDT)
+Received: from sol (106-69-170-56.dyn.iinet.net.au. [106.69.170.56])
+        by smtp.gmail.com with ESMTPSA id z4sm22772247pfz.99.2021.10.06.19.14.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Oct 2021 14:14:51 -0700 (PDT)
-Received: (nullmailer pid 2887704 invoked by uid 1000);
-        Wed, 06 Oct 2021 21:14:50 -0000
-Date:   Wed, 6 Oct 2021 16:14:50 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>
-Subject: Re: [RFC PATCH 1/4] dt-bindings: pincfg-node: Add "output-impedance"
- property
-Message-ID: <YV4RypY6/n23Bl2T@robh.at.kernel.org>
-References: <20210930121630.17449-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20210930121630.17449-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Wed, 06 Oct 2021 19:14:30 -0700 (PDT)
+Date:   Thu, 7 Oct 2021 10:14:24 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     lakshmi.sowjanya.d@intel.com,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, mgross@linux.intel.com,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        tamal.saha@intel.com, bala.senthil@intel.com
+Subject: Re: [RFC PATCH v1 02/20] gpio: Add GPIO polling interface to GPIO lib
+Message-ID: <20211007021424.GA13920@sol>
+References: <20210824164801.28896-1-lakshmi.sowjanya.d@intel.com>
+ <20210824164801.28896-3-lakshmi.sowjanya.d@intel.com>
+ <CAMpxmJWeZP-f-3BoWwX7PkWNZySn5RP=rc4cVyLEwYmSb6if+w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20210930121630.17449-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <CAMpxmJWeZP-f-3BoWwX7PkWNZySn5RP=rc4cVyLEwYmSb6if+w@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 30, 2021 at 01:16:27PM +0100, Lad Prabhakar wrote:
-> On RZ/G2L SoC for Group-B pins, output impedance can be configured.
-> This patch documents "output-impedance" property in pincfg-node.yaml so
-> that other platforms requiring such feature can make use of this property.
+On Wed, Sep 22, 2021 at 12:03:53PM +0200, Bartosz Golaszewski wrote:
+> On Tue, Aug 24, 2021 at 6:48 PM <lakshmi.sowjanya.d@intel.com> wrote:
+> >
+> > From: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
+> >
+> > Some Intel Timed I/O devices do not implement IRQ functionality. Augment
+> > read() interface to allow polling.
+> >
+> > Add two GPIO device methods: setup_poll() and poll():
+> > - setup_poll() configures the GPIO interface e.g. capture rising edges
+> > - poll() checks for events on the interface
+> >
+> > To implement polling, the driver must implement the two functions above
+> > and should either leave to_irq() method NULL or return irq 0.
+> >
+> > setup_poll() should configure the hardware to 'listen' for input events.
+> >
+> > poll() driver implementation must return the realtime timestamp
+> > corresponding to the event and -EAGAIN if no data is available.
+> >
+> > Co-developed-by: Christopher Hall <christopher.s.hall@intel.com>
+> > Signed-off-by: Christopher Hall <christopher.s.hall@intel.com>
+> > Signed-off-by: Tamal Saha <tamal.saha@intel.com>
+> > Signed-off-by: Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
+> > Reviewed-by: Mark Gross <mgross@linux.intel.com>
+> > ---
 > 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
->  Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml | 4 ++++
->  1 file changed, 4 insertions(+)
+> Interesting. So the idea is to allow user-space to read line events as
+> if they were generated by interrupts handled in the kernel. While this
+> whole series has a long way to go and this patch looks wrong to me in
+> several places at first glance, I find the idea interesting. Cc'ing
+> Kent who's the author of most of this code - Kent: what do you think?
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml b/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
-> index 71ed0a9def84..cdcb23daeca2 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
-> @@ -114,6 +114,10 @@ properties:
->      description: enable output on a pin without actively driving it
->        (such as enabling an output buffer)
->  
-> +  output-impedance:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
 
-Use standard unit suffix and drop the type.
+It is interesting that we're seeing more hardware that provides more
+detailed edge info than we get from irq.  The hte patch series can also
+provide hardware timestamps, but the Timed I/O could even provide the
+sequence numbers.
+It might be worth abstracting the edge detection so edge events could be
+more easily driven by subsystems other than irq, without festooning cdev
+with special cases.
 
-> +    description: set the pins output impedance at most X ohm
-> +
->    output-low:
->      type: boolean
->      description: set the pin to output mode with low level
-> -- 
-> 2.17.1
-> 
-> 
+I'm not a fan of the polling here though, particularly from userspace.
+If polling can't be avoided (why did they not provide an irq??) then I
+would do the polling in kernel and place any resulting events in the
+cdev kfifo for userspace to read as per the existing events.
+
+Of course that is without knowing a whole lot about the hardware or use
+cases.  The Intel datasheet doesn't provide much in the way of data :|.
+
+Cheers,
+Kent.
