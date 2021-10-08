@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F9B7426DA2
+	by mail.lfdr.de (Postfix) with ESMTP id D0898426DA4
 	for <lists+linux-gpio@lfdr.de>; Fri,  8 Oct 2021 17:39:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243024AbhJHPlv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Oct 2021 11:41:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34940 "EHLO
+        id S243035AbhJHPlw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Oct 2021 11:41:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
         with ESMTP id S242780AbhJHPlv (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Oct 2021 11:41:51 -0400
-Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 574A7C061570;
-        Fri,  8 Oct 2021 08:39:55 -0700 (PDT)
-Received: by mail-lf1-x130.google.com with SMTP id r19so38919356lfe.10;
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 278F7C061570;
+        Fri,  8 Oct 2021 08:39:56 -0700 (PDT)
+Received: by mail-lf1-x133.google.com with SMTP id t9so39824097lfd.1;
         Fri, 08 Oct 2021 08:39:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YG9Ar+cG6qU5gjsx0O70Gv7O+SgzCIkgLxuZkibpVvY=;
-        b=Rp3jX2X5Q2u65KiRr3g/piNYKnrDJC2jZOLAUfByXB2AGTC07WXW5XePdlrQw99Aar
-         zbsia3AwKyGZ8ftEu53n3kN8egySix/0sd7EcBUq075kUTS3DPWxrR9E5LEUt9fjyZNB
-         CBHBDUVQiWAScCqipee54dOmmF9xcgpWVuNa++10gTRt0TlPf454p5li5/iL6EgM7vgN
-         UTPpemXcwz4e4ANAqlyIwD7NPWfo8DC4MLDTWH/AlubcC4IBYS6ek9n+gnnwr13/Ut3z
-         iE5uYJFqIbeV2TZ8ASTgJtSMTIYJMePoRzsuEXjAeVtdltTmy74aUCzPJ5cLbYaZArvC
-         r6Vw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=gDyEXWIeYRFxChu9VxQR3xwCXz9T0mgyC95BWcs1m1I=;
+        b=jGK19TX4C59UJgY1shXWdZHtXz7jMJBPg866ZeCN71fkOHlLX2tqaebuU9SGhPfWsW
+         lsi97Pj1w/DcjPWH1QhAPRJMUFhmYkQZzVNLiFgOekPlb4f/pMj7OOh+xq3JRsfdrUYP
+         AI8cxBpncxGkrbZKkfdNsXEzkB0Dyr72CReHcocIn3U20VxGds4aIMEzEXIOV6YdFT8p
+         AoQhEZF3UKqiJ7ARxr69LByA580j3LpwJoUSC1mIXucKI4YzfRTxXuoe/4mdBi2YQgFN
+         FaqGPZrujj05+ycejlyxdRLsDOANEQ98tF7uCcW4yEaPniJuf+IklNM7LaxW/B/li5tg
+         hTJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YG9Ar+cG6qU5gjsx0O70Gv7O+SgzCIkgLxuZkibpVvY=;
-        b=YdXwR7eD9Pogc+iBA93hDl/6M5RHGzNbaRqjF91C2cwubkL/2XhY+tiezxwYLdQsuI
-         KrUrUw/MomPgCXTL9780jHTZwB2upI5IBjgsOS99mPkTObeNit/TzVY2brXcLmA1p1RS
-         QFXPPd694AVHFqHKh0kOA/xDb9pDfPUf3CozpchFg4To7Ibzty8UBCVIiHuCXQf9daG1
-         dp1AzJ1R8P6vk4C6f7bc9mxcKPtyZ9SLZgl4hgKG6sFO4QxEKSQVO9iHMhuiSJJ4y0K8
-         Kmp3b8BQl/LCATqvp2mhbaagdS95pS0U/XluMw+NaJn+ghZuv0ehj8WppA1DvpXAUQaq
-         luNA==
-X-Gm-Message-State: AOAM533oQgi/eFK07qhy6r8o2eK2iuBt+zhrHbwWLYQEONQURo1V7eMw
-        hCX1hTTPN+XMJqqYZ/JFoEI=
-X-Google-Smtp-Source: ABdhPJyqXmlhUIDibjr4Kkw0USEAAWrWl3xzaH/JKr6l6aGts+0NJDKTXoAj9KESuBfR0MGeczeH0Q==
-X-Received: by 2002:a2e:5359:: with SMTP id t25mr4286576ljd.18.1633707588461;
-        Fri, 08 Oct 2021 08:39:48 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=gDyEXWIeYRFxChu9VxQR3xwCXz9T0mgyC95BWcs1m1I=;
+        b=i5hLwFKJcUrI5wE93PvEmyrEW1ly7yWeFd5aCq7ORA6mh99KadqQjbufgmM1bXuGuC
+         t3QlFovXbp3hJESnDFjvxmPiILckkgleIJ3RESqLDD5PmhAt5dCFr+0mArZadjUeLgjp
+         ydtRXAxJuRGNznAYHqRFvDYGltK6R2sLcf42Xa+TEQbDvLCa52KKdUbw/4j3QvuNTCdk
+         BYhOCgEXSF0FDjAhSUJPTX/1ZMobmhx3+FMbXvdpufIMOI2hnhZzepYP1pin4C66SZbM
+         Kl7jTSJV5TUgv3yS5NWoDpwXgc44RyH6n0SdytMy4L31rbW5RN+qAOwKPnirKf/XjcjP
+         tZcw==
+X-Gm-Message-State: AOAM533L7XPDuwfXWdI+B8AILFDFk4hzRf2itDBe8IeuCqOoiWtgo3LF
+        IVO4gH6MYieVygJfWlK3COc=
+X-Google-Smtp-Source: ABdhPJyrPWldKwHWPwzsouIKLWc2KVmxKlBBTf362iEc8sEfyXu0e4IBIQuQ18iRsscGlWPiOhO2bw==
+X-Received: by 2002:ac2:4e47:: with SMTP id f7mr11155438lfr.615.1633707590279;
+        Fri, 08 Oct 2021 08:39:50 -0700 (PDT)
 Received: from localhost.lan (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
-        by smtp.gmail.com with ESMTPSA id u27sm156851lfm.275.2021.10.08.08.39.46
+        by smtp.gmail.com with ESMTPSA id u27sm156851lfm.275.2021.10.08.08.39.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Oct 2021 08:39:47 -0700 (PDT)
+        Fri, 08 Oct 2021 08:39:49 -0700 (PDT)
 From:   =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>
@@ -54,10 +54,12 @@ Cc:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
         bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
-Subject: [PATCH V2 linux-pinctrl 1/2] Revert "dt-bindings: pinctrl: bcm4708-pinmux: rework binding to use syscon"
-Date:   Fri,  8 Oct 2021 17:39:38 +0200
-Message-Id: <20211008153939.19685-1-zajec5@gmail.com>
+Subject: [PATCH V2 linux-pinctrl 2/2] Revert "pinctrl: bcm: ns: support updated DT binding as syscon subnode"
+Date:   Fri,  8 Oct 2021 17:39:39 +0200
+Message-Id: <20211008153939.19685-2-zajec5@gmail.com>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20211008153939.19685-1-zajec5@gmail.com>
+References: <20211008153939.19685-1-zajec5@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -67,126 +69,103 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Rafał Miłecki <rafal@milecki.pl>
 
-This reverts commit 2ae80900f239484069569380e1fc4340fd6e0089.
+This reverts commit a49d784d5a8272d0f63c448fe8dc69e589db006e.
 
-My rework was unneeded & wrong. It replaced a clear & correct "reg"
-property usage with a custom "offset" one.
+The updated binding was wrong / invalid and has been reverted. There
+isn't any upstream kernel DTS using it and Broadcom isn't known to use
+it neither. There is close to zero chance this will cause regression for
+anyone.
 
-Back then I didn't understand how to properly handle CRU block binding.
-I heard / read about syscon and tried to use it in a totally invalid
-way. That change also missed Rob's review (obviously).
-
-Northstar's pin controller is a simple consistent hardware block that
-can be cleanly mapped using a 0x24 long reg space.
-
-Since the rework commit there wasn't any follow up modifying in-kernel
-DTS files to use the new binding. Broadcom also isn't known to use that
-bugged binding. There is close to zero chance this revert may actually
-cause problems / regressions.
-
-This commit is a simple revert. Example binding may (should) be updated
-/ cleaned up but that can be handled separately.
+Actually in-kernel bcm5301x.dtsi still uses the old good binding and so
+it's broken since the driver update. This revert fixes it.
 
 Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
 ---
-V2: Update brcm,cru.yaml to avoid new yamllint warnings/errors
----
- .../devicetree/bindings/mfd/brcm,cru.yaml     | 11 +++++----
- .../bindings/pinctrl/brcm,ns-pinmux.yaml      | 23 +++++++++++--------
- 2 files changed, 19 insertions(+), 15 deletions(-)
+ drivers/pinctrl/bcm/pinctrl-ns.c | 29 ++++++++++-------------------
+ 1 file changed, 10 insertions(+), 19 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/brcm,cru.yaml b/Documentation/devicetree/bindings/mfd/brcm,cru.yaml
-index fc1317ab3226..28ac60acf4ac 100644
---- a/Documentation/devicetree/bindings/mfd/brcm,cru.yaml
-+++ b/Documentation/devicetree/bindings/mfd/brcm,cru.yaml
-@@ -32,13 +32,13 @@ properties:
-   "#size-cells":
-     const: 1
+diff --git a/drivers/pinctrl/bcm/pinctrl-ns.c b/drivers/pinctrl/bcm/pinctrl-ns.c
+index e79690bd8b85..d7f8175d2c1c 100644
+--- a/drivers/pinctrl/bcm/pinctrl-ns.c
++++ b/drivers/pinctrl/bcm/pinctrl-ns.c
+@@ -5,7 +5,6 @@
  
--  pinctrl:
--    $ref: ../pinctrl/brcm,ns-pinmux.yaml
+ #include <linux/err.h>
+ #include <linux/io.h>
+-#include <linux/mfd/syscon.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
+@@ -13,7 +12,6 @@
+ #include <linux/pinctrl/pinctrl.h>
+ #include <linux/pinctrl/pinmux.h>
+ #include <linux/platform_device.h>
+-#include <linux/regmap.h>
+ #include <linux/slab.h>
+ 
+ #define FLAG_BCM4708		BIT(1)
+@@ -24,8 +22,7 @@ struct ns_pinctrl {
+ 	struct device *dev;
+ 	unsigned int chipset_flag;
+ 	struct pinctrl_dev *pctldev;
+-	struct regmap *regmap;
+-	u32 offset;
++	void __iomem *base;
+ 
+ 	struct pinctrl_desc pctldesc;
+ 	struct ns_pinctrl_group *groups;
+@@ -232,9 +229,9 @@ static int ns_pinctrl_set_mux(struct pinctrl_dev *pctrl_dev,
+ 		unset |= BIT(pin_number);
+ 	}
+ 
+-	regmap_read(ns_pinctrl->regmap, ns_pinctrl->offset, &tmp);
++	tmp = readl(ns_pinctrl->base);
+ 	tmp &= ~unset;
+-	regmap_write(ns_pinctrl->regmap, ns_pinctrl->offset, tmp);
++	writel(tmp, ns_pinctrl->base);
+ 
+ 	return 0;
+ }
+@@ -266,13 +263,13 @@ static const struct of_device_id ns_pinctrl_of_match_table[] = {
+ static int ns_pinctrl_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+-	struct device_node *np = dev->of_node;
+ 	const struct of_device_id *of_id;
+ 	struct ns_pinctrl *ns_pinctrl;
+ 	struct pinctrl_desc *pctldesc;
+ 	struct pinctrl_pin_desc *pin;
+ 	struct ns_pinctrl_group *group;
+ 	struct ns_pinctrl_function *function;
++	struct resource *res;
+ 	int i;
+ 
+ 	ns_pinctrl = devm_kzalloc(dev, sizeof(*ns_pinctrl), GFP_KERNEL);
+@@ -290,18 +287,12 @@ static int ns_pinctrl_probe(struct platform_device *pdev)
+ 		return -EINVAL;
+ 	ns_pinctrl->chipset_flag = (uintptr_t)of_id->data;
+ 
+-	ns_pinctrl->regmap = syscon_node_to_regmap(of_get_parent(np));
+-	if (IS_ERR(ns_pinctrl->regmap)) {
+-		int err = PTR_ERR(ns_pinctrl->regmap);
 -
- patternProperties:
-   '^clock-controller@[a-f0-9]+$':
-     $ref: ../clock/brcm,iproc-clocks.yaml
- 
-+  '^pin-controller@[a-f0-9]+$':
-+    $ref: ../pinctrl/brcm,ns-pinmux.yaml
-+
-   '^thermal@[a-f0-9]+$':
-     $ref: ../thermal/brcm,ns-thermal.yaml
- 
-@@ -73,9 +73,10 @@ examples:
-                                  "iprocfast", "sata1", "sata2";
-         };
- 
--        pinctrl {
-+        pin-controller@1c0 {
-             compatible = "brcm,bcm4708-pinmux";
--            offset = <0x1c0>;
-+            reg = <0x1c0 0x24>;
-+            reg-names = "cru_gpio_control";
-         };
- 
-         thermal@2c0 {
-diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,ns-pinmux.yaml b/Documentation/devicetree/bindings/pinctrl/brcm,ns-pinmux.yaml
-index 470aff599c27..78600a8fe403 100644
---- a/Documentation/devicetree/bindings/pinctrl/brcm,ns-pinmux.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/brcm,ns-pinmux.yaml
-@@ -17,9 +17,6 @@ description:
- 
-   A list of pins varies across chipsets so few bindings are available.
- 
--  Node of the pinmux must be nested in the CRU (Central Resource Unit) "syscon"
--  node.
+-		dev_err(dev, "Failed to map pinctrl regs: %d\n", err);
 -
- properties:
-   compatible:
-     enum:
-@@ -27,10 +24,11 @@ properties:
-       - brcm,bcm4709-pinmux
-       - brcm,bcm53012-pinmux
+-		return err;
+-	}
+-
+-	if (of_property_read_u32(np, "offset", &ns_pinctrl->offset)) {
+-		dev_err(dev, "Failed to get register offset\n");
+-		return -ENOENT;
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
++					   "cru_gpio_control");
++	ns_pinctrl->base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(ns_pinctrl->base)) {
++		dev_err(dev, "Failed to map pinctrl regs\n");
++		return PTR_ERR(ns_pinctrl->base);
+ 	}
  
--  offset:
--    description: offset of pin registers in the CRU block
-+  reg:
-     maxItems: 1
--    $ref: /schemas/types.yaml#/definitions/uint32-array
-+
-+  reg-names:
-+    const: cru_gpio_control
- 
- patternProperties:
-   '-pins$':
-@@ -72,19 +70,24 @@ allOf:
-                         uart1_grp ]
- 
- required:
--  - offset
-+  - reg
-+  - reg-names
- 
- additionalProperties: false
- 
- examples:
-   - |
-     cru@1800c100 {
--        compatible = "syscon", "simple-mfd";
-+        compatible = "simple-bus";
-         reg = <0x1800c100 0x1a4>;
-+        ranges;
-+        #address-cells = <1>;
-+        #size-cells = <1>;
- 
--        pinctrl {
-+        pin-controller@1c0 {
-             compatible = "brcm,bcm4708-pinmux";
--            offset = <0xc0>;
-+            reg = <0x1c0 0x24>;
-+            reg-names = "cru_gpio_control";
- 
-             spi-pins {
-                 function = "spi";
+ 	memcpy(pctldesc, &ns_pinctrl_desc, sizeof(*pctldesc));
 -- 
 2.26.2
 
