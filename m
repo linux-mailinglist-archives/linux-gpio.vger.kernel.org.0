@@ -2,73 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CED9D4266C0
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Oct 2021 11:26:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AECC6426AA8
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Oct 2021 14:25:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236335AbhJHJ2i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Oct 2021 05:28:38 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:13710 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229710AbhJHJ2h (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Oct 2021 05:28:37 -0400
-Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4HQjTK4lPszWZvY;
-        Fri,  8 Oct 2021 17:25:09 +0800 (CST)
-Received: from dggema757-chm.china.huawei.com (10.1.198.199) by
- dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.2308.8; Fri, 8 Oct 2021 17:26:40 +0800
-Received: from [10.67.102.185] (10.67.102.185) by
- dggema757-chm.china.huawei.com (10.1.198.199) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.2308.8; Fri, 8 Oct 2021 17:26:39 +0800
-Subject: Re: [PATCH v1] MAINTAINERS: Change maintainer for gpio-hisi driver
-To:     Luo Jiaxing <luojiaxing@huawei.com>, <linus.walleij@linaro.org>,
-        <andy.shevchenko@gmail.com>, <andriy.shevchenko@linux.intel.com>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20210930075807.333-1-luojiaxing@huawei.com>
-From:   "liuqi (BA)" <liuqi115@huawei.com>
-Message-ID: <29eace32-346c-446a-f709-db76bdae00d2@huawei.com>
-Date:   Fri, 8 Oct 2021 17:26:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S240689AbhJHM1O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Oct 2021 08:27:14 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:38622 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S240457AbhJHM1N (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Oct 2021 08:27:13 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1989g3K9023582;
+        Fri, 8 Oct 2021 14:25:07 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=selector1;
+ bh=o5dnBVGOI0j0+u6Bn/o8WUIi3ZFLpUM04QJe3Cs6AOU=;
+ b=CcP90rnzgOfMswdXew1Gty1D3hFwatW0LQWG+5gCTjZ/m3O0ZhKnsOIEJpheJqIjzAQ5
+ M7nR4HZK2hLbP3dBitNKsCjPr2XwnPgUkFCptyw4zf0OoktWVbFlWEaCzuus0raBRCEk
+ AoouUv04z5CBISwMizuVIWshx1y0t7jksrcfvpozpEINdMQeuucatnhGsJCfms+HeVmB
+ TGTX26htQbJO3RFnr4GJzUEU4sQ4IMkGtxBlQMEhpYntKk0X6tCAU16Mgh4ptII2Lr9t
+ 62OVerJBsf0MMUoSsICXYgO8LwJi5i73kxxex73JiQ06+sn9qv0gCxmVqBnnqZxo7Zbd DQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 3bjkk78vnk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 08 Oct 2021 14:25:07 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CDE2F10002A;
+        Fri,  8 Oct 2021 14:25:04 +0200 (CEST)
+Received: from Webmail-eu.st.com (sfhdag2node2.st.com [10.75.127.5])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C1527229A85;
+        Fri,  8 Oct 2021 14:25:04 +0200 (CEST)
+Received: from localhost (10.75.127.49) by SFHDAG2NODE2.st.com (10.75.127.5)
+ with Microsoft SMTP Server (TLS) id 15.0.1497.18; Fri, 8 Oct 2021 14:25:02
+ +0200
+From:   Fabien Dessenne <fabien.dessenne@foss.st.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Fabien Dessenne <fabien.dessenne@foss.st.com>
+Subject: [PATCH] pinctrl: stm32: do not warn when 'st,package' is absent
+Date:   Fri, 8 Oct 2021 14:24:54 +0200
+Message-ID: <20211008122454.617556-1-fabien.dessenne@foss.st.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20210930075807.333-1-luojiaxing@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.102.185]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggema757-chm.china.huawei.com (10.1.198.199)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG2NODE2.st.com
+ (10.75.127.5)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.391,FMLib:17.0.607.475
+ definitions=2021-10-08_03,2021-10-07_02,2020-04-07_01
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Since the 'st,package' property is optional, outputting the "No package
+detected" warning-level log when the property is absent is unsuitable.
+Remove that log.
 
+Signed-off-by: Fabien Dessenne <fabien.dessenne@foss.st.com>
+---
+ drivers/pinctrl/stm32/pinctrl-stm32.c | 16 +++-------------
+ 1 file changed, 3 insertions(+), 13 deletions(-)
 
-On 2021/9/30 15:58, Luo Jiaxing wrote:
-> Qi Liu take over the maintenance of HISILICON GPIO driver next, change
-> the maintainer information.
-> 
-> Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
-> ---
->   MAINTAINERS | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
+index 68b3886f9f0f..ac82570e46be 100644
+--- a/drivers/pinctrl/stm32/pinctrl-stm32.c
++++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
+@@ -1415,17 +1415,6 @@ static int stm32_pctrl_create_pins_tab(struct stm32_pinctrl *pctl,
+ 	return 0;
+ }
+ 
+-static void stm32_pctl_get_package(struct device_node *np,
+-				   struct stm32_pinctrl *pctl)
+-{
+-	if (of_property_read_u32(np, "st,package", &pctl->pkg)) {
+-		pctl->pkg = 0;
+-		dev_warn(pctl->dev, "No package detected, use default one\n");
+-	} else {
+-		dev_dbg(pctl->dev, "package detected: %x\n", pctl->pkg);
+-	}
+-}
+-
+ int stm32_pctl_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
+@@ -1473,8 +1462,9 @@ int stm32_pctl_probe(struct platform_device *pdev)
+ 	pctl->dev = dev;
+ 	pctl->match_data = match->data;
+ 
+-	/*  get package information */
+-	stm32_pctl_get_package(np, pctl);
++	/*  get optional package information */
++	if (!of_property_read_u32(np, "st,package", &pctl->pkg))
++		dev_dbg(pctl->dev, "package detected: %x\n", pctl->pkg);
+ 
+ 	pctl->pins = devm_kcalloc(pctl->dev, pctl->match_data->npins,
+ 				  sizeof(*pctl->pins), GFP_KERNEL);
+-- 
+2.25.1
 
-Acked-by: Qi Liu <liuqi115@huawei.com>
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index eeb4c70b3d5b..b7ee5ddaf820 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8400,7 +8400,7 @@ S:	Maintained
->   F:	drivers/dma/hisi_dma.c
->   
->   HISILICON GPIO DRIVER
-> -M:	Luo Jiaxing <luojiaxing@huawei.com>
-> +M:	Qi Liu <liuqi115@huawei.com>
->   L:	linux-gpio@vger.kernel.org
->   S:	Maintained
->   F:	drivers/gpio/gpio-hisi.c
-> 
