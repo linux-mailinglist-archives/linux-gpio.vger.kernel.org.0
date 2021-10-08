@@ -2,172 +2,209 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D0BDA42629B
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Oct 2021 04:46:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7055F426332
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Oct 2021 05:41:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242470AbhJHCse (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 7 Oct 2021 22:48:34 -0400
-Received: from mail-ot1-f43.google.com ([209.85.210.43]:44830 "EHLO
-        mail-ot1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241465AbhJHCsZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 7 Oct 2021 22:48:25 -0400
-Received: by mail-ot1-f43.google.com with SMTP id o27-20020a9d411b000000b005453f95356cso9068688ote.11;
-        Thu, 07 Oct 2021 19:46:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
-         :message-id;
-        bh=F5u7B1faN7GIARvju3yEKIKOGcdT28jBF9I4hUbH430=;
-        b=dwayYMXWql4fvzjqk4JKZacbot3VQHcrPyKu6DKvE6W93vEXIGgYsKLKGN3ltnd2di
-         EHvra4S9ZW8trMIfjbZ3MlGfnbL6yFQz5k2uYSp5cdui3QvRsg/5sdqpcw838NzcFxit
-         2NLcFc/5cLIm0g62RE9l3bvDBagLBBnGZSlh7Eip1VL2La85Q3Na1cojf/qNRF9Az4Zr
-         lotZOYZZ8CxR9urkiNgWjIfI5GCPvh6ookLbqRCwOJOpyxmAt5wGFdXZEQn+D9ShDOXI
-         YOwSjHoR5tMwixSu0PXDvtXMu3c4PRiDQS375GvoJQktBFnsovw8mOz5vQ++mGfWqC51
-         rq2g==
-X-Gm-Message-State: AOAM531E6jSpMNFcqGIHdtFNYWUjAzc7urYnMI1xiX+7g/0iP/KODbw6
-        aywUXdrVrirotTLMArl5iA==
-X-Google-Smtp-Source: ABdhPJxhik3pP72/uU77mjGnOYVeYYD7sZQa73bAx4GqoJTK2vd+jXOwR6TD5y5vLKY3lNUmo/aDQg==
-X-Received: by 2002:a05:6830:1098:: with SMTP id y24mr6481195oto.368.1633661189944;
-        Thu, 07 Oct 2021 19:46:29 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id j24sm237690oou.10.2021.10.07.19.46.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Oct 2021 19:46:29 -0700 (PDT)
-Received: (nullmailer pid 1409606 invoked by uid 1000);
-        Fri, 08 Oct 2021 02:46:12 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, Andy Gross <agross@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-In-Reply-To: <20211008012524.481877-2-dmitry.baryshkov@linaro.org>
-References: <20211008012524.481877-1-dmitry.baryshkov@linaro.org> <20211008012524.481877-2-dmitry.baryshkov@linaro.org>
-Subject: Re: [PATCH v3 01/25] dt-bindings: pinctrl: qcom,pmic-mpp: Convert qcom pmic mpp bindings to YAML
-Date:   Thu, 07 Oct 2021 21:46:12 -0500
-Message-Id: <1633661172.674895.1409605.nullmailer@robh.at.kernel.org>
+        id S242533AbhJHDnX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 7 Oct 2021 23:43:23 -0400
+Received: from mga14.intel.com ([192.55.52.115]:41018 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S242336AbhJHDnW (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 7 Oct 2021 23:43:22 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10130"; a="226714165"
+X-IronPort-AV: E=Sophos;i="5.85,356,1624345200"; 
+   d="scan'208";a="226714165"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Oct 2021 20:41:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,356,1624345200"; 
+   d="scan'208";a="657658454"
+Received: from lkp-server01.sh.intel.com (HELO 72c3bd3cf19c) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 07 Oct 2021 20:41:25 -0700
+Received: from kbuild by 72c3bd3cf19c with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1mYglB-0007x5-80; Fri, 08 Oct 2021 03:41:25 +0000
+Date:   Fri, 08 Oct 2021 11:41:21 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
+ 5077a3240bb3a971005afa2f30482283c0984c41
+Message-ID: <615fbde1.k8wUyliIxEy/1ntX%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 08 Oct 2021 04:25:00 +0300, Dmitry Baryshkov wrote:
-> Convert Qualcomm PMIC MPP bindings from .txt to .yaml format.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->  .../bindings/pinctrl/qcom,pmic-mpp.txt        | 187 -----------------
->  .../bindings/pinctrl/qcom,pmic-mpp.yaml       | 188 ++++++++++++++++++
->  2 files changed, 188 insertions(+), 187 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: 5077a3240bb3a971005afa2f30482283c0984c41  Merge tag 'renesas-pinctrl-for-v5.16-tag1' of git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers into devel
 
-Running 'make dtbs_check' with the schema in this patch gives the
-following warnings. Consider if they are expected or the schema is
-incorrect. These may not be new warnings.
+elapsed time: 1220m
 
-Note that it is not yet a requirement to have 0 warnings for dtbs_check.
-This will change in the future.
+configs tested: 149
+configs skipped: 3
 
-Full log is available here: https://patchwork.ozlabs.org/patch/1538157
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allmodconfig
+arm                              allyesconfig
+m68k                       m5475evb_defconfig
+powerpc                     tqm5200_defconfig
+m68k                       m5249evb_defconfig
+powerpc                     skiroot_defconfig
+powerpc                   motionpro_defconfig
+arc                 nsimosci_hs_smp_defconfig
+m68k                          atari_defconfig
+powerpc                      ppc40x_defconfig
+powerpc                     stx_gp3_defconfig
+m68k                          multi_defconfig
+sh                          landisk_defconfig
+powerpc                      pcm030_defconfig
+mips                          malta_defconfig
+mips                        qi_lb60_defconfig
+mips                       bmips_be_defconfig
+powerpc                     tqm8560_defconfig
+sh                         microdev_defconfig
+powerpc                       ppc64_defconfig
+mips                          ath25_defconfig
+arm                         orion5x_defconfig
+arm                          collie_defconfig
+powerpc                      ppc6xx_defconfig
+powerpc                   microwatt_defconfig
+arm                        multi_v5_defconfig
+xtensa                       common_defconfig
+m68k                        m5272c3_defconfig
+s390                       zfcpdump_defconfig
+sparc                            alldefconfig
+sparc                       sparc64_defconfig
+sh                        sh7757lcr_defconfig
+sh                          rsk7264_defconfig
+mips                       capcella_defconfig
+arm                           h5000_defconfig
+sh                            migor_defconfig
+openrisc                    or1ksim_defconfig
+arc                          axs101_defconfig
+sh                          kfr2r09_defconfig
+mips                        maltaup_defconfig
+mips                      loongson3_defconfig
+sh                   sh7724_generic_defconfig
+arm                           viper_defconfig
+arm                          simpad_defconfig
+powerpc                         ps3_defconfig
+h8300                            allyesconfig
+powerpc                      pasemi_defconfig
+powerpc64                           defconfig
+arm                          moxart_defconfig
+arm                           sama5_defconfig
+arc                     nsimosci_hs_defconfig
+m68k                        stmark2_defconfig
+arm                       omap2plus_defconfig
+mips                           ip27_defconfig
+mips                      malta_kvm_defconfig
+riscv             nommu_k210_sdcard_defconfig
+arm                     davinci_all_defconfig
+sh                          polaris_defconfig
+xtensa                          iss_defconfig
+arm                       multi_v4t_defconfig
+powerpc                     ksi8560_defconfig
+mips                        bcm63xx_defconfig
+x86_64               randconfig-c001-20211003
+i386                 randconfig-c001-20211003
+arm                  randconfig-c002-20211003
+x86_64               randconfig-c001-20211004
+i386                 randconfig-c001-20211004
+arm                  randconfig-c002-20211004
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                                defconfig
+m68k                             allmodconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+nios2                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+xtensa                           allyesconfig
+parisc                              defconfig
+parisc                           allyesconfig
+s390                                defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                             allyesconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+powerpc                          allyesconfig
+x86_64               randconfig-a015-20211004
+x86_64               randconfig-a012-20211004
+x86_64               randconfig-a016-20211004
+x86_64               randconfig-a014-20211004
+x86_64               randconfig-a013-20211004
+x86_64               randconfig-a011-20211004
+i386                 randconfig-a013-20211004
+i386                 randconfig-a016-20211004
+i386                 randconfig-a014-20211004
+i386                 randconfig-a011-20211004
+i386                 randconfig-a012-20211004
+i386                 randconfig-a015-20211004
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                           allyesconfig
 
-mpp@50: 'gpio-ranges' is a required property
-	arch/arm/boot/dts/qcom-mdm9615-wp8548-mangoh-green.dt.yaml
+clang tested configs:
+x86_64               randconfig-c007-20211003
+i386                 randconfig-c001-20211003
+arm                  randconfig-c002-20211003
+s390                 randconfig-c005-20211003
+powerpc              randconfig-c003-20211003
+riscv                randconfig-c006-20211003
+mips                 randconfig-c004-20211003
+x86_64               randconfig-a003-20211004
+x86_64               randconfig-a005-20211004
+x86_64               randconfig-a001-20211004
+x86_64               randconfig-a002-20211004
+x86_64               randconfig-a004-20211004
+x86_64               randconfig-a006-20211004
+i386                 randconfig-a001-20211004
+i386                 randconfig-a003-20211004
+i386                 randconfig-a005-20211004
+i386                 randconfig-a002-20211004
+i386                 randconfig-a004-20211004
+i386                 randconfig-a006-20211004
+hexagon              randconfig-r045-20211007
+hexagon              randconfig-r041-20211007
+s390                 randconfig-r044-20211007
+riscv                randconfig-r042-20211007
 
-mpps@50: 'cm3605-mpps' does not match any of the regexes: '-state$', 'pinctrl-[0-9]+'
-	arch/arm/boot/dts/qcom-apq8060-dragonboard.dt.yaml
-
-mpps@50: 'gpio-ranges' is a required property
-	arch/arm/boot/dts/qcom-apq8060-dragonboard.dt.yaml
-	arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dt.yaml
-	arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dt.yaml
-	arch/arm/boot/dts/qcom-apq8064-cm-qs600.dt.yaml
-	arch/arm/boot/dts/qcom-apq8064-cm-qs600.dt.yaml
-	arch/arm/boot/dts/qcom-apq8064-ifc6410.dt.yaml
-	arch/arm/boot/dts/qcom-apq8064-ifc6410.dt.yaml
-	arch/arm/boot/dts/qcom-apq8064-sony-xperia-yuga.dt.yaml
-	arch/arm/boot/dts/qcom-apq8064-sony-xperia-yuga.dt.yaml
-	arch/arm/boot/dts/qcom-msm8660-surf.dt.yaml
-
-mpps@a000: compatible: ['qcom,pm8916-mpp'] is too short
-	arch/arm64/boot/dts/qcom/apq8016-sbc.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8916-alcatel-idol347.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8916-asus-z00l.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8916-huawei-g7.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8916-longcheer-l8910.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8916-mtp.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8916-samsung-a3u-eur.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8916-samsung-a5u-eur.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8916-wingtech-wt88047.dt.yaml
-
-mpps@a000: compatible: ['qcom,pm8994-mpp'] is too short
-	arch/arm64/boot/dts/qcom/apq8094-sony-xperia-kitakami-karin_windy.dt.yaml
-	arch/arm64/boot/dts/qcom/apq8096-db820c.dt.yaml
-	arch/arm64/boot/dts/qcom/apq8096-ifc6640.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8992-msft-lumia-octagon-talkman.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8992-xiaomi-libra.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8994-msft-lumia-octagon-cityman.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami-ivy.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami-karin.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami-satsuki.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami-sumire.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami-suzuran.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8996-pmi8996-sony-xperia-tone-dora.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8996-pmi8996-sony-xperia-tone-kagura.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8996-pmi8996-sony-xperia-tone-keyaki.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8996-sony-xperia-tone-dora.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8996-sony-xperia-tone-kagura.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8996-sony-xperia-tone-keyaki.dt.yaml
-
-mpps@a000: 'gpio-ranges' is a required property
-	arch/arm64/boot/dts/qcom/apq8016-sbc.dt.yaml
-	arch/arm64/boot/dts/qcom/apq8094-sony-xperia-kitakami-karin_windy.dt.yaml
-	arch/arm64/boot/dts/qcom/apq8096-db820c.dt.yaml
-	arch/arm64/boot/dts/qcom/apq8096-ifc6640.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8916-alcatel-idol347.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8916-asus-z00l.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8916-huawei-g7.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8916-longcheer-l8910.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8916-mtp.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8916-samsung-a3u-eur.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8916-samsung-a5u-eur.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8916-wingtech-wt88047.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8992-bullhead-rev-101.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8992-msft-lumia-octagon-talkman.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8992-xiaomi-libra.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8994-msft-lumia-octagon-cityman.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami-ivy.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami-karin.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami-satsuki.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami-sumire.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami-suzuran.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8996-pmi8996-sony-xperia-tone-dora.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8996-pmi8996-sony-xperia-tone-kagura.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8996-pmi8996-sony-xperia-tone-keyaki.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8996-sony-xperia-tone-dora.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8996-sony-xperia-tone-kagura.dt.yaml
-	arch/arm64/boot/dts/qcom/msm8996-sony-xperia-tone-keyaki.dt.yaml
-	arch/arm/boot/dts/qcom-apq8074-dragonboard.dt.yaml
-	arch/arm/boot/dts/qcom-apq8074-dragonboard.dt.yaml
-	arch/arm/boot/dts/qcom-apq8084-ifc6540.dt.yaml
-	arch/arm/boot/dts/qcom-apq8084-mtp.dt.yaml
-	arch/arm/boot/dts/qcom-msm8974-fairphone-fp2.dt.yaml
-	arch/arm/boot/dts/qcom-msm8974-fairphone-fp2.dt.yaml
-	arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dt.yaml
-	arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dt.yaml
-	arch/arm/boot/dts/qcom-msm8974-samsung-klte.dt.yaml
-	arch/arm/boot/dts/qcom-msm8974-sony-xperia-amami.dt.yaml
-	arch/arm/boot/dts/qcom-msm8974-sony-xperia-amami.dt.yaml
-	arch/arm/boot/dts/qcom-msm8974-sony-xperia-castor.dt.yaml
-	arch/arm/boot/dts/qcom-msm8974-sony-xperia-castor.dt.yaml
-	arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dt.yaml
-	arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dt.yaml
-
-mpps@a000: 'pm8916-mpp4', 'pm8916-mpps-leds' do not match any of the regexes: '-state$', 'pinctrl-[0-9]+'
-	arch/arm64/boot/dts/qcom/apq8016-sbc.dt.yaml
-
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
