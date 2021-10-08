@@ -2,170 +2,291 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CA3464272BA
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Oct 2021 22:59:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C9CB1427375
+	for <lists+linux-gpio@lfdr.de>; Sat,  9 Oct 2021 00:11:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243309AbhJHVBs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Oct 2021 17:01:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53078 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243288AbhJHVBr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Oct 2021 17:01:47 -0400
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3247C061570;
-        Fri,  8 Oct 2021 13:59:51 -0700 (PDT)
-Received: by mail-lf1-x12d.google.com with SMTP id y26so44597609lfa.11;
-        Fri, 08 Oct 2021 13:59:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=gDyEXWIeYRFxChu9VxQR3xwCXz9T0mgyC95BWcs1m1I=;
-        b=juF+oWck8fEkqCK0joVz9cMzf+7iyO+kCiz0bmS/mbiro4fmR/bDT4sCCavGuZPwu1
-         yvKfm9xVjqR1UKzmTPk8AXfOaS0xxneE/wjr8r8DujzgBrmXsWIov006+/N9xva0U6a6
-         ctmQT0M4dQqmjdp3apSfBUk/zxxmPYpDLRn2DdauH6EjPuu9QvrbKcavTpY/UUbCXiX0
-         YIcA2F5oHCGU4goOAXOteRC9rkQD9nnuOJDYxsPKfKzmccuEH6rkk0jiMEnncelpqT3F
-         b84DMAUzB57vj3HqL8J+DSrYUcUVA1zoeqr1E2ESHEMZ6RwsNhxBEu3svpopeNM/0YLg
-         8LSQ==
+        id S243573AbhJHWN2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Oct 2021 18:13:28 -0400
+Received: from mail-oi1-f174.google.com ([209.85.167.174]:46782 "EHLO
+        mail-oi1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243563AbhJHWN0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Oct 2021 18:13:26 -0400
+Received: by mail-oi1-f174.google.com with SMTP id o204so7364624oih.13;
+        Fri, 08 Oct 2021 15:11:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=gDyEXWIeYRFxChu9VxQR3xwCXz9T0mgyC95BWcs1m1I=;
-        b=5Omkw2gLHdmRpy3+/7+iiw8EqMsoUaByUfBtcThR6UcXlt2I4HcrAFE8HUNH64zuWM
-         rqBMwRTlfUbiQZygxdu5FYRWbvX9EWgfuRYOeAidx+VJMdHRMDIrzxP9LYdgGgpwPDrR
-         OuXomEXRuJHEpQXzNvM+wu5H4mz0xO/QDTNuPcfIJiy+ObdqqBCrGXQoPQWem3igP96n
-         mtKDJgNows+TWGMny4xfSlBXzD4EiFHSlILZA/HxHfbyysVbBb7LqMZ54v4Fi0J8z3Fv
-         ZjlQuBSf5XjzB4ds2B4jmkVE2GABmcEAztT8ihJCt2km+xdJtpoU28p31UwvFP/+POFN
-         sCKg==
-X-Gm-Message-State: AOAM530TBeiK8DwfxlNsnujnBgOiyWN+Sgc2EeO+IJsqUNsOd5A/JH0r
-        n/Kodg9C45hbVzYBo1+cg14=
-X-Google-Smtp-Source: ABdhPJytWd8DyJ2/z1R4B6YJSLFg9kbeWCWmjlh8uP1VeodhS0GIAKa/13s5OlvKbtfTu8I20eJEFQ==
-X-Received: by 2002:a2e:a803:: with SMTP id l3mr5822644ljq.74.1633726790195;
-        Fri, 08 Oct 2021 13:59:50 -0700 (PDT)
-Received: from localhost.lan (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
-        by smtp.gmail.com with ESMTPSA id a21sm31862lfg.194.2021.10.08.13.59.49
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=d6BsMDMQTAtwuQOjR1Y00yw1JHyPYzJywrXEXvPOQvA=;
+        b=1b5SYFCWR9r2rGiHixzUmWsQEcxs4h42B0hpGl8q5rdj67hoqwYkBsJ9YlK2HG436i
+         0lLHJTmX5M6XiYvC5tileTO63sZh3csrn38Xfru+vdF5rsJ6wilKNigMCrBuZg2UMoE0
+         6eQxHqt5RZmWak7UHjdilwSoZJ2AVK0onUZytO1vCP48u7Zbb44EzK+3shagtX9vivDj
+         GntMwnahtWZ+qaJhZr7SPqwMHLdqgR5j8/2kjF5uY2dXtg3iTgb2qcnQTcfgBVe+ZqKo
+         emOcQFLlgM4p3YC4OJeasLUwBACGoIfwDOVh6qWy9Bef2CNxPMn6LgOg0UUiNmukq0EQ
+         88gg==
+X-Gm-Message-State: AOAM532d7fQsdd/Hgd5NWrJIAr69O/yneNoqiYwsT/M/V7liWJrf133d
+        Vfku6thU//VduGHcLxbp2wxBa82OHQ==
+X-Google-Smtp-Source: ABdhPJxjNWPKMwCnB1Pb/gbrjWGF++/KQD5XMV7P8tAq7lCIoW/WM5muuAKgrFcqqtYvPzM5tOIaTA==
+X-Received: by 2002:aca:1101:: with SMTP id 1mr18234970oir.85.1633731090390;
+        Fri, 08 Oct 2021 15:11:30 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id e28sm143182oth.40.2021.10.08.15.11.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Oct 2021 13:59:49 -0700 (PDT)
-From:   =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
-Subject: [PATCH V3 linux-pinctrl 3/3] Revert "pinctrl: bcm: ns: support updated DT binding as syscon subnode"
-Date:   Fri,  8 Oct 2021 22:59:38 +0200
-Message-Id: <20211008205938.29925-3-zajec5@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20211008205938.29925-1-zajec5@gmail.com>
-References: <20211008205938.29925-1-zajec5@gmail.com>
+        Fri, 08 Oct 2021 15:11:29 -0700 (PDT)
+Received: (nullmailer pid 3407634 invoked by uid 1000);
+        Fri, 08 Oct 2021 22:11:28 -0000
+Date:   Fri, 8 Oct 2021 17:11:28 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Dipen Patel <dipenp@nvidia.com>
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, warthog618@gmail.com,
+        devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [RFC v2 04/11] dt-bindings: Add HTE bindings
+Message-ID: <YWDCEOuHu8vsRSPH@robh.at.kernel.org>
+References: <20210930232617.6396-1-dipenp@nvidia.com>
+ <20210930232617.6396-5-dipenp@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210930232617.6396-5-dipenp@nvidia.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Rafał Miłecki <rafal@milecki.pl>
+On Thu, Sep 30, 2021 at 04:26:10PM -0700, Dipen Patel wrote:
+> Introduces HTE devicetree binding details for the HTE subsystem. It
+> includes examples for the consumers, binding details for the providers
+> and specific binding details for the Tegra194 based HTE providers.
+> 
 
-This reverts commit a49d784d5a8272d0f63c448fe8dc69e589db006e.
+This pattern of binding isn't easily checked completely by schema. You 
+need a dtc check added too. Should be a 2 line change. (And dtc changes 
+go upstream first).
 
-The updated binding was wrong / invalid and has been reverted. There
-isn't any upstream kernel DTS using it and Broadcom isn't known to use
-it neither. There is close to zero chance this will cause regression for
-anyone.
+> Signed-off-by: Dipen Patel <dipenp@nvidia.com>
+> ---
+> Changes in v2:
+> - Replace hte with hardware-timestamp for property names
+> - Renamed file
+> - Removed example from the common dt binding file.
+> 
+>  .../hte/hardware-timestamps-common.yaml       | 29 +++++++
+>  .../devicetree/bindings/hte/hte-consumer.yaml | 48 +++++++++++
+>  .../bindings/hte/nvidia,tegra194-hte.yaml     | 79 +++++++++++++++++++
+>  3 files changed, 156 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hte/hardware-timestamps-common.yaml
+>  create mode 100644 Documentation/devicetree/bindings/hte/hte-consumer.yaml
+>  create mode 100644 Documentation/devicetree/bindings/hte/nvidia,tegra194-hte.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/hte/hardware-timestamps-common.yaml b/Documentation/devicetree/bindings/hte/hardware-timestamps-common.yaml
+> new file mode 100644
+> index 000000000000..8b8db3bc4dcf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hte/hardware-timestamps-common.yaml
+> @@ -0,0 +1,29 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-Actually in-kernel bcm5301x.dtsi still uses the old good binding and so
-it's broken since the driver update. This revert fixes it.
+Dual license new bindings.
 
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
----
- drivers/pinctrl/bcm/pinctrl-ns.c | 29 ++++++++++-------------------
- 1 file changed, 10 insertions(+), 19 deletions(-)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/hte/hardware-timestamps-common.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Hardware timestamp providers
+> +
+> +maintainers:
+> +  - Dipen Patel <dipenp@nvidia.com>
+> +
+> +description: |
+> +  Some devices/SoCs have hardware time stamping engines which can use hardware
+> +  means to timestamp entity in realtime. The entity could be anything from
+> +  GPIOs, IRQs, Bus and so on. The hardware timestamp engine (HTE) present
+> +  itself as a provider with the bindings described in this document.
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^hardware-timestamps(@.*|-[0-9a-f])*$"
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-ns.c b/drivers/pinctrl/bcm/pinctrl-ns.c
-index e79690bd8b85..d7f8175d2c1c 100644
---- a/drivers/pinctrl/bcm/pinctrl-ns.c
-+++ b/drivers/pinctrl/bcm/pinctrl-ns.c
-@@ -5,7 +5,6 @@
- 
- #include <linux/err.h>
- #include <linux/io.h>
--#include <linux/mfd/syscon.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-@@ -13,7 +12,6 @@
- #include <linux/pinctrl/pinctrl.h>
- #include <linux/pinctrl/pinmux.h>
- #include <linux/platform_device.h>
--#include <linux/regmap.h>
- #include <linux/slab.h>
- 
- #define FLAG_BCM4708		BIT(1)
-@@ -24,8 +22,7 @@ struct ns_pinctrl {
- 	struct device *dev;
- 	unsigned int chipset_flag;
- 	struct pinctrl_dev *pctldev;
--	struct regmap *regmap;
--	u32 offset;
-+	void __iomem *base;
- 
- 	struct pinctrl_desc pctldesc;
- 	struct ns_pinctrl_group *groups;
-@@ -232,9 +229,9 @@ static int ns_pinctrl_set_mux(struct pinctrl_dev *pctrl_dev,
- 		unset |= BIT(pin_number);
- 	}
- 
--	regmap_read(ns_pinctrl->regmap, ns_pinctrl->offset, &tmp);
-+	tmp = readl(ns_pinctrl->base);
- 	tmp &= ~unset;
--	regmap_write(ns_pinctrl->regmap, ns_pinctrl->offset, tmp);
-+	writel(tmp, ns_pinctrl->base);
- 
- 	return 0;
- }
-@@ -266,13 +263,13 @@ static const struct of_device_id ns_pinctrl_of_match_table[] = {
- static int ns_pinctrl_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
--	struct device_node *np = dev->of_node;
- 	const struct of_device_id *of_id;
- 	struct ns_pinctrl *ns_pinctrl;
- 	struct pinctrl_desc *pctldesc;
- 	struct pinctrl_pin_desc *pin;
- 	struct ns_pinctrl_group *group;
- 	struct ns_pinctrl_function *function;
-+	struct resource *res;
- 	int i;
- 
- 	ns_pinctrl = devm_kzalloc(dev, sizeof(*ns_pinctrl), GFP_KERNEL);
-@@ -290,18 +287,12 @@ static int ns_pinctrl_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	ns_pinctrl->chipset_flag = (uintptr_t)of_id->data;
- 
--	ns_pinctrl->regmap = syscon_node_to_regmap(of_get_parent(np));
--	if (IS_ERR(ns_pinctrl->regmap)) {
--		int err = PTR_ERR(ns_pinctrl->regmap);
--
--		dev_err(dev, "Failed to map pinctrl regs: %d\n", err);
--
--		return err;
--	}
--
--	if (of_property_read_u32(np, "offset", &ns_pinctrl->offset)) {
--		dev_err(dev, "Failed to get register offset\n");
--		return -ENOENT;
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-+					   "cru_gpio_control");
-+	ns_pinctrl->base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(ns_pinctrl->base)) {
-+		dev_err(dev, "Failed to map pinctrl regs\n");
-+		return PTR_ERR(ns_pinctrl->base);
- 	}
- 
- 	memcpy(pctldesc, &ns_pinctrl_desc, sizeof(*pctldesc));
--- 
-2.26.2
+"^hardware-timestamp(@.*|-[0-9a-f])?$"
 
+> +
+> +  "#hardware-timestamps-cells":
+
+Double plural:
+
+#hardware-timestamp-cells
+
+Arguably, the same string everywhere would have been an easier design, 
+but let's keep consistency with (most) other flavors of this pattern.
+
+> +    description:
+> +      Number of cells in a HTE specifier.
+> +
+> +required:
+> +  - "#hardware-timestamps-cells"
+> +
+> +additionalProperties: true
+> diff --git a/Documentation/devicetree/bindings/hte/hte-consumer.yaml b/Documentation/devicetree/bindings/hte/hte-consumer.yaml
+> new file mode 100644
+> index 000000000000..cf65d1d44a18
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hte/hte-consumer.yaml
+> @@ -0,0 +1,48 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/hte/hte-consumer.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: HTE Consumer Device Tree Bindings
+> +
+> +maintainers:
+> +  - Dipen Patel <dipenp@nvidia.com>
+> +
+> +description: |
+> +  HTE properties should be named "hardware-timestamps". The exact meaning of
+> +  each hardware-timestamps property must be documented in the device tree
+> +  binding for each device. An optional property "hardware-timestamps-names" may
+> +  contain a list of strings to label each of the HTE devices listed in the
+> +  "hardware-timestamps" property.
+> +
+> +  The "hardware-timestamps-names" property if specified is used to map the name
+> +  of the HTE device requested by the devm_of_hte_request_ts() or of_hte_request_ts
+> +  call to an index into the list given by the "hardware-timestamps" property.
+> +
+> +properties:
+> +  hardware-timestamps:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    description:
+> +      The list of HTE provider phandle. The provider must document the number
+> +      of cell that must be passed in this property along with phandle.
+> +
+> +  hardware-timestamps-names:
+
+hardware-timestamp-names
+
+
+> +    $ref: /schemas/types.yaml#/definitions/string-array
+> +    description:
+> +      An optional string property.
+> +
+> +required:
+> +  - "hardware-timestamps"
+
+Don't need quotes.
+
+> +
+> +dependencies:
+> +  hardware-timestamps-names: [ hardware-timestamps ]
+> +
+> +additionalProperties: true
+> +
+> +examples:
+> +  - |
+> +    hte_irq_consumer {
+> +              hardware-timestamps = <&tegra_hte_lic 0x19>;
+> +              hardware-timestamps-names = "hte-irq";
+> +    };
+> diff --git a/Documentation/devicetree/bindings/hte/nvidia,tegra194-hte.yaml b/Documentation/devicetree/bindings/hte/nvidia,tegra194-hte.yaml
+> new file mode 100644
+> index 000000000000..529926118f35
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hte/nvidia,tegra194-hte.yaml
+> @@ -0,0 +1,79 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/hte/nvidia,tegra194-hte.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Tegra194 on chip generic hardware timestamping engine (HTE)
+> +
+> +maintainers:
+> +  - Dipen Patel <dipenp@nvidia.com>
+> +
+> +description: |
+> +  Tegra194 SoC has multiple generic hardware timestamping engines which can
+> +  monitor subset of GPIO and on chip IRQ lines for the state change, upon
+> +  detection it will record timestamp (taken from system counter) in its
+> +  internal hardware FIFO. It has bitmap array arranged in 32bit slices where
+
+has a bitmap
+
+> +  each bit represent signal/line to enable or disable for the hardware
+> +  timestamping.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - nvidia,tegra194-gte-aon
+> +      - nvidia,tegra194-gte-lic
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  int-threshold:
+
+nvidia,int-threshold unless this is common for all hw timestamps?
+
+> +    description:
+> +      HTE device generates its interrupt based on this u32 FIFO threshold
+> +      value. The recommended value is 1.
+> +    minimum: 1
+> +    maximum: 256
+> +
+> +  slices:
+
+nvidia,slices
+
+Needs a type.
+
+> +    description:
+> +      HTE lines are arranged in 32 bit slice where each bit represents different
+> +      line/signal that it can enable/configure for the timestamp. It is u32
+> +      property and depends on the HTE instance in the chip.
+> +    enum: [3, 11]
+> +
+> +  '#hardware-timestamps-cells':
+> +    const: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - slices
+> +  - "#hardware-timestamps-cells"
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    tegra_hte_aon: hardware-timestamps@c1e0000 {
+> +              compatible = "nvidia,tegra194-gte-aon";
+> +              reg = <0xc1e0000 0x10000>;
+> +              interrupts = <0 13 0x4>;
+> +              int-threshold = <1>;
+> +              slices = <3>;
+> +              #hardware-timestamps-cells = <1>;
+> +    };
+> +
+> +  - |
+> +    tegra_hte_lic: hardware-timestamps@3aa0000 {
+> +              compatible = "nvidia,tegra194-gte-lic";
+> +              reg = <0x3aa0000 0x10000>;
+> +              interrupts = <0 11 0x4>;
+> +              int-threshold = <1>;
+> +              slices = <11>;
+> +              #hardware-timestamps-cells = <1>;
+> +    };
+> +
+> +...
+> -- 
+> 2.17.1
+> 
+> 
