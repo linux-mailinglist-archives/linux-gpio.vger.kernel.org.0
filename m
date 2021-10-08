@@ -2,195 +2,125 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 358444271AC
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Oct 2021 21:57:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2EA24271D5
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Oct 2021 22:08:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241939AbhJHT7Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Oct 2021 15:59:25 -0400
-Received: from mail-bn8nam11on2047.outbound.protection.outlook.com ([40.107.236.47]:60001
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S231589AbhJHT7Z (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 8 Oct 2021 15:59:25 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GGkMN4fLYUHqUKeh92ox0pR9MFTX8/0fU3xr30L/MD8B0HRHhoomCA941dN/ddciYXs1JoOTECIpu5gQQC1qRok3xPzskuHJ2Aqk22AjtkigMRtZYYXQlPXj09y9hQBihmg/lMiWj1N+Z883LrSu8vsg22M6VT6rdmb+qx/o09KxQV7X2i1Hn3YOZz4IpITiIdzuFr/GHtiXkABOXuFudNa/h08lQSeitMe/4Mn0gg2riZXgPYmvTc7z5/GBw4G85wIPa/OsxJegJHltdnp+E1pWev1Gwp40jMhF8CeJoi4S3mSwLYjgeEG6enySZB/qBWMEfp0h/BYF5BATf9Dd2w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KtD4yeVxORps79WBpKA6F8idr/rtUXrchc6zspTP3KM=;
- b=hLO1NsvGJi7pvWnvSaLkA3GxzBLCtjd1Ujsqh/ymZqfBPDdnxagMNP9SEB9TqqpUH0K9CLtWHaBVTsiwXmH53T83hmbQ4sHNy4UeuEUTakGYLZgxMYai7WA/ELVCZGCw2kPlOB+rg5c5q9g1DV/SOH1FoAmmrgLCEXtAVNS6+uqjV31oNultmU9PCtxgoguOa5CXLjjj50sIoTMPULoow457MHV6QzHLJxRkTU4ggBQEfb+gjiTVbmFvLP85lTylCTvr2AVsM6j7NUnszKC0qeAWFVgehpMVW08TB+86t/mc3UMdAIaZoCNR0zJrRG+UHbPOvVxrVdhsr5aEn8UTCQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KtD4yeVxORps79WBpKA6F8idr/rtUXrchc6zspTP3KM=;
- b=GQ3X3WYn/Ya04BZtDx9kRefhMsiP3dag/JM/b4zsLXIpFJyTdfw6nYVDMM15e3QFsceTrBZwPm1dsVQ3PG6tZrCNRftsx4teewNXfoWduYyLxyr31zoCGOWLjRFB7FiNZpDQ/lpLlHY68ImH1CWHYAX7uANULHxJnVsDtrIkHok=
-Authentication-Results: amd.com; dkim=none (message not signed)
- header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB5040.namprd12.prod.outlook.com (2603:10b6:5:38b::19)
- by DM4PR12MB5357.namprd12.prod.outlook.com (2603:10b6:5:39b::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4587.18; Fri, 8 Oct
- 2021 19:57:27 +0000
-Received: from DM4PR12MB5040.namprd12.prod.outlook.com
- ([fe80::9c06:d113:293:f09b]) by DM4PR12MB5040.namprd12.prod.outlook.com
- ([fe80::9c06:d113:293:f09b%8]) with mapi id 15.20.4587.022; Fri, 8 Oct 2021
- 19:57:27 +0000
-Subject: Re: [PATCH 1/1] pinctrl: amd: disable and mask interrupts on probe
-To:     Sachi King <nakato@nakato.io>, linux-gpio@vger.kernel.org,
-        basavaraj.natikar@amd.com
-Cc:     linux-kernel@vger.kernel.org,
-        "Limonciello, Mario" <mario.limonciello@amd.com>,
-        Shyam-sundar S-k <Shyam-sundar.S-k@amd.com>,
-        "Shah, Nehal-bakulchandra" <Nehal-bakulchandra.Shah@amd.com>
-References: <20211001161714.2053597-1-nakato@nakato.io>
- <20211001161714.2053597-2-nakato@nakato.io>
-From:   Basavaraj Natikar <bnatikar@amd.com>
-Message-ID: <5d683882-257d-87b2-20aa-0871e2902090@amd.com>
-Date:   Sat, 9 Oct 2021 01:27:16 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
-In-Reply-To: <20211001161714.2053597-2-nakato@nakato.io>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: MA1PR01CA0167.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:d::15) To DM4PR12MB5040.namprd12.prod.outlook.com
- (2603:10b6:5:38b::19)
+        id S231589AbhJHUKs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Oct 2021 16:10:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41152 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231584AbhJHUKr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Oct 2021 16:10:47 -0400
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBF3FC061570;
+        Fri,  8 Oct 2021 13:08:51 -0700 (PDT)
+Received: by mail-lf1-x130.google.com with SMTP id j21so25875697lfe.0;
+        Fri, 08 Oct 2021 13:08:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=SvSecvKN+CG0meIBIuOZ66lX5o0E6MQFEWg90R8UlQw=;
+        b=fVOINyEbOLrsm+S5bai0uYf9CSlDbUG0AtM46n93N7B1iv84zSLST92obxzsd0oIjG
+         A2yrL8VzgBMF0NXrBT84XLdLHqKEJtgdZZUbq6nHpjtRiRzBemsqvwrRBdI3lTxzjwBx
+         eOEJykY8NveLzv/4AIgIDPYYTVy4FYN0YvgidtfnMHW/+qiwNsO3U4y37ihNr6470R2S
+         tHP05t4Ct4L2MQxfMY8/V7Z5wenp4Ifap8ASADub5NGLvvClu3+JcbCeb2ZWY0D2lceg
+         S940ebtZyLk8aVco4CQMojrNZkGtXFldAJht8Uz9GHgq4FOiqMJ8r3atXnzCfnRlj76+
+         juqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SvSecvKN+CG0meIBIuOZ66lX5o0E6MQFEWg90R8UlQw=;
+        b=f3NUbHTg6fajqJbT/cBQ6AEJavt4Pf7RnEhihsh5BLWVMxym88VcN7w5oCDh2b+1Hu
+         AwGecGgLVmPCCE1lgAMI0zYq122puFe9im5vqLwi9PkeX3cNny7DmCG5cRtm6RCgE+Ms
+         UfWhTIdH5c7E2V52UNsFCU7OsIDVv2szwzKErmbz4v0725WN2AshJ6/E2280RgiUbm/T
+         AfrtZ85EK6yzg3Y0EIvppE8uuYLY6HigJgthgTgshlkGkISdtd2zlgOCq7u4NjZFgJ44
+         USIGDmIFAASfStIOjW2RgAU3yhJB7ge7d7O3+bdnG1Et3Ki/KC7MCmSbWm72aSjR4jT0
+         FM0A==
+X-Gm-Message-State: AOAM531zmwOTCE4g/4xF97quaWHl56+gd7rt/eNYdqAG5Zmo40R43bRb
+        X6nV6/HLVVks9AI/O601ubY=
+X-Google-Smtp-Source: ABdhPJz0lsQ4+eQVLaSuW5oMxXBEX6xuS3cSfnTO6tjJGmU+oiw07uhmWLWXNu5NTGunXYTgFgt/lQ==
+X-Received: by 2002:a05:6512:3083:: with SMTP id z3mr12588754lfd.242.1633723730320;
+        Fri, 08 Oct 2021 13:08:50 -0700 (PDT)
+Received: from localhost.localdomain (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
+        by smtp.googlemail.com with ESMTPSA id b21sm24580lfs.49.2021.10.08.13.08.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 08 Oct 2021 13:08:49 -0700 (PDT)
+Subject: Re: [PATCH V2 linux-pinctrl 1/2] Revert "dt-bindings: pinctrl:
+ bcm4708-pinmux: rework binding to use syscon"
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        devicetree@vger.kernel.org, Ray Jui <rjui@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Scott Branden <sbranden@broadcom.com>,
+        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+        Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20211008153939.19685-1-zajec5@gmail.com>
+ <1633722536.868012.3211952.nullmailer@robh.at.kernel.org>
+From:   =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Message-ID: <cf2ca705-d6d7-d69a-3c66-59f7c997f6b8@gmail.com>
+Date:   Fri, 8 Oct 2021 22:08:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-Received: from [IPv6:2405:201:d002:588b:e88c:d154:d7cb:86f4] (2405:201:d002:588b:e88c:d154:d7cb:86f4) by MA1PR01CA0167.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a01:d::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4587.21 via Frontend Transport; Fri, 8 Oct 2021 19:57:25 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 34c7a983-4bef-4c63-243d-08d98a95dad7
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5357:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM4PR12MB5357FB74A3B368687FF1A2AEE6B29@DM4PR12MB5357.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: v8FqZibiNfIAQNSu7NiYzOSrQVSvmQje+TaL9EVwn+3ZSdhwvu44wt+zO3WU6yhH621oEDXC3+FtaBisWqGTSZEPavsaUuhMP36e9A/cZAQTcGkdcvk6D+11QV27iX/+mvalyEg3FKFy3u1mvF5w3oYx7EUQDLv2e937Xh+EJqtQjNtL8Izc/YRZ0kt8Lda4tvrqYwYC5qvPOJGeELOAW2zudjya5PdYLquXoyj3SsuEs/kcobxD76lNobAGEYAc0PXhXc6fIT4ADbZqLmICwEfxM0FSLSbfU7ek9OfeZIlpics/CUkM4AOHgp9RUFB/+uPKMQcWk6+CsR3lAWtu9NDZvgMq6gpDubodC6J8Rv00/xsqc/MKqG3KCz/PstCtbUlByD7JD7Qfa8hy/ELKaaa3hFMxyMj4Tmjz1qWjH9OOrYdCPxRoMWJ7ZZqqOTT68p7xLx8BTw4nflEgzDcqVb3XbR78o/Q3BEHf/JlFQjn7d4LYMNAxDx4IX6FVaMZxtQn5FhwUlt6iBTLaBSxUMgnezMQyjMuFtPLkShyvW2BPrFQis5M44oSv+Pv2ppMF6f9grtX4qjOlmp3tJdhf/ahFSNiJ54cnPSWX5To4PdDdS2fhMw92itsDVs0l+yVqZwFRs/Qak/3o9b/f1OMma47GcuS1Cgg/WqWK+09+VXpeVYxapRbJIv7qyk58+t7MQZpwfX3GKLzygNFenzEMqsiLbBWWfR1cXYvLz4wEzV4=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5040.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(5660300002)(83380400001)(8936002)(2906002)(8676002)(6636002)(53546011)(38100700002)(54906003)(66556008)(66476007)(4326008)(316002)(45080400002)(66946007)(31686004)(6486002)(186003)(36756003)(31696002)(2616005)(6666004)(508600001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TTBhY0NlQkw1aFFnSkdKNW1qTlBQbEJRejBkelphbkJhV2VlODZFTitWVzRs?=
- =?utf-8?B?RXZOeEV2QWQ1ckp1VGE2WU5NQjBRaFprajJKVzNuWXg2UXIwZEJldG9BUGJw?=
- =?utf-8?B?L3ZvSWNsRmFEa2k3eGdYVnBhcGl1SjZ6YnliaTljTnQ2aUVjV3cwNCs3Mmpl?=
- =?utf-8?B?TWZ2NUVZYmZLYW5aR3JqYmx4NlRDalIrZ2tEU0VuVTFoQUhaNXVjdVZKTCs1?=
- =?utf-8?B?R3VzK1psMVA3MjZsQjg3bjZPcDFQVnhUU3hGQWtib1VDYWt0YmlBaHdqdUhm?=
- =?utf-8?B?R3hYdUd2ZUMvSGc3cmhmZE4valBCTGN4bHVvbi8xVER2S2M3TW9uMC9WMXJK?=
- =?utf-8?B?NmZEbkt5UVBYVDcrS3ZkcFB6dUpkQTdvNUFiZnhDR1lncHlBdTlXbmt0TC8r?=
- =?utf-8?B?QXoxR3ZKTTJXSWpMUlRaVVpQYU5ZcmpXc2lwU3F5MHBWb0dkNUwxZzRqaWtG?=
- =?utf-8?B?Vnk0K2trZFRNOW1CbHpwT2RDdyttaWo0NlZFNVdSS0l2dFNiQW9XZmpnODBQ?=
- =?utf-8?B?R1g1S3dmUUsxQjdqZGtUVWM1ZzFqVHYxblo1WkRyZWd1YUtTNVBGMTRCVHpz?=
- =?utf-8?B?OWpxdjNOdmNnSTVIZGV3RjN2dmNwYVp2VWJGaHlpRHpvNFhFbHhkTUM3c2g2?=
- =?utf-8?B?SktqUFpBUXhhRGN0NGIzZ1pCaUU1R0ZvaGNZQXpjUlBQWUJldkxOTUFhMXp6?=
- =?utf-8?B?QXFDQ1pieTFFVWpSZjRvRmlWK1JEYndxZk5hU3hRY3c3SFBZdlBUV2tJNVVa?=
- =?utf-8?B?dEphdnNqWjF4eFgrcjhMWFBFSWxaQlR5TFg2MkFPdk5aaHdoY1RZRmlhbGZD?=
- =?utf-8?B?VW83U3l4eGcwaldDa1duN2h2RGlSWUFYcHZPVEtiMkhwT29oVW9kV0tSaE4y?=
- =?utf-8?B?WlROdGFBNFFtK1Vkd052ZVZDMGJyNUYxV1ZJU1lwWGlRQVVqR3lEVHJaOS9Y?=
- =?utf-8?B?dDJFTmVIZEw5MmtVSStWTGhRaVpJRzFmQ3RKOWVUL2RVN1dReDROaWh0NW1J?=
- =?utf-8?B?QWpQaHlRWExsbTlRYmdiWmx0ZjR3cnBKUkVXWjk0bG1SNTFUN3Byb2lKclBF?=
- =?utf-8?B?aTNRTE02QjJaY1lNbE9acXdmVW93SUY1S3JkMjlLTXVSWVZSejFZRk5SVzhx?=
- =?utf-8?B?YmNpWTVzeFpsMDh4OVh0MGZvOHI0WWVuZ3J6aWhlcU9pNDYyZXFqeThobFBo?=
- =?utf-8?B?Q3FVWEovUldGclQwMjQzeHovL0xLU1hjcFErd0tMeWVMb0sxdlBvNTNiVWl4?=
- =?utf-8?B?WTFrMTR5TjBlUTRNbjhVRHBVd3plbkUwc1VkeUpzVXZsam82VmNyaUlDVUpi?=
- =?utf-8?B?aGF3M2gzSDJWc0FVY0tRV2sxZllNOTNCT0ZvVWkwV0F1M3kyaTJQdFVXSjZF?=
- =?utf-8?B?SDQ3ME5VYUFZcEZycDQxaWloK3IyNW1Dc3d4cVNJQmRydXdWQTFrTG94b243?=
- =?utf-8?B?cGpqN0VOWTZVK212Z0JwRkNKM2V5VXFWVnZjRjBEbWRrd1NGQzJ0NThnbm1h?=
- =?utf-8?B?VFJ2cTlWalQ5ZndxTk1oUzVIcUo2SXYzNGswTmNiMWVyZmNpMERhTVZyWTBC?=
- =?utf-8?B?bWwvbVIySkl6TjBiaTJ4blFsODlPclNkeThHbEg5K0hkVmFrWDRrQWVaNjBs?=
- =?utf-8?B?NldadjZEOFlDZTFMUUtucHFpRHVyb1c2cWgvMHRNYjBKd29DMHdqOGNHSDNi?=
- =?utf-8?B?amg1RlpSNkpNU3pBN0IyMXFYTUszYlF6Sy9mT1VlcWNFZlBvZ2NxSkdqclVL?=
- =?utf-8?B?RHlkdUZ1M2E4Rm5GTS83N0lOWnhJTElWNVBjRTBoOGJ5em9GOUV3SmdEdTBW?=
- =?utf-8?B?d1liaDRQVU5QdjNMNE4wbjNaMGhrblc2UTJlYmFXZ253dHNOQjkwZVFIeGMz?=
- =?utf-8?Q?V7bg9k5K914RL?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 34c7a983-4bef-4c63-243d-08d98a95dad7
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5040.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Oct 2021 19:57:27.7242
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6NfpNjUjjl13CgYp0jtyAJz1vH1VzpDL1mEkr2p0VLEBo7V8R81+PbqSsnSObyHWiuU/GjqFdCfiSdQ0ndklUw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5357
+In-Reply-To: <1633722536.868012.3211952.nullmailer@robh.at.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On 08.10.2021 21:48, Rob Herring wrote:
+> On Fri, 08 Oct 2021 17:39:38 +0200, Rafał Miłecki wrote:
+>> From: Rafał Miłecki <rafal@milecki.pl>
+>>
+>> This reverts commit 2ae80900f239484069569380e1fc4340fd6e0089.
+>>
+>> My rework was unneeded & wrong. It replaced a clear & correct "reg"
+>> property usage with a custom "offset" one.
+>>
+>> Back then I didn't understand how to properly handle CRU block binding.
+>> I heard / read about syscon and tried to use it in a totally invalid
+>> way. That change also missed Rob's review (obviously).
+>>
+>> Northstar's pin controller is a simple consistent hardware block that
+>> can be cleanly mapped using a 0x24 long reg space.
+>>
+>> Since the rework commit there wasn't any follow up modifying in-kernel
+>> DTS files to use the new binding. Broadcom also isn't known to use that
+>> bugged binding. There is close to zero chance this revert may actually
+>> cause problems / regressions.
+>>
+>> This commit is a simple revert. Example binding may (should) be updated
+>> / cleaned up but that can be handled separately.
+>>
+>> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+>> ---
+>> V2: Update brcm,cru.yaml to avoid new yamllint warnings/errors
+>> ---
+>>   .../devicetree/bindings/mfd/brcm,cru.yaml     | 11 +++++----
+>>   .../bindings/pinctrl/brcm,ns-pinmux.yaml      | 23 +++++++++++--------
+>>   2 files changed, 19 insertions(+), 15 deletions(-)
+>>
+> 
+> My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+> on your patch (DT_CHECKER_FLAGS is new in v5.13):
+> 
+> yamllint warnings/errors:
+> 
+> dtschema/dtc warnings/errors:
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/brcm,ns-pinmux.example.dt.yaml: cru@1800c100: $nodename:0: 'cru@1800c100' does not match '^([a-z][a-z0-9\\-]+-bus|bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
+> 	From schema: /usr/local/lib/python3.8/dist-packages/dtschema/schemas/simple-bus.yaml
 
-On 10/1/2021 9:47 PM, Sachi King wrote:
-> [CAUTION: External Email]
->
-> Some systems such as the Microsoft Surface Laptop 4 leave interrupts
-> enabled and configured for use in sleep states on boot, which cause
-> unexpected behaviour such as spurious wakes and failed resumes in
-> s2idle states.
->
-> As interrupts should not be enabled until they are claimed and
-> explicitly enabled, disabling any interrupts mistakenly left enabled by
-> firmware should be safe.
->
-> Signed-off-by: Sachi King <nakato@nakato.io>
-> ---
->  drivers/pinctrl/pinctrl-amd.c | 29 +++++++++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
->
-> diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
-> index c001f2ed20f8..aa4136cd312d 100644
-> --- a/drivers/pinctrl/pinctrl-amd.c
-> +++ b/drivers/pinctrl/pinctrl-amd.c
-> @@ -830,6 +830,32 @@ static const struct pinconf_ops amd_pinconf_ops = {
->         .pin_config_group_set = amd_pinconf_group_set,
->  };
->
-> +static void amd_gpio_irq_init(struct amd_gpio *gpio_dev) {
-> +       struct pinctrl_desc *desc = gpio_dev->pctrl->desc;
-> +       unsigned long flags;
-> +       u32 pin_reg, mask;
-> +       int i;
-> +
-> +       mask = BIT(WAKE_CNTRL_OFF_S0I3) | BIT(WAKE_CNTRL_OFF_S3)
-> +               | BIT(INTERRUPT_MASK_OFF) | BIT(INTERRUPT_ENABLE_OFF)
-> +               | BIT(INTERRUPT_MASK_OFF) | BIT(WAKE_CNTRL_OFF_S4);
+It's warning we already have and not something introduced by this
+revert.
 
-Could you please correct INTERRUPT_MASK_OFF , added twice.
+As a revert this commit should introduce as little non-revert changes
+as possible. I'm planning to improve that example later in a separated
+commit.
 
-Thanks,
-Basavaraj 
-
-> +
-> +       for (i = 0; i < desc->npins; i++) {
-> +               int pin = desc->pins[i].number;
-> +               const struct pin_desc *pd = pin_desc_get(gpio_dev->pctrl, pin);
-> +               if (!pd)
-> +                       continue;
-> +
-> +               raw_spin_lock_irqsave(&gpio_dev->lock, flags);
-> +
-> +               pin_reg = readl(gpio_dev->base + i * 4);
-> +               pin_reg &= ~mask;
-> +               writel(pin_reg, gpio_dev->base + i * 4);
-> +
-> +               raw_spin_unlock_irqrestore(&gpio_dev->lock, flags);
-> +       }
-> +}
-> +
->  #ifdef CONFIG_PM_SLEEP
->  static bool amd_gpio_should_save(struct amd_gpio *gpio_dev, unsigned int pin)
->  {
-> @@ -967,6 +993,9 @@ static int amd_gpio_probe(struct platform_device *pdev)
->                 return PTR_ERR(gpio_dev->pctrl);
->         }
->
-> +       /* Disable and mask interrupts */
-> +       amd_gpio_irq_init(gpio_dev);
-> +
->         girq = &gpio_dev->gc.irq;
->         girq->chip = &amd_gpio_irqchip;
->         /* This will let us handle the parent IRQ in the driver */
-> --
-> 2.33.0
->
-
+Can you take a look at this commit despite your bot warning, please?
