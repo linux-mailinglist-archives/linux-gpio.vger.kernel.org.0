@@ -2,93 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 45E3F426AAB
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Oct 2021 14:25:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99BAA426B20
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Oct 2021 14:48:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240457AbhJHM1i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Oct 2021 08:27:38 -0400
-Received: from mx07-00178001.pphosted.com ([185.132.182.106]:34932 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230197AbhJHM1h (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Oct 2021 08:27:37 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1989Zvn3032584;
-        Fri, 8 Oct 2021 14:25:36 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=selector1;
- bh=au7Ek/5U1T6AULbN6EfVLxcM0LGgQliVI5/SbjC2bS0=;
- b=mAc4Fbc/nRAk6yw0QopQN6vsY+j7t/kkm6FiW5UbwlikHd0dwRrIvNPO2Gx3jd8TCPz2
- ENWc2V+ku1Sfp0lJOig5x+RW1V/sNrTHIMhgD7ebogrD66OeFfcVRexP4FJREuzRB/TJ
- 7Ae0b3XxRET3/OrA7F5ls4/ccz4WyqDqoCjdm6UxT7Sj+qHMgpiToKcDDf9EK03WdK1P
- nSUMKCnyMYtIJv0IF20BvgQxwyxWWuf8NpEq0MgarUGZBsbeRIveXEhm9gbppmTk7fo3
- 3omahBaDOxm+FM5Kxf9rwead+cTgwm91HM59bM9D5/uz2EYzSlH/v4JsKW3c6USTZaIf Kg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 3bjem12svt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 08 Oct 2021 14:25:36 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4182710002A;
-        Fri,  8 Oct 2021 14:25:35 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag2node2.st.com [10.75.127.5])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 371EB227F4C;
-        Fri,  8 Oct 2021 14:25:35 +0200 (CEST)
-Received: from localhost (10.75.127.49) by SFHDAG2NODE2.st.com (10.75.127.5)
- with Microsoft SMTP Server (TLS) id 15.0.1497.18; Fri, 8 Oct 2021 14:25:27
- +0200
-From:   Fabien Dessenne <fabien.dessenne@foss.st.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Fabien Dessenne <fabien.dessenne@foss.st.com>
-Subject: [PATCH] pinctrl: stm32: use valid pin identifier in stm32_pinctrl_resume()
-Date:   Fri, 8 Oct 2021 14:25:17 +0200
-Message-ID: <20211008122517.617633-1-fabien.dessenne@foss.st.com>
-X-Mailer: git-send-email 2.25.1
+        id S230212AbhJHMuW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Oct 2021 08:50:22 -0400
+Received: from mail-vk1-f179.google.com ([209.85.221.179]:33391 "EHLO
+        mail-vk1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230204AbhJHMuS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Oct 2021 08:50:18 -0400
+Received: by mail-vk1-f179.google.com with SMTP id t200so4177257vkt.0;
+        Fri, 08 Oct 2021 05:48:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2CZA5owzP75Fk3OUthJZqkUZwf9bToqDOhS3PDP9ylg=;
+        b=0xiwhAHaIYXS6I4PlmgO0CR3a2nNgtpZwOrMdtqjf0sZG9eTCxFqE3zdFBNmLrFxGu
+         +4GPGtR73+W31UAmqS+a7DqiYU1uMbcSRVpqFasXse6ethYaPQYoZrYE2EfpM7Fh17CB
+         Wm+OG2ENJvX7hCiqlcaQXO1MhakXdLLTWwNqTonbjJMKyZ7/du3wrjyVQ5nPMPPMgJg7
+         L5t3JcGdvbI301W5/ZgumlgTyYzaw1ewm2C+Xd6NkmnRAeFpYfxY1DncQpI0M9co6PQ9
+         3LvRulKVS5JOBzS58qfVhMNfxfxzcNx09XklkQFEOUZX7M/YWeg4CtEoIlvvF1IXcAFb
+         8Hgw==
+X-Gm-Message-State: AOAM531mFOV3pNaJTs4LadrO+vRtBsvX0sarDTtlZswYZhOlBW/hZXYe
+        FW1j6VGijRDVxrH1+LsLAsm7N9767mRQcWrKbkE=
+X-Google-Smtp-Source: ABdhPJzhaludNGFd2M+jSs3csgSWFGRxQKaQ5CFdeS+FIxZB4w/RVLybb15Btky/2gRCvdqiCLIczqmpmRi0rz61IR4=
+X-Received: by 2002:a1f:5e84:: with SMTP id s126mr9100625vkb.7.1633697303106;
+ Fri, 08 Oct 2021 05:48:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG2NODE2.st.com
- (10.75.127.5)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.182.1,Aquarius:18.0.790,Hydra:6.0.391,FMLib:17.0.607.475
- definitions=2021-10-08_03,2021-10-07_02,2020-04-07_01
+References: <CAMuHMdUvNM8Tu-+Ed0vjB2-_JUQe7ojUPbzJM=Vy1m_j31sNSg@mail.gmail.com>
+ <20211007200250.20661-1-nikita.yoush@cogentembedded.com>
+In-Reply-To: <20211007200250.20661-1-nikita.yoush@cogentembedded.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 8 Oct 2021 14:48:11 +0200
+Message-ID: <CAMuHMdU2Nr1V035Ntz-XNrc10t7femUFt_WV+Q3EHiWZD5HmkQ@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: renesas: r8a779[56]x: add MediaLB pins
+To:     Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
+        Vladimir Barinov <vladimir.barinov@cogentembedded.com>,
+        LUU HOAI <hoai.luu.ub@renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-When resuming from low power, the driver attempts to restore the
-configuration of some pins. This is done by a call to:
-  stm32_pinctrl_restore_gpio_regs(struct stm32_pinctrl *pctl, u32 pin)
-where 'pin' must be a valid pin value (i.e. matching some 'groups->pin').
-Fix the current implementation which uses some wrong 'pin' value.
+Hi Nikita,
 
-Fixes: e2f3cf18c3e2 ("pinctrl: stm32: add suspend/resume management")
-Signed-off-by: Fabien Dessenne <fabien.dessenne@foss.st.com>
----
- drivers/pinctrl/stm32/pinctrl-stm32.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Thu, Oct 7, 2021 at 10:03 PM Nikita Yushchenko
+<nikita.yoush@cogentembedded.com> wrote:
+> From: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
+>
+> This adds pins, groups, and functions for MediaLB device on Renesas
+> H3 and M3.
+>
+> Signed-off-by: Andrey Gusakov <andrey.gusakov@cogentembedded.com>
+> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> Signed-off-by: LUU HOAI <hoai.luu.ub@renesas.com>
+> Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+> ---
+> Changes from v1:
+> - move mlb_3pin from common[] to automotive[] arrays
+> - fix missed array size update in pfc-r8a7796.c
 
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
-index 68b3886f9f0f..dfd8888a222a 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-@@ -1644,8 +1644,8 @@ int __maybe_unused stm32_pinctrl_resume(struct device *dev)
- 	struct stm32_pinctrl_group *g = pctl->groups;
- 	int i;
- 
--	for (i = g->pin; i < g->pin + pctl->ngroups; i++)
--		stm32_pinctrl_restore_gpio_regs(pctl, i);
-+	for (i = 0; i < pctl->ngroups; i++, g++)
-+		stm32_pinctrl_restore_gpio_regs(pctl, g->pin);
- 
- 	return 0;
- }
+Thanks for the update!
+
+Obviously not only the mlb_3pin groups, but also the functions have to
+be moved to the automotive[] arrays ;-)
+
+I'll fix these up while applying, so no need to resend.
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-pinctrl-for-v5.16.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.25.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
