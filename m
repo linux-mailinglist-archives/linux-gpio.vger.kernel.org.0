@@ -2,195 +2,279 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B7904270A4
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Oct 2021 20:19:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 08F0F42714A
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Oct 2021 21:15:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239741AbhJHSVQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 8 Oct 2021 14:21:16 -0400
-Received: from mail-dm6nam12on2063.outbound.protection.outlook.com ([40.107.243.63]:62689
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S235604AbhJHSVP (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 8 Oct 2021 14:21:15 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XyIazTYGmPYr7p1rSwD1Fa51zfezX5v+13Baun6eywdEAD0fGZGdNy8+LIc/AzaLEqcQeLXJ6J37OBzKV4IbT8ju54YouSH25wD3xFoto+gNGDUhCbNtxTYY2aOPBasodQlw5JpNrseM3AQLe7tKtYRTgjoZk8YvGRLARlbf5oRcCAZcBCDOg2dEi6EHBHCKWnEU89lsU+3TsmGnVYJzM9sX7z2NzUm/OCds7RXyq03TvQXnBvT2DvUexgd4XPCbVvmUDWDgfbHw9ZHOTeBUA8ewhgjad/dF2GtjFoAEng+4XEwoNSkOSnzGpVLiV6czPtooKydAbFKEdJ/U/qZfbw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MbirUpDqNQz8/NJEsu8/d2czrEx9fcFmAjg6+7ecZGE=;
- b=jxeOC2gEn+KW9QbVcJszuOxjCNLJwYB5Ev/djc6GFFK++QdAPJwdvA2/O7ZGBoCHgq4epkJ/OQjdY0SdGo/GLA9jfcrbW1CUI4psySffoWewtOj5ugGDGVKOiAkEmo8XLRRA4gnttbCTfXBUGOXOiJ/FatfA1R145Tjnuwzq/m43XuvYXwkbATAbneDxLFzZdQQ1UvMHwfPqWTV2bszQakEFC1qo14FPiPD+WwOlFVZepEGnNog3xQaEwOcIJ/WaVKpecUDq0+lFqCw3ab2WTbqes/2XcANNMW6DsC99jD2292opOQCATYRvr67Zwyr1pvNZQpoqPMVFwz6952NMGw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MbirUpDqNQz8/NJEsu8/d2czrEx9fcFmAjg6+7ecZGE=;
- b=DHYb5b7bscp//Cr/c4/OahNUPD8V4n9vVXN3zkaaMVtUE+4gXxhOUsy4B3g0Tww2bza1bBwAXtiEifCcDVQQFRttAq8nYVVlb3xOYDweOxw+kkokGVh1vFuP4JFi/7mPDVstFltFEwzFmn+ZEkY9CBaTjvEV2nX4GK+VCQr/wNQ=
-Authentication-Results: amd.com; dkim=none (message not signed)
- header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
-Received: from SA0PR12MB4510.namprd12.prod.outlook.com (2603:10b6:806:94::8)
- by SN6PR12MB4671.namprd12.prod.outlook.com (2603:10b6:805:e::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4587.19; Fri, 8 Oct
- 2021 18:19:18 +0000
-Received: from SA0PR12MB4510.namprd12.prod.outlook.com
- ([fe80::f909:b733:33ff:e3b1]) by SA0PR12MB4510.namprd12.prod.outlook.com
- ([fe80::f909:b733:33ff:e3b1%5]) with mapi id 15.20.4587.022; Fri, 8 Oct 2021
- 18:19:18 +0000
-Subject: Re: [PATCH 1/1] pinctrl: amd: disable and mask interrupts on probe
-To:     Sachi King <nakato@nakato.io>, linux-gpio@vger.kernel.org,
-        basavaraj.natikar@amd.com
-Cc:     linux-kernel@vger.kernel.org,
-        Shyam-sundar S-k <Shyam-sundar.S-k@amd.com>,
-        "Shah, Nehal-bakulchandra" <Nehal-bakulchandra.Shah@amd.com>
-References: <20211001161714.2053597-1-nakato@nakato.io>
- <20211001161714.2053597-2-nakato@nakato.io>
-From:   "Limonciello, Mario" <mario.limonciello@amd.com>
-Message-ID: <8cf02fe2-252d-02b5-d227-9091bee57f76@amd.com>
-Date:   Fri, 8 Oct 2021 13:19:17 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
-In-Reply-To: <20211001161714.2053597-2-nakato@nakato.io>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN4PR0601CA0004.namprd06.prod.outlook.com
- (2603:10b6:803:2f::14) To SA0PR12MB4510.namprd12.prod.outlook.com
- (2603:10b6:806:94::8)
+        id S231480AbhJHTRb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 8 Oct 2021 15:17:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57214 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231459AbhJHTRa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 8 Oct 2021 15:17:30 -0400
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 059B7C061570
+        for <linux-gpio@vger.kernel.org>; Fri,  8 Oct 2021 12:15:35 -0700 (PDT)
+Received: by mail-ed1-x52f.google.com with SMTP id p13so40675897edw.0
+        for <linux-gpio@vger.kernel.org>; Fri, 08 Oct 2021 12:15:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bw3ds29XinXwW1KEBljx493lcjaPJSd3SSCdxWGuvg8=;
+        b=FG/7crXKJQ1+RGfM2AebqtZIbOdrK6naSx3mxE1upBkMeJUEk/ZJA+mH4mQ8BUxpnu
+         UpWtjOEjcct/b8g0MxKKlyu5DoPjQj7tNo17py6iOlmX3xYgU0bTAixoZFBXWzV0mtXs
+         242qGhAe+UI+0DlvB67GdCOphlIy39x3lPENC5gFemcfslzr/9V+dXs2Sa8EwaRO14et
+         b8jSyMYqruB23/RtkJwlLz/LPLVehNO5lXftc9VgrimwyiT088tKIhoxL5ktuiAixKDn
+         ZPzEykEC3EEyD5r83aUldM0cDoehNjCyd9bgEgiI1uGzx97A1jhpmnN0h0GkwIqNrpPx
+         wJpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bw3ds29XinXwW1KEBljx493lcjaPJSd3SSCdxWGuvg8=;
+        b=o/IbaJzlVXvt9T7hYIzAy/vXn7QQ3PpyHeRoDYRvsMb+ChMKNHsy2z3cl86xl2sjvG
+         wYbc6QCsLfapXt5x3wZ5+os/fpuQqkWLBsRwkUhgETTNrkWTBKPMNzCk+EY6/1UX4RqV
+         4IXBUl1owVVvBLHXw4cxaybd20aC1IopGT8D+1sg1JzKrFoEjqYtE3WXyhuJpmL+9gwv
+         YL3Cc5yQGbws9qQI6hwvdNHuaiX6hy9v8PJkdnHGTCuXGC+l1AXsQDgzyGeBBXb/Svbd
+         ui8FKl4rkoqnmPZsiwfGACk57ZNUtTuqqGEZBjOEnEOaS4AtBmJle9DZkymC24K7ItIg
+         bL0g==
+X-Gm-Message-State: AOAM5322q4hy2+OStQ0vD+j6ZaeIuLTrFXPvQrVCLgdbQ3MQtORZY1uf
+        X59iAS/8GaeMelBvPhAe6ab63zR9hT3GABeQO5zAbA==
+X-Google-Smtp-Source: ABdhPJwyRk3zCtdm0a0Mvm3CHn1BFMyhKDjNgDw/4sqwSCL8PtZV6KSgD2JURURpKihLbp0ZypdHiMCgpdm0uItioVY=
+X-Received: by 2002:a50:e08c:: with SMTP id f12mr17368589edl.178.1633720533495;
+ Fri, 08 Oct 2021 12:15:33 -0700 (PDT)
 MIME-Version: 1.0
-Received: from [10.254.54.68] (165.204.77.11) by SN4PR0601CA0004.namprd06.prod.outlook.com (2603:10b6:803:2f::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4587.18 via Frontend Transport; Fri, 8 Oct 2021 18:19:18 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4cf781f2-bf14-48a8-0708-08d98a88249a
-X-MS-TrafficTypeDiagnostic: SN6PR12MB4671:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN6PR12MB46711F820639F8AC7197E5E9E2B29@SN6PR12MB4671.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4502;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: zEtUoh+wR7z/NSkALlF7hyCQl+Z5nprb/dhyt6XwEpsZbsZeKtOwYW0slex5yVbJSBW6eLnKW84vUUUBUx6R/tLO4XlBnvWMu+NKeOvCp5esNY0fwWLzRrnjzcrYY6VHfxsUgqu7Cm5N2qCLzlr0ivPHQOcM4oLTjOMXkuGlzvZ25grAb/KkgJQRAjEj4bCJCLP/BWc5NmWgi3DTRO+Mt0Cc3/YES6OTcwwvr3g6cN5WLFpxi0mdsfWHALXBZ2Nr5hJ4sWRE5AnbMGvYrEqJJ1i7jN7l7ORFNlA+MwCFMANZ1Kh8+sX5kxd+mkufwuwnlGgHwRrsPqSsXSZ2n2D3byE/SxqsYf+C8VWvL3uQhCSqlermvkKlWrxma3D9CgQ82EDvyWzpppUPF+KeY1NO23mmlTSRILlw/e59OgbbE+zRnkQcolBssefxQC0yIBvoXB/kxr4XKydHMNtTOuiHq5O4V72GP9j+5syMIyEYtv5dEoltTgebcikHBHKrs5zKVLXq9HewSXjwwJflcAISsL5hgEVojIXJcVTlN2SPEsT4wYO6LwnA9jhsyjpU+aYVgBt3G0epPDgV4VRmgdCELhf1lenlziK1EfpjFnSORQpQ5Mtomzl6Rk/Px3l3TyrXqZMx+VfqqlxYImf5S/nXxHEHkYveUUCUcLwcN5rweJvlC3CfEAZaqmh2QZgX0cXkEqdzSQlGUvmA9C798tgIY8nvCld03iCXsgBIR0ZsZ44Gu5uZ0o5a1p1NwBvjlx6C
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA0PR12MB4510.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(2616005)(4326008)(956004)(86362001)(186003)(83380400001)(26005)(38100700002)(45080400002)(508600001)(6486002)(66476007)(316002)(66946007)(16576012)(31696002)(8676002)(36756003)(5660300002)(2906002)(6636002)(31686004)(66556008)(8936002)(54906003)(53546011)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UWFneVkzTjg3em16TlVRaEFNNnhiOFAwcHBuZlI3ZFdwVVhEWElCK3hYTzRN?=
- =?utf-8?B?OVRWQXRFZ2F6VHYydlpFT3hMdXVlVzc3M2hXamhjTnFiTDEraDlwcERMTU9Y?=
- =?utf-8?B?dHFKZ0hkbml3cFEvU2xqWkJhQmh0WFplc3FEWlhBRkM4T0RXY2RhU1NGd0p0?=
- =?utf-8?B?MXE3MFdiTFFNQXo4WHhFUzM5NmlYQ0JsWU43OVlaVFR1T2p5cFJYLzBjYWM5?=
- =?utf-8?B?K3Vya2tXREVGdWdxQnk4UTlxRno5aTZodG8xMUIxMlNVaENqc2s1bitBSFpM?=
- =?utf-8?B?VFhTbm5XSmFNNVNSS2pJcTc5b2M2K2N0ek1QVnhhcDZPSEdGQXVRSGdOY3JE?=
- =?utf-8?B?ZHZpT2lVZnZCRXdvNmMxUi9MR2k1bjJVNis5MTB2RnNJd0ZFajJaaDBRMCsv?=
- =?utf-8?B?NVp2R0Rwb0FWaXk2Q2Znb0lTOHBPUU52OE5kK2NHcWJNT1EwNG92c3NkRmpr?=
- =?utf-8?B?RG1OS0hlaWVpQ3BqbTBWakN6dWFHSkw0SWQ5anRjcmNueFdmS3hweXJXcjNP?=
- =?utf-8?B?TmlVYnZIbFFlTmQ0cmV3RGp2RXkyOHFPbnl2U284MloxM2toaDk0cnBiY2N6?=
- =?utf-8?B?anlRSGNHYUhLb1ExbzFiTE5aa3ZaS1h2NVpKZXg5VVJFT2hPUjhEdzF6Uml0?=
- =?utf-8?B?dzRzKzZ0dlJUanoyTW9FS2laVTdNWm1RUUtqVUxCOEt5MGtwSXAzbWlTZG9E?=
- =?utf-8?B?ZllZM1hqQmxKK2doNlNOMzNDRFFYUEl6TSswSHBqZldYSGxyV3N2MTQ5ZElN?=
- =?utf-8?B?bzFlcGc0dTBxT0Q3VDFYZVhkZmpOSjhGejdJMnhWNlE3U3k0Sld0NHNDVVFD?=
- =?utf-8?B?VzRGTHY3T1VIWHR6eWxiQTJHTHFRcDdsRkh4L1A0MXJTL1hGazRFcVJ3V2tT?=
- =?utf-8?B?M1JrNFFxUitPZXR2dFpyR3lZVWRtM0xyWVhLYnA3V3Y4SFplS01OeGYxdkh2?=
- =?utf-8?B?VjFrTEZadmZFMHMwZFNzK2g3M21uSHBRYm1iS1VIQXhvNFhVdzFHR1FSZzRT?=
- =?utf-8?B?SWZHeUdsaEpldmE2UVlZcTJRUTM5ZVhpdHo3MEFTbVFOQWpHU1llUGs0RklL?=
- =?utf-8?B?cnR1QlNTTDFBOVNGSk93V1pGc3lsbVMrSWRrcjgxaTZheUUxUzA3MkJIU00z?=
- =?utf-8?B?QW1TUHYwd1U5SDQ1aEpZSHc0SVRlbTRVdEhMZmFmNzFET28rSjJYc1Q4REM1?=
- =?utf-8?B?REs5WHJwVEF0U0FQa0FxT2RRMDYyeUxlT0dndXAxVlVCMURoaExrTElLNHg3?=
- =?utf-8?B?Sk10YXMrTEc5NTdwbXJNRmJXcVBuSkc0Nk1ZblhFY0FUbVJnbWliV2tWMllI?=
- =?utf-8?B?N0x2SXNJaE80MEhQby93Vk5sMzFyWlpvdEtwS0tsRS9QajA5WGZ6a2p5Z0VG?=
- =?utf-8?B?WE5JSWdQSHF0UUVHSTBEYngwdWxMSzRKYmhNR1lxOUdYTFNCVWthdWRkZkl5?=
- =?utf-8?B?T0JmMWUxaVhQeGJGd01KVE51YlRDcjFoa3FUQU9sNzZPYVZCWmpqYVhQQ0RZ?=
- =?utf-8?B?THp0dlM3TE1yTXBoZjhJZGhMR29Cc05kZG9SMy9CODBJVGJIcnZUWW8xU0NN?=
- =?utf-8?B?ZFBDYmwzM1VYd0xDNlYzbEtXa1daMk5kb0hNWE5XUHpucVdnckk0VWxTUG04?=
- =?utf-8?B?TjdnYUtyTC8rd3JlNS9vVEUzdUpEQ0dvSjZudjJYdERVUzAxNG1VbWRpaDZG?=
- =?utf-8?B?Rnc2cUJSc2ZTWk9oMTVadUo4UzU4enQ4KzN4THY0ZFZ2emNJV1hEZSsydEwy?=
- =?utf-8?Q?m+1HycwnGG93T7MN0mG++L5zwQsWRAZ6s5zJI3T?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4cf781f2-bf14-48a8-0708-08d98a88249a
-X-MS-Exchange-CrossTenant-AuthSource: SA0PR12MB4510.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Oct 2021 18:19:18.5846
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HwVFF8N4A/0uqOZmYm2fBhoVN9muLui/Iq2RZSOiSZStRcZSfeQE9Y3kjl0ze9dhXPySiC7pdCf84t1FIrLs7Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB4671
+References: <20210922081100.16753-1-brgl@bgdev.pl> <20211005042022.GA109255@sol>
+In-Reply-To: <20211005042022.GA109255@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 8 Oct 2021 21:15:22 +0200
+Message-ID: <CAMRc=MfJVAB4day4Qvq1VdMcoqH6pLr7=FFjri=6VotxqtZ3Bg@mail.gmail.com>
+Subject: Re: [libgpiod v2][PATCH] line-config: rework the internal implementation
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jack Winch <sunt.un.morcov@gmail.com>,
+        Helmut Grohne <helmut.grohne@intenta.de>,
+        Ben Hutchings <ben.hutchings@essensium.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 10/1/2021 11:17, Sachi King wrote:
-> Some systems such as the Microsoft Surface Laptop 4 leave interrupts
-> enabled and configured for use in sleep states on boot, which cause
-> unexpected behaviour such as spurious wakes and failed resumes in
-> s2idle states.
-> 
-> As interrupts should not be enabled until they are claimed and
-> explicitly enabled, disabling any interrupts mistakenly left enabled by
-> firmware should be safe.
-> 
+On Tue, Oct 5, 2021 at 6:20 AM Kent Gibson <warthog618@gmail.com> wrote:
+>
+> On Wed, Sep 22, 2021 at 10:11:00AM +0200, Bartosz Golaszewski wrote:
+> > This reworks how the line config objects work internally. In order to reduce
+> > the size of the gpiod_line_config objects, we switch from using a set number
+> > of override config structures with each storing a list of line offsets to
+> > storing a smaller override object for each of the maximum of 64 lines.
+> > Additionally these internal config structures are now packed and only occupy
+> > the minimum required amount of memory.
+> >
+> > The processing of these new overrides has become a bit more complicated but
+> > should actually be more robust wrt corner cases.
+> >
+> > Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+>
+> Given the level of rework the diff is harder work than looking at the
+> resulting code, but it all looks good to me.
+> A few minor comments scattered below.
+>
 
-So I did test this on a handful of platforms and confirmed that the 
-events declared in _AEI are still being enabled and passed properly.
+[snip]
 
-So if no other changes needed you can add my:
-Tested-by: Mario Limonciello <mario.limonciello@amd.com>
+> >
+> >  GPIOD_API struct gpiod_line_config *gpiod_line_config_new(void)
+>
+> You don't have any change to gpiod_line_config_free() here, but
+> isn't free() guaranteed to be NULL aware, so you can drop the NULL
+> check?
+> If not, couldn't it be flipped to:
+>
+>         if (config)
+>                 free(config);
+>
+> Similarly gpiod_line_config_new() could have
+>
+>         if (config)
+>                 gpiod_line_config_reset(config);
+>
+> and that "if" could be dropped if gpiod_line_config_reset() were NULL
+> aware.
+>
 
-> Signed-off-by: Sachi King <nakato@nakato.io>
-> ---
->   drivers/pinctrl/pinctrl-amd.c | 29 +++++++++++++++++++++++++++++
->   1 file changed, 29 insertions(+)
-> 
-> diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
-> index c001f2ed20f8..aa4136cd312d 100644
-> --- a/drivers/pinctrl/pinctrl-amd.c
-> +++ b/drivers/pinctrl/pinctrl-amd.c
-> @@ -830,6 +830,32 @@ static const struct pinconf_ops amd_pinconf_ops = {
->   	.pin_config_group_set = amd_pinconf_group_set,
->   };
->   
-> +static void amd_gpio_irq_init(struct amd_gpio *gpio_dev) {
-> +	struct pinctrl_desc *desc = gpio_dev->pctrl->desc;
-> +	unsigned long flags;
-> +	u32 pin_reg, mask;
-> +	int i;
-> +
-> +	mask = BIT(WAKE_CNTRL_OFF_S0I3) | BIT(WAKE_CNTRL_OFF_S3)
-> +		| BIT(INTERRUPT_MASK_OFF) | BIT(INTERRUPT_ENABLE_OFF)
-> +	        | BIT(INTERRUPT_MASK_OFF) | BIT(WAKE_CNTRL_OFF_S4);
-> +
-> +	for (i = 0; i < desc->npins; i++) {
-> +		int pin = desc->pins[i].number;
-> +		const struct pin_desc *pd = pin_desc_get(gpio_dev->pctrl, pin);
-> +		if (!pd)
-> +			continue;
-> +
-> +		raw_spin_lock_irqsave(&gpio_dev->lock, flags);
-> +
-> +		pin_reg = readl(gpio_dev->base + i * 4);
-> +		pin_reg &= ~mask;
-> +		writel(pin_reg, gpio_dev->base + i * 4);
-> +
-> +		raw_spin_unlock_irqrestore(&gpio_dev->lock, flags);
-> +	}
-> +}
-> +
->   #ifdef CONFIG_PM_SLEEP
->   static bool amd_gpio_should_save(struct amd_gpio *gpio_dev, unsigned int pin)
->   {
-> @@ -967,6 +993,9 @@ static int amd_gpio_probe(struct platform_device *pdev)
->   		return PTR_ERR(gpio_dev->pctrl);
->   	}
->   
-> +	/* Disable and mask interrupts */
-> +	amd_gpio_irq_init(gpio_dev);
-> +
+No, you're right, as long as we don't dereference the pointer, we can
+drop the check. Here and elsewhere.
 
-As the pinctrl device was just registered, I do wonder if this actually 
-needs a mutex in case another thread tries to enable the pins at the 
-same time.  I might be wrong here though and things are OK because the 
-pin range isn't added until later on in probe.
+> But the general policy is that gpiod functions are not NULL aware?
+>
 
+In general yes, but various free functions are NULL-aware.
 
->   	girq = &gpio_dev->gc.irq;
->   	girq->chip = &amd_gpio_irqchip;
->   	/* This will let us handle the parent IRQ in the driver */
-> 
+[snip]
 
+> >  static struct base_config *
+> > -get_base_config_for_offset(struct gpiod_line_config *config,
+> > -                        unsigned int offset)
+> > +get_base_config_for_reading(struct gpiod_line_config *config,
+> > +                        unsigned int offset, unsigned int flag)
+> >  {
+> > -     struct secondary_config *secondary;
+> > -     unsigned int i, j;
+> > -
+> > -     /*
+> > -      * We're looking backwards as the settings get overwritten if set
+> > -      * multiple times.
+> > -      */
+> > -     for (i = config->num_secondary; i > 0; i--) {
+> > -             secondary = &config->secondary[i - 1];
+> > +     struct override_config *override;
+> >
+> > -             for (j = 0; j < secondary->num_offsets; j++) {
+> > -                     if (secondary->offsets[j] == offset)
+> > -                             return &secondary->config;
+> > -             }
+> > -     }
+> > +     override = get_override_by_offset(config, offset);
+> > +     if (!override || !(override->override_flags & flag))
+> > +             return &config->defaults;
+> >
+> > -     return NULL;
+> > +     return &override->base;
+> >  }
+> >
+>
+> Maybe flip the logic around to make it easier to read:
+>
+>         if (override && (override->override_flags & flag))
+>                 return &override->base;
+>
+>     return &config->defaults;
+>
+> Similarly in gpiod_line_config_get_output_value().
+>
+
+Done.
+
+> >  static void set_direction(struct base_config *config, int direction)
+>
+> In set_direction() you have a specific case (GPIOD_LINE_DIRECTION_AS_IS)
+> that matches the default behaviour.  I generally drop that case and let
+> the default handle it, but that is just personal preference.
+>
+> Similarly in other set_XXX switches.
+>
+
+My personal preference is to be explicit and include those default
+cases even if only to tell my future self what's happening here.
+
+> > @@ -209,7 +170,7 @@ static void set_direction(struct base_config *config, int direction)
+> >  GPIOD_API void
+> >  gpiod_line_config_set_direction(struct gpiod_line_config *config, int direction)
+> >  {
+> > -     set_direction(&config->primary, direction);
+> > +     set_direction(&config->defaults, direction);
+> >  }
+> >
+> >  GPIOD_API void
+> > @@ -224,13 +185,19 @@ gpiod_line_config_set_direction_subset(struct gpiod_line_config *config,
+> >                                      int direction, unsigned int num_offsets,
+> >                                      const unsigned int *offsets)
+> >  {
+> > -     struct secondary_config *secondary;
+> > +     struct override_config *override;
+> > +     unsigned int i, offset;
+> >
+> > -     secondary = get_secondary_config(config, num_offsets, offsets);
+> > -     if (!secondary)
+> > -             return;
+> > +     for (i = 0; i < num_offsets; i++) {
+> > +             offset = offsets[i];
+> >
+>
+> Worth the effort given it is only used once?
+>
+
+Must have been a leftover, thanks.
+
+[snip]
+
+> >
+> >  GPIOD_API void
+> > @@ -464,20 +448,26 @@ gpiod_line_config_set_active_high_subset(struct gpiod_line_config *config,
+> >                                        unsigned int num_offsets,
+> >                                        const unsigned int *offsets)
+> >  {
+> > -     struct secondary_config *secondary;
+> > +     struct override_config *override;
+> > +     unsigned int i, offset;
+> >
+> > -     secondary = get_secondary_config(config, num_offsets, offsets);
+> > -     if (!secondary)
+> > -             return;
+> > +     for (i = 0; i < num_offsets; i++) {
+> > +             offset = offsets[i];
+> > +
+> > +             override = get_override_config_for_writing(config, offset);
+> > +             if (!override)
+> > +                     return;
+> >
+> > -     secondary->config.active_low = false;
+> > +             override->base.active_low = false;
+> > +             override->override_flags |= OVERRIDE_FLAG_ACTIVE_LOW;
+> > +     }
+> >  }
+> >
+>
+> gpiod_line_config_set_active_low_subset() and
+> gpiod_line_config_set_active_high_subset() could call a common helper
+> that accepts the active_low as a parameter?
+>
+
+Makes sense.
+
+[snip]
+
+> > +
+> > +static bool override_config_debounce_period_is_equal(struct override_config *a,
+> > +                                                  struct override_config *b)
+> > +{
+> > +     if (base_debounce_period_is_equal(&a->base, b) &&
+> > +         ((a->override_flags & OVERRIDE_FLAG_DEBOUNCE_PERIOD) ==
+> > +          (b->override_flags & OVERRIDE_FLAG_DEBOUNCE_PERIOD)))
+> > +             return true;
+> > +
+> > +     return false;
+> > +}
+> > +
+>
+> To improve readability, flip the order here to test the flag equivalence
+> first.
+> Particularly wrt the "a" doesn't have debounce overridden case.
+>
+
+Done.
+
+[snip]
+
+>
+> Don't see anything wrong here, but I'd like to see a bunch of tests to
+> cover the corner cases you mentioned, as the bulk of the module complexity
+> is here.
+> Not that I expect that now.
+>
+
+Yes, definitely. Trying to get the gpio-sim module upstream for this
+exact reason. Please take a look at this series if you can.
+
+[snip]
+
+>
+> Overall it looks really good to me, so no problem with applying it,
+> with or without my suggestions.
+
+I've applied most of your suggestions and will squash this into the
+big patch, thanks as usual!
+
+Bart
