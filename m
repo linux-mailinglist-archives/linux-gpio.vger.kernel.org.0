@@ -2,100 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 476CE428A2D
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Oct 2021 11:49:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 577ED428B70
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Oct 2021 12:56:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235613AbhJKJvU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Oct 2021 05:51:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44394 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235559AbhJKJvT (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 11 Oct 2021 05:51:19 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3FC8360D07;
-        Mon, 11 Oct 2021 09:49:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633945759;
-        bh=2S2M+vWOVlpt6SDouVxbnwzuqIHxp67kF+TZGn3HQzk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qgboGxStzK89PPnYnYrazfeTg8br2hqCfCP9Cd6VYQBoH4VzUR4VQaxsvuSp0XV0S
-         5BnNz207Mic0sXCLXCQnGxM9/ptzYTAtG4lKjzS4qt4YOP5RF/vcHMTpdCEgMW087y
-         Foix2CtTPslsLBcwYswqQi87GEcHHYTwql8f+NOKmIEq2NV2bePnIdUdFf59P0f9nN
-         RsKNhTXGni4Jt9ZaHuMIBOTFOuXM/X35TJea/R4UWkLeU8Q3A4keP62qJPan42iBzB
-         AF1ityGZ2W8rkJS68xPHNZqvHokH4PYY/3KDB91l9M6rPq8K9txX4rFgWfKZy+UOr6
-         Lo6D6bBoZ8P1A==
-Date:   Mon, 11 Oct 2021 11:49:15 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-i2c@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v3 2/3] i2c: acpi: Replace custom function with
- device_match_acpi_handle()
-Message-ID: <YWQImyIlsWdam7T/@kunai>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-i2c@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-References: <20211007171815.28336-1-andriy.shevchenko@linux.intel.com>
- <20211007171815.28336-2-andriy.shevchenko@linux.intel.com>
+        id S236142AbhJKK6X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 11 Oct 2021 06:58:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51594 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236156AbhJKK6U (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Oct 2021 06:58:20 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A14BC061779
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Oct 2021 03:56:12 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id k7so54671424wrd.13
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Oct 2021 03:56:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=DOxN63QWnl4dBNWQl+LufsBrewR+8VuPJnGph7ijSeE=;
+        b=km/+rwE10MGCG3K0BNjxD+A2l394aMlSCDFqBEiDyrs45mObKwVEkOccUp5BPFftJU
+         5cB06txNzUPVxcrxQnkqMq9zaxAqQeR9eoa3+7DqnAg3rX7wMze/dloERdrhczopiGET
+         PvxtLks7kWCMKTs5Q8Mmq12LwUKUT5cPH1x1mszpEwl0kuXWAYNTl0kX4+cL3oWAj8+a
+         6an2wLimFEmscCT9jtQf7FGYav0q/UTa6GRCeFihab7mYp8KZTVzyAi9ONxHllw1wfay
+         OSS3CoE7RnQ2PFKTnc/5Yya8gHnSshWvMzermo1msudbBS7MTk09iY8fA6ci8A/KmFSk
+         +E4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=DOxN63QWnl4dBNWQl+LufsBrewR+8VuPJnGph7ijSeE=;
+        b=RKSQt9MaEESazZEB5InAqY4K6arQQnvA810pchv36U8mQXDTamBQ9HNQFIM8IF6sYV
+         /9mGDeiZ7bvnrDw0avq4dAWeVDJhZqctj/4RI2pS1x3I0sAAaiRePxtrMe1mLA/LAAVG
+         tlWMz76mJ2zxjJEOEhR5Vc0gLQvlfk1qgTaFu3bIB4br8quz1HJw2OOPVc/WkudFRceE
+         STNPooCP99q9cLfXp4a9IClWWq1h7dzr+GNftqW/G66gmN/r+qmvJqCvWcMU0uuirF/d
+         wXkhLQC+ZoiIxmZf8UcYZNxA/uCRaGWkzwx6qsYIr+vkOsjEKHA4ojhd8ucgu7qby50A
+         S+Rg==
+X-Gm-Message-State: AOAM531RpFFSTCaS7W3zIDXXEiA5Rsu6ElSNd2jY+chCqW8YzwcxWLNO
+        POsMoiR/VRgzOc1Q7BK9xqFqxTefVWCTUUw1rl0Z1g83ixg1SA==
+X-Google-Smtp-Source: ABdhPJxWYMUVxuj7Tly9azrkWxEMXzTPZAklmoVIH4V2ykknMMiBN9imOFz2zTqxux/zk/7pzvFSRlX+C6mfjc7ADy4=
+X-Received: by 2002:adf:8b9a:: with SMTP id o26mr24377548wra.109.1633949760323;
+ Mon, 11 Oct 2021 03:56:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="UJCRYauk+dyrduoc"
-Content-Disposition: inline
-In-Reply-To: <20211007171815.28336-2-andriy.shevchenko@linux.intel.com>
+Received: by 2002:adf:dd8c:0:0:0:0:0 with HTTP; Mon, 11 Oct 2021 03:55:59
+ -0700 (PDT)
+Reply-To: ramcharan9910@outlook.com
+From:   "Cr.David Ramcharan" <convy0101@gmail.com>
+Date:   Mon, 11 Oct 2021 03:55:59 -0700
+Message-ID: <CADDRs95718H=K3tUjphEHH_C96xYhoJw7jeCMpt_FfZZjhEXrA@mail.gmail.com>
+Subject: Thank You
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Please I am writing to notify you again on my intention to list your
+name as a beneficiary to the total sum of GBP6.350 million (Six
+million, Three hundred and fifty thousand British Pounds Sterlings) in
+the intent of the deceased (name now withheld since this is my second
+letter to you).
 
---UJCRYauk+dyrduoc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I contacted you because you bear the surname identity and therefore
+can present you as the beneficiary to inherit the account proceeds of
+the deceased since there is no written "WILL" or trace to the deceased
+family relatives. My aim is to present you to my Bank Authorities as
+the Next of Kin to our deceased client. I will guide you all through
+the Claim procedure by providing all relevant Information and guiding
+you in your decisions and response to the Bank Management. All the
+papers will be processed after your acceptance.
 
-On Thu, Oct 07, 2021 at 08:18:14PM +0300, Andy Shevchenko wrote:
-> Since driver core provides a generic device_match_acpi_handle()
-> we may replace the custom one with it. This unifies code to find
-> an adapter with the similar one which finds a client.
->=20
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+In your acceptance of this deal, I request that you kindly forward to
+me your letter of acceptance; your current telephone and fax numbers
+,age, occupational status and a forwarding address to enable me submit
+to the Bank Management the details as the Next of Kin to their
+deceased customer. Reply strictly through: ramcharancrdavid@gmail.com
 
-Fine with me:
-
-Acked-by: Wolfram Sang <wsa@kernel.org>
-
-
---UJCRYauk+dyrduoc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmFkCJsACgkQFA3kzBSg
-KbbBrQ//e4S6A/kk7s4p9GPeIz2YzaWXID6jC1bNc5ax9g6YuwgvkuSYDOyXQHl9
-5U0mYLxdkOxq+9vG++t8lwh0vjJLN9dB7uDmMExtkzWejreqS9IDPc6/qSZIB8An
-kLU1o6jVFTM/SSSMn86pe7aUhMha3i/akqBTdpFwth8ph47yX3AIQ/l8eLvWlHBs
-w6EcyyNgfNLRj4i18bNvfTlqANUtt3R/Is4D73BWOpgCYFbZ6Mm2RuS+ukuyiYTx
-5ZYh6il1Cn6PAEU4vLkA0uA5VGw0U9IxGHwRheIdW1iq5q7rlHFzw//eUVjuD+56
-Uab0gi5gC/O67BFW90FKfH67LGjLl5KfZBKhE28cAlJ21XWYYqoXN8J8jg5wUxvN
-9uK10H7kDQboFz4AvMH49VFvic1FXwzA7Xkw9p07lVpwRBJoyOoqbilTwt/5RDdH
-9bTMJ2qp/hzMhabc3gaNh4gbq7Qe67KdY4RPvpoCvmOf7Zqkk6UaFsXUzjaDJBfA
-qwMdujGL5xUqZtCMtG8ooW6X9rKIo+c2aeShlzRpDBHhMM5doOSObUOAlGECX1we
-l8tS7K6Esoibq85b1y0eXX3iU3zgnapX4QJ8ZJhplkSRwr53NSlW7GCnTJWeColM
-4+TrfXavalv1Pp5lgrM9GjnSH5/7R4D65ioLs75v23/u5JWpzQI=
-=51+n
------END PGP SIGNATURE-----
-
---UJCRYauk+dyrduoc--
+Yours faithfully,
+Cr.David Ramcharan
