@@ -2,117 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C680C42A7A3
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Oct 2021 16:51:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E06D842A7D9
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Oct 2021 17:05:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236637AbhJLOxC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Oct 2021 10:53:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36548 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230195AbhJLOxB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Oct 2021 10:53:01 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03865C061570
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Oct 2021 07:51:00 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id e12so67772198wra.4
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Oct 2021 07:50:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=CjTQbSHcm7VtINyZoRSXIZ9bJVbGO3ptnUtUnzquW7Q=;
-        b=xI3YY7OTNUdc763OfDc3VV9hte9dq1H7Sp/X9Q956NkzANA1kGGirWrn87WKTt0FQJ
-         UjL5Pxeh382JtYyH0RwzzdAV6EurHgx9mYOY8rv6gkGhrKYh+Pc74JaHyl5X0Xuz4o50
-         As0jbux70rntYo3L8ZnBffUxjcQnxPjG2khuZ/dxOCDpcqgsbwHQEdMtcHl2EnYK+i2y
-         IgTjpRZiyWIpHjtwR2b83/2z4KhLpJCV3Xv51iBscjbVW9x5IOttox8TPsSkplKwFRj3
-         m6YNiG8Udfd2SvG3PlRsHqxpn1i4zuft7FUEx0+g2tJ3dJNSWeSBJIg2qxZjSlEmrlz8
-         dHWA==
+        id S237311AbhJLPHD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Oct 2021 11:07:03 -0400
+Received: from mail-pf1-f177.google.com ([209.85.210.177]:38684 "EHLO
+        mail-pf1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237223AbhJLPHD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Oct 2021 11:07:03 -0400
+Received: by mail-pf1-f177.google.com with SMTP id k26so17810137pfi.5;
+        Tue, 12 Oct 2021 08:05:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=CjTQbSHcm7VtINyZoRSXIZ9bJVbGO3ptnUtUnzquW7Q=;
-        b=s3sDvSNNkBxcY1XJWy1g/9IgS5FHgrxygVZUnIBKtC+ZvtQO9usnjGiYTBdvtlaOov
-         lkENzfefCL7NuZZx2JnPM0mF9i7yk6JpG2oFqWvCjTxg/kvntBKSlDlW8olVkiM1H5oA
-         TMpEdLim0Oj6cNC6vSkVDU+hRJjdNSg7fsNOg+PO5dINVklLeKXDFJpfkKtZVTjx8F5M
-         yWyqqjg7Of5YA6Au6yQWIQ4aVVW7gWa5vjvAKzIcg5oTejc0kxRVU/kV4p8ZnM6MWbt9
-         6/4J6yqTtlKwLaYmCoiuaPtU0UzM3nqGEvDs10VYrB+qzarInBh+ql/5LN4/pzif5XyT
-         9T1g==
-X-Gm-Message-State: AOAM5300EzmY8YRoYIP/Fx0rfVS1yj9xru7LdtML91l7LY8BS9o1+nQ7
-        mV+Vref2ef6hxUWGRAciviJ3jA==
-X-Google-Smtp-Source: ABdhPJzZ3bh4fiEUDaG8ALYrKIFy7DJqjTc+COvz2Ky6QaGqldCge7K0tJSBmcdrDZbWi6KsycgvoA==
-X-Received: by 2002:a05:6000:1563:: with SMTP id 3mr8033532wrz.20.1634050258581;
-        Tue, 12 Oct 2021 07:50:58 -0700 (PDT)
-Received: from google.com ([95.148.6.175])
-        by smtp.gmail.com with ESMTPSA id t3sm2621283wmj.33.2021.10.12.07.50.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Oct 2021 07:50:58 -0700 (PDT)
-Date:   Tue, 12 Oct 2021 15:50:56 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Maxime Ripard <maxime@cerno.tech>, Chen-Yu Tsai <wens@csie.org>,
-        Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree@vger.kernel.org, linux-sunxi@lists.linux.dev,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [RESEND v2 1/3] dt-bindings: gpio: Convert X-Powers AXP209 GPIO
- binding to a schema
-Message-ID: <YWWg0PjnuBCKO3Tq@google.com>
-References: <20210924071614.868307-1-maxime@cerno.tech>
- <CAL_JsqL3BUX8jO4X12Au_VAytboisQAoxDYz03rQfDMJjL4EDA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hdJDtZAfGIdmZ/ukdHpeB6ObCJRx81CajNUOCsrybQI=;
+        b=PLODMfvtk0akldX2uKuW3OfA8uRa9S2MSPgbhHny7guY2xuIOIBNg2FKgf0F16h9gz
+         1ZQpB58gQrvKlii1NheXBLFGfoOMdCz3R8BkzJhfAMxqeqbSxvS8JcHTOY16lOP3KWgd
+         RWJ3PuIS79mjngoa84d7DwO7U/9nAybKQtf3By4ioA2y9iilbpLA4Vc54zDhE8tUYQ8W
+         s8vE58lrTTKofu460M46eLmO3h1K8BA+6DPvqx6+TtY6F5VKXYiuhp+HWDNKMSKi2Y49
+         RfEewfNDPke9JF6zh0kFOMMNSRdI85BA7K4pCwFS0v5Z42AT3WqH6UI7ehdTpq9hFJ3d
+         FDJw==
+X-Gm-Message-State: AOAM531G6sDhSraynjZ3qRa1fAWYAhd40u4sRhINO2jDYft/lBxLxoQs
+        E+KVX8gAq3WPk2zhWhFqVU31bqxPjAoYpltM7F8=
+X-Google-Smtp-Source: ABdhPJwjzF1OeRyJAl+WVfOcbYpjaH0YTTRuWHlM9SeqDs+4nR3B9BF7FubISuSdaFjCzlSGaxlHolurGeiz3wPpntQ=
+X-Received: by 2002:a63:b11:: with SMTP id 17mr23103923pgl.51.1634051101136;
+ Tue, 12 Oct 2021 08:05:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL_JsqL3BUX8jO4X12Au_VAytboisQAoxDYz03rQfDMJjL4EDA@mail.gmail.com>
+References: <20211012134027.684712-1-kernel@esmil.dk> <20211012134027.684712-10-kernel@esmil.dk>
+ <99ddc44924bcb89110a74d3182b1d3eea623dce1.camel@pengutronix.de>
+In-Reply-To: <99ddc44924bcb89110a74d3182b1d3eea623dce1.camel@pengutronix.de>
+From:   Emil Renner Berthing <kernel@esmil.dk>
+Date:   Tue, 12 Oct 2021 17:04:49 +0200
+Message-ID: <CANBLGcyA3LzRNhR1pFpZmnHPXHSMcxyF93_p2nvVfscZCAO06w@mail.gmail.com>
+Subject: Re: [PATCH v1 09/16] reset: starfive-jh7100: Add StarFive JH7100
+ reset driver
+To:     Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-clk@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-serial@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        Drew Fustini <drew@beagleboard.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Anup Patel <anup.patel@wdc.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Matteo Croce <mcroce@microsoft.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 12 Oct 2021, Rob Herring wrote:
-
-> On Fri, Sep 24, 2021 at 2:16 AM Maxime Ripard <maxime@cerno.tech> wrote:
+On Tue, 12 Oct 2021 at 16:31, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+>
+> On Tue, 2021-10-12 at 15:40 +0200, Emil Renner Berthing wrote:
+> > Add a driver for the StarFive JH7100 reset controller.
 > >
-> > The X-Powers AXP PMICs feature a GPIO Controller supported by Linux
-> > thanks to its device tree binding.
-> >
-> > Now that we have the DT validation in place, let's convert the device
-> > tree bindings for that driver over to a YAML schema.
-> >
-> > Cc: Chen-Yu Tsai <wens@csie.org>
-> > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > Cc: linux-gpio@vger.kernel.org
-> > Acked-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> >
+> > Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
 > > ---
+> >  MAINTAINERS                           |   7 ++
+> >  drivers/reset/Kconfig                 |   8 ++
+> >  drivers/reset/Makefile                |   1 +
+> >  drivers/reset/reset-starfive-jh7100.c | 164 ++++++++++++++++++++++++++
+> >  4 files changed, 180 insertions(+)
+> >  create mode 100644 drivers/reset/reset-starfive-jh7100.c
 > >
-> > Changes from v1:
-> >   - Removed the example and moved it in the mfd schema
-> > ---
-> >  .../devicetree/bindings/gpio/gpio-axp209.txt  | 75 -------------------
-> >  .../bindings/gpio/x-powers,axp209-gpio.yaml   | 55 ++++++++++++++
-> >  2 files changed, 55 insertions(+), 75 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-axp209.txt
-> >  create mode 100644 Documentation/devicetree/bindings/gpio/x-powers,axp209-gpio.yaml
-> 
-> This one not being applied with the rest of the series is also
-> breaking linux-next.
-> 
-> b4 am -P_ -sl -o - 20210924071614.868307-1-maxime@cerno.tech | git am
+> [...]
+> > diff --git a/drivers/reset/reset-starfive-jh7100.c b/drivers/reset/reset-starfive-jh7100.c
+> > new file mode 100644
+> > index 000000000000..26bc5b59c1f3
+> > --- /dev/null
+> > +++ b/drivers/reset/reset-starfive-jh7100.c
+> > @@ -0,0 +1,164 @@
+> [...]
+> > +static int jh7100_reset_update(struct reset_controller_dev *rcdev,
+> > +                            unsigned long id, bool assert)
+> > +{
+> > +     struct jh7100_reset *data = jh7100_reset_from(rcdev);
+> > +     unsigned long offset = id / 32;
+> > +     void __iomem *reg_assert = data->base + JH7100_RESET_ASSERT0 + 4 * offset;
+> > +     void __iomem *reg_status = data->base + JH7100_RESET_STATUS0 + 4 * offset;
+> > +     u32 mask = BIT(id % 32);
+> > +     u32 done = jh7100_reset_asserted[offset] & mask;
+> > +     unsigned long flags;
+> > +     u32 value;
+> > +
+> > +     if (!assert)
+> > +             done ^= mask;
+> > +
+> > +     spin_lock_irqsave(&data->lock, flags);
+> > +
+> > +     value = readl(reg_assert);
+> > +     if (assert)
+> > +             value |= mask;
+> > +     else
+> > +             value &= ~mask;
+> > +     writel(value, reg_assert);
+> > +
+> > +     do {
+> > +             value = readl(reg_status) & mask;
+> > +     } while (value != done);
+>
+> Looking at the barebox driver, this could loop indefinitely if the
+> caller forgets to enable the corresponding peripheral clock. Maybe
+> use readl_poll_timeout() as a safety net.
 
-Thanks for the link.
+You're right. Asserting without the clock enabled is fine, but
+deasserting will hang forever. At least for the temperature sensor
+clock/resets I tried it with. I'll add the timeout, thanks!
 
-Seeing as there are no *real* dependencies, it would be better for
-Linus to take the patch (if he's okay with it of course).
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+/Emil
