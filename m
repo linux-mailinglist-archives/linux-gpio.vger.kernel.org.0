@@ -2,121 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9800542A73C
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Oct 2021 16:31:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0F9E42A77D
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Oct 2021 16:41:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237316AbhJLOdu convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 12 Oct 2021 10:33:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60362 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237300AbhJLOdu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Oct 2021 10:33:50 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B46FBC06174E
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Oct 2021 07:31:48 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1maIoT-00014a-Ay; Tue, 12 Oct 2021 16:31:29 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1maIoQ-00049f-J4; Tue, 12 Oct 2021 16:31:26 +0200
-Message-ID: <99ddc44924bcb89110a74d3182b1d3eea623dce1.camel@pengutronix.de>
-Subject: Re: [PATCH v1 09/16] reset: starfive-jh7100: Add StarFive JH7100
- reset driver
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Emil Renner Berthing <kernel@esmil.dk>,
-        linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        Drew Fustini <drew@beagleboard.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Anup Patel <anup.patel@wdc.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        Matteo Croce <mcroce@microsoft.com>,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 12 Oct 2021 16:31:26 +0200
-In-Reply-To: <20211012134027.684712-10-kernel@esmil.dk>
-References: <20211012134027.684712-1-kernel@esmil.dk>
-         <20211012134027.684712-10-kernel@esmil.dk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        id S235355AbhJLOng (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Oct 2021 10:43:36 -0400
+Received: from esa.microchip.iphmx.com ([68.232.154.123]:32061 "EHLO
+        esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236637AbhJLOng (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Oct 2021 10:43:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1634049694; x=1665585694;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=uaKFVdc8S/VvWiZuXCUCkebK43ut9xuhbG5d0/Im4a4=;
+  b=kbI6+nHosBQ9OCvaxLaD++uvkYC3ktxC8VDLSF4ZYIFGCWc/2ia8uQhw
+   0Zw1AV/8FXYzEarwe6msRVXljxZ95dK02KpT17O9qWoLCl7BwBN+jnM59
+   WGzjOVAK+TmuaX1IKDjOYXw8ReaJJ2nubEnplyiej0ku2vLfqFHvYPP0l
+   mRas97c9O5rXc8yB0NUwbtlGtAd/F8qS4XEEKvUn1IxrCCQGW7fnC+L5w
+   7mWWOJI7D51syfWkegDLVuh8oFwfvZ8qpMUeF6Cgud++WmAkoYDcWgINg
+   OrlURSJmjSXUe9Ue05Q9olrN41AvKxVCM93ASjKrgyDToQohPlLyRiNjR
+   A==;
+IronPort-SDR: G5/0/w2zkA1J/kUitsL+TTmBuTT6zOQBYeRhnhdJ1xc+U88DRMABe9O5d/81kVSnERBHzCd2OA
+ j8zVGqYj16GEvBA4cnAI/ethiQWXoh9KJ4Y8iQp1HPVPFQMYCceyuBO/KnJgXmx4hinrU9D7s3
+ h8wXxHdNWs7RfDwoRj9Ta6dJxGcVDy+0uynZhqJtGnFHj3FM5+BnVGDMVlF0B79k9T7s4XANfG
+ IFxSKUYcQrmk58k87mAUHYVOyduXGMvW2TDUkJtAP9q4PDbplxLvgGuZdZUWBoRV062jl+zD8/
+ x5GK9Wb2BhJ62/SgcXMCGxhX
+X-IronPort-AV: E=Sophos;i="5.85,367,1624345200"; 
+   d="scan'208";a="132723629"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 12 Oct 2021 07:41:33 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.14; Tue, 12 Oct 2021 07:41:33 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.2176.14 via Frontend
+ Transport; Tue, 12 Oct 2021 07:41:33 -0700
+Date:   Tue, 12 Oct 2021 16:43:05 +0200
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     Philipp Zabel <p.zabel@pengutronix.de>
+CC:     <lars.povlsen@microchip.com>, <Steen.Hegelund@microchip.com>,
+        <UNGLinuxDriver@microchip.com>, <linus.walleij@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] pinctrl: microchip sgpio: use reset driver
+Message-ID: <20211012144305.cfvvtqlscnrhsvx2@soft-dev3-1.localhost>
+References: <20211012122435.2081930-1-horatiu.vultur@microchip.com>
+ <ea3b5be735f51dd7c9ac7e77a19596b0e4ced740.camel@pengutronix.de>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <ea3b5be735f51dd7c9ac7e77a19596b0e4ced740.camel@pengutronix.de>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 2021-10-12 at 15:40 +0200, Emil Renner Berthing wrote:
-> Add a driver for the StarFive JH7100 reset controller.
-> 
-> Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
-> ---
->  MAINTAINERS                           |   7 ++
->  drivers/reset/Kconfig                 |   8 ++
->  drivers/reset/Makefile                |   1 +
->  drivers/reset/reset-starfive-jh7100.c | 164 ++++++++++++++++++++++++++
->  4 files changed, 180 insertions(+)
->  create mode 100644 drivers/reset/reset-starfive-jh7100.c
-> 
-[...]
-> diff --git a/drivers/reset/reset-starfive-jh7100.c b/drivers/reset/reset-starfive-jh7100.c
-> new file mode 100644
-> index 000000000000..26bc5b59c1f3
-> --- /dev/null
-> +++ b/drivers/reset/reset-starfive-jh7100.c
-> @@ -0,0 +1,164 @@
-[...]
-> +static int jh7100_reset_update(struct reset_controller_dev *rcdev,
-> +			       unsigned long id, bool assert)
-> +{
-> +	struct jh7100_reset *data = jh7100_reset_from(rcdev);
-> +	unsigned long offset = id / 32;
-> +	void __iomem *reg_assert = data->base + JH7100_RESET_ASSERT0 + 4 * offset;
-> +	void __iomem *reg_status = data->base + JH7100_RESET_STATUS0 + 4 * offset;
-> +	u32 mask = BIT(id % 32);
-> +	u32 done = jh7100_reset_asserted[offset] & mask;
-> +	unsigned long flags;
-> +	u32 value;
-> +
-> +	if (!assert)
-> +		done ^= mask;
-> +
-> +	spin_lock_irqsave(&data->lock, flags);
-> +
-> +	value = readl(reg_assert);
-> +	if (assert)
-> +		value |= mask;
-> +	else
-> +		value &= ~mask;
-> +	writel(value, reg_assert);
-> +
-> +	do {
-> +		value = readl(reg_status) & mask;
-> +	} while (value != done);
+Hi Philipp,
 
-Looking at the barebox driver, this could loop indefinitely if the
-caller forgets to enable the corresponding peripheral clock. Maybe
-use readl_poll_timeout() as a safety net.
+The 10/12/2021 15:40, Philipp Zabel wrote:
+> 
+> On Tue, 2021-10-12 at 14:24 +0200, Horatiu Vultur wrote:
+> > On lan966x platform when the switch gets reseted then also the sgpio
+> > gets reseted. The fix for this is to extend also the sgpio driver to
+> > call the reset driver which will be reseted only once by the first
+> > driver that is probed.
+> >
+> > Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> > ---
+> >  drivers/pinctrl/pinctrl-microchip-sgpio.c | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > diff --git a/drivers/pinctrl/pinctrl-microchip-sgpio.c b/drivers/pinctrl/pinctrl-microchip-sgpio.c
+> > index 072bccdea2a5..e8a91d0824cb 100644
+> > --- a/drivers/pinctrl/pinctrl-microchip-sgpio.c
+> > +++ b/drivers/pinctrl/pinctrl-microchip-sgpio.c
+> > @@ -17,6 +17,7 @@
+> >  #include <linux/pinctrl/pinmux.h>
+> >  #include <linux/platform_device.h>
+> >  #include <linux/property.h>
+> > +#include <linux/reset.h>
+> >
+> >  #include "core.h"
+> >  #include "pinconf.h"
+> > @@ -803,6 +804,7 @@ static int microchip_sgpio_probe(struct platform_device *pdev)
+> >       int div_clock = 0, ret, port, i, nbanks;
+> >       struct device *dev = &pdev->dev;
+> >       struct fwnode_handle *fwnode;
+> > +     struct reset_control *reset;
+> >       struct sgpio_priv *priv;
+> >       struct clk *clk;
+> >       u32 val;
+> > @@ -813,6 +815,10 @@ static int microchip_sgpio_probe(struct platform_device *pdev)
+> >
+> >       priv->dev = dev;
+> >
+> > +     reset = devm_reset_control_get_shared(&pdev->dev, "switch");
+> 
+> This seems to be missing an update to the devicetree binding.
 
-regards
-Philipp
+Yes, I will fix this in the next version.
+
+> 
+> Just to make sure we aren't introducing a circular dependency here, are
+> the PHY reset GPIOs that are toggled by the "switch" reset controller in
+> [1] provided by one of the sgpio controllers?
+> 
+> [1] https://lore.kernel.org/all/20211012114238.2060101-3-horatiu.vultur@microchip.com/
+
+Nope, the GPIOs are provided by a differnet gpio controller.
+
+> 
+> regards
+> Philipp
+
+-- 
+/Horatiu
