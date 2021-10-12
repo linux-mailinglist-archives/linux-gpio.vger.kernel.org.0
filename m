@@ -2,84 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB96E42A6B6
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Oct 2021 16:04:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D8F142A6BD
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Oct 2021 16:06:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236953AbhJLOGw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Oct 2021 10:06:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46064 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237144AbhJLOGv (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 12 Oct 2021 10:06:51 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6859C60EBB;
-        Tue, 12 Oct 2021 14:04:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634047489;
-        bh=CM715X93mwOfebn9okb1cn60LPdLuCAP97k7YQ925Zs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=eE9l10nRCwFP9JwQm5CBzQbVgED40qFbvqxZpS5Q594VM0NaFYDhIkmPkAkKOkSZR
-         dxZAbcyVHosz4i/m8hC0JZOLlrm+vfeElh/CoV7xACEAy9YYB58wGK0+7oWREfS0Tn
-         SZUf50ExqKsXNgJGlJnIGB7D4zXnaNnuS6W1/aEtPmjLz5HqVvQSkosNBjE4vLuymR
-         HavTbMLdHrzty3LZB1zgEVpi2uZOjTMxORXrdBwfcLBy+YkJNVU4C6OP45p5fUY3nj
-         3XCJGo+s7Rw1tmMc2qJH9VKxe/FK2Lw1GOte1jKrxgJRxqmEC6kd/+x9w1oXU61jtN
-         1SlCjNnCzg6Hg==
-Received: by mail-ed1-f47.google.com with SMTP id w19so146604edd.2;
-        Tue, 12 Oct 2021 07:04:49 -0700 (PDT)
-X-Gm-Message-State: AOAM531aBn+dx7QnmTSm18A09d2pJ+WzYYAOiX5GWJRyTAYPeiSE4S+9
-        e/RFyTBWGCEf3wVi9MzX/O2EPLFZn3FP8vS5hA==
-X-Google-Smtp-Source: ABdhPJwPDiBfN77c2V77s+DF2ulIEohbF2WPsDSFsQtO7KsY/+TG1HOFqiE53/kzqDEpDbfGFVsXC/v7dU3yjLvJBdM=
-X-Received: by 2002:a05:6402:27d3:: with SMTP id c19mr158659ede.70.1634047487830;
- Tue, 12 Oct 2021 07:04:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210924071614.868307-1-maxime@cerno.tech>
-In-Reply-To: <20210924071614.868307-1-maxime@cerno.tech>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 12 Oct 2021 09:04:36 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqL3BUX8jO4X12Au_VAytboisQAoxDYz03rQfDMJjL4EDA@mail.gmail.com>
-Message-ID: <CAL_JsqL3BUX8jO4X12Au_VAytboisQAoxDYz03rQfDMJjL4EDA@mail.gmail.com>
-Subject: Re: [RESEND v2 1/3] dt-bindings: gpio: Convert X-Powers AXP209 GPIO
- binding to a schema
-To:     Maxime Ripard <maxime@cerno.tech>, Lee Jones <lee.jones@linaro.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@gmail.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        devicetree@vger.kernel.org, linux-sunxi@lists.linux.dev,
+        id S237085AbhJLOIi convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 12 Oct 2021 10:08:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54510 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236936AbhJLOIi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Oct 2021 10:08:38 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAC92C06161C
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Oct 2021 07:06:36 -0700 (PDT)
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1maIQ0-0006DE-Q2; Tue, 12 Oct 2021 16:06:12 +0200
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1maIPx-0002gx-Jv; Tue, 12 Oct 2021 16:06:09 +0200
+Message-ID: <9446163d07a2ff135965c7bff249f76bd0da5fb8.camel@pengutronix.de>
+Subject: Re: [PATCH v1 09/16] reset: starfive-jh7100: Add StarFive JH7100
+ reset driver
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Emil Renner Berthing <kernel@esmil.dk>,
+        linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        Drew Fustini <drew@beagleboard.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Anup Patel <anup.patel@wdc.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Matteo Croce <mcroce@microsoft.com>,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 12 Oct 2021 16:06:09 +0200
+In-Reply-To: <20211012134027.684712-10-kernel@esmil.dk>
+References: <20211012134027.684712-1-kernel@esmil.dk>
+         <20211012134027.684712-10-kernel@esmil.dk>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
+MIME-Version: 1.0
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 24, 2021 at 2:16 AM Maxime Ripard <maxime@cerno.tech> wrote:
->
-> The X-Powers AXP PMICs feature a GPIO Controller supported by Linux
-> thanks to its device tree binding.
->
-> Now that we have the DT validation in place, let's convert the device
-> tree bindings for that driver over to a YAML schema.
->
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: linux-gpio@vger.kernel.org
-> Acked-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
->
-> ---
->
-> Changes from v1:
->   - Removed the example and moved it in the mfd schema
-> ---
->  .../devicetree/bindings/gpio/gpio-axp209.txt  | 75 -------------------
->  .../bindings/gpio/x-powers,axp209-gpio.yaml   | 55 ++++++++++++++
->  2 files changed, 55 insertions(+), 75 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-axp209.txt
->  create mode 100644 Documentation/devicetree/bindings/gpio/x-powers,axp209-gpio.yaml
+Hi Emil,
 
-This one not being applied with the rest of the series is also
-breaking linux-next.
+On Tue, 2021-10-12 at 15:40 +0200, Emil Renner Berthing wrote:
+> Add a driver for the StarFive JH7100 reset controller.
+> 
+> Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
+> ---
+>  MAINTAINERS                           |   7 ++
+>  drivers/reset/Kconfig                 |   8 ++
+>  drivers/reset/Makefile                |   1 +
+>  drivers/reset/reset-starfive-jh7100.c | 164 ++++++++++++++++++++++++++
+>  4 files changed, 180 insertions(+)
+>  create mode 100644 drivers/reset/reset-starfive-jh7100.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index d2b95b96f0ec..f7883377895e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -17854,6 +17854,13 @@ F:	Documentation/devicetree/bindings/clock/starfive,jh7100-clkgen.yaml
+>  F:	drivers/clk/starfive/clk-starfive-jh7100.c
+>  F:	include/dt-bindings/clock/starfive-jh7100.h
+>  
+> +STARFIVE JH7100 RESET CONTROLLER DRIVER
+> +M:	Emil Renner Berthing <kernel@esmil.dk>
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/reset/starfive,jh7100-reset.yaml
+> +F:	drivers/reset/reset-starfive-jh7100.c
+> +F:	include/dt-bindings/reset/starfive-jh7100.h
+> +
+>  STATIC BRANCH/CALL
+>  M:	Peter Zijlstra <peterz@infradead.org>
+>  M:	Josh Poimboeuf <jpoimboe@redhat.com>
+> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> index be799a5abf8a..8345521744b3 100644
+> --- a/drivers/reset/Kconfig
+> +++ b/drivers/reset/Kconfig
+> @@ -92,6 +92,14 @@ config RESET_INTEL_GW
+>  	  Say Y to control the reset signals provided by reset controller.
+>  	  Otherwise, say N.
+>  
+> +config RESET_STARFIVE_JH7100
+> +	bool "StarFive JH7100 Reset Driver"
+> +	depends on SOC_STARFIVE || COMPILE_TEST
+> +	depends on OF
+> +	default SOC_STARFIVE
+> +	help
+> +	  This enables the reset controller driver for the StarFive JH7100 SoC.
+> +
 
-b4 am -P_ -sl -o - 20210924071614.868307-1-maxime@cerno.tech | git am
+Please keep these in alphabetical (config symbol name) order.
+
+regards
+Philipp
