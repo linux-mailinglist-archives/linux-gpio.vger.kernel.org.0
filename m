@@ -2,120 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B0F9E42A77D
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Oct 2021 16:41:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C680C42A7A3
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Oct 2021 16:51:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235355AbhJLOng (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Oct 2021 10:43:36 -0400
-Received: from esa.microchip.iphmx.com ([68.232.154.123]:32061 "EHLO
-        esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236637AbhJLOng (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Oct 2021 10:43:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1634049694; x=1665585694;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=uaKFVdc8S/VvWiZuXCUCkebK43ut9xuhbG5d0/Im4a4=;
-  b=kbI6+nHosBQ9OCvaxLaD++uvkYC3ktxC8VDLSF4ZYIFGCWc/2ia8uQhw
-   0Zw1AV/8FXYzEarwe6msRVXljxZ95dK02KpT17O9qWoLCl7BwBN+jnM59
-   WGzjOVAK+TmuaX1IKDjOYXw8ReaJJ2nubEnplyiej0ku2vLfqFHvYPP0l
-   mRas97c9O5rXc8yB0NUwbtlGtAd/F8qS4XEEKvUn1IxrCCQGW7fnC+L5w
-   7mWWOJI7D51syfWkegDLVuh8oFwfvZ8qpMUeF6Cgud++WmAkoYDcWgINg
-   OrlURSJmjSXUe9Ue05Q9olrN41AvKxVCM93ASjKrgyDToQohPlLyRiNjR
-   A==;
-IronPort-SDR: G5/0/w2zkA1J/kUitsL+TTmBuTT6zOQBYeRhnhdJ1xc+U88DRMABe9O5d/81kVSnERBHzCd2OA
- j8zVGqYj16GEvBA4cnAI/ethiQWXoh9KJ4Y8iQp1HPVPFQMYCceyuBO/KnJgXmx4hinrU9D7s3
- h8wXxHdNWs7RfDwoRj9Ta6dJxGcVDy+0uynZhqJtGnFHj3FM5+BnVGDMVlF0B79k9T7s4XANfG
- IFxSKUYcQrmk58k87mAUHYVOyduXGMvW2TDUkJtAP9q4PDbplxLvgGuZdZUWBoRV062jl+zD8/
- x5GK9Wb2BhJ62/SgcXMCGxhX
-X-IronPort-AV: E=Sophos;i="5.85,367,1624345200"; 
-   d="scan'208";a="132723629"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 12 Oct 2021 07:41:33 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.14; Tue, 12 Oct 2021 07:41:33 -0700
-Received: from localhost (10.10.115.15) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.2176.14 via Frontend
- Transport; Tue, 12 Oct 2021 07:41:33 -0700
-Date:   Tue, 12 Oct 2021 16:43:05 +0200
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-CC:     <lars.povlsen@microchip.com>, <Steen.Hegelund@microchip.com>,
-        <UNGLinuxDriver@microchip.com>, <linus.walleij@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] pinctrl: microchip sgpio: use reset driver
-Message-ID: <20211012144305.cfvvtqlscnrhsvx2@soft-dev3-1.localhost>
-References: <20211012122435.2081930-1-horatiu.vultur@microchip.com>
- <ea3b5be735f51dd7c9ac7e77a19596b0e4ced740.camel@pengutronix.de>
+        id S236637AbhJLOxC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Oct 2021 10:53:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36548 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230195AbhJLOxB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Oct 2021 10:53:01 -0400
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03865C061570
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Oct 2021 07:51:00 -0700 (PDT)
+Received: by mail-wr1-x42a.google.com with SMTP id e12so67772198wra.4
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Oct 2021 07:50:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=CjTQbSHcm7VtINyZoRSXIZ9bJVbGO3ptnUtUnzquW7Q=;
+        b=xI3YY7OTNUdc763OfDc3VV9hte9dq1H7Sp/X9Q956NkzANA1kGGirWrn87WKTt0FQJ
+         UjL5Pxeh382JtYyH0RwzzdAV6EurHgx9mYOY8rv6gkGhrKYh+Pc74JaHyl5X0Xuz4o50
+         As0jbux70rntYo3L8ZnBffUxjcQnxPjG2khuZ/dxOCDpcqgsbwHQEdMtcHl2EnYK+i2y
+         IgTjpRZiyWIpHjtwR2b83/2z4KhLpJCV3Xv51iBscjbVW9x5IOttox8TPsSkplKwFRj3
+         m6YNiG8Udfd2SvG3PlRsHqxpn1i4zuft7FUEx0+g2tJ3dJNSWeSBJIg2qxZjSlEmrlz8
+         dHWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=CjTQbSHcm7VtINyZoRSXIZ9bJVbGO3ptnUtUnzquW7Q=;
+        b=s3sDvSNNkBxcY1XJWy1g/9IgS5FHgrxygVZUnIBKtC+ZvtQO9usnjGiYTBdvtlaOov
+         lkENzfefCL7NuZZx2JnPM0mF9i7yk6JpG2oFqWvCjTxg/kvntBKSlDlW8olVkiM1H5oA
+         TMpEdLim0Oj6cNC6vSkVDU+hRJjdNSg7fsNOg+PO5dINVklLeKXDFJpfkKtZVTjx8F5M
+         yWyqqjg7Of5YA6Au6yQWIQ4aVVW7gWa5vjvAKzIcg5oTejc0kxRVU/kV4p8ZnM6MWbt9
+         6/4J6yqTtlKwLaYmCoiuaPtU0UzM3nqGEvDs10VYrB+qzarInBh+ql/5LN4/pzif5XyT
+         9T1g==
+X-Gm-Message-State: AOAM5300EzmY8YRoYIP/Fx0rfVS1yj9xru7LdtML91l7LY8BS9o1+nQ7
+        mV+Vref2ef6hxUWGRAciviJ3jA==
+X-Google-Smtp-Source: ABdhPJzZ3bh4fiEUDaG8ALYrKIFy7DJqjTc+COvz2Ky6QaGqldCge7K0tJSBmcdrDZbWi6KsycgvoA==
+X-Received: by 2002:a05:6000:1563:: with SMTP id 3mr8033532wrz.20.1634050258581;
+        Tue, 12 Oct 2021 07:50:58 -0700 (PDT)
+Received: from google.com ([95.148.6.175])
+        by smtp.gmail.com with ESMTPSA id t3sm2621283wmj.33.2021.10.12.07.50.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Oct 2021 07:50:58 -0700 (PDT)
+Date:   Tue, 12 Oct 2021 15:50:56 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Maxime Ripard <maxime@cerno.tech>, Chen-Yu Tsai <wens@csie.org>,
+        Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree@vger.kernel.org, linux-sunxi@lists.linux.dev,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [RESEND v2 1/3] dt-bindings: gpio: Convert X-Powers AXP209 GPIO
+ binding to a schema
+Message-ID: <YWWg0PjnuBCKO3Tq@google.com>
+References: <20210924071614.868307-1-maxime@cerno.tech>
+ <CAL_JsqL3BUX8jO4X12Au_VAytboisQAoxDYz03rQfDMJjL4EDA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ea3b5be735f51dd7c9ac7e77a19596b0e4ced740.camel@pengutronix.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqL3BUX8jO4X12Au_VAytboisQAoxDYz03rQfDMJjL4EDA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Philipp,
+On Tue, 12 Oct 2021, Rob Herring wrote:
 
-The 10/12/2021 15:40, Philipp Zabel wrote:
-> 
-> On Tue, 2021-10-12 at 14:24 +0200, Horatiu Vultur wrote:
-> > On lan966x platform when the switch gets reseted then also the sgpio
-> > gets reseted. The fix for this is to extend also the sgpio driver to
-> > call the reset driver which will be reseted only once by the first
-> > driver that is probed.
+> On Fri, Sep 24, 2021 at 2:16 AM Maxime Ripard <maxime@cerno.tech> wrote:
 > >
-> > Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> > The X-Powers AXP PMICs feature a GPIO Controller supported by Linux
+> > thanks to its device tree binding.
+> >
+> > Now that we have the DT validation in place, let's convert the device
+> > tree bindings for that driver over to a YAML schema.
+> >
+> > Cc: Chen-Yu Tsai <wens@csie.org>
+> > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > Cc: linux-gpio@vger.kernel.org
+> > Acked-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> >
 > > ---
-> >  drivers/pinctrl/pinctrl-microchip-sgpio.c | 6 ++++++
-> >  1 file changed, 6 insertions(+)
 > >
-> > diff --git a/drivers/pinctrl/pinctrl-microchip-sgpio.c b/drivers/pinctrl/pinctrl-microchip-sgpio.c
-> > index 072bccdea2a5..e8a91d0824cb 100644
-> > --- a/drivers/pinctrl/pinctrl-microchip-sgpio.c
-> > +++ b/drivers/pinctrl/pinctrl-microchip-sgpio.c
-> > @@ -17,6 +17,7 @@
-> >  #include <linux/pinctrl/pinmux.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/property.h>
-> > +#include <linux/reset.h>
-> >
-> >  #include "core.h"
-> >  #include "pinconf.h"
-> > @@ -803,6 +804,7 @@ static int microchip_sgpio_probe(struct platform_device *pdev)
-> >       int div_clock = 0, ret, port, i, nbanks;
-> >       struct device *dev = &pdev->dev;
-> >       struct fwnode_handle *fwnode;
-> > +     struct reset_control *reset;
-> >       struct sgpio_priv *priv;
-> >       struct clk *clk;
-> >       u32 val;
-> > @@ -813,6 +815,10 @@ static int microchip_sgpio_probe(struct platform_device *pdev)
-> >
-> >       priv->dev = dev;
-> >
-> > +     reset = devm_reset_control_get_shared(&pdev->dev, "switch");
+> > Changes from v1:
+> >   - Removed the example and moved it in the mfd schema
+> > ---
+> >  .../devicetree/bindings/gpio/gpio-axp209.txt  | 75 -------------------
+> >  .../bindings/gpio/x-powers,axp209-gpio.yaml   | 55 ++++++++++++++
+> >  2 files changed, 55 insertions(+), 75 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-axp209.txt
+> >  create mode 100644 Documentation/devicetree/bindings/gpio/x-powers,axp209-gpio.yaml
 > 
-> This seems to be missing an update to the devicetree binding.
-
-Yes, I will fix this in the next version.
-
+> This one not being applied with the rest of the series is also
+> breaking linux-next.
 > 
-> Just to make sure we aren't introducing a circular dependency here, are
-> the PHY reset GPIOs that are toggled by the "switch" reset controller in
-> [1] provided by one of the sgpio controllers?
-> 
-> [1] https://lore.kernel.org/all/20211012114238.2060101-3-horatiu.vultur@microchip.com/
+> b4 am -P_ -sl -o - 20210924071614.868307-1-maxime@cerno.tech | git am
 
-Nope, the GPIOs are provided by a differnet gpio controller.
+Thanks for the link.
 
-> 
-> regards
-> Philipp
+Seeing as there are no *real* dependencies, it would be better for
+Linus to take the patch (if he's okay with it of course).
 
 -- 
-/Horatiu
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
