@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D8EB242A635
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Oct 2021 15:42:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C0DD42A638
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Oct 2021 15:42:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237199AbhJLNoe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S237083AbhJLNoe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Tue, 12 Oct 2021 09:44:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48652 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237220AbhJLNoU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Oct 2021 09:44:20 -0400
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41C55C061772;
-        Tue, 12 Oct 2021 06:42:16 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id p16so17250870lfa.2;
-        Tue, 12 Oct 2021 06:42:16 -0700 (PDT)
+        with ESMTP id S237234AbhJLNoV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Oct 2021 09:44:21 -0400
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04AFCC061776;
+        Tue, 12 Oct 2021 06:42:18 -0700 (PDT)
+Received: by mail-lf1-x130.google.com with SMTP id i24so86003798lfj.13;
+        Tue, 12 Oct 2021 06:42:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=SP3ukIpWgejkYPr25X5V3f6f4cfAs1jYw+VX4Qabu68=;
-        b=n4mn9H3yBZU5NxCyx9v/kHth3RsW3yoA9HUheYI4yoJqaPJXoYoA4HTi2/pEsQGzOc
-         ZxQogFfcpgTjNLOYgGS+IivOBzsZ9aT9Gud8A1BQCGY7bXlFgSHesD0cMOys2oOm447o
-         XVUwgUyzAuXMbc59pJTcPxS+JNI9qVBkoKHXLOsy5eY9h9IYTMh0Ia89R/mVNDsrPtAl
-         I2zkaBpHnwa7o7lpJNVAQAutwnNRJYQLO+w2g21KGRBL6DU8JyfAAkrBS/ZnItJr7Na1
-         GunByUhNHTU4TCknilLVcCI5FWO9ocI8ZWLlkACHhOdQoEhsPaE/UkWejuTOCSF/31f0
-         6sag==
+        bh=LvxmJqCnzTrLj1Lk8VsTVozn/1nTi8+XXqTdTbOzc7E=;
+        b=gyS8mK9BeY9rImNNHupqoTLQ//AjDrjAg6RzBzZZlvCkN4qYhU9QtyfX3c8vv6Uh69
+         HS58i1QObwOgsJPzeXA+F6CKpzOdn+Vwtjea9nSfisXp4sNLWoapXR9EZITycET/66E0
+         uZNJAKSyg56wzyusFKZRMWZL6gk1p/U8L5UnHo9dO+DubBVzrsztu03Xp5WWkfUsHcyw
+         zLgg9NQKkhQWMj33zIVse7FZvVHf4cIm4LDJQidZNjuIRYUqUx2tPcKFyN6goGOuNSlY
+         9TOx4Egzz5w2rQBxf2JKP5XoMRktlPLQ4GBYOHEOt0FIDRGyNG9QeqEINuvLUMlIh9uw
+         nZYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=SP3ukIpWgejkYPr25X5V3f6f4cfAs1jYw+VX4Qabu68=;
-        b=zhdGltR5xibw7YC3rcvDUVx8/cM9DBfjOFyxsaQXDiV44QSKn58iMVHvqFJj1Ddp+M
-         aMx495glYR3oaYIru/ZyOgk6/JW6h/7AMKDRlR7rasezImHKzZBtRjAuGyP98wSLR/IU
-         Zup1H76FDwDyQIdHG0NV/Oh52QeCtkL8eIaUy7VjqhqJD70JRMPuELTPksdzKizKDk6n
-         WDNdf1MahXR2lUlWFegmLyhTOvpco0Nom1wHniGO4wkIXgnbNUVXKi0tR67Wpjx9acBM
-         QvW2UCJDugtW/4YSb60tPgpTN4u65HoA36iDQ7biygHZxKFflcExYnnePpn3kHqsdLst
-         gJ+g==
-X-Gm-Message-State: AOAM530w2nmtbDlPhwWE2/7s5h2BHQY6d8UrO2BzJ6wsaVpZqpCLCxKE
-        nswm6HT7kl2vlu1qa9uQExM=
-X-Google-Smtp-Source: ABdhPJwoseP3cc4gsjA7m/LA316WUSr0lQbPRj7mGDZjFft6jEPQ3Zn36oOowhIU3P3nB/RI5aZWCQ==
-X-Received: by 2002:a05:6512:260f:: with SMTP id bt15mr32895654lfb.134.1634046134691;
-        Tue, 12 Oct 2021 06:42:14 -0700 (PDT)
+        bh=LvxmJqCnzTrLj1Lk8VsTVozn/1nTi8+XXqTdTbOzc7E=;
+        b=RJoky+m7uYnB8vKGq1y7MMZoqeGJXVHIqF/UOgQ+rS7Tx3fPMOHWpaFmUU+3oBcjZ+
+         COhSlzIiUcAibd6Ig6OXoW9f2OmFQB/1dLJ8Ne0GLFjJtVlwi8iHFpdsB67iPjcTEYoz
+         AgCHgJLxsCiTv4Ga/sbCdn6LU/Wi9htRaQ1Dm4eN/pGa9AsW3kxnUVve/3UGvEZaEyZI
+         NsjPAvX3rEnIAKTFH3ABMDo+Of9nrjdQx5TdKwAnnyjUQP3YTZ4lQ6BkrxYK0vCU/d12
+         qr4iDfBOoGL+5/tZc8CHOe0MPWjFMIEO5Jp7odHbq5f8V4BJgVm6CDKd33urZRQYq6zv
+         f+Tg==
+X-Gm-Message-State: AOAM531ymb87takEWkpPB8EKLUO2I7Jh2uZgokkm0JYu4S8LYojYJ5bH
+        gcmWB84I+v18AViDChCPEA0=
+X-Google-Smtp-Source: ABdhPJwMquktNt2X9WrmpAzx7SS52yV8JYLyAzxa4lRbFyIoobAtJtzqqhKD2ufoWHalRzQYNF+Jxg==
+X-Received: by 2002:a19:6742:: with SMTP id e2mr4264528lfj.568.1634046137382;
+        Tue, 12 Oct 2021 06:42:17 -0700 (PDT)
 Received: from stitch.. (80.71.140.73.ipv4.parknet.dk. [80.71.140.73])
-        by smtp.gmail.com with ESMTPSA id k16sm1033761lfo.219.2021.10.12.06.42.12
+        by smtp.gmail.com with ESMTPSA id k16sm1033761lfo.219.2021.10.12.06.42.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Oct 2021 06:42:14 -0700 (PDT)
+        Tue, 12 Oct 2021 06:42:16 -0700 (PDT)
 Sender: Emil Renner Berthing <emil.renner.berthing@gmail.com>
 From:   Emil Renner Berthing <kernel@esmil.dk>
 To:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
@@ -74,9 +74,9 @@ Cc:     Emil Renner Berthing <kernel@esmil.dk>,
         Atish Patra <atish.patra@wdc.com>,
         Matteo Croce <mcroce@microsoft.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v1 13/16] dt-bindings: serial: snps-dw-apb-uart: Add JH7100 uarts
-Date:   Tue, 12 Oct 2021 15:40:24 +0200
-Message-Id: <20211012134027.684712-14-kernel@esmil.dk>
+Subject: [PATCH v1 14/16] serial: 8250_dw: Add skip_clk_set_rate quirk
+Date:   Tue, 12 Oct 2021 15:40:25 +0200
+Message-Id: <20211012134027.684712-15-kernel@esmil.dk>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20211012134027.684712-1-kernel@esmil.dk>
 References: <20211012134027.684712-1-kernel@esmil.dk>
@@ -86,29 +86,84 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add compatibles for the StarFive JH7100 uarts.
+On the StarFive JH7100 SoC the uart core clocks can't be set to exactly
+16 * 115200Hz and many other common bitrates. Trying this will only
+result in a higher input clock, but low enough that the uart's internal
+divisor can't come close enough to the baud rate target. So rather than
+try to set the input clock it's better to rely solely on the uart's
+internal divisor.
 
 Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
 ---
- .../devicetree/bindings/serial/snps-dw-apb-uart.yaml         | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/tty/serial/8250/8250_dw.c | 32 ++++++++++++++++++-------------
+ 1 file changed, 19 insertions(+), 13 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml b/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml
-index b49fda5e608f..12137fe80acf 100644
---- a/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml
-+++ b/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml
-@@ -40,6 +40,11 @@ properties:
-               - brcm,bcm11351-dw-apb-uart
-               - brcm,bcm21664-dw-apb-uart
-           - const: snps,dw-apb-uart
-+      - items:
-+          - enum:
-+              - starfive,jh7100-hsuart
-+              - starfive,jh7100-uart
-+          - const: snps,dw-apb-uart
-       - const: snps,dw-apb-uart
+diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/8250/8250_dw.c
+index a3a0154da567..dee26c0909fd 100644
+--- a/drivers/tty/serial/8250/8250_dw.c
++++ b/drivers/tty/serial/8250/8250_dw.c
+@@ -51,6 +51,7 @@ struct dw8250_data {
  
-   reg:
+ 	unsigned int		skip_autocfg:1;
+ 	unsigned int		uart_16550_compatible:1;
++	unsigned int		skip_clk_set_rate:1;
+ };
+ 
+ static inline struct dw8250_data *to_dw8250_data(struct dw8250_port_data *data)
+@@ -334,21 +335,23 @@ static void dw8250_set_termios(struct uart_port *p, struct ktermios *termios,
+ 	long rate;
+ 	int ret;
+ 
+-	clk_disable_unprepare(d->clk);
+-	rate = clk_round_rate(d->clk, newrate);
+-	if (rate > 0) {
+-		/*
+-		 * Premilinary set the uartclk to the new clock rate so the
+-		 * clock update event handler caused by the clk_set_rate()
+-		 * calling wouldn't actually update the UART divisor since
+-		 * we about to do this anyway.
+-		 */
+-		swap(p->uartclk, rate);
+-		ret = clk_set_rate(d->clk, newrate);
+-		if (ret)
++	if (!d->skip_clk_set_rate) {
++		clk_disable_unprepare(d->clk);
++		rate = clk_round_rate(d->clk, newrate);
++		if (rate > 0) {
++			/*
++			 * Premilinary set the uartclk to the new clock rate so
++			 * the clock update event handler caused by the
++			 * clk_set_rate() calling wouldn't actually update the
++			 * UART divisor since we about to do this anyway.
++			 */
+ 			swap(p->uartclk, rate);
++			ret = clk_set_rate(d->clk, newrate);
++			if (ret)
++				swap(p->uartclk, rate);
++		}
++		clk_prepare_enable(d->clk);
+ 	}
+-	clk_prepare_enable(d->clk);
+ 
+ 	p->status &= ~UPSTAT_AUTOCTS;
+ 	if (termios->c_cflag & CRTSCTS)
+@@ -418,6 +421,8 @@ static void dw8250_quirks(struct uart_port *p, struct dw8250_data *data)
+ 		}
+ 		if (of_device_is_compatible(np, "marvell,armada-38x-uart"))
+ 			p->serial_out = dw8250_serial_out38x;
++		if (of_device_is_compatible(np, "starfive,jh7100-uart"))
++			data->skip_clk_set_rate = true;
+ 
+ 	} else if (acpi_dev_present("APMC0D08", NULL, -1)) {
+ 		p->iotype = UPIO_MEM32;
+@@ -700,6 +705,7 @@ static const struct of_device_id dw8250_of_match[] = {
+ 	{ .compatible = "cavium,octeon-3860-uart" },
+ 	{ .compatible = "marvell,armada-38x-uart" },
+ 	{ .compatible = "renesas,rzn1-uart" },
++	{ .compatible = "starfive,jh7100-uart" },
+ 	{ /* Sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, dw8250_of_match);
 -- 
 2.33.0
 
