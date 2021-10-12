@@ -2,85 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD11342B09C
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Oct 2021 01:52:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A18F242B0A3
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Oct 2021 01:55:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236278AbhJLXyP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Oct 2021 19:54:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47278 "EHLO
+        id S234294AbhJLX5A (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Oct 2021 19:57:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235105AbhJLXyN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Oct 2021 19:54:13 -0400
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB5F6C061745
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Oct 2021 16:52:10 -0700 (PDT)
-Received: by mail-ed1-x52c.google.com with SMTP id p13so2804181edw.0
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Oct 2021 16:52:10 -0700 (PDT)
+        with ESMTP id S232243AbhJLX5A (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Oct 2021 19:57:00 -0400
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7DD6C061570
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Oct 2021 16:54:57 -0700 (PDT)
+Received: by mail-ed1-x52f.google.com with SMTP id d9so2612145edh.5
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Oct 2021 16:54:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=cbR0fYQwEzzPnCNSZ2ICWQZko1+pYoFdiGN6U0UHQwc=;
-        b=xGQWQl+Rhu5wc1pookDpIpkj5pCLuttrBc/yXvjFsnnJT7q4Pc+AqreFLXb9frSAtV
-         g+m12d9PJuw5aFPIVGI1DH3Z/LxUFCP3JDOhQ/QMnVhKm8pCSzj7dSa9J5HfXtCpDLBn
-         Oax0yqSgmK1iXRZgCqNT0gYq7qRSJkpv4RIiM2uqoNpUdNvIq1cnGVA6Jiu4U21TgAjM
-         WG9OZYzMwG9I6pRNj+8+O4a1xZ5PczLu/bmxs0yciQhettLEZgYHloJ9EwZZ+Hq9w52W
-         snn15hSloMgqG14PY/X5UtPVikd3uCCsHKQAT0RWNxa8rzpnTFc6kTGuJPdmbm+d+/8t
-         pe7w==
+        bh=JsDhOlqzhOapvl8qxZ/zkHGlh54hY6Kt5vSuddjS2m8=;
+        b=jNR2hBGDsozEooWWvO9GWItqGjJUZg4h7ASntvUqvgN263KyNqEKuIkQ+9JwuLlHJC
+         rmMLJRkNYZtc+mINxh1zuZgPeE1Y4VHbmk5J0p2QfEeWGRRVHfTTtkVfOwrQiQhSrjuC
+         wXLlSvn688W0u9euPEq04KXD994cwEft8X/wUu06OvI4u8Gb8GqvFos8PCsl6d0SEvhM
+         9VX55ChOyMd28ZGMxsrOEwLfTO5YnsL4LipilL3VlmJxj5khEcDbb2+84Lqk1ixZucX5
+         tEPLqip+3aX6X/FIve2FBOCF0p0gtx1yFx+m6jHuel+Nzt7P6GFO+uHVzcBN85JYvbLI
+         MQWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=cbR0fYQwEzzPnCNSZ2ICWQZko1+pYoFdiGN6U0UHQwc=;
-        b=XC5Iz0TuZtq7ZPJ2jwbqIEve7w7tE9+0GSyzwEUH+tipzS0oWRhCJsE9p3sto1DL90
-         Vt336JxZh1QLCIl3gP4XmguC2ldUZykYWLJLoxkxZ6OVft4EfBr7vH+Zp6iuhdytvbtA
-         RDZpPDAv5AcF3gUBzemrSf71Ha7B6zETARf11BPVYJcYU27auZsONEr/gq7AKSDHrh74
-         UCJmzuYWiK2JVDQLFpsVzLgsjeheDVTXbffWwqZIM9r8hgleEPZN8XL5LGvFGkJ2omgn
-         iQbXwUpXwP+0HMN6oxnaFpNlHY4jYMgt3byTdGBxBhKBXXLhoClQsjZrb+25t2NMz2CF
-         s+rA==
-X-Gm-Message-State: AOAM531+SXo8xi1cuOUKqtBnCx83h9UbDBFZ7Ayd7hpFmsFtDKwL9YyC
-        MBlUNjajcfHpesKEZHIGoJFFf60EIfr5AQXnEKDYLw==
-X-Google-Smtp-Source: ABdhPJxMAqC/9xf+4Ig3GYpEod8yl4nK4RsazuqtIkK0qfl4kAfDsXmJeks3/H6i+HVOnzNz5Q2XqvqQamIzMGXchIc=
-X-Received: by 2002:a17:907:2156:: with SMTP id rk22mr36680106ejb.64.1634082729262;
- Tue, 12 Oct 2021 16:52:09 -0700 (PDT)
+        bh=JsDhOlqzhOapvl8qxZ/zkHGlh54hY6Kt5vSuddjS2m8=;
+        b=vy8ZUM7wXC/GDwBb7PTUenJv9nm+VqPbSURuk/aDh3vDev70iqnWfOidtYmd+hwMV7
+         iq9FGQEPRiBK6DKJoBG/Ci/0sUjuG1y1/OKv3npxTk+osJn4hJLFd1aeoAnJRoFxvm2E
+         l8VUVexXNVqs74I7NKYu6Wa2rokCeWdQfzsV9VFkCOLX8bapAyAlXFX8AGmPqA+vSteh
+         upwn8X7J1AHNRF1uXpR9nl2VU6fz6mA6xRLTi4lMqiudW3oCqTLVtthxgKiQZdLwQv/y
+         I8spu/tzdRQpoxkwkUDQ/OTsxPgdPX+KIN+oOU9EQr+UA2lGavcwIkr+7PxfgM/PysSE
+         shRA==
+X-Gm-Message-State: AOAM533vjIsDpXhhBmGoZoqKYDcgjWgwKDFonU4ecVQLyAuYjjwub9+z
+        hAE3ltOVAkCUBfOjnj2xcMOEGNFOsLn5zfdWUJikjuy+iGI=
+X-Google-Smtp-Source: ABdhPJy0Ta/y0E0vjs17iI7GLoMijAuqH+qD48WZvbHmNnsvA0FTaJkHEiqVaJJ7O8N7vTMtkohDE4idInHyytpVcjc=
+X-Received: by 2002:a17:907:118d:: with SMTP id uz13mr38510164ejb.382.1634082896509;
+ Tue, 12 Oct 2021 16:54:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210304034141.7062-1-brad@pensando.io> <20210304034141.7062-2-brad@pensando.io>
- <CACRpkdbQD6p7fbGtuu1c92uXfSFDCTwqjqsXHpgnD5Lg4v0Okw@mail.gmail.com>
- <20210304091025.ny52qjm7wbfvmjgl@mobilestation> <CACRpkdZroi+_oHqipS71MAGif190y7jWU5Myf55vz=_um4w5cQ@mail.gmail.com>
- <CAK9rFnzDZ4MNm68AJ75g7zegLD-7UMHyoVR-4ssitYTTEeQm5g@mail.gmail.com>
- <CACRpkdZEURRTe15HGf93SvyHej=_6qhfP9KWPSQbCM=SLUVKmA@mail.gmail.com> <CAK9rFnxuiAX2-5TFhfyTdpaY3BRysX_Q2sJkca4LhOLzapB83Q@mail.gmail.com>
-In-Reply-To: <CAK9rFnxuiAX2-5TFhfyTdpaY3BRysX_Q2sJkca4LhOLzapB83Q@mail.gmail.com>
+References: <20211008012524.481877-1-dmitry.baryshkov@linaro.org> <20211008012524.481877-4-dmitry.baryshkov@linaro.org>
+In-Reply-To: <20211008012524.481877-4-dmitry.baryshkov@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 13 Oct 2021 01:51:58 +0200
-Message-ID: <CACRpkdbF3oXec-8Z-1fNVL47mfYo2TW8WTDxzpwaR2YqLaTdAQ@mail.gmail.com>
-Subject: Re: [PATCH 1/8] gpio: Add Elba SoC gpio driver for spi cs control
-To:     Brad Larson <brad@pensando.io>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Olof Johansson <olof@lixom.net>,
+Date:   Wed, 13 Oct 2021 01:54:45 +0200
+Message-ID: <CACRpkdZEdJU9sjV2VPejSPc7Rpth3JFrtYihuT9P0VJVnqLqyA@mail.gmail.com>
+Subject: Re: [PATCH v3 03/25] ARM: dts: qcom-apq8064: add gpio-ranges to mpps nodes
+To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        <devicetree@vger.kernel.org>, MSM <linux-arm-msm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 4, 2021 at 6:46 PM Brad Larson <brad@pensando.io> wrote:
+On Fri, Oct 8, 2021 at 3:25 AM Dmitry Baryshkov
+<dmitry.baryshkov@linaro.org> wrote:
 
-> Yes that works, please see the diff below where the file
-> gpio-elba-spics.c goes away.  The original implementation was
-> motivated by gpio-spear-spics.c.
+> Add gpio-ranges property to mpps device tree nodes, adding the mapping between
+> pinctrl and GPIO pins.
+>
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-This looks good to me :)
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
