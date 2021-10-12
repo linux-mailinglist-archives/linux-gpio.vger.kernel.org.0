@@ -2,60 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E772442A821
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Oct 2021 17:21:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A90442A8A1
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Oct 2021 17:41:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237237AbhJLPX3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Oct 2021 11:23:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43356 "EHLO
+        id S237521AbhJLPm7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Oct 2021 11:42:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234023AbhJLPX2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Oct 2021 11:23:28 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0F9FC061570;
-        Tue, 12 Oct 2021 08:21:26 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id ec8so983514edb.6;
-        Tue, 12 Oct 2021 08:21:26 -0700 (PDT)
+        with ESMTP id S237529AbhJLPm4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Oct 2021 11:42:56 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 519A2C06174E;
+        Tue, 12 Oct 2021 08:40:54 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id r18so1070519edv.12;
+        Tue, 12 Oct 2021 08:40:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Fgwbge5K1EzbR8VI8a8H+Le1NZKMMr2m8pTON2xUTN8=;
-        b=QzV9YbjGsg5t2ZQdqkJweilCwjmv4f72WtizTfjRD1Z69nHKwlfIiVk9MKiRlbEJ3M
-         TIHpw/FxnC/HP+5SA6hgP4KYPicWuytgbi9wK8eIt5nmUVSYpScMPgY+o8EiY28/GHw6
-         N0FLqSe4XHbska7BuYvfFGFuLxwQ5ehC37hDLaiWT7iLXWenpcMsDHXEpDwkNw1UoluY
-         bChBoNeZU/DB1fJvp9iHrNPflFh88J+rkZLx20pNvxo6J434CKGA8xip4fm0zZb645PF
-         duqJZMT7VmJha6C2jowMLglzgpTLnF6hzYtGuX12RQEr/03u8EZDNEWZlzQ1sAhaIRMH
-         /WBg==
+        bh=5vws6sMTfuIUpw/tvRD3yV733Vt/oKMHzkN1nuZ1vds=;
+        b=W3xuWRdAGjqLW7kMpsg6EzCDJGX+u7T8LbQwJnFITwMyQKXIV+thrIH5pReBwQgCq7
+         ZH3X6jKa7UFFPcWtOPWMdXDrEIQfxZbduQGtKW/O1ZeJXRM+F0wPKEXurRE8B+iQzPhu
+         yG9dxc1aY8Y2KeK8Okq0cbZ1o81PJjEN7HDbJRnKeDcsH196twyl9vgszt3TrTvBMllb
+         6sfbgEGN5xJG5zuEGjWoUvBhLhPLnXRI/u/l+xQb4n4my06ipQuykRARukvF814i8gjs
+         0xfxNnpUv/thnQA1nh0ufzM6D/6UMWw46n3n/Zl2y6XXLnqA5DE958HXKXJgKufKp87P
+         am8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Fgwbge5K1EzbR8VI8a8H+Le1NZKMMr2m8pTON2xUTN8=;
-        b=ql1gq/UdrhrACr1IUteuY3VLxmplPBKQ6W7wz143v3hFtUUgBWkbuSema1UN+kB2z8
-         9cMdMtVaY+51VAKEwezmdPOUJNj4NOfNFMf8uZbkGNQCfExrOT4ixrcGJ+dTvTHhcJQM
-         9BkN350mNRCoxEUb/djSlFesBebCPTC6G3U4+fc6mZyiKh2SsJoZkmAiTIbhxs0dikvM
-         beEOWlSnQbF1yuy1yxuzVufAQokh5w0T74y3CJd7gDkdJNk0JMfsvYCBAU6EU8/eA+85
-         1F90qZXadAFWvqcu8fmo8u9j63G+jzyqjuTuEBVoRrTpoxotqfRkQpqeZsWuh9Tzflvg
-         LTJg==
-X-Gm-Message-State: AOAM531n9Uv/bkapCZM1Qbs63HCg+3bBi0KS461YQ4gFar2YNvVB9Ngw
-        bYF+dIkplp0xmVwu3Xh+vj/m37h9QTcOkZWXwroB+vtnfwMhSQ==
-X-Google-Smtp-Source: ABdhPJyH2Cr0E/CmRn2fpGIMT6foljvhODeW0WmDCNiwPWy1V5M7oQBd/zsMp/jE5RFRB/+ZUOCr7c7fggDU4sXQp/0=
-X-Received: by 2002:a05:6402:143b:: with SMTP id c27mr606000edx.224.1634052084925;
- Tue, 12 Oct 2021 08:21:24 -0700 (PDT)
+        bh=5vws6sMTfuIUpw/tvRD3yV733Vt/oKMHzkN1nuZ1vds=;
+        b=b79y5g2IUsI7Oen662XjeD+d/wIjkYtngOFpWEGufZLO9kONwe2V4MuY5URbiPtFFf
+         fffV04QOpcWzYLOhdOEjiZH7Ghm3JgDM2FpXTJ5Cw/V451n1wx49vTPo5/jMJX++n5Hj
+         db0bt2hWdeyBhX3RnReGQNhc/FG2qY8VWxuX8F3+uRZke04n2T9b3nIWViPEePZiYCfE
+         ma0MzZvqwCEPgvex9lAj7jFQwmN7X793Nu1rSB3phZqfvItIxi2qYA0hI2Oc+Ckvm1j2
+         5K3DaDioXK0BXId6AEIzYuM2d6LGqkniLflOw4xGqJjkSQhT+VB08ht94zME4AgHKx+/
+         Atxg==
+X-Gm-Message-State: AOAM531B/eY/53zKnPPIKtBwHeAwp1DBiYJJ771slyQA+9VBcvllQq5V
+        LkHmjUJ94LribG/b9bi2gGqCKtntzlMUefsoswM=
+X-Google-Smtp-Source: ABdhPJw6b5/cDVnUDUOYGlubY3IK7TXocmkqeO4rQjOPiQyeiygR8kyVW5V7QbJJvYNkBUvVfw6qvUxO0QlwIkcVXcQ=
+X-Received: by 2002:a50:e00b:: with SMTP id e11mr651595edl.359.1634053252589;
+ Tue, 12 Oct 2021 08:40:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211012134027.684712-1-kernel@esmil.dk> <20211012134027.684712-2-kernel@esmil.dk>
-In-Reply-To: <20211012134027.684712-2-kernel@esmil.dk>
+References: <20211012134027.684712-1-kernel@esmil.dk> <20211012134027.684712-7-kernel@esmil.dk>
+In-Reply-To: <20211012134027.684712-7-kernel@esmil.dk>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 12 Oct 2021 21:20:37 +0300
-Message-ID: <CAHp75VcCCxPmnzoE5PSxtODdguoKa7VA1r2yrJRLQ=gOAevu2Q@mail.gmail.com>
-Subject: Re: [PATCH v1 01/16] RISC-V: Add StarFive SoC Kconfig option
+Date:   Tue, 12 Oct 2021 21:40:05 +0300
+Message-ID: <CAHp75Vetqi=FMoRxfXHL+d1DhAXgLr+5e7ss1M_Rkhqa07H5Jg@mail.gmail.com>
+Subject: Re: [PATCH v1 06/16] clk: starfive: Add JH7100 clock generator driver
 To:     Emil Renner Berthing <kernel@esmil.dk>
 Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
         devicetree <devicetree@vger.kernel.org>,
         linux-clk <linux-clk@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
         Palmer Dabbelt <palmer@dabbelt.com>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -72,7 +73,6 @@ Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
         Maximilian Luz <luzmaximilian@gmail.com>,
         Sagar Kadam <sagar.kadam@sifive.com>,
         Drew Fustini <drew@beagleboard.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
         Anup Patel <anup.patel@wdc.com>,
         Atish Patra <atish.patra@wdc.com>,
         Matteo Croce <mcroce@microsoft.com>,
@@ -84,14 +84,143 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Tue, Oct 12, 2021 at 4:42 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
 >
-> Add StarFive Kconfig option to select SoC specific and common drivers
-> required for these SoCs.
+> From: Geert Uytterhoeven <geert@linux-m68k.org>
+>
+> Add a driver for the StarFive JH7100 clock generator.
 
 ...
 
-> +       select SERIAL_8250_DW
+> +config CLK_STARFIVE_JH7100
+> +       bool "StarFive JH7100 clock support"
+> +       depends on SOC_STARFIVE || COMPILE_TEST
 
-Is it critical for boot? Why?
+> +       depends on OF
+
+Why? I haven't found a compile dependency, so you reduce the test
+scope (when COMPILE_TEST=y).
+
+...
+
+You are using
+bits.h
+mod_devicetable.h
+which are not here
+
+> +#include <linux/clk.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/debugfs.h>
+> +#include <linux/device.h>
+> +#include <linux/init.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/overflow.h>
+> +#include <linux/platform_device.h>
+
+...
+
+> +       value |= readl_relaxed(reg) & ~mask;
+
+value is not masked, is it okay?
+
+Usual pattern for this kind of operations is
+
+value = (current & ~mask) | (value & mask);
+
+> +       writel_relaxed(value, reg);
+
+...
+
+> +       if (div > max)
+> +               div = max;
+> +
+> +       return div;
+
+return min(div, max); ?
+
+...
+
+> +       rate = parent / div;
+> +       if (rate < req->min_rate && div > 1) {
+> +               div -= 1;
+> +               rate = parent / div;
+> +       }
+
+Seems like homegrown DIV_ROUND_UP() or so. Who will guarantee that
+decreasing div by 1 will satisfy the conditional again?
+
+...
+
+> +#ifdef CONFIG_DEBUG_FS
+
+Perhaps __maybe_unused?
+
+> +#else
+> +#define jh7100_clk_debug_init NULL
+> +#endif
+
+...
+
+> +       if (idx >= JH7100_CLK_END) {
+
+> +               dev_err(priv->dev, "%s: invalid index %u\n", __func__, idx);
+
+__func__ means that the message has no value on its own. Make it
+unique without using __func__, or drop completely.
+
+> +               return ERR_PTR(-EINVAL);
+> +       }
+
+...
+
+> +       for (idx = 0; idx < JH7100_CLK_PLL0_OUT; idx++) {
+> +               struct clk_init_data init = {
+> +                       .name = jh7100_clk_data[idx].name,
+> +                       .ops = jh7100_clk_data[idx].ops,
+
+> +                       .num_parents = ((jh7100_clk_data[idx].max & JH7100_CLK_MUX_MASK)
+> +                                       >> JH7100_CLK_MUX_SHIFT) + 1,
+
+With temporary variable this can be better written, or consider
+something like this
+
+                       .num_parents =
+                               ((jh7100_clk_data[idx].max &
+JH7100_CLK_MUX_MASK) >> JH7100_CLK_MUX_SHIFT) + 1,
+
+> +                       .flags = jh7100_clk_data[idx].flags,
+> +               };
+> +               struct jh7100_clk *clk = &priv->reg[idx];
+
+...
+
+> +       while (idx > 0)
+> +               clk_hw_unregister(&priv->reg[--idx].hw);
+
+The
+
+       while (idx--)
+               clk_hw_unregister(&priv->reg[idx].hw);
+
+is slightly better to read.
+
+> +       return ret;
+> +}
+
+...
+
+> +static int __init clk_starfive_jh7100_init(void)
+> +{
+> +       return platform_driver_probe(&clk_starfive_jh7100_driver,
+> +                                    clk_starfive_jh7100_probe);
+> +}
+
+> +
+
+No need to have this blank line.
+> +subsys_initcall(clk_starfive_jh7100_init);
+
+Any  explanation why subsys_initcall() is in use?
 
 -- 
 With Best Regards,
