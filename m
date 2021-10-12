@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 458FB42A625
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Oct 2021 15:42:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E52CD42A62A
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Oct 2021 15:42:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237187AbhJLNoP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Oct 2021 09:44:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48676 "EHLO
+        id S237155AbhJLNoU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Oct 2021 09:44:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237155AbhJLNoH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Oct 2021 09:44:07 -0400
-Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89436C06161C;
-        Tue, 12 Oct 2021 06:42:03 -0700 (PDT)
-Received: by mail-lf1-x130.google.com with SMTP id x27so87685270lfa.9;
-        Tue, 12 Oct 2021 06:42:03 -0700 (PDT)
+        with ESMTP id S237134AbhJLNoI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Oct 2021 09:44:08 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 495AAC061749;
+        Tue, 12 Oct 2021 06:42:06 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id x27so88114484lfu.5;
+        Tue, 12 Oct 2021 06:42:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=dtURt139qgddHpLPO67/kM/tEuprVxdMtl96A+mzATM=;
-        b=f60zFRFDt/J9sxLIcF+lO55d+JVDIGUNgcvj6khe3iArz759dKGw1U0UaynAxR7JbJ
-         11RkIoPOuaWTEkZyGnvvtDc0OcZR9jTKU9zeqno0vryy9RhtqUv73+fHh/C8OX76I0IR
-         Hzuxxpi0iuzgswXPrVq4DWtWEL8Ak9SFq0fRoclFGZtGkecO1cRUhqFR6mSRaGxhe5jB
-         Zh7iE5xY8TuWkJvbEyU0zPQGfYIY0LRv0hunGby1bZMTG9BjIP1rU2rbx3Hrs0y8dXpr
-         nqLFe0dO2i4FqNbGh7ZZtSNUpe22NKIikcSvPlnr5eHID+2dQj88DEamPZPwBgJdR64W
-         +rfQ==
+        bh=H2aw/o26lGTLDzH3YOP75eV9L8dn5bjkyaVEvrEmqig=;
+        b=IyjunfE44XnQZCdE+lE+WLjk7t91vHjvie+v8qEgw8SfcVkWPn1GzUxhtAdjTrrycn
+         zpedmhzgD5o4h5j4ba7x1AKqZbMxqPDMIeRFBOwhHfwFgRbPdkJV5SNbdWV3SrPvltw7
+         aKNGB8v9mNf4wSBaVbxYeCsihgfWNZKRgDoLxY+7jQoY72q+p6GzrWY2SjuK4uQgxzts
+         lvqkP41+OMIhBYhi7CSVUgkrh6vSB5zPNOwxUvwKySQ4Dv89TyJlzw6TrVh4btn9dw9+
+         0XRPMkYeRmWhib4rHshT5m0vI7/JSOMoY/ijQsBtlA84M19qPQOs8PYP6bDr4++M9S34
+         Fr4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=dtURt139qgddHpLPO67/kM/tEuprVxdMtl96A+mzATM=;
-        b=GrFcDWNWF6IQ+in0PT5DTm+qxL72HziljNLBzgEB5OeDA9YSXwZzOoncy5YS5wknMb
-         ZnGuw2Tf1eyEke/OMDDoiehpFJdyJrjcohiO3Lpn1DXDtkSJptrLC3veXxo84+ec2tSk
-         lRWPKBifvpF+8f4Kv3jkqvz+uN06K2EEhAVe8ZWz4dPJwaF8EwlztTxA9j3ZiD0XgAmU
-         Kknl8Z5D1EqZgoCcdg7xmgQsupjfoKvvIO7W3GvV/Lk7doVu6qPV3N/hbufxSxmGtGT6
-         40koZbF50Pt1dcShBiZV4o0Kyvj3Zantxe8uk9kma573Bpfv+lGbHd1sM2Hzx4UP40g6
-         cLdQ==
-X-Gm-Message-State: AOAM532V3Ucx95kAp3IOO6M6voNwchtaKil1yzBD7R4Z0lKvD0TX6+Mv
-        oIMAswnAvJdtn4qBV9fsC/k=
-X-Google-Smtp-Source: ABdhPJzNpUTNHtZKYvkfOn3zYXgma9rI5O1vya6ZA38ztxGLe7l7ZEbLH0F3xnw9itB6Ml15kGfo7A==
-X-Received: by 2002:a2e:b949:: with SMTP id 9mr29558640ljs.400.1634046121868;
-        Tue, 12 Oct 2021 06:42:01 -0700 (PDT)
+        bh=H2aw/o26lGTLDzH3YOP75eV9L8dn5bjkyaVEvrEmqig=;
+        b=hxWDGzaJZSvXD6zEMC3Io3d0VeuU4aGpgozBTvQb9POFXDe8WJuVTZ4wQugSGeKBLF
+         topwWyMPwDVV9adfJyhFpsUKbx1wS/R5RzNd58quCquq6FVdxuSU5+XEsL/t6xGgd4QQ
+         4Hnt8Mw4FCm1Gnl4LKIpigOhq4UxzfcuXCI3RmshVOy8FSTE8u2ooG/Eg8iwIhty7cYu
+         gnEAYk8AUE9nQDuif1rjcYpc18J1Tz7OipcM26+Z4FslOrfa1iR9UvR/zoVCLZ/Udo3z
+         S/qyQiVCVc+MYW2ssAZ/m8kTkrDEtzSeD+gHRlzqKaPX2J/o9MJ3WvEX6VkISdM4R8Ay
+         sNqg==
+X-Gm-Message-State: AOAM533dhNNNrIZdxtFtoJsQVOtnvC4YCvQa9elBIwsD/D8Nn9008KSP
+        RrbxmjRu0TMO6a6eYUUGdjU=
+X-Google-Smtp-Source: ABdhPJz0Z1ewloJ8LIeBnd3Rq56FgK3WS7WOSJCqENIifGpo+aGHqcNXgUNTw8uZNT17zykIW8lNwg==
+X-Received: by 2002:a2e:a889:: with SMTP id m9mr19306875ljq.83.1634046124689;
+        Tue, 12 Oct 2021 06:42:04 -0700 (PDT)
 Received: from stitch.. (80.71.140.73.ipv4.parknet.dk. [80.71.140.73])
-        by smtp.gmail.com with ESMTPSA id k16sm1033761lfo.219.2021.10.12.06.41.59
+        by smtp.gmail.com with ESMTPSA id k16sm1033761lfo.219.2021.10.12.06.42.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Oct 2021 06:42:01 -0700 (PDT)
+        Tue, 12 Oct 2021 06:42:04 -0700 (PDT)
 Sender: Emil Renner Berthing <emil.renner.berthing@gmail.com>
 From:   Emil Renner Berthing <kernel@esmil.dk>
 To:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
@@ -74,9 +74,9 @@ Cc:     Emil Renner Berthing <kernel@esmil.dk>,
         Atish Patra <atish.patra@wdc.com>,
         Matteo Croce <mcroce@microsoft.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v1 09/16] reset: starfive-jh7100: Add StarFive JH7100 reset driver
-Date:   Tue, 12 Oct 2021 15:40:20 +0200
-Message-Id: <20211012134027.684712-10-kernel@esmil.dk>
+Subject: [PATCH v1 10/16] dt-bindings: pinctrl: Add StarFive pinctrl definitions
+Date:   Tue, 12 Oct 2021 15:40:21 +0200
+Message-Id: <20211012134027.684712-11-kernel@esmil.dk>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20211012134027.684712-1-kernel@esmil.dk>
 References: <20211012134027.684712-1-kernel@esmil.dk>
@@ -86,236 +86,295 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add a driver for the StarFive JH7100 reset controller.
+Add definitons for pins and gpio input, output and output enable
+signals on the StarFive JH7100 SoC.
 
 Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
 ---
- MAINTAINERS                           |   7 ++
- drivers/reset/Kconfig                 |   8 ++
- drivers/reset/Makefile                |   1 +
- drivers/reset/reset-starfive-jh7100.c | 164 ++++++++++++++++++++++++++
- 4 files changed, 180 insertions(+)
- create mode 100644 drivers/reset/reset-starfive-jh7100.c
+ .../dt-bindings/pinctrl/pinctrl-starfive.h    | 274 ++++++++++++++++++
+ 1 file changed, 274 insertions(+)
+ create mode 100644 include/dt-bindings/pinctrl/pinctrl-starfive.h
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d2b95b96f0ec..f7883377895e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17854,6 +17854,13 @@ F:	Documentation/devicetree/bindings/clock/starfive,jh7100-clkgen.yaml
- F:	drivers/clk/starfive/clk-starfive-jh7100.c
- F:	include/dt-bindings/clock/starfive-jh7100.h
- 
-+STARFIVE JH7100 RESET CONTROLLER DRIVER
-+M:	Emil Renner Berthing <kernel@esmil.dk>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/reset/starfive,jh7100-reset.yaml
-+F:	drivers/reset/reset-starfive-jh7100.c
-+F:	include/dt-bindings/reset/starfive-jh7100.h
-+
- STATIC BRANCH/CALL
- M:	Peter Zijlstra <peterz@infradead.org>
- M:	Josh Poimboeuf <jpoimboe@redhat.com>
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index be799a5abf8a..8345521744b3 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -92,6 +92,14 @@ config RESET_INTEL_GW
- 	  Say Y to control the reset signals provided by reset controller.
- 	  Otherwise, say N.
- 
-+config RESET_STARFIVE_JH7100
-+	bool "StarFive JH7100 Reset Driver"
-+	depends on SOC_STARFIVE || COMPILE_TEST
-+	depends on OF
-+	default SOC_STARFIVE
-+	help
-+	  This enables the reset controller driver for the StarFive JH7100 SoC.
-+
- config RESET_K210
- 	bool "Reset controller driver for Canaan Kendryte K210 SoC"
- 	depends on (SOC_CANAAN || COMPILE_TEST) && OF
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index 21d46d8869ff..021eff3525de 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -13,6 +13,7 @@ obj-$(CONFIG_RESET_BRCMSTB_RESCAL) += reset-brcmstb-rescal.o
- obj-$(CONFIG_RESET_HSDK) += reset-hsdk.o
- obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
- obj-$(CONFIG_RESET_INTEL_GW) += reset-intel-gw.o
-+obj-$(CONFIG_RESET_STARFIVE_JH7100) += reset-starfive-jh7100.o
- obj-$(CONFIG_RESET_K210) += reset-k210.o
- obj-$(CONFIG_RESET_LANTIQ) += reset-lantiq.o
- obj-$(CONFIG_RESET_LPC18XX) += reset-lpc18xx.o
-diff --git a/drivers/reset/reset-starfive-jh7100.c b/drivers/reset/reset-starfive-jh7100.c
+diff --git a/include/dt-bindings/pinctrl/pinctrl-starfive.h b/include/dt-bindings/pinctrl/pinctrl-starfive.h
 new file mode 100644
-index 000000000000..26bc5b59c1f3
+index 000000000000..3dd2a886b95b
 --- /dev/null
-+++ b/drivers/reset/reset-starfive-jh7100.c
-@@ -0,0 +1,164 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
++++ b/include/dt-bindings/pinctrl/pinctrl-starfive.h
+@@ -0,0 +1,274 @@
++/* SPDX-License-Identifier: GPL-2.0 */
 +/*
-+ * Reset driver for the StarFive JH7100 SoC
-+ *
-+ * Copyright (C) 2021 Emil Renner Berthing <kernel@esmil.dk>
-+ *
++ * Copyright (c) 2021 Emil Renner Berthing <kernel@esmil.dk>
 + */
++#ifndef _DT_BINDINGS_PINCTRL_STARFIVE_H
++#define _DT_BINDINGS_PINCTRL_STARFIVE_H
 +
-+#include <linux/io.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset-controller.h>
-+#include <linux/spinlock.h>
++#define PAD_GPIO_OFFSET		0
++#define PAD_FUNC_SHARE_OFFSET	64
++#define PAD_GPIO(x)		(PAD_GPIO_OFFSET + (x))
++#define PAD_FUNC_SHARE(x)	(PAD_FUNC_SHARE_OFFSET + (x))
 +
-+#include <dt-bindings/reset/starfive-jh7100.h>
++/*
++ * GPIOMUX bits:
++ *  | 31 - 24 | 23 - 16 | 15 - 8 |     7    |     6    |  5 - 0  |
++ *  |  dout   |  doen   |  din   | dout rev | doen rev | gpio nr |
++ *
++ * dout:     output signal
++ * doen:     output enable signal
++ * din:      optional input signal, 0xff = none
++ * dout rev: output signal reverse bit
++ * doen rev: output enable signal reverse bit
++ * gpio nr:  gpio number, 0 - 63
++ */
++#define GPIOMUX(n, dout, doen, din) ( \
++		(((dout) & 0x80000000) >> (31 - 7)) | (((dout) & 0xff) << 24) | \
++		(((doen) & 0x80000000) >> (31 - 6)) | (((doen) & 0xff) << 16) | \
++		(((din) & 0xff) << 8) | \
++		((n) & 0x3f))
 +
-+/* register offsets */
-+#define JH7100_RESET_ASSERT0	0x00
-+#define JH7100_RESET_ASSERT1	0x04
-+#define JH7100_RESET_ASSERT2	0x08
-+#define JH7100_RESET_ASSERT3	0x0c
-+#define JH7100_RESET_STATUS0	0x10
-+#define JH7100_RESET_STATUS1	0x14
-+#define JH7100_RESET_STATUS2	0x18
-+#define JH7100_RESET_STATUS3	0x1c
++#define GPO_REVERSE				0x80000000
 +
-+struct jh7100_reset {
-+	struct reset_controller_dev rcdev;
-+	/* protect registers against overlapping read-modify-write */
-+	spinlock_t lock;
-+	void __iomem *base;
-+};
++#define GPO_LOW					0
++#define GPO_HIGH				1
++#define GPO_ENABLE				0
++#define GPO_DISABLE				1
++#define GPO_CLK_GMAC_PAPHYREF			2
++#define GPO_JTAG_TDO				3
++#define GPO_JTAG_TDO_OEN			4
++#define GPO_DMIC_CLK_OUT			5
++#define GPO_DSP_JTDOEN_PAD			6
++#define GPO_DSP_JTDO_PAD			7
++#define GPO_I2C0_PAD_SCK_OE			8
++#define GPO_I2C0_PAD_SCK_OEN			(GPO_I2C0_PAD_SCK_OE | GPO_REVERSE)
++#define GPO_I2C0_PAD_SDA_OE			9
++#define GPO_I2C0_PAD_SDA_OEN			(GPO_I2C0_PAD_SDA_OE | GPO_REVERSE)
++#define GPO_I2C1_PAD_SCK_OE			10
++#define GPO_I2C1_PAD_SCK_OEN			(GPO_I2C1_PAD_SCK_OE | GPO_REVERSE)
++#define GPO_I2C1_PAD_SDA_OE			11
++#define GPO_I2C1_PAD_SDA_OEN			(GPO_I2C1_PAD_SDA_OE | GPO_REVERSE)
++#define GPO_I2C2_PAD_SCK_OE			12
++#define GPO_I2C2_PAD_SCK_OEN			(GPO_I2C2_PAD_SCK_OE | GPO_REVERSE)
++#define GPO_I2C2_PAD_SDA_OE			13
++#define GPO_I2C2_PAD_SDA_OEN			(GPO_I2C2_PAD_SDA_OE | GPO_REVERSE)
++#define GPO_I2C3_PAD_SCK_OE			14
++#define GPO_I2C3_PAD_SCK_OEN			(GPO_I2C3_PAD_SCK_OE | GPO_REVERSE)
++#define GPO_I2C3_PAD_SDA_OE			15
++#define GPO_I2C3_PAD_SDA_OEN			(GPO_I2C3_PAD_SDA_OE | GPO_REVERSE)
++#define GPO_I2SRX_BCLK_OUT			16
++#define GPO_I2SRX_BCLK_OUT_OEN			17
++#define GPO_I2SRX_LRCK_OUT			18
++#define GPO_I2SRX_LRCK_OUT_OEN			19
++#define GPO_I2SRX_MCLK_OUT			20
++#define GPO_I2STX_BCLK_OUT			21
++#define GPO_I2STX_BCLK_OUT_OEN			22
++#define GPO_I2STX_LRCK_OUT			23
++#define GPO_I2STX_LRCK_OUT_OEN			24
++#define GPO_I2STX_MCLK_OUT			25
++#define GPO_I2STX_SDOUT0			26
++#define GPO_I2STX_SDOUT1			27
++#define GPO_LCD_PAD_CSM_N			28
++#define GPO_PWM_PAD_OE_N_BIT0			29
++#define GPO_PWM_PAD_OE_N_BIT1			30
++#define GPO_PWM_PAD_OE_N_BIT2			31
++#define GPO_PWM_PAD_OE_N_BIT3			32
++#define GPO_PWM_PAD_OE_N_BIT4			33
++#define GPO_PWM_PAD_OE_N_BIT5			34
++#define GPO_PWM_PAD_OE_N_BIT6			35
++#define GPO_PWM_PAD_OE_N_BIT7			36
++#define GPO_PWM_PAD_OUT_BIT0			37
++#define GPO_PWM_PAD_OUT_BIT1			38
++#define GPO_PWM_PAD_OUT_BIT2			39
++#define GPO_PWM_PAD_OUT_BIT3			40
++#define GPO_PWM_PAD_OUT_BIT4			41
++#define GPO_PWM_PAD_OUT_BIT5			42
++#define GPO_PWM_PAD_OUT_BIT6			43
++#define GPO_PWM_PAD_OUT_BIT7			44
++#define GPO_PWMDAC_LEFT_OUT			45
++#define GPO_PWMDAC_RIGHT_OUT			46
++#define GPO_QSPI_CSN1_OUT			47
++#define GPO_QSPI_CSN2_OUT			48
++#define GPO_QSPI_CSN3_OUT			49
++#define GPO_REGISTER23_SCFG_CMSENSOR_RST0	50
++#define GPO_REGISTER23_SCFG_CMSENSOR_RST1	51
++#define GPO_REGISTER32_SCFG_GMAC_PHY_RSTN	52
++#define GPO_SDIO0_PAD_CARD_POWER_EN		53
++#define GPO_SDIO0_PAD_CCLK_OUT			54
++#define GPO_SDIO0_PAD_CCMD_OE			55
++#define GPO_SDIO0_PAD_CCMD_OEN			(GPO_SDIO0_PAD_CCMD_OE | GPO_REVERSE)
++#define GPO_SDIO0_PAD_CCMD_OUT			56
++#define GPO_SDIO0_PAD_CDATA_OE_BIT0		57
++#define GPO_SDIO0_PAD_CDATA_OEN_BIT0		(GPO_SDIO0_PAD_CDATA_OE_BIT0 | GPO_REVERSE)
++#define GPO_SDIO0_PAD_CDATA_OE_BIT1		58
++#define GPO_SDIO0_PAD_CDATA_OEN_BIT1		(GPO_SDIO0_PAD_CDATA_OE_BIT1 | GPO_REVERSE)
++#define GPO_SDIO0_PAD_CDATA_OE_BIT2		59
++#define GPO_SDIO0_PAD_CDATA_OEN_BIT2		(GPO_SDIO0_PAD_CDATA_OE_BIT2 | GPO_REVERSE)
++#define GPO_SDIO0_PAD_CDATA_OE_BIT3		60
++#define GPO_SDIO0_PAD_CDATA_OEN_BIT3		(GPO_SDIO0_PAD_CDATA_OE_BIT3 | GPO_REVERSE)
++#define GPO_SDIO0_PAD_CDATA_OE_BIT4		61
++#define GPO_SDIO0_PAD_CDATA_OEN_BIT4		(GPO_SDIO0_PAD_CDATA_OE_BIT4 | GPO_REVERSE)
++#define GPO_SDIO0_PAD_CDATA_OE_BIT5		62
++#define GPO_SDIO0_PAD_CDATA_OEN_BIT5		(GPO_SDIO0_PAD_CDATA_OE_BIT5 | GPO_REVERSE)
++#define GPO_SDIO0_PAD_CDATA_OE_BIT6		63
++#define GPO_SDIO0_PAD_CDATA_OEN_BIT6		(GPO_SDIO0_PAD_CDATA_OE_BIT6 | GPO_REVERSE)
++#define GPO_SDIO0_PAD_CDATA_OE_BIT7		64
++#define GPO_SDIO0_PAD_CDATA_OEN_BIT7		(GPO_SDIO0_PAD_CDATA_OE_BIT7 | GPO_REVERSE)
++#define GPO_SDIO0_PAD_CDATA_OUT_BIT0		65
++#define GPO_SDIO0_PAD_CDATA_OUT_BIT1		66
++#define GPO_SDIO0_PAD_CDATA_OUT_BIT2		67
++#define GPO_SDIO0_PAD_CDATA_OUT_BIT3		68
++#define GPO_SDIO0_PAD_CDATA_OUT_BIT4		69
++#define GPO_SDIO0_PAD_CDATA_OUT_BIT5		70
++#define GPO_SDIO0_PAD_CDATA_OUT_BIT6		71
++#define GPO_SDIO0_PAD_CDATA_OUT_BIT7		72
++#define GPO_SDIO0_PAD_RST_N			73
++#define GPO_SDIO1_PAD_CARD_POWER_EN		74
++#define GPO_SDIO1_PAD_CCLK_OUT			75
++#define GPO_SDIO1_PAD_CCMD_OE			76
++#define GPO_SDIO1_PAD_CCMD_OEN			(GPO_SDIO1_PAD_CCMD_OE | GPO_REVERSE)
++#define GPO_SDIO1_PAD_CCMD_OUT			77
++#define GPO_SDIO1_PAD_CDATA_OE_BIT0		78
++#define GPO_SDIO1_PAD_CDATA_OEN_BIT0		(GPO_SDIO1_PAD_CDATA_OE_BIT0 | GPO_REVERSE)
++#define GPO_SDIO1_PAD_CDATA_OE_BIT1		79
++#define GPO_SDIO1_PAD_CDATA_OEN_BIT1		(GPO_SDIO1_PAD_CDATA_OE_BIT1 | GPO_REVERSE)
++#define GPO_SDIO1_PAD_CDATA_OE_BIT2		80
++#define GPO_SDIO1_PAD_CDATA_OEN_BIT2		(GPO_SDIO1_PAD_CDATA_OE_BIT2 | GPO_REVERSE)
++#define GPO_SDIO1_PAD_CDATA_OE_BIT3		81
++#define GPO_SDIO1_PAD_CDATA_OEN_BIT3		(GPO_SDIO1_PAD_CDATA_OE_BIT3 | GPO_REVERSE)
++#define GPO_SDIO1_PAD_CDATA_OE_BIT4		82
++#define GPO_SDIO1_PAD_CDATA_OEN_BIT4		(GPO_SDIO1_PAD_CDATA_OE_BIT4 | GPO_REVERSE)
++#define GPO_SDIO1_PAD_CDATA_OE_BIT5		83
++#define GPO_SDIO1_PAD_CDATA_OEN_BIT5		(GPO_SDIO1_PAD_CDATA_OE_BIT5 | GPO_REVERSE)
++#define GPO_SDIO1_PAD_CDATA_OE_BIT6		84
++#define GPO_SDIO1_PAD_CDATA_OEN_BIT6		(GPO_SDIO1_PAD_CDATA_OE_BIT6 | GPO_REVERSE)
++#define GPO_SDIO1_PAD_CDATA_OE_BIT7		85
++#define GPO_SDIO1_PAD_CDATA_OEN_BIT7		(GPO_SDIO1_PAD_CDATA_OE_BIT7 | GPO_REVERSE)
++#define GPO_SDIO1_PAD_CDATA_OUT_BIT0		86
++#define GPO_SDIO1_PAD_CDATA_OUT_BIT1		87
++#define GPO_SDIO1_PAD_CDATA_OUT_BIT2		88
++#define GPO_SDIO1_PAD_CDATA_OUT_BIT3		89
++#define GPO_SDIO1_PAD_CDATA_OUT_BIT4		90
++#define GPO_SDIO1_PAD_CDATA_OUT_BIT5		91
++#define GPO_SDIO1_PAD_CDATA_OUT_BIT6		92
++#define GPO_SDIO1_PAD_CDATA_OUT_BIT7		93
++#define GPO_SDIO1_PAD_RST_N			94
++#define GPO_SPDIF_TX_SDOUT			95
++#define GPO_SPDIF_TX_SDOUT_OEN			96
++#define GPO_SPI0_PAD_OE_N			97
++#define GPO_SPI0_PAD_SCK_OUT			98
++#define GPO_SPI0_PAD_SS_0_N			99
++#define GPO_SPI0_PAD_SS_1_N			100
++#define GPO_SPI0_PAD_TXD			101
++#define GPO_SPI1_PAD_OE_N			102
++#define GPO_SPI1_PAD_SCK_OUT			103
++#define GPO_SPI1_PAD_SS_0_N			104
++#define GPO_SPI1_PAD_SS_1_N			105
++#define GPO_SPI1_PAD_TXD			106
++#define GPO_SPI2_PAD_OE_N			107
++#define GPO_SPI2_PAD_SCK_OUT			108
++#define GPO_SPI2_PAD_SS_0_N			109
++#define GPO_SPI2_PAD_SS_1_N			110
++#define GPO_SPI2_PAD_TXD			111
++#define GPO_SPI2AHB_PAD_OE_N_BIT0		112
++#define GPO_SPI2AHB_PAD_OE_N_BIT1		113
++#define GPO_SPI2AHB_PAD_OE_N_BIT2		114
++#define GPO_SPI2AHB_PAD_OE_N_BIT3		115
++#define GPO_SPI2AHB_PAD_TXD_BIT0		116
++#define GPO_SPI2AHB_PAD_TXD_BIT1		117
++#define GPO_SPI2AHB_PAD_TXD_BIT2		118
++#define GPO_SPI2AHB_PAD_TXD_BIT3		119
++#define GPO_SPI3_PAD_OE_N			120
++#define GPO_SPI3_PAD_SCK_OUT			121
++#define GPO_SPI3_PAD_SS_0_N			122
++#define GPO_SPI3_PAD_SS_1_N			123
++#define GPO_SPI3_PAD_TXD			124
++#define GPO_UART0_PAD_DTRN			125
++#define GPO_UART0_PAD_RTSN			126
++#define GPO_UART0_PAD_SOUT			127
++#define GPO_UART1_PAD_SOUT			128
++#define GPO_UART2_PAD_DTR_N			129
++#define GPO_UART2_PAD_RTS_N			130
++#define GPO_UART2_PAD_SOUT			131
++#define GPO_UART3_PAD_SOUT			132
++#define GPO_USB_DRV_BUS				133
 +
-+static inline struct jh7100_reset *
-+jh7100_reset_from(struct reset_controller_dev *rcdev)
-+{
-+	return container_of(rcdev, struct jh7100_reset, rcdev);
-+}
++#define GPI_NONE				0xffffffff
 +
-+static const u32 jh7100_reset_asserted[4] = {
-+	BIT(JH7100_RST_U74 % 32) |
-+	BIT(JH7100_RST_VP6_DRESET % 32) |
-+	BIT(JH7100_RST_VP6_BRESET % 32),
++#define GPI_CPU_JTAG_TCK			0
++#define GPI_CPU_JTAG_TDI			1
++#define GPI_CPU_JTAG_TMS			2
++#define GPI_CPU_JTAG_TRST			3
++#define GPI_DMIC_SDIN_BIT0			4
++#define GPI_DMIC_SDIN_BIT1			5
++#define GPI_DSP_JTCK_PAD			6
++#define GPI_DSP_JTDI_PAD			7
++#define GPI_DSP_JTMS_PAD			8
++#define GPI_DSP_TRST_PAD			9
++#define GPI_I2C0_PAD_SCK_IN			10
++#define GPI_I2C0_PAD_SDA_IN			11
++#define GPI_I2C1_PAD_SCK_IN			12
++#define GPI_I2C1_PAD_SDA_IN			13
++#define GPI_I2C2_PAD_SCK_IN			14
++#define GPI_I2C2_PAD_SDA_IN			15
++#define GPI_I2C3_PAD_SCK_IN			16
++#define GPI_I2C3_PAD_SDA_IN			17
++#define GPI_I2SRX_BCLK_IN			18
++#define GPI_I2SRX_LRCK_IN			19
++#define GPI_I2SRX_SDIN_BIT0			20
++#define GPI_I2SRX_SDIN_BIT1			21
++#define GPI_I2SRX_SDIN_BIT2			22
++#define GPI_I2STX_BCLK_IN			23
++#define GPI_I2STX_LRCK_IN			24
++#define GPI_SDIO0_PAD_CARD_DETECT_N		25
++#define GPI_SDIO0_PAD_CARD_WRITE_PRT		26
++#define GPI_SDIO0_PAD_CCMD_IN			27
++#define GPI_SDIO0_PAD_CDATA_IN_BIT0		28
++#define GPI_SDIO0_PAD_CDATA_IN_BIT1		29
++#define GPI_SDIO0_PAD_CDATA_IN_BIT2		30
++#define GPI_SDIO0_PAD_CDATA_IN_BIT3		31
++#define GPI_SDIO0_PAD_CDATA_IN_BIT4		32
++#define GPI_SDIO0_PAD_CDATA_IN_BIT5		33
++#define GPI_SDIO0_PAD_CDATA_IN_BIT6		34
++#define GPI_SDIO0_PAD_CDATA_IN_BIT7		35
++#define GPI_SDIO1_PAD_CARD_DETECT_N		36
++#define GPI_SDIO1_PAD_CARD_WRITE_PRT		37
++#define GPI_SDIO1_PAD_CCMD_IN			38
++#define GPI_SDIO1_PAD_CDATA_IN_BIT0		39
++#define GPI_SDIO1_PAD_CDATA_IN_BIT1		40
++#define GPI_SDIO1_PAD_CDATA_IN_BIT2		41
++#define GPI_SDIO1_PAD_CDATA_IN_BIT3		42
++#define GPI_SDIO1_PAD_CDATA_IN_BIT4		43
++#define GPI_SDIO1_PAD_CDATA_IN_BIT5		44
++#define GPI_SDIO1_PAD_CDATA_IN_BIT6		45
++#define GPI_SDIO1_PAD_CDATA_IN_BIT7		46
++#define GPI_SPDIF_RX_SDIN			47
++#define GPI_SPI0_PAD_RXD			48
++#define GPI_SPI0_PAD_SS_IN_N			49
++#define GPI_SPI1_PAD_RXD			50
++#define GPI_SPI1_PAD_SS_IN_N			51
++#define GPI_SPI2_PAD_RXD			52
++#define GPI_SPI2_PAD_SS_IN_N			53
++#define GPI_SPI2AHB_PAD_RXD_BIT0		54
++#define GPI_SPI2AHB_PAD_RXD_BIT1		55
++#define GPI_SPI2AHB_PAD_RXD_BIT2		56
++#define GPI_SPI2AHB_PAD_RXD_BIT3		57
++#define GPI_SPI2AHB_PAD_SS_N			58
++#define GPI_SPI2AHB_SLV_SCLKIN			59
++#define GPI_SPI3_PAD_RXD			60
++#define GPI_SPI3_PAD_SS_IN_N			61
++#define GPI_UART0_PAD_CTSN			62
++#define GPI_UART0_PAD_DCDN			63
++#define GPI_UART0_PAD_DSRN			64
++#define GPI_UART0_PAD_RIN			65
++#define GPI_UART0_PAD_SIN			66
++#define GPI_UART1_PAD_SIN			67
++#define GPI_UART2_PAD_CTS_N			68
++#define GPI_UART2_PAD_DCD_N			69
++#define GPI_UART2_PAD_DSR_N			70
++#define GPI_UART2_PAD_RI_N			71
++#define GPI_UART2_PAD_SIN			72
++#define GPI_UART3_PAD_SIN			73
++#define GPI_USB_OVER_CURRENT			74
 +
-+	BIT(JH7100_RST_HIFI4_DRESET % 32) |
-+	BIT(JH7100_RST_HIFI4_BRESET % 32),
-+
-+	BIT_MASK(JH7100_RST_E24	% 32)
-+};
-+
-+static int jh7100_reset_update(struct reset_controller_dev *rcdev,
-+			       unsigned long id, bool assert)
-+{
-+	struct jh7100_reset *data = jh7100_reset_from(rcdev);
-+	unsigned long offset = id / 32;
-+	void __iomem *reg_assert = data->base + JH7100_RESET_ASSERT0 + 4 * offset;
-+	void __iomem *reg_status = data->base + JH7100_RESET_STATUS0 + 4 * offset;
-+	u32 mask = BIT(id % 32);
-+	u32 done = jh7100_reset_asserted[offset] & mask;
-+	unsigned long flags;
-+	u32 value;
-+
-+	if (!assert)
-+		done ^= mask;
-+
-+	spin_lock_irqsave(&data->lock, flags);
-+
-+	value = readl(reg_assert);
-+	if (assert)
-+		value |= mask;
-+	else
-+		value &= ~mask;
-+	writel(value, reg_assert);
-+
-+	do {
-+		value = readl(reg_status) & mask;
-+	} while (value != done);
-+
-+	spin_unlock_irqrestore(&data->lock, flags);
-+	return 0;
-+}
-+
-+static int jh7100_reset_assert(struct reset_controller_dev *rcdev,
-+			       unsigned long id)
-+{
-+	dev_dbg(rcdev->dev, "assert(%lu)\n", id);
-+	return jh7100_reset_update(rcdev, id, true);
-+}
-+
-+static int jh7100_reset_deassert(struct reset_controller_dev *rcdev,
-+				 unsigned long id)
-+{
-+	dev_dbg(rcdev->dev, "deassert(%lu)\n", id);
-+	return jh7100_reset_update(rcdev, id, false);
-+}
-+
-+static int jh7100_reset_reset(struct reset_controller_dev *rcdev,
-+			      unsigned long id)
-+{
-+	int ret;
-+
-+	dev_dbg(rcdev->dev, "reset(%lu)\n", id);
-+	ret = jh7100_reset_assert(rcdev, id);
-+	if (ret)
-+		return ret;
-+
-+	return jh7100_reset_deassert(rcdev, id);
-+}
-+
-+static int jh7100_reset_status(struct reset_controller_dev *rcdev,
-+			       unsigned long id)
-+{
-+	struct jh7100_reset *data = jh7100_reset_from(rcdev);
-+	unsigned long offset = id / 32;
-+	void __iomem *reg_status = data->base + JH7100_RESET_STATUS0 + 4 * offset;
-+	u32 mask = BIT(id % 32);
-+	u32 value = (readl(reg_status) ^ jh7100_reset_asserted[offset]) & mask;
-+
-+	dev_dbg(rcdev->dev, "status(%lu) = %d\n", id, !value);
-+	return !value;
-+}
-+
-+static const struct reset_control_ops jh7100_reset_ops = {
-+	.assert		= jh7100_reset_assert,
-+	.deassert	= jh7100_reset_deassert,
-+	.reset		= jh7100_reset_reset,
-+	.status		= jh7100_reset_status,
-+};
-+
-+static int jh7100_reset_probe(struct platform_device *pdev)
-+{
-+	struct jh7100_reset *data;
-+
-+	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(data->base))
-+		return PTR_ERR(data->base);
-+
-+	data->rcdev.ops = &jh7100_reset_ops;
-+	data->rcdev.owner = THIS_MODULE;
-+	data->rcdev.nr_resets = JH7100_RSTN_END;
-+	data->rcdev.dev = &pdev->dev;
-+	data->rcdev.of_node = pdev->dev.of_node;
-+	spin_lock_init(&data->lock);
-+
-+	return devm_reset_controller_register(&pdev->dev, &data->rcdev);
-+}
-+
-+static const struct of_device_id jh7100_reset_dt_ids[] = {
-+	{ .compatible = "starfive,jh7100-reset" },
-+	{ /* sentinel */ },
-+};
-+
-+static struct platform_driver jh7100_reset_driver = {
-+	.probe = jh7100_reset_probe,
-+	.driver = {
-+		.name = "jh7100-reset",
-+		.of_match_table = jh7100_reset_dt_ids,
-+	},
-+};
-+builtin_platform_driver(jh7100_reset_driver);
++#endif
 -- 
 2.33.0
 
