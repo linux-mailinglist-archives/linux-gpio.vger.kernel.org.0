@@ -2,171 +2,179 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F107429BCA
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Oct 2021 05:11:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CBC442A21C
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Oct 2021 12:29:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232063AbhJLDNh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 11 Oct 2021 23:13:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46976 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232087AbhJLDNg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 11 Oct 2021 23:13:36 -0400
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0895FC061766
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Oct 2021 20:11:35 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id i24so79729214lfj.13
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Oct 2021 20:11:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=w2FJM5xq0hHLOwYkxQq9HjtkvFRksFK+c9CUBnhMlUA=;
-        b=ECxgpBAgFN57M9Muv6HgPW+2gsbKzFTgbdkbk/wcoXHhkLozGpRLLlOMDYegVvygHN
-         2py0lXASeUR5ykVbr81UL/hPafzHt+NJHhyIvmIYcmytMQ6GdAJ8dUABYBTqcJvXUoDk
-         df377gxkJR4hl2XnoHq6H5fg1PhPosrjlO+vw06vz95++L7FV4HiYbwq2J1WFfNnN/jf
-         Mx2ogkRKfRgA5smJ82Ca1+NvpsHAbDGCT+LpTXs64ymH6okmPAuVxvDsTmmJO9KVLgUG
-         pZxdks765lI2PhK8KGoyJxBi3yRR/GHoeDDoq3qeWcq50tyooD3LpiVGlx8t8P9OlzUu
-         Hbhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=w2FJM5xq0hHLOwYkxQq9HjtkvFRksFK+c9CUBnhMlUA=;
-        b=Wi6q6mEyAh4HlMAwsE3xtd0tYsuBh+WEYqcdWNMuwzRFqvJeya6uUqCV1HTutRUm1Y
-         Cb8Q3g6WDyJOFePq6NJNk0erEadCPc29HsXoYCtsvUXpukxuVhV8OPgAbWq9OyA2SmIw
-         1tQ0ijrj+gmfVg5ftWlVu/ptwrgDk/zh6utoDhwKwtOHdgAdvVvtZxkTaY+3BD9zQ39t
-         fP25j+QxeG1hkGcBI0rve33e6QOH/FYprtyXyEfflSEhT+MnfGO8IGRmNGHVDsekPSyA
-         zpaLjrSNtoTbikNP8z+0aJRz08kFABxTS5XzZO4C4c6+wXU3N2iUO2+1mwZaSxYLJ6/V
-         EJdA==
-X-Gm-Message-State: AOAM530u9PHBn5tuLFq8WUnQ8u/cFZ6QEi06jdot2gFPCv/ObSajtvz7
-        PHkY7vgCyQU1vR6Kj0JxkF/ljhzTv1iffBIkbRkGeQ==
-X-Google-Smtp-Source: ABdhPJyrNsMKS3+CiKmx5Tie0/Y10h5OgwLQcjWxqMC9cxgYiRdOXIj2B1esdvuIxFjjlUZ3q1gGQg9rDQ/7FbCROq4=
-X-Received: by 2002:a05:651c:b21:: with SMTP id b33mr25766490ljr.515.1634008293091;
- Mon, 11 Oct 2021 20:11:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20211007151010.333516-1-arnd@kernel.org> <20211007151010.333516-2-arnd@kernel.org>
-In-Reply-To: <20211007151010.333516-2-arnd@kernel.org>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Mon, 11 Oct 2021 20:11:20 -0700
-Message-ID: <CALAqxLVVEi67HQbjCSvfDPmfjeeZ4ROvqa8yfYMnRmeyi34Ddw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] qcom_scm: hide Kconfig symbol
-To:     Arnd Bergmann <arnd@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-ia64@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <freedreno@lists.freedesktop.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        ath10k <ath10k@lists.infradead.org>,
-        linux-wireless@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Alex Elder <elder@linaro.org>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        Caleb Connolly <caleb.connolly@linaro.org>
+        id S235872AbhJLKbi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Oct 2021 06:31:38 -0400
+Received: from mailgw01.mediatek.com ([60.244.123.138]:45944 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S235153AbhJLKbh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Oct 2021 06:31:37 -0400
+X-UUID: 4408c824a8f947aaa53b05f088e8147e-20211012
+X-UUID: 4408c824a8f947aaa53b05f088e8147e-20211012
+Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw01.mediatek.com
+        (envelope-from <sam.shih@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+        with ESMTP id 869037599; Tue, 12 Oct 2021 18:29:30 +0800
+Received: from mtkcas11.mediatek.inc (172.21.101.40) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 12 Oct 2021 18:29:29 +0800
+Received: from mtksdccf07 (172.21.84.99) by mtkcas11.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 12 Oct 2021 18:29:28 +0800
+Message-ID: <315d7823aa108c909a3d36464fe54763b76ab2f4.camel@mediatek.com>
+Subject: Re: [v3,7/9] dt-bindings: arm64: dts: mediatek: Add mt7986 series
+From:   Sam Shih <sam.shih@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+CC:     <Ryder.Lee@mediatek.com>, <devicetree@vger.kernel.org>,
+        <enric.balletbo@collabora.com>, <fparent@baylibre.com>,
+        <gregkh@linuxfoundation.org>, <herbert@gondor.apana.org.au>,
+        <hsinyi@chromium.org>, <john@phrozen.org>,
+        <linus.walleij@linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-clk@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-serial@vger.kernel.org>, <linux-watchdog@vger.kernel.org>,
+        <linux@roeck-us.net>, <mpm@selenic.com>, <mturquette@baylibre.com>,
+        <robh+dt@kernel.org>, <sboyd@kernel.org>, <sean.wang@kernel.org>,
+        <seiya.wang@mediatek.com>, <wim@linux-watchdog.org>
+Date:   Tue, 12 Oct 2021 18:29:28 +0800
+In-Reply-To: <bc29d5bc-9ce7-6147-a708-e6304249b600@gmail.com>
+References: <9552b0dc-337f-7edc-2997-50603dfe8bcd@gmail.com>
+         <20210924114046.26070-1-sam.shih@mediatek.com>
+         <bc29d5bc-9ce7-6147-a708-e6304249b600@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 7, 2021 at 8:10 AM Arnd Bergmann <arnd@kernel.org> wrote:
->
-> From: Arnd Bergmann <arnd@arndb.de>
->
-> Now that SCM can be a loadable module, we have to add another
-> dependency to avoid link failures when ipa or adreno-gpu are
-> built-in:
->
-> aarch64-linux-ld: drivers/net/ipa/ipa_main.o: in function `ipa_probe':
-> ipa_main.c:(.text+0xfc4): undefined reference to `qcom_scm_is_available'
->
-> ld.lld: error: undefined symbol: qcom_scm_is_available
-> >>> referenced by adreno_gpu.c
-> >>>               gpu/drm/msm/adreno/adreno_gpu.o:(adreno_zap_shader_load) in archive drivers/built-in.a
->
-> This can happen when CONFIG_ARCH_QCOM is disabled and we don't select
-> QCOM_MDT_LOADER, but some other module selects QCOM_SCM. Ideally we'd
-> use a similar dependency here to what we have for QCOM_RPROC_COMMON,
-> but that causes dependency loops from other things selecting QCOM_SCM.
->
-> This appears to be an endless problem, so try something different this
-> time:
->
->  - CONFIG_QCOM_SCM becomes a hidden symbol that nothing 'depends on'
->    but that is simply selected by all of its users
->
->  - All the stubs in include/linux/qcom_scm.h can go away
->
->  - arm-smccc.h needs to provide a stub for __arm_smccc_smc() to
->    allow compile-testing QCOM_SCM on all architectures.
->
->  - To avoid a circular dependency chain involving RESET_CONTROLLER
->    and PINCTRL_SUNXI, drop the 'select RESET_CONTROLLER' statement.
->    According to my testing this still builds fine, and the QCOM
->    platform selects this symbol already.
->
-> Acked-by: Kalle Valo <kvalo@codeaurora.org>
-> Acked-by: Alex Elder <elder@linaro.org>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> Changes in v2:
-> - fix the iommu dependencies
+Hi
 
-Hey Arnd,
-   Thanks again so much for working out these details. Also my
-apologies, as Bjorn asked for me to test this patch, but I wasn't able
-to get to it before it landed.  Unfortunately I've hit an issue that
-is keeping the db845c from booting with this.
+On Fri, 2021-10-08 at 15:53 +0200, Matthias Brugger wrote:
+> Hi Sam,
+> 
+> I'd advise to split this series in parts for:
+> - basic device support via dts.
+> - pinctrl driver + dts
+> - clk driver + dts
 
-> diff --git a/drivers/iommu/arm/arm-smmu/Makefile b/drivers/iommu/arm/arm-smmu/Makefile
-> index e240a7bcf310..b0cc01aa20c9 100644
-> --- a/drivers/iommu/arm/arm-smmu/Makefile
-> +++ b/drivers/iommu/arm/arm-smmu/Makefile
-> @@ -1,4 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0
->  obj-$(CONFIG_QCOM_IOMMU) += qcom_iommu.o
->  obj-$(CONFIG_ARM_SMMU) += arm_smmu.o
-> -arm_smmu-objs += arm-smmu.o arm-smmu-impl.o arm-smmu-nvidia.o arm-smmu-qcom.o
-> +arm_smmu-objs += arm-smmu.o arm-smmu-impl.o arm-smmu-nvidia.o
-> +arm_smmu-$(CONFIG_ARM_SMMU_QCOM) += arm-smmu-qcom.o
-> diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c b/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c
-> index 9f465e146799..2c25cce38060 100644
-> --- a/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c
-> +++ b/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c
-> @@ -215,7 +215,8 @@ struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu)
->             of_device_is_compatible(np, "nvidia,tegra186-smmu"))
->                 return nvidia_smmu_impl_init(smmu);
->
-> -       smmu = qcom_smmu_impl_init(smmu);
-> +       if (IS_ENABLED(CONFIG_ARM_SMMU_QCOM))
-> +               smmu = qcom_smmu_impl_init(smmu);
->
->         if (of_device_is_compatible(np, "marvell,ap806-smmu-500"))
->                 smmu->impl = &mrvl_mmu500_impl;
+Okay, I will split the patches that are still under review into the
+above patch series.
+
+But I have a dumb question, currently, we have some patches that have
+been assigned version numbers.
+If I want to seprate original patch series, and resend 3 new patch
+series (basic / pinctrl / clock) according to your comment, if I want
+to keep the preview change log, tags in the patch set: 
+
+like:
+---
+v3: changed 'MT7986' to 'MT7986 series' in the commit message
+v2: added an Acked-by tag
+---
+
+Which version number should I use for these new patch series ?
+
+Does the version number in corver-letter and the version number in each
+patch need to be the same in the entire patch series ?
+
+// (Original patch series/thread, version number is v3)
+[PATCH v3 0/3] Add basic SoC support for mediatek mt7986
+  [PATCH v3 1/3] dt-bindings: arm64: dts: mediatek: Add mt7986 series
+  // (the version number has been updated to v5 previously)
+  // (basic part only, not include pinctrl and clock nodes)
+  [PATCH v5 2/3] arm64: dts: mediatek: add mt7986a support
+  [PATCH v5 3/3] arm64: dts: mediatek: add mt7986b support
+
+// (New clock driver patch series)
+[PATCH 0/3] Add clock driver support for mediatek mt7986
+  [PATCH v3,1/3] dt-bindings: clock: mediatek: document clk bindings   
+for mediatek mt7986 SoC
+  // (the version number has been updated to v3 previously)
+  [PATCH v3 2/3] clk: mediatek: add mt7986 clock IDs
+  [PATCH v2 3/3] clk: mediatek: add mt7986 clock support
+
+// (New pinctrl driver patch series)
+[PATCH 0/4] Add pinctrl driver support for mediatek mt7986
+  // (the version number has been updated to v6 previously)
+  [PATCH v6 1/4] dt-bindings: pinctrl: update bindings for MT7986 SoC
+  // (the version number has been updated to v2 previously)
+  [PATCH v2 2/4] pinctrl: mediatek: add support for MT7986 SoC
+  [PATCH 3/4] arm64: dts: mediatek: add mt7986a pinctrl support
+  [PATCH 3/4] arm64: dts: mediatek: add mt7986b pinctrl support
+
+> 
+> I would also advise to not send new versions of patches as new
+> threads and don't 
+> respond in the same thread. At least for me that breaks my workflow
+> as I use b4.
+
+If I don't respond to the next patch set in the same thread, should I
+create an entire new patch series ?
+
+For example, if I want to update PATCH 2/3 in the bellows patch series,
+and my PATCH 1/3 has been accepted by reviewer previously
+
+[PATCH v2 0/3] Add basic SoC support for mediatek mt7986
+  [PATCH v2 1/3] ...   (patch set v1, applied by matainer)
+  [PATCH v2 2/3] ...   (patch set v2, need to be upgrade to v3)
+  [PATCH v2 3/3] ...   (patch set v1, waiting for review)
+
+Is this correct to send patch mail to maintaiers for the above
+situation ?
+
+[PATCH v3 0/2] Add basic SoC support for mediatek mt7986
+  [PATCH v3 1/2] ...   (patch set v3)
+  [PATCH v3 2/2] ...   (still patch set v1, waiting for review)
 
 
-The problem with these two chunks is that there is currently no
-CONFIG_ARM_SMMU_QCOM option. :)
+> 
+> Regards,
+> Matthias
+> 
+> 
+> On 24/09/2021 13:40, Sam Shih wrote:
+> > MT7986 series is Mediatek's new 4-core SoC, which is mainly for
+> > wifi-router application. The difference between mt7986a and mt7986b
+> > is that some pins do not exist on mt7986b.
+> > 
+> > Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+> > Acked-by: Rob Herring <robh@kernel.org>
+> > 
+> > ---
+> > v3: changed 'MT7986' to 'MT7986 series' in the commit message
+> > v2: added an Acked-by tag
+> > ---
+> >   Documentation/devicetree/bindings/arm/mediatek.yaml | 8 ++++++++
+> >   1 file changed, 8 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/mediatek.yaml
+> > b/Documentation/devicetree/bindings/arm/mediatek.yaml
+> > index 80a05f6fee85..a9a778269684 100644
+> > --- a/Documentation/devicetree/bindings/arm/mediatek.yaml
+> > +++ b/Documentation/devicetree/bindings/arm/mediatek.yaml
+> > @@ -76,6 +76,14 @@ properties:
+> >             - enum:
+> >                 - mediatek,mt7629-rfb
+> >             - const: mediatek,mt7629
+> > +      - items:
+> > +          - enum:
+> > +              - mediatek,mt7986a-rfb
+> > +          - const: mediatek,mt7986a
+> > +      - items:
+> > +          - enum:
+> > +              - mediatek,mt7986b-rfb
+> > +          - const: mediatek,mt7986b
+> >         - items:
+> >             - enum:
+> >                 - mediatek,mt8127-moose
+> > 
 
-Was that something you intended to add in the patch?
+Thanks,
+Sam
 
-I'm working up a Kconfig patch to do so, so I'll send that out in a
-second here, but let me know if you already have that somewhere (I
-suspect you implemented it and just forgot to add the change to the
-commit), as I'm sure your Kconfig help text will be better than mine.
-:)
-
-Again, I'm so sorry I didn't get over to testing your patch before
-seeing this here!
-
-thanks
--john
