@@ -2,87 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD6A342B884
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Oct 2021 09:09:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E021F42BAAD
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Oct 2021 10:41:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238262AbhJMHL5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Oct 2021 03:11:57 -0400
-Received: from mail-ua1-f47.google.com ([209.85.222.47]:41602 "EHLO
-        mail-ua1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238307AbhJMHL4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Oct 2021 03:11:56 -0400
-Received: by mail-ua1-f47.google.com with SMTP id r17so2561627uaf.8;
-        Wed, 13 Oct 2021 00:09:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=n2Vfle/L4DE8NNVonQeF5lDlU0mWpcADJWBKbo+5jlg=;
-        b=mz9AbB+VZ5S4MSVRd37pnKGF9QX3inhO7uiZJHzCpVFRPc1xlwSoya1PXLimE8bmTs
-         ydf+H2FFU0sKFJtJ2U+5K3J50EsEwbPRqbVj6SnSFcRXLtXLVvgOGXbrXmDFvpjdULra
-         4q1zJ5RggOXXcBNTN9EtivGfNGt//OcCeqrKvIGLkwsM2cG5jOZh0JkO9GIPWbSDgVRo
-         K86JAUQRpSg2mOalhpLFSCxpDllpLSxG39Fgz4wKlqTVEhTBUGqwuOgYfGmlt1G0oS9P
-         kYB1xUMrXr3q9723zsUcC1+sSNdwmcl/PsojdZ5pgokzAEqDIOI+WLY2CQQPUJNckEsh
-         +MuQ==
-X-Gm-Message-State: AOAM531OalkE6/NdrHATcOrQ71cZGAAtQ3NHR5sbkbf7I6TGq/lp/gIH
-        70r/1xasB/JYc/ZmAWbhSEDwSYO4D10vHvsy4WE=
-X-Google-Smtp-Source: ABdhPJw9m3bolfmVg7DS3DCFf2Y3Gnn0kQSL4lmvuOhPzzjoHLSBo8TqPmo7TCeoJyzlugmfCsY/y5nnNy0Wk1eojM8=
-X-Received: by 2002:ab0:311a:: with SMTP id e26mr28277722ual.122.1634108992835;
- Wed, 13 Oct 2021 00:09:52 -0700 (PDT)
+        id S236050AbhJMInl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Oct 2021 04:43:41 -0400
+Received: from esa.microchip.iphmx.com ([68.232.154.123]:19027 "EHLO
+        esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233707AbhJMInk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Oct 2021 04:43:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1634114497; x=1665650497;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=uS5AUBVNgvSk7L6DFWnNIGqcFmvItYvZAYD6rQ6KYRo=;
+  b=p08/uONEKTvvDpADmk4WBZlIc2bTNe7gWO0Udgvs4l8w4F1pMH7YGQ9w
+   xX6kxB7BnRtac/ec+4HWN0q7iZ/e3eX5Mta+w+XeWkbGw7dfK0YX1WNuu
+   tlUEfpsCAmgxEDT4r6BWijftUmPFmNir/fYZ6Krv/b0kDS0HVTwlYWQ9N
+   aHd2QfRQmYiUWohQO4CGrfCqA0WunRPNC40f5CMT3jy61bt5FXwwnyEF5
+   i3feqy7biIaw/qL7CkIU2JRXyvMm4b1nUGKBbm20WPJBByP6m1SjcCZbt
+   F0iQ2t4yzVRK7NSH9WjC/51KgKoZYGcgk9CQk7vh6WtIAcGl8Nt6KWeXU
+   g==;
+IronPort-SDR: kDs5hX2aE+TjJTDd44u9mMdNi45JykHWVZyXP867ispU0XU0EqAhvCsGCd7HiSemh5i4aQa8s8
+ O5FMwWgCLTFCJIVoJAUblP1SLP1dlBv4UNRz7fgnBm4y8ap4E9UJjGHqFXuh2Z0lGM7A5pKE0v
+ cf3w7B7lSchHRDvrI8f7caUXKKvsPa9JuJ/IVS9OPCGzEqVxJh8L9gkwk4nXCMuXw1ruajEqAC
+ zKb4eCQULASDqk3xTZ71mPmp6BiYj1Bs7b9GuFZhSbywfmQL2P7i7r/Sx8Buwt42GXIXBGPNQh
+ M/anCRohilkpO0zsWsQai6E4
+X-IronPort-AV: E=Sophos;i="5.85,370,1624345200"; 
+   d="scan'208";a="72768982"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 Oct 2021 01:41:36 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.14; Wed, 13 Oct 2021 01:41:36 -0700
+Received: from soft-dev3-1.microsemi.net (10.10.115.15) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.2176.14 via Frontend Transport; Wed, 13 Oct 2021 01:41:34 -0700
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
+        <lars.povlsen@microchip.com>, <Steen.Hegelund@microchip.com>,
+        <UNGLinuxDriver@microchip.com>, <p.zabel@pengutronix.de>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Subject: [PATCH v2 0/2] pinctrl: pinctrl-microchip-sgpio: Extend to call reset driver
+Date:   Wed, 13 Oct 2021 10:42:15 +0200
+Message-ID: <20211013084217.2298553-1-horatiu.vultur@microchip.com>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-References: <20211012134027.684712-1-kernel@esmil.dk> <20211012134027.684712-14-kernel@esmil.dk>
-In-Reply-To: <20211012134027.684712-14-kernel@esmil.dk>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 13 Oct 2021 09:09:41 +0200
-Message-ID: <CAMuHMdVq4pKovPsk0cAWSZ3T0-z8uVG1Bf306ya37BZnx0knpw@mail.gmail.com>
-Subject: Re: [PATCH v1 13/16] dt-bindings: serial: snps-dw-apb-uart: Add
- JH7100 uarts
-To:     Emil Renner Berthing <kernel@esmil.dk>
-Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        Drew Fustini <drew@beagleboard.org>,
-        Anup Patel <anup.patel@wdc.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        Matteo Croce <mcroce@microsoft.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 12, 2021 at 3:42 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
-> Add compatibles for the StarFive JH7100 uarts.
->
-> Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
+This allows the driver to call an optional reset driver.
 
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+v1->v2:
+ - add dt-bidings changes
 
-Gr{oetje,eeting}s,
+Horatiu Vultur (2):
+  dt-bindings: pinctrl: pinctrl-microchip-sgpio: Add reset binding
+  pinctrl: microchip sgpio: use reset driver
 
-                        Geert
+ .../devicetree/bindings/pinctrl/microchip,sparx5-sgpio.yaml | 6 ++++++
+ drivers/pinctrl/pinctrl-microchip-sgpio.c                   | 6 ++++++
+ 2 files changed, 12 insertions(+)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.33.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
