@@ -2,87 +2,247 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 93DCD42C610
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Oct 2021 18:16:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3906D42C5D7
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Oct 2021 18:08:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237317AbhJMQSs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Oct 2021 12:18:48 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:55442 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229785AbhJMQSp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Oct 2021 12:18:45 -0400
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 3.0.0)
- id 2c11d38a76026872; Wed, 13 Oct 2021 18:16:40 +0200
-Received: from kreacher.localnet (unknown [213.134.161.244])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by v370.home.net.pl (Postfix) with ESMTPSA id DE37066A871;
-        Wed, 13 Oct 2021 18:16:39 +0200 (CEST)
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux ACPI <linux-acpi@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
-Subject: [PATCH v2 1/7] gpio-amdpt: ACPI: Use the ACPI_COMPANION() macro directly
-Date:   Wed, 13 Oct 2021 18:06:40 +0200
-Message-ID: <4711815.31r3eYUQgx@kreacher>
-In-Reply-To: <2179627.iZASKD2KPV@kreacher>
-References: <4369779.LvFx2qVVIh@kreacher> <2179627.iZASKD2KPV@kreacher>
+        id S236325AbhJMQKZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Oct 2021 12:10:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45258 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229514AbhJMQKY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Oct 2021 12:10:24 -0400
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 435F5C061570;
+        Wed, 13 Oct 2021 09:08:21 -0700 (PDT)
+Received: by mail-wr1-x42e.google.com with SMTP id u18so10157346wrg.5;
+        Wed, 13 Oct 2021 09:08:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:content-language:to:cc
+         :references:from:subject:in-reply-to:content-transfer-encoding;
+        bh=eX7yjJefdYC9EkA2tTv7QWyCDc8KjHPONkGSpJrjJ+4=;
+        b=Fh/+e/qKee/OC3Pdz/1y1XxQafvN08plEo51h2csXqSGGDsuhib/3q52O/b2mUKYD5
+         JdebSWNKT6si8Sukw4Qx+8ih9WTKC0gwi3GfkFRbHI6EeyXqJE0FsTGeXUReayK4yE2e
+         TkziOkGTOtRYd4TJa1tLgvOgk9Y6lOsINvu1SdTOMzmCgsASgncB3rl2yUw17BHiX3D3
+         QcRk6HlEJzzMklDt9srpG79X3vXuIGVi1KDfVk/jcoG9zQjuehhUqeZunxOg2qlS6+Hk
+         LfrVu7txywRk6tcN8W9WlMggmH0lj4y0usk1JWUu4Xxcdw+hwptpGNNoa3+H89F21m8B
+         tACg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent
+         :content-language:to:cc:references:from:subject:in-reply-to
+         :content-transfer-encoding;
+        bh=eX7yjJefdYC9EkA2tTv7QWyCDc8KjHPONkGSpJrjJ+4=;
+        b=RamnbcasvGQ4OTXtjwguAGnvvMYtQ3wisL7ulgmwjvZX1obP54QQkOTL0NeP3i9dsY
+         kCy6+ixgCMGc8qe9+wImQoBJrvjHGoSRhojAm80CT7pdF11UwLNYsLpdg2YHYUT4L7NU
+         /0zRr5J5pIAyQS/eoXS6FD5/o3Qps861YJLQNBBBCpLiyumVZUrH7eJbBZaUa/0vC+iP
+         R7fuzhTQUJvDSLeUyQVvpiSUp5TeqdEjvO12q9Z9pKG6fw5Jtv+zu/VZA+cUpjcw5hVq
+         ybDWj67VP4YM3CNu6XGfZbpzCfG+L8aDaghnUohQ3xiEwsnowpMzy8eYSuzM+kNREmsh
+         DjRA==
+X-Gm-Message-State: AOAM5313GtDGsYgmIxSdjmPoBTA3zf8nuwrag9bIHiwObHtbZg2Bgz3I
+        e+yvraAGn/cBczudnyDCBjI=
+X-Google-Smtp-Source: ABdhPJyc2za+pLb2K8Q2vROq1u9HYfBpwC559+1Sp0MAfUmCphOwF4O3hP79hd0gYRqn2x2KDgvh0Q==
+X-Received: by 2002:adf:aadc:: with SMTP id i28mr44424wrc.320.1634141299580;
+        Wed, 13 Oct 2021 09:08:19 -0700 (PDT)
+Received: from ?IPV6:2620:113:80c0:8000:c::779? (nat0.nue.suse.com. [2001:67c:2178:4000::1111])
+        by smtp.gmail.com with ESMTPSA id 25sm5565503wmo.18.2021.10.13.09.08.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 Oct 2021 09:08:18 -0700 (PDT)
+Message-ID: <8348ed3e-c561-ad7e-fe9e-a31ed346d8d0@gmail.com>
+Date:   Wed, 13 Oct 2021 18:08:17 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 213.134.161.244
-X-CLIENT-HOSTNAME: 213.134.161.244
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvtddrvddutddgleejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkjghfggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpedvjeelgffhiedukedtleekkedvudfggefhgfegjefgueekjeelvefggfdvledutdenucfkphepvddufedrudefgedrudeiuddrvdeggeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvudefrddufeegrdduiedurddvgeegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhk
- vghrnhgvlhdrohhrgh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=5 Fuz1=5 Fuz2=5
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.1.2
+Content-Language: en-US
+To:     Sam Shih <sam.shih@mediatek.com>
+Cc:     Ryder.Lee@mediatek.com, devicetree@vger.kernel.org,
+        enric.balletbo@collabora.com, fparent@baylibre.com,
+        gregkh@linuxfoundation.org, herbert@gondor.apana.org.au,
+        hsinyi@chromium.org, john@phrozen.org, linus.walleij@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-serial@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux@roeck-us.net, mpm@selenic.com, mturquette@baylibre.com,
+        robh+dt@kernel.org, sboyd@kernel.org, sean.wang@kernel.org,
+        seiya.wang@mediatek.com, wim@linux-watchdog.org
+References: <9552b0dc-337f-7edc-2997-50603dfe8bcd@gmail.com>
+ <20210924114046.26070-1-sam.shih@mediatek.com>
+ <bc29d5bc-9ce7-6147-a708-e6304249b600@gmail.com>
+ <315d7823aa108c909a3d36464fe54763b76ab2f4.camel@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [v3,7/9] dt-bindings: arm64: dts: mediatek: Add mt7986 series
+In-Reply-To: <315d7823aa108c909a3d36464fe54763b76ab2f4.camel@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Hi Sam,
 
-The ACPI_HANDLE() macro is a wrapper arond the ACPI_COMPANION()
-macro and the ACPI handle produced by the former comes from the
-ACPI device object produced by the latter, so it is way more
-straightforward to evaluate the latter directly instead of passing
-the handle produced by the former to acpi_bus_get_device().
+On 12/10/2021 12:29, Sam Shih wrote:
+> Hi
+> 
+> On Fri, 2021-10-08 at 15:53 +0200, Matthias Brugger wrote:
+>> Hi Sam,
+>>
+>> I'd advise to split this series in parts for:
+>> - basic device support via dts.
+>> - pinctrl driver + dts
+>> - clk driver + dts
+> 
+> Okay, I will split the patches that are still under review into the
+> above patch series.
+> 
+> But I have a dumb question, currently, we have some patches that have
+> been assigned version numbers.
+> If I want to seprate original patch series, and resend 3 new patch
+> series (basic / pinctrl / clock) according to your comment, if I want
+> to keep the preview change log, tags in the patch set:
+> 
+> like:
+> ---
+> v3: changed 'MT7986' to 'MT7986 series' in the commit message
+> v2: added an Acked-by tag
+> ---
+> 
+> Which version number should I use for these new patch series ?
+> 
 
-Modify pt_gpio_probe() accordingly (no intentional functional impact).
+I'd use v4 keeping the change-log and adding a link with hint to v3 in the cover 
+letter.
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Acked-by: Bartosz Golaszewski <brgl@bgdev.pl>
----
+> Does the version number in corver-letter and the version number in each
+> patch need to be the same in the entire patch series ?
+> 
 
-v1 -> v2:
-   * Resend with a different From and S-o-b address and with ACK from Bart.
-     No other changes.
+Yes, otherwise the version number doesn't make to much sense.
 
----
- drivers/gpio/gpio-amdpt.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+> // (Original patch series/thread, version number is v3)
+> [PATCH v3 0/3] Add basic SoC support for mediatek mt7986
+>    [PATCH v3 1/3] dt-bindings: arm64: dts: mediatek: Add mt7986 series
+>    // (the version number has been updated to v5 previously)
+>    // (basic part only, not include pinctrl and clock nodes)
+>    [PATCH v5 2/3] arm64: dts: mediatek: add mt7986a support
+>    [PATCH v5 3/3] arm64: dts: mediatek: add mt7986b support
 
-Index: linux-pm/drivers/gpio/gpio-amdpt.c
-===================================================================
---- linux-pm.orig/drivers/gpio/gpio-amdpt.c
-+++ linux-pm/drivers/gpio/gpio-amdpt.c
-@@ -72,12 +72,10 @@ static void pt_gpio_free(struct gpio_chi
- static int pt_gpio_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
--	struct acpi_device *acpi_dev;
--	acpi_handle handle = ACPI_HANDLE(dev);
- 	struct pt_gpio_chip *pt_gpio;
- 	int ret = 0;
- 
--	if (acpi_bus_get_device(handle, &acpi_dev)) {
-+	if (!ACPI_COMPANION(dev)) {
- 		dev_err(dev, "PT GPIO device node not found\n");
- 		return -ENODEV;
- 	}
+use v6 explaining where in the mailing list one can find v5.
 
+> 
+> // (New clock driver patch series)
+> [PATCH 0/3] Add clock driver support for mediatek mt7986
+>    [PATCH v3,1/3] dt-bindings: clock: mediatek: document clk bindings
+> for mediatek mt7986 SoC
+>    // (the version number has been updated to v3 previously)
+>    [PATCH v3 2/3] clk: mediatek: add mt7986 clock IDs
+>    [PATCH v2 3/3] clk: mediatek: add mt7986 clock support
+> 
 
+Same here, use v4.
 
+> // (New pinctrl driver patch series)
+> [PATCH 0/4] Add pinctrl driver support for mediatek mt7986
+>    // (the version number has been updated to v6 previously)
+>    [PATCH v6 1/4] dt-bindings: pinctrl: update bindings for MT7986 SoC
+>    // (the version number has been updated to v2 previously)
+>    [PATCH v2 2/4] pinctrl: mediatek: add support for MT7986 SoC
+>    [PATCH 3/4] arm64: dts: mediatek: add mt7986a pinctrl support
+>    [PATCH 3/4] arm64: dts: mediatek: add mt7986b pinctrl support
+> 
+
+use v7 here.
+
+>>
+>> I would also advise to not send new versions of patches as new
+>> threads and don't
+>> respond in the same thread. At least for me that breaks my workflow
+>> as I use b4.
+> 
+> If I don't respond to the next patch set in the same thread, should I
+> create an entire new patch series ?
+> 
+
+Respond to any review comments in the thread but once you are ready to send a 
+new version of the patch, send the whole series with an incremented
+
+> For example, if I want to update PATCH 2/3 in the bellows patch series,
+> and my PATCH 1/3 has been accepted by reviewer previously
+> 
+> [PATCH v2 0/3] Add basic SoC support for mediatek mt7986
+>    [PATCH v2 1/3] ...   (patch set v1, applied by matainer)
+
+beware: applied != accepted
+reviewer != maintainer
+
+if the patch got applied to some maintainer repo, then in the next version drop 
+that patch (it is already applied) but mention that in the cover letter.
+
+>    [PATCH v2 2/3] ...   (patch set v2, need to be upgrade to v3)
+>    [PATCH v2 3/3] ...   (patch set v1, waiting for review)
+> 
+
+This series would be v3, if 1/3 is applied, drop. 2/3 will have changes and 3/3 
+will be the same as in v2.
+
+> Is this correct to send patch mail to maintaiers for the above
+> situation ?
+> 
+> [PATCH v3 0/2] Add basic SoC support for mediatek mt7986
+>    [PATCH v3 1/2] ...   (patch set v3)
+>    [PATCH v3 2/2] ...   (still patch set v1, waiting for review)
+> 
+
+yes, that's how is expected you send your patches.
+
+Let me know if you have any further questions :)
+
+Regards,
+Matthias
+
+> 
+>>
+>> Regards,
+>> Matthias
+>>
+>>
+>> On 24/09/2021 13:40, Sam Shih wrote:
+>>> MT7986 series is Mediatek's new 4-core SoC, which is mainly for
+>>> wifi-router application. The difference between mt7986a and mt7986b
+>>> is that some pins do not exist on mt7986b.
+>>>
+>>> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+>>> Acked-by: Rob Herring <robh@kernel.org>
+>>>
+>>> ---
+>>> v3: changed 'MT7986' to 'MT7986 series' in the commit message
+>>> v2: added an Acked-by tag
+>>> ---
+>>>    Documentation/devicetree/bindings/arm/mediatek.yaml | 8 ++++++++
+>>>    1 file changed, 8 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/arm/mediatek.yaml
+>>> b/Documentation/devicetree/bindings/arm/mediatek.yaml
+>>> index 80a05f6fee85..a9a778269684 100644
+>>> --- a/Documentation/devicetree/bindings/arm/mediatek.yaml
+>>> +++ b/Documentation/devicetree/bindings/arm/mediatek.yaml
+>>> @@ -76,6 +76,14 @@ properties:
+>>>              - enum:
+>>>                  - mediatek,mt7629-rfb
+>>>              - const: mediatek,mt7629
+>>> +      - items:
+>>> +          - enum:
+>>> +              - mediatek,mt7986a-rfb
+>>> +          - const: mediatek,mt7986a
+>>> +      - items:
+>>> +          - enum:
+>>> +              - mediatek,mt7986b-rfb
+>>> +          - const: mediatek,mt7986b
+>>>          - items:
+>>>              - enum:
+>>>                  - mediatek,mt8127-moose
+>>>
+> 
+> Thanks,
+> Sam
+> 
