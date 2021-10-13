@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 99E4142C814
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Oct 2021 19:53:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E40E742C817
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Oct 2021 19:53:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233315AbhJMRzc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Oct 2021 13:55:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41506 "EHLO
+        id S229814AbhJMRzn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Oct 2021 13:55:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229714AbhJMRza (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Oct 2021 13:55:30 -0400
+        with ESMTP id S238159AbhJMRzm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Oct 2021 13:55:42 -0400
 Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DFB3C061570
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Oct 2021 10:53:26 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id w19so13810857edd.2
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Oct 2021 10:53:26 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFC36C061570
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Oct 2021 10:53:38 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id i20so13114344edj.10
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Oct 2021 10:53:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=Y88NO31n5zZQladVHGT0A7AV0jELq4UAK9M51NO2UeE=;
-        b=w1IGNF93XVj3d6vSv41EXHaCmxNzDxXdWwt8nhqaMSJGhuXjRTL+sywPi/wkXjhdiW
-         /AXVkKr4nhytkS6XPceL5qgwFYfze+E8eecmNwkq9g8AM9h2V4O9O64VtNXm6TJccFbj
-         dxsCvWAdpZZjaaXxuzLL7q3KAjo6wb5hopEuzQ9llDbGWVoMFlZIcGCDFThBa96ymvu0
-         wpDACie3VYnNC2RLh/3tOvCBYAIHYZ6Hv+ifv7/4GHYXo9omAckGf2gKBx4DhvvGE9Uz
-         NWmiqBlVD+58L1fMUWDa4AxdnbHwAQTdwE/PHsQDz+a+5pB+2B8psOdxAgQXN7hFg7Ho
-         JRuQ==
+        bh=vL4wHlXoObWaIJMSvBAH6mZwwplVWNyO56sQB7dapM0=;
+        b=2dnJLUKCx3K8k6fe4zGbY7WUtBRVBbtEbodzjAjTbKDCvn4VI68gWEPjuCOqpkPp/V
+         c5PpJSWrPVO5JGQimGHojdmLzaCGu0ouUAtd93GLWlifhwz0jkbhHT94YMv/29NeHJMX
+         mR0iHW9EW83TvnmB1ke9D7RylbWDYCCeATLYA8xlWlIEcsZeUL040Mzl3a1mgn827Nxh
+         t1p7HoSoVI5pILkj5Y0gM7XXv/LhHrfKi9OzAnNT74zI5CFttqyjODSRpwrGrJ787zKm
+         CcI3ISJpaA84IdgI+j8EcX6HYRFpi8FzmmsRlRPYGDr481IUESWaJu0hn1ii0MsdqU2p
+         ubBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Y88NO31n5zZQladVHGT0A7AV0jELq4UAK9M51NO2UeE=;
-        b=0SI76KHFtocVx+6SYODO1sE/JaOqI371Xs35fyDOTMiITPD6dPL7OHdjmp3ly+r5/N
-         rjzPP7w+rvs2a0SaFLLHu0SmEGgFJyoap5G5/cx8wgWEKpFRlThK9o/c3puy5WLAAnVM
-         dryasmO7x1npRQuwvFxNSuNuKYnpDMrUc6wgWDtynQd5LePvW+VPkjSugX8WHL1bMroa
-         l2ry5TWhvveYdnCFq/2zq436Ks45Mk2TKWCuhj15QHmZ3KBPBWFaXuh5hqENr9DiFwvk
-         bEIKMKDZ5KHh9ufYEekE/z3vU3ljCjTcVgtANyx8Bond3jZbvcIP90vtNS2l4uS6in1W
-         nhSg==
-X-Gm-Message-State: AOAM53229epLQWp5+RyCbMIApvjJJsKW4GMCY5OJj3R29A+bvZ4nwDK3
-        DCLlxUD3VC/w5ROZPqR8DeqA0HxxZKj93KTeRP+5RA==
-X-Google-Smtp-Source: ABdhPJwWSHEYE1qdximFCtCdQMTeYuMyvtTpp6Xew2luRB9ik7+nz528hEPv7ehzfXChKRNfD57kPJc8IqMJE12tkis=
-X-Received: by 2002:a17:906:5343:: with SMTP id j3mr761563ejo.538.1634147605032;
- Wed, 13 Oct 2021 10:53:25 -0700 (PDT)
+        bh=vL4wHlXoObWaIJMSvBAH6mZwwplVWNyO56sQB7dapM0=;
+        b=lvv6rGx3bgV60ccWDXtHFtGSUFuxjg1JzIzXxJqN8453P16rUtzXs74cJpBZoOcndO
+         4hFeZDFsJE1YUfLRk9t6dfHaQJEeKfRYw1d7Gq2HMe/bGH5Mf9PVcG4XkjQMSQjkBYiC
+         JyIE+684H+ZhNxgXzEMYIXrw2fxLwowMxAbHSVMYZwn5IW0xRY34KZf+n00AQt6EkEDO
+         EvheLUI+Tk5O2+EjELJzFuq4iPNXnacanHN2cVV/9icQFt5vao2TqbramyZZWY+RNAFq
+         7OtnqA7HEQN137MnE9I4Dm/ADuANsPn4JZmDkcFjMOBX1BGDjQl0Wg69aP9WSb3WApQp
+         sJDQ==
+X-Gm-Message-State: AOAM533c7SFpYN7cnn9ZMCvVVyCm4fPkOrtJBUxQfwNroP2wJ3o8fQyl
+        Yifv+s7NTO6DzhttdgHFz6ubzJerlb8Wqw//wjS10g==
+X-Google-Smtp-Source: ABdhPJwGLvGKJU0T4kkxzDIrIomjfXEHdeUC+7jxo1/eKA4gya0frJUJrIpmu+tpnhWl1oJJTZAy3XPSevWXUtNtx5U=
+X-Received: by 2002:a17:907:2bc2:: with SMTP id gv2mr733986ejc.433.1634147617387;
+ Wed, 13 Oct 2021 10:53:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211012153945.2651412-1-u.kleine-koenig@pengutronix.de> <20211012153945.2651412-3-u.kleine-koenig@pengutronix.de>
-In-Reply-To: <20211012153945.2651412-3-u.kleine-koenig@pengutronix.de>
+References: <20211012153945.2651412-1-u.kleine-koenig@pengutronix.de> <20211012153945.2651412-4-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20211012153945.2651412-4-u.kleine-koenig@pengutronix.de>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 13 Oct 2021 19:53:14 +0200
-Message-ID: <CAMRc=MeyHwbm24fWPqKhx7yKktSXMZNaWqm24p6MW-hGCueRfw@mail.gmail.com>
-Subject: Re: [PATCH v2 02/20] gpio: max730x: Make __max730x_remove() return void
+Date:   Wed, 13 Oct 2021 19:53:26 +0200
+Message-ID: <CAMRc=Mcx1+dXwUQNnpKGtq7_nCMQo7xxDLUs5mJ=bVRT8-CuHw@mail.gmail.com>
+Subject: Re: [PATCH v2 03/20] gpio: mc33880: Drop if with an always false condition
 To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -66,18 +66,34 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Tue, Oct 12, 2021 at 5:39 PM Uwe Kleine-K=C3=B6nig
 <u.kleine-koenig@pengutronix.de> wrote:
 >
-> An spi or i2c remove callback is only called for devices that probed
-> successfully. In this case this implies that __max730x_probe() set a
-> non-NULL driver data. So the check ts =3D=3D NULL is never true. With thi=
-s
-> check dropped, __max730x_remove() returns zero unconditionally. Make it
-> return void instead which makes it easier to see in the callers that
-> there is no error to handle.
+> An spi remove callback is only called for devices that probed
+> successfully. In this case this implies that mc33880_probe() set a
+> non-NULL driver data. So the check for mc being NULL is never true and
+> the check can be dropped.
 >
-> Also the return value of i2c and spi remove callbacks is ignored anyway.
+> Also the return value ofspi remove callbacks is ignored anyway.
 >
 > Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
 > ---
+>  drivers/gpio/gpio-mc33880.c | 2 --
+>  1 file changed, 2 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-mc33880.c b/drivers/gpio/gpio-mc33880.c
+> index f8194f7c6186..31d2be1bebc8 100644
+> --- a/drivers/gpio/gpio-mc33880.c
+> +++ b/drivers/gpio/gpio-mc33880.c
+> @@ -139,8 +139,6 @@ static int mc33880_remove(struct spi_device *spi)
+>         struct mc33880 *mc;
+>
+>         mc =3D spi_get_drvdata(spi);
+> -       if (!mc)
+> -               return -ENODEV;
+>
+>         gpiochip_remove(&mc->chip);
+>         mutex_destroy(&mc->lock);
+> --
+> 2.30.2
+>
 
 Applied, thanks!
 
