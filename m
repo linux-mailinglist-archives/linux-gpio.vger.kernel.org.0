@@ -2,57 +2,42 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DEE9342BFA5
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Oct 2021 14:18:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DDFB42C128
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Oct 2021 15:16:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231919AbhJMMUK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Oct 2021 08:20:10 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:51798 "EHLO
+        id S234531AbhJMNSc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Oct 2021 09:18:32 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:37356 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232145AbhJMMUJ (ORCPT
+        by vger.kernel.org with ESMTP id S233552AbhJMNSb (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 13 Oct 2021 08:20:09 -0400
+        Wed, 13 Oct 2021 09:18:31 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634127483;
+        s=mimecast20190719; t=1634130988;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=8uA+gFhUzMMrb5D5fxARTwQwcT+AEfWKWkQ0ooGMKj8=;
-        b=gcZphIhv1SUibhOpSsOSgz4m0cbJvHyEtd0kwtKyNGk7PlE0SU+JPX+FUmjzkGHkvuPJuI
-        RYeShTXWeJ1jx+SFek2K1Tc6X4vwuEpu4Q3Rv6491+05hOgYMfee2etkukNn00qGLGJeMY
-        ljgHBxDZGBTUGlUD8++dZn6sdjVlaG0=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-355-OFaRA8LcPXy_1QeLZl5yLw-1; Wed, 13 Oct 2021 08:18:02 -0400
-X-MC-Unique: OFaRA8LcPXy_1QeLZl5yLw-1
-Received: by mail-wr1-f69.google.com with SMTP id s18-20020adfbc12000000b00160b2d4d5ebso1841514wrg.7
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Oct 2021 05:18:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8uA+gFhUzMMrb5D5fxARTwQwcT+AEfWKWkQ0ooGMKj8=;
-        b=H/st6NNGsu10B7BFI14pKSMmYSL0A2tWqiBVw9ecMbBZ74ztq5yWVEdAdaB6OlaWTW
-         GlxtVhN7gigsHCGlKuUMfjNslnsJ5Jp1f6FmvzhKzQ79ePRZsGwpIytqqnjBLQAOcqN8
-         eKkgQTcp1jwAfrczfinUtKhw71jtAA8EESgRK52AqSrMw6KVs3J65L6LABhcSwYbwf25
-         RrTFmN3as8YziFg3S85J9+1mbNNgfczzauYAbHxxsZ4jG54KhsQKsxupg6+YvjCgK3mI
-         p91AI0ebkMR9ezl/0TSrTPPKN7a/qzy9OsAnsM3BZcOnPf6qgYCk39crRMHfJ9maQf1S
-         qi4w==
-X-Gm-Message-State: AOAM532RtWw6Bd7BQf1j/fNMqFY03LHyEpjosIEviash3Mg4u8It+dlL
-        s4tXoL0dLrHGycJ0wMFt4ti7XoYJ8RAS21cNox3euB+wxtLM7OXf9VxX5nuB9H5nLvxWsqpSkbw
-        FkQriBfsKQ5K8jl9ljq5n+A==
-X-Received: by 2002:a7b:c30c:: with SMTP id k12mr12535230wmj.38.1634127481365;
-        Wed, 13 Oct 2021 05:18:01 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwFEzPqFQ+1qHznC4euH1QtbfXrvr/+t46tCqHwjpC6aqk2B2gJ30j5Cm2I+Hz0oA4zGN44UQ==
-X-Received: by 2002:a7b:c30c:: with SMTP id k12mr12535146wmj.38.1634127481076;
-        Wed, 13 Oct 2021 05:18:01 -0700 (PDT)
-Received: from redhat.com ([2.55.30.112])
-        by smtp.gmail.com with ESMTPSA id z1sm4104369wrt.94.2021.10.13.05.17.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Oct 2021 05:18:00 -0700 (PDT)
-Date:   Wed, 13 Oct 2021 08:17:49 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
+        bh=3UweUBspHinuJSQhguEdx6WU40R4nh4wg670z3EQDCs=;
+        b=XNP1QDwX2f719a9ZrFnhwucrTmmJi3xG6/ZEi9kIsyI5EgoqN8WKfM1aPjoQSJIbgOQFYV
+        pFRVUyG4/rV6koPl8MKbwi0AXmQTYeRxBCWmzjs1lY2Bl9yZ8PmUbb1llOU47KJzq7j5Ui
+        2AnDvE9EkAQFUkWYniyGFIldV/jAtHA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-397-51EXKiPTPNOe2wB9MiFWRQ-1; Wed, 13 Oct 2021 09:16:25 -0400
+X-MC-Unique: 51EXKiPTPNOe2wB9MiFWRQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 85FDA100A95A;
+        Wed, 13 Oct 2021 13:16:22 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.22.33.167])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6603219E7E;
+        Wed, 13 Oct 2021 13:16:20 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id DEFAB22023A; Wed, 13 Oct 2021 09:16:19 -0400 (EDT)
+Date:   Wed, 13 Oct 2021 09:16:19 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
 Cc:     linux-kernel@vger.kernel.org, Jeff Dike <jdike@addtoit.com>,
         Richard Weinberger <richard@nod.at>,
         Anton Ivanov <anton.ivanov@cambridgegreys.com>,
@@ -92,7 +77,7 @@ Cc:     linux-kernel@vger.kernel.org, Jeff Dike <jdike@addtoit.com>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
         "James E.J. Bottomley" <jejb@linux.ibm.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
         Miklos Szeredi <miklos@szeredi.hu>,
         Eric Van Hensbergen <ericvh@gmail.com>,
         Latchesar Ionkov <lucho@ionkov.net>,
@@ -112,81 +97,79 @@ Cc:     linux-kernel@vger.kernel.org, Jeff Dike <jdike@addtoit.com>,
         v9fs-developer@lists.sourceforge.net, kvm@vger.kernel.org,
         alsa-devel@alsa-project.org
 Subject: Re: [PATCH RFC] virtio: wrap config->reset calls
-Message-ID: <20211013081632-mutt-send-email-mst@kernel.org>
+Message-ID: <YWbcI15YOkhnPh5x@redhat.com>
 References: <20211013105226.20225-1-mst@redhat.com>
- <2060bd96-5884-a1b5-9f29-7fe670dc088d@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2060bd96-5884-a1b5-9f29-7fe670dc088d@redhat.com>
+In-Reply-To: <20211013105226.20225-1-mst@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 13, 2021 at 01:03:46PM +0200, David Hildenbrand wrote:
-> On 13.10.21 12:55, Michael S. Tsirkin wrote:
-> > This will enable cleanups down the road.
-> > The idea is to disable cbs, then add "flush_queued_cbs" callback
-> > as a parameter, this way drivers can flush any work
-> > queued after callbacks have been disabled.
-> > 
-> > Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> > ---
-> >   arch/um/drivers/virt-pci.c                 | 2 +-
-> >   drivers/block/virtio_blk.c                 | 4 ++--
-> >   drivers/bluetooth/virtio_bt.c              | 2 +-
-> >   drivers/char/hw_random/virtio-rng.c        | 2 +-
-> >   drivers/char/virtio_console.c              | 4 ++--
-> >   drivers/crypto/virtio/virtio_crypto_core.c | 8 ++++----
-> >   drivers/firmware/arm_scmi/virtio.c         | 2 +-
-> >   drivers/gpio/gpio-virtio.c                 | 2 +-
-> >   drivers/gpu/drm/virtio/virtgpu_kms.c       | 2 +-
-> >   drivers/i2c/busses/i2c-virtio.c            | 2 +-
-> >   drivers/iommu/virtio-iommu.c               | 2 +-
-> >   drivers/net/caif/caif_virtio.c             | 2 +-
-> >   drivers/net/virtio_net.c                   | 4 ++--
-> >   drivers/net/wireless/mac80211_hwsim.c      | 2 +-
-> >   drivers/nvdimm/virtio_pmem.c               | 2 +-
-> >   drivers/rpmsg/virtio_rpmsg_bus.c           | 2 +-
-> >   drivers/scsi/virtio_scsi.c                 | 2 +-
-> >   drivers/virtio/virtio.c                    | 5 +++++
-> >   drivers/virtio/virtio_balloon.c            | 2 +-
-> >   drivers/virtio/virtio_input.c              | 2 +-
-> >   drivers/virtio/virtio_mem.c                | 2 +-
-> >   fs/fuse/virtio_fs.c                        | 4 ++--
-> >   include/linux/virtio.h                     | 1 +
-> >   net/9p/trans_virtio.c                      | 2 +-
-> >   net/vmw_vsock/virtio_transport.c           | 4 ++--
-> >   sound/virtio/virtio_card.c                 | 4 ++--
-> >   26 files changed, 39 insertions(+), 33 deletions(-)
-> > 
-> > diff --git a/arch/um/drivers/virt-pci.c b/arch/um/drivers/virt-pci.c
-> > index c08066633023..22c4d87c9c15 100644
-> > --- a/arch/um/drivers/virt-pci.c
-> > +++ b/arch/um/drivers/virt-pci.c
-> > @@ -616,7 +616,7 @@ static void um_pci_virtio_remove(struct virtio_device *vdev)
-> >   	int i;
-> >           /* Stop all virtqueues */
-> > -        vdev->config->reset(vdev);
-> > +        virtio_reset_device(vdev);
-> >           vdev->config->del_vqs(vdev);
+On Wed, Oct 13, 2021 at 06:55:31AM -0400, Michael S. Tsirkin wrote:
+> This will enable cleanups down the road.
+> The idea is to disable cbs, then add "flush_queued_cbs" callback
+> as a parameter, this way drivers can flush any work
+> queued after callbacks have been disabled.
 > 
-> Nit: virtio_device_reset()?
-> 
-> Because I see:
-> 
-> int virtio_device_freeze(struct virtio_device *dev);
-> int virtio_device_restore(struct virtio_device *dev);
-> void virtio_device_ready(struct virtio_device *dev)
-> 
-> But well, there is:
-> void virtio_break_device(struct virtio_device *dev);
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> ---
+>  arch/um/drivers/virt-pci.c                 | 2 +-
+>  drivers/block/virtio_blk.c                 | 4 ++--
+>  drivers/bluetooth/virtio_bt.c              | 2 +-
+>  drivers/char/hw_random/virtio-rng.c        | 2 +-
+>  drivers/char/virtio_console.c              | 4 ++--
+>  drivers/crypto/virtio/virtio_crypto_core.c | 8 ++++----
+>  drivers/firmware/arm_scmi/virtio.c         | 2 +-
+>  drivers/gpio/gpio-virtio.c                 | 2 +-
+>  drivers/gpu/drm/virtio/virtgpu_kms.c       | 2 +-
+>  drivers/i2c/busses/i2c-virtio.c            | 2 +-
+>  drivers/iommu/virtio-iommu.c               | 2 +-
+>  drivers/net/caif/caif_virtio.c             | 2 +-
+>  drivers/net/virtio_net.c                   | 4 ++--
+>  drivers/net/wireless/mac80211_hwsim.c      | 2 +-
+>  drivers/nvdimm/virtio_pmem.c               | 2 +-
+>  drivers/rpmsg/virtio_rpmsg_bus.c           | 2 +-
+>  drivers/scsi/virtio_scsi.c                 | 2 +-
+>  drivers/virtio/virtio.c                    | 5 +++++
+>  drivers/virtio/virtio_balloon.c            | 2 +-
+>  drivers/virtio/virtio_input.c              | 2 +-
+>  drivers/virtio/virtio_mem.c                | 2 +-
+>  fs/fuse/virtio_fs.c                        | 4 ++--
 
-Exactly. I don't know what's best, so I opted for plain english :)
+fs/fuse/virtio_fs.c changes look good to me.
+
+Reviewed-by: Vivek Goyal <vgoyal@redhat.com>
+
+Vivek
+
+[..]
+> diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
+> index 0ad89c6629d7..27c3b74070a2 100644
+> --- a/fs/fuse/virtio_fs.c
+> +++ b/fs/fuse/virtio_fs.c
+> @@ -895,7 +895,7 @@ static int virtio_fs_probe(struct virtio_device *vdev)
+>  	return 0;
+>  
+>  out_vqs:
+> -	vdev->config->reset(vdev);
+> +	virtio_reset_device(vdev);
+>  	virtio_fs_cleanup_vqs(vdev, fs);
+>  	kfree(fs->vqs);
+>  
+> @@ -927,7 +927,7 @@ static void virtio_fs_remove(struct virtio_device *vdev)
+>  	list_del_init(&fs->list);
+>  	virtio_fs_stop_all_queues(fs);
+>  	virtio_fs_drain_all_queues_locked(fs);
+> -	vdev->config->reset(vdev);
+> +	virtio_reset_device(vdev);
+>  	virtio_fs_cleanup_vqs(vdev, fs);
+>  
+>  	vdev->priv = NULL;
 
 
-> -- 
-> Thanks,
-> 
-> David / dhildenb
+Thanks
+Vivek
 
