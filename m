@@ -2,115 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 976D042C80B
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Oct 2021 19:50:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99E4142C814
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Oct 2021 19:53:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238413AbhJMRwq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Oct 2021 13:52:46 -0400
-Received: from mail-ua1-f41.google.com ([209.85.222.41]:44970 "EHLO
-        mail-ua1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230404AbhJMRwS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Oct 2021 13:52:18 -0400
-Received: by mail-ua1-f41.google.com with SMTP id e7so6125246ual.11;
-        Wed, 13 Oct 2021 10:50:14 -0700 (PDT)
+        id S233315AbhJMRzc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Oct 2021 13:55:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41506 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229714AbhJMRza (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Oct 2021 13:55:30 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DFB3C061570
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Oct 2021 10:53:26 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id w19so13810857edd.2
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Oct 2021 10:53:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Y88NO31n5zZQladVHGT0A7AV0jELq4UAK9M51NO2UeE=;
+        b=w1IGNF93XVj3d6vSv41EXHaCmxNzDxXdWwt8nhqaMSJGhuXjRTL+sywPi/wkXjhdiW
+         /AXVkKr4nhytkS6XPceL5qgwFYfze+E8eecmNwkq9g8AM9h2V4O9O64VtNXm6TJccFbj
+         dxsCvWAdpZZjaaXxuzLL7q3KAjo6wb5hopEuzQ9llDbGWVoMFlZIcGCDFThBa96ymvu0
+         wpDACie3VYnNC2RLh/3tOvCBYAIHYZ6Hv+ifv7/4GHYXo9omAckGf2gKBx4DhvvGE9Uz
+         NWmiqBlVD+58L1fMUWDa4AxdnbHwAQTdwE/PHsQDz+a+5pB+2B8psOdxAgQXN7hFg7Ho
+         JRuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tIi5T5N2/yaJwmSaNVNNDL3lEJSP+D3EZbhPxV9bN7g=;
-        b=lBwUf98Ya9xGJQumHemveoYA3jaTGo9zceF+dlSBGjCHA+Jw2MOMxZ9OB934ZHub28
-         5V0ABhjVZZlvZ+qWYFw+P9SMRVXTIpguYu7gvrLFzeJfdcNzF1zQ6W5+GJr4ko/qmX33
-         mNaU3t7S3dcefIkBVLx5WaJaO0wIUUWCcisYJ3M/Khuo1Nc8+ePnQ8t9GOtFD4xJP62a
-         tNJ/V0MdsaVFB7VJj5663dRzvTghbMC3MkfLWjRt6i/7i3gInulrtow0NCcTDSC+mGLe
-         Y8RJWnu649ml0kDDeEFEBJ9TUdlnr37o9CBy+bZSsXfi3ju+3sQvs4Z5+gggZ1nO8gnq
-         smIw==
-X-Gm-Message-State: AOAM5318vrASNhOp78jMVxYwLNjoIj3Gdwq3n7Y5wXZqlQW/7whZGddO
-        DFdYQixye+6aHB/pDB0ctyRgwEr3UFmuDyTp4DY=
-X-Google-Smtp-Source: ABdhPJzI98rys3rSOTMBc774JLZNtowDx6KeQUTWoK/w1LLQIcU7V1QbgCRSZxN5x/TbAcms2qoGM52BOpUZIUalKpI=
-X-Received: by 2002:a67:d583:: with SMTP id m3mr967150vsj.41.1634147413827;
- Wed, 13 Oct 2021 10:50:13 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Y88NO31n5zZQladVHGT0A7AV0jELq4UAK9M51NO2UeE=;
+        b=0SI76KHFtocVx+6SYODO1sE/JaOqI371Xs35fyDOTMiITPD6dPL7OHdjmp3ly+r5/N
+         rjzPP7w+rvs2a0SaFLLHu0SmEGgFJyoap5G5/cx8wgWEKpFRlThK9o/c3puy5WLAAnVM
+         dryasmO7x1npRQuwvFxNSuNuKYnpDMrUc6wgWDtynQd5LePvW+VPkjSugX8WHL1bMroa
+         l2ry5TWhvveYdnCFq/2zq436Ks45Mk2TKWCuhj15QHmZ3KBPBWFaXuh5hqENr9DiFwvk
+         bEIKMKDZ5KHh9ufYEekE/z3vU3ljCjTcVgtANyx8Bond3jZbvcIP90vtNS2l4uS6in1W
+         nhSg==
+X-Gm-Message-State: AOAM53229epLQWp5+RyCbMIApvjJJsKW4GMCY5OJj3R29A+bvZ4nwDK3
+        DCLlxUD3VC/w5ROZPqR8DeqA0HxxZKj93KTeRP+5RA==
+X-Google-Smtp-Source: ABdhPJwWSHEYE1qdximFCtCdQMTeYuMyvtTpp6Xew2luRB9ik7+nz528hEPv7ehzfXChKRNfD57kPJc8IqMJE12tkis=
+X-Received: by 2002:a17:906:5343:: with SMTP id j3mr761563ejo.538.1634147605032;
+ Wed, 13 Oct 2021 10:53:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211012134027.684712-1-kernel@esmil.dk> <20211012134027.684712-13-kernel@esmil.dk>
- <CAHp75Vep+i+iyJi0LAOKuer-cUZoUoB_ZrWKcmT=EB_4hOgFGw@mail.gmail.com>
- <CANBLGczDZh+kLWM017mPenY8WO5OovH2DFUSS-shRD-aZVKa0A@mail.gmail.com> <YWc5zq0Moz3asWEa@smile.fi.intel.com>
-In-Reply-To: <YWc5zq0Moz3asWEa@smile.fi.intel.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 13 Oct 2021 19:50:02 +0200
-Message-ID: <CAMuHMdUBwUcs9GPWyrVqu=H1+VnXRzyTzT3XU2jASB+-VQ6axg@mail.gmail.com>
-Subject: Re: [PATCH v1 12/16] pinctrl: starfive: Add pinctrl driver for
- StarFive SoCs
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Emil Renner Berthing <kernel@esmil.dk>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
+References: <20211012153945.2651412-1-u.kleine-koenig@pengutronix.de> <20211012153945.2651412-3-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20211012153945.2651412-3-u.kleine-koenig@pengutronix.de>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 13 Oct 2021 19:53:14 +0200
+Message-ID: <CAMRc=MeyHwbm24fWPqKhx7yKktSXMZNaWqm24p6MW-hGCueRfw@mail.gmail.com>
+Subject: Re: [PATCH v2 02/20] gpio: max730x: Make __max730x_remove() return void
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        Drew Fustini <drew@beagleboard.org>,
-        Anup Patel <anup.patel@wdc.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        Matteo Croce <mcroce@microsoft.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Huan Feng <huan.feng@starfivetech.com>
+        linux-spi@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 13, 2021 at 6:58 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Wed, Oct 13, 2021 at 06:38:14PM +0200, Emil Renner Berthing wrote:
-> > On Tue, 12 Oct 2021 at 19:03, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > > On Tue, Oct 12, 2021 at 4:43 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
-
-> > > > +               v = pinmux[i];
-> > > > +               dout = ((v & BIT(7)) << (31 - 7)) | ((v >> 24) & 0xffU);
-> > > > +               doen = ((v & BIT(6)) << (31 - 6)) | ((v >> 16) & 0xffU);
-> > > > +               din  = (v >> 8) & 0xffU;
-> > >
-> > > What is this voodoo for?
-> >
-> > In order to do pinmux we need the following pieces of information from
-> > the device tree for each pin ("GPIO" they call it):
-> >
-> > output signal: 0-133 + 1bit reverse flag
-> > output enable signal: 0-133 + 1bit reverse flag
-> > optional input signal: 0-74 + special "none" value, right now 0xff
-> > gpio number: 0-63
-> >
-> > As the code is now all that info is packed into a u32 for each pin
-> > using the GPIOMUX macro defined in the dt-binding header added in
-> > patch 10. There is also a diagram for how this packing is done. The
-> > above voodoo is for unpacking that.
-> >
-> > I'd very much like to hear if you have a better solution for how to
-> > convey that information from the device tree to here.
+On Tue, Oct 12, 2021 at 5:39 PM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
 >
-> At very least this code should have something like above in the comment.
+> An spi or i2c remove callback is only called for devices that probed
+> successfully. In this case this implies that __max730x_probe() set a
+> non-NULL driver data. So the check ts =3D=3D NULL is never true. With thi=
+s
+> check dropped, __max730x_remove() returns zero unconditionally. Make it
+> return void instead which makes it easier to see in the callers that
+> there is no error to handle.
+>
+> Also the return value of i2c and spi remove callbacks is ignored anyway.
+>
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> ---
 
-And perhaps introduce some helper macros to access the fields?
+Applied, thanks!
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Bart
