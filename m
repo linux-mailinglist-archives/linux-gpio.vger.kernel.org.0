@@ -2,86 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C83C842B0AC
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Oct 2021 01:59:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D72D42B0D7
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Oct 2021 02:08:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234157AbhJMABv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 12 Oct 2021 20:01:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48964 "EHLO
+        id S236303AbhJMAJm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 12 Oct 2021 20:09:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233176AbhJMABu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Oct 2021 20:01:50 -0400
+        with ESMTP id S236875AbhJMAJX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 12 Oct 2021 20:09:23 -0400
 Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC426C061745
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Oct 2021 16:59:47 -0700 (PDT)
-Received: by mail-ed1-x52c.google.com with SMTP id i20so2549083edj.10
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Oct 2021 16:59:47 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CDD3C061753
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Oct 2021 17:07:21 -0700 (PDT)
+Received: by mail-ed1-x52c.google.com with SMTP id ec8so2678098edb.6
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Oct 2021 17:07:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=pA/RLR0KfHQo0D8Z/6AcxihH5fdEamebhyEqoCoH4js=;
-        b=NgLAwMaGbmUpS08qwcfFBxXGk97MvrDJzl+Zy9GxbMz2FgHsuLSjIoLw29SgHz0bae
-         9e9QKK7XDIYQSljiJg1Z2S1XkPpGL4PizP+l+uzo73L5GL/Lzhx7AuHHJLSVKt5Pp+x/
-         nFCrSmi4+L5gStAt3H06UFjMdRUI9sBX7bYOI0zbH3BJ67b75khA7bizEA83aiHrB64i
-         CbJl2UHuxXGEcxCTTJ9VoBoiPDE+SYy6fGMu5L4FlyCOHxqlCgZfxhB4onKVCgDgAmlf
-         HCBk/c3Pv809yvj759/8HZvIeipZswDs9pI0ZLXPbmJhW7V+iVUfFWuvVbgKAcwZwR8k
-         5iyw==
+        bh=JTWVNyhczFZinoqJ7kSsMVLCZQV46DfROw4WieDRZL0=;
+        b=C+jvuEDHNozuwvDiFT13ZmF9FghO3sCvBMryHwNXqttukFXiOG06ppcJDCCdy2wy28
+         U4TOfYlWTXHe98gqEq0f6rRVzif90/rYm8im8hRz3gNOQl+bNY2iajHWjfT4hNv1d8bR
+         tpUxFTkQRV47ixP9oqsoDTAmDQElWjtG9MZmMDO0i7G1eMN0M6tbWTdjmbaf/onh8giS
+         G0+SKvTrCgFy4TqDzhUus3OtVPOAqwyv685wrg4KXAV0wkzncdTdM/t+IXzMoyDg+5gX
+         DLtehrTWmwIDI/lDQE9jLq5AcRb/l+NEUbBXgNPTDds5VzfpySah0PPF/NHmyj9yjYby
+         j5DA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=pA/RLR0KfHQo0D8Z/6AcxihH5fdEamebhyEqoCoH4js=;
-        b=ZzuQVe0XlzfP77jppDjhfwOYBF+Ff4PpUk62m688/1unuAb8QRp+7k8F+5awy2D962
-         Fpl1BgKtqh/h/U4arAPs4iTv0asmg1C+XDN5AtartTeDl5MWhnPFAbSyilzWKlrGQmOP
-         0dcni8PFVTMCZ0QiBWm6aM3xEl65F3bwrvbGR7lZHfz9+v9CJ26QafidUr7pDOLga7Ub
-         /tFCG6BsisRUKu1/SL7lwc41FgJY2NxvFqlVDE4A3Q4UloIpFULN5JlQg+kqjeAYlLHf
-         LGlLCGAXBPjowvtqw0yCGjhV0Q0gsRP0BJt8m4qw85mjp+nR6ev6jw0wNva1x8ihukP+
-         E+pQ==
-X-Gm-Message-State: AOAM5313eLjkMS5MxWo1zRBPsrswjuRvp9jBPXgvesYA3lV55cE2Jshq
-        LskY5uPaAq6o/OsBT1Jq3vP1rDQxQZxvalWyD8IeOg==
-X-Google-Smtp-Source: ABdhPJxbTyvOlEME29e2j+RkbfPt0NEPM4IQeMGrTtrmsNasAnyXtTpQbfSjPAEtbeGr0KaEdx7nUJlQAMiUSRr8oeU=
-X-Received: by 2002:a05:6402:410:: with SMTP id q16mr4556268edv.286.1634083186495;
- Tue, 12 Oct 2021 16:59:46 -0700 (PDT)
+        bh=JTWVNyhczFZinoqJ7kSsMVLCZQV46DfROw4WieDRZL0=;
+        b=sABrVncCaaP/XivMsCqDQBLsYv2eFxYcSGXa2smJDCxXMKqhcPeZV7EFltySYEVp1Q
+         nEN9QMW17VYA4lI+oEpnamVortek8AVpJcqQgrPtKHyUDmH7FN8wLUO+9uxQJGjsiEQz
+         hurZ0lnu72aFdIqmbskMN0xP5FoFzP3fug2rysmT3o/wnxHxfDROXpARU+2LshhXuqC7
+         LqGAsaJ5+3kH5LI9gYEPT9BeQNFHPC8R4TUZ0egKYmDfH3EqMufQ4Up4Ha2ThGnRiVD+
+         ZqwsYQm2LdZbF9tTfC7+lpiAW7VPAe5p7wzKFudSI27s0a2jsrRAQfNkldh05wFkcDbO
+         T6uw==
+X-Gm-Message-State: AOAM532nLSt5bCqmUfkyKIrATP0kPmGeTUP1jciDC7YsYWtxkEs1fNys
+        jxt7pwa1HXXTXwyW+RsxCvt+i/iHzGSjIqNect1Pci9NTTE=
+X-Google-Smtp-Source: ABdhPJyfDYLRR6F/3juZtl20H7qFZacVtgfDH8pJMmKfRymkv5U3UjEddwOHxHDtXbJ0Au3F1L7uA8SrwAQMX+APApE=
+X-Received: by 2002:a05:6402:278a:: with SMTP id b10mr4463346ede.134.1634083640074;
+ Tue, 12 Oct 2021 17:07:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211008012524.481877-1-dmitry.baryshkov@linaro.org>
-In-Reply-To: <20211008012524.481877-1-dmitry.baryshkov@linaro.org>
+References: <20210921193028.13099-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20210921193028.13099-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CACRpkdaJk-G0YE63uvH9C=G3n7k2gZqf9QrwGfAZC2O4hhps=A@mail.gmail.com> <CAMuHMdUvThtOKrhTqW+U1qijW7dRc6GYg4_Owt_GnUxX4DrGog@mail.gmail.com>
+In-Reply-To: <CAMuHMdUvThtOKrhTqW+U1qijW7dRc6GYg4_Owt_GnUxX4DrGog@mail.gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 13 Oct 2021 01:59:35 +0200
-Message-ID: <CACRpkda_hW7vbvC1jizRa05ZdgeL-FkU3_zF+rvCfRBuRB3+VQ@mail.gmail.com>
-Subject: Re:
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+Date:   Wed, 13 Oct 2021 02:07:09 +0200
+Message-ID: <CACRpkdaTWb4-m=9UzQUwQyUhT3PQ3YWreG+KNnhLdXGGmJLrBg@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 3/4] pinctrl: renesas: pinctrl-rzg2l: Add IRQ
+ domain to handle GPIO interrupt
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         Rob Herring <robh+dt@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, MSM <linux-arm-msm@vger.kernel.org>
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 8, 2021 at 3:25 AM Dmitry Baryshkov
-<dmitry.baryshkov@linaro.org> wrote:
+On Tue, Oct 5, 2021 at 11:56 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 
-> In 2019 (in kernel 5.4) spmi-gpio and ssbi-gpio drivers were converted
-> to hierarchical IRQ helpers, however MPP drivers were not converted at
-> that moment. Complete this by converting MPP drivers.
+> > Why can't you just use the hierarchical IRQ domain handling inside
+> > gpiolib?
 >
-> Changes since v2:
->  - Add patches fixing/updating mpps nodes in the existing device trees
+> Out of interest (not related to this patch), does this support multiple
+> parent domains?
 
-Thanks a *lot* for being thorough and fixing all this properly!
-
-I am happy to apply the pinctrl portions to the pinctrl tree, I'm
-uncertain about Rob's syntax checker robot here, are there real
-problems? Sometimes it complains about things being changed
-in the DTS files at the same time.
-
-I could apply all of this (including DTS changes) to an immutable
-branch and offer to Bjorn if he is fine with the patches and
-the general approach.
+Not currently, but I might have seen a patch adding it?
+Now I can't find it...
 
 Yours,
 Linus Walleij
