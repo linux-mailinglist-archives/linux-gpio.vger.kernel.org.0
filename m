@@ -2,101 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8638742C3CB
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Oct 2021 16:44:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BBFB42C40E
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Oct 2021 16:54:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236315AbhJMOq3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Oct 2021 10:46:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53532 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233744AbhJMOq2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Oct 2021 10:46:28 -0400
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 471DEC061570
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Oct 2021 07:44:25 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id y12so11534538eda.4
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Oct 2021 07:44:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=i6YmpBMDpvUqciTeeopqUBjl8BzBtSmMLDzw4bnotnU=;
-        b=g8rAUh+kFRTFmlfkHBMXJ2/nccCJa3Ynk81USzQYq5btcl1ZPxHNeqaT0Vl6PAWNCI
-         4SIuSHcdasBvAsJs7Qy/io5+NeCmm5JcaROxKyYrtmEHBRIoL6HnkASgaVz68VjguQUk
-         JzL94VBaHU+1CWMbCCyuPDwbIeFvm6/cSFIKC9xwkdsei+hk+e70KmqjuNMlMn34e9qe
-         3Wwr8EkatXWU1veRFZ2b5MaUjNWxiHRp40cXcMvr3Hs8VZG9pJ2sIfFA37TqMFNbMZfF
-         iZU/1Kf8AbgeRN8kn9+pdEzDjzQcbJd9/WzOT03N4Y6bb9aJPS7cZ6vJSeRgRShEkQJY
-         t8Zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=i6YmpBMDpvUqciTeeopqUBjl8BzBtSmMLDzw4bnotnU=;
-        b=TsLMFjvdYbmnOpXi9IyTb270h/ROVdYwvv0t77CP+tlh8MEez+sLtM9AN5FMbxpQw7
-         O6+B9UgwMA/bTh+GGMWXy8bdrkN5sWW7nbeuO7jHwkG86YabCIxKefPQ9p2+LLZRDI6W
-         R8wadvTvsmVcImZTOy1IzPNvZEyz9aUedAjGcgjTexN5T5292XekpeDZB/9IEHaMt6aL
-         3g0ikU909x6dMQphEy5DbXi62p0vNH0GBVfL/mBBUG2Q9AH6CSmgvKIzA/S/Fo2RxCNK
-         SzxAmoysvITqWrJECbC6WsJ49+MHRtCltkEB4zhaZDCBJo5iuwud3lOKVP+J70d0KOnU
-         6HOg==
-X-Gm-Message-State: AOAM532T49nnZMIX2XXbtBFeJ/UACX15emP7mLSTdLd3XfdpqXM8aQzO
-        yyItp0nxLP1QoSRShll2FUvQXk8f+N00T+hHuW7rew==
-X-Google-Smtp-Source: ABdhPJzZpTdJ7emb46XqWMJlSJHnw4zoj66lDjO4a2CSC8gaYPY/D+pskCtu8Yv/I2DRiEcjawRWbiECwb4S4PLm7cs=
-X-Received: by 2002:a17:907:764e:: with SMTP id kj14mr39374254ejc.349.1634136263872;
- Wed, 13 Oct 2021 07:44:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <4369779.LvFx2qVVIh@kreacher> <2179627.iZASKD2KPV@kreacher>
-In-Reply-To: <2179627.iZASKD2KPV@kreacher>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 13 Oct 2021 16:44:13 +0200
-Message-ID: <CAMRc=MchN6+N_sgW6ZY4JiiVsy112S2_sc8uyqxjzFJtEAumew@mail.gmail.com>
-Subject: Re: [PATCH v1 1/7] gpio-amdpt: ACPI: Use the ACPI_COMPANION() macro directly
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+        id S233023AbhJMO4W (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Oct 2021 10:56:22 -0400
+Received: from mx.socionext.com ([202.248.49.38]:49852 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230468AbhJMO4W (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 13 Oct 2021 10:56:22 -0400
+Received: from unknown (HELO iyokan2-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 13 Oct 2021 23:54:18 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by iyokan2-ex.css.socionext.com (Postfix) with ESMTP id 255CB2058B40;
+        Wed, 13 Oct 2021 23:54:18 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Wed, 13 Oct 2021 23:54:18 +0900
+Received: from plum.e01.socionext.com (unknown [10.212.243.119])
+        by kinkan2.css.socionext.com (Postfix) with ESMTP id B281AB62B7;
+        Wed, 13 Oct 2021 23:54:17 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH] dt-bindings: pinctrl: uniphier: Add child node definitions to describe pin mux and configuration
+Date:   Wed, 13 Oct 2021 23:54:08 +0900
+Message-Id: <1634136848-20091-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 12, 2021 at 7:51 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
->
-> From: Rafael J. Wysocki <rafael@kernel.org>
->
-> The ACPI_HANDLE() macro is a wrapper arond the ACPI_COMPANION()
-> macro and the ACPI handle produced by the former comes from the
-> ACPI device object produced by the latter, so it is way more
-> straightforward to evaluate the latter directly instead of passing
-> the handle produced by the former to acpi_bus_get_device().
->
-> Modify pt_gpio_probe() accordingly (no intentional functional impact).
->
-> Signed-off-by: Rafael J. Wysocki <rafael@kernel.org>
-> ---
->  drivers/gpio/gpio-amdpt.c |    4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->
-> Index: linux-pm/drivers/gpio/gpio-amdpt.c
-> ===================================================================
-> --- linux-pm.orig/drivers/gpio/gpio-amdpt.c
-> +++ linux-pm/drivers/gpio/gpio-amdpt.c
-> @@ -72,12 +72,10 @@ static void pt_gpio_free(struct gpio_chi
->  static int pt_gpio_probe(struct platform_device *pdev)
->  {
->         struct device *dev = &pdev->dev;
-> -       struct acpi_device *acpi_dev;
-> -       acpi_handle handle = ACPI_HANDLE(dev);
->         struct pt_gpio_chip *pt_gpio;
->         int ret = 0;
->
-> -       if (acpi_bus_get_device(handle, &acpi_dev)) {
-> +       if (!ACPI_COMPANION(dev)) {
->                 dev_err(dev, "PT GPIO device node not found\n");
->                 return -ENODEV;
->         }
->
->
->
+In arch/arm/boot/dts/uniphier-pinctrl.dtsi, there are child nodes of
+pinctrl that defines pinmux and pincfg, however, there are no rules about
+that in dt-bindings.
 
-Acked-by: Bartosz Golaszewski <brgl@bgdev.pl>
+'make dtbs_check' results an error with the following message:
+
+   pinctrl: 'ain1', 'ain2', 'ainiec1', 'aout', 'aout1', 'aout2', ...
+   ... 'usb2', 'usb3' do not match any of the regexes: 'pinctrl-[0-9]+'
+
+To avoid this issue, add the rules of pinmux and pincfg in each child node
+and grandchild node.
+
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+---
+ .../pinctrl/socionext,uniphier-pinctrl.yaml        | 46 +++++++++++++++++++++-
+ 1 file changed, 44 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.yaml
+index a804d9bc1602..4567330fe536 100644
+--- a/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.yaml
+@@ -26,11 +26,53 @@ properties:
+       - socionext,uniphier-pxs3-pinctrl
+       - socionext,uniphier-nx1-pinctrl
+ 
+-required:
+-  - compatible
++patternProperties:
++  "^.*$":
++    if:
++      type: object
++    then:
++      allOf:
++        - $ref: pincfg-node.yaml#
++        - $ref: pinmux-node.yaml#
++
++      properties:
++        phandle: true
++        function: true
++        groups: true
++        pins: true
++        bias-pull-up: true
++        bias-pull-down: true
++        bias-pull-pin-default: true
++        drive-strength: true
++
++      patternProperties:
++        "^.*$":
++          if:
++            type: object
++          then:
++            allOf:
++              - $ref: pincfg-node.yaml#
++              - $ref: pinmux-node.yaml#
++
++            properties:
++              phandle: true
++              function: true
++              groups: true
++              pins: true
++              bias-pull-up: true
++              bias-pull-down: true
++              bias-pull-pin-default: true
++              drive-strength: true
++
++            unevaluatedProperties: false
++
++      unevaluatedProperties: false
+ 
+ additionalProperties: false
+ 
++required:
++  - compatible
++
+ examples:
+   - |
+     // The UniPhier pinctrl should be a subnode of a "syscon" compatible node.
+-- 
+2.7.4
+
