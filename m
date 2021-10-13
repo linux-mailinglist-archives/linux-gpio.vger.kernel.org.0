@@ -2,575 +2,726 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E065042C657
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Oct 2021 18:27:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC86742C685
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Oct 2021 18:38:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236142AbhJMQ3N (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Oct 2021 12:29:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49598 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229938AbhJMQ3K (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Oct 2021 12:29:10 -0400
-Received: from mail-io1-xd2e.google.com (mail-io1-xd2e.google.com [IPv6:2607:f8b0:4864:20::d2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B792C061570;
-        Wed, 13 Oct 2021 09:27:04 -0700 (PDT)
-Received: by mail-io1-xd2e.google.com with SMTP id p68so349305iof.6;
-        Wed, 13 Oct 2021 09:27:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Xrtpz9NXHFWFufGg5SCBWCumluTEAtqRhhWyErbsuT8=;
-        b=cm62qW/8bM+RvH6hNwULRssypHbQXgwQh9hAuLuU0Axk90D74llz7ih64+7HGRdbUx
-         yEjqXWZvnHRMNxdOSqQfncIsHo9pGNcAbIAt4vtNjtGFGCCfubtEakJ/WK8T5PosJHX7
-         SvO/7OaNqlLgZVT5X7OdbzsWgNbeAxl3BlLWjA+6XPiJd8uxlaKGakcjGuVYhPzDjead
-         Nf7WBsZ+S0hRvV40PfR9I3um9qpbIfQjoegJkYpHE2unO5pwCaYQXrimbaPTvNxXp95b
-         MaGaif9EsmZA3H5yk+M0khVV8DmhTgmKDbCCmhqSMpOho8AZ/8zAOMcW9Hxirq9BxUGJ
-         72Jw==
+        id S230118AbhJMQka (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Oct 2021 12:40:30 -0400
+Received: from mail-pl1-f178.google.com ([209.85.214.178]:37615 "EHLO
+        mail-pl1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229939AbhJMQk3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Oct 2021 12:40:29 -0400
+Received: by mail-pl1-f178.google.com with SMTP id n11so2226975plf.4;
+        Wed, 13 Oct 2021 09:38:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Xrtpz9NXHFWFufGg5SCBWCumluTEAtqRhhWyErbsuT8=;
-        b=7Xl4+7ln5zCG78pGopobqg9Iti6z66/g8hLyiKaX6rsAqKJJ/KcT4ZXXxn4d35egG/
-         O7DnLLMs1ZkeDDthbN6pLKts03okyRx2B1zA4dgkXHYFLwcdT36dwKl/7/64zC60VMUO
-         +/skrlV82WpocdQekMYCtd0lXhPJFH4bVgfmqnwNSkZzCWj8kq8YvXXD6ME01LM1eevd
-         JWm/GPuDmxK7/2fO0gxvhR8RjXPeKKfnhbO+FjW7/iamTHMmOLiXFWx9O7WdwlkimveB
-         akJlMZan4eG8KI+E3yuCmbrDs/rUNV21O2RfLp5GwPgGoKtsvvNcBceTsZZFHzblgqmn
-         neHw==
-X-Gm-Message-State: AOAM532eaFzKAtHh4KDk44EYpiUVbiKj7H9wGowM36OZMIkk52llzJPK
-        kK5wZugMpJMRbEPvAEXfFGrXHLWGiOyiUFmc5rs=
-X-Google-Smtp-Source: ABdhPJyuL03Mu4jCtrDahdjQhnotErC05Ve18e62uQyBilTUwz90riuTyD8fiewVxVGZWLl9N2i8KnFUl44nihqeTWo=
-X-Received: by 2002:a5e:a619:: with SMTP id q25mr200218ioi.144.1634142423625;
- Wed, 13 Oct 2021 09:27:03 -0700 (PDT)
+        bh=qqBBg0cpnxm6GRZe59JZnFiDqhYKmwCkzRYCtGQ6sYk=;
+        b=1Jr+uga9JA9kTg+i8glVPIgKlbyYSBLTbzcl+jc4cKVeyxjbrxLGS3gq4veQJkkzHr
+         BJLSEck9f3lj/mnTpaMsi0LThkjS8z4amj0NpX0VvACyrfTi7ZWImJQhKxd/5VCBZ/sS
+         e7X6TKWdeBEiOjd/ccQ69Lu3NJfH4+2xZO/b666s6GKNeSp2sCM6CjsyUkm6awBnjBRQ
+         JfFMS1rmVGxb9RvT8Gjd533NYtadUpCHTYHwVwItuqGAOc4wVtkl04rGm1+50zXvAo8F
+         u0chdh3zYJbAnDE5H7WX7mYa8gfbMYxAWI9o9sr82V76FbXohEj0Un4J77akoTjJxpWo
+         h9eA==
+X-Gm-Message-State: AOAM532MhjX1xO+Iy4tEwX+rCZTm15tzpHZ36E+UiiSq6TvY4MMsnFUA
+        Wd4uKdF8aGZdlvHokB68DhkQdfuVkzdfikMcj8U=
+X-Google-Smtp-Source: ABdhPJxl8HakLIR8XeyvOjtrMns0/XqViMpskmA7NK5K8F8XzqLcby68KlirHnm/HmbaVyE/1+jw4GjjYuhWBDjgrgA=
+X-Received: by 2002:a17:90b:694:: with SMTP id m20mr14745261pjz.160.1634143105508;
+ Wed, 13 Oct 2021 09:38:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211013105226.20225-1-mst@redhat.com>
-In-Reply-To: <20211013105226.20225-1-mst@redhat.com>
-From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Date:   Wed, 13 Oct 2021 18:26:51 +0200
-Message-ID: <CAM9Jb+j9=JKAaZp5vb82JYErpwkaVbv0zoUJagYLwr5m=Vbptg@mail.gmail.com>
-Subject: Re: [PATCH RFC] virtio: wrap config->reset calls
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Amit Shah <amit@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gonglei <arei.gonglei@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Cristian Marussi <cristian.marussi@arm.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Viresh Kumar <vireshk@kernel.org>,
+References: <20211012134027.684712-1-kernel@esmil.dk> <20211012134027.684712-13-kernel@esmil.dk>
+ <CAHp75Vep+i+iyJi0LAOKuer-cUZoUoB_ZrWKcmT=EB_4hOgFGw@mail.gmail.com>
+In-Reply-To: <CAHp75Vep+i+iyJi0LAOKuer-cUZoUoB_ZrWKcmT=EB_4hOgFGw@mail.gmail.com>
+From:   Emil Renner Berthing <kernel@esmil.dk>
+Date:   Wed, 13 Oct 2021 18:38:14 +0200
+Message-ID: <CANBLGczDZh+kLWM017mPenY8WO5OovH2DFUSS-shRD-aZVKa0A@mail.gmail.com>
+Subject: Re: [PATCH v1 12/16] pinctrl: starfive: Add pinctrl driver for
+ StarFive SoCs
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        David Airlie <airlied@linux.ie>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jie Deng <jie.deng@intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        David Hildenbrand <david@redhat.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Eric Van Hensbergen <ericvh@gmail.com>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Anton Yakovlev <anton.yakovlev@opensynergy.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, linux-um@lists.infradead.org,
-        virtualization@lists.linux-foundation.org,
-        linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-i2c@vger.kernel.org, iommu@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-        Linux NVDIMM <nvdimm@lists.linux.dev>,
-        linux-remoteproc@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net, kvm@vger.kernel.org,
-        alsa-devel@alsa-project.org
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        Drew Fustini <drew@beagleboard.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Anup Patel <anup.patel@wdc.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Matteo Croce <mcroce@microsoft.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Huan Feng <huan.feng@starfivetech.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> This will enable cleanups down the road.
-> The idea is to disable cbs, then add "flush_queued_cbs" callback
-> as a parameter, this way drivers can flush any work
-> queued after callbacks have been disabled.
+On Tue, 12 Oct 2021 at 19:03, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> On Tue, Oct 12, 2021 at 4:43 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
+> >
+> > Add a combined pinctrl and gpio driver for the StarFive JH7100 SoC.
+> >
+> > For each "GPIO" there are two registers for configuring the output and
+> > output enable signals which may come from other peripherals. Among these
+> > are two special signals that are constant 0 and constant 1 respectively.
+> > Controlling the GPIOs from software is done by choosing one of these
+> > signals. In other words the same registers are used for both pinmuxing
+> > and controlling the GPIOs, which makes it easier to combine the pinctrl
+> > and gpio driver in one.
+> >
+> > I wrote the pinconf and pinmux parts, but the gpio part of the code is
+> > based on the gpio driver in the vendor tree written by Huan Feng with
+> > cleanups and fixes by Drew and me.
 >
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> ---
->  arch/um/drivers/virt-pci.c                 | 2 +-
->  drivers/block/virtio_blk.c                 | 4 ++--
->  drivers/bluetooth/virtio_bt.c              | 2 +-
->  drivers/char/hw_random/virtio-rng.c        | 2 +-
->  drivers/char/virtio_console.c              | 4 ++--
->  drivers/crypto/virtio/virtio_crypto_core.c | 8 ++++----
->  drivers/firmware/arm_scmi/virtio.c         | 2 +-
->  drivers/gpio/gpio-virtio.c                 | 2 +-
->  drivers/gpu/drm/virtio/virtgpu_kms.c       | 2 +-
->  drivers/i2c/busses/i2c-virtio.c            | 2 +-
->  drivers/iommu/virtio-iommu.c               | 2 +-
->  drivers/net/caif/caif_virtio.c             | 2 +-
->  drivers/net/virtio_net.c                   | 4 ++--
->  drivers/net/wireless/mac80211_hwsim.c      | 2 +-
->  drivers/nvdimm/virtio_pmem.c               | 2 +-
->  drivers/rpmsg/virtio_rpmsg_bus.c           | 2 +-
->  drivers/scsi/virtio_scsi.c                 | 2 +-
->  drivers/virtio/virtio.c                    | 5 +++++
->  drivers/virtio/virtio_balloon.c            | 2 +-
->  drivers/virtio/virtio_input.c              | 2 +-
->  drivers/virtio/virtio_mem.c                | 2 +-
->  fs/fuse/virtio_fs.c                        | 4 ++--
->  include/linux/virtio.h                     | 1 +
->  net/9p/trans_virtio.c                      | 2 +-
->  net/vmw_vsock/virtio_transport.c           | 4 ++--
->  sound/virtio/virtio_card.c                 | 4 ++--
->  26 files changed, 39 insertions(+), 33 deletions(-)
+> s/gpio/GPIO/g
 >
-> diff --git a/arch/um/drivers/virt-pci.c b/arch/um/drivers/virt-pci.c
-> index c08066633023..22c4d87c9c15 100644
-> --- a/arch/um/drivers/virt-pci.c
-> +++ b/arch/um/drivers/virt-pci.c
-> @@ -616,7 +616,7 @@ static void um_pci_virtio_remove(struct virtio_device *vdev)
->         int i;
+> ...
 >
->          /* Stop all virtqueues */
-> -        vdev->config->reset(vdev);
-> +        virtio_reset_device(vdev);
->          vdev->config->del_vqs(vdev);
+> > +config PINCTRL_STARFIVE
 >
->         device_set_wakeup_enable(&vdev->dev, false);
-> diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-> index 303caf2d17d0..83d0af3fbf30 100644
-> --- a/drivers/block/virtio_blk.c
-> +++ b/drivers/block/virtio_blk.c
-> @@ -910,7 +910,7 @@ static void virtblk_remove(struct virtio_device *vdev)
->         mutex_lock(&vblk->vdev_mutex);
+> > +       bool "Pinctrl and GPIO driver for the StarFive JH7100 SoC"
 >
->         /* Stop all the virtqueues. */
-> -       vdev->config->reset(vdev);
-> +       virtio_reset_device(vdev);
+> Why not module?
 >
->         /* Virtqueues are stopped, nothing can use vblk->vdev anymore. */
->         vblk->vdev = NULL;
-> @@ -929,7 +929,7 @@ static int virtblk_freeze(struct virtio_device *vdev)
->         struct virtio_blk *vblk = vdev->priv;
+> > +       depends on SOC_STARFIVE || COMPILE_TEST
 >
->         /* Ensure we don't receive any more interrupts */
-> -       vdev->config->reset(vdev);
-> +       virtio_reset_device(vdev);
+> > +       depends on OF
 >
->         /* Make sure no work handler is accessing the device. */
->         flush_work(&vblk->config_work);
-> diff --git a/drivers/bluetooth/virtio_bt.c b/drivers/bluetooth/virtio_bt.c
-> index 57908ce4fae8..24a9258962fa 100644
-> --- a/drivers/bluetooth/virtio_bt.c
-> +++ b/drivers/bluetooth/virtio_bt.c
-> @@ -364,7 +364,7 @@ static void virtbt_remove(struct virtio_device *vdev)
->         struct hci_dev *hdev = vbt->hdev;
+> Do you really need this taking into account...
 >
->         hci_unregister_dev(hdev);
-> -       vdev->config->reset(vdev);
-> +       virtio_reset_device(vdev);
+> > +       default SOC_STARFIVE
+> > +       select GENERIC_PINCTRL_GROUPS
+> > +       select GENERIC_PINMUX_FUNCTIONS
+> > +       select GENERIC_PINCONF
+> > +       select GPIOLIB
+> > +       select GPIOLIB_IRQCHIP
 >
->         hci_free_dev(hdev);
->         vbt->hdev = NULL;
-> diff --git a/drivers/char/hw_random/virtio-rng.c b/drivers/char/hw_random/virtio-rng.c
-> index a90001e02bf7..95980489514b 100644
-> --- a/drivers/char/hw_random/virtio-rng.c
-> +++ b/drivers/char/hw_random/virtio-rng.c
-> @@ -134,7 +134,7 @@ static void remove_common(struct virtio_device *vdev)
->         vi->hwrng_removed = true;
->         vi->data_avail = 0;
->         complete(&vi->have_data);
-> -       vdev->config->reset(vdev);
-> +       virtio_reset_device(vdev);
->         vi->busy = false;
->         if (vi->hwrng_register_done)
->                 hwrng_unregister(&vi->hwrng);
-> diff --git a/drivers/char/virtio_console.c b/drivers/char/virtio_console.c
-> index 7eaf303a7a86..08bbd693436f 100644
-> --- a/drivers/char/virtio_console.c
-> +++ b/drivers/char/virtio_console.c
-> @@ -1957,7 +1957,7 @@ static void virtcons_remove(struct virtio_device *vdev)
->         spin_unlock_irq(&pdrvdata_lock);
+> > +       select OF_GPIO
 >
->         /* Disable interrupts for vqs */
-> -       vdev->config->reset(vdev);
-> +       virtio_reset_device(vdev);
->         /* Finish up work that's lined up */
->         if (use_multiport(portdev))
->                 cancel_work_sync(&portdev->control_work);
-> @@ -2139,7 +2139,7 @@ static int virtcons_freeze(struct virtio_device *vdev)
+> ...this one?
 >
->         portdev = vdev->priv;
+> ...
 >
-> -       vdev->config->reset(vdev);
-> +       virtio_reset_device(vdev);
+> bits.h ?
 >
->         if (use_multiport(portdev))
->                 virtqueue_disable_cb(portdev->c_ivq);
-> diff --git a/drivers/crypto/virtio/virtio_crypto_core.c b/drivers/crypto/virtio/virtio_crypto_core.c
-> index e2375d992308..8e977b7627cb 100644
-> --- a/drivers/crypto/virtio/virtio_crypto_core.c
-> +++ b/drivers/crypto/virtio/virtio_crypto_core.c
-> @@ -404,7 +404,7 @@ static int virtcrypto_probe(struct virtio_device *vdev)
->  free_engines:
->         virtcrypto_clear_crypto_engines(vcrypto);
->  free_vqs:
-> -       vcrypto->vdev->config->reset(vdev);
-> +       virtio_reset_device(vdev);
->         virtcrypto_del_vqs(vcrypto);
->  free_dev:
->         virtcrypto_devmgr_rm_dev(vcrypto);
-> @@ -436,7 +436,7 @@ static void virtcrypto_remove(struct virtio_device *vdev)
+> > +#include <linux/clk.h>
+> > +#include <linux/gpio/driver.h>
+> > +#include <linux/io.h>
+> > +#include <linux/module.h>
 >
->         if (virtcrypto_dev_started(vcrypto))
->                 virtcrypto_dev_stop(vcrypto);
-> -       vdev->config->reset(vdev);
-> +       virtio_reset_device(vdev);
->         virtcrypto_free_unused_reqs(vcrypto);
->         virtcrypto_clear_crypto_engines(vcrypto);
->         virtcrypto_del_vqs(vcrypto);
-> @@ -456,7 +456,7 @@ static int virtcrypto_freeze(struct virtio_device *vdev)
->  {
->         struct virtio_crypto *vcrypto = vdev->priv;
 >
-> -       vdev->config->reset(vdev);
-> +       virtio_reset_device(vdev);
->         virtcrypto_free_unused_reqs(vcrypto);
->         if (virtcrypto_dev_started(vcrypto))
->                 virtcrypto_dev_stop(vcrypto);
-> @@ -492,7 +492,7 @@ static int virtcrypto_restore(struct virtio_device *vdev)
->  free_engines:
->         virtcrypto_clear_crypto_engines(vcrypto);
->  free_vqs:
-> -       vcrypto->vdev->config->reset(vdev);
-> +       virtio_reset_device(vdev);
->         virtcrypto_del_vqs(vcrypto);
->         return err;
->  }
-> diff --git a/drivers/firmware/arm_scmi/virtio.c b/drivers/firmware/arm_scmi/virtio.c
-> index 11e8efb71375..6b8d93fe8848 100644
-> --- a/drivers/firmware/arm_scmi/virtio.c
-> +++ b/drivers/firmware/arm_scmi/virtio.c
-> @@ -452,7 +452,7 @@ static void scmi_vio_remove(struct virtio_device *vdev)
->          * outstanding message on any vqueue to be ignored by complete_cb: now
->          * we can just stop processing buffers and destroy the vqueues.
->          */
-> -       vdev->config->reset(vdev);
-> +       virtio_reset_device(vdev);
->         vdev->config->del_vqs(vdev);
->         /* Ensure scmi_vdev is visible as NULL */
->         smp_store_mb(scmi_vdev, NULL);
-> diff --git a/drivers/gpio/gpio-virtio.c b/drivers/gpio/gpio-virtio.c
-> index d24f1c9264bc..5029f01966f4 100644
-> --- a/drivers/gpio/gpio-virtio.c
-> +++ b/drivers/gpio/gpio-virtio.c
-> @@ -203,7 +203,7 @@ static void virtio_gpio_request_vq(struct virtqueue *vq)
+> mod_devicetable.h ?
 >
->  static void virtio_gpio_free_vqs(struct virtio_device *vdev)
->  {
-> -       vdev->config->reset(vdev);
-> +       virtio_reset_device(vdev);
->         vdev->config->del_vqs(vdev);
->  }
+> > +#include <linux/pinctrl/pinctrl.h>
+> > +#include <linux/pinctrl/pinmux.h>
 >
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/virtgpu_kms.c
-> index f3379059f324..6aa605b8d3a1 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_kms.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
-> @@ -257,7 +257,7 @@ void virtio_gpu_deinit(struct drm_device *dev)
->         flush_work(&vgdev->ctrlq.dequeue_work);
->         flush_work(&vgdev->cursorq.dequeue_work);
->         flush_work(&vgdev->config_changed_work);
-> -       vgdev->vdev->config->reset(vgdev->vdev);
-> +       virtio_reset_device(vgdev->vdev);
->         vgdev->vdev->config->del_vqs(vgdev->vdev);
->  }
+> Can you move these as a group after generic linux/* ones?
 >
-> diff --git a/drivers/i2c/busses/i2c-virtio.c b/drivers/i2c/busses/i2c-virtio.c
-> index f10a603b13fb..eb3261ac64dc 100644
-> --- a/drivers/i2c/busses/i2c-virtio.c
-> +++ b/drivers/i2c/busses/i2c-virtio.c
-> @@ -177,7 +177,7 @@ static int virtio_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
+> > +#include <linux/platform_device.h>
+> > +#include <linux/reset.h>
+> > +#include <linux/spinlock.h>
 >
->  static void virtio_i2c_del_vqs(struct virtio_device *vdev)
->  {
-> -       vdev->config->reset(vdev);
-> +       virtio_reset_device(vdev);
->         vdev->config->del_vqs(vdev);
->  }
+> ...
 >
-> diff --git a/drivers/iommu/virtio-iommu.c b/drivers/iommu/virtio-iommu.c
-> index 80930ce04a16..1d4e1e7cf175 100644
-> --- a/drivers/iommu/virtio-iommu.c
-> +++ b/drivers/iommu/virtio-iommu.c
-> @@ -1115,7 +1115,7 @@ static void viommu_remove(struct virtio_device *vdev)
->         iommu_device_unregister(&viommu->iommu);
+> > +/*
+> > + * refer to Section 12. GPIO Registers in JH7100 datasheet:
 >
->         /* Stop all virtqueues */
-> -       vdev->config->reset(vdev);
-> +       virtio_reset_device(vdev);
->         vdev->config->del_vqs(vdev);
+> Be consistent in your style, here for example missed capitalization.
 >
->         dev_info(&vdev->dev, "device removed\n");
-> diff --git a/drivers/net/caif/caif_virtio.c b/drivers/net/caif/caif_virtio.c
-> index 91230894692d..444ef6a342f6 100644
-> --- a/drivers/net/caif/caif_virtio.c
-> +++ b/drivers/net/caif/caif_virtio.c
-> @@ -754,7 +754,7 @@ static void cfv_remove(struct virtio_device *vdev)
->         debugfs_remove_recursive(cfv->debugfs);
+> > + * https://github.com/starfive-tech/StarLight_Docs
 >
->         vringh_kiov_cleanup(&cfv->ctx.riov);
-> -       vdev->config->reset(vdev);
-> +       virtio_reset_device(vdev);
->         vdev->vringh_config->del_vrhs(cfv->vdev);
->         cfv->vr_rx = NULL;
->         vdev->config->del_vqs(cfv->vdev);
-> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> index 79bd2585ec6b..8c10fcad73a4 100644
-> --- a/drivers/net/virtio_net.c
-> +++ b/drivers/net/virtio_net.c
-> @@ -3274,7 +3274,7 @@ static int virtnet_probe(struct virtio_device *vdev)
->         return 0;
->
->  free_unregister_netdev:
-> -       vi->vdev->config->reset(vdev);
-> +       virtio_reset_device(vdev);
->
->         unregister_netdev(dev);
->  free_failover:
-> @@ -3290,7 +3290,7 @@ static int virtnet_probe(struct virtio_device *vdev)
->
->  static void remove_vq_common(struct virtnet_info *vi)
->  {
-> -       vi->vdev->config->reset(vi->vdev);
-> +       virtio_reset_device(vi->vdev);
->
->         /* Free unused buffers in both send and recv, if any. */
->         free_unused_bufs(vi);
-> diff --git a/drivers/net/wireless/mac80211_hwsim.c b/drivers/net/wireless/mac80211_hwsim.c
-> index 0adae76eb8df..9ee430c1d4a2 100644
-> --- a/drivers/net/wireless/mac80211_hwsim.c
-> +++ b/drivers/net/wireless/mac80211_hwsim.c
-> @@ -4369,7 +4369,7 @@ static void remove_vqs(struct virtio_device *vdev)
->  {
->         int i;
->
-> -       vdev->config->reset(vdev);
-> +       virtio_reset_device(vdev);
->
->         for (i = 0; i < ARRAY_SIZE(hwsim_vqs); i++) {
->                 struct virtqueue *vq = hwsim_vqs[i];
-> diff --git a/drivers/nvdimm/virtio_pmem.c b/drivers/nvdimm/virtio_pmem.c
-> index 726c7354d465..995b6cdc67ed 100644
-> --- a/drivers/nvdimm/virtio_pmem.c
-> +++ b/drivers/nvdimm/virtio_pmem.c
-> @@ -105,7 +105,7 @@ static void virtio_pmem_remove(struct virtio_device *vdev)
->
->         nvdimm_bus_unregister(nvdimm_bus);
->         vdev->config->del_vqs(vdev);
-> -       vdev->config->reset(vdev);
-> +       virtio_reset_device(vdev);
->  }
->
->  static struct virtio_driver virtio_pmem_driver = {
-> diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c b/drivers/rpmsg/virtio_rpmsg_bus.c
-> index 8e49a3bacfc7..6a11952822df 100644
-> --- a/drivers/rpmsg/virtio_rpmsg_bus.c
-> +++ b/drivers/rpmsg/virtio_rpmsg_bus.c
-> @@ -1015,7 +1015,7 @@ static void rpmsg_remove(struct virtio_device *vdev)
->         size_t total_buf_space = vrp->num_bufs * vrp->buf_size;
->         int ret;
->
-> -       vdev->config->reset(vdev);
-> +       virtio_reset_device(vdev);
->
->         ret = device_for_each_child(&vdev->dev, NULL, rpmsg_remove_device);
->         if (ret)
-> diff --git a/drivers/scsi/virtio_scsi.c b/drivers/scsi/virtio_scsi.c
-> index 07d0250f17c3..f2502a8a5213 100644
-> --- a/drivers/scsi/virtio_scsi.c
-> +++ b/drivers/scsi/virtio_scsi.c
-> @@ -778,7 +778,7 @@ static void virtscsi_init_vq(struct virtio_scsi_vq *virtscsi_vq,
->  static void virtscsi_remove_vqs(struct virtio_device *vdev)
->  {
->         /* Stop all the virtqueues. */
-> -       vdev->config->reset(vdev);
-> +       virtio_reset_device(vdev);
->         vdev->config->del_vqs(vdev);
->  }
->
-> diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
-> index 0a5b54034d4b..a67dd0eca578 100644
-> --- a/drivers/virtio/virtio.c
-> +++ b/drivers/virtio/virtio.c
-> @@ -204,6 +204,11 @@ int virtio_finalize_features(struct virtio_device *dev)
->  }
->  EXPORT_SYMBOL_GPL(virtio_finalize_features);
->
-> +static void virtio_reset_device(struct virtio_device *dev)
-> +{
-> +       dev->config->reset(dev);
-> +}
-> +
->  static int virtio_dev_probe(struct device *_d)
->  {
->         int err, i;
-> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-> index c22ff0117b46..f4c34a2a6b8e 100644
-> --- a/drivers/virtio/virtio_balloon.c
-> +++ b/drivers/virtio/virtio_balloon.c
-> @@ -1056,7 +1056,7 @@ static void remove_common(struct virtio_balloon *vb)
->                 return_free_pages_to_mm(vb, ULONG_MAX);
->
->         /* Now we reset the device so we can clean up the queues. */
-> -       vb->vdev->config->reset(vb->vdev);
-> +       virtio_reset_device(vb->vdev);
->
->         vb->vdev->config->del_vqs(vb->vdev);
->  }
-> diff --git a/drivers/virtio/virtio_input.c b/drivers/virtio/virtio_input.c
-> index ce51ae165943..3aa46703872d 100644
-> --- a/drivers/virtio/virtio_input.c
-> +++ b/drivers/virtio/virtio_input.c
-> @@ -347,7 +347,7 @@ static void virtinput_remove(struct virtio_device *vdev)
->         spin_unlock_irqrestore(&vi->lock, flags);
->
->         input_unregister_device(vi->idev);
-> -       vdev->config->reset(vdev);
-> +       virtio_reset_device(vdev);
->         while ((buf = virtqueue_detach_unused_buf(vi->sts)) != NULL)
->                 kfree(buf);
->         vdev->config->del_vqs(vdev);
-> diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
-> index bef8ad6bf466..3bab0a625a4b 100644
-> --- a/drivers/virtio/virtio_mem.c
-> +++ b/drivers/virtio/virtio_mem.c
-> @@ -2722,7 +2722,7 @@ static void virtio_mem_remove(struct virtio_device *vdev)
->         }
->
->         /* reset the device and cleanup the queues */
-> -       vdev->config->reset(vdev);
-> +       virtio_reset_device(vdev);
->         vdev->config->del_vqs(vdev);
->
->         kfree(vm);
-> diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
-> index 0ad89c6629d7..27c3b74070a2 100644
-> --- a/fs/fuse/virtio_fs.c
-> +++ b/fs/fuse/virtio_fs.c
-> @@ -895,7 +895,7 @@ static int virtio_fs_probe(struct virtio_device *vdev)
->         return 0;
->
->  out_vqs:
-> -       vdev->config->reset(vdev);
-> +       virtio_reset_device(vdev);
->         virtio_fs_cleanup_vqs(vdev, fs);
->         kfree(fs->vqs);
->
-> @@ -927,7 +927,7 @@ static void virtio_fs_remove(struct virtio_device *vdev)
->         list_del_init(&fs->list);
->         virtio_fs_stop_all_queues(fs);
->         virtio_fs_drain_all_queues_locked(fs);
-> -       vdev->config->reset(vdev);
-> +       virtio_reset_device(vdev);
->         virtio_fs_cleanup_vqs(vdev, fs);
->
->         vdev->priv = NULL;
-> diff --git a/include/linux/virtio.h b/include/linux/virtio.h
-> index 41edbc01ffa4..72292a62cd90 100644
-> --- a/include/linux/virtio.h
-> +++ b/include/linux/virtio.h
-> @@ -138,6 +138,7 @@ int virtio_finalize_features(struct virtio_device *dev);
->  int virtio_device_freeze(struct virtio_device *dev);
->  int virtio_device_restore(struct virtio_device *dev);
->  #endif
-> +void virtio_reset_device(struct virtio_device *dev);
->
->  size_t virtio_max_dma_size(struct virtio_device *vdev);
->
-> diff --git a/net/9p/trans_virtio.c b/net/9p/trans_virtio.c
-> index 490a4c900339..19c69821dd04 100644
-> --- a/net/9p/trans_virtio.c
-> +++ b/net/9p/trans_virtio.c
-> @@ -721,7 +721,7 @@ static void p9_virtio_remove(struct virtio_device *vdev)
->
->         mutex_unlock(&virtio_9p_lock);
->
-> -       vdev->config->reset(vdev);
-> +       virtio_reset_device(vdev);
->         vdev->config->del_vqs(vdev);
->
->         sysfs_remove_file(&(vdev->dev.kobj), &dev_attr_mount_tag.attr);
-> diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
-> index 4f7c99dfd16c..fb3302fff627 100644
-> --- a/net/vmw_vsock/virtio_transport.c
-> +++ b/net/vmw_vsock/virtio_transport.c
-> @@ -665,7 +665,7 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
->         vsock_for_each_connected_socket(virtio_vsock_reset_sock);
->
->         /* Stop all work handlers to make sure no one is accessing the device,
-> -        * so we can safely call vdev->config->reset().
-> +        * so we can safely call virtio_reset_device().
->          */
->         mutex_lock(&vsock->rx_lock);
->         vsock->rx_run = false;
-> @@ -682,7 +682,7 @@ static void virtio_vsock_remove(struct virtio_device *vdev)
->         /* Flush all device writes and interrupts, device will not use any
->          * more buffers.
->          */
-> -       vdev->config->reset(vdev);
-> +       virtio_reset_device(vdev);
->
->         mutex_lock(&vsock->rx_lock);
->         while ((pkt = virtqueue_detach_unused_buf(vsock->vqs[VSOCK_VQ_RX])))
-> diff --git a/sound/virtio/virtio_card.c b/sound/virtio/virtio_card.c
-> index 150ab3e37013..e2847c040f75 100644
-> --- a/sound/virtio/virtio_card.c
-> +++ b/sound/virtio/virtio_card.c
-> @@ -350,7 +350,7 @@ static void virtsnd_remove(struct virtio_device *vdev)
->                 snd_card_free(snd->card);
->
->         vdev->config->del_vqs(vdev);
-> -       vdev->config->reset(vdev);
-> +       virtio_reset_device(vdev);
->
->         for (i = 0; snd->substreams && i < snd->nsubstreams; ++i) {
->                 struct virtio_pcm_substream *vss = &snd->substreams[i];
-> @@ -379,7 +379,7 @@ static int virtsnd_freeze(struct virtio_device *vdev)
->         virtsnd_ctl_msg_cancel_all(snd);
->
->         vdev->config->del_vqs(vdev);
-> -       vdev->config->reset(vdev);
-> +       virtio_reset_device(vdev);
->
->         for (i = 0; i < snd->nsubstreams; ++i)
->                 cancel_work_sync(&snd->substreams[i].elapsed_period);
+> Is it possible to have the datasheet to be provided as Datasheet: tag
+> in the commit message?
 
-Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Oh neat. Didn't know about that. I'll also check with StarFive if this
+is the best address for it.
+
+> > + */
+>
+> ...
+>
+> > +/*
+> > + * Global enable for GPIO interrupts, offset: 0x0, field: GPIOEN
+> > + * set to 1 if GPIO interrupts are enabled, set to 0 to disable
+> > + */
+> > +#define IRQ_GLOBAL_EN          0x0
+>
+> s/0x0/0x00/g
+>
+> ...
+>
+> > +/*
+> > + * Interrupt Type for GPIO[31:0], offset: 0x10, field: GPIOS_0
+> > + * set to 1 if edge-triggered, set to 0 for level-triggered
+> > + */
+> > +#define IRQ_TYPE_LOW           0x10
+> > +
+> > +/*
+> > + * Interrupt Type for GPIO[63:32], offset: 0x14, field: GPIOS_1
+> > + */
+> > +#define IRQ_TYPE_HIGH          0x14
+>
+> As I reviewed below, the IRQ is represented by a few registers in a
+> row, no need to define low and high separately. Ditto for the rest
+> register pairs.
+>
+> ...
+>
+> > +/*
+> > + * Interrupt Status after Masking GPIO[31:0], offset: 0x40, field: GPIOMIS_0
+> > + * status of edge-triggered or level-triggered after masking
+> > + * value of 1 means edge or level was detected, value of 0 menas not detected
+>
+> menas?!
+>
+> > + */
+>
+> ...
+>
+> > +/*
+> > + * Data Value of GPIO for GPIO[31:0], offest: 0x48, field: GPIODIN_0
+>
+> offest?!
+>
+> > + * dynamically reflects value on the GPIO pin
+> > + */
+>
+> Please, run a spellchecker.
+>
+> ...
+>
+> > +#define IO_PADSHARE_SEL                0x1a0
+>
+> Okay, make all registers to be fixed width, i.e. 0x000 for IRQ global
+> enabling and so on.
+>
+> ...
+>
+> > +#define PAD_SLEW_RATE_MASK             0xe00U
+>
+> GENMASK()
+>
+> > +#define PAD_BIAS_STRONG_PULL_UP                0x100U
+> > +#define PAD_INPUT_ENABLE               0x080U
+> > +#define PAD_INPUT_SCHMITT_ENABLE       0x040U
+> > +#define PAD_BIAS_DISABLE               0x020U
+> > +#define PAD_BIAS_PULL_DOWN             0x010U
+>
+> All above seems like BIT(_something_).
+>
+> > +#define PAD_BIAS_MASK                  0x130U
+> > +#define PAD_DRIVE_STRENGTH_MASK                0x007U
+>
+> GENMASK()
+>
+> ...
+>
+> > +#ifdef CONFIG_DEBUG_FS
+>
+> __maybe_unused ?
+
+This is the same as the clock driver. If we don't have the ifdef here
+we'll need it when populating the ops structure later or live with the
+code bloat when debugfs is not enabled. Other driver don't seem to do
+that.
+
+> > +#else
+> > +#define starfive_pin_dbg_show NULL
+> > +#endif
+>
+> ...
+>
+> > +       dout = readl_relaxed(reg);
+>
+> readl_relaxed(reg + 0x00)
+>
+> > +       reg += 4;
+>
+> > +       doen = readl_relaxed(reg);
+>
+> readl_relaxed(reg + 0x04);
+>
+> ...
+>
+> > +       seq_printf(s, "dout=%u%s doen=%u%s",
+> > +                  dout & 0xffU, (dout & 0x80000000U) ? "r" : "",
+> > +                  doen & 0xffU, (doen & 0x80000000U) ? "r" : "");
+>
+> GENMASK()
+> BIT()
+>
+> ...
+>
+> > +       for_each_child_of_node(np, child) {
+> > +               const __be32 *pinmux_list;
+> > +               const __be32 *pins_list;
+> > +               int pinmux_size;
+> > +               int pins_size;
+> > +
+> > +               pinmux_list = of_get_property(child, "pinmux", &pinmux_size);
+> > +               pins_list   = of_get_property(child, "pins",   &pins_size);
+> > +               if (pinmux_list && pins_list) {
+> > +                       dev_err(dev, "invalid pinctrl group %pOFn.%pOFn: %s\n",
+> > +                               np, child, "both pinmux and pins set");
+> > +                       of_node_put(child);
+> > +                       return -EINVAL;
+> > +               }
+> > +
+> > +               if (pinmux_list && pinmux_size > 0) {
+> > +                       nmaps += 2;
+> > +               } else if (pins_list && pins_size > 0) {
+> > +                       nmaps += 1;
+> > +               } else {
+> > +                       dev_err(dev, "invalid pinctrl group %pOFn.%pOFn: %s\n",
+> > +                               np, child, "neither pinmux nor pins set");
+> > +                       of_node_put(child);
+> > +                       return -EINVAL;
+> > +               }
+> > +               ngroups += 1;
+> > +       }
+>
+> This entire loop seems like
+> 1) it should be based on something from pin control core;
+> 2) it's using some low level APIs instead of better ones like
+> of_property_read_uXX();
+> 3) smells like unoptimized NIH.
+>
+> ...
+>
+> > +               if ((list = of_get_property(child, "pinmux", &npins))) {
+>
+> Why not of_property_read_...() ?
+>
+> ...
+>
+> > +                               u32 v = be32_to_cpu(*list++);
+>
+> My gosh!
+>
+> ...
+>
+> > +                       for (i = 0; i < npins; i++)
+> > +                               pins[i] = be32_to_cpu(*list++);
+>
+> Ditto.
+> Even for this we have something in byteorder headers.
+>
+> Summary, make sure you use much better _existing_ APIs instead of the
+> above crap.
+>
+> ...
+>
+> > +free_pinmux:
+> > +       devm_kfree(dev, pinmux);
+> > +free_pins:
+> > +       devm_kfree(dev, pins);
+> > +free_grpname:
+> > +       devm_kfree(dev, grpname);
+>
+> What the heck?!
+
+Just to be clear. You mean we don't need to explicitly free them
+because they're tied to the device right? I don't think the device
+will go away just because a single device tree entry can't be parsed,
+so on such errors this garbage would be left behind. You can still
+argue we shouldn't optimize for broken device trees, I just want to
+make it at conscious decision.
+
+> > +free_pgnames:
+> > +       devm_kfree(dev, pgnames);
+>
+> Ditto.
+>
+> ...
+>
+> > +out:
+>
+> Useless label.
+
+Hmm.. my compiler disagrees.
+
+> > +       return ret;
+>
+> ...
+>
+> > +       for (i = 0; i < group->num_pins; i++) {
+> > +               unsigned int gpio = starfive_pin_to_gpio(sfp, group->pins[i]);
+> > +               void __iomem *reg_dout;
+> > +               void __iomem *reg_doen;
+> > +               void __iomem *reg_din;
+> > +               u32 v, dout, doen, din;
+> > +               unsigned long flags;
+>
+> > +               if (dev_WARN_ONCE(dev, gpio >= MAX_GPIO,
+>
+> What?!
+>
+> > +                                 "%s: invalid gpiomux pin", group->name))
+> > +                       continue;
+> > +
+> > +               v = pinmux[i];
+> > +               dout = ((v & BIT(7)) << (31 - 7)) | ((v >> 24) & 0xffU);
+> > +               doen = ((v & BIT(6)) << (31 - 6)) | ((v >> 16) & 0xffU);
+> > +               din  = (v >> 8) & 0xffU;
+>
+> What is this voodoo for?
+
+In order to do pinmux we need the following pieces of information from
+the device tree for each pin ("GPIO" they call it):
+
+output signal: 0-133 + 1bit reverse flag
+output enable signal: 0-133 + 1bit reverse flag
+optional input signal: 0-74 + special "none" value, right now 0xff
+gpio number: 0-63
+
+As the code is now all that info is packed into a u32 for each pin
+using the GPIOMUX macro defined in the dt-binding header added in
+patch 10. There is also a diagram for how this packing is done. The
+above voodoo is for unpacking that.
+
+I'd very much like to hear if you have a better solution for how to
+convey that information from the device tree to here.
+
+> > +               if (din != 0xff)
+> > +                       reg_din = sfp->base + GPIO_IN_OFFSET + 4 * din;
+> > +               else
+> > +                       reg_din = NULL;
+>
+> This looks like you maybe use gpio-regmap instead?
+
+This was discussed at length when Drew sent in the GPIO part of this code:
+https://lore.kernel.org/linux-riscv/20210701002037.912625-1-drew@beagleboard.org/
+The conclusion was that because pinmux and controlling the pins from
+software in GPIO mode uses the same registers it is better to do a
+combined driver like this that can share the lock among other things.
+
+> ...
+>
+> > +       void __iomem *reg = sfp->padctl + 4 * (pin / 2);
+> > +       u32 value = readl_relaxed(reg);
+> > +
+> > +       if (pin & 1U)
+> > +               value >>= 16;
+> > +       return value;
+>
+> u8 shift = 16 * (pin % 2);
+>
+> return readl_relaxed() >> shift;
+>
+> ?
+>
+> Something similar for below code.
+>
+> ...
+>
+> > +#ifdef CONFIG_DEBUG_FS
+> > +static const struct pin_config_item
+> > +starfive_pinconf_custom_conf_items[ARRAY_SIZE(starfive_pinconf_custom_params)] = {
+>
+> Instead of using ARAY_SIZE() here, use static_assert().
+>
+> __maybe_unused?
+
+As above.
+
+> > +       PCONFDUMP(PIN_CONFIG_STARFIVE_STRONG_PULL_UP, "input bias strong pull-up", NULL, false),
+> > +};
+> > +#else
+> > +#define starfive_pinconf_custom_conf_items NULL
+> > +#endif
+>
+> ...
+>
+> > +static const unsigned char starfive_drive_strength[] = {
+> > +       14, 21, 28, 35, 42, 49, 56, 63,
+>
+> Why table? Can you simply use the formula?!
+
+Heh, yeah. So these are rounded values from a table and I never
+noticed that after rounding they follow a nice arithmetic progression.
+It'll probably still be nice to have an explanation in the comments
+about the formula then.
+
+> > +};
+>
+> ...
+>
+> > +       if (unlikely(!group))
+>
+> Why unlikely() Must be justified here and everywhere where you are using it.
+>
+> > +               return -EINVAL;
+> > +
+> > +       return starfive_pinconf_get(pctldev, group->pins[0], config);
+> > +}
+>
+> ...
+>
+> > +               case PIN_CONFIG_BIAS_DISABLE:
+>
+> > +                       mask |= PAD_BIAS_MASK;
+>
+> Use it...
+>
+> > +                       value = (value & ~PAD_BIAS_MASK) | PAD_BIAS_DISABLE;
+>
+> ...here. Ditto for the similar cases in this function and elsewhere.
+>
+> After done this, you will see how you can simplify and deduplicate the
+> switch-cases.
+>
+> ...
+>
+> > +#ifdef CONFIG_DEBUG_FS
+>
+> __maybe_unused ?
+>
+> > +#else
+> > +#define starfive_pinconf_dbg_show NULL
+> > +#endif
+>
+> ...
+>
+> > +       if (gpio < 32) {
+> > +               value = readl_relaxed(sfp->base + GPIO_DIN_LOW);
+>
+> > +               value = (value >> gpio) & 1U;
+>
+> Drop
+>
+> > +       } else {
+> > +               value = readl_relaxed(sfp->base + GPIO_DIN_HIGH);
+>
+> > +               value = (value >> (gpio - 32)) & 1U;
+>
+> Drop
+>
+> > +       }
+>
+> > +       return value;
+>
+> return !!(value & BIT(gpio % 32));
+>
+> ...
+>
+> > +               if (arg == 0)
+>
+> > +                       return -ENOTSUPP;
+>
+> Shouldn't we return something else and pin control core will change it
+> to something else if needed?
+
+The documentation include/linux/pinctrl/pinconf.h has rules for when
+to return -ENOTSUPP and -EINVAL.
+
+> > +               if (arg == 0)
+> > +                       return -ENOTSUPP;
+>
+> Ditto.
+>
+> > +       default:
+> > +               return -ENOTSUPP;
+>
+> ...
+>
+> > +       if (gpio < 0 || gpio >= MAX_GPIO)
+> > +               return;
+> > +
+> > +       if (gpio < 32) {
+> > +               ie = sfp->base + IRQ_ENABLE_LOW;
+> > +               mask = BIT(gpio);
+> > +       } else {
+> > +               ie = sfp->base + IRQ_ENABLE_HIGH;
+> > +               mask = BIT(gpio - 32);
+> > +       }
+>
+> See below. And update all occurrences of these lines accordingly and
+> everywhere. Also for IRQ may use helper functions if needed (but I
+> don't believe the high and low register have stride more than 4).
+>
+> ...
+>
+> > +       if (gpio < 0 || gpio >= MAX_GPIO)
+> > +               return -EINVAL;
+>
+> How is it possible to be ever triggered?
+>
+> ...
+>
+> > +       if (gpio < 32) {
+> > +               base = sfp->base;
+> > +               mask = BIT(gpio);
+> > +       } else {
+> > +               base = sfp->base + 4;
+> > +               mask = BIT(gpio - 32);
+> > +       }
+>
+> base = sfp_base + 4 * (gpio / 32);
+> mask = BIT(gpio % 32);
+>
+> ...
+>
+> > +               irq_set_handler_locked(d, handle_edge_irq);
+>
+> > +               irq_set_handler_locked(d, handle_edge_irq);
+>
+> Dup.
+>
+> ...
+>
+> > +               irq_set_handler_locked(d, handle_edge_irq);
+>
+> > +               irq_set_handler_locked(d, handle_level_irq);
+>
+> > +               irq_set_handler_locked(d, handle_level_irq);
+>
+> Ditto.
+>
+> ...
+>
+> > +               irq_set_handler_locked(d, handle_bad_irq);
+>
+> Why is this here? Move it to ->probe().
+
+My thinking was that if something tries to set a an unsupported irq
+type, we should make sure the caller doesn't get spurious interrupts
+because we left the handler at its old value.
+
+> ...
+>
+> > +       clk = devm_clk_get(dev, NULL);
+> > +       if (IS_ERR(clk)) {
+> > +               ret = PTR_ERR(clk);
+>
+> > +               dev_err(dev, "could not get clock: %d\n", ret);
+>
+> Thank you for spamming logs with this noise.
+>
+> > +               return ret;
+>
+> Hint: return dev_err_probe(). Ditto for the rest in this function.
+>
+> > +       }
+>
+> ...
+>
+> > +       ret = clk_prepare_enable(clk);
+> > +       if (ret) {
+>
+> > +               reset_control_deassert(rst);
+>
+> Use devm_add_action_or_reset().
+>
+> > +               dev_err(dev, "could not enable clock: %d\n", ret);
+> > +               return ret;
+> > +       }
+>
+> ...
+>
+> > +       if (!of_property_read_u32(dev->of_node, "starfive,signal-group", &value)) {
+>
+> Can be refactored without conditional. Also, why not to use
+> device_property_read_u32()?
+>
+> > +               if (value <= 6)
+> > +                       writel(value, sfp->padctl + IO_PADSHARE_SEL);
+> > +               else
+>
+> > +                       dev_err(dev, "invalid signal group %u\n", value);
+>
+> Why _err if you not bail out here?
+
+My thinking was that if the device tree specifies an invalid signal
+group we should just leave the setting alone and not break booting,
+but still be loud about it. Maybe that's too lenient and it's better
+to crash and burn immediately if someone does that.
+
+> > +       }
+>
+> ...
+>
+> > +       value = readl(sfp->padctl + IO_PADSHARE_SEL);
+> > +       switch (value) {
+> > +       case 0:
+> > +               sfp->gpios.pin_base = 0x10000;
+>
+> Magic number!
+>
+> > +               goto done;
+> > +       case 1:
+> > +               sfp->gpios.pin_base = PAD_GPIO(0);
+> > +               break;
+> > +       case 2:
+> > +               sfp->gpios.pin_base = PAD_FUNC_SHARE(72);
+> > +               break;
+> > +       case 3:
+> > +               sfp->gpios.pin_base = PAD_FUNC_SHARE(70);
+> > +               break;
+> > +       case 4: case 5: case 6:
+> > +               sfp->gpios.pin_base = PAD_FUNC_SHARE(0);
+> > +               break;
+> > +       default:
+> > +               dev_err(dev, "invalid signal group %u\n", value);
+> > +               return -EINVAL;
+> > +       }
+>
+> ...
+>
+> > +       sfp->gc.of_node = dev->of_node;
+>
+> Isn't GPIO library do this for you?
+>
+> ...
+>
+> > +       starfive_irq_chip.parent_device = dev;
+>
+> Ditto?
+>
+> ...
+>
+> > +       sfp->gc.irq.parents =
+> > +               devm_kcalloc(dev, 1, sizeof(*sfp->gc.irq.parents), GFP_KERNEL);
+>
+> 1 -> sfp->gc.irq.num_parents
+> And hence move below line up.
+>
+> > +       if (!sfp->gc.irq.parents)
+> > +               return -ENOMEM;
+>
+> > +       sfp->gc.irq.num_parents = 1;
+>
+> ...
+>
+> > +       dev_info(dev, "StarFive GPIO chip registered %d GPIOs\n", sfp->gc.ngpio);
+>
+> Redundant noise.
+>
+> ...
+>
+> > +static const struct of_device_id starfive_of_match[] = {
+> > +       { .compatible = "starfive,jh7100-pinctrl" },
+>
+> > +       { /* sentinel */ },
+>
+> No comma needed for terminator entry.
+>
+> > +};
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
