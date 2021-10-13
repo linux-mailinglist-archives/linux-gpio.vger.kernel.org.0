@@ -2,203 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4209642C59F
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Oct 2021 18:00:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 93DCD42C610
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Oct 2021 18:16:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236277AbhJMQCP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 13 Oct 2021 12:02:15 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:60332 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236407AbhJMQCL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 13 Oct 2021 12:02:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634140808;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QCm5dOclxo0psHU4qKEkJZZeOXU3321uNZD2ahb33xs=;
-        b=BHjATy6fZP8ji4IGupauqNl0WwuhtgEHJ5Uvo41N7C5M7N8Uj7jryss0bo6TNq4OIi4Q4l
-        gDnny4txN/4x+z2INOe6gluUHretukxeipr9wZKzZ3Z2N2Geayq8RKiR7CmF6nQOUFkNta
-        Sqk16wgXDGlTSh4T0aJeS8g4mhBWmaI=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-28-OyAdkr5COs6_rmoelV5ZFg-1; Wed, 13 Oct 2021 12:00:06 -0400
-X-MC-Unique: OyAdkr5COs6_rmoelV5ZFg-1
-Received: by mail-wr1-f70.google.com with SMTP id 10-20020a5d47aa000000b001610cbda93dso2312739wrb.23
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Oct 2021 09:00:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:organization:in-reply-to
-         :content-transfer-encoding;
-        bh=QCm5dOclxo0psHU4qKEkJZZeOXU3321uNZD2ahb33xs=;
-        b=BBsAzD5e//BWogEPRr36dmKEtSMCyMJHvV/Kt/7Attatbc9cLlc5q9rjAGFK1WFPf3
-         +H1VRhmVUTZzU6XxqMPc7TzqhRwcPRQEJwQuflA4gwNTUsxnTRYmUGaZLBrtXjW+X4g6
-         F0VbH0wIdjo6LjcHNDkyOQH1vMV7yjhPRxqw7Gdr6YaqyHf3Tn6Du7lWEIOYECzHSHcR
-         k9xVqa6iiPsfXitZd8Acda7VXJUF0CLo3a2oNEWbbzpd2BbRw1as7GibhwUNkSgwGBHC
-         WIOXOoDe2Jj4cR9Ll5Mly2FIijGPNLWcjNX0AXjfe7xHAoS0OH0a9Qs+7n9GEFFT8rlw
-         QSOg==
-X-Gm-Message-State: AOAM531ugnh3r9ZRx6ZQ+zQG5lO/kXziWuXgyf4Ianflgwa9DdzapGMV
-        DjuxrnZU5hmlWOd+b2hYzX8N2po7PF47u3llmr0fbggOxcdaReFhV70MXtEiEHpU+Bo5aEHTdtN
-        ivrR48Mi74TbygsmOKm85/A==
-X-Received: by 2002:adf:dc0d:: with SMTP id t13mr9678wri.158.1634140805535;
-        Wed, 13 Oct 2021 09:00:05 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyItkbAA3kGIqmmHgTgrrpf9fCG54WlJV2+wdefB9WU28Q546eZydpGXWHl2Ou3h6lUqYc/hA==
-X-Received: by 2002:adf:dc0d:: with SMTP id t13mr9603wri.158.1634140805309;
-        Wed, 13 Oct 2021 09:00:05 -0700 (PDT)
-Received: from [192.168.3.132] (p5b0c6774.dip0.t-ipconnect.de. [91.12.103.116])
-        by smtp.gmail.com with ESMTPSA id n17sm6521wrq.11.2021.10.13.09.00.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Oct 2021 09:00:04 -0700 (PDT)
-Message-ID: <cf511a7f-531f-4555-d7b4-cb171a615fdd@redhat.com>
-Date:   Wed, 13 Oct 2021 18:00:01 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.1.0
-Subject: Re: [PATCH RFC] virtio: wrap config->reset calls
-Content-Language: en-US
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Amit Shah <amit@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gonglei <arei.gonglei@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Cristian Marussi <cristian.marussi@arm.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Viresh Kumar <vireshk@kernel.org>,
+        id S237317AbhJMQSs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 13 Oct 2021 12:18:48 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:55442 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229785AbhJMQSp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 13 Oct 2021 12:18:45 -0400
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 3.0.0)
+ id 2c11d38a76026872; Wed, 13 Oct 2021 18:16:40 +0200
+Received: from kreacher.localnet (unknown [213.134.161.244])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by v370.home.net.pl (Postfix) with ESMTPSA id DE37066A871;
+        Wed, 13 Oct 2021 18:16:39 +0200 (CEST)
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux ACPI <linux-acpi@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        David Airlie <airlied@linux.ie>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Daniel Vetter <daniel@ffwll.ch>, Jie Deng <jie.deng@intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Eric Van Hensbergen <ericvh@gmail.com>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Anton Yakovlev <anton.yakovlev@opensynergy.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, linux-um@lists.infradead.org,
-        virtualization@lists.linux-foundation.org,
-        linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-i2c@vger.kernel.org, iommu@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-        nvdimm@lists.linux.dev, linux-remoteproc@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net, kvm@vger.kernel.org,
-        alsa-devel@alsa-project.org
-References: <20211013105226.20225-1-mst@redhat.com>
- <2060bd96-5884-a1b5-9f29-7fe670dc088d@redhat.com>
- <20211013081632-mutt-send-email-mst@kernel.org>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-In-Reply-To: <20211013081632-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
+Subject: [PATCH v2 1/7] gpio-amdpt: ACPI: Use the ACPI_COMPANION() macro directly
+Date:   Wed, 13 Oct 2021 18:06:40 +0200
+Message-ID: <4711815.31r3eYUQgx@kreacher>
+In-Reply-To: <2179627.iZASKD2KPV@kreacher>
+References: <4369779.LvFx2qVVIh@kreacher> <2179627.iZASKD2KPV@kreacher>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 213.134.161.244
+X-CLIENT-HOSTNAME: 213.134.161.244
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvtddrvddutddgleejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvffufffkjghfggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpedvjeelgffhiedukedtleekkedvudfggefhgfegjefgueekjeelvefggfdvledutdenucfkphepvddufedrudefgedrudeiuddrvdeggeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvudefrddufeegrdduiedurddvgeegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhk
+ vghrnhgvlhdrohhrgh
+X-DCC--Metrics: v370.home.net.pl 1024; Body=5 Fuz1=5 Fuz2=5
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 13.10.21 14:17, Michael S. Tsirkin wrote:
-> On Wed, Oct 13, 2021 at 01:03:46PM +0200, David Hildenbrand wrote:
->> On 13.10.21 12:55, Michael S. Tsirkin wrote:
->>> This will enable cleanups down the road.
->>> The idea is to disable cbs, then add "flush_queued_cbs" callback
->>> as a parameter, this way drivers can flush any work
->>> queued after callbacks have been disabled.
->>>
->>> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
->>> ---
->>>   arch/um/drivers/virt-pci.c                 | 2 +-
->>>   drivers/block/virtio_blk.c                 | 4 ++--
->>>   drivers/bluetooth/virtio_bt.c              | 2 +-
->>>   drivers/char/hw_random/virtio-rng.c        | 2 +-
->>>   drivers/char/virtio_console.c              | 4 ++--
->>>   drivers/crypto/virtio/virtio_crypto_core.c | 8 ++++----
->>>   drivers/firmware/arm_scmi/virtio.c         | 2 +-
->>>   drivers/gpio/gpio-virtio.c                 | 2 +-
->>>   drivers/gpu/drm/virtio/virtgpu_kms.c       | 2 +-
->>>   drivers/i2c/busses/i2c-virtio.c            | 2 +-
->>>   drivers/iommu/virtio-iommu.c               | 2 +-
->>>   drivers/net/caif/caif_virtio.c             | 2 +-
->>>   drivers/net/virtio_net.c                   | 4 ++--
->>>   drivers/net/wireless/mac80211_hwsim.c      | 2 +-
->>>   drivers/nvdimm/virtio_pmem.c               | 2 +-
->>>   drivers/rpmsg/virtio_rpmsg_bus.c           | 2 +-
->>>   drivers/scsi/virtio_scsi.c                 | 2 +-
->>>   drivers/virtio/virtio.c                    | 5 +++++
->>>   drivers/virtio/virtio_balloon.c            | 2 +-
->>>   drivers/virtio/virtio_input.c              | 2 +-
->>>   drivers/virtio/virtio_mem.c                | 2 +-
->>>   fs/fuse/virtio_fs.c                        | 4 ++--
->>>   include/linux/virtio.h                     | 1 +
->>>   net/9p/trans_virtio.c                      | 2 +-
->>>   net/vmw_vsock/virtio_transport.c           | 4 ++--
->>>   sound/virtio/virtio_card.c                 | 4 ++--
->>>   26 files changed, 39 insertions(+), 33 deletions(-)
->>>
->>> diff --git a/arch/um/drivers/virt-pci.c b/arch/um/drivers/virt-pci.c
->>> index c08066633023..22c4d87c9c15 100644
->>> --- a/arch/um/drivers/virt-pci.c
->>> +++ b/arch/um/drivers/virt-pci.c
->>> @@ -616,7 +616,7 @@ static void um_pci_virtio_remove(struct virtio_device *vdev)
->>>   	int i;
->>>           /* Stop all virtqueues */
->>> -        vdev->config->reset(vdev);
->>> +        virtio_reset_device(vdev);
->>>           vdev->config->del_vqs(vdev);
->>
->> Nit: virtio_device_reset()?
->>
->> Because I see:
->>
->> int virtio_device_freeze(struct virtio_device *dev);
->> int virtio_device_restore(struct virtio_device *dev);
->> void virtio_device_ready(struct virtio_device *dev)
->>
->> But well, there is:
->> void virtio_break_device(struct virtio_device *dev);
-> 
-> Exactly. I don't know what's best, so I opted for plain english :)
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Fair enough, LGTM
+The ACPI_HANDLE() macro is a wrapper arond the ACPI_COMPANION()
+macro and the ACPI handle produced by the former comes from the
+ACPI device object produced by the latter, so it is way more
+straightforward to evaluate the latter directly instead of passing
+the handle produced by the former to acpi_bus_get_device().
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+Modify pt_gpio_probe() accordingly (no intentional functional impact).
+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Acked-by: Bartosz Golaszewski <brgl@bgdev.pl>
+---
+
+v1 -> v2:
+   * Resend with a different From and S-o-b address and with ACK from Bart.
+     No other changes.
+
+---
+ drivers/gpio/gpio-amdpt.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+Index: linux-pm/drivers/gpio/gpio-amdpt.c
+===================================================================
+--- linux-pm.orig/drivers/gpio/gpio-amdpt.c
++++ linux-pm/drivers/gpio/gpio-amdpt.c
+@@ -72,12 +72,10 @@ static void pt_gpio_free(struct gpio_chi
+ static int pt_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+-	struct acpi_device *acpi_dev;
+-	acpi_handle handle = ACPI_HANDLE(dev);
+ 	struct pt_gpio_chip *pt_gpio;
+ 	int ret = 0;
+ 
+-	if (acpi_bus_get_device(handle, &acpi_dev)) {
++	if (!ACPI_COMPANION(dev)) {
+ 		dev_err(dev, "PT GPIO device node not found\n");
+ 		return -ENODEV;
+ 	}
 
 
--- 
-Thanks,
-
-David / dhildenb
 
