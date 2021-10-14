@@ -2,119 +2,154 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B8BCB42DFB1
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Oct 2021 18:51:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E30742E208
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Oct 2021 21:27:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231931AbhJNQxt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 Oct 2021 12:53:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44828 "EHLO
+        id S232822AbhJNT3H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 Oct 2021 15:29:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231859AbhJNQxs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Oct 2021 12:53:48 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E497C061753
-        for <linux-gpio@vger.kernel.org>; Thu, 14 Oct 2021 09:51:43 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id n8so29550246lfk.6
-        for <linux-gpio@vger.kernel.org>; Thu, 14 Oct 2021 09:51:43 -0700 (PDT)
+        with ESMTP id S231502AbhJNT3G (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Oct 2021 15:29:06 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F18BC061753
+        for <linux-gpio@vger.kernel.org>; Thu, 14 Oct 2021 12:27:01 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id p16so31668565lfa.2
+        for <linux-gpio@vger.kernel.org>; Thu, 14 Oct 2021 12:27:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ra1p1AyrmgIfN1LhOPTR9YCOWFcOoaktP+SupTcX5Os=;
-        b=kgwFN9+P42p59iUyH1bgxB5EOUt6yXyKLFe9dafbkr8/oRhl4xCcK+7FvJdgXPps5i
-         5nS03roZT1sJ/0EMdUn3EyHAUOOyU9dgAQlVUhVKxrCqubUKB7LGcL1Cf1ty90DFVzxi
-         tEJHXClQ0xj8pwmQXW8rRS4e89L5juTlh58QtT8o3rQNaeytlR8T4qwNS04L9fOqxNEp
-         AiVUFHJHWNeTz60OUnEWI0yFIOs83SWbgK/pzceNLm5AJ6jBREMxUVaL+7Mg/8fxni+z
-         Z/3B4lDye299Y1XMv+pv2RIsv7V7jP3GzozfBxfP/U9dJjsnbw1b/RBv1X+v/2hXe8M3
-         kxDA==
+        d=cogentembedded-com.20210112.gappssmtp.com; s=20210112;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=plSxLdohiawK9v5g/YQxS/w9Rn9HzCKJRyvLQE2YWx8=;
+        b=kZOFJUN4j714xJTUzU1dxNFBnaNDBBA58bdY92Z5ZrqC7F2kYWqI/pcg9LdQUsf+o8
+         DXxtT6jINJTJeAXoRtZP/doSelLOXCL1H1fegOIItUQbYk7juW1GazDumsmw3ORSBvTE
+         72oTtcriLDfxUaK+MDHrPesf/JXqtLdgLBaaWN1YSD+rgl2I2leR5Zc5+w8d11DY2jYo
+         J1iiRyLBpmpvoFgz/nJkJ3Ut3EQqEm/VovzJI5pkOTZdmaqneVclQZPUpse0yUqMiti+
+         ZBMe+O3oA7w2+cGmsugwBxW65zEkBRZ5xY8JriFgKVBq29Seo1bYO7pC6MOwNXbsVVar
+         hsLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ra1p1AyrmgIfN1LhOPTR9YCOWFcOoaktP+SupTcX5Os=;
-        b=xUFKQ7KwAHiUcASbPrUoKzkmWRTIIglQHpTpr329DMsroVwR6a9tNaSRfiZBHgtiGM
-         gnnfw2ofk1HXiIJ1SEpv/P9WBsGomw+qGDhy2y5h/4AISD6hwl+4EWf2Qax4V0ynvi0P
-         mxupNS98a5zzFLAtmccmC3ujtZEl03sl451icqKT5HDWPHc2xjhCKMp5PjHIlkD+XuKX
-         C+j23J2hgEgbDCrWoU9qm5IQlgtyp3p3IzjZf7EAkG7vAvxlAHFPkqFPRkdPkpyDlf5r
-         391Xp1xQiwe2Q8KBuTnQnFe2wR4Gon9+xBi07n61GcVUqzun4Jt07Tiv9zig48QlhWR0
-         biNw==
-X-Gm-Message-State: AOAM530fhzOcBA0WOAmiy1csNqnL8C7fbLQwAT3fG5slZK+YjRY3rRsO
-        CQvTQP3+roeqGio33k08PpOnQqo0Rfxyh73W//ZfsndDSWA=
-X-Google-Smtp-Source: ABdhPJy3jyeJ9514AUAE8389Xe37alzmco+h23EIxO+L8YCB/rVbaoTP0zJZ2ahD03wZDQMX1eu8JIQFxfrP6oJzESM=
-X-Received: by 2002:a19:c10d:: with SMTP id r13mr6405229lff.339.1634230301515;
- Thu, 14 Oct 2021 09:51:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <20211014110437.64764-1-shreeya.patel@collabora.com>
-In-Reply-To: <20211014110437.64764-1-shreeya.patel@collabora.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 14 Oct 2021 18:51:30 +0200
-Message-ID: <CACRpkdbwx+6xB0=rwm60=2jM4OfyDKxkwAEZMgU=10LuijsW1A@mail.gmail.com>
-Subject: Re: [PATCH] gpio: Return EPROBE_DEFER if gc->to_irq is NULL
-To:     Shreeya Patel <shreeya.patel@collabora.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Wolfram Sang <wsa@kernel.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=plSxLdohiawK9v5g/YQxS/w9Rn9HzCKJRyvLQE2YWx8=;
+        b=rc6sH/X1zi5q1/MU8xeuRhwFfWpeh++br+li908uQd9ZBoxi/xe6y57LPY+AN36Fau
+         4bL/4c/4bO6rQhSdKCclJ8bzqRb7VHtRD364rIHCpxxSo6x5l57+XAbbu0qtrDbRmGtE
+         mjL48BR1zfE+qAYNAJvUMeVo7Tuwbd9guwIVx6Het6ryAjfKYtdR50mynXlk3mkkEjAh
+         uBPoZy5eJM6diY1+7vHLXpHqJvR63CgMhv7znzBBsGd/qbmcCSHDx+xr3ga7GuNUQsgc
+         mo3mr++xbhCnO77GwwPrHV0c3FJwl6Nyh3PJ4cDFdyaDce1iIwFonz2aQgr3PqUTpCR9
+         SS9Q==
+X-Gm-Message-State: AOAM531KU9JKcp4yWMTITavcTZ5e9sBparcMBO7twLJNPaG2WMClU4Nn
+        KZnIPP0gRAIeqF/hpoItaYnGcw==
+X-Google-Smtp-Source: ABdhPJyZZTUDQSFoiBxUa58tb09wa37AJZpduqIQeub/B8AmxTEv6Zh5nbYLQ4ysdr8DeAMY/rKNiw==
+X-Received: by 2002:a2e:9b4e:: with SMTP id o14mr7856596ljj.278.1634239619670;
+        Thu, 14 Oct 2021 12:26:59 -0700 (PDT)
+Received: from [192.168.112.17] (nikaet.starlink.ru. [94.141.168.29])
+        by smtp.gmail.com with ESMTPSA id b25sm297865lfi.151.2021.10.14.12.26.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Oct 2021 12:26:59 -0700 (PDT)
+Subject: Re: [PATCH v2] pinctrl: renesas: r8a779[56]x: add MediaLB pins
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
+        Vladimir Barinov <vladimir.barinov@cogentembedded.com>,
+        LUU HOAI <hoai.luu.ub@renesas.com>
+References: <CAMuHMdUvNM8Tu-+Ed0vjB2-_JUQe7ojUPbzJM=Vy1m_j31sNSg@mail.gmail.com>
+ <20211007200250.20661-1-nikita.yoush@cogentembedded.com>
+ <CAMuHMdU2Nr1V035Ntz-XNrc10t7femUFt_WV+Q3EHiWZD5HmkQ@mail.gmail.com>
+From:   Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Message-ID: <c8234074-a22e-72f9-fbe7-e65d6af74eec@cogentembedded.com>
+Date:   Thu, 14 Oct 2021 22:26:58 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
+MIME-Version: 1.0
+In-Reply-To: <CAMuHMdU2Nr1V035Ntz-XNrc10t7femUFt_WV+Q3EHiWZD5HmkQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 14, 2021 at 1:05 PM Shreeya Patel
-<shreeya.patel@collabora.com> wrote:
+Hi,
 
-> We are racing the registering of .to_irq when probing the
-> i2c driver. This results in random failure of touchscreen
-> devices.
->
-> Following errors could be seen in dmesg logs when gc->to_irq is NULL
->
-> [2.101857] i2c_hid i2c-FTS3528:00: HID over i2c has not been provided an Int IRQ
-> [2.101953] i2c_hid: probe of i2c-FTS3528:00 failed with error -22
->
-> To avoid this situation, defer probing until to_irq is registered.
->
-> This issue has been reported many times in past and people have been
-> using workarounds like changing the pinctrl_amd to built-in instead
-> of loading it as a module or by adding a softdep for pinctrl_amd into
-> the config file.
->
-> References :-
-> https://bugzilla.kernel.org/show_bug.cgi?id=209413
-> https://github.com/Syniurge/i2c-amd-mp2/issues/3
->
-> Signed-off-by: Shreeya Patel <shreeya.patel@collabora.com>
+> 
+> Obviously not only the mlb_3pin groups, but also the functions have to
+> be moved to the automotive[] arrays ;-)
+> 
+> I'll fix these up while applying, so no need to resend.
 
-I understand the issue.
+Looking at error mail from build robot (cited below).
 
-There is one problem.
+Looks like also must put definitions of mlb_3pin_groups[] / mlb_3pin_mux[] / mlb_3pin_pins[] under GEN3 
+ifdefs.
 
-> @@ -3084,7 +3084,7 @@ int gpiod_to_irq(const struct gpio_desc *desc)
->
->                 return retirq;
->         }
-> -       return -ENXIO;
-> +       return -EPROBE_DEFER;
+What are the proper steps now - send a v3 of the original patch, or send a fix to what is in linux-next ?
 
-If you after five minutes plug in a USB FTDI or similar UART thing
-with a GPIO expander, and someone request an IRQ from
-one of those lines (they do not support interrupts), why should
-it return -EPROBE_DEFER?
+Nikita
 
-The point is that I think this will in certain circumstances return
-a bogus error.
 
-We cannot merge this other than with a fat comment above:
+ > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+ > head:   8006b911c90a4ec09958447d24c8a4c3538f5723
+ > commit: 23f87fe82c0341ff79807fb5f92a05a33ce1b055 [7355/7806] pinctrl: renesas: r8a779[56]x: Add 
+MediaLB pins
+ > config: sh-buildonly-randconfig-r002-20211014 (attached as .config)
+ > compiler: sh4-linux-gcc (GCC) 11.2.0
+ > reproduce (this is a W=1 build):
+ >          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O 
+~/bin/make.cross
+ >          chmod +x ~/bin/make.cross
+ >          # 
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=23f87fe82c0341ff79807fb5f92a05a33ce1b055
+ >          git remote add linux-next https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+ >          git fetch --no-tags linux-next master
+ >          git checkout 23f87fe82c0341ff79807fb5f92a05a33ce1b055
+ >          # save the attached .config to linux build tree
+ >          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross ARCH=sh
+ >
+ > If you fix the issue, kindly add following tag as appropriate
+ > Reported-by: kernel test robot <lkp@intel.com>
+ >
+ > All errors (new ones prefixed by >>):
+ >
+ >>> drivers/pinctrl/renesas/pfc-r8a77965.c:5030:27: error: 'mlb_3pin_groups' defined but not used 
+[-Werror=unused-const-variable=]
+ >      5030 | static const char * const mlb_3pin_groups[] = {
+ >           |                           ^~~~~~~~~~~~~~~
+ >>> drivers/pinctrl/renesas/pfc-r8a77965.c:2616:27: error: 'mlb_3pin_mux' defined but not used 
+[-Werror=unused-const-variable=]
+ >      2616 | static const unsigned int mlb_3pin_mux[] = {
+ >           |                           ^~~~~~~~~~~~
+ >>> drivers/pinctrl/renesas/pfc-r8a77965.c:2613:27: error: 'mlb_3pin_pins' defined but not used 
+[-Werror=unused-const-variable=]
+ >      2613 | static const unsigned int mlb_3pin_pins[] = {
+ >           |                           ^~~~~~~~~~~~~
+ >     cc1: all warnings being treated as errors
+ > --
+ >>> drivers/pinctrl/renesas/pfc-r8a77951.c:4807:27: error: 'mlb_3pin_groups' defined but not used 
+[-Werror=unused-const-variable=]
+ >      4807 | static const char * const mlb_3pin_groups[] = {
+ >           |                           ^~~~~~~~~~~~~~~
+ >>> drivers/pinctrl/renesas/pfc-r8a77951.c:2460:27: error: 'mlb_3pin_mux' defined but not used 
+[-Werror=unused-const-variable=]
+ >      2460 | static const unsigned int mlb_3pin_mux[] = {
+ >           |                           ^~~~~~~~~~~~
+ >>> drivers/pinctrl/renesas/pfc-r8a77951.c:2457:27: error: 'mlb_3pin_pins' defined but not used 
+[-Werror=unused-const-variable=]
+ >      2457 | static const unsigned int mlb_3pin_pins[] = {
+ >           |                           ^~~~~~~~~~~~~
+ >     cc1: all warnings being treated as errors
+ >
+ >
+ > vim +/mlb_3pin_groups +5030 drivers/pinctrl/renesas/pfc-r8a77965.c
+ >
+ >    5029	
+ >> 5030	static const char * const mlb_3pin_groups[] = {
+ >    5031		"mlb_3pin",
+ >    5032	};
+ >    5033	
+ >
 
-/*
- * This is semantically WRONG because the -EPROBE_DEFER
- * is really just applicable during system bring-up.
- */
-return -EPROBE_DEFER;
-
-Can we use some kind of late_initcall() to just switch this over
-to -ENXIO after a while?
-
-Yours,
-Linus Walleij
