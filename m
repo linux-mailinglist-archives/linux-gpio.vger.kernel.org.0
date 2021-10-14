@@ -2,117 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C91D42DBD3
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Oct 2021 16:36:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B8BCB42DFB1
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Oct 2021 18:51:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231318AbhJNOiG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 Oct 2021 10:38:06 -0400
-Received: from esa.microchip.iphmx.com ([68.232.153.233]:3259 "EHLO
-        esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230190AbhJNOiF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Oct 2021 10:38:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1634222161; x=1665758161;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=UKR5vWCNAno42pYINcB56F+Pp43CdX14ETbyIT5ZJIE=;
-  b=nTMRZCxtF/9FlO3KQ+OJ8eP+zipDJoNUiJXFesovnC6jGcIP5oyGnPwx
-   f0eUCI02P6WNbUrdBWXpB8C+5Ci3t0nZ3MU7hsHHku5nB9A/e5hk+NjLD
-   4HAwMYZWFLktrVKvOzvN8pdkSZsDzYm8WcRtMaml35NZ8jr6INXIuN48X
-   nqtiBhi8XQ00rxWNPTzOcbafgPKNHNCNYSD+9JvZx9PjnySmdf+Vj0iL/
-   91d/ZM3dUxu5I1UtbEuGx+vkJ+grVqyMPzXjuY5cSrzKul0fUF58lGpW3
-   3zhDtPH9fLcQBVJ/BgOyfdhDINWKH3UEoZaqAlLgUARLKO0f5mMHuGyKC
-   g==;
-IronPort-SDR: d+BId0l/vwLu4oBH7WCcy4CC1hRX5GfLxzG3TEWawvTRBPtcFMbCtQXmqjo8hNdV+IgHLQyvuR
- g96YwPTZVfzII8Z51wwTCgp+297MaRniVrh2iuBLuqJN4VIZ9PdVCau9RMycnZMxcPqyeZYAPF
- bz3Mk/s2FyLHUrNNg+NmSAU4Q2oHrAGxVGYo4ZDXxt4+ZrhdCI0O8L8Ju0nhNjE6w+i7khBxc6
- XlvJ1sbu5NIpsDT9eV06C4LcwA3DL/Kf4BSlV/LPt0h3vMrWTA8yvbZAeSqg0OOlBjrxcXuTPh
- IkFY3b7qthC/QuYMdgxw3JYz
-X-IronPort-AV: E=Sophos;i="5.85,372,1624345200"; 
-   d="scan'208";a="140290254"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 14 Oct 2021 07:36:00 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.14; Thu, 14 Oct 2021 07:36:00 -0700
-Received: from localhost (10.10.115.15) by chn-vm-ex04.mchp-main.com
- (10.10.85.152) with Microsoft SMTP Server id 15.1.2176.14 via Frontend
- Transport; Thu, 14 Oct 2021 07:35:59 -0700
-Date:   Thu, 14 Oct 2021 16:37:33 +0200
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-CC:     <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
-        <lars.povlsen@microchip.com>, <Steen.Hegelund@microchip.com>,
-        <UNGLinuxDriver@microchip.com>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 2/2] pinctrl: microchip sgpio: use reset driver
-Message-ID: <20211014143733.t2dov6ajjebxlht6@soft-dev3-1.localhost>
-References: <20211014085929.2579695-1-horatiu.vultur@microchip.com>
- <20211014085929.2579695-3-horatiu.vultur@microchip.com>
- <2874212d2f9462880d1b0aae35296162e1277e62.camel@pengutronix.de>
+        id S231931AbhJNQxt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 Oct 2021 12:53:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44828 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231859AbhJNQxs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Oct 2021 12:53:48 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E497C061753
+        for <linux-gpio@vger.kernel.org>; Thu, 14 Oct 2021 09:51:43 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id n8so29550246lfk.6
+        for <linux-gpio@vger.kernel.org>; Thu, 14 Oct 2021 09:51:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ra1p1AyrmgIfN1LhOPTR9YCOWFcOoaktP+SupTcX5Os=;
+        b=kgwFN9+P42p59iUyH1bgxB5EOUt6yXyKLFe9dafbkr8/oRhl4xCcK+7FvJdgXPps5i
+         5nS03roZT1sJ/0EMdUn3EyHAUOOyU9dgAQlVUhVKxrCqubUKB7LGcL1Cf1ty90DFVzxi
+         tEJHXClQ0xj8pwmQXW8rRS4e89L5juTlh58QtT8o3rQNaeytlR8T4qwNS04L9fOqxNEp
+         AiVUFHJHWNeTz60OUnEWI0yFIOs83SWbgK/pzceNLm5AJ6jBREMxUVaL+7Mg/8fxni+z
+         Z/3B4lDye299Y1XMv+pv2RIsv7V7jP3GzozfBxfP/U9dJjsnbw1b/RBv1X+v/2hXe8M3
+         kxDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ra1p1AyrmgIfN1LhOPTR9YCOWFcOoaktP+SupTcX5Os=;
+        b=xUFKQ7KwAHiUcASbPrUoKzkmWRTIIglQHpTpr329DMsroVwR6a9tNaSRfiZBHgtiGM
+         gnnfw2ofk1HXiIJ1SEpv/P9WBsGomw+qGDhy2y5h/4AISD6hwl+4EWf2Qax4V0ynvi0P
+         mxupNS98a5zzFLAtmccmC3ujtZEl03sl451icqKT5HDWPHc2xjhCKMp5PjHIlkD+XuKX
+         C+j23J2hgEgbDCrWoU9qm5IQlgtyp3p3IzjZf7EAkG7vAvxlAHFPkqFPRkdPkpyDlf5r
+         391Xp1xQiwe2Q8KBuTnQnFe2wR4Gon9+xBi07n61GcVUqzun4Jt07Tiv9zig48QlhWR0
+         biNw==
+X-Gm-Message-State: AOAM530fhzOcBA0WOAmiy1csNqnL8C7fbLQwAT3fG5slZK+YjRY3rRsO
+        CQvTQP3+roeqGio33k08PpOnQqo0Rfxyh73W//ZfsndDSWA=
+X-Google-Smtp-Source: ABdhPJy3jyeJ9514AUAE8389Xe37alzmco+h23EIxO+L8YCB/rVbaoTP0zJZ2ahD03wZDQMX1eu8JIQFxfrP6oJzESM=
+X-Received: by 2002:a19:c10d:: with SMTP id r13mr6405229lff.339.1634230301515;
+ Thu, 14 Oct 2021 09:51:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <2874212d2f9462880d1b0aae35296162e1277e62.camel@pengutronix.de>
+References: <20211014110437.64764-1-shreeya.patel@collabora.com>
+In-Reply-To: <20211014110437.64764-1-shreeya.patel@collabora.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 14 Oct 2021 18:51:30 +0200
+Message-ID: <CACRpkdbwx+6xB0=rwm60=2jM4OfyDKxkwAEZMgU=10LuijsW1A@mail.gmail.com>
+Subject: Re: [PATCH] gpio: Return EPROBE_DEFER if gc->to_irq is NULL
+To:     Shreeya Patel <shreeya.patel@collabora.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The 10/14/2021 13:47, Philipp Zabel wrote:
-> 
-> Hi Horatiu,
+On Thu, Oct 14, 2021 at 1:05 PM Shreeya Patel
+<shreeya.patel@collabora.com> wrote:
 
-Hi Philipp
-> 
-> > +     reset = devm_reset_control_get_shared(&pdev->dev, "switch");
-> 
-> Please use devm_reset_control_get_optional_shared() for optional resets
-> and handle errors. That will return NULL in case the optional reset is
-> not specified in the device tree.
+> We are racing the registering of .to_irq when probing the
+> i2c driver. This results in random failure of touchscreen
+> devices.
+>
+> Following errors could be seen in dmesg logs when gc->to_irq is NULL
+>
+> [2.101857] i2c_hid i2c-FTS3528:00: HID over i2c has not been provided an Int IRQ
+> [2.101953] i2c_hid: probe of i2c-FTS3528:00 failed with error -22
+>
+> To avoid this situation, defer probing until to_irq is registered.
+>
+> This issue has been reported many times in past and people have been
+> using workarounds like changing the pinctrl_amd to built-in instead
+> of loading it as a module or by adding a softdep for pinctrl_amd into
+> the config file.
+>
+> References :-
+> https://bugzilla.kernel.org/show_bug.cgi?id=209413
+> https://github.com/Syniurge/i2c-amd-mp2/issues/3
+>
+> Signed-off-by: Shreeya Patel <shreeya.patel@collabora.com>
 
-I will do that.
+I understand the issue.
 
-> 
-> It seems weird to me that the reset input to the GPIO controller is
-> called "switch" reset. You can request a single unnamed reset with
-> 
->         reset = devm_reset_control_get_shared(&pdev->dev, NULL);
-> 
-> although that would limit future extendability in case this driver will
-> ever require to handle multiple separate resets. If you decide to
-> request the reset control by name, the yaml binding should specify the
-> same name.
+There is one problem.
 
-I think this requires a little bit more explanation from my side. On
-lan966x we are facing the following issue. When we try to reset just the
-switch core then also the sgpio device was reset and there was no way
-from HW perspective to prevent this.
+> @@ -3084,7 +3084,7 @@ int gpiod_to_irq(const struct gpio_desc *desc)
+>
+>                 return retirq;
+>         }
+> -       return -ENXIO;
+> +       return -EPROBE_DEFER;
 
-So our solutions was to create a reset driver[1] that will be triggered
-only one time, by the sgpio driver or by the switch driver. That is the
-reason why it was called "switch" reset. And that is the purpose of this
-patch to allow the sgpio driver to reset the switch in case is probed
-before the switch driver so it would not get reset after that.
+If you after five minutes plug in a USB FTDI or similar UART thing
+with a GPIO expander, and someone request an IRQ from
+one of those lines (they do not support interrupts), why should
+it return -EPROBE_DEFER?
 
-> 
-> > +     if (!IS_ERR(reset))
-> > +             reset_control_reset(reset);
-> 
-> With optional resets, this can be just:
-> 
->         reset_control_reset(reset);
+The point is that I think this will in certain circumstances return
+a bogus error.
 
-Great I will do that.
+We cannot merge this other than with a fat comment above:
 
-> 
-> regards
-> Philipp
+/*
+ * This is semantically WRONG because the -EPROBE_DEFER
+ * is really just applicable during system bring-up.
+ */
+return -EPROBE_DEFER;
 
-[1] https://lore.kernel.org/lkml/20211013073807.2282230-1-horatiu.vultur@microchip.com/
+Can we use some kind of late_initcall() to just switch this over
+to -ENXIO after a while?
 
--- 
-/Horatiu
+Yours,
+Linus Walleij
