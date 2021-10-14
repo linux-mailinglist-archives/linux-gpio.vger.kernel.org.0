@@ -2,77 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C0CA42D7B7
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Oct 2021 13:05:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6940842D880
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Oct 2021 13:48:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230179AbhJNLHZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 Oct 2021 07:07:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49418 "EHLO
+        id S231195AbhJNLuF convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 14 Oct 2021 07:50:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230080AbhJNLHZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Oct 2021 07:07:25 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B597C061570;
-        Thu, 14 Oct 2021 04:05:20 -0700 (PDT)
-Received: from localhost.localdomain (unknown [IPv6:2401:4900:1c20:48dc:2024:938f:96e4:4a08])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: shreeya)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 4EF181F44A4A;
-        Thu, 14 Oct 2021 12:05:18 +0100 (BST)
-From:   Shreeya Patel <shreeya.patel@collabora.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com, wsa@kernel.org
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org,
-        Shreeya Patel <shreeya.patel@collabora.com>
-Subject: [PATCH] gpio: Return EPROBE_DEFER if gc->to_irq is NULL
-Date:   Thu, 14 Oct 2021 16:34:37 +0530
-Message-Id: <20211014110437.64764-1-shreeya.patel@collabora.com>
-X-Mailer: git-send-email 2.30.2
+        with ESMTP id S231177AbhJNLuE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Oct 2021 07:50:04 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDDF1C061570
+        for <linux-gpio@vger.kernel.org>; Thu, 14 Oct 2021 04:47:59 -0700 (PDT)
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1mazDC-00079e-2V; Thu, 14 Oct 2021 13:47:50 +0200
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1mazDA-0004UO-F8; Thu, 14 Oct 2021 13:47:48 +0200
+Message-ID: <2874212d2f9462880d1b0aae35296162e1277e62.camel@pengutronix.de>
+Subject: Re: [PATCH v3 2/2] pinctrl: microchip sgpio: use reset driver
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>,
+        linus.walleij@linaro.org, robh+dt@kernel.org,
+        lars.povlsen@microchip.com, Steen.Hegelund@microchip.com,
+        UNGLinuxDriver@microchip.com, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 14 Oct 2021 13:47:48 +0200
+In-Reply-To: <20211014085929.2579695-3-horatiu.vultur@microchip.com>
+References: <20211014085929.2579695-1-horatiu.vultur@microchip.com>
+         <20211014085929.2579695-3-horatiu.vultur@microchip.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-We are racing the registering of .to_irq when probing the
-i2c driver. This results in random failure of touchscreen
-devices.
+Hi Horatiu,
 
-Following errors could be seen in dmesg logs when gc->to_irq is NULL
+On Thu, 2021-10-14 at 10:59 +0200, Horatiu Vultur wrote:
+> On lan966x platform when the switch gets reseted then also the sgpio
+> gets reseted. The fix for this is to extend also the sgpio driver to
+> call the reset driver which will be reseted only once by the first
+> driver that is probed.
+> 
+> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> ---
+>  drivers/pinctrl/pinctrl-microchip-sgpio.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/pinctrl/pinctrl-microchip-sgpio.c b/drivers/pinctrl/pinctrl-microchip-sgpio.c
+> index 072bccdea2a5..e8a91d0824cb 100644
+> --- a/drivers/pinctrl/pinctrl-microchip-sgpio.c
+> +++ b/drivers/pinctrl/pinctrl-microchip-sgpio.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/pinctrl/pinmux.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/property.h>
+> +#include <linux/reset.h>
+>  
+>  #include "core.h"
+>  #include "pinconf.h"
+> @@ -803,6 +804,7 @@ static int microchip_sgpio_probe(struct platform_device *pdev)
+>  	int div_clock = 0, ret, port, i, nbanks;
+>  	struct device *dev = &pdev->dev;
+>  	struct fwnode_handle *fwnode;
+> +	struct reset_control *reset;
+>  	struct sgpio_priv *priv;
+>  	struct clk *clk;
+>  	u32 val;
+> @@ -813,6 +815,10 @@ static int microchip_sgpio_probe(struct platform_device *pdev)
+>  
+>  	priv->dev = dev;
+>  
+> +	reset = devm_reset_control_get_shared(&pdev->dev, "switch");
 
-[2.101857] i2c_hid i2c-FTS3528:00: HID over i2c has not been provided an Int IRQ
-[2.101953] i2c_hid: probe of i2c-FTS3528:00 failed with error -22
+Please use devm_reset_control_get_optional_shared() for optional resets
+and handle errors. That will return NULL in case the optional reset is
+not specified in the device tree.
 
-To avoid this situation, defer probing until to_irq is registered.
+It seems weird to me that the reset input to the GPIO controller is
+called "switch" reset. You can request a single unnamed reset with
 
-This issue has been reported many times in past and people have been
-using workarounds like changing the pinctrl_amd to built-in instead
-of loading it as a module or by adding a softdep for pinctrl_amd into
-the config file.
+	reset = devm_reset_control_get_shared(&pdev->dev, NULL);
 
-References :-
-https://bugzilla.kernel.org/show_bug.cgi?id=209413
-https://github.com/Syniurge/i2c-amd-mp2/issues/3
+although that would limit future extendability in case this driver will
+ever require to handle multiple separate resets. If you decide to
+request the reset control by name, the yaml binding should specify the
+same name.
 
-Signed-off-by: Shreeya Patel <shreeya.patel@collabora.com>
----
- drivers/gpio/gpiolib.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> +	if (!IS_ERR(reset))
+> +		reset_control_reset(reset);
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 27c07108496d..fc0ba85f4c45 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -3084,7 +3084,7 @@ int gpiod_to_irq(const struct gpio_desc *desc)
- 
- 		return retirq;
- 	}
--	return -ENXIO;
-+	return -EPROBE_DEFER;
- }
- EXPORT_SYMBOL_GPL(gpiod_to_irq);
- 
--- 
-2.30.2
+With optional resets, this can be just:
 
+	reset_control_reset(reset);
+
+regards
+Philipp
