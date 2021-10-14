@@ -2,151 +2,187 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E61E642E217
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Oct 2021 21:39:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BEF2242E26B
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Oct 2021 22:07:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233535AbhJNTli (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 Oct 2021 15:41:38 -0400
-Received: from mail-ua1-f41.google.com ([209.85.222.41]:38443 "EHLO
-        mail-ua1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232556AbhJNTli (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Oct 2021 15:41:38 -0400
-Received: by mail-ua1-f41.google.com with SMTP id h19so13541862uax.5;
-        Thu, 14 Oct 2021 12:39:33 -0700 (PDT)
+        id S231570AbhJNUJK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 Oct 2021 16:09:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60962 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234078AbhJNUJJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Oct 2021 16:09:09 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F25EC061755
+        for <linux-gpio@vger.kernel.org>; Thu, 14 Oct 2021 13:07:04 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id ec8so28929669edb.6
+        for <linux-gpio@vger.kernel.org>; Thu, 14 Oct 2021 13:07:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pensando.io; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tOC9prHZYIEZh+iOSkgASgqcP4dzHU1Vi2nx843IsCk=;
+        b=NL0BrbBgqbeg+0k1NdyHAoUworVxwn/bPXtWcOyPrJjiIpNlT1faHXA45eyP9NndQ8
+         GY6YgAmOHLAZ/tAmiSlkjl6N8hPbdMSxqgVNlAkQWq4zFMK0JLWO7AArMg2YnWWk2jSp
+         k3WkVkHvKn3O99QXT7K3GiVbGxYD/qzA3Bw94Yswc2z3skllu6r8XA+f/34SzUTYrVno
+         +RIWyNtx2rCeOe/yliw4fna8bHmSd0oZjw9hN+mJnzJL47/a/yr3XjQDu7aRj4zYWWVv
+         4EypWFYkT+zi4P4XBv6M0hYyyXU8d9p2vYXwozwbXGocu6QkkGopMHu6J9GPflpKU/6N
+         gtyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=mKswVKHsYaVmj+miEFc+WAd+jtG8tqDfzq5v7oYhDog=;
-        b=16PiWEFEbRFaVMrcDdPUz1zP4cjqKbgFLADx9g09QrXstQWEUtXKaHD7cmSAiMXqsr
-         pNrbdytIiZsW8l+UPSIGrk0+dfI3+GOXOIJ0vtWciFuTMy8v5dQ1C3bH9VDFeGlix8SK
-         d0AwiLZMX6+GIud//JZFohyaBUovnAfwzJHeytjT/FmAMevYBO0QXuLqDkYDVfSwWyUv
-         meMrIGeMOwNPXLN3+jN5KKZQKV+rtIWV3RWAa7WFST1lIOVz4dGKunZB7EAKTk3gA3+M
-         WppQ6EIfpNI8h0AsHAuQr+52M1wg1Dkgy9rYkDFFFQVXKT3FX+T6v9+rBI4Y2PS2IN/w
-         dmAg==
-X-Gm-Message-State: AOAM530f+KG+bhi2KElHwcHDZX4Ays2THfny7GzDirzya1ZoYyRxI43S
-        xr/kw0ROdJKeA2oZ1VTM0FhoGFtyMp/NvM5i
-X-Google-Smtp-Source: ABdhPJxLjwf6uJlAsnft6IqvwXKkqPfUiIJP+N7srcfQG3q4NjgeuuEy3jj4Ea7URiBx8sLxElVO1g==
-X-Received: by 2002:ab0:70d6:: with SMTP id r22mr8702107ual.139.1634240372314;
-        Thu, 14 Oct 2021 12:39:32 -0700 (PDT)
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
-        by smtp.gmail.com with ESMTPSA id q12sm2465114uae.15.2021.10.14.12.39.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Oct 2021 12:39:31 -0700 (PDT)
-Received: by mail-ua1-f49.google.com with SMTP id f4so13560326uad.4;
-        Thu, 14 Oct 2021 12:39:31 -0700 (PDT)
-X-Received: by 2002:a05:6102:290c:: with SMTP id cz12mr9646854vsb.35.1634240371444;
- Thu, 14 Oct 2021 12:39:31 -0700 (PDT)
+        bh=tOC9prHZYIEZh+iOSkgASgqcP4dzHU1Vi2nx843IsCk=;
+        b=ExCxK9dDAsDTjuFCjqR0MO1NAZwLle7ZAXakD5UzqG3MDpL0o9ijRkMJTtcmCkAAOK
+         tROrcMSoWNAxdRnP4LaRKOfUtfOwmINF/zXNzx9peabREz0FsnU2TdlcBJL7+GACQz76
+         ZGxCmo0fjFSY0jkOR7UazZT2vIh3cuuoH3rWRLdjmEy5rYbbn8JzhU3KJtBuAq5k6uj8
+         JamyxhxBZ1t3bJ8StLe0fbDk+UrS8Awk8LM/ELeHII51eWDXLHcAe64IR/XfHccpamhP
+         rVyjy2Zfn0vr1fDjZBrufONtdnKciN1mW0VbfA+32T0VVOin0uCpGQBYKp6ByN0TFzi5
+         E8ug==
+X-Gm-Message-State: AOAM533+Swft5J3wrhQmFTvgtzXF0dtpsE3ZDJBfvvSJLtctzGXLHsIe
+        rsnofbFyXuQo8a9VfJx3FbU10AbPPXbdasf5GMxQBQ==
+X-Google-Smtp-Source: ABdhPJxD9UzCWfjeFxRsC1YkcQ1vTaG6mft6f+Mucv9VjzzB99L17qlsFkC2Y1a/7iwSh5iOwxPa20nY0PCyjOOngtw=
+X-Received: by 2002:a17:906:b19:: with SMTP id u25mr1397747ejg.36.1634242022767;
+ Thu, 14 Oct 2021 13:07:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAMuHMdUvNM8Tu-+Ed0vjB2-_JUQe7ojUPbzJM=Vy1m_j31sNSg@mail.gmail.com>
- <20211007200250.20661-1-nikita.yoush@cogentembedded.com> <CAMuHMdU2Nr1V035Ntz-XNrc10t7femUFt_WV+Q3EHiWZD5HmkQ@mail.gmail.com>
- <c8234074-a22e-72f9-fbe7-e65d6af74eec@cogentembedded.com>
-In-Reply-To: <c8234074-a22e-72f9-fbe7-e65d6af74eec@cogentembedded.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 14 Oct 2021 21:39:20 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdU1OhyqnREnwpEUubUsR1DUF_3a1z2MpWxe5U6rWCLUUA@mail.gmail.com>
-Message-ID: <CAMuHMdU1OhyqnREnwpEUubUsR1DUF_3a1z2MpWxe5U6rWCLUUA@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: renesas: r8a779[56]x: add MediaLB pins
-To:     Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+References: <20210304034141.7062-1-brad@pensando.io> <20210304034141.7062-2-brad@pensando.io>
+ <CACRpkdbQD6p7fbGtuu1c92uXfSFDCTwqjqsXHpgnD5Lg4v0Okw@mail.gmail.com>
+ <20210304091025.ny52qjm7wbfvmjgl@mobilestation> <CACRpkdZroi+_oHqipS71MAGif190y7jWU5Myf55vz=_um4w5cQ@mail.gmail.com>
+ <CAK9rFnzDZ4MNm68AJ75g7zegLD-7UMHyoVR-4ssitYTTEeQm5g@mail.gmail.com>
+ <CACRpkdZEURRTe15HGf93SvyHej=_6qhfP9KWPSQbCM=SLUVKmA@mail.gmail.com>
+ <CAK9rFnxuiAX2-5TFhfyTdpaY3BRysX_Q2sJkca4LhOLzapB83Q@mail.gmail.com> <CACRpkdbF3oXec-8Z-1fNVL47mfYo2TW8WTDxzpwaR2YqLaTdAQ@mail.gmail.com>
+In-Reply-To: <CACRpkdbF3oXec-8Z-1fNVL47mfYo2TW8WTDxzpwaR2YqLaTdAQ@mail.gmail.com>
+From:   Brad Larson <brad@pensando.io>
+Date:   Thu, 14 Oct 2021 13:06:52 -0700
+Message-ID: <CAK9rFnx1NN92coAgUC7douF+ny8dCL5uoFopBaWAE_q02-XWyg@mail.gmail.com>
+Subject: Re: [PATCH 1/8] gpio: Add Elba SoC gpio driver for spi cs control
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Olof Johansson <olof@lixom.net>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
-        Vladimir Barinov <vladimir.barinov@cogentembedded.com>,
-        LUU HOAI <hoai.luu.ub@renesas.com>
+        linux-spi <linux-spi@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Nikita,
-
-On Thu, Oct 14, 2021 at 9:27 PM Nikita Yushchenko
-<nikita.yoush@cogentembedded.com> wrote:
-> > Obviously not only the mlb_3pin groups, but also the functions have to
-> > be moved to the automotive[] arrays ;-)
-> >
-> > I'll fix these up while applying, so no need to resend.
+On Tue, Oct 12, 2021 at 4:52 PM Linus Walleij <linus.walleij@linaro.org> wrote:
 >
-> Looking at error mail from build robot (cited below).
+> On Mon, Oct 4, 2021 at 6:46 PM Brad Larson <brad@pensando.io> wrote:
 >
-> Looks like also must put definitions of mlb_3pin_groups[] / mlb_3pin_mux[] / mlb_3pin_pins[] under GEN3
-> ifdefs.
+> > Yes that works, please see the diff below where the file
+> > gpio-elba-spics.c goes away.  The original implementation was
+> > motivated by gpio-spear-spics.c.
 >
-> What are the proper steps now - send a v3 of the original patch, or send a fix to what is in linux-next ?
+> This looks good to me :)
+>
+> Yours,
+> Linus Walleij
 
-No worries, I'll fix it up tomorrow myself (unless you beat me to it,
-then I'll fold
-your fix into the original commit ;-)
+Hi Linus,
 
->  > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
->  > head:   8006b911c90a4ec09958447d24c8a4c3538f5723
->  > commit: 23f87fe82c0341ff79807fb5f92a05a33ce1b055 [7355/7806] pinctrl: renesas: r8a779[56]x: Add
-> MediaLB pins
->  > config: sh-buildonly-randconfig-r002-20211014 (attached as .config)
->  > compiler: sh4-linux-gcc (GCC) 11.2.0
->  > reproduce (this is a W=1 build):
->  >          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O
-> ~/bin/make.cross
->  >          chmod +x ~/bin/make.cross
->  >          #
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=23f87fe82c0341ff79807fb5f92a05a33ce1b055
->  >          git remote add linux-next https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
->  >          git fetch --no-tags linux-next master
->  >          git checkout 23f87fe82c0341ff79807fb5f92a05a33ce1b055
->  >          # save the attached .config to linux build tree
->  >          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross ARCH=sh
->  >
->  > If you fix the issue, kindly add following tag as appropriate
->  > Reported-by: kernel test robot <lkp@intel.com>
->  >
->  > All errors (new ones prefixed by >>):
->  >
->  >>> drivers/pinctrl/renesas/pfc-r8a77965.c:5030:27: error: 'mlb_3pin_groups' defined but not used
-> [-Werror=unused-const-variable=]
->  >      5030 | static const char * const mlb_3pin_groups[] = {
->  >           |                           ^~~~~~~~~~~~~~~
->  >>> drivers/pinctrl/renesas/pfc-r8a77965.c:2616:27: error: 'mlb_3pin_mux' defined but not used
-> [-Werror=unused-const-variable=]
->  >      2616 | static const unsigned int mlb_3pin_mux[] = {
->  >           |                           ^~~~~~~~~~~~
->  >>> drivers/pinctrl/renesas/pfc-r8a77965.c:2613:27: error: 'mlb_3pin_pins' defined but not used
-> [-Werror=unused-const-variable=]
->  >      2613 | static const unsigned int mlb_3pin_pins[] = {
->  >           |                           ^~~~~~~~~~~~~
->  >     cc1: all warnings being treated as errors
->  > --
->  >>> drivers/pinctrl/renesas/pfc-r8a77951.c:4807:27: error: 'mlb_3pin_groups' defined but not used
-> [-Werror=unused-const-variable=]
->  >      4807 | static const char * const mlb_3pin_groups[] = {
->  >           |                           ^~~~~~~~~~~~~~~
->  >>> drivers/pinctrl/renesas/pfc-r8a77951.c:2460:27: error: 'mlb_3pin_mux' defined but not used
-> [-Werror=unused-const-variable=]
->  >      2460 | static const unsigned int mlb_3pin_mux[] = {
->  >           |                           ^~~~~~~~~~~~
->  >>> drivers/pinctrl/renesas/pfc-r8a77951.c:2457:27: error: 'mlb_3pin_pins' defined but not used
-> [-Werror=unused-const-variable=]
->  >      2457 | static const unsigned int mlb_3pin_pins[] = {
->  >           |                           ^~~~~~~~~~~~~
->  >     cc1: all warnings being treated as errors
->  >
->  >
->  > vim +/mlb_3pin_groups +5030 drivers/pinctrl/renesas/pfc-r8a77965.c
->  >
->  >    5029
->  >> 5030        static const char * const mlb_3pin_groups[] = {
->  >    5031              "mlb_3pin",
->  >    5032      };
->  >    5033
+:-)  It's better to not have to look at a related gpio driver file to
+the spi-dw-mmio.c
+driver and think it could possibly be used as general purpose gpio.
 
-Gr{oetje,eeting}s,
+Here is a response summary per patch.  Should I start respinning the
+patchset against
+the latest linux-next tag?  The changes are merged to our production
+5.10.28 kernel
+and the next step is to re-spin the set against the latest linux-next
+which has a newer dtc,
+run checkpatch, etc.  For reference as this has been cooking for
+awhile here is the
+overview from V2 patchset cover letter.
 
-                        Geert
+This series enables support for Pensando Elba SoC based platforms.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+The Elba SoC has the following features:
+- Sixteen ARM64 A72 cores
+- Dual DDR 4/5 memory controllers
+- 32 lanes of PCIe Gen3/4 to the Host
+- Network interfaces: Dual 200GE, Quad 100GE, 50GE, 25GE, 10GE and
+  also a single 1GE management port.
+- Storage/crypto offloads and 144 programmable P4 cores.
+- QSPI and EMMC for SoC storage
+- Two SPI interfaces for peripheral management
+- I2C bus for platform management
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Summary of response to V1/V2 patchset
+0001-gpio-Add-Elba-SoC-gpio-driver-for-spi-cs-control.patch
+- This patch is deleted.  Elba SOC specific gpio spics control is
+  integrated into spi-dw-mmio.c.
+
+0002-spi-cadence-quadspi-Add-QSPI-support-for-Pensando-El.patch
+- Changed compatible to "pensando,elba-qspi" to be more descriptive
+  in spi-cadence-quadspi.c.
+
+- Arnd wondered if moving to DT properties for quirks may be the
+  way to go.  Feedback I've received on other patches was don't
+  mix two efforts in one patch so I'm currently just adding the
+  Elba support to the current design.
+
+0003-spi-dw-Add-support-for-Pensando-Elba-SoC-SPI.patch
+- Changed the implementation to use existing dw_spi_set_cs() and
+  integrated Elba specific CS control into spi-dw-mmio.c.  The
+  native designware support is for two chip-selects while Elba
+  provides 4 chip-selects.  Instead of adding a new file for
+  this support in gpio-elba-spics.c the support is in one
+  file (spi-dw-mmio.c).
+
+0004-spidev-Add-Pensando-CPLD-compatible.patch
+- This patch is deleted.  The addition of compatible "pensando,cpld"
+  to spidev.c is removed.
+
+0005-mmc-sdhci-cadence-Add-Pensando-Elba-SoC-support.patch
+- Ulf and Yamada-san agreed the amount of code for this support
+  is not enough to need a new file.  The support is added into
+  sdhci-cadence.c and new files sdhci-cadence-elba.c and
+  sdhci-cadence.h are deleted.
+- Redundant defines are removed (e.g. use SDHCI_CDNS_HRS04 and
+  remove SDIO_REG_HRS4).
+- Removed phy init function sd4_set_dlyvr() and used existing
+  sdhci_cdns_phy_init(). Init values are from DT properties.
+- Replace  devm_ioremap_resource(&pdev->dev, iomem)
+     with  devm_platform_ioremap_resource(pdev, 1)
+- Refactored the elba priv_writ_l() and elba_write_l() to
+  remove a little redundant code.
+- The config option CONFIG_MMC_SDHCI_CADENCE_ELBA goes away.
+- Only C syntax and Elba functions are prefixed with elba_
+
+0006-arm64-Add-config-for-Pensando-SoC-platforms.patch
+- Added a little more info to the platform help text to assist
+  users to decide on including platform support or not.
+
+0007-arm64-dts-Add-Pensando-Elba-SoC-support.patch
+- Node names changed to DT generic names
+- Changed from using 'spi@' which is reserved
+- The elba-flash-parts.dtsi is kept separate as
+  it is included in multiple dts files.
+- SPDX license tags at the top of each file
+- The compatible = "pensando,elba" and 'model' are
+  now together in the board file.
+- UIO nodes removed
+- Ordered nodes by increasing unit address
+- Removed an unreferenced container node.
+- Dropped deprecated 'device_type' for uart0 node.
+- Added syscon usage
+
+0010-dt-bindings-spi-cadence-qspi-Add-support-for-Pensand.patch
+- Updated since the latest documentation has been converted to yaml
+
+0011-dt-bindings-gpio-Add-Pensando-Elba-SoC-support.patch
+- This patch is deleted since the Elba gpio spics is added to
+  the spi dw driver and documented there.
+
+Best,
+Brad
