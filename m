@@ -2,106 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B50E242D58C
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Oct 2021 10:58:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D44C742D6D2
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Oct 2021 12:14:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230126AbhJNJAz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 14 Oct 2021 05:00:55 -0400
-Received: from esa.microchip.iphmx.com ([68.232.154.123]:17088 "EHLO
-        esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230017AbhJNJAm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Oct 2021 05:00:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1634201917; x=1665737917;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=2SfxK57vRWHEZrPMMA/I/4JeY6YI1pn+Pq8lPJzvFYk=;
-  b=a0EIrpuZ3kZN/RYhr9hxd3vFoDUyDvZ82LUiHy9bT346tLZUTxUQJr+1
-   oR8Jn1pk0oZ5KsgD7dCgN6Kw1zRCYCdS55+SIIQ0CyPnsNp7nfGWGyNxV
-   Pn89q9sKTfhW5/QL2g7LnDJmJzzqtOdS+bP/pqB+RxZbVHVcyn7CypYZQ
-   WbbylQXOXx/fCY/xGwq3FtzUy5aNzZQqadTOND6ligqDPRG0xc1HaYEXg
-   ykqPID+IO+nvgxEfGbigwFC2k2GnXBcQoi4q3aG7BTs/WTdlSixKYQfUQ
-   TG4AsAj7/a8kbXyHNjs1HW0GZp5+mXgxsg0nxIkEvnfMdZwoguPD1Fh3r
-   g==;
-IronPort-SDR: Qf/lBrOUwB/cqSFaTWYx9GBfFVfLWdJcXkZ5ReUrI1ZMY4Vk2fP2L47p7HGcTgo5UV9QtYw6dA
- LFOvSEPkDBKgDRbhbF2+aQvr0W8sreSQdUORJzeW825I1RxZA2cYsLkn/o/w/UE1DGD06Ib0P1
- RgDFSJT6KaTJqMx4+32RNN0UK8x4Nbox1j+7NtXnkP2VhRp/cjpWTzyQVEh3/pYLz5CPuPk4eZ
- tHEFlo+pXLfaQJdS6NY0O5stxQKVOgsXCMlJlRMhJxlwnEvNb+B0LcyqhaLPuCqn1yC3MW4TGa
- lw8q2Gmxr1cMFLqzOs+gZwll
-X-IronPort-AV: E=Sophos;i="5.85,372,1624345200"; 
-   d="scan'208";a="132960570"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 14 Oct 2021 01:58:37 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.14; Thu, 14 Oct 2021 01:58:37 -0700
-Received: from soft-dev3-1.microsemi.net (10.10.115.15) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.2176.14 via Frontend Transport; Thu, 14 Oct 2021 01:58:35 -0700
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
-        <lars.povlsen@microchip.com>, <Steen.Hegelund@microchip.com>,
-        <UNGLinuxDriver@microchip.com>, <p.zabel@pengutronix.de>,
-        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH v3 2/2] pinctrl: microchip sgpio: use reset driver
-Date:   Thu, 14 Oct 2021 10:59:29 +0200
-Message-ID: <20211014085929.2579695-3-horatiu.vultur@microchip.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211014085929.2579695-1-horatiu.vultur@microchip.com>
-References: <20211014085929.2579695-1-horatiu.vultur@microchip.com>
+        id S229691AbhJNKQa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 14 Oct 2021 06:16:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37716 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229468AbhJNKQ3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 14 Oct 2021 06:16:29 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F9BBC061570
+        for <linux-gpio@vger.kernel.org>; Thu, 14 Oct 2021 03:14:24 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id w19so22363537edd.2
+        for <linux-gpio@vger.kernel.org>; Thu, 14 Oct 2021 03:14:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20210112.gappssmtp.com; s=20210112;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GHc5A/qhNfuEto6B41cQAXzkLUJ5EigvZPwypQfoqNo=;
+        b=LRSGJ4v6BqaTzAjcf1YExgGxiqvqx8nAF5XRA8swmqSepJG4/g1+zKVbsaEZ0zD+jo
+         iRbow2iNFs8T7pgO3XftuJUw9FRgE5D08jyNciQFyuRtRMWAUrAZeoelZTt0okM2yDYE
+         hvnHQvBEO/0CrDIUF5LwX1ogsUjVwqdMgReCT3U9c+8p5G0jdE+5VmecOjE0wqpHC0zD
+         2clLAw6/wKUCAj5cPdyoT0jmJSW57hsMX4gP+O2ku29OosuVooqxTSQm9iknP8BmgJzL
+         jUvWYQq+K9if+i3oREiytpPtOiyvpn7xN/Yi9ue/q84m5gGEylV3uz2J55q1xJaCi2Io
+         7ivA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=GHc5A/qhNfuEto6B41cQAXzkLUJ5EigvZPwypQfoqNo=;
+        b=ZMvPkqt/SDMQZRyLphWsdYfReiFXrdgkJHOLbymlU3vRsyIFZpyL6QqRPELD3g434X
+         w393rLjNVkmlaT3sb0L5EWUwdJeHYCk5qnEY92+4g1Uqu34wafavIJ28td8RuivnJjhk
+         nNkhzc3xS18AtR5AT0FNLC2wUpqKLN+xmh7q7THvicFwFpbVSWEbWNuaOVKJtGXu7ayz
+         emdA0CRbus/9rwPpMC5upP4gLwjQb4dsIXa9dfOkU94igJcec0EDuvuQbJlp+qXH0c4i
+         5Akik4QjLS305boTGbHqcOBalz76sX/dGvlA3AbNmH2kVLN+nXyqIpvucKqB8MCY73cP
+         PtZQ==
+X-Gm-Message-State: AOAM532SRoB1A5yEy55YG6k+bzYfJQIKuOM/RDPoW77LhONVCS1wjW33
+        H7lt6d0vtw9x1crmMR8YcjUdjQ==
+X-Google-Smtp-Source: ABdhPJyDwtW9LHvRz51bmzBPrlr56K96+xhvMtJUFN5ybCv8O/JwTFkvRi4bCVHoOhQIjmDPbfp3kg==
+X-Received: by 2002:aa7:c741:: with SMTP id c1mr7454024eds.194.1634206463151;
+        Thu, 14 Oct 2021 03:14:23 -0700 (PDT)
+Received: from localhost ([2a02:768:2307:40d6::45a])
+        by smtp.gmail.com with ESMTPSA id t18sm2127329edd.18.2021.10.14.03.14.22
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 14 Oct 2021 03:14:22 -0700 (PDT)
+Sender: Michal Simek <monstr@monstr.eu>
+From:   Michal Simek <michal.simek@xilinx.com>
+To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
+        michal.simek@xilinx.com, git@xilinx.com
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nobuhiro Iwamatsu <iwamatsu@nigauri.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+        Srinivas Neeli <srinivas.neeli@xilinx.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH] dt-bindings: gpio: zynq: Add missing compatible strings
+Date:   Thu, 14 Oct 2021 12:14:18 +0200
+Message-Id: <72c973da5670b5ae81d050c582948894ee4174f8.1634206453.git.michal.simek@xilinx.com>
+X-Mailer: git-send-email 2.33.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On lan966x platform when the switch gets reseted then also the sgpio
-gets reseted. The fix for this is to extend also the sgpio driver to
-call the reset driver which will be reseted only once by the first
-driver that is probed.
+"xlnx,zynqmp-gpio-1.0", "xlnx,versal-gpio-1.0" and "xlnx,pmc-gpio-1.0"
+compatible strings were not moved to yaml format. But they were in origin
+text file.
 
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+Fixes: 45ca16072b70 ("dt-bindings: gpio: zynq: convert bindings to YAML")
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 ---
- drivers/pinctrl/pinctrl-microchip-sgpio.c | 6 ++++++
- 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/pinctrl/pinctrl-microchip-sgpio.c b/drivers/pinctrl/pinctrl-microchip-sgpio.c
-index 072bccdea2a5..e8a91d0824cb 100644
---- a/drivers/pinctrl/pinctrl-microchip-sgpio.c
-+++ b/drivers/pinctrl/pinctrl-microchip-sgpio.c
-@@ -17,6 +17,7 @@
- #include <linux/pinctrl/pinmux.h>
- #include <linux/platform_device.h>
- #include <linux/property.h>
-+#include <linux/reset.h>
+ Documentation/devicetree/bindings/gpio/gpio-zynq.yaml | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-zynq.yaml b/Documentation/devicetree/bindings/gpio/gpio-zynq.yaml
+index 378da2649e66..980f92ad9eba 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-zynq.yaml
++++ b/Documentation/devicetree/bindings/gpio/gpio-zynq.yaml
+@@ -11,7 +11,11 @@ maintainers:
  
- #include "core.h"
- #include "pinconf.h"
-@@ -803,6 +804,7 @@ static int microchip_sgpio_probe(struct platform_device *pdev)
- 	int div_clock = 0, ret, port, i, nbanks;
- 	struct device *dev = &pdev->dev;
- 	struct fwnode_handle *fwnode;
-+	struct reset_control *reset;
- 	struct sgpio_priv *priv;
- 	struct clk *clk;
- 	u32 val;
-@@ -813,6 +815,10 @@ static int microchip_sgpio_probe(struct platform_device *pdev)
+ properties:
+   compatible:
+-    const: xlnx,zynq-gpio-1.0
++    enum:
++      - xlnx,zynq-gpio-1.0
++      - xlnx,zynqmp-gpio-1.0
++      - xlnx,versal-gpio-1.0
++      - xlnx,pmc-gpio-1.0
  
- 	priv->dev = dev;
- 
-+	reset = devm_reset_control_get_shared(&pdev->dev, "switch");
-+	if (!IS_ERR(reset))
-+		reset_control_reset(reset);
-+
- 	clk = devm_clk_get(dev, NULL);
- 	if (IS_ERR(clk))
- 		return dev_err_probe(dev, PTR_ERR(clk), "Failed to get clock\n");
+   reg:
+     maxItems: 1
 -- 
-2.33.0
+2.33.1
 
