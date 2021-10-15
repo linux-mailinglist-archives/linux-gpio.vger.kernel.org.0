@@ -2,79 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B0CA642F206
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Oct 2021 15:22:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3D4442F213
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Oct 2021 15:25:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239255AbhJONYZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 15 Oct 2021 09:24:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39444 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230500AbhJONYX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Oct 2021 09:24:23 -0400
-X-Greylist: delayed 1548 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 15 Oct 2021 06:22:15 PDT
-Received: from mailserv1.kapsi.fi (mailserv1.kapsi.fi [IPv6:2001:67c:1be8::25:1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0CB4C061570;
-        Fri, 15 Oct 2021 06:22:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=ext.kapsi.fi; s=20161220; h=Subject:Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
-        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
-        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=o0wfY5rWG9bmKz4fgn2nS2DQacNRL7NBVJevnu+cu7A=; b=C4BLm5NskSbrQTV1sjBDGHez2B
-        Bb9TCosJPdsS3LYNjtqn7rEp5XDA3EZZLlAsYyjnOXOXTNOIIHA9zB6eHu3G6sTJEfVJRe81gxD2f
-        pQwakmwJIfNhZN2HSYcyXmTbgLp5xpJimHu9+xQNU+W2I/P6EZJ0tYtxzogoXGR+CE8tzRVBALNe1
-        AvTIQc2Yid5js5hUlYgBszJugfslQewUiudB5VoKuCwj4N2I2X9sDKxKzkkWYAlOAGgzsaoED+YBw
-        xCDxOaWlqyKmGWCWinE5mBcM8PlQDA6Ue/pQwnmLzNr14iNVdB2oK6unt7vEatV0fjd6QC87JCLrG
-        mwOwocig==;
-Received: from a2ef-817a-a3e5-8122-5100-87f3-07d0-2001.dyn.estpak.ee ([2001:7d0:87f3:5100:8122:a3e5:817a:a2ef]:52775)
-        by mailserv1.kapsi.fi with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <maukka@ext.kapsi.fi>)
-        id 1mbMl5-0000tY-BT; Fri, 15 Oct 2021 15:56:23 +0300
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Mauri Sandberg <sandberg@mailfence.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Drew Fustini <drew@beagleboard.org>
-References: <20210325122832.119147-1-sandberg@mailfence.com>
- <20210621172053.107045-1-maukka@ext.kapsi.fi>
- <20210621172053.107045-3-maukka@ext.kapsi.fi>
- <CAHp75VcjGpveAHNAW7Xf7d_Zf6LGSSyD6+qBiF9xxvb+EKs3tg@mail.gmail.com>
-From:   Mauri Sandberg <maukka@ext.kapsi.fi>
-Message-ID: <c7b9688f-5f52-94e3-532c-2177132869de@ext.kapsi.fi>
-Date:   Fri, 15 Oct 2021 15:56:23 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        id S236011AbhJON1U (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 15 Oct 2021 09:27:20 -0400
+Received: from esa.microchip.iphmx.com ([68.232.154.123]:34023 "EHLO
+        esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235985AbhJON1T (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Oct 2021 09:27:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1634304313; x=1665840313;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=rmf3/CTvHOYsMOoYG1qTohpi8i7hVFFCkcZosN22AQ8=;
+  b=IXEHBXgrI9gfx8+4BvjkLfjgQv+zE32/+MuI0COr5BEr5rciJugKo3vq
+   LlIgSPCDANIEC9rtLs5KGl2/hqv94JUZ3XHP3jkOv6qHyfGrn+GUuy0wq
+   0x3zFQtF3oU6b9FUuDxY6ENBUGP+v1jzlVYEPnOEH7sDWgoESqPxX982X
+   xQtVV4njjNG7isldrsrvjRndEtfyaxzbin9xs/wUkiNPMVfonH2/EwE/T
+   OtKtna7j4jLtLtes2TYERkk8kAhW1Ffhk3CJiG1vY/jBaY54O9NIGuSqi
+   bQIRak2eCIJoauTuMUxepo6j9qXK/c1w8w9Ee7FQ52klsnaWddy+yQII3
+   A==;
+IronPort-SDR: j/LE/Cbu3hNCnIgHOntnkSC0+XsWCRvmhrQTGfAjDnBNJkRUjgB5E/BlQKzPrcQYXa6OQ2izWS
+ Yi9hqtgYioTPJsefY0yD0QUJ4vHSSiKCxKdRl8dFhnEr9dovQGEITVgo+zEY0PA0xKmaa0R+We
+ 0vqFeFX998hhA6fGMklqfQM3TiDB0n9uOvYwPzQnjXZvBcHL46AwGJXfyFcLuPCLR/xwxwrKZj
+ JsSHKR9hmbU9c6gxo4E+0H87n/QAdXSitPLhJ8RsC3yBviaRQwLkR9+kaHH7SEZG1TOE16zeM6
+ 5R+ZARUCQ6N6e/P96XXh4FId
+X-IronPort-AV: E=Sophos;i="5.85,375,1624345200"; 
+   d="scan'208";a="73075269"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 Oct 2021 06:25:12 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.14; Fri, 15 Oct 2021 06:25:12 -0700
+Received: from soft-dev3-1.microsemi.net (10.10.115.15) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.2176.14 via Frontend Transport; Fri, 15 Oct 2021 06:25:10 -0700
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
+        <lars.povlsen@microchip.com>, <Steen.Hegelund@microchip.com>,
+        <UNGLinuxDriver@microchip.com>, <p.zabel@pengutronix.de>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Subject: [PATCH v4 0/2] pinctrl: pinctrl-microchip-sgpio: Extend to call reset driver
+Date:   Fri, 15 Oct 2021 15:25:24 +0200
+Message-ID: <20211015132526.200816-1-horatiu.vultur@microchip.com>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VcjGpveAHNAW7Xf7d_Zf6LGSSyD6+qBiF9xxvb+EKs3tg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:7d0:87f3:5100:8122:a3e5:817a:a2ef
-X-SA-Exim-Mail-From: maukka@ext.kapsi.fi
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on mailserv1.kapsi.fi
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        NICE_REPLY_A autolearn=ham autolearn_force=no version=3.4.2
-Subject: Re: [PATCH v5 2/2] gpio: gpio-cascade: add generic GPIO cascade
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on mailserv1.kapsi.fi)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+This allows the driver to call an optional reset driver.
 
-On 21.6.2021 20.43, Andy Shevchenko wrote:
+v3->v4:
+ - use devm_reset_control_get_optional_shared
+ - remove the expected name of the reset line
 
->> +       gc->of_node = np;
-> 
-> This should be guarded by CONFIG_OF_GPIO.
-In the Kconfig I have a dependency to OF_GPIO. Is the guarding still 
-necessary? Or should the guard be added and dependency removed? Or have 
-them both?
+v2->v3:
+ - fix warnings reported by 'make dtbs_check'
+
+v1->v2:
+ - add dt-bindings changes
+
+
+Horatiu Vultur (2):
+  dt-bindings: pinctrl: pinctrl-microchip-sgpio: Add reset binding
+  pinctrl: microchip sgpio: use reset driver
+
+ .../devicetree/bindings/pinctrl/microchip,sparx5-sgpio.yaml  | 3 +++
+ drivers/pinctrl/pinctrl-microchip-sgpio.c                    | 5 +++++
+ 2 files changed, 8 insertions(+)
+
+-- 
+2.33.0
+
