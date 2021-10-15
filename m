@@ -2,95 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F5FF42EAC8
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Oct 2021 09:57:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF64242EC5F
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Oct 2021 10:30:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232353AbhJOH7k (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 15 Oct 2021 03:59:40 -0400
-Received: from mail-ua1-f44.google.com ([209.85.222.44]:35547 "EHLO
-        mail-ua1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234653AbhJOH7j (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Oct 2021 03:59:39 -0400
-Received: by mail-ua1-f44.google.com with SMTP id q13so16358299uaq.2;
-        Fri, 15 Oct 2021 00:57:33 -0700 (PDT)
+        id S236796AbhJOIcI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 15 Oct 2021 04:32:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56910 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235604AbhJOIcG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Oct 2021 04:32:06 -0400
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E094C061753
+        for <linux-gpio@vger.kernel.org>; Fri, 15 Oct 2021 01:30:00 -0700 (PDT)
+Received: by mail-ed1-x52e.google.com with SMTP id ec8so35061589edb.6
+        for <linux-gpio@vger.kernel.org>; Fri, 15 Oct 2021 01:30:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20210112.gappssmtp.com; s=20210112;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=yywf8uxmCXs+eHVnojLOdXO3w73p4tPODGryjkUOC2E=;
+        b=l4sgEo7cC46MhO+PI0YeFQne/haReZBLw0/wy6m2pDFVB3+E5ctsPNrDdkeXEPCAIf
+         s4qyVnvX7o++rRkDEuviJmTtYx4crxtzpHUqAYze6yLMGaZpuB2t+Dvy7T6UTC368Cu2
+         V8aW2d/L8DVIkhjuK1SeADaWD6IzrO8rqHWmNbenRsSZK+lpC4trfWbo7JeTr2lwZmmT
+         dV4nYcFRRFAnJAmnWI1awDpvQkiSzfUeL8XFemU57J4IMg/5SqfW+VOeP18B90DK7zl7
+         XgjUlOAK2vEW1yYvM7OWdEWRUo4d2j+R062a+/6HNb4ckgsq6coY2VR1+ICcNeawwEJo
+         Uh/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=i5vb3wGtSZYL9XNwuV89eijT6RI8LwaEwuKKZHudGy8=;
-        b=rUEYa3kAInm5Fe/ugCAUHVDL4OkWnyzcTSVcLAJwCP/Kr0eNIf/OwItx4Qf6w9hhrF
-         8+e70Sf2ssioQQBkEvAIbwgRdqzcT/qcV7BH07pQ4M4xJ497fwv8pkpMRn7Ir9hd62tI
-         jcNwQA4nSih4Oa9aioKF8V8Re52FVDvETq0JzyGp3NP8H2lK0BTrOg/TqeK7fbBwcP6/
-         IdPHZvTZSiYYoX1aZpH6CYh0km/A1gGo7WKVCuC6adOa/nFW4Nx8Mis4LQQ4lYa8fGO3
-         LR22mxnylHonSKmAvxzV4XOehutiiaDtZBH/BBFkV+zrCvfTkUmk/vDumL+qYuOLGiMA
-         bhug==
-X-Gm-Message-State: AOAM53056IX4Q8D0fjim8DQN1ParTv1f1coUnpFi9xhxCbMg+tZpaQRG
-        ub+ZQtHiSXJD5BCgnNX6M/TAz6k2BUIyhQ==
-X-Google-Smtp-Source: ABdhPJwObPnMXTrqwUd4xyP7nMBPhZ7iLEzWjT2LCX0iV6nfw73cEAeDZr+bAOpgim3AQ8qRPVF26Q==
-X-Received: by 2002:ab0:6c4b:: with SMTP id q11mr12340433uas.128.1634284652573;
-        Fri, 15 Oct 2021 00:57:32 -0700 (PDT)
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com. [209.85.222.54])
-        by smtp.gmail.com with ESMTPSA id w20sm3226543vkw.28.2021.10.15.00.57.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 Oct 2021 00:57:32 -0700 (PDT)
-Received: by mail-ua1-f54.google.com with SMTP id q13so16358198uaq.2;
-        Fri, 15 Oct 2021 00:57:31 -0700 (PDT)
-X-Received: by 2002:ab0:58c1:: with SMTP id r1mr11403589uac.89.1634284651673;
- Fri, 15 Oct 2021 00:57:31 -0700 (PDT)
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=yywf8uxmCXs+eHVnojLOdXO3w73p4tPODGryjkUOC2E=;
+        b=mZ38P4sFv+Oivs5lAlkJwsYvdRJEfEMJ17b/t+oQxM9AyfOBbQpd/qPyPCru3RaPsd
+         XI76chdkFqiFgrvuwMgYOGEC/2mKtU/Iox/d21pprq8yTOi9H5DzVak0TX74zZ7rtaWb
+         LKp7a/r9BrGxu+ne/SK7yR2ViRb0alVDNUCMQGcC0GWBUxEwmRRAdZCmv3zB/XT+1Yzp
+         JQ8181AAxIw6D5wFBqdkzgqWoqel3sw7RBDGo+cmO4iAGyNq6CHu+1EO0CbTqDM4udAe
+         UTWRrILoEAQnfZjfHyRdXa0eBLgNyeN9ujIbYUPDGVx3Jyzc4hNwMFo2nyKTKeicscWG
+         V7TA==
+X-Gm-Message-State: AOAM531cnwqkdMu3+y4t/UqNUvtgGkxyhzMdOuYk1CiLAlmEjX9B65TG
+        OzwwhRfIRdHxJs1jy/mFKjizeg==
+X-Google-Smtp-Source: ABdhPJxry4jiBqbpg/NGImCQluSCFaGyDDT/dLeUU1nPcjHfB+LumB8PhvFLsQ4R4CK37LErl3vv9Q==
+X-Received: by 2002:a50:9e85:: with SMTP id a5mr12888588edf.148.1634286598841;
+        Fri, 15 Oct 2021 01:29:58 -0700 (PDT)
+Received: from localhost ([2a02:768:2307:40d6:f666:9af6:3fed:e53b])
+        by smtp.gmail.com with ESMTPSA id j21sm3944973edr.64.2021.10.15.01.29.58
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 15 Oct 2021 01:29:58 -0700 (PDT)
+Sender: Michal Simek <monstr@monstr.eu>
+From:   Michal Simek <michal.simek@xilinx.com>
+To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
+        michal.simek@xilinx.com, git@xilinx.com
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+        Srinivas Neeli <srinivas.neeli@xilinx.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH] dt-bindings: gpio: zynq: Add power-domains
+Date:   Fri, 15 Oct 2021 10:29:57 +0200
+Message-Id: <655523d7bf9658eb0b8e49a06c8b79a04052e5d5.1634286595.git.michal.simek@xilinx.com>
+X-Mailer: git-send-email 2.33.1
 MIME-Version: 1.0
-References: <CAMuHMdUvNM8Tu-+Ed0vjB2-_JUQe7ojUPbzJM=Vy1m_j31sNSg@mail.gmail.com>
- <20211007200250.20661-1-nikita.yoush@cogentembedded.com> <CAMuHMdU2Nr1V035Ntz-XNrc10t7femUFt_WV+Q3EHiWZD5HmkQ@mail.gmail.com>
- <c8234074-a22e-72f9-fbe7-e65d6af74eec@cogentembedded.com> <CAMuHMdU1OhyqnREnwpEUubUsR1DUF_3a1z2MpWxe5U6rWCLUUA@mail.gmail.com>
-In-Reply-To: <CAMuHMdU1OhyqnREnwpEUubUsR1DUF_3a1z2MpWxe5U6rWCLUUA@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 15 Oct 2021 09:57:20 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWbQPN+TsE0LZm-sp46cOoiwjCQw0wS5e2Z1ua66qdntQ@mail.gmail.com>
-Message-ID: <CAMuHMdWbQPN+TsE0LZm-sp46cOoiwjCQw0wS5e2Z1ua66qdntQ@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: renesas: r8a779[56]x: add MediaLB pins
-To:     Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
-        Vladimir Barinov <vladimir.barinov@cogentembedded.com>,
-        LUU HOAI <hoai.luu.ub@renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Nikita,
+Describe optional power-domain property to fix dts_check warnings.
+The similar change was done by commit 8c0aa567146b ("dt-bindings: gpio:
+fsl-imx-gpio: Add power-domains").
 
-On Thu, Oct 14, 2021 at 9:39 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Thu, Oct 14, 2021 at 9:27 PM Nikita Yushchenko
-> <nikita.yoush@cogentembedded.com> wrote:
-> > > Obviously not only the mlb_3pin groups, but also the functions have to
-> > > be moved to the automotive[] arrays ;-)
-> > >
-> > > I'll fix these up while applying, so no need to resend.
-> >
-> > Looking at error mail from build robot (cited below).
-> >
-> > Looks like also must put definitions of mlb_3pin_groups[] / mlb_3pin_mux[] / mlb_3pin_pins[] under GEN3
-> > ifdefs.
-> >
-> > What are the proper steps now - send a v3 of the original patch, or send a fix to what is in linux-next ?
->
-> No worries, I'll fix it up tomorrow myself (unless you beat me to it,
-> then I'll fold
-> your fix into the original commit ;-)
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
 
-Fixed in
-https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git/commit/?h=renesas-pinctrl-for-v5.16&id=ce34fb3cb4a8165a51a90d0ea437d75f34a6d031
+ Documentation/devicetree/bindings/gpio/gpio-zynq.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Gr{oetje,eeting}s,
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-zynq.yaml b/Documentation/devicetree/bindings/gpio/gpio-zynq.yaml
+index 980f92ad9eba..da95b951c23e 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-zynq.yaml
++++ b/Documentation/devicetree/bindings/gpio/gpio-zynq.yaml
+@@ -36,6 +36,9 @@ properties:
+   clocks:
+     maxItems: 1
+ 
++  power-domains:
++    maxItems: 1
++
+ required:
+   - compatible
+   - reg
+-- 
+2.33.1
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
