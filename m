@@ -2,298 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4932842E99E
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Oct 2021 09:01:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F5FF42EAC8
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Oct 2021 09:57:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235840AbhJOHDj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 15 Oct 2021 03:03:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36460 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235837AbhJOHDh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Oct 2021 03:03:37 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD95FC061570
-        for <linux-gpio@vger.kernel.org>; Fri, 15 Oct 2021 00:01:31 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id y30so17078561edi.0
-        for <linux-gpio@vger.kernel.org>; Fri, 15 Oct 2021 00:01:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FmKkfM/1eZ6CH+Nh6bYE9seKAU754cBloquUZK6mdqE=;
-        b=tkVzioxgPLgsxZof6tus91cnxKZrzjdS3z8DEavY8Oi1OmMtqCq65N6JS1GsMCc4eA
-         FgHR7JSmgPMtQpjkLN/lfLULjd48xbrDVeqlAkxp50zIr1GeKu9SxZzpcjOE8rsWpaLO
-         EibptvGr56Ot3HqH2G3Zlrxle/LeVe8kMX97EkEC1Wlstn6q9cA2NbvwBE8994ePisfL
-         /a75reki8xcXuHO6KF/rWatMH67cTf+Tk5yjSZXGfIe3NKPRRCROYb2B0R7ew21kwpZ6
-         MANAKNTSFOG2qsLQVxsKcFpSh04JMzklntlFlllhVRkte4a7whRCrjoNwBvv2TRnuqe0
-         MR/Q==
+        id S232353AbhJOH7k (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 15 Oct 2021 03:59:40 -0400
+Received: from mail-ua1-f44.google.com ([209.85.222.44]:35547 "EHLO
+        mail-ua1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234653AbhJOH7j (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Oct 2021 03:59:39 -0400
+Received: by mail-ua1-f44.google.com with SMTP id q13so16358299uaq.2;
+        Fri, 15 Oct 2021 00:57:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=FmKkfM/1eZ6CH+Nh6bYE9seKAU754cBloquUZK6mdqE=;
-        b=HZzLuTe4Q8uOzUoamMDw5ND+R/gOW/C60dco+JgSXz/j2cfBGK/bUm5zbjvnSjisuG
-         zOneyEGUJ+NnI3z2seY3/Y/XjzBQiEKZLktaXIzRUyYIH0ul7OnvrZ32UMywCnXx+H60
-         1Hbd/zKeRnl8c1/hEGA2Bjz/NTv/nqpXPyaHZURTWblTEaS5HJDKPjobA/vb08joca+N
-         v6O62qH2XMIl0pfqn2canxSxLH3nsA5UxKPVIFp7acSmfnvAiOb0P/noe1/NEj/D0YVU
-         su1KCtph5gXeM5TK54AftckWXGjcn2AitjXbgcBdAONFlLNIimjO+M2eRIW6wOX10euH
-         UL3w==
-X-Gm-Message-State: AOAM530svK1/jB5yGA7efIqLjjfZTDC61RXTRv3V79Qcmw0gsEw5LvNU
-        g9qTMnjMUtkb1Pdwv2D+h3iiZbHzQyCA5+lMApzFdA==
-X-Google-Smtp-Source: ABdhPJwNoPIEp9DqsKcjRA/4bQg99WBVvXwoh/QRRh1FQrhwZnaIKoS9tr3rFItF7II3bnd8+H/p9XfpTYmuH2TO/1A=
-X-Received: by 2002:a50:d50c:: with SMTP id u12mr15591860edi.118.1634281287150;
- Fri, 15 Oct 2021 00:01:27 -0700 (PDT)
+        bh=i5vb3wGtSZYL9XNwuV89eijT6RI8LwaEwuKKZHudGy8=;
+        b=rUEYa3kAInm5Fe/ugCAUHVDL4OkWnyzcTSVcLAJwCP/Kr0eNIf/OwItx4Qf6w9hhrF
+         8+e70Sf2ssioQQBkEvAIbwgRdqzcT/qcV7BH07pQ4M4xJ497fwv8pkpMRn7Ir9hd62tI
+         jcNwQA4nSih4Oa9aioKF8V8Re52FVDvETq0JzyGp3NP8H2lK0BTrOg/TqeK7fbBwcP6/
+         IdPHZvTZSiYYoX1aZpH6CYh0km/A1gGo7WKVCuC6adOa/nFW4Nx8Mis4LQQ4lYa8fGO3
+         LR22mxnylHonSKmAvxzV4XOehutiiaDtZBH/BBFkV+zrCvfTkUmk/vDumL+qYuOLGiMA
+         bhug==
+X-Gm-Message-State: AOAM53056IX4Q8D0fjim8DQN1ParTv1f1coUnpFi9xhxCbMg+tZpaQRG
+        ub+ZQtHiSXJD5BCgnNX6M/TAz6k2BUIyhQ==
+X-Google-Smtp-Source: ABdhPJwObPnMXTrqwUd4xyP7nMBPhZ7iLEzWjT2LCX0iV6nfw73cEAeDZr+bAOpgim3AQ8qRPVF26Q==
+X-Received: by 2002:ab0:6c4b:: with SMTP id q11mr12340433uas.128.1634284652573;
+        Fri, 15 Oct 2021 00:57:32 -0700 (PDT)
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com. [209.85.222.54])
+        by smtp.gmail.com with ESMTPSA id w20sm3226543vkw.28.2021.10.15.00.57.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 Oct 2021 00:57:32 -0700 (PDT)
+Received: by mail-ua1-f54.google.com with SMTP id q13so16358198uaq.2;
+        Fri, 15 Oct 2021 00:57:31 -0700 (PDT)
+X-Received: by 2002:ab0:58c1:: with SMTP id r1mr11403589uac.89.1634284651673;
+ Fri, 15 Oct 2021 00:57:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211008144920.10975-1-asmaa@nvidia.com> <20211008144920.10975-2-asmaa@nvidia.com>
-In-Reply-To: <20211008144920.10975-2-asmaa@nvidia.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 15 Oct 2021 09:01:16 +0200
-Message-ID: <CAMRc=Mc4yJZ2qv7W+mk-jJhhxEwe+7VowJt51ZekpVrZ=4LsZA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] gpio: mlxbf2: Introduce IRQ support
-To:     Asmaa Mnebhi <asmaa@nvidia.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+References: <CAMuHMdUvNM8Tu-+Ed0vjB2-_JUQe7ojUPbzJM=Vy1m_j31sNSg@mail.gmail.com>
+ <20211007200250.20661-1-nikita.yoush@cogentembedded.com> <CAMuHMdU2Nr1V035Ntz-XNrc10t7femUFt_WV+Q3EHiWZD5HmkQ@mail.gmail.com>
+ <c8234074-a22e-72f9-fbe7-e65d6af74eec@cogentembedded.com> <CAMuHMdU1OhyqnREnwpEUubUsR1DUF_3a1z2MpWxe5U6rWCLUUA@mail.gmail.com>
+In-Reply-To: <CAMuHMdU1OhyqnREnwpEUubUsR1DUF_3a1z2MpWxe5U6rWCLUUA@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 15 Oct 2021 09:57:20 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWbQPN+TsE0LZm-sp46cOoiwjCQw0wS5e2Z1ua66qdntQ@mail.gmail.com>
+Message-ID: <CAMuHMdWbQPN+TsE0LZm-sp46cOoiwjCQw0wS5e2Z1ua66qdntQ@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: renesas: r8a779[56]x: add MediaLB pins
+To:     Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>, davthompson@nvidia.com
+        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
+        Vladimir Barinov <vladimir.barinov@cogentembedded.com>,
+        LUU HOAI <hoai.luu.ub@renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 8, 2021 at 4:50 PM Asmaa Mnebhi <asmaa@nvidia.com> wrote:
->
-> Introduce standard IRQ handling in the gpio-mlxbf2.c
-> driver.
->
-> Signed-off-by: Asmaa Mnebhi <asmaa@nvidia.com>
-> ---
->  drivers/gpio/gpio-mlxbf2.c | 147 ++++++++++++++++++++++++++++++++++++-
->  1 file changed, 145 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-mlxbf2.c b/drivers/gpio/gpio-mlxbf2.c
-> index 177d03ef4529..3d89912a05b8 100644
-> --- a/drivers/gpio/gpio-mlxbf2.c
-> +++ b/drivers/gpio/gpio-mlxbf2.c
-> @@ -1,9 +1,14 @@
->  // SPDX-License-Identifier: GPL-2.0
->
-> +/*
-> + * Copyright (C) 2020-2021 NVIDIA CORPORATION & AFFILIATES
-> + */
-> +
->  #include <linux/bitfield.h>
->  #include <linux/bitops.h>
->  #include <linux/device.h>
->  #include <linux/gpio/driver.h>
-> +#include <linux/interrupt.h>
->  #include <linux/io.h>
->  #include <linux/ioport.h>
->  #include <linux/kernel.h>
-> @@ -43,9 +48,14 @@
->  #define YU_GPIO_MODE0                  0x0c
->  #define YU_GPIO_DATASET                        0x14
->  #define YU_GPIO_DATACLEAR              0x18
-> +#define YU_GPIO_CAUSE_RISE_EN          0x44
-> +#define YU_GPIO_CAUSE_FALL_EN          0x48
->  #define YU_GPIO_MODE1_CLEAR            0x50
->  #define YU_GPIO_MODE0_SET              0x54
->  #define YU_GPIO_MODE0_CLEAR            0x58
-> +#define YU_GPIO_CAUSE_OR_CAUSE_EVTEN0  0x80
-> +#define YU_GPIO_CAUSE_OR_EVTEN0                0x94
-> +#define YU_GPIO_CAUSE_OR_CLRCAUSE      0x98
->
->  struct mlxbf2_gpio_context_save_regs {
->         u32 gpio_mode0;
-> @@ -55,6 +65,7 @@ struct mlxbf2_gpio_context_save_regs {
->  /* BlueField-2 gpio block context structure. */
->  struct mlxbf2_gpio_context {
->         struct gpio_chip gc;
-> +       struct irq_chip irq_chip;
->
->         /* YU GPIO blocks address */
->         void __iomem *gpio_io;
-> @@ -218,15 +229,114 @@ static int mlxbf2_gpio_direction_output(struct gpio_chip *chip,
->         return ret;
->  }
->
-> +static void mlxbf2_gpio_irq_enable(struct irq_data *irqd)
-> +{
-> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(irqd);
-> +       struct mlxbf2_gpio_context *gs = gpiochip_get_data(gc);
-> +       int offset = irqd_to_hwirq(irqd);
-> +       unsigned long flags;
-> +       u32 val;
-> +
-> +       spin_lock_irqsave(&gs->gc.bgpio_lock, flags);
-> +       val = readl(gs->gpio_io + YU_GPIO_CAUSE_OR_CLRCAUSE);
-> +       val |= BIT(offset);
-> +       writel(val, gs->gpio_io + YU_GPIO_CAUSE_OR_CLRCAUSE);
-> +
-> +       val = readl(gs->gpio_io + YU_GPIO_CAUSE_OR_EVTEN0);
-> +       val |= BIT(offset);
-> +       writel(val, gs->gpio_io + YU_GPIO_CAUSE_OR_EVTEN0);
-> +       spin_unlock_irqrestore(&gs->gc.bgpio_lock, flags);
-> +}
-> +
-> +static void mlxbf2_gpio_irq_disable(struct irq_data *irqd)
-> +{
-> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(irqd);
-> +       struct mlxbf2_gpio_context *gs = gpiochip_get_data(gc);
-> +       int offset = irqd_to_hwirq(irqd);
-> +       unsigned long flags;
-> +       u32 val;
-> +
-> +       spin_lock_irqsave(&gs->gc.bgpio_lock, flags);
-> +       val = readl(gs->gpio_io + YU_GPIO_CAUSE_OR_EVTEN0);
-> +       val &= ~BIT(offset);
-> +       writel(val, gs->gpio_io + YU_GPIO_CAUSE_OR_EVTEN0);
-> +       spin_unlock_irqrestore(&gs->gc.bgpio_lock, flags);
-> +}
-> +
-> +static irqreturn_t mlxbf2_gpio_irq_handler(int irq, void *ptr)
-> +{
-> +       struct mlxbf2_gpio_context *gs = ptr;
-> +       struct gpio_chip *gc = &gs->gc;
-> +       unsigned long pending;
-> +       u32 level;
-> +
-> +       pending = readl(gs->gpio_io + YU_GPIO_CAUSE_OR_CAUSE_EVTEN0);
-> +       writel(pending, gs->gpio_io + YU_GPIO_CAUSE_OR_CLRCAUSE);
-> +
-> +       for_each_set_bit(level, &pending, gc->ngpio) {
-> +               int gpio_irq = irq_find_mapping(gc->irq.domain, level);
-> +               generic_handle_irq(gpio_irq);
-> +       }
-> +
-> +       return IRQ_RETVAL(pending);
-> +}
-> +
-> +static int
-> +mlxbf2_gpio_irq_set_type(struct irq_data *irqd, unsigned int type)
-> +{
-> +       struct gpio_chip *gc = irq_data_get_irq_chip_data(irqd);
-> +       struct mlxbf2_gpio_context *gs = gpiochip_get_data(gc);
-> +       int offset = irqd_to_hwirq(irqd);
-> +       unsigned long flags;
-> +       bool fall = false;
-> +       bool rise = false;
-> +       u32 val;
-> +
-> +       switch (type & IRQ_TYPE_SENSE_MASK) {
-> +       case IRQ_TYPE_EDGE_BOTH:
-> +               fall = true;
-> +               rise = true;
-> +               break;
-> +       case IRQ_TYPE_EDGE_RISING:
-> +               rise = true;
-> +               break;
-> +       case IRQ_TYPE_EDGE_FALLING:
-> +               fall = true;
-> +               break;
-> +       default:
-> +               return -EINVAL;
-> +       }
-> +
-> +       spin_lock_irqsave(&gs->gc.bgpio_lock, flags);
-> +       if (fall) {
-> +               val = readl(gs->gpio_io + YU_GPIO_CAUSE_FALL_EN);
-> +               val |= BIT(offset);
-> +               writel(val, gs->gpio_io + YU_GPIO_CAUSE_FALL_EN);
-> +       }
-> +
-> +       if (rise) {
-> +               val = readl(gs->gpio_io + YU_GPIO_CAUSE_RISE_EN);
-> +               val |= BIT(offset);
-> +               writel(val, gs->gpio_io + YU_GPIO_CAUSE_RISE_EN);
-> +       }
-> +       spin_unlock_irqrestore(&gs->gc.bgpio_lock, flags);
-> +
-> +       return 0;
-> +}
-> +
->  /* BlueField-2 GPIO driver initialization routine. */
->  static int
->  mlxbf2_gpio_probe(struct platform_device *pdev)
->  {
->         struct mlxbf2_gpio_context *gs;
->         struct device *dev = &pdev->dev;
-> +       struct gpio_irq_chip *girq;
->         struct gpio_chip *gc;
->         unsigned int npins;
-> -       int ret;
-> +       const char *name;
-> +       int ret, irq;
-> +
-> +       name = dev_name(dev);
->
->         gs = devm_kzalloc(dev, sizeof(*gs), GFP_KERNEL);
->         if (!gs)
-> @@ -256,11 +366,44 @@ mlxbf2_gpio_probe(struct platform_device *pdev)
->                         NULL,
->                         0);
->
-> +       if (ret) {
-> +               dev_err(dev, "bgpio_init failed\n");
-> +               return ret;
-> +       }
+Hi Nikita,
 
-This is a correct fix but it should be sent as a fix aimed for stable
-in a separate branch, as we want that to be backported.
+On Thu, Oct 14, 2021 at 9:39 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Thu, Oct 14, 2021 at 9:27 PM Nikita Yushchenko
+> <nikita.yoush@cogentembedded.com> wrote:
+> > > Obviously not only the mlb_3pin groups, but also the functions have to
+> > > be moved to the automotive[] arrays ;-)
+> > >
+> > > I'll fix these up while applying, so no need to resend.
+> >
+> > Looking at error mail from build robot (cited below).
+> >
+> > Looks like also must put definitions of mlb_3pin_groups[] / mlb_3pin_mux[] / mlb_3pin_pins[] under GEN3
+> > ifdefs.
+> >
+> > What are the proper steps now - send a v3 of the original patch, or send a fix to what is in linux-next ?
+>
+> No worries, I'll fix it up tomorrow myself (unless you beat me to it,
+> then I'll fold
+> your fix into the original commit ;-)
 
-Other than that it looks good to me, which tree do you want it to go through?
+Fixed in
+https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git/commit/?h=renesas-pinctrl-for-v5.16&id=ce34fb3cb4a8165a51a90d0ea437d75f34a6d031
 
-Bart
+Gr{oetje,eeting}s,
 
-> +
->         gc->direction_input = mlxbf2_gpio_direction_input;
->         gc->direction_output = mlxbf2_gpio_direction_output;
->         gc->ngpio = npins;
->         gc->owner = THIS_MODULE;
->
-> +       irq = platform_get_irq(pdev, 0);
-> +       if (irq >= 0) {
-> +               gs->irq_chip.name = name;
-> +               gs->irq_chip.irq_set_type = mlxbf2_gpio_irq_set_type;
-> +               gs->irq_chip.irq_enable = mlxbf2_gpio_irq_enable;
-> +               gs->irq_chip.irq_disable = mlxbf2_gpio_irq_disable;
-> +
-> +               girq = &gs->gc.irq;
-> +               girq->chip = &gs->irq_chip;
-> +               girq->handler = handle_simple_irq;
-> +               girq->default_type = IRQ_TYPE_NONE;
-> +               /* This will let us handle the parent IRQ in the driver */
-> +               girq->num_parents = 0;
-> +               girq->parents = NULL;
-> +               girq->parent_handler = NULL;
-> +
-> +               /*
-> +                * Directly request the irq here instead of passing
-> +                * a flow-handler because the irq is shared.
-> +                */
-> +               ret = devm_request_irq(dev, irq, mlxbf2_gpio_irq_handler,
-> +                                      IRQF_SHARED, name, gs);
-> +               if (ret) {
-> +                       dev_err(dev, "failed to request IRQ");
-> +                       return ret;
-> +               }
-> +       }
-> +
->         platform_set_drvdata(pdev, gs);
->
->         ret = devm_gpiochip_add_data(dev, &gs->gc, gs);
-> @@ -315,5 +458,5 @@ static struct platform_driver mlxbf2_gpio_driver = {
->  module_platform_driver(mlxbf2_gpio_driver);
->
->  MODULE_DESCRIPTION("Mellanox BlueField-2 GPIO Driver");
-> -MODULE_AUTHOR("Mellanox Technologies");
-> +MODULE_AUTHOR("Asmaa Mnebhi <asmaa@nvidia.com>");
->  MODULE_LICENSE("GPL v2");
-> --
-> 2.30.1
->
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
