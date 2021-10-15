@@ -2,111 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FB4442EFDE
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Oct 2021 13:42:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6200042F01B
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Oct 2021 13:59:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235463AbhJOLo4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 15 Oct 2021 07:44:56 -0400
-Received: from mail-ot1-f46.google.com ([209.85.210.46]:46020 "EHLO
-        mail-ot1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233893AbhJOLoz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Oct 2021 07:44:55 -0400
-Received: by mail-ot1-f46.google.com with SMTP id l16-20020a9d6a90000000b0054e7ab56f27so12357964otq.12;
-        Fri, 15 Oct 2021 04:42:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JfZm3iz53zBbmZ+VZQc8KEVHhrHKIZCNO2+vdUYexZQ=;
-        b=K9khiOGXuhLa3d+bYUFZUTD3HNSebX0cfXxrkpZWfPYIyfKsk9lDnVzyxKVAwmHJS9
-         f8VzXSYQ2LadJHmoQyRHhupPrpxcOQCbx0r0GwCizfXCbaotvPKoRe0eLamd2mzf2RNd
-         G+1LyqUXWQlrY0b3CxFhopa8FjzGm8NGjhBDEI0SI7ggKs7dVDWLplTkODUXYFNyOZid
-         iGgHAGYmLtJOEb6P3EKVJwJHovFWukfilwqM/CXh1mQdXIfSQ37Dc81dW4yaETbInbH4
-         yuiRJibQ2NikutinjLi/hiB4iMd8rVxhNYbkxwDllF8b5lZujiWPuUP2Vm5PDhTpSw2T
-         6PGQ==
-X-Gm-Message-State: AOAM533IlFTr64RSEDgSwSW8e+b2veVD9DfsbcTpI8UCYisoC4m219PR
-        tvTlQxx78GF61fIcTKEpDySZ1DxlROTBpKY7vuM=
-X-Google-Smtp-Source: ABdhPJyoEJdEus2DquPhhvMi/xTGqQhpdGRCjogsE1cGs4H+xC9389P/c68uhtDj1mE7Yxm1bxzEaLCJvcMT4JIVlNM=
-X-Received: by 2002:a05:6830:90b:: with SMTP id v11mr6395998ott.254.1634298169233;
- Fri, 15 Oct 2021 04:42:49 -0700 (PDT)
+        id S238641AbhJOMBn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 15 Oct 2021 08:01:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48704 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238637AbhJOMBm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Oct 2021 08:01:42 -0400
+Received: from andre.telenet-ops.be (andre.telenet-ops.be [IPv6:2a02:1800:120:4::f00:15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8033AC061570
+        for <linux-gpio@vger.kernel.org>; Fri, 15 Oct 2021 04:59:36 -0700 (PDT)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed20:ad48:4534:27c0:db4b])
+        by andre.telenet-ops.be with bizsmtp
+        id 6Bza2600C0SQF6f01BzaSA; Fri, 15 Oct 2021 13:59:35 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1mbLs6-0053nA-KV; Fri, 15 Oct 2021 13:59:34 +0200
+Received: from geert by rox.of.borg with local (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1mbLs6-004hzu-49; Fri, 15 Oct 2021 13:59:34 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [GIT PULL] pinctrl: renesas: Updates for v5.16 (take two)
+Date:   Fri, 15 Oct 2021 13:59:32 +0200
+Message-Id: <cover.1634298539.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20211014134756.39092-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20211014134756.39092-1-andriy.shevchenko@linux.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 15 Oct 2021 13:42:37 +0200
-Message-ID: <CAJZ5v0jqXqhV1FSyuoVwbgwhte7Q4KUQMozggcxCHGPf+Mfw=A@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] driver core: Provide device_match_acpi_handle() helper
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Saravana Kannan <saravanak@google.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Wolfram Sang <wsa@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 14, 2021 at 3:48 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> We have a couple of users of this helper, make it available for them.
->
-> The prototype for the helper is specifically crafted in order to be
-> easily used with bus_find_device() call. That's why its location is
-> in the driver core rather than ACPI.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+	Hi Linus,
 
-OK, please feel free to add
+The following changes since commit fcfb63148c241adad54ed99fc318167176d7254b:
 
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+  pinctrl: renesas: rzg2l: Fix missing port register 21h (2021-09-24 15:14:49 +0200)
 
-to all of the patches in this series.
+are available in the Git repository at:
 
-> ---
-> v4: amended changelog to clarify implementation details (Rafael)
->  drivers/base/core.c        | 6 ++++++
->  include/linux/device/bus.h | 1 +
->  2 files changed, 7 insertions(+)
->
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index b67ebe6a323c..fd034d742447 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -4838,6 +4838,12 @@ int device_match_acpi_dev(struct device *dev, const void *adev)
->  }
->  EXPORT_SYMBOL(device_match_acpi_dev);
->
-> +int device_match_acpi_handle(struct device *dev, const void *handle)
-> +{
-> +       return ACPI_HANDLE(dev) == handle;
-> +}
-> +EXPORT_SYMBOL(device_match_acpi_handle);
-> +
->  int device_match_any(struct device *dev, const void *unused)
->  {
->         return 1;
-> diff --git a/include/linux/device/bus.h b/include/linux/device/bus.h
-> index 062777a45a74..a039ab809753 100644
-> --- a/include/linux/device/bus.h
-> +++ b/include/linux/device/bus.h
-> @@ -143,6 +143,7 @@ int device_match_of_node(struct device *dev, const void *np);
->  int device_match_fwnode(struct device *dev, const void *fwnode);
->  int device_match_devt(struct device *dev, const void *pdevt);
->  int device_match_acpi_dev(struct device *dev, const void *adev);
-> +int device_match_acpi_handle(struct device *dev, const void *handle);
->  int device_match_any(struct device *dev, const void *unused);
->
->  /* iterator helpers for buses */
-> --
-> 2.33.0
->
+  git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v5.16-tag2
+
+for you to fetch changes up to f4e260bffcf367523b77f936fe0dbd278581305e:
+
+  pinctrl: renesas: checker: Prefix common checker output (2021-10-15 09:48:00 +0200)
+
+----------------------------------------------------------------
+pinctrl: renesas: Updates for v5.16 (take two)
+
+  - Add MediaLB pins on R-Car H3, M3-W/W+, and M3-N.
+  - Miscellaneous fixes and improvements.
+
+Thanks for pulling!
+----------------------------------------------------------------
+Andrey Gusakov (1):
+      pinctrl: renesas: r8a779[56]x: Add MediaLB pins
+
+Geert Uytterhoeven (5):
+      pinctrl: renesas: Fix save/restore on SoCs with pull-down only pins
+      pinctrl: renesas: checker: Fix off-by-one bug in drive register check
+      pinctrl: renesas: checker: Move overlapping field check
+      pinctrl: renesas: checker: Fix bias checks on SoCs with pull-down only pins
+      pinctrl: renesas: checker: Prefix common checker output
+
+ drivers/pinctrl/renesas/core.c         | 73 +++++++++++++++++++++-------------
+ drivers/pinctrl/renesas/pfc-r8a77950.c | 14 +++++++
+ drivers/pinctrl/renesas/pfc-r8a77951.c | 22 +++++++++-
+ drivers/pinctrl/renesas/pfc-r8a7796.c  | 22 +++++++++-
+ drivers/pinctrl/renesas/pfc-r8a77965.c | 22 +++++++++-
+ 5 files changed, 119 insertions(+), 34 deletions(-)
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
