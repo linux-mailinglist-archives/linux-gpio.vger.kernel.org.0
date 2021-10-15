@@ -2,89 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6200042F01B
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Oct 2021 13:59:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0CA642F206
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Oct 2021 15:22:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238641AbhJOMBn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 15 Oct 2021 08:01:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48704 "EHLO
+        id S239255AbhJONYZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 15 Oct 2021 09:24:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238637AbhJOMBm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Oct 2021 08:01:42 -0400
-Received: from andre.telenet-ops.be (andre.telenet-ops.be [IPv6:2a02:1800:120:4::f00:15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8033AC061570
-        for <linux-gpio@vger.kernel.org>; Fri, 15 Oct 2021 04:59:36 -0700 (PDT)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed20:ad48:4534:27c0:db4b])
-        by andre.telenet-ops.be with bizsmtp
-        id 6Bza2600C0SQF6f01BzaSA; Fri, 15 Oct 2021 13:59:35 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1mbLs6-0053nA-KV; Fri, 15 Oct 2021 13:59:34 +0200
-Received: from geert by rox.of.borg with local (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1mbLs6-004hzu-49; Fri, 15 Oct 2021 13:59:34 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [GIT PULL] pinctrl: renesas: Updates for v5.16 (take two)
-Date:   Fri, 15 Oct 2021 13:59:32 +0200
-Message-Id: <cover.1634298539.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S230500AbhJONYX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Oct 2021 09:24:23 -0400
+X-Greylist: delayed 1548 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 15 Oct 2021 06:22:15 PDT
+Received: from mailserv1.kapsi.fi (mailserv1.kapsi.fi [IPv6:2001:67c:1be8::25:1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0CB4C061570;
+        Fri, 15 Oct 2021 06:22:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=ext.kapsi.fi; s=20161220; h=Subject:Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Sender:
+        Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+        :Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=o0wfY5rWG9bmKz4fgn2nS2DQacNRL7NBVJevnu+cu7A=; b=C4BLm5NskSbrQTV1sjBDGHez2B
+        Bb9TCosJPdsS3LYNjtqn7rEp5XDA3EZZLlAsYyjnOXOXTNOIIHA9zB6eHu3G6sTJEfVJRe81gxD2f
+        pQwakmwJIfNhZN2HSYcyXmTbgLp5xpJimHu9+xQNU+W2I/P6EZJ0tYtxzogoXGR+CE8tzRVBALNe1
+        AvTIQc2Yid5js5hUlYgBszJugfslQewUiudB5VoKuCwj4N2I2X9sDKxKzkkWYAlOAGgzsaoED+YBw
+        xCDxOaWlqyKmGWCWinE5mBcM8PlQDA6Ue/pQwnmLzNr14iNVdB2oK6unt7vEatV0fjd6QC87JCLrG
+        mwOwocig==;
+Received: from a2ef-817a-a3e5-8122-5100-87f3-07d0-2001.dyn.estpak.ee ([2001:7d0:87f3:5100:8122:a3e5:817a:a2ef]:52775)
+        by mailserv1.kapsi.fi with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <maukka@ext.kapsi.fi>)
+        id 1mbMl5-0000tY-BT; Fri, 15 Oct 2021 15:56:23 +0300
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Mauri Sandberg <sandberg@mailfence.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Drew Fustini <drew@beagleboard.org>
+References: <20210325122832.119147-1-sandberg@mailfence.com>
+ <20210621172053.107045-1-maukka@ext.kapsi.fi>
+ <20210621172053.107045-3-maukka@ext.kapsi.fi>
+ <CAHp75VcjGpveAHNAW7Xf7d_Zf6LGSSyD6+qBiF9xxvb+EKs3tg@mail.gmail.com>
+From:   Mauri Sandberg <maukka@ext.kapsi.fi>
+Message-ID: <c7b9688f-5f52-94e3-532c-2177132869de@ext.kapsi.fi>
+Date:   Fri, 15 Oct 2021 15:56:23 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75VcjGpveAHNAW7Xf7d_Zf6LGSSyD6+qBiF9xxvb+EKs3tg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:7d0:87f3:5100:8122:a3e5:817a:a2ef
+X-SA-Exim-Mail-From: maukka@ext.kapsi.fi
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on mailserv1.kapsi.fi
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        NICE_REPLY_A autolearn=ham autolearn_force=no version=3.4.2
+Subject: Re: [PATCH v5 2/2] gpio: gpio-cascade: add generic GPIO cascade
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on mailserv1.kapsi.fi)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-	Hi Linus,
 
-The following changes since commit fcfb63148c241adad54ed99fc318167176d7254b:
+On 21.6.2021 20.43, Andy Shevchenko wrote:
 
-  pinctrl: renesas: rzg2l: Fix missing port register 21h (2021-09-24 15:14:49 +0200)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v5.16-tag2
-
-for you to fetch changes up to f4e260bffcf367523b77f936fe0dbd278581305e:
-
-  pinctrl: renesas: checker: Prefix common checker output (2021-10-15 09:48:00 +0200)
-
-----------------------------------------------------------------
-pinctrl: renesas: Updates for v5.16 (take two)
-
-  - Add MediaLB pins on R-Car H3, M3-W/W+, and M3-N.
-  - Miscellaneous fixes and improvements.
-
-Thanks for pulling!
-----------------------------------------------------------------
-Andrey Gusakov (1):
-      pinctrl: renesas: r8a779[56]x: Add MediaLB pins
-
-Geert Uytterhoeven (5):
-      pinctrl: renesas: Fix save/restore on SoCs with pull-down only pins
-      pinctrl: renesas: checker: Fix off-by-one bug in drive register check
-      pinctrl: renesas: checker: Move overlapping field check
-      pinctrl: renesas: checker: Fix bias checks on SoCs with pull-down only pins
-      pinctrl: renesas: checker: Prefix common checker output
-
- drivers/pinctrl/renesas/core.c         | 73 +++++++++++++++++++++-------------
- drivers/pinctrl/renesas/pfc-r8a77950.c | 14 +++++++
- drivers/pinctrl/renesas/pfc-r8a77951.c | 22 +++++++++-
- drivers/pinctrl/renesas/pfc-r8a7796.c  | 22 +++++++++-
- drivers/pinctrl/renesas/pfc-r8a77965.c | 22 +++++++++-
- 5 files changed, 119 insertions(+), 34 deletions(-)
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+>> +       gc->of_node = np;
+> 
+> This should be guarded by CONFIG_OF_GPIO.
+In the Kconfig I have a dependency to OF_GPIO. Is the guarding still 
+necessary? Or should the guard be added and dependency removed? Or have 
+them both?
