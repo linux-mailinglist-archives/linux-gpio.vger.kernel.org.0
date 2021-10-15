@@ -2,90 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3567642F421
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Oct 2021 15:46:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C33DF42F4DD
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Oct 2021 16:11:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239999AbhJONss convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Fri, 15 Oct 2021 09:48:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45172 "EHLO
+        id S240146AbhJOONa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 15 Oct 2021 10:13:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240003AbhJONsj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Oct 2021 09:48:39 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0A6CC061764
-        for <linux-gpio@vger.kernel.org>; Fri, 15 Oct 2021 06:46:33 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1mbNXU-0001eJ-Na; Fri, 15 Oct 2021 15:46:24 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1mbNXT-0003MH-Pj; Fri, 15 Oct 2021 15:46:23 +0200
-Message-ID: <045af226c30bde06bff318e9c0673afd86540661.camel@pengutronix.de>
-Subject: Re: [PATCH v3 2/2] pinctrl: microchip sgpio: use reset driver
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Cc:     linus.walleij@linaro.org, robh+dt@kernel.org,
-        lars.povlsen@microchip.com, Steen.Hegelund@microchip.com,
-        UNGLinuxDriver@microchip.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 15 Oct 2021 15:46:23 +0200
-In-Reply-To: <20211014143733.t2dov6ajjebxlht6@soft-dev3-1.localhost>
-References: <20211014085929.2579695-1-horatiu.vultur@microchip.com>
-         <20211014085929.2579695-3-horatiu.vultur@microchip.com>
-         <2874212d2f9462880d1b0aae35296162e1277e62.camel@pengutronix.de>
-         <20211014143733.t2dov6ajjebxlht6@soft-dev3-1.localhost>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        with ESMTP id S240089AbhJOON2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Oct 2021 10:13:28 -0400
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D48DC061764
+        for <linux-gpio@vger.kernel.org>; Fri, 15 Oct 2021 07:11:16 -0700 (PDT)
+Received: by mail-wm1-x32f.google.com with SMTP id b189-20020a1c1bc6000000b0030da052dd4fso2513036wmb.3
+        for <linux-gpio@vger.kernel.org>; Fri, 15 Oct 2021 07:11:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Er3WiMyf17c0WY4AO4vNjbmHxPQdkdtX2SYw/tzJ4Tw=;
+        b=nR5HWzmAsjCJD9ODhBtDt3y6oqRpgGprk/5xLr2UPVtU2heGvxseRGBWlJk/v5Bt0f
+         ZhqEWvPvmUiZymr5y9D/M7N3bEBSogIfgHmDgxSJwgRYaSGonLb/40K/Ff93lgi8qcby
+         4gSs1oHYhcKY1PVZUtymSvAsw/XWnZWZ1rnJzMuhO92R3SibtyxtejFd96HekOzR8jCn
+         8PRcyVgOEOMRK4l/DxIYmoBk+4JnilAEM9Av3yIjVsBmtWTrW2+0vhrrWgARoZ5eomSs
+         93PHWKI5mcBFp6ImL/EdqwQesDT7jImC0bKvwsjlV0VndfYHfuTLW4ZAZJI8CNwDL5w4
+         RZnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Er3WiMyf17c0WY4AO4vNjbmHxPQdkdtX2SYw/tzJ4Tw=;
+        b=APBRGKaYbqI2bDs2tNbQJ64ctE+bv/TTpRSjg3J93Cd3Vp3SqGC7OCgM21tySk+npd
+         S93fGmhLtyU3Jl3e8z6AmsTs5AqdSkVGyboIi09weA/hFBe/XTnm5nVT6d1KTRH01ZUu
+         mP7SeXBN3td/Y1MoQs5gJ5+2KBul0IMSBb/0xA8FMVjqTIWfWLZeM5AOCmpxq7FBHx5p
+         cKXjJhPEECnuZ0w2znW31nFv/h/v9y4352kzhJShZg5MmVt1Z3/IWnAsyYIvUEQEzGoD
+         ShsDqo51Mk4dnRk5lkX86aFXlO6YaaP4mGPvaoKzCnI/jPREbbD/+2TRJnwt1aU72jdL
+         IT3g==
+X-Gm-Message-State: AOAM531WHoI73xXNUzjkEKd+EPG+BO9gWDR75d/BnZku0I2cQGkQ0hC3
+        vz9n6XV19lhHM5v2tKVgr6Zhng==
+X-Google-Smtp-Source: ABdhPJwyIbVf187jUvsiTcIXNn0XqSnzRXM1CqrDJkl8XcjfP478xbdHT9w+WChIiBS3Ervp3IbA3Q==
+X-Received: by 2002:a05:600c:a43:: with SMTP id c3mr25776973wmq.193.1634307074986;
+        Fri, 15 Oct 2021 07:11:14 -0700 (PDT)
+Received: from debian-brgl.home ([2a01:cb1d:334:ac00:7d50:ff5:f5c1:e225])
+        by smtp.gmail.com with ESMTPSA id o12sm4975125wrv.78.2021.10.15.07.11.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Oct 2021 07:11:14 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [GIT PULL] gpio: fixes for v5.15-rc6
+Date:   Fri, 15 Oct 2021 16:11:12 +0200
+Message-Id: <20211015141112.23965-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 2021-10-14 at 16:37 +0200, Horatiu Vultur wrote:
-> The 10/14/2021 13:47, Philipp Zabel wrote:
-> > Hi Horatiu,
-> 
-> Hi Philipp
-> > > +     reset = devm_reset_control_get_shared(&pdev->dev, "switch");
-> > 
-> > Please use devm_reset_control_get_optional_shared() for optional resets
-> > and handle errors. That will return NULL in case the optional reset is
-> > not specified in the device tree.
-> 
-> I will do that.
-> 
-> > It seems weird to me that the reset input to the GPIO controller is
-> > called "switch" reset. You can request a single unnamed reset with
-> > 
-> >         reset = devm_reset_control_get_shared(&pdev->dev, NULL);
-> > 
-> > although that would limit future extendability in case this driver will
-> > ever require to handle multiple separate resets. If you decide to
-> > request the reset control by name, the yaml binding should specify the
-> > same name.
-> 
-> I think this requires a little bit more explanation from my side. On
-> lan966x we are facing the following issue. When we try to reset just the
-> switch core then also the sgpio device was reset and there was no way
-> from HW perspective to prevent this.
-> 
-> So our solutions was to create a reset driver[1] that will be triggered
-> only one time, by the sgpio driver or by the switch driver. That is the
-> reason why it was called "switch" reset. And that is the purpose of this
-> patch to allow the sgpio driver to reset the switch in case is probed
-> before the switch driver so it would not get reset after that.
+Linus,
 
-Thank you for the explanation, it is perfectly fine to request the
-shared reset line with another name, or use no name at all if it is the
-only reset input to the sgpio controller.
+Please pull the following set of fixes for the GPIO subsystem. Details are in
+the signed tag as usual.
 
-regards
-Philipp
+Best Regards,
+Bartosz
+
+The following changes since commit 9e1ff307c779ce1f0f810c7ecce3d95bbae40896:
+
+  Linux 5.15-rc4 (2021-10-03 14:08:47 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.15-rc6
+
+for you to fetch changes up to 6fda593f3082ef1aa783ac13e89f673fd69a2cb6:
+
+  gpio: mockup: Convert to use software nodes (2021-10-06 13:04:04 +0200)
+
+----------------------------------------------------------------
+gpio fixes for v5.15-rc6
+
+- fix module autoloading on gpio-74x164 after a revert of OF modaliases
+- fix problems with the bias setting in gpio-pca953x
+- fix a use-after-free bug in gpio-mockup by using software nodes
+
+----------------------------------------------------------------
+Andy Shevchenko (2):
+      gpio: pca953x: Improve bias setting
+      gpio: mockup: Convert to use software nodes
+
+Mark Brown (1):
+      gpio: 74x164: Add SPI device ID table
+
+ drivers/gpio/gpio-74x164.c  |  8 ++++++++
+ drivers/gpio/gpio-mockup.c  | 21 ++++++++++++++++++---
+ drivers/gpio/gpio-pca953x.c | 16 +++++++++-------
+ 3 files changed, 35 insertions(+), 10 deletions(-)
