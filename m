@@ -2,39 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 55C8342F3D9
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Oct 2021 15:39:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3567642F421
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Oct 2021 15:46:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239607AbhJONlT convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Fri, 15 Oct 2021 09:41:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43450 "EHLO
+        id S239999AbhJONss convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Fri, 15 Oct 2021 09:48:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236154AbhJONlS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Oct 2021 09:41:18 -0400
+        with ESMTP id S240003AbhJONsj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 15 Oct 2021 09:48:39 -0400
 Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCBA1C061762
-        for <linux-gpio@vger.kernel.org>; Fri, 15 Oct 2021 06:39:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0A6CC061764
+        for <linux-gpio@vger.kernel.org>; Fri, 15 Oct 2021 06:46:33 -0700 (PDT)
 Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <p.zabel@pengutronix.de>)
-        id 1mbNQK-0000Rn-58; Fri, 15 Oct 2021 15:39:00 +0200
+        id 1mbNXU-0001eJ-Na; Fri, 15 Oct 2021 15:46:24 +0200
 Received: from pza by lupine with local (Exim 4.92)
         (envelope-from <p.zabel@pengutronix.de>)
-        id 1mbNQJ-00030v-CS; Fri, 15 Oct 2021 15:38:59 +0200
-Message-ID: <a73a43a71adedcdc34d060bcff10fc13ca1d6d16.camel@pengutronix.de>
-Subject: Re: [PATCH v4 2/2] pinctrl: microchip sgpio: use reset driver
+        id 1mbNXT-0003MH-Pj; Fri, 15 Oct 2021 15:46:23 +0200
+Message-ID: <045af226c30bde06bff318e9c0673afd86540661.camel@pengutronix.de>
+Subject: Re: [PATCH v3 2/2] pinctrl: microchip sgpio: use reset driver
 From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>,
-        linus.walleij@linaro.org, robh+dt@kernel.org,
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc:     linus.walleij@linaro.org, robh+dt@kernel.org,
         lars.povlsen@microchip.com, Steen.Hegelund@microchip.com,
         UNGLinuxDriver@microchip.com, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Date:   Fri, 15 Oct 2021 15:38:59 +0200
-In-Reply-To: <20211015132526.200816-3-horatiu.vultur@microchip.com>
-References: <20211015132526.200816-1-horatiu.vultur@microchip.com>
-         <20211015132526.200816-3-horatiu.vultur@microchip.com>
+Date:   Fri, 15 Oct 2021 15:46:23 +0200
+In-Reply-To: <20211014143733.t2dov6ajjebxlht6@soft-dev3-1.localhost>
+References: <20211014085929.2579695-1-horatiu.vultur@microchip.com>
+         <20211014085929.2579695-3-horatiu.vultur@microchip.com>
+         <2874212d2f9462880d1b0aae35296162e1277e62.camel@pengutronix.de>
+         <20211014143733.t2dov6ajjebxlht6@soft-dev3-1.localhost>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 User-Agent: Evolution 3.30.5-1.1 
@@ -47,54 +49,43 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 2021-10-15 at 15:25 +0200, Horatiu Vultur wrote:
-> On lan966x platform when the switch gets reseted then also the sgpio
-> gets reseted. The fix for this is to extend also the sgpio driver to
-> call the reset driver which will be reseted only once by the first
-> driver that is probed.
+On Thu, 2021-10-14 at 16:37 +0200, Horatiu Vultur wrote:
+> The 10/14/2021 13:47, Philipp Zabel wrote:
+> > Hi Horatiu,
 > 
-> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
-> ---
->  drivers/pinctrl/pinctrl-microchip-sgpio.c | 5 +++++
->  1 file changed, 5 insertions(+)
+> Hi Philipp
+> > > +     reset = devm_reset_control_get_shared(&pdev->dev, "switch");
+> > 
+> > Please use devm_reset_control_get_optional_shared() for optional resets
+> > and handle errors. That will return NULL in case the optional reset is
+> > not specified in the device tree.
 > 
-> diff --git a/drivers/pinctrl/pinctrl-microchip-sgpio.c b/drivers/pinctrl/pinctrl-microchip-sgpio.c
-> index 072bccdea2a5..23f5a744edc4 100644
-> --- a/drivers/pinctrl/pinctrl-microchip-sgpio.c
-> +++ b/drivers/pinctrl/pinctrl-microchip-sgpio.c
-> @@ -17,6 +17,7 @@
->  #include <linux/pinctrl/pinmux.h>
->  #include <linux/platform_device.h>
->  #include <linux/property.h>
-> +#include <linux/reset.h>
->  
->  #include "core.h"
->  #include "pinconf.h"
-> @@ -803,6 +804,7 @@ static int microchip_sgpio_probe(struct platform_device *pdev)
->  	int div_clock = 0, ret, port, i, nbanks;
->  	struct device *dev = &pdev->dev;
->  	struct fwnode_handle *fwnode;
-> +	struct reset_control *reset;
->  	struct sgpio_priv *priv;
->  	struct clk *clk;
->  	u32 val;
-> @@ -813,6 +815,9 @@ static int microchip_sgpio_probe(struct platform_device *pdev)
->  
->  	priv->dev = dev;
->  
-> +	reset = devm_reset_control_get_optional_shared(&pdev->dev, NULL);
+> I will do that.
+> 
+> > It seems weird to me that the reset input to the GPIO controller is
+> > called "switch" reset. You can request a single unnamed reset with
+> > 
+> >         reset = devm_reset_control_get_shared(&pdev->dev, NULL);
+> > 
+> > although that would limit future extendability in case this driver will
+> > ever require to handle multiple separate resets. If you decide to
+> > request the reset control by name, the yaml binding should specify the
+> > same name.
+> 
+> I think this requires a little bit more explanation from my side. On
+> lan966x we are facing the following issue. When we try to reset just the
+> switch core then also the sgpio device was reset and there was no way
+> from HW perspective to prevent this.
+> 
+> So our solutions was to create a reset driver[1] that will be triggered
+> only one time, by the sgpio driver or by the switch driver. That is the
+> reason why it was called "switch" reset. And that is the purpose of this
+> patch to allow the sgpio driver to reset the switch in case is probed
+> before the switch driver so it would not get reset after that.
 
-	if (IS_ERR(reset))
-		return dev_err_probe(dev, PTR_ERR(reset), "Failed to get reset\n");
-
-This could still happen if the device tree is broken or on
--EPROBE_DEFER.
-
-> +	reset_control_reset(reset);
-> +
->  	clk = devm_clk_get(dev, NULL);
->  	if (IS_ERR(clk))
->  		return dev_err_probe(dev, PTR_ERR(clk), "Failed to get clock\n");
+Thank you for the explanation, it is perfectly fine to request the
+shared reset line with another name, or use no name at all if it is the
+only reset input to the sgpio controller.
 
 regards
 Philipp
