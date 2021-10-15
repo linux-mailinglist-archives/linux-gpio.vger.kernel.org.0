@@ -2,35 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4962D42E65A
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Oct 2021 04:06:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 00D2742E659
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Oct 2021 04:06:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234754AbhJOCIJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S234863AbhJOCIJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Thu, 14 Oct 2021 22:08:09 -0400
-Received: from mga17.intel.com ([192.55.52.151]:33965 "EHLO mga17.intel.com"
+Received: from mga06.intel.com ([134.134.136.31]:19812 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234862AbhJOCII (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        id S234874AbhJOCII (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
         Thu, 14 Oct 2021 22:08:08 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10137"; a="208636626"
+X-IronPort-AV: E=McAfee;i="6200,9189,10137"; a="288699598"
 X-IronPort-AV: E=Sophos;i="5.85,374,1624345200"; 
-   d="scan'208";a="208636626"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2021 19:06:02 -0700
+   d="scan'208";a="288699598"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2021 19:06:02 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.85,374,1624345200"; 
-   d="scan'208";a="442353172"
+   d="scan'208";a="527820207"
 Received: from lkp-server02.sh.intel.com (HELO 08b2c502c3de) ([10.239.97.151])
-  by orsmga006.jf.intel.com with ESMTP; 14 Oct 2021 19:06:01 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 14 Oct 2021 19:06:01 -0700
 Received: from kbuild by 08b2c502c3de with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1mbCbg-00071Q-NI; Fri, 15 Oct 2021 02:06:00 +0000
-Date:   Fri, 15 Oct 2021 10:05:17 +0800
+        id 1mbCbg-00071T-P8; Fri, 15 Oct 2021 02:06:00 +0000
+Date:   Fri, 15 Oct 2021 10:05:21 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
- e1d9756efa420028b2d133d02bfe5622aec25bef
-Message-ID: <6168e1dd.R/fS6na/yCYFwIEx%lkp@intel.com>
+Subject: [linusw-pinctrl:devel] BUILD SUCCESS
+ c30174d3332d33de21b7c8b10000d25daf65fea5
+Message-ID: <6168e1e1.rH+0WENno+whIK3h%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -39,12 +39,12 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: e1d9756efa420028b2d133d02bfe5622aec25bef  Merge branch 'devel' into for-next
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: c30174d3332d33de21b7c8b10000d25daf65fea5  pinctrl: gemini: fix typos
 
-elapsed time: 1524m
+elapsed time: 1525m
 
-configs tested: 237
+configs tested: 245
 configs skipped: 4
 
 The following configs have been built successfully.
@@ -54,8 +54,8 @@ gcc tested configs:
 arm                                 defconfig
 arm64                            allyesconfig
 arm64                               defconfig
-arm                              allyesconfig
 arm                              allmodconfig
+arm                              allyesconfig
 i386                 randconfig-c001-20211014
 sparc                            allyesconfig
 sh                         microdev_defconfig
@@ -105,9 +105,9 @@ powerpc                   currituck_defconfig
 mips                  decstation_64_defconfig
 powerpc                     skiroot_defconfig
 xtensa                         virt_defconfig
-um                           x86_64_defconfig
 mips                         bigsur_defconfig
 arc                              alldefconfig
+um                           x86_64_defconfig
 xtensa                    xip_kc705_defconfig
 mips                      maltaaprp_defconfig
 m68k                            q40_defconfig
@@ -124,6 +124,12 @@ mips                     loongson2k_defconfig
 arc                     haps_hs_smp_defconfig
 m68k                          atari_defconfig
 um                                  defconfig
+s390                          debug_defconfig
+powerpc                      pcm030_defconfig
+powerpc                       ebony_defconfig
+arm                           tegra_defconfig
+powerpc                     tqm8540_defconfig
+ia64                      gensparse_defconfig
 mips                         tb0287_defconfig
 sh                      rts7751r2d1_defconfig
 powerpc                      pasemi_defconfig
@@ -137,7 +143,6 @@ mips                            gpr_defconfig
 powerpc                      tqm8xx_defconfig
 powerpc                    adder875_defconfig
 arc                        nsim_700_defconfig
-parisc                generic-32bit_defconfig
 arm                       aspeed_g4_defconfig
 arm                     eseries_pxa_defconfig
 mips                        omega2p_defconfig
@@ -156,7 +161,6 @@ riscv                    nommu_k210_defconfig
 sh                           se7722_defconfig
 arm                         s3c6400_defconfig
 sparc                       sparc32_defconfig
-powerpc                     tqm8540_defconfig
 arm                         shannon_defconfig
 alpha                            allyesconfig
 powerpc                    amigaone_defconfig
@@ -168,6 +172,10 @@ mips                          rm200_defconfig
 sh                           se7750_defconfig
 sh                          r7780mp_defconfig
 sh                           se7751_defconfig
+arm                         socfpga_defconfig
+m68k                       m5208evb_defconfig
+powerpc                     tqm5200_defconfig
+sh                        dreamcast_defconfig
 m68k                             alldefconfig
 nds32                               defconfig
 mips                         tb0219_defconfig
@@ -183,7 +191,6 @@ arm                         lpc18xx_defconfig
 sh                          landisk_defconfig
 powerpc                 xes_mpc85xx_defconfig
 arm                  colibri_pxa300_defconfig
-s390                          debug_defconfig
 m68k                         apollo_defconfig
 sh                               j2_defconfig
 sh                             espt_defconfig
@@ -195,11 +202,9 @@ powerpc                      pmac32_defconfig
 sh                             sh03_defconfig
 m68k                       m5249evb_defconfig
 sh                             shx3_defconfig
-ia64                      gensparse_defconfig
 powerpc                    ge_imp3a_defconfig
 powerpc                     sequoia_defconfig
 m68k                        m5307c3_defconfig
-m68k                       m5208evb_defconfig
 arm                        mvebu_v7_defconfig
 powerpc                    gamecube_defconfig
 arm                          ixp4xx_defconfig
@@ -252,6 +257,9 @@ x86_64               randconfig-a016-20211013
 x86_64               randconfig-a014-20211013
 x86_64               randconfig-a013-20211013
 x86_64               randconfig-a011-20211013
+i386                 randconfig-a016-20211013
+i386                 randconfig-a014-20211013
+i386                 randconfig-a011-20211013
 arc                  randconfig-r043-20211013
 s390                 randconfig-r044-20211013
 riscv                randconfig-r042-20211013
