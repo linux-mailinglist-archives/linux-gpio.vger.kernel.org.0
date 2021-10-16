@@ -2,85 +2,165 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C0B7430560
-	for <lists+linux-gpio@lfdr.de>; Sun, 17 Oct 2021 00:23:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2A5443056D
+	for <lists+linux-gpio@lfdr.de>; Sun, 17 Oct 2021 00:37:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235862AbhJPWZg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 16 Oct 2021 18:25:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54792 "EHLO
+        id S236657AbhJPWkG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 16 Oct 2021 18:40:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235173AbhJPWZf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 16 Oct 2021 18:25:35 -0400
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDB34C061766
-        for <linux-gpio@vger.kernel.org>; Sat, 16 Oct 2021 15:23:26 -0700 (PDT)
-Received: by mail-lf1-x12d.google.com with SMTP id r19so56463182lfe.10
-        for <linux-gpio@vger.kernel.org>; Sat, 16 Oct 2021 15:23:26 -0700 (PDT)
+        with ESMTP id S235339AbhJPWkG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 16 Oct 2021 18:40:06 -0400
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F6B6C061765
+        for <linux-gpio@vger.kernel.org>; Sat, 16 Oct 2021 15:37:57 -0700 (PDT)
+Received: by mail-lf1-x133.google.com with SMTP id x192so22632763lff.12
+        for <linux-gpio@vger.kernel.org>; Sat, 16 Oct 2021 15:37:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=p3FVWFHYEJvia2KboNohOnop6t5qjPeV+JIRsjfGAvQ=;
-        b=PcAfAJ7La6ATrlQFcKj7Yet2plWqrYwTqKqG/hqo3fQBaEj6mz9AjBYZpLX7Goa7kG
-         WONoO8E7+mM4nmkHFzZLwRWN6R7cbBo4QYHHG456kCYDvZ/RRM58fp3jMbBN9mJ8Lgi2
-         sLYv9K5RYXsm+91VwuyzZBqiIq5H/yAlZVhhGN9Odnp43B2MXKkQ9N3p0KsiiVgVTciD
-         OOEmPLMpfxafQu6UWwRvwDG7p77SdPnKMTg+bsSib0rt16VzJNDug1yI1+Y5Vqw7FaQK
-         /9lxOCfxHnxNFisfQXozF2WYWF0N6v27DXcrdxFuYLthvGEUF3EWFtE6Nj4sNnzORmBs
-         X0wg==
+        bh=HIn9fXswaPOFkEp5r6mPDGSH5cXVQzTMb+9xQaqAYCk=;
+        b=ZJBK6fch2LR7J5S+Tm5RjoueSldPH7z//t69/VqsG6ZEsRLsg8YiWU0K2cM3hpAZAw
+         J9FbmMb8thnH2jmvHVa2djXnl9cpItdp6PFFBE+qUI6ubPogIYPlN/MOxa+virwPb36/
+         kEZwLQBcPzmLQjvaHz5Rr1xeGHRQgt9uhyggiSAEdJOkcgpT4ldkmhlZPbnNnnijAcfP
+         4MFjXn62S9QCa+NqE4qdgleuLCFAlqdCxxcOgTTEiuIWBCEO6vjARYbQoS1VhUTHsOuY
+         X/4l5UKdSL1TqBSjTMKtxwS4IKms0VbfvBot0RkyyyIvFsdKScNS6vIxKOf2aRKIg57/
+         vsnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=p3FVWFHYEJvia2KboNohOnop6t5qjPeV+JIRsjfGAvQ=;
-        b=67ODPXoWlBAqtnLn6lXyFx/uDt42e6kt2ousNHb3p8iY/+mHZWeSoyLtqwPi13hrdQ
-         tA3+DbrxL7my+xkXlu//f14abh3p9i5wD9QxOsGtFYJd2tNIEN/mCDaG01J0wXf1I6q3
-         dbeq4sSeds+5crkGP7iNSfdztxD0CSH2Ur6ix8Z0i1P2KbY+E1T0TwRD46WrKQbclM6D
-         AjUdCeCV6HMtIC8j1dMI5JKnEAQ/PTTiyVxuN+EJKxYMX7wxibitWB6rmIdMdDSP64VZ
-         EFMdU04nHDr1lDlRHlxo8N8KfEMBcdsUdqRh5ibp+o2Brjt5d/VO/PbCABdnzpQVIaR3
-         /m0Q==
-X-Gm-Message-State: AOAM530tqf/7xTM3Fr29KhNdsghSB7AcT4T96fduStHaIsFQCD08Y2iJ
-        n/FDezS8/QoMcyeQJ8pEcDAbGg1fvN0XSNHNuEMgxw==
-X-Google-Smtp-Source: ABdhPJy82eQjg2a0KgyXHCV7OyYHGgWPCMzm75KYH0/22I29cGhFGc7f/I9ftrW1M4rzVCVFOHqliZaq2imdQccEUC4=
-X-Received: by 2002:a05:6512:3e9:: with SMTP id n9mr21107873lfq.72.1634423005077;
- Sat, 16 Oct 2021 15:23:25 -0700 (PDT)
+        bh=HIn9fXswaPOFkEp5r6mPDGSH5cXVQzTMb+9xQaqAYCk=;
+        b=MPo2gOP5Z4GdQbtO3eq1NlpOoNffBvR7+k4KvpV1QD/zmqBWKM+5lgIvCW0ThHWy5Y
+         G47dCc52hI22GieWaDiE9J00jvdWd7T5ZPLUzIn/uTuIxPd3ZlHIxxF/MGWSeZyyIWLY
+         cItHLrhW3v9k6YV98r+iH8SucJdAq4CEn3VCSVXUVdPMs3UNExY9YONKNktezzba057b
+         CbDuJ86Db+TrpgGiKSz4VvJ7xncsFOi+pfOEHcb/oH/Tgvka/QmKZksopsOWLddUXyNE
+         ahze2XpsvI7WITBe4upavqDoLnhigdGDTy7KN81fXKF2DcjgoDj/gaOHsH2qxnBW0DGy
+         f7kQ==
+X-Gm-Message-State: AOAM530rS35MJ0JRfBq04YWTgGYDzRktY3gnFSoM4CqcPb8scpbRvlw9
+        cb+2Mhw9EO1SvbP8OmvVtge6QVUbK3qm4lPAkFl2Pg==
+X-Google-Smtp-Source: ABdhPJwJVfVbGLWN6Cfk6r/5D+jG7hdkK7FsQWfHxu2/axd8FNdH07TaAiF4xxObMWITHxtrLF4Vk51vM07n8vA0ih8=
+X-Received: by 2002:ac2:5d4a:: with SMTP id w10mr19928988lfd.584.1634423875834;
+ Sat, 16 Oct 2021 15:37:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211008081739.26807-1-brgl@bgdev.pl> <CAMRc=McpCw2TgLFCzvwOupd+RW2BoQRJKVTdbR6s2z+O2pJuUQ@mail.gmail.com>
-In-Reply-To: <CAMRc=McpCw2TgLFCzvwOupd+RW2BoQRJKVTdbR6s2z+O2pJuUQ@mail.gmail.com>
+References: <20211016141839.45460-1-joey.gouly@arm.com> <20211016141839.45460-2-joey.gouly@arm.com>
+In-Reply-To: <20211016141839.45460-2-joey.gouly@arm.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 17 Oct 2021 00:23:13 +0200
-Message-ID: <CACRpkdYtD-3vX1VW9uLn3zqxD7gYjCXs+NgLHfnsZHhcA4nJyw@mail.gmail.com>
-Subject: Re: [PATCH v7 0/8] gpio: implement the configfs testing module
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>,
-        Shuah Khan <shuah@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jack Winch <sunt.un.morcov@gmail.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-doc <linux-doc@vger.kernel.org>
+Date:   Sun, 17 Oct 2021 00:37:44 +0200
+Message-ID: <CACRpkdac+NYMSHg_KCb2xQpnFaJMBfGT_7Mk+Kst1WrK9As_ZA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/5] gpio: Allow per-parent interrupt data
+To:     Joey Gouly <joey.gouly@arm.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Hector Martin <marcan@marcan.st>,
+        Marc Zyngier <maz@kernel.org>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Sven Peter <sven@svenpeter.dev>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Kettenis <kettenis@openbsd.org>, nd <nd@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 15, 2021 at 4:13 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+Top-posting because I need a nod from Bartosz that I can
+merge this patch with the rest in the pinctrl tree.
 
-> Another ping...
-
-If it's hard to get attention I would simply queue these on a immutable branch
-in the GPIO tree, then merge it into what you send to linux-next and offer
-the interested parties to pull it in.
-
-If noone complains as we get really close to the merge window, just offer
-this branch to Torvalds in a separate pull request.
+Bartosz: I can also offer this one patch in an immutable branch
+as well so you can pull it in as well.
 
 Yours,
 Linus Walleij
+
+On Sat, Oct 16, 2021 at 4:19 PM Joey Gouly <joey.gouly@arm.com> wrote:
+
+> From: Marc Zyngier <maz@kernel.org>
+>
+> The core gpiolib code is able to deal with multiple interrupt parents
+> for a single gpio irqchip. It however only allows a single piece
+> of data to be conveyed to all flow handlers (either the gpio_chip
+> or some other, driver-specific data).
+>
+> This means that drivers have to go through some interesting dance
+> to find the correct context, something that isn't great in interrupt
+> context (see aebdc8abc9db86e2bd33070fc2f961012fff74b4 for a prime
+> example).
+>
+> Instead, offer an optional way for a pinctrl/gpio driver to provide
+> an array of pointers which gets used to provide the correct context
+> to the flow handler.
+>
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> Signed-off-by: Joey Gouly <joey.gouly@arm.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  drivers/gpio/gpiolib.c      |  9 +++++++--
+>  include/linux/gpio/driver.h | 19 +++++++++++++++++--
+>  2 files changed, 24 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index d1b9b721218f..abfbf546d159 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -1534,9 +1534,14 @@ static int gpiochip_add_irqchip(struct gpio_chip *gc,
+>         }
+>
+>         if (gc->irq.parent_handler) {
+> -               void *data = gc->irq.parent_handler_data ?: gc;
+> -
+>                 for (i = 0; i < gc->irq.num_parents; i++) {
+> +                       void *data;
+> +
+> +                       if (gc->irq.per_parent_data)
+> +                               data = gc->irq.parent_handler_data_array[i];
+> +                       else
+> +                               data = gc->irq.parent_handler_data ?: gc;
+> +
+>                         /*
+>                          * The parent IRQ chip is already using the chip_data
+>                          * for this IRQ chip, so our callbacks simply use the
+> diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+> index a0f9901dcae6..a673a359e20b 100644
+> --- a/include/linux/gpio/driver.h
+> +++ b/include/linux/gpio/driver.h
+> @@ -168,11 +168,18 @@ struct gpio_irq_chip {
+>
+>         /**
+>          * @parent_handler_data:
+> +        * @parent_handler_data_array:
+>          *
+>          * Data associated, and passed to, the handler for the parent
+> -        * interrupt.
+> +        * interrupt. Can either be a single pointer if @per_parent_data
+> +        * is false, or an array of @num_parents pointers otherwise.  If
+> +        * @per_parent_data is true, @parent_handler_data_array cannot be
+> +        * NULL.
+>          */
+> -       void *parent_handler_data;
+> +       union {
+> +               void *parent_handler_data;
+> +               void **parent_handler_data_array;
+> +       };
+>
+>         /**
+>          * @num_parents:
+> @@ -203,6 +210,14 @@ struct gpio_irq_chip {
+>          */
+>         bool threaded;
+>
+> +       /**
+> +        * @per_parent_data:
+> +        *
+> +        * True if parent_handler_data_array describes a @num_parents
+> +        * sized array to be used as parent data.
+> +        */
+> +       bool per_parent_data;
+> +
+>         /**
+>          * @init_hw: optional routine to initialize hardware before
+>          * an IRQ chip will be added. This is quite useful when
+> --
+> 2.17.1
+>
