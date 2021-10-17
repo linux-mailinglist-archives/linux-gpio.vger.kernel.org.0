@@ -2,49 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B0C52430733
-	for <lists+linux-gpio@lfdr.de>; Sun, 17 Oct 2021 10:29:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 289B74307DC
+	for <lists+linux-gpio@lfdr.de>; Sun, 17 Oct 2021 12:21:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245061AbhJQIbQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 17 Oct 2021 04:31:16 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:50148 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S245032AbhJQIbP (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 17 Oct 2021 04:31:15 -0400
-Received: from p508fd4f7.dip0.t-ipconnect.de ([80.143.212.247] helo=phil.fritz.box)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1mc1XR-0002AV-VW; Sun, 17 Oct 2021 10:29:02 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Johan Jonker <jbx6244@gmail.com>
-Cc:     Heiko Stuebner <heiko@sntech.de>, linus.walleij@linaro.org,
-        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: (subset) [PATCH v3 1/3] dt-bindings: pinctrl: convert rockchip, pinctrl.txt to YAML
-Date:   Sun, 17 Oct 2021 10:28:59 +0200
-Message-Id: <163445933306.455569.8867235552630241420.b4-ty@sntech.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20211007144019.7461-1-jbx6244@gmail.com>
-References: <20211007144019.7461-1-jbx6244@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        id S231839AbhJQKXZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 17 Oct 2021 06:23:25 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:55971 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235834AbhJQKXQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 17 Oct 2021 06:23:16 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id 967305C00C8;
+        Sun, 17 Oct 2021 06:21:01 -0400 (EDT)
+Received: from imap47 ([10.202.2.97])
+  by compute1.internal (MEProxy); Sun, 17 Oct 2021 06:21:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
+         h=mime-version:message-id:in-reply-to:references:date:from:to
+        :cc:subject:content-type; s=fm2; bh=1zE7dgRiYPkvVlRK/NiklHXQgAnC
+        4eWlry1ezJUOuT0=; b=GDtXyLozkfx5FE/x6li0YCIDA+LZpRG6I6KptPXQDltu
+        mGpDZlo6enIV7gzp5yzERmK8ADJqjwStlznLmR1k3JRbFIysWAWdled3y3Be2Nx3
+        IGc9o5GHAj/o6vGJafrWfURxYaWOL5x9FA2PpoR2M4PATZ6z9VEgFAMTbDQSTHW8
+        anNtVngqGM9TJn7eHzdB9DHbZ8Cuhd9cNUeNZT4WZDGUl8K7Avoh8VIoYngAAhwM
+        z3440R95Zrd9sdmfTP6wjNBI6mW5lDd4sR6LrDwAhynAEM+WO4lU6iIN9p2IhoaF
+        rFMa34+WXBeKREbrbHJn1LoL3aeCC8WXkyPKB0+/4g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=1zE7dg
+        RiYPkvVlRK/NiklHXQgAnC4eWlry1ezJUOuT0=; b=SVfV94g5D30kaNzPNcsnVs
+        /Xg+Cl7eO10seqlWFEL3SbkguIFJHS/PGbmqusNtPMFhe54x6WU8MgDmx6EuMI2f
+        K3ESN/DLrbt6XZFk9bhHnQOfSR4qPcHFrhERBLtAq+90D8VTjDWgPRRXij/O0cwA
+        mJD3CaHMKXvdFgdN47TjpXbryh5TC63n5meA6uc4ACE8oiqr9eN+6Hy0VpgGNHtN
+        b+e+w0XDburl/sCSuC9HM8k//u2RburHVQtejmnOVk4k3n1Regj3GpfT45vsIWpQ
+        ux+gVAEXdnxbkp2Wg/XpwJyHYfkIwg5mce4w8mvZ+JIrZcikQStC5AchZwuIGYqQ
+        ==
+X-ME-Sender: <xms:DPlrYSEjwsaME395ynVpiZs0m5-2b7kHq1wxqPUPS-og8NrOs9QhVg>
+    <xme:DPlrYTW3mlTRA-UrqYY4hQzSrgXY_-CGkiBpLXFBtYZTIHyLN51kfKVnLg2hqGg_k
+    XRzewPp4jFH08GRqCk>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrvddukedgvdejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdfuvhgv
+    nhcurfgvthgvrhdfuceoshhvvghnsehsvhgvnhhpvghtvghrrdguvghvqeenucggtffrrg
+    htthgvrhhnpefgieegieffuefhtedtjefgteejteefleefgfefgfdvvddtgffhffduhedv
+    feekffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    hsvhgvnhesshhvvghnphgvthgvrhdruggvvh
+X-ME-Proxy: <xmx:DPlrYcL3tdheinJoY9DgbXpzDYrkEP5tgffe51IDl-OEPrE-Wa2j_g>
+    <xmx:DPlrYcE1zqmuufavHsZ_iOuyPxkTPIiHaARDXm3DaIruuj0jB7Sxtg>
+    <xmx:DPlrYYUNSLlWi6O9LeyW4RKMoBh3EZXy0m-GPWwoOk0SWdislWaaBA>
+    <xmx:DflrYbF4JIdFk6yZXz_pIGi7isA4zFdQRrvSvNJ2R-dHE8xUVZr0gg>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 82F8F2740061; Sun, 17 Oct 2021 06:21:00 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.5.0-alpha0-1345-g8441cd7852-fm-20211006.001-g8441cd78
+Mime-Version: 1.0
+Message-Id: <a842e478-8526-4605-b4cf-df9f1e5dc975@www.fastmail.com>
+In-Reply-To: <20211016141839.45460-3-joey.gouly@arm.com>
+References: <20211016141839.45460-1-joey.gouly@arm.com>
+ <20211016141839.45460-3-joey.gouly@arm.com>
+Date:   Sun, 17 Oct 2021 12:20:34 +0200
+From:   "Sven Peter" <sven@svenpeter.dev>
+To:     "Joey Gouly" <joey.gouly@arm.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Cc:     "Linus Walleij" <linus.walleij@linaro.org>,
+        "Hector Martin" <marcan@marcan.st>,
+        "Marc Zyngier" <maz@kernel.org>,
+        "Alyssa Rosenzweig" <alyssa.rosenzweig@collabora.com>,
+        devicetree@vger.kernel.org, "Rob Herring" <robh+dt@kernel.org>,
+        "Mark Kettenis" <kettenis@openbsd.org>, nd <nd@arm.com>
+Subject: Re: [PATCH v3 2/5] dt-bindings: pinctrl: add #interrupt-cells to apple,pinctrl
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 7 Oct 2021 16:40:17 +0200, Johan Jonker wrote:
-> Convert rockchip,pinctrl.txt to YAML
+On Sat, Oct 16, 2021, at 16:18, Joey Gouly wrote:
+> The GPIO/pinctrl hardware can act as an interrupt-controller, so add
+> the #interrupt-cells property to the binding.
+>
+> Signed-off-by: Joey Gouly <joey.gouly@arm.com>
+> ---
+>  Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git 
+> a/Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml 
+> b/Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
+> index d50571affd1f..340be4eabf44 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
+> @@ -43,6 +43,9 @@ properties:
+> 
+>    interrupt-controller: true
+> 
+> +  '#interrupt-cells':
+> +    const: 2
+> +
 
-Applied, thanks!
+thanks for adding this! small nit: could you also add it to the example below?
 
-[2/3] ARM: dts: rockchip: change gpio nodenames
-      commit: d7077ac508e6dbeb737758dd2ef6637141ca72f8
-[3/3] arm64: dts: rockchip: change gpio nodenames
-      commit: ec3028e7c83ed03f9cd10c0373d955b489ca5ed6
+Reviewed-by: Sven Peter <sven@svenpeter.dev>
 
-Best regards,
--- 
-Heiko Stuebner <heiko@sntech.de>
+
+Thanks,
+
+Sven
