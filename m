@@ -2,107 +2,49 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B202A430581
-	for <lists+linux-gpio@lfdr.de>; Sun, 17 Oct 2021 00:57:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0C52430733
+	for <lists+linux-gpio@lfdr.de>; Sun, 17 Oct 2021 10:29:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241091AbhJPW7Y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 16 Oct 2021 18:59:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33816 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241088AbhJPW7X (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 16 Oct 2021 18:59:23 -0400
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE77AC061766
-        for <linux-gpio@vger.kernel.org>; Sat, 16 Oct 2021 15:57:14 -0700 (PDT)
-Received: by mail-lj1-x235.google.com with SMTP id t20so1096881ljk.8
-        for <linux-gpio@vger.kernel.org>; Sat, 16 Oct 2021 15:57:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2EQxS6LUZ0095r5Vq3OY8v0JO8+NoJey9tlMZreupJo=;
-        b=cdZ24gh3v3PzBLsDaFaLb7T9PJjWPJtyAQzXWjzJxRGkBDBU67b8L0hzx71d83E7Lw
-         sLSTfgXdyAV0N1TrMPnaYHRQSIjMmpj13EECCK32CHyOrFb3Tziai0E4cBIwEM3AGgri
-         YRpQn8rj2LNtY5t2O7c0p0H0RH7SBk8w6x2hW3sO4zfT5b/WLiCEC4G5oV4mZZntvF9N
-         ZCCuorDhqUuPq9neK5/hOghVJmxAY+ab12+wIRM62IBSEeoplT/eJRvZDPkT89E/qRcp
-         0NPxMj/TD4SL36d6Pb0yGARxMtIs3f01r395hHxWKHAC5k7uu0vxZ7J4pEKPuATpGkyr
-         j0Ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2EQxS6LUZ0095r5Vq3OY8v0JO8+NoJey9tlMZreupJo=;
-        b=mZCyOvn8X4c+nsc/jGP6OrWopf/fBp2A6jM93+E/x+hGO4xdF6iEbM0RPhmo8DStEO
-         NZ+wm2H8uFb5f8vsdkTq8k1jtTSnaxgCMTevyBhm5RxE7jWwyq3+tQmOZk70ckvg28GT
-         hjPjwByKtk89LEHZNjyyuyGL09Wa1MOouyhWVCTIsxhbTiXZ2IY5s7daNn8J88fjedhL
-         uZRtydtQJI0SYTlQ8wuJ/LGGH/TRmQncjRBnloE9SyEhzwwAky0pnvGnJE+h06jG+EMR
-         2SSjT84ZX7oJa8KfH25+fOWCM7kJ6jNjdFBUc3m4m9vKEbsSQnJROObMbJLq/y43M+a6
-         qLCw==
-X-Gm-Message-State: AOAM532g7Avf6T3KciA9eZpF0kGAvlUUsDkB/r7soNUr00eVupjVYVSQ
-        IA6KmvKIQezXHfXcI8o3qddOoYqFBJpEpTYenvNV6Q==
-X-Google-Smtp-Source: ABdhPJyks5aYSgbvOlpsrFk0yrj9aY/rwT0UNRNKnfNGTnygdSGEYsrUdUx2R4YLnfvEZWshNPWXdwVxQ63UoSEVrQs=
-X-Received: by 2002:a2e:b748:: with SMTP id k8mr22564504ljo.358.1634425033293;
- Sat, 16 Oct 2021 15:57:13 -0700 (PDT)
+        id S245061AbhJQIbQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 17 Oct 2021 04:31:16 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:50148 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S245032AbhJQIbP (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 17 Oct 2021 04:31:15 -0400
+Received: from p508fd4f7.dip0.t-ipconnect.de ([80.143.212.247] helo=phil.fritz.box)
+        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <heiko@sntech.de>)
+        id 1mc1XR-0002AV-VW; Sun, 17 Oct 2021 10:29:02 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>, linus.walleij@linaro.org,
+        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: (subset) [PATCH v3 1/3] dt-bindings: pinctrl: convert rockchip, pinctrl.txt to YAML
+Date:   Sun, 17 Oct 2021 10:28:59 +0200
+Message-Id: <163445933306.455569.8867235552630241420.b4-ty@sntech.de>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20211007144019.7461-1-jbx6244@gmail.com>
+References: <20211007144019.7461-1-jbx6244@gmail.com>
 MIME-Version: 1.0
-References: <20211016141839.45460-1-joey.gouly@arm.com> <20211016141839.45460-5-joey.gouly@arm.com>
-In-Reply-To: <20211016141839.45460-5-joey.gouly@arm.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 17 Oct 2021 00:57:02 +0200
-Message-ID: <CACRpkdaJwscpxj7UtF5mNsdcdHCr=mXPDYz-pnhA8Q9qNaWxjg@mail.gmail.com>
-Subject: Re: [PATCH v3 4/5] pinctrl: add pinctrl/GPIO driver for Apple SoCs
-To:     Joey Gouly <joey.gouly@arm.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Hector Martin <marcan@marcan.st>,
-        Marc Zyngier <maz@kernel.org>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Sven Peter <sven@svenpeter.dev>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Kettenis <kettenis@openbsd.org>, nd <nd@arm.com>,
-        Stan Skowronek <stan@corellium.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Oct 16, 2021 at 4:18 PM Joey Gouly <joey.gouly@arm.com> wrote:
+On Thu, 7 Oct 2021 16:40:17 +0200, Johan Jonker wrote:
+> Convert rockchip,pinctrl.txt to YAML
 
-> This driver adds support for the pinctrl / GPIO hardware found
-> on some Apple SoCs.
->
-> Co-developed-by: Stan Skowronek <stan@corellium.com>
-> Signed-off-by: Stan Skowronek <stan@corellium.com>
-> Signed-off-by: Joey Gouly <joey.gouly@arm.com>
+Applied, thanks!
 
-Hi Joey, this looks really good. I started to write a reply but
-noticed that all my comments are already covered by
-Marc Z so I scrapped it: do what Marc says.
+[2/3] ARM: dts: rockchip: change gpio nodenames
+      commit: d7077ac508e6dbeb737758dd2ef6637141ca72f8
+[3/3] arm64: dts: rockchip: change gpio nodenames
+      commit: ec3028e7c83ed03f9cd10c0373d955b489ca5ed6
 
-This is interesting:
-
-> +#define REG_GPIOx_PULL_OFF   0
-> +#define REG_GPIOx_PULL_DOWN  1
-> +#define REG_GPIOx_PULL_UP_STRONG 2
-> +#define REG_GPIOx_PULL_UP    3
-
-Pull-up strong! Nice that you found these details. We don't have a
-generic pinconf binding for that but possibly the bias-pull-up
-argument can be used if we know how many ohms each is
-(preferred).
-
-But this is no problem for the moment because pin config is
-for implementing later (I assume). I bet this is going to be important
-to get right as well as it usually affects the power dissipation in
-suspend-to-RAM.
-
-> +static int apple_gpio_pinmux_enable(struct pinctrl_dev *pctldev, unsigned func,
-> +                                   unsigned group)
-(...)
-> +       .set_mux = apple_gpio_pinmux_enable,
-
-What about just naming it apple_gpio_pinmux_set()?
-
-Next iteration should be good to go I guess!
-
-Yours,
-Linus Walleij
+Best regards,
+-- 
+Heiko Stuebner <heiko@sntech.de>
