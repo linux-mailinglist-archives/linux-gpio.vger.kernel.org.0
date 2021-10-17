@@ -2,109 +2,194 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 289B74307DC
-	for <lists+linux-gpio@lfdr.de>; Sun, 17 Oct 2021 12:21:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2755430868
+	for <lists+linux-gpio@lfdr.de>; Sun, 17 Oct 2021 13:37:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231839AbhJQKXZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 17 Oct 2021 06:23:25 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:55971 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235834AbhJQKXQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 17 Oct 2021 06:23:16 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 967305C00C8;
-        Sun, 17 Oct 2021 06:21:01 -0400 (EDT)
-Received: from imap47 ([10.202.2.97])
-  by compute1.internal (MEProxy); Sun, 17 Oct 2021 06:21:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
-         h=mime-version:message-id:in-reply-to:references:date:from:to
-        :cc:subject:content-type; s=fm2; bh=1zE7dgRiYPkvVlRK/NiklHXQgAnC
-        4eWlry1ezJUOuT0=; b=GDtXyLozkfx5FE/x6li0YCIDA+LZpRG6I6KptPXQDltu
-        mGpDZlo6enIV7gzp5yzERmK8ADJqjwStlznLmR1k3JRbFIysWAWdled3y3Be2Nx3
-        IGc9o5GHAj/o6vGJafrWfURxYaWOL5x9FA2PpoR2M4PATZ6z9VEgFAMTbDQSTHW8
-        anNtVngqGM9TJn7eHzdB9DHbZ8Cuhd9cNUeNZT4WZDGUl8K7Avoh8VIoYngAAhwM
-        z3440R95Zrd9sdmfTP6wjNBI6mW5lDd4sR6LrDwAhynAEM+WO4lU6iIN9p2IhoaF
-        rFMa34+WXBeKREbrbHJn1LoL3aeCC8WXkyPKB0+/4g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=1zE7dg
-        RiYPkvVlRK/NiklHXQgAnC4eWlry1ezJUOuT0=; b=SVfV94g5D30kaNzPNcsnVs
-        /Xg+Cl7eO10seqlWFEL3SbkguIFJHS/PGbmqusNtPMFhe54x6WU8MgDmx6EuMI2f
-        K3ESN/DLrbt6XZFk9bhHnQOfSR4qPcHFrhERBLtAq+90D8VTjDWgPRRXij/O0cwA
-        mJD3CaHMKXvdFgdN47TjpXbryh5TC63n5meA6uc4ACE8oiqr9eN+6Hy0VpgGNHtN
-        b+e+w0XDburl/sCSuC9HM8k//u2RburHVQtejmnOVk4k3n1Regj3GpfT45vsIWpQ
-        ux+gVAEXdnxbkp2Wg/XpwJyHYfkIwg5mce4w8mvZ+JIrZcikQStC5AchZwuIGYqQ
-        ==
-X-ME-Sender: <xms:DPlrYSEjwsaME395ynVpiZs0m5-2b7kHq1wxqPUPS-og8NrOs9QhVg>
-    <xme:DPlrYTW3mlTRA-UrqYY4hQzSrgXY_-CGkiBpLXFBtYZTIHyLN51kfKVnLg2hqGg_k
-    XRzewPp4jFH08GRqCk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrvddukedgvdejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdfuvhgv
-    nhcurfgvthgvrhdfuceoshhvvghnsehsvhgvnhhpvghtvghrrdguvghvqeenucggtffrrg
-    htthgvrhhnpefgieegieffuefhtedtjefgteejteefleefgfefgfdvvddtgffhffduhedv
-    feekffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    hsvhgvnhesshhvvghnphgvthgvrhdruggvvh
-X-ME-Proxy: <xmx:DPlrYcL3tdheinJoY9DgbXpzDYrkEP5tgffe51IDl-OEPrE-Wa2j_g>
-    <xmx:DPlrYcE1zqmuufavHsZ_iOuyPxkTPIiHaARDXm3DaIruuj0jB7Sxtg>
-    <xmx:DPlrYYUNSLlWi6O9LeyW4RKMoBh3EZXy0m-GPWwoOk0SWdislWaaBA>
-    <xmx:DflrYbF4JIdFk6yZXz_pIGi7isA4zFdQRrvSvNJ2R-dHE8xUVZr0gg>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 82F8F2740061; Sun, 17 Oct 2021 06:21:00 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.5.0-alpha0-1345-g8441cd7852-fm-20211006.001-g8441cd78
-Mime-Version: 1.0
-Message-Id: <a842e478-8526-4605-b4cf-df9f1e5dc975@www.fastmail.com>
-In-Reply-To: <20211016141839.45460-3-joey.gouly@arm.com>
-References: <20211016141839.45460-1-joey.gouly@arm.com>
- <20211016141839.45460-3-joey.gouly@arm.com>
-Date:   Sun, 17 Oct 2021 12:20:34 +0200
-From:   "Sven Peter" <sven@svenpeter.dev>
-To:     "Joey Gouly" <joey.gouly@arm.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Cc:     "Linus Walleij" <linus.walleij@linaro.org>,
-        "Hector Martin" <marcan@marcan.st>,
-        "Marc Zyngier" <maz@kernel.org>,
-        "Alyssa Rosenzweig" <alyssa.rosenzweig@collabora.com>,
-        devicetree@vger.kernel.org, "Rob Herring" <robh+dt@kernel.org>,
-        "Mark Kettenis" <kettenis@openbsd.org>, nd <nd@arm.com>
-Subject: Re: [PATCH v3 2/5] dt-bindings: pinctrl: add #interrupt-cells to apple,pinctrl
-Content-Type: text/plain
+        id S245542AbhJQLj7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 17 Oct 2021 07:39:59 -0400
+Received: from mga12.intel.com ([192.55.52.136]:24961 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S245540AbhJQLj7 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 17 Oct 2021 07:39:59 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10139"; a="208213464"
+X-IronPort-AV: E=Sophos;i="5.85,380,1624345200"; 
+   d="scan'208";a="208213464"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2021 04:37:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.85,380,1624345200"; 
+   d="scan'208";a="443100287"
+Received: from lkp-server02.sh.intel.com (HELO 08b2c502c3de) ([10.239.97.151])
+  by orsmga006.jf.intel.com with ESMTP; 17 Oct 2021 04:37:47 -0700
+Received: from kbuild by 08b2c502c3de with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1mc4U6-000AHE-Pk; Sun, 17 Oct 2021 11:37:46 +0000
+Date:   Sun, 17 Oct 2021 19:36:55 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:fixes] BUILD SUCCESS
+ 4e5a04be88fe335ad5331f4f8c17f4ebd357e065
+Message-ID: <616c0ad7.ciIpqvkbkwT0Ral6%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Oct 16, 2021, at 16:18, Joey Gouly wrote:
-> The GPIO/pinctrl hardware can act as an interrupt-controller, so add
-> the #interrupt-cells property to the binding.
->
-> Signed-off-by: Joey Gouly <joey.gouly@arm.com>
-> ---
->  Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git 
-> a/Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml 
-> b/Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
-> index d50571affd1f..340be4eabf44 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
-> @@ -43,6 +43,9 @@ properties:
-> 
->    interrupt-controller: true
-> 
-> +  '#interrupt-cells':
-> +    const: 2
-> +
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git fixes
+branch HEAD: 4e5a04be88fe335ad5331f4f8c17f4ebd357e065  pinctrl: amd: disable and mask interrupts on probe
 
-thanks for adding this! small nit: could you also add it to the example below?
+elapsed time: 721m
 
-Reviewed-by: Sven Peter <sven@svenpeter.dev>
+configs tested: 136
+configs skipped: 4
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Thanks,
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+h8300                       h8s-sim_defconfig
+arc                     haps_hs_smp_defconfig
+powerpc                     tqm5200_defconfig
+sh                             sh03_defconfig
+sh                  sh7785lcr_32bit_defconfig
+arm                         axm55xx_defconfig
+sh                          landisk_defconfig
+arm                           tegra_defconfig
+arm                        oxnas_v6_defconfig
+arm                         orion5x_defconfig
+riscv                    nommu_k210_defconfig
+nios2                         10m50_defconfig
+sh                   sh7770_generic_defconfig
+mips                          rb532_defconfig
+arc                          axs103_defconfig
+powerpc                       ebony_defconfig
+s390                             alldefconfig
+sh                        dreamcast_defconfig
+openrisc                 simple_smp_defconfig
+sh                          sdk7786_defconfig
+m68k                       bvme6000_defconfig
+arm                     am200epdkit_defconfig
+powerpc                      chrp32_defconfig
+mips                     loongson1b_defconfig
+mips                           xway_defconfig
+ia64                        generic_defconfig
+arm                           h5000_defconfig
+mips                        workpad_defconfig
+powerpc                 xes_mpc85xx_defconfig
+powerpc                      ppc6xx_defconfig
+h8300                               defconfig
+ia64                      gensparse_defconfig
+arc                         haps_hs_defconfig
+arm                        keystone_defconfig
+arm                  colibri_pxa270_defconfig
+sh                        edosk7705_defconfig
+sh                         ap325rxa_defconfig
+sh                           se7751_defconfig
+m68k                        m5272c3_defconfig
+arm                           viper_defconfig
+powerpc                    adder875_defconfig
+arm                             mxs_defconfig
+nds32                             allnoconfig
+ia64                          tiger_defconfig
+m68k                          hp300_defconfig
+powerpc                     ep8248e_defconfig
+powerpc                     sequoia_defconfig
+sh                     magicpanelr2_defconfig
+riscv                               defconfig
+microblaze                      mmu_defconfig
+mips                     cu1000-neo_defconfig
+arm                          pcm027_defconfig
+arc                           tb10x_defconfig
+h8300                            allyesconfig
+mips                           gcw0_defconfig
+powerpc                  iss476-smp_defconfig
+powerpc                  mpc866_ads_defconfig
+sh                 kfr2r09-romimage_defconfig
+arc                 nsimosci_hs_smp_defconfig
+powerpc                 mpc837x_rdb_defconfig
+arm                  randconfig-c002-20211017
+i386                 randconfig-c001-20211017
+x86_64               randconfig-c001-20211017
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                                defconfig
+m68k                             allmodconfig
+m68k                             allyesconfig
+nds32                               defconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+nios2                            allyesconfig
+arc                                 defconfig
+xtensa                           allyesconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                                defconfig
+parisc                           allyesconfig
+s390                             allyesconfig
+s390                             allmodconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a012-20211017
+x86_64               randconfig-a015-20211017
+x86_64               randconfig-a016-20211017
+x86_64               randconfig-a014-20211017
+x86_64               randconfig-a011-20211017
+x86_64               randconfig-a013-20211017
+i386                 randconfig-a016-20211017
+i386                 randconfig-a014-20211017
+i386                 randconfig-a011-20211017
+i386                 randconfig-a015-20211017
+i386                 randconfig-a012-20211017
+i386                 randconfig-a013-20211017
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                          rv32_defconfig
+riscv                            allyesconfig
+riscv                            allmodconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                           allyesconfig
 
-Sven
+clang tested configs:
+x86_64               randconfig-a006-20211017
+x86_64               randconfig-a004-20211017
+x86_64               randconfig-a001-20211017
+x86_64               randconfig-a005-20211017
+x86_64               randconfig-a002-20211017
+x86_64               randconfig-a003-20211017
+i386                 randconfig-a003-20211017
+i386                 randconfig-a001-20211017
+i386                 randconfig-a005-20211017
+i386                 randconfig-a004-20211017
+i386                 randconfig-a002-20211017
+i386                 randconfig-a006-20211017
+hexagon              randconfig-r041-20211017
+hexagon              randconfig-r045-20211017
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
