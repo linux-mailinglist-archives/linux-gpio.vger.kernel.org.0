@@ -2,105 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AC8D431703
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Oct 2021 13:14:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A658431762
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Oct 2021 13:32:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229581AbhJRLQ4 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Mon, 18 Oct 2021 07:16:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59370 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229569AbhJRLQ4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Oct 2021 07:16:56 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47D90C06161C
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Oct 2021 04:14:45 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1mcQbE-0006vn-QW; Mon, 18 Oct 2021 13:14:36 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1mcQbD-00082c-IT; Mon, 18 Oct 2021 13:14:35 +0200
-Message-ID: <14aa7bde4028007496dfbf041ab5000eb437941e.camel@pengutronix.de>
-Subject: Re: [PATCH v6 2/2] pinctrl: microchip sgpio: use reset driver
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Cc:     linus.walleij@linaro.org, robh+dt@kernel.org,
-        lars.povlsen@microchip.com, Steen.Hegelund@microchip.com,
-        UNGLinuxDriver@microchip.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 18 Oct 2021 13:14:35 +0200
-In-Reply-To: <20211018111231.bawmvre4dqow65dy@soft-dev3-1.localhost>
-References: <20211018085754.1066056-1-horatiu.vultur@microchip.com>
-         <20211018085754.1066056-3-horatiu.vultur@microchip.com>
-         <6f46c5ab7458e1368abfeb8dee6e24271f39d236.camel@pengutronix.de>
-         <20211018111231.bawmvre4dqow65dy@soft-dev3-1.localhost>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        id S231337AbhJRLeY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Oct 2021 07:34:24 -0400
+Received: from asav21.altibox.net ([109.247.116.8]:41654 "EHLO
+        asav21.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231351AbhJRLeX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Oct 2021 07:34:23 -0400
+X-Greylist: delayed 532 seconds by postgrey-1.27 at vger.kernel.org; Mon, 18 Oct 2021 07:34:20 EDT
+Received: from localhost.localdomain (211.81-166-168.customer.lyse.net [81.166.168.211])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: noralf.tronnes@ebnett.no)
+        by asav21.altibox.net (Postfix) with ESMTPSA id 92D4380047;
+        Mon, 18 Oct 2021 13:23:14 +0200 (CEST)
+From:   =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>
+To:     linux-gpio@vger.kernel.org
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
+        stable@vger.kernel.org, Daniel Baluta <daniel.baluta@gmail.com>
+Subject: [PATCH] gpio: dln2: Fix interrupts when replugging the device
+Date:   Mon, 18 Oct 2021 13:22:01 +0200
+Message-Id: <20211018112201.25424-1-noralf@tronnes.org>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=Yr0hubQX c=1 sm=1 tr=0
+        a=OYZzhG0JTxDrWp/F2OJbnw==:117 a=OYZzhG0JTxDrWp/F2OJbnw==:17
+        a=IkcTkHD0fZMA:10 a=M51BFTxLslgA:10 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8
+        a=SJz97ENfAAAA:8 a=uisS6GW8JqvGFITEYyMA:9 a=QEXdDO2ut3YA:10
+        a=AjGcO6oz07-iQ99wixmX:22 a=vFet0B0WnEQeilDPIY6i:22
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 2021-10-18 at 13:12 +0200, Horatiu Vultur wrote:
-> The 10/18/2021 12:37, Philipp Zabel wrote:
-> 
-> Hi Philipp,
-> > Hi Horatiu,
-> > 
-> > On Mon, 2021-10-18 at 10:57 +0200, Horatiu Vultur wrote:
-> > > On lan966x platform when the switch gets reseted then also the sgpio
-> > > gets reseted. The fix for this is to extend also the sgpio driver to
-> > > call the reset driver which will be reseted only once by the first
-> > > driver that is probed.
-> > > 
-> > > Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
-> > > ---
-> > >  drivers/pinctrl/pinctrl-microchip-sgpio.c | 7 +++++++
-> > >  1 file changed, 7 insertions(+)
-> > > 
-> > > diff --git a/drivers/pinctrl/pinctrl-microchip-sgpio.c b/drivers/pinctrl/pinctrl-microchip-sgpio.c
-> > > index 072bccdea2a5..78765faa245a 100644
-> > > --- a/drivers/pinctrl/pinctrl-microchip-sgpio.c
-> > > +++ b/drivers/pinctrl/pinctrl-microchip-sgpio.c
-> > > @@ -17,6 +17,7 @@
-> > >  #include <linux/pinctrl/pinmux.h>
-> > >  #include <linux/platform_device.h>
-> > >  #include <linux/property.h>
-> > > +#include <linux/reset.h>
-> > > 
-> > >  #include "core.h"
-> > >  #include "pinconf.h"
-> > > @@ -803,6 +804,7 @@ static int microchip_sgpio_probe(struct platform_device *pdev)
-> > >       int div_clock = 0, ret, port, i, nbanks;
-> > >       struct device *dev = &pdev->dev;
-> > >       struct fwnode_handle *fwnode;
-> > > +     struct reset_control *reset;
-> > >       struct sgpio_priv *priv;
-> > >       struct clk *clk;
-> > >       u32 val;
-> > > @@ -813,6 +815,11 @@ static int microchip_sgpio_probe(struct platform_device *pdev)
-> > > 
-> > >       priv->dev = dev;
-> > > 
-> > > +     reset = devm_reset_control_get_optional_shared(&pdev->dev, "switch");
-> > 
-> > This is the first GPIO driver that I am aware of that requests a named
-> > reset control, so I'm still not sure if this should be called "switch"
-> > instead of "gpio" or just "reset", just in case there is a future model
-> > where the GPIO controller reset is not shared with the switch reset.
-> 
-> I agree, it is not the best name. But the name "switch" was already used
-> in DT by sparx5[1], so I just went with this name.
+When replugging the device the following message shows up:
 
-Oh, ok, in that case the decision already has been made.
+gpio gpiochip2: (dln2): detected irqchip that is shared with multiple gpiochips: please fix the driver.
 
-regards
-Philipp
+This also has the effect that interrupts won't work.
+The same problem would also show up if multiple devices where plugged in.
+
+Fix this by allocating the irq_chip data structure per instance like other
+drivers do.
+
+I don't know when this problem appeared, but it is present in 5.10.
+
+Cc: <stable@vger.kernel.org> # 5.10+
+Cc: Daniel Baluta <daniel.baluta@gmail.com>
+Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
+---
+ drivers/gpio/gpio-dln2.c | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/gpio/gpio-dln2.c b/drivers/gpio/gpio-dln2.c
+index 4c5f6d0c8d74..22f11dd5210d 100644
+--- a/drivers/gpio/gpio-dln2.c
++++ b/drivers/gpio/gpio-dln2.c
+@@ -46,6 +46,7 @@
+ struct dln2_gpio {
+ 	struct platform_device *pdev;
+ 	struct gpio_chip gpio;
++	struct irq_chip irqchip;
+ 
+ 	/*
+ 	 * Cache pin direction to save us one transfer, since the hardware has
+@@ -383,15 +384,6 @@ static void dln2_irq_bus_unlock(struct irq_data *irqd)
+ 	mutex_unlock(&dln2->irq_lock);
+ }
+ 
+-static struct irq_chip dln2_gpio_irqchip = {
+-	.name = "dln2-irq",
+-	.irq_mask = dln2_irq_mask,
+-	.irq_unmask = dln2_irq_unmask,
+-	.irq_set_type = dln2_irq_set_type,
+-	.irq_bus_lock = dln2_irq_bus_lock,
+-	.irq_bus_sync_unlock = dln2_irq_bus_unlock,
+-};
+-
+ static void dln2_gpio_event(struct platform_device *pdev, u16 echo,
+ 			    const void *data, int len)
+ {
+@@ -477,8 +469,15 @@ static int dln2_gpio_probe(struct platform_device *pdev)
+ 	dln2->gpio.direction_output = dln2_gpio_direction_output;
+ 	dln2->gpio.set_config = dln2_gpio_set_config;
+ 
++	dln2->irqchip.name = "dln2-irq",
++	dln2->irqchip.irq_mask = dln2_irq_mask,
++	dln2->irqchip.irq_unmask = dln2_irq_unmask,
++	dln2->irqchip.irq_set_type = dln2_irq_set_type,
++	dln2->irqchip.irq_bus_lock = dln2_irq_bus_lock,
++	dln2->irqchip.irq_bus_sync_unlock = dln2_irq_bus_unlock,
++
+ 	girq = &dln2->gpio.irq;
+-	girq->chip = &dln2_gpio_irqchip;
++	girq->chip = &dln2->irqchip;
+ 	/* The event comes from the outside so no parent handler */
+ 	girq->parent_handler = NULL;
+ 	girq->num_parents = 0;
+-- 
+2.33.0
+
