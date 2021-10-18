@@ -2,149 +2,226 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 303DF43164E
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Oct 2021 12:40:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 471C74316E4
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Oct 2021 13:09:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229668AbhJRKm4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Oct 2021 06:42:56 -0400
-Received: from mga12.intel.com ([192.55.52.136]:2882 "EHLO mga12.intel.com"
+        id S229781AbhJRLLg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Oct 2021 07:11:36 -0400
+Received: from mga09.intel.com ([134.134.136.24]:40335 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229590AbhJRKmz (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 18 Oct 2021 06:42:55 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10140"; a="208324571"
+        id S229870AbhJRLLb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 18 Oct 2021 07:11:31 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10140"; a="228104435"
 X-IronPort-AV: E=Sophos;i="5.85,381,1624345200"; 
-   d="scan'208";a="208324571"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2021 03:40:41 -0700
+   d="scan'208";a="228104435"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2021 04:09:17 -0700
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.85,381,1624345200"; 
-   d="scan'208";a="489364092"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.159])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2021 03:40:37 -0700
-Received: from andy by smile with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1mcQ42-0001m6-75;
-        Mon, 18 Oct 2021 13:40:18 +0300
-Date:   Mon, 18 Oct 2021 13:40:18 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>,
-        Shuah Khan <shuah@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jack Winch <sunt.un.morcov@gmail.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        Colin Ian King <colin.king@canonical.com>
-Subject: Re: [PATCH v7 5/8] gpio: sim: new testing module
-Message-ID: <YW1PEvTyqdhiRYR6@smile.fi.intel.com>
-References: <20211008081739.26807-1-brgl@bgdev.pl>
- <20211008081739.26807-6-brgl@bgdev.pl>
+   d="scan'208";a="444014919"
+Received: from lkp-server02.sh.intel.com (HELO 08b2c502c3de) ([10.239.97.151])
+  by orsmga003.jf.intel.com with ESMTP; 18 Oct 2021 04:09:16 -0700
+Received: from kbuild by 08b2c502c3de with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1mcQW3-000BGP-R0; Mon, 18 Oct 2021 11:09:15 +0000
+Date:   Mon, 18 Oct 2021 19:08:34 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
+ 664bad61ccdec3b3b751da79f9c0449e1af005ed
+Message-ID: <616d55b2.1dEYcEtEbXCRdhRR%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211008081739.26807-6-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 08, 2021 at 10:17:36AM +0200, Bartosz Golaszewski wrote:
-> Implement a new, modern GPIO testing module controlled by configfs
-> attributes instead of module parameters. The goal of this driver is
-> to provide a replacement for gpio-mockup that will be easily extensible
-> with new features and doesn't require reloading the module to change
-> the setup.
-> 
-> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
-> [Andy: Initialize attribute allocated on the heap]
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> [Colin: Fix dereference of free'd pointer config]
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: 664bad61ccdec3b3b751da79f9c0449e1af005ed  Merge branch 'devel' into for-next
 
-Some nit-picks below, up to you to address.
+elapsed time: 721m
 
-...
+configs tested: 168
+configs skipped: 4
 
-> +	ret = gpio_sim_setup_sysfs(chip);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-return gpio_sim_...(chip); ?
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+sparc                            allyesconfig
+mips                         tb0287_defconfig
+s390                          debug_defconfig
+mips                      bmips_stb_defconfig
+powerpc                 mpc836x_mds_defconfig
+powerpc                    klondike_defconfig
+powerpc                 mpc8560_ads_defconfig
+riscv             nommu_k210_sdcard_defconfig
+arm                         orion5x_defconfig
+powerpc                  iss476-smp_defconfig
+arm                           h5000_defconfig
+arm                       multi_v4t_defconfig
+arm                        multi_v7_defconfig
+sh                        edosk7705_defconfig
+arc                          axs103_defconfig
+arm                       imx_v4_v5_defconfig
+sh                          rsk7264_defconfig
+arm                            mmp2_defconfig
+m68k                         amcore_defconfig
+sparc64                          alldefconfig
+xtensa                  nommu_kc705_defconfig
+xtensa                         virt_defconfig
+powerpc                      obs600_defconfig
+mips                        qi_lb60_defconfig
+mips                    maltaup_xpa_defconfig
+mips                      maltasmvp_defconfig
+x86_64                           allyesconfig
+powerpc                    socrates_defconfig
+arm                      tct_hammer_defconfig
+m68k                        mvme16x_defconfig
+powerpc                 mpc837x_mds_defconfig
+m68k                          atari_defconfig
+mips                       capcella_defconfig
+arm                       imx_v6_v7_defconfig
+xtensa                  audio_kc705_defconfig
+s390                                defconfig
+nios2                         3c120_defconfig
+mips                malta_qemu_32r6_defconfig
+arc                    vdk_hs38_smp_defconfig
+arm                            hisi_defconfig
+arc                           tb10x_defconfig
+ia64                                defconfig
+powerpc                     rainier_defconfig
+powerpc                       holly_defconfig
+mips                        nlm_xlr_defconfig
+powerpc                     ksi8560_defconfig
+arm                          pxa910_defconfig
+s390                       zfcpdump_defconfig
+mips                     loongson2k_defconfig
+mips                      malta_kvm_defconfig
+arm                           stm32_defconfig
+powerpc                     mpc5200_defconfig
+arm                         cm_x300_defconfig
+powerpc                   currituck_defconfig
+powerpc                        icon_defconfig
+powerpc                      tqm8xx_defconfig
+mips                         bigsur_defconfig
+arm                         shannon_defconfig
+nios2                         10m50_defconfig
+sh                            titan_defconfig
+powerpc                 mpc834x_mds_defconfig
+m68k                          multi_defconfig
+powerpc                      ep88xc_defconfig
+sh                        edosk7760_defconfig
+sh                        sh7763rdp_defconfig
+arm                           u8500_defconfig
+arm                       mainstone_defconfig
+sh                          r7785rp_defconfig
+powerpc                     kmeter1_defconfig
+arm                        clps711x_defconfig
+powerpc                      pcm030_defconfig
+arm                           corgi_defconfig
+arm                          gemini_defconfig
+powerpc                 mpc8313_rdb_defconfig
+arm                  randconfig-c002-20211017
+i386                 randconfig-c001-20211017
+x86_64               randconfig-c001-20211017
+arm                  randconfig-c002-20211018
+i386                 randconfig-c001-20211018
+x86_64               randconfig-c001-20211018
+ia64                             allmodconfig
+ia64                             allyesconfig
+m68k                                defconfig
+m68k                             allmodconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+arc                              allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+xtensa                           allyesconfig
+parisc                              defconfig
+parisc                           allyesconfig
+s390                             allyesconfig
+s390                             allmodconfig
+sparc                               defconfig
+i386                                defconfig
+i386                             allyesconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a004-20211018
+x86_64               randconfig-a006-20211018
+x86_64               randconfig-a005-20211018
+x86_64               randconfig-a001-20211018
+x86_64               randconfig-a002-20211018
+x86_64               randconfig-a003-20211018
+i386                 randconfig-a001-20211018
+i386                 randconfig-a003-20211018
+i386                 randconfig-a004-20211018
+i386                 randconfig-a005-20211018
+i386                 randconfig-a002-20211018
+i386                 randconfig-a006-20211018
+x86_64               randconfig-a012-20211017
+x86_64               randconfig-a015-20211017
+x86_64               randconfig-a016-20211017
+x86_64               randconfig-a014-20211017
+x86_64               randconfig-a011-20211017
+x86_64               randconfig-a013-20211017
+arc                  randconfig-r043-20211018
+riscv                            allyesconfig
+riscv                            allmodconfig
+riscv                    nommu_k210_defconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
 
-...
+clang tested configs:
+i386                 randconfig-a003-20211017
+i386                 randconfig-a001-20211017
+i386                 randconfig-a005-20211017
+i386                 randconfig-a004-20211017
+i386                 randconfig-a002-20211017
+i386                 randconfig-a006-20211017
+x86_64               randconfig-a015-20211018
+x86_64               randconfig-a012-20211018
+x86_64               randconfig-a016-20211018
+x86_64               randconfig-a014-20211018
+x86_64               randconfig-a013-20211018
+x86_64               randconfig-a011-20211018
+i386                 randconfig-a014-20211018
+i386                 randconfig-a016-20211018
+i386                 randconfig-a011-20211018
+i386                 randconfig-a015-20211018
+i386                 randconfig-a012-20211018
+i386                 randconfig-a013-20211018
+hexagon              randconfig-r041-20211018
+s390                 randconfig-r044-20211018
+riscv                randconfig-r042-20211018
+hexagon              randconfig-r045-20211018
 
-> +
-
-Redundant empty line.
-
-> +CONFIGFS_ATTR_RO(gpio_sim_config_, dev_name);
-
-...
-
-> +
-
-Ditto.
-
-> +CONFIGFS_ATTR_RO(gpio_sim_config_, chip_name);
-
-...
-
-> +
-
-Ditto.
-
-> +CONFIGFS_ATTR(gpio_sim_config_, label);
-
-...
-
-> +
-
-Ditto.
-
-> +CONFIGFS_ATTR(gpio_sim_config_, num_lines);
-
-...
-
-> +
-
-Ditto.
-
-> +CONFIGFS_ATTR(gpio_sim_config_, line_names);
-
-...
-
-> +	fwnode = fwnode_create_software_node(properties, NULL);
-> +	if (IS_ERR(fwnode))
-> +		return PTR_ERR(fwnode);
-
-
-> +	fwnode = dev_fwnode(&config->pdev->dev);
-> +	platform_device_unregister(config->pdev);
-> +	fwnode_remove_software_node(fwnode);
-
-This seems correct, thank you for modifying the code.
-
-...
-
-> +	config->pdev = NULL;
-> +	mutex_unlock(&config->lock);
-
-mutex_destroy() ?
-Or is it done in the upper level?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
