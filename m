@@ -2,108 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A658431762
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Oct 2021 13:32:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C04A74317EF
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Oct 2021 13:48:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231337AbhJRLeY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Oct 2021 07:34:24 -0400
-Received: from asav21.altibox.net ([109.247.116.8]:41654 "EHLO
-        asav21.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231351AbhJRLeX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Oct 2021 07:34:23 -0400
-X-Greylist: delayed 532 seconds by postgrey-1.27 at vger.kernel.org; Mon, 18 Oct 2021 07:34:20 EDT
-Received: from localhost.localdomain (211.81-166-168.customer.lyse.net [81.166.168.211])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: noralf.tronnes@ebnett.no)
-        by asav21.altibox.net (Postfix) with ESMTPSA id 92D4380047;
-        Mon, 18 Oct 2021 13:23:14 +0200 (CEST)
-From:   =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>,
-        stable@vger.kernel.org, Daniel Baluta <daniel.baluta@gmail.com>
-Subject: [PATCH] gpio: dln2: Fix interrupts when replugging the device
-Date:   Mon, 18 Oct 2021 13:22:01 +0200
-Message-Id: <20211018112201.25424-1-noralf@tronnes.org>
-X-Mailer: git-send-email 2.33.0
+        id S231684AbhJRLuP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Oct 2021 07:50:15 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:38752 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S231865AbhJRLuH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Oct 2021 07:50:07 -0400
+X-UUID: f34a922b839e4663ab0d83a385939c0d-20211018
+X-UUID: f34a922b839e4663ab0d83a385939c0d-20211018
+Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw02.mediatek.com
+        (envelope-from <sam.shih@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 2076674163; Mon, 18 Oct 2021 19:47:53 +0800
+Received: from mtkcas10.mediatek.inc (172.21.101.39) by
+ mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.2.792.15; Mon, 18 Oct 2021 19:47:52 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas10.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 18 Oct 2021 19:47:52 +0800
+From:   Sam Shih <sam.shih@mediatek.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     John Crispin <john@phrozen.org>,
+        Ryder Lee <Ryder.Lee@mediatek.com>,
+        "Sam Shih" <sam.shih@mediatek.com>
+Subject: [PATCH v8 0/4] Mediatek MT7986 pinctrl support
+Date:   Mon, 18 Oct 2021 19:47:35 +0800
+Message-ID: <20211018114739.14026-1-sam.shih@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=Yr0hubQX c=1 sm=1 tr=0
-        a=OYZzhG0JTxDrWp/F2OJbnw==:117 a=OYZzhG0JTxDrWp/F2OJbnw==:17
-        a=IkcTkHD0fZMA:10 a=M51BFTxLslgA:10 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8
-        a=SJz97ENfAAAA:8 a=uisS6GW8JqvGFITEYyMA:9 a=QEXdDO2ut3YA:10
-        a=AjGcO6oz07-iQ99wixmX:22 a=vFet0B0WnEQeilDPIY6i:22
+X-MTK:  N
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-When replugging the device the following message shows up:
-
-gpio gpiochip2: (dln2): detected irqchip that is shared with multiple gpiochips: please fix the driver.
-
-This also has the effect that interrupts won't work.
-The same problem would also show up if multiple devices where plugged in.
-
-Fix this by allocating the irq_chip data structure per instance like other
-drivers do.
-
-I don't know when this problem appeared, but it is present in 5.10.
-
-Cc: <stable@vger.kernel.org> # 5.10+
-Cc: Daniel Baluta <daniel.baluta@gmail.com>
-Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
+This patch series add pinctrl support for mediatek mt7986 SoC series.
+It is based on patch series "Add basic SoC support for mediatek mt7986"
+https://lore.kernel.org/all/20211018114009.13350-1-sam.shih@mediatek.com/
 ---
- drivers/gpio/gpio-dln2.c | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+v8: fixed uart node in yaml dts example
+v7: separate pinctrl part into a single patch series
 
-diff --git a/drivers/gpio/gpio-dln2.c b/drivers/gpio/gpio-dln2.c
-index 4c5f6d0c8d74..22f11dd5210d 100644
---- a/drivers/gpio/gpio-dln2.c
-+++ b/drivers/gpio/gpio-dln2.c
-@@ -46,6 +46,7 @@
- struct dln2_gpio {
- 	struct platform_device *pdev;
- 	struct gpio_chip gpio;
-+	struct irq_chip irqchip;
- 
- 	/*
- 	 * Cache pin direction to save us one transfer, since the hardware has
-@@ -383,15 +384,6 @@ static void dln2_irq_bus_unlock(struct irq_data *irqd)
- 	mutex_unlock(&dln2->irq_lock);
- }
- 
--static struct irq_chip dln2_gpio_irqchip = {
--	.name = "dln2-irq",
--	.irq_mask = dln2_irq_mask,
--	.irq_unmask = dln2_irq_unmask,
--	.irq_set_type = dln2_irq_set_type,
--	.irq_bus_lock = dln2_irq_bus_lock,
--	.irq_bus_sync_unlock = dln2_irq_bus_unlock,
--};
--
- static void dln2_gpio_event(struct platform_device *pdev, u16 echo,
- 			    const void *data, int len)
- {
-@@ -477,8 +469,15 @@ static int dln2_gpio_probe(struct platform_device *pdev)
- 	dln2->gpio.direction_output = dln2_gpio_direction_output;
- 	dln2->gpio.set_config = dln2_gpio_set_config;
- 
-+	dln2->irqchip.name = "dln2-irq",
-+	dln2->irqchip.irq_mask = dln2_irq_mask,
-+	dln2->irqchip.irq_unmask = dln2_irq_unmask,
-+	dln2->irqchip.irq_set_type = dln2_irq_set_type,
-+	dln2->irqchip.irq_bus_lock = dln2_irq_bus_lock,
-+	dln2->irqchip.irq_bus_sync_unlock = dln2_irq_bus_unlock,
-+
- 	girq = &dln2->gpio.irq;
--	girq->chip = &dln2_gpio_irqchip;
-+	girq->chip = &dln2->irqchip;
- 	/* The event comes from the outside so no parent handler */
- 	girq->parent_handler = NULL;
- 	girq->num_parents = 0;
--- 
-2.33.0
+According to the maintainer’s suggestion, this patch splits the previous
+thread into independent patch series.
+This patch include clock driver and device tree update
+
+Original thread:
+https://lore.kernel.org/all/20210914085137.31761-1-sam.shih@mediatek.com/
+---
+
+Sam Shih (4):
+  dt-bindings: pinctrl: update bindings for MT7986 SoC
+  pinctrl: mediatek: add support for MT7986 SoC
+  arm64: dts: mediatek: add pinctrl support for mt7986a
+  arm64: dts: mediatek: add pinctrl support for mt7986b
+
+ .../pinctrl/mediatek,mt7986-pinctrl.yaml      | 363 +++++++
+ arch/arm64/boot/dts/mediatek/mt7986a-rfb.dts  |  20 +
+ arch/arm64/boot/dts/mediatek/mt7986a.dtsi     |  21 +
+ arch/arm64/boot/dts/mediatek/mt7986b.dtsi     |  21 +
+ drivers/pinctrl/mediatek/Kconfig              |   7 +
+ drivers/pinctrl/mediatek/Makefile             |   1 +
+ drivers/pinctrl/mediatek/pinctrl-mt7986.c     | 927 ++++++++++++++++++
+ 7 files changed, 1360 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt7986.c
+
+--
+2.29.2
 
