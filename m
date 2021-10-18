@@ -2,106 +2,149 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 61C5A431640
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Oct 2021 12:37:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 303DF43164E
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Oct 2021 12:40:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229494AbhJRKjm convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Mon, 18 Oct 2021 06:39:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50752 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229473AbhJRKjl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Oct 2021 06:39:41 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A38F2C06161C
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Oct 2021 03:37:30 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1mcQ1B-0002BW-0I; Mon, 18 Oct 2021 12:37:21 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1mcQ19-0005y0-Mz; Mon, 18 Oct 2021 12:37:19 +0200
-Message-ID: <6f46c5ab7458e1368abfeb8dee6e24271f39d236.camel@pengutronix.de>
-Subject: Re: [PATCH v6 2/2] pinctrl: microchip sgpio: use reset driver
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>,
-        linus.walleij@linaro.org, robh+dt@kernel.org,
-        lars.povlsen@microchip.com, Steen.Hegelund@microchip.com,
-        UNGLinuxDriver@microchip.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 18 Oct 2021 12:37:19 +0200
-In-Reply-To: <20211018085754.1066056-3-horatiu.vultur@microchip.com>
-References: <20211018085754.1066056-1-horatiu.vultur@microchip.com>
-         <20211018085754.1066056-3-horatiu.vultur@microchip.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        id S229668AbhJRKm4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Oct 2021 06:42:56 -0400
+Received: from mga12.intel.com ([192.55.52.136]:2882 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229590AbhJRKmz (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 18 Oct 2021 06:42:55 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10140"; a="208324571"
+X-IronPort-AV: E=Sophos;i="5.85,381,1624345200"; 
+   d="scan'208";a="208324571"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2021 03:40:41 -0700
+X-IronPort-AV: E=Sophos;i="5.85,381,1624345200"; 
+   d="scan'208";a="489364092"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.159])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2021 03:40:37 -0700
+Received: from andy by smile with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1mcQ42-0001m6-75;
+        Mon, 18 Oct 2021 13:40:18 +0300
+Date:   Mon, 18 Oct 2021 13:40:18 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>,
+        Shuah Khan <shuah@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jack Winch <sunt.un.morcov@gmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        Colin Ian King <colin.king@canonical.com>
+Subject: Re: [PATCH v7 5/8] gpio: sim: new testing module
+Message-ID: <YW1PEvTyqdhiRYR6@smile.fi.intel.com>
+References: <20211008081739.26807-1-brgl@bgdev.pl>
+ <20211008081739.26807-6-brgl@bgdev.pl>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211008081739.26807-6-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Horatiu,
-
-On Mon, 2021-10-18 at 10:57 +0200, Horatiu Vultur wrote:
-> On lan966x platform when the switch gets reseted then also the sgpio
-> gets reseted. The fix for this is to extend also the sgpio driver to
-> call the reset driver which will be reseted only once by the first
-> driver that is probed.
+On Fri, Oct 08, 2021 at 10:17:36AM +0200, Bartosz Golaszewski wrote:
+> Implement a new, modern GPIO testing module controlled by configfs
+> attributes instead of module parameters. The goal of this driver is
+> to provide a replacement for gpio-mockup that will be easily extensible
+> with new features and doesn't require reloading the module to change
+> the setup.
 > 
-> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
-> ---
->  drivers/pinctrl/pinctrl-microchip-sgpio.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/pinctrl/pinctrl-microchip-sgpio.c b/drivers/pinctrl/pinctrl-microchip-sgpio.c
-> index 072bccdea2a5..78765faa245a 100644
-> --- a/drivers/pinctrl/pinctrl-microchip-sgpio.c
-> +++ b/drivers/pinctrl/pinctrl-microchip-sgpio.c
-> @@ -17,6 +17,7 @@
->  #include <linux/pinctrl/pinmux.h>
->  #include <linux/platform_device.h>
->  #include <linux/property.h>
-> +#include <linux/reset.h>
->  
->  #include "core.h"
->  #include "pinconf.h"
-> @@ -803,6 +804,7 @@ static int microchip_sgpio_probe(struct platform_device *pdev)
->  	int div_clock = 0, ret, port, i, nbanks;
->  	struct device *dev = &pdev->dev;
->  	struct fwnode_handle *fwnode;
-> +	struct reset_control *reset;
->  	struct sgpio_priv *priv;
->  	struct clk *clk;
->  	u32 val;
-> @@ -813,6 +815,11 @@ static int microchip_sgpio_probe(struct platform_device *pdev)
->  
->  	priv->dev = dev;
->  
-> +	reset = devm_reset_control_get_optional_shared(&pdev->dev, "switch");
+> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+> [Andy: Initialize attribute allocated on the heap]
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> [Colin: Fix dereference of free'd pointer config]
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-This is the first GPIO driver that I am aware of that requests a named
-reset control, so I'm still not sure if this should be called "switch"
-instead of "gpio" or just "reset", just in case there is a future model
-where the GPIO controller reset is not shared with the switch reset.
+Some nit-picks below, up to you to address.
 
-> +	if (IS_ERR(reset))
-> +		return dev_err_probe(dev, PTR_ERR(reset), "Failed to get reset\n");
-> +	reset_control_reset(reset);
+...
+
+> +	ret = gpio_sim_setup_sysfs(chip);
+> +	if (ret)
+> +		return ret;
 > +
->  	clk = devm_clk_get(dev, NULL);
->  	if (IS_ERR(clk))
->  		return dev_err_probe(dev, PTR_ERR(clk), "Failed to get clock\n");
+> +	return 0;
 
-But whichever name you choose, the code is
+return gpio_sim_...(chip); ?
 
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+...
 
-regards
-Philipp
+> +
+
+Redundant empty line.
+
+> +CONFIGFS_ATTR_RO(gpio_sim_config_, dev_name);
+
+...
+
+> +
+
+Ditto.
+
+> +CONFIGFS_ATTR_RO(gpio_sim_config_, chip_name);
+
+...
+
+> +
+
+Ditto.
+
+> +CONFIGFS_ATTR(gpio_sim_config_, label);
+
+...
+
+> +
+
+Ditto.
+
+> +CONFIGFS_ATTR(gpio_sim_config_, num_lines);
+
+...
+
+> +
+
+Ditto.
+
+> +CONFIGFS_ATTR(gpio_sim_config_, line_names);
+
+...
+
+> +	fwnode = fwnode_create_software_node(properties, NULL);
+> +	if (IS_ERR(fwnode))
+> +		return PTR_ERR(fwnode);
+
+
+> +	fwnode = dev_fwnode(&config->pdev->dev);
+> +	platform_device_unregister(config->pdev);
+> +	fwnode_remove_software_node(fwnode);
+
+This seems correct, thank you for modifying the code.
+
+...
+
+> +	config->pdev = NULL;
+> +	mutex_unlock(&config->lock);
+
+mutex_destroy() ?
+Or is it done in the upper level?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
