@@ -2,91 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 808E94317FA
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Oct 2021 13:48:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CD5843188E
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Oct 2021 14:12:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231803AbhJRLuW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 18 Oct 2021 07:50:22 -0400
-Received: from mailgw01.mediatek.com ([60.244.123.138]:51364 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S231810AbhJRLuO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Oct 2021 07:50:14 -0400
-X-UUID: 11580b42840444be96ed14585d728221-20211018
-X-UUID: 11580b42840444be96ed14585d728221-20211018
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
-        (envelope-from <sam.shih@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 2056399248; Mon, 18 Oct 2021 19:47:59 +0800
-Received: from mtkcas10.mediatek.inc (172.21.101.39) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Mon, 18 Oct 2021 19:47:58 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas10.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 18 Oct 2021 19:47:58 +0800
-From:   Sam Shih <sam.shih@mediatek.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     John Crispin <john@phrozen.org>,
-        Ryder Lee <Ryder.Lee@mediatek.com>,
-        Sam Shih <sam.shih@mediatek.com>
-Subject: [PATCH v8 4/4] arm64: dts: mediatek: add pinctrl support for mt7986b
-Date:   Mon, 18 Oct 2021 19:47:39 +0800
-Message-ID: <20211018114739.14026-5-sam.shih@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20211018114739.14026-1-sam.shih@mediatek.com>
-References: <20211018114739.14026-1-sam.shih@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+        id S231167AbhJRMOs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Oct 2021 08:14:48 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:53158 "EHLO
+        mail.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231248AbhJRMOs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Oct 2021 08:14:48 -0400
+Received: from localhost (cpc147930-brnt3-2-0-cust60.4-2.cable.virginm.net [86.15.196.61])
+        by mail.monkeyblade.net (Postfix) with ESMTPSA id 434234D31A6D6;
+        Mon, 18 Oct 2021 05:12:32 -0700 (PDT)
+Date:   Mon, 18 Oct 2021 13:12:26 +0100 (BST)
+Message-Id: <20211018.131226.1107812021372806461.davem@davemloft.net>
+To:     asmaa@nvidia.com
+Cc:     andy.shevchenko@gmail.com, linux-gpio@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org, andrew@lunn.ch, kuba@kernel.org,
+        linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        rjw@rjwysocki.net, davthompson@nvidia.com
+Subject: Re: [PATCH v5 0/2] gpio: mlxbf2: Introduce proper interrupt
+ handling
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20211015164809.22009-1-asmaa@nvidia.com>
+References: <20211015164809.22009-1-asmaa@nvidia.com>
+X-Mailer: Mew version 6.8 on Emacs 27.2
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (mail.monkeyblade.net [0.0.0.0]); Mon, 18 Oct 2021 05:12:34 -0700 (PDT)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add mt7986b pinctrl node
+From: Asmaa Mnebhi <asmaa@nvidia.com>
+Date: Fri, 15 Oct 2021 12:48:07 -0400
 
-Signed-off-by: Sam Shih <sam.shih@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/mt7986b.dtsi | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+> This is a follow up on a discussion regarding
+> proper handling of GPIO interrupts within the
+> gpio-mlxbf2.c driver.
+> 
+> Link to discussion:
+> https://lore.kernel.org/netdev/20210816115953.72533-7-andriy.shevchenko@linux.intel.com/T/
+> 
+> Patch 1 adds support to a GPIO IRQ handler in gpio-mlxbf2.c.
+> Patch 2 is a follow up removal of custom GPIO IRQ handling
+> from the mlxbf_gige driver and replacing it with a simple
+> IRQ request. The ACPI table for the mlxbf_gige driver is
+> responsible for instantiating the PHY GPIO interrupt via
+> GpioInt.
+> 
+> Andy Shevchenko, could you please review this patch series.
+> David Miller, could you please ack the changes in the
+> mlxbf_gige driver.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7986b.dtsi b/arch/arm64/boot/dts/mediatek/mt7986b.dtsi
-index 0bb33b614b56..9a94ca1225c5 100644
---- a/arch/arm64/boot/dts/mediatek/mt7986b.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt7986b.dtsi
-@@ -128,6 +128,27 @@ apmixedsys: apmixedsys@1001e000 {
- 			#clock-cells = <1>;
- 		};
- 
-+		pio: pinctrl@1001f000 {
-+			compatible = "mediatek,mt7986b-pinctrl";
-+			reg = <0 0x1001f000 0 0x1000>,
-+			      <0 0x11c30000 0 0x1000>,
-+			      <0 0x11c40000 0 0x1000>,
-+			      <0 0x11e20000 0 0x1000>,
-+			      <0 0x11e30000 0 0x1000>,
-+			      <0 0x11f00000 0 0x1000>,
-+			      <0 0x11f10000 0 0x1000>,
-+			      <0 0x1000b000 0 0x1000>;
-+			reg-names = "gpio", "iocfg_rt", "iocfg_rb", "iocfg_lt",
-+				    "iocfg_lb", "iocfg_tr", "iocfg_tl", "eint";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pio 0 0 41>, <&pio 66 66 35>;
-+			interrupt-controller;
-+			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-parent = <&gic>;
-+			#interrupt-cells = <2>;
-+		};
-+
- 		sgmiisys0: syscon@10060000 {
- 			compatible = "mediatek,mt7986-sgmiisys_0",
- 				     "syscon";
--- 
-2.29.2
-
+Acked-by: David S. Miller <davem@davemloft.net>
