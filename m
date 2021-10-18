@@ -2,86 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E70A430D36
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Oct 2021 02:59:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AA16430F6B
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Oct 2021 06:57:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344794AbhJRBBf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 17 Oct 2021 21:01:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34520 "EHLO
+        id S229704AbhJRE7n (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 18 Oct 2021 00:59:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344765AbhJRBBe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 17 Oct 2021 21:01:34 -0400
-Received: from mail-vk1-xa2b.google.com (mail-vk1-xa2b.google.com [IPv6:2607:f8b0:4864:20::a2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68AFDC06161C
-        for <linux-gpio@vger.kernel.org>; Sun, 17 Oct 2021 17:59:24 -0700 (PDT)
-Received: by mail-vk1-xa2b.google.com with SMTP id f126so7813411vke.3
-        for <linux-gpio@vger.kernel.org>; Sun, 17 Oct 2021 17:59:24 -0700 (PDT)
+        with ESMTP id S229481AbhJRE7n (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 18 Oct 2021 00:59:43 -0400
+Received: from mail-ua1-x92e.google.com (mail-ua1-x92e.google.com [IPv6:2607:f8b0:4864:20::92e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37C5EC06161C
+        for <linux-gpio@vger.kernel.org>; Sun, 17 Oct 2021 21:57:32 -0700 (PDT)
+Received: by mail-ua1-x92e.google.com with SMTP id f4so3491864uad.4
+        for <linux-gpio@vger.kernel.org>; Sun, 17 Oct 2021 21:57:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vIEFutEubHblD6m4CJ07+iaI+xTyTiVljq2Pxa5i1uU=;
-        b=Pmn4LRMIU4UEbma6xeSAJmerc9eX9zSdd5VqjEjBgmVAnb+nxEiXXjJ3+n1fLQ2O7L
-         hC/nvCB1f2f5aCVUHnUi5ZJ1KkAkeQ1tEiJQmng4fXBo6JOfbTLMq7kAmsl0RY/yKuh2
-         lcgq2B+4khe/IaGMsh3bHGP5UZwZpOHhCvaOmhwbqBSlkkdyKjm5lD3yO/90p/DFdEi0
-         8EdxZ1CaFeBuVBJzAiq70fRjDboNpXpWcYvvcUk7vHR8tPPHiwOOTgO07toB/SH3VTQL
-         cMhWYROW9QZwYGFFa5aOQOskCbK78qCx9WMLnsXBX7kD7CbPV1jITkle7lmLuOsrB7ru
-         j1pw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iPYB1T7gyfKLEKhW7wZ0g0txOGlKrluH3CU38I7q+kI=;
+        b=Zs+ejEPn7RH6Eini+VRDCuMpDF7M5+SqQOc8HW6m+cbjp9tmm776ZfBbergz1W6RFP
+         crVe415Bd6EpHRzNnPC9ILq6w1DsgVn6cd3a9NBqMD9RRaWnIaM7peuPY8tQE8dU7Stn
+         rTCxk2Wg3Q9PmJWGM8WWKqfI35ubPxCshcavX5erfHGlizayUJd3DvccC28uReq/MJQ8
+         m375MiCLIZq1qQxrTUAduLX+QKgi2/LfSCtji7P3y4/bGJ4fNxQpJGWbTJ4oVbi7qz0f
+         PVEgbCjKWhIafNDLH68MMXsDmA5fDm0WAUBSKSD+6Kh33jnxpDPYIykBNgq1DMMVBAdz
+         rZYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vIEFutEubHblD6m4CJ07+iaI+xTyTiVljq2Pxa5i1uU=;
-        b=bn9Z08zK3lGCi5wGAxl8mp/sv/uXOJRxXPcLuOBI6cQtBJVBnKm6+TLUCD5qhYZy8c
-         WK4XJnGShoy1Dq+MH8/69xVnz11RlD8MYi/xYyi4Ut9YVH0QVgyM0Hc+oMhJfL5cmb/Y
-         bc16IdH/iU5QBrpa8FYxjmnjGzw0vnSNZy4OYgj9XToL9MZjU0UyppBEtmWfo7Lof2Ur
-         L0g2kE2+P/R5+9wNybnB0P3ZvQdqPCrkgNmN3aQk88RTSed+irVez/7LqeCsnAkj6Rg5
-         5ytiVfj1DhsuVcKzDm/pAaga5nwi9+lvn2FJ7b6yUJIcUpc5qpovujhJn4af4JkL7FtT
-         O3xQ==
-X-Gm-Message-State: AOAM533Wy2AO4eCw+rZAEmYFAIakoOsTDpm1kNfWzyxWkaiF6DGFrspp
-        x2n2gEsP82zr193kyqHAD9Qp1FwqOeD/jPR/
-X-Google-Smtp-Source: ABdhPJwKzz7rDBXY9rfZEkyHIB4hf6FojsEWsR/UOH/x9UdQ4/qeiykz/vuSOGcn8vVAJIZ0uCVP8g==
-X-Received: by 2002:a1f:b44f:: with SMTP id d76mr22240117vkf.25.1634518763142;
-        Sun, 17 Oct 2021 17:59:23 -0700 (PDT)
-Received: from tresc043793.tre-sc.gov.br ([187.94.103.218])
-        by smtp.gmail.com with ESMTPSA id f128sm2241992vsc.13.2021.10.17.17.59.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Oct 2021 17:59:22 -0700 (PDT)
-From:   luizluca@gmail.com
-To:     linux-gpio@vger.kernel.org
-Cc:     luizluca@gmail.com, trivial@kernel.org,
-        sergio.paracuellos@gmail.com
-Subject: [PATCH] pinctrl: ralink: include 'ralink_regs.h' in 'pinctrl-mt7620.c'
-Date:   Sun, 17 Oct 2021 21:59:15 -0300
-Message-Id: <20211018005915.17601-1-luizluca@gmail.com>
-X-Mailer: git-send-email 2.33.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iPYB1T7gyfKLEKhW7wZ0g0txOGlKrluH3CU38I7q+kI=;
+        b=vjO7KafLZjFY04PJA3qvPnS4m1CtV/AEMU/NQiGGNEPPv0h3Tw49vvvVqc3T60VWA7
+         2yqFG94A+r3b7aqD7xKQHxd0y32DMsx9duxAADpp0Muf1euy4XnzLenOFxVGEOOC7dzi
+         pUfTlEy2l9b9LblvvjVxl+H/2f2882Nwj6QK3G9L6ctVByFU8LLryUVA9/LaORpIkN7f
+         8UwzLFtZUUX51iLH3Nh4JqVUA3p+fvMl0uMx5T/Cx2pbHwMKkU3IDprlMjfpCJTfOTIO
+         NS5IrRfB5RrqjYDb+FwX5mkWLDqOLu+VBbFXBSQ5O8dENcCHx/HBcTGPx6PP2aWLma2M
+         EWHA==
+X-Gm-Message-State: AOAM5333dsRu1RO3T6Aovb26tmiN/ALZp4rYvQM4TCi+NreP5W/3JIE8
+        /r0BV7oFjTMnQojI/jafcP1HVdjEmOP/+xmRvi0h1nszcNI=
+X-Google-Smtp-Source: ABdhPJzAk5rvMKDNpKxWgh67tpbNY8eamDkEkAZAuSb5qo08RTFIstSuH6E6wtgXkJSdvL7OGUCrlFl2ueLvVZWoPyA=
+X-Received: by 2002:ab0:42e:: with SMTP id 43mr23290393uav.98.1634533051301;
+ Sun, 17 Oct 2021 21:57:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20211018005915.17601-1-luizluca@gmail.com>
+In-Reply-To: <20211018005915.17601-1-luizluca@gmail.com>
+From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date:   Mon, 18 Oct 2021 06:57:20 +0200
+Message-ID: <CAMhs-H_=7D9mGweMxRigVxSWR4GCaowExjgM28D7NB7MsPvcew@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: ralink: include 'ralink_regs.h' in 'pinctrl-mt7620.c'
+To:     luizluca@gmail.com
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Jiri Kosina <trivial@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Luiz Angelo Daros de Luca <luizluca@gmail.com>
+Hi Luiz,
 
-mt7620.h, included by pinctrl-mt7620.c, mentions MT762X_SOC_MT7628AN
-declared in ralink_regs.h.
+Thanks for your patch. I thought I had reviewed all of this since the
+kernel test robot complains once for something similar but it seems I
+missed this one :).
 
-Signed-off-by: Luiz Angelo Daros de Luca <luizluca@gmail.com>
----
- drivers/pinctrl/ralink/pinctrl-mt7620.c | 1 +
- 1 file changed, 1 insertion(+)
+On Mon, Oct 18, 2021 at 2:59 AM <luizluca@gmail.com> wrote:
+>
+> From: Luiz Angelo Daros de Luca <luizluca@gmail.com>
+>
+> mt7620.h, included by pinctrl-mt7620.c, mentions MT762X_SOC_MT7628AN
+> declared in ralink_regs.h.
+>
+> Signed-off-by: Luiz Angelo Daros de Luca <luizluca@gmail.com>
+> ---
+>  drivers/pinctrl/ralink/pinctrl-mt7620.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/pinctrl/ralink/pinctrl-mt7620.c b/drivers/pinctrl/ralink/pinctrl-mt7620.c
+> index 425d55a2ee19..6853b5b8b0fe 100644
+> --- a/drivers/pinctrl/ralink/pinctrl-mt7620.c
+> +++ b/drivers/pinctrl/ralink/pinctrl-mt7620.c
+> @@ -1,5 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>
+> +#include <asm/mach-ralink/ralink_regs.h>
+>  #include <asm/mach-ralink/mt7620.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+> --
+> 2.33.0
+>
 
-diff --git a/drivers/pinctrl/ralink/pinctrl-mt7620.c b/drivers/pinctrl/ralink/pinctrl-mt7620.c
-index 425d55a2ee19..6853b5b8b0fe 100644
---- a/drivers/pinctrl/ralink/pinctrl-mt7620.c
-+++ b/drivers/pinctrl/ralink/pinctrl-mt7620.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-only
- 
-+#include <asm/mach-ralink/ralink_regs.h>
- #include <asm/mach-ralink/mt7620.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
--- 
-2.33.0
+Can you please add the "Fixes" tag and CC also stable linux? With
+those two added, please send v2.
 
+Fixes: 745ec436de72 ("pinctrl: ralink: move MT7620 SoC pinmux config
+into a new 'pinctrl-mt7620.c' file")
+Cc: stable@vger.kernel.org
+
+Thanks,
+    Sergio Paracuellos
