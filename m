@@ -2,82 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B52D43307E
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Oct 2021 10:05:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE1E0433282
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Oct 2021 11:38:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234778AbhJSIGp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Oct 2021 04:06:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36234 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234711AbhJSIGk (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 19 Oct 2021 04:06:40 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 9B6A76138F;
-        Tue, 19 Oct 2021 08:04:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634630667;
-        bh=1KoIdQOJKC+q8eSROHr3duOzqfc7i0BTRJOLtAaUpjA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X5AXMhDYKI5rwQEKGv0/MhrxK3IsFJe3JbUJ87IC+iW+r6fCIBgRpQZNVN2GD4xYc
-         P4kcALrzgy5W5FsFG5baL2bIxGQCcVJtgsAcqQwiOObGHqRBvq6oDCjP9p90/me+gt
-         Nm+syWhy/WP5Ephay1hWIe2j5APgcZ5dxj6m4tnXM827TELV/DbGaEKlYc+nmAQXw9
-         OxNHnLOdZPZ5ee2uxlKHlLD+oyu2RaC5kBr2qDDYBG0aV/+1Np3pEeggX/OqEt1sYJ
-         8XJta33BObU2i6WU7S59NmZ+pamaR/zzIb+tM+IAEmfNFYYA9pd3YUXYqoDsKGad2H
-         /5NgcyDgxXIJw==
-Received: by mail.kernel.org with local (Exim 4.94.2)
-        (envelope-from <mchehab@kernel.org>)
-        id 1mck6j-001oJm-9w; Tue, 19 Oct 2021 09:04:25 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Chen-Yu Tsai <wens@csie.org>, Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 20/23] dt-bindings: mfd: update x-powers,axp152.yaml reference
-Date:   Tue, 19 Oct 2021 09:04:19 +0100
-Message-Id: <aedef820f4dc9af5d3a3fcce2ad733d75e1ad4f0.1634630486.git.mchehab+huawei@kernel.org>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <cover.1634630485.git.mchehab+huawei@kernel.org>
-References: <cover.1634630485.git.mchehab+huawei@kernel.org>
+        id S235126AbhJSJlG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Oct 2021 05:41:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54100 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235068AbhJSJlE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Oct 2021 05:41:04 -0400
+Received: from mail-io1-xd2b.google.com (mail-io1-xd2b.google.com [IPv6:2607:f8b0:4864:20::d2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84D00C061749
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Oct 2021 02:38:51 -0700 (PDT)
+Received: by mail-io1-xd2b.google.com with SMTP id i189so19620426ioa.1
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Oct 2021 02:38:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=h7Ka/8DlpkXEXF23rPgOfJJ3SyquA2FhD5HYDsybiG4=;
+        b=TOvN/3L74NxJ8jkZLAwc1HWcAigE5PqgL50bgmFqgfF5N3Ni/F/hFF6HKKLKTN31yN
+         HevaAXYbPfypt8hhKvSPyehT5ALdXqczNk+5xUwtC+i5sgHXh2uIQwAecZjfCaWU8ix6
+         IP3iNNDeKzM9Rarn67S7Y6Q5meavaw7Mpk+sez5Jm9gTXVkS2K7rH0HxN0wGBD1vTEZW
+         SlZ7Ohjm5TDffwxVe9psHKkZrw9F8ewS3UJdvRp48BugnVC9N6o6tGt7kOuD9dBL9WOI
+         l1dbXlU20FuuDCR1G9eGV6dpPzPq/obtSd+vSUmjw4dvgQ3M4KndmuUgzevCd5/KLP2j
+         AvJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=h7Ka/8DlpkXEXF23rPgOfJJ3SyquA2FhD5HYDsybiG4=;
+        b=t7CPfSPgG3TkuHj+KDYQ80pW2gJVDfGX3sQts+cm4IWEEkCFEYvje8CF2uTDO45LAS
+         4VkonB1WkVUs+RKTPEZtSpfDXEuf2G4nssCveQE6V5scsPn84Kr77x+DSlyrGcKKdQn1
+         paOohpPAc6dU7eMJxFFS1c6OOavutyp5zsiwBjVf7xpge0od4ZeSMmUDScqdwhYxT1Zx
+         A06wuZl6fP7Yu2BHhq9oenzWCmHZFM+42PVUSTJISGO20G4/d2Gc4w1SnDGbBjVAJ6st
+         ERh+CR+YvOKGzgvkmCq5TbL3Je9RtruIXZ1zslL/4oMhM2dP+naY8gH4tJZSXxXYW4JN
+         ojAA==
+X-Gm-Message-State: AOAM531PO8XzDVQi1srquMGeqlFvp1EsjPxf8i++bZKk7qHc4z9HUwBj
+        zZBGpPozUnIKVtiw9xyAm+8drIPzygHGe7EKizI=
+X-Google-Smtp-Source: ABdhPJzMH7/Viv+gmOFi/wRxRbcc549EbhNxq1WBmFuuCl5Y1sIaNw3hPc5P9A8SHm6QnP1HNGNAvecvirmJS/oiL6w=
+X-Received: by 2002:a02:6f5d:: with SMTP id b29mr3319085jae.113.1634636331013;
+ Tue, 19 Oct 2021 02:38:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: Mauro Carvalho Chehab <mchehab@kernel.org>
+Received: by 2002:a92:c7c6:0:0:0:0:0 with HTTP; Tue, 19 Oct 2021 02:38:50
+ -0700 (PDT)
+Reply-To: megaritalouisdrayfu199@yahoo.com
+From:   "Mrs. Margarita Louis-Dreyfus." <anniewei112@gmail.com>
+Date:   Mon, 18 Oct 2021 21:38:50 -1200
+Message-ID: <CAGT4pMkzKn8mfeY05OAG04CCAxodKEVDUk46D=O7cfK8+n1=tA@mail.gmail.com>
+Subject: Charitable funds to help the less privilege!
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Changeset f38d3e404326 ("dt-bindings: mfd: Convert X-Powers AXP binding to a schema")
-renamed: Documentation/devicetree/bindings/mfd/axp20x.txt
-to: Documentation/devicetree/bindings/mfd/x-powers,axp152.yaml.
+--=20
+Hello,
 
-Update its cross-reference accordingly.
+I am sorry to encroach into your privacy in this manner, my name
+Margarita Louis-Dreyfus , I find it pleasurable to offer you my
+partnership in business, i only pray at this time that your email
+address is still valid. I want to solicit your attention to receive
+money on my behalf for humanitarian project to help the less
+priviledge.
 
-Fixes: f38d3e404326 ("dt-bindings: mfd: Convert X-Powers AXP binding to a schema")
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
+The purpose of my contacting you is because my status would not permit
+me to do this alone. Given my current state of health, I have decided
+to donate Ninety -Eight Million United State Dollars to establish a
+foundation with your help to reach out to the less privilege, orphans,
+sick and homeless people in your country who will receive their
+blessings as i promised my God before i leave this earth.
 
-To mailbombing on a large number of people, only mailing lists were C/C on the cover.
-See [PATCH v3 00/23] at: https://lore.kernel.org/all/cover.1634630485.git.mchehab+huawei@kernel.org/
+I got your contact through my personal search, you were revealed as
+being quite astute in private entrepreneurship, and i have no doubt
+that you can handle this huge financial transaction. Please contact my
+executor for more information:
 
- Documentation/devicetree/bindings/gpio/gpio-axp209.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Mr. Ford Spencer(Attorney at Law).
+For: Mrs. Margarita Louis-Dreyfus
+LEGAL DEPARTMENT LAWSON & ASSOCIATES
+(JUSTICE, FAIRPLAY & EQUITY)
+Email: fordspencer828@yahoo.com, fordspencereqs828@gmail.com
+Office: +1-970-414-1400
++1-702-714-3422
+Mobile: +1 916 269 2733
+Fax: +1-970-414-1433
+=C2=AE Property of Steven C Spence PA.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-axp209.txt b/Documentation/devicetree/bindings/gpio/gpio-axp209.txt
-index fc42b2caa06d..538f04e60ff9 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-axp209.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-axp209.txt
-@@ -17,7 +17,7 @@ Required properties:
- - gpio-controller: Marks the device node as a GPIO controller.
- 
- This node must be a subnode of the axp20x PMIC, documented in
--Documentation/devicetree/bindings/mfd/axp20x.txt
-+Documentation/devicetree/bindings/mfd/x-powers,axp152.yaml
- 
- Example:
- 
--- 
-2.31.1
+Your earliest response to this letter will be appreciated.
 
+Kind Regards,
+
+Mrs. Margarita Louis-Dreyfus.
