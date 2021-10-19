@@ -2,348 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DF12943393E
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Oct 2021 16:50:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 475B2433B9B
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Oct 2021 18:04:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233839AbhJSOwV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Oct 2021 10:52:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41076 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233928AbhJSOwF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Oct 2021 10:52:05 -0400
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0316C06177C
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Oct 2021 07:49:28 -0700 (PDT)
-Received: by mail-wm1-x336.google.com with SMTP id s198-20020a1ca9cf000000b0030d6986ea9fso3301408wme.1
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Oct 2021 07:49:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jMwKeDx1xIluS3Y035lgALsVGvJn3c2xJ25VMV8QOGs=;
-        b=d5OV6axjaaW3HY62xWBS/mJAitWnIu7hNZhBo0xLnYj0sPR8SECroaHaKL0iST38x1
-         V9wDpUc18lSmsoaryOwS93wvpKYb/QeCN1DrvIb8WtC23/7rzmgEGZA8RIfbGgY/AfUw
-         WFvwcgY8oS0uBxCdYMF17QOlc4O2o1m/P6FV4Te6QrIlKp0RYHrsaVDyrPavmu/Zlc6i
-         cJyF18ZNjunogRUfJVRzWt6o111aPhDiwVequdpePRky3IXck0hw0HgUfyzLG7qaWQD+
-         dnFeDmqKhYJoFoOXGEyxHPWHMaIPuVDeOl32eGm6TflD4vaMurAuEnnqTIdiTF2ahaAx
-         iiMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jMwKeDx1xIluS3Y035lgALsVGvJn3c2xJ25VMV8QOGs=;
-        b=VrSqhVLrq8MVXQifn2styN0l4/SbqZ/ogkSaMOX2ZeJJB85KeyR9V/VQ7luZGr25Rd
-         8zWMh7iRTgoqz+d7GGaEMWmtkbVJOBeiymqMhAKpwho53mshLzOtHTxtBQDzefwxT3fm
-         qxSolfB1qryUt9ISuDn0WcYCWUnYYiG47ct4BvZRRMpoNsZTC+5ylf7MFeOHKlZsU2UK
-         Ev0YofCV/F4f2eDvZD/WNR0bILrHZ/MR/QRA+XXYqA1iQE+EAtnw3RusDJ4KOk4Qbfg1
-         9tFmXGoZwiUSRXR9thkjF62fzp/UqQgEorWxsFRo9PEm2RxoZD0XCaODRwCYVeoRtoah
-         FrWA==
-X-Gm-Message-State: AOAM531kNzwSzKH4so7MX78KYMnKZkgxs/FbOVVuEOV3EyGBM4fRYgtY
-        25pYhOJ+wexsms7hH+On8PPuNA==
-X-Google-Smtp-Source: ABdhPJw68Xm7j5jX3xpVx1k96ImK4Fftt66JIDJngLbjqppjKdUbYxogns/Gi9++m0tBdlD9OA76Lw==
-X-Received: by 2002:adf:ead0:: with SMTP id o16mr13067340wrn.106.1634654967258;
-        Tue, 19 Oct 2021 07:49:27 -0700 (PDT)
-Received: from debian-brgl.home ([2a01:cb1d:334:ac00:7d50:ff5:f5c1:e225])
-        by smtp.gmail.com with ESMTPSA id j1sm16212752wrd.28.2021.10.19.07.49.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Oct 2021 07:49:27 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>,
-        Shuah Khan <shuah@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jack Winch <sunt.un.morcov@gmail.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v8 8/8] selftests: gpio: add test cases for gpio-sim
-Date:   Tue, 19 Oct 2021 16:49:09 +0200
-Message-Id: <20211019144909.21959-9-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.30.1
-In-Reply-To: <20211019144909.21959-1-brgl@bgdev.pl>
-References: <20211019144909.21959-1-brgl@bgdev.pl>
+        id S233497AbhJSQGk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Oct 2021 12:06:40 -0400
+Received: from mail-sn1anam02on2061.outbound.protection.outlook.com ([40.107.96.61]:31168
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S233718AbhJSQGi (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 19 Oct 2021 12:06:38 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Xzr19SVJC5eLAtj5HCrXBJh1O1nL4PU7ztAGNhuHRMCPneFGOQ0c8dNL6+RVb6JWYCtllHOekSp37sFcaPCHYpvRetSLTAoVV2hcuKkmgLPpRSpkEJalfj5fn5lDAslnRnvwX1PC2x2DOXBRD+MPUvTHZ39vB6XgX+YrFmu2o3pO4QRDyEv95rgI/L5Jjyr57cy+3Xib40yccMDPLE4SkyRW9GDk612YSDUP9E1UIhAmxmn/VOvYO4BBEE7ZipqLynR357ifPhdZVJD41LVUKZoSWes1I6aaKKAKfVuomzXCMNHmgFx2C+5Cq8J2NssZCSIvaiP7i1g9RLXi2DuC5g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SrGPLe1SEQkvNtSee211EK8AwR9jo6TWWQYRIUIOtZo=;
+ b=kysTqILVnMIZrnzjhaTTUw/Q1mn/bH9hrw84u+TCM5pFkRGvNZf5utLEw+FyJvMUhtx0NLsezOWy5d/2PemrdxQFU5sd9Ms/jQfSq90LsZ4/RbopdAfHdzC6vrsgviCCh6Uo202B1WYaAXIjK2BQwySob4WxaHbFsdJl2oLP4wN+ahzc/gEcD6qviCttMwPSYVb70h8BYWqUf5RUinsMaPTd7Q/KjBdAf1Fm6g8GxVaZr6kVcL+aEYE1iThta8+UlWMmg8FMgAq6SD+oMgotIMhRxjv3FT3uMfy+uAV+RrJsmuZmvYipEOrw8J4gJo6AjydTkyK5I0qDmGK/O03DqA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linaro.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SrGPLe1SEQkvNtSee211EK8AwR9jo6TWWQYRIUIOtZo=;
+ b=Uu2DsVulWoJafoG821MzlyQ6LQPi9Di1Zf2TEnOTB1OTsdtgrawyOXIuoIpuf1SGvpanrYmqFQIsnqrtrXa6ZyK066/22nELHPYPgd/XoD7JowF8baI4q/sJXwMATDFFawO/Ch8DGcNcqoHaXkLGwP3NbKkHDMiks3olePNreCA=
+Received: from MW4PR04CA0350.namprd04.prod.outlook.com (2603:10b6:303:8a::25)
+ by DM6PR12MB3467.namprd12.prod.outlook.com (2603:10b6:5:3c::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4608.18; Tue, 19 Oct
+ 2021 16:04:19 +0000
+Received: from CO1NAM11FT019.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:8a:cafe::83) by MW4PR04CA0350.outlook.office365.com
+ (2603:10b6:303:8a::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4608.15 via Frontend
+ Transport; Tue, 19 Oct 2021 16:04:19 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; linaro.org; dkim=none (message not signed)
+ header.d=none;linaro.org; dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com;
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT019.mail.protection.outlook.com (10.13.175.57) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.4608.15 via Frontend Transport; Tue, 19 Oct 2021 16:04:19 +0000
+Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.15; Tue, 19 Oct
+ 2021 11:04:12 -0500
+From:   Mario Limonciello <mario.limonciello@amd.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+CC:     "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Nehal Shah <Nehal-bakulchandra.Shah@amd.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH v3 1/2] ACPI: Add stubs for wakeup handler functions
+Date:   Tue, 19 Oct 2021 11:04:00 -0500
+Message-ID: <20211019160401.8296-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e097ad86-5b58-444a-928a-08d9931a1bf6
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3467:
+X-Microsoft-Antispam-PRVS: <DM6PR12MB34674E427F4EFA4296FA437EE2BD9@DM6PR12MB3467.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:565;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: zRRzXSEm/s/xouDs67HDAPTBDS8NJK3Vyh32Yd7o8UyIik7D3mhGbpkpCkKhA1uKdQa9ClmyG6ELdjVhM9XQjPSEcCFtHn5ZRxLecKwnNPLSuv2X2dmhxErhfAOj9jbsuYRq8q6/lrmy7eety61YP34Roc/tfneVVSaNHMGuB0b5IvK2T9E1i/D7GLbNYXNquJd7Ti+lWJivEfp/sqebDqwxr9xnqh43P4aH0mOvoyRjcb/MWN5IZ37RpDSgMxnaGX5n/aCxfQVnuBfOnptBfox3Bv1OvCjHPRsh+DaaYsEpEmUyPprkQbc0Dw97gHKlGZ/UhrdJoMcdMtk8/+0JGcCKxGpnQM/av2elHMpirPTw9KV2PvVRe8nlQyHJZe09anBr26PW12lbmVWnKRa/Ax6Nwnd1LyzYDK8Na9y+lFLZ92hmo8zB12GH5oT4MWpF1ZwIvL5TeEa5eJ/RX7iCA2cB/cfBNoH0R96//7SHynA47pmGBVrkzkW41XC7SqpgS4vFwIVjz5+lKWPyNSC+FVn8meTcp+zi/JUYP0UkmwCR3Yo1RJGj7OrSLtJD1mkWKwAiRheRlBIkAPoeOfj74P/ncX37aeiMDKv8iFy9CgvQ3KXGx7UJDeYmc2aOLDEpPB9iTEIKrk3OGkEYAAmIW7fJN+Q8NCw1oakpZP9wPa317UzHbAXrTzxK64pi+/J1QGg1t7exaZkISddcoAZ7p360L1IUPEbPsOe+TSw7K9w=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(46966006)(36840700001)(6666004)(426003)(2906002)(336012)(2616005)(316002)(44832011)(5660300002)(7696005)(110136005)(1076003)(54906003)(36756003)(36860700001)(82310400003)(6636002)(508600001)(47076005)(86362001)(8936002)(26005)(16526019)(81166007)(356005)(70206006)(186003)(4326008)(8676002)(70586007)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Oct 2021 16:04:19.5793
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e097ad86-5b58-444a-928a-08d9931a1bf6
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT019.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3467
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add a set of tests for the new gpio-sim module. This is a pure shell
-test-suite and uses the helper programs available in the gpio selftests
-directory. These test-cases only test the functionalities exposed by the
-gpio-sim driver, not those handled by core gpiolib code.
+commit ddfd9dcf270c ("ACPI: PM: Add acpi_[un]register_wakeup_handler()")
+added new functions for drivers to use during the s2idle wakeup path, but
+didn't add stubs for when CONFIG_ACPI wasn't set.
 
-Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+Add those stubs in for other drivers to be able to use.
+
+Fixes: ddfd9dcf270c ("ACPI: PM: Add acpi_[un]register_wakeup_handler()")
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 ---
- tools/testing/selftests/gpio/Makefile    |   2 +-
- tools/testing/selftests/gpio/config      |   1 +
- tools/testing/selftests/gpio/gpio-sim.sh | 229 +++++++++++++++++++++++
- 3 files changed, 231 insertions(+), 1 deletion(-)
- create mode 100755 tools/testing/selftests/gpio/gpio-sim.sh
+ include/linux/acpi.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/tools/testing/selftests/gpio/Makefile b/tools/testing/selftests/gpio/Makefile
-index d7d8f1985d99..4c6df61c76a8 100644
---- a/tools/testing/selftests/gpio/Makefile
-+++ b/tools/testing/selftests/gpio/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index 72e4f7fd268c..b31bcc0f4c89 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -976,6 +976,14 @@ static inline int acpi_get_local_address(acpi_handle handle, u32 *addr)
+ 	return -ENODEV;
+ }
  
--TEST_PROGS := gpio-mockup.sh
-+TEST_PROGS := gpio-mockup.sh gpio-sim.sh
- TEST_FILES := gpio-mockup-sysfs.sh
- TEST_GEN_PROGS_EXTENDED := gpio-mockup-cdev gpio-chip-info gpio-line-name
++static inline int acpi_register_wakeup_handler(
++	int wake_irq, bool (*wakeup)(void *context), void *context)
++{
++	return -EINVAL;
++}
++static inline void acpi_unregister_wakeup_handler(
++	bool (*wakeup)(void *context), void *context) { }
++
+ #endif	/* !CONFIG_ACPI */
  
-diff --git a/tools/testing/selftests/gpio/config b/tools/testing/selftests/gpio/config
-index ce100342c20b..409a8532facc 100644
---- a/tools/testing/selftests/gpio/config
-+++ b/tools/testing/selftests/gpio/config
-@@ -1,3 +1,4 @@
- CONFIG_GPIOLIB=y
- CONFIG_GPIO_CDEV=y
- CONFIG_GPIO_MOCKUP=m
-+CONFIG_GPIO_SIM=m
-diff --git a/tools/testing/selftests/gpio/gpio-sim.sh b/tools/testing/selftests/gpio/gpio-sim.sh
-new file mode 100755
-index 000000000000..fcca6ec611f8
---- /dev/null
-+++ b/tools/testing/selftests/gpio/gpio-sim.sh
-@@ -0,0 +1,229 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright (C) 2021 Bartosz Golaszewski <bgolaszewski@baylibre.com>
-+
-+BASE_DIR=`dirname $0`
-+CONFIGFS_DIR="/sys/kernel/config/gpio-sim"
-+PENDING_DIR=$CONFIGFS_DIR/pending
-+LIVE_DIR=$CONFIGFS_DIR/live
-+MODULE="gpio-sim"
-+
-+fail() {
-+	echo "$*" >&2
-+	echo "GPIO $MODULE test FAIL"
-+	exit 1
-+}
-+
-+skip() {
-+	echo "$*" >&2
-+	echo "GPIO $MODULE test SKIP"
-+	exit 4
-+}
-+
-+configfs_cleanup() {
-+	for DIR in `ls $LIVE_DIR`; do
-+		mv $LIVE_DIR/$DIR $PENDING_DIR
-+	done
-+
-+	for DIR in `ls $PENDING_DIR`; do
-+		rmdir $PENDING_DIR/$DIR
-+	done
-+}
-+
-+create_pending_chip() {
-+	local NAME="$1"
-+	local LABEL="$2"
-+	local NUM_LINES="$3"
-+	local LINE_NAMES="$4"
-+	local CHIP_DIR="$PENDING_DIR/$NAME"
-+
-+	mkdir $CHIP_DIR
-+	test -n "$LABEL" && echo $LABEL > $CHIP_DIR/label
-+	test -n "$NUM_LINES" && echo $NUM_LINES > $CHIP_DIR/num_lines
-+	if [ -n "$LINE_NAMES" ]; then
-+		echo $LINE_NAMES 2> /dev/null > $CHIP_DIR/line_names
-+		# This one can fail
-+		if [ "$?" -ne "0" ]; then
-+			return 1
-+		fi
-+	fi
-+}
-+
-+create_live_chip() {
-+	local CHIP_DIR="$PENDING_DIR/$1"
-+
-+	create_pending_chip "$@" || fail "unable to create the chip configfs item"
-+	mv $CHIP_DIR $LIVE_DIR || fail "unable to commit the chip configfs item"
-+}
-+
-+remove_pending_chip() {
-+	local NAME="$1"
-+
-+	rmdir $PENDING_DIR/$NAME || fail "unable to remove the chip configfs item"
-+}
-+
-+remove_live_chip() {
-+	local NAME="$1"
-+
-+	mv $LIVE_DIR/$NAME $PENDING_DIR || fail "unable to uncommit the chip configfs item"
-+	remove_pending_chip "$@"
-+}
-+
-+configfs_chip_name() {
-+	local CHIP="$1"
-+
-+	cat $LIVE_DIR/$CHIP/chip_name 2> /dev/null || return 1
-+}
-+
-+configfs_dev_name() {
-+	local CHIP="$1"
-+
-+	cat $LIVE_DIR/$CHIP/dev_name 2> /dev/null || return 1
-+}
-+
-+get_chip_num_lines() {
-+	local CHIP="$1"
-+
-+	$BASE_DIR/gpio-chip-info /dev/`configfs_chip_name $CHIP` num-lines
-+}
-+
-+get_chip_label() {
-+	local CHIP="$1"
-+
-+	$BASE_DIR/gpio-chip-info /dev/`configfs_chip_name $CHIP` label
-+}
-+
-+get_line_name() {
-+	local CHIP="$1"
-+	local OFFSET="$2"
-+
-+	$BASE_DIR/gpio-line-name /dev/`configfs_chip_name $CHIP` $OFFSET
-+}
-+
-+sysfs_set_pull() {
-+	local CHIP="$1"
-+	local OFFSET="$2"
-+	local PULL="$3"
-+	local SYSFSPATH="/sys/devices/platform/`configfs_dev_name $CHIP`/line-ctrl/gpio$OFFSET"
-+
-+	echo $PULL > $SYSFSPATH
-+}
-+
-+# Load the gpio-sim module. This will pull in configfs if needed too.
-+modprobe gpio-sim || skip "unable to load the gpio-sim module"
-+# Make sure configfs is mounted at /sys/kernel/config. Wait a bit if needed.
-+for IDX in `seq 5`; do
-+	if [ "$IDX" -eq "5" ]; then
-+		skip "configfs not mounted at /sys/kernel/config"
-+	fi
-+
-+	mountpoint -q /sys/kernel/config && break
-+	sleep 0.1
-+done
-+# If the module was already loaded: remove all previous chips
-+configfs_cleanup
-+
-+trap "exit 1" SIGTERM SIGINT
-+trap configfs_cleanup EXIT
-+
-+echo "1. chip_name and dev_name attributes"
-+
-+echo "1.1. Chip name is communicated to user"
-+create_live_chip chip
-+test -n `cat $LIVE_DIR/chip/chip_name` || fail "chip_name doesn't work"
-+remove_live_chip chip
-+
-+echo "1.2. chip_name returns 'none' if the chip is still pending"
-+create_pending_chip chip
-+test "`cat $PENDING_DIR/chip/chip_name`" = "none" || fail "chip_name doesn't return 'none' for a pending chip"
-+remove_pending_chip chip
-+
-+echo "1.3. Device name is communicated to user"
-+create_live_chip chip
-+test -n `cat $LIVE_DIR/chip/dev_name` || fail "dev_name doesn't work"
-+remove_live_chip chip
-+
-+echo "1.4. dev_name returns 'none' if chip is still pending"
-+create_pending_chip chip
-+test "`cat $PENDING_DIR/chip/dev_name`" = "none" || fail "dev_name doesn't return 'none' for a pending chip"
-+remove_pending_chip chip
-+
-+echo "2. Creating simulated chips"
-+
-+echo "2.1. Default number of lines is 1"
-+create_live_chip chip
-+test "`get_chip_num_lines chip`" = "1" || fail "default number of lines is not 1"
-+remove_live_chip chip
-+
-+echo "2.2. Number of lines can be specified"
-+create_live_chip chip test-label 16
-+test "`get_chip_num_lines chip`" = "16" || fail "number of lines is not 16"
-+remove_live_chip chip
-+
-+echo "2.3. Label can be set"
-+create_live_chip chip foobar
-+test "`get_chip_label chip`" = "foobar" || fail "label is incorrect"
-+remove_live_chip chip
-+
-+echo "2.4. Label can be left empty"
-+create_live_chip chip
-+test -z "`cat $LIVE_DIR/chip/label`" || fail "label is not empty"
-+remove_live_chip chip
-+
-+echo "2.5. Line names can be configured"
-+create_live_chip chip test-label 16 '"foo", "", "bar"'
-+test "`get_line_name chip 0`" = "foo" || fail "line name is incorrect"
-+test "`get_line_name chip 2`" = "bar" || fail "line name is incorrect"
-+remove_live_chip chip
-+
-+echo "2.6. Errors in line names are detected"
-+create_pending_chip chip test-label 8 '"foo", bar' && fail "incorrect line name accepted"
-+remove_pending_chip chip
-+create_pending_chip chip test-label 8 '"foo" "bar"' && fail "incorrect line name accepted"
-+remove_pending_chip chip
-+
-+echo "2.7. Multiple chips can be created"
-+create_live_chip chip0
-+create_live_chip chip1
-+create_live_chip chip2
-+remove_live_chip chip0
-+remove_live_chip chip1
-+remove_live_chip chip2
-+
-+echo "3. Controlling simulated chips"
-+
-+echo "3.3. Pull can be set over sysfs"
-+create_live_chip chip test-label 8
-+sysfs_set_pull chip 0 1
-+$BASE_DIR/gpio-mockup-cdev /dev/`configfs_chip_name chip` 0
-+test "$?" = "1" || fail "pull set incorrectly"
-+sysfs_set_pull chip 0 0
-+$BASE_DIR/gpio-mockup-cdev /dev/`configfs_chip_name chip` 1
-+test "$?" = "0" || fail "pull set incorrectly"
-+remove_live_chip chip
-+
-+echo "3.4. Incorrect input in sysfs is rejected"
-+create_live_chip chip test-label 8
-+SYSFS_PATH="/sys/devices/platform/`configfs_dev_name chip`/line-ctrl/gpio0"
-+echo 2 > $SYSFS_PATH 2> /dev/null && fail "invalid input not detectec"
-+remove_live_chip chip
-+
-+echo "4. Simulated GPIO chips are functional"
-+
-+echo "4.1. Values can be read from sysfs"
-+create_live_chip chip test-label 8
-+SYSFS_PATH="/sys/devices/platform/`configfs_dev_name chip`/line-ctrl/gpio0"
-+test `cat $SYSFS_PATH` = "0" || fail "incorrect value read from sysfs"
-+$BASE_DIR/gpio-mockup-cdev -s 1 /dev/`configfs_chip_name chip` 0 &
-+sleep 0.1 # FIXME Any better way?
-+test `cat $SYSFS_PATH` = "1" || fail "incorrect value read from sysfs"
-+kill $!
-+remove_live_chip chip
-+
-+echo "4.2. Bias settings work correctly"
-+create_live_chip chip test-label 8
-+$BASE_DIR/gpio-mockup-cdev -b pull-up /dev/`configfs_chip_name chip` 0
-+test `cat $SYSFS_PATH` = "1" || fail "bias setting does not work"
-+remove_live_chip chip
-+
-+echo "GPIO $MODULE test PASS"
+ #ifdef CONFIG_ACPI_HOTPLUG_IOAPIC
 -- 
-2.30.1
+2.25.1
 
