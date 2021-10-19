@@ -2,282 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E18E433FAB
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Oct 2021 22:10:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FD19434138
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Oct 2021 00:14:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235065AbhJSUM0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Oct 2021 16:12:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58506 "EHLO
+        id S229570AbhJSWQo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Oct 2021 18:16:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230432AbhJSUM0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Oct 2021 16:12:26 -0400
-Received: from mailserv1.kapsi.fi (mailserv1.kapsi.fi [IPv6:2001:67c:1be8::25:1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 059CAC06161C;
-        Tue, 19 Oct 2021 13:10:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=ext.kapsi.fi; s=20161220; h=Subject:Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=gFN8R2U6QR1XWLkHGWxAj2WQIAxoH0HovnQZLhbe0zs=; b=uBoifJPZuUSVOMwkP2ybigzsBH
-        0RD5fg3uCRgEIlrOLkoT2eQprfne4PXc09odCKCJGZ7w0OEv7Edc1ER4HH9Z7LYWtmn6ez2wpEXj7
-        hppwDZxHnUaWl0TlD3QrDhzQEuVt7CvlWx0ciJk3oqNpviwcA1G/Rfsna5wKAr3Q7OgvOaLYPljVO
-        gzuVFX7ydEC0dPG1EP6ryl+kNeH801y3v6PLJNhVSrgF3s6WA0K+ZVn2RKJc7HiIU+aEFzJyHR0Ko
-        XYYYG0tHaAedHlF/16fe4NJCub92EhAThRSrpvzT/T8Gke/6Qb4t7S/7YeQqtD8no1flTKppv63uh
-        wrJQrR0g==;
-Received: from 153-106-191-90.dyn.estpak.ee ([90.191.106.153]:63065 helo=localdomain)
-        by mailserv1.kapsi.fi with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <maukka@ext.kapsi.fi>)
-        id 1mcvR1-0002ys-M8; Tue, 19 Oct 2021 23:10:09 +0300
-Received: by localdomain (sSMTP sendmail emulation); Tue, 19 Oct 2021 23:10:06 +0300
-From:   Mauri Sandberg <maukka@ext.kapsi.fi>
-To:     sandberg@mailfence.com
-Cc:     andy.shevchenko@gmail.com, bgolaszewski@baylibre.com,
-        geert+renesas@glider.be, linus.walleij@linaro.org,
-        linux-gpio@vger.kernel.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        drew@beagleboard.org, Mauri Sandberg <maukka@ext.kapsi.fi>
-Date:   Tue, 19 Oct 2021 23:08:31 +0300
-Message-Id: <20211019200831.3817-3-maukka@ext.kapsi.fi>
+        with ESMTP id S229533AbhJSWQn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Oct 2021 18:16:43 -0400
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59AD1C06161C;
+        Tue, 19 Oct 2021 15:14:30 -0700 (PDT)
+Received: by mail-pg1-x52f.google.com with SMTP id j190so13931897pgd.0;
+        Tue, 19 Oct 2021 15:14:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=db7rEPRLzmzI5PinOMajtHWjLZ84asKHAw3+UbYQqrI=;
+        b=fqe3bvOaBxbVhzaKLdztWbhm4VnbMY66SAxgni9R3Y1MUCCCTIAj6uKVT4rIyP+yKu
+         n8TZY8ZoSh6iRlJaxuVevEFsYZpzUUh9WM8euGEv9SVKdmq3YI+mi9uIYpmTbwCHTlWa
+         yiFk0ohpB4cnFOrk4sdiF0IfR4TyMEXA+5jbE/FVHR/A4zxLVTStxNGNv0nw5dnFYepx
+         MKeDEaA/IVWkFquOHZZW/BgmeAiq2VDwjhDqwAHxoUHLE2FF4Knp11NrkxHrEMiE2Gdm
+         +P4k8Y8+sKfriEd+7YxndGjBobUU1WWrn6wGP4g1wr8apgow3/2kJYbBpv43NrpPSBkG
+         7tFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=db7rEPRLzmzI5PinOMajtHWjLZ84asKHAw3+UbYQqrI=;
+        b=mh5KOJM5KZAyV0ekMcxKzgk0nybb8WWStVUf3qbtkCFO1kcm0s0riMF3+zaNZGl+gK
+         Yvzh6YuyKh+HR3tivJDxnGmF1KvIwvN2bH8D8UduKRpIe+lTD+ZE2598EY1hMSTjPVt/
+         7nL+QjmiKdK0VXQdPlwEitlB/8jM5nxZ9tdBXDCBOJEp5x8jdXW03uaUVAf2HKc0Iyqs
+         QC9Wm3lRAPTTrrftEb81fpupOncQ8VDyd5KCPTPO9V1w23avXyKlvMupWEP0Fmtu1G6K
+         Tl9ZhNtrAIpeJboF9IY8k1AuAQR7fmdqwoqfl3DXn61QJX432Mfofzuq81DjuBTIlPz0
+         R7Cg==
+X-Gm-Message-State: AOAM532eUMAo1xH8JCCUPv6ka5AEmvLQis2jknl0+0B0hYoSUu1qPNSt
+        cor8nM8ZhGaRkP9IkaaTez5tgIElJJM=
+X-Google-Smtp-Source: ABdhPJzOTticDhcbLAuvC/vCcVPjf0Xza41ZAhCLev8x7LTgw9X3IyBbsaQ4IHukxjc9Vos099ViHQ==
+X-Received: by 2002:a63:84c3:: with SMTP id k186mr31070638pgd.462.1634681669452;
+        Tue, 19 Oct 2021 15:14:29 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id y13sm205587pgc.46.2021.10.19.15.14.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Oct 2021 15:14:28 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM
+        BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE...),
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= 
+        <noltari@gmail.com>, Randy Dunlap <rdunlap@infradead.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Jason Wang <wangborong@cdjrlc.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        linux-gpio@vger.kernel.org (open list:PIN CONTROL SUBSYSTEM),
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE)
+Subject: [PATCH] pinctrl: bcm2835: Allow building driver as a module
+Date:   Tue, 19 Oct 2021 15:11:21 -0700
+Message-Id: <20211019221127.1953001-1-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20211019200831.3817-1-maukka@ext.kapsi.fi>
-References: <20210325122832.119147-1-sandberg@mailfence.com>
- <20211019200831.3817-1-maukka@ext.kapsi.fi>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 90.191.106.153
-X-SA-Exim-Mail-From: maukka@ext.kapsi.fi
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on mailserv1.kapsi.fi
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        TVD_RCVD_IP autolearn=ham autolearn_force=no version=3.4.2
-Subject: [PATCH v7 2/2] gpio: gpio-cascade: add generic GPIO cascade
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on mailserv1.kapsi.fi)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Adds support for building cascades of GPIO lines. That is, it allows
-setups when there is one upstream line and multiple cascaded lines, out
-of which one can be chosen at a time. The status of the upstream line
-can be conveyed to the selected cascaded line or, vice versa, the status
-of the cascaded line can be conveyed to the upstream line.
+Update the pinctrl-bcm2835 driver to support being built as as a module
+by converting it to a module_platform_driver() with the appropriate
+module license, authors and description.
 
-A multiplexer is being used to select, which cascaded GPIO line is being
-used at any given time.
-
-At the moment only input direction is supported. In future it should be
-possible to add support for output direction, too.
-
-Signed-off-by: Mauri Sandberg <maukka@ext.kapsi.fi>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
-v6 -> v7:
- - In Kconfig add info about module name
- - adhere to new convention that allows lines longer than 80 chars
- - use dev_probe_err with upstream gpio line too
- - refactor for cleaner exit of probe function.
-v5 -> v6:
- - In Kconfig, remove dependency to OF_GPIO and select only MULTIPLEXER
- - refactor code preferring one-liners
- - clean up prints, removing them from success-path.
- - don't explicitly set gpio_chip.of_node as it's done in the GPIO library
- - use devm_gpiochip_add_data instead of gpiochip_add
-v4 -> v5:
- - renamed gpio-mux-input -> gpio-cascade. refactored code accordingly
-   here and there and changed to use new bindings and compatible string
-   - ambigious and vague 'pin' was rename to 'upstream_line'
- - dropped Tested-by and Reviewed-by due to changes in bindings
- - dropped Reported-by suggested by an automatic bot as it was not really
-   appropriate to begin with
- - functionally it's the same as v4
-v3 -> v4:
- - Changed author email
- - Included Tested-by and Reviewed-by from Drew
-v2 -> v3:
- - use managed device resources
- - update Kconfig description
-v1 -> v2:
- - removed .owner from platform_driver as per test bot's instruction
- - added MODULE_AUTHOR, MODULE_DESCRIPTION, MODULE_LICENSE
- - added gpio_mux_input_get_direction as it's recommended for all chips
- - removed because this is input only chip: gpio_mux_input_set_value
- - removed because they are not needed for input/output only chips:
-     gpio_mux_input_direction_input
-     gpio_mux_input_direction_output
- - fixed typo in an error message
- - added info message about successful registration
- - removed can_sleep flag as this does not sleep while getting GPIO value
-   like I2C or SPI do
- - Updated description in Kconfig
----
- drivers/gpio/Kconfig        |  15 +++++
- drivers/gpio/Makefile       |   1 +
- drivers/gpio/gpio-cascade.c | 118 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 134 insertions(+)
- create mode 100644 drivers/gpio/gpio-cascade.c
+ drivers/pinctrl/bcm/Kconfig           | 2 +-
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c | 9 ++++++++-
+ 2 files changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 37a6f77c86fe..e69457144459 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1694,4 +1694,19 @@ config GPIO_VIRTIO
+diff --git a/drivers/pinctrl/bcm/Kconfig b/drivers/pinctrl/bcm/Kconfig
+index c9c5efc92731..8fc1feedd861 100644
+--- a/drivers/pinctrl/bcm/Kconfig
++++ b/drivers/pinctrl/bcm/Kconfig
+@@ -18,7 +18,7 @@ config PINCTRL_BCM281XX
+ 	  framework.  GPIO is provided by a separate GPIO driver.
  
- endmenu
- 
-+comment "Other GPIO expanders"
-+
-+config GPIO_CASCADE
-+	tristate "General GPIO cascade"
-+	select MULTIPLEXER
-+	help
-+	  Say yes here to enable support for generic GPIO cascade.
-+
-+	  This allows building one-to-many cascades of GPIO lines using
-+	  different types of multiplexers readily available. At the
-+	  moment only input lines are supported.
-+
-+	  To build the driver as a module choose 'm' and the resulting module
-+	  will be called 'gpio-cascade'.
-+
- endif
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 71ee9fc2ff83..e8945456e7ea 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -45,6 +45,7 @@ obj-$(CONFIG_GPIO_BD9571MWV)		+= gpio-bd9571mwv.o
- obj-$(CONFIG_GPIO_BRCMSTB)		+= gpio-brcmstb.o
- obj-$(CONFIG_GPIO_BT8XX)		+= gpio-bt8xx.o
- obj-$(CONFIG_GPIO_CADENCE)		+= gpio-cadence.o
-+obj-$(CONFIG_GPIO_CASCADE)		+= gpio-cascade.o
- obj-$(CONFIG_GPIO_CLPS711X)		+= gpio-clps711x.o
- obj-$(CONFIG_GPIO_SNPS_CREG)		+= gpio-creg-snps.o
- obj-$(CONFIG_GPIO_CRYSTAL_COVE)		+= gpio-crystalcove.o
-diff --git a/drivers/gpio/gpio-cascade.c b/drivers/gpio/gpio-cascade.c
-new file mode 100644
-index 000000000000..82001299265e
---- /dev/null
-+++ b/drivers/gpio/gpio-cascade.c
-@@ -0,0 +1,118 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ *  A generic GPIO cascade driver
-+ *
-+ *  Copyright (C) 2021 Mauri Sandberg <maukka@ext.kapsi.fi>
-+ *
-+ * This allows building cascades of GPIO lines in a manner illustrated
-+ * below:
-+ *
-+ *                 /|---- Cascaded GPIO line 0
-+ *  Upstream      | |---- Cascaded GPIO line 1
-+ *  GPIO line ----+ | .
-+ *                | | .
-+ *                 \|---- Cascaded GPIO line n
-+ *
-+ * A gpio-mux is being used to select, which cascaded line is being
-+ * addressed at any given time.
-+ *
-+ * At the moment only input mode is supported due to lack of means for
-+ * testing output functionality. At least theoretically output should be
-+ * possible with an open drain constructions.
-+ */
-+
+ config PINCTRL_BCM2835
+-	bool "Broadcom BCM2835 GPIO (with PINCONF) driver"
++	tristate "Broadcom BCM2835 GPIO (with PINCONF) driver"
+ 	depends on OF && (ARCH_BCM2835 || ARCH_BRCMSTB || COMPILE_TEST)
+ 	select PINMUX
+ 	select PINCONF
+diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+index 6e6fefeb21ea..2abcc6ce4eba 100644
+--- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
++++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+@@ -20,6 +20,7 @@
+ #include <linux/irqdesc.h>
+ #include <linux/init.h>
+ #include <linux/interrupt.h>
 +#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/platform_device.h>
-+#include <linux/mux/consumer.h>
+ #include <linux/of_address.h>
+ #include <linux/of.h>
+ #include <linux/of_irq.h>
+@@ -1332,4 +1333,10 @@ static struct platform_driver bcm2835_pinctrl_driver = {
+ 		.suppress_bind_attrs = true,
+ 	},
+ };
+-builtin_platform_driver(bcm2835_pinctrl_driver);
++module_platform_driver(bcm2835_pinctrl_driver);
 +
-+#include <linux/gpio/consumer.h>
-+#include <linux/gpio/driver.h>
-+
-+struct gpio_cascade {
-+	struct device		*parent;
-+	struct gpio_chip	gpio_chip;
-+	struct mux_control	*mux_control;
-+	struct gpio_desc	*upstream_line;
-+};
-+
-+static struct gpio_cascade *chip_to_cascade(struct gpio_chip *gc)
-+{
-+	return container_of(gc, struct gpio_cascade, gpio_chip);
-+}
-+
-+static int gpio_cascade_get_direction(struct gpio_chip *gc,
-+					unsigned int offset)
-+{
-+	return GPIO_LINE_DIRECTION_IN;
-+}
-+
-+static int gpio_cascade_get_value(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct gpio_cascade *cas = chip_to_cascade(gc);
-+	int ret;
-+
-+	ret = mux_control_select(cas->mux_control, offset);
-+	if (ret)
-+		return ret;
-+
-+	ret = gpiod_get_value(cas->upstream_line);
-+	mux_control_deselect(cas->mux_control);
-+	return ret;
-+}
-+
-+static int gpio_cascade_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct gpio_cascade *cas;
-+	struct mux_control *mc;
-+	struct gpio_desc *upstream;
-+	struct gpio_chip *gc;
-+
-+	cas = devm_kzalloc(dev, sizeof(*cas), GFP_KERNEL);
-+	if (!cas)
-+		return -ENOMEM;
-+
-+	mc = devm_mux_control_get(dev, NULL);
-+	if (IS_ERR(mc))
-+		return dev_err_probe(dev, PTR_ERR(mc), "unable to get mux-control\n");
-+
-+	cas->mux_control = mc;
-+	upstream = devm_gpiod_get(dev, "upstream",  GPIOD_IN);
-+	if (IS_ERR(upstream))
-+		return dev_err_probe(dev, PTR_ERR(upstream), "unable to claim upstream GPIO line\n");
-+
-+	cas->upstream_line = upstream;
-+	cas->parent = dev;
-+
-+	gc = &cas->gpio_chip;
-+	gc->get = gpio_cascade_get_value;
-+	gc->get_direction = gpio_cascade_get_direction;
-+	gc->base = -1;
-+	gc->ngpio = mux_control_states(mc);
-+	gc->label = dev_name(cas->parent);
-+	gc->parent = cas->parent;
-+	gc->owner = THIS_MODULE;
-+
-+	platform_set_drvdata(pdev, cas);
-+	return devm_gpiochip_add_data(dev, &cas->gpio_chip, NULL);
-+}
-+
-+static const struct of_device_id gpio_cascade_id[] = {
-+	{ .compatible = "gpio-cascade" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, gpio_cascade_id);
-+
-+static struct platform_driver gpio_cascade_driver = {
-+	.driver	= {
-+		.name		= "gpio-cascade",
-+		.of_match_table = gpio_cascade_id,
-+	},
-+	.probe	= gpio_cascade_probe,
-+};
-+module_platform_driver(gpio_cascade_driver);
-+
-+MODULE_AUTHOR("Mauri Sandberg <maukka@ext.kapsi.fi>");
-+MODULE_DESCRIPTION("Generic GPIO cascade");
++MODULE_AUTHOR("Chris Boot");
++MODULE_AUTHOR("Simon Arlott");
++MODULE_AUTHOR("Stephen Warren");
++MODULE_DESCRIPTION("Broadcom BCM2835/2711 pinctrl and GPIO driver");
 +MODULE_LICENSE("GPL");
 -- 
 2.25.1
