@@ -2,83 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A73E434196
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Oct 2021 00:48:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 781854341DC
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Oct 2021 01:00:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229784AbhJSWuT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Oct 2021 18:50:19 -0400
-Received: from mail-oo1-f52.google.com ([209.85.161.52]:33789 "EHLO
-        mail-oo1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229683AbhJSWuT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Oct 2021 18:50:19 -0400
-Received: by mail-oo1-f52.google.com with SMTP id y145-20020a4a4597000000b002b7d49905acso748829ooa.0;
-        Tue, 19 Oct 2021 15:48:05 -0700 (PDT)
+        id S229498AbhJSXCY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Oct 2021 19:02:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40514 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229483AbhJSXCY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Oct 2021 19:02:24 -0400
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B994C06161C;
+        Tue, 19 Oct 2021 16:00:10 -0700 (PDT)
+Received: by mail-lf1-x129.google.com with SMTP id n8so10870689lfk.6;
+        Tue, 19 Oct 2021 16:00:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=a88qg38+MHwgayXwRxD5MdpDf9+mfzp1qVrL1oByJeU=;
+        b=kA9EsuhL3/N3fKQjjy5KKGYwd4taVPf179Wy+M3axYvPRLCCJcaLmysu6/zyCbQhPY
+         JOMV6FyN+fi6SGd70PfKtIooF4IGfcGjaY80N9cMr3cvf6MkmQa+G1Dgk0NfRfvh8rbY
+         ZzVnxHjWnvVIurVWTH1023W/zht1mYpe8X9kDoudvDipkRu2c4kHO98tvU6BdcyHaLQb
+         9cgue9aF/a17Bxmv2+DoXk1wt7hSHY+UEiMxnGhbjrO+HKAs+CLXY8d7Wajbt/w+qQLo
+         cXIEjIM6A9ZkRnK5wZ2V8KnGY2K1CjQJSuu0kCLTQ1+4NiakCSvC3DbSHc1PmKhLBMiD
+         i4sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=qy225hlqYwRXCtGLKyscMysC+wuepXd23D/7I3vqNfc=;
-        b=B3/aSvDOcQ92TP+IkJQovgaDu60ln8LsiB1H3HzHS2vgFIgMy/uywc8d+INVjk7bhM
-         BBowuXkMelQtcIsY6/U/0CaiwRebOuCEsl+7Yq3NJlRbp1aMvj5RirgM3Vd7jycOH3G/
-         uPkfxIJvcMA8vF2Lv1ORDG96FlC5ViM/KHFKdAXtsJfyhV2C/1rXFRyK3r7FxtyqDBK+
-         sPAzBqs/Lzb1j9BSO1BInW4OtfAeEIoO2IEmvgNIOE28jWxFLycYK0Jez/hNdhm4uW6q
-         F3FgMJsM0xxgWiYvFIOa77TlILZvDNQKCAhbto3S+bpLeVBKvlsUCLTwOYpf2UM/rRgv
-         qX7A==
-X-Gm-Message-State: AOAM532dwGTLjK4rwGjaJ2aWFvRdrb/VVVfboYPszdlueHhKwk3Q3m2i
-        dpG+5jGh4/w8b1sncB9qBvqMEu24NQ==
-X-Google-Smtp-Source: ABdhPJx+7M3+gwkvEccdiQLtE6ApfeIIiJPnK81zPl6XyOGFDwaQcsleOmnfmF9OVJFcsgizIss55Q==
-X-Received: by 2002:a4a:ca0f:: with SMTP id w15mr6869426ooq.39.1634683685422;
-        Tue, 19 Oct 2021 15:48:05 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id n17sm82181oic.21.2021.10.19.15.48.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Oct 2021 15:48:04 -0700 (PDT)
-Received: (nullmailer pid 968061 invoked by uid 1000);
-        Tue, 19 Oct 2021 22:48:03 -0000
-Date:   Tue, 19 Oct 2021 17:48:03 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Emil Renner Berthing <kernel@esmil.dk>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        devicetree@vger.kernel.org,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-clk@vger.kernel.org, Sagar Kadam <sagar.kadam@sifive.com>,
-        linux-gpio@vger.kernel.org, Jiri Slaby <jirislaby@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Drew Fustini <drew@beagleboard.org>,
-        linux-kernel@vger.kernel.org, Matteo Croce <mcroce@microsoft.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Atish Patra <atish.patra@wdc.com>,
-        linux-serial@vger.kernel.org, linux-riscv@lists.infradead.org,
-        Marc Zyngier <maz@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Anup Patel <anup.patel@wdc.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v1 02/16] dt-bindings: timer: Add StarFive JH7100 clint
-Message-ID: <YW9LI/scFZtyczt2@robh.at.kernel.org>
-References: <20211012134027.684712-1-kernel@esmil.dk>
- <20211012134027.684712-3-kernel@esmil.dk>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=a88qg38+MHwgayXwRxD5MdpDf9+mfzp1qVrL1oByJeU=;
+        b=5cgwULuFmjjG2B6Jj4IYUtQivqWXh+nbhKN9GQNGriu+UL4JmpX+AQo2pffN5JaY/M
+         ou2s0kZH9R2qYDmlLb0tVr1lxeDed4w7aVB7GtppYaKGBIs7ll2e7TRyX8I3K0AlSmer
+         Mohsbe6yE3+NUkt1an7bXbQoDx44dgtbDha+0uKNM7pAkhWCCSNloASvXGKvzQGBUPm1
+         C3PBzWZHl9wvCoFKAGmeYEuoJ9/bDheEgiIbMPukMEkjkAyPflfs4vXhcU+7LQ0wfmml
+         4B56zl+FDWGM46f1tB6eEdq8MhLsiCdh0vbVu5gUYHStc0PcsiE+4kgzzU+zcCnCYwcy
+         k6Jw==
+X-Gm-Message-State: AOAM532SRUetFkzUcZJUG3OmHQ2Qk40Dpc9ZzUJMNDchZ4UKYD4KqGB+
+        jFiy7T3bWC/EV8PJ7cxWimq9VsMyA2I=
+X-Google-Smtp-Source: ABdhPJxX3C4sQ0bUdp8xWbdoxRUTy9FTgsKWNE0hAgaj65a+zHXQMp6ARMP8QSubzwEoZCoP0cqVdg==
+X-Received: by 2002:a05:6512:2344:: with SMTP id p4mr8606274lfu.324.1634684408827;
+        Tue, 19 Oct 2021 16:00:08 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-39-10.dynamic.spd-mgts.ru. [94.29.39.10])
+        by smtp.googlemail.com with ESMTPSA id v3sm41462lfr.61.2021.10.19.16.00.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 Oct 2021 16:00:08 -0700 (PDT)
+Subject: Re: [PATCH 1/2] pinctrl: tegra: include lpdr pin properties
+To:     Prathamesh Shete <pshete@nvidia.com>, linus.walleij@linaro.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     smangipudi@nvidia.com
+References: <20211018121815.3017-1-pshete@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <742eef64-c607-451b-3a28-171c628a44d4@gmail.com>
+Date:   Wed, 20 Oct 2021 02:00:07 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211012134027.684712-3-kernel@esmil.dk>
+In-Reply-To: <20211018121815.3017-1-pshete@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 12 Oct 2021 15:40:13 +0200, Emil Renner Berthing wrote:
-> Add compatible string for the StarFive JH7100 clint.
+18.10.2021 15:18, Prathamesh Shete пишет:
+> From: Suresh Mangipudi <smangipudi@nvidia.com>
 > 
-> Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
+> Update lpdr pin-property for supported pins.
+> 
+> lpdr property help disable most basic driver fingers
+> leaving only minimal base driver finger.
+> 
+> Signed-off-by: Suresh Mangipudi <smangipudi@nvidia.com>
+> Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
 > ---
->  Documentation/devicetree/bindings/timer/sifive,clint.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
+>  drivers/pinctrl/tegra/pinctrl-tegra.h    |   2 +
+>  drivers/pinctrl/tegra/pinctrl-tegra210.c | 330 ++++++++++++-----------
+>  2 files changed, 168 insertions(+), 164 deletions(-)
 
-Acked-by: Rob Herring <robh@kernel.org>
+The code of this driver was generated by [1]. Have you considered
+updating the generator?
+
+[1] https://github.com/NVIDIA/tegra-pinmux-scripts
