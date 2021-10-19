@@ -2,132 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E5784333FF
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Oct 2021 12:55:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4253343346C
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Oct 2021 13:09:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235283AbhJSK5O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Oct 2021 06:57:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43314 "EHLO
+        id S235282AbhJSLL4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Oct 2021 07:11:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235276AbhJSK5O (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Oct 2021 06:57:14 -0400
-Received: from mail-il1-x131.google.com (mail-il1-x131.google.com [IPv6:2607:f8b0:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99349C061745
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Oct 2021 03:55:01 -0700 (PDT)
-Received: by mail-il1-x131.google.com with SMTP id s3so18029131ild.0
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Oct 2021 03:55:01 -0700 (PDT)
+        with ESMTP id S230129AbhJSLL4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Oct 2021 07:11:56 -0400
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1A45C06161C
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Oct 2021 04:09:43 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id i76so15163344pfe.13
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Oct 2021 04:09:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura-hr.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2NDB8D8TfZqCGnqAYnU/I/JJMv1zpQuUUkf40rgGSoU=;
-        b=F1F8n9mmM/9jOrEH9G1XgISAoWRIwy5LUlITNwD9wlj0KsB2LHgLIw9u3IM+YXbvNQ
-         DAeTBy3TjycsDJmKmC3pwY5+CdpI4WNmZzEs21ps4xC5n4VhRsd9XAaLmhs0LpE05VJu
-         LIWVd+b0DAKqJcGCycoJtpskDh39lP+IpIc/zUS6aM715DWz/gXZ0o9x/V6pvTcVuHS5
-         9dUWGNgk751wP66zPuaLN2+QFdqM/p25JMcmj1aHwro/ZFYTJxvNp3HnMy1chtqvpv9M
-         j3wJT7d4slPzJmoV7oJIGCPTL67RotrCGsjcpkCsPIANej3ATKEhVNEUIqoEOQEOhyQF
-         q+gQ==
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=sLvuXUIVq1jKnhOw/i/BcOZ+oL9amgYiHpm3EvpEBDk=;
+        b=KNVqWymYbP/YgK7WJRGKJMnRa5bMTJmCwL3DbBQS8JPWzBuSgM3FSaDEwCL3zUs42P
+         qUDox6nTqYpl+4HsHp+qem7olc5vkmeM/BUctxNtq2AF3fkp4MN8I1vquS6qHcyMBWFV
+         KR2pZ4H52lEjLYF/Ved5T34PcnDvb2c0sTH/P6kG9K2SnTiIEA0n9qaxUsdn8byIOkP9
+         0vm11pc7witUV5zpMRQJe17j0ew381sgQ9Fx/7LoxwNbvc+K0YF1eJCwhgRe9TPISyZa
+         0e2YuJPtYqbrzQ0/W+319mf7uJw9+6xURto8aAw5U07CxWgAaYXXVn+tbbiFLMmScrXU
+         cR5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2NDB8D8TfZqCGnqAYnU/I/JJMv1zpQuUUkf40rgGSoU=;
-        b=zQqKgzIYLtzL/tOJGpg1SqToE3qBgmbW5BaeIAQLVHAJ3FGSh+HBQuG5bAu2weVE4H
-         hTYzLH6HnywIxCeFcFHUfssy2wNSahhshBXpw3oMlve6wRgHMWlPRc2yo4nWyXUYksjY
-         Tn/V/YteM6fQxnTYmtI3dVCar8L/x0mZUdaW3bII4q84dHUfwuQkwxm0k4eRSuh93kXQ
-         waiLztRw9eVn4n97L3qkEkDlt206pcBJGxlxBDxljIursR+rtc5QhYUk5cn6h6uxdCHe
-         +d+Xg4WAhigsrl+jKPK9+oGT7k21hDbimDrnRZHqzcQOrauhuj8hChGLQ0QJgA5Kz8YW
-         h5rg==
-X-Gm-Message-State: AOAM5334VIhM39y3WeRkidE/UJ9IKSAgqIZC+FNPlEYXk1WJWRdkRWml
-        M5Wl+/GHLthfAqWV+SUdNBlLMGbXT19QPbN3UFSpGQ==
-X-Google-Smtp-Source: ABdhPJxIq6mlwrLoaIjqjqH/xMYSi81uzKoeL2stWejW1qsIN7OfNoqGcVTAxWskrY1fYHTeQaLnEkaAh7tYKxq4jHw=
-X-Received: by 2002:a05:6e02:5c4:: with SMTP id l4mr1584439ils.56.1634640901047;
- Tue, 19 Oct 2021 03:55:01 -0700 (PDT)
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=sLvuXUIVq1jKnhOw/i/BcOZ+oL9amgYiHpm3EvpEBDk=;
+        b=x3jNgNZFy7cVJIkd4o9cDSmhARPnP0lcDKoOTjaBARtZjrLz2pgq16MDIgxWqm2/Yj
+         wv0MABhXSuAPJ+/fKgwTzboLx4dypU61hR4rrBEJvY95vbAV/Sszg6oMZtt77lZ5JGmE
+         a6mfN8OuM8gSuBb4LdA0PGUqJAk1N4lRm2JP3TTnz603UNUmPVWLvwCDenSCEHnWXu9T
+         V8h/JUK690qX3w1NAJxdI2AYVjPz1gAdclufCJmE/bZXsC0Vbv+6QJDDzURTF1y1IDrM
+         ilZkDApcvmD6gsHKo2RIQg7ymnIjlZDxqErh/p+TUtMJ7furRlVt0BOczsSupOVl+iDv
+         v6vw==
+X-Gm-Message-State: AOAM5311UCKW/xJsfElUqyiTLpwj+9jaNRKFqy8Mj8kGPlckCjnYbVWX
+        9P4fGghCkFd4SU/4/saE78sP2K4YcgIOKpGZk/0=
+X-Google-Smtp-Source: ABdhPJxldu5bde29uR7oKFw8e1mIeFblKradyDshqOsFRJgqIyTPqOEfm552T0fkltaNvUJPfHd6xmWT/sVppN3hDBo=
+X-Received: by 2002:a05:6a00:2b1:b0:44d:b18:8192 with SMTP id
+ q17-20020a056a0002b100b0044d0b188192mr34606546pfs.35.1634641782991; Tue, 19
+ Oct 2021 04:09:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210607123317.3242031-1-robert.marko@sartura.hr>
- <20210607123317.3242031-5-robert.marko@sartura.hr> <CA+HBbNH7wcpfQOX2=vZmW78GoWy_WL3Pz-dMKe0N0ebZDp+oUw@mail.gmail.com>
- <20210713222528.GA952399@robh.at.kernel.org> <CA+HBbNFj5+6sLKxmL8XtsZQ48ch8OjTbJ1bwkDC8dfRiOyWY1Q@mail.gmail.com>
- <YW4n7hUIEB320dFv@lunn.ch>
-In-Reply-To: <YW4n7hUIEB320dFv@lunn.ch>
-From:   Robert Marko <robert.marko@sartura.hr>
-Date:   Tue, 19 Oct 2021 12:54:50 +0200
-Message-ID: <CA+HBbNGQ9OCn9T-XW7MUL-H8LkL6Dcot1NExO+xv9gsuPxjLRw@mail.gmail.com>
-Subject: Re: [PATCH v6 5/6] dt-bindings: mfd: Add Delta TN48M CPLD drivers bindings
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Rob Herring <robh@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Luka Perkov <luka.perkov@sartura.hr>,
-        "Jonathan M. Polom" <jmp@epiphyte.org>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Donald Buczek <buczek@molgen.mpg.de>
+Received: by 2002:a17:90b:1c05:0:0:0:0 with HTTP; Tue, 19 Oct 2021 04:09:42
+ -0700 (PDT)
+Reply-To: mr.luisfernando5050@gmail.com
+From:   "Mr. Luis Fernando " <mr.alinmusah03@gmail.com>
+Date:   Tue, 19 Oct 2021 04:09:42 -0700
+Message-ID: <CAK9pk2Ge5VYDxAsV13PDT9XNKA+D0Zddy1VCCSGhz2VvD-f4ow@mail.gmail.com>
+Subject: GOOD DAY
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 19, 2021 at 4:05 AM Andrew Lunn <andrew@lunn.ch> wrote:
->
-> > > > > +  GPIO controller module provides GPIO-s for the SFP slots.
-> > > > > +  It is split into 3 controllers, one output only for the SFP TX disable
-> > > > > +  pins, one input only for the SFP present pins and one input only for
-> > > > > +  the SFP LOS pins.
->
-> Late to the conversation, so i might be asking questions already
-> asked...
->
-> So the PLD has restrictions? You have a collection of GPOs and a
-> collection of GPIs? You don't have an GPIOs?
-
-Yes, the CPLD is hardwired per board with the specific FW for it.
-There are no true GPIO-s, only input or output pins depending on their
-purpose in the SFP cage.
->
-> > > > > +
-> > > > > +properties:
-> > > > > +  compatible:
-> > > > > +    enum:
-> > > > > +      - delta,tn48m-gpio-sfp-tx-disable
-> > > > > +      - delta,tn48m-gpio-sfp-present
-> > > > > +      - delta,tn48m-gpio-sfp-los
->
-> Do these names have any real significant? Are you really forced to
-> connect the SFP cage in this dedicated manor? Is there any reason why
-> i cannot use a GPO to control an LED? A GPI for a button?
-
-Yes, there are connected like this on the TN48M switch, names directly
-match their
-purpose. The CPLD is customized per each switch model, so TN4810M which is the
-48 x 10G SFP+ uses the same CPLD model but is wired differently and
-with a different FW.
-Since it's a CPLD you technically use whatever pin to connect stuff,
-but it completely depends
-on the FW implementation as there is no traditional GPIO block with
-XYZ number of pins.
-I have multiple vendors and models using the same CPLD but its wired
-completely different
-and the register layout is different.
-
-So you cant force any of the input pins to output mode or change their
-value at all, its all hardwired.
-
-Regards,
-Robert
->
->         Andrew
-
-
-
--- 
-Robert Marko
-Staff Embedded Linux Engineer
-Sartura Ltd.
-Lendavska ulica 16a
-10000 Zagreb, Croatia
-Email: robert.marko@sartura.hr
-Web: www.sartura.hr
+LS0gDQpEZWFyIEZyaWVuZCwNCg0KR3JlZXRpbmdzLg0KDQpIb3cgYXJlIHlvdSBkb2luZyB0b2Rh
+eSBpIGhvcGUgZmluZT8NCg0KSSBjYW1lIGFjcm9zcyB5b3VyIGUtbWFpbCBjb250YWN0IHByaW9y
+IGEgcHJpdmF0ZSBzZWFyY2ggd2hpbGUgaW4gbmVlZA0Kb2YgeW91ciBhc3Npc3RhbmNlLiBNeSBu
+YW1lIE1yLkthc2ltIE1vaGFtZWQg4oCZIEkgd29yayB3aXRoIHRoZQ0KZGVwYXJ0bWVudCBvZiBB
+dWRpdCBhbmQgYWNjb3VudGluZyBtYW5hZ2VyIGhlcmUgaW4gVUJBIEJhbmsgb2YgQWZyaWNhLA0K
+VGhlcmUgaXMgdGhpcyBmdW5kIHRoYXQgd2FzIGtlZXAgaW4gbXkgY3VzdG9keSB5ZWFycyBhZ28g
+YW5kIEkgbmVlZA0KeW91ciBhc3Npc3RhbmNlIGZvciB0aGUgdHJhbnNmZXJyaW5nIG9mIHRoaXMg
+ZnVuZCB0byB5b3VyIGJhbmsgYWNjb3VudA0KZm9yIGJvdGggb2YgdXMgYmVuZWZpdCBmb3IgbGlm
+ZSB0aW1lIGludmVzdG1lbnQgYW5kIHRoZSBhbW91bnQgaXMgKFVTDQokMjcsNTAwLiBNaWxsaW9u
+IERvbGxhcnMpLg0KDQpJIGhhdmUgZXZlcnkgaW5xdWlyeSBkZXRhaWxzIHRvIG1ha2UgdGhlIGJh
+bmsgYmVsaWV2ZSB5b3UgYW5kIHJlbGVhc2UNCnRoZSBmdW5kIHRvIHlvdXIgYmFuayBhY2NvdW50
+IGluIHdpdGhpbiA3IGJhbmtpbmcgd29ya2luZyBkYXlzIHdpdGgNCnlvdXIgZnVsbCBjby1vcGVy
+YXRpb24gd2l0aCBtZSBhZnRlciBzdWNjZXNzIE5vdGUgNTAlIGZvciB5b3Ugd2hpbGUNCjUwJSBm
+b3IgbWUgYWZ0ZXIgc3VjY2VzcyBvZiB0aGUgdHJhbnNmZXIgb2YgdGhlIGZ1bmRzIHRvIHlvdXIg
+YmFuaw0KYWNjb3VudCBva2F5Lg0KDQpXQUlUSU5HIFRPIEhFQVIgRlJPTSBZT1UuDQpUSEFOS1Mu
+DQoNCk1yLmx1aXMgZmVybmFuZG8NCg0KDQoNCg0KDQoNCg0KDQoNCg0K2LXYr9mK2YLZiiDYp9mE
+2LnYstmK2LLYjA0KDQrYqtit2YrYp9iqLg0KDQrZg9mK2YEg2K3Yp9mE2YMg2KfZhNmK2YjZhSDY
+o9iq2YXZhtmJINij2YYg2KrZg9mI2YYg2KjYrtmK2LHYnw0KDQrZhNmC2K8g2LXYp9iv2YHYqiDY
+rNmH2Kkg2KfYqti12KfZhCDYp9mE2KjYsdmK2K8g2KfZhNil2YTZg9iq2LHZiNmG2Yog2KfZhNiu
+2KfYtdipINio2YMg2YLYqNmEINil2KzYsdin2KEg2KjYrdirINiu2KfYtSDYo9ir2YbYp9ihINin
+2YTYrdin2KzYqQ0K2YXZhiDZhdiz2KfYudiv2KrZgy4g2KfYs9mF2Yog2KfZhNiz2YrYryDZgtin
+2LPZhSDZhdit2YXYryDYo9i52YXZhCDZhdi5DQrZhdiv2YrYsSDZgtiz2YUg2KfZhNiq2K/ZgtmK
+2YIg2YjYp9mE2YXYrdin2LPYqNipINmH2YbYpyDZgdmKIFVCQSBCYW5rIG9mIEFmcmljYSDYjA0K
+2YfZhtin2YMg2YfYsNinINin2YTYtdmG2K/ZiNmCINin2YTYsNmKINin2K3YqtmB2Lgg2KjZhyDZ
+gdmKINi52YfYr9mKINmF2YbYsCDYs9mG2YjYp9iqINmI2KPZhtinINio2K3Yp9is2Kkg2KXZhNmK
+2YcNCtmF2LPYp9i52K/YqtmDINmB2Yog2KrYrdmI2YrZhCDZh9iw2Kcg2KfZhNmF2KjZhNi6INil
+2YTZiSDYrdiz2KfYqNmDINin2YTZhdi12LHZgdmKDQrZhNmD2YTYpyDZhdmG2Kcg2KfZhNin2LPY
+qtmB2KfYr9ipINmF2YYg2KfZhNin2LPYqtir2YXYp9ixINmF2K/ZiSDYp9mE2K3Zitin2Kkg2YjY
+p9mE2YXYqNmE2LogKNin2YTZiNmE2KfZitin2Kog2KfZhNmF2KrYrdiv2KkNCjI3NTAwINiv2YjZ
+hNin2LEuINmF2YTZitmI2YYg2K/ZiNmE2KfYsSkuDQoNCtmE2K/ZiiDZg9mEINiq2YHYp9i12YrZ
+hCDYp9mE2KfYs9iq2YHYs9in2LEg2YTYrNi52YQg2KfZhNio2YbZgyDZiti12K/ZgtmDINmI2YrY
+t9mE2YIg2LPYsdin2K3Zgw0K2KrYrdmI2YrZhCDYp9mE2KPZhdmI2KfZhCDYpdmE2Ykg2K3Ys9in
+2KjZgyDYp9mE2YXYtdix2YHZiiDZgdmKINi62LbZiNmGIDcg2KPZitin2YUg2LnZhdmEINmF2LXY
+sdmB2YrYqSDZhdi5DQrYqti52KfZiNmG2YMg2KfZhNmD2KfZhdmEINmF2LnZiiDYqNi52K8g2KfZ
+hNmG2KzYp9itINmE2KfYrdi4IDUw2aog2YXZhiDYo9is2YTZgyDYo9ir2YbYp9ihDQo1MNmqINio
+2KfZhNmG2LPYqNipINmE2Yog2KjYudivINmG2KzYp9itINiq2K3ZiNmK2YQg2KfZhNij2YXZiNin
+2YQg2KXZhNmJINin2YTYqNmG2YMg2KfZhNiw2Yog2KrYqti52KfZhdmEINmF2LnZhw0K2KfZhNit
+2LPYp9ioINio2K7ZitixLg0KDQrZgdmKINin2YbYqti42KfYsSDYo9mGINmG2LPZhdi5INmF2YbZ
+gy4NCti02YPYsdinLg0KDQrYp9mE2LPZitivINmE2YjZitizINmB2LHZhtin2YbYr9mIDQo=
