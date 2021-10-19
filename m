@@ -2,96 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B14B4332DE
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Oct 2021 11:52:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A256B43332C
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Oct 2021 12:05:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234887AbhJSJyk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Oct 2021 05:54:40 -0400
-Received: from mga17.intel.com ([192.55.52.151]:65378 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231652AbhJSJyk (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 19 Oct 2021 05:54:40 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10141"; a="209266693"
-X-IronPort-AV: E=Sophos;i="5.85,384,1624345200"; 
-   d="scan'208";a="209266693"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2021 02:52:27 -0700
-X-IronPort-AV: E=Sophos;i="5.85,384,1624345200"; 
-   d="scan'208";a="531371974"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.159])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2021 02:52:21 -0700
-Received: from andy by smile with local (Exim 4.95)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1mclms-000SXr-2L;
-        Tue, 19 Oct 2021 12:52:02 +0300
-Date:   Tue, 19 Oct 2021 12:52:02 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Emil Renner Berthing <kernel@esmil.dk>
-Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        Drew Fustini <drew@beagleboard.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Anup Patel <anup.patel@wdc.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        Matteo Croce <mcroce@microsoft.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Huan Feng <huan.feng@starfivetech.com>
-Subject: Re: [PATCH v1 12/16] pinctrl: starfive: Add pinctrl driver for
- StarFive SoCs
-Message-ID: <YW6VQutGMFOZPNlC@smile.fi.intel.com>
-References: <20211012134027.684712-1-kernel@esmil.dk>
- <20211012134027.684712-13-kernel@esmil.dk>
- <CAHp75Vep+i+iyJi0LAOKuer-cUZoUoB_ZrWKcmT=EB_4hOgFGw@mail.gmail.com>
- <CANBLGcxHD2vy0+tXYo5Pkqri9mV7aD9jikvs3ygBJRxF4ApLMA@mail.gmail.com>
- <CAHp75Vc65deoHbks-aPmnjEJzm3GdqFMfBCUqw4vVLVr=71Ncg@mail.gmail.com>
- <CANBLGcxriKLZ+CKUsj5sviW8FdHnWTF2koROwmAb=G2tbmE6vQ@mail.gmail.com>
- <CAHp75VccSDLVbs1sF_-1zghWyLKtKKV1qtxOxZZ-cS0e6S-sBA@mail.gmail.com>
- <CAHp75VcgFRGpca-pSU9T5Oo1fT4aWQJd5EQfyZscGYx0mDMJ_Q@mail.gmail.com>
- <CANBLGcxHLQZygX9CHsXK4aYS9m4VE5OnLNROOmvP1ps5UP-xAw@mail.gmail.com>
+        id S235050AbhJSKHa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Oct 2021 06:07:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60226 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234914AbhJSKH3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Oct 2021 06:07:29 -0400
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BD45C06161C;
+        Tue, 19 Oct 2021 03:05:17 -0700 (PDT)
+Received: by mail-ed1-x535.google.com with SMTP id y30so9774593edi.0;
+        Tue, 19 Oct 2021 03:05:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=weqn2VVSwGcyXsa0H+TZIaJZQbD+c+j8TTHDHQ3X1gI=;
+        b=d4ezrvuUdFBB6wWt1NQAxkXil5Lg+SgXN+f7KJAQMQPKwOn6wsEFR1e/ZwtwAX9k71
+         eC6HsCkZRUtIiHHk4UtU/uSyxV7pgYY89B4jS0KMug+qccRe68KFNL4q+/yjlbsktaqm
+         QnOtRR8Fu4KNeFdE0aC/LOoHqYEeuVF8IS6iRpFi/m9wg+KtNZ0xzixJUVkVwtDfuvXX
+         wR7kYH81AqJunWHDvTsYLrb+w3F1Y0XAGghwqj/nkIz7L6CMB7ra/Oi54oxPFcl3m6Wp
+         iNYZkVNcgbzkVBBJUxRuPO0Dcw94VwzzIzw0HXmMaKUCV0ZqZUN5PXLueeQ7SoIp5AUt
+         kPGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=weqn2VVSwGcyXsa0H+TZIaJZQbD+c+j8TTHDHQ3X1gI=;
+        b=ULW1EphLuDwk7HJekOGBfYNLJZ2BoRNnc7ZyRNd0vuWew7BaA6A0ryanOTNLInYh79
+         P4jvcvoQiA/gnWAhueM7uKk5I1P0g6eGa5oSYA+iD0dmSD/loIlpT37IoNPYUrZo11An
+         Vi4bMUSo789lEUId9sGkdpdz/iL7ItYAQN5zV1p1ud6HExVyJWUhZEwwSLOn322B3sMI
+         6oscA5ockuif9+tPNsfz0kFeoywSPHZOQCXL07LXEay+99HfcxjYeZLe1PrbwRtYZswX
+         TCUgZg6w49K7HmgnCr9+/5J+1GShoXFWDoxMTb/akII6lvWmKBPHcWbv2oikAa36b5mu
+         pcdw==
+X-Gm-Message-State: AOAM532+GZuNX5r2F5ayzOyZICJWBlv9FKcHbQeO7uAO6YCC/SjJPdg4
+        x+B0YAsq0LZvUIctXiEpG/t6yQeq7npwxPd34oLFyW4H0UyvRpon
+X-Google-Smtp-Source: ABdhPJz1rktonq3jgZFoXdQzqkmtScwjEv3/nZx2zO05n6Bow3B4vYCxO8AlbBSp28HuUoUw2imT4VJVmb/rrQjQlQ0=
+X-Received: by 2002:a17:907:8a27:: with SMTP id sc39mr36338752ejc.567.1634637913069;
+ Tue, 19 Oct 2021 03:05:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANBLGcxHLQZygX9CHsXK4aYS9m4VE5OnLNROOmvP1ps5UP-xAw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20211019032648.2208-1-mario.limonciello@amd.com>
+In-Reply-To: <20211019032648.2208-1-mario.limonciello@amd.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 19 Oct 2021 13:04:21 +0300
+Message-ID: <CAHp75Vexw8P6EcyX=fpoH_SxHTzSahrb82GfUCgzpyK3ePEjhg@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: amd: Fix wakeups when IRQ is shared with SCI
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Nehal Shah <Nehal-bakulchandra.Shah@amd.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Joerie de Gram <j.de.gram@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 18, 2021 at 07:02:43PM +0200, Emil Renner Berthing wrote:
-> On Mon, 18 Oct 2021 at 18:29, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > On Mon, Oct 18, 2021 at 7:23 PM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
+On Tue, Oct 19, 2021 at 6:27 AM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+>
+> On some Lenovo AMD Gen2 platforms the IRQ for the SCI and pinctrl drivers
+> are shared.  Due to how the s2idle loop handling works, this case needs
+> an extra explicit check whether the interrupt was caused by SCI or by
+> the GPIO controller.
+>
+> To fix this rework the existing IRQ handler function to function as a
+> checker and an IRQ handler depending on the calling arguments.
+>
+> BugLink: https://gitlab.freedesktop.org/drm/amd/-/issues/1738
+
+Should it have a Fixes tag?
+
+> Reported-by: Joerie de Gram <j.de.gram@gmail.com>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
 ...
 
-> > Having a second look I found even problematic error paths because of
-> > mixing devm_*() with non-devm_*() calls, which only assures me that
-> > your ->probe() error path is broken and should be revisited.
-> 
-> So do you want to expand on that now or should I send v2 first?
+> +#ifdef CONFIG_ACPI
 
-Here is not enough context anymore to point out. I expect one to have done
-their homework anyway.
+__maybe_unused?
+
+> +static bool amd_gpio_check_wake(void *dev_id)
+> +{
+> +       return _amd_gpio_irq_handler(-1, dev_id);
+> +}
+> +#endif
+
+...
+
+> +#ifdef CONFIG_ACPI
+> +       acpi_register_wakeup_handler(gpio_dev->irq, amd_gpio_check_wake, gpio_dev);
+> +#endif
+
+Not what I expected.
+
+...
+
+> +#ifdef CONFIG_ACPI
+> +       acpi_unregister_wakeup_handler(amd_gpio_check_wake, gpio_dev);
+> +#endif
+
+Ditto.
+
+Yes, I see the problem, perhaps you need to add the stubs. If this is
+a real regression fix, then probably this patch should follow by two:
+adding stubs, removing ugly ifdeffery here. Otherwise, introduce stubs
+as patch 1 preceding this one in a series.
 
 -- 
 With Best Regards,
 Andy Shevchenko
-
-
