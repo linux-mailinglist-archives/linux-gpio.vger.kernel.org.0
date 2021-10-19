@@ -2,159 +2,182 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C199F4336BE
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Oct 2021 15:13:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC00D433837
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Oct 2021 16:17:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231616AbhJSNQG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Oct 2021 09:16:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47310 "EHLO
+        id S230020AbhJSOTd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Oct 2021 10:19:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235825AbhJSNQG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Oct 2021 09:16:06 -0400
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C1BCC06161C;
-        Tue, 19 Oct 2021 06:13:53 -0700 (PDT)
-Received: by mail-ed1-x52e.google.com with SMTP id w19so12722714edd.2;
-        Tue, 19 Oct 2021 06:13:53 -0700 (PDT)
+        with ESMTP id S229584AbhJSOTc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Oct 2021 10:19:32 -0400
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3B7AC06161C
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Oct 2021 07:17:19 -0700 (PDT)
+Received: by mail-ed1-x531.google.com with SMTP id y12so14419606eda.4
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Oct 2021 07:17:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Yb5AYlFBZpmOcMRPANWbIoCRCA80wADgh4x7iAW1ExU=;
-        b=H0zGly0sCkacvlKcxqqWAJ4IY4FSkznN2vKL1ODg8xYFhSUhN15I8y7637JR93fvhV
-         zoWDzKhPk9HxNtj3XG9NRzVM/oBxD+tK+d8ptg7nlcvCstOPufCxvJAjzRcDQvx2XUBV
-         xiiSufc+SOdXorgmUOKj+RVUGhPyaWF2GDlX4+q5fyfLjTm5iDqWH43jdEJbrV4dPj/z
-         wG7NpiXYOc6IT5nA+t4A3d+mYB6DloDmyXw21PLOi3EZuBLUi2A0JBQc6hanaGYBUvXi
-         oTIPxlEb6Ng/oe9bISOlYuWnAFT32WZHtt+uCMioDRUp4y6tGOc0AoPvNC+c48J5Z+7n
-         8Zpw==
+        bh=kgCDDEsGSe1etnRXFlGlYA3RdOp2g4WwA49g9BH2mKE=;
+        b=tWFghgkkUlfwYWjFZ3PYbgFlQf/5Mi+IMgCHPscUSOO7C1RUHeBeoxtuvWPSEzFLev
+         wVFrWrFn98WLfL4h4+OMZ/U6TlUplFq2ctVYWcBR10YBLVQeaezu4BX56/hIYr9z7xZl
+         EOAf9FiQC2zv/Dh63ggvbYyyYn8l3/mWtXfuvdp2lJVhyAXc7ujE/iRJ1fdH60NR2XXg
+         vHiLXdv7bC+W3qJXQKo+/DhFRRomE4ojmENGbVXyvw2XStajmJCmm/BaWPW87A4mLjQu
+         k/Kpyr39gGNM65JZBs7uMC7/pESvkUguFyRBRdzO74ygiW4l6UUjkiHXI2FsNJZuFW9J
+         PSjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Yb5AYlFBZpmOcMRPANWbIoCRCA80wADgh4x7iAW1ExU=;
-        b=V0Rq1ZZLlm26QcQReqMm27RhXYrnfLiSRnbk5nFXyFoo9xskclVBw1riZzlwxiHjtj
-         Hz8o83mMkL17IgRoxziDGJ8iqqXzDgcioKk0JOyh5Vq5bey5xQHNWQ4HsR60XyF+Q+Em
-         O/hLMV6XH3pUmAQrWJ3UTvmFwR0dSs1dPHYFPm0zWGv57M7E4y0ni3B50UVIM75x1g0F
-         VUu3Cmxiko9iuRm60fc0/NVinNvgoraKeJNKFW5hfA9WvwhnUGpg9u8orSFVk/FYjEkQ
-         YfqUHphfPmm0Fl6o8qr7ZiVDHISwWh5uyYOgTQvOT+JjDILSwkGOVo6rJtsc8vJBShDA
-         FD+g==
-X-Gm-Message-State: AOAM530BnPIRb444gCQi85iGb1tP1u252ERNH/VW9A1Ni0vmQ/s9wV4N
-        sqhsmuO6VPO60/bk1GrdP7XTk8NiCgCqSnd9FbY=
-X-Google-Smtp-Source: ABdhPJzpUjCirAMo9LRcvIUqEhu7nS182O8i9NHU3B0apVjOzlvvl++HVxgQGWYCXow969iY47xNrnxdD2OuKLxsBEg=
-X-Received: by 2002:a17:906:a158:: with SMTP id bu24mr35432917ejb.356.1634649229512;
- Tue, 19 Oct 2021 06:13:49 -0700 (PDT)
+        bh=kgCDDEsGSe1etnRXFlGlYA3RdOp2g4WwA49g9BH2mKE=;
+        b=Pn4jHn5hpq6xhTGdKceXodocPIntBi7OOSu+hp2re+6n/6EtLW/qYf4qU7C14TTHQn
+         RkHOOUQ63JUkG1c48rKDaMCEFAizVqBmtsJ9JSVwR8Y+n+c3IUxFLyQL7Vcd3lM8aL56
+         H0dDs8R79z6KQi8oOm6qrw/y6HS+151EEininUAewp5XgjrjAectDsLBbSmeYBochrAj
+         US78Onqt/FpFPfhNrgruHE7tC0CBxkK/PoTotf2P+FHRTx7zPdpQUvdx41uNVx35xPj0
+         B9fz+0hR8HUAF0Tmt9eW9c5Xkw2pxa3tpQULn6rOn/OjiWoo6NTpovJTdhJzS74B+nBG
+         ivYQ==
+X-Gm-Message-State: AOAM530fyc7ystg6cdn3wmaD2MeCKJSS+THILqsfmJSqo5WTPsoUFyQw
+        0CqXg9lwLHidIjwQ/YrL3Qcy6wWgj9/qSgPaSKGPPw==
+X-Google-Smtp-Source: ABdhPJy1gSI41oeorN63MssHPM8MixeVINo6yVf++/lR4YLCwf0LjmL8Upf93f3ovx7b7dmSgVflhalUnudvZZUPAi0=
+X-Received: by 2002:a17:907:764e:: with SMTP id kj14mr37506778ejc.349.1634652981528;
+ Tue, 19 Oct 2021 07:16:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210325122832.119147-1-sandberg@mailfence.com>
- <20211019125731.4327-1-maukka@ext.kapsi.fi> <20211019125731.4327-3-maukka@ext.kapsi.fi>
-In-Reply-To: <20211019125731.4327-3-maukka@ext.kapsi.fi>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 19 Oct 2021 16:12:57 +0300
-Message-ID: <CAHp75VeOZY+YHfFsnTNdYfan=dxZx9ZEoCr8PAgOewAZX4khsQ@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] gpio: gpio-cascade: add generic GPIO cascade
-To:     Mauri Sandberg <maukka@ext.kapsi.fi>
-Cc:     Mauri Sandberg <sandberg@mailfence.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+References: <20211008081739.26807-1-brgl@bgdev.pl> <20211008081739.26807-6-brgl@bgdev.pl>
+ <YW1PEvTyqdhiRYR6@smile.fi.intel.com>
+In-Reply-To: <YW1PEvTyqdhiRYR6@smile.fi.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 19 Oct 2021 16:16:10 +0200
+Message-ID: <CAMRc=Mcem-EC=ckD2HwiihJXUsOGpGdiJ=U-vWGq1SzmOVwbTg@mail.gmail.com>
+Subject: Re: [PATCH v7 5/8] gpio: sim: new testing module
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>,
+        Shuah Khan <shuah@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jack Winch <sunt.un.morcov@gmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Drew Fustini <drew@beagleboard.org>
+        linux-doc <linux-doc@vger.kernel.org>,
+        Colin Ian King <colin.king@canonical.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 19, 2021 at 4:00 PM Mauri Sandberg <maukka@ext.kapsi.fi> wrote:
+On Mon, Oct 18, 2021 at 12:40 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
-> Adds support for building cascades of GPIO lines. That is, it allows
-> setups when there is one upstream line and multiple cascaded lines, out
-> of which one can be chosen at a time. The status of the upstream line
-> can be conveyed to the selected cascaded line or, vice versa, the status
-> of the cascaded line can be conveyed to the upstream line.
+> On Fri, Oct 08, 2021 at 10:17:36AM +0200, Bartosz Golaszewski wrote:
+> > Implement a new, modern GPIO testing module controlled by configfs
+> > attributes instead of module parameters. The goal of this driver is
+> > to provide a replacement for gpio-mockup that will be easily extensible
+> > with new features and doesn't require reloading the module to change
+> > the setup.
+> >
+> > Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+> > [Andy: Initialize attribute allocated on the heap]
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > [Colin: Fix dereference of free'd pointer config]
+> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 >
-> A multiplexer is being used to select, which cascaded GPIO line is being
-> used at any given time.
+> Some nit-picks below, up to you to address.
 >
-> At the moment only input direction is supported. In future it should be
-> possible to add support for output direction, too.
+> ...
+>
+> > +     ret = gpio_sim_setup_sysfs(chip);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     return 0;
+>
+> return gpio_sim_...(chip); ?
+>
 
-Thanks for an update! My comments below.
+Sure, can do.
 
-...
+> ...
+>
+> > +
+>
+> Redundant empty line.
+>
+> > +CONFIGFS_ATTR_RO(gpio_sim_config_, dev_name);
+>
+> ...
+>
+> > +
+>
+> Ditto.
+>
+> > +CONFIGFS_ATTR_RO(gpio_sim_config_, chip_name);
+>
+> ...
+>
+> > +
+>
+> Ditto.
+>
+> > +CONFIGFS_ATTR(gpio_sim_config_, label);
+>
+> ...
+>
+> > +
+>
+> Ditto.
+>
+> > +CONFIGFS_ATTR(gpio_sim_config_, num_lines);
+>
+> ...
+>
+> > +
+>
+> Ditto.
+>
+> > +CONFIGFS_ATTR(gpio_sim_config_, line_names);
+>
 
-> +config GPIO_CASCADE
-> +       tristate "General GPIO cascade"
-> +       select MULTIPLEXER
-> +       help
-> +         Say yes here to enable support for generic GPIO cascade.
-> +
-> +         This allows building one-to-many cascades of GPIO lines using
-> +         different types of multiplexers readily available. At the
-> +         moment only input lines are supported.
+These are on purpose - there's the store and show function and putting
+it next to only one is misleading IMO.
 
-Care to mention what will be the module name in the case of being
-built as a module?
-(Hint: there are plenty of existing examples in the kernel)
+> ...
+>
+> > +     fwnode = fwnode_create_software_node(properties, NULL);
+> > +     if (IS_ERR(fwnode))
+> > +             return PTR_ERR(fwnode);
+>
+>
+> > +     fwnode = dev_fwnode(&config->pdev->dev);
+> > +     platform_device_unregister(config->pdev);
+> > +     fwnode_remove_software_node(fwnode);
+>
+> This seems correct, thank you for modifying the code.
+>
+> ...
+>
+> > +     config->pdev = NULL;
+> > +     mutex_unlock(&config->lock);
+>
+> mutex_destroy() ?
+> Or is it done in the upper level?
+>
 
-...
+It's done in the release callback.
 
-> +#include <linux/module.h>
+Bart
 
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/gpio/driver.h>
-
-I would move this group...
-
-> +#include <linux/slab.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/mux/consumer.h>
-> +
-
-...to be somewhere here to explicitly show that this is the GPIO
-subsystem related driver.
-
-...
-
-> +       mc = devm_mux_control_get(dev, NULL);
-> +       if (IS_ERR(mc))
-
-> +               return dev_err_probe(dev,
-> +                                    PTR_ERR(mc),
-> +                                    "unable to get mux-control\n");
-
-Why not one line?
-
-...
-
-> +       upstream = devm_gpiod_get(dev, "upstream",  GPIOD_IN);
-> +       if (IS_ERR(upstream)) {
-> +               dev_err(dev, "unable to claim upstream GPIO line\n");
-> +               return -ENODEV;
-
-Why shadowing error code? What happens if it's deferred?
-Hint: use dev_err_probe() here as well.
-
-> +       }
-
-...
-
-> +       err = devm_gpiochip_add_data(dev, &cas->gpio_chip, NULL);
-> +       if (err) {
-> +               dev_err(dev, "unable to add gpio chip\n");
-> +               return err;
-> +       }
-> +
-> +       platform_set_drvdata(pdev, cas);
-> +       return 0;
-
-I would rather do
-
-       platform_set_drvdata(pdev, cas);
-
-       return devm_gpiochip_add_data(dev, &cas->gpio_chip, NULL);
-
--- 
-With Best Regards,
-Andy Shevchenko
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
