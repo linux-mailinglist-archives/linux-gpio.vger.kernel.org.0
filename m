@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DDBB0433932
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Oct 2021 16:49:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4385C433936
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Oct 2021 16:49:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233940AbhJSOwF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Oct 2021 10:52:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41072 "EHLO
+        id S233481AbhJSOwJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Oct 2021 10:52:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233325AbhJSOvl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Oct 2021 10:51:41 -0400
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB19CC06176C
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Oct 2021 07:49:22 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id g2so12155348wme.4
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Oct 2021 07:49:22 -0700 (PDT)
+        with ESMTP id S232349AbhJSOvr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Oct 2021 10:51:47 -0400
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 003B6C061771
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Oct 2021 07:49:25 -0700 (PDT)
+Received: by mail-wm1-x32a.google.com with SMTP id y74-20020a1c7d4d000000b00322f53b9bbfso2986745wmc.3
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Oct 2021 07:49:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=4StP4zG1fEI9tjzWgHEnJNQemAlTt1GkDMlHKHuvYzA=;
-        b=ZtUOLj/F/LiCr/Kd8ToV2ADnVDYnJXcSddyeNYMoAy/pbe0ExMRTdcK7LvTJs5JvqX
-         LsmaXuB+XA/r0Ea12C5DlaMCgzPc+CvkVFcmtWjRVMuihtr1rKKgL30IeCWs4+8gzn6o
-         o3SA8L9Yq4/ho052zBsOKigyd597kOKaX8ky501/Ti0csYDFvRXXhRS/433g0wAzYe1E
-         tAEUWaVA8FEGfkAvtdbkkXqr5OPWyLSbstSesM07EwEkUHUuGg4YjM0XrYSDZ+aEtWut
-         GNvW4EZV/7H7EFGsNK4J8oAg1WR04fMtZXia/2PtYsC32FBiStO6PDEsqynMJkfwf2y5
-         1r1g==
+        bh=3WiEMOM7MN0CCA4NLUM6q2vsR11WoaM3MIis6xIV2X8=;
+        b=cHDME5P8XJdL5nJ15gYUcedaWY7Zse6hKp7BQoIGAo0OxHq3O63myQB4jw/7D+wrwG
+         zYcS9D5soEYrvZkTzO9ZkQPY4coY31BUhsiA0R+c7ZECCaK7JeovKqEZ3/ZZSu/bAAHN
+         psASYFSCC23phKvO33cVJcHzkO1dr8JkbmQfJOYyJz2ZbCC8YE5fWkCcUaDP43jCQDtB
+         zmGDbk07vgyLDGFyiygUAFKf7mWsOQaL3oQAIGExG8DKRIXpfts7fEVDi49qaAWxFNXX
+         CSs+Q2sTzrHvm55n28CriE2eIfBUxeJkynOugvIi+tWE830zIOIIlJ+y/Xgyw03w3jR7
+         kl0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=4StP4zG1fEI9tjzWgHEnJNQemAlTt1GkDMlHKHuvYzA=;
-        b=4jaJFX54G9MMpa8vwn5oYmnf76p/mlfLojLL3NY16nuQ5BTpYAolYr/cG2s8G4qSL+
-         G04i/cQloB7RSXDxkpyXvkuHRjZLZQ4q+AsBFHyEVEFmdIsyItIUTWflZcTV9kdTKUgs
-         dohjGMdFJI/tVTG7RATYMmB62Qll6r65QJDvkpoTzdr4lJmYnNdlFIDcVbEfkGPaSKGQ
-         XDP+JK9dCE+7CCQJ4NfXm2mljh4tFbYSxCq6kSSTwul0Q8uGPFEWuMt97iXiQkY8OwyA
-         g1jwIE44XT5Uc1dILK/yI0qrLYpcOxjywddzX6+YG114dzCxA7RIX8ffslOQ/q+8t9qE
-         3J0A==
-X-Gm-Message-State: AOAM530ExZjdaGHZJMmh3MpsANsIIKNGOCHC9Ws4U0kikhxSZATYBmhT
-        tMFz2X2FRTqGNBJK8Kxte1fatNuQRDX1iw==
-X-Google-Smtp-Source: ABdhPJzUQ3TxpUPPlkbvzqU9F9LzmG+iknYPc3123dIPMUFqemTdA1Ajjx4IOnssRV49sgjeKciAUA==
-X-Received: by 2002:adf:e44c:: with SMTP id t12mr45861692wrm.113.1634654961270;
-        Tue, 19 Oct 2021 07:49:21 -0700 (PDT)
+        bh=3WiEMOM7MN0CCA4NLUM6q2vsR11WoaM3MIis6xIV2X8=;
+        b=2kAn2y/Zo1uIU/iqhQIJc9LItRzHpwVLzpu3wn3ZRXBKKnwHW52hzCnVNWCKZnAgOj
+         YcGt/TC1DfosiolUlZ3tZDVg30lSL1Gxwe562KLqdMHtgLIi9IZ56R7SU0IscL6Yjf5+
+         HAkU8/BwT5Fz5shIEezluI6FOy4Hd/ou26OJijFORXN5F+ZbJ9hTtShKOU5F11t63t4N
+         aZv5PfHKH4OdbBOOKYOIEuc5UPXHLiZ1n1Sdhpg216dkD665rO5upg6CFxTBA7hHpgJg
+         X2yYTCwUB+yDLlC42r+hfsDCQQf5Y6h+/MhsPxkGV3WmZSttYiSLEH2y6bAN0MmVAspL
+         2xAA==
+X-Gm-Message-State: AOAM531HoVaCAPD2PADQgqc6JX5ct8C6bHNyeBXl4andMpymiOUIxs93
+        us8zyB5Y66Fh8EjmaePV9CM35w==
+X-Google-Smtp-Source: ABdhPJxksqLtPCWN2lK06sWa180HmClCruI3Nyw6B9K0YOS4/zuDbUjsinDEqFoGRVsoxQVries8Aw==
+X-Received: by 2002:adf:a347:: with SMTP id d7mr46057999wrb.139.1634654964356;
+        Tue, 19 Oct 2021 07:49:24 -0700 (PDT)
 Received: from debian-brgl.home ([2a01:cb1d:334:ac00:7d50:ff5:f5c1:e225])
-        by smtp.gmail.com with ESMTPSA id j1sm16212752wrd.28.2021.10.19.07.49.20
+        by smtp.gmail.com with ESMTPSA id j1sm16212752wrd.28.2021.10.19.07.49.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Oct 2021 07:49:20 -0700 (PDT)
+        Tue, 19 Oct 2021 07:49:24 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>,
         Shuah Khan <shuah@kernel.org>,
@@ -62,10 +62,11 @@ To:     Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>,
         Jack Winch <sunt.un.morcov@gmail.com>,
         Viresh Kumar <viresh.kumar@linaro.org>
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v8 4/8] samples: configfs: add a committable group
-Date:   Tue, 19 Oct 2021 16:49:05 +0200
-Message-Id: <20211019144909.21959-5-brgl@bgdev.pl>
+        linux-doc@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+        Colin Ian King <colin.king@canonical.com>
+Subject: [PATCH v8 5/8] gpio: sim: new testing module
+Date:   Tue, 19 Oct 2021 16:49:06 +0200
+Message-Id: <20211019144909.21959-6-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.30.1
 In-Reply-To: <20211019144909.21959-1-brgl@bgdev.pl>
 References: <20211019144909.21959-1-brgl@bgdev.pl>
@@ -75,190 +76,1025 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add an example of using committable items to configfs samples. Each
-config item has two attributes: read-write 'storeme' which works
-similarly to other examples in this file and a read-only 'committed'
-attribute which changes its value between false and true depending on
-whether it's committed or not at the moment.
+Implement a new, modern GPIO testing module controlled by configfs
+attributes instead of module parameters. The goal of this driver is
+to provide a replacement for gpio-mockup that will be easily extensible
+with new features and doesn't require reloading the module to change
+the setup.
 
 Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+[Andy: Initialize attribute allocated on the heap]
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+[Colin: Fix dereference of free'd pointer config]
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- samples/configfs/configfs_sample.c | 153 +++++++++++++++++++++++++++++
- 1 file changed, 153 insertions(+)
+ Documentation/admin-guide/gpio/gpio-sim.rst |  72 ++
+ drivers/gpio/Kconfig                        |   8 +
+ drivers/gpio/Makefile                       |   1 +
+ drivers/gpio/gpio-sim.c                     | 882 ++++++++++++++++++++
+ 4 files changed, 963 insertions(+)
+ create mode 100644 Documentation/admin-guide/gpio/gpio-sim.rst
+ create mode 100644 drivers/gpio/gpio-sim.c
 
-diff --git a/samples/configfs/configfs_sample.c b/samples/configfs/configfs_sample.c
-index 37a657b25d58..f0a1c4d847b1 100644
---- a/samples/configfs/configfs_sample.c
-+++ b/samples/configfs/configfs_sample.c
-@@ -313,6 +313,158 @@ static struct configfs_subsystem group_children_subsys = {
+diff --git a/Documentation/admin-guide/gpio/gpio-sim.rst b/Documentation/admin-guide/gpio/gpio-sim.rst
+new file mode 100644
+index 000000000000..08eac487e35e
+--- /dev/null
++++ b/Documentation/admin-guide/gpio/gpio-sim.rst
+@@ -0,0 +1,72 @@
++.. SPDX-License-Identifier: GPL-2.0-or-later
++
++Configfs GPIO Simulator
++=======================
++
++The configfs GPIO Simulator (gpio-sim) provides a way to create simulated GPIO
++chips for testing purposes. The lines exposed by these chips can be accessed
++using the standard GPIO character device interface as well as manipulated
++using sysfs attributes.
++
++Creating simulated chips
++------------------------
++
++The gpio-sim module registers a configfs subsystem called 'gpio-sim'. It's a
++subsystem with committable items which means two subdirectories are created in
++the filesystem: pending and live. For more information on configfs and
++committable items, please refer to Documentation/filesystems/configfs.rst.
++
++In order to instantiate a new simulated chip, the user needs to mkdir() a new
++directory in pending/. Inside each new directory, there's a set of attributes
++that can be used to configure the new chip. Once the configuration is complete,
++the user needs to use rename() to move the chip to the live/ directory. This
++creates and registers the new device.
++
++In order to destroy a simulated chip, it has to be moved back to pending first
++and then removed using rmdir().
++
++Currently supported configuration attributes are:
++
++  num_lines - an unsigned integer value defining the number of GPIO lines to
++              export
++
++  label - a string defining the label for the GPIO chip
++
++  line_names - a list of GPIO line names in the form of quoted strings
++               separated by commas, e.g.: '"foo", "bar", "", "foobar"'. The
++               number of strings doesn't have to be equal to the value set in
++               the num_lines attribute. If it's lower than the number of lines,
++               the remaining lines are unnamed. If it's larger, the superfluous
++               lines are ignored. A name of the form: '""' means the line
++               should be unnamed.
++
++Additionally two read-only attributes named 'chip_name' and 'dev_name' are
++exposed in order to provide users with a mapping from configfs directories to
++the actual devices created in the kernel. The former returns the name of the
++GPIO device as assigned by gpiolib (i.e. "gpiochip0", "gpiochip1", etc.). The
++latter returns the parent device name as defined by the gpio-sim driver (i.e.
++"gpio-sim.0", "gpio-sim.1", etc.). This allows user-space to map the configfs
++items both to the correct character device file as well as the associated entry
++in sysfs.
++
++Simulated GPIO chips can also be defined in device-tree. The compatible string
++must be: "gpio-simulator". Supported properties are:
++
++  "gpio-sim,label" - chip label
++
++  "gpio-sim,nr-gpios" - number of lines
++
++Other standard GPIO properties (like "gpio-line-names" and gpio-hog) are also
++supported.
++
++Manipulating simulated lines
++----------------------------
++
++Each simulated GPIO chip creates a sysfs attribute group under its device
++directory called 'line-ctrl'. Inside each group, there's a separate attribute
++for each GPIO line. The name of the attribute is of the form 'gpioX' where X
++is the line's offset in the chip.
++
++Reading from a line attribute returns the current value. Writing to it (0 or 1)
++changes the configuration of the simulated pull-up/pull-down resistor
++(1 - pull-up, 0 - pull-down).
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index fae5141251e5..2631d60eb2eb 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -1680,6 +1680,14 @@ config GPIO_VIRTIO
+ 	  These virtual GPIOs can be routed to real GPIOs or attached to
+ 	  simulators on the host (like QEMU).
  
- /* ----------------------------------------------------------------- */
++config GPIO_SIM
++	tristate "GPIO Simulator Module"
++	select IRQ_SIM
++	select CONFIGFS_FS
++	help
++	  This enables the GPIO simulator - a configfs-based GPIO testing
++	  driver.
++
+ endmenu
  
+ endif
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index fbcda637d5e1..1cb16c767237 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -133,6 +133,7 @@ obj-$(CONFIG_GPIO_SAMA5D2_PIOBU)	+= gpio-sama5d2-piobu.o
+ obj-$(CONFIG_GPIO_SCH311X)		+= gpio-sch311x.o
+ obj-$(CONFIG_GPIO_SCH)			+= gpio-sch.o
+ obj-$(CONFIG_GPIO_SIFIVE)		+= gpio-sifive.o
++obj-$(CONFIG_GPIO_SIM)			+= gpio-sim.o
+ obj-$(CONFIG_GPIO_SIOX)			+= gpio-siox.o
+ obj-$(CONFIG_GPIO_SL28CPLD)		+= gpio-sl28cpld.o
+ obj-$(CONFIG_GPIO_SODAVILLE)		+= gpio-sodaville.o
+diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
+new file mode 100644
+index 000000000000..d8bf84b604d9
+--- /dev/null
++++ b/drivers/gpio/gpio-sim.c
+@@ -0,0 +1,882 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
 +/*
-+ * 04-committable-children
++ * GPIO testing driver based on configfs.
 + *
-+ * This is an example of a committable group.  It's similar to the simple
-+ * children example but each config_item has an additional 'committed'
-+ * attribute which is read-only and is only modified when the config_item
-+ * is moved from the 'pending' to the 'live' directory.
++ * Copyright (C) 2021 Bartosz Golaszewski <bgolaszewski@baylibre.com>
 + */
 +
-+struct committable_child {
-+	struct config_item item;
-+	int storeme;
-+	bool committed;
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/bitmap.h>
++#include <linux/configfs.h>
++#include <linux/device.h>
++#include <linux/gpio/driver.h>
++#include <linux/idr.h>
++#include <linux/interrupt.h>
++#include <linux/irq.h>
++#include <linux/irq_sim.h>
++#include <linux/mod_devicetable.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/platform_device.h>
++#include <linux/property.h>
++#include <linux/slab.h>
++#include <linux/string.h>
++#include <linux/string_helpers.h>
++#include <linux/sysfs.h>
++
++#include "gpiolib.h"
++
++static DEFINE_IDA(gpio_sim_ida);
++
++struct gpio_sim_chip {
++	struct gpio_chip gc;
++	unsigned long *directions;
++	unsigned long *values;
++	unsigned long *pulls;
++	struct irq_domain *irq_sim;
++	struct mutex lock;
++	struct attribute_group attr_group;
 +};
 +
-+static inline struct committable_child *
-+to_committable_child(struct config_item *item)
++struct gpio_sim_attribute {
++	struct device_attribute dev_attr;
++	unsigned int offset;
++};
++
++static struct gpio_sim_attribute *
++to_gpio_sim_attr(struct device_attribute *dev_attr)
 +{
-+	return container_of(item, struct committable_child, item);
++	return container_of(dev_attr, struct gpio_sim_attribute, dev_attr);
 +}
 +
-+static ssize_t
-+committable_child_storeme_show(struct config_item *item, char *page)
++static int gpio_sim_apply_pull(struct gpio_sim_chip *chip,
++			       unsigned int offset, int value)
 +{
-+	return sprintf(page, "%d\n", to_committable_child(item)->storeme);
++	int curr_val, irq, irq_type, ret;
++	struct gpio_desc *desc;
++	struct gpio_chip *gc;
++
++	gc = &chip->gc;
++	desc = &gc->gpiodev->descs[offset];
++
++	mutex_lock(&chip->lock);
++
++	if (test_bit(FLAG_REQUESTED, &desc->flags) &&
++	    !test_bit(FLAG_IS_OUT, &desc->flags)) {
++		curr_val = !!test_bit(offset, chip->values);
++		if (curr_val == value)
++			goto set_pull;
++
++		/*
++		 * This is fine - it just means, nobody is listening
++		 * for interrupts on this line, otherwise
++		 * irq_create_mapping() would have been called from
++		 * the to_irq() callback.
++		 */
++		irq = irq_find_mapping(chip->irq_sim, offset);
++		if (!irq)
++			goto set_value;
++
++		irq_type = irq_get_trigger_type(irq);
++
++		if ((value && (irq_type & IRQ_TYPE_EDGE_RISING)) ||
++		    (!value && (irq_type & IRQ_TYPE_EDGE_FALLING))) {
++			ret = irq_set_irqchip_state(irq, IRQCHIP_STATE_PENDING,
++						    true);
++			if (ret)
++				goto set_pull;
++		}
++	}
++
++set_value:
++	/* Change the value unless we're actively driving the line. */
++	if (!test_bit(FLAG_REQUESTED, &desc->flags) ||
++	    !test_bit(FLAG_IS_OUT, &desc->flags))
++		__assign_bit(offset, chip->values, value);
++
++set_pull:
++	__assign_bit(offset, chip->pulls, value);
++	mutex_unlock(&chip->lock);
++	return 0;
 +}
 +
-+static ssize_t committable_child_storeme_store(struct config_item *item,
-+					       const char *page, size_t count)
++static int gpio_sim_get(struct gpio_chip *gc, unsigned int offset)
 +{
-+	struct committable_child *child = to_committable_child(item);
++	struct gpio_sim_chip *chip = gpiochip_get_data(gc);
 +	int ret;
 +
-+	if (child->committed)
-+		return -EPERM;
++	mutex_lock(&chip->lock);
++	ret = !!test_bit(offset, chip->values);
++	mutex_unlock(&chip->lock);
 +
-+	ret = kstrtoint(page, 10, &child->storeme);
++	return ret;
++}
++
++static void gpio_sim_set(struct gpio_chip *gc, unsigned int offset, int value)
++{
++	struct gpio_sim_chip *chip = gpiochip_get_data(gc);
++
++	mutex_lock(&chip->lock);
++	__assign_bit(offset, chip->values, value);
++	mutex_unlock(&chip->lock);
++}
++
++static int gpio_sim_get_multiple(struct gpio_chip *gc,
++				 unsigned long *mask, unsigned long *bits)
++{
++	struct gpio_sim_chip *chip = gpiochip_get_data(gc);
++
++	mutex_lock(&chip->lock);
++	bitmap_copy(bits, chip->values, gc->ngpio);
++	mutex_unlock(&chip->lock);
++
++	return 0;
++}
++
++static void gpio_sim_set_multiple(struct gpio_chip *gc,
++				  unsigned long *mask, unsigned long *bits)
++{
++	struct gpio_sim_chip *chip = gpiochip_get_data(gc);
++
++	mutex_lock(&chip->lock);
++	bitmap_copy(chip->values, bits, gc->ngpio);
++	mutex_unlock(&chip->lock);
++}
++
++static int gpio_sim_direction_output(struct gpio_chip *gc,
++				     unsigned int offset, int value)
++{
++	struct gpio_sim_chip *chip = gpiochip_get_data(gc);
++
++	mutex_lock(&chip->lock);
++	__clear_bit(offset, chip->directions);
++	__assign_bit(offset, chip->values, value);
++	mutex_unlock(&chip->lock);
++
++	return 0;
++}
++
++static int gpio_sim_direction_input(struct gpio_chip *gc, unsigned int offset)
++{
++	struct gpio_sim_chip *chip = gpiochip_get_data(gc);
++
++	mutex_lock(&chip->lock);
++	__set_bit(offset, chip->directions);
++	mutex_unlock(&chip->lock);
++
++	return 0;
++}
++
++static int gpio_sim_get_direction(struct gpio_chip *gc, unsigned int offset)
++{
++	struct gpio_sim_chip *chip = gpiochip_get_data(gc);
++	int direction;
++
++	mutex_lock(&chip->lock);
++	direction = !!test_bit(offset, chip->directions);
++	mutex_unlock(&chip->lock);
++
++	return direction ? GPIO_LINE_DIRECTION_IN : GPIO_LINE_DIRECTION_OUT;
++}
++
++static int gpio_sim_set_config(struct gpio_chip *gc,
++				  unsigned int offset, unsigned long config)
++{
++	struct gpio_sim_chip *chip = gpiochip_get_data(gc);
++
++	switch (pinconf_to_config_param(config)) {
++	case PIN_CONFIG_BIAS_PULL_UP:
++		return gpio_sim_apply_pull(chip, offset, 1);
++	case PIN_CONFIG_BIAS_PULL_DOWN:
++		return gpio_sim_apply_pull(chip, offset, 0);
++	default:
++		break;
++	}
++
++	return -ENOTSUPP;
++}
++
++static int gpio_sim_to_irq(struct gpio_chip *gc, unsigned int offset)
++{
++	struct gpio_sim_chip *chip = gpiochip_get_data(gc);
++
++	return irq_create_mapping(chip->irq_sim, offset);
++}
++
++static void gpio_sim_free(struct gpio_chip *gc, unsigned int offset)
++{
++	struct gpio_sim_chip *chip = gpiochip_get_data(gc);
++
++	mutex_lock(&chip->lock);
++	__assign_bit(offset, chip->values, !!test_bit(offset, chip->pulls));
++	mutex_unlock(&chip->lock);
++}
++
++static ssize_t gpio_sim_sysfs_line_show(struct device *dev,
++					struct device_attribute *attr,
++					char *buf)
++{
++	struct gpio_sim_attribute *line_attr = to_gpio_sim_attr(attr);
++	struct gpio_sim_chip *chip = dev_get_drvdata(dev);
++	int ret;
++
++	mutex_lock(&chip->lock);
++	ret = sysfs_emit(buf, "%u\n",
++			 !!test_bit(line_attr->offset, chip->values));
++	mutex_unlock(&chip->lock);
++
++	return ret;
++}
++
++static ssize_t gpio_sim_sysfs_line_store(struct device *dev,
++					 struct device_attribute *attr,
++					 const char *buf, size_t len)
++{
++	struct gpio_sim_attribute *line_attr = to_gpio_sim_attr(attr);
++	struct gpio_sim_chip *chip = dev_get_drvdata(dev);
++	int ret, val;
++
++	if (len > 2 || (buf[0] != '0' && buf[0] != '1'))
++		return -EINVAL;
++
++	val = buf[0] == '0' ? 0 : 1;
++
++	ret = gpio_sim_apply_pull(chip, line_attr->offset, val);
 +	if (ret)
 +		return ret;
 +
++	return len;
++}
++
++static void gpio_sim_mutex_destroy(void *data)
++{
++	struct mutex *lock = data;
++
++	mutex_destroy(lock);
++}
++
++static void gpio_sim_sysfs_remove(void *data)
++{
++	struct gpio_sim_chip *chip = data;
++
++	sysfs_remove_group(&chip->gc.parent->kobj, &chip->attr_group);
++}
++
++static int gpio_sim_setup_sysfs(struct gpio_sim_chip *chip)
++{
++	unsigned int i, num_lines = chip->gc.ngpio;
++	struct device *dev = chip->gc.parent;
++	struct gpio_sim_attribute *line_attr;
++	struct device_attribute *dev_attr;
++	struct attribute **attrs;
++	int ret;
++
++	attrs = devm_kcalloc(dev, sizeof(*attrs), num_lines + 1, GFP_KERNEL);
++	if (!attrs)
++		return -ENOMEM;
++
++	for (i = 0; i < num_lines; i++) {
++		line_attr = devm_kzalloc(dev, sizeof(*line_attr), GFP_KERNEL);
++		if (!line_attr)
++			return -ENOMEM;
++
++		line_attr->offset = i;
++
++		dev_attr = &line_attr->dev_attr;
++		sysfs_attr_init(&dev_attr->attr);
++
++		dev_attr->attr.name = devm_kasprintf(dev, GFP_KERNEL,
++						     "gpio%u", i);
++		if (!dev_attr->attr.name)
++			return -ENOMEM;
++
++		dev_attr->attr.mode = 0644;
++
++		dev_attr->show = gpio_sim_sysfs_line_show;
++		dev_attr->store = gpio_sim_sysfs_line_store;
++
++		attrs[i] = &dev_attr->attr;
++	}
++
++	chip->attr_group.name = "line-ctrl";
++	chip->attr_group.attrs = attrs;
++
++	ret = sysfs_create_group(&dev->kobj, &chip->attr_group);
++	if (ret)
++		return ret;
++
++	return devm_add_action_or_reset(dev, gpio_sim_sysfs_remove, chip);
++}
++
++static int gpio_sim_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct gpio_sim_chip *chip;
++	struct gpio_chip *gc;
++	const char *label;
++	u32 num_lines;
++	int ret;
++
++	ret = device_property_read_u32(dev, "gpio-sim,nr-gpios", &num_lines);
++	if (ret)
++		return ret;
++
++	ret = device_property_read_string(dev, "gpio-sim,label", &label);
++	if (ret)
++		label = dev_name(dev);
++
++	chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
++	if (!chip)
++		return -ENOMEM;
++
++	chip->directions = devm_bitmap_alloc(dev, num_lines, GFP_KERNEL);
++	if (!chip->directions)
++		return -ENOMEM;
++
++	/* Default to input mode. */
++	bitmap_fill(chip->directions, num_lines);
++
++	chip->values = devm_bitmap_zalloc(dev, num_lines, GFP_KERNEL);
++	if (!chip->values)
++		return -ENOMEM;
++
++	chip->pulls = devm_bitmap_zalloc(dev, num_lines, GFP_KERNEL);
++	if (!chip->pulls)
++		return -ENOMEM;
++
++	chip->irq_sim = devm_irq_domain_create_sim(dev, NULL, num_lines);
++	if (IS_ERR(chip->irq_sim))
++		return PTR_ERR(chip->irq_sim);
++
++	mutex_init(&chip->lock);
++	ret = devm_add_action_or_reset(dev, gpio_sim_mutex_destroy,
++				       &chip->lock);
++	if (ret)
++		return ret;
++
++	gc = &chip->gc;
++	gc->base = -1;
++	gc->ngpio = num_lines;
++	gc->label = label;
++	gc->owner = THIS_MODULE;
++	gc->parent = dev;
++	gc->get = gpio_sim_get;
++	gc->set = gpio_sim_set;
++	gc->get_multiple = gpio_sim_get_multiple;
++	gc->set_multiple = gpio_sim_set_multiple;
++	gc->direction_output = gpio_sim_direction_output;
++	gc->direction_input = gpio_sim_direction_input;
++	gc->get_direction = gpio_sim_get_direction;
++	gc->set_config = gpio_sim_set_config;
++	gc->to_irq = gpio_sim_to_irq;
++	gc->free = gpio_sim_free;
++
++	ret = devm_gpiochip_add_data(dev, gc, chip);
++	if (ret)
++		return ret;
++
++	/* Used by sysfs and configfs callbacks. */
++	dev_set_drvdata(dev, chip);
++
++	return gpio_sim_setup_sysfs(chip);
++}
++
++static const struct of_device_id gpio_sim_of_match[] = {
++	{ .compatible = "gpio-simulator" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, gpio_sim_of_match);
++
++static struct platform_driver gpio_sim_driver = {
++	.driver = {
++		.name = "gpio-sim",
++		.of_match_table = gpio_sim_of_match,
++	},
++	.probe = gpio_sim_probe,
++};
++
++struct gpio_sim_chip_config {
++	struct config_item item;
++
++	/*
++	 * If pdev is NULL, the item is 'pending' (waiting for configuration).
++	 * Once the pointer is assigned, the device has been created and the
++	 * item is 'live'.
++	 */
++	struct platform_device *pdev;
++	int id;
++
++	/*
++	 * Each configfs filesystem operation is protected with the subsystem
++	 * mutex. Each separate attribute is protected with the buffer mutex.
++	 * This structure however can be modified by callbacks of different
++	 * attributes so we need another lock.
++	 */
++	struct mutex lock;
++
++	char label[32];
++	unsigned int num_lines;
++	char **line_names;
++	unsigned int num_line_names;
++};
++
++static struct gpio_sim_chip_config *
++to_gpio_sim_chip_config(struct config_item *item)
++{
++	return container_of(item, struct gpio_sim_chip_config, item);
++}
++
++static ssize_t gpio_sim_config_dev_name_show(struct config_item *item,
++					     char *page)
++{
++	struct gpio_sim_chip_config *config = to_gpio_sim_chip_config(item);
++	struct platform_device *pdev;
++	int ret;
++
++	mutex_lock(&config->lock);
++	pdev = config->pdev;
++	if (pdev)
++		ret = sprintf(page, "%s\n", dev_name(&pdev->dev));
++	else
++		ret = sprintf(page, "gpio-sim.%d\n", config->id);
++	mutex_unlock(&config->lock);
++
++	return ret;
++}
++
++CONFIGFS_ATTR_RO(gpio_sim_config_, dev_name);
++
++static ssize_t gpio_sim_config_chip_name_show(struct config_item *item,
++					      char *page)
++{
++	struct gpio_sim_chip_config *config = to_gpio_sim_chip_config(item);
++	struct gpio_sim_chip *chip = NULL;
++	struct platform_device *pdev;
++	int ret;
++
++	mutex_lock(&config->lock);
++	pdev = config->pdev;
++	if (pdev)
++		chip = dev_get_drvdata(&pdev->dev);
++
++	if (chip)
++		ret = sprintf(page, "%s\n", dev_name(&chip->gc.gpiodev->dev));
++	else
++		ret = sprintf(page, "none\n");
++	mutex_unlock(&config->lock);
++
++	return ret;
++}
++
++CONFIGFS_ATTR_RO(gpio_sim_config_, chip_name);
++
++static ssize_t gpio_sim_config_label_show(struct config_item *item, char *page)
++{
++	struct gpio_sim_chip_config *config = to_gpio_sim_chip_config(item);
++	int ret;
++
++	mutex_lock(&config->lock);
++	ret = sprintf(page, "%s\n", config->label);
++	mutex_unlock(&config->lock);
++
++	return ret;
++}
++
++static ssize_t gpio_sim_config_label_store(struct config_item *item,
++					   const char *page, size_t count)
++{
++	struct gpio_sim_chip_config *config = to_gpio_sim_chip_config(item);
++	char *dup, *trimmed;
++	int ret;
++
++	mutex_lock(&config->lock);
++
++	if (config->pdev) {
++		mutex_unlock(&config->lock);
++		return -EBUSY;
++	}
++
++	dup = kstrndup(page, count, GFP_KERNEL);
++	if (!dup) {
++		mutex_unlock(&config->lock);
++		return -ENOMEM;
++	}
++
++	trimmed = strstrip(dup);
++	ret = snprintf(config->label, sizeof(config->label), "%s", trimmed);
++	kfree(dup);
++	if (ret < 0) {
++		mutex_unlock(&config->lock);
++		return ret;
++	}
++
++	mutex_unlock(&config->lock);
 +	return count;
 +}
 +
-+CONFIGFS_ATTR(committable_child_, storeme);
++CONFIGFS_ATTR(gpio_sim_config_, label);
 +
-+static ssize_t
-+committable_child_committed_show(struct config_item *item, char *page)
++static ssize_t gpio_sim_config_num_lines_show(struct config_item *item,
++					      char *page)
 +{
-+	return sprintf(page, "%s\n",
-+		to_committable_child(item)->committed ? "true" : "false");
++	struct gpio_sim_chip_config *config = to_gpio_sim_chip_config(item);
++	int ret;
++
++	mutex_lock(&config->lock);
++	ret = sprintf(page, "%u\n", config->num_lines);
++	mutex_unlock(&config->lock);
++
++	return ret;
 +}
 +
-+CONFIGFS_ATTR_RO(committable_child_, committed);
-+
-+static struct configfs_attribute *committable_child_attrs[] = {
-+	&committable_child_attr_storeme,
-+	&committable_child_attr_committed,
-+	NULL,
-+};
-+
-+static void committable_child_release(struct config_item *item)
++static ssize_t gpio_sim_config_num_lines_store(struct config_item *item,
++					       const char *page, size_t count)
 +{
-+	kfree(to_committable_child(item));
++	struct gpio_sim_chip_config *config = to_gpio_sim_chip_config(item);
++	unsigned int num_lines;
++	int ret;
++
++	mutex_lock(&config->lock);
++
++	if (config->pdev) {
++		mutex_unlock(&config->lock);
++		return -EBUSY;
++	}
++
++	ret = kstrtouint(page, 10, &num_lines);
++	if (ret) {
++		mutex_unlock(&config->lock);
++		return ret;
++	}
++
++	if (num_lines == 0) {
++		mutex_unlock(&config->lock);
++		return -EINVAL;
++	}
++
++	config->num_lines = num_lines;
++
++	mutex_unlock(&config->lock);
++	return count;
 +}
 +
-+static struct configfs_item_operations committable_child_item_ops = {
-+	.release	= committable_child_release,
++CONFIGFS_ATTR(gpio_sim_config_, num_lines);
++
++static ssize_t gpio_sim_config_line_names_show(struct config_item *item,
++					       char *page)
++{
++	struct gpio_sim_chip_config *config = to_gpio_sim_chip_config(item);
++	int ret, i, written = 0;
++
++	mutex_lock(&config->lock);
++
++	if (!config->line_names) {
++		mutex_unlock(&config->lock);
++		return sprintf(page, "\n");
++	}
++
++	for (i = 0; i < config->num_line_names; i++) {
++		ret = sprintf(page + written,
++			i < config->num_line_names - 1 ? "\"%s\", " : "\"%s\"\n",
++			config->line_names[i] ?: "");
++		if (ret < 0) {
++			mutex_unlock(&config->lock);
++			return ret;
++		}
++
++		written += ret;
++	}
++
++	mutex_unlock(&config->lock);
++	return written;
++}
++
++static ssize_t gpio_sim_config_line_names_store(struct config_item *item,
++						const char *page, size_t count)
++{
++	struct gpio_sim_chip_config *config = to_gpio_sim_chip_config(item);
++	unsigned int num_new_names = 1, num_old_names, name_idx = 0;
++	bool in_quote = false, got_comma = true;
++	char **new_names, **old_names, *name, c;
++	const char *start = page;
++	size_t pos, name_len;
++	int err = -EINVAL;
++
++	mutex_lock(&config->lock);
++
++	if (config->pdev) {
++		mutex_unlock(&config->lock);
++		return -EBUSY;
++	}
++
++	/*
++	 * Line names are stored in a pointer array so that we can easily
++	 * pass them down to the GPIO subsystem in a "gpio-line-names"
++	 * property.
++	 *
++	 * Line names must be passed as a list of quoted names separated by
++	 * commas, for example: '"foo", "bar", "foobar"'.
++	 */
++
++	for (pos = 0; pos < count; pos++) {
++		/*
++		 * Just count the commas and assume the number if strings
++		 * equals the number of commas + 1. If the format is wrong
++		 * we'll bail out anyway.
++		 */
++		if (page[pos] == ',')
++			num_new_names++;
++	}
++
++	new_names = kcalloc(num_new_names, sizeof(char *), GFP_KERNEL);
++	if (!new_names) {
++		mutex_unlock(&config->lock);
++		return -ENOMEM;
++	}
++
++	/*
++	 * REVISIT There are more users in the kernel that want to split
++	 * comma-separated strings into tokens. We should generalize it and
++	 * put it into lib/.
++	 */
++	for (pos = 0; pos < count; pos++) {
++		c = page[pos];
++
++		if (in_quote) {
++			if (c == '"') {
++				/* This is the end of the name. */
++				in_quote = got_comma = false;
++				name_len = (page + pos) - start;
++				if (name_len == 0) {
++					/* Name is empty (passed as ""). */
++					name_idx++;
++					continue;
++				}
++
++				name = kmemdup(start, name_len + 1, GFP_KERNEL);
++				if (!name) {
++					err = -ENOMEM;
++					goto err_out;
++				}
++
++				name[name_len] = '\0';
++				new_names[name_idx++] = name;
++			}
++		} else {
++			if (c == '"') {
++				/* Enforce separating names with commas. */
++				if (!got_comma)
++					goto err_out;
++
++				start = page + pos + 1;
++				in_quote = true;
++			} else if (c == ',') {
++				if (!got_comma)
++					got_comma = true;
++				else
++					/* Double commas are not allowed. */
++					goto err_out;
++			} else if (!isspace(c)) {
++				goto err_out;
++			}
++		}
++	}
++
++	/*
++	 * End of input sanity checks, must not have a comma at the end and
++	 * must have finished scanning the last name.
++	 */
++	if (in_quote || got_comma)
++		goto err_out;
++
++	old_names = config->line_names;
++	num_old_names = config->num_line_names;
++	config->line_names = new_names;
++	config->num_line_names = num_new_names;
++
++	mutex_unlock(&config->lock);
++	kfree_strarray(old_names, num_old_names);
++	return count;
++
++err_out:
++	mutex_unlock(&config->lock);
++	kfree_strarray(new_names, name_idx);
++	return err;
++}
++
++CONFIGFS_ATTR(gpio_sim_config_, line_names);
++
++static struct configfs_attribute *gpio_sim_config_attrs[] = {
++	&gpio_sim_config_attr_dev_name,
++	&gpio_sim_config_attr_chip_name,
++	&gpio_sim_config_attr_label,
++	&gpio_sim_config_attr_num_lines,
++	&gpio_sim_config_attr_line_names,
++	NULL
 +};
 +
-+static const struct config_item_type committable_child_type = {
-+	.ct_item_ops	= &committable_child_item_ops,
-+	.ct_attrs	= committable_child_attrs,
++static void gpio_sim_chip_config_release(struct config_item *item)
++{
++	struct gpio_sim_chip_config *config = to_gpio_sim_chip_config(item);
++
++	mutex_destroy(&config->lock);
++	ida_free(&gpio_sim_ida, config->id);
++	kfree_strarray(config->line_names, config->num_line_names);
++	kfree(config);
++}
++
++static struct configfs_item_operations gpio_sim_config_item_ops = {
++	.release	= gpio_sim_chip_config_release,
++};
++
++static const struct config_item_type gpio_sim_chip_config_type = {
++	.ct_item_ops	= &gpio_sim_config_item_ops,
++	.ct_attrs	= gpio_sim_config_attrs,
 +	.ct_owner	= THIS_MODULE,
-+};
-+
-+struct committable_children {
-+	struct config_group group;
 +};
 +
 +static struct config_item *
-+committable_children_make_item(struct config_group *group, const char *name)
++gpio_sim_config_make_item(struct config_group *group, const char *name)
 +{
-+	struct committable_child *child;
++	struct gpio_sim_chip_config *config;
++	int id;
 +
-+	child = kzalloc(sizeof(*child), GFP_KERNEL);
-+	if (!child)
++	config = kzalloc(sizeof(*config), GFP_KERNEL);
++	if (!config)
 +		return ERR_PTR(-ENOMEM);
 +
-+	config_item_init_type_name(&child->item, name, &committable_child_type);
++	id = ida_alloc(&gpio_sim_ida, GFP_KERNEL);
++	if (id < 0) {
++		kfree(config);
++		return ERR_PTR(id);
++	}
 +
-+	return &child->item;
++	config_item_init_type_name(&config->item, name,
++				   &gpio_sim_chip_config_type);
++	config->num_lines = 1;
++	config->id = id;
++	mutex_init(&config->lock);
++
++	return &config->item;
 +}
 +
-+static ssize_t
-+committable_children_description_show(struct config_item *item, char *page)
++static int gpio_sim_config_commit_item(struct config_item *item)
 +{
-+	return sprintf(page,
-+"[04-committable-children]\n"
-+"\n"
-+"This subsystem allows creation of committable config_items.  The subsystem\n"
-+"has two subdirectories: pending and live.  New config_items can only be\n"
-+"created in pending/ and they have one writable and readable attribute as\n"
-+"well as a single read-only attribute.  The latter is only changed once the\n"
-+"item is 'committed'.  This is done by moving the config_item (using\n"
-+"rename()) to the live/ directory.  In this example, the storeme attribute\n"
-+"becomes 'read-only' once committed.\n");
-+}
++	struct gpio_sim_chip_config *config = to_gpio_sim_chip_config(item);
++	struct platform_device_info pdevinfo;
++	struct property_entry properties[4]; /* Max 3 properties + sentinel. */
++	struct fwnode_handle *fwnode;
++	struct platform_device *pdev;
++	unsigned int prop_idx = 0;
 +
-+CONFIGFS_ATTR_RO(committable_children_, description);
++	memset(&pdevinfo, 0, sizeof(pdevinfo));
++	memset(properties, 0, sizeof(properties));
 +
-+static struct configfs_attribute *committable_children_attrs[] = {
-+	&committable_children_attr_description,
-+	NULL,
-+};
++	mutex_lock(&config->lock);
 +
-+static int committable_children_commit_item(struct config_item *item)
-+{
-+	to_committable_child(item)->committed = true;
++	properties[prop_idx++] = PROPERTY_ENTRY_U32("gpio-sim,nr-gpios",
++						    config->num_lines);
++
++	if (config->label[0] != '\0')
++		properties[prop_idx++] = PROPERTY_ENTRY_STRING("gpio-sim,label",
++							       config->label);
++
++	if (config->line_names)
++		properties[prop_idx++] = PROPERTY_ENTRY_STRING_ARRAY_LEN(
++						"gpio-line-names",
++						config->line_names,
++						config->num_line_names);
++
++	fwnode = fwnode_create_software_node(properties, NULL);
++	if (IS_ERR(fwnode))
++		return PTR_ERR(fwnode);
++
++	pdevinfo.name = "gpio-sim";
++	pdevinfo.fwnode = fwnode;
++	pdevinfo.id = config->id;
++
++	pdev = platform_device_register_full(&pdevinfo);
++	if (IS_ERR(pdev)) {
++		fwnode_remove_software_node(fwnode);
++		mutex_unlock(&config->lock);
++		return PTR_ERR(pdev);
++	}
++
++	config->pdev = pdev;
++	mutex_unlock(&config->lock);
 +
 +	return 0;
 +}
 +
-+static int committable_children_uncommit_item(struct config_item *item)
++static int gpio_sim_config_uncommit_item(struct config_item *item)
 +{
-+	to_committable_child(item)->committed = false;
++	struct gpio_sim_chip_config *config = to_gpio_sim_chip_config(item);
++	struct fwnode_handle *fwnode;
++
++	mutex_lock(&config->lock);
++	fwnode = dev_fwnode(&config->pdev->dev);
++	platform_device_unregister(config->pdev);
++	fwnode_remove_software_node(fwnode);
++	config->pdev = NULL;
++	mutex_unlock(&config->lock);
 +
 +	return 0;
 +}
 +
-+static struct configfs_group_operations committable_children_group_ops = {
-+	.make_item	= committable_children_make_item,
-+	.commit_item	= committable_children_commit_item,
-+	.uncommit_item	= committable_children_uncommit_item,
++static struct configfs_group_operations gpio_sim_config_group_ops = {
++	.make_item	= gpio_sim_config_make_item,
++	.commit_item	= gpio_sim_config_commit_item,
++	.uncommit_item	= gpio_sim_config_uncommit_item,
 +};
 +
-+static const struct config_item_type committable_children_type = {
-+	.ct_group_ops	= &committable_children_group_ops,
-+	.ct_attrs	= committable_children_attrs,
++static const struct config_item_type gpio_sim_config_type = {
++	.ct_group_ops	= &gpio_sim_config_group_ops,
 +	.ct_owner	= THIS_MODULE,
 +};
 +
-+static struct configfs_subsystem committable_children_subsys = {
++static struct configfs_subsystem gpio_sim_config_subsys = {
 +	.su_group = {
 +		.cg_item = {
-+			.ci_namebuf = "04-committable-children",
-+			.ci_type = &committable_children_type,
++			.ci_namebuf	= "gpio-sim",
++			.ci_type	= &gpio_sim_config_type,
 +		},
 +	},
 +};
 +
-+/* ----------------------------------------------------------------- */
++static int __init gpio_sim_init(void)
++{
++	int ret;
 +
- /*
-  * We're now done with our subsystem definitions.
-  * For convenience in this module, here's a list of them all.  It
-@@ -324,6 +476,7 @@ static struct configfs_subsystem *example_subsys[] = {
- 	&childless_subsys.subsys,
- 	&simple_children_subsys,
- 	&group_children_subsys,
-+	&committable_children_subsys,
- 	NULL,
- };
- 
++	ret = platform_driver_register(&gpio_sim_driver);
++	if (ret) {
++		pr_err("Error %d while registering the platform driver\n", ret);
++		return ret;
++	}
++
++	config_group_init(&gpio_sim_config_subsys.su_group);
++	mutex_init(&gpio_sim_config_subsys.su_mutex);
++	ret = configfs_register_subsystem(&gpio_sim_config_subsys);
++	if (ret) {
++		pr_err("Error %d while registering the configfs subsystem %s\n",
++		       ret, gpio_sim_config_subsys.su_group.cg_item.ci_namebuf);
++		mutex_destroy(&gpio_sim_config_subsys.su_mutex);
++		platform_driver_unregister(&gpio_sim_driver);
++		return ret;
++	}
++
++	return 0;
++}
++module_init(gpio_sim_init);
++
++static void __exit gpio_sim_exit(void)
++{
++	configfs_unregister_subsystem(&gpio_sim_config_subsys);
++	mutex_destroy(&gpio_sim_config_subsys.su_mutex);
++	platform_driver_unregister(&gpio_sim_driver);
++}
++module_exit(gpio_sim_exit);
++
++MODULE_AUTHOR("Bartosz Golaszewski <bgolaszewski@baylibre.com>");
++MODULE_DESCRIPTION("GPIO Simulator Module");
++MODULE_LICENSE("GPL");
 -- 
 2.30.1
 
