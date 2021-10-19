@@ -2,60 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC00D433837
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Oct 2021 16:17:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9829043391F
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Oct 2021 16:49:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230020AbhJSOTd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Oct 2021 10:19:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33736 "EHLO
+        id S231888AbhJSOvc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Oct 2021 10:51:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229584AbhJSOTc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Oct 2021 10:19:32 -0400
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3B7AC06161C
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Oct 2021 07:17:19 -0700 (PDT)
-Received: by mail-ed1-x531.google.com with SMTP id y12so14419606eda.4
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Oct 2021 07:17:19 -0700 (PDT)
+        with ESMTP id S230464AbhJSOvb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Oct 2021 10:51:31 -0400
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B63F7C06161C
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Oct 2021 07:49:18 -0700 (PDT)
+Received: by mail-wm1-x336.google.com with SMTP id m42so12116556wms.2
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Oct 2021 07:49:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kgCDDEsGSe1etnRXFlGlYA3RdOp2g4WwA49g9BH2mKE=;
-        b=tWFghgkkUlfwYWjFZ3PYbgFlQf/5Mi+IMgCHPscUSOO7C1RUHeBeoxtuvWPSEzFLev
-         wVFrWrFn98WLfL4h4+OMZ/U6TlUplFq2ctVYWcBR10YBLVQeaezu4BX56/hIYr9z7xZl
-         EOAf9FiQC2zv/Dh63ggvbYyyYn8l3/mWtXfuvdp2lJVhyAXc7ujE/iRJ1fdH60NR2XXg
-         vHiLXdv7bC+W3qJXQKo+/DhFRRomE4ojmENGbVXyvw2XStajmJCmm/BaWPW87A4mLjQu
-         k/Kpyr39gGNM65JZBs7uMC7/pESvkUguFyRBRdzO74ygiW4l6UUjkiHXI2FsNJZuFW9J
-         PSjw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eS6l377VdbApvDNfoSn7WNJh4L5MhlIJd5UxiCWKaI0=;
+        b=p+cGwaFCRpisr8jDV95j8bZ6iso9EHxPP7UiF1FAABPVkUrfJZh0A4UkIoucRR1zg4
+         A6/+Ctxbsjh7RQP8whD7bJzwQG3bCTB1yoNNtsS2VsEgInqgXA+5Tj23rR1NfrQt+xYO
+         YQTQE/93lX5+RD1KXJpEgfFX6qW+yoKFAHLT9jT0YAIpK5t/OB+zAxEskCTceLKXHjuy
+         qbRfA1XzrdN+SSBu90/qzPQqq5So0x4ggpxXrXEFoF0QDphTkuyhvCuUY+GUK/I7A8IC
+         ZLV+TPLU1awEjNCKJhArfBq1K9wAZR2XLzaKXbhxI1qDDPfPKsT/nGGqcKnO/ovwg/zn
+         bn/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kgCDDEsGSe1etnRXFlGlYA3RdOp2g4WwA49g9BH2mKE=;
-        b=Pn4jHn5hpq6xhTGdKceXodocPIntBi7OOSu+hp2re+6n/6EtLW/qYf4qU7C14TTHQn
-         RkHOOUQ63JUkG1c48rKDaMCEFAizVqBmtsJ9JSVwR8Y+n+c3IUxFLyQL7Vcd3lM8aL56
-         H0dDs8R79z6KQi8oOm6qrw/y6HS+151EEininUAewp5XgjrjAectDsLBbSmeYBochrAj
-         US78Onqt/FpFPfhNrgruHE7tC0CBxkK/PoTotf2P+FHRTx7zPdpQUvdx41uNVx35xPj0
-         B9fz+0hR8HUAF0Tmt9eW9c5Xkw2pxa3tpQULn6rOn/OjiWoo6NTpovJTdhJzS74B+nBG
-         ivYQ==
-X-Gm-Message-State: AOAM530fyc7ystg6cdn3wmaD2MeCKJSS+THILqsfmJSqo5WTPsoUFyQw
-        0CqXg9lwLHidIjwQ/YrL3Qcy6wWgj9/qSgPaSKGPPw==
-X-Google-Smtp-Source: ABdhPJy1gSI41oeorN63MssHPM8MixeVINo6yVf++/lR4YLCwf0LjmL8Upf93f3ovx7b7dmSgVflhalUnudvZZUPAi0=
-X-Received: by 2002:a17:907:764e:: with SMTP id kj14mr37506778ejc.349.1634652981528;
- Tue, 19 Oct 2021 07:16:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20211008081739.26807-1-brgl@bgdev.pl> <20211008081739.26807-6-brgl@bgdev.pl>
- <YW1PEvTyqdhiRYR6@smile.fi.intel.com>
-In-Reply-To: <YW1PEvTyqdhiRYR6@smile.fi.intel.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eS6l377VdbApvDNfoSn7WNJh4L5MhlIJd5UxiCWKaI0=;
+        b=4QEs5VhFsqXzmVPwP2uPYF6EGCkr2LcV4IwsjU/DP8YJoTAekKZpibl7Ibj9DZluyj
+         HokJar3wTNybIUA0gk5yOqPbALI/roM6yNb9OqG6czAaQAi4/FPfOh9sZMOB6dc+foLR
+         rabCdycippMOm6pkMFliDQflcXbIFQZTeX+hu2ZCWG5V90oy/ucI5Q/DN3phB8I90dGY
+         yaFtIT12OEc4ZUPxP9qwSKQqbCqt4Ah/gXA5F/ZIVM8BonIUvwbLV2T8C8c162bTOEhk
+         S0Y8AvKLmHhtOuXOb0mN7v5ipUUkvRT5VleYQQvap7nZ1Eqfry1tGBa77UdUEz4GciEf
+         SaNw==
+X-Gm-Message-State: AOAM531Wmp+2nPU88jVG7IFwSJcMqwpXCUKVJYDqHVh4XKEDcDM3bxn8
+        cV3vZuj7f0clHkJpwGbsSnZpTQ==
+X-Google-Smtp-Source: ABdhPJzqgun7UjiWaUhdlTxVJOvRJbqsvJYSmLekLm4e5+UpjGk3jUPVNwubFMJTIIRHJ3RwoG3TXA==
+X-Received: by 2002:a7b:c856:: with SMTP id c22mr6518694wml.178.1634654957317;
+        Tue, 19 Oct 2021 07:49:17 -0700 (PDT)
+Received: from debian-brgl.home ([2a01:cb1d:334:ac00:7d50:ff5:f5c1:e225])
+        by smtp.gmail.com with ESMTPSA id j1sm16212752wrd.28.2021.10.19.07.49.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Oct 2021 07:49:16 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 19 Oct 2021 16:16:10 +0200
-Message-ID: <CAMRc=Mcem-EC=ckD2HwiihJXUsOGpGdiJ=U-vWGq1SzmOVwbTg@mail.gmail.com>
-Subject: Re: [PATCH v7 5/8] gpio: sim: new testing module
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>,
+To:     Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>,
         Shuah Khan <shuah@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
         <u.kleine-koenig@pengutronix.de>,
         Geert Uytterhoeven <geert@linux-m68k.org>,
         Kent Gibson <warthog618@gmail.com>,
@@ -63,121 +60,144 @@ Cc:     Joel Becker <jlbec@evilplan.org>, Christoph Hellwig <hch@lst.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Al Viro <viro@zeniv.linux.org.uk>,
         Jack Winch <sunt.un.morcov@gmail.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        Colin Ian King <colin.king@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v8 0/8] gpio: implement the configfs testing module
+Date:   Tue, 19 Oct 2021 16:49:01 +0200
+Message-Id: <20211019144909.21959-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.30.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 18, 2021 at 12:40 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Fri, Oct 08, 2021 at 10:17:36AM +0200, Bartosz Golaszewski wrote:
-> > Implement a new, modern GPIO testing module controlled by configfs
-> > attributes instead of module parameters. The goal of this driver is
-> > to provide a replacement for gpio-mockup that will be easily extensible
-> > with new features and doesn't require reloading the module to change
-> > the setup.
-> >
-> > Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
-> > [Andy: Initialize attribute allocated on the heap]
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > [Colin: Fix dereference of free'd pointer config]
-> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->
-> Some nit-picks below, up to you to address.
->
-> ...
->
-> > +     ret = gpio_sim_setup_sysfs(chip);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     return 0;
->
-> return gpio_sim_...(chip); ?
->
+I'm respinning this series now because I noticed that I need to start writing
+tests for my work on the new libgpiod v2 code to make sense (it's just becoming
+too complicated to make even remotely functional without test coverage). At the
+same time I don't want to rewrite the tests using gpio-mockup if the goal is to
+replace it with gpio-sim anyway.
 
-Sure, can do.
+I fixed issues pointed out by Al Viro and made sure that references are
+correctly counted (including error paths) and that memory allocated for the
+pending and live groups gets freed.
 
-> ...
->
-> > +
->
-> Redundant empty line.
->
-> > +CONFIGFS_ATTR_RO(gpio_sim_config_, dev_name);
->
-> ...
->
-> > +
->
-> Ditto.
->
-> > +CONFIGFS_ATTR_RO(gpio_sim_config_, chip_name);
->
-> ...
->
-> > +
->
-> Ditto.
->
-> > +CONFIGFS_ATTR(gpio_sim_config_, label);
->
-> ...
->
-> > +
->
-> Ditto.
->
-> > +CONFIGFS_ATTR(gpio_sim_config_, num_lines);
->
-> ...
->
-> > +
->
-> Ditto.
->
-> > +CONFIGFS_ATTR(gpio_sim_config_, line_names);
->
+===
 
-These are on purpose - there's the store and show function and putting
-it next to only one is misleading IMO.
+Cc'ing Viresh too.
 
-> ...
->
-> > +     fwnode = fwnode_create_software_node(properties, NULL);
-> > +     if (IS_ERR(fwnode))
-> > +             return PTR_ERR(fwnode);
->
->
-> > +     fwnode = dev_fwnode(&config->pdev->dev);
-> > +     platform_device_unregister(config->pdev);
-> > +     fwnode_remove_software_node(fwnode);
->
-> This seems correct, thank you for modifying the code.
->
-> ...
->
-> > +     config->pdev = NULL;
-> > +     mutex_unlock(&config->lock);
->
-> mutex_destroy() ?
-> Or is it done in the upper level?
->
+Viresh: while there's still a long way to go before the libgpio v2.0 release,
+in order to merge the Rust bindings, we'll need a test-suite similar to what
+we have now for C++ and Python bindings, except that it will have to be based
+on the gpio-sim module when it makes its way into mainline.
 
-It's done in the release callback.
+===
 
-Bart
+This series adds a new GPIO testing module based on configfs committable items
+and sysfs. The goal is to provide a testing driver that will be configurable
+at runtime (won't need module reload) and easily extensible. The control over
+the attributes is also much more fine-grained than in gpio-mockup.
 
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+This series also contains a respin of the patches I sent separately to the
+configfs maintainers - these patches implement the concept of committable
+items that was well defined for a long time but never actually completed.
+
+Apart from the new driver itself, its selftests and the configfs patches, this
+series contains some changes to the bitmap API - most importantly: it adds
+devres managed variants of bitmap_alloc() and bitmap_zalloc().
+
+v1 -> v2:
+- add selftests for gpio-sim
+- add helper programs for selftests
+- update the configfs rename callback to work with the new API introduced in
+  v5.11
+- fix a missing quote in the documentation
+- use !! whenever using bits operation that are required to return 0 or 1
+- use provided bitmap API instead of reimplementing copy or fill operations
+- fix a deadlock in gpio_sim_direction_output()
+- add new read-only configfs attributes for mapping of configfs items to GPIO
+  device names
+- and address other minor issues pointed out in reviews of v1
+
+v2 -> v3:
+- use devm_bitmap_alloc() instead of the zalloc variant if we're initializing
+  the bitmap with 1s
+- drop the patch exporting device_is_bound()
+- don't return -ENODEV from dev_nam and chip_name configfs attributes, return
+  a string indicating that the device is not available yet ('n/a')
+- fix indentation where it makes sense
+- don't protect IDA functions which use their own locking and where it's not
+  needed
+- use kmemdup() instead of kzalloc() + memcpy()
+- collected review tags
+- minor coding style fixes
+
+v3 -> v4:
+- return 'none' instead of 'n/a' from dev_name and chip_name before the device
+  is registered
+- use sysfs_emit() instead of s*printf()
+- drop GPIO_SIM_MAX_PROP as it's only used in an array's definition where it's
+  fine to hardcode the value
+
+v4 -> v5:
+- drop lib patches that are already upstream
+- use BIT() instead of (1UL << bit) for flags
+- fix refcounting for the configfs_dirent in rename()
+- drop d_move() from the rename() callback
+- free memory allocated for the live and pending groups in configfs_d_iput()
+  and not in detach_groups()
+- make sure that if a group of some name is in the live directory, a new group
+  with the same name cannot be created in the pending directory
+
+v5 -> v6:
+- go back to using (1UL << bit) instead of BIT()
+- if the live group dentry doesn't exist for whatever reason at the time when
+  mkdir() in the pending group is called (would be a BUG()), return -ENOENT
+  instead of -EEXIST which should only be returned if given subsystem already
+  exists in either live or pending group
+
+v6 -> v7:
+- as detailed by Andy in commit 6fda593f3082 ("gpio: mockup: Convert to use
+  software nodes") removing device properties after the platform device is
+  removed but before the GPIO device gets dropped can lead to a use-after-free
+  bug - use software nodes to manually control the freeing of the properties
+
+v7 -> v8:
+- fixed some minor coding style issues as pointed out by Andy
+
+Bartosz Golaszewski (8):
+  configfs: increase the item name length
+  configfs: use (1UL << bit) for internal flags
+  configfs: implement committable items
+  samples: configfs: add a committable group
+  gpio: sim: new testing module
+  selftests: gpio: provide a helper for reading chip info
+  selftests: gpio: add a helper for reading GPIO line names
+  selftests: gpio: add test cases for gpio-sim
+
+ Documentation/admin-guide/gpio/gpio-sim.rst   |  72 ++
+ Documentation/filesystems/configfs.rst        |   6 +-
+ drivers/gpio/Kconfig                          |   8 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-sim.c                       | 882 ++++++++++++++++++
+ fs/configfs/configfs_internal.h               |  22 +-
+ fs/configfs/dir.c                             | 276 +++++-
+ include/linux/configfs.h                      |   3 +-
+ samples/configfs/configfs_sample.c            | 153 +++
+ tools/testing/selftests/gpio/.gitignore       |   2 +
+ tools/testing/selftests/gpio/Makefile         |   4 +-
+ tools/testing/selftests/gpio/config           |   1 +
+ tools/testing/selftests/gpio/gpio-chip-info.c |  57 ++
+ tools/testing/selftests/gpio/gpio-line-name.c |  55 ++
+ tools/testing/selftests/gpio/gpio-sim.sh      | 229 +++++
+ 15 files changed, 1748 insertions(+), 23 deletions(-)
+ create mode 100644 Documentation/admin-guide/gpio/gpio-sim.rst
+ create mode 100644 drivers/gpio/gpio-sim.c
+ create mode 100644 tools/testing/selftests/gpio/gpio-chip-info.c
+ create mode 100644 tools/testing/selftests/gpio/gpio-line-name.c
+ create mode 100755 tools/testing/selftests/gpio/gpio-sim.sh
+
+-- 
+2.30.1
+
