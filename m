@@ -2,99 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4253343346C
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Oct 2021 13:09:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 07A14433549
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Oct 2021 14:01:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235282AbhJSLL4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Oct 2021 07:11:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46896 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230129AbhJSLL4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Oct 2021 07:11:56 -0400
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1A45C06161C
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Oct 2021 04:09:43 -0700 (PDT)
-Received: by mail-pf1-x429.google.com with SMTP id i76so15163344pfe.13
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Oct 2021 04:09:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=sLvuXUIVq1jKnhOw/i/BcOZ+oL9amgYiHpm3EvpEBDk=;
-        b=KNVqWymYbP/YgK7WJRGKJMnRa5bMTJmCwL3DbBQS8JPWzBuSgM3FSaDEwCL3zUs42P
-         qUDox6nTqYpl+4HsHp+qem7olc5vkmeM/BUctxNtq2AF3fkp4MN8I1vquS6qHcyMBWFV
-         KR2pZ4H52lEjLYF/Ved5T34PcnDvb2c0sTH/P6kG9K2SnTiIEA0n9qaxUsdn8byIOkP9
-         0vm11pc7witUV5zpMRQJe17j0ew381sgQ9Fx/7LoxwNbvc+K0YF1eJCwhgRe9TPISyZa
-         0e2YuJPtYqbrzQ0/W+319mf7uJw9+6xURto8aAw5U07CxWgAaYXXVn+tbbiFLMmScrXU
-         cR5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=sLvuXUIVq1jKnhOw/i/BcOZ+oL9amgYiHpm3EvpEBDk=;
-        b=x3jNgNZFy7cVJIkd4o9cDSmhARPnP0lcDKoOTjaBARtZjrLz2pgq16MDIgxWqm2/Yj
-         wv0MABhXSuAPJ+/fKgwTzboLx4dypU61hR4rrBEJvY95vbAV/Sszg6oMZtt77lZ5JGmE
-         a6mfN8OuM8gSuBb4LdA0PGUqJAk1N4lRm2JP3TTnz603UNUmPVWLvwCDenSCEHnWXu9T
-         V8h/JUK690qX3w1NAJxdI2AYVjPz1gAdclufCJmE/bZXsC0Vbv+6QJDDzURTF1y1IDrM
-         ilZkDApcvmD6gsHKo2RIQg7ymnIjlZDxqErh/p+TUtMJ7furRlVt0BOczsSupOVl+iDv
-         v6vw==
-X-Gm-Message-State: AOAM5311UCKW/xJsfElUqyiTLpwj+9jaNRKFqy8Mj8kGPlckCjnYbVWX
-        9P4fGghCkFd4SU/4/saE78sP2K4YcgIOKpGZk/0=
-X-Google-Smtp-Source: ABdhPJxldu5bde29uR7oKFw8e1mIeFblKradyDshqOsFRJgqIyTPqOEfm552T0fkltaNvUJPfHd6xmWT/sVppN3hDBo=
-X-Received: by 2002:a05:6a00:2b1:b0:44d:b18:8192 with SMTP id
- q17-20020a056a0002b100b0044d0b188192mr34606546pfs.35.1634641782991; Tue, 19
- Oct 2021 04:09:42 -0700 (PDT)
+        id S230513AbhJSMDv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 19 Oct 2021 08:03:51 -0400
+Received: from mga12.intel.com ([192.55.52.136]:13690 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230337AbhJSMDu (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 19 Oct 2021 08:03:50 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10141"; a="208590522"
+X-IronPort-AV: E=Sophos;i="5.85,384,1624345200"; 
+   d="scan'208";a="208590522"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2021 05:01:36 -0700
+X-IronPort-AV: E=Sophos;i="5.85,384,1624345200"; 
+   d="scan'208";a="594210343"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.159])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2021 05:01:33 -0700
+Received: from andy by smile with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1mcnnu-000THp-DU;
+        Tue, 19 Oct 2021 15:01:14 +0300
+Date:   Tue, 19 Oct 2021 15:01:14 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Wolfram Sang <wsa@kernel.org>
+Subject: Re: [PATCH v4 1/3] driver core: Provide device_match_acpi_handle()
+ helper
+Message-ID: <YW6ziqiIgioxDjq3@smile.fi.intel.com>
+References: <20211014134756.39092-1-andriy.shevchenko@linux.intel.com>
+ <CAJZ5v0jqXqhV1FSyuoVwbgwhte7Q4KUQMozggcxCHGPf+Mfw=A@mail.gmail.com>
 MIME-Version: 1.0
-Received: by 2002:a17:90b:1c05:0:0:0:0 with HTTP; Tue, 19 Oct 2021 04:09:42
- -0700 (PDT)
-Reply-To: mr.luisfernando5050@gmail.com
-From:   "Mr. Luis Fernando " <mr.alinmusah03@gmail.com>
-Date:   Tue, 19 Oct 2021 04:09:42 -0700
-Message-ID: <CAK9pk2Ge5VYDxAsV13PDT9XNKA+D0Zddy1VCCSGhz2VvD-f4ow@mail.gmail.com>
-Subject: GOOD DAY
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0jqXqhV1FSyuoVwbgwhte7Q4KUQMozggcxCHGPf+Mfw=A@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-LS0gDQpEZWFyIEZyaWVuZCwNCg0KR3JlZXRpbmdzLg0KDQpIb3cgYXJlIHlvdSBkb2luZyB0b2Rh
-eSBpIGhvcGUgZmluZT8NCg0KSSBjYW1lIGFjcm9zcyB5b3VyIGUtbWFpbCBjb250YWN0IHByaW9y
-IGEgcHJpdmF0ZSBzZWFyY2ggd2hpbGUgaW4gbmVlZA0Kb2YgeW91ciBhc3Npc3RhbmNlLiBNeSBu
-YW1lIE1yLkthc2ltIE1vaGFtZWQg4oCZIEkgd29yayB3aXRoIHRoZQ0KZGVwYXJ0bWVudCBvZiBB
-dWRpdCBhbmQgYWNjb3VudGluZyBtYW5hZ2VyIGhlcmUgaW4gVUJBIEJhbmsgb2YgQWZyaWNhLA0K
-VGhlcmUgaXMgdGhpcyBmdW5kIHRoYXQgd2FzIGtlZXAgaW4gbXkgY3VzdG9keSB5ZWFycyBhZ28g
-YW5kIEkgbmVlZA0KeW91ciBhc3Npc3RhbmNlIGZvciB0aGUgdHJhbnNmZXJyaW5nIG9mIHRoaXMg
-ZnVuZCB0byB5b3VyIGJhbmsgYWNjb3VudA0KZm9yIGJvdGggb2YgdXMgYmVuZWZpdCBmb3IgbGlm
-ZSB0aW1lIGludmVzdG1lbnQgYW5kIHRoZSBhbW91bnQgaXMgKFVTDQokMjcsNTAwLiBNaWxsaW9u
-IERvbGxhcnMpLg0KDQpJIGhhdmUgZXZlcnkgaW5xdWlyeSBkZXRhaWxzIHRvIG1ha2UgdGhlIGJh
-bmsgYmVsaWV2ZSB5b3UgYW5kIHJlbGVhc2UNCnRoZSBmdW5kIHRvIHlvdXIgYmFuayBhY2NvdW50
-IGluIHdpdGhpbiA3IGJhbmtpbmcgd29ya2luZyBkYXlzIHdpdGgNCnlvdXIgZnVsbCBjby1vcGVy
-YXRpb24gd2l0aCBtZSBhZnRlciBzdWNjZXNzIE5vdGUgNTAlIGZvciB5b3Ugd2hpbGUNCjUwJSBm
-b3IgbWUgYWZ0ZXIgc3VjY2VzcyBvZiB0aGUgdHJhbnNmZXIgb2YgdGhlIGZ1bmRzIHRvIHlvdXIg
-YmFuaw0KYWNjb3VudCBva2F5Lg0KDQpXQUlUSU5HIFRPIEhFQVIgRlJPTSBZT1UuDQpUSEFOS1Mu
-DQoNCk1yLmx1aXMgZmVybmFuZG8NCg0KDQoNCg0KDQoNCg0KDQoNCg0K2LXYr9mK2YLZiiDYp9mE
-2LnYstmK2LLYjA0KDQrYqtit2YrYp9iqLg0KDQrZg9mK2YEg2K3Yp9mE2YMg2KfZhNmK2YjZhSDY
-o9iq2YXZhtmJINij2YYg2KrZg9mI2YYg2KjYrtmK2LHYnw0KDQrZhNmC2K8g2LXYp9iv2YHYqiDY
-rNmH2Kkg2KfYqti12KfZhCDYp9mE2KjYsdmK2K8g2KfZhNil2YTZg9iq2LHZiNmG2Yog2KfZhNiu
-2KfYtdipINio2YMg2YLYqNmEINil2KzYsdin2KEg2KjYrdirINiu2KfYtSDYo9ir2YbYp9ihINin
-2YTYrdin2KzYqQ0K2YXZhiDZhdiz2KfYudiv2KrZgy4g2KfYs9mF2Yog2KfZhNiz2YrYryDZgtin
-2LPZhSDZhdit2YXYryDYo9i52YXZhCDZhdi5DQrZhdiv2YrYsSDZgtiz2YUg2KfZhNiq2K/ZgtmK
-2YIg2YjYp9mE2YXYrdin2LPYqNipINmH2YbYpyDZgdmKIFVCQSBCYW5rIG9mIEFmcmljYSDYjA0K
-2YfZhtin2YMg2YfYsNinINin2YTYtdmG2K/ZiNmCINin2YTYsNmKINin2K3YqtmB2Lgg2KjZhyDZ
-gdmKINi52YfYr9mKINmF2YbYsCDYs9mG2YjYp9iqINmI2KPZhtinINio2K3Yp9is2Kkg2KXZhNmK
-2YcNCtmF2LPYp9i52K/YqtmDINmB2Yog2KrYrdmI2YrZhCDZh9iw2Kcg2KfZhNmF2KjZhNi6INil
-2YTZiSDYrdiz2KfYqNmDINin2YTZhdi12LHZgdmKDQrZhNmD2YTYpyDZhdmG2Kcg2KfZhNin2LPY
-qtmB2KfYr9ipINmF2YYg2KfZhNin2LPYqtir2YXYp9ixINmF2K/ZiSDYp9mE2K3Zitin2Kkg2YjY
-p9mE2YXYqNmE2LogKNin2YTZiNmE2KfZitin2Kog2KfZhNmF2KrYrdiv2KkNCjI3NTAwINiv2YjZ
-hNin2LEuINmF2YTZitmI2YYg2K/ZiNmE2KfYsSkuDQoNCtmE2K/ZiiDZg9mEINiq2YHYp9i12YrZ
-hCDYp9mE2KfYs9iq2YHYs9in2LEg2YTYrNi52YQg2KfZhNio2YbZgyDZiti12K/ZgtmDINmI2YrY
-t9mE2YIg2LPYsdin2K3Zgw0K2KrYrdmI2YrZhCDYp9mE2KPZhdmI2KfZhCDYpdmE2Ykg2K3Ys9in
-2KjZgyDYp9mE2YXYtdix2YHZiiDZgdmKINi62LbZiNmGIDcg2KPZitin2YUg2LnZhdmEINmF2LXY
-sdmB2YrYqSDZhdi5DQrYqti52KfZiNmG2YMg2KfZhNmD2KfZhdmEINmF2LnZiiDYqNi52K8g2KfZ
-hNmG2KzYp9itINmE2KfYrdi4IDUw2aog2YXZhiDYo9is2YTZgyDYo9ir2YbYp9ihDQo1MNmqINio
-2KfZhNmG2LPYqNipINmE2Yog2KjYudivINmG2KzYp9itINiq2K3ZiNmK2YQg2KfZhNij2YXZiNin
-2YQg2KXZhNmJINin2YTYqNmG2YMg2KfZhNiw2Yog2KrYqti52KfZhdmEINmF2LnZhw0K2KfZhNit
-2LPYp9ioINio2K7ZitixLg0KDQrZgdmKINin2YbYqti42KfYsSDYo9mGINmG2LPZhdi5INmF2YbZ
-gy4NCti02YPYsdinLg0KDQrYp9mE2LPZitivINmE2YjZitizINmB2LHZhtin2YbYr9mIDQo=
+On Fri, Oct 15, 2021 at 01:42:37PM +0200, Rafael J. Wysocki wrote:
+> On Thu, Oct 14, 2021 at 3:48 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > We have a couple of users of this helper, make it available for them.
+> >
+> > The prototype for the helper is specifically crafted in order to be
+> > easily used with bus_find_device() call. That's why its location is
+> > in the driver core rather than ACPI.
+> >
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> OK, please feel free to add
+> 
+> Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> to all of the patches in this series.
+
+Thank you, Rafael!
+
+Greg, can it be applied now?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
