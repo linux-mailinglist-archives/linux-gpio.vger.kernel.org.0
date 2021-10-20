@@ -2,89 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 781854341DC
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Oct 2021 01:00:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B73BD4344E2
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Oct 2021 07:57:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229498AbhJSXCY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 19 Oct 2021 19:02:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40514 "EHLO
+        id S229823AbhJTF7y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 20 Oct 2021 01:59:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229483AbhJSXCY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 19 Oct 2021 19:02:24 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B994C06161C;
-        Tue, 19 Oct 2021 16:00:10 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id n8so10870689lfk.6;
-        Tue, 19 Oct 2021 16:00:10 -0700 (PDT)
+        with ESMTP id S229591AbhJTF7x (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 20 Oct 2021 01:59:53 -0400
+Received: from mail-io1-xd2c.google.com (mail-io1-xd2c.google.com [IPv6:2607:f8b0:4864:20::d2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1ED3C06161C
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Oct 2021 22:57:39 -0700 (PDT)
+Received: by mail-io1-xd2c.google.com with SMTP id b188so18266223iof.8
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Oct 2021 22:57:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=a88qg38+MHwgayXwRxD5MdpDf9+mfzp1qVrL1oByJeU=;
-        b=kA9EsuhL3/N3fKQjjy5KKGYwd4taVPf179Wy+M3axYvPRLCCJcaLmysu6/zyCbQhPY
-         JOMV6FyN+fi6SGd70PfKtIooF4IGfcGjaY80N9cMr3cvf6MkmQa+G1Dgk0NfRfvh8rbY
-         ZzVnxHjWnvVIurVWTH1023W/zht1mYpe8X9kDoudvDipkRu2c4kHO98tvU6BdcyHaLQb
-         9cgue9aF/a17Bxmv2+DoXk1wt7hSHY+UEiMxnGhbjrO+HKAs+CLXY8d7Wajbt/w+qQLo
-         cXIEjIM6A9ZkRnK5wZ2V8KnGY2K1CjQJSuu0kCLTQ1+4NiakCSvC3DbSHc1PmKhLBMiD
-         i4sw==
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=l9MH5Fa9lKfHxtw1c8/4yQQrmXihTMz1FL3D8HTFj8M=;
+        b=R1koJO2SAwo/sbTRlttlL4pwve8qUgFFMs+aDsyn/SWGWg66B5brTbE/MPIo/GiWmK
+         kx+mo9DQZLuSp29ePXoqOUhMCpjufu7UBFetnnYb0uj27eG+fK7Y7xLT9+GtwzRc4yYM
+         Mu9HoA7v19VnqYUPFMI1p2DCIkGvt7GaP2nQ+GXe2aZyifZBOQ1YP0WwmqOrKByHUxcR
+         56tfATy4qpiqJ0AtQwsHlmSm6cgTbaZZKhq7u4AyZR6QnENil4JkdXQCol+Ii2QCml2C
+         jAAKy1t/aQWJFsjd5pLzDWWSsP3pn6f/ZZ80BdNa98UE15fBrFtaKhjJhNwW+VJ4uOij
+         SiiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=a88qg38+MHwgayXwRxD5MdpDf9+mfzp1qVrL1oByJeU=;
-        b=5cgwULuFmjjG2B6Jj4IYUtQivqWXh+nbhKN9GQNGriu+UL4JmpX+AQo2pffN5JaY/M
-         ou2s0kZH9R2qYDmlLb0tVr1lxeDed4w7aVB7GtppYaKGBIs7ll2e7TRyX8I3K0AlSmer
-         Mohsbe6yE3+NUkt1an7bXbQoDx44dgtbDha+0uKNM7pAkhWCCSNloASvXGKvzQGBUPm1
-         C3PBzWZHl9wvCoFKAGmeYEuoJ9/bDheEgiIbMPukMEkjkAyPflfs4vXhcU+7LQ0wfmml
-         4B56zl+FDWGM46f1tB6eEdq8MhLsiCdh0vbVu5gUYHStc0PcsiE+4kgzzU+zcCnCYwcy
-         k6Jw==
-X-Gm-Message-State: AOAM532SRUetFkzUcZJUG3OmHQ2Qk40Dpc9ZzUJMNDchZ4UKYD4KqGB+
-        jFiy7T3bWC/EV8PJ7cxWimq9VsMyA2I=
-X-Google-Smtp-Source: ABdhPJxX3C4sQ0bUdp8xWbdoxRUTy9FTgsKWNE0hAgaj65a+zHXQMp6ARMP8QSubzwEoZCoP0cqVdg==
-X-Received: by 2002:a05:6512:2344:: with SMTP id p4mr8606274lfu.324.1634684408827;
-        Tue, 19 Oct 2021 16:00:08 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-39-10.dynamic.spd-mgts.ru. [94.29.39.10])
-        by smtp.googlemail.com with ESMTPSA id v3sm41462lfr.61.2021.10.19.16.00.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 19 Oct 2021 16:00:08 -0700 (PDT)
-Subject: Re: [PATCH 1/2] pinctrl: tegra: include lpdr pin properties
-To:     Prathamesh Shete <pshete@nvidia.com>, linus.walleij@linaro.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     smangipudi@nvidia.com
-References: <20211018121815.3017-1-pshete@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <742eef64-c607-451b-3a28-171c628a44d4@gmail.com>
-Date:   Wed, 20 Oct 2021 02:00:07 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=l9MH5Fa9lKfHxtw1c8/4yQQrmXihTMz1FL3D8HTFj8M=;
+        b=ZGsG0lWJvufg0YlFCLnuUgBCtEPxzG52F17H5Lqv5ubmaB28At7rj4d5nQ9N4VJ0rM
+         DwR4+AgDnhnXonDWDmYYPbo4/WxHJT6nskrAp2Qs2BM4jX8T4jxAQAtu4XPjpBWHvjdz
+         kQFyJQCTVCVnrsLP+TICSQ1omgqihmqE4C5D0PKj6JI3Rxj/NbGJ7RLheMlRmR8+daQm
+         P/sYTx7FHqY/KCziiLqZ0WPEKiczWw7SsbIcokxi5Osj/AxK9ca+R5Vi20lTpCUt/ECZ
+         sA6pmcF4GnnPMP5ZIRj2WQAw03z9wD7E9dfURQFeJdsK5KHyQXpFumXVyECvUMxHIdb4
+         sLew==
+X-Gm-Message-State: AOAM53084I9i8Y42KsXpqI53DQJYDm/fVA1Le7F+iCCZJvEShQH1LGTh
+        mBu4Pz2wQn5PwgoZo5ZhRe8o39dfvo3atkhvZ9E=
+X-Google-Smtp-Source: ABdhPJzg2GCUuTzKH0w1r5OgamxZoWT4Lcor4/jk44GUGJJa29HG/KmSatMLdYZX6iyh7w34Oq4Wh6Mf8RoEhi7L56E=
+X-Received: by 2002:a6b:c348:: with SMTP id t69mr21923655iof.2.1634709459035;
+ Tue, 19 Oct 2021 22:57:39 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20211018121815.3017-1-pshete@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Received: by 2002:a92:6012:0:0:0:0:0 with HTTP; Tue, 19 Oct 2021 22:57:38
+ -0700 (PDT)
+Reply-To: rubeccarubeccaahmad@gmail.com
+From:   Rubecca Ahmad <hendersonjodie49@gmail.com>
+Date:   Wed, 20 Oct 2021 06:57:38 +0100
+Message-ID: <CACW7uuo7cYLs8-4fWgEtF0Gze2+=K3YYW-CwL08vmuWs_oFYWw@mail.gmail.com>
+Subject: Hi Friend
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-18.10.2021 15:18, Prathamesh Shete пишет:
-> From: Suresh Mangipudi <smangipudi@nvidia.com>
-> 
-> Update lpdr pin-property for supported pins.
-> 
-> lpdr property help disable most basic driver fingers
-> leaving only minimal base driver finger.
-> 
-> Signed-off-by: Suresh Mangipudi <smangipudi@nvidia.com>
-> Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
-> ---
->  drivers/pinctrl/tegra/pinctrl-tegra.h    |   2 +
->  drivers/pinctrl/tegra/pinctrl-tegra210.c | 330 ++++++++++++-----------
->  2 files changed, 168 insertions(+), 164 deletions(-)
+Dear friend,
 
-The code of this driver was generated by [1]. Have you considered
-updating the generator?
+How are you today I hope that everything is moving normal with you as
+it is my great pleasure to contact you through this means.
 
-[1] https://github.com/NVIDIA/tegra-pinmux-scripts
+Please I wish you will have the desire to reply me immediately so that
+I can get to know you better because you are the choosing one for my
+charity project in your country. I will be very much happy if you can
+write me back for easiest communication and to know more about you
+since that will give me clear confidence to share this matter with
+you.
+
+I will be waiting to hear from you as I wish you all the best for your day.
+
+Thanks,
+Ms.Rebecca Ahmad,
