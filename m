@@ -2,76 +2,151 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E0B79435176
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Oct 2021 19:38:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10BE0435A0B
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Oct 2021 06:34:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230433AbhJTRk3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 20 Oct 2021 13:40:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42242 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230391AbhJTRk3 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 20 Oct 2021 13:40:29 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id DBE64611C7;
-        Wed, 20 Oct 2021 17:38:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1634751494;
-        bh=dlqZhTZMgkAacw0yTZYPf/PbPQrZV7HqKQMSqGYnVSI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nM8XnvUBCqd6vi/qIshaunTN6gwJvcSzmA4m5WmzUAS+TyVArbJXk3YR6pG5ba6p8
-         ec+k3aedURjgoz9gEQooSdj2oOX09N7pxPJ69g2nUjrYgjFsL6wZtdgOgm+fBh+lSE
-         1XaVv53jsE4EDAJMsREZAklfTDlOAZHewmQ2wcj8=
-Date:   Wed, 20 Oct 2021 19:38:12 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        id S229597AbhJUEhF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 21 Oct 2021 00:37:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44630 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229499AbhJUEhE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Oct 2021 00:37:04 -0400
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 620ACC061749
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Oct 2021 21:34:49 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id m26so4786845pff.3
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Oct 2021 21:34:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=jaiLtlV833/Xq50ZtlkoTbBz4JFSnmlv9NeQfSfgHg4=;
+        b=h0F95M0PrLk7D8QgNTB2BqUYk0J4hCY6SU0hpopoSa06OV3nxdYJX/bVam2+2+Lzl5
+         p7qONW7e707xdv8XGXGWaUhExXHHlnvrNFFDBvwatduMlZQE47wE4JrSo/z4DMqJrTJP
+         iljR1qxZPKcfPDCFIBUW7scAiHAMrb1gpHaaebd9bH6ZhbycqkKNfTZHdH18hMKnUqVr
+         WoX5YdCw/UiEuuLbiVP8IvdFzrzLE/0BhhF0ycwlXo/aBB3oIbjikEcZllI3MM7fN3xP
+         ZXIMey9d63vQXS++XKqh3fkDwLQ66LYdoAbEXIJdvbofBUyyNZTcC5kR+bIg+09ryaD6
+         iKGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=jaiLtlV833/Xq50ZtlkoTbBz4JFSnmlv9NeQfSfgHg4=;
+        b=hCutTep4antEqFmmoOD2v1Xub7k2s1wJbxtwMwuI5VdU5QNXIyXrfGkptji73ianUQ
+         axtZFTX/iVJVNptvlDuvaYeA6ZS1DXE/CwNLlT2pjlj+foN85OTQHLJiLPe8D+zHgciR
+         aFkBOqbkFfY1GusnjqUzT27p0i/5WRV92U68xaqKvGtEkwXopt0obS5tBmjGKnwaqBVn
+         Wz03d8DDbeFyfmwht/T2nsd2/QjRMC1gIviq34IOHB6HksWeu1ljaR2Rur5ubisJRuqs
+         SIrCFGSEPPnDlLSdFMlKFcXKrTJ6JiL6scvgMAeQstD88HqQYNH7Pv9wYFrJvwtY647c
+         poxQ==
+X-Gm-Message-State: AOAM530D0wczX7RQHz/kokTladhVcbvfcJybUfdSPHcalKXnbNz+2bL0
+        +MhmSQ4Sl4C19JJzoSM3UQZN+A==
+X-Google-Smtp-Source: ABdhPJxy9sXJSpJeIDOujmjVoM00QXmZAzl/1qhqh2gyKuCmbib7G8Elu0hey3Nb4TAbQDYpK762Pg==
+X-Received: by 2002:a62:15c6:0:b0:44c:74b7:14f5 with SMTP id 189-20020a6215c6000000b0044c74b714f5mr2970346pfv.80.1634790888730;
+        Wed, 20 Oct 2021 21:34:48 -0700 (PDT)
+Received: from localhost ([106.201.113.61])
+        by smtp.gmail.com with ESMTPSA id x22sm4068322pjd.47.2021.10.20.21.34.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Oct 2021 21:34:48 -0700 (PDT)
+Date:   Thu, 21 Oct 2021 10:04:43 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Arnd Bergmann <arnd@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Wolfram Sang <wsa@kernel.org>
-Subject: Re: [PATCH v4 1/3] driver core: Provide device_match_acpi_handle()
- helper
-Message-ID: <YXBUBGcb+kLvj7mj@kroah.com>
-References: <20211014134756.39092-1-andriy.shevchenko@linux.intel.com>
- <CAJZ5v0jqXqhV1FSyuoVwbgwhte7Q4KUQMozggcxCHGPf+Mfw=A@mail.gmail.com>
- <YW6ziqiIgioxDjq3@smile.fi.intel.com>
+        "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Viresh Kumar <vireshk@kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Bill Mills <bill.mills@linaro.org>,
+        Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "stratos-dev@op-lists.linaro.org" <stratos-dev@op-lists.linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>
+Subject: Re: [PATCH V6] gpio: virtio: Add IRQ support
+Message-ID: <20211021043443.snhqpac5ofmxfb7k@vireshk-i7>
+References: <8ca87330fd348fc5199ad08904ec90cc6a91a1bf.1634723848.git.viresh.kumar@linaro.org>
+ <CAHp75Vctj-v8W+LgdVpYgRVL3fLdcFnOFRFg74LeCc=xLD+w4w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <YW6ziqiIgioxDjq3@smile.fi.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75Vctj-v8W+LgdVpYgRVL3fLdcFnOFRFg74LeCc=xLD+w4w@mail.gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 19, 2021 at 03:01:14PM +0300, Andy Shevchenko wrote:
-> On Fri, Oct 15, 2021 at 01:42:37PM +0200, Rafael J. Wysocki wrote:
-> > On Thu, Oct 14, 2021 at 3:48 PM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > >
-> > > We have a couple of users of this helper, make it available for them.
-> > >
-> > > The prototype for the helper is specifically crafted in order to be
-> > > easily used with bus_find_device() call. That's why its location is
-> > > in the driver core rather than ACPI.
-> > >
-> > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > 
-> > OK, please feel free to add
-> > 
-> > Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > 
-> > to all of the patches in this series.
+On 20-10-21, 18:10, Andy Shevchenko wrote:
+> On Wednesday, October 20, 2021, Viresh Kumar <viresh.kumar@linaro.org>
+> wrote:
+> > +static int virtio_gpio_irq_set_type(struct irq_data *d, unsigned int
+> > type)
+> > +{
+> > +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> > +       struct virtio_gpio *vgpio = gpiochip_get_data(gc);
+> > +       struct vgpio_irq_line *irq_line = &vgpio->irq_lines[d->hwirq];
+> > +
+> > +       switch (type) {
+> > +       case IRQ_TYPE_NONE:
+> > +               type = VIRTIO_GPIO_IRQ_TYPE_NONE;
+> > +               break;
 > 
-> Thank you, Rafael!
 > 
-> Greg, can it be applied now?
+> IIRC you add dead code. IRQ framework never calls this if type is not set.
 
-Yes, will go do so now, thanks.
+Yes, but it is allowed to call
 
-greg k-h
+irq_set_irq_type(irq, IRQ_TYPE_NONE);
+
+and the irq framework won't disallow it AFAICT.
+
+> > +static void virtio_gpio_event_vq(struct virtqueue *vq)
+> > +{
+
+> > +               irq = irq_find_mapping(vgpio->gc.irq.domain, gpio);
+> > +               WARN_ON(!irq);
+> > +
+> > +               ret = generic_handle_irq(irq);
+> 
+> 
+> IIRC there is a new API that basically combines the two above.
+
+generic_handle_domain_irq(), thanks.
+
+> >  struct virtio_gpio_config {
+> >         __le16 ngpio;
+> >         __u8 padding[2];
+> > @@ -44,4 +56,17 @@ struct virtio_gpio_response_get_names {
+> >         __u8 value[];
+> >  };
+> >
+> > +/* Virtio GPIO IRQ Request / Response */
+> > +struct virtio_gpio_irq_request {
+> > +       __le16 gpio;
+> > +};
+> > +
+> > +struct virtio_gpio_irq_response {
+> > +       __u8 status;
+> > +};
+> >
+> >
+> I’m wondering if those above should be packed.
+
+You are talking about the newly added ones or the ones before ?
+
+In any case, they are all already packed (i.e. they have explicit
+padding wherever required) and properly aligned. Compiler won't add
+any other padding to them.
+ 
+-- 
+viresh
