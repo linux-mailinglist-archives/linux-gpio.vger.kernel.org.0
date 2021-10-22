@@ -2,174 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 58856436B83
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Oct 2021 21:50:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DBA7A436F1D
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Oct 2021 02:52:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231819AbhJUTxL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 21 Oct 2021 15:53:11 -0400
-Received: from mail-pg1-f177.google.com ([209.85.215.177]:35651 "EHLO
-        mail-pg1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231728AbhJUTxJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Oct 2021 15:53:09 -0400
-Received: by mail-pg1-f177.google.com with SMTP id q187so1274761pgq.2;
-        Thu, 21 Oct 2021 12:50:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5qcBk3DeZv7+MBr+DGak5KmAIKq22H5/grJVeSCeLaw=;
-        b=ZjItPisPSDEL6cgmvUPYFaAZEy0N46bIWUjLpg8oJfA6tpA3SbC9C4EPghn/wGs4JD
-         cII7/2xC3dnbGAMmhklBB7JA4bZ2psdJXPmFoOFLR4ujbiiUb7l4VhAawaMEELxMYJ42
-         5Us60xzpB/f9V+wFNyPUoFur/ONjDcXD0xXb9wCy33GBIv3EQeTHDb4G/EYiWEK0ULtb
-         /v1yXWtKMZF8753QsYsm5LMlABi592MQcK3lgHqL6uaMPyfWy1Te4HeWGtEaylxBejpx
-         2q5fzejSLFYreio2lxOZ+shyweg+0PbM9ZWykT+W/wHWXxzCs4jKBjtNEODE+OO8J4xU
-         B9Bw==
-X-Gm-Message-State: AOAM533iLrDX8+dmEY3xez1WN3h0tALAHOWZuRq63VZ4EUPafgbABuR1
-        ODeaC6W3dj3IGudUs0K97/8sPTTHRAZ3HjwUuB4=
-X-Google-Smtp-Source: ABdhPJz2g45HVrm92zsQSGHVasZJ2oUSDzMsKNKTjLhfF9aY5UDp7p3S+/XUucIuf3UBNmD9xTaAgYYNmpQ1XqNUueI=
-X-Received: by 2002:a63:2d46:: with SMTP id t67mr5876914pgt.15.1634845853245;
- Thu, 21 Oct 2021 12:50:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <20211021174223.43310-1-kernel@esmil.dk> <20211021174223.43310-13-kernel@esmil.dk>
- <20211021190118.GA1802180@x1>
-In-Reply-To: <20211021190118.GA1802180@x1>
-From:   Emil Renner Berthing <kernel@esmil.dk>
-Date:   Thu, 21 Oct 2021 21:50:42 +0200
-Message-ID: <CANBLGcy2WR2L_CE2FbLPBnDaHWaNgUySxyB4WyPYA1z8zsQAPQ@mail.gmail.com>
-Subject: Re: [PATCH v2 12/16] pinctrl: starfive: Add pinctrl driver for
- StarFive SoCs
-To:     Drew Fustini <dfustini@baylibre.com>
-Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        id S232192AbhJVAzK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 21 Oct 2021 20:55:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40952 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229512AbhJVAzJ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 21 Oct 2021 20:55:09 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A694761371;
+        Fri, 22 Oct 2021 00:52:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1634863973;
+        bh=/ar7Vm5chhxFFJNLsH1Cx7MqXOvv+yBrbQnZyJ7ext0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ugDqVE5LEFVT7/8vRX1SWqwaJ3I5ScNrEq2t0RusE9J4xkcI7xqNz/rGm+OGE2ePP
+         BMnWjwEuVU4FEa0SG+NUNzWfQDzTmJqHjz/8YAsI7FqN/SosBxBTjrADbYZynbiFDV
+         3qzPSII+4Tsym20VDjCTxdRgpAQLLFWSrK4esjxbSBQb9Nkuk2Uxv9VEnZhM7AYR3L
+         293LQ6kJc7HQFNFMJiGUxryVARloozj1p+HHPn67DnNFu3iJMGX3sYMsbCCXpP9Mrc
+         XOYIZ8CdU1kydl6iEJVkbSgk/zUzQyWwMZOYRZQS7U58HsbSCGJuUtOmQzPZmf5yiL
+         RhIKq8Di4+ggg==
+From:   Mark Brown <broonie@kernel.org>
+To:     linux-arm-msm@vger.kernel.org, Luca Weiss <luca@z3ntu.xyz>
+Cc:     Mark Brown <broonie@kernel.org>,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@somainline.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        David Collins <collinsd@codeaurora.org>,
+        linux-gpio@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh@kernel.org>, linux-clk@vger.kernel.org,
+        Vinod Koul <vkoul@kernel.org>, devicetree@vger.kernel.org,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        konrad.dybcio@somainline.org, linux-kernel@vger.kernel.org,
+        Hector Martin <marcan@marcan.st>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        Drew Fustini <drew@beagleboard.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Michael Zhu <michael.zhu@starfivetech.com>,
-        Fu Wei <tekkamanninja@gmail.com>,
-        Anup Patel <anup.patel@wdc.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        Matteo Croce <mcroce@microsoft.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Huan Feng <huan.feng@starfivetech.com>
-Content-Type: text/plain; charset="UTF-8"
+        Stephen Boyd <sboyd@kernel.org>
+Subject: Re: (subset) [PATCH v2 00/11] Initial Fairphone 4 support
+Date:   Fri, 22 Oct 2021 01:52:45 +0100
+Message-Id: <163486395942.2610269.17464570982100143546.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20211007212444.328034-1-luca@z3ntu.xyz>
+References: <20211007212444.328034-1-luca@z3ntu.xyz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 21 Oct 2021 at 21:01, Drew Fustini <dfustini@baylibre.com> wrote:
-> On Thu, Oct 21, 2021 at 07:42:19PM +0200, Emil Renner Berthing wrote:
-> > +/*
-> > + * Interrupt Trigger Polarity. If set to 1 the interrupt is triggered on a
-> > + * rising edge (edge-triggered) or high level (level-triggered). If set to 0 the
-> > + * interrupt is triggered on a falling edge (edge-triggered) or low level
-> > + * (level-triggered).
-> > + */
-> > +#define GPIOIEV              0x020
-> > +
-> > +/*
-> > + * Interrupt Mask. If set to 1 the interrupt is disabled (masked). If set to 0
-> > + * the interrupt is enabled (unmasked).
-> > + */
-> > +#define GPIOIE               0x028
->
-> It bothered me that the datasheet used the term GPIOIE for the interrupt
-> mask register. I had used a more verbose #define name because I worried
-> someone reading GPIOIE in functions might mistake it for an interrupt
-> enable register. This happened to me when I was originally working with
-> the gpio driver.
->
-> However I suppose the best solution would have been to get the datasheet
-> updated as I can see how it is best to have #define names in the driver
-> match the datasheet.
->
-> > +static void starfive_irq_mask(struct irq_data *d)
-> > +{
-> > +     struct starfive_pinctrl *sfp = starfive_from_irq_data(d);
-> > +     irq_hw_number_t gpio = irqd_to_hwirq(d);
-> > +     void __iomem *ie = sfp->base + GPIOIE + 4 * (gpio / 32);
-> > +     u32 mask = BIT(gpio % 32);
-> > +     unsigned long flags;
-> > +     u32 value;
-> > +
-> > +     raw_spin_lock_irqsave(&sfp->lock, flags);
-> > +     value = readl_relaxed(ie) & ~mask;
-> > +     writel_relaxed(value, ie);
-> > +     raw_spin_unlock_irqrestore(&sfp->lock, flags);
-> > +}
-> > +
-> > +static void starfive_irq_mask_ack(struct irq_data *d)
-> > +{
-> > +     struct starfive_pinctrl *sfp = starfive_from_irq_data(d);
-> > +     irq_hw_number_t gpio = irqd_to_hwirq(d);
-> > +     void __iomem *ie = sfp->base + GPIOIE + 4 * (gpio / 32);
-> > +     void __iomem *ic = sfp->base + GPIOIC + 4 * (gpio / 32);
-> > +     u32 mask = BIT(gpio % 32);
-> > +     unsigned long flags;
-> > +     u32 value;
-> > +
-> > +     raw_spin_lock_irqsave(&sfp->lock, flags);
-> > +     value = readl_relaxed(ie) & ~mask;
-> > +     writel_relaxed(value, ie);
-> > +     writel_relaxed(mask, ic);
-> > +     raw_spin_unlock_irqrestore(&sfp->lock, flags);
-> > +}
-> > +
-> > +static void starfive_irq_unmask(struct irq_data *d)
-> > +{
-> > +     struct starfive_pinctrl *sfp = starfive_from_irq_data(d);
-> > +     irq_hw_number_t gpio = irqd_to_hwirq(d);
-> > +     void __iomem *ie = sfp->base + GPIOIE + 4 * (gpio / 32);
-> > +     u32 mask = BIT(gpio % 32);
-> > +     unsigned long flags;
-> > +     u32 value;
-> > +
-> > +     raw_spin_lock_irqsave(&sfp->lock, flags);
-> > +     value = readl_relaxed(ie) | mask;
-> > +     writel_relaxed(value, ie);
-> > +     raw_spin_unlock_irqrestore(&sfp->lock, flags);
-> > +}
-> > +
+On Thu, 7 Oct 2021 23:24:27 +0200, Luca Weiss wrote:
+> This series adds basic support for the recently announced Fairphone 4
+> smartphone, based on the Snapdragon 750G (sm7225).
+> 
+> This adds support for UART, power & volume buttons, screen based on
+> simple-framebuffer, regulators and USB.
+> 
+> v2 fixes some stylistic problems in dts and corrects the situation with
+> pm6350 regulator supplies.
+> 
+> [...]
 
-...
+Applied to
 
-> > +static int starfive_gpio_init_hw(struct gpio_chip *gc)
-> > +{
-> > +     struct starfive_pinctrl *sfp = starfive_from_gc(gc);
-> > +
-> > +     /* mask all GPIO interrupts */
-> > +     writel(0, sfp->base + GPIOIE + 0);
-> > +     writel(0, sfp->base + GPIOIE + 4);
->
-> Woudln't 0 in GPIOIE mean mask is disabled for all interrupts?
->
-> In other words, wouldn't this enable all the interrupts?
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
-Heh, you're right. The code does the exact opposite of what the
-documentation says it should be doing. However I just tried and with
-the code as it is now GPIO interrupts work fine, but with the logic
-flipped the kernel fails to boot. I'm guessing because an interrupt
-storm. So it seems to me the documentation might be wrong and GPIOIE
-is actually a good name.
+Thanks!
 
-Michael Zhu: Can you confirm if a 1 or 0 enables the interrupt in the
-GPIOIE registers?
+[02/11] dt-bindings: regulator: qcom,rpmh: Add compatible for PM6350
+        commit: 12271ba94530e7476eff09e98a7de10c31f5d474
+[03/11] regulator: qcom-rpmh: Add PM6350 regulators
+        commit: 0adafd62505ccb4787d4918fd0b4ca126b754453
 
-/Emil
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
