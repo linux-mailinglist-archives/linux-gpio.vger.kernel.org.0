@@ -2,61 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 05286437728
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Oct 2021 14:34:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD822437752
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Oct 2021 14:41:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231574AbhJVMhH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Oct 2021 08:37:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56618 "EHLO
+        id S232323AbhJVMnn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Oct 2021 08:43:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230342AbhJVMhG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Oct 2021 08:37:06 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAF4DC061764;
-        Fri, 22 Oct 2021 05:34:48 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id w19so1046771edd.2;
-        Fri, 22 Oct 2021 05:34:48 -0700 (PDT)
+        with ESMTP id S231474AbhJVMnj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Oct 2021 08:43:39 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26E7CC061220;
+        Fri, 22 Oct 2021 05:41:22 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id g10so1076064edj.1;
+        Fri, 22 Oct 2021 05:41:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=sJaedp+WwFniAnsPOoxdNlKqeKWuyKqfMjHYa+KV7DM=;
-        b=psg2ERjBTmguvun4iRACGpDey3AvgvUOnPmxWUCYXNVPU2Lja48yf8k+qfNAZHOwvE
-         mdx3NZ0QRraYobiycacjFN6GrT7SLBMgp8n8Kqr/AvOabhepU1KW/RVlwhMr3BwMhdG+
-         p/zqmQMKhWN3xPImJkgHjc/eH9wQ5b7oURXn4dazCZpAlvpXKQAc2n4p8pJCc++RwtFl
-         k+1IlequuJarwJ4yBYhG+DbtcgFq8+azfLBvpEO0/5QbHqJ1Jv/O6hG34TPMH1wzYs6M
-         oEfjywrYcb0XcWD2TlkYM83WX4je/xXED6cfzrUGgUk4MS6heQk4AGP3/k/LW6FFf8sD
-         5cXw==
+        bh=tHQR2Z1qPtXtLpD0ldcO3jwebCIJGWS4TZ77ng4RLWk=;
+        b=REF5yOX879PB3VexQN+8YNPVZ8RLatORYZww04QHrDlIRQM7I4x6kER2e5a6EhqPX5
+         xkmWjyoVWZn+LPnptkCjqJ1fgLohJn3/jJ2tu+oTZKvBHoECP1XK1g30HssJ2oewzFRK
+         r2ffSYJBdijXbAOvef5h34X0+ZvvlEihjm2tBaehkcOlOVpyM7cWJ4Ly4z3m2naCmpHY
+         xjULUeXBNPPdi8pPRJqk/Cws5on4ye04LWF5yxlWBbxQgS7oaINKqymuwYmr2QSuuv1O
+         cDPAf+BPabV0KHeH5oXH6alCa+AIiTFU28gVJNnuAV/Z9fqyzYvKZfIsEBmGONkYzdVQ
+         7Q1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=sJaedp+WwFniAnsPOoxdNlKqeKWuyKqfMjHYa+KV7DM=;
-        b=sz2CxHbXKfshMVHzxBWLN/bmmTFzt/P58FHBVNo6vdbkF6A91ifTyYyqcp2hQ2C3Hx
-         z+VDU8K8E6yCjaJL4YTNuvEj28WRurD4lLWeFHYbjIwkaVGFZBm+X+aYNCt1ws4vKuuN
-         Hn91bFUezWLzbV1f0yAVdCsyROn1eVrL4W91HDXukVN7e5u4vWSrquen3DetwrzY7nAD
-         HMbk/8Md2CHyMmLfMUDU33RAeLaa4Z1YWrmpGPRMph5wLYHDpXYJh9zSiGSgzs3jUBXx
-         y4Y84awf2jF6xBw07EM/K9vUoysDMLGz+P8IvD7SqglInxeTciC6iLxjmigwMy0UCkZ9
-         swqQ==
-X-Gm-Message-State: AOAM530094OoWgu4RhEmFXW5O2uKXY9jph3MfqZh2LmuLriWGAwV3tm9
-        4OGOAcWEioy+PsfeSnwq0YVhctwV8XHDbIdKXWw=
-X-Google-Smtp-Source: ABdhPJzELMMCdF3V0ssE/+Finv7LByJ4VhsgFR1Ko44YZnSsrQh8x6Ri7/3ky81qJckrRAZEb9X0ta8R9EPXbJ4mi0w=
-X-Received: by 2002:aa7:c0d2:: with SMTP id j18mr17043167edp.107.1634906087448;
- Fri, 22 Oct 2021 05:34:47 -0700 (PDT)
+        bh=tHQR2Z1qPtXtLpD0ldcO3jwebCIJGWS4TZ77ng4RLWk=;
+        b=laVRjrCTLcFKGPTa0iPmsBpYOFQFwIJXFiN+MOxLSuYhy9Z3yDuHrvf2RriwzQEqLe
+         sbH8Xyx+R1ToLLW4qJZC2IUrojh5EkATfEC/x6bf6wVKGLkbm23TiPWSCbABvLqNZt4m
+         Wu+UyJtuYr9Lo3CFV8DKEHRL9icj8iGP9aqQmgP4qVTc0bfsbj+grpQzoBF4xePDjhuG
+         8CKqhtIr1c1AfWCL9Z30mCymQcUVSVcdIA5BFzp6VgoaDjDAE/quDc5ESGtgMGVjF8j7
+         KaOKLXTBg4i1rSP+e1sYmrdj6lmGB0gDQcqro2JmHjDuQXctSnIjGEXfOrPVnrqY28zv
+         Cifw==
+X-Gm-Message-State: AOAM533IGgRt0uX2wbYkyeH1OamP+HICyD/9IF3Fd6fwIhDaumqg1okq
+        /5jc4yHwgN18WyTYAYl2Gd0OFcaOl6jngOJGAxg=
+X-Google-Smtp-Source: ABdhPJwiFLRfZxQa56LwZ/jlFLeGcQX5OKJGaYAlbeJ1xllTBp0a3m0uOfcMCb4u/khczTjeZS6N2tacQalYzsvXwkU=
+X-Received: by 2002:aa7:c0d2:: with SMTP id j18mr17090901edp.107.1634906480674;
+ Fri, 22 Oct 2021 05:41:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211021174223.43310-1-kernel@esmil.dk> <20211021174223.43310-7-kernel@esmil.dk>
-In-Reply-To: <20211021174223.43310-7-kernel@esmil.dk>
+References: <20211021174223.43310-1-kernel@esmil.dk> <20211021174223.43310-2-kernel@esmil.dk>
+ <CAHp75VfD73Nsrp-3hMzFtuEAfka+rRc=2m0ZZYddhWBAzg=QAw@mail.gmail.com> <CANBLGcxJGgi9nuT6LpjGgPj1bg0aW-ELRCAO0Csv3xi82gTCnQ@mail.gmail.com>
+In-Reply-To: <CANBLGcxJGgi9nuT6LpjGgPj1bg0aW-ELRCAO0Csv3xi82gTCnQ@mail.gmail.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 22 Oct 2021 15:33:50 +0300
-Message-ID: <CAHp75VcS7ZZCciAgBH2QU7u8CiHzveAOsvSdv2DQBvpBn_6opQ@mail.gmail.com>
-Subject: Re: [PATCH v2 06/16] clk: starfive: Add JH7100 clock generator driver
+Date:   Fri, 22 Oct 2021 15:40:24 +0300
+Message-ID: <CAHp75Ve400r6GCeROhX3XF7KSjA=HKpDoR9ip+efYtPS9FRahg@mail.gmail.com>
+Subject: Re: [PATCH v2 01/16] RISC-V: Add StarFive SoC Kconfig option
 To:     Emil Renner Berthing <kernel@esmil.dk>
 Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
         devicetree <devicetree@vger.kernel.org>,
         linux-clk <linux-clk@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
         Palmer Dabbelt <palmer@dabbelt.com>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -73,6 +73,7 @@ Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
         Maximilian Luz <luzmaximilian@gmail.com>,
         Sagar Kadam <sagar.kadam@sifive.com>,
         Drew Fustini <drew@beagleboard.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
         Michael Zhu <michael.zhu@starfivetech.com>,
         Fu Wei <tekkamanninja@gmail.com>,
         Anup Patel <anup.patel@wdc.com>,
@@ -84,49 +85,51 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 21, 2021 at 8:43 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
+On Fri, Oct 22, 2021 at 12:40 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
+> On Fri, 22 Oct 2021 at 10:51, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > On Thu, Oct 21, 2021 at 8:42 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
 
 ...
 
-> +static struct clk_hw *clk_starfive_jh7100_get(struct of_phandle_args *clkspec, void *data)
-> +{
-> +       struct clk_starfive_jh7100_priv *priv = data;
-> +       unsigned int idx = clkspec->args[0];
-> +
-> +       if (idx >= JH7100_CLK_END) {
-> +               dev_err(priv->dev, "invalid clock index %u\n", idx);
-> +               return ERR_PTR(-EINVAL);
+> > > +config SOC_STARFIVE
+> > > +       bool "StarFive SoCs"
+> > > +       select PINCTRL
+> > > +       select RESET_CONTROLLER
+> >
+> > > +       select SIFIVE_PLIC
+> >
+> > If this is well understood and platform related the above two are too
+> > generic. Why have you selected them?
+>
+> From your last comments the criterion seemed to be to only add it here
+> if it would otherwise fail to boot. Well it does fail to boot without
+> the reset and pinctrl drivers. The clock driver too, but RISCV already
+> selects COMMON_CLK. Once PINCTRL and RESET_CONTROLLER is selected the
+> specific drivers defaults to SOC_STARFIVE.
+>
+> Alternatively we'd select the drivers too, but I can't promise that
+> future StarFive chips will need the same JH7100 clock and reset
+> drivers. Doing it this way means that selecting SOC_STARFIVE by
+> default gives you a kernel that will boot on all StarFive SoCs, but
+> you can still customise it further to your particular chip. It seems
+> like SOC_SIFIVE is doing the same.
 
-After this
-https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git/commit/?h=driver-core-next&id=7065f92255bb2468dbb9aa0537ff186ef64d5a02
-It's okay to use
-
-> +       }
-
-       if (idx >= JH7100_CLK_END)
-               return dev_err_probe(priv->dev, -EINVAL, "invalid clock
-index %u\n", idx);
-
-Ditto for other similar cases.
-
-> +       if (idx >= JH7100_CLK_PLL0_OUT)
-> +               return priv->pll[idx - JH7100_CLK_PLL0_OUT];
-> +
-> +       return &priv->reg[idx].hw;
-> +}
+Okay, please add this justification to the commit message in the next version.
 
 ...
 
-> +       while (idx)
-> +               clk_hw_unregister(&priv->reg[--idx].hw);
+> > > +       help
+> > > +         This enables support for StarFive SoC platform hardware.
+> >
+> > Not too much to read here. What is the point of this help?
+> > I would elaborate what kind of platform it may support, what kind of
+> > drivers it selects due to necessity of the accomplishing the boot
+> > process, etc.
+>
+> This is exactly as the other descriptions in this file. I don't know
+> why SOC_STARFIVE should be special.
 
-I still consider that usual pattern, i.e.
-
-       while (idx--)
-               clk_hw_unregister(&priv->reg[idx].hw);
-
-but since you are pushing hard for your variant I'll leave it to the
-maintainers and author.
+OK.
 
 -- 
 With Best Regards,
