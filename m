@@ -2,39 +2,49 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 07A404377C0
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Oct 2021 15:12:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B4514377C5
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Oct 2021 15:14:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231597AbhJVNOl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Oct 2021 09:14:41 -0400
-Received: from mail-out.m-online.net ([212.18.0.9]:40386 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230175AbhJVNOk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Oct 2021 09:14:40 -0400
-X-Greylist: delayed 364 seconds by postgrey-1.27 at vger.kernel.org; Fri, 22 Oct 2021 09:14:39 EDT
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 4HbPjx4cbRz1qwy7;
-        Fri, 22 Oct 2021 15:06:13 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 4HbPjx1ZvWz1qqkB;
-        Fri, 22 Oct 2021 15:06:13 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id 47iEcBUIACYB; Fri, 22 Oct 2021 15:06:11 +0200 (CEST)
-X-Auth-Info: pHCxIG/3Fn8LyBofwRXxdTnAKN2ei9mTIkWXITidtoTB3gneygtKBg6A1vL4R5zg
-Received: from igel.home (ppp-46-244-166-255.dynamic.mnet-online.de [46.244.166.255])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Fri, 22 Oct 2021 15:06:11 +0200 (CEST)
-Received: by igel.home (Postfix, from userid 1000)
-        id 914BC2C19B9; Fri, 22 Oct 2021 15:06:10 +0200 (CEST)
-From:   Andreas Schwab <schwab@linux-m68k.org>
-To:     Emil Renner Berthing <kernel@esmil.dk>
-Cc:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-serial@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>,
+        id S232842AbhJVNQO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Oct 2021 09:16:14 -0400
+Received: from mail-pl1-f178.google.com ([209.85.214.178]:47074 "EHLO
+        mail-pl1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232827AbhJVNQN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Oct 2021 09:16:13 -0400
+Received: by mail-pl1-f178.google.com with SMTP id i1so2638895plr.13;
+        Fri, 22 Oct 2021 06:13:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3OEFGu3enLvj4SiHrgtW22LytEptjzZQ2XovqUzzJxs=;
+        b=nQlnjLb0xaEQ9s8nFvdNgPY0GIxKJ+7Z/bcDdya4eKXAVWfCFGvLZZthyIrbQLZ1Kd
+         /CFPZZJVnIwwKWPJwnh71t5q0m06yH20QsOIYhdnOvwzI4xF94/IeI1Kd6x887c0dIjV
+         dP3L/ugz+o8vQ//qfOXfR4RmBwuoIyqJ/oSuaUuFLPphP8OMUGfGrxkhmGBQbXvtpELM
+         Db1e6ktKBz6GlGjfO+dUKVkXoLpYppgfwdeU3J38ql9JWS9dbdv6QyRcC6PfEOhx566w
+         3Ne734B4tDWmfyCvdkpU/7DNux9zMhpRspT1KR7NAmp9FVBeFXQGvuFifx/SBfMNBT46
+         ZA/Q==
+X-Gm-Message-State: AOAM5301zVQQROmUIDXdyP4pt2a3x8tyL80ZgytDxmGufo51uyhHKIy9
+        i0dg1BkpL9ZpA1MBVQb3/s9oJRwynHd7L1bNijg=
+X-Google-Smtp-Source: ABdhPJwdNKuFIRy3q4FG0qUqRpoxDObQ291Tb2SMDa/9Z3I5rVsMLHdpaoevze0fIUT7jxHb62MFoZMSVTU8r0ulBHA=
+X-Received: by 2002:a17:90b:98:: with SMTP id bb24mr4342124pjb.194.1634908435520;
+ Fri, 22 Oct 2021 06:13:55 -0700 (PDT)
+MIME-Version: 1.0
+References: <20211021174223.43310-1-kernel@esmil.dk> <20211021174223.43310-7-kernel@esmil.dk>
+ <CAHp75VcS7ZZCciAgBH2QU7u8CiHzveAOsvSdv2DQBvpBn_6opQ@mail.gmail.com>
+In-Reply-To: <CAHp75VcS7ZZCciAgBH2QU7u8CiHzveAOsvSdv2DQBvpBn_6opQ@mail.gmail.com>
+From:   Emil Renner Berthing <kernel@esmil.dk>
+Date:   Fri, 22 Oct 2021 15:13:44 +0200
+Message-ID: <CANBLGcyHpxuT9N+H8Lk=5CjMb1=-17_sH3dBzALCMYpAEZfeuw@mail.gmail.com>
+Subject: Re: [PATCH v2 06/16] clk: starfive: Add JH7100 clock generator driver
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         Rob Herring <robh+dt@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
@@ -50,41 +60,65 @@ Cc:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
         Maximilian Luz <luzmaximilian@gmail.com>,
         Sagar Kadam <sagar.kadam@sifive.com>,
         Drew Fustini <drew@beagleboard.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
         Michael Zhu <michael.zhu@starfivetech.com>,
         Fu Wei <tekkamanninja@gmail.com>,
         Anup Patel <anup.patel@wdc.com>,
         Atish Patra <atish.patra@wdc.com>,
         Matteo Croce <mcroce@microsoft.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 09/16] reset: starfive-jh7100: Add StarFive JH7100
- reset driver
-References: <20211021174223.43310-1-kernel@esmil.dk>
-        <20211021174223.43310-10-kernel@esmil.dk>
-X-Yow:  ..  Should I get locked in the PRINCIPAL'S OFFICE today --
- or have a VASECTOMY??
-Date:   Fri, 22 Oct 2021 15:06:10 +0200
-In-Reply-To: <20211021174223.43310-10-kernel@esmil.dk> (Emil Renner Berthing's
-        message of "Thu, 21 Oct 2021 19:42:16 +0200")
-Message-ID: <8735otjjjx.fsf@igel.home>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.2 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Okt 21 2021, Emil Renner Berthing wrote:
+On Fri, 22 Oct 2021 at 14:34, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> On Thu, Oct 21, 2021 at 8:43 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
+>
+> ...
+>
+> > +static struct clk_hw *clk_starfive_jh7100_get(struct of_phandle_args *clkspec, void *data)
+> > +{
+> > +       struct clk_starfive_jh7100_priv *priv = data;
+> > +       unsigned int idx = clkspec->args[0];
+> > +
+> > +       if (idx >= JH7100_CLK_END) {
+> > +               dev_err(priv->dev, "invalid clock index %u\n", idx);
+> > +               return ERR_PTR(-EINVAL);
+>
+> After this
+> https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git/commit/?h=driver-core-next&id=7065f92255bb2468dbb9aa0537ff186ef64d5a02
+> It's okay to use
+>
+> > +       }
+>
+>        if (idx >= JH7100_CLK_END)
+>                return dev_err_probe(priv->dev, -EINVAL, "invalid clock
+> index %u\n", idx);
+>
+> Ditto for other similar cases.
 
-> +config RESET_STARFIVE_JH7100
-> +	bool "StarFive JH7100 Reset Driver"
-> +	depends on SOC_STARFIVE || COMPILE_TEST
+Hmm.. this function doesn't return int, but struct clk_hw *, hence the ERR_PTR.
+Also I don't see any other similar cases in this driver.
 
-Why does it need to depend on SOC_STARFIVE?
-
-Andreas.
-
--- 
-Andreas Schwab, schwab@linux-m68k.org
-GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
-"And now for something completely different."
+> > +       if (idx >= JH7100_CLK_PLL0_OUT)
+> > +               return priv->pll[idx - JH7100_CLK_PLL0_OUT];
+> > +
+> > +       return &priv->reg[idx].hw;
+> > +}
+>
+> ...
+>
+> > +       while (idx)
+> > +               clk_hw_unregister(&priv->reg[--idx].hw);
+>
+> I still consider that usual pattern, i.e.
+>
+>        while (idx--)
+>                clk_hw_unregister(&priv->reg[idx].hw);
+>
+> but since you are pushing hard for your variant I'll leave it to the
+> maintainers and author.
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
