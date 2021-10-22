@@ -2,57 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DF0A436FC8
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Oct 2021 04:08:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C766A4373FB
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Oct 2021 10:51:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232262AbhJVCIs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 21 Oct 2021 22:08:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57360 "EHLO
+        id S232387AbhJVIyI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Oct 2021 04:54:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232213AbhJVCIr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Oct 2021 22:08:47 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 069D4C061243
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Oct 2021 19:06:31 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id n11so1687821plf.4
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Oct 2021 19:06:30 -0700 (PDT)
+        with ESMTP id S231563AbhJVIyH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Oct 2021 04:54:07 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27611C061764;
+        Fri, 22 Oct 2021 01:51:50 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id z20so966985edc.13;
+        Fri, 22 Oct 2021 01:51:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ic/jkXaDMCMZefIM+INQtLKGqHBF+RCyVHH3h2YGrKw=;
-        b=lOYDkrAgkjTYYjAVXORDOxu+X2oWJ4E99fQkCZASDeb6Bxv82OEj1GN5FK0PImm5Km
-         1ndDDD5m1+pbmgSn1SBOKkTkmI7jOGTmPdscGaAxvuyV0qv9zrNHSWWjIacTclp7IP8m
-         blwJCsF1Eav/gdde5L8blmmtrqSfTEaSWkVhkGUJlXUKR5GLx7C9pNVdNuQpKo0hWD5q
-         r1DrR3i3eTnq/y4cVofFTn7yizNn9/14ZJ233lM7YtM+F0dJDENsEyExx68GpuYIW9j3
-         V12+w1OEyyGSREogPhp1ezeuWIo0c7S25MveUfLpDoYgyADV8XIlq8q5tptjCMaone7i
-         fdWQ==
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vsSof8B35sJ3TdkUFeoW7PDjPfQXbtV3oB1joueUNsI=;
+        b=LmOW2M7Fls4cmKaeo5kDREtk0zbyuTkrGZBD8wxmaysk/H0O0rScyPc56wgFeg6BtR
+         Oi8BOBQD+Fym+tArVe6z1Y1H1aNXcMv7ojyYr+GFhZEZXyp2DJpyEt9B3MqLdt0ZMIUJ
+         TvGAy/iVDbjKK1Wyha135Etodgnpe8mk04QRAJI0qG+7mRumNyYYXS+JClEOk/xkj8+v
+         dXgtyctgJtieXo7LMiBedb3Vcoub142ihtAxE6RQXey9sjgjhpwhQXulz+s633tIDqDc
+         j6LSTINe9bgiELKxM8C3MTuaYked3bcPiczfVP26IQo7fdvNZ7kS8zxCFteFea8RGbbh
+         YMSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ic/jkXaDMCMZefIM+INQtLKGqHBF+RCyVHH3h2YGrKw=;
-        b=5qVymCu1E3mCWCpAnkvx8vqEIMqXgmhnTCCNd/B93yF81hD+V07aqmWq+G40ppt4TX
-         H5ORlzNhZYZGhBedjv7TO2D5NlGp4Zg4n5zZW0XBMeGSiK+p02JYJaZ4e3rfxQw0M0co
-         cwf8Jwsiil+dkgrIS+nlc2ljblT6J0z2LIC9S69N+8KC607WhF0pWn9akyPIm2SeY8tR
-         s27/P+yohH7gDXQdTU1hl/x9FiTrODxK5MGtA0YLhCzqDounxOa2UicjlhlCIYSOX81t
-         alsALhuZzl0i1CG8Me/8esC+coHIKQQyTNfRzcSZsQrbRqdRzwJNmAPLbDmhpusmh9V1
-         tdDQ==
-X-Gm-Message-State: AOAM530dm9HuKbTUtD1eSqToNoZf4iCGBwRQVO7ClXJPxq0LyuHQTLH4
-        4g+mZjia0yAFf+Ch0s5apaOayQ==
-X-Google-Smtp-Source: ABdhPJyaepizqaQ/UmIrCDVyrV4BTCHFvghNob7aEx2InsVkBVoe5WCokUrJgYwitOuJP7tHnLeG1Q==
-X-Received: by 2002:a17:903:310c:b0:13f:f70e:6e8f with SMTP id w12-20020a170903310c00b0013ff70e6e8fmr7335147plc.82.1634868390409;
-        Thu, 21 Oct 2021 19:06:30 -0700 (PDT)
-Received: from x1 ([2601:1c2:1080:1950:7c59:380a:adf8:4f49])
-        by smtp.gmail.com with ESMTPSA id p4sm6260957pgc.15.2021.10.21.19.06.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Oct 2021 19:06:29 -0700 (PDT)
-Date:   Thu, 21 Oct 2021 19:06:27 -0700
-From:   Drew Fustini <dfustini@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vsSof8B35sJ3TdkUFeoW7PDjPfQXbtV3oB1joueUNsI=;
+        b=XmF2Z//OphpBD45R4K/WSPOeVv/dZkMQDLrcBuJgxbZSsqjJwae1L2foLyrK1Z7aXl
+         Eor3dltASS/f0r5F/tTFk50JWiG/PSu9xdr0SUzkUlP/hq/mI0KqOBV2w4T+kxLI1vJC
+         0EbKM/rgfZMeHtPJWZUAWfz1D7j6Qqr+obvlce8KiShS3xsxFIKzjLyfxohEk2d4Vkgj
+         ezUuBcUZuX8lpXDmTvq6qkkRT0patXPlaET3/wqe+2rcKxH1jZbwSLguq7fCwUtvG4DO
+         s5jNdMHAblyIWyVxYaRG6CQjoxPg5mCDb6D6Ux1owTwmlTnPWhyhYAc5ZawxMEEYWkKc
+         oqMA==
+X-Gm-Message-State: AOAM532oKHdfB/wT4e58xoeQ2MfO63dRgwJzmkkp/+vnLbbaIEoo8Tv+
+        InsuGDKMxFwiQV1DBbykFKbqokDziI3uTYHJ4t8=
+X-Google-Smtp-Source: ABdhPJxg0tLJ7/LdpnuntihRiqWvlRRwACrMPNo7XYl/Y8z0+A5FUElZXiGRbf+lmQ4LBqBm7evjGm3ttticSo63kcs=
+X-Received: by 2002:a17:906:1707:: with SMTP id c7mr13563725eje.377.1634892708737;
+ Fri, 22 Oct 2021 01:51:48 -0700 (PDT)
+MIME-Version: 1.0
+References: <20211021174223.43310-1-kernel@esmil.dk> <20211021174223.43310-2-kernel@esmil.dk>
+In-Reply-To: <20211021174223.43310-2-kernel@esmil.dk>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 22 Oct 2021 11:50:52 +0300
+Message-ID: <CAHp75VfD73Nsrp-3hMzFtuEAfka+rRc=2m0ZZYddhWBAzg=QAw@mail.gmail.com>
+Subject: Re: [PATCH v2 01/16] RISC-V: Add StarFive SoC Kconfig option
 To:     Emil Renner Berthing <kernel@esmil.dk>
 Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
         linux-clk <linux-clk@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
@@ -78,134 +78,37 @@ Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
         Anup Patel <anup.patel@wdc.com>,
         Atish Patra <atish.patra@wdc.com>,
         Matteo Croce <mcroce@microsoft.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Huan Feng <huan.feng@starfivetech.com>
-Subject: Re: [PATCH v2 12/16] pinctrl: starfive: Add pinctrl driver for
- StarFive SoCs
-Message-ID: <20211022020627.GA1836770@x1>
-References: <20211021174223.43310-1-kernel@esmil.dk>
- <20211021174223.43310-13-kernel@esmil.dk>
- <20211021190118.GA1802180@x1>
- <CANBLGcy2WR2L_CE2FbLPBnDaHWaNgUySxyB4WyPYA1z8zsQAPQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANBLGcy2WR2L_CE2FbLPBnDaHWaNgUySxyB4WyPYA1z8zsQAPQ@mail.gmail.com>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 21, 2021 at 09:50:42PM +0200, Emil Renner Berthing wrote:
-> On Thu, 21 Oct 2021 at 21:01, Drew Fustini <dfustini@baylibre.com> wrote:
-> > On Thu, Oct 21, 2021 at 07:42:19PM +0200, Emil Renner Berthing wrote:
-> > > +/*
-> > > + * Interrupt Trigger Polarity. If set to 1 the interrupt is triggered on a
-> > > + * rising edge (edge-triggered) or high level (level-triggered). If set to 0 the
-> > > + * interrupt is triggered on a falling edge (edge-triggered) or low level
-> > > + * (level-triggered).
-> > > + */
-> > > +#define GPIOIEV              0x020
-> > > +
-> > > +/*
-> > > + * Interrupt Mask. If set to 1 the interrupt is disabled (masked). If set to 0
-> > > + * the interrupt is enabled (unmasked).
-> > > + */
-> > > +#define GPIOIE               0x028
-> >
-> > It bothered me that the datasheet used the term GPIOIE for the interrupt
-> > mask register. I had used a more verbose #define name because I worried
-> > someone reading GPIOIE in functions might mistake it for an interrupt
-> > enable register. This happened to me when I was originally working with
-> > the gpio driver.
-> >
-> > However I suppose the best solution would have been to get the datasheet
-> > updated as I can see how it is best to have #define names in the driver
-> > match the datasheet.
-> >
-> > > +static void starfive_irq_mask(struct irq_data *d)
-> > > +{
-> > > +     struct starfive_pinctrl *sfp = starfive_from_irq_data(d);
-> > > +     irq_hw_number_t gpio = irqd_to_hwirq(d);
-> > > +     void __iomem *ie = sfp->base + GPIOIE + 4 * (gpio / 32);
-> > > +     u32 mask = BIT(gpio % 32);
-> > > +     unsigned long flags;
-> > > +     u32 value;
-> > > +
-> > > +     raw_spin_lock_irqsave(&sfp->lock, flags);
-> > > +     value = readl_relaxed(ie) & ~mask;
-> > > +     writel_relaxed(value, ie);
-> > > +     raw_spin_unlock_irqrestore(&sfp->lock, flags);
-> > > +}
-> > > +
-> > > +static void starfive_irq_mask_ack(struct irq_data *d)
-> > > +{
-> > > +     struct starfive_pinctrl *sfp = starfive_from_irq_data(d);
-> > > +     irq_hw_number_t gpio = irqd_to_hwirq(d);
-> > > +     void __iomem *ie = sfp->base + GPIOIE + 4 * (gpio / 32);
-> > > +     void __iomem *ic = sfp->base + GPIOIC + 4 * (gpio / 32);
-> > > +     u32 mask = BIT(gpio % 32);
-> > > +     unsigned long flags;
-> > > +     u32 value;
-> > > +
-> > > +     raw_spin_lock_irqsave(&sfp->lock, flags);
-> > > +     value = readl_relaxed(ie) & ~mask;
-> > > +     writel_relaxed(value, ie);
-> > > +     writel_relaxed(mask, ic);
-> > > +     raw_spin_unlock_irqrestore(&sfp->lock, flags);
-> > > +}
-> > > +
-> > > +static void starfive_irq_unmask(struct irq_data *d)
-> > > +{
-> > > +     struct starfive_pinctrl *sfp = starfive_from_irq_data(d);
-> > > +     irq_hw_number_t gpio = irqd_to_hwirq(d);
-> > > +     void __iomem *ie = sfp->base + GPIOIE + 4 * (gpio / 32);
-> > > +     u32 mask = BIT(gpio % 32);
-> > > +     unsigned long flags;
-> > > +     u32 value;
-> > > +
-> > > +     raw_spin_lock_irqsave(&sfp->lock, flags);
-> > > +     value = readl_relaxed(ie) | mask;
-> > > +     writel_relaxed(value, ie);
-> > > +     raw_spin_unlock_irqrestore(&sfp->lock, flags);
-> > > +}
-> > > +
-> 
-> ...
-> 
-> > > +static int starfive_gpio_init_hw(struct gpio_chip *gc)
-> > > +{
-> > > +     struct starfive_pinctrl *sfp = starfive_from_gc(gc);
-> > > +
-> > > +     /* mask all GPIO interrupts */
-> > > +     writel(0, sfp->base + GPIOIE + 0);
-> > > +     writel(0, sfp->base + GPIOIE + 4);
-> >
-> > Woudln't 0 in GPIOIE mean mask is disabled for all interrupts?
-> >
-> > In other words, wouldn't this enable all the interrupts?
-> 
-> Heh, you're right. The code does the exact opposite of what the
-> documentation says it should be doing. However I just tried and with
-> the code as it is now GPIO interrupts work fine, but with the logic
-> flipped the kernel fails to boot. I'm guessing because an interrupt
-> storm. So it seems to me the documentation might be wrong and GPIOIE
-> is actually a good name.
+On Thu, Oct 21, 2021 at 8:42 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
+>
+> Add StarFive Kconfig option to select SoC specific and common drivers
+> required for these SoCs.
 
-Ah, it seems I once knew this back in July [1] but never got the
-documentation changed:
+...
 
-NOTE: Table 12-9 in the JH7100 datasheet is incorrect regarding fields
-GPIOIE_0 and GPIOIE_1. An interrupt is enabled (unmasked) when the bit
-is   set to 1 and it is disabled (masked) when set to 0. The datasheet
-incorrectly states the opposite. I think this is due to the datasheet
-author thinking of it as mask field which it is not, it is an enable
-field. I will raise an issue on the documentation repo.
+> +config SOC_STARFIVE
+> +       bool "StarFive SoCs"
+> +       select PINCTRL
+> +       select RESET_CONTROLLER
 
+> +       select SIFIVE_PLIC
 
-> 
-> Michael Zhu: Can you confirm if a 1 or 0 enables the interrupt in the
-> GPIOIE registers?
-> 
-> /Emil
+If this is well understood and platform related the above two are too
+generic. Why have you selected them?
 
-[1] https://github.com/esmil/linux/pull/34/commits/e247a259e40312d0202cdbdd686dbba09afc7813
+> +       help
+> +         This enables support for StarFive SoC platform hardware.
+
+Not too much to read here. What is the point of this help?
+I would elaborate what kind of platform it may support, what kind of
+drivers it selects due to necessity of the accomplishing the boot
+process, etc.
+
+-- 
+With Best Regards,
+Andy Shevchenko
