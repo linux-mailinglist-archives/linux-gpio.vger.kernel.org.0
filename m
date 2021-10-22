@@ -2,44 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 688C7437861
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Oct 2021 15:50:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ACA75437886
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Oct 2021 15:58:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232922AbhJVNwu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Oct 2021 09:52:50 -0400
-Received: from mail-pl1-f181.google.com ([209.85.214.181]:38832 "EHLO
-        mail-pl1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230342AbhJVNwt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Oct 2021 09:52:49 -0400
-Received: by mail-pl1-f181.google.com with SMTP id i5so2735843pla.5;
-        Fri, 22 Oct 2021 06:50:32 -0700 (PDT)
+        id S233086AbhJVOAA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Oct 2021 10:00:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47040 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233082AbhJVN7i (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Oct 2021 09:59:38 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FDFDC061224;
+        Fri, 22 Oct 2021 06:57:21 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id y12so1476121eda.4;
+        Fri, 22 Oct 2021 06:57:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=N2LgKJHjAxWATzIP8s9Chgsauqr0Jq39ANiFQNTNdvA=;
+        b=atHm7dWYDFc+xMMI0nEXnjBKGmTe3Mhj3j44gptKPmL3yZSmcfPhGBE64YsimpDkRj
+         3JNapsquzvEaRN4rlLZm/e3gAK6PuH4inkVvuQzMmWJD4Fw6FTtWQPCXkgqDCuh7EULb
+         yNTTsoQRo9uDej/o2MZxfOP65jPJvwE94CFsaqfNuZNaXjAjM/EmrMyiG4Xju744vWFB
+         MF6JOygy44c4b8O8vYFaLC36mbgBaHx84E22kFUgJLaYtkfz/IR1K5WkWIspkHAhxZrf
+         ER3rtRGr7XHV0NpNgjyePT0QzWIZ2EsAHQ7higGfSHKW8azFx28d7dx9gfAmHjBCNF4f
+         aSGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=e4VAlxqjX7tVS4RVU1hVLMwxlt5HBKt4g0cT2A4i/lc=;
-        b=CQm86dOsCIjWXawe3/g/e4cs0g6/TUg6PmP6hYoQDl1Zcvv+5uvYJbEtgF6VFROEHr
-         oztYhNAeb18MUGa/RK9O1PN0wHysJiez5sHpViiPltj0fPsoGzl20EHJBbyVSdw9iN4b
-         hB0PDPM1ECf6uXWbIDITJ9IruZcJ/k3NgdyLqpjp/Yk5a/7hjQPkqgrEaTbzHB5mz5vI
-         sBQZzQwXfFSs+B4LYz5G0Jbd1DrTPCek1Wq1XtsFHygBA80wLFl5msAFunQ/PCyp4EZc
-         P5GAjBHEaV1WMr7olA4VESK7TpbTsW7OYQUv6KGYd4nCfgx9dBeVu7U5riIfhqMDbMG1
-         lFSA==
-X-Gm-Message-State: AOAM533TdPzLqSPNeEwH6WCs5XnYRvtS0QbKaN/hVjgLLZXlpooag0tF
-        tx15TPh4oYHEHnH8vLpm25KGqz/o4g7r3siSiNU=
-X-Google-Smtp-Source: ABdhPJxD84S/qyVc64yZN7zn360JIvYLyRoTZQ+nTLW8NPOh4R0Onceuz8xIbXKjs/Zs0RMr8FooFXCbqrByMUrAzuI=
-X-Received: by 2002:a17:90b:390f:: with SMTP id ob15mr13560608pjb.185.1634910632123;
- Fri, 22 Oct 2021 06:50:32 -0700 (PDT)
+        bh=N2LgKJHjAxWATzIP8s9Chgsauqr0Jq39ANiFQNTNdvA=;
+        b=ZMzIZWuHq8dylZDyJQL0nkdIu3LzEe9anQzZDUefznPDs6C2WvVkHUP4nUAy6gPVr9
+         bd/FUyxPhKdOsyRFlAJRCesh5tHbYHIQY4MbHyr3uKhMUqnnDch5lqSdtbMsPnOlKwUN
+         N9D2jxQReN/p+84V9cGDG4Zu/99SF/lzqEfDADXPsu8nL5kOcJl5V7AaMMgwfMEG7u6t
+         rRhoU8XxpbfAjcYbIC5A5PhTlqODCsYCawshXeanh2MMLcl0JXhFkFuKkcvx6jy/J8Kj
+         2yWy3Xo0qgZinWemmU1QuPhwQ6gYyjb4F0VzVliyGltML2hV69QxU105aMxGRpbqc6jR
+         x2mg==
+X-Gm-Message-State: AOAM530mKf3C1OszVnLru0OzkCgv8pmJytzeOoVXspmmCk3VjNJDW/ln
+        t4VPhm0RNaqmWC4DscYWzBQe52tnvfsMBV7hJG0=
+X-Google-Smtp-Source: ABdhPJxJM2m9jS5DjeNSJjBC4XIn4RTOgPs/zblzns86IWUdsSxE0UfgtL48RUJSZS0ETv3HMiVmN+oWWEz4xXDFYeE=
+X-Received: by 2002:a17:906:2887:: with SMTP id o7mr15492300ejd.425.1634911039873;
+ Fri, 22 Oct 2021 06:57:19 -0700 (PDT)
 MIME-Version: 1.0
 References: <20211021174223.43310-1-kernel@esmil.dk> <20211021174223.43310-10-kernel@esmil.dk>
  <CAHp75VcUv6WH0--FANpRExCdEOJNVo8KCtJ2Go090=FZq-Y0UQ@mail.gmail.com>
- <CANBLGcysKdqo+FioSkhd1PZRLzPF=fRJrCTsUGR7vXcn2WpYHg@mail.gmail.com> <CAHp75VditKnEcPKgqxz7NfG3ZWLZCu=pW=8qw7HS_iWePTj5Qw@mail.gmail.com>
-In-Reply-To: <CAHp75VditKnEcPKgqxz7NfG3ZWLZCu=pW=8qw7HS_iWePTj5Qw@mail.gmail.com>
-From:   Emil Renner Berthing <kernel@esmil.dk>
-Date:   Fri, 22 Oct 2021 15:50:21 +0200
-Message-ID: <CANBLGcxDUNib4C0mrP1bYnJSLyZn7rmV1wwJyj5tK4-nbMnu9g@mail.gmail.com>
+ <CANBLGcysKdqo+FioSkhd1PZRLzPF=fRJrCTsUGR7vXcn2WpYHg@mail.gmail.com>
+ <CAHp75VditKnEcPKgqxz7NfG3ZWLZCu=pW=8qw7HS_iWePTj5Qw@mail.gmail.com> <CANBLGcxDUNib4C0mrP1bYnJSLyZn7rmV1wwJyj5tK4-nbMnu9g@mail.gmail.com>
+In-Reply-To: <CANBLGcxDUNib4C0mrP1bYnJSLyZn7rmV1wwJyj5tK4-nbMnu9g@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 22 Oct 2021 16:56:24 +0300
+Message-ID: <CAHp75VfcTkpq17fzVmzdZVC=xCBFEajxmG2C79TkD1S5+9BNqg@mail.gmail.com>
 Subject: Re: [PATCH v2 09/16] reset: starfive-jh7100: Add StarFive JH7100
  reset driver
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Emil Renner Berthing <kernel@esmil.dk>
 Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
         devicetree <devicetree@vger.kernel.org>,
         linux-clk <linux-clk@vger.kernel.org>,
@@ -73,44 +88,42 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 22 Oct 2021 at 15:39, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> On Fri, Oct 22, 2021 at 4:35 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
-> > On Fri, 22 Oct 2021 at 14:56, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > > On Thu, Oct 21, 2021 at 8:43 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
->
-> ...
->
-> > > Why all these ugly % 32 against constants?
-> >
-> > Because the JH7100_RST_ values goes higher than 31. There is a
-> > BIT_MASK macro, but that does % BITS_PER_LONG and this is a 64bit
-> > machine.
->
-> And? It's exactly what you have to use!
+On Fri, Oct 22, 2021 at 4:50 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
+> On Fri, 22 Oct 2021 at 15:39, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > On Fri, Oct 22, 2021 at 4:35 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
+> > > On Fri, 22 Oct 2021 at 14:56, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > > > On Thu, Oct 21, 2021 at 8:43 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
 
+...
 
-> > > Can you convert this to simple
+> > > > Can you convert this to simple
+> > > >
+> > > >   if (assert)
+> > > >     ret = readl_...
+> > > >   else
+> > > >     ret = readl_...
+> > > >
+> > > > below?
 > > >
-> > >   if (assert)
-> > >     ret = readl_...
-> > >   else
-> > >     ret = readl_...
-> > >
-> > > below?
+> > > I don't see how that would work. We're using the done value in in the
+> > > readl_poll_timeout. Maybe you can be a bit more explicit.
 > >
-> > I don't see how that would work. We're using the done value in in the
-> > readl_poll_timeout. Maybe you can be a bit more explicit.
+> > Supply done either == mask or == ^mask. Try it.
 >
-> Supply done either == mask or == ^mask. Try it.
+> So you want this?
+> if (assert)
+>   ret = readl_poll_timeout_atomic(reg_status, value, (value & mask) ==
+> done, 0, 1000);
+> else
+>   ret = readl_poll_timeout_atomic(reg_status, value, (value & mask) ==
+> ^done, 0, 1000);
+>
+> The compiler might be clever enough, but I'd worry the long body of
+> the readl_poll_timeout_atomic macro is inline twice. Rather than just
+> flipping the bit in `done`.
 
-So you want this?
-if (assert)
-  ret = readl_poll_timeout_atomic(reg_status, value, (value & mask) ==
-done, 0, 1000);
-else
-  ret = readl_poll_timeout_atomic(reg_status, value, (value & mask) ==
-^done, 0, 1000);
+You have a point, although it would be nice to have confirmation of either.
 
-The compiler might be clever enough, but I'd worry the long body of
-the readl_poll_timeout_atomic macro is inline twice. Rather than just
-flipping the bit in `done`.
+-- 
+With Best Regards,
+Andy Shevchenko
