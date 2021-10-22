@@ -2,97 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DBA7A436F1D
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Oct 2021 02:52:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D4C06436F76
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Oct 2021 03:35:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232192AbhJVAzK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 21 Oct 2021 20:55:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40952 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229512AbhJVAzJ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 21 Oct 2021 20:55:09 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A694761371;
-        Fri, 22 Oct 2021 00:52:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634863973;
-        bh=/ar7Vm5chhxFFJNLsH1Cx7MqXOvv+yBrbQnZyJ7ext0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ugDqVE5LEFVT7/8vRX1SWqwaJ3I5ScNrEq2t0RusE9J4xkcI7xqNz/rGm+OGE2ePP
-         BMnWjwEuVU4FEa0SG+NUNzWfQDzTmJqHjz/8YAsI7FqN/SosBxBTjrADbYZynbiFDV
-         3qzPSII+4Tsym20VDjCTxdRgpAQLLFWSrK4esjxbSBQb9Nkuk2Uxv9VEnZhM7AYR3L
-         293LQ6kJc7HQFNFMJiGUxryVARloozj1p+HHPn67DnNFu3iJMGX3sYMsbCCXpP9Mrc
-         XOYIZ8CdU1kydl6iEJVkbSgk/zUzQyWwMZOYRZQS7U58HsbSCGJuUtOmQzPZmf5yiL
-         RhIKq8Di4+ggg==
-From:   Mark Brown <broonie@kernel.org>
-To:     linux-arm-msm@vger.kernel.org, Luca Weiss <luca@z3ntu.xyz>
-Cc:     Mark Brown <broonie@kernel.org>,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@somainline.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        David Collins <collinsd@codeaurora.org>,
-        linux-gpio@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh@kernel.org>, linux-clk@vger.kernel.org,
-        Vinod Koul <vkoul@kernel.org>, devicetree@vger.kernel.org,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        konrad.dybcio@somainline.org, linux-kernel@vger.kernel.org,
-        Hector Martin <marcan@marcan.st>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stephen Boyd <sboyd@kernel.org>
-Subject: Re: (subset) [PATCH v2 00/11] Initial Fairphone 4 support
-Date:   Fri, 22 Oct 2021 01:52:45 +0100
-Message-Id: <163486395942.2610269.17464570982100143546.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20211007212444.328034-1-luca@z3ntu.xyz>
-References: <20211007212444.328034-1-luca@z3ntu.xyz>
+        id S231336AbhJVBhs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 21 Oct 2021 21:37:48 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:26110 "EHLO
+        szxga08-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230521AbhJVBhr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 21 Oct 2021 21:37:47 -0400
+Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.53])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4Hb6Ls0YyJz1DHpf;
+        Fri, 22 Oct 2021 09:33:41 +0800 (CST)
+Received: from dggpeml500017.china.huawei.com (7.185.36.243) by
+ dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.15; Fri, 22 Oct 2021 09:35:25 +0800
+Received: from huawei.com (10.175.103.91) by dggpeml500017.china.huawei.com
+ (7.185.36.243) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.15; Fri, 22 Oct
+ 2021 09:35:25 +0800
+From:   Yang Yingliang <yangyingliang@huawei.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
+CC:     <linus.walleij@linaro.org>
+Subject: [PATCH] pinctrl: core: fix possible memory leak in pinctrl_enable()
+Date:   Fri, 22 Oct 2021 09:43:23 +0800
+Message-ID: <20211022014323.1156924-1-yangyingliang@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.103.91]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpeml500017.china.huawei.com (7.185.36.243)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 7 Oct 2021 23:24:27 +0200, Luca Weiss wrote:
-> This series adds basic support for the recently announced Fairphone 4
-> smartphone, based on the Snapdragon 750G (sm7225).
-> 
-> This adds support for UART, power & volume buttons, screen based on
-> simple-framebuffer, regulators and USB.
-> 
-> v2 fixes some stylistic problems in dts and corrects the situation with
-> pm6350 regulator supplies.
-> 
-> [...]
+I got memory leak as follows when doing fault injection test:
 
-Applied to
+unreferenced object 0xffff888020a7a680 (size 64):
+  comm "i2c-mcp23018-41", pid 23090, jiffies 4295160544 (age 8.680s)
+  hex dump (first 32 bytes):
+    00 48 d3 1e 80 88 ff ff 00 1a 56 c1 ff ff ff ff  .H........V.....
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<0000000083c79b35>] kmem_cache_alloc_trace+0x16d/0x360
+    [<0000000051803c95>] pinctrl_init_controller+0x6ed/0xb70
+    [<0000000064346707>] pinctrl_register+0x27/0x80
+    [<0000000029b0e186>] devm_pinctrl_register+0x5b/0xe0
+    [<00000000391f5a3e>] mcp23s08_probe_one+0x968/0x118a [pinctrl_mcp23s08]
+    [<000000006112c039>] mcp230xx_probe+0x266/0x560 [pinctrl_mcp23s08_i2c]
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+If pinctrl_claim_hogs() fails, the 'pindesc' allocated in pinctrl_register_one_pin()
+need be freed.
 
-Thanks!
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 950b0d91dc10 ("pinctrl: core: Fix regression caused by delayed work for hogs")
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+---
+ drivers/pinctrl/core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-[02/11] dt-bindings: regulator: qcom,rpmh: Add compatible for PM6350
-        commit: 12271ba94530e7476eff09e98a7de10c31f5d474
-[03/11] regulator: qcom-rpmh: Add PM6350 regulators
-        commit: 0adafd62505ccb4787d4918fd0b4ca126b754453
+diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+index 5082102d7d0d..ffe39336fcac 100644
+--- a/drivers/pinctrl/core.c
++++ b/drivers/pinctrl/core.c
+@@ -2100,6 +2100,8 @@ int pinctrl_enable(struct pinctrl_dev *pctldev)
+ 	if (error) {
+ 		dev_err(pctldev->dev, "could not claim hogs: %i\n",
+ 			error);
++		pinctrl_free_pindescs(pctldev, pctldev->desc->pins,
++				      pctldev->desc->npins);
+ 		mutex_destroy(&pctldev->mutex);
+ 		kfree(pctldev);
+ 
+-- 
+2.25.1
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
