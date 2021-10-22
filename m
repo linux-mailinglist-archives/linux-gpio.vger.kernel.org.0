@@ -2,48 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EC4F43780E
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Oct 2021 15:35:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35AF5437813
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Oct 2021 15:36:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232276AbhJVNh2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Oct 2021 09:37:28 -0400
-Received: from mail-pj1-f54.google.com ([209.85.216.54]:36441 "EHLO
-        mail-pj1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231537AbhJVNh1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Oct 2021 09:37:27 -0400
-Received: by mail-pj1-f54.google.com with SMTP id s61-20020a17090a69c300b0019f663cfcd1so5761986pjj.1;
-        Fri, 22 Oct 2021 06:35:10 -0700 (PDT)
+        id S232775AbhJVNjF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Oct 2021 09:39:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42360 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231658AbhJVNjE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Oct 2021 09:39:04 -0400
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F5FFC061764;
+        Fri, 22 Oct 2021 06:36:46 -0700 (PDT)
+Received: by mail-ed1-x52b.google.com with SMTP id e19so3227197edy.0;
+        Fri, 22 Oct 2021 06:36:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3VqjR5oI/ait3rohMOusYdeugPboOfYtc3O9o05eMHQ=;
+        b=Q1yRtDerJPfkd6V6vThQqZzlZX02K8g1faPyh5JvGtWbxyqlvyJdVLUGTYwPQ3saLq
+         //fIB06jwTGHRGxKPLs8MJWyLB830xmXmsTkCETeG1taPcahOXie4rvc7CK5zltFt8oF
+         oPUshuRuTnd0iZXy0ny9kVNx8mrm1ouS31YXXV69DYolYaT48xWqECVE7DhkqpFj8Azm
+         VWMFDlsZTra/bzin+kya2NessF7ZGFHODA9zaBsoaYq5uCJaZikR/QWJcRu4iqFGwBxl
+         7SUxGngqa3kITyZSSsSKeCn5rbO8WWtCwQv7XozRKVi8eu+fjf3xq7bGmV9vMO/W2GeJ
+         DmEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=gB9nPqjC9kxzaGyB2tMhiS6mHnq6MtGEClgbmCe1njU=;
-        b=oKz5XugOcFNwrwnTaCY/SSpL7pnROnKkrienvzj5uVBK0QBc1mJr/o5RqGfeRX23z7
-         7Exq6062+04598c1mBbQlOz/HtDxkoVO0Ik5R3i4A0rvl0EYDNjdV3YBd3UdRXyCr58K
-         0lHAgP0GY7HJG/6lvnrV/yeWg45+7KZ3mNMXyk46gysLDISFGEb33iInu5Wp7HNx+OZU
-         rW/3w+GLfgz0z9oi7AMDhac1LZ3Lr5PV0TYw/VxjS9FsTSP5zVUOKy1DX4nqrl0cuXKI
-         JPO6BNZbzUf99uSsbdSfXebVYRCJfjxp/+BdsKxy4f8GY0tXrOQJQQYYrdC89hKvosrD
-         JUbA==
-X-Gm-Message-State: AOAM530liQ+0FFyaHU7QLNSpfe/j4WG2aXlL5u+Gt3ECLD6Rf1KMZoib
-        gJ8nNZqmtfuD7JaNfuEJzyBa9Qwn7yD5+rtRVXo=
-X-Google-Smtp-Source: ABdhPJzqcT67gDitD+qJ4y7d2w+3rgIO7RJA2uS12QTmtGTpMOXJEAZLRBCBCYbMxbHPzzavLq8IpRdVwEBpC6v5jgY=
-X-Received: by 2002:a17:90b:390f:: with SMTP id ob15mr13460474pjb.185.1634909710011;
- Fri, 22 Oct 2021 06:35:10 -0700 (PDT)
+        bh=3VqjR5oI/ait3rohMOusYdeugPboOfYtc3O9o05eMHQ=;
+        b=LA0O2ritGvHs42KGT2DfYX62qe8ITDzUTgz14pdTQ+Ni3AIMsYNJcA40Pn5JOabVnK
+         87brKmiOojCeim57Kn+uUWiTdUQnb34hf6CvomFeL2qRkZNdOscWyHoWxwyhS4c1uOP7
+         MxqPczorrJT46LtNePqqPBjn3DAXg5Ndoj4hDx3IL3vLEiDlMTjdH+wWgm0dvaXKyRZU
+         SrTMT8KhUlbWi2Y924iVUpBeTIxEHzHvo7/VYtS5qeJE+ESnIMVmumuODQoLDmuMSNLG
+         VSvoygyK/RZYigSjMDhGQYmou2BW9i+PGOU5O6Ln+bmTE/I8mB5ys7gTCpfZq21XSFMq
+         3GHA==
+X-Gm-Message-State: AOAM5318jS0lKWZF04wL+wimiEv+AuQOU5uWYs63r2B+KakiCXel7Ruh
+        yyGYxtyrdky1OwUpy6cALAS+zFqZ/EFuSTLHAyU=
+X-Google-Smtp-Source: ABdhPJxTUPfm1rVOGx8gokzVv5igP9B4UGk9EquAWiBprb/AKADuLLwJMD4BsQNPgSHNpLkA0ym/zi0SHdqrUZTvc64=
+X-Received: by 2002:a17:906:5a47:: with SMTP id my7mr14903725ejc.128.1634909805119;
+ Fri, 22 Oct 2021 06:36:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211021174223.43310-1-kernel@esmil.dk> <20211021174223.43310-10-kernel@esmil.dk>
- <CAHp75VcUv6WH0--FANpRExCdEOJNVo8KCtJ2Go090=FZq-Y0UQ@mail.gmail.com>
-In-Reply-To: <CAHp75VcUv6WH0--FANpRExCdEOJNVo8KCtJ2Go090=FZq-Y0UQ@mail.gmail.com>
-From:   Emil Renner Berthing <kernel@esmil.dk>
-Date:   Fri, 22 Oct 2021 15:34:58 +0200
-Message-ID: <CANBLGcysKdqo+FioSkhd1PZRLzPF=fRJrCTsUGR7vXcn2WpYHg@mail.gmail.com>
-Subject: Re: [PATCH v2 09/16] reset: starfive-jh7100: Add StarFive JH7100
- reset driver
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+References: <20211021174223.43310-1-kernel@esmil.dk> <20211021174223.43310-7-kernel@esmil.dk>
+ <CAHp75VcS7ZZCciAgBH2QU7u8CiHzveAOsvSdv2DQBvpBn_6opQ@mail.gmail.com> <CANBLGcyHpxuT9N+H8Lk=5CjMb1=-17_sH3dBzALCMYpAEZfeuw@mail.gmail.com>
+In-Reply-To: <CANBLGcyHpxuT9N+H8Lk=5CjMb1=-17_sH3dBzALCMYpAEZfeuw@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 22 Oct 2021 16:35:49 +0300
+Message-ID: <CAHp75VfjmYONiuaQMybCvnfswZKvwBVAXH+sFirOoOb9YEzYHg@mail.gmail.com>
+Subject: Re: [PATCH v2 06/16] clk: starfive: Add JH7100 clock generator driver
+To:     Emil Renner Berthing <kernel@esmil.dk>
 Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
         devicetree <devicetree@vger.kernel.org>,
         linux-clk <linux-clk@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
         Palmer Dabbelt <palmer@dabbelt.com>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -60,7 +74,6 @@ Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
         Maximilian Luz <luzmaximilian@gmail.com>,
         Sagar Kadam <sagar.kadam@sifive.com>,
         Drew Fustini <drew@beagleboard.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
         Michael Zhu <michael.zhu@starfivetech.com>,
         Fu Wei <tekkamanninja@gmail.com>,
         Anup Patel <anup.patel@wdc.com>,
@@ -72,52 +85,17 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 22 Oct 2021 at 14:56, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> On Thu, Oct 21, 2021 at 8:43 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
-> > +static const u32 jh7100_reset_asserted[4] = {
->
-> > +       BIT(JH7100_RST_U74 % 32) |
-> > +       BIT(JH7100_RST_VP6_DRESET % 32) |
-> > +       BIT(JH7100_RST_VP6_BRESET % 32),
->
-> It's hard to notice that this is only one entry. See also below.
+On Fri, Oct 22, 2021 at 4:13 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
+> On Fri, 22 Oct 2021 at 14:34, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-Yeah, so what would be a better way to style it?
+...
 
-> > +       BIT(JH7100_RST_HIFI4_DRESET % 32) |
-> > +       BIT(JH7100_RST_HIFI4_BRESET % 32),
-> > +
-> > +       BIT(JH7100_RST_E24 % 32)
->
-> + Comma.
->
-> > +};
->
-> Why all these ugly % 32 against constants?
+> Hmm.. this function doesn't return int, but struct clk_hw *, hence the ERR_PTR.
 
-Because the JH7100_RST_ values goes higher than 31. There is a
-BIT_MASK macro, but that does % BITS_PER_LONG and this is a 64bit
-machine.
+Ah, indeed, sorry. Got your point.
 
-> ...
->
-> > +       if (!assert)
-> > +               done ^= mask;
->
-> Can you convert this to simple
->
->   if (assert)
->     ret = readl_...
->   else
->     ret = readl_...
->
-> below?
+Of course one may try 'return ERR_PTR(dev_err_probe())', but this looks ugly.
 
-I don't see how that would work. We're using the done value in in the
-readl_poll_timeout. Maybe you can be a bit more explicit.
-
-The reason is that for most reset lines a 0 in the status register
-means it's asserted and a 1 means it's deasserted. For the few reset
-lines above this is reversed though.
-
-/Emil
+-- 
+With Best Regards,
+Andy Shevchenko
