@@ -2,183 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 489CE437794
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Oct 2021 14:56:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B82BA43779D
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Oct 2021 14:58:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232292AbhJVM6Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 22 Oct 2021 08:58:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33316 "EHLO
+        id S231356AbhJVNAj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 22 Oct 2021 09:00:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232805AbhJVM6Z (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Oct 2021 08:58:25 -0400
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAB45C061764;
-        Fri, 22 Oct 2021 05:56:07 -0700 (PDT)
-Received: by mail-ed1-x52f.google.com with SMTP id t16so5048563eds.9;
-        Fri, 22 Oct 2021 05:56:07 -0700 (PDT)
+        with ESMTP id S229925AbhJVNAj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 22 Oct 2021 09:00:39 -0400
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDB18C061764;
+        Fri, 22 Oct 2021 05:58:21 -0700 (PDT)
+Received: by mail-ed1-x533.google.com with SMTP id ec8so1411791edb.6;
+        Fri, 22 Oct 2021 05:58:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=+qOi8f1v4+rJCxOKM/1lFt8oaZPEX6smhRzqey4rSCg=;
-        b=YivvG/JsMBUvbb3Fs9tTmqksEjk8+rN0v5A+vUK4z8jS13RgQj58cSSwV7Hs+IWsGB
-         adNRyKbM3yrg9wi18C8DLlOUORLq1BF4FYNWg7JzYi9UuIUeEq4Rn/rDkk/y1zhLxtEc
-         aOJwG8ueEq8fZmlCGlZRCr1VCFNZmF0LBwCeNKdP2CPqZ8YkdZryhKGqdvn5XSpjL1oP
-         4o6i1XlLhy5Ivwsx0XRyu4wrcaRPgu1kTvO9jQ+GdztgGf9HLtxndmPFXuqPLPJ6Ep1B
-         hDkRcHpvS7zlSUe5S45XqZYbcF6yhFGCeBVedFGDj8jrOQeCynGBXo9ZCYD+Q7EnHKgo
-         5Pew==
+        bh=sdVW3UDZwK61lxuEJ1bpro4jif3jQr2QR2HEc/tjWM8=;
+        b=EZ1t7Sxrf/AR2RQHe2Io3nofGIoyEMedxRDuXeZW3sRr0uYWY5LV8l75w5jLWDeeKI
+         6cUd6LvLAlhmgM6SdSDEu+jnanWNTQ1UKnOA7Z7OBVoa7OrePjcAZ+ZIm4hxzruOvBMe
+         Bgipn3FntDMtxHTqyfnE/3t2hoUimKKlB+6H3j5lzwTzgdrLDxMUhugew1Cls+CVSHrW
+         xd4RzkeB7gxreJVvZ/HFxgntg9KTtbiWQCe9zSKPFpTdVANPWLtXqHEF+24sU+sKad7m
+         JID86uGa09Ja5zlrFg4HV4wpUTxzUyqDxaGiV6VS8Ffl1G9RpXD6aWm9rTTztVTsHuTF
+         hAVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+qOi8f1v4+rJCxOKM/1lFt8oaZPEX6smhRzqey4rSCg=;
-        b=5+uTAOrr2V0dcaVJzZBFq07KW7zK7NmkyRwdwtaiARaSfz73n3ZxgLedNJdgSCcE33
-         xsKyityjBnqQSTB2SAf3jTt3XUjh1D1Q0xdaYWAXKfWPftFNBwilaeQHj7qe1gdxAfoH
-         HveW2bflwxYw9eH6MhI+w6Nvtub3vlCjjtwlyzuKcHub7IIng4wHQLh5JYWruMfWnqpw
-         kPIHTBH3bdwWhTKtepq6wqfueuiyEVgqYvI3hFTic+u0Oeb7H2EMicbiW6AnyJM47C1Z
-         idX1VBSMCDr09/3awkhzPErZG3HVj0hNUbt2Ta23hUKYV90LTEU89hFqmESnw62yeHkW
-         97ng==
-X-Gm-Message-State: AOAM532Q4yyAHXMJDDEFOxDdejELBl7sReiYReMuxZCtVmG54PNyRhWk
-        IHK7LNQsA420HTBS2U1DXi9Qi+WWM0BQtftyME8=
-X-Google-Smtp-Source: ABdhPJxjmbZn/mKzz2MeCcWBTlXcYFWWJdlvVwlzqH5Cmn9IpfIf34cJh9HoSyv6xIrG1HUL+9nURIo/Rrh/wNmzfU8=
-X-Received: by 2002:a17:906:5a47:: with SMTP id my7mr14665000ejc.128.1634907366155;
- Fri, 22 Oct 2021 05:56:06 -0700 (PDT)
+        bh=sdVW3UDZwK61lxuEJ1bpro4jif3jQr2QR2HEc/tjWM8=;
+        b=AI0umt+GwqeecYT0Ykq6yEuRytl/odbH691eb8nVdCqWdBQqm8uOK9dmCet5EFZN+D
+         UaH0zCF1FK8RrcEgiULZOeKY7bU6lheGbh89S3ScsSBCMjVFs3G8Tiu8jP0Ur9NnYA9f
+         fe7czaqeXEyPqAQRm1g1ae2RW03xdtOX77vJQQNIWNMRHXkHxqx6YSuedREjWPKx2JwC
+         StMh3dQxfWa4QV3uU1uX+BszbdFw2VxmDFYu5jVj83B2uboLP+8JaS7rEbxFBejRbGdD
+         ZvXZxOnyLO/xLblhVwQx+vreAb3BbR+FUJQiiUkonxtqwPcFPEEaESzGe3y86F/MrgBv
+         RBjA==
+X-Gm-Message-State: AOAM531ZtcZdcP/f2wJhOtVIvXkQeaGYY7pMXtRX20JYHbLK1lB1FnCU
+        Pll2KJboVF2VAq3BDQz3BTmKkTg2cgkHk/0clO4=
+X-Google-Smtp-Source: ABdhPJzI6SPafEiE4F549hcNejQttJOvb88iWUSJhYHI9dOlN/rKwPp3nG//aadx/SQnubpgY46qi3WPu+hgYtvYUpk=
+X-Received: by 2002:a17:906:a158:: with SMTP id bu24mr14112090ejb.356.1634907500360;
+ Fri, 22 Oct 2021 05:58:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211021174223.43310-1-kernel@esmil.dk> <20211021174223.43310-10-kernel@esmil.dk>
-In-Reply-To: <20211021174223.43310-10-kernel@esmil.dk>
+References: <20211019160401.8296-1-mario.limonciello@amd.com>
+In-Reply-To: <20211019160401.8296-1-mario.limonciello@amd.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 22 Oct 2021 15:55:10 +0300
-Message-ID: <CAHp75VcUv6WH0--FANpRExCdEOJNVo8KCtJ2Go090=FZq-Y0UQ@mail.gmail.com>
-Subject: Re: [PATCH v2 09/16] reset: starfive-jh7100: Add StarFive JH7100
- reset driver
-To:     Emil Renner Berthing <kernel@esmil.dk>
-Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        Drew Fustini <drew@beagleboard.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Michael Zhu <michael.zhu@starfivetech.com>,
-        Fu Wei <tekkamanninja@gmail.com>,
-        Anup Patel <anup.patel@wdc.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        Matteo Croce <mcroce@microsoft.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Fri, 22 Oct 2021 15:57:24 +0300
+Message-ID: <CAHp75VcoKYvbMpAmyDjkBtt1bL96RwSD0DYcb96hRO6n3aXe9A@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] ACPI: Add stubs for wakeup handler functions
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Nehal Shah <Nehal-bakulchandra.Shah@amd.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 21, 2021 at 8:43 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
+On Tue, Oct 19, 2021 at 7:05 PM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+
+Thanks! My comments below.
+
+> commit ddfd9dcf270c ("ACPI: PM: Add acpi_[un]register_wakeup_handler()")
+
+The commit
+
+> added new functions for drivers to use during the s2idle wakeup path, but
+> didn't add stubs for when CONFIG_ACPI wasn't set.
 >
-> Add a driver for the StarFive JH7100 reset controller.
+> Add those stubs in for other drivers to be able to use.
 
 ...
 
-> +config RESET_STARFIVE_JH7100
-> +       bool "StarFive JH7100 Reset Driver"
-> +       depends on SOC_STARFIVE || COMPILE_TEST
+> +static inline int acpi_register_wakeup_handler(
+> +       int wake_irq, bool (*wakeup)(void *context), void *context)
 
-> +       depends on OF
-
-No evidence of this dependency. Why to limit test coverage?
-
-> +       default SOC_STARFIVE
-
-...
-
-> +/*
-> + * Reset driver for the StarFive JH7100 SoC
-> + *
-> + * Copyright (C) 2021 Emil Renner Berthing <kernel@esmil.dk>
-
-> + *
-
-Redundant empty line.
-
-> + */
-
-...
-
-> +#include <linux/of_device.h>
-
-No evidence of any usage of this header. Perhaps you meant mod_devicetable.h?
-
-...
-
-> +static const u32 jh7100_reset_asserted[4] = {
-
-> +       BIT(JH7100_RST_U74 % 32) |
-> +       BIT(JH7100_RST_VP6_DRESET % 32) |
-> +       BIT(JH7100_RST_VP6_BRESET % 32),
-
-It's hard to notice that this is only one entry. See also below.
-
-> +       BIT(JH7100_RST_HIFI4_DRESET % 32) |
-> +       BIT(JH7100_RST_HIFI4_BRESET % 32),
-> +
-> +       BIT(JH7100_RST_E24 % 32)
-
-+ Comma.
-
-> +};
-
-Why all these ugly % 32 against constants?
-
-...
-
-> +       if (!assert)
-> +               done ^= mask;
-
-Can you convert this to simple
-
-  if (assert)
-    ret = readl_...
-  else
-    ret = readl_...
-
-below?
-
-> +       spin_lock_irqsave(&data->lock, flags);
-> +
-> +       value = readl(reg_assert);
-> +       if (assert)
-> +               value |= mask;
-> +       else
-> +               value &= ~mask;
-> +       writel(value, reg_assert);
-
-> +       /* if the associated clock is gated, deasserting might otherwise hang forever */
-> +       ret = readl_poll_timeout(reg_status, value, (value & mask) == done, 0, 1000);
-
-You run delays under spin lock. You need to use _atomic variant.
-
-> +       spin_unlock_irqrestore(&data->lock, flags);
-
-...
-
-> +       u32 value = (readl(reg_status) ^ jh7100_reset_asserted[offset]) & mask;
-
-> +       dev_dbg(rcdev->dev, "status(%lu) = %d\n", id, !value);
-> +       return !value;
-
-Dup of ! operator. Can it be value = !(...); above?
+A bit of a strange indentation. Can wake_irq be on the previous line?
 
 -- 
 With Best Regards,
