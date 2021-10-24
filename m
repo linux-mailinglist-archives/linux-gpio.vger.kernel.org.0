@@ -2,79 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2AE2438BFD
-	for <lists+linux-gpio@lfdr.de>; Sun, 24 Oct 2021 23:04:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8EC2438C00
+	for <lists+linux-gpio@lfdr.de>; Sun, 24 Oct 2021 23:08:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231696AbhJXVGe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 24 Oct 2021 17:06:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60230 "EHLO
+        id S231733AbhJXVKa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 24 Oct 2021 17:10:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231259AbhJXVGd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 24 Oct 2021 17:06:33 -0400
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94DA7C061745
-        for <linux-gpio@vger.kernel.org>; Sun, 24 Oct 2021 14:04:12 -0700 (PDT)
-Received: by mail-lf1-x133.google.com with SMTP id j21so6721859lfe.0
-        for <linux-gpio@vger.kernel.org>; Sun, 24 Oct 2021 14:04:12 -0700 (PDT)
+        with ESMTP id S231314AbhJXVK3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 24 Oct 2021 17:10:29 -0400
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9B72C061745
+        for <linux-gpio@vger.kernel.org>; Sun, 24 Oct 2021 14:08:08 -0700 (PDT)
+Received: by mail-lf1-x12c.google.com with SMTP id bi35so274509lfb.9
+        for <linux-gpio@vger.kernel.org>; Sun, 24 Oct 2021 14:08:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=rXZiinBB1P7wOrPBY5EXOLhRiRUn4EMUQJBC+p4xV6E=;
-        b=wqk0FsTc33l1K46sT2Xr6J8RUxVJh/uxskfmCXujnPnsqk00yE0NSXmAbm/sI7ezoQ
-         Sv9PPACt1sGIa2itP3H0vpq0T/XUB8iU9lbCfkvX672BUxotkQmISbTr5EEOE+eTBLXZ
-         BiZvlrGw0vfunNxOZGTvhRhFjDn6kYhClJd6VX+ZyGvj0gwO6AFgZ/2FeSje7WXeI35r
-         6b6blrGBXF7oSBFZLFOYFAXZFcEQhUx2kcLW/uvB6v5CEFrnUr/ZknJfuaI9mBuWuKQ2
-         p5H6rH45jT9U+V9hKA9jjV5V9Pkh/ufWHg4B+PXlCSIpsh3//IYZR+BKE2+QBZDXG1G4
-         k/MA==
+        bh=LMYhbLkgTSqPSv9vA6KWgK1dElOofvGFtWwEO+48qZ0=;
+        b=CCBwZTOnWvYExKQ/vwM/BrgQ+/2VXEta4i/lTffNfw3ohsCrs5RF8Di2tkXD7R8Y7Z
+         9ImYAeELkS9dIztoT86WgcADOmObC7RVpSFYpgz+/50LupX31VuzTNej6sUzePQuroY5
+         r4gbHDF/oxnmeyx638YZb/RUOGb+ZDJRlKK6zjRIKV6O9pOvVSMwqo4B1ZDJI2E7YiQa
+         BdQfBeiHzL+uRB5vyFdJhTXJW5CWDfqTTDIvKJX3frysFvikSP0rBDRSynt8SiCB4HjA
+         Tymjj8+wz1PdvZyiVTQU+A4frz7K2AGDAhuCNaHznPdjZwP0S60w1qdbtF2nSki37b7q
+         thMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=rXZiinBB1P7wOrPBY5EXOLhRiRUn4EMUQJBC+p4xV6E=;
-        b=s/h5h+F/6rpcLG1EJJLxE4AfDyxEp6fNVybfPr+6WySReol4goZXs39ldYxCRMoS2t
-         1UwqX+0z0jDSvYRl+skO4aixB8tIopEgytvKy/8l42knNtXl2c7eBFKXixqHz9HpymDZ
-         F7ohW8hhD/t5iv6IWWWO8Kag1HW5kovZtQxG26VM6VAJkB5ul5VMA1C1TbgDWBT2aLq5
-         qCZTy1DwgdGRH8tQ1wCi7oRCEyC3x4+2l8rM3WqxuRFzn6ekFashpv7uM7RDgU1+5Y1w
-         dJVUomWl6Ne6FHjhAvcb0zvAm3/MSpH2M4ZmvJe6M51CaMxWj7vIX0tfeIbTjT7DGPVv
-         iJKQ==
-X-Gm-Message-State: AOAM533o6LiDyH5azWudn77n6ASNcEMrOUhoWxOX6LGFbK0YwSfdQrl/
-        LJpKO/lET/Zph8VlZpy7SFDx8Ig9zZiX9cAd5wSE1w==
-X-Google-Smtp-Source: ABdhPJxNr92QTY2HNT8gRchRvSIpTrojxUxrxZ0hp9tos7pfpHyh5Hyi1phko/4SIzDFMiFX1QLAQUIl+4FTuACoszg=
-X-Received: by 2002:ac2:5d4a:: with SMTP id w10mr13034115lfd.584.1635109450097;
- Sun, 24 Oct 2021 14:04:10 -0700 (PDT)
+        bh=LMYhbLkgTSqPSv9vA6KWgK1dElOofvGFtWwEO+48qZ0=;
+        b=I57Xrx1MbD5oR4yGocyfoROn6Q+PRO2mSbSG71TXMjMhCkFxj9Q89pXzlzSjEuarF/
+         MvrJfJLtMPBv+4IcWa6AdGcx3EtAR9M1HDkvB+jN/NwNk3JuyM1VLtHu/buXJgNZfuDg
+         VCepbnxPE3uHYPErwHYv66rty78xVTKH+vQb5T1O3BJfAYYxkbLg0G8QDmI9pNy56xa3
+         5k+KSiqIQWk5auRs4peFiynSvKGfvLV9MAOKC932f7rw5X10IS3RcaLWkdDNcqTwp6t4
+         +vqTfjiU2tKzTpJfpy2DKJWO/WBORXCViSaTB+6DiV2nGLucmPLRHS9NpkRxcMcTSRWv
+         ojMw==
+X-Gm-Message-State: AOAM532VkGY96mzZzlPK/vTkhSqzIYYpibGwZdPp98yzm5G3nfAleRhM
+        PpWbFIC+COIWtfQHbi7mc3+jnu42Yk+rJySCCl9Z3w==
+X-Google-Smtp-Source: ABdhPJwAZbQpExa3fIcxuElrdBQpPSxEtV7dAaKscoaT6LDhlGxWjuDzvnxdv0SLWc6JCN8hPKHAEbgB51S3lCZGu1s=
+X-Received: by 2002:a05:6512:1316:: with SMTP id x22mr13096950lfu.291.1635109687054;
+ Sun, 24 Oct 2021 14:08:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211018085754.1066056-1-horatiu.vultur@microchip.com>
-In-Reply-To: <20211018085754.1066056-1-horatiu.vultur@microchip.com>
+References: <20211022124036.5291-1-sam.shih@mediatek.com>
+In-Reply-To: <20211022124036.5291-1-sam.shih@mediatek.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 24 Oct 2021 23:03:59 +0200
-Message-ID: <CACRpkdbyY9LPf5una95YE4OW4do9aLp_Vr-ge23RTSu6-7iKjw@mail.gmail.com>
-Subject: Re: [PATCH v6 0/2] pinctrl: pinctrl-microchip-sgpio: Extend to call
- reset driver
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Date:   Sun, 24 Oct 2021 23:07:56 +0200
+Message-ID: <CACRpkdagzzWtN6Gp-ZMZkAqq7JwL0nf63J7NC8jpF=ZfRJG4JQ@mail.gmail.com>
+Subject: Re: [PATCH v9 0/4] Mediatek MT7986 pinctrl support
+To:     Sam Shih <sam.shih@mediatek.com>
 Cc:     Rob Herring <robh+dt@kernel.org>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        John Crispin <john@phrozen.org>,
+        Ryder Lee <Ryder.Lee@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 18, 2021 at 10:56 AM Horatiu Vultur
-<horatiu.vultur@microchip.com> wrote:
+Hi Sam,
 
-> v5->v6:
->  - fix warnings reported by 'make dtbs_check'
->  - add back the name of the reset line
+On Fri, Oct 22, 2021 at 2:40 PM Sam Shih <sam.shih@mediatek.com> wrote:
 
-Patch set v6 applied, thanks for working this out!
+> This patch series add pinctrl support for mediatek mt7986 SoC series.
+> It is based on patch series "Add basic SoC support for mediatek mt7986"
+> https://lore.kernel.org/all/20211018114009.13350-1-sam.shih@mediatek.com/
+> ---
+> v9: added Acked-by and Reviewed-by tag
+
+I have applied patches 1 & 2 applied to the pin control tree!
+Thanks for your good work.
+
+Please submit patches 3 & 4 to the Mediatek SoC tree.
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+for these.
 
 Yours,
 Linus Walleij
