@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E49C438A64
-	for <lists+linux-gpio@lfdr.de>; Sun, 24 Oct 2021 17:42:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9DFE438A6A
+	for <lists+linux-gpio@lfdr.de>; Sun, 24 Oct 2021 17:42:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231928AbhJXPox (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 24 Oct 2021 11:44:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45802 "EHLO
+        id S232238AbhJXPo7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 24 Oct 2021 11:44:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231875AbhJXPoI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 24 Oct 2021 11:44:08 -0400
-Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9EE0C061228;
-        Sun, 24 Oct 2021 08:41:00 -0700 (PDT)
-Received: by mail-qk1-x72e.google.com with SMTP id bl14so9628235qkb.4;
-        Sun, 24 Oct 2021 08:41:00 -0700 (PDT)
+        with ESMTP id S232145AbhJXPoK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 24 Oct 2021 11:44:10 -0400
+Received: from mail-qv1-xf2b.google.com (mail-qv1-xf2b.google.com [IPv6:2607:f8b0:4864:20::f2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D70E6C0432CC;
+        Sun, 24 Oct 2021 08:41:02 -0700 (PDT)
+Received: by mail-qv1-xf2b.google.com with SMTP id d10so1269282qvl.13;
+        Sun, 24 Oct 2021 08:41:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=d7vj3ilWe5QQISMGTOkaAZY2eAF33WoZ7GzqRUnfca8=;
-        b=TtJPgW4q4ffYPXeWTMLOfjK4PVXBGkF4uTcuDNcv3lkdOXjUtOlSZA9wugyspKp6Ji
-         fmlCAyPQJENOoXaD8bcPaz3BcMthLPKUkHjjg6QlNxxondO/P3uhIe6zbmrrfxacWPh6
-         +JFM0cy5eP2Z8KAAa87QktQS3imAgSZY4DCuFvyM/Pr8Koiw6drtvI9efuZXExxcRLa7
-         OY7L/rg1hQeVn7SVF0ha/vIuIiBw/jOdqFe26gL098NHieUdJdQ6gj3M4dVSo0Tv7LGv
-         BGwOEiyxIPSkyBNSTbm+AhPFSYiidEidEF3NjgAFwyxCYEL+P8bplzuukhTP2aan9Nfh
-         Li6A==
+        bh=YheDEmlPH+D5Q0VJO3zBAo6GIkCPsU4mrGDZL+63++E=;
+        b=kTlE+Wd2GxRGpG7UsR8CHxgw8NRtDJp5ySY5R2Oe2XYp52ukbTvzZar8DsUxWTPtxb
+         lYIewVPSuN/8wa8KNTb3IKMwCznm4VWxUC+h6TBxh2d3ZsNaV4lkfKTjXQoyXBF2Igd+
+         q2A5/23dxdvKo5O8zVZq9BwaWjE7d6G6c70vaoDlKsl6uEbdpmhAI+FdXnuQrO9MnRgm
+         99t+Y9UA1G01CUpAcC5tBvHhAy9HBEmZdRqYufHkCXsZneRWMBmwHOgADXjXJh3Cj1CD
+         BaBdxECygYz/vUziahpyTc/vQ5LfTSC7S6Mk73O5ZdjdGdECfQcQGbDFOVPggNRaM4l6
+         z14A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=d7vj3ilWe5QQISMGTOkaAZY2eAF33WoZ7GzqRUnfca8=;
-        b=FBmmJ2juw0OCMGWHXz29TrxDNj0ZW4X7znHwHV5wShT5YY5aITtebGFoAps9JmcHuP
-         qfAg00Geiz7w8feEYhpb9s1X+eX2RTDvI+EknMqojp4iMJd62It8/iLbbFZh0vXfzcpw
-         y6ut0LYfpFUXVELm7qaw0NnO0svq32/qLAr7rcZ6hOxGcsmKp27t1HafF5KZUHeuPaN8
-         dKgfPcQcAco0dcZagEMIZrXiUq7FOjOhDxw4wid8J3TWawViuC6swttYevLpadbggOQJ
-         s3dKiGigLLTErWp6eAXbL+E/H+/s2odmWwlO9JDnxFD4XaF7Cj1XHLWih/S0dpnEbZ99
-         gdLA==
-X-Gm-Message-State: AOAM531rU/5SK1YSTxSsQXdg4mfjQEDCnGvc0Jay8uv8bjluzXqrMd/h
-        N1QmjG9Q8iLvSePJ1cwDTcI=
-X-Google-Smtp-Source: ABdhPJyLO5qaZ5FcikymL7m/N/MQ6igLkwoI+zAvXWkrfuaYDwEaO2w5AP0ItrDvFNvX73YYRyAy3g==
-X-Received: by 2002:a37:b481:: with SMTP id d123mr9365962qkf.514.1635090059988;
-        Sun, 24 Oct 2021 08:40:59 -0700 (PDT)
+        bh=YheDEmlPH+D5Q0VJO3zBAo6GIkCPsU4mrGDZL+63++E=;
+        b=IewROBPL9ViV0umybkMp/mLsdPqCiy0MdsAZ1LFEZ8aBv+npYPeQZ2cliYljEPBwRk
+         ICywRz4klEnR9k7xaomySjGVJXU73V6vefkIvROT4OJnR1eWggqE8x3oT+W95eS9BIGq
+         HLymSor/9bD0NiFhEh7tyMQ+OQD4/AMSCG1Sl8TczCaA3kosIs1uLyDS/9dcg+oGa6hl
+         D0cwUKS71fADD82BUew1Ruji3Az5I2V5OGhp48l0XI2Q0mBjy6vLUgDCqZfTKnzN0PLY
+         gXNLe3N56XrXYfHHIcWU3anzUDasCthEcRekxGIO8dR3WzH5xqiPLJ52r0cxX/ckNOYg
+         PIsA==
+X-Gm-Message-State: AOAM5329Gzdo3JarpMEWQzXd1xZuau4phMYAgxb7q6im8ecgZLdTKvM0
+        p+WirMxaHslpMz2HHm4iNEU=
+X-Google-Smtp-Source: ABdhPJzCOJmNTYJHsHMc3AeIO6KwGSOv1lFICvlapqP877MBe01dvFoT1s6Ct0DDaskqWyV/qM0F/g==
+X-Received: by 2002:a0c:eb11:: with SMTP id j17mr11048839qvp.51.1635090062036;
+        Sun, 24 Oct 2021 08:41:02 -0700 (PDT)
 Received: from jesse-desktop.jtp-bos.lab (146-115-144-188.s4282.c3-0.nwt-cbr1.sbo-nwt.ma.cable.rcncustomer.com. [146.115.144.188])
-        by smtp.gmail.com with ESMTPSA id x9sm7291731qtw.84.2021.10.24.08.40.58
+        by smtp.gmail.com with ESMTPSA id x9sm7291731qtw.84.2021.10.24.08.41.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Oct 2021 08:40:59 -0700 (PDT)
+        Sun, 24 Oct 2021 08:41:01 -0700 (PDT)
 From:   Jesse Taube <mr.bossman075@gmail.com>
 X-Google-Original-From: Jesse Taube <Mr.Bossman075@gmail.com>
 To:     linux-imx@nxp.com
@@ -64,9 +64,9 @@ Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-serial@vger.kernel.org
-Subject: [PATCH 12/13] ARM: dts: imx: add i.MXRT1050-EVK support
-Date:   Sun, 24 Oct 2021 11:40:26 -0400
-Message-Id: <20211024154027.1479261-13-Mr.Bossman075@gmail.com>
+Subject: [PATCH 13/13] ARM: imxrt_defconfig: add i.MXRT family defconfig
+Date:   Sun, 24 Oct 2021 11:40:27 -0400
+Message-Id: <20211024154027.1479261-14-Mr.Bossman075@gmail.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20211024154027.1479261-1-Mr.Bossman075@gmail.com>
 References: <20211024154027.1479261-1-Mr.Bossman075@gmail.com>
@@ -78,397 +78,178 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Giulio Benetti <giulio.benetti@benettiengineering.com>
 
-The NXP i.MXRT1050 Evaluation Kit (EVK) provides a platform for rapid
-evaluation of the i.MXRT, which features NXP's implementation of the Arm
-Cortex-M7 core.
-
-The EVK provides 32 MB SDRAM, 64 MB Quad SPI flash, Micro SD card socket,
-USB 2.0 OTG.
-
-This patch aims to support the preliminary booting up features
-as follows:
-GPIO
-LPUART
-SD/MMC
+Add generic i.MXRT family defconfig.
 
 Signed-off-by: Giulio Benetti <giulio.benetti@benettiengineering.com>
 Signed-off-by: Jesse Taube <Mr.Bossman075@gmail.com>
 ---
- arch/arm/boot/dts/Makefile          |   2 +
- arch/arm/boot/dts/imxrt1050-evk.dts | 164 +++++++++++++++++++++++++
- arch/arm/boot/dts/imxrt1050.dtsi    | 179 ++++++++++++++++++++++++++++
- 3 files changed, 345 insertions(+)
- create mode 100644 arch/arm/boot/dts/imxrt1050-evk.dts
- create mode 100644 arch/arm/boot/dts/imxrt1050.dtsi
+ arch/arm/configs/imxrt_defconfig | 157 +++++++++++++++++++++++++++++++
+ 1 file changed, 157 insertions(+)
+ create mode 100644 arch/arm/configs/imxrt_defconfig
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 7e0934180724..f32dd34550cb 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -708,6 +708,8 @@ dtb-$(CONFIG_SOC_IMX7D) += \
- dtb-$(CONFIG_SOC_IMX7ULP) += \
- 	imx7ulp-com.dtb \
- 	imx7ulp-evk.dtb
-+dtb-$(CONFIG_SOC_IMXRT) += \
-+	imxrt1050-evk.dtb
- dtb-$(CONFIG_SOC_LS1021A) += \
- 	ls1021a-moxa-uc-8410a.dtb \
- 	ls1021a-qds.dtb \
-diff --git a/arch/arm/boot/dts/imxrt1050-evk.dts b/arch/arm/boot/dts/imxrt1050-evk.dts
+diff --git a/arch/arm/configs/imxrt_defconfig b/arch/arm/configs/imxrt_defconfig
 new file mode 100644
-index 000000000000..1653aa4cddc0
+index 000000000000..d673745a5462
 --- /dev/null
-+++ b/arch/arm/boot/dts/imxrt1050-evk.dts
-@@ -0,0 +1,164 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-+/*
-+ * Copyright (C) 2019
-+ * Author(s): Giulio Benetti <giulio.benetti@benettiengineering.com>
-+ */
-+
-+/dts-v1/;
-+#include "imxrt1050.dtsi"
-+#include <dt-bindings/pinctrl/pins-imxrt1050.h>
-+
-+/ {
-+	model = "NXP IMXRT1050-evk board";
-+	compatible = "fsl,imxrt1050-evk", "fsl,imxrt1050";
-+
-+	chosen {
-+		bootargs = "root=/dev/ram";
-+		stdout-path = &lpuart1;
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x80000000 0x2000000>;
-+	};
-+
-+};
-+
-+&lpuart1 { /* console */
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lpuart1>;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl-names = "default";
-+
-+	imxrt1050-evk {
-+		pinctrl_lpuart1: lpuart1grp {
-+			fsl,pins = <
-+				MXRT1050_IOMUXC_GPIO_AD_B0_12_LPUART1_TXD
-+					0xf1
-+				MXRT1050_IOMUXC_GPIO_AD_B0_13_LPUART1_RXD
-+					0xf1
-+			>;
-+		};
-+
-+		pinctrl_semc: semcgrp {
-+			fsl,pins = <
-+				MXRT1050_IOMUXC_GPIO_EMC_00_SEMC_DA00
-+					0xf1	/* SEMC_D0 */
-+				MXRT1050_IOMUXC_GPIO_EMC_01_SEMC_DA01
-+					0xf1	/* SEMC_D1 */
-+				MXRT1050_IOMUXC_GPIO_EMC_02_SEMC_DA02
-+					0xf1	/* SEMC_D2 */
-+				MXRT1050_IOMUXC_GPIO_EMC_03_SEMC_DA03
-+					0xf1	/* SEMC_D3 */
-+				MXRT1050_IOMUXC_GPIO_EMC_04_SEMC_DA04
-+					0xf1	/* SEMC_D4 */
-+				MXRT1050_IOMUXC_GPIO_EMC_05_SEMC_DA05
-+					0xf1	/* SEMC_D5 */
-+				MXRT1050_IOMUXC_GPIO_EMC_06_SEMC_DA06
-+					0xf1	/* SEMC_D6 */
-+				MXRT1050_IOMUXC_GPIO_EMC_07_SEMC_DA07
-+					0xf1	/* SEMC_D7 */
-+				MXRT1050_IOMUXC_GPIO_EMC_08_SEMC_DM00
-+					0xf1	/* SEMC_DM0 */
-+				MXRT1050_IOMUXC_GPIO_EMC_09_SEMC_ADDR00
-+					0xf1	/* SEMC_A0 */
-+				MXRT1050_IOMUXC_GPIO_EMC_10_SEMC_ADDR01
-+					0xf1	/* SEMC_A1 */
-+				MXRT1050_IOMUXC_GPIO_EMC_11_SEMC_ADDR02
-+					0xf1	/* SEMC_A2 */
-+				MXRT1050_IOMUXC_GPIO_EMC_12_SEMC_ADDR03
-+					0xf1	/* SEMC_A3 */
-+				MXRT1050_IOMUXC_GPIO_EMC_13_SEMC_ADDR04
-+					0xf1	/* SEMC_A4 */
-+				MXRT1050_IOMUXC_GPIO_EMC_14_SEMC_ADDR05
-+					0xf1	/* SEMC_A5 */
-+				MXRT1050_IOMUXC_GPIO_EMC_15_SEMC_ADDR06
-+					0xf1	/* SEMC_A6 */
-+				MXRT1050_IOMUXC_GPIO_EMC_16_SEMC_ADDR07
-+					0xf1	/* SEMC_A7 */
-+				MXRT1050_IOMUXC_GPIO_EMC_17_SEMC_ADDR08
-+					0xf1	/* SEMC_A8 */
-+				MXRT1050_IOMUXC_GPIO_EMC_18_SEMC_ADDR09
-+					0xf1	/* SEMC_A9 */
-+				MXRT1050_IOMUXC_GPIO_EMC_19_SEMC_ADDR11
-+					0xf1	/* SEMC_A11 */
-+				MXRT1050_IOMUXC_GPIO_EMC_20_SEMC_ADDR12
-+					0xf1	/* SEMC_A12 */
-+				MXRT1050_IOMUXC_GPIO_EMC_21_SEMC_BA0
-+					0xf1	/* SEMC_BA0 */
-+				MXRT1050_IOMUXC_GPIO_EMC_22_SEMC_BA1
-+					0xf1	/* SEMC_BA1 */
-+				MXRT1050_IOMUXC_GPIO_EMC_23_SEMC_ADDR10
-+					0xf1	/* SEMC_A10 */
-+				MXRT1050_IOMUXC_GPIO_EMC_24_SEMC_CAS
-+					0xf1	/* SEMC_CAS */
-+				MXRT1050_IOMUXC_GPIO_EMC_25_SEMC_RAS
-+					0xf1	/* SEMC_RAS */
-+				MXRT1050_IOMUXC_GPIO_EMC_26_SEMC_CLK
-+					0xf1	/* SEMC_CLK */
-+				MXRT1050_IOMUXC_GPIO_EMC_27_SEMC_CKE
-+					0xf1	/* SEMC_CKE */
-+				MXRT1050_IOMUXC_GPIO_EMC_28_SEMC_WE
-+					0xf1	/* SEMC_WE */
-+				MXRT1050_IOMUXC_GPIO_EMC_29_SEMC_CS0
-+					0xf1	/* SEMC_CS0 */
-+				MXRT1050_IOMUXC_GPIO_EMC_30_SEMC_DA08
-+					0xf1	/* SEMC_D8 */
-+				MXRT1050_IOMUXC_GPIO_EMC_31_SEMC_DA09
-+					0xf1	/* SEMC_D9 */
-+				MXRT1050_IOMUXC_GPIO_EMC_32_SEMC_DA10
-+					0xf1	/* SEMC_D10 */
-+				MXRT1050_IOMUXC_GPIO_EMC_33_SEMC_DA11
-+					0xf1	/* SEMC_D11 */
-+				MXRT1050_IOMUXC_GPIO_EMC_34_SEMC_DA12
-+					0xf1	/* SEMC_D12 */
-+				MXRT1050_IOMUXC_GPIO_EMC_35_SEMC_DA13
-+					0xf1	/* SEMC_D13 */
-+				MXRT1050_IOMUXC_GPIO_EMC_36_SEMC_DA14
-+					0xf1	/* SEMC_D14 */
-+				MXRT1050_IOMUXC_GPIO_EMC_37_SEMC_DA15
-+					0xf1	/* SEMC_D15 */
-+				MXRT1050_IOMUXC_GPIO_EMC_38_SEMC_DM01
-+					0xf1	/* SEMC_DM1 */
-+				MXRT1050_IOMUXC_GPIO_EMC_39_SEMC_DQS
-+					(IMX_PAD_SION | 0xf1)	/* SEMC_DQS */
-+			>;
-+		};
-+
-+		pinctrl_usdhc0: usdhc0grp {
-+			fsl,pins = <
-+				MXRT1050_IOMUXC_GPIO_B1_12_USDHC1_CD_B
-+					0x1B000
-+				MXRT1050_IOMUXC_GPIO_B1_14_USDHC1_VSELECT
-+					0xB069
-+				MXRT1050_IOMUXC_GPIO_SD_B0_00_USDHC1_CMD
-+					0x17061
-+				MXRT1050_IOMUXC_GPIO_SD_B0_01_USDHC1_CLK
-+					0x17061
-+				MXRT1050_IOMUXC_GPIO_SD_B0_05_USDHC1_DATA3
-+					0x17061
-+				MXRT1050_IOMUXC_GPIO_SD_B0_04_USDHC1_DATA2
-+					0x17061
-+				MXRT1050_IOMUXC_GPIO_SD_B0_03_USDHC1_DATA1
-+					0x17061
-+				MXRT1050_IOMUXC_GPIO_SD_B0_02_USDHC1_DATA0
-+					0x17061
-+			>;
-+		};
-+
-+	};
-+};
-+
-+&usdhc1 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz", "sleep";
-+	pinctrl-0 = <&pinctrl_usdhc0>;
-+	pinctrl-1 = <&pinctrl_usdhc0>;
-+	pinctrl-2 = <&pinctrl_usdhc0>;
-+	pinctrl-3 = <&pinctrl_usdhc0>;
-+	status = "okay";
-+
-+	cd-gpios = <&gpio2 28 GPIO_ACTIVE_LOW>;
-+};
-diff --git a/arch/arm/boot/dts/imxrt1050.dtsi b/arch/arm/boot/dts/imxrt1050.dtsi
-new file mode 100644
-index 000000000000..b1c04395bb29
---- /dev/null
-+++ b/arch/arm/boot/dts/imxrt1050.dtsi
-@@ -0,0 +1,179 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-+/*
-+ * Copyright (C) 2019
-+ * Author(s): Giulio Benetti <giulio.benetti@benettiengineering.com>
-+ */
-+
-+#include "armv7-m.dtsi"
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/imxrt1050-clock.h>
-+#include <dt-bindings/gpio/gpio.h>
-+
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	aliases {
-+		gpio0 = &gpio1;
-+		gpio1 = &gpio2;
-+		gpio2 = &gpio3;
-+		gpio3 = &gpio4;
-+		gpio4 = &gpio5;
-+		mmc0 = &usdhc1;
-+		serial0 = &lpuart1;
-+	};
-+	clocks {
-+		osc: osc {
-+			compatible = "fsl,imx-osc", "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <24000000>;
-+		};
-+	};
-+
-+	cpus {
-+		#address-cells = <0x01>;
-+		#size-cells = <0x00>;
-+
-+		cpu@0 {
-+			compatible = "arm,cortex-m7";
-+			device_type = "cpu";
-+			reg = <0x00>;
-+		};
-+	};
-+
-+	soc {
-+
-+		lpuart1: serial@40184000 {
-+			compatible = "fsl,imxrt-lpuart","fsl,imx8mm-uart", "fsl,imx6q-uart";
-+			reg = <0x40184000 0x4000>;
-+			interrupts = <20>;
-+			clocks = <&clks IMXRT1050_CLK_LPUART1>;
-+			clock-names = "ipg";
-+			status = "disabled";
-+		};
-+
-+		iomuxc: iomuxc@401f8000 {
-+			compatible = "fsl,imxrt1050-iomuxc";
-+			reg = <0x401f8000 0x4000>;
-+			fsl,mux_mask = <0x7>;
-+		};
-+
-+		clks: ccm@400fc000 {
-+			compatible = "fsl,imxrt1050-ccm";
-+			reg = <0x400fc000 0x4000>;
-+			interrupts = <95>,
-+				     <96>;
-+			clocks = <&osc>;
-+			clock-names = "osc";
-+			#clock-cells = <1>;
-+		};
-+
-+		edma1: dma-controller@400E8000 {
-+			#dma-cells = <2>;
-+			compatible = "fsl,imx7ulp-edma";
-+			reg = <0x400E8000 0x4000>,
-+				<0x400EC000 0x4000>;
-+			dma-channels = <32>;
-+			interrupts = <0>,
-+				<1>,
-+				<2>,
-+				<3>,
-+				<4>,
-+				<5>,
-+				<6>,
-+				<7>,
-+				<8>,
-+				<9>,
-+				<10>,
-+				<11>,
-+				<12>,
-+				<13>,
-+				<14>,
-+				<15>,
-+				<16>;
-+			clock-names = "dma", "dmamux0";
-+			clocks = <&clks IMXRT1050_CLK_DMA>,
-+				 <&clks IMXRT1050_CLK_DMA_MUX>;
-+		};
-+
-+		usdhc1: mmc@402c0000 {
-+			compatible ="fsl,imxrt-usdhc";
-+			reg = <0x402c0000 0x4000>;
-+			interrupts = <110>;
-+			clocks = <&clks IMXRT1050_CLK_IPG_PDOF>,
-+				<&clks IMXRT1050_CLK_OSC>,
-+				<&clks IMXRT1050_CLK_USDHC1>;
-+			clock-names = "ipg", "ahb", "per";
-+			bus-width = <4>;
-+			fsl,wp-controller;
-+			no-1-8-v;
-+			max-frequency = <4000000>;
-+			fsl,tuning-start-tap = <20>;
-+			fsl,tuning-step= <2>;
-+			status = "disabled";
-+		};
-+
-+		gpio1: gpio@401b8000 {
-+			compatible = "fsl,imxrt-gpio", "fsl,imx35-gpio";
-+			reg = <0x401b8000 0x4000>;
-+			interrupts = <80>,
-+				     <81>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+
-+		gpio2: gpio@401bc000 {
-+			compatible = "fsl,imxrt-gpio", "fsl,imx35-gpio";
-+			reg = <0x401bc000 0x4000>;
-+			interrupts = <82>,
-+				<83>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+
-+		gpio3: gpio@401c0000 {
-+			compatible = "fsl,imxrt-gpio", "fsl,imx35-gpio";
-+			reg = <0x401c0000 0x4000>;
-+			interrupts = <84>,
-+				<85>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+
-+		gpio4: gpio@401c4000 {
-+			compatible = "fsl,imxrt-gpio", "fsl,imx35-gpio";
-+			reg = <0x401c4000 0x4000>;
-+			interrupts = <86>,
-+					<87>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+
-+		gpio5: gpio@400c0000 {
-+			compatible = "fsl,imxrt-gpio", "fsl,imx35-gpio";
-+			reg = <0x400c0000 0x4000>;
-+			interrupts = <88>,
-+				<89>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+
-+		gpt: timer@401ec000 {
-+			compatible = "fsl,imx53-gpt", "fsl,imx31-gpt";
-+			reg = <0x401ec000 0x4000>;
-+			interrupts = <100>;
-+			clocks = <&clks IMXRT1050_CLK_OSC>;
-+			clock-names = "per";
-+		};
-+	};
-+};
++++ b/arch/arm/configs/imxrt_defconfig
+@@ -0,0 +1,157 @@
++# CONFIG_LOCALVERSION_AUTO is not set
++CONFIG_SYSVIPC=y
++CONFIG_USELIB=y
++CONFIG_NO_HZ=y
++CONFIG_HIGH_RES_TIMERS=y
++CONFIG_BPF_SYSCALL=y
++CONFIG_PREEMPT_VOLUNTARY=y
++CONFIG_BSD_PROCESS_ACCT=y
++CONFIG_BSD_PROCESS_ACCT_V3=y
++CONFIG_PSI=y
++CONFIG_IKCONFIG=y
++CONFIG_IKCONFIG_PROC=y
++CONFIG_LOG_BUF_SHIFT=18
++CONFIG_MEMCG=y
++CONFIG_BLK_CGROUP=y
++CONFIG_CFS_BANDWIDTH=y
++CONFIG_CGROUP_PIDS=y
++CONFIG_CGROUP_RDMA=y
++CONFIG_CGROUP_FREEZER=y
++CONFIG_CGROUP_DEVICE=y
++CONFIG_CGROUP_CPUACCT=y
++CONFIG_CGROUP_PERF=y
++CONFIG_CGROUP_BPF=y
++CONFIG_NAMESPACES=y
++CONFIG_USER_NS=y
++CONFIG_CHECKPOINT_RESTORE=y
++CONFIG_SCHED_AUTOGROUP=y
++CONFIG_RELAY=y
++CONFIG_BLK_DEV_INITRD=y
++CONFIG_EXPERT=y
++CONFIG_SGETMASK_SYSCALL=y
++# CONFIG_FUTEX is not set
++CONFIG_KALLSYMS_ALL=y
++CONFIG_PC104=y
++# CONFIG_SLUB_DEBUG is not set
++# CONFIG_COMPAT_BRK is not set
++CONFIG_SLAB_FREELIST_RANDOM=y
++CONFIG_SLAB_FREELIST_HARDENED=y
++CONFIG_PROFILING=y
++# CONFIG_MMU is not set
++CONFIG_ARCH_MXC=y
++CONFIG_SOC_IMXRT=y
++# CONFIG_ARM_DMA_MEM_BUFFERABLE is not set
++CONFIG_SET_MEM_PARAM=y
++CONFIG_DRAM_BASE=0x80000000
++CONFIG_DRAM_SIZE=0x02000000
++CONFIG_HZ_250=y
++CONFIG_FORCE_MAX_ZONEORDER=14
++CONFIG_PARAVIRT=y
++# CONFIG_ATAGS is not set
++CONFIG_CMDLINE="console=ttyS0 root=/dev/mmcblk0p2 rw earlycon rootwait"
++CONFIG_BLK_DEV_BSGLIB=y
++CONFIG_BLK_DEV_INTEGRITY=y
++CONFIG_BLK_DEV_ZONED=y
++CONFIG_BLK_DEV_THROTTLING=y
++CONFIG_BLK_WBT=y
++CONFIG_BLK_SED_OPAL=y
++CONFIG_PARTITION_ADVANCED=y
++CONFIG_BSD_DISKLABEL=y
++CONFIG_MINIX_SUBPARTITION=y
++CONFIG_SOLARIS_X86_PARTITION=y
++CONFIG_UNIXWARE_DISKLABEL=y
++CONFIG_LDM_PARTITION=y
++CONFIG_CMDLINE_PARTITION=y
++# CONFIG_MQ_IOSCHED_KYBER is not set
++CONFIG_BINFMT_FLAT=y
++CONFIG_CLEANCACHE=y
++CONFIG_ZPOOL=y
++CONFIG_ZBUD=y
++CONFIG_Z3FOLD=y
++CONFIG_UEVENT_HELPER=y
++CONFIG_DEVTMPFS=y
++CONFIG_DEVTMPFS_MOUNT=y
++# CONFIG_STANDALONE is not set
++CONFIG_FW_LOADER_USER_HELPER=y
++CONFIG_FW_LOADER_USER_HELPER_FALLBACK=y
++CONFIG_IMX_WEIM=y
++CONFIG_BLK_DEV_LOOP=y
++CONFIG_BLK_DEV_RAM=y
++CONFIG_BLK_DEV_RAM_COUNT=1
++CONFIG_BLK_DEV_RAM_SIZE=65536
++# CONFIG_INPUT_KEYBOARD is not set
++# CONFIG_INPUT_MOUSE is not set
++# CONFIG_SERIO is not set
++CONFIG_LEGACY_PTY_COUNT=2
++CONFIG_SERIAL_FSL_LPUART=y
++CONFIG_SERIAL_FSL_LPUART_CONSOLE=y
++CONFIG_SERIAL_NONSTANDARD=y
++CONFIG_SERIAL_DEV_BUS=y
++CONFIG_TTY_PRINTK=y
++CONFIG_TTY_PRINTK_LEVEL=7
++CONFIG_PINCTRL_IMXRT1050=y
++CONFIG_GPIO_SYSFS=y
++CONFIG_GPIO_MXC=y
++# CONFIG_HWMON is not set
++# CONFIG_HID is not set
++# CONFIG_USB_SUPPORT is not set
++CONFIG_MMC=y
++CONFIG_MMC_SDHCI=y
++CONFIG_MMC_SDHCI_PLTFM=y
++CONFIG_MMC_SDHCI_ESDHC_IMX=y
++CONFIG_DMADEVICES=y
++CONFIG_FSL_EDMA=y
++# CONFIG_MX3_IPU is not set
++# CONFIG_VIRTIO_MENU is not set
++# CONFIG_VHOST_MENU is not set
++CONFIG_MEMORY=y
++CONFIG_EXT2_FS=y
++CONFIG_EXT2_FS_XATTR=y
++CONFIG_EXT2_FS_POSIX_ACL=y
++CONFIG_EXT2_FS_SECURITY=y
++CONFIG_EXT3_FS=y
++CONFIG_EXT3_FS_POSIX_ACL=y
++CONFIG_EXT3_FS_SECURITY=y
++# CONFIG_FILE_LOCKING is not set
++# CONFIG_DNOTIFY is not set
++CONFIG_QUOTA=y
++# CONFIG_PRINT_QUOTA_WARNING is not set
++CONFIG_AUTOFS4_FS=y
++CONFIG_VFAT_FS=y
++CONFIG_FAT_DEFAULT_UTF8=y
++CONFIG_EXFAT_FS=y
++CONFIG_CONFIGFS_FS=y
++# CONFIG_MISC_FILESYSTEMS is not set
++CONFIG_NLS_DEFAULT="cp437"
++CONFIG_NLS_CODEPAGE_437=y
++CONFIG_NLS_ASCII=y
++CONFIG_NLS_ISO8859_1=y
++CONFIG_NLS_UTF8=y
++CONFIG_LSM="yama,loadpin,integrity,apparmor"
++# CONFIG_CRYPTO_MANAGER_DISABLE_TESTS is not set
++# CONFIG_CRYPTO_HW is not set
++CONFIG_PRINTK_TIME=y
++CONFIG_CONSOLE_LOGLEVEL_DEFAULT=15
++CONFIG_CONSOLE_LOGLEVEL_QUIET=15
++CONFIG_MESSAGE_LOGLEVEL_DEFAULT=7
++CONFIG_DYNAMIC_DEBUG=y
++# CONFIG_DEBUG_BUGVERBOSE is not set
++CONFIG_DEBUG_INFO=y
++CONFIG_DEBUG_INFO_DWARF4=y
++CONFIG_GDB_SCRIPTS=y
++CONFIG_MAGIC_SYSRQ=y
++CONFIG_MAGIC_SYSRQ_DEFAULT_ENABLE=0x01b6
++CONFIG_DEBUG_FS=y
++CONFIG_PAGE_POISONING=y
++CONFIG_SCHED_STACK_END_CHECK=y
++CONFIG_SOFTLOCKUP_DETECTOR=y
++CONFIG_DEFAULT_HUNG_TASK_TIMEOUT=1
++# CONFIG_SCHED_DEBUG is not set
++CONFIG_SCHEDSTATS=y
++CONFIG_STACKTRACE=y
++CONFIG_DEBUG_USER=y
++CONFIG_DEBUG_LL=y
++CONFIG_DEBUG_UNCOMPRESS=y
++CONFIG_EARLY_PRINTK=y
++# CONFIG_RUNTIME_TESTING_MENU is not set
++CONFIG_MEMTEST=y
 -- 
 2.33.0
 
