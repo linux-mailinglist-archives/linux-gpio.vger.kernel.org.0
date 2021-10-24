@@ -2,88 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D8EC2438C00
-	for <lists+linux-gpio@lfdr.de>; Sun, 24 Oct 2021 23:08:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AB07438C04
+	for <lists+linux-gpio@lfdr.de>; Sun, 24 Oct 2021 23:10:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231733AbhJXVKa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 24 Oct 2021 17:10:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32848 "EHLO
+        id S231867AbhJXVMU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 24 Oct 2021 17:12:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231314AbhJXVK3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 24 Oct 2021 17:10:29 -0400
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9B72C061745
-        for <linux-gpio@vger.kernel.org>; Sun, 24 Oct 2021 14:08:08 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id bi35so274509lfb.9
-        for <linux-gpio@vger.kernel.org>; Sun, 24 Oct 2021 14:08:08 -0700 (PDT)
+        with ESMTP id S231760AbhJXVMT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 24 Oct 2021 17:12:19 -0400
+Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56759C061764
+        for <linux-gpio@vger.kernel.org>; Sun, 24 Oct 2021 14:09:58 -0700 (PDT)
+Received: by mail-lj1-x231.google.com with SMTP id o26so9515307ljj.2
+        for <linux-gpio@vger.kernel.org>; Sun, 24 Oct 2021 14:09:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LMYhbLkgTSqPSv9vA6KWgK1dElOofvGFtWwEO+48qZ0=;
-        b=CCBwZTOnWvYExKQ/vwM/BrgQ+/2VXEta4i/lTffNfw3ohsCrs5RF8Di2tkXD7R8Y7Z
-         9ImYAeELkS9dIztoT86WgcADOmObC7RVpSFYpgz+/50LupX31VuzTNej6sUzePQuroY5
-         r4gbHDF/oxnmeyx638YZb/RUOGb+ZDJRlKK6zjRIKV6O9pOvVSMwqo4B1ZDJI2E7YiQa
-         BdQfBeiHzL+uRB5vyFdJhTXJW5CWDfqTTDIvKJX3frysFvikSP0rBDRSynt8SiCB4HjA
-         Tymjj8+wz1PdvZyiVTQU+A4frz7K2AGDAhuCNaHznPdjZwP0S60w1qdbtF2nSki37b7q
-         thMQ==
+         :cc:content-transfer-encoding;
+        bh=vFAdDSdKatUr6JRjcKkr/+bpZM+7j83T9fyuwg8k+Z4=;
+        b=FWQY4cVf6pREKtaWH9QI9Aocz2xs8NTJoPWlEjVmb3AS15+BUGbgcAKXNGlnzIC6aK
+         upzWRuWmugvFpXalI8IfMtrdD2TjY3eWYqF7oMkjJu0FgVZS+FbBHeDLbF5cn5dAmjYD
+         cz9RhbsczeqEkNVyFRGqMVTyZrvjzvb/O3GhJP4U5wYkwLyvIdp2Sgac9A9F/8mH1clq
+         bj5Hrvht+khwaXSO6LzgnfTeanwH1DS/lhokaWDnue2/OIdbqb/zlrAQwIbzb/R3sQnw
+         PLtd7l7QQ6t+lbbYl+mU4gNPOA6qpKIvSE7JcKfq61BJ77iW+ThEqvaHKlaasWulcowV
+         i3XQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LMYhbLkgTSqPSv9vA6KWgK1dElOofvGFtWwEO+48qZ0=;
-        b=I57Xrx1MbD5oR4yGocyfoROn6Q+PRO2mSbSG71TXMjMhCkFxj9Q89pXzlzSjEuarF/
-         MvrJfJLtMPBv+4IcWa6AdGcx3EtAR9M1HDkvB+jN/NwNk3JuyM1VLtHu/buXJgNZfuDg
-         VCepbnxPE3uHYPErwHYv66rty78xVTKH+vQb5T1O3BJfAYYxkbLg0G8QDmI9pNy56xa3
-         5k+KSiqIQWk5auRs4peFiynSvKGfvLV9MAOKC932f7rw5X10IS3RcaLWkdDNcqTwp6t4
-         +vqTfjiU2tKzTpJfpy2DKJWO/WBORXCViSaTB+6DiV2nGLucmPLRHS9NpkRxcMcTSRWv
-         ojMw==
-X-Gm-Message-State: AOAM532VkGY96mzZzlPK/vTkhSqzIYYpibGwZdPp98yzm5G3nfAleRhM
-        PpWbFIC+COIWtfQHbi7mc3+jnu42Yk+rJySCCl9Z3w==
-X-Google-Smtp-Source: ABdhPJwAZbQpExa3fIcxuElrdBQpPSxEtV7dAaKscoaT6LDhlGxWjuDzvnxdv0SLWc6JCN8hPKHAEbgB51S3lCZGu1s=
-X-Received: by 2002:a05:6512:1316:: with SMTP id x22mr13096950lfu.291.1635109687054;
- Sun, 24 Oct 2021 14:08:07 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=vFAdDSdKatUr6JRjcKkr/+bpZM+7j83T9fyuwg8k+Z4=;
+        b=eEChtAikBZrK8OQxqMGHOIlUv4RvtjUYtkqS8vdQRF5kiA5TS63XqjrKV8TfJEh1T9
+         H1Us9CDHfIKbdPp/0+C+3Jpqqiv/CLl7d0y2DiAGVUwWoJ1kg/nlVklZ8ktblFBttomB
+         sZuHqAguk5d3t981Aw5UoaZ7hsFWJ3A6MjNnUqyhEkWbgkde1C0aTFEGXHZxLnPjXCF0
+         i8wcERwL5l7CZ3Ue4KKEPxzB9HOf94nXxkjlW7riSmug7zqY+vz066o2XZzmMsYESUQD
+         HGj7IUcJ8R15mt7uCXZdLr1TqsZVbG1LPNkD+oTa5XfUtnbBUZ53RszjeW9NIDDcuDYq
+         wm+Q==
+X-Gm-Message-State: AOAM531Qbrv6gouvWZcBd+70tUcTXm/NdCUOSoVRjbMWXVJoJLYaScz/
+        DiR3gHsR4hiQ0tNeU5XtKXBvoYVwsXfhY/+sMN6TLA==
+X-Google-Smtp-Source: ABdhPJxKA5zxWB6X10wDcO3IwJzTWj31ZG/+9qs1bK3p713Bu71+iyIOOHDYSCN+E1PT43P/8dj9+yHQs5UfeIlkPIg=
+X-Received: by 2002:a05:651c:111:: with SMTP id a17mr14278890ljb.145.1635109796637;
+ Sun, 24 Oct 2021 14:09:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211022124036.5291-1-sam.shih@mediatek.com>
-In-Reply-To: <20211022124036.5291-1-sam.shih@mediatek.com>
+References: <20211018112201.25424-1-noralf@tronnes.org>
+In-Reply-To: <20211018112201.25424-1-noralf@tronnes.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 24 Oct 2021 23:07:56 +0200
-Message-ID: <CACRpkdagzzWtN6Gp-ZMZkAqq7JwL0nf63J7NC8jpF=ZfRJG4JQ@mail.gmail.com>
-Subject: Re: [PATCH v9 0/4] Mediatek MT7986 pinctrl support
-To:     Sam Shih <sam.shih@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        John Crispin <john@phrozen.org>,
-        Ryder Lee <Ryder.Lee@mediatek.com>
+Date:   Sun, 24 Oct 2021 23:09:45 +0200
+Message-ID: <CACRpkdZQSB+McOGK9HZUNAr2p+FX=6ddbY=5-sQ8difh1pEqGg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: dln2: Fix interrupts when replugging the device
+To:     =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        stable <stable@vger.kernel.org>,
+        Daniel Baluta <daniel.baluta@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Sam,
+On Mon, Oct 18, 2021 at 1:23 PM Noralf Tr=C3=B8nnes <noralf@tronnes.org> wr=
+ote:
 
-On Fri, Oct 22, 2021 at 2:40 PM Sam Shih <sam.shih@mediatek.com> wrote:
+> When replugging the device the following message shows up:
+>
+> gpio gpiochip2: (dln2): detected irqchip that is shared with multiple gpi=
+ochips: please fix the driver.
+>
+> This also has the effect that interrupts won't work.
+> The same problem would also show up if multiple devices where plugged in.
+>
+> Fix this by allocating the irq_chip data structure per instance like othe=
+r
+> drivers do.
+>
+> I don't know when this problem appeared, but it is present in 5.10.
+>
+> Cc: <stable@vger.kernel.org> # 5.10+
+> Cc: Daniel Baluta <daniel.baluta@gmail.com>
+> Signed-off-by: Noralf Tr=C3=B8nnes <noralf@tronnes.org>
 
-> This patch series add pinctrl support for mediatek mt7986 SoC series.
-> It is based on patch series "Add basic SoC support for mediatek mt7986"
-> https://lore.kernel.org/all/20211018114009.13350-1-sam.shih@mediatek.com/
-> ---
-> v9: added Acked-by and Reviewed-by tag
-
-I have applied patches 1 & 2 applied to the pin control tree!
-Thanks for your good work.
-
-Please submit patches 3 & 4 to the Mediatek SoC tree.
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-for these.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
