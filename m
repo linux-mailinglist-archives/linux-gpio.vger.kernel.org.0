@@ -2,97 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A4179438C2C
-	for <lists+linux-gpio@lfdr.de>; Sun, 24 Oct 2021 23:49:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 12AD5438C4C
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Oct 2021 00:17:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231665AbhJXVwT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 24 Oct 2021 17:52:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41996 "EHLO
+        id S229734AbhJXWUT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 24 Oct 2021 18:20:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231872AbhJXVwS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 24 Oct 2021 17:52:18 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC675C061745
-        for <linux-gpio@vger.kernel.org>; Sun, 24 Oct 2021 14:49:56 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id bp15so7378824lfb.4
-        for <linux-gpio@vger.kernel.org>; Sun, 24 Oct 2021 14:49:56 -0700 (PDT)
+        with ESMTP id S229533AbhJXWUS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 24 Oct 2021 18:20:18 -0400
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEC82C061764
+        for <linux-gpio@vger.kernel.org>; Sun, 24 Oct 2021 15:17:56 -0700 (PDT)
+Received: by mail-lj1-x229.google.com with SMTP id w23so4667811lje.7
+        for <linux-gpio@vger.kernel.org>; Sun, 24 Oct 2021 15:17:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=zqFQsFklz0z9fcfedYbprvhik13AFhIEkeGZ0J9HMVs=;
-        b=vtdzNJXe7QO5brg0f8xsAF2K449Mc5q9vcJq0Qcq8K5HWgXm4fq6s2MKROR+wgugHh
-         /7nPILVTts16rDHuo9n7Ix+IjkFiSOXKB1sHPByCN6zeoVpIAH8X8bakNSHYS8jS3DFJ
-         qFYsBbZgfQ4Hl2cgMyBdeTsfNXF+Lgemm1NCR0+oLdvmTrr1+Y0DW5+nxCQZNxcHBjKd
-         dNokp3lRaRxMNp0zsDdWXdyLEbdU6V82Sb2apqaRcu13h3cWCdlhEA0HjsU9/WSdGZ0p
-         TIQ+zHPhHbesIkOXlzu7OuydUKuJ+6PM5Xx/tWhULpvKDZCWGlWYSCwJDMdzBlwny86K
-         mMOw==
+        bh=JJaQllcwUzGd4qxnMR+A86sauTQSNS36fTnnI/uULQM=;
+        b=GQ+zacEvuIRSW8rKG/z7bNab0DMU6w/J4LIs6RCDHju9nVo1ufu9qJ9aDN0QJNxejY
+         0FL926egcpBAegVGFn999GDpXrzXuR0g4jSjEjkqinSx9UutX/P7KOiiUeMk2It6MaEo
+         rRHzucaXtlYVjA3ligXrHAhCQn+VAnngnZworLl41Rcs1XgMfoUs0XE9+ywYpBqjif0Y
+         145L74F8X6SKmrGpzzZ0a0SX87Stx23qWWYI1iu7U2e4F91knBiglw4EpyuTZiSSocg3
+         7WqpX796Rj1dGzcnbqfcuMw01bWvOI4Fx9g4xGw+3ubQMZKk1c22FSXIVbj+xJg2o29T
+         UZpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=zqFQsFklz0z9fcfedYbprvhik13AFhIEkeGZ0J9HMVs=;
-        b=Z9ERRatgiy2JOlxp8pblQCL8dFv8T1q+GmcKpM98ZB0nXWBL7BGc9rpCTI77je2yr1
-         YyT7Ir1+Ca+1/lNtqaChPNswSLlgURaUCkCaIIdd7g+JIX8SDQYZrEi/D8DR9f71tvbA
-         FlaP0iGDHBOgsyEL0ZNnGoh2Mz//I3a5Ai5eIbp28e33Tn9thu4xNgIvBCwziopyfM8X
-         n1VEMd/PSXjGGopyMaDRsJg2MmVp2N54JEHNi0EzI1yjJ/cwDXJFAl+J78DSG+YFkRso
-         QKgtvKhoVWCudxUW/yHUZhv9xYJBN1brpBvCPaK6fyoqVFe8kDFnQugSfOrIobXFD7e8
-         3zRQ==
-X-Gm-Message-State: AOAM5322oVVzfdJwzN20GJ9/sS3N/mWoN+zTcpOOcrHA1KigGjIRFnn2
-        /Kcx7xLx7RFX4E7ty1B1hxNlAmodoEtiDxgRF0Jnjw==
-X-Google-Smtp-Source: ABdhPJygz737sWYq7dytPNvnnlwtCG1vOKQaYk14JY11BQkN5FIGmxvZXnjTvu/d8bwlzjISeavbtKh2rIcQEhfyUR0=
-X-Received: by 2002:ac2:5d4a:: with SMTP id w10mr13208074lfd.584.1635112195140;
- Sun, 24 Oct 2021 14:49:55 -0700 (PDT)
+        bh=JJaQllcwUzGd4qxnMR+A86sauTQSNS36fTnnI/uULQM=;
+        b=eJmWp2reR5Des1YzS5VxloCjznc9OqRu4d+MALPdMtFFGDKVHVYDA89WyNT1SFOSXl
+         rQ4ylIIAvn/EJ6eXWMNXugXjuJpbR9NE+l2Gbh7cQ9FnZzSAEKV6YE+yL6cHP0GelXt9
+         py4YCnoMazlQHfIJkF29NIBL7cPaVV9u5n5Y97WXBNZhNqUPnB5JYLmeTVj92jmObUsD
+         yBLhJIAHPlcL1haYZsc/AwdBr6pQFcM0a4gf877Guzc1e+5PNBpZHEX4ToZZim5F9/qb
+         1OGk7al570S/odqpfy8WyXLSbIxB4eeXNn+ZFBm8tkLJjUsyRPnK11puSpxBN8FFDYAv
+         y6kg==
+X-Gm-Message-State: AOAM5300haf2y7LsqDA8DTZFMXIJfW/c4BW8CVApT3UlqwjjPOM4Iwwf
+        hTwbWscnI2Re0pPdUJhHoUPDgjEUjUmQWYPeXMFHeA==
+X-Google-Smtp-Source: ABdhPJzoqTpYQ5TpW5Izs9igH8k5pOJrErUUiisSDzyj8MrLgy4z8bzWFA9jSxPgHlJRRbjcka6RCXHo8VBMTWnTrq4=
+X-Received: by 2002:a2e:b748:: with SMTP id k8mr15148284ljo.358.1635113875297;
+ Sun, 24 Oct 2021 15:17:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211018220504.8301-1-shreeya.patel@collabora.com>
-In-Reply-To: <20211018220504.8301-1-shreeya.patel@collabora.com>
+References: <20210325122832.119147-1-sandberg@mailfence.com>
+ <20211019200831.3817-1-maukka@ext.kapsi.fi> <20211019200831.3817-3-maukka@ext.kapsi.fi>
+In-Reply-To: <20211019200831.3817-3-maukka@ext.kapsi.fi>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 24 Oct 2021 23:49:44 +0200
-Message-ID: <CACRpkdZCMH5OBwfiPwMT1CifDV28H4aTxy_N_4dHs0Qg0ENOAw@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: Return EPROBE_DEFER if gc->to_irq is NULL
-To:     Shreeya Patel <shreeya.patel@collabora.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Wolfram Sang <wsa@kernel.org>, krisman@collabora.com,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Collabora Kernel ML <kernel@collabora.com>,
+Date:   Mon, 25 Oct 2021 00:17:44 +0200
+Message-ID: <CACRpkdYvhM53GVLpDp6mHmy+U0kTz2t-yDz5afeXeWTgp=bsXw@mail.gmail.com>
+Subject: Re: [PATCH v7 2/2] gpio: gpio-cascade: add generic GPIO cascade
+To:     Mauri Sandberg <maukka@ext.kapsi.fi>
+Cc:     Mauri Sandberg <sandberg@mailfence.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>
+        Drew Fustini <drew@beagleboard.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 19, 2021 at 12:05 AM Shreeya Patel
-<shreeya.patel@collabora.com> wrote:
+On Tue, Oct 19, 2021 at 10:10 PM Mauri Sandberg <maukka@ext.kapsi.fi> wrote:
 
-> We are racing the registering of .to_irq when probing the
-> i2c driver. This results in random failure of touchscreen
-> devices.
+> Adds support for building cascades of GPIO lines. That is, it allows
+> setups when there is one upstream line and multiple cascaded lines, out
+> of which one can be chosen at a time. The status of the upstream line
+> can be conveyed to the selected cascaded line or, vice versa, the status
+> of the cascaded line can be conveyed to the upstream line.
 >
-> Following errors could be seen in dmesg logs when gc->to_irq is NULL
+> A multiplexer is being used to select, which cascaded GPIO line is being
+> used at any given time.
 >
-> [2.101857] i2c_hid i2c-FTS3528:00: HID over i2c has not been provided an Int IRQ
-> [2.101953] i2c_hid: probe of i2c-FTS3528:00 failed with error -22
+> At the moment only input direction is supported. In future it should be
+> possible to add support for output direction, too.
 >
-> To avoid this situation, defer probing until to_irq is registered.
->
-> This issue has been reported many times in past and people have been
-> using workarounds like changing the pinctrl_amd to built-in instead
-> of loading it as a module or by adding a softdep for pinctrl_amd into
-> the config file.
->
-> References :-
-> https://bugzilla.kernel.org/show_bug.cgi?id=209413
-> https://github.com/Syniurge/i2c-amd-mp2/issues/3
->
-> Signed-off-by: Shreeya Patel <shreeya.patel@collabora.com>
->
+> Signed-off-by: Mauri Sandberg <maukka@ext.kapsi.fi>
 > ---
-> Changes in v2
->   - Add a condition to check for irq chip to avoid bogus error.
+> v6 -> v7:
 
-This v2 looks acceptable to me.
+This v7 looks like clean and nice merge material to me,
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
