@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4EFD9438A3B
-	for <lists+linux-gpio@lfdr.de>; Sun, 24 Oct 2021 17:42:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C84EA438A40
+	for <lists+linux-gpio@lfdr.de>; Sun, 24 Oct 2021 17:42:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231954AbhJXPnj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 24 Oct 2021 11:43:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45782 "EHLO
+        id S232013AbhJXPnx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 24 Oct 2021 11:43:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232320AbhJXPnE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 24 Oct 2021 11:43:04 -0400
-Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55C4DC061227;
-        Sun, 24 Oct 2021 08:40:43 -0700 (PDT)
-Received: by mail-qk1-x731.google.com with SMTP id 77so9568600qkh.6;
-        Sun, 24 Oct 2021 08:40:43 -0700 (PDT)
+        with ESMTP id S232012AbhJXPnS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 24 Oct 2021 11:43:18 -0400
+Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 459F4C061235;
+        Sun, 24 Oct 2021 08:40:45 -0700 (PDT)
+Received: by mail-qk1-x72a.google.com with SMTP id r15so9513367qkp.8;
+        Sun, 24 Oct 2021 08:40:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=pgMwPqW2QCPNmYp35h2C/F650sNSLIlI55N0crxYuL0=;
-        b=myUDTvQmrwBmSEMelN7b1JegjCXwcqT0Iurql9ceXSOVHnoMdJlrMVQiqfB+M4Re2B
-         ctCZhaLjbsDq3Ddbohqy7YsDFo/ht3CftWFM84clcK7PFxMD1qjtJNM25UqFRvXdn/De
-         dFYosO/ROM17js70NwuEB6TyaDu4E8o4j1dxugOusyDOqSSa2s99PbhBXYXTEZiN05pb
-         tF7QHRRnxdsmAB3A02d3ZMqSlLSaQP2bs0WmtpSUYEJNXk2cb9mIZt0PxMy2A7iOMTsb
-         TcXY3WZBtGmeMDxNMBGf1XoJ4EZCkipuf2fWzMf9EH+hP5aE8KmX3CUcPVubw5w9cnTh
-         /JQQ==
+        bh=KLaMi0PjecgqH9q6xdREGuXIuHpv+l05lfMg4lrWRM0=;
+        b=U2sUeme9KDMAkiU+LubwbYqgrPTmBpkB3glBm48fRP3JvzUaGRsf16LZQFndRgfQVy
+         BCRE5GOdG+Eqr9FVP7gFxa8mRSUtdhOE6VBowIZyKlGrX7qmVP5OtxK/CtItSfeKSxZT
+         AKRicU+TXJ4iIaXmODjoA13KK+pHaElZ6csBw01V7NPPzyUotOMuosojuggPMPVP5jG0
+         lwIEs74cMs7gtoYj7H9dM3ZrN7siDs99tk3o7X5k4nhIDqSYC4NxFIqg1JHH4LRrQipz
+         Uy6ErKUVnxgdvJwrxRmYZVQ0eBd3i75qqpx3ZfQTBbNsJ8V70iSzM36+F0OEt5MElssa
+         ftQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=pgMwPqW2QCPNmYp35h2C/F650sNSLIlI55N0crxYuL0=;
-        b=zT5E+AasJy/70abiE9G12Ujy/l/iAla6rKKgt7dDDxlyzeU+zBGcGZA2rDcVzlsEnj
-         zVnZWBnEFpOG4Iin4isH30CV04YrQ7UfYmg4oKKNPGGIW7n067phPlGc2HjmKaONoQ+Z
-         dd/UkW5fZ7CgxlSAgF6HVyuEypRlOHpnc5PNUlOrJkCz7atfH6uMRAdCq1djJnKJCLe1
-         k/9f62t1RuQHIgdn2/UcKzGROCM0MSYR8q1/197KKj2Y5aKWtF/ZxUpDECIt7xG0jZEy
-         0Vay6hGCX1ZUznrJkfwzq1MdupC3MP8gKI76rVRMJG9o2VsBFy7NlcVHozUbceb7XAUG
-         u6aA==
-X-Gm-Message-State: AOAM531rh1jR3TDEnWl9OvuSX0tEJvG9gpdFnkvPzEaJmlWkDD7Q/faI
-        4qWhus9xw6kq93jWkWTxF28=
-X-Google-Smtp-Source: ABdhPJwtUFwY8HuVejQdK7Ge1YW9lUgLt3C2U9LkWnnddRmGOCS6ExqiNeu7EpADCQ45I9sus0NbxA==
-X-Received: by 2002:a37:b13:: with SMTP id 19mr9499459qkl.430.1635090042452;
-        Sun, 24 Oct 2021 08:40:42 -0700 (PDT)
+        bh=KLaMi0PjecgqH9q6xdREGuXIuHpv+l05lfMg4lrWRM0=;
+        b=K0+V5oUQb6aVe/ABdllR4FD/hxvbfJ4rLVgH1cC9mr41E50qZpFwlN4qmcuhnueHHQ
+         U+nO8eQjSfn6gG7Hn3ofM/Vhpnp2ZwzUNan4TtSRBd+7T6gbPVu7a2klr06aDTr7/B2P
+         PJDG6hH+q/sPmdbqPV8jiOEx9q0jxELi2LjXc4vIlvXjMK6V4CKJ4KvS6EId+u9r9pGf
+         OM0fxe215uoPw472wYiWFAN9DbFkoi8Uo2udO6O6Fw2frLQ3F+3PXcjk/5em+AfXUFzD
+         /JOCnTmF5s6WWw5gU3tW2bXJBwlBtBKVwy+8fXC1t9tiNuZao1RY3ccUoBqRGJQPKtJe
+         EoJg==
+X-Gm-Message-State: AOAM532meyLCpXdPwae8HSkAMfRJrl99ZvrITiO6Uo5EbIvnlg2/v3Xw
+        1MmspA+9hNlLFxsgui3r5vk=
+X-Google-Smtp-Source: ABdhPJy9P9jjgymuGD+hjGuutud3QqZ6FQXwfzaibrHuMzBaHwHpi8yxpzE1VeuLxZa7eKj8Aj9T+w==
+X-Received: by 2002:a37:9307:: with SMTP id v7mr9447815qkd.371.1635090044481;
+        Sun, 24 Oct 2021 08:40:44 -0700 (PDT)
 Received: from jesse-desktop.jtp-bos.lab (146-115-144-188.s4282.c3-0.nwt-cbr1.sbo-nwt.ma.cable.rcncustomer.com. [146.115.144.188])
-        by smtp.gmail.com with ESMTPSA id x9sm7291731qtw.84.2021.10.24.08.40.41
+        by smtp.gmail.com with ESMTPSA id x9sm7291731qtw.84.2021.10.24.08.40.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Oct 2021 08:40:42 -0700 (PDT)
+        Sun, 24 Oct 2021 08:40:44 -0700 (PDT)
 From:   Jesse Taube <mr.bossman075@gmail.com>
 X-Google-Original-From: Jesse Taube <Mr.Bossman075@gmail.com>
 To:     linux-imx@nxp.com
@@ -64,9 +64,9 @@ Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-serial@vger.kernel.org
-Subject: [PATCH 04/13] pinctrl: freescale: Add i.MXRT1050 pinctrl driver support
-Date:   Sun, 24 Oct 2021 11:40:18 -0400
-Message-Id: <20211024154027.1479261-5-Mr.Bossman075@gmail.com>
+Subject: [PATCH 05/13] dt-bindings: clock: imx: Add documentation for i.MXRT clock
+Date:   Sun, 24 Oct 2021 11:40:19 -0400
+Message-Id: <20211024154027.1479261-6-Mr.Bossman075@gmail.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20211024154027.1479261-1-Mr.Bossman075@gmail.com>
 References: <20211024154027.1479261-1-Mr.Bossman075@gmail.com>
@@ -76,401 +76,78 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Giulio Benetti <giulio.benetti@benettiengineering.com>
+Add DT binding documentation for i.MXRT clock driver.
 
-Add the pinctrl driver support for i.MXRT1050.
-
-Signed-off-by: Giulio Benetti <giulio.benetti@benettiengineering.com>
+Cc: Giulio Benetti <giulio.benetti@benettiengineering.com>
 Signed-off-by: Jesse Taube <Mr.Bossman075@gmail.com>
 ---
- drivers/pinctrl/freescale/Kconfig             |   7 +
- drivers/pinctrl/freescale/Makefile            |   1 +
- drivers/pinctrl/freescale/pinctrl-imxrt1050.c | 349 ++++++++++++++++++
- 3 files changed, 357 insertions(+)
- create mode 100644 drivers/pinctrl/freescale/pinctrl-imxrt1050.c
+ .../bindings/clock/imxrt-clock.yaml           | 57 +++++++++++++++++++
+ 1 file changed, 57 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/imxrt-clock.yaml
 
-diff --git a/drivers/pinctrl/freescale/Kconfig b/drivers/pinctrl/freescale/Kconfig
-index 21fa21c6547b..8bdafaf40b29 100644
---- a/drivers/pinctrl/freescale/Kconfig
-+++ b/drivers/pinctrl/freescale/Kconfig
-@@ -173,6 +173,13 @@ config PINCTRL_IMX8ULP
- 	help
- 	  Say Y here to enable the imx8ulp pinctrl driver
- 
-+config PINCTRL_IMXRT1050
-+	bool "IMXRT1050 pinctrl driver"
-+	depends on ARCH_MXC
-+	select PINCTRL_IMX
-+	help
-+	  Say Y here to enable the imxrt1050 pinctrl driver
-+
- config PINCTRL_VF610
- 	bool "Freescale Vybrid VF610 pinctrl driver"
- 	depends on SOC_VF610
-diff --git a/drivers/pinctrl/freescale/Makefile b/drivers/pinctrl/freescale/Makefile
-index c44930b1b362..565a0350bf09 100644
---- a/drivers/pinctrl/freescale/Makefile
-+++ b/drivers/pinctrl/freescale/Makefile
-@@ -30,3 +30,4 @@ obj-$(CONFIG_PINCTRL_MXS)	+= pinctrl-mxs.o
- obj-$(CONFIG_PINCTRL_IMX23)	+= pinctrl-imx23.o
- obj-$(CONFIG_PINCTRL_IMX25)	+= pinctrl-imx25.o
- obj-$(CONFIG_PINCTRL_IMX28)	+= pinctrl-imx28.o
-+obj-$(CONFIG_PINCTRL_IMXRT1050)	+= pinctrl-imxrt1050.o
-diff --git a/drivers/pinctrl/freescale/pinctrl-imxrt1050.c b/drivers/pinctrl/freescale/pinctrl-imxrt1050.c
+diff --git a/Documentation/devicetree/bindings/clock/imxrt-clock.yaml b/Documentation/devicetree/bindings/clock/imxrt-clock.yaml
 new file mode 100644
-index 000000000000..11f31c90ad30
+index 000000000000..f432aa81b849
 --- /dev/null
-+++ b/drivers/pinctrl/freescale/pinctrl-imxrt1050.c
-@@ -0,0 +1,349 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020
-+ * Author(s): Giulio Benetti <giulio.benetti@benettiengineering.com>
-+ */
++++ b/Documentation/devicetree/bindings/clock/imxrt-clock.yaml
+@@ -0,0 +1,57 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/imxrt-clock.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/of_device.h>
-+#include <linux/pinctrl/pinctrl.h>
-+#include <linux/platform_device.h>
++title: Clock bindings for Freescale i.MXRT
 +
-+#include "pinctrl-imx.h"
++maintainers:
++  - Giulio Benetti <giulio.benetti@benettiengineering.com>
++  - Jesse Taube <Mr.Bossman075@gmail.com>
 +
-+enum imxrt1050_pads {
-+	IMXRT1050_PAD_RESERVE0 = 0,
-+	IMXRT1050_PAD_RESERVE1 = 1,
-+	IMXRT1050_PAD_RESERVE2 = 2,
-+	IMXRT1050_PAD_RESERVE3 = 3,
-+	IMXRT1050_PAD_RESERVE4 = 4,
-+	IMXRT1050_PAD_RESERVE5 = 5,
-+	IMXRT1050_PAD_RESERVE6 = 6,
-+	IMXRT1050_PAD_RESERVE7 = 7,
-+	IMXRT1050_PAD_RESERVE8 = 8,
-+	IMXRT1050_PAD_RESERVE9 = 9,
-+	IMXRT1050_IOMUXC_GPIO1_IO00 = 10,
-+	IMXRT1050_IOMUXC_GPIO1_IO01 = 11,
-+	IMXRT1050_IOMUXC_GPIO1_IO02 = 12,
-+	IMXRT1050_IOMUXC_GPIO1_IO03 = 13,
-+	IMXRT1050_IOMUXC_GPIO1_IO04 = 14,
-+	IMXRT1050_IOMUXC_GPIO1_IO05 = 15,
-+	IMXRT1050_IOMUXC_GPIO1_IO06 = 16,
-+	IMXRT1050_IOMUXC_GPIO1_IO07 = 17,
-+	IMXRT1050_IOMUXC_GPIO1_IO08 = 18,
-+	IMXRT1050_IOMUXC_GPIO1_IO09 = 19,
-+	IMXRT1050_IOMUXC_GPIO1_IO10 = 20,
-+	IMXRT1050_IOMUXC_GPIO1_IO11 = 21,
-+	IMXRT1050_IOMUXC_GPIO1_IO12 = 22,
-+	IMXRT1050_IOMUXC_GPIO1_IO13 = 23,
-+	IMXRT1050_IOMUXC_GPIO1_IO14 = 24,
-+	IMXRT1050_IOMUXC_GPIO1_IO15 = 25,
-+	IMXRT1050_IOMUXC_ENET_MDC = 26,
-+	IMXRT1050_IOMUXC_ENET_MDIO = 27,
-+	IMXRT1050_IOMUXC_ENET_TD3 = 28,
-+	IMXRT1050_IOMUXC_ENET_TD2 = 29,
-+	IMXRT1050_IOMUXC_ENET_TD1 = 30,
-+	IMXRT1050_IOMUXC_ENET_TD0 = 31,
-+	IMXRT1050_IOMUXC_ENET_TX_CTL = 32,
-+	IMXRT1050_IOMUXC_ENET_TXC = 33,
-+	IMXRT1050_IOMUXC_ENET_RX_CTL = 34,
-+	IMXRT1050_IOMUXC_ENET_RXC = 35,
-+	IMXRT1050_IOMUXC_ENET_RD0 = 36,
-+	IMXRT1050_IOMUXC_ENET_RD1 = 37,
-+	IMXRT1050_IOMUXC_ENET_RD2 = 38,
-+	IMXRT1050_IOMUXC_ENET_RD3 = 39,
-+	IMXRT1050_IOMUXC_SD1_CLK = 40,
-+	IMXRT1050_IOMUXC_SD1_CMD = 41,
-+	IMXRT1050_IOMUXC_SD1_DATA0 = 42,
-+	IMXRT1050_IOMUXC_SD1_DATA1 = 43,
-+	IMXRT1050_IOMUXC_SD1_DATA2 = 44,
-+	IMXRT1050_IOMUXC_SD1_DATA3 = 45,
-+	IMXRT1050_IOMUXC_SD1_DATA4 = 46,
-+	IMXRT1050_IOMUXC_SD1_DATA5 = 47,
-+	IMXRT1050_IOMUXC_SD1_DATA6 = 48,
-+	IMXRT1050_IOMUXC_SD1_DATA7 = 49,
-+	IMXRT1050_IOMUXC_SD1_RESET_B = 50,
-+	IMXRT1050_IOMUXC_SD1_STROBE = 51,
-+	IMXRT1050_IOMUXC_SD2_CD_B = 52,
-+	IMXRT1050_IOMUXC_SD2_CLK = 53,
-+	IMXRT1050_IOMUXC_SD2_CMD = 54,
-+	IMXRT1050_IOMUXC_SD2_DATA0 = 55,
-+	IMXRT1050_IOMUXC_SD2_DATA1 = 56,
-+	IMXRT1050_IOMUXC_SD2_DATA2 = 57,
-+	IMXRT1050_IOMUXC_SD2_DATA3 = 58,
-+	IMXRT1050_IOMUXC_SD2_RESET_B = 59,
-+	IMXRT1050_IOMUXC_SD2_WP = 60,
-+	IMXRT1050_IOMUXC_NAND_ALE = 61,
-+	IMXRT1050_IOMUXC_NAND_CE0 = 62,
-+	IMXRT1050_IOMUXC_NAND_CE1 = 63,
-+	IMXRT1050_IOMUXC_NAND_CE2 = 64,
-+	IMXRT1050_IOMUXC_NAND_CE3 = 65,
-+	IMXRT1050_IOMUXC_NAND_CLE = 66,
-+	IMXRT1050_IOMUXC_NAND_DATA00 = 67,
-+	IMXRT1050_IOMUXC_NAND_DATA01 = 68,
-+	IMXRT1050_IOMUXC_NAND_DATA02 = 69,
-+	IMXRT1050_IOMUXC_NAND_DATA03 = 70,
-+	IMXRT1050_IOMUXC_NAND_DATA04 = 71,
-+	IMXRT1050_IOMUXC_NAND_DATA05 = 72,
-+	IMXRT1050_IOMUXC_NAND_DATA06 = 73,
-+	IMXRT1050_IOMUXC_NAND_DATA07 = 74,
-+	IMXRT1050_IOMUXC_NAND_DQS = 75,
-+	IMXRT1050_IOMUXC_NAND_RE_B = 76,
-+	IMXRT1050_IOMUXC_NAND_READY_B = 77,
-+	IMXRT1050_IOMUXC_NAND_WE_B = 78,
-+	IMXRT1050_IOMUXC_NAND_WP_B = 79,
-+	IMXRT1050_IOMUXC_SAI5_RXFS = 80,
-+	IMXRT1050_IOMUXC_SAI5_RXC = 81,
-+	IMXRT1050_IOMUXC_SAI5_RXD0 = 82,
-+	IMXRT1050_IOMUXC_SAI5_RXD1 = 83,
-+	IMXRT1050_IOMUXC_SAI5_RXD2 = 84,
-+	IMXRT1050_IOMUXC_SAI5_RXD3 = 85,
-+	IMXRT1050_IOMUXC_SAI5_MCLK = 86,
-+	IMXRT1050_IOMUXC_SAI1_RXFS = 87,
-+	IMXRT1050_IOMUXC_SAI1_RXC = 88,
-+	IMXRT1050_IOMUXC_SAI1_RXD0 = 89,
-+	IMXRT1050_IOMUXC_SAI1_RXD1 = 90,
-+	IMXRT1050_IOMUXC_SAI1_RXD2 = 91,
-+	IMXRT1050_IOMUXC_SAI1_RXD3 = 92,
-+	IMXRT1050_IOMUXC_SAI1_RXD4 = 93,
-+	IMXRT1050_IOMUXC_SAI1_RXD5 = 94,
-+	IMXRT1050_IOMUXC_SAI1_RXD6 = 95,
-+	IMXRT1050_IOMUXC_SAI1_RXD7 = 96,
-+	IMXRT1050_IOMUXC_SAI1_TXFS = 97,
-+	IMXRT1050_IOMUXC_SAI1_TXC = 98,
-+	IMXRT1050_IOMUXC_SAI1_TXD0 = 99,
-+	IMXRT1050_IOMUXC_SAI1_TXD1 = 100,
-+	IMXRT1050_IOMUXC_SAI1_TXD2 = 101,
-+	IMXRT1050_IOMUXC_SAI1_TXD3 = 102,
-+	IMXRT1050_IOMUXC_SAI1_TXD4 = 103,
-+	IMXRT1050_IOMUXC_SAI1_TXD5 = 104,
-+	IMXRT1050_IOMUXC_SAI1_TXD6 = 105,
-+	IMXRT1050_IOMUXC_SAI1_TXD7 = 106,
-+	IMXRT1050_IOMUXC_SAI1_MCLK = 107,
-+	IMXRT1050_IOMUXC_SAI2_RXFS = 108,
-+	IMXRT1050_IOMUXC_SAI2_RXC = 109,
-+	IMXRT1050_IOMUXC_SAI2_RXD0 = 110,
-+	IMXRT1050_IOMUXC_SAI2_TXFS = 111,
-+	IMXRT1050_IOMUXC_SAI2_TXC = 112,
-+	IMXRT1050_IOMUXC_SAI2_TXD0 = 113,
-+	IMXRT1050_IOMUXC_SAI2_MCLK = 114,
-+	IMXRT1050_IOMUXC_SAI3_RXFS = 115,
-+	IMXRT1050_IOMUXC_SAI3_RXC = 116,
-+	IMXRT1050_IOMUXC_SAI3_RXD = 117,
-+	IMXRT1050_IOMUXC_SAI3_TXFS = 118,
-+	IMXRT1050_IOMUXC_SAI3_TXC = 119,
-+	IMXRT1050_IOMUXC_SAI3_TXD = 120,
-+	IMXRT1050_IOMUXC_SAI3_MCLK = 121,
-+	IMXRT1050_IOMUXC_SPDIF_TX = 122,
-+	IMXRT1050_IOMUXC_SPDIF_RX = 123,
-+	IMXRT1050_IOMUXC_SPDIF_EXT_CLK = 124,
-+	IMXRT1050_IOMUXC_ECSPI1_SCLK = 125,
-+	IMXRT1050_IOMUXC_ECSPI1_MOSI = 126,
-+	IMXRT1050_IOMUXC_ECSPI1_MISO = 127,
-+	IMXRT1050_IOMUXC_ECSPI1_SS0 = 128,
-+	IMXRT1050_IOMUXC_ECSPI2_SCLK = 129,
-+	IMXRT1050_IOMUXC_ECSPI2_MOSI = 130,
-+	IMXRT1050_IOMUXC_ECSPI2_MISO = 131,
-+	IMXRT1050_IOMUXC_ECSPI2_SS0 = 132,
-+	IMXRT1050_IOMUXC_I2C1_SCL = 133,
-+	IMXRT1050_IOMUXC_I2C1_SDA = 134,
-+	IMXRT1050_IOMUXC_I2C2_SCL = 135,
-+	IMXRT1050_IOMUXC_I2C2_SDA = 136,
-+	IMXRT1050_IOMUXC_I2C3_SCL = 137,
-+	IMXRT1050_IOMUXC_I2C3_SDA = 138,
-+	IMXRT1050_IOMUXC_I2C4_SCL = 139,
-+	IMXRT1050_IOMUXC_I2C4_SDA = 140,
-+	IMXRT1050_IOMUXC_UART1_RXD = 141,
-+	IMXRT1050_IOMUXC_UART1_TXD = 142,
-+	IMXRT1050_IOMUXC_UART2_RXD = 143,
-+	IMXRT1050_IOMUXC_UART2_TXD = 144,
-+	IMXRT1050_IOMUXC_UART3_RXD = 145,
-+	IMXRT1050_IOMUXC_UART3_TXD = 146,
-+	IMXRT1050_IOMUXC_UART4_RXD = 147,
-+	IMXRT1050_IOMUXC_UART4_TXD = 148,
-+};
++description: |
++  The clock consumer should specify the desired clock by having the clock
++  ID in its "clocks" phandle cell. See include/dt-bindings/clock/imxrt*-clock.h
++  for the full list of i.MXRT clock IDs.
++properties:
++  compatible:
++    oneOf:
++      - enum:
++          - fsl,imxrt1050-ccm
 +
-+/* Pad names for the pinmux subsystem */
-+static const struct pinctrl_pin_desc imxrt1050_pinctrl_pads[] = {
-+	IMX_PINCTRL_PIN(IMXRT1050_PAD_RESERVE0),
-+	IMX_PINCTRL_PIN(IMXRT1050_PAD_RESERVE1),
-+	IMX_PINCTRL_PIN(IMXRT1050_PAD_RESERVE2),
-+	IMX_PINCTRL_PIN(IMXRT1050_PAD_RESERVE3),
-+	IMX_PINCTRL_PIN(IMXRT1050_PAD_RESERVE4),
-+	IMX_PINCTRL_PIN(IMXRT1050_PAD_RESERVE5),
-+	IMX_PINCTRL_PIN(IMXRT1050_PAD_RESERVE6),
-+	IMX_PINCTRL_PIN(IMXRT1050_PAD_RESERVE7),
-+	IMX_PINCTRL_PIN(IMXRT1050_PAD_RESERVE8),
-+	IMX_PINCTRL_PIN(IMXRT1050_PAD_RESERVE9),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_GPIO1_IO00),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_GPIO1_IO01),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_GPIO1_IO02),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_GPIO1_IO03),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_GPIO1_IO04),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_GPIO1_IO05),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_GPIO1_IO06),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_GPIO1_IO07),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_GPIO1_IO08),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_GPIO1_IO09),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_GPIO1_IO10),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_GPIO1_IO11),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_GPIO1_IO12),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_GPIO1_IO13),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_GPIO1_IO14),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_GPIO1_IO15),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_ENET_MDC),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_ENET_MDIO),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_ENET_TD3),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_ENET_TD2),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_ENET_TD1),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_ENET_TD0),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_ENET_TX_CTL),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_ENET_TXC),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_ENET_RX_CTL),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_ENET_RXC),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_ENET_RD0),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_ENET_RD1),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_ENET_RD2),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_ENET_RD3),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SD1_CLK),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SD1_CMD),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SD1_DATA0),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SD1_DATA1),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SD1_DATA2),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SD1_DATA3),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SD1_DATA4),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SD1_DATA5),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SD1_DATA6),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SD1_DATA7),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SD1_RESET_B),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SD1_STROBE),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SD2_CD_B),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SD2_CLK),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SD2_CMD),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SD2_DATA0),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SD2_DATA1),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SD2_DATA2),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SD2_DATA3),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SD2_RESET_B),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SD2_WP),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_NAND_ALE),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_NAND_CE0),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_NAND_CE1),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_NAND_CE2),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_NAND_CE3),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_NAND_CLE),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_NAND_DATA00),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_NAND_DATA01),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_NAND_DATA02),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_NAND_DATA03),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_NAND_DATA04),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_NAND_DATA05),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_NAND_DATA06),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_NAND_DATA07),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_NAND_DQS),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_NAND_RE_B),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_NAND_READY_B),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_NAND_WE_B),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_NAND_WP_B),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI5_RXFS),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI5_RXC),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI5_RXD0),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI5_RXD1),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI5_RXD2),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI5_RXD3),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI5_MCLK),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI1_RXFS),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI1_RXC),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI1_RXD0),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI1_RXD1),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI1_RXD2),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI1_RXD3),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI1_RXD4),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI1_RXD5),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI1_RXD6),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI1_RXD7),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI1_TXFS),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI1_TXC),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI1_TXD0),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI1_TXD1),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI1_TXD2),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI1_TXD3),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI1_TXD4),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI1_TXD5),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI1_TXD6),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI1_TXD7),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI1_MCLK),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI2_RXFS),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI2_RXC),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI2_RXD0),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI2_TXFS),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI2_TXC),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI2_TXD0),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI2_MCLK),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI3_RXFS),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI3_RXC),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI3_RXD),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI3_TXFS),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI3_TXC),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI3_TXD),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SAI3_MCLK),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SPDIF_TX),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SPDIF_RX),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_SPDIF_EXT_CLK),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_ECSPI1_SCLK),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_ECSPI1_MOSI),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_ECSPI1_MISO),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_ECSPI1_SS0),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_ECSPI2_SCLK),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_ECSPI2_MOSI),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_ECSPI2_MISO),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_ECSPI2_SS0),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_I2C1_SCL),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_I2C1_SDA),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_I2C2_SCL),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_I2C2_SDA),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_I2C3_SCL),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_I2C3_SDA),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_I2C4_SCL),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_I2C4_SDA),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_UART1_RXD),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_UART1_TXD),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_UART2_RXD),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_UART2_TXD),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_UART3_RXD),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_UART3_TXD),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_UART4_RXD),
-+	IMX_PINCTRL_PIN(IMXRT1050_IOMUXC_UART4_TXD),
-+};
++  reg:
++    maxItems: 1
 +
-+static const struct imx_pinctrl_soc_info imxrt1050_pinctrl_info = {
-+	.pins = imxrt1050_pinctrl_pads,
-+	.npins = ARRAY_SIZE(imxrt1050_pinctrl_pads),
-+	.gpr_compatible = "fsl,imxrt1050-iomuxc-gpr",
-+};
++  interrupts:
++    maxItems: 1
 +
-+static const struct of_device_id imxrt1050_pinctrl_of_match[] = {
-+	{ .compatible = "fsl,imxrt1050-iomuxc", .data = &imxrt1050_pinctrl_info, },
-+	{ /* sentinel */ }
-+};
++  '#clock-cells':
++    const: 1
 +
-+static int imxrt1050_pinctrl_probe(struct platform_device *pdev)
-+{
-+	return imx_pinctrl_probe(pdev, &imxrt1050_pinctrl_info);
-+}
++required:
++  - compatible
++  - reg
++  - interrupts
++  - '#clock-cells'
 +
-+static struct platform_driver imxrt1050_pinctrl_driver = {
-+	.driver = {
-+		.name = "imxrt1050-pinctrl",
-+		.of_match_table = of_match_ptr(imxrt1050_pinctrl_of_match),
-+		.suppress_bind_attrs = true,
-+	},
-+	.probe = imxrt1050_pinctrl_probe,
-+};
++additionalProperties: false
 +
-+static int __init imxrt1050_pinctrl_init(void)
-+{
-+	return platform_driver_register(&imxrt1050_pinctrl_driver);
-+}
-+arch_initcall(imxrt1050_pinctrl_init);
++examples:
++  - |
++    ccm@400fc000 {
++      compatible = "fsl,imxrt1050-ccm";
++      reg = <0x400fc000 0x4000>;
++      interrupts = <95>,<96>;
++      clocks = <&osc>;
++      clock-names = "osc";
++      #clock-cells = <1>;
++    };
++
++    gpt: timer@401ec000 {
++      compatible = "fsl,imx53-gpt", "fsl,imx31-gpt";
++      reg = <0x401ec000 0x4000>;
++      interrupts = <100>;
++      clocks = <&clks IMXRT1050_CLK_OSC>;
++      clock-names = "per";
++    };
 -- 
 2.33.0
 
