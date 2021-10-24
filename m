@@ -2,451 +2,184 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 52F02438714
-	for <lists+linux-gpio@lfdr.de>; Sun, 24 Oct 2021 08:01:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BAB624387EB
+	for <lists+linux-gpio@lfdr.de>; Sun, 24 Oct 2021 11:29:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229638AbhJXGDZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 24 Oct 2021 02:03:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33290 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229464AbhJXGDZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 24 Oct 2021 02:03:25 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EDBAC061764;
-        Sat, 23 Oct 2021 23:01:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=t3ikfoCzjLUbSENr+UW7RxZj7KTsuLFbLll8f3IrlNI=; b=sZFxpPhkry6Ng21WzM1Ohn56YU
-        hoYI1QnvXauiYFrofn3NRC8280e7vGnLHebE2HERcVKMlgrA6z4U+mgF3C34GxOVHmUzgpH0iyu1h
-        qXpTkW7GD4aLxz4vlHXHftOcpCv58zPwz7zIrT78H33P2isBe4xEpSwVMxofznFdTX8KP1DLbRHB4
-        dMDJT3j0NRPhtCFV0m0kFpz54ag6c6Z6P1wLfqMYGlg+ZKO7IooLnRBbe7lO2AW8PZ2lc9R+0Ng9e
-        OwxEBPrfPD1i4UjjonOkCMc06BB0e4Nb52Q81ZgcphYnDzkpvKWMRuBmcBOBVRaQx+mouC0vAhUnO
-        mQbKGfBA==;
-Received: from [2601:1c0:6280:3f0::aa0b] (helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1meWZ1-00Dim6-LK; Sun, 24 Oct 2021 06:00:59 +0000
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-gpio@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Sean Young <sean@mess.org>,
-        Bamvor Jian Zhang <bamv2005@gmail.com>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH] gpio: clean up Kconfig file
-Date:   Sat, 23 Oct 2021 23:00:58 -0700
-Message-Id: <20211024060058.6719-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.31.1
+        id S230249AbhJXJbf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 24 Oct 2021 05:31:35 -0400
+Received: from mail-pl1-f180.google.com ([209.85.214.180]:42958 "EHLO
+        mail-pl1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229886AbhJXJbe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 24 Oct 2021 05:31:34 -0400
+Received: by mail-pl1-f180.google.com with SMTP id v16so463818ple.9;
+        Sun, 24 Oct 2021 02:29:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AtnhJDg1yXoN87a6f65ZXajgyzKarXRMIiguSWzzW8o=;
+        b=iNSgHiUPDPivEFQwBveI/h9upZJiPGv+1cnuN4eqH5eYpcZsUHKjMbigNZeos9CKVZ
+         psIIrmZm+WfxvQ6ngj5AYVrVhc43idSWWTuI1IP9/6Jpf8TgxtfgE90S+9rxObMfVhtb
+         vRn5/25hlazO8DX0iDfwkpfeAHezJpOK4ABzxmOPBVtDy8NQXSvGwVQxGzu4DxsK40bK
+         iTziZ2DmRXuEQQCWG1x8VNh9vZXizOXtu/iEGywor0KYf/SaDXZksThZ34NOY4zGBKXb
+         ksE3rnB60EPFVpHgVbb8m3VKNym/kg/yqE/NmIqP98IqETay7q2fkigHR5Mj5xRQ2ah2
+         RyvA==
+X-Gm-Message-State: AOAM533kq1fYdPUxM0vVChWq4YYynMlEM7A55e6BdJ76m2yQWKGB4qJ+
+        sylcenp+zJ9Lx0c/fsZG7MrKpnRf0sJnF+sfIkI=
+X-Google-Smtp-Source: ABdhPJz/lfKDFYDalcNbEuT9HXlt+qKuPzUIloGK4jMf0z9sSyZLZVrBF5kFG87Y6hx3GLBuxXgcfEV+akBG6htbcZo=
+X-Received: by 2002:a17:90b:390f:: with SMTP id ob15mr26111167pjb.185.1635067753381;
+ Sun, 24 Oct 2021 02:29:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20211021174223.43310-1-kernel@esmil.dk> <20211021174223.43310-13-kernel@esmil.dk>
+ <CAHp75Vf3yNoKxguHP3EPcRV_3tG++Fd=FVM0MXqW4_SmLA6HEw@mail.gmail.com>
+ <CANBLGcxEwkcZn2CC69zLaVqL8ocS6r6HDaaoUF09gg1mpDxFzg@mail.gmail.com>
+ <CAHp75Vc5-Sg-0kKN=OMs_2iJbtc+D9=f0-Sp+SpY5O3roU3XdA@mail.gmail.com> <CANBLGcxnmt4Ki4EHAXeoJX5mJMyeioZXhGaDsKm_wk86D4js3Q@mail.gmail.com>
+In-Reply-To: <CANBLGcxnmt4Ki4EHAXeoJX5mJMyeioZXhGaDsKm_wk86D4js3Q@mail.gmail.com>
+From:   Emil Renner Berthing <kernel@esmil.dk>
+Date:   Sun, 24 Oct 2021 11:29:02 +0200
+Message-ID: <CANBLGcyOfo3r0Viidf9kyW0Q9yD4uqTLm90+7O=T49v7ZHurfA@mail.gmail.com>
+Subject: Re: [PATCH v2 12/16] pinctrl: starfive: Add pinctrl driver for
+ StarFive SoCs
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        Drew Fustini <drew@beagleboard.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Michael Zhu <michael.zhu@starfivetech.com>,
+        Fu Wei <tekkamanninja@gmail.com>,
+        Anup Patel <anup.patel@wdc.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Matteo Croce <mcroce@microsoft.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Huan Feng <huan.feng@starfivetech.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Fix multiple problems in punctuation, capitalization, grammar,
-wording, and typos in the GPIO Kconfig file.
+On Sat, 23 Oct 2021 at 23:02, Emil Renner Berthing <kernel@esmil.dk> wrote:
+> On Sat, 23 Oct 2021 at 22:29, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > On Sat, Oct 23, 2021 at 9:46 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
+> > > On Fri, 22 Oct 2021 at 15:32, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > > > On Thu, Oct 21, 2021 at 8:44 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
+> > > So I asked you if you thought it was better to leave these unused
+> > > allocations when parsing the device tree node fails but you never
+> > > answered that. I didn't want put words in your mouth so I could only
+> > > assume you didn't. I'd really like a straight answer to that so I have
+> > > something to refer to when people ask why this driver doesn't do the
+> > > same as fx. the pinctrl-single. So just to be clear: do you think it's
+> > > better to leave this unused garbage allocated if parsing the device
+> > > tree node fails?
+> >
+> > If it's only one time use, I don't think it's good to have it hanging
+> > around, BUT at the same time devm_*() is not suitable for such
+> > allocations.
+>
+> So is that a yes or a no to my question? It's not clear to me.
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Sean Young <sean@mess.org>
-Cc: Bamvor Jian Zhang <bamv2005@gmail.com>
-Cc: Michael Walle <michael@walle.cc>
----
- drivers/gpio/Kconfig |  116 ++++++++++++++++++++---------------------
- 1 file changed, 58 insertions(+), 58 deletions(-)
+I see now that you've probably misunderstood what the code does. It's
+not one time use. The function parses the device tree and dynamically
+registers groups and functions with the pinctrl framework. Each group
+needs a string name, an int array of pins and optionally the pinmux
+data. Once the group is registered those pieces of data needs to live
+with the group until the drive is unloaded. But if the device tree
+parsing fails before the group is registered then those allocations
+would never be referenced and just hang around as garbage until the
+driver is unloaded. In such cases fx. pinctrl-single uses devm_free to
+free them again.
 
---- linux-next-20211022.orig/drivers/gpio/Kconfig
-+++ linux-next-20211022/drivers/gpio/Kconfig
-@@ -15,7 +15,7 @@ menuconfig GPIOLIB
- 	bool "GPIO Support"
- 	help
- 	  This enables GPIO support through the generic GPIO library.
--	  You only need to enable this, if you also want to enable
-+	  You only need to enable this if you also want to enable
- 	  one or more of the GPIO drivers below.
- 
- 	  If unsure, say N.
-@@ -140,8 +140,8 @@ config GPIO_AMDPT
- 	depends on ACPI
- 	select GPIO_GENERIC
- 	help
--	  driver for GPIO functionality on Promontory IOHub
--	  Require ACPI ASL code to enumerate as a platform device.
-+	  Driver for GPIO functionality on Promontory IOHub.
-+	  Requires ACPI ASL code to enumerate as a platform device.
- 
- config GPIO_ASPEED
- 	tristate "Aspeed GPIO support"
-@@ -306,7 +306,7 @@ config GPIO_HISI
- 	help
- 	  Say Y or M here to build support for the HiSilicon GPIO controller
- 	  driver GPIO block.
--	  This GPIO controller support double-edge interrupt and multi-core
-+	  This GPIO controller supports double-edge interrupt and multi-core
- 	  concurrent access.
- 
- config GPIO_HLWD
-@@ -326,7 +326,7 @@ config GPIO_ICH
- 	help
- 	  Say yes here to support the GPIO functionality of a number of Intel
- 	  ICH-based chipsets.  Currently supported devices: ICH6, ICH7, ICH8
--	  ICH9, ICH10, Series 5/3400 (eg Ibex Peak), Series 6/C200 (eg
-+	  ICH9, ICH10, Series 5/3400 (e.g. Ibex Peak), Series 6/C200 (e.g.
- 	  Cougar Point), NM10 (Tiger Point), and 3100 (Whitmore Lake).
- 
- 	  If unsure, say N.
-@@ -337,7 +337,7 @@ config GPIO_IOP
- 	select GPIO_GENERIC
- 	help
- 	  Say yes here to support the GPIO functionality of a number of Intel
--	  IOP32X or IOP33X.
-+	  IOP32X or IOP33X series of chips.
- 
- 	  If unsure, say N.
- 
-@@ -364,7 +364,7 @@ config GPIO_LOONGSON
- 	bool "Loongson-2/3 GPIO support"
- 	depends on CPU_LOONGSON2EF || CPU_LOONGSON64
- 	help
--	  driver for GPIO functionality on Loongson-2F/3A/3B processors.
-+	  Driver for GPIO functionality on Loongson-2F/3A/3B processors.
- 
- config GPIO_LPC18XX
- 	tristate "NXP LPC18XX/43XX GPIO support"
-@@ -392,15 +392,15 @@ config GPIO_MENZ127
- 	depends on MCB
- 	select GPIO_GENERIC
- 	help
--	  Say yes here to support the MEN 16Z127 GPIO Controller
-+	  Say yes here to support the MEN 16Z127 GPIO Controller.
- 
- config GPIO_MM_LANTIQ
- 	bool "Lantiq Memory mapped GPIOs"
- 	depends on LANTIQ && SOC_XWAY
- 	help
- 	  This enables support for memory mapped GPIOs on the External Bus Unit
--	  (EBU) found on Lantiq SoCs. The gpios are output only as they are
--	  created by attaching a 16bit latch to the bus.
-+	  (EBU) found on Lantiq SoCs. The GPIOs are output only as they are
-+	  created by attaching a 16-bit latch to the bus.
- 
- config GPIO_MPC5200
- 	def_bool y
-@@ -424,7 +424,7 @@ config GPIO_MT7621
- 	select GPIO_GENERIC
- 	select GPIOLIB_IRQCHIP
- 	help
--	  Say yes here to support the Mediatek MT7621 SoC GPIO device
-+	  Say yes here to support the Mediatek MT7621 SoC GPIO device.
- 
- config GPIO_MVEBU
- 	def_bool y
-@@ -469,7 +469,7 @@ config GPIO_PL061
- 	select IRQ_DOMAIN
- 	select GPIOLIB_IRQCHIP
- 	help
--	  Say yes here to support the PrimeCell PL061 GPIO device
-+	  Say yes here to support the PrimeCell PL061 GPIO device.
- 
- config GPIO_PMIC_EIC_SPRD
- 	tristate "Spreadtrum PMIC EIC support"
-@@ -483,7 +483,7 @@ config GPIO_PXA
- 	bool "PXA GPIO support"
- 	depends on ARCH_PXA || ARCH_MMP || COMPILE_TEST
- 	help
--	  Say yes here to support the PXA GPIO device
-+	  Say yes here to support the PXA GPIO device.
- 
- config GPIO_RCAR
- 	tristate "Renesas R-Car and RZ/G GPIO support"
-@@ -573,7 +573,7 @@ config GPIO_SPEAR_SPICS
- 	depends on PLAT_SPEAR
- 	select GENERIC_IRQ_CHIP
- 	help
--	  Say yes here to support ST SPEAr SPI Chip Select as GPIO device
-+	  Say yes here to support ST SPEAr SPI Chip Select as GPIO device.
- 
- config GPIO_SPRD
- 	tristate "Spreadtrum GPIO support"
-@@ -598,8 +598,8 @@ config GPIO_STP_XWAY
- 	help
- 	  This enables support for the Serial To Parallel (STP) unit found on
- 	  XWAY SoC. The STP allows the SoC to drive a shift registers cascade,
--	  that can be up to 24 bit. This peripheral is aimed at driving leds.
--	  Some of the gpios/leds can be auto updated by the soc with dsl and
-+	  that can be up to 24 bits. This peripheral is aimed at driving LEDs.
-+	  Some of the GPIOs/LEDs can be auto updated by the SoC with DSL and
- 	  phy status.
- 
- config GPIO_SYSCON
-@@ -679,10 +679,10 @@ config GPIO_VISCONTI
- 	  Say yes here to support GPIO on Tohisba Visconti.
- 
- config GPIO_VR41XX
--	tristate "NEC VR4100 series General-purpose I/O Uint support"
-+	tristate "NEC VR4100 series General-purpose I/O Unit support"
- 	depends on CPU_VR41XX
- 	help
--	  Say yes here to support the NEC VR4100 series General-purpose I/O Uint
-+	  Say yes here to support the NEC VR4100 series General-purpose I/O Unit.
- 
- config GPIO_VX855
- 	tristate "VIA VX855/VX875 GPIO"
-@@ -690,14 +690,14 @@ config GPIO_VX855
- 	select MFD_CORE
- 	select MFD_VX855
- 	help
--	  Support access to the VX855/VX875 GPIO lines through the gpio library.
-+	  Support access to the VX855/VX875 GPIO lines through the GPIO library.
- 
--	  This driver provides common support for accessing the device,
--	  additional drivers must be enabled in order to use the
-+	  This driver provides common support for accessing the device.
-+	  Additional drivers must be enabled in order to use the
- 	  functionality of the device.
- 
- config GPIO_WCD934X
--	tristate "Qualcomm Technologies Inc WCD9340/WCD9341 gpio controller driver"
-+	tristate "Qualcomm Technologies Inc WCD9340/WCD9341 GPIO controller driver"
- 	depends on MFD_WCD934X && OF_GPIO
- 	help
-          This driver is to support GPIO block found on the Qualcomm Technologies
-@@ -727,7 +727,7 @@ config GPIO_XILINX
- 	select GPIOLIB_IRQCHIP
- 	depends on OF_GPIO
- 	help
--	  Say yes here to support the Xilinx FPGA GPIO device
-+	  Say yes here to support the Xilinx FPGA GPIO device.
- 
- config GPIO_XLP
- 	tristate "Netlogic XLP GPIO support"
-@@ -748,7 +748,7 @@ config GPIO_XTENSA
- 	depends on !SMP
- 	help
- 	  Say yes here to support the Xtensa internal GPIO32 IMPWIRE (input)
--	  and EXPSTATE (output) ports
-+	  and EXPSTATE (output) ports.
- 
- config GPIO_ZEVIO
- 	bool "LSI ZEVIO SoC memory mapped GPIOs"
-@@ -764,14 +764,14 @@ config GPIO_ZYNQ
- 	  Say yes here to support Xilinx Zynq GPIO controller.
- 
- config GPIO_ZYNQMP_MODEPIN
--	tristate "ZynqMP ps-mode pin gpio configuration driver"
-+	tristate "ZynqMP ps-mode pin GPIO configuration driver"
- 	depends on ZYNQMP_FIRMWARE
- 	default ZYNQMP_FIRMWARE
- 	help
--	  Say yes here to support the ZynqMP ps-mode pin gpio configuration
-+	  Say yes here to support the ZynqMP ps-mode pin GPIO configuration
- 	  driver.
- 
--	  This ps-mode pin gpio driver is based on GPIO framework, PS_MODE
-+	  This ps-mode pin GPIO driver is based on GPIO framework. PS_MODE
- 	  is 4-bits boot mode pins. It sets and gets the status of
- 	  the ps-mode pin. Every pin can be configured as input/output.
- 
-@@ -785,12 +785,12 @@ config GPIO_LOONGSON1
- config GPIO_AMD_FCH
- 	tristate "GPIO support for AMD Fusion Controller Hub (G-series SOCs)"
- 	help
--	  This option enables driver for GPIO on AMDs Fusion Controller Hub,
--	  as found on G-series SOCs (eg. GX-412TC)
-+	  This option enables driver for GPIO on AMD's Fusion Controller Hub,
-+	  as found on G-series SOCs (e.g. GX-412TC).
- 
--	  Note: This driver doesn't registers itself automatically, as it
--	  needs to be provided with platform specific configuration.
--	  (See eg. CONFIG_PCENGINES_APU2.)
-+	  Note: This driver doesn't register itself automatically, as it
-+	  needs to be provided with platform-specific configuration.
-+	  (See e.g. CONFIG_PCENGINES_APU2.)
- 
- config GPIO_MSC313
- 	bool "MStar MSC313 GPIO support"
-@@ -800,7 +800,7 @@ config GPIO_MSC313
- 	select IRQ_DOMAIN_HIERARCHY
- 	help
- 	  Say Y here to support the main GPIO block on MStar/SigmaStar
--	  ARMv7 based SoCs.
-+	  ARMv7-based SoCs.
- 
- config GPIO_IDT3243X
- 	tristate "IDT 79RC3243X GPIO support"
-@@ -809,7 +809,7 @@ config GPIO_IDT3243X
- 	select GPIOLIB_IRQCHIP
- 	help
- 	  Select this option to enable GPIO driver for
--	  IDT 79RC3243X based devices like Mikrotik RB532.
-+	  IDT 79RC3243X-based devices like Mikrotik RB532.
- 
- 	  To compile this driver as a module, choose M here: the module will
- 	  be called gpio-idt3243x.
-@@ -887,7 +887,7 @@ config GPIO_IT87
- 	  well.
- 
- 	  To compile this driver as a module, choose M here: the module will
--	  be called gpio_it87
-+	  be called gpio_it87.
- 
- config GPIO_SCH
- 	tristate "Intel SCH/TunnelCreek/Centerton/Quark X1000 GPIO"
-@@ -903,7 +903,7 @@ config GPIO_SCH
- 	  powered by the core power rail and are turned off during sleep
- 	  modes (S3 and higher). The remaining four GPIOs are powered by
- 	  the Intel SCH suspend power supply. These GPIOs remain
--	  active during S3. The suspend powered GPIOs can be used to wake the
-+	  active during S3. The suspend-powered GPIOs can be used to wake the
- 	  system from the Suspend-to-RAM state.
- 
- 	  The Intel Tunnel Creek processor has 5 GPIOs powered by the
-@@ -1056,7 +1056,7 @@ config GPIO_PCA953X_IRQ
- 	select GPIOLIB_IRQCHIP
- 	help
- 	  Say yes here to enable the pca953x to be used as an interrupt
--	  controller. It requires the driver to be built in the kernel.
-+	  controller.
- 
- config GPIO_PCA9570
- 	tristate "PCA9570 4-Bit I2C GPO expander"
-@@ -1183,7 +1183,7 @@ config GPIO_CRYSTAL_COVE
- 	help
- 	  Support for GPIO pins on Crystal Cove PMIC.
- 
--	  Say Yes if you have a Intel SoC based tablet with Crystal Cove PMIC
-+	  Say Yes if you have a Intel SoC-based tablet with Crystal Cove PMIC
- 	  inside.
- 
- 	  This driver can also be built as a module. If so, the module will be
-@@ -1213,7 +1213,7 @@ config GPIO_DA9055
- 	  Say yes here to enable the GPIO driver for the DA9055 chip.
- 
- 	  The Dialog DA9055 PMIC chip has 3 GPIO pins that can be
--	  be controller by this driver.
-+	  be controlled by this driver.
- 
- 	  If driver is built as a module it will be called gpio-da9055.
- 
-@@ -1235,7 +1235,7 @@ config HTC_EGPIO
- 	help
- 	  This driver supports the CPLD egpio chip present on
- 	  several HTC phones.  It provides basic support for input
--	  pins, output pins, and irqs.
-+	  pins, output pins, and IRQs.
- 
- config GPIO_JANZ_TTL
- 	tristate "Janz VMOD-TTL Digital IO Module"
-@@ -1296,8 +1296,8 @@ config GPIO_MAX77620
- 	help
- 	  GPIO driver for MAX77620 and MAX20024 PMIC from Maxim Semiconductor.
- 	  MAX77620 PMIC has 8 pins that can be configured as GPIOs. The
--	  driver also provides interrupt support for each of the gpios.
--	  Say yes here to enable the max77620 to be used as gpio controller.
-+	  driver also provides interrupt support for each of the GPIOs.
-+	  Say yes here to enable the max77620 to be used as GPIO controller.
- 
- config GPIO_MAX77650
- 	tristate "Maxim MAX77650/77651 GPIO support"
-@@ -1319,8 +1319,8 @@ config GPIO_RC5T583
- 	help
- 	  Select this option to enable GPIO driver for the Ricoh RC5T583
- 	  chip family.
--	  This driver provides the support for driving/reading the gpio pins
--	  of RC5T583 device through standard gpio library.
-+	  This driver provides the support for driving/reading the GPIO pins
-+	  of RC5T583 device through standard GPIO library.
- 
- config GPIO_SL28CPLD
- 	tristate "Kontron sl28cpld GPIO support"
-@@ -1389,7 +1389,7 @@ config GPIO_TPS65912
- 	tristate "TI TPS65912 GPIO"
- 	depends on MFD_TPS65912
- 	help
--	  This driver supports TPS65912 gpio chip
-+	  This driver supports TPS65912 GPIO chip.
- 
- config GPIO_TPS68470
- 	bool "TPS68470 GPIO"
-@@ -1397,7 +1397,7 @@ config GPIO_TPS68470
- 	help
- 	  Select this option to enable GPIO driver for the TPS68470
- 	  chip family.
--	  There are 7 GPIOs and few sensor related GPIOs supported
-+	  There are 7 GPIOs and few sensor-related GPIOs supported
- 	  by the TPS68470. While the 7 GPIOs can be configured as
- 	  input or output as appropriate, the sensor related GPIOs
- 	  are "output only" GPIOs.
-@@ -1442,7 +1442,7 @@ config GPIO_WHISKEY_COVE
- 	help
- 	  Support for GPIO pins on Whiskey Cove PMIC.
- 
--	  Say Yes if you have a Intel SoC based tablet with Whiskey Cove PMIC
-+	  Say Yes if you have an Intel SoC-based tablet with Whiskey Cove PMIC
- 	  inside.
- 
- 	  This driver can also be built as a module. If so, the module will be
-@@ -1479,10 +1479,10 @@ config GPIO_AMD8111
- 	depends on X86 || COMPILE_TEST
- 	depends on HAS_IOPORT_MAP
- 	help
--	  The AMD 8111 south bridge contains 32 GPIO pins which can be used.
-+	  The AMD 8111 southbridge contains 32 GPIO pins which can be used.
- 
--	  Note, that usually system firmware/ACPI handles GPIO pins on their
--	  own and users might easily break their systems with uncarefull usage
-+	  Note that usually system firmware/ACPI handles GPIO pins on their
-+	  own and users might easily break their systems with uncareful usage
- 	  of this driver!
- 
- 	  If unsure, say N
-@@ -1530,22 +1530,22 @@ config GPIO_ML_IOH
- 	select GENERIC_IRQ_CHIP
- 	help
- 	  ML7213 is companion chip for Intel Atom E6xx series.
--	  This driver can be used for OKI SEMICONDUCTOR ML7213 IOH(Input/Output
--	  Hub) which is for IVI(In-Vehicle Infotainment) use.
-+	  This driver can be used for OKI SEMICONDUCTOR ML7213 IOH (Input/Output
-+	  Hub) which is for IVI (In-Vehicle Infotainment) use.
- 	  This driver can access the IOH's GPIO device.
- 
- config GPIO_PCH
--	tristate "Intel EG20T PCH/LAPIS Semiconductor IOH(ML7223/ML7831) GPIO"
-+	tristate "Intel EG20T PCH/LAPIS Semiconductor IOH (ML7223/ML7831) GPIO"
- 	depends on X86_32 || MIPS || COMPILE_TEST
- 	select GENERIC_IRQ_CHIP
- 	help
--	  This driver is for PCH(Platform controller Hub) GPIO of Intel Topcliff
--	  which is an IOH(Input/Output Hub) for x86 embedded processor.
-+	  This driver is for PCH (Platform Controller Hub) GPIO of Intel Topcliff,
-+	  which is an IOH (Input/Output Hub) for x86 embedded processor.
- 	  This driver can access PCH GPIO device.
- 
--	  This driver also can be used for LAPIS Semiconductor IOH(Input/
-+	  This driver also can be used for LAPIS Semiconductor IOH (Input/
- 	  Output Hub), ML7223 and ML7831.
--	  ML7223 IOH is for MP(Media Phone) use.
-+	  ML7223 IOH is for MP (Media Phone) use.
- 	  ML7831 IOH is for general purpose use.
- 	  ML7223/ML7831 is companion chip for Intel Atom E6xx series.
- 	  ML7223/ML7831 is completely compatible for Intel EG20T PCH.
-@@ -1596,7 +1596,7 @@ config GPIO_74X164
- 	help
- 	  Driver for 74x164 compatible serial-in/parallel-out 8-outputs
- 	  shift registers. This driver can be used to provide access
--	  to more gpio outputs.
-+	  to more GPIO outputs.
- 
- config GPIO_MAX3191X
- 	tristate "Maxim MAX3191x industrial serializer"
+> > > > > +               if (reg_din)
+> > > > > +                       writel_relaxed(gpio + 2, reg_din);
+> > > >
+> > > > Why 0 can't be written?
+> > >
+> > > Because signal 0 is a special "always 0" signal and signal 1 is a
+> > > special "always 1" signal, and after that signal n is the input value
+> > > of GPIO n - 2. We don't want to overwrite the PoR defaults.
+> >
+> > Okay, this, perhaps, needs a comment (if I have not missed the existing one).
+> >
+> > And what about checking for reg_din? Do you have some blocks output-only?
+>
+> I don't know know what you mean by the first question, but yes fx. the
+> uart tx pins would be an example of pins that have their output signal
+> set to the uart peripheral, the output enable set to the special
+> "always enabled" signal, and no input signal is set to any of the tx
+> pins.
+>
+> > > > > +               case PIN_CONFIG_BIAS_DISABLE:
+> > > > > +                       mask |= PAD_BIAS_MASK;
+> > > > > +                       value = (value & ~PAD_BIAS_MASK) | PAD_BIAS_DISABLE;
+> > > >
+> > > > Okay, I have got why you are masking on each iteration, but here is
+> > > > the question, shouldn't you apply the cnages belonged to each of the
+> > > > group of options as it's requested by the user? Here you basically
+> > > > ignore all previous changes to bias.
+> > > >
+> > > > I would expect that you have something like
+> > > >
+> > > > for () {
+> > > >   switch (type) {
+> > > >   case BIAS*:
+> > > >     return apply_bias();
+> > > >   ...other types...
+> > > >   default:
+> > > >     return err;
+> > > >   }
+> > > > }
+> > >
+> > > I such cases where you get conflicting PIN_CONFIG_BIAS_* settings I
+> > > don't see why it's better to do the rmw on the padctl register for the
+> > > first bias setting only to then change the bits again a few
+> > > microseconds later when the loop encounters the second bias setting.
+> > > After the loop is done the end result would still be just the last
+> > > bias setting.
+> >
+> > It could be bias X followed by something else followed by bias Y. You
+> > will write something else with bias Y. I admit I don't know this
+> > hardware and you and maintainers are supposed to decide what's better,
+> > but my guts are telling me that current algo is buggy.
+>
+> So there is only one padctl register pr. pin. I don't see why first
+> setting the bias bits to X, then setting some other bits, and then
+> setting the bias bits to Y would be different from just setting all
+> the bits in one go. Except for during that little microsecond window
+> during the loop that I actually think it's better to avoid.
+
+Maybe an example is in order. Suppose we get strong pull-up, drive
+strength 3 and pull-down config flags (the strong pull-up and pull
+down flags conflict) and the padctl value is 0x0c0 (pull-up, input and
+schmitt trigger enabled). With your solution of just altering the
+padctl bits immediately we'd call starfive_padctl_rmw 3 times in rapid
+succession like this:
+
+starfive_padctl_rmw(pin, 0x130, 0x100);
+starfive_padctl_rmw(pin, 0x007, 0x003);
+starfive_padctl_rmw(pin, 0x130, 0x010);
+
+..and the end result would be 0x0d3, although the strong pull-up would
+be enabled for the microseconds between the 1st and 3nd call.
+As the code is now it'd just directly do
+
+starfive_padctl_rmw(pin, 0x137, 0x013)
+
+..which again results in 0x0d3, only without the microsecond blink of
+the strong pull-up.
