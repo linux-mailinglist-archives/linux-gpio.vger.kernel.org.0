@@ -2,91 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 131E34396D2
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Oct 2021 14:54:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 033954396CC
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Oct 2021 14:54:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233434AbhJYM4o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Oct 2021 08:56:44 -0400
-Received: from mail-ot1-f54.google.com ([209.85.210.54]:39677 "EHLO
-        mail-ot1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233414AbhJYM4n (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Oct 2021 08:56:43 -0400
-Received: by mail-ot1-f54.google.com with SMTP id e59-20020a9d01c1000000b00552c91a99f7so14791170ote.6;
-        Mon, 25 Oct 2021 05:54:21 -0700 (PDT)
+        id S233412AbhJYM4m (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Oct 2021 08:56:42 -0400
+Received: from mail-ot1-f51.google.com ([209.85.210.51]:35393 "EHLO
+        mail-ot1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233403AbhJYM4l (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Oct 2021 08:56:41 -0400
+Received: by mail-ot1-f51.google.com with SMTP id w12-20020a056830410c00b0054e7ceecd88so14814831ott.2;
+        Mon, 25 Oct 2021 05:54:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
          :message-id;
-        bh=xfPmPgNFQgIKrWKVU27Szuu0QsSCtm+5R24aa/F4BSg=;
-        b=lefDfrVSvWR8U4WnOGkF76AwFCk8T7kwi4iXWysxEQOHCWhxgytedxzDmpLotohspU
-         4yIHd1goYVMJ62GPiS7B0X1CWbsgkgb5Ahqzrywtp7mk3EcFto3F+iaMnAuSSvGd4SZA
-         z2mSapmsWoNGGnGXMs+2LjUd39+PrxCAB/gXm7/q8cXzs3EI8sx/T6EasX+de84STXna
-         c9/UfbPjWGJWOjO2RajtyLPcLrkp3ds8n+bTR4Rq52mY9fWbDQMLOZD8Noou3ntkp0w6
-         NHR2piQo0ZUn5zoocHV9C1z2Vbr9FEwc0gIdDzqHFqVRZ7VyFZ+qmIVG0xR4OcabjR8r
-         zXWg==
-X-Gm-Message-State: AOAM532ryVk5dLiBR4k316724wgmMcaTKOhvxgMEi0iRdQGPRETIJRTT
-        EIAXQki6lhWh5Tn/vglSPA==
-X-Google-Smtp-Source: ABdhPJxSzDa6Aw86E7HU9PcZR3V6hQx/apZrKRCDa2ilOHhh7Q1/dkrii+HwuqomKgo/nUzIa6Dt1Q==
-X-Received: by 2002:a05:6830:1e08:: with SMTP id s8mr13970909otr.305.1635166460875;
-        Mon, 25 Oct 2021 05:54:20 -0700 (PDT)
+        bh=QEjs2AwnO2Ur5YJn6P5w/EnVp73YUTavMQU16y98cUk=;
+        b=jOFw45N1wPafz/Dbq/cDudhloMElsxWN44hFudQ0Hc6c6kzXCcFxNH79WyU0W4pRYB
+         aGXyIajL42KbozK6D7dhVPPFkuePNo8ewDpmpR9pIqnEuv9fnJ4OhTpfL2JqTNqkiLi6
+         kVYS2cHqcUCHHP5ozRZFrXmWQjAhmxsY6TVRTFjdKBU6bx7s6Z+K4rV7kkWJx6ir2Y0x
+         IinvCG2ztAGXQBzE+LkOrjpLmMDJsWF455DJcbjyePy3g4/lwm9Utw9SfjSUrPVYYNfj
+         oJaB1mtUm2ynejq1oSsmPo87bS9UdF/uKgOogUU27E7fD+Zq+RYYyllZLsSXOZgkt31Y
+         2cgQ==
+X-Gm-Message-State: AOAM5335P7hwDJQIQXIrEmcmjTZbqLqcsF+i/PjvxUz2vEqH2loboU7m
+        QqOofmuAQjg/rUCVIIZA8g==
+X-Google-Smtp-Source: ABdhPJztdVgWQ1YHyEB7LVuV95ww9aPD+XrZT5nCV7Nt0zjUuuT0pJy9M/ipCL6XGEqils5z8U3nCA==
+X-Received: by 2002:a05:6830:1c2e:: with SMTP id f14mr12867262ote.159.1635166458627;
+        Mon, 25 Oct 2021 05:54:18 -0700 (PDT)
 Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id bf3sm3946646oib.34.2021.10.25.05.54.19
+        by smtp.gmail.com with ESMTPSA id e22sm3543127otp.0.2021.10.25.05.54.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Oct 2021 05:54:20 -0700 (PDT)
-Received: (nullmailer pid 190976 invoked by uid 1000);
+        Mon, 25 Oct 2021 05:54:17 -0700 (PDT)
+Received: (nullmailer pid 190978 invoked by uid 1000);
         Mon, 25 Oct 2021 12:54:14 -0000
 From:   Rob Herring <robh@kernel.org>
-To:     Jesse Taube <mr.bossman075@gmail.com>
-Cc:     arnd@arndb.de, mturquette@baylibre.com, olof@lixom.net,
-        aisheng.dong@nxp.com, sboyd@kernel.org, Mr.Bossman075@gmail.com,
-        fugang.duan@nxp.com, nobuhiro1.iwamatsu@toshiba.co.jp,
-        adrian.hunter@intel.com, linux-arm-kernel@lists.infradead.org,
-        b20788@freescale.com, linux-serial@vger.kernel.org,
-        gregkh@linuxfoundation.org, linus.walleij@linaro.org,
-        ulf.hansson@linaro.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, s.hauer@pengutronix.de,
-        abel.vesa@nxp.com, leonard.crestez@nxp.com, linux@armlinux.org.uk,
-        shawnguo@kernel.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, jirislaby@kernel.org,
-        linux-imx@nxp.com, linux-mmc@vger.kernel.org, festevam@gmail.com,
-        stefan@agner.ch, giulio.benetti@benettiengineering.com,
-        soc@kernel.org
-In-Reply-To: <20211024154027.1479261-6-Mr.Bossman075@gmail.com>
-References: <20211024154027.1479261-1-Mr.Bossman075@gmail.com> <20211024154027.1479261-6-Mr.Bossman075@gmail.com>
-Subject: Re: [PATCH 05/13] dt-bindings: clock: imx: Add documentation for i.MXRT clock
+To:     Brad Larson <brad@pensando.io>
+Cc:     linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        broonie@kernel.org, devicetree@vger.kernel.org,
+        fancer.lancer@gmail.com, linux-spi@vger.kernel.org,
+        adrian.hunter@intel.com, bgolaszewski@baylibre.com, olof@lixom.net,
+        ulf.hansson@linaro.org, arnd@arndb.de,
+        linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20211025015156.33133-4-brad@pensando.io>
+References: <20211025015156.33133-1-brad@pensando.io> <20211025015156.33133-4-brad@pensando.io>
+Subject: Re: [PATCH v3 03/11] dt-bindings: mmc: Add Pensando Elba SoC binding
 Date:   Mon, 25 Oct 2021 07:54:14 -0500
-Message-Id: <1635166454.818167.190975.nullmailer@robh.at.kernel.org>
+Message-Id: <1635166454.830065.190977.nullmailer@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, 24 Oct 2021 11:40:19 -0400, Jesse Taube wrote:
-> Add DT binding documentation for i.MXRT clock driver.
+On Sun, 24 Oct 2021 18:51:48 -0700, Brad Larson wrote:
+> Pensando Elba ARM 64-bit SoC is integrated with this IP and
+> explicitly controls byte-lane enables resulting in an additional
+> reg property resource.
 > 
-> Cc: Giulio Benetti <giulio.benetti@benettiengineering.com>
-> Signed-off-by: Jesse Taube <Mr.Bossman075@gmail.com>
+> Signed-off-by: Brad Larson <brad@pensando.io>
 > ---
->  .../bindings/clock/imxrt-clock.yaml           | 57 +++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/imxrt-clock.yaml
+>  .../devicetree/bindings/mmc/cdns,sdhci.yaml         | 13 ++++++++-----
+>  1 file changed, 8 insertions(+), 5 deletions(-)
 > 
 
 My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
 on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
 yamllint warnings/errors:
+./Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml:20:9: [warning] wrong indentation: expected 10 but found 8 (indentation)
 
 dtschema/dtc warnings/errors:
-Error: Documentation/devicetree/bindings/clock/imxrt-clock.example.dts:32.27-28 syntax error
-FATAL ERROR: Unable to parse input tree
-make[1]: *** [scripts/Makefile.lib:385: Documentation/devicetree/bindings/clock/imxrt-clock.example.dt.yaml] Error 1
-make[1]: *** Waiting for unfinished jobs....
-make: *** [Makefile:1441: dt_binding_check] Error 2
 
 doc reference errors (make refcheckdocs):
 
-See https://patchwork.ozlabs.org/patch/1545398
+See https://patchwork.ozlabs.org/patch/1545481
 
 This check can fail if there are any dependencies. The base for a patch
 series is generally the most recent rc1.
