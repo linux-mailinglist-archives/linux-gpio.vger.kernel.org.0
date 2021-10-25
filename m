@@ -2,139 +2,156 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 096B24393AE
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Oct 2021 12:28:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AC3143940C
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Oct 2021 12:52:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230267AbhJYKag (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Oct 2021 06:30:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55432 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230231AbhJYKag (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 25 Oct 2021 06:30:36 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E036760E8C;
-        Mon, 25 Oct 2021 10:28:13 +0000 (UTC)
-Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <maz@kernel.org>)
-        id 1mexD9-001KvG-HK; Mon, 25 Oct 2021 11:28:11 +0100
-Date:   Mon, 25 Oct 2021 11:28:11 +0100
-Message-ID: <87fsspbdqc.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Joey Gouly <joey.gouly@arm.com>
-Cc:     <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Hector Martin <marcan@marcan.st>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Sven Peter <sven@svenpeter.dev>, <devicetree@vger.kernel.org>,
+        id S232934AbhJYKyl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Oct 2021 06:54:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46136 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229890AbhJYKye (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Oct 2021 06:54:34 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7B0DC061224;
+        Mon, 25 Oct 2021 03:52:10 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id z20so18161979edc.13;
+        Mon, 25 Oct 2021 03:52:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NjHry8Fv5zzV/JAApPjcefE7M+AQEl6U+mJvNnu7wyQ=;
+        b=dFzeI9cZ5SddbIq480bmLmsT5M6Xll/8SFcq3UuBf1wdp8GUojw8+x0SEbwRukMVUh
+         ALRnhxIHX6VZSIVB1copUjNOho/p5Ovbb96iZ5MA1o7ObzxZmg/a9bURhISSEIglU+A0
+         myBzjtbmqWBKgZ3GGZdGmM/t3fOS33lyUvrVU9nboK7WJq0gKRSQKbGsxeaAWKez2iqt
+         FyQuG147gFRbdne++zH7gwQT0kCgQYRLYqMGivJBFk23QcMQRdvVhT2ZeTSXMlsADgaW
+         w+te6n8Dr/kp2kro+JMpnjcjrvvPcJLuWGPj1JUo1LSfsADYHTUEfwBXz4XS7UDs7V8q
+         mIlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NjHry8Fv5zzV/JAApPjcefE7M+AQEl6U+mJvNnu7wyQ=;
+        b=XAMSLaVrFuEgZfXmDoAN2J0qAVw0fXcN57IKBXM/Rogfj2xNiGpds5irFUllhNPyR/
+         kSH0MD+T33DlbqdXdrkGSZBG/v/6ZrW9KNu6ZH1pk8wAy5SB8ANV9QSB11wqyyzZqrmU
+         wdLbUgk4RcAsU0oPRaV7x3R0KQj+JuASpPvPdgUnDqVlG6AemamIfaI38LUAc/uKQnDr
+         vssrq3sRi+F9mKt0uhAzrNACtkcaPLjADrUuXnQS57kXniZRHoEcF5v22riGh5Wpvnlo
+         qeSaJthTY8LlVtgdu6nbbz4+9lGUyDytoqsPwVyDM1AIV5CflKOtRhCAj3mrR8M34+0T
+         T2dQ==
+X-Gm-Message-State: AOAM531+dI0T91bwgsHBKZbGjZwmHBWKyINgevj+MfrEbznur0tO1hys
+        0spd2n0Rzk6eonWRFNju1oFMeFu4MPHxer4KvwA=
+X-Google-Smtp-Source: ABdhPJzr/m0IXbfrBpHO+bWETekwH+mW5UDrGhdzAB/d5gzJ6NqY7h/m5pCFxn3ZIU5LNm2oLXH1TnyiqSFFdtv5ff0=
+X-Received: by 2002:a17:907:7601:: with SMTP id jx1mr21787575ejc.69.1635159129379;
+ Mon, 25 Oct 2021 03:52:09 -0700 (PDT)
+MIME-Version: 1.0
+References: <20211021174223.43310-1-kernel@esmil.dk> <20211021174223.43310-13-kernel@esmil.dk>
+ <CAHp75Vf3yNoKxguHP3EPcRV_3tG++Fd=FVM0MXqW4_SmLA6HEw@mail.gmail.com>
+ <CANBLGcxEwkcZn2CC69zLaVqL8ocS6r6HDaaoUF09gg1mpDxFzg@mail.gmail.com>
+ <CAHp75Vc5-Sg-0kKN=OMs_2iJbtc+D9=f0-Sp+SpY5O3roU3XdA@mail.gmail.com>
+ <CANBLGcxnmt4Ki4EHAXeoJX5mJMyeioZXhGaDsKm_wk86D4js3Q@mail.gmail.com>
+ <CANBLGcyOfo3r0Viidf9kyW0Q9yD4uqTLm90+7O=T49v7ZHurfA@mail.gmail.com>
+ <CAHp75Vc1EES8c7XD-MbQNdtCJA3YvvEYd3_e378rVCe6=AmhvQ@mail.gmail.com> <CANBLGczXN4JV1Xrym_YGiAvrOFwkd4-PDjfvL93ZMgePb7wFVA@mail.gmail.com>
+In-Reply-To: <CANBLGczXN4JV1Xrym_YGiAvrOFwkd4-PDjfvL93ZMgePb7wFVA@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 25 Oct 2021 13:51:15 +0300
+Message-ID: <CAHp75VdufyQpMVqhXK_UmOmsHSd8v2aDA-hKQNeQQfQF2-gJFA@mail.gmail.com>
+Subject: Re: [PATCH v2 12/16] pinctrl: starfive: Add pinctrl driver for
+ StarFive SoCs
+To:     Emil Renner Berthing <kernel@esmil.dk>
+Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Mark Kettenis <kettenis@openbsd.org>, <nd@arm.com>
-Subject: Re: [PATCH v4 0/5] pinctrl/GPIO driver for Apple SoCs
-In-Reply-To: <20211024101838.43107-1-joey.gouly@arm.com>
-References: <20211024101838.43107-1-joey.gouly@arm.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: joey.gouly@arm.com, linux-gpio@vger.kernel.org, linus.walleij@linaro.org, marcan@marcan.st, alyssa.rosenzweig@collabora.com, sven@svenpeter.dev, devicetree@vger.kernel.org, robh+dt@kernel.org, kettenis@openbsd.org, nd@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        Drew Fustini <drew@beagleboard.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Michael Zhu <michael.zhu@starfivetech.com>,
+        Fu Wei <tekkamanninja@gmail.com>,
+        Anup Patel <anup.patel@wdc.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Matteo Croce <mcroce@microsoft.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Huan Feng <huan.feng@starfivetech.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, 24 Oct 2021 11:18:33 +0100,
-Joey Gouly <joey.gouly@arm.com> wrote:
-> 
-> Hi all,
-> 
-> Here is the v4 patchset for the Apple pinctrl/GPIO driver.
-> 
-> Changes since v3 [1]:
->   - Applied Marc Zyngier's review/patch (with exception noted below)
->   - Removed "apple,t8103-pinctrl" compatible from driver
->   - Applied Acks/Review tags
-> 
-> 
-> With Marc's changes, the irq_chip was being shared between pinctrl
-> drivers and I was getting the following warning:
-> 
->   drivers/gpio/gpiolib.c:1456:
-> 
->     detected irqchip that is shared with multiple gpiochips: please fix
-> the driver.
-> 
-> 
-> So I applied the following diff to Marc's change, to not share the
-> irq_chips, while still being cleaner overall:
-> 
-> diff --git a/drivers/pinctrl/pinctrl-apple-gpio.c
-> b/drivers/pinctrl/pinctrl-apple-gpio.c
-> index 732c347a2bbc..ce037a5c15c1 100644
-> --- a/drivers/pinctrl/pinctrl-apple-gpio.c
-> +++ b/drivers/pinctrl/pinctrl-apple-gpio.c
-> @@ -35,6 +35,7 @@ struct apple_gpio_pinctrl {
-> 
->         struct pinctrl_desc pinctrl_desc;
->         struct gpio_chip gpio_chip;
-> +       struct irq_chip irq_chip;
->         u8 irqgrps[0];
->  };
-> 
-> @@ -369,6 +370,8 @@ static int apple_gpio_gpio_register(struct
-> apple_gpio_pinctrl *pctl)
->                 return dev_err_probe(pctl->dev, -ENODEV,
->                                      "No gpio-controller property\n");
-> 
-> +       pctl->irq_chip = apple_gpio_irqchip;
-> +
->         pctl->gpio_chip.label = dev_name(pctl->dev);
->         pctl->gpio_chip.request = gpiochip_generic_request;
->         pctl->gpio_chip.free = gpiochip_generic_free;
-> @@ -385,7 +388,7 @@ static int apple_gpio_gpio_register(struct
-> apple_gpio_pinctrl *pctl)
->         if (girq->num_parents) {
->                 int i;
-> 
-> -               girq->chip = &apple_gpio_irqchip;
-> +               girq->chip = &pctl->irq_chip;
->                 girq->parent_handler = apple_gpio_gpio_irq_handler;
-> 
->                 girq->parents = kmalloc_array(girq->num_parents,
-> 
-> Marc said that hierarchical IRQ domains should solve this problem, but
-> I'll let him explain more on the list, maybe that should solved in a different
-> patch series.
+On Mon, Oct 25, 2021 at 1:24 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
+> On Mon, 25 Oct 2021 at 12:16, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > On Sun, Oct 24, 2021 at 12:29 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
+> > > On Sat, 23 Oct 2021 at 23:02, Emil Renner Berthing <kernel@esmil.dk> wrote:
+> > > > On Sat, 23 Oct 2021 at 22:29, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > > > > On Sat, Oct 23, 2021 at 9:46 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
 
-The issue I have with the gpiolib code is that it hijacks function
-pointers from a structure that is not under its control, and that is
-exactly what the hierarchical IRQ domains/irqchips were supposed to
-prevent.
+...
 
-It isn't obvious to me why this cannot be fixed with a gpiolib domain
-and irqchip stacked on top of the one exposed by the low-level driver,
-providing the required hooks in a standard way. Yes, this is even more
-indirection. It also isn't clear why gpiochip_set_irq_hooks() shouts:
-if the hooks are already there, move on.
+> > > > > > I such cases where you get conflicting PIN_CONFIG_BIAS_* settings I
+> > > > > > don't see why it's better to do the rmw on the padctl register for the
+> > > > > > first bias setting only to then change the bits again a few
+> > > > > > microseconds later when the loop encounters the second bias setting.
+> > > > > > After the loop is done the end result would still be just the last
+> > > > > > bias setting.
+> > > > >
+> > > > > It could be bias X followed by something else followed by bias Y. You
+> > > > > will write something else with bias Y. I admit I don't know this
+> > > > > hardware and you and maintainers are supposed to decide what's better,
+> > > > > but my guts are telling me that current algo is buggy.
+> > > >
+> > > > So there is only one padctl register pr. pin. I don't see why first
+> > > > setting the bias bits to X, then setting some other bits, and then
+> > > > setting the bias bits to Y would be different from just setting all
+> > > > the bits in one go. Except for during that little microsecond window
+> > > > during the loop that I actually think it's better to avoid.
+> > >
+> > > Maybe an example is in order. Suppose we get strong pull-up, drive
+> > > strength 3 and pull-down config flags (the strong pull-up and pull
+> > > down flags conflict) and the padctl value is 0x0c0 (pull-up, input and
+> > > schmitt trigger enabled). With your solution of just altering the
+> > > padctl bits immediately we'd call starfive_padctl_rmw 3 times in rapid
+> > > succession like this:
+> > >
+> > > starfive_padctl_rmw(pin, 0x130, 0x100);
+> > > starfive_padctl_rmw(pin, 0x007, 0x003);
+> > > starfive_padctl_rmw(pin, 0x130, 0x010);
+> > >
+> > > ..and the end result would be 0x0d3, although the strong pull-up would
+> > > be enabled for the microseconds between the 1st and 3nd call.
+> > > As the code is now it'd just directly do
+> > >
+> > > starfive_padctl_rmw(pin, 0x137, 0x013)
+> > >
+> > > ..which again results in 0x0d3, only without the microsecond blink of
+> > > the strong pull-up.
+> >
+> > You missed the point. Hardware on the other end may behave well
+> > differently in these two cases.
+>
+> Right, but that can never be an intended behaviour. Which of the
+> conflicting bias settings comes first and is blipped before the 2nd
+> remains entirely depends on how the pinctrl framework parses the
+> devicetree. I'd much rather have it cleanly go to just one of the
+> states, which might be the wrong one, but the conflicting bias
+> settings are wrong to begin with.
 
-Ultimately, this sort of manipulation is what prevents the irq_chip
-structure from being made 'const' everywhere (ok, there is another nit
-because of the parent_device field, which I'm looking at getting rid
-of). Keeping writable function pointers isn't great, overall.
-
-Now, given that this is an issue that isn't directly related to the
-driver at hand, it shouldn't be a blocker for merging it.
-
-So for the driver itself:
-
-Reviewed-by: Marc Zyngier <maz@kernel.org>
-
-	M.
+That's why I said that is up to you and maintainers and people who
+know hardware better than me.
 
 -- 
-Without deviation from the norm, progress is not possible.
+With Best Regards,
+Andy Shevchenko
