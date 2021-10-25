@@ -2,82 +2,161 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DE7B043930C
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Oct 2021 11:53:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 856AF439374
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Oct 2021 12:16:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232554AbhJYJ4R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Oct 2021 05:56:17 -0400
-Received: from marcansoft.com ([212.63.210.85]:51882 "EHLO mail.marcansoft.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229809AbhJYJ4R (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 25 Oct 2021 05:56:17 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: marcan@marcan.st)
-        by mail.marcansoft.com (Postfix) with ESMTPSA id 595C4419B4;
-        Mon, 25 Oct 2021 09:53:51 +0000 (UTC)
-Subject: Re: [PATCH v4 4/5] pinctrl: add pinctrl/GPIO driver for Apple SoCs
-To:     Joey Gouly <joey.gouly@arm.com>
-Cc:     linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Sven Peter <sven@svenpeter.dev>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Kettenis <kettenis@openbsd.org>, nd@arm.com,
-        Stan Skowronek <stan@corellium.com>
-References: <20211024101838.43107-1-joey.gouly@arm.com>
- <20211024101838.43107-5-joey.gouly@arm.com>
- <7092f3f8-c9ae-4cde-2d1d-f5fd19ad2626@marcan.st>
- <20211025094119.GA52794@e124191.cambridge.arm.com>
-From:   Hector Martin <marcan@marcan.st>
-Message-ID: <ad9465f6-2544-b6a1-8ffa-dc382f4b93b8@marcan.st>
-Date:   Mon, 25 Oct 2021 18:53:48 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        id S229895AbhJYKSp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Oct 2021 06:18:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37990 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232772AbhJYKSo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Oct 2021 06:18:44 -0400
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C7CAC061745;
+        Mon, 25 Oct 2021 03:16:22 -0700 (PDT)
+Received: by mail-ed1-x52b.google.com with SMTP id l13so20345973edi.8;
+        Mon, 25 Oct 2021 03:16:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NoOyCfUHoc1NYPh3QSE+q8V42pQrvXovBnbm5bi8Q4k=;
+        b=QYH7ZKvRWU1KiiEGEiqhp/peQaL15IJnNfVPiYX/zO0MWra7+JI3SXg0Lc0JOA98XW
+         WPj0LrY1A9k5qE+Fp7rMP4ng0O1HUTlPumAhQb4+v52N+Gxh4ARNPuyOlTxD1lWp2hPU
+         +CZeBnhLNgI5Sswr1xtPARYwEWLeJVIyMo0vKQkodDvIb+wFY1C1QMKmpWuR8CETdaeY
+         +1QUbqZOiVqSWFHOAOgre3vMI8qKI9BZ3oqaxTWnWpEwtFrprfAJnVoUrrormyAw67w8
+         q4J0hElT7j8paGd5sJawJ1zttr7+KMkjayF3pBz9cS4vqbe4A781qONfgGIej61A2KEd
+         BXmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NoOyCfUHoc1NYPh3QSE+q8V42pQrvXovBnbm5bi8Q4k=;
+        b=YLCsN5rUDWHtcgPzdu3n/cvmPBLNUNpadsuByUhqCHuPN9FRhbSojbgwewGPoLVFW3
+         YvMb5UlwcHo5APY2bwX+4jmKSJkjgyae1ziXHJRAlwKqt5RIGyVzqJ/Z1yf3MsOcsoKR
+         +aY1rwdScPqkTZE0AN4poAUofUou2SzzgXWjvSg8tvA5eqCO76isv1PRt/rwFpJHZT+h
+         AAath7Sd++g+EHs9Ff7e398+VCOvbeNtYAuO4VnzbUeSATuM8cWuuAjwb+Az4KIxwVMo
+         0qWYIp4r70suvf7amWwnTzn5caKZ3EIyOjyUwYqaDzLZbI3iSN2IqXzv56o3cnbeQfb7
+         ARDQ==
+X-Gm-Message-State: AOAM531DJ8XveusHL9XjbWZ2rLpP2hXuuEzOxFXhn/IbrAW9uZ/WsTNd
+        vX/GeZ+spkrAEGomKkB9ZJXVnlWojpUURP9pnVU=
+X-Google-Smtp-Source: ABdhPJzVsrEQ2wGc7NbJFC9XtcZJjhMbuy0RLRmB4+JyACp9oh8ch9YE0U1JW5YiiQEFm2TA0W1r11nn0kZxkU7HS/I=
+X-Received: by 2002:a17:906:a158:: with SMTP id bu24mr19541505ejb.356.1635156977533;
+ Mon, 25 Oct 2021 03:16:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20211025094119.GA52794@e124191.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: es-ES
-Content-Transfer-Encoding: 7bit
+References: <20211021174223.43310-1-kernel@esmil.dk> <20211021174223.43310-13-kernel@esmil.dk>
+ <CAHp75Vf3yNoKxguHP3EPcRV_3tG++Fd=FVM0MXqW4_SmLA6HEw@mail.gmail.com>
+ <CANBLGcxEwkcZn2CC69zLaVqL8ocS6r6HDaaoUF09gg1mpDxFzg@mail.gmail.com>
+ <CAHp75Vc5-Sg-0kKN=OMs_2iJbtc+D9=f0-Sp+SpY5O3roU3XdA@mail.gmail.com>
+ <CANBLGcxnmt4Ki4EHAXeoJX5mJMyeioZXhGaDsKm_wk86D4js3Q@mail.gmail.com> <CANBLGcyOfo3r0Viidf9kyW0Q9yD4uqTLm90+7O=T49v7ZHurfA@mail.gmail.com>
+In-Reply-To: <CANBLGcyOfo3r0Viidf9kyW0Q9yD4uqTLm90+7O=T49v7ZHurfA@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 25 Oct 2021 13:15:23 +0300
+Message-ID: <CAHp75Vc1EES8c7XD-MbQNdtCJA3YvvEYd3_e378rVCe6=AmhvQ@mail.gmail.com>
+Subject: Re: [PATCH v2 12/16] pinctrl: starfive: Add pinctrl driver for
+ StarFive SoCs
+To:     Emil Renner Berthing <kernel@esmil.dk>
+Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        Drew Fustini <drew@beagleboard.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Michael Zhu <michael.zhu@starfivetech.com>,
+        Fu Wei <tekkamanninja@gmail.com>,
+        Anup Patel <anup.patel@wdc.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Matteo Croce <mcroce@microsoft.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Huan Feng <huan.feng@starfivetech.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 25/10/2021 18.41, Joey Gouly wrote:
-> Hi,
-> 
-> On Mon, Oct 25, 2021 at 06:07:35PM +0900, Hector Martin wrote:
->> On 24/10/2021 19.18, Joey Gouly wrote:
->>> This driver adds support for the pinctrl / GPIO hardware found
->>> on some Apple SoCs.
->>>
->>> Co-developed-by: Stan Skowronek <stan@corellium.com>
->>> Signed-off-by: Stan Skowronek <stan@corellium.com>
->>> Signed-off-by: Joey Gouly <joey.gouly@arm.com>
->>> ---
->> [snip]
->>
->>> +/* GPIO chip functions */
->>> +
->>> +static int apple_gpio_gpio_get_direction(struct gpio_chip *chip,
->>> +					 unsigned int offset)
->>
->> Nit: do we really need to gpio_gpio all the things? I think maz already
->> mentioned this one.
->>
-> 
-> I forgot to reply to that. The reason (perhaps not a good one), is that the
-> module is called 'apple_gpio' and these set of functions are related to the
-> GPIO interface (not the pinctrl side of things). I'm not tied to the names
-> either way.
+On Sun, Oct 24, 2021 at 12:29 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
+> On Sat, 23 Oct 2021 at 23:02, Emil Renner Berthing <kernel@esmil.dk> wrote:
+> > On Sat, 23 Oct 2021 at 22:29, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > > On Sat, Oct 23, 2021 at 9:46 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
 
-I figured that would be it. Personally I'd just consider the second 
-"gpio" implicit here and drop it, but that's me; you can do it however 
-you want :)
+...
+
+> > So is that a yes or a no to my question? It's not clear to me.
+>
+> I see now that you've probably misunderstood what the code does. It's
+> not one time use. The function parses the device tree and dynamically
+> registers groups and functions with the pinctrl framework. Each group
+> needs a string name, an int array of pins and optionally the pinmux
+> data. Once the group is registered those pieces of data needs to live
+> with the group until the drive is unloaded. But if the device tree
+> parsing fails before the group is registered then those allocations
+> would never be referenced and just hang around as garbage until the
+> driver is unloaded. In such cases fx. pinctrl-single uses devm_free to
+> free them again.
+
+Thank you for elaboration. Please, drop devm_*(). In this case it's
+inappropriate to use it. pinctrl-single should be amended accordingly,
+but it's out of scope here.
+
+...
+
+> > > > I such cases where you get conflicting PIN_CONFIG_BIAS_* settings I
+> > > > don't see why it's better to do the rmw on the padctl register for the
+> > > > first bias setting only to then change the bits again a few
+> > > > microseconds later when the loop encounters the second bias setting.
+> > > > After the loop is done the end result would still be just the last
+> > > > bias setting.
+> > >
+> > > It could be bias X followed by something else followed by bias Y. You
+> > > will write something else with bias Y. I admit I don't know this
+> > > hardware and you and maintainers are supposed to decide what's better,
+> > > but my guts are telling me that current algo is buggy.
+> >
+> > So there is only one padctl register pr. pin. I don't see why first
+> > setting the bias bits to X, then setting some other bits, and then
+> > setting the bias bits to Y would be different from just setting all
+> > the bits in one go. Except for during that little microsecond window
+> > during the loop that I actually think it's better to avoid.
+>
+> Maybe an example is in order. Suppose we get strong pull-up, drive
+> strength 3 and pull-down config flags (the strong pull-up and pull
+> down flags conflict) and the padctl value is 0x0c0 (pull-up, input and
+> schmitt trigger enabled). With your solution of just altering the
+> padctl bits immediately we'd call starfive_padctl_rmw 3 times in rapid
+> succession like this:
+>
+> starfive_padctl_rmw(pin, 0x130, 0x100);
+> starfive_padctl_rmw(pin, 0x007, 0x003);
+> starfive_padctl_rmw(pin, 0x130, 0x010);
+>
+> ..and the end result would be 0x0d3, although the strong pull-up would
+> be enabled for the microseconds between the 1st and 3nd call.
+> As the code is now it'd just directly do
+>
+> starfive_padctl_rmw(pin, 0x137, 0x013)
+>
+> ..which again results in 0x0d3, only without the microsecond blink of
+> the strong pull-up.
+
+You missed the point. Hardware on the other end may behave well
+differently in these two cases.
 
 -- 
-Hector Martin (marcan@marcan.st)
-Public Key: https://mrcn.st/pub
+With Best Regards,
+Andy Shevchenko
