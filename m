@@ -2,62 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A99C1439DAF
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Oct 2021 19:36:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 61C6943A826
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Oct 2021 01:26:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231171AbhJYRi7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 25 Oct 2021 13:38:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40734 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233395AbhJYRiw (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 25 Oct 2021 13:38:52 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id E0AC960F6F;
-        Mon, 25 Oct 2021 17:36:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635183389;
-        bh=qEVqHR9hUkrdY7q3niszJAwWxfAHLPU3FjHV4O6JW/U=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=aKd/xyBjm1XK/yx15sWnP/I7pRLaxWae1b0QuRSAOWULy6rcYnzpBrSPpa3shQD2q
-         d7CPU/tHfg4ytsdiq15+Q5TFGZM+VoWrbTlrxIgtP1Z2I9a7Qh8IYmcR3OUawpcGHN
-         CjlTUw0af7OcR9VdT2y5LEXWWryhUcm0DE0f3HnYqnwYk+ENJD1+zbfjK6Hcm0qh8l
-         ztQYBa8sUk5CrzDoxPWmpIOQHJ7KQ8VbPSgtb5WIWtOl4AAhlCphALjWoZNMTA52ed
-         M6gvcrvYQs0xHvNPIz8Uxpis1YIDGHHIdvFB3S5AqxnUwiFYueIe7I326wxcxzOkSH
-         TU9tdC7AEWZUA==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id D15B960A17;
-        Mon, 25 Oct 2021 17:36:29 +0000 (UTC)
-Subject: Re: [GIT PULL] pin control fixes for v5.15
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CACRpkdYY43-Dj=ZQ3brn41-3OZm0_vT+qHmcG9=EsMFy6J_Q_g@mail.gmail.com>
-References: <CACRpkdYY43-Dj=ZQ3brn41-3OZm0_vT+qHmcG9=EsMFy6J_Q_g@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CACRpkdYY43-Dj=ZQ3brn41-3OZm0_vT+qHmcG9=EsMFy6J_Q_g@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5.15-3
-X-PR-Tracked-Commit-Id: 4e5a04be88fe335ad5331f4f8c17f4ebd357e065
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a51aec4109300d843bf144579109d5288856f72a
-Message-Id: <163518338979.28134.16136876932332663263.pr-tracker-bot@kernel.org>
-Date:   Mon, 25 Oct 2021 17:36:29 +0000
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        id S235064AbhJYX2v (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 25 Oct 2021 19:28:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50548 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234939AbhJYX2u (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 25 Oct 2021 19:28:50 -0400
+Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB754C061745
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Oct 2021 16:26:27 -0700 (PDT)
+Received: by mail-lj1-x236.google.com with SMTP id h11so3895874ljk.1
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Oct 2021 16:26:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/yg9hgJMvA7baky1gPxmKx1/8p6roc03HL0AMsIkWjo=;
+        b=ZNDjDv6/XWgw9Ehv4qSnugcZ4A0nWxeA5Oj2IqHy2QXhYUp+XKRzAfwoOxtA1WMHoA
+         TSxEblXMvj0Bz0S/hS5VFWG80V2APvb0VX9zGsbqpA6ylIBo7dv2XvmFIy4OWYdjSnl1
+         4r88Q1H9wCs8vcex9V9hcE+CUn+F7N3hzv+WeLp2qVjN9vXpXWlYU7RNm4WI/WbXjsWP
+         /RnsN3a3Cas9m1Hfs/zayGyQdjllTZU7sCS27/96puperA6AMTS1LO30jo68+jPOLBVL
+         xv+v7Yfk3RW9CZrTpQUtF9W5aQvkhRlIe/cGaZtwNWLoApw/+UUzzlCjUcTjKTXIlYFC
+         x7lQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/yg9hgJMvA7baky1gPxmKx1/8p6roc03HL0AMsIkWjo=;
+        b=hA5VGCQkGOzVTivuSux4GvEBasgAPLZLDtRg4dc0pTGPXY9tAsoYyHu8EWAZET35XQ
+         KsdqccdVWAgGQ1Gr9qjzTX3qcx/To60cugC1UuyqAnHViUKYztRwa9MrRDlZmVPSp+3O
+         AJIenKzVEpkNPAVZhzdF1x8PK///W0L2Ov2lo4qquzybbvEt9eXOy5ti7mqmDCcmlgof
+         m63/Mwv/iJ/bYVIXVxRLyVMnbOs3LXNQMIkNTid3wZNlA2SrY+lX821TcEi8AgqBeiE5
+         ra2rhoI+gmC9fUJjcbD+8XEkPncfITNuqgxLyKauYUszDVHn8STbK6UmiufWxM4RaQis
+         BytQ==
+X-Gm-Message-State: AOAM531yQtoU6++8xVf/8dwH9+a1joFxejwv9nJGtTOrUu5A/C3Z969Y
+        W5wBaXJoc6HmRf1xg/1Yx3Oo0eotF2f69/IpriMgIQ==
+X-Google-Smtp-Source: ABdhPJz5oMKaC6A0znmMVRUW2QmwpIkB3WFzuOVijgqTXtns0MEAe26tQYWP1HMgvt4u07l1BqyR0v4p7iqMtDBdMB8=
+X-Received: by 2002:a05:651c:111:: with SMTP id a17mr21602317ljb.145.1635204386221;
+ Mon, 25 Oct 2021 16:26:26 -0700 (PDT)
+MIME-Version: 1.0
+References: <20211024101838.43107-1-joey.gouly@arm.com> <44f573d2-4e77-a235-c45b-079eeb6a45a9@marcan.st>
+In-Reply-To: <44f573d2-4e77-a235-c45b-079eeb6a45a9@marcan.st>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 26 Oct 2021 01:26:15 +0200
+Message-ID: <CACRpkdatSbH0+PnHe9PRPBgcfyFmHjn3vVSNR7s6cHk5K=yKOQ@mail.gmail.com>
+Subject: Re: [PATCH v4 0/5] pinctrl/GPIO driver for Apple SoCs
+To:     Hector Martin <marcan@marcan.st>
+Cc:     Joey Gouly <joey.gouly@arm.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-        Sachi King <nakato@nakato.io>
+        Marc Zyngier <maz@kernel.org>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Sven Peter <sven@svenpeter.dev>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Kettenis <kettenis@openbsd.org>, nd <nd@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pull request you sent on Sun, 24 Oct 2021 22:16:56 +0200:
+On Mon, Oct 25, 2021 at 11:13 AM Hector Martin <marcan@marcan.st> wrote:
+> On 24/10/2021 19.18, Joey Gouly wrote:
+> > Hi all,
+> >
+> > Here is the v4 patchset for the Apple pinctrl/GPIO driver.
+> >
+> > Changes since v3 [1]:
+> >    - Applied Marc Zyngier's review/patch (with exception noted below)
+> >    - Removed "apple,t8103-pinctrl" compatible from driver
+> >    - Applied Acks/Review tags
+>
+> I mentioned two nits in a reply to #4, but nothing worth blocking
+> merging over, so this is:
+>
+> Acked-by: Hector Martin <marcan@marcan.st>
+>
+> Linus: You can take everything but the MAINTAINERS patch, I'll push that
+> one via SoC together with everything else for this window to avoid merge
+> hell :)
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5.15-3
+Excellent Joey can you respin the series with Hectors fixes on patch #4
+and add in the ACKs and review tags also Marc Z:s, so I can queue
+this for v5.16 ASAP.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a51aec4109300d843bf144579109d5288856f72a
+Any remaining issues can certainly be ironed out in-tree.
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Yours,
+Linus Walleij
