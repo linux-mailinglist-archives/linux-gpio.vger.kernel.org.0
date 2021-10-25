@@ -2,105 +2,196 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BE37E438CB4
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Oct 2021 02:05:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB631438CD2
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Oct 2021 02:36:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231696AbhJYAHq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 24 Oct 2021 20:07:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43008 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229915AbhJYAHp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 24 Oct 2021 20:07:45 -0400
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86445C061348
-        for <linux-gpio@vger.kernel.org>; Sun, 24 Oct 2021 17:05:23 -0700 (PDT)
-Received: by mail-lj1-x22a.google.com with SMTP id o26so10004513ljj.2
-        for <linux-gpio@vger.kernel.org>; Sun, 24 Oct 2021 17:05:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BXs3CPiRM0ktOPn6UKcTUaxBGbDFvG7y/D+eqfm+MiI=;
-        b=EcqtqNeLccqZf+cv2/s25z9obdQyXFWwESdFctu92gglRQdTZilo0i5mW9ktv1CRSH
-         8gcQDYNEbRGQpjfxp/u/Yp8OfTvFYkgPPwTw3RVE94rCfUxv5czaERJlokO+/zV83QrX
-         RHKWpBeCyAIc+olrONkEnxnO7XgRReItJ9JV7LzvfQmiPxP3KKvNqP+/d+eFPXaywCEc
-         TmyNwQm0YDxuzkNjLlb3wIDsjPypsGNEoyrbdKGB2nBh29/DpGCiwy3vMVKw3nmLcMhp
-         /ycA5xhEyOFFyCUim9WUoTxrNWHnhfFLM1Xh8aToH0Ofnzpg5W53/HmH2Xlx4gp07260
-         1vnQ==
+        id S231961AbhJYAib (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 24 Oct 2021 20:38:31 -0400
+Received: from mail-pf1-f172.google.com ([209.85.210.172]:43781 "EHLO
+        mail-pf1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231938AbhJYAi0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 24 Oct 2021 20:38:26 -0400
+Received: by mail-pf1-f172.google.com with SMTP id 187so9060599pfc.10;
+        Sun, 24 Oct 2021 17:36:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=BXs3CPiRM0ktOPn6UKcTUaxBGbDFvG7y/D+eqfm+MiI=;
-        b=MxJUpUg+ebzqI4+raXAn5M643Ohzobh8OYBgCNIeXWmg9r/stWwiXW4aCSf4eqJM3u
-         cVg6K1+v6Lwd0rWUkCwymPBCj1MLALQuot6M/EDJ9tz6A7ZPLJXawjGgiYUY5llMEs0p
-         ByNW/P71+HdmNcxpe5+ec/4ELvgcMcnP6qdJoQN+QWpnJOcTql+zZtkZ0NNnQVjaSnvb
-         tUCG3L27fK6+zclrqvTWk+g1SkCdZZryo1FK3e1gwfSuObx9g4CEMLL51QDiRdsyxU+s
-         8ZsQ/GPqrKchXp+EcMiu/ZvrGjwgxKJ0GWCCI/SGHkA13OTI/LsKs5j6ic2MQvqvfJi8
-         IAjA==
-X-Gm-Message-State: AOAM533h2fCRLR8/hZTb6hMV1eK10FFRDjiexqdcIQfQgk/JKSEfzBAZ
-        2DUccetMJ8VSJFFUkALHEBk2xCG1voD7Az5ayN9KhA==
-X-Google-Smtp-Source: ABdhPJwz/CLcFxBI/cvz+vNv1O1716R9EDbGS/lJN3cLLx8ZY3kiktxsKROfdKUg6qk8vtT+Kjkh2EnAzf/Kw34JXc8=
-X-Received: by 2002:a2e:9e4e:: with SMTP id g14mr7718082ljk.261.1635120321725;
- Sun, 24 Oct 2021 17:05:21 -0700 (PDT)
+        bh=2qH0EkjmGBqZqzNWAd5xakY+DAqcPlo0/17L+watSFo=;
+        b=xYjCDeGXzElczrJq4/5CpPeaUIsLRkPrCFmX60Ip2DKd4UGdW991GssP04e5jSmWdV
+         K8QY87yueWwhta5+a+PeqXM8SmzGMGbRX87sWtRdiNyyA39euhoUZ4tcVvTQLpgWNdK8
+         p9VR4dnh9OhZeHQwL0BOUVm2sRSFQWZkyxbyVMNgcsqxiCb24vlX+hF+hnzHO+Wesq1r
+         nCySeY3ewkLX7S6cfGREyYSwAlA6XscGoLs964WjILxJaGzQyc//+n/Ex9SBADbWXnq0
+         q9PZ8BYbSvhE3TS6am4aYM2leMGEHHsF4OJcuufHfQh1X9msHxcykrcUWqLNiTgpb+IA
+         Ktsw==
+X-Gm-Message-State: AOAM532N5BNqC7YrBOnRSzlMcF9QoDMzatAXb6BV825yBT2HXZn9YsA5
+        U0Nfm7mUrpL/bWUotLvIaM0sqzbu9qEUg6Khdm+/bR9L3SCbMQ==
+X-Google-Smtp-Source: ABdhPJzl54zpKV3sQ8JY+vUbzNFdI4ziqWls7u/hP7OYNEq6resMPJD1kH5xqGf6CGbcj8bF7QSTME7U2/JD7t9HACg=
+X-Received: by 2002:a63:b11:: with SMTP id 17mr11021028pgl.51.1635122163670;
+ Sun, 24 Oct 2021 17:36:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211024154027.1479261-1-Mr.Bossman075@gmail.com> <20211024154027.1479261-4-Mr.Bossman075@gmail.com>
-In-Reply-To: <20211024154027.1479261-4-Mr.Bossman075@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 25 Oct 2021 02:05:10 +0200
-Message-ID: <CACRpkdZGAfJATC5MGaJ9AUs8x+nN_rDRATyV44Fkztoat4-ZLw@mail.gmail.com>
-Subject: Re: [PATCH 03/13] dt-bindings: imx: Add pinctrl binding doc for i.MXRT1050
-To:     Jesse Taube <mr.bossman075@gmail.com>
-Cc:     NXP Linux Team <linux-imx@nxp.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        SoC Team <soc@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        giulio.benetti@benettiengineering.com,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Huang Yongcai-B20788 <b20788@freescale.com>,
-        Andy Duan <fugang.duan@nxp.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
+References: <20211021174223.43310-1-kernel@esmil.dk> <20211021174223.43310-12-kernel@esmil.dk>
+ <CACRpkdYZzKtFcBUM8sV4uze2T_EbfOGG=QkO9miDKKq=1mws_A@mail.gmail.com>
+In-Reply-To: <CACRpkdYZzKtFcBUM8sV4uze2T_EbfOGG=QkO9miDKKq=1mws_A@mail.gmail.com>
+From:   Emil Renner Berthing <kernel@esmil.dk>
+Date:   Mon, 25 Oct 2021 02:35:52 +0200
+Message-ID: <CANBLGczuVgT30OGDSN=4WcX8AgpoTQc5goUg23YY859T8axkRQ@mail.gmail.com>
+Subject: Re: [PATCH v2 11/16] dt-bindings: pinctrl: Add StarFive JH7100 bindings
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
         "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
         <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        Drew Fustini <drew@beagleboard.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Michael Zhu <michael.zhu@starfivetech.com>,
+        Fu Wei <tekkamanninja@gmail.com>,
+        Anup Patel <anup.patel@wdc.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Matteo Croce <mcroce@microsoft.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Oct 24, 2021 at 5:40 PM Jesse Taube <mr.bossman075@gmail.com> wrote:
-
-> From: Giulio Benetti <giulio.benetti@benettiengineering.com>
+On Mon, 25 Oct 2021 at 01:11, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Thu, Oct 21, 2021 at 7:42 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
 >
-> Add binding doc for i.MXRT1050 pinctrl driver.
+> > Add bindings for the StarFive JH7100 GPIO/pin controller.
+> >
+> > Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
 >
-> Signed-off-by: Giulio Benetti <giulio.benetti@benettiengineering.com>
-> Signed-off-by: Jesse Taube <Mr.Bossman075@gmail.com>
+> That is a very terse commit message for an entirely new
+> SoC, please put a little blurb about this silicon there.
+> Like mention that it is RISC-V at least.
 
-On this and all the pinctrl stuff I need review from the current
-Freescale maintainers, the fsl,pins stuff is a Freescale pecularity.
-I would hardcode all of this into the driver but there are historical
-reason for why Freescale want it and does it this way.
-(And I don't understand those.)
+Will do!
 
-Yours,
-Linus Walleij
+> Overall quite interesting!
+>
+> > +$id: http://devicetree.org/schemas/pinctrl/starfive,jh7100-pinctrl.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: StarFive JH7100 Pin Controller Device Tree Bindings
+> > +
+> > +maintainers:
+> > +  - Emil Renner Berthing <kernel@esmil.dk>
+> > +  - Drew Fustini <drew@beagleboard.org>
+>
+> Add description: talking about that this is a RISC-V SoC
+> and other implicit things that are really good to know.
+
+Gotcha.
+
+> > +  starfive,signal-group:
+> > +    description: |
+> > +      The SoC has a global setting selecting one of 7 different pinmux
+> > +      configurations of the pads named GPIO[0:63] and FUNC_SHARE[0:141]. After
+> > +      this global setting is chosen only the 64 "GPIO" pins can be further
+> > +      muxed by configuring them to be controlled by certain peripherals rather
+> > +      than software.
+> > +      Note that in configuration 0 none of GPIOs are routed to pads, and only
+> > +      in configuration 1 are the GPIOs routed to the pads named GPIO[0:63].
+> > +      If this property is not set it defaults to the configuration already
+> > +      chosen by the earlier boot stages.
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +    enum: [0, 1, 2, 3, 4, 5, 6]
+>
+> This still is hard for me to understand. Does it mean that 0..6 define
+> how the direct-to-peripheral-pins are set up?
+
+Yeah, so the SoC has many pins, but only the pins named GPIO[0:63] and
+FUNC_SHARE[0:141] can be muxed. To do that you first select one of 7
+different "signal groups". This is a global setting. There is just a
+single register on the whole SoC where you write either 0, 1, .., or
+6. As an example signal group 6 maps LCD output to FUNC_SHARE[40:97],
+ethernet phy connection to FUNC_SHARE[115:141], MIPI to GPIO[0:60] and
+confusingly it maps "GPIO0", "GPIO1", ..., "GPIO63" to pins
+FUNC_SHARE[0:63]. So the pin names doesn't necessarily match the
+function. In fact only signal group 1 maps GPIO0-63 to pins
+GPIO[0:63]. See table 11-1 starting on page 62 of this PDF:
+https://github.com/starfive-tech/JH7100_Docs/blob/main/JH7100%20Data%20Sheet%20V01.01.04-EN%20(4-21-2021).pdf
+
+GPIO0-63 can of course be used as GPIOs, but they can also have their
+output value and output enable controlled by certain (slow)
+peripherals like UARTs, I2C, SPI, PWM etc. These can be chosen freely.
+So once you've chosen signal group 6, you can have any of GPIO0-GPIO63
+(that is any of pins FUNC_SHARE[0:63]) be controlled by the UART0 TX
+signal fx.
+
+So for each of GPIO0 to GPIO63 there is a register to select the
+output value signal and a register to select its output enable signal.
+You can see the list of signals to choose from in the header
+introduced in the previous patch.
+
+Input from GPIO0-63 to peripherals works the other way around. Here
+there is a register for each input signal, where you can select which
+(if any) of GPIO0-63 is routed to the peripheral.
+
+> Then it would make sense to describe what happens for 0, 1, 2 ...6
+> i.e. what the different set-ups are.
+
+Yeah, so how much of table 11-1 does it make sense to write out.
+Certainly I can list how GPIO0-63 are mapped to pins for each of the 7
+signal groups, but should I also list LCD, ethernet, interconnect,
+mipi etc. for each of the 7 signal groups?
+
+> Actually this is what we call group-based pin multiplexing in Linux,
+> this property seems to avoid using that concept.
+> See for example:
+> Documentation/devicetree/bindings/pinctrl/cortina,gemini-pinctrl.txt
+
+I don't think this is the same, but hope you can tell me after reading
+the description above.
+
+> > +    patternProperties:
+> > +      '-pins*$':
+> > +        type: object
+> > +        description: |
+> > +          A pinctrl node should contain at least one subnode representing the
+> > +          pinctrl groups available on the machine. Each subnode will list the
+> > +          pins it needs, and how they should be configured, with regard to
+> > +          muxer configuration, bias, input enable/disable, input schmitt
+> > +          trigger enable/disable, slew-rate and drive strength.
+> > +        $ref: "/schemas/pinctrl/pincfg-node.yaml"
+>
+> Nice that you use pincfg-node.yaml
+>
+> > +        properties:
+> > +          pins:
+> > +            description: |
+> > +              The list of pin identifiers that properties in the node apply to.
+> > +              This should be set using either the PAD_GPIO or PAD_FUNC_SHARE
+> > +              macro. Either this or "pinmux" has to be specified.
+> > +
+> > +          pinmux:
+> > +            description: |
+> > +              The list of GPIO identifiers and their mux settings that
+> > +              properties in the node apply to. This should be set using the
+> > +              GPIOMUX macro. Either this or "pins" has to be specified.
+>
+> What about referencing
+> Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml
+> for this?
+
+Sure. You just mean adding $ref: like above right?
+
+Thanks!
+/Emil
