@@ -2,71 +2,173 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0721F43BC44
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Oct 2021 23:20:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 720BD43BC87
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Oct 2021 23:36:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239510AbhJZVWw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 Oct 2021 17:22:52 -0400
-Received: from mail-oi1-f169.google.com ([209.85.167.169]:40860 "EHLO
-        mail-oi1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239511AbhJZVWv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Oct 2021 17:22:51 -0400
-Received: by mail-oi1-f169.google.com with SMTP id n63so515638oif.7;
-        Tue, 26 Oct 2021 14:20:26 -0700 (PDT)
+        id S239678AbhJZVjJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 Oct 2021 17:39:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41472 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239669AbhJZVjI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Oct 2021 17:39:08 -0400
+Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09638C061570;
+        Tue, 26 Oct 2021 14:36:44 -0700 (PDT)
+Received: by mail-yb1-xb30.google.com with SMTP id a6so1031212ybq.9;
+        Tue, 26 Oct 2021 14:36:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4wNyPqGE0Nzj26+1d7qK2TZKb0WDGW0xR3NS0/Dm8D8=;
+        b=GEmgQETGyiJphS4CkZY+/W+RfT30EWmPhkSALapYdNnp7ZzzxU7W9CBTByYovl3XTu
+         D1o4ToRTb4bN/71ajbmVU8N4Em1c8Q4hc9b461DCLf0F7hqdnyh7jmgeUBgvdAIZ+1bC
+         op5Z2bIVLdcIGRRGO1vIPOWreM5JcGlu2Zvqh6Az3ccghSTHQ146nyhOjZF10Ggu26jO
+         rXO0ZnJElx0VGUpvt4HjxAADRtNFhtk/eHxODAIIYXQDcYfCZ3FHlLMRaCurRUVHtcEP
+         W29TdhkYvTJdTFzCBG/l/3GqQUW0HaFL/z+IMKoU8gCYeLWm4G/AD/MQJ+VLbuyxnQ8I
+         KK6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RCbYeBeMvbrHSdyvTDSqkQZ6Yknq+sajMOBXkanmlDk=;
-        b=ZoZrfhbJ9B5X+Fpt1BnG4C1NABuXQ12ACG9zjFtC0ayt5ULXQzoHnWPWix41WnmbM/
-         1JM8keeYajVyRA7NGFqyFIY2TlDpzQ0GZtzfYdIMi+sC6hrO/3nzMsORbvL3Gpn2s9x5
-         1ifAUPQb2KU+pCl4FoJVFdk9fxzI9DrA6+NDQZdldjh/wZ5ukZmdEHbsLXRpmjrFur24
-         6F8S9fg4rYmcwisTO6o8mepbVN6q+ueRy6F+meMt4yS4JiHsRHVysHJpZpNdBmnFxzBl
-         NAC3DXaLA8vqakn05if134Cn01+O+zI4gYq2ysk3kUOX+Q+9KBHMdZepQW28eVVTwNyS
-         hKzQ==
-X-Gm-Message-State: AOAM530/H/2UxK+FIn6k+azhXeJ/JzEy5Zd9rQYOSub0l+TrqprW605l
-        /ouDLVwSYnHF09IMoZa50g==
-X-Google-Smtp-Source: ABdhPJzgvwq+0+tj6wKk+W4DmaR1WDhr/uTub0VlaWK+cK7/K0zwvd3VnE5OeyZGLlSFBGBiYyAqxA==
-X-Received: by 2002:a54:418a:: with SMTP id 10mr932031oiy.13.1635283226441;
-        Tue, 26 Oct 2021 14:20:26 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id e9sm4924300otr.25.2021.10.26.14.20.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Oct 2021 14:20:25 -0700 (PDT)
-Received: (nullmailer pid 3273688 invoked by uid 1000);
-        Tue, 26 Oct 2021 21:20:24 -0000
-Date:   Tue, 26 Oct 2021 16:20:24 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     devicetree@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        monstr@monstr.eu, linux-arm-kernel@lists.infradead.org,
-        git@xilinx.com, Srinivas Neeli <srinivas.neeli@xilinx.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: gpio: zynq: Describe gpio-line-names
-Message-ID: <YXhxGBCmHakfaK1K@robh.at.kernel.org>
-References: <4b9db94cdd8ca106feee53f76fab2a23721f7d2a.1634290039.git.michal.simek@xilinx.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4wNyPqGE0Nzj26+1d7qK2TZKb0WDGW0xR3NS0/Dm8D8=;
+        b=7pvWeqUn4/hU2irWQg1J9h4evfmcfyRhmJ7UuKUgwfhJJ1OkvznEMci0pKIQRBFq75
+         3oyd5haCjxRbVcob0IdEuCa9Fxwyn3pwypmqS0i2nzO06H/WFng1pDBz6qYdci7viVy9
+         RmLLjHUWWfNTXqViZRHmVI9/IkaNfZytrR+cN5ZC57HojTMXOEMghEGfm7hDxvD54TRU
+         fx6EPpxE+rP+z6JOg/nMlVA0J0BWqB1+vRhmvROVjT0T3DtEL2ZcigNqFMrWwJB+OX0G
+         ZcROQTtPaNXn8dnrokATeYsCp50Ke5rEmZJJosXUiVbFeUc+mqp2qxx5WPU8mfybu95u
+         KDSQ==
+X-Gm-Message-State: AOAM533MndgV8ZuV+0vYBZGoRlXpKnG28+QeytmXoCX6We9s+n8tda04
+        2sE98VbmzF9/eDR8mPHMl6arXeyXjWNc1d/nBIJatVKqGzk=
+X-Google-Smtp-Source: ABdhPJyYcqrrKYkTH7z5pS2QaoRaP8XhF7TcGKpw4QG6fNwhow0uLaanWQMMefPjJDQjEA4NA6a4x+vUzsD+cW4aFGY=
+X-Received: by 2002:a5b:783:: with SMTP id b3mr25680236ybq.328.1635284203236;
+ Tue, 26 Oct 2021 14:36:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4b9db94cdd8ca106feee53f76fab2a23721f7d2a.1634290039.git.michal.simek@xilinx.com>
+References: <20210930121630.17449-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20210930121630.17449-5-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdXHv7H3xxEYFLhfBf+Pun-w=F4k5S2RAYJY6qz75QpxhQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdXHv7H3xxEYFLhfBf+Pun-w=F4k5S2RAYJY6qz75QpxhQ@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Tue, 26 Oct 2021 22:36:17 +0100
+Message-ID: <CA+V-a8uS6fiHAWbJTXtVJgHPqvtDGPf-RupQGaKJv7wWkurLYw@mail.gmail.com>
+Subject: Re: [RFC PATCH 4/4] pinctrl: renesas: pinctrl-rzg2l: Add support to
+ get/set drive-strength and output-impedance
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 15 Oct 2021 11:27:23 +0200, Michal Simek wrote:
-> Number of lines depends on compatible string from 58 to 174.
-> That's why it is checked based on it.
-> 
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> ---
-> 
->  .../devicetree/bindings/gpio/gpio-zynq.yaml   | 50 +++++++++++++++++++
->  1 file changed, 50 insertions(+)
-> 
+Hi Geert,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Thank you for the review.
+
+On Thu, Oct 7, 2021 at 6:23 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Thu, Sep 30, 2021 at 2:17 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > Add support to get/set drive-strength and output-impedance of the pins.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Thanks for your patch!
+>
+> > --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> > +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> > @@ -47,6 +47,7 @@
+> >  #define PIN_CFG_FILONOFF               BIT(9)
+> >  #define PIN_CFG_FILNUM                 BIT(10)
+> >  #define PIN_CFG_FILCLKSEL              BIT(11)
+> > +#define PIN_CFG_GROUP_B                        BIT(12)
+>
+> Perhaps it would be easier to have separate PIN_CFG_IOLH_A and
+> PIN_CFG_IOLH_B flags, instead of a PIN_CFG_IOLH flag and a
+> PIN_CFG_GROUP_B modifier flag?
+>
+Agreed will do that.
+
+> >
+> >  #define RZG2L_MPXED_PIN_FUNCS          (PIN_CFG_IOLH | \
+> >                                          PIN_CFG_SR | \
+>
+> > @@ -484,6 +513,38 @@ static int rzg2l_pinctrl_pinconf_get(struct pinctrl_dev *pctldev,
+> >                 break;
+> >         }
+> >
+> > +       case PIN_CONFIG_OUTPUT_IMPEDANCE:
+> > +       case PIN_CONFIG_DRIVE_STRENGTH: {
+> > +               unsigned int mA[4] = { 2, 4, 8, 12 };
+> > +               unsigned int oi[4] = { 100, 66, 50, 33 };
+>
+> static const
+>
+agreed.
+
+> > +
+> > +               if (param == PIN_CONFIG_DRIVE_STRENGTH) {
+> > +                       if (!(cfg & PIN_CFG_IOLH) || groupb_pin)
+> > +                               return -EINVAL;
+> > +               } else {
+> > +                       if (!(cfg & PIN_CFG_IOLH) || !groupb_pin)
+> > +                               return -EINVAL;
+> > +               }
+> > +
+> > +               spin_lock_irqsave(&pctrl->lock, flags);
+> > +
+> > +               /* handle _L/_H for 32-bit register read/write */
+> > +               addr = pctrl->base + IOLH(port);
+> > +               if (bit >= 4) {
+> > +                       bit -= 4;
+> > +                       addr += 4;
+> > +               }
+> > +
+> > +               reg = readl(addr) & (IOLH_MASK << (bit * 8));
+> > +               reg = reg >> (bit * 8);
+> > +               if (param == PIN_CONFIG_DRIVE_STRENGTH)
+> > +                       arg = mA[reg];
+> > +               else
+> > +                       arg = oi[reg];
+> > +               spin_unlock_irqrestore(&pctrl->lock, flags);
+>
+> I think you've reached the point where it starts to make sense to
+> have helper functions to read and modify these sub-register fields
+> that may be located into the current or next register.
+>
+Ok will add helpers to read and rmw.
+
+> And after that, you can split it in two smaller separate cases for
+> drive strength and output impedance.
+>
+Agreed.
+
+Cheers,
+Prabhakar
+
+> > +               break;
+> > +       }
+> > +
+> >         default:
+> >                 return -ENOTSUPP;
+> >         }
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
