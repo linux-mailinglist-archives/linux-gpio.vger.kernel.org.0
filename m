@@ -2,55 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 422E043BAC4
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Oct 2021 21:27:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA8E343BACC
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Oct 2021 21:29:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237151AbhJZTaL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 Oct 2021 15:30:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40318 "EHLO
+        id S238735AbhJZTbz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 Oct 2021 15:31:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236282AbhJZTaK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Oct 2021 15:30:10 -0400
-Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B654C061570;
-        Tue, 26 Oct 2021 12:27:46 -0700 (PDT)
-Received: by mail-yb1-xb2b.google.com with SMTP id b9so284274ybc.5;
-        Tue, 26 Oct 2021 12:27:46 -0700 (PDT)
+        with ESMTP id S238731AbhJZTbw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Oct 2021 15:31:52 -0400
+Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3DB2C061570;
+        Tue, 26 Oct 2021 12:29:26 -0700 (PDT)
+Received: by mail-yb1-xb29.google.com with SMTP id m63so274669ybf.7;
+        Tue, 26 Oct 2021 12:29:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=l+wfMzT5pI4KeLbKtOYEjGxFkq26O6EhH+jW3fAP20s=;
-        b=Ncb4t9TNinjO48UvUq1B0xRaynko7cysjTONTPP77SCo8bzaNeTehUbHgptpcjwUAQ
-         23GyyxUGfAH0D2Qixvy9RCx9oHmRVc+iA9CdvRRdCMyAITQPzJ98zD4CjMZoJBdfSOmO
-         7vY/yf6YzYJlxSRxjJiKpBARv09ri+ZJ5D6sB9MkFjHAF5/O7A+ia8hFPfqEnppxIm+n
-         sTpmuNvubZ/gjBxB3leJNLEEdUFaPA9RATJ3IEND4lg6sOnQ948Ncdj2RKMu908Z0w2M
-         1+sQya9KQ/Z5DwXHKvkbqEqiOO/NwrPLsjoqPPskqxef7pUwepf0KhVAuBb4GMqLdGqa
-         dQ1w==
+        bh=+NelDXF27zh376nuZKTht06HRFY8IAGB5HDrOTlHXaU=;
+        b=jXd7KptoyXQebe9euhlvXUw0kli2jFKQEjBo/no0TC4HLIc9XAIO6c4Squkj3pcBSd
+         sGCRDCEygq0GD9ZWnNSh3Z5tLH4YR9/JnI+WJkIbu0Mbo2nZTd9FN6cngpYUai/HsLEZ
+         Xv4WIK18iPAUU0TZc/mk5DerZmIVcgg2OlJYc7a6c9zOJUmmnYMptqpZWk8n9oYe91Yz
+         0KiZxEb+oP6iHe7xKFbqKUVcSDr9i0V/z7rZ1AIxLfbjjm97/KCRLXXZ8mU80VErmDBz
+         k2v+nNOXeB1jr2jUeINBm45OX2HdShgihZunviaaJqx09DdFmIdTu4vGpvnfFTEBi7yc
+         6yJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=l+wfMzT5pI4KeLbKtOYEjGxFkq26O6EhH+jW3fAP20s=;
-        b=dAVU7C6Dzu5vQ1THsKl1x4UC33QEHT9rBUFdkcnDpVrle19E8fWgoVbC0Na/HJbxrT
-         HYxjdmmDbtf0GQYOgirm79gykAgfjFbFbFvzbRpv+q8XCcyuG65ajKS8bNcH8TKcEsJm
-         A+xyhwT1KTL+62A4tMSv7lF0oUuum9C239P5RS3lJ+MGcZMXaPoNk4ZbbbKq4o+iOcR2
-         BNvpFqd+WL6O4SRhiUJywBndwc4Chb2kl58FwXxIto7oeqRwNfLkNJmZhsH+lT3UYZuq
-         zNuuesKcPg/5NimmbxekhL2mmiyfzm9W2HYAlLQKCWQ7WHaa/4VqR15KjO3WVAobGmgw
-         9UNQ==
-X-Gm-Message-State: AOAM532Q4dbsNJrUp+XeJLtKVpeL1L0Llhmh5bozVwARjbpkvUNI1iWg
-        i6bixt65hjEKye3zlaWHIiRqlGtl/5DCs59TpaQ=
-X-Google-Smtp-Source: ABdhPJw/2ChRJ5oj3dv8OSYqLhqvL0LlcghhuyFBiV0TA3STVk75KQikO8lmp8LLAAvGSQgf7rIaQ8GxdXCqyOoBuHw=
-X-Received: by 2002:a25:c08a:: with SMTP id c132mr25961947ybf.49.1635276465259;
- Tue, 26 Oct 2021 12:27:45 -0700 (PDT)
+        bh=+NelDXF27zh376nuZKTht06HRFY8IAGB5HDrOTlHXaU=;
+        b=2kOZv1LvopDems+jd/ad0E3xhkxnnzrrocViMHKtbkcB16pbvMzBuKaHGbxdB4L8LL
+         XvODtF5jMww7pwPGpedfFihkjaWl00QsHLCqj/UUDQQ8+6giTY5k0TbW/rxIaBalkMR9
+         OUpUw+mayOXbRcVFlp3AZAYCVNwLa7Tvem+DiOAAn32IuFF8slDPALe+MMsIZkN9ysVZ
+         9a2TAgEOzZPQNq8+T1FWLquDir1HADQo0/bzhKZWSs4Pr+BUm1peBbUWP/h0eCiDt0aX
+         n0w42rIqdtbUZjp1joNc3cb8Uop+DxuP5c+YznitP8auFzPE+zByPVZqGR/6CDg5F1sm
+         UtfA==
+X-Gm-Message-State: AOAM533I+S2ILWDA3K0sANHuplkqbVDbK9pEyCZTGqz15k5OxeS16kow
+        2m6oU1NRu4nDe+TNizcP9RliAiDKLar/CtRsCR4=
+X-Google-Smtp-Source: ABdhPJy4NFRKzLqvuv9b+W3fNFaE1Fm82be22RqumcVLw1PBA8BZyoXRB9Ni/1GP8Dy1EK+diD3+iJ4+XDoIJz/G06g=
+X-Received: by 2002:a5b:783:: with SMTP id b3mr25063420ybq.328.1635276566184;
+ Tue, 26 Oct 2021 12:29:26 -0700 (PDT)
 MIME-Version: 1.0
 References: <20210930121630.17449-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20210930121630.17449-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdVm5gYFKZa=4jSm+GAsMYRUFwXjjXNhr16Z-ROVzpsZbA@mail.gmail.com>
-In-Reply-To: <CAMuHMdVm5gYFKZa=4jSm+GAsMYRUFwXjjXNhr16Z-ROVzpsZbA@mail.gmail.com>
+ <20210930121630.17449-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdVd8nhWX9__bo9oxE44_+FNYs3RhxmJNbz-kKnRzKJZYA@mail.gmail.com>
+In-Reply-To: <CAMuHMdVd8nhWX9__bo9oxE44_+FNYs3RhxmJNbz-kKnRzKJZYA@mail.gmail.com>
 From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Tue, 26 Oct 2021 20:27:19 +0100
-Message-ID: <CA+V-a8sgmocz+EPALfSytcmQYHbUeMWcz4ac6g5gzUARWDUaPA@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/4] dt-bindings: pincfg-node: Add "output-impedance" property
+Date:   Tue, 26 Oct 2021 20:29:00 +0100
+Message-ID: <CA+V-a8sq_Pp+9yv1Yu5z_OnUyBgan3FHOk8iMVTSdVSO6B5DjA@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/4] pinctrl: pinconf-generic: Add support for
+ "output-impedance" to be extracted from DT files
 To:     Geert Uytterhoeven <geert@linux-m68k.org>
 Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -70,45 +71,50 @@ Hi Geert,
 
 Thank you for the review.
 
-On Thu, Oct 7, 2021 at 5:57 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+On Thu, Oct 7, 2021 at 6:02 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 >
 > Hi Prabhakar,
 >
 > On Thu, Sep 30, 2021 at 2:17 PM Lad Prabhakar
 > <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > On RZ/G2L SoC for Group-B pins, output impedance can be configured.
-> > This patch documents "output-impedance" property in pincfg-node.yaml so
-> > that other platforms requiring such feature can make use of this property.
+> > Add "output-impedance" property to generic options used for DT parsing
+> > files. This enables drivers, which use generic pin configurations, to
+> > get the value passed to this property.
 > >
 > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >
 > Thanks for your patch!
 >
-> > --- a/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
-> > +++ b/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
-> > @@ -114,6 +114,10 @@ properties:
-> >      description: enable output on a pin without actively driving it
-> >        (such as enabling an output buffer)
-> >
-> > +  output-impedance:
+> > --- a/drivers/pinctrl/pinconf-generic.c
+> > +++ b/drivers/pinctrl/pinconf-generic.c
+> > @@ -46,6 +46,7 @@ static const struct pin_config_item conf_items[] = {
+> >         PCONFDUMP(PIN_CONFIG_MODE_LOW_POWER, "pin low power", "mode", true),
+> >         PCONFDUMP(PIN_CONFIG_OUTPUT_ENABLE, "output enabled", NULL, false),
+> >         PCONFDUMP(PIN_CONFIG_OUTPUT, "pin output", "level", true),
+> > +       PCONFDUMP(PIN_CONFIG_OUTPUT_IMPEDANCE, "output impedance", "ohm", true),
+> >         PCONFDUMP(PIN_CONFIG_POWER_SOURCE, "pin power source", "selector", true),
+> >         PCONFDUMP(PIN_CONFIG_SLEEP_HARDWARE_STATE, "sleep hardware state", NULL, false),
+> >         PCONFDUMP(PIN_CONFIG_SLEW_RATE, "slew rate", NULL, true),
+> > @@ -179,6 +180,7 @@ static const struct pinconf_generic_params dt_params[] = {
+> >         { "output-disable", PIN_CONFIG_OUTPUT_ENABLE, 0 },
+> >         { "output-enable", PIN_CONFIG_OUTPUT_ENABLE, 1 },
+> >         { "output-high", PIN_CONFIG_OUTPUT, 1, },
+> > +       { "output-impedance", PIN_CONFIG_OUTPUT_IMPEDANCE, 0 },
 >
-> output-impedance-ohms (ugh, the standard suffix is plural)
+> "output-impedance-ohms", as per DT standardized property units.
 >
-> Yes, I know only one other property has a standard unit suffix from
-> dt-schema/schemas/property-units.yaml. Should we add properties
-> including standard unit suffixes, and deprecate the old ones?
->
-Yes, that should be the way to go forward.
+Sure will replace that with output-impedance-ohms and to chime in Ill
+re-name the macro to PIN_CONFIG_OUTPUT_IMPEDANCE_OHMS
 
 Cheers,
 Prabhakar
 
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    description: set the pins output impedance at most X ohm
-> > +
-> >    output-low:
-> >      type: boolean
-> >      description: set the pin to output mode with low level
+> >         { "output-low", PIN_CONFIG_OUTPUT, 0, },
+> >         { "power-source", PIN_CONFIG_POWER_SOURCE, 0 },
+> >         { "sleep-hardware-state", PIN_CONFIG_SLEEP_HARDWARE_STATE, 0 },
+>
+> With the above fixed:
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 >
 > Gr{oetje,eeting}s,
 >
