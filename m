@@ -2,85 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3473343BD0C
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Oct 2021 00:11:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B4C4343BD1E
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Oct 2021 00:21:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234474AbhJZWNk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 Oct 2021 18:13:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48724 "EHLO
+        id S237266AbhJZWX3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 Oct 2021 18:23:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240226AbhJZWNb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Oct 2021 18:13:31 -0400
-Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 775BCC061235
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Oct 2021 15:10:49 -0700 (PDT)
-Received: by mail-lj1-x235.google.com with SMTP id o26so1331416ljj.2
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Oct 2021 15:10:49 -0700 (PDT)
+        with ESMTP id S232718AbhJZWX3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Oct 2021 18:23:29 -0400
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3644C061570
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Oct 2021 15:21:04 -0700 (PDT)
+Received: by mail-lf1-x12d.google.com with SMTP id j2so1939057lfg.3
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Oct 2021 15:21:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=FeJxrETo5kkHC6yy5/z3/zb2XGiSNYC+KlW60qSUBa4=;
-        b=IGRo583RkjYHRXrdCbB2VtjMRMnIkzIotxUIb344Yg0+X2k+LZZ44x9PLWUupfLfXM
-         aa3MfmufNZMIOtCn8Sdx5GErCS334lOiLPg1xe2O/saDViWnOiPfN9te4fJnYGSdlobZ
-         bc8VUKmmke2U/XMI2xp3OP4iKKpxdAsC50gE5o2J7Q405Y0U6u11DbxbRDn33b4wZw1V
-         pVpwzAtXUR8FSIeKPCX1b5dCdSQUt8eV6aAze1TLGfHbpRYWMImBTG0zXCQcY2d2Mj4h
-         N8M1/sJrEiQ9QqRdk574feqFG1xLRk+DgKLBN9B/BmTVnNMA78leWGosbuID7PkPx07T
-         JZFA==
+        bh=ZlgtQAxkjTvj8T+NiFuX+YdjQJNoRYDUWGidTE7NktE=;
+        b=lP53rE17CXHjyhEcAMjZOKQP2wp23J8OD0vD2MI+vVS5gmf5BOG40rCPxDf/Df4yrG
+         WYMorX2dS00+xbiNG0sJAk/KkcOE+JGs2L5jfIpHD/YBcMx5fAUMd7tFu8mYizOm37H8
+         iBLShaiht6g6hi6YXbsSpGiyTHgR5DQnI8c4J3cwr/PpwXurJ620Yln3LhiyfRzNDgjM
+         Z3hB9aAppPQMG2pEm2yORVZtTuUSUAZGA5DUPA5n6B5VV0FoAtM+zwSJ3fMSRPwPvXep
+         kni7KbjAF9g3dfowbMQm5f16qX3aXTlXEp6foIx4vmuS1NIy23Uxf1Qkam96i+sMkZey
+         9zJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=FeJxrETo5kkHC6yy5/z3/zb2XGiSNYC+KlW60qSUBa4=;
-        b=NXQPKGpbj4rc3g57DUxHtScfxeIX8gAXA+HQk5hW79rrRjawYeriWKNiJxb2q03V4b
-         guwsPHaB/VdSRoKl34XqIHT5q4FsB0TuC5d9nqTKbFJh68xpchZzvdbWP/LMcO31VB1I
-         ZHyq5CZQ+CVnsZ5aloMmFgGB3eAV5EvbbhVM3H0VG5ZB8bCMdoYIfQwugaiu4LHqIGVI
-         NtY+5JbvFxpq7L+QkrvBauZotoHLhdFwqPqlIAAMKVAmUdNsoTaSYt70RXkjoRlCLg2h
-         zo4K+I3v4f35BQFJdCdEcD69U/+v0CwTaD022nrS3iHaO5Zt8OhWPeMqSo4JV4/vd/YF
-         HYvw==
-X-Gm-Message-State: AOAM531JsovF9fgP/hZ4z3bZ2tzLIeERKU7mihWaPYKl4kenTazg/1hM
-        sg9ujDf0tOCGCQcD1HY417V9PAwVoomBSDtIIM6oHg==
-X-Google-Smtp-Source: ABdhPJzMiEfUftf3AQCYeJTd8EgA3PuLtgAofwFO1J7XgnTbj+hNXjSb/i3L0yrGwvrWcwZe6l9j1qocEPmvn5WPDNY=
-X-Received: by 2002:a05:651c:111:: with SMTP id a17mr28176160ljb.145.1635286247771;
- Tue, 26 Oct 2021 15:10:47 -0700 (PDT)
+        bh=ZlgtQAxkjTvj8T+NiFuX+YdjQJNoRYDUWGidTE7NktE=;
+        b=s2gwKUnnsLxet3vdUEIk80xCqhhulAxMBJG9nWpzPRECC281a4Ce/66KxehjJGks4u
+         OUCYpkyfpLYOD1xpdHuyw0ixqS6GIGPmP6w8VpftII+cTLeR1tSYw7xGfSgyn01yAHqn
+         B9PVrT8+f/5zyEU69CBWPfXkhEW4WhGjkytNiBE5v1rpHnAbxh99RwDp4/ntMoY8shhD
+         K8sF/LjX2yLvFZwz2Hlp3D4YLjK7vysML/guK5xx5lcGukqgQTRB+zLwBzKzkzGgr2m+
+         puLGmvEKK3ca3yfXGt9Bkl6B45hD6Ww32QrrLEqEYN8m2k+cbQiJ+hUflXvRr67x4VSP
+         ojUw==
+X-Gm-Message-State: AOAM531NSEVkV9kk7tDCc5SnWOjB4WQhk80ooALxyNuBOv522sR5AzSY
+        ogYZgy/vJGdX3TJXpLHi3DCR2ipKbe2xG8/gCMZAkg==
+X-Google-Smtp-Source: ABdhPJwiTxeE+wx0gpSVxCZCymLsJYilUf1TwSM2k5kPWFpxVcr09yIRFQMN28eEDKweQL95lAg/hxK7sdqwzIUejR0=
+X-Received: by 2002:ac2:5d4a:: with SMTP id w10mr25529349lfd.584.1635286863063;
+ Tue, 26 Oct 2021 15:21:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211026171313.50-1-mario.limonciello@amd.com>
-In-Reply-To: <20211026171313.50-1-mario.limonciello@amd.com>
+References: <20211026175815.52703-1-joey.gouly@arm.com>
+In-Reply-To: <20211026175815.52703-1-joey.gouly@arm.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 27 Oct 2021 00:10:36 +0200
-Message-ID: <CACRpkdYAv5w5AfKPQgCqXgKSYnS7wvCkE3qTj_Q9hyvOS=xsvQ@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] ACPI: Add stubs for wakeup handler functions
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Nehal Shah <Nehal-bakulchandra.Shah@amd.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>
+Date:   Wed, 27 Oct 2021 00:20:51 +0200
+Message-ID: <CACRpkdbJM0-epk0D=-VDs9mdVVxarR=K6BA+rowiO2173ScE-Q@mail.gmail.com>
+Subject: Re: [PATCH v5 0/5] pinctrl/GPIO driver for Apple SoCs
+To:     Joey Gouly <joey.gouly@arm.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Hector Martin <marcan@marcan.st>,
+        Marc Zyngier <maz@kernel.org>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Sven Peter <sven@svenpeter.dev>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Kettenis <kettenis@openbsd.org>, nd <nd@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 26, 2021 at 7:13 PM Mario Limonciello
-<mario.limonciello@amd.com> wrote:
+On Tue, Oct 26, 2021 at 7:58 PM Joey Gouly <joey.gouly@arm.com> wrote:
 
-> The commit ddfd9dcf270c ("ACPI: PM: Add acpi_[un]register_wakeup_handler()")
-> added new functions for drivers to use during the s2idle wakeup path, but
-> didn't add stubs for when CONFIG_ACPI wasn't set.
->
-> Add those stubs in for other drivers to be able to use.
->
-> Fixes: ddfd9dcf270c ("ACPI: PM: Add acpi_[un]register_wakeup_handler()")
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> Here is the v5 patchset for the Apple pinctrl/GPIO driver.
 
-I need an ACK from an ACPI maintainer to take this with the
-other fix into the pinctrl tree.
+Excellent. As agreed I have applied patch 1 to an immutable branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=ib-gpio-ppid
+If Bartosz needs this patch he can pull it into the GPIO subsystem.
 
-Alternatively both can be merged into the ACPI tree.
+Then I have applied patches 2-4 on top of this branch for v5.16.
 
-Should these two patches be tagged for stable?
+I leave patch 5 for Marcan so he can minimize MAINTAINERS
+collisions.
+
+Thanks for your hard work on this!
+
+If any issues remains to be addressed they can be done with incremental
+patches for sure.
 
 Yours,
 Linus Walleij
