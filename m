@@ -2,289 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5008A43BA87
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Oct 2021 21:16:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1893E43BAB3
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Oct 2021 21:25:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238635AbhJZTS6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 26 Oct 2021 15:18:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37694 "EHLO
+        id S238682AbhJZT2A (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 26 Oct 2021 15:28:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236979AbhJZTSz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Oct 2021 15:18:55 -0400
-Received: from mailserv1.kapsi.fi (mailserv1.kapsi.fi [IPv6:2001:67c:1be8::25:1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 915F7C061224;
-        Tue, 26 Oct 2021 12:16:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=ext.kapsi.fi; s=20161220; h=Subject:Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=KMKa7OlZdVJCfsSfbM4n8ZaCg8f5yjneT5gd42Bsx2U=; b=ptH4dpJfTs5uAXhhkGI9RyWZgR
-        xb0X6ftEE0gmXoHr95BMBR2YAr1aBAy51VoafRimy+t/P2iA1xS9dQoFhMqheXdieI39BkQ/lkiPX
-        UdVLnZMMkTl3MWDRNR8zxLp1JzZpScWIND3zMTPCKvqdg+/wJk/M7xka0+6lwRR38+Hx83qKmRgeo
-        SXbvVjMQcPMjZbV8yx6+kB6MLIrjNpKeWGW8Z8dSAPc5n4SRLlR06khaW84b8kbt8tbIKBocen4al
-        uqfhgjtKtK5YDAS33V0Euh18X7R3zeaABK1h5YJ7F3Bmi3f4NYs4NbBAvkE//25jk/OyQ5PWi5oSa
-        NdERhT7w==;
-Received: from 153-106-191-90.dyn.estpak.ee ([90.191.106.153]:49200 helo=localdomain)
-        by mailserv1.kapsi.fi with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <maukka@ext.kapsi.fi>)
-        id 1mfRvt-0000Nw-OA; Tue, 26 Oct 2021 22:16:27 +0300
-Received: by localdomain (sSMTP sendmail emulation); Tue, 26 Oct 2021 22:16:24 +0300
-From:   Mauri Sandberg <maukka@ext.kapsi.fi>
-To:     sandberg@mailfence.com
-Cc:     andy.shevchenko@gmail.com, bgolaszewski@baylibre.com,
-        geert+renesas@glider.be, linus.walleij@linaro.org,
-        linux-gpio@vger.kernel.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        drew@beagleboard.org, Mauri Sandberg <maukka@ext.kapsi.fi>
-Date:   Tue, 26 Oct 2021 22:15:06 +0300
-Message-Id: <20211026191506.3099-3-maukka@ext.kapsi.fi>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20211026191506.3099-1-maukka@ext.kapsi.fi>
-References: <20210325122832.119147-1-sandberg@mailfence.com>
- <20211026191506.3099-1-maukka@ext.kapsi.fi>
+        with ESMTP id S231424AbhJZT15 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 26 Oct 2021 15:27:57 -0400
+Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A0B9C061570;
+        Tue, 26 Oct 2021 12:25:33 -0700 (PDT)
+Received: by mail-yb1-xb29.google.com with SMTP id i9so235082ybi.8;
+        Tue, 26 Oct 2021 12:25:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rBUgQseJq2zPtCP8x6ikcKAwJhDgfwgdMRbCuv6rnd0=;
+        b=oss7Pu7S5ldBRdue1h6+N1MDWSnadoF3IcgqegToIi18/+MxEvE7CnoVKLuTQv6gAJ
+         v4RnBgVLOFVMmN3gZNvijYmuNomM3ckwYHJWNxAA6AwxE1UaqEBNNQXRzYMHOlfoKZHf
+         K2rHuYa+lsWege8VGiCnv6uE4/XogOfFs+UFx7IENGc6RIYZeIfhJFKHpmeU9ng43PW5
+         gBJ8sL9yFLydG9k0b6YagFLc0eOc6IuW21Fv69H2+4/rSAezcJkpfDhNJLuS8XMgTRlr
+         sg7KPoXpX7K4cofJeBvrOf266cPCcKgXlCoY57cu6Q96n59is/QiDd3XOaSs54QgtFIV
+         VUEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rBUgQseJq2zPtCP8x6ikcKAwJhDgfwgdMRbCuv6rnd0=;
+        b=3G77BtyO/k+MtE6S68FeKprC8gs9kDvX/k19fii2KC4L75Al9xm3N+IdaIgFbp0OkL
+         cXhl26m/KN3ICD0aQ8/DtAs8l9iKtzZZxUBZWu/5yB8RmFlJTQY+4E9Uo4GEw9fkalh2
+         mtOglhXIFf20i7umeBEiaz8aWrARABmi89lT4+yG2Vwse+wzUfFeStTSEQuCpzH4loCm
+         MS8UqK5ILufbIdrbMxvNptMa+e3LQ7QHP0XzKALQ/th/wAy09Xkk8ps3F63D10WllwaI
+         hEG9H5E/xldhXTVzf6t2odEJciKB9enodxl8xrTVbjRYqwUi+tBIwcR/+CmmvaAIe0cD
+         z0WQ==
+X-Gm-Message-State: AOAM53051qybYD87Q7JpB30vzucUECVW7fE4EJOyLk4Cp5hyneJlMNqN
+        veGbg5R/1x4NL4PJacFQ95W5JShlkE52A3Ibc9yHXwyluL4=
+X-Google-Smtp-Source: ABdhPJzHAKQhzCSpYIQJ5XiYFGPUfMteyGetlG3MivLJ23mW0y6eDlso9Zn7YyS6GJ9dpSoERFQhIsplZouMBrJsbfA=
+X-Received: by 2002:a25:b7c6:: with SMTP id u6mr25954633ybj.16.1635276332116;
+ Tue, 26 Oct 2021 12:25:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 90.191.106.153
-X-SA-Exim-Mail-From: maukka@ext.kapsi.fi
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on mailserv1.kapsi.fi
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        TVD_RCVD_IP,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.2
-Subject: [PATCH v8 2/2] gpio: gpio-cascade: add generic GPIO cascade
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on mailserv1.kapsi.fi)
+References: <20210930121630.17449-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20210930121630.17449-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <YV4RypY6/n23Bl2T@robh.at.kernel.org>
+In-Reply-To: <YV4RypY6/n23Bl2T@robh.at.kernel.org>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Tue, 26 Oct 2021 20:25:06 +0100
+Message-ID: <CA+V-a8s4ti-WNxiEPB8WCVNdwEv-Y6rZgMKuc=TmsxAGiaet1g@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/4] dt-bindings: pincfg-node: Add "output-impedance" property
+To:     Rob Herring <robh@kernel.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Adds support for building cascades of GPIO lines. That is, it allows
-setups when there is one upstream line and multiple cascaded lines, out
-of which one can be chosen at a time. The status of the upstream line
-can be conveyed to the selected cascaded line or, vice versa, the status
-of the cascaded line can be conveyed to the upstream line.
+Hi Rob,
 
-A multiplexer is being used to select, which cascaded GPIO line is being
-used at any given time.
+Thank you for the review.
 
-At the moment only input direction is supported. In future it should be
-possible to add support for output direction, too.
+On Wed, Oct 6, 2021 at 10:14 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Thu, Sep 30, 2021 at 01:16:27PM +0100, Lad Prabhakar wrote:
+> > On RZ/G2L SoC for Group-B pins, output impedance can be configured.
+> > This patch documents "output-impedance" property in pincfg-node.yaml so
+> > that other platforms requiring such feature can make use of this property.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> >  Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml b/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
+> > index 71ed0a9def84..cdcb23daeca2 100644
+> > --- a/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
+> > +++ b/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
+> > @@ -114,6 +114,10 @@ properties:
+> >      description: enable output on a pin without actively driving it
+> >        (such as enabling an output buffer)
+> >
+> > +  output-impedance:
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+>
+> Use standard unit suffix and drop the type.
+>
+Sure will do in the next version.
 
-Signed-off-by: Mauri Sandberg <maukka@ext.kapsi.fi>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
----
-v7 -> v8:
- - rearrange members in struct gpio_cascade
- - cosmetic changes in file header and in one function declaration
- - added Reviewed-by tags by Linus and Andy
-v6 -> v7:
- - In Kconfig add info about module name
- - adhere to new convention that allows lines longer than 80 chars
- - use dev_probe_err with upstream gpio line too
- - refactor for cleaner exit of probe function.
-v5 -> v6:
- - In Kconfig, remove dependency to OF_GPIO and select only MULTIPLEXER
- - refactor code preferring one-liners
- - clean up prints, removing them from success-path.
- - don't explicitly set gpio_chip.of_node as it's done in the GPIO library
- - use devm_gpiochip_add_data instead of gpiochip_add
-v4 -> v5:
- - renamed gpio-mux-input -> gpio-cascade. refactored code accordingly
-   here and there and changed to use new bindings and compatible string
-   - ambigious and vague 'pin' was rename to 'upstream_line'
- - dropped Tested-by and Reviewed-by due to changes in bindings
- - dropped Reported-by suggested by an automatic bot as it was not really
-   appropriate to begin with
- - functionally it's the same as v4
-v3 -> v4:
- - Changed author email
- - Included Tested-by and Reviewed-by from Drew
-v2 -> v3:
- - use managed device resources
- - update Kconfig description
-v1 -> v2:
- - removed .owner from platform_driver as per test bot's instruction
- - added MODULE_AUTHOR, MODULE_DESCRIPTION, MODULE_LICENSE
- - added gpio_mux_input_get_direction as it's recommended for all chips
- - removed because this is input only chip: gpio_mux_input_set_value
- - removed because they are not needed for input/output only chips:
-     gpio_mux_input_direction_input
-     gpio_mux_input_direction_output
- - fixed typo in an error message
- - added info message about successful registration
- - removed can_sleep flag as this does not sleep while getting GPIO value
-   like I2C or SPI do
- - Updated description in Kconfig
----
- drivers/gpio/Kconfig        |  15 +++++
- drivers/gpio/Makefile       |   1 +
- drivers/gpio/gpio-cascade.c | 117 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 133 insertions(+)
- create mode 100644 drivers/gpio/gpio-cascade.c
+Cheers,
+Prabhakar
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 37a6f77c86fe..e69457144459 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1694,4 +1694,19 @@ config GPIO_VIRTIO
- 
- endmenu
- 
-+comment "Other GPIO expanders"
-+
-+config GPIO_CASCADE
-+	tristate "General GPIO cascade"
-+	select MULTIPLEXER
-+	help
-+	  Say yes here to enable support for generic GPIO cascade.
-+
-+	  This allows building one-to-many cascades of GPIO lines using
-+	  different types of multiplexers readily available. At the
-+	  moment only input lines are supported.
-+
-+	  To build the driver as a module choose 'm' and the resulting module
-+	  will be called 'gpio-cascade'.
-+
- endif
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 71ee9fc2ff83..e8945456e7ea 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -45,6 +45,7 @@ obj-$(CONFIG_GPIO_BD9571MWV)		+= gpio-bd9571mwv.o
- obj-$(CONFIG_GPIO_BRCMSTB)		+= gpio-brcmstb.o
- obj-$(CONFIG_GPIO_BT8XX)		+= gpio-bt8xx.o
- obj-$(CONFIG_GPIO_CADENCE)		+= gpio-cadence.o
-+obj-$(CONFIG_GPIO_CASCADE)		+= gpio-cascade.o
- obj-$(CONFIG_GPIO_CLPS711X)		+= gpio-clps711x.o
- obj-$(CONFIG_GPIO_SNPS_CREG)		+= gpio-creg-snps.o
- obj-$(CONFIG_GPIO_CRYSTAL_COVE)		+= gpio-crystalcove.o
-diff --git a/drivers/gpio/gpio-cascade.c b/drivers/gpio/gpio-cascade.c
-new file mode 100644
-index 000000000000..5cbda882d79a
---- /dev/null
-+++ b/drivers/gpio/gpio-cascade.c
-@@ -0,0 +1,117 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ *  A generic GPIO cascade driver
-+ *
-+ *  Copyright (C) 2021 Mauri Sandberg <maukka@ext.kapsi.fi>
-+ *
-+ * This allows building cascades of GPIO lines in a manner illustrated
-+ * below:
-+ *
-+ *                 /|---- Cascaded GPIO line 0
-+ *  Upstream      | |---- Cascaded GPIO line 1
-+ *  GPIO line ----+ | .
-+ *                | | .
-+ *                 \|---- Cascaded GPIO line n
-+ *
-+ * A multiplexer is being used to select, which cascaded line is being
-+ * addressed at any given time.
-+ *
-+ * At the moment only input mode is supported due to lack of means for
-+ * testing output functionality. At least theoretically output should be
-+ * possible with open drain constructions.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/platform_device.h>
-+#include <linux/mux/consumer.h>
-+
-+#include <linux/gpio/consumer.h>
-+#include <linux/gpio/driver.h>
-+
-+struct gpio_cascade {
-+	struct gpio_chip	gpio_chip;
-+	struct device		*parent;
-+	struct mux_control	*mux_control;
-+	struct gpio_desc	*upstream_line;
-+};
-+
-+static struct gpio_cascade *chip_to_cascade(struct gpio_chip *gc)
-+{
-+	return container_of(gc, struct gpio_cascade, gpio_chip);
-+}
-+
-+static int gpio_cascade_get_direction(struct gpio_chip *gc, unsigned int offset)
-+{
-+	return GPIO_LINE_DIRECTION_IN;
-+}
-+
-+static int gpio_cascade_get_value(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct gpio_cascade *cas = chip_to_cascade(gc);
-+	int ret;
-+
-+	ret = mux_control_select(cas->mux_control, offset);
-+	if (ret)
-+		return ret;
-+
-+	ret = gpiod_get_value(cas->upstream_line);
-+	mux_control_deselect(cas->mux_control);
-+	return ret;
-+}
-+
-+static int gpio_cascade_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct gpio_cascade *cas;
-+	struct mux_control *mc;
-+	struct gpio_desc *upstream;
-+	struct gpio_chip *gc;
-+
-+	cas = devm_kzalloc(dev, sizeof(*cas), GFP_KERNEL);
-+	if (!cas)
-+		return -ENOMEM;
-+
-+	mc = devm_mux_control_get(dev, NULL);
-+	if (IS_ERR(mc))
-+		return dev_err_probe(dev, PTR_ERR(mc), "unable to get mux-control\n");
-+
-+	cas->mux_control = mc;
-+	upstream = devm_gpiod_get(dev, "upstream",  GPIOD_IN);
-+	if (IS_ERR(upstream))
-+		return dev_err_probe(dev, PTR_ERR(upstream), "unable to claim upstream GPIO line\n");
-+
-+	cas->upstream_line = upstream;
-+	cas->parent = dev;
-+
-+	gc = &cas->gpio_chip;
-+	gc->get = gpio_cascade_get_value;
-+	gc->get_direction = gpio_cascade_get_direction;
-+	gc->base = -1;
-+	gc->ngpio = mux_control_states(mc);
-+	gc->label = dev_name(cas->parent);
-+	gc->parent = cas->parent;
-+	gc->owner = THIS_MODULE;
-+
-+	platform_set_drvdata(pdev, cas);
-+	return devm_gpiochip_add_data(dev, &cas->gpio_chip, NULL);
-+}
-+
-+static const struct of_device_id gpio_cascade_id[] = {
-+	{ .compatible = "gpio-cascade" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, gpio_cascade_id);
-+
-+static struct platform_driver gpio_cascade_driver = {
-+	.driver	= {
-+		.name		= "gpio-cascade",
-+		.of_match_table = gpio_cascade_id,
-+	},
-+	.probe	= gpio_cascade_probe,
-+};
-+module_platform_driver(gpio_cascade_driver);
-+
-+MODULE_AUTHOR("Mauri Sandberg <maukka@ext.kapsi.fi>");
-+MODULE_DESCRIPTION("Generic GPIO cascade");
-+MODULE_LICENSE("GPL");
--- 
-2.25.1
-
+> > +    description: set the pins output impedance at most X ohm
+> > +
+> >    output-low:
+> >      type: boolean
+> >      description: set the pin to output mode with low level
+> > --
+> > 2.17.1
+> >
+> >
