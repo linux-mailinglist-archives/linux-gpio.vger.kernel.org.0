@@ -2,69 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5606243D5FA
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Oct 2021 23:42:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1F5243D652
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Oct 2021 00:12:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229458AbhJ0Voq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Oct 2021 17:44:46 -0400
-Received: from mail-oo1-f51.google.com ([209.85.161.51]:43848 "EHLO
-        mail-oo1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbhJ0Vop (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Oct 2021 17:44:45 -0400
-Received: by mail-oo1-f51.google.com with SMTP id x135-20020a4a418d000000b002b961605657so734847ooa.10;
-        Wed, 27 Oct 2021 14:42:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3ZN6Gv8dEcW1STN8Y2wfeq1p+xH2xHX+YM1iSvc+i+g=;
-        b=pJBl845a8EFQQCI/4ReJyLOs5ki5lAAZr35SvzQskOn2rtmaEdi4Mg8jvkratLh8s9
-         ozRCM+5TQRIct2p+nlrfQKZLKBNLas4vL+V2f5+KCroZGDz8knzK1VGhYWRAj64cLWnp
-         w31Bwhl+G8AcACq+B2lkmsv0grGGkTQ5xxftSJp976ySI6VA2oy63k23YYG1gTJNWTaP
-         zful9bIPCHvI5A6+1pLK+pXp9hOXwLO+qh5cnlyUxcbR/kEmuUweUcGhheKNHJ4xrhD1
-         gaCIy1QX5oqLMPcvuH3HQaftjvbZszjg3VrLTO9JAFHEseSSROYF4NbWTCUEiCsZWyWc
-         5jnA==
-X-Gm-Message-State: AOAM530Wb2HrrufB7bmdoWvB3/MHNYZgBL0xD/Cx3phMWo+kB1AH64ET
-        MDyd8CG15T8AvgeM/paccQ==
-X-Google-Smtp-Source: ABdhPJy8CB+owYFlIjx4OeQ8acjoEEhZ2gt1lUZamqU0YdKU0HTcA07RQOmqMgTczHc9zBnIQAp4Iw==
-X-Received: by 2002:a4a:9204:: with SMTP id f4mr152062ooh.87.1635370939410;
-        Wed, 27 Oct 2021 14:42:19 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id v22sm520079ott.80.2021.10.27.14.42.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Oct 2021 14:42:18 -0700 (PDT)
-Received: (nullmailer pid 2219669 invoked by uid 1000);
-        Wed, 27 Oct 2021 21:42:17 -0000
-Date:   Wed, 27 Oct 2021 16:42:17 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Brad Larson <brad@pensando.io>
-Cc:     arnd@arndb.de, bgolaszewski@baylibre.com,
-        devicetree@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
-        broonie@kernel.org, olof@lixom.net, linux-gpio@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        adrian.hunter@intel.com, ulf.hansson@linaro.org,
-        fancer.lancer@gmail.com
-Subject: Re: [PATCH v3 05/11] spi: dw: Add Pensando Elba SoC SPI Controller
- bindings
-Message-ID: <YXnHuRi264DkxLML@robh.at.kernel.org>
-References: <20211025015156.33133-1-brad@pensando.io>
- <20211025015156.33133-6-brad@pensando.io>
+        id S230041AbhJ0WOk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Oct 2021 18:14:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37736 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229792AbhJ0WOj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Oct 2021 18:14:39 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E528C061570;
+        Wed, 27 Oct 2021 15:12:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=vLcvcoDLoRsO1QRkWZDKvUBuvpcc21DXYKf15cUuQwA=; b=gvDkv5wfjyVnLjEmbDanwtnLfB
+        A/QP/9U4V4iMkZodfT0tsu09Qf+vnUJtcgrHiJMcdhe6piNJEL+uVlITUWI6ZRq+2Fa53bjGqqWBM
+        GhKwn77BZVK8lnOq7ZBPqzdOjgnihU0ekuiq9o5ilBEPJ2+XQsWkqp1fkxDuqbqv7bP0G4AOMPT1i
+        JwCxRhMTF6a8S51MbkWZPu5pmi7ye/0LYd8kVVCD9eRcDloBoHPM32jYorH8M+f1wPpacpGoDRGdT
+        YV5cc9OEFrsBGotH6L6nHnqqIDtHrwNgL7rDnLBMwzR2hKb1S6Q0mURz4f25z9m5MLdJ4UA2if4l/
+        oXxbtxug==;
+Received: from [2601:1c0:6280:3f0::aa0b]
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mfr9R-006NlZ-56; Wed, 27 Oct 2021 22:12:05 +0000
+Subject: Re: [PATCH 1/3] pinctrl: Add driver for Sunplus SP7021
+To:     Wells Lu <wellslutw@gmail.com>, linus.walleij@linaro.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, devicetree@vger.kernel.org
+Cc:     qinjian@cqplus1.com, dvorkin@tibbo.com,
+        Wells Lu <wells.lu@sunplus.com>
+References: <1635324926-22319-1-git-send-email-wells.lu@sunplus.com>
+ <1635324926-22319-2-git-send-email-wells.lu@sunplus.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <3ed37bf9-d698-2a03-60e7-9b357e3abfb4@infradead.org>
+Date:   Wed, 27 Oct 2021 15:12:04 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211025015156.33133-6-brad@pensando.io>
+In-Reply-To: <1635324926-22319-2-git-send-email-wells.lu@sunplus.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, 24 Oct 2021 18:51:50 -0700, Brad Larson wrote:
-> The Pensando Elba SoC has integrated the DW APB SPI Controller
-> 
-> Signed-off-by: Brad Larson <brad@pensando.io>
-> ---
->  Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+Hi--
 
-Acked-by: Rob Herring <robh@kernel.org>
+On 10/27/21 1:55 AM, Wells Lu wrote:
+> diff --git a/drivers/pinctrl/sunplus/Kconfig b/drivers/pinctrl/sunplus/Kconfig
+> new file mode 100644
+> index 0000000..93b5ccf
+> --- /dev/null
+> +++ b/drivers/pinctrl/sunplus/Kconfig
+> @@ -0,0 +1,32 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Sunplus Pin control driver configuration
+> +#
+> +
+> +config PINCTRL_SPPCTL
+> +	bool "Sunplus SP7021 pinmux and gpio driver"
+
+Preferably                              GPIO
+
+> +	depends on SOC_SP7021
+> +	select PINMUX
+> +	select GENERIC_PINCTRL_GROUPS
+> +	select CONFIG_GENERIC_PINMUX_FUNCTIONS
+
+	Drop   CONFIG_
+
+> +	select PINCONF
+> +	select GENERIC_PINCONF
+> +	select OF_GPIO
+
+Probably
+	depends on OF && HAS_IOMEM
+Otherwise how do you know that it's safe to do
+	select OF_GPIO
+?
+
+
+> +	select GPIOLIB
+> +	select GPIO_SYSFS
+> +	select GENERIC_IRQ_CHIP
+> +	select GPIOLIB_IRQCHIP
+> +	help
+> +	  Say Y here to support Sunplus SP7021 pinmux controller.
+> +	  The driveer is selected automatically by platform.
+
+	      driver
+
+> +	  This driver requires the pinctrl framework.
+> +	  GPIO is provided by the same driver.
+> +
+> +config PINCTRL_SPPCTL_DEBUG
+> +	bool "Sunplus pinmux specific debug"
+> +	depends on SOC_SP7021 && DEBUG_PINCTRL
+> +	help
+> +	  Say Y if you need to debug Sunplus pinmux driver in-depth.
+> +	  Pin control driver will output more messages if you enable
+> +	  this item. This function is dependent on DEBUG_PINCTRL. It
+> +	  should be enabled first.
+
+
+thanks.
+-- 
+~Randy
