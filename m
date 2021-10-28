@@ -2,89 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ABBC843DF74
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Oct 2021 12:52:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C21EE43E043
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Oct 2021 13:53:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230264AbhJ1Ky6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 28 Oct 2021 06:54:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37538 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230281AbhJ1Kyv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Oct 2021 06:54:51 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4A74C079785
-        for <linux-gpio@vger.kernel.org>; Thu, 28 Oct 2021 03:52:22 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id g10so22795545edj.1
-        for <linux-gpio@vger.kernel.org>; Thu, 28 Oct 2021 03:52:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=vprh3gRT3Cegcj0K7Fy7tqOfLGKK384XjLMkCZvF/BY=;
-        b=MqgQiMnth4O6zLvpsYbAhVLW1BorpgoCleWwfkY0/i+i6OSDuXRZO1jIKzpTTrmehO
-         XtsLWdXiTcL+XCe4naFtf2tTUJnbwwmDpuUkpvRhLd+LEnuxY7nNr11hmTRUVX1WOHsO
-         bN0u1arCg4gm9LHdXRMZFcXOD22U5gDGuBOuhPo6qvWbt6nA2j/p/5IZ88XFHrEsiSW3
-         12hentYJMlWeUfa2lUQkLm+5/fvMSizrI7wGoF2taOa3dgGUV5HKZWb0yAAH7nAXVevJ
-         tDC/xbHNLzSn310XeD3Gkoobjl6MPBQzT5DSLzerNBdTKOdmyp3xvfvOyo80qVUTZIED
-         gaRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=vprh3gRT3Cegcj0K7Fy7tqOfLGKK384XjLMkCZvF/BY=;
-        b=QcFLbBdRyPDm+Z9W9Jr12u3fLFF7jrlVP1QQDpLUbotN5vrreWaUPL1UcAUNbRIifs
-         SKl4Y29NCXk5OTHZLDxUFYPkwCqFzDxumKDSdJqNa0OdEW7jQ1ePoZ16ddF8rotdnOrX
-         UclCrzljxqNjbr9GFDCIfNTI4JZbNXmYmcEJMatLxot/A2LvNDUc7dOaRbH4GXD6Banm
-         UAJo2woYH12pcGnYhaTE06a2NkhE0rEm11/HyqQPys7ULgZgk9f/gQ4k+bKaIxv3OTtj
-         js07Px41OyfhdSgNYJLxNv95nJADpAciKQQ82fiqtfCTutzbpOlJItHGPWQ1wCT8s7ot
-         hgBQ==
-X-Gm-Message-State: AOAM533PUi09OtelA9YjoEJZNvIwKFIKDD3hIfTe34cO6OQlhrIh7Ls6
-        sTkU9cfPuhXB4jiomSHX372Kc/6F/PSsTtxWiBaFo1sexV8KGKTz
-X-Google-Smtp-Source: ABdhPJw39EF9dJlXS9lAFrZ3adXxB8DVzXcygVzA3uRLiZxWlggxaB9ElCxkEB0P82xisoA6G442GD5iqMe2hCgLIt8=
-X-Received: by 2002:a2e:9a83:: with SMTP id p3mr3750290lji.145.1635418330269;
- Thu, 28 Oct 2021 03:52:10 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 2002:ab3:6f89:0:0:0:0:0 with HTTP; Thu, 28 Oct 2021 03:52:09
- -0700 (PDT)
-Reply-To: aabdulwalialhashmi@gmail.com
-From:   Abdulwali Alhashmi <husamalsayed.hs@gmail.com>
-Date:   Thu, 28 Oct 2021 03:52:09 -0700
-Message-ID: <CAF6yYCeS=rm8=_71-kMjVo4oaVK57w9X52R_yv1HDrBe7vh-sA@mail.gmail.com>
-Subject: PLEASE GET BACK TO ME IF I CAN I TRUST YOU
-To:     undisclosed-recipients:;
+        id S230135AbhJ1Lz1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 28 Oct 2021 07:55:27 -0400
+Received: from polaris.svanheule.net ([84.16.241.116]:52460 "EHLO
+        polaris.svanheule.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230188AbhJ1Lz1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Oct 2021 07:55:27 -0400
+X-Greylist: delayed 10811 seconds by postgrey-1.27 at vger.kernel.org; Thu, 28 Oct 2021 07:55:26 EDT
+Received: from [IPv6:2a02:a03f:eafe:c901:6c18:8b05:4bd4:d9c2] (unknown [IPv6:2a02:a03f:eafe:c901:6c18:8b05:4bd4:d9c2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: sander@svanheule.net)
+        by polaris.svanheule.net (Postfix) with ESMTPSA id 98A5926878E;
+        Thu, 28 Oct 2021 13:52:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
+        s=mail1707; t=1635421978;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1gbyaB4CnoIk3BZehsPmxOskoWAiekdQXyVFvPOrOfQ=;
+        b=cvN61TsVQUecCBmHfY7oZ8VWVts2M81nJlsYkBVuLs1VV7hGySYhfBwhYaJ0YobVMJ4vts
+        Xbm0bTMJ1wQB2ii+rKQlzyGFgWJ8kow92LRp8TtnDyOwOHqp8A7PA83tM2JZQXpX8jLuRC
+        yB3NdYAqN/qbzsK5/erCimmlA+oDE3zKmW6FQYuBSDT9vmlNVCiyr9f0P34X27ym+XiZLc
+        AT685BcDvGl0LMe+17BdRzY9oi3khOSmKXKHcVpJFZzobS+DuPKfTHP0vSGA3sOVhA+R4N
+        FVNOVcv4rTtFH2daXjc0cXca3q5L2dLWBCxMbCUjnRostEbRRVOLQblit5rn5g==
+Message-ID: <943e9850fba584ea93262f37165819bb18d2e1c3.camel@svanheule.net>
+Subject: Re: [PATCH] gpio: realtek-otto: fix GPIO line IRQ offset
+From:   Sander Vanheule <sander@svanheule.net>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 28 Oct 2021 13:52:55 +0200
+In-Reply-To: <CAHp75VdafMtemORf3FvV-M4x7iJMxhCQrGSa17vJHrHuzQCqyg@mail.gmail.com>
+References: <20211028085243.34360-1-sander@svanheule.net>
+         <CAHp75VdafMtemORf3FvV-M4x7iJMxhCQrGSa17vJHrHuzQCqyg@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.40.4 (3.40.4-2.fc34) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
--- 
-Greetings,
+On Thu, 2021-10-28 at 13:23 +0300, Andy Shevchenko wrote:
+> On Thu, Oct 28, 2021 at 11:52 AM Sander Vanheule <sander@svanheule.net> wrote:
+> > 
+> > The irqchip uses one domain for all GPIO lines, so the line offset
+> > should be determined w.r.t. the first line of the first port, not the
+> > first line of the triggered port.
+> > 
+> > Fixes: 0d82fb1127fb ("gpio: Add Realtek Otto GPIO support")
+> 
+> Not sure it fixes anything (it wasn't working from day 1), but in any
+> case the patch is good.
 
-Firstly, I apologize for encroaching into your privacy in this manner
-as it may seem unethical though it is a matter of great importance.
+The original patch was tested using a GPIO line on port A, so the missing offset was
+irrelevant there (as it was zero). After recently acquiring a new device, I was trying to
+use a line on port C, which resulted in unhandled interrupts.
 
-I am Abdulwali Alhashmi, I work with Cayman National Bank (Cayman Islands).
+> 
+> > Signed-off-by: Sander Vanheule <sander@svanheule.net>
+> > ---
+> >  drivers/gpio/gpio-realtek-otto.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/gpio/gpio-realtek-otto.c b/drivers/gpio/gpio-realtek-otto.c
+> > index eeeb39bc171d..bd75401b549d 100644
+> > --- a/drivers/gpio/gpio-realtek-otto.c
+> > +++ b/drivers/gpio/gpio-realtek-otto.c
+> > @@ -205,7 +205,7 @@ static void realtek_gpio_irq_handler(struct irq_desc *desc)
+> >                 status = realtek_gpio_read_isr(ctrl, lines_done / 8);
+> >                 port_pin_count = min(gc->ngpio - lines_done, 8U);
+> >                 for_each_set_bit(offset, &status, port_pin_count)
+> > -                       generic_handle_domain_irq(gc->irq.domain, offset);
+> > +                       generic_handle_domain_irq(gc->irq.domain, offset +
+> > lines_done);
+> 
+> Looking into these '/ 8', '8U' sounds to me that it may be a good idea
+> to switch to for_each_set_clump8(). But it's out of scope here.
 
-I am contacting you because my status would not permit me to do this
-alone as it is concerning our customer and an investment placed under
-our bank's management over 5 years ago.
+For the current code, I could indeed have used for_each_set_clump8, instead of the u8
+read_isr() accessor.
 
-I have a proposal I would love to discuss with you which will be very
-beneficial to both of us. It's regarding my late client who has a huge
-deposit with my bank.
+However, I'm also preparing support for the RTL9302 device I have recently acquired. On
+RTL930x and RTL931x the port order is reversed, requiring different port order handling.
+My plan is to provide different port_read_isr() functions for the different port orders,
+that return the requested u8. I'll try to get that patch set out today as well.
 
-He is from your country and shares the same last name with you.
+Best,
+Sander
 
-I want to seek your consent to present you as the next of kin to my
-late client who died and left a huge deposit with my bank.
-
-I would respectfully request that you keep the contents of this mail
-confidential and respect the integrity of the information you come by
-as a result of this mail.
-
-Please kindly get back to me for more details if I can TRUST YOU.{
-aabdulwalialhashmi@gmail.com }
-
-Regards
-Abdulwali Alhashmi
-Treasury and Deposit Management,
-Cayman National Bank Cayman Islands
