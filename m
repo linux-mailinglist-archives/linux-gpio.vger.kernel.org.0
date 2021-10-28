@@ -2,113 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B1F5243D652
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Oct 2021 00:12:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70B8943D8E0
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Oct 2021 03:46:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230041AbhJ0WOk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 27 Oct 2021 18:14:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37736 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229792AbhJ0WOj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 27 Oct 2021 18:14:39 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E528C061570;
-        Wed, 27 Oct 2021 15:12:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=vLcvcoDLoRsO1QRkWZDKvUBuvpcc21DXYKf15cUuQwA=; b=gvDkv5wfjyVnLjEmbDanwtnLfB
-        A/QP/9U4V4iMkZodfT0tsu09Qf+vnUJtcgrHiJMcdhe6piNJEL+uVlITUWI6ZRq+2Fa53bjGqqWBM
-        GhKwn77BZVK8lnOq7ZBPqzdOjgnihU0ekuiq9o5ilBEPJ2+XQsWkqp1fkxDuqbqv7bP0G4AOMPT1i
-        JwCxRhMTF6a8S51MbkWZPu5pmi7ye/0LYd8kVVCD9eRcDloBoHPM32jYorH8M+f1wPpacpGoDRGdT
-        YV5cc9OEFrsBGotH6L6nHnqqIDtHrwNgL7rDnLBMwzR2hKb1S6Q0mURz4f25z9m5MLdJ4UA2if4l/
-        oXxbtxug==;
-Received: from [2601:1c0:6280:3f0::aa0b]
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mfr9R-006NlZ-56; Wed, 27 Oct 2021 22:12:05 +0000
-Subject: Re: [PATCH 1/3] pinctrl: Add driver for Sunplus SP7021
-To:     Wells Lu <wellslutw@gmail.com>, linus.walleij@linaro.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, devicetree@vger.kernel.org
-Cc:     qinjian@cqplus1.com, dvorkin@tibbo.com,
-        Wells Lu <wells.lu@sunplus.com>
-References: <1635324926-22319-1-git-send-email-wells.lu@sunplus.com>
- <1635324926-22319-2-git-send-email-wells.lu@sunplus.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <3ed37bf9-d698-2a03-60e7-9b357e3abfb4@infradead.org>
-Date:   Wed, 27 Oct 2021 15:12:04 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
-MIME-Version: 1.0
-In-Reply-To: <1635324926-22319-2-git-send-email-wells.lu@sunplus.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S229791AbhJ1BtP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 27 Oct 2021 21:49:15 -0400
+Received: from mx.socionext.com ([202.248.49.38]:57202 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229534AbhJ1BtM (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 27 Oct 2021 21:49:12 -0400
+Received: from unknown (HELO iyokan2-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 28 Oct 2021 10:46:45 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by iyokan2-ex.css.socionext.com (Postfix) with ESMTP id 2DDEC207616C;
+        Thu, 28 Oct 2021 10:46:45 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Thu, 28 Oct 2021 10:46:45 +0900
+Received: from plum.e01.socionext.com (unknown [10.212.243.119])
+        by kinkan2.css.socionext.com (Postfix) with ESMTP id B8346B1D51;
+        Thu, 28 Oct 2021 10:46:44 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH v2] dt-bindings: pinctrl: uniphier: Add child node definitions to describe pin mux and configuration
+Date:   Thu, 28 Oct 2021 10:46:39 +0900
+Message-Id: <1635385599-17778-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi--
+In arch/arm/boot/dts/uniphier-pinctrl.dtsi, there are child nodes of
+pinctrl that defines pinmux and pincfg, however, there are no rules about
+that in dt-bindings.
 
-On 10/27/21 1:55 AM, Wells Lu wrote:
-> diff --git a/drivers/pinctrl/sunplus/Kconfig b/drivers/pinctrl/sunplus/Kconfig
-> new file mode 100644
-> index 0000000..93b5ccf
-> --- /dev/null
-> +++ b/drivers/pinctrl/sunplus/Kconfig
-> @@ -0,0 +1,32 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +#
-> +# Sunplus Pin control driver configuration
-> +#
-> +
-> +config PINCTRL_SPPCTL
-> +	bool "Sunplus SP7021 pinmux and gpio driver"
+'make dtbs_check' results an error with the following message:
 
-Preferably                              GPIO
+   pinctrl: 'ain1', 'ain2', 'ainiec1', 'aout', 'aout1', 'aout2', ...
+   ... 'usb2', 'usb3' do not match any of the regexes: 'pinctrl-[0-9]+'
 
-> +	depends on SOC_SP7021
-> +	select PINMUX
-> +	select GENERIC_PINCTRL_GROUPS
-> +	select CONFIG_GENERIC_PINMUX_FUNCTIONS
+To avoid this issue, add the rules of pinmux and pincfg in each child node
+and grandchild node.
 
-	Drop   CONFIG_
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+---
+Changes since v1:
+- Replace additionalProperties with unevaluatedProperties
+- Add additionalProperties for child and grandchild nodes
 
-> +	select PINCONF
-> +	select GENERIC_PINCONF
-> +	select OF_GPIO
+ .../pinctrl/socionext,uniphier-pinctrl.yaml        | 50 +++++++++++++++++++++-
+ 1 file changed, 49 insertions(+), 1 deletion(-)
 
-Probably
-	depends on OF && HAS_IOMEM
-Otherwise how do you know that it's safe to do
-	select OF_GPIO
-?
-
-
-> +	select GPIOLIB
-> +	select GPIO_SYSFS
-> +	select GENERIC_IRQ_CHIP
-> +	select GPIOLIB_IRQCHIP
-> +	help
-> +	  Say Y here to support Sunplus SP7021 pinmux controller.
-> +	  The driveer is selected automatically by platform.
-
-	      driver
-
-> +	  This driver requires the pinctrl framework.
-> +	  GPIO is provided by the same driver.
-> +
-> +config PINCTRL_SPPCTL_DEBUG
-> +	bool "Sunplus pinmux specific debug"
-> +	depends on SOC_SP7021 && DEBUG_PINCTRL
-> +	help
-> +	  Say Y if you need to debug Sunplus pinmux driver in-depth.
-> +	  Pin control driver will output more messages if you enable
-> +	  this item. This function is dependent on DEBUG_PINCTRL. It
-> +	  should be enabled first.
-
-
-thanks.
+diff --git a/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.yaml
+index a804d9bc1602..7e504e003181 100644
+--- a/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.yaml
+@@ -26,10 +26,58 @@ properties:
+       - socionext,uniphier-pxs3-pinctrl
+       - socionext,uniphier-nx1-pinctrl
+ 
++additionalProperties:
++  type: object
++
++patternProperties:
++  "^.*$":
++    if:
++      type: object
++    then:
++      allOf:
++        - $ref: pincfg-node.yaml#
++        - $ref: pinmux-node.yaml#
++
++      properties:
++        phandle: true
++        function: true
++        groups: true
++        pins: true
++        bias-pull-up: true
++        bias-pull-down: true
++        bias-pull-pin-default: true
++        drive-strength: true
++
++      additionalProperties:
++        type: object
++
++      patternProperties:
++        "^.*$":
++          if:
++            type: object
++          then:
++            allOf:
++              - $ref: pincfg-node.yaml#
++              - $ref: pinmux-node.yaml#
++
++            properties:
++              phandle: true
++              function: true
++              groups: true
++              pins: true
++              bias-pull-up: true
++              bias-pull-down: true
++              bias-pull-pin-default: true
++              drive-strength: true
++
++            unevaluatedProperties: false
++
++      unevaluatedProperties: false
++
+ required:
+   - compatible
+ 
+-additionalProperties: false
++unevaluatedProperties: false
+ 
+ examples:
+   - |
 -- 
-~Randy
+2.7.4
+
