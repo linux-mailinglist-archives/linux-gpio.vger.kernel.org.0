@@ -2,141 +2,219 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 55A5143DD9F
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Oct 2021 11:19:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D5AD43DF0D
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Oct 2021 12:37:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230166AbhJ1JWH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 28 Oct 2021 05:22:07 -0400
-Received: from mail-lf1-f44.google.com ([209.85.167.44]:34793 "EHLO
-        mail-lf1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230124AbhJ1JWH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Oct 2021 05:22:07 -0400
-Received: by mail-lf1-f44.google.com with SMTP id u11so12224703lfs.1;
-        Thu, 28 Oct 2021 02:19:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=2mmhTTP4Qy+KhAe38thA6Tq/Dy9B7Ar6r4uzxdubI4Q=;
-        b=ciLO7bO0DhIfhf8AUnww8ZyL9uTHC9CXJnGz4v0sIDoPSNCH+PO+jnXfR1Q519z6yb
-         PqhNbXveXjd95RJU1MaDalwebhhQR+BFGj8D9SqRJ1alXiDBLpHNZ/aOkOcjIklA0+ev
-         w6JGgK/kYNpYbix+pX2RpEUDIUwqqPU4hge5kVTJ9aII2ky+Ptis8saGWKNIwDfmDz4j
-         BODhlrmpKLiLhlFR6tBADIkH9YKBsphJMcsVxwMygZONy85E3N0xLgHmuM/ZOR4tni8j
-         rBYJcfJMlpGHKHVcP8apRjcJwnIUQThWrPnY7bfCj89HWbEygbTAfpBYwKEbo+BTRnvU
-         ml1Q==
-X-Gm-Message-State: AOAM5322OXopGTNCfo3SAqkTutjJ/EGkKCcPn8Ugnln9km7XvGVWAZXv
-        15k8RdhewTXInQ8Dwf9bC0oJsfZIbpc=
-X-Google-Smtp-Source: ABdhPJx6UcY0PEhhRnmhp+U9YlaEzFRijCH63lG0Pn2VHDPYNTTmzxdAczl6JsQKxF3/u+PEnH/vvA==
-X-Received: by 2002:a05:6512:33a9:: with SMTP id i9mr3091960lfg.82.1635412779433;
-        Thu, 28 Oct 2021 02:19:39 -0700 (PDT)
-Received: from fedora (d44bs26yxfwtfmx4yyk-4.rev.dnainternet.fi. [2001:14bb:c6:2fb:6813:24a0:454f:2])
-        by smtp.gmail.com with ESMTPSA id u6sm256389lfs.21.2021.10.28.02.19.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Oct 2021 02:19:38 -0700 (PDT)
-Date:   Thu, 28 Oct 2021 12:19:32 +0300
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Matti Vaittinen <mazziesaccount@gmail.com>
-Cc:     lukas.bulwahn@gmail.com, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-power@fi.rohmeurope.com
-Subject: [RESEND PATCH 4/4] MAINTAINERS: bd70528: Drop ROHM BD70528 drivers
-Message-ID: <6b8819238dfe43e356c2c5035c5ffe487257bf70.1635412162.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1635412162.git.matti.vaittinen@fi.rohmeurope.com>
+        id S229775AbhJ1KkA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 28 Oct 2021 06:40:00 -0400
+Received: from mga14.intel.com ([192.55.52.115]:35742 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230077AbhJ1Kj7 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 28 Oct 2021 06:39:59 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10150"; a="230638316"
+X-IronPort-AV: E=Sophos;i="5.87,189,1631602800"; 
+   d="scan'208";a="230638316"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Oct 2021 03:13:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,189,1631602800"; 
+   d="scan'208";a="447629086"
+Received: from lkp-server01.sh.intel.com (HELO 3b851179dbd8) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 28 Oct 2021 03:13:32 -0700
+Received: from kbuild by 3b851179dbd8 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1mg2Pb-0001ym-Pg; Thu, 28 Oct 2021 10:13:31 +0000
+Date:   Thu, 28 Oct 2021 18:13:11 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:ib-gpio-ppid] BUILD SUCCESS
+ cfe6807d82e97e81c3209dca9448f091e1448a57
+Message-ID: <617a77b7.QI0ReNPidAtsJ3iN%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="twiyDOCo1fYStRp7"
-Content-Disposition: inline
-In-Reply-To: <cover.1635412162.git.matti.vaittinen@fi.rohmeurope.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git ib-gpio-ppid
+branch HEAD: cfe6807d82e97e81c3209dca9448f091e1448a57  gpio: Allow per-parent interrupt data
 
---twiyDOCo1fYStRp7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+elapsed time: 2130m
 
-The only known BD70528 use-cases are such that the PMIC is controlled
-=66rom separate MCU which is not running Linux. I am not aware of
-any Linux driver users. Furthermore, it seems there is no demand for
-this IC.
+configs tested: 158
+configs skipped: 3
 
-Ease the maintenance burden and drop the driver.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allmodconfig
+arm                              allyesconfig
+mips                 randconfig-c004-20211027
+i386                 randconfig-c001-20211027
+sh                      rts7751r2d1_defconfig
+xtensa                    smp_lx200_defconfig
+mips                          malta_defconfig
+powerpc                     skiroot_defconfig
+mips                         tb0287_defconfig
+nios2                            alldefconfig
+powerpc                     ep8248e_defconfig
+sh                           se7721_defconfig
+powerpc                        fsp2_defconfig
+sh                          r7785rp_defconfig
+arm                           stm32_defconfig
+arm                          pxa168_defconfig
+mips                         cobalt_defconfig
+mips                     loongson2k_defconfig
+arc                 nsimosci_hs_smp_defconfig
+sparc                       sparc64_defconfig
+arm                        cerfcube_defconfig
+powerpc                   currituck_defconfig
+arm                         nhk8815_defconfig
+arm                         shannon_defconfig
+sh                                  defconfig
+arc                              alldefconfig
+mips                           ip32_defconfig
+mips                      loongson3_defconfig
+powerpc                       ebony_defconfig
+mips                malta_qemu_32r6_defconfig
+arm                          pcm027_defconfig
+arm                         lpc32xx_defconfig
+arm                          badge4_defconfig
+arc                        vdk_hs38_defconfig
+sh                            shmin_defconfig
+arm                           viper_defconfig
+arm                        spear3xx_defconfig
+arm                    vt8500_v6_v7_defconfig
+arm                     davinci_all_defconfig
+arc                         haps_hs_defconfig
+arc                            hsdk_defconfig
+arm                          lpd270_defconfig
+sparc                               defconfig
+powerpc                  storcenter_defconfig
+arm                      integrator_defconfig
+arm                         s3c6400_defconfig
+powerpc                      ppc40x_defconfig
+arm                         at91_dt_defconfig
+mips                  maltasmvp_eva_defconfig
+m68k                          amiga_defconfig
+mips                      bmips_stb_defconfig
+powerpc                 mpc8315_rdb_defconfig
+m68k                          multi_defconfig
+i386                             alldefconfig
+powerpc                 mpc832x_rdb_defconfig
+arm                       aspeed_g5_defconfig
+mips                         tb0226_defconfig
+openrisc                    or1ksim_defconfig
+arm                        clps711x_defconfig
+powerpc                      ppc44x_defconfig
+xtensa                    xip_kc705_defconfig
+mips                     decstation_defconfig
+powerpc                      bamboo_defconfig
+mips                          ath25_defconfig
+powerpc                     akebono_defconfig
+powerpc                      tqm8xx_defconfig
+openrisc                            defconfig
+mips                       lemote2f_defconfig
+powerpc                 mpc834x_itx_defconfig
+m68k                        mvme16x_defconfig
+microblaze                      mmu_defconfig
+mips                  cavium_octeon_defconfig
+arm                         vf610m4_defconfig
+powerpc                 canyonlands_defconfig
+arm                        multi_v7_defconfig
+mips                     cu1830-neo_defconfig
+mips                          rm200_defconfig
+riscv             nommu_k210_sdcard_defconfig
+arm                  randconfig-c002-20211027
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                                defconfig
+m68k                             allmodconfig
+m68k                             allyesconfig
+nios2                               defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+nios2                            allyesconfig
+arc                              allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+xtensa                           allyesconfig
+parisc                              defconfig
+s390                                defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+i386                                defconfig
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a013-20211027
+x86_64               randconfig-a015-20211027
+x86_64               randconfig-a011-20211027
+x86_64               randconfig-a014-20211027
+x86_64               randconfig-a016-20211027
+x86_64               randconfig-a012-20211027
+i386                 randconfig-a012-20211027
+i386                 randconfig-a013-20211027
+i386                 randconfig-a011-20211027
+i386                 randconfig-a016-20211027
+i386                 randconfig-a015-20211027
+i386                 randconfig-a014-20211027
+riscv                    nommu_k210_defconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allyesconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+x86_64                           allyesconfig
+
+clang tested configs:
+riscv                randconfig-c006-20211027
+powerpc              randconfig-c003-20211027
+arm                  randconfig-c002-20211027
+mips                 randconfig-c004-20211027
+x86_64               randconfig-c007-20211027
+i386                 randconfig-c001-20211027
+s390                 randconfig-c005-20211027
+x86_64               randconfig-a002-20211027
+x86_64               randconfig-a004-20211027
+x86_64               randconfig-a005-20211027
+x86_64               randconfig-a006-20211027
+x86_64               randconfig-a001-20211027
+x86_64               randconfig-a003-20211027
+i386                 randconfig-a003-20211027
+i386                 randconfig-a004-20211027
+i386                 randconfig-a002-20211027
+i386                 randconfig-a005-20211027
+i386                 randconfig-a001-20211027
+i386                 randconfig-a006-20211027
+hexagon              randconfig-r045-20211027
+hexagon              randconfig-r041-20211027
+
 ---
- MAINTAINERS | 8 --------
- 1 file changed, 8 deletions(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f26920f0fa65..08d19fed6609 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16173,27 +16173,19 @@ ROHM POWER MANAGEMENT IC DEVICE DRIVERS
- R:	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
- L:	linux-power@fi.rohmeurope.com
- S:	Supported
--F:	Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
--F:	Documentation/devicetree/bindings/regulator/rohm,bd70528-regulator.txt
- F:	drivers/clk/clk-bd718x7.c
--F:	drivers/gpio/gpio-bd70528.c
- F:	drivers/gpio/gpio-bd71815.c
- F:	drivers/gpio/gpio-bd71828.c
--F:	drivers/mfd/rohm-bd70528.c
- F:	drivers/mfd/rohm-bd71828.c
- F:	drivers/mfd/rohm-bd718x7.c
- F:	drivers/mfd/rohm-bd9576.c
--F:	drivers/power/supply/bd70528-charger.c
--F:	drivers/regulator/bd70528-regulator.c
- F:	drivers/regulator/bd71815-regulator.c
- F:	drivers/regulator/bd71828-regulator.c
- F:	drivers/regulator/bd718x7-regulator.c
- F:	drivers/regulator/bd9576-regulator.c
- F:	drivers/regulator/rohm-regulator.c
- F:	drivers/rtc/rtc-bd70528.c
--F:	drivers/watchdog/bd70528_wdt.c
- F:	drivers/watchdog/bd9576_wdt.c
--F:	include/linux/mfd/rohm-bd70528.h
- F:	include/linux/mfd/rohm-bd71815.h
- F:	include/linux/mfd/rohm-bd71828.h
- F:	include/linux/mfd/rohm-bd718x7.h
---=20
-2.31.1
-
-
---=20
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =3D]=20
-
---twiyDOCo1fYStRp7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmF6ayQACgkQeFA3/03a
-ocUZcggAp94TIsWGCkaYj4DD9jsBdfY3JaSk4zSi/pHUvIsUeT2gyMKd/1LKNbo4
-mXpip3I5XpAADZTZ1MBb7/0P/AD8xvhyCokMJckY8xaW35khYaD06CZgRE+BPKeT
-iI8osA3on9EGd+FGNlrjxsV7Vk/qSjpa+b0m0cTuXQ7Md2DXuuxczEJx/z6BTV47
-3AvRPAT8veUvQ8nkER/MjqOfBpUipGjKN70v6ZPxPCgMYEcFYQKpiI/xGdHBa/8Y
-mri7f9vQtasylLwmDsoxeDl657vmwoFB+U80fRCUgNrCugqfLoGL1LxI9CelYLdk
-4IMG8wQsmFs+9HaCGjrisArJxrCCyA==
-=y3nR
------END PGP SIGNATURE-----
-
---twiyDOCo1fYStRp7--
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
