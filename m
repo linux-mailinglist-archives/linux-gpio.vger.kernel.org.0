@@ -2,38 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E0F8E43DD9A
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Oct 2021 11:19:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E159C43DD9C
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Oct 2021 11:19:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230131AbhJ1JVd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 28 Oct 2021 05:21:33 -0400
-Received: from mail-lj1-f180.google.com ([209.85.208.180]:37663 "EHLO
-        mail-lj1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230124AbhJ1JVd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Oct 2021 05:21:33 -0400
-Received: by mail-lj1-f180.google.com with SMTP id 188so9563077ljj.4;
-        Thu, 28 Oct 2021 02:19:05 -0700 (PDT)
+        id S230153AbhJ1JVv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 28 Oct 2021 05:21:51 -0400
+Received: from mail-lf1-f51.google.com ([209.85.167.51]:42724 "EHLO
+        mail-lf1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230124AbhJ1JVu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 28 Oct 2021 05:21:50 -0400
+Received: by mail-lf1-f51.google.com with SMTP id bi35so12141907lfb.9;
+        Thu, 28 Oct 2021 02:19:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Yq6BwnSmNf80lpDeEcazJdzs3D3BE8lrJc9IhNqrmmQ=;
-        b=Az45LzkG8dHiOo9DcdrjEt6Hc8XXCPnGjEFUULbz+YplIQ9hU1yQvSFIjRBgzvJWsA
-         rtoqmFchgtM5i7qBNOKEN6jDGjMA9mxhsTbtBCfIIJG0mRJM+ryKOw6yp9ebzkcP7xJF
-         uIzJ5Grby9YWoaf3j5FUhHkoc22TA0yV4IzjHoFtrgKVw4rC1z/Lr87vJXARphaM5Ukk
-         Wg/Q5AiCGvf4m4v2n0Bg6eyvi+5igVJMMVFg1J2hPo8W9r+U78gjBE6U18FRcALKZFO0
-         +8KpZA1AXwwstC3qOhewDLUGj55m70kuPkuByYDgtCCMwOo/xenYzyOBsToMe4KPXo8M
-         KQfg==
-X-Gm-Message-State: AOAM533X5ySRn1c9p3otyNUuCU4aeLSv1Pe18oD4qBqQwPKNCOq2Loeh
-        o3qAu2O1fIGNTgDRTFDQNZA=
-X-Google-Smtp-Source: ABdhPJybVm/EhdfVqe99WdxGaaH9eltbA9mC1GxPtys1jJuLExq1MdtM8alCepgoeCxcO+7fY/n3Zw==
-X-Received: by 2002:a2e:2a83:: with SMTP id q125mr3404356ljq.313.1635412744802;
-        Thu, 28 Oct 2021 02:19:04 -0700 (PDT)
+        bh=P9xPxxBN9uT1X5U8HA5qT9pghXKXU9auK+3kZVBOk+4=;
+        b=7lEz4R7sIIr0Lh5ImlbA5wR03T7c9DS3Rt1z0R/5umiqhdkKCYTDcB0X+KB/6Jkn/l
+         il16oOgsEdbs3b6sWOqO5bLBvBydmtxH2Hn16BadUKhG7WqepUUKHIZuqIhj3nwSHClC
+         Dq91/HoseuzB144PksqMDLoBh43C8cWTsXf22vLoVvoEEXNovl492ujacjykuM9Q+poY
+         S7PWL0+WvuefNFXUP/ZMhiTnMnyeg+bClNfFy15lMjmO6EX60XIosZzhHf4XSASbHAFd
+         NtCzuwNGIzfx/Igo8KcfU8CRn5423M+sKCovjtTAyLzXX4zxMz9UagTz2lDfCEjTJaIE
+         U2wg==
+X-Gm-Message-State: AOAM530VWiqIz7C22MiLkXDT15vmeDZaCxxmwZqexGteQUrN5z65OAWn
+        Cfv2ByHpZUsqhjsVXORrQ8Q=
+X-Google-Smtp-Source: ABdhPJxa5Xp4R2HTGDQ7qdaGkRzr+gBUjd0zAg9h8DE/MduCP0/G5pxSkHMK+sDmEoGx84VLXNGaiQ==
+X-Received: by 2002:a05:6512:3b9c:: with SMTP id g28mr2976201lfv.583.1635412762402;
+        Thu, 28 Oct 2021 02:19:22 -0700 (PDT)
 Received: from fedora (d44bs26yxfwtfmx4yyk-4.rev.dnainternet.fi. [2001:14bb:c6:2fb:6813:24a0:454f:2])
-        by smtp.gmail.com with ESMTPSA id e29sm254284lfc.141.2021.10.28.02.19.03
+        by smtp.gmail.com with ESMTPSA id d10sm252871lfg.245.2021.10.28.02.19.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Oct 2021 02:19:04 -0700 (PDT)
-Date:   Thu, 28 Oct 2021 12:18:57 +0300
+        Thu, 28 Oct 2021 02:19:21 -0700 (PDT)
+Date:   Thu, 28 Oct 2021 12:19:14 +0300
 From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
         Matti Vaittinen <mazziesaccount@gmail.com>
@@ -46,12 +46,12 @@ Cc:     lukas.bulwahn@gmail.com, Lee Jones <lee.jones@linaro.org>,
         Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-power@fi.rohmeurope.com
-Subject: [RESEND PATCH 2/4] gpio: bd70528 Drop BD70528 support
-Message-ID: <5da2237a0446e960a7726c23eb34cb1eaf6f4b54.1635412162.git.matti.vaittinen@fi.rohmeurope.com>
+Subject: [RESEND PATCH 3/4] mfd: bd70528: Drop BD70528 support
+Message-ID: <d1b83de6814dd32063a8b06ab6ee60339520c8f6.1635412162.git.matti.vaittinen@fi.rohmeurope.com>
 References: <cover.1635412162.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="sPu3AeqMFjAZuYLd"
+        protocol="application/pgp-signature"; boundary="9T8HxJyTuU7sOj5T"
 Content-Disposition: inline
 In-Reply-To: <cover.1635412162.git.matti.vaittinen@fi.rohmeurope.com>
 Precedence: bulk
@@ -59,7 +59,7 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
---sPu3AeqMFjAZuYLd
+--9T8HxJyTuU7sOj5T
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
@@ -71,290 +71,789 @@ this IC. Let's ease the maintenance burden and drop the driver. We can
 always add it back if there is sudden need for it.
 
 Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Acked-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Acked-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/gpio/Kconfig        |  11 --
- drivers/gpio/Makefile       |   1 -
- drivers/gpio/gpio-bd70528.c | 230 ------------------------------------
- 3 files changed, 242 deletions(-)
- delete mode 100644 drivers/gpio/gpio-bd70528.c
+ drivers/mfd/Kconfig              |  17 --
+ drivers/mfd/Makefile             |   1 -
+ drivers/mfd/rohm-bd70528.c       | 314 -------------------------
+ include/linux/mfd/rohm-bd70528.h | 389 -------------------------------
+ include/linux/mfd/rohm-generic.h |   1 -
+ 5 files changed, 722 deletions(-)
+ delete mode 100644 drivers/mfd/rohm-bd70528.c
+ delete mode 100644 include/linux/mfd/rohm-bd70528.h
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index fae5141251e5..ca6d71fe7185 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1120,17 +1120,6 @@ config GPIO_ARIZONA
- 	help
- 	  Support for GPIOs on Wolfson Arizona class devices.
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index ca0edab91aeb..7ecbb2af95f3 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -1956,23 +1956,6 @@ config MFD_ROHM_BD718XX
+ 	  NXP i.MX8. It contains 8 BUCK outputs and 7 LDOs, voltage monitoring
+ 	  and emergency shut down as well as 32,768KHz clock output.
 =20
--config GPIO_BD70528
--	tristate "ROHM BD70528 GPIO support"
--	depends on MFD_ROHM_BD70528
+-config MFD_ROHM_BD70528
+-	tristate "ROHM BD70528 Power Management IC"
+-	depends on I2C=3Dy
+-	depends on OF
+-	select REGMAP_I2C
+-	select REGMAP_IRQ
+-	select MFD_CORE
 -	help
--	  Support for GPIOs on ROHM BD70528 PMIC. There are four GPIOs
--	  available on the ROHM PMIC in total. The GPIOs can also
--	  generate interrupts.
+-	  Select this option to get support for the ROHM BD70528 Power
+-	  Management IC. BD71837 is general purpose single-chip power
+-	  management IC for battery-powered portable devices. It contains
+-	  3 ultra-low current consumption buck converters, 3 LDOs and 2 LED
+-	  drivers. Also included are 4 GPIOs, a real-time clock (RTC), a 32kHz
+-	  crystal oscillator, high-accuracy VREF for use with an external ADC,
+-	  10 bits SAR ADC for battery temperature monitor and 1S battery
+-	  charger.
 -
--	  This driver can also be built as a module. If so, the module
--	  will be called gpio-bd70528.
--
- config GPIO_BD71815
- 	tristate "ROHM BD71815 PMIC GPIO support"
- 	depends on MFD_ROHM_BD71828
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index fbcda637d5e1..dd62fd6e60d2 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -38,7 +38,6 @@ obj-$(CONFIG_GPIO_ASPEED_SGPIO)		+=3D gpio-aspeed-sgpio.o
- obj-$(CONFIG_GPIO_ATH79)		+=3D gpio-ath79.o
- obj-$(CONFIG_GPIO_BCM_KONA)		+=3D gpio-bcm-kona.o
- obj-$(CONFIG_GPIO_BCM_XGS_IPROC)	+=3D gpio-xgs-iproc.o
--obj-$(CONFIG_GPIO_BD70528)		+=3D gpio-bd70528.o
- obj-$(CONFIG_GPIO_BD71815)		+=3D gpio-bd71815.o
- obj-$(CONFIG_GPIO_BD71828)		+=3D gpio-bd71828.o
- obj-$(CONFIG_GPIO_BD9571MWV)		+=3D gpio-bd9571mwv.o
-diff --git a/drivers/gpio/gpio-bd70528.c b/drivers/gpio/gpio-bd70528.c
+ config MFD_ROHM_BD71828
+ 	tristate "ROHM BD71828 and BD71815 Power Management IC"
+ 	depends on I2C=3Dy
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index 2ba6646e874c..0a21b60a55a7 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -258,7 +258,6 @@ obj-$(CONFIG_MFD_STM32_TIMERS) 	+=3D stm32-timers.o
+ obj-$(CONFIG_MFD_MXS_LRADC)     +=3D mxs-lradc.o
+ obj-$(CONFIG_MFD_SC27XX_PMIC)	+=3D sprd-sc27xx-spi.o
+ obj-$(CONFIG_RAVE_SP_CORE)	+=3D rave-sp.o
+-obj-$(CONFIG_MFD_ROHM_BD70528)	+=3D rohm-bd70528.o
+ obj-$(CONFIG_MFD_ROHM_BD71828)	+=3D rohm-bd71828.o
+ obj-$(CONFIG_MFD_ROHM_BD718XX)	+=3D rohm-bd718x7.o
+ obj-$(CONFIG_MFD_ROHM_BD957XMUF)	+=3D rohm-bd9576.o
+diff --git a/drivers/mfd/rohm-bd70528.c b/drivers/mfd/rohm-bd70528.c
 deleted file mode 100644
-index 397a50d6bc65..000000000000
---- a/drivers/gpio/gpio-bd70528.c
+index 5c44d3b77b3e..000000000000
+--- a/drivers/mfd/rohm-bd70528.c
 +++ /dev/null
-@@ -1,230 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--// Copyright (C) 2018 ROHM Semiconductors
--// gpio-bd70528.c ROHM BD70528MWV gpio driver
+@@ -1,314 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-or-later
+-//
+-// Copyright (C) 2019 ROHM Semiconductors
+-//
+-// ROHM BD70528 PMIC driver
 -
--#include <linux/gpio/driver.h>
+-#include <linux/i2c.h>
+-#include <linux/interrupt.h>
+-#include <linux/ioport.h>
+-#include <linux/irq.h>
+-#include <linux/mfd/core.h>
 -#include <linux/mfd/rohm-bd70528.h>
 -#include <linux/module.h>
--#include <linux/platform_device.h>
+-#include <linux/of_device.h>
 -#include <linux/regmap.h>
+-#include <linux/types.h>
 -
--#define GPIO_IN_REG(offset) (BD70528_REG_GPIO1_IN + (offset) * 2)
--#define GPIO_OUT_REG(offset) (BD70528_REG_GPIO1_OUT + (offset) * 2)
+-#define BD70528_NUM_OF_GPIOS 4
 -
--struct bd70528_gpio {
--	struct regmap *regmap;
--	struct device *dev;
--	struct gpio_chip gpio;
+-static const struct resource rtc_irqs[] =3D {
+-	DEFINE_RES_IRQ_NAMED(BD70528_INT_RTC_ALARM, "bd70528-rtc-alm"),
+-	DEFINE_RES_IRQ_NAMED(BD70528_INT_ELPS_TIM, "bd70528-elapsed-timer"),
 -};
 -
--static int bd70528_set_debounce(struct bd70528_gpio *bdgpio,
--				unsigned int offset, unsigned int debounce)
--{
--	u8 val;
+-static const struct resource charger_irqs[] =3D {
+-	DEFINE_RES_IRQ_NAMED(BD70528_INT_BAT_OV_RES, "bd70528-bat-ov-res"),
+-	DEFINE_RES_IRQ_NAMED(BD70528_INT_BAT_OV_DET, "bd70528-bat-ov-det"),
+-	DEFINE_RES_IRQ_NAMED(BD70528_INT_DBAT_DET, "bd70528-bat-dead"),
+-	DEFINE_RES_IRQ_NAMED(BD70528_INT_BATTSD_COLD_RES, "bd70528-bat-warmed"),
+-	DEFINE_RES_IRQ_NAMED(BD70528_INT_BATTSD_COLD_DET, "bd70528-bat-cold"),
+-	DEFINE_RES_IRQ_NAMED(BD70528_INT_BATTSD_HOT_RES, "bd70528-bat-cooled"),
+-	DEFINE_RES_IRQ_NAMED(BD70528_INT_BATTSD_HOT_DET, "bd70528-bat-hot"),
+-	DEFINE_RES_IRQ_NAMED(BD70528_INT_CHG_TSD, "bd70528-chg-tshd"),
+-	DEFINE_RES_IRQ_NAMED(BD70528_INT_BAT_RMV, "bd70528-bat-removed"),
+-	DEFINE_RES_IRQ_NAMED(BD70528_INT_BAT_DET, "bd70528-bat-detected"),
+-	DEFINE_RES_IRQ_NAMED(BD70528_INT_DCIN2_OV_RES, "bd70528-dcin2-ov-res"),
+-	DEFINE_RES_IRQ_NAMED(BD70528_INT_DCIN2_OV_DET, "bd70528-dcin2-ov-det"),
+-	DEFINE_RES_IRQ_NAMED(BD70528_INT_DCIN2_RMV, "bd70528-dcin2-removed"),
+-	DEFINE_RES_IRQ_NAMED(BD70528_INT_DCIN2_DET, "bd70528-dcin2-detected"),
+-	DEFINE_RES_IRQ_NAMED(BD70528_INT_DCIN1_RMV, "bd70528-dcin1-removed"),
+-	DEFINE_RES_IRQ_NAMED(BD70528_INT_DCIN1_DET, "bd70528-dcin1-detected"),
+-};
 -
--	switch (debounce) {
--	case 0:
--		val =3D BD70528_DEBOUNCE_DISABLE;
--		break;
--	case 1 ... 15000:
--		val =3D BD70528_DEBOUNCE_15MS;
--		break;
--	case 15001 ... 30000:
--		val =3D BD70528_DEBOUNCE_30MS;
--		break;
--	case 30001 ... 50000:
--		val =3D BD70528_DEBOUNCE_50MS;
--		break;
--	default:
--		dev_err(bdgpio->dev,
--			"Invalid debounce value %u\n", debounce);
+-static struct mfd_cell bd70528_mfd_cells[] =3D {
+-	{ .name =3D "bd70528-pmic", },
+-	{ .name =3D "bd70528-gpio", },
+-	/*
+-	 * We use BD71837 driver to drive the clock block. Only differences to
+-	 * BD70528 clock gate are the register address and mask.
+-	 */
+-	{ .name =3D "bd70528-clk", },
+-	{ .name =3D "bd70528-wdt", },
+-	{
+-		.name =3D "bd70528-power",
+-		.resources =3D charger_irqs,
+-		.num_resources =3D ARRAY_SIZE(charger_irqs),
+-	}, {
+-		.name =3D "bd70528-rtc",
+-		.resources =3D rtc_irqs,
+-		.num_resources =3D ARRAY_SIZE(rtc_irqs),
+-	},
+-};
+-
+-static const struct regmap_range volatile_ranges[] =3D {
+-	{
+-		.range_min =3D BD70528_REG_INT_MAIN,
+-		.range_max =3D BD70528_REG_INT_OP_FAIL,
+-	}, {
+-		.range_min =3D BD70528_REG_RTC_COUNT_H,
+-		.range_max =3D BD70528_REG_RTC_ALM_REPEAT,
+-	}, {
+-		/*
+-		 * WDT control reg is special. Magic values must be written to
+-		 * it in order to change the control. Should not be cached.
+-		 */
+-		.range_min =3D BD70528_REG_WDT_CTRL,
+-		.range_max =3D BD70528_REG_WDT_CTRL,
+-	}, {
+-		/*
+-		 * BD70528 also contains a few other registers which require
+-		 * magic sequences to be written in order to update the value.
+-		 * At least SHIPMODE, HWRESET, WARMRESET,and STANDBY
+-		 */
+-		.range_min =3D BD70528_REG_SHIPMODE,
+-		.range_max =3D BD70528_REG_STANDBY,
+-	},
+-};
+-
+-static const struct regmap_access_table volatile_regs =3D {
+-	.yes_ranges =3D &volatile_ranges[0],
+-	.n_yes_ranges =3D ARRAY_SIZE(volatile_ranges),
+-};
+-
+-static struct regmap_config bd70528_regmap =3D {
+-	.reg_bits =3D 8,
+-	.val_bits =3D 8,
+-	.volatile_table =3D &volatile_regs,
+-	.max_register =3D BD70528_MAX_REGISTER,
+-	.cache_type =3D REGCACHE_RBTREE,
+-};
+-
+-/*
+- * Mapping of main IRQ register bits to sub-IRQ register offsets so that w=
+e can
+- * access corect sub-IRQ registers based on bits that are set in main IRQ
+- * register.
+- */
+-
+-static unsigned int bit0_offsets[] =3D {0};	/* Shutdown */
+-static unsigned int bit1_offsets[] =3D {1};	/* Power failure */
+-static unsigned int bit2_offsets[] =3D {2};	/* VR FAULT */
+-static unsigned int bit3_offsets[] =3D {3};	/* PMU interrupts */
+-static unsigned int bit4_offsets[] =3D {4, 5};	/* Charger 1 and Charger 2 =
+*/
+-static unsigned int bit5_offsets[] =3D {6};	/* RTC */
+-static unsigned int bit6_offsets[] =3D {7};	/* GPIO */
+-static unsigned int bit7_offsets[] =3D {8};	/* Invalid operation */
+-
+-static struct regmap_irq_sub_irq_map bd70528_sub_irq_offsets[] =3D {
+-	REGMAP_IRQ_MAIN_REG_OFFSET(bit0_offsets),
+-	REGMAP_IRQ_MAIN_REG_OFFSET(bit1_offsets),
+-	REGMAP_IRQ_MAIN_REG_OFFSET(bit2_offsets),
+-	REGMAP_IRQ_MAIN_REG_OFFSET(bit3_offsets),
+-	REGMAP_IRQ_MAIN_REG_OFFSET(bit4_offsets),
+-	REGMAP_IRQ_MAIN_REG_OFFSET(bit5_offsets),
+-	REGMAP_IRQ_MAIN_REG_OFFSET(bit6_offsets),
+-	REGMAP_IRQ_MAIN_REG_OFFSET(bit7_offsets),
+-};
+-
+-static struct regmap_irq bd70528_irqs[] =3D {
+-	REGMAP_IRQ_REG(BD70528_INT_LONGPUSH, 0, BD70528_INT_LONGPUSH_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_WDT, 0, BD70528_INT_WDT_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_HWRESET, 0, BD70528_INT_HWRESET_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_RSTB_FAULT, 0, BD70528_INT_RSTB_FAULT_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_VBAT_UVLO, 0, BD70528_INT_VBAT_UVLO_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_TSD, 0, BD70528_INT_TSD_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_RSTIN, 0, BD70528_INT_RSTIN_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_BUCK1_FAULT, 1,
+-		       BD70528_INT_BUCK1_FAULT_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_BUCK2_FAULT, 1,
+-		       BD70528_INT_BUCK2_FAULT_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_BUCK3_FAULT, 1,
+-		       BD70528_INT_BUCK3_FAULT_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_LDO1_FAULT, 1, BD70528_INT_LDO1_FAULT_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_LDO2_FAULT, 1, BD70528_INT_LDO2_FAULT_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_LDO3_FAULT, 1, BD70528_INT_LDO3_FAULT_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_LED1_FAULT, 1, BD70528_INT_LED1_FAULT_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_LED2_FAULT, 1, BD70528_INT_LED2_FAULT_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_BUCK1_OCP, 2, BD70528_INT_BUCK1_OCP_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_BUCK2_OCP, 2, BD70528_INT_BUCK2_OCP_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_BUCK3_OCP, 2, BD70528_INT_BUCK3_OCP_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_LED1_OCP, 2, BD70528_INT_LED1_OCP_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_LED2_OCP, 2, BD70528_INT_LED2_OCP_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_BUCK1_FULLON, 2,
+-		       BD70528_INT_BUCK1_FULLON_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_BUCK2_FULLON, 2,
+-		       BD70528_INT_BUCK2_FULLON_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_SHORTPUSH, 3, BD70528_INT_SHORTPUSH_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_AUTO_WAKEUP, 3,
+-		       BD70528_INT_AUTO_WAKEUP_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_STATE_CHANGE, 3,
+-		       BD70528_INT_STATE_CHANGE_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_BAT_OV_RES, 4, BD70528_INT_BAT_OV_RES_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_BAT_OV_DET, 4, BD70528_INT_BAT_OV_DET_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_DBAT_DET, 4, BD70528_INT_DBAT_DET_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_BATTSD_COLD_RES, 4,
+-		       BD70528_INT_BATTSD_COLD_RES_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_BATTSD_COLD_DET, 4,
+-		       BD70528_INT_BATTSD_COLD_DET_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_BATTSD_HOT_RES, 4,
+-		       BD70528_INT_BATTSD_HOT_RES_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_BATTSD_HOT_DET, 4,
+-		       BD70528_INT_BATTSD_HOT_DET_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_CHG_TSD, 4, BD70528_INT_CHG_TSD_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_BAT_RMV, 5, BD70528_INT_BAT_RMV_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_BAT_DET, 5, BD70528_INT_BAT_DET_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_DCIN2_OV_RES, 5,
+-		       BD70528_INT_DCIN2_OV_RES_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_DCIN2_OV_DET, 5,
+-		       BD70528_INT_DCIN2_OV_DET_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_DCIN2_RMV, 5, BD70528_INT_DCIN2_RMV_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_DCIN2_DET, 5, BD70528_INT_DCIN2_DET_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_DCIN1_RMV, 5, BD70528_INT_DCIN1_RMV_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_DCIN1_DET, 5, BD70528_INT_DCIN1_DET_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_RTC_ALARM, 6, BD70528_INT_RTC_ALARM_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_ELPS_TIM, 6, BD70528_INT_ELPS_TIM_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_GPIO0, 7, BD70528_INT_GPIO0_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_GPIO1, 7, BD70528_INT_GPIO1_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_GPIO2, 7, BD70528_INT_GPIO2_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_GPIO3, 7, BD70528_INT_GPIO3_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_BUCK1_DVS_OPFAIL, 8,
+-		       BD70528_INT_BUCK1_DVS_OPFAIL_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_BUCK2_DVS_OPFAIL, 8,
+-		       BD70528_INT_BUCK2_DVS_OPFAIL_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_BUCK3_DVS_OPFAIL, 8,
+-		       BD70528_INT_BUCK3_DVS_OPFAIL_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_LED1_VOLT_OPFAIL, 8,
+-		       BD70528_INT_LED1_VOLT_OPFAIL_MASK),
+-	REGMAP_IRQ_REG(BD70528_INT_LED2_VOLT_OPFAIL, 8,
+-		       BD70528_INT_LED2_VOLT_OPFAIL_MASK),
+-};
+-
+-static struct regmap_irq_chip bd70528_irq_chip =3D {
+-	.name =3D "bd70528_irq",
+-	.main_status =3D BD70528_REG_INT_MAIN,
+-	.irqs =3D &bd70528_irqs[0],
+-	.num_irqs =3D ARRAY_SIZE(bd70528_irqs),
+-	.status_base =3D BD70528_REG_INT_SHDN,
+-	.mask_base =3D BD70528_REG_INT_SHDN_MASK,
+-	.ack_base =3D BD70528_REG_INT_SHDN,
+-	.type_base =3D BD70528_REG_GPIO1_IN,
+-	.init_ack_masked =3D true,
+-	.num_regs =3D 9,
+-	.num_main_regs =3D 1,
+-	.num_type_reg =3D 4,
+-	.sub_reg_offsets =3D &bd70528_sub_irq_offsets[0],
+-	.num_main_status_bits =3D 8,
+-	.irq_reg_stride =3D 1,
+-};
+-
+-static int bd70528_i2c_probe(struct i2c_client *i2c,
+-			     const struct i2c_device_id *id)
+-{
+-	struct bd70528_data *bd70528;
+-	struct regmap_irq_chip_data *irq_data;
+-	int ret, i;
+-
+-	if (!i2c->irq) {
+-		dev_err(&i2c->dev, "No IRQ configured\n");
 -		return -EINVAL;
 -	}
--	return regmap_update_bits(bdgpio->regmap, GPIO_IN_REG(offset),
--				 BD70528_DEBOUNCE_MASK, val);
--}
 -
--static int bd70528_get_direction(struct gpio_chip *chip, unsigned int offs=
-et)
--{
--	struct bd70528_gpio *bdgpio =3D gpiochip_get_data(chip);
--	int val, ret;
+-	bd70528 =3D devm_kzalloc(&i2c->dev, sizeof(*bd70528), GFP_KERNEL);
+-	if (!bd70528)
+-		return -ENOMEM;
 -
--	/* Do we need to do something to IRQs here? */
--	ret =3D regmap_read(bdgpio->regmap, GPIO_OUT_REG(offset), &val);
--	if (ret) {
--		dev_err(bdgpio->dev, "Could not read gpio direction\n");
--		return ret;
+-	mutex_init(&bd70528->rtc_timer_lock);
+-
+-	dev_set_drvdata(&i2c->dev, &bd70528->chip);
+-
+-	bd70528->chip.regmap =3D devm_regmap_init_i2c(i2c, &bd70528_regmap);
+-	if (IS_ERR(bd70528->chip.regmap)) {
+-		dev_err(&i2c->dev, "Failed to initialize Regmap\n");
+-		return PTR_ERR(bd70528->chip.regmap);
 -	}
--	if (val & BD70528_GPIO_OUT_EN_MASK)
--		return GPIO_LINE_DIRECTION_OUT;
--
--	return GPIO_LINE_DIRECTION_IN;
--}
--
--static int bd70528_gpio_set_config(struct gpio_chip *chip, unsigned int of=
-fset,
--				   unsigned long config)
--{
--	struct bd70528_gpio *bdgpio =3D gpiochip_get_data(chip);
--
--	switch (pinconf_to_config_param(config)) {
--	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
--		return regmap_update_bits(bdgpio->regmap,
--					  GPIO_OUT_REG(offset),
--					  BD70528_GPIO_DRIVE_MASK,
--					  BD70528_GPIO_OPEN_DRAIN);
--		break;
--	case PIN_CONFIG_DRIVE_PUSH_PULL:
--		return regmap_update_bits(bdgpio->regmap,
--					  GPIO_OUT_REG(offset),
--					  BD70528_GPIO_DRIVE_MASK,
--					  BD70528_GPIO_PUSH_PULL);
--		break;
--	case PIN_CONFIG_INPUT_DEBOUNCE:
--		return bd70528_set_debounce(bdgpio, offset,
--					    pinconf_to_config_argument(config));
--		break;
--	default:
--		break;
--	}
--	return -ENOTSUPP;
--}
--
--static int bd70528_direction_input(struct gpio_chip *chip, unsigned int of=
-fset)
--{
--	struct bd70528_gpio *bdgpio =3D gpiochip_get_data(chip);
--
--	/* Do we need to do something to IRQs here? */
--	return regmap_update_bits(bdgpio->regmap, GPIO_OUT_REG(offset),
--				 BD70528_GPIO_OUT_EN_MASK,
--				 BD70528_GPIO_OUT_DISABLE);
--}
--
--static void bd70528_gpio_set(struct gpio_chip *chip, unsigned int offset,
--			     int value)
--{
--	int ret;
--	struct bd70528_gpio *bdgpio =3D gpiochip_get_data(chip);
--	u8 val =3D (value) ? BD70528_GPIO_OUT_HI : BD70528_GPIO_OUT_LO;
--
--	ret =3D regmap_update_bits(bdgpio->regmap, GPIO_OUT_REG(offset),
--				 BD70528_GPIO_OUT_MASK, val);
--	if (ret)
--		dev_err(bdgpio->dev, "Could not set gpio to %d\n", value);
--}
--
--static int bd70528_direction_output(struct gpio_chip *chip, unsigned int o=
-ffset,
--				    int value)
--{
--	struct bd70528_gpio *bdgpio =3D gpiochip_get_data(chip);
--
--	bd70528_gpio_set(chip, offset, value);
--	return regmap_update_bits(bdgpio->regmap, GPIO_OUT_REG(offset),
--				 BD70528_GPIO_OUT_EN_MASK,
--				 BD70528_GPIO_OUT_ENABLE);
--}
--
--#define GPIO_IN_STATE_MASK(offset) (BD70528_GPIO_IN_STATE_BASE << (offset))
--
--static int bd70528_gpio_get_o(struct bd70528_gpio *bdgpio, unsigned int of=
-fset)
--{
--	int ret;
--	unsigned int val;
--
--	ret =3D regmap_read(bdgpio->regmap, GPIO_OUT_REG(offset), &val);
--	if (!ret)
--		ret =3D !!(val & BD70528_GPIO_OUT_MASK);
--	else
--		dev_err(bdgpio->dev, "GPIO (out) state read failed\n");
--
--	return ret;
--}
--
--static int bd70528_gpio_get_i(struct bd70528_gpio *bdgpio, unsigned int of=
-fset)
--{
--	unsigned int val;
--	int ret;
--
--	ret =3D regmap_read(bdgpio->regmap, BD70528_REG_GPIO_STATE, &val);
--
--	if (!ret)
--		ret =3D !(val & GPIO_IN_STATE_MASK(offset));
--	else
--		dev_err(bdgpio->dev, "GPIO (in) state read failed\n");
--
--	return ret;
--}
--
--static int bd70528_gpio_get(struct gpio_chip *chip, unsigned int offset)
--{
--	int ret;
--	struct bd70528_gpio *bdgpio =3D gpiochip_get_data(chip);
 -
 -	/*
--	 * There is a race condition where someone might be changing the
--	 * GPIO direction after we get it but before we read the value. But
--	 * application design where GPIO direction may be changed just when
--	 * we read GPIO value would be pointless as reader could not know
--	 * whether the returned high/low state is caused by input or output.
--	 * Or then there must be other ways to mitigate the issue. Thus
--	 * locking would make no sense.
+-	 * Disallow type setting for all IRQs by default as most of them do not
+-	 * support setting type.
 -	 */
--	ret =3D bd70528_get_direction(chip, offset);
--	if (ret =3D=3D GPIO_LINE_DIRECTION_OUT)
--		ret =3D bd70528_gpio_get_o(bdgpio, offset);
--	else if (ret =3D=3D GPIO_LINE_DIRECTION_IN)
--		ret =3D bd70528_gpio_get_i(bdgpio, offset);
--	else
--		dev_err(bdgpio->dev, "failed to read GPIO direction\n");
+-	for (i =3D 0; i < ARRAY_SIZE(bd70528_irqs); i++)
+-		bd70528_irqs[i].type.types_supported =3D 0;
 -
--	return ret;
--}
+-	/* Set IRQ typesetting information for GPIO pins 0 - 3 */
+-	for (i =3D 0; i < BD70528_NUM_OF_GPIOS; i++) {
+-		struct regmap_irq_type *type;
 -
--static int bd70528_probe(struct platform_device *pdev)
--{
--	struct device *dev =3D &pdev->dev;
--	struct bd70528_gpio *bdgpio;
--	int ret;
+-		type =3D &bd70528_irqs[BD70528_INT_GPIO0 + i].type;
+-		type->type_reg_offset =3D 2 * i;
+-		type->type_rising_val =3D 0x20;
+-		type->type_falling_val =3D 0x10;
+-		type->type_level_high_val =3D 0x40;
+-		type->type_level_low_val =3D 0x50;
+-		type->types_supported =3D (IRQ_TYPE_EDGE_BOTH |
+-				IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_LEVEL_LOW);
+-	}
 -
--	bdgpio =3D devm_kzalloc(dev, sizeof(*bdgpio), GFP_KERNEL);
--	if (!bdgpio)
--		return -ENOMEM;
--	bdgpio->dev =3D dev;
--	bdgpio->gpio.parent =3D dev->parent;
--	bdgpio->gpio.label =3D "bd70528-gpio";
--	bdgpio->gpio.owner =3D THIS_MODULE;
--	bdgpio->gpio.get_direction =3D bd70528_get_direction;
--	bdgpio->gpio.direction_input =3D bd70528_direction_input;
--	bdgpio->gpio.direction_output =3D bd70528_direction_output;
--	bdgpio->gpio.set_config =3D bd70528_gpio_set_config;
--	bdgpio->gpio.can_sleep =3D true;
--	bdgpio->gpio.get =3D bd70528_gpio_get;
--	bdgpio->gpio.set =3D bd70528_gpio_set;
--	bdgpio->gpio.ngpio =3D 4;
--	bdgpio->gpio.base =3D -1;
--#ifdef CONFIG_OF_GPIO
--	bdgpio->gpio.of_node =3D dev->parent->of_node;
--#endif
--	bdgpio->regmap =3D dev_get_regmap(dev->parent, NULL);
--	if (!bdgpio->regmap)
--		return -ENODEV;
+-	ret =3D devm_regmap_add_irq_chip(&i2c->dev, bd70528->chip.regmap,
+-				       i2c->irq, IRQF_ONESHOT, 0,
+-				       &bd70528_irq_chip, &irq_data);
+-	if (ret) {
+-		dev_err(&i2c->dev, "Failed to add IRQ chip\n");
+-		return ret;
+-	}
+-	dev_dbg(&i2c->dev, "Registered %d IRQs for chip\n",
+-		bd70528_irq_chip.num_irqs);
 -
--	ret =3D devm_gpiochip_add_data(dev, &bdgpio->gpio, bdgpio);
+-	/*
+-	 * BD70528 IRQ controller is not touching the main mask register.
+-	 * So enable the GPIO block interrupts at main level. We can just leave
+-	 * them enabled as the IRQ controller should disable IRQs from
+-	 * sub-registers when IRQ is disabled or freed.
+-	 */
+-	ret =3D regmap_update_bits(bd70528->chip.regmap,
+-				 BD70528_REG_INT_MAIN_MASK,
+-				 BD70528_INT_GPIO_MASK, 0);
+-
+-	ret =3D devm_mfd_add_devices(&i2c->dev, PLATFORM_DEVID_AUTO,
+-				   bd70528_mfd_cells,
+-				   ARRAY_SIZE(bd70528_mfd_cells), NULL, 0,
+-				   regmap_irq_get_domain(irq_data));
 -	if (ret)
--		dev_err(dev, "gpio_init: Failed to add bd70528-gpio\n");
+-		dev_err(&i2c->dev, "Failed to create subdevices\n");
 -
 -	return ret;
 -}
 -
--static struct platform_driver bd70528_gpio =3D {
+-static const struct of_device_id bd70528_of_match[] =3D {
+-	{ .compatible =3D "rohm,bd70528", },
+-	{ },
+-};
+-MODULE_DEVICE_TABLE(of, bd70528_of_match);
+-
+-static struct i2c_driver bd70528_drv =3D {
 -	.driver =3D {
--		.name =3D "bd70528-gpio"
+-		.name =3D "rohm-bd70528",
+-		.of_match_table =3D bd70528_of_match,
 -	},
--	.probe =3D bd70528_probe,
+-	.probe =3D &bd70528_i2c_probe,
 -};
 -
--module_platform_driver(bd70528_gpio);
+-module_i2c_driver(bd70528_drv);
 -
 -MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
--MODULE_DESCRIPTION("BD70528 voltage regulator driver");
+-MODULE_DESCRIPTION("ROHM BD70528 Power Management IC driver");
 -MODULE_LICENSE("GPL");
--MODULE_ALIAS("platform:bd70528-gpio");
+diff --git a/include/linux/mfd/rohm-bd70528.h b/include/linux/mfd/rohm-bd70=
+528.h
+deleted file mode 100644
+index 4a5966475a35..000000000000
+--- a/include/linux/mfd/rohm-bd70528.h
++++ /dev/null
+@@ -1,389 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-or-later */
+-/* Copyright (C) 2018 ROHM Semiconductors */
+-
+-#ifndef __LINUX_MFD_BD70528_H__
+-#define __LINUX_MFD_BD70528_H__
+-
+-#include <linux/bits.h>
+-#include <linux/device.h>
+-#include <linux/mfd/rohm-generic.h>
+-#include <linux/mfd/rohm-shared.h>
+-#include <linux/regmap.h>
+-
+-enum {
+-	BD70528_BUCK1,
+-	BD70528_BUCK2,
+-	BD70528_BUCK3,
+-	BD70528_LDO1,
+-	BD70528_LDO2,
+-	BD70528_LDO3,
+-	BD70528_LED1,
+-	BD70528_LED2,
+-};
+-
+-struct bd70528_data {
+-	struct rohm_regmap_dev chip;
+-	struct mutex rtc_timer_lock;
+-};
+-
+-#define BD70528_BUCK_VOLTS 0x10
+-#define BD70528_LDO_VOLTS 0x20
+-
+-#define BD70528_REG_BUCK1_EN	0x0F
+-#define BD70528_REG_BUCK1_VOLT	0x15
+-#define BD70528_REG_BUCK2_EN	0x10
+-#define BD70528_REG_BUCK2_VOLT	0x16
+-#define BD70528_REG_BUCK3_EN	0x11
+-#define BD70528_REG_BUCK3_VOLT	0x17
+-#define BD70528_REG_LDO1_EN	0x1b
+-#define BD70528_REG_LDO1_VOLT	0x1e
+-#define BD70528_REG_LDO2_EN	0x1c
+-#define BD70528_REG_LDO2_VOLT	0x1f
+-#define BD70528_REG_LDO3_EN	0x1d
+-#define BD70528_REG_LDO3_VOLT	0x20
+-#define BD70528_REG_LED_CTRL	0x2b
+-#define BD70528_REG_LED_VOLT	0x29
+-#define BD70528_REG_LED_EN	0x2a
+-
+-/* main irq registers */
+-#define BD70528_REG_INT_MAIN	0x7E
+-#define BD70528_REG_INT_MAIN_MASK 0x74
+-
+-/* 'sub irq' registers */
+-#define BD70528_REG_INT_SHDN	0x7F
+-#define BD70528_REG_INT_PWR_FLT	0x80
+-#define BD70528_REG_INT_VR_FLT	0x81
+-#define BD70528_REG_INT_MISC	0x82
+-#define BD70528_REG_INT_BAT1	0x83
+-#define BD70528_REG_INT_BAT2	0x84
+-#define BD70528_REG_INT_RTC	0x85
+-#define BD70528_REG_INT_GPIO	0x86
+-#define BD70528_REG_INT_OP_FAIL	0x87
+-
+-#define BD70528_REG_INT_SHDN_MASK	0x75
+-#define BD70528_REG_INT_PWR_FLT_MASK	0x76
+-#define BD70528_REG_INT_VR_FLT_MASK	0x77
+-#define BD70528_REG_INT_MISC_MASK	0x78
+-#define BD70528_REG_INT_BAT1_MASK	0x79
+-#define BD70528_REG_INT_BAT2_MASK	0x7a
+-#define BD70528_REG_INT_RTC_MASK	0x7b
+-#define BD70528_REG_INT_GPIO_MASK	0x7c
+-#define BD70528_REG_INT_OP_FAIL_MASK	0x7d
+-
+-/* Reset related 'magic' registers */
+-#define BD70528_REG_SHIPMODE	0x03
+-#define BD70528_REG_HWRESET	0x04
+-#define BD70528_REG_WARMRESET	0x05
+-#define BD70528_REG_STANDBY	0x06
+-
+-/* GPIO registers */
+-#define BD70528_REG_GPIO_STATE	0x8F
+-
+-#define BD70528_REG_GPIO1_IN	0x4d
+-#define BD70528_REG_GPIO2_IN	0x4f
+-#define BD70528_REG_GPIO3_IN	0x51
+-#define BD70528_REG_GPIO4_IN	0x53
+-#define BD70528_REG_GPIO1_OUT	0x4e
+-#define BD70528_REG_GPIO2_OUT	0x50
+-#define BD70528_REG_GPIO3_OUT	0x52
+-#define BD70528_REG_GPIO4_OUT	0x54
+-
+-/* RTC */
+-
+-#define BD70528_REG_RTC_COUNT_H		0x2d
+-#define BD70528_REG_RTC_COUNT_L		0x2e
+-#define BD70528_REG_RTC_SEC		0x2f
+-#define BD70528_REG_RTC_MINUTE		0x30
+-#define BD70528_REG_RTC_HOUR		0x31
+-#define BD70528_REG_RTC_WEEK		0x32
+-#define BD70528_REG_RTC_DAY		0x33
+-#define BD70528_REG_RTC_MONTH		0x34
+-#define BD70528_REG_RTC_YEAR		0x35
+-
+-#define BD70528_REG_RTC_ALM_SEC		0x36
+-#define BD70528_REG_RTC_ALM_START	BD70528_REG_RTC_ALM_SEC
+-#define BD70528_REG_RTC_ALM_MINUTE	0x37
+-#define BD70528_REG_RTC_ALM_HOUR	0x38
+-#define BD70528_REG_RTC_ALM_WEEK	0x39
+-#define BD70528_REG_RTC_ALM_DAY		0x3a
+-#define BD70528_REG_RTC_ALM_MONTH	0x3b
+-#define BD70528_REG_RTC_ALM_YEAR	0x3c
+-#define BD70528_REG_RTC_ALM_MASK	0x3d
+-#define BD70528_REG_RTC_ALM_REPEAT	0x3e
+-#define BD70528_REG_RTC_START		BD70528_REG_RTC_SEC
+-
+-#define BD70528_REG_RTC_WAKE_SEC	0x43
+-#define BD70528_REG_RTC_WAKE_START	BD70528_REG_RTC_WAKE_SEC
+-#define BD70528_REG_RTC_WAKE_MIN	0x44
+-#define BD70528_REG_RTC_WAKE_HOUR	0x45
+-#define BD70528_REG_RTC_WAKE_CTRL	0x46
+-
+-#define BD70528_REG_ELAPSED_TIMER_EN	0x42
+-#define BD70528_REG_WAKE_EN		0x46
+-
+-/* WDT registers */
+-#define BD70528_REG_WDT_CTRL		0x4A
+-#define BD70528_REG_WDT_HOUR		0x49
+-#define BD70528_REG_WDT_MINUTE		0x48
+-#define BD70528_REG_WDT_SEC		0x47
+-
+-/* Charger / Battery */
+-#define BD70528_REG_CHG_CURR_STAT	0x59
+-#define BD70528_REG_CHG_BAT_STAT	0x57
+-#define BD70528_REG_CHG_BAT_TEMP	0x58
+-#define BD70528_REG_CHG_IN_STAT		0x56
+-#define BD70528_REG_CHG_DCIN_ILIM	0x5d
+-#define BD70528_REG_CHG_CHG_CURR_WARM	0x61
+-#define BD70528_REG_CHG_CHG_CURR_COLD	0x62
+-
+-/* Masks for main IRQ register bits */
+-enum {
+-	BD70528_INT_SHDN,
+-#define BD70528_INT_SHDN_MASK BIT(BD70528_INT_SHDN)
+-	BD70528_INT_PWR_FLT,
+-#define BD70528_INT_PWR_FLT_MASK BIT(BD70528_INT_PWR_FLT)
+-	BD70528_INT_VR_FLT,
+-#define BD70528_INT_VR_FLT_MASK BIT(BD70528_INT_VR_FLT)
+-	BD70528_INT_MISC,
+-#define BD70528_INT_MISC_MASK BIT(BD70528_INT_MISC)
+-	BD70528_INT_BAT1,
+-#define BD70528_INT_BAT1_MASK BIT(BD70528_INT_BAT1)
+-	BD70528_INT_RTC,
+-#define BD70528_INT_RTC_MASK BIT(BD70528_INT_RTC)
+-	BD70528_INT_GPIO,
+-#define BD70528_INT_GPIO_MASK BIT(BD70528_INT_GPIO)
+-	BD70528_INT_OP_FAIL,
+-#define BD70528_INT_OP_FAIL_MASK BIT(BD70528_INT_OP_FAIL)
+-};
+-
+-/* IRQs */
+-enum {
+-	/* Shutdown register IRQs */
+-	BD70528_INT_LONGPUSH,
+-	BD70528_INT_WDT,
+-	BD70528_INT_HWRESET,
+-	BD70528_INT_RSTB_FAULT,
+-	BD70528_INT_VBAT_UVLO,
+-	BD70528_INT_TSD,
+-	BD70528_INT_RSTIN,
+-	/* Power failure register IRQs */
+-	BD70528_INT_BUCK1_FAULT,
+-	BD70528_INT_BUCK2_FAULT,
+-	BD70528_INT_BUCK3_FAULT,
+-	BD70528_INT_LDO1_FAULT,
+-	BD70528_INT_LDO2_FAULT,
+-	BD70528_INT_LDO3_FAULT,
+-	BD70528_INT_LED1_FAULT,
+-	BD70528_INT_LED2_FAULT,
+-	/* VR FAULT register IRQs */
+-	BD70528_INT_BUCK1_OCP,
+-	BD70528_INT_BUCK2_OCP,
+-	BD70528_INT_BUCK3_OCP,
+-	BD70528_INT_LED1_OCP,
+-	BD70528_INT_LED2_OCP,
+-	BD70528_INT_BUCK1_FULLON,
+-	BD70528_INT_BUCK2_FULLON,
+-	/* PMU register interrupts */
+-	BD70528_INT_SHORTPUSH,
+-	BD70528_INT_AUTO_WAKEUP,
+-	BD70528_INT_STATE_CHANGE,
+-	/* Charger 1 register IRQs */
+-	BD70528_INT_BAT_OV_RES,
+-	BD70528_INT_BAT_OV_DET,
+-	BD70528_INT_DBAT_DET,
+-	BD70528_INT_BATTSD_COLD_RES,
+-	BD70528_INT_BATTSD_COLD_DET,
+-	BD70528_INT_BATTSD_HOT_RES,
+-	BD70528_INT_BATTSD_HOT_DET,
+-	BD70528_INT_CHG_TSD,
+-	/* Charger 2 register IRQs */
+-	BD70528_INT_BAT_RMV,
+-	BD70528_INT_BAT_DET,
+-	BD70528_INT_DCIN2_OV_RES,
+-	BD70528_INT_DCIN2_OV_DET,
+-	BD70528_INT_DCIN2_RMV,
+-	BD70528_INT_DCIN2_DET,
+-	BD70528_INT_DCIN1_RMV,
+-	BD70528_INT_DCIN1_DET,
+-	/* RTC register IRQs */
+-	BD70528_INT_RTC_ALARM,
+-	BD70528_INT_ELPS_TIM,
+-	/* GPIO register IRQs */
+-	BD70528_INT_GPIO0,
+-	BD70528_INT_GPIO1,
+-	BD70528_INT_GPIO2,
+-	BD70528_INT_GPIO3,
+-	/* Invalid operation register IRQs */
+-	BD70528_INT_BUCK1_DVS_OPFAIL,
+-	BD70528_INT_BUCK2_DVS_OPFAIL,
+-	BD70528_INT_BUCK3_DVS_OPFAIL,
+-	BD70528_INT_LED1_VOLT_OPFAIL,
+-	BD70528_INT_LED2_VOLT_OPFAIL,
+-};
+-
+-/* Masks */
+-#define BD70528_INT_LONGPUSH_MASK 0x1
+-#define BD70528_INT_WDT_MASK 0x2
+-#define BD70528_INT_HWRESET_MASK 0x4
+-#define BD70528_INT_RSTB_FAULT_MASK 0x8
+-#define BD70528_INT_VBAT_UVLO_MASK 0x10
+-#define BD70528_INT_TSD_MASK 0x20
+-#define BD70528_INT_RSTIN_MASK 0x40
+-
+-#define BD70528_INT_BUCK1_FAULT_MASK 0x1
+-#define BD70528_INT_BUCK2_FAULT_MASK 0x2
+-#define BD70528_INT_BUCK3_FAULT_MASK 0x4
+-#define BD70528_INT_LDO1_FAULT_MASK 0x8
+-#define BD70528_INT_LDO2_FAULT_MASK 0x10
+-#define BD70528_INT_LDO3_FAULT_MASK 0x20
+-#define BD70528_INT_LED1_FAULT_MASK 0x40
+-#define BD70528_INT_LED2_FAULT_MASK 0x80
+-
+-#define BD70528_INT_BUCK1_OCP_MASK 0x1
+-#define BD70528_INT_BUCK2_OCP_MASK 0x2
+-#define BD70528_INT_BUCK3_OCP_MASK 0x4
+-#define BD70528_INT_LED1_OCP_MASK 0x8
+-#define BD70528_INT_LED2_OCP_MASK 0x10
+-#define BD70528_INT_BUCK1_FULLON_MASK 0x20
+-#define BD70528_INT_BUCK2_FULLON_MASK 0x40
+-
+-#define BD70528_INT_SHORTPUSH_MASK 0x1
+-#define BD70528_INT_AUTO_WAKEUP_MASK 0x2
+-#define BD70528_INT_STATE_CHANGE_MASK 0x10
+-
+-#define BD70528_INT_BAT_OV_RES_MASK 0x1
+-#define BD70528_INT_BAT_OV_DET_MASK 0x2
+-#define BD70528_INT_DBAT_DET_MASK 0x4
+-#define BD70528_INT_BATTSD_COLD_RES_MASK 0x8
+-#define BD70528_INT_BATTSD_COLD_DET_MASK 0x10
+-#define BD70528_INT_BATTSD_HOT_RES_MASK 0x20
+-#define BD70528_INT_BATTSD_HOT_DET_MASK 0x40
+-#define BD70528_INT_CHG_TSD_MASK 0x80
+-
+-#define BD70528_INT_BAT_RMV_MASK 0x1
+-#define BD70528_INT_BAT_DET_MASK 0x2
+-#define BD70528_INT_DCIN2_OV_RES_MASK 0x4
+-#define BD70528_INT_DCIN2_OV_DET_MASK 0x8
+-#define BD70528_INT_DCIN2_RMV_MASK 0x10
+-#define BD70528_INT_DCIN2_DET_MASK 0x20
+-#define BD70528_INT_DCIN1_RMV_MASK 0x40
+-#define BD70528_INT_DCIN1_DET_MASK 0x80
+-
+-#define BD70528_INT_RTC_ALARM_MASK 0x1
+-#define BD70528_INT_ELPS_TIM_MASK 0x2
+-
+-#define BD70528_INT_GPIO0_MASK 0x1
+-#define BD70528_INT_GPIO1_MASK 0x2
+-#define BD70528_INT_GPIO2_MASK 0x4
+-#define BD70528_INT_GPIO3_MASK 0x8
+-
+-#define BD70528_INT_BUCK1_DVS_OPFAIL_MASK 0x1
+-#define BD70528_INT_BUCK2_DVS_OPFAIL_MASK 0x2
+-#define BD70528_INT_BUCK3_DVS_OPFAIL_MASK 0x4
+-#define BD70528_INT_LED1_VOLT_OPFAIL_MASK 0x10
+-#define BD70528_INT_LED2_VOLT_OPFAIL_MASK 0x20
+-
+-#define BD70528_DEBOUNCE_MASK 0x3
+-
+-#define BD70528_DEBOUNCE_DISABLE 0
+-#define BD70528_DEBOUNCE_15MS 1
+-#define BD70528_DEBOUNCE_30MS 2
+-#define BD70528_DEBOUNCE_50MS 3
+-
+-#define BD70528_GPIO_DRIVE_MASK 0x2
+-#define BD70528_GPIO_PUSH_PULL 0x0
+-#define BD70528_GPIO_OPEN_DRAIN 0x2
+-
+-#define BD70528_GPIO_OUT_EN_MASK 0x80
+-#define BD70528_GPIO_OUT_ENABLE 0x80
+-#define BD70528_GPIO_OUT_DISABLE 0x0
+-
+-#define BD70528_GPIO_OUT_HI 0x1
+-#define BD70528_GPIO_OUT_LO 0x0
+-#define BD70528_GPIO_OUT_MASK 0x1
+-
+-#define BD70528_GPIO_IN_STATE_BASE 1
+-
+-/* RTC masks to mask out reserved bits */
+-
+-#define BD70528_MASK_ELAPSED_TIMER_EN	0x1
+-/* Mask second, min and hour fields
+- * HW would support ALM irq for over 24h
+- * (by setting day, month and year too)
+- * but as we wish to keep this same as for
+- * wake-up we limit ALM to 24H and only
+- * unmask sec, min and hour
+- */
+-#define BD70528_MASK_WAKE_EN		0x1
+-
+-/* WDT masks */
+-#define BD70528_MASK_WDT_EN		0x1
+-#define BD70528_MASK_WDT_HOUR		0x1
+-#define BD70528_MASK_WDT_MINUTE		0x7f
+-#define BD70528_MASK_WDT_SEC		0x7f
+-
+-#define BD70528_WDT_STATE_BIT		0x1
+-#define BD70528_ELAPSED_STATE_BIT	0x2
+-#define BD70528_WAKE_STATE_BIT		0x4
+-
+-/* Charger masks */
+-#define BD70528_MASK_CHG_STAT		0x7f
+-#define BD70528_MASK_CHG_BAT_TIMER	0x20
+-#define BD70528_MASK_CHG_BAT_OVERVOLT	0x10
+-#define BD70528_MASK_CHG_BAT_DETECT	0x1
+-#define BD70528_MASK_CHG_DCIN1_UVLO	0x1
+-#define BD70528_MASK_CHG_DCIN_ILIM	0x3f
+-#define BD70528_MASK_CHG_CHG_CURR	0x1f
+-#define BD70528_MASK_CHG_TRICKLE_CURR	0x10
+-
+-/*
+- * Note, external battery register is the lonely rider at
+- * address 0xc5. See how to stuff that in the regmap
+- */
+-#define BD70528_MAX_REGISTER 0x94
+-
+-/* Buck control masks */
+-#define BD70528_MASK_RUN_EN	0x4
+-#define BD70528_MASK_STBY_EN	0x2
+-#define BD70528_MASK_IDLE_EN	0x1
+-#define BD70528_MASK_LED1_EN	0x1
+-#define BD70528_MASK_LED2_EN	0x10
+-
+-#define BD70528_MASK_BUCK_VOLT	0xf
+-#define BD70528_MASK_LDO_VOLT	0x1f
+-#define BD70528_MASK_LED1_VOLT	0x1
+-#define BD70528_MASK_LED2_VOLT	0x10
+-
+-/* Misc irq masks */
+-#define BD70528_INT_MASK_SHORT_PUSH	1
+-#define BD70528_INT_MASK_AUTO_WAKE	2
+-#define BD70528_INT_MASK_POWER_STATE	4
+-
+-#define BD70528_MASK_BUCK_RAMP 0x10
+-#define BD70528_SIFT_BUCK_RAMP 4
+-
+-#if IS_ENABLED(CONFIG_BD70528_WATCHDOG)
+-
+-int bd70528_wdt_set(struct rohm_regmap_dev *data, int enable, int *old_sta=
+te);
+-void bd70528_wdt_lock(struct rohm_regmap_dev *data);
+-void bd70528_wdt_unlock(struct rohm_regmap_dev *data);
+-
+-#else /* CONFIG_BD70528_WATCHDOG */
+-
+-static inline int bd70528_wdt_set(struct rohm_regmap_dev *data, int enable,
+-				  int *old_state)
+-{
+-	return 0;
+-}
+-
+-static inline void bd70528_wdt_lock(struct rohm_regmap_dev *data)
+-{
+-}
+-
+-static inline void bd70528_wdt_unlock(struct rohm_regmap_dev *data)
+-{
+-}
+-
+-#endif /* CONFIG_BD70528_WATCHDOG */
+-
+-#endif /* __LINUX_MFD_BD70528_H__ */
+diff --git a/include/linux/mfd/rohm-generic.h b/include/linux/mfd/rohm-gene=
+ric.h
+index 35b392a0d73a..8fb763a2265a 100644
+--- a/include/linux/mfd/rohm-generic.h
++++ b/include/linux/mfd/rohm-generic.h
+@@ -12,7 +12,6 @@ enum rohm_chip_type {
+ 	ROHM_CHIP_TYPE_BD9573,
+ 	ROHM_CHIP_TYPE_BD9574,
+ 	ROHM_CHIP_TYPE_BD9576,
+-	ROHM_CHIP_TYPE_BD70528,
+ 	ROHM_CHIP_TYPE_BD71815,
+ 	ROHM_CHIP_TYPE_BD71828,
+ 	ROHM_CHIP_TYPE_BD71837,
 --=20
 2.31.1
 
@@ -371,19 +870,19 @@ Simon says - in Latin please.
 ~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
 Thanks to Simon Glass for the translation =3D]=20
 
---sPu3AeqMFjAZuYLd
+--9T8HxJyTuU7sOj5T
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmF6awEACgkQeFA3/03a
-ocWDJQgAoZYHtru/v6dFGLLh2qtGIzUdME0X6bH+Bt1bCJ7u2Sr38ggVM+qfhgFf
-/m4BBb5bN71mYx9s28OJYzcwISFBBOS2kJfiIhCs6M4DXOei9pL2eeq8eFEzDZdS
-VU9fudiDHRlaQkoWJggo1ZzAzGaaSXUCyo83SXzFIaefaeGi0Z1L+FXVCRufGiob
-V8Td5GGiByMZF9/IJ9hCoVvetPqZ6I0GxBuYMRhbQlBbUE0GRoQO2y5kNuAz9xyu
-n1PZJlBpx7C0+H/8sur62aZnGp3CoogaddHK7O/sg3HF1AfxMwwhbhi0gClg184z
-Fh8CB+2BGN7TNrghuk8AWEGhngvF6w==
-=k9vI
+iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmF6axIACgkQeFA3/03a
+ocXy+ggAniGiHA+X4KeuIRA3565vNDpTG9UnwmVWUD4YWOJEtVwXOilcRcTmx4LN
+vK55OdcVujpi3xeuiRObN0uaLb1/1fxFhiXTmPokt50rbj9IyHctyasZG+8SckrQ
+H0zvcLMavlmhiEFSlhLsq7P/yq+3NmIzpi846JzWxrH2Yw/wWaQ2sgco5eqEiIxC
+Ilu40zgWW5XAnkfXUWg0+hi1Y4QSV/J/ai/TAVsFwOvxOPXbYuXALl51KD9aXz/3
+bi8eXjM7Fh5fGQPITXnj2nNTnqHu/NNUzDnR4EbSUACd6tELMfO4onUBB4FiaHWR
+aFygakWi5eNf/LVmNxX9U6kdBHGXUg==
+=/zZv
 -----END PGP SIGNATURE-----
 
---sPu3AeqMFjAZuYLd--
+--9T8HxJyTuU7sOj5T--
