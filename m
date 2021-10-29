@@ -2,88 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 613F843F788
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Oct 2021 08:54:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E3F943F9CD
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Oct 2021 11:27:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232116AbhJ2G5V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 29 Oct 2021 02:57:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55126 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232034AbhJ2G5V (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Oct 2021 02:57:21 -0400
-Received: from mail-oi1-x231.google.com (mail-oi1-x231.google.com [IPv6:2607:f8b0:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69895C061714
-        for <linux-gpio@vger.kernel.org>; Thu, 28 Oct 2021 23:54:53 -0700 (PDT)
-Received: by mail-oi1-x231.google.com with SMTP id o83so12057419oif.4
-        for <linux-gpio@vger.kernel.org>; Thu, 28 Oct 2021 23:54:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:in-reply-to:references:from:user-agent:date:message-id
-         :subject:to:cc;
-        bh=ePIHoriLIVjhSnt0MZ2sr1WXfIYtpmc6bctB4GvfYk4=;
-        b=OmHAJEK0zMenmccOMKcd39WUjZj9QUxY9vCl1ZLJKSHtEpCU2CvRwDbSSrZkPutUU2
-         gX+QqkSxQXFBC5O7dJRy43ietqnteApz22NzV73I/3OSfpy/Qf6R0eZ/pCSM38K865Ay
-         c7ZxdBbTnxPm88SHFEV2cQuHvBbs0iAJNoxVI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from
-         :user-agent:date:message-id:subject:to:cc;
-        bh=ePIHoriLIVjhSnt0MZ2sr1WXfIYtpmc6bctB4GvfYk4=;
-        b=LrI1IXwEeHUkaaiE27A0TSBj87Z8nM38wWVqUDYtF1b92XfSRNF6FKO5QBJnFhCg2F
-         A4JuuFrFnP1fXPg93rRkE3xwAe1YTUYDjTggBSOjcBm/7mDlZe+4+fX9NmIf69Xk8LqU
-         G+FhpteqMEzD2JVGi5fNK7vgMDWEK8oKaJIrTYcAxDCn8HoAyMD0dqXitab12Z8DhgcF
-         oyQcUey5OjYsW10tsu0kgK6AH/WlbJAltrTias42DWqIMz6oNrA5mlAsEGd+9P3t1TJg
-         VfId1dXMD4hDzFhTwkMFPzhiUSNwmvJZigA6kggady1wAF43oaxC/ILSreadz/2o+gbx
-         wLng==
-X-Gm-Message-State: AOAM531wRzvL/XjEMsmVl5j7YvkukK1pQ5OeAf1uG2pzezih9S0+fKNW
-        fb/D6iaQjhjnREN0OgPxD35dQ0BxRzrYkDYTHo8T5w==
-X-Google-Smtp-Source: ABdhPJyHUrHkYGLOqR3AfqoEd3h8Vg+Y4D1mydhapVCma/WU0xYA2fXjbJHnOH9sVOH6bK0UdSXOBdl4bzfroyj0XWU=
-X-Received: by 2002:a05:6808:2128:: with SMTP id r40mr4917340oiw.164.1635490492859;
- Thu, 28 Oct 2021 23:54:52 -0700 (PDT)
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 28 Oct 2021 23:54:52 -0700
+        id S231523AbhJ2J3u (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 29 Oct 2021 05:29:50 -0400
+Received: from esa.microchip.iphmx.com ([68.232.153.233]:57910 "EHLO
+        esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231504AbhJ2J3j (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Oct 2021 05:29:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1635499631; x=1667035631;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=uXdorQ9K+li950c0L19MJQYPHHlldG8dHhrzQ/Lieko=;
+  b=M/mABgkUZ5DMAucMoRsjJHGjHtQ6i4xR3DyhQ4kEnGr11ZfI0qdXciN2
+   S/VOJx2wy8DoQw+3zW+RHc+htAxJtkhTYuqcY2dSmG4tXbY6/d/qEF5By
+   P/ImEUUzl/vUh2JeJtidXiaBF3zd74D0MQ3nXs5SVRxjFAz8FPa4RV5uU
+   +XusM0zPn1ztE6KgelJGeYd75tZUCbQbaTQwHHREqFV2sCeU0bltvX8ZL
+   wblJo9CxWNg+6cvXvP7bBA4CquIKi0IV7h00J3MPlDkveHZXb3QELsxQD
+   ddm9z+/IGM8cm/WFnKp+CI9TVeX6FJ+vnqQTPe5FXjU4uUTUfUKK7klWm
+   w==;
+IronPort-SDR: Zvkhaq5xBGZFpewpmOKnyuKE/9zgGroBMdJZb8nXzyyDW2cC70tu0KIZZ71S0gdtnlDyZY29ot
+ VPuyfPNCZvUToTaLFNaBLpiDgAybTCsCf/QeafGrG/xnYGQI8FNDFCMGa5bSiJrcNipvtVC3OH
+ O1DJTwhjJfFc59RNOeEV1LgfrquC1NquU556+VuakQ7iFarIcu4yZrPbNSwFx4JLA9y11IcPJW
+ j5tMqyM0dfPG3bknGw5r7YE3BkV/IPMEbqLP0AnUU8cDo9+XvlyM5loX5/4PSFpw3DB1Dek0dv
+ yPePdkse6auV+EIBqkok6zM1
+X-IronPort-AV: E=Sophos;i="5.87,192,1631602800"; 
+   d="scan'208";a="150014287"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 Oct 2021 02:27:08 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.14; Fri, 29 Oct 2021 02:27:08 -0700
+Received: from kavya-HP-Compaq-6000-Pro-SFF-PC.microchip.com (10.10.115.15) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
+ 15.1.2176.14 via Frontend Transport; Fri, 29 Oct 2021 02:27:05 -0700
+From:   Kavyasree Kotagiri <kavyasree.kotagiri@microchip.com>
+To:     <robh+dt@kernel.org>, <linus.walleij@linaro.org>
+CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <UNGLinuxDriver@microchip.com>,
+        <Kavyasree.Kotagiri@microchip.com>
+Subject: [PATCH 0/2] Extend pinctrl-ocelot driver for lan966x
+Date:   Fri, 29 Oct 2021 14:57:01 +0530
+Message-ID: <20211029092703.18886-1-kavyasree.kotagiri@microchip.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <1635250056-20274-1-git-send-email-rnayak@codeaurora.org>
-References: <1635250056-20274-1-git-send-email-rnayak@codeaurora.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.9.1
-Date:   Thu, 28 Oct 2021 23:54:52 -0700
-Message-ID: <CAE-0n50E2dmQeDaiggEgMgykrkGB3H38sbkTXDX3avR7XtSizw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] pinctrl: qcom: Add egpio feature support
-To:     Rajendra Nayak <rnayak@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, linus.walleij@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, psodagud@codeaurora.org,
-        dianders@chromium.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Quoting Rajendra Nayak (2021-10-26 05:07:35)
-> From: Prasad Sodagudi <psodagud@codeaurora.org>
->
-> egpio is a scheme which allows special power Island Domain IOs
-> (LPASS,SSC) to be reused as regular chip GPIOs by muxing regular
-> TLMM functions with Island Domain functions.
-> With this scheme, an IO can be controlled both by the cpu running
-> linux and the Island processor. This provides great flexibility to
-> re-purpose the Island IOs for regular TLMM usecases.
->
-> 2 new bits are added to ctl_reg, egpio_present is a read only bit
-> which shows if egpio feature is available or not on a given gpio.
-> egpio_enable is the read/write bit and only effective if egpio_present
-> is 1. Once its set, the Island IO is controlled from Chip TLMM.
-> egpio_enable when set to 0 means the GPIO is used as Island Domain IO.
->
-> To support this we add a new function 'egpio' which can be used to
-> set the egpio_enable to 0, for any other TLMM controlled functions
-> we set the egpio_enable to 1.
->
-> Signed-off-by: Prasad Sodagudi <psodagud@codeaurora.org>
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
+This patch series extends pinctrl-ocelot driver to support also
+the lan966x.
 
-Does this supersede adding support for lpass pinctrl in this series[1]?
+Kavyasree Kotagiri (2):
+  dt-bindings: pinctrl: ocelot: Add Lan966x SoC support
+  pinctrl: ocelot: Extend support for lan966x
 
-[1] https://lore.kernel.org/r/1635342097-2726-1-git-send-email-srivasam@codeaurora.org
+ .../bindings/pinctrl/mscc,ocelot-pinctrl.txt  |   3 +-
+ drivers/pinctrl/pinctrl-ocelot.c              | 416 ++++++++++++++++++
+ 2 files changed, 418 insertions(+), 1 deletion(-)
+
+-- 
+2.17.1
+
