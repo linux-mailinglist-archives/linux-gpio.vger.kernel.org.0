@@ -2,100 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 15B414402D2
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Oct 2021 21:05:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7DC544042E
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Oct 2021 22:34:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230253AbhJ2THn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 29 Oct 2021 15:07:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52128 "EHLO
+        id S231495AbhJ2UhQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 29 Oct 2021 16:37:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230126AbhJ2THn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Oct 2021 15:07:43 -0400
-Received: from mail-ot1-x336.google.com (mail-ot1-x336.google.com [IPv6:2607:f8b0:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39295C061714
-        for <linux-gpio@vger.kernel.org>; Fri, 29 Oct 2021 12:05:14 -0700 (PDT)
-Received: by mail-ot1-x336.google.com with SMTP id x16-20020a9d7050000000b00553d5d169f7so13208139otj.6
-        for <linux-gpio@vger.kernel.org>; Fri, 29 Oct 2021 12:05:14 -0700 (PDT)
+        with ESMTP id S231271AbhJ2UhP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Oct 2021 16:37:15 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4C4DC061714
+        for <linux-gpio@vger.kernel.org>; Fri, 29 Oct 2021 13:34:45 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id j21so19626199edt.11
+        for <linux-gpio@vger.kernel.org>; Fri, 29 Oct 2021 13:34:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:in-reply-to:references:from:user-agent:date:message-id
-         :subject:to:cc;
-        bh=XrtEv0I4WsSSxKWDA07JfBbz3bZ9+ZB3B3Y9Ggez2Go=;
-        b=c2Yo4PxZ9egNJp82XI1pGTkuAyzNXcy7wXjAsXJ86jd0NN1PX5YTtJagzG9TtSP27Q
-         WFCn+oT7xajIz4IdEqmFgxlsc673cFsVZeIhs9qWO7jF7zUW8oMD6tyJnCIgXYlEGDE0
-         z3WjQ9SK3GOcE/Lcsyti2+4e6VdnqaeCGCQB8=
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=1swJmkPi9uwotkKckAgo9jhrAoNyom1Qj18BNEzB3+I=;
+        b=r4bnOEvrYyG1JRtPLSuWESUesY5Pmj/fQOeo0PO35cPtkOYFjoUVxEf7tOWevELv9A
+         r4swx3Qvoll9tyk/tTM2J+0FIqzYay7T4YMBtkgj2gqrQQH+sFskKIlnunJ40uAcv96F
+         O50t+Au1m8r/iRAwturDRybdQ/Pw3eGlRUJtzw9WmjMFEb+erwyoYfG+hy+KBw8C8CVN
+         6CUmI3ISlVxXhRncvdDR459IMKpBNnmKmi5rfvzgep1mVtt0yuzb8h+OVTLe4TYIn2iE
+         Sl+NbwxC4YEuze/WxGcZtWZvhYdjwpaT//GwgbOVGX0RLlAGowF6FTNGfAZgl9F+amX3
+         mGmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from
-         :user-agent:date:message-id:subject:to:cc;
-        bh=XrtEv0I4WsSSxKWDA07JfBbz3bZ9+ZB3B3Y9Ggez2Go=;
-        b=WzucnTGpRor74tRlGIb4OyHlZVyXFwFgeMPQNULu/0fWTJf5ZaGtq7CD6bU7aD2FWg
-         f7ExkdGtZtBLN546R53xOhTC5MXM2JZP5pvVi9qglTFQ9lglMaTk21hTC8zrKbBbdnl3
-         TgC3aiVUGMKfjk/EqmVBUsUUIB+R8mq/D2nbc6UgZ1+wapEJCn0fK4jfDmG0n3FhBrLR
-         kHoTNXCEPM4OFdZ9NatF6wiHzNdOJ0zddeBrUbVguVWf/3DuXSTGYeev+wQfd5E6Sjy5
-         zlgx08VMymGGyWZ4e1Vsqx3tF692ve/sm+UPFELlltIu63Lw860oZ9Yj22YYi075/LEw
-         1m9g==
-X-Gm-Message-State: AOAM533ZXzlcm1ruyqpOjMYGLQ+iyAIxkBqjfDXvjZH7ZBtmylf7cUIh
-        Z1SybPjDEnFm3B7s1gd6PWHjyjpl7PSkzsKBLF9zbw==
-X-Google-Smtp-Source: ABdhPJw/kOHVX9Wyeio1xesDOsb6yUP5GNsssmdqQJg7eJkT1l4b7IdJw3gnhqKmDwTOSlBGS5lLQIFfmZ/w4s+TI1w=
-X-Received: by 2002:a9d:7655:: with SMTP id o21mr9907159otl.126.1635534313642;
- Fri, 29 Oct 2021 12:05:13 -0700 (PDT)
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Fri, 29 Oct 2021 14:05:13 -0500
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=1swJmkPi9uwotkKckAgo9jhrAoNyom1Qj18BNEzB3+I=;
+        b=780u5vYeXf9MsLMyxFAKZj/z/O8WFf0h7ePXVnHHaDKZAYhrjo9/MmjywZzEMiMVAq
+         Inzu9jI0AUaZ4mSM2G4v5vp6Okn0EipDlQVgg1euc9jSgjvkL6NmsqXg+4mAHRED3E9y
+         VYSmvIjMEG+YdIM4dVSZIJ5cWwiPlIOxIed6D2k8/sfuBcAabndXS/H6BTBoR/Kqfo13
+         I80CBhWLRHg7vsd5eIKRQaQD3SgUBwDoQSlJNvYD4i5hcF7RhQd2aPXTOPe4W46v7LkQ
+         yFzfXauofRRMTFdO+JzDlk6cNbMRNndtiQfRdr8rFLFShfpiy2+Zp436p8aXmMJ95J/B
+         /JFQ==
+X-Gm-Message-State: AOAM531IpoSUHvWksCYPxrW9A3VAFyAd34phzw6mgIvxPoCtTwro3X8E
+        uVUlFtQX6sMv2Q3Q5ewTHf163Z9genC9j7hBV35J7g==
+X-Google-Smtp-Source: ABdhPJx79iUWJCmvTNVwg54crO4qNoLGr19P3Hkupw22vybmIx9h2eZw/RbiShR0V5EAwTMX3p4vD7cDXkOKWcdd14s=
+X-Received: by 2002:a50:d50c:: with SMTP id u12mr17987207edi.118.1635539684417;
+ Fri, 29 Oct 2021 13:34:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <40fa13cd-f24c-e3a9-9b49-23ad26507bfe@codeaurora.org>
-References: <1635250056-20274-1-git-send-email-rnayak@codeaurora.org>
- <CAE-0n50E2dmQeDaiggEgMgykrkGB3H38sbkTXDX3avR7XtSizw@mail.gmail.com> <40fa13cd-f24c-e3a9-9b49-23ad26507bfe@codeaurora.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.9.1
-Date:   Fri, 29 Oct 2021 14:05:13 -0500
-Message-ID: <CAE-0n51Ag_KK7wC4r7YFar=C5P-YLLVZHUyJrNAcMEpfwYFy2Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] pinctrl: qcom: Add egpio feature support
-To:     Rajendra Nayak <rnayak@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, linus.walleij@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, psodagud@codeaurora.org,
-        dianders@chromium.org
+References: <20211015164809.22009-1-asmaa@nvidia.com> <CAMRc=McSPG61nnq9sibBunwso1dsO6Juo2M8MtQuEEGZbWqDNw@mail.gmail.com>
+ <CH2PR12MB3895A1C9868F8F0C9CA3FC45D7879@CH2PR12MB3895.namprd12.prod.outlook.com>
+In-Reply-To: <CH2PR12MB3895A1C9868F8F0C9CA3FC45D7879@CH2PR12MB3895.namprd12.prod.outlook.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 29 Oct 2021 22:34:33 +0200
+Message-ID: <CAMRc=MebEY8wAeNpcXwgi_OaTwwYaqxqWZ6XZRoCRPZvS-724A@mail.gmail.com>
+Subject: Re: [PATCH v5 0/2] gpio: mlxbf2: Introduce proper interrupt handling
+To:     Asmaa Mnebhi <asmaa@nvidia.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        David Thompson <davthompson@nvidia.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Quoting Rajendra Nayak (2021-10-29 03:19:04)
+On Fri, Oct 29, 2021 at 6:46 PM Asmaa Mnebhi <asmaa@nvidia.com> wrote:
 >
+> Hi Bart,
 >
-> On 10/29/2021 12:24 PM, Stephen Boyd wrote:
-> > Quoting Rajendra Nayak (2021-10-26 05:07:35)
-> >> From: Prasad Sodagudi <psodagud@codeaurora.org>
-> >>
-> >> egpio is a scheme which allows special power Island Domain IOs
-> >> (LPASS,SSC) to be reused as regular chip GPIOs by muxing regular
-> >> TLMM functions with Island Domain functions.
-> >> With this scheme, an IO can be controlled both by the cpu running
-> >> linux and the Island processor. This provides great flexibility to
-> >> re-purpose the Island IOs for regular TLMM usecases.
-> >>
-> >> 2 new bits are added to ctl_reg, egpio_present is a read only bit
-> >> which shows if egpio feature is available or not on a given gpio.
-> >> egpio_enable is the read/write bit and only effective if egpio_present
-> >> is 1. Once its set, the Island IO is controlled from Chip TLMM.
-> >> egpio_enable when set to 0 means the GPIO is used as Island Domain IO.
-> >>
-> >> To support this we add a new function 'egpio' which can be used to
-> >> set the egpio_enable to 0, for any other TLMM controlled functions
-> >> we set the egpio_enable to 1.
-> >>
-> >> Signed-off-by: Prasad Sodagudi <psodagud@codeaurora.org>
-> >> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> >> ---
+> I was just wondering what is the status for this series of patches?
+>
+> Thank you.
+> Asmaa
+>
+> -----Original Message-----
+> From: Bartosz Golaszewski <brgl@bgdev.pl>
+> Sent: Thursday, October 21, 2021 2:01 PM
+> To: Asmaa Mnebhi <asmaa@nvidia.com>
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>; open list:GPIO SUBSYSTEM=
+ <linux-gpio@vger.kernel.org>; netdev <netdev@vger.kernel.org>; Linux Kerne=
+l Mailing List <linux-kernel@vger.kernel.org>; ACPI Devel Maling List <linu=
+x-acpi@vger.kernel.org>; Andrew Lunn <andrew@lunn.ch>; Jakub Kicinski <kuba=
+@kernel.org>; Linus Walleij <linus.walleij@linaro.org>; Bartosz Golaszewski=
+ <bgolaszewski@baylibre.com>; David S . Miller <davem@davemloft.net>; Rafae=
+l J . Wysocki <rjw@rjwysocki.net>; David Thompson <davthompson@nvidia.com>
+> Subject: Re: [PATCH v5 0/2] gpio: mlxbf2: Introduce proper interrupt hand=
+ling
+> Importance: High
+>
+> On Fri, Oct 15, 2021 at 6:48 PM Asmaa Mnebhi <asmaa@nvidia.com> wrote:
 > >
-> > Does this supersede adding support for lpass pinctrl in this series[1]?
+> > This is a follow up on a discussion regarding proper handling of GPIO
+> > interrupts within the gpio-mlxbf2.c driver.
+> >
+> > Link to discussion:
+> > https://lore.kernel.org/netdev/20210816115953.72533-7-andriy.shevchenk
+> > o@linux.intel.com/T/
+> >
+> > Patch 1 adds support to a GPIO IRQ handler in gpio-mlxbf2.c.
+> > Patch 2 is a follow up removal of custom GPIO IRQ handling from the
+> > mlxbf_gige driver and replacing it with a simple IRQ request. The ACPI
+> > table for the mlxbf_gige driver is responsible for instantiating the
+> > PHY GPIO interrupt via GpioInt.
+> >
+> > Andy Shevchenko, could you please review this patch series.
+> > David Miller, could you please ack the changes in the mlxbf_gige
+> > driver.
+> >
+> > v5 vs. v4 patch:
+> > - Remove a fix which check if bgpio_init has failed.
+> >   This fix should in a separate patch targeting the stable
+> >   branch.
+> >
 >
-> No, the driver in [1] actually manages the LPASS TLMM instance, while this patch
-> makes it possible for the 'same' pins to be managed by the SoC TLMM instance.
-> On sc7280 SoC for instance GPIO144-158 maps to LPI-GPIO-0-14, and GPIO159-174
-> maps to SSC-GPIO-0-15.
+> Hi Asmaa! Did you send this fix? I can't find it in my inbox or on patchw=
+ork.
+>
+> Bart
 
-How do we make sure that the LPASS pins are actually muxed out of the
-SoC and not blocked by eGPIO in this driver muxing out the pin as a
-gpio? Do they avoid conflicting with each other somehow?
+Now both applied (with David's Acks). Sorry for the delay.
+
+Bart
