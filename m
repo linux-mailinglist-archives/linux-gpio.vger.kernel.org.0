@@ -2,102 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EF59C44044C
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Oct 2021 22:45:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B56B94404B7
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Oct 2021 23:15:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231409AbhJ2UsY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 29 Oct 2021 16:48:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46732 "EHLO
+        id S231674AbhJ2VSE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 29 Oct 2021 17:18:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230271AbhJ2UsY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Oct 2021 16:48:24 -0400
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09B50C061570
-        for <linux-gpio@vger.kernel.org>; Fri, 29 Oct 2021 13:45:55 -0700 (PDT)
-Received: by mail-wr1-x433.google.com with SMTP id i5so10808077wrb.2
-        for <linux-gpio@vger.kernel.org>; Fri, 29 Oct 2021 13:45:54 -0700 (PDT)
+        with ESMTP id S231638AbhJ2VSC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Oct 2021 17:18:02 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F4D8C061767;
+        Fri, 29 Oct 2021 14:15:32 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id w1so23809747edd.0;
+        Fri, 29 Oct 2021 14:15:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=q7JMVL7G4r57WQGGqdVOy40eDcbhr5zqpbYFZ6tt2qc=;
-        b=TU6GHjk8LerR625mUlOu+XAhKMtJtLYc934B26SqDBTji2fm78zsYJGU7Q73ULdHlN
-         MazFt/euYGnGc6CWqnKqobfiVmn7dRKBJn1z7fg5tXjmi69G+RPYp2A3JoTs1EXdVtzz
-         ebcchXX0wjf4b6OacFjRqN5OBNLT5eTK5GVgh+taVc5oDpJua4FFogYsa5/4zSSTf6tm
-         A6BEOzQnsbfplx9puF8OmndEhvwnn5jayLUbagytRrDVP7TwsYWno7BFO0TUPVV2ZYSd
-         Znk4KBJICkBtwAz6Aa+fPfwi1wLTjTPA87yZwquBtOlBQhEMSplescRH9h6zOHXa0VGK
-         TEZw==
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zB9iTOd6l5xRY5CMg7grYjmtDvYZDiD8fNnJgsxmRRU=;
+        b=ZUVK0iOjP01bBbFRtJazELaaIxANhNBitZ8fQCtTHWI49EV1xOygLc7+WtV7eq+U2K
+         9zgEBG7ELWsWRc4Vkfs8EEmw40GOYfJx0H34sAcDWg+nB4eneRq0a60aWcl/ohVul5j9
+         dxuukyER2DQgzNHfiZ7sQ4595xY7rgWQPF0vlPEBaDlJxw23X4oKGkflSYfza+fbFGuj
+         XnkZrWPhtlOwt7tert1R7g+wxVmBVDkwZcx+P25uy6SucfFMGSvsfAyGv43R9BgpI4d8
+         RMViIoNXYUrcPkOMqR67hj48aOx5SFd4xUH2CPnGTzGKpqYWxJ3IFqDDPrfAE1GUI9c+
+         O7pQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=q7JMVL7G4r57WQGGqdVOy40eDcbhr5zqpbYFZ6tt2qc=;
-        b=c7fUp4HmGDKIAPGHN6PaBvPsTuKwzJ52GDDJGH+okK2KaDsBgx6XZKSN+7KE6woMxS
-         oZa9Nvvt13rd1ZPYfiibDN1BNjgFPWbYk0l/fZr5K1TepSdmlHAxPjx2yxj1REmsENdb
-         ZInVkKBOG/CiOttRFU7Nw8/O8r6KLrB/fU6LQZnz+j7fYplQP5CwV+OAqr4MAVixpfzM
-         LEAV1jaajCQMc5j/DVoWAxJxyyBXIh2LrbvQ2flRMQC7XChEvNbuPwz1vaOaHDsEbtz3
-         m0Pbmy9MOA6Bz+52mH8Mh9CloNyE55aM2bAFFePvI2nqIap7jSm5WwbQxVtyIQJJcY2W
-         I1lA==
-X-Gm-Message-State: AOAM532TsageukdF2LVM9zGmY6VaH480TIXd6+zTPbNyPmA8XxMAmPyT
-        EHFjyAOnhphWn7VhoTbOKm4RxA==
-X-Google-Smtp-Source: ABdhPJwkeK557CAOYJFHk4vaxAvdSjgL4VwKyuX2MH+nuV/lj+hlA0Fk/sliiMoFNZnLG4A8SLDkfQ==
-X-Received: by 2002:a7b:c248:: with SMTP id b8mr1968818wmj.190.1635540353553;
-        Fri, 29 Oct 2021 13:45:53 -0700 (PDT)
-Received: from debian-brgl.home ([2a01:cb1d:334:ac00:7d50:ff5:f5c1:e225])
-        by smtp.gmail.com with ESMTPSA id k22sm6749196wrd.59.2021.10.29.13.45.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Oct 2021 13:45:53 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [GIT PULL] gpio: fixes for v5.15
-Date:   Fri, 29 Oct 2021 22:45:50 +0200
-Message-Id: <20211029204550.24882-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.30.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zB9iTOd6l5xRY5CMg7grYjmtDvYZDiD8fNnJgsxmRRU=;
+        b=4IcCn3S2bNYqSHQJmF22k4V4PRsTIRUFsSciDLANPwBc5STRxKFydOpRn8bLBANJ69
+         1alq9ST9QmTP3+j5PIPiOGL7SS/Z6Is2wXS7XPIhyBwc5V1Nl7RK/YjNXOBp9iuCWyve
+         U75Se2bk+x9FjKl7HGHh1pFlCYOeLb2lmGYhctHULlUfwRsG7zFL2Tm8QRPAwI2CB0KE
+         AG9VayxZxNfq/+wug0mzg9S9zA+JKOojGBy8+pG9GvsOFAiladLl/xZZRGzr6hkAcBZQ
+         Ye3jqynAI2YJ2RBwXzQoh+IN9cUXO8NXGBaa/nLtNozDwnbX4iG6QgGH4g567cTH9r3J
+         Vw7A==
+X-Gm-Message-State: AOAM533s4/G1HW/yhMskljCsuIQD4k0Jzt0piw0IRrCl0rdNrWmtevOE
+        hTq5b2XCAk56WaVn4rJWaI+3UY/+m8l0J8RlhkjFnUU4c3u0JA==
+X-Google-Smtp-Source: ABdhPJx6hAQf0cMI8/q0l37HlNiY5i1PNjSiBeveMPEQBRbZHbggKWBMIxewQ+CETE/rfTiLZgJbs4e4Ml5qiLNJIYk=
+X-Received: by 2002:a05:6402:205a:: with SMTP id bc26mr6340821edb.119.1635542131112;
+ Fri, 29 Oct 2021 14:15:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20211015164809.22009-1-asmaa@nvidia.com> <CAMRc=McSPG61nnq9sibBunwso1dsO6Juo2M8MtQuEEGZbWqDNw@mail.gmail.com>
+ <CH2PR12MB3895A1C9868F8F0C9CA3FC45D7879@CH2PR12MB3895.namprd12.prod.outlook.com>
+In-Reply-To: <CH2PR12MB3895A1C9868F8F0C9CA3FC45D7879@CH2PR12MB3895.namprd12.prod.outlook.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 30 Oct 2021 00:14:54 +0300
+Message-ID: <CAHp75VcRaumXM5hDEra=UCzAoOAzEP9DGDxVFo3UGvGu8KLqnw@mail.gmail.com>
+Subject: Re: [PATCH v5 0/2] gpio: mlxbf2: Introduce proper interrupt handling
+To:     Asmaa Mnebhi <asmaa@nvidia.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        David Thompson <davthompson@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Linus,
+On Fri, Oct 29, 2021 at 7:46 PM Asmaa Mnebhi <asmaa@nvidia.com> wrote:
 
-This is the last batch of fixes for the GPIO subsystem. Nothing worth
-noting, just minor driver fixes.
+> > This is a follow up on a discussion regarding proper handling of GPIO
+> > interrupts within the gpio-mlxbf2.c driver.
+> >
+> > Link to discussion:
+> > https://lore.kernel.org/netdev/20210816115953.72533-7-andriy.shevchenk
+> > o@linux.intel.com/T/
+> >
+> > Patch 1 adds support to a GPIO IRQ handler in gpio-mlxbf2.c.
+> > Patch 2 is a follow up removal of custom GPIO IRQ handling from the
+> > mlxbf_gige driver and replacing it with a simple IRQ request. The ACPI
+> > table for the mlxbf_gige driver is responsible for instantiating the
+> > PHY GPIO interrupt via GpioInt.
+> >
+> > Andy Shevchenko, could you please review this patch series.
+> > David Miller, could you please ack the changes in the mlxbf_gige
+> > driver.
 
-Please pull.
+It looks nice! Thank you for fixing this code and making it right!
 
-Best Regards,
-Bartosz Golaszewski
-
-The following changes since commit 6fda593f3082ef1aa783ac13e89f673fd69a2cb6:
-
-  gpio: mockup: Convert to use software nodes (2021-10-06 13:04:04 +0200)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio-fixes-for-v5.15
-
-for you to fetch changes up to c0eee6fbfa2b3377f1efed10dad539abeb7312aa:
-
-  gpio: mlxbf2.c: Add check for bgpio_init failure (2021-10-25 10:15:05 +0200)
-
-----------------------------------------------------------------
-gpio fixes for v5.15
-
-- fix the return value check when parsing the ngpios property in gpio-xgs-iproc
-- check the return value of bgpio_init() in gpio-mlxbf2
-
-----------------------------------------------------------------
-Asmaa Mnebhi (1):
-      gpio: mlxbf2.c: Add check for bgpio_init failure
-
-Jonas Gorski (1):
-      gpio: xgs-iproc: fix parsing of ngpios property
-
- drivers/gpio/gpio-mlxbf2.c    | 5 +++++
- drivers/gpio/gpio-xgs-iproc.c | 2 +-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+-- 
+With Best Regards,
+Andy Shevchenko
