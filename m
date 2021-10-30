@@ -2,94 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C6D64409DD
-	for <lists+linux-gpio@lfdr.de>; Sat, 30 Oct 2021 17:13:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3ABED440A0A
+	for <lists+linux-gpio@lfdr.de>; Sat, 30 Oct 2021 17:49:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231938AbhJ3PPv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 30 Oct 2021 11:15:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60798 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230086AbhJ3PPu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 30 Oct 2021 11:15:50 -0400
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F869C061714
-        for <linux-gpio@vger.kernel.org>; Sat, 30 Oct 2021 08:13:20 -0700 (PDT)
-Received: by mail-ed1-x533.google.com with SMTP id s1so48867918edd.3
-        for <linux-gpio@vger.kernel.org>; Sat, 30 Oct 2021 08:13:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hF2D2p8R03MXzhio9eo1V6ljCWCm/2b9pw+faHVE6UQ=;
-        b=C+QHVLjyfNj1RMDbT/2ZWGgiW8GaTiLQSR8+yk4wLMBKR1Ui1hSE57P+HmW2s7gRbS
-         K9gmM194msV9u4wah9FCMjroBOOm0cqoMU43Ckvwtzf1YET+5eN3JNj5Xb1NewxdK2QR
-         CgqydKB7JfOrgoU9afKDLQjzBTi4JoIImsRMAL+GuaIOEyrChgF06h+JSixg2wOXo7xK
-         id2HghqJIVPveKGcfBh8km9y51utwKMaooqUHEJbN+ISxY8D2CFDGn0LrtTbDvxRg7Av
-         D1SO1a0NUuHeUAAVlbiftSg12tdvqQQq6rAthDd6k6hAv1+7VJx4qt5dVrrj07E9MGr/
-         G5Ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hF2D2p8R03MXzhio9eo1V6ljCWCm/2b9pw+faHVE6UQ=;
-        b=3SAqB4MLNVGqcOhT31H3GO7CoRWDKXMac41YJ71Yrfhewij1JOUp5++v/tQGD+5PXP
-         xA2Uvww0HZQHmdzq7N9igeWaKvanSxa+DZfCBhuDgzrlK0kyX65awk4lA3YQytDT5VcK
-         W3OUpOnB6vNwflIvIGOkl6EWzLYgKj8JzMBi0qKYI0ExauVDdwm0viVw/JBeFgMkFnuY
-         SmazhB5ZEUWYUt0KGdkU9Ot5eu+aAjkEeapz9mtXCOKa77na+ZHh+mhHBdXktiDtmPq5
-         5fNg6d7vPtb7h2ctcjQusG9VKge54iUdMR1kXT0aawcpBfSxUZwZBKm1bQL447JBRAbi
-         J/7w==
-X-Gm-Message-State: AOAM531222rkMnSHxEFaW5HoewWS8/EvuUk6rTTEZsQOcjmindaOTgeu
-        G+8VR1kwyk32f1CITLvMDTN7Ztiro21M6rYcoqCZF1ZK8uY=
-X-Google-Smtp-Source: ABdhPJy34XwCcmYaIo7aLruDKeslQBQc3GziCc4YeYQA5TYkQlaQNCnuLcDPmEznfwWAkG0+JU+ZHYRr2m126T4kXe8=
-X-Received: by 2002:a05:6402:51cf:: with SMTP id r15mr25228272edd.60.1635606799114;
- Sat, 30 Oct 2021 08:13:19 -0700 (PDT)
+        id S232001AbhJ3PwM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 30 Oct 2021 11:52:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58484 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231995AbhJ3PwM (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 30 Oct 2021 11:52:12 -0400
+Received: from jic23-huawei (cpc108967-cmbg20-2-0-cust86.5-4.cable.virginm.net [81.101.6.87])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAB1260E8C;
+        Sat, 30 Oct 2021 15:49:38 +0000 (UTC)
+Date:   Sat, 30 Oct 2021 16:54:06 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Cosmin Tanislav <demonsingur@gmail.com>
+Cc:     cosmin.tanislav@analog.com, Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 3/3] iio: addac: add AD74413R driver
+Message-ID: <20211030165406.149b9036@jic23-huawei>
+In-Reply-To: <CAA+onPPObFeXQwJ450M=5Ue3uE6Cui0M0X49qgn_U1D6su=BcA@mail.gmail.com>
+References: <20211028134849.3664969-1-demonsingur@gmail.com>
+        <20211028134849.3664969-3-demonsingur@gmail.com>
+        <20211028165847.4baa8566@jic23-huawei>
+        <CAA+onPPObFeXQwJ450M=5Ue3uE6Cui0M0X49qgn_U1D6su=BcA@mail.gmail.com>
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20211030040757.2168399-1-weiyongjun1@huawei.com>
-In-Reply-To: <20211030040757.2168399-1-weiyongjun1@huawei.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Sat, 30 Oct 2021 17:13:08 +0200
-Message-ID: <CAMRc=MfEytPqH3PFnWLcyGaVgM+=KPpRqEPK-f+Lu8dnj9u2kQ@mail.gmail.com>
-Subject: Re: [PATCH -next] gpio: sim: fix missing unlock on error in gpio_sim_config_commit_item()
-To:     Wei Yongjun <weiyongjun1@huawei.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org, Hulk Robot <hulkci@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Oct 30, 2021 at 5:54 AM Wei Yongjun <weiyongjun1@huawei.com> wrote:
->
-> Add the missing unlock before return from function
-> gpio_sim_config_commit_item() in the error handling
-> case.
->
-> Fixes: b48f6b466e44 ("gpio: sim: new testing module")
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-> ---
->  drivers/gpio/gpio-sim.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-> index d8bf84b604d9..e2113092f85b 100644
-> --- a/drivers/gpio/gpio-sim.c
-> +++ b/drivers/gpio/gpio-sim.c
-> @@ -789,8 +789,10 @@ static int gpio_sim_config_commit_item(struct config_item *item)
->                                                 config->num_line_names);
->
->         fwnode = fwnode_create_software_node(properties, NULL);
-> -       if (IS_ERR(fwnode))
-> +       if (IS_ERR(fwnode)) {
-> +               mutex_unlock(&config->lock);
->                 return PTR_ERR(fwnode);
-> +       }
->
->         pdevinfo.name = "gpio-sim";
->         pdevinfo.fwnode = fwnode;
->
+@Linus, some gpio related discussion below...
 
-Applied, thanks!
+On Fri, 29 Oct 2021 00:38:31 +0300
+Cosmin Tanislav <demonsingur@gmail.com> wrote:
 
-Bart
+Too much context removed. I had to go back and look earlier in the thread
+to work out what was being discussed.  Particularly as I think these aren't
+even in order!
+
+> > Often these are 1/(N**2) rather than 1/(N**2 - 1) as here.
+> > Noise level is probably high enough this doesn't really matter though.
+> > Data sheets are never entirely clear if ranges are inclusive or not...  
+> 
+> My max values are defined as being inclusive.
+> On a 13bit DAC, raw values are in the range of 0 to 2**13 - 1, inclusive.
+> 
+OK
+
+> > Rule it out in the dt binding and enforce it at probe time not here which  
+> is far too late.
+> > As below, this should be prevented at probe time not runtime.  
+> 
+> This is done so that the GPIO indices are kept the same as the hardware
+> channels, 0, 1, 2, 3.
+> Depending on their mode, some GPIOs can only be read and some of them can
+> only be written to.
+> I'm not sure how you would want to do this at probe time?
+
+I'm not totally following, but took more a look at the datasheet.
+
+Device has 4 GPO pins whch is fine.  Those are simple output only pins. For
+those, if they are in a mode where you are controlling them then you can
+cache the value - if they are in comparator mode then they aren't really
+acting as GPIO pins at all the value you are reading is reflecting the
+input on the other side of the device on a different pin. So in that
+case don't register these with the GPIO subsystem at all.
+Instead you are registering channels selected from A,B,C,D 
+
+> 
+> Logic parallel mode is reserved for set_multiple, when the GPIO is in logic
+> mode.
+So, it took me a while to understand what we would loose by 'only' providing
+the logic parallel mode.  If we only had logic high / logic low as the options
+then a sensible driver option would be to map any GPO configuration to the
+logic parallel mode.  It enables more functionality.  However, that got me thinking
+for why we had high impedance and 100kOhms as options.
+
+These allow you to implement shared buses over these pins.  Which incidentally
+should probably be mapped through to the various gpio subsystem controls
+to reflect these options.
+
+So the state combinations you might well have would be...
+
+Logic low / logic high
+100kOhm pull down / logic high (something like an i2c bus would use this)
+tristate so logic low / logic high / high impedance.(don't care or off)
+
+Other than the first one, these require you to not be in the GPO mode.
+
+However, this is all stuff that depends on what these are wired to - so the
+dts should reflect that rather than simply setting the mode to one of
+
++          0 - GPO_CONFIG_100K_PULL_DOWN
++          1 - GPO_CONFIG_LOGIC
++          3 - GPO_CONFIG_DEBOUNCED_COMPARATOR
++          4 - GPO_CONFIG_HIGH_IMPEDANCE
+
+The only exception being the debounce comparator. So the question is where
+would that be wired to?
+
+> GPIOs are referred to as GPO in the datasheet, so I used this name in the
+> driver too.
+
+Sort of... As above, the output pins are GPO, the input pins are the ones
+the comparator is running on - whilst there value is relected on the outputs
+when in the right mode (and that's the only one you can read them in) they
+are not the same channel.  I'm not sure they should map to the same index...
+
+> 
+> > Error out of this function is fine, but why not just leave this channel  
+> disabled
+> rather than failing to probe which I think is what will currently happen?
+> 
+> Sure, I could make invalid channel and gpo functions fallback to default
+> function.
+> But why tolerate errors in the dts configuration?
+
+I don't think it is an error but rather a function you haven't enabled yet
+in a specific driver.  dts is for the hardware, not your particular driver.
+
+Mind you, I think the binding around this needs to change entirely anyway
+so this will probably not end up relevant.
+
+Jonathan
+
+
