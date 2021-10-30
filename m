@@ -2,62 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C3940440670
-	for <lists+linux-gpio@lfdr.de>; Sat, 30 Oct 2021 02:37:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE342440722
+	for <lists+linux-gpio@lfdr.de>; Sat, 30 Oct 2021 05:54:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231229AbhJ3AkF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 29 Oct 2021 20:40:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55906 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230506AbhJ3AkE (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 29 Oct 2021 20:40:04 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPS id 5849860FDA;
-        Sat, 30 Oct 2021 00:37:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1635554255;
-        bh=y2Zs8XJPWM+Ey9LfBq0NLktQc13rb1IJWNTSOt/bL3U=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=CvcPbtquP4kmhHtgDgcDBCEDaBQ/osqrF7uAzmpumzAeSapGVGAQjuoT40mp9Js8G
-         Y+ukejm9Wt6XFdeyzITbmniI5Ub6ZCLzd8B7uOUixwzFaarMSrcNefwa/Bowd1Dvh3
-         sV6vqMyOmdqJgIDvhiucmmLplDGGGAolf/NV4yQdenfI7H4HBcyWI9b9hUaUxesaAc
-         z+KbbckCrlRP7pyoxw7vi7uxzoNPkfN7p2k9M0vfnsmsjiaFgOvXj7hWNq0x1aDt8x
-         siy+c450jWWgYIKjxzgdhEkJowPGRueUKDAkbpyQinVIrk6MTexUaM9IfnR6k1tM+E
-         Qmu63E5MYXZZg==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 4857B60A1B;
-        Sat, 30 Oct 2021 00:37:35 +0000 (UTC)
-Subject: Re: [GIT PULL] gpio: fixes for v5.15
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20211029204550.24882-1-brgl@bgdev.pl>
-References: <20211029204550.24882-1-brgl@bgdev.pl>
-X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20211029204550.24882-1-brgl@bgdev.pl>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio-fixes-for-v5.15
-X-PR-Tracked-Commit-Id: c0eee6fbfa2b3377f1efed10dad539abeb7312aa
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: db2398a56aecec058643d35828e8cca56a0ac0a3
-Message-Id: <163555425523.1437.13927049465909591185.pr-tracker-bot@kernel.org>
-Date:   Sat, 30 Oct 2021 00:37:35 +0000
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        id S231654AbhJ3D4u (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 29 Oct 2021 23:56:50 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:26211 "EHLO
+        szxga03-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231651AbhJ3D4t (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 29 Oct 2021 23:56:49 -0400
+Received: from dggeml709-chm.china.huawei.com (unknown [172.30.72.53])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Hh53k6Ljmz8txf;
+        Sat, 30 Oct 2021 11:52:50 +0800 (CST)
+Received: from localhost.localdomain (10.175.102.38) by
+ dggeml709-chm.china.huawei.com (10.3.17.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2308.15; Sat, 30 Oct 2021 11:54:15 +0800
+From:   Wei Yongjun <weiyongjun1@huawei.com>
+To:     <weiyongjun1@huawei.com>, Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>
+CC:     <linux-gpio@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
+        Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH -next] gpio: sim: fix missing unlock on error in gpio_sim_config_commit_item()
+Date:   Sat, 30 Oct 2021 04:07:57 +0000
+Message-ID: <20211030040757.2168399-1-weiyongjun1@huawei.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.102.38]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggeml709-chm.china.huawei.com (10.3.17.139)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pull request you sent on Fri, 29 Oct 2021 22:45:50 +0200:
+Add the missing unlock before return from function
+gpio_sim_config_commit_item() in the error handling
+case.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio-fixes-for-v5.15
+Fixes: b48f6b466e44 ("gpio: sim: new testing module")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+---
+ drivers/gpio/gpio-sim.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/db2398a56aecec058643d35828e8cca56a0ac0a3
+diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
+index d8bf84b604d9..e2113092f85b 100644
+--- a/drivers/gpio/gpio-sim.c
++++ b/drivers/gpio/gpio-sim.c
+@@ -789,8 +789,10 @@ static int gpio_sim_config_commit_item(struct config_item *item)
+ 						config->num_line_names);
+ 
+ 	fwnode = fwnode_create_software_node(properties, NULL);
+-	if (IS_ERR(fwnode))
++	if (IS_ERR(fwnode)) {
++		mutex_unlock(&config->lock);
+ 		return PTR_ERR(fwnode);
++	}
+ 
+ 	pdevinfo.name = "gpio-sim";
+ 	pdevinfo.fwnode = fwnode;
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
