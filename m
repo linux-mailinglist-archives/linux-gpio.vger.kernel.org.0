@@ -2,127 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1042D440E9A
-	for <lists+linux-gpio@lfdr.de>; Sun, 31 Oct 2021 14:15:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 690FD440E9F
+	for <lists+linux-gpio@lfdr.de>; Sun, 31 Oct 2021 14:20:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229747AbhJaNSW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 31 Oct 2021 09:18:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34394 "EHLO
+        id S229791AbhJaNW6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 31 Oct 2021 09:22:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229626AbhJaNSW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 31 Oct 2021 09:18:22 -0400
-Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C258C061570;
-        Sun, 31 Oct 2021 06:15:50 -0700 (PDT)
-Received: by mail-lj1-x230.google.com with SMTP id e2so24940544ljg.13;
-        Sun, 31 Oct 2021 06:15:50 -0700 (PDT)
+        with ESMTP id S229626AbhJaNW6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 31 Oct 2021 09:22:58 -0400
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ECD4C061570;
+        Sun, 31 Oct 2021 06:20:26 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id x27so31130106lfu.5;
+        Sun, 31 Oct 2021 06:20:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=PD41efnyktLHVkqJ0TVfwzxxHD0nZAcOYiom746hjGQ=;
-        b=GwWyzVHloam8hOV0kUaZxK5hzO1YMmURf/lyKVRA1v0OxXchX6D4NZ0XcggUMjtCzf
-         naB6Lkpkpf7VPU2vFHY8wUIwVme3pMykWZKKr+zFq9v6JMkC9ZIvvjS82w/3BfZveg++
-         XR5+70Lh3ow8eWRR0giUTCrjMm6FYazKCFRVpZuGzNS140U8YPH3YNibym1UroeJdH5F
-         k2BiPe1qrGZ0ZYFHW63vdoQ1T5CPw1+p7Vdm23m3/FvcZeE0noSmqU8h+rRQB51HeOhX
-         OlCimI8A20gfSAJ5uyjXhaHZKXg3sRjBc+/uCiHJD2Fiz2eKv6uCg0NPeeKq9ensRAiW
-         0JSw==
+        bh=4Ml4HoePorbB3uwkIfZq01AIVq0ZLevX5o6NsPpTI0c=;
+        b=Z3igLXnvuoQJi5FZI1JWL5XpYtUVODbUdysV9oUu5OA3HDGCPOzuRbO7WVkArCUQrg
+         wgiG7jp1XeX1iz2oD4i/mtdZvM9Skf2wEz4OZ/nhZcTXLbDG7s7NeSC6ty1ZINRWX7oE
+         tzY8CPLppOpZY0ufRBzwHiPe88ubKrX5Sw5iMA6rD4dq05XCHtjw1xm1tBE5a7Fc9hvt
+         dD+7JuGa+vtqjJt8cqXk3BL7i2lFCnzxnMIbu6cbNCkohEiWPeOKEca9l7qWWZNNBGvS
+         wv7X1r98dboww6i/4/5HX3+XP/1Hsq7JuH9Iu5vUS9LFnRLGg1Eng7C9PKrT/P8fJWX4
+         Ywmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=PD41efnyktLHVkqJ0TVfwzxxHD0nZAcOYiom746hjGQ=;
-        b=JgX3YLCxRYjjOi+9Mm3k3TX3i8Kq7FD8CiMjuG6REsuC87Gd1HN8OgIxfICqH39FMp
-         wk+CSm8ONzNiPY9db65F2TytdukoWSDujo+EBLUL7KWZGljetH8/Y/Ud15QmR1YIiMTD
-         91qtK3b++UW7QImhM/4lPpKusy9OEfm7TrTTDpWkqsj8J1YDx9IvMfgJucGFipVRUSle
-         q9Al9u/aGV3oPBQLaodNrlPes0zv8Zm3/Fn8H/E9fNzfkP/XYCwIpl1Tyydv+zGgEqjc
-         PoXIn1qBnoxnXcsHDcmwpwvBm8uYeNdh7MtlvqQ7d724OlLkZWpTkAQgVRFUM1sZjIkt
-         +CiQ==
-X-Gm-Message-State: AOAM5336cB4SaMeR4Jc9hbfq4urrqwOXzW8apI7Ryh3p31/sZaY2d4zi
-        TBTPZCBAM+nOd8Y/q0z0wiCMTp8v1zPW5+W3O7g=
-X-Google-Smtp-Source: ABdhPJyFY5myPudPlEIk0GekoyOBXszKfOf23/qHuuqxvTKdHopkZdc2Dj43lMvN4+oDUYFTNkQSNdIo6Cki9a1bP/k=
-X-Received: by 2002:a2e:8605:: with SMTP id a5mr25689897lji.107.1635686148557;
- Sun, 31 Oct 2021 06:15:48 -0700 (PDT)
+        bh=4Ml4HoePorbB3uwkIfZq01AIVq0ZLevX5o6NsPpTI0c=;
+        b=SvUOyMaFUifPGvy3eGjC41x4BYOhFvlOyWxJxvTt028E9iF0SVtXmaxy9LPS4IuQHJ
+         ibry2PigUSJYIFwAwzCr3ugc3qChYk0MAq1eXNJr4vnCbTcmvrfXqqq8mSCQuSUZNHbS
+         XlJoP23NpgFwBvkbh+cUsF56sB35IhbNjrnfgKuwHQZJdPu+lXRqhSxUKLxoufy9BWmU
+         Ouzg9o5ruOawykOaR3Qf2A5tGDzo+0m9v221/nEBMfl1CDv/ot4caN4m4sTPEaNGPHQe
+         uzTM05khL/2wIX+kRdzEUDY0ur4HBd9mjceeekCo9NPwSzqh/uaJt7jzhiUZaOTjF00W
+         8z2Q==
+X-Gm-Message-State: AOAM531RE+Yq1zvMTS5O+f2VmSou3rqLMsz2YzNSJP1+MoIV0mQYQIuw
+        aHKNv7Ripjtma/g0v61uGM8ujdQO0w91hZRSpvA9xQuf/J9BcQ==
+X-Google-Smtp-Source: ABdhPJwP5ltZLEYCpy4Y5wYCMLT1QMQ2cfYoIJAC3xlPjQsGl38qoc2SBcUim8j5r+MqhRS8M8IuZ3nlHwBbfTcu4u4=
+X-Received: by 2002:a05:6512:260e:: with SMTP id bt14mr22784564lfb.129.1635686424771;
+ Sun, 31 Oct 2021 06:20:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211029204017.8223-1-mario.limonciello@amd.com> <20211029204017.8223-2-mario.limonciello@amd.com>
-In-Reply-To: <20211029204017.8223-2-mario.limonciello@amd.com>
+References: <20211025015156.33133-1-brad@pensando.io> <20211025015156.33133-11-brad@pensando.io>
+In-Reply-To: <20211025015156.33133-11-brad@pensando.io>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 31 Oct 2021 15:15:12 +0200
-Message-ID: <CAHp75VfOBBpt84aQYGOW32kKqeNH5gZUbJtqf1sPP7O-ZZkW+g@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] pinctrl: amd: Fix wakeups when IRQ is shared with SCI
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Nehal Shah <Nehal-bakulchandra.Shah@amd.com>,
-        stable@kernel.org, Joerie de Gram <j.de.gram@gmail.com>
+Date:   Sun, 31 Oct 2021 15:19:48 +0200
+Message-ID: <CAHp75Vejm7exqWY9XcaJQCqLgUvoM5E93=0JV2Wew7T6WzTKpg@mail.gmail.com>
+Subject: Re: [PATCH v3 10/11] spi: dw: Add support for Pensando Elba SoC
+To:     Brad Larson <brad@pensando.io>
+Cc:     linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Olof Johansson <olof@lixom.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 29, 2021 at 11:42 PM Mario Limonciello
-<mario.limonciello@amd.com> wrote:
+On Mon, Oct 25, 2021 at 4:54 AM Brad Larson <brad@pensando.io> wrote:
 >
-> On some Lenovo AMD Gen2 platforms the IRQ for the SCI and pinctrl drivers
-> are shared.  Due to how the s2idle loop handling works, this case needs
-> an extra explicit check whether the interrupt was caused by SCI or by
-> the GPIO controller.
->
-> To fix this rework the existing IRQ handler function to function as a
-> checker and an IRQ handler depending on the calling arguments.
->
-> Cc: stable@kernel.org
-> BugLink: https://gitlab.freedesktop.org/drm/amd/-/issues/1738
-> Reported-by: Joerie de Gram <j.de.gram@gmail.com>
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> Acked-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+> The Pensando Elba SoC includes a DW apb_ssi v4 controller
+> with device specific chip-select control.  The Elba SoC
+> provides four chip-selects where the native DW IP supports
+> two chip-selects.
 
 ...
 
-> +static bool _amd_gpio_irq_handler(int irq, void *dev_id)
+> +static void dw_spi_elba_set_cs(struct spi_device *spi, bool enable)
+> +{
+> +       struct dw_spi *dws = spi_master_get_devdata(spi->master);
+> +       struct dw_spi_mmio *dwsmmio = container_of(dws, struct dw_spi_mmio, dws);
+> +       struct dw_spi_elba *dwselba = dwsmmio->priv;
 
-I know Linus does not like leading _* in the function names, what
-about 'do_' instead?
+> +       u8 cs = spi->chip_select;
+
+Much easier to maintain and follow the code (in the future) if this
+assignment is broken to two parts, i.e...
+
+> +
+
+...like this
+
+       cs = spi->chip_select;
+       if (cs < 2) {
+         ...
+
+> +       if (cs < 2) {
+> +               /* overridden native chip-select */
+> +               elba_spics_set_cs(dwselba, spi->chip_select, enable);
+> +       }
 
 ...
 
-> +                       /* called from resume context on a shared IRQ, just
-> +                        * checking wake source.
-> +                        */
+> +       regmap = syscon_node_to_regmap(args.np);
+> +       if (IS_ERR(regmap)) {
+> +               dev_err(&pdev->dev, "could not map pensando,spics\n");
+> +               return PTR_ERR(regmap);
+> +       }
 
-Is this comment aligned with the style used elsewhere in the driver code?
-
-...
-
-> +                               dev_dbg(&gpio_dev->pdev->dev,
-> +                                       "Waking due to GPIO %ld: 0x%x",
-> +                                       (long)(regs + i - ((u32 __iomem *)gpio_dev->base)), regval);
-
-Oy vey, these castings are ugly. The rule of thumb is that if one does
-such a thing for printf() it means something is really wrong (in 99%
-of the cases).
-
-AFAICS you may simply use 'irqnr + i' as the other message does.
-
-...
-
->         platform_set_drvdata(pdev, gpio_dev);
-> +       acpi_register_wakeup_handler(gpio_dev->irq, amd_gpio_check_wake, gpio_dev);
->
->         dev_dbg(&pdev->dev, "amd gpio driver loaded\n");
->         return ret;
-> @@ -1021,6 +1045,7 @@ static int amd_gpio_remove(struct platform_device *pdev)
->         gpio_dev = platform_get_drvdata(pdev);
->
->         gpiochip_remove(&gpio_dev->gc);
-> +       acpi_unregister_wakeup_handler(amd_gpio_check_wake, gpio_dev);
-
-Thinking about making this in the generic GPIO library code, but this
-is out of scope of the patch...
+Why not return dev_err_probe()?
 
 -- 
 With Best Regards,
