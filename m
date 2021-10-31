@@ -2,106 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B4821440EB3
-	for <lists+linux-gpio@lfdr.de>; Sun, 31 Oct 2021 14:42:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CF63B440F35
+	for <lists+linux-gpio@lfdr.de>; Sun, 31 Oct 2021 16:50:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229792AbhJaNpP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 31 Oct 2021 09:45:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40168 "EHLO
+        id S229853AbhJaPxS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 31 Oct 2021 11:53:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229662AbhJaNpP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 31 Oct 2021 09:45:15 -0400
-Received: from mail-ua1-x92d.google.com (mail-ua1-x92d.google.com [IPv6:2607:f8b0:4864:20::92d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D089FC061570;
-        Sun, 31 Oct 2021 06:42:43 -0700 (PDT)
-Received: by mail-ua1-x92d.google.com with SMTP id f4so27222901uad.4;
-        Sun, 31 Oct 2021 06:42:43 -0700 (PDT)
+        with ESMTP id S229744AbhJaPxS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 31 Oct 2021 11:53:18 -0400
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F887C061570;
+        Sun, 31 Oct 2021 08:50:46 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id 5so55133176edw.7;
+        Sun, 31 Oct 2021 08:50:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S3+xpO8fzkCeapzFiUJk1K6GTL67bNhShj+Jer91ixc=;
-        b=mJ0BM64NWeKIOPWHlNc/Mo12h+HHptaAmoNePbIWVVj2F/rs0KMgi2bZdYqTEAEMeA
-         ASIAQO0fbHwSZzBFyj+yJEfFGCRI3iO0a8RatcZJPJe9Pw1rxaYiaY6g3l1S7p5vbL5C
-         L+yQIYkV9zJy5jT5SUxLbqDcNYU3rBrfki3hgTlCdZNMh0oF+vKYaGsd3lT6k/yNsaeN
-         e/CF9+sRT6BSSvyOGQiymkk/a+C9Y+LCmQqBILDL8rPKQkf5Myeb6PK/BGRL73pyJ463
-         AICR9jpxk2h4ALlIEhpgfjWf7RhGpKstiNpFoyS0VF8F6Vb0So6uKsUxLXcEpBfPLbX7
-         goQw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2bexitaDg2Y3iHmlrxKLSrp7oBsCielhGeP4I3npPL0=;
+        b=Oi8mqhgYucm5S3SnE2QAgz/5r3Up0npR9CXiFb9fQeYftCEDT+0feuzkiXb0m2jYAL
+         BLG12UhjyEc5cy/uMKXH65cRQ8ru08RrdmCrmowxQYujXGi1bxgDTYk6MRgT3zTO03gz
+         VfpgEzbFADCzgg2iuqT1xGqsdmOTavqMptDiie+FePRKLsU114WF3ki+ey2AQBLLe9ms
+         PFy0tShfELbDqWkM4mxyqkSPWuU64F4mIZ2Nobj/MgbyXIxIZ2b/dXL7HpPmnq/yrxSb
+         Fo6nEMLYI+cUl1ivfzRtrGl8SFOJ+HFs1SLyueVeXS1sWv6LtB72bOykxlSEjD2w1x3m
+         0c0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S3+xpO8fzkCeapzFiUJk1K6GTL67bNhShj+Jer91ixc=;
-        b=GmgkWZCsned0/ubMM0sW8YP53BlLugIj5VJ+4kBaCQOSDz5RY926HlfUGJjVIfUD0U
-         I2iOf1GkFqhL45QyT03iolsre/i0dAbsowdufW2w2HbSH6P0yDUUyBG+ASCYum5VJdUJ
-         /5drU5qx8DK7k5Ohc3nOyv85h3n9c7uu++fUZVamidjAJfWTLgmhQ7QY5sFXLxu3KVa4
-         XbUuQwoOoDEQAW5v16BYlIwZzN22SL8oJ+jPyVu7AfaDJGobeTnMzEl7G1PeOIV/V+3/
-         s8SkbZQk/xj+RysZdKxmI7yT2Ck9J9aCV3O3s03JAiSjOguwHglqDHWWAAlHtZ44BQ5Z
-         0RUQ==
-X-Gm-Message-State: AOAM532oUsGUMmytnETCL2LL6LbjLwuxYlTZxOFGcMy3+TyctnMg8w7d
-        qGFYO5omERjGApErFS+AwK2C1EgLkfHj+gjnGFU=
-X-Google-Smtp-Source: ABdhPJyJuH9EIbc35OuuE+cCZvI8jo6ujqJHu00hWa4W9C/uJyBEpl5h9HTCnqa8cNWV4INZp9aC8LRg20/l4g6El0Y=
-X-Received: by 2002:ab0:5925:: with SMTP id n34mr23689101uad.46.1635687762790;
- Sun, 31 Oct 2021 06:42:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <20211031064046.13533-1-sergio.paracuellos@gmail.com> <CAHp75Vf3TninFNRdz453sdqrQpu-2sqaiFd-rCqOFeo-kMCniw@mail.gmail.com>
-In-Reply-To: <CAHp75Vf3TninFNRdz453sdqrQpu-2sqaiFd-rCqOFeo-kMCniw@mail.gmail.com>
-From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date:   Sun, 31 Oct 2021 14:42:31 +0100
-Message-ID: <CAMhs-H-r2rUdhO3+-GfrOy+d7dXOBaN283Aqf3q5FqugLPpeMQ@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: ralink: include 'ralink_regs.h' in 'pinctrl-mt7620.c'
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stable <stable@vger.kernel.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2bexitaDg2Y3iHmlrxKLSrp7oBsCielhGeP4I3npPL0=;
+        b=jnEN+3STRCpk2cdetOdVfJm1vAg3bEH1Kcyjk4KHBZjJ9Rj9nmNz80GXDb/1XIGtSM
+         a5Gbo3lNpsIxPGFh2l6Jfj7l6vpIWTRngPz+dTVsy0PQZ/YwFKSi7U9wf4Gp+O3y6Hwk
+         wi0CgNDg9W0KdBIEICLDITmcVUr46TFVZbOtweGaR0REQ88pR+J4be8I2YaZ37i/1DLR
+         W8mAVLSsxJKhM08ncVL/IC6bLYrQ+XEqL5M5tlvGtUeM2LxY3qF1b/Zkeavu3ISyQpD3
+         u4DCFm16iWnIJAAgcTKbven10RmEPEy7JQVg/R0ufzMnMUbwjqjWSctmhbxZZq8PVKN5
+         SRGg==
+X-Gm-Message-State: AOAM531EUjHR/tuItFnquBRlsqV+CMfyVN/Rt6npYNbTkHmZQn8YQaoJ
+        0YKKkE/N6hlB25hPrfi+o6PX1uKSvEsF0Ar5bkE=
+X-Google-Smtp-Source: ABdhPJxwwW5vIy6HG/vxjYZiKRswnJqJuNZmWRiFSIuKKTkD3uJZMaHZj1eVoc3/WqQP+E2K55zaJQ==
+X-Received: by 2002:a05:6402:1801:: with SMTP id g1mr6676528edy.107.1635695444412;
+        Sun, 31 Oct 2021 08:50:44 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:ab88:368f:2080:eab:126a:947d:3008])
+        by smtp.googlemail.com with ESMTPSA id cs20sm1550167ejc.105.2021.10.31.08.50.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 31 Oct 2021 08:50:43 -0700 (PDT)
+From:   David Virag <virag.david003@gmail.com>
+Cc:     David Virag <virag.david003@gmail.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Luiz Angelo Daros de Luca <luizluca@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] dt-bindings: pinctrl: samsung: Document Exynos7885
+Date:   Sun, 31 Oct 2021 16:48:51 +0100
+Message-Id: <20211031154851.20103-1-virag.david003@gmail.com>
+X-Mailer: git-send-email 2.33.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andy,
+Document compatible string for Exynos7885 SoC.
 
-On Sun, Oct 31, 2021 at 2:08 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Sun, Oct 31, 2021 at 8:41 AM Sergio Paracuellos
-> <sergio.paracuellos@gmail.com> wrote:
-> >
-> > mt7620.h, included by pinctrl-mt7620.c, mentions MT762X_SOC_MT7628AN
-> > declared in ralink_regs.h.
-> >
-> > Fixes: 745ec436de72 ("pinctrl: ralink: move MT7620 SoC pinmux config into a new 'pinctrl-mt7620.c' file")
-> > Cc: stable@vger.kernel.org
-> > Cc: linus.walleij@linaro.org
-> >
-> > Signed-off-by: Luiz Angelo Daros de Luca <luizluca@gmail.com>
-> > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
->
-> Tag blocks mustn't have blank lines.
+Signed-off-by: David Virag <virag.david003@gmail.com>
+---
+ Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Ok, thanks for letting me know.
+diff --git a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
+index b8b475967ff9..9e70edceb21b 100644
+--- a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
+@@ -22,6 +22,7 @@ Required Properties:
+   - "samsung,exynos5420-pinctrl": for Exynos5420 compatible pin-controller.
+   - "samsung,exynos5433-pinctrl": for Exynos5433 compatible pin-controller.
+   - "samsung,exynos7-pinctrl": for Exynos7 compatible pin-controller.
++  - "samsung,exynos7885-pinctrl": for Exynos7885 compatible pin-controller.
+   - "samsung,exynos850-pinctrl": for Exynos850 compatible pin-controller.
+   - "samsung,exynosautov9-pinctrl": for ExynosAutov9 compatible pin-controller.
+ 
+-- 
+2.33.1
 
->
-> ...
->
-> > +#include <asm/mach-ralink/ralink_regs.h>
-> >  #include <asm/mach-ralink/mt7620.h>
-> >  #include <linux/module.h>
-> >  #include <linux/platform_device.h>
->
-> Actually the rule of thumb is to start from more generic definitions /
-> inclusions to more particular. Thus, asm/* usually goes after linux/*.
-> Any Specific reason why here is not the case?
-
-I just respect the order that was already in the files, I guess when I
-moved all of this from arch/mips into drivers/pinctrl. All files
-inside follows the same order.
-
-Best regards,
-    Sergio Paracuellos
->
-> --
-> With Best Regards,
-> Andy Shevchenko
