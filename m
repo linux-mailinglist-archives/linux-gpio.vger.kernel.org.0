@@ -2,111 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DAA45440D62
-	for <lists+linux-gpio@lfdr.de>; Sun, 31 Oct 2021 07:42:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DC60440E88
+	for <lists+linux-gpio@lfdr.de>; Sun, 31 Oct 2021 14:06:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229673AbhJaGo6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 31 Oct 2021 02:44:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34604 "EHLO
+        id S229863AbhJaNJO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 31 Oct 2021 09:09:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229638AbhJaGo6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 31 Oct 2021 02:44:58 -0400
-Received: from mail-vk1-xa33.google.com (mail-vk1-xa33.google.com [IPv6:2607:f8b0:4864:20::a33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58795C061570
-        for <linux-gpio@vger.kernel.org>; Sat, 30 Oct 2021 23:42:27 -0700 (PDT)
-Received: by mail-vk1-xa33.google.com with SMTP id e64so6602891vke.4
-        for <linux-gpio@vger.kernel.org>; Sat, 30 Oct 2021 23:42:27 -0700 (PDT)
+        with ESMTP id S229626AbhJaNJO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 31 Oct 2021 09:09:14 -0400
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E30DC061570;
+        Sun, 31 Oct 2021 06:06:42 -0700 (PDT)
+Received: by mail-lf1-x132.google.com with SMTP id u21so31047045lff.8;
+        Sun, 31 Oct 2021 06:06:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=P9DsuqSyJPp2ah6vaAGEYBOyFXAqSYh99S5sr1wE1SI=;
-        b=b0Tt6Pl2t9bRhpfaxgE3cak5BqGlno/H86g3vvu+HknlhS0K6RvOXQFE065qdau55w
-         Z5oK/XNHPvP7HxiOdN5atT5dekKNCYZxjEfA/onB46fIneqs5fM5QZ/1RckBg3+moXMH
-         qNrgTvW927yodlu79zOeBOpB6jve/PKeU9HhBs6PDwwVt5jc35G/gesjLgIrDMVBlNuK
-         O5XVnNVekx+0ySBxQcaL1G1u8sPDjPdtAesPU/QPuwrr9L9Pa40YkPVo12PNxOe4dabn
-         a8AkKrOZszeVNsEwpRrUzKM+EP+CACMCYK6nbgSkkXXl/dY4vOnVaq+Z1oSi1DHYMr/X
-         SVlw==
+        bh=HnA4agtvoe5bY8VDS5ihdFhbJWN6EIjsWlUJf/KpvEg=;
+        b=CmaQHx6bEFgb0QO4CmJHd/SgHy+uYvlYGANFpzXePelKTbEdOMj9dxnaTIXbb4w4ly
+         +KEsckeR2tebik7NiuQtUcq0kBK9VOQF9VbU1KhgoKr4HXDvrNUSeCoB0prE2BUCRXF3
+         Wf3M94WdTNZdQpaoJu/HF2oNrVJ0l7ZhX0V77B0sNQiFFWAjdxQYJLuTe4j5Z8XCOObq
+         bnPrFfyt0OnqjyQiecblcjKF8PTWaiOsfGJDDpCgIb8ZhS9efRuol12zcDM5Q/I6z3uA
+         mr5BhOtIocvA4LVOu9YaHaGOg7m5JvJuGD0Bl0TRDLQP1Dm/A8cri2IH+8L/6tYB4uxc
+         r2NQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=P9DsuqSyJPp2ah6vaAGEYBOyFXAqSYh99S5sr1wE1SI=;
-        b=MbTXRZ6pQll6ue29vug9GmLEYA/ON23IEWzWuVIylaLgv0J42OIBVAoFlAyo2uihZL
-         ChoiGSs4XenQygsb8PnDstkDSl92ga3KIA0aWHshw0cs/VNL++4Wryal+oFsSyU5GhC0
-         M1lsZMAcRvLWdMzXIcPXIuDJZNZetGTUVr3Zu9EgnoLoG7QwmM+7JnrQg5J2yILWXtBD
-         rXuNbpc6XTroGETBqImlzG/gm/BOqeQbgMCbdyZ0GYbUlsTN58UYKINu7u6ZJbd0+8Zs
-         SB4iKZYJZjOda/bq4mZ3oeLTQJTH84cXGWQvPR5X3Wz1Df1HUjKCOJBpJRqJk36KP+oA
-         vj2A==
-X-Gm-Message-State: AOAM533+fBPxYbEgKkkB5roIVTmNrxk14LiEmlA3WjuVVpV/tXrThaoX
-        W6qrywSSVTO+wFaJl5BEV+gog0tAI8JztiA/Gl4=
-X-Google-Smtp-Source: ABdhPJzKUX27CjuM4Z6WEwihBNwylNCcMXNoJ0gun/cr4g6MyBpjWFmaZzF7EKKgbTogu5y9W/ahOzZicfHQGeDpB4g=
-X-Received: by 2002:a1f:2502:: with SMTP id l2mr9387518vkl.4.1635662546439;
- Sat, 30 Oct 2021 23:42:26 -0700 (PDT)
+        bh=HnA4agtvoe5bY8VDS5ihdFhbJWN6EIjsWlUJf/KpvEg=;
+        b=ui+PwBWfwBITTdHFwos5BHxcuntYWU5Tat2ItzCu0wvXqA8N3Xg6tg99aaXMCaYgyx
+         HluFojxe4bNf1L0cekqK5tVC3FbkujCm3gzIE7NTqc9ZWGxMfPApfUmACq5luG4I+P2m
+         VED2XQnAaREdC0fzbKzrXxjGFoqmR7sEQSIeZ5BO+y00V3xUcqW6ZZTtZ4N7iqyKJNPm
+         6pXDuTPoR81bbgxg+/xMfQcLi7/9HxwIcnWqb91qPN1f4jkp9hli06wV2kmUWOxAj0Wi
+         VIZEYmsZMNZ0ZIL+/XsHSn3yTq5lleRjFahN7VutjuV7g2eNsDJJnoWnOilib/6lyTNl
+         4Rug==
+X-Gm-Message-State: AOAM532+cdd1dWL/pcN0WCb9zxYLSsziqywfOlEOkPK/OQAiQlXCEmxz
+        ZIJ1gBGMZTHPtnjNMGZE8A5oRYmeNux5NUVbZZmeKQqTB9c=
+X-Google-Smtp-Source: ABdhPJye681stA1OkK1J5HPFPb/3HDU+gJAlfKObEtPg9qAInOF1LWCXpQyhtpk28xb7ryeb6q65WrH5U+kKilaUpF4=
+X-Received: by 2002:a05:6512:260e:: with SMTP id bt14mr22723388lfb.129.1635685601025;
+ Sun, 31 Oct 2021 06:06:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211018005915.17601-1-luizluca@gmail.com> <CAMhs-H_=7D9mGweMxRigVxSWR4GCaowExjgM28D7NB7MsPvcew@mail.gmail.com>
-In-Reply-To: <CAMhs-H_=7D9mGweMxRigVxSWR4GCaowExjgM28D7NB7MsPvcew@mail.gmail.com>
-From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date:   Sun, 31 Oct 2021 07:42:15 +0100
-Message-ID: <CAMhs-H9zUmL6BTqjS8Om+oLMZcMAwoNUwdB+dt9AfdRZeFzauw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: ralink: include 'ralink_regs.h' in 'pinctrl-mt7620.c'
-To:     luizluca@gmail.com
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Jiri Kosina <trivial@kernel.org>
+References: <cover.1635412162.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <cover.1635412162.git.matti.vaittinen@fi.rohmeurope.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 31 Oct 2021 15:06:05 +0200
+Message-ID: <CAHp75Vf12Lx=demULkNhgP=YpnfdH15Y9T5C7PUA4uo=0J15ZQ@mail.gmail.com>
+Subject: Re: [RESEND PATCH 0/4] Drop ROHM BD70528 support
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-power <linux-power@fi.rohmeurope.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 18, 2021 at 6:57 AM Sergio Paracuellos
-<sergio.paracuellos@gmail.com> wrote:
+On Thu, Oct 28, 2021 at 12:18 PM Matti Vaittinen
+<matti.vaittinen@fi.rohmeurope.com> wrote:
 >
-> Hi Luiz,
->
-> Thanks for your patch. I thought I had reviewed all of this since the
-> kernel test robot complains once for something similar but it seems I
-> missed this one :).
->
-> On Mon, Oct 18, 2021 at 2:59 AM <luizluca@gmail.com> wrote:
-> >
-> > From: Luiz Angelo Daros de Luca <luizluca@gmail.com>
-> >
-> > mt7620.h, included by pinctrl-mt7620.c, mentions MT762X_SOC_MT7628AN
-> > declared in ralink_regs.h.
-> >
-> > Signed-off-by: Luiz Angelo Daros de Luca <luizluca@gmail.com>
-> > ---
-> >  drivers/pinctrl/ralink/pinctrl-mt7620.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/pinctrl/ralink/pinctrl-mt7620.c b/drivers/pinctrl/ralink/pinctrl-mt7620.c
-> > index 425d55a2ee19..6853b5b8b0fe 100644
-> > --- a/drivers/pinctrl/ralink/pinctrl-mt7620.c
-> > +++ b/drivers/pinctrl/ralink/pinctrl-mt7620.c
-> > @@ -1,5 +1,6 @@
-> >  // SPDX-License-Identifier: GPL-2.0-only
-> >
-> > +#include <asm/mach-ralink/ralink_regs.h>
-> >  #include <asm/mach-ralink/mt7620.h>
-> >  #include <linux/module.h>
-> >  #include <linux/platform_device.h>
-> > --
-> > 2.33.0
-> >
->
-> Can you please add the "Fixes" tag and CC also stable linux? With
-> those two added, please send v2.
->
-> Fixes: 745ec436de72 ("pinctrl: ralink: move MT7620 SoC pinmux config
-> into a new 'pinctrl-mt7620.c' file")
-> Cc: stable@vger.kernel.org
+> Drop ROHM BD70528 support
 
-I have already sent v2 of this patch including by myself what I was
-asking you to do, since no answer at all came from your side.
+I am always for the code removal, but the Q here is do you think there
+won't be similar chips that may utilize the code and avoid duplication
+in the future?
 
-Thanks,
-    Sergio Paracuellos
-
->
-> Thanks,
->     Sergio Paracuellos
+-- 
+With Best Regards,
+Andy Shevchenko
