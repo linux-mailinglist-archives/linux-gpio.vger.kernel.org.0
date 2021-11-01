@@ -2,93 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 505004415E0
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Nov 2021 10:11:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C5654441928
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Nov 2021 10:56:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231364AbhKAJOF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 1 Nov 2021 05:14:05 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:23465 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230520AbhKAJOE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Nov 2021 05:14:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1635757891;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=2W7P6GktRsi14ktbeTR+//wKtS91dY+AJDqQY5GsUpU=;
-        b=TD5x0RfdqMgSopo/4pCBy+doK9o4f5CnOSswGfvyZMITPACsFrlclNiPBUeWsblNIWpeW6
-        UZDV190wznVyieQG2Ze9L2E7FXFOAQzTtY8EgvEgf57k2bADTPWoH3W4zIdYBV00+YWYhK
-        lIWMEP37eF9dlwYAVF/NodA8uyHdUTg=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-468-PxoINYrOPsunEACWBWyCSA-1; Mon, 01 Nov 2021 05:11:30 -0400
-X-MC-Unique: PxoINYrOPsunEACWBWyCSA-1
-Received: by mail-ed1-f71.google.com with SMTP id d11-20020a50cd4b000000b003da63711a8aso14899278edj.20
-        for <linux-gpio@vger.kernel.org>; Mon, 01 Nov 2021 02:11:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=2W7P6GktRsi14ktbeTR+//wKtS91dY+AJDqQY5GsUpU=;
-        b=Lm2We4Gf3Yt21zbcutjjRkaXtVTJk8suAwG6uCCMmnXwgKDoumSQa50AjIg/D5hP+e
-         L+8dyxhyfzz6vHmcnxF/KmY8MuIRKvbQEKLYPDfMWRUJ8UcGC4yEf/4FpuJJsutkmGGG
-         fb3oEdhdALRD7JLamlhRgDNL/2AqD+c3tCzU1ZIVye2vEIXQIqU6bxPltDRWJG8GMO8R
-         KI7uycLjyDfwOztFuiDC1CcsbzWoyNcLhVEZuWYs9w4K55hHFckBXtfK9LcaiJJV2jut
-         rxjvmWy6IGFvFPPgQWKw02oPAyWoq9hk1M01os8N1MmLdu4wpAWPYngbWNAU0mhIuKtS
-         fNZA==
-X-Gm-Message-State: AOAM533yDnfKsMN9NRk7NGY6/bOdIYeIZy9DO2eFKGVVL5BaSNb/urvg
-        pqIaP8ZDgLRNnMliChLg+qDvCkOtcWMv8HSdkKSsLsMt1/EI3PuFKzrFpWXTSMwYViI5oQP/Ph9
-        kF0EZmEsqv84pl8eioFsWRQ==
-X-Received: by 2002:a17:907:7215:: with SMTP id dr21mr16826613ejc.505.1635757888527;
-        Mon, 01 Nov 2021 02:11:28 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyGFjVuS5ieqvbfX0iqQUSp1YKsugqWB3cvdDo7TtxlMqzMZiJotDXzX2Nh2NnX9BU8QL6UDA==
-X-Received: by 2002:a17:907:7215:: with SMTP id dr21mr16826599ejc.505.1635757888385;
-        Mon, 01 Nov 2021 02:11:28 -0700 (PDT)
-Received: from redhat.com ([2a03:c5c0:107f:7087:907d:ff12:1534:78b7])
-        by smtp.gmail.com with ESMTPSA id g12sm2377939edz.68.2021.11.01.02.11.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Nov 2021 02:11:27 -0700 (PDT)
-Date:   Mon, 1 Nov 2021 05:11:25 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Jason Wang <jasowang@redhat.com>, linux-gpio@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH] virtio_gpio: drop packed attribute
-Message-ID: <20211101091122.442512-1-mst@redhat.com>
+        id S232274AbhKAJ6s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 1 Nov 2021 05:58:48 -0400
+Received: from esa.microchip.iphmx.com ([68.232.154.123]:3437 "EHLO
+        esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231695AbhKAJ5b (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 1 Nov 2021 05:57:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1635760498; x=1667296498;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=mSuwzvbFosgXR+t/J5/7W7IMTcUGeCP7rMs5ACbUzzo=;
+  b=SvFYPHhUtaFbwtj+iF2VmE4blSoBErrBHw5BzjSFv38ldexePwenQob1
+   Dc2xhJpRvdTECH2d8oO3KhkkcY2l4ysggd3cLQd86x2mYw7BbzaxJM714
+   DvufcMxZ/6GzVaE2g65lCUFxgx9MhJEyGG57ZxI11mun9J43wG9Jj3bc8
+   PYSTDImHF6ZE35imm0RVd5jmuxg7vzP6fnFVGuo2BvBZiRsY7hIueDJzZ
+   kUvgoyt6xKJP8zY8QZMLlXDKDyZxF0/P8acSjfChJ6tENf+nyGAiJ6Ss3
+   1iB/zQ0yh7dBZI/H+GecR9rcdTAxoxzUXCnC5oOG8rF3e/TBH99cSLVgx
+   g==;
+IronPort-SDR: SX2FJxAMsva8Jy9RyHBd2k0pUMCtDKYCGpM9PAT001hMltTdpldEzqaGatAmZoZL6Qu0RuJXUx
+ sjGDE8XDhgFvD3kialKVm5Sb/jsAo+tR7a0W/F//m8bm5IAJB2aNrlCaqGWrdqZzH8Q18s69oB
+ ubMclwfNAuUFOzCUnU71pRQBCpTs4R6YaY9cG7JVQw2XS2Tt4NG45e3xa0woEN+LZY2mBDWMql
+ W/1ZH4b+i3O6I7ob+QaXcOxh90CASJt2cRLCqsGGHM+SFOC5tP4mQmZ2nzstPar9GcpZD/Iwwl
+ hUaNiCNM+6Yy42+3kaQ4nVXO
+X-IronPort-AV: E=Sophos;i="5.87,198,1631602800"; 
+   d="scan'208";a="74934026"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 01 Nov 2021 02:54:56 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2176.14; Mon, 1 Nov 2021 02:54:56 -0700
+Received: from kavya-HP-Compaq-6000-Pro-SFF-PC.microchip.com (10.10.115.15) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.2176.14 via Frontend Transport; Mon, 1 Nov 2021 02:54:53 -0700
+From:   Kavyasree Kotagiri <kavyasree.kotagiri@microchip.com>
+To:     <robh+dt@kernel.org>, <linus.walleij@linaro.org>
+CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <UNGLinuxDriver@microchip.com>,
+        <Kavyasree.Kotagiri@microchip.com>
+Subject: [PATCH v3 0/2]  Extend pinctrl-ocelot driver for lan966x
+Date:   Mon, 1 Nov 2021 15:24:49 +0530
+Message-ID: <20211101095451.5831-1-kavyasree.kotagiri@microchip.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email 2.27.0.106.g8ac3dc51b1
-X-Mutt-Fcc: =sent
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Declaring the struct packed here is mostly harmless,
-but gives a bad example for people to copy.
-As the struct is packed and aligned manually,
-let's just drop the attribute.
+This patch series extends pinctrl-ocelot driver to support lan966x.
 
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
----
- include/uapi/linux/virtio_gpio.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v2 -> v3:
+- Removed extra new lines in pinctrl-ocelot.
+- Reverted sparx5_desc changes which are done by mistake.
 
-diff --git a/include/uapi/linux/virtio_gpio.h b/include/uapi/linux/virtio_gpio.h
-index 0445f905d8cc..25c95a034674 100644
---- a/include/uapi/linux/virtio_gpio.h
-+++ b/include/uapi/linux/virtio_gpio.h
-@@ -25,7 +25,7 @@ struct virtio_gpio_config {
- 	__le16 ngpio;
- 	__u8 padding[2];
- 	__le32 gpio_names_size;
--} __packed;
-+};
- 
- /* Virtio GPIO Request / Response */
- struct virtio_gpio_request {
+v1 -> v2:
+- Use consistent name lan966x everywhere.
+
+Kavyasree Kotagiri (2):
+  dt-bindings: pinctrl: ocelot: add lan966x SoC support
+  pinctrl: ocelot: Extend support for lan966x
+
+ .../bindings/pinctrl/mscc,ocelot-pinctrl.txt  |   3 +-
+ drivers/pinctrl/pinctrl-ocelot.c              | 416 ++++++++++++++++++
+ 2 files changed, 418 insertions(+), 1 deletion(-)
+
 -- 
-MST
+2.17.1
 
