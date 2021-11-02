@@ -2,147 +2,159 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC9844437B4
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Nov 2021 22:17:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BBF4F4438B6
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Nov 2021 23:46:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229981AbhKBVTv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 Nov 2021 17:19:51 -0400
-Received: from mail-pl1-f170.google.com ([209.85.214.170]:36364 "EHLO
-        mail-pl1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229931AbhKBVTv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Nov 2021 17:19:51 -0400
-Received: by mail-pl1-f170.google.com with SMTP id u11so864484plf.3;
-        Tue, 02 Nov 2021 14:17:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=q3y5UxeQSpLyKQPZY321rv/0ZITkGbCXJhzW/7YHXdo=;
-        b=x6QsW+aTrEmPDoDxf/ujFsmJrx7Y8vJFmcoz5NjjOnqjt58UqMhAwgwJMupWDfuae2
-         sySplTnaviF7XxdIrW68c7GdChwqFF/VzMtcEfrINSqiv2ZIAayA58lrO6Uy5NXV6ljb
-         pG5BGoLWTscbikhcSs5Z4HnyJqkhPrfhQvQBGv+c5oUTWHKPlzGaP361diy/IDoDYdf2
-         A3VK82vxtd1ZlTtSitXNLC4nVm2m+1oqElOE10T0Kf6JAZ3ZNVvm2Q4KMEHT1OJD/boO
-         raTMXAVzi1fka+bTNsGugF+oFrR+NU2tAp1xvFjGPltAXuk9PmMEykPL5B+rmHX5ofAU
-         8NLg==
-X-Gm-Message-State: AOAM533KVAY0FQYRRb8z0GznhOxU7FsdwmWDImg8Zyhb1umSQ4OgenAb
-        mdtA64RMpAucRfLyH/PvUhSkGod2WDwVdx4UoQc/AjhSjMc=
-X-Google-Smtp-Source: ABdhPJz8vya8Pc9vfyjBBnOdrocjtFOk+W75BUtZYClkn8GG2bJFYZJzRCxnG9uqRIRWqGnV1fANTmhWO6L01upvC1k=
-X-Received: by 2002:a17:90a:5b0c:: with SMTP id o12mr9978948pji.194.1635887835692;
- Tue, 02 Nov 2021 14:17:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20211102161125.1144023-1-kernel@esmil.dk> <20211102161125.1144023-10-kernel@esmil.dk>
- <CAHp75Ve-P8DR00mtRP_NkrXgB4nsZ+qBkgBen94iTcPqxQYUOg@mail.gmail.com>
- <CANBLGcyb=TAP0h2WuxBAjRvpN9n7Dt1Hvh5yE8NMOwm3ixZWuA@mail.gmail.com> <CAHp75Vcg3En=xH+kz0GgAMGUoo5FABo2HwGoHd=7QgGVrYkYXg@mail.gmail.com>
-In-Reply-To: <CAHp75Vcg3En=xH+kz0GgAMGUoo5FABo2HwGoHd=7QgGVrYkYXg@mail.gmail.com>
-From:   Emil Renner Berthing <kernel@esmil.dk>
-Date:   Tue, 2 Nov 2021 22:17:04 +0100
-Message-ID: <CANBLGczrGwexRGvGxa9C+yzaSHZF_d5+AaebeLUX5BXFxipr=A@mail.gmail.com>
-Subject: Re: [PATCH v3 09/16] reset: starfive-jh7100: Add StarFive JH7100
- reset driver
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Yury Norov <yury.norov@gmail.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        Drew Fustini <drew@beagleboard.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Michael Zhu <michael.zhu@starfivetech.com>,
-        Fu Wei <tekkamanninja@gmail.com>,
-        Anup Patel <anup.patel@wdc.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        Matteo Croce <mcroce@microsoft.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        id S229747AbhKBWt1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 2 Nov 2021 18:49:27 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:57505 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229685AbhKBWt0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Nov 2021 18:49:26 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailout.nyi.internal (Postfix) with ESMTP id B980E5C0063;
+        Tue,  2 Nov 2021 18:46:50 -0400 (EDT)
+Received: from imap43 ([10.202.2.93])
+  by compute2.internal (MEProxy); Tue, 02 Nov 2021 18:46:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm1; bh=+MmfI1hZqEV2ZXk8KmjNb0iZ8aI9C1X
+        wnf9lcQ3Z1uc=; b=YFmHr1Oukctfa1gHQIpggEvefuoGE4pnTJ5WbvG78Hb/MLR
+        EeNus6GyzokK1Fttz8p44luYffyp0Ewlu2MD/4s1pX8Kj/i0bq6RtIFD1HfUBDhZ
+        IPZ1hQei5b4JvrC74jSvh0w+2Zmt/Qeure3CpyH+2xZEvb1xzRJCsJ4lwomBUk/g
+        UR6dZUrQPfyD496Uk8DRWwqHq5UneFxRdUWwjea9IQrC1+h8GYYEADBDp03PX+Bm
+        JM9lKZQqtFn7Bn7DekpYBLZsD+3b3oyU3wETQH3ocgzi4lbiKadTU4Qukuxt1d0e
+        U7bXc7B5h2GPGBz8NMtZJMEDKv8/ds+VOwZEggQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=+MmfI1
+        hZqEV2ZXk8KmjNb0iZ8aI9C1Xwnf9lcQ3Z1uc=; b=HD1En9EfpDdtNdzzDK3z1A
+        qKRdQ4dEH6fT+NppFc2Tplbqnu6bZuwIZ2WlT/DM93uDNw1D26grn7xCytMSg2q2
+        xrVPEbIaXrvKMldB++BRrrPcFqWeHN6VqkSC5NIs+MrZ3f9iwd6YsqzlWB+kS6Gi
+        rXYaTV2LumDsuvRU9fMi7rvyhycqoSiPQP+ozimKIw9/soGC81oZZQD/hAyFwQd4
+        5/7JUYV9vx2W+iHYarCV1oKTBwPMcKBcob8LNaE7z/SNwo+WWwMtHGR4ltslXJSJ
+        LznpoJEZl0SuSAZuIpzUwbOxl0WyuRWfhlj/QuHwvn8dueRBVpkFnfICP3RJEgjQ
+        ==
+X-ME-Sender: <xms:2r-BYTq0n-5UldPg_zXq-JhZmzsp75EGAEEXvL1BEiYitN7qoaZvQA>
+    <xme:2r-BYdr0Wc9-VK76am5pTrJvQQaJ8XejF3ywxGC29ODiCq_uwK3xmEdJLWgtdMLre
+    m7gNkMED3mq4OWDKQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvuddrtddugddtudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
+    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucggtffrrg
+    htthgvrhhnpeehhfefkefgkeduveehffehieehudejfeejveejfedugfefuedtuedvhefh
+    veeuffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grnhgurhgvfiesrghjrdhiugdrrghu
+X-ME-Proxy: <xmx:2r-BYQN1odeZTH5cZ15jmB0wcHvGUAYh8uP328m5hMo8eAT5hwleBQ>
+    <xmx:2r-BYW7whpwHdmUZkJUde3_3rNIV1bF_Ewxia1lVDKzUDaduCpYW-w>
+    <xmx:2r-BYS73IicJx_qukKMIx6HyEDrCDFrdKZLHL6oSS_a7TxRnyUF9fA>
+    <xmx:2r-BYfubquuJ1R21rpgvG3cZ8rsh6hrsZPYt3Azxa36EUuxpnL2syg>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 7A487AC0E8C; Tue,  2 Nov 2021 18:46:50 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.5.0-alpha0-1369-gd055fb5e7c-fm-20211018.002-gd055fb5e
+Mime-Version: 1.0
+Message-Id: <3fc55e2b-05cb-438d-b1cb-0d62f26c5411@www.fastmail.com>
+In-Reply-To: <20211029212157.14230-1-julianbraha@gmail.com>
+References: <20211029212157.14230-1-julianbraha@gmail.com>
+Date:   Wed, 03 Nov 2021 09:16:30 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Julian Braha" <julianbraha@gmail.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Joel Stanley" <joel@jms.id.au>
+Cc:     linux-aspeed@lists.ozlabs.org, linux-gpio@vger.kernel.org,
+        openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, fazilyildiran@gmail.com
+Subject: Re: [PATCH] pinctrl: aspeed: fix unmet dependencies on MFD_SYSCON for
+ PINCTRL_ASPEED
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 2 Nov 2021 at 21:14, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> On Tue, Nov 2, 2021 at 9:59 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
-> > On Tue, 2 Nov 2021 at 20:43, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > > On Tue, Nov 2, 2021 at 6:50 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
->
-> ...
->
-> > > > +/*
-> > > > + * the registers work like a 32bit bitmap, so writing a 1 to the m'th bit of
-> > > > + * the n'th ASSERT register asserts line 32n + m, and writing a 0 deasserts the
-> > > > + * same line.
-> > > > + * most reset lines have their status inverted so a 0 in the STATUS register
-> > > > + * means the line is asserted and a 1 means it's deasserted. a few lines don't
-> > > > + * though, so store the expected value of the status registers when all lines
-> > > > + * are asserted.
-> > > > + */
-> > >
-> > > Besides missing capitalization,
-> >
-> > I'm confused. it was you who wanted all comments to capitalized the same..
->
-> Yes and there are two types of the comments, one-liners and
-> multi-line. In multi-line you usually use proper English grammar,
-> where capitalization means what it means. For the one-liners just
-> choose either small letters or capital letters to start them with.
 
-That sounds reasonable, it was just that you complained about
-inconsistent comments in the pinctrl driver that follows the above.
 
-> > if it sounds like bitmap, use bitmap.
-> > > I have checked DT definitions and it seems you don't even need the
-> > > BIT_MASK() macro,
-> > >
-> > > > +static const u32 jh7100_reset_asserted[4] = {
-> > > > +       /* STATUS0 register */
-> > > > +       BIT_MASK32(JH7100_RST_U74) |
-> > > > +       BIT_MASK32(JH7100_RST_VP6_DRESET) |
-> > > > +       BIT_MASK32(JH7100_RST_VP6_BRESET),
-> > > > +       /* STATUS1 register */
-> > > > +       BIT_MASK32(JH7100_RST_HIFI4_DRESET) |
-> > > > +       BIT_MASK32(JH7100_RST_HIFI4_BRESET),
-> > > > +       /* STATUS2 register */
-> > > > +       BIT_MASK32(JH7100_RST_E24),
-> > > > +       /* STATUS3 register */
-> > > > +       0,
-> > > > +};
-> > >
-> > > Yury, do we have any clever (clean) way to initialize a bitmap with
-> > > particular bits so that it will be a constant from the beginning? If
-> > > no, any suggestion what we can provide to such users?
-> >
-> > The problem is, that even if we could initialize this without the
-> > monstrosity in our last conversation a 64bit bitmap would still
-> > produce worse code. As it is now it's simply a 32bit load and mask
-> > with index and mask already calculated for the registers. In the
-> > status callback the mask can even be folded into the register read
-> > mask. With a 64bit bitmap you'd need to calculate new 64bit index and
-> > masks, and then conditionally shift the bits into position.
+On Sat, 30 Oct 2021, at 07:51, Julian Braha wrote:
+> When PINCTRL_ASPEED_G* is selected,
+> and MFD_SYSCON is not selected,
+> Kbuild gives the following warnings:
 >
-> Why? You may use 8 byte IO (writeq() / readq() or their relaxed versions), no?
+> WARNING: unmet direct dependencies detected for PINCTRL_ASPEED
+>   Depends on [n]: PINCTRL [=y] && (ARCH_ASPEED [=n] || COMPILE_TEST 
+> [=y]) && OF [=y] && MFD_SYSCON [=n]
+>   Selected by [y]:
+>   - PINCTRL_ASPEED_G4 [=y] && PINCTRL [=y] && (MACH_ASPEED_G4 [=n] || 
+> COMPILE_TEST [=y]) && OF [=y]
 >
-> ...
+> WARNING: unmet direct dependencies detected for PINCTRL_ASPEED
+>   Depends on [n]: PINCTRL [=y] && (ARCH_ASPEED [=n] || COMPILE_TEST 
+> [=y]) && OF [=y] && MFD_S>
+>   Selected by [y]:
+>   - PINCTRL_ASPEED_G5 [=y] && PINCTRL [=y] && (MACH_ASPEED_G5 [=n] || 
+> COMPILE_TEST [=y]) && O>
 >
-> > If this reflection of the 32bit registers bothers you that much
+> WARNING: unmet direct dependencies detected for PINCTRL_ASPEED
+>   Depends on [n]: PINCTRL [=y] && (ARCH_ASPEED [=n] || COMPILE_TEST 
+> [=y]) && OF [=y] && MFD_S>
+>   Selected by [y]:
+>   - PINCTRL_ASPEED_G6 [=y] && PINCTRL [=y] && (MACH_ASPEED_G6 [=n] || 
+> COMPILE_TEST [=y]) && O>
 >
-> What bothers me is hidden endianess issues (yeah, here it might be
-> theoretical, but consider that somebody will look at your code and use
-> it as the best example ever).
+> This is because PINCTRL_ASPEED_G* selects PINCTRL_ASPEED,
+> without selecting or depending on MFD_SYSCON, despite
+> PINCTRL_ASPEED depending on MFD_SYSCON.
+>
+> These unmet dependency bugs were detected by Kismet,
+> a static analysis tool for Kconfig. Please advise
+> if this is not the appropriate solution.
+>
+> Signed-off-by: Julian Braha <julianbraha@gmail.com>
 
-Wouldn't endian issues be a reason to make sure we read 32bit
-registers with 32bit reads? Or do you expect a hypothetical big-endian
-StarFive SoC to also change the order of the registers?
+From a system-level perspective MFD_SYSCON is selected by ARCH_ASPEED, 
+then the MACH_ASPEED_G* symbols depend on ARCH_ASPEED.
+
+However, that doesn't help the COMPILE_TEST case, so we need some 
+solution. Since MFD_SYSCON is required by all the relevant drivers and 
+the aspeed pinctrl core, maybe it would be best just to add as a select to 
+PINCTRL_ASPEED? Unless there's an argument for depends instead?
+
+Thanks for the patch and report!
+
+Andrew
+
+> ---
+>  drivers/pinctrl/aspeed/Kconfig | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/drivers/pinctrl/aspeed/Kconfig b/drivers/pinctrl/aspeed/Kconfig
+> index de8b185c4fee..b0bae6144fc2 100644
+> --- a/drivers/pinctrl/aspeed/Kconfig
+> +++ b/drivers/pinctrl/aspeed/Kconfig
+> @@ -11,6 +11,7 @@ config PINCTRL_ASPEED
+>  config PINCTRL_ASPEED_G4
+>  	bool "Aspeed G4 SoC pin control"
+>  	depends on (MACH_ASPEED_G4 || COMPILE_TEST) && OF
+> +	depends on MFD_SYSCON
+>  	select PINCTRL_ASPEED
+>  	help
+>  	  Say Y here to enable pin controller support for Aspeed's 4th
+> @@ -19,6 +20,7 @@ config PINCTRL_ASPEED_G4
+>  config PINCTRL_ASPEED_G5
+>  	bool "Aspeed G5 SoC pin control"
+>  	depends on (MACH_ASPEED_G5 || COMPILE_TEST) && OF
+> +	depends on MFD_SYSCON
+>  	select PINCTRL_ASPEED
+>  	help
+>  	  Say Y here to enable pin controller support for Aspeed's 5th
+> @@ -27,6 +29,7 @@ config PINCTRL_ASPEED_G5
+>  config PINCTRL_ASPEED_G6
+>  	bool "Aspeed G6 SoC pin control"
+>  	depends on (MACH_ASPEED_G6 || COMPILE_TEST) && OF
+> +	depends on MFD_SYSCON
+>  	select PINCTRL_ASPEED
+>  	help
+>  	  Say Y here to enable pin controller support for Aspeed's 6th
+> -- 
+> 2.30.2
