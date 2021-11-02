@@ -2,44 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4ACE7443769
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Nov 2021 21:35:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CA22443784
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Nov 2021 21:56:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231433AbhKBUiK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 Nov 2021 16:38:10 -0400
-Received: from mail-pl1-f181.google.com ([209.85.214.181]:39711 "EHLO
-        mail-pl1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229764AbhKBUiJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Nov 2021 16:38:09 -0400
-Received: by mail-pl1-f181.google.com with SMTP id t21so680592plr.6;
-        Tue, 02 Nov 2021 13:35:34 -0700 (PDT)
+        id S230409AbhKBU6o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 2 Nov 2021 16:58:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47278 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230061AbhKBU6o (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Nov 2021 16:58:44 -0400
+Received: from mail-io1-xd2c.google.com (mail-io1-xd2c.google.com [IPv6:2607:f8b0:4864:20::d2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C58A7C061714;
+        Tue,  2 Nov 2021 13:56:08 -0700 (PDT)
+Received: by mail-io1-xd2c.google.com with SMTP id 62so299659iou.2;
+        Tue, 02 Nov 2021 13:56:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5qpSO8WUXhUCrAbZgUnrOJ4l2/cOqHIYTb/IBBg9XxU=;
+        b=dYUO/tLaVyPYDeinS3Bci5Y1zgmTYCUUBGwfkUhxhDm6S9KkOcjK8bQl8oEHcC2+ZX
+         ET9FkdT7791SO9/NU5VVw7pDfz5Py4ns2fGH+RQKLK4WXEpiLrDGZQbUag5qOjeVJKdY
+         +pIl+QoR4ENH464VRVxn01fSLd736ql860MiHqgRzfncsvfHfzNu1+XYXeBycbs4XZfz
+         G0Wy2ujTD540hiNf7cB8mwTGkmyEvPXrx8rfK7DEWnDaLkER/vtNYV9X6SzvBm8uVl5E
+         BswK0OIp3Q7KrKTqFH6gjVo3aeGhuDeVApKzvZsbq8E7fMjDoAE4DPYmAF5NXblXxw6r
+         HCww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+ukRUnX99GuuGwercSLJHoFG30Ze6tFA6H732ebipYw=;
-        b=QHCyXIt7EzRXtJr8RfS+wg0LeQ1TQsnPPqXr5i2reF88zPmDMrDHBmXdzdtbt7WWBV
-         HAzIR7rekwrG9o1lN6YdiM3m9INAfo+SXO2hpaTHNbdcnw/zDVG6OBSRnD+NPRg0cICB
-         vg7ZouP5bXVNgDHmwv3kU8EXOWTsdMP9+ac+w9i8SBD5bco74Rpnm2tjNhIidB2OzSiP
-         cY/bfAl9GjrwXcZYU5bKn92KBb86FlvpPffxlrku1ywfZEQNTuaDFofo/mKChkQBO40s
-         Hy+WmezSDrj9jKn1iemHrCW03w31PDVzepDcByNRA6GGExCz5CMLT2QEGjCVdoblDfwX
-         +A9A==
-X-Gm-Message-State: AOAM530fS9UYuIlefW/8fydbJuuY4NZNxqq0LFpwE18S07Nj3A/Ag9cd
-        uugzvj3HORR73QpqcccUgLHbErS74ypw/IcYysg=
-X-Google-Smtp-Source: ABdhPJwcoVLt11l+ug+gF9p11omB7TPoI/gjwPD7aicE1EjLlqZEE1qV7U9Hob+ZQw1H45ZZ4/Ab1gEEMKE1bx513n0=
-X-Received: by 2002:a17:90a:5b0c:: with SMTP id o12mr9748968pji.194.1635885334069;
- Tue, 02 Nov 2021 13:35:34 -0700 (PDT)
+        bh=5qpSO8WUXhUCrAbZgUnrOJ4l2/cOqHIYTb/IBBg9XxU=;
+        b=j1jy2JcuVgV2onzrsKQWsUqiszZfS8Ci4XXTdfQJb9/HOv0oY58xOyZQnMuyIhWyMA
+         ZSGMCmoxAOoY+6WqUMNx4SWAKnkLmkARSDKMxX22i+venQepnD4hD7qv1HgeKp6I3GAN
+         5/Ac1vZTgfmolPAubv2cQKrcopEADY6LpnZuH2+OZRzrWSqsD88sFys8H/us4MU7VY2G
+         dOPk0EoFEv+OqE9JRFarXbLaGKKoogMMIJxlT0AOLbOqmnUD0zBDa0Ge2HkLHoiRYCI4
+         ZQcZ2FhRycScTTB1sOdt0WMAXwlDA6vh3oHlDCeysClsaSFfLZRcR/UZyJtV4bSmW1yr
+         6KTg==
+X-Gm-Message-State: AOAM5305MNuJ3cYSWNVY1OKTNi6Jt9PuVfKk9V0nz5JzhnaxMje2Rc1l
+        t9N4W2++TayBA7NpJsHMFUHvgDc7J/vK//Rhdi0=
+X-Google-Smtp-Source: ABdhPJygmuBb5+o5lPg7eND5Rtx8YFYElghK2rfOTJ0tMJEFEttP6v8+0uhDe+ZA+pt6kb9Y/WP9MaRcaSIw1/qaGCU=
+X-Received: by 2002:a02:6064:: with SMTP id d36mr29827629jaf.80.1635886568112;
+ Tue, 02 Nov 2021 13:56:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211102161125.1144023-1-kernel@esmil.dk> <20211102161125.1144023-13-kernel@esmil.dk>
- <CAHp75VdmnnrisuP00W0KYta0KgmC+fu3WMxm959dt5X1kpiKTw@mail.gmail.com>
-In-Reply-To: <CAHp75VdmnnrisuP00W0KYta0KgmC+fu3WMxm959dt5X1kpiKTw@mail.gmail.com>
-From:   Emil Renner Berthing <kernel@esmil.dk>
-Date:   Tue, 2 Nov 2021 21:35:22 +0100
-Message-ID: <CANBLGczn8+po09wF_uEvvU8tLCn0ahY+Gkj9JJLxOcj1LC1aLA@mail.gmail.com>
-Subject: Re: [PATCH v3 12/16] pinctrl: starfive: Add pinctrl driver for
- StarFive SoCs
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
+References: <20211102161125.1144023-1-kernel@esmil.dk> <20211102161125.1144023-10-kernel@esmil.dk>
+ <CAHp75Ve-P8DR00mtRP_NkrXgB4nsZ+qBkgBen94iTcPqxQYUOg@mail.gmail.com> <CANBLGcyb=TAP0h2WuxBAjRvpN9n7Dt1Hvh5yE8NMOwm3ixZWuA@mail.gmail.com>
+In-Reply-To: <CANBLGcyb=TAP0h2WuxBAjRvpN9n7Dt1Hvh5yE8NMOwm3ixZWuA@mail.gmail.com>
+From:   Yury Norov <yury.norov@gmail.com>
+Date:   Tue, 2 Nov 2021 13:55:53 -0700
+Message-ID: <CAAH8bW-J6Ai+KZFkZ4ELOzD-u7BceZrBqwnCuPH6F-fNQNm3XQ@mail.gmail.com>
+Subject: Re: [PATCH v3 09/16] reset: starfive-jh7100: Add StarFive JH7100
+ reset driver
+To:     Emil Renner Berthing <kernel@esmil.dk>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
         devicetree <devicetree@vger.kernel.org>,
         linux-clk <linux-clk@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
@@ -66,246 +81,127 @@ Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
         Anup Patel <anup.patel@wdc.com>,
         Atish Patra <atish.patra@wdc.com>,
         Matteo Croce <mcroce@microsoft.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Huan Feng <huan.feng@starfivetech.com>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 2 Nov 2021 at 21:02, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> On Tue, Nov 2, 2021 at 6:50 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
-> > Add a combined pinctrl and GPIO driver for the JH7100 RISC-V SoC by
-> > StarFive Ltd. This is a test chip for their upcoming JH7110 SoC, which
-> > is said to feature only minor changes to these pinctrl/GPIO parts.
+On Tue, Nov 2, 2021 at 12:59 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
+>
+> On Tue, 2 Nov 2021 at 20:43, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > +Cc: Yury (bitmap expert)
 > >
-> > For each "GPIO" there are two registers for configuring the output and
-> > output enable signals which may come from other peripherals. Among these
-> > are two special signals that are constant 0 and constant 1 respectively.
-> > Controlling the GPIOs from software is done by choosing one of these
-> > signals. In other words the same registers are used for both pin muxing
-> > and controlling the GPIOs, which makes it easier to combine the pinctrl
-> > and GPIO driver in one.
+> > On Tue, Nov 2, 2021 at 6:50 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
+> > >
+> > > Add a driver for the StarFive JH7100 reset controller.
 > >
-> > I wrote the pinconf and pinmux parts, but the GPIO part of the code is
-> > based on the GPIO driver in the vendor tree written by Huan Feng with
-> > cleanups and fixes by Drew and me.
->
-> ...
->
-> > +       depends on OF
->
-> So this descreases test coverage.
-> Linus, can we provide a necessary stub so we may drop this dependency?
->
-> ...
->
-> > +static inline struct device *starfive_dev(const struct starfive_pinctrl *sfp)
-> > +{
-> > +       return sfp->gc.parent;
-> > +}
-> > +
->
-> This seems useless helper. You may do what it's doing just in place.
-> It will save 5 LOCs.
+> > ...
+> >
+> > > +#define BIT_MASK32(x) BIT((x) % 32)
+> >
+> > Possible namespace collision.
+> >
+> > ...
+> >
+> > > +/*
+> > > + * the registers work like a 32bit bitmap, so writing a 1 to the m'th bit of
+> > > + * the n'th ASSERT register asserts line 32n + m, and writing a 0 deasserts the
+> > > + * same line.
 
-I don't mind removing it, I just think it's easier to read when we're
-explicit that all we want is a dev pointer, and we don't suddenly need
-to know the parent of the gpio chip in all the pinmux/pinconf
-callbacks.
+We don't have 32-bit bitmaps. Bitmaps are always arrays of unsigned longs. On a
+64-bit system this '32-bit bitmap' may be broken due to endianness issues.
 
-> > +static void starfive_pin_dbg_show(struct pinctrl_dev *pctldev,
-> > +                                 struct seq_file *s,
-> > +                                 unsigned int pin)
-> > +{
-> > +       struct starfive_pinctrl *sfp = pinctrl_dev_get_drvdata(pctldev);
-> > +       unsigned int gpio = starfive_pin_to_gpio(sfp, pin);
-> > +       void __iomem *reg;
-> > +       u32 dout, doen;
+> > > + * most reset lines have their status inverted so a 0 in the STATUS register
+> > > + * means the line is asserted and a 1 means it's deasserted. a few lines don't
+> > > + * though, so store the expected value of the status registers when all lines
+> > > + * are asserted.
+> > > + */
+> >
+> > Besides missing capitalization,
 >
-> > +       if (gpio >= NR_GPIOS)
-> > +               return;
->
-> Dead code?
+> I'm confused. it was you who wanted all comments to capitalized the same..
+> 64bi
+> if it sounds like bitmap, use bitmap.
+> > I have checked DT definitions and it seems you don't even need the
+> > BIT_MASK() macro,
+> >
+> > > +static const u32 jh7100_reset_asserted[4] = {
+> > > +       /* STATUS0 register */
+> > > +       BIT_MASK32(JH7100_RST_U74) |
 
-No, this function is called for all 206 configurable pins, but only 64
-of them are gpio pins. Which ones depend on the signal group.
+I think we have no BIT_MASK32() for a good reason. Natural alignment is
+always preferable.
 
-> > +       reg = sfp->base + GPON_DOUT_CFG + 8 * gpio;
-> > +       dout = readl_relaxed(reg + 0x000);
-> > +       doen = readl_relaxed(reg + 0x004);
-> > +
-> > +       seq_printf(s, "dout=%lu%s doen=%lu%s",
-> > +                  dout & GENMASK(7, 0), (dout & BIT(31)) ? "r" : "",
-> > +                  doen & GENMASK(7, 0), (doen & BIT(31)) ? "r" : "");
-> > +}
->
-> ...
->
-> > +       struct starfive_pinctrl *sfp = pinctrl_dev_get_drvdata(pctldev);
-> > +       struct device *dev = starfive_dev(sfp);
-> > +       const char **pgnames;
-> > +       struct pinctrl_map *map;
-> > +       struct device_node *child;
-> > +       const char *grpname;
-> > +       int *pins;
-> > +       u32 *pinmux;
->
-> Reversed xmas tree order?
->
-> > +static int starfive_gpio_get_direction(struct gpio_chip *gc, unsigned int gpio)
-> > +{
-> > +       struct starfive_pinctrl *sfp = container_of(gc, struct starfive_pinctrl, gc);
-> > +       void __iomem *doen = sfp->base + GPON_DOEN_CFG + 8 * gpio;
-> > +
-> > +       /* return GPIO_LINE_DIRECTION_OUT (0) only if doen == GPO_ENABLE (0) */
-> > +       return readl_relaxed(doen) != GPO_ENABLE;
->
-> I believe the idea was to return the predefined values for the direction.
+> > > +       BIT_MASK32(JH7100_RST_VP6_DRESET) |
+> > > +       BIT_MASK32(JH7100_RST_VP6_BRESET),
+> > > +       /* STATUS1 register */
+> > > +       BIT_MASK32(JH7100_RST_HIFI4_DRESET) |
+> > > +       BIT_MASK32(JH7100_RST_HIFI4_BRESET),
+> > > +       /* STATUS2 register */
+> > > +       BIT_MASK32(JH7100_RST_E24),
+> > > +       /* STATUS3 register */
+> > > +       0,
+> > > +};
+> >
+> > Yury, do we have any clever (clean) way to initialize a bitmap with
+> > particular bits so that it will be a constant from the beginning? If
+> > no, any suggestion what we can provide to such users?
 
-You mean this?
-  return readl_relaxed(doen) == GPO_ENABLE ? GPIO_LINE_DIRECTION_OUT :
-GPIO_LINE_DIRECTION_IN;
+If you want your array to be a true bitmap, ie, all bitmap functions should
+work with it correctly, you'd initialize it like this:
 
-> > +}
->
-> ...
->
-> > +static int starfive_irq_set_type(struct irq_data *d, unsigned int trigger)
-> > +{
-> > +       struct starfive_pinctrl *sfp = starfive_from_irq_data(d);
-> > +       irq_hw_number_t gpio = irqd_to_hwirq(d);
-> > +       void __iomem *base = sfp->base + 4 * (gpio / 32);
-> > +       u32 mask = BIT(gpio % 32);
-> > +       u32 irq_type, edge_both, polarity;
-> > +       unsigned long flags;
-> > +
-> > +       if (trigger & IRQ_TYPE_EDGE_BOTH)
-> > +               irq_set_handler_locked(d, handle_edge_irq);
-> > +       else if (trigger & IRQ_TYPE_LEVEL_MASK)
-> > +               irq_set_handler_locked(d, handle_level_irq);
->
-> Usually we don't assign this twice, so it should be after the switch.
->
-> > +       switch (trigger) {
-> > +       case IRQ_TYPE_EDGE_RISING:
-> > +               irq_type  = mask; /* 1: edge triggered */
-> > +               edge_both = 0;    /* 0: single edge */
-> > +               polarity  = mask; /* 1: rising edge */
-> > +               break;
-> > +       case IRQ_TYPE_EDGE_FALLING:
-> > +               irq_type  = mask; /* 1: edge triggered */
-> > +               edge_both = 0;    /* 0: single edge */
-> > +               polarity  = 0;    /* 0: falling edge */
-> > +               break;
-> > +       case IRQ_TYPE_EDGE_BOTH:
-> > +               irq_type  = mask; /* 1: edge triggered */
-> > +               edge_both = mask; /* 1: both edges */
-> > +               polarity  = 0;    /* 0: ignored */
-> > +               break;
-> > +       case IRQ_TYPE_LEVEL_HIGH:
-> > +               irq_type  = 0;    /* 0: level triggered */
-> > +               edge_both = 0;    /* 0: ignored */
-> > +               polarity  = mask; /* 1: high level */
-> > +               break;
-> > +       case IRQ_TYPE_LEVEL_LOW:
-> > +               irq_type  = 0;    /* 0: level triggered */
-> > +               edge_both = 0;    /* 0: ignored */
-> > +               polarity  = 0;    /* 0: low level */
-> > +               break;
-> > +       default:
->
-> > +               irq_set_handler_locked(d, handle_bad_irq);
->
-> Why? You have it already in ->probe(), what's the point?
+static const unsigned long jh7100_reset_asserted[] = {
+        BITMAP_FROM_U64(BIT_MASK(JH7100_RST_VP6_DRESET) |
+                          BIT_MASK(JH7100_RST_VP6_BRESET) |
+                          BIT_MASK(JH7100_RST_HIFI4_DRESET) |
+                          BIT_MASK(JH7100_RST_HIFI4_BRESET)),
+        BITMAP_FROM_U64(BIT_MASK(JH7100_RST_E24)),
+}
 
-So last time you asked about this, I explained a situation where
-userspace first grabs a GPIO, set the interrupt to edge triggered, and
-then later loads a driver that requests an unsupported IRQ type. Then
-I'd like to set the handler back to handle_bad_irq so we don't get
-weird interrupts, but maybe now you know a reason why that doesn't
-matter or can't happen?
+Look at lib/test_bitmap.c for example, and comment to BITMAP_FROM_U64()
+for internal details.
 
-> > +               return -EINVAL;
-> > +       }
-> > +
-> > +       raw_spin_lock_irqsave(&sfp->lock, flags);
-> > +       irq_type |= readl_relaxed(base + GPIOIS) & ~mask;
-> > +       writel_relaxed(irq_type, base + GPIOIS);
-> > +       edge_both |= readl_relaxed(base + GPIOIBE) & ~mask;
-> > +       writel_relaxed(edge_both, base + GPIOIBE);
-> > +       polarity |= readl_relaxed(base + GPIOIEV) & ~mask;
-> > +       writel_relaxed(polarity, base + GPIOIEV);
-> > +       raw_spin_unlock_irqrestore(&sfp->lock, flags);
-> > +       return 0;
-> > +}
->
-> ...
->
-> > +       ret = reset_control_deassert(rst);
-> > +       if (ret)
-> > +               return dev_err_probe(dev, ret, "could not deassert resetd\n");
->
-> > +       ret = devm_pinctrl_register_and_init(dev, &starfive_desc, sfp, &sfp->pctl);
-> > +       if (ret)
->
-> I don't see who will assert reset here.
+On the other hand, if you hardware has tricky requirements for bit
+positions, and they should depend on endianness and/or size of
+long in a way not compatible with bitmaps, you probably know better
+how to handle this. Just don't refer to your structure as a bitmap.
 
-No, so originally this driver would first assert and then deassert
-reset. I decided against that because in all likelyhood earlier boot
-stages would have set pinmux up for a serial port, and we don't want
-to interrupt the serial debug output. The only reason I make sure the
-reset line is deasserted is in case someone makes a really minimal
-bootloader that just does the absolute minimal to load a Linux kernel
-and doesn't even log any anything.
+Thanks,
+Yury
 
-By the same token we also don't want to assert reset on error in case
-it resets pin muxing for the the serial line that was supposed to log
-the error.
-
+> The problem is, that even if we could initialize this without the
+> monstrosity in our last conversation a 64bit bitmap would still
+> produce worse code. As it is now it's simply a 32bit load and mask
+> with index and mask already calculated for the registers. In the
+> status callback the mask can even be folded into the register read
+> mask. With a 64bit bitmap you'd need to calculate new 64bit index and
+> masks, and then conditionally shift the bits into position.
 >
-> > +               return dev_err_probe(dev, ret, "could not register pinctrl driver\n");
+> If this reflection of the 32bit registers bothers you that much we
+> could alternatively do
 >
-> ...
+> static bool jh7100_reset_inverted(unsigned int idx)
+> {
+>   switch (idx) {
+>   case JH7100_RST_U74:
+>   case JH7100_RST_VP6_DRESET:
+>   ..
+>     return false;
+>   }
+>   return true;
+> }
 >
-> > +       switch (value) {
-> > +       case 0:
-> > +               sfp->gpios.pin_base = PAD_INVALID_GPIO;
-> > +               goto done;
-> > +       case 1:
-> > +               sfp->gpios.pin_base = PAD_GPIO(0);
-> > +               break;
-> > +       case 2:
-> > +               sfp->gpios.pin_base = PAD_FUNC_SHARE(72);
-> > +               break;
-> > +       case 3:
-> > +               sfp->gpios.pin_base = PAD_FUNC_SHARE(70);
-> > +               break;
-> > +       case 4: case 5: case 6:
-> > +               sfp->gpios.pin_base = PAD_FUNC_SHARE(0);
-> > +               break;
-> > +       default:
+> It'd still produce worse code, but at least it would be readable.
 >
-> Ditto.
+> /Emil
 >
-> > +               return dev_err_probe(dev, -EINVAL, "invalid signal group %u\n", value);
-> > +       }
->
-> ...
->
-> > +       ret = devm_gpiochip_add_data(dev, &sfp->gc, sfp);
-> > +       if (ret)
->
-> Ditto.
->
-> > +               return dev_err_probe(dev, ret, "could not register gpiochip\n");
-> > +
-> > +done:
-> > +       return pinctrl_enable(sfp->pctl);
->
-> Ditto.
->
-> And better to use label name like following
-> out_pinctrl_enable:
-
-Good idea.
+> > ...
+> >
+> > > +       dev_dbg(rcdev->dev, "reset(%lu)\n", id);
+> >
+> > These debug messages are useless since one should use ftrace facility instead,
+> >
+> > --
+> > With Best Regards,
+> > Andy Shevchenko
