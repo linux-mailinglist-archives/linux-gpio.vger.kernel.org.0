@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA7C1443380
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Nov 2021 17:44:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 28CA04433DD
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Nov 2021 17:50:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234916AbhKBQqy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 Nov 2021 12:46:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44502 "EHLO
+        id S235212AbhKBQwd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 2 Nov 2021 12:52:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234775AbhKBQqt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Nov 2021 12:46:49 -0400
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B847C06122B;
+        with ESMTP id S235037AbhKBQv4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Nov 2021 12:51:56 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72F3FC06122C;
         Tue,  2 Nov 2021 09:12:00 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id w15so77758933edc.9;
+Received: by mail-ed1-x536.google.com with SMTP id f8so56342205edy.4;
         Tue, 02 Nov 2021 09:12:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=S07ZlNyPM9aXYOfmi3L50ieiCZ4bZ/2J0IfM/InNuyU=;
-        b=JJTA+SybBinzM+vGWoCK8Zj+OROkF68vq6cvWOXoq3PB7eP5OQDD/BBh9UoBnl4H7+
-         mzldCTY/3gwMbwy2/neOvNSdYxixLqIvU0Qdrw21IdYCHaGjktwVmmVG5oN8LWhnCc5z
-         OwKKgEzutOC0DfsrPTgNS7jL7rgRhB81TEKv6IfV1pZJfSNbHfOqbZUg7F+u4NiirNO2
-         AOxBZVBxhUaLD49kV8yqGK7HFx+7iFzgjwYDSoRVLOeYKdUixaP/O4zAbee3fH5TY4DB
-         59QiMCog5d6CZpBgOAbMhmXaL+FaMY85smJF7SEJZlSEHTKam63H1zZ2SK+DJzw8UaPg
-         kw5A==
+        bh=Gr1wIwTgNcFqIl+KtBgXG2trMXyB3lpCcCeSmV2+9WY=;
+        b=kesuWbk9QcRbTHpSJ2A10Q6H95jas9sYalZHj8eRZNjTGUGOaf+UUzkg6V+yA7NYIt
+         BQsP3GIIxSRP47TRDhvh6SmXgsvjY7NojTVPf4UmQvgfbZwG5YZmm9eVcCRFMhiHWIqX
+         fe5YOMGWsLLkjV7NTD9pQRiwBhNaEnElQ1A9cn69samSO2ZxildjFRog/xrFFctzSCTw
+         ncJ5e3thI3FdaWDJjgB2qrGjoY/MVqTJoV89DUfcqai+8yfheJNBR2XhOZypRjxz0LCV
+         ZqpM1IXjLe8cacP/jwJQ2qA1tbydorQttsf+KnvrZW4pYDESJTMSZp7wHcEKNzIoGnem
+         Whjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=S07ZlNyPM9aXYOfmi3L50ieiCZ4bZ/2J0IfM/InNuyU=;
-        b=DuZIT6jlkEtUy1fvaRfMMB+fmbDkoIfyFxBmjzcKSWx3/COCswyOZfSgQk7oAtLZW3
-         yIv1unJ61q+9VTplCUBlixRSrSjAQTSUsmzzgK4LLsOJNp6nkBRoM6AcE8/sYkmTIrFt
-         lbUinNDYXjdTNYFtx6yFUEBpE4Ssv/OjeuELHH8PUZ/Lqo3FU1TfYDiuvkiJqpeEaArS
-         y1e7myNzZwtgUdMy4vEj4vk58iUBisL9povERSgWjc7OEzT51pVLF+YEUIIEHuKkIuZZ
-         4kXDi58q6E8Uf+xL7elv5upDAr9z8mtLHC4PIj0rCXcYMK5vJX8Q5FFyMldHt1naXMwg
-         byNw==
-X-Gm-Message-State: AOAM533Wy6CfwrOetjGLO+YDenDzE9B+fgbsDbSpZl3hheoBqUU9Ja+n
-        MVllF1c88h6z0xCFcb8eT4I=
-X-Google-Smtp-Source: ABdhPJxvPFom9mlEjjVUIlLhKJOwt4kgVVrbP9xtfptymruWIARqgA1j1tb6QG0G6R4K61k3zlKa1A==
-X-Received: by 2002:a17:906:4f95:: with SMTP id o21mr47162618eju.61.1635869517753;
-        Tue, 02 Nov 2021 09:11:57 -0700 (PDT)
+        bh=Gr1wIwTgNcFqIl+KtBgXG2trMXyB3lpCcCeSmV2+9WY=;
+        b=BdPsVmJNtXklNmogpvmuUreGo5Bs413G912wnq9jnbGyt4G3fVmw7GCCWTzpB7Umgu
+         orAP+Oz21b3uAdGfAHuFU/ATeXHfYxO+WL+Ys/ISY6am9wx7fD8mhKRmqnzDjngXhrfk
+         PVN3gOwDzNLb0SgZ3ZcD775shIg6bLr+9+uso/x6kQa1yF1cnohVK4ut8QpSIuko+0V3
+         bg731oLbcPLDscS9Vk5NmFNYFMti3G2kouy4b0SWoapIt5RZcsV8j0EWuUiPZTlxJMQY
+         YHszQDHUPhhxDwXnJPlQtvOw+LcKlzb2yb9Bw8oqzGQiWWRgHG7YPMsu0AbNA45F9I0K
+         bJRQ==
+X-Gm-Message-State: AOAM530kWm0Chibs1WPEF5O7oz0jz3/XVbjyWDBdIgf5YoWW6lKv/C0c
+        d0AmLYU9iqyJOxbrl27nRuU=
+X-Google-Smtp-Source: ABdhPJxsQXhFOdodq7sgqZhbOs4IXxJ0LcYr8VHTuKHe46oKUaM43Vg1y2FuktrEefEmnmpEvyn6Pg==
+X-Received: by 2002:a50:e606:: with SMTP id y6mr25517269edm.270.1635869519070;
+        Tue, 02 Nov 2021 09:11:59 -0700 (PDT)
 Received: from stitch.. (80.71.140.73.ipv4.parknet.dk. [80.71.140.73])
-        by smtp.gmail.com with ESMTPSA id c7sm8451374ejd.91.2021.11.02.09.11.56
+        by smtp.gmail.com with ESMTPSA id c7sm8451374ejd.91.2021.11.02.09.11.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Nov 2021 09:11:57 -0700 (PDT)
+        Tue, 02 Nov 2021 09:11:58 -0700 (PDT)
 Sender: Emil Renner Berthing <emil.renner.berthing@gmail.com>
 From:   Emil Renner Berthing <kernel@esmil.dk>
 To:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
@@ -76,9 +76,9 @@ Cc:     Emil Renner Berthing <kernel@esmil.dk>,
         Atish Patra <atish.patra@wdc.com>,
         Matteo Croce <mcroce@microsoft.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 08/16] dt-bindings: reset: Add Starfive JH7100 reset bindings
-Date:   Tue,  2 Nov 2021 17:11:17 +0100
-Message-Id: <20211102161125.1144023-9-kernel@esmil.dk>
+Subject: [PATCH v3 09/16] reset: starfive-jh7100: Add StarFive JH7100 reset driver
+Date:   Tue,  2 Nov 2021 17:11:18 +0100
+Message-Id: <20211102161125.1144023-10-kernel@esmil.dk>
 X-Mailer: git-send-email 2.33.1
 In-Reply-To: <20211102161125.1144023-1-kernel@esmil.dk>
 References: <20211102161125.1144023-1-kernel@esmil.dk>
@@ -88,59 +88,249 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add bindings for the reset controller on the JH7100 RISC-V SoC by
-StarFive Ltd. This is a test chip for their upcoming JH7110 SoC.
+Add a driver for the StarFive JH7100 reset controller.
 
 Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
 ---
- .../bindings/reset/starfive,jh7100-reset.yaml | 38 +++++++++++++++++++
- 1 file changed, 38 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/starfive,jh7100-reset.yaml
+ MAINTAINERS                           |   7 +
+ drivers/reset/Kconfig                 |   7 +
+ drivers/reset/Makefile                |   1 +
+ drivers/reset/reset-starfive-jh7100.c | 178 ++++++++++++++++++++++++++
+ 4 files changed, 193 insertions(+)
+ create mode 100644 drivers/reset/reset-starfive-jh7100.c
 
-diff --git a/Documentation/devicetree/bindings/reset/starfive,jh7100-reset.yaml b/Documentation/devicetree/bindings/reset/starfive,jh7100-reset.yaml
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ed49827dfb29..8274fa4b8430 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17866,6 +17866,13 @@ F:	Documentation/devicetree/bindings/clock/starfive,jh7100-clkgen.yaml
+ F:	drivers/clk/starfive/clk-starfive-jh7100.c
+ F:	include/dt-bindings/clock/starfive-jh7100.h
+ 
++STARFIVE JH7100 RESET CONTROLLER DRIVER
++M:	Emil Renner Berthing <kernel@esmil.dk>
++S:	Maintained
++F:	Documentation/devicetree/bindings/reset/starfive,jh7100-reset.yaml
++F:	drivers/reset/reset-starfive-jh7100.c
++F:	include/dt-bindings/reset/starfive-jh7100.h
++
+ STATIC BRANCH/CALL
+ M:	Peter Zijlstra <peterz@infradead.org>
+ M:	Josh Poimboeuf <jpoimboe@redhat.com>
+diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+index b0056ae5d463..346e66ae690b 100644
+--- a/drivers/reset/Kconfig
++++ b/drivers/reset/Kconfig
+@@ -224,6 +224,13 @@ config RESET_SOCFPGA
+ 	  This enables the reset driver for the SoCFPGA ARMv7 platforms. This
+ 	  driver gets initialized early during platform init calls.
+ 
++config RESET_STARFIVE_JH7100
++	bool "StarFive JH7100 Reset Driver"
++	depends on SOC_STARFIVE || COMPILE_TEST
++	default SOC_STARFIVE
++	help
++	  This enables the reset controller driver for the StarFive JH7100 SoC.
++
+ config RESET_SUNXI
+ 	bool "Allwinner SoCs Reset Driver" if COMPILE_TEST && !ARCH_SUNXI
+ 	default ARCH_SUNXI
+diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+index 21d46d8869ff..bd0a97be18b5 100644
+--- a/drivers/reset/Makefile
++++ b/drivers/reset/Makefile
+@@ -29,6 +29,7 @@ obj-$(CONFIG_RESET_RZG2L_USBPHY_CTRL) += reset-rzg2l-usbphy-ctrl.o
+ obj-$(CONFIG_RESET_SCMI) += reset-scmi.o
+ obj-$(CONFIG_RESET_SIMPLE) += reset-simple.o
+ obj-$(CONFIG_RESET_SOCFPGA) += reset-socfpga.o
++obj-$(CONFIG_RESET_STARFIVE_JH7100) += reset-starfive-jh7100.o
+ obj-$(CONFIG_RESET_SUNXI) += reset-sunxi.o
+ obj-$(CONFIG_RESET_TI_SCI) += reset-ti-sci.o
+ obj-$(CONFIG_RESET_TI_SYSCON) += reset-ti-syscon.o
+diff --git a/drivers/reset/reset-starfive-jh7100.c b/drivers/reset/reset-starfive-jh7100.c
 new file mode 100644
-index 000000000000..300359a5e14b
+index 000000000000..a3cbae933ec0
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/starfive,jh7100-reset.yaml
-@@ -0,0 +1,38 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/reset/starfive,jh7100-reset.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/reset/reset-starfive-jh7100.c
+@@ -0,0 +1,178 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Reset driver for the StarFive JH7100 SoC
++ *
++ * Copyright (C) 2021 Emil Renner Berthing <kernel@esmil.dk>
++ */
 +
-+title: StarFive JH7100 SoC Reset Controller Device Tree Bindings
++#include <linux/io.h>
++#include <linux/iopoll.h>
++#include <linux/mod_devicetable.h>
++#include <linux/platform_device.h>
++#include <linux/reset-controller.h>
++#include <linux/spinlock.h>
 +
-+maintainers:
-+  - Emil Renner Berthing <kernel@esmil.dk>
++#include <dt-bindings/reset/starfive-jh7100.h>
 +
-+properties:
-+  compatible:
-+    enum:
-+      - starfive,jh7100-reset
++#define BIT_MASK32(x) BIT((x) % 32)
 +
-+  reg:
-+    maxItems: 1
++/* register offsets */
++#define JH7100_RESET_ASSERT0	0x00
++#define JH7100_RESET_ASSERT1	0x04
++#define JH7100_RESET_ASSERT2	0x08
++#define JH7100_RESET_ASSERT3	0x0c
++#define JH7100_RESET_STATUS0	0x10
++#define JH7100_RESET_STATUS1	0x14
++#define JH7100_RESET_STATUS2	0x18
++#define JH7100_RESET_STATUS3	0x1c
 +
-+  "#reset-cells":
-+    const: 1
++/*
++ * the registers work like a 32bit bitmap, so writing a 1 to the m'th bit of
++ * the n'th ASSERT register asserts line 32n + m, and writing a 0 deasserts the
++ * same line.
++ * most reset lines have their status inverted so a 0 in the STATUS register
++ * means the line is asserted and a 1 means it's deasserted. a few lines don't
++ * though, so store the expected value of the status registers when all lines
++ * are asserted.
++ */
++static const u32 jh7100_reset_asserted[4] = {
++	/* STATUS0 register */
++	BIT_MASK32(JH7100_RST_U74) |
++	BIT_MASK32(JH7100_RST_VP6_DRESET) |
++	BIT_MASK32(JH7100_RST_VP6_BRESET),
++	/* STATUS1 register */
++	BIT_MASK32(JH7100_RST_HIFI4_DRESET) |
++	BIT_MASK32(JH7100_RST_HIFI4_BRESET),
++	/* STATUS2 register */
++	BIT_MASK32(JH7100_RST_E24),
++	/* STATUS3 register */
++	0,
++};
 +
-+required:
-+  - compatible
-+  - reg
-+  - "#reset-cells"
++struct jh7100_reset {
++	struct reset_controller_dev rcdev;
++	/* protect registers against concurrent read-modify-write */
++	spinlock_t lock;
++	void __iomem *base;
++};
 +
-+additionalProperties: false
++static inline struct jh7100_reset *
++jh7100_reset_from(struct reset_controller_dev *rcdev)
++{
++	return container_of(rcdev, struct jh7100_reset, rcdev);
++}
 +
-+examples:
-+  - |
-+    reset-controller@11840000 {
-+        compatible = "starfive,jh7100-reset";
-+        reg = <0x11840000 0x10000>;
-+        #reset-cells = <1>;
-+    };
++static int jh7100_reset_update(struct reset_controller_dev *rcdev,
++			       unsigned long id, bool assert)
++{
++	struct jh7100_reset *data = jh7100_reset_from(rcdev);
++	unsigned long offset = id / 32;
++	void __iomem *reg_assert = data->base + JH7100_RESET_ASSERT0 + 4 * offset;
++	void __iomem *reg_status = data->base + JH7100_RESET_STATUS0 + 4 * offset;
++	u32 mask = BIT_MASK32(id);
++	u32 done = jh7100_reset_asserted[offset] & mask;
++	unsigned long flags;
++	u32 value;
++	int ret;
 +
-+...
++	if (!assert)
++		done ^= mask;
++
++	spin_lock_irqsave(&data->lock, flags);
++
++	value = readl(reg_assert);
++	if (assert)
++		value |= mask;
++	else
++		value &= ~mask;
++	writel(value, reg_assert);
++
++	/* if the associated clock is gated, deasserting might otherwise hang forever */
++	ret = readl_poll_timeout_atomic(reg_status, value, (value & mask) == done, 0, 1000);
++
++	spin_unlock_irqrestore(&data->lock, flags);
++	return ret;
++}
++
++static int jh7100_reset_assert(struct reset_controller_dev *rcdev,
++			       unsigned long id)
++{
++	dev_dbg(rcdev->dev, "assert(%lu)\n", id);
++	return jh7100_reset_update(rcdev, id, true);
++}
++
++static int jh7100_reset_deassert(struct reset_controller_dev *rcdev,
++				 unsigned long id)
++{
++	dev_dbg(rcdev->dev, "deassert(%lu)\n", id);
++	return jh7100_reset_update(rcdev, id, false);
++}
++
++static int jh7100_reset_reset(struct reset_controller_dev *rcdev,
++			      unsigned long id)
++{
++	int ret;
++
++	dev_dbg(rcdev->dev, "reset(%lu)\n", id);
++	ret = jh7100_reset_assert(rcdev, id);
++	if (ret)
++		return ret;
++
++	return jh7100_reset_deassert(rcdev, id);
++}
++
++static int jh7100_reset_status(struct reset_controller_dev *rcdev,
++			       unsigned long id)
++{
++	struct jh7100_reset *data = jh7100_reset_from(rcdev);
++	unsigned long offset = id / 32;
++	void __iomem *reg_status = data->base + JH7100_RESET_STATUS0 + 4 * offset;
++	u32 mask = BIT_MASK32(id);
++	int ret = !((readl(reg_status) ^ jh7100_reset_asserted[offset]) & mask);
++
++	dev_dbg(rcdev->dev, "status(%lu) = %d\n", id, ret);
++	return ret;
++}
++
++static const struct reset_control_ops jh7100_reset_ops = {
++	.assert		= jh7100_reset_assert,
++	.deassert	= jh7100_reset_deassert,
++	.reset		= jh7100_reset_reset,
++	.status		= jh7100_reset_status,
++};
++
++static int __init jh7100_reset_probe(struct platform_device *pdev)
++{
++	struct jh7100_reset *data;
++
++	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	data->base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(data->base))
++		return PTR_ERR(data->base);
++
++	data->rcdev.ops = &jh7100_reset_ops;
++	data->rcdev.owner = THIS_MODULE;
++	data->rcdev.nr_resets = JH7100_RSTN_END;
++	data->rcdev.dev = &pdev->dev;
++	data->rcdev.of_node = pdev->dev.of_node;
++	spin_lock_init(&data->lock);
++
++	return devm_reset_controller_register(&pdev->dev, &data->rcdev);
++}
++
++static const struct of_device_id jh7100_reset_dt_ids[] = {
++	{ .compatible = "starfive,jh7100-reset" },
++	{ /* sentinel */ }
++};
++
++static struct platform_driver jh7100_reset_driver = {
++	.driver = {
++		.name = "jh7100-reset",
++		.of_match_table = jh7100_reset_dt_ids,
++		.suppress_bind_attrs = true,
++	},
++};
++builtin_platform_driver_probe(jh7100_reset_driver, jh7100_reset_probe);
 -- 
 2.33.1
 
