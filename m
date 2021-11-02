@@ -2,114 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A469443943
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Nov 2021 00:02:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A245443974
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Nov 2021 00:17:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231295AbhKBXE4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 Nov 2021 19:04:56 -0400
-Received: from smtpcmd13147.aruba.it ([62.149.156.147]:46264 "EHLO
-        smtpcmd13147.aruba.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229685AbhKBXEz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Nov 2021 19:04:55 -0400
-Received: from [192.168.153.129] ([146.241.216.221])
-        by Aruba Outgoing Smtp  with ESMTPSA
-        id i2nFm97pQueW5i2nFmhbKy; Wed, 03 Nov 2021 00:02:18 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
-        t=1635894138; bh=oK87bVnkYiUtGJyUmet+/HBPLdMRnwtDKTiOXteInjQ=;
-        h=Subject:To:From:Date:MIME-Version:Content-Type;
-        b=af9Fqkc8rTCEDQmqZTV4tg2Z5+pgBaFydeNISwHypnv5wrE45WUznIIEL+wZl66dr
-         EbJlWFSbo0O10xt9GIe0dwRykOC6iRW7i7rvCo2qGu6s+5lJ+TBgGBWiiNpGcPSYkE
-         SpySBaN42zgsr1vNVyfdgSoISMZVnKo849oKDIuXLlG8wluh+hEGH3XmynmR3yKrY0
-         vONSQIjWFF7puji50eRAlLwEUbhF9RB8cqe2Lmnz/wg6HBaj9qyWaRmGw7iAWG+r5h
-         3BvZoR5jFBZGllmXn9EuigU3T29/o9FUwcqprpohqsXOzqGub60BubHe6vvLcHDcis
-         /5h6X9cv+hhQw==
+        id S231740AbhKBXUH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 2 Nov 2021 19:20:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50718 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231745AbhKBXUH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Nov 2021 19:20:07 -0400
+Received: from mail-ua1-x92f.google.com (mail-ua1-x92f.google.com [IPv6:2607:f8b0:4864:20::92f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D57CC061203;
+        Tue,  2 Nov 2021 16:17:31 -0700 (PDT)
+Received: by mail-ua1-x92f.google.com with SMTP id e5so1042104uam.11;
+        Tue, 02 Nov 2021 16:17:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZsNw+rozMJw0uF1kikrp6ToQQ8yZiRgQpxArMCQC7PY=;
+        b=fl9496zHGb1NMIhicizBPN50+jkvVCzoSslA/3cjMnpa+V5Kk/tzqoNIW+vTJbkT46
+         UnfGFq/LPeYOmOIklcJ/kTkv1M02gBxrdakFh/fHfrLqPQub6NnpOHSvOUgZndUCTvsA
+         UxncsTS2FxzQzqnp5E4pKxsnzvtfexsn4kdBAyHztGytBIP0UtSUHrHE+m5aDlWCaXno
+         CImAuLb8lQL3fI2V7b1LB8jiwAaxTpJrA7LxeF82W9qFv9pBpn96+XVytZ3+BXGfFUhM
+         JoPLD1oxIHfd9RDAANGZiCow8xM3fDv06KG7SVCD4qmhxZ+HGYLbXctdsVepreqoYo0Q
+         7S8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZsNw+rozMJw0uF1kikrp6ToQQ8yZiRgQpxArMCQC7PY=;
+        b=eO3NI9erepxl0Eoa1BMxhiIZho/TDNaxkNMfsbNgQFUkLNpyYCQpZpfOoY1XFBgJRg
+         uoHMSibTPSnI/dZuifoMfBLPKSpRf0MMUIM9lyJYbvtVHWb/3gZgFq72h84uzz5cEzM9
+         8+zOAhjuEzmDdHNBHeYhlEu12eDyRsqfOvY9dY5YCjHY32K1s2GtM2GWY1BBcI56VK/9
+         22cB3WZzgzIUoZQBudtUU7I72IfUQ9SKMoIq75l9D3j/2llxOfr9obot4yroiSPMicMF
+         6M7252q9+otgs14ooh3iSzU6dOgvtqfKw7sdTix+QEChZJwQovUSsDj11wixFEbLBeul
+         cjkQ==
+X-Gm-Message-State: AOAM531ZtEHJLhS6vYwP6/BHpr2ffrr9OJDIcsuhD+y2tGgi4UPWdpr2
+        1Er+SRaswhhlj744A50MWpOOz7XzrARnb9tW2ao=
+X-Google-Smtp-Source: ABdhPJyKSz6TCwnh7C+kJRYFN36Ph1nCIbuAY9M8q8RU9WcxjgDuFfVym1xz6Ue87gxiQx13egUc+1+Z88EDJpe8oCo=
+X-Received: by 2002:ab0:6ca7:: with SMTP id j7mr31958596uaa.133.1635895049876;
+ Tue, 02 Nov 2021 16:17:29 -0700 (PDT)
+MIME-Version: 1.0
+References: <20211102225701.98944-1-Mr.Bossman075@gmail.com> <20211102225701.98944-12-Mr.Bossman075@gmail.com>
+In-Reply-To: <20211102225701.98944-12-Mr.Bossman075@gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Tue, 2 Nov 2021 20:17:19 -0300
+Message-ID: <CAOMZO5AxMXxDkNDqGJDhtepqSUxGRCWO+L=c67O==4fx66M7XQ@mail.gmail.com>
 Subject: Re: [PATCH v2 11/13] mmc: sdhci-esdhc-imx: Add sdhc support for
  i.MXRT series
-To:     Jesse Taube <mr.bossman075@gmail.com>, linux-imx@nxp.com
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, ulf.hansson@linaro.org, aisheng.dong@nxp.com,
-        stefan@agner.ch, linus.walleij@linaro.org,
-        gregkh@linuxfoundation.org, arnd@arndb.de, olof@lixom.net,
-        soc@kernel.org, linux@armlinux.org.uk, abel.vesa@nxp.com,
-        adrian.hunter@intel.com, jirislaby@kernel.org,
-        nobuhiro1.iwamatsu@toshiba.co.jp, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org
-References: <20211102225701.98944-1-Mr.Bossman075@gmail.com>
- <20211102225701.98944-12-Mr.Bossman075@gmail.com>
-From:   Giulio Benetti <giulio.benetti@benettiengineering.com>
-Message-ID: <d52ec837-a936-0312-0322-7e3a061984b9@benettiengineering.com>
-Date:   Wed, 3 Nov 2021 00:02:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
-MIME-Version: 1.0
-In-Reply-To: <20211102225701.98944-12-Mr.Bossman075@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfJgmuaRDniGb9KZ6FZ4QyMEMS2aKi6SERw8sh1OzYMKDB/NA1B7vRiCroRDe6acGggzP8wENsLq6qLxSryxtKRnW+3qt7gNN0A6cCJHR+G1OVwyHuOL6
- T7Fmxiu4O7KNABNkcUCCOdapFoTQqYCFd6TJGaa1wldydiSjIAixnffyCvnmkPPCzSFG5di0q7fErw7oEkfu3dIfHiI034n40eYLFbERrXtY98ZJgnLqpQ47
- xx3QkLPZE9U52WXzIAqu6ELAkcn7ZNhATR8qhm0SLXgVaBuXU+5a2cqVnWP+7bP3SU/8PATpfYqPfDq7KgIjxD2YUPxcrI9uGm4cPqlBv6IJyT5hRo20tYq5
- SppOmk+VZzrKwQeAtVyOxtCjzlSlV1O02Rxpv8PwGzfalc8eNXvvimN1bF4Vy2BSii2Awnxx5L1dx9fEjHbIqu7xMzXZY7VSgVfvB38By6m7EdI4lHhvuV2V
- Ut33bBdqg4++BbE9kZhiPxdlxsm19Fq7rj+ovMJtnUqC7Qmm7oQM6EkWtOVH1LHxW0G4TF06BecSyHHoQQLZ+29zDD38YbArjbV2clXUzHro0CwY9LA1uI7k
- FfuWJbF3tdRUIQoPydsFiVkKOZXg5jezsORQosD0bC4yTvaT7+amwE3CUGMftUwqiXGZUZVCKO3f4/pgehmJxJnJAMo2x2Kg6qijtRHpwGdE8O8dwhTcbB6s
- JoL5IHHwlYPsd4mZ3kMp9LtP5933w488c3w720kmzg7S0X4m8t/twprBv+oAUDHxF8qka9AhLvt255TDuS0n6rUzEkvxW35kWJjDWCxm+0FbyrmqFI8lyTLQ
- kiVWF8EWSwOYIQWHJzUbkl/hW2HFe8tO4dF9Ghm2wmcqvSV9ro/oOfm0DRBF51X//vrZvvKerkMwsfl+KXiLkSiPvW2/TZcbmIKtamzNaqJh86rnoQbb+y0+
- zI++y+iCxdprMgAxMhVL1LCEsiI7xi+VyTFlIVdo+RbCtDsgx2Bn3gMyjE5uUi8NXqLPi63NxoTdkMf6CNNmEMeMPIS4fHwIv0seearHmrD42u0IYm7qGAP1
- 3QJruOF1Yh1Jt/6SCxTgdBZv20uMrWRNPtzzSNNIgu6bhpl0bSyzS+lwP5PYyevelWBh2VsleL8rq7EQkv9bVUk2Wi0bszQXG4U=
+To:     Jesse Taube <mr.bossman075@gmail.com>
+Cc:     NXP Linux Team <linux-imx@nxp.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        soc@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Giulio Benetti <giulio.benetti@benettiengineering.com>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Jesse,
+On Tue, Nov 2, 2021 at 7:57 PM Jesse Taube <mr.bossman075@gmail.com> wrote:
 
-On 11/2/21 11:56 PM, Jesse Taube wrote:
-> From: Jesse Taube <mr.bossman075@gmail.com>
-> 
-> Add support for i.MXRT1050's sdhc.
-> 
-> Cc: Giulio Benetti <giulio.benetti@benettiengineering.com>
-> Signed-off-by: Jesse Taube <Mr.Bossman075@gmail.com>---
-
-Here the 3 dashes are missing(---)
-
-Best regards
--- 
-Giulio Benetti
-Benetti Engineering sas
-
-> V1->V2:
-> * Nothing done
-> ---
->   drivers/mmc/host/sdhci-esdhc-imx.c | 7 +++++++
->   1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
-> index afaf33707d46..c852a6df5611 100644
-> --- a/drivers/mmc/host/sdhci-esdhc-imx.c
-> +++ b/drivers/mmc/host/sdhci-esdhc-imx.c
-> @@ -305,6 +305,12 @@ static struct esdhc_soc_data usdhc_imx7ulp_data = {
->   			| ESDHC_FLAG_PMQOS | ESDHC_FLAG_HS400
->   			| ESDHC_FLAG_STATE_LOST_IN_LPMODE,
->   };
-> +static struct esdhc_soc_data usdhc_imxrt_data = {
-> +	.flags = ESDHC_FLAG_USDHC | ESDHC_FLAG_MAN_TUNING
-> +			| ESDHC_FLAG_HS200 | ESDHC_FLAG_ERR004536
-> +			| ESDHC_FLAG_BROKEN_AUTO_CMD23,
-> +};
-> +
->   
->   static struct esdhc_soc_data usdhc_imx8qxp_data = {
->   	.flags = ESDHC_FLAG_USDHC | ESDHC_FLAG_STD_TUNING
+>  static struct esdhc_soc_data usdhc_imx8qxp_data = {
+>         .flags = ESDHC_FLAG_USDHC | ESDHC_FLAG_STD_TUNING
 > @@ -357,6 +363,7 @@ static const struct of_device_id imx_esdhc_dt_ids[] = {
->   	{ .compatible = "fsl,imx7ulp-usdhc", .data = &usdhc_imx7ulp_data, },
->   	{ .compatible = "fsl,imx8qxp-usdhc", .data = &usdhc_imx8qxp_data, },
->   	{ .compatible = "fsl,imx8mm-usdhc", .data = &usdhc_imx8mm_data, },
-> +	{ .compatible = "fsl,imxrt-usdhc", .data = &usdhc_imxrt_data, },
->   	{ .compatible = "nxp,s32g2-usdhc", .data = &usdhc_s32g2_data, },
->   	{ /* sentinel */ }
->   };
-> 
+>         { .compatible = "fsl,imx7ulp-usdhc", .data = &usdhc_imx7ulp_data, },
+>         { .compatible = "fsl,imx8qxp-usdhc", .data = &usdhc_imx8qxp_data, },
+>         { .compatible = "fsl,imx8mm-usdhc", .data = &usdhc_imx8mm_data, },
+> +       { .compatible = "fsl,imxrt-usdhc", .data = &usdhc_imxrt_data, },
 
+I thought Rob suggested to use the SoC name, so this would be:
+
+{ .compatible = "fsl,imxrt1050-usdhc", .data = &usdhc_imxrt1050_data, },
+
+The same applies to the other bindings in the series.
+
+This way it would be possible to differentiate between future
+supported i.MX RT devices.
