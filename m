@@ -2,156 +2,147 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F0A9B443791
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Nov 2021 21:57:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC9844437B4
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Nov 2021 22:17:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230409AbhKBVA2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 Nov 2021 17:00:28 -0400
-Received: from mail-ot1-f49.google.com ([209.85.210.49]:42795 "EHLO
-        mail-ot1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230061AbhKBVA2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Nov 2021 17:00:28 -0400
-Received: by mail-ot1-f49.google.com with SMTP id v19-20020a9d69d3000000b00555a7318f31so605842oto.9;
-        Tue, 02 Nov 2021 13:57:53 -0700 (PDT)
+        id S229981AbhKBVTv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 2 Nov 2021 17:19:51 -0400
+Received: from mail-pl1-f170.google.com ([209.85.214.170]:36364 "EHLO
+        mail-pl1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229931AbhKBVTv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Nov 2021 17:19:51 -0400
+Received: by mail-pl1-f170.google.com with SMTP id u11so864484plf.3;
+        Tue, 02 Nov 2021 14:17:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=66ck82izyu4qoaKeTAXAblgBu0F6EcIPcvB7IIzWoYw=;
-        b=X6d/oFq5G94E87VgE25KSFEuyqSUNXXCnvVsKGcLFR8/TOTKQD8RiplC6evGIopOOD
-         c/e9fjWIG0HhZhIl6V1WO9GK0dVQGsLq7dAQnKlr1WtD8JmM188BKZlpcdCTZTSIsrle
-         pDBKhxp9nI0+bQSdXID7T9SnBmkD0QSMUVvAxTdoff47UXL3TQ8vT2UF2IvIuGevruLy
-         0aG7pYs2vXtl32Upi6BkLNlVFoJPWY4kKBtbS6KtMUsA/ValfIhYKF2pqxknZQ98v8f0
-         zDLYWbowAWNLob6TNd3FJcmAaebYK2fD5VxO+SkBvfoSsoDwYnLTJfZSH1xV1WDo/hmP
-         xiGQ==
-X-Gm-Message-State: AOAM533NKpc5I+/dp9oXdbDtMPyz/twpkyNPrU0onPDwGnhaAqdJxH5N
-        1SpaMi9z/MgO81i76UwV8Q==
-X-Google-Smtp-Source: ABdhPJx8mAcZMxugS0NdsFzh+dnyXo5rNadhHimq6L2KWur3IT+B/oKSvO/RZy+PAImlwBBIRLciGg==
-X-Received: by 2002:a9d:2ac1:: with SMTP id e59mr28481258otb.80.1635886672840;
-        Tue, 02 Nov 2021 13:57:52 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id j19sm20502oot.25.2021.11.02.13.57.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Nov 2021 13:57:52 -0700 (PDT)
-Received: (nullmailer pid 3463519 invoked by uid 1000);
-        Tue, 02 Nov 2021 20:57:51 -0000
-Date:   Tue, 2 Nov 2021 15:57:51 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] dt-bindings: pinctrl: uniphier: Add child node
- definitions to describe pin mux and configuration
-Message-ID: <YYGmT9zLiqpb1fH8@robh.at.kernel.org>
-References: <1635385599-17778-1-git-send-email-hayashi.kunihiko@socionext.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q3y5UxeQSpLyKQPZY321rv/0ZITkGbCXJhzW/7YHXdo=;
+        b=x6QsW+aTrEmPDoDxf/ujFsmJrx7Y8vJFmcoz5NjjOnqjt58UqMhAwgwJMupWDfuae2
+         sySplTnaviF7XxdIrW68c7GdChwqFF/VzMtcEfrINSqiv2ZIAayA58lrO6Uy5NXV6ljb
+         pG5BGoLWTscbikhcSs5Z4HnyJqkhPrfhQvQBGv+c5oUTWHKPlzGaP361diy/IDoDYdf2
+         A3VK82vxtd1ZlTtSitXNLC4nVm2m+1oqElOE10T0Kf6JAZ3ZNVvm2Q4KMEHT1OJD/boO
+         raTMXAVzi1fka+bTNsGugF+oFrR+NU2tAp1xvFjGPltAXuk9PmMEykPL5B+rmHX5ofAU
+         8NLg==
+X-Gm-Message-State: AOAM533KVAY0FQYRRb8z0GznhOxU7FsdwmWDImg8Zyhb1umSQ4OgenAb
+        mdtA64RMpAucRfLyH/PvUhSkGod2WDwVdx4UoQc/AjhSjMc=
+X-Google-Smtp-Source: ABdhPJz8vya8Pc9vfyjBBnOdrocjtFOk+W75BUtZYClkn8GG2bJFYZJzRCxnG9uqRIRWqGnV1fANTmhWO6L01upvC1k=
+X-Received: by 2002:a17:90a:5b0c:: with SMTP id o12mr9978948pji.194.1635887835692;
+ Tue, 02 Nov 2021 14:17:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1635385599-17778-1-git-send-email-hayashi.kunihiko@socionext.com>
+References: <20211102161125.1144023-1-kernel@esmil.dk> <20211102161125.1144023-10-kernel@esmil.dk>
+ <CAHp75Ve-P8DR00mtRP_NkrXgB4nsZ+qBkgBen94iTcPqxQYUOg@mail.gmail.com>
+ <CANBLGcyb=TAP0h2WuxBAjRvpN9n7Dt1Hvh5yE8NMOwm3ixZWuA@mail.gmail.com> <CAHp75Vcg3En=xH+kz0GgAMGUoo5FABo2HwGoHd=7QgGVrYkYXg@mail.gmail.com>
+In-Reply-To: <CAHp75Vcg3En=xH+kz0GgAMGUoo5FABo2HwGoHd=7QgGVrYkYXg@mail.gmail.com>
+From:   Emil Renner Berthing <kernel@esmil.dk>
+Date:   Tue, 2 Nov 2021 22:17:04 +0100
+Message-ID: <CANBLGczrGwexRGvGxa9C+yzaSHZF_d5+AaebeLUX5BXFxipr=A@mail.gmail.com>
+Subject: Re: [PATCH v3 09/16] reset: starfive-jh7100: Add StarFive JH7100
+ reset driver
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Yury Norov <yury.norov@gmail.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        Drew Fustini <drew@beagleboard.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Michael Zhu <michael.zhu@starfivetech.com>,
+        Fu Wei <tekkamanninja@gmail.com>,
+        Anup Patel <anup.patel@wdc.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Matteo Croce <mcroce@microsoft.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 28, 2021 at 10:46:39AM +0900, Kunihiko Hayashi wrote:
-> In arch/arm/boot/dts/uniphier-pinctrl.dtsi, there are child nodes of
-> pinctrl that defines pinmux and pincfg, however, there are no rules about
-> that in dt-bindings.
-> 
-> 'make dtbs_check' results an error with the following message:
-> 
->    pinctrl: 'ain1', 'ain2', 'ainiec1', 'aout', 'aout1', 'aout2', ...
->    ... 'usb2', 'usb3' do not match any of the regexes: 'pinctrl-[0-9]+'
-> 
-> To avoid this issue, add the rules of pinmux and pincfg in each child node
-> and grandchild node.
-> 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> ---
-> Changes since v1:
-> - Replace additionalProperties with unevaluatedProperties
-> - Add additionalProperties for child and grandchild nodes
-> 
->  .../pinctrl/socionext,uniphier-pinctrl.yaml        | 50 +++++++++++++++++++++-
->  1 file changed, 49 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.yaml
-> index a804d9bc1602..7e504e003181 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.yaml
-> @@ -26,10 +26,58 @@ properties:
->        - socionext,uniphier-pxs3-pinctrl
->        - socionext,uniphier-nx1-pinctrl
->  
-> +additionalProperties:
-> +  type: object
-> +
-> +patternProperties:
-> +  "^.*$":
-> +    if:
-> +      type: object
-> +    then:
-> +      allOf:
+On Tue, 2 Nov 2021 at 21:14, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> On Tue, Nov 2, 2021 at 9:59 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
+> > On Tue, 2 Nov 2021 at 20:43, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > > On Tue, Nov 2, 2021 at 6:50 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
+>
+> ...
+>
+> > > > +/*
+> > > > + * the registers work like a 32bit bitmap, so writing a 1 to the m'th bit of
+> > > > + * the n'th ASSERT register asserts line 32n + m, and writing a 0 deasserts the
+> > > > + * same line.
+> > > > + * most reset lines have their status inverted so a 0 in the STATUS register
+> > > > + * means the line is asserted and a 1 means it's deasserted. a few lines don't
+> > > > + * though, so store the expected value of the status registers when all lines
+> > > > + * are asserted.
+> > > > + */
+> > >
+> > > Besides missing capitalization,
+> >
+> > I'm confused. it was you who wanted all comments to capitalized the same..
+>
+> Yes and there are two types of the comments, one-liners and
+> multi-line. In multi-line you usually use proper English grammar,
+> where capitalization means what it means. For the one-liners just
+> choose either small letters or capital letters to start them with.
 
-All of the above should be:
+That sounds reasonable, it was just that you complained about
+inconsistent comments in the pinctrl driver that follows the above.
 
-additionalProperties:
-  type: object
-  allOf:
-  ...
+> > if it sounds like bitmap, use bitmap.
+> > > I have checked DT definitions and it seems you don't even need the
+> > > BIT_MASK() macro,
+> > >
+> > > > +static const u32 jh7100_reset_asserted[4] = {
+> > > > +       /* STATUS0 register */
+> > > > +       BIT_MASK32(JH7100_RST_U74) |
+> > > > +       BIT_MASK32(JH7100_RST_VP6_DRESET) |
+> > > > +       BIT_MASK32(JH7100_RST_VP6_BRESET),
+> > > > +       /* STATUS1 register */
+> > > > +       BIT_MASK32(JH7100_RST_HIFI4_DRESET) |
+> > > > +       BIT_MASK32(JH7100_RST_HIFI4_BRESET),
+> > > > +       /* STATUS2 register */
+> > > > +       BIT_MASK32(JH7100_RST_E24),
+> > > > +       /* STATUS3 register */
+> > > > +       0,
+> > > > +};
+> > >
+> > > Yury, do we have any clever (clean) way to initialize a bitmap with
+> > > particular bits so that it will be a constant from the beginning? If
+> > > no, any suggestion what we can provide to such users?
+> >
+> > The problem is, that even if we could initialize this without the
+> > monstrosity in our last conversation a 64bit bitmap would still
+> > produce worse code. As it is now it's simply a 32bit load and mask
+> > with index and mask already calculated for the registers. In the
+> > status callback the mask can even be folded into the register read
+> > mask. With a 64bit bitmap you'd need to calculate new 64bit index and
+> > masks, and then conditionally shift the bits into position.
+>
+> Why? You may use 8 byte IO (writeq() / readq() or their relaxed versions), no?
+>
+> ...
+>
+> > If this reflection of the 32bit registers bothers you that much
+>
+> What bothers me is hidden endianess issues (yeah, here it might be
+> theoretical, but consider that somebody will look at your code and use
+> it as the best example ever).
 
-> +        - $ref: pincfg-node.yaml#
-> +        - $ref: pinmux-node.yaml#
-> +
-> +      properties:
-> +        phandle: true
-> +        function: true
-> +        groups: true
-> +        pins: true
-> +        bias-pull-up: true
-> +        bias-pull-down: true
-> +        bias-pull-pin-default: true
-> +        drive-strength: true
-> +
-> +      additionalProperties:
-> +        type: object
-> +
-> +      patternProperties:
-> +        "^.*$":
-> +          if:
-> +            type: object
-> +          then:
-> +            allOf:
-> +              - $ref: pincfg-node.yaml#
-> +              - $ref: pinmux-node.yaml#
-> +
-> +            properties:
-> +              phandle: true
-> +              function: true
-> +              groups: true
-> +              pins: true
-> +              bias-pull-up: true
-> +              bias-pull-down: true
-> +              bias-pull-pin-default: true
-> +              drive-strength: true
-> +
-> +            unevaluatedProperties: false
-> +
-> +      unevaluatedProperties: false
-> +
->  required:
->    - compatible
->  
-> -additionalProperties: false
-> +unevaluatedProperties: false
-
-Drop +unevaluatedProperties.
-
->  
->  examples:
->    - |
-> -- 
-> 2.7.4
-> 
-> 
+Wouldn't endian issues be a reason to make sure we read 32bit
+registers with 32bit reads? Or do you expect a hypothetical big-endian
+StarFive SoC to also change the order of the registers?
