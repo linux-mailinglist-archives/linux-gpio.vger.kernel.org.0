@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BA73443917
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Nov 2021 23:58:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 04BB344391F
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Nov 2021 23:58:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231958AbhKBXAj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 Nov 2021 19:00:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46206 "EHLO
+        id S232078AbhKBXAt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 2 Nov 2021 19:00:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231778AbhKBXAF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Nov 2021 19:00:05 -0400
-Received: from mail-qv1-xf33.google.com (mail-qv1-xf33.google.com [IPv6:2607:f8b0:4864:20::f33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4938C06122E;
-        Tue,  2 Nov 2021 15:57:20 -0700 (PDT)
-Received: by mail-qv1-xf33.google.com with SMTP id s9so584003qvk.12;
-        Tue, 02 Nov 2021 15:57:20 -0700 (PDT)
+        with ESMTP id S232116AbhKBXAT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Nov 2021 19:00:19 -0400
+Received: from mail-qv1-xf31.google.com (mail-qv1-xf31.google.com [IPv6:2607:f8b0:4864:20::f31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F1E7C06118D;
+        Tue,  2 Nov 2021 15:57:22 -0700 (PDT)
+Received: by mail-qv1-xf31.google.com with SMTP id k29so609421qve.6;
+        Tue, 02 Nov 2021 15:57:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=IL3OGRIIMFUvv6ERH/SkSwRuJ7jwKuspNRDZqrtOGDc=;
-        b=DyZ94o0+FQapY+J2rZGkoXsLLRkGrxuOD1iAX7zCkinTqnJQtKhnlPzPST9jAIF53r
-         t4hR9tfTJuOst3R2jZuV3ik2uN5iG5H+gwTo8EgR5Jh0TO1tuFcSlyvxe+ggPYTXl84l
-         cV6GMTfbNyoYZrdG36nx7Bjkb6JM8d75JrX72XaQbEtBofIEGV7QNsuxN/SR1hfGBNLy
-         5HAJ+09LherHqBSp/nnbD0aVPMYgEGzCoqcK2aaTDkNzMVwF/oLYDtTqT5htLnQLZ7wf
-         E5aXGmyiXnQFxlHhAhJ33A3Pgit7HcLH6bJGNDWRDm246WuBYCRrzUeZflEwwRln44ZL
-         NtbA==
+        bh=6IuAL4Jlzfho0dMKI6upYj8AX7/wi6KQMfdg/5Bl22U=;
+        b=X1Se+/P+UHBy7XOEMAwQGKZ334vkvS3+fxh4jNtT7kNH60uqY+xs0iN20h6oke+Kqk
+         jMzTEgedqjZIApuJzXvVzjns9hh5N6d11kJxbtgCIS1SdzLerQKt20R/maVRHA1lSrJf
+         2E9k0Hi7G4nBCopvOfXxQH1lB5aeorUYBmAZjX3J8IW9nUSqpIuzalDlalg2uEkuw4z0
+         xaYjySUs0f6ynS01TaYs+tX9zZ/IGM+75RJmoHiiKmBb2Iap1BCSj/dk7MjuGO/yNEEG
+         lNZzbc437lH1dDY1PAkMy3ibxwXVwX0pjtEkLrshRlx/ym+/2OfbinS/fqCT0VBT4AJ+
+         CjvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=IL3OGRIIMFUvv6ERH/SkSwRuJ7jwKuspNRDZqrtOGDc=;
-        b=VktOCQ7MYXUAYM1gYzpCRZ9IvL9vQIJyTlF2TIVU19rqP4+FIIE1Ue6LUpCLP7cxj0
-         YHQBOtZYoiYQWgpa6Qozj/QPRZtFB0UFRxCFIxU6UTD/xh42skJfPm8Jh+Urf25p5ndV
-         bVin/Z2AtFoLc8VE2YV+DEhE6V2m1CaB9uWZqHet6N8efJuL1DXIxkXm5mr21hxqXJ7j
-         PonU3IMeEk3O946oDEG3849dAKVvi/qlR4X0520jO1cW9UmToN+9o1T6GEVNGXsPVEAR
-         pJsM1ayQRZsbJKxftJsPFJcdTkRo8d7d0EBbJwEXG+VhOhzUADk38JHdzmeKztghUM8O
-         wUnQ==
-X-Gm-Message-State: AOAM533HEmxu3WgI+3kqUfHDToBsV8sgGn8I2lIXvzU4T5NDzhsRYBcG
-        +H7w+s/C/0WZUb0o16WncY8=
-X-Google-Smtp-Source: ABdhPJzvncT8jsqO17WmjFqU6dV6qTNP9fA3RJ7MZ0N0WVKoE7yR2jImRsI9mqAM64mBQA1Ci/knDA==
-X-Received: by 2002:a05:622a:84:: with SMTP id o4mr32151612qtw.41.1635893840049;
-        Tue, 02 Nov 2021 15:57:20 -0700 (PDT)
+        bh=6IuAL4Jlzfho0dMKI6upYj8AX7/wi6KQMfdg/5Bl22U=;
+        b=LaNVKmOeIQISAKmSg4h/b4r28aRlmEhCZNt8qocg1sNLBhapnumckSqhwVEG9JVImQ
+         09O2vp3Brj/7B2DejKTfu54OHajdAl+iMoX3exppQu1I9OIpXcIZisJOKtNvIogVlZHq
+         MsZFRpkqnhqeNLkSD85jpmvTI0TxKvLAIdYltUIpAnUtnAFQH1C2Bw4sE4Q9ZE0rqNCt
+         9XJeie0/svNqXLCRW0YWLhxAe/4g/TQQBDI0/rs0VyFklDb+sf/KWbHCWU8wDSb6d7+q
+         RXexWUk2t9ME4KthcfutHMd0EO0eFsZJ4TooLHgILKM8vYwPaD1DrNp4hmDkCyEGvHUW
+         pBbQ==
+X-Gm-Message-State: AOAM533nXWpIsDOwOHfar6RSB9pBIwfeYYXVhlDM9dT3MP8kFcdPS1ST
+        P2P0dudfELXaph8D9O71ulg=
+X-Google-Smtp-Source: ABdhPJznWEVNaPDxSOUP+wtI4TY5Jd/rdQBV/aTXAX+EZP4Ja5gVYacwyacDYlGnM9oR0ku0gnzJ2w==
+X-Received: by 2002:a05:622a:134e:: with SMTP id w14mr21406824qtk.33.1635893841490;
+        Tue, 02 Nov 2021 15:57:21 -0700 (PDT)
 Received: from jesse-desktop.jtp-bos.lab (146-115-144-188.s4282.c3-0.nwt-cbr1.sbo-nwt.ma.cable.rcncustomer.com. [146.115.144.188])
-        by smtp.gmail.com with ESMTPSA id v19sm351222qtk.6.2021.11.02.15.57.18
+        by smtp.gmail.com with ESMTPSA id v19sm351222qtk.6.2021.11.02.15.57.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Nov 2021 15:57:19 -0700 (PDT)
+        Tue, 02 Nov 2021 15:57:21 -0700 (PDT)
 From:   Jesse Taube <mr.bossman075@gmail.com>
 X-Google-Original-From: Jesse Taube <Mr.Bossman075@gmail.com>
 To:     linux-imx@nxp.com
@@ -63,9 +63,9 @@ Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-serial@vger.kernel.org, Jesse Taube <mr.bossman075@gmail.com>
-Subject: [PATCH v2 10/13] dt-bindings: mmc: fsl-imx-esdhc: add i.MXRT compatible string
-Date:   Tue,  2 Nov 2021 18:56:58 -0400
-Message-Id: <20211102225701.98944-11-Mr.Bossman075@gmail.com>
+Subject: [PATCH v2 11/13] mmc: sdhci-esdhc-imx: Add sdhc support for i.MXRT series
+Date:   Tue,  2 Nov 2021 18:56:59 -0400
+Message-Id: <20211102225701.98944-12-Mr.Bossman075@gmail.com>
 X-Mailer: git-send-email 2.33.1
 In-Reply-To: <20211102225701.98944-1-Mr.Bossman075@gmail.com>
 References: <20211102225701.98944-1-Mr.Bossman075@gmail.com>
@@ -77,29 +77,41 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Jesse Taube <mr.bossman075@gmail.com>
 
-Add i.MXRT documentation for compatible string.
+Add support for i.MXRT1050's sdhc.
 
 Cc: Giulio Benetti <giulio.benetti@benettiengineering.com>
-Signed-off-by: Jesse Taube <Mr.Bossman075@gmail.com>
----
+Signed-off-by: Jesse Taube <Mr.Bossman075@gmail.com>---
 V1->V2:
 * Nothing done
 ---
- Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mmc/host/sdhci-esdhc-imx.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
-index 19621a2f8beb..bbb600f0e105 100644
---- a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
-+++ b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.yaml
-@@ -34,6 +34,7 @@ properties:
-           - fsl,imx6ull-usdhc
-           - fsl,imx7d-usdhc
-           - fsl,imx7ulp-usdhc
-+          - fsl,imxrt-usdhc
-           - nxp,s32g2-usdhc
-       - items:
-           - enum:
+diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
+index afaf33707d46..c852a6df5611 100644
+--- a/drivers/mmc/host/sdhci-esdhc-imx.c
++++ b/drivers/mmc/host/sdhci-esdhc-imx.c
+@@ -305,6 +305,12 @@ static struct esdhc_soc_data usdhc_imx7ulp_data = {
+ 			| ESDHC_FLAG_PMQOS | ESDHC_FLAG_HS400
+ 			| ESDHC_FLAG_STATE_LOST_IN_LPMODE,
+ };
++static struct esdhc_soc_data usdhc_imxrt_data = {
++	.flags = ESDHC_FLAG_USDHC | ESDHC_FLAG_MAN_TUNING
++			| ESDHC_FLAG_HS200 | ESDHC_FLAG_ERR004536
++			| ESDHC_FLAG_BROKEN_AUTO_CMD23,
++};
++
+ 
+ static struct esdhc_soc_data usdhc_imx8qxp_data = {
+ 	.flags = ESDHC_FLAG_USDHC | ESDHC_FLAG_STD_TUNING
+@@ -357,6 +363,7 @@ static const struct of_device_id imx_esdhc_dt_ids[] = {
+ 	{ .compatible = "fsl,imx7ulp-usdhc", .data = &usdhc_imx7ulp_data, },
+ 	{ .compatible = "fsl,imx8qxp-usdhc", .data = &usdhc_imx8qxp_data, },
+ 	{ .compatible = "fsl,imx8mm-usdhc", .data = &usdhc_imx8mm_data, },
++	{ .compatible = "fsl,imxrt-usdhc", .data = &usdhc_imxrt_data, },
+ 	{ .compatible = "nxp,s32g2-usdhc", .data = &usdhc_s32g2_data, },
+ 	{ /* sentinel */ }
+ };
 -- 
 2.33.1
 
