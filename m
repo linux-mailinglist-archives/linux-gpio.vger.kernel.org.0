@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 56CE844367B
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Nov 2021 20:28:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B6698443680
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Nov 2021 20:31:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229791AbhKBTat (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 2 Nov 2021 15:30:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55694 "EHLO
+        id S229844AbhKBTeL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 2 Nov 2021 15:34:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229616AbhKBTas (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Nov 2021 15:30:48 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 853E3C061714;
-        Tue,  2 Nov 2021 12:28:13 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id ee33so1218536edb.8;
-        Tue, 02 Nov 2021 12:28:13 -0700 (PDT)
+        with ESMTP id S229616AbhKBTeK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 2 Nov 2021 15:34:10 -0400
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E38BC061714;
+        Tue,  2 Nov 2021 12:31:35 -0700 (PDT)
+Received: by mail-ed1-x533.google.com with SMTP id w1so1206747edd.10;
+        Tue, 02 Nov 2021 12:31:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=e6nR869W0fXYmtUYDBLiuvK6kyQ8/vraF1nLWI4LcJY=;
-        b=c/PlF2mYYJdg6tb03y3/poRALPQShfeRIjjN0Cd/RZgC1AJF17rY4gKpzJAfpq5upL
-         DJ83v9oxARR2W9+7XWHfcoIByx13aCRlmuno40QG9iegzDviRyeCPnsEwD4PtF0L3ZVx
-         KkA56KC86sUFwwvpbVhAqW7yCzqju+k6e12QJX7txEEashO96LuyOuZpcTtJS4YqDqoJ
-         5zhA68u3tq4+ie4DpYmyp3W8sPSUWIvy/XcM3z0T+GqIiG947UeUSsBbpoukRqaFyMi3
-         MUmFlU/9Aq84GLSUcSLAk05dCDL61AQSo6eddGu+Zxve8G9pZY6g8q2xgJX0qARvdRtJ
-         mewA==
+        bh=bt940E6AfKeGJyxU5HlKvj0wHTzNhdmnLGDk/z8Wpsw=;
+        b=gSM99RIB3tfBlxPN8B4IYaJzcoVxPJzLlScvspNdRLnGElKH8BdgO9MWg1xHvumZB4
+         kzyevjodY9IVvTtgobKQMelJXrztXAA30Od7mymwlyGuKD08aw2SC1hBQ4ystnjw2zGi
+         mMBUTZhQ14RPhwUAMHRVCKPhHFoqxssevoL+jP6GNMS29FKnpPfvl5Q3ZwRst6zUB56O
+         fQfRUG+TVY6COXWJ8Qh+RQ9K/heSU385/i15YRx2H6cpPY6k2rmr2sXynrNGmAP9jlTY
+         dpG1HLr2HFt+0jJVrXb4Iz8oPFRTHfzBfF1BefNDAFgq5eixZ8Iy9qaKmu9Ynpqc7iLi
+         tbhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=e6nR869W0fXYmtUYDBLiuvK6kyQ8/vraF1nLWI4LcJY=;
-        b=aPxjxYAVZYN48EKh+6bpmYXdVNU1Oy457LpjZVFu2Ak6HG5qkPz1cLKBOIU6lv80lE
-         oZArFiarNjZAmT6am3NLOB9ddl/OSf0MHDweTStK3TOjP4zXlg5JUWoKBejV+Zg1hzcA
-         LZeHGuP3Ngd8sFoVLR5gYJO/5hcfbAxXK09tzvHFZ3bSD6Z7mp92jHZ5raNWHr0CdeML
-         nIHl+2imeND0+K36wmHHgQpPMF06HWgKdAyxjmTq5KR8kcuC3Vak1abTI/Uomme+yqYd
-         SE2m1Qu1j0OC8rxk9CVuJu2PebJDz7Zm4Byrim4/1BpOdw1W8+xwvtYDChDIpHa4bV4E
-         8DAw==
-X-Gm-Message-State: AOAM5334mT+e74iVjhzVxD4/SZy7fICq6VeBOFyE9WHiMaKx7zS2BXco
-        WNBniS9H/JQhCfO9eaXv6KPP2mdxBOYJhq8fsCI=
-X-Google-Smtp-Source: ABdhPJzCj0xRCXkjyv/hIiJjCfUJ5rUX5AncZUkcCwb46GZ0zuec8x7+cPEhRp+yVeH+qQy9Q49wGMzka2/UB4eA66o=
-X-Received: by 2002:a17:906:1707:: with SMTP id c7mr47083787eje.377.1635881291822;
- Tue, 02 Nov 2021 12:28:11 -0700 (PDT)
+        bh=bt940E6AfKeGJyxU5HlKvj0wHTzNhdmnLGDk/z8Wpsw=;
+        b=50IkM9I+sJe6n93B6xNKcfsDaI62l+jzfAV8o7f+fsNAwwZlZBMXba4CRbaQI0HD2j
+         g+Pz4LdVEmBqD6W8KK1K6vSHhVijqOoTcjf5zD/xMJ6BiHLe7TMVGGUwUEB14HCMzUPq
+         Bo9N6khyO4ly7nd4mQKnQ5GIboW6gZ1zvYgK2LpnGE6GmqcyAR4TfVCQPab2590255fs
+         aKSiqVA0ewOsSwglXs17XIoy/As88rivdSC5kUroI9gxaEad2mE9HObRiGwdxA1iWiNi
+         cS/yoan9aMb+xqtFoIgB1xU8vnN/6eTATdtJQdoNP++lNDX4OZ/gqmQAjgXTSsF59J5M
+         KEBg==
+X-Gm-Message-State: AOAM533CYjckeyClmeGFoRtDonqRciku2uiFO5AKYAhSDo1lIXBV8ZlV
+        LUcpGbPnaV/wYmzNOLYJJl+erM2Cv1EPN1LWAVM=
+X-Google-Smtp-Source: ABdhPJz1dUar5MBJH89kVTK0v4f9sWDCrAJS84etFr1P8yuZokSHutdkwOPVTYoUJTqSC4irVoW8+4dwGb9ugbb9H+Y=
+X-Received: by 2002:a17:906:9f21:: with SMTP id fy33mr47674900ejc.567.1635881494034;
+ Tue, 02 Nov 2021 12:31:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211102165657.3428995-1-robert.marko@sartura.hr> <20211102165657.3428995-2-robert.marko@sartura.hr>
-In-Reply-To: <20211102165657.3428995-2-robert.marko@sartura.hr>
+References: <20211102165657.3428995-1-robert.marko@sartura.hr> <20211102165657.3428995-4-robert.marko@sartura.hr>
+In-Reply-To: <20211102165657.3428995-4-robert.marko@sartura.hr>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 2 Nov 2021 21:27:22 +0200
-Message-ID: <CAHp75VdnQq76f5Xeo5LCq83sr4TbcXY_mtZ4x_rFzUkS01BYZg@mail.gmail.com>
-Subject: Re: [PATCH v7 2/6] gpio: Add Delta TN48M CPLD GPIO driver
+Date:   Tue, 2 Nov 2021 21:30:44 +0200
+Message-ID: <CAHp75VcWWBHDpM9+POPMUmWuGmdbyH0wCGXvqFH3znbZnTht+w@mail.gmail.com>
+Subject: Re: [PATCH v7 4/6] reset: Add Delta TN48M CPLD reset controller
 To:     Robert Marko <robert.marko@sartura.hr>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
@@ -67,43 +67,40 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Tue, Nov 2, 2021 at 6:57 PM Robert Marko <robert.marko@sartura.hr> wrote:
 >
-> Delta TN48M switch has an onboard Lattice CPLD that is used as a GPIO
-> expander.
+> Delta TN48M CPLD exposes resets for the following:
+> * 88F7040 SoC
+> * 88F6820 SoC
+> * 98DX3265 switch MAC-s
+> * 88E1680 PHY-s
+> * 88E1512 PHY
+> * PoE PSE controller
 >
-> The CPLD provides 12 pins in total on the TN48M, but on more advanced
-> switch models it provides up to 192 pins, so the driver is extendable
-> to support more switches.
+> Controller supports only self clearing resets.
 
 ...
 
-> +static int tn48m_gpio_probe(struct platform_device *pdev)
-> +{
+> +#include <linux/device.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
 
-> +       const struct tn48m_gpio_config *gpio_config = NULL;
-> +       struct gpio_regmap_config config = {0};
+> +#include <linux/of.h>
 
-I don't see a point in assigning these variables.
+I haven't found any user of this header, but mod_devicetable.h is missing.
 
-> +       struct regmap *regmap;
-> +       u32 base;
-> +       int ret;
-> +
-> +       if (!pdev->dev.parent)
-> +               return -ENODEV;
-> +
-> +       gpio_config = device_get_match_data(&pdev->dev);
-> +       if (!gpio_config)
-> +               return -ENODEV;
-> +
-> +       ret = device_property_read_u32(&pdev->dev, "reg", &base);
-> +       if (ret)
-> +               return ret;
-> +
-> +       regmap = dev_get_regmap(pdev->dev.parent, NULL);
-> +       if (!regmap)
-> +               return -ENODEV;
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reset-controller.h>
 
-> +}
+> +#include <dt-bindings/reset/delta,tn48m-reset.h>
+
+Shouldn't this go before linux/* as it provides more generic definitions?
+
+...
+
+> +#define TN48M_RESET_TIMEOUT    125000
+> +#define TN48M_RESET_SLEEP      10
+
+In which units? (both)
 
 -- 
 With Best Regards,
