@@ -2,58 +2,30 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A7A1B4447C1
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Nov 2021 18:51:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CC3FF4448C8
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Nov 2021 20:10:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230132AbhKCRyB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 3 Nov 2021 13:54:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48892 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229697AbhKCRyA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Nov 2021 13:54:00 -0400
-Received: from mail-ua1-x92e.google.com (mail-ua1-x92e.google.com [IPv6:2607:f8b0:4864:20::92e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEA77C061714;
-        Wed,  3 Nov 2021 10:51:23 -0700 (PDT)
-Received: by mail-ua1-x92e.google.com with SMTP id b17so6091629uas.0;
-        Wed, 03 Nov 2021 10:51:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=y16TxmkBvfqZgNLIXU85g39fksG0Qn9oks7FAgvFiCM=;
-        b=fPXyM8mzP3xvv8wh3rn4V3uaO87BNrn0AJ9Qk+6md27hPqHI7elIBnRFfZrMbkrB8z
-         HMRAMWtnw0XtczVwAoKFJVJIdYOkvt8HQYEM8C6xTdZXiSzf4OZxmxoe6Y08fRhREPSJ
-         XIWi2Lh6dvIz44V28gaJTn+LjOAiatp6weuHgHr8HN783Bom+vt60CdU1nql8hJzFwAf
-         8xk0AzN3X2eOPziruIBW+zMsjC7zIG02FuAJFh5F++waTBxWkxxKZf6WCNIdprizOMbW
-         Xm+0CZZTDVOgSmjSd7lFoDAmPZFRD0BUunnY1+vhJaIeWPGb9aoKk/6xNIoKE9mP9EBy
-         QQOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=y16TxmkBvfqZgNLIXU85g39fksG0Qn9oks7FAgvFiCM=;
-        b=6ed8Ak2NxFyuoGWkmmzeNtFP+9ujHdtv9ZDijobAHU4OlBvshZxm2U188Q9L5z5dK/
-         fmT/ex04l0kVE2zarxz6Gk/8lG7Elfd7l2NCv//B5gEChpJnmFfKPtdFfoqrVdAln8m4
-         Vdx1knm2xcNgXy7Ie0RYCeNGQa+ECDf+QyNhkWhDDtzdAl+8c5xuFWAZ0AYHNJk9BTQT
-         tCrJPQf0kyw2zxNfzg01+R5xXegX0poj4npcKcgJjwlm4Qgg8DyGl8Yl8Mxa4k89YgEV
-         dBiQH8zd+0AmJ+suvBt4VdJzBZ/TYADHMgH99ZORQq/Z5pVH8yItVNcCPamWLsS4mAIx
-         CISA==
-X-Gm-Message-State: AOAM532KKTYw+5sL9nIyLuKDlMc9GmQU6KRqXWs9JMN8H57Nx/BWTHb9
-        tx2NYG0H7boJX16/FijrcDVGygK40wCcgHTwII8=
-X-Google-Smtp-Source: ABdhPJx8cB1VYKTTJlveYA1FJ28sZ0zZeouC+gUZUYrWW2QvfiO2tYkKYYUUJqVe1q+ewdOqhm9/EvWuL40E8vwi7uo=
-X-Received: by 2002:ab0:6ca7:: with SMTP id j7mr39236673uaa.133.1635961882870;
- Wed, 03 Nov 2021 10:51:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20211102225701.98944-1-Mr.Bossman075@gmail.com>
- <20211102225701.98944-12-Mr.Bossman075@gmail.com> <CAOMZO5AxMXxDkNDqGJDhtepqSUxGRCWO+L=c67O==4fx66M7XQ@mail.gmail.com>
- <c1610093-95ae-68d3-57ae-93b1bc9715d7@gmail.com> <5ebe48f5-7b9c-be99-d50c-65a056084b96@benettiengineering.com>
-In-Reply-To: <5ebe48f5-7b9c-be99-d50c-65a056084b96@benettiengineering.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Wed, 3 Nov 2021 14:51:12 -0300
-Message-ID: <CAOMZO5DHCYaxzSASKq6Bk8ALkiQeVjPOHOyk-pKYepJFJk6oFQ@mail.gmail.com>
+        id S231211AbhKCTNX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 Nov 2021 15:13:23 -0400
+Received: from smtpcmd0756.aruba.it ([62.149.156.56]:41745 "EHLO
+        smtpcmd0756.aruba.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230460AbhKCTNW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Nov 2021 15:13:22 -0400
+Received: from [192.168.153.129] ([146.241.216.221])
+        by Aruba Outgoing Smtp  with ESMTPSA
+        id iLehmQUVD4n4riLehmFuEJ; Wed, 03 Nov 2021 20:10:44 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+        t=1635966644; bh=0/31yxmO9a/oC0P8HSIAOi7F4D8XhUglntlI8cyweIg=;
+        h=Subject:To:From:Date:MIME-Version:Content-Type;
+        b=JHt8XzSjYLi1rWyUyi2ykyjLwTWrBHdvKgItGaNHY9vgQDx4CIXQIBALXxgxMWPRM
+         oGtbjIF7McsY1X/k1uP2Acdeqw2BIas+OYupr81C2Dcca7XMa2Vp0Sp0FJTrwpcsSX
+         gFRfNMSc4dWtlo/n9+z2VXPjPRkCSC59N3R0G8+8JwmsfgviQHXTaF7kvRBJuWubei
+         hx+F0V/WiqGSUyEdMZ1mqAWtMsH7ZhpC7rP9NDKtvKOajBIDiWHDZJL7lyTxdyUfDg
+         n4sufjnQVMtJZjMUz4pfih0uAXT2MavO/91P0GGzNZ/d33kaReBHi5j6jAzzW4d6FZ
+         +cACDqCxUK6YQ==
 Subject: Re: [PATCH v2 11/13] mmc: sdhci-esdhc-imx: Add sdhc support for
  i.MXRT series
-To:     Giulio Benetti <giulio.benetti@benettiengineering.com>
+To:     Fabio Estevam <festevam@gmail.com>
 Cc:     Jesse Taube <mr.bossman075@gmail.com>,
         NXP Linux Team <linux-imx@nxp.com>,
         Michael Turquette <mturquette@baylibre.com>,
@@ -82,26 +54,68 @@ Cc:     Jesse Taube <mr.bossman075@gmail.com>,
         linux-mmc <linux-mmc@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         linux-serial@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+References: <20211102225701.98944-1-Mr.Bossman075@gmail.com>
+ <20211102225701.98944-12-Mr.Bossman075@gmail.com>
+ <CAOMZO5AxMXxDkNDqGJDhtepqSUxGRCWO+L=c67O==4fx66M7XQ@mail.gmail.com>
+ <c1610093-95ae-68d3-57ae-93b1bc9715d7@gmail.com>
+ <5ebe48f5-7b9c-be99-d50c-65a056084b96@benettiengineering.com>
+ <CAOMZO5DHCYaxzSASKq6Bk8ALkiQeVjPOHOyk-pKYepJFJk6oFQ@mail.gmail.com>
+From:   Giulio Benetti <giulio.benetti@benettiengineering.com>
+Message-ID: <78cba8ec-72b0-89b8-d6e3-09ecea19ca7b@benettiengineering.com>
+Date:   Wed, 3 Nov 2021 20:10:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.13.0
+MIME-Version: 1.0
+In-Reply-To: <CAOMZO5DHCYaxzSASKq6Bk8ALkiQeVjPOHOyk-pKYepJFJk6oFQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfF6/WWjL7PJeZTTfz9UiWozyugqncNHx9tTkfwkkeDbnl31INXrmdyJqCSDLjNgQNAiX+KEFaL/glNmQk4hLNz+e91vJZFmZ3NF5I4POniLdU+133jcp
+ XzXAVa/DOc7iJ7Umt9dQCiK70yv+dPSCm6DyvEHh3sPzUmjoblvN2rbQedLd/KRav15zduP3h7pa3TBT7GXnqFDja1xM10FZDIRnNyWpakY0+K6IpWr9CtRp
+ RbGD2bB0eWYl2pgQ6oK7rgqwkfBiXt6WBqx32YZalbWMiwFTgFZXYFX2bhI4iGNXtHbYX6M7a2P6awc9yt+RpNOC46ceA2OSF2GD2nNLCCA85tkJbOLpIuW+
+ 2qJ4tYuOUeifsY8fJ1OAWVgvpme4hq+Jn9KOnjeL9hMJkqLhKlMoFBWG4ZFAjx6P+T/WjW84919f5FBekomjfNlXPtI2bx8LowHcHVMxxtgWKrIy8/HCjQse
+ hMtGvQbiPuqHqMSGKMU0Q3721Q7hTJXFuObQDrhcRED7Kw6KTtE+Aczv5xnK+GZFMBgayrKg+SPoimBROvDme87huk7quiukeu+sSdj2ldoS4sJzD14db2fG
+ fUZGCElF1aWolDYn3zDRnuI9aNLyzS3y1bYpg51QmCdVikiJpSb9nuEDd32x1YmU5g6bp8wj6JvNaeEdLN+hZ8C98TiPIvfIAQlyjNyu4rl6AtSJkRa0xbkl
+ Oqwe2dhAY8fi/AdyGAOTkGT9EcPX6i/VjPEh3HGAOLI7lQRyq0Do61LOcfvBUvIvN4UdwfKqBwD9s9EPIMQEYbN3mTdK+1FUVYNZBAwyyypuvn/FOjtDyP2H
+ JMyFerHaBWkngEyHrqz25mjCOQMODTDTsNvvVliBq93lDPsgK3mJEl0Habe+NGvFA2p8EJtf0FwLgL0DRkJHzdhMV88ocFN+5a1+J0RrGZr4w1tABUN/5cm1
+ WudLVrZSILp4LPugdLhbdtWqzTVqLr7Z5bwjuyY0ykWP1Okhj8x8edAs9QHPcNhSXogZq6iiuo5o1gC6xSOGhsYvQsVxL3miS8s3fPyG/QjEvDLLBWrnRyF1
+ 0glwqRkuoJSHoK/FA3aAdIQ9Aeg2lDGEs3pbsWIwLor0bSAzNFFlUwrWmx7Z5ykPs8sZoNMAWTJRAnNPRjzG87S0dPFSboLuLSo=
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Giulio,
+Hi Fabio, Jesse, Rob, All,
 
-On Tue, Nov 2, 2021 at 8:30 PM Giulio Benetti
-<giulio.benetti@benettiengineering.com> wrote:
+On 11/3/21 6:51 PM, Fabio Estevam wrote:
+> Hi Giulio,
+> 
+> On Tue, Nov 2, 2021 at 8:30 PM Giulio Benetti
+> <giulio.benetti@benettiengineering.com> wrote:
+> 
+>> If we add every SoC we will end up having a long list for every device
+>> driver. At the moment it would be 7 parts:
+>> 1) imxrt1020
+>> 2) imxrt1024
+>> .
+>> .
+>> .
+>> 7) imxrt1170
+>>
+>> Is it ok anyway?
+> 
+> As this patch adds the support for imxrt1050, I would go with
+> "fsl,imxrt1050-usdhc" for now.
+> 
 
-> If we add every SoC we will end up having a long list for every device
-> driver. At the moment it would be 7 parts:
-> 1) imxrt1020
-> 2) imxrt1024
-> .
-> .
-> .
-> 7) imxrt1170
->
-> Is it ok anyway?
+Ok, then it's the same as pointed by Rob for lpuart[1]; @Jesse: we will 
+do the same for all peripherals(more or less) since it seems there are 
+little differences in the i.MXRT family.
 
-As this patch adds the support for imxrt1050, I would go with
-"fsl,imxrt1050-usdhc" for now.
+[1]: 
+https://lore.kernel.org/lkml/D0A3E11F-FEDE-4B2D-90AB-63DFC245A935@benettiengineering.com/T/
+
+Thanks a lot
+Best regards
+-- 
+Giulio Benetti
+Benetti Engineering sas
