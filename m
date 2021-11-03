@@ -2,143 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D7FA44441A7
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Nov 2021 13:35:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E41C344426C
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Nov 2021 14:30:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231975AbhKCMi2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 3 Nov 2021 08:38:28 -0400
-Received: from mail-pf1-f171.google.com ([209.85.210.171]:39933 "EHLO
-        mail-pf1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231993AbhKCMiL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Nov 2021 08:38:11 -0400
-Received: by mail-pf1-f171.google.com with SMTP id x64so2161555pfd.6;
-        Wed, 03 Nov 2021 05:35:35 -0700 (PDT)
+        id S231343AbhKCNct (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 3 Nov 2021 09:32:49 -0400
+Received: from mail-pl1-f170.google.com ([209.85.214.170]:39819 "EHLO
+        mail-pl1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230152AbhKCNct (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 3 Nov 2021 09:32:49 -0400
+Received: by mail-pl1-f170.google.com with SMTP id t21so2476608plr.6;
+        Wed, 03 Nov 2021 06:30:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=JE/2edLy6usLclELy9HdQo+SFIip3f5Fv/danfH38Us=;
-        b=MqdddXuI5fFJnjftC8vLsoy2ixpIPYuFiM8V4oraxQUT2habCa1/OyVh9Or5gfhlsh
-         54/3R9jpxylyL59NOJYqx8AUw6mSbJYhw3biuhKm2adWmuVZACknH8ZNuHnUZ/0uG02b
-         OmCWlvN9TX3iMY7IGv/WKbv/v474vSrqB5kS2c3wn0ULhRtAyJOknq+t95nW0Lk3Zy95
-         LwBc1lj4j6oz9UtSbAf4l+osDv3bZAC0xQrNf+PSeygV8MS7manzlCFKNnK9bygpN0nV
-         urkvQwnd3LfAxkZ1ViFujKVTKGi7EUHwsYYGz9KDcDPuWp7eSZpDHhlHPFqipgi5r+y/
-         CwVA==
-X-Gm-Message-State: AOAM5311AHT7zBa2IzVqTifPUN7BErbjkrw5HebaKSMTVY+NoFg2980c
-        p0zTd45IlXYqMXRDyQCC7ZeMNrxMoUunQXhJGPU=
-X-Google-Smtp-Source: ABdhPJxYbn79vSJ2NRtioaA8LqjYkpfmXUk5eC68C/FQfgWNHpS1VH42PtOSnEicWrsOvNwI2un3ZgJ4IhQvUwx3oI0=
-X-Received: by 2002:a63:2d46:: with SMTP id t67mr32735713pgt.15.1635942934696;
- Wed, 03 Nov 2021 05:35:34 -0700 (PDT)
+        bh=zTMij4riOHLD0cKrMBvNEsbDWm7ejt3VqpUfGJxdY7w=;
+        b=w30Fme3CiHvQKDNNkdMfjSHphx+3+lFFr1hGo321h/V5Bds7z0YYBldKhx0jwNySYP
+         +GDvLyZsJjFpGGaMXdpqOA5/9lpeib/OZmtoQRiLMKGW/D6uVgVp/6wE1k/d2DBGH5Eq
+         Mjwof52X93V2oTu1sosUUFrM3pXcisZaKQewZG87h/9Z+YW9BruOTegvLmlpLi6gwCcq
+         VEECimDokKnnvxmnY4VqSw48eBPIlSV/09PDUpgTCkk9HgrcnzyXFvfJsVIioyDJtdKk
+         jflWWPBdEaruc1AM51uqgWdLe7qpyNlxFlMMpV4K/a275d34BdwCPMS1KyhRz99eEKH1
+         EKvw==
+X-Gm-Message-State: AOAM531fDikhil/13SuoviOWCDCPWrHTq5AoJzxuVQuUtgAeq7fMJbSL
+        uq9klRlng0/wSpXs5/qJwuNQrA6SKsKCVUxBfQQ=
+X-Google-Smtp-Source: ABdhPJwNq6Q76J7qXE/0eAQN5HimezZY3rwDPmoANzNGDoGAXLzuRGbdMKq3Oek9Nc0X4IigXZvlpuqyhJ7hmGVXXQg=
+X-Received: by 2002:a17:902:a60f:b0:141:8996:3fe with SMTP id
+ u15-20020a170902a60f00b00141899603femr37563503plq.71.1635946212677; Wed, 03
+ Nov 2021 06:30:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20211102161125.1144023-1-kernel@esmil.dk> <20211102161125.1144023-13-kernel@esmil.dk>
- <CAHp75VdmnnrisuP00W0KYta0KgmC+fu3WMxm959dt5X1kpiKTw@mail.gmail.com>
- <CANBLGczn8+po09wF_uEvvU8tLCn0ahY+Gkj9JJLxOcj1LC1aLA@mail.gmail.com> <CAHp75VetDHt9G+PT77_py8N4Z06j7oytnXgQq8zss_xZBBeEng@mail.gmail.com>
-In-Reply-To: <CAHp75VetDHt9G+PT77_py8N4Z06j7oytnXgQq8zss_xZBBeEng@mail.gmail.com>
+References: <20211102161125.1144023-1-kernel@esmil.dk> <20211102161125.1144023-12-kernel@esmil.dk>
+ <1635902437.610819.3880381.nullmailer@robh.at.kernel.org>
+In-Reply-To: <1635902437.610819.3880381.nullmailer@robh.at.kernel.org>
 From:   Emil Renner Berthing <kernel@esmil.dk>
-Date:   Wed, 3 Nov 2021 13:35:23 +0100
-Message-ID: <CANBLGczTnf1UrRt=d-czaG-CE=Rwb1x6MV4c97ia+P3u5Mt8Jg@mail.gmail.com>
-Subject: Re: [PATCH v3 12/16] pinctrl: starfive: Add pinctrl driver for
- StarFive SoCs
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     linux-riscv <linux-riscv@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+Date:   Wed, 3 Nov 2021 14:30:01 +0100
+Message-ID: <CANBLGcwTB27kSRC7HCAJvrk7T0zyj1eM1i4YHj8Prar6JLqTYA@mail.gmail.com>
+Subject: Re: [PATCH v3 11/16] dt-bindings: pinctrl: Add StarFive JH7100 bindings
+To:     Rob Herring <robh@kernel.org>
+Cc:     Anup Patel <anup.patel@wdc.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Jiri Slaby <jirislaby@kernel.org>,
         Maximilian Luz <luzmaximilian@gmail.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        Drew Fustini <drew@beagleboard.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Michael Zhu <michael.zhu@starfivetech.com>,
-        Fu Wei <tekkamanninja@gmail.com>,
-        Anup Patel <anup.patel@wdc.com>,
-        Atish Patra <atish.patra@wdc.com>,
         Matteo Croce <mcroce@microsoft.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Atish Patra <atish.patra@wdc.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Huan Feng <huan.feng@starfivetech.com>
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Michael Zhu <michael.zhu@starfivetech.com>,
+        Drew Fustini <drew@beagleboard.org>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Fu Wei <tekkamanninja@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 3 Nov 2021 at 10:13, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> On Tue, Nov 2, 2021 at 10:35 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
-> > On Tue, 2 Nov 2021 at 21:02, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > > On Tue, Nov 2, 2021 at 6:50 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
->
-> > > > +       switch (trigger) {
->
-> > > > +       default:
-> > >
-> > > > +               irq_set_handler_locked(d, handle_bad_irq);
-> > >
-> > > Why? You have it already in ->probe(), what's the point?
+On Wed, 3 Nov 2021 at 02:20, Rob Herring <robh@kernel.org> wrote:
+> On Tue, 02 Nov 2021 17:11:20 +0100, Emil Renner Berthing wrote:
+> > Add bindings for the GPIO/pin controller on the JH7100 RISC-V SoC by
+> > StarFive Ltd. This is a test chip for their upcoming JH7110 SoC.
 > >
-> > So last time you asked about this, I explained a situation where
-> > userspace first grabs a GPIO, set the interrupt to edge triggered, and
-> > then later loads a driver that requests an unsupported IRQ type.
->
-> I didn't get this scenario. Is it real?
-
-No, it's totally made up, but I mean we even have tools like fuzzing
-to help us find bugs that would never happen in real use cases.
-
-> > Then
-> > I'd like to set the handler back to handle_bad_irq so we don't get
-> > weird interrupts, but maybe now you know a reason why that doesn't
-> > matter or can't happen?
->
-> In ->probe() you set _default_ handler to bad(), what do you mean by
-> 'set the handler back to bad()'? How is it otherwise if you free an
-> interrupt?
-
-It might not be, but when not sure I thought it better to error on the
-safe side.
-
-> So, please elaborate with call traces what the scenario / use case you
-> are talking about. If it's true what you are saying, we have a
-> situation (plenty of GPIO drivers don't do what you are suggesting
-> here).
->
-> > > > +               return -EINVAL;
-> > > > +       }
->
-> ...
->
-> > > > +       ret = reset_control_deassert(rst);
-> > > > +       if (ret)
-> > > > +               return dev_err_probe(dev, ret, "could not deassert resetd\n");
-> > >
-> > > > +       ret = devm_pinctrl_register_and_init(dev, &starfive_desc, sfp, &sfp->pctl);
-> > > > +       if (ret)
-> > >
-> > > I don't see who will assert reset here.
+> > Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
+> > ---
 > >
-> > No, so originally this driver would first assert and then deassert
-> > reset. I decided against that because in all likelyhood earlier boot
-> > stages would have set pinmux up for a serial port, and we don't want
-> > to interrupt the serial debug output. The only reason I make sure the
-> > reset line is deasserted is in case someone makes a really minimal
-> > bootloader that just does the absolute minimal to load a Linux kernel
-> > and doesn't even log any anything.
+> > @Linus: I'm really struggling to find a good way to describe how pin
+> > muxing works on the JH7100. As you can see I've now resorted to
+> > ascii-art to try to explain it, but please let me know if it's still
+> > unclear.
 > >
-> > By the same token we also don't want to assert reset on error in case
-> > it resets pin muxing for the the serial line that was supposed to log
-> > the error.
+> >  .../pinctrl/starfive,jh7100-pinctrl.yaml      | 307 ++++++++++++++++++
+> >  1 file changed, 307 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jh7100-pinctrl.yaml
+> >
 >
-> Perhaps comment in the code explaining this?
+> My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+> on your patch (DT_CHECKER_FLAGS is new in v5.13):
+>
+> yamllint warnings/errors:
+>
+> dtschema/dtc warnings/errors:
+> Documentation/devicetree/bindings/pinctrl/starfive,jh7100-pinctrl.example.dts:19:18: fatal error: dt-bindings/clock/starfive-jh7100.h: No such file or directory
+>    19 |         #include <dt-bindings/clock/starfive-jh7100.h>
+>       |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> compilation terminated.
+> make[1]: *** [scripts/Makefile.lib:385: Documentation/devicetree/bindings/pinctrl/starfive,jh7100-pinctrl.example.dt.yaml] Error 1
+> make[1]: *** Waiting for unfinished jobs....
+> make: *** [Makefile:1441: dt_binding_check] Error 2
+>
+> doc reference errors (make refcheckdocs):
+>
+> See https://patchwork.ozlabs.org/patch/1549835
 
-Sure.
+Hi Rob.
+
+It seems like your bot didn't add the clock header because the patch
+already has an Acked-by from you.
+
+/Emil
