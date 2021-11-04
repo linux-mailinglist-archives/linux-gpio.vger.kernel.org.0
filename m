@@ -2,100 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 707FD4453FF
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Nov 2021 14:36:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 62EEE44565C
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Nov 2021 16:30:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231379AbhKDNj2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Nov 2021 09:39:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38980 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231332AbhKDNj1 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 4 Nov 2021 09:39:27 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 06CF4604DC;
-        Thu,  4 Nov 2021 13:36:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636033009;
-        bh=LL6MZq3ANzbnT8B6kNDsWFF+dSyrJdaXeAPKgIfe79Y=;
-        h=From:To:Cc:Subject:Date:From;
-        b=hmaO4gSO5+Y0cYnIoou/71k59ALarjvmPkvhEgE6BmMqsJuhgv49NaA5Clg4llPzZ
-         ukjfCTKoWIZVR1ai8okRR/yJWpRxekvZT3ioItVnr5zO3rV47gcMIJY3fg6LBQVdYH
-         nnZwSVfLmBMEjGkdSfzQyQBxqqEp+aMx0WOtKc0PPxIJvsAz2jgMRQyVNlldfmfxFL
-         IPt+PB+TUW58wMPlzh8TdySZxqZVxE7UcMXbvlrEcNXLuTYt7NTGj+LsGTTgzu9g4X
-         XnrgqJoX7SPRO/rVf2ByFM7ADLhwopw59qT44le6K1emh71B15GSSIqYiMybK5/CmI
-         X43oeSBrxaDkw==
-From:   Arnd Bergmann <arnd@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Prathamesh Shete <pshete@nvidia.com>,
-        Lee Jones <lee.jones@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-gpio@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: tegra194: remove duplicate initializer again
-Date:   Thu,  4 Nov 2021 14:36:39 +0100
-Message-Id: <20211104133645.1186968-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.29.2
+        id S231474AbhKDPdb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Nov 2021 11:33:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57790 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231312AbhKDPdb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Nov 2021 11:33:31 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFB35C06127A
+        for <linux-gpio@vger.kernel.org>; Thu,  4 Nov 2021 08:30:52 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id o8so22724100edc.3
+        for <linux-gpio@vger.kernel.org>; Thu, 04 Nov 2021 08:30:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=M+COtvf8+vi8Ame9eqBQdGnMVyl2IED6RewYN1F2OFg=;
+        b=4Xsh4IK7kDExeMBYlvtxlMszcSU6a4MlzPyPm4CsN9rtwJ7HXYq5rqALaIX6A/Wa9+
+         MXOpvuKYqadDBfUO6fIX5zXQ70hPcpf+xLl4YhPG4xKmA4ifJXiOWrA1uIYhTEZtLbB2
+         B35meMFcG/E5ZGLLRaJfMrf3bD1tbGJzt4aTsMPnKg1z4FbTCq/ZlAXW8PVoTBwCgKMB
+         fBJtFVmo1y5F/lC/XrSmUMnhRSlSqPjUKk0nb7GGVCqE1qZlo6/0saCJkGYBK6GqfKip
+         nLB2HjACKV/qPW88gXdLmoyGh855xX+3MbXFhZ/DYAd+fnBxKUcu/mI+BgrH7pVEdk15
+         663g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=M+COtvf8+vi8Ame9eqBQdGnMVyl2IED6RewYN1F2OFg=;
+        b=5wBjXKn74V7N39nDVTAdnOH5DZsfBJj5DOVN9pEsSjqNT1SlQ2CkmZTqdMonlKxjaX
+         VgRLXatHjYsQkTkay2OSeC2rcyWH0FsAsZIIVlWxl3hcAuPtakzA7rUM+Xx0N1pUxT1n
+         0gRUN8eGLeEtw8eGbjlp2BgGWmDfzMUEE18tpUZUmUp83oHMnZLhIVyjuYM8a/8Vun5y
+         2JhpmfYP2fCO4jPN4RrwGxfy9SXePT790NeLRunFpkSYqMkF1Yj5HnIlb9XT+FltXmSY
+         fieLAmyrXVfEtSxLCrw600EONURdY/Av90WpokwBHNupDMdDSXUwdzs5/lkm3Jmb/Lo1
+         VeNQ==
+X-Gm-Message-State: AOAM530K0kfZG/eqETXvmsswFyV3/PmDG5D1XSKA0xOpE11PcnpPZ0OQ
+        umyF1jb3CgSlnay48q5FuiNtDQdEJ96zxbypiIY0sAtWUVw=
+X-Google-Smtp-Source: ABdhPJy2UNzo37eDLa95hvWTCuRgJWES7H+FIc7Pf6QWBH9kQXR3cSgC7tpos9FO1y1FCzGDSQXU0sxJSRS68l6x7p0=
+X-Received: by 2002:a17:906:5343:: with SMTP id j3mr63319978ejo.538.1636039836026;
+ Thu, 04 Nov 2021 08:30:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20211016141839.45460-1-joey.gouly@arm.com> <20211016141839.45460-2-joey.gouly@arm.com>
+ <CACRpkdac+NYMSHg_KCb2xQpnFaJMBfGT_7Mk+Kst1WrK9As_ZA@mail.gmail.com>
+In-Reply-To: <CACRpkdac+NYMSHg_KCb2xQpnFaJMBfGT_7Mk+Kst1WrK9As_ZA@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 4 Nov 2021 16:30:25 +0100
+Message-ID: <CAMRc=MeXf9wxk6=b7WnjN_Rb5fB3c8g6suo0A830Npc5-dhWVA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/5] gpio: Allow per-parent interrupt data
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Joey Gouly <joey.gouly@arm.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Hector Martin <marcan@marcan.st>,
+        Marc Zyngier <maz@kernel.org>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Sven Peter <sven@svenpeter.dev>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Kettenis <kettenis@openbsd.org>, nd <nd@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Sun, Oct 17, 2021 at 12:37 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> Top-posting because I need a nod from Bartosz that I can
+> merge this patch with the rest in the pinctrl tree.
+>
+> Bartosz: I can also offer this one patch in an immutable branch
+> as well so you can pull it in as well.
+>
+> Yours,
+> Linus Walleij
 
-An earlier bugfix removed a duplicate field initializer in
-a macro, but it seems that this came back with the following
-update:
+Hey! Sorry, didn't see it. Yes please take it.
 
-drivers/pinctrl/tegra/pinctrl-tegra194.c:1341:28: error: initialized field overwritten [-Werror=override-init]
- 1341 |                 .drv_reg = ((r)),                               \
-      |                            ^
-drivers/pinctrl/tegra/pinctrl-tegra194.c:1392:41: note: in expansion of macro 'DRV_PINGROUP_ENTRY_Y'
- 1392 | #define drive_touch_clk_pcc4            DRV_PINGROUP_ENTRY_Y(0x2004,    12,     5,      20,     5,      -1,     -1,     -1,     -1,     1)
-      |                                         ^~~~~~~~~~~~~~~~~~~~
-drivers/pinctrl/tegra/pinctrl-tegra194.c:1631:17: note: in expansion of macro 'drive_touch_clk_pcc4'
- 1631 |                 drive_##pg_name,                                \
-      |                 ^~~~~~
-drivers/pinctrl/tegra/pinctrl-tegra194.c:1636:9: note: in expansion of macro 'PINGROUP'
- 1636 |         PINGROUP(touch_clk_pcc4,        GP,             TOUCH,          RSVD2,          RSVD3,          0x2000,         1,      Y,      -1,     -1,     6,      8,      -1,     10,     11,     12,     N,      -1,     -1,     N,      "vddio_ao"),
-      |         ^~~~~~~~
-drivers/pinctrl/tegra/pinctrl-tegra194.c:1341:28: note: (near initialization for 'tegra194_groups[0].drv_reg')
- 1341 |                 .drv_reg = ((r)),                               \
-      |                            ^
-drivers/pinctrl/tegra/pinctrl-tegra194.c:1392:41: note: in expansion of macro 'DRV_PINGROUP_ENTRY_Y'
- 1392 | #define drive_touch_clk_pcc4            DRV_PINGROUP_ENTRY_Y(0x2004,    12,     5,      20,     5,      -1,     -1,     -1,     -1,     1)
-      |                                         ^~~~~~~~~~~~~~~~~~~~
-drivers/pinctrl/tegra/pinctrl-tegra194.c:1631:17: note: in expansion of macro 'drive_touch_clk_pcc4'
- 1631 |                 drive_##pg_name,                                \
-      |                 ^~~~~~
-drivers/pinctrl/tegra/pinctrl-tegra194.c:1636:9: note: in expansion of macro 'PINGROUP'
- 1636 |         PINGROUP(touch_clk_pcc4,        GP,             TOUCH,          RSVD2,          RSVD3,          0x2000,         1,      Y,      -1,     -1,     6,      8,      -1,     10,     11,     12,     N,      -1,     -1,     N,      "vddio_ao"),
-      |         ^~~~~~~~
-
-Remove it again.
-
-Fixes: 613c0826081b ("pinctrl: tegra: Add pinmux support for Tegra194")
-Fixes: 92cadf68e50a ("pinctrl: tegra: pinctrl-tegra194: Do not initialise field twice")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-The two initializers are different, please double-check that I
-remove the right one here.
----
- drivers/pinctrl/tegra/pinctrl-tegra194.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/pinctrl/tegra/pinctrl-tegra194.c b/drivers/pinctrl/tegra/pinctrl-tegra194.c
-index b4fef9185d88..5c1dfcb46749 100644
---- a/drivers/pinctrl/tegra/pinctrl-tegra194.c
-+++ b/drivers/pinctrl/tegra/pinctrl-tegra194.c
-@@ -1387,7 +1387,6 @@ static struct tegra_function tegra194_functions[] = {
- 		.schmitt_bit = schmitt_b,			\
- 		.drvtype_bit = 13,				\
- 		.lpdr_bit = e_lpdr,				\
--		.drv_reg = -1,					\
- 
- #define drive_touch_clk_pcc4            DRV_PINGROUP_ENTRY_Y(0x2004,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	1)
- #define drive_uart3_rx_pcc6             DRV_PINGROUP_ENTRY_Y(0x200c,	12,	5,	20,	5,	-1,	-1,	-1,	-1,	1)
--- 
-2.29.2
-
+Acked-by: Bartosz Golaszewski <brgl@bgdev.pl>
