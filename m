@@ -2,64 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C8AAD445A22
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Nov 2021 20:01:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D9E32445A85
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Nov 2021 20:22:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232141AbhKDTEJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Nov 2021 15:04:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49908 "EHLO
+        id S230403AbhKDTZg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Nov 2021 15:25:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231823AbhKDTEI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Nov 2021 15:04:08 -0400
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3516BC061714
-        for <linux-gpio@vger.kernel.org>; Thu,  4 Nov 2021 12:01:30 -0700 (PDT)
-Received: by mail-wm1-x330.google.com with SMTP id b184-20020a1c1bc1000000b0033140bf8dd5so4953335wmb.5
-        for <linux-gpio@vger.kernel.org>; Thu, 04 Nov 2021 12:01:30 -0700 (PDT)
+        with ESMTP id S230344AbhKDTZf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Nov 2021 15:25:35 -0400
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51DC2C061714
+        for <linux-gpio@vger.kernel.org>; Thu,  4 Nov 2021 12:22:57 -0700 (PDT)
+Received: by mail-wm1-x32c.google.com with SMTP id 133so5387457wme.0
+        for <linux-gpio@vger.kernel.org>; Thu, 04 Nov 2021 12:22:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=x+uX5Ns056I9tnFIVcNyuYzIDAX+5rS74jXcNO8ZZKU=;
-        b=emBNHheP8B0mR8OzksZJqloYZOJk0nyjriKh4F2bzGPy75wwbbA3JKL5fiQuzGd0DA
-         ZEiwhvGaPXtzQocFdGEa5p/FntQ//GcNErwJqh0YvaO2U0Fy42flzGTP7+dbJPcfrwfo
-         XeIQJSjB0X3hTMnA3Ta7r2lDlq0H4IsbNjGRaDDNlI5YfvwdfqaGw7AByTUgvnAnlmru
-         gJTLXunmjBxJ0KoRTGqsLH+N0HVeEYR3/LBmyfYAKs+e/KTvO2UCqvrMzUzcEOnshD/c
-         zvM+hhmCtZU65t0KsC0U9VMO2Vt7GALek4gMzRwTjFKHskTzsQQZ+tb1rFmRvwQ0QZD/
-         z+2g==
+        bh=d585Se0HJg6ed8xW9VDwAvAC5egpJlXYCMNCDcAdEoo=;
+        b=PnyutyywTyxgc/u6Amcy6gLy6W66h2rKt+eh/9ofMmTqzryI/oVqqfwLKPKnz9ESh3
+         XEXT2ph1Wd8f7tGqVR2NUp4ckkknInr0Xr6hnXypM4ZGq1g/Cob3vO3kEvN7qvgrAl6W
+         DUDAzQLWSqt9Su20aGEzPw5qZGjFnvPHs49Vd8hts0f3OmwKeXm/toYdICnxKH4mAfFi
+         AzY+cJvGhLmIJuzfqEoxj/1lIsJ0SdGt4hy6w9WlD4v/0YmPfKOIbnd8GP6sT/ZeftCS
+         2j2cdPmVdY+RXsxTobYstWftJosd4Tvc/w1X46It7De7tOe7rT5MIksknzZq5+VSoDQs
+         fs5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=x+uX5Ns056I9tnFIVcNyuYzIDAX+5rS74jXcNO8ZZKU=;
-        b=eTf8fU/B8JcRMTZ00nXtd1JzzJWbGNSrjJ4bk+3ORS+AoBLQOBjB9YWeX1f9UIXnMT
-         ZKDMm4fOnhGTatTcbFt/bK6aE3ukrY4MSRq++I7TftoR2PzFgu4u3EX8QNTCbBfoUOX8
-         qS9J6OezfL3KDwMYn74H3CFXHBjv0aXDund4BiaQVwKRn7SPBfCB2aCH9qdFrSLVueRR
-         f/GkOiGg4xyCDJPhxQB0K7G0s4cWD3qL3FV3ORVYnKXu1TmPQ3oop9YDrS27HpMX9uyP
-         ByN0CUuodtScM0tzbUaxeeMsw+g+G36xV1FB34n4QOxr84h0uIYkWeEJsdjjTIdeJuCH
-         EaAg==
-X-Gm-Message-State: AOAM533wGsvcVd0Vb1w7AKjXEEkscrWnp4Cd0Twh8AZT5B4UU0xwDABz
-        LVEFXiGL9BDTPdviSnVXy1Jflzp429bkKA==
-X-Google-Smtp-Source: ABdhPJyoy6Zj81c/FZxLpOTVEnDQY4I0ACJcBtfBpoJoM1HZy0OMGDZXc7tiSYsTwIdMqlOkcbn2ZQ==
-X-Received: by 2002:a05:600c:1914:: with SMTP id j20mr25597303wmq.26.1636052488813;
-        Thu, 04 Nov 2021 12:01:28 -0700 (PDT)
+        bh=d585Se0HJg6ed8xW9VDwAvAC5egpJlXYCMNCDcAdEoo=;
+        b=uHoEysxuL36yq1apNY+dR+wB1K3JEVjQGbR5HE4DHWbcsKkNGYsRLgKURDyo5pBUEU
+         UXkRYfIpDMv2GjPkfqPtzlK0kuKWnM6OcqP11Jv+g4tS0yVr0+7m6hhWizIhPm9O6JRH
+         GooqBrNunEP4CtbXcxAgtt8M7oD++OMC54OddZWeUVw9L7/WFPdvP7yoFzUWKTWFx+uD
+         oVlUluC3TN0AZvzovuVt9MyCIV4zKwsAzLVYlRcGuWNcd18fcVF2cu4a/WfKYJZTVDXP
+         fzbQldz7aNVuHNoUHxnYC/hlEoe23EEGKAzq9Fu7PlMtWkH0Bjw2U0rNgDQMRjt+TVjy
+         RUTA==
+X-Gm-Message-State: AOAM533DJPHUkhTMhxDod7EwmMaJulbvnMvfOqPP+tNGH+FetLTTfYpa
+        R760JUBCqsDeNuhCmB1aHhJUgTEZyQ8V5A==
+X-Google-Smtp-Source: ABdhPJxHoQjUtofeKQ5D7WsRegOvOFJnlQ0mbt12Xe8OMo0agcHEOrL01nqbuPoTkiblz4//eJkrDQ==
+X-Received: by 2002:a1c:208b:: with SMTP id g133mr25785085wmg.128.1636053775649;
+        Thu, 04 Nov 2021 12:22:55 -0700 (PDT)
 Received: from debian-brgl.home ([2a01:cb1d:334:ac00:7d50:ff5:f5c1:e225])
-        by smtp.gmail.com with ESMTPSA id n1sm3986245wmq.6.2021.11.04.12.01.27
+        by smtp.gmail.com with ESMTPSA id f3sm9290784wmb.12.2021.11.04.12.22.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Nov 2021 12:01:27 -0700 (PDT)
+        Thu, 04 Nov 2021 12:22:55 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+To:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Joel Becker <jlbec@evilplan.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Kent Gibson <warthog618@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [GIT PULL] configfs-based GPIO simulator for v5.16
-Date:   Thu,  4 Nov 2021 20:00:30 +0100
-Message-Id: <20211104190030.20660-1-brgl@bgdev.pl>
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jack Winch <sunt.un.morcov@gmail.com>,
+        Helmut Grohne <helmut.grohne@intenta.de>,
+        Ben Hutchings <ben.hutchings@essensium.com>
+Cc:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [libgpiod v2][PATCH v4 0/2] libgpiod v2: C++ bindings
+Date:   Thu,  4 Nov 2021 20:22:50 +0100
+Message-Id: <20211104192252.21883-1-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -67,85 +65,125 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Linus,
+This series contains the implementation of the C++ bindings for libgpiod v2.
+In general the C++ library follows the data structure model as defined by
+the C library with one notable exception: objects that represent immutable
+snapshots of kernel data (line_info and edge & info events) are copyable
+(or rather shared behind the scenes using ::std::shared_ptr). The rest of
+the classes delete their copy constructors and assignment operators and
+are only move constructible and move assignable.
 
-A while ago I sent you a pull-request for the GPIO subsystem which, in addition
-to regular GPIO updates, contained a new GPIO simulator module based on
-configfs that we want to use to test the uAPI and its main user-space user -
-libgpiod. The PR included changes to configfs itself in the form of an
-implementation of the concept of committable items. The changes had been in
-development for several months and the maintainers had been largely
-unresponsive which made me send it directly to you eventually after gathering
-some reviews on the linux-gpio mailing list. You then Cc'ed Al who raised some
-concerns and the patches were pulled out.
+All classes follow the pimpl idiom - using either shared_ptr or unique_ptr -
+and all implementations are hidden from the user for easier maintenance and
+less ABI breakage in the future.
 
-A couple months have passed with a few more iterations and I still can't get
-any meaningful reviews from the configfs maintainers (nor NAKs for that
-matter). I decided to give it another try and send it to you directly again.
+The edge_event class is a bit of a special case. While it looks the same
+as other copyable objects to the user, the implementation uses a tiny bit of
+polymorphism (although it never crosses the ABI boundary). This is done
+to make it possible to use the edge_event_buffer without any memory
+allocations like what the C API enables. The edge_event objects stored
+in the buffer only contain a raw pointer to the C object stored in the
+underlying C edge_event_buffer. The event is copied into a fully managed
+object once the copy assignment operator is called.
 
-Since last time I've addressed issues raised by Al (to the best of my ability
-anyway) and made sure all references are counted correctly (including error
-paths) and all resources freed. This code has been tested a lot with
-a development version of libgpiod. The branch I've tagged spent some time in
-next too with a single issue reported and fixed.
+I'm Cc'ing people who showed interest and helped me with C++ bindings
+before for review.
 
-Please consider pulling.
+v1 -> v2:
+Kent: I addressed most points from your review. Some are unaddressed due to
+personal preference (for instance: I still allow creating of empty line-request
+objects as they may be reused in subsequent requests). I also kept the 'watch'
+argument in get_line_info() as well as the boolean operators for chip and
+request - although with (hopefully) better documentation.
 
-Best Regards,
-Bartosz Golaszewski
+v2 -> v3:
+- use scoped class enums instead of regular integer ones
+- rename getters to get_<property>() in order to avoid name conflicts with
+  the new enum types
 
-The following changes since commit 519d81956ee277b4419c723adfb154603c2565ba:
+v3 -> v4:
+The bindings have been significantly rebuilt and the list of changes
+is mostly likely too long put all here but in short:
+- renamed and reworked the accessors
+- added custom stream insertion operators and exceptions
+- used scoped C++ enum and unifying their definitions across classes
+- deconstified all mutators for logical consistency
+- modified the implementation to work with the reworked C API
+- many more small tweaks all over the place
 
-  Linux 5.15-rc6 (2021-10-17 20:00:13 -1000)
+Bartosz Golaszewski (2):
+  line-config: rework the interface some more
+  bindings: cxx: implement C++ bindings for libgpiod v2.0
 
-are available in the Git repository at:
+ Doxyfile.in                                 |   4 +-
+ bindings/cxx/Makefile.am                    |  18 +-
+ bindings/cxx/chip.cpp                       | 214 +++--
+ bindings/cxx/edge-event-buffer.cpp          | 118 +++
+ bindings/cxx/edge-event.cpp                 | 135 +++
+ bindings/cxx/examples/Makefile.am           |  12 +-
+ bindings/cxx/examples/gpiodetectcxx.cpp     |   9 +-
+ bindings/cxx/examples/gpiogetcxx.cpp        |  12 +-
+ bindings/cxx/examples/gpioinfocxx.cpp       |  62 +-
+ bindings/cxx/examples/gpiomoncxx.cpp        |  39 +-
+ bindings/cxx/examples/gpiosetcxx.cpp        |  19 +-
+ bindings/cxx/exception.cpp                  | 107 +++
+ bindings/cxx/gpiod.hpp                      | 946 +-------------------
+ bindings/cxx/gpiodcxx/Makefile.am           |  16 +
+ bindings/cxx/gpiodcxx/chip.hpp              | 197 ++++
+ bindings/cxx/gpiodcxx/edge-event-buffer.hpp | 122 +++
+ bindings/cxx/gpiodcxx/edge-event.hpp        | 135 +++
+ bindings/cxx/gpiodcxx/exception.hpp         | 149 +++
+ bindings/cxx/gpiodcxx/info-event.hpp        | 115 +++
+ bindings/cxx/gpiodcxx/line-config.hpp       | 445 +++++++++
+ bindings/cxx/gpiodcxx/line-info.hpp         | 169 ++++
+ bindings/cxx/gpiodcxx/line-request.hpp      | 214 +++++
+ bindings/cxx/gpiodcxx/line.hpp              | 123 +++
+ bindings/cxx/gpiodcxx/misc.hpp              |  44 +
+ bindings/cxx/gpiodcxx/request-config.hpp    | 128 +++
+ bindings/cxx/info-event.cpp                 | 102 +++
+ bindings/cxx/internal.cpp                   |  91 ++
+ bindings/cxx/internal.hpp                   | 188 +++-
+ bindings/cxx/iter.cpp                       |  60 --
+ bindings/cxx/line-config.cpp                | 589 ++++++++++++
+ bindings/cxx/line-info.cpp                  | 199 ++++
+ bindings/cxx/line-request.cpp               | 200 +++++
+ bindings/cxx/line.cpp                       | 321 -------
+ bindings/cxx/line_bulk.cpp                  | 366 --------
+ bindings/cxx/misc.cpp                       |  20 +
+ bindings/cxx/request-config.cpp             | 117 +++
+ configure.ac                                |   1 +
+ include/gpiod.h                             | 255 ++++--
+ lib/line-config.c                           | 295 ++++--
+ tools/gpioget.c                             |   6 +-
+ tools/gpiomon.c                             |   6 +-
+ tools/gpioset.c                             |   9 +-
+ 42 files changed, 4380 insertions(+), 1997 deletions(-)
+ create mode 100644 bindings/cxx/edge-event-buffer.cpp
+ create mode 100644 bindings/cxx/edge-event.cpp
+ create mode 100644 bindings/cxx/exception.cpp
+ create mode 100644 bindings/cxx/gpiodcxx/Makefile.am
+ create mode 100644 bindings/cxx/gpiodcxx/chip.hpp
+ create mode 100644 bindings/cxx/gpiodcxx/edge-event-buffer.hpp
+ create mode 100644 bindings/cxx/gpiodcxx/edge-event.hpp
+ create mode 100644 bindings/cxx/gpiodcxx/exception.hpp
+ create mode 100644 bindings/cxx/gpiodcxx/info-event.hpp
+ create mode 100644 bindings/cxx/gpiodcxx/line-config.hpp
+ create mode 100644 bindings/cxx/gpiodcxx/line-info.hpp
+ create mode 100644 bindings/cxx/gpiodcxx/line-request.hpp
+ create mode 100644 bindings/cxx/gpiodcxx/line.hpp
+ create mode 100644 bindings/cxx/gpiodcxx/misc.hpp
+ create mode 100644 bindings/cxx/gpiodcxx/request-config.hpp
+ create mode 100644 bindings/cxx/info-event.cpp
+ create mode 100644 bindings/cxx/internal.cpp
+ delete mode 100644 bindings/cxx/iter.cpp
+ create mode 100644 bindings/cxx/line-config.cpp
+ create mode 100644 bindings/cxx/line-info.cpp
+ create mode 100644 bindings/cxx/line-request.cpp
+ delete mode 100644 bindings/cxx/line.cpp
+ delete mode 100644 bindings/cxx/line_bulk.cpp
+ create mode 100644 bindings/cxx/misc.cpp
+ create mode 100644 bindings/cxx/request-config.cpp
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-sim-for-v5.16
+-- 
+2.30.1
 
-for you to fetch changes up to 5065e08e4ef3c3fd0daf141f601de4b4d1af2333:
-
-  gpio: sim: fix missing unlock on error in gpio_sim_config_commit_item() (2021-10-30 17:10:47 +0200)
-
-----------------------------------------------------------------
-gpio simulator + configfs changes for v5.16
-
-- implement committable items in configfs
-- add sample code
-- implement the GPIO simulator based on configfs committable items
-- add tests
-
-----------------------------------------------------------------
-Bartosz Golaszewski (8):
-      configfs: increase the item name length
-      configfs: use (1UL << bit) for internal flags
-      configfs: implement committable items
-      samples: configfs: add a committable group
-      gpio: sim: new testing module
-      selftests: gpio: provide a helper for reading chip info
-      selftests: gpio: add a helper for reading GPIO line names
-      selftests: gpio: add test cases for gpio-sim
-
-Wei Yongjun (1):
-      gpio: sim: fix missing unlock on error in gpio_sim_config_commit_item()
-
- Documentation/admin-guide/gpio/gpio-sim.rst   |  72 +++
- Documentation/filesystems/configfs.rst        |   6 +-
- drivers/gpio/Kconfig                          |   8 +
- drivers/gpio/Makefile                         |   1 +
- drivers/gpio/gpio-sim.c                       | 884 ++++++++++++++++++++++++++
- fs/configfs/configfs_internal.h               |  22 +-
- fs/configfs/dir.c                             | 276 +++++++-
- include/linux/configfs.h                      |   3 +-
- samples/configfs/configfs_sample.c            | 153 +++++
- tools/testing/selftests/gpio/.gitignore       |   2 +
- tools/testing/selftests/gpio/Makefile         |   4 +-
- tools/testing/selftests/gpio/config           |   1 +
- tools/testing/selftests/gpio/gpio-chip-info.c |  57 ++
- tools/testing/selftests/gpio/gpio-line-name.c |  55 ++
- tools/testing/selftests/gpio/gpio-sim.sh      | 229 +++++++
- 15 files changed, 1750 insertions(+), 23 deletions(-)
- create mode 100644 Documentation/admin-guide/gpio/gpio-sim.rst
- create mode 100644 drivers/gpio/gpio-sim.c
- create mode 100644 tools/testing/selftests/gpio/gpio-chip-info.c
- create mode 100644 tools/testing/selftests/gpio/gpio-line-name.c
- create mode 100755 tools/testing/selftests/gpio/gpio-sim.sh
