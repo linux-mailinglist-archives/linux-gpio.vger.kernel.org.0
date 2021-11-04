@@ -2,96 +2,172 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CCC00444EA0
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Nov 2021 07:08:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 50290444FB1
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Nov 2021 08:32:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229994AbhKDGKp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Nov 2021 02:10:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48370 "EHLO mail.kernel.org"
+        id S230306AbhKDHfE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Nov 2021 03:35:04 -0400
+Received: from mx.socionext.com ([202.248.49.38]:14433 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229912AbhKDGKp (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 4 Nov 2021 02:10:45 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C7521610FC;
-        Thu,  4 Nov 2021 06:08:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636006087;
-        bh=u78YSZDJYfigsy7GL5G4yNXKMBMaWKzma9S8XVynMwU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=IfwmvxhgW5ygKsNG9ghm67gSI+9in4oE7VZi3M9NdBRTc7q7OKEc/v9JxqqreH519
-         2FgObB627O+Vd4jwdfJjO+vKq6HIQ1097QFpWEgz7T3mJtq1yn/zcLC5L3r7oFb0uY
-         i0K9/lkCxsDNYzEy/5aKapx0UOzDqPa2MKAwCWPKaupiAxQzmJVXPaGAe0fl/HATd6
-         XTeA4CgrxElzaF7mL/u2mVC3dk8EwlFUf1IvUrIxBoD8M9b81zZU21V2OdgCHVricw
-         DQwL36KZEUr2jTz3eD2ZHvydn6x7uzu633WI34AZjYV38KfCuGkm5syr1MYN23ozmH
-         h8vxWyWrUh1hg==
-Received: by mail-ed1-f52.google.com with SMTP id f8so17633091edy.4;
-        Wed, 03 Nov 2021 23:08:07 -0700 (PDT)
-X-Gm-Message-State: AOAM532I4UpweDp5D1l87q2x5FY6F25ofghiOrm355o9QLPvC3l89Bhk
-        Irtm4xwvx8uG3n6mMcoW1tGyuoJPUkyd/LG1ryg=
-X-Google-Smtp-Source: ABdhPJyBVxTLTZ4b6DuU6NgWddxlcUlTiORn1PjxDqGqHxAT4Fs7BTZ9YjXfyqWgfOtH18SsScYUNl5vcRMqFHPTJCI=
-X-Received: by 2002:a50:bf48:: with SMTP id g8mr67634296edk.10.1636006086162;
- Wed, 03 Nov 2021 23:08:06 -0700 (PDT)
+        id S230119AbhKDHfE (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 4 Nov 2021 03:35:04 -0400
+Received: from unknown (HELO kinkan2-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 04 Nov 2021 16:32:25 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by kinkan2-ex.css.socionext.com (Postfix) with ESMTP id C8BA7203F6D9;
+        Thu,  4 Nov 2021 16:32:25 +0900 (JST)
+Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Thu, 4 Nov 2021 16:32:25 +0900
+Received: from yuzu2.css.socionext.com (yuzu2 [172.31.9.57])
+        by iyokan2.css.socionext.com (Postfix) with ESMTP id 51CA9B62AB;
+        Thu,  4 Nov 2021 16:32:25 +0900 (JST)
+Received: from [10.212.183.139] (unknown [10.212.183.139])
+        by yuzu2.css.socionext.com (Postfix) with ESMTP id E0ED1B6291;
+        Thu,  4 Nov 2021 16:32:24 +0900 (JST)
+Subject: Re: [PATCH v2] dt-bindings: pinctrl: uniphier: Add child node
+ definitions to describe pin mux and configuration
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <1635385599-17778-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <YYGmT9zLiqpb1fH8@robh.at.kernel.org>
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Message-ID: <138d4e8f-b63e-8118-2d66-23384af9cc6d@socionext.com>
+Date:   Thu, 4 Nov 2021 16:32:24 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-References: <20211104014039.26772-1-zhiyong.tao@mediatek.com> <20211104014039.26772-2-zhiyong.tao@mediatek.com>
-In-Reply-To: <20211104014039.26772-2-zhiyong.tao@mediatek.com>
-From:   Sean Wang <sean.wang@kernel.org>
-Date:   Wed, 3 Nov 2021 23:07:55 -0700
-X-Gmail-Original-Message-ID: <CAGp9LzpEG_6w6fvmjaBAW3ihKQZm4uMEy9-5MaLLWkeu+QFqeQ@mail.gmail.com>
-Message-ID: <CAGp9LzpEG_6w6fvmjaBAW3ihKQZm4uMEy9-5MaLLWkeu+QFqeQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: mediatek: fix global-out-of-bounds issue
-To:     Zhiyong Tao <zhiyong.tao@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        hui.liu@mediatek.com, Light Hsieh <light.hsieh@mediatek.com>,
-        =?UTF-8?B?U2VhbiBXYW5nICjnjovlv5fkupgp?= <sean.wang@mediatek.com>,
-        Seiya Wang <seiya.wang@mediatek.com>, rex-bc.chen@mediatek.com,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Guodong Liu <guodong.liu@mediatek.corp-partner.google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <YYGmT9zLiqpb1fH8@robh.at.kernel.org>
+Content-Type: text/plain; charset=iso-2022-jp; format=flowed; delsp=yes
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-HI, Zhiyong
+On 2021/11/03 5:57, Rob Herring wrote:
+> On Thu, Oct 28, 2021 at 10:46:39AM +0900, Kunihiko Hayashi wrote:
+>> In arch/arm/boot/dts/uniphier-pinctrl.dtsi, there are child nodes of
+>> pinctrl that defines pinmux and pincfg, however, there are no rules about
+>> that in dt-bindings.
+>>
+>> 'make dtbs_check' results an error with the following message:
+>>
+>>     pinctrl: 'ain1', 'ain2', 'ainiec1', 'aout', 'aout1', 'aout2', ...
+>>     ... 'usb2', 'usb3' do not match any of the regexes: 'pinctrl-[0-9]+'
+>>
+>> To avoid this issue, add the rules of pinmux and pincfg in each child node
+>> and grandchild node.
+>>
+>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+>> ---
+>> Changes since v1:
+>> - Replace additionalProperties with unevaluatedProperties
+>> - Add additionalProperties for child and grandchild nodes
+>>
+>>   .../pinctrl/socionext,uniphier-pinctrl.yaml        | 50 +++++++++++++++++++++-
+>>   1 file changed, 49 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.yaml
+> b/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.yaml
+>> index a804d9bc1602..7e504e003181 100644
+>> --- a/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.yaml
+>> +++ b/Documentation/devicetree/bindings/pinctrl/socionext,uniphier-pinctrl.yaml
+>> @@ -26,10 +26,58 @@ properties:
+>>         - socionext,uniphier-pxs3-pinctrl
+>>         - socionext,uniphier-nx1-pinctrl
+>>   
+>> +additionalProperties:
+>> +  type: object
+>> +
+>> +patternProperties:
+>> +  "^.*$":
+>> +    if:
+>> +      type: object
+>> +    then:
+>> +      allOf:
+> 
+> All of the above should be:
+> 
+> additionalProperties:
+>    type: object
+>    allOf:
+>    ...
 
-On Wed, Nov 3, 2021 at 6:40 PM Zhiyong Tao <zhiyong.tao@mediatek.com> wrote:
->
-> From: Guodong Liu <guodong.liu@mediatek.corp-partner.google.com>
->
-> When eint virtual eint number is greater than gpio number,
-> it maybe produce 'desc[eint_n]' size globle-out-of-bounds issue.
->
-> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
-> Signed-off-by: Guodong Liu <guodong.liu@mediatek.corp-partner.google.com>
-> ---
->  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> index 45ebdeba985a..9d57c897835c 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> @@ -286,7 +286,8 @@ static int mtk_xt_get_gpio_n(void *data, unsigned long eint_n,
->         *gpio_chip = &hw->chip;
->
->         /* Be greedy to guess first gpio_n is equal to eint_n */
-> -       if (desc[eint_n].eint.eint_n == eint_n)
-> +       if (((*gpio_chip)->ngpio > eint_n) &&
+I see. I'll rewrite it instead of "patternProperties".
 
-please use "hw->soc->npins > eint_n" to perform the boundary check to
-be consistent with the other places for the same purpose
+> 
+>> +        - $ref: pincfg-node.yaml#
+>> +        - $ref: pinmux-node.yaml#
+>> +
+>> +      properties:
+>> +        phandle: true
+>> +        function: true
+>> +        groups: true
+>> +        pins: true
+>> +        bias-pull-up: true
+>> +        bias-pull-down: true
+>> +        bias-pull-pin-default: true
+>> +        drive-strength: true
+>> +
+>> +      additionalProperties:
+>> +        type: object
+>> +
+>> +      patternProperties:
+>> +        "^.*$":
+>> +          if:
+>> +            type: object
+>> +          then:
+>> +            allOf:
+>> +              - $ref: pincfg-node.yaml#
+>> +              - $ref: pinmux-node.yaml#
+>> +
+>> +            properties:
+>> +              phandle: true
+>> +              function: true
+>> +              groups: true
+>> +              pins: true
+>> +              bias-pull-up: true
+>> +              bias-pull-down: true
+>> +              bias-pull-pin-default: true
+>> +              drive-strength: true
+>> +
+>> +            unevaluatedProperties: false
+>> +
+>> +      unevaluatedProperties: false
+>> +
+>>   required:
+>>     - compatible
+>>   
+>> -additionalProperties: false
+>> +unevaluatedProperties: false
+> 
+> Drop +unevaluatedProperties.
 
-> +           desc[eint_n].eint.eint_n == eint_n)
->                 *gpio_n = eint_n;
->         else
->                 *gpio_n = mtk_xt_find_eint_num(hw, eint_n);
-> --
-> 2.25.1
->
+I understand that "additionalProperties" has already been used at the top
+level, so this "unevaluatedProperties" is unnecessary.
+
+For the same reason, "unevaluatedProperties" at the child node is also unnecessary.
+
+I think "unevaluatedProperties" at the grandchild node should be left because
+the grandchild node doesn't have "additionalProperties".
+
+
+additionalProperties:
+   type: object
+   allOf:
+     ...
+     additionalProperties:
+       type: object
+       allOf:
+         ...
+         unevaluatedProperties: false
+     [X]
+[X]
+
+Thank you,
+
+---
+Best Regards
+Kunihiko Hayashi
