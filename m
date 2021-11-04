@@ -2,95 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2179A445675
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Nov 2021 16:38:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8776F445682
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Nov 2021 16:41:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229770AbhKDPlP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Nov 2021 11:41:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59558 "EHLO
+        id S229770AbhKDPoQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Nov 2021 11:44:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231571AbhKDPlP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Nov 2021 11:41:15 -0400
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E05C0C061714
-        for <linux-gpio@vger.kernel.org>; Thu,  4 Nov 2021 08:38:36 -0700 (PDT)
-Received: by mail-ed1-x52e.google.com with SMTP id f8so23069909edy.4
-        for <linux-gpio@vger.kernel.org>; Thu, 04 Nov 2021 08:38:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0K6UWIrugOT13ui2fyiIN4B5pxyQCxg5Y4QgfujDLxk=;
-        b=I3BGfNdDEMylnSSsAPKdkHwPptW8SdDQ2iAuipUnR/iLJXQK8LMKOL1UsEX2/3gavM
-         RXqbvjUTF5MYWDoHEcRM2XnTGG9BHleUs0po7ySlU+9pubTL5vhy6mua7xrXH8NGaXBV
-         ZddnblPB/Mq0yNh0RyYTSl7PUlr7r1gzng7wJQ/QwioNwXGPZ7vQ0nOXJSCf6AJDLzsq
-         t3Z/qyCHpOindApWDYQ/KPXtchpWwsH9uSHBGv9E7c86ZuO1IlPqmMhTXNfB/+cGKp+j
-         6cAPsyFEHngSDFIzOwG618acpfBqEXP8pBTtTB5Tw6EPcgG3LOuAzxcQNTBFmlFM+zyF
-         6OIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0K6UWIrugOT13ui2fyiIN4B5pxyQCxg5Y4QgfujDLxk=;
-        b=kLMOHzJ72DPifq7ZVAgydGyV9AcOpgLHthBFEsBJcyvMDwmYQDwKfRs07qOJcDU4Fx
-         ha6iNpoZzLQ24w+UukPxNt/DsQhbgbj5aUPiC3Wj49+fqzdR1jMgv5k1qsa/rLvh+EN1
-         rQnUK7GdrnDX+YEJwNTgW25pS9kATrlSYrcYRzsWT22dM9RY2YPjz3PLvsegwGApxw98
-         cHjyC168+SwaHVw7RYL9zK7SyJxWa3UcRx+nacgeP2utzVKRt6VlXOCKkK4JeGd+TYUT
-         51PwOOXeoXucLsBgwWF6Q7GE3qoGf/0Me+FbUqsPWzTYyf7ri1u6Mz+1Unm0CQBUzff+
-         6SmA==
-X-Gm-Message-State: AOAM532wlt04eaGKP+KBIQvNw2Gmhdb6g8xZG7olxjZA2uQ1dK3CG07T
-        xnLF5ILbCSF7/ry+zMPi3xCygdZq87FEXFBVtZ8LDA==
-X-Google-Smtp-Source: ABdhPJzlv+j779DPYQpd2DCJs0vdgpLkFWhPRAuwUIiLiJYofSzulEag829/sAVPIr0SHBTwQPhyPqbHIdgiphG2sPE=
-X-Received: by 2002:a17:907:c15:: with SMTP id ga21mr31185750ejc.349.1636040297956;
- Thu, 04 Nov 2021 08:38:17 -0700 (PDT)
+        with ESMTP id S231215AbhKDPoQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Nov 2021 11:44:16 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68E0DC061714;
+        Thu,  4 Nov 2021 08:41:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=tzR1bzDNHCL2xV55dg6t9T/nvYHiJSyDmOp1Hab1RAs=; b=OlfEnUoHiQPn2iXeER+unFtYQd
+        OFLMsPIjQGxjVUS0LlQqrzuLTz5xYaUxz86Bk49l/PnHmbkG87jrHRWTjXtLwnXOXI8INIVuz+KLp
+        6dnn4JUvTnQDZQjxk1pBme81J8XgETznFg0lY4Lx/e3h+2AgaEakEVjPorxMXJqVzab08XDJ1s032
+        EiQftayVJjDO9hswhucaNiE9+Dr20OUsIz/OuqOr8Zj48QtU1+Du1VOI1UZ3hh7ZDHOh5SgHviQBt
+        SEtS6YH21/lPQKcHsdZ7pNjUH7yVKIBlW0Db16x/DPjDZqZeIaIaAHEJ3wX4v4yIYUKJ5yy7L67Rl
+        fi3GchlQ==;
+Received: from [2601:1c0:6280:3f0::aa0b] (helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mierw-009Hvk-1d; Thu, 04 Nov 2021 15:41:36 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Jianqun Xu <jay.xu@rock-chips.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
+Subject: [PATCH] gpio/rockchip: fix Kconfig to prevent build errors
+Date:   Thu,  4 Nov 2021 08:41:35 -0700
+Message-Id: <20211104154135.2119-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-References: <20211101091122.442512-1-mst@redhat.com>
-In-Reply-To: <20211101091122.442512-1-mst@redhat.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 4 Nov 2021 16:38:07 +0100
-Message-ID: <CAMRc=MdvizSVQLyGd7uHdxFoeAitT32BRjGcrRJKwuCmc2RMnQ@mail.gmail.com>
-Subject: Re: [PATCH] virtio_gpio: drop packed attribute
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Jason Wang <jasowang@redhat.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 1, 2021 at 10:11 AM Michael S. Tsirkin <mst@redhat.com> wrote:
->
-> Declaring the struct packed here is mostly harmless,
-> but gives a bad example for people to copy.
-> As the struct is packed and aligned manually,
-> let's just drop the attribute.
->
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> ---
->  include/uapi/linux/virtio_gpio.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/include/uapi/linux/virtio_gpio.h b/include/uapi/linux/virtio_gpio.h
-> index 0445f905d8cc..25c95a034674 100644
-> --- a/include/uapi/linux/virtio_gpio.h
-> +++ b/include/uapi/linux/virtio_gpio.h
-> @@ -25,7 +25,7 @@ struct virtio_gpio_config {
->         __le16 ngpio;
->         __u8 padding[2];
->         __le32 gpio_names_size;
-> -} __packed;
-> +};
->
->  /* Virtio GPIO Request / Response */
->  struct virtio_gpio_request {
-> --
-> MST
->
+GPIO_ROCKCHIP needs to enable GENERIC_IRQ_CHIP to prevent build errors.
 
-Applied, thanks!
+Eliminates these build errors:
+ld: drivers/gpio/gpio-rockchip.o: in function `rockchip_irq_disable':
+gpio-rockchip.c:(.text+0x6c9): undefined reference to `irq_gc_mask_set_bit'
+ld: drivers/gpio/gpio-rockchip.o: in function `rockchip_irq_enable':
+gpio-rockchip.c:(.text+0x709): undefined reference to `irq_gc_mask_clr_bit'
+ld: drivers/gpio/gpio-rockchip.o: in function `rockchip_gpio_probe':
+gpio-rockchip.c:(.text+0xe25): undefined reference to `irq_generic_chip_ops'
+ld: gpio-rockchip.c:(.text+0xe7e): undefined reference to `__irq_alloc_domain_generic_chips'
+ld: gpio-rockchip.c:(.text+0xeb9): undefined reference to `irq_get_domain_generic_chip'
+ld: gpio-rockchip.c:(.text+0xf04): undefined reference to `irq_gc_ack_set_bit'
+ld: gpio-rockchip.c:(.text+0xf0e): undefined reference to `irq_gc_mask_set_bit'
+ld: gpio-rockchip.c:(.text+0xf18): undefined reference to `irq_gc_mask_clr_bit'
+ld: gpio-rockchip.c:(.text+0xf36): undefined reference to `irq_gc_set_wake'
 
-Bart
+Fixes: 936ee2675eee ("gpio/rockchip: add driver for rockchip gpio")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Jianqun Xu <jay.xu@rock-chips.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org
+---
+ drivers/gpio/Kconfig |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- linux-next-20211104.orig/drivers/gpio/Kconfig
++++ linux-next-20211104/drivers/gpio/Kconfig
+@@ -524,6 +524,7 @@ config GPIO_ROCKCHIP
+ 	tristate "Rockchip GPIO support"
+ 	depends on ARCH_ROCKCHIP || COMPILE_TEST
+ 	select GPIOLIB_IRQCHIP
++	select GENERIC_IRQ_CHIP
+ 	default ARCH_ROCKCHIP
+ 	help
+ 	  Say yes here to support GPIO on Rockchip SoCs.
