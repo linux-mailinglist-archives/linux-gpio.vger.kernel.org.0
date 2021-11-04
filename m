@@ -2,80 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8776F445682
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Nov 2021 16:41:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B2C14457ED
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Nov 2021 18:06:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229770AbhKDPoQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 4 Nov 2021 11:44:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60234 "EHLO
+        id S231827AbhKDRJe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 4 Nov 2021 13:09:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231215AbhKDPoQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Nov 2021 11:44:16 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68E0DC061714;
-        Thu,  4 Nov 2021 08:41:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=tzR1bzDNHCL2xV55dg6t9T/nvYHiJSyDmOp1Hab1RAs=; b=OlfEnUoHiQPn2iXeER+unFtYQd
-        OFLMsPIjQGxjVUS0LlQqrzuLTz5xYaUxz86Bk49l/PnHmbkG87jrHRWTjXtLwnXOXI8INIVuz+KLp
-        6dnn4JUvTnQDZQjxk1pBme81J8XgETznFg0lY4Lx/e3h+2AgaEakEVjPorxMXJqVzab08XDJ1s032
-        EiQftayVJjDO9hswhucaNiE9+Dr20OUsIz/OuqOr8Zj48QtU1+Du1VOI1UZ3hh7ZDHOh5SgHviQBt
-        SEtS6YH21/lPQKcHsdZ7pNjUH7yVKIBlW0Db16x/DPjDZqZeIaIaAHEJ3wX4v4yIYUKJ5yy7L67Rl
-        fi3GchlQ==;
-Received: from [2601:1c0:6280:3f0::aa0b] (helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mierw-009Hvk-1d; Thu, 04 Nov 2021 15:41:36 +0000
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Jianqun Xu <jay.xu@rock-chips.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
-Subject: [PATCH] gpio/rockchip: fix Kconfig to prevent build errors
-Date:   Thu,  4 Nov 2021 08:41:35 -0700
-Message-Id: <20211104154135.2119-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.31.1
+        with ESMTP id S231804AbhKDRJd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 4 Nov 2021 13:09:33 -0400
+Received: from mail-ot1-x333.google.com (mail-ot1-x333.google.com [IPv6:2607:f8b0:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 916B2C061714
+        for <linux-gpio@vger.kernel.org>; Thu,  4 Nov 2021 10:06:55 -0700 (PDT)
+Received: by mail-ot1-x333.google.com with SMTP id n13-20020a9d710d000000b005558709b70fso9154915otj.10
+        for <linux-gpio@vger.kernel.org>; Thu, 04 Nov 2021 10:06:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AkqChPnPSN5fMwuIQ2K/rgJWrknzWBl6gBTKcahDpRA=;
+        b=u+MUCDDyyPAhhA2xzCjx0U7d40hPHusdXM2+k05ohsbQVaetcv+aj534n8xMdgSdZa
+         zEVlpRl9UXRwI0a3ZX13/j0yygzHkuGvp3JABsiNnb/l/Abeaj9oJaAEjKu/awJPhz25
+         ULJhlNtJBkt3cVhUrs21pIq+7P+7qUvlT1f8WXRsaqIuYT7gQb0Nyj/RGD90N/KptRSD
+         YaUyDEaRRAW2lnWrPyMwMiWmCmePxWqHjg8ZpoE44Gw6R1cY8IAIGdOuwWWdrbcsYt0K
+         OZtFLojc6wPQt72R7y+9UM699sRTKupO/bSVtKRIMoJQ2rNBAUDzjfmTHOkcB9UhjSzL
+         l7iQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AkqChPnPSN5fMwuIQ2K/rgJWrknzWBl6gBTKcahDpRA=;
+        b=xHrW6U09lzCjFvNmJR216IZcwzKZPgE5+4WBbHzCUHDMf/CqgVfLeYVuZDPrXditWI
+         Yf63N79Ld1Tjjv3IT4tDDcgrSgKC6oMIYc/5PWeRPqcdvNfUSeLFrmoV4O/Q12mgkFHf
+         FggjQJgOUY94j8HoOMNAXgKN9KIhOkEzBYoNbXGtr5ahKJi+4YFxTAYRanJC0gQblvU6
+         LfBMk1vMRyGAelGTHmiUUSpmr4CYcT2SGPCuoPNUUIsssxbq9H4pObkNq6AE33czWHmw
+         SrWiNZHNgW3BiC3HYe/C9A+DswO52bThbVqCIy4oHuu6jZ24ZUhl/HDamaUbiVQ2wOqf
+         rvrg==
+X-Gm-Message-State: AOAM532Ra2ABWAtD8+Z5WOB3i/FJU8bKCY10je1tOTYIxtdtUagW7Ece
+        aloiKZV5BMBXdj9FEE8q5vQ0Vw==
+X-Google-Smtp-Source: ABdhPJy2G1slU/3u+UxEp6iHtKcBf1aqOUliNI2njqNy0wmtt6CE3nYN4USY+5XbX4ClQ7gJFYPsBw==
+X-Received: by 2002:a05:6830:448e:: with SMTP id r14mr27861890otv.171.1636045614922;
+        Thu, 04 Nov 2021 10:06:54 -0700 (PDT)
+Received: from ripper.. (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
+        by smtp.gmail.com with ESMTPSA id q5sm1490236otc.79.2021.11.04.10.06.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Nov 2021 10:06:54 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     vladimir.zapolskiy@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] pinctrl: qcom: sm8350: Correct UFS and SDC offsets
+Date:   Thu,  4 Nov 2021 10:08:35 -0700
+Message-Id: <20211104170835.1993686-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.33.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-GPIO_ROCKCHIP needs to enable GENERIC_IRQ_CHIP to prevent build errors.
+The downstream TLMM binding covers a group of TLMM-related hardware
+blocks, but the upstream binding only captures the particular block
+related to controlling the TLMM pins from an OS. In the translation of
+the driver from downstream, the offset of 0x100000 was lost for the UFS
+and SDC pingroups.
 
-Eliminates these build errors:
-ld: drivers/gpio/gpio-rockchip.o: in function `rockchip_irq_disable':
-gpio-rockchip.c:(.text+0x6c9): undefined reference to `irq_gc_mask_set_bit'
-ld: drivers/gpio/gpio-rockchip.o: in function `rockchip_irq_enable':
-gpio-rockchip.c:(.text+0x709): undefined reference to `irq_gc_mask_clr_bit'
-ld: drivers/gpio/gpio-rockchip.o: in function `rockchip_gpio_probe':
-gpio-rockchip.c:(.text+0xe25): undefined reference to `irq_generic_chip_ops'
-ld: gpio-rockchip.c:(.text+0xe7e): undefined reference to `__irq_alloc_domain_generic_chips'
-ld: gpio-rockchip.c:(.text+0xeb9): undefined reference to `irq_get_domain_generic_chip'
-ld: gpio-rockchip.c:(.text+0xf04): undefined reference to `irq_gc_ack_set_bit'
-ld: gpio-rockchip.c:(.text+0xf0e): undefined reference to `irq_gc_mask_set_bit'
-ld: gpio-rockchip.c:(.text+0xf18): undefined reference to `irq_gc_mask_clr_bit'
-ld: gpio-rockchip.c:(.text+0xf36): undefined reference to `irq_gc_set_wake'
-
-Fixes: 936ee2675eee ("gpio/rockchip: add driver for rockchip gpio")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Jianqun Xu <jay.xu@rock-chips.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org
+Fixes: d5d348a3271f ("pinctrl: qcom: Add SM8350 pinctrl driver")
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- drivers/gpio/Kconfig |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/pinctrl/qcom/pinctrl-sm8350.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- linux-next-20211104.orig/drivers/gpio/Kconfig
-+++ linux-next-20211104/drivers/gpio/Kconfig
-@@ -524,6 +524,7 @@ config GPIO_ROCKCHIP
- 	tristate "Rockchip GPIO support"
- 	depends on ARCH_ROCKCHIP || COMPILE_TEST
- 	select GPIOLIB_IRQCHIP
-+	select GENERIC_IRQ_CHIP
- 	default ARCH_ROCKCHIP
- 	help
- 	  Say yes here to support GPIO on Rockchip SoCs.
+diff --git a/drivers/pinctrl/qcom/pinctrl-sm8350.c b/drivers/pinctrl/qcom/pinctrl-sm8350.c
+index 4d8f8636c2b3..1c042d39380c 100644
+--- a/drivers/pinctrl/qcom/pinctrl-sm8350.c
++++ b/drivers/pinctrl/qcom/pinctrl-sm8350.c
+@@ -1597,10 +1597,10 @@ static const struct msm_pingroup sm8350_groups[] = {
+ 	[200] = PINGROUP(200, qdss_gpio, _, _, _, _, _, _, _, _),
+ 	[201] = PINGROUP(201, _, _, _, _, _, _, _, _, _),
+ 	[202] = PINGROUP(202, _, _, _, _, _, _, _, _, _),
+-	[203] = UFS_RESET(ufs_reset, 0x1d8000),
+-	[204] = SDC_PINGROUP(sdc2_clk, 0x1cf000, 14, 6),
+-	[205] = SDC_PINGROUP(sdc2_cmd, 0x1cf000, 11, 3),
+-	[206] = SDC_PINGROUP(sdc2_data, 0x1cf000, 9, 0),
++	[203] = UFS_RESET(ufs_reset, 0xd8000),
++	[204] = SDC_PINGROUP(sdc2_clk, 0xcf000, 14, 6),
++	[205] = SDC_PINGROUP(sdc2_cmd, 0xcf000, 11, 3),
++	[206] = SDC_PINGROUP(sdc2_data, 0xcf000, 9, 0),
+ };
+ 
+ static const struct msm_gpio_wakeirq_map sm8350_pdc_map[] = {
+-- 
+2.33.1
+
