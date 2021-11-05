@@ -2,27 +2,27 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 03EE84463C8
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Nov 2021 14:03:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C79404463CD
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Nov 2021 14:04:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232034AbhKENG1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 5 Nov 2021 09:06:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60544 "EHLO mail.kernel.org"
+        id S231952AbhKENHL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 5 Nov 2021 09:07:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231239AbhKENG0 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 5 Nov 2021 09:06:26 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A43D160F9B;
-        Fri,  5 Nov 2021 13:03:43 +0000 (UTC)
+        id S229529AbhKENHK (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 5 Nov 2021 09:07:10 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4D7CF60F9B;
+        Fri,  5 Nov 2021 13:04:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636117427;
-        bh=GGdaqM4ZLemAr74nj3CO0oh8DGXzHO2ZiWpz2bA/Q3Q=;
-        h=From:To:Cc:Subject:Date:From;
-        b=u6myhAUt2cjOuDDabk6BRgRVtQ2o4mLVAZ4UlYg3DPrxXDPfMHXM1jsVdjGiBHxT9
-         XXJpwoesp2JI2fnL0o/BMzHzH24tn8VWwCELASFCiqGXao8YP+xDf67DurV72/c649
-         LVlfV/FgdsF9SguO9mRmIk/wkC6fO7D011U2+gy7TN25iXfGOL9NRyhOX6L2Qg5isx
-         VoWPnwMxoRp1gURGnAWZCjveQmd7MX9ObAsf9w16Z9AsWGfCKQHkALBcFE3KG03ziD
-         E9h0cGoY1kBdMGJ/JMj82kaORNJXT56Olfwo2tWTotYekHW9AaSO5n8cIJ6S6me1DC
-         EI2UBZMXpx/ug==
+        s=k20201202; t=1636117470;
+        bh=+PVJdXmBLA/gstw3D36WCQ0Nj/5w+hOzURJoImyixsc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Ji37vi22HiR6CPYz0IHehOb3KXRwUbGtW7Oq4UpSIwq6mrTGWf+pTRPLHwJf6yGZ3
+         wPQDDchlaurwxi0Mr0fYQHFvNT82r02uJx3lhSQnJ1xldU0mTs3ExD+goKIp/aNjsd
+         wmXuHSakR8RxG1ADmz5Uj5TJMQasa94EF3IDlfnoilBe2Zws0int92Mz1RsGuWyoRg
+         1qB7pFhdjHpCtB96J3QPlPnWGgQoho/SP15xcjxIcSW2Jy+/2R+9AVSlHXeE6FjedF
+         Fap0sRwsY6YooVjAPYJpBHzdbXchdQ3+UhPWOJSOjwBhwMIGTi9Fs/Wj/OZzrXs2Fq
+         rLtiMOtIks1Uw==
 From:   Arnd Bergmann <arnd@kernel.org>
 To:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
         Linus Walleij <linus.walleij@linaro.org>
@@ -31,17 +31,14 @@ Cc:     linux-m68k@lists.linux-m68k.org, geert@linux-m68k.org,
         linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org,
         dalias@libc.org, ysato@users.sourceforge.jp,
         Arnd Bergmann <arnd@arndb.de>,
-        Fu Wei <tekkamanninja@gmail.com>, Alex Shi <alexs@kernel.org>,
-        Hu Haowen <src.res@email.cn>,
-        linux-doc-tw-discuss@lists.sourceforge.net,
-        Jonathan Corbet <corbet@lwn.net>,
-        Drew Fustini <drew@beagleboard.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC 1/3] gpiolib: remove irq_to_gpio() definition
-Date:   Fri,  5 Nov 2021 14:03:03 +0100
-Message-Id: <20211105130338.241100-1-arnd@kernel.org>
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-kernel@vger.kernel.org
+Subject: [RFC 2/3] gpiolib: remove empty asm/gpio.h files
+Date:   Fri,  5 Nov 2021 14:03:04 +0100
+Message-Id: <20211105130338.241100-2-arnd@kernel.org>
 X-Mailer: git-send-email 2.29.2
+In-Reply-To: <20211105130338.241100-1-arnd@kernel.org>
+References: <20211105130338.241100-1-arnd@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -50,134 +47,126 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-All implementations other than coldfire have returned an error since
-the avr32 and blackfin architectures got removed, and the last user in
-driver code was removed in 2016, so just remove this old interface.
+The arm and sh versions of this file are identical to the generic
+versions and can just be removed.
 
-The only reference is now in the Chinese documentation, which should be
-changed to remove this reference as well.
+The drivers that actually use the sh3 specific version also include
+cpu/gpio.h directly. This leaves coldfire as the only gpio driver
+that needs something custom for gpiolib.
 
-Cc: Fu Wei <tekkamanninja@gmail.com>
-Cc: Alex Shi <alexs@kernel.org>
-Cc: Hu Haowen <src.res@email.cn>
-Cc: linux-doc-tw-discuss@lists.sourceforge.net
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- Documentation/driver-api/gpio/legacy.rst | 20 +++++---------------
- arch/m68k/include/asm/gpio.h             |  7 -------
- arch/sh/include/asm/gpio.h               |  5 -----
- include/linux/gpio.h                     | 12 ------------
- 4 files changed, 5 insertions(+), 39 deletions(-)
+ arch/arm/Kconfig            |  1 -
+ arch/arm/include/asm/gpio.h | 22 ------------------
+ arch/sh/Kconfig             |  1 -
+ arch/sh/include/asm/gpio.h  | 45 -------------------------------------
+ 4 files changed, 69 deletions(-)
+ delete mode 100644 arch/arm/include/asm/gpio.h
+ delete mode 100644 arch/sh/include/asm/gpio.h
 
-diff --git a/Documentation/driver-api/gpio/legacy.rst b/Documentation/driver-api/gpio/legacy.rst
-index 9b12eeb89170..06c05e2d62c1 100644
---- a/Documentation/driver-api/gpio/legacy.rst
-+++ b/Documentation/driver-api/gpio/legacy.rst
-@@ -382,22 +382,18 @@ GPIOs mapped to IRQs
- --------------------
- GPIO numbers are unsigned integers; so are IRQ numbers.  These make up
- two logically distinct namespaces (GPIO 0 need not use IRQ 0).  You can
--map between them using calls like::
-+map between them using::
- 
- 	/* map GPIO numbers to IRQ numbers */
- 	int gpio_to_irq(unsigned gpio);
- 
--	/* map IRQ numbers to GPIO numbers (avoid using this) */
--	int irq_to_gpio(unsigned irq);
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 526ae94b1c9a..80378eeee760 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -23,7 +23,6 @@ config ARM
+ 	select ARCH_HAS_SYNC_DMA_FOR_CPU if SWIOTLB || !MMU
+ 	select ARCH_HAS_TEARDOWN_DMA_OPS if MMU
+ 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
+-	select ARCH_HAVE_CUSTOM_GPIO_H
+ 	select ARCH_HAVE_NMI_SAFE_CMPXCHG if CPU_V7 || CPU_V7M || CPU_V6K
+ 	select ARCH_HAS_GCOV_PROFILE_ALL
+ 	select ARCH_KEEP_MEMBLOCK
+diff --git a/arch/arm/include/asm/gpio.h b/arch/arm/include/asm/gpio.h
+deleted file mode 100644
+index f3bb8a2bf788..000000000000
+--- a/arch/arm/include/asm/gpio.h
++++ /dev/null
+@@ -1,22 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef _ARCH_ARM_GPIO_H
+-#define _ARCH_ARM_GPIO_H
 -
--Those return either the corresponding number in the other namespace, or
-+This returns an irq number corresponding to the gpio number, or
- else a negative errno code if the mapping can't be done.  (For example,
- some GPIOs can't be used as IRQs.)  It is an unchecked error to use a GPIO
--number that wasn't set up as an input using gpio_direction_input(), or
--to use an IRQ number that didn't originally come from gpio_to_irq().
-+number that wasn't set up as an input using gpio_direction_input().
- 
--These two mapping calls are expected to cost on the order of a single
--addition or subtraction.  They're not allowed to sleep.
-+The mapping call is expected to cost on the order of a single
-+addition or subtraction.  It is not allowed to sleep.
- 
- Non-error values returned from gpio_to_irq() can be passed to request_irq()
- or free_irq().  They will often be stored into IRQ resources for platform
-@@ -405,12 +401,6 @@ devices, by the board-specific initialization code.  Note that IRQ trigger
- options are part of the IRQ interface, e.g. IRQF_TRIGGER_FALLING, as are
- system wakeup capabilities.
- 
--Non-error values returned from irq_to_gpio() would most commonly be used
--with gpio_get_value(), for example to initialize or update driver state
--when the IRQ is edge-triggered.  Note that some platforms don't support
--this reverse mapping, so you should avoid using it.
+-/* Note: this may rely upon the value of ARCH_NR_GPIOS set in mach/gpio.h */
+-#include <asm-generic/gpio.h>
 -
+-/* The trivial gpiolib dispatchers */
+-#define gpio_get_value  __gpio_get_value
+-#define gpio_set_value  __gpio_set_value
+-#define gpio_cansleep   __gpio_cansleep
 -
- Emulating Open Drain Signals
- ----------------------------
- Sometimes shared signals need to use "open drain" signaling, where only the
-diff --git a/arch/m68k/include/asm/gpio.h b/arch/m68k/include/asm/gpio.h
-index a50b27719a58..5cfc0996ba94 100644
---- a/arch/m68k/include/asm/gpio.h
-+++ b/arch/m68k/include/asm/gpio.h
-@@ -66,13 +66,6 @@ static inline int gpio_to_irq(unsigned gpio)
- 		return __gpio_to_irq(gpio);
- }
- 
--static inline int irq_to_gpio(unsigned irq)
--{
--	return (irq >= MCFGPIO_IRQ_VECBASE &&
--		irq < (MCFGPIO_IRQ_VECBASE + MCFGPIO_IRQ_MAX)) ?
--		irq - MCFGPIO_IRQ_VECBASE : -ENXIO;
--}
+-/*
+- * Provide a default gpio_to_irq() which should satisfy every case.
+- * However, some platforms want to do this differently, so allow them
+- * to override it.
+- */
+-#ifndef gpio_to_irq
+-#define gpio_to_irq	__gpio_to_irq
+-#endif
 -
- static inline int gpio_cansleep(unsigned gpio)
- {
- 	return gpio < MCFGPIO_PIN_MAX ? 0 : __gpio_cansleep(gpio);
+-#endif /* _ARCH_ARM_GPIO_H */
+diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
+index 2474a04ceac4..cebd04314d76 100644
+--- a/arch/sh/Kconfig
++++ b/arch/sh/Kconfig
+@@ -4,7 +4,6 @@ config SUPERH
+ 	select ARCH_32BIT_OFF_T
+ 	select ARCH_ENABLE_MEMORY_HOTPLUG if SPARSEMEM && MMU
+ 	select ARCH_ENABLE_MEMORY_HOTREMOVE if SPARSEMEM && MMU
+-	select ARCH_HAVE_CUSTOM_GPIO_H
+ 	select ARCH_HAVE_NMI_SAFE_CMPXCHG if (GUSA_RB || CPU_SH4A)
+ 	select ARCH_HAS_BINFMT_FLAT if !MMU
+ 	select ARCH_HAS_GIGANTIC_PAGE
 diff --git a/arch/sh/include/asm/gpio.h b/arch/sh/include/asm/gpio.h
-index d643250f0a0f..588c1380e4cb 100644
+deleted file mode 100644
+index 588c1380e4cb..000000000000
 --- a/arch/sh/include/asm/gpio.h
-+++ b/arch/sh/include/asm/gpio.h
-@@ -40,11 +40,6 @@ static inline int gpio_to_irq(unsigned gpio)
- 	return __gpio_to_irq(gpio);
- }
- 
--static inline int irq_to_gpio(unsigned int irq)
++++ /dev/null
+@@ -1,45 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0
+- *
+- *  include/asm-sh/gpio.h
+- *
+- * Generic GPIO API and pinmux table support for SuperH.
+- *
+- * Copyright (c) 2008 Magnus Damm
+- */
+-#ifndef __ASM_SH_GPIO_H
+-#define __ASM_SH_GPIO_H
+-
+-#include <linux/kernel.h>
+-#include <linux/errno.h>
+-
+-#if defined(CONFIG_CPU_SH3)
+-#include <cpu/gpio.h>
+-#endif
+-
+-#include <asm-generic/gpio.h>
+-
+-#ifdef CONFIG_GPIOLIB
+-
+-static inline int gpio_get_value(unsigned gpio)
 -{
--	return -ENOSYS;
+-	return __gpio_get_value(gpio);
 -}
 -
- #endif /* CONFIG_GPIOLIB */
- 
- #endif /* __ASM_SH_GPIO_H */
-diff --git a/include/linux/gpio.h b/include/linux/gpio.h
-index 008ad3ee56b7..d8d7daa7eb94 100644
---- a/include/linux/gpio.h
-+++ b/include/linux/gpio.h
-@@ -81,11 +81,6 @@ static inline int gpio_to_irq(unsigned int gpio)
- 	return __gpio_to_irq(gpio);
- }
- 
--static inline int irq_to_gpio(unsigned int irq)
+-static inline void gpio_set_value(unsigned gpio, int value)
 -{
--	return -EINVAL;
+-	__gpio_set_value(gpio, value);
 -}
 -
- #endif /* ! CONFIG_ARCH_HAVE_CUSTOM_GPIO_H */
- 
- /* CONFIG_GPIOLIB: bindings for managed devices that want to request gpios */
-@@ -219,13 +214,6 @@ static inline int gpio_to_irq(unsigned gpio)
- 	return -EINVAL;
- }
- 
--static inline int irq_to_gpio(unsigned irq)
+-static inline int gpio_cansleep(unsigned gpio)
 -{
--	/* irq can never have been returned from gpio_to_irq() */
--	WARN_ON(1);
--	return -EINVAL;
+-	return __gpio_cansleep(gpio);
 -}
 -
- static inline int devm_gpio_request(struct device *dev, unsigned gpio,
- 				    const char *label)
- {
+-static inline int gpio_to_irq(unsigned gpio)
+-{
+-	return __gpio_to_irq(gpio);
+-}
+-
+-#endif /* CONFIG_GPIOLIB */
+-
+-#endif /* __ASM_SH_GPIO_H */
 -- 
 2.29.2
 
