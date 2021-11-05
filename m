@@ -2,77 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 805D3446418
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Nov 2021 14:24:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 46EC744650A
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Nov 2021 15:36:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232946AbhKEN1R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 5 Nov 2021 09:27:17 -0400
-Received: from mga18.intel.com ([134.134.136.126]:49150 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232913AbhKEN1L (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 5 Nov 2021 09:27:11 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10158"; a="218794808"
-X-IronPort-AV: E=Sophos;i="5.87,211,1631602800"; 
-   d="scan'208";a="218794808"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2021 06:24:31 -0700
-X-IronPort-AV: E=Sophos;i="5.87,211,1631602800"; 
-   d="scan'208";a="729933654"
-Received: from smile.fi.intel.com ([10.237.72.184])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2021 06:24:26 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1mizCV-003ni9-8h;
-        Fri, 05 Nov 2021 15:24:11 +0200
-Date:   Fri, 5 Nov 2021 15:24:11 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+        id S233112AbhKEOjM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 5 Nov 2021 10:39:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56944 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232865AbhKEOjL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Nov 2021 10:39:11 -0400
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69091C061714;
+        Fri,  5 Nov 2021 07:36:31 -0700 (PDT)
+Received: by mail-wr1-x42b.google.com with SMTP id b12so14077004wrh.4;
+        Fri, 05 Nov 2021 07:36:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xvMjGcobnBgLs7ZPSv8hX0I0/4KkCNQdWW3Z/W7d/b4=;
+        b=IB25lQ1JPmF23njjHdeiU6z1mNDbFN6QEZH54rKox/jHMRLTohC1oewAkk/HCoXwr1
+         f/Xw4G2k/ESLpOWF/XSkRULZZra1jBpoSxnv7xZZuroh+Z5mI4JJes8OD38/9Qqc0uF7
+         ZZkS7DS4aa9qpR9DfjMujEsfZsmZDBTqvbJB7CC7tHRhToDMmQXaF1Gyazr0KBT1Xb6Q
+         /+YeDNG2q2RaMq2Jl9W1k6sJH4UNxOW9AdQiswxawhq/g//vOdfKkUhRBeObrP8c4xIr
+         J/UQr0JfjxbAqR0Awourre10x/eJULBPmHUjyS7ZgNGXGF/DnudTUIkXhFkgplqCi20E
+         AS/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xvMjGcobnBgLs7ZPSv8hX0I0/4KkCNQdWW3Z/W7d/b4=;
+        b=f+UYJiGSDS8EyfHe4N5iBNAujVIZO8ZCgDon7fPsb+vemwfjrolEigHgzh5Sa3zmk1
+         S9Go/B2MnzAuJSYZ54APgYALfCfsn31lnVxaUKOCOSuDzNjTy1AAGIf9u5Z1WDfYuXhf
+         4K/FatL76gM61/3Zfehn/qf8p4XoFaqKpCqSh463jITj4uJqzmzuaqwYJE7iqsqq2MB8
+         avRYTJaSVwnvBqOVkklOHN9PqfhxHjLxrDSwFUj0UkmNg6A4tITFxWQOyNa5S7748wpk
+         9Q1oqD/eejfnVFXDmrk84w0615treJBB/U6RuWvvKF3zLsJTRFljNTK5AmZ6o8Xckmtz
+         m7iw==
+X-Gm-Message-State: AOAM532QxFhBXtHx6RCAHhfWTlpJLlNqKQfWSfwUfr7Jpbdqs7g49Buw
+        mrQY/uWRoW36l/tjt28O8W3qj7rNYenJyw==
+X-Google-Smtp-Source: ABdhPJyeeJKJvHRvpLq0b+2TdSjZvOz0j8oKTFETeEWsdESJjCTyNXfeqK0D8zGKC3Q6zi3OVRleHg==
+X-Received: by 2002:adf:dc0d:: with SMTP id t13mr73158647wri.158.1636122990015;
+        Fri, 05 Nov 2021 07:36:30 -0700 (PDT)
+Received: from demon-pc.localdomain ([188.24.96.74])
+        by smtp.gmail.com with ESMTPSA id z5sm15140839wmp.26.2021.11.05.07.36.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Nov 2021 07:36:29 -0700 (PDT)
+From:   Cosmin Tanislav <demonsingur@gmail.com>
+Cc:     demonsingur@gmail.com, cosmin.tanislav@analog.com,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-m68k@lists.linux-m68k.org, geert@linux-m68k.org,
-        gerg@linux-m68k.org, linux@armlinux.org.uk,
-        linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org,
-        dalias@libc.org, ysato@users.sourceforge.jp,
-        Arnd Bergmann <arnd@arndb.de>,
-        Fu Wei <tekkamanninja@gmail.com>, Alex Shi <alexs@kernel.org>,
-        Hu Haowen <src.res@email.cn>,
-        linux-doc-tw-discuss@lists.sourceforge.net,
-        Jonathan Corbet <corbet@lwn.net>,
-        Drew Fustini <drew@beagleboard.org>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC 1/3] gpiolib: remove irq_to_gpio() definition
-Message-ID: <YYUwe0fGs6ypDySp@smile.fi.intel.com>
-References: <20211105130338.241100-1-arnd@kernel.org>
- <YYUwWFOeiFBC2Nhd@smile.fi.intel.com>
+        Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
+Subject: [PATCH v3 0/3] Add AD74413R driver
+Date:   Fri,  5 Nov 2021 16:35:47 +0200
+Message-Id: <20211105143550.1783528-1-demonsingur@gmail.com>
+X-Mailer: git-send-email 2.33.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YYUwWFOeiFBC2Nhd@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 05, 2021 at 03:23:37PM +0200, Andy Shevchenko wrote:
-> On Fri, Nov 05, 2021 at 02:03:03PM +0100, Arnd Bergmann wrote:
-> > From: Arnd Bergmann <arnd@arndb.de>
-> > 
-> > All implementations other than coldfire have returned an error since
-> > the avr32 and blackfin architectures got removed, and the last user in
-> > driver code was removed in 2016, so just remove this old interface.
-> > 
-> > The only reference is now in the Chinese documentation, which should be
-> > changed to remove this reference as well.
-> 
-> FWIW,
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+V1 -> V2
+ * sign off using company email
 
-This is for the entire series.
+V2 -> V3
+ * replace gpo config firmware flag with one flag specifying whether gpo is in
+   comparator mode
+ * create two separate gpiochips, one output-only for GPO pins not in
+   comparator mode and one input-only for the value of digital input channels
+ * wire up all gpo functionalities using pinconf
+ * keep number of characters per line under 80
+ * rework locking
+ * do not invalidate other chip revisions
+ * do not set indio device parent
+ * print probe error for refin regulator
+ * move conversion from range register value to range / offset / raw offset
+   into separate function
+ * module.h -> mod_devicetable.h
+ * use generic firmware interface functions
+ * add comment regarding cache alignment
+ * add comment regarding ADC channels buffered read setup
+ * un-inline comment regarding 100us delay for conversion start
+ * inline return statements
+ * remove assignments to val2 where not necessary
+ * local_channels -> chans
+ * index -> i
+ * channel_config -> config
+ * IIO_ALTVOLTAGE -> IIO_VOLTAGE
+ * .info_mask_shared_by_type_available -> .info_mask_separate_available
+ * remove unlikely probe error messages
+ * use an array indexed by channel function for retrieving iio channels
+ * count iio channels while parsing
+ * move HART rate rejection outside of setter
+ * move channel function validation outside of setter
+ * use SPI messages for read and write
+ * validate DAC code earlier
+ * simplify switches to only handle existing iio channels
+ * pass indio_dev into functions needing access to it
+ * pass spi into devm_regmap_init
+ * dt-bindings: sort compatibles
+ * dt-bindings: remove driver word from description
+ * dt-bindings: remove refin supply description
+ * dt-bindings: specify channel function default value
+ * dt-bindings: remove maxItems from scalar value
 
-> Thanks, Arnd, for cleaning this up!
+Cosmin Tanislav (3):
+  iio: add adddac subdirectory
+  dt-bindings: iio: add AD74413R
+  iio: addac: add AD74413R driver
+
+ .../bindings/iio/addac/adi,ad74413r.yaml      |  153 ++
+ MAINTAINERS                                   |    9 +
+ drivers/iio/Kconfig                           |    1 +
+ drivers/iio/Makefile                          |    1 +
+ drivers/iio/addac/Kconfig                     |   20 +
+ drivers/iio/addac/Makefile                    |    7 +
+ drivers/iio/addac/ad74413r.c                  | 1492 +++++++++++++++++
+ include/dt-bindings/iio/addac/adi,ad74413r.h  |   21 +
+ 8 files changed, 1704 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/addac/adi,ad74413r.yaml
+ create mode 100644 drivers/iio/addac/Kconfig
+ create mode 100644 drivers/iio/addac/Makefile
+ create mode 100644 drivers/iio/addac/ad74413r.c
+ create mode 100644 include/dt-bindings/iio/addac/adi,ad74413r.h
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.33.1
 
