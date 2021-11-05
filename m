@@ -2,290 +2,328 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC78544617E
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Nov 2021 10:42:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 993A6446193
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Nov 2021 10:50:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232867AbhKEJpS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 5 Nov 2021 05:45:18 -0400
-Received: from smtpcmd0987.aruba.it ([62.149.156.87]:52519 "EHLO
-        smtpcmd0987.aruba.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232847AbhKEJpP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Nov 2021 05:45:15 -0400
-Received: from [192.168.153.129] ([146.241.216.221])
-        by Aruba Outgoing Smtp  with ESMTPSA
-        id ivjdmdpVVsfk3ivjfmPM8G; Fri, 05 Nov 2021 10:42:32 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
-        t=1636105352; bh=1GP6cpeDo31RshdJGVY27pg4jdAQLLhr1b3EHvlqG9U=;
-        h=Subject:To:From:Date:MIME-Version:Content-Type;
-        b=RdWsBvQOUh0y5sMKxC/8qFCZqAKgVNldIM4KBq+GnvYKRPU65iFvMatCxpaYtRjd1
-         dBO645DPZ7Gl9iIyVBiIkepIRRddD4/oy6U95t3jSBNjDgN2CR1cfelwJHV9ES9k/P
-         cBJWjEba0HW5ZGAqYREHOHLyt+JpPYyp5a9NErtbCOz6El3RU77PFBxSa3+vZ9tCvx
-         PjNADZNdF3CYI1xtdHOIawJ+45Zi4+KBs5joppbNdfbDqstBLAfSKapdHvrN+YDdG8
-         oH32WUPzflKxn21mjJM6NxBiccP0rzXximOAjhnBxly/9Xn58f9ViPAj16EA3s0/Oj
-         4GxF0yr1c0n5Q==
-Subject: Re: [PATCH v2 07/13] clk: imx: Add initial support for i.MXRT clock
- driver
-To:     Jesse Taube <mr.bossman075@gmail.com>, linux-imx@nxp.com
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, ulf.hansson@linaro.org, aisheng.dong@nxp.com,
-        stefan@agner.ch, linus.walleij@linaro.org,
-        gregkh@linuxfoundation.org, arnd@arndb.de, olof@lixom.net,
-        soc@kernel.org, linux@armlinux.org.uk, abel.vesa@nxp.com,
-        adrian.hunter@intel.com, jirislaby@kernel.org,
-        nobuhiro1.iwamatsu@toshiba.co.jp, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org
-References: <20211102225701.98944-1-Mr.Bossman075@gmail.com>
- <20211102225701.98944-8-Mr.Bossman075@gmail.com>
-From:   Giulio Benetti <giulio.benetti@benettiengineering.com>
-Message-ID: <01336852-e6fa-cfe6-21be-9c03cb567fde@benettiengineering.com>
-Date:   Fri, 5 Nov 2021 10:42:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        id S232840AbhKEJwr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 5 Nov 2021 05:52:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48802 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232834AbhKEJwq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Nov 2021 05:52:46 -0400
+Received: from mail-ot1-x32c.google.com (mail-ot1-x32c.google.com [IPv6:2607:f8b0:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D7C4C061714
+        for <linux-gpio@vger.kernel.org>; Fri,  5 Nov 2021 02:50:07 -0700 (PDT)
+Received: by mail-ot1-x32c.google.com with SMTP id s19-20020a056830125300b0055ad9673606so11022514otp.0
+        for <linux-gpio@vger.kernel.org>; Fri, 05 Nov 2021 02:50:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=6wn/L7/SSOhEC1CvL6qpAc+L8JOU1SQHvHQXVt2hgdI=;
+        b=hlk46Ule8jDc0kHPpvMjrplvYrsNRmNQGi8r/epX8JG/m/iySnRWU4dM1JQzvu2EyO
+         T1BdKsnwMrMyBbBWE41IMzLT1wyP8AoJ4x6BYAEnxynEsJDKZchWqKOMtHAxiCr6Jfp5
+         mP6WnqHQweE3Phxmbp+GhHc5kJGZJKgjmS/spwvPzvuM2RnS2oSUfH/jI3QccfgXhzhh
+         FCiKCzQ9Loa3jIbAXud7vesZ6IakPCBlOsuXymE+krhTrKZ2gJNdU5vEJXnkdljztFn/
+         iL+QX2cLpqpb0DZq4qrL5GTR1pIJEhMLHXfnLw/1SrpBEyPfZIXquqIIPZZciffY+qds
+         XlTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=6wn/L7/SSOhEC1CvL6qpAc+L8JOU1SQHvHQXVt2hgdI=;
+        b=DJylGV6uXVO0SDz64jxBTurSctPJcLkgfrZVtAhWnTw3Zn0R3SOe3nwXbXyLxz/bcC
+         XlBkBtLDJM6vPuZga7ov0tOOnxIo5Ken4ssvvlOYbIfSrvPeWVbU07PYPWkXZPEYASXd
+         oVUo6daahvOpgKElrBVm7lOzt2GO6ykCVG1Fj6CzLs6o4YdP2WG9P5awMb4b/farrzYx
+         0Tj2DX7XaDAZ8kWkWwLuNg6U3ZkudgyCVeD3EZTGHjADDnoJvMSmZzn+QnV2fh7t5xO3
+         rz8KyHi2t/LGfF3Q0Ut160lb2Kbr89TwtR3XiM2htT/Hua3wxzBCIW1IUWvu5ou72GFj
+         eLpQ==
+X-Gm-Message-State: AOAM530ug7ggMYm1uQXn8kgFvE03LmumYaHbLJR+MPYUsdSG3walC843
+        tzMs3+40y2FwGnaZsfEE/f4YDxr23jKVe5Yg8DCNgIi+a3TGGg==
+X-Google-Smtp-Source: ABdhPJx3DMMB+58/dyKZwFRuLmXcKJP5SQvzh+M+qBwz56yovBbYQc5ZStHSiwe8APbGvw+eUhua2OuZnWoqOe/Y/o0=
+X-Received: by 2002:a9d:6348:: with SMTP id y8mr44727729otk.179.1636105806759;
+ Fri, 05 Nov 2021 02:50:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20211102225701.98944-8-Mr.Bossman075@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfGHZCGviNtSTv00RKTlbWw4QzIQHqj2J0gHEQJVYrIkWDxivZ2LS7bPvRjwyVHcSDYfpVwJpkj+AGOcq6htQ3mirYuJdnMDtXLXWapvNehq92jrNsHUK
- m7Kwml9wPX7+BzX9ImcYS+h5cfDTbUywzpUjtD0YLA2qq8DxB2CzpiQGi9ndy1awhC5+0syO378gLAtqjPFZCAfMYGWoOp8o6VALHQUGya3sgT+neZeYUxNQ
- k7I5s9fOg7iZHJnHzyTCoABl1u8C6FazaKEIbWwsi0Zl8FFf64c3WqJkqhcMtEfNUrhZd1Kk19X+Ga2DyQeXVF6i9y2Lvx09wgPy5+Mmblmv7fG5ly2HdvG4
- l1a4AhBKErOW1vFPstLToHlq5/hb0HpdyYK8EOL5BXg1K01KSTbJn34+u0PJGO2wp9Kq+/yHMzDM4GeAOIrBVyxc/RLt8P9rmgejkkHklHkriih7WK5iUOw7
- j5N910PqyCbjyFauy4dRqMCgEM14bt8/uY9mONpQdQi6gJXQ+JGtMQYoL6BSE8wNW+HXDAwsoQBFY6txyGC0o0L8jk37LUC/mBLu7UxhR1/CJ148JLpr/h0p
- dleOKGVAjijot+BarE3+s3cFROly7khgfHE2wZ0//tH2q3EMWAXceXAb3IRcUDK24cveUd8fZ7Na2xC3lgUTAjzvxNMLyD+TBZClsPA+sb9ZOZd4CAwJHfs4
- nBuhoEefmCxTpYFYgtIXikl2RthZWX+ozCAN6LH3xpvWPCRXjpuuKmIxJpRO99ut+EgtcDwZN+zfFHE0iQoJx/DwjfenLmbxT52K1h0+haU8FBYe6fgkiwfp
- dXLIcBlCLYdFIckrJjMWK5FVvngblxxZJrxJhm53696YB++iMmIQUJAysCRk2wtfM9GdXLEeozZ5H5bxn/ICkir1b4m1EESV81h1EZoithxsJLpYiTvTpjja
- 1vEfRQ15G94yhSVV54KlyDg74O5s+D9aGG7F/4t/AI6mZDRj74uq5pZQOzFZw26V3IkuTiCGNBl5UK0sQFHeAyC0VkVpUN7fVbla1zBc1YwOv/vvwcs+J/SD
- QICKnQtBGtmj8+KPkiCthtkKo5EYWwkGMuOfYKx/+fK72712NJuT9xb5v+7Qz9vcJOA/SM0WB6AJiri2Jm3xgCHd90oF9dQ32Dg=
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 5 Nov 2021 10:49:54 +0100
+Message-ID: <CACRpkdbRu_NTJpSeyOeMRq5TFgj0-7Ny1vTvcak4K9qaY6nunw@mail.gmail.com>
+Subject: [GIT PULL] Pin control bulk changes for v5.16
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Jesse, All,
+Hi Linus,
 
-this is a specific driver for imxrt1050, for example imxrt1020 is 
-totally different while imxrt1060 is similar, so commit log needs to 
-change to i.MXRT1050,
+here is the big pin control pull request for v5.16.
 
-On 11/2/21 11:56 PM, Jesse Taube wrote:
-> From: Jesse Taube <mr.bossman075@gmail.com>
-> 
-> This patch adds initial clock driver support for the i.MXRT series.
+The details are in the signed tag as usual.
 
-Here too ^^^
+The most interesting aspect is that we now have initial
+support for the Apple pin controller as used in the M1
+laptops and the iPhones which is a step forward for using
+Linux efficiently on this Apple silicon.
 
-> 
-> Signed-off-by: Jesse Taube <Mr.Bossman075@gmail.com>
-> Suggested-by: Giulio Benetti <giulio.benetti@benettiengineering.com>
-> ---
-> V1->V2:
-> * Kconfig: Add new line
-> * clk-imxrt.c: Remove unused const
-> * clk-imxrt.c: Remove set parents
-> * clk-imxrt.c: Use fsl,imxrt-anatop for anatop base address
-> ---
->   drivers/clk/imx/Kconfig     |   4 +
->   drivers/clk/imx/Makefile    |   1 +
->   drivers/clk/imx/clk-imxrt.c | 149 ++++++++++++++++++++++++++++++++++++
+Please pull it in!
 
-Here we need this file ^^^ to be clk-imxrt1050.c
+Yours,
+Linus Walleij
 
->   3 files changed, 154 insertions(+)
->   create mode 100644 drivers/clk/imx/clk-imxrt.c
-> 
-> diff --git a/drivers/clk/imx/Kconfig b/drivers/clk/imx/Kconfig
-> index 47d9ec3abd2f..f83ba5fe8cd3 100644
-> --- a/drivers/clk/imx/Kconfig
-> +++ b/drivers/clk/imx/Kconfig
-> @@ -98,3 +98,7 @@ config CLK_IMX8QXP
->   	select MXC_CLK_SCU
->   	help
->   	  Build the driver for IMX8QXP SCU based clocks.
-> +
-> +config CLK_IMXRT
+The following changes since commit 6880fa6c56601bb8ed59df6c30fd390cc5f6dd8f:
 
-CLK_IMXRT1050
+  Linux 5.15-rc1 (2021-09-12 16:28:37 -0700)
 
-> +	def_bool SOC_IMXRT
-> +	select MXC_CLK
-> diff --git a/drivers/clk/imx/Makefile b/drivers/clk/imx/Makefile
-> index c24a2acbfa56..6a3fee6cd9af 100644
-> --- a/drivers/clk/imx/Makefile
-> +++ b/drivers/clk/imx/Makefile
-> @@ -45,3 +45,4 @@ obj-$(CONFIG_CLK_IMX6UL) += clk-imx6ul.o
->   obj-$(CONFIG_CLK_IMX7D)  += clk-imx7d.o
->   obj-$(CONFIG_CLK_IMX7ULP) += clk-imx7ulp.o
->   obj-$(CONFIG_CLK_VF610)  += clk-vf610.o
-> +obj-$(CONFIG_CLK_IMXRT)  += clk-imxrt.o
+are available in the Git repository at:
 
-CONFIG_CLK_IMXRT1050
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+tags/pinctrl-v5.16-1
 
-> diff --git a/drivers/clk/imx/clk-imxrt.c b/drivers/clk/imx/clk-imxrt.c
-> new file mode 100644
-> index 000000000000..8e235925cdb7
-> --- /dev/null
-> +++ b/drivers/clk/imx/clk-imxrt.c
-> @@ -0,0 +1,149 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
-> +/*
-> + * Copyright (C) 2021
-> + * Author(s):
-> + * Jesse Taube <Mr.Bossman075@gmail.com>
-> + * Giulio Benetti <giulio.benetti@benettiengineering.com>
-> + */
-> +#include <linux/mm.h>
-> +#include <linux/delay.h>
-> +#include <linux/clk.h>
-> +#include <linux/io.h>
-> +#include <linux/clkdev.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/err.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/sizes.h>
-> +#include <soc/imx/revision.h>
-> +#include <dt-bindings/clock/imxrt1050-clock.h>
+for you to fetch changes up to a0f160ffcb83de6a04fa75f9e7bdfe969f2863f7:
 
-Indeed here the include is imxrt1050-clock.h and every macro below 
-starts with IMXRT1050_ prefix
+  pinctrl: add pinctrl/GPIO driver for Apple SoCs (2021-10-27 00:16:52 +0200)
 
-> +
-> +#include "clk.h"
-> +#define ANATOP_BASE_ADDR	0x400d8000
-> +
-> +static const char * const pll_ref_sels[] = {"osc", "dummy", };
-> +static const char * const per_sels[] = {"ipg_pdof", "osc", };
-> +static const char * const pll1_bypass_sels[] = {"pll1_arm", "pll1_arm_ref_sel", };
-> +static const char * const pll2_bypass_sels[] = {"pll2_sys", "pll2_sys_ref_sel", };
-> +static const char * const pll3_bypass_sels[] = {"pll3_usb_otg", "pll3_usb_otg_ref_sel", };
-> +static const char * const pll5_bypass_sels[] = {"pll5_video", "pll5_video_ref_sel", };
-> +static const char *const pre_periph_sels[] = {
-> +	"pll2_sys", "pll2_pfd2_396m", "pll2_pfd0_352m", "arm_podf", };
-> +static const char *const periph_sels[] = { "pre_periph_sel", "todo", };
-> +static const char *const usdhc_sels[] = { "pll2_pfd2_396m", "pll2_pfd0_352m", };
-> +static const char *const lpuart_sels[] = { "pll3_80m", "osc", };
-> +static const char *const lcdif_sels[] = {
-> +	"pll2_sys", "pll3_pfd3_454_74m", "pll5_video", "pll2_pfd0_352m",
-> +	"pll2_pfd1_594m", "pll3_pfd1_664_62m", };
-> +
-> +static struct clk *clk[IMXRT1050_CLK_END];
-> +static struct clk_onecell_data clk_data;
-> +
-> +static void __init imxrt_clocks_common_init(void __iomem *base)
-> +{
-> +	/* Anatop clocks */
-> +	clk[IMXRT1050_CLK_DUMMY] = imx_clk_fixed("dummy", 0UL);
-> +
-> +	clk[IMXRT1050_CLK_PLL1_REF_SEL] = imx_clk_mux("pll1_arm_ref_sel",
-> +		base + 0x0, 14, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
-> +	clk[IMXRT1050_CLK_PLL2_REF_SEL] = imx_clk_mux("pll2_sys_ref_sel",
-> +		base + 0x30, 14, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
-> +	clk[IMXRT1050_CLK_PLL3_REF_SEL] = imx_clk_mux("pll3_usb_otg_ref_sel",
-> +		base + 0x10, 14, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
-> +	clk[IMXRT1050_CLK_PLL5_REF_SEL] = imx_clk_mux("pll5_video_ref_sel",
-> +		base + 0xa0, 14, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
-> +
-> +	clk[IMXRT1050_CLK_PLL1_ARM] = imx_clk_pllv3(IMX_PLLV3_SYS, "pll1_arm",
-> +		"pll1_arm_ref_sel", base + 0x0, 0x7f);
-> +	clk[IMXRT1050_CLK_PLL2_SYS] = imx_clk_pllv3(IMX_PLLV3_GENERIC, "pll2_sys",
-> +		"pll2_sys_ref_sel", base + 0x30, 0x1);
-> +	clk[IMXRT1050_CLK_PLL3_USB_OTG] = imx_clk_pllv3(IMX_PLLV3_USB, "pll3_usb_otg",
-> +		"pll3_usb_otg_ref_sel", base + 0x10, 0x1);
-> +	clk[IMXRT1050_CLK_PLL5_VIDEO] = imx_clk_pllv3(IMX_PLLV3_AV, "pll5_video",
-> +		"pll5_video_ref_sel", base + 0xa0, 0x7f);
-> +
-> +	/* PLL bypass out */
-> +	clk[IMXRT1050_CLK_PLL1_BYPASS] = imx_clk_mux_flags("pll1_bypass", base + 0x0, 16, 1,
-> +		pll1_bypass_sels, ARRAY_SIZE(pll1_bypass_sels), CLK_SET_RATE_PARENT);
-> +	clk[IMXRT1050_CLK_PLL2_BYPASS] = imx_clk_mux_flags("pll2_bypass", base + 0x30, 16, 1,
-> +		pll2_bypass_sels, ARRAY_SIZE(pll2_bypass_sels), CLK_SET_RATE_PARENT);
-> +	clk[IMXRT1050_CLK_PLL3_BYPASS] = imx_clk_mux_flags("pll3_bypass", base + 0x10, 16, 1,
-> +		pll3_bypass_sels, ARRAY_SIZE(pll3_bypass_sels), CLK_SET_RATE_PARENT);
-> +	clk[IMXRT1050_CLK_PLL5_BYPASS] = imx_clk_mux_flags("pll5_bypass", base + 0xa0, 16, 1,
-> +		pll5_bypass_sels, ARRAY_SIZE(pll5_bypass_sels), CLK_SET_RATE_PARENT);
-> +
-> +	clk[IMXRT1050_CLK_VIDEO_POST_DIV_SEL] = imx_clk_divider("video_post_div_sel",
-> +		"pll5_video", base + 0xa0, 19, 2);
-> +	clk[IMXRT1050_CLK_VIDEO_DIV] = imx_clk_divider("video_div",
-> +		"video_post_div_sel", base + 0x170, 30, 2);
-> +
-> +	clk[IMXRT1050_CLK_PLL3_80M] = imx_clk_fixed_factor("pll3_80m",  "pll3_usb_otg", 1, 6);
-> +
-> +	clk[IMXRT1050_CLK_PLL2_PFD0_352M] = imx_clk_pfd("pll2_pfd0_352m", "pll2_sys", base + 0x100, 0);
-> +	clk[IMXRT1050_CLK_PLL2_PFD1_594M] = imx_clk_pfd("pll2_pfd1_594m", "pll2_sys", base + 0x100, 1);
-> +	clk[IMXRT1050_CLK_PLL2_PFD2_396M] = imx_clk_pfd("pll2_pfd2_396m", "pll2_sys", base + 0x100, 2);
-> +	clk[IMXRT1050_CLK_PLL3_PFD1_664_62M] = imx_clk_pfd("pll3_pfd1_664_62m", "pll3_usb_otg", base + 0xf0, 1);
-> +	clk[IMXRT1050_CLK_PLL3_PFD3_454_74M] = imx_clk_pfd("pll3_pfd3_454_74m", "pll3_usb_otg", base + 0xf0, 3);
-> +}
-> +
-> +static void __init imxrt1050_clocks_init(struct device_node *np)
-> +{
-> +	void __iomem *ccm_base;
-> +	void __iomem *pll_base;
-> +	struct device_node *anp;
-> +
-> +	clk[IMXRT1050_CLK_OSC] = of_clk_get_by_name(np, "osc");
-> +
-> +	anp = of_find_compatible_node(NULL, NULL, "fsl,imxrt-anatop");
-> +	pll_base = of_iomap(anp, 0);
-> +	WARN_ON(!pll_base);
-> +	imxrt_clocks_common_init(pll_base);
-> +	/* CCM clocks */
-> +	ccm_base = of_iomap(np, 0);
-> +	WARN_ON(!ccm_base);
-> +
-> +	clk[IMXRT1050_CLK_ARM_PODF] = imx_clk_divider("arm_podf", "pll1_arm", ccm_base + 0x10, 0, 3);
-> +	clk[IMXRT1050_CLK_PRE_PERIPH_SEL] = imx_clk_mux("pre_periph_sel", ccm_base + 0x18, 18, 2,
-> +		pre_periph_sels, ARRAY_SIZE(pre_periph_sels));
-> +	clk[IMXRT1050_CLK_PERIPH_SEL] = imx_clk_mux("periph_sel", ccm_base + 0x14, 25, 1,
-> +		periph_sels, ARRAY_SIZE(periph_sels));
-> +	clk[IMXRT1050_CLK_USDHC1_SEL] = imx_clk_mux("usdhc1_sel", ccm_base + 0x1c, 16, 1,
-> +		usdhc_sels, ARRAY_SIZE(usdhc_sels));
-> +	clk[IMXRT1050_CLK_USDHC2_SEL] = imx_clk_mux("usdhc2_sel", ccm_base + 0x1c, 17, 1,
-> +		usdhc_sels, ARRAY_SIZE(usdhc_sels));
-> +	clk[IMXRT1050_CLK_LPUART_SEL] = imx_clk_mux("lpuart_sel", ccm_base + 0x24, 6, 1,
-> +		lpuart_sels, ARRAY_SIZE(lpuart_sels));
-> +	clk[IMXRT1050_CLK_LCDIF_SEL] = imx_clk_mux("lcdif_sel", ccm_base + 0x38, 15, 3,
-> +		lcdif_sels, ARRAY_SIZE(lcdif_sels));
-> +	clk[IMXRT1050_CLK_PER_CLK_SEL] = imx_clk_mux("per_sel", ccm_base + 0x1C, 6, 1,
-> +		per_sels, ARRAY_SIZE(per_sels));
-> +
-> +	clk[IMXRT1050_CLK_AHB_PODF] = imx_clk_divider("ahb", "periph_sel", ccm_base + 0x14, 10, 3);
-> +	clk[IMXRT1050_CLK_IPG_PDOF] = imx_clk_divider("ipg", "ahb", ccm_base + 0x14, 8, 2);
-> +	clk[IMXRT1050_CLK_PER_PDOF] = imx_clk_divider("per", "per_sel", ccm_base + 0x1C, 0, 5);
-> +
-> +	clk[IMXRT1050_CLK_USDHC1_PODF] = imx_clk_divider("usdhc1_podf", "usdhc1_sel", ccm_base + 0x24, 11, 3);
-> +	clk[IMXRT1050_CLK_USDHC2_PODF] = imx_clk_divider("usdhc2_podf", "usdhc2_sel", ccm_base + 0x24, 16, 3);
-> +	clk[IMXRT1050_CLK_LPUART_PODF] = imx_clk_divider("lpuart_podf", "lpuart_sel", ccm_base + 0x24, 0, 6);
-> +	clk[IMXRT1050_CLK_LCDIF_PRED] = imx_clk_divider("lcdif_pred", "lcdif_sel", ccm_base + 0x38, 12, 3);
-> +	clk[IMXRT1050_CLK_LCDIF_PODF] = imx_clk_divider("lcdif_podf", "lcdif_pred", ccm_base + 0x18, 23, 3);
-> +
-> +	clk[IMXRT1050_CLK_USDHC1] = imx_clk_gate2("usdhc1", "usdhc1_podf", ccm_base + 0x80, 2);
-> +	clk[IMXRT1050_CLK_USDHC2] = imx_clk_gate2("usdhc2", "usdhc2_podf", ccm_base + 0x80, 4);
-> +	clk[IMXRT1050_CLK_LPUART1] = imx_clk_gate2("lpuart1", "lpuart_podf", ccm_base + 0x7c, 24);
-> +	clk[IMXRT1050_CLK_LCDIF_APB] = imx_clk_gate2("lcdif", "lcdif_podf", ccm_base + 0x74, 10);
-> +	clk[IMXRT1050_CLK_DMA] = imx_clk_gate("dma", "ipg", ccm_base + 0x7C, 6);
-> +	clk[IMXRT1050_CLK_DMA_MUX] = imx_clk_gate("dmamux0", "ipg", ccm_base + 0x7C, 7);
-> +
-> +	imx_check_clocks(clk, ARRAY_SIZE(clk));
-> +	clk_data.clks = clk;
-> +	clk_data.clk_num = ARRAY_SIZE(clk);
-> +	of_clk_add_provider(np, of_clk_src_onecell_get, &clk_data);
-> +	clk_prepare_enable(clk[IMXRT1050_CLK_PLL1_ARM]);
-> +	clk_prepare_enable(clk[IMXRT1050_CLK_PLL2_SYS]);
-> +	clk_prepare_enable(clk[IMXRT1050_CLK_PLL3_USB_OTG]);
-> +	clk_prepare_enable(clk[IMXRT1050_CLK_PLL3_PFD1_664_62M]);
-> +	clk_prepare_enable(clk[IMXRT1050_CLK_PLL2_PFD2_396M]);
-> +}
-> +CLK_OF_DECLARE(imxrt_ccm, "fsl,imxrt1050-ccm", imxrt1050_clocks_init);
-> 
+----------------------------------------------------------------
+Pin control changes for the v5.16 kernel cycle
 
-Thank you
-and
-Best regards
--- 
-Giulio Benetti
-Benetti Engineering sas
+Core changes:
+
+- Add infrastructure for per-parent interrupt data to support
+  the Apple pin controller.
+
+New drivers:
+
+- New combined pin control and GPIO driver for the Apple SoC.
+  This is used in all modern Apple silicon such as the M1
+  laptops but also in at least recent iPhone variants.
+
+- New subdriver for the Qualcomm SM6350
+
+- New subdriver for the Qualcomm QCM2290
+
+- New subdriver for the Qualcomm PM6350
+
+- New subdriver for the Uniphier NX1
+
+- New subdriver for the Samsung ExynosAutoV9
+
+- New subdriver for the Mediatek MT7986
+
+- New subdriver for the nVidia Tegra194
+
+Improvements:
+
+- Improve power management in the Mediatek driver.
+
+- Improvements to the Renesas internal consistency checker.
+
+- Convert the Rockchip pin control device tree bindings to YAML.
+
+- Finally convert the Qualcomm PMIC SSBI and SPMI MPP GPIO
+  driver to use hierarchical interrupts.
+
+- Convert the Qualcomm PMIC MPP device tree bindings to YAML.
+
+----------------------------------------------------------------
+Andrey Gusakov (1):
+      pinctrl: renesas: r8a779[56]x: Add MediaLB pins
+
+Biju Das (1):
+      pinctrl: renesas: rzg2l: Fix missing port register 21h
+
+Cai Huoqing (2):
+      pinctrl: nomadik: Kconfig: Remove repeated config dependency
+      pinctrl: intel: Kconfig: Add configuration menu to Intel pin control
+
+Chanho Park (1):
+      pinctrl: samsung: support ExynosAutov9 SoC pinctrl
+
+Colin Ian King (1):
+      pinctrl: Fix spelling mistake "atleast" -> "at least"
+
+Dmitry Baryshkov (6):
+      dt-bindings: pinctrl: qcom,pmic-mpp: Convert qcom pmic mpp
+bindings to YAML
+      pinctrl: qcom: ssbi-mpp: hardcode IRQ counts
+      pinctrl: qcom: ssbi-mpp: add support for hierarchical IRQ chip
+      pinctrl: qcom: spmi-mpp: hardcode IRQ counts
+      pinctrl: qcom: spmi-mpp: add support for hierarchical IRQ chip
+      dt-bindings: pinctrl: qcom,pmic-mpp: switch to #interrupt-cells
+
+Du Huanpeng (1):
+      pinctrl: gemini: fix typos
+
+Fabien Dessenne (1):
+      pinctrl: stm32: do not warn when 'st,package' is absent
+
+Florian Fainelli (1):
+      pinctrl: bcm2835: Allow building driver as a module
+
+Geert Uytterhoeven (5):
+      pinctrl: renesas: Fix save/restore on SoCs with pull-down only pins
+      pinctrl: renesas: checker: Fix off-by-one bug in drive register check
+      pinctrl: renesas: checker: Move overlapping field check
+      pinctrl: renesas: checker: Fix bias checks on SoCs with
+pull-down only pins
+      pinctrl: renesas: checker: Prefix common checker output
+
+Horatiu Vultur (2):
+      dt-bindings: pinctrl: pinctrl-microchip-sgpio: Add reset binding
+      pinctrl: microchip sgpio: use reset driver
+
+Jason Wang (1):
+      pinctrl: renesas: No need to initialise global statics
+
+Joey Gouly (3):
+      dt-bindings: pinctrl: add #interrupt-cells to apple,pinctrl
+      dt-bindings: pinctrl: Add apple,npins property to apple,pinctrl
+      pinctrl: add pinctrl/GPIO driver for Apple SoCs
+
+Johan Jonker (1):
+      dt-bindings: pinctrl: convert rockchip,pinctrl.txt to YAML
+
+Konrad Dybcio (2):
+      dt-bindings: pinctrl: qcom: Add SM6350 pinctrl bindings
+      pinctrl: qcom: Add SM6350 pinctrl driver
+
+Kunihiko Hayashi (3):
+      pinctrl: uniphier: Add extra audio pinmux settings for LD11,
+LD20 and PXs3 SoCs
+      dt-bindings: pinctrl: uniphier: Add NX1 pinctrl binding
+      pinctrl: uniphier: Add UniPhier NX1 pinctrl driver
+
+Linus Walleij (3):
+      Merge tag 'renesas-pinctrl-for-v5.16-tag1' of
+git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers
+into devel
+      Merge tag 'renesas-pinctrl-for-v5.16-tag2' of
+git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers
+into devel
+      Merge branch 'ib-gpio-ppid' into devel
+
+Luca Weiss (3):
+      pinctrl: qcom: msm8226: fill in more functions
+      dt-bindings: pinctrl: qcom,pmic-gpio: Add compatible for PM6350
+      pinctrl: qcom: spmi-gpio: Add compatible for PM6350
+
+Marc Zyngier (1):
+      gpio: Allow per-parent interrupt data
+
+Prathamesh Shete (3):
+      pinctrl: tegra: Add pinmux support for Tegra194
+      pinctrl: tegra: Use correct offset for pin group
+      pinctrl: tegra: Fix warnings and error
+
+Rahul Tanwar (1):
+      pinctrl: equilibrium: Fix function addition in multiple groups
+
+Sam Shih (3):
+      pinctrl: mediatek: moore: check if pin_desc is valid before use
+      dt-bindings: pinctrl: update bindings for MT7986 SoC
+      pinctrl: mediatek: add support for MT7986 SoC
+
+Shawn Guo (2):
+      dt-bindings: pinctrl: qcom: Add QCM2290 pinctrl bindings
+      pinctrl: qcom: Add QCM2290 pinctrl driver
+
+Subbaraman Narayanamurthy (2):
+      dt-bindings: pinctrl: qcom-pmic-gpio: Add
+output-{enable,disable} properties
+      pinctrl: qcom: spmi-gpio: add support to enable/disable output
+
+Suresh Mangipudi (1):
+      pinctrl: tegra: include lpdr pin properties
+
+Yang Yingliang (1):
+      pinctrl: core: fix possible memory leak in pinctrl_enable()
+
+Zhiyong Tao (6):
+      pinctrl: mediatek: mt8195: Add pm_ops
+      dt-bindings: pinctrl: mt8195: add rsel define
+      dt-bindings: pinctrl: mt8195: change pull up/down description
+      pinctrl: mediatek: fix coding style
+      pinctrl: mediatek: support rsel feature
+      pinctrl: mediatek: add rsel setting on MT8195
+
+ .../devicetree/bindings/pinctrl/apple,pinctrl.yaml |   10 +
+ .../bindings/pinctrl/mediatek,mt7986-pinctrl.yaml  |  363 ++++
+ .../bindings/pinctrl/microchip,sparx5-sgpio.yaml   |    7 +
+ .../bindings/pinctrl/pinctrl-mt8195.yaml           |   86 +-
+ .../bindings/pinctrl/qcom,pmic-gpio.yaml           |    4 +
+ .../devicetree/bindings/pinctrl/qcom,pmic-mpp.txt  |  187 --
+ .../devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml |  188 ++
+ .../bindings/pinctrl/qcom,qcm2290-pinctrl.yaml     |  165 ++
+ .../bindings/pinctrl/qcom,sm6350-pinctrl.yaml      |  148 ++
+ .../bindings/pinctrl/rockchip,pinctrl.txt          |  114 --
+ .../bindings/pinctrl/rockchip,pinctrl.yaml         |  184 ++
+ .../bindings/pinctrl/samsung-pinctrl.txt           |    1 +
+ .../pinctrl/socionext,uniphier-pinctrl.yaml        |    1 +
+ drivers/gpio/gpiolib.c                             |    9 +-
+ drivers/pinctrl/Kconfig                            |   16 +
+ drivers/pinctrl/Makefile                           |    1 +
+ drivers/pinctrl/bcm/Kconfig                        |    2 +-
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c              |    9 +-
+ drivers/pinctrl/core.c                             |    2 +
+ drivers/pinctrl/intel/Kconfig                      |    6 +-
+ drivers/pinctrl/mediatek/Kconfig                   |    7 +
+ drivers/pinctrl/mediatek/Makefile                  |    1 +
+ drivers/pinctrl/mediatek/pinctrl-moore.c           |   18 +
+ drivers/pinctrl/mediatek/pinctrl-mt7986.c          |  927 ++++++++++
+ drivers/pinctrl/mediatek/pinctrl-mt8195.c          |  134 ++
+ drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c   |  231 ++-
+ drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h   |   46 +
+ drivers/pinctrl/mediatek/pinctrl-paris.c           |   68 +-
+ drivers/pinctrl/nomadik/Kconfig                    |    1 -
+ drivers/pinctrl/pinctrl-apple-gpio.c               |  534 ++++++
+ drivers/pinctrl/pinctrl-equilibrium.c              |    7 +-
+ drivers/pinctrl/pinctrl-gemini.c                   |    4 +-
+ drivers/pinctrl/pinctrl-microchip-sgpio.c          |    7 +
+ drivers/pinctrl/pinctrl-st.c                       |    2 +-
+ drivers/pinctrl/qcom/Kconfig                       |   17 +
+ drivers/pinctrl/qcom/Makefile                      |    2 +
+ drivers/pinctrl/qcom/pinctrl-msm8226.c             |   74 +-
+ drivers/pinctrl/qcom/pinctrl-qcm2290.c             | 1129 ++++++++++++
+ drivers/pinctrl/qcom/pinctrl-sm6350.c              | 1401 +++++++++++++++
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           |    7 +
+ drivers/pinctrl/qcom/pinctrl-spmi-mpp.c            |  111 +-
+ drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c            |  133 +-
+ drivers/pinctrl/renesas/core.c                     |   83 +-
+ drivers/pinctrl/renesas/pfc-r8a77950.c             |   14 +
+ drivers/pinctrl/renesas/pfc-r8a77951.c             |   22 +-
+ drivers/pinctrl/renesas/pfc-r8a7796.c              |   22 +-
+ drivers/pinctrl/renesas/pfc-r8a77965.c             |   22 +-
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c            |    2 +-
+ drivers/pinctrl/samsung/pinctrl-exynos-arm64.c     |  108 ++
+ drivers/pinctrl/samsung/pinctrl-samsung.c          |    2 +
+ drivers/pinctrl/samsung/pinctrl-samsung.h          |    1 +
+ drivers/pinctrl/stm32/pinctrl-stm32.c              |   16 +-
+ drivers/pinctrl/tegra/pinctrl-tegra.c              |   32 +-
+ drivers/pinctrl/tegra/pinctrl-tegra.h              |    2 +
+ drivers/pinctrl/tegra/pinctrl-tegra194.c           | 1794 +++++++++++++++++++-
+ drivers/pinctrl/tegra/pinctrl-tegra210.c           |  330 ++--
+ drivers/pinctrl/uniphier/Kconfig                   |    4 +
+ drivers/pinctrl/uniphier/Makefile                  |    1 +
+ drivers/pinctrl/uniphier/pinctrl-uniphier-ld11.c   |   18 +
+ drivers/pinctrl/uniphier/pinctrl-uniphier-ld20.c   |   35 +
+ drivers/pinctrl/uniphier/pinctrl-uniphier-nx1.c    |  489 ++++++
+ drivers/pinctrl/uniphier/pinctrl-uniphier-pxs3.c   |   40 +
+ include/dt-bindings/pinctrl/mt65xx.h               |    9 +
+ include/linux/gpio/driver.h                        |   19 +-
+ 64 files changed, 8720 insertions(+), 709 deletions(-)
+ create mode 100644
+Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml
+ create mode 100644
+Documentation/devicetree/bindings/pinctrl/qcom,qcm2290-pinctrl.yaml
+ create mode 100644
+Documentation/devicetree/bindings/pinctrl/qcom,sm6350-pinctrl.yaml
+ delete mode 100644
+Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
+ create mode 100644
+Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt7986.c
+ create mode 100644 drivers/pinctrl/pinctrl-apple-gpio.c
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-qcm2290.c
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-sm6350.c
+ create mode 100644 drivers/pinctrl/uniphier/pinctrl-uniphier-nx1.c
