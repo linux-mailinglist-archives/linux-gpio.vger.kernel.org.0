@@ -2,139 +2,169 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 462384462C7
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Nov 2021 12:34:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 351644462CE
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Nov 2021 12:35:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232513AbhKELhD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 5 Nov 2021 07:37:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43954 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232481AbhKELg7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Nov 2021 07:36:59 -0400
-Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE3E4C061205
-        for <linux-gpio@vger.kernel.org>; Fri,  5 Nov 2021 04:34:19 -0700 (PDT)
-Received: by mail-il1-x136.google.com with SMTP id h23so9133513ila.4
-        for <linux-gpio@vger.kernel.org>; Fri, 05 Nov 2021 04:34:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura-hr.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=37ldEtgbRfj0gqJFzrwwBrgWWYf34odeJI+ew8Grfis=;
-        b=YolaZi91DDInT1dsVjqw+qJjbqUg/DG2N5OtKURQJqUi1AtMdKBQ4T/eN8i9EQTu0K
-         x38l3saebRQUlavZpRqAx1otsI5SWyxMUwdPY7d8riV7CvuHEL4d0TIBeJ1YnX8faTt7
-         EtRTyQvUDH9AwYmipszH6ap767jpkXr93M1ci73GT2aj5hQIm8OQ2q3uZtOBOkOT+XNC
-         78WMvGvksnwxlVkLXhXdSK/k/QzxjU73Jtyft4sXbFvWCz2n298EWpmNKY/PvaM3xT3U
-         6UiRThnJWbvRXMYFYTk7jR1IFNpnCZZj2UNXWO0Q/ebuMp8UtS7GWZxmpqJAUD/eLA13
-         pIlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=37ldEtgbRfj0gqJFzrwwBrgWWYf34odeJI+ew8Grfis=;
-        b=AL1VV9PtwPlCi7IAsA7An/LYl/YPnfa0ThizPliSJNELr3o/44MXD+XQkl4XlW67MQ
-         eECnu8ZQzy0xzIC28oHFh7legaEcI6IMe9ZHATW1SB46E5YCByWT84x8ezFQopJ20Zep
-         oUqZNmtZVgYamp9kmSC49uiRomQtmlmlSKX87BuPZIA3nr7KkxDLrw9MPD+CnG3g+mqQ
-         kYRIfiAAzsvaojpbnjZkGz6jvQa10RVRwX/Pa3CHsFQqjnB5qyeywtnqU6kZLHbIAp9n
-         h/LVOhY+HavDwSqFhCj6IZkFRQph+YnT7eFmnPHkdXQ2Ck3TuWCL4mJ2AenFIHWKcV6/
-         36DA==
-X-Gm-Message-State: AOAM531hkHNuuL1Bo44Etskip968jr4Txg37ZGRqsS3rzcJlm3KnJ/A9
-        zj1wq9BKxK8hiOMXD7iYYDK6vquZytiqjNmMUyuZww==
-X-Google-Smtp-Source: ABdhPJyqSxx6zA492c2fosRkmsEeZkENhNp9Ep1J+ItnlqIdyZs5DCFE4cjf+WNodDJC9IapBTWEyMozmEqtlF1Dd1Y=
-X-Received: by 2002:a05:6e02:1a4e:: with SMTP id u14mr28496369ilv.159.1636112059176;
- Fri, 05 Nov 2021 04:34:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20211102165657.3428995-1-robert.marko@sartura.hr>
- <20211102165657.3428995-2-robert.marko@sartura.hr> <CAHp75VdnQq76f5Xeo5LCq83sr4TbcXY_mtZ4x_rFzUkS01BYZg@mail.gmail.com>
-In-Reply-To: <CAHp75VdnQq76f5Xeo5LCq83sr4TbcXY_mtZ4x_rFzUkS01BYZg@mail.gmail.com>
-From:   Robert Marko <robert.marko@sartura.hr>
-Date:   Fri, 5 Nov 2021 12:34:08 +0100
-Message-ID: <CA+HBbNEEPHLbJSdWPdxWb5gASha_NavJrEBBRkbvzEW2aDSjmQ@mail.gmail.com>
-Subject: Re: [PATCH v7 2/6] gpio: Add Delta TN48M CPLD GPIO driver
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Michael Walle <michael@walle.cc>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        id S232593AbhKELi2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 5 Nov 2021 07:38:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42354 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232477AbhKELi2 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 5 Nov 2021 07:38:28 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDD23601FA;
+        Fri,  5 Nov 2021 11:35:48 +0000 (UTC)
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1mixVa-003e0A-O6; Fri, 05 Nov 2021 11:35:46 +0000
+Date:   Fri, 05 Nov 2021 11:35:46 +0000
+Message-ID: <87zgqi96nh.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Brad Larson <brad@pensando.io>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Olof Johansson <olof@lixom.net>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v3 11/11] arm64: dts: Add Pensando Elba SoC support
+In-Reply-To: <CAK9rFnxH=DtC9vEJJCXkGEWjvg2E8vHPUcRy9rJpo34Furtmvw@mail.gmail.com>
+References: <20211025015156.33133-1-brad@pensando.io>
+        <20211025015156.33133-12-brad@pensando.io>
+        <20211025091731.GA2001@C02TD0UTHF1T.local>
+        <a20805de16e1196c2ed46dd949473c9a@kernel.org>
+        <CAK9rFnxH=DtC9vEJJCXkGEWjvg2E8vHPUcRy9rJpo34Furtmvw@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: brad@pensando.io, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, arnd@arndb.de, linus.walleij@linaro.org, bgolaszewski@baylibre.com, broonie@kernel.org, fancer.lancer@gmail.com, adrian.hunter@intel.com, ulf.hansson@linaro.org, olof@lixom.net, linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 2, 2021 at 8:28 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Tue, Nov 2, 2021 at 6:57 PM Robert Marko <robert.marko@sartura.hr> wrote:
+Brad,
+
+On Fri, 05 Nov 2021 00:02:04 +0000,
+Brad Larson <brad@pensando.io> wrote:
+> 
+> Hi Marc,
+> 
+> On Mon, Oct 25, 2021 at 4:15 AM Marc Zyngier <maz@kernel.org> wrote:
 > >
-> > Delta TN48M switch has an onboard Lattice CPLD that is used as a GPIO
-> > expander.
+> > On 2021-10-25 10:17, Mark Rutland wrote:
+> > > Hi,
+> > >
+> > > On Sun, Oct 24, 2021 at 06:51:56PM -0700, Brad Larson wrote:
+> > >> Add Pensando common and Elba SoC specific device nodes
+> > >>
+> > >> Signed-off-by: Brad Larson <brad@pensando.io>
+> > >
+> > > [...]
+> > >> +            gic: interrupt-controller@800000 {
+> > >> +                    compatible = "arm,gic-v3";
+> > >> +                    #interrupt-cells = <3>;
+> > >> +                    #address-cells = <2>;
+> > >> +                    #size-cells = <2>;
+> > >> +                    ranges;
+> > >> +                    interrupt-controller;
+> > >> +                    reg = <0x0 0x800000 0x0 0x200000>,      /* GICD */
+> > >> +                          <0x0 0xa00000 0x0 0x200000>;      /* GICR */
 > >
-> > The CPLD provides 12 pins in total on the TN48M, but on more advanced
-> > switch models it provides up to 192 pins, so the driver is extendable
-> > to support more switches.
->
-> ...
->
-> > +static int tn48m_gpio_probe(struct platform_device *pdev)
-> > +{
->
-> > +       const struct tn48m_gpio_config *gpio_config = NULL;
-> > +       struct gpio_regmap_config config = {0};
->
-> I don't see a point in assigning these variables.
+> > This is missing the GICv2 compat regions that the CPUs implement.
+> 
+> Is this what is described as optional in the GIC architecture specification
+> where a GICv3 system can run restricted GICv2 code?
 
-Hi,
-The NULL one isn't required, but the regmap one is, otherwise the
-devm_gpio_regmap_register call will
-return -EINVAL.
+Yup, that. It is actually implemented by the CPU.
 
-It will fail here:
-https://elixir.bootlin.com/linux/latest/source/drivers/gpio/gpio-regmap.c#L209
+> Can you point me in the right direction in the spec and example dts
+> node if needed.
 
-I see that Michael Walle who did the GPIO regmap uses it as well in
-the Kontron CPLD driver.
-Michael, can you shed some light on this?
-
-Regards,
-Robert
->
-> > +       struct regmap *regmap;
-> > +       u32 base;
-> > +       int ret;
-> > +
-> > +       if (!pdev->dev.parent)
-> > +               return -ENODEV;
-> > +
-> > +       gpio_config = device_get_match_data(&pdev->dev);
-> > +       if (!gpio_config)
-> > +               return -ENODEV;
-> > +
-> > +       ret = device_property_read_u32(&pdev->dev, "reg", &base);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       regmap = dev_get_regmap(pdev->dev.parent, NULL);
-> > +       if (!regmap)
-> > +               return -ENODEV;
->
-> > +}
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+The Cortex-A72 TRM has everything you need [1]. And since you used the
+Synquacer as the model for this, you will see that it has the missing
+regions. Alternatively, rk3399.dtsi is a good example.
 
 
+> > >> +                    interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> > >> +
+> > >> +                    gic_its: msi-controller@820000 {
+> > >> +                            compatible = "arm,gic-v3-its";
+> > >> +                            msi-controller;
+> > >> +                            #msi-cells = <1>;
+> > >> +                            reg = <0x0 0x820000 0x0 0x10000>;
+> > >> +                            socionext,synquacer-pre-its =
+> > >> +                                                    <0xc00000 0x1000000>;
+> > >> +                    };
+> > >> +            };
+> > >
+> > > Is there any shared lineage with Synquacer? The commit message didn't
+> > > describe this quirk.
+> >
+> > Funny, it looks like there is a sudden outburst of stupid copy/paste
+> > among HW designers. TI did the exact same thing recently.
+> >
+> > This totally negates all the advantages of having an ITS and makes
+> > sure that you have all the overhead. Facepalm...
+> 
+> Some background may help explain.  To generate an LPI a peripheral must
+> write to the GITS_TRANSLATER (a specific address). For the ITS to know
+> which translations apply to the generated interrupts, it must know which
+> peripheral performed the write. The ID of the peripheral is known as its
+> DeviceID, which is often carried along with the write as an AXI sideband
+> signal.
+
+Yes, I happen to be vaguely familiar with the GIC architecture.
+
+> The Elba SoC doesn't carry the DeviceID, so we have to conjure one up
+> between the peripheral and the ITS.  Instead of telling a peripheral to target
+> the GITS_TRANSLATER directly, we instead direct it to a specific offset
+> within a pre-ITS address range (our own IP block).  For writes that land in
+> that memory range, we derive the DeviceID from (offset >> 2).  The pre-ITS
+> block then sends (DeviceID, data) to the GITS_TRANSLATER.
+> 
+> The hardware designer came up with the Pre-ITS mechanism in Feb 2018.
+> When we looked at the upstream kernel later (we developed on 4.14)
+> we found that not only did it support something similar, it supported the
+> exact scheme we are using.
+
+And this scheme is totally wrong. It breaks interrupt isolation.
+
+Instead of having a single doorbell and getting the ITS to segregate
+between devices itself, you end-up with multiple ones, allowing a
+rogue device to impersonate another one by targeting another doorbell.
+You can't even use an SMMU to preserve some isolation, because all the
+doorbells are in the *same page*. Unmitigated disaster.
+
+At this stage, why did you bother having an ITS at all? You get none
+of the security features. Only the excess area, memory allocation,
+additional latency and complexity. All you get is a larger INTID
+space.
+
+This only shows that the hardware designer didn't understand the ITS
+at all. Which seems a common pattern, unfortunately.
+
+	M.
+
+[1] https://developer.arm.com/documentation/100095/0003/Generic-Interrupt-Controller-CPU-Interface/GIC-functional-description/GIC-memory-map?lang=en#way1382452674438__CHDEBJAJ
 
 -- 
-Robert Marko
-Staff Embedded Linux Engineer
-Sartura Ltd.
-Lendavska ulica 16a
-10000 Zagreb, Croatia
-Email: robert.marko@sartura.hr
-Web: www.sartura.hr
+Without deviation from the norm, progress is not possible.
