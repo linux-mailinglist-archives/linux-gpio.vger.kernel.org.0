@@ -2,286 +2,198 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B3BB446400
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Nov 2021 14:19:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CED4B44640E
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Nov 2021 14:23:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232824AbhKENVw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 5 Nov 2021 09:21:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39290 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232822AbhKENVt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 5 Nov 2021 09:21:49 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A915C061714;
-        Fri,  5 Nov 2021 06:19:07 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id c8so16276148ede.13;
-        Fri, 05 Nov 2021 06:19:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KXvIXUwdhnwsQptNDf+LXPNje9m2HJqMbS8TaZl13qU=;
-        b=Wxyy6A94A1dtcmgVO2w9xOAJFu2vlvVvgNdW1VUKN5OnHC8ltP4Udg1gQ+tTw9MCw7
-         cnLfbP46WBPOQ+4zebvlEKdZHeAtyCZoTvMsk2evB0nHG9+yYCTDhpX7cZaeiKBcbG77
-         jw3lBmn0/QCmsw8QzPp/U28QEIB7NseTjcpHHUb67irBrBdvMlBeJlO9hzt1oD7aGvzk
-         S1k6dtiI0flb5G97yh7OYr6crvd0FZYZy0iwsrE5PsIHmbXReoFUohp42Cp9X9xIQALh
-         2e2fdmdZt6D5xG954hnogGPk2OKDB2GQo3ANaMjTUpdh1ERyCQfrG0DStjxMVI4Otj5Q
-         B4AQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KXvIXUwdhnwsQptNDf+LXPNje9m2HJqMbS8TaZl13qU=;
-        b=oILcyJIOe38HOhihH3l4JmcSFu0iR/NM7+04BdEJsBE9P55n5eWZg4W/iJxq2Pk6gn
-         nGUTSOWrHErdIDjyXlB1e1XQiVo/fmdM4WtUyRl66MTfXe0OBZ9JjDh8Q/vWIhFYbNaX
-         Jy+7hZhHsVfx+ws1Do/Tb39ZVkBHpw/eMwvBPXVCkym6AQtLPhwT5kyHIc3ppd40fkpV
-         sWRy/6hrz8h24CvIMZbK0qasja0kU0JkdvcjnQEZT/e+NLuSfAD2h3rgoUwE964leKXD
-         VBWd1EpnDhh3LFRYNOVnnCHpUNLunLvuLptmvt8d0rTQyg71b4cE8I5UrLJAc5F5+gKX
-         BS/w==
-X-Gm-Message-State: AOAM532QXJf5ESjVvmFjZv9K7F8Nxr7XIE6Bf2pLPYQo9vc6g9/sgj/s
-        faqAJqMxhL/TkZN9y+a4K3ciufrQ50nJAJQ+xsc=
-X-Google-Smtp-Source: ABdhPJwg31MBG3tQ0eaKTNytMOXJUg3q3Ol5S4BWN+X969S6WXyWEwwgTiSTDBWCU12L+R7UdTh1rJuS8LNsNcATH6Y=
-X-Received: by 2002:a17:906:ecac:: with SMTP id qh12mr13588799ejb.377.1636118346018;
- Fri, 05 Nov 2021 06:19:06 -0700 (PDT)
+        id S232739AbhKEN0i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 5 Nov 2021 09:26:38 -0400
+Received: from mga09.intel.com ([134.134.136.24]:31247 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232258AbhKEN0h (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 5 Nov 2021 09:26:37 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10158"; a="231739591"
+X-IronPort-AV: E=Sophos;i="5.87,211,1631602800"; 
+   d="scan'208";a="231739591"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2021 06:23:57 -0700
+X-IronPort-AV: E=Sophos;i="5.87,211,1631602800"; 
+   d="scan'208";a="562026535"
+Received: from smile.fi.intel.com ([10.237.72.184])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2021 06:23:53 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1mizBx-003nhY-0i;
+        Fri, 05 Nov 2021 15:23:37 +0200
+Date:   Fri, 5 Nov 2021 15:23:36 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Arnd Bergmann <arnd@kernel.org>
+Cc:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-m68k@lists.linux-m68k.org, geert@linux-m68k.org,
+        gerg@linux-m68k.org, linux@armlinux.org.uk,
+        linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org,
+        dalias@libc.org, ysato@users.sourceforge.jp,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fu Wei <tekkamanninja@gmail.com>, Alex Shi <alexs@kernel.org>,
+        Hu Haowen <src.res@email.cn>,
+        linux-doc-tw-discuss@lists.sourceforge.net,
+        Jonathan Corbet <corbet@lwn.net>,
+        Drew Fustini <drew@beagleboard.org>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC 1/3] gpiolib: remove irq_to_gpio() definition
+Message-ID: <YYUwWFOeiFBC2Nhd@smile.fi.intel.com>
+References: <20211105130338.241100-1-arnd@kernel.org>
 MIME-Version: 1.0
-References: <20211105113859.101868-1-robert.marko@sartura.hr> <20211105113859.101868-4-robert.marko@sartura.hr>
-In-Reply-To: <20211105113859.101868-4-robert.marko@sartura.hr>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 5 Nov 2021 15:18:18 +0200
-Message-ID: <CAHp75Vct5JG=y=yvnUoeuSwDiqXJHwFDC9hPxRF4W1P4AcK8_g@mail.gmail.com>
-Subject: Re: [PATCH v8 4/6] reset: Add Delta TN48M CPLD reset controller
-To:     Robert Marko <robert.marko@sartura.hr>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michael Walle <michael@walle.cc>,
-        Luka Perkov <luka.perkov@sartura.hr>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211105130338.241100-1-arnd@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 5, 2021 at 1:39 PM Robert Marko <robert.marko@sartura.hr> wrote:
->
-> Delta TN48M CPLD exposes resets for the following:
-> * 88F7040 SoC
-> * 88F6820 SoC
-> * 98DX3265 switch MAC-s
-> * 88E1680 PHY-s
-> * 88E1512 PHY
-> * PoE PSE controller
->
-> Controller supports only self clearing resets.
+On Fri, Nov 05, 2021 at 02:03:03PM +0100, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> All implementations other than coldfire have returned an error since
+> the avr32 and blackfin architectures got removed, and the last user in
+> driver code was removed in 2016, so just remove this old interface.
+> 
+> The only reference is now in the Chinese documentation, which should be
+> changed to remove this reference as well.
 
-After addressing below,
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+FWIW,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Thanks, Arnd, for cleaning this up!
+
+> Cc: Fu Wei <tekkamanninja@gmail.com>
+> Cc: Alex Shi <alexs@kernel.org>
+> Cc: Hu Haowen <src.res@email.cn>
+> Cc: linux-doc-tw-discuss@lists.sourceforge.net
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
-> Changes in v8:
-> * Drop of.h and include mod_devicetable.h per Andys comment
-> * Mark the units used in timeout and sleep defines for the timeout poller
->
-> Changes in v5:
-> * Allow COMPILE_TEST as well
-> * Default to MFD_TN48M_CPLD
->
-> Changes in v4:
-> * Drop assert and deassert as only self-clearing
-> resets are support by the HW
-> * Make sure that reset is cleared before returning
-> from reset.
-> ---
->  drivers/reset/Kconfig       |  10 +++
->  drivers/reset/Makefile      |   1 +
->  drivers/reset/reset-tn48m.c | 128 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 139 insertions(+)
->  create mode 100644 drivers/reset/reset-tn48m.c
->
-> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-> index 5656cac04b4c..e76aba5f4c84 100644
-> --- a/drivers/reset/Kconfig
-> +++ b/drivers/reset/Kconfig
-> @@ -243,6 +243,16 @@ config RESET_TI_SYSCON
->           you wish to use the reset framework for such memory-mapped devices,
->           say Y here. Otherwise, say N.
->
-> +config RESET_TN48M_CPLD
-> +       tristate "Delta Networks TN48M switch CPLD reset controller"
-> +       depends on MFD_TN48M_CPLD || COMPILE_TEST
-> +       default MFD_TN48M_CPLD
-> +       help
-> +         This enables the reset controller driver for the Delta TN48M CPLD.
-> +         It provides reset signals for Armada 7040 and 385 SoC-s, Alleycat 3X
-> +         switch MAC-s, Alaska OOB ethernet PHY, Quad Alaska ethernet PHY-s and
-> +         Microchip PD69200 PoE PSE controller.
-
-Since it's a tristate, the common practice is to mentioned the module
-name in the help.
-
->  config RESET_UNIPHIER
->         tristate "Reset controller driver for UniPhier SoCs"
->         depends on ARCH_UNIPHIER || COMPILE_TEST
-> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-> index ea8b8d9ca565..79beab92324f 100644
-> --- a/drivers/reset/Makefile
-> +++ b/drivers/reset/Makefile
-> @@ -31,6 +31,7 @@ obj-$(CONFIG_RESET_SOCFPGA) += reset-socfpga.o
->  obj-$(CONFIG_RESET_SUNXI) += reset-sunxi.o
->  obj-$(CONFIG_RESET_TI_SCI) += reset-ti-sci.o
->  obj-$(CONFIG_RESET_TI_SYSCON) += reset-ti-syscon.o
-> +obj-$(CONFIG_RESET_TN48M_CPLD) += reset-tn48m.o
->  obj-$(CONFIG_RESET_UNIPHIER) += reset-uniphier.o
->  obj-$(CONFIG_RESET_UNIPHIER_GLUE) += reset-uniphier-glue.o
->  obj-$(CONFIG_RESET_ZYNQ) += reset-zynq.o
-> diff --git a/drivers/reset/reset-tn48m.c b/drivers/reset/reset-tn48m.c
-> new file mode 100644
-> index 000000000000..6889e9173577
-> --- /dev/null
-> +++ b/drivers/reset/reset-tn48m.c
-> @@ -0,0 +1,128 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Delta TN48M CPLD reset driver
-> + *
-> + * Copyright (C) 2021 Sartura Ltd.
-> + *
-> + * Author: Robert Marko <robert.marko@sartura.hr>
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/reset-controller.h>
-> +
-> +#include <dt-bindings/reset/delta,tn48m-reset.h>
-> +
-> +#define TN48M_RESET_REG                0x10
-> +
-> +#define TN48M_RESET_TIMEOUT_US 125000
-> +#define TN48M_RESET_SLEEP_US   10
-> +
-> +struct tn48_reset_map {
-> +       u8 bit;
-> +};
-> +
-> +struct tn48_reset_data {
-> +       struct reset_controller_dev rcdev;
-> +       struct regmap *regmap;
-> +};
-> +
-> +static const struct tn48_reset_map tn48m_resets[] = {
-> +       [CPU_88F7040_RESET] = {0},
-> +       [CPU_88F6820_RESET] = {1},
-> +       [MAC_98DX3265_RESET] = {2},
-> +       [PHY_88E1680_RESET] = {4},
-> +       [PHY_88E1512_RESET] = {6},
-> +       [POE_RESET] = {7},
-> +};
-> +
-> +static inline struct tn48_reset_data *to_tn48_reset_data(
-> +                       struct reset_controller_dev *rcdev)
-> +{
-> +       return container_of(rcdev, struct tn48_reset_data, rcdev);
-> +}
-> +
-> +static int tn48m_control_reset(struct reset_controller_dev *rcdev,
-> +                              unsigned long id)
-> +{
-> +       struct tn48_reset_data *data = to_tn48_reset_data(rcdev);
-> +       unsigned int val;
-> +
-> +       regmap_update_bits(data->regmap, TN48M_RESET_REG,
-> +                          BIT(tn48m_resets[id].bit), 0);
-> +
-> +       return regmap_read_poll_timeout(data->regmap,
-> +                                       TN48M_RESET_REG,
-> +                                       val,
-> +                                       val & BIT(tn48m_resets[id].bit),
-> +                                       TN48M_RESET_SLEEP_US,
-> +                                       TN48M_RESET_TIMEOUT_US);
-> +}
-> +
-> +static int tn48m_control_status(struct reset_controller_dev *rcdev,
-> +                               unsigned long id)
-> +{
-> +       struct tn48_reset_data *data = to_tn48_reset_data(rcdev);
-> +       unsigned int regval;
-> +       int ret;
-> +
-> +       ret = regmap_read(data->regmap, TN48M_RESET_REG, &regval);
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       if (BIT(tn48m_resets[id].bit) & regval)
-> +               return 0;
-> +       else
-> +               return 1;
-> +}
-> +
-> +static const struct reset_control_ops tn48_reset_ops = {
-> +       .reset          = tn48m_control_reset,
-> +       .status         = tn48m_control_status,
-> +};
-> +
-> +static int tn48m_reset_probe(struct platform_device *pdev)
-> +{
-> +       struct tn48_reset_data *data;
-> +       struct regmap *regmap;
-> +
-> +       regmap = dev_get_regmap(pdev->dev.parent, NULL);
-> +       if (!regmap)
-> +               return -ENODEV;
-> +
-> +       data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-> +       if (!data)
-> +               return -ENOMEM;
-> +
-> +       data->regmap = regmap;
-> +
-> +       data->rcdev.owner = THIS_MODULE;
-> +       data->rcdev.ops = &tn48_reset_ops;
-> +       data->rcdev.nr_resets = ARRAY_SIZE(tn48m_resets);
-> +       data->rcdev.of_node = pdev->dev.of_node;
-> +
-> +       return devm_reset_controller_register(&pdev->dev, &data->rcdev);
-> +}
-> +
-> +static const struct of_device_id tn48m_reset_of_match[] = {
-> +       { .compatible = "delta,tn48m-reset", },
-
-Comma inside {} is not required.
-
-> +       { }
-> +};
-> +MODULE_DEVICE_TABLE(of, tn48m_reset_of_match);
-> +
-> +static struct platform_driver tn48m_reset_driver = {
-> +       .driver = {
-> +               .name = "delta-tn48m-reset",
-> +               .of_match_table = tn48m_reset_of_match,
-> +       },
-> +       .probe = tn48m_reset_probe,
-> +};
-> +module_platform_driver(tn48m_reset_driver);
-> +
-> +MODULE_AUTHOR("Robert Marko <robert.marko@sartura.hr>");
-> +MODULE_DESCRIPTION("Delta TN48M CPLD reset driver");
-> +MODULE_LICENSE("GPL");
-> --
-> 2.33.1
->
-
+>  Documentation/driver-api/gpio/legacy.rst | 20 +++++---------------
+>  arch/m68k/include/asm/gpio.h             |  7 -------
+>  arch/sh/include/asm/gpio.h               |  5 -----
+>  include/linux/gpio.h                     | 12 ------------
+>  4 files changed, 5 insertions(+), 39 deletions(-)
+> 
+> diff --git a/Documentation/driver-api/gpio/legacy.rst b/Documentation/driver-api/gpio/legacy.rst
+> index 9b12eeb89170..06c05e2d62c1 100644
+> --- a/Documentation/driver-api/gpio/legacy.rst
+> +++ b/Documentation/driver-api/gpio/legacy.rst
+> @@ -382,22 +382,18 @@ GPIOs mapped to IRQs
+>  --------------------
+>  GPIO numbers are unsigned integers; so are IRQ numbers.  These make up
+>  two logically distinct namespaces (GPIO 0 need not use IRQ 0).  You can
+> -map between them using calls like::
+> +map between them using::
+>  
+>  	/* map GPIO numbers to IRQ numbers */
+>  	int gpio_to_irq(unsigned gpio);
+>  
+> -	/* map IRQ numbers to GPIO numbers (avoid using this) */
+> -	int irq_to_gpio(unsigned irq);
+> -
+> -Those return either the corresponding number in the other namespace, or
+> +This returns an irq number corresponding to the gpio number, or
+>  else a negative errno code if the mapping can't be done.  (For example,
+>  some GPIOs can't be used as IRQs.)  It is an unchecked error to use a GPIO
+> -number that wasn't set up as an input using gpio_direction_input(), or
+> -to use an IRQ number that didn't originally come from gpio_to_irq().
+> +number that wasn't set up as an input using gpio_direction_input().
+>  
+> -These two mapping calls are expected to cost on the order of a single
+> -addition or subtraction.  They're not allowed to sleep.
+> +The mapping call is expected to cost on the order of a single
+> +addition or subtraction.  It is not allowed to sleep.
+>  
+>  Non-error values returned from gpio_to_irq() can be passed to request_irq()
+>  or free_irq().  They will often be stored into IRQ resources for platform
+> @@ -405,12 +401,6 @@ devices, by the board-specific initialization code.  Note that IRQ trigger
+>  options are part of the IRQ interface, e.g. IRQF_TRIGGER_FALLING, as are
+>  system wakeup capabilities.
+>  
+> -Non-error values returned from irq_to_gpio() would most commonly be used
+> -with gpio_get_value(), for example to initialize or update driver state
+> -when the IRQ is edge-triggered.  Note that some platforms don't support
+> -this reverse mapping, so you should avoid using it.
+> -
+> -
+>  Emulating Open Drain Signals
+>  ----------------------------
+>  Sometimes shared signals need to use "open drain" signaling, where only the
+> diff --git a/arch/m68k/include/asm/gpio.h b/arch/m68k/include/asm/gpio.h
+> index a50b27719a58..5cfc0996ba94 100644
+> --- a/arch/m68k/include/asm/gpio.h
+> +++ b/arch/m68k/include/asm/gpio.h
+> @@ -66,13 +66,6 @@ static inline int gpio_to_irq(unsigned gpio)
+>  		return __gpio_to_irq(gpio);
+>  }
+>  
+> -static inline int irq_to_gpio(unsigned irq)
+> -{
+> -	return (irq >= MCFGPIO_IRQ_VECBASE &&
+> -		irq < (MCFGPIO_IRQ_VECBASE + MCFGPIO_IRQ_MAX)) ?
+> -		irq - MCFGPIO_IRQ_VECBASE : -ENXIO;
+> -}
+> -
+>  static inline int gpio_cansleep(unsigned gpio)
+>  {
+>  	return gpio < MCFGPIO_PIN_MAX ? 0 : __gpio_cansleep(gpio);
+> diff --git a/arch/sh/include/asm/gpio.h b/arch/sh/include/asm/gpio.h
+> index d643250f0a0f..588c1380e4cb 100644
+> --- a/arch/sh/include/asm/gpio.h
+> +++ b/arch/sh/include/asm/gpio.h
+> @@ -40,11 +40,6 @@ static inline int gpio_to_irq(unsigned gpio)
+>  	return __gpio_to_irq(gpio);
+>  }
+>  
+> -static inline int irq_to_gpio(unsigned int irq)
+> -{
+> -	return -ENOSYS;
+> -}
+> -
+>  #endif /* CONFIG_GPIOLIB */
+>  
+>  #endif /* __ASM_SH_GPIO_H */
+> diff --git a/include/linux/gpio.h b/include/linux/gpio.h
+> index 008ad3ee56b7..d8d7daa7eb94 100644
+> --- a/include/linux/gpio.h
+> +++ b/include/linux/gpio.h
+> @@ -81,11 +81,6 @@ static inline int gpio_to_irq(unsigned int gpio)
+>  	return __gpio_to_irq(gpio);
+>  }
+>  
+> -static inline int irq_to_gpio(unsigned int irq)
+> -{
+> -	return -EINVAL;
+> -}
+> -
+>  #endif /* ! CONFIG_ARCH_HAVE_CUSTOM_GPIO_H */
+>  
+>  /* CONFIG_GPIOLIB: bindings for managed devices that want to request gpios */
+> @@ -219,13 +214,6 @@ static inline int gpio_to_irq(unsigned gpio)
+>  	return -EINVAL;
+>  }
+>  
+> -static inline int irq_to_gpio(unsigned irq)
+> -{
+> -	/* irq can never have been returned from gpio_to_irq() */
+> -	WARN_ON(1);
+> -	return -EINVAL;
+> -}
+> -
+>  static inline int devm_gpio_request(struct device *dev, unsigned gpio,
+>  				    const char *label)
+>  {
+> -- 
+> 2.29.2
+> 
 
 -- 
 With Best Regards,
 Andy Shevchenko
+
+
