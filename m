@@ -2,86 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0345A446C66
-	for <lists+linux-gpio@lfdr.de>; Sat,  6 Nov 2021 05:50:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 00025446CDF
+	for <lists+linux-gpio@lfdr.de>; Sat,  6 Nov 2021 08:35:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230262AbhKFExS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 6 Nov 2021 00:53:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49088 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233699AbhKFExR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 6 Nov 2021 00:53:17 -0400
-Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A407C061205
-        for <linux-gpio@vger.kernel.org>; Fri,  5 Nov 2021 21:50:36 -0700 (PDT)
-Received: by mail-lj1-x234.google.com with SMTP id a10so10861012ljk.13
-        for <linux-gpio@vger.kernel.org>; Fri, 05 Nov 2021 21:50:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
-        bh=xRc3IHUizmviQEjT/aA/BX2eK4NRIQ6MOKbVgrtXYgk=;
-        b=Bz9kgxF17Lnqk0Ix9PMFDztCPNNSJZzr/kDW4M3zHPBOIlINv/F6eMTSj0NmyE77Pl
-         vnflYw0jg5XvnYF5t0r/fvwT08XMvM34qT3/qirZSZhrCgOMgcwfQXmAmPitxms0aEtH
-         zb2Q1WlA1+SvDeSyD+I0MmEgyRqr/+/qwBfGqXOClYlpbHA2EGuSyD7Pqczb1sUQr/2G
-         YKJgCyZkeuFfkpT2HX4yMG9uM61Dr3wOCYL9qN5paDo6uapqLWs8x/fQbVkJlBy1TcfC
-         2cxr5VmhV7/rIlT6PZr5XyVEMHhTaMgPCTTTVkHWjOthcxHkir21UejX2Ez8Pk9UrGqm
-         vhfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to;
-        bh=xRc3IHUizmviQEjT/aA/BX2eK4NRIQ6MOKbVgrtXYgk=;
-        b=wl29Y+/+Spr+zBDrAfbE7gS5fC8darcFT5beVRIbZWxjRdYh9nEI63qRB2IvZZjoPs
-         KTbbzFzzk0yhdmLc0E9mP5Ld6XFIHOlfzHQshcxEPY+9kCe2RbiqO0QknvwAWb+QahDU
-         qR4a2DvwFKqZ4if/6qA914cM+x1qwk9m5iXJG0kKvBdneiMJxcf52GArGSTloGCyQz3B
-         Bgrtnbu6iQJhq4q9KLOGoflJigxMlLWo/D3T++QcLSwW8RFBJeoTrwdDYaGPcnsJtyDJ
-         vVtM1i8Gro1Y9mLcUiMKXkJbf2y6k9oGkYopO2g8S2+oLYcR9cnVzcfQDAAtKZSh8tPf
-         NI+Q==
-X-Gm-Message-State: AOAM533pvPXBnf66K89bUCdmHCtfpblBoBa90jC6xz+s/nr77mRrR6LA
-        kE/IPh7FZiRoalQSCRZw2nVsS5wwMlgMpYmb8UI=
-X-Google-Smtp-Source: ABdhPJyMFRUwC8RdVFE+gcH/VVgEzXz5JxWgYAZS5wZkHSr7EebKKS4wGOkrP8jerHPiizGc8rXWn55/7ZUpyk4ySWg=
-X-Received: by 2002:a05:651c:513:: with SMTP id o19mr41423328ljp.108.1636174234264;
- Fri, 05 Nov 2021 21:50:34 -0700 (PDT)
+        id S233634AbhKFHhk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 6 Nov 2021 03:37:40 -0400
+Received: from smtprelay0121.hostedemail.com ([216.40.44.121]:33614 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S232099AbhKFHhi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 6 Nov 2021 03:37:38 -0400
+Received: from omf20.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id CD4F7181D2090;
+        Sat,  6 Nov 2021 07:34:56 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf20.hostedemail.com (Postfix) with ESMTPA id EE66118A5F8;
+        Sat,  6 Nov 2021 07:34:52 +0000 (UTC)
+Message-ID: <6f27043dc7c50a7447b8fdcb6126f4c67a5936a5.camel@perches.com>
+Subject: Re: [PATCH v1 01/19] lib/string_helpers: Introduce
+ kasprintf_strarray()
+From:   Joe Perches <joe@perches.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jianqun Xu <jay.xu@rock-chips.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Cc:     Bamvor Jian Zhang <bamv2005@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Patrice Chotard <patrice.chotard@foss.st.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Andy Shevchenko <andy@kernel.org>
+Date:   Sat, 06 Nov 2021 00:34:51 -0700
+In-Reply-To: <20211105124242.27288-1-andriy.shevchenko@linux.intel.com>
+References: <20211105124242.27288-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.40.4-1 
 MIME-Version: 1.0
-Reply-To: godwinppter@gmail.com
-Sender: nataichalinossa01@gmail.com
-Received: by 2002:a05:6512:15a8:0:0:0:0 with HTTP; Fri, 5 Nov 2021 21:50:33
- -0700 (PDT)
-From:   Godwin Pete <godwinnpeter@gmail.com>
-Date:   Sat, 6 Nov 2021 05:50:33 +0100
-X-Google-Sender-Auth: yNjWOIAxIc0cloJ0dtqvmtOGC7M
-Message-ID: <CAAkWb02W7bLoR7ZGR5xji_veLbXBDJDHX=HbO4wAgyapr39sgg@mail.gmail.com>
-Subject: It's my pleasure to inform you
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=0.10
+X-Stat-Signature: 1ifh16fok5zodoyg17ub7y551gue9gq8
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: EE66118A5F8
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX1/zHRdlX+53TMDzXto5pNOnstJ0U8Gbcpk=
+X-HE-Tag: 1636184092-287531
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On Fri, 2021-11-05 at 14:42 +0200, Andy Shevchenko wrote:
+> We have a few users already that basically want to have array of
+> sequential strings to be allocated and filled.
+> 
+> Provide a helper for them (basically adjusted version from gpio-mockup.c).
 
-How are you doing? I am very happy to inform you about my success. I'm
-currently out of the country for an investment with part of my share,
-after completing the transfer with an Indian business man. But i will
-visit your country, next year, after the completion of my project.
-Please, contact my secretary to send you the (ATM) card which I've
-already credited with the sum of ($500,000.00). Just contact her to
-help you in receiving the (ATM) card. I've explained everything to her
-before my trip. This is what I can do for you because, you couldn't
-help in the transfer, but for the fact that you're the person whom
-I've contacted initially, for the transfer. I decided to give this
-($500,000.00) as a compensation for being contacted initially for the
-transfer. I always try to make the difference, in dealing with people
-any time I come in contact with them. I'm also trying to show that I'm
-quite a different person from others whose may have a different
-purpose within them. I believe that you will render some help to me
-when I, will visit your country, for another investment there. So
-contact my secretary for the card, Her contact are as follows,
+I think this is overkill and unnecessary bloat for the number of
+actual or possible in-tree uses.  The devm_ variant too.
 
-Full name: Mrs, Jovita Dumuije,
-Country: Burkina Faso
-Email: jovitadumuije@gmail.com
+And it'd be useful to have an 0/n patch cover letter describing
+why the patchset is useful so I could reply to that instead of the
+1/n.
 
-Thanks, and hope for a good corporation with you in future.
+> diff --git a/include/linux/string_helpers.h b/include/linux/string_helpers.h
+[]
+> @@ -100,6 +100,7 @@ char *kstrdup_quotable(const char *src, gfp_t gfp);
+>  char *kstrdup_quotable_cmdline(struct task_struct *task, gfp_t gfp);
+>  char *kstrdup_quotable_file(struct file *file, gfp_t gfp);
+>  
+> +char **kasprintf_strarray(gfp_t gfp, const char *prefix, size_t n);
+>  void kfree_strarray(char **array, size_t n);
+>  
+>  #endif
+> diff --git a/lib/string_helpers.c b/lib/string_helpers.c
+[]
+> @@ -674,6 +674,39 @@ char *kstrdup_quotable_file(struct file *file, gfp_t gfp)
+>  }
+>  EXPORT_SYMBOL_GPL(kstrdup_quotable_file);
+>  
+> +/**
+> + * kasprintf_strarray - allocate and fill array of sequential strings
+> + * @gfp: flags for the slab allocator
+> + * @prefix: prefix to be used
+> + * @n: amount of lines to be allocated and filled
+> + *
+> + * Allocates and fills @n strings using pattern "%s-%zu", where prefix
+> + * is provided by caller. The caller is responsible to free them with
+> + * kfree_strarray() after use.
+> + *
+> + * Returns array of strings or NULL when memory can't be allocated.
+> + */
+> +char **kasprintf_strarray(gfp_t gfp, const char *prefix, size_t n)
+> +{
+> +	char **names;
+> +	size_t i;
+> +
+> +	names = kcalloc(n + 1, sizeof(char *), gfp);
+> +	if (!names)
+> +		return NULL;
+> +
+> +	for (i = 0; i < n; i++) {
+> +		names[i] = kasprintf(gfp, "%s-%zu", prefix, i);
+> +		if (!names[i]) {
+> +			kfree_strarray(names, i);
+> +			return NULL;
+> +		}
+> +	}
+> +
+> +	return names;
+> +}
+> +EXPORT_SYMBOL_GPL(kasprintf_strarray);
+> +
+>  /**
+>   * kfree_strarray - free a number of dynamically allocated strings contained
+>   *                  in an array and the array itself
 
-Godwin Peter,
+
