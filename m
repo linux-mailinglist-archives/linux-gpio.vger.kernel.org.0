@@ -2,105 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 05BDF447107
-	for <lists+linux-gpio@lfdr.de>; Sun,  7 Nov 2021 00:51:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F34AA4472D7
+	for <lists+linux-gpio@lfdr.de>; Sun,  7 Nov 2021 13:17:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232941AbhKFXy1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 6 Nov 2021 19:54:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42062 "EHLO
+        id S231284AbhKGMTx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 7 Nov 2021 07:19:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232907AbhKFXy0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 6 Nov 2021 19:54:26 -0400
-Received: from mail-ua1-x92e.google.com (mail-ua1-x92e.google.com [IPv6:2607:f8b0:4864:20::92e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 138D3C061570
-        for <linux-gpio@vger.kernel.org>; Sat,  6 Nov 2021 16:51:45 -0700 (PDT)
-Received: by mail-ua1-x92e.google.com with SMTP id i6so24180835uae.6
-        for <linux-gpio@vger.kernel.org>; Sat, 06 Nov 2021 16:51:45 -0700 (PDT)
+        with ESMTP id S230286AbhKGMTx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 7 Nov 2021 07:19:53 -0500
+Received: from mail-oi1-x232.google.com (mail-oi1-x232.google.com [IPv6:2607:f8b0:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A158CC061570
+        for <linux-gpio@vger.kernel.org>; Sun,  7 Nov 2021 04:17:10 -0800 (PST)
+Received: by mail-oi1-x232.google.com with SMTP id o83so22992068oif.4
+        for <linux-gpio@vger.kernel.org>; Sun, 07 Nov 2021 04:17:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:sender:from:date:message-id:subject:to;
-        bh=bCqULwsZuISPZMTlX87VgaXnSyFILmNDEf3l7kbkpmw=;
-        b=nnAJIsE6kwtDQx+QZru9nYKRJ9KzGSjMBav6SSs3qPUIUFEsOxEya4Ts4xkQ2F3lD4
-         6yA8nJ55wDySZydFYdgJQ3Pi3WWvknoLy74HGG6y+6dOS5Up276NjSZWtk8NkR1rXvrT
-         3rM8Ib2X+uOC6xCMSC6O+iq6aRwscrPnUYT4XMwd+NYLzRVGjOUjxQrRdzwqkKkUaVHq
-         s+sHBHhgVz9yLv8V3as7suYZJiRLHUQ49XO6wy22p3+GS6HPz6+vWkUCI+TfVrGVwZw1
-         0A3DMgPWC4+3xkeMUY5js+GLnqchdx5t9CTMZx3XyxLLMwKrexcKxLhvHGskMsULgUP3
-         cq/Q==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qwEmrvgjr3BpBfj02IBFbEAwkHhmYpc8H0xeadfaW/8=;
+        b=SERr7CikvTZ6o7H4yCkuAK6p0w1lFBY63/W3t3kiTrOe8/jBAJqhRtuaR7tWOgvevh
+         lGSpmrP3pjmZL9btCSPs6X/poBJ70EvK0fW+3xDavlxd9aSAIWLbfA4ztLGpxpK1RJZA
+         t8JrL26wdtbp0XDjiDoITU9ZZzqTPXQvknwd/SWTdSyP+uQGpcjiswleAj7dl2ENbyww
+         5I4v8j/tL96bxB77IzAfSqukcWBTYc7LGZ5B9m2PO7f/SVzPwrGViuC5zBzCuYGp64Cc
+         JtN+GGBpu7t/L9SljzhutYSX/10sE8EldTAgMcABDWDwv2qunb1Qd8ngqMBtKRrlaIfB
+         VzSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to;
-        bh=bCqULwsZuISPZMTlX87VgaXnSyFILmNDEf3l7kbkpmw=;
-        b=qRz5p/QpMmGQpijTmDhsKudFkAT1k4Wh9+kcHm9B7w3j54FmyvQxjagNwRzR1qKWA/
-         T+YIDA5HTF0Y2090SgbpGJf5azrxZPOWT7x7qeOQII76jR4oGgf6ldY2DPFwjuzyNCso
-         i5vmzd7XmAHJkse6i826fsVaRca4D5vim5quGAge0qfmhQ4m9pJ8UkQmxUPcR3IP+fKY
-         F9jus86IvftR0dwjwqNtEMqF+zgGKNq7b5/dVeXCDomJuHLc9EvnHdUxSbcjFJYXrOrQ
-         WjHEkmUeONkyPGGg0zHYbptquKmoTde4pZKrrwYs/iKjPkEcco8LdJQthPZ0jC59ITh8
-         LQrQ==
-X-Gm-Message-State: AOAM533hw830JC1Y/KrKMAYQRq95EJmkLun0ludEvAU31I8MqLRiuotb
-        5J6fy4OKNykhDs7Mr0LaI/ULpdnh9UBk085II6o=
-X-Google-Smtp-Source: ABdhPJyn8LGStnIpo6CkQ0hYix4qyV5mZRGZM/U9SUvVZXQSooXVPiA4KnwNJ2CGll2CS1pWVaNIdDPOGpbi+qk7bmY=
-X-Received: by 2002:ab0:3d07:: with SMTP id f7mr59350076uax.11.1636242703661;
- Sat, 06 Nov 2021 16:51:43 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qwEmrvgjr3BpBfj02IBFbEAwkHhmYpc8H0xeadfaW/8=;
+        b=wIW2KmKN1+m/Y5Q7PgW8DkpGlPD5RBVltTSlme1SmtHU81G7ZOlvXw4SOrdbphIbsf
+         fcv4UOLo6Fm8UldCNnCw9LVaxCkn61SjY8AjE+yIdO9Ex5y9X6SL1uu/9FTnSR0ULInA
+         OzXoJ7kK2VSi0IN0LntjK0hUxAvjf8kab7VdSYBai/EeaRcr0jdk5tlmslXaAtWo/OMv
+         nOK3DLfYumY77cF5QzeZcUBBByB64D6elNVSs9cyQspuHIZ5KbKK7M9bN/k5qZXkupBr
+         t0E2/nN3sE4sacG8mIYjNm5PMYaDNIOQ1F4Iz/41zp9Me3yfIxEMBivrtF5mYCfK//ib
+         fhFg==
+X-Gm-Message-State: AOAM533h1xkE6T7pYJagR/SiA3JTlER54yLxmMjOmE/umosOE9sXqEwq
+        ePMwuheky84GqzYVzWn/Kw2vbQw0MmKf0G9q1q+YuQ==
+X-Google-Smtp-Source: ABdhPJz89tuCao9ba4CKBLi+ty9PyP8AGd+5kqn4zJdJIfhJI9J1mmK4wY4R7VMJb52bBeufGMhaE+BZHPcA1Ck5JPU=
+X-Received: by 2002:a05:6808:144f:: with SMTP id x15mr31149867oiv.132.1636287430009;
+ Sun, 07 Nov 2021 04:17:10 -0800 (PST)
 MIME-Version: 1.0
-Sender: mrsroseedwards@gmail.com
-Received: by 2002:a59:9a44:0:b0:23d:7085:1c83 with HTTP; Sat, 6 Nov 2021
- 16:51:43 -0700 (PDT)
-From:   Alicia Collins <aliciacollins634@gmail.com>
-Date:   Sat, 6 Nov 2021 15:51:43 -0800
-X-Google-Sender-Auth: qAh-7KOAG87sASwIEDEoU5-u4Go
-Message-ID: <CAOw80JhVTt1Pdp9x+m_rVXpLO-C5sdrQ+o52snpFK51ZQm1Q-g@mail.gmail.com>
-Subject: Hello
-To:     undisclosed-recipients:;
+References: <20211104190030.20660-1-brgl@bgdev.pl>
+In-Reply-To: <20211104190030.20660-1-brgl@bgdev.pl>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sun, 7 Nov 2021 13:16:58 +0100
+Message-ID: <CACRpkdZchV1M+BYhMYoXNj_+uUHZeydW5-nHGTjD2bZedAqKKw@mail.gmail.com>
+Subject: Re: [GIT PULL] configfs-based GPIO simulator for v5.16
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Greg KH <gregkh@linuxfoundation.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Joel Becker <jlbec@evilplan.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Kent Gibson <warthog618@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Dear,
+On Thu, Nov 4, 2021 at 8:01 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-With due respect to your person and much sincerity of purpose I wish
-to write to you today, seeking for your urgent assistance in this
-humanitarian social investment project to be establish in your country
-for the mutual benefit of the orphans and the less privileged ones,
-haven't known each other or met before, I know that everything is
-controlled by God as there is nothing impossible to him. I believe
-that you and I can cooperate together in the service of the Lord,
-please open your heart to assist me in carrying out this benevolent
-project in your country/position. I am Mrs.Alicia Collins, a dying
-widow hospitalized undergoing treatment for brain tumor disease, I
-believe that you will not expose or betray this trust and confidence
-that I am about to entrust to you for the mutual benefit of the
-orphans and the less privileged ones. My late husband made a
-substantial deposit with the Bank which I have decided to hand over
-and entrust the sum of ($ 12,500,000.00 Dollars) in the account under
-your custody for you to invest it into any social charitable project
-in your location or your country. Based on my present health status I
-am permanently indisposed to handle finances or any financial related
-project.
+> A couple months have passed with a few more iterations and I still can't get
+> any meaningful reviews from the configfs maintainers (nor NAKs for that
+> matter). I decided to give it another try and send it to you directly again.
 
- This is the reason why I decided to contact you for your support and
-help to stand as my rightful beneficiary and claim the money for
-humanitarian purposes for the mutual benefits of the less privileged
-ones. Because If the money remains unclaimed with the bank after my
-death, those greedy bank executives will place the money as an
-unclaimed Fund and share it for their selfish and worthless ventures.
-However I need your sincerity and ability to carry out this
-transaction and fulfill my final wish in implementing the charitable
-investment project in your country as it requires absolute trust and
-devotion without any failure. Meanwhile It will be my pleasure to
-compensate you with part of the total money as my Investment
-manager/partner for your effort in handling the transaction, while the
-remaining amount shall be invested into any charity project of your
-choice there in your country.
+I think this indicates that configfs is partly orphaned. If not formally
+then practically. Let's poke Greg and see what he says, configfs
+is important for USB.
 
-Your early response will be appreciated to enable me to send you
-further details and the bank contact details where the fund has been
-deposited for you to contact the Bank for immediate release and
-transfer of the fund into your bank account as my rightful
-beneficiary.
-Thank you very much for your kind consideration and I wish you well
-and God enlighten you in this social humanitarian project.
+I do understand the lack of maintainership hours and that people have
+more important things to do, we all suffer from this.
 
-Best regards and God bless you.
-Sincerely Mrs.Alicia Collins.
+If you are the only one who really care maybe we should consider listing
+you as configfs (co-)maintainer as well?
+
+This pull request FWIW:
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
