@@ -2,95 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4734144793B
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Nov 2021 05:15:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 82A75447B19
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Nov 2021 08:31:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237385AbhKHESb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 7 Nov 2021 23:18:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43782 "EHLO
+        id S237837AbhKHHaq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Nov 2021 02:30:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237387AbhKHES3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 7 Nov 2021 23:18:29 -0500
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87DEAC061570
-        for <linux-gpio@vger.kernel.org>; Sun,  7 Nov 2021 20:15:45 -0800 (PST)
-Received: by mail-pg1-x52f.google.com with SMTP id j9so14032390pgh.1
-        for <linux-gpio@vger.kernel.org>; Sun, 07 Nov 2021 20:15:45 -0800 (PST)
+        with ESMTP id S237798AbhKHHaX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Nov 2021 02:30:23 -0500
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2785C061227
+        for <linux-gpio@vger.kernel.org>; Sun,  7 Nov 2021 23:27:33 -0800 (PST)
+Received: by mail-ed1-x530.google.com with SMTP id o8so58521072edc.3
+        for <linux-gpio@vger.kernel.org>; Sun, 07 Nov 2021 23:27:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Ow3kGxYLNyC9HLIHc8ZxwibYPx3dM7u/6WgOPxoycOY=;
-        b=hHMIXEwywC4KIIcQTyM84LrwKvo0ZqVFVCZyZ3zsYzUh8HbqDoMcVOpiienrfq12D8
-         xi0CV1k9a4sv5Q5WEj3X8+uC2l0CdHdSipai3N4MZ04/hGZKDyuIXNzCIciAOnJH17GP
-         wWUqQrLxozORex1MMIfW4QO9UL4Wj2vRuSWb7jQ1OkcOwMC2YKZFg6deH2OALV1Jcmvv
-         NktFVMtu6Ag4ALAeGCqLhZgl+b8yytLE8FfIfaKYbN7ham6klAxxbVDVF8Jic+75yHbM
-         c4A92SQLr6n749h08SAh91JLDGPwTi8gIf7rpf65FwTM1tUK6nxS4tRP+LYsE09ZGIT+
-         1LOQ==
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=gS+G2bXPLTc8QV9oSOsVFPfildfSifO+gabOlUjPn+8=;
+        b=lohGAXI96njXpZ5r6vgYlUkp2V68iRMzDV25uaLpmT1WmpX2h0YNNnPekuKOrJR7Hh
+         rCcmOUgGjsAkeHEvvQCkM6ux+TyqL0CqGbf0IPfL8V+eIKLF7r3X9QWFup/xVl2xV9qZ
+         NGc0LQ7JpvXhk+YTEHFaFd2QnuENE8mCWi0drmIQkANv1zf9DM6Bfjx/yF/A/b9RtJFU
+         CT2DuJeqJ7evq+rJKQgmUSCIg2GjkqvLZlnb0ekZ1/3u7apFf2k73Uqo2u8YZ8hKmOIw
+         ZGA3M8LZJFGSmW3P+nQyYMCLCtL13s+WCsnPOmCuuFd5xieMsN0vbLhindKIE3OfrP6U
+         BcYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ow3kGxYLNyC9HLIHc8ZxwibYPx3dM7u/6WgOPxoycOY=;
-        b=4jdEuW9iEWHKumioQ4z2c10EaLX24KONCF2phmnYTwqkxa8sgSnzDJ6snNXsST2uxX
-         3KEnDpgmythhKIYnt/ZBoLtbMGgyhVJk4vr3rr8T7hB4TYwQOM8ILq19uphTmBZdwjRj
-         EQiu9C0YTYasRWi/YirMEWjD4RHxtmZE2JcYVihOQES3lAOLeKc6EkTNPaVeQfUlFrI6
-         /cyFvvjQFjb1VpVNoceFOx6AHB7zhzyVB2TFlL90rKW72Wq7CGeG0nE4KsUgfFQ3DXPv
-         R6xf9ptkjT1tieqHcYZ2Ozcd9RI0d2q/EXfDJkJzPCHwf61COdMjf2qvwqLnDhVzevDK
-         kdeA==
-X-Gm-Message-State: AOAM530zbQF7OvXaCliKH5MIhmHr9V8zsANSWIJPECj+gwyqiOK0t2BC
-        +d3FoFF+nrZcTpoNcT3JIjEJgQ==
-X-Google-Smtp-Source: ABdhPJw03Vh40n48feQuJ7VhZZRb8hZlAw4Q421T71CKIYSr2dlumNMItyAlVZWpDNqfvuu93XJpTQ==
-X-Received: by 2002:aa7:80c5:0:b0:480:4fc5:a531 with SMTP id a5-20020aa780c5000000b004804fc5a531mr64855837pfn.52.1636344945089;
-        Sun, 07 Nov 2021 20:15:45 -0800 (PST)
-Received: from localhost ([223.226.77.81])
-        by smtp.gmail.com with ESMTPSA id e14sm4521443pfv.18.2021.11.07.20.15.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Nov 2021 20:15:44 -0800 (PST)
-Date:   Mon, 8 Nov 2021 09:45:42 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Yang Li <yang.lee@linux.alibaba.com>
-Cc:     info@metux.net, vireshk@kernel.org, linus.walleij@linaro.org,
-        brgl@bgdev.pl, linux-gpio@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] gpio: virtio: remove unneeded semicolon
-Message-ID: <20211108041542.vhznujep4qgm7hv3@vireshk-i7>
-References: <1636344232-56537-1-git-send-email-yang.lee@linux.alibaba.com>
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=gS+G2bXPLTc8QV9oSOsVFPfildfSifO+gabOlUjPn+8=;
+        b=hJoEAM6FHanLISefigV/74Ezb9mLGWu96PlxTF6umqsBWl1NPi1dMnOcmPye3sFeeV
+         avfiZcsE4RCyeh4acQqf/gstul1+kDGXV8n2rrO3LSPvpjF8gDAXW0rJV+XapcaVlcSg
+         N+SFYFnIlCb0ywrsvZpIseNPl418wjybGuV+tAPU5gaKtYua6oCPfUbY8mehhLvIgP9h
+         Iyznjy1Btpc10dH6OwXFgNxez1rp+TWzvZ9QfTBZldnQTBhqjiqP72G0T5i1wgU7vT1L
+         GuMekyYeL5zREw6V1d4cJd0/Q/POyOUr0iSdkn7nmnhj9G1SYwAL4amJZr8Rh4T7qRDp
+         cX9A==
+X-Gm-Message-State: AOAM531BWbe+yB68lGc+OnkPzr2tCIqmjUo6mZA4gN0EMTxKeQ5n7F48
+        G8eJ9mdxFtP1zzFbAAj5StokXPVXXD2c0qsmtej4YLMbhew=
+X-Google-Smtp-Source: ABdhPJwiROS9SRRNMvDLES4YHo6uT5d60ZUwIiFmBNAm9OxEfLgMU9cee9PqVQWim0XNVifN/Rk5vWcyMQ7rvBndYNE=
+X-Received: by 2002:a05:6402:557:: with SMTP id i23mr66769092edx.176.1636356441798;
+ Sun, 07 Nov 2021 23:27:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1636344232-56537-1-git-send-email-yang.lee@linux.alibaba.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Received: by 2002:a50:2501:0:0:0:0:0 with HTTP; Sun, 7 Nov 2021 23:27:21 -0800 (PST)
+Reply-To: mariaschaefler@gmx.com
+From:   Maria Schaefler <ziskoraa@gmail.com>
+Date:   Mon, 8 Nov 2021 07:27:21 +0000
+Message-ID: <CAJh0FjiFL7uihMBL6ckYO8FJ6tnzM+tBivU2c60yDbG14LZLeA@mail.gmail.com>
+Subject: MY HEART CHOOSE YOU.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 08-11-21, 12:03, Yang Li wrote:
-> Eliminate the following coccicheck warning:
-> ./drivers/gpio/gpio-virtio.c:437:2-3: Unneeded semicolon
-> 
-> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-> Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
-> ---
->  drivers/gpio/gpio-virtio.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpio/gpio-virtio.c b/drivers/gpio/gpio-virtio.c
-> index aeec4bf..84f96b7 100644
-> --- a/drivers/gpio/gpio-virtio.c
-> +++ b/drivers/gpio/gpio-virtio.c
-> @@ -434,7 +434,7 @@ static void virtio_gpio_event_vq(struct virtqueue *vq)
->  		ret = generic_handle_domain_irq(vgpio->gc.irq.domain, gpio);
->  		if (ret)
->  			dev_err(dev, "failed to handle interrupt: %d\n", ret);
-> -	};
-> +	}
->  }
->  
->  static void virtio_gpio_request_vq(struct virtqueue *vq)
-
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-
--- 
-viresh
+Given my current state of health, I have decided to donate what I
+inherited from my late husband to you to help the poor and needy. I am
+Mrs Maria Schaefler,a 57years old dying woman. I was diagnosed for
+cancer about 2 years ago and I have few months to live according to
+medical experts. Email me for my directives
