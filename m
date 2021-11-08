@@ -2,18 +2,18 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 96E55447E58
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Nov 2021 11:56:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FE87447E5E
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Nov 2021 11:59:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238871AbhKHK7f (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 Nov 2021 05:59:35 -0500
-Received: from relay10.mail.gandi.net ([217.70.178.230]:58333 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238859AbhKHK7U (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Nov 2021 05:59:20 -0500
+        id S236232AbhKHLCf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Nov 2021 06:02:35 -0500
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:49993 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231720AbhKHLCe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Nov 2021 06:02:34 -0500
 Received: (Authenticated sender: gregory.clement@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 4605D24000B;
-        Mon,  8 Nov 2021 10:56:34 +0000 (UTC)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 259DD2000D;
+        Mon,  8 Nov 2021 10:59:48 +0000 (UTC)
 From:   Gregory CLEMENT <gregory.clement@bootlin.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -32,13 +32,13 @@ Cc:     Bamvor Jian Zhang <bamv2005@gmail.com>,
         Patrice Chotard <patrice.chotard@foss.st.com>,
         Michal Simek <michal.simek@xilinx.com>,
         Andy Shevchenko <andy@kernel.org>
-Subject: Re: [PATCH v1 10/19] pinctrl: armada-37xx: Make use of the
- devm_platform_ioremap_resource()
-In-Reply-To: <20211105124242.27288-10-andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v1 11/19] pinctrl: armada-37xx: Convert to use
+ dev_err_probe()
+In-Reply-To: <20211105124242.27288-11-andriy.shevchenko@linux.intel.com>
 References: <20211105124242.27288-1-andriy.shevchenko@linux.intel.com>
- <20211105124242.27288-10-andriy.shevchenko@linux.intel.com>
-Date:   Mon, 08 Nov 2021 11:56:33 +0100
-Message-ID: <87zgqesyou.fsf@BL-laptop>
+ <20211105124242.27288-11-andriy.shevchenko@linux.intel.com>
+Date:   Mon, 08 Nov 2021 11:59:47 +0100
+Message-ID: <87wnlisyjg.fsf@BL-laptop>
 MIME-Version: 1.0
 Content-Type: text/plain
 Precedence: bulk
@@ -47,9 +47,8 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 Hello Andy,
 
-> Use the devm_platform_ioremap_resource() helper instead of
-> calling of_address_to_resource() and devm_ioremap_resource()
-> separately.
+> It's fine to call dev_err_probe() in ->probe() when error code is known.
+> Convert the driver to use dev_err_probe().
 >
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
@@ -60,35 +59,52 @@ Thanks,
 Gregory
 
 > ---
->  drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 8 +-------
->  1 file changed, 1 insertion(+), 7 deletions(-)
+>  drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 18 ++++++------------
+>  1 file changed, 6 insertions(+), 12 deletions(-)
 >
 > diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-> index 37f92dc54d7a..282b3fac3bec 100644
+> index 282b3fac3bec..f48745c43419 100644
 > --- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
 > +++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-> @@ -727,7 +727,6 @@ static int armada_37xx_irqchip_register(struct platform_device *pdev,
->  	struct gpio_irq_chip *girq = &gc->irq;
->  	struct device *dev = &pdev->dev;
->  	struct device_node *np;
-> -	struct resource res;
->  	int ret = -ENODEV, i, nr_irq_parent;
->  
->  	/* Check if we have at least one gpio-controller child node */
-> @@ -750,12 +749,7 @@ static int armada_37xx_irqchip_register(struct platform_device *pdev,
->  		return 0;
+> @@ -736,10 +736,8 @@ static int armada_37xx_irqchip_register(struct platform_device *pdev,
+>  			break;
+>  		}
 >  	}
->  
-> -	if (of_address_to_resource(dev->of_node, 1, &res)) {
-> -		dev_err(dev, "cannot find IO resource\n");
-> -		return -ENOENT;
+> -	if (ret) {
+> -		dev_err(dev, "no gpio-controller child node\n");
+> -		return ret;
 > -	}
-> -
-> -	info->base = devm_ioremap_resource(dev, &res);
-> +	info->base = devm_platform_ioremap_resource(pdev, 1);
->  	if (IS_ERR(info->base))
->  		return PTR_ERR(info->base);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "no gpio-controller child node\n");
 >  
+>  	nr_irq_parent = of_irq_count(np);
+>  	spin_lock_init(&info->irq_lock);
+> @@ -996,10 +994,8 @@ static int armada_37xx_pinctrl_register(struct platform_device *pdev,
+>  		return ret;
+>  
+>  	info->pctl_dev = devm_pinctrl_register(dev, ctrldesc, info);
+> -	if (IS_ERR(info->pctl_dev)) {
+> -		dev_err(dev, "could not register pinctrl driver\n");
+> -		return PTR_ERR(info->pctl_dev);
+> -	}
+> +	if (IS_ERR(info->pctl_dev))
+> +		return dev_err_probe(dev, PTR_ERR(info->pctl_dev), "could not register pinctrl driver\n");
+>  
+>  	return 0;
+>  }
+> @@ -1135,10 +1131,8 @@ static int __init armada_37xx_pinctrl_probe(struct platform_device *pdev)
+>  	info->dev = dev;
+>  
+>  	regmap = syscon_node_to_regmap(np);
+> -	if (IS_ERR(regmap)) {
+> -		dev_err(dev, "cannot get regmap\n");
+> -		return PTR_ERR(regmap);
+> -	}
+> +	if (IS_ERR(regmap))
+> +		return dev_err_probe(dev, PTR_ERR(regmap), "cannot get regmap\n");
+>  	info->regmap = regmap;
+>  
+>  	info->data = of_device_get_match_data(dev);
 > -- 
 > 2.33.0
 >
