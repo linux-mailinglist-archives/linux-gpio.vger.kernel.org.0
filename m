@@ -2,112 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD149447DE8
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Nov 2021 11:26:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D0AB447E20
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Nov 2021 11:38:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237819AbhKHK3J (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 Nov 2021 05:29:09 -0500
-Received: from foss.arm.com ([217.140.110.172]:48408 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237572AbhKHK2s (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 8 Nov 2021 05:28:48 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 257AB1FB;
-        Mon,  8 Nov 2021 02:26:01 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.58.140])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C89913F800;
-        Mon,  8 Nov 2021 02:25:58 -0800 (PST)
-Date:   Mon, 8 Nov 2021 10:25:52 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Brad Larson <brad@pensando.io>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
+        id S238567AbhKHKke (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Nov 2021 05:40:34 -0500
+Received: from relay10.mail.gandi.net ([217.70.178.230]:39989 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238365AbhKHKke (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Nov 2021 05:40:34 -0500
+Received: (Authenticated sender: gregory.clement@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 084A024000C;
+        Mon,  8 Nov 2021 10:37:46 +0000 (UTC)
+From:   Gregory CLEMENT <gregory.clement@bootlin.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jianqun Xu <jay.xu@rock-chips.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Olof Johansson <olof@lixom.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 11/11] arm64: dts: Add Pensando Elba SoC support
-Message-ID: <YYj7MA4D1zCF39lh@FVFF77S0Q05N>
-References: <20211025015156.33133-1-brad@pensando.io>
- <20211025015156.33133-12-brad@pensando.io>
- <20211025091731.GA2001@C02TD0UTHF1T.local>
- <CAK9rFnx7DgS3TYMmu5NBacV_6WC_UwJ=u7n3e_fGd0RpEcg3kA@mail.gmail.com>
+        Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Cc:     Bamvor Jian Zhang <bamv2005@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Patrice Chotard <patrice.chotard@foss.st.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Andy Shevchenko <andy@kernel.org>
+Subject: Re: [PATCH v1 08/19] pinctrl: armada-37xx: Fix function name in the
+ kernel doc
+In-Reply-To: <20211105124242.27288-8-andriy.shevchenko@linux.intel.com>
+References: <20211105124242.27288-1-andriy.shevchenko@linux.intel.com>
+ <20211105124242.27288-8-andriy.shevchenko@linux.intel.com>
+Date:   Mon, 08 Nov 2021 11:37:46 +0100
+Message-ID: <877ddjszk5.fsf@BL-laptop>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK9rFnx7DgS3TYMmu5NBacV_6WC_UwJ=u7n3e_fGd0RpEcg3kA@mail.gmail.com>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 04, 2021 at 03:53:13PM -0700, Brad Larson wrote:
-> On Mon, Oct 25, 2021 at 2:17 AM Mark Rutland <mark.rutland@arm.com> wrote:
-> > On Sun, Oct 24, 2021 at 06:51:56PM -0700, Brad Larson wrote:
-> > > +     timer {
-> > > +             compatible = "arm,armv8-timer";
-> > > +             interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(1) |
-> > > +                                     IRQ_TYPE_LEVEL_LOW)>,
-> > > +                          <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(1) |
-> > > +                                     IRQ_TYPE_LEVEL_LOW)>,
-> > > +                          <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(1) |
-> > > +                                     IRQ_TYPE_LEVEL_LOW)>,
-> > > +                          <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(1) |
-> > > +                                     IRQ_TYPE_LEVEL_LOW)>;
-> > > +     };
-> >
-> > The GIC_CPU_MASK_SIMPLE() stuff is meant for GICv2, but as below you
-> > have GICv3, where this is not valid, so this should go.
-> >
-> > Also, beware that GIC_CPU_MASK_SIMPLE(1) means a single CPU, which
-> > doesn't mak sense for the 16 CPUs you have.
-> >
-> 
-> Thanks for pointing this out.  Elba SoC is a GICv3 implementation and looking
-> at other device tree files we should be using this:
-> 
->         timer {
->                 compatible = "arm,armv8-timer";
->                 interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(16) |
->                                         IRQ_TYPE_LEVEL_LOW)>,
->                              <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(16) |
->                                         IRQ_TYPE_LEVEL_LOW)>,
->                              <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(16) |
->                                         IRQ_TYPE_LEVEL_LOW)>,
->                              <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(16) |
->                                         IRQ_TYPE_LEVEL_LOW)>;
->         };
+Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
 
-No; as above, you should *not* use GIC_CPU_MASK_SIMPLE() at all for GICv3. i.e.
-
->         timer {
->                 compatible = "arm,armv8-timer";
->                 interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
->                              <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
->                              <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
->                              <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
->         };
-
-Please see the GICv3 binding documentation:
-
-  Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml
-
-... and note that it does not have the cpumask field as use by the binding for
-prior generations of GIC:
-
-  Documentation/devicetree/bindings/interrupt-controller/arm,gic.yaml
+> Kernel doc validator is not happy:
+>
+>   .../pinctrl-armada-37xx.c:926: warning: expecting prototype for armada_37xx_fill_funcs(). Prototype was for armada_37xx_fill_func() instead
+>
+> Fix this by updating function name in the kernel doc.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
 
-If you've seen other dts files using GIC_CPU_MASK_SIMPLE() with GICv3, those
-are incorrect, and need to be fixed.
+Reviewed-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 
 Thanks,
-Mark.
+
+Gregory
+
+> ---
+>  drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+> index 5cb018f98800..5615cb7a1209 100644
+> --- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+> +++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+> @@ -913,7 +913,7 @@ static int armada_37xx_fill_group(struct armada_37xx_pinctrl *info)
+>  }
+>  
+>  /**
+> - * armada_37xx_fill_funcs() - complete the funcs array
+> + * armada_37xx_fill_func() - complete the funcs array
+>   * @info: info driver instance
+>   *
+>   * Based on the data available from the armada_37xx_pin_group array
+> -- 
+> 2.33.0
+>
+
+-- 
+Gregory Clement, Bootlin
+Embedded Linux and Kernel engineering
+http://bootlin.com
