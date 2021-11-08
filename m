@@ -2,96 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 677C3447C32
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Nov 2021 09:45:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 79A22447C9F
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Nov 2021 10:17:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237552AbhKHIsi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 Nov 2021 03:48:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47156 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230214AbhKHIsh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Nov 2021 03:48:37 -0500
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A241C061714
-        for <linux-gpio@vger.kernel.org>; Mon,  8 Nov 2021 00:45:53 -0800 (PST)
-Received: by mail-ed1-x535.google.com with SMTP id b15so40038588edd.7
-        for <linux-gpio@vger.kernel.org>; Mon, 08 Nov 2021 00:45:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3m86pyGVPBMP52r/Y1c8ER09SIwIEolGjkxNb4+jiGY=;
-        b=GsqSgfk0lXteviyGL++Knn3DNY1lpJtgK3aYO12Iat+3kt9yJkLYY+GV5jGZ7vvAHA
-         pVWH31YzPrsx/p2NBjfQaFeJT/rjoc9s2RNXd2JOKHrrtohgXDiuoXbXLeQuDPSK+8wq
-         eow2638WDdilYvP/qeiL2b//FkBLoKDty85KcRU7XN8VgPuzTv8qbcci98H4PrxjytVT
-         g7Tc5gASdWxHoRBkmb0Dg/kmPiCpsBE9+M7buA/gQ3QAum4IJFDg07Xwlsj23p+yrqfS
-         s4E/FfrBo1nfds8kWL0ZtJAsghcp0qz2EomsIkavDKTmjD+yVBY+9JJ4h68ZX37jkU3S
-         ztWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3m86pyGVPBMP52r/Y1c8ER09SIwIEolGjkxNb4+jiGY=;
-        b=IepdeLhRl2cXhmrAqTDtPqHcSKUdBheVe9guE/ULSo//vHrPBcw1xeFiHI143pp0A4
-         o41NGU46kqZsihpd/UFwzVqtBXMU8tmrAhwb9zR3edj65Ql693ARC1pnwKczC/U3Ds2R
-         E61F2KxLKWD/0xD8Xa5q2hfIRNV6xKUBY74QNqWAwCDls/biR9g4n1yUEdexgRkYzrrg
-         F937EzAOGeQjGlCDjSD6o7noyQcaeMHHHfVYx2mvdiyE74lyZ41VSuPzhn0EtDqPM/ho
-         IaW6K2AJd/6a22dFtvZss5pDHvoPMeMqIt+OKmQKj+iozZmV9BV0YQMSiE9fiAp5eosn
-         8utA==
-X-Gm-Message-State: AOAM533MFUi0TKh3lt4zUVV6RcPJS3C6CzMkxvEDv5TQEY75gz8ikZFX
-        wg46fhpoDn0EsB1a6wNhTD/I/qdkzZ3UbFMMPA3rvA==
-X-Google-Smtp-Source: ABdhPJzGYmqcG4Jo+lMnGLPbIUi8IrUcPZ4KE4/tVBteeAXmoLZ0TwMtHUoVhpGNFuaGav4DS9nIxBbP8nARxP5SvpY=
-X-Received: by 2002:a17:907:1deb:: with SMTP id og43mr37014080ejc.189.1636361151952;
- Mon, 08 Nov 2021 00:45:51 -0800 (PST)
-MIME-Version: 1.0
-References: <20211104190030.20660-1-brgl@bgdev.pl> <CACRpkdZchV1M+BYhMYoXNj_+uUHZeydW5-nHGTjD2bZedAqKKw@mail.gmail.com>
- <YYfIS/sK+OAF8xsA@kroah.com> <20211108074414.GA24829@lst.de>
-In-Reply-To: <20211108074414.GA24829@lst.de>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 8 Nov 2021 09:45:41 +0100
-Message-ID: <CAMRc=MfPANj7jwFd9WeqNTJkxxn4+oiO7yiDTP4b3q83=yWOQw@mail.gmail.com>
-Subject: Re: [GIT PULL] configfs-based GPIO simulator for v5.16
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        id S235206AbhKHJU1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Nov 2021 04:20:27 -0500
+Received: from mga17.intel.com ([192.55.52.151]:41360 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233715AbhKHJU1 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 8 Nov 2021 04:20:27 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10161"; a="212928192"
+X-IronPort-AV: E=Sophos;i="5.87,218,1631602800"; 
+   d="scan'208";a="212928192"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2021 01:17:28 -0800
+X-IronPort-AV: E=Sophos;i="5.87,218,1631602800"; 
+   d="scan'208";a="544398855"
+Received: from smile.fi.intel.com ([10.237.72.184])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2021 01:17:21 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1mk0m3-004cLP-Ea;
+        Mon, 08 Nov 2021 11:17:07 +0200
+Date:   Mon, 8 Nov 2021 11:17:07 +0200
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Emil Renner Berthing <kernel@esmil.dk>
+Cc:     Yury Norov <yury.norov@gmail.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Joel Becker <jlbec@evilplan.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        Drew Fustini <drew@beagleboard.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Michael Zhu <michael.zhu@starfivetech.com>,
+        Fu Wei <tekkamanninja@gmail.com>,
+        Anup Patel <anup.patel@wdc.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Matteo Croce <mcroce@microsoft.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 09/16] reset: starfive-jh7100: Add StarFive JH7100
+ reset driver
+Message-ID: <YYjrE/+1wxgGEAKJ@smile.fi.intel.com>
+References: <20211102161125.1144023-1-kernel@esmil.dk>
+ <20211102161125.1144023-10-kernel@esmil.dk>
+ <CAHp75Ve-P8DR00mtRP_NkrXgB4nsZ+qBkgBen94iTcPqxQYUOg@mail.gmail.com>
+ <CANBLGcyb=TAP0h2WuxBAjRvpN9n7Dt1Hvh5yE8NMOwm3ixZWuA@mail.gmail.com>
+ <CAHp75Vcg3En=xH+kz0GgAMGUoo5FABo2HwGoHd=7QgGVrYkYXg@mail.gmail.com>
+ <CANBLGczrGwexRGvGxa9C+yzaSHZF_d5+AaebeLUX5BXFxipr=A@mail.gmail.com>
+ <CANBLGcztx0DL=U06QPJ5XT4ra=kx2QAZxxP=0bjfgQ0skhv3Bg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANBLGcztx0DL=U06QPJ5XT4ra=kx2QAZxxP=0bjfgQ0skhv3Bg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 8, 2021 at 8:44 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> On Sun, Nov 07, 2021 at 01:36:27PM +0100, Greg KH wrote:
-> > configfs has two current maintainers, I don't think we need another one,
-> > but they should have at least responded to the patch series previously
->
-> I've clearly stated that I'm not going to take these "interesting" new
-> atomic semantics without an ACK from Al.  And to be honest even with that
-> feature creep isn't exactly on my wish list.
+On Thu, Nov 04, 2021 at 01:15:46PM +0100, Emil Renner Berthing wrote:
+> On Tue, 2 Nov 2021 at 22:17, Emil Renner Berthing <kernel@esmil.dk> wrote:
 
-I've just went through my inbox to make sure I didn't miss anything
-but, barring some undelivered email, the only thing you ever stated
-wrt this series (other than your general dislike of the BIT() macro)
-is this: https://lkml.org/lkml/2021/1/27/202 four versions ago.
+...
 
-It's Linus Torvalds who stated he'll need an Ack from Al and I have
-Cc'ed him on multiple iterations over the course of several weeks
-after that. I assume he's got more important things on his plate but
-there's not much more I can do...
+> I'd really like to understand your reasoning here. As far as I can
+> tell reading 2 adjacent 32bit registers with a 64bit read as you're
+> proposing is exactly what would cause endian issues. Eg. on little
+> endian you'd get reg0 | reg1 << 32 whereas on big-endian you'd get
+> reg0 << 32 | reg1.
 
-Feature creep is an exaggeration IMO for something that the very
-maintainer of configfs (Joel Becker) defined in detail in the
-documentation a long time ago. Most likely the need for committable
-items was clear from the start but as there were no users, no
-implementation ever followed. Now we've presented a very clear
-use-case hence the proposed implementation of the concept designed by
-Joel.
+Nope, it won't. The endianess is a property of both CPU and device.
 
-Bart
+The I/O accessors, such as readl()/writel() and iowrtieXX()/ioreadXX()
+are _always_ LE.
+
+So, writeq() will properly put bits to their places in case device is LE.
+And most devices are LE (or should be). Of course there are cases, but then
+you have to specify them explicitly.
+
+My motive here is simple as that the device is definitely a set of a few
+128-bit bitmaps (in registers) and using bitmap _is_ representing hardware
+in the kernel. Using something else will deviate from that (maybe not too
+far, but still...).
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
