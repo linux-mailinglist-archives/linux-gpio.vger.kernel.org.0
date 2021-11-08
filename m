@@ -2,98 +2,183 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 377444497DA
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Nov 2021 16:09:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A084449860
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Nov 2021 16:33:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241028AbhKHPLu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 Nov 2021 10:11:50 -0500
-Received: from esa.microchip.iphmx.com ([68.232.154.123]:23991 "EHLO
-        esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240863AbhKHPKf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Nov 2021 10:10:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1636384072; x=1667920072;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=zstF7h07gTp/nSKCbQQYFsltrxG1f82P+gEsZAQgpqk=;
-  b=02kxndMFCiYXF30RPQQL+JnxhzfbfJ3vsL3k/li9U0rExwve71qJ9+ys
-   hGdlgZl2yXj7ydkam6b6BVN+ouOnQm7UgMFQaqA2iadowR88L4knZu6Yi
-   OdKELw5x8Nbw0Dg3rZ9WwuMCO8ZZ4k2rl9fV+NL9FrKKL+bHT0iv2HJ0V
-   heUB7Qnvcy7qz/7L7CO6OLTlyO/+UA3FYQSg1niVfu2080xXqoigtW6Je
-   8KpF+lNMpWiUi2RQdwRDb2JkbmKfphzvJwcZYfFVpg5nRO1OiHpG5/BW4
-   9GwHFi2hGG23Ldx917Ldg/TjQQdkGbiLuF5a3ntKNRjcxORp3BYVNTCTC
-   A==;
-IronPort-SDR: Eogmog9AAXgm4HnCJJNC5JQfchpBBEOXSO9Szw9Yd6IV1QVflnJrLHXeS92sou3QG5r9z3DAb0
- u/vPYB9PXTmDijeXfeSAE9Hw4D4QxiXyUiKC9SwSKVmc1uAhYqH7vf8zdmGoYTggva0kJsP7WW
- xE6IUll8rSK8YEXhlMRqt23eNZIlsvjl8CCURx7fsPBrrnRdUJfG8wKqpwRsLOg34SZRx07PTB
- 7qRZ86+1cqR97sBJlnGgEoxG+SNGDATG2j6o5Iz8k1VKg4t6bzGcO1bfWINExTZ8NeOfVpmOcA
- yK/txlrGNY6Mc976wnSszjAU
-X-IronPort-AV: E=Sophos;i="5.87,218,1631602800"; 
-   d="scan'208";a="138382872"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 08 Nov 2021 08:07:50 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.14; Mon, 8 Nov 2021 08:07:49 -0700
-Received: from wendy.microchip.com (10.10.115.15) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.2176.14 via Frontend
- Transport; Mon, 8 Nov 2021 08:07:45 -0700
-From:   <conor.dooley@microchip.com>
-To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
-        <robh+dt@kernel.org>, <jassisinghbrar@gmail.com>,
-        <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
-        <aou@eecs.berkeley.edu>, <a.zummo@towertech.it>,
-        <alexandre.belloni@bootlin.com>, <broonie@kernel.org>,
-        <gregkh@linuxfoundation.org>, <lewis.hanly@microchip.com>,
-        <conor.dooley@microchip.com>, <daire.mcnamara@microchip.com>,
-        <atish.patra@wdc.com>, <ivan.griffin@microchip.com>,
-        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>, <linux-crypto@vger.kernel.org>,
-        <linux-rtc@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>
-CC:     <krzysztof.kozlowski@canonical.com>, <geert@linux-m68k.org>,
-        <bin.meng@windriver.com>
-Subject: [PATCH 13/13] MAINTAINERS: update riscv/microchip entry
-Date:   Mon, 8 Nov 2021 15:05:54 +0000
-Message-ID: <20211108150554.4457-14-conor.dooley@microchip.com>
-X-Mailer: git-send-email 2.33.1
-In-Reply-To: <20211108150554.4457-1-conor.dooley@microchip.com>
-References: <20211108150554.4457-1-conor.dooley@microchip.com>
+        id S240902AbhKHPft (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Nov 2021 10:35:49 -0500
+Received: from mail-ua1-f43.google.com ([209.85.222.43]:36469 "EHLO
+        mail-ua1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240901AbhKHPfs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Nov 2021 10:35:48 -0500
+Received: by mail-ua1-f43.google.com with SMTP id e10so32293872uab.3;
+        Mon, 08 Nov 2021 07:33:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VTpS+ObghtKC7xPz2lM+kE7ggidy/4BWxc00rHslQ+I=;
+        b=gWwy3gFh+So5NTeMQbTFasFlGyAMFg3woiC4uHfFmZ1nEU/uoJbDRUVmfKEoa6oNmP
+         /u1B6TmIzeVoOcNS+72nIstkegvCluQh/Vblg9MLaTMjmyLIpML41uQH9qHAkMwmFaLE
+         MmXiWqH19PqVOEkgUswJ7BQZxRA82po/Zf/AT7YBnWbxFw0X01opUmY9usB5pfgW5luH
+         jCX/jiRICGJ9RORTYLxIqbdnL8iTU/rRCoV/YAqpoVJTxRsBpRvFvFtNdp+HKQzlDGst
+         FCu3knoYfa76Z94RS+aq9TpHaXRaDl1tWPQpHciSy8Dc0GyFgD343wlDe3ZV+rXJFrKk
+         bDDA==
+X-Gm-Message-State: AOAM530snvjGsxjnXo0uXdWzoH/IlmwbMerAU0LKKN3V/4YCCP0EKlBJ
+        qiVpTkg2An+9ONDntLJ4oIOhqq773tRDWgIQ
+X-Google-Smtp-Source: ABdhPJwgqcClZIE5WX2DMIrzxhX7mr0L1NhN3UETWudQ1nHbOI4rRKvQA2RwQHtal+VzbAB+tLJYCQ==
+X-Received: by 2002:a67:c11c:: with SMTP id d28mr979832vsj.54.1636385583483;
+        Mon, 08 Nov 2021 07:33:03 -0800 (PST)
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com. [209.85.222.52])
+        by smtp.gmail.com with ESMTPSA id v13sm3486260vsi.0.2021.11.08.07.33.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Nov 2021 07:33:03 -0800 (PST)
+Received: by mail-ua1-f52.google.com with SMTP id e2so32227583uax.7;
+        Mon, 08 Nov 2021 07:33:03 -0800 (PST)
+X-Received: by 2002:a05:6102:2910:: with SMTP id cz16mr39514390vsb.9.1636385582860;
+ Mon, 08 Nov 2021 07:33:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+References: <20211029124437.20721-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20211029124437.20721-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20211029124437.20721-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 8 Nov 2021 16:32:51 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUG4A26kBP_8fbraYxVOhtR5GZuwZyO8z6X5a8K6hmmYg@mail.gmail.com>
+Message-ID: <CAMuHMdUG4A26kBP_8fbraYxVOhtR5GZuwZyO8z6X5a8K6hmmYg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] pinctrl: renesas: pinctrl-rzg2l: Add helper
+ functions to read/write pin config
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Conor Dooley <conor.dooley@microchip.com>
+Hi Prabhakar,
 
-Update the riscv/microchip entry by adding the microchip dts
-directory and myself as maintainer
+On Fri, Oct 29, 2021 at 2:44 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> Add helper functions to read/read modify write pin config.
+>
+> Switch to use helper functions for pins supporting PIN_CONFIG_INPUT_ENABLE
+> capabilities.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
 
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+Thanks for your patch!
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ca6d6fde85cf..a0000ddd02fd 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16077,8 +16077,10 @@ K:	riscv
- 
- RISC-V/MICROCHIP POLARFIRE SOC SUPPORT
- M:	Lewis Hanly <lewis.hanly@microchip.com>
-+M:	Conor Dooley <conor.dooley@microchip.com>
- L:	linux-riscv@lists.infradead.org
- S:	Supported
-+F:	arch/riscv/boot/dts/microchip/
- F:	drivers/mailbox/mailbox-mpfs.c
- F:	drivers/soc/microchip/
- F:	include/soc/microchip/mpfs.h
--- 
-2.33.1
+> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> @@ -91,6 +91,8 @@
+>  #define SD_CH(n)               (0x3000 + (n) * 4)
+>  #define QSPI                   (0x3008)
+>
+> +#define PORT_PIN_CFG_OFFSET    0x80
 
+This definition belongs in [PATCH v2 5/5].
+
+> +
+>  #define PVDD_1800              1       /* I/O domain voltage <= 1.8V */
+>  #define PVDD_3300              0       /* I/O domain voltage >= 3.3V */
+>
+> @@ -424,6 +426,52 @@ static int rzg2l_dt_node_to_map(struct pinctrl_dev *pctldev,
+>         return ret;
+>  }
+>
+> +static u32 rzg2l_read_pin_config(struct rzg2l_pinctrl *pctrl, bool port_pin,
+> +                                u32 offset, u8 bit, u32 mask)
+> +{
+> +       void __iomem *addr = pctrl->base + offset;
+> +       unsigned long flags;
+> +       u32 reg;
+> +
+> +       if (port_pin)
+> +               addr += PORT_PIN_CFG_OFFSET;
+
+I'm wondering if it would be better to handle this in the caller,
+by passing an adjusted offset?
+Same for rzg2l_rmw_pin_config().
+
+> +
+> +       /* handle _L/_H for 32-bit register read/write */
+> +       if (bit >= 4) {
+> +               bit -= 4;
+> +               addr += 4;
+> +       }
+> +
+> +       spin_lock_irqsave(&pctrl->lock, flags);
+> +       reg = readl(addr) & (mask << (bit * 8));
+
+The masking is not needed here, as it is done below.
+
+> +       spin_unlock_irqrestore(&pctrl->lock, flags);
+
+I still think you don't need that spinlock here, as reading a MMIO
+register is an atomic operation.
+
+(/me fixes drivers/pinctrl/renesas/pinctrl.c you referred to before)
+
+> +       reg = (reg >> (bit * 8)) & mask;
+> +
+> +       return reg;
+
+return (reg >> (bit * 8)) & mask;
+
+> +}
+
+> @@ -432,10 +480,11 @@ static int rzg2l_pinctrl_pinconf_get(struct pinctrl_dev *pctldev,
+>         enum pin_config_param param = pinconf_to_config_param(*config);
+>         const struct pinctrl_pin_desc *pin = &pctrl->desc.pins[_pin];
+>         unsigned int *pin_data = pin->drv_data;
+> +       bool port_pin = false;
+
+Do you really need this?
+
+>         unsigned int arg = 0;
+>         unsigned long flags;
+>         void __iomem *addr;
+> -       u32 port = 0, reg;
+> +       u32 port = 0;
+>         u32 cfg = 0;
+>         u8 bit = 0;
+>
+> @@ -452,17 +501,8 @@ static int rzg2l_pinctrl_pinconf_get(struct pinctrl_dev *pctldev,
+>         case PIN_CONFIG_INPUT_ENABLE:
+>                 if (!(cfg & PIN_CFG_IEN))
+>                         return -EINVAL;
+> -               spin_lock_irqsave(&pctrl->lock, flags);
+> -               /* handle _L/_H for 32-bit register read/write */
+> -               addr = pctrl->base + IEN(port);
+> -               if (bit >= 4) {
+> -                       bit -= 4;
+> -                       addr += 4;
+> -               }
+>
+> -               reg = readl(addr) & (IEN_MASK << (bit * 8));
+> -               arg = (reg >> (bit * 8)) & 0x1;
+> -               spin_unlock_irqrestore(&pctrl->lock, flags);
+> +               arg = rzg2l_read_pin_config(pctrl, port_pin, IEN(port), bit, IEN_MASK);
+
+port_pin is always false here, as PIN_CFG_IEN is only ever set for
+dedicated pins.
+
+Same comments for rzg2l_pinctrl_pinconf_set().
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
