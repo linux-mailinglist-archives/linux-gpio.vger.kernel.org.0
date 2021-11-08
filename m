@@ -2,65 +2,154 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 90254449C55
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Nov 2021 20:23:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 94F57449C8C
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Nov 2021 20:41:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237126AbhKHT0a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 Nov 2021 14:26:30 -0500
-Received: from mail-ot1-f44.google.com ([209.85.210.44]:35756 "EHLO
-        mail-ot1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236881AbhKHT03 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Nov 2021 14:26:29 -0500
-Received: by mail-ot1-f44.google.com with SMTP id p11-20020a9d4e0b000000b0055a5741bff7so27191853otf.2;
-        Mon, 08 Nov 2021 11:23:44 -0800 (PST)
+        id S237670AbhKHTiM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Nov 2021 14:38:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54566 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237544AbhKHTiM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Nov 2021 14:38:12 -0500
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D010C061746
+        for <linux-gpio@vger.kernel.org>; Mon,  8 Nov 2021 11:35:27 -0800 (PST)
+Received: by mail-ed1-x536.google.com with SMTP id r12so66752506edt.6
+        for <linux-gpio@vger.kernel.org>; Mon, 08 Nov 2021 11:35:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pensando.io; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z/MR0vqbYTkAsYuLNAb29468NBKY3mHo6iVJJTJx4h0=;
+        b=eH34PqDe6uY4jqBZvuGAv4uNlpzvYcOVNa+yRh0IxFWZ1+GwXQO3Nq6sdkn6AwMr66
+         Ob+7tJckDHQ+VOwnmEeh80RE3zHnAN6dJJIeMB7LpesL9hvdGCZ2Tx/qgZRB3THQHLbw
+         oBoRUsdOoupzBgR6+wAiZXO/ztOh0Yfnt8p1N3O7XaRt0Mkwhy2sBqk4i6k0bAGZ95dx
+         c3Yq+9Uz+EXC0pC8+vFZm19F3wTiMKSvEMy+A/5zfM5vBbULOrzQU8PN7idtAW0qUqSZ
+         MmNAaBNXfK3aN4Gk0R4FvG4b8nUi7x6YGy4BYP/sumJP31Lhf9oB9eyUDZFuA6nrokBu
+         MY/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mqDTQKApc2kTQofGLT1IqukelJnzReC5kPeApeje4eQ=;
-        b=Dj/knTZ6lJaGcGhgaWsoHL11w+dhi7xs3NHN5SW57ADxxWZ8gbVHBTm6PSwQHJQbxR
-         4z7TXwiwXLYQj4VGWQtTPkYA/ONHBqOx8lYdC5aT/cWQ7GoE5OdJEdFVbaepslmsb8kN
-         ZKkw0JElse+utK/YK+KV1rTXmlMm7+mIfReXHkuQPppLZDmD49NaDgqAmWCTtd/oA4GZ
-         74ZiphCxcfH0TZKN0y3RELCUIVVlFmHN2nx3nTtsZO8/D0UiLBI0kR1CfkNQ5eSX8t5p
-         VbXBxWRBPxiE/clOZOibiYo2X8pBHS+8BaF38nKBFQ8NFnHjmlv7LS0+jdmP5qCfAboM
-         QngA==
-X-Gm-Message-State: AOAM532IOnBEAox2AxTOxd+jTDfBFE8HwS48i+MLGB+/y9YDw0LLSru9
-        mspvHeFLB4NmjidL0u3Yag==
-X-Google-Smtp-Source: ABdhPJx3lD+3O7Jj4V4I2UeMIrVZzQhO2yLBSmbuSXbXCfKKOjcBoqXOQ295XzMoPvfirkaupaeHjA==
-X-Received: by 2002:a9d:a2b:: with SMTP id 40mr1224332otg.100.1636399424614;
-        Mon, 08 Nov 2021 11:23:44 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id z22sm6441009oth.63.2021.11.08.11.23.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Nov 2021 11:23:44 -0800 (PST)
-Received: (nullmailer pid 4062547 invoked by uid 1000);
-        Mon, 08 Nov 2021 19:23:43 -0000
-Date:   Mon, 8 Nov 2021 13:23:43 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kavyasree Kotagiri <kavyasree.kotagiri@microchip.com>
-Cc:     devicetree@vger.kernel.org, UNGLinuxDriver@microchip.com,
-        Kavyasree.Kotagiri@microchip.com, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
-        robh+dt@kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: ocelot: Add Lan966x SoC support
-Message-ID: <YYl5P4r6HZSWnxuv@robh.at.kernel.org>
-References: <20211029092703.18886-1-kavyasree.kotagiri@microchip.com>
- <20211029092703.18886-2-kavyasree.kotagiri@microchip.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z/MR0vqbYTkAsYuLNAb29468NBKY3mHo6iVJJTJx4h0=;
+        b=lU8+k6ndTT1ukLrrR3/7E/THCHiigFQC1St0vt2Gz4rzdY1YcgK52f5zf0ivhu9e4o
+         dnIa2119mYJcXi4V0CBd02aqGimXeBFdeFN/2p+NVPXdj7vXTXyplyhVFKBPsLlTC6qp
+         w6tqC4ErMkCTg81eaMp6iUi4x3YvPwO3DrBSmvLMpb/0b27ncCEClenp4ptb+11GdicI
+         /zPG8jIpOkcSeDU4ucEmI7k1fiBMNB9Gi738kQpZfJAcw2VQy1bp3ZAtd0WWWUkmKykT
+         skZpa3eN2c44KVk3pAn23dZ4Fd27O9BQRBH5qGKQyKrThLE5FAdI0BH9ttaL4SUtxUqq
+         MZew==
+X-Gm-Message-State: AOAM5307jjg/qIa2PyAIf2TfUSKQCRAku4EMm/QMTMM/kjz7SkegxAzU
+        SWk0Xc4Dq1tXMOHur/O8Az3A7x0i4VWTqR/q/8NvBQ==
+X-Google-Smtp-Source: ABdhPJwpaoKAhf7YBb+13Nn+Kx8crS+r3pHNmhs/IkckIQ1sUmJKNxXCpW8CIp7Ll4JNzOB6vtAZ1z8y699gDaYjS1U=
+X-Received: by 2002:a17:907:2d20:: with SMTP id gs32mr2084348ejc.270.1636400125691;
+ Mon, 08 Nov 2021 11:35:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211029092703.18886-2-kavyasree.kotagiri@microchip.com>
+References: <20211025015156.33133-1-brad@pensando.io> <20211025015156.33133-12-brad@pensando.io>
+ <20211025091731.GA2001@C02TD0UTHF1T.local> <a20805de16e1196c2ed46dd949473c9a@kernel.org>
+ <CAK9rFnxH=DtC9vEJJCXkGEWjvg2E8vHPUcRy9rJpo34Furtmvw@mail.gmail.com> <87zgqi96nh.wl-maz@kernel.org>
+In-Reply-To: <87zgqi96nh.wl-maz@kernel.org>
+From:   Brad Larson <brad@pensando.io>
+Date:   Mon, 8 Nov 2021 11:35:14 -0800
+Message-ID: <CAK9rFnz6X3wR6bMPkVicGoqj+prm5OmY3y3B_8Fc+WGJxcVsXA@mail.gmail.com>
+Subject: Re: [PATCH v3 11/11] arm64: dts: Add Pensando Elba SoC support
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Olof Johansson <olof@lixom.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 29 Oct 2021 14:57:02 +0530, Kavyasree Kotagiri wrote:
-> Add documentation for the compatible designated for Lan966x.
-> 
-> Signed-off-by: Kavyasree Kotagiri <kavyasree.kotagiri@microchip.com>
-> ---
->  .../devicetree/bindings/pinctrl/mscc,ocelot-pinctrl.txt        | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
+Hi Mark,
 
-Acked-by: Rob Herring <robh@kernel.org>
+On Fri, Nov 5, 2021 at 4:35 AM Marc Zyngier <maz@kernel.org> wrote:
+>
+> > > >> +                    interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> > > >> +
+> > > >> +                    gic_its: msi-controller@820000 {
+> > > >> +                            compatible = "arm,gic-v3-its";
+> > > >> +                            msi-controller;
+> > > >> +                            #msi-cells = <1>;
+> > > >> +                            reg = <0x0 0x820000 0x0 0x10000>;
+> > > >> +                            socionext,synquacer-pre-its =
+> > > >> +                                                    <0xc00000 0x1000000>;
+> > > >> +                    };
+> > > >> +            };
+> > > >
+> > > > Is there any shared lineage with Synquacer? The commit message didn't
+> > > > describe this quirk.
+> > >
+> > > Funny, it looks like there is a sudden outburst of stupid copy/paste
+> > > among HW designers. TI did the exact same thing recently.
+> > >
+> > > This totally negates all the advantages of having an ITS and makes
+> > > sure that you have all the overhead. Facepalm...
+> >
+> > Some background may help explain.  To generate an LPI a peripheral must
+> > write to the GITS_TRANSLATER (a specific address). For the ITS to know
+> > which translations apply to the generated interrupts, it must know which
+> > peripheral performed the write. The ID of the peripheral is known as its
+> > DeviceID, which is often carried along with the write as an AXI sideband
+> > signal.
+>
+> Yes, I happen to be vaguely familiar with the GIC architecture.
+>
+> > The Elba SoC doesn't carry the DeviceID, so we have to conjure one up
+> > between the peripheral and the ITS.  Instead of telling a peripheral to target
+> > the GITS_TRANSLATER directly, we instead direct it to a specific offset
+> > within a pre-ITS address range (our own IP block).  For writes that land in
+> > that memory range, we derive the DeviceID from (offset >> 2).  The pre-ITS
+> > block then sends (DeviceID, data) to the GITS_TRANSLATER.
+> >
+> > The hardware designer came up with the Pre-ITS mechanism in Feb 2018.
+> > When we looked at the upstream kernel later (we developed on 4.14)
+> > we found that not only did it support something similar, it supported the
+> > exact scheme we are using.
+>
+> And this scheme is totally wrong. It breaks interrupt isolation.
+>
+> Instead of having a single doorbell and getting the ITS to segregate
+> between devices itself, you end-up with multiple ones, allowing a
+> rogue device to impersonate another one by targeting another doorbell.
+> You can't even use an SMMU to preserve some isolation, because all the
+> doorbells are in the *same page*. Unmitigated disaster.
+>
+> At this stage, why did you bother having an ITS at all? You get none
+> of the security features. Only the excess area, memory allocation,
+> additional latency and complexity. All you get is a larger INTID
+> space.
+>
+> This only shows that the hardware designer didn't understand the ITS
+> at all. Which seems a common pattern, unfortunately.
+
+The Elba SoC is an embedded chip and not intended as a SBSA-compliant
+general platform.  In this implementation the ITS is used to provide
+message-based interrupts for our (potentially large set) of hardware
+based platform device instances.  Virtualization is not a consideration.
+We don't have a SMMU.  Interrupt isolation isn't a practical consideration
+for this product.  Propose adding a comment to the dts.
+
++                       /*
++                        * Elba SoC implemented a pre-ITS that happened to
++                        * be the same implementation as synquacer.
++                        */
+                        its: interrupt-controller@820000 {
+                                compatible = "arm,gic-v3-its";
+                                msi-controller;
+
+Thanks
+Brad
