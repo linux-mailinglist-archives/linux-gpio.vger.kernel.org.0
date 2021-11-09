@@ -2,117 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 15B2944B46F
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Nov 2021 22:04:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5902A44B5B4
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Nov 2021 23:19:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244871AbhKIVHW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Nov 2021 16:07:22 -0500
-Received: from mail-pf1-f182.google.com ([209.85.210.182]:37585 "EHLO
-        mail-pf1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244853AbhKIVHV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Nov 2021 16:07:21 -0500
-Received: by mail-pf1-f182.google.com with SMTP id y5so563779pfb.4;
-        Tue, 09 Nov 2021 13:04:35 -0800 (PST)
+        id S1343537AbhKIWWV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Nov 2021 17:22:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50790 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1343542AbhKIWVC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Nov 2021 17:21:02 -0500
+Received: from mail-ot1-x32f.google.com (mail-ot1-x32f.google.com [IPv6:2607:f8b0:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABE95C061234
+        for <linux-gpio@vger.kernel.org>; Tue,  9 Nov 2021 14:17:48 -0800 (PST)
+Received: by mail-ot1-x32f.google.com with SMTP id p11-20020a9d4e0b000000b0055a5741bff7so926533otf.2
+        for <linux-gpio@vger.kernel.org>; Tue, 09 Nov 2021 14:17:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Tm6yQehIZfxegQ8LQXmzpFcIGj8PrEgZNef1SIRm8V4=;
+        b=gW0Q1vghMpdNvpEzqaYw/vBySsb/uRGOLQyXIpWbwKfyLOIK5TbfKgHgOHsomzNzQ1
+         iqSUqrjeZ94H3uNw+UFDShc83N0fCNS6vZxdNtWsAMMAt48s6BUSzc31oLPZh5ZSz+NI
+         oXhBndndVnFgNqFVoC2Tg0vcycUpR5I5FfGlec0wPa9/ylYz2GwNkIrTESXkqLDnMm7v
+         mDstpsh66kKPpBp4PvtnTkI3ObI1NQmy4Ze1y008VeSMhqa4bu7wd2mCzot6zpNNDP8s
+         JeX0a8SeaBdsRPlcN8Tj+AR44DQiLz/YA6CQggSwGYRajUI36iL/8V4mI9jnGtTxCeeU
+         3h+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=E8Y2jyNg7h9soMk4rEm6rzTo1BjlaELOxyIkvTVeIKc=;
-        b=qFzg41KmFXXKxf0e7AIwCA80Vj91V/b5yxTOjkUyLj5g3HujBNOJ7qrqd9N4Mwa/P6
-         Sfl4ATULDY2ywqS3ruJg80zTSHpWY+zb9UQJHt9dZcQYnLqvb0dXt2mclUIlsiLZQnaV
-         vpBioGPkcymA/Ri3sCrAlRn2ZtIKOWZLVgqHuXnDtZ00y1DKMg72Uea8lMEFLivX/r8r
-         skk6f/aqTmMGnO0XocjxfLvBrD26RTW9NVGyGIaXbx5VfqMHEQukO8CGEbBUeoprVB4B
-         6M8YuUDbHJK5Yc0SNtY0OQt/eMN8VvyubtqwmF3xoltLU/GBmcMOrJ2TjZLYqJvEYcgf
-         UCXg==
-X-Gm-Message-State: AOAM530BGgMaRBQAP2cGf2AjT2BkjSOVO9gELRy1PUJFVIlumTA8KId7
-        /ajj9eER+M1Szon1rqPIXnQN+ZeMNAy0fTh2z6g=
-X-Google-Smtp-Source: ABdhPJz1YJYHQflXJx0Bc84bAu1eZK8Iidi5ru1YEkbahK+1/iI8yZB/R/hQC6b2vi+cWBbhfBoFSTKZxNwGdzS5FHg=
-X-Received: by 2002:aa7:8883:0:b0:49f:f87a:95de with SMTP id
- z3-20020aa78883000000b0049ff87a95demr9062124pfe.53.1636491875224; Tue, 09 Nov
- 2021 13:04:35 -0800 (PST)
+        bh=Tm6yQehIZfxegQ8LQXmzpFcIGj8PrEgZNef1SIRm8V4=;
+        b=EKGagH0K6kuZ/I0a7mDx4nn3E5Ljonkb+6SK4oYlvTwa4/8IWY7Iq0UQVAp/AJ842r
+         4qXQfvT7m1d/PRKeXiQQyXvYbQ8mtZGt4wmpc0nvV9ruMiLoWkPnu9io/5EFzqgpq3aK
+         fhoMfsbu9/Zdjb4rbPTgq6Jikw/Ret8dmfwdWNqSX4PsnLE9JHG8n9qQbvXV22rb6l3e
+         7ZcVFysIkytBguZEyuNc8IFNFqaX7Fa5HoGRPttIlIcUWpeVz8jJU4T5Vplv2Q3bG4Ah
+         0E3Nzl/VoygwwiD/6Q34Q6DEmUJbFJeq2RC8kgKEqit0yFcs0hdJynFH9mLQbuMVcCDD
+         0AkQ==
+X-Gm-Message-State: AOAM533xXqZZmmiJ2wXftp/XBIjcw5yqTTk5ub7FzmYpsH6wsBMwBb/d
+        oAnhFfu/tf3CZinlNzKhVqsucf41hEfvIdAraCgYeg==
+X-Google-Smtp-Source: ABdhPJzo4LmUY1pFN2oW/gS3+tIDlYsTBZs9R18Xd1P3754m/dv0m7cnbD7ZvDQF9ZkQEmbRVyX6LHfPFNWuBda049M=
+X-Received: by 2002:a9d:6348:: with SMTP id y8mr9026567otk.179.1636496268074;
+ Tue, 09 Nov 2021 14:17:48 -0800 (PST)
 MIME-Version: 1.0
-References: <20211102161125.1144023-1-kernel@esmil.dk> <20211102161125.1144023-13-kernel@esmil.dk>
- <CAHp75VdmnnrisuP00W0KYta0KgmC+fu3WMxm959dt5X1kpiKTw@mail.gmail.com>
- <CAHp75VcuGdaq_TjjRS0S8R5y-nryLABZSp7ehrXz-fUS2W3vfA@mail.gmail.com>
- <CACRpkdYe-tW2K2eOQa+FYb-ZXzrA95+pPc6kkLB8ZJLAT8G_eA@mail.gmail.com>
- <CANBLGcyo3YjygkjDmdjt4C_H=MZdHQwqumsxnatuObeP2LADAg@mail.gmail.com>
- <CAHp75VdBaKZVeA7dasHWP4E3c8F2phaGz-90FErj3bB8FJOS9w@mail.gmail.com>
- <CANBLGcw7X9SY3_=A7ZXW60646vconjCbYBsvb=D2a0BPcyn75A@mail.gmail.com> <CACRpkda7b+j1=X9rUrqwEFhxvp2zVTvFkxanjh3hL7AksqCX1g@mail.gmail.com>
-In-Reply-To: <CACRpkda7b+j1=X9rUrqwEFhxvp2zVTvFkxanjh3hL7AksqCX1g@mail.gmail.com>
-From:   Emil Renner Berthing <kernel@esmil.dk>
-Date:   Tue, 9 Nov 2021 22:04:24 +0100
-Message-ID: <CANBLGcxT_a3J+uaaKazRkfJQoBjGGGiz9agAZUzMEmfJiVXXbw@mail.gmail.com>
-Subject: Re: [PATCH v3 12/16] pinctrl: starfive: Add pinctrl driver for
- StarFive SoCs
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
+References: <20211109100207.2474024-1-arnd@kernel.org> <20211109100207.2474024-6-arnd@kernel.org>
+ <YYpMcKlcZ3JWqp5M@smile.fi.intel.com> <CAK8P3a0VsDG3af1YkRRb=5bmvZ4zP3Du492hE_jyUWOwnYph_w@mail.gmail.com>
+In-Reply-To: <CAK8P3a0VsDG3af1YkRRb=5bmvZ4zP3Du492hE_jyUWOwnYph_w@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 9 Nov 2021 23:17:34 +0100
+Message-ID: <CACRpkdacYt4kS2QS4-W83ZtWWtTaAETeH8Buer2wOXBOoBK=qA@mail.gmail.com>
+Subject: Re: [PATCH v2 5/8] gpiolib: shrink further
+To:     Arnd Bergmann <arnd@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        Drew Fustini <drew@beagleboard.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Michael Zhu <michael.zhu@starfivetech.com>,
-        Fu Wei <tekkamanninja@gmail.com>,
-        Anup Patel <anup.patel@wdc.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        Matteo Croce <mcroce@microsoft.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Huan Feng <huan.feng@starfivetech.com>
+        Arnd Bergmann <arnd@arndb.de>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 9 Nov 2021 at 21:29, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Tue, Nov 9, 2021 at 10:40 AM Emil Renner Berthing <kernel@esmil.dk> wrote:
-> > On Tue, 9 Nov 2021 at 10:34, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
->
-> > > > The order the different states are blinked depends entirely on
-> > > > how the pinctrl framework parses the device tree. I still think it
-> > > > would be more natural to cleanly go to the end result without this
-> > > > blinking.
-> >
-> > Hmm.. but if going through the different states is what you want, then
-> > wouldn't you need the device tree to have an ordered list of the
-> > states rather than just a single node and also a way to tune how long
-> > time the different states are blinked?
->
-> In a way you are correct that the DT is a functional language and it's
-> a bit lite a style sheet or prolog or something in that the end reduction
-> is what counts.
->
-> In this case, I would say something is weird if there are interim states,
-> the yaml validation should not allow you to set the same thing back
-> and forth in your DTS file.
+On Tue, Nov 9, 2021 at 12:18 PM Arnd Bergmann <arnd@kernel.org> wrote:
 
-Yes, exactly.
-
-> Alas we are not perfect as in yaml validation isn't perfect either.
-> I can't see what the problem is really, just write proper DTS files
-> and there will not be any interim states, right?
-
-No, I agree. I think it's only that Andy wasn't sure if these interim
-states might be meaningful/useful.
-
-> And if it is possible
-> to write DTS files that have states and sequence requirements,
-> these should be caught in validation. Should be.
+> Ideally we should only use linux/gpio/consumer.h, which is required for
+> gpiod_set_debounce(). of_gpio.h is still needed for of_get_named_gpio()
+> and should be taken out once we change this to gpiod_get(), while
+> linux/gpio.h is still needed for gpio_is_valid()/gpio_get_value() and should
+> be removed when those are changed to the gpiod_ versions.
 >
-> Yours,
-> Linus Walleij
+> We could do an intermediate patch that converts one half of the
+> interface, something like
+
+When I convert stuff I try to go all the way when I can. It can
+be a bit daring if no one is there to test changes.
+
+The patch looks good though apart from:
+
+> -               ts->gpio_pendown = pdata->gpio_pendown;
+> +               ts->gpio_pendown = gpio_to_desc(pdata->gpio_pendown);
+
+I usually even go into the defined platform data and try to convert
+the boardfile to use a descriptor table so this is never needed.
+(But, more work.)
+
+Examples:
+git log -p --author=Walleij arch/arm/mach-pxa/
+
+> -       pdata->gpio_pendown = of_get_named_gpio(dev->of_node,
+> "pendown-gpio", 0);
+> +       ts->gpio_pendown = gpiod_get(dev, "pendown-gpio", GPIOD_IN);
+
+Needs to be just gpiod_get(dev, "pendown", GPIOD_IN); the new
+API tries the "-gpio[s]" suffixes when going into the device tree.
+
+Yours,
+Linus Walleij
