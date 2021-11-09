@@ -2,104 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 335B844ACAF
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Nov 2021 12:32:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3746B44ACB2
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Nov 2021 12:33:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343519AbhKILfl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Nov 2021 06:35:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45126 "EHLO
+        id S237637AbhKILgE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Nov 2021 06:36:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343522AbhKILfl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Nov 2021 06:35:41 -0500
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 552E4C0613F5
-        for <linux-gpio@vger.kernel.org>; Tue,  9 Nov 2021 03:32:55 -0800 (PST)
-Received: by mail-ed1-x535.google.com with SMTP id w1so75825005edd.10
-        for <linux-gpio@vger.kernel.org>; Tue, 09 Nov 2021 03:32:55 -0800 (PST)
+        with ESMTP id S241154AbhKILf6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Nov 2021 06:35:58 -0500
+Received: from mail-oo1-xc2f.google.com (mail-oo1-xc2f.google.com [IPv6:2607:f8b0:4864:20::c2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C7A0C0613F5
+        for <linux-gpio@vger.kernel.org>; Tue,  9 Nov 2021 03:33:13 -0800 (PST)
+Received: by mail-oo1-xc2f.google.com with SMTP id q39-20020a4a962a000000b002b8bb100791so6878646ooi.0
+        for <linux-gpio@vger.kernel.org>; Tue, 09 Nov 2021 03:33:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura-hr.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=6adjk580AwBpX7D5EH7ECcA7MO/6lGH/OQuhWqLcWr0=;
-        b=ePCHlZ5s9Ca1lZx+Ue/zbqUXBWWK74DCtvcQBG3qSYUhBBYhK3Qifxqxd4eL841TER
-         /tfx+DEQuyTCy6l0cW09Zc9/fu5rb7Pk2Z0RJM/hxWLiSlAxnkH73IQYYzBPOhju/5SA
-         tPPj8nheYVRiKlO2tS7jVeVJdkbAgAqEp5ACRdF2OQ/vXre084Lx42Fi6tvDasc6RqP0
-         XcFuX0oUM5CI8FI5Hh9RLuyk2ERaDGGUJM0SFvYebuxUmXA4vHrrq92wx1ikzo4GIuMI
-         ea9w3xaJPXYI4Ww+FQxdSutJ1nFHtaZ+qAZNPiVWmsM5GNscEqBuJfO+5BMUnGryXnQL
-         H2MQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CSSmBGiZVMNlw9saF2eyI7HOrgrdT0YOSip6CH89u1c=;
+        b=TaEIl/KFsdk7aCm+psQMJAvJANY9fl88AA6fiFvOsx4MD/EZynOYrLCLBFHxr4nP3z
+         TQvoDi45fZ9jV5aILC7hS1SJkobjR2iKX5kJhLNeQwMHiRKyiZ6IJsUhBGAr+afnrw6+
+         x+d+BJjiiG4SuDpiBLjkkG8vTIL29TR5I6uJdzPfbVJy9UPzMyYnJJahks0Wcp6A67OH
+         +F2tNvawnF4i4K20iq+ZwMye0Uzjqad6sUB9BRaPfYEmwHEPHo+kNomEeE8sNnYVeM7r
+         OjHNtXuEIJyMq6csGdMlzvKEOPfpIB0ApOcBTaJlf70eH89kNAPHT7uA+XoLkRQ8M0Tj
+         AH4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6adjk580AwBpX7D5EH7ECcA7MO/6lGH/OQuhWqLcWr0=;
-        b=yjkfTdNc/KGWBiPgff5x8JAOY7ia/o0kZR96L/W938vM+eZj+Ce1QDO7FDCzueoo4p
-         PYx+Xnkg51XvFWwhI7Vj+R67gQ7IFQZ2sp62fyK7JznesdnhKmq8d9CLdUvDBj/vwcFE
-         LfOKBQcUkH7CJY/on1KHRRsubh2AfEaCbCuOVTmLq9tjPKk24M1LagfwgYjOzLNeQ2GU
-         ebx5PItNGSWKySRDOiRz7NoHTQbjb6UaIahxBGc+Y247s2OKC0DrNReTHaHnMYmNHczg
-         dELN+vM7TIEq9Far+2Liqh4mQIc3h7cN9sAka0hclFm4EZJ3reugUlj80l4CFsoUds0B
-         WvwQ==
-X-Gm-Message-State: AOAM531iSuOL60qmQAcZ92RCOXaosdTJo+OQflLRqwP3uogjbKlJCagB
-        2vb43i1B3oAXVr3pANvRyMAwIA==
-X-Google-Smtp-Source: ABdhPJz9e6kGHWVTAn0UkguaWaO5ZH2j5n/zKug8t+61+ALHwQfJ1idBgI+P0ewSbsuC1WEMc1TYkQ==
-X-Received: by 2002:a17:907:7e83:: with SMTP id qb3mr8826860ejc.469.1636457573897;
-        Tue, 09 Nov 2021 03:32:53 -0800 (PST)
-Received: from fedora.. (cpezg-94-253-144-18-cbl.xnet.hr. [94.253.144.18])
-        by smtp.googlemail.com with ESMTPSA id s4sm6771167ejn.25.2021.11.09.03.32.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Nov 2021 03:32:53 -0800 (PST)
-From:   Robert Marko <robert.marko@sartura.hr>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        robh+dt@kernel.org, lee.jones@linaro.org, p.zabel@pengutronix.de,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        andy.shevchenko@gmail.com, michael@walle.cc, andrew@lunn.ch
-Cc:     luka.perkov@sartura.hr, bruno.banelli@sartura.hr,
-        Robert Marko <robert.marko@sartura.hr>
-Subject: [PATCH v9 6/6] MAINTAINERS: Add Delta Networks TN48M CPLD drivers
-Date:   Tue,  9 Nov 2021 12:32:39 +0100
-Message-Id: <20211109113239.93493-6-robert.marko@sartura.hr>
-X-Mailer: git-send-email 2.33.1
-In-Reply-To: <20211109113239.93493-1-robert.marko@sartura.hr>
-References: <20211109113239.93493-1-robert.marko@sartura.hr>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CSSmBGiZVMNlw9saF2eyI7HOrgrdT0YOSip6CH89u1c=;
+        b=Py0msqmGEtzl3P2yFrvjlJ5v/svwdzOi/qtlzMS0mpxh3VNuOe1WUHziXUo7W4Sor5
+         bqQuSqhL+3QQYTpWxO08O7Awk/2mcC7ONj2LqH9ZXxFSWqvyMBbSQnkDwW3TqUqnxnl0
+         9TvF0Zr749MWo6ovd0OXuYiu67bgoCPC22UH0j0Dq6tkk/5bupop77TtY07i5Qacr8nT
+         1H5eTmNCTFTLO4E6fsbkHdphr2tWL5L0mVweHTf9iyK2daBUQU5EUKJwcDfkmNU13PoN
+         La75FNje06q0IFOOw5QVw3CO/g08BhP36AWMQ4/dHag984kUQgcCJkdS/llNLzmI86m8
+         74lA==
+X-Gm-Message-State: AOAM533cCLaLewaUJMT0WvFiji6MRxmL/wS7OI6QaNaCE0G/P6J8qgZ+
+        YQ5H1lHZqu4y4T6QOwziD22bMlNQOf5kRcUtd2n1Qw==
+X-Google-Smtp-Source: ABdhPJywvZKJoZBox3QIktaEO2rKrJtRPMqM6AhEvJyTlBaJAPM8lakOBpMg0SgtBEI2NKgbHRswI7RDSSX7KAPjZjg=
+X-Received: by 2002:a4a:e5cd:: with SMTP id r13mr3324482oov.84.1636457592495;
+ Tue, 09 Nov 2021 03:33:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20211105124242.27288-1-andriy.shevchenko@linux.intel.com> <20211105124242.27288-15-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20211105124242.27288-15-andriy.shevchenko@linux.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 9 Nov 2021 12:33:00 +0100
+Message-ID: <CACRpkdaFNhy8DrY7L76OC3Udkeo33t8vGv10T8NoFp+R9x1jKQ@mail.gmail.com>
+Subject: Re: [PATCH v1 15/19] pinctrl: st: Make use of the devm_platform_ioremap_resource_byname()
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jianqun Xu <jay.xu@rock-chips.com>,
+        Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        Bamvor Jian Zhang <bamv2005@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Patrice Chotard <patrice.chotard@foss.st.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Andy Shevchenko <andy@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add maintainers entry for the Delta Networks TN48M
-CPLD MFD drivers.
+On Fri, Nov 5, 2021 at 1:43 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-Signed-off-by: Robert Marko <robert.marko@sartura.hr>
----
-Changes in v3:
-* Add reset driver documentation
+> Use the devm_platform_ioremap_resource_byname() helper instead of
+> calling platform_get_resource_byname() and devm_ioremap_resource()
+> separately.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Changes in v2:
-* Drop no more existing files
----
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d7b4f32875a9..92747bfc01db 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5289,6 +5289,15 @@ S:	Maintained
- F:	Documentation/hwmon/dps920ab.rst
- F:	drivers/hwmon/pmbus/dps920ab.c
- 
-+DELTA NETWORKS TN48M CPLD DRIVERS
-+M:	Robert Marko <robert.marko@sartura.hr>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/gpio/delta,tn48m-gpio.yaml
-+F:	Documentation/devicetree/bindings/mfd/delta,tn48m-cpld.yaml
-+F:	Documentation/devicetree/bindings/reset/delta,tn48m-reset.yaml
-+F:	drivers/gpio/gpio-tn48m.c
-+F:	include/dt-bindings/reset/delta,tn48m-reset.h
-+
- DENALI NAND DRIVER
- L:	linux-mtd@lists.infradead.org
- S:	Orphan
--- 
-2.33.1
-
+Yours,
+Linus Walleij
