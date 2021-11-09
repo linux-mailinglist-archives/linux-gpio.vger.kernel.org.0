@@ -2,70 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F22544A5F0
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Nov 2021 05:55:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DB8AC44A5F9
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Nov 2021 05:59:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239835AbhKIE5u (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 Nov 2021 23:57:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39646 "EHLO
+        id S230311AbhKIFBr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Nov 2021 00:01:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238992AbhKIE5t (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Nov 2021 23:57:49 -0500
-Received: from mail-oi1-x22d.google.com (mail-oi1-x22d.google.com [IPv6:2607:f8b0:4864:20::22d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C0E0C061766
-        for <linux-gpio@vger.kernel.org>; Mon,  8 Nov 2021 20:55:04 -0800 (PST)
-Received: by mail-oi1-x22d.google.com with SMTP id m6so5697378oim.2
-        for <linux-gpio@vger.kernel.org>; Mon, 08 Nov 2021 20:55:04 -0800 (PST)
+        with ESMTP id S230283AbhKIFBr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Nov 2021 00:01:47 -0500
+Received: from mail-oo1-xc36.google.com (mail-oo1-xc36.google.com [IPv6:2607:f8b0:4864:20::c36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B1F0C061764
+        for <linux-gpio@vger.kernel.org>; Mon,  8 Nov 2021 20:59:01 -0800 (PST)
+Received: by mail-oo1-xc36.google.com with SMTP id x1-20020a4aea01000000b002c296d82604so525477ood.9
+        for <linux-gpio@vger.kernel.org>; Mon, 08 Nov 2021 20:59:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=3d0bpgnKtpNRbrHQNZy5MuUdrJxoJuPOMsuXvuRPMN8=;
-        b=L7BeCSywMcOjoZ/hgoduMlABJb+5iYGwXhMxgvGQrd/1xorjTG4ZAProqrWBWl1xAT
-         KEVmbojM/uoaVuD0l9SQzznTg3/MfQ3zE2qERe4OH6Xk1Wx90ck7rTYoUr+gddUQ5gvp
-         SMb73RnNcjlIcyU0n/g5YanbCxq5Ewif7JXwxWmQNIWOknOqj1sMKC9qdbkJV1/401oy
-         y/eOl+hl+juRhQTUQ6dbBgY4MWLFLTVSYQj+7TNo0Tx7Rm16ff3gF06YBvB8B9MUxqUJ
-         mTcrnv2FZTjN7dKpvuzY8M1qNDfbms80Kw+z1NW3hwU27btKCkJ9JoGfIuG4ZD4qPcNl
-         hZLg==
+        bh=irWfmlcyPuQHKKPir8OlxwwVnibLr6uWK7muZHmIMsk=;
+        b=WzK18Y5A4egmuKvtBbizvoyHLqZQwgphFe0O19EbuiJRo0oG70FWWhAqECIkojaMTE
+         LGei/ky0WwZacG7gqMOVuP6JrODhZG0ZvLRWrSl1p4XkO+hxU5UAlejPj2KacG1fLPBP
+         AURwVMA7gLsyTMVWlEkcqjb2T0KilFe1jhZ4kXAO/tCscD2iZzmaN7LJz+web0hb/av/
+         sXy9+WTDxPk9gzQW9iODIOP4T+mGKZZnWeYnlfwzLWcYbWGWZn3wmw/1GYD9qh1FjAMI
+         vco1WzrmtuHAJaTFKzZ4GX4+Wazy1QgHkWe47k5aI/ouwH+EJxoTJddSpN4RMJzlY0O5
+         X3VQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3d0bpgnKtpNRbrHQNZy5MuUdrJxoJuPOMsuXvuRPMN8=;
-        b=R7p2egROdMQa0TbU7HAHMfATdzXlzh4wND3RIHpu5ModnEFfN0itlkZalEsecMqv7t
-         xbL3Nil78bFda8FZx8DwriJMVfy+wHXkH94hh4ocfZlKKvUuuH7NAyatubrW8O4pH0Du
-         fOwWbHQT9UUjsypRKVy77bLUcJT4iGGmI+Qc335XKlj8K5UoZ9Bjq3B0Bcc39bq6fTtb
-         zxBQqyNLGSmGSBNOB7ZrCvLVnNG3wjrezM86VfeiISo9MKirzjvLKs+SS9u7R1EXhaYn
-         CmIyvIurVeq+NJ7xrj2KBwWRmWEZdFPL936bo6i8qJ4XLPHdWiK8Y8qRpWM5MDXGGAQA
-         An9Q==
-X-Gm-Message-State: AOAM5314pBiW5HKprrb0dcLgk1UeyG49P2joGnCTpgQYNui2XBvWGsGS
-        LfSiaCe3JhTeEkuYbMHGIvfVYn4mF4jquZds+l4M3w==
-X-Google-Smtp-Source: ABdhPJyIS2IsZz4xKbaYthafvjd3nIdS88pgHNCwEs9uL1201EaOoOE0s06/9PFn4U8mcXjX+/4yPUANDO9cNwZmYoQ=
-X-Received: by 2002:a54:4791:: with SMTP id o17mr3428652oic.114.1636433703538;
- Mon, 08 Nov 2021 20:55:03 -0800 (PST)
+        bh=irWfmlcyPuQHKKPir8OlxwwVnibLr6uWK7muZHmIMsk=;
+        b=79XntHgbLVSwn5ysoFMz6YNaosk8gD1DlOjcHPQXzJyF/3G2KXGJxw72ZhhM4t934f
+         I3rcCcOGnRR5HCAKeK5UwLlvM9iBFiYqYtRpVfY00zBt4X3zYP6xehlTnvfMZKJXnggy
+         az4Mmjx0xxbUNXg7HS9ZGaD4M2QEKpS5XCe5dyttWG2umD67MMUTl0DuZ0uhR9D9nvKl
+         g663dWiG9zYHQYy+knbGDF1PAZ6YZGzBqLHI/9eYRLAljxGW3Tpi1eoAPNS94rLZxN5D
+         hUdi/4gUWV999IuYphOVgQ66Lyf3YNGKOFgNWgIleE2AXM7lbnnl/zuw/99Sx5BX4dwL
+         RCgA==
+X-Gm-Message-State: AOAM533L2T69Cjns+/+/sNZgzLpin0WI7KaXB6VX0uQ4/CiXY2bbj2A4
+        miI9psqe44cVNncFEVQmGNFoMEbSP0RO9W89GupQSw==
+X-Google-Smtp-Source: ABdhPJzA0fBJmolcF9ydwIK4LPh8g10cwPkTOJq8YZWFOGCxYdG35tZxSmMOA+s7P/3EH5wClIkzSAPkiWKZInwliPU=
+X-Received: by 2002:a4a:5b85:: with SMTP id g127mr2368667oob.86.1636433941005;
+ Mon, 08 Nov 2021 20:59:01 -0800 (PST)
 MIME-Version: 1.0
-References: <20211029004610.35131-1-julianbraha@gmail.com>
-In-Reply-To: <20211029004610.35131-1-julianbraha@gmail.com>
+References: <20211029092703.18886-1-kavyasree.kotagiri@microchip.com>
+In-Reply-To: <20211029092703.18886-1-kavyasree.kotagiri@microchip.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 9 Nov 2021 05:54:51 +0100
-Message-ID: <CACRpkdYMSMAEp=a6sb9062ohS_F_ak63PhgW4RMuu2wAAtg1Wg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: qcom: fix unmet dependencies on GPIOLIB for GPIOLIB_IRQCHIP
-To:     Julian Braha <julianbraha@gmail.com>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+Date:   Tue, 9 Nov 2021 05:58:49 +0100
+Message-ID: <CACRpkdb6-Wa8KGnx9kD5zhPLBw1YDZQgfDPm35VJzNnt27d3Vw@mail.gmail.com>
+Subject: Re: [PATCH 0/2] Extend pinctrl-ocelot driver for lan966x
+To:     Kavyasree Kotagiri <kavyasree.kotagiri@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        quentin.schulz@bootlin.com
+Cc:     robh+dt@kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        UNGLinuxDriver@microchip.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 29, 2021 at 2:46 AM Julian Braha <julianbraha@gmail.com> wrote:
+On Fri, Oct 29, 2021 at 11:27 AM Kavyasree Kotagiri
+<kavyasree.kotagiri@microchip.com> wrote:
 
-> When PINCTRL_QCOM_SPMI_PMIC or PINCTRL_QCOM_SSBI_PMIC
-> is selected, and GPIOLIB is not selected, Kbuild
-> gives the following warnings:
+> This patch series extends pinctrl-ocelot driver to support also
+> the lan966x.
 
-Patch applied for fixes.
+Alexandre Belloni and Quentin Schultz worked on this
+driver a lot, so paging them for feedback/review.
 
 Yours,
 Linus Walleij
