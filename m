@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E860944ACE2
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Nov 2021 12:50:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 020E044ACEB
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Nov 2021 12:51:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343592AbhKILw4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Nov 2021 06:52:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49082 "EHLO
+        id S1343643AbhKILyJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Nov 2021 06:54:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242051AbhKILw4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Nov 2021 06:52:56 -0500
-Received: from mail-ot1-x32a.google.com (mail-ot1-x32a.google.com [IPv6:2607:f8b0:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7982EC061764
-        for <linux-gpio@vger.kernel.org>; Tue,  9 Nov 2021 03:50:10 -0800 (PST)
-Received: by mail-ot1-x32a.google.com with SMTP id x19-20020a9d7053000000b0055c8b39420bso9842113otj.1
-        for <linux-gpio@vger.kernel.org>; Tue, 09 Nov 2021 03:50:10 -0800 (PST)
+        with ESMTP id S1343639AbhKILyI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Nov 2021 06:54:08 -0500
+Received: from mail-oi1-x232.google.com (mail-oi1-x232.google.com [IPv6:2607:f8b0:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61CA4C061764
+        for <linux-gpio@vger.kernel.org>; Tue,  9 Nov 2021 03:51:22 -0800 (PST)
+Received: by mail-oi1-x232.google.com with SMTP id m6so7258508oim.2
+        for <linux-gpio@vger.kernel.org>; Tue, 09 Nov 2021 03:51:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ALBcIFK0M2sDqjczdXHc9NoWo8sCRANOPePxtQKC6v0=;
-        b=WiNjKmsahtkj7noZ9ffdWo8zufH5fxNGTifxSgsaMThK1Bc25ubh55+CHeuGaG7dca
-         IUJu9SE+F1ZklwyVbmXyyhhwcj0fg+IcXAUeMkT2TM5AtPRpH3WjiiGM0JbYuy1FNyNo
-         W/m4prG/Qo/AI9tmUfrtEwc1xzSfJ8Q+7ZXo7dZw2gmjbx0/oFHLRnz+TXr7yb4yt4rw
-         DbpNSz1GfVi/hAHf/6iZhz37emGktf2XV99bWXojbMU9ELu6783fpV36atKSUBhOD6FP
-         qt5X3Lt9oO+YFKDBZilTPQ4bEsJUs+P+vARkfPy4jNZXysxqcTZkkSfcAc6qC7oUWOwo
-         t/8g==
+        bh=kMK6SnHP7XOL/nzbm1KS22pVeT/yVqRtpG4D5bAlLtY=;
+        b=o9FwO7JCulklcAOt08HURze6MgADdmgcfLw3Yl4MCHTMoFLONnBFI0Vc09v1fn4Ru1
+         a8sSgNlHwT73XBbn3Rtvl9qOR9H/8XdGjeZ2kt9amCQmP/vrh9Ql/m9TqCEzKxmn2ck2
+         1iZItOphR9RBsP/Wx5Rh7PRHJcs87JiPoPXQLYosgsujYhKXvfklJlb8zp2WDcG+SCLz
+         Zh5hPpuhnG76txv0tu3QIahyuXIMUFjknLT4m3kjK66ydWl3NrN61xyanki+aMIiExYK
+         kz6K4gZOzlyomsHYCPRrpYTMDak6kyS29r3Z+mBeSKbX/Bb9XbUjiEnUBJ6FaLtnuuQE
+         K3Ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ALBcIFK0M2sDqjczdXHc9NoWo8sCRANOPePxtQKC6v0=;
-        b=Ij5j4hpIU25v1JddMWgFZdT1Lv2YIeKly/soyLkdUcUhqaSuiVg/xdcnKXtMYts0YQ
-         SXAYNF058YVA6ZzxN1uErZQZmCeVS+hcWXCa8kAn3L4WGdrBq9XZk4BVOCAryYRU5C+n
-         nCYrZflez6/bsD7xXDRjr+uS1JzI4Ej8+8xvKPpXohfUGRHy+oKEVtl/C2Omp4jkW7PB
-         UFYDi4NrBKKNrF+DIE+QsFP23T4zQsyFwZcIYnNlK4Iww5kX15cthNhOCbHS5FbIPWP6
-         zIZFUOjXTez02EUFVgilGPhAr+dSa1ihzZg1EAQoH2q+921WF+vaWhkzS63vGoe5dYHI
-         0Qkg==
-X-Gm-Message-State: AOAM533R1ygmA33UIMKATjSqfNhRhgQvdp5r2BJoQ56eyaoQKJHHWdUW
-        0Yse40fUGGYV9hSc0Q7LYxR+V4DzCBG5hil1CG/mlg==
-X-Google-Smtp-Source: ABdhPJykswbjVxAwy6QccCD6a4oKxQG8ZBoSavSKVwonmEEZcj7+3DiAKXMLdnvkMbWw05xgzSkhW8FiyFJlI+8TVv8=
-X-Received: by 2002:a9d:ed6:: with SMTP id 80mr5272989otj.35.1636458609456;
- Tue, 09 Nov 2021 03:50:09 -0800 (PST)
+        bh=kMK6SnHP7XOL/nzbm1KS22pVeT/yVqRtpG4D5bAlLtY=;
+        b=dUP5tm/frtSql/uDuQX78a2Bc17tsbAQAE25m8Yvi6rR4hkx6ZxQm5cyIb8gy8qKSA
+         co6nklFcYSjK+fposciBirmTR5Fv+qDWrl07jiQywU9edM/nqMARFnp7SHgBRFqzDl64
+         RtCy8rHQ2g2ODwr2W/qkV+SLyQl/W1KmglMgexCThnHEnt1692qur0RhoZGEr1FqZzEu
+         6srPgxxYI84dr1xa2FUD1uCZ9JL5XCVkc/e05JdmXLQ4Jdtzg/Ny1gel1p9VK+OiY+GS
+         knz6WPM7Nvmadz545HNZirdWxkJeEb6aIyiBIZKZ0AQ5HtKQxv+uqlzjWQeK3cpE5o8i
+         RbeA==
+X-Gm-Message-State: AOAM530XtkkBhLs8Agz/USNSsEcHrGR1XTW8gnVIGiMhr6MXxvrd6Zy4
+        Nzxi11eYUgsxbx1tHAJMa8BcZMyj0i9xzMAY8N8qMw==
+X-Google-Smtp-Source: ABdhPJzh5h6N1umE+Ysu5XocKatjpgfgpDggcSizG4BYyhksOtzOtMD8oSphQQMP0yAmmkHhJPnOvtLfi83T4u+8cUM=
+X-Received: by 2002:a05:6808:60e:: with SMTP id y14mr5237493oih.162.1636458681847;
+ Tue, 09 Nov 2021 03:51:21 -0800 (PST)
 MIME-Version: 1.0
-References: <20211105130338.241100-1-arnd@kernel.org>
-In-Reply-To: <20211105130338.241100-1-arnd@kernel.org>
+References: <20211105130338.241100-1-arnd@kernel.org> <20211105130338.241100-2-arnd@kernel.org>
+In-Reply-To: <20211105130338.241100-2-arnd@kernel.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 9 Nov 2021 12:49:58 +0100
-Message-ID: <CACRpkdYKs==og5pSsSxMXXozkexybJEnTHZWUr1ObsqAsGPuRA@mail.gmail.com>
-Subject: Re: [RFC 1/3] gpiolib: remove irq_to_gpio() definition
+Date:   Tue, 9 Nov 2021 12:51:09 +0100
+Message-ID: <CACRpkdZ=z2YZ0rtD3=xqEQOMbwph-BEb-3xP_LajCzykmpYgSg@mail.gmail.com>
+Subject: Re: [RFC 2/3] gpiolib: remove empty asm/gpio.h files
 To:     Arnd Bergmann <arnd@kernel.org>
 Cc:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
         linux-m68k@lists.linux-m68k.org, geert@linux-m68k.org,
@@ -57,39 +57,30 @@ Cc:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
         linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org,
         dalias@libc.org, ysato@users.sourceforge.jp,
         Arnd Bergmann <arnd@arndb.de>,
-        Fu Wei <tekkamanninja@gmail.com>, Alex Shi <alexs@kernel.org>,
-        Hu Haowen <src.res@email.cn>,
-        linux-doc-tw-discuss@lists.sourceforge.net,
-        Jonathan Corbet <corbet@lwn.net>,
-        Drew Fustini <drew@beagleboard.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 5, 2021 at 2:03 PM Arnd Bergmann <arnd@kernel.org> wrote:
+On Fri, Nov 5, 2021 at 2:04 PM Arnd Bergmann <arnd@kernel.org> wrote:
 
 > From: Arnd Bergmann <arnd@arndb.de>
 >
-> All implementations other than coldfire have returned an error since
-> the avr32 and blackfin architectures got removed, and the last user in
-> driver code was removed in 2016, so just remove this old interface.
+> The arm and sh versions of this file are identical to the generic
+> versions and can just be removed.
 >
-> The only reference is now in the Chinese documentation, which should be
-> changed to remove this reference as well.
+> The drivers that actually use the sh3 specific version also include
+> cpu/gpio.h directly. This leaves coldfire as the only gpio driver
+> that needs something custom for gpiolib.
 >
-> Cc: Fu Wei <tekkamanninja@gmail.com>
-> Cc: Alex Shi <alexs@kernel.org>
-> Cc: Hu Haowen <src.res@email.cn>
-> Cc: linux-doc-tw-discuss@lists.sourceforge.net
 > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Thanks for doing this Arnd. I had it on my mind some years
-ago but I think Coldfire or something was still using it and didn't
-think about it as the last user disappeared.
+Excellent!
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+I suggest Bartosz can queue this in the GPIO tree.
 
 Yours,
 Linus Walleij
