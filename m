@@ -2,93 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CF6744A848
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Nov 2021 09:24:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 19A7E44A965
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Nov 2021 09:41:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244029AbhKII0s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Nov 2021 03:26:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57716 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239099AbhKII0s (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Nov 2021 03:26:48 -0500
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DB3FC061764;
-        Tue,  9 Nov 2021 00:24:02 -0800 (PST)
-Received: by mail-pl1-x62e.google.com with SMTP id r5so19608019pls.1;
-        Tue, 09 Nov 2021 00:24:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/ObBvvdfK0rOPDXHfLBPPfh89zKu+hFmOacks0ZOP8Y=;
-        b=IPerIFMJ7EW74Om8qHG2xT4JFQYWF+rpZSAWuBGSY6dYLl+WH2ZdhsTQB+8tjzk0gV
-         4lMJQ4P+L6FiysAygAF+s7ByLvp91lAaM6Rg+HPT0Z0n7LyzL7RSZk6Uk4tkGZ3T3MsJ
-         2vlipZiVoH2/Zr5fjkDAFnhasZcJaJ4vQApDnSl8iWhwsYPHBBYkwuOSmlcJLFSe+giw
-         VGoo+iG/HoWkKrLsoMNxZJoMYbtbwAS4Kw6AQQDUGweBVhaggIwrw3gwbGnbRKTwhWPd
-         /itfRKSud1HUyySLZJDVkE1xBKBq0IyylWXocdgZuICSrARfnQqq3jCBiMTrXJOClD5f
-         V61w==
+        id S244363AbhKIIoN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Nov 2021 03:44:13 -0500
+Received: from mail-pl1-f173.google.com ([209.85.214.173]:39674 "EHLO
+        mail-pl1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S244402AbhKIInQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Nov 2021 03:43:16 -0500
+Received: by mail-pl1-f173.google.com with SMTP id t21so19642292plr.6;
+        Tue, 09 Nov 2021 00:40:30 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/ObBvvdfK0rOPDXHfLBPPfh89zKu+hFmOacks0ZOP8Y=;
-        b=4uyDXkI2a3KnFovMUDPQ8QcYH75Qg45pW5k2TU+NNrtheuw5OxjH2Y5OT6aAyhZQxk
-         ceaq9XLfWrgIGVhlZ9ygCipHhvfJ6xOpdadgCSHoy+uCKE+70GNIQra/NlCTX+QRC3vV
-         fD7pO/lMH7ru57PpbXUsWua0szeR0kk3DDW/3Acfj261lDHQe6Uos7CLBDD0UdCg/SRR
-         kdrD6qsltvcN7Ja7Te89PIloi+BO5iunvutThQSFmHWwgCRNuF2olnq/wOaxsVk0n/KF
-         WiuVpqzl6UiLHA0KOefmPxyxa0cjYtjoCgEASa5YfRij9zCZeBttGp5ir2HcB5iT91dG
-         DJVw==
-X-Gm-Message-State: AOAM532Ur2zPqNMpUPccH6k4GNfkXLyscBdSAEMZuaNP7DVx1D8IY4Z9
-        5fBw7/8Ur/AuBPqQLKEBRgw=
-X-Google-Smtp-Source: ABdhPJyKSDwtCCwSUW8AR8d9qzOSeuyM5hs9Wk8F7LxJO0LRG6ld3ZCFjPM61qsMhC6w71bG0zMlqQ==
-X-Received: by 2002:a17:903:246:b0:13f:2ff9:8b93 with SMTP id j6-20020a170903024600b0013f2ff98b93mr5628103plh.54.1636446242111;
-        Tue, 09 Nov 2021 00:24:02 -0800 (PST)
-Received: from localhost.localdomain ([193.203.214.57])
-        by smtp.gmail.com with ESMTPSA id kx3sm1730566pjb.5.2021.11.09.00.24.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Nov 2021 00:24:01 -0800 (PST)
-From:   cgel.zte@gmail.com
-X-Google-Original-From: chi.minghao@zte.com.cn
-To:     info@metux.net
-Cc:     vireshk@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl,
-        linux-gpio@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, chiminghao <chi.minghao@zte.com.cn>,
-        Zeal Robot <zealci@zte.com.cn>
-Subject: [PATCH] drivers:gpio: Remove unneeded semicolon
-Date:   Tue,  9 Nov 2021 08:23:57 +0000
-Message-Id: <20211109082357.131251-1-chi.minghao@zte.com.cn>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gSLDpPNAPTFpdKJNeNQhMNDuIXO+IuEe87YK9rCw7Wk=;
+        b=bkicM4NptlSvs00dBmXJ8TA9DlC4vSJ2JXtFGNClf/JdgY4gMyYyDkSYfwVpSzaTnz
+         X/9Wi4YkrynGP0SbMT9EbYhwepz+NrK9oERNaggxMkpCgX+anSzKxtgAOIKj4IYigEg0
+         9ziUGP3BHi4ZZk6si4bLc9OwHusH/W4uqufNQGUc7GWsZYNR/2ugLGrYPK2Y/IuTbNWx
+         ocF8GDLevXNUHUAP+S9RN7O/NISFiLxrDiEy4+ZZ/7GaeGMzoIQvLQUzjhwcMEb6xQjS
+         GFVmaUA4Tuo/vGfkt0fsCpn5T74w77WAPuCupdrAq5wpzcctY8fN/XoXodE/YsvedD0a
+         0v6A==
+X-Gm-Message-State: AOAM532+o1o3PB0qgfdwg60wYvQCsPagQHqel0K7+/32C8gpUGzkhywD
+        d8m7o/BRi10LzU2X5WI1pTtuoRpciUOYTtil
+X-Google-Smtp-Source: ABdhPJwtNor6FrZO+2M63XnKFgzRT/k6VXW3jhwqnHCDRjPu1KybXzCzjDFd1YQD8ThE7ACLxJkvoA==
+X-Received: by 2002:a17:90a:134f:: with SMTP id y15mr5317434pjf.158.1636447230229;
+        Tue, 09 Nov 2021 00:40:30 -0800 (PST)
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com. [209.85.210.181])
+        by smtp.gmail.com with ESMTPSA id a13sm1962640pfv.99.2021.11.09.00.40.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 Nov 2021 00:40:30 -0800 (PST)
+Received: by mail-pf1-f181.google.com with SMTP id o4so4771059pfp.13;
+        Tue, 09 Nov 2021 00:40:29 -0800 (PST)
+X-Received: by 2002:a05:6102:e82:: with SMTP id l2mr9441005vst.37.1636446824427;
+ Tue, 09 Nov 2021 00:33:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20211108150554.4457-1-conor.dooley@microchip.com> <20211108150554.4457-4-conor.dooley@microchip.com>
+In-Reply-To: <20211108150554.4457-4-conor.dooley@microchip.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 9 Nov 2021 09:33:33 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVx9BgCYHX5-Bwx1TzQzNK1+7cUWoWnOdMX31SJ22sMzg@mail.gmail.com>
+Message-ID: <CAMuHMdVx9BgCYHX5-Bwx1TzQzNK1+7cUWoWnOdMX31SJ22sMzg@mail.gmail.com>
+Subject: Re: [PATCH 03/13] dt-bindings: soc/microchip: update sys ctrlr compat string
+To:     Conor Dooley <conor.dooley@microchip.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Lewis Hanly <lewis.hanly@microchip.com>,
+        daire.mcnamara@microchip.com, Atish Patra <atish.patra@wdc.com>,
+        ivan.griffin@microchip.com,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        linux-rtc@vger.kernel.org, linux-spi <linux-spi@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Bin Meng <bin.meng@windriver.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: chiminghao <chi.minghao@zte.com.cn>
+Hi Conor,
 
-Fix the following coccicheck REVIEW:
-./drivers/gpio/gpio-virtio.c:437:2-3 REVIEW Unneeded semicolon
+On Mon, Nov 8, 2021 at 4:06 PM <conor.dooley@microchip.com> wrote:
+> From: Conor Dooley <conor.dooley@microchip.com>
+>
+> Update 'compatible' strings for system controller drivers to the
+> approved Microchip name.
+>
+> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
 
-Reported-by: Zeal Robot <zealci@zte.com.cn>
-Signed-off-by: chiminghao <chi.minghao@zte.com.cn>
----
- drivers/gpio/gpio-virtio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks for your patch!
 
-diff --git a/drivers/gpio/gpio-virtio.c b/drivers/gpio/gpio-virtio.c
-index aeec4bf0b625..84f96b78f32a 100644
---- a/drivers/gpio/gpio-virtio.c
-+++ b/drivers/gpio/gpio-virtio.c
-@@ -434,7 +434,7 @@ static void virtio_gpio_event_vq(struct virtqueue *vq)
- 		ret = generic_handle_domain_irq(vgpio->gc.irq.domain, gpio);
- 		if (ret)
- 			dev_err(dev, "failed to handle interrupt: %d\n", ret);
--	};
-+	}
- }
- 
- static void virtio_gpio_request_vq(struct virtqueue *vq)
--- 
-2.25.1
+> --- a/Documentation/devicetree/bindings/mailbox/microchip,polarfire-soc-mailbox.yaml
+> +++ b/Documentation/devicetree/bindings/mailbox/microchip,polarfire-soc-mailbox.yaml
+> @@ -11,7 +11,9 @@ maintainers:
+>
+>  properties:
+>    compatible:
+> -    const: microchip,polarfire-soc-mailbox
+> +    enum:
+> +      - microchip,polarfire-soc-mailbox
+> +      - microchip,mpfs-mailbox
 
+Is there any point in keeping the old compatible value?
+Are there any real users? Most of the MPFS upstream DT is still in flux.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
