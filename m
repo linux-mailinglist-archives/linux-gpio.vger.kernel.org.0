@@ -2,88 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B30544AC97
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Nov 2021 12:26:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D9E744ACA1
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Nov 2021 12:32:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242782AbhKIL3W (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Nov 2021 06:29:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43628 "EHLO
+        id S1343501AbhKILfa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Nov 2021 06:35:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242267AbhKIL3U (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Nov 2021 06:29:20 -0500
-Received: from mail-oo1-xc32.google.com (mail-oo1-xc32.google.com [IPv6:2607:f8b0:4864:20::c32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44469C061766
-        for <linux-gpio@vger.kernel.org>; Tue,  9 Nov 2021 03:26:35 -0800 (PST)
-Received: by mail-oo1-xc32.google.com with SMTP id o26-20020a4abe9a000000b002b74bffdef0so6851041oop.12
-        for <linux-gpio@vger.kernel.org>; Tue, 09 Nov 2021 03:26:35 -0800 (PST)
+        with ESMTP id S234461AbhKILf3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Nov 2021 06:35:29 -0500
+Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA41BC061764
+        for <linux-gpio@vger.kernel.org>; Tue,  9 Nov 2021 03:32:43 -0800 (PST)
+Received: by mail-ot1-x329.google.com with SMTP id b5-20020a9d60c5000000b0055c6349ff22so19613427otk.13
+        for <linux-gpio@vger.kernel.org>; Tue, 09 Nov 2021 03:32:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=gCm3nSR397zk7aSEEkQCw98vZ58y73OpbN0H7g0wwJM=;
-        b=hS/rr3fGh5laNnuUENCdGVA75ssygWbqppxs2QMMUMhAB3kaGI9LQa+dlNsNsutGjS
-         q+56DQRYlQsibzvJuJnQ5w/SDbeU/j/DuklCJWYQhBYfyP82IJRcUdcycrJ+dNgtg3Dz
-         mAL3uKtBf9iM2NUmdhCC58DqFlbKBghnalIOXfNr5aObky1aQ6/O6QvIjO8DZCoP/7VK
-         7a3BjiYmqznA7f5d1mATCZU/hJ3HEZ7xFv0/0+K/f0FSXrgDIexQUxJo62EzKT9FPyTD
-         bYMylpOD4soTbGyONk6HtVc+zbvcVUjAHnTZn1C5tC+WN5rKWcfbvk6MaLakpKaiWZSV
-         IGvQ==
+        bh=Qy6TGyX8vFWvykfE4/Xbu62w/6VA/cV8jxGqL+/tOGM=;
+        b=fYa6b8hX1Dq2cAMrWRhsarxQfP7zOdb08HRYi6q7V2gUnjMrvPHLBV9luIUlFbo75L
+         zXqR4jRbDQD7Zj/37y7Jw5IUHNtGxH/atQu8galeFSlGqcUK+Gf7pkiel+PTf0cfcdoY
+         IMDM0/PeZ7TayUF3+gallC5tY1StHe/E9atj7T9hSc3sqbCtND0tnEKov+aPe1wkMWGM
+         2iB7bEC73cWGe9qNHMinLpETfPo+2GQBK/4UKY0UYIz/sPdiYoLUN2uMKoP8wJm9ogrA
+         ynDKySFVWxWtKU/vrcp2rv7+9W9Nn4ZbLoQb4uMtVsO6EZxYRsv5FIERqowlRnUngsrp
+         TpGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=gCm3nSR397zk7aSEEkQCw98vZ58y73OpbN0H7g0wwJM=;
-        b=VKyaKCKRbXdR88nGasKQgS9fXRTxq5M1NCw/UMy1fQR3KlJu2zH5pXMsVUi2XwRjj0
-         FAB8rBZcNc3EuSxbmxLLfXqEfgSaZh7emRIJSM1QdcGidyJAbb52V/jAvqebKPm/djrd
-         CU+SvYTLo8RltHDJNWeSYZbp6HSL6zmK3LPSlnvkklBKd6PI/7ngQc+FT6VlFlrqmAwu
-         tlsXu9h3l9Vn30M5RVqYYt97rKJzZ1rhEPA9FhhV4bX3YzhlQMuVxnmrc9ScvVnkfpyU
-         7HRnH2prJ1SsNt4ePrnqLBQsERyG9FSVzvZmE80Lg4e/PqxyMjt6kgnzlhjX06RISPH2
-         BuYA==
-X-Gm-Message-State: AOAM530t5LYSbK62qcgkC1YzfPphps5lJu+kYOa/UHABoWIPWo13IC5q
-        a0sfomm1Vxr8SzSbh0duat//wz/Mo8+E9zmjmjcT/A==
-X-Google-Smtp-Source: ABdhPJwkWMItcy6dYAzsdz0Ss+mlymO7DJvCLhisfx81i7Po0UJcwJpYb3dKmZpYVOf8lEFZGtR62J76EpX/RLqjp68=
-X-Received: by 2002:a4a:5b85:: with SMTP id g127mr3353848oob.86.1636457194390;
- Tue, 09 Nov 2021 03:26:34 -0800 (PST)
+        bh=Qy6TGyX8vFWvykfE4/Xbu62w/6VA/cV8jxGqL+/tOGM=;
+        b=3TYxr1YB2OQ4TnWQHovFAu5fk8iVsfrOi+gz2JjBkDLqfKQBZl7ZT9m/tJkqSrIOXe
+         s2OSlX0MxJWj/A7U6JHaZ4Q6iUnLuFsZJqtLhfuphGQI6FHtWCvxwnN6VJZf1RxsVRDl
+         3sQAd9wp/k3q1o7WBHL83LLJHgpvRC+l+9CXNdQieFk10CywLA51ZDHBsfOPX8G15y3q
+         AWYZh6Ggdh5QkXXpQpge3sxSacaABIf+JKA74iWm8mfn+uRZKWUcZO6ZlpOmmeiQsWuh
+         drXlPvP3df9BcXX4u1X5QkMP0UKHIEzEiO7tQZ5A93qibdeAX4v1VhypCe891PCRB0ix
+         EkwA==
+X-Gm-Message-State: AOAM530M0mVsSGJBzntgTUEKSda4mtcsjXQb4gqxgLQcR8cX4tBHuPUI
+        N7wqzzs0wH5zGZNQM/DjWM3RigeUETiX5nY03M1V4w==
+X-Google-Smtp-Source: ABdhPJyPUvoffTAvqw9J4DzdBPjfjQyEb+p8m0OPCaQnugVpSRhmHRb+EHPbR3OsvLSnVFw5ovkObNghJbXbWRypASA=
+X-Received: by 2002:a05:6830:2809:: with SMTP id w9mr5266073otu.237.1636457563186;
+ Tue, 09 Nov 2021 03:32:43 -0800 (PST)
 MIME-Version: 1.0
-References: <20211104154135.2119-1-rdunlap@infradead.org>
-In-Reply-To: <20211104154135.2119-1-rdunlap@infradead.org>
+References: <20211105124242.27288-1-andriy.shevchenko@linux.intel.com> <20211105124242.27288-13-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20211105124242.27288-13-andriy.shevchenko@linux.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 9 Nov 2021 12:26:21 +0100
-Message-ID: <CACRpkdY8Otp8GVXWTCh5r9gs4e7fc9UuVMvW_zxU7ADbMmSpwg@mail.gmail.com>
-Subject: Re: [PATCH] gpio/rockchip: fix Kconfig to prevent build errors
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Jianqun Xu <jay.xu@rock-chips.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
+Date:   Tue, 9 Nov 2021 12:32:31 +0100
+Message-ID: <CACRpkdbUKJVz=pzdw0Egw39gCUTxJRkyNjxOTOqCnJ1k_j406g@mail.gmail.com>
+Subject: Re: [PATCH v1 13/19] pinctrl: st: Drop wrong kernel doc annotations
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jianqun Xu <jay.xu@rock-chips.com>,
+        Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        Bamvor Jian Zhang <bamv2005@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Patrice Chotard <patrice.chotard@foss.st.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Andy Shevchenko <andy@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 4, 2021 at 4:41 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+On Fri, Nov 5, 2021 at 1:43 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-> GPIO_ROCKCHIP needs to enable GENERIC_IRQ_CHIP to prevent build errors.
+> Kernel doc validator is not happy:
 >
-> Eliminates these build errors:
-> ld: drivers/gpio/gpio-rockchip.o: in function `rockchip_irq_disable':
-> gpio-rockchip.c:(.text+0x6c9): undefined reference to `irq_gc_mask_set_bit'
-> ld: drivers/gpio/gpio-rockchip.o: in function `rockchip_irq_enable':
-> gpio-rockchip.c:(.text+0x709): undefined reference to `irq_gc_mask_clr_bit'
-> ld: drivers/gpio/gpio-rockchip.o: in function `rockchip_gpio_probe':
-> gpio-rockchip.c:(.text+0xe25): undefined reference to `irq_generic_chip_ops'
-> ld: gpio-rockchip.c:(.text+0xe7e): undefined reference to `__irq_alloc_domain_generic_chips'
-> ld: gpio-rockchip.c:(.text+0xeb9): undefined reference to `irq_get_domain_generic_chip'
-> ld: gpio-rockchip.c:(.text+0xf04): undefined reference to `irq_gc_ack_set_bit'
-> ld: gpio-rockchip.c:(.text+0xf0e): undefined reference to `irq_gc_mask_set_bit'
-> ld: gpio-rockchip.c:(.text+0xf18): undefined reference to `irq_gc_mask_clr_bit'
-> ld: gpio-rockchip.c:(.text+0xf36): undefined reference to `irq_gc_set_wake'
+>   .../pinctrl-st.c:59: warning: This comment starts with '/**', but isn't a kernel-doc comment.
+>   .../pinctrl-st.c:73: warning: This comment starts with '/**', but isn't a kernel-doc comment.
 >
-> Fixes: 936ee2675eee ("gpio/rockchip: add driver for rockchip gpio")
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Jianqun Xu <jay.xu@rock-chips.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-> Cc: linux-gpio@vger.kernel.org
+> Drop them as they are indeed not a kernel doc comments.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+
+Hm maybe I could just apply this patch, shouldn't collide with anything.
+Let me know your preference.
 
 Yours,
 Linus Walleij
