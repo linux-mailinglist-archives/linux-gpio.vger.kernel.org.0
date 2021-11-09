@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EE11744ACB8
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Nov 2021 12:34:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A0FC444ACBA
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Nov 2021 12:34:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239621AbhKILhV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Nov 2021 06:37:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45568 "EHLO
+        id S1343514AbhKILhn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Nov 2021 06:37:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234937AbhKILhU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Nov 2021 06:37:20 -0500
-Received: from mail-oi1-x22e.google.com (mail-oi1-x22e.google.com [IPv6:2607:f8b0:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A69BC061766
-        for <linux-gpio@vger.kernel.org>; Tue,  9 Nov 2021 03:34:35 -0800 (PST)
-Received: by mail-oi1-x22e.google.com with SMTP id m6so7189961oim.2
-        for <linux-gpio@vger.kernel.org>; Tue, 09 Nov 2021 03:34:35 -0800 (PST)
+        with ESMTP id S241924AbhKILhm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Nov 2021 06:37:42 -0500
+Received: from mail-oi1-x231.google.com (mail-oi1-x231.google.com [IPv6:2607:f8b0:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D9F6C061764
+        for <linux-gpio@vger.kernel.org>; Tue,  9 Nov 2021 03:34:56 -0800 (PST)
+Received: by mail-oi1-x231.google.com with SMTP id o83so33150286oif.4
+        for <linux-gpio@vger.kernel.org>; Tue, 09 Nov 2021 03:34:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=CJvoZMaaDiqQDQzmQKxU7aL1Rgs77zOyF+qBbYMPai4=;
-        b=ibWeio9MhAbFBMtbEQiWYGtyoUNI2wGwaiB/Cg+427BrHvgtSDRUW5gDCClC3hCcLn
-         0HnANAGOM2wRQZIbHQsIOJDEhxwHLDwPRLxUm4yvmIe4FIOWkDKUHiJEZKBG6fl/QWul
-         qX9/8nHQ5u9FrKDFujOXwOsES7LbHEjOxtPxvTVmgvjrePUf0FznxdT1zflk7ca3kk36
-         0EQpWHsYulFHFaOfX2jHVJoxSU2Ki7ebnmIdXo2g/GrSNHUL00Y/D2AKgZj90f5okAqE
-         SH/F/fy6rg74jts0jJcKSKjKVqeGqqKRjQJ6WU6M9p2hRNCWmhRbBUr1MB6e9hyf51SR
-         s0Ew==
+        bh=WMhqT96OOBbAley9AFYgsxGB5oY3iyIMYs14i3Gkg3o=;
+        b=oi4JGP/SZMbE5ERMkIj9fir5MGvpsEB7KRHDL4ZOvGz69icIfywOoCxILyi/1Be1yU
+         ftJcJz/AQIjcyB3OV3GhSDTNhd599XTWxyrqH9S1fbhgxS3yZ03/W9QPU+iIb0ntYWxd
+         JvreBAZYqUNb5ubky4Mqed3j2Nq4VFs5YsGlujgxXG04gD/ehEjM4dR+OIqo2yECWUlE
+         nQssTMxWJ3b4IgmXS3eQHzmkRNuyB2eLq+R+Gq71FfN60xd7mWLNVpLl0Zdc/xSbh+2h
+         0tZPPrdoRUGpdlPv3xsdNS/X3pOFd0VcjVZvpTvPAf8XOUXJOgUwqL1IUjLQQZFXbi/W
+         7Uag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=CJvoZMaaDiqQDQzmQKxU7aL1Rgs77zOyF+qBbYMPai4=;
-        b=XzWLp3sLfat2G871UH3U5GY/pX6XiZk8hEpTyKOMJyXioFzHs9r6n8MmkWGDLD1U1e
-         kt+64L2OMnWtQa81hw4l1yOzxHVRsuKvd95T2UrmJKTOkQHIov+B+N4PM+knhk1b5Yhz
-         FvihNqgtTrOYSyfyEo+/Y7nhgv9lCLavgqr02Js51aw4vL0SzHFj6kEoet9Kn45A+IZ4
-         G479AS/DMwwvbFDXPEjXC5K/ejJ+jq7caMr/qXj5ZjI9pfnAE6PLmJ2VtcRz28xXnOh5
-         /M4H/tw3HEwiT71zjm/CQqf6X3MbNu9sy2NwuaLPmZlONPXHn2VMOyE4XhcJupKzYCMu
-         WfSw==
-X-Gm-Message-State: AOAM533i6dhhzIpzxJVuxATVEBb9Ui8YOVdwHr2tcMKwpjk/Bptwv0ZJ
-        SkZXxtEha+hlBQgYKGrrYJ/BWrF0HoItL9IAwtmoXQ==
-X-Google-Smtp-Source: ABdhPJy/RETaWdANM3tucuwvOzEk6ouGG2eWkyABK9KYywpBeBb3elcEuOEvVyLatP3WRod1SZHwHhkYlC6A0sQeZAU=
-X-Received: by 2002:a05:6808:60e:: with SMTP id y14mr5145143oih.162.1636457674579;
- Tue, 09 Nov 2021 03:34:34 -0800 (PST)
+        bh=WMhqT96OOBbAley9AFYgsxGB5oY3iyIMYs14i3Gkg3o=;
+        b=2P/9rW8fLxtBYdF/VJJLkJGfuT5z7gkbtjrRBKqaDlyZkCConhli3qoVcbLBN0UTwk
+         llVK7BVCke9g21Vxxud+YMLOgEo4djjtSNztvAtwZmT4phE8tfQ5b1G+ekp9WwPn62tQ
+         vneqR2YD09FvX0vLoKWGgns3kCvqjsjvPHcRJUxlq7s6JO7iP46pdaDCA9rxH0DXMOOL
+         vPKrLcL3CluyEhe8ea4jd5EpQpeqfcGcbA9j8pfGwJUaEUw0H1qTYjAC9uirPadMrAxi
+         EXhA6Xk1DtOzvyRIKjHDowuHmzA/vQtGHEozL6HgN7+/XFeRqCvM4rjeoP9MLBCZIjV5
+         /7GQ==
+X-Gm-Message-State: AOAM533fmSj2J4ZgaCF5ruXA+mSKGPdxwFs15vAsplMwECwamAokfyPr
+        hZAJKZEL2/jiRemKU9pnWbAiRzhZ0Sxf00z2FUmxiA==
+X-Google-Smtp-Source: ABdhPJzQ9BcKupTckBvimT1UFASyWrf2POLGY0fYltjfQBFyXFETzsbUnf6PebRBImEXyR1sAkgx7gmkfsC35C3w2ew=
+X-Received: by 2002:a05:6808:60e:: with SMTP id y14mr5147323oih.162.1636457695902;
+ Tue, 09 Nov 2021 03:34:55 -0800 (PST)
 MIME-Version: 1.0
-References: <20211105124242.27288-1-andriy.shevchenko@linux.intel.com> <20211105124242.27288-17-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20211105124242.27288-17-andriy.shevchenko@linux.intel.com>
+References: <20211105124242.27288-1-andriy.shevchenko@linux.intel.com> <20211105124242.27288-18-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20211105124242.27288-18-andriy.shevchenko@linux.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 9 Nov 2021 12:34:23 +0100
-Message-ID: <CACRpkdb2Z23AOSfEWjFHL5RdErEh8r9xUypWWyV2LUNhRw-q5w@mail.gmail.com>
-Subject: Re: [PATCH v1 17/19] pinctrl: st: Switch to use devm_kasprintf_strarray()
+Date:   Tue, 9 Nov 2021 12:34:44 +0100
+Message-ID: <CACRpkdYu319K3GzYOnDx=zWN7e_k=ARPo+qi4VozfW7WpgxsuQ@mail.gmail.com>
+Subject: Re: [PATCH v1 18/19] pinctrl: zynqmp: Unify pin naming
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
         Jianqun Xu <jay.xu@rock-chips.com>,
@@ -74,10 +74,11 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Fri, Nov 5, 2021 at 1:43 PM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
 
-> Since we have a generic helper, switch the module to use it.
->
-> As a side effect, add check for the memory allocation failures and
-> cleanup it either in error case or when driver is unloading.
+> Since we have devm_kasprintf_strarray() helper, which is used in
+> the rest of pin control drivers, it makes sense to switch this
+> driver to it. The pin names are not part of any ABI and hence
+> there will be no regression based on that. Otherwise all generated
+> pin names will follow the same schema in the pin control subsystem.
 >
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
