@@ -2,77 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AF4744A5CD
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Nov 2021 05:33:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F22544A5F0
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Nov 2021 05:55:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240688AbhKIEgm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 Nov 2021 23:36:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34950 "EHLO
+        id S239835AbhKIE5u (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Nov 2021 23:57:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240680AbhKIEgl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Nov 2021 23:36:41 -0500
-Received: from mail-ot1-x331.google.com (mail-ot1-x331.google.com [IPv6:2607:f8b0:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74568C061766
-        for <linux-gpio@vger.kernel.org>; Mon,  8 Nov 2021 20:33:56 -0800 (PST)
-Received: by mail-ot1-x331.google.com with SMTP id q33-20020a056830442100b0055abeab1e9aso29080501otv.7
-        for <linux-gpio@vger.kernel.org>; Mon, 08 Nov 2021 20:33:56 -0800 (PST)
+        with ESMTP id S238992AbhKIE5t (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Nov 2021 23:57:49 -0500
+Received: from mail-oi1-x22d.google.com (mail-oi1-x22d.google.com [IPv6:2607:f8b0:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C0E0C061766
+        for <linux-gpio@vger.kernel.org>; Mon,  8 Nov 2021 20:55:04 -0800 (PST)
+Received: by mail-oi1-x22d.google.com with SMTP id m6so5697378oim.2
+        for <linux-gpio@vger.kernel.org>; Mon, 08 Nov 2021 20:55:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=+WRwsngrge7fmdoOfN9Md08igk+lRKVSK1l4OA42oOw=;
-        b=c14AeYQSYyNoJ/X8O/oY3juyFM+0e/+PxbjTzHxi1svD6/4Hs+3wfEKckzuDZP03ie
-         s8oZA44J106tazC1gCbx2sEE8WQhoZshuA/VzsHMlXI7CL3owpEe3jC2sj7Oymns/4tw
-         7F+NuWfTcG5rRJnRB8PRM16fqrk8zJFKePQaVLlUG3hxeprySR2j3dKr91dWtwhU7XNH
-         Rqc60GkhvcBEK98upKXvkY+MZgCAkcBj2fd6Ebv8p1AqGFjWJGR6sLSQdlR1QTsVWZlb
-         LLFraP8B9Q2ifqLkfYYJ5BkIb/LgggG644lNIXoIcyuEvWqEyds2EcATSAxx8IGYFLKd
-         2DEg==
+        bh=3d0bpgnKtpNRbrHQNZy5MuUdrJxoJuPOMsuXvuRPMN8=;
+        b=L7BeCSywMcOjoZ/hgoduMlABJb+5iYGwXhMxgvGQrd/1xorjTG4ZAProqrWBWl1xAT
+         KEVmbojM/uoaVuD0l9SQzznTg3/MfQ3zE2qERe4OH6Xk1Wx90ck7rTYoUr+gddUQ5gvp
+         SMb73RnNcjlIcyU0n/g5YanbCxq5Ewif7JXwxWmQNIWOknOqj1sMKC9qdbkJV1/401oy
+         y/eOl+hl+juRhQTUQ6dbBgY4MWLFLTVSYQj+7TNo0Tx7Rm16ff3gF06YBvB8B9MUxqUJ
+         mTcrnv2FZTjN7dKpvuzY8M1qNDfbms80Kw+z1NW3hwU27btKCkJ9JoGfIuG4ZD4qPcNl
+         hZLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+WRwsngrge7fmdoOfN9Md08igk+lRKVSK1l4OA42oOw=;
-        b=pFLYVmR1DVnx9DTU9afNm7fOijE+/KIHO9wXK6qYn8+GKYjuhwdo2eQT5wlp+5hsaq
-         o7Dk/LDOAoTUtyoNEJJGHB2ppiyD4i5OWUNHjzEuZNI42gOe2lwPXTdlF97hC1DffWI0
-         CHwdqQTnSXuJ/K9LtYIKGSlVuXV2ho/rfB28Q0w6Jyn3JG4mfyVVLwi/6F6PA40H9ZD4
-         0Kdp10VC0qiK+oFhpGtCSzUzPOHfAdFjcTLmvEIMFS4VfQST/IBr3Qnd5FX/Oc2KebVf
-         aEkR7wLL3JgBkJKOMN+x1MlYnTwJ/PW6kvSQfcW3Z0oT6eh2qNz7unJOiV7r8x6/s+PO
-         jkzQ==
-X-Gm-Message-State: AOAM532lK9RMCvt2NXLXSyxGo13xLN1A93wYFdXFYoGKIWNnsD+gOor3
-        yMVakEW9tcVfmF4EugYz4xIMmFDvFmOsAMz0Hz7XDiRBS60=
-X-Google-Smtp-Source: ABdhPJx7oxsXZm7o+spmLGHlFCGcx1koPGWLS85Vcj/WaABroEvxDBCn2W8JQAMvGpWL2/fxXqLcLNmRwl/MOg+ah0I=
-X-Received: by 2002:a9d:6348:: with SMTP id y8mr3583295otk.179.1636432435886;
- Mon, 08 Nov 2021 20:33:55 -0800 (PST)
+        bh=3d0bpgnKtpNRbrHQNZy5MuUdrJxoJuPOMsuXvuRPMN8=;
+        b=R7p2egROdMQa0TbU7HAHMfATdzXlzh4wND3RIHpu5ModnEFfN0itlkZalEsecMqv7t
+         xbL3Nil78bFda8FZx8DwriJMVfy+wHXkH94hh4ocfZlKKvUuuH7NAyatubrW8O4pH0Du
+         fOwWbHQT9UUjsypRKVy77bLUcJT4iGGmI+Qc335XKlj8K5UoZ9Bjq3B0Bcc39bq6fTtb
+         zxBQqyNLGSmGSBNOB7ZrCvLVnNG3wjrezM86VfeiISo9MKirzjvLKs+SS9u7R1EXhaYn
+         CmIyvIurVeq+NJ7xrj2KBwWRmWEZdFPL936bo6i8qJ4XLPHdWiK8Y8qRpWM5MDXGGAQA
+         An9Q==
+X-Gm-Message-State: AOAM5314pBiW5HKprrb0dcLgk1UeyG49P2joGnCTpgQYNui2XBvWGsGS
+        LfSiaCe3JhTeEkuYbMHGIvfVYn4mF4jquZds+l4M3w==
+X-Google-Smtp-Source: ABdhPJyIS2IsZz4xKbaYthafvjd3nIdS88pgHNCwEs9uL1201EaOoOE0s06/9PFn4U8mcXjX+/4yPUANDO9cNwZmYoQ=
+X-Received: by 2002:a54:4791:: with SMTP id o17mr3428652oic.114.1636433703538;
+ Mon, 08 Nov 2021 20:55:03 -0800 (PST)
 MIME-Version: 1.0
-References: <20211027134509.5036-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20211027134509.5036-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20211027134509.5036-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20211029004610.35131-1-julianbraha@gmail.com>
+In-Reply-To: <20211029004610.35131-1-julianbraha@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 9 Nov 2021 05:33:44 +0100
-Message-ID: <CACRpkdYDoT5ChWcrZDOs1koN8cpMW_OhhkRZ2pUvaYwz_5njXw@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: pincfg-node: Add "output-impedance-ohms" property
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Biju Das <biju.das.jz@bp.renesas.com>
+Date:   Tue, 9 Nov 2021 05:54:51 +0100
+Message-ID: <CACRpkdYMSMAEp=a6sb9062ohS_F_ak63PhgW4RMuu2wAAtg1Wg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: qcom: fix unmet dependencies on GPIOLIB for GPIOLIB_IRQCHIP
+To:     Julian Braha <julianbraha@gmail.com>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 27, 2021 at 3:45 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+On Fri, Oct 29, 2021 at 2:46 AM Julian Braha <julianbraha@gmail.com> wrote:
 
-> On RZ/G2L SoC for Group-B pins, output impedance can be configured. This
-> patch documents "output-impedance-ohms" property in pincfg-node.yaml so
-> that other platforms requiring such feature can make use of this property.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> When PINCTRL_QCOM_SPMI_PMIC or PINCTRL_QCOM_SSBI_PMIC
+> is selected, and GPIOLIB is not selected, Kbuild
+> gives the following warnings:
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Patch applied for fixes.
 
 Yours,
 Linus Walleij
