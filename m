@@ -2,76 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DDF344B3DB
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Nov 2021 21:21:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E10E944B3E7
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Nov 2021 21:22:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244238AbhKIUYV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Nov 2021 15:24:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52514 "EHLO
+        id S244266AbhKIUZ0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Nov 2021 15:25:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229850AbhKIUYU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Nov 2021 15:24:20 -0500
-Received: from mail-oi1-x233.google.com (mail-oi1-x233.google.com [IPv6:2607:f8b0:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A89EC061764
-        for <linux-gpio@vger.kernel.org>; Tue,  9 Nov 2021 12:21:34 -0800 (PST)
-Received: by mail-oi1-x233.google.com with SMTP id t19so916289oij.1
-        for <linux-gpio@vger.kernel.org>; Tue, 09 Nov 2021 12:21:34 -0800 (PST)
+        with ESMTP id S244248AbhKIUZ0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Nov 2021 15:25:26 -0500
+Received: from mail-ot1-x32e.google.com (mail-ot1-x32e.google.com [IPv6:2607:f8b0:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EF6FC061766
+        for <linux-gpio@vger.kernel.org>; Tue,  9 Nov 2021 12:22:40 -0800 (PST)
+Received: by mail-ot1-x32e.google.com with SMTP id h16-20020a9d7990000000b0055c7ae44dd2so436687otm.10
+        for <linux-gpio@vger.kernel.org>; Tue, 09 Nov 2021 12:22:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=2bkcPZxFy4otFLdNug+cuD0qwesnkaZRZdhfmKMjIhQ=;
-        b=AT3ewhh5rfdjFWpDWhNwT9yqY0kdlPWvW1TGijSZQxjbDseYcq/D2kPFS3rLbEVJhm
-         O3QeTPPgPVWWEK4Ua7kiPX8RkjATovcRiD3KNjDYDcybTClXQAaZvc66GEYLOGvA2Z6m
-         wal8X+lvAep8AF7V+yu1lNtcju75GflZZwRhoNANvZ/9CaPAMSlLgOTCqQtTD2fXZx+i
-         U43QrFIU3z4wZL5ifbWqyf8pDp5ZvlOCCTjtXOjjtLARbBmJPAgo+CW+ZeNktAQ2MW6I
-         3lRRUlDfduWtCHfp98gjDExpCjFr/jwCcVOJM0RgGnTBhDz4qALzTI13rO0RQI2YQuMK
-         aU2A==
+        bh=JWuZRe3vhx/rsj3gDszi/QmMzXVPXcxE0U8W784K8CQ=;
+        b=DeCDZjnQdNNhZ03hlUnVSgyeAzHG1iPg9MysXicWXq+iOJakaMQOGe/MJWUn3OMl6f
+         dOxXSV6NxsEWwHeWX1yqjoPzw/+HpIbt4rbqavjV0MG5IkpPv4T3qSD3Jxt9Ci+iCllD
+         2yv1RvveYsRMCZPfiSlv/lmiTh3veXnun+9101ww+5olB7WVn45JSQQBJ3QUJfzHqiBp
+         5UxwlWZv1Wakz1VUr1/vIqdTR8Vde99nq4F9gzNbkP56FrtjeoMvAMpL4yl7iZCsmD08
+         3qxjjjbENxAeNNPkOrrLnSOtO/oYlpGoQ2E7o844Wf2ME3gWML5MKz/WMMKAF4aEOtdr
+         B1EQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2bkcPZxFy4otFLdNug+cuD0qwesnkaZRZdhfmKMjIhQ=;
-        b=5xBhGnOozq4U2NLswXsSzGxKwlgUK3QEJJLkz17idbuPMtkCktp7Bfo3cUT5gC8Ed/
-         qkv3fZVmDj/0bmYcHlSzvzLo9TXkuf5bm3wyPwIkyIMuTevS8K/lq6NBkxMEjHsE0Ol/
-         jWP5eopRuEJJH3M4fKOoQVVjpgGZkrOsizp8yT1nOkH+7FhSJbZhbcUQQyHKWECojLPZ
-         6m7LrOszOqdX2fkYd8NTZ0a9lmrT+7ay8oJ1jy3PLN4cXOiHAcKxH9jV7hoho4gdorMA
-         eYOpgB3tU2YgeL3LU8nhv85azs1QzZAz6QB1zpR5xB/ZpUGh7DjfYCWOWqTkinHXe7eI
-         TNyQ==
-X-Gm-Message-State: AOAM531gMfFPpZ282qTZjppVSPAbcLi0q/yebxbQYwcBoL1fe4vbcrvR
-        PPvTGXh8Nnjd9tzBratRZP3q/ofAgm2nSzYseyxIHA==
-X-Google-Smtp-Source: ABdhPJzy5H8Qpb/5Cgyv/YOM54pkbhWTSoxC79x4FvNlgpvaTFmf2JW/zcONsoNsaCxEc1r3xTjLki60c2d9mnCd77g=
-X-Received: by 2002:a05:6808:60e:: with SMTP id y14mr8510016oih.162.1636489293983;
- Tue, 09 Nov 2021 12:21:33 -0800 (PST)
+        bh=JWuZRe3vhx/rsj3gDszi/QmMzXVPXcxE0U8W784K8CQ=;
+        b=aytjmY9rr5jiuBOI9vF0A54kK0yH8J2G0kPzKnDNJ2GfJb2uyrFDerItgUGBkXzfxs
+         rwh2qFRZmISQ+W5NdD+BnzgM+1CKvFwthfsuzG1QOo0JvPR1Ro+4WpeewvuHWaa5LpCl
+         CYSzkJWEuZQ+1+GoAlmwuY4SSiQyAuQ0Jz5B9xYk6EsUBdrX3LWXTdiw+TnoaQGnozEH
+         8MKwta5bz/kw/ltW3zKYo8GAC8yL8jFGy56vl/CWrcoL0/tkU5rmKccbjqE7IIuwgEVL
+         TsFZ9LQxg5/ONEyqHK11UyKn0gKBSYTWx+0b6QixB2BQ/IJDRyjrFNwrFIi25Qj7qbRP
+         oz1A==
+X-Gm-Message-State: AOAM533nQgKnv1Ygr6tLlnWfnMeqdYBD5+nsIsCqMeFTE7qYJw9OJhXn
+        SgsSzHHuwvIqhbMPCiDNFN3F6T9E5tmowo0CdjkHJw==
+X-Google-Smtp-Source: ABdhPJxpfFTf/2zksxtqSl9+nWqbnRdYGeqbmbAHc7zwysbZWdRoq+wqw9o01iCe/WvDTX2oANbaqbljxIiWaI8p2gw=
+X-Received: by 2002:a9d:ed6:: with SMTP id 80mr8122963otj.35.1636489359421;
+ Tue, 09 Nov 2021 12:22:39 -0800 (PST)
 MIME-Version: 1.0
-References: <20211104170835.1993686-1-bjorn.andersson@linaro.org>
-In-Reply-To: <20211104170835.1993686-1-bjorn.andersson@linaro.org>
+References: <20211027134509.5036-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20211027134509.5036-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CACRpkdbY7QtjACCu63k+=Mn-XeLN3+fOjmKYR0w2NbhEZYGbeQ@mail.gmail.com> <CAMuHMdWcx3E-pc9MDMjE08kFHQ=LAr2kHP8Xitu0YfkPP3QNAA@mail.gmail.com>
+In-Reply-To: <CAMuHMdWcx3E-pc9MDMjE08kFHQ=LAr2kHP8Xitu0YfkPP3QNAA@mail.gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 9 Nov 2021 21:21:21 +0100
-Message-ID: <CACRpkdbSJRTcXdPO_CAHQ93CXszawvY9EQH4bcXWjSfuU+Y17A@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: qcom: sm8350: Correct UFS and SDC offsets
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Vinod Koul <vkoul@kernel.org>, vladimir.zapolskiy@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+Date:   Tue, 9 Nov 2021 21:22:27 +0100
+Message-ID: <CACRpkdakC-PsDpg3w8uEo33zDX-aQbESMx1BsknFCaboMct2qQ@mail.gmail.com>
+Subject: Re: [PATCH 2/4] pinctrl: pinconf-generic: Add support for
+ "output-impedance-ohms" to be extracted from DT files
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 4, 2021 at 6:06 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
+On Tue, Nov 9, 2021 at 8:51 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 
-> The downstream TLMM binding covers a group of TLMM-related hardware
-> blocks, but the upstream binding only captures the particular block
-> related to controlling the TLMM pins from an OS. In the translation of
-> the driver from downstream, the offset of 0x100000 was lost for the UFS
-> and SDC pingroups.
+> > I suppose Geert will queue this patch with the rest of the Renesas stuff?
 >
-> Fixes: d5d348a3271f ("pinctrl: qcom: Add SM8350 pinctrl driver")
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Yes, that's the plan.
+> Unless you have another user in mind that cannot wait until I will
+> have sent a PR for v5.17?
 
-Patch applied for fixes.
+Nope, take it easy and queue it with your stuff.
 
 Yours,
 Linus Walleij
