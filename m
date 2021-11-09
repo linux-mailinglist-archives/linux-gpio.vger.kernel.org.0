@@ -2,80 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AFC1444B116
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Nov 2021 17:24:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E3AE44B292
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Nov 2021 19:15:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239166AbhKIQ1Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Nov 2021 11:27:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52378 "EHLO mail.kernel.org"
+        id S241573AbhKISSj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Nov 2021 13:18:39 -0500
+Received: from mga04.intel.com ([192.55.52.120]:42495 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238397AbhKIQ1Z (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 9 Nov 2021 11:27:25 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id F014A60FD8;
-        Tue,  9 Nov 2021 16:24:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636475079;
-        bh=S02AWkEYJNSoTOH6r1bp7lYVkK/1pCY/xooUDR9Z8YY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=D29EStRlaFZuXf/ZKsGy2wvtW2tv3OQ6X9FxyEWxTolayz//ngdUFuGwGl7TaQC0S
-         F5pmBZNrzYlp1m/LUnrah3cILrV0JrFgZQIJnVzQbPfaJUncjTTPwVu/49ozn89NgF
-         vuNLw6gZ2TLf94CRDtpejr2z5/eegrZGe0jkewVBQt1ySWS16pNeT1/cSWsEqN2a0L
-         oYplSFy9K+eCRzCswU+cj8AafEefqlzGBQL5Q7BUWchbLGooxSFfjaJ369gcoCYSJ3
-         LPRNA+R+j/iqUdcseKQ5Jt+8cDeK9aVH7OdtmrV4rQrT+gzkEUf6ewYAjwi7VXob2G
-         ImBxYhg1VLmcA==
-Date:   Tue, 9 Nov 2021 16:24:33 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        George Cherian <gcherian@marvell.com>,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-spi@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Remove Netlogic bindings
-Message-ID: <YYqgwQVgjOwoaZZg@sirena.org.uk>
-References: <20211109161707.2209170-1-robh@kernel.org>
+        id S242160AbhKISSi (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 9 Nov 2021 13:18:38 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10163"; a="231235270"
+X-IronPort-AV: E=Sophos;i="5.87,220,1631602800"; 
+   d="scan'208";a="231235270"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2021 10:15:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,220,1631602800"; 
+   d="scan'208";a="491762732"
+Received: from lkp-server02.sh.intel.com (HELO c20d8bc80006) ([10.239.97.151])
+  by orsmga007.jf.intel.com with ESMTP; 09 Nov 2021 10:15:49 -0800
+Received: from kbuild by c20d8bc80006 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1mkVev-000DkG-5Z; Tue, 09 Nov 2021 18:15:49 +0000
+Date:   Wed, 10 Nov 2021 02:15:01 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:fixes] BUILD SUCCESS
+ cb9cbb01b90acac8eca1188adc66c9997328685a
+Message-ID: <618abaa5.ftPEic9nps7Db6g/%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="2FnwxKPLYbn/7HKW"
-Content-Disposition: inline
-In-Reply-To: <20211109161707.2209170-1-robh@kernel.org>
-X-Cookie: Elevators smell different to midgets.
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git fixes
+branch HEAD: cb9cbb01b90acac8eca1188adc66c9997328685a  pinctrl: qcom: fix unmet dependencies on GPIOLIB for GPIOLIB_IRQCHIP
 
---2FnwxKPLYbn/7HKW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+elapsed time: 726m
 
-On Tue, Nov 09, 2021 at 10:17:07AM -0600, Rob Herring wrote:
-> Support for Netlogic was removed in commit 95b8a5e0111a ("MIPS: Remove
-> NETLOGIC support"). Remove the now unused bindings.
->=20
-> The GPIO binding also includes "brcm,vulcan-gpio", but it appears to be
-> unused as well as Broadcom Vulkan became Cavium ThunderX2 which is ACPI
-> based.
+configs tested: 53
+configs skipped: 3
 
-Acked-by: Mark Brown <broonie@kernel.org>
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
---2FnwxKPLYbn/7HKW
-Content-Type: application/pgp-signature; name="signature.asc"
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmGKoMAACgkQJNaLcl1U
-h9AoiAf/ekVKGxswprkfhL2xFb59W4S9TiOQAYT6SnP7lu202u3QcBy7W8oX4OjT
-dr8uo6NQ6jHwai3ZiP85QrmuN4sweJG8JDzh6ArgtWgRHcYknDH/RjYhDYoo3P8O
-S2fc1NtMu5mVXAMxJWjEuQKhoKkStNMMZOJCQh9SbXOUaF53JH4h92p4BOUSDoBh
-7EJ0JvqWX1tGTxi3TEKb8e+9JoamQpZaMp4NhMlXKjsOEan/8CJ+n0n6E+TzUwqn
-N+/sZ3uiuWQnrtsTBHPJ31T/iWMYt5ZpVhWN0kXRu1cKg0Xcs6zE4dsfjUnaRDP3
-EifXkzdJvgUNnGsl7M5QG6MHyFmMAw==
-=l4BV
------END PGP SIGNATURE-----
-
---2FnwxKPLYbn/7HKW--
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
