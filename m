@@ -2,87 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A6C7044ACC6
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Nov 2021 12:42:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E860944ACE2
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Nov 2021 12:50:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343547AbhKILo7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Nov 2021 06:44:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47264 "EHLO
+        id S1343592AbhKILw4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Nov 2021 06:52:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343543AbhKILo6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Nov 2021 06:44:58 -0500
-Received: from mail-oi1-x233.google.com (mail-oi1-x233.google.com [IPv6:2607:f8b0:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9654C061766
-        for <linux-gpio@vger.kernel.org>; Tue,  9 Nov 2021 03:42:12 -0800 (PST)
-Received: by mail-oi1-x233.google.com with SMTP id t19so2872825oij.1
-        for <linux-gpio@vger.kernel.org>; Tue, 09 Nov 2021 03:42:12 -0800 (PST)
+        with ESMTP id S242051AbhKILw4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Nov 2021 06:52:56 -0500
+Received: from mail-ot1-x32a.google.com (mail-ot1-x32a.google.com [IPv6:2607:f8b0:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7982EC061764
+        for <linux-gpio@vger.kernel.org>; Tue,  9 Nov 2021 03:50:10 -0800 (PST)
+Received: by mail-ot1-x32a.google.com with SMTP id x19-20020a9d7053000000b0055c8b39420bso9842113otj.1
+        for <linux-gpio@vger.kernel.org>; Tue, 09 Nov 2021 03:50:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=mhp9TzcF0FJk80drP2WtwN9HUs+vg3LkkMoIt6RpEF4=;
-        b=olwR8eKIQydywoP9wwQ49hUplsRYThhLBucewwDhwt7sW0N8FghwRqb2YTfFmmQaAM
-         eoOHY/s2eMATsA0TyHJz6KNPgGrwLjAq1yAYu3pqPbg4ILcyfhlt4XBS1maL5zZGM8SB
-         /J5eUploIL+HdOCmiSCrzSExX+tnB8XZ/yeaby54qp5/GAhldTb++/1lgFAWnNT/gozP
-         A2+m2Aa9liTusE9rl+++t+wQUwKU9sndyzWTo28y3+L8i4AZgXoGb1JB+PIGHFMdTkAd
-         +CWj2/pK7Czc/z1j0ov7mWhnuifK7Zecv6IVdudLEJIIlnN8ttiE2Awf1Uu/iQgP0MQ+
-         A4Rg==
+        bh=ALBcIFK0M2sDqjczdXHc9NoWo8sCRANOPePxtQKC6v0=;
+        b=WiNjKmsahtkj7noZ9ffdWo8zufH5fxNGTifxSgsaMThK1Bc25ubh55+CHeuGaG7dca
+         IUJu9SE+F1ZklwyVbmXyyhhwcj0fg+IcXAUeMkT2TM5AtPRpH3WjiiGM0JbYuy1FNyNo
+         W/m4prG/Qo/AI9tmUfrtEwc1xzSfJ8Q+7ZXo7dZw2gmjbx0/oFHLRnz+TXr7yb4yt4rw
+         DbpNSz1GfVi/hAHf/6iZhz37emGktf2XV99bWXojbMU9ELu6783fpV36atKSUBhOD6FP
+         qt5X3Lt9oO+YFKDBZilTPQ4bEsJUs+P+vARkfPy4jNZXysxqcTZkkSfcAc6qC7oUWOwo
+         t/8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=mhp9TzcF0FJk80drP2WtwN9HUs+vg3LkkMoIt6RpEF4=;
-        b=quSLIOeqIW/PTgX+oWu9+cA6kF7nW0IcOB0H0gtZ4jezZ1J8ijRDiZ8BueZ3eEqCU9
-         mHFk7ZiTDUcLt+pouwPzzL0OA+b0njy5kupPPtO540u9TyHd6Ka+cp12rtMD4IxWSwZt
-         fglcd7tQV3OawjJmcZNF7W05Vp44Tm6TnEcElRHM6ceOCPah5xnAaJYUkL77TA5Do64X
-         UdoP/2DbOGbVOqeNM5IGHjwSb9wGXhFd8LfEa7Wte6x1PHSN0ZTVrzKwwBd6t2KumuEr
-         oqoxkJEJ8Jyxnxe6JJJvjifM6Kd39M9nPTy7zRSBFiyfYBNagrBDXb+bARtSgSVCe2oh
-         l0RA==
-X-Gm-Message-State: AOAM530WrtfFoVPzz1mjjajXaDWg5gUaIFWC8C40YzmA+BLDoJWofS4w
-        jWNEHlTKZnqLeKapJu0US+RskdeyZ0RLBYWUN46agA==
-X-Google-Smtp-Source: ABdhPJyPHpmLKJWvNf4h7ERinzV0bNLNBoF0liQERhWM5bH4q3Bh9XBTTXD2QUAOEmTu+PDwzljjIN9g/NSOLBZiY0c=
-X-Received: by 2002:a05:6808:60e:: with SMTP id y14mr5187977oih.162.1636458132308;
- Tue, 09 Nov 2021 03:42:12 -0800 (PST)
+        bh=ALBcIFK0M2sDqjczdXHc9NoWo8sCRANOPePxtQKC6v0=;
+        b=Ij5j4hpIU25v1JddMWgFZdT1Lv2YIeKly/soyLkdUcUhqaSuiVg/xdcnKXtMYts0YQ
+         SXAYNF058YVA6ZzxN1uErZQZmCeVS+hcWXCa8kAn3L4WGdrBq9XZk4BVOCAryYRU5C+n
+         nCYrZflez6/bsD7xXDRjr+uS1JzI4Ej8+8xvKPpXohfUGRHy+oKEVtl/C2Omp4jkW7PB
+         UFYDi4NrBKKNrF+DIE+QsFP23T4zQsyFwZcIYnNlK4Iww5kX15cthNhOCbHS5FbIPWP6
+         zIZFUOjXTez02EUFVgilGPhAr+dSa1ihzZg1EAQoH2q+921WF+vaWhkzS63vGoe5dYHI
+         0Qkg==
+X-Gm-Message-State: AOAM533R1ygmA33UIMKATjSqfNhRhgQvdp5r2BJoQ56eyaoQKJHHWdUW
+        0Yse40fUGGYV9hSc0Q7LYxR+V4DzCBG5hil1CG/mlg==
+X-Google-Smtp-Source: ABdhPJykswbjVxAwy6QccCD6a4oKxQG8ZBoSavSKVwonmEEZcj7+3DiAKXMLdnvkMbWw05xgzSkhW8FiyFJlI+8TVv8=
+X-Received: by 2002:a9d:ed6:: with SMTP id 80mr5272989otj.35.1636458609456;
+ Tue, 09 Nov 2021 03:50:09 -0800 (PST)
 MIME-Version: 1.0
-References: <20211105124242.27288-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20211105124242.27288-1-andriy.shevchenko@linux.intel.com>
+References: <20211105130338.241100-1-arnd@kernel.org>
+In-Reply-To: <20211105130338.241100-1-arnd@kernel.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 9 Nov 2021 12:42:00 +0100
-Message-ID: <CACRpkdZ2-MRY_L2J4RvKDNW1yyThg7KUFbd80ZMpRY209RNxnw@mail.gmail.com>
-Subject: Re: [PATCH v1 01/19] lib/string_helpers: Introduce kasprintf_strarray()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jianqun Xu <jay.xu@rock-chips.com>,
-        Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        Bamvor Jian Zhang <bamv2005@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Patrice Chotard <patrice.chotard@foss.st.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Andy Shevchenko <andy@kernel.org>
+Date:   Tue, 9 Nov 2021 12:49:58 +0100
+Message-ID: <CACRpkdYKs==og5pSsSxMXXozkexybJEnTHZWUr1ObsqAsGPuRA@mail.gmail.com>
+Subject: Re: [RFC 1/3] gpiolib: remove irq_to_gpio() definition
+To:     Arnd Bergmann <arnd@kernel.org>
+Cc:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-m68k@lists.linux-m68k.org, geert@linux-m68k.org,
+        gerg@linux-m68k.org, linux@armlinux.org.uk,
+        linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org,
+        dalias@libc.org, ysato@users.sourceforge.jp,
+        Arnd Bergmann <arnd@arndb.de>,
+        Fu Wei <tekkamanninja@gmail.com>, Alex Shi <alexs@kernel.org>,
+        Hu Haowen <src.res@email.cn>,
+        linux-doc-tw-discuss@lists.sourceforge.net,
+        Jonathan Corbet <corbet@lwn.net>,
+        Drew Fustini <drew@beagleboard.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 5, 2021 at 1:43 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Fri, Nov 5, 2021 at 2:03 PM Arnd Bergmann <arnd@kernel.org> wrote:
 
-> We have a few users already that basically want to have array of
-> sequential strings to be allocated and filled.
+> From: Arnd Bergmann <arnd@arndb.de>
 >
-> Provide a helper for them (basically adjusted version from gpio-mockup.c).
+> All implementations other than coldfire have returned an error since
+> the avr32 and blackfin architectures got removed, and the last user in
+> driver code was removed in 2016, so just remove this old interface.
 >
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> The only reference is now in the Chinese documentation, which should be
+> changed to remove this reference as well.
+>
+> Cc: Fu Wei <tekkamanninja@gmail.com>
+> Cc: Alex Shi <alexs@kernel.org>
+> Cc: Hu Haowen <src.res@email.cn>
+> Cc: linux-doc-tw-discuss@lists.sourceforge.net
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Fulfils Rusty Russell's API design hierarchy requirements
-and help people to make less mistakes so:
+Thanks for doing this Arnd. I had it on my mind some years
+ago but I think Coldfire or something was still using it and didn't
+think about it as the last user disappeared.
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
