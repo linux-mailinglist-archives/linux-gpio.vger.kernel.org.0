@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3746B44ACB2
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Nov 2021 12:33:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8805344ACB5
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Nov 2021 12:34:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237637AbhKILgE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Nov 2021 06:36:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45210 "EHLO
+        id S239105AbhKILhD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Nov 2021 06:37:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241154AbhKILf6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Nov 2021 06:35:58 -0500
-Received: from mail-oo1-xc2f.google.com (mail-oo1-xc2f.google.com [IPv6:2607:f8b0:4864:20::c2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C7A0C0613F5
-        for <linux-gpio@vger.kernel.org>; Tue,  9 Nov 2021 03:33:13 -0800 (PST)
-Received: by mail-oo1-xc2f.google.com with SMTP id q39-20020a4a962a000000b002b8bb100791so6878646ooi.0
-        for <linux-gpio@vger.kernel.org>; Tue, 09 Nov 2021 03:33:13 -0800 (PST)
+        with ESMTP id S234560AbhKILhC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Nov 2021 06:37:02 -0500
+Received: from mail-ot1-x330.google.com (mail-ot1-x330.google.com [IPv6:2607:f8b0:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08AF4C061766
+        for <linux-gpio@vger.kernel.org>; Tue,  9 Nov 2021 03:34:17 -0800 (PST)
+Received: by mail-ot1-x330.google.com with SMTP id x19-20020a9d7053000000b0055c8b39420bso9786853otj.1
+        for <linux-gpio@vger.kernel.org>; Tue, 09 Nov 2021 03:34:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=CSSmBGiZVMNlw9saF2eyI7HOrgrdT0YOSip6CH89u1c=;
-        b=TaEIl/KFsdk7aCm+psQMJAvJANY9fl88AA6fiFvOsx4MD/EZynOYrLCLBFHxr4nP3z
-         TQvoDi45fZ9jV5aILC7hS1SJkobjR2iKX5kJhLNeQwMHiRKyiZ6IJsUhBGAr+afnrw6+
-         x+d+BJjiiG4SuDpiBLjkkG8vTIL29TR5I6uJdzPfbVJy9UPzMyYnJJahks0Wcp6A67OH
-         +F2tNvawnF4i4K20iq+ZwMye0Uzjqad6sUB9BRaPfYEmwHEPHo+kNomEeE8sNnYVeM7r
-         OjHNtXuEIJyMq6csGdMlzvKEOPfpIB0ApOcBTaJlf70eH89kNAPHT7uA+XoLkRQ8M0Tj
-         AH4w==
+        bh=PgKxam+qAfleYvZBMFEu6UnavjbkQrXumKv/BiyI4/U=;
+        b=BsYM6Bi7Lxtmtg8TotqlxPaHt/BSB3dxseSDPSXvt3P95Lsdz5OUUobMd8Zg/OIb8s
+         SfO52SsBMHTxPSpKlirqScOYb5Tbt5sQptReQrEaGYLZAQmi7NzoqKIP1YEMAwmYTfLP
+         IBbXbUJXqCCmB0MG/xyqWHgjHjAUhNnviVDCJqYpOlmi59HIOSMCXjZxX8WSWq2fRgUM
+         qcGomXRP+yQZUZjmnx7eREORRt1m2UrEUo9+xknCInFtaa82UeNrzRtwBt0tyaAzW+bw
+         V2JBPlP8+iaexpaRlGko+6fvVrBHJLuFDxAKZyoOVYNNHGX4GBIQcpyOWTCRj4GQXnGA
+         vDJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=CSSmBGiZVMNlw9saF2eyI7HOrgrdT0YOSip6CH89u1c=;
-        b=Py0msqmGEtzl3P2yFrvjlJ5v/svwdzOi/qtlzMS0mpxh3VNuOe1WUHziXUo7W4Sor5
-         bqQuSqhL+3QQYTpWxO08O7Awk/2mcC7ONj2LqH9ZXxFSWqvyMBbSQnkDwW3TqUqnxnl0
-         9TvF0Zr749MWo6ovd0OXuYiu67bgoCPC22UH0j0Dq6tkk/5bupop77TtY07i5Qacr8nT
-         1H5eTmNCTFTLO4E6fsbkHdphr2tWL5L0mVweHTf9iyK2daBUQU5EUKJwcDfkmNU13PoN
-         La75FNje06q0IFOOw5QVw3CO/g08BhP36AWMQ4/dHag984kUQgcCJkdS/llNLzmI86m8
-         74lA==
-X-Gm-Message-State: AOAM533cCLaLewaUJMT0WvFiji6MRxmL/wS7OI6QaNaCE0G/P6J8qgZ+
-        YQ5H1lHZqu4y4T6QOwziD22bMlNQOf5kRcUtd2n1Qw==
-X-Google-Smtp-Source: ABdhPJywvZKJoZBox3QIktaEO2rKrJtRPMqM6AhEvJyTlBaJAPM8lakOBpMg0SgtBEI2NKgbHRswI7RDSSX7KAPjZjg=
-X-Received: by 2002:a4a:e5cd:: with SMTP id r13mr3324482oov.84.1636457592495;
- Tue, 09 Nov 2021 03:33:12 -0800 (PST)
+        bh=PgKxam+qAfleYvZBMFEu6UnavjbkQrXumKv/BiyI4/U=;
+        b=bm+4DAp1q9nQgMCXBhCN1bQvNpYiUDl//OpmJcvLLO/8bCqU/mLKVxENbOXtJyv2/k
+         reLN1UfO7e5yhKOJqklzXf7hePPxr0QkemlHNy+4RGy6OcVdrjccpj7K+dCBd2MZmOKj
+         HKRc1z+jnsGto8h0CPlLWzZyMoQEAQ0ptWQiwPjV8T/pAceMfvLUry+t28k0GF9EhMLB
+         k+7+0ugpM8/6pr29/VVURkjj7drCNJbFdWhEV0FXZkIwc6/GT5IlzrRhMnChc5vmkpQz
+         0ScADTC8OGmYTtAcb8z0D+0nDo4kFXtNf0iIbqXl1MqnLky6MXENdo2mErzkTVq2Fcco
+         PpsQ==
+X-Gm-Message-State: AOAM531+CHwKvDVpLJM2wtvKUza6GVqmwPIu0wq+b5AZvM/IDmC+LExh
+        Qs0nIznAgK4g6SMe9Pspbf5buOwhB9Xqx2gDOWJWCA==
+X-Google-Smtp-Source: ABdhPJzviuYIV0XEMzSLi/CNoAZWhBEhCFmwu82oJOK40s5TsX6ukEJ3mIwhbEoxvmOG8GkRWxc2kBDN8VinHR7raSA=
+X-Received: by 2002:a9d:6348:: with SMTP id y8mr5397301otk.179.1636457656438;
+ Tue, 09 Nov 2021 03:34:16 -0800 (PST)
 MIME-Version: 1.0
-References: <20211105124242.27288-1-andriy.shevchenko@linux.intel.com> <20211105124242.27288-15-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20211105124242.27288-15-andriy.shevchenko@linux.intel.com>
+References: <20211105124242.27288-1-andriy.shevchenko@linux.intel.com> <20211105124242.27288-16-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20211105124242.27288-16-andriy.shevchenko@linux.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 9 Nov 2021 12:33:00 +0100
-Message-ID: <CACRpkdaFNhy8DrY7L76OC3Udkeo33t8vGv10T8NoFp+R9x1jKQ@mail.gmail.com>
-Subject: Re: [PATCH v1 15/19] pinctrl: st: Make use of the devm_platform_ioremap_resource_byname()
+Date:   Tue, 9 Nov 2021 12:34:05 +0100
+Message-ID: <CACRpkdZaWggKS9c97XXpKJXANVGc5Kcw7MzgfSNvW3+ztj=h7A@mail.gmail.com>
+Subject: Re: [PATCH v1 16/19] pinctrl: st: Convert to use dev_err_probe()
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
         Jianqun Xu <jay.xu@rock-chips.com>,
@@ -74,13 +74,12 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Fri, Nov 5, 2021 at 1:43 PM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
 
-> Use the devm_platform_ioremap_resource_byname() helper instead of
-> calling platform_get_resource_byname() and devm_ioremap_resource()
-> separately.
+> It's fine to call dev_err_probe() in ->probe() when error code is known.
+> Convert the driver to use dev_err_probe().
 >
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
