@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C222C44ACBD
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Nov 2021 12:35:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A6C7044ACC6
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Nov 2021 12:42:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237400AbhKILiB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 9 Nov 2021 06:38:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45724 "EHLO
+        id S1343547AbhKILo7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 9 Nov 2021 06:44:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239478AbhKILiA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Nov 2021 06:38:00 -0500
-Received: from mail-oi1-x231.google.com (mail-oi1-x231.google.com [IPv6:2607:f8b0:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B353C061764
-        for <linux-gpio@vger.kernel.org>; Tue,  9 Nov 2021 03:35:14 -0800 (PST)
-Received: by mail-oi1-x231.google.com with SMTP id o83so33151415oif.4
-        for <linux-gpio@vger.kernel.org>; Tue, 09 Nov 2021 03:35:14 -0800 (PST)
+        with ESMTP id S1343543AbhKILo6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 9 Nov 2021 06:44:58 -0500
+Received: from mail-oi1-x233.google.com (mail-oi1-x233.google.com [IPv6:2607:f8b0:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9654C061766
+        for <linux-gpio@vger.kernel.org>; Tue,  9 Nov 2021 03:42:12 -0800 (PST)
+Received: by mail-oi1-x233.google.com with SMTP id t19so2872825oij.1
+        for <linux-gpio@vger.kernel.org>; Tue, 09 Nov 2021 03:42:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=v2pAd4bAvLGuQHlmvNN+h2TrmSqORB/og4IefjMu/Gs=;
-        b=oeBZnU3MNAghzjyLIb+fM7Irgkj3AauRHUnUS9LblIjn/HL/tpUBDV4ZYfAfSiBivY
-         f2Ooq2zZvyRjQykYk2jrIrnXytZnVmx3pmJ7cP3XrQdBrqFTVMKjjm/9LROvnpeG4s6R
-         ZC3XFcnEK6V2y+vFLNbGJlxgqlKt/oOrjg1pqxQn5BWklsQBh4sg+99rG5PuQ2YCb4Uj
-         S+Cpvf9CPwkp32bMJe9Jk+y+lG5z5tjx2uGFGBBe/7UZU6FTzAAYks78FbC79IeVdjSG
-         wjVKRCfbkDZtVon7tBp0LZBnLgm8eVTxAGO+wskKug5AJrfa9LZwzG2igXTZbgv5k6vE
-         bZEw==
+        bh=mhp9TzcF0FJk80drP2WtwN9HUs+vg3LkkMoIt6RpEF4=;
+        b=olwR8eKIQydywoP9wwQ49hUplsRYThhLBucewwDhwt7sW0N8FghwRqb2YTfFmmQaAM
+         eoOHY/s2eMATsA0TyHJz6KNPgGrwLjAq1yAYu3pqPbg4ILcyfhlt4XBS1maL5zZGM8SB
+         /J5eUploIL+HdOCmiSCrzSExX+tnB8XZ/yeaby54qp5/GAhldTb++/1lgFAWnNT/gozP
+         A2+m2Aa9liTusE9rl+++t+wQUwKU9sndyzWTo28y3+L8i4AZgXoGb1JB+PIGHFMdTkAd
+         +CWj2/pK7Czc/z1j0ov7mWhnuifK7Zecv6IVdudLEJIIlnN8ttiE2Awf1Uu/iQgP0MQ+
+         A4Rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=v2pAd4bAvLGuQHlmvNN+h2TrmSqORB/og4IefjMu/Gs=;
-        b=iC70W+1U7613dp2gAykYxMnYL7OsPhFH0r6Y6tpsmodp5kYtgy7dhUjanuYvrSlYFz
-         A6Wx+3UBnnPhlrGvVyVa+WgIFAVUUawutH2fSPzcFe0ClQLFp5M1fMVAd0rUvq8FHQ5+
-         eGyxg03lkHea/MbQ5IEnIhhGUMUivlrUw9v8uuX6bIc5nILbNeXU1/wgvsSMb5Cd1eqR
-         frOMmguEQU8h1dReSqxOqrZuSrxOgM+2onhuDm6NyUDjVg8XHnDDsKFDXNvQLC++t6Yi
-         8esJL1ndGZRN6kGULbEwYVKQW5OF7eN9lg2Dsu7XUCsSO+NhDWCkR1fIJf8aEpDgLPIx
-         aCag==
-X-Gm-Message-State: AOAM530fl59+EpOSCb49dLcCZzqfquDF9mM9QJoJBtYKV1qpwRSUaD+u
-        aChIn5bzewn0/LrHsHWP0KKsIDNGVgrUi8SkyYIj5g==
-X-Google-Smtp-Source: ABdhPJx4OlotCLYJPZy+X0p8zFLUTXcqcM/xCAFKp3eZ4QqsYKNx7VufYAbkVJoBzN16IyIl2/T2UCY/eqmhbavLu80=
-X-Received: by 2002:a54:4791:: with SMTP id o17mr5249862oic.114.1636457713735;
- Tue, 09 Nov 2021 03:35:13 -0800 (PST)
+        bh=mhp9TzcF0FJk80drP2WtwN9HUs+vg3LkkMoIt6RpEF4=;
+        b=quSLIOeqIW/PTgX+oWu9+cA6kF7nW0IcOB0H0gtZ4jezZ1J8ijRDiZ8BueZ3eEqCU9
+         mHFk7ZiTDUcLt+pouwPzzL0OA+b0njy5kupPPtO540u9TyHd6Ka+cp12rtMD4IxWSwZt
+         fglcd7tQV3OawjJmcZNF7W05Vp44Tm6TnEcElRHM6ceOCPah5xnAaJYUkL77TA5Do64X
+         UdoP/2DbOGbVOqeNM5IGHjwSb9wGXhFd8LfEa7Wte6x1PHSN0ZTVrzKwwBd6t2KumuEr
+         oqoxkJEJ8Jyxnxe6JJJvjifM6Kd39M9nPTy7zRSBFiyfYBNagrBDXb+bARtSgSVCe2oh
+         l0RA==
+X-Gm-Message-State: AOAM530WrtfFoVPzz1mjjajXaDWg5gUaIFWC8C40YzmA+BLDoJWofS4w
+        jWNEHlTKZnqLeKapJu0US+RskdeyZ0RLBYWUN46agA==
+X-Google-Smtp-Source: ABdhPJyPHpmLKJWvNf4h7ERinzV0bNLNBoF0liQERhWM5bH4q3Bh9XBTTXD2QUAOEmTu+PDwzljjIN9g/NSOLBZiY0c=
+X-Received: by 2002:a05:6808:60e:: with SMTP id y14mr5187977oih.162.1636458132308;
+ Tue, 09 Nov 2021 03:42:12 -0800 (PST)
 MIME-Version: 1.0
-References: <20211105124242.27288-1-andriy.shevchenko@linux.intel.com> <20211105124242.27288-19-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20211105124242.27288-19-andriy.shevchenko@linux.intel.com>
+References: <20211105124242.27288-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20211105124242.27288-1-andriy.shevchenko@linux.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 9 Nov 2021 12:35:02 +0100
-Message-ID: <CACRpkda47wek7EEhs-ecaij_OX4i7EZ+nvxa=VxHH+krgVYg+g@mail.gmail.com>
-Subject: Re: [PATCH v1 19/19] gpio: mockup: Switch to use kasprintf_strarray()
+Date:   Tue, 9 Nov 2021 12:42:00 +0100
+Message-ID: <CACRpkdZ2-MRY_L2J4RvKDNW1yyThg7KUFbd80ZMpRY209RNxnw@mail.gmail.com>
+Subject: Re: [PATCH v1 01/19] lib/string_helpers: Introduce kasprintf_strarray()
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
         Jianqun Xu <jay.xu@rock-chips.com>,
@@ -74,11 +74,15 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Fri, Nov 5, 2021 at 1:43 PM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
 
-> Since we have a generic helper, switch the module to use it.
-> No functional change intended.
+> We have a few users already that basically want to have array of
+> sequential strings to be allocated and filled.
+>
+> Provide a helper for them (basically adjusted version from gpio-mockup.c).
 >
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
+Fulfils Rusty Russell's API design hierarchy requirements
+and help people to make less mistakes so:
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
