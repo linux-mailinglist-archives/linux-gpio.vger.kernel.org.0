@@ -2,58 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C093449FEC
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Nov 2021 01:46:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 39CBB44A005
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Nov 2021 01:54:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235733AbhKIAsw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 8 Nov 2021 19:48:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39544 "EHLO
+        id S236380AbhKIA5Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 8 Nov 2021 19:57:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235514AbhKIAsw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Nov 2021 19:48:52 -0500
-Received: from mail-ot1-x32f.google.com (mail-ot1-x32f.google.com [IPv6:2607:f8b0:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60775C061570
-        for <linux-gpio@vger.kernel.org>; Mon,  8 Nov 2021 16:46:07 -0800 (PST)
-Received: by mail-ot1-x32f.google.com with SMTP id q33-20020a056830442100b0055abeab1e9aso28352429otv.7
-        for <linux-gpio@vger.kernel.org>; Mon, 08 Nov 2021 16:46:07 -0800 (PST)
+        with ESMTP id S236321AbhKIA5Y (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 8 Nov 2021 19:57:24 -0500
+Received: from mail-ot1-x331.google.com (mail-ot1-x331.google.com [IPv6:2607:f8b0:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A0E2C061764
+        for <linux-gpio@vger.kernel.org>; Mon,  8 Nov 2021 16:54:39 -0800 (PST)
+Received: by mail-ot1-x331.google.com with SMTP id h12-20020a056830034c00b0055c8458126fso9426250ote.0
+        for <linux-gpio@vger.kernel.org>; Mon, 08 Nov 2021 16:54:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=bG3Y/BqnxEVlePdqiSugZ7Hd/V/NSxSTAbSGa+VvoRs=;
-        b=M6szQqyTjFsganR9sNUTE9fnidl9uukXt7LqnK2czDeOY6OBN5fgOVflmA10HlXbqT
-         lSXjpwutL+GQALNCuC1yLgmH/Tw4T4hOVVXH6wSaiVbh7ge7Uq04DuVUfZalIDcXFKc/
-         FiSxguiMBIMljRGqkcw0wu2bdV1c5njLZhxFNcDf/bQBeEwcbCZKb+fS2xr+Ux+0IQ6/
-         eKPVPOTG5dWftFTBl6lnooe3AvycKpiY0cRbyr8cM/sArSde0d779fPCKd8hd6RWvG6T
-         aEsfRwwfb8ze7Lk/2Gfjkfn5+tm9deonu5TsIItVbE2PAQBRdIvCtpxQl0bN18se165b
-         GQXg==
+        bh=y/5wawZ4iCQr7l/M8N9c7Pm/2uOFf0V7hWRrRXV1YxY=;
+        b=n+jlur+tkjDc+lvzvnxzvjuMCuPiLormrOIgFn5OjIIJDPQHrK7TYPu8WkNQsELu1e
+         xa6Ms7ysitAQJllZkoG9r+FsT1x/JJVXiQQTYvYlfe4V1HuBUazR6CzD+341b1DQvMwR
+         ehKV26SEHzwLQUzAYiT6S9szxr+CZ+pug1+BngZBPtdxAohv7pweOteMw11Opm0tNZ4J
+         utDUZzCR8NkxuTy37qDOPhHzRcf/oMHy8/p3KMsuKzwOtzG+SS+L98bqykJsd9/3eYCg
+         e3N1zFEeyPwFmtROdKHMB5ZaAzoSn4g+NXJpbsKNunzO9Vaq/DN+cgYhOlkQyymcldrh
+         aR1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=bG3Y/BqnxEVlePdqiSugZ7Hd/V/NSxSTAbSGa+VvoRs=;
-        b=yu9WvqSnbWUXJxR/hVhc823EzS5SxcjGH0H6rjpRZT+mdHVXzAt4pX6AZDHFcWEAfj
-         +J/DGDJAsQQ4O8pWtVr5Hni3WQnJwICC6aHferW5hCSj7DP/sjoj7hak7foTl8SlCAtd
-         OmcenK1cxPEYKFUvXdtpblI+iVH+STq3Epl+h6Q7+ztugGwzzkCG9+bZ9DkRGJ0bF2rN
-         JaMlmLeurKOLmezwfZdEXfsiFNw6DgcC/XVEXmajllchamyC2YzLiSr1KkJSGC71wi6V
-         9cKU0oWYEogHpR+EUPQHbBDRudZ/uXpy8Plgeo5J9Kdswbyrnq9peXj1ynnsyFmMj5fs
-         sLDw==
-X-Gm-Message-State: AOAM531rAD5EBCgMTiZonyu0KIYrb7FNHuHFXIYpEdRmOpTgUY+Zdd3z
-        1wiEJc7SntBo9wWZ6YpFowe3sEfVejHl/G0iVollFg==
-X-Google-Smtp-Source: ABdhPJyys3qfTJGPVjeVT/HCn3VkOqbY3GVCdzVh24eOXr7uLVD857f62jht8jhypUUWDkrPmq/NlW044n5qV03SLYA=
-X-Received: by 2002:a9d:ed6:: with SMTP id 80mr2580722otj.35.1636418766697;
- Mon, 08 Nov 2021 16:46:06 -0800 (PST)
+        bh=y/5wawZ4iCQr7l/M8N9c7Pm/2uOFf0V7hWRrRXV1YxY=;
+        b=GwcJnT/gAy1fHrR5iE5DmYWcgazgKkn6PBlu80ipuuB3NuZ4R5vvbgZPYFd7m6BGX4
+         Htkr10bPtlALqAohlOsaJzVKYMsV4MY+uAclXTiffaymR6g1QY39FII5mrD9W+Zmh6ZA
+         VSGTyponxmTqemAQebaHvk+UpmGGQiSBe+6jFMntwmh+5GzdIceyDZtU6HBjR3F/JWf+
+         OqNI2bzxmhQzNkmtz2CJSYVqLGvpy3K86KduYVnER9zTggQz7EDqJKikrPs9/yFXJtk3
+         KvPn1SXLTVVPBsfZCTBZB7ncAxVvNNlwSon83Z4lGtMuyTIRfCpnSbfGYV3OLRCzTPqy
+         3AcA==
+X-Gm-Message-State: AOAM533lHUrpYUfkuoXNlaymxaMMZlAa0nXOLZsXYJodkfwrGcABwnQk
+        007YQ9BhPBmZDRUQ6XCE1F5ze9XVD61PRY5FDgIsZw==
+X-Google-Smtp-Source: ABdhPJx6ntF9Ij4ABUlVfspt/BrE1AagUV5HYqW4lumhYW9HaJk/bpBVv2CAh2o/6TEPXu1pygB6104B8pbDewZcMzA=
+X-Received: by 2002:a9d:ed6:: with SMTP id 80mr2614070otj.35.1636419278616;
+ Mon, 08 Nov 2021 16:54:38 -0800 (PST)
 MIME-Version: 1.0
-References: <20211102161125.1144023-1-kernel@esmil.dk> <20211102161125.1144023-12-kernel@esmil.dk>
-In-Reply-To: <20211102161125.1144023-12-kernel@esmil.dk>
+References: <20211102161125.1144023-1-kernel@esmil.dk> <20211102161125.1144023-13-kernel@esmil.dk>
+ <CAHp75VdmnnrisuP00W0KYta0KgmC+fu3WMxm959dt5X1kpiKTw@mail.gmail.com>
+In-Reply-To: <CAHp75VdmnnrisuP00W0KYta0KgmC+fu3WMxm959dt5X1kpiKTw@mail.gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 9 Nov 2021 01:45:55 +0100
-Message-ID: <CACRpkdb0CrJ_uTbtfg-xGq8uu0AKoqfAB03mF2CA_G8ys_8Lzg@mail.gmail.com>
-Subject: Re: [PATCH v3 11/16] dt-bindings: pinctrl: Add StarFive JH7100 bindings
-To:     Emil Renner Berthing <kernel@esmil.dk>
-Cc:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-serial@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>,
+Date:   Tue, 9 Nov 2021 01:54:26 +0100
+Message-ID: <CACRpkdZOpXC0GvoyS8KexgjxL17rjyNkPuA0KGOvesZMDLvyJg@mail.gmail.com>
+Subject: Re: [PATCH v3 12/16] pinctrl: starfive: Add pinctrl driver for
+ StarFive SoCs
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Emil Renner Berthing <kernel@esmil.dk>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         Rob Herring <robh+dt@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
@@ -74,30 +80,27 @@ Cc:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
         Anup Patel <anup.patel@wdc.com>,
         Atish Patra <atish.patra@wdc.com>,
         Matteo Croce <mcroce@microsoft.com>,
-        linux-kernel@vger.kernel.org
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Huan Feng <huan.feng@starfivetech.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 2, 2021 at 5:12 PM Emil Renner Berthing <kernel@esmil.dk> wrote:
+On Tue, Nov 2, 2021 at 9:02 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 
-> Add bindings for the GPIO/pin controller on the JH7100 RISC-V SoC by
-> StarFive Ltd. This is a test chip for their upcoming JH7110 SoC.
+> > +       depends on OF
 >
-> Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
-> ---
->
-> @Linus: I'm really struggling to find a good way to describe how pin
-> muxing works on the JH7100. As you can see I've now resorted to
-> ascii-art to try to explain it, but please let me know if it's still
-> unclear.
+> So this descreases test coverage.
+> Linus, can we provide a necessary stub so we may drop this dependency?
 
-This looks perfectly acceptable to me:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Hm it further selects OF_GPIO which depends on OF
+so I don't know how that would work.
 
-As it appears to have some cross dependencies I assume
-it will be merged through the SoC tree?
+But does it decrease compile coverage a lot, even x86 has
+optional OF support so I imagine it appears in x86
+allyesconfig I suppose? Or am I wrong?
 
 Yours,
 Linus Walleij
