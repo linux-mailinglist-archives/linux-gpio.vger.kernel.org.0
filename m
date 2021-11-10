@@ -2,159 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 47EA344BC56
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Nov 2021 08:45:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AE7FF44BC83
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Nov 2021 09:05:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229908AbhKJHsG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 10 Nov 2021 02:48:06 -0500
-Received: from smtp-relay-internal-1.canonical.com ([185.125.188.123]:44770
-        "EHLO smtp-relay-internal-1.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229931AbhKJHsF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 10 Nov 2021 02:48:05 -0500
-Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com [209.85.208.197])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id A034C3F1A7
-        for <linux-gpio@vger.kernel.org>; Wed, 10 Nov 2021 07:45:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1636530317;
-        bh=N83ESKUHB/kqrmHqZ+hpUE8Wq2iA/YnywAyf4v9xq00=;
-        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-         In-Reply-To:Content-Type;
-        b=wXXPSCVYjdbs+iToRmvDGzHd6Miv6O1tDdodDVe4wa8qGHVfeKUSS5PC78qkezXai
-         amgLYBVeA1VtPSJRoi3Iby5rt1LjltMPAJ2QPejvVd5XqnN1eSX3W28kO/O2ff5Tfk
-         YX0iWJ7NVO5aG2V7bc7gWhtjgU33bC24zKs+eLShPdqMgc1zrGhVniAWBNMM4Q34OE
-         C4mCZXuIBu285I8qHAAXYIsWQOMVAObouAffw+24YxLxaoTXcjPtMZNyNM0ymDBKVR
-         nYhnmPCgnYC3gyeK1FR5zujF3MPKuitajUivHrnHNPVU5RQTkcqvjTemCcAgGSzNFz
-         q83sqxucguO/w==
-Received: by mail-lj1-f197.google.com with SMTP id q13-20020a2e750d000000b00218c953d0b8so283392ljc.21
-        for <linux-gpio@vger.kernel.org>; Tue, 09 Nov 2021 23:45:17 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=N83ESKUHB/kqrmHqZ+hpUE8Wq2iA/YnywAyf4v9xq00=;
-        b=N4chl6AXRr6Rh1l8h2toOuRzrL9Qq7bjXp8HusW5DKe8IN59i9q3Wc8M/uOUN7+0Wr
-         VHdjP+zzX1aUAN7jey6A3Yc9NZnTR/8/d46ei68UnDbGUMtDE4D/GX1Zd835SGscwcVd
-         iXGaIIJl1NoNLe9arUU7PUAS7bybYkpQJdLMyNKCyh1Bi94uX2rl36Bjz9RWYd8gyQB3
-         oFx7UmYPzDJt9dyIfTrKN3RhFc+CefXzYbzKVgB0KNBDogmg6ctf2RFxWlrLyv1OJSgP
-         LLR3DmUOAeMBki+0F0+m8ZaBfr9QmG949IYTXnhkoh8hz5VXcDhmNIdpKYt37WJ08/lg
-         HXcw==
-X-Gm-Message-State: AOAM531WTzOwnGoxBJf5kmWroLwrqbCXjhJcvXA+Uwz6anu5YJbdv5F2
-        UW69qAy5NRApGFH1CbGEaehpfrAaT/uy3NP7O7Yj7lXNMzxtTbmDcWxchm3D8O/08zTBuc9icVD
-        mH32i7wbSm4wi4zlRN1fphzBdk+57FVRFXhMrCjc=
-X-Received: by 2002:a05:651c:11cf:: with SMTP id z15mr13724622ljo.30.1636530316475;
-        Tue, 09 Nov 2021 23:45:16 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxj/L+35JjL2smH5MiuFZkelZYQSjo3AZ/1hVDezSpzMKpDS3vieitpkj9D1r3Hbn/gkMU6Bw==
-X-Received: by 2002:a05:651c:11cf:: with SMTP id z15mr13724596ljo.30.1636530316282;
-        Tue, 09 Nov 2021 23:45:16 -0800 (PST)
-Received: from [192.168.3.67] (89-77-68-124.dynamic.chello.pl. [89.77.68.124])
-        by smtp.gmail.com with ESMTPSA id b22sm2384886lfi.67.2021.11.09.23.45.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Nov 2021 23:45:15 -0800 (PST)
-Message-ID: <978563c0-95fd-1c76-42a2-5e0ab9cbc61d@canonical.com>
-Date:   Wed, 10 Nov 2021 08:45:14 +0100
+        id S229653AbhKJIIB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 10 Nov 2021 03:08:01 -0500
+Received: from mga07.intel.com ([134.134.136.100]:22585 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229595AbhKJIIA (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 10 Nov 2021 03:08:00 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10163"; a="296063689"
+X-IronPort-AV: E=Sophos;i="5.87,223,1631602800"; 
+   d="scan'208";a="296063689"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2021 00:05:13 -0800
+X-IronPort-AV: E=Sophos;i="5.87,223,1631602800"; 
+   d="scan'208";a="545915896"
+Received: from smile.fi.intel.com ([10.237.72.184])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2021 00:05:05 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1mkibE-005LVR-8K;
+        Wed, 10 Nov 2021 10:04:52 +0200
+Date:   Wed, 10 Nov 2021 10:04:51 +0200
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Emil Renner Berthing <kernel@esmil.dk>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        Drew Fustini <drew@beagleboard.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Michael Zhu <michael.zhu@starfivetech.com>,
+        Fu Wei <tekkamanninja@gmail.com>,
+        Anup Patel <anup.patel@wdc.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Matteo Croce <mcroce@microsoft.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Huan Feng <huan.feng@starfivetech.com>
+Subject: Re: [PATCH v3 12/16] pinctrl: starfive: Add pinctrl driver for
+ StarFive SoCs
+Message-ID: <YYt9I7hfugtpeALs@smile.fi.intel.com>
+References: <20211102161125.1144023-1-kernel@esmil.dk>
+ <20211102161125.1144023-13-kernel@esmil.dk>
+ <CAHp75VdmnnrisuP00W0KYta0KgmC+fu3WMxm959dt5X1kpiKTw@mail.gmail.com>
+ <CAHp75VcuGdaq_TjjRS0S8R5y-nryLABZSp7ehrXz-fUS2W3vfA@mail.gmail.com>
+ <CACRpkdYe-tW2K2eOQa+FYb-ZXzrA95+pPc6kkLB8ZJLAT8G_eA@mail.gmail.com>
+ <CANBLGcyo3YjygkjDmdjt4C_H=MZdHQwqumsxnatuObeP2LADAg@mail.gmail.com>
+ <CAHp75VdBaKZVeA7dasHWP4E3c8F2phaGz-90FErj3bB8FJOS9w@mail.gmail.com>
+ <CANBLGcw7X9SY3_=A7ZXW60646vconjCbYBsvb=D2a0BPcyn75A@mail.gmail.com>
+ <CACRpkda7b+j1=X9rUrqwEFhxvp2zVTvFkxanjh3hL7AksqCX1g@mail.gmail.com>
+ <CANBLGcxT_a3J+uaaKazRkfJQoBjGGGiz9agAZUzMEmfJiVXXbw@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.1
-Subject: Re: [PATCH 10/13] dt-bindings: spi: add bindings for microchip mpfs
- spi
-Content-Language: en-US
-To:     Conor.Dooley@microchip.com, robh@kernel.org
-Cc:     robh+dt@kernel.org, gregkh@linuxfoundation.org,
-        linus.walleij@linaro.org, linux-riscv@lists.infradead.org,
-        aou@eecs.berkeley.edu, paul.walmsley@sifive.com,
-        linux-usb@vger.kernel.org, Daire.McNamara@microchip.com,
-        linux-spi@vger.kernel.org, geert@linux-m68k.org,
-        devicetree@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-gpio@vger.kernel.org, broonie@kernel.org, palmer@dabbelt.com,
-        bgolaszewski@baylibre.com, jassisinghbrar@gmail.com,
-        linux-crypto@vger.kernel.org, Ivan.Griffin@microchip.com,
-        atish.patra@wdc.com, Lewis.Hanly@microchip.com,
-        bin.meng@windriver.com, alexandre.belloni@bootlin.com,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        a.zummo@towertech.it
-References: <20211108150554.4457-1-conor.dooley@microchip.com>
- <20211108150554.4457-11-conor.dooley@microchip.com>
- <1636430789.935637.743042.nullmailer@robh.at.kernel.org>
- <96005893-8819-1d76-6dea-7d173655258f@microchip.com>
- <0d996393-20b9-4f16-cbd0-c9bff2b54112@canonical.com>
- <bd26a633-7c71-b00b-00c3-54688ee42297@microchip.com>
- <cd789074-53a0-72c1-76f0-b2b86a434247@canonical.com>
- <a2ce221d-5ab7-52c5-176e-e64a081a6805@microchip.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-In-Reply-To: <a2ce221d-5ab7-52c5-176e-e64a081a6805@microchip.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANBLGcxT_a3J+uaaKazRkfJQoBjGGGiz9agAZUzMEmfJiVXXbw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 09/11/2021 14:20, Conor.Dooley@microchip.com wrote:
-> On 09/11/2021 13:04, Krzysztof Kozlowski wrote:
->> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
->>
->> On 09/11/2021 13:58, Conor.Dooley@microchip.com wrote:
->>> On 09/11/2021 12:53, Krzysztof Kozlowski wrote:
->>>> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
->>>>
->>>> On 09/11/2021 13:16, Conor.Dooley@microchip.com wrote:
->>>>> On 09/11/2021 04:06, Rob Herring wrote:
->>>>>> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
->>>>>>
->>>>>> On Mon, 08 Nov 2021 15:05:51 +0000, conor.dooley@microchip.com wrote:
->>>>>>> From: Conor Dooley <conor.dooley@microchip.com>
->>>>>>>
->>>>>>> Add device tree bindings for the {q,}spi controller on
->>>>>>> the Microchip PolarFire SoC.
->>>>>>>
->>>>>>> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
->>>>>>> ---
->>>>>>>     .../bindings/spi/microchip,mpfs-spi.yaml      | 72 +++++++++++++++++++
->>>>>>>     1 file changed, 72 insertions(+)
->>>>>>>     create mode 100644 Documentation/devicetree/bindings/spi/microchip,mpfs-spi.yaml
->>>>>>>
->>>>>>
->>>>>> My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
->>>>>> on your patch (DT_CHECKER_FLAGS is new in v5.13):
->>>>>>
->>>>>> yamllint warnings/errors:
->>>>>>
->>>>>> dtschema/dtc warnings/errors:
->>>>>> Documentation/devicetree/bindings/spi/microchip,mpfs-spi.example.dts:19:18: fatal error: dt-bindings/clock/microchip,mpfs-clock.h: No such file or directory
->>>>>>       19 |         #include "dt-bindings/clock/microchip,mpfs-clock.h"
->>>>> Rob,
->>>>> Should I drop the header from the example or is there a way for me
->>>>> specify the dependent patch to pass this check?
->>>>
->>>> The error has to be fixed, although not necessarily by dropping the
->>>> header, but by posting it. How this can pass on your system? There is no
->>>> such file added in this patchset.
->>> I linked the patch adding the clock as a dependency in the cover letter
->>> [1], which is why I was wondering if there was a better way to do so
->>> that would get picked up by the checker bot.
->>
->> It's not only about the bot, but dependency when applied. If you did not
->> warn clk maintainer that clock bindings should go via Rob's tree or
->> should be provided as a tag, the patches here cannot be applied in this
->> cycle.
-> It was not my (our) intention to send the clock patches via rob's tree.
-> And since this is my first time trying to upstream wholescale changes to 
-> a device tree I honestly didn't expect this series to get accepted in 
-> this cycle anyway.
+On Tue, Nov 09, 2021 at 10:04:24PM +0100, Emil Renner Berthing wrote:
+> On Tue, 9 Nov 2021 at 21:29, Linus Walleij <linus.walleij@linaro.org> wrote:
+> > On Tue, Nov 9, 2021 at 10:40 AM Emil Renner Berthing <kernel@esmil.dk> wrote:
 
-OK :)
+...
 
-Assuming your new bindings pass db_binding_check with
-DT_CHECKER_FLAGS=-m (on top of clock patch), I propose to keep the
-header here.
+> No, I agree. I think it's only that Andy wasn't sure if these interim
+> states might be meaningful/useful.
 
-Another idea would be to submit without the header and use raw IDs
-(numbers) and convert it later. I prefer the first- base on clock patches.
+Exactly. Because HW could behave differently.
+
+> > And if it is possible
+> > to write DTS files that have states and sequence requirements,
+> > these should be caught in validation. Should be.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-Best regards,
-Krzysztof
