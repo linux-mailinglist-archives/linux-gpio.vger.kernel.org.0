@@ -2,23 +2,23 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C5F5644CD04
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Nov 2021 23:46:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C180444CD07
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Nov 2021 23:46:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233859AbhKJWtX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 10 Nov 2021 17:49:23 -0500
-Received: from relmlor2.renesas.com ([210.160.252.172]:61074 "EHLO
+        id S233896AbhKJWtZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 10 Nov 2021 17:49:25 -0500
+Received: from relmlor2.renesas.com ([210.160.252.172]:62570 "EHLO
         relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S233795AbhKJWtV (ORCPT
+        by vger.kernel.org with ESMTP id S233634AbhKJWtX (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 10 Nov 2021 17:49:21 -0500
+        Wed, 10 Nov 2021 17:49:23 -0500
 X-IronPort-AV: E=Sophos;i="5.87,225,1631545200"; 
-   d="scan'208";a="100143068"
+   d="scan'208";a="100143073"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 11 Nov 2021 07:46:32 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 11 Nov 2021 07:46:34 +0900
 Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 43C75413162C;
-        Thu, 11 Nov 2021 07:46:30 +0900 (JST)
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id AE090413165E;
+        Thu, 11 Nov 2021 07:46:32 +0900 (JST)
 From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -29,9 +29,9 @@ Cc:     linux-kernel@vger.kernel.org,
         Prabhakar <prabhakar.csengg@gmail.com>,
         Biju Das <biju.das.jz@bp.renesas.com>,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v3 2/6] pinctrl: renesas: pinctrl-rzg2l: Rename RZG2L_SINGLE_PIN_GET_PORT macro
-Date:   Wed, 10 Nov 2021 22:46:18 +0000
-Message-Id: <20211110224622.16022-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v3 3/6] pinctrl: renesas: pinctrl-rzg2l: Add helper functions to read/write pin config
+Date:   Wed, 10 Nov 2021 22:46:19 +0000
+Message-Id: <20211110224622.16022-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20211110224622.16022-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20211110224622.16022-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -39,92 +39,120 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Rename RZG2L_SINGLE_PIN_GET_PORT -> RZG2L_SINGLE_PIN_GET_PORT_OFFSET.
+Add helper functions to read/read modify write pin config.
 
-Also, rename port -> port_offset in rzg2l_pinctrl_pinconf_set/get for
-readability.
+Switch to use helper functions for pins supporting PIN_CONFIG_INPUT_ENABLE
+capabilities.
 
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
 ---
 v2->v3
-* New patch
+* Dropped duplicate masking in rzg2l_read_pin_config
+* Dropped port_pin flag
+* Dropped spinlocks around read/write
 ---
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 58 +++++++++++++++----------
+ 1 file changed, 34 insertions(+), 24 deletions(-)
 
 diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index 20b2af889ca9..be9af717a497 100644
+index be9af717a497..984c19328efa 100644
 --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
 +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -77,7 +77,7 @@
- #define RZG2L_SINGLE_PIN		BIT(31)
- #define RZG2L_SINGLE_PIN_PACK(p, b, f)	(RZG2L_SINGLE_PIN | \
- 					 ((p) << 24) | ((b) << 20) | (f))
--#define RZG2L_SINGLE_PIN_GET_PORT(x)	(((x) & GENMASK(30, 24)) >> 24)
-+#define RZG2L_SINGLE_PIN_GET_PORT_OFFSET(x)	(((x) & GENMASK(30, 24)) >> 24)
- #define RZG2L_SINGLE_PIN_GET_BIT(x)	(((x) & GENMASK(22, 20)) >> 20)
- #define RZG2L_SINGLE_PIN_GET_CFGS(x)	((x) & GENMASK(19, 0))
+@@ -424,6 +424,36 @@ static int rzg2l_dt_node_to_map(struct pinctrl_dev *pctldev,
+ 	return ret;
+ }
  
-@@ -432,10 +432,10 @@ static int rzg2l_pinctrl_pinconf_get(struct pinctrl_dev *pctldev,
++static u32 rzg2l_read_pin_config(struct rzg2l_pinctrl *pctrl, u32 offset,
++				 u8 bit, u32 mask)
++{
++	void __iomem *addr = pctrl->base + offset;
++
++	/* handle _L/_H for 32-bit register read/write */
++	if (bit >= 4) {
++		bit -= 4;
++		addr += 4;
++	}
++
++	return (readl(addr) >> (bit * 8)) & mask;
++}
++
++static void rzg2l_rmw_pin_config(struct rzg2l_pinctrl *pctrl, u32 offset,
++				 u8 bit, u32 mask, u32 val)
++{
++	void __iomem *addr = pctrl->base + offset;
++	u32 reg;
++
++	/* handle _L/_H for 32-bit register read/write */
++	if (bit >= 4) {
++		bit -= 4;
++		addr += 4;
++	}
++
++	reg = readl(addr) & ~(mask << (bit * 8));
++	writel(reg | (val << (bit * 8)), addr);
++}
++
+ static int rzg2l_pinctrl_pinconf_get(struct pinctrl_dev *pctldev,
+ 				     unsigned int _pin,
+ 				     unsigned long *config)
+@@ -432,8 +462,8 @@ static int rzg2l_pinctrl_pinconf_get(struct pinctrl_dev *pctldev,
  	enum pin_config_param param = pinconf_to_config_param(*config);
  	const struct pinctrl_pin_desc *pin = &pctrl->desc.pins[_pin];
  	unsigned int *pin_data = pin->drv_data;
-+	u32 port_offset = 0, reg;
+-	u32 port_offset = 0, reg;
  	unsigned int arg = 0;
++	u32 port_offset = 0;
  	unsigned long flags;
  	void __iomem *addr;
--	u32 port = 0, reg;
  	u32 cfg = 0;
- 	u8 bit = 0;
- 
-@@ -443,7 +443,7 @@ static int rzg2l_pinctrl_pinconf_get(struct pinctrl_dev *pctldev,
- 		return -EINVAL;
- 
- 	if (*pin_data & RZG2L_SINGLE_PIN) {
--		port = RZG2L_SINGLE_PIN_GET_PORT(*pin_data);
-+		port_offset = RZG2L_SINGLE_PIN_GET_PORT_OFFSET(*pin_data);
- 		cfg = RZG2L_SINGLE_PIN_GET_CFGS(*pin_data);
- 		bit = RZG2L_SINGLE_PIN_GET_BIT(*pin_data);
- 	}
-@@ -454,7 +454,7 @@ static int rzg2l_pinctrl_pinconf_get(struct pinctrl_dev *pctldev,
+@@ -452,17 +482,7 @@ static int rzg2l_pinctrl_pinconf_get(struct pinctrl_dev *pctldev,
+ 	case PIN_CONFIG_INPUT_ENABLE:
+ 		if (!(cfg & PIN_CFG_IEN))
  			return -EINVAL;
- 		spin_lock_irqsave(&pctrl->lock, flags);
- 		/* handle _L/_H for 32-bit register read/write */
--		addr = pctrl->base + IEN(port);
-+		addr = pctrl->base + IEN(port_offset);
- 		if (bit >= 4) {
- 			bit -= 4;
- 			addr += 4;
-@@ -502,9 +502,9 @@ static int rzg2l_pinctrl_pinconf_set(struct pinctrl_dev *pctldev,
+-		spin_lock_irqsave(&pctrl->lock, flags);
+-		/* handle _L/_H for 32-bit register read/write */
+-		addr = pctrl->base + IEN(port_offset);
+-		if (bit >= 4) {
+-			bit -= 4;
+-			addr += 4;
+-		}
+-
+-		reg = readl(addr) & (IEN_MASK << (bit * 8));
+-		arg = (reg >> (bit * 8)) & 0x1;
+-		spin_unlock_irqrestore(&pctrl->lock, flags);
++		arg = rzg2l_read_pin_config(pctrl, IEN(port_offset), bit, IEN_MASK);
+ 		break;
+ 
+ 	case PIN_CONFIG_POWER_SOURCE: {
+@@ -502,7 +522,7 @@ static int rzg2l_pinctrl_pinconf_set(struct pinctrl_dev *pctldev,
  	const struct pinctrl_pin_desc *pin = &pctrl->desc.pins[_pin];
  	unsigned int *pin_data = pin->drv_data;
  	enum pin_config_param param;
-+	u32 port_offset = 0, reg;
+-	u32 port_offset = 0, reg;
++	u32 port_offset = 0;
  	unsigned long flags;
  	void __iomem *addr;
--	u32 port = 0, reg;
  	unsigned int i;
- 	u32 cfg = 0;
- 	u8 bit = 0;
-@@ -513,7 +513,7 @@ static int rzg2l_pinctrl_pinconf_set(struct pinctrl_dev *pctldev,
- 		return -EINVAL;
- 
- 	if (*pin_data & RZG2L_SINGLE_PIN) {
--		port = RZG2L_SINGLE_PIN_GET_PORT(*pin_data);
-+		port_offset = RZG2L_SINGLE_PIN_GET_PORT_OFFSET(*pin_data);
- 		cfg = RZG2L_SINGLE_PIN_GET_CFGS(*pin_data);
- 		bit = RZG2L_SINGLE_PIN_GET_BIT(*pin_data);
- 	}
-@@ -529,7 +529,7 @@ static int rzg2l_pinctrl_pinconf_set(struct pinctrl_dev *pctldev,
+@@ -528,17 +548,7 @@ static int rzg2l_pinctrl_pinconf_set(struct pinctrl_dev *pctldev,
+ 			if (!(cfg & PIN_CFG_IEN))
  				return -EINVAL;
  
- 			/* handle _L/_H for 32-bit register read/write */
--			addr = pctrl->base + IEN(port);
-+			addr = pctrl->base + IEN(port_offset);
- 			if (bit >= 4) {
- 				bit -= 4;
- 				addr += 4;
+-			/* handle _L/_H for 32-bit register read/write */
+-			addr = pctrl->base + IEN(port_offset);
+-			if (bit >= 4) {
+-				bit -= 4;
+-				addr += 4;
+-			}
+-
+-			spin_lock_irqsave(&pctrl->lock, flags);
+-			reg = readl(addr) & ~(IEN_MASK << (bit * 8));
+-			writel(reg | (arg << (bit * 8)), addr);
+-			spin_unlock_irqrestore(&pctrl->lock, flags);
++			rzg2l_rmw_pin_config(pctrl, IEN(port_offset), bit, IEN_MASK, !!arg);
+ 			break;
+ 		}
+ 
 -- 
 2.17.1
 
