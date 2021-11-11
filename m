@@ -2,111 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CDC8244DC5E
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Nov 2021 21:06:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 731B344DC65
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Nov 2021 21:13:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229710AbhKKUI5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 11 Nov 2021 15:08:57 -0500
-Received: from mail-oi1-f174.google.com ([209.85.167.174]:38821 "EHLO
-        mail-oi1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229539AbhKKUI4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 Nov 2021 15:08:56 -0500
-Received: by mail-oi1-f174.google.com with SMTP id r26so13627646oiw.5;
-        Thu, 11 Nov 2021 12:06:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=HuT29kr7jQT7cuNJmoGPLr0geLlUe5ftqPVAaDrc9ho=;
-        b=A8NuL1wOy/ZRMKxUmj6nUeGV4uZXy0Xq37BWwEUa7RfeZM2KCMDmAwMzGrLK2fDywX
-         L/gywIvzi8wVOHPINWuj7PSNj5JA6Z1O5y2snZRrDXxQCOyFtcpYQW4quACZCQrIwbW0
-         3tBvIN80Xoy98MDOUq3oI4n4+6H+d7igxPqa85uV4wxhpOoD8XJEZvTjAsYyToHa5pdo
-         DR6mHD+PvPqrs71tgi7GYEkF6nqSn+JwNPSCQ4aMqD0ZoaCIT/9opRRfSE1zu0OkmkEN
-         MaP+sy3kHub/rJkS/4AtmvniWaz//IgwD9rIm6Zc8B0usLMfMI5nP8uC1nBfmhZx25EC
-         5DTQ==
-X-Gm-Message-State: AOAM532ZITjoE3SXyq16lW9L+lrrOBwix/mtKP0RPXw+BaIVFpyDzIzM
-        DByszUn7F9SGuHTXhkI7TQ==
-X-Google-Smtp-Source: ABdhPJwz5SIVcWpRIh29F5oJTI35LeD9ENrLRATSeuGMhvBuf8o4x0OWa36CzlMzxop2TVbYrGJDGw==
-X-Received: by 2002:a05:6808:211f:: with SMTP id r31mr8393771oiw.64.1636661166208;
-        Thu, 11 Nov 2021 12:06:06 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id x23sm709471ooo.34.2021.11.11.12.06.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Nov 2021 12:06:05 -0800 (PST)
-Received: (nullmailer pid 14106 invoked by uid 1000);
-        Thu, 11 Nov 2021 20:06:04 -0000
-Date:   Thu, 11 Nov 2021 14:06:04 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
-Subject: Re: [PATCH RFC] dt-bindings: pinctrl: support specifying pins
-Message-ID: <YY13rKxQpzcB4f0b@robh.at.kernel.org>
-References: <20211110231436.8866-1-zajec5@gmail.com>
+        id S231806AbhKKUQ3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 11 Nov 2021 15:16:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36812 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229539AbhKKUQ2 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 11 Nov 2021 15:16:28 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 26D8061452;
+        Thu, 11 Nov 2021 20:13:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1636661619;
+        bh=OBl2/RJkXnTVlorNWEsue6KPdxSG9wgVBCBBr67fFww=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=gGyvwUq8Iha0Q1SelN8UMWn3RCs61h+LhxzHI9QlpVBZI+q7nUsahrGXqLupPSoQw
+         ebZ346MQ0ozQP/4VjUfjczbuIDa7qE+s+kd/bl/1wBvZKOTeloLMjKCCCIkblNucZ5
+         /yxQ2WBrqMoaITa8fATEb4S7MYNOEF9k18xP6bUdK4noW01NdM+VNvhUu8fP6dG5zt
+         QcBsTsIrg8sMaryxSBWgyexyckwb6rw1iOv0k9T30MBOjPT05G1rayUF5KkXQx049F
+         Zoi4M9sZQIJN4lRS6OavpbRvSsSuWmqN/KNFMi/lBoBvNXHhDcRxfiEpijF6odGHvc
+         yF+Cy/Nth/6RA==
+Received: by mail-ed1-f52.google.com with SMTP id c8so28308477ede.13;
+        Thu, 11 Nov 2021 12:13:39 -0800 (PST)
+X-Gm-Message-State: AOAM533//ixxNAn8gIdN9pVLDquYHm/yJQHt+q69iKZ2tUuMk3zzDESf
+        DTuykvtESYOOvkz0Ky6wObgaAbAoE80vzwPZBw==
+X-Google-Smtp-Source: ABdhPJzK590YjmtXBIbhO+gFqRQ/Rx60J8XhDq4QBtLpLTnNV2NmS29qR9v3NBJEfa6Vnv79XQMVuPYgluWvwaQSnCE=
+X-Received: by 2002:a17:907:3f24:: with SMTP id hq36mr12803070ejc.390.1636661617574;
+ Thu, 11 Nov 2021 12:13:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211110231436.8866-1-zajec5@gmail.com>
+References: <20211109161253.2202108-1-robh@kernel.org> <CACRpkda1+86GgvCJEehg9CGS78Q10FJ3ZHzdmHpYHrY7tAwkwA@mail.gmail.com>
+In-Reply-To: <CACRpkda1+86GgvCJEehg9CGS78Q10FJ3ZHzdmHpYHrY7tAwkwA@mail.gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 11 Nov 2021 14:13:25 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+gjP=3=wMYJ83KAn7Jf6xgaqoW9yn-bfoqD3Ung+CcKg@mail.gmail.com>
+Message-ID: <CAL_Jsq+gjP=3=wMYJ83KAn7Jf6xgaqoW9yn-bfoqD3Ung+CcKg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: xlp: Remove Netlogic XLP variants
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "open list:MIPS" <linux-mips@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 11, 2021 at 12:14:36AM +0100, Rafał Miłecki wrote:
-> From: Rafał Miłecki <rafal@milecki.pl>
-> 
-> Add support for "pins" node with pin@ subnodes. This allows specifying
-> all pins (and their names) at DT level.
-> 
-> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
-> ---
-> While working with pinctrl in Linux I started wondering if we could
-> start specifying pins in DT instead of Linux drivers. When working with
-> DT we usually avoid hardcoding hardware description in drivers so it
-> isn't clear to me why it doesn't apply to pins.
-> 
-> Please let me know if this makes sense. If by some chance I'm correct I
-> think that specifying groups and functions could follow too.
-> 
-> FWIW: I didn't start working on Linux reading pins from DT yet.
-> ---
->  .../bindings/pinctrl/brcm,ns-pinmux.yaml      | 12 +++++++++-
->  .../devicetree/bindings/pinctrl/pinctrl.yaml  | 23 +++++++++++++++++++
->  2 files changed, 34 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,ns-pinmux.yaml b/Documentation/devicetree/bindings/pinctrl/brcm,ns-pinmux.yaml
-> index 8d1e5b1cdd5f..92a86b0822d6 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/brcm,ns-pinmux.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/brcm,ns-pinmux.yaml
-> @@ -74,7 +74,7 @@ required:
->    - reg
->    - reg-names
->  
-> -additionalProperties: false
-> +unevaluatedProperties: false
->  
->  examples:
->    - |
-> @@ -83,6 +83,16 @@ examples:
->          reg = <0x1800c1c0 0x24>;
->          reg-names = "cru_gpio_control";
->  
-> +        pins {
-> +            #address-cells = <1>;
-> +            #size-cells = <0>;
-> +
-> +            pin@0 {
-> +                reg = <0>;
+On Thu, Nov 11, 2021 at 4:43 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Tue, Nov 9, 2021 at 5:12 PM Rob Herring <robh@kernel.org> wrote:
+>
+> > Netlogic XLP was removed in commit 95b8a5e0111a ("MIPS: Remove NETLOGIC
+> > support"). With those gone, the single platform left to support is
+> > Cavium ThunderX2. Remove all the Netlogic variants and DT support.
+> >
+> > For simplicity, the existing kconfig name is retained.
+> >
+> > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+> > Cc: linux-gpio@vger.kernel.org
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>
+> A question:
+>
+>
+> > @@ -373,7 +263,7 @@ static int xlp_gpio_probe(struct platform_device *pdev)
+> >         gc->label = dev_name(&pdev->dev);
+> >         gc->base = 0;
+>
+> Can we also set this to -1 and use dynamic GPIO base allocation?
+> (Can be a separate patch.)
 
-Where does 'reg' value come from?
-
-> +                label = "spi_clk";
-> +            };
-
-If you just want a list of pins names, then why not just a list of 
-names?
+No clue. What's normal for GPIO ACPI systems? Does that mean more than
+1 instance is broken currently?
 
 Rob
