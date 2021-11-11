@@ -2,85 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AE7E044DC7E
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Nov 2021 21:28:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DEF244DC82
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Nov 2021 21:30:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233445AbhKKUbP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 11 Nov 2021 15:31:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53264 "EHLO
+        id S233119AbhKKUc4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 11 Nov 2021 15:32:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229785AbhKKUbP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 Nov 2021 15:31:15 -0500
-Received: from mail-oi1-x233.google.com (mail-oi1-x233.google.com [IPv6:2607:f8b0:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0744C061767
-        for <linux-gpio@vger.kernel.org>; Thu, 11 Nov 2021 12:28:25 -0800 (PST)
-Received: by mail-oi1-x233.google.com with SMTP id bk14so13717040oib.7
-        for <linux-gpio@vger.kernel.org>; Thu, 11 Nov 2021 12:28:25 -0800 (PST)
+        with ESMTP id S232666AbhKKUcz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 11 Nov 2021 15:32:55 -0500
+Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4F7AC061767
+        for <linux-gpio@vger.kernel.org>; Thu, 11 Nov 2021 12:30:05 -0800 (PST)
+Received: by mail-ot1-x334.google.com with SMTP id v15-20020a9d604f000000b0056cdb373b82so2658661otj.7
+        for <linux-gpio@vger.kernel.org>; Thu, 11 Nov 2021 12:30:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=gBiwdPPgqDE+FpLiui3l4oL6zGJDjA4BEp171adZNFs=;
-        b=B8NeVe5nPMz0rQZrp8+YjBhrDYXgs9ZklicjiIFaaDb90Y8E8SawcNdECdGOLY72/k
-         ba3Z+4/8l7CKpSFeET7DVi39dVzpPoU5w8ZdslaOVU4b7NdZoVKQEThssjddoBa+ayt1
-         5i3XTg9UukhSSRxUsDv8+ks04MuzyKAkA27uAsvdQxHEreu7mn9xRvkwsQHBR/JE/VlQ
-         6NAA+SCh48PlpKFfhS4WAwU83oahtGYVOqbBK1t7NiezlRXg+1U51MbCxlMqzSZ4O/Yi
-         pehdGv72QC2rr4Ya6MKZNihO/8U9pTUdS46YH3T8gJXrWhDCIuYYbHlx737huac2cpvX
-         nYEw==
+        bh=c8dwJaksGQJsxMwWrR9ri+8u4KXcRbKUrExUavBRwpo=;
+        b=PkdaGB1Td7UXM2K+KDPzSgPpaBAwDAGFIkTvpjz9sTvkFys0zJ4pbVFdi4prbLNB7r
+         a4v9r0dCKxQsCnwFZiz+0OrI5zTtrGsEm25Bm/b/tTxmS3AwXa6jaS5Xh55UroqRSdwX
+         SET0DlaLMxE3/WCM1ogFraoymNwLb6bqEkYOBGoWpkcxqtLDShMkx84Ui/YqNWhWeGrh
+         W/rKI4p1tDGy5r6kLyV2n5EBFAEnMgtHTuYo4nF9PDlg3KO/2LepecGLYnfbehcNmbiT
+         y33m+wrXyeMuxzmCGnnGKQsGFP3yeVJAUoDtSqXjVwDBuTnId+JUpQdTXlbx9g5klc42
+         LIMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=gBiwdPPgqDE+FpLiui3l4oL6zGJDjA4BEp171adZNFs=;
-        b=AZyXK0q2SipklmKjwNh7hULesDlU18pg5ihOtGMxhN10VrCjs31mgHVEuOckADSGkU
-         LvvGCUa1qggtEsiJ+If/4Ntycn7AUf9FvCjiaosldjMVEpIIg0WmiVs7SAjY615DxHGC
-         e0UH7LWikch0r/joytZg4b4jOn5lYd07tK2gTEm0WuvdZ16qy/OUNrF3c3kUeh+xlzIZ
-         JiUxT8GDqUARxED32qU9OyJz2o8AlBf0W1kXFlTI6HviJ+4jVelSQz69wGPz2WOC2pRj
-         vrtBS+VKy86/+sgrcBnru670s28mA0P1JwP4eZWXcuNDLYoCYjsGlm1LMeIICvMGSvy0
-         z8IA==
-X-Gm-Message-State: AOAM532PWeGyQbvY8H80/7As5U6h7nb7dhktRduuj0qW1cWqDR98cyn1
-        bLkiZifM948yPqrJ9DQTQlVdJ7WP+WVeKvok8uSOWg==
-X-Google-Smtp-Source: ABdhPJz1t8ilCe+azR4nxyMELuFZ202q6/P+OrgSG758hZXZJ0cRdCRts8XbAIgXPHpBGut6c4m3RRCMxRay292CWw0=
-X-Received: by 2002:a05:6808:60e:: with SMTP id y14mr8514570oih.162.1636662505339;
- Thu, 11 Nov 2021 12:28:25 -0800 (PST)
+        bh=c8dwJaksGQJsxMwWrR9ri+8u4KXcRbKUrExUavBRwpo=;
+        b=h/UqRws7PBkyn+3nfOo6xhsDBJl8Z2X9S/mCz2nC4vMNbPL9hfc1g1jjbqcxnnu93V
+         4O9LobSd9hyhQtK8EyKwFXJ4aSpYUF+wnjR9rqRfeV1W4sX0p70jAzpzYkFyAS9etO/f
+         B7tbaL6H5DkT1g3Y3eQ0A6TY9qBdu803vNhhSmkGlxsDPkB6JpH0pfKjDRFNkdt2y7wO
+         o1dKhEkIffIZytj+GuIlrd9ZLj7T6YbSTtI6lGbQndsTbTL61kziozGWXYYmmfF1jlQH
+         L9Vm5/e3QPDXp7dxJbXmQTp7q4ajzSpx4v+6dNIztX4+oSmLPZBC1LXcIjisLVow/8Xc
+         btuA==
+X-Gm-Message-State: AOAM532WMG9jCh5y9Hv9J05xI67EhhaLz8aMb6tZc6lOMmBrgiQWOyKV
+        7TKajNNXVGOEsggo6PNf0Kj35Pc1rRfg5LD9uB6xtTwKVFU=
+X-Google-Smtp-Source: ABdhPJybpt+Qn6Zn2ZF+1VoOxbUW02/esoG/7GpAw1tZgcfsI5R8cK3bpHCWXa9DthYKjDYIZcZzizDYqQW+sPuCS9M=
+X-Received: by 2002:a9d:ed6:: with SMTP id 80mr8024846otj.35.1636662605317;
+ Thu, 11 Nov 2021 12:30:05 -0800 (PST)
 MIME-Version: 1.0
-References: <20211109161253.2202108-1-robh@kernel.org> <CACRpkda1+86GgvCJEehg9CGS78Q10FJ3ZHzdmHpYHrY7tAwkwA@mail.gmail.com>
- <CAL_Jsq+gjP=3=wMYJ83KAn7Jf6xgaqoW9yn-bfoqD3Ung+CcKg@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+gjP=3=wMYJ83KAn7Jf6xgaqoW9yn-bfoqD3Ung+CcKg@mail.gmail.com>
+References: <20211111202506.19459-1-brgl@bgdev.pl>
+In-Reply-To: <20211111202506.19459-1-brgl@bgdev.pl>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 11 Nov 2021 21:28:14 +0100
-Message-ID: <CACRpkdbZvyQL3H31=00W-XeELR_g8xfRDyt-htLfh9DNSSDYxQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: xlp: Remove Netlogic XLP variants
-To:     Rob Herring <robh@kernel.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Date:   Thu, 11 Nov 2021 21:29:53 +0100
+Message-ID: <CACRpkdZ-DY3YVRDZmpU458wTqeNy0khdfJTNDk3UBjnX0zAUHw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpiolib: improve coding style for local variables
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 11, 2021 at 9:13 PM Rob Herring <robh@kernel.org> wrote:
-> On Thu, Nov 11, 2021 at 4:43 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+On Thu, Nov 11, 2021 at 9:25 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-> > > @@ -373,7 +263,7 @@ static int xlp_gpio_probe(struct platform_device *pdev)
-> > >         gc->label = dev_name(&pdev->dev);
-> > >         gc->base = 0;
-> >
-> > Can we also set this to -1 and use dynamic GPIO base allocation?
-> > (Can be a separate patch.)
+> Drop unneeded whitespaces and put the variables of the same type
+> together for consistency with the rest of the code.
 >
-> No clue. What's normal for GPIO ACPI systems?
+> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
 
-Dynamic allocation (-1) c.f.
-drivers/pinctrl/intel/pinctrl-intel.c
-
-> Does that mean more than
-> 1 instance is broken currently?
-
-Yes.
+OK then (also results in inverse christmas-tree shape...)
 
 Yours,
 Linus Walleij
