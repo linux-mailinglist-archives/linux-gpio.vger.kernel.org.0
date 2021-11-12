@@ -2,103 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4407144E925
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Nov 2021 15:46:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E93144E92D
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Nov 2021 15:48:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235197AbhKLOtb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 Nov 2021 09:49:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45612 "EHLO
+        id S232403AbhKLOvh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 Nov 2021 09:51:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232403AbhKLOtb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Nov 2021 09:49:31 -0500
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70261C061766
-        for <linux-gpio@vger.kernel.org>; Fri, 12 Nov 2021 06:46:40 -0800 (PST)
-Received: by mail-ed1-x536.google.com with SMTP id e3so2217969edu.4
-        for <linux-gpio@vger.kernel.org>; Fri, 12 Nov 2021 06:46:40 -0800 (PST)
+        with ESMTP id S231553AbhKLOvh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Nov 2021 09:51:37 -0500
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F425C061766
+        for <linux-gpio@vger.kernel.org>; Fri, 12 Nov 2021 06:48:46 -0800 (PST)
+Received: by mail-ed1-x534.google.com with SMTP id z21so38633824edb.5
+        for <linux-gpio@vger.kernel.org>; Fri, 12 Nov 2021 06:48:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=WeFvDrUcPGbcaBQPo6VmrhI9Z5gxUYwokkUPX3k4Mk0=;
-        b=QBebM8rMQiV9mScH9ZUQO4Zpeo7TuM4UoJaHl8WwqfZzuh4JO3WyvIRsLh/6Hcpoi6
-         rteynH1OLtBp2ixzP8B0TlSSL8a0NYnuGYgUffGV+lqFk5lkCH/XUjHRv3kQSP92+AxK
-         jm5MMny5iH7S83FtWNDTzi/8MvrZorcbj7aJ9QFrrVRA/k3wvyo+fzNTNE5MUBGqVvP8
-         qUCKPLcpcV9I+TRFv4hKpjSH6PsG9AE82ouvSSGPPr4sLKMQfMQATUjXZ1tF5kIKJg70
-         bv3o7f6HW7q/wVZjclPVOSAxPbCOAugRtW9nZU9nQGbia5UXW5z4mrYoEjXo5HwrdOc8
-         3LgA==
+        bh=liCIQ0fS9RC7PAp1JXFa7fSdczN2ri6zbG8n42TR698=;
+        b=2d38TNhNK2cNhtiA0+1oHekR01L0p4voHKIlXJMPEYWP9lQBKLbuptj3seDiN2+mGE
+         esruC5cRcsMBE83MAsKK9tLyMOAXSWnMcCpmTC+ddIoFMbiO1EH5h1RP0CWyVnfmgFXc
+         JCop+Mapt+WwyqbeAtX7Q6nITLVv+Z7QTWoi7x29Bfews3hM9GPzMyjT1Ba7s3g7px3Y
+         xbYeR6MFxwV2WL9zUm6ntNa5gIQZZ9vRSoSHBY/oGBJy03Qq6ebvoGh6aXD+2Glk7Dh9
+         pSLtyZqRcqsVSaRw4Q2l589V8WV2EAPyNaLOm9QQ6ciRsp+rUIOIoLPyMfEXbIoy5t2w
+         t8UA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=WeFvDrUcPGbcaBQPo6VmrhI9Z5gxUYwokkUPX3k4Mk0=;
-        b=Erqe3pfJi2Xn2KBy0ilwd7B1iy/N844pMnRdbu6umnvq9n5FS0L71C2s9SkhIiky7c
-         CyyNZbxG7BxCx/Q7j5LVwrWVXVq/84spgMClpQ9OWPD3Y8r6eQJaK+Gk7UyzWR8ojsPg
-         e+IzEXtc5h5SgkvZBv8z4f4QCtAJMjnkSnWfgISemdWKulMB+saAUDa1uFr8YrCGyKaa
-         /RgkU6iuydyjplB5SXEDT29666fNsaYOA9R9GUv9YDYGLjGTdCJlMyEv6BOvVnhoe+qg
-         S0Ep1vj+Pa246dHqGz7v0dntPaQmG/RFGHM1iR+hfBH66tBCjtb1lXc9bSNosiNM+YBB
-         yRlQ==
-X-Gm-Message-State: AOAM531e0gNwXvQeQ+reF6MvZm925WIC+jzavVc+68c2PgNm61hhQWYA
-        QkAYjGXffTENgKlmP2ugXjz9dRxCej3YnXIvLyzIxw==
-X-Google-Smtp-Source: ABdhPJwbAaJWd8bNqmv+zEgAxyuJ9xSV9pu4jexjV9AxwiLg6vC9YfkLVXdCMmB6gTe8Q7eultwG4oz/JkgGFBD1wGI=
-X-Received: by 2002:a17:907:1deb:: with SMTP id og43mr19716880ejc.189.1636728399055;
- Fri, 12 Nov 2021 06:46:39 -0800 (PST)
+        bh=liCIQ0fS9RC7PAp1JXFa7fSdczN2ri6zbG8n42TR698=;
+        b=IM6uhHeUDMLENh53DviwB6TjGf4d/kXxwRbqCifYCS9g8PTYBijmquZeFUVYFWQprb
+         FNJebLQLXtYxzQEgalXHn/ugr/p+ROd4uGu+DQc0HlG75VcyDE0v0uVpBLX9HKR2QLNP
+         gvPNl6ch/VDSuBxlo5WZfPg+YILLAT+HgeY1YGJFApo/l7c/Q2TDXhEFCNtOlvPBzBRF
+         oZO65LnalZKESZVqGYnzYxoCEdG90OGP78yWqgjhlsU4aJrNjbWEWFuVdZmBoIuIWs6H
+         U2E14byYJz1I38O2UZa8s1NV/clHO1A+cu4OEQAjw/VZfN0Up22dcNJ7Gq7JFdkkIOre
+         ePiQ==
+X-Gm-Message-State: AOAM533tTokpIyp/b4PYpyll48OyeHoBy/o++aN3s+2sAbW9kqSQRlzb
+        aw3JIguIhqkis0GcgdVGODyH/N24t4L4gbv1ZrTm6BT2wgtZew==
+X-Google-Smtp-Source: ABdhPJzc44VifLa2rYLGlj3oXKnMb9qqwgqk4m8d/p+GHYSsjU2862hljMkjoNQFEFNAMXKeIt4lmytpw57S6DWqarY=
+X-Received: by 2002:a17:907:75f0:: with SMTP id jz16mr20705808ejc.77.1636728524826;
+ Fri, 12 Nov 2021 06:48:44 -0800 (PST)
 MIME-Version: 1.0
-References: <20211104190030.20660-1-brgl@bgdev.pl>
-In-Reply-To: <20211104190030.20660-1-brgl@bgdev.pl>
+References: <20211111202506.19459-1-brgl@bgdev.pl> <20211111202506.19459-2-brgl@bgdev.pl>
+ <CAHp75Vdbgk-SVe_eFHUdnNUF65ZSRPHVZXExus13Q6j2CHFy=g@mail.gmail.com>
+In-Reply-To: <CAHp75Vdbgk-SVe_eFHUdnNUF65ZSRPHVZXExus13Q6j2CHFy=g@mail.gmail.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 12 Nov 2021 15:46:28 +0100
-Message-ID: <CAMRc=MfA=i4xn+Xy4mCg17rCCQfGcp7QUrodYz0YNnxPPd-0Mw@mail.gmail.com>
-Subject: Re: [GIT PULL] configfs-based GPIO simulator for v5.16
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+Date:   Fri, 12 Nov 2021 15:48:34 +0100
+Message-ID: <CAMRc=MdtuDVnBMWHuTYUC7e65s8GsYrPnRv0zcmWGJwEQfmuSw@mail.gmail.com>
+Subject: Re: [PATCH RFC 2/2] gpiolib: check the 'ngpios' property in core
+ gpiolib code
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Joel Becker <jlbec@evilplan.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Kent Gibson <warthog618@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 4, 2021 at 8:01 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Thu, Nov 11, 2021 at 9:47 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> Linus,
+> On Thu, Nov 11, 2021 at 10:26 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> >
+> > Several drivers read the 'ngpios' device property on their own, but
+> > since it's defined as a standard GPIO property in the device tree bindings
+> > anyway, it's a good candidate for generalization. If the driver didn't
+> > set its gc->ngpio, try to read the 'ngpios' property from the GPIO
+> > device's firmware node before bailing out.
 >
-> A while ago I sent you a pull-request for the GPIO subsystem which, in addition
-> to regular GPIO updates, contained a new GPIO simulator module based on
-> configfs that we want to use to test the uAPI and its main user-space user -
-> libgpiod. The PR included changes to configfs itself in the form of an
-> implementation of the concept of committable items. The changes had been in
-> development for several months and the maintainers had been largely
-> unresponsive which made me send it directly to you eventually after gathering
-> some reviews on the linux-gpio mailing list. You then Cc'ed Al who raised some
-> concerns and the patches were pulled out.
+> Thanks!
 >
-> A couple months have passed with a few more iterations and I still can't get
-> any meaningful reviews from the configfs maintainers (nor NAKs for that
-> matter). I decided to give it another try and send it to you directly again.
+> ...
 >
-> Since last time I've addressed issues raised by Al (to the best of my ability
-> anyway) and made sure all references are counted correctly (including error
-> paths) and all resources freed. This code has been tested a lot with
-> a development version of libgpiod. The branch I've tagged spent some time in
-> next too with a single issue reported and fixed.
+> > +               ret = fwnode_property_read_u32(gdev->dev.fwnode, "ngpios",
+> > +                                              &ngpios);
 >
-> Please consider pulling.
+> I'm wondering if there is any obstacle to call
 >
-> Best Regards,
-> Bartosz Golaszewski
+>                ret = device_property_read_u32(&gdev->dev, "ngpios", &ngpios);
 >
+> ?
+>
+> Rationale (the main one) is to avoid direct dereference of fwnode from
+> struct device (it might be changed in the future). I really prefer API
+> calls here.
+>
+> > +               if (ret == 0) {
+> > +                       gc->ngpio = ngpios;
+> > +               } else {
+> > +                       chip_err(gc, "tried to insert a GPIO chip with zero lines\n");
+> > +                       ret = -EINVAL;
+> > +                       goto err_free_descs;
+> > +               }
+>
+> I would prefer the other way around and without 'else' being involved.
+>
+> >         }
+>
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
 
-Hi Linus,
+Will do. Just a note: some drivers that parse the ngpios property will
+need to continue doing it themselves as they have additional
+requirements from the value (limited max value, needs to be multiple
+of 8, etc.) on the read value. For those that are obvious, we can
+start converting them after this patch lands.
 
-The merge window is closing soon, so I'd like to send out a gentle
-ping and ask you if you have any comments on these patches and what
-should my next steps be regarding them.
-
-Best Regards,
-Bartosz Golaszewski
+Bart
