@@ -2,176 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 41B1A44E27E
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Nov 2021 08:42:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A158C44E471
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Nov 2021 11:16:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233999AbhKLHpf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 Nov 2021 02:45:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33170 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233859AbhKLHpd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Nov 2021 02:45:33 -0500
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B4F1C06120A
-        for <linux-gpio@vger.kernel.org>; Thu, 11 Nov 2021 23:42:43 -0800 (PST)
-Received: by mail-wm1-x331.google.com with SMTP id o29so7009263wms.2
-        for <linux-gpio@vger.kernel.org>; Thu, 11 Nov 2021 23:42:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=d4YpBbYWP9wG3LFBKWknnju7IW21BdQrAXLAFoUfJjk=;
-        b=L0G7vqzIu4OmVtWPcfcfA5NzLtPk2i0H7s2BzObNlHQTFEkm03sqk/2QHQ4kjpk9BH
-         XMXouE5QpmwrxFfo6B5ZLvuccwWWhT/w9Ko9Yi7L+7BfDDnicqyRLnT+TM8ck5H5bQEY
-         cyD6P6qfh9iWldNqTQR7o5UJ+sXkSMXyDzLNU6kkBq7ka/+ZuUqEk/qcSbQ3GxXC7kiU
-         cm9dyledHK9n0gr3crraQGaAfhd3vfTQwfXVu/kwmwojjE1dRCSgNEVgeiJJB70r7ke9
-         OYePQHHEPa/usZJXytv516/nCeAGVXFsmZBOHnIcNaOTOhsULeXowN7ikvsxKqOo/gxw
-         3O2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=d4YpBbYWP9wG3LFBKWknnju7IW21BdQrAXLAFoUfJjk=;
-        b=2F7KvyCmwMJ8kvmaIfFDt4bIBRbFBcheCCKrcKKsYx5PXy2lTKS355DDocIuzm4ThS
-         ylmCWT5R0VSqnWWYAfcbb8eZLN15P1BiSr8eQwy21EQuoFTW2qHqt3kF3GWNEfMYLJk+
-         KJMZp+2nBG7fC/Elm4btAkvDzDh1Sg4rZVXTeA+e6VLB19y37Yqitf3e2hOJSgZiz8H+
-         bpLN4N6a8eoPji+WqJecgzOisQcw8QCZKu89bEEvMC9WU83jxMxKCNaUvKkCNM5OrUfc
-         WfY+R3bsH2F6k92eeX1lwsJpm1MTNqtDVw/jDTqH4JyEgHAt4TxTDbwWhJNHauNhKlXk
-         8+IQ==
-X-Gm-Message-State: AOAM530EsZFgJMxBHahfhB1gkSHbTbDT6BiKqo2JI1kuCsshkBlKVZ8M
-        4iMJQiOXETKYAtRg6Np35JMY2Q==
-X-Google-Smtp-Source: ABdhPJyYtg+MHn61GMl0MRFqSO/sm1wnHgrm7yORmq7WT7ihtvN7d0mp317CBhRDaom5mAlXGDszmg==
-X-Received: by 2002:a05:600c:2107:: with SMTP id u7mr32377342wml.82.1636702961238;
-        Thu, 11 Nov 2021 23:42:41 -0800 (PST)
-Received: from google.com ([95.148.6.174])
-        by smtp.gmail.com with ESMTPSA id q8sm4978469wrx.71.2021.11.11.23.42.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Nov 2021 23:42:40 -0800 (PST)
-Date:   Fri, 12 Nov 2021 07:42:37 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     patrice.chotard@foss.st.com, Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        alexandre torgue <alexandre.torgue@foss.st.com>,
-        jonathan cameron <jic23@kernel.org>,
-        Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        olivier moysan <olivier.moysan@foss.st.com>,
-        Amelie Delaunay <amelie.delaunay@foss.st.com>,
-        linux-mtd@lists.infradead.org, linux-watchdog@vger.kernel.org,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        maxime coquelin <mcoquelin.stm32@gmail.com>,
-        Matt Mackall <mpm@selenic.com>, vinod koul <vkoul@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        baolin wang <baolin.wang7@gmail.com>,
-        linux-spi@vger.kernel.org, david airlie <airlied@linux.ie>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        netdev@vger.kernel.org,
-        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-        ohad ben-cohen <ohad@wizery.com>, linux-gpio@vger.kernel.org,
-        Jose Abreu <joabreu@synopsys.com>,
-        Le Ray <erwan.leray@foss.st.com>,
-        herbert xu <herbert@gondor.apana.org.au>,
-        michael turquette <mturquette@baylibre.com>,
-        Christophe Kerello <christophe.kerello@foss.st.com>,
-        Gabriel Fernandez <gabriel.fernandez@foss.st.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Christophe Roullier <christophe.roullier@foss.st.com>,
-        linux-serial@vger.kernel.org, Amit Kucheria <amitk@kernel.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Ludovic Barre <ludovic.barre@foss.st.com>,
-        "david s . miller" <davem@davemloft.net>,
-        Lionel Debieve <lionel.debieve@foss.st.com>,
-        linux-i2c@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>,
-        thierry reding <thierry.reding@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        philippe cornu <philippe.cornu@foss.st.com>,
-        linux-rtc@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Hugues Fruchet <hugues.fruchet@foss.st.com>,
-        alsa-devel@alsa-project.org, Zhang Rui <rui.zhang@intel.com>,
-        linux-crypto@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-iio@vger.kernel.org, pascal Paillet <p.paillet@foss.st.com>,
-        Pierre-Yves MORDRET <pierre-yves.mordret@foss.st.com>,
-        Fabien Dessenne <fabien.dessenne@foss.st.com>,
-        linux-pm@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        stephen boyd <sboyd@kernel.org>,
-        dillon min <dillon.minfei@gmail.com>,
-        devicetree@vger.kernel.org,
-        yannick fertre <yannick.fertre@foss.st.com>,
-        linux-kernel@vger.kernel.org,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        linux-phy@lists.infradead.org,
-        benjamin gaignard <benjamin.gaignard@linaro.org>,
-        sam ravnborg <sam@ravnborg.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-clk@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>, Marek Vasut <marex@denx.de>,
-        arnaud pouliquen <arnaud.pouliquen@foss.st.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        dmaengine@vger.kernel.org, linux-media@vger.kernel.org,
-        daniel vetter <daniel@ffwll.ch>, Marc Zyngier <maz@kernel.org>,
-        bjorn andersson <bjorn.andersson@linaro.org>,
-        lars-peter clausen <lars@metafoo.de>
-Subject: Re: [PATCH v3 2/5] dt-bindings: mfd: timers: Update maintainers for
- st,stm32-timers
-Message-ID: <YY4a7ZxzhNq6Or+t@google.com>
-References: <20211110150144.18272-1-patrice.chotard@foss.st.com>
- <20211110150144.18272-3-patrice.chotard@foss.st.com>
- <YYwjPAoCtuM6iycz@robh.at.kernel.org>
+        id S234656AbhKLKSz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 Nov 2021 05:18:55 -0500
+Received: from muru.com ([72.249.23.125]:55382 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234886AbhKLKSz (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 12 Nov 2021 05:18:55 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 01DDB80E2;
+        Fri, 12 Nov 2021 10:16:39 +0000 (UTC)
+Date:   Fri, 12 Nov 2021 12:16:01 +0200
+From:   Tony Lindgren <tony@atomide.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Subject: Re: [PATCH RFC] dt-bindings: pinctrl: support specifying pins
+Message-ID: <YY4+4Wb/H2ogKnQg@atomide.com>
+References: <20211110231436.8866-1-zajec5@gmail.com>
+ <CACRpkdbAS0JiqTQUU0R0yRhVCwagubwsNYLxj1DLE1Ldc+H_JQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <YYwjPAoCtuM6iycz@robh.at.kernel.org>
+In-Reply-To: <CACRpkdbAS0JiqTQUU0R0yRhVCwagubwsNYLxj1DLE1Ldc+H_JQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 10 Nov 2021, Rob Herring wrote:
-
-> On Wed, 10 Nov 2021 16:01:41 +0100, patrice.chotard@foss.st.com wrote:
-> > From: Patrice Chotard <patrice.chotard@foss.st.com>
-> > 
-> > Benjamin has left the company, remove his name from maintainers.
-> > 
-> > Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
-> > ---
-> >  Documentation/devicetree/bindings/mfd/st,stm32-timers.yaml | 1 -
-> >  1 file changed, 1 deletion(-)
-> > 
+* Linus Walleij <linus.walleij@linaro.org> [211111 15:32]:
+> At the time (2011?) it was unclear what kind of data should go into
+> e.g. header and data files in the kernel (modules) and what should
+> go into the DT. So the approach to put pin information into the DT
+> was allowed for pinctrl-single.
 > 
-> Lee indicated he was going to pick this one up, so:
+> The way I have understood it, DT maintainers have since gotten
+> a bit wary about (ab)using the DT as a container for "anything data"
+> and prefer that drivers contain details and derive these from
+> compatible strings.
 > 
-> Acked-by: Rob Herring <robh@kernel.org>
+> As of today, IIUC the DT maintainers are against this scheme.
 
-Since you already merged the treewide patch, you may as well take
-this too.  We'll work through any conflicts that may occur as a
-result.
+We have some newish tools now compared 2011 though with #pinctrl-cells.
+And we now have also GENERIC_PINCTRL_GROUPS, GENERIC_PINMUX_FUNCTIONS
+and GENERIC_PINCONF :)
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
+The problem with the pinctrl-single binding is that it uses the hardware
+specific mux values in addition to the mux register offsets. IMO the
+values should use Linux generic pinctrl defines instead. Just like we
+do for the gpio and interrupt bindings. And then the generic pinctrl
+binding would be very similar to the interrupts-extended binding for
+example.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+And with a generic pinctrl binding pinctrl-single could be updated to
+parse the generic binding naturally too in addition to the legacy
+binding.
+
+> That said, the topic is open in a way. Some people are also annoyed
+> that some graphics drivers just ask Torvalds to pull 100.000+ lines
+> of register defnes in some merge windows. The data has to go
+> somewhere.
+
+Yes and the amount of SoC specific LOC under drivers/pinctrl is pretty
+staggering already.
+
+With all that SoC specific data built into the kernel, it's like going
+camping with all your pants stuffed into your car instead of just the
+pants you need :)
+
+We only need the SoC specific data for the booted SoC, so devicetree
+and loadable modules makes more sense there compared to the current
+built-in setup.
+
+Regards,
+
+Tony
