@@ -2,110 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 86F0144E841
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Nov 2021 15:12:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C8BDB44E86A
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Nov 2021 15:17:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234818AbhKLOPd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 Nov 2021 09:15:33 -0500
-Received: from mail-ua1-f52.google.com ([209.85.222.52]:43782 "EHLO
-        mail-ua1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232299AbhKLOPd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Nov 2021 09:15:33 -0500
-Received: by mail-ua1-f52.google.com with SMTP id v3so18977713uam.10;
-        Fri, 12 Nov 2021 06:12:42 -0800 (PST)
+        id S235146AbhKLOUl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 Nov 2021 09:20:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38508 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231718AbhKLOUk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Nov 2021 09:20:40 -0500
+Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CB6BC061766;
+        Fri, 12 Nov 2021 06:17:50 -0800 (PST)
+Received: by mail-yb1-xb29.google.com with SMTP id 131so24005719ybc.7;
+        Fri, 12 Nov 2021 06:17:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7bya5EY6Rtb/Z58QHqc1Yqz/uwIXxrwWi+NWj4OOJwY=;
+        b=SNCxVjhxB41VV0TMVB4Yb5O7A/e0usUCGDRJbA59hI9FcV75zusPXOhxjaCOHnY63l
+         xzjUA9g20k45C10zi09cCdoXjAR81AdIv70h+PMiRb8d9NsnJZ11a/M6aS8JW+nfioy5
+         N114uES71jHbyGZGJbBjEakxL2MohNprJZzunyBMaHQskyYH4VevvjcMg1rXOYjPtisB
+         QUxVSxSHEwJZuuf4qd3TdlviYljmtNnQQH1/N2Dzabx5yEdMj2ZvTYd+OxxjT9nQryyU
+         4UlwQFoDxK3IV6gX9A81XvZzmuJQux0hQc61Iygkn36ub+ogYuFlHPmev76kwgntQfJW
+         /gYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ODq4xEGeD5W0X5IEWpSPJxMwWpEtxP4KZ12UIQVNQ+c=;
-        b=rifJRaUubSmTxTOLYLaBVzV9unsayw7v9TtHKXJ0qcaehkVX6u5rz5PUS774AeF3j+
-         JfS1ITVebh3KCSrWGIbawYmKJCprgOj25ePgUL/xE2VYN8JI40bKb03DTYSnBENvfN6Q
-         HfPoPJClmgIsKyHnSA73GGIZ8O5jTal5dsfOKFWX7zxzjgdbxWkIHRnhQC4K2xYroPJG
-         ycfg+YZ9BtAZTep/W5u/zkXQKHdvVfZImi/PFsgHcXj8yoS9LY1K0ADlnFef7m32XM+5
-         nDHzl9JsgHs9UHrf6z59mm+rbTE8CMDuSuBSmsScs/TE4iQAynqXPxxtk1IM+P4xJHLg
-         BzYQ==
-X-Gm-Message-State: AOAM530Ifru1G8ltqyu4FVgwBoiwT+J9YcWoBVToMpZPrkuelxdObb1d
-        j0LayBe7R2Wk+8Vt+dFNH+9VwuTAzyy91g==
-X-Google-Smtp-Source: ABdhPJyQLZe8MJSZV274W1EpngvJWRZGGpFMx5ibh+/dMol9BMv5OzBx6K3GoX0Ztni6g4QCAdKUOA==
-X-Received: by 2002:a05:6102:2748:: with SMTP id p8mr10802136vsu.13.1636726361928;
-        Fri, 12 Nov 2021 06:12:41 -0800 (PST)
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com. [209.85.222.43])
-        by smtp.gmail.com with ESMTPSA id e13sm4025093vkd.21.2021.11.12.06.12.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Nov 2021 06:12:41 -0800 (PST)
-Received: by mail-ua1-f43.google.com with SMTP id e10so19143093uab.3;
-        Fri, 12 Nov 2021 06:12:41 -0800 (PST)
-X-Received: by 2002:a9f:248b:: with SMTP id 11mr18426788uar.14.1636726361011;
- Fri, 12 Nov 2021 06:12:41 -0800 (PST)
+        bh=7bya5EY6Rtb/Z58QHqc1Yqz/uwIXxrwWi+NWj4OOJwY=;
+        b=TzZUqW8usNZnEVFhTuZaGTS4873kMAdcG3iOJY2JA1Y4CHT7tQgg1RNjWxoHmhKzI4
+         ZatsrFqnKDkWdVFv/db2zBCleEKgrCe6uPsebwWVnKf6aasb76C4u3CpLgtu4xIytCVH
+         UCeMmu6ceERRnNw8AaFj47zjqCLqqviA3bRXNTZR8/TSnCkbgVz4obpSC/8a1MuyLEiU
+         E7D/7IDj0VF4138zJlhsLvzndWu7Sa3N5m5aYnkmoCRDuIJcmfA5zFR5+Nq3TEbNMKH/
+         A1fXAq/SGNzl6N6+lnaUf4pLrH6lgLrmyEuBbwj8l3k1pPCgcCqXM468LEu62A56r17y
+         RO8w==
+X-Gm-Message-State: AOAM532ArWYBf90HolKE0o1ibd8zJkbShlqV3vdEOHS7A2Dy0bLSmy93
+        9osUBMSXkXy1vMN9dQzvJz+0cLxAFNyGIEAinryBTtRNcdoayw==
+X-Google-Smtp-Source: ABdhPJx/oBs4d/v2DIBjYFnAf47VgGeIBILgIJFBB1Cko+QVsxWfzKhDpObLW/8dD2e42h2j++Jm/dv4XAFL173djkQ=
+X-Received: by 2002:a5b:783:: with SMTP id b3mr16220460ybq.328.1636726669394;
+ Fri, 12 Nov 2021 06:17:49 -0800 (PST)
 MIME-Version: 1.0
-References: <20211110225808.16388-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20211110225808.16388-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 12 Nov 2021 15:12:29 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWmvPgAeS1o8aubaYBihuFrggoVkpT8XtnTZ6nq-VXn9A@mail.gmail.com>
-Message-ID: <CAMuHMdWmvPgAeS1o8aubaYBihuFrggoVkpT8XtnTZ6nq-VXn9A@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 0/7] Renesas RZ/G2L IRQC support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
+References: <20211110224622.16022-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20211110224622.16022-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdVGeuabyQPYE2JPMzg_Kt0r-MxFr62SobQNLzFoWLo=8g@mail.gmail.com>
+In-Reply-To: <CAMuHMdVGeuabyQPYE2JPMzg_Kt0r-MxFr62SobQNLzFoWLo=8g@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Fri, 12 Nov 2021 14:17:23 +0000
+Message-ID: <CA+V-a8sJuYg5_aSc5toAy10YXDBe4GMcyE8xMJ+TTT0KhPCxeA@mail.gmail.com>
+Subject: Re: [PATCH v3 3/6] pinctrl: renesas: pinctrl-rzg2l: Add helper
+ functions to read/write pin config
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
         Biju Das <biju.das.jz@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Prabhakar,
+Hi Geert,
 
-On Wed, Nov 10, 2021 at 11:58 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> The RZ/G2L Interrupt Controller is a front-end for the GIC found on
-> Renesas RZ/G2L SoC's with below pins:
-> - IRQ sense select for 8 external interrupts, mapped to 8 GIC SPI interrupts
-> - GPIO pins used as external interrupt input pins out of GPIOINT0-122 a
->   maximum of only 32 can be mapped to 32 GIC SPI interrupts,
-> - NMI edge select.
+Thank you for the review.
+
+On Fri, Nov 12, 2021 at 2:06 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 >
->                                                                 _____________
->                                                                 |    GIC     |
->                                                                 |  ________  |
->                                          ____________           | |        | |
-> NMI ------------------------------------>|          |  SPI0-479 | | GIC-600| |
->                 _______                  |          |------------>|        | |
->                 |      |                 |          |  PPI16-31 | |        | |
->                 |      | IRQ0-IRQ8       |   IRQC   |------------>|        | |
-
-IRQ0-IRQ7?
-
-> P0_P48_4 ------>| GPIO |---------------->|          |           | |________| |
->                 |      |GPIOINT0-122     |          |           |            |
->                 |      |---------------->| TINT0-31 |           |            |
->                 |______|                 |__________|           |____________|
+> Hi Prabhakar,
 >
-> The proposed RFC patches, add the IRQ domains in GPIO (pinctrl driver) and the
-> IRQC driver. The IRQC domain handles the actual SPI interrupt and upon reception
-> of the interrupt it propagates to the GPIO IRQ domain to handle virq.
-> Out of GPIOINT0-122 only 32 can be mapped to GIC SPI, this mapping is handled by
-> the IRQC driver.
+> On Wed, Nov 10, 2021 at 11:46 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > Add helper functions to read/read modify write pin config.
+> >
+> > Switch to use helper functions for pins supporting PIN_CONFIG_INPUT_ENABLE
+> > capabilities.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> > ---
+> > v2->v3
+> > * Dropped duplicate masking in rzg2l_read_pin_config
+> > * Dropped port_pin flag
+> > * Dropped spinlocks around read/write
+>
+> You do need the spinlock in the read-modify-write case.
+>
+Ouch I mistook your comment of dropping the lock entirely!
+> No worries, I'll add it back while applying.
+>
+Thank you.
 
-Gr{oetje,eeting}s,
+Cheers,
+Prabhakar
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> i.e. will queue in renesas-pinctrl-for-v5.17.
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
