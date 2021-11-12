@@ -2,122 +2,129 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 479CE44E4AF
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Nov 2021 11:35:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AA34744E585
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Nov 2021 12:22:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234325AbhKLKiG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 Nov 2021 05:38:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44050 "EHLO
+        id S233994AbhKLLZC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 Nov 2021 06:25:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234144AbhKLKiG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Nov 2021 05:38:06 -0500
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF377C061766;
-        Fri, 12 Nov 2021 02:35:15 -0800 (PST)
-Received: by mail-wr1-x431.google.com with SMTP id r8so14608378wra.7;
-        Fri, 12 Nov 2021 02:35:15 -0800 (PST)
+        with ESMTP id S233883AbhKLLZC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Nov 2021 06:25:02 -0500
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE8F8C061766;
+        Fri, 12 Nov 2021 03:22:11 -0800 (PST)
+Received: by mail-ed1-x532.google.com with SMTP id g14so36360650edz.2;
+        Fri, 12 Nov 2021 03:22:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QdoNIfuooUxGvM1/b5JFfH6vaJ2XJ2d/YPwKErmo22w=;
-        b=ZPgxkQUMiQOxckL/6jdYj8UN9nOtMnrBoPRPrAHuKl24iZ16hoa0TD25SSeI/A3t1d
-         mMwyuya5j23x/hQEu4yaGDgE3D/bkOwFW5yx2lL92e+Y4rB3kFcQ+heHYBIzuUbPcRyP
-         lJqhYbQvYMI8GTe/V/maTuljtel/Q3iXy13qCpeQRXiYNTX+oV5vVIeThjONtC8ES9JD
-         ntXYqf0ZdouUhrYFDa9lB8xMBDUa/fiVspFvlkD9jGqlFW7ymFpGZ1qhFSGyVH3Ciu4Y
-         JxHau8NizF7X/GeORz0fcGxnYgB0ptogucnbFXKk6/+ugsrhWBrRw0HZ2lTafD8x5Zp5
-         L74A==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9V5Di8a8qyE+6jAAu0K6/l3AcCOwFjxWjFK/ohjqHvM=;
+        b=ZruTDvmwL9J3DhYB0V0NebSG2YNkc2mEybtAJg1zCWCe5N5tbzkxPgIEfyTYH7lDT0
+         EKkx6RcH8148+XKgBROyI4XxxUfLtKKbrH5b753u2q1MK2zj1+1d4/S+MJInhIG2ivd/
+         rhi6K1TYKO81ndafBfgeqRj75hdy3aHToS4OkEdVLvk9PwIUqCzIiIbJTCOA40wJISZQ
+         w+C7+vOuBcR18T2UFE1DLmXtu5I2TsjzXXAJZN8InrBF5vCxpsUJjRxZZXmfBsnjrhe/
+         UJmPBDghtGVD0Ri/jx3PiQkksk/lTq7USQ/160hE/IYq87dnXMM8MR/behE7saOo/5Gp
+         wIVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QdoNIfuooUxGvM1/b5JFfH6vaJ2XJ2d/YPwKErmo22w=;
-        b=MSMe/LZXr5iSpwhxTaV7IB/Ddk49uMN5pb8Es7/HNT+ij0m39fGqJqM9tJTKElvPCk
-         5/8168oxbJqdVvGnsMbYOidGU92ahe06qFsPAc2dgExzYCVZP1T+jZo8o7jriR3K+UDZ
-         /iZ3Wc25ukgUKzr2DQWysTLoX+0ecf01Dbmq4GQR0tNJd+c0YQ8mWbm7SdTXC7Zu4cr4
-         10HBD+CuRjXpRC3Z8caE3zC+Vsm1UbbufwV9pRLys4sGcoVW7j+gjn5YETObMWYyEwsR
-         KpPvs7mLPkT0EZzJRJIHlIujhnVMGpa+6lQcVCEcMgKGl4EzFU7CVsPWCstwTefCsZbl
-         eWaA==
-X-Gm-Message-State: AOAM530yYcgHMJIkTry30fSX7qDZMvWBmadbDXcN35yhjeHNeWX9xl71
-        aonvaxLU+i4BA9Jr7f4ugT8=
-X-Google-Smtp-Source: ABdhPJxv6PsU9fthoNFdX3tDvA618t/AN85YWs8Oi5s91O6Iy+wiEahdsLUu220uNmi1omEHX08dDw==
-X-Received: by 2002:a5d:468f:: with SMTP id u15mr17174462wrq.171.1636713314393;
-        Fri, 12 Nov 2021 02:35:14 -0800 (PST)
-Received: from orome.fritz.box ([193.209.96.43])
-        by smtp.gmail.com with ESMTPSA id m20sm12117707wmq.11.2021.11.12.02.35.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Nov 2021 02:35:13 -0800 (PST)
-Date:   Fri, 12 Nov 2021 11:35:10 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Prathamesh Shete <pshete@nvidia.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Suresh Mangipudi <smangipudi@nvidia.com>
-Subject: Re: [PATCH 2/2] gpio: tegra186: Add support for Tegra234 gpio
-Message-ID: <YY5DXh6MdmSFXHhB@orome.fritz.box>
-References: <20211021123021.9602-1-pshete@nvidia.com>
- <20211021123021.9602-2-pshete@nvidia.com>
- <YXq3/1AXX7KiwpTy@orome.fritz.box>
- <YYE7aXo0mfCfCqGF@orome.fritz.box>
- <DM5PR12MB240697948C6DFF64E45AFF00B78C9@DM5PR12MB2406.namprd12.prod.outlook.com>
- <CACRpkdZto=5Pa4r7-eufUqteaJS5yYeTL6Oh8mFO_g=6RzV+mg@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9V5Di8a8qyE+6jAAu0K6/l3AcCOwFjxWjFK/ohjqHvM=;
+        b=3dj1nUPdEvxcZ683UtAZYF8E8oe7Vg8KUrBUTg8nqNTbRnPaR3K6qwcyV1OLGVtO8m
+         kAEpm1ytst0EhADQ/qzL6fBJq0kJ3v7tVXvd70nehR62bb8YdLehY5QExlaI4yOaAFRx
+         jTIZNByBwliHQIYvC1DGqbWRrFvH9IB+j3rFsj+a52Wbmu9bLQ3uCzg1v1aBOAQDrrRP
+         oS4VpkKPhQR/tGcaU1grHXH47tSMj2l7fZ/Kzh8P5UEAQUnqLzCBbP8+OlnR0jmQq8uD
+         eicH+fJX58H339UYqIywc/bS0ziKgHvsQigV82+iz9Wn+AWfPvpv/VfkMkQvFfCYRwxf
+         mSTA==
+X-Gm-Message-State: AOAM531qqbBUiDakdTOpJrlL+xF1fjTEDaZjYzhv4D62uAXg0fdC5L7x
+        PUASFQyeLw0Q6GKviRfWVpo9BUj3M4dz2J7EdOfKhJ/rbBvmbg==
+X-Google-Smtp-Source: ABdhPJynT0/Ydf2hVmCsiNCZ25jcRpNCeBcKZGpTrxDUkkmvTP0NtWl9e2cBnHMISg5oLEKwA+LaVPf5kHVfTuL8iiY=
+X-Received: by 2002:a50:9ec9:: with SMTP id a67mr8043060edf.238.1636716130294;
+ Fri, 12 Nov 2021 03:22:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="aVodid0IcneiqicN"
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZto=5Pa4r7-eufUqteaJS5yYeTL6Oh8mFO_g=6RzV+mg@mail.gmail.com>
-User-Agent: Mutt/2.1.3 (987dde4c) (2021-09-10)
+References: <20211110231436.8866-1-zajec5@gmail.com> <CACRpkdbAS0JiqTQUU0R0yRhVCwagubwsNYLxj1DLE1Ldc+H_JQ@mail.gmail.com>
+ <YY4+4Wb/H2ogKnQg@atomide.com>
+In-Reply-To: <YY4+4Wb/H2ogKnQg@atomide.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 12 Nov 2021 13:21:26 +0200
+Message-ID: <CAHp75VeO4yr9fAx_-MHDnRGQn1paWF=59+o-9ZyP5PGSCPU8og@mail.gmail.com>
+Subject: Re: [PATCH RFC] dt-bindings: pinctrl: support specifying pins
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Fri, Nov 12, 2021 at 12:16 PM Tony Lindgren <tony@atomide.com> wrote:
+> * Linus Walleij <linus.walleij@linaro.org> [211111 15:32]:
+> > At the time (2011?) it was unclear what kind of data should go into
+> > e.g. header and data files in the kernel (modules) and what should
+> > go into the DT. So the approach to put pin information into the DT
+> > was allowed for pinctrl-single.
+> >
+> > The way I have understood it, DT maintainers have since gotten
+> > a bit wary about (ab)using the DT as a container for "anything data"
+> > and prefer that drivers contain details and derive these from
+> > compatible strings.
+> >
+> > As of today, IIUC the DT maintainers are against this scheme.
+>
+> We have some newish tools now compared 2011 though with #pinctrl-cells.
+> And we now have also GENERIC_PINCTRL_GROUPS, GENERIC_PINMUX_FUNCTIONS
+> and GENERIC_PINCONF :)
+>
+> The problem with the pinctrl-single binding is that it uses the hardware
+> specific mux values in addition to the mux register offsets. IMO the
+> values should use Linux generic pinctrl defines instead. Just like we
+> do for the gpio and interrupt bindings. And then the generic pinctrl
+> binding would be very similar to the interrupts-extended binding for
+> example.
+>
+> And with a generic pinctrl binding pinctrl-single could be updated to
+> parse the generic binding naturally too in addition to the legacy
+> binding.
+>
+> > That said, the topic is open in a way. Some people are also annoyed
+> > that some graphics drivers just ask Torvalds to pull 100.000+ lines
+> > of register defnes in some merge windows. The data has to go
+> > somewhere.
+>
+> Yes and the amount of SoC specific LOC under drivers/pinctrl is pretty
+> staggering already.
+>
+> With all that SoC specific data built into the kernel, it's like going
+> camping with all your pants stuffed into your car instead of just the
+> pants you need :)
+>
+> We only need the SoC specific data for the booted SoC, so devicetree
+> and loadable modules makes more sense there compared to the current
+> built-in setup.
 
---aVodid0IcneiqicN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm against putting that into DT and here is why.
 
-On Tue, Nov 09, 2021 at 01:30:38AM +0100, Linus Walleij wrote:
-> On Wed, Nov 3, 2021 at 12:01 PM Prathamesh Shete <pshete@nvidia.com> wrot=
-e:
->=20
-> > It would be helpful if you share the update to the device tree bindings=
- documentation patch with me I will push all the changes together.
-> > OR
-> > Can you please resend these patches along with device tree binding docu=
-ment patch that you have.
->=20
-> I'm just gonna assume that you guys sort this out and I can see the
-> combined tegra234 support in v2 :)
+DT is the thing that describes the _platform_. While it's fine to put
+GPIO expander thingy (and we actually do this with labeling schema for
+GPIOs, right?), the SoC level of things is a _hardware_ and with all
+flexibility the DT gives us we will definitely have a deviations on
+_different_ platforms with _the same_ SoC! To work around this we must
+have a validation of the pin names and their functions in many places.
 
-Yeah, I was working on some other Tegra234 related stuff and I'm about
-ready to send out the whole set, though I will likely split it up a bit
-because it's quite a few patches and not all are relevant to everyone.
+And last but not least the copying it in tons of DT feels like a
+duplication effort.,
 
-Thierry
+AFAIU the topic, the pin control lacks labeling schema that will
+provide the view from the platform perspective, while driver provides
+from HW perspective.
 
---aVodid0IcneiqicN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmGOQ14ACgkQ3SOs138+
-s6GHyQ/+KiBJwnOJCZ9FAjlW235POgJ8cDk6kiJ9ARWHs7T3/PvPab5BBtVGEWju
-Mv7eUorj0AoWSTp6a/4PCRPJarVW1En/wBkn0PdQvPvpFTVx/QSEbZ7Qtshfpsa/
-kQU7Q8XXz6Yhj6BnmGpOE+hCXPTjUSMTyHBX2/mPJEQH1bmDKF1hgDcf2g2O1uT5
-t/IvcoBMyYBB0Pdvj7LWGOq/vwrS6lm8xUYwyvZL8l8P4zo/t48Ea0Y0vk2Fk03X
-6Z9Bd1ozTzrjQcY43ufQIswzQhpzGdPnLSEnkQCExbjCFtGd/yk6HCLbpmN9S/Rb
-s4zHmq/hHezeLHhS8iLAaiXxoRpfLwsNBkqLInC++AC1ZprWIiF08Fxdxp3isQ3R
-nxD0U9jDTwj9on7FxBUFl7MNE8mYQ8pifnJ35nEnrLSaPyL3kGqjRVrl2NSdcaYW
-EOTGZP1QgkqNlxSfC+f04hrlDW1xdAJ4zfpceglyu0k75GUyZivu20M3n1UPaBts
-erO3wL/jLS15b7C0JhPJgS99KqMBll8N6EyNzJzBhlB+j7+X8g+kUmZSjkeIfVL+
-HWFrOQe2oXzrZEj1GU1Efkiuf/J+6lSpr6+yXqiQttmhDRmQolMSmkj8use0HANf
-1koXLqqDS9Av6P1f6ukgovXdj2DQK2afCJzAAtwH2nZkO753WsI=
-=p0li
------END PGP SIGNATURE-----
-
---aVodid0IcneiqicN--
+-- 
+With Best Regards,
+Andy Shevchenko
