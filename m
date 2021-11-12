@@ -2,317 +2,379 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 86C2144EA74
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Nov 2021 16:37:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 21F3A44EAA2
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Nov 2021 16:40:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235333AbhKLPke (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 Nov 2021 10:40:34 -0500
-Received: from mail-oi1-f177.google.com ([209.85.167.177]:37525 "EHLO
-        mail-oi1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235411AbhKLPjz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Nov 2021 10:39:55 -0500
-Received: by mail-oi1-f177.google.com with SMTP id o83so18531135oif.4;
-        Fri, 12 Nov 2021 07:37:05 -0800 (PST)
+        id S235253AbhKLPnm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 Nov 2021 10:43:42 -0500
+Received: from mail-oi1-f171.google.com ([209.85.167.171]:38823 "EHLO
+        mail-oi1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233551AbhKLPnj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Nov 2021 10:43:39 -0500
+Received: by mail-oi1-f171.google.com with SMTP id r26so18578241oiw.5;
+        Fri, 12 Nov 2021 07:40:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=9TaMLHWl9iJZfvjLD+Yt9rxlhwt1x09IX/sYxXtA9Lg=;
-        b=QQH4rzxL0EHsi57pRBsPa9wUnLqcsDJtIYmXaPbyq/V4w26aKVuR0+Qo7pCfyK5VnG
-         oW9ibWrNB61ME1SsAdU9TpYqGm4EsXPD6bl5Saxe7kDNvilQL9rqqwkGBQt67RhOU6mc
-         lgMeAeTEctsExsEblijQ+ifc6WNQez0CiONEnQh7C0/nL7lV7Dlxr1MR94a/ggLAXyJz
-         UfpZmTY/IpD6+O0KxR0ADSNvluIjjjY2xehJnPGEk3XFAhnEqfP1TQ8W9qlPETcW+u4G
-         dpo2ouroZRX0BISiZXqETFuTKvnUmhjA2pOOKFfKqNBCh93tD3GeH/LcYLSA815hKgbv
-         9JFA==
-X-Gm-Message-State: AOAM531ldQg3Qf0asIC7jDGVx4S86i8MgSW6PinO50p9cdoW+sNi9pBn
-        FC1i5L7k0eUJvEPlOTE/2A==
-X-Google-Smtp-Source: ABdhPJzIudTzP51IgML2CH0/sEdLOcsKs5b3oI04qJMTV4lzrHlxjPfAROskO5jZxg/7fAZGED04TQ==
-X-Received: by 2002:a05:6808:1814:: with SMTP id bh20mr26725397oib.31.1636731424737;
-        Fri, 12 Nov 2021 07:37:04 -0800 (PST)
+        bh=nzVMGtks6rrWhxXjE+FNEYQ2vPVnBRRsHmjFJbXZd9Q=;
+        b=vSpqBZBFnDT6IrY5jZUtGrPS6lxrk9vUDGcxce2Qx2CVcBuDZXgG39W4vSScltUQpD
+         +icSzoZVEig0zEXZk/pctte70d/GlzB2NUVggO2l7HgPB+m7FrmOGeCY431n//VpolIX
+         SxuaQWqPAwD8j1nC9gC+uEHl0000PfCGqHS6vzf7ttp0Oc/tqYLh7a5VgxvRaIfiDWPj
+         J2Z4Q1433oGGKz8ATuwLVGXOqA9fovX2lCXOeLp5p+gZ0G9lOK98egiYCWF13PxFGzG7
+         Bx+JFR+UMpXSyXKc23lRmEG46EVeIz8Bi98pxEd5jgNpdf2uQZSsuhx0Dfs0RUU0VG4t
+         5GfA==
+X-Gm-Message-State: AOAM532VVj11Y+KMp0bNYLLCxQLc4gL8jMNTaROAs1VK6EJX2VWiEMI2
+        +tgcNc8cjXhBGTZSPMbcCQ==
+X-Google-Smtp-Source: ABdhPJySeCyS8+hB8H/nj8C5IHPl5OU84DQCx6Sks3+0VZ9TlDlz+wXCYcq2KKL/IdtD/aNdEV04SQ==
+X-Received: by 2002:aca:110e:: with SMTP id 14mr19815794oir.100.1636731647969;
+        Fri, 12 Nov 2021 07:40:47 -0800 (PST)
 Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id bk41sm67699oib.31.2021.11.12.07.37.03
+        by smtp.gmail.com with ESMTPSA id v20sm1294642otj.27.2021.11.12.07.40.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Nov 2021 07:37:03 -0800 (PST)
-Received: (nullmailer pid 2894576 invoked by uid 1000);
-        Fri, 12 Nov 2021 15:37:02 -0000
-Date:   Fri, 12 Nov 2021 09:37:02 -0600
+        Fri, 12 Nov 2021 07:40:47 -0800 (PST)
+Received: (nullmailer pid 2899506 invoked by uid 1000);
+        Fri, 12 Nov 2021 15:40:46 -0000
+Date:   Fri, 12 Nov 2021 09:40:46 -0600
 From:   Rob Herring <robh@kernel.org>
 To:     Wells Lu <wellslutw@gmail.com>
 Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         qinjian@cqplus1.com, dvorkin@tibbo.com,
         Wells Lu <wells.lu@sunplus.com>
-Subject: Re: [PATCH v2 2/3] dt-bindings: pinctrl: Add dt-bindings for Sunplus
- SP7021
-Message-ID: <YY6KHnXGMYeNq/dK@robh.at.kernel.org>
+Subject: Re: [PATCH v2 3/3] devicetree: bindings: pinctrl: Add bindings doc
+ for Sunplus SP7021.
+Message-ID: <YY6K/sJi9xZLmW+W@robh.at.kernel.org>
 References: <1635324926-22319-1-git-send-email-wells.lu@sunplus.com>
  <1635754277-32429-1-git-send-email-wells.lu@sunplus.com>
- <1635754277-32429-3-git-send-email-wells.lu@sunplus.com>
+ <1635754277-32429-4-git-send-email-wells.lu@sunplus.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1635754277-32429-3-git-send-email-wells.lu@sunplus.com>
+In-Reply-To: <1635754277-32429-4-git-send-email-wells.lu@sunplus.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 01, 2021 at 04:11:16PM +0800, Wells Lu wrote:
-> Add dt-bindings header files for Sunplus SP7021 SoC.
+On Mon, Nov 01, 2021 at 04:11:17PM +0800, Wells Lu wrote:
+> Add bindings documentation for Sunplus SP7021.
+
+Patch 2 and 3 can be combined. Use consistent subjects. Patch 2 is good. 
+This one is not.
+
 > 
 > Signed-off-by: Wells Lu <wells.lu@sunplus.com>
 > ---
 > Changes in v2:
->  - Added more 'defines' in dt-bindings header files (forgot to add in v1).
+>  - None
 > 
->  MAINTAINERS                                 |   1 +
->  include/dt-bindings/pinctrl/sppctl-sp7021.h | 171 ++++++++++++++++++++++++++++
->  include/dt-bindings/pinctrl/sppctl.h        |  40 +++++++
->  3 files changed, 212 insertions(+)
->  create mode 100644 include/dt-bindings/pinctrl/sppctl-sp7021.h
->  create mode 100644 include/dt-bindings/pinctrl/sppctl.h
+>  .../bindings/pinctrl/sunplus,sp7021-pinctrl.yaml   | 277 +++++++++++++++++++++
+>  MAINTAINERS                                        |   1 +
+>  2 files changed, 278 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/sunplus,sp7021-pinctrl.yaml
 > 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/sunplus,sp7021-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/sunplus,sp7021-pinctrl.yaml
+> new file mode 100644
+> index 0000000..7cfa0ce
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/sunplus,sp7021-pinctrl.yaml
+> @@ -0,0 +1,277 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright (C) Sunplus Co., Ltd. 2021
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/sunplus,sp7021-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Sunplus SP7021 Pin Controller Device Tree Bindings
+> +
+> +maintainers:
+> +  - Dvorkin Dmitry <dvorkin@tibbo.com>
+> +  - Wells Lu <wells.lu@sunplus.com>
+> +
+> +description: |
+> +  The Sunplus SP7021 pin controller is used to control SoC pins. Please
+> +  refer to pinctrl-bindings.txt in this directory for details of the common
+> +  pinctrl bindings used by client devices.
+> +
+> +  Refer to https://sunplus-tibbo.atlassian.net/wiki/spaces/doc/pages/
+> +  1443495991/How+to+setup+pins+of+SP7021+in+device-tree+source
+> +
+> +  The device node of pin controller of Sunplus SP7021 has following
+> +  properties.
+> +
+> +properties:
+> +  compatible:
+> +    const: sunplus,sp7021-pctl
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +    const: 2
+> +
+> +  reg:
+> +    items:
+> +      - description: Base address and length of the MOON2 registers.
+> +      - description: Base address and length of the GPIOXT registers.
+> +      - description: Base address and length of the GPIOXT2 registers.
+> +      - description: Base address and length of the FIRST registers.
+> +      - description: Base address and length of the MOON1 registers.
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +patternProperties:
+> +  '^.*$':
+> +    if:
+> +      type: object
+> +    then:
+
+For new bindings, don't use this hack. Make the node name something you 
+can match on (e.g. '-pins$').
+
+> +      description: |
+> +        A pinctrl node should contain at least one subnodes representing the
+> +        pins or function-pins group available on the machine. Each subnode
+> +        will list the pins it needs, and how they should be configured.
+> +
+> +        Pinctrl node's client devices use subnodes for desired pin
+> +        configuration. Client device subnodes use below standard properties.
+> +
+> +      properties:
+> +        pins:
+> +          description: |
+> +            Define pins which are used by pinctrl node's client device.
+> +
+> +            It consists of one or more integers which represents the config
+> +            setting for corresponding pin. Please use macro SPPCTL_IOPAD to
+> +            define the integers for pins.
+> +
+> +            The first argument of the macro is pin number, the second is pin
+> +            type, the third is type of GPIO, the last is default output state
+> +            of GPIO.
+> +          $ref: /schemas/types.yaml#/definitions/uint32-array
+> +
+> +        function:
+> +          description: |
+> +            Define pin-function which is used by pinctrl node's client device.
+> +            The name should be one of string in the following enumeration.
+> +          $ref: "/schemas/types.yaml#/definitions/string"
+> +          enum: [ SPI_FLASH, SPI_FLASH_4BIT, SPI_NAND, CARD0_EMMC, SD_CARD,
+> +                  UA0, FPGA_IFX, HDMI_TX, LCDIF, USB0_OTG, USB1_OTG ]
+> +
+> +        groups:
+> +          description: |
+> +            Define pin-group in a specified pin-function.
+> +            The name should be one of string in the following enumeration.
+> +          $ref: "/schemas/types.yaml#/definitions/string"
+> +          enum: [ SPI_FLASH1, SPI_FLASH2, SPI_FLASH_4BIT1, SPI_FLASH_4BIT2,
+> +                  SPI_NAND, CARD0_EMMC, SD_CARD, UA0, FPGA_IFX, HDMI_TX1,
+> +                  HDMI_TX2, HDMI_TX3, LCDIF, USB0_OTG, USB1_OTG ]
+> +
+> +        zero_func:
+> +          description: |
+> +            Disabled pins which are not used by pinctrl node's client device.
+> +          $ref: /schemas/types.yaml#/definitions/uint32-array
+> +
+> +      additionalProperties: false
+> +
+> +      allOf:
+> +        - if:
+> +            properties:
+> +              function:
+> +                enum:
+> +                  - SPI_FLASH
+> +          then:
+> +            properties:
+> +              groups:
+> +                enum:
+> +                  - SPI_FLASH1
+> +                  - SPI_FLASH2
+> +        - if:
+> +            properties:
+> +              function:
+> +                enum:
+> +                  - SPI_FLASH_4BIT
+> +          then:
+> +            properties:
+> +              groups:
+> +                enum:
+> +                  - SPI_FLASH_4BIT1
+> +                  - SPI_FLASH_4BIT2
+> +        - if:
+> +            properties:
+> +              function:
+> +                enum:
+> +                  - SPI_NAND
+> +          then:
+> +            properties:
+> +              groups:
+> +                enum:
+> +                  - SPI_NAND
+> +        - if:
+> +            properties:
+> +              function:
+> +                enum:
+> +                  - CARD0_EMMC
+> +          then:
+> +            properties:
+> +              groups:
+> +                enum:
+> +                  - CARD0_EMMC
+> +        - if:
+> +            properties:
+> +              function:
+> +                enum:
+> +                  - SD_CARD
+> +          then:
+> +            properties:
+> +              groups:
+> +                enum:
+> +                  - SD_CARD
+> +        - if:
+> +            properties:
+> +              function:
+> +                enum:
+> +                  - UA0
+> +          then:
+> +            properties:
+> +              groups:
+> +                enum:
+> +                  - UA0
+> +        - if:
+> +            properties:
+> +              function:
+> +                enum:
+> +                  - FPGA_IFX
+> +          then:
+> +            properties:
+> +              groups:
+> +                enum:
+> +                  - FPGA_IFX
+> +        - if:
+> +            properties:
+> +              function:
+> +                enum:
+> +                  - HDMI_TX
+> +          then:
+> +            properties:
+> +              groups:
+> +                enum:
+> +                  - HDMI_TX1
+> +                  - HDMI_TX2
+> +                  - HDMI_TX3
+> +        - if:
+> +            properties:
+> +              function:
+> +                enum:
+> +                  - LCDIF
+> +          then:
+> +            properties:
+> +              groups:
+> +                enum:
+> +                  - LCDIF
+> +        - if:
+> +            properties:
+> +              function:
+> +                enum:
+> +                  - USB0_OTG
+> +          then:
+> +            properties:
+> +              groups:
+> +                enum:
+> +                  - USB0_OTG
+> +        - if:
+> +            properties:
+> +              function:
+> +                enum:
+> +                  - USB1_OTG
+> +          then:
+> +            properties:
+> +              groups:
+> +                enum:
+> +                  - USB1_OTG
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#gpio-cells"
+> +  - gpio-controller
+> +  - clocks
+> +  - resets
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/sp-sp7021.h>
+> +    #include <dt-bindings/reset/sp-sp7021.h>
+> +    #include <dt-bindings/pinctrl/sppctl-sp7021.h>
+> +
+> +    pctl: pctl@9C000100 {
+
+pinctl@9c000100
+
+> +        compatible = "sunplus,sp7021-pctl";
+> +        reg = <0x9C000100 0x100>, <0x9C000300 0x80>, <0x9C000380 0x80>,
+> +              <0x9C0032e4 0x1C>, <0x9C000080 0x20>;
+> +        gpio-controller;
+> +        #gpio-cells = <2>;
+> +        clocks = <&clkc GPIO>;
+> +        resets = <&rstc RST_GPIO>;
+> +
+> +        pins_uart0: pins_uart0 {
+> +            function = "UA0";
+> +            groups = "UA0";
+> +        };
+> +
+> +        pins_uart1: pins_uart1 {
+> +            pins = <
+> +                SPPCTL_IOPAD(11,SPPCTL_PCTL_G_PMUX,MUXF_UA1_TX,0)
+> +                SPPCTL_IOPAD(10,SPPCTL_PCTL_G_PMUX,MUXF_UA1_RX,0)
+> +                SPPCTL_IOPAD(7,SPPCTL_PCTL_G_GPIO,0,SPPCTL_PCTL_L_OUT)
+> +            >;
+> +        };
+> +
+> +        emmc_mux: emmc_mux {
+> +            function = "CARD0_EMMC";
+> +            groups = "CARD0_EMMC";
+> +        };
+> +
+> +        mmc1_mux: mmc1_mux {
+> +            function = "SD_CARD";
+> +            groups = "SD_CARD";
+> +            pins = < SPPCTL_IOPAD(91,SPPCTL_PCTL_G_GPIO,0,0) >;
+> +        };
+> +
+> +        hdmi_A_tx1: hdmi_A_tx1_pins {
+> +            function = "HDMI_TX";
+> +            groups = "HDMI_TX1";
+> +        };
+> +        hdmi_A_tx2: hdmi_A_tx2_pins {
+> +            function = "HDMI_TX";
+> +            groups = "HDMI_TX2";
+> +        };
+> +        hdmi_A_tx3: hdmi_A_tx3_pins {
+> +            function = "HDMI_TX";
+> +            groups = "HDMI_TX3";
+> +        };
+> +    };
+> +...
 > diff --git a/MAINTAINERS b/MAINTAINERS
-> index fd82c77..da6378f 100644
+> index da6378f..11835e7 100644
 > --- a/MAINTAINERS
 > +++ b/MAINTAINERS
-> @@ -14873,6 +14873,7 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+> @@ -14872,6 +14872,7 @@ M:	Wells Lu <wells.lu@sunplus.com>
+>  L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
 >  S:	Maintained
 >  W:	https://sunplus-tibbo.atlassian.net/wiki/spaces/doc/overview
+> +F:	Documentation/devicetree/bindings/pinctrl/sunplus,*
 >  F:	drivers/pinctrl/sunplus/
-> +F:	include/dt-bindings/pinctrl/sppctl*
+>  F:	include/dt-bindings/pinctrl/sppctl*
 >  
->  PKTCDVD DRIVER
->  M:	linux-block@vger.kernel.org
-> diff --git a/include/dt-bindings/pinctrl/sppctl-sp7021.h b/include/dt-bindings/pinctrl/sppctl-sp7021.h
-> new file mode 100644
-> index 0000000..4e07d03
-> --- /dev/null
-> +++ b/include/dt-bindings/pinctrl/sppctl-sp7021.h
-> @@ -0,0 +1,171 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-
-Care about OS other than Linux? Should be dual licensed.
-
-> +/*
-> + * SP7021 pinmux pinctrl bindings.
-> + * Copyright (C) Sunplus Tech/Tibbo Tech. 2020
-> + * Author: Dvorkin Dmitry <dvorkin@tibbo.com>
-> + */
-> +
-> +#ifndef _DT_BINDINGS_PINCTRL_SPPCTL_SP7021_H
-> +#define _DT_BINDINGS_PINCTRL_SPPCTL_SP7021_H
-> +
-> +#include <dt-bindings/pinctrl/sppctl.h>
-> +
-> +#define MUXF_GPIO                       0
-
-Where do these numbers come from? Hopefully they correspond to register 
-offsets and aren't made up. A comment either way here would help.
-
-> +#define MUXF_IOP                        1
-> +#define MUXF_L2SW_CLK_OUT               2
-> +#define MUXF_L2SW_MAC_SMI_MDC           3
-> +#define MUXF_L2SW_LED_FLASH0            4
-> +#define MUXF_L2SW_LED_FLASH1            5
-> +#define MUXF_L2SW_LED_ON0               6
-> +#define MUXF_L2SW_LED_ON1               7
-> +#define MUXF_L2SW_MAC_SMI_MDIO          8
-> +#define MUXF_L2SW_P0_MAC_RMII_TXEN      9
-> +#define MUXF_L2SW_P0_MAC_RMII_TXD0      10
-> +#define MUXF_L2SW_P0_MAC_RMII_TXD1      11
-> +#define MUXF_L2SW_P0_MAC_RMII_CRSDV     12
-> +#define MUXF_L2SW_P0_MAC_RMII_RXD0      13
-> +#define MUXF_L2SW_P0_MAC_RMII_RXD1      14
-> +#define MUXF_L2SW_P0_MAC_RMII_RXER      15
-> +#define MUXF_L2SW_P1_MAC_RMII_TXEN      16
-> +#define MUXF_L2SW_P1_MAC_RMII_TXD0      17
-> +#define MUXF_L2SW_P1_MAC_RMII_TXD1      18
-> +#define MUXF_L2SW_P1_MAC_RMII_CRSDV     19
-> +#define MUXF_L2SW_P1_MAC_RMII_RXD0      20
-> +#define MUXF_L2SW_P1_MAC_RMII_RXD1      21
-> +#define MUXF_L2SW_P1_MAC_RMII_RXER      22
-> +#define MUXF_DAISY_MODE                 23
-> +#define MUXF_SDIO_CLK                   24
-> +#define MUXF_SDIO_CMD                   25
-> +#define MUXF_SDIO_D0                    26
-> +#define MUXF_SDIO_D1                    27
-> +#define MUXF_SDIO_D2                    28
-> +#define MUXF_SDIO_D3                    29
-> +#define MUXF_PWM0                       30
-> +#define MUXF_PWM1                       31
-> +#define MUXF_PWM2                       32
-> +#define MUXF_PWM3                       33
-> +#define MUXF_PWM4                       34
-> +#define MUXF_PWM5                       35
-> +#define MUXF_PWM6                       36
-> +#define MUXF_PWM7                       37
-> +#define MUXF_ICM0_D                     38
-> +#define MUXF_ICM1_D                     39
-> +#define MUXF_ICM2_D                     40
-> +#define MUXF_ICM3_D                     41
-> +#define MUXF_ICM0_CLK                   42
-> +#define MUXF_ICM1_CLK                   43
-> +#define MUXF_ICM2_CLK                   44
-> +#define MUXF_ICM3_CLK                   45
-> +#define MUXF_SPIM0_INT                  46
-> +#define MUXF_SPIM0_CLK                  47
-> +#define MUXF_SPIM0_EN                   48
-> +#define MUXF_SPIM0_DO                   49
-> +#define MUXF_SPIM0_DI                   50
-> +#define MUXF_SPIM1_INT                  51
-> +#define MUXF_SPIM1_CLK                  52
-> +#define MUXF_SPIM1_EN                   53
-> +#define MUXF_SPIM1_DO                   54
-> +#define MUXF_SPIM1_DI                   55
-> +#define MUXF_SPIM2_INT                  56
-> +#define MUXF_SPIM2_CLK                  57
-> +#define MUXF_SPIM2_EN                   58
-> +#define MUXF_SPIM2_DO                   59
-> +#define MUXF_SPIM2_DI                   60
-> +#define MUXF_SPIM3_INT                  61
-> +#define MUXF_SPIM3_CLK                  62
-> +#define MUXF_SPIM3_EN                   63
-> +#define MUXF_SPIM3_DO                   64
-> +#define MUXF_SPIM3_DI                   65
-> +#define MUXF_SPI0S_INT                  66
-> +#define MUXF_SPI0S_CLK                  67
-> +#define MUXF_SPI0S_EN                   68
-> +#define MUXF_SPI0S_DO                   69
-> +#define MUXF_SPI0S_DI                   70
-> +#define MUXF_SPI1S_INT                  71
-> +#define MUXF_SPI1S_CLK                  72
-> +#define MUXF_SPI1S_EN                   73
-> +#define MUXF_SPI1S_DO                   74
-> +#define MUXF_SPI1S_DI                   75
-> +#define MUXF_SPI2S_INT                  76
-> +#define MUXF_SPI2S_CLK                  77
-> +#define MUXF_SPI2S_EN                   78
-> +#define MUXF_SPI2S_DO                   79
-> +#define MUXF_SPI2S_DI                   80
-> +#define MUXF_SPI3S_INT                  81
-> +#define MUXF_SPI3S_CLK                  82
-> +#define MUXF_SPI3S_EN                   83
-> +#define MUXF_SPI3S_DO                   84
-> +#define MUXF_SPI3S_DI                   85
-> +#define MUXF_I2CM0_CLK                  86
-> +#define MUXF_I2CM0_DAT                  87
-> +#define MUXF_I2CM1_CLK                  88
-> +#define MUXF_I2CM1_DAT                  89
-> +#define MUXF_I2CM2_CLK                  90
-> +#define MUXF_I2CM2_DAT                  91
-> +#define MUXF_I2CM3_CLK                  92
-> +#define MUXF_I2CM3_DAT                  93
-> +#define MUXF_UA1_TX                     94
-> +#define MUXF_UA1_RX                     95
-> +#define MUXF_UA1_CTS                    96
-> +#define MUXF_UA1_RTS                    97
-> +#define MUXF_UA2_TX                     98
-> +#define MUXF_UA2_RX                     99
-> +#define MUXF_UA2_CTS                    100
-> +#define MUXF_UA2_RTS                    101
-> +#define MUXF_UA3_TX                     102
-> +#define MUXF_UA3_RX                     103
-> +#define MUXF_UA3_CTS                    104
-> +#define MUXF_UA3_RTS                    105
-> +#define MUXF_UA4_TX                     106
-> +#define MUXF_UA4_RX                     107
-> +#define MUXF_UA4_CTS                    108
-> +#define MUXF_UA4_RTS                    109
-> +#define MUXF_TIMER0_INT                 110
-> +#define MUXF_TIMER1_INT                 111
-> +#define MUXF_TIMER2_INT                 112
-> +#define MUXF_TIMER3_INT                 113
-> +#define MUXF_GPIO_INT0                  114
-> +#define MUXF_GPIO_INT1                  115
-> +#define MUXF_GPIO_INT2                  116
-> +#define MUXF_GPIO_INT3                  117
-> +#define MUXF_GPIO_INT4                  118
-> +#define MUXF_GPIO_INT5                  119
-> +#define MUXF_GPIO_INT6                  120
-> +#define MUXF_GPIO_INT7                  121
-> +
-> +#define GROP_SPI_FLASH                  122
-> +#define GROP_SPI_FLASH_4BIT             123
-> +#define GROP_SPI_NAND                   124
-> +#define GROP_CARD0_EMMC                 125
-> +#define GROP_SD_CARD                    126
-> +#define GROP_UA0                        127
-> +#define GROP_ACHIP_DEBUG                128
-> +#define GROP_ACHIP_UA2AXI               129
-> +#define GROP_FPGA_IFX                   130
-> +#define GROP_HDMI_TX                    131
-> +#define GROP_AUD_EXT_ADC_IFX0           132
-> +#define GROP_AUD_EXT_DAC_IFX0           133
-> +#define GROP_SPDIF_RX                   134
-> +#define GROP_SPDIF_TX                   135
-> +#define GROP_TDMTX_IFX0                 136
-> +#define GROP_TDMRX_IFX0                 137
-> +#define GROP_PDMRX_IFX0                 138
-> +#define GROP_PCM_IEC_TX                 139
-> +#define GROP_LCDIF                      140
-> +#define GROP_DVD_DSP_DEBUG              141
-> +#define GROP_I2C_DEBUG                  142
-> +#define GROP_I2C_SLAVE                  143
-> +#define GROP_WAKEUP                     144
-> +#define GROP_UART2AXI                   145
-> +#define GROP_USB0_I2C                   146
-> +#define GROP_USB1_I2C                   147
-> +#define GROP_USB0_OTG                   148
-> +#define GROP_USB1_OTG                   149
-> +#define GROP_UPHY0_DEBUG                150
-> +#define GROP_UPHY1_DEBUG                151
-> +#define GROP_UPHY0_EXT                  152
-> +#define GROP_PROBE_PORT                 153
-> +#define GROP_ANA_I2C_IF                 154
-> +#define GROP_ANA_TEST_IF                155
-> +
-> +#endif
-> diff --git a/include/dt-bindings/pinctrl/sppctl.h b/include/dt-bindings/pinctrl/sppctl.h
-> new file mode 100644
-> index 0000000..3e82989
-> --- /dev/null
-> +++ b/include/dt-bindings/pinctrl/sppctl.h
-> @@ -0,0 +1,40 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * SP7021 pinmux pinctrl bindings.
-> + * Copyright (C) Sunplus Tech/Tibbo Tech. 2020
-> + * Author: Dvorkin Dmitry <dvorkin@tibbo.com>
-> + */
-> +
-> +#ifndef _DT_BINDINGS_PINCTRL_SPPCTL_H
-> +#define _DT_BINDINGS_PINCTRL_SPPCTL_H
-> +
-> +#define IOP_G_MASTE             (0x01<<0)
-> +#define IOP_G_FIRST             (0x01<<1)
-> +
-> +#define SPPCTL_PCTL_G_PMUX      (0x00|IOP_G_MASTE)
-> +#define SPPCTL_PCTL_G_GPIO      (IOP_G_FIRST|IOP_G_MASTE)
-> +#define SPPCTL_PCTL_G_IOPP      (IOP_G_FIRST|0x00)
-> +
-> +#define SPPCTL_PCTL_L_OUT       (0x01<<0)
-> +#define SPPCTL_PCTL_L_OU1       (0x01<<1)
-> +#define SPPCTL_PCTL_L_INV       (0x01<<2)
-> +#define SPPCTL_PCTL_L_ONV       (0x01<<3)
-> +#define SPPCTL_PCTL_L_ODR       (0x01<<4)
-> +
-> +#define SPPCTL_PCTLE_P(v)       ((v)<<24)
-> +#define SPPCTL_PCTLE_G(v)       ((v)<<16)
-> +#define SPPCTL_PCTLE_F(v)       ((v)<<8)
-> +#define SPPCTL_PCTLE_L(v)       ((v)<<0)
-> +
-> +#define SPPCTL_PCTLD_P(v)       (((v)>>24) & 0xFF)
-> +#define SPPCTL_PCTLD_G(v)       (((v)>>16) & 0xFF)
-> +#define SPPCTL_PCTLD_F(v)       (((v) >> 8) & 0xFF)
-> +#define SPPCTL_PCTLD_L(v)       (((v) >> 0) & 0xFF)
-> +
-> +/*
-> + * pack into 32-bit value:
-> + * pin#{8bit}, typ{8bit}, function{8bit}, flags{8bit}
-> + */
-> +#define SPPCTL_IOPAD(pin, typ, fun, fls) (((pin)<<24)|((typ)<<16)|((fun)<<8)|(fls))
-> +
-> +#endif
 > -- 
 > 2.7.4
 > 
