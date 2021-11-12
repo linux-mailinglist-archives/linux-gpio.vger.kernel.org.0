@@ -2,50 +2,50 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5254D44E82B
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Nov 2021 15:08:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B72F44E833
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Nov 2021 15:09:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235029AbhKLOKy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 Nov 2021 09:10:54 -0500
-Received: from mail-ua1-f52.google.com ([209.85.222.52]:44910 "EHLO
+        id S231718AbhKLOMP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 Nov 2021 09:12:15 -0500
+Received: from mail-ua1-f52.google.com ([209.85.222.52]:38893 "EHLO
         mail-ua1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234199AbhKLOKy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Nov 2021 09:10:54 -0500
-Received: by mail-ua1-f52.google.com with SMTP id p2so18986587uad.11;
-        Fri, 12 Nov 2021 06:08:03 -0800 (PST)
+        with ESMTP id S235029AbhKLOMO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Nov 2021 09:12:14 -0500
+Received: by mail-ua1-f52.google.com with SMTP id o26so19088682uab.5;
+        Fri, 12 Nov 2021 06:09:23 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4DOuw4nyHs7hU56f2iCja0ZDfqiThTsFxVnB3zDgPfI=;
-        b=4LnniHzYEiWzM8AgiF/nfTT1kDo1RJgnR1nFUQCHjYn/a3+NvKi8RGpt6TCfs+jCZx
-         TJ8u6aetLIKmPQwLA8m9pYPVNSuABJiaQYRhex1XZXUn67pVKjwg63rSKdKQluAPzEWp
-         H60iiCsN9ibGyB2yeeARqyuGMpvvxbU3FEUEHu4R3ZBJ1qbt0diBxrcfTVdBXIxupAUK
-         qXc+SPojm/CS2AZKqnqlBrvxhRbqH5ADw0i8w+IGho2GjylNVHz8V9wBNQtS7RGPcaGI
-         85qciRvq19mb8yqHVVSeYcPwv7N1y6yn0TPVa4tkFBpeUPQybXJtAmM1+hxxvv2f4M+3
-         pYYg==
-X-Gm-Message-State: AOAM532xIb/CocorU1GA8qwaq4QL7Blotpw/ayb3yG9HiNSg9t4sGJB9
-        WNmub9GbN6mm6QRtP03JtUx949IF5cTX6g==
-X-Google-Smtp-Source: ABdhPJz5KGNJrVdAXKI67Z4d66322skrJGUdEoTkkyYUJMVGUF+dtI0zuGNceNigS2DkLchS90nUuQ==
-X-Received: by 2002:ab0:3813:: with SMTP id x19mr22586736uav.56.1636726082730;
-        Fri, 12 Nov 2021 06:08:02 -0800 (PST)
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
-        by smtp.gmail.com with ESMTPSA id u16sm4499191uad.2.2021.11.12.06.08.02
+        bh=DhXqfwSlPm16zKdEV1ag+dVLF4h8hJZRSRqMOMtnQqE=;
+        b=pAMihPEe/5UFKRD4T/1DfbLMkJDHEisTHlH1XgSmeAj2IknKzLyfQyjBJbiYlI8VzC
+         BD6g8MLKf+HOnKPZwjLl518QcsbcP629wR6lIS2E3OvVafFvBXprCy4tMCn5H440e2tk
+         a1L6Jz0p3Rny8F6FDXKfA93lXqIu/TGonc8uOeCmTy1/XUbsMEKny0h2O3v0U0DHJRo7
+         SOZnPciXkzQZHGNfd+LaqXOxd7QXyG+ViyFqypjr9DTWfJMyWPBv/327UD2u41ujEq0T
+         owTivkZW7+O/aBh32iHWsWkIv594sNWMadz7draRxntAYnT192iboBikuwyUcX5YPvx9
+         2xpQ==
+X-Gm-Message-State: AOAM5304HWVlUCktLM3ITwL8Gf0awAyR2G1LdtiIR758LNVeLGceCnFz
+        UTpTDVVsJRhVfViCiA3VXDrKrSBN6TluTg==
+X-Google-Smtp-Source: ABdhPJzQ2pUeUXWsBt79uZucsYMSuLGKV7RPpagUhB8nnNXwrU12K4qXxaJanDlhVBz5L0T3xeZuAw==
+X-Received: by 2002:a05:6102:d8d:: with SMTP id d13mr10491858vst.54.1636726161974;
+        Fri, 12 Nov 2021 06:09:21 -0800 (PST)
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com. [209.85.222.52])
+        by smtp.gmail.com with ESMTPSA id t1sm4006288vkl.56.2021.11.12.06.09.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Nov 2021 06:08:02 -0800 (PST)
-Received: by mail-ua1-f45.google.com with SMTP id t13so18999817uad.9;
-        Fri, 12 Nov 2021 06:08:02 -0800 (PST)
-X-Received: by 2002:ab0:5552:: with SMTP id u18mr22545741uaa.78.1636726082069;
- Fri, 12 Nov 2021 06:08:02 -0800 (PST)
+        Fri, 12 Nov 2021 06:09:21 -0800 (PST)
+Received: by mail-ua1-f52.google.com with SMTP id v3so18954364uam.10;
+        Fri, 12 Nov 2021 06:09:21 -0800 (PST)
+X-Received: by 2002:ab0:15a1:: with SMTP id i30mr22901368uae.122.1636726161283;
+ Fri, 12 Nov 2021 06:09:21 -0800 (PST)
 MIME-Version: 1.0
-References: <20211110224622.16022-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20211110224622.16022-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20211110224622.16022-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20211110224622.16022-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20211110224622.16022-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 12 Nov 2021 15:07:51 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWoJEYkPDFa5CBnz4HUOD+E791hLu1Fk2xFaz0UX+hFmg@mail.gmail.com>
-Message-ID: <CAMuHMdWoJEYkPDFa5CBnz4HUOD+E791hLu1Fk2xFaz0UX+hFmg@mail.gmail.com>
-Subject: Re: [PATCH v3 4/6] pinctrl: renesas: pinctrl-rzg2l: Add support to
- get/set pin config for GPIO port pins
+Date:   Fri, 12 Nov 2021 15:09:10 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVw=bDj=Uq+wXzBb_HhG4viHZC0A0znv15htvwwS15oEQ@mail.gmail.com>
+Message-ID: <CAMuHMdVw=bDj=Uq+wXzBb_HhG4viHZC0A0znv15htvwwS15oEQ@mail.gmail.com>
+Subject: Re: [PATCH v3 0/6] RZ/G2L: pinctrl: Support to get/set drive-strength
+ and output-impedance-ohms
 To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -61,15 +61,29 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Prabhakar,
+
 On Wed, Nov 10, 2021 at 11:46 PM Lad Prabhakar
 <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Add support to get/set pin config for GPIO port pins.
+> This patch series add support to get/set drive-strength and
+> output-impedance for RZ/G2L SoC. Along with some macro renames
+> and code cleanup.
 >
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+> Cheers,
+> Prabhakar
+>
+> Changes for v3:
+> * Fixed review comments pointed by Geert.
+>
+> Changes for v2:
+> * Fixed review comments pointed by Geert, split up patch 4 from series [1]
+>
+> Note: This patch series is dependent on first two patches of series [1]
+>
+> [1] https://patchwork.kernel.org/project/linux-renesas-soc/cover/
+> 20211027134509.5036-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-pinctrl-for-v5.17.
+Thank you, will queue in renesas-pinctrl-for-v5.17 with the dependencies.
 
 Gr{oetje,eeting}s,
 
