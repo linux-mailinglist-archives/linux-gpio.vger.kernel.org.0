@@ -2,129 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EEF2844E891
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Nov 2021 15:23:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4407144E925
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Nov 2021 15:46:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235144AbhKLOZu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 12 Nov 2021 09:25:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39804 "EHLO
+        id S235197AbhKLOtb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 12 Nov 2021 09:49:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235106AbhKLOZt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Nov 2021 09:25:49 -0500
-Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBAFCC061766;
-        Fri, 12 Nov 2021 06:22:58 -0800 (PST)
-Received: by mail-yb1-xb2d.google.com with SMTP id s186so24002579yba.12;
-        Fri, 12 Nov 2021 06:22:58 -0800 (PST)
+        with ESMTP id S232403AbhKLOtb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 12 Nov 2021 09:49:31 -0500
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70261C061766
+        for <linux-gpio@vger.kernel.org>; Fri, 12 Nov 2021 06:46:40 -0800 (PST)
+Received: by mail-ed1-x536.google.com with SMTP id e3so2217969edu.4
+        for <linux-gpio@vger.kernel.org>; Fri, 12 Nov 2021 06:46:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ggAR2uubSaydz9H2bhZaHxQ14ET7vRT2WA5ZzUM/Bq4=;
-        b=RmKrY1Mg6PRkyDz1IdWCexNeP/AXl4K1EwGea8Lbgt+TIk/zCcR97hrA6qvZGTHrcM
-         OeY4h7le+zysNz7HeifFubwumUkRt5uRNy2lUCnf2RD3FPIc7wMvwNihVbwO/U5scdgH
-         NXx6tzo83iI1UjbUy6H6vZyelZD0FaZbx/Dw6uHde0uD4BbE35cF9XOQkzlmwJMX1KU9
-         +GSdsMPZahMKqzl94uBuZkYZ77vJHKu1S/SpboJtV7ds/dEDgRmTj8qyMrLDKmVsJVnv
-         /txyxYe609hUCiABQEVu3Rw/1AluIkHy4bprZ/CBxbIFiI/+kJTm1NS9sdXLk7sYQ6OH
-         uYyw==
+        bh=WeFvDrUcPGbcaBQPo6VmrhI9Z5gxUYwokkUPX3k4Mk0=;
+        b=QBebM8rMQiV9mScH9ZUQO4Zpeo7TuM4UoJaHl8WwqfZzuh4JO3WyvIRsLh/6Hcpoi6
+         rteynH1OLtBp2ixzP8B0TlSSL8a0NYnuGYgUffGV+lqFk5lkCH/XUjHRv3kQSP92+AxK
+         jm5MMny5iH7S83FtWNDTzi/8MvrZorcbj7aJ9QFrrVRA/k3wvyo+fzNTNE5MUBGqVvP8
+         qUCKPLcpcV9I+TRFv4hKpjSH6PsG9AE82ouvSSGPPr4sLKMQfMQATUjXZ1tF5kIKJg70
+         bv3o7f6HW7q/wVZjclPVOSAxPbCOAugRtW9nZU9nQGbia5UXW5z4mrYoEjXo5HwrdOc8
+         3LgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ggAR2uubSaydz9H2bhZaHxQ14ET7vRT2WA5ZzUM/Bq4=;
-        b=4rCs1hnaH/tjdI82FZVqNFo7I1ndxFdLzIDyCtIAov+xiPPQ6cCVYtwNbGccIApNuH
-         G8kJATsMuG4uxqSUbN2RLNgw8o5M+UJLlVNEbmHtwxr/EY0VonFHRDdNzlT370pA9qTe
-         TCcTvMCrJxZ/XksNz5U4ZipcN7NJ3Gwa+S7QVlqD2Ix7mTuWQ/PUWM31POe94PlaLhAv
-         td51WL5ip7icEa78Qe0QCuLL+UKzt3gCvoP91QKbQeO3mDYWCiX0QL6+Ur02ZFt6s1d1
-         Yr9jdLHRHpU41lU9onTHw7xq4a49A83yICtQKs8UuwqPn5OK4VWeOLNAa67glSdQE4/t
-         kGpw==
-X-Gm-Message-State: AOAM531hM73nvs5BSnwd3d6L6aY54E2By5IM+g/iWNjaZiSXcOgUoO++
-        PvAJS+IxOKsn6w091LaXTLkWoniTxGf1/9oezgY=
-X-Google-Smtp-Source: ABdhPJyR7CKGHvXg49KCfNoT5U0Y+hsV3oGjChLcbb/t6QQoHHxwVAoOOEMYuIH8zySnXIegmuAbgC8Cs4np+f3RF2E=
-X-Received: by 2002:a25:f502:: with SMTP id a2mr17981752ybe.254.1636726977939;
- Fri, 12 Nov 2021 06:22:57 -0800 (PST)
+        bh=WeFvDrUcPGbcaBQPo6VmrhI9Z5gxUYwokkUPX3k4Mk0=;
+        b=Erqe3pfJi2Xn2KBy0ilwd7B1iy/N844pMnRdbu6umnvq9n5FS0L71C2s9SkhIiky7c
+         CyyNZbxG7BxCx/Q7j5LVwrWVXVq/84spgMClpQ9OWPD3Y8r6eQJaK+Gk7UyzWR8ojsPg
+         e+IzEXtc5h5SgkvZBv8z4f4QCtAJMjnkSnWfgISemdWKulMB+saAUDa1uFr8YrCGyKaa
+         /RgkU6iuydyjplB5SXEDT29666fNsaYOA9R9GUv9YDYGLjGTdCJlMyEv6BOvVnhoe+qg
+         S0Ep1vj+Pa246dHqGz7v0dntPaQmG/RFGHM1iR+hfBH66tBCjtb1lXc9bSNosiNM+YBB
+         yRlQ==
+X-Gm-Message-State: AOAM531e0gNwXvQeQ+reF6MvZm925WIC+jzavVc+68c2PgNm61hhQWYA
+        QkAYjGXffTENgKlmP2ugXjz9dRxCej3YnXIvLyzIxw==
+X-Google-Smtp-Source: ABdhPJwbAaJWd8bNqmv+zEgAxyuJ9xSV9pu4jexjV9AxwiLg6vC9YfkLVXdCMmB6gTe8Q7eultwG4oz/JkgGFBD1wGI=
+X-Received: by 2002:a17:907:1deb:: with SMTP id og43mr19716880ejc.189.1636728399055;
+ Fri, 12 Nov 2021 06:46:39 -0800 (PST)
 MIME-Version: 1.0
-References: <20211110225808.16388-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWmvPgAeS1o8aubaYBihuFrggoVkpT8XtnTZ6nq-VXn9A@mail.gmail.com>
-In-Reply-To: <CAMuHMdWmvPgAeS1o8aubaYBihuFrggoVkpT8XtnTZ6nq-VXn9A@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Fri, 12 Nov 2021 14:22:32 +0000
-Message-ID: <CA+V-a8tLRircMSHxqHRP6g611fPpSrVe1motkKAULeuAM1bMUA@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 0/7] Renesas RZ/G2L IRQC support
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
+References: <20211104190030.20660-1-brgl@bgdev.pl>
+In-Reply-To: <20211104190030.20660-1-brgl@bgdev.pl>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 12 Nov 2021 15:46:28 +0100
+Message-ID: <CAMRc=MfA=i4xn+Xy4mCg17rCCQfGcp7QUrodYz0YNnxPPd-0Mw@mail.gmail.com>
+Subject: Re: [GIT PULL] configfs-based GPIO simulator for v5.16
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>
+        Joel Becker <jlbec@evilplan.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Kent Gibson <warthog618@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Geert,
-
-On Fri, Nov 12, 2021 at 2:12 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+On Thu, Nov 4, 2021 at 8:01 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 >
-> Hi Prabhakar,
+> Linus,
 >
-> On Wed, Nov 10, 2021 at 11:58 PM Lad Prabhakar
-> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > The RZ/G2L Interrupt Controller is a front-end for the GIC found on
-> > Renesas RZ/G2L SoC's with below pins:
-> > - IRQ sense select for 8 external interrupts, mapped to 8 GIC SPI interrupts
-> > - GPIO pins used as external interrupt input pins out of GPIOINT0-122 a
-> >   maximum of only 32 can be mapped to 32 GIC SPI interrupts,
-> > - NMI edge select.
-> >
-> >                                                                 _____________
-> >                                                                 |    GIC     |
-> >                                                                 |  ________  |
-> >                                          ____________           | |        | |
-> > NMI ------------------------------------>|          |  SPI0-479 | | GIC-600| |
-> >                 _______                  |          |------------>|        | |
-> >                 |      |                 |          |  PPI16-31 | |        | |
-> >                 |      | IRQ0-IRQ8       |   IRQC   |------------>|        | |
+> A while ago I sent you a pull-request for the GPIO subsystem which, in addition
+> to regular GPIO updates, contained a new GPIO simulator module based on
+> configfs that we want to use to test the uAPI and its main user-space user -
+> libgpiod. The PR included changes to configfs itself in the form of an
+> implementation of the concept of committable items. The changes had been in
+> development for several months and the maintainers had been largely
+> unresponsive which made me send it directly to you eventually after gathering
+> some reviews on the linux-gpio mailing list. You then Cc'ed Al who raised some
+> concerns and the patches were pulled out.
 >
-> IRQ0-IRQ7?
+> A couple months have passed with a few more iterations and I still can't get
+> any meaningful reviews from the configfs maintainers (nor NAKs for that
+> matter). I decided to give it another try and send it to you directly again.
 >
-oops typo here.
-
-> > P0_P48_4 ------>| GPIO |---------------->|          |           | |________| |
-> >                 |      |GPIOINT0-122     |          |           |            |
-> >                 |      |---------------->| TINT0-31 |           |            |
-> >                 |______|                 |__________|           |____________|
-> >
-> > The proposed RFC patches, add the IRQ domains in GPIO (pinctrl driver) and the
-> > IRQC driver. The IRQC domain handles the actual SPI interrupt and upon reception
-> > of the interrupt it propagates to the GPIO IRQ domain to handle virq.
-Also this bit isnt true (copy pasted from v1 :(). IRQ now is handled
-by the slave driver requesting interrupts. IRQC now handles eoi
-callbacks.
-
-> > Out of GPIOINT0-122 only 32 can be mapped to GIC SPI, this mapping is handled by
-> > the IRQC driver.
+> Since last time I've addressed issues raised by Al (to the best of my ability
+> anyway) and made sure all references are counted correctly (including error
+> paths) and all resources freed. This code has been tested a lot with
+> a development version of libgpiod. The branch I've tagged spent some time in
+> next too with a single issue reported and fixed.
+>
+> Please consider pulling.
+>
+> Best Regards,
+> Bartosz Golaszewski
 >
 
-Cheers,
-Prabhakar
+Hi Linus,
 
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+The merge window is closing soon, so I'd like to send out a gentle
+ping and ask you if you have any comments on these patches and what
+should my next steps be regarding them.
+
+Best Regards,
+Bartosz Golaszewski
