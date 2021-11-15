@@ -2,84 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 394BD450359
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Nov 2021 12:23:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D6143450362
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Nov 2021 12:24:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230456AbhKOL0V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 Nov 2021 06:26:21 -0500
-Received: from mga02.intel.com ([134.134.136.20]:24260 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231461AbhKOL0N (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 15 Nov 2021 06:26:13 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10168"; a="220632503"
-X-IronPort-AV: E=Sophos;i="5.87,236,1631602800"; 
-   d="scan'208";a="220632503"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2021 03:23:17 -0800
-X-IronPort-AV: E=Sophos;i="5.87,236,1631602800"; 
-   d="scan'208";a="585236645"
-Received: from smile.fi.intel.com ([10.237.72.184])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2021 03:23:12 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1mma4l-0072cQ-A0;
-        Mon, 15 Nov 2021 13:23:03 +0200
-Date:   Mon, 15 Nov 2021 13:23:02 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jianqun Xu <jay.xu@rock-chips.com>,
-        Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        Bamvor Jian Zhang <bamv2005@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Patrice Chotard <patrice.chotard@foss.st.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Andy Shevchenko <andy@kernel.org>
-Subject: Re: [PATCH v1 01/19] lib/string_helpers: Introduce
- kasprintf_strarray()
-Message-ID: <YZJDFhMNyRaH+HFE@smile.fi.intel.com>
-References: <20211105124242.27288-1-andriy.shevchenko@linux.intel.com>
- <CACRpkdZ2-MRY_L2J4RvKDNW1yyThg7KUFbd80ZMpRY209RNxnw@mail.gmail.com>
+        id S231390AbhKOL04 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 Nov 2021 06:26:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41290 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231786AbhKOL0s (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Nov 2021 06:26:48 -0500
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88F99C061767
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Nov 2021 03:23:50 -0800 (PST)
+Received: by mail-ed1-x52d.google.com with SMTP id w1so70424097edd.10
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Nov 2021 03:23:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nTWihlS7JMTvQaBGNGJD6t4n52toGFrv4uGcY9ggcM8=;
+        b=mCx2UlhlZa5VElpVAh6Ze+4eSolv61qJqaXdv62Jf6tlyBvZM2Lt/L9UexMvAqRjr0
+         9QgONMSdrfGQK3YYAJEuT0N9zPwHZ6jvjNUf3NkqLKaa5G5j/i0mgnJMyq0DUn5xDDSo
+         wztVBaOLMTVDZ1HEopQHvZVg6LalRMnf+lSTafPlXyyJFyuvkeeu8IbJJLrLP4LLQGob
+         2kT2KFt9Hg4gO2I90AaiYjyD4nhvwigwes8jJYWYGiLZJ8W/6WA+LMN8yd31CBegr7ux
+         yQhn4dxF5DojWidnFx03NXqhYbtKS5wYS/u5gnpcdqpsfS2iT2s1Sd+cvHygCfRCoBBO
+         JJ/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nTWihlS7JMTvQaBGNGJD6t4n52toGFrv4uGcY9ggcM8=;
+        b=VHWPb6BB0kNvYhj/JOrJ0cxSOkT+gg5o9ky8R4j1za4azLseFmGFNZtPTjNG1ML8kc
+         nA/KoxhwhwNlI2ykpuLT0C3cdSUBEgr+wW0hjQUliCuAYIh9JW7RLw2LXC2Bl6VXB+gl
+         fx4bGHEx43sytCHRyG9acbts2WkTwmDOhjbWXBHpQ6ziSX1mOJ9O3ffRHRNKzUGElQnO
+         Urbwh1jTmINkO98Ts1uWhz+kb34vA5pi2iP/j+IhSviKd2OA+2SuoH/QZvu+ehr+nWdq
+         hg4xu+pYe7qqhvcbV7QFbjZwDwe82sVZrzArP4Js3RKRup9pbDJvSEV5cjLa3senbmIq
+         37tQ==
+X-Gm-Message-State: AOAM530Kc4VZcab3JCp/G2B/OGcu6UskNgHjKeMlNppi7doU3ndTQBrW
+        YuImwYgroT4O621Kxu+Am3zjaOdZmx+YGPcfUzvmYg==
+X-Google-Smtp-Source: ABdhPJwplrH/h4uJ902U6lQCybbS4z5DM0zNOAijb05Miq8byRKi+/AfAW+yQX+JrrQBAS0KPQmwRgi1fkq6f6vT5s0=
+X-Received: by 2002:a17:906:5343:: with SMTP id j3mr48564278ejo.538.1636975429136;
+ Mon, 15 Nov 2021 03:23:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZ2-MRY_L2J4RvKDNW1yyThg7KUFbd80ZMpRY209RNxnw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20211109161253.2202108-1-robh@kernel.org>
+In-Reply-To: <20211109161253.2202108-1-robh@kernel.org>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 15 Nov 2021 12:23:38 +0100
+Message-ID: <CAMRc=Mdv8-=WsizZ1W8p8+kLKh2QLfgfxSOQ0L=0rBDvO63HpQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: xlp: Remove Netlogic XLP variants
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 09, 2021 at 12:42:00PM +0100, Linus Walleij wrote:
-> On Fri, Nov 5, 2021 at 1:43 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> 
-> > We have a few users already that basically want to have array of
-> > sequential strings to be allocated and filled.
-> >
-> > Provide a helper for them (basically adjusted version from gpio-mockup.c).
-> >
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> 
-> Fulfils Rusty Russell's API design hierarchy requirements
-> and help people to make less mistakes so:
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+On Tue, Nov 9, 2021 at 5:12 PM Rob Herring <robh@kernel.org> wrote:
+>
+> Netlogic XLP was removed in commit 95b8a5e0111a ("MIPS: Remove NETLOGIC
+> support"). With those gone, the single platform left to support is
+> Cavium ThunderX2. Remove all the Netlogic variants and DT support.
+>
+> For simplicity, the existing kconfig name is retained.
+>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+> Cc: linux-gpio@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  drivers/gpio/Kconfig    |  10 ++-
+>  drivers/gpio/gpio-xlp.c | 142 +++-------------------------------------
+>  2 files changed, 13 insertions(+), 139 deletions(-)
+>
 
-Thanks!
+Applied, thanks!
 
-Should I resend, take into mine PR, or you just apply it as is?
-
-As I answered previously the series doesn't require additional work
-from my perspective.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bart
