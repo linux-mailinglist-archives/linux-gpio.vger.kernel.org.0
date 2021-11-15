@@ -2,153 +2,149 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A66245097D
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Nov 2021 17:20:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DE03445096D
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Nov 2021 17:18:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232403AbhKOQXT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 Nov 2021 11:23:19 -0500
-Received: from mail-ua1-f49.google.com ([209.85.222.49]:37822 "EHLO
-        mail-ua1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236711AbhKOQWn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Nov 2021 11:22:43 -0500
-Received: by mail-ua1-f49.google.com with SMTP id o1so3163658uap.4;
-        Mon, 15 Nov 2021 08:19:45 -0800 (PST)
+        id S236708AbhKOQVE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 Nov 2021 11:21:04 -0500
+Received: from mail-ua1-f51.google.com ([209.85.222.51]:33322 "EHLO
+        mail-ua1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236675AbhKOQVB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Nov 2021 11:21:01 -0500
+Received: by mail-ua1-f51.google.com with SMTP id b17so36132512uas.0;
+        Mon, 15 Nov 2021 08:18:05 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=efm7nTUMt8rzsLA3IdyOYKyQXeHPPTB88YQ7l3tEZPU=;
-        b=j1ePCDZz9pjRoBSjFPBK36Zkij+CB1qkYiXTY2Q3Wp4RBzYIuPpueipNAr4BDIT5Ge
-         3SycT+nqt7zu8Fk7R5Gsrzw3syS3NENcAds96Vs2uthWNWG1lUnYXFYPMLVOriSKm7ca
-         /m9xHDv/Y8S9zaBhSZIN9F7jjCjVmUd2HX20FhAeUcHNY6K4x23cQ0Fy2U+wZn7rlyrv
-         RGgEOs+EcSJ3vxim8f+x87mPJ6aOU1OpyknXNv4zcV+W618oqCRqL3Lj3sVGTbPLyZ0L
-         PIAxEBQTYGtMEFARIzBxLlYvhfg7JQBmYsnHjf7ZB2xN3/ljNIgblRXnJoM85m7VyW7V
-         e6/Q==
-X-Gm-Message-State: AOAM533Z+HIGAeIaX6iMf1CQvBtK2FuYsmKT2NsJnLTwyy62NRaCvM/D
-        9JZqAwRUF2yE+MgaldzM9xMECe64xCuRWQ==
-X-Google-Smtp-Source: ABdhPJylBZXFwAq5a1NpYaCzYAYvfTy5mBiEIMoNMxzm+3uw7hyEvmc0grXVvV36HYTiF4V1kFvcrw==
-X-Received: by 2002:ab0:3d13:: with SMTP id f19mr80563uax.30.1636993184203;
-        Mon, 15 Nov 2021 08:19:44 -0800 (PST)
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com. [209.85.221.182])
-        by smtp.gmail.com with ESMTPSA id s10sm8696109vkf.9.2021.11.15.08.19.44
+        bh=MzrpV0n9zVO9H1XuqgeVs7Q9WtEYC0pbJKOVtZbpaDc=;
+        b=c3m3eSIfYiEC0NWP16r35KBdx003YO64EM8bsbbf7l8iD4FHHpgr2vaiRk6VHd9JpL
+         sRjDbE9nDnCeSzklRWyshd8uyJooCA0jJJ/iDdNzmCXNSZtRTxqWU4fKBExnkJDROpHX
+         4m7rZzy0H0TgYgDnvNTsXcX2MZpn7mXRZYMZ6RYkUWhlckJLu0DNl3q07wTzZAp798CK
+         +1Va2QRfrYhgPgCNb6rQ08+Lsla6IAa10AooLTZ5ggg+3i9yTFm3FZeJHv7F+pgre9vF
+         evMWGBqVHikQisQ6gbV6xNv1nJxq04vKS/d7z+0AFbaiJwzO7nu5R7dFSXpAeEwChfo+
+         RkCg==
+X-Gm-Message-State: AOAM532QC/Ux1BYrHah4EZqIFgEjNpSw8qPrPI1rlN4OcU7ZBix3TAdz
+        QdoLCPeJexBD3Ci8ivQkuBBi6ZZimXi/7A==
+X-Google-Smtp-Source: ABdhPJyjBd8r6yk0+8TjqLB+l1w5Xx1fbP1OcgHYM+wbr7gXuGVd50UiW0X6hmbtKEfumh/+ffBcUA==
+X-Received: by 2002:a67:4347:: with SMTP id q68mr45237935vsa.40.1636993085092;
+        Mon, 15 Nov 2021 08:18:05 -0800 (PST)
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com. [209.85.222.44])
+        by smtp.gmail.com with ESMTPSA id m15sm9718868vsh.31.2021.11.15.08.18.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Nov 2021 08:19:44 -0800 (PST)
-Received: by mail-vk1-f182.google.com with SMTP id j1so2079248vkr.1;
-        Mon, 15 Nov 2021 08:19:44 -0800 (PST)
-X-Received: by 2002:a1f:f24f:: with SMTP id q76mr60850690vkh.11.1636992782095;
- Mon, 15 Nov 2021 08:13:02 -0800 (PST)
+        Mon, 15 Nov 2021 08:18:04 -0800 (PST)
+Received: by mail-ua1-f44.google.com with SMTP id w23so13090411uao.5;
+        Mon, 15 Nov 2021 08:18:03 -0800 (PST)
+X-Received: by 2002:a67:c38f:: with SMTP id s15mr44690576vsj.50.1636993083572;
+ Mon, 15 Nov 2021 08:18:03 -0800 (PST)
 MIME-Version: 1.0
-References: <20211115155105.3797527-1-geert@linux-m68k.org>
-In-Reply-To: <20211115155105.3797527-1-geert@linux-m68k.org>
+References: <20211108150554.4457-1-conor.dooley@microchip.com>
+ <20211108150554.4457-13-conor.dooley@microchip.com> <CAMuHMdWEhJj0Cqt3sgGvgZe7JSFqBmTgtZRkom30NKqEW27NvQ@mail.gmail.com>
+ <0e379411-2469-8c78-1a3f-0645579a967c@microchip.com> <CAMuHMdULO5gJcbnsDzZcVShmYkByyM30f9nYyDD8e4PJ6nrnCQ@mail.gmail.com>
+ <e91ebf36-5a8b-9d9f-d4f0-aa9e38e7a41f@microchip.com>
+In-Reply-To: <e91ebf36-5a8b-9d9f-d4f0-aa9e38e7a41f@microchip.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 15 Nov 2021 17:12:50 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUCsyUxaEf1Lz7+jMnur4ECwK+JoXQqmOCkRKqXdb1hTQ@mail.gmail.com>
-Message-ID: <CAMuHMdUCsyUxaEf1Lz7+jMnur4ECwK+JoXQqmOCkRKqXdb1hTQ@mail.gmail.com>
-Subject: Re: Build regressions/improvements in v5.16-rc1
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc:     Nick Terrell <terrelln@fb.com>, Rob Clark <robdclark@gmail.com>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Anton Altaparmakov <anton@tuxera.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Joey Gouly <joey.gouly@arm.com>,
-        Stan Skowronek <stan@corellium.com>,
-        Hector Martin <marcan@marcan.st>,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@collabora.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+Date:   Mon, 15 Nov 2021 17:17:52 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUQRJHkbwj++jJBMG7QqLd5_bmzUrMzyxEd92bgZbvDYw@mail.gmail.com>
+Message-ID: <CAMuHMdUQRJHkbwj++jJBMG7QqLd5_bmzUrMzyxEd92bgZbvDYw@mail.gmail.com>
+Subject: Re: [PATCH 12/13] riscv: icicle-kit: update microchip icicle kit
+ device tree
+To:     Conor Dooley <Conor.Dooley@microchip.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Lewis Hanly <Lewis.Hanly@microchip.com>,
+        Daire.McNamara@microchip.com, Atish Patra <atish.patra@wdc.com>,
+        Ivan.Griffin@microchip.com,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-ntfs-dev@lists.sourceforge.net,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
         Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>
+        linux-rtc@vger.kernel.org, linux-spi <linux-spi@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Bin Meng <bin.meng@windriver.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 15, 2021 at 4:54 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> Below is the list of build error/warning regressions/improvements in
-> v5.16-rc1[1] compared to v5.15[2].
+Hi Conor,
+
+On Mon, Nov 15, 2021 at 4:39 PM <Conor.Dooley@microchip.com> wrote:
+> On 10/11/2021 14:58, Geert Uytterhoeven wrote:
+> > On Wed, Nov 10, 2021 at 3:20 PM <Conor.Dooley@microchip.com> wrote:
+> >> On 09/11/2021 09:04, Geert Uytterhoeven wrote:
+> >>> On Mon, Nov 8, 2021 at 4:07 PM <conor.dooley@microchip.com> wrote:
+> >>>> From: Conor Dooley <conor.dooley@microchip.com>
+> >>>>
+> >>>> +&gpio2 {
+> >>>> +       interrupts = <PLIC_INT_GPIO2_NON_DIRECT
+> >>>> +               PLIC_INT_GPIO2_NON_DIRECT
+> >>>> +               PLIC_INT_GPIO2_NON_DIRECT
+> >>>> +               PLIC_INT_GPIO2_NON_DIRECT
+> >>>> +               PLIC_INT_GPIO2_NON_DIRECT
+> >>>> +               PLIC_INT_GPIO2_NON_DIRECT
+> >>>> +               PLIC_INT_GPIO2_NON_DIRECT
+> >>>> +               PLIC_INT_GPIO2_NON_DIRECT
+> >>>> +               PLIC_INT_GPIO2_NON_DIRECT
+> >>>> +               PLIC_INT_GPIO2_NON_DIRECT
+> >>>> +               PLIC_INT_GPIO2_NON_DIRECT
+> >>>> +               PLIC_INT_GPIO2_NON_DIRECT
+> >>>> +               PLIC_INT_GPIO2_NON_DIRECT
+> >>>> +               PLIC_INT_GPIO2_NON_DIRECT
+> >>>> +               PLIC_INT_GPIO2_NON_DIRECT
+> >>>> +               PLIC_INT_GPIO2_NON_DIRECT
+> >>>> +               PLIC_INT_GPIO2_NON_DIRECT
+> >>>> +               PLIC_INT_GPIO2_NON_DIRECT
+> >>>> +               PLIC_INT_GPIO2_NON_DIRECT
+> >>>> +               PLIC_INT_GPIO2_NON_DIRECT
+> >>>> +               PLIC_INT_GPIO2_NON_DIRECT
+> >>>> +               PLIC_INT_GPIO2_NON_DIRECT
+> >>>> +               PLIC_INT_GPIO2_NON_DIRECT
+> >>>> +               PLIC_INT_GPIO2_NON_DIRECT
+> >>>> +               PLIC_INT_GPIO2_NON_DIRECT
+> >>>> +               PLIC_INT_GPIO2_NON_DIRECT
+> >>>> +               PLIC_INT_GPIO2_NON_DIRECT
+> >>>> +               PLIC_INT_GPIO2_NON_DIRECT
+> >>>> +               PLIC_INT_GPIO2_NON_DIRECT
+> >>>> +               PLIC_INT_GPIO2_NON_DIRECT
+> >>>> +               PLIC_INT_GPIO2_NON_DIRECT
+> >>>> +               PLIC_INT_GPIO2_NON_DIRECT>;
+> >>>
+> >>> Why override interrupts in the board .dts file?
+> >>> Doesn't this belong in the SoC .dtsi file?
+> >> The interrupt setup for the gpio isnt fixed, there is an option to
+> >> either connect the individual gpio interrupts to the plic *or* they can
+> >> be connected to a per gpio controller common interrupt, and it is up to
+> >> the driver to read a register to determine which interrupt triggered the
+> >> common/NON_DIRECT interrupt. This decision is made by a write to a
+> >> system register in application code, which to us didn't seem like it
+> >> belonged in the soc .dtsi.
+> >
+> > So it is software policy? Then it doesn't belong in the board DTS either.
 >
-> Summarized:
->   - build errors: +20/-13
->   - build warnings: +3/-28
->
-> Happy fixing! ;-)
->
-> Thanks to the linux-next team for providing the build service.
->
-> [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/fa55b7dcdc43c1aa1ba12bca9d2dd4318c2a0dbf/ (all 90 configs)
-> [2] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/8bb7eca972ad531c9b149c0a51ab43a417385813/ (all 90 configs)
->
->
-> *** ERRORS ***
->
-> 20 error regressions:
->   + /kisskb/src/arch/parisc/include/asm/jump_label.h: error: expected ':' before '__stringify':  => 33:4, 18:4
->   + /kisskb/src/arch/parisc/include/asm/jump_label.h: error: label 'l_yes' defined but not used [-Werror=unused-label]:  => 38:1, 23:1
+> The write (if was to be done) would be done by the bootloader, based on
+> the bitstream written to the FPGA, before even u-boot is started. By
+> application I meant the bootloader (or some other bare metal
+> application), not a program running in userspace in case that's what you
+> interpreted. Am I incorrect in thinking that if it is set up by the
+> bootloader that Linux can take it for granted?
 
-    due to static_branch_likely() in crypto/api.c
-
-parisc-allmodconfig
-
->   + /kisskb/src/drivers/gpu/drm/msm/msm_drv.h: error: "COND" redefined [-Werror]:  => 531
->   + /kisskb/src/lib/zstd/compress/zstd_double_fast.c: error: the frame size of 3252 bytes is larger than 1536 bytes [-Werror=frame-larger-than=]:  => 47:1
->   + /kisskb/src/lib/zstd/compress/zstd_double_fast.c: error: the frame size of 3360 bytes is larger than 1536 bytes [-Werror=frame-larger-than=]:  => 499:1
->   + /kisskb/src/lib/zstd/compress/zstd_double_fast.c: error: the frame size of 5344 bytes is larger than 1536 bytes [-Werror=frame-larger-than=]:  => 334:1
->   + /kisskb/src/lib/zstd/compress/zstd_double_fast.c: error: the frame size of 5380 bytes is larger than 1536 bytes [-Werror=frame-larger-than=]:  => 354:1
->   + /kisskb/src/lib/zstd/compress/zstd_fast.c: error: the frame size of 1824 bytes is larger than 1536 bytes [-Werror=frame-larger-than=]:  => 372:1
->   + /kisskb/src/lib/zstd/compress/zstd_fast.c: error: the frame size of 2224 bytes is larger than 1536 bytes [-Werror=frame-larger-than=]:  => 204:1
->   + /kisskb/src/lib/zstd/compress/zstd_fast.c: error: the frame size of 3800 bytes is larger than 1536 bytes [-Werror=frame-larger-than=]:  => 476:1
-
-parisc-allmodconfig
-
->   + /kisskb/src/fs/ntfs/aops.c: error: the frame size of 2240 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]:  => 1311:1
->   + /kisskb/src/fs/ntfs/aops.c: error: the frame size of 2304 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]:  => 1311:1
->   + /kisskb/src/fs/ntfs/aops.c: error: the frame size of 2320 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]:  => 1311:1
-
-powerpc-allmodconfig
-
->   + /kisskb/src/include/linux/compiler_types.h: error: call to '__compiletime_assert_366' declared with attribute error: FIELD_PREP: value too large for the field:  => 335:38
-
-    in drivers/pinctrl/pinctrl-apple-gpio.c
-
-arm64-allmodconfig (gcc8)
-
->   + /kisskb/src/include/linux/fortify-string.h: error: call to '__read_overflow' declared with attribute error: detected read beyond size of object (1st parameter):  => 263:25, 277:17
-
-    in lib/test_kasan.c
-
-s390-all{mod,yes}config
-arm64-allmodconfig (gcc11)
-
->   + error: modpost: "mips_cm_is64" [drivers/pci/controller/pcie-mt7621.ko] undefined!:  => N/A
->   + error: modpost: "mips_cm_lock_other" [drivers/pci/controller/pcie-mt7621.ko] undefined!:  => N/A
->   + error: modpost: "mips_cm_unlock_other" [drivers/pci/controller/pcie-mt7621.ko] undefined!:  => N/A
->   + error: modpost: "mips_cpc_base" [drivers/pci/controller/pcie-mt7621.ko] undefined!:  => N/A
->   + error: modpost: "mips_gcr_base" [drivers/pci/controller/pcie-mt7621.ko] undefined!:  => N/A
-
-mips-allmodconfig
-
-> 3 warning regressions:
->   + <stdin>: warning: #warning syscall futex_waitv not implemented [-Wcpp]:  => 1559:2
-
-powerpc, m68k, mips, s390, parisc (and probably more)
-
->   + arch/m68k/configs/multi_defconfig: warning: symbol value 'm' invalid for MCTP:  => 322
->   + arch/m68k/configs/sun3_defconfig: warning: symbol value 'm' invalid for MCTP:  => 295
-
-Yeah, that happens when symbols are changed from tristate to bool...
-Will be fixed in 5.17-rc1, with the next defconfig refresh.
+If it is to be provided by the boot loader, the boot loader should fill
+in the interrupts property, just like it already does (or should do, if it
+doesn't) for /memory and chosen/bootargs.
 
 Gr{oetje,eeting}s,
 
