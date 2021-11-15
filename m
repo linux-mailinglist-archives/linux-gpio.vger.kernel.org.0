@@ -2,98 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 27733450FCE
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Nov 2021 19:34:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D7C645184A
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Nov 2021 23:54:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241764AbhKOSgc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 Nov 2021 13:36:32 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:55570 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242158AbhKOSeu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Nov 2021 13:34:50 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: shreeya)
-        with ESMTPSA id B5E3A1F44F22
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=collabora.com; s=mail;
-        t=1637001110; bh=U/odPWkiNZqaJgSMaK/WWQK5FMSfWCiioBpM4k781b8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=FwbjEaP/e1wNeo94buJljl/fvd51gUI7iaNQIRzB0LOnu8jMazdH0ZlbD1ZpoeTeB
-         zSsuvvHM9c2Hq32n6uyEdysWb7OxPsGFv35srrfaVshs6KKJ6Hch+ZeceS5kPsspFG
-         z/7bj6UcSMvH5loo/QJ/7EbsHAH0PhWfKbmwJBuJDVnMn1MOgYxuUEjlE7ufFkL/0j
-         rLvgo3X/uctgUjkg2w1jIBX5uLm2Io2OMGVNqgcQkog2/8KDKgaEMgn97P8BpmZ6bR
-         7e3Dl3dgeDrLz7LR2ox8uQHqg9ZeL3OJjqtfALMN7nj7jkNznKJ+mUdpt1UGkr66rd
-         9puA1Ra4552pA==
-From:   Shreeya Patel <shreeya.patel@collabora.com>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        andy.shevchenko@gmail.com, wsa@kernel.org
-Cc:     kernel@collabora.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        Shreeya Patel <shreeya.patel@collabora.com>,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH v3] gpio: Return EPROBE_DEFER if gc->to_irq is NULL
-Date:   Tue, 16 Nov 2021 00:00:29 +0530
-Message-Id: <20211115183029.234898-1-shreeya.patel@collabora.com>
-X-Mailer: git-send-email 2.30.2
+        id S1348432AbhKOW5e (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 Nov 2021 17:57:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54056 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1348851AbhKOWyf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Nov 2021 17:54:35 -0500
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82610C03AA3C
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Nov 2021 14:06:07 -0800 (PST)
+Received: by mail-ed1-x535.google.com with SMTP id z10so51846303edc.11
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Nov 2021 14:06:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pensando.io; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DydRu7SpBSGXsY1o+1JsxVZaNRTPESv1WbRFhErfJMM=;
+        b=NsZfxABNmHEDn3cAEnxfzvehuxWUKowwXgKM2/RzHN1gLJBC2Xbn4Kmf7YkcAbdSQY
+         Wvjred1hNAkJMPqPI74nlx9auc5zLsTgpHtzZA9DgkYndFOWzEF/M6Xo9y7ScSKQAiRT
+         4x6aB4KBn0QPgpWdz6ZmI+xN6jJ9m0Sg72N+L1tk6h2fqM/BY5nX10HGkE9zYHLaZvIb
+         QjwndfZqoBl8hupCCgNgE8JcrZ9WWx4h1sIEjiCXAu9KivroAGA8boMT9Q+mTdiBYQmC
+         wX+OZ8qBocm1oEPw2/9/Vzz719VkQEz5/GWml2T3umjZ7AgD1MtLVw+rZeRTgQSIQXSP
+         Nfcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DydRu7SpBSGXsY1o+1JsxVZaNRTPESv1WbRFhErfJMM=;
+        b=LggwEIOCLaJibbnlN9M6gTcsV1uCEWSUo8dwi9Fb1MsbXJ9fG9MYk5oL0sTepi16VG
+         lY59Ds4+lmEsfqwA51U4QEzR9XLuoDXpJTFC0edrugCLomdoUtZQE66SPZzxX6m3UfW1
+         Ev0kTPKPDLEn1veHfT0TylZrAzr0S7Ja0gCgb0gDDoOwBnDHXioWbayPpDzTW8fAl26R
+         FVmcwpHNp//QL3sygZwq2vRoUUI9Z87h3AZcuq4uusvbFXv0pWfFUO3M4nX9o08VyWXi
+         Kgdxpdovuyc9kHSfio8gCealuU5//bRTDwv/vxLVM6/+qny1t8LLFrLWLj7qKFo+jisS
+         Ls9w==
+X-Gm-Message-State: AOAM530DABt84JtVwvHZ+9ADqQri+2e3H65Yj7QfWXqt/nU6B3Otgv2P
+        BP/R4w3F05sMcB9XWx7elF3oD+8wqwuZs2pFAMJhZg==
+X-Google-Smtp-Source: ABdhPJwSi1BR2b9pVA2sLcVwhXu9OEXIKNaFyg+koHsL/tNEQcgfiypLJF0L+hXMaCL8HnPm+3CzHQPwuJd+6mtEA64=
+X-Received: by 2002:a17:907:1dd5:: with SMTP id og21mr3099771ejc.233.1637013965985;
+ Mon, 15 Nov 2021 14:06:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20211025015156.33133-1-brad@pensando.io> <20211025015156.33133-5-brad@pensando.io>
+ <20211028072616.p3mazud3vi5jgynk@mobilestation>
+In-Reply-To: <20211028072616.p3mazud3vi5jgynk@mobilestation>
+From:   Brad Larson <brad@pensando.io>
+Date:   Mon, 15 Nov 2021 14:05:55 -0800
+Message-ID: <CAK9rFnwjDrGO5u83vc19QenFoCmYs07Nzo1N76SsKC8BLXHbvw@mail.gmail.com>
+Subject: Re: [PATCH v3 04/11] dt-bindings: spi: Add compatible for Pensando
+ Elba SoC
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Olof Johansson <olof@lixom.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-We are racing the registering of .to_irq when probing the
-i2c driver. This results in random failure of touchscreen
-devices.
+Hi Sergey,
 
-Following errors could be seen in dmesg logs when gc->to_irq is NULL
+On Thu, Oct 28, 2021 at 12:26 AM Serge Semin <fancer.lancer@gmail.com> wrote:
+>
+> Hello Brad
+>
+> The patch name "dt-bindings: spi: Add compatible for Pensando Elba
+> SoC" doesn't mention to what bindings it is referring to. For the sake
+> of having a more representative git log I'd suggest at least to add
+> "cdns" vendor name in the title, like: "dt-bindings: spi: cdns: Add ..."
+> Otherwise it's impossible to understand to what bindings you're adding
+> a new compatibility especially seeing you are doing the similar thing
+> for the DW SPI in the next patch.
 
-[2.101857] i2c_hid i2c-FTS3528:00: HID over i2c has not been provided an Int IRQ
-[2.101953] i2c_hid: probe of i2c-FTS3528:00 failed with error -22
+I'll add "cdns" to the git log for the re-spin.
 
-To avoid this situation, defer probing until to_irq is registered.
-
-This issue has been reported many times in past and people have been
-using workarounds like changing the pinctrl_amd to built-in instead
-of loading it as a module or by adding a softdep for pinctrl_amd into
-the config file.
-
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=209413
-
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Shreeya Patel <shreeya.patel@collabora.com>
-
----
-Changes in v3
-  - Fix the error reported by kernel test robot.
-
-Changes in v2
-  - Add a condition to check for irq chip to avoid bogus error.
----
- drivers/gpio/gpiolib.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index abfbf546d159..4d7fb349e837 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -3111,6 +3111,16 @@ int gpiod_to_irq(const struct gpio_desc *desc)
- 
- 		return retirq;
- 	}
-+#ifdef CONFIG_GPIOLIB_IRQCHIP
-+	if (gc->irq.chip) {
-+		/*
-+		 * avoid race condition with other code, which tries to lookup
-+		 * an IRQ before the irqchip has been properly registered,
-+		 * i.e. while gpiochip is still being brought up.
-+		 */
-+		return -EPROBE_DEFER;
-+	}
-+#endif
- 	return -ENXIO;
- }
- EXPORT_SYMBOL_GPL(gpiod_to_irq);
--- 
-2.30.2
-
+Thanks
+Brad
