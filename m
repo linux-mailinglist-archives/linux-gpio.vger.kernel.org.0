@@ -2,91 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B7B945055F
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Nov 2021 14:26:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 848CE450577
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Nov 2021 14:29:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231660AbhKON25 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 Nov 2021 08:28:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40888 "EHLO
+        id S231615AbhKONcm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 Nov 2021 08:32:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231989AbhKON2e (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Nov 2021 08:28:34 -0500
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42CA3C061202
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Nov 2021 05:25:35 -0800 (PST)
-Received: by mail-ed1-x52f.google.com with SMTP id x15so71910615edv.1
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Nov 2021 05:25:35 -0800 (PST)
+        with ESMTP id S231849AbhKONcW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Nov 2021 08:32:22 -0500
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20F38C061208
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Nov 2021 05:28:42 -0800 (PST)
+Received: by mail-ed1-x533.google.com with SMTP id z10so45428920edc.11
+        for <linux-gpio@vger.kernel.org>; Mon, 15 Nov 2021 05:28:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=x6SA1RRfPRQsyPoxGMHruqyhNm/ud8FtPEsb7q99xAA=;
-        b=HsTLOFEHoVqdXzo2g9yYpRz3UHtI7vR6zXlVLrnfleNah5CX6l3Oj2fXz2YhS0id2i
-         Vi0yZiNiQgz8v3OHGlMItd4JY7+XmfCX6mTiHICp1eCimqLgfbL5EA/AcLCJHJZmVFuI
-         VtJDZXuSLTtE50Wl76NGyauY9WiP4OWTYZW9oJsofjFap8MqCwNNtLJ4gdhLpR+Q3GF/
-         vCOZP9nbUeUP7pxXG/Nfg7HVlwYBdlyqilCE2tF7PyAHZc4Fui3XZoHsRxwV2aJjHMHK
-         li8rZWPJOoAFC3NEkQU1fmMXdy54f3Dy5xEdh7/KiuqgJBe/CRPLxs7JMiKnvVDUg+bV
-         gu2Q==
+        bh=8cRmbCo9kjvNgwv7vSSBuH8WEW+eAn1HMf/bmF9PTrM=;
+        b=PpOLKmMO141AHO2LthNVc1GBHjkYGTgnoRIEHSH991PbEODCwwVho43tYn9STIYdCM
+         SzFVpgjKAKyp0QWdWRpumxa/i6dzKGgKMA75DkSw/Ff15lTmzWdndttSr4mPOA4jZfZw
+         T4xBtFBEdq0tWBVTd4Pm8VDXU0e62EOzaNldX5iY6BC/9FHK857mQsLlo2V6Qs5qjVOq
+         tyqU6xpCiyKiGqn8LbV5dZXSvV482KSEskO6rnn0hnu1SquRBIII2SrgRk2F661xdJGY
+         zSW2vrYEei1afzEVdQF/F6LF/Uo5wA7ig7UqZgDxmjlqVqncSPzctuAXPCepXYtgH1D+
+         EZ/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=x6SA1RRfPRQsyPoxGMHruqyhNm/ud8FtPEsb7q99xAA=;
-        b=J9QusxC/YQS3wX+j/+Sb3USzlWuLWVi3BaIPCDcOVEmHJWYf1LCbOSh7bkSYVPrIWY
-         TC/+v0d+DsnAxgl0oUtZ6jTIC89vdbNIgfmTNZKhOJ9YQX1yLmh4Ex1a0+V0HpqQK3qu
-         OICw4ZqXYPhltteRZLxdw+q7OABVUEKcn0iUJ/A52pKSYlMw6hcfIFFQ5QVrShXoRDbo
-         pBd+ya8s7BxqQby29eXinR+ElCXjGu7AWUGI1IU/tSbtY2gsjaR8klxFpyQmBB904iXB
-         UpGyBghhg+rWR1hLBTOOz2CbpsNsdoPHrUTtywBh1kdxbp2XtLOlQkfa3qD4Kb5iJ4sp
-         iqSg==
-X-Gm-Message-State: AOAM530mtJGfE1wxEuOfz0kC9Xh+G8AihAzaWMWsLdUD2TVzKkQmVGvF
-        cdVezrey075nqaBctlw4F2U0eFVZmygGQbysE5YkDA==
-X-Google-Smtp-Source: ABdhPJyaC521tT2BTB8Z5L9QDooodl4iPZm2LpVpGe626jrcmpdc+jZsnaeDMKL14AYvz/H5qbzuqPgs9WbCslaAVqk=
-X-Received: by 2002:a17:907:1deb:: with SMTP id og43mr48620799ejc.189.1636982733866;
- Mon, 15 Nov 2021 05:25:33 -0800 (PST)
+        bh=8cRmbCo9kjvNgwv7vSSBuH8WEW+eAn1HMf/bmF9PTrM=;
+        b=jqfWq7/bsuJLC5/ybN/PVhmMLYzI4sr0tSXZEQhptHvtLpG8jjHpaLGzpHk3xB73jP
+         9i9mxIFaLPDuxab8z6JQKAvQyG8w1Jc9fdyefl/cPrygIfvm6TeOtTBCuF+Vuabz0gnz
+         1Qd1IGtFggpA45RvNAfSidJMxfJkM2Hgxyw/AyKyrxuWkh35YIjcqv0Gn56eShs/Woci
+         6pjSWQJDpwnyBzHmhWuaBCpvfXiV26IymVQJC2/au5FNIdKA5loz7PlEcbAhSPFb+MdO
+         lI7kAhJFlgUH9QwM0kb/X5eiGL8obVeW+cKMTLaebGkGb59rJMbmkO4paz+ALhued03K
+         mnig==
+X-Gm-Message-State: AOAM530ZQVztX+AYFJNeE5izaGiQ60Q/0MPkwiSZ9734xxXLRwX//xRH
+        WhwR+uiF9UnuaODiZbJ4QuLpL+wm/AlxWSdnZAtFF1HtzY+/mA==
+X-Google-Smtp-Source: ABdhPJz6Udv1Bqde1kFPfmZFvq2RGosFkkXKXqcczQ2H+gQ1/7ffgsAHUCSai1s9AAuvn4ddinbkNxcrnF4nwBOQ3mQ=
+X-Received: by 2002:a17:907:1deb:: with SMTP id og43mr48646216ejc.189.1636982920718;
+ Mon, 15 Nov 2021 05:28:40 -0800 (PST)
 MIME-Version: 1.0
-References: <1636344232-56537-1-git-send-email-yang.lee@linux.alibaba.com>
-In-Reply-To: <1636344232-56537-1-git-send-email-yang.lee@linux.alibaba.com>
+References: <20211108012851.7772-1-warthog618@gmail.com>
+In-Reply-To: <20211108012851.7772-1-warthog618@gmail.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 15 Nov 2021 14:25:23 +0100
-Message-ID: <CAMRc=Mess=fKf7ez=0eAAzG8e7iwCC4CJgQorzVDu7LBBPOXbw@mail.gmail.com>
-Subject: Re: [PATCH -next] gpio: virtio: remove unneeded semicolon
-To:     Yang Li <yang.lee@linux.alibaba.com>
-Cc:     Enrico Weigelt <info@metux.net>, Viresh Kumar <vireshk@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+Date:   Mon, 15 Nov 2021 14:28:30 +0100
+Message-ID: <CAMRc=Mco28U7D15BJjvPrOqORQQ2MKUrwPkKWKVFQg9ks0--fw@mail.gmail.com>
+Subject: Re: [PATCH 0/3] selftests: gpio: fix minor build issues
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        linux-kselftest@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Bamvor Jian Zhang <bamv2005@gmail.com>,
+        lizhijian@cn.fujitsu.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 8, 2021 at 5:04 AM Yang Li <yang.lee@linux.alibaba.com> wrote:
+On Mon, Nov 8, 2021 at 2:29 AM Kent Gibson <warthog618@gmail.com> wrote:
 >
-> Eliminate the following coccicheck warning:
-> ./drivers/gpio/gpio-virtio.c:437:2-3: Unneeded semicolon
+> This is a series of fixes for minor problems in the building of the GPIO
+> selftests introduced by my rework of those tests.
 >
-> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-> Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
-> ---
->  drivers/gpio/gpio-virtio.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> The first patch is from Li Zhijian and fixes a compiler error when
+> building the selftests in environments with stale system includes.
+> I have reworded the commit comment to make it more to the point in
+> describing the root cause of the problem and the fix, as suggested by
+> Shuah in his initial review of that patch.
 >
-> diff --git a/drivers/gpio/gpio-virtio.c b/drivers/gpio/gpio-virtio.c
-> index aeec4bf..84f96b7 100644
-> --- a/drivers/gpio/gpio-virtio.c
-> +++ b/drivers/gpio/gpio-virtio.c
-> @@ -434,7 +434,7 @@ static void virtio_gpio_event_vq(struct virtqueue *vq)
->                 ret = generic_handle_domain_irq(vgpio->gc.irq.domain, gpio);
->                 if (ret)
->                         dev_err(dev, "failed to handle interrupt: %d\n", ret);
-> -       };
-> +       }
->  }
+> The second patch fixes a warning when the tests are compiled with -Wall,
+> and the final patch restores the CFLAGS that should not have been removed
+> in the rework, including the -Wall.
 >
->  static void virtio_gpio_request_vq(struct virtqueue *vq)
+> Kent Gibson (2):
+>   selftests: gpio: fix uninitialised variable warning
+>   selftests: gpio: restore CFLAGS options
+>
+> Li Zhijian (1):
+>   selftests: gpio: fix gpio compiling error
+>
+>  tools/testing/selftests/gpio/Makefile           | 1 +
+>  tools/testing/selftests/gpio/gpio-mockup-cdev.c | 2 +-
+>  2 files changed, 2 insertions(+), 1 deletion(-)
+>
 > --
-> 1.8.3.1
+> 2.33.1
 >
 
 Queued for fixes, thanks!
