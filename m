@@ -2,83 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D6143450362
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Nov 2021 12:24:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DDB3A450379
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Nov 2021 12:31:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231390AbhKOL04 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 15 Nov 2021 06:26:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41290 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231786AbhKOL0s (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 15 Nov 2021 06:26:48 -0500
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88F99C061767
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Nov 2021 03:23:50 -0800 (PST)
-Received: by mail-ed1-x52d.google.com with SMTP id w1so70424097edd.10
-        for <linux-gpio@vger.kernel.org>; Mon, 15 Nov 2021 03:23:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nTWihlS7JMTvQaBGNGJD6t4n52toGFrv4uGcY9ggcM8=;
-        b=mCx2UlhlZa5VElpVAh6Ze+4eSolv61qJqaXdv62Jf6tlyBvZM2Lt/L9UexMvAqRjr0
-         9QgONMSdrfGQK3YYAJEuT0N9zPwHZ6jvjNUf3NkqLKaa5G5j/i0mgnJMyq0DUn5xDDSo
-         wztVBaOLMTVDZ1HEopQHvZVg6LalRMnf+lSTafPlXyyJFyuvkeeu8IbJJLrLP4LLQGob
-         2kT2KFt9Hg4gO2I90AaiYjyD4nhvwigwes8jJYWYGiLZJ8W/6WA+LMN8yd31CBegr7ux
-         yQhn4dxF5DojWidnFx03NXqhYbtKS5wYS/u5gnpcdqpsfS2iT2s1Sd+cvHygCfRCoBBO
-         JJ/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nTWihlS7JMTvQaBGNGJD6t4n52toGFrv4uGcY9ggcM8=;
-        b=VHWPb6BB0kNvYhj/JOrJ0cxSOkT+gg5o9ky8R4j1za4azLseFmGFNZtPTjNG1ML8kc
-         nA/KoxhwhwNlI2ykpuLT0C3cdSUBEgr+wW0hjQUliCuAYIh9JW7RLw2LXC2Bl6VXB+gl
-         fx4bGHEx43sytCHRyG9acbts2WkTwmDOhjbWXBHpQ6ziSX1mOJ9O3ffRHRNKzUGElQnO
-         Urbwh1jTmINkO98Ts1uWhz+kb34vA5pi2iP/j+IhSviKd2OA+2SuoH/QZvu+ehr+nWdq
-         hg4xu+pYe7qqhvcbV7QFbjZwDwe82sVZrzArP4Js3RKRup9pbDJvSEV5cjLa3senbmIq
-         37tQ==
-X-Gm-Message-State: AOAM530Kc4VZcab3JCp/G2B/OGcu6UskNgHjKeMlNppi7doU3ndTQBrW
-        YuImwYgroT4O621Kxu+Am3zjaOdZmx+YGPcfUzvmYg==
-X-Google-Smtp-Source: ABdhPJwplrH/h4uJ902U6lQCybbS4z5DM0zNOAijb05Miq8byRKi+/AfAW+yQX+JrrQBAS0KPQmwRgi1fkq6f6vT5s0=
-X-Received: by 2002:a17:906:5343:: with SMTP id j3mr48564278ejo.538.1636975429136;
- Mon, 15 Nov 2021 03:23:49 -0800 (PST)
+        id S230263AbhKOLeZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 15 Nov 2021 06:34:25 -0500
+Received: from mga05.intel.com ([192.55.52.43]:39072 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231295AbhKOLeJ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 15 Nov 2021 06:34:09 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10168"; a="319633908"
+X-IronPort-AV: E=Sophos;i="5.87,236,1631602800"; 
+   d="scan'208";a="319633908"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2021 03:31:14 -0800
+X-IronPort-AV: E=Sophos;i="5.87,236,1631602800"; 
+   d="scan'208";a="471875949"
+Received: from smile.fi.intel.com ([10.237.72.184])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2021 03:31:12 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1mmaCV-0072io-NO;
+        Mon, 15 Nov 2021 13:31:03 +0200
+Date:   Mon, 15 Nov 2021 13:31:03 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH v1 1/2] gpiolib: acpi: Remove never used
+ devm_acpi_dev_remove_driver_gpios()
+Message-ID: <YZJE9++7NI3NnAk/@smile.fi.intel.com>
+References: <20211110134743.4300-1-andriy.shevchenko@linux.intel.com>
+ <YYv5JdEqyG7T9vfH@lahna>
 MIME-Version: 1.0
-References: <20211109161253.2202108-1-robh@kernel.org>
-In-Reply-To: <20211109161253.2202108-1-robh@kernel.org>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 15 Nov 2021 12:23:38 +0100
-Message-ID: <CAMRc=Mdv8-=WsizZ1W8p8+kLKh2QLfgfxSOQ0L=0rBDvO63HpQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: xlp: Remove Netlogic XLP variants
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YYv5JdEqyG7T9vfH@lahna>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 9, 2021 at 5:12 PM Rob Herring <robh@kernel.org> wrote:
->
-> Netlogic XLP was removed in commit 95b8a5e0111a ("MIPS: Remove NETLOGIC
-> support"). With those gone, the single platform left to support is
-> Cavium ThunderX2. Remove all the Netlogic variants and DT support.
->
-> For simplicity, the existing kconfig name is retained.
->
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-> Cc: linux-gpio@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  drivers/gpio/Kconfig    |  10 ++-
->  drivers/gpio/gpio-xlp.c | 142 +++-------------------------------------
->  2 files changed, 13 insertions(+), 139 deletions(-)
->
+On Wed, Nov 10, 2021 at 06:53:57PM +0200, Mika Westerberg wrote:
+> On Wed, Nov 10, 2021 at 03:47:42PM +0200, Andy Shevchenko wrote:
+> > Remove never used devm_acpi_dev_remove_driver_gpios().
+> > 
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-Applied, thanks!
+Pushed to my review and testing queue, thanks!
 
-Bart
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
