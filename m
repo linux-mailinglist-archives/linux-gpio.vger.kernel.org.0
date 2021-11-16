@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D84E345352B
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Nov 2021 16:06:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B59D45352F
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Nov 2021 16:06:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237805AbhKPPIo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 Nov 2021 10:08:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47788 "EHLO
+        id S237804AbhKPPIp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 Nov 2021 10:08:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237862AbhKPPHR (ORCPT
+        with ESMTP id S237864AbhKPPHR (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Nov 2021 10:07:17 -0500
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3786BC06122B;
-        Tue, 16 Nov 2021 07:02:28 -0800 (PST)
-Received: by mail-ed1-x536.google.com with SMTP id z5so29285776edd.3;
-        Tue, 16 Nov 2021 07:02:28 -0800 (PST)
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BA0DC06122D;
+        Tue, 16 Nov 2021 07:02:30 -0800 (PST)
+Received: by mail-ed1-x52e.google.com with SMTP id g14so25545778edb.8;
+        Tue, 16 Nov 2021 07:02:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=0Ok82EnVbms3xaCc+k3GgiPbyL+Vn/MOKDOz/sHkYac=;
-        b=djz63seyeiFbZoCuM77SVikQcV9Xf8ED3RlhDKjVZCv6zmgCOeFXD5LwQxrwQqUY39
-         Zhr2kiz+yGQAMKP9H1AjF5+2vSdo3rBdShqJH1QdPx7Ff7FSfaeDfF4IF2mopVyIITVc
-         YAX1yYhJz+QQj0Fgtv6pvUIPL5+YQdpxyQA/aPFDd/ruLGvJunNgSbY2eMwYg8ppI5e2
-         Oeu7M66uc0iK84UbltAH2vC8V/ORKPCUyTXpc1f0UVo9Ov5+GS8TE1vARX6hFyraBAwD
-         FFtQRa4D40dgO7l4J+5oC5PVC/ka0Yc/iQyjGoNZhqANB8QviTOUI0e0tUnsWVajxwK0
-         WmKQ==
+        bh=n3D3isQYQoZt8oK+QagFyG/F4ee/acgQw48favSVe0E=;
+        b=iHtjl/nfmPQHpfqvVe7OLbfIuLYEAbPeHSJuoW8MqzMXzXOag9XBTIRgw6kZ1h0PQ2
+         7vV/sAo6B0TUNocYJ5r8MQdhv5ZeMi6dcttI06A77+9Tdl3eudJis97cTMjuLIlISOPb
+         VC11VpvkRo8eZZlAY20con9fibd6R6nxz5dzDB243tc6nkwEWXG4awvk+fiHoavDQfoB
+         CULxGMBfTjUXQT+jj0fP/Xk5EaRFrRHjZKfJ0JgSfLRfyDsd1Igh/iq4ViSujhhR91jy
+         HYSCoe8ipljVHJwjhRsg7KjgyRwCe61hv3SFzN+es8VXpXmSIsHEp4OQk5+cXjGtVFoo
+         Mjgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=0Ok82EnVbms3xaCc+k3GgiPbyL+Vn/MOKDOz/sHkYac=;
-        b=oUZ0vA0+3/xDLaatSpH/6YvgAzgNK4BB6Dlsuf4piHTe58i2L2VO2xrDSlDbiV1zZZ
-         Q8jNSaFAzT6DYooyVTJ1TYDGcJ1qmhao6aVDBiS4rKhgrVDFfrzDmDJHSB50obx+R83c
-         ydJVHvNMfRYpUQe4i8gFu5RzPI88Nijo3tHBMM5rw6AIUYafkKdMYSA9A5jKhjKL/Es0
-         wstMYbG51NB+Rq5QBpCTf233TuagZmMIYYWKCIjdbrlCx+FfmLrYzXGDONkdxFI/3wnV
-         kQQwgtmp+7WXnk1X/0181g+auBGnLKUWs+IeCHuKFvb97bUCRLId+Egv8tIo3lFQGbba
-         K3oQ==
-X-Gm-Message-State: AOAM530cHxNX22mHDRlGk9XZ1Q+RW2uzA+iFqIOVrprA3TfPHtz7MOyD
-        6KQCZ762DgBOu0SX33eKD/8=
-X-Google-Smtp-Source: ABdhPJwpFQy0dCnXV44yeL5pWTfSQoyIAzTD4a2n3RnQrp6x2A3mipn3ciq7c3KWN2d9ffwt8ZD8Jw==
-X-Received: by 2002:a17:907:e86:: with SMTP id ho6mr10959486ejc.209.1637074945322;
-        Tue, 16 Nov 2021 07:02:25 -0800 (PST)
+        bh=n3D3isQYQoZt8oK+QagFyG/F4ee/acgQw48favSVe0E=;
+        b=emR4v1LpcizArF6jCapniwpwr64PWNiykGnDZpK8TEBrpmQpKYKFNY1SG/S0BC/OQY
+         3iBeJqpg/IW4EbaE0LvzRdA9PRi3oDrFESq2x4OHqj4LlZPbLhEacZ9dtUkY3qeGWnCB
+         J5oLkONNttTeP1N/cCsPS2bIebR3P5FUkVv1FDoAwQHBwQlPxKvlfDYXeQDx5k6sqUCM
+         o/aiSNuGOyM1upRBZr+hQsmqd9fOI17x8V+sDY6utXYMp+mQFVExzDkL/MWO4a/EwgnY
+         v58R3VLYRGtYLjwMEOnWAOefP9clx0QhpvvPckhEvt4E7ojVsxZSHL21G+ZkWu1UtKCy
+         C79w==
+X-Gm-Message-State: AOAM533avAajNM24wUPpNkZqsxmXxozfeJ0Wj6zkFL1cEIJ3FsQ3NqYL
+        cWu9GXcY0Wy0T8CjsGyy7hU=
+X-Google-Smtp-Source: ABdhPJzT/NUBHx0bHf0OxPsubbU8JaUF7vSGJZwT5jNIsSUak4miN+RnN3IM9rNPAph6p5SyUnHU5Q==
+X-Received: by 2002:a17:907:97c3:: with SMTP id js3mr10922236ejc.240.1637074948242;
+        Tue, 16 Nov 2021 07:02:28 -0800 (PST)
 Received: from stitch.. ([2a02:aa7:4600:b4ae:a375:e7a0:9eaf:8d7b])
-        by smtp.gmail.com with ESMTPSA id u16sm9414311edr.43.2021.11.16.07.02.22
+        by smtp.gmail.com with ESMTPSA id u16sm9414311edr.43.2021.11.16.07.02.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Nov 2021 07:02:24 -0800 (PST)
+        Tue, 16 Nov 2021 07:02:27 -0800 (PST)
 Sender: Emil Renner Berthing <emil.renner.berthing@gmail.com>
 From:   Emil Renner Berthing <kernel@esmil.dk>
 To:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
@@ -76,9 +76,9 @@ Cc:     Emil Renner Berthing <kernel@esmil.dk>,
         Atish Patra <atish.patra@wdc.com>,
         Matteo Croce <mcroce@microsoft.com>,
         Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 15/16] RISC-V: Add initial StarFive JH7100 device tree
-Date:   Tue, 16 Nov 2021 16:01:18 +0100
-Message-Id: <20211116150119.2171-16-kernel@esmil.dk>
+Subject: [PATCH v4 16/16] RISC-V: Add BeagleV Starlight Beta device tree
+Date:   Tue, 16 Nov 2021 16:01:19 +0100
+Message-Id: <20211116150119.2171-17-kernel@esmil.dk>
 X-Mailer: git-send-email 2.34.0
 In-Reply-To: <20211116150119.2171-1-kernel@esmil.dk>
 References: <20211116150119.2171-1-kernel@esmil.dk>
@@ -88,24 +88,49 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add initial device tree for the JH7100 RISC-V SoC by StarFive Ltd. This
-is a test chip for their upcoming JH7110 SoC.
+Add initial device tree for the BeagleV Starlight Beta board. About 300
+of these boards were sent out as part of a now cancelled BeagleBoard.org
+project.
 
-The CPU and cache data is based on the device tree in the vendor u-boot
-port.
+I2C timing data is based on the device tree in the vendor u-boot port.
+Heartbeat LED added by Geert.
 
 Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
+Co-developed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 ---
- arch/riscv/boot/dts/starfive/jh7100.dtsi | 230 +++++++++++++++++++++++
- 1 file changed, 230 insertions(+)
- create mode 100644 arch/riscv/boot/dts/starfive/jh7100.dtsi
+ arch/riscv/boot/dts/Makefile                  |   1 +
+ arch/riscv/boot/dts/starfive/Makefile         |   2 +
+ .../dts/starfive/jh7100-beaglev-starlight.dts | 164 ++++++++++++++++++
+ 3 files changed, 167 insertions(+)
+ create mode 100644 arch/riscv/boot/dts/starfive/Makefile
+ create mode 100644 arch/riscv/boot/dts/starfive/jh7100-beaglev-starlight.dts
 
-diff --git a/arch/riscv/boot/dts/starfive/jh7100.dtsi b/arch/riscv/boot/dts/starfive/jh7100.dtsi
+diff --git a/arch/riscv/boot/dts/Makefile b/arch/riscv/boot/dts/Makefile
+index fe996b88319e..ff174996cdfd 100644
+--- a/arch/riscv/boot/dts/Makefile
++++ b/arch/riscv/boot/dts/Makefile
+@@ -1,5 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ subdir-y += sifive
++subdir-y += starfive
+ subdir-$(CONFIG_SOC_CANAAN_K210_DTB_BUILTIN) += canaan
+ subdir-y += microchip
+ 
+diff --git a/arch/riscv/boot/dts/starfive/Makefile b/arch/riscv/boot/dts/starfive/Makefile
 new file mode 100644
-index 000000000000..69f22f9aad9d
+index 000000000000..0ea1bc15ab30
 --- /dev/null
-+++ b/arch/riscv/boot/dts/starfive/jh7100.dtsi
-@@ -0,0 +1,230 @@
++++ b/arch/riscv/boot/dts/starfive/Makefile
+@@ -0,0 +1,2 @@
++# SPDX-License-Identifier: GPL-2.0
++dtb-$(CONFIG_SOC_STARFIVE) += jh7100-beaglev-starlight.dtb
+diff --git a/arch/riscv/boot/dts/starfive/jh7100-beaglev-starlight.dts b/arch/riscv/boot/dts/starfive/jh7100-beaglev-starlight.dts
+new file mode 100644
+index 000000000000..c9af67f7a0d2
+--- /dev/null
++++ b/arch/riscv/boot/dts/starfive/jh7100-beaglev-starlight.dts
+@@ -0,0 +1,164 @@
 +// SPDX-License-Identifier: GPL-2.0 OR MIT
 +/*
 + * Copyright (C) 2021 StarFive Technology Co., Ltd.
@@ -113,228 +138,162 @@ index 000000000000..69f22f9aad9d
 + */
 +
 +/dts-v1/;
-+#include <dt-bindings/clock/starfive-jh7100.h>
-+#include <dt-bindings/reset/starfive-jh7100.h>
++#include "jh7100.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/leds/common.h>
++#include <dt-bindings/pinctrl/pinctrl-starfive.h>
 +
 +/ {
-+	compatible = "starfive,jh7100";
-+	#address-cells = <2>;
-+	#size-cells = <2>;
++	model = "BeagleV Starlight Beta";
++	compatible = "beagle,beaglev-starlight-jh7100-r0", "starfive,jh7100";
++
++	aliases {
++		serial0 = &uart3;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
 +
 +	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
++		timebase-frequency = <6250000>;
++	};
 +
-+		cpu@0 {
-+			compatible = "sifive,u74-mc", "riscv";
-+			reg = <0>;
-+			d-cache-block-size = <64>;
-+			d-cache-sets = <64>;
-+			d-cache-size = <32768>;
-+			d-tlb-sets = <1>;
-+			d-tlb-size = <32>;
-+			device_type = "cpu";
-+			i-cache-block-size = <64>;
-+			i-cache-sets = <64>;
-+			i-cache-size = <32768>;
-+			i-tlb-sets = <1>;
-+			i-tlb-size = <32>;
-+			mmu-type = "riscv,sv39";
-+			riscv,isa = "rv64imafdc";
-+			tlb-split;
++	memory@80000000 {
++		device_type = "memory";
++		reg = <0x0 0x80000000 0x2 0x0>;
++	};
 +
-+			cpu0_intc: interrupt-controller {
-+				compatible = "riscv,cpu-intc";
-+				interrupt-controller;
-+				#interrupt-cells = <1>;
-+			};
++	leds {
++		compatible = "gpio-leds";
++
++		led-ack {
++			gpios = <&gpio 43 GPIO_ACTIVE_HIGH>;
++			color = <LED_COLOR_ID_GREEN>;
++			function = LED_FUNCTION_HEARTBEAT;
++			linux,default-trigger = "heartbeat";
++			label = "ack";
 +		};
++	};
++};
 +
-+		cpu@1 {
-+			compatible = "sifive,u74-mc", "riscv";
-+			reg = <1>;
-+			d-cache-block-size = <64>;
-+			d-cache-sets = <64>;
-+			d-cache-size = <32768>;
-+			d-tlb-sets = <1>;
-+			d-tlb-size = <32>;
-+			device_type = "cpu";
-+			i-cache-block-size = <64>;
-+			i-cache-sets = <64>;
-+			i-cache-size = <32768>;
-+			i-tlb-sets = <1>;
-+			i-tlb-size = <32>;
-+			mmu-type = "riscv,sv39";
-+			riscv,isa = "rv64imafdc";
-+			tlb-split;
-+
-+			cpu1_intc: interrupt-controller {
-+				compatible = "riscv,cpu-intc";
-+				interrupt-controller;
-+				#interrupt-cells = <1>;
-+			};
++&gpio {
++	i2c0_pins: i2c0-0 {
++		i2c-pins {
++			pinmux = <GPIOMUX(62, GPO_LOW,
++				  GPO_I2C0_PAD_SCK_OEN,
++				  GPI_I2C0_PAD_SCK_IN)>,
++				 <GPIOMUX(61, GPO_LOW,
++				  GPO_I2C0_PAD_SDA_OEN,
++				  GPI_I2C0_PAD_SDA_IN)>;
++			bias-disable; /* external pull-up */
++			input-enable;
++			input-schmitt-enable;
 +		};
 +	};
 +
-+	osc_sys: osc_sys {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		/* This value must be overridden by the board */
-+		clock-frequency = <0>;
-+	};
-+
-+	osc_aud: osc_aud {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		/* This value must be overridden by the board */
-+		clock-frequency = <0>;
-+	};
-+
-+	gmac_rmii_ref: gmac_rmii_ref {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		/* Should be overridden by the board when needed */
-+		clock-frequency = <0>;
-+	};
-+
-+	gmac_gr_mii_rxclk: gmac_gr_mii_rxclk {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		/* Should be overridden by the board when needed */
-+		clock-frequency = <0>;
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		interrupt-parent = <&plic>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		clint: clint@2000000 {
-+			compatible = "starfive,jh7100-clint", "sifive,clint0";
-+			reg = <0x0 0x2000000 0x0 0x10000>;
-+			interrupts-extended = <&cpu0_intc 3 &cpu0_intc 7
-+					       &cpu1_intc 3 &cpu1_intc 7>;
-+		};
-+
-+		plic: interrupt-controller@c000000 {
-+			compatible = "starfive,jh7100-plic", "sifive,plic-1.0.0";
-+			reg = <0x0 0xc000000 0x0 0x4000000>;
-+			interrupts-extended = <&cpu0_intc 11 &cpu0_intc 9
-+					       &cpu1_intc 11 &cpu1_intc 9>;
-+			interrupt-controller;
-+			#address-cells = <0>;
-+			#interrupt-cells = <1>;
-+			riscv,ndev = <127>;
-+		};
-+
-+		clkgen: clock-controller@11800000 {
-+			compatible = "starfive,jh7100-clkgen";
-+			reg = <0x0 0x11800000 0x0 0x10000>;
-+			clocks = <&osc_sys>, <&osc_aud>, <&gmac_rmii_ref>, <&gmac_gr_mii_rxclk>;
-+			clock-names = "osc_sys", "osc_aud", "gmac_rmii_ref", "gmac_gr_mii_rxclk";
-+			#clock-cells = <1>;
-+		};
-+
-+		rstgen: reset-controller@11840000 {
-+			compatible = "starfive,jh7100-reset";
-+			reg = <0x0 0x11840000 0x0 0x10000>;
-+			#reset-cells = <1>;
-+		};
-+
-+		i2c0: i2c@118b0000 {
-+			compatible = "snps,designware-i2c";
-+			reg = <0x0 0x118b0000 0x0 0x10000>;
-+			clocks = <&clkgen JH7100_CLK_I2C0_CORE>,
-+				 <&clkgen JH7100_CLK_I2C0_APB>;
-+			clock-names = "ref", "pclk";
-+			resets = <&rstgen JH7100_RSTN_I2C0_APB>;
-+			interrupts = <96>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2c1: i2c@118c0000 {
-+			compatible = "snps,designware-i2c";
-+			reg = <0x0 0x118c0000 0x0 0x10000>;
-+			clocks = <&clkgen JH7100_CLK_I2C1_CORE>,
-+				 <&clkgen JH7100_CLK_I2C1_APB>;
-+			clock-names = "ref", "pclk";
-+			resets = <&rstgen JH7100_RSTN_I2C1_APB>;
-+			interrupts = <97>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		gpio: pinctrl@11910000 {
-+			compatible = "starfive,jh7100-pinctrl";
-+			reg = <0x0 0x11910000 0x0 0x10000>,
-+			      <0x0 0x11858000 0x0 0x1000>;
-+			reg-names = "gpio", "padctl";
-+			clocks = <&clkgen JH7100_CLK_GPIO_APB>;
-+			resets = <&rstgen JH7100_RSTN_GPIO_APB>;
-+			interrupts = <32>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+
-+		uart2: serial@12430000 {
-+			compatible = "starfive,jh7100-uart", "snps,dw-apb-uart";
-+			reg = <0x0 0x12430000 0x0 0x10000>;
-+			clocks = <&clkgen JH7100_CLK_UART2_CORE>,
-+				 <&clkgen JH7100_CLK_UART2_APB>;
-+			clock-names = "baudclk", "apb_pclk";
-+			resets = <&rstgen JH7100_RSTN_UART2_APB>;
-+			interrupts = <72>;
-+			reg-io-width = <4>;
-+			reg-shift = <2>;
-+			status = "disabled";
-+		};
-+
-+		uart3: serial@12440000 {
-+			compatible = "starfive,jh7100-uart", "snps,dw-apb-uart";
-+			reg = <0x0 0x12440000 0x0 0x10000>;
-+			clocks = <&clkgen JH7100_CLK_UART3_CORE>,
-+				 <&clkgen JH7100_CLK_UART3_APB>;
-+			clock-names = "baudclk", "apb_pclk";
-+			resets = <&rstgen JH7100_RSTN_UART3_APB>;
-+			interrupts = <73>;
-+			reg-io-width = <4>;
-+			reg-shift = <2>;
-+			status = "disabled";
-+		};
-+
-+		i2c2: i2c@12450000 {
-+			compatible = "snps,designware-i2c";
-+			reg = <0x0 0x12450000 0x0 0x10000>;
-+			clocks = <&clkgen JH7100_CLK_I2C2_CORE>,
-+				 <&clkgen JH7100_CLK_I2C2_APB>;
-+			clock-names = "ref", "pclk";
-+			resets = <&rstgen JH7100_RSTN_I2C2_APB>;
-+			interrupts = <74>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		i2c3: i2c@12460000 {
-+			compatible = "snps,designware-i2c";
-+			reg = <0x0 0x12460000 0x0 0x10000>;
-+			clocks = <&clkgen JH7100_CLK_I2C3_CORE>,
-+				 <&clkgen JH7100_CLK_I2C3_APB>;
-+			clock-names = "ref", "pclk";
-+			resets = <&rstgen JH7100_RSTN_I2C3_APB>;
-+			interrupts = <75>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
++	i2c1_pins: i2c1-0 {
++		i2c-pins {
++			pinmux = <GPIOMUX(47, GPO_LOW,
++				  GPO_I2C1_PAD_SCK_OEN,
++				  GPI_I2C1_PAD_SCK_IN)>,
++				 <GPIOMUX(48, GPO_LOW,
++				  GPO_I2C1_PAD_SDA_OEN,
++				  GPI_I2C1_PAD_SDA_IN)>;
++			bias-pull-up;
++			input-enable;
++			input-schmitt-enable;
 +		};
 +	};
++
++	i2c2_pins: i2c2-0 {
++		i2c-pins {
++			pinmux = <GPIOMUX(60, GPO_LOW,
++				  GPO_I2C2_PAD_SCK_OEN,
++				  GPI_I2C2_PAD_SCK_IN)>,
++				 <GPIOMUX(59, GPO_LOW,
++				  GPO_I2C2_PAD_SDA_OEN,
++				  GPI_I2C2_PAD_SDA_IN)>;
++			bias-disable; /* external pull-up */
++			input-enable;
++			input-schmitt-enable;
++		};
++	};
++
++	uart3_pins: uart3-0 {
++		rx-pins {
++			pinmux = <GPIOMUX(13, GPO_LOW, GPO_DISABLE,
++				  GPI_UART3_PAD_SIN)>;
++			bias-pull-up;
++			drive-strength = <14>;
++			input-enable;
++			input-schmitt-enable;
++			slew-rate = <0>;
++		};
++		tx-pins {
++			pinmux = <GPIOMUX(14, GPO_UART3_PAD_SOUT,
++				  GPO_ENABLE, GPI_NONE)>;
++			bias-disable;
++			drive-strength = <35>;
++			input-disable;
++			input-schmitt-disable;
++			slew-rate = <0>;
++		};
++	};
++};
++
++&i2c0 {
++	clock-frequency = <100000>;
++	i2c-sda-hold-time-ns = <300>;
++	i2c-sda-falling-time-ns = <500>;
++	i2c-scl-falling-time-ns = <500>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c0_pins>;
++	status = "okay";
++
++	pmic@5e {
++		compatible = "ti,tps65086";
++		reg = <0x5e>;
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		regulators {
++		};
++	};
++};
++
++&i2c1 {
++	clock-frequency = <400000>;
++	i2c-sda-hold-time-ns = <300>;
++	i2c-sda-falling-time-ns = <100>;
++	i2c-scl-falling-time-ns = <100>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c1_pins>;
++	status = "okay";
++};
++
++&i2c2 {
++	clock-frequency = <100000>;
++	i2c-sda-hold-time-ns = <300>;
++	i2c-sda-falling-time-ns = <500>;
++	i2c-scl-falling-time-ns = <500>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c2_pins>;
++	status = "okay";
++};
++
++&osc_sys {
++	clock-frequency = <25000000>;
++};
++
++&osc_aud {
++	clock-frequency = <27000000>;
++};
++
++&uart3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart3_pins>;
++	status = "okay";
 +};
 -- 
 2.33.1
