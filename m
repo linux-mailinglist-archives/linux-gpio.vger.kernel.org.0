@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 237B54534EC
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Nov 2021 16:04:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 943B94534E8
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Nov 2021 16:04:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237934AbhKPPHg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 Nov 2021 10:07:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47446 "EHLO
+        id S237924AbhKPPHe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 Nov 2021 10:07:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237752AbhKPPGt (ORCPT
+        with ESMTP id S237842AbhKPPGt (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Nov 2021 10:06:49 -0500
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5641FC06120D;
-        Tue, 16 Nov 2021 07:01:42 -0800 (PST)
-Received: by mail-ed1-x52a.google.com with SMTP id r11so25340077edd.9;
-        Tue, 16 Nov 2021 07:01:42 -0800 (PST)
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D01DAC06120E;
+        Tue, 16 Nov 2021 07:01:44 -0800 (PST)
+Received: by mail-ed1-x533.google.com with SMTP id e3so52785380edu.4;
+        Tue, 16 Nov 2021 07:01:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=oPNzD5bnl2PSjk+0YD7yG3K2QwDiM6PZuu4dMQq39/o=;
-        b=cnr4Q5xPkbuPm3TLXjaJ2pjkvnzKkt4NU88x+/c491rS++FKb3RZqLNVQvu9n/yjV3
-         VK7ZtdcidYz39YXHe0ocRxUBjD0lICRI7sxrE812hF0ClH70z0z8ykOKGYwIXab4aze5
-         o1pMSu2zgPs49PISgb1lSONbbu1Xdpyc9GRhpt1VYBWmNIpHXwIBdSjWuulEIxIdAvnl
-         nC3mmLl8+1ShbIvWw72ZcCsnqEq5WEqK/+wr4sTsw895EkLFqdTZGG2ygm0D94ofWEmj
-         XVfERyEpa2EyfXw8bCxEm+hEYdusum2J8aqoba234GJkRn+U7N7BRX9II7ny0zk75MHW
-         uNtg==
+        bh=CMB5icMsNI9B+HlHvOZ/rsWpb2j9DPNZlwQY5zjCx08=;
+        b=n9SeuxOXS3gI4AQNwEJV1oIlLn5uP2F8o0UII9zWz5LDEqfCBTVOn5m70Mjt/FVI59
+         NlUSesXzufLGX5fWoa+TgTya1q+4LjU6VPDpsAw0EnjHO+T//9b7jFAAy/R2M44bvdSM
+         /am+b4XYKGSR0upcBwY/+6B57gNRwBZLkSuwge5PfotKg2jCNV1Fn8NHXtSv1TiqE8+o
+         Tpq5viWNUvtmDM38/cUZlU7JuC7brgk5Q8zU1SEgGlYEoPU6VeSGc0oHIwipiUo3FzhD
+         VyYO+yu5eavWgkSgjERs/6VKy4B+1nQgq572MKwS+vwfS2dknwB9OssFIvAa40H2x8rT
+         2WCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=oPNzD5bnl2PSjk+0YD7yG3K2QwDiM6PZuu4dMQq39/o=;
-        b=kmiuZB3nRTtNrp2SWOiALeOSx8BRT/eqDWmeTEd9YcCql4bpKdgQEeW8ufUGw41T0v
-         c/+iRT9WO/LIkbtybmZ8DfHRDjLVWUmknT3EaOsRe7CH9qzJqCykiUWwIArT+ZbKpK5N
-         BmyNxfbdM+rcUmFMSPeUnQPBFj43dGIuHvb5OgPrEeffM6u3IFMrQXyKiET7W6f6Mg10
-         tgjNH99hxhtOlMwjC5kWu5QndP736JzTcoY82spplahpXeIN4msOOWODYxVG4n79Bvai
-         Aqpao/PIb+m73/4z4KvM3Y/vm0W8kMPDpn2wmeXWPEXk5Brm0h6vNeG9KtlomIUYLpr0
-         iNqQ==
-X-Gm-Message-State: AOAM532/IXjiEE/onNHzBmkEigJJX6d7gJO3FwvSjP1s9PA/uvGOn1Eg
-        UBZ/riRPipG9sCkcAbdX2pA=
-X-Google-Smtp-Source: ABdhPJx8vnoNqgZ/tAcT6WqmQrmmONNtGYsmXPHCLuY8u/9mSGV/N1UqNxsymAeGHieq0Ft7UMkVDQ==
-X-Received: by 2002:a05:6402:27d3:: with SMTP id c19mr4587398ede.390.1637074899238;
-        Tue, 16 Nov 2021 07:01:39 -0800 (PST)
+        bh=CMB5icMsNI9B+HlHvOZ/rsWpb2j9DPNZlwQY5zjCx08=;
+        b=K5vr0Ky+Nq5289AryDkS2aUrwAUD6/3KipmZZCoXGSvmK15dnw5LRg2ntusVvNOnq+
+         DW75Vi/Fk81zJtWPh0IQVuvEaRMQSYFzQaSpe+bBsQfHy9xLHtfuP21gwRG2OJWu/lOq
+         Hd2fgl2ZfDRb9IzKiHn7zS9jmHb+GFQanbvULc1BZ+FhrPXGbBO6OzxGRiAI1qhu5Vi5
+         gUZB9HUHF1NaaueoLc3phtx+btcVwNTuJwMi4PBGxOkxnoWSog8yPjjiF7PpbQ9Wyt7e
+         7sEpq8WPvbQv1bBYPKVdWnXc12TM+jf7nvSj6axFq6Xo2GjIf6btWQmEUw5DOlPzpgj0
+         aCyw==
+X-Gm-Message-State: AOAM531rCsgf1wg/YbMaDXJ2XDaMPqGfFIxX72unD958DrRykfRZ8pkt
+        h5KRyukOIH+7L/vEVkWkch5lecuGsarEWw==
+X-Google-Smtp-Source: ABdhPJw+EQ13uDQl3bfi5CHEZDvZZHxGJHUGTdHoXtISUwk6v3kE2Bnu1lG3gg+1Uy+IoWc3a0Y7dQ==
+X-Received: by 2002:a17:907:a088:: with SMTP id hu8mr11082855ejc.234.1637074902328;
+        Tue, 16 Nov 2021 07:01:42 -0800 (PST)
 Received: from stitch.. ([2a02:aa7:4600:b4ae:a375:e7a0:9eaf:8d7b])
-        by smtp.gmail.com with ESMTPSA id u16sm9414311edr.43.2021.11.16.07.01.36
+        by smtp.gmail.com with ESMTPSA id u16sm9414311edr.43.2021.11.16.07.01.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Nov 2021 07:01:38 -0800 (PST)
+        Tue, 16 Nov 2021 07:01:41 -0800 (PST)
 Sender: Emil Renner Berthing <emil.renner.berthing@gmail.com>
 From:   Emil Renner Berthing <kernel@esmil.dk>
 To:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
@@ -75,10 +75,11 @@ Cc:     Emil Renner Berthing <kernel@esmil.dk>,
         Anup Patel <anup.patel@wdc.com>,
         Atish Patra <atish.patra@wdc.com>,
         Matteo Croce <mcroce@microsoft.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 01/16] RISC-V: Add StarFive SoC Kconfig option
-Date:   Tue, 16 Nov 2021 16:01:04 +0100
-Message-Id: <20211116150119.2171-2-kernel@esmil.dk>
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v4 02/16] dt-bindings: timer: Add StarFive JH7100 clint
+Date:   Tue, 16 Nov 2021 16:01:05 +0100
+Message-Id: <20211116150119.2171-3-kernel@esmil.dk>
 X-Mailer: git-send-email 2.34.0
 In-Reply-To: <20211116150119.2171-1-kernel@esmil.dk>
 References: <20211116150119.2171-1-kernel@esmil.dk>
@@ -88,35 +89,27 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add StarFive Kconfig option to select SoC specific and common drivers
-required for these SoCs. Select subsystems required to boot so the
-required drivers gets enabled by default.
+Add compatible string for the StarFive JH7100 clint.
 
 Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
 Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- arch/riscv/Kconfig.socs | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ Documentation/devicetree/bindings/timer/sifive,clint.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
-index 30676ebb16eb..6ec44a22278a 100644
---- a/arch/riscv/Kconfig.socs
-+++ b/arch/riscv/Kconfig.socs
-@@ -19,6 +19,14 @@ config SOC_SIFIVE
- 	help
- 	  This enables support for SiFive SoC platform hardware.
+diff --git a/Documentation/devicetree/bindings/timer/sifive,clint.yaml b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
+index a35952f48742..8d5f4687add9 100644
+--- a/Documentation/devicetree/bindings/timer/sifive,clint.yaml
++++ b/Documentation/devicetree/bindings/timer/sifive,clint.yaml
+@@ -25,6 +25,7 @@ properties:
+     items:
+       - enum:
+           - sifive,fu540-c000-clint
++          - starfive,jh7100-clint
+           - canaan,k210-clint
+       - const: sifive,clint0
  
-+config SOC_STARFIVE
-+	bool "StarFive SoCs"
-+	select PINCTRL
-+	select RESET_CONTROLLER
-+	select SIFIVE_PLIC
-+	help
-+	  This enables support for StarFive SoC platform hardware.
-+
- config SOC_VIRT
- 	bool "QEMU Virt Machine"
- 	select CLINT_TIMER if RISCV_M_MODE
 -- 
 2.33.1
 
