@@ -2,299 +2,163 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B59D45352F
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Nov 2021 16:06:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 69ED6453501
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Nov 2021 16:05:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237804AbhKPPIp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 Nov 2021 10:08:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47790 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237864AbhKPPHR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Nov 2021 10:07:17 -0500
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BA0DC06122D;
-        Tue, 16 Nov 2021 07:02:30 -0800 (PST)
-Received: by mail-ed1-x52e.google.com with SMTP id g14so25545778edb.8;
-        Tue, 16 Nov 2021 07:02:30 -0800 (PST)
+        id S237989AbhKPPHx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 Nov 2021 10:07:53 -0500
+Received: from mail-bn8nam12on2135.outbound.protection.outlook.com ([40.107.237.135]:40171
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S237804AbhKPPHE (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 16 Nov 2021 10:07:04 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FWC/J7tfaN+Lsh3Wu7ghsjOgsGV4+R+cUNtAaWS0cOvtbNZeFqHhfiJjPWWiGxXk2DIrD8itUjrMLICQfB4tx6TLuFzZeYx8YL14IjKdpcel1tBc8fJZnKixlKhMBJvKcYh4IHbS81T1LZ8lh8Uuo61JyJ95g095fl5AaCsUUbDmhW4jkbsv0KhfMeGnbIoTqbZGePN/F2+gKvQta/rTQh1AIebYZXxZzzO4ak5ZIUcADuUeOsgnkAJOB5fJBXrR+zrZComYulpB+xrBN2W5DPwF8GC148CzS6EasqMzWf1LNDyxzBe7DkqLLJeWe/iGQdibVbRfxg3z9fxGQZVkpg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lSuPQ3d0tOED9bkhjCyHEX1WBQd3xts64ziWqYOr5zA=;
+ b=j5WpjJUI/SB0gpfk8z9wTPdasF6vxnUCY+HyRltuYtUYkTMLa40fjPzejzdD2l9m4QilSuykgdB8j9MJJFW0QmF/H83r/4FtvEl6L/qDFQbnkB3iKHKs/N4PgRwcfVlYK7Gk5HCVZmvXSuNxUGRZTJinQDPJJj2pKMGWGZBHWwVzsWyaQFxGFSjsJfBE1/TfO1YiwfZSajY2pT/PAxHo0ze/9eaMRxTOp6iYOwyY+J5mTZjr8AYJfg9iqV64M2zmLvRuIqzS72DNquc4EPkh8HIR8/HQtomCAW+/u6zlaCrrcTL0VuqPqfFAXUl/G6oj1gZiAXVtjliE2hgdLS9fkA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=in-advantage.com; dmarc=pass action=none
+ header.from=in-advantage.com; dkim=pass header.d=in-advantage.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=n3D3isQYQoZt8oK+QagFyG/F4ee/acgQw48favSVe0E=;
-        b=iHtjl/nfmPQHpfqvVe7OLbfIuLYEAbPeHSJuoW8MqzMXzXOag9XBTIRgw6kZ1h0PQ2
-         7vV/sAo6B0TUNocYJ5r8MQdhv5ZeMi6dcttI06A77+9Tdl3eudJis97cTMjuLIlISOPb
-         VC11VpvkRo8eZZlAY20con9fibd6R6nxz5dzDB243tc6nkwEWXG4awvk+fiHoavDQfoB
-         CULxGMBfTjUXQT+jj0fP/Xk5EaRFrRHjZKfJ0JgSfLRfyDsd1Igh/iq4ViSujhhR91jy
-         HYSCoe8ipljVHJwjhRsg7KjgyRwCe61hv3SFzN+es8VXpXmSIsHEp4OQk5+cXjGtVFoo
-         Mjgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=n3D3isQYQoZt8oK+QagFyG/F4ee/acgQw48favSVe0E=;
-        b=emR4v1LpcizArF6jCapniwpwr64PWNiykGnDZpK8TEBrpmQpKYKFNY1SG/S0BC/OQY
-         3iBeJqpg/IW4EbaE0LvzRdA9PRi3oDrFESq2x4OHqj4LlZPbLhEacZ9dtUkY3qeGWnCB
-         J5oLkONNttTeP1N/cCsPS2bIebR3P5FUkVv1FDoAwQHBwQlPxKvlfDYXeQDx5k6sqUCM
-         o/aiSNuGOyM1upRBZr+hQsmqd9fOI17x8V+sDY6utXYMp+mQFVExzDkL/MWO4a/EwgnY
-         v58R3VLYRGtYLjwMEOnWAOefP9clx0QhpvvPckhEvt4E7ojVsxZSHL21G+ZkWu1UtKCy
-         C79w==
-X-Gm-Message-State: AOAM533avAajNM24wUPpNkZqsxmXxozfeJ0Wj6zkFL1cEIJ3FsQ3NqYL
-        cWu9GXcY0Wy0T8CjsGyy7hU=
-X-Google-Smtp-Source: ABdhPJzT/NUBHx0bHf0OxPsubbU8JaUF7vSGJZwT5jNIsSUak4miN+RnN3IM9rNPAph6p5SyUnHU5Q==
-X-Received: by 2002:a17:907:97c3:: with SMTP id js3mr10922236ejc.240.1637074948242;
-        Tue, 16 Nov 2021 07:02:28 -0800 (PST)
-Received: from stitch.. ([2a02:aa7:4600:b4ae:a375:e7a0:9eaf:8d7b])
-        by smtp.gmail.com with ESMTPSA id u16sm9414311edr.43.2021.11.16.07.02.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Nov 2021 07:02:27 -0800 (PST)
-Sender: Emil Renner Berthing <emil.renner.berthing@gmail.com>
-From:   Emil Renner Berthing <kernel@esmil.dk>
-To:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Cc:     Emil Renner Berthing <kernel@esmil.dk>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
+ d=inadvantage.onmicrosoft.com; s=selector2-inadvantage-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lSuPQ3d0tOED9bkhjCyHEX1WBQd3xts64ziWqYOr5zA=;
+ b=FukRBPwFkHPtng3v0YyPwy+sy+7CLEX/t63gMBp09hPn2J3ny0bPwzIFwvsouUJ1KkRew/m8AtKIIIzl8MgI4W5LLGqIKz0nqsCcvAWfV5cfP1cGnh0HqCeVMwybcV3bAKQ4gf7C1xBtnsXdnCjPwYQyxdCiHlvTpaOpRYsJXoo=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=in-advantage.com;
+Received: from MWHPR1001MB2351.namprd10.prod.outlook.com
+ (2603:10b6:301:35::37) by MW4PR10MB5881.namprd10.prod.outlook.com
+ (2603:10b6:303:18e::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4690.26; Tue, 16 Nov
+ 2021 15:04:03 +0000
+Received: from MWHPR1001MB2351.namprd10.prod.outlook.com
+ ([fe80::6430:b20:8805:cd9f]) by MWHPR1001MB2351.namprd10.prod.outlook.com
+ ([fe80::6430:b20:8805:cd9f%5]) with mapi id 15.20.4713.019; Tue, 16 Nov 2021
+ 15:04:03 +0000
+Date:   Tue, 16 Nov 2021 07:04:04 -0800
+From:   Colin Foster <colin.foster@in-advantage.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Daniel Scally <djrscally@gmail.com>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        Drew Fustini <drew@beagleboard.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Michael Zhu <michael.zhu@starfivetech.com>,
-        Fu Wei <tekkamanninja@gmail.com>,
-        Anup Patel <anup.patel@wdc.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        Matteo Croce <mcroce@microsoft.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 16/16] RISC-V: Add BeagleV Starlight Beta device tree
-Date:   Tue, 16 Nov 2021 16:01:19 +0100
-Message-Id: <20211116150119.2171-17-kernel@esmil.dk>
-X-Mailer: git-send-email 2.34.0
-In-Reply-To: <20211116150119.2171-1-kernel@esmil.dk>
-References: <20211116150119.2171-1-kernel@esmil.dk>
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        UNGLinuxDriver@microchip.com, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [RFC PATCH v4 net-next 00/23] add support for VSC75XX control
+ over SPI
+Message-ID: <20211116150404.GA8651@DESKTOP-LAINLKC.localdomain>
+References: <20211116062328.1949151-1-colin.foster@in-advantage.com>
+ <YZOJKZZSVQ9wvUTS@smile.fi.intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YZOJKZZSVQ9wvUTS@smile.fi.intel.com>
+X-ClientProxiedBy: MWHPR22CA0064.namprd22.prod.outlook.com
+ (2603:10b6:300:12a::26) To MWHPR1001MB2351.namprd10.prod.outlook.com
+ (2603:10b6:301:35::37)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: from DESKTOP-LAINLKC.localdomain (96.93.101.165) by MWHPR22CA0064.namprd22.prod.outlook.com (2603:10b6:300:12a::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4690.19 via Frontend Transport; Tue, 16 Nov 2021 15:04:02 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 9622e6af-407a-443f-a8af-08d9a91253eb
+X-MS-TrafficTypeDiagnostic: MW4PR10MB5881:
+X-Microsoft-Antispam-PRVS: <MW4PR10MB58810860B2917518592B83E7A4999@MW4PR10MB5881.namprd10.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: owseUeNYJii/ahoFWOk5RpdvL3KKDftjgwfgsQFLW5jn8tn2FvXGbmofzgavVsRaFqprV9z65yu5mYH9h0+Byco5cO8xk0Z6SwK4AErtTHD+lJhJKeaFIwsMeZm0Aj+UFfXeqUD2amcy6lRVbHHb/VSt/llGUbUUzpsJb6zEGiqAGfWlEVQQlqyksxiPBcY0jSmxjRWzi3bxY6T3aO3nOf+i0IqhwUR1Kr3vdGiTeKD1MRxKG0Obs0eaMFPm09hVsHWy+MkoZtwVDnXX0pYDoOqCdPY1J0k363YFzd9zlUCm7Djug/5Tfbo106oucPuKC3tTeGNjZTv72877p4HcjMG9OfZGZJYEyYiTDPl+nuTm1Is4YBUqNLoYvsl5ME+wBdYvpKQrXppjh/VQgb5ofWiQIvM/o3YWskimqO3CfvdcnE3K8N8BEM9gZ2+ovrnNyfa+J0kHPhGNDPVmIa4gEgXQVm+A+hBXO+xonTCP4I7djKBnLpyD3AiGYIBfZ9ozlr0eUlgKMOP/TIWVXP4izLHu6Hp3odLAUUpmGJHZ8ZRZZtsddaq1vbAPBcp2LEahGTf8FmL8FzpA1UeS05G30Wc2Rs91Ecu3PPZWTSXFbvjiUaK0qiXUX8JexOCFLnTPBB0CbbEythVi4zsJ3xZbTi/o4DVc6UeFGdPrR6ZB7JGhRD/TejHwmgAbPsIqd6ODHrAztnVriePotglyB0H5X+2yit3yI0i98s1O2d7wmMf13O3riscQqzCqjP8frQONKVdfGcgmfd2jG2/BuOn0otLu8XVdQgnEH3sEZUw8AIs=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1001MB2351.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(396003)(346002)(366004)(136003)(376002)(39840400004)(8676002)(26005)(186003)(44832011)(966005)(6916009)(2906002)(66556008)(508600001)(33656002)(956004)(9686003)(66476007)(1076003)(52116002)(316002)(86362001)(8936002)(66946007)(55016002)(4326008)(7696005)(54906003)(5660300002)(38350700002)(6506007)(7416002)(38100700002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?uMqtuto1VCi5LSGkfBjT9UtZfShD2d84DWnu0Pc93qteAxgAgd9HYUpMAKXY?=
+ =?us-ascii?Q?3iNui7AbAq0/RYIEzRdTMSAsTG+fKy94BhKpiZtIHrX+P+B0TpjhOwukNhEW?=
+ =?us-ascii?Q?2KRdwQxuIbtOBkZlt+o83fY6zjBo2Nv59cr4j7miOwovs6bBLkxmYuQ/7fFf?=
+ =?us-ascii?Q?75vRGKIFye8Zwr1aQjB7Uor52HBY8kvyyuZs2gEsuOESZ2kTuFyXaBIUWkly?=
+ =?us-ascii?Q?RE2Z+PLnJi515M94UvvLTXVqb3DI4lzHkn9R6Bh6Q3PYylz0qKx+RFG0aEGT?=
+ =?us-ascii?Q?0yCRlzCNXkPh6zGKJiZRyxmlWghMAaQcAt45kVxSvYx4xKGP/b5oPzgG/qUO?=
+ =?us-ascii?Q?GUAMarANcg7IlEt8Z1z3ucmGEfZkFeYIHSeBfZ4uw0egD/B7sT10lbl+oVjz?=
+ =?us-ascii?Q?4LwT++7P4JXL+9QVejjXo7Sr5sWWsI4oLhf427Hzj6Ih/CVYKHHtGycLwBDK?=
+ =?us-ascii?Q?v/GmcgUH1cAWOxkz5L5d6q42u38YBtRVwv+/ahv1vb/Q0t4Uxk9yYmo+gw7b?=
+ =?us-ascii?Q?CqqFcqosSfPyOcQP1Bh72ttSooioJVCV8t4XVdz3poSF4DHx2nEz6CJZaBAe?=
+ =?us-ascii?Q?9XWZjkCEzP1TMM4pkmB5T7iRkXnGqTkN5IhgbYRBwiBLtetkxcrAFzwDakTM?=
+ =?us-ascii?Q?q2Pww8Fed7nfiP5iXslvL/ZIlfjBg28YLozh+4iEqaipfEZYkFGHCQ2WC/Ec?=
+ =?us-ascii?Q?AlXmVb/Sovf+mYYsgXNW4lwbcYbt8/7QcUOqqG2K6P78Z8y7bbjxV/tZQXXg?=
+ =?us-ascii?Q?Yem9HjDKB/sz5A31zV9MSPEuZhbwf84e03gUPw1Rn3bHzJ9nnrnGjBw4U/bj?=
+ =?us-ascii?Q?6VST+vR8fjfdAkzccLfEqhtd2Vvueobp/7+QsEOxLDpViDjVHcvA6lcNK066?=
+ =?us-ascii?Q?nw4tHsVsH2WBQHD235+SvVBUVKLNQoYHk3BSDtASpeqQGsG27kBeO6f9wlkM?=
+ =?us-ascii?Q?lMlFWMQeqb6/RnsDKme6Ez29G365L8rgJ6L4IeHzCEiKjoOiOfBxZXhANif1?=
+ =?us-ascii?Q?5zecfXNTuIu/m+aY8Hf/bhF+e+jKJkQrcLPsg4PWIWMuYHtLgj7/YHkraS9y?=
+ =?us-ascii?Q?xMFKGjFAxtd+4zaKk+HYpJMFBD6RMkw2jykVKW1U5vi38ZKd/kuYy7ZCak0m?=
+ =?us-ascii?Q?pL+uRA4WofGKF7z2LtMYSXnuyjCwDTt0HcVVQEE89o4OriqYZPSArRbIoUAe?=
+ =?us-ascii?Q?FO46MkHi0uOf4otmhoRTEUYKS8BJLWfK3PEvC8fGuO80LJz9oRAg9Pi9ROtb?=
+ =?us-ascii?Q?4+nADYtZRyKOuMEsLUOwrnCBA20Crn/X/qXnUIGH6Na2LMbD/e2uV4Mv812W?=
+ =?us-ascii?Q?p9FZtg3HgzXIYCn/Qri2YkzJ1aDEO4/BdCASwE8PDBad5ZYsGAQD7c1FWZtF?=
+ =?us-ascii?Q?Mpor7PUwPt/ufmFSoBozV4crn6cYPJgU/Jo9Dki2v+Qzc8UPbl1H6llAWimf?=
+ =?us-ascii?Q?TyKYY8eKjB/PYwymBeCWD6z8vv8EgZ6k8OKkWcMNFx5pzfShmnaB1aqIgrhX?=
+ =?us-ascii?Q?Rv5CD37GVwJ9cG0xD34yNU55YkN7CN6U7UT97UX7+xVrzwf86+oDyi15mn2v?=
+ =?us-ascii?Q?e2/jcEfVmN543rX1k0kcv7S4Po70Fq8p8LfGJLuhL7m0zDDa3cR3SZspd6hm?=
+ =?us-ascii?Q?zevPN+ZMITRmaRY8ACnkJtDzvNsnbKbLt5JJVBQnKmcvIBfNZhREo7JiuI7u?=
+ =?us-ascii?Q?PjxHGxxGHhH3kz9Vkhvh4BTuTO0=3D?=
+X-OriginatorOrg: in-advantage.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9622e6af-407a-443f-a8af-08d9a91253eb
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR1001MB2351.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Nov 2021 15:04:03.5382
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 48e842ca-fbd8-4633-a79d-0c955a7d3aae
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tp4StAHUaXQEi9iMiV4jiJmguJI+5SIhvCOCev4ajWxpxZ399X5dXDGAcm1BkmekkuDmAp0qacxiFXvYrEaIMyg2TpB8RlX/nXX06uYJM4I=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR10MB5881
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add initial device tree for the BeagleV Starlight Beta board. About 300
-of these boards were sent out as part of a now cancelled BeagleBoard.org
-project.
+On Tue, Nov 16, 2021 at 12:34:17PM +0200, Andy Shevchenko wrote:
+> On Mon, Nov 15, 2021 at 10:23:05PM -0800, Colin Foster wrote:
+> > My apologies for this next RFC taking so long. Life got in the way.
+> > 
+> > 
+> > The patch set in general is to add support for the VSC7511, VSC7512,
+> > VSC7513 and VSC7514 devices controlled over SPI. The driver is
+> > relatively functional for the internal phy ports (0-3) on the VSC7512.
+> > As I'll discuss, it is not yet functional for other ports yet.
+> 
+> 
+> Since series touches fwnode, please Cc next time to Daniel Scally.
 
-I2C timing data is based on the device tree in the vendor u-boot port.
-Heartbeat LED added by Geert.
+Thank you. I will do this next time.
 
-Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
-Co-developed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
- arch/riscv/boot/dts/Makefile                  |   1 +
- arch/riscv/boot/dts/starfive/Makefile         |   2 +
- .../dts/starfive/jh7100-beaglev-starlight.dts | 164 ++++++++++++++++++
- 3 files changed, 167 insertions(+)
- create mode 100644 arch/riscv/boot/dts/starfive/Makefile
- create mode 100644 arch/riscv/boot/dts/starfive/jh7100-beaglev-starlight.dts
+For my future reference, is there a way that I could have known this? Or
+is this just knowledge that comes with experience? The email list I got
+was from running the patch set through get_maintainers.
 
-diff --git a/arch/riscv/boot/dts/Makefile b/arch/riscv/boot/dts/Makefile
-index fe996b88319e..ff174996cdfd 100644
---- a/arch/riscv/boot/dts/Makefile
-+++ b/arch/riscv/boot/dts/Makefile
-@@ -1,5 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- subdir-y += sifive
-+subdir-y += starfive
- subdir-$(CONFIG_SOC_CANAAN_K210_DTB_BUILTIN) += canaan
- subdir-y += microchip
- 
-diff --git a/arch/riscv/boot/dts/starfive/Makefile b/arch/riscv/boot/dts/starfive/Makefile
-new file mode 100644
-index 000000000000..0ea1bc15ab30
---- /dev/null
-+++ b/arch/riscv/boot/dts/starfive/Makefile
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0
-+dtb-$(CONFIG_SOC_STARFIVE) += jh7100-beaglev-starlight.dtb
-diff --git a/arch/riscv/boot/dts/starfive/jh7100-beaglev-starlight.dts b/arch/riscv/boot/dts/starfive/jh7100-beaglev-starlight.dts
-new file mode 100644
-index 000000000000..c9af67f7a0d2
---- /dev/null
-+++ b/arch/riscv/boot/dts/starfive/jh7100-beaglev-starlight.dts
-@@ -0,0 +1,164 @@
-+// SPDX-License-Identifier: GPL-2.0 OR MIT
-+/*
-+ * Copyright (C) 2021 StarFive Technology Co., Ltd.
-+ * Copyright (C) 2021 Emil Renner Berthing <kernel@esmil.dk>
-+ */
-+
-+/dts-v1/;
-+#include "jh7100.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/leds/common.h>
-+#include <dt-bindings/pinctrl/pinctrl-starfive.h>
-+
-+/ {
-+	model = "BeagleV Starlight Beta";
-+	compatible = "beagle,beaglev-starlight-jh7100-r0", "starfive,jh7100";
-+
-+	aliases {
-+		serial0 = &uart3;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	cpus {
-+		timebase-frequency = <6250000>;
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x0 0x80000000 0x2 0x0>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		led-ack {
-+			gpios = <&gpio 43 GPIO_ACTIVE_HIGH>;
-+			color = <LED_COLOR_ID_GREEN>;
-+			function = LED_FUNCTION_HEARTBEAT;
-+			linux,default-trigger = "heartbeat";
-+			label = "ack";
-+		};
-+	};
-+};
-+
-+&gpio {
-+	i2c0_pins: i2c0-0 {
-+		i2c-pins {
-+			pinmux = <GPIOMUX(62, GPO_LOW,
-+				  GPO_I2C0_PAD_SCK_OEN,
-+				  GPI_I2C0_PAD_SCK_IN)>,
-+				 <GPIOMUX(61, GPO_LOW,
-+				  GPO_I2C0_PAD_SDA_OEN,
-+				  GPI_I2C0_PAD_SDA_IN)>;
-+			bias-disable; /* external pull-up */
-+			input-enable;
-+			input-schmitt-enable;
-+		};
-+	};
-+
-+	i2c1_pins: i2c1-0 {
-+		i2c-pins {
-+			pinmux = <GPIOMUX(47, GPO_LOW,
-+				  GPO_I2C1_PAD_SCK_OEN,
-+				  GPI_I2C1_PAD_SCK_IN)>,
-+				 <GPIOMUX(48, GPO_LOW,
-+				  GPO_I2C1_PAD_SDA_OEN,
-+				  GPI_I2C1_PAD_SDA_IN)>;
-+			bias-pull-up;
-+			input-enable;
-+			input-schmitt-enable;
-+		};
-+	};
-+
-+	i2c2_pins: i2c2-0 {
-+		i2c-pins {
-+			pinmux = <GPIOMUX(60, GPO_LOW,
-+				  GPO_I2C2_PAD_SCK_OEN,
-+				  GPI_I2C2_PAD_SCK_IN)>,
-+				 <GPIOMUX(59, GPO_LOW,
-+				  GPO_I2C2_PAD_SDA_OEN,
-+				  GPI_I2C2_PAD_SDA_IN)>;
-+			bias-disable; /* external pull-up */
-+			input-enable;
-+			input-schmitt-enable;
-+		};
-+	};
-+
-+	uart3_pins: uart3-0 {
-+		rx-pins {
-+			pinmux = <GPIOMUX(13, GPO_LOW, GPO_DISABLE,
-+				  GPI_UART3_PAD_SIN)>;
-+			bias-pull-up;
-+			drive-strength = <14>;
-+			input-enable;
-+			input-schmitt-enable;
-+			slew-rate = <0>;
-+		};
-+		tx-pins {
-+			pinmux = <GPIOMUX(14, GPO_UART3_PAD_SOUT,
-+				  GPO_ENABLE, GPI_NONE)>;
-+			bias-disable;
-+			drive-strength = <35>;
-+			input-disable;
-+			input-schmitt-disable;
-+			slew-rate = <0>;
-+		};
-+	};
-+};
-+
-+&i2c0 {
-+	clock-frequency = <100000>;
-+	i2c-sda-hold-time-ns = <300>;
-+	i2c-sda-falling-time-ns = <500>;
-+	i2c-scl-falling-time-ns = <500>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins>;
-+	status = "okay";
-+
-+	pmic@5e {
-+		compatible = "ti,tps65086";
-+		reg = <0x5e>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		regulators {
-+		};
-+	};
-+};
-+
-+&i2c1 {
-+	clock-frequency = <400000>;
-+	i2c-sda-hold-time-ns = <300>;
-+	i2c-sda-falling-time-ns = <100>;
-+	i2c-scl-falling-time-ns = <100>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins>;
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	clock-frequency = <100000>;
-+	i2c-sda-hold-time-ns = <300>;
-+	i2c-sda-falling-time-ns = <500>;
-+	i2c-scl-falling-time-ns = <500>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins>;
-+	status = "okay";
-+};
-+
-+&osc_sys {
-+	clock-frequency = <25000000>;
-+};
-+
-+&osc_aud {
-+	clock-frequency = <27000000>;
-+};
-+
-+&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart3_pins>;
-+	status = "okay";
-+};
--- 
-2.33.1
+> It also appears [1] that somewhere in PHY code a bug is hidden
+> (at least I think so).
 
+Thank you for this information. I'll keep an eye out!
+
+> 
+> [1]: https://lore.kernel.org/lkml/20211113204141.520924-1-djrscally@gmail.com/T/#u
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
