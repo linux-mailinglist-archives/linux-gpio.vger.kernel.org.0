@@ -2,100 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DAC2B452E32
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Nov 2021 10:39:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 99D81452F01
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Nov 2021 11:25:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233162AbhKPJmd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 Nov 2021 04:42:33 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:34498 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233401AbhKPJmb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Nov 2021 04:42:31 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: shreeya)
-        with ESMTPSA id 14F8F1F45517
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=collabora.com; s=mail;
-        t=1637055572; bh=UOh/mlQFaw22xo9WHVNz2cr8hTemgxQ+nXiVIok1HPw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Afe9ZJ51KS4elifx7/n+bOnVyhmJK7jOq5CUFObjKRhdmy0Ndso+6JHDS1XCKaks/
-         X1CepfNnomL/PEaWsjgXaLq/Qfbmcm1vyVCIDNdwIh5SkLYEAsAPCQssnXSohdj6x1
-         Yp+hGiz62O7isHYD24/DMzFKIQ1ogsPYRoygP44/XmSmDvPt/nuzLbGP34wXUn8VhC
-         L3MDwWpQQhKOB7uF53FPy4aG13cuyaNDo1UB02LQIaBOEx8PaOltymiixi1YrAfdIO
-         +H50lAfNrK22ST8kOuar5RL4RM5Tj/9DPQlfTPOyj0+Zw2nG4Og8IxFrDS+bP3gcKE
-         s5es24O/InECQ==
-From:   Shreeya Patel <shreeya.patel@collabora.com>
-To:     linus.walleij@linaro.org, andy.shevchenko@gmail.com,
-        bgolaszewski@baylibre.com, wsa@kernel.org
-Cc:     kernel@collabora.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        lkp@intel.com, Shreeya Patel <shreeya.patel@collabora.com>
-Subject: [PATCH v4] gpio: Return EPROBE_DEFER if gc->to_irq is NULL
-Date:   Tue, 16 Nov 2021 15:08:33 +0530
-Message-Id: <20211116093833.245542-1-shreeya.patel@collabora.com>
-X-Mailer: git-send-email 2.30.2
+        id S234110AbhKPK2a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 Nov 2021 05:28:30 -0500
+Received: from smtp-relay-internal-1.canonical.com ([185.125.188.123]:41138
+        "EHLO smtp-relay-internal-1.canonical.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233985AbhKPK20 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 16 Nov 2021 05:28:26 -0500
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com [209.85.167.70])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 8D9CC3FFEC
+        for <linux-gpio@vger.kernel.org>; Tue, 16 Nov 2021 10:25:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1637058328;
+        bh=/O+GZ0qbV9JKdbSeqRFNBm7ySSAQt685cqSjGVfpAHw=;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+         MIME-Version:Content-Type;
+        b=v0nsdLvcw33tp2dmmTfRoeWEqw7h/v4VtEbrRJTtaTnylrxuc5WuPttqIHZUnh2fT
+         7Dnsp6OtJJy4BNZd4cc7y3sZ1/ivrT+Rye795Gr45ZDVK22ruQqgjmKLiwqcY4ix9W
+         RF+46VlMcFGzfVN7ijCPg0ta6G6UjJRkkO6j1gxUpkPIg0QVVNh1KNxnv1Uf8ENdbv
+         MFOkjZPYldI3VCphoJIyS9JF52WJf5kbKR9sw0HWmPzd5DtIIQBidh/+jl8XnbhsV1
+         QOLwBP/bFFj9DLWWyRFdpXMZvOeiLE5eGSbSCeGJ2b/qw2viqKNC3zikL3NNWo8Dy0
+         Ff/2W+3Mf6JbQ==
+Received: by mail-lf1-f70.google.com with SMTP id q26-20020ac2515a000000b0040adfeb8132so2155871lfd.9
+        for <linux-gpio@vger.kernel.org>; Tue, 16 Nov 2021 02:25:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=/O+GZ0qbV9JKdbSeqRFNBm7ySSAQt685cqSjGVfpAHw=;
+        b=yToiS9OGoM4BOGCKfp7xaWDNlprI4fBXcZW9Nnz5tLVO103hhGNHWh3fOLhzVoeFZU
+         /geDL1wQwgxqUNGWp02b5psV4l+4ei2EMDbshXBXws0b4ttGIrDVZ2Vh81eY2+e51Bxm
+         ueiHCMAinHobhH+N0OZ3kO4RBa5xd2R80torZC+gCI43tsWBiiCA8JPUPRwp0+hUNVI7
+         ozbbt77tzDlQLAsPfvrPToT913S5bw/7JEbvYQEufICnRX5TlvMsacVrXwaYh0UV5iMn
+         wg+LKIJSo3jvPwAOgxe8EvemCdBYVu5Zu2V/BiMtJap2S+0xPmBKngUxmASF1T2ZrSAD
+         spPA==
+X-Gm-Message-State: AOAM5319vMpDQ33Bg84hPBg/tsOEOhoP5D2BBXu+GyfHUj6G9XGcEgte
+        B24FAX+TTjp3n3JjLi3+VDB9+kEFK7z0ak2ae98YJaHaSZ6gmI95zgbbJQ2gJDTjXTE6HDCfUW0
+        QxBBRbYhntm83sVSclVBpNXg0fSUczfO+qr8hvOg=
+X-Received: by 2002:a2e:bf26:: with SMTP id c38mr5657027ljr.523.1637058328085;
+        Tue, 16 Nov 2021 02:25:28 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxkQWpwRbE6IFJrFB9M4s6jTblkLSEi2iHO1KLrB5XVlSnuJKxSATSfrgQqBJDRIkKqXDX5ow==
+X-Received: by 2002:a2e:bf26:: with SMTP id c38mr5656998ljr.523.1637058327846;
+        Tue, 16 Nov 2021 02:25:27 -0800 (PST)
+Received: from localhost.localdomain (89-77-68-124.dynamic.chello.pl. [89.77.68.124])
+        by smtp.gmail.com with ESMTPSA id n7sm1792473ljg.113.2021.11.16.02.25.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Nov 2021 02:25:27 -0800 (PST)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+To:     David Virag <virag.david003@gmail.com>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        linux-samsung-soc@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: samsung: Document Exynos7885
+Date:   Tue, 16 Nov 2021 11:24:51 +0100
+Message-Id: <163705828808.25843.6357745358034135180.b4-ty@canonical.com>
+X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20211031231511.46856-1-virag.david003@gmail.com>
+References: <20211031231511.46856-1-virag.david003@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-We are racing the registering of .to_irq when probing the
-i2c driver. This results in random failure of touchscreen
-devices.
+On Mon, 1 Nov 2021 00:15:11 +0100, David Virag wrote:
+> Document compatible string for Exynos7885 SoC.
+> 
+> 
 
-Following errors could be seen in dmesg logs when gc->to_irq is NULL
+Applied, thanks!
 
-[2.101857] i2c_hid i2c-FTS3528:00: HID over i2c has not been provided an Int IRQ
-[2.101953] i2c_hid: probe of i2c-FTS3528:00 failed with error -22
+[1/2] dt-bindings: pinctrl: samsung: Document Exynos7885
+      commit: 1e6a58ad39a638f29f9d3e8c8128a2ab355ad1ac
+[2/2] pinctrl: samsung: Add Exynos7885 SoC specific data
+      commit: b0ef7b1a7a07dde54c5849e0ca94070a1ed08d04
 
-To avoid this situation, defer probing until to_irq is registered.
-
-This issue has been reported many times in past and people have been
-using workarounds like changing the pinctrl_amd to built-in instead
-of loading it as a module or by adding a softdep for pinctrl_amd into
-the config file.
-
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=209413
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Shreeya Patel <shreeya.patel@collabora.com>
-
----
-Changes in v4
-  - Remove blank line and make the first letter of the sentence
-capital.
-
-Changes in v3
-  - Fix the error reported by kernel test robot.
-
-Changes in v2
-  - Add a condition to check for irq chip to avoid bogus error.
----
- drivers/gpio/gpiolib.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index abfbf546d159..7b3f7f4d1d06 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -3111,6 +3111,16 @@ int gpiod_to_irq(const struct gpio_desc *desc)
- 
- 		return retirq;
- 	}
-+#ifdef CONFIG_GPIOLIB_IRQCHIP
-+	if (gc->irq.chip) {
-+		/*
-+		 * Avoid race condition with other code, which tries to lookup
-+		 * an IRQ before the irqchip has been properly registered,
-+		 * i.e. while gpiochip is still being brought up.
-+		 */
-+		return -EPROBE_DEFER;
-+	}
-+#endif
- 	return -ENXIO;
- }
- EXPORT_SYMBOL_GPL(gpiod_to_irq);
+Best regards,
 -- 
-2.30.2
-
+Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
