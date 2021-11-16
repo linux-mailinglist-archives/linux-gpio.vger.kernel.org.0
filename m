@@ -2,54 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 52C7F452D55
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Nov 2021 09:56:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 07EA9452DA6
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Nov 2021 10:13:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232752AbhKPI7c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 Nov 2021 03:59:32 -0500
-Received: from mail.bizjoindeal.pl ([80.211.97.164]:53158 "EHLO
-        mail.bizjoindeal.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232671AbhKPI7Y (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Nov 2021 03:59:24 -0500
-X-Greylist: delayed 607 seconds by postgrey-1.27 at vger.kernel.org; Tue, 16 Nov 2021 03:59:24 EST
-Received: by mail.bizjoindeal.pl (Postfix, from userid 1001)
-        id 2B88BA27C8; Tue, 16 Nov 2021 08:46:16 +0000 (GMT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=bizjoindeal.pl;
-        s=mail; t=1637052378;
-        bh=JZuQ1fK7zFtz2oeUB7Xfid9vb7kUywdmDd2OluR8ywA=;
-        h=Date:From:To:Subject:From;
-        b=Bd+2jVB76fm65kXO3bR2F/tqtEldEnEq1VzjO/HF6Z/30IV6585qCpyMYDPYFGaYh
-         UmDXryf8rOSf23mR2IZguud392XxNszJLMtHrWs3FvOBcOvukXCQzprWIPKvCXO0gF
-         u75qcsi9ldJuLnZr/spsx4x4N2XHDLeXWrgYEE2vtT3CqBshY9L/YJfGkaN4SX/2f9
-         J+V734YpVF+hrH3F43/kJ+GcjQsWmy0BKLx3SLtMHAfXxXY6LN33FkCBVBt9GpxPi2
-         tMwYSyXyK3PPQXg84KZKirZEMclVdD4KoOAWhlPeiOxq1YDBp3C2RJjLylntUXpXAI
-         hFrlN5O59h0Hw==
-Received: by mail.bizjoindeal.pl for <linux-gpio@vger.kernel.org>; Tue, 16 Nov 2021 08:46:10 GMT
-Message-ID: <20211116074500-0.1.60.f03o.0.ij6hvxgge1@bizjoindeal.pl>
-Date:   Tue, 16 Nov 2021 08:46:10 GMT
-From:   "Dorian Kwiatkowski" <dorian.kwiatkowski@bizjoindeal.pl>
-To:     <linux-gpio@vger.kernel.org>
-Subject: Fotowoltaika dla firm
-X-Mailer: mail.bizjoindeal.pl
+        id S232905AbhKPJPm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 Nov 2021 04:15:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51592 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232934AbhKPJPi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Nov 2021 04:15:38 -0500
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39A31C061570
+        for <linux-gpio@vger.kernel.org>; Tue, 16 Nov 2021 01:12:42 -0800 (PST)
+Received: by mail-ed1-x529.google.com with SMTP id e3so48285735edu.4
+        for <linux-gpio@vger.kernel.org>; Tue, 16 Nov 2021 01:12:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qKVkYLH3mOowH9ihjxmK78ep8UuW+0rWvJVOqRYNCN4=;
+        b=7kGEMByJoCTKLzBecErJpTJcSpp8TYNs47ih0FIsR8BboXBXDTVrz9X2CHpFsqCjAQ
+         plsZumoB6V8NrmfWB1JsyuJXZnWAbzNtxDSNpn/0gfRd6V8sO3jemtgvSY4Px/Qc6YDQ
+         yAQXq3KXBl17GyClcDfBnOL/5SWTW5Hi6jMbaEbSrID6AQDpQlWj+n5gvEWFykrk4g0G
+         +qvZJGNrHafjgBIcO6zXohiXQAcaGBWM6teeU6CUBHznIvnWv2WlBvEpieT8TvNL2twO
+         FkwDw11qnsNrKe2jvJTP/t3yO3TlQYFJ9ZyM77EhuwtbAwTqTAnVJ8DOGqTQEJoqWE30
+         6Ifg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qKVkYLH3mOowH9ihjxmK78ep8UuW+0rWvJVOqRYNCN4=;
+        b=q5V7It7emYnqre6saw5m9pOIwY7UaOF9NNeKEE57DGkcwKzAlKTrugNiW8UnZygmIW
+         pZmcUHayx6ov6U+GmwfPQYqSDkhiY+x0PIqznQv6mqrCGweLwh3DEjVoSSSXduMkKFVU
+         Ob/tTvZ62U/yq9K48EZIPwOWwd1AdSFlsoQrD9CYQG+23cMNR8psJRJG80te/PdDEBON
+         bWH8B9cgXxWcRrmMCjn1Ih3jgPTpURdsrICPMKlQo6rnyNn1D6IdXhxQV0Mq9wBaPUNA
+         zeXqv7LE6yTPocNO+wsSOu0thzRB9+59mJSTV6AXsVUMTRELAHUZs6DQ3hmXKAo7FHNT
+         /JLg==
+X-Gm-Message-State: AOAM530s4BPP7pZ3hTydbY+DjgkJ/Ig8Td+wohx5ZuJ9wIuURAHVv6Jd
+        lm49OkSHOW4XRB4LBgOl7O2yx9jByu3n6lG4g26WNQ==
+X-Google-Smtp-Source: ABdhPJyN+4pYB4ITOLCCI2vxwYTJycQb5pex8bjnakGV8Kf69ptx0Ib7k3LjS+VYdVHfNClgN8lvQe15xzC1yaFSyIw=
+X-Received: by 2002:a17:907:75f0:: with SMTP id jz16mr7942096ejc.77.1637053960836;
+ Tue, 16 Nov 2021 01:12:40 -0800 (PST)
 MIME-Version: 1.0
+References: <20211105124242.27288-1-andriy.shevchenko@linux.intel.com> <20211105124242.27288-19-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20211105124242.27288-19-andriy.shevchenko@linux.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 16 Nov 2021 10:12:30 +0100
+Message-ID: <CAMRc=Me20whtwS--+Zy2NLDGKH+wvxVtXFGMXj+E-ANun2U=qA@mail.gmail.com>
+Subject: Re: [PATCH v1 19/19] gpio: mockup: Switch to use kasprintf_strarray()
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Jianqun Xu <jay.xu@rock-chips.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Bamvor Jian Zhang <bamv2005@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Patrice Chotard <patrice.chotard@foss.st.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Andy Shevchenko <andy@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dzie=C5=84 dobry,
+On Fri, Nov 5, 2021 at 1:43 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> Since we have a generic helper, switch the module to use it.
+> No functional change intended.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/gpio/gpio-mockup.c | 23 +----------------------
+>  1 file changed, 1 insertion(+), 22 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+> index d26bff29157b..8943cea92764 100644
+> --- a/drivers/gpio/gpio-mockup.c
+> +++ b/drivers/gpio/gpio-mockup.c
+> @@ -491,27 +491,6 @@ static void gpio_mockup_unregister_pdevs(void)
+>         }
+>  }
+>
+> -static __init char **gpio_mockup_make_line_names(const char *label,
+> -                                                unsigned int num_lines)
+> -{
+> -       unsigned int i;
+> -       char **names;
+> -
+> -       names = kcalloc(num_lines + 1, sizeof(char *), GFP_KERNEL);
+> -       if (!names)
+> -               return NULL;
+> -
+> -       for (i = 0; i < num_lines; i++) {
+> -               names[i] = kasprintf(GFP_KERNEL, "%s-%u", label, i);
+> -               if (!names[i]) {
+> -                       kfree_strarray(names, i);
+> -                       return NULL;
+> -               }
+> -       }
+> -
+> -       return names;
+> -}
+> -
+>  static int __init gpio_mockup_register_chip(int idx)
+>  {
+>         struct property_entry properties[GPIO_MOCKUP_MAX_PROP];
+> @@ -538,7 +517,7 @@ static int __init gpio_mockup_register_chip(int idx)
+>         properties[prop++] = PROPERTY_ENTRY_U16("nr-gpios", ngpio);
+>
+>         if (gpio_mockup_named_lines) {
+> -               line_names = gpio_mockup_make_line_names(chip_label, ngpio);
+> +               line_names = kasprintf_strarray(GFP_KERNEL, chip_label, ngpio);
+>                 if (!line_names)
+>                         return -ENOMEM;
+>
+> --
+> 2.33.0
+>
 
-kontaktuj=C4=99 si=C4=99 z Pa=C5=84stwem, poniewa=C5=BC dostrzegam mo=C5=BC=
-liwo=C5=9B=C4=87 redukcji op=C5=82at za pr=C4=85d.
+Acked-by: Bartosz Golaszewski <brgl@bgdev.pl>
 
-Odpowiednio dobrana instalacja fotowoltaiczna to rozwi=C4=85zanie, kt=C3=B3=
-re pozwala wygenerowa=C4=87 spore oszcz=C4=99dno=C5=9Bci w skali roku.
+Feel free to take it with the rest of the series.
 
-Chcia=C5=82bym porozmawia=C4=87 z Pa=C5=84stwem o tego typu rozwi=C4=85za=
-niu, a tak=C5=BCe przedstawi=C4=87 wst=C4=99pne kalkulacje.
-
-Czy s=C4=85 Pa=C5=84stwo zainteresowani?
-
-Pozdrawiam,
-Dorian Kwiatkowski
+Bart
