@@ -2,231 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 34167454280
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Nov 2021 09:20:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E34A14542A9
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Nov 2021 09:30:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234460AbhKQIW1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 Nov 2021 03:22:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56490 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233313AbhKQIW0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Nov 2021 03:22:26 -0500
-Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A100BC061570;
-        Wed, 17 Nov 2021 00:19:27 -0800 (PST)
-Received: by mail-lj1-x22f.google.com with SMTP id d11so4407629ljg.8;
-        Wed, 17 Nov 2021 00:19:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Bgs8iyUy89PkKvzl321W/UAXVH57vSKrzyQqzOIg/uo=;
-        b=TnY11PkOecu9gptvsD5iv0+wmUGir99GjK9/k3tBZOwew4wfLpIG+zbAeVl5x4W7b1
-         Cpbedg//+UfgYiaDeyfO+0Zks+5y0YWrPFFTtbgV8Xr1x2HQ0ecKJDub0wCyWoKocNEN
-         38KH36jveNOf7cJQr7FIUMQV6YxDJ+MowxaWyWZ+1kWDMYhb8GIoCylopTPKHpj8iOya
-         RTHhc4guieXR93jZ1lPD0xFXzcX4WQDsAj3jourJuWohtzFksx5r6ltkFVqhZyJVSvxB
-         PZyvkTQX1jECPp//Z5ioTLZ5INdVutYbz5r+cw9Rtrjfp1q+MW15iVAlmWVLiIH+OCeB
-         gl3Q==
+        id S234539AbhKQIdp convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 17 Nov 2021 03:33:45 -0500
+Received: from mail-qt1-f169.google.com ([209.85.160.169]:34729 "EHLO
+        mail-qt1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229944AbhKQIdp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 17 Nov 2021 03:33:45 -0500
+Received: by mail-qt1-f169.google.com with SMTP id o17so1924109qtk.1;
+        Wed, 17 Nov 2021 00:30:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Bgs8iyUy89PkKvzl321W/UAXVH57vSKrzyQqzOIg/uo=;
-        b=Td2/awECVBwh7E4uPpkWkKWfqSASaBD3SqT/k+wA4EiE/NNBN7uq3IMOgq3f0AgTXJ
-         aiGy8uNXOsz8Wl9yn6chVHzSzVKTkyRYg63GfURF2Xfgk0hMwGl53AE3xUEERr6QfB8x
-         XtT/NU0vKzc3qbodSocXAy9c3e0n/nPA9DFiOEnwfcLswK1jXBhERqlyj50jsMP0bx1T
-         DYLxe72VrfIEsrd8UJ9OXfeD52RvnUXJjoYM7l/KmSKcvELOJhbkU5+7D5nRhCsbK/rY
-         jI/VSwm0hQetx1QmSsboEApDLKuzR2bXfBDT4d0L/mjZEaPrbwZAWTD2JVsBgrctwVFi
-         kqhA==
-X-Gm-Message-State: AOAM533ClO/FaVIddofO1SaOjYL4EJ+CldjsGWm3qVWVbCf0L10GzJO5
-        ZlxTP95VKGfnAIOl4OTVrn8=
-X-Google-Smtp-Source: ABdhPJzXiZb7AbiLv4mX/n1uVupgxzrFrsNr8u0D38JXKOqnjBNQXe1nkF/X9hhJXvlEYO752Wd4PA==
-X-Received: by 2002:a05:651c:179b:: with SMTP id bn27mr3019354ljb.444.1637137165798;
-        Wed, 17 Nov 2021 00:19:25 -0800 (PST)
-Received: from mobilestation ([95.79.188.236])
-        by smtp.gmail.com with ESMTPSA id c21sm2044020lfv.29.2021.11.17.00.19.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Nov 2021 00:19:25 -0800 (PST)
-Date:   Wed, 17 Nov 2021 11:19:22 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Brad Larson <brad@pensando.io>
-Cc:     Rob Herring <robh@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Olof Johansson <olof@lixom.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 05/11] spi: dw: Add Pensando Elba SoC SPI Controller
- bindings
-Message-ID: <20211117081922.nnqsr5zzzydurq5t@mobilestation>
-References: <20211025015156.33133-1-brad@pensando.io>
- <20211025015156.33133-6-brad@pensando.io>
- <20211028074945.rv2j5kgzk7yc2srr@mobilestation>
- <CAK9rFnw396xK+u3qUpgbnGNw7WDJPJm0L3o4nPAcFeqQjBDbXg@mail.gmail.com>
- <20211116112907.lbwdcz5pmgxqzv55@mobilestation>
- <CAK9rFny7zQRpvGOVK0+01hKQNu7XCMOz8vTfbHPs6gMR10muDw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=pLki4VXVNEgH7BpAr7thCy6liKqtc8dZxgXibG/LDtU=;
+        b=IUpfMS2Qsw+4vmn7I+udpusUuBdphjjcAJKehe7ijbqvhkYnwm6cTNdca+Cm0+0ma0
+         xHD7AGKnQOaEiCs6xqSWURkkNCEsyjFfW5BS+qXXbqRwqmicLNGkp26r99JMfFSCO/3k
+         0bWFazjujRDAHYFZe81Zf9uHbmyFG8cifydbv07Sd9hppAYW34M6QwmE5KICuNyBOc1b
+         uaRJUYDVmVWNYnHKQUaNc9sX2Jn2J5I6VMJVbOUUi0zfxBoozVHwbFXJ/iQhxxdP0nJI
+         UUZ2M0IUONMJ7yEaDyGm9GjG4M1JgiuAegMgBQl0bzAe7JH80skTE+4MB5PXQv0AtrMH
+         PE+w==
+X-Gm-Message-State: AOAM533Gmfbt9PLCNrSukClwWshSIsB1Zv0j1Rff2FGOwSGUU7Ob7m8A
+        uDSnap65Q1tmO3hQD/OtlyUl2r4Dhpxyxg==
+X-Google-Smtp-Source: ABdhPJwoFVUouk9QlvygqIYHdaUI5uPa2eT+UDuhCZpvADfGS5ohUE9j9fFTF1CGKB45SU6JCVVhbA==
+X-Received: by 2002:a05:622a:178c:: with SMTP id s12mr14701908qtk.156.1637137846345;
+        Wed, 17 Nov 2021 00:30:46 -0800 (PST)
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com. [209.85.219.170])
+        by smtp.gmail.com with ESMTPSA id j20sm5550905qtj.43.2021.11.17.00.30.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Nov 2021 00:30:46 -0800 (PST)
+Received: by mail-yb1-f170.google.com with SMTP id n2so746118yba.2;
+        Wed, 17 Nov 2021 00:30:46 -0800 (PST)
+X-Received: by 2002:a9f:2431:: with SMTP id 46mr20823663uaq.114.1637137464301;
+ Wed, 17 Nov 2021 00:24:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK9rFny7zQRpvGOVK0+01hKQNu7XCMOz8vTfbHPs6gMR10muDw@mail.gmail.com>
+References: <20211115155105.3797527-1-geert@linux-m68k.org>
+ <CAMuHMdUCsyUxaEf1Lz7+jMnur4ECwK+JoXQqmOCkRKqXdb1hTQ@mail.gmail.com>
+ <fcdead1c-2e26-b8ca-9914-4b3718d8f6d4@gmx.de> <480CE37B-FE60-44EE-B9D2-59A88FDFE809@fb.com>
+ <78b2d093-e06c-ba04-9890-69f948bfb937@infradead.org> <B57193D6-1FD4-45D3-8045-8D2DE691E24E@fb.com>
+In-Reply-To: <B57193D6-1FD4-45D3-8045-8D2DE691E24E@fb.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 17 Nov 2021 09:24:12 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWgGz5FSidaGpp8YRRSnJfwdP4-wOkXdVx+mydXnMAXHQ@mail.gmail.com>
+Message-ID: <CAMuHMdWgGz5FSidaGpp8YRRSnJfwdP4-wOkXdVx+mydXnMAXHQ@mail.gmail.com>
+Subject: Re: Build regressions/improvements in v5.16-rc1
+To:     Nick Terrell <terrelln@fb.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>, Helge Deller <deller@gmx.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Clark <robdclark@gmail.com>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Anton Altaparmakov <anton@tuxera.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Joey Gouly <joey.gouly@arm.com>,
+        Stan Skowronek <stan@corellium.com>,
+        Hector Martin <marcan@marcan.st>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@collabora.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        "linux-ntfs-dev@lists.sourceforge.net" 
+        <linux-ntfs-dev@lists.sourceforge.net>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 16, 2021 at 03:11:53PM -0800, Brad Larson wrote:
-> Hi Sergey,
-> 
-> On Tue, Nov 16, 2021 at 3:29 AM Serge Semin <fancer.lancer@gmail.com> wrote:
+Hi Nick,
+
+On Wed, Nov 17, 2021 at 3:20 AM Nick Terrell <terrelln@fb.com> wrote:
+> > On Nov 16, 2021, at 6:05 PM, Randy Dunlap <rdunlap@infradead.org> wrote:
+> > On 11/16/21 5:59 PM, Nick Terrell wrote:
+> >> I’ll send the PR to Linus tomorrow. I’ve been informed that it
+> >> isn't strictly necessary to send the patches to the mailing list
+> >> for bug fixes, but its already done, so I’ll wait and see if there
+> >> is any feedback.
 > >
-> > > > AFAICS from the driver-part of the patchset it's not enough. You've
-> > > > also got the syscon phandle, which needs to be reflected in the
-> > > > bindings. That also makes me thinking that you didn't perform the
-> > > > "dtbs_check" on the dts-files you were going to submit, but for some
-> > > > reason discarded from this series (btw why?). If you did you would
-> > > > have got an error of an unevaluated property detection.
-> > >
-> > > I ran the checks below and didn't get errors.  Rob provided some info
-> > > and I found the server did not have yamllint installed (not flagged by
-> > > tool).  Also dt-schema was not the latest.  I'm re-doing this and
-> > > including "DT_CHECKER_FLAGS=-m" as that is new with v5.13.
-> > >
+> > IMO several (or many more) people would disagree with that.
 > >
-> > > make ARCH=arm64 dtbs_check
-> > > DT_SCHEMA_FILES=Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml
-> > > make ARCH=arm64 dtbs_check
-> > > DT_SCHEMA_FILES=Documentation/devicetree/bindings/spi/cdns,qspi-nor.yaml
-> > > make ARCH=arm64 dtbs_check
-> > > DT_SCHEMA_FILES=Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
-> > > make ARCH=arm64 dtbs_check
-> > > DT_SCHEMA_FILES=Documentation/devicetree/bindings/vendor-prefixes.yaml
-> > > make ARCH=arm64 dtbs_check
-> > > DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/pensando,elba.yaml
-> >
-> > Hmm, that's weird. Rob, does dtschema tool have the
-> > "unevaluatedProperties" property support?
-> >
-> > Brad, anyway you still need to add the syscon-property (pensando,*spics)
-> > requirement in the snps,dw-apb-ssi.yaml schema. See the way it's done there
-> > for instance for "baikal,bt1-sys-ssi" when it comes to the
-> > vendor-specific properties definition in the allOf composition block.
-> > You'll need to define a custom phandle property there in case if a
-> > DT-node is compatible with you SPI controller.
-> 
-> Updating and adding only this bindings update to file
-> snps,dw-apb-ssi.yaml in 5.16.0-rc1 (next-20211116):
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
-> b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
-> index d7e08b03e204..99deb587a47b 100644
-> --- a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
-> +++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
-> @@ -37,6 +37,21 @@ allOf:
->      else:
->        required:
->          - interrupts
-> +  - if:
-> +      properties:
+> > "strictly?"  OK, it's probably possible that almost any patch
+> > could be merged without being on a mailing list, but it's not
+> > desirable (except in the case of "security" patches).
+>
+> Good to know! Thanks for the advice, I wasn’t really sure what
+> the best practice is for sending patches to your own tree, as I
+> didn't see anything about it in the maintainer guide.
 
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - pensando,elba-spics
+All patches must be sent to public mailing lists for review.
+You might get away with not doing that for a simple and trivial fix,
+but be prepared to end up on people's "special" lists if you did get
+it wrong.
 
-I was wrong using that construction here (fixup patch would be very
-welcome) seeing the "snps,dw-apb-ssi" doesn't permit having a generic
-"snps,dw*" compatible string. So just const-compatible property should
-be enough:
+We are Legion. We do not forgive. We do not forget ;-)
 
-+        compatible:
-+          const: pensando,elba-spics
+Gr{oetje,eeting}s,
 
+                        Geert
 
-> +    then:
-> +      properties:
-> +        pensando,spics:
-> +          $ref: /schemas/types.yaml#/definitions/phandle
-> +          description:
-> +            Phandle to the system control device node which provides access to
-> +            the spics control register
-> +      required:
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-> +        - pensando,spics
-
-Please note, I've asked to be more specific in this property naming.
-Something like this should be fine
-"pensando,elba-syscon-spics"/"pensando,syscon-spics".
-
-> 
->  properties:
->    compatible:
-> @@ -73,6 +88,8 @@ properties:
->                - renesas,r9a06g032-spi # RZ/N1D
->                - renesas,r9a06g033-spi # RZ/N1S
->            - const: renesas,rzn1-spi   # RZ/N1
-> +      - description: Pensando Elba SoC SPI Controller
-> +        const: pensando,elba-spics
-> 
->    reg:
->      minItems: 1
-> 
-> $ make ARCH=arm64 defconfig
-> ...
-> 
-
-> $ make DT_CHECKER_FLAGS=-m dt_binding_check
-> DT_SCHEMA_FILES=Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.yaml
-
-I am kind of surprised that this command is still evaluating all
-the schemas. Compiling only the depended DT-schemas would much
-better... Anyway that's why you are getting unrelated to the
-snps,dw-apb-ssi.yaml errors.
-
-> ...
->   DTEX    Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.example.dts
->   DTC     Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.example.dt.yaml
->   CHECK   Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.example.dt.yaml
-> Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.example.dt.yaml:0:0:
-> /example-0/spi@fff00000/flash@1: failed to match any schema with
-> compatible: ['spi-nand']
-
-That means there is no bindings defined for the "spi-nand"-compatible
-node. AFAICS it doesn't make the tool to fail though. Anyway fixing this
-part would be a subject of additional patches (which would be very
-appreciated). That would concern converting the
-Documentation/devicetree/bindings/mtd/spi-nand.txt legacy bindings to
-the DT-schema. It's not enough though. Seeing that file lacks of
-the NAND Flash specific DT-property description, you'd need to detach
-ones (described by the "^nand@[a-f0-9]$"-pattern property) from the
-Documentation/devicetree/bindings/mtd/nand-controller.yaml schema and
-place them into a separate DT-schema file for generic nand-flashes
-Documentation/devicetree/bindings/mtd/nand-flash.yaml in a framework
-of a pre-requisite patch. Than in the legacy bindings conversion patch
-you'd need to use it to correctly evaluate a generic NAND flash node.
-Adding some example properties to the DT-schema would be also
-required.
-
--Sergey
-
-> 
-> The spi-nand schema match failure happens before I make any change.
-> The tool also throws errors for these files which are unrelated
-> 
-> Documentation/devicetree/bindings/net/qcom,ipa.yaml: ignoring, error
-> in schema: properties: qcom,smem-state-names
-> Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.yaml:
-> ignoring, error in schema: patternProperties: ^filter@[0-9]+$:
-> properties: st,adc-channel-names
-> Documentation/devicetree/bindings/interconnect/qcom,rpmh.yaml:
-> ignoring, error in schema: properties: qcom,bcm-voter-names
-> 
-> Thanks,
-> Brad
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
