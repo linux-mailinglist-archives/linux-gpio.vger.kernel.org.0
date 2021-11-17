@@ -2,98 +2,196 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CEF70453CE5
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Nov 2021 00:51:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 97A4D453DAB
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Nov 2021 02:22:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231564AbhKPXym (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 16 Nov 2021 18:54:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55772 "EHLO
+        id S232736AbhKQBY7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 16 Nov 2021 20:24:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231237AbhKPXym (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Nov 2021 18:54:42 -0500
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85B36C061570;
-        Tue, 16 Nov 2021 15:51:44 -0800 (PST)
-Received: by mail-pf1-x42b.google.com with SMTP id x5so953425pfr.0;
-        Tue, 16 Nov 2021 15:51:44 -0800 (PST)
+        with ESMTP id S232674AbhKQBYx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 16 Nov 2021 20:24:53 -0500
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF47CC06122E
+        for <linux-gpio@vger.kernel.org>; Tue, 16 Nov 2021 17:21:53 -0800 (PST)
+Received: by mail-ed1-x52c.google.com with SMTP id e3so3197423edu.4
+        for <linux-gpio@vger.kernel.org>; Tue, 16 Nov 2021 17:21:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/a8VkPOBp+sRhshdlMGv/oDCg20jVzLPWjV5XIU6qh0=;
-        b=KfK1z35s2reqrgZuw9I2YR5DGVMmAJQjacu4q2s730DsD+K+mkk3bTKBWODTSTsh9S
-         KKImSmEE/fEPslTeVzPzTXAv3NWJXT332fPqtzCuJMneWCHd8EFMZqoxZEBF58rMPXr1
-         PG8g/Q1bKI4pW1sR/6jpu+w/db4iczyD73JNMlhmOpIMzAys/d66GJ86FXyMZToBf8VC
-         SiGeo/TkYQkcPMq62RE4Bt99H2FoPBh0Un8/bSnmTJKddPIB3RLpfN/B7N4ri590zz7K
-         ur8z6nYqLe+vbTo1lZNk/b+QkXLvRxadzwmHcUsVAbi7ztXeDL8n+nq0TIqy8Y0e5Dgj
-         vkuQ==
+        d=pensando.io; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=M0DL4Z+z7lD4X8gzZ0br5lXdNaFuU3WYYnUldjpHc2U=;
+        b=nwq+nix4pOQgFe2cQDcY0ONGPbpxJ8sYMy/yq7her6nK8IAaY2rNQ3/k8ehU7eMZuc
+         BZHmd+0AWLJceWNi/O1CPHLx4uT4KZq0v5u8cRnw9uGsUiBzDqZk/ninenAMx52mId9J
+         57cXo85nb5SzFi1ufwA9w5fSFx7vpsSJjFmrlhb72RHqgDuyFlDrnjLEBhBJ2sP7og5o
+         pqa6mqzGcg6w0zAxvbBhNRYx7ySeq1E/LFCO1Sa4+OFj8Pk4f9D+nDkLsevVN2iwA/3w
+         UgkZT03wrnhv4U1re89+eWg263xXyl874+2ECrp1/IaYe1NM2h0Aas1G2dM8F/HaRfY8
+         vF/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/a8VkPOBp+sRhshdlMGv/oDCg20jVzLPWjV5XIU6qh0=;
-        b=SJ+wQomNFNEhzTQri6kENcJg81ebSiQA3jNSJgHydf2eyRgBs6FfOLu5k96ZRLxP8Z
-         tynclnHn7NMXTRxCdJ2wOAQNRfp52hbJA7LwXXLxZk8vRY7WtQjGUCM6pJOfNnAqhaQ8
-         evzy2okDQ0AzLb8eeqbBKhLz6sfsHeG04jj35K/5m+vejeRGIdMsvDYOfgX7FZdb2qnX
-         1ieTv+gvK550sMDRY+a7AQb22Fy46eo6180npw8BxY+lw6NhnD6RK6Ay8OSUYxSz/exn
-         etQnIyxfvGf7TZhLwUXJPQjZwYx1ZzfhjvVNl0IsFd/MxQk1z+1088AYNAH7aX+lsCTe
-         Onmw==
-X-Gm-Message-State: AOAM533nPPvRDmtUm9jNjmTkq6wIeVzu61Ib1Yyu0WLVyzgSiYi9ekUJ
-        yOK3IpGwVhOauCVH3ZaMT1YCADLRlms=
-X-Google-Smtp-Source: ABdhPJyHo9ax2VndO116SXAPqjSqES9eXZgyrgnatGJhOXhl1DOJeWTaVdhxGABayePJ4jBp09H6mw==
-X-Received: by 2002:a63:f95b:: with SMTP id q27mr2238531pgk.202.1637106704042;
-        Tue, 16 Nov 2021 15:51:44 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id g5sm3299599pjt.15.2021.11.16.15.51.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Nov 2021 15:51:43 -0800 (PST)
-Subject: Re: [RFC PATCH v4 net-next 03/23] net: dsa: ocelot: seville: utilize
- of_mdiobus_register
-To:     Colin Foster <colin.foster@in-advantage.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        UNGLinuxDriver@microchip.com, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Ioana Ciornei <ioana.ciornei@nxp.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <20211116062328.1949151-1-colin.foster@in-advantage.com>
- <20211116062328.1949151-4-colin.foster@in-advantage.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <8dca509f-5dff-bc19-c702-ed03e52a8f86@gmail.com>
-Date:   Tue, 16 Nov 2021 15:51:40 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=M0DL4Z+z7lD4X8gzZ0br5lXdNaFuU3WYYnUldjpHc2U=;
+        b=eadmk6URe0G8J634cXOFxQLU4V0i775LOh0g5IbNObUvCbvR1PWPWhHkKLWu17lzD6
+         pDixyoT08WVHZawMYskOoRfkYR743XJUYgNOXZEnMITaKmW3n+WbXgXCaDJ8AnInMfYb
+         l6XObhDWJrTSqe5dakgUbtjNtVrsLBaOHdx7qV20PysMHWYO2XFr3FojreD7OaxazVQm
+         rlXW6CmhbrNgjw6efa2CPsCx7pterL9cBoy7qt+aYMOLiR6wolrs2Pvn2YjpEufNFTDL
+         gFrxBVAnpIDZdpjFPtLgeN08/r0eS1nEn5OoluV0LTjLd6xM6ivamv8yVMMuqDzNr7Af
+         1Oew==
+X-Gm-Message-State: AOAM531sNR8swtmsRn8Zjo2tdZoLaEuxXcylVm0ZIvN5BE40olsVIjer
+        FiaXh9VfYouhb1OjnJ4/vyoWXu39lXv2qdHy/G2SrA==
+X-Google-Smtp-Source: ABdhPJz+Zpnh28paqLB4qDHLzR3XVq2bt0ht3aoYvckA16R5n/koE3WziQ9CnstPTiZ+BYY0ZXMPZLKJl704orREtZg=
+X-Received: by 2002:a17:907:d89:: with SMTP id go9mr16600378ejc.330.1637112112433;
+ Tue, 16 Nov 2021 17:21:52 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20211116062328.1949151-4-colin.foster@in-advantage.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20211025015156.33133-1-brad@pensando.io> <20211025015156.33133-4-brad@pensando.io>
+ <YXhErvvSfKIBvHae@robh.at.kernel.org>
+In-Reply-To: <YXhErvvSfKIBvHae@robh.at.kernel.org>
+From:   Brad Larson <brad@pensando.io>
+Date:   Tue, 16 Nov 2021 17:21:41 -0800
+Message-ID: <CAK9rFnyk=gW_ZRZUci3byu=DNwdrmKBb30HQgxK0iWJuVVPbfQ@mail.gmail.com>
+Subject: Re: [PATCH v3 03/11] dt-bindings: mmc: Add Pensando Elba SoC binding
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Olof Johansson <olof@lixom.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 11/15/21 10:23 PM, Colin Foster wrote:
-> Switch seville to use of_mdiobus_register(bus, NULL) instead of just
-> mdiobus_register. This code is about to be pulled into a separate module
-> that can optionally define ports by the device_node.
-> 
-> Signed-off-by: Colin Foster <colin.foster@in-advantage.com>
+Hi Rob,
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+On Tue, Oct 26, 2021 at 11:10 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Sun, Oct 24, 2021 at 06:51:48PM -0700, Brad Larson wrote:
+> > Pensando Elba ARM 64-bit SoC is integrated with this IP and
+> > explicitly controls byte-lane enables resulting in an additional
+> > reg property resource.
+> >
+> > Signed-off-by: Brad Larson <brad@pensando.io>
+> > ---
+> >  .../devicetree/bindings/mmc/cdns,sdhci.yaml         | 13 ++++++++-----
+> >  1 file changed, 8 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml b/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml
+> > index af7442f73881..6c68b7b5abec 100644
+> > --- a/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml
+> > +++ b/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml
+> > @@ -15,13 +15,16 @@ allOf:
+> >
+> >  properties:
+> >    compatible:
+> > -    items:
+> > -      - enum:
+> > -          - socionext,uniphier-sd4hc
+> > -      - const: cdns,sd4hc
+> > +    oneOf:
+> > +      - items:
+> > +        - enum:
+> > +            - socionext,uniphier-sd4hc
+> > +            - pensando,elba-emmc
+> > +        - const: cdns,sd4hc
+> >
+> >    reg:
+> > -    maxItems: 1
+> > +    minItems: 1
+> > +    maxItems: 2
+>
+> If there is more than 1, then you need to describe what each entry is.
+
+The dtschema update and yamllint install shows the errors your bot
+reported.  With the updated cdns,sdhci.yaml to add the description for
+Elba's two reg items this is what I'm getting with in 5.16.0-rc1
+(next-20211116):
+
+diff --git a/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml
+b/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml
+index 4207fed62dfe..c01a7283c468 100644
+--- a/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml
++++ b/Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml
+@@ -12,17 +12,44 @@ maintainers:
+
+ allOf:
+   - $ref: mmc-controller.yaml
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - socionext,uniphier-sd4hc
++    then:
++      properties:
++        reg:
++          maxItems: 1
++          items:
++            - description: SDHCI CDNS HRS registers
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - pensando,elba-emmc
++    then:
++      properties:
++        reg:
++          maxItems: 2
++          items:
++            - description: SDHCI CDNS HRS registers
++            - description: Byte lane control register
+
+ properties:
+   compatible:
+-    items:
+-      - enum:
+-          - microchip,mpfs-sd4hc
+-          - socionext,uniphier-sd4hc
+-      - const: cdns,sd4hc
++    oneOf:
++      - items:
++          - enum:
++              - socionext,uniphier-sd4hc
++              - pensando,elba-emmc
++          - const: cdns,sd4hc
+
+   reg:
+-    maxItems: 1
++    minItems: 1
++    maxItems: 2
+
+   interrupts:
+     maxItems: 1
+
+$ make DT_CHECKER_FLAGS=-m dt_binding_check
+DT_SCHEMA_FILES=Documentation/devicetree/bindings/mmc/cdns,sdhci.yaml
+  LINT    Documentation/devicetree/bindings
+  CHKDT   Documentation/devicetree/bindings/processed-schema-examples.json
+  SCHEMA  Documentation/devicetree/bindings/processed-schema-examples.json
+...
+  DTEX    Documentation/devicetree/bindings/mmc/cdns,sdhci.example.dts
+  DTC     Documentation/devicetree/bindings/mmc/cdns,sdhci.example.dt.yaml
+  CHECK   Documentation/devicetree/bindings/mmc/cdns,sdhci.example.dt.yaml
+
+These errors are reported for unrelated files not on DT_SCHEMA_FILES
+
+bindings/net/qcom,ipa.yaml: ignoring, error in schema: properties:
+qcom,smem-state-names
+bindings/iio/adc/st,stm32-dfsdm-adc.yaml: ignoring, error in schema:
+patternProperties: ^filter@[0-9]+$: properties: st,adc-channel-names
+bindings/interconnect/qcom,rpmh.yaml: ignoring, error in schema:
+properties: qcom,bcm-voter-names
+
+Thanks,
+Brad
