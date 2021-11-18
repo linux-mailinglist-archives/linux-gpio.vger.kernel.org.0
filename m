@@ -2,108 +2,182 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A472455DC8
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Nov 2021 15:17:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB164455E9A
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Nov 2021 15:51:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232898AbhKROUD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 18 Nov 2021 09:20:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40866 "EHLO
+        id S229649AbhKROy6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 18 Nov 2021 09:54:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232893AbhKROUD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Nov 2021 09:20:03 -0500
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28423C061570;
-        Thu, 18 Nov 2021 06:17:03 -0800 (PST)
-Received: by mail-lf1-x12c.google.com with SMTP id b40so26810251lfv.10;
-        Thu, 18 Nov 2021 06:17:03 -0800 (PST)
+        with ESMTP id S229752AbhKROy6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Nov 2021 09:54:58 -0500
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28178C06173E
+        for <linux-gpio@vger.kernel.org>; Thu, 18 Nov 2021 06:51:58 -0800 (PST)
+Received: by mail-wr1-x434.google.com with SMTP id u1so12028918wru.13
+        for <linux-gpio@vger.kernel.org>; Thu, 18 Nov 2021 06:51:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:to:cc:references
-         :from:in-reply-to:content-transfer-encoding;
-        bh=GygOPhU5icKxtqCF2DlWG7uaF79rJii2mQxjLwhBwyQ=;
-        b=O2IoF3iq+u+SRLi6N/yjfQRZcvPsf9yeWFQttHAIL8zsKKwatyxiWosbUHeRmAOviA
-         MrfHkwL+Cmj4fl2HfK28GqWSX3zI0Ytmf4D6TBGAXkZCSkMvQTUDeZunTSKQVtRrrgiL
-         RqtLLSQzrZ8t81aDvwGaXUzlIvqbUExCwHEY2vdGRhVkmSOWWPV/iXdZGbjaYLd4dgHn
-         0EdtMmOEOUysBXlnaphTMThrNgYgkXZXNdlUym4+jMPMXwDGFd9os2Zl5aGhGMIIsAhn
-         8qUQS1k1JVySrtqmUxNZQkzKiI+il+bHjD93i+2Ex77OzrkOfFGtxos7Ecp6b6TGn6xM
-         sUZA==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=l/3Z4XGcqYwV4V6oJiYgbORs/SEqlAwMD+aKJHi8Aw0=;
+        b=loM5pLXRmcR68RfF6U0PZ3BKyaZb2Jr/o6CnjIAntvneXNEqrHNr7hUcYluL/tLnly
+         FDsuKH7X5M0cMQqBDPP4IGCLTZT7sCCtl068RtVv5M8w3NyRZtcX6r2p4SnVeAc6DUSF
+         CKHB0nJv2kHTDsPFC1SxDFH2lNeinGpB/MOuAEsxTXGFFctRqE22ksPYxfDK7TWze708
+         v00Uv3akr65t5pQgoFcxoj2jT7HCJp3XqLa775zyxu38UHt1Enj2rU90SmytmQKP+8EH
+         M+bVpz+tyCf2IcoPx0RgwfmP63gJend3y8vEd0Xc51LOrKE8120PhFkaR6/4MWbwISQI
+         kyzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :to:cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=GygOPhU5icKxtqCF2DlWG7uaF79rJii2mQxjLwhBwyQ=;
-        b=RPMgFoxyLXSiOcUPPE6wBW2IQM7mLZKFXtJRBrmaFDU7J0O0Tf9j6TCmre329pHYUG
-         uCiAhpkgU6Eg0TwE+7mR2IHhvj/GcN04cn+yaTd7Wf2VtfeCXkvs8GqO8pH8lHzI1Rn9
-         h1pA3rDDFfNg+kIvF9NOuJQLiLDy/TXVZ2sksf008/Mwsj+OiGZ0+5sl9eldDi9YWJGA
-         HbadgfO1bll1mooSZZwq04n+E834YyLrV3yQSJy+5VnFU2jKNvO0BA5xjgP0+ufbsgp4
-         B91G3dKMTXPsKlq/vaBegMZs+QGrP7GYkvr2cSPITg2veP0N7FhcM0wXEiZSc8KrapGJ
-         JPug==
-X-Gm-Message-State: AOAM533s1ZP/Zdt6K/prXfIp7umw8e2iJjVAUWhFZ0FzdsQdQRy2CW2u
-        n1Lwfq1DajbY4QmeY0hnpQQ=
-X-Google-Smtp-Source: ABdhPJyAyAEBFANrU0C0b9yVQTfaZztqVN2XdodkepfT/4CKArVg8D8iqGDrvSbTVzeeo3YOMeOclA==
-X-Received: by 2002:a05:6512:3763:: with SMTP id z3mr24016586lft.601.1637245021577;
-        Thu, 18 Nov 2021 06:17:01 -0800 (PST)
-Received: from [192.168.26.149] (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
-        by smtp.googlemail.com with ESMTPSA id r5sm309070lji.132.2021.11.18.06.17.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 18 Nov 2021 06:17:01 -0800 (PST)
-Message-ID: <82405573-8c3b-0c43-6388-6e0891af4ae6@gmail.com>
-Date:   Thu, 18 Nov 2021 15:17:00 +0100
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=l/3Z4XGcqYwV4V6oJiYgbORs/SEqlAwMD+aKJHi8Aw0=;
+        b=Dt3cXdZVPzkLqbSdw+XhVDFI/9odl6jxMIq1YYEwTTPGLnRWqvd4r/cXB3jgYfgABR
+         W23MImgj5aEnW5Y0YHSUR/Xg0K2T9lFoDjpksGt2ub8bPPINSwH/iQ8vxdUpLGiY+xBd
+         pTMWqBORDtl7SGALLD56A4tCn3svsBhJ97PV1BvFL+lPbxjAuEoCS0w/rVeDcGW3GXqA
+         Z4QKsIgw+n3dj795VnKUxaUJjOguEDHAsfvnaCPjq6jg04v1g2OEMNDkKHzzGZxQKHz7
+         BKfLzCWPkt4/MKDz8U49NyVChXjMMpiedQ8iTPF80OBHsllIR2IG68qdw9b87dmkBEg1
+         UZww==
+X-Gm-Message-State: AOAM530qZJMlbdY+mUAt/cM7ArfqWJDcjtT469/XcLI5Ut99wGMCQpcG
+        5s1qwHHGIxINGkN+sZ+BVlwE/w==
+X-Google-Smtp-Source: ABdhPJyNxJobDwtILjTC6h5Cp05n1wiYxhZhxizHmJukDD8j8h6sjQv2l2t4xzah0tH4iZGJPmEgYA==
+X-Received: by 2002:adf:d22a:: with SMTP id k10mr31239898wrh.80.1637247116671;
+        Thu, 18 Nov 2021 06:51:56 -0800 (PST)
+Received: from debian-brgl.home ([2a01:cb1d:334:ac00:7d50:ff5:f5c1:e225])
+        by smtp.gmail.com with ESMTPSA id f7sm63154wri.74.2021.11.18.06.51.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Nov 2021 06:51:56 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v9 0/4] gpio-sim: configfs-based GPIO simulator
+Date:   Thu, 18 Nov 2021 15:51:38 +0100
+Message-Id: <20211118145142.14519-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:95.0) Gecko/20100101
- Thunderbird/95.0
-Subject: Re: [PATCH 3/5] pinctrl: add helpers reading pins, groups & functions
- from DT
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
-References: <20211118132152.15722-1-zajec5@gmail.com>
- <20211118132152.15722-4-zajec5@gmail.com>
- <CAHp75VebQKsSJYxK9Fi0wEhGfpR=1HZfDsVuqV8BCG-UrZDtVg@mail.gmail.com>
-From:   =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-In-Reply-To: <CAHp75VebQKsSJYxK9Fi0wEhGfpR=1HZfDsVuqV8BCG-UrZDtVg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 18.11.2021 14:57, Andy Shevchenko wrote:
-> On Thu, Nov 18, 2021 at 3:22 PM Rafał Miłecki <zajec5@gmail.com> wrote:
-> 
-> ...
-> 
->> --- a/drivers/pinctrl/pinmux.c
->> +++ b/drivers/pinctrl/pinmux.c
-> 
->> +#include <linux/of.h>
-> 
-> I don't like this. This shows not thought through the design of the series.
-> 
-> What I rather expect is a proper interfacing layer that you fill with
-> options that can be provided by corresponding underlying
-> implementation, e.g. DT.
-> 
-> Moreover, before doing this you probably would need to refactor the
-> pin control core to get rid of DT specifics, i.e. abstract them away
-> first.
+This is another shot at the gpio-sim testing module. As there was no
+reasoning with configfs maintainers for many months, this time the whole
+concept of committable items has been dropped. Instead, each configfs
+chip item (or rather a group - more on that later) exposes a new
+attribute called 'live'. Writing 1 to it brings the chip on-line
+(registers the platform device) and writing 0 tears it down.
 
-Ouch, it seems like pinctrl got into a tricky state. As I understand it
-we need some abstraction layer between DT and pinctrl but noone is
-working on it? Does it mean we should consider pinctrl core frozen until
-it's refactored?
+There are some caveats to that approach - for example: we can't block
+the user-space from deleting chip items when chips are live but is just
+handled by silently destroying the chip device in the background.
 
-It's quite inconvenient for me as I'm not sure if I can handle such
-heavy pinctrl refactoring while at the same time I'd like to add
-those small features to it.
+Andy (rightfully) pointed out that parsing of the lists of line names is
+awkward so in this iteration it's been replaced by a system that is more
+elegant and will allow to easily extend configuration options for
+specific GPIO lines. This is achieved by turning the chip's configfs
+item into a configfs group and allowing the user-space to create
+additional items inside it. The items must be called line<offset> (e.g.
+line0, line12 etc.) where the offset part indicates to the module the
+offset for which given item stores the configuration for. Within each
+such line item, there are additional attributes that allow specifying
+configuration for specific lines. Currently we only support the 'name'
+attribute but I plan to extend that to support GPIO hogging too.
 
-Can you point to an example of extra interfacing layer that could be
-used as a reference for what you expect for pinctrl one, please? Some
-solution in another Linux's subsystem?
+v1 -> v2:
+- add selftests for gpio-sim
+- add helper programs for selftests
+- update the configfs rename callback to work with the new API introduced in
+  v5.11
+- fix a missing quote in the documentation
+- use !! whenever using bits operation that are required to return 0 or 1
+- use provided bitmap API instead of reimplementing copy or fill operations
+- fix a deadlock in gpio_sim_direction_output()
+- add new read-only configfs attributes for mapping of configfs items to GPIO
+  device names
+- and address other minor issues pointed out in reviews of v1
+
+v2 -> v3:
+- use devm_bitmap_alloc() instead of the zalloc variant if we're initializing
+  the bitmap with 1s
+- drop the patch exporting device_is_bound()
+- don't return -ENODEV from dev_nam and chip_name configfs attributes, return
+  a string indicating that the device is not available yet ('n/a')
+- fix indentation where it makes sense
+- don't protect IDA functions which use their own locking and where it's not
+  needed
+- use kmemdup() instead of kzalloc() + memcpy()
+- collected review tags
+- minor coding style fixes
+
+v3 -> v4:
+- return 'none' instead of 'n/a' from dev_name and chip_name before the device
+  is registered
+- use sysfs_emit() instead of s*printf()
+- drop GPIO_SIM_MAX_PROP as it's only used in an array's definition where it's
+  fine to hardcode the value
+
+v4 -> v5:
+- drop lib patches that are already upstream
+- use BIT() instead of (1UL << bit) for flags
+- fix refcounting for the configfs_dirent in rename()
+- drop d_move() from the rename() callback
+- free memory allocated for the live and pending groups in configfs_d_iput()
+  and not in detach_groups()
+- make sure that if a group of some name is in the live directory, a new group
+  with the same name cannot be created in the pending directory
+
+v5 -> v6:
+- go back to using (1UL << bit) instead of BIT()
+- if the live group dentry doesn't exist for whatever reason at the time when
+  mkdir() in the pending group is called (would be a BUG()), return -ENOENT
+  instead of -EEXIST which should only be returned if given subsystem already
+  exists in either live or pending group
+
+v6 -> v7:
+- as detailed by Andy in commit 6fda593f3082 ("gpio: mockup: Convert to use
+  software nodes") removing device properties after the platform device is
+  removed but before the GPIO device gets dropped can lead to a use-after-free
+  bug - use software nodes to manually control the freeing of the properties
+
+v7 -> v8:
+- fixed some minor coding style issues as pointed out by Andy
+
+v8 -> v9:
+- dropped the patches implementing committable-items and reworked the
+  driver to not use them
+- reworked the gpio-line-names property and configuring specific lines
+  in general
+- many smaller tweaks here and there
+
+Bartosz Golaszewski (4):
+  gpio: sim: new testing module
+  selftests: gpio: provide a helper for reading chip info
+  selftests: gpio: add a helper for reading GPIO line names
+  selftests: gpio: add test cases for gpio-sim
+
+ Documentation/admin-guide/gpio/gpio-sim.rst   |  67 ++
+ drivers/gpio/Kconfig                          |   8 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-sim.c                       | 990 ++++++++++++++++++
+ tools/testing/selftests/gpio/.gitignore       |   2 +
+ tools/testing/selftests/gpio/Makefile         |   4 +-
+ tools/testing/selftests/gpio/config           |   1 +
+ tools/testing/selftests/gpio/gpio-chip-info.c |  57 +
+ tools/testing/selftests/gpio/gpio-line-name.c |  55 +
+ tools/testing/selftests/gpio/gpio-sim.sh      | 266 +++++
+ 10 files changed, 1449 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/admin-guide/gpio/gpio-sim.rst
+ create mode 100644 drivers/gpio/gpio-sim.c
+ create mode 100644 tools/testing/selftests/gpio/gpio-chip-info.c
+ create mode 100644 tools/testing/selftests/gpio/gpio-line-name.c
+ create mode 100755 tools/testing/selftests/gpio/gpio-sim.sh
+
+-- 
+2.25.1
+
