@@ -2,60 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 77E384558DC
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Nov 2021 11:19:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C3D7455969
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Nov 2021 11:51:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244850AbhKRKWy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 18 Nov 2021 05:22:54 -0500
-Received: from mga03.intel.com ([134.134.136.65]:53281 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244554AbhKRKWV (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 18 Nov 2021 05:22:21 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10171"; a="234103822"
-X-IronPort-AV: E=Sophos;i="5.87,244,1631602800"; 
-   d="scan'208";a="234103822"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2021 02:19:20 -0800
-X-IronPort-AV: E=Sophos;i="5.87,244,1631602800"; 
-   d="scan'208";a="605108732"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2021 02:19:17 -0800
-Received: by lahna (sSMTP sendmail emulation); Thu, 18 Nov 2021 12:19:15 +0200
-Date:   Thu, 18 Nov 2021 12:19:15 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        Yauhen Kharuzhy <jekhor@gmail.com>
-Subject: Re: [PATCH 3/3] pinctrl: cherryview: Ignore INT33FF UID 5 ACPI device
-Message-ID: <YZYoo/KcP9mSlJjt@lahna>
-References: <20211117231614.758362-1-hdegoede@redhat.com>
- <20211117231614.758362-3-hdegoede@redhat.com>
+        id S1343560AbhKRKyA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 18 Nov 2021 05:54:00 -0500
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:50317 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1343499AbhKRKxQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Nov 2021 05:53:16 -0500
+Received: (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id D895E40002;
+        Thu, 18 Nov 2021 10:50:13 +0000 (UTC)
+Date:   Thu, 18 Nov 2021 11:50:13 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Kavyasree.Kotagiri@microchip.com
+Cc:     robh+dt@kernel.org, linus.walleij@linaro.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, UNGLinuxDriver@microchip.com
+Subject: Re: [PATCH 2/2] pinctrl: ocelot: Extend support for lan966x
+Message-ID: <YZYv5aPqDyFIQibj@piout.net>
+References: <20211029092703.18886-1-kavyasree.kotagiri@microchip.com>
+ <20211029092703.18886-3-kavyasree.kotagiri@microchip.com>
+ <YZWJZzCuzXTVzIJ+@piout.net>
+ <CO1PR11MB4865BC4DCB3C0E542EF2D7EA929B9@CO1PR11MB4865.namprd11.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211117231614.758362-3-hdegoede@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CO1PR11MB4865BC4DCB3C0E542EF2D7EA929B9@CO1PR11MB4865.namprd11.prod.outlook.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 18, 2021 at 12:16:14AM +0100, Hans de Goede wrote:
-> Many Cherry Trail DSDTs have an extra INT33FF device with UID 5,
-> the intel_pinctrl_get_soc_data() call will fail for this extra
-> unknown UID, leading to the following error in dmesg:
-
-Yeah, this may be the "DSW" or Deep Sleep Well community that is
-typically not available for software to use at all. No idea why they
-expose it on some systems.
-
->  cherryview-pinctrl: probe of INT33FF:04 failed with error -61
+On 18/11/2021 09:24:56+0000, Kavyasree.Kotagiri@microchip.com wrote:
+> > > +      * but it doesn't matter much for now.
+> > > +      * Note: ALT0/ALT1/ALT2 are organized specially for 78 gpio targets
+> > > +      */
+> > > +     regmap_update_bits(info->map, REG_ALT(0, info, pin->pin),
+> > > +                        BIT(p), f << p);
+> > > +     regmap_update_bits(info->map, REG_ALT(1, info, pin->pin),
+> > > +                        BIT(p), (f >> 1) << p);
+> > > +     regmap_update_bits(info->map, REG_ALT(2, info, pin->pin),
+> > > +                        BIT(p), (f >> 2) << p);
+> > > +
+> > 
+> > I would have thought the hardware would be fixed because you now have 78
+> > pins and this probably will get worse over time. This is really a poor
+> > choice of interface as now you will get two transient states instead of
+> > one.
+> > 
+> Sorry, I couldn't get you. please elaborate what you meant by this comment?
 > 
-> Add a check for this extra UID and return -ENODEV for it to
-> silence this false-positive error message.
-> 
-> Cc: Yauhen Kharuzhy <jekhor@gmail.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Not mush you can do on your side, this was just a rant. I raised the
+issue to Allan, hoping that this will get fixed in the next SoCs ;)
+
+
+-- 
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
