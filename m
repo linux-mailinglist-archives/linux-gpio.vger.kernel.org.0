@@ -2,87 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4914B4550FB
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Nov 2021 00:16:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CCE03455775
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Nov 2021 09:56:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231776AbhKQXT0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 17 Nov 2021 18:19:26 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:40106 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S241523AbhKQXTZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 17 Nov 2021 18:19:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1637190985;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=4L6fYkm3itlF64N4oeIyQNxJtyJbr/iAzdlnWwlNS3w=;
-        b=C5s2HC1VN8ceXXzIU4WxAFUlpQpeBp1xhfcAw0K0aM+u9bbsp896D0tFZE11ncLAgHUf4d
-        GCugkpZJd6oB6GznCX5FcDwtHKcoSA6847tk643PJAq9A2JtNDjeb9MafpcRksO0aPmU6b
-        C1HRK+dsiCsPPJSdSjMzdsMTqGNZeZk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-228-9UyRdRXPM3G1EqI8qLDZvA-1; Wed, 17 Nov 2021 18:16:22 -0500
-X-MC-Unique: 9UyRdRXPM3G1EqI8qLDZvA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 76F4A100C660;
-        Wed, 17 Nov 2021 23:16:21 +0000 (UTC)
-Received: from x1.localdomain.com (unknown [10.39.192.15])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 05D2B10023B8;
-        Wed, 17 Nov 2021 23:16:19 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org, Yauhen Kharuzhy <jekhor@gmail.com>
-Subject: [PATCH 3/3] pinctrl: cherryview: Ignore INT33FF UID 5 ACPI device
-Date:   Thu, 18 Nov 2021 00:16:14 +0100
-Message-Id: <20211117231614.758362-3-hdegoede@redhat.com>
-In-Reply-To: <20211117231614.758362-1-hdegoede@redhat.com>
-References: <20211117231614.758362-1-hdegoede@redhat.com>
+        id S243517AbhKRI7l (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 18 Nov 2021 03:59:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52348 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S244880AbhKRI61 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Nov 2021 03:58:27 -0500
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D5EBC0613B9
+        for <linux-gpio@vger.kernel.org>; Thu, 18 Nov 2021 00:55:18 -0800 (PST)
+Received: by mail-wr1-x431.google.com with SMTP id u18so10054576wrg.5
+        for <linux-gpio@vger.kernel.org>; Thu, 18 Nov 2021 00:55:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=dSP+w0ULKXB14fx0Qg6uZmQEgEDOZqwyyo7QWe1WeRA=;
+        b=ydGmwL4bJDWdRowxUjZt8fkHicYan+sgcnHB3CDDWdrWIZ8SfGCvjnttvQl6Av5vlr
+         s6PrLg6WG4iAClWRg4ABvIUY5CoPtZ1J8dPHr9UUowjjMD4oV4y3F/fStxNQWSI7JIhu
+         Wl17LV+jYNskvi1g3OB4pI+WRDya+Ni66dYqqj1oORgx93UMAo4F6oQHfWVjY0kjzNOF
+         b0a/2g4B9e0VFYvtAFTw52qfI+9oxP11ske5S/1xGpCj0YjTW5PflN3gXSTlO9I4Lhdl
+         o5dbw2PJfgAiIgVp0fOOzgRhSj1XSewWVex+fR/7KOeHmaWcgDV5BBO2HSumFII0Xmav
+         S53g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=dSP+w0ULKXB14fx0Qg6uZmQEgEDOZqwyyo7QWe1WeRA=;
+        b=ERsQtoMYMYAa6MiXyVjsXUZ3RUC5r+zqZtSCcTOnz0M+P5GR5AhKdINxDtFaeWHGsC
+         FaYLAX8RaBMt03OCWwdzskRXYL68dT411fz7ll5YahsX6B6OnoGa5N3W4ocE0Ub6MdxK
+         KqXlw8pL+naLjhZ9kOaV0Zya2FhfeRyBMzGcIBd/iVqFDQQ/UCPexmuI/7gPuxe/avzJ
+         KnfYS8PCqFldF9yYLdahfal9bTgy9yELvdLda5OQhVOBHhYqfnifvoyzDKTdvoEkuOeT
+         UwfmvaS8M4O8pCrnGNDCsBPm34328zPNfW74/QbIYPd2oTSx0XpuENdjPyo66tZ/OwoF
+         3EvQ==
+X-Gm-Message-State: AOAM5330IIeVVjuhXODjjszBK1f2fU9JYsQ6EmT4rGqUsW40tVVwj1nQ
+        9mV3Uni+JbASsfTdsQGHfISAFA==
+X-Google-Smtp-Source: ABdhPJxCrYvy/KHbOLzaUjVIo3pWbsYkJIUI9dO/1fGCACLzErizkkHVQ37qGCEiCScVrzOKly2AKQ==
+X-Received: by 2002:adf:d1cb:: with SMTP id b11mr30566144wrd.33.1637225717048;
+        Thu, 18 Nov 2021 00:55:17 -0800 (PST)
+Received: from google.com ([95.148.6.231])
+        by smtp.gmail.com with ESMTPSA id n129sm2279008wmn.36.2021.11.18.00.55.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Nov 2021 00:55:16 -0800 (PST)
+Date:   Thu, 18 Nov 2021 08:55:14 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-power <linux-power@fi.rohmeurope.com>
+Subject: Re: [PATCH RESEND 0/4] Drop ROHM BD70528 support
+Message-ID: <YZYU8hzZyzcPHCTT@google.com>
+References: <cover.1637066805.git.matti.vaittinen@fi.rohmeurope.com>
+ <CAHp75Ve_qS0Qc8XLHLwFnWEPzQtgNfEeVr8q9L4gK2m5a-By0A@mail.gmail.com>
+ <50c260a1-c6d0-1a0b-45da-ab1a2d1379c3@gmail.com>
+ <CAMRc=Mc-+ZR1PR9p=cXkfMWdKn1d1VCxmhBknSzNaDjepfpV-g@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <CAMRc=Mc-+ZR1PR9p=cXkfMWdKn1d1VCxmhBknSzNaDjepfpV-g@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Many Cherry Trail DSDTs have an extra INT33FF device with UID 5,
-the intel_pinctrl_get_soc_data() call will fail for this extra
-unknown UID, leading to the following error in dmesg:
+On Tue, 16 Nov 2021, Bartosz Golaszewski wrote:
 
- cherryview-pinctrl: probe of INT33FF:04 failed with error -61
+> On Tue, Nov 16, 2021 at 7:41 PM Matti Vaittinen
+> <mazziesaccount@gmail.com> wrote:
+> >
+> > On 11/16/21 18:10, Andy Shevchenko wrote:
+> > > On Tue, Nov 16, 2021 at 2:52 PM Matti Vaittinen
+> > > <matti.vaittinen@fi.rohmeurope.com> wrote:
+> > >>
+> > >> Drop ROHM BD70528 support
+> > >>
+> > >> Unfortunately there has not been a big demand for ROHM BD70528
+> > >> IC. The few users I know control PMIC from separate M4-core,
+> > >> which is not running Linux. I am not aware of any users of this
+> > >> Linux driver.
+> > >>
+> > >> While I did really like this IC and writing the drivers for it,
+> > >> seems like these drivers are becoming useless burden. So, I see
+> > >> no point in maintaining them. Let's just drop the drivers if
+> > >> there is no objections to this series. :(
+> > >>
+> > >> The regulator, WDG and power-supply drivers were already dropped.
+> > >>
+> > >> The RTC and clk drivers remain in use by few other ROHM IC drivers.
+> > >> Nevertheless, they are already converted to not depend the BD70528
+> > >> defines during previous cycle.
+> > >>
+> > >> This series cleans the remaining pieces, GPIO, MFD, dt-bindings and
+> > >> MAINTAINER entries. The GPIO code uses defines from MFD - but the GPIO
+> > >> part is also depending on MFD KConfig entry - so there should be no
+> > >> breakages even if the patches were applied to respective subsystem trees
+> > >> and were not carried via single tree.
+> > >
+> > > FWIW, no objections from me.
+> >
+> > Thanks Andy!
+> >
+> > I see acks from Andu, Bartosz, Lee and Rob. It'd be nice to see ack from
+> > Linus W too - but other than that - I guess this is good to go. Any
+> > preferences regarding the tree(s) that could carry the patches? All via
+> > MFD or each patch merged to the subsystem it fits the best?
+> >
+> > Best Regards
+> >         Matti Vaittinen
+> 
+> Normally Lee takes MFD patches together with those touching relevant subsystems.
 
-Add a check for this extra UID and return -ENODEV for it to
-silence this false-positive error message.
+Yep, it's on the list.
 
-Cc: Yauhen Kharuzhy <jekhor@gmail.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/pinctrl/intel/pinctrl-cherryview.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/pinctrl/intel/pinctrl-cherryview.c b/drivers/pinctrl/intel/pinctrl-cherryview.c
-index 491b234812cd..ca6fe6115ecb 100644
---- a/drivers/pinctrl/intel/pinctrl-cherryview.c
-+++ b/drivers/pinctrl/intel/pinctrl-cherryview.c
-@@ -1686,6 +1686,10 @@ static int chv_pinctrl_probe(struct platform_device *pdev)
- 	acpi_status status;
- 	int i, ret, irq;
- 
-+	/* Cherry Trail DSDTs have an extra INT33FF device with UID 5, ignore */
-+	if (!strcmp(adev->pnp.unique_id, "5"))
-+		return -ENODEV;
-+
- 	soc_data = intel_pinctrl_get_soc_data(pdev);
- 	if (IS_ERR(soc_data))
- 		return PTR_ERR(soc_data);
 -- 
-2.31.1
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
