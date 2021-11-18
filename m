@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C0EC455C94
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Nov 2021 14:22:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C9582455C97
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Nov 2021 14:22:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230354AbhKRNZV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 18 Nov 2021 08:25:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56024 "EHLO
+        id S229786AbhKRNZW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 18 Nov 2021 08:25:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229786AbhKRNZR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Nov 2021 08:25:17 -0500
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43E3BC061764;
-        Thu, 18 Nov 2021 05:22:17 -0800 (PST)
-Received: by mail-lf1-x134.google.com with SMTP id y26so25855572lfa.11;
-        Thu, 18 Nov 2021 05:22:17 -0800 (PST)
+        with ESMTP id S230411AbhKRNZT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Nov 2021 08:25:19 -0500
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2111FC061767;
+        Thu, 18 Nov 2021 05:22:19 -0800 (PST)
+Received: by mail-lf1-x135.google.com with SMTP id c32so26014986lfv.4;
+        Thu, 18 Nov 2021 05:22:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=9E+oBGu3s/wKY5ZnDLWn9aAASyvfS9O25fFkmrDjZDg=;
-        b=g1VXvm95hleoOSdqO5/XtKVhOGke2/AqUe350SVd0FPK5y50OyVvH63wvhatm0Q9nQ
-         LQ0HJ8VVNo095BvU6FaCp3IXkgm7HvKMCtq2uPP/NX9QZyDkGs04eiGPQbDFGhZjGRBg
-         CxvpM+20YWwMSXyybGyu/TabXBF98/i6604dzFTi33NfmUVzc3dCqvr2wNUzMWTga19E
-         vgR7A60eacjWxywyhxueAlh/omjgWjkapkITe+k4aWx7xqO/ei6xpQltbaywslMEbQJx
-         Y/cJGDn1xNAH1ZS1BKEfEVjKPE5FM8WOIHOGxwjt1PxP99mXkIM6JfbX+I/snjyMjxaO
-         jvRw==
+        bh=ULF68UwhVDlRTvRbeXuUFDMpZQ8miFxqyGy0nvwt3uk=;
+        b=pGo1wzg0o2Q8EeSlsXb/UhoMwD2LzHiKdnm68v0zPZs3YW98qOdHxiEmBM40i+ORjP
+         s1oDysRZIqf3oucuL7AI0b2/oz6ayhrSUZkmYhZpDQEybzfzHyosNhfKn7f57xZ/T/ri
+         2i8Fa+ZFz/zwxJQEkevTM46eNqVDUOgfzKYy0yX/09v3u8rP5nhLTUdGh3Yfs2tSZv7q
+         wZVyHSMPKSyJ42OH5kga6Vk016etBoO9QIsr+g3nmfXWtIaCq4vmpRZp5CHQ/6frxBUM
+         KTBGFHh6iPUJoINT7O+WqDGD6lCDL+APf/O1k6Rrn8Oq3k1/IUlTgdY47MeWzPb/TIJB
+         iCYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=9E+oBGu3s/wKY5ZnDLWn9aAASyvfS9O25fFkmrDjZDg=;
-        b=TcOJ+rCe17Ufk1vAxgdKwZbXiKLBCmw+HDz+A3+zwaCqc6z+Ai/4rtN3/8wFDJrB9L
-         8r+EiRBxvvmMKP3LVCobLca5AWhvCOyygMGkcx1xK5jF6YrkYuCrcTs3gDigsRqGFed8
-         f0GTGGpdcCqXNRHY2/xDbueJaF5GdJzxCTWKD06GvkLTZ+k5abfXH1QBLIVCZmqk3NLw
-         i/XcU1DgGk0qyaKcmIUa7oHb1jdjCU1OmXlHLhF3QqiRwNcI7yINgVqSrcgyMN7cEEZP
-         R4o7rG5pKJG0uC9SC5iGLm7LknHackdf9kJpkvjuFziCHtnYOIUJ+/Q2oBk0w2jEHBrc
-         QZmg==
-X-Gm-Message-State: AOAM530aJ7MWayoy8cDNTEChjOoUoVbvFQcJ64/bXt41twxlaDZM/gJD
-        5KcbtvbO7Uu32R2/hwtsRIA=
-X-Google-Smtp-Source: ABdhPJyqcA/lYXMQf4qMh25mqXnzK2hhKOSWdnaKKiSeIuucVGO9wDKOsaCmDI3n0rkyl9XCHJ8AcQ==
-X-Received: by 2002:a2e:95d6:: with SMTP id y22mr17047762ljh.5.1637241735587;
-        Thu, 18 Nov 2021 05:22:15 -0800 (PST)
+        bh=ULF68UwhVDlRTvRbeXuUFDMpZQ8miFxqyGy0nvwt3uk=;
+        b=XOy8Y7VdDTx4gvFmSakKkgLEWhDzI9XtFx0WDwPqsOTnumLjuiFb4dCOtlO6ig64V3
+         aKutEc17KvPmVKTE1YdDeqJsKXRSbngFuZBJuFphiCiEtXLMjM+b8KYbz4B5ltD/J++7
+         sX7hNGgrjuHVUWKCocgrMzy5v+AHu3ffsXAJq0awQui0I6/9Rf98cvs0BlbleAoJau9e
+         QtVDl4f3YdNxYyo/RX2FuEV+qIkaS/A6sHcnmwqWenCyBH2GeLpA6gV7P+PZj/PhLHvL
+         p74XTXxZT5shUJDm+hg+TaL0+4aVYUKzPDQBcsfOxduVyBN8aZAnYJeCrRx9jF6vTthj
+         FIEw==
+X-Gm-Message-State: AOAM532VfkrK+YrGqNc8slIHberN1ZvFmUd2WeIJsHK09EAf78Y4MWKF
+        iosidDTFzqlpILUEBhU1Ep4=
+X-Google-Smtp-Source: ABdhPJwHCfXME+dCe7HSwWboePM3jMjp/q/TB3ludt+Evadz5tV+XX3KLaFub0RTmqqDLK0TBApfPA==
+X-Received: by 2002:a2e:9641:: with SMTP id z1mr18419557ljh.66.1637241737452;
+        Thu, 18 Nov 2021 05:22:17 -0800 (PST)
 Received: from localhost.lan (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
-        by smtp.gmail.com with ESMTPSA id bp36sm356550lfb.0.2021.11.18.05.22.14
+        by smtp.gmail.com with ESMTPSA id bp36sm356550lfb.0.2021.11.18.05.22.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Nov 2021 05:22:15 -0800 (PST)
+        Thu, 18 Nov 2021 05:22:17 -0800 (PST)
 From:   =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>
@@ -57,9 +57,9 @@ Cc:     Tony Lindgren <tony@atomide.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
         bcm-kernel-feedback-list@broadcom.com,
         =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
-Subject: [PATCH 4/5] pinctrl: bcm: pinctrl-ns: supoprt DT specified pins, groups & functions
-Date:   Thu, 18 Nov 2021 14:21:51 +0100
-Message-Id: <20211118132152.15722-5-zajec5@gmail.com>
+Subject: [PATCH 5/5] ARM: dts: BCM5301X: add pinctrl pins, groups & functions
+Date:   Thu, 18 Nov 2021 14:21:52 +0100
+Message-Id: <20211118132152.15722-6-zajec5@gmail.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20211118132152.15722-1-zajec5@gmail.com>
 References: <20211118132152.15722-1-zajec5@gmail.com>
@@ -72,135 +72,266 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Rafał Miłecki <rafal@milecki.pl>
 
-It's now possible to specify hardware pins, groups & functions in DT
-instead of hardcoding that info in a driver. Use pinctrl subsystem
-helpers to extract that info from DT.
-
-Keep hardcoded data as fallback method.
+They can now be described in DT so do that.
 
 Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
 ---
- drivers/pinctrl/bcm/pinctrl-ns.c | 90 +++++++++++++++++++++-----------
- 1 file changed, 60 insertions(+), 30 deletions(-)
+ arch/arm/boot/dts/bcm4709.dtsi  |  74 +++++++++++++++++++
+ arch/arm/boot/dts/bcm47094.dtsi |  11 +--
+ arch/arm/boot/dts/bcm5301x.dtsi | 123 ++++++++++++++++++++++++++++++++
+ 3 files changed, 198 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-ns.c b/drivers/pinctrl/bcm/pinctrl-ns.c
-index 0897041b5ef1..48e77ff25d9d 100644
---- a/drivers/pinctrl/bcm/pinctrl-ns.c
-+++ b/drivers/pinctrl/bcm/pinctrl-ns.c
-@@ -213,7 +213,11 @@ static int ns_pinctrl_probe(struct platform_device *pdev)
- 	struct ns_pinctrl *ns_pinctrl;
- 	struct pinctrl_desc *pctldesc;
- 	struct pinctrl_pin_desc *pin;
-+	struct device_node *functions;
-+	struct device_node *groups;
-+	struct device_node *pins;
- 	struct resource *res;
-+	int err;
- 	int i;
+diff --git a/arch/arm/boot/dts/bcm4709.dtsi b/arch/arm/boot/dts/bcm4709.dtsi
+index cba3d910bed8..ba4700a85772 100644
+--- a/arch/arm/boot/dts/bcm4709.dtsi
++++ b/arch/arm/boot/dts/bcm4709.dtsi
+@@ -10,6 +10,80 @@ &uart0 {
+ 	status = "okay";
+ };
  
- 	ns_pinctrl = devm_kzalloc(dev, sizeof(*ns_pinctrl), GFP_KERNEL);
-@@ -243,19 +247,27 @@ static int ns_pinctrl_probe(struct platform_device *pdev)
- 
- 	/* Set pinctrl properties */
- 
--	pctldesc->pins = devm_kcalloc(dev, ARRAY_SIZE(ns_pinctrl_pins),
--				      sizeof(struct pinctrl_pin_desc),
--				      GFP_KERNEL);
--	if (!pctldesc->pins)
--		return -ENOMEM;
--	for (i = 0, pin = (struct pinctrl_pin_desc *)&pctldesc->pins[0];
--	     i < ARRAY_SIZE(ns_pinctrl_pins); i++) {
--		const struct pinctrl_pin_desc *src = &ns_pinctrl_pins[i];
--		unsigned int chipsets = (uintptr_t)src->drv_data;
--
--		if (chipsets & ns_pinctrl->chipset_flag) {
--			memcpy(pin++, src, sizeof(*src));
--			pctldesc->npins++;
-+	pins = of_get_child_by_name(dev->of_node, "pins");
-+	if (pins) {
-+		err = pinctrl_generic_get_dt_pins(pctldesc, dev);
-+		of_node_put(pins);
-+		if (err)
-+			return err;
-+	} else {
-+		pctldesc->pins = devm_kcalloc(dev, ARRAY_SIZE(ns_pinctrl_pins),
-+					sizeof(struct pinctrl_pin_desc),
-+					GFP_KERNEL);
-+		if (!pctldesc->pins)
-+			return -ENOMEM;
-+		for (i = 0, pin = (struct pinctrl_pin_desc *)&pctldesc->pins[0];
-+		     i < ARRAY_SIZE(ns_pinctrl_pins); i++) {
-+			const struct pinctrl_pin_desc *src = &ns_pinctrl_pins[i];
-+			unsigned int chipsets = (uintptr_t)src->drv_data;
++&pinctrl {
++	compatible = "brcm,bcm4709-pinmux";
 +
-+			if (chipsets & ns_pinctrl->chipset_flag) {
-+				memcpy(pin++, src, sizeof(*src));
-+				pctldesc->npins++;
-+			}
- 		}
- 	}
- 
-@@ -267,25 +279,43 @@ static int ns_pinctrl_probe(struct platform_device *pdev)
- 		return PTR_ERR(ns_pinctrl->pctldev);
- 	}
- 
--	for (i = 0; i < ARRAY_SIZE(ns_pinctrl_groups); i++) {
--		const struct ns_pinctrl_group *group = &ns_pinctrl_groups[i];
--
--		if (!(group->chipsets & ns_pinctrl->chipset_flag))
--			continue;
--
--		pinctrl_generic_add_group(ns_pinctrl->pctldev, group->name,
--					  group->pins, group->num_pins, NULL);
-+	groups = of_get_child_by_name(dev->of_node, "groups");
-+	if (groups) {
-+		err = pinctrl_generic_get_dt_groups(ns_pinctrl->pctldev);
-+		of_node_put(groups);
-+		if (err)
-+			return err;
-+	} else {
-+		for (i = 0; i < ARRAY_SIZE(ns_pinctrl_groups); i++) {
-+			const struct ns_pinctrl_group *group = &ns_pinctrl_groups[i];
++	pins {
++		reg@6 {
++			reg = <6>;
++			label = "mdc";
++		};
 +
-+			if (!(group->chipsets & ns_pinctrl->chipset_flag))
-+				continue;
++		reg@7 {
++			reg = <7>;
++			label = "mdio";
++		};
 +
-+			pinctrl_generic_add_group(ns_pinctrl->pctldev,
-+						  group->name, group->pins,
-+						  group->num_pins, NULL);
-+		}
- 	}
++		reg@10 {
++			reg = <16>;
++			label = "uart2_rx";
++		};
++
++		reg@11 {
++			reg = <17>;
++			label = "uart2_tx";
++		};
++
++		/* TODO
++		 * reg@ {
++		 *	label = "xtal_out";
++		 * };
++		 */
++
++		reg@16 {
++			reg = <22>;
++			label = "sdio_pwr";
++		};
++
++		reg@17 {
++			reg = <23>;
++			label = "sdio_en_1p8v";
++		};
++	};
++
++	groups {
++		mdio_grp: mdio_grp {
++			pins = <6 7>;
++		};
++
++		uart2_grp: uart2_grp {
++			pins = <16 17>;
++		};
++
++		sdio_pwr_grp: sdio_pwr_grp {
++			pins = <22>;
++		};
++
++		sdio_1p8v_grp: sdio_1p8v_grp {
++			pins = <23>;
++		};
++	};
++
++	functions {
++		mdio {
++			groups = <&mdio_grp>;
++		};
++
++		uart2 {
++			groups = <&uart2_grp>;
++		};
++
++		sdio {
++			groups = <&sdio_pwr_grp &sdio_1p8v_grp>;
++		};
++	};
++};
++
+ &srab {
+ 	compatible = "brcm,bcm53012-srab", "brcm,bcm5301x-srab";
+ };
+diff --git a/arch/arm/boot/dts/bcm47094.dtsi b/arch/arm/boot/dts/bcm47094.dtsi
+index 6282363313e1..239c1c1b0268 100644
+--- a/arch/arm/boot/dts/bcm47094.dtsi
++++ b/arch/arm/boot/dts/bcm47094.dtsi
+@@ -3,14 +3,12 @@
+  * Copyright (C) 2016 Rafał Miłecki <rafal@milecki.pl>
+  */
  
--	for (i = 0; i < ARRAY_SIZE(ns_pinctrl_functions); i++) {
--		const struct ns_pinctrl_function *function = &ns_pinctrl_functions[i];
--
--		if (!(function->chipsets & ns_pinctrl->chipset_flag))
--			continue;
--
--		pinmux_generic_add_function(ns_pinctrl->pctldev, function->name,
--					    function->groups,
--					    function->num_groups, NULL);
-+	functions = of_get_child_by_name(dev->of_node, "functions");
-+	if (functions) {
-+		err = pinmux_generic_get_dt_functions(ns_pinctrl->pctldev);
-+		of_node_put(functions);
-+		if (err)
-+			return err;
-+	} else {
-+		for (i = 0; i < ARRAY_SIZE(ns_pinctrl_functions); i++) {
-+			const struct ns_pinctrl_function *function = &ns_pinctrl_functions[i];
-+
-+			if (!(function->chipsets & ns_pinctrl->chipset_flag))
-+				continue;
-+
-+			pinmux_generic_add_function(ns_pinctrl->pctldev,
-+						    function->name,
-+						    function->groups,
-+						    function->num_groups, NULL);
-+		}
- 	}
+-#include "bcm4708.dtsi"
++#include "bcm4709.dtsi"
  
- 	return 0;
+ / {
+ };
+ 
+ &pinctrl {
+-	compatible = "brcm,bcm4709-pinmux";
+-
+ 	pinmux_mdio: mdio-pins {
+ 		groups = "mdio_grp";
+ 		function = "mdio";
+@@ -21,11 +19,4 @@ &usb3_phy {
+ 	compatible = "brcm,ns-bx-usb3-phy";
+ };
+ 
+-&uart0 {
+-	clock-frequency = <125000000>;
+-	status = "okay";
+-};
+ 
+-&srab {
+-	compatible = "brcm,bcm53012-srab", "brcm,bcm5301x-srab";
+-};
+diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
+index d4f355015e3c..31c6a3dbba30 100644
+--- a/arch/arm/boot/dts/bcm5301x.dtsi
++++ b/arch/arm/boot/dts/bcm5301x.dtsi
+@@ -473,6 +473,129 @@ pinmux_uart1: uart1-pins {
+ 					groups = "uart1_grp";
+ 					function = "uart1";
+ 				};
++
++				pins {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					pin@0 {
++						reg = <0>;
++						label = "spi_clk";
++					};
++
++					pin@1 {
++						reg = <1>;
++						label = "spi_ss";
++					};
++
++					pin@2 {
++						reg = <2>;
++						label = "spi_mosi";
++					};
++
++					pin@3 {
++						reg = <3>;
++						label = "spi_miso";
++					};
++
++					pin@4 {
++						reg = <4>;
++						label = "i2c_scl";
++					};
++
++					pin@5 {
++						reg = <5>;
++						label = "i2c_sda";
++					};
++
++					pin@8 {
++						reg = <8>;
++						label = "pwm0";
++					};
++
++					pin@9 {
++						reg = <9>;
++						label = "pwm1";
++					};
++
++					pin@a {
++						reg = <10>;
++						label = "pwm2";
++					};
++
++					pin@b {
++						reg = <11>;
++						label = "pwm3";
++					};
++
++					pin@c {
++						reg = <12>;
++						label = "uart1_rx";
++					};
++
++					pin@d {
++						reg = <13>;
++						label = "uart1_tx";
++					};
++
++					pin@e {
++						reg = <14>;
++						label = "uart1_cts";
++					};
++
++					pin@f {
++						reg = <15>;
++						label = "uart1_rts";
++					};
++				};
++
++				groups {
++					spi_grp: spi_grp {
++						pins = <0 1 2 3>;
++					};
++
++					i2c_grp: i2c_grp {
++						pins = <4 5>;
++					};
++
++					pwm0_grp: pwm0_grp {
++						pins = <8>;
++					};
++
++					pwm1_grp: pwm1_grp {
++						pins = <9>;
++					};
++
++					pwm2_grp: pwm2_grp {
++						pins = <10>;
++					};
++
++					pwm3_grp: pwm3_grp {
++						pins = <11>;
++					};
++
++					uart1_grp: uart1_grp {
++						pins = <12 13 14 15>;
++					};
++				};
++
++				functions {
++					spi {
++						groups = <&spi_grp>;
++					};
++
++					i2c {
++						groups = <&i2c_grp>;
++					};
++
++					pwm {
++						groups = <&pwm0_grp &pwm1_grp &pwm2_grp &pwm3_grp>;
++					};
++
++					uart1 {
++						groups = <&uart1_grp>;
++					};
++				};
+ 			};
+ 
+ 			thermal: thermal@2c0 {
 -- 
 2.31.1
 
