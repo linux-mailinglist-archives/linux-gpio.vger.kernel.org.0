@@ -2,138 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 28CA54561E6
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Nov 2021 18:57:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B61F94563E7
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Nov 2021 21:13:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230164AbhKRSAu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 18 Nov 2021 13:00:50 -0500
-Received: from mga12.intel.com ([192.55.52.136]:9354 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229648AbhKRSAu (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 18 Nov 2021 13:00:50 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10172"; a="214280629"
-X-IronPort-AV: E=Sophos;i="5.87,245,1631602800"; 
-   d="scan'208";a="214280629"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2021 09:57:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.87,245,1631602800"; 
-   d="scan'208";a="568555458"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga004.fm.intel.com with ESMTP; 18 Nov 2021 09:57:48 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id A235F445; Thu, 18 Nov 2021 19:57:51 +0200 (EET)
-Date:   Thu, 18 Nov 2021 19:57:51 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linux pin control <linux-gpio@vger.kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [GIT PULL] intel-pinctrl for 5.17-1
-Message-ID: <YZaUHy//vkja2la6@black.fi.intel.com>
+        id S233617AbhKRUQM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 18 Nov 2021 15:16:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38844 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229805AbhKRUQM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Nov 2021 15:16:12 -0500
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BBCBC061574
+        for <linux-gpio@vger.kernel.org>; Thu, 18 Nov 2021 12:13:11 -0800 (PST)
+Received: by mail-ed1-x52b.google.com with SMTP id g14so32342623edb.8
+        for <linux-gpio@vger.kernel.org>; Thu, 18 Nov 2021 12:13:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yfcsLQEcPV0JsHfU07qVfuDHJqM7i+iltNgLWRiMg1k=;
+        b=V+OPyhSoe08YXVkmR0afneubAhjj4VTbYsUYS6WjhUYlL5V5lrlsb4or67/Yt1Wfi0
+         BkxJXUSgV57M5ivu/ve/JqtD+1qA5VjSjfJO8QaOO0R4d0eFgBD8z2r32uKOSK9d5Gth
+         Ha3znWTChGPXe2b35gBDuBnr57IFKXUw4WlUmBg1sf/v6Ul8dmege3Oiu34TxpinrLb0
+         SsG3uELtvJ1x6W2Izy41mza7SK6aIgNEwQsT0UdS4b7NeL+wfJWmyzzQdgvtiKtxfjCY
+         T1UEjIJu1JMs1IKRIWN45T1sPxH2x70Ol4TU++JBdPaH3MwPh1IhUWCwCdr9wMon6wsu
+         p4cQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yfcsLQEcPV0JsHfU07qVfuDHJqM7i+iltNgLWRiMg1k=;
+        b=bNiWgbS0rpFaMYGM1JKIIUcl5DsQDtUcNHSsty9wOW2+b7DHbmgxKNWXKRs6NFLLbI
+         HDbYlRLe+L7ZmRzB0UYFPB3ccdrcyFjvFPUkSv0t85oD0PfRJQnk2Ul6mEZ6DZN1Fvag
+         FTLxXxZ0O07pEIrz4a0HhE3XRuM44WGrVYlzx2SWh6JYjKGoMuzUDuTlDTBYDXBoo8Yg
+         8WvNuvVknEvG2Hzp/bqt0eMXyhIMuKrWum5Tl3aszhupWv5nKit7o0vnRmA1OsGlgtqh
+         w0qaIlJafMfcVaJ9itbrqSB3ngG2WDt6lAu2FYCE8ljruheSM7HXOrIq0ArpKujbCB4U
+         OElg==
+X-Gm-Message-State: AOAM532TefOEwacqa+/O1Yg3f1oBI4bk9Jh7mKlgpyQFCvoopCAkInqv
+        L1v9Jd9BZN51wr2NOt5S7o1kx4Pj1fUQiWOmWoeSbRtR3+Kr9j2t
+X-Google-Smtp-Source: ABdhPJwbsk04yDg2oy2nZQBz4ntMPLkjIiBSDg0HUVJOTKiMfZVegj6KLZxBktPZRtv5A8GmD4IuDZfIk8vem0tjYXs=
+X-Received: by 2002:a17:907:9847:: with SMTP id jj7mr213116ejc.508.1637266390138;
+ Thu, 18 Nov 2021 12:13:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20211118132317.15898-1-brgl@bgdev.pl> <20211118132317.15898-2-brgl@bgdev.pl>
+ <YZaH8rsMyUztOX/r@smile.fi.intel.com>
+In-Reply-To: <YZaH8rsMyUztOX/r@smile.fi.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 18 Nov 2021 21:12:59 +0100
+Message-ID: <CAMRc=MdR_RGLLPJ5Hqetj5_7ZQfUXOijEoVp3uR7cgEDHKnchA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] gpiolib: check the 'ngpios' property in core
+ gpiolib code
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linux pin control  maintainers,
+On Thu, Nov 18, 2021 at 6:06 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Thu, Nov 18, 2021 at 02:23:17PM +0100, Bartosz Golaszewski wrote:
+> > Several drivers read the 'ngpios' device property on their own, but
+> > since it's defined as a standard GPIO property in the device tree bindings
+> > anyway, it's a good candidate for generalization. If the driver didn't
+> > set its gc->ngpio, try to read the 'ngpios' property from the GPIO
+> > device's firmware node before bailing out.
+>
+> ...
+>
+> >       if (gc->ngpio == 0) {
+> > -             chip_err(gc, "tried to insert a GPIO chip with zero lines\n");
+> > -             ret = -EINVAL;
+> > -             goto err_free_descs;
+> > +             ret = device_property_read_u32(&gdev->dev, "ngpios", &ngpios);
+> > +             if (ret) {
+> > +                     chip_err(gc, "tried to insert a GPIO chip with zero lines\n");
+> > +                     ret = -EINVAL;
+> > +                     goto err_free_descs;
+> > +             }
+> > +
+> > +             gc->ngpio = ngpios;
+> >       }
+>
+> This should be
+>
+>         if (gc->ngpio == 0) {
+>                 ret = device_property_read_u32(&gdev->dev, "ngpios", &ngpios);
+>                 if (ret)
+>                         return ret;
 
-The kasprintf_strarray() series as PR for both Pin Control and GPIO subsystems.
-All tags have been applied.
+But device_property_read_u32() returning -ENODATA means there's no
+such property, which should actually be converted to -EINVAL as the
+caller wanting to create the chip provided invalid configuration - in
+this case: a chip with 0 lines. In case of the non-array variant of
+read_u32 that's also the only error that can be returned so this bit
+looks right to me.
 
-Thanks,
+Bart
 
-With Best Regards,
-Andy Shevchenko
-
-The following changes since commit fa55b7dcdc43c1aa1ba12bca9d2dd4318c2a0dbf:
-
-  Linux 5.16-rc1 (2021-11-14 13:56:52 -0800)
-
-are available in the Git repository at:
-
-  git@gitolite.kernel.org:pub/scm/linux/kernel/git/pinctrl/intel.git tags/intel-pinctrl-v5.17-1
-
-for you to fetch changes up to c25441ca551164c56b34885df3d657e2ea4d623f:
-
-  gpio: mockup: Switch to use kasprintf_strarray() (2021-11-18 18:40:10 +0200)
-
-----------------------------------------------------------------
-intel-pinctrl for v5.17-1
-
-* Introduce new generic kasprintf_strarray() API
-* Clean up and convert existing drivers to use the above
-
-The API will be needed in the future for new comers, including Intel ones.
-
-The following is an automated git shortlog grouped by driver:
-
-armada-37xx:
- -  Switch to use devm_kasprintf_strarray()
- -  Convert to use dev_err_probe()
- -  Make use of the devm_platform_ioremap_resource()
- -  Use temporary variable for struct device
- -  Fix function name in the kernel doc
-
-gpio:
- -  mockup: Switch to use kasprintf_strarray()
-
-lib/string_helpers:
- -  Introduce managed variant of kasprintf_strarray()
- -  Introduce kasprintf_strarray()
-
-pinctrl/rockchip:
- -  Switch to use devm_kasprintf_strarray()
- -  Convert to use dev_err_probe()
- -  Make use of the devm_platform_get_and_ioremap_resource()
- -  Use temporary variable for struct device
- -  Drop wrong kernel doc annotation
-
-st:
- -  Switch to use devm_kasprintf_strarray()
- -  Convert to use dev_err_probe()
- -  Make use of the devm_platform_ioremap_resource_byname()
- -  Use temporary variable for struct device
- -  Drop wrong kernel doc annotations
-
-zynqmp:
- -  Unify pin naming
-
-----------------------------------------------------------------
-Andy Shevchenko (19):
-      lib/string_helpers: Introduce kasprintf_strarray()
-      lib/string_helpers: Introduce managed variant of kasprintf_strarray()
-      pinctrl/rockchip: Drop wrong kernel doc annotation
-      pinctrl/rockchip: Use temporary variable for struct device
-      pinctrl/rockchip: Make use of the devm_platform_get_and_ioremap_resource()
-      pinctrl/rockchip: Convert to use dev_err_probe()
-      pinctrl/rockchip: Switch to use devm_kasprintf_strarray()
-      pinctrl: armada-37xx: Fix function name in the kernel doc
-      pinctrl: armada-37xx: Use temporary variable for struct device
-      pinctrl: armada-37xx: Make use of the devm_platform_ioremap_resource()
-      pinctrl: armada-37xx: Convert to use dev_err_probe()
-      pinctrl: armada-37xx: Switch to use devm_kasprintf_strarray()
-      pinctrl: st: Drop wrong kernel doc annotations
-      pinctrl: st: Use temporary variable for struct device
-      pinctrl: st: Make use of the devm_platform_ioremap_resource_byname()
-      pinctrl: st: Convert to use dev_err_probe()
-      pinctrl: st: Switch to use devm_kasprintf_strarray()
-      pinctrl: zynqmp: Unify pin naming
-      gpio: mockup: Switch to use kasprintf_strarray()
-
- drivers/gpio/gpio-mockup.c                  |  23 +---
- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c |  85 ++++++---------
- drivers/pinctrl/pinctrl-rockchip.c          | 159 +++++++++++++---------------
- drivers/pinctrl/pinctrl-st.c                | 116 +++++++++-----------
- drivers/pinctrl/pinctrl-zynqmp.c            |  10 +-
- include/linux/string_helpers.h              |   4 +
- lib/string_helpers.c                        |  64 +++++++++++
- 7 files changed, 233 insertions(+), 228 deletions(-)
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+>
+>                 gc->ngpio = ngpios;
+>         }
+>
+>         if (gc->ngpio == 0) {
+>                 chip_err(gc, "tried to insert a GPIO chip with zero lines\n");
+>                 ret = -EINVAL;
+>                 goto err_free_descs;
+>         }
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
