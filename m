@@ -2,108 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 466B9456431
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Nov 2021 21:30:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 77F4B4564F3
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Nov 2021 22:16:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233255AbhKRUd2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 18 Nov 2021 15:33:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42890 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233243AbhKRUd1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 18 Nov 2021 15:33:27 -0500
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F51FC061574
-        for <linux-gpio@vger.kernel.org>; Thu, 18 Nov 2021 12:30:27 -0800 (PST)
-Received: by mail-ed1-x52e.google.com with SMTP id y12so32479368eda.12
-        for <linux-gpio@vger.kernel.org>; Thu, 18 Nov 2021 12:30:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wwg+Ca9jb9pUEm7rE+CduZsgo7GneYWcNrMAsYNN4w0=;
-        b=J9QOzTq127+fjB9bPz1Tnkq8fAIAL3i5cPhju4I+zno7r6Z0aHsjUzVuJ+w32/a2Q7
-         RIO526yWOq/eal3vMxgZIKyyhjNMlEhgJs1eDXiPQE0NsNprB6qriiR7Wgsbrecrq+ez
-         QuyIbgcopabzqAIu2L6lhS70RNLKh00a3v3a2ZprgWdnPCFAeWW0kiwblid1NUwc96yC
-         Tp8dl/pjplMx8XddvkdoNoROcC0Sub/8IwP0p5ArtnbG4R3QPLL74z9buVSle0iD2Nc0
-         5tLmpZhp7pg5CqPUA69D4PYecmNlT74wayeiqMWMg/ZYZsNGalBVUnMwRNtMKDhXAECX
-         o9NQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wwg+Ca9jb9pUEm7rE+CduZsgo7GneYWcNrMAsYNN4w0=;
-        b=xSzyutePb3ZZkWV8mCBj1DSeQRQZrGyRDDyTYxyqUvYUAi8pZHaTqo2lGGfh7YqrnB
-         ZhGhOd14cStZyEAnNUGWXTtg5feCmWEda4q0jr/Oh8TkF0Z2x852DneQHwf4rKmPrNqd
-         PNeHNyTNKSQiHBzBvs+OzJNj8V8l4+UP5EO0IKyBSRwx81TT6cDf7DdryHhWkH6Hsn4o
-         zqUhA3GVyRXjg0O4xTX/5CoCv/T3rlO3ARt8xxg3dr9aiG8GPLE7H9KnvCT7vgv3viwS
-         QuQBJGvIPe/tSLcpo6AJag2pjiLlo5fFJTLcOd8yU746M26GOnLAYKJijqLgh2pTtTtG
-         9gog==
-X-Gm-Message-State: AOAM531hrgpteILmr/fAAhyAZG2i9eDGZOtu0gvuYKNGYeJGwnhO9ZW9
-        yEttvwuPk6KKRSvO/gGIcnPPwoIyrGLqZwa9joSZJg==
-X-Google-Smtp-Source: ABdhPJwmTWmlHt4Iw5Q0nSvh9x75b6Y1V3AEdkg+yigj2bPoOupsbO8rrcQLoT70uyjwd8iVWqIasKW1gEPKi1IWv7Q=
-X-Received: by 2002:a50:ef02:: with SMTP id m2mr15409971eds.172.1637267425669;
- Thu, 18 Nov 2021 12:30:25 -0800 (PST)
-MIME-Version: 1.0
-References: <20211105124242.27288-1-andriy.shevchenko@linux.intel.com>
- <CACRpkdZ2-MRY_L2J4RvKDNW1yyThg7KUFbd80ZMpRY209RNxnw@mail.gmail.com>
- <YZJDFhMNyRaH+HFE@smile.fi.intel.com> <YZaFuGZ4AEN8HjUv@smile.fi.intel.com>
-In-Reply-To: <YZaFuGZ4AEN8HjUv@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 18 Nov 2021 21:30:14 +0100
-Message-ID: <CAMRc=MfD54gjMcZazJqXKUMTaW45_qKH6GSLOfs4eciKGtfrCw@mail.gmail.com>
-Subject: Re: [PATCH v1 01/19] lib/string_helpers: Introduce kasprintf_strarray()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        id S229838AbhKRVTg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 18 Nov 2021 16:19:36 -0500
+Received: from mga05.intel.com ([192.55.52.43]:41214 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229521AbhKRVTg (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 18 Nov 2021 16:19:36 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10172"; a="320508099"
+X-IronPort-AV: E=Sophos;i="5.87,245,1631602800"; 
+   d="scan'208";a="320508099"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2021 13:16:35 -0800
+X-IronPort-AV: E=Sophos;i="5.87,245,1631602800"; 
+   d="scan'208";a="587482998"
+Received: from smile.fi.intel.com ([10.237.72.184])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2021 13:16:34 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1mnolg-008Iwg-31;
+        Thu, 18 Nov 2021 23:16:28 +0200
+Date:   Thu, 18 Nov 2021 23:16:27 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Jianqun Xu <jay.xu@rock-chips.com>,
-        Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Bamvor Jian Zhang <bamv2005@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Patrice Chotard <patrice.chotard@foss.st.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Andy Shevchenko <andy@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/2] gpiolib: check the 'ngpios' property in core
+ gpiolib code
+Message-ID: <YZbCq5Xcohm/t/FP@smile.fi.intel.com>
+References: <20211118132317.15898-1-brgl@bgdev.pl>
+ <20211118132317.15898-2-brgl@bgdev.pl>
+ <YZaH8rsMyUztOX/r@smile.fi.intel.com>
+ <CAMRc=MdR_RGLLPJ5Hqetj5_7ZQfUXOijEoVp3uR7cgEDHKnchA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MdR_RGLLPJ5Hqetj5_7ZQfUXOijEoVp3uR7cgEDHKnchA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 18, 2021 at 5:56 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Mon, Nov 15, 2021 at 01:23:02PM +0200, Andy Shevchenko wrote:
-> > On Tue, Nov 09, 2021 at 12:42:00PM +0100, Linus Walleij wrote:
-> > > On Fri, Nov 5, 2021 at 1:43 PM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> > >
-> > > > We have a few users already that basically want to have array of
-> > > > sequential strings to be allocated and filled.
-> > > >
-> > > > Provide a helper for them (basically adjusted version from gpio-mockup.c).
-> > > >
-> > > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > >
-> > > Fulfils Rusty Russell's API design hierarchy requirements
-> > > and help people to make less mistakes so:
-> > > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+On Thu, Nov 18, 2021 at 09:12:59PM +0100, Bartosz Golaszewski wrote:
+> On Thu, Nov 18, 2021 at 6:06 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Thu, Nov 18, 2021 at 02:23:17PM +0100, Bartosz Golaszewski wrote:
+> > > Several drivers read the 'ngpios' device property on their own, but
+> > > since it's defined as a standard GPIO property in the device tree bindings
+> > > anyway, it's a good candidate for generalization. If the driver didn't
+> > > set its gc->ngpio, try to read the 'ngpios' property from the GPIO
+> > > device's firmware node before bailing out.
 > >
-> > Thanks!
+> > ...
 > >
-> > Should I resend, take into mine PR, or you just apply it as is?
+> > >       if (gc->ngpio == 0) {
+> > > -             chip_err(gc, "tried to insert a GPIO chip with zero lines\n");
+> > > -             ret = -EINVAL;
+> > > -             goto err_free_descs;
+> > > +             ret = device_property_read_u32(&gdev->dev, "ngpios", &ngpios);
+> > > +             if (ret) {
+> > > +                     chip_err(gc, "tried to insert a GPIO chip with zero lines\n");
+> > > +                     ret = -EINVAL;
+> > > +                     goto err_free_descs;
+> > > +             }
+> > > +
+> > > +             gc->ngpio = ngpios;
+> > >       }
 > >
-> > As I answered previously the series doesn't require additional work
-> > from my perspective.
->
-> Okay, I'm about to send a PR to you and Bart for this.
-> Does it sound good?
->
+> > This should be
+> >
+> >         if (gc->ngpio == 0) {
+> >                 ret = device_property_read_u32(&gdev->dev, "ngpios", &ngpios);
+> >                 if (ret)
+> >                         return ret;
+> 
+> But device_property_read_u32() returning -ENODATA means there's no
+> such property, which should actually be converted to -EINVAL as the
+> caller wanting to create the chip provided invalid configuration - in
+> this case: a chip with 0 lines. In case of the non-array variant of
+> read_u32 that's also the only error that can be returned so this bit
+> looks right to me.
 
-Sounds good to me.
+So, what is so special about -EINVAL? Why -ENODATA is not good enough which
+will exactly explain to the caller what's going on, no?
 
-Bart
+> >                 gc->ngpio = ngpios;
+> >         }
+> >
+> >         if (gc->ngpio == 0) {
+> >                 chip_err(gc, "tried to insert a GPIO chip with zero lines\n");
+> >                 ret = -EINVAL;
+> >                 goto err_free_descs;
+
+When the caller intended to create a chip with 0 GPIOs they will get an error
+as you wish with an error message.
+
+> >         }
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
