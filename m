@@ -2,148 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DACB9456DDE
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Nov 2021 11:57:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 15C9D456F5B
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Nov 2021 14:12:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234755AbhKSLAg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 19 Nov 2021 06:00:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39428 "EHLO
+        id S235372AbhKSNPG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 19 Nov 2021 08:15:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231796AbhKSLAf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 Nov 2021 06:00:35 -0500
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C567C061574;
-        Fri, 19 Nov 2021 02:57:34 -0800 (PST)
-Received: by mail-pj1-x102f.google.com with SMTP id gx15-20020a17090b124f00b001a695f3734aso8552769pjb.0;
-        Fri, 19 Nov 2021 02:57:34 -0800 (PST)
+        with ESMTP id S235362AbhKSNPG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 Nov 2021 08:15:06 -0500
+Received: from mail-ua1-x932.google.com (mail-ua1-x932.google.com [IPv6:2607:f8b0:4864:20::932])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6B65C06174A
+        for <linux-gpio@vger.kernel.org>; Fri, 19 Nov 2021 05:12:04 -0800 (PST)
+Received: by mail-ua1-x932.google.com with SMTP id i6so21094764uae.6
+        for <linux-gpio@vger.kernel.org>; Fri, 19 Nov 2021 05:12:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=yXWru8Y/zGzIEgDibnYqUEohYi+J5qhkV9k7sQLjDGg=;
-        b=MAn8fuJgScM2d464FqGzea1ztZqryKLoRZwXHvcL5s2a6GUY9/z3kCffgCsZkJexRx
-         OjKgJq/WaDUyd0PUygJzVear8OlKYYADjqC+l0iij9Oi0zll1gDRWzpvEFmUbotnzh0b
-         QYVHnZMzovQAoffnZ8c2C0t/390FwR86knjOdIPKwVbLB9slGrMwjGE3oCV2Abnf5G/w
-         kPKBKIh2RC54lMLyNJMC5EijShUMvf9zlFvLHsIBhr2dozCJpaB9tKACbYtfUNMyESk+
-         /euhcCbSsSexZKR/64E/wU/mC+WvwrUWpcff2zOaid2kgn0CdGop1yh7ZznS6Gz5PgkH
-         naJw==
+        d=0x0f.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YM8iEZkWj09QdZV0IaAS62/GEXCOf5MjgxwudLjy2dY=;
+        b=cAE33cfo/0N63eGgp8XbsF1lNvSCLdfZ1+2RAHHG4RaBBsTG0gitWfyd/tOn+UlXeK
+         q0fSYiClNmlpIxW80wl8/1ziXRzBUdaZ6/JDoFb8RP4KfycfDQIdQvvNBvHrqVTYNaXW
+         KT+I/Khok9hk9K03fe9/iYTO36bYC08uzLHs4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=yXWru8Y/zGzIEgDibnYqUEohYi+J5qhkV9k7sQLjDGg=;
-        b=uAtj/2aVKWS058ju0D4WOTC0r1ZKU0GE24YOLEcPe7Ldr3eUJJ8JHKMBqA9R93UuSj
-         9l6BDXr3qLLr27I6mlHtj+bzxtCtH5GuuFAP0ootYYiixyYMf5Mxz1hwXwUtcsJ87+o8
-         lztZRJqUOa6OdVzd6Z8I8EggCvYzlKMSnMFaB3Viar2TqM4wAGbjvT5HqIL/3aDdVfez
-         /1Zjrjdbpd73dptLA9A0Z+hl0U9ZAZtzYgJmR46WnPliKoSt0FHlT9eaJRkUROsnnkiC
-         0LQnwAKKM0I2kzMLXqvzj4B9Fbgkfg5D+a8nL1Q7qEaecdCCYQL/Byr7f9WSHgYGkE8I
-         8EeA==
-X-Gm-Message-State: AOAM532N6QHcEjeM5F7d+awzDnfX9UHQO2xzxA84P7alEwEwhzh2RcJZ
-        Amn1ri4lL86Jl1SYFbxzj30=
-X-Google-Smtp-Source: ABdhPJzfcTGRBWEMEEO3v85eKQ5PFI93tR5bdCnOJp5m7pjS9XFna+n2dfQKGf05yTO83wQhvfVa/w==
-X-Received: by 2002:a17:90b:1d0e:: with SMTP id on14mr3532603pjb.119.1637319453934;
-        Fri, 19 Nov 2021 02:57:33 -0800 (PST)
-Received: from sol (14-201-12-235.tpgi.com.au. [14.201.12.235])
-        by smtp.gmail.com with ESMTPSA id mq14sm11828624pjb.54.2021.11.19.02.57.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Nov 2021 02:57:33 -0800 (PST)
-Date:   Fri, 19 Nov 2021 18:57:27 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v9 0/4] gpio-sim: configfs-based GPIO simulator
-Message-ID: <20211119105727.GA21048@sol>
-References: <20211118145142.14519-1-brgl@bgdev.pl>
- <YZZ1cFWaexGlJL8C@smile.fi.intel.com>
- <CAMRc=MdeEiz+uKhAz5-1MX_KG5fmjshRtDXARPMEx8VwBKfXZQ@mail.gmail.com>
- <YZaGa66iEFb6bJjK@smile.fi.intel.com>
- <CAMRc=MeZrdgxMUxGQ0rFPkSXMto==WrMGPz0Zo8wfdCxM_0+=Q@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YM8iEZkWj09QdZV0IaAS62/GEXCOf5MjgxwudLjy2dY=;
+        b=bzTf8qM13+8rsaWd2AQqs7jwe+/JtddpwHWU+WrlSy+KaVCW3PrlBiCEOfZsFkEqy4
+         qUMr3BkzYZG1ZprmTjTqxDtOPrrKbDpfqpGonAIeKybGh55oz7jfkal1RPCtYdkkAsPr
+         XsXTYQP+nrw3ba0G12mR8MebW5X0EAxoQVddY9xu/jPVgNaCcs/stT1sBaLsxCzkHjkh
+         ftKWuDBP28xs7KEQOIOk23ICZ/99G4ItWotl5MQf8X3GNYFa7gSeWqQSpBLvKl0DlQ8n
+         dUnAIgPl8R1vCsBtWFamPyt4o0OgTdu/gXFXVKOlFqtk3+2qQdah9DXeoSUxD3dBtLf3
+         vDKg==
+X-Gm-Message-State: AOAM531WkOCnMtc/UQZLcjiLEC7mDCFUPsT4YnsRZImNELmS8EQRvAXg
+        DzaqITVBPAi31SxzcbuThMY923KLfhuzw8s6ZeLZxg==
+X-Google-Smtp-Source: ABdhPJx8ZxQW/Y4NgqCFDWKYKJOnuOnviKck4eVR5XbNzsqnkFWtVWE2YsNzXL/5+5sd4UipCMXMaZBVMVKVdagJ3lo=
+X-Received: by 2002:a05:6102:38c7:: with SMTP id k7mr87839688vst.45.1637327522660;
+ Fri, 19 Nov 2021 05:12:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MeZrdgxMUxGQ0rFPkSXMto==WrMGPz0Zo8wfdCxM_0+=Q@mail.gmail.com>
+References: <20210923065500.2284347-1-daniel@0x0f.com>
+In-Reply-To: <20210923065500.2284347-1-daniel@0x0f.com>
+From:   Daniel Palmer <daniel@0x0f.com>
+Date:   Fri, 19 Nov 2021 22:11:52 +0900
+Message-ID: <CAFr9PXmPE_vRcHgPkJp3o=d5HnAV52TFuBe-2hf=hKY8y2=BhA@mail.gmail.com>
+Subject: Re: [PATCH v2 00/11] gpio: msc313: Add gpio support for ssd20xd
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        pavel@ucw.cz, DTML <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-leds@vger.kernel.org, Romain Perier <romain.perier@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 19, 2021 at 11:34:59AM +0100, Bartosz Golaszewski wrote:
-> On Thu, Nov 18, 2021 at 5:59 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > On Thu, Nov 18, 2021 at 05:37:02PM +0100, Bartosz Golaszewski wrote:
-> > > On Thu, Nov 18, 2021 at 4:50 PM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > >
-> > > > On Thu, Nov 18, 2021 at 03:51:38PM +0100, Bartosz Golaszewski wrote:
-> > > > > This is another shot at the gpio-sim testing module. As there was no
-> > > > > reasoning with configfs maintainers for many months, this time the whole
-> > > > > concept of committable items has been dropped. Instead, each configfs
-> > > > > chip item (or rather a group - more on that later) exposes a new
-> > > > > attribute called 'live'. Writing 1 to it brings the chip on-line
-> > > > > (registers the platform device) and writing 0 tears it down.
-> > > > >
-> > > > > There are some caveats to that approach - for example: we can't block
-> > > > > the user-space from deleting chip items when chips are live but is just
-> > > > > handled by silently destroying the chip device in the background.
-> > > > >
-> > > > > Andy (rightfully) pointed out that parsing of the lists of line names is
-> > > > > awkward so in this iteration it's been replaced by a system that is more
-> > > > > elegant and will allow to easily extend configuration options for
-> > > > > specific GPIO lines. This is achieved by turning the chip's configfs
-> > > > > item into a configfs group and allowing the user-space to create
-> > > > > additional items inside it. The items must be called line<offset> (e.g.
-> > > > > line0, line12 etc.) where the offset part indicates to the module the
-> > > > > offset for which given item stores the configuration for. Within each
-> > > > > such line item, there are additional attributes that allow specifying
-> > > > > configuration for specific lines. Currently we only support the 'name'
-> > > > > attribute but I plan to extend that to support GPIO hogging too.
-> > > >
-> > > > One question here. Since you know how the driver looks like in both cases
-> > > > (with and without committable items), would it be possible to modify what
-> > > > you proposed here to the former one in case ConfigFS gains the feature?
-> > >
-> > > This would completely change the user interface unfortunately. We
-> > > could extend it but we would need to keep this one too most likely.
-> > >
-> > > TBH I don't see the committable items merged anytime soon, and this is
-> > > GoodEnough®.
-> >
-> > Fine with me then!
-> >
-> > Thanks for doing this all, I know it's a bit delayed in terms of getting
-> > into upstream.
-> >
-> > Btw, gpio-mockup testing scripts have an issue that the number of lines to
-> > check overflow is hardcoded and since x86_64 switched to 1024 from 512 it
-> > reveals the issue. Does gpio-sim solve this in a better way (like telling
-> > to user space the ngpios, etc)?
-> >
-> 
-> Yeah the selftests need fixing now.
-> 
+Hi Bartosz,
 
-No, there need to be new selftests added for your gpio-sim.
-The existing selftests cover the gpio-mockup itself.
+On Thu, 23 Sept 2021 at 15:55, Daniel Palmer <daniel@0x0f.com> wrote:
 
-> No, there's no fix for that in gpio-sim - probe() will just fail.
-> Which makes me think - maybe we should synchronously wait when writing
-> to 'live' for the probe to return (for instance setup a notifier) so
-> that we know if the chip probed correctly. Then we can notify the
-> user-space about the error destroy the device too.
-> 
+> Daniel Palmer (11):
+>   dt-bindings: gpio: msc313: Add compatible for ssd20xd
+>   dt-bindings: gpio: msc313: Add offsets for ssd20xd
+>   gpio: msc313: Code clean ups
+>   gpio: msc313: Add support for SSD201 and SSD202D
 
-+1 - need definite feedback to userspace that the change to the test setup
-is in place so tests can proceed.  No arbitrary waits or waiting for
-events from other subsystems like udev as we have to do with gpio-mockup.
+Would it be possible to get some comment on these commits and/or get
+them picked up?
+We (Romain and I) have a few bits that are blocked on this.
 
-Cheers,
-Kent.
+Thanks,
 
+Daniel
