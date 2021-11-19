@@ -2,230 +2,270 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AEE2E457789
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Nov 2021 20:59:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 432444577C0
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Nov 2021 21:30:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236448AbhKSUCt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 19 Nov 2021 15:02:49 -0500
-Received: from mail-bn1nam07on2110.outbound.protection.outlook.com ([40.107.212.110]:13381
-        "EHLO NAM02-BN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S235208AbhKSUCr (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 19 Nov 2021 15:02:47 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=D6RVMzxuPaKTiP9P8tDo/ocfF+yMP1WgdVOCi+Jo5uRRz9lP8a5aII3AZlAGJOYhit8mD8fC35vkQOTNw5t/PFtnMFx88u8iZZUD+wDjAr+lHfxXIKVcmwiQNCUKQSsF7kxp1c/qXOjMLOiZoMLLMIjB6Q4X7NUoWMfHR30XCn8YSAXStvn6Mr12zUxW2WHgqVCPw5D0iXZnOXaXUn2IUQOc+K4SiKedhbV8DF6E0Jfk2QnIGuyPaShE7dbMGWt74vQpjqq3BfBVR19zfC3b6YwOE/QCbhRpPQHNdnnAkYZm7+2qkfvAkZ7IcQ4TYzdxo5klG8V9FUFj2nNpjKcVDg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dfborKht4S6i6bKzP5zQQgPUelK4e7eCGot2VmBn4XE=;
- b=lORrXcVqvG7WubB73Nc9PtzkA8RtWu1Wr/XpwLbBAaRRlQbCGADmeJouCMlXDrh6OF8S3ojh0UH1LLMTVt+ryVqtj8hU/P29AZ7rMj37CMOvBOzgxtrdg+a7bpb+hBYUnbwLtgREQxE/NVLJW73oW5MVLmMhYHrdLL4LrvvUFR57wRXDESruOHj7/nkwPpaBG2kd34YcHOYYvJWHjHG0CvMa/mOQQdOm0mgViVNLa3gegxIrtBo459yLJ0pHHlRdaf8nVcP6OXxkyB58kSBQQyTwojTvot3eJWaVgjb1PjlirXYtkH0pnWwb9dA4OhyhT9ol9C1la/tKvlPm7zrZXQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=in-advantage.com; dmarc=pass action=none
- header.from=in-advantage.com; dkim=pass header.d=in-advantage.com; arc=none
+        id S229879AbhKSUdd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 19 Nov 2021 15:33:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57206 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235285AbhKSUdc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 19 Nov 2021 15:33:32 -0500
+Received: from mail-io1-xd35.google.com (mail-io1-xd35.google.com [IPv6:2607:f8b0:4864:20::d35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9300EC06173E
+        for <linux-gpio@vger.kernel.org>; Fri, 19 Nov 2021 12:30:29 -0800 (PST)
+Received: by mail-io1-xd35.google.com with SMTP id k21so14337012ioh.4
+        for <linux-gpio@vger.kernel.org>; Fri, 19 Nov 2021 12:30:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=inadvantage.onmicrosoft.com; s=selector2-inadvantage-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dfborKht4S6i6bKzP5zQQgPUelK4e7eCGot2VmBn4XE=;
- b=hprmRjuaoNi9bGLGeIwi0sWGhNfRYMe0Hwb+BGLcFtIgH0gpD6CeBlC66s2Ts+5vdMS6lreqan8pgONvoc+gCS9gOe2qfiAchI6ZrzBTXgt4xH9ahpk5wvIQT7dfc1aFhJ1Nox6VIW2m/1t0TiookYN1EDCAN3HzB9qUKW3s4zg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=in-advantage.com;
-Received: from MWHPR1001MB2351.namprd10.prod.outlook.com
- (2603:10b6:301:35::37) by MWHPR10MB1454.namprd10.prod.outlook.com
- (2603:10b6:300:23::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4713.19; Fri, 19 Nov
- 2021 19:59:41 +0000
-Received: from MWHPR1001MB2351.namprd10.prod.outlook.com
- ([fe80::6430:b20:8805:cd9f]) by MWHPR1001MB2351.namprd10.prod.outlook.com
- ([fe80::6430:b20:8805:cd9f%5]) with mapi id 15.20.4713.019; Fri, 19 Nov 2021
- 19:59:41 +0000
-From:   Colin Foster <colin.foster@in-advantage.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        UNGLinuxDriver@microchip.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <clement.leger@bootlin.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>
-Subject: [PATCH v1 net-next 4/4] pinctrl: microchip-sgpio: update to support regmap
-Date:   Fri, 19 Nov 2021 11:59:28 -0800
-Message-Id: <20211119195928.2498441-5-colin.foster@in-advantage.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20211119195928.2498441-1-colin.foster@in-advantage.com>
-References: <20211119195928.2498441-1-colin.foster@in-advantage.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: CO2PR07CA0068.namprd07.prod.outlook.com (2603:10b6:100::36)
- To MWHPR1001MB2351.namprd10.prod.outlook.com (2603:10b6:301:35::37)
+        d=sartura-hr.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zAUhIBP078fnIpfNsctFVU/hIbI+oiA9NYL1Zz+yQsw=;
+        b=GxclxbCO0fuX0oi91XcP3Pl1KNE+8CRC8A4FL2DIUPEaKiGU1P2NA3jBFHTEK7zXWK
+         iijmezPGMjyeTZSKEgNGokRdBN45M49o2N2nYj5UXX+0wKrBgb7K8cNvxVug//mKGeaN
+         L4fkvewxJcwrSOlHd/LbR2THiPKofb0h5v7aSi1kvL1CbAmHRg+xX4m0DwvS5kn5gk8C
+         3h4R6VFMUDtSt7g+lLpQ15VlsMzy338u/CSK7q06PhO6Mjj/4ZIDh6sM7PfQ28z/eo1U
+         jMdlesLRXwS233sVBK1P/V7MPeojsMiLEiZ+4VJ40knz0/G88/+5wWow86l1Df/D7awn
+         0Ueg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zAUhIBP078fnIpfNsctFVU/hIbI+oiA9NYL1Zz+yQsw=;
+        b=Rc5CFCxAoxWs8mAwR4nYpxxWGlLcb4GJaTy9EGDPSNDnc77NBInchlBj6PtPlQLnEf
+         N8/t1T/a925qxyuUjQKo7qJ9s6J2ney8vwTmgUAwZvh0o8o/x1tFFkP6LjCPzp9YSUBQ
+         uGwNFoNS4hkCiq7xnT/ubAEwBpaG6tbmVMLkzzlLj9g//nGZoV/lFnxXdtri76YcpLcO
+         7INwov0cb41k0sI+1zo56ixWe/G1pkXisJahjsCHvyEDYomMjGe6tsow0v90LGQLm/ck
+         pT70MT7LQvRCJYXPgKaoUMSESqwI15qogWqLK3k84gJ1zKwOXBQiD4CwBLzm04GwzvPL
+         KwKg==
+X-Gm-Message-State: AOAM531+EdEO/0sylgJJRGMRz83CuLVsi9h25x9xb+WqM6i1qkAMZtg5
+        AsLFfPvigoQldDPD+e1Evli0Lzxp7lG1i8D4KlQMNQ==
+X-Google-Smtp-Source: ABdhPJyXZBD0JDC6Qq4qjwy7plo96K5M0kw0/AhMvJlvY+btEXI4JX4JkpMfWsC5rzTMkivw/gUPe7i64OcLM0Xin60=
+X-Received: by 2002:a5d:994f:: with SMTP id v15mr7909635ios.88.1637353828625;
+ Fri, 19 Nov 2021 12:30:28 -0800 (PST)
 MIME-Version: 1.0
-Received: from localhost.localdomain (67.185.175.147) by CO2PR07CA0068.namprd07.prod.outlook.com (2603:10b6:100::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4713.19 via Frontend Transport; Fri, 19 Nov 2021 19:59:40 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 97447887-572f-441b-0179-08d9ab971fbd
-X-MS-TrafficTypeDiagnostic: MWHPR10MB1454:
-X-Microsoft-Antispam-PRVS: <MWHPR10MB14548F087BDD68CE466C0D97A49C9@MWHPR10MB1454.namprd10.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1824;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: EKk/WZmr7u8RS5aVc8LxlBveNN2xbDU9Nf4NX0DyhWY8l0iZDJo+Ho1Xh6NhW7U1unzgSyTyP3WjAaAxtb7T8ZCFPQqonZq6D+okQzFUZ2Y1KicTkjZttUTxsSvG0xKFtBDoVu7MLaqN597gEPvvBvvV8t/pWjJq4M2uOHxGm7SagItVT3WscqxH0vfTPVZ0Z9WtLuYMte0fPvxDnf1DjYCtOZx09li5ezOWwA0InZb0U4yjMoz9ibqlPIYxyMVyNuuQMmYTFUS0l6bkse2MXF1G3l9y8M+2z5gfN3Ec0YKmOlM/E1V13jD6xPyEEvUSuNkEnDhzuhAfIKyyf2z3AyUbQp4Yjb0H9mUbaswZhlWRp2njDKni7sspb3XfgwD6xXXjdilVi7KaUCrbstjNzthhhK7k7rHj+jVHt6frBiycAZihvI/gtmyu+iEGiLDvJF/Rm/CFExkCCT9m7eHmm/yT79fxikmr5ZqQfU7Z9TmBY+E9stR1uewmxoFwuatldAhE5KYcQC4jDXgWZF6+gMtZZOD+TAR71fD32+Pt/n38nqdM08UED1KAeEY7OTCg2zqCkfDN8xnFc6BKS6M3VCZMs4t2vP/Aagxmh323/j7+gElgJN7xdO0/XRRdoXvNv/hl/NdwmfzrJh7upFEOhE7Ho6y1ful4luJ/sMsvOQ1IAGs17N8n8gXFy+RSqbmnRi7lf7ocJ8tJL4c+djtfYg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1001MB2351.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(39840400004)(376002)(366004)(346002)(396003)(38350700002)(38100700002)(956004)(8676002)(26005)(2906002)(66946007)(52116002)(86362001)(36756003)(1076003)(186003)(83380400001)(6512007)(316002)(5660300002)(6486002)(54906003)(66556008)(66476007)(7416002)(508600001)(4326008)(2616005)(6666004)(8936002)(6506007)(44832011);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?AvRyOojq7+e4xyz5lTUVS4FNIqmJcoLkHKxJ383sAamWG0pLUFaqVqhVM2La?=
- =?us-ascii?Q?+lpA5s1OYLXJPgX6wNnwB96Nv7a9lt2Hnmm67pOSHqQ5UJoyUX4ynXDUFaUb?=
- =?us-ascii?Q?l4wrKJavPLZ2c/5W68zhc40PlGPtCvI6DUHEYkhegPjGykCfa1cOpzXJbEwW?=
- =?us-ascii?Q?/frqC+MfqDfAOSVmsZ1Jkv+YwkQpGdK/TM32OFAxGdIeKsHqFwwjsVEQ5MfM?=
- =?us-ascii?Q?h9sDpOoosICsYK5GyrLToKEe1iA+j5ZtA3WE0v1CMybWTQR4h6IxaF+IQceA?=
- =?us-ascii?Q?16bFsZys7+9yyWhB3LEcoluCU1Wu+VysVTJB7Z4a9CtICDhik2udui3KLmQ7?=
- =?us-ascii?Q?BMn6NqRwt5nL23JwOUlDlPEhjhXQrqYelVZLOIJPu2nXzWWFf2ihwFbQGRAI?=
- =?us-ascii?Q?mGYgB2dB3FH0ORh6ojDOTdWOgQZps5J31A8tXZxPwFcinOdjzTkRLJTTklCB?=
- =?us-ascii?Q?POIGmbelm1PEmemTT2occPptxwzIEXqDVLPAiyhDrZYvmw4smRXS2Umi0z+S?=
- =?us-ascii?Q?uoGNpc91/PRpsm9fDXp6j/I6+Tori2+L4UGAbj+DS8Mywe0B1t9fMwcrQVxa?=
- =?us-ascii?Q?FEdlhtm2j+lIghSpMir/PLRb3eq1bCTXEhPLaLrjKLZJ6ZaeOfj+0DLeQky1?=
- =?us-ascii?Q?7wIWUp05C19r5dNDDtXQxIs1PB5RGhJ2ECpek5byt3mC1fb0zbrUxLzq0bUq?=
- =?us-ascii?Q?hsPHw+5D8oX9AoeghOqo/yJP8NhxGwgBq4GEfqHJQjXU6uVXePhNXlT6H8aM?=
- =?us-ascii?Q?YDNDDfCme4m0uaUzOWMlsWDA345Ig3irfdCK/85tcZNSspzm26P0lRX3THpW?=
- =?us-ascii?Q?MVn0/WfpBj6xzGNJrtW89wtAdehDPbagJkDlGrVX9df87ZahNA2i3cbBreTa?=
- =?us-ascii?Q?VDLtBN0XWt9fKk2myGo3evXbcZ8oqnzTYGqYGqNHMdgCOwksl7Q5sN+fWpVs?=
- =?us-ascii?Q?M9OzpieFEoH6SPoJfi7pQuyg/IyfREg90M0747+VVmf4z6xfaJvQ1yYXOVAf?=
- =?us-ascii?Q?lFr5btHLCn58FAiA42byahehdd8U7h7zopL8/z/tov+m2qbPiBeV4IreCaXo?=
- =?us-ascii?Q?IhrIEo+Bopg83A4mjUq7/j3TXRLQ87oTxPlsSLrXy7o0FBuqtYlzFNxhAc9Z?=
- =?us-ascii?Q?YBYEap1AgGhH2/IP+CNBg3Ci3NG8/9fzMYrZCz0FuhGpI2vuh+wdKgB4e4NG?=
- =?us-ascii?Q?9M6HoDNg7R+LPs0HCmiYY7blGn7F0BbAcw8dxa8VCxzR3nXdwaIahmtpS2Wo?=
- =?us-ascii?Q?Ly9vWWndV5OxYNMVXLO95cDk2/md+V0KkC18Xty6BLNq2pexcpyPjqFPT5Nq?=
- =?us-ascii?Q?MkDAqGi/51YIFMyt20Fgx7KaScyqsF/T7zzbTZ29d3KWD0kJSCTmWmBgvBc3?=
- =?us-ascii?Q?c4xiZfpwR9xyRMwqxbp4oPCJavzZwvd1JJpsh+SqnCU5KlUE5+63i2OdnBds?=
- =?us-ascii?Q?w4QMJhzEsDbAzhYrO4yHyrS0hEVNbZF0bNee9/TJ/p19SdHKB2Pp0lWcJEiR?=
- =?us-ascii?Q?Xmp522ThLqZma1FNJhcKRs1zkj9pfdR7DdMMpsscN4pOKtkPkPmUz2kxEGNT?=
- =?us-ascii?Q?Yr+ZqMs3RevWvt+2/Yfs3o+I8tpn74RlvYrcERvZ9xfCJGDDitKFkxEVTuOo?=
- =?us-ascii?Q?t/k2egI2gaIh8cFEpg39jR5CCny87ia8YnNawDVlSHszUAxZkDEU5I43Kq+0?=
- =?us-ascii?Q?2sr8Lg=3D=3D?=
-X-OriginatorOrg: in-advantage.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 97447887-572f-441b-0179-08d9ab971fbd
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR1001MB2351.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Nov 2021 19:59:41.5085
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 48e842ca-fbd8-4633-a79d-0c955a7d3aae
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WEr46dyohN186SqfN9ogOPiNXGLpj9ASNifKNKBr+vPS4wco74J/OGU67/r46hwC6aHTPJ+uEGDzcLs1qSTfD3zquw3AXqEE9WG0BjD4m8Q=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR10MB1454
+References: <20211109113239.93493-1-robert.marko@sartura.hr> <20211109113239.93493-2-robert.marko@sartura.hr>
+In-Reply-To: <20211109113239.93493-2-robert.marko@sartura.hr>
+From:   Robert Marko <robert.marko@sartura.hr>
+Date:   Fri, 19 Nov 2021 21:30:18 +0100
+Message-ID: <CA+HBbNFyrLTxuSf8Wt0D5eK5YAW3AK2U_u0uB_2EWyHWrSfR-A@mail.gmail.com>
+Subject: Re: [PATCH v9 2/6] gpio: Add Delta TN48M CPLD GPIO driver
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Michael Walle <michael@walle.cc>, Andrew Lunn <andrew@lunn.ch>
+Cc:     Luka Perkov <luka.perkov@sartura.hr>,
+        Bruno Banelli <bruno.banelli@sartura.hr>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Adopt regmap instead of a direct memory map so that custom regmaps and
-other interfaces can be supported.
+On Tue, Nov 9, 2021 at 12:32 PM Robert Marko <robert.marko@sartura.hr> wrote:
+>
+> Delta TN48M switch has an onboard Lattice CPLD that is used as a GPIO
+> expander.
+>
+> The CPLD provides 12 pins in total on the TN48M, but on more advanced
+> switch models it provides up to 192 pins, so the driver is extendable
+> to support more switches.
+>
+> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Reviewed-by: Michael Walle <michael@walle.cc>
+> ---
+> Changes in v9:
+> * Use {} instead of {0} for initialising the regmap config per Andys
+> comment
+> * Fix spelling mistake in KConfig
+>
+> Changes in v8:
+> * No need to assing NULL to gpio_config per Andys comment
+>
+> Changes in v7:
+> * Change compatibles, reduce their number
+> * Rework the driver to be easily extendible to support more devices
+> * Use match data to populate configuration
+> * Drop reviews and ACK-s as the driver changed
+>
+> Changes in v6:
+> * Drop unused header
+> * Return the return value of device_property_read_u32()
+> instead of a hardcoded return
+>
+> Changes in v2:
+> * Rewrite to use simple I2C MFD and GPIO regmap
+> * Drop DT bindings for pin numbering
+> ---
+>  drivers/gpio/Kconfig      |  12 +++++
+>  drivers/gpio/Makefile     |   1 +
+>  drivers/gpio/gpio-tn48m.c | 100 ++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 113 insertions(+)
+>  create mode 100644 drivers/gpio/gpio-tn48m.c
+>
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index fab571016adf..8f7dd207bd16 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -1344,6 +1344,18 @@ config GPIO_TIMBERDALE
+>         help
+>         Add support for the GPIO IP in the timberdale FPGA.
+>
+> +config GPIO_TN48M_CPLD
+> +       tristate "Delta Networks TN48M switch CPLD GPIO driver"
+> +       depends on MFD_TN48M_CPLD
+> +       select GPIO_REGMAP
+> +       help
+> +         This enables support for the GPIOs found on the Delta
+> +         Networks TN48M switch Lattice CPLD. It provides 12 pins in total,
+> +         they are input-only or output-only type.
+> +
+> +         This driver can also be built as a module. If so, the
+> +         module will be called gpio-tn48m.
+> +
+>  config GPIO_TPS65086
+>         tristate "TI TPS65086 GPO"
+>         depends on MFD_TPS65086
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index 32a32659866a..93abc7461e45 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -148,6 +148,7 @@ obj-$(CONFIG_GPIO_TEGRA186)         += gpio-tegra186.o
+>  obj-$(CONFIG_GPIO_TEGRA)               += gpio-tegra.o
+>  obj-$(CONFIG_GPIO_THUNDERX)            += gpio-thunderx.o
+>  obj-$(CONFIG_GPIO_TIMBERDALE)          += gpio-timberdale.o
+> +obj-$(CONFIG_GPIO_TN48M_CPLD)          += gpio-tn48m.o
+>  obj-$(CONFIG_GPIO_TPIC2810)            += gpio-tpic2810.o
+>  obj-$(CONFIG_GPIO_TPS65086)            += gpio-tps65086.o
+>  obj-$(CONFIG_GPIO_TPS65218)            += gpio-tps65218.o
+> diff --git a/drivers/gpio/gpio-tn48m.c b/drivers/gpio/gpio-tn48m.c
+> new file mode 100644
+> index 000000000000..cd4a80b22794
+> --- /dev/null
+> +++ b/drivers/gpio/gpio-tn48m.c
+> @@ -0,0 +1,100 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Delta TN48M CPLD GPIO driver
+> + *
+> + * Copyright (C) 2021 Sartura Ltd.
+> + *
+> + * Author: Robert Marko <robert.marko@sartura.hr>
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/gpio/driver.h>
+> +#include <linux/gpio/regmap.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +
+> +enum tn48m_gpio_type {
+> +       TN48M_GP0 = 1,
+> +       TN48M_GPI,
+> +};
+> +
+> +struct tn48m_gpio_config {
+> +       int ngpio;
+> +       int ngpio_per_reg;
+> +       enum tn48m_gpio_type type;
+> +};
+> +
+> +static const struct tn48m_gpio_config tn48m_gpo_config = {
+> +       .ngpio = 4,
+> +       .ngpio_per_reg = 4,
+> +       .type = TN48M_GP0,
+> +};
+> +
+> +static const struct tn48m_gpio_config tn48m_gpi_config = {
+> +       .ngpio = 4,
+> +       .ngpio_per_reg = 4,
+> +       .type = TN48M_GPI,
+> +};
+> +
+> +static int tn48m_gpio_probe(struct platform_device *pdev)
+> +{
+> +       const struct tn48m_gpio_config *gpio_config;
+> +       struct gpio_regmap_config config = {};
+> +       struct regmap *regmap;
+> +       u32 base;
+> +       int ret;
+> +
+> +       if (!pdev->dev.parent)
+> +               return -ENODEV;
+> +
+> +       gpio_config = device_get_match_data(&pdev->dev);
+> +       if (!gpio_config)
+> +               return -ENODEV;
+> +
+> +       ret = device_property_read_u32(&pdev->dev, "reg", &base);
+> +       if (ret)
+> +               return ret;
+> +
+> +       regmap = dev_get_regmap(pdev->dev.parent, NULL);
+> +       if (!regmap)
+> +               return -ENODEV;
+> +
+> +       config.regmap = regmap;
+> +       config.parent = &pdev->dev;
+> +       config.ngpio = gpio_config->ngpio;
+> +       config.ngpio_per_reg = gpio_config->ngpio_per_reg;
+> +       switch (gpio_config->type) {
+> +       case TN48M_GP0:
+> +               config.reg_set_base = base;
+> +               break;
+> +       case TN48M_GPI:
+> +               config.reg_dat_base = base;
+> +               break;
+> +       default:
+> +               return -EINVAL;
+> +       }
+> +
+> +       return PTR_ERR_OR_ZERO(devm_gpio_regmap_register(&pdev->dev, &config));
+> +}
+> +
+> +static const struct of_device_id tn48m_gpio_of_match[] = {
+> +       { .compatible = "delta,tn48m-gpo", .data = &tn48m_gpo_config },
+> +       { .compatible = "delta,tn48m-gpi", .data = &tn48m_gpi_config },
+> +       { }
+> +};
+> +MODULE_DEVICE_TABLE(of, tn48m_gpio_of_match);
+> +
+> +static struct platform_driver tn48m_gpio_driver = {
+> +       .driver = {
+> +               .name = "delta-tn48m-gpio",
+> +               .of_match_table = tn48m_gpio_of_match,
+> +       },
+> +       .probe = tn48m_gpio_probe,
+> +};
+> +module_platform_driver(tn48m_gpio_driver);
+> +
+> +MODULE_AUTHOR("Robert Marko <robert.marko@sartura.hr>");
+> +MODULE_DESCRIPTION("Delta TN48M CPLD GPIO driver");
+> +MODULE_LICENSE("GPL");
+> --
+> 2.33.1
+>
 
-Signed-off-by: Colin Foster <colin.foster@in-advantage.com>
----
- drivers/pinctrl/pinctrl-microchip-sgpio.c | 45 +++++++++++++++++------
- 1 file changed, 34 insertions(+), 11 deletions(-)
+Bartosz and Linus,
+do you have any comments on the patch series?
 
-diff --git a/drivers/pinctrl/pinctrl-microchip-sgpio.c b/drivers/pinctrl/pinctrl-microchip-sgpio.c
-index 78765faa245a..8e081c90bdb2 100644
---- a/drivers/pinctrl/pinctrl-microchip-sgpio.c
-+++ b/drivers/pinctrl/pinctrl-microchip-sgpio.c
-@@ -17,6 +17,7 @@
- #include <linux/pinctrl/pinmux.h>
- #include <linux/platform_device.h>
- #include <linux/property.h>
-+#include <linux/regmap.h>
- #include <linux/reset.h>
- 
- #include "core.h"
-@@ -113,7 +114,7 @@ struct sgpio_priv {
- 	u32 bitcount;
- 	u32 ports;
- 	u32 clock;
--	u32 __iomem *regs;
-+	struct regmap *regs;
- 	const struct sgpio_properties *properties;
- };
- 
-@@ -134,31 +135,42 @@ static inline int sgpio_addr_to_pin(struct sgpio_priv *priv, int port, int bit)
- 	return bit + port * priv->bitcount;
- }
- 
--static inline u32 sgpio_readl(struct sgpio_priv *priv, u32 rno, u32 off)
-+static inline u32 sgpio_get_addr(struct sgpio_priv *priv, u32 rno, u32 off)
-+{
-+	return priv->properties->regoff[rno] + off;
-+}
-+
-+static u32 sgpio_readl(struct sgpio_priv *priv, u32 rno, u32 off)
- {
--	u32 __iomem *reg = &priv->regs[priv->properties->regoff[rno] + off];
-+	u32 addr = sgpio_get_addr(priv, rno, off);
-+	u32 val = 0;
-+	int ret;
- 
--	return readl(reg);
-+	ret = regmap_read(priv->regs, addr, &val);
-+	WARN_ONCE(ret, "error reading sgpio reg %d\n", ret);
-+
-+	return val;
- }
- 
--static inline void sgpio_writel(struct sgpio_priv *priv,
-+static void sgpio_writel(struct sgpio_priv *priv,
- 				u32 val, u32 rno, u32 off)
- {
--	u32 __iomem *reg = &priv->regs[priv->properties->regoff[rno] + off];
-+	u32 addr = sgpio_get_addr(priv, rno, off);
-+	int ret;
- 
--	writel(val, reg);
-+	ret = regmap_write(priv->regs, addr, val);
-+	WARN_ONCE(ret, "error writing sgpio reg %d\n", ret);
- }
- 
- static inline void sgpio_clrsetbits(struct sgpio_priv *priv,
- 				    u32 rno, u32 off, u32 clear, u32 set)
- {
--	u32 __iomem *reg = &priv->regs[priv->properties->regoff[rno] + off];
--	u32 val = readl(reg);
-+	u32 val = sgpio_readl(priv, rno, off);
- 
- 	val &= ~clear;
- 	val |= set;
- 
--	writel(val, reg);
-+	sgpio_writel(priv, val, rno, off);
- }
- 
- static inline void sgpio_configure_bitstream(struct sgpio_priv *priv)
-@@ -807,7 +819,13 @@ static int microchip_sgpio_probe(struct platform_device *pdev)
- 	struct reset_control *reset;
- 	struct sgpio_priv *priv;
- 	struct clk *clk;
-+	u32 __iomem *regs;
- 	u32 val;
-+	struct regmap_config regmap_config = {
-+		.reg_bits = 32,
-+		.val_bits = 32,
-+		.reg_stride = 4,
-+	};
- 
- 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
-@@ -832,9 +850,14 @@ static int microchip_sgpio_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
--	priv->regs = devm_platform_ioremap_resource(pdev, 0);
-+	regs = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(regs))
-+		return PTR_ERR(regs);
-+
-+	priv->regs = devm_regmap_init_mmio(dev, regs, &regmap_config);
- 	if (IS_ERR(priv->regs))
- 		return PTR_ERR(priv->regs);
-+
- 	priv->properties = device_get_match_data(dev);
- 	priv->in.is_input = true;
- 
+I would like to start working on support for the more complex switch models
+so that we finally have some L3 switches with upstream support.
+
+Regards,
+Robert
 -- 
-2.25.1
-
+Robert Marko
+Staff Embedded Linux Engineer
+Sartura Ltd.
+Lendavska ulica 16a
+10000 Zagreb, Croatia
+Email: robert.marko@sartura.hr
+Web: www.sartura.hr
