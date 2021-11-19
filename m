@@ -2,84 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 399A7456B2B
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Nov 2021 08:57:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9532B456BC5
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Nov 2021 09:40:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232944AbhKSIAT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 19 Nov 2021 03:00:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43122 "EHLO mail.kernel.org"
+        id S231825AbhKSInj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 19 Nov 2021 03:43:39 -0500
+Received: from mga12.intel.com ([192.55.52.136]:34025 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229501AbhKSIAT (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 19 Nov 2021 03:00:19 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3D29261B04;
-        Fri, 19 Nov 2021 07:57:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637308638;
-        bh=06f0t7T5g2+sFHylnxPjV+6gXXRZ9fVMkiz17s+krrQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Wo7IhRJbw0y02YDfkt1RvaFUyG5j0sT8NHgAdWfK942Tv2jPniUdWk5+SJZPzZlbc
-         WCN5vZcPCRwiOQZiX9oKDSvVynzPdNQT7GIm8vUd3SSnSb/2LBFchwCt2fHerwiNxO
-         yRx+xpktxSph4iZFa1m5ILxDkqacZT6oMkbjKwRvC2zRtTEM4kwiv1cHHkTZVVl3sT
-         VMXs0mFFDJcyZUhEN6zF/dGePj71WaS6LKczBANuZisEtaS0R7awVPJNq0DKovRvxT
-         WoAP6gxF5SnBDuouRFwjeo9jerD392jglMjrupvAHCWFJQLJhLV7mXrRPFAASjMcmc
-         T+KrltudfHldw==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan@kernel.org>)
-        id 1mnylY-00088X-BK; Fri, 19 Nov 2021 08:57:01 +0100
-Date:   Fri, 19 Nov 2021 08:57:00 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
+        id S230169AbhKSInj (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 19 Nov 2021 03:43:39 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10172"; a="214411611"
+X-IronPort-AV: E=Sophos;i="5.87,246,1631602800"; 
+   d="scan'208";a="214411611"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2021 00:40:38 -0800
+X-IronPort-AV: E=Sophos;i="5.87,246,1631602800"; 
+   d="scan'208";a="673134895"
+Received: from smile.fi.intel.com ([10.237.72.184])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2021 00:40:36 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1mnzRe-008Tcn-M6;
+        Fri, 19 Nov 2021 10:40:30 +0200
+Date:   Fri, 19 Nov 2021 10:40:30 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linux pin control <linux-gpio@vger.kernel.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] gpiolib: improve coding style for local variables
-Message-ID: <YZdYzLqQgvA96LoU@hovoldconsulting.com>
-References: <20211118132317.15898-1-brgl@bgdev.pl>
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [GIT PULL] intel-pinctrl for 5.17-1
+Message-ID: <YZdi/lLVoDhoayth@smile.fi.intel.com>
+References: <YZaUHy//vkja2la6@black.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211118132317.15898-1-brgl@bgdev.pl>
+In-Reply-To: <YZaUHy//vkja2la6@black.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 18, 2021 at 02:23:16PM +0100, Bartosz Golaszewski wrote:
-> Drop unneeded whitespaces and put the variables of the same type
-> together for consistency with the rest of the code.
+On Thu, Nov 18, 2021 at 07:57:51PM +0200, Andy Shevchenko wrote:
+> Hi Linux pin control  maintainers,
 > 
-> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  drivers/gpio/gpiolib.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index abfbf546d159..20d63028b85c 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -594,11 +594,10 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
->  			       struct lock_class_key *request_key)
->  {
->  	struct fwnode_handle *fwnode = gc->parent ? dev_fwnode(gc->parent) : NULL;
-> -	unsigned long	flags;
-> -	int		ret = 0;
-> -	unsigned	i;
-> -	int		base = gc->base;
-> +	int ret = 0, base = gc->base;
+> The kasprintf_strarray() series as PR for both Pin Control and GPIO subsystems.
+> All tags have been applied.
 
-This only makes the code harder to read for no good reason.
+Scratch it, kbuild bot found one typo, which makes code in zynqmp erroneous.
+I'll update and send a new PR
 
-Keep declarations on separate lines, especially if also initialising.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Note that all but one function in this file initialises return value
-variables on their own lines too (as they should).
 
->  	struct gpio_device *gdev;
-> +	unsigned long flags;
-> +	unsigned int i;
-
->  
->  	/*
->  	 * First: allocate and populate the internal stat container, and
-
-Johan
