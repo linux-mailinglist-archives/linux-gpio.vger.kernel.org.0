@@ -2,76 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 52FD34586E3
-	for <lists+linux-gpio@lfdr.de>; Sun, 21 Nov 2021 23:58:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AFC34586EC
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Nov 2021 00:11:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231723AbhKUXBT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 21 Nov 2021 18:01:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36876 "EHLO
+        id S229441AbhKUXO2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 21 Nov 2021 18:14:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230170AbhKUXBT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 21 Nov 2021 18:01:19 -0500
-Received: from mail-oi1-x232.google.com (mail-oi1-x232.google.com [IPv6:2607:f8b0:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED9A6C06173E
-        for <linux-gpio@vger.kernel.org>; Sun, 21 Nov 2021 14:58:13 -0800 (PST)
-Received: by mail-oi1-x232.google.com with SMTP id r26so34192428oiw.5
-        for <linux-gpio@vger.kernel.org>; Sun, 21 Nov 2021 14:58:13 -0800 (PST)
+        with ESMTP id S229735AbhKUXO2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 21 Nov 2021 18:14:28 -0500
+Received: from mail-ot1-x32a.google.com (mail-ot1-x32a.google.com [IPv6:2607:f8b0:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C840C061574
+        for <linux-gpio@vger.kernel.org>; Sun, 21 Nov 2021 15:11:23 -0800 (PST)
+Received: by mail-ot1-x32a.google.com with SMTP id a23-20020a9d4717000000b0056c15d6d0caso26097970otf.12
+        for <linux-gpio@vger.kernel.org>; Sun, 21 Nov 2021 15:11:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=/5OZU0dPITJ79B0ldHvptsJJjqxj5kJ42lpkT+u7EAE=;
-        b=dnSoV/tSD+rfrE9UnR0LqWTICHhNjqERhGtexoeub25ZTDwZbCaePnvxpiyrmLQnW5
-         oRjynhxCJKKJWK12DJMB6oF6WhnngL5V+F9GvAQlIgDz4aVHqo0Lbg2vFjtwIi+XrHzJ
-         Tnji7disVwfdrSyVd/BphgXXA0tR4CI86OmfFowviZFLOAKQnt6xiaLO9zl7BbDrN6Ri
-         y4VPAsYFAmPVyea7JCLuALUcewsNt4WwpBQJ5kAallC7q6ySyLiEr5nqdy7Rp9NUCoDO
-         eLiom8oxJngJefdNG2Dlx4f8S8S9GBng8O+3QOlVZh/UZoWgXy3P/l5KcflHjgLyRApS
-         6xEw==
+         :cc;
+        bh=bTAbuwwiRCZN3KqUf/kG304lXY2W1vD8B7/l1GzwKy8=;
+        b=Z8DWsyha2Dp8bop4b5/0sikkJ061GrpRiI6v7NAguDswKzjJi4nt70dyVA8wXDEcZx
+         uBOZcbm8w0zhjmrrFVOhZW4E6JpB/5YUg9T4Aiy7dgt9Es0TmlRx3vRjfUYtaxc1jyHW
+         1N/bWcNR02//76oyApRPkP2hE3BuyT3TcnIF1AkpSXKirNW8nHCixaiLv2lA8DEBz+Tn
+         83vBDgpnQAASx9N8NirSQPA50pqwoOw0tiHrnroiyf55mECppIjg5uR6NUdqRt9/At77
+         HCEr37NfSL6gPJ6RHZP289BaQa3eIGWrs56PMAnO1rLNx8CNG7xZAHQUSq4VrX9oowkw
+         YmPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/5OZU0dPITJ79B0ldHvptsJJjqxj5kJ42lpkT+u7EAE=;
-        b=PC3OFe+sB43JzZK+FvHGARbykhdgl0OKqkFznFH/fwzY45z+a2mj82hl4b9VPqfH0E
-         W4DmP+vHotFbYf4ZgdPEF9gDyZ0RqNlcm4DVBpuilv8Z9UgL6M7FMTGXnpmktmBVND/N
-         ADZvMlz8H1i8b+NIGbJ8DyDQdO54ecgm7lGK5vvSAJNp7LfI3elRCksy26DqDg71VNKL
-         sJPV5kV5yAb5gzU3kmGehG4dNNvxRg7gmjEdRk4HVmkfqBSZf/FZ16x0PrHWnO6a5Md5
-         PI1GZ+VWEUcEr8aAWtF4njzbxSz16ji4V6FJF5eEHa6n7XdH+I298YpRlwN3Rivikl1j
-         OFTA==
-X-Gm-Message-State: AOAM531oc1wrGvGCglHgUxTSvTlNVqQre9e4A24YwJXGI0TZ+REuFwNu
-        /5JvCZxefjbmcnFPF5PQbPvej0USjoAwPP19M6Wrjg==
-X-Google-Smtp-Source: ABdhPJyVeByS26CUTL6DtZHU3tOXB2fRzb6opZhfyZVeuemgt5Kvq+XhBTiDAtDzxeTbOO6EexIMaBes3AiawHPQtzw=
-X-Received: by 2002:a54:4791:: with SMTP id o17mr17766392oic.114.1637535493362;
- Sun, 21 Nov 2021 14:58:13 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=bTAbuwwiRCZN3KqUf/kG304lXY2W1vD8B7/l1GzwKy8=;
+        b=WR8QDyBQRZ1PjNhAE4fwT2izbSU99jh9pV5z2IoGWOhG97EqdblqTQXqcKl7LZ0SDf
+         4rfb3VfT1aAqKCVS7vP3hp4IQdbuyHS2Ho7GEkkBDnlt24cH3B2fpKBkNUtfu+izxsAT
+         AKN7H60mlLm2P0h+umKVnb5hP0ocf7MfGhZFqt8Sm3BqKpZIW+0QRX5wgc8bVw7LNs7n
+         zAEOd3Au03ilVrA/mY7KKfZWOkG/MGHyBk8jFArI0BueiKyZwv1kwCpgLSyH1o6XLFvc
+         OIXsHhXQ7rCXBKq7sxClNbQGD7NfAWyEuEPGQEWylbPoOlVYH2rzlNzNrQEdvL+MQhRr
+         W00A==
+X-Gm-Message-State: AOAM531izC7dmJfR1MnUTihItLJDuvSRDUivRfEOiVNcTXn9HFTBA7Q9
+        1+9BMGKaxBW2BcGM1qGFIrsOFnedmqnwLrw5BcphCNyClm4=
+X-Google-Smtp-Source: ABdhPJxnzPWPghCWX8gYtpkOsS59rzm44Ms1Mf25+pnmI3+IHeGK770vYP2R9da+dR4OmbKV6ZsJrF6I6pOlZdkK99g=
+X-Received: by 2002:a9d:ed6:: with SMTP id 80mr20510732otj.35.1637536281974;
+ Sun, 21 Nov 2021 15:11:21 -0800 (PST)
 MIME-Version: 1.0
-References: <20211110165720.30242-1-zajec5@gmail.com> <20211110165720.30242-2-zajec5@gmail.com>
-In-Reply-To: <20211110165720.30242-2-zajec5@gmail.com>
+References: <20211112130152.3682556-1-thierry.reding@gmail.com>
+In-Reply-To: <20211112130152.3682556-1-thierry.reding@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 21 Nov 2021 23:58:01 +0100
-Message-ID: <CACRpkdbfMFa9wt2XqhzK6-ZbAgRPPu3C7o2=4PbK2FEYFgkJ2Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dt-bindings: pinctrl: use pinctrl.yaml
-To:     =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Date:   Mon, 22 Nov 2021 00:11:10 +0100
+Message-ID: <CACRpkdYR4-xVcYd-0AsCvzknAbP_hbnJnnwmESh1=pgAfYOVyQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] gpio: tegra186: Add support for Tegra234
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Prathamesh Shete <pshete@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 10, 2021 at 5:57 PM Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com> =
-wrote:
+On Fri, Nov 12, 2021 at 2:02 PM Thierry Reding <thierry.reding@gmail.com> wrote:
 
-> From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
+> this set of patches converts the Tegra186 (and later) GPIO device tree
+> bindings to json-schema and adds support for the GPIO controllers found
+> on the new Tegra234 SoC. This also adds a gpio-keys device tree node to
+> the Jetson AGX Orin Developer Kit device tree to allow events from the
+> various inputs to be received by the system.
 >
-> Also fix some examples to avoid warnings like:
-> brcm,ns-pinmux.example.dt.yaml: pin-controller@1800c1c0: $nodename:0: 'pi=
-n-controller@1800c1c0' does not match '^pinctrl|pinmux@[0-9a-f]+$'
->
-> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
+> Based on work by Prathamesh Shete.
 
-Looks good to me, Rob?
+This looks good to me:
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+for the series.
+
+I suppose Bartosz can just apply patches 1-3 to the GPIO tree
+and the rest go to the Tegra tree?
 
 Yours,
 Linus Walleij
