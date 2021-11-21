@@ -2,75 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E11A4586C8
-	for <lists+linux-gpio@lfdr.de>; Sun, 21 Nov 2021 23:49:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 42A5D4586CD
+	for <lists+linux-gpio@lfdr.de>; Sun, 21 Nov 2021 23:51:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234278AbhKUWwq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 21 Nov 2021 17:52:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34890 "EHLO
+        id S235115AbhKUWyG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 21 Nov 2021 17:54:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234211AbhKUWwq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 21 Nov 2021 17:52:46 -0500
-Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F4F5C06173E
-        for <linux-gpio@vger.kernel.org>; Sun, 21 Nov 2021 14:49:40 -0800 (PST)
-Received: by mail-oi1-x229.google.com with SMTP id q25so34323333oiw.0
-        for <linux-gpio@vger.kernel.org>; Sun, 21 Nov 2021 14:49:40 -0800 (PST)
+        with ESMTP id S234436AbhKUWyG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 21 Nov 2021 17:54:06 -0500
+Received: from mail-ot1-x330.google.com (mail-ot1-x330.google.com [IPv6:2607:f8b0:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40DE2C061714
+        for <linux-gpio@vger.kernel.org>; Sun, 21 Nov 2021 14:51:01 -0800 (PST)
+Received: by mail-ot1-x330.google.com with SMTP id h12-20020a056830034c00b0055c8458126fso26189540ote.0
+        for <linux-gpio@vger.kernel.org>; Sun, 21 Nov 2021 14:51:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=X99/qOPdJ+WUbWBBOwNYpUmngjvM1PDWHkQjo0ad32Y=;
-        b=Q44svvAiadlk8aMSRveyGTPXRA5oCYbxFmT+IhIUTIN2fwuIw52DehmCszaMmv5M7t
-         mo1dASbLVJt1oJ5uYp5n+1c/QqzKMbyE/hmBiNoxaEufxzhfelf5KD2Z8d9M5inU4S9y
-         FuERCfwcJdOG0DZbzcbVXCE5/f/5K+0kk6Q1q0Ast4WisWpKmjB5mvyrrkVcHnaeT4hS
-         1i20p3nA5Xsk5zB5b7tazj+rpqTz/yMPuIawvy1D9eTl/Cum/pPAbzKERJAo2sGeu7uc
-         /PBtXxWpdWAhP+DwcgjeeZFk3iiwZGM8JT7MWqhygcvPtbAfM5/icS9l1cBkeJSBxsNO
-         FIXg==
+        bh=GPWdnLAG4F0+O/cKfXO41ARuBr52660bNdQdvywOP4Y=;
+        b=KOB6vV4KS8hxKMpT0VDKo61v+J3w0emW1YgL/HvpwnQlY7FZUmFVBcVfteUKoNkqYG
+         X1RQyE5cKCrlbMC//GYbSdEe4DjunnFt5bFqFb/T/aB9hljIjiijGW9OxbXqMpVkm/sE
+         n52BhCrngNN3aBfsfRDEm/QnCaPRDekq5hRqU/dAu+3tPlns3KgqmWIl7LZffCZZPVgQ
+         8TCNkX/L56KJhckqSfPijLbXvBG0ug4DMQtFWpWkIsj/r1UYMbFwQdD6/CHvSe+7ZTY1
+         SreqClOPDK1m1bwZl74XjBrgSbNYnDQoYz7y5QAO2x5yhUFOyOQV7e4Cr5/gyYiKCKVx
+         3m5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=X99/qOPdJ+WUbWBBOwNYpUmngjvM1PDWHkQjo0ad32Y=;
-        b=vSKOcCwTApFAXddO0WQGY5L9RdNcMeFkBoMxnJfHi59hMvpYwYn69h1s1AjY2p9cEE
-         nHX/ZbfX2YBgdHSU9xn2Siip3k3mthOvunLooUuArcMhy5JKPMyNZBOUfbGVG363MCu1
-         p960kjKcpV2LmVs9qhejU22AUUuJwbpUbmTxgZe955r4V6CzbEXlEV+GwHTChPM0+2BC
-         mH6+m/vgm3mEZ1J1YnU6rHvc5XyCVa6Y4DrVNxJkuOIJG036Gv92+GwhBcJNRX6JgoJO
-         41DieHry2nJkySAV7DI5MviLpZI++r6CE/pj929UpU/j8PshdArY2pESBGJGaCkcbPRk
-         0R3A==
-X-Gm-Message-State: AOAM530yKA5VW2Sbi4fgPEERrxQbIJvjaAS03Kms1KAil7Jj0wUGacYo
-        hxWncK7/G5CLeI6hlyzapslxLRQ9I2W+f1psxAcYPw==
-X-Google-Smtp-Source: ABdhPJwgaKcMuYgYCnXAWZszLJBD35nrr/psdZgwCLa+EINWN49QQKsj71cxw3YkXzLW9+ZE2BbOlleDjfZ50bFaefI=
-X-Received: by 2002:aca:120f:: with SMTP id 15mr16999633ois.132.1637534979818;
- Sun, 21 Nov 2021 14:49:39 -0800 (PST)
+        bh=GPWdnLAG4F0+O/cKfXO41ARuBr52660bNdQdvywOP4Y=;
+        b=M8oxSy79M+t4o6bfFHsOkcXHKzXs0qygRvajgeU69tVSZ4Oe+75RJlYeM79Q0lNz0S
+         4nHziZzLHeCgRFy/zushnsSiKxwcU1vuQShkbLk9GHHDmJ+3kRV6UaH49SnQ/4QZGaJD
+         0TmU2GMnOG1ToPVY8eUc+KdgslFKz1LT0FtxDygrVIIXMRlwHeeTQRbzMEzJiQSOXk+s
+         gbwmfhjkEwos4PwFqdCELag4iN0m2N4wy1fg8nzGuY0wiK6zLP+nhhYPOI7QofswKsP+
+         xzsEbTIPw6jA/NJWrTsUCb6LUaF8MpXhrRcrZmL1Enq8L2lrlqkvdtHY8TjTTde/w2nP
+         WikA==
+X-Gm-Message-State: AOAM532oRN5mYhWm959ojU0ASRfzYU88qRH19R5SlzqcBRe418QfJmVa
+        g5mRCeuqBYFfnsPGzgymXVmRWlQ4HEHepu1FZ5FwYw==
+X-Google-Smtp-Source: ABdhPJw+IURZg7LAXOySyG68vfWW1OBtjBY5hqcbBojTczIDo4sqsxNk20a2JBnKqNRdEf8UrKSDBSMPsc577lx54AI=
+X-Received: by 2002:a9d:ed6:: with SMTP id 80mr20420713otj.35.1637535060584;
+ Sun, 21 Nov 2021 14:51:00 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1637048107.git.quic_vamslank@quicinc.com>
-In-Reply-To: <cover.1637048107.git.quic_vamslank@quicinc.com>
+References: <20211109161707.2209170-1-robh@kernel.org>
+In-Reply-To: <20211109161707.2209170-1-robh@kernel.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 21 Nov 2021 23:49:28 +0100
-Message-ID: <CACRpkdY7h2ff8Td_iV03Bq2F=UcSOJj5W+5zB+UAA8uWK8z12w@mail.gmail.com>
-Subject: Re: [PATCH v4 0/2] Add pinctrl support for SDX65
-To:     quic_vamslank@quicinc.com
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, manivannan.sadhasivam@linaro.org
+Date:   Sun, 21 Nov 2021 23:50:49 +0100
+Message-ID: <CACRpkdZdZH9e5fHaFArcRxBcdEdfWDmxmDkTwL9EwchkTceCHg@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: Remove Netlogic bindings
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+        George Cherian <gcherian@marvell.com>,
+        Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 16, 2021 at 8:40 AM <quic_vamslank@quicinc.com> wrote:
+On Tue, Nov 9, 2021 at 5:17 PM Rob Herring <robh@kernel.org> wrote:
 
-> From: Vamsi Krishna Lanka <quic_vamslank@quicinc.com>
+> Support for Netlogic was removed in commit 95b8a5e0111a ("MIPS: Remove
+> NETLOGIC support"). Remove the now unused bindings.
 >
-> Hello,
+> The GPIO binding also includes "brcm,vulcan-gpio", but it appears to be
+> unused as well as Broadcom Vulkan became Cavium ThunderX2 which is ACPI
+> based.
 >
-> Changes from v3:
->  - Addressed comments, fixed dt_binding check errors and collected reviewed
->    by from Bjorn
->  - Rebased on top of v5.16-rc1
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+> Cc: George Cherian <gcherian@marvell.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: linux-gpio@vger.kernel.org
+> Cc: linux-i2c@vger.kernel.org
+> Cc: linux-spi@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-This v4 patch set applied for v5.17!
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
