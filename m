@@ -2,85 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BEB8458751
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Nov 2021 01:05:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A07E458755
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Nov 2021 01:08:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231753AbhKVAIL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 21 Nov 2021 19:08:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51572 "EHLO
+        id S231384AbhKVALg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 21 Nov 2021 19:11:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231415AbhKVAIL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 21 Nov 2021 19:08:11 -0500
-Received: from mail-oi1-x22c.google.com (mail-oi1-x22c.google.com [IPv6:2607:f8b0:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B07AC06173E
-        for <linux-gpio@vger.kernel.org>; Sun, 21 Nov 2021 16:05:05 -0800 (PST)
-Received: by mail-oi1-x22c.google.com with SMTP id q25so34560420oiw.0
-        for <linux-gpio@vger.kernel.org>; Sun, 21 Nov 2021 16:05:05 -0800 (PST)
+        with ESMTP id S230090AbhKVALg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 21 Nov 2021 19:11:36 -0500
+Received: from mail-ot1-x331.google.com (mail-ot1-x331.google.com [IPv6:2607:f8b0:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDED0C061574
+        for <linux-gpio@vger.kernel.org>; Sun, 21 Nov 2021 16:08:30 -0800 (PST)
+Received: by mail-ot1-x331.google.com with SMTP id w6-20020a9d77c6000000b0055e804fa524so26238706otl.3
+        for <linux-gpio@vger.kernel.org>; Sun, 21 Nov 2021 16:08:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=DSsEi2JoPWNRsH+hXvNqq1V/qVr/q0+A0UFabbDDLto=;
-        b=GvqMwIt3hzADRIbBw9sq7ul+0eBsJlaAjYELSGxthJO2DKk0y528RIReyszb3BEkMP
-         of0M3QjyTSWJpUbkPJxQQLj1IwXhohXDJ3VQXn8HhrlLE3aN4BDPejFkctCYpcYn8b7f
-         G0CLAlfc5QnvF3BgrkjEgKFJvY8SgMnXFFWroq73TGF3fHJwdbfyzmI4gG+2/KfMU2CF
-         1gVeZ7Uxr1B4sBF+2nYeeN1xXpcR+pgncniNPZUSHXWwIpgim8xewrzmp0P9/tUfoDr5
-         PyUAOJyKrXAG6Rn05BzMJ/6HYHHryCQw6B+glLEv+MH3Vw/5FHWvyQW/OVs5qtmIGpB3
-         lpxQ==
+        bh=qp8qvP1duE4sps65Ryua2FND+EVymcNt7eeEnZjkT9w=;
+        b=Iv6b8LbWkjDNWnKH8fvIb6Oe6siOZd+BVjZno64KhP8n8v1lqYl1vyt2jrCWUX3v/Z
+         RMvLzySTb7M+OVGY1Rc+KH0xPgfClvdZ1lLkuBHyGkIff7WOnq257NFNbAVhLhDcaFbB
+         ViSoveTiqQQdqIX9f5xXAbIfJbTVA9nAx0ZLcKMWMJxE/duF4cXlNuEaSLNNyJiZqfP7
+         VM7vg55IrN/u9OcHbUR8mb3HDDfWbu+LrV2/JDHWEyKEX2kdU3RjMMpUreOCd+ORm49e
+         7fKYiOxtOaC1O+czvIb4OGDyLXGozwGppdHfCeaIp0aNdyW+mftBwp5i7ll6e2a+qY+r
+         hTcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DSsEi2JoPWNRsH+hXvNqq1V/qVr/q0+A0UFabbDDLto=;
-        b=Tz/QH0rqk+emyVk5rFzmW6BLrPqjDE1+/3GDHMaT6QOoSZO7eSQj24ssSgW1Av9X6q
-         /LzLKVo65tNcp6mtbm8AMnyxH6qj/P5F2ltkwAVs7wC3CpK5JJGAFXDlfas5VOJxgITc
-         z2oG0E9zm61fC+t+iglB65l/ELN2q6qFDDwq59UOXiKGKbPNTnz0UG2xS8lRweNy8pC3
-         poF3tKUJSdAmBl3Gg2H0894/jcP1fIv98J33h0RqtyTSmr+5wQO5HpOd2eCxzzrK+TuS
-         qk0b8o2XIe/ls9y7IoUtoeK/Cl8GEGjhdRc/MBV0cfwIe6atBw88r/2dypmqg82pwAaU
-         xPBA==
-X-Gm-Message-State: AOAM532mabaeHS0sIuN3s4frzKmll2AYHt4IWBHjELDU9Eth6bkBJzsJ
-        n4GkT8tLlz/mrEUs3hdxzqwD6SrtTmIjBy4xS462zA==
-X-Google-Smtp-Source: ABdhPJwriH0rHPvHd39ZEC3C07PFdaNt+cM28lWdIEDa67VEiT+QY8HmOfo/1AgO8PfHOKCNyMtlrEuvLkJLgOXK+Sw=
-X-Received: by 2002:a05:6808:60e:: with SMTP id y14mr17423178oih.162.1637539504647;
- Sun, 21 Nov 2021 16:05:04 -0800 (PST)
+        bh=qp8qvP1duE4sps65Ryua2FND+EVymcNt7eeEnZjkT9w=;
+        b=TTAJliiF0Mzg4R+06jsEA4OIWcfH7x90VI2bMXl//M8KXfS1/1vHyHqUcDfGGMPDwE
+         QRXGISgY1Hax6p7RjxjWczX+4cYPdb9E+tY9bqq9OsHhn8JhOKbq7YWykRVgvMB4vQJB
+         nyvJYLbKaVki9lfeKx+Rmddg5wt7HjDVU1q1K7RcBzODmhS92WTQ7YRqgV3RZSpW4uyx
+         NK3RGLENMk3Y1NpWu/Z29xnCYVJQeiOBkqryxpZAJ0Bf8vsOeCzQFPk9MQm/R5yjXi17
+         kNHh0iY+PY35a4BaF7vm1sfBPLeIw2oXWYQfP5ier5KSPZyXvzmb0Gewx/kChdoYD5AH
+         Gk4A==
+X-Gm-Message-State: AOAM532jzdddnA7yJoKJMrkQLrSJSXoiSFqiLj+8/aRM5KVJimuI+YsM
+        E437Ib4pPqUvevugBnaYM0jb6VFLUR2AkbjKPxi7sQ==
+X-Google-Smtp-Source: ABdhPJxvD0lqe5bwW7jZKcmW+MhtmK8dNWRzRSetu7eKkiJACTRAo/bXNHATiEu80R+mPong6K1cbtOQDP+bs6Bk/3U=
+X-Received: by 2002:a9d:a42:: with SMTP id 60mr21620754otg.179.1637539710298;
+ Sun, 21 Nov 2021 16:08:30 -0800 (PST)
 MIME-Version: 1.0
-References: <20210923065500.2284347-1-daniel@0x0f.com> <CAFr9PXmPE_vRcHgPkJp3o=d5HnAV52TFuBe-2hf=hKY8y2=BhA@mail.gmail.com>
-In-Reply-To: <CAFr9PXmPE_vRcHgPkJp3o=d5HnAV52TFuBe-2hf=hKY8y2=BhA@mail.gmail.com>
+References: <20211119195928.2498441-1-colin.foster@in-advantage.com>
+In-Reply-To: <20211119195928.2498441-1-colin.foster@in-advantage.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 22 Nov 2021 01:04:52 +0100
-Message-ID: <CACRpkda9j=dQKp+W0iE0xhbuBWAibXHovgdEVkyXHevRnnRtsg@mail.gmail.com>
-Subject: Re: [PATCH v2 00/11] gpio: msc313: Add gpio support for ssd20xd
-To:     Daniel Palmer <daniel@0x0f.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        pavel@ucw.cz, DTML <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-leds@vger.kernel.org, Romain Perier <romain.perier@gmail.com>
+Date:   Mon, 22 Nov 2021 01:08:18 +0100
+Message-ID: <CACRpkdad-_annWF2f-aKqTrLdTosO2Q7c0jxknP8jL6kWk9qEA@mail.gmail.com>
+Subject: Re: [PATCH v1 net-next 0/4] pinctrl: update drivers to utilize regmap
+To:     Colin Foster <colin.foster@in-advantage.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        UNGLinuxDriver@microchip.com,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 19, 2021 at 2:12 PM Daniel Palmer <daniel@0x0f.com> wrote:
-> On Thu, 23 Sept 2021 at 15:55, Daniel Palmer <daniel@0x0f.com> wrote:
->
-> > Daniel Palmer (11):
-> >   dt-bindings: gpio: msc313: Add compatible for ssd20xd
-> >   dt-bindings: gpio: msc313: Add offsets for ssd20xd
-> >   gpio: msc313: Code clean ups
-> >   gpio: msc313: Add support for SSD201 and SSD202D
->
-> Would it be possible to get some comment on these commits and/or get
-> them picked up?
-> We (Romain and I) have a few bits that are blocked on this.
+On Fri, Nov 19, 2021 at 8:59 PM Colin Foster
+<colin.foster@in-advantage.com> wrote:
 
-I think it is usually easier for the maintainers if you don't include
-the DTS changes in the series. Then we can just apply the whole
-series, no need to drop the stuff in the tail.
-The DT bindings sometimes need some slack so the DT people
-have time to look at them as well.
+> Colin Foster (4):
+>   pinctrl: ocelot: combine get resource and ioremap into single call
+>   pinctrl: ocelot: update pinctrl to automatic base address
+>   pinctrl: ocelot: convert pinctrl to regmap
+>   pinctrl: microchip-sgpio: update to support regmap
+
+Patches applied to the pinctrl tree for v5.17!
+If reviewers don't like that we can always pull them out or do
+some fixes on top.
 
 Yours,
 Linus Walleij
