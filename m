@@ -2,77 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 13E99458BF8
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Nov 2021 11:01:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7AB37458D43
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Nov 2021 12:20:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238898AbhKVKEu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 Nov 2021 05:04:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41352 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234451AbhKVKEt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Nov 2021 05:04:49 -0500
-Received: from mail-ua1-x929.google.com (mail-ua1-x929.google.com [IPv6:2607:f8b0:4864:20::929])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87194C061714
-        for <linux-gpio@vger.kernel.org>; Mon, 22 Nov 2021 02:01:43 -0800 (PST)
-Received: by mail-ua1-x929.google.com with SMTP id y5so35286918ual.7
-        for <linux-gpio@vger.kernel.org>; Mon, 22 Nov 2021 02:01:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=0x0f.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=l9cKZ85V/kOofYO4Xn9D9NxUA7pbG6Ev+c+SBRxE64k=;
-        b=LLOALxzuISMVAodihUK25Q4JlSFsywz0o35JoodfcsNHuAi/YcxhnuLoSsikDHA2q8
-         vuvKJm33Fg53FYgXZ0l3oHxqvC1c07qRN1bN+VVgNNPu27GWwUaKJrdBN0Pvg0YTC/51
-         oeAuc4FU+XotgfcEOlt3tWq89P5fA05cQrzPI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=l9cKZ85V/kOofYO4Xn9D9NxUA7pbG6Ev+c+SBRxE64k=;
-        b=2htxYsdcls/NZIr60ScGni3nULT/a8vCv1ZABM0PU65YoTfgirl8OTbSCcwWwgDP+X
-         6tW98lYkre2lD5alAi83BhhEAJAU5cjtJkTfL7P1WeMQs2sCW2yGChlmqsdYtEbQf/AG
-         2LPjdDAXTxa4LcE85n/BxMz7z1SKL5lDBJaNFCw2zJ5M+xbP6+WgjTPnrWs++8Lv3XDl
-         5Fb9LfgLdRIbfOxRRKtr9X1xXRPDhuKcvDnA7UKEEZW962VoRJuUHrgbJJbV0wKsK4nA
-         P/Jnp9bBRrze3G7QdylO1OagltO6fiy4fRRnvcsqwlgW8cso0FopKF4T87Ic1WgZgQSJ
-         Jr6w==
-X-Gm-Message-State: AOAM533b4/25rrshIjqq20aT5gHMo7LBUYhQM36PDJkiIu76lNeCuuUf
-        p8Z6OmrgN6NQ9MODfBIQD6tvcfIRYJd1+AfHlAQZlA==
-X-Google-Smtp-Source: ABdhPJy5AkNAerk25bDE+1X3yRxbzD4HZeiarqaFa2ZdpKEHGA0y9mw2lAcPsMW/rzogSnFGyjA5KtHtgZ/ypDezrsk=
-X-Received: by 2002:a05:6102:38c7:: with SMTP id k7mr122446860vst.45.1637575302665;
- Mon, 22 Nov 2021 02:01:42 -0800 (PST)
-MIME-Version: 1.0
-References: <20210923065500.2284347-1-daniel@0x0f.com> <CAFr9PXmPE_vRcHgPkJp3o=d5HnAV52TFuBe-2hf=hKY8y2=BhA@mail.gmail.com>
- <CACRpkda9j=dQKp+W0iE0xhbuBWAibXHovgdEVkyXHevRnnRtsg@mail.gmail.com>
-In-Reply-To: <CACRpkda9j=dQKp+W0iE0xhbuBWAibXHovgdEVkyXHevRnnRtsg@mail.gmail.com>
-From:   Daniel Palmer <daniel@0x0f.com>
-Date:   Mon, 22 Nov 2021 19:01:32 +0900
-Message-ID: <CAFr9PXm7YotmZFFuvqGwfromRGY3YdRkoH4ZC0kvOxqxujy7AA@mail.gmail.com>
-Subject: Re: [PATCH v2 00/11] gpio: msc313: Add gpio support for ssd20xd
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        id S232727AbhKVLX6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 Nov 2021 06:23:58 -0500
+Received: from mga06.intel.com ([134.134.136.31]:41952 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229516AbhKVLX5 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 22 Nov 2021 06:23:57 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10175"; a="295577131"
+X-IronPort-AV: E=Sophos;i="5.87,254,1631602800"; 
+   d="scan'208";a="295577131"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2021 03:20:51 -0800
+X-IronPort-AV: E=Sophos;i="5.87,254,1631602800"; 
+   d="scan'208";a="674029881"
+Received: from smile.fi.intel.com ([10.237.72.184])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2021 03:20:50 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1mp7NN-009Pk1-MS;
+        Mon, 22 Nov 2021 13:20:45 +0200
+Date:   Mon, 22 Nov 2021 13:20:45 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        pavel@ucw.cz, DTML <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-leds@vger.kernel.org, Romain Perier <romain.perier@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/2] gpiolib: check the 'ngpios' property in core
+ gpiolib code
+Message-ID: <YZt9DVihGaq0kjKG@smile.fi.intel.com>
+References: <20211118132317.15898-1-brgl@bgdev.pl>
+ <20211118132317.15898-2-brgl@bgdev.pl>
+ <YZaH8rsMyUztOX/r@smile.fi.intel.com>
+ <CAMRc=MdR_RGLLPJ5Hqetj5_7ZQfUXOijEoVp3uR7cgEDHKnchA@mail.gmail.com>
+ <YZbCq5Xcohm/t/FP@smile.fi.intel.com>
+ <CAMRc=MdBhm-+oDiBdYQJZXYEko8rGhZtHQfu6p3DFy_a3aJOZw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MdBhm-+oDiBdYQJZXYEko8rGhZtHQfu6p3DFy_a3aJOZw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+On Fri, Nov 19, 2021 at 08:35:33PM +0100, Bartosz Golaszewski wrote:
+> On Thu, Nov 18, 2021 at 10:16 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Thu, Nov 18, 2021 at 09:12:59PM +0100, Bartosz Golaszewski wrote:
+> > > On Thu, Nov 18, 2021 at 6:06 PM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > On Thu, Nov 18, 2021 at 02:23:17PM +0100, Bartosz Golaszewski wrote:
 
-On Mon, 22 Nov 2021 at 09:05, Linus Walleij <linus.walleij@linaro.org> wrote:
-> I think it is usually easier for the maintainers if you don't include
-> the DTS changes in the series.
+...
 
-Ok, I was aiming for a series that added something and then showed how
-it would be used hence adding the board DTS bits.
-If needed I'll create a new series with just the relevant bits. The
-listed commits all got reviewed from what I remember so I was hoping
-they'd get picked up.
+> > > > >       if (gc->ngpio == 0) {
+> > > > > -             chip_err(gc, "tried to insert a GPIO chip with zero lines\n");
+> > > > > -             ret = -EINVAL;
+> > > > > -             goto err_free_descs;
+> > > > > +             ret = device_property_read_u32(&gdev->dev, "ngpios", &ngpios);
+> > > > > +             if (ret) {
+> > > > > +                     chip_err(gc, "tried to insert a GPIO chip with zero lines\n");
+> > > > > +                     ret = -EINVAL;
+> > > > > +                     goto err_free_descs;
+> > > > > +             }
+> > > > > +
+> > > > > +             gc->ngpio = ngpios;
+> > > > >       }
+> > > >
+> > > > This should be
+> > > >
+> > > >         if (gc->ngpio == 0) {
+> > > >                 ret = device_property_read_u32(&gdev->dev, "ngpios", &ngpios);
+> > > >                 if (ret)
+> > > >                         return ret;
+> > >
+> > > But device_property_read_u32() returning -ENODATA means there's no
+> > > such property, which should actually be converted to -EINVAL as the
+> > > caller wanting to create the chip provided invalid configuration - in
+> > > this case: a chip with 0 lines. In case of the non-array variant of
+> > > read_u32 that's also the only error that can be returned so this bit
+> > > looks right to me.
+> >
+> > So, what is so special about -EINVAL? Why -ENODATA is not good enough which
+> > will exactly explain to the caller what's going on, no?
+> >
+> 
+> Let's imagine the user sets gc->ngpio = 0 incorrectly thinking it'll
+> make gpiolib set it to some sane default. Then gpiochip_add_data()
+> returns -ENODATA (No data available). This is confusing IMO. But if we
+> convert it to -EINVAL, it now says "Invalid value" which points to the
+> wrong configuration.
+> 
+> ENODATA means "device tree property is not present" in this case but
+> the problem is that user supplies the gpiolib with invalid
+> configuration. EINVAL is the right error here.
 
-Thanks,
+Then be explicit, don't shadow other error codes from fwnode API.
 
-Daniel
+	if (ret && ret != -ENODATA)
+
+> > > >                 gc->ngpio = ngpios;
+> > > >         }
+> > > >
+> > > >         if (gc->ngpio == 0) {
+> > > >                 chip_err(gc, "tried to insert a GPIO chip with zero lines\n");
+> > > >                 ret = -EINVAL;
+> > > >                 goto err_free_descs;
+> >
+> > When the caller intended to create a chip with 0 GPIOs they will get an error
+> > as you wish with an error message.
+> 
+> Yes, as it was before.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
