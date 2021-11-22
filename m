@@ -2,86 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FDAA45971A
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Nov 2021 23:04:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3757E459730
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Nov 2021 23:13:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239472AbhKVWHn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 Nov 2021 17:07:43 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:41493 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S239948AbhKVWHi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 22 Nov 2021 17:07:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1637618670;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=R0Wu/W/Wi5O+Hzu3YzLggiwAid8zZBDC6HkiLP7qREY=;
-        b=H8X056qefWvvqalAvDAyArK1EWcPrtxW3QRmCPHMsvM3Jfkge96BXjvxBcJRJkEojci+D2
-        BOgfmooAUelTwnvrKhyQ+4BVlkLjMbwWsKZa8CRlaKYetymLD3QVVMlq5xVA7nJkiigJzb
-        5EbC3JPZuOe9AQwxcLr+R39Ews3xw+Y=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-583-kKbqZmKsMSaLpCKi-qGp7g-1; Mon, 22 Nov 2021 17:04:27 -0500
-X-MC-Unique: kKbqZmKsMSaLpCKi-qGp7g-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 159CC19251A0;
-        Mon, 22 Nov 2021 22:04:26 +0000 (UTC)
-Received: from x1.localdomain (unknown [10.39.192.226])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C32C07945B;
-        Mon, 22 Nov 2021 22:04:24 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: [PATCH] pinctrl: baytrail: Set IRQCHIP_SET_TYPE_MASKED flag on the irqchip
-Date:   Mon, 22 Nov 2021 23:04:23 +0100
-Message-Id: <20211122220423.11256-1-hdegoede@redhat.com>
+        id S233551AbhKVWQt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 Nov 2021 17:16:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39112 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231771AbhKVWQt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Nov 2021 17:16:49 -0500
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 700B5C061574
+        for <linux-gpio@vger.kernel.org>; Mon, 22 Nov 2021 14:13:42 -0800 (PST)
+Received: by mail-ed1-x536.google.com with SMTP id x6so71185237edr.5
+        for <linux-gpio@vger.kernel.org>; Mon, 22 Nov 2021 14:13:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=xZTlJ2utI9ngeCT9ZWxO9pUftQUihEay2JhC7sODIcM=;
+        b=ZN2pruTuVvnAiEKgfmoeemNk/1cjz7szTRRh7/zffi8rPprqpR7LOgci+pr4Qfe65b
+         x19933B8bPsF13gsu60BVVfbyPCAoMBZ7mHWgpTVoWh4NL4DCn4+dH1h2cU8M2fhAB61
+         Pq87RB537LE73qzGdStP3qEZwbFIYyNvnGGe7JiU+YSqzsgVtooHjILCELPFXhoTdzMv
+         6qz3X8edqTf/eM0cf08CfFoHc51Y8KN6JqgC2S8S+AmDqnT/35J4sccBz/dZRxH/Zznq
+         GZO1qoX0NkuR9CvIlJ+eeBWWQG8LRNkZpH8Au7pXY5zNRREMQfsycCeiPkScua5E2ssj
+         k28A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=xZTlJ2utI9ngeCT9ZWxO9pUftQUihEay2JhC7sODIcM=;
+        b=wt/1i7wLyx9j3oNDU739mhSPl86gqIyhKtJ5Da1zuKklJ2DHkJfJch8lCZL11442nx
+         8OZYriLwD7kq437UR23tEbv2/T5tWjZ8orzp5vqrrZkC/eXfyEO0wNMgQwdMltZUW1q2
+         Oc2R574DdupjhgC/8DtBCj62M+wAXaS/9kfkmwqvU1qB8RjXRmi3YID1WqsSxt11s1Ij
+         zVvJWzlYqx0tNpyraNwNoZXJv6uBfSG0sHf0xSGpV9pdsCV+8VHX3QRVDiiLLMGqGcs9
+         A4b2rXoNEkOEQ/oIXRehVNrfdEMEifmiPv1Eb6p6ngO2HXvS4rl01d0fs6vPElmxDOY0
+         iTkg==
+X-Gm-Message-State: AOAM532TpcuUKham5BQK6WRyNMQkVDUElc8Y2MnCga//UNq+hE0x6NKF
+        poZlcRVLqYBCoLUWxYeYzMTLnLftBobV9N8FFcU=
+X-Google-Smtp-Source: ABdhPJzUmUstq/iFuqsnrAf/gZ3eonL6sQTTU6gekA1jX1XEuKDyblUs6lVXZlU0M8MWs7BtImc49P5eArd5ZIL8shE=
+X-Received: by 2002:a17:906:ecac:: with SMTP id qh12mr775738ejb.377.1637619220858;
+ Mon, 22 Nov 2021 14:13:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <CANqO7_ZUzfmhj9dt1bDW2YmVtr=fRyCErsuoMS+PqSgGkZsjXA@mail.gmail.com>
+ <CAHp75Ve7YD3Bq2QgU3-WunB5gHA7pXcSfpoGBt1GASn1WA8C4w@mail.gmail.com> <CANqO7_aZw3dFT-TfjrkQVosHqeBFFE44P6_2SDPnvNe1N04Kpg@mail.gmail.com>
+In-Reply-To: <CANqO7_aZw3dFT-TfjrkQVosHqeBFFE44P6_2SDPnvNe1N04Kpg@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 23 Nov 2021 00:13:03 +0200
+Message-ID: <CAHp75Vc6DdXzyNtiTtQ01djg=aG3fbu3Smr82CXrv_pWZLH0QA@mail.gmail.com>
+Subject: Re: [libgpiod] Strange error
+To:     James Nugen <jnugen@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The byt_irq_type function ends with the IRQ masked, this means that calls
-to irq_set_irq_type() while the IRQ is enabled end up masking it, which
-is wrong. Add the IRQCHIP_SET_TYPE_MASKED flag to fix this.
+Please, reply to all, including the mailing list. (Asn do not top-post!)
 
-This will make the IRQ core call mask() + unmask() on the IRQ around
-a set_type() call when the IRQ is enabled at the type of the call.
+On Mon, Nov 22, 2021 at 9:42 PM James Nugen <jnugen@gmail.com> wrote:
+>
+> 'gpiodetect' output:
+> gpiochip0 [INT34BB:00] (312 lines)
+> gpiochip1 [ftdi-cbus] (4 lines)
+>
+> I can try v5.15.
 
-Note in practice irq_set_irq_type() getting called while the IRQ is enabled
-almost never happens. I hit this with a buggy DSDT where a wrongly active
-(_STA returns 0xf) I2C ACPI devices point to an IRQ already in use by an
-_AEI handler, leading to the irq_set_irq_type() call in
-acpi_dev_gpio_irq_get_by() getting called while the IRQ is enabled.
+Please do.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/pinctrl/intel/pinctrl-baytrail.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> I should mention everything works correctly on a laptop running
+> '5.4.0-89-generic'.
 
-diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
-index 744ebe417bff..e3dd105e2f6e 100644
---- a/drivers/pinctrl/intel/pinctrl-baytrail.c
-+++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
-@@ -1554,7 +1554,8 @@ static int byt_gpio_probe(struct intel_pinctrl *vg)
- 		vg->irqchip.irq_mask = byt_irq_mask,
- 		vg->irqchip.irq_unmask = byt_irq_unmask,
- 		vg->irqchip.irq_set_type = byt_irq_type,
--		vg->irqchip.flags = IRQCHIP_SKIP_SET_WAKE,
-+		vg->irqchip.flags = IRQCHIP_SKIP_SET_WAKE |
-+				    IRQCHIP_SET_TYPE_MASKED,
- 
- 		girq = &gc->irq;
- 		girq->chip = &vg->irqchip;
+> Perhaps, I should try downgrading to 5.4 on the NUC.
+
+It's too far from the current kernels, we wouldn't be able to bisect
+in a reasonable time.
+
+> On Mon, Nov 22, 2021 at 11:23 AM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> >
+> > On Mon, Nov 22, 2021 at 9:00 PM James Nugen <jnugen@gmail.com> wrote:
+> > >
+> > > Hello,
+> > >>
+> Thanks,
+> James Nugen
+>
+
+> > > I'm getting a weird error when trying to access GPIOs from my machine.
+> > > The "gpioinfo" command is returning this error message:
+> > > "gpioinfo: error creating line iterator: Invalid argument"
+> > > This happens as a regular user and as root (via sudo).
+> > > "gpioget" returns a similar error.
+> > > "gpiodetect" works and finds two devices.
+> >
+> > What's the output of `gpiodetect`?
+> >
+> > > The machine is an Intel NUC running Ubuntu 20.04.
+> > > Here is the "uname" output:
+> > > Linux nuc 5.11.0-38-generic #42~20.04.1-Ubuntu SMP Tue Sep 28 20:41:07
+> > > UTC 2021 x86_64 x86_64 x86_64 GNU/Linux
+> > >
+> > > The installed version of "libgpiod" is v1.4,1.
+> > > I tried the latest version (v1.6.3) and got the same errors.
+> >
+> > Is it possible to try the v5.15 kernel on your side?
+> >
+> > --
+> > With Best Regards,
+> > Andy Shevchenko
+
+
+
 -- 
-2.33.1
-
+With Best Regards,
+Andy Shevchenko
