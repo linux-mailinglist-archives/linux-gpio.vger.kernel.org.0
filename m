@@ -2,77 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4481645875E
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Nov 2021 01:16:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BABD34589F6
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Nov 2021 08:41:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229901AbhKVATF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 21 Nov 2021 19:19:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53932 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229884AbhKVATE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 21 Nov 2021 19:19:04 -0500
-Received: from mail-ot1-x333.google.com (mail-ot1-x333.google.com [IPv6:2607:f8b0:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D175C061574
-        for <linux-gpio@vger.kernel.org>; Sun, 21 Nov 2021 16:15:59 -0800 (PST)
-Received: by mail-ot1-x333.google.com with SMTP id o15-20020a9d410f000000b0055c942cc7a0so26237172ote.8
-        for <linux-gpio@vger.kernel.org>; Sun, 21 Nov 2021 16:15:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Q3gq4Z9pMhh8rOqRdl4j/n3TxD+TdM/44dzvZ+ScoXY=;
-        b=oMGhsOkmbuCHdDrrZ+o6xHoZL6FkvgjD1m8VJNmHf9f/OYZJvm0ZVMwzNZjJCp/KBH
-         APcAQIAKygT8jk6Bb57INl3LUXB3sIWySfGvAc5gvQi7GuN34IyyzTgyYUd7CUnrva/n
-         sTHih+sVJIcG7C8YlGp5RyvFEBBP6XuxjsvefkxLZ+zV2slajxPj9/uvFhVoqHY0Mc/I
-         OZzNwP8MkATGmuCREr5exZtT5nPYpWVVdKGkR2p9NU4FARoToGiTYEulD7LvDriKrITM
-         sbhsEJR9Rc38Q8TZn993WSqN77XsfTh5llTAGZW9tatzlCMp0OQ4ZFgiKDSD4SJwgo+O
-         aQMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Q3gq4Z9pMhh8rOqRdl4j/n3TxD+TdM/44dzvZ+ScoXY=;
-        b=bB56/MHQLuse7f/E1s4azA9j9Hm7Xag4bPuziMqjdsPgAGPe76hmhnGpDEMap6r1IL
-         a4qGWDeVJDob/sX/JFmJP6Gkq1IccHurqch5nBYvDnVnJJ9Cc2bgQH+rSULuxKIDecGZ
-         wYviDpi2iPTHcViFarjPYQ9Y2J8IJ2CM70j6BhY95yWhOXSgPkbBeH2fwrY1qiOPyrNp
-         /Wu417SuyKrTkEZfkYbqjE0GLvm9LAaTfniJTJNVJ0c6FRp3JKN2HHHOeLNDvmFPRKr3
-         lV/gpqnXAWtMcOzCTaVq2d5TwHnwJFL9TaWPvUOMy3fy31OeTRVUzs8u2RYO0Ggq/coF
-         XNJw==
-X-Gm-Message-State: AOAM530ZB9jYtuoQBaeScY+hVKgjY8RCdC1JiXXJlPH/HgchJ1jm4nVc
-        +2vO4VyNzidp+gedUq6GN9ljcPCUkrfcmLH6TijzEg==
-X-Google-Smtp-Source: ABdhPJwMl8dQynphDsaDKhcDGKOG5GbWb69Dr0B5g9jtkYXijKRFCeukXqUbKeAcVv+yY/c8SOrqrMwM3Z/wk20b3SE=
-X-Received: by 2002:a9d:a42:: with SMTP id 60mr21656051otg.179.1637540158490;
- Sun, 21 Nov 2021 16:15:58 -0800 (PST)
+        id S238805AbhKVHoj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 Nov 2021 02:44:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35090 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232870AbhKVHoe (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 22 Nov 2021 02:44:34 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5E74860E96;
+        Mon, 22 Nov 2021 07:41:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1637566877;
+        bh=LvPHFzOeLqsay8wVm6ou1s6YcS6M7oKO3oa1ezBZ9Hw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BpPhTRNJGw5EhiVUs0VvbvRSCr6LAzptLuoEGjdmAtJjcGLERdZGV4lEFc9233pO+
+         jaQh8df6wlqSU4A0CL30h6VXZ5sD4HujS12DGol7cnqXaeDHPerKQvUAvhg/tq7IKo
+         0j9pIS4VX3iSPWi3Y3kJZr9BPJ28CQ328MRnvPwMl6k7QPW24NbjtQ9FHcm8dzGcMn
+         vSVkHLwo+VCUTayw5kfMIejTwtWma+95RjQSkyo8ohI65MsxsxxpzBLWgXnDLs1iZI
+         RAqxWQyYEb8Ji62l68y9/pT+ki9o3r2f38n+eS2pnJv8VhxmLPAHbvXUsjo8ntXkd2
+         s5bygdWGABXwA==
+Date:   Mon, 22 Nov 2021 08:41:13 +0100
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        George Cherian <gcherian@marvell.com>,
+        Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: Remove Netlogic bindings
+Message-ID: <YZtJme/3TEOxBVl3@ninjato>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
+        Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        George Cherian <gcherian@marvell.com>,
+        Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org
+References: <20211109161707.2209170-1-robh@kernel.org>
 MIME-Version: 1.0
-References: <20211121165642.27883-1-joey.gouly@arm.com>
-In-Reply-To: <20211121165642.27883-1-joey.gouly@arm.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 22 Nov 2021 01:15:47 +0100
-Message-ID: <CACRpkdbbj_PapRXYv61Dt8369_qqQx97t3o=FyFUY7s1ThytMA@mail.gmail.com>
-Subject: Re: [PATCH v2 00/11] pinctrl: apple: misc fixes from post-commit review
-To:     Joey Gouly <joey.gouly@arm.com>
-Cc:     linux-gpio@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Hector Martin <marcan@marcan.st>, nd@arm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="XZBCKHgU11ItvwWY"
+Content-Disposition: inline
+In-Reply-To: <20211109161707.2209170-1-robh@kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Joel,
 
-On Sun, Nov 21, 2021 at 5:57 PM Joey Gouly <joey.gouly@arm.com> wrote:
+--XZBCKHgU11ItvwWY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Here's a series of small fixes that Andy made comments about, after the driver
-> was already in the pinctrl tree.
+On Tue, Nov 09, 2021 at 10:17:07AM -0600, Rob Herring wrote:
+> Support for Netlogic was removed in commit 95b8a5e0111a ("MIPS: Remove
+> NETLOGIC support"). Remove the now unused bindings.
+>=20
+> The GPIO binding also includes "brcm,vulcan-gpio", but it appears to be
+> unused as well as Broadcom Vulkan became Cavium ThunderX2 which is ACPI
+> based.
+>=20
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+> Cc: George Cherian <gcherian@marvell.com>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: linux-gpio@vger.kernel.org
+> Cc: linux-i2c@vger.kernel.org
+> Cc: linux-spi@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-I tried to apply this on the pinctrl tree based on v5.16-rc1, have you tested
-this?
+Acked-by: Wolfram Sang <wsa@kernel.org> # for I2C
 
-It didn't work for me :(
+--XZBCKHgU11ItvwWY
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Can you try to rebase to v5.16-rc1 so this can go in as non urgent fixes
-for v5.17?
+-----BEGIN PGP SIGNATURE-----
 
-Yours,
-Linus Walleij
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmGbSZkACgkQFA3kzBSg
+KbbFTQ//WZUp3eYt6NdLKHHEYSr3OSZTJUWKoTi9oPPq2qjKowqcKE8I3bNPqdq+
+OEXvxEQKCe008GcFByplZitwmV/zGJSJBgjUgnnEfwo+QTPcYEzb7waEJgEur4wu
+xUni8WlOkzxpfq7c6pgQN5h2VgzOz+Fe1uLVcoyZzlm4Jdwo7HlOsNLpysuQaeyg
+xp5LYHGHTjlCgt6XCtJnpGTpsiITQMY7aH+lU+yFDUdhIpsEq95kIbR4+OsTlodS
+BQvz/q5bl4GS6g/SalnAkWNrz+dr0VVT9M0J18o7LNsJTXb2cByYBWuLDmHyfi1i
+X2vB2mdn865u/3GAi67wpGXxZ1ZVS79UesPsfvzVBWPrp2hUp7cztV3PQhFGPfGw
+EzfbzldiUyS43IRdhUwbScz5DentHg5UnPwHtcEU/Usvojy8D5O2h7Pai8heI5F/
+9Jig2zKzHRQsaOItyea2eVQZlSAUxSIm0YY8B91LPCcrGF5fvNbx6tT4JDf+1W5I
+q3cY1dUTIBbrCCu1to/UAqsDRMwUEdoJanfILL2r9pLThKr9xS5nSF2qQmDx5gwB
+DgLg9R9AQ/zKTV9HW9MbNA6hKM8ECiiNdGEbH2eQlSLN84dAEJj1SO7jCJqc62DG
+nn5fNwuw1veaFttwNuvhfJFSRHrGfAlyQTZhQmcx9ofaWOFXm38=
+=Rl8m
+-----END PGP SIGNATURE-----
+
+--XZBCKHgU11ItvwWY--
