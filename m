@@ -2,110 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6FDA745931F
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Nov 2021 17:34:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C4BF45942E
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Nov 2021 18:45:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235754AbhKVQhr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 Nov 2021 11:37:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46624 "EHLO
+        id S240297AbhKVRsh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 Nov 2021 12:48:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230406AbhKVQhr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Nov 2021 11:37:47 -0500
-Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DD44C061574;
-        Mon, 22 Nov 2021 08:34:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sipsolutions.net; s=mail; h=Content-Transfer-Encoding:MIME-Version:
-        Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-        Resent-Cc:Resent-Message-ID; bh=kqBhSMWa3sOnZM39EObYBhGUKcC3oHWInrKZjV+i2aU=;
-        t=1637598880; x=1638808480; b=Vd8FhQmL61Y0EvCjXGWm8kG0KApfp/fZYqaIlYxLVXwe81z
-        ZOLVBFrXpjc1zjnQ42HuW4+1Y7vddCDBHaMVJ05M6a1Ho+movW3tYyrEZJL7Zx3GT0FQb+wxzt2OQ
-        zK51IhXzPgwLGlVQEiHPRU4p4CA2f54T6c/hpHY6H47T9awIhWE7f/wgBVviQUqN7kU7OX45CQJIA
-        hrQeaxvbmtUgFMam8WSqjMr5FcrDGAYMIh6JeLBOltFlknrN/3tgCamZn6QebQgzIcrzCL7p+F9Ph
-        PSqAhv0IcgdteNCDpYFCUbjDj2U/6dnqJiQEb6B/HOO1yFfv7eksixE/TsWih0PA==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.95)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1mpCFL-001MvE-3o;
-        Mon, 22 Nov 2021 17:32:47 +0100
-Message-ID: <01b44b38c087c151171f8d45a2090474c2559306.camel@sipsolutions.net>
-Subject: Re: [PATCH 01/17] bitfield: Add non-constant field_{prep,get}()
- helpers
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Tony Lindgren <tony@atomide.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Paul Walmsley <paul@pwsan.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Tero Kristo <kristo@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
-        Benoit Parrot <bparrot@ti.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Ping-Ke Shih <pkshih@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Keerthy <j-keerthy@ti.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
-        alsa-devel@alsa-project.org
-Date:   Mon, 22 Nov 2021 17:32:43 +0100
-In-Reply-To: <3a54a6703879d10f08cf0275a2a69297ebd2b1d4.1637592133.git.geert+renesas@glider.be>
-References: <cover.1637592133.git.geert+renesas@glider.be>
-         <3a54a6703879d10f08cf0275a2a69297ebd2b1d4.1637592133.git.geert+renesas@glider.be>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.1 (3.42.1-1.fc35) 
+        with ESMTP id S240509AbhKVRs3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Nov 2021 12:48:29 -0500
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 020F5C061714
+        for <linux-gpio@vger.kernel.org>; Mon, 22 Nov 2021 09:45:22 -0800 (PST)
+Received: by mail-ed1-x533.google.com with SMTP id g14so80618294edb.8
+        for <linux-gpio@vger.kernel.org>; Mon, 22 Nov 2021 09:45:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=dcw+Rz/hUeKmQgOK5oiXMwiGgX0oy7PQUINQwMOxCY8=;
+        b=BlgvDQH69bLeIDNLp3CJ9+gkLC1KFeaCn8kRENAkbp8fLA5GIZsDI2piwmFZGkXoux
+         02M6TVZHkh4JbQGtButkeOdM5SAtxVohViSYF7MFJVwqYJu8swpenyLDhuRGgAwXb7mC
+         0FSHM7TuQtpKLajFiK6YEXq8GIEybOQziIHDO/lIVpvFhKRuILd6J6mw48TVKB6Ysupw
+         QloDGBAEDtwA52Ya7nI4ONqhxivaH4sVDU8ysTaP4YUyyhpUViwtFP4AR7faWj4uZJlW
+         OzZNoyigCH01/Y1aB5safJSC4nFvAfNyYycTL2TCb3KQIGjF7w1+Q93EaHKN5wDJTKS9
+         PjIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=dcw+Rz/hUeKmQgOK5oiXMwiGgX0oy7PQUINQwMOxCY8=;
+        b=lNt0Ijpld9IJnMmtAj7TpktA5tNQsQDZcSNF1zSFUrRHORUHsA5rexZQ0NjsF3XsJT
+         U+dYFISBZ2McJHbrb8YcuqCaL5MmVIQlqwrRVFTXtgIW982lDk7UpddcHNCPKhv/Nzr8
+         O9Pw4MspYBhA/f2YFnuJ5UDsJhD7h4eKZPTIBNqsKO7KHgstYSqGy7fnOZqVh9ZO4raS
+         w/a2J0zrysrpt03g8WDQaynuPJoRH+7x5fHMCrOu6yj4KAx5uNh+du7hU5a/S8WSKgiM
+         xZABXQnsYY7lk+iT+c66oh1urA/VDSBdVUSJa3NqemKw8kC5pdBd7yyxebVvItQ5gQ6j
+         cTYQ==
+X-Gm-Message-State: AOAM532YEkTXaowbz/c2uKOTYXIiteFbZUvlgYa8LRS9xJSGPEKcU8in
+        skAEYXg/kO5G5udVnHwBsXVAD7iUqmWlHB/CjCw=
+X-Google-Smtp-Source: ABdhPJwQEGwr2CeQkVn/dgb5EoJ8AD/RCcgLChenbMrxtz51gmW2fThdxO1a+YwU0SlCzSqEH/ZxI6vNWDKnu2M2CLQ=
+X-Received: by 2002:a17:906:a041:: with SMTP id bg1mr41928822ejb.470.1637603120443;
+ Mon, 22 Nov 2021 09:45:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-malware-bazaar: not-scanned
+Received: by 2002:a17:906:4fd1:0:0:0:0 with HTTP; Mon, 22 Nov 2021 09:45:19
+ -0800 (PST)
+Reply-To: lisshuuu1@gmail.com
+From:   MS LISA HUGH <safi.kabore360@gmail.com>
+Date:   Mon, 22 Nov 2021 18:45:19 +0100
+Message-ID: <CAAoJS395zL7n+fTwqHogLq44oohT16dK78e9y2OVx6kCP-eZ3Q@mail.gmail.com>
+Subject: HOPE YOU UNDERSTAND MY EMAIL?( Ms Lisa)
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 2021-11-22 at 16:53 +0100, Geert Uytterhoeven wrote:
-> The existing FIELD_{GET,PREP}() macros are limited to compile-time
-> constants.  However, it is very common to prepare or extract bitfield
-> elements where the bitfield mask is not a compile-time constant.
-> 
+Dear Friend,
 
-I'm not sure it's really a good idea to add a third API here?
+I am Ms Lisa Hugh, work in the department of Audit and accounting
+manager here in the Bank.
 
-We have the upper-case (constant) versions, and already
-{u32,...}_get_bits()/etc.
+Please i need your assistance for the transferring of this fund to
+your bank account for both  of us benefit for life time investment,
 
-Also, you're using __ffs(), which doesn't work for 64-bit on 32-bit
-architectures (afaict), so that seems a bit awkward.
+I have every inquiry details to make the bank believe you and release
+the fund in within 5
 
-Maybe we can make {u32,...}_get_bits() be doing compile-time only checks
-if it is indeed a constant? The __field_overflow() usage is already only
-done if __builtin_constant_p(v), so I guess we can do the same with
-__bad_mask()?
+banking working days with your full co-operation with me for success.
 
-johannes
+Below information is what i need from you so will can be reaching each other
+
+1)Private telephone number for communication............
+2)Age.............
+3)Country..........
+4)Occupation........
+
+Thanks.
+
+Ms Lisa Hugh,
