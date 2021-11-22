@@ -2,123 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AB37458D43
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Nov 2021 12:20:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 09F7D458DA6
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Nov 2021 12:43:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232727AbhKVLX6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 Nov 2021 06:23:58 -0500
-Received: from mga06.intel.com ([134.134.136.31]:41952 "EHLO mga06.intel.com"
+        id S239167AbhKVLqN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 Nov 2021 06:46:13 -0500
+Received: from www.zeus03.de ([194.117.254.33]:52174 "EHLO mail.zeus03.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229516AbhKVLX5 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 22 Nov 2021 06:23:57 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10175"; a="295577131"
-X-IronPort-AV: E=Sophos;i="5.87,254,1631602800"; 
-   d="scan'208";a="295577131"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2021 03:20:51 -0800
-X-IronPort-AV: E=Sophos;i="5.87,254,1631602800"; 
-   d="scan'208";a="674029881"
-Received: from smile.fi.intel.com ([10.237.72.184])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2021 03:20:50 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1mp7NN-009Pk1-MS;
-        Mon, 22 Nov 2021 13:20:45 +0200
-Date:   Mon, 22 Nov 2021 13:20:45 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        id S233502AbhKVLqN (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 22 Nov 2021 06:46:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=k1; bh=PnCEnaUq3vutr+dPiGSuA0WqLJ48
+        BXfWQsyovlkEAsc=; b=iDmohpgz9tJYZIe8T/HCQjycGKzsSE5TFhnU88yoB2Eh
+        A7b3Ue6FShneOO8mnAkQ32en8OYd92zxskknXm5L5pgY6ayZLrE9ZPowJjLb20Gr
+        dO/XWPe5FXF7RDXf9S+NILjdSU8An2RzeSAvwMnl6X5X77vvEVnqECnpdTkw3nE=
+Received: (qmail 782451 invoked from network); 22 Nov 2021 12:43:04 +0100
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 22 Nov 2021 12:43:04 +0100
+X-UD-Smtp-Session: l3s3148p1@Xy64IF/ROt0gAwDPXwnCAFkDAkP2hjT7
+Date:   Mon, 22 Nov 2021 12:43:04 +0100
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] gpiolib: check the 'ngpios' property in core
- gpiolib code
-Message-ID: <YZt9DVihGaq0kjKG@smile.fi.intel.com>
-References: <20211118132317.15898-1-brgl@bgdev.pl>
- <20211118132317.15898-2-brgl@bgdev.pl>
- <YZaH8rsMyUztOX/r@smile.fi.intel.com>
- <CAMRc=MdR_RGLLPJ5Hqetj5_7ZQfUXOijEoVp3uR7cgEDHKnchA@mail.gmail.com>
- <YZbCq5Xcohm/t/FP@smile.fi.intel.com>
- <CAMRc=MdBhm-+oDiBdYQJZXYEko8rGhZtHQfu6p3DFy_a3aJOZw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] gpio: add sloppy logic analyzer using polling
+Message-ID: <YZuCSNeT3xeKlCv7@ninjato>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20210918083307.3195-1-wsa+renesas@sang-engineering.com>
+ <20210918083307.3195-2-wsa+renesas@sang-engineering.com>
+ <CAMuHMdXYpK861-=Esa3GqjkNMAqzLBiGN5NQKpHNo5d0w=FWmQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="II7g/Il5Yng/Np5H"
 Content-Disposition: inline
-In-Reply-To: <CAMRc=MdBhm-+oDiBdYQJZXYEko8rGhZtHQfu6p3DFy_a3aJOZw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CAMuHMdXYpK861-=Esa3GqjkNMAqzLBiGN5NQKpHNo5d0w=FWmQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 19, 2021 at 08:35:33PM +0100, Bartosz Golaszewski wrote:
-> On Thu, Nov 18, 2021 at 10:16 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Thu, Nov 18, 2021 at 09:12:59PM +0100, Bartosz Golaszewski wrote:
-> > > On Thu, Nov 18, 2021 at 6:06 PM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > On Thu, Nov 18, 2021 at 02:23:17PM +0100, Bartosz Golaszewski wrote:
 
-...
+--II7g/Il5Yng/Np5H
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > > > >       if (gc->ngpio == 0) {
-> > > > > -             chip_err(gc, "tried to insert a GPIO chip with zero lines\n");
-> > > > > -             ret = -EINVAL;
-> > > > > -             goto err_free_descs;
-> > > > > +             ret = device_property_read_u32(&gdev->dev, "ngpios", &ngpios);
-> > > > > +             if (ret) {
-> > > > > +                     chip_err(gc, "tried to insert a GPIO chip with zero lines\n");
-> > > > > +                     ret = -EINVAL;
-> > > > > +                     goto err_free_descs;
-> > > > > +             }
-> > > > > +
-> > > > > +             gc->ngpio = ngpios;
-> > > > >       }
-> > > >
-> > > > This should be
-> > > >
-> > > >         if (gc->ngpio == 0) {
-> > > >                 ret = device_property_read_u32(&gdev->dev, "ngpios", &ngpios);
-> > > >                 if (ret)
-> > > >                         return ret;
-> > >
-> > > But device_property_read_u32() returning -ENODATA means there's no
-> > > such property, which should actually be converted to -EINVAL as the
-> > > caller wanting to create the chip provided invalid configuration - in
-> > > this case: a chip with 0 lines. In case of the non-array variant of
-> > > read_u32 that's also the only error that can be returned so this bit
-> > > looks right to me.
-> >
-> > So, what is so special about -EINVAL? Why -ENODATA is not good enough which
-> > will exactly explain to the caller what's going on, no?
-> >
-> 
-> Let's imagine the user sets gc->ngpio = 0 incorrectly thinking it'll
-> make gpiolib set it to some sane default. Then gpiochip_add_data()
-> returns -ENODATA (No data available). This is confusing IMO. But if we
-> convert it to -EINVAL, it now says "Invalid value" which points to the
-> wrong configuration.
-> 
-> ENODATA means "device tree property is not present" in this case but
-> the problem is that user supplies the gpiolib with invalid
-> configuration. EINVAL is the right error here.
+Hi Geert,
 
-Then be explicit, don't shadow other error codes from fwnode API.
+thanks for the review!
 
-	if (ret && ret != -ENODATA)
+> Note that this is the second posting using v2, and the previous version
+> was simultaneously v1 and v3 (branch renesas/gpio-logic-analyzer-v3).
+> Resetting version numbers may confuse people and tools (e.g. b4).
 
-> > > >                 gc->ngpio = ngpios;
-> > > >         }
-> > > >
-> > > >         if (gc->ngpio == 0) {
-> > > >                 chip_err(gc, "tried to insert a GPIO chip with zero lines\n");
-> > > >                 ret = -EINVAL;
-> > > >                 goto err_free_descs;
-> >
-> > When the caller intended to create a chip with 0 GPIOs they will get an error
-> > as you wish with an error message.
-> 
-> Yes, as it was before.
+Well, there was an "RFC v2" once but to avoid confusion, I'll go with v5
+for the next iteration. Only one thing I did not pick up for v5 yet.
 
--- 
-With Best Regards,
-Andy Shevchenko
+> > +Samples 50us at 2MHz waiting for a falling edge on channel 2. CPU and =
+instance as above:
+>=20
+> =C2=B5s
+
+I'd like to stay ASCII here because the script may run on limited
+systems without UTF8 support. Too anxious?
+
+All the best,
+
+   Wolfram
 
 
+--II7g/Il5Yng/Np5H
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmGbgkQACgkQFA3kzBSg
+KbZfiA/+KYdF+8E2WvXfTcfXxNcy9a33+/K2ttZSzx9q69G3HfL5XJr0xhJsAyib
+F+YDUNM99igIvxGMOMLDnMauVyDQwtHcG9p1M9Ua1uKREPV8qy1uTt1sBAVjTTDN
+MVaps/K/qlUYHMYYLlfWyuy4p4iCsu6GE7UAGFVxKN9Mhsw98F0a1+my2P0SC+5T
+7JYLR+QYc6pfRch7bSX+y1ossRzvufpbDRhS8gF6Xljr0aLqwOyoBW06whK7UseM
+H7NveZnj8WfQwWIH0/XdelzSDFEN+PwjyYGeUhs0AByam9ptAEbMnwiW2y01Qx7N
+3KqaO9EWJZq52wv7VwqzPZf77oLoOGzkfTcNle530UyEvhJkJEOIzMpt3tR5U0a8
+Anu3ETkdDnLSCiYpeEVRc8KD6bJcflHMQdEHmCODE4EjLbUzKQlQeOlxs5u1CIZ5
+22oipOZBnQIe/Xw+L1rIHJkbEgAf0IDnhzVKDwQDadDunlgrRvqSfo2AAwdphsVM
+1NkFY9JR4yI9ZyURTntkV1N7NilOx6zR8kPc3jzopVBYX1bPbszW9TTx3NCAe35w
+feIP2dTSU6n7gX1tx0LsexWD3jxJRvPIDxG3IlsSx23Jv+2c9MHut4yuO3GIkeoE
+A+ksDvEP1yGt6hRxYGX8G1LEhP3bczm/Qjbn1lf+NSenAiGco8M=
+=OdU3
+-----END PGP SIGNATURE-----
+
+--II7g/Il5Yng/Np5H--
