@@ -2,148 +2,178 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E0684599DA
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Nov 2021 02:52:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 34204459A60
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Nov 2021 04:13:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232408AbhKWBz4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 Nov 2021 20:55:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60720 "EHLO
+        id S232134AbhKWDQt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 Nov 2021 22:16:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232143AbhKWBzz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Nov 2021 20:55:55 -0500
-Received: from mail-io1-xd30.google.com (mail-io1-xd30.google.com [IPv6:2607:f8b0:4864:20::d30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8714AC061756
-        for <linux-gpio@vger.kernel.org>; Mon, 22 Nov 2021 17:52:48 -0800 (PST)
-Received: by mail-io1-xd30.google.com with SMTP id c3so25958063iob.6
-        for <linux-gpio@vger.kernel.org>; Mon, 22 Nov 2021 17:52:48 -0800 (PST)
+        with ESMTP id S229998AbhKWDQs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Nov 2021 22:16:48 -0500
+Received: from mail-qv1-xf33.google.com (mail-qv1-xf33.google.com [IPv6:2607:f8b0:4864:20::f33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25833C061574;
+        Mon, 22 Nov 2021 19:13:41 -0800 (PST)
+Received: by mail-qv1-xf33.google.com with SMTP id jo22so13914720qvb.13;
+        Mon, 22 Nov 2021 19:13:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ieee.org; s=google;
+        d=gmail.com; s=20210112;
         h=message-id:date:mime-version:user-agent:subject:content-language:to
          :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=7Oi7YYe6mXZ9qFhiItC3cT+zBCj+1FGQIOXFSu9z5Og=;
-        b=EMJHfp61byAPVM0d+YSPglX9cQhq+7ayPyr9zRTzuSPcvvgnxyLMG1ltK8vjfaD0FU
-         tlPYxbO7NtBZeDgMPNcJJoHVx+Je8+bWQnN+DVWW1NrLrqmC5gQjAph9/LWH4uiuxcYY
-         wd41pmLNfefVdVvVpoPO9twaon39sVO4IspOU=
+        bh=Sy7JaU2EDn5D2wYuyqGh4o1BUOWyto7RBqAd1Ba53AU=;
+        b=lVp7SmTyo4bC69l84XIYCHz429co3+/tXnqFK2KvZYRvxj033ZXlq4sMn3O909lClG
+         +N+9j3w1xiNNav8B0rlgJcmcOdN68BneiSvVDGyU09Um+v1tbjGePFsIhd7/EToH7l8J
+         HUD23gTBNqiq5XGH66V6+U9Ka0g1iOPSgLkdLuJWraWOUtPu0XpNwBLK8f/pPICHEY/8
+         006+EwPmVljhmm7lIvtfzCbXZ4PK7f2yJdvf/SaM9he1ethAi5EPThqtU/PG3q7fuYLs
+         3LiLGCqaSXLSSeq91QI5QDT/1d45+OGepRTlfdUwE2zJHML/yiOB5cEESjb8mWKcgH4Z
+         Ie/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=7Oi7YYe6mXZ9qFhiItC3cT+zBCj+1FGQIOXFSu9z5Og=;
-        b=j1xTqRftcmu4hk6AIIl2NtGeuygeKzenG2RvIR0O8/6JPvT/EPgCS5WNWKg6r3UjYU
-         Xt9nc0Fesmb2wT/uo+u2Q/mgJI1L8YLbfxUaOZM95apV3bnS9BJcRH0QlAzBIQuEAqNn
-         e31hOMqNqwauzr2OLt/6p37C+0PQ2JYTvaGHAaDZNMbRCKArLxayAxgLmA4hBVzKk/Xd
-         ji30cKQIcjnd+Z9PGoy0H3vOvzJEzcaU9Pb9a8/YQHiClp2HawcDfW6keF6KwBhqz35Q
-         +lcAc8MdiPNRgpsG9VCMG5Yy4hlpTEKXzbYN7glTmcH18tE6S0kspOZVMBSdwOFgyXm9
-         KgjA==
-X-Gm-Message-State: AOAM530qmCNAq+H9BM1UsUnIMAuvYFt8w2Ir6h1vmi9OB2eGOVS489OF
-        o/qvK3XHTiZ4AUSbxsd3wkTeHA==
-X-Google-Smtp-Source: ABdhPJwFYEXqq9O3YpMuHp49czIlbhiXDJHljcLoM+vErOaDm/O2cJ+JlOI+DmxoJkJ4K5f7Ve5+nA==
-X-Received: by 2002:a05:6638:14ca:: with SMTP id l10mr1120728jak.107.1637632367373;
-        Mon, 22 Nov 2021 17:52:47 -0800 (PST)
-Received: from [172.22.22.4] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.googlemail.com with ESMTPSA id d137sm6102931iof.16.2021.11.22.17.52.44
+        bh=Sy7JaU2EDn5D2wYuyqGh4o1BUOWyto7RBqAd1Ba53AU=;
+        b=Snq4lmmuu6J1t2+M1MBT3mwgexmN3JRMLHC6DoS6YLHmWutY/WolPUpzZ7xI1ELTVn
+         hnykpTCm+uAZkO7g13EXwnwJo1tVkI44LZ9gX4DotSanswElE4D+clKjPHoiYbIKNdxZ
+         UoR/kItrBCNRrZu9VyRgXbNlFN8Ys2fCz/vFfbqWGPy+B7eozioMlIXSICKxxJCU5xoB
+         TKmLM9z0AWPbk0+lVyZQr1q5VUlwqi/5KJ9wkzEpqS0rhFlQzsaNLaVBWXsVbb4gKvDJ
+         1D/mF6hpaKFRnLHvL567n49WuSaH0i3/RO4su2XgTulIeAM+/AfQtSrzoV1TtgADpg1P
+         JXLw==
+X-Gm-Message-State: AOAM533HR0TQRUkmqGu2ryVyiowabPFUe30mQRFqlduarAtIcLtjfwj9
+        hCvo0jy3EQuIvqheO3qPc4Y=
+X-Google-Smtp-Source: ABdhPJxtys1Np0ntBaXrohAUw6BXAy5s++dHp2Us2B8HDqjYlTZcDXxEGJseqdiYfXGmvv6z/n3M5w==
+X-Received: by 2002:a05:6214:2427:: with SMTP id gy7mr2449608qvb.38.1637637220347;
+        Mon, 22 Nov 2021 19:13:40 -0800 (PST)
+Received: from [10.4.10.38] (146-115-144-188.s4282.c3-0.nwt-cbr1.sbo-nwt.ma.cable.rcncustomer.com. [146.115.144.188])
+        by smtp.gmail.com with ESMTPSA id j126sm5502755qke.103.2021.11.22.19.13.38
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Nov 2021 17:52:47 -0800 (PST)
-Message-ID: <5936f811-fa48-33e9-2a1a-66c68f74aa5e@ieee.org>
-Date:   Mon, 22 Nov 2021 19:52:43 -0600
+        Mon, 22 Nov 2021 19:13:39 -0800 (PST)
+Message-ID: <9bcb9068-25f5-edfb-98a0-92a7e9cc1909@gmail.com>
+Date:   Mon, 22 Nov 2021 22:13:37 -0500
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.1
-Subject: Re: [PATCH 01/17] bitfield: Add non-constant field_{prep,get}()
- helpers
+ Thunderbird/91.3.0
+Subject: Re: [PATCH v2 11/13] mmc: sdhci-esdhc-imx: Add sdhc support for
+ i.MXRT series
 Content-Language: en-US
-To:     Johannes Berg <johannes@sipsolutions.net>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Tony Lindgren <tony@atomide.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Paul Walmsley <paul@pwsan.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Tero Kristo <kristo@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
-        Benoit Parrot <bparrot@ti.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Ping-Ke Shih <pkshih@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Keerthy <j-keerthy@ti.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
-        alsa-devel@alsa-project.org
-References: <cover.1637592133.git.geert+renesas@glider.be>
- <3a54a6703879d10f08cf0275a2a69297ebd2b1d4.1637592133.git.geert+renesas@glider.be>
- <01b44b38c087c151171f8d45a2090474c2559306.camel@sipsolutions.net>
-From:   Alex Elder <elder@ieee.org>
-In-Reply-To: <01b44b38c087c151171f8d45a2090474c2559306.camel@sipsolutions.net>
+To:     Bough Chen <haibo.chen@nxp.com>, dl-linux-imx <linux-imx@nxp.com>
+Cc:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "stefan@agner.ch" <stefan@agner.ch>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "arnd@arndb.de" <arnd@arndb.de>, "olof@lixom.net" <olof@lixom.net>,
+        "soc@kernel.org" <soc@kernel.org>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+        "jirislaby@kernel.org" <jirislaby@kernel.org>,
+        "giulio.benetti@benettiengineering.com" 
+        <giulio.benetti@benettiengineering.com>,
+        "nobuhiro1.iwamatsu@toshiba.co.jp" <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
+References: <20211102225701.98944-1-Mr.Bossman075@gmail.com>
+ <20211102225701.98944-12-Mr.Bossman075@gmail.com>
+ <DB7PR04MB401021F7155E723194BA857E908C9@DB7PR04MB4010.eurprd04.prod.outlook.com>
+From:   Jesse Taube <mr.bossman075@gmail.com>
+In-Reply-To: <DB7PR04MB401021F7155E723194BA857E908C9@DB7PR04MB4010.eurprd04.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 11/22/21 10:32 AM, Johannes Berg wrote:
-> On Mon, 2021-11-22 at 16:53 +0100, Geert Uytterhoeven wrote:
->> The existing FIELD_{GET,PREP}() macros are limited to compile-time
->> constants.  However, it is very common to prepare or extract bitfield
->> elements where the bitfield mask is not a compile-time constant.
+
+
+On 11/2/21 22:19, Bough Chen wrote:
+>> -----Original Message-----
+>> From: Jesse Taube [mailto:mr.bossman075@gmail.com]
+>> Sent: 2021年11月3日 6:57
+>> To: dl-linux-imx <linux-imx@nxp.com>
+>> Cc: mturquette@baylibre.com; sboyd@kernel.org; robh+dt@kernel.org;
+>> shawnguo@kernel.org; s.hauer@pengutronix.de; kernel@pengutronix.de;
+>> festevam@gmail.com; ulf.hansson@linaro.org; Aisheng Dong
+>> <aisheng.dong@nxp.com>; stefan@agner.ch; linus.walleij@linaro.org;
+>> gregkh@linuxfoundation.org; arnd@arndb.de; olof@lixom.net;
+>> soc@kernel.org; linux@armlinux.org.uk; Abel Vesa <abel.vesa@nxp.com>;
+>> adrian.hunter@intel.com; jirislaby@kernel.org;
+>> giulio.benetti@benettiengineering.com; nobuhiro1.iwamatsu@toshiba.co.jp;
+>> Mr.Bossman075@gmail.com; linux-clk@vger.kernel.org;
+>> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+>> linux-kernel@vger.kernel.org; linux-mmc@vger.kernel.org;
+>> linux-gpio@vger.kernel.org; linux-serial@vger.kernel.org; Jesse Taube
+>> <mr.bossman075@gmail.com>
+>> Subject: [PATCH v2 11/13] mmc: sdhci-esdhc-imx: Add sdhc support for
+> i.MXRT
+>> series
 >>
+>> From: Jesse Taube <mr.bossman075@gmail.com>
+>>
+>> Add support for i.MXRT1050's sdhc.
+>>
+>> Cc: Giulio Benetti <giulio.benetti@benettiengineering.com>
+>> Signed-off-by: Jesse Taube <Mr.Bossman075@gmail.com>---
+>> V1->V2:
+>> * Nothing done
+>> ---
+>>   drivers/mmc/host/sdhci-esdhc-imx.c | 7 +++++++
+>>   1 file changed, 7 insertions(+)
+>>
+>> diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c
+>> b/drivers/mmc/host/sdhci-esdhc-imx.c
+>> index afaf33707d46..c852a6df5611 100644
+>> --- a/drivers/mmc/host/sdhci-esdhc-imx.c
+>> +++ b/drivers/mmc/host/sdhci-esdhc-imx.c
+>> @@ -305,6 +305,12 @@ static struct esdhc_soc_data usdhc_imx7ulp_data = {
+>>   			| ESDHC_FLAG_PMQOS | ESDHC_FLAG_HS400
+>>   			| ESDHC_FLAG_STATE_LOST_IN_LPMODE,
+>>   };
+>> +static struct esdhc_soc_data usdhc_imxrt_data = {
+>> +	.flags = ESDHC_FLAG_USDHC | ESDHC_FLAG_MAN_TUNING
+>> +			| ESDHC_FLAG_HS200 | ESDHC_FLAG_ERR004536
+>> +			| ESDHC_FLAG_BROKEN_AUTO_CMD23,
+>> +};
+>> +
 > 
-> I'm not sure it's really a good idea to add a third API here?
+> Hi Jesse,
+> 	I have few question here.
+> 	Why only use manual tuning here? Does this usdhc don't support
+> standard tuning? or meet any issue when use standard tuning?
+No std tuning works, so does cmd23, i changed it to use them.
+> 	Please also double check why not use ADMA in default? Any issue
+> found?
+Yes this is the output with ADMA:
+[0.00] mmc0: Unable to allocate ADMA buffers - falling back to standard DMA
+NOTE: I did not look into why this occurs.
+> 	
 > 
-> We have the upper-case (constant) versions, and already
-> {u32,...}_get_bits()/etc.
-
-I've used these a lot (and personally prefer the lower-case ones).
-
-Your new macros don't do anything to ensure the field mask is
-of the right form, which is basically:  (2 ^ width - 1) << shift
-
-I really like the property that the field mask must be constant.
-
-That being said, I've had to use some strange coding patterns
-in order to adhere to the "const only" rule in a few cases.
-So if you can come up with a satisfactory naming scheme I'm
-all for it.
-
-					-Alex
-
-
-
-> Also, you're using __ffs(), which doesn't work for 64-bit on 32-bit
-> architectures (afaict), so that seems a bit awkward.
+> Best Regards
+> Haibo Chen
+>>
+>>   static struct esdhc_soc_data usdhc_imx8qxp_data = {
+>>   	.flags = ESDHC_FLAG_USDHC | ESDHC_FLAG_STD_TUNING @@ -357,6
+>> +363,7 @@ static const struct of_device_id imx_esdhc_dt_ids[] = {
+>>   	{ .compatible = "fsl,imx7ulp-usdhc", .data = &usdhc_imx7ulp_data, },
+>>   	{ .compatible = "fsl,imx8qxp-usdhc", .data = &usdhc_imx8qxp_data, },
+>>   	{ .compatible = "fsl,imx8mm-usdhc", .data = &usdhc_imx8mm_data, },
+>> +	{ .compatible = "fsl,imxrt-usdhc", .data = &usdhc_imxrt_data, },
+>>   	{ .compatible = "nxp,s32g2-usdhc", .data = &usdhc_s32g2_data, },
+>>   	{ /* sentinel */ }
+>>   };
+>> --
+>> 2.33.1
 > 
-> Maybe we can make {u32,...}_get_bits() be doing compile-time only checks
-> if it is indeed a constant? The __field_overflow() usage is already only
-> done if __builtin_constant_p(v), so I guess we can do the same with
-> __bad_mask()?
-> 
-> johannes
-> 
-
