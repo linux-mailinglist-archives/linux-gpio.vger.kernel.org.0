@@ -2,155 +2,352 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CDD4E45AB4F
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Nov 2021 19:34:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 465BB45AB71
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Nov 2021 19:47:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239832AbhKWShk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 Nov 2021 13:37:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35934 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239737AbhKWShj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Nov 2021 13:37:39 -0500
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40E0EC061574
-        for <linux-gpio@vger.kernel.org>; Tue, 23 Nov 2021 10:34:31 -0800 (PST)
-Received: by mail-ed1-x52e.google.com with SMTP id w1so96193043edc.6
-        for <linux-gpio@vger.kernel.org>; Tue, 23 Nov 2021 10:34:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rUttVp0qcoQ3onsU7kDiVqOGMVslqvMygVqIh78XJp8=;
-        b=Jif420f54xa20GI6tGxJz0I4+R5sR/iB7WDpgw9fjVPVjhau8QjrkB52Du9+SdCrsN
-         o76E5S5PB5Y4iIJDlh7HuHXqu16tlw8uSnO1UheitynUAmqddZUngIp1BV1w2CovHNf0
-         5ElTIZVavJ/lDDTY9wCiOCk9kTEz9KHyTazz4gkSSRHdrHR8J4CEjmDkvDXcMtL2+eLg
-         5ly3vFAdJzfaQLKMCirzWuVkJcKlIbPPXrIxf7iVAUfui2sYrMccJ5iFxKBl3VMNuIr/
-         TCqwBugflhWjXDenMLBU7g6xpqT2oNUJ2TrxgSP6jKSsBR+M3ipOa+LciJaWkiYNvtXJ
-         9qbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rUttVp0qcoQ3onsU7kDiVqOGMVslqvMygVqIh78XJp8=;
-        b=4Yv3FbzMOf3JBXRK/CvFKBVDEdXgbiloLGEdKscAVOqAPb5yoNDPRbXxuMq85Mk4sN
-         llEAj8M3tP72V1aUOBxUH5wd+dy6pHOSruCOqRGMOBg4g4DLd51chD7mwafos8A/D/bE
-         No83dzfbkWwdVWk6Wo8syWqPvdgPuh2UMrNEHCXwF3HgSNwy1H/tBnesuydAiJp8KLjo
-         0AE0XswwjZmefK495X5R1eG9n2Bbs/zvK/YoH54TqfygEB6FSPMBrdkzM25IHStm3CP5
-         siDC7lLy1qub4AOFsVzHGYRD2FsV/ihGmy2vR6apOu3wR38MbPp/O3JoLa88Yx0BOSES
-         peQg==
-X-Gm-Message-State: AOAM533SM4MWNhEfXcBy0iVlIpyRQa75Tfi0fCmQ1K8TZcUbD/IxXPEQ
-        6p6A4eID2hRmGFTiwW6EnKGfo1xSipOzwILvm20Af86uap/cI0Ws
-X-Google-Smtp-Source: ABdhPJwbG8101uPiXTB6tjJwbxAKKHFawm2+YtbrETxJtUZ5plM3zsECTNo4IN4XyxW9VHkj9yh5/9+HEAS+Z3ExJLo=
-X-Received: by 2002:a50:ef02:: with SMTP id m2mr12478903eds.172.1637692469792;
- Tue, 23 Nov 2021 10:34:29 -0800 (PST)
+        id S237313AbhKWSu2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 Nov 2021 13:50:28 -0500
+Received: from mga01.intel.com ([192.55.52.88]:33936 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234139AbhKWSu2 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 23 Nov 2021 13:50:28 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10177"; a="258977198"
+X-IronPort-AV: E=Sophos;i="5.87,258,1631602800"; 
+   d="scan'208";a="258977198"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2021 10:46:01 -0800
+X-IronPort-AV: E=Sophos;i="5.87,258,1631602800"; 
+   d="scan'208";a="674590629"
+Received: from smile.fi.intel.com ([10.237.72.184])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2021 10:45:58 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1mpanj-009s1P-3i;
+        Tue, 23 Nov 2021 20:45:55 +0200
+Date:   Tue, 23 Nov 2021 20:45:54 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v5 1/1] gpio: add sloppy logic analyzer using polling
+Message-ID: <YZ024q/r7Hc3TpMt@smile.fi.intel.com>
+References: <20211123164902.35370-1-wsa+renesas@sang-engineering.com>
+ <20211123164902.35370-2-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
-References: <CAEdwc-Qm8hqvJhVLWeqLDYGL2mtH7S=TH=pwhzb5T-nMGD_ugw@mail.gmail.com>
- <CAMRc=McOuJkAFg02+HWDtTxOYm+5io994G8AafnxY32eJJi4+g@mail.gmail.com> <CAEdwc-TS-yTdgg+sLag10jCT+O4H_m4sMANX6mg5oxsTRir8EA@mail.gmail.com>
-In-Reply-To: <CAEdwc-TS-yTdgg+sLag10jCT+O4H_m4sMANX6mg5oxsTRir8EA@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 23 Nov 2021 19:34:19 +0100
-Message-ID: <CAMRc=Mdgk9hhKgznaH3ftmXNmLORAzrtVr7gE-qr7U6EpjtuFQ@mail.gmail.com>
-Subject: Re: Confused as to what is going on with libgpiod v2
-To:     Thomas Williams <thomas.hugo.williams@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211123164902.35370-2-wsa+renesas@sang-engineering.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 22, 2021 at 11:47 PM Thomas Williams
-<thomas.hugo.williams@gmail.com> wrote:
->
-> Hi Bart,
->
-> Thank you for responding.
->
-> > > Sorry, horribly newbie questions and if I should be asking it
-> > > somewhere else then please tell me.
-> >
-> > Hi Thomas! No, that's perfectly fine.
->
-> That's good because I've been watching the traffic and it mostly seems
-> to be reviews for code that is almost, but not quite, entirely unlike
-> what I'm interested in. I'm guessing I'm either not looking hard
-> enough or that it is for the kernel level implementations below the
-> libgpiod API? - note that I've never had to deal with kernel level
-> Linux development before, I'm an applications developer IRL.
->
+On Tue, Nov 23, 2021 at 05:49:02PM +0100, Wolfram Sang wrote:
+> This is a sloppy logic analyzer using GPIOs. It comes with a script to
+> isolate a CPU for polling. While this is definitely not a production
+> level analyzer, it can be a helpful first view when remote debugging.
+> Read the documentation for details.
 
-The linux-gpio mailing list is mostly for kernel development but as
-libgpiod lives closes to the kernel, it's developed here too.
+...
 
-> > > 1. Have there been any releases of libgpiod v2 ? I can't see any tags
-> > > in the git repo later than v1.6.
-> >
-> > Nope, libgpiod v2 is under development and will probably still be so
-> > for a while.
->
-> OK.
->
-> Could you explain what gives with something like this then:
-> https://packages.debian.org/buster/libgpiod2 which advertises itself
-> as "libgpiod2", but on closer inspection says version 1.2-3, which I
-> assume is the corresponding version number here:
-> https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/
->
-> Are libgpiod2 and libgpiod v2 referring to different meanings of "2" ?
->
+> +Result is a .sr file to be consumed with PulseView or sigrok-cli from the free
+> +`sigrok`_ project. It is a zip file which also contains the binary sample data
+> +which may be consumed by other software. The filename is the logic analyzer
+> +instance name plus a since-epoch timestamp.
+> +
+> +.. _sigrok: https://sigrok.org/
 
-Ha! Yes they do, it's distro's packaging shenanigans! Basically the
-API version and the ABI version of libgpiod are different as we had a
-non-compatible ABI change back during v0.x.y development. Current API
-version for v1.6.x is 2.something.something. You'll see that while the
-development files and other packages are just called libgpiod on
-ubuntu and debian, the package containing the shared library is called
-libgpiod2.
+Alas, yet another tool required... (Sad thoughts since recently has installed
+PicoScope software).
 
-> > > 4. Should I even be trying to use libgpiod v2 yet ?
-> >
-> > Probably not, unless you have a good reason to (writing bindings or
-> > whatever). It's not yet stable and is about to change again soon.
->
-> LOL.
->
-> Not sure what you mean by "bindings". A friend and I are porting
+...
 
-Language bindings are libraries in high-level languages that provide
-an interface for low-level libraries. For instance: the libgpiod
-python module exposes an interface in Python for using libgpiod's C
-API.
+>     kgdb
+>     kselftest
+>     kunit/index
 
-> MMBasic, a *very* niche BASIC interpreter that is usually at home on
-> microcontrollers, to Linux. The language has an array of inbuilt
-> commands for controlling digital and analogue pins, SPI, I2C, etc. and
-> libgpiod seems like the natural match for implementing the former.
->
+> +   gpio-sloppy-logic-analyzer
 
-I can't help you with that.
+Above looks like ordered, do we need some groups here or so?
 
-> A previous (Raspberry Pi specific) attempt by another developer
-> floundered because (apocryphally) he was trying to treat the Pi as a
-> microcontroller and programming to too low a level (directly to the
-> Broadcom API) and finding that it was breaking on every O/S update. We
-> were hoping to avoid a repeat of this by relying on a higher level
-> API.
->
+...
 
-If you're using linux, then that's precisely the right approach.
+> +	mutex_lock(&priv->lock);
 
-> I imagine you are busy, but would you care to offer an opinion as to
-> whether we should persevere with API v2 (where my friend has had some
-> success) or roll-back to looking at v1.6.x, assuming that it even
-> provides everything we need ?
->
+> +	if (priv->blob_dent) {
 
-v2 API is simply not stable. At the same time I'm working hard to
-bring on the v2 release but I can't give you a timeline as I'm doing
-it in my free (hahaha... :( ) time. For current development I'd
-suggest sticking with v1.6 for now.
+Redundant (i.e. duplicate).
 
-Bart
+> +		debugfs_remove(priv->blob_dent);
+> +		priv->blob_dent = NULL;
+> +	}
 
-> Best wishes,
->
-> Tom
+...
+
+> +gpio_err:
+
+A bit confusing name. What about
+
+enable_irq_and_free_data:
+
+?
+
+> +	preempt_enable_notrace();
+> +	local_irq_enable();
+> +	if (ret)
+> +		dev_err(priv->dev, "couldn't read GPIOs: %d\n", ret);
+> +
+> +	kfree(priv->trig_data);
+> +	priv->trig_data = NULL;
+> +	priv->trig_len = 0;
+
+...
+
+> +static int gpio_la_poll_probe(struct platform_device *pdev)
+> +{
+> +	struct gpio_la_poll_priv *priv;
+> +	struct device *dev = &pdev->dev;
+> +	const char *devname = dev_name(dev);
+> +	const char *gpio_names[GPIO_LA_MAX_PROBES];
+
+> +	char *meta = NULL;
+> +	unsigned int i, meta_len = 0;
+> +	int ret;
+
+Perhaps
+
+	unsigned int i, meta_len = 0;
+	char *meta = NULL;
+	int ret;
+
+
+...
+
+> +	ret = device_property_read_string_array(dev, "probe-names", gpio_names,
+> +						priv->descs->ndescs);
+> +	if (ret >= 0 && ret != priv->descs->ndescs)
+
+> +		ret = -ENODATA;
+
+Don't remember if we already discussed this error code, but data is there,
+it's not correct. EBADSLT? EBADR? ECHRNG?
+
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret, "error naming the GPIOs");
+
+...
+
+> +	for (i = 0; i < priv->descs->ndescs; i++) {
+> +		unsigned int add_len;
+> +		char *new_meta, *consumer_name;
+> +
+> +		if (gpiod_cansleep(priv->descs->desc[i]))
+> +			return -EREMOTE;
+> +
+> +		consumer_name = kasprintf(GFP_KERNEL, "%s: %s", devname, gpio_names[i]);
+> +		if (!consumer_name)
+> +			return -ENOMEM;
+> +		gpiod_set_consumer_name(priv->descs->desc[i], consumer_name);
+> +		kfree(consumer_name);
+> +
+> +		/* '10' is length of 'probe00=\n\0' */
+> +		add_len = strlen(gpio_names[i]) + 10;
+> +
+> +		new_meta = devm_krealloc(dev, meta, meta_len + add_len, GFP_KERNEL);
+> +		if (!new_meta)
+> +			return -ENOMEM;
+> +
+> +		meta = new_meta;
+> +		meta_len += snprintf(meta + meta_len, add_len, "probe%02u=%s\n",
+> +				     i + 1, gpio_names[i]);
+
+Do we really need the 'probe%02u=' part? It's redundant since it may be derived
+from the line number of the output (and it always in [1..ndescs+1]).
+
+> +	}
+
+...
+
+> +	dev_info(dev, "initialized");
+
+Is it useful?
+
+...
+
+> +print_help()
+> +{
+> +	cat <<EOF
+
+	cat << EOF
+
+is slightly easier to read.
+
+> +EOF
+> +}
+
+...
+
+> +set_newmask()
+> +{
+> +	for f in $(find "$1" -iname "$2"); do echo "$newmask" > "$f" 2>/dev/null || true; done
+
+While here it's okay, the rule of thumb is never use `for` or `while` against
+the list of filenames.
+
+> +}
+
+...
+
+> +init_cpu()
+> +{
+> +	isol_cpu="$1"
+
+> +	[ -d $cpusetdir ] || mkdir $cpusetdir
+
+`mkdir -p` and drop needless test.
+
+> +	mount | grep -q $cpusetdir || mount -t cpuset cpuset $cpusetdir
+
+> +	[ -d "$lacpusetdir" ] || mkdir "$lacpusetdir"
+
+`mkdir -p` and drop needless test.
+
+> +	cur_cpu="$(cat "$lacpusetdir"/cpus)"
+> +	[ "$cur_cpu" = "$isol_cpu" ] && return
+> +	[ -z "$cur_cpu" ] || fail "CPU$isol_cpu requested but CPU$cur_cpu already isolated"
+> +
+> +	echo "$isol_cpu" > "$lacpusetdir"/cpus || fail "Could not isolate CPU$isol_cpu. Does it exist?"
+> +	echo 1 > "$lacpusetdir"/cpu_exclusive
+> +	echo 0 > "$lacpusetdir"/mems
+> +
+> +	oldmask=$(cat /proc/irq/default_smp_affinity)
+
+> +	val=$((0x$oldmask & ~(1 << isol_cpu)))
+> +	newmask=$(printf "%x" $val)
+
+Can be on one line (in a single expression).
+
+> +	set_newmask '/proc/irq' '*smp_affinity'
+> +	set_newmask '/sys/devices/virtual/workqueue/' 'cpumask'
+> +
+> +	# Move tasks away from isolated CPU
+> +	for p in $(ps -o pid | tail -n +2); do
+> +		mask=$(taskset -p "$p") || continue
+> +		# Ignore tasks with a custom mask, i.e. not equal $oldmask
+> +		[ "${mask##*: }" = "$oldmask" ] || continue
+> +		taskset -p "$newmask" "$p" || continue
+> +	done 2>/dev/null >/dev/null
+
+`> /dev/null 2>&1` is idiomatic. And I think there is actually a subtle
+difference between two.
+
+> +	echo 1 > /sys/module/rcupdate/parameters/rcu_cpu_stall_suppress
+> +
+> +	cpufreqgov="/sys/devices/system/cpu/cpu$isol_cpu/cpufreq/scaling_governor"
+> +	[ -w "$cpufreqgov" ] && echo 'performance' > "$cpufreqgov" || true
+> +}
+
+...
+
+> +parse_triggerdat()
+> +{
+> +	oldifs="$IFS"
+> +	IFS=','; for trig in $1; do
+> +		mask=0; val1=0; val2=0
+> +		IFS='+'; for elem in $trig; do
+> +			chan=${elem%[lhfrLHFR]}
+> +			mode=${elem#$chan}
+> +			# Check if we could parse something and the channel number fits
+
+> +			[ "$chan" != "$elem" ] && [ "$chan" -le $max_chans ] || fail "Trigger syntax error: $elem"
+
+No need to execute `test` twice:
+
+			[ "$chan" != "$elem" -a "$chan" -le $max_chans ] || fail "Trigger syntax error: $elem"
+
+> +			bit=$((1 << (chan - 1)))
+> +			mask=$((mask | bit))
+> +			case $mode in
+> +				[hH]) val1=$((val1 | bit)); val2=$((val2 | bit));;
+> +				[fF]) val1=$((val1 | bit));;
+> +				[rR]) val2=$((val2 | bit));;
+> +			esac
+> +		done
+
+> +		trigger_bindat="$trigger_bindat$(printf '\\%o\\%o' $mask $val1)"
+> +		[ $val1 -ne $val2 ] && trigger_bindat="$trigger_bindat$(printf '\\%o\\%o' $mask $val2)"
+
+`printf` with arguments may be split to a separate helper function.
+
+> +	done
+> +	IFS="$oldifs"
+> +}
+> +
+> +do_capture()
+> +{
+> +	taskset "$1" echo 1 > "$lasysfsdir"/capture || fail "Capture error! Check kernel log"
+
+Shouldn't this function setup signal TRAPs?
+
+> +	srtmp=$(mktemp -d)
+> +	echo 1 > "$srtmp"/version
+> +	cp "$lasysfsdir"/sample_data "$srtmp"/logic-1-1
+> +	cat > "$srtmp"/metadata <<EOF
+
+	cat > "$srtmp"/metadata << EOF
+
+> +[global]
+> +sigrok version=0.2.0
+> +
+> +[device 1]
+> +capturefile=logic-1
+> +total probes=$(wc -l < "$lasysfsdir"/meta_data)
+> +samplerate=${samplefreq}Hz
+> +unitsize=1
+> +EOF
+> +	cat "$lasysfsdir"/meta_data >> "$srtmp"/metadata
+> +
+> +	zipname="$outputdir/${lasysfsdir##*/}-$(date +%s).sr"
+> +	zip -jq "$zipname" "$srtmp"/*
+> +	rm -rf "$srtmp"
+> +	delay_ack=$(cat "$lasysfsdir"/delay_ns_acquisition)
+> +	[ "$delay_ack" -eq 0 ] && delay_ack=1
+> +	echo "Logic analyzer done. Saved '$zipname'"
+> +	echo "Max sample frequency this time: $((1000000000 / delay_ack))Hz."
+> +}
+> +
+> +rep=$(getopt -a -l cpu:,duration-us:,help,instance:,kernel-debug-dir:,num_samples:,output-dir:,sample_freq:,trigger: -o c:d:hi:k:n:o:s:t: -- "$@") || exit 1
+> +eval set -- "$rep"
+> +while true; do
+> +	case "$1" in
+> +	-c|--cpu) initcpu="$2"; shift;;
+> +	-d|--duration-us) duration="$2"; shift;;
+> +	-h|--help) print_help; exit 0;;
+> +	-i|--instance) lainstance="$2"; shift;;
+> +	-k|--kernel-debug-dir) debugdir="$2"; shift;;
+> +	-n|--num_samples) numsamples="$2"; shift;;
+> +	-o|--output-dir) outputdir="$2"; shift;;
+> +	-s|--sample_freq) samplefreq="$2"; shift;;
+> +	-t|--trigger) triggerdat="$2"; shift;;
+> +	--) break;;
+
+> +	*) fail "error parsing command line: $*";;
+
+$@ is better, actually one should never use $*.
+
+> +	esac
+> +	shift
+> +done
+
+...
+
+Wondering, shouldn't be a simple validator before start that we have commands
+present, such as zip?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
