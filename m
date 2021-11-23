@@ -2,105 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C66CB45A0F2
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Nov 2021 12:08:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B01345A0F8
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Nov 2021 12:08:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234842AbhKWLLU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 Nov 2021 06:11:20 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:51856 "EHLO gloria.sntech.de"
+        id S231176AbhKWLLo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 Nov 2021 06:11:44 -0500
+Received: from mga05.intel.com ([192.55.52.43]:50088 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230471AbhKWLLU (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 23 Nov 2021 06:11:20 -0500
-Received: from ip5f5b2004.dynamic.kabel-deutschland.de ([95.91.32.4] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1mpTeV-00086y-0h; Tue, 23 Nov 2021 12:07:55 +0100
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        robh+dt@kernel.org, jassisinghbrar@gmail.com,
-        paul.walmsley@sifive.com, palmer@dabbelt.com,
-        aou@eecs.berkeley.edu, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, broonie@kernel.org,
-        gregkh@linuxfoundation.org, lewis.hanly@microchip.com,
-        conor.dooley@microchip.com, daire.mcnamara@microchip.com,
-        atish.patra@wdc.com, ivan.griffin@microchip.com,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Cc:     krzysztof.kozlowski@canonical.com, geert@linux-m68k.org,
-        bin.meng@windriver.com, conor.dooley@microchip.com
-Subject: Re: [PATCH 01/13] dt-bindings: interrupt-controller: create a header for RISC-V interrupts
-Date:   Tue, 23 Nov 2021 12:07:52 +0100
-Message-ID: <272946671.hFph3VMliC@diego>
-In-Reply-To: <20211108150554.4457-2-conor.dooley@microchip.com>
-References: <20211108150554.4457-1-conor.dooley@microchip.com> <20211108150554.4457-2-conor.dooley@microchip.com>
+        id S230471AbhKWLLn (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 23 Nov 2021 06:11:43 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10176"; a="321233595"
+X-IronPort-AV: E=Sophos;i="5.87,257,1631602800"; 
+   d="scan'208";a="321233595"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2021 03:08:35 -0800
+X-IronPort-AV: E=Sophos;i="5.87,257,1631602800"; 
+   d="scan'208";a="497247798"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2021 03:08:32 -0800
+Received: by lahna (sSMTP sendmail emulation); Tue, 23 Nov 2021 13:08:30 +0200
+Date:   Tue, 23 Nov 2021 13:08:30 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: baytrail: Set IRQCHIP_SET_TYPE_MASKED flag on
+ the irqchip
+Message-ID: <YZzLrsS/zNlH3Zk4@lahna>
+References: <20211122220423.11256-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211122220423.11256-1-hdegoede@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am Montag, 8. November 2021, 16:05:42 CET schrieb conor.dooley@microchip.com:
-> From: Ivan Griffin <ivan.griffin@microchip.com>
+On Mon, Nov 22, 2021 at 11:04:23PM +0100, Hans de Goede wrote:
+> The byt_irq_type function ends with the IRQ masked, this means that calls
+> to irq_set_irq_type() while the IRQ is enabled end up masking it, which
+> is wrong. Add the IRQCHIP_SET_TYPE_MASKED flag to fix this.
 > 
-> Provide named identifiers for device tree for RISC-V interrupts.
+> This will make the IRQ core call mask() + unmask() on the IRQ around
+> a set_type() call when the IRQ is enabled at the type of the call.
 > 
-> Licensed under GPL and MIT, as this file may be useful to any OS that
-> uses device tree.
+> Note in practice irq_set_irq_type() getting called while the IRQ is enabled
+> almost never happens. I hit this with a buggy DSDT where a wrongly active
+> (_STA returns 0xf) I2C ACPI devices point to an IRQ already in use by an
+> _AEI handler, leading to the irq_set_irq_type() call in
+> acpi_dev_gpio_irq_get_by() getting called while the IRQ is enabled.
 > 
-> Signed-off-by: Ivan Griffin <ivan.griffin@microchip.com>
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> ---
->  .../interrupt-controller/riscv-hart.h         | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->  create mode 100644 include/dt-bindings/interrupt-controller/riscv-hart.h
-> 
-> diff --git a/include/dt-bindings/interrupt-controller/riscv-hart.h b/include/dt-bindings/interrupt-controller/riscv-hart.h
-> new file mode 100644
-> index 000000000000..e1c32f6090ac
-> --- /dev/null
-> +++ b/include/dt-bindings/interrupt-controller/riscv-hart.h
-> @@ -0,0 +1,19 @@
-> +/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
-> +/*
-> + * Copyright (C) 2021 Microchip Technology Inc.  All rights reserved.
-> + */
-> +
-> +#ifndef _DT_BINDINGS_INTERRUPT_CONTROLLER_RISCV_HART_H
-> +#define _DT_BINDINGS_INTERRUPT_CONTROLLER_RISCV_HART_H
-> +
-> +#define HART_INT_U_SOFT   0
-> +#define HART_INT_S_SOFT   1
-> +#define HART_INT_M_SOFT   3
-> +#define HART_INT_U_TIMER  4
-> +#define HART_INT_S_TIMER  5
-> +#define HART_INT_M_TIMER  7
-> +#define HART_INT_U_EXT    8
-> +#define HART_INT_S_EXT    9
-> +#define HART_INT_M_EXT    11
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-(1) From checking clic doc [0] I see an additional
-	12   CLIC software interrupt
-defined.
-
-(2) The doc states that the ordering is a recommendation and
-	"not mandatory in all incarnations of the CLIC"
-Is that clarified somewhere else that this more than recommended?
-
-Thanks
-Heiko
-
-
-[0] https://github.com/riscv/riscv-fast-interrupt/blob/master/clic.adoc
-
-> +
-> +#endif /* _DT_BINDINGS_INTERRUPT_CONTROLLER_RISCV_HART_H */
-> 
-
-
-
-
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
