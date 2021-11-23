@@ -2,97 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AE91C459E48
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Nov 2021 09:37:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 66D51459E54
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Nov 2021 09:39:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234038AbhKWIkV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 Nov 2021 03:40:21 -0500
-Received: from smtp-relay-internal-0.canonical.com ([185.125.188.122]:33050
-        "EHLO smtp-relay-internal-0.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233911AbhKWIkU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 23 Nov 2021 03:40:20 -0500
-Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com [209.85.208.197])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 425263F1B1
-        for <linux-gpio@vger.kernel.org>; Tue, 23 Nov 2021 08:37:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1637656632;
-        bh=COz8Xt5iyR6b2fbCfQiCZFl6eUlmeAm2S/sJlzQf8ME=;
-        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-         MIME-Version:Content-Type;
-        b=bDwxxcolN8F1AdapjCIvtS8fgDxluK4WBRQPl97/UWUpdKtfiRp8wnxIyZKV3qD0O
-         OlvoXWn+to/PZKNonHQl9lAb7rio5G0TngPox3FZNJo9xplDJlEN69oV4t7Fp0nPxE
-         CsV9Li9nRWETbFwJl6OSKoOuzsDWkf6PBTU+hmxQc9ljJ8sdBPirqP/SSIilVOeINe
-         hCdDIntQjkcK2jfigCgk04ZiJvbOXabOEHAfPnGes2ymTVDS39CMgb7YwB1fc3O47T
-         3I5Li0VLI06ed3jPwtM07Lg/uecPCTU0+hjquW4z6UW5t7sOVy6kpi1W+wGQmpBt/7
-         6nHK0sWiPbOEA==
-Received: by mail-lj1-f197.google.com with SMTP id s16-20020a2ea710000000b0021b674e9347so415470lje.8
-        for <linux-gpio@vger.kernel.org>; Tue, 23 Nov 2021 00:37:12 -0800 (PST)
+        id S234343AbhKWImY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 Nov 2021 03:42:24 -0500
+Received: from mail-qv1-f54.google.com ([209.85.219.54]:36844 "EHLO
+        mail-qv1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233911AbhKWImX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Nov 2021 03:42:23 -0500
+Received: by mail-qv1-f54.google.com with SMTP id kl8so14459173qvb.3;
+        Tue, 23 Nov 2021 00:39:14 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=COz8Xt5iyR6b2fbCfQiCZFl6eUlmeAm2S/sJlzQf8ME=;
-        b=DPmTaDdXS3AR47Up4r8BYy5E40ONV9TslZJgoV5Q5ytLcDP6qS5MKOdXngtgB28YeF
-         2SlJaEWHQQ1IUrXk56w9cTWWutA8b5SBK5u6fM/yd3BBibMOGQ02qDwzhNwSZ3Eqc5Z/
-         IAOZNjsmCXyTFefaQ3K/moUSTlhzbpcOUsScsyD6R/3BneuIym1WBdTc6ocuDeR5La5d
-         g2qMQk3zQ7lhSC5JrtLa/WlDYQIOBNTQPncGYwMvv27j3z1vuiH8Ea4V6UlKbZcrb8PL
-         jBt34vjbFqQ739ParjVoeVBPtgww1qeEYL8OxlJDvqMYcz+lhOXuGUaZtiR0u6kwkxRM
-         z1VQ==
-X-Gm-Message-State: AOAM532NmZoU59okSZMYw/C04SmHekgic2czlpOpzlDcCECjlCWcexBq
-        Up6hiRF8LquX918FceEzXhe3NPMtl6h/zNO9M9MBvfJ1B+hYpoq6qjHq0G2+9jc9ftcfbdHbpfI
-        1eyPlhR1RdLww88Q12iTXprbh45YFseb6nP2gBtM=
-X-Received: by 2002:a19:6752:: with SMTP id e18mr3052882lfj.195.1637656631736;
-        Tue, 23 Nov 2021 00:37:11 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwbTmlTJExHRzGjXz7RgsWigueTPgxob7fbleonTy2RgKaGipXnBNDBGRNeCgrAxkc2Kr1DIQ==
-X-Received: by 2002:a19:6752:: with SMTP id e18mr3052859lfj.195.1637656631554;
-        Tue, 23 Nov 2021 00:37:11 -0800 (PST)
-Received: from krzk-bin.lan (89-77-68-124.dynamic.chello.pl. [89.77.68.124])
-        by smtp.gmail.com with ESMTPSA id l16sm1402483lfg.90.2021.11.23.00.37.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Nov 2021 00:37:11 -0800 (PST)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-To:     Wei Yongjun <weiyongjun1@huawei.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        David Virag <virag.david003@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH -next] pinctrl: samsung: Make symbol 'exynos7885_pin_ctrl' static
-Date:   Tue, 23 Nov 2021 09:37:09 +0100
-Message-Id: <163765662601.91709.15516222234511579630.b4-ty@canonical.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <20211123083617.2366756-1-weiyongjun1@huawei.com>
-References: <20211123083617.2366756-1-weiyongjun1@huawei.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YD9+CLUS5Xv902/pEfqOtiLcZyXas3B/t1a2ZRr+mI0=;
+        b=LXrwxGGnxkX/NVnYsoGww5CRIG6ielkxAfwhqDd0GSTVJi7ckk7pa3rKM7PsENPkVA
+         k4+iq7HYlG9sdCCaR04ghEfkWPlmkN5H9HySFaYFsxBEW4eL38N/cfMD6kwc55ItO4ko
+         9XCw3J5iQjw21mqVrRUaNFeGg9IP+YJFSfSUbldlFnWO8t+34o1ALrrmMKhAOrEqQLst
+         2dut2eYLwS72gN2yTeH/YjkCEeue0s2VC/rJL3DURZnAXItZvvbzAG4bTm1jUgC5leaG
+         xUpUpRyTSX9gbyutV9lYuvEhF1XWI++odrR6CIr3ZIm+J7YxbwtMuZ06L5WB+HK/B76Z
+         dISQ==
+X-Gm-Message-State: AOAM530rTVPAKtpxl0Biidy8BxnFVsxfY/0kqiHOm8RFWV9cOaY9Z+m0
+        pREjiWhsxGSNRSA19w3q7qlJeiNsOjNP6w==
+X-Google-Smtp-Source: ABdhPJwl7IFfqBvyxvzsIGDvXIqCpOyDF+gdOezzZQWSahoV7nupzS7YLtInPshC/NmOzg9BnWp5fA==
+X-Received: by 2002:a05:6214:cac:: with SMTP id s12mr4269630qvs.60.1637656754206;
+        Tue, 23 Nov 2021 00:39:14 -0800 (PST)
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com. [209.85.219.172])
+        by smtp.gmail.com with ESMTPSA id w10sm5807946qtj.37.2021.11.23.00.39.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Nov 2021 00:39:14 -0800 (PST)
+Received: by mail-yb1-f172.google.com with SMTP id f9so23788959ybq.10;
+        Tue, 23 Nov 2021 00:39:13 -0800 (PST)
+X-Received: by 2002:a9f:2431:: with SMTP id 46mr6012282uaq.114.1637656742896;
+ Tue, 23 Nov 2021 00:39:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <cover.1637592133.git.geert+renesas@glider.be> <3a54a6703879d10f08cf0275a2a69297ebd2b1d4.1637592133.git.geert+renesas@glider.be>
+ <01b44b38c087c151171f8d45a2090474c2559306.camel@sipsolutions.net> <5936f811-fa48-33e9-2a1a-66c68f74aa5e@ieee.org>
+In-Reply-To: <5936f811-fa48-33e9-2a1a-66c68f74aa5e@ieee.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 23 Nov 2021 09:38:51 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdX4C0EgkGXR=MwSuBOFoj7O9xx8xwH5dP8rWzN1ckejQA@mail.gmail.com>
+Message-ID: <CAMuHMdX4C0EgkGXR=MwSuBOFoj7O9xx8xwH5dP8rWzN1ckejQA@mail.gmail.com>
+Subject: Re: [PATCH 01/17] bitfield: Add non-constant field_{prep,get}() helpers
+To:     Alex Elder <elder@ieee.org>
+Cc:     Johannes Berg <johannes@sipsolutions.net>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Paul Walmsley <paul@pwsan.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Tero Kristo <kristo@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
+        Benoit Parrot <bparrot@ti.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Ping-Ke Shih <pkshih@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Keerthy <j-keerthy@ti.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
+        alsa-devel@alsa-project.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 23 Nov 2021 08:36:17 +0000, Wei Yongjun wrote:
-> The sparse tool complains as follows:
-> 
-> drivers/pinctrl/samsung/pinctrl-exynos-arm64.c:490:31: warning:
->  symbol 'exynos7885_pin_ctrl' was not declared. Should it be static?
-> 
-> This symbol is not used outside of pinctrl-exynos-arm64.c, so marks
-> it static.
-> 
-> [...]
+Hi Alex,
 
-Applied, thanks!
+On Tue, Nov 23, 2021 at 2:52 AM Alex Elder <elder@ieee.org> wrote:
+> On 11/22/21 10:32 AM, Johannes Berg wrote:
+> > On Mon, 2021-11-22 at 16:53 +0100, Geert Uytterhoeven wrote:
+> >> The existing FIELD_{GET,PREP}() macros are limited to compile-time
+> >> constants.  However, it is very common to prepare or extract bitfield
+> >> elements where the bitfield mask is not a compile-time constant.
+> >
+> > I'm not sure it's really a good idea to add a third API here?
+> >
+> > We have the upper-case (constant) versions, and already
+> > {u32,...}_get_bits()/etc.
+>
+> I've used these a lot (and personally prefer the lower-case ones).
+>
+> Your new macros don't do anything to ensure the field mask is
+> of the right form, which is basically:  (2 ^ width - 1) << shift
 
-[1/1] pinctrl: samsung: Make symbol 'exynos7885_pin_ctrl' static
-      commit: 16dd3bb5c190654854c0846ee433076139f71c6a
+> I really like the property that the field mask must be constant.
 
-Best regards,
--- 
-Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+That's correct. How to enforce that in the non-const case?
+BUG()/WARN() is not an option ;-)
+
+> That being said, I've had to use some strange coding patterns
+> in order to adhere to the "const only" rule in a few cases.
+> So if you can come up with a satisfactory naming scheme I'm
+> all for it.
+
+There are plenty of drivers that handle masks stored in a data
+structure, so it would be good if they can use a suitable helper,
+as open-coding is prone to errors.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
