@@ -2,73 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C27D1459888
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Nov 2021 00:46:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CA8EC459994
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Nov 2021 02:17:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231890AbhKVXtQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 22 Nov 2021 18:49:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60452 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230366AbhKVXtP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 22 Nov 2021 18:49:15 -0500
-Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 500FDC061714
-        for <linux-gpio@vger.kernel.org>; Mon, 22 Nov 2021 15:46:01 -0800 (PST)
-Received: by mail-ot1-x334.google.com with SMTP id h16-20020a9d7990000000b0055c7ae44dd2so31136127otm.10
-        for <linux-gpio@vger.kernel.org>; Mon, 22 Nov 2021 15:46:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=HIB1oiHZ0iiGMICUTKXSMj/pebpoygCKH0iu3f2KlXo=;
-        b=j8oaVLNLXUURGEz6MidWqEUBxbHKtCc7+5kr8NpBqGN8Fql3A3SSQ7oL16VTULcvKR
-         O1NBWt/nOpsVbaEz0DJhinp3WPzht9FZwyWVJQV9tCluWbytuZbacLLTO+FU0PGY7/vl
-         7VkIYvFjHc519CIVZ1Dc67u6XAk5F0WUjNV4UwDvW65B1/qTb2ZT8hz1PT1wkbo+fHAw
-         9j+syovs/uXDNjw6484D9jVU43BL1WozFcFO+KEg/+C9UESrSlORsLxtP1HyD12BthmY
-         9/9v1xKho+rb1z5qc/P1ce+zcLtGTCfz66ce/ywer17yZ8ni9UltMC5xfk3dfNKpPWhR
-         iFXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=HIB1oiHZ0iiGMICUTKXSMj/pebpoygCKH0iu3f2KlXo=;
-        b=434d1ph7+Je2BJ6+yu4ke7T4ei5piXiXrrFM6NxRWfqL2iciMoDtYHDkd2DIOdHwWn
-         ivbbiWPrGdkpR0KBiYcu8RUA4knDIsgIZ0OlFuT9nyU2Mt8Jg+R6U/iMGtPjyPC3cA8o
-         +ck1ygYyyw1pDlAdZd5afImDKwDfP8mnqrtW7L2Ju2hQP+gkggFpPkgcTFANfJ2aUWEA
-         B3Gdoh6jRpQeSJUw6OoY06jOtrQPESFSJ7FM3cocaafd2nFwC90UNQrLWsR4hykd74XS
-         gUtHFIfcYfhEJ0MkGiXQWX3kekvNTp7qKmt+L1LASwQm5X1euwf4uHGcG4/49WMRqFDX
-         wo5Q==
-X-Gm-Message-State: AOAM533FcLV15z6E1HPTHJ6svzPvZEIaPYUt1HUe20q88JsyzBG6dkNS
-        BIO6KeBteN5GBJkYxu8sFOtMgBgULC4gj8W2BRxhYg==
-X-Google-Smtp-Source: ABdhPJxpWRmJuQc45Mu2zDtBT8Yxx3zT/6RR/yC2BBhjIHeod2k0wQ/3KgvX7nHp9bI3uNpu/Wi17209pUXDUIvOQB0=
-X-Received: by 2002:a9d:ed6:: with SMTP id 80mr209544otj.35.1637624760387;
- Mon, 22 Nov 2021 15:46:00 -0800 (PST)
+        id S232168AbhKWBUu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 22 Nov 2021 20:20:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53542 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229776AbhKWBUt (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 22 Nov 2021 20:20:49 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 7D9BC60FE7;
+        Tue, 23 Nov 2021 01:17:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1637630262;
+        bh=aoZBtBydzk0bAevU49rnDfe9zlt/fW7CJBCoU7dRxYA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=DP4A1u9wNAGb4TisYL/xclxXLCsu2eYg5z5kmYiYSKFhn68ml1u5EecsH0UtRKHqf
+         6WSeXmftsKJnT0cJoC45C1J/DRKEkyY8ZtRnMG5HUdipvmpB5FFIlmEIJvncTHRUsl
+         ZJL0QNbzVlJaWzKiVHfmtZTk38Yn3TlLB2z6CLXnGmgwi//WUT0SYP6cVTF8nOAJxN
+         15rOBhxuQkabwtldmp65OfJNj5TeFJmkuLPCAwUI0Dna0FEvAJIm2JVOaykJdOmzdN
+         ItdPFw828/65BBT1WXG3h6a2jxgAjBQ+Bbe/D392jq/wYgwXj4sze1/1CQib/FK9DM
+         tH9oaaLRu5SxA==
+Date:   Mon, 22 Nov 2021 17:17:39 -0800
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Tony Lindgren <tony@atomide.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Paul Walmsley <paul@pwsan.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Tero Kristo <kristo@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
+        Benoit Parrot <bparrot@ti.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Ping-Ke Shih <pkshih@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Keerthy <j-keerthy@ti.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
+        alsa-devel@alsa-project.org
+Subject: Re: [PATCH 01/17] bitfield: Add non-constant field_{prep,get}()
+ helpers
+Message-ID: <20211122171739.03848154@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <01b44b38c087c151171f8d45a2090474c2559306.camel@sipsolutions.net>
+References: <cover.1637592133.git.geert+renesas@glider.be>
+        <3a54a6703879d10f08cf0275a2a69297ebd2b1d4.1637592133.git.geert+renesas@glider.be>
+        <01b44b38c087c151171f8d45a2090474c2559306.camel@sipsolutions.net>
 MIME-Version: 1.0
-References: <20211018112201.25424-1-noralf@tronnes.org> <CACRpkdZQSB+McOGK9HZUNAr2p+FX=6ddbY=5-sQ8difh1pEqGg@mail.gmail.com>
- <56881c23-8659-04e2-e7c1-264f7ef1b752@tronnes.org>
-In-Reply-To: <56881c23-8659-04e2-e7c1-264f7ef1b752@tronnes.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 23 Nov 2021 00:45:48 +0100
-Message-ID: <CACRpkdaGyiNubyxsTQtQ=VPj5-GiHwDS61L9kMVHEyNAN-yoBw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: dln2: Fix interrupts when replugging the device
-To:     =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        stable <stable@vger.kernel.org>,
-        Daniel Baluta <daniel.baluta@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 22, 2021 at 9:28 PM Noralf Tr=C3=B8nnes <noralf@tronnes.org> wr=
-ote:
+On Mon, 22 Nov 2021 17:32:43 +0100 Johannes Berg wrote:
+> On Mon, 2021-11-22 at 16:53 +0100, Geert Uytterhoeven wrote:
+> > The existing FIELD_{GET,PREP}() macros are limited to compile-time
+> > constants.  However, it is very common to prepare or extract bitfield
+> > elements where the bitfield mask is not a compile-time constant.
+> 
+> I'm not sure it's really a good idea to add a third API here?
 
-> Has this been applied, I can't see it in -next?
++1
 
-Bartosz is applying patches for the recent kernels, I bet he will
-get to it.
+> We have the upper-case (constant) versions, and already
+> {u32,...}_get_bits()/etc.
+> 
+> Also, you're using __ffs(), which doesn't work for 64-bit on 32-bit
+> architectures (afaict), so that seems a bit awkward.
+> 
+> Maybe we can make {u32,...}_get_bits() be doing compile-time only checks
+> if it is indeed a constant? The __field_overflow() usage is already only
+> done if __builtin_constant_p(v), so I guess we can do the same with
+> __bad_mask()?
 
-Yours,
-Linus Walleij
+Either that or add decomposition macros. Are compilers still really bad
+at passing small structs by value?
