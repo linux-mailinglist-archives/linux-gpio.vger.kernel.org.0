@@ -2,82 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C46F045B970
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Nov 2021 12:47:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 90F2445C701
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Nov 2021 15:14:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241146AbhKXLuz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 24 Nov 2021 06:50:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41078 "EHLO
+        id S1351431AbhKXORs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 24 Nov 2021 09:17:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240996AbhKXLuy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Nov 2021 06:50:54 -0500
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5C94C06173E
-        for <linux-gpio@vger.kernel.org>; Wed, 24 Nov 2021 03:47:44 -0800 (PST)
-Received: by mail-ed1-x535.google.com with SMTP id l25so8936264eda.11
-        for <linux-gpio@vger.kernel.org>; Wed, 24 Nov 2021 03:47:44 -0800 (PST)
+        with ESMTP id S1352900AbhKXORR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Nov 2021 09:17:17 -0500
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95F00C0818F0
+        for <linux-gpio@vger.kernel.org>; Wed, 24 Nov 2021 04:28:56 -0800 (PST)
+Received: by mail-wr1-x435.google.com with SMTP id l16so3873764wrp.11
+        for <linux-gpio@vger.kernel.org>; Wed, 24 Nov 2021 04:28:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lQHkGQMRbwlV2X6v9gZ8r5Fj5KrluPJpcxhCcMkVPsA=;
-        b=f1to1KC72xBbiGARC+SE+4GPB1WnRPifDgHoaaUIIAa5QeW5qeGwQh0NT0aQAFqLez
-         RqWZErHFUX+57FwCcfyWfl2+lRh2EPK2PzVQLXeQzV9YV6/U4KkHUdjx2Sh5E7Hwt8tt
-         bhO2r8xPIXDH8JIhOm2cBuXE58p8FHaErhmQBpTZIQHsaeCh8x3jQxtRNzs1XJ+UHprL
-         AMCyVyVXIa+x6YscCgdaOLaKMwfSam67xO/qYv2iLAwCa8VtFdzvZBImCQqY1k5xrVmj
-         r0cjQrZNUmwssNd3rz2WLOBeAEd9re64NURK/NSRZkMztkrtP1Bmizbnz3gSdmvA+zuF
-         iLDg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=itVP4aNbik/dROJTIOMt1U3nLqJ1tEkeMNd95tsUZfI=;
+        b=MDUIPdijTyP4/fpQuv6ZuVlM7tyrXL9fEM9D1engdJP3v/7I6HXcc4tq3W05xa282v
+         7MfuuDChpc2dk2IRy9XzTmqZZUZluuJu0ybfxkEN0VPtlboCLZ9Pe/NYIlieWYqYRXa2
+         zQlZcgiu9HQw8pQYEwWLpqvKAljYvRUkNuZNWA3QxluesS3L5jcmU1RSGMf8gLUfR4RP
+         XEKjcO0Sxi5XsOHlZPKE8l696doVzC4K0qFZ+SmW4GA6XCt5uzXH+FG8C7NiCcQimAnO
+         dFQhZwxQ1vdoxp28sQxtbV0ROhqtvzmJTxUQWik3oKpeLmH9xCtN4OOOwQfnrX6Hluqj
+         loPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lQHkGQMRbwlV2X6v9gZ8r5Fj5KrluPJpcxhCcMkVPsA=;
-        b=vyKvkUtA7WKJbY+Ix3B6DS+VuIjwHXVQwud0c3fCgu8nO3OWU1WSw10sO8LKGmS028
-         X0DQGz2DGEv3ZQaC244fAmzyY995/MdBnsxs/xsXszDkR5pETAoTFbOcKDkL5HQY9ilS
-         KdogEingyBaCCkJhyf9yChYJ3LHHTk7IMA2sKSx2heMfItXINgndkzrc3ziSWVBzCkLv
-         VUgHI93ewxSCFxpTKlSGL0fNp5NX5+bzi0tRcTgYUrAQY1VJjNDCH8QJc/Gp/LRSw2GR
-         mTE+ADxmjIzzF9frCWdDdA2Idl5IVLQ2OL9F2lkyx8c7MbhHNzj+7l7h1j0JyUA7g2Od
-         w/BQ==
-X-Gm-Message-State: AOAM532ska8p4uR6/BJeIvTBCb99JL8v0/emhKki+aLPS+swioeE1hc3
-        8JGmrKUArGUPu+8r7/lAuOAqej7yLj2Y2zJbyrDxlHNvZsuiqQ==
-X-Google-Smtp-Source: ABdhPJxjrkK9w0QGaOG7YGLxsSY/kyJR0/6HPIGbb9vpEroIK+ub1dtHysZ5pwXH45RvBIRnqsRxbGGLWAKTcr6JlEo=
-X-Received: by 2002:a50:ef02:: with SMTP id m2mr23346820eds.172.1637754463129;
- Wed, 24 Nov 2021 03:47:43 -0800 (PST)
-MIME-Version: 1.0
-References: <20211123164902.35370-1-wsa+renesas@sang-engineering.com> <20211123164902.35370-2-wsa+renesas@sang-engineering.com>
-In-Reply-To: <20211123164902.35370-2-wsa+renesas@sang-engineering.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=itVP4aNbik/dROJTIOMt1U3nLqJ1tEkeMNd95tsUZfI=;
+        b=fOOCV76/FRVSleSCAO7asKFaDbcgwaaWlZ728W96tiEc+40RxIfUWsGR/UZls9XaZv
+         KfuyX6w5uSUvAZgEek6eNowF2QO8jL4UvVY32ti8uZ/2P2gY9eHNRL+IMvhGduxFpE3W
+         ihqFmffU6bj5AQQ04WsDXsT66XYbN4gBxd5InbEdOLq99/DOcBPiXKZV/NoerJnbn/Tx
+         9AhgPkxx5OKURks/5y8jDnkQEwzswSz5SXJnOjSDMCssrR4wYL7PTOyGgA+x9TZNgBJC
+         xCRf2ex1Xhuc/LECWRN6LtuQraiTZsvnBGhWr72faQSwuLQVzrqbNIMaGpxReqJTxDPZ
+         t5Uw==
+X-Gm-Message-State: AOAM5319EGvNMcRoxfAklsH8GXtEsw8w+3N/3PjJP8nfK+gEElEmxCCZ
+        kM0QKgM8t2winWCEA9Pw16WrQQ==
+X-Google-Smtp-Source: ABdhPJxI1/vhZ1KM2jJH6ksA70uIiYHjkzcyEe/prqKG2CyKBGHpDy10UuCc8LzOuo7Pl0GG8bMXbQ==
+X-Received: by 2002:a5d:45c4:: with SMTP id b4mr18470805wrs.222.1637756935206;
+        Wed, 24 Nov 2021 04:28:55 -0800 (PST)
+Received: from debian-brgl.home ([2a01:cb1d:334:ac00:7d50:ff5:f5c1:e225])
+        by smtp.gmail.com with ESMTPSA id p62sm4417694wmp.10.2021.11.24.04.28.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Nov 2021 04:28:54 -0800 (PST)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 24 Nov 2021 12:47:32 +0100
-Message-ID: <CAMRc=McG6fn_VX7+OPXUWjX1tYozQPg1eyEz-3fJMx35DiXimg@mail.gmail.com>
-Subject: Re: [PATCH v5 1/1] gpio: add sloppy logic analyzer using polling
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+To:     Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-doc <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Johan Hovold <johan@kernel.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v3 1/2] gpiolib: improve coding style for local variables
+Date:   Wed, 24 Nov 2021 13:28:49 +0100
+Message-Id: <20211124122850.7095-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.30.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 23, 2021 at 5:49 PM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
->
-> This is a sloppy logic analyzer using GPIOs. It comes with a script to
-> isolate a CPU for polling. While this is definitely not a production
-> level analyzer, it can be a helpful first view when remote debugging.
-> Read the documentation for details.
->
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Drop unneeded whitespaces and put the variables of the same type
+together for consistency with the rest of the code.
 
-Hi Wolfram!
+Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+---
+v1 -> v2:
+- keep initializations on separate lines
 
-I'm seeing you're using debugfs for this module (both for
-configuration as well as control). How about using configfs + sysfs?
-I'd argue that debugfs isn't really the right interface for a useful
-tool that is this LA.
+ drivers/gpio/gpiolib.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Bart
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index abfbf546d159..ede8b8a7aa18 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -594,11 +594,11 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+ 			       struct lock_class_key *request_key)
+ {
+ 	struct fwnode_handle *fwnode = gc->parent ? dev_fwnode(gc->parent) : NULL;
+-	unsigned long	flags;
+-	int		ret = 0;
+-	unsigned	i;
+-	int		base = gc->base;
+ 	struct gpio_device *gdev;
++	unsigned long flags;
++	int base = gc->base;
++	unsigned int i;
++	int ret = 0;
+ 
+ 	/*
+ 	 * First: allocate and populate the internal stat container, and
+-- 
+2.25.1
+
