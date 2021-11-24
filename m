@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B048945D0B6
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Nov 2021 00:05:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FB8A45D0B8
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Nov 2021 00:05:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352323AbhKXXIN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S1352378AbhKXXIN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Wed, 24 Nov 2021 18:08:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54090 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232233AbhKXXIL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Nov 2021 18:08:11 -0500
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CF7EC061574;
-        Wed, 24 Nov 2021 15:05:00 -0800 (PST)
-Received: by mail-lf1-x12a.google.com with SMTP id f18so11268025lfv.6;
-        Wed, 24 Nov 2021 15:05:00 -0800 (PST)
+        with ESMTP id S1352370AbhKXXIM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Nov 2021 18:08:12 -0500
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00EFFC061748;
+        Wed, 24 Nov 2021 15:05:01 -0800 (PST)
+Received: by mail-lf1-x12c.google.com with SMTP id n12so11328636lfe.1;
+        Wed, 24 Nov 2021 15:05:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=jf6byrH4ANB6TExq8PGAH/b0DeVk7tVroeKAe91ZQMA=;
-        b=YuXEfoqeeoz4pH50VVL6U1HkVptULVaVyPgPEEbDEf8T2A/euQ3lqUFLD4i0mqTlwq
-         sxOLf4/HAHQk3xAjsdKdV4AUHXg611sp2XJu+9S/bPtWwcw2Z7SHf5UljbtHIBThyoCc
-         xRB8wL0euX+PlgZJFw7HRcPnNuieA2M6B62lqitOlhyL8FkEKulIcx53XIF3vJXsYwX8
-         PbR7+4F+RocD917qxATdpLW0FWbgQRn0moCiArJWe3zIdcikvjQR8MR8580ES1pV4r8D
-         wg+O1cwR7YK/wNhnkoCz4Qs9mKFObc561aPpzZ1r7Vqoopeha0wbh0LoDTX6t4xwAbxG
-         F1nQ==
+        bh=F+wTJaDM5r+kBEnKzSjdLDhTIMgT1zwrllSdQA6Fd8c=;
+        b=GAcDYwPz9LSENEq26U7TEJnu6ce9k/4l2vXsfG9xKZjxo8q93jC+Eus++WIDCdLORm
+         zRHYDw+2TK48X2NRzeY8Dm6gWWoZu0TPJRBOVIFaepkjyOzU7nBLlsQtC7Dv01TZ/zlW
+         xZbtJ1pckfWxeRzXBGO4b32ioqsDT7zF/kXP5BTNnV/ysyURA505gvVNXBo2KFxfDaMc
+         eWLuAGaSrja2fTXgkIFzqXWlb3FjnJH9ZuNvek935eCPQ9YFo5kfIkpEH5KacDuq0787
+         orInYbewu19bnL4v+tqLC8vUySuQKrbc6O1hxiwdRd2Tz1eelXOWuu+i58rEcBO35YDv
+         k8CQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=jf6byrH4ANB6TExq8PGAH/b0DeVk7tVroeKAe91ZQMA=;
-        b=WElYkPnKFItoxwdp53w9T65k+k39kopb50YSUveAWsYAU0dCon84SPehDJwdjjBIqI
-         gEb2ZQJHlYMEI9CThvXiKSH+UBnXlvz8wP1bJMXkXevIIrqyw0AnQGLgykbjgvIYjrso
-         642Q61IDGF/Y0JSuN2Oo8vJUx/NYsPMjNsVY1DaNlIheOwKaMCPBVzzMliyQckGg91V7
-         +vk98O6Uc0RZMpKM25fExPoDWuOM/hxfxdmQsvgNhNa/5kYZDp9fG0Ap0wNUSQYK9Bf0
-         byiKy98bCcxNrPwbN8U8QsGAknHR2OQVAbU29tYtolqIS2sYsTq+l9WAqw3tNNhkdw96
-         3urg==
-X-Gm-Message-State: AOAM532ktfyEsQGMqvMlzxAldZgHBC/FX8vRwLjxBiPfpDiDSICyaGqM
-        1FDbv9X8HfOEZ0F90Ux8DZE=
-X-Google-Smtp-Source: ABdhPJyJn22Wtpwzu5pAhlIuYMkgGMQTdAOfiqhTeUMu7YgI7YJ022htjj1hLABdJ7l4WIVT61FF6Q==
-X-Received: by 2002:a05:6512:39d6:: with SMTP id k22mr19465971lfu.559.1637795098680;
-        Wed, 24 Nov 2021 15:04:58 -0800 (PST)
+        bh=F+wTJaDM5r+kBEnKzSjdLDhTIMgT1zwrllSdQA6Fd8c=;
+        b=0mmTIKzXgqMs18WwGvt+ip4xv5uVuaFsJFh34xk+NuhW/HL6Z95siyzYHquVJ+Ktpr
+         Z4Ge/UfwRiZYOXitWCBsMWTIvhJnDVYUj4TcYDyZqhTxBXC30tv63gXzvVBH/ig7wLoN
+         YNLgJH+lp3f4IrP+DAQqZw9hWIjFZ6qtlHC1ayB95wZwVBvdcMl2xpKNew8YCk/zbyLW
+         +Dk5xA3yRFCW3hoNiMZ1WTdesYcyKFf53CRJ+B6DBrSyQoVa70j1dF5dImqigaOJt44T
+         WoNasTTEgDrS+54VtL5+szooZcrPN3FDy27Sz3s5YIbGTmgokjoN1flKS6exsfrPD5JG
+         kGxA==
+X-Gm-Message-State: AOAM530b906gnOdWQlsdNKvOncdbctfqWU0UWz3p3egqB3P/133A1t3y
+        fA4GZ9oJvmNue1ay9oLdrPw=
+X-Google-Smtp-Source: ABdhPJwu/Bw6vmmNeIOw2NrUsgPlQvnNVaCKt3cFrezWklnMjvvFXnXK5qx9O+hzEH9Qtt3+e1/LMA==
+X-Received: by 2002:ac2:5388:: with SMTP id g8mr19570402lfh.382.1637795100285;
+        Wed, 24 Nov 2021 15:05:00 -0800 (PST)
 Received: from localhost.lan (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
-        by smtp.gmail.com with ESMTPSA id t15sm106243lfp.181.2021.11.24.15.04.57
+        by smtp.gmail.com with ESMTPSA id t15sm106243lfp.181.2021.11.24.15.04.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Nov 2021 15:04:58 -0800 (PST)
+        Wed, 24 Nov 2021 15:05:00 -0800 (PST)
 From:   =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>
@@ -57,9 +57,9 @@ Cc:     Tony Lindgren <tony@atomide.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
         bcm-kernel-feedback-list@broadcom.com,
         =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
-Subject: [PATCH V2 4/6] pinctrl: support reading pins, groups & functions from DT
-Date:   Thu, 25 Nov 2021 00:04:37 +0100
-Message-Id: <20211124230439.17531-5-zajec5@gmail.com>
+Subject: [PATCH V2 5/6] pinctrl: bcm: pinctrl-ns: supoprt DT specified pins, groups & functions
+Date:   Thu, 25 Nov 2021 00:04:38 +0100
+Message-Id: <20211124230439.17531-6-zajec5@gmail.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20211124230439.17531-1-zajec5@gmail.com>
 References: <20211124230439.17531-1-zajec5@gmail.com>
@@ -72,263 +72,135 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Rafał Miłecki <rafal@milecki.pl>
 
-DT binding allows specifying pins, groups & functions now. That allows
-storing them in DT instead of hardcoding in drivers.
+It's now possible to specify hardware pins, groups & functions in DT
+instead of hardcoding that info in a driver. Use pinctrl subsystem
+helpers to extract that info from DT.
 
-This adds support for DT as data source to recently introduced API.
+Keep hardcoded data as fallback method.
 
 Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
 ---
-V2: Update pinctrl_generic_dt_load_pins() to support new binding
----
- drivers/pinctrl/core.c       |   6 ++
- drivers/pinctrl/devicetree.c | 131 +++++++++++++++++++++++++++++++++++
- drivers/pinctrl/devicetree.h |  29 ++++++++
- drivers/pinctrl/pinmux.c     |   4 ++
- 4 files changed, 170 insertions(+)
+ drivers/pinctrl/bcm/pinctrl-ns.c | 90 +++++++++++++++++++++-----------
+ 1 file changed, 60 insertions(+), 30 deletions(-)
 
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index 53b3e8b54a9b..4c39ca338896 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -517,6 +517,9 @@ EXPORT_SYMBOL_GPL(pinctrl_remove_gpio_range);
- 
- int pinctrl_generic_load_pins(struct pinctrl_desc *pctldesc, struct device *dev)
- {
-+	if (dev->of_node)
-+		return pinctrl_generic_dt_load_pins(pctldesc, dev);
-+
- 	return -ENOENT;
- }
- EXPORT_SYMBOL_GPL(pinctrl_generic_load_pins);
-@@ -525,6 +528,9 @@ EXPORT_SYMBOL_GPL(pinctrl_generic_load_pins);
- 
- int pinctrl_generic_load_groups(struct pinctrl_dev *pctldev)
- {
-+	if (pctldev->dev->of_node)
-+		return pinctrl_generic_load_dt_groups(pctldev);
-+
- 	return -ENOENT;
- }
- EXPORT_SYMBOL_GPL(pinctrl_generic_load_groups);
-diff --git a/drivers/pinctrl/devicetree.c b/drivers/pinctrl/devicetree.c
-index 3fb238714718..5e511e61449a 100644
---- a/drivers/pinctrl/devicetree.c
-+++ b/drivers/pinctrl/devicetree.c
-@@ -12,6 +12,7 @@
- 
- #include "core.h"
- #include "devicetree.h"
-+#include "pinmux.h"
- 
- /**
-  * struct pinctrl_dt_map - mapping table chunk parsed from device tree
-@@ -27,6 +28,136 @@ struct pinctrl_dt_map {
- 	unsigned num_maps;
- };
- 
-+int pinctrl_generic_dt_load_pins(struct pinctrl_desc *pctldesc,
-+				struct device *dev)
-+{
-+	struct pinctrl_pin_desc *descs;
-+	struct device_node *pins;
-+	struct device_node *np;
-+	int err = 0;
-+	int i = 0;
-+
-+	pins = of_get_child_by_name(dev->of_node, "pins");
-+	if (!pins) {
-+		dev_err(dev, "failed to find \"pins\" DT node\n");
-+		err = -ENOENT;
-+		goto err_out;
-+	}
-+
-+	pctldesc->npins = of_get_available_child_count(pins);
-+
-+	descs = devm_kcalloc(dev, pctldesc->npins, sizeof(*descs), GFP_KERNEL);
-+	if (!descs) {
-+		err = -ENOMEM;
-+		goto err_put_node;
-+	}
-+
-+	for_each_available_child_of_node(pins, np) {
-+		descs[i].name = np->name;
-+
-+		if (of_property_read_u32(np, "number", &descs[i].number)) {
-+			dev_err(dev, "missing \"number\" property in %pOF\n", np);
-+			err = -ENOENT;
-+			goto err_put_node;
-+		}
-+
-+		i++;
-+	}
-+
-+	pctldesc->pins = descs;
-+
-+err_put_node:
-+	of_node_put(pins);
-+err_out:
-+	return err;
-+}
-+
-+#ifdef CONFIG_GENERIC_PINCTRL_GROUPS
-+
-+int pinctrl_generic_load_dt_groups(struct pinctrl_dev *pctldev)
-+{
-+	struct device *dev = pctldev->dev;
-+	struct device_node *groups;
-+	struct device_node *np;
-+	int err = 0;
-+
-+	groups = of_get_child_by_name(dev->of_node, "groups");
-+	if (!groups) {
-+		dev_err(dev, "failed to find \"groups\" DT node\n");
-+		err = -ENOENT;
-+		goto err_out;
-+	}
-+
-+	for_each_available_child_of_node(groups, np) {
-+		int num_pins;
-+		u32 *pins;
-+
-+		num_pins = of_property_count_u32_elems(np, "pins");
-+		pins = devm_kmalloc_array(dev, num_pins, sizeof(*pins), GFP_KERNEL);
-+		if (!pins) {
-+			err = -ENOMEM;
-+			goto err_put_node;
-+		}
-+
-+		if (of_property_read_u32_array(np, "pins", pins, num_pins)) {
-+			err = -EIO;
-+			goto err_put_node;
-+		}
-+
-+		pinctrl_generic_add_group(pctldev, np->name, pins, num_pins, np);
-+	}
-+
-+err_put_node:
-+	of_node_put(groups);
-+err_out:
-+	return err;
-+}
-+
-+#endif
-+
-+#ifdef CONFIG_GENERIC_PINMUX_FUNCTIONS
-+int pinmux_generic_load_dt_functions(struct pinctrl_dev *pctldev)
-+{
-+	struct device *dev = pctldev->dev;
+diff --git a/drivers/pinctrl/bcm/pinctrl-ns.c b/drivers/pinctrl/bcm/pinctrl-ns.c
+index 0897041b5ef1..9036d62c806f 100644
+--- a/drivers/pinctrl/bcm/pinctrl-ns.c
++++ b/drivers/pinctrl/bcm/pinctrl-ns.c
+@@ -213,7 +213,11 @@ static int ns_pinctrl_probe(struct platform_device *pdev)
+ 	struct ns_pinctrl *ns_pinctrl;
+ 	struct pinctrl_desc *pctldesc;
+ 	struct pinctrl_pin_desc *pin;
 +	struct device_node *functions;
-+	struct device_node *np;
-+	int err = 0;
++	struct device_node *groups;
++	struct device_node *pins;
+ 	struct resource *res;
++	int err;
+ 	int i;
+ 
+ 	ns_pinctrl = devm_kzalloc(dev, sizeof(*ns_pinctrl), GFP_KERNEL);
+@@ -243,19 +247,27 @@ static int ns_pinctrl_probe(struct platform_device *pdev)
+ 
+ 	/* Set pinctrl properties */
+ 
+-	pctldesc->pins = devm_kcalloc(dev, ARRAY_SIZE(ns_pinctrl_pins),
+-				      sizeof(struct pinctrl_pin_desc),
+-				      GFP_KERNEL);
+-	if (!pctldesc->pins)
+-		return -ENOMEM;
+-	for (i = 0, pin = (struct pinctrl_pin_desc *)&pctldesc->pins[0];
+-	     i < ARRAY_SIZE(ns_pinctrl_pins); i++) {
+-		const struct pinctrl_pin_desc *src = &ns_pinctrl_pins[i];
+-		unsigned int chipsets = (uintptr_t)src->drv_data;
+-
+-		if (chipsets & ns_pinctrl->chipset_flag) {
+-			memcpy(pin++, src, sizeof(*src));
+-			pctldesc->npins++;
++	pins = of_get_child_by_name(dev->of_node, "pins");
++	if (pins) {
++		err = pinctrl_generic_load_pins(pctldesc, dev);
++		of_node_put(pins);
++		if (err)
++			return err;
++	} else {
++		pctldesc->pins = devm_kcalloc(dev, ARRAY_SIZE(ns_pinctrl_pins),
++					sizeof(struct pinctrl_pin_desc),
++					GFP_KERNEL);
++		if (!pctldesc->pins)
++			return -ENOMEM;
++		for (i = 0, pin = (struct pinctrl_pin_desc *)&pctldesc->pins[0];
++		     i < ARRAY_SIZE(ns_pinctrl_pins); i++) {
++			const struct pinctrl_pin_desc *src = &ns_pinctrl_pins[i];
++			unsigned int chipsets = (uintptr_t)src->drv_data;
 +
++			if (chipsets & ns_pinctrl->chipset_flag) {
++				memcpy(pin++, src, sizeof(*src));
++				pctldesc->npins++;
++			}
+ 		}
+ 	}
+ 
+@@ -267,25 +279,43 @@ static int ns_pinctrl_probe(struct platform_device *pdev)
+ 		return PTR_ERR(ns_pinctrl->pctldev);
+ 	}
+ 
+-	for (i = 0; i < ARRAY_SIZE(ns_pinctrl_groups); i++) {
+-		const struct ns_pinctrl_group *group = &ns_pinctrl_groups[i];
+-
+-		if (!(group->chipsets & ns_pinctrl->chipset_flag))
+-			continue;
+-
+-		pinctrl_generic_add_group(ns_pinctrl->pctldev, group->name,
+-					  group->pins, group->num_pins, NULL);
++	groups = of_get_child_by_name(dev->of_node, "groups");
++	if (groups) {
++		err = pinctrl_generic_load_groups(ns_pinctrl->pctldev);
++		of_node_put(groups);
++		if (err)
++			return err;
++	} else {
++		for (i = 0; i < ARRAY_SIZE(ns_pinctrl_groups); i++) {
++			const struct ns_pinctrl_group *group = &ns_pinctrl_groups[i];
++
++			if (!(group->chipsets & ns_pinctrl->chipset_flag))
++				continue;
++
++			pinctrl_generic_add_group(ns_pinctrl->pctldev,
++						  group->name, group->pins,
++						  group->num_pins, NULL);
++		}
+ 	}
+ 
+-	for (i = 0; i < ARRAY_SIZE(ns_pinctrl_functions); i++) {
+-		const struct ns_pinctrl_function *function = &ns_pinctrl_functions[i];
+-
+-		if (!(function->chipsets & ns_pinctrl->chipset_flag))
+-			continue;
+-
+-		pinmux_generic_add_function(ns_pinctrl->pctldev, function->name,
+-					    function->groups,
+-					    function->num_groups, NULL);
 +	functions = of_get_child_by_name(dev->of_node, "functions");
-+	if (!functions) {
-+		dev_err(dev, "failed to find \"functions\" DT node\n");
-+		err = -ENOENT;
-+		goto err_out;
-+	}
++	if (functions) {
++		err = pinmux_generic_load_functions(ns_pinctrl->pctldev);
++		of_node_put(functions);
++		if (err)
++			return err;
++	} else {
++		for (i = 0; i < ARRAY_SIZE(ns_pinctrl_functions); i++) {
++			const struct ns_pinctrl_function *function = &ns_pinctrl_functions[i];
 +
-+	for_each_available_child_of_node(functions, np) {
-+		int num_groups = of_count_phandle_with_args(np, "groups", NULL);
-+		struct of_phandle_iterator it;
-+		const char **groups;
-+		int ret;
-+		int i;
++			if (!(function->chipsets & ns_pinctrl->chipset_flag))
++				continue;
 +
-+		groups = devm_kmalloc_array(dev, num_groups, sizeof(*groups), GFP_KERNEL);
-+		if (!groups) {
-+			err = -ENOMEM;
-+			goto err_put_node;
++			pinmux_generic_add_function(ns_pinctrl->pctldev,
++						    function->name,
++						    function->groups,
++						    function->num_groups, NULL);
 +		}
-+
-+		i = 0;
-+		of_for_each_phandle(&it, ret, np, "groups", NULL, 0) {
-+			groups[i++] = it.node->name;
-+		}
-+
-+		pinmux_generic_add_function(pctldev, np->name, groups, num_groups, np);
-+	}
-+
-+err_put_node:
-+	of_node_put(functions);
-+err_out:
-+	return err;
-+}
-+#endif
-+
- static void dt_free_map(struct pinctrl_dev *pctldev,
- 		     struct pinctrl_map *map, unsigned num_maps)
- {
-diff --git a/drivers/pinctrl/devicetree.h b/drivers/pinctrl/devicetree.h
-index efa80779de4f..156f13896c39 100644
---- a/drivers/pinctrl/devicetree.h
-+++ b/drivers/pinctrl/devicetree.h
-@@ -9,6 +9,15 @@ struct of_phandle_args;
+ 	}
  
- #ifdef CONFIG_OF
- 
-+int pinctrl_generic_dt_load_pins(struct pinctrl_desc *pctldesc,
-+				struct device *dev);
-+#ifdef CONFIG_GENERIC_PINCTRL_GROUPS
-+int pinctrl_generic_load_dt_groups(struct pinctrl_dev *pctldev);
-+#endif
-+#ifdef CONFIG_GENERIC_PINMUX_FUNCTIONS
-+int pinmux_generic_load_dt_functions(struct pinctrl_dev *pctldev);
-+#endif
-+
- void pinctrl_dt_free_maps(struct pinctrl *p);
- int pinctrl_dt_to_map(struct pinctrl *p, struct pinctrl_dev *pctldev);
- 
-@@ -21,6 +30,26 @@ int pinctrl_parse_index_with_args(const struct device_node *np,
- 
- #else
- 
-+static inline int pinctrl_generic_dt_load_pins(struct pinctrl_desc *pctldesc,
-+					      struct device *dev)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+#ifdef CONFIG_GENERIC_PINCTRL_GROUPS
-+static inline int pinctrl_generic_load_dt_groups(struct pinctrl_dev *pctldev)
-+{
-+	return -EOPNOTSUPP;
-+}
-+#endif
-+
-+#ifdef CONFIG_GENERIC_PINMUX_FUNCTIONS
-+static inline int pinmux_generic_load_dt_functions(struct pinctrl_dev *pctldev)
-+{
-+	return -EOPNOTSUPP;
-+}
-+#endif
-+
- static inline int pinctrl_dt_to_map(struct pinctrl *p,
- 				    struct pinctrl_dev *pctldev)
- {
-diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
-index ef7d2cbf0946..36a1d1af4a20 100644
---- a/drivers/pinctrl/pinmux.c
-+++ b/drivers/pinctrl/pinmux.c
-@@ -27,6 +27,7 @@
- #include <linux/pinctrl/machine.h>
- #include <linux/pinctrl/pinmux.h>
- #include "core.h"
-+#include "devicetree.h"
- #include "pinmux.h"
- 
- int pinmux_check_ops(struct pinctrl_dev *pctldev)
-@@ -790,6 +791,9 @@ void pinmux_init_device_debugfs(struct dentry *devroot,
- 
- int pinmux_generic_load_functions(struct pinctrl_dev *pctldev)
- {
-+	if (pctldev->dev->of_node)
-+		return pinmux_generic_load_dt_functions(pctldev);
-+
- 	return -ENOENT;
- }
- EXPORT_SYMBOL_GPL(pinmux_generic_load_functions);
+ 	return 0;
 -- 
 2.31.1
 
