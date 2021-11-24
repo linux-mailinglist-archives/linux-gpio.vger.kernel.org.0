@@ -2,122 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2BA945C706
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Nov 2021 15:17:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D1FDF45C71C
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Nov 2021 15:18:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348868AbhKXOSC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 24 Nov 2021 09:18:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44038 "EHLO
+        id S1353502AbhKXOVW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 24 Nov 2021 09:21:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351000AbhKXOR1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Nov 2021 09:17:27 -0500
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36F98C0818F3
-        for <linux-gpio@vger.kernel.org>; Wed, 24 Nov 2021 04:28:57 -0800 (PST)
-Received: by mail-wm1-x331.google.com with SMTP id p27-20020a05600c1d9b00b0033bf8532855so1910680wms.3
-        for <linux-gpio@vger.kernel.org>; Wed, 24 Nov 2021 04:28:57 -0800 (PST)
+        with ESMTP id S1351095AbhKXOVE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Nov 2021 09:21:04 -0500
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F209DC11223D
+        for <linux-gpio@vger.kernel.org>; Wed, 24 Nov 2021 04:46:59 -0800 (PST)
+Received: by mail-ed1-x52f.google.com with SMTP id v1so9918370edx.2
+        for <linux-gpio@vger.kernel.org>; Wed, 24 Nov 2021 04:46:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=DcZ1Q8d+O6FgM0ahJ1NKmjZFVwY2xw4s/RvlwwiK+mU=;
-        b=WOKeoFFzUWyCB51Qa2QJzo4p0Sv9PqYAsGJHScNWi0Nxq4TkivGBjOMsmIQgYB/l3P
-         rB4/KYGerJym8yts+yBeedP3jrVFUZLq8OQZLErIvNzv7MK1wT7l35NbDKJ5VmFA9Dus
-         9H8JlOuZ+ZuUTWSev2rzR576dLdVH29+YiWKHTd8sSyawZ9p/i8GxRJ9sIIAdYpnO58S
-         yKpT2i+cBPy1bC9Zg78RgvmKXjZvkYtiItvAhlvZIp8Fta8qs91Xwgbh4DPIpyK3Df4E
-         QENJwb+fp+kPKHGoW6R3OYrgOjIGHkGW9INfjPhGlP7bYiFpbXDKLdNYhVUoKu1z1YfA
-         mCJQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QNxbdxvY1XGwJO5BhsvGP2g9FnaYCe6z/c5imeKTCQc=;
+        b=JAO/GeWYxrwEZ+KX7CN1FibY0RaYaYDktQMXfAGDm6HVGGFB8u3qG7/sKMMalnK5V/
+         y+nL/khR63DpUwXJpS1dhQQV6ddEDo9nbmUBxbrwsGjbof5O4fOcSJgRfc9f2gdDx8Ye
+         5GZhrudR0PunvfEXr9OgrZEdnJ9KRMq154DpIDlQ8CY6cXdv7DSbAegAX8vkhR/mh505
+         JzdqlAUdf1b1BgOwmLbU2B1PziiNESeZ2vUty/cbK/DiWTjLvMQtq5bypBCcLiOkBr9a
+         aHYFAxW7X6PzMqlmsJCe4aVB6M9Zl274zvr6M/C4Ht0BgSTT4Cu4prTQzU/bXfYwIZl9
+         3o7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=DcZ1Q8d+O6FgM0ahJ1NKmjZFVwY2xw4s/RvlwwiK+mU=;
-        b=8ORRcrscAlBwT6bdxWUX+ILFlRMOw2mZqYEOO47RkRgfGBo1SAfrA3aO856Swc0Rd/
-         inP7BphPKXqx8Cxki3yf4LRILPYRloBvG6hfpUT0KtpYrbNmEedyehtF27m+AE22mNfb
-         TJtBCfPGnqNWvm9VS0ivTf5aZHiRR3T7wC8bh/UQMi2AafOKvEv3KKKfsbsDB0eJ0L6o
-         YXmlzE7YM2WURQg2I5WGan739e+kBacV+TnFh+kCAZjWgrGND/7z2URi/m2v44Jo7vwK
-         qK0+IrznzhrHZUtSx5xYy2drvSId6jjPXPVRwd4qP+JEwJvj6wZ9GNMEyuFJr4XCXk8N
-         OJCg==
-X-Gm-Message-State: AOAM531ayPAfWv+F8MEsS7hj12j7DSRwBlHHsW8NnwqSuBFj4ISbSW2M
-        rR+hhr+yzinq0fYTH3LhfaJDWLK5yEGe8zTe
-X-Google-Smtp-Source: ABdhPJzT/jKV/kTbp1ET/jbz8/YdJAG86C5Bkz7yhjB8UEXLmD/yNJcyuAzmYfO/v9dZHELp43N/GA==
-X-Received: by 2002:a05:600c:22d9:: with SMTP id 25mr14255425wmg.71.1637756935782;
-        Wed, 24 Nov 2021 04:28:55 -0800 (PST)
-Received: from debian-brgl.home ([2a01:cb1d:334:ac00:7d50:ff5:f5c1:e225])
-        by smtp.gmail.com with ESMTPSA id p62sm4417694wmp.10.2021.11.24.04.28.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Nov 2021 04:28:55 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Johan Hovold <johan@kernel.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v3 2/2] gpiolib: check the 'ngpios' property in core gpiolib code
-Date:   Wed, 24 Nov 2021 13:28:50 +0100
-Message-Id: <20211124122850.7095-2-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.30.1
-In-Reply-To: <20211124122850.7095-1-brgl@bgdev.pl>
-References: <20211124122850.7095-1-brgl@bgdev.pl>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QNxbdxvY1XGwJO5BhsvGP2g9FnaYCe6z/c5imeKTCQc=;
+        b=QmzFjUsj0ech80dAHpytFg7yLfnQ1zBouOByW1MDdi3Pie/8BEM/SiyyYuS1hDEWkm
+         HF8cmcc6bcp1eigXs/JWi8u00iAfk+8L0yxXDfI2RIX1ylOqqmT5OHq3gM81NMWO/tH+
+         XtzhIth/r20xItjH4hWT+cWMSlo56yl6c9Qxb0rxIAhl/xPh7ivfOZXGRf6N+IOYDiy8
+         LhHEWT9l5YCi7xH4Uy3dKWEnIKq+GChVbExrpuDv5GR+p8WnPLl/GtauRInKkaz3YWwr
+         nTeO8y9z2O3NAsIBbZ2Ga66IRAnkTf6LotJn6vzRwSbqPar7sLKM1TTrcu5A8jG2SmFe
+         TPgg==
+X-Gm-Message-State: AOAM532C6VIudcbNprrLoWxobRxTOMv8BLpLc7/adFVp44ieaxVbcZ1n
+        OdQCnrraLM/aC1Hdczd7xA82VAnVh4qw79UNl2TDy9w7LCfLwA==
+X-Google-Smtp-Source: ABdhPJyA+W15t1CjEV/znDfMRF9pbH794hXE1Mz4w5XFk6DeON2vEQHijf1ymInLVeDutAJkzB74uutR0+T/MJu13wM=
+X-Received: by 2002:a05:6402:1e93:: with SMTP id f19mr24830673edf.60.1637758018580;
+ Wed, 24 Nov 2021 04:46:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20210518155013.45622-1-andriy.shevchenko@linux.intel.com>
+ <20210518232451.GA7362@sol> <YKTCDNcyUlrgE0Y4@smile.fi.intel.com>
+ <20210519080434.GA22854@sol> <YKTMninSSY3MK6Hf@smile.fi.intel.com>
+ <CAMpxmJVJBx2J87bS0CUYPyJkHKt=nvFw65y_+iG-5JbVekuaqw@mail.gmail.com>
+ <CAHp75VdZ3aws3G=4_r82LMfuMNmNdLoBpqRsfF_ogZ7c=vyTsQ@mail.gmail.com>
+ <CAMpxmJVy12at1+37iPiqTXe6mvodUpjDKCkFQO02Cu=u5_sp_A@mail.gmail.com> <YZ0928wfsYIBJYcQ@smile.fi.intel.com>
+In-Reply-To: <YZ0928wfsYIBJYcQ@smile.fi.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 24 Nov 2021 13:46:47 +0100
+Message-ID: <CAMRc=McPGR4xejGWxCUkEsNiOmwkf1kctXB-K73xU9q3r7+CFA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] gpiolib: Never return internal error codes to user space
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Kent Gibson <warthog618@gmail.com>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Suresh Balakrishnan <suresh.balakrishnan@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Several drivers read the 'ngpios' device property on their own, but
-since it's defined as a standard GPIO property in the device tree bindings
-anyway, it's a good candidate for generalization. If the driver didn't
-set its gc->ngpio, try to read the 'ngpios' property from the GPIO
-device's firmware node before bailing out.
+On Tue, Nov 23, 2021 at 8:16 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Thu, May 20, 2021 at 04:39:50PM +0200, Bartosz Golaszewski wrote:
+> > On Thu, May 20, 2021 at 3:15 PM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > >
+> > > On Thu, May 20, 2021 at 4:08 PM Bartosz Golaszewski
+> > > <bgolaszewski@baylibre.com> wrote:
+> > > > On Wed, May 19, 2021 at 10:30 AM Andy Shevchenko
+> > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > > On Wed, May 19, 2021 at 04:04:34PM +0800, Kent Gibson wrote:
+> > > > > > On Wed, May 19, 2021 at 10:45:16AM +0300, Andy Shevchenko wrote:
+> > > > > > > On Wed, May 19, 2021 at 07:24:51AM +0800, Kent Gibson wrote:
+> > > > > > > > On Tue, May 18, 2021 at 06:50:12PM +0300, Andy Shevchenko wrote:
+> > >
+> > > ...
+> > >
+> > > > > > > > > Fixes: d7c51b47ac11 ("gpio: userspace ABI for reading/writing GPIO lines")
+> > > > > > > > > Fixes: 61f922db7221 ("gpio: userspace ABI for reading GPIO line events")
+> > > > > > > > > Fixes: 3c0d9c635ae2 ("gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL and GPIO_V2_LINE_GET_VALUES_IOCTL")
+> > >
+> > > ...
+> > >
+> > > > > > > > You immediately revert this patch in patch 2.
+> > > > > > > > My understanding is that is not allowed within a patch set.
+> > > > > > >
+> > > > > > > > Why split the patches instead of going direct to the new helper?
+> > > > > > >
+> > > > > > > It's for backporting to make it easier. (I deliberately left the context above)
+> > > > > > >
+> > > > > > > I can fold them if maintainers think it's okay to do.
+> > > > > > >
+> > > > > >
+> > > > > > Not sure what the constraints are on backporting, but wouldn't it be
+> > > > > > simpler and cleaner to backport the new helper?
+> > > > >
+> > > > > Logically (and ideally) it would be three different patches:
+> > > > >  1) introduce helper
+> > > > >  2) use helper
+> > > > >  3) fix places where it's needed to be done
+> > > > >
+> > > > > But the above scheme doesn't fit backporting idea (we don't backport new
+> > > > > features and APIs without really necessity). So, the options left are:
+> > > > >
+> > > > > Option a: One patch (feels a bit like above)
+> > > > > Option b: Two patches like in this series (yes, you are correct about
+> > > > >           disadvantages)
+> > > > >
+> > > > > > But, as you say, it is the maintainers' call.
+> > >
+> > > > Third option is to backport this patch but apply the helper
+> > > > immediately to master.
+> > >
+> > > If I got you correctly, you want to have two patches, one for
+> > > backporting and one for current, correct? But how can we backport
+> > > something which has never been upstreamed?
+> > >
+> >
+> > Well we would not technically backport anything - there would be one
+> > patch for mainline and a separate fix for stable.
+>
+> So, what should I do here?
 
-Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
----
-v1 -> v2:
-- use device_property_read_u32() instead of fwnode_property_read_u32()
-- reverse the error check logic
+Send a separate patch for stable branches that fixes the issue and
+fold this patch into the next one in the series for master.
 
-v2 -> v3:
-- don't shadow errors other than -ENODATA in device_property_read_u32()
-
- drivers/gpio/gpiolib.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index ede8b8a7aa18..f79fd2551cf7 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -599,6 +599,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	int base = gc->base;
- 	unsigned int i;
- 	int ret = 0;
-+	u32 ngpios;
- 
- 	/*
- 	 * First: allocate and populate the internal stat container, and
-@@ -647,9 +648,17 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	}
- 
- 	if (gc->ngpio == 0) {
--		chip_err(gc, "tried to insert a GPIO chip with zero lines\n");
--		ret = -EINVAL;
--		goto err_free_descs;
-+		ret = device_property_read_u32(&gdev->dev, "ngpios", &ngpios);
-+		if (ret) {
-+			if (ret == -ENODATA) {
-+				chip_err(gc, "tried to insert a GPIO chip with zero lines\n");
-+				ret = -EINVAL;
-+			}
-+
-+			goto err_free_descs;
-+		}
-+
-+		gc->ngpio = ngpios;
- 	}
- 
- 	if (gc->ngpio > FASTPATH_NGPIO)
--- 
-2.25.1
-
+Bart
