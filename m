@@ -2,103 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6372345B06E
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Nov 2021 00:49:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E4E745B0C7
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Nov 2021 01:35:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239202AbhKWXwe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 23 Nov 2021 18:52:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43150 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229674AbhKWXwd (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 23 Nov 2021 18:52:33 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id EBAD760F41;
-        Tue, 23 Nov 2021 23:49:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637711364;
-        bh=IW4qN8u05oVacusnPMH1cuKnY7vyge2dygNZ0jyMnfs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=bMkLLetQudL1AnjDLBkGz2KJV65XFDNAI+qMERM3p2htB/mPltEFDc0SoR5SG7cTn
-         yUvjgLX4fj3iycoMCeZbceNqv8VJp4xXmhJ5j4daJdQUx70dPPE1ZSDF3I8EJ3CrBl
-         FL9EHxBPJYKnvkt5L2363w5f8MTJ/hI+N0EksRg4Tqq2ECyAP9r+yfiU6OtA4c1HNW
-         sJDJxZC66+IkfqVqHU0aoaIJ7PQLiQE76d+ztRn4+dA/AYxJtUD+/ZrA56NgYcGb99
-         3NhcCdyp7MdhPQ2MlzMSxitFt7xyg2kF02pUQFCNG1ojXEWE+DZkeLhKg7BQKKAgjZ
-         pglhaeH4khWUA==
-Date:   Tue, 23 Nov 2021 15:49:22 -0800
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Paul Walmsley <paul@pwsan.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Tero Kristo <kristo@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
-        Benoit Parrot <bparrot@ti.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Ping-Ke Shih <pkshih@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Keerthy <j-keerthy@ti.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
-        alsa-devel@alsa-project.org
-Subject: Re: [PATCH 01/17] bitfield: Add non-constant field_{prep,get}()
- helpers
-Message-ID: <20211123154922.600fd3b5@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <637a4183861a1f2cdab52b7652bfa7ed33fbcdd2.camel@sipsolutions.net>
-References: <cover.1637592133.git.geert+renesas@glider.be>
-        <3a54a6703879d10f08cf0275a2a69297ebd2b1d4.1637592133.git.geert+renesas@glider.be>
-        <01b44b38c087c151171f8d45a2090474c2559306.camel@sipsolutions.net>
-        <20211122171739.03848154@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-        <CAMuHMdWAAGrQUZN18cnDTDUUhuPNTZTFkRMe2Sbf+s7CedPSxA@mail.gmail.com>
-        <637a4183861a1f2cdab52b7652bfa7ed33fbcdd2.camel@sipsolutions.net>
+        id S230288AbhKXAi4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 23 Nov 2021 19:38:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33412 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229926AbhKXAiz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 23 Nov 2021 19:38:55 -0500
+Received: from mail-oi1-x22e.google.com (mail-oi1-x22e.google.com [IPv6:2607:f8b0:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE85AC061574
+        for <linux-gpio@vger.kernel.org>; Tue, 23 Nov 2021 16:35:46 -0800 (PST)
+Received: by mail-oi1-x22e.google.com with SMTP id o4so1603684oia.10
+        for <linux-gpio@vger.kernel.org>; Tue, 23 Nov 2021 16:35:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kNh0jt8tv4maN2YkF0cmeBfMTgSPYwcWwHTrIEj8PD4=;
+        b=RaJX8F1zRhXuDy80KZTcn+dQG5gDuyJcbR9Truhvisst9naZx2GPRqhKCfPSGA7bH9
+         S4ey/ByihGFenVcwBSdlZOoytstPoEDO3jcbQaHZtCFB659a4vMl6TDNasJnhob3sdPe
+         aZLjIOt8VGWOTaeoFiRoZCXBOiig0A60Z8z8jBpa8IniwasBhYcZKKI+c+m6Xp9SY+FU
+         AoTN/BHReBRXjpUdt562mH0OPwsBNAXATEEKi6HNKKQ77EmeolMy74FoUMlsP1NdVzLP
+         Y/Rxmk8nc15M3CDmwAJZ+vzWptXyXguBqsfmoilurxOTOpLua1Tw66SEDf0e4T27hoq7
+         sygw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kNh0jt8tv4maN2YkF0cmeBfMTgSPYwcWwHTrIEj8PD4=;
+        b=FN76gVV4i04esZCU+SDgOytTgsv/0hTREVLWWiDbja8tmGDOMeDAwtNiRYcBphBxIi
+         NxKqEoBgmMNmRtoNArFMFveGAoeAz3/fhwgPDniBCBSJmI8ft7f+isGP8DOQ9cWq+S6q
+         tG4DA9V5cqP5YFQPL6366ocb/Lis1a6N1viStpWLdo9fPBAaLcRN0LF0QapD2kadbNJu
+         b41H+L5meAiEDF+yFChMXs6lsrehD2B7w1B0HfYm5ixXXEvzHZQYMJbYU414QN8rXNwp
+         NRDSpMWyRUQCsZt9L2SvNPxIUGrnkOckb3rbO502l70QflKOymSy3k442xF65ThyeRGv
+         e/HQ==
+X-Gm-Message-State: AOAM533/fL78c7ke7jkTmVysLwBapK1qf/dg1cmqSzzL/qpVRzNI5l5i
+        TqNQl6Yx5MFxkoKWWctIxyM/PkzVdCTNQ77YWGC8qg==
+X-Google-Smtp-Source: ABdhPJyNEmGOeKXUl3TxFGzLSZSdD+IztDjr0BhBBI2kJMnGgmHs2eAnjCm1/YARFHCchP1O0uJLUFFPcXuqbc1B5T8=
+X-Received: by 2002:a05:6808:60e:: with SMTP id y14mr1453521oih.162.1637714146248;
+ Tue, 23 Nov 2021 16:35:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20211123164902.35370-1-wsa+renesas@sang-engineering.com> <20211123164902.35370-2-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20211123164902.35370-2-wsa+renesas@sang-engineering.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 24 Nov 2021 01:35:34 +0100
+Message-ID: <CACRpkdYJqP7WJuhS9G65abCZHK1_LX9hkXU6o+k10t2LXw100w@mail.gmail.com>
+Subject: Re: [PATCH v5 1/1] gpio: add sloppy logic analyzer using polling
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 23 Nov 2021 17:24:15 +0100 Johannes Berg wrote:
-> > (*_replace_bits() seems to be useful, though)  
-> 
-> Indeed.
-> 
-> Also as I said in my other mail, the le32/be32/... variants are
-> tremendously useful, and they fundamentally cannot be expressed with the
-> FIELD_GET() or field_get() macros. IMHO this is a clear advantage to the
+Hi Wolfram!
 
-Can you elaborate?
+I like this patch.
 
-> typed versions, and if you ask me we should get rid of the FIELD_GETand
-> FIELD_PREP entirely - difficult now, but at least let's not propagate
-> that?
+On Tue, Nov 23, 2021 at 5:49 PM Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
 
-I don't see why.
+> +Introduction
+> +============
+> +
+> +This document briefly describes how to run the GPIO based in-kernel sloppy
+> +logic analyzer running on an isolated CPU.
+> +
+> +Note that this is a last resort analyzer which can be affected by latencies,
+> +non-deterministic code paths and non-maskable interrupts. It is called 'sloppy'
+> +for a reason. However, for e.g. remote development, it may be useful to get a
+> +first view and aid further debugging.
+
+Maybe a small paragraph first saying what this is, the usecase (feel
+free to steal,
+rewrite etc):
+
+The sloppy logic analyzer will utilize a few GPIO lines in input mode on a
+system to rapidly sample these digital lines, which will, if the
+Nyquist criteria
+is met, result in a time series log with approximate waveforms as they appeared
+on these lines.
+
+One way to use it is to analyze external traffic connected to these GPIO
+lines with wires (i.e. digital probes), acting as a common logic analyzer.
+
+Another thing it can do is to snoop on on-chip peripherals if the I/O cells of
+these peripherals can be used in GPIO input mode at the same time as they
+are being used as inputs or outputs for the peripheral, for example it would be
+possible to scale down the speed of a certain MMC controller and snoop
+the traffic between the MMC controller and the SD card by the sloppy
+logic analyzer. In the pin control subsystem such pin controllers are
+called "non-strict": a certain pin can be used with a certain peripheral and
+as a GPIO input line at the same time.
+
+Yours,
+Linus Walleij
