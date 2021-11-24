@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 20F5345D0B0
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Nov 2021 00:04:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D2E1C45D0B4
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Nov 2021 00:05:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352181AbhKXXIG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 24 Nov 2021 18:08:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54050 "EHLO
+        id S1352309AbhKXXIK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 24 Nov 2021 18:08:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232233AbhKXXIF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Nov 2021 18:08:05 -0500
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAAA1C061574;
-        Wed, 24 Nov 2021 15:04:54 -0800 (PST)
-Received: by mail-lf1-x133.google.com with SMTP id c32so11296391lfv.4;
-        Wed, 24 Nov 2021 15:04:54 -0800 (PST)
+        with ESMTP id S1350651AbhKXXIH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Nov 2021 18:08:07 -0500
+Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BA49C061574;
+        Wed, 24 Nov 2021 15:04:57 -0800 (PST)
+Received: by mail-lj1-x231.google.com with SMTP id i63so8665855lji.3;
+        Wed, 24 Nov 2021 15:04:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=lWbqyeFKTpIICRMymi5H38k0B/Ww7jwmEeUwnVlXWRw=;
-        b=BBWiwwcrrubeEEsKBJa5owoPeKRZfdluFYfF1P2knbtHA/JkxNnrKnPs0BWbU8gEPN
-         FYLgYu1SnlfvtAZ6TcFeXiQsBYIh1czGq/jULOgkELbpTBDLv5RYa+MBEbdPCeA6fLET
-         RBRU5RY3Q3t63NgXhTryEs/TNpI2AMN9Ti0IL84bP4zbLY9A7G986Vpi6Ivs/RKYm/S3
-         DrHrpXaW+ZSEKjFJEVDvUE5uqeaFFVxJ9DHs13pC1NrazwSVZNqWF+chU12lt+bvhhrg
-         RtaW4F0yIflUPD9AvdF+hw/PjQ2aHDDMyqB3xl7y01rt0DbpoyL+Vh1I/a8efmf7nYYI
-         IIMg==
+        bh=t5U1SyZfZoNpGvHsTDHh7UaG3kdZXZO+eWrR/VnLjrk=;
+        b=lCDNG9jpw+/etEW6mwyL4EzIUojTEv+dOGBBzgrrZB2DbGynnUmiV83vYs5DXdOUIy
+         T5U80pnSUEq1tYgeHhySOJZe7lTdOEj71TkP+XU3JZK8uTbcAy3HA4J51Oe0v7CJQg1w
+         7ywe+qhLGu6Ze6qA+cJB5S9SMYxjOFe1acreWzja7KvbjJHa05DDdtOMYJpTXov2Hll+
+         oQ7/6Oa8qR1rLuIS8OiBFazPtbjgWp5QMhSfIiHeqS9wvIqR5EQ7i/3cf8D+n5hCy87W
+         /u7Oes8iQC2Fev+B+L/taTDoJxcYYfQ/++RqdOEYi+4uDnvwNHEyki25aSrP/x2exnot
+         F2FQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=lWbqyeFKTpIICRMymi5H38k0B/Ww7jwmEeUwnVlXWRw=;
-        b=X1a01tuw/AKKpvS9o4XcYgCT0FefJAftnY6gONcQ3lBFzMRRpzljDKDCFi+26UZ4T1
-         P8JIn7/KIRLFKjAQpp8FSmrctvXsPi3bVBsZMLGe4m336+lPhBu5f8yWy/usyco+5LhW
-         fDR3Hbmm9Jy22wnjSraG1onO3frhsTctcNYr7p/hjmG1J79eY/MQ5oSMCUABMkF5AvLW
-         N5NtRPlfzB0Mb+sPjxb7pkZXdumO9JzW/EDukjqM+mYwz/KIAOeeYXgQQ1AD/QIyXyxA
-         pubx1B43pFybC519YG6mSwXJwR0d74N0nZLSQ0qXaont6vL0kxwjsbkaejvI7y6XUclD
-         K1qA==
-X-Gm-Message-State: AOAM533HJU1/6BKjOumvgExf09EBKXEz+GvP9+pSHepY5HODm7hTup+x
-        aI1Re/SEfZYjdPwtUwGVX2o=
-X-Google-Smtp-Source: ABdhPJzPn86hxh8E/nA0jTARqE7u4J7ABNdcZr57j9b5czRc0sWmJkNF1kqtc4K5OHdUhqRQtJQXBA==
-X-Received: by 2002:a19:9157:: with SMTP id y23mr19363900lfj.277.1637795093282;
-        Wed, 24 Nov 2021 15:04:53 -0800 (PST)
+        bh=t5U1SyZfZoNpGvHsTDHh7UaG3kdZXZO+eWrR/VnLjrk=;
+        b=QO+SW/F+GpMedL600PcfDCxU41O4k+BGV1c3zTcpkEzF6vknYOiYD30mzn88K/7C/u
+         IbEbYdLovAeCVAtSZPNIhNXc4+gMquacH9PPZoYeM+ScVTTp8Ye0vSaEN7mZJxnvCH7E
+         dmSJudWKquWOPfyBPkczPytp8zc7T8oesZsDO5ATlM1bvVR3U3EWo6mWq7mnXZzBLIG2
+         fz0b806RQF6PJHY/voO1JoE86sop4IqbjlftwpwQUSS8/7kNOQuByGrMfRVdYIqmsSrg
+         6+lSKm7x7rFUyDfhscT88mfGMngVB0Z24Vdq91qF7k5ZxR0jOl2lKJBIk0uPIiKcZtHR
+         pi2A==
+X-Gm-Message-State: AOAM530+mq6d25lgMevWCsySlCc3aOlcomzgewy/HSvwsBZQCCn0Pj1/
+        MvhXMLD8S9fzJbXFgmjKATc=
+X-Google-Smtp-Source: ABdhPJx6vDIEcyUtB+GGU0RO2j8UW/qmW6qWgbrVozwXJdnq6GLsQfLFu/fmFeWwCylyo3vB3wo+Ww==
+X-Received: by 2002:a2e:904b:: with SMTP id n11mr19791007ljg.120.1637795095369;
+        Wed, 24 Nov 2021 15:04:55 -0800 (PST)
 Received: from localhost.lan (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
-        by smtp.gmail.com with ESMTPSA id t15sm106243lfp.181.2021.11.24.15.04.52
+        by smtp.gmail.com with ESMTPSA id t15sm106243lfp.181.2021.11.24.15.04.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Nov 2021 15:04:53 -0800 (PST)
+        Wed, 24 Nov 2021 15:04:55 -0800 (PST)
 From:   =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>
@@ -57,9 +57,9 @@ Cc:     Tony Lindgren <tony@atomide.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
         bcm-kernel-feedback-list@broadcom.com,
         =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
-Subject: [PATCH V2 1/6] dt-bindings: pinctrl: support specifying pins, groups & functions
-Date:   Thu, 25 Nov 2021 00:04:34 +0100
-Message-Id: <20211124230439.17531-2-zajec5@gmail.com>
+Subject: [PATCH V2 2/6] dt-bindings: pinctrl: brcm,ns-pinmux: extend example
+Date:   Thu, 25 Nov 2021 00:04:35 +0100
+Message-Id: <20211124230439.17531-3-zajec5@gmail.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20211124230439.17531-1-zajec5@gmail.com>
 References: <20211124230439.17531-1-zajec5@gmail.com>
@@ -72,98 +72,60 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Rafał Miłecki <rafal@milecki.pl>
 
-This binding change is meant to introduce a generic way of describing
-pinctrl blocks details. Every pinmux block is expected to have:
-1. Named pins
-2. Named groups containing one or more pins
-3. Named functions referencing one or more groups
+pinctrl bindings allow specifying pins, groups & functions now. Put some
+entries in binding example to help writing DTS files.
 
-It doesn't describe how hw should be programmed. That remains binding
-and driver specific.
-
-This commit describes syntax for "pins", "groups" & "functions" nodes in
-a standard pinctrl binding. Every above node allows specifying its
-entries and it's done using subnodes.
-
-That design it meant to be generic and extendable (hw specific
-properties can be added). Using subnodes allows storing hw specific
-pin/group/function configuration.
-
-While it would be possible to have:
-groups {
-    foo-pins = <0 1>;
-    bar-pins = <2 3>;
-};
-that doesn't allow hw specific quirks.
-
-Introduced design allows e.g.:
-groups {
-    foo {
-        pins = <0 1>;
-        vendor,magic = <0xbeaf>;
-    };
-};
+Specify pins, groups & functions in the example.
 
 Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
 ---
-Rob: this patch depends on another one I sent 2 weeks ago:
-[PATCH 2/2] dt-bindings: pinctrl: use pinctrl.yaml
-https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20211110165720.30242-2-zajec5@gmail.com/
-
-V2: Don't use "reg" property as explained by Tony
+V2: Update "pins" to match new binding
 ---
- .../devicetree/bindings/pinctrl/pinctrl.yaml  | 40 +++++++++++++++++++
- 1 file changed, 40 insertions(+)
+ .../bindings/pinctrl/brcm,ns-pinmux.yaml      | 24 ++++++++++++++++++-
+ 1 file changed, 23 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/pinctrl.yaml
-index d471563119a9..25d8188fbb26 100644
---- a/Documentation/devicetree/bindings/pinctrl/pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl.yaml
-@@ -42,4 +42,44 @@ properties:
-       This property can be set either globally for the pin controller or in
-       child nodes for individual pin group control.
+diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,ns-pinmux.yaml b/Documentation/devicetree/bindings/pinctrl/brcm,ns-pinmux.yaml
+index 8d1e5b1cdd5f..e5816a10938c 100644
+--- a/Documentation/devicetree/bindings/pinctrl/brcm,ns-pinmux.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/brcm,ns-pinmux.yaml
+@@ -74,7 +74,7 @@ required:
+   - reg
+   - reg-names
  
-+  pins:
-+    type: object
+-additionalProperties: false
++unevaluatedProperties: false
+ 
+ examples:
+   - |
+@@ -83,6 +83,28 @@ examples:
+         reg = <0x1800c1c0 0x24>;
+         reg-names = "cru_gpio_control";
+ 
++        pins {
++            i2c_scl {
++                number = <4>;
++            };
 +
-+    patternProperties:
-+      "^.*$":
-+        type: object
++            i2c_sda {
++                number = <5>;
++            };
++        };
 +
-+        properties:
-+          number:
-+            description: Pin number
-+            $ref: /schemas/types.yaml#/definitions/uint32
++        groups {
++            i2c_grp: i2c_grp {
++                pins = <4 5>;
++            };
++        };
 +
-+        additionalProperties: false
++        functions {
++            i2c {
++                groups = <&i2c_grp>;
++            };
++        };
 +
-+  groups:
-+    type: object
-+
-+    patternProperties:
-+      "^.*$":
-+        type: object
-+        description: Group identified by node name
-+
-+        properties:
-+          pins:
-+            $ref: /schemas/types.yaml#/definitions/uint32-array
-+            description: Array of pins belonging to this group
-+
-+  functions:
-+    type: object
-+
-+    patternProperties:
-+      "^.*$":
-+        type: object
-+        description: Function identified by node name
-+
-+        properties:
-+          groups:
-+            $ref: /schemas/types.yaml#/definitions/phandle-array
-+            description: Array of pins groups used by this function
-+
- additionalProperties: true
+         spi-pins {
+             function = "spi";
+             groups = "spi_grp";
 -- 
 2.31.1
 
