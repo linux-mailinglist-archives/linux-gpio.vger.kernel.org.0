@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5ED3045D0AE
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Nov 2021 00:04:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 20F5345D0B0
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Nov 2021 00:04:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345925AbhKXXID (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 24 Nov 2021 18:08:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54042 "EHLO
+        id S1352181AbhKXXIG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 24 Nov 2021 18:08:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232233AbhKXXIC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Nov 2021 18:08:02 -0500
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3533DC061574;
-        Wed, 24 Nov 2021 15:04:52 -0800 (PST)
-Received: by mail-lf1-x12a.google.com with SMTP id bi37so11259653lfb.5;
-        Wed, 24 Nov 2021 15:04:52 -0800 (PST)
+        with ESMTP id S232233AbhKXXIF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 24 Nov 2021 18:08:05 -0500
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAAA1C061574;
+        Wed, 24 Nov 2021 15:04:54 -0800 (PST)
+Received: by mail-lf1-x133.google.com with SMTP id c32so11296391lfv.4;
+        Wed, 24 Nov 2021 15:04:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xu4ZJzFogZrNX3XGLhtBKZKbbwbJR/nJXQ9VcrBljmI=;
-        b=dgBujuUmsMqv7KONxnH+FFUgyLhIZz5fcr9OhY2liYYKViLh6Km5L5aohsYzLNyl0k
-         VpYhqjNsG73cntqbY5xvKOVwLkikDFhuFSE+Oi2SjsuEdVIgykQI30Dw0AsqUnATzJfk
-         Fylgfo0OWFeQUYr/+apnsfawreX10vgDS0/Auh8maU8npkxa1y3sTh8xQ0R+jhlbhVCF
-         z/GYBgxtZQH8zQeqvBCeUdjb+JFODUrpobeMX//UymTT8XOK3pG2DmJteqMKKbPzwcFz
-         IgEObgD5JMEs+8fgwOhZYEClfCzWHb6ztilV7JY43Xp4MIjoGS7wRFHDcnhdAWHLfjjl
-         bV6g==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=lWbqyeFKTpIICRMymi5H38k0B/Ww7jwmEeUwnVlXWRw=;
+        b=BBWiwwcrrubeEEsKBJa5owoPeKRZfdluFYfF1P2knbtHA/JkxNnrKnPs0BWbU8gEPN
+         FYLgYu1SnlfvtAZ6TcFeXiQsBYIh1czGq/jULOgkELbpTBDLv5RYa+MBEbdPCeA6fLET
+         RBRU5RY3Q3t63NgXhTryEs/TNpI2AMN9Ti0IL84bP4zbLY9A7G986Vpi6Ivs/RKYm/S3
+         DrHrpXaW+ZSEKjFJEVDvUE5uqeaFFVxJ9DHs13pC1NrazwSVZNqWF+chU12lt+bvhhrg
+         RtaW4F0yIflUPD9AvdF+hw/PjQ2aHDDMyqB3xl7y01rt0DbpoyL+Vh1I/a8efmf7nYYI
+         IIMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xu4ZJzFogZrNX3XGLhtBKZKbbwbJR/nJXQ9VcrBljmI=;
-        b=KmBKYT/XczclE6P7+Z9JNoZn3vge7A8KXahffZs1xnnQWHF3qIKtNW7FrQu3Vyl3pW
-         0gp1tKw6kmkixaYleXZwJ5nnFx08PdpUHqjWG7fW+wFsJHrAJ6/FLIRoqcDYHk539rtX
-         NrDMggZyiM/k79lyixXb+pR1A2GNJFBw3bkBlW/egZ/fhGxtwVKo6nD8LN0sU2/ksG3f
-         uvRBnkj1kyxiPUyDH/KvXPDhpENzFS8s5h09/q1ECAfPkYIgpLgKD5VZj+7VIGllukol
-         jLp4f2oCT/Hy062lddtQHyuDZ6jD5UA8ge3huzY5HGhv8jEE0/v2cacyAtuOODVL2Snm
-         Uemg==
-X-Gm-Message-State: AOAM53163dL4Yx17okW07XiWF5uyyIsUFV/ap4HgdlJsUnAe+ZnjZw40
-        JwW1lizmnCy3zFG4I0JuG8E=
-X-Google-Smtp-Source: ABdhPJxLCyIVOzcM1kvVipVfrJjEc52yxVOsPgpBY0OrMesf5AqGVt3InUc+lEOqGg+FX8coxEbxaQ==
-X-Received: by 2002:a05:6512:3f91:: with SMTP id x17mr10309034lfa.5.1637795090421;
-        Wed, 24 Nov 2021 15:04:50 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=lWbqyeFKTpIICRMymi5H38k0B/Ww7jwmEeUwnVlXWRw=;
+        b=X1a01tuw/AKKpvS9o4XcYgCT0FefJAftnY6gONcQ3lBFzMRRpzljDKDCFi+26UZ4T1
+         P8JIn7/KIRLFKjAQpp8FSmrctvXsPi3bVBsZMLGe4m336+lPhBu5f8yWy/usyco+5LhW
+         fDR3Hbmm9Jy22wnjSraG1onO3frhsTctcNYr7p/hjmG1J79eY/MQ5oSMCUABMkF5AvLW
+         N5NtRPlfzB0Mb+sPjxb7pkZXdumO9JzW/EDukjqM+mYwz/KIAOeeYXgQQ1AD/QIyXyxA
+         pubx1B43pFybC519YG6mSwXJwR0d74N0nZLSQ0qXaont6vL0kxwjsbkaejvI7y6XUclD
+         K1qA==
+X-Gm-Message-State: AOAM533HJU1/6BKjOumvgExf09EBKXEz+GvP9+pSHepY5HODm7hTup+x
+        aI1Re/SEfZYjdPwtUwGVX2o=
+X-Google-Smtp-Source: ABdhPJzPn86hxh8E/nA0jTARqE7u4J7ABNdcZr57j9b5czRc0sWmJkNF1kqtc4K5OHdUhqRQtJQXBA==
+X-Received: by 2002:a19:9157:: with SMTP id y23mr19363900lfj.277.1637795093282;
+        Wed, 24 Nov 2021 15:04:53 -0800 (PST)
 Received: from localhost.lan (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
-        by smtp.gmail.com with ESMTPSA id t15sm106243lfp.181.2021.11.24.15.04.48
+        by smtp.gmail.com with ESMTPSA id t15sm106243lfp.181.2021.11.24.15.04.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Nov 2021 15:04:50 -0800 (PST)
+        Wed, 24 Nov 2021 15:04:53 -0800 (PST)
 From:   =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>
@@ -57,10 +57,12 @@ Cc:     Tony Lindgren <tony@atomide.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
         bcm-kernel-feedback-list@broadcom.com,
         =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
-Subject: [PATCH V2 0/6] pinctrl: support platform (e.g. DT) stored pins, groups & functions
-Date:   Thu, 25 Nov 2021 00:04:33 +0100
-Message-Id: <20211124230439.17531-1-zajec5@gmail.com>
+Subject: [PATCH V2 1/6] dt-bindings: pinctrl: support specifying pins, groups & functions
+Date:   Thu, 25 Nov 2021 00:04:34 +0100
+Message-Id: <20211124230439.17531-2-zajec5@gmail.com>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20211124230439.17531-1-zajec5@gmail.com>
+References: <20211124230439.17531-1-zajec5@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -70,49 +72,98 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Rafał Miłecki <rafal@milecki.pl>
 
-Two weeks ago I sent
-[PATCH RFC] dt-bindings: pinctrl: support specifying pins
-https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20211110231436.8866-1-zajec5@gmail.com/
+This binding change is meant to introduce a generic way of describing
+pinctrl blocks details. Every pinmux block is expected to have:
+1. Named pins
+2. Named groups containing one or more pins
+3. Named functions referencing one or more groups
 
-and week ago I sent
-[PATCH 0/5] pinctrl: allow storing pins, groups & functions in DT
-https://patchwork.ozlabs.org/project/linux-gpio/list/?series=272685
+It doesn't describe how hw should be programmed. That remains binding
+and driver specific.
 
-Initially I planned to allow putting some pinctrl hw details in DT and
-later that evolved into a slightly more generic API.
+This commit describes syntax for "pins", "groups" & "functions" nodes in
+a standard pinctrl binding. Every above node allows specifying its
+entries and it's done using subnodes.
 
-Again:
-Please note it's about describing hardware elements and not actual
-programming way. It may be used with pinctrl-single.c one day but it's
-designed as a generic solution for data.
+That design it meant to be generic and extendable (hw specific
+properties can be added). Using subnodes allows storing hw specific
+pin/group/function configuration.
 
-Patches 1-5 are for linux-pinctrl.git. Patch 6 I found worth including
-as DT big example. It can go through Linus with Florian's Ack or I can
-send it to Florian later.
+While it would be possible to have:
+groups {
+    foo-pins = <0 1>;
+    bar-pins = <2 3>;
+};
+that doesn't allow hw specific quirks.
 
-Rafał Miłecki (6):
-  dt-bindings: pinctrl: support specifying pins, groups & functions
-  dt-bindings: pinctrl: brcm,ns-pinmux: extend example
-  pinctrl: prepare API for reading pins, groups & functions
-  pinctrl: support reading pins, groups & functions from DT
-  pinctrl: bcm: pinctrl-ns: supoprt DT specified pins, groups &
-    functions
-  ARM: dts: BCM5301X: add pinctrl pins, groups & functions
+Introduced design allows e.g.:
+groups {
+    foo {
+        pins = <0 1>;
+        vendor,magic = <0xbeaf>;
+    };
+};
 
- .../bindings/pinctrl/brcm,ns-pinmux.yaml      |  24 +++-
- .../devicetree/bindings/pinctrl/pinctrl.yaml  |  40 ++++++
- arch/arm/boot/dts/bcm4709.dtsi                |  67 +++++++++
- arch/arm/boot/dts/bcm47094.dtsi               |  11 +-
- arch/arm/boot/dts/bcm5301x.dtsi               | 109 +++++++++++++++
- drivers/pinctrl/bcm/pinctrl-ns.c              |  90 ++++++++----
- drivers/pinctrl/core.c                        |  18 +++
- drivers/pinctrl/core.h                        |   4 +
- drivers/pinctrl/devicetree.c                  | 131 ++++++++++++++++++
- drivers/pinctrl/devicetree.h                  |  29 ++++
- drivers/pinctrl/pinmux.c                      |  10 ++
- drivers/pinctrl/pinmux.h                      |   2 +
- 12 files changed, 494 insertions(+), 41 deletions(-)
+Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+---
+Rob: this patch depends on another one I sent 2 weeks ago:
+[PATCH 2/2] dt-bindings: pinctrl: use pinctrl.yaml
+https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20211110165720.30242-2-zajec5@gmail.com/
 
+V2: Don't use "reg" property as explained by Tony
+---
+ .../devicetree/bindings/pinctrl/pinctrl.yaml  | 40 +++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/pinctrl.yaml
+index d471563119a9..25d8188fbb26 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl.yaml
+@@ -42,4 +42,44 @@ properties:
+       This property can be set either globally for the pin controller or in
+       child nodes for individual pin group control.
+ 
++  pins:
++    type: object
++
++    patternProperties:
++      "^.*$":
++        type: object
++
++        properties:
++          number:
++            description: Pin number
++            $ref: /schemas/types.yaml#/definitions/uint32
++
++        additionalProperties: false
++
++  groups:
++    type: object
++
++    patternProperties:
++      "^.*$":
++        type: object
++        description: Group identified by node name
++
++        properties:
++          pins:
++            $ref: /schemas/types.yaml#/definitions/uint32-array
++            description: Array of pins belonging to this group
++
++  functions:
++    type: object
++
++    patternProperties:
++      "^.*$":
++        type: object
++        description: Function identified by node name
++
++        properties:
++          groups:
++            $ref: /schemas/types.yaml#/definitions/phandle-array
++            description: Array of pins groups used by this function
++
+ additionalProperties: true
 -- 
 2.31.1
 
