@@ -2,88 +2,276 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A2BF645E2D0
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Nov 2021 22:59:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EC5F045E2F1
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Nov 2021 23:21:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343804AbhKYWCl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 Nov 2021 17:02:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45152 "EHLO
+        id S239368AbhKYWYi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 Nov 2021 17:24:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229735AbhKYWAk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Nov 2021 17:00:40 -0500
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 527CAC061746;
-        Thu, 25 Nov 2021 13:56:45 -0800 (PST)
-Received: by mail-lf1-x144.google.com with SMTP id k37so19405314lfv.3;
-        Thu, 25 Nov 2021 13:56:45 -0800 (PST)
+        with ESMTP id S232830AbhKYWWi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Nov 2021 17:22:38 -0500
+Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CE21C06173E;
+        Thu, 25 Nov 2021 14:19:26 -0800 (PST)
+Received: by mail-qk1-x72e.google.com with SMTP id de30so13111667qkb.0;
+        Thu, 25 Nov 2021 14:19:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+xEZeptIFxKUhbqhiFVnqGqN6Ab8HrFfKJKYFIcuna8=;
-        b=j2jrdtKDfjIF2/VQumwah3x35qghBAF7rFhqOYBOVWX6j1XP7FenYr7ZaGu0DT64RC
-         IcDufkGKwb9awNbIS3un1qGBCRE+qQ4hzaVcTokthbyUfGTLRZPO4Fu4+il3hXokqzFh
-         1wm4cxOYo5pM57dSkpwH0DIfniwJ4bJ3hQg0F+OuYCql0TPLz2T2DskvAMtSlv5nQ2vB
-         WFydVv9DeLwSLnyDsoN4kitLK801s/dkTsBSOgMmGoSsR5yRqtQmKMk56BiQvDZ72E30
-         6XcdWgQz5CleDItEeVR2CMK1nMWhL8HT2CA33Q818jEWRqSFnSQlnq5moY9q23wOIjRH
-         hLPw==
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=Jzu3IGp/+NtN4KbWEJ7SKM9mTl27O4zRYj7bMTCcrDE=;
+        b=OjE3fyUCfvqLCfwTy5oIDirKOGtUiPlm61xh/sjmS8fkEGNT33LdV81wdUB26kbtD+
+         o8zIRbchPNkvhSf82WqVy5cR98VkXUL3DUtCs351sPiQsuLzkzpFRBuV+3yPC9MuKi6w
+         ztjTUmlFr7zgqMeQbvXhCFSvV9tUHahyGpaVEuposSRCXhJL1BEIHoZfJ9nq99Xa5mL0
+         iqlDbGv8MrD6mEQYXgnWOIO7h++bdHD9ETNLZDJhtjpgdzXfMdDeIER6ssS7mJIZveQT
+         OHfPxHMFSGuDUT9msVDJ0QMAOhe4RPz9NmE+MFV0Qbx0CrnoTfZL2xlHs1nyTwC7ZpKn
+         AOLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+xEZeptIFxKUhbqhiFVnqGqN6Ab8HrFfKJKYFIcuna8=;
-        b=gJvdSZSBZgo250modi/bnshj0RN3VCUi8aOcrEUaLpuwW6lbuyxyUgDfDRIuirBHpZ
-         SRFp09IWU53YdER9wByflNjGqChSBhd2xG8wypsxAYc6XHXUBCFW1dFpWL4h8Tg5bUhg
-         e+SqWn3FPFVbVYMB+Ep8Q2tLWArcMGbQs5/EzJ7FW4/H0ruQnbXJzIaHwnpZPUy4U5Wm
-         RDyHqlagWYXxLsvB/HoN5BcC/5VszkrDY0woKbdRxV0GQKQpREA8d6NtaMzz52dJG21z
-         vE4BQDZNfFCuTELMKexrU0SxY2EmvXdfJp0MNn4PIKDRDoGvkzNKIz4iKs9MnCNWXPRK
-         2YUw==
-X-Gm-Message-State: AOAM530WZqgjtCkJusYXt1b3YxENhVviCf2BskHKMh7do1vZBY71II0q
-        kQ1Z6MlvVhlEAl+S7QmDGWo=
-X-Google-Smtp-Source: ABdhPJx1mrubuqNyQ0dooCVOTMGD+K7aLr/k7C1mFcvBED8jX1uELx0eBU7Rl+Ez/uWq+6ymci64vQ==
-X-Received: by 2002:ac2:4119:: with SMTP id b25mr25681466lfi.3.1637877403556;
-        Thu, 25 Nov 2021 13:56:43 -0800 (PST)
-Received: from localhost.localdomain (public-gprs212807.centertel.pl. [46.134.170.136])
-        by smtp.googlemail.com with ESMTPSA id l16sm404861lfg.90.2021.11.25.13.56.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Nov 2021 13:56:43 -0800 (PST)
-From:   Dominik Kobinski <dominikkobinski314@gmail.com>
-To:     bjorn.andersson@linaro.org
-Cc:     agross@kernel.org, linus.walleij@linaro.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dominik Kobinski <dominikkobinski314@gmail.com>,
-        Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-Subject: [PATCH v2,2/5] dt-bindings: pinctrl: qcom: pmic-gpio: Document pm8226 compatible
-Date:   Thu, 25 Nov 2021 22:56:26 +0100
-Message-Id: <20211125215626.62447-1-dominikkobinski314@gmail.com>
-X-Mailer: git-send-email 2.34.0
-In-Reply-To: <20211125213451.62010-1-dominikkobinski314@gmail.com>
-References: <20211125213451.62010-1-dominikkobinski314@gmail.com>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=Jzu3IGp/+NtN4KbWEJ7SKM9mTl27O4zRYj7bMTCcrDE=;
+        b=dyc1jJoVjpacnvHuoQg1jENWFiQJbAd3nMOzRU9nR6Zlss7KTyeveILQZH/7Vj43v3
+         wlp+TDiFNMfoDkVBEFaK9Jkn1zMqOg3/6BjfaUYaAv0LE9Iax7SXII0BgxHsP+HUUzrA
+         r9oYIcoSDaqFTGySROWpz7T7u+KKHHffMrwdDN8dabkpWElvFUtCkvhL5ajFTXgU2I8S
+         Vc8P1Mjm/gTxkDDqM0e7EyzOCahJrSS+V9BvAVsptinH3MUelF2R1wAElM8V2+lY/bv4
+         MZthnHQKlYHpunWFBPpnoHLEGkssxb8gvQ6ntGG0j7Rgv+OPAmrR9ZsNEzTyOxw8ni9V
+         uRlg==
+X-Gm-Message-State: AOAM530SReP5lXov5Vo/WmIRS4AgUshU1SqVUbr2vFVjg16Oe8F7Whx0
+        +SDvt3Pdavz9rzviISo9EfI=
+X-Google-Smtp-Source: ABdhPJxTOSRJIXYg48NDzBO2Igr258AXSKndwwjJmfQt6W5u0VUgTJ2R8cUwxHqE9Pp/9WV8nyLzhQ==
+X-Received: by 2002:a05:620a:2955:: with SMTP id n21mr11102232qkp.586.1637878765420;
+        Thu, 25 Nov 2021 14:19:25 -0800 (PST)
+Received: from [10.4.10.38] (146-115-144-188.s4282.c3-0.nwt-cbr1.sbo-nwt.ma.cable.rcncustomer.com. [146.115.144.188])
+        by smtp.gmail.com with ESMTPSA id d5sm2347779qte.27.2021.11.25.14.19.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 Nov 2021 14:19:25 -0800 (PST)
+Message-ID: <2801d9c2-f922-5cc7-4e43-c9a8db3004ba@gmail.com>
+Date:   Thu, 25 Nov 2021 17:19:23 -0500
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.2
+Subject: Re: [PATCH v3 13/13] ARM: imxrt_defconfig: add i.MXRT family
+ defconfig
+Content-Language: en-US
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     NXP Linux Team <linux-imx@nxp.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        gregkh <gregkh@linuxfoundation.org>,
+        Olof Johansson <olof@lixom.net>, SoC Team <soc@kernel.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        giulio.benetti@benettiengineering.com,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
+References: <20211125211443.1150135-1-Mr.Bossman075@gmail.com>
+ <20211125211443.1150135-14-Mr.Bossman075@gmail.com>
+ <CAK8P3a3dwwBt21o7LDY-CLDdVmOknxDF7sgO_dfiTj8_u4Tx=A@mail.gmail.com>
+From:   Jesse Taube <mr.bossman075@gmail.com>
+In-Reply-To: <CAK8P3a3dwwBt21o7LDY-CLDdVmOknxDF7sgO_dfiTj8_u4Tx=A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Suggested-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-Signed-off-by: Dominik Kobinski <dominikkobinski314@gmail.com>
----
- Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
-index 8952b4cc1262..293f480ad0b4 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
-@@ -30,6 +30,7 @@ properties:
-           - qcom,pm8058-gpio
-           - qcom,pm8150-gpio
-           - qcom,pm8150b-gpio
-+          - qcom,pm8226-gpio
-           - qcom,pm8350-gpio
-           - qcom,pm8350b-gpio
-           - qcom,pm8350c-gpio
--- 
-2.34.0
 
+On 11/25/21 16:42, Arnd Bergmann wrote:
+> On Thu, Nov 25, 2021 at 10:14 PM Jesse Taube <mr.bossman075@gmail.com> wrote:
+>>
+>> From: Giulio Benetti <giulio.benetti@benettiengineering.com>
+>>
+>> Add generic i.MXRT family defconfig.
+>>
+>> Signed-off-by: Giulio Benetti <giulio.benetti@benettiengineering.com>
+>> Signed-off-by: Jesse Taube <Mr.Bossman075@gmail.com>
+> 
+> I see a lot of things in here that probably should not be part of the kernel,
+> either because they are rather obscure, or they take valuable memory:
+> 
+>> ---
+>>   arch/arm/configs/imxrt_defconfig | 157 +++++++++++++++++++++++++++++++
+>>   1 file changed, 157 insertions(+)
+>>   create mode 100644 arch/arm/configs/imxrt_defconfig
+>>
+>> diff --git a/arch/arm/configs/imxrt_defconfig b/arch/arm/configs/imxrt_defconfig
+>> new file mode 100644
+>> index 000000000000..d673745a5462
+>> --- /dev/null
+>> +++ b/arch/arm/configs/imxrt_defconfig
+>> @@ -0,0 +1,157 @@
+>> +# CONFIG_LOCALVERSION_AUTO is not set
+>> +CONFIG_SYSVIPC=y
+>> +CONFIG_USELIB=y
+> 
+> You almost certainly won't want USELIB, and SYSVIPC support
+> would only be useful for certain applications that you probably
+> won't run.
+> 
+>> +CONFIG_BSD_PROCESS_ACCT=y
+>> +CONFIG_BSD_PROCESS_ACCT_V3=y
+>> +CONFIG_PSI=y
+>> +CONFIG_IKCONFIG=y
+>> +CONFIG_IKCONFIG_PROC=y
+> 
+> Probably nonen of these are helpful here.
+> 
+>> +CONFIG_MEMCG=y
+>> +CONFIG_BLK_CGROUP=y
+>> +CONFIG_CFS_BANDWIDTH=y
+>> +CONFIG_CGROUP_PIDS=y
+>> +CONFIG_CGROUP_RDMA=y
+>> +CONFIG_CGROUP_FREEZER=y
+>> +CONFIG_CGROUP_DEVICE=y
+>> +CONFIG_CGROUP_CPUACCT=y
+>> +CONFIG_CGROUP_PERF=y
+>> +CONFIG_CGROUP_BPF=y
+>> +CONFIG_NAMESPACES=y
+>> +CONFIG_USER_NS=y
+>> +CONFIG_CHECKPOINT_RESTORE=y
+> 
+> Same for control groups overall as well as checkpoint_restore
+> 
+>> +CONFIG_RELAY=y
+> 
+> There are a few drivers using CONFIG_RELAY, but I don't see you enable
+> any of them,
+> so this is not actually used.
+> 
+this makes scene will change
+>> +CONFIG_EXPERT=y
+> 
+> Are you losing anything without EXPERT? If not, remove that
+> 
+>> +CONFIG_SGETMASK_SYSCALL=y
+>> +# CONFIG_FUTEX is not set
+> 
+> Futex is probably one of the things you /do/ want.
+> 
+There is a weird bug in futexs that reads from null_ptr, otherwise if 
+you hard code that access isn't allowed it works. This seems to be a 
+problem on other no-MMU platforms. I changed it to not have futexs like 
+the stm32s, CONFIG_EXPERT is required for this option. If you want I can 
+explain more about this but, i was going to do that as a separate patch.
+
+>> +CONFIG_KALLSYMS_ALL=y
+>> +CONFIG_PC104=y
+> 
+> Turning off KALLSYMS_ALL may save a noticeable amount of RAM.
+Intresting
+> 
+> PC104 isn't actually that big, but it seems unlikely that you have
+> that hardware.
+> 
+>> +CONFIG_PARAVIRT=y
+> 
+> You don't seem to enable XEN, so I don't think PARAVIRT is useful by itself.
+> 
+>> +# CONFIG_ATAGS is not set
+>> +CONFIG_CMDLINE="console=ttyS0 root=/dev/mmcblk0p2 rw earlycon rootwait"
+> 
+> The command line should come from the boot loader, users probably have
+> a different root device.
+Presumably this will never be used but I have it there as an example for 
+others, I can remove it if necessary.
+> 
+>> +CONFIG_BLK_DEV_BSGLIB=y
+>> +CONFIG_BLK_DEV_INTEGRITY=y
+>> +CONFIG_BLK_DEV_ZONED=y
+>> +CONFIG_BLK_DEV_THROTTLING=y
+>> +CONFIG_BLK_WBT=y
+>> +CONFIG_BLK_SED_OPAL=y
+>> +CONFIG_PARTITION_ADVANCED=y
+>> +CONFIG_BSD_DISKLABEL=y
+>> +CONFIG_MINIX_SUBPARTITION=y
+>> +CONFIG_SOLARIS_X86_PARTITION=y
+>> +CONFIG_UNIXWARE_DISKLABEL=y
+>> +CONFIG_LDM_PARTITION=y
+> 
+> I don't see you using OPAL or any of the 1990's partition formats.
+> ot set
+> 
+>> +CONFIG_BINFMT_FLAT=y
+> 
+> For the defconfig, you should probably have ELF_FDPIC enabled,
+> not just FLAT.
+> 
+>> +CONFIG_CLEANCACHE=y
+>> +CONFIG_ZPOOL=y
+>> +CONFIG_ZBUD=y
+>> +CONFIG_Z3FOLD=y
+> 
+> Do these work as expected on NOMMU?
+> 
+>> +CONFIG_BLK_DEV_LOOP=y
+>> +CONFIG_BLK_DEV_RAM=y
+>> +CONFIG_BLK_DEV_RAM_COUNT=1
+>> +CONFIG_BLK_DEV_RAM_SIZE=65536
+> 
+> I don't think you can have a ramdisk larger than RAM ;-)
+> 
+Oh that's funny I left that from testing something I will remove it.
+>> +CONFIG_MEMORY=y
+> 
+> No need to enable the subsystem when you don't enable any
+> of its drivers.
+> 
+>> +CONFIG_EXT2_FS=y
+>> +CONFIG_EXT2_FS_XATTR=y
+>> +CONFIG_EXT2_FS_POSIX_ACL=y
+>> +CONFIG_EXT2_FS_SECURITY=y
+>> +CONFIG_EXT3_FS=y
+>> +CONFIG_EXT3_FS_POSIX_ACL=y
+>> +CONFIG_EXT3_FS_SECURITY=y
+> 
+> Never use EXT3 on eMMC, just use EXT4 instead to make
+> the device actually live longer. You probably don't need to enable
+> EXT2 support separately.
+> 
+>> +# CONFIG_FILE_LOCKING is not set
+>> +# CONFIG_DNOTIFY is not set
+>> +CONFIG_QUOTA=y
+> 
+> dnotify and locking seem more useful than quota here
+> 
+>> +# CONFIG_PRINT_QUOTA_WARNING is not set
+>> +CONFIG_AUTOFS4_FS=y
+> 
+>> +CONFIG_CONFIGFS_FS=y
+> 
+> I don't see anything using configfs
+> 
+>> +CONFIG_LSM="yama,loadpin,integrity,apparmor"
+> 
+> None of these are actually enabled as far as I can tell.
+> 
+>> +CONFIG_DEBUG_INFO=y
+>> +CONFIG_DEBUG_INFO_DWARF4=y
+> 
+> If you use DWARF4, you probably want DEBUG_INFO_SPLIT as well,
+> to reduce the vmlinux size.
+> 
+>         Arnd
+> 
+Thx for telling me about this i will try to use only the necessary ones.
