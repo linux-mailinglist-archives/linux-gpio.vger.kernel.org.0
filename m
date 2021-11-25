@@ -2,132 +2,187 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 74BAB45D92E
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Nov 2021 12:25:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD7F545DA13
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Nov 2021 13:30:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232569AbhKYL2m (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 25 Nov 2021 06:28:42 -0500
-Received: from mga11.intel.com ([192.55.52.93]:22844 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234506AbhKYL0m (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 25 Nov 2021 06:26:42 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10178"; a="232992535"
-X-IronPort-AV: E=Sophos;i="5.87,263,1631602800"; 
-   d="scan'208";a="232992535"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2021 03:18:13 -0800
-X-IronPort-AV: E=Sophos;i="5.87,263,1631602800"; 
-   d="scan'208";a="607538955"
-Received: from smile.fi.intel.com ([10.237.72.184])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2021 03:18:11 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1mqClU-00APiI-Nu;
-        Thu, 25 Nov 2021 13:18:08 +0200
-Date:   Thu, 25 Nov 2021 13:18:08 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Johan Hovold <johan@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 2/2] gpiolib: check the 'ngpios' property in core
- gpiolib code
-Message-ID: <YZ9w8EU8XN8xhpDp@smile.fi.intel.com>
-References: <20211124122850.7095-1-brgl@bgdev.pl>
- <20211124122850.7095-2-brgl@bgdev.pl>
- <YZ5QYsu2ed5FiSWE@smile.fi.intel.com>
- <CAMRc=Mfcph_YPryowhtGtb9G_GOveRm+27BJYyznjxc=BK-jWg@mail.gmail.com>
+        id S1352974AbhKYMdj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 25 Nov 2021 07:33:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59938 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1352866AbhKYMbf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 25 Nov 2021 07:31:35 -0500
+Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4822CC061756;
+        Thu, 25 Nov 2021 04:28:24 -0800 (PST)
+Received: by mail-lj1-x231.google.com with SMTP id e11so12111186ljo.13;
+        Thu, 25 Nov 2021 04:28:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:to:cc:references
+         :from:in-reply-to:content-transfer-encoding;
+        bh=h4zpnY29V2vfxgbVPVCQbgZupqEMTi1kTAtyT5HWSkQ=;
+        b=aRaz+wIjNQMc+9ry0ykaS4nSCmIvUnvcCQz4gLJbFCU9c10THV+EBOnCkJNqqxWD9Q
+         4TT0TX9MrUasE54+KLWHbcWeXTREyedFFJBVJYR1yDda8nSfrNzf1A6Zy7wanpJxDwf7
+         PPAGx9AtvWIRcBMcMJ6vWmJFkKSTS1hNlWTDSx+1cQk0+iDu761vYXpzgxtl5HayKJ2O
+         Ku0/Dtsb49AipVNZv+x005sCsYkocWIlxlWOT3XM3nVeYe/0xKf4ELAbQpAaOVaQCvR2
+         pus0ZhFC310bTATrsGu4BoZlFGEstzNuq0qSS46gs1c3tIoAX3cwvpyyUNChtIPNtpsn
+         gCQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :to:cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=h4zpnY29V2vfxgbVPVCQbgZupqEMTi1kTAtyT5HWSkQ=;
+        b=FJSIGSrSSU0LIJsLzWqSm8DZfbz3jMspBZRmae6bEyzpdnU+PcUWSG+WEhxwC4Jpy0
+         7vu1Jqhrnin7dbFwK1N26exBsiw1l9hkYR4+jmo0Gd26vyeUmoYZxX9MGGbT5freRIUp
+         iRha2ZjO8G7oFhy62Ynk++8quFse8xZOKNuZke5d273f5HvkKn3r2DVPhten/PTeJ1u3
+         vHb5pbVxS4oH0Z6m0KM/s6yHGUy8VwxEmMfw54IFJumOXICASLQHJ+MuCBT3hpCc30lR
+         73ShhvfBdFtb9CD9PslPjMyLOr7+tcxtA5ajMbnj5JRsg4kuE9n0BBydhWl3R3avmU9W
+         3c5w==
+X-Gm-Message-State: AOAM531tvR+tgpoYbDvoroL0nJMk7qT3sJROI/lmw3T7jdWCpZSs5kjF
+        RX2fVpfYF0nQ4rgnzWrssI8zHgLHaSY=
+X-Google-Smtp-Source: ABdhPJzWuR0H3frAXxiTdeQeIL7lMlX7wJPjM+8OCv99+1KeTfq3ae7JKS8kuY/jF6eL66wR54YUNg==
+X-Received: by 2002:a2e:918e:: with SMTP id f14mr23591820ljg.109.1637843302525;
+        Thu, 25 Nov 2021 04:28:22 -0800 (PST)
+Received: from [192.168.26.149] (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
+        by smtp.googlemail.com with ESMTPSA id x133sm292329lff.290.2021.11.25.04.28.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 25 Nov 2021 04:28:22 -0800 (PST)
+Message-ID: <3acea66e-c5e1-ff6c-aedb-d9ee61dcf8ab@gmail.com>
+Date:   Thu, 25 Nov 2021 13:28:20 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=Mfcph_YPryowhtGtb9G_GOveRm+27BJYyznjxc=BK-jWg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:95.0) Gecko/20100101
+ Thunderbird/95.0
+Subject: Re: [PATCH V2 1/6] dt-bindings: pinctrl: support specifying pins,
+ groups & functions
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+References: <20211124230439.17531-1-zajec5@gmail.com>
+ <20211124230439.17531-2-zajec5@gmail.com> <YZ9OAC/swfCbBXFt@atomide.com>
+From:   =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+In-Reply-To: <YZ9OAC/swfCbBXFt@atomide.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 25, 2021 at 11:10:08AM +0100, Bartosz Golaszewski wrote:
-> On Wed, Nov 24, 2021 at 3:47 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Wed, Nov 24, 2021 at 01:28:50PM +0100, Bartosz Golaszewski wrote:
-
-...
-
-> > > +             ret = device_property_read_u32(&gdev->dev, "ngpios", &ngpios);
-> > > +             if (ret) {
-> > > +                     if (ret == -ENODATA) {
-> > > +                             chip_err(gc, "tried to insert a GPIO chip with zero lines\n");
-> > > +                             ret = -EINVAL;
-> > > +                     }
-> > > +
-> > > +                     goto err_free_descs;
-> > > +             }
-> >
-> > And if the property returns 0 in ngpios?
-> >
-> > What about the modified suggestion from previous version:
-> >
-> >         if (gc->ngpio == 0) {
-> >                 ret = device_property_read_u32(&gdev->dev, "ngpios", &ngpios);
-
-> The comment is a good idea but other than that - it's overcomplicating things.
-
-I don't think so. It is plain and self-explaining each step. See at the end of
-the message how.
-
-> >                 if (ret == -ENODATA)
-> >                         ngpios = 0;
-> >                 else if (ret)
-> >                         return ret;
-
-> You still need to goto err_free_descs here.
-
-Right, this doesn't affect the main point / logic here.
-
-> >                 gc->ngpio = ngpios;
-> >         }
-> >
-> >         if (gc->ngpio == 0) {
+On 25.11.2021 09:49, Tony Lindgren wrote:
+> * Rafał Miłecki <zajec5@gmail.com> [211124 23:05]:
+>> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl.yaml
+>> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl.yaml
+>> @@ -42,4 +42,44 @@ properties:
+>>         This property can be set either globally for the pin controller or in
+>>         child nodes for individual pin group control.
+>>   
+>> +  pins:
+>> +    type: object
+>> +
+>> +    patternProperties:
+>> +      "^.*$":
+>> +        type: object
+>> +
+>> +        properties:
+>> +          number:
+>> +            description: Pin number
+>> +            $ref: /schemas/types.yaml#/definitions/uint32
+>> +
+>> +        additionalProperties: false
 > 
-> Why check that again? We already know the driver set it to 0, we
-> checked it a couple lines before. If we can't get the setting from the
-> properties then it won't be non 0 here right?
+> Please don't introduce Linux kernel internal numbering here. It's
+> like bringing back the interrupt numbers again.
 
-No, it's not right. The check is needed to tell that properties supplied 0.
+This is a new bit to me and the reason why I got this binding that way.
 
-> >                 chip_err(gc, "tried to insert a GPIO chip with zero lines\n");
-> >                 ret = -EINVAL;
-> >                 goto err_free_descs;
-> >         }
-> >
-> > ?
-> >
-> > > +             gc->ngpio = ngpios;
-> > >       }
-> > >
-> > >       if (gc->ngpio > FASTPATH_NGPIO)
+I had no idea pin numbering is system specific thing. I always thought
+pin numbers are present in every chip datasheets and that is just a part
+of hardware.
 
-> I suggest the following:
+Now I'm reading https://www.kernel.org/doc/Documentation/pinctrl.txt
+again it indeed seems to mention that numbering is handled in a way not
+related to specs: "I enumerated the pins from 0 in the upper left corner
+to 63 in the lower right corner.".
 
-It's buggy as submitted version (I actually haven't found any difference in
-the code, but comments).
-
-You see, I propose less changes and straight forward logic:
-
-1. Check if the supplied ->ngpio equal to 0
-2. If so, try device properties
-2.1. If there is no property found, make sure we a) don't use uninitialized
-     variable, b) we don't change ->ngpio, so it stays 0
-2.2. If there is an error, return it as is to the caller
-2.3. Assign ->ngpio by value from property (which very well may be 0!)
-3. Check ->ngpio for 0 again, if so, issue a message and return -EINVAL to
-the user.
-
-We have three places where ->ngpio can be 0, all of them I covered.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Sorry for that, I hopefully understand your point correctly now.
 
 
+> Just make this into
+> a proper hardware offset from the controller base, so a reg property.
+> Sure in some cases the reg property is just an index depending on
+> the controller, we don't really care from the binding point of view.
+> 
+> We already have #pinctrl-cells, so plase do something like the four
+> ximaginary examples below:
+> 
+> 	#pinctrl-cells = <1>;
+> 	...
+> 	pin@foo {
+> 		reg = <0xf00 MUX_MODE0>;
+> 		label = "foo_pin";
+> 	};
+> 
+> 
+> 	#pinctrl-cells = <2>;
+> 	...
+> 	pin@foo {
+> 		reg = <0xf00 PIN_INPUT_PULLUP MUX_MODE3>;
+> 	};
+> 
+> 
+> 	#pinctrl-cells = <2>;
+> 	...
+> 	pin@f00 {
+> 		reg = <0xf00 DELAY_PS(0) DELAY_PS(0)>;
+> 	};
+> 
+> 
+> 	#pinctrl-cells = <3>;
+> 	...
+> 	pin@f00 {
+> 		reg = <0xf00 MUX_MODE3 PULL_UP_STRENGTH(36) PULL_DOWN_STRENGTH(20)>;
+> 	};
+> 
+> 
+> Then let's attempt to use just standard numbers and defines for the
+> values where possible. Then a group of pins is just a list of the pin
+> phandles in the devicetree.
+
+I need to ask for help on understanding that reg = <...> syntax.
+
+(Why) do we need to put that extra info in a "reg" property? That seems
+like either:
+1. Pin specific info
+or
+2. Phandle arguments
+
+In the first case, instead of:
+	pin@f00 {
+		reg = <0xf00 MUX_MODE3 PULL_UP_STRENGTH(36) PULL_DOWN_STRENGTH(20)>;
+	};
+I'd rather use:
+	pin@f00 {
+		reg = <0xf00>;
+		mux_mode3;
+		pull_up_strength = <36>;
+		pull_down_strength = <20>;
+	};
+
+In the second case, shouldn't that be something like:
+	pins {
+		bar: pin@f00 {
+			reg = <0xf00>;
+			#pinctrl-cells = <3>;
+		};
+	};
+
+	groups {
+		qux {
+			pins = <&bar MUX_MODE3 PULL_UP_STRENGTH(36) PULL_DOWN_STRENGTH(20)>;
+		}
+	};
