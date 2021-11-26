@@ -2,29 +2,29 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD78445F326
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Nov 2021 18:46:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FB9F45F3E1
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Nov 2021 19:23:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232470AbhKZRtj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 26 Nov 2021 12:49:39 -0500
-Received: from mga07.intel.com ([134.134.136.100]:63632 "EHLO mga07.intel.com"
+        id S241856AbhKZS0e (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 26 Nov 2021 13:26:34 -0500
+Received: from mga14.intel.com ([192.55.52.115]:9803 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229555AbhKZRrj (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 26 Nov 2021 12:47:39 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10180"; a="299101131"
+        id S236624AbhKZSYe (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 26 Nov 2021 13:24:34 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10180"; a="235940782"
 X-IronPort-AV: E=Sophos;i="5.87,266,1631602800"; 
-   d="scan'208";a="299101131"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2021 09:43:11 -0800
+   d="scan'208";a="235940782"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2021 10:13:03 -0800
 X-IronPort-AV: E=Sophos;i="5.87,266,1631602800"; 
-   d="scan'208";a="539306483"
+   d="scan'208";a="458268263"
 Received: from smile.fi.intel.com ([10.237.72.184])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2021 09:43:09 -0800
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2021 10:13:01 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.95)
         (envelope-from <andriy.shevchenko@intel.com>)
-        id 1mqfFb-00ArOt-Cu;
-        Fri, 26 Nov 2021 19:43:07 +0200
-Date:   Fri, 26 Nov 2021 19:43:07 +0200
+        id 1mqfiV-00As4E-AB;
+        Fri, 26 Nov 2021 20:12:59 +0200
+Date:   Fri, 26 Nov 2021 20:12:59 +0200
 From:   Andy Shevchenko <andriy.shevchenko@intel.com>
 To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
@@ -32,37 +32,47 @@ Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
         Yauhen Kharuzhy <jekhor@gmail.com>
-Subject: Re: [PATCH v2 1/3] pinctrl: cherryview: Don't use pin/offset 0 to
- mark an interrupt line as unused
-Message-ID: <YaEcq2N92rwbUsXx@smile.fi.intel.com>
+Subject: Re: [PATCH v2 3/3] pinctrl: cherryview: Ignore INT33FF UID 5 ACPI
+ device
+Message-ID: <YaEjqxg8rX0njW6z@smile.fi.intel.com>
 References: <20211118105650.207638-1-hdegoede@redhat.com>
- <YZY4ZA80QpJQFqOj@smile.fi.intel.com>
+ <20211118105650.207638-3-hdegoede@redhat.com>
+ <YZY4wj5AHhzFSwdD@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YZY4ZA80QpJQFqOj@smile.fi.intel.com>
+In-Reply-To: <YZY4wj5AHhzFSwdD@smile.fi.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 18, 2021 at 01:26:28PM +0200, Andy Shevchenko wrote:
-> On Thu, Nov 18, 2021 at 11:56:48AM +0100, Hans de Goede wrote:
-> > Offset/pin 0 is a perfectly valid offset, so stop using it to have
-> > the special meaning of interrupt line not used in the intr_lines.
+On Thu, Nov 18, 2021 at 01:28:02PM +0200, Andy Shevchenko wrote:
+> On Thu, Nov 18, 2021 at 11:56:50AM +0100, Hans de Goede wrote:
+> > Many Cherry Trail DSDTs have an extra INT33FF device with UID 5,
+> > the intel_pinctrl_get_soc_data() call will fail for this extra
+> > unknown UID, leading to the following error in dmesg:
 > > 
-> > Instead introduce a new special INTR_LINE_UNUSED value which is never
-> > a valid offset and use that to indicate unused interrupt lines.
+> >  cherryview-pinctrl: probe of INT33FF:04 failed with error -61
+> > 
+> > Add a check for this extra UID and return -ENODEV for it to
+> > silence this false-positive error message.
 > 
-> ...
-> 
-> > +#define INTR_LINE_UNUSED		U32_MAX
-> 
-> Funny, I have had something similar in my local branch for a few years ;-)
-> 
-> +#define CHV_INVALID_HWIRQ      ((unsigned int)INVALID_HWIRQ)
+> Hmm... Interesting. Why do they have it?
+> Give me some time to check this...
 
-I will rename this when applying. I assume there is no objection on doing it.
+_DDN in ACPI describes this as Virtual GPIO. The only documentation at hand
+right now tells me that this is a "solution" to represent the "virtual GPIO"
+as fifth community (no connection to any pads, minimum configuration, etc).
+
+The goal as far as I can see is "to convert a PME event generated by PCI device
+to a GPIO interrupt".
+
+Seems like we better have a driver for it, but the only purpose of it is to
+generate interrupts based on PME.
+
+I'll try to dig more may be next week, but for now I would like to postpone the
+patch. Do you agree?
 
 -- 
 With Best Regards,
