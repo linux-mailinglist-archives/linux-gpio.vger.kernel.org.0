@@ -2,73 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6107845F297
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Nov 2021 18:03:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B75B245F2DD
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Nov 2021 18:27:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235558AbhKZRGe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 26 Nov 2021 12:06:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40466 "EHLO
+        id S232537AbhKZRam (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 26 Nov 2021 12:30:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229555AbhKZREd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 Nov 2021 12:04:33 -0500
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFCA4C07E5F6;
-        Fri, 26 Nov 2021 08:37:34 -0800 (PST)
-Received: by mail-lf1-x134.google.com with SMTP id b1so25489502lfs.13;
-        Fri, 26 Nov 2021 08:37:34 -0800 (PST)
+        with ESMTP id S231339AbhKZR2l (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 Nov 2021 12:28:41 -0500
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7421C061D6A;
+        Fri, 26 Nov 2021 08:58:23 -0800 (PST)
+Received: by mail-ed1-x52b.google.com with SMTP id w1so41514336edc.6;
+        Fri, 26 Nov 2021 08:58:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=5Kh+r+enE/aDMEcIg5E7aidz6CHPbgPNpbPDxwc6DgE=;
-        b=nuOBw0N7ESsRZ8Kle97wVZLlQu5aQBukVf/f3QaReGPkqwkHgtMY7p4eOcM5+i8XSn
-         1zq5QczRWSGt8aK4RwWE5pEcgdnliAyGZ5N6R2p1aBnOLWpvKVxyumHzclidwN6LdML2
-         ZJ3sq4ftv/ypq0M2epY2umP6kFY2drnTmDeiUsitz7BJt4o3AbPVpp9FAlgvrJViG7n8
-         4Ne14u0MQ7M6fRkRA8f5s6F4cPD1B6BNPf6PCKYodipNwgpO3dMbij/5dXhqtzVPQji3
-         ksL6/0rHO+Kgdyig82NsV7TMB9Qwg7u2qFMoHGkqHRuKtCKxizqOXiPO9rk5pjMLrCni
-         uoSw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/cj12yNx+8MhDFy03xDOyf1KZM8MF6fnUqCuiicwspE=;
+        b=FiYTkTldngnj2AjjXPfuese/k1KOh0xkon21keGZ2+iQlc6m/MPpNcHq4fD3AuxCXS
+         9YIX0CvigSmnvYWKzYmWmFekWlPUpYWWoUczWKucPb1efzx42aYvFUpz6dlozkKJPlOt
+         JYR3kv2fNkMpVsOklKCOgml+TiDIxevfofGUzsu8dOkxf/DW/1PmxcsGdbnRz6VwrvPP
+         tKEXbnynEqHxIp/dDwvQf1Pkoglx/kPSzrn/EK5FWD3y/Tb3WHreIg124EiDkQAlb+YP
+         ai9iwsCj/SNtcVfbWolFbvp3vvNQClvkrDqIPJPyrjkpI0mx8KAB+MGZWhU3o5Z/IuMm
+         tQqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=5Kh+r+enE/aDMEcIg5E7aidz6CHPbgPNpbPDxwc6DgE=;
-        b=2sknrVBYxNrTtQwrbfDro4Zk9pxJsF6PleePbx+kVq37RFH5Fi4uCX+UC+G/8KCmAM
-         xcVFlyPSQCU7mIby9miEx7/e1rV5RbsmE1+MFij2Y0OBffF/y2QbHA4TxeHwWlv03l23
-         paQSCWE2ebFhzXgBqHG1iwydRo46y7TCqp5nkkruyN6/iEcXJTbg5uVPXDj1oI0h84hf
-         S5Zj9DALDftSriBrof8iMC6BgGWIHqon30ESefXPT5QYmQR8vZ0XAveH0g8eDANoxGOs
-         sexYfLylh7jEDaYr9l4ERJF0/40zWewH43bpzt1K5//fVLccSuEyL9SOWMMYT7HJt6B8
-         iiTg==
-X-Gm-Message-State: AOAM531ujeLThwPOzqrAs+opTkXbCgIUFQecr8AxRpPNDLftund5DimL
-        6tHECPZzcmhtcSGdE7AAWX8=
-X-Google-Smtp-Source: ABdhPJyUXNOan4K2/n26Y8rT6nUMdDqi7PPMlqzjw3ahkpFZkcIvq40b55PsRAVMeykP6zfjqvU4FA==
-X-Received: by 2002:a05:6512:b14:: with SMTP id w20mr30228832lfu.164.1637944653083;
-        Fri, 26 Nov 2021 08:37:33 -0800 (PST)
-Received: from localhost.localdomain (public-gprs174427.centertel.pl. [46.134.20.156])
-        by smtp.googlemail.com with ESMTPSA id p5sm540608lfa.251.2021.11.26.08.37.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Nov 2021 08:37:32 -0800 (PST)
-From:   Dominik Kobinski <dominikkobinski314@gmail.com>
-To:     linus.walleij@linaro.org
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        dominikkobinski314@gmail.com, ivo.ivanov.ivanov1@gmail.com,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Dominik Kobinski <dkobinski314@gmail.com>
-Subject: Re: [PATCH v2,1/5] pinctrl: qcom: spmi-gpio: Add pm8226 compatibility 
-Date:   Fri, 26 Nov 2021 17:36:57 +0100
-Message-Id: <20211126163657.65471-1-dominikkobinski314@gmail.com>
-X-Mailer: git-send-email 2.34.0
-In-Reply-To: <CACRpkdau+wHpoWa1JrLt35dnCHJejs8HZkkzZCrrcnRCx3SinQ@mail.gmail.com>
-References: <CACRpkdau+wHpoWa1JrLt35dnCHJejs8HZkkzZCrrcnRCx3SinQ@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/cj12yNx+8MhDFy03xDOyf1KZM8MF6fnUqCuiicwspE=;
+        b=N5kmritKc/i5hpJCQag3bkobbkP32N/OkIdwWxWkKV2XcL/lftBbE+gNqgjr0nfyJe
+         M6xFK6CjV/UhcB2Om36/dgVpDfIt8tU2IPteEuCp1y6l/zlv7PEhmlVzyfu6eJxqaUrB
+         iDwu3fPyouHfOWjfJ7BzKRecP6qj85VtxC5iYRdRS/LsK5G+qJxNHaKpGjesHsr+1oVs
+         YRjGgPsRNiZBQzByrwY1Rgqrp+Z6AgQ2FiePc7/35pFJ4lzg3w+02P4NTAPIZm0YWMk6
+         7pSky2ruQaqlY0J8faR3669SgMQFg5KIlB6zHiZOABYFwSRJjAOMRnXv986rs5Ismlpj
+         nH8Q==
+X-Gm-Message-State: AOAM5305J9XCuwqgZHOIovN0aNQ0165MH8QFe/2uzfruuDDUjVptK7uv
+        SWIfYATHW7MKwpa9ipiTubaBQefRqzjJi28u/9c=
+X-Google-Smtp-Source: ABdhPJw2HiWX3hnwC3PefguvXtotwxycD8rkwoWSKOFfmIWSx0TtwRCADA82IHWFv2/GurbsAEEeFKgSAdXrll7+FYE=
+X-Received: by 2002:a17:907:60d0:: with SMTP id hv16mr39403459ejc.425.1637945902315;
+ Fri, 26 Nov 2021 08:58:22 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20211125110738.41028-1-nbd@nbd.name> <20211125110738.41028-13-nbd@nbd.name>
+ <CAMRc=MfEO-kvOq2aELO6LMSTTHykG8DxdJOf_zUdJSaz8tB8wA@mail.gmail.com>
+In-Reply-To: <CAMRc=MfEO-kvOq2aELO6LMSTTHykG8DxdJOf_zUdJSaz8tB8wA@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 26 Nov 2021 18:57:47 +0200
+Message-ID: <CAHp75VcofiOE4LKqTjnXco26Yd5a4VWYkQE3gNU8Z3zr70woVA@mail.gmail.com>
+Subject: Re: [PATCH v4 12/12] gpio: Add support for Airoha EN7523 GPIO controller
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Felix Fietkau <nbd@nbd.name>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        John Crispin <john@phrozen.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Dominik Kobinski <dkobinski314@gmail.com>
+On Fri, Nov 26, 2021 at 6:40 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> On Thu, Nov 25, 2021 at 12:24 PM Felix Fietkau <nbd@nbd.name> wrote:
+> >
+> > From: John Crispin <john@phrozen.org>
+> >
+> > Airoha's GPIO controller on their ARM EN7523 SoCs consists of two banks of 32
+> > GPIOs. Each instance in DT is for an single bank.
 
-Thank you for applying the patch. I believe the second one in this series (https://patchwork.kernel.org/project/linux-arm-msm/patch/20211125215626.62447-1-dominikkobinski314@gmail.com/) should be also applied to the pinctrl tree.
+a single
 
-Regards,
-Dominik Kobinski
+...
+
+> > +       err = bgpio_init(&ctrl->gc, dev, 4, ctrl->data, NULL,
+> > +                        NULL, NULL, NULL, 0);
+> > +       if (err) {
+> > +               dev_err(dev, "unable to init generic GPIO");
+> > +               return err;
+> > +       }
+
+Since it will be a new version you may have a chance to replace this with
+
+  return dev_err_probe(dev, err, ...);
+
+-- 
+With Best Regards,
+Andy Shevchenko
