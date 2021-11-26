@@ -2,94 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 80A7145E8DD
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Nov 2021 08:50:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FB8C45EA0F
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Nov 2021 10:14:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344139AbhKZHxZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 26 Nov 2021 02:53:25 -0500
-Received: from mail-ua1-f41.google.com ([209.85.222.41]:37589 "EHLO
-        mail-ua1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244165AbhKZHvU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 Nov 2021 02:51:20 -0500
-Received: by mail-ua1-f41.google.com with SMTP id o1so16941605uap.4;
-        Thu, 25 Nov 2021 23:48:08 -0800 (PST)
+        id S1345902AbhKZJRP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 26 Nov 2021 04:17:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51308 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1359744AbhKZJPO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 Nov 2021 04:15:14 -0500
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0198C061372
+        for <linux-gpio@vger.kernel.org>; Fri, 26 Nov 2021 01:07:11 -0800 (PST)
+Received: by mail-pj1-x102b.google.com with SMTP id gx15-20020a17090b124f00b001a695f3734aso7620604pjb.0
+        for <linux-gpio@vger.kernel.org>; Fri, 26 Nov 2021 01:07:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nzlIrRw5KEmdejFl5iafweINOu/oGRNG9pBzAZgUP3M=;
+        b=p4yP+kXxdFbm83YzRbrwcSTOsJSkpudn6XXnjPe8CGIHN1Lm+WN6Rdee4/Sp5WFjQu
+         ChXvj/EPq767Bei6Ly6rpO59ry0UtSNUHpYzqLTESAK5mQN+NIbPi8TWx0wvyKrcKjbq
+         khr8LEwXPn6MyWU8FX2IHEUF1MND9VHNK92UHVyGPtH3RocaPkLQhNQ1chtnnPT1A9ZA
+         XhSlyFlf6I8z3ch8RF7wr3J8nJw+kPx+1GNCL7xq4/AqyLJRAHOY2cTErwfUh2XxO2sW
+         2lpWFQfQCqIrx4n5cXEhhnwdeSXqLHdDab9WCRlvEmNfOD9d2BqEVkbG9QxN6V9RDCkf
+         kHHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=C+WB98uVMoTfL9kTGPdtgqlO5TacGgYCY8mjvq5BMMc=;
-        b=6GW42FgWv/SRNrHIXez+fp7gdKRYwpxonAkRcyVhHMynMKQdy2afIa1n6vdxe+Nedp
-         9sFjQZPTyfSHZ88mXrpB3UxvXAmOLGqMtcoYVWvZogSRjcecHOMevYyhXnTbUtsRitzu
-         zwk47DqqS4eyF5myrMwTayeFE9Tcrlbf2xvT1IrMllnjA79TfJq2yXg5ydxG0bIGpD1j
-         6sHmNcc0+wD/sB5iYdvTUpgRruviRbYVTFOyUccYMx/JAFxuQ1TBDfUI/4Tqb6hed+fH
-         CO9WJTz5Mwxe12WBaTSRF8Ddw1IRkeAwOKH7L+12MQa+Gjv4JdIMZrJeUyfRquXOSkwT
-         3iJQ==
-X-Gm-Message-State: AOAM53353rAd4pzS9O2AeXjSp1Mc+dyrsDZPquSe4arykJm2/AaocHq+
-        Cg3d/yJA80FxQYMmuCx82PDVJAAKuMjq0A==
-X-Google-Smtp-Source: ABdhPJw79oK6QjZMavEgkcUbGU1uolbLyl7qbjakwUYOAnHHFcRNjPLNYuwiswZxowTCzNEnMtwkww==
-X-Received: by 2002:a67:63c4:: with SMTP id x187mr14052939vsb.69.1637912887080;
-        Thu, 25 Nov 2021 23:48:07 -0800 (PST)
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
-        by smtp.gmail.com with ESMTPSA id a128sm3139529vki.11.2021.11.25.23.48.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Nov 2021 23:48:06 -0800 (PST)
-Received: by mail-ua1-f45.google.com with SMTP id o1so16941517uap.4;
-        Thu, 25 Nov 2021 23:48:06 -0800 (PST)
-X-Received: by 2002:a9f:248b:: with SMTP id 11mr32201048uar.14.1637912886319;
- Thu, 25 Nov 2021 23:48:06 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nzlIrRw5KEmdejFl5iafweINOu/oGRNG9pBzAZgUP3M=;
+        b=DpjmJw7lFJ/TJHiBcYm7z7S1wP51ccSgsCBNBL2YkPXkNx6IaGhfn05NYlIfFKG50o
+         xvcZ4jg3f5XZruTMqSLC3N+YeMMgvjoAmljxRG7ZO0aRrreQG7UIqwgjsrrnwNmdG1TD
+         vvTURV3L2w06Z5vu2oPFz2HoMRLeN6snqKINr8n8ijcZ87/nqzwcSBIgsCu1PvlR94jR
+         sS3QVv8GkOT3Eyj+AXvKrAJUdaog8RcThCkc92lPq/99IUr7T1rBzsd33bP4EXGwntrG
+         DJ5I80Dh9bz2BfEdW8qWuxjYCdO1XYw54f1LaOcoKv5XBr9QAciguXPsvxMn44LbfhOv
+         ZvUw==
+X-Gm-Message-State: AOAM5314bbzaP5fdkFtxIlFcWjGcMtK3pdR2DeKveJoJCHlnn6yhnBqg
+        fMgpReWrP3iKl/Cun4K8+8bJbg==
+X-Google-Smtp-Source: ABdhPJxPYLV4MCcQGhREqnqgYV5zfm1+vN985fOgCQIl0Osw7+cljO/5rKqNfyj1REE2AvvybyfHvQ==
+X-Received: by 2002:a17:90b:1057:: with SMTP id gq23mr14065733pjb.203.1637917631131;
+        Fri, 26 Nov 2021 01:07:11 -0800 (PST)
+Received: from localhost ([122.172.196.175])
+        by smtp.gmail.com with ESMTPSA id v15sm6635589pfu.195.2021.11.26.01.07.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Nov 2021 01:07:10 -0800 (PST)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-gpio@vger.kernel.org, Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH 0/2] libgpiod: Minor fixups for 2.0 bindings
+Date:   Fri, 26 Nov 2021 14:37:03 +0530
+Message-Id: <cover.1637917008.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
 MIME-Version: 1.0
-References: <20211125152043.162655-1-geert@linux-m68k.org> <CACRpkdaFBOq4-Pok3au+Q8uAXe5QscO81JYAhXwMS9B2FjuUiw@mail.gmail.com>
-In-Reply-To: <CACRpkdaFBOq4-Pok3au+Q8uAXe5QscO81JYAhXwMS9B2FjuUiw@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 26 Nov 2021 08:47:55 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdX0awdFCB+vWyy5TZMUeKoii8_Y8NaZO77sMaOniaOy1g@mail.gmail.com>
-Message-ID: <CAMuHMdX0awdFCB+vWyy5TZMUeKoii8_Y8NaZO77sMaOniaOy1g@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: gpio: sifive,gpio: Group interrupt tuples
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Yash Shah <yash.shah@sifive.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+Hi Bartosz,
 
-On Fri, Nov 26, 2021 at 2:22 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Thu, Nov 25, 2021 at 4:20 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > To improve human readability and enable automatic validation, the tuples
-> > in "interrupts" properties should be grouped using angle brackets.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
->
-> (...)
-> > -        interrupts = <7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22>;
-> > +        interrupts = <7>, <8>, <9>, <10>, <11>, <12>, <13>, <14>, <15>, <16>,
-> > +                     <17>, <18>, <19>, <20>, <21>, <22>;
->
-> Tuples? Hm they look single. Like singletons?
+This patchset contain minor fixes for the libgpiod 2.0 helpers that I found
+during my rust bindings work with it.
 
-Yeah, plic has #interrupt-cells = <1>.
-
-> Anyway:
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
+It is based on next/post-libgpiod-2.0 branch.
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Viresh
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Viresh Kumar (2):
+  libgpiod: Fix ioctl number for gpiod_line_request_reconfigure_lines()
+  libgpiod: Remove dummy declaration gpiod_line_config_get_event_clock()
+
+ include/gpiod.h    | 12 ------------
+ lib/line-request.c |  2 +-
+ 2 files changed, 1 insertion(+), 13 deletions(-)
+
+-- 
+2.31.1.272.g89b43f80a514
+
