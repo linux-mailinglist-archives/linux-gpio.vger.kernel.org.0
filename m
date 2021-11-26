@@ -2,105 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AAED45F3A2
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Nov 2021 19:19:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 586ED45F6B8
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Nov 2021 23:03:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230250AbhKZSWw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 26 Nov 2021 13:22:52 -0500
-Received: from mga06.intel.com ([134.134.136.31]:26698 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231664AbhKZSUv (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 26 Nov 2021 13:20:51 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10180"; a="296503037"
-X-IronPort-AV: E=Sophos;i="5.87,266,1631602800"; 
-   d="scan'208";a="296503037"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2021 10:13:58 -0800
-X-IronPort-AV: E=Sophos;i="5.87,266,1631602800"; 
-   d="scan'208";a="510079221"
-Received: from smile.fi.intel.com ([10.237.72.184])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2021 10:13:56 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1mqfjO-00As5Z-61;
-        Fri, 26 Nov 2021 20:13:54 +0200
-Date:   Fri, 26 Nov 2021 20:13:53 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        Yauhen Kharuzhy <jekhor@gmail.com>
-Subject: Re: [PATCH v2 2/3] pinctrl: cherryview: Do not allow the same
- interrupt line to be used by 2 pins
-Message-ID: <YaEj4WuexzxGiP4L@smile.fi.intel.com>
-References: <20211118105650.207638-1-hdegoede@redhat.com>
- <20211118105650.207638-2-hdegoede@redhat.com>
- <YZY1rTL2fnz1pxTq@lahna>
+        id S242605AbhKZWHL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 26 Nov 2021 17:07:11 -0500
+Received: from mail-il1-f180.google.com ([209.85.166.180]:35819 "EHLO
+        mail-il1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242791AbhKZWFK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 26 Nov 2021 17:05:10 -0500
+Received: by mail-il1-f180.google.com with SMTP id 15so1301935ilq.2;
+        Fri, 26 Nov 2021 14:01:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=U7pqWisj6jJ5TjISWm7FuFwz6JZmQrfbLJ0Krc3qwoQ=;
+        b=6TkcbgVqeEwZV9rb2ffPFtfQSyQB2gvQRNEyR/pHceN3TVwFgClT+NXv05rDyHV+PM
+         SQ45Ikig4Xfo1zr5SiLChcA0c5c/0WWToCPKXNubqy9v/CAUNOqwIlp6R8sbNr2q7LHl
+         uDUVkGedF4DBRYsNzb/pAz5sjZNJWulCPkW2sVsq8TpR5crGh6qWxKKMIjvE6lQS72nb
+         NO99IYGIE4iJRsufXg13RLCkbC5VEoRx7xUIyj17bb274FPqXZDkugr7MO8rEm55UEve
+         uszr/cQW44zD2f8nVswlEHHwkg9Y3xjrCBeL0WbsyU2iXUpUUBLpIWkXPgYM/2SBCWVl
+         jxhg==
+X-Gm-Message-State: AOAM530gYn7JJNKxjjZrQqQfTIzlacX6okkmYbBSQnBvlv+GY99i6moP
+        BFls8RhRQjAnc/8D4g+yRA==
+X-Google-Smtp-Source: ABdhPJybx68U174Eaha9BUWMvTEppJV0mtTc/A29ZFmkJSy95RayV1OjBHFQ4cZ9gxqQF4ChAq/L9A==
+X-Received: by 2002:a05:6e02:484:: with SMTP id b4mr34984883ils.173.1637964116491;
+        Fri, 26 Nov 2021 14:01:56 -0800 (PST)
+Received: from robh.at.kernel.org ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id y4sm4469705ilv.21.2021.11.26.14.01.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Nov 2021 14:01:55 -0800 (PST)
+Received: (nullmailer pid 3352231 invoked by uid 1000);
+        Fri, 26 Nov 2021 22:01:51 -0000
+Date:   Fri, 26 Nov 2021 15:01:51 -0700
+From:   Rob Herring <robh@kernel.org>
+To:     quic_vamslank@quicinc.com
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        manivannan.sadhasivam@linaro.org
+Subject: Re: [PATCH v4 1/2] dt-bindings: pinctrl: qcom: Add SDX65 pinctrl
+ bindings
+Message-ID: <YaFZTxDcTMqeA/42@robh.at.kernel.org>
+References: <cover.1637048107.git.quic_vamslank@quicinc.com>
+ <06234768890dc7572226f23d432e5a69a4d5b305.1637048107.git.quic_vamslank@quicinc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YZY1rTL2fnz1pxTq@lahna>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <06234768890dc7572226f23d432e5a69a4d5b305.1637048107.git.quic_vamslank@quicinc.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 18, 2021 at 01:14:53PM +0200, Mika Westerberg wrote:
-> On Thu, Nov 18, 2021 at 11:56:49AM +0100, Hans de Goede wrote:
-> > It is impossible to use the same interrupt line for 2 pins, this will
-> > result in the interrupts only being delivered to the IRQ handler for
-> > the pin for which chv_gpio_irq_type() was called last.
-> > 
-> > The pinctrl-cherryview.c code relies on the BIOS to correctly setup the
-> > interrupt line, but there is a BIOS bug on at least the Medion Akoya E1239T
-> > and the GPD win models where both INT33FF:02 pin 8, used by the powerbutton
-> > and INT33FF:02 pin 21 used as IRQ input for the accelerometer are mapped to
-> > interrupt line 0.
-> > 
-> > This causes 2 problems:
-> > 1. The accelerometer IRQ does not work, since the power button is probed
-> > later taking over the intr_lines[0] slot.
-> > 
-> > 2. Since the accelerometer IRQ is not marked as wakeup, interrupt line 0
-> > gets masked on suspend, causing the power button to not work to wake
-> > the system from suspend.
-> > 
-> > Likewise on the Lenovo Yogabook, which has a touchscreen as keyboard
-> > and the keyboard half of the tablet also has a Wacom digitizer, the BIOS
-> > by default assigns the same interrupt line to the GPIOs used
-> > for their interrupts.
-> > 
-> > Fix these problems by adding a check for this and assigning a new
-> > interrupt line to the 2nd pin for which chv_gpio_irq_type() gets called.
-> > 
-> > With this fix in place the following 2 messages show up in dmesg on
-> > the Medion Akoya E1239T and the GPD win:
-> > 
-> >  cherryview-pinctrl INT33FF:02: interrupt line 0 is used by both pin 21 and pin 8
-> >  cherryview-pinctrl INT33FF:02: changing the interrupt line for pin 8 to 15
-> > 
-> > And the following gets logged on the Lenovo Yogabook:
-> > 
-> >  cherryview-pinctrl INT33FF:01: interrupt-line 0 is used by both pin 49 and pin 56
-> >  cherryview-pinctrl INT33FF:01: changing the interrupt line for pin 56 to 7
-> > 
-> > Note commit 9747070c11d6 ("Input: axp20x-pek - always register interrupt
-> > handlers") was added as a work around for the power button not being able
-> > to wakeup the system. This relies on using the PMIC's connection to the
-> > power button but that only works on systems with the AXP288 PMIC.
-> > Once this fix has been merged that workaround can be removed.
-> > 
-> > Cc: Yauhen Kharuzhy <jekhor@gmail.com>
-> > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+On Mon, Nov 15, 2021 at 11:39:45PM -0800, quic_vamslank@quicinc.com wrote:
+> From: Vamsi Krishna Lanka <quic_vamslank@quicinc.com>
 > 
-> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Add device tree binding Documentation details for Qualcomm SDX65
+> pinctrl driver.
+> 
+> Signed-off-by: Vamsi Krishna Lanka <quic_vamslank@quicinc.com>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  .../bindings/pinctrl/qcom,sdx65-pinctrl.yaml  | 195 ++++++++++++++++++
+>  1 file changed, 195 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sdx65-pinctrl.yaml
 
-Pushed to my review and testing queue, thanks!
+This fails dt_binding_check:
 
--- 
-With Best Regards,
-Andy Shevchenko
+/builds/robherring/linux-dt/Documentation/devicetree/bindings/pinctrl/qcom,sdx65-pinctrl.example.dt.yaml: pinctrl@f100000: 'serial-pins', 'uart-w-subnodes-state' do not match any of the regexes: '$-state', 'pinctrl-[0-9]+'
+	From schema: /builds/robherring/linux-dt/Documentation/devicetree/bindings/pinctrl/qcom,sdx65-pinctrl.yaml
 
+The DT list was not Cc'ed so checks never ran nor was this reviewed.
+
+Rob
 
