@@ -2,88 +2,188 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FD3B4600DC
-	for <lists+linux-gpio@lfdr.de>; Sat, 27 Nov 2021 19:10:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 139FB4600F6
+	for <lists+linux-gpio@lfdr.de>; Sat, 27 Nov 2021 19:43:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344073AbhK0SN2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 27 Nov 2021 13:13:28 -0500
-Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:39540 "EHLO
-        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1356013AbhK0SL2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 27 Nov 2021 13:11:28 -0500
-X-Greylist: delayed 428 seconds by postgrey-1.27 at vger.kernel.org; Sat, 27 Nov 2021 13:11:27 EST
-IronPort-Data: =?us-ascii?q?A9a23=3AIHFg2KtIkMiVmwj5bXRr15zZ3ufnVBlfMUV32f8?=
- =?us-ascii?q?akzHdYEJGY0x3yzFLDG2PPP+MYmX8L9Eia4zj9xsHupPRydBkG1Q++SBgHilAw?=
- =?us-ascii?q?SbnLYTAfx2oZ0t+DeWaERk5t51GAjX4wXFdokb0/n9BCZC86ykjvU20buCkUre?=
- =?us-ascii?q?dY3ouHVUMpBoJ0nqPpcZo2+aEvvDpW2thifuqyyHuEAfNNwxcagr42IrfwP9bh?=
- =?us-ascii?q?8kejRtD1rAIiV+ni3eF/5UdJMp3yahctBIUSKEMdgKxb76rIL1UYgrkExkR5tO?=
- =?us-ascii?q?Nyt4Xc2UKS7LIPAWI4pZUc/j/xEYS4HVoi+Bia6F0hUR/0l1lm/hz1dFMvNq0Q?=
- =?us-ascii?q?BggOqnkmeIHUhAeHTsW0ahupuKbfyPl66R/yGWDKRMA2c5GDkY7LMsX/ftzEEl?=
- =?us-ascii?q?H7/leIzcIBjiAjf+3xL7+Q+1orsAiN9XwettG/HZ6wlnxCfcgXICGQKjQ49Jc9?=
- =?us-ascii?q?Ck/i9oIHvvEYccdLz11Y3zoZxxJJ0xRF5s6mOqphFH7cjtRslXTorA4i0DI0AV?=
- =?us-ascii?q?3+LPqKtfRft2XQINemUPwjmfP7Uz6DwscOdjZziCKmlqoh+nSjWb0QIMVPKO3+?=
- =?us-ascii?q?+Qsg1CJwGEXThoMWjOTpfi/l177WN9FLUEQ0jQhoLJ090GxSNT5GRqirxa5UrQ?=
- =?us-ascii?q?0MzZLO7Rls0fUkPOSvVbfVjVCVDNfLscorokwSCBC67NApPuxbRQHjVFfYSj1G?=
- =?us-ascii?q?m+okA6P?=
-IronPort-HdrOrdr: =?us-ascii?q?A9a23=3A9Ib6nKpo8JgKzEJmPgf3wfUaV5rYeYIsimQD?=
- =?us-ascii?q?101hICG9Ffbo6/xG/c5rqCMc7Qx7NU3I9urwQ5VoPkmsjKKdjbN8AV7AZnidhI?=
- =?us-ascii?q?LXFvAb0WKK+VSJcUPDH4hmpMJdmsNFZ+EYY2IK7/rS0U2cE9EjxdmB/rrtrerS?=
- =?us-ascii?q?1Ht2Vw1nApsA0y5JTiOaFU9yRA5JH94YE5Wbj/A3xAaISDAzbsO4A3kDUfKGnd?=
- =?us-ascii?q?HNmZ78CCRnO/ZngjP+6w9AH4SKd2n+4isj?=
-X-IronPort-AV: E=Sophos;i="5.87,269,1631570400"; 
-   d="scan'208";a="6546322"
-Received: from 173.121.68.85.rev.sfr.net (HELO hadrien) ([85.68.121.173])
-  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 27 Nov 2021 19:01:04 +0100
-Date:   Sat, 27 Nov 2021 19:01:04 +0100 (CET)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Joey Gouly <joey.gouly@arm.com>
-cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        id S240299AbhK0SrC convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Sat, 27 Nov 2021 13:47:02 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:58424 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239416AbhK0SpB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 27 Nov 2021 13:45:01 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D5F6860F02;
+        Sat, 27 Nov 2021 18:41:46 +0000 (UTC)
+Received: from jic23-huawei (cpc108967-cmbg20-2-0-cust86.5-4.cable.virginm.net [81.101.6.87])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp.kernel.org (Postfix) with ESMTPSA id 002C4C53FAD;
+        Sat, 27 Nov 2021 18:41:41 +0000 (UTC)
+Date:   Sat, 27 Nov 2021 18:46:43 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Cosmin Tanislav <demonsingur@gmail.com>
+Cc:     cosmin.tanislav@analog.com, Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Stan Skowronek <stan@corellium.com>,
-        Marc Zyngier <maz@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: fix flexible_array.cocci warnings
-Message-ID: <alpine.DEB.2.22.394.2111271859250.2864@hadrien>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v6 3/3] iio: addac: add AD74413R driver
+Message-ID: <20211127184617.2a7c7c14@jic23-huawei>
+In-Reply-To: <20211126160219.674665-4-demonsingur@gmail.com>
+References: <20211126160219.674665-1-demonsingur@gmail.com>
+        <20211126160219.674665-4-demonsingur@gmail.com>
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: kernel test robot <lkp@intel.com>
+On Fri, 26 Nov 2021 18:02:19 +0200
+Cosmin Tanislav <demonsingur@gmail.com> wrote:
 
-Zero-length and one-element arrays are deprecated, see
-Documentation/process/deprecated.rst
-Flexible-array members should be used instead.
+> The AD74412R and AD74413R are quad-channel software configurable input/output
+> solutions for building and process control applications. They contain
+> functionality for analog output, analog input, digital input, resistance
+> temperature detector, and thermocouple measurements integrated
+> into a single chip solution with an SPI interface.
+> The devices feature a 16-bit ADC and four configurable 13-bit DACs to provide
+> four configurable input/output channels and a suite of diagnostic functions.
+> The AD74413R differentiates itself from the AD74412R by being HART-compatible.
+> 
+> When configured with channel 0 as voltage output, channel 1 as current
+> output, channel 2 as voltage input and channel 3 as current input, the
+> following structure is created under the corresponding IIO device.
 
-Generated by: scripts/coccinelle/misc/flexible_array.cocci
+Thanks for the example. This definitely helps.  
 
-CC: Joey Gouly <joey.gouly@arm.com>
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Julia Lawall <julia.lawall@inria.fr>
----
+> 
+> .
+> ├── in_current0_offset
+> ├── in_current0_raw
+> ├── in_current0_sampling_frequency
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   c5c17547b778975b3d83a73c8d84e8fb5ecf3ba5
-commit: a0f160ffcb83de6a04fa75f9e7bdfe969f2863f7 pinctrl: add pinctrl/GPIO driver for Apple SoCs
-:::::: branch date: 21 hours ago
-:::::: commit date: 5 weeks ago
+The sampling frequency per channel is a bit unusual, but oddly enough that
+is how it is documented even when in sequence mode.  So I guess we should
+just live with it being strange...  Obviously the actual sampling frequency
+will be lower because we'll be measuring other things between each reading
+of this channel. Oh well. odd :)
 
- pinctrl-apple-gpio.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> ├── in_current0_sampling_frequency_available
+> ├── in_current0_scale
+> ├── in_voltage1_offset
+> ├── in_voltage1_raw
+> ├── in_voltage1_sampling_frequency
+> ├── in_voltage1_sampling_frequency_available
+> ├── in_voltage1_scale
+> ├── in_voltage2_offset
+> ├── in_voltage2_raw
+> ├── in_voltage2_sampling_frequency
+> ├── in_voltage2_sampling_frequency_available
+> ├── in_voltage2_scale
+> ├── in_current3_offset
+> ├── in_current3_raw
+> ├── in_current3_sampling_frequency
+> ├── in_current3_sampling_frequency_available
+> ├── in_current3_scale
+> ├── out_voltage0_raw
+> ├── out_voltage0_scale
+> ├── out_current1_raw
+> ├── out_current1_scale
+> ├── name
+> ├── buffer
+> │   ├── data_available
+> │   ├── enable
+> │   ├── length
+> │   └── watermark
+> └── scan_elements
+>     ├── in_current0_en
+>     ├── in_current0_index
+>     ├── in_current0_type
+>     ├── in_voltage1_en
+>     ├── in_voltage1_index
+>     ├── in_voltage1_type
+>     ├── in_voltage2_en
+>     ├── in_voltage2_index
+>     ├── in_voltage2_type
+>     ├── in_current3_en
+>     ├── in_current3_index
+>     └── in_current3_type
+> 
+> Signed-off-by: Cosmin Tanislav <cosmin.tanislav@analog.com>
 
---- a/drivers/pinctrl/pinctrl-apple-gpio.c
-+++ b/drivers/pinctrl/pinctrl-apple-gpio.c
-@@ -36,7 +36,7 @@ struct apple_gpio_pinctrl {
- 	struct pinctrl_desc pinctrl_desc;
- 	struct gpio_chip gpio_chip;
- 	struct irq_chip irq_chip;
--	u8 irqgrps[0];
-+	u8 irqgrps[];
- };
+Unless I'm missing something, you are being overly cautious with the DMA
+buffer alignments. Forcing that for the first one only should be enough.
+> +};
+> +
+> +struct ad74413r_state {
+> +	struct ad74413r_channel_config	channel_configs[AD74413R_CHANNEL_MAX];
+> +	unsigned int			gpo_gpio_offsets[AD74413R_CHANNEL_MAX];
+> +	unsigned int			comp_gpio_offsets[AD74413R_CHANNEL_MAX];
+> +	struct gpio_chip		gpo_gpiochip;
+> +	struct gpio_chip		comp_gpiochip;
+> +	struct mutex			lock;
+> +	struct completion		adc_data_completion;
+> +	unsigned int			num_gpo_gpios;
+> +	unsigned int			num_comparator_gpios;
+> +	u32				rsense_resistance_ohms;
+> +
+> +	const struct ad74413r_chip_info	*chip_info;
+> +	struct spi_device		*spi;
+> +	struct regulator		*refin_reg;
+> +	struct regmap			*regmap;
+> +	struct device			*dev;
+> +	struct iio_trigger		*trig;
+> +
+> +	size_t			adc_active_channels;
+> +	struct spi_message	adc_samples_msg;
+> +	struct spi_transfer	adc_samples_xfer[AD74413R_CHANNEL_MAX + 1];
+> +
+> +	/*
+> +	 * DMA (thus cache coherency maintenance) requires the
+> +	 * transfer buffers to live in their own cache lines.
+> +	 */
+> +	struct {
+> +		u8 rx_buf[AD74413R_FRAME_SIZE * AD74413R_CHANNEL_MAX];
+> +		s64 timestamp;
+> +	} adc_samples_buf ____cacheline_aligned;
+> +
+> +	u8	adc_samples_tx_buf[AD74413R_FRAME_SIZE * AD74413R_CHANNEL_MAX]
+> +			____cacheline_aligned;
 
- #define REG_GPIO(x)          (4 * (x))
+I'm surprised I didn't mention this before but you only need to ensure that any
+memory used for DMA is not in a cacheline with memory used for other things that
+might change concurrently.
+
+I'm assuming there is only one DMA transaction going on to one piece of hardwre
+here so you should be fine with just forcing the alignment of adc_samples_buf
+to be ____cacheline_aligned.  That will ensure non of these DMA buffers share
+a line with anything other than each other.
+
+To give the short explanation of why we jump through these hoops.
+
+1) DMA transfer started - it grabs a whole cacheline because that is how this
+   particular platform works (even if it is doing DMA to just one byte)
+2) A flag or similar is updated in the same cacheline.
+3) The DMA transfer ends and the cacheline is entirely overwritten with
+   the data from the DAM and whatever was grabbed in step 1.
+
+So as long as we are only dealing with buffers in the same DMA transaction
+it will be safe for them to share cachelines.
+
+Note that we play games with the alignment of iio_priv() region at allocation
+to ensure that is appropriately aligned, such that when we align an element
+within it the alignment ends up right as well.  This case was so common
+it was worth the 'magic' handling to ensure we could embed DMA buffers.
+
+
+> +	u8	reg_tx_buf[AD74413R_FRAME_SIZE] ____cacheline_aligned;
+> +	u8	reg_rx_buf[AD74413R_FRAME_SIZE] ____cacheline_aligned;
+> +};
+
+
+
