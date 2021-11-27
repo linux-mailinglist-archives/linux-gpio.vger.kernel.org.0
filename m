@@ -2,71 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 82D6F45FE94
-	for <lists+linux-gpio@lfdr.de>; Sat, 27 Nov 2021 13:35:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 35F8C45FEA9
+	for <lists+linux-gpio@lfdr.de>; Sat, 27 Nov 2021 13:52:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354551AbhK0MiO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 27 Nov 2021 07:38:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40034 "EHLO
+        id S243974AbhK0Mzy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 27 Nov 2021 07:55:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233937AbhK0MgO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 27 Nov 2021 07:36:14 -0500
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBBFBC06173E;
-        Sat, 27 Nov 2021 04:32:59 -0800 (PST)
-Received: by mail-wm1-x335.google.com with SMTP id i8-20020a7bc948000000b0030db7b70b6bso12645106wml.1;
-        Sat, 27 Nov 2021 04:32:59 -0800 (PST)
+        with ESMTP id S237071AbhK0Mxy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 27 Nov 2021 07:53:54 -0500
+Received: from mail-vk1-xa33.google.com (mail-vk1-xa33.google.com [IPv6:2607:f8b0:4864:20::a33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24AFFC061756;
+        Sat, 27 Nov 2021 04:49:11 -0800 (PST)
+Received: by mail-vk1-xa33.google.com with SMTP id 84so7701470vkc.6;
+        Sat, 27 Nov 2021 04:49:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:reply-to:mime-version
-         :content-disposition:user-agent;
-        bh=cym/rhXni262lJDrdSli5f3C7oHJR0/fnsXBXxHnTTs=;
-        b=o4HYizWSiV5rx6hMfafIab4dtg7tx7IR2lBwTGzH6v4RX2UX34iHJilrK6tWdxa4gJ
-         wi+M/IoWxknuaxjHJeAK2vKHZRDHF4qc5Oq/oq9nosuHNq/IeRqw2rNwFMKGdZXB9OEn
-         JZjFYITb4v3oV6alKCLyA2AsgldH3eQr2L4Fu8aU3LGOF5TfLPaWFEtLZihvPK5jXBLn
-         XsRHnHA6pXDhyyMdSKcDDX5DdUb4wWWXrX4b8rqnBczAe1pvpMpc77wnjE4YTYrk//Lu
-         kMl4HMRLOtYavFXIYgj19xR8d2cyo2svwZQnK5pIeXMpGr7KK3oFpr/iSn5qvLwWWDlX
-         3DvA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AhTTFdq9Ouec2Tp6O3ODQcGsU1dD+1o+XNr7Zcpuux4=;
+        b=aUXDxw+wxuMfK0NN8FA5RBdWoJRuGZruR2eeUtw9vunGcBVFcz6a94bYV7441YRx4J
+         YSDVawbU8r3G2qYRzqCU/7UOrnpDE8jSYZ7BORrxpOkDBiWyXln63uSXVywij0e4oZyE
+         lj1F6POIHIqjc9nkAKgFL5Ma5m+fFnQIEjgGi0gbfV7XrbDHEidWN+hKDpHSjZ/ux/Bo
+         ELw6MphLUtfPiAqSEZgbyU0QC6skids8eW8GsKzyoflJhPXz486/jO7VDkV5ojirizmR
+         i59FBFk+VzAaa9RJ8PILqercKpdsI5QoOJDuBqod72YkgOy8RilIFiZ30bjiOuvWHI1f
+         USIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :mime-version:content-disposition:user-agent;
-        bh=cym/rhXni262lJDrdSli5f3C7oHJR0/fnsXBXxHnTTs=;
-        b=EcZHHBEpoB3Wy2kRpRmAF9kA8XTANvCwvRP4ngefxdXTes8GFyh0JUJ1B2XozOJxZP
-         KW+LWx+qN9UZoXWU5YvsmxPxN1ycqrKB/xeLJSQ9r+qRlnh7UmtYNPhx5pW+YZKPrzny
-         zWy8E2yY54LH39cHzJCp72faE7VqC0lw4sZtBSf8RxoVy4O5CqDGy/wVv8uJKYYT/pOf
-         X6yCga1V48uNQ64aOSm0XyilsHzeTe/D+6II0jqdRHFKLnxZs9hjMDpIs12qH96kpcGd
-         hFywkftutFhWbUGOckyfGUgzDC2rgMfgCsp5ib7vl6gNrMQIiI2ugr1FrPFok6Rdu7Zv
-         C4Xg==
-X-Gm-Message-State: AOAM532oQFuXWt2kePNzO8POEU00SGYpte4dxVdG8MiGficMcbHbQlHi
-        YfbewoYXYgU7Pvi1nAAnXZA=
-X-Google-Smtp-Source: ABdhPJxhBcmHNU7kdzFqDTv20cEQft9Tb2E5xjOWlDYu5QO1xdu74z8xHEP3mxuEfNQlYTeF8/ziXQ==
-X-Received: by 2002:a05:600c:3510:: with SMTP id h16mr22236706wmq.144.1638016378333;
-        Sat, 27 Nov 2021 04:32:58 -0800 (PST)
-Received: from debian.domena ([176.106.33.180])
-        by smtp.gmail.com with ESMTPSA id f7sm16986463wmg.6.2021.11.27.04.32.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 Nov 2021 04:32:58 -0800 (PST)
-Date:   Sat, 27 Nov 2021 13:32:56 +0100
-From:   Dominik Kobinski <dominikkobinski314@gmail.com>
-To:     linus.walleij@linaro.org
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        ivo.ivanov.ivanov1@gmail.com, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dominikkobinski314@gmail.com
-Subject: Re: [PATCH v2,1/5] pinctrl: qcom: spmi-gpio: Add pm8226 compatibility
-Message-ID: <20211127123254.GA4014@debian.domena>
-Reply-To: CACRpkda9PkXZugE2vFnw+BhSrN-wJvX0Yu1Nffyd9qqg46ijoA@mail.gmail.com
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AhTTFdq9Ouec2Tp6O3ODQcGsU1dD+1o+XNr7Zcpuux4=;
+        b=MmoAd0ux2IeNfTrZelp+6vjTGWCvtWCPLB25tCm2gljLYZIer8iZNzCqfABsd/mzF2
+         wO8gn7eovaVImsIV1pEt8ib0OER31TJUxcmte32peCoGJSHaDCLKc1VfXEagaDzMd4mo
+         b9FY6ogwoViiRaB/NkFmvkMZgXxsnNSfZ9yjYwQpBi2YJel5mQFA6Zf3O6i9TxENSTx7
+         ghcjociKLqzCCz5+xLupx5WFYKh1A3G7hUSFjQEbF23xvsaB204PKrNis5r0ExgAFr4I
+         9LAnJ6iYzA+zR+HdsD+vYsIdlhocvngCR+VHELPLd5p0d11MlSTEgCmJrWZBmVxl5Zba
+         kDzQ==
+X-Gm-Message-State: AOAM530wi0xznPPFu1VJ2BLextHaLAYMn3bn5x8t8QYqYYLy9GzR42yZ
+        CqcjI61sXtq/nTQkfo01EudFHrXXR97iuphWPEeO8zzj
+X-Google-Smtp-Source: ABdhPJwR6Ggz9AFJAtv78Mk3+wpQfGFn/ZWsDVX2sy5m5SBxiY/eT8fXvH489Y2Xkh4JHYdHbxwV7GG3sGXn2rRmx3A=
+X-Received: by 2002:a05:6122:629:: with SMTP id g9mr20722297vkp.36.1638017350280;
+ Sat, 27 Nov 2021 04:49:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20211125211443.1150135-1-Mr.Bossman075@gmail.com> <20211125211443.1150135-5-Mr.Bossman075@gmail.com>
+In-Reply-To: <20211125211443.1150135-5-Mr.Bossman075@gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Sat, 27 Nov 2021 09:48:59 -0300
+Message-ID: <CAOMZO5Az+JJB7pokhOue+DZpKTxu3uQFkDJd7LpLgri5aLv9zg@mail.gmail.com>
+Subject: Re: [PATCH v3 04/13] pinctrl: freescale: Add i.MXRT1050 pinctrl
+ driver support
+To:     Jesse Taube <mr.bossman075@gmail.com>
+Cc:     NXP Linux Team <linux-imx@nxp.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        soc@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Giulio Benetti <giulio.benetti@benettiengineering.com>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-True. Sorry for the confusion and thank you for applying the patch.
+On Thu, Nov 25, 2021 at 6:14 PM Jesse Taube <mr.bossman075@gmail.com> wrote:
+>
+> From: Giulio Benetti <giulio.benetti@benettiengineering.com>
+>
+> Add the pinctrl driver support for i.MXRT1050.
+>
+> Signed-off-by: Giulio Benetti <giulio.benetti@benettiengineering.com>
+> Signed-off-by: Jesse Taube <Mr.Bossman075@gmail.com>
 
-Regards,
-Dominik Kobinski
+Looks good:
 
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
