@@ -2,61 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1524C4609D7
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Nov 2021 21:54:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C4E104609DF
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Nov 2021 21:57:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358881AbhK1U5Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 28 Nov 2021 15:57:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35130 "EHLO
+        id S1354776AbhK1VBN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 28 Nov 2021 16:01:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243743AbhK1UzY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 28 Nov 2021 15:55:24 -0500
-Received: from mail-qv1-xf2c.google.com (mail-qv1-xf2c.google.com [IPv6:2607:f8b0:4864:20::f2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 576FBC061757;
-        Sun, 28 Nov 2021 12:52:08 -0800 (PST)
-Received: by mail-qv1-xf2c.google.com with SMTP id j9so12424102qvm.10;
-        Sun, 28 Nov 2021 12:52:08 -0800 (PST)
+        with ESMTP id S1357945AbhK1U7M (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 28 Nov 2021 15:59:12 -0500
+Received: from mail-vk1-xa30.google.com (mail-vk1-xa30.google.com [IPv6:2607:f8b0:4864:20::a30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FD61C061746;
+        Sun, 28 Nov 2021 12:54:41 -0800 (PST)
+Received: by mail-vk1-xa30.google.com with SMTP id u68so9562862vke.11;
+        Sun, 28 Nov 2021 12:54:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=qqPM+9oSDb+C5bIeKnOOrRzc8/vgXxoC8kEuwdzzRWw=;
-        b=U8bfBlf50QNx7gO7ZwS/b3DqSZSeOSkUK9UCiRLAZjJxnMuOeA+dkXUvZ9mvCje4gn
-         invyo19u7+X9Z0rCrL+xEk4Hiz5XCSddUHEhCEhw/zBEX0GYcVaT5tWix39WBP6XIVdR
-         P8QQdTDjjKLbzsBnfVdcFpIus/y4FqSil3NPOZTwI2gFKKVgEZI2rRaKhBJaCvExQ3xo
-         f2Bnb2M3jI8L6gOUK+EmDUYeUtwwi1ujzxx4S4yZyhlaq5EpgGOdoDVmNIC1nzl8zHD6
-         XBV/VqJhIjtMBVBgR45Lm9fhrWX6O7QOY/mTu58wzyK0kEtA9ZykgjFyT5KlUEicxowV
-         Dw/Q==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hD8X8qVZq4QKTN1ZTeopdiOIlClAYJmnZKU9CVsO/cs=;
+        b=aQg3vtt+4H1lt0RbLFuPBMh8bth02t7Ut92OWIKW2emBz2XXNHbzvFxf+/P5VUrr97
+         GDXNJQ6yUURYSpyi0lKuaoq8r5ivaD0nM+3Up/L2fbRBSOiWy1twBwURPjdOr6yRidvo
+         YI909txyLgz3vvYfi9//m1Z7wiZfjoAM88zGAW4HxfCP6zqpeb9X07Su2xS37uBk4+wr
+         D6DA0omN63xrdYEOOYofEOEkga/4xhoowr3EMRYWQwY+QZroTYK0HWiaIHmg++hoosCS
+         zhfS/G+gBRNSUIqzXMa3D7ZXDQFpcrBElurXwgLguCI937gUXEoIul2GU9NV3GXydVBU
+         bCHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=qqPM+9oSDb+C5bIeKnOOrRzc8/vgXxoC8kEuwdzzRWw=;
-        b=caHUtEe7YcTZqPSXIbcXzU4FrW+Lmxb+hpJoiWmpUfDefnidPO4GlnZLeqKG2Akw6T
-         H8IdrQEs8WmjQ7xEXVKGqEWlaNs41KOXqbBgkvB4J1G589L/O41VWSR840Ml1e2JcBru
-         FmhMBjhx8wMmFwKQA5cvFfGzt+3UqD26jWtiFnRur7uOoYKJ8FF9X87hIQrqOH3mepnw
-         UKNilgzb7Qj4WCIu8/huGzw3PsImxkm4FGaFwV3Y1T9JejSKEtW9Z+BFXFt64/xEN0Tl
-         uFVekrla0TSunyzWU4rifxRy7RgAPQALDBl/D481jQ3kNxAGwfFxMvlHAHgAmipffk91
-         8/vg==
-X-Gm-Message-State: AOAM5326/7rT3lzkKpcEuhAP6R7wWso3M+fPfYmzer+/qW9UH09sDxr0
-        UYskeX8VVe0V0VvOOFKXgRY=
-X-Google-Smtp-Source: ABdhPJzZQz4CT0EURXLXhGl2+VC8pnUS0sthHbH3Vr1M4IAGTRE5tMIHPru9BRyy4GWTHa0dIsc5ZQ==
-X-Received: by 2002:a05:6214:29ed:: with SMTP id jv13mr38813189qvb.8.1638132727522;
-        Sun, 28 Nov 2021 12:52:07 -0800 (PST)
-Received: from [10.4.10.5] (146-115-144-188.s4282.c3-0.nwt-cbr1.sbo-nwt.ma.cable.rcncustomer.com. [146.115.144.188])
-        by smtp.gmail.com with ESMTPSA id 139sm6696350qkn.37.2021.11.28.12.52.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 28 Nov 2021 12:52:07 -0800 (PST)
-Message-ID: <dae68360-456e-3db8-57ed-2287dc7cfd57@gmail.com>
-Date:   Sun, 28 Nov 2021 15:52:05 -0500
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hD8X8qVZq4QKTN1ZTeopdiOIlClAYJmnZKU9CVsO/cs=;
+        b=J3OUJ0dG4emDmi+RqX8H0ZzHZlTz4ykORceOUqMgNLEC6/OXqs4mp+mhQNtkq6e3OZ
+         KFTzkUMh5I8U2fwwA7aPUeJNl8zgFH9apOwoMpnsa/uSk2yj41/hvRa/YPjLJlexbSnr
+         L4LJsTm2KnNGpbHY5swg2bu300qxUYeSeYAlHDU+Ur2ifplS/4xzQeKZ/NA0dCxO3X7l
+         2o7+8mwACKbsI3NzpcZ0cD+muKO4KcgvfkveHKa2h+RoabyBjkWxiGVAQcXZVMTLb9gz
+         iVHV/YLaXId5oRNk8YSmevqB+xTrBS6yF3/n3L9yf6XYl7g0BIJErR5hFuWa9Z/bTZ4d
+         S1lQ==
+X-Gm-Message-State: AOAM5330vBhWtZK3/HlspRcNE6UPoh/0K3VivqRtALeCtN98zhT9cenZ
+        5+SBIH/1fVYcSrPcvxvY/8VwotVZ5wqdX0CUIAw=
+X-Google-Smtp-Source: ABdhPJy4IAicZ4T3I0QqmFkKXJz64V93a9r3U1yEXvPSJUIQruJd7WrzOa8FDTdmvw9a/2V3TdwZq25nTnF467frhZs=
+X-Received: by 2002:a1f:2b4a:: with SMTP id r71mr27341358vkr.37.1638132880735;
+ Sun, 28 Nov 2021 12:54:40 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.2
-Subject: Re: [PATCH v3 07/13] clk: imx: Add initial support for i.MXRT clock
- driver
-Content-Language: en-US
-To:     Fabio Estevam <festevam@gmail.com>
+References: <20211125211443.1150135-1-Mr.Bossman075@gmail.com>
+ <20211125211443.1150135-8-Mr.Bossman075@gmail.com> <CAOMZO5Dqo6c=4nGCOakMKG8fn=V1HA7-O26t3GmwWtD-FbZiPg@mail.gmail.com>
+ <dae68360-456e-3db8-57ed-2287dc7cfd57@gmail.com>
+In-Reply-To: <dae68360-456e-3db8-57ed-2287dc7cfd57@gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Sun, 28 Nov 2021 17:54:30 -0300
+Message-ID: <CAOMZO5Ca7j6_KOBJ1XVpx0yRvCaAH3i2Wac0jwL8HT8pxso2eA@mail.gmail.com>
+Subject: Re: [PATCH v3 07/13] clk: imx: Add initial support for i.MXRT clock driver
+To:     Jesse Taube <mr.bossman075@gmail.com>
 Cc:     NXP Linux Team <linux-imx@nxp.com>,
         Michael Turquette <mturquette@baylibre.com>,
         Stephen Boyd <sboyd@kernel.org>,
@@ -85,45 +81,16 @@ Cc:     NXP Linux Team <linux-imx@nxp.com>,
         linux-mmc <linux-mmc@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         linux-serial@vger.kernel.org
-References: <20211125211443.1150135-1-Mr.Bossman075@gmail.com>
- <20211125211443.1150135-8-Mr.Bossman075@gmail.com>
- <CAOMZO5Dqo6c=4nGCOakMKG8fn=V1HA7-O26t3GmwWtD-FbZiPg@mail.gmail.com>
-From:   Jesse Taube <mr.bossman075@gmail.com>
-In-Reply-To: <CAOMZO5Dqo6c=4nGCOakMKG8fn=V1HA7-O26t3GmwWtD-FbZiPg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Sun, Nov 28, 2021 at 5:52 PM Jesse Taube <mr.bossman075@gmail.com> wrote:
 
+> we can have multiple imxrt versions in there like the other IMX clk
+> drivers, is this okay?
 
-On 11/28/21 15:50, Fabio Estevam wrote:
-> On Thu, Nov 25, 2021 at 6:14 PM Jesse Taube <mr.bossman075@gmail.com> wrote:
->>
->> From: Jesse Taube <mr.bossman075@gmail.com>
->>
->> This patch adds initial clock driver support for the i.MXRT series.
->>
->> Signed-off-by: Jesse Taube <Mr.Bossman075@gmail.com>
->> Suggested-by: Giulio Benetti <giulio.benetti@benettiengineering.com>
->> ---
->> V1->V2:
->> * Kconfig: Add new line
->> * clk-imxrt.c: Remove unused const
->> * clk-imxrt.c: Remove set parents
->> * clk-imxrt.c: Use fsl,imxrt-anatop for anatop base address
->> V2->V3:
->> * Remove unused ANATOP_BASE_ADDR
->> * Move to hw API
->> * Add GPT's own clock
->> * Add SEMC clocks to set muxing to CRITICAL
->> ---
->>   drivers/clk/imx/Kconfig     |   4 +
->>   drivers/clk/imx/Makefile    |   1 +
->>   drivers/clk/imx/clk-imxrt.c | 156 ++++++++++++++++++++++++++++++++++++
-> 
-> Wouldn't it be better to name it clk-imxrt1050.c instead?
-we can have multiple imxrt versions in there like the other IMX clk 
-drivers, is this okay?
-> 
+Yes, in i.MX we use drivers/clk/imx/clk-<soc>.c
+
+The same pattern could be used for i.MXRT as well.
