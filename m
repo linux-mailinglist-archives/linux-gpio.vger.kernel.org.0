@@ -2,54 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F0B64609BD
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Nov 2021 21:49:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B2524609C6
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Nov 2021 21:52:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356407AbhK1Uwd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 28 Nov 2021 15:52:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34062 "EHLO
+        id S1350807AbhK1Uzp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 28 Nov 2021 15:55:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243450AbhK1Uuc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 28 Nov 2021 15:50:32 -0500
-Received: from mail-ua1-x92c.google.com (mail-ua1-x92c.google.com [IPv6:2607:f8b0:4864:20::92c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71304C061748;
-        Sun, 28 Nov 2021 12:47:16 -0800 (PST)
-Received: by mail-ua1-x92c.google.com with SMTP id o1so29741979uap.4;
-        Sun, 28 Nov 2021 12:47:16 -0800 (PST)
+        with ESMTP id S237186AbhK1Uxp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 28 Nov 2021 15:53:45 -0500
+Received: from mail-vk1-xa2a.google.com (mail-vk1-xa2a.google.com [IPv6:2607:f8b0:4864:20::a2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F949C061574;
+        Sun, 28 Nov 2021 12:50:28 -0800 (PST)
+Received: by mail-vk1-xa2a.google.com with SMTP id m16so8627225vkl.13;
+        Sun, 28 Nov 2021 12:50:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=6Giz1SwY82g/5k3rpig0B1bNAl0T39LLOyvXZ9G7668=;
-        b=j9yVpxlkr92H3j8XogkkFArtyWSLj6On2TPoyYzLdK5KrdoxO2eKd6Z0AvY1ELzIlT
-         Xw6AUlCFQ0qEnCsOsRq/kJXDfqq3WA7pV3WU1FFnVOyvcaX0q/jfQ2ofjQMziZcBsqYr
-         vrzwZmmKmLXRa7zTmsSunVvQkBx+DJbEqHoAnSVqAADrtuCd1t91MP2H0xLFjpSTyPvG
-         woIbpoPisS3x8pVGht9PZTEUWwN16zqsV0AQsGaZWUo+klR1vZc/iTAWjK1O7mrsPYTv
-         ACRnR/ij6Lk4fHbwC77RAbCD2lUeEOUfXze8idiXLataBzvWB6pQjq2uebXQAc1NgngZ
-         /+Dw==
+        bh=ozjJ3S5Udm4B/OHBZ5P2O9zki+yUp9fd6WJGfyI7sV4=;
+        b=jL6xsvpd7T1ANE1JqP6l3iIR2W4N08COgcswxreba+5PfVGwvMc9GxbJ5vZtkb4rdR
+         mcP70bSrCUnrbWduLH+5RKI5NI8TQNZ8lgsoj1Wzgmm0UcA2ipZIUS1OKKDD+SPz5K9K
+         fIYaYX/JPFDrIVE6kGBYpANehgUJwE0pdIGWSt13EKtjpnllqQLfhAGMMbwVJFDMbc55
+         0clotCrmP8TpwQTnG/UygBsPcHczlGUHStQz7yQEgcIcjQO4uWxgvvR9t9pMY0rpLxwK
+         b++kUHcQQMtIExbSnYMfWvSZOljhDSSoK1f2GkcgGdHreihszyT/Kuh+9cEd2g2uyXlR
+         XwBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=6Giz1SwY82g/5k3rpig0B1bNAl0T39LLOyvXZ9G7668=;
-        b=DlXoT4cWg1LjdGahtHPL7+X3+RspaeVXsql5uLPErrFxeGfzq8Kz/dxA/StCOI4whH
-         u2l2zLNZlyyKnevwvpBsiLptV12eO5xUJNdCKcTUCrRKd94r6HoBMuJC5NwqUff3O7Ee
-         oHC/fe79j8NJkc5L7pCItgJysKl6pu97Us08LAtCiaay/4epL0zF0+PA32gP1LZNWJX0
-         vXmjKvb4Brn4tvLq8N2tvv11B96UGxMu4ZdKv5UO2we4IRW92zIHmBvh8mnBlSa0UHbf
-         5ngKPimCGCC93UvAdIT9sDiuubIVw3FHi1/rdkWU0RlsqA5men53kdo8octWwqj8VjsD
-         3kAA==
-X-Gm-Message-State: AOAM531zqzErrgub0qouL/VS4wLtiLoTw20LzEgCWIhCF8oh2XJ7cuB6
-        MoEAVz73sYg8tuBtDiYz3h5AzPoZMKb2/KGqza4=
-X-Google-Smtp-Source: ABdhPJzzLRgOtej8nLnlEwtProk4Wve2g/tuNbislmc8PlVWD41K7eAX/FIlr4vGfJ4vq0VXhULX8+hk4y1B7/LqQAE=
-X-Received: by 2002:a05:6102:3588:: with SMTP id h8mr28456760vsu.7.1638132435141;
- Sun, 28 Nov 2021 12:47:15 -0800 (PST)
+        bh=ozjJ3S5Udm4B/OHBZ5P2O9zki+yUp9fd6WJGfyI7sV4=;
+        b=3e2Rcx5+5mP5va/q2XxJE1kn5TIKJyudDeMOGRgGaDbMeEyNeuRTcEKyc8R4M+LMZ6
+         uBG7e3el32lXsrAf4aXodQuIvnAML1dxpdapgdY313NmHo7TO/1RHLoIeLm941Vu/9+U
+         535UudBH3CiVev68Htx4hEZ8A24ThmY7m2s6CtP3zwKcvX/eJrfWvnprUTdPj5bWsP+K
+         aUfJxEAMy3G21ydGc7IQmmRmxP+qzO+/74bgpdO8gBl8MQZ+eU3SNmSvAcQ6590BdYlc
+         94dUKtcvITZsEh2n/M1JETouhuzjkaICtN7lHGpZK/tqZWaT3T9iC7kvn71saiB5am0l
+         1yaA==
+X-Gm-Message-State: AOAM531K8WKdta3W/4+m5UAFUfytarRQ+Pxo8HqfJ+y60aHvmuj9QYPE
+        WjhM4Ri47aPcwZPoJ5VRSZwMr7wv3mMQUvOQEj0=
+X-Google-Smtp-Source: ABdhPJwqKT0SJSealzpAeOuiuzBx+Ouri6WOg7q88zgMzKFcvEBeTGHbTYv3Au3CQjhcuPQWX3A/YVR/KzwFODrXPbA=
+X-Received: by 2002:a05:6122:629:: with SMTP id g9mr27480004vkp.36.1638132627271;
+ Sun, 28 Nov 2021 12:50:27 -0800 (PST)
 MIME-Version: 1.0
-References: <20211125211443.1150135-1-Mr.Bossman075@gmail.com> <20211125211443.1150135-10-Mr.Bossman075@gmail.com>
-In-Reply-To: <20211125211443.1150135-10-Mr.Bossman075@gmail.com>
+References: <20211125211443.1150135-1-Mr.Bossman075@gmail.com> <20211125211443.1150135-8-Mr.Bossman075@gmail.com>
+In-Reply-To: <20211125211443.1150135-8-Mr.Bossman075@gmail.com>
 From:   Fabio Estevam <festevam@gmail.com>
-Date:   Sun, 28 Nov 2021 17:47:04 -0300
-Message-ID: <CAOMZO5CjpRjBqj_9b17K1q7bw67XqNP5xWh2-MjWq8zMzhJVSg@mail.gmail.com>
-Subject: Re: [PATCH v3 09/13] tty: serial: fsl_lpuart: add i.MXRT support
+Date:   Sun, 28 Nov 2021 17:50:16 -0300
+Message-ID: <CAOMZO5Dqo6c=4nGCOakMKG8fn=V1HA7-O26t3GmwWtD-FbZiPg@mail.gmail.com>
+Subject: Re: [PATCH v3 07/13] clk: imx: Add initial support for i.MXRT clock driver
 To:     Jesse Taube <mr.bossman075@gmail.com>
 Cc:     NXP Linux Team <linux-imx@nxp.com>,
         Michael Turquette <mturquette@baylibre.com>,
@@ -84,13 +84,28 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 25, 2021 at 6:15 PM Jesse Taube <mr.bossman075@gmail.com> wrote:
+On Thu, Nov 25, 2021 at 6:14 PM Jesse Taube <mr.bossman075@gmail.com> wrote:
 >
 > From: Jesse Taube <mr.bossman075@gmail.com>
 >
-> Add support for i.MXRT1050's uart.
+> This patch adds initial clock driver support for the i.MXRT series.
 >
-> Cc: Giulio Benetti <giulio.benetti@benettiengineering.com>
 > Signed-off-by: Jesse Taube <Mr.Bossman075@gmail.com>
+> Suggested-by: Giulio Benetti <giulio.benetti@benettiengineering.com>
+> ---
+> V1->V2:
+> * Kconfig: Add new line
+> * clk-imxrt.c: Remove unused const
+> * clk-imxrt.c: Remove set parents
+> * clk-imxrt.c: Use fsl,imxrt-anatop for anatop base address
+> V2->V3:
+> * Remove unused ANATOP_BASE_ADDR
+> * Move to hw API
+> * Add GPT's own clock
+> * Add SEMC clocks to set muxing to CRITICAL
+> ---
+>  drivers/clk/imx/Kconfig     |   4 +
+>  drivers/clk/imx/Makefile    |   1 +
+>  drivers/clk/imx/clk-imxrt.c | 156 ++++++++++++++++++++++++++++++++++++
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Wouldn't it be better to name it clk-imxrt1050.c instead?
