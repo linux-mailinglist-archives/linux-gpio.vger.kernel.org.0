@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC1C1461430
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Nov 2021 12:50:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E2DA461433
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Nov 2021 12:51:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237645AbhK2LyL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 Nov 2021 06:54:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60080 "EHLO
+        id S238501AbhK2LyW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 Nov 2021 06:54:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235081AbhK2LwK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Nov 2021 06:52:10 -0500
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3471CC08EB5B
-        for <linux-gpio@vger.kernel.org>; Mon, 29 Nov 2021 02:56:12 -0800 (PST)
-Received: by mail-wr1-x430.google.com with SMTP id v11so35785781wrw.10
-        for <linux-gpio@vger.kernel.org>; Mon, 29 Nov 2021 02:56:12 -0800 (PST)
+        with ESMTP id S236221AbhK2LwU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Nov 2021 06:52:20 -0500
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29BDBC08ED7C
+        for <linux-gpio@vger.kernel.org>; Mon, 29 Nov 2021 02:56:14 -0800 (PST)
+Received: by mail-wr1-x42b.google.com with SMTP id j3so35835703wrp.1
+        for <linux-gpio@vger.kernel.org>; Mon, 29 Nov 2021 02:56:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=raspberrypi.com; s=google;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=t4Fz19OEITz1hFR6emn8cktw87Fvn/NDcRj21iTSDJ8=;
-        b=MCQTaVx1eofARZWeFYruH/iOLxm3jxTyVtVI7D24dKSTFXQ/AhlmeAqYal8p1XWIqY
-         pN2HoiMZESuo5ryUBStowMn19e4llcBNyP47FpyDz22dRZCMXJzSsTKQjQSLXg2PV7VF
-         4uBpsgsyT3yS+9MsfdmebbeuyrqaOHWX1cqIhGJyer+hkDyAyN9C8bpN05NYJgo7Wa+v
-         /Dbp3P4IR8BVSFD2D6wyEaF4BqXSMBDR8iDQxeGh4fsFFOGpl74Fle0oCKJuoVmU01IN
-         Ls/TbtcTeQkF1Fng7Lun1a3bRojsfFUskYkUhKkUq7lORv89gFcx+coqSFjD8wRNplDW
-         Jt5g==
+        bh=ZfEoBbQk9ONECLNrOcF/c65XH6Dj3L7ZBAnd/speD8A=;
+        b=X3pKhf4XzRQ2NeLjZhaNyB8xA/+CokWlcc+WMuKfV8BFqDnLqQlGPD9tJ2i2UpzWiI
+         C6tPIoeDXOAzEj6E08ojGI3Oz1jUSZ94h4mnjVRG2RY4NstoG2Ky5XtG3NoiRE70X16B
+         4/AYzllR2hMpBRHc+jaSM05cI51PGp0b6ovfQItozx5D628yj0JdY74hymYQVlrk4NZV
+         cGYZ1x0Elepo0nZXUzv6S0Mp0nvOhp1C7r7QS/HPo9VH4xXzac6pEiayDMZkM6D0Ok+m
+         ptcNOzFIIbSpZeYIYnk/RDnXRXQTUD02Z7GlDSH+YFASL7bP0aFN7Eo0SC9lE3fTY839
+         iEyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=t4Fz19OEITz1hFR6emn8cktw87Fvn/NDcRj21iTSDJ8=;
-        b=NsidqADDA5J8UNWjl4OQbLpg8zKy6ldy0sTulb0nX+hmlOs5Ff+fcxcLEy2vfVyGeZ
-         aUVfnSKVtCKtJ8seZMCilIsBHXAyVaeehbkQxG3IGCmRyuijZwPGvc1NEvp104OLLVCZ
-         DGtrUNXx3V70O5spp7pCKjSgze23RL3w/IbJdYtqgJkl3Wm02JC0HkEDbZKusGQuZVU/
-         wpDq2T5xyKw6hO8suRcxEqm3DWtQfArsXUB560NzxIuzepdZv+yspkEJpdHoYSOhU1oB
-         IuUGBpBNsO9+w0OGDlCd9grVLVUyw25K4IM7C0Fwg2mfUQYCmYXyWqdszjMsEs5Lr1UX
-         qWsQ==
-X-Gm-Message-State: AOAM531AX6xdh/p41VxqEsvknr54Jr55h5f1VnjEgiC32qhNMEeM+MhH
-        KKvHKkAkdOV/5RMKgXZPuWIbFA==
-X-Google-Smtp-Source: ABdhPJxNMTENSfCgD1mcdb8Ph6fBL5pzPylgWcFwapLtUPET2Clsm2TdnxIrpYIs1kY2s3aBlFFVnA==
-X-Received: by 2002:a5d:464c:: with SMTP id j12mr32190837wrs.150.1638183370798;
-        Mon, 29 Nov 2021 02:56:10 -0800 (PST)
+        bh=ZfEoBbQk9ONECLNrOcF/c65XH6Dj3L7ZBAnd/speD8A=;
+        b=5bhTVm7oOY44kUZNsLhCSXtKYapcP5c8I7fw351AHo5aVQdZE2QLV5OOZ0bGfoiQHN
+         tzW51QdBcsnbCY8trHF7Nds/ry1/dz9xOaNlXE4myLBW1ImqEhWLoSSnme4ECUe11whC
+         5rapsy1QhMUbglVbQyHrqEeyar9UtORG+ejxswia795D8jlxVTdGANeFcP5NbCIqL52X
+         u4R/sncZ5mo/5AfF6UH0oaC3ZCEPfzTDjfecak6QpD/nfIimMHABtooNlmNXa9VNUXp8
+         px8dF1AtmiJnKiTiQQxGm+qZGU0fady22t23uzPo2HZE4a9RVtCP2w8LWRFNt6iD022d
+         Dt1A==
+X-Gm-Message-State: AOAM533o5mfUvtWkFyeG0Y8Vf891/6yMdW76EOPsW4r3CkocEIU4RHm/
+        t3f5Z9Yv12QYLauBCJKKnAKadA==
+X-Google-Smtp-Source: ABdhPJxHm92jwXsF+QAiagLFH4/A19S6SFKU28ueXRsS9Z0Wr5docJJst8qgOK1ih6T71bj/MZrg4g==
+X-Received: by 2002:adf:dcd0:: with SMTP id x16mr32167464wrm.229.1638183372723;
+        Mon, 29 Nov 2021 02:56:12 -0800 (PST)
 Received: from buildbot.pitowers.org ([2a00:1098:3142:14:ae1f:6bff:fedd:de54])
-        by smtp.gmail.com with ESMTPSA id z15sm13246285wrr.65.2021.11.29.02.56.10
+        by smtp.gmail.com with ESMTPSA id z15sm13246285wrr.65.2021.11.29.02.56.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Nov 2021 02:56:10 -0800 (PST)
+        Mon, 29 Nov 2021 02:56:12 -0800 (PST)
 From:   Phil Elwell <phil@raspberrypi.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Nicolas Saenz Julienne <nsaenz@kernel.org>,
@@ -57,9 +57,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         Thierry Reding <treding@nvidia.com>,
         devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
         linux-gpio@vger.kernel.org
-Subject: [PATCH 1/2] pinctrl: bcm2835: Change init order for gpio hogs
-Date:   Mon, 29 Nov 2021 10:55:55 +0000
-Message-Id: <20211129105556.675235-2-phil@raspberrypi.com>
+Subject: [PATCH 2/2] ARM: dts: gpio-ranges property is now required
+Date:   Mon, 29 Nov 2021 10:55:56 +0000
+Message-Id: <20211129105556.675235-3-phil@raspberrypi.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20211129105556.675235-1-phil@raspberrypi.com>
 References: <20211129105556.675235-1-phil@raspberrypi.com>
@@ -69,86 +69,47 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-...and gpio-ranges
+Since [1], added in 5.7, the absence of a gpio-ranges property has
+prevented GPIOs from being restored to inputs when released.
+Add those properties for BCM283x and BCM2711 devices.
 
-pinctrl-bcm2835 is a combined pinctrl/gpio driver. Currently the gpio
-side is registered first, but this breaks gpio hogs (which are
-configured during gpiochip_add_data). Part of the hog initialisation
-is a call to pinctrl_gpio_request, and since the pinctrl driver hasn't
-yet been registered this results in an -EPROBE_DEFER from which it can
-never recover.
+[1] commit 2ab73c6d8323 ("gpio: Support GPIO controllers without
+    pin-ranges")
 
-Change the initialisation sequence to register the pinctrl driver
-first.
-
-This also solves a similar problem with the gpio-ranges property, which
-is required in order for released pins to be returned to inputs.
-
-Fixes: 73345a18d464b ("pinctrl: bcm2835: Pass irqchip when adding
-                       gpiochip")
+Fixes: 2ab73c6d8323 ("gpio: Support GPIO controllers without
+                      pin-ranges")
 Signed-off-by: Phil Elwell <phil@raspberrypi.com>
 ---
- drivers/pinctrl/bcm/pinctrl-bcm2835.c | 29 +++++++++++++++------------
- 1 file changed, 16 insertions(+), 13 deletions(-)
+ arch/arm/boot/dts/bcm2711.dtsi | 2 ++
+ arch/arm/boot/dts/bcm283x.dtsi | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-index 2abcc6ce4eba..b607d10e4cbd 100644
---- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-+++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-@@ -1244,6 +1244,18 @@ static int bcm2835_pinctrl_probe(struct platform_device *pdev)
- 		raw_spin_lock_init(&pc->irq_lock[i]);
- 	}
+diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.dtsi
+index 9e01dbca4a01..dff18fc9a906 100644
+--- a/arch/arm/boot/dts/bcm2711.dtsi
++++ b/arch/arm/boot/dts/bcm2711.dtsi
+@@ -582,6 +582,8 @@ &gpio {
+ 		     <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
+ 		     <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
  
-+	pc->pctl_desc = *pdata->pctl_desc;
-+	pc->pctl_dev = devm_pinctrl_register(dev, &pc->pctl_desc, pc);
-+	if (IS_ERR(pc->pctl_dev)) {
-+		gpiochip_remove(&pc->gpio_chip);
-+		return PTR_ERR(pc->pctl_dev);
-+	}
++	gpio-ranges = <&gpio 0 0 58>;
 +
-+	pc->gpio_range = *pdata->gpio_range;
-+	pc->gpio_range.base = pc->gpio_chip.base;
-+	pc->gpio_range.gc = &pc->gpio_chip;
-+	pinctrl_add_gpio_range(pc->pctl_dev, &pc->gpio_range);
+ 	gpclk0_gpio49: gpclk0_gpio49 {
+ 		pin-gpclk {
+ 			pins = "gpio49";
+diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+index a3e06b680947..c113661a6668 100644
+--- a/arch/arm/boot/dts/bcm283x.dtsi
++++ b/arch/arm/boot/dts/bcm283x.dtsi
+@@ -126,6 +126,8 @@ gpio: gpio@7e200000 {
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+ 
++			gpio-ranges = <&gpio 0 0 54>;
 +
- 	girq = &pc->gpio_chip.irq;
- 	girq->chip = &bcm2835_gpio_irq_chip;
- 	girq->parent_handler = bcm2835_gpio_irq_handler;
-@@ -1251,8 +1263,10 @@ static int bcm2835_pinctrl_probe(struct platform_device *pdev)
- 	girq->parents = devm_kcalloc(dev, BCM2835_NUM_IRQS,
- 				     sizeof(*girq->parents),
- 				     GFP_KERNEL);
--	if (!girq->parents)
-+	if (!girq->parents) {
-+		pinctrl_remove_gpio_range(pc->pctl_dev, &pc->gpio_range);
- 		return -ENOMEM;
-+	}
- 
- 	if (is_7211) {
- 		pc->wake_irq = devm_kcalloc(dev, BCM2835_NUM_IRQS,
-@@ -1307,21 +1321,10 @@ static int bcm2835_pinctrl_probe(struct platform_device *pdev)
- 	err = gpiochip_add_data(&pc->gpio_chip, pc);
- 	if (err) {
- 		dev_err(dev, "could not add GPIO chip\n");
-+		pinctrl_remove_gpio_range(pc->pctl_dev, &pc->gpio_range);
- 		return err;
- 	}
- 
--	pc->pctl_desc = *pdata->pctl_desc;
--	pc->pctl_dev = devm_pinctrl_register(dev, &pc->pctl_desc, pc);
--	if (IS_ERR(pc->pctl_dev)) {
--		gpiochip_remove(&pc->gpio_chip);
--		return PTR_ERR(pc->pctl_dev);
--	}
--
--	pc->gpio_range = *pdata->gpio_range;
--	pc->gpio_range.base = pc->gpio_chip.base;
--	pc->gpio_range.gc = &pc->gpio_chip;
--	pinctrl_add_gpio_range(pc->pctl_dev, &pc->gpio_range);
--
- 	return 0;
- }
- 
+ 			/* Defines common pin muxing groups
+ 			 *
+ 			 * While each pin can have its mux selected
 -- 
 2.25.1
 
