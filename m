@@ -2,114 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E2DA461433
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Nov 2021 12:51:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D7E0F461453
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Nov 2021 12:53:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238501AbhK2LyW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 Nov 2021 06:54:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60120 "EHLO
+        id S236673AbhK2L5E (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 Nov 2021 06:57:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236221AbhK2LwU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Nov 2021 06:52:20 -0500
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29BDBC08ED7C
-        for <linux-gpio@vger.kernel.org>; Mon, 29 Nov 2021 02:56:14 -0800 (PST)
-Received: by mail-wr1-x42b.google.com with SMTP id j3so35835703wrp.1
-        for <linux-gpio@vger.kernel.org>; Mon, 29 Nov 2021 02:56:14 -0800 (PST)
+        with ESMTP id S230169AbhK2LzD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Nov 2021 06:55:03 -0500
+Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B08A0C08ED8F
+        for <linux-gpio@vger.kernel.org>; Mon, 29 Nov 2021 02:57:21 -0800 (PST)
+Received: by mail-yb1-xb36.google.com with SMTP id v203so41037246ybe.6
+        for <linux-gpio@vger.kernel.org>; Mon, 29 Nov 2021 02:57:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.com; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to
          :content-transfer-encoding;
-        bh=ZfEoBbQk9ONECLNrOcF/c65XH6Dj3L7ZBAnd/speD8A=;
-        b=X3pKhf4XzRQ2NeLjZhaNyB8xA/+CokWlcc+WMuKfV8BFqDnLqQlGPD9tJ2i2UpzWiI
-         C6tPIoeDXOAzEj6E08ojGI3Oz1jUSZ94h4mnjVRG2RY4NstoG2Ky5XtG3NoiRE70X16B
-         4/AYzllR2hMpBRHc+jaSM05cI51PGp0b6ovfQItozx5D628yj0JdY74hymYQVlrk4NZV
-         cGYZ1x0Elepo0nZXUzv6S0Mp0nvOhp1C7r7QS/HPo9VH4xXzac6pEiayDMZkM6D0Ok+m
-         ptcNOzFIIbSpZeYIYnk/RDnXRXQTUD02Z7GlDSH+YFASL7bP0aFN7Eo0SC9lE3fTY839
-         iEyQ==
+        bh=/N2AzXdmQhj8cnrxf6yxwa23/wIatZRqd4goM9Q+IO8=;
+        b=ErhOpdgigBGRX0iOA2ci/LrupvuM6+6c+q9rD2B6x1di+sFL9PVYGmzafYCayO999B
+         Ex51N+if313WKcW+gK1lj/OWtPvwfLDnTT20+eAv8YxxrR4g7rLnHIdzsTIvVAz0SrpQ
+         Ch6axdbEwb+a/M3Dt2tKAFVIFy0Y8iZuOwtZqXl1J60xk4GO/CqIzkuCM++XjDrDX06p
+         089vT34nfrhei7WTrhyk/M1T035mB+FNPNQ5Hd3oBtsviAPMtLS5mvE7ZDcnz+92hK94
+         07sMoak/mgTSYg0TcRsMzWsKiITVk9cvja0ME+E02kwQTfYZNPVDhNnY35dNNYcmygLp
+         iGDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ZfEoBbQk9ONECLNrOcF/c65XH6Dj3L7ZBAnd/speD8A=;
-        b=5bhTVm7oOY44kUZNsLhCSXtKYapcP5c8I7fw351AHo5aVQdZE2QLV5OOZ0bGfoiQHN
-         tzW51QdBcsnbCY8trHF7Nds/ry1/dz9xOaNlXE4myLBW1ImqEhWLoSSnme4ECUe11whC
-         5rapsy1QhMUbglVbQyHrqEeyar9UtORG+ejxswia795D8jlxVTdGANeFcP5NbCIqL52X
-         u4R/sncZ5mo/5AfF6UH0oaC3ZCEPfzTDjfecak6QpD/nfIimMHABtooNlmNXa9VNUXp8
-         px8dF1AtmiJnKiTiQQxGm+qZGU0fady22t23uzPo2HZE4a9RVtCP2w8LWRFNt6iD022d
-         Dt1A==
-X-Gm-Message-State: AOAM533o5mfUvtWkFyeG0Y8Vf891/6yMdW76EOPsW4r3CkocEIU4RHm/
-        t3f5Z9Yv12QYLauBCJKKnAKadA==
-X-Google-Smtp-Source: ABdhPJxHm92jwXsF+QAiagLFH4/A19S6SFKU28ueXRsS9Z0Wr5docJJst8qgOK1ih6T71bj/MZrg4g==
-X-Received: by 2002:adf:dcd0:: with SMTP id x16mr32167464wrm.229.1638183372723;
-        Mon, 29 Nov 2021 02:56:12 -0800 (PST)
-Received: from buildbot.pitowers.org ([2a00:1098:3142:14:ae1f:6bff:fedd:de54])
-        by smtp.gmail.com with ESMTPSA id z15sm13246285wrr.65.2021.11.29.02.56.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Nov 2021 02:56:12 -0800 (PST)
-From:   Phil Elwell <phil@raspberrypi.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Thierry Reding <treding@nvidia.com>,
-        devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH 2/2] ARM: dts: gpio-ranges property is now required
-Date:   Mon, 29 Nov 2021 10:55:56 +0000
-Message-Id: <20211129105556.675235-3-phil@raspberrypi.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20211129105556.675235-1-phil@raspberrypi.com>
-References: <20211129105556.675235-1-phil@raspberrypi.com>
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=/N2AzXdmQhj8cnrxf6yxwa23/wIatZRqd4goM9Q+IO8=;
+        b=nojBVt2a3ljfg1jIPsl2vF6SfK9L99GSmPwD0jBQ6ARz9zDq+qpw3VmehA2NdebE60
+         sl7ArQvMA/hfdTdtcx1x88iBsRRhPL8d3Hj7cryBf3DpFhcH5spjITJZ4Gt65eAicC3D
+         s61I975vnvz59+MzN6vfBcnY4xeEndDqnGszjGq7kDWAhvKICkrOO4c/1NCt7rK4Gmjg
+         A+8iK1BKf6IlEdMCPsbwOlDKLSGPo/2pEhzIsMFgGmsNNL9SXCWbqSYaGhyoBbvtJbaL
+         x+1F8gBRNqh0RNJ9MxowFkgNaCOzffa3Ect811iw4z3Vfm8bNhSE+dRv9DqNCUXHTMGd
+         mDww==
+X-Gm-Message-State: AOAM532Bm3ARHx/O0NXSHo+puHJv9VQFx31Rq05kxPLxmXwPrKUr02UG
+        zgwUxEQCmCSPElaXmfbSV8ME3uP261rbPDD/D1U=
+X-Google-Smtp-Source: ABdhPJwDXAO1KxnCKDkkwiudCJqJuhpArYKiJQTg+eIzhjAbEBRvY4HWTqik/oBHDS4epB1bybFjcLt6vUq4kag2XME=
+X-Received: by 2002:a25:8052:: with SMTP id a18mr5454865ybn.634.1638183440729;
+ Mon, 29 Nov 2021 02:57:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: by 2002:a05:7010:178c:b0:1df:8029:4655 with HTTP; Mon, 29 Nov 2021
+ 02:57:20 -0800 (PST)
+Reply-To: koffiaya202100@gmail.com
+From:   Koffi Aya <jindaratdaosornprasat2014@gmail.com>
+Date:   Mon, 29 Nov 2021 10:57:20 +0000
+Message-ID: <CAEU+xUtwV2_ndBWAkwUyRuwpTUmaYNsko=VW5FhYtsUrob4E3g@mail.gmail.com>
+Subject: Von Koffi
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Since [1], added in 5.7, the absence of a gpio-ranges property has
-prevented GPIOs from being restored to inputs when released.
-Add those properties for BCM283x and BCM2711 devices.
+--=20
+Von: Koffi Aya
+Liebste,
+Guten Tag und vielen Dank f=C3=BCr Ihre Aufmerksamkeit. Bitte, ich m=C3=B6c=
+hte, dass
+Sie meine E-Mail sorgf=C3=A4ltig lesen und mir helfen, dieses Projekt zu
+bearbeiten. Ich bin Miss Koffi Aya und m=C3=B6chte Sie in aller Bescheidenh=
+eit
+um Ihre Partnerschaft und Unterst=C3=BCtzung bei der =C3=9Cbertragung und A=
+nlage
+meiner Erbschaftsgelder in H=C3=B6he von 6.500.000,00 US-Dollar (sechs Mill=
+ionen
+f=C3=BCnfhunderttausend US-Dollar) bitten, die mein verstorbener geliebter =
+Vater
+vor seinem Tod bei einer Bank hinterlegt hat.
 
-[1] commit 2ab73c6d8323 ("gpio: Support GPIO controllers without
-    pin-ranges")
+Ich m=C3=B6chte Ihnen versichern, dass dieser Fonds legal von meinem
+verstorbenen Vater erworben wurde und keinen kriminellen Hintergrund hat.
+Mein Vater hat diesen Fonds legal durch ein legitimes Gesch=C3=A4ft erworbe=
+n,
+bevor er w=C3=A4hrend seiner Gesch=C3=A4ftsreise zu Tode vergiftet wurde. D=
+er Tod
+meines Vaters wurde von seinen Verwandten, die ihn w=C3=A4hrend seiner
+Dienstreise begleiteten, vermutet. Denn nach 3 Monaten nach dem Tod meines
+Vaters begannen Seine Verwandten, alle Besitzt=C3=BCmer meines verstorbenen
+Vaters zu beanspruchen und zu verkaufen.
 
-Fixes: 2ab73c6d8323 ("gpio: Support GPIO controllers without
-                      pin-ranges")
-Signed-off-by: Phil Elwell <phil@raspberrypi.com>
----
- arch/arm/boot/dts/bcm2711.dtsi | 2 ++
- arch/arm/boot/dts/bcm283x.dtsi | 2 ++
- 2 files changed, 4 insertions(+)
+Die Verwandten meines verstorbenen Vaters wissen nichts von den
+6.500.000,00 US-Dollar (sechs Millionen f=C3=BCnfhunderttausend US-Dollar),=
+ die
+mein verstorbener Vater auf die Bank eingezahlt hat und mein verstorbener
+Vater sagte mir heimlich, bevor er starb, dass ich in jedem Land nach einem
+ausl=C3=A4ndischen Partner suchen sollte meiner Wahl, wohin ich diese Gelde=
+r f=C3=BCr
+meine eigenen Zwecke =C3=BCberweise.
 
-diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.dtsi
-index 9e01dbca4a01..dff18fc9a906 100644
---- a/arch/arm/boot/dts/bcm2711.dtsi
-+++ b/arch/arm/boot/dts/bcm2711.dtsi
-@@ -582,6 +582,8 @@ &gpio {
- 		     <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
- 		     <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
- 
-+	gpio-ranges = <&gpio 0 0 58>;
-+
- 	gpclk0_gpio49: gpclk0_gpio49 {
- 		pin-gpclk {
- 			pins = "gpio49";
-diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-index a3e06b680947..c113661a6668 100644
---- a/arch/arm/boot/dts/bcm283x.dtsi
-+++ b/arch/arm/boot/dts/bcm283x.dtsi
-@@ -126,6 +126,8 @@ gpio: gpio@7e200000 {
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
- 
-+			gpio-ranges = <&gpio 0 0 54>;
-+
- 			/* Defines common pin muxing groups
- 			 *
- 			 * While each pin can have its mux selected
--- 
-2.25.1
+Bitte helfen Sie mir, dieses Geld f=C3=BCr gesch=C3=A4ftliche Zwecke in Ihr=
+em Land
+auf Ihr Konto zu =C3=BCberweisen. Ich habe diese Entscheidung getroffen, we=
+il
+ich viele Dem=C3=BCtigungen von den Verwandten meines verstorbenen Vaters
+erlitten habe. Zur Zeit habe ich Kommunikation mit dem Direktor der Bank,
+bei der mein verstorbener Vater dieses Geld hinterlegt hat. Ich habe dem
+Direktor der Bank die Dringlichkeit erkl=C3=A4rt, sicherzustellen, dass das=
+ Geld
+ins Ausland =C3=BCberwiesen wird, damit ich dieses Land zu meiner Sicherhei=
+t
+verlassen kann. Der Direktor der Bank hat mir zugesichert, dass das Geld
+=C3=BCberwiesen wird, sobald ich jemanden vorlege, der den Geldbetrag in me=
+inem
+Namen f=C3=BCr diesen Zweck ehrlich entgegennimmt.
 
+Seien Sie versichert, dass die Bank den Betrag auf Ihr Konto =C3=BCberweist=
+ und
+es keine Probleme geben wird. Diese Transaktion ist 100% risikofrei und
+legitim. Ich bin bereit, Ihnen nach erfolgreicher =C3=9Cberweisung dieses G=
+eldes
+auf Ihr Konto 30% der Gesamtsumme als Entsch=C3=A4digung f=C3=BCr Ihren Auf=
+wand
+anzubieten. Sie werden mir auch helfen, 10% an Wohlt=C3=A4tigkeitsorganisat=
+ionen
+und Heime f=C3=BCr mutterlose Babys in Ihrem Land zu spenden.
+
+Bitte alles, was ich m=C3=B6chte, ist, dass Sie f=C3=BCr mich als mein ausl=
+=C3=A4ndischer
+Partner auftreten, damit die Bank dieses Geld auf Ihr Konto =C3=BCberweist,
+damit ich in diesem Land leben kann. Bitte, ich brauche Ihre dringende
+Hilfe wegen meines jetzigen Zustands. Mit Ihrer vollen Zustimmung, mit mir
+zu diesem Zweck zusammenzuarbeiten, bekunden Sie bitte Ihr Interesse durch
+eine R=C3=BCckantwort an mich, damit ich Ihnen die notwendigen Informatione=
+n und
+die Details zum weiteren Vorgehen gebe. Ich werde Ihnen 30% des Geldes f=C3=
+=BCr
+Ihre Hilfe anbieten und Hilfestellung, damit umzugehen.
+
+Ihre dringende Antwort wird gesch=C3=A4tzt.
+Mit freundlichen Gr=C3=BC=C3=9Fen
+Koffi Aya
