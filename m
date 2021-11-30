@@ -2,39 +2,42 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DF853464125
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Nov 2021 23:14:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B9D746410F
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Nov 2021 23:10:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344929AbhK3WRP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Nov 2021 17:17:15 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:42176 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344549AbhK3WMN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Nov 2021 17:12:13 -0500
+        id S1344747AbhK3WM7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Nov 2021 17:12:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49874 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1344678AbhK3WMU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Nov 2021 17:12:20 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67698C061757
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Nov 2021 14:08:54 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5CD60B81D41
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Nov 2021 22:08:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C95A3C53FCC;
-        Tue, 30 Nov 2021 22:08:49 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 2F159B81D3C
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Nov 2021 22:08:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2F1FC53FD0;
+        Tue, 30 Nov 2021 22:08:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638310130;
-        bh=Bwocmk2zGXOjzfa7u+dwaG1albWjVqET0kPSLgpOr4Q=;
+        s=k20201202; t=1638310131;
+        bh=K5kjoVixjmU2Vq/LXKt/KMDR0qFId8jnRJKidJLr00Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GciYKpYkLowc18qjD16FHkGNoP6Ov2oRhoVJ8Kkd84iYgWg1oZpIlAOqO7bQdcN+c
-         j01N5OjFd5m6efB5OgEHLUr3UWgRFxQAkl5e79S/IqH1GFqDg1EocM+1HNM6dl5ut8
-         EodXhAFQRDH2b6LAs15AyrmWtGmPydZyE8YAsPSGEipPUvYRXvYfUYOI4rmefEdiKb
-         TaDOImRsKuCFy1cDtr9dWmfVdvtcR6hQj0eFOy7CxlEUW8lMf1HTwejGnenFy0VT5J
-         IZSzUeAhOVPkQYQpGijF7yt9QGA5wEPNGFljj2Ie4n/S0G4e23fvEbt4X13XqDkjJH
-         1UMIIkBudw7Jw==
+        b=RqSbB4KOvGz1cn8u4iRgS/20RpUe+KO2Hxn9XbTcngU9F/5GiuchAQLOsWIbSxZ2P
+         4RO8oG+mV1bdEnL+NJW7jR349NuMChTGlXCAFqqBnCnWZ9EtqN/AsFddsgmwjCcPT7
+         NfMp+mao5cmSbvgMKoy+4acvJpTezdi+FUFzROMcTp4GbCHOR2EWzmP0nJgjQqvCHY
+         yhezT7j6Sq8/MwGz7s0hG/5Ao4oXSgDUP8oxtB/+3hznmD6d67Z/+TdfcMKl7MdlzH
+         mTdqm7iX8yr7cnjWhQty4CXPqH5kS6yrX2knvgfHY+rStuEVjePWyGjfLQo7C7+fPG
+         m5bllxeTTsSlw==
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Andy Shevchenko <andy@kernel.org>
 Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
         linux-gpio@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 2/5] gpio: pch: Cache &pdev->dev to reduce repetition
-Date:   Tue, 30 Nov 2021 16:08:38 -0600
-Message-Id: <20211130220841.2776562-3-helgaas@kernel.org>
+Subject: [PATCH 3/5] gpio: ml-ioh: Cache &pdev->dev to reduce repetition
+Date:   Tue, 30 Nov 2021 16:08:39 -0600
+Message-Id: <20211130220841.2776562-4-helgaas@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20211130220841.2776562-1-helgaas@kernel.org>
 References: <20211130220841.2776562-1-helgaas@kernel.org>
@@ -46,82 +49,102 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-pch_gpio_probe() repeats the "&pdev->dev" expression several times.  Cache
+ioh_gpio_probe() repeats the "&pdev->dev" expression several times.  Cache
 the result as "struct device *dev" to reduce the repetition.  No functional
 change intended.
 
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/gpio/gpio-pch.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ drivers/gpio/gpio-ml-ioh.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/gpio/gpio-pch.c b/drivers/gpio/gpio-pch.c
-index 625920421990..3a0bd8795741 100644
---- a/drivers/gpio/gpio-pch.c
-+++ b/drivers/gpio/gpio-pch.c
-@@ -346,24 +346,25 @@ static int pch_gpio_alloc_generic_chip(struct pch_gpio *chip,
- static int pch_gpio_probe(struct pci_dev *pdev,
+diff --git a/drivers/gpio/gpio-ml-ioh.c b/drivers/gpio/gpio-ml-ioh.c
+index efa9acdc320a..4e9528dd1152 100644
+--- a/drivers/gpio/gpio-ml-ioh.c
++++ b/drivers/gpio/gpio-ml-ioh.c
+@@ -401,6 +401,7 @@ static int ioh_gpio_alloc_generic_chip(struct ioh_gpio *chip,
+ static int ioh_gpio_probe(struct pci_dev *pdev,
  				    const struct pci_device_id *id)
  {
 +	struct device *dev = &pdev->dev;
- 	s32 ret;
- 	struct pch_gpio *chip;
- 	int irq_base;
+ 	int ret;
+ 	int i, j;
+ 	struct ioh_gpio *chip;
+@@ -410,19 +411,19 @@ static int ioh_gpio_probe(struct pci_dev *pdev,
  
--	chip = devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
-+	chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
- 	if (chip == NULL)
- 		return -ENOMEM;
- 
--	chip->dev = &pdev->dev;
-+	chip->dev = dev;
- 	ret = pcim_enable_device(pdev);
+ 	ret = pci_enable_device(pdev);
  	if (ret) {
--		dev_err(&pdev->dev, "pci_enable_device FAILED");
-+		dev_err(dev, "pci_enable_device FAILED");
- 		return ret;
+-		dev_err(&pdev->dev, "%s : pci_enable_device failed", __func__);
++		dev_err(dev, "%s : pci_enable_device failed", __func__);
+ 		goto err_pci_enable;
  	}
  
- 	ret = pcim_iomap_regions(pdev, BIT(1), KBUILD_MODNAME);
+ 	ret = pci_request_regions(pdev, KBUILD_MODNAME);
  	if (ret) {
--		dev_err(&pdev->dev, "pci_request_regions FAILED-%d", ret);
-+		dev_err(dev, "pci_request_regions FAILED-%d", ret);
- 		return ret;
+-		dev_err(&pdev->dev, "pci_request_regions failed-%d", ret);
++		dev_err(dev, "pci_request_regions failed-%d", ret);
+ 		goto err_request_regions;
  	}
  
-@@ -374,16 +375,16 @@ static int pch_gpio_probe(struct pci_dev *pdev,
- 	spin_lock_init(&chip->spinlock);
- 	pch_gpio_setup(chip);
+ 	base = pci_iomap(pdev, 1, 0);
+ 	if (!base) {
+-		dev_err(&pdev->dev, "%s : pci_iomap failed", __func__);
++		dev_err(dev, "%s : pci_iomap failed", __func__);
+ 		ret = -ENOMEM;
+ 		goto err_iomap;
+ 	}
+@@ -435,7 +436,7 @@ static int ioh_gpio_probe(struct pci_dev *pdev,
  
--	ret = devm_gpiochip_add_data(&pdev->dev, &chip->gpio, chip);
-+	ret = devm_gpiochip_add_data(dev, &chip->gpio, chip);
- 	if (ret) {
--		dev_err(&pdev->dev, "PCH gpio: Failed to register GPIO\n");
-+		dev_err(dev, "PCH gpio: Failed to register GPIO\n");
- 		return ret;
+ 	chip = chip_save;
+ 	for (i = 0; i < 8; i++, chip++) {
+-		chip->dev = &pdev->dev;
++		chip->dev = dev;
+ 		chip->base = base;
+ 		chip->reg = chip->base;
+ 		chip->ch = i;
+@@ -443,17 +444,17 @@ static int ioh_gpio_probe(struct pci_dev *pdev,
+ 		ioh_gpio_setup(chip, num_ports[i]);
+ 		ret = gpiochip_add_data(&chip->gpio, chip);
+ 		if (ret) {
+-			dev_err(&pdev->dev, "IOH gpio: Failed to register GPIO\n");
++			dev_err(dev, "IOH gpio: Failed to register GPIO\n");
+ 			goto err_gpiochip_add;
+ 		}
  	}
  
--	irq_base = devm_irq_alloc_descs(&pdev->dev, -1, 0,
-+	irq_base = devm_irq_alloc_descs(dev, -1, 0,
- 					gpio_pins[chip->ioh], NUMA_NO_NODE);
- 	if (irq_base < 0) {
--		dev_warn(&pdev->dev, "PCH gpio: Failed to get IRQ base num\n");
-+		dev_warn(dev, "PCH gpio: Failed to get IRQ base num\n");
- 		chip->irq_base = -1;
- 		return 0;
+ 	chip = chip_save;
+ 	for (j = 0; j < 8; j++, chip++) {
+-		irq_base = devm_irq_alloc_descs(&pdev->dev, -1, IOH_IRQ_BASE,
++		irq_base = devm_irq_alloc_descs(dev, -1, IOH_IRQ_BASE,
+ 						num_ports[j], NUMA_NO_NODE);
+ 		if (irq_base < 0) {
+-			dev_warn(&pdev->dev,
++			dev_warn(dev,
+ 				"ml_ioh_gpio: Failed to get IRQ base num\n");
+ 			ret = irq_base;
+ 			goto err_gpiochip_add;
+@@ -467,11 +468,10 @@ static int ioh_gpio_probe(struct pci_dev *pdev,
  	}
-@@ -393,10 +394,10 @@ static int pch_gpio_probe(struct pci_dev *pdev,
- 	iowrite32(BIT(gpio_pins[chip->ioh]) - 1, &chip->reg->imask);
- 	iowrite32(BIT(gpio_pins[chip->ioh]) - 1, &chip->reg->ien);
  
--	ret = devm_request_irq(&pdev->dev, pdev->irq, pch_gpio_handler,
-+	ret = devm_request_irq(dev, pdev->irq, pch_gpio_handler,
+ 	chip = chip_save;
+-	ret = devm_request_irq(&pdev->dev, pdev->irq, ioh_gpio_handler,
++	ret = devm_request_irq(dev, pdev->irq, ioh_gpio_handler,
  			       IRQF_SHARED, KBUILD_MODNAME, chip);
- 	if (ret) {
--		dev_err(&pdev->dev, "request_irq failed\n");
-+		dev_err(dev, "request_irq failed\n");
- 		return ret;
+ 	if (ret != 0) {
+-		dev_err(&pdev->dev,
+-			"%s request_irq failed\n", __func__);
++		dev_err(dev, "%s request_irq failed\n", __func__);
+ 		goto err_gpiochip_add;
  	}
+ 
+@@ -498,7 +498,7 @@ static int ioh_gpio_probe(struct pci_dev *pdev,
+ 
+ err_pci_enable:
+ 
+-	dev_err(&pdev->dev, "%s Failed returns %d\n", __func__, ret);
++	dev_err(dev, "%s Failed returns %d\n", __func__, ret);
+ 	return ret;
+ }
  
 -- 
 2.25.1
