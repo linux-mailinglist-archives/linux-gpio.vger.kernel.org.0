@@ -2,68 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B95B462738
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Nov 2021 23:59:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 75B8D462990
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Nov 2021 02:19:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236923AbhK2XBf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 29 Nov 2021 18:01:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38980 "EHLO
+        id S235793AbhK3BWW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 29 Nov 2021 20:22:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236684AbhK2XAa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Nov 2021 18:00:30 -0500
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC011C0617A2
-        for <linux-gpio@vger.kernel.org>; Mon, 29 Nov 2021 14:04:40 -0800 (PST)
-Received: by mail-ed1-x532.google.com with SMTP id z5so12889927edd.3
-        for <linux-gpio@vger.kernel.org>; Mon, 29 Nov 2021 14:04:40 -0800 (PST)
+        with ESMTP id S230411AbhK3BWV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 29 Nov 2021 20:22:21 -0500
+Received: from mail-oi1-x233.google.com (mail-oi1-x233.google.com [IPv6:2607:f8b0:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62421C061746
+        for <linux-gpio@vger.kernel.org>; Mon, 29 Nov 2021 17:18:59 -0800 (PST)
+Received: by mail-oi1-x233.google.com with SMTP id bf8so38113810oib.6
+        for <linux-gpio@vger.kernel.org>; Mon, 29 Nov 2021 17:18:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=9QABpclmDsiBw3O50MnuiVrQu5ZlXjbuKEZDiFrlX+M=;
-        b=oiFlsiTC7wUIWSjwnxxqqPl0wwMT0zJBSGJhjHzWKa2BSxxCx9R74nlBUSKBHbRnfR
-         km7OcxwLVQljTJlHu97B6XoY0Cd5+S8z1/kr+fQ5LQvx0SbJ+ugd+Q8zVws6G7AdvFVO
-         rHVYRJLIjGcTOSi6jw5G1YCuZu6KP1ERvTeBBHIZ8/zLstCoWImtRkJrkPGIHtKkE3/R
-         +Atssxal6LZJBs635ht2vCk46tdtT/id5Da1BaaVFTowW9Ph8MwrvaGtO/rJ2x+YAP6s
-         82C2er7DMqjR4xbypS88sAfhhl16vLxEmVtVEPajBQrQrIP8gTvWAAnxE1I87iGLNphC
-         xKJQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=h7dfI3SuNLbI8eu2t4U0v+H2ni+TuABrtKx5R3CfOHM=;
+        b=yJc94fLQTljmDterLRcug2eR/c+vDp0LTI+vRv2nR+c/ddCjsYXmPTE02Vayv09E3R
+         Kv8LNcOXnMkrzyWweCyKQNq91Omh0l7IFZLiSEs3jXCZXnBJ67lffzr40aZWtneQarqb
+         bKVmqXvIjRi8CEqJPV+fdwbCsmIYY0oya15SfMc4WnqZwgpCckZ2362UkaNMbQ3rnE6Q
+         L2ZqySG/zeIswlIiFzrpwKLl+Vdekd1MbW0XqN5PD7lMKjSU87ArTZPmkYsxYkiO7meU
+         q/F+WzMnW2TPdv54KXLgDmIsF6YCCQZ+rb+ylC+w3Hz/3rP1sQ2Mx1L73iPSSK5zyfls
+         mjsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=9QABpclmDsiBw3O50MnuiVrQu5ZlXjbuKEZDiFrlX+M=;
-        b=aS9A1pdaCLYZ9rfCLYr11g+pX+NddDb/T7jFe4+zwJd8ZEC1MwkVHOsFwkAo5H0QEP
-         demnn3kAdgiOXDAiLijCInxFlqQUl5BUTG4k0724FDPw1q1AmBR3xxEhHRXgtY7dB4Ly
-         8jYROj3FAolxQ7eLraJG7xTzG/rAdpO2qh5y2ZYqNccGjTDT3QU6T8TVAvdqHUuvkEn/
-         fEFf2j7Gh5fj2X75KdHxwqhXCi8X9CsGLiwk6wJmBkMhHImO45zynVBwC2CVEQmUmCIW
-         dxXTqtL2fA1GX9UOYNxlwjWTuVB2wtmOlFWv+s9PT4TlxxPViuQYUm6ht2Q/ij5Ij5f5
-         V9OQ==
-X-Gm-Message-State: AOAM530geB+P3WrimNNbUZkWp6fQE8S38DGdTF3HrNveqcXxDdbRa6Q3
-        lGjaWn1jlOVGuGdjV75zOWot8BRcIEurrmE1SRk=
-X-Google-Smtp-Source: ABdhPJxNs3OKAYyjAIucm4FxnVk9eoCrSIaStTsFNTybc11OAK5vB9AZqMObbGbaShCyBqStXH+rWKiWWBvBP3lmvRE=
-X-Received: by 2002:a17:907:3e8a:: with SMTP id hs10mr62878225ejc.404.1638223479275;
- Mon, 29 Nov 2021 14:04:39 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=h7dfI3SuNLbI8eu2t4U0v+H2ni+TuABrtKx5R3CfOHM=;
+        b=E8MzKA+UF1xujLQ1DrSNVaoP3uKD7rr7l/aDQ9wYogCrq+hpkZF+zU49KXzfKzBRRd
+         AzgAYZS7r9ueMZP6AvXs7EJVTPBAhB+0aAlAU4vvdKUbcLxxj9AsRBv/HDqzQuBAh0iS
+         6Yjw4zlbwFOt6Y6io4E/N34a9GVOSrERqoYFj3abxgjN21W20vGjmelXpA+v2/taMq01
+         WmpzdJ47gGfLVkYhlCyv8p/Bxli/d/YesHFocA+ObKHKP9ZRr5YMlsvWpj3ChYHJ4vJ3
+         gwNUZ15N/171Oux2xJXsG5Z/Q6dYivwbBQVmtLjDsdNrsvfmdVCfLAF37qhyH+gnADij
+         lZvA==
+X-Gm-Message-State: AOAM531xudM5RM7mIb/odJe54p/K8jokx4J7h5+1Ycy5Kw0vlk6D+McR
+        fOtdzfRNCQCizKFa1tIOYvmAfDuC/EmA6QhpG9SjDw==
+X-Google-Smtp-Source: ABdhPJzmLyeQbxd78GNxBdXwDedwzxM3MZT96tDdvy8hzbjtS6grHN+iBJetLmTlLj/SPYPMXXf9itVMOmqvKPpjHwU=
+X-Received: by 2002:a54:4791:: with SMTP id o17mr1541501oic.114.1638235138666;
+ Mon, 29 Nov 2021 17:18:58 -0800 (PST)
 MIME-Version: 1.0
-Received: by 2002:a54:2ecf:0:0:0:0:0 with HTTP; Mon, 29 Nov 2021 14:04:39
- -0800 (PST)
-Reply-To: lisshuuu1@gmail.com
-From:   MS LISA HUGH <olivier.folly0@gmail.com>
-Date:   Mon, 29 Nov 2021 23:04:39 +0100
-Message-ID: <CAG_GOAtqOQyDm+Aj1KqD6to_uVgTiw+r=AnY6nXHRFCpswU5AA@mail.gmail.com>
-Subject: YOU HAVE THE DETAILS AS SOON I HEAR FROM YOU(Ms Lisa Hugh)
-To:     undisclosed-recipients:;
+References: <20211127192510.35723-1-demonsingur@gmail.com> <20211127192510.35723-4-demonsingur@gmail.com>
+In-Reply-To: <20211127192510.35723-4-demonsingur@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 30 Nov 2021 02:18:46 +0100
+Message-ID: <CACRpkda7-5YDQ6Gc+Ad0eHYO8pW3nLuUh1rKn9dEZ0PS-xHyJg@mail.gmail.com>
+Subject: Re: [PATCH v7 3/3] iio: addac: add AD74413R driver
+To:     Cosmin Tanislav <demonsingur@gmail.com>
+Cc:     cosmin.tanislav@analog.com, Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dear Friend,
+On Sat, Nov 27, 2021 at 8:25 PM Cosmin Tanislav <demonsingur@gmail.com> wro=
+te:
 
-I am Ms Lisa Hugh accountant and files keeping by profession here with the bank.
+> The AD74412R and AD74413R are quad-channel software configurable input/ou=
+tput
+> solutions for building and process control applications. They contain
+> functionality for analog output, analog input, digital input, resistance
+> temperature detector, and thermocouple measurements integrated
+> into a single chip solution with an SPI interface.
+> The devices feature a 16-bit ADC and four configurable 13-bit DACs to pro=
+vide
+> four configurable input/output channels and a suite of diagnostic functio=
+ns.
+> The AD74413R differentiates itself from the AD74412R by being HART-compat=
+ible.
+>
+> When configured with channel 0 as voltage output, channel 1 as current
+> output, channel 2 as voltage input and channel 3 as current input, the
+> following structure is created under the corresponding IIO device.
+>
+> .
+> =E2=94=9C=E2=94=80=E2=94=80 in_current0_offset
+> =E2=94=9C=E2=94=80=E2=94=80 in_current0_raw
+> =E2=94=9C=E2=94=80=E2=94=80 in_current0_sampling_frequency
+> =E2=94=9C=E2=94=80=E2=94=80 in_current0_sampling_frequency_available
+> =E2=94=9C=E2=94=80=E2=94=80 in_current0_scale
+> =E2=94=9C=E2=94=80=E2=94=80 in_voltage1_offset
+> =E2=94=9C=E2=94=80=E2=94=80 in_voltage1_raw
+> =E2=94=9C=E2=94=80=E2=94=80 in_voltage1_sampling_frequency
+> =E2=94=9C=E2=94=80=E2=94=80 in_voltage1_sampling_frequency_available
+> =E2=94=9C=E2=94=80=E2=94=80 in_voltage1_scale
+> =E2=94=9C=E2=94=80=E2=94=80 in_voltage2_offset
+> =E2=94=9C=E2=94=80=E2=94=80 in_voltage2_raw
+> =E2=94=9C=E2=94=80=E2=94=80 in_voltage2_sampling_frequency
+> =E2=94=9C=E2=94=80=E2=94=80 in_voltage2_sampling_frequency_available
+> =E2=94=9C=E2=94=80=E2=94=80 in_voltage2_scale
+> =E2=94=9C=E2=94=80=E2=94=80 in_current3_offset
+> =E2=94=9C=E2=94=80=E2=94=80 in_current3_raw
+> =E2=94=9C=E2=94=80=E2=94=80 in_current3_sampling_frequency
+> =E2=94=9C=E2=94=80=E2=94=80 in_current3_sampling_frequency_available
+> =E2=94=9C=E2=94=80=E2=94=80 in_current3_scale
+> =E2=94=9C=E2=94=80=E2=94=80 out_voltage0_raw
+> =E2=94=9C=E2=94=80=E2=94=80 out_voltage0_scale
+> =E2=94=9C=E2=94=80=E2=94=80 out_current1_raw
+> =E2=94=9C=E2=94=80=E2=94=80 out_current1_scale
+> =E2=94=9C=E2=94=80=E2=94=80 name
+> =E2=94=9C=E2=94=80=E2=94=80 buffer
+> =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 data_available
+> =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 enable
+> =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80 length
+> =E2=94=82   =E2=94=94=E2=94=80=E2=94=80 watermark
+> =E2=94=94=E2=94=80=E2=94=80 scan_elements
+>     =E2=94=9C=E2=94=80=E2=94=80 in_current0_en
+>     =E2=94=9C=E2=94=80=E2=94=80 in_current0_index
+>     =E2=94=9C=E2=94=80=E2=94=80 in_current0_type
+>     =E2=94=9C=E2=94=80=E2=94=80 in_voltage1_en
+>     =E2=94=9C=E2=94=80=E2=94=80 in_voltage1_index
+>     =E2=94=9C=E2=94=80=E2=94=80 in_voltage1_type
+>     =E2=94=9C=E2=94=80=E2=94=80 in_voltage2_en
+>     =E2=94=9C=E2=94=80=E2=94=80 in_voltage2_index
+>     =E2=94=9C=E2=94=80=E2=94=80 in_voltage2_type
+>     =E2=94=9C=E2=94=80=E2=94=80 in_current3_en
+>     =E2=94=9C=E2=94=80=E2=94=80 in_current3_index
+>     =E2=94=94=E2=94=80=E2=94=80 in_current3_type
+>
+> Signed-off-by: Cosmin Tanislav <cosmin.tanislav@analog.com>
 
-I need Your help for this transfer($4,500,000,00 ,U.S.DOLLARS)to your
-bank account with your co-operation for both of us benefit.
+From a GPIO point of view there is nothing to complain about here
+so:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Please send the follow below,
-1)AGE....2)TELEPHONE NUMBER,,,,,...,3)COUNTRY.....4)OCCUPATION......
-Thanks.
-Ms Lisa Hugh
+Yours,
+Linus Walleij
