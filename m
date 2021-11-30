@@ -2,154 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BB579463F9B
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Nov 2021 22:04:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 93211464123
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Nov 2021 23:14:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240474AbhK3VIE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 30 Nov 2021 16:08:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34284 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240366AbhK3VH7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Nov 2021 16:07:59 -0500
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DF21C061746
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Nov 2021 13:04:40 -0800 (PST)
-Received: by mail-ed1-x52c.google.com with SMTP id z5so27147429edd.3
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Nov 2021 13:04:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BWwYMH2QXD8RdUA4ARWeTtAI5cdUZzTQzP59cE/DcyM=;
-        b=DFwE/Jt9m0dyRM4buFbduTu7WcsnUL2piaBhy02HNohEZGbDBC+POJ03HMyDT2tkCx
-         8ptui4G9N8pW0pfA8rYZW89uSRLFGQlGtNpwY4PcFqIsc1bYEGvzBuaJGwD/oOroChcL
-         b/b7AcJHBd8x25FXWbEEdbjpG0LdPPr8ipHeXBwjtd/5UdpAYB/Mmt9rJkXvN0YiHjDF
-         WVIo69R0PTLDkL+y9XU2/rf3KRdmZz5B0sH7lEg7M7hWOuL7QLZPG/kY+prUWII6ZQoe
-         SYp2F6zfeI2jEWCIeAQJK8kIfDiRvHnmKkULoj4oKc8nClAWpdN9eIQT1uMV7A9C3QwK
-         uuEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BWwYMH2QXD8RdUA4ARWeTtAI5cdUZzTQzP59cE/DcyM=;
-        b=U/ksIiU/kP20mo5BYwH71GtZV7iFt+5PSehsb2tuo9LVxtZNT6TGK4lvg3iotvFW5B
-         Mde1fTck2nzftqgeP9apWLXVOpZG6mv/7j4z2EHMaAJPJjZvy/sAXAdR93jd11/6M/eo
-         pNPEGtgzPiH5/LGCdIGgMuSyiFA9b9goBmnE8no5YjkEDAwTVeqZDFAu0jqdw+O1prv8
-         QOF/FCJ4hoa05RWuLrmNnypwqnqZUgL5MZSR3mlMCwo6EWwYmKIBr/avnx6ThijE28fS
-         aXApdYAC3csoZbgbIfrVCS0N/wg6h/6GU6KjlR5EqUlNE+laYKb8Fo86EG5xYgsv7Jz+
-         HRiw==
-X-Gm-Message-State: AOAM531c1eBJAmGo3AjqOkzPpaZwbJqP7Edgdds+xBWnSe7Zr7JYo83r
-        Y01WvuyUjsbUlcAIYGm75bK0Nd/I04GcuPQHr6OsZA==
-X-Google-Smtp-Source: ABdhPJwsck9dzegaqyD1ZCTbKPCXQRGaCD3hmU681+zXZ0dURe9qvueKcDsKME504ulmNnxrqM8XHAxmOXWEHL2UxJo=
-X-Received: by 2002:a17:907:1deb:: with SMTP id og43mr1750653ejc.189.1638306278433;
- Tue, 30 Nov 2021 13:04:38 -0800 (PST)
+        id S1344667AbhK3WRO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 30 Nov 2021 17:17:14 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:42134 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1344573AbhK3WMI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 30 Nov 2021 17:12:08 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id CE307B81CDD
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Nov 2021 22:08:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40812C53FC7;
+        Tue, 30 Nov 2021 22:08:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1638310126;
+        bh=FIjwXV914fpkvB8jfWfEg3YviC5U9kN8mg0qBX+8Ub0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Tfx1IY7a0fBEMDyE40P2H46/z7KtmZj7KR3HyEBQcmBL1RWyacx2C+yA5sO5tEb3E
+         l8qO9vh6nM9NvknWwX529OQlZxcADwApPFaGLR1Ig7kio+qVsZYAaBZn6aBynJzN6q
+         7Yh9IjCFzbAJfsZFS4dGy0T+v0JtOxBi6szDrmlxyJkvt8YXmRQxmEMV7gm1VY4mWO
+         JJsMTFNRpYSpcsYs6aH49PoscznC7QrgPDTTl98HN28DN5sm4CmeGklZ4RaA9BNlVt
+         bYMaRh2cDDL1CyOannZiJzlqBxOJNyfBiAdbWqAhRDkManxVvHEW0PgXj6l+f78gjO
+         LnZGdCInS0kgA==
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Andy Shevchenko <andy@kernel.org>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        linux-gpio@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 0/5] GPIO PCH/ML-IOH consolidation baby steps
+Date:   Tue, 30 Nov 2021 16:08:36 -0600
+Message-Id: <20211130220841.2776562-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20211130154127.12272-1-brgl@bgdev.pl> <20211130154127.12272-3-brgl@bgdev.pl>
- <YaZNyMV5gX5cZpar@smile.fi.intel.com> <CAMRc=Mf5d1i34eBez+pOYjjdyfRL9N_ha_==Cn1rANr=2CB9aQ@mail.gmail.com>
- <YaaQp2rq7N71dm1l@smile.fi.intel.com>
-In-Reply-To: <YaaQp2rq7N71dm1l@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 30 Nov 2021 22:04:27 +0100
-Message-ID: <CAMRc=Me=Oq_V=+p-AFPcyDjBs-+4Ug3k0AWK9fdEEet2JD3eFw@mail.gmail.com>
-Subject: Re: [PATCH v11 2/6] gpiolib: allow to specify the firmware node in
- struct gpio_chip
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 30, 2021 at 10:00 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Tue, Nov 30, 2021 at 09:25:35PM +0100, Bartosz Golaszewski wrote:
-> > On Tue, Nov 30, 2021 at 5:15 PM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > >
-> > > On Tue, Nov 30, 2021 at 04:41:23PM +0100, Bartosz Golaszewski wrote:
-> > > > Software nodes allow us to represent hierarchies for device components
-> > > > that don't have their struct device representation yet - for instance:
-> > > > banks of GPIOs under a common GPIO expander. The core gpiolib core
-> > >
-> > > core .. core ?!
-> > >
-> > > > however doesn't offer any way of passing this information from the
-> > > > drivers.
-> > > >
-> > > > This extends struct gpio_chip with a pointer to fwnode that can be set
-> > > > by the driver and used to pass device properties for child nodes.
-> > > >
-> > > > This is similar to how we handle device-tree sub-nodes with
-> > > > CONFIG_OF_GPIO enabled.
-> > >
-> > > Not sure I understand the proposal. Can you provide couple of (simplest)
-> > > examples?
-> > >
-> > > And also it sounds like reinventing a wheel. What problem do you have that you
-> > > need to solve this way?
-> > >
-> > > ...
-> > >
-> > > > +#if IS_ENABLED(CONFIG_OF_GPIO)
-> > > > +     if (gc->of_node && gc->fwnode) {
-> > > > +             pr_err("%s: tried to set both the of_node and fwnode in gpio_chip\n",
-> > > > +                    __func__);
-> > > > +             return -EINVAL;
-> > > > +     }
-> > > > +#endif /* CONFIG_OF_GPIO */
-> > >
-> > > I don't like this. It seems like a hack right now.
-> > >
-> > > Is it possible to convert all GPIO controller drivers to provide an fwnode
-> > > rather than doing this? (I believe in most of the drivers we can drop
-> > > completely the of_node assignment).
-> > >
-> >
-> > Yes, it's definitely a good idea but I would be careful with just
-> > dropping the of_node assignments as callbacks may depend on them
-> > later.
->
-> GPIO library does it for us among these lines:
->
->         struct fwnode_handle *fwnode = gc->parent ? dev_fwnode(gc->parent) : NULL;
->
->         of_gpio_dev_init(gc, gdev); <<< HERE!
->         acpi_gpio_dev_init(gc, gdev);
->
->         /*
->          * Assign fwnode depending on the result of the previous calls,
->          * if none of them succeed, assign it to the parent's one.
->          */
->         gdev->dev.fwnode = dev_fwnode(&gdev->dev) ?: fwnode;
->
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-Except that it doesn't and I noticed that when working on the
-subsequent patch. The child gpiochipX devices all had the parent's
-fwnode assigned as their primary fwnode and no secondary fwnode.
+These are tiny cleanups to pch and ml-ioh to try to make them easier to
+merge together.  I can't really test either driver, so I'm not pushing too
+hard on this.
 
-Note that this driver doesn't use neither OF nor ACPI in which case
-gdev->dev has no fwnode and the parent's one is used. This patch
-addresses it. If you have a better idea, let me know.
+If anybody wants to go further, Andy mentioned some docs here:
+  https://lore.kernel.org/lkml/CAHp75VfDcQXqmK9=4k4rqi7t2OZaVPC13b45vLY7fELr7zBG_Q@mail.gmail.com/
 
-Bart
+Bjorn Helgaas (5):
+  gpio: pch: Use .driver_data instead of checking Device IDs again
+  gpio: pch: Cache &pdev->dev to reduce repetition
+  gpio: ml-ioh: Cache &pdev->dev to reduce repetition
+  gpio: ml-ioh: Use BIT() to match gpio-pch.c
+  gpio: ml-ioh: Change whitespace to match gpio-pch.c
 
->
-> > Also it's not just about the gpio_chip of_node assignment -
-> > drivers also use a bunch of OF APIs all around the place. I would
-> > prefer that it be done one by one and every modified driver be tested.
->
-> That's why we want to eliminate dev->fwnode explicit dereference as a first
-> step (see dev_fwnode() / device_set_node() APIs).
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+ drivers/gpio/gpio-ml-ioh.c | 52 +++++++++++++++++++-------------------
+ drivers/gpio/gpio-pch.c    | 42 +++++++++++++++---------------
+ 2 files changed, 46 insertions(+), 48 deletions(-)
+
+-- 
+2.25.1
+
