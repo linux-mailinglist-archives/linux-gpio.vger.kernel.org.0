@@ -2,151 +2,199 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E2D2465106
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Dec 2021 16:11:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A39A465151
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Dec 2021 16:19:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240188AbhLAPOs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 1 Dec 2021 10:14:48 -0500
-Received: from so254-9.mailgun.net ([198.61.254.9]:24365 "EHLO
-        so254-9.mailgun.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239738AbhLAPOq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Dec 2021 10:14:46 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1638371485; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=hzfR5Iy/ZH4JZgmh+ej8VUvwQgSQ07CnUGKU2GOo0f0=; b=DarWwyXS721nLyZZZGYfkCVLJ/s6aWB7ZYEvQ1p5Qjx24aquaZU1Jb72u4aEArYEXWPsymX7
- VL7mWqoHZ58Qg/C2Q/RexvruMvIqJapz8KQAmbcSfkeoT5Agg/p9BtFABlqeEkdoaQ0H1G2A
- vU833ygsCSQw2L5p4mWbuOWfcx0=
-X-Mailgun-Sending-Ip: 198.61.254.9
-X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
- 61a7909d86d0e4d88862b844 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 01 Dec 2021 15:11:25
- GMT
-Sender: srivasam=codeaurora.org@mg.codeaurora.org
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 9327FC43638; Wed,  1 Dec 2021 15:11:23 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-        aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=2.0 tests=ALL_TRUSTED,BAYES_00,
-        NICE_REPLY_A,SPF_FAIL autolearn=unavailable autolearn_force=no version=3.4.0
-Received: from [10.242.143.72] (unknown [202.46.23.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: srivasam)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 44557C4338F;
-        Wed,  1 Dec 2021 15:11:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org 44557C4338F
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
-Subject: Re: [PATCH v3 3/5] pinctrl: qcom: Move chip specific functions to
- right files
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org, robh+dt@kernel.org, plai@codeaurora.org,
-        bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
-        rohitkr@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, swboyd@chromium.org,
-        judyhsiao@chromium.org, Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org
-Cc:     Venkata Prasad Potturu <potturu@codeaurora.org>
-References: <1638179932-3353-1-git-send-email-srivasam@codeaurora.org>
- <1638179932-3353-4-git-send-email-srivasam@codeaurora.org>
- <bb08af7e-3b90-2d64-3bb1-f82cc6686184@linaro.org>
- <342898d1-59ef-9104-658d-d992c0126361@codeaurora.org>
- <a9e561cc-67f7-450b-fc08-61ece48e9070@linaro.org>
-From:   Srinivasa Rao Mandadapu <srivasam@codeaurora.org>
-Organization: Qualcomm India Private Limited.
-Message-ID: <c05aee0c-9cd7-38e0-61cf-eaf138185b00@codeaurora.org>
-Date:   Wed, 1 Dec 2021 20:41:14 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        id S1350499AbhLAPW3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 1 Dec 2021 10:22:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57130 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243357AbhLAPWQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Dec 2021 10:22:16 -0500
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E42B1C061574
+        for <linux-gpio@vger.kernel.org>; Wed,  1 Dec 2021 07:18:54 -0800 (PST)
+Received: by mail-wm1-x32d.google.com with SMTP id o29so20703615wms.2
+        for <linux-gpio@vger.kernel.org>; Wed, 01 Dec 2021 07:18:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.com; s=google;
+        h=message-id:date:mime-version:user-agent:subject:to:cc:references
+         :from:in-reply-to:content-transfer-encoding;
+        bh=SocG1K4Km9pityZDy8LZ6cbAsQD/fy8hCQDiq9C2wEc=;
+        b=UFx+fv//tBONGiK+z8htFYIwDfao0KXOQs/xq3njMyn/pSrVamvrBpoNOquW0g3OYq
+         xjitEbWec6dUdUUCEohqRjz1d4Z2pD4B9ia4FyUCBi5c/kQQs8SxiHJq0D2Mn0zEaYBP
+         ag+sewFvXfgFSVo+B27OZOBmoswDmH9e4iq8FXDGMa/+gTlub4x9GibYM3+5dH0SnrBQ
+         1HytCoEbh25lqXZCj7BY/ZTAQHn5Rg/AgVXVtIY9m8o8QbApTS5bIEbABvhURaAY8Hph
+         NHvOYE0TCTVNVPfamzTFpOwKeFY8YHIXMKChKf4nF3tG3dIUP/cdK91KAfbKcT7o8e3p
+         OMhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :to:cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=SocG1K4Km9pityZDy8LZ6cbAsQD/fy8hCQDiq9C2wEc=;
+        b=p3osAzD1tcjVklr3WHU94NCFFNmvC1OMGnK+WJ4pryfr45e4Ou+tGvA+et3SGKaTF0
+         M2Okl2JbuFVqXeLjWT0qOHxtdl7kn90A7Xo/RI2Q5iiK2H2Rbbr4P5WJvpP8vC6yUPG6
+         mwQegYLLuT6o2ONoTV5jR/GoGK0Me5YkM21F+kDHfdPSTesMwNiTCmGxfL+n7tfVzqIo
+         Q62e9XIDrXY9KlXVq87XVTL7NZiNnyUmaTBRsKt/9w3VdxYl4ECpIO9JSgDkQKwCR5kZ
+         8ZudgQe2NHdO8r5EV24GW4jfQZnZlbbV8UrPb8NsH6Axye9Jjah5LUHqDYhARZQHCwmH
+         wnCw==
+X-Gm-Message-State: AOAM532pIc3T2FnTC3nJjUp/G/weQF2EkoFJzTG1x4yASLrXqfYmOwUi
+        c/Fo90XESqLy2BgyCK7veaKhzg==
+X-Google-Smtp-Source: ABdhPJzi5YkLKACpYiy0/O9nTMFaton8K3JkoAfHFyk7pgZOLNVRU7r4rFm15NZLCPZtet0VtW9+Hg==
+X-Received: by 2002:a7b:cd93:: with SMTP id y19mr7591237wmj.190.1638371933474;
+        Wed, 01 Dec 2021 07:18:53 -0800 (PST)
+Received: from ?IPV6:2a00:1098:3142:14:3430:4041:27d3:fbce? ([2a00:1098:3142:14:3430:4041:27d3:fbce])
+        by smtp.gmail.com with ESMTPSA id g124sm1206703wme.28.2021.12.01.07.18.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Dec 2021 07:18:53 -0800 (PST)
+Message-ID: <06345f5a-c8e7-848b-d25f-3f3e32ab5418@raspberrypi.com>
+Date:   Wed, 1 Dec 2021 15:18:51 +0000
 MIME-Version: 1.0
-In-Reply-To: <a9e561cc-67f7-450b-fc08-61ece48e9070@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.2
+Subject: Re: [PATCH 1/2] pinctrl: bcm2835: Change init order for gpio hogs
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Thierry Reding <treding@nvidia.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-rpi-kernel@lists.infradead.org" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+References: <20211129105556.675235-1-phil@raspberrypi.com>
+ <20211129105556.675235-2-phil@raspberrypi.com>
+ <CAHp75Vei9FUY0gGD99gVv_FZzcpN1y_i65BB-auyAFUwqsQxNA@mail.gmail.com>
+From:   Phil Elwell <phil@raspberrypi.com>
+In-Reply-To: <CAHp75Vei9FUY0gGD99gVv_FZzcpN1y_i65BB-auyAFUwqsQxNA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Andy,
 
-On 12/1/2021 8:37 PM, Srinivas Kandagatla wrote:
-Thanks for clarification Srini!!
->
-> On 01/12/2021 14:33, Srinivasa Rao Mandadapu wrote:
->>>
->>>
->>>> +enum lpass_lpi_functions {
->>>> +    LPI_MUX_dmic1_clk,
->>>> +    LPI_MUX_dmic1_data,
->>>> +    LPI_MUX_dmic2_clk,
->>>> +    LPI_MUX_dmic2_data,
->>>> +    LPI_MUX_dmic3_clk,
->>>> +    LPI_MUX_dmic3_data,
->>>> +    LPI_MUX_i2s1_clk,
->>>> +    LPI_MUX_i2s1_data,
->>>> +    LPI_MUX_i2s1_ws,
->>>> +    LPI_MUX_i2s2_clk,
->>>> +    LPI_MUX_i2s2_data,
->>>> +    LPI_MUX_i2s2_ws,
->>>> +    LPI_MUX_qua_mi2s_data,
->>>> +    LPI_MUX_qua_mi2s_sclk,
->>>> +    LPI_MUX_qua_mi2s_ws,
->>>> +    LPI_MUX_swr_rx_clk,
->>>> +    LPI_MUX_swr_rx_data,
->>>> +    LPI_MUX_swr_tx_clk,
->>>> +    LPI_MUX_swr_tx_data,
->>>> +    LPI_MUX_wsa_swr_clk,
->>>> +    LPI_MUX_wsa_swr_data,
->>>> +    LPI_MUX_gpio,
->>>> +    LPI_MUX__,
->>>> +};
->>>> +
->>>> +static const unsigned int gpio0_pins[] = { 0 };
->>>> +static const unsigned int gpio1_pins[] = { 1 };
->>>> +static const unsigned int gpio2_pins[] = { 2 };
->>>> +static const unsigned int gpio3_pins[] = { 3 };
->>>> +static const unsigned int gpio4_pins[] = { 4 };
->>>> +static const unsigned int gpio5_pins[] = { 5 };
->>>> +static const unsigned int gpio6_pins[] = { 6 };
->>>> +static const unsigned int gpio7_pins[] = { 7 };
->>>> +static const unsigned int gpio8_pins[] = { 8 };
->>>> +static const unsigned int gpio9_pins[] = { 9 };
->>>> +static const unsigned int gpio10_pins[] = { 10 };
->>>> +static const unsigned int gpio11_pins[] = { 11 };
->>>> +static const unsigned int gpio12_pins[] = { 12 };
->>>> +static const unsigned int gpio13_pins[] = { 13 };
->>> >>>
->>> to here are specific to sm8250, so it should not be in header file 
->>> to start with.
->>
->> As these are common to all lpass variants.. I feel it's better to 
->> keep in Header file.
->
-> You realize that every include of this file will add these static 
-> variables to file, in this case to pinctrl-lpass-lpi.c, 
-> pinctrl-sm8250-lpass-lpi.c and pinctrl-sc7280-lpass-lpi.c
-> so in first file(pinctrl-lpass-lpi.c) you never use those variables in 
-> second file (pinctrl-sm8250-lpass-lpi.c)you only use up to gpio13 and 
-> in third file pinctrl-sc7280-lpass-lpi.c you could use them.
->
-> so its really bad idea to add static variables in header files.
->
-Okay. Understood. will move it SoC specific files.
-> --srini
->
->>
->> And if new pins comes in later variants, we can add them 
->> incrementally, and they will not impact existing pin numbers.
->>
->> I think in upcoming variants number of pins will not decrease.
->>
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
-is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+On 01/12/2021 12:06, Andy Shevchenko wrote:
+> On Monday, November 29, 2021, Phil Elwell <phil@raspberrypi.com 
+> <mailto:phil@raspberrypi.com>> wrote:
+> 
+>     ...and gpio-ranges
+> 
+>     pinctrl-bcm2835 is a combined pinctrl/gpio driver. Currently the gpio
+>     side is registered first, but this breaks gpio hogs (which are
+>     configured during gpiochip_add_data). Part of the hog initialisation
+>     is a call to pinctrl_gpio_request, and since the pinctrl driver hasn't
+>     yet been registered this results in an -EPROBE_DEFER from which it can
+>     never recover.
+> 
+>     Change the initialisation sequence to register the pinctrl driver
+>     first.
+> 
+>     This also solves a similar problem with the gpio-ranges property, which
+>     is required in order for released pins to be returned to inputs.
+> 
+> 
+> We have a callback in GPIO chip to register pin ranges, why driver does it 
+> separately?
 
+A few experiments (this is not my driver) appear to show that the call to 
+pinctrl_add_gpio_range can be removed, but only once the gpio-ranges DT property 
+has been added if we want to remain functionality throughout a bisect. That tidy 
+up might be better done with a followup commit once the DT patch has also
+been accepted, unless it's possible to guarantee the sequencing between
+the pinctrl/gpio tree and the DT tree.
+
+>     Fixes: 73345a18d464b ("pinctrl: bcm2835: Pass irqchip when adding
+>                             gpiochip")
+>     Signed-off-by: Phil Elwell <phil@raspberrypi.com <mailto:phil@raspberrypi.com>>
+> 
+> 
+> 
+> Is it originally so strange indentation or is it only on my side?
+
+The "g" is below the "p" in the patch.
+
+Thanks,
+
+Phil
+
+>     ---
+>       drivers/pinctrl/bcm/pinctrl-bcm2835.c | 29 +++++++++++++++------------
+>       1 file changed, 16 insertions(+), 13 deletions(-)
+> 
+>     diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+>     b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+>     index 2abcc6ce4eba..b607d10e4cbd 100644
+>     --- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+>     +++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+>     @@ -1244,6 +1244,18 @@ static int bcm2835_pinctrl_probe(struct
+>     platform_device *pdev)
+>                      raw_spin_lock_init(&pc->irq_lock[i]);
+>              }
+> 
+>     +       pc->pctl_desc = *pdata->pctl_desc;
+>     +       pc->pctl_dev = devm_pinctrl_register(dev, &pc->pctl_desc, pc);
+>     +       if (IS_ERR(pc->pctl_dev)) {
+>     +               gpiochip_remove(&pc->gpio_chip);
+>     +               return PTR_ERR(pc->pctl_dev);
+>     +       }
+>     +
+>     +       pc->gpio_range = *pdata->gpio_range;
+>     +       pc->gpio_range.base = pc->gpio_chip.base;
+>     +       pc->gpio_range.gc = &pc->gpio_chip;
+>     +       pinctrl_add_gpio_range(pc->pctl_dev, &pc->gpio_range);
+>     +
+>              girq = &pc->gpio_chip.irq;
+>              girq->chip = &bcm2835_gpio_irq_chip;
+>              girq->parent_handler = bcm2835_gpio_irq_handler;
+>     @@ -1251,8 +1263,10 @@ static int bcm2835_pinctrl_probe(struct
+>     platform_device *pdev)
+>              girq->parents = devm_kcalloc(dev, BCM2835_NUM_IRQS,
+>                                           sizeof(*girq->parents),
+>                                           GFP_KERNEL);
+>     -       if (!girq->parents)
+>     +       if (!girq->parents) {
+>     +               pinctrl_remove_gpio_range(pc->pctl_dev, &pc->gpio_range);
+>                      return -ENOMEM;
+>     +       }
+> 
+>              if (is_7211) {
+>                      pc->wake_irq = devm_kcalloc(dev, BCM2835_NUM_IRQS,
+>     @@ -1307,21 +1321,10 @@ static int bcm2835_pinctrl_probe(struct
+>     platform_device *pdev)
+>              err = gpiochip_add_data(&pc->gpio_chip, pc);
+>              if (err) {
+>                      dev_err(dev, "could not add GPIO chip\n");
+>     +               pinctrl_remove_gpio_range(pc->pctl_dev, &pc->gpio_range);
+>                      return err;
+>              }
+> 
+>     -       pc->pctl_desc = *pdata->pctl_desc;
+>     -       pc->pctl_dev = devm_pinctrl_register(dev, &pc->pctl_desc, pc);
+>     -       if (IS_ERR(pc->pctl_dev)) {
+>     -               gpiochip_remove(&pc->gpio_chip);
+>     -               return PTR_ERR(pc->pctl_dev);
+>     -       }
+>     -
+>     -       pc->gpio_range = *pdata->gpio_range;
+>     -       pc->gpio_range.base = pc->gpio_chip.base;
+>     -       pc->gpio_range.gc = &pc->gpio_chip;
+>     -       pinctrl_add_gpio_range(pc->pctl_dev, &pc->gpio_range);
+>     -
+>              return 0;
+>       }
+> 
+>     -- 
+>     2.25.1
+> 
+> 
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
