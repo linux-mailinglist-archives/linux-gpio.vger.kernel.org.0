@@ -2,55 +2,49 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 02B8B4650ED
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Dec 2021 16:07:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E2D2465106
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Dec 2021 16:11:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234474AbhLAPKr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 1 Dec 2021 10:10:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54260 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229769AbhLAPKq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Dec 2021 10:10:46 -0500
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0C54C061748
-        for <linux-gpio@vger.kernel.org>; Wed,  1 Dec 2021 07:07:25 -0800 (PST)
-Received: by mail-wm1-x336.google.com with SMTP id 137so20682878wma.1
-        for <linux-gpio@vger.kernel.org>; Wed, 01 Dec 2021 07:07:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qTmietPPTH/OEWz3+GN173yo9RKau03sCp5APng7zRc=;
-        b=jzA4kko/2OjjeaobiNKn612JAkABJ27wZLaAMOy6eKCrhon866eDrxxG5nmZ/pRRq2
-         NE4zTNZUiSvjcGJnqr9jMhKnIZbPDhYN1GaWw4oZ94U+BAFGZl7jgNf5GNCtyAa/IsNQ
-         EqGL+Nfy7ZbYzWlFeKH4LkKnkcjq+YOO8ToWS+Fq9ampksyPKnVye2nICbuZSLTaZWRb
-         RyXjpO1L/uC+Wvu0ROkT4uIRvFJUNQ00AR87Gaz4pSTiSg8x+3KFgIIWbfNOYYbVRh0j
-         sKLAyrhMOKy3vcG8EgSt2jZmHeqQobEtCv7bY6R0wX+GFvwlckNBPNTZMgFneXXxFPJa
-         Z3BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qTmietPPTH/OEWz3+GN173yo9RKau03sCp5APng7zRc=;
-        b=fEy2RmdrbA67bMkZQZvjz4v5FNoG3DT6lMvJrFi1Kqf0XpuQt3+h2Ln6yws8ipfCuu
-         MCAShtn4wD6bfuf+KQTa/7FDf70Z6Fo7kWxjYofDbS7X0wIqGpL9o90DrqYUF3pDYwUT
-         DmFm+r+x1As9Y0xE3KY9qXwAabUtleU7WhLHygmK7KE3qW3+nHqzQ+P1A+8vJ9kDKVFN
-         sMzB5fSsBPGLrt2zUTJ9N1tMlfISNBPo/DTkGtBOQgddPrqnm6sO0RWVW4gNkq69f91l
-         So7NYSoaQSHWmBjBklGMcfi7yJMfrBJrl9mg3Ko3unGfGSVatq1CqSm+bROWpH1Nr+VR
-         tBCA==
-X-Gm-Message-State: AOAM530k6vrvJtYV5Dl3tA/ydlZKgsVCvC3g2cKFiz78HGVr8YDyYnGH
-        xBJ8Cd9Si4bYnt/zh54G8AOl5w==
-X-Google-Smtp-Source: ABdhPJw7rj6qis9EWXaZFE/0EATQh6xhhQa51TzS6S/onkXNA+4TsiXKIUSFBX+s/THVcjWw3y8IVA==
-X-Received: by 2002:a05:600c:501f:: with SMTP id n31mr7688078wmr.101.1638371244569;
-        Wed, 01 Dec 2021 07:07:24 -0800 (PST)
-Received: from [192.168.86.34] (cpc90716-aztw32-2-0-cust825.18-1.cable.virginm.net. [86.26.103.58])
-        by smtp.googlemail.com with ESMTPSA id n15sm1360511wmq.38.2021.12.01.07.07.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Dec 2021 07:07:23 -0800 (PST)
+        id S240188AbhLAPOs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 1 Dec 2021 10:14:48 -0500
+Received: from so254-9.mailgun.net ([198.61.254.9]:24365 "EHLO
+        so254-9.mailgun.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239738AbhLAPOq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Dec 2021 10:14:46 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1638371485; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=hzfR5Iy/ZH4JZgmh+ej8VUvwQgSQ07CnUGKU2GOo0f0=; b=DarWwyXS721nLyZZZGYfkCVLJ/s6aWB7ZYEvQ1p5Qjx24aquaZU1Jb72u4aEArYEXWPsymX7
+ VL7mWqoHZ58Qg/C2Q/RexvruMvIqJapz8KQAmbcSfkeoT5Agg/p9BtFABlqeEkdoaQ0H1G2A
+ vU833ygsCSQw2L5p4mWbuOWfcx0=
+X-Mailgun-Sending-Ip: 198.61.254.9
+X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 61a7909d86d0e4d88862b844 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 01 Dec 2021 15:11:25
+ GMT
+Sender: srivasam=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 9327FC43638; Wed,  1 Dec 2021 15:11:23 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-5.1 required=2.0 tests=ALL_TRUSTED,BAYES_00,
+        NICE_REPLY_A,SPF_FAIL autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from [10.242.143.72] (unknown [202.46.23.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: srivasam)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 44557C4338F;
+        Wed,  1 Dec 2021 15:11:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org 44557C4338F
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
 Subject: Re: [PATCH v3 3/5] pinctrl: qcom: Move chip specific functions to
  right files
-To:     Srinivasa Rao Mandadapu <srivasam@codeaurora.org>,
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
         broonie@kernel.org, robh+dt@kernel.org, plai@codeaurora.org,
         bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
@@ -64,86 +58,95 @@ References: <1638179932-3353-1-git-send-email-srivasam@codeaurora.org>
  <1638179932-3353-4-git-send-email-srivasam@codeaurora.org>
  <bb08af7e-3b90-2d64-3bb1-f82cc6686184@linaro.org>
  <342898d1-59ef-9104-658d-d992c0126361@codeaurora.org>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <a9e561cc-67f7-450b-fc08-61ece48e9070@linaro.org>
-Date:   Wed, 1 Dec 2021 15:07:22 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ <a9e561cc-67f7-450b-fc08-61ece48e9070@linaro.org>
+From:   Srinivasa Rao Mandadapu <srivasam@codeaurora.org>
+Organization: Qualcomm India Private Limited.
+Message-ID: <c05aee0c-9cd7-38e0-61cf-eaf138185b00@codeaurora.org>
+Date:   Wed, 1 Dec 2021 20:41:14 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.14.0
 MIME-Version: 1.0
-In-Reply-To: <342898d1-59ef-9104-658d-d992c0126361@codeaurora.org>
+In-Reply-To: <a9e561cc-67f7-450b-fc08-61ece48e9070@linaro.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
-
-On 01/12/2021 14:33, Srinivasa Rao Mandadapu wrote:
+On 12/1/2021 8:37 PM, Srinivas Kandagatla wrote:
+Thanks for clarification Srini!!
+>
+> On 01/12/2021 14:33, Srinivasa Rao Mandadapu wrote:
+>>>
+>>>
+>>>> +enum lpass_lpi_functions {
+>>>> +    LPI_MUX_dmic1_clk,
+>>>> +    LPI_MUX_dmic1_data,
+>>>> +    LPI_MUX_dmic2_clk,
+>>>> +    LPI_MUX_dmic2_data,
+>>>> +    LPI_MUX_dmic3_clk,
+>>>> +    LPI_MUX_dmic3_data,
+>>>> +    LPI_MUX_i2s1_clk,
+>>>> +    LPI_MUX_i2s1_data,
+>>>> +    LPI_MUX_i2s1_ws,
+>>>> +    LPI_MUX_i2s2_clk,
+>>>> +    LPI_MUX_i2s2_data,
+>>>> +    LPI_MUX_i2s2_ws,
+>>>> +    LPI_MUX_qua_mi2s_data,
+>>>> +    LPI_MUX_qua_mi2s_sclk,
+>>>> +    LPI_MUX_qua_mi2s_ws,
+>>>> +    LPI_MUX_swr_rx_clk,
+>>>> +    LPI_MUX_swr_rx_data,
+>>>> +    LPI_MUX_swr_tx_clk,
+>>>> +    LPI_MUX_swr_tx_data,
+>>>> +    LPI_MUX_wsa_swr_clk,
+>>>> +    LPI_MUX_wsa_swr_data,
+>>>> +    LPI_MUX_gpio,
+>>>> +    LPI_MUX__,
+>>>> +};
+>>>> +
+>>>> +static const unsigned int gpio0_pins[] = { 0 };
+>>>> +static const unsigned int gpio1_pins[] = { 1 };
+>>>> +static const unsigned int gpio2_pins[] = { 2 };
+>>>> +static const unsigned int gpio3_pins[] = { 3 };
+>>>> +static const unsigned int gpio4_pins[] = { 4 };
+>>>> +static const unsigned int gpio5_pins[] = { 5 };
+>>>> +static const unsigned int gpio6_pins[] = { 6 };
+>>>> +static const unsigned int gpio7_pins[] = { 7 };
+>>>> +static const unsigned int gpio8_pins[] = { 8 };
+>>>> +static const unsigned int gpio9_pins[] = { 9 };
+>>>> +static const unsigned int gpio10_pins[] = { 10 };
+>>>> +static const unsigned int gpio11_pins[] = { 11 };
+>>>> +static const unsigned int gpio12_pins[] = { 12 };
+>>>> +static const unsigned int gpio13_pins[] = { 13 };
+>>> >>>
+>>> to here are specific to sm8250, so it should not be in header file 
+>>> to start with.
 >>
+>> As these are common to all lpass variants.. I feel it's better to 
+>> keep in Header file.
+>
+> You realize that every include of this file will add these static 
+> variables to file, in this case to pinctrl-lpass-lpi.c, 
+> pinctrl-sm8250-lpass-lpi.c and pinctrl-sc7280-lpass-lpi.c
+> so in first file(pinctrl-lpass-lpi.c) you never use those variables in 
+> second file (pinctrl-sm8250-lpass-lpi.c)you only use up to gpio13 and 
+> in third file pinctrl-sc7280-lpass-lpi.c you could use them.
+>
+> so its really bad idea to add static variables in header files.
+>
+Okay. Understood. will move it SoC specific files.
+> --srini
+>
 >>
->>> +enum lpass_lpi_functions {
->>> +    LPI_MUX_dmic1_clk,
->>> +    LPI_MUX_dmic1_data,
->>> +    LPI_MUX_dmic2_clk,
->>> +    LPI_MUX_dmic2_data,
->>> +    LPI_MUX_dmic3_clk,
->>> +    LPI_MUX_dmic3_data,
->>> +    LPI_MUX_i2s1_clk,
->>> +    LPI_MUX_i2s1_data,
->>> +    LPI_MUX_i2s1_ws,
->>> +    LPI_MUX_i2s2_clk,
->>> +    LPI_MUX_i2s2_data,
->>> +    LPI_MUX_i2s2_ws,
->>> +    LPI_MUX_qua_mi2s_data,
->>> +    LPI_MUX_qua_mi2s_sclk,
->>> +    LPI_MUX_qua_mi2s_ws,
->>> +    LPI_MUX_swr_rx_clk,
->>> +    LPI_MUX_swr_rx_data,
->>> +    LPI_MUX_swr_tx_clk,
->>> +    LPI_MUX_swr_tx_data,
->>> +    LPI_MUX_wsa_swr_clk,
->>> +    LPI_MUX_wsa_swr_data,
->>> +    LPI_MUX_gpio,
->>> +    LPI_MUX__,
->>> +};
->>> +
->>> +static const unsigned int gpio0_pins[] = { 0 };
->>> +static const unsigned int gpio1_pins[] = { 1 };
->>> +static const unsigned int gpio2_pins[] = { 2 };
->>> +static const unsigned int gpio3_pins[] = { 3 };
->>> +static const unsigned int gpio4_pins[] = { 4 };
->>> +static const unsigned int gpio5_pins[] = { 5 };
->>> +static const unsigned int gpio6_pins[] = { 6 };
->>> +static const unsigned int gpio7_pins[] = { 7 };
->>> +static const unsigned int gpio8_pins[] = { 8 };
->>> +static const unsigned int gpio9_pins[] = { 9 };
->>> +static const unsigned int gpio10_pins[] = { 10 };
->>> +static const unsigned int gpio11_pins[] = { 11 };
->>> +static const unsigned int gpio12_pins[] = { 12 };
->>> +static const unsigned int gpio13_pins[] = { 13 };
->> >>>
->> to here are specific to sm8250, so it should not be in header file to 
->> start with.
-> 
-> As these are common to all lpass variants.. I feel it's better to keep 
-> in Header file.
+>> And if new pins comes in later variants, we can add them 
+>> incrementally, and they will not impact existing pin numbers.
+>>
+>> I think in upcoming variants number of pins will not decrease.
+>>
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
+is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
-You realize that every include of this file will add these static 
-variables to file, in this case to pinctrl-lpass-lpi.c, 
-pinctrl-sm8250-lpass-lpi.c and pinctrl-sc7280-lpass-lpi.c
-so in first file(pinctrl-lpass-lpi.c) you never use those variables in 
-second file (pinctrl-sm8250-lpass-lpi.c)you only use up to gpio13 and in 
-third file pinctrl-sc7280-lpass-lpi.c you could use them.
-
-so its really bad idea to add static variables in header files.
-
---srini
-
-> 
-> And if new pins comes in later variants, we can add them incrementally, 
-> and they will not impact existing pin numbers.
-> 
-> I think in upcoming variants number of pins will not decrease.
-> 
