@@ -2,101 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC483465814
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Dec 2021 21:59:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FFC146585C
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Dec 2021 22:28:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353456AbhLAVDF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 1 Dec 2021 16:03:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51074 "EHLO
+        id S236606AbhLAVcH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 1 Dec 2021 16:32:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353173AbhLAVBI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Dec 2021 16:01:08 -0500
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FFBCC0613B8
-        for <linux-gpio@vger.kernel.org>; Wed,  1 Dec 2021 12:56:51 -0800 (PST)
-Received: by mail-ed1-x543.google.com with SMTP id w1so107357504edc.6
-        for <linux-gpio@vger.kernel.org>; Wed, 01 Dec 2021 12:56:50 -0800 (PST)
+        with ESMTP id S231824AbhLAVcG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Dec 2021 16:32:06 -0500
+Received: from mail-io1-xd2c.google.com (mail-io1-xd2c.google.com [IPv6:2607:f8b0:4864:20::d2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BE5BC061574
+        for <linux-gpio@vger.kernel.org>; Wed,  1 Dec 2021 13:28:45 -0800 (PST)
+Received: by mail-io1-xd2c.google.com with SMTP id w22so32845116ioa.1
+        for <linux-gpio@vger.kernel.org>; Wed, 01 Dec 2021 13:28:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=SEwD+S7B7Z0TmR61j5TLTSyf4uBaLQGT8XY2khx62T4=;
-        b=iWZVIijYyqO6EbRa7ATLNxVTEURWBvvk1MmUbQwFUUublTm1kObbGFpzuKgl2+EayF
-         asZv3uhbSt3I0ZipRezpC/syJqCOBsllO7SxtITJHZIntnWIxQLV+nqOEppMKQwtp+hW
-         tJtDd12j4ODWlWvPGgSclgP/WJ6drqbDqjpk771tmllDmTUaaFDA3yDn7xUwZCQu9Ohn
-         v1GR39IA7imPlyYhldw6F0f5Z17cjWyN64POMx3mGmgLZf2m0Z1CFJvwA5NOLfd5vcQe
-         QIaUd52mM3p2JmUFVBjN3nM2sF8z9tVFLa2Hutw10MBW/vQcw/GoqjOxtiYqWtTtHlDS
-         enUg==
+        d=sartura-hr.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JU5TgDLS5GPcXgmJtmNE+t40b9mpN9pxEwofkeb2nlE=;
+        b=jZuSujuwagfhvgalS9XYIXTkDDRnStrVv4NDR8LAk6crMDqvKFqWPWUucGa+ObJGty
+         xL73Os/kTI01d+StjK/XmI3T44qfmJ8l2I0cDbPWZS8dfauW/aERTZZF/4yqAd4MUOam
+         nzaD2isFr74y6GWUdfEhPQGYiq2Ctd98Pv6D3b4mimDSPvbeSSf+B38ZYby/WsZx1zk1
+         YmiasE3+rHJLzuELQG7u9anaiBeYVMcvjEEurz/RzXshEYdBjpriT6dK/135l6GUtGC7
+         jPSBfKVPoVPVSlsEAxjm5wtSNNHaS49HnQF1yVG0iNoBqMLNV2mvzc7iTq4VMURdbozL
+         tu3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=SEwD+S7B7Z0TmR61j5TLTSyf4uBaLQGT8XY2khx62T4=;
-        b=rVr3X+gZZwi+Q9nc6UVA4Gh8BWzuYhZy/yBohluqtVATSDTRUyq5YKpG7W3ikAS0Us
-         dLgUyiNHWcE0fstPgGQsjvv3clTklRe13UUzEa1RXVEkjMOWYVDtNyhA84RgBoYp/n29
-         0XHqSEPPfeW5M0n986OKsXZ0nhMmAq1JOB/hVeiTBOiZTmnqftyRkPFSJsAF7BTDvOao
-         8BOIjQTBKVrT42s74OmbaVqKVtDdGUGJrHxmXDmrnK4tkNk4RCbcK3HM6nEZAbkUpSjy
-         MXeMtvZz6yubs7XRkYmdP65tKGMU7BAAds8xfcSc+KgXqh7XVTnsvTkuRyJZ7ImM5A/T
-         +EkA==
-X-Gm-Message-State: AOAM532U2PCAxlJfa9WgJfnUCC1dp40440/QWF0dsIfpME/3DF37bzlV
-        62EdGQrwaxjrwKEtkHaA5WiF7wmHWhaVgRh8Bwo=
-X-Google-Smtp-Source: ABdhPJw1wxpJIC/oajmYUWPupum/C1G33vXwf6GS4gdkydldkrK2x6lZRqIsRfD0rE/0qbeNvNIdKIXHkEUYDeHZV7Q=
-X-Received: by 2002:aa7:c846:: with SMTP id g6mr11565671edt.75.1638392209450;
- Wed, 01 Dec 2021 12:56:49 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JU5TgDLS5GPcXgmJtmNE+t40b9mpN9pxEwofkeb2nlE=;
+        b=hr5tvH9TCpaj+hfEPyaP18QdQTvKaaL5m6eQ4dQxL8Abr9nC+TdUc9rnUrB55ppaWS
+         kAZVnQTgEGTNE3QKaVFx4gLUHhtxwIiSI2UdB7BOPbQnC009iMeYqYr919HinYyzXJxl
+         G3REC8seuKP5ldILhR8k385D8HJru2pqP6wrHhPAeFVWC+F69tRUEOz1VV3dMGNQcGdN
+         k3Gp3DN7EMwvYSeBESk9Eit3cLgFn7+DIKuAuX2ozfvsObgKblMclsn/V90gQ1fqaMPj
+         OMxH/IlAHcGXOToClle+rwe8i9TWxO2tBbFXzEo9TBBXlLTN4LfGqW+tHG05oxCwHYRf
+         Jjlg==
+X-Gm-Message-State: AOAM531gTkgnACIlfxXDOsuImdFFyW6mxQAy+pqFwmhpIcLgaPcFBSi9
+        k7QVHVcpicwH5atEiMV7UU9N77GbN1vQ5zCGDKk82Wjs8Lzawg==
+X-Google-Smtp-Source: ABdhPJxHZYLWn7G9DYIxJrfpYceqaeczeqgpVS9eew3s2JlxRjInT4EfPDV6hL8Wrz0S0mQ75s4FCN25TK/mTRBx4lw=
+X-Received: by 2002:a05:6638:1695:: with SMTP id f21mr14594847jat.84.1638394124588;
+ Wed, 01 Dec 2021 13:28:44 -0800 (PST)
 MIME-Version: 1.0
-Received: by 2002:a54:3646:0:0:0:0:0 with HTTP; Wed, 1 Dec 2021 12:56:48 -0800 (PST)
-From:   mrnomaa saleem <mrnomaasaleem@gmail.com>
-Date:   Wed, 1 Dec 2021 12:56:48 -0800
-Message-ID: <CAHbR6=06u2BeC+yacCJD37s=jbmBE38makCy9ZaqxSPuCDBeuQ@mail.gmail.com>
-Subject: DEAR FRIEND CONTACTS MY SECRETARY HIS E-MAIL nelson_salah@aol.com.
-To:     undisclosed-recipients:;
+References: <20211109113239.93493-1-robert.marko@sartura.hr> <20211109113239.93493-3-robert.marko@sartura.hr>
+In-Reply-To: <20211109113239.93493-3-robert.marko@sartura.hr>
+From:   Robert Marko <robert.marko@sartura.hr>
+Date:   Wed, 1 Dec 2021 22:28:34 +0100
+Message-ID: <CA+HBbNGH9ih5RovU9YHL91osFxDJbWw2Qk=ed30GGQvndNJPKw@mail.gmail.com>
+Subject: Re: [PATCH v9 3/6] dt-bindings: reset: Add Delta TN48M
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Michael Walle <michael@walle.cc>, Andrew Lunn <andrew@lunn.ch>
+Cc:     Luka Perkov <luka.perkov@sartura.hr>,
+        Bruno Banelli <bruno.banelli@sartura.hr>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-DEAR FRIEND CONTACTS MY SECRETARY FOR THE DELIVERING OF YOUR VISA CARD
-VALUE SUM OF $2.500, 000.00. USD.
+On Tue, Nov 9, 2021 at 12:32 PM Robert Marko <robert.marko@sartura.hr> wrote:
+>
+> Add header for the Delta TN48M CPLD provided
+> resets.
+>
+> Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> ---
+>  include/dt-bindings/reset/delta,tn48m-reset.h | 20 +++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>  create mode 100644 include/dt-bindings/reset/delta,tn48m-reset.h
+>
+> diff --git a/include/dt-bindings/reset/delta,tn48m-reset.h b/include/dt-bindings/reset/delta,tn48m-reset.h
+> new file mode 100644
+> index 000000000000..d4e9ed12de3e
+> --- /dev/null
+> +++ b/include/dt-bindings/reset/delta,tn48m-reset.h
+> @@ -0,0 +1,20 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Delta TN48M CPLD GPIO driver
+> + *
+> + * Copyright (C) 2021 Sartura Ltd.
+> + *
+> + * Author: Robert Marko <robert.marko@sartura.hr>
+> + */
+> +
+> +#ifndef _DT_BINDINGS_RESET_TN48M_H
+> +#define _DT_BINDINGS_RESET_TN48M_H
+> +
+> +#define CPU_88F7040_RESET      0
+> +#define CPU_88F6820_RESET      1
+> +#define MAC_98DX3265_RESET     2
+> +#define PHY_88E1680_RESET      3
+> +#define PHY_88E1512_RESET      4
+> +#define POE_RESET              5
+> +
+> +#endif /* _DT_BINDINGS_RESET_TN48M_H */
+> --
+> 2.33.1
+>
 
-I'M SORRY BUT HAPPY TO INFORM YOU ABOUT MY SUCCESS IN GETTING THOSE
-FUNDS TRANSFERRED UNDER THE CO-OPERATION OF A NEW PARTNER FROM
-PARAGUAY THOUGH I TRIED MY BEST TO INVOLVE YOU IN THE GOLD/DIAMOND
-BUSINESS BUT GOD DECIDED THE WHOLE SITUATIONS. PRESENTLY AM IN UNITED
-ARAB EMIRATES FOR INVESTMENT PROJECTS WITH MY OWN SHARE OF THE TOTAL
-SUM OF THE MONEY. MEANWHILE, I DIDN'T FORGET YOU=E2=80=99RE PAST EFFORTS AN=
-D
-ATTEMPTS TO ASSIST ME IN TRANSFERRING THOSE FUNDS DESPITE THAT
-EVERYTHING FAILED US SOMEHOW. NOW CONTACT MY SECRETARY IN BURKINA
-FASO. MR. NELSON SALAH BY NAME: HIS E-MAIL nelson_salah@aol.com.
+Does anybody have any comments on the patch as the reset driver got reviewed and
+the bindings have not?
 
-ASK HIM TO SEND YOU THE VISA CARD TOTAL SUM OF $2.500, 000.00.USD
-WHICH I KEPT FOR YOUR COMPENSATION FOR ALL THE PAST EFFORTS AND
-ATTEMPT TO ASSIST ME IN THIS MATTER. I DEEPLY APPRECIATED YOUR EFFORTS
-AT THAT TIME VERY MUCH. SO FEEL FREE AND KEEP IN TOUCHED WITH MY
-SECRETARY; MR. NELSON SALAH AND INSTRUCT HIM WHERE TO SEND THE VISA
-CARD VALUE SUM OF $2.500, 000.00.USD TO YOU. NOW THIS AMOUNT IS ME AND
-THE NEW PARTNER CONTRIBUTE AND OFFER YOU THIS AMOUNT
-$1.500.000.00.USD. IS FROM MY OWN SHARE WHILE MY NEW PARTNER SUPPORTED
-YOU ALSO WITH SUM OF $ 1000000.USD. FROM HIS OWN SHARE ALSO BECAUSE I
-EXPLAIN THE WHOLE FACTS TO HIM THAT YOU ARE THE FIRST PERSON I
-CONTACTED THAT WANTED TO ASSIST ME WHILE YOU COULD NOT MAKE IT AND HE
-SAID OKAY THERE'S NO PROBLEM.
-
-SO YOU HAVE TO KEEP THE WHOLE SECRET ABOUT MY SUCCESS, BECAUSE I
-BELIEVE ONLY YOU KNOW HOW I MADE THIS MONEY SO TRY TO KEEP EVERYTHING
-SECRET. I HOPE YOU UNDERSTAND THE REASON WHY THIS HUGE AMOUNT OF FUNDS
-WAS KEPT FOR YOU? PLEASE DO LET ME KNOW IMMEDIATELY YOU RECEIVE THE
-VISA CARD SO THAT WE CAN SHARE THE JOY AFTER ALL THE SUFFERINGS AT
-THAT TIME; IN THIS MOMENT OF TIME, I'M VERY BUSY HERE BECAUSE OF THE
-INVESTMENT PROJECTS WHICH MYSELF AND THE NEW PARTNER ARE HAVING AT
-HAND, FINALLY;
-
-REMEMBER THAT I HAVE ALREADY FORWARD THE INSTRUCTION TO THE SECRETARY
-ON YOUR BEHALF TO RECEIVE THAT MONEY, SO FEEL FREE TO KEEP IN TOUCH
-WITH HIM, SO THAT HE WILL SEND THE VISA CARD VALUE SUM OF
-$2.500,000.00.USD. TWO MILLION FIVE HUNDRED THOUSAND UNITED STATE
-DOLLARS TO YOU WITHOUT ANY DELAY.
-
-BEST REGARDS,
-MR. NORMAN SALEEM.
+Regards,
+Robert
+-- 
+Robert Marko
+Staff Embedded Linux Engineer
+Sartura Ltd.
+Lendavska ulica 16a
+10000 Zagreb, Croatia
+Email: robert.marko@sartura.hr
+Web: www.sartura.hr
