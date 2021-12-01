@@ -2,98 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 94C6F46587E
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Dec 2021 22:43:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CD96A46591B
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Dec 2021 23:24:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241507AbhLAVqc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 1 Dec 2021 16:46:32 -0500
-Received: from mail-oi1-f171.google.com ([209.85.167.171]:37516 "EHLO
-        mail-oi1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234546AbhLAVq3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Dec 2021 16:46:29 -0500
-Received: by mail-oi1-f171.google.com with SMTP id bj13so51439795oib.4;
-        Wed, 01 Dec 2021 13:43:07 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2DnjThda92gYDbdeLO1wf4FxmuOIHogNaNKDjeSi854=;
-        b=dSuGVXBbytudtK7Mo5dKE4slRDejhI4Xmzm3o3/wYj3QqF5zWul6fmJ7S06uzpmu9M
-         1d9phPpi6Cfj9zzceKV4PvNT/AEyIalPTxqxujB+5qnfzwyvMi5czesZ8Mss1kK+sHIT
-         ANTlvq8ovo9qy/lTKRXTDpnqeOrsPGaCI5XTc+apr83EjaNRSHV2imKX/jtNtMBNvn51
-         4LH/s+0x8nrM8U0ieDAW83FMpBbv6AK4+vj27bRgDQUl+1OM5tmInw8wdPHBYW6dCOJB
-         NP1NbFYqQooCzzCik3fKI48feRNMqqFhm2xkUaXofeL9XRGHSK0LR8hTIBXJDgsgVg+Y
-         FHsg==
-X-Gm-Message-State: AOAM530lWln576y2l/CmBJK4u4exG2ApKOxc/cJDoaXcUziWYXrusBmZ
-        lhqDUNkDDN0I1dzQZhRpFQ==
-X-Google-Smtp-Source: ABdhPJwzwRQ+lX3EB3kBsdEGnB4Fog5blZXAeRbGzxOzSKTplhtRRW3fCSAGNZ/XiReYytDkE4XAYQ==
-X-Received: by 2002:a05:6808:15a:: with SMTP id h26mr828757oie.123.1638394987136;
-        Wed, 01 Dec 2021 13:43:07 -0800 (PST)
-Received: from xps15.herring.priv (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.googlemail.com with ESMTPSA id p6sm379120oof.0.2021.12.01.13.43.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Dec 2021 13:43:06 -0800 (PST)
-From:   Rob Herring <robh@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        kernel test robot <lkp@intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] gpio: xlp: Fix build errors from Netlogic XLP removal
-Date:   Wed,  1 Dec 2021 15:43:05 -0600
-Message-Id: <20211201214305.2725271-1-robh@kernel.org>
-X-Mailer: git-send-email 2.32.0
+        id S1353473AbhLAW2M (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 1 Dec 2021 17:28:12 -0500
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:60165 "EHLO
+        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1353470AbhLAW2L (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Dec 2021 17:28:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
+  t=1638397491; x=1669933491;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=crTZ2a/2yB7/AUlebdFt1Mo2mkX4VhYfwG1XMxzOUb4=;
+  b=ZqpcNdEk4jCogH6yVGIXnE0D5Zm/tj0qe6ZUppEIKONIKMPDgST++Bl2
+   kwUEqHv+jyUIqx6Y7221pcFVXxvS0h1N43wML4lG3xivVypgc2FIUKLE7
+   TwnfXEHSPCMJvhveZdbB7OwyIb4Jrc7WrrxxeehMVfRNWkmUT/ZUQT3Za
+   U=;
+Received: from ironmsg09-lv.qualcomm.com ([10.47.202.153])
+  by alexa-out.qualcomm.com with ESMTP; 01 Dec 2021 14:24:50 -0800
+X-QCInternal: smtphost
+Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
+  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2021 14:24:49 -0800
+Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
+ nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.922.19; Wed, 1 Dec 2021 14:24:49 -0800
+Received: from quicinc.com (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.922.19; Wed, 1 Dec 2021
+ 14:24:48 -0800
+Date:   Wed, 1 Dec 2021 14:24:47 -0800
+From:   Vamsi Krishna Lanka <quic_vamslank@quicinc.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Rob Herring <robh@kernel.org>, <agross@kernel.org>,
+        <bjorn.andersson@linaro.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v4 1/2] dt-bindings: pinctrl: qcom: Add SDX65 pinctrl
+ bindings
+Message-ID: <20211201222447.GA586@quicinc.com>
+References: <cover.1637048107.git.quic_vamslank@quicinc.com>
+ <06234768890dc7572226f23d432e5a69a4d5b305.1637048107.git.quic_vamslank@quicinc.com>
+ <YaFZTxDcTMqeA/42@robh.at.kernel.org>
+ <CACRpkdYpCmhXhJV1x42hu6QoncXX7eWcGPk22de19sSEC7B=oQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYpCmhXhJV1x42hu6QoncXX7eWcGPk22de19sSEC7B=oQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Commit ea708ac5bf41 ("gpio: xlp: Remove Netlogic XLP variants") has
-build errors with CONFIG_ACPI:
+On Sat, Nov 27, 2021 at 01:07:16AM +0100, Linus Walleij wrote:
+> On Fri, Nov 26, 2021 at 11:01 PM Rob Herring <robh@kernel.org> wrote:
+> > On Mon, Nov 15, 2021 at 11:39:45PM -0800, quic_vamslank@quicinc.com wrote:
+> > > From: Vamsi Krishna Lanka <quic_vamslank@quicinc.com>
+> > >
+> > > Add device tree binding Documentation details for Qualcomm SDX65
+> > > pinctrl driver.
+> > >
+> > > Signed-off-by: Vamsi Krishna Lanka <quic_vamslank@quicinc.com>
+> > > Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > > ---
+> > >  .../bindings/pinctrl/qcom,sdx65-pinctrl.yaml  | 195 ++++++++++++++++++
+> > >  1 file changed, 195 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sdx65-pinctrl.yaml
+> >
+> > This fails dt_binding_check:
+> >
+> > /builds/robherring/linux-dt/Documentation/devicetree/bindings/pinctrl/qcom,sdx65-pinctrl.example.dt.yaml: pinctrl@f100000: 'serial-pins', 'uart-w-subnodes-state' do not match any of the regexes: '$-state', 'pinctrl-[0-9]+'
+> >         From schema: /builds/robherring/linux-dt/Documentation/devicetree/bindings/pinctrl/qcom,sdx65-pinctrl.yaml
+> >
+> > The DT list was not Cc'ed so checks never ran nor was this reviewed.
+> 
+> OK that's annoying, I didn't notice it wasn't posted to the DT list.
+> I reverted the patch, Vamsi can you please reiterate the patch
+> and include devicetree@vger.kernel.org on subsequent postings.
+> I have kept the kernel code in place, optimistically assuming the
+> bindings will be fixed soon-ish.
 
-drivers/gpio/gpio-xlp.c:300:23: error: 'GPIO_VARIANT_VULCAN' undeclared here (not in a function)
+I'm sorry for overlooking this. I will fix this and post a new patch soon.
 
-and !CONFIG_OF:
-
-drivers/gpio/gpio-xlp.c:267:11: error: 'struct gpio_chip' has no member named 'of_node'
-
-Fix these errors.
-
-Fixes: ea708ac5bf41 ("gpio: xlp: Remove Netlogic XLP variants")
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Reported-by: kernel test robot <lkp@intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- drivers/gpio/gpio-xlp.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpio/gpio-xlp.c b/drivers/gpio/gpio-xlp.c
-index 814cc34aef97..0199f545335f 100644
---- a/drivers/gpio/gpio-xlp.c
-+++ b/drivers/gpio/gpio-xlp.c
-@@ -264,7 +264,6 @@ static int xlp_gpio_probe(struct platform_device *pdev)
- 	gc->base = 0;
- 	gc->parent = &pdev->dev;
- 	gc->ngpio = 70;
--	gc->of_node = pdev->dev.of_node;
- 	gc->direction_output = xlp_gpio_dir_output;
- 	gc->direction_input = xlp_gpio_dir_input;
- 	gc->set = xlp_gpio_set;
-@@ -297,8 +296,8 @@ static int xlp_gpio_probe(struct platform_device *pdev)
- 
- #ifdef CONFIG_ACPI
- static const struct acpi_device_id xlp_gpio_acpi_match[] = {
--	{ "BRCM9006", GPIO_VARIANT_VULCAN },
--	{ "CAV9006",  GPIO_VARIANT_VULCAN },
-+	{ "BRCM9006" },
-+	{ "CAV9006" },
- 	{},
- };
- MODULE_DEVICE_TABLE(acpi, xlp_gpio_acpi_match);
--- 
-2.32.0
-
+Thanks,
+Vamsi
+> 
+> Yours,
+> Linus Walleij
