@@ -2,75 +2,160 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A6A71464E8B
-	for <lists+linux-gpio@lfdr.de>; Wed,  1 Dec 2021 14:10:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C9F9464E91
+	for <lists+linux-gpio@lfdr.de>; Wed,  1 Dec 2021 14:12:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349491AbhLANNZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 1 Dec 2021 08:13:25 -0500
-Received: from mga14.intel.com ([192.55.52.115]:41722 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244690AbhLANNZ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 1 Dec 2021 08:13:25 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10184"; a="236681939"
-X-IronPort-AV: E=Sophos;i="5.87,278,1631602800"; 
-   d="scan'208";a="236681939"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2021 05:10:02 -0800
-X-IronPort-AV: E=Sophos;i="5.87,278,1631602800"; 
-   d="scan'208";a="459246179"
-Received: from smile.fi.intel.com ([10.237.72.184])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2021 05:10:00 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1msPM1-000zNi-EA;
-        Wed, 01 Dec 2021 15:08:57 +0200
-Date:   Wed, 1 Dec 2021 15:08:57 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Andy Shevchenko <andy@kernel.org>,
-        Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        linux-gpio@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 0/5] GPIO PCH/ML-IOH consolidation baby steps
-Message-ID: <Yadz6QFmk3wy7Hub@smile.fi.intel.com>
-References: <20211130220841.2776562-1-helgaas@kernel.org>
+        id S1349533AbhLANPe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 1 Dec 2021 08:15:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55656 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1349511AbhLANPC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Dec 2021 08:15:02 -0500
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF651C06174A
+        for <linux-gpio@vger.kernel.org>; Wed,  1 Dec 2021 05:11:40 -0800 (PST)
+Received: by mail-ed1-x52b.google.com with SMTP id z5so36347880edd.3
+        for <linux-gpio@vger.kernel.org>; Wed, 01 Dec 2021 05:11:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=liC6iBHdVHj8wrS34Mv4qj/s+gn0Mtz6/NZeXb3PmG0=;
+        b=CW883sHA/ZsErtuI3bBKwZH7FrSIo6SF/udDvszUZTIfAWjof6aw/X6qtqF6e/83+e
+         Qz50HsrZj7OUdZoK9oP6fKMs/blgQZ0ffMhE1aJGR1dzTa0lTeMFAhvBjqbeVigBkTaM
+         PWbItNOZEKHzVZ92ZsfTsGwAHNMEfG5wPpYBPd8sCNiVnnRABSTnZCAUrHvEL7nyyJc2
+         cJzm/1+U9eb+I8rCxW90/bqbNbx95VrX3Iu68TelOmXj4Z6WqnMlAqkV8tjkJbgiiJze
+         6FM+UqTZzC2OeqKQsofRWnuTdYE2vYadOSzCHKAxD5MRkew2GtOQ3s+M0yX35D98WXLs
+         piyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=liC6iBHdVHj8wrS34Mv4qj/s+gn0Mtz6/NZeXb3PmG0=;
+        b=vqx32M5pG0/S4cgpBtReAu02PamyAxfZGLIoX1H2HfLJNmZVkFa+1Dg7WXSmT6RVz8
+         7RNucsun0ywGQppevm34A3b3RkcUM+Aa7n3/SnZJo2NxVTHryUfl9ZNh0EYMVB40b4Yc
+         HtVs2oFPnMqYVvgthzmcMJPkc3QKwrSlu4imXVQUuSA58aw93gymL447dZpuyPsb7EO0
+         y/+EU6av2kpP1a8QSuNVGpcbCHUL20RPASLU0NQdke3tsQQNpVo/KnJuv5zgraMsxF49
+         rYk3GToFSlO6rpyqdYhOn97Fmf+51y5hyqB200CEqoYzoC+lmovz06mqp/4aa+N2324s
+         f8Iw==
+X-Gm-Message-State: AOAM532r1DfFEp27sR9vH4QBoMy3FRHMCyCnW3IgSy779Nu9yP4BMaMD
+        +oT0gBgahajvlY8t1WdyMNn4vSNaYCyb4UjFxVKTs/RzhOwqiw==
+X-Google-Smtp-Source: ABdhPJzXpOwR/zmaQijtGvVMihRvtGN4y1YzAc1jjrZxJxi1juTyRwOdjlj1BPD38T9PG+TZgGcLPYM5+xi2wbTzz5k=
+X-Received: by 2002:a17:907:3e9a:: with SMTP id hs26mr7104471ejc.433.1638364299412;
+ Wed, 01 Dec 2021 05:11:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211130220841.2776562-1-helgaas@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20211130154127.12272-1-brgl@bgdev.pl> <20211130154127.12272-3-brgl@bgdev.pl>
+ <YaZNyMV5gX5cZpar@smile.fi.intel.com> <CAMRc=Mf5d1i34eBez+pOYjjdyfRL9N_ha_==Cn1rANr=2CB9aQ@mail.gmail.com>
+ <YaaQp2rq7N71dm1l@smile.fi.intel.com> <CAMRc=Me=Oq_V=+p-AFPcyDjBs-+4Ug3k0AWK9fdEEet2JD3eFw@mail.gmail.com>
+In-Reply-To: <CAMRc=Me=Oq_V=+p-AFPcyDjBs-+4Ug3k0AWK9fdEEet2JD3eFw@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 1 Dec 2021 14:11:28 +0100
+Message-ID: <CAMRc=MdQ+a7UrE7csg3GsiLXYGkzti-wPUwPh5J=7WBj74OVZg@mail.gmail.com>
+Subject: Re: [PATCH v11 2/6] gpiolib: allow to specify the firmware node in
+ struct gpio_chip
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 30, 2021 at 04:08:36PM -0600, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> These are tiny cleanups to pch and ml-ioh to try to make them easier to
-> merge together.  I can't really test either driver, so I'm not pushing too
-> hard on this.
+On Tue, Nov 30, 2021 at 10:04 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> On Tue, Nov 30, 2021 at 10:00 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > On Tue, Nov 30, 2021 at 09:25:35PM +0100, Bartosz Golaszewski wrote:
+> > > On Tue, Nov 30, 2021 at 5:15 PM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > >
+> > > > On Tue, Nov 30, 2021 at 04:41:23PM +0100, Bartosz Golaszewski wrote:
+> > > > > Software nodes allow us to represent hierarchies for device components
+> > > > > that don't have their struct device representation yet - for instance:
+> > > > > banks of GPIOs under a common GPIO expander. The core gpiolib core
+> > > >
+> > > > core .. core ?!
+> > > >
+> > > > > however doesn't offer any way of passing this information from the
+> > > > > drivers.
+> > > > >
+> > > > > This extends struct gpio_chip with a pointer to fwnode that can be set
+> > > > > by the driver and used to pass device properties for child nodes.
+> > > > >
+> > > > > This is similar to how we handle device-tree sub-nodes with
+> > > > > CONFIG_OF_GPIO enabled.
+> > > >
+> > > > Not sure I understand the proposal. Can you provide couple of (simplest)
+> > > > examples?
+> > > >
+> > > > And also it sounds like reinventing a wheel. What problem do you have that you
+> > > > need to solve this way?
+> > > >
+> > > > ...
+> > > >
+> > > > > +#if IS_ENABLED(CONFIG_OF_GPIO)
+> > > > > +     if (gc->of_node && gc->fwnode) {
+> > > > > +             pr_err("%s: tried to set both the of_node and fwnode in gpio_chip\n",
+> > > > > +                    __func__);
+> > > > > +             return -EINVAL;
+> > > > > +     }
+> > > > > +#endif /* CONFIG_OF_GPIO */
+> > > >
+> > > > I don't like this. It seems like a hack right now.
+> > > >
+> > > > Is it possible to convert all GPIO controller drivers to provide an fwnode
+> > > > rather than doing this? (I believe in most of the drivers we can drop
+> > > > completely the of_node assignment).
+> > > >
+> > >
+> > > Yes, it's definitely a good idea but I would be careful with just
+> > > dropping the of_node assignments as callbacks may depend on them
+> > > later.
+> >
+> > GPIO library does it for us among these lines:
+> >
+> >         struct fwnode_handle *fwnode = gc->parent ? dev_fwnode(gc->parent) : NULL;
+> >
+> >         of_gpio_dev_init(gc, gdev); <<< HERE!
+> >         acpi_gpio_dev_init(gc, gdev);
+> >
+> >         /*
+> >          * Assign fwnode depending on the result of the previous calls,
+> >          * if none of them succeed, assign it to the parent's one.
+> >          */
+> >         gdev->dev.fwnode = dev_fwnode(&gdev->dev) ?: fwnode;
+> >
+>
+> Except that it doesn't and I noticed that when working on the
+> subsequent patch. The child gpiochipX devices all had the parent's
+> fwnode assigned as their primary fwnode and no secondary fwnode.
+>
+> Note that this driver doesn't use neither OF nor ACPI in which case
+> gdev->dev has no fwnode and the parent's one is used. This patch
+> addresses it. If you have a better idea, let me know.
+>
+> Bart
 
-Thanks, all pushed to my review and testing queue!
+Let me maybe rephrase the problem: currently, for GPIO devices
+instantiating multiple banks created outside of the OF or ACPI
+frameworks (e.g. instantiated manually and configured using a
+hierarchy of software nodes with a single parent swnode and a number
+of child swnodes representing the children), it is impossible to
+assign firmware nodes other than the one representing the top GPIO
+device to the gpiochip child devices.
 
-> If anybody wants to go further, Andy mentioned some docs here:
->   https://lore.kernel.org/lkml/CAHp75VfDcQXqmK9=4k4rqi7t2OZaVPC13b45vLY7fELr7zBG_Q@mail.gmail.com/
-> 
-> Bjorn Helgaas (5):
->   gpio: pch: Use .driver_data instead of checking Device IDs again
->   gpio: pch: Cache &pdev->dev to reduce repetition
->   gpio: ml-ioh: Cache &pdev->dev to reduce repetition
->   gpio: ml-ioh: Use BIT() to match gpio-pch.c
->   gpio: ml-ioh: Change whitespace to match gpio-pch.c
-> 
->  drivers/gpio/gpio-ml-ioh.c | 52 +++++++++++++++++++-------------------
->  drivers/gpio/gpio-pch.c    | 42 +++++++++++++++---------------
->  2 files changed, 46 insertions(+), 48 deletions(-)
-> 
-> -- 
-> 2.25.1
-> 
+In fact if we want to drop the OF APIs entirely from gpiolib - this
+would be the right first step as for gpio-sim it actually replaces the
+gc->of_node = some_of_node; assignment that OF-based drivers do for
+sub-nodes defining banks and it does work with device-tree (I verified
+that too) thanks to the fwnode abstraction layer.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Linus: Do you have anything against this change?
 
-
+Bart
