@@ -2,35 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3295E46662C
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Dec 2021 16:07:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A57AB46664F
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Dec 2021 16:17:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358880AbhLBPKu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 2 Dec 2021 10:10:50 -0500
-Received: from mga04.intel.com ([192.55.52.120]:6667 "EHLO mga04.intel.com"
+        id S1347464AbhLBPVP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 2 Dec 2021 10:21:15 -0500
+Received: from mga18.intel.com ([134.134.136.126]:6810 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1358885AbhLBPKW (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 2 Dec 2021 10:10:22 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10185"; a="235458180"
+        id S1347498AbhLBPVM (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 2 Dec 2021 10:21:12 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10185"; a="223598340"
 X-IronPort-AV: E=Sophos;i="5.87,282,1631602800"; 
-   d="scan'208";a="235458180"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2021 07:06:35 -0800
+   d="scan'208";a="223598340"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2021 07:17:35 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.87,282,1631602800"; 
-   d="scan'208";a="460491284"
+   d="scan'208";a="500778839"
 Received: from lkp-server02.sh.intel.com (HELO 9e1e9f9b3bcb) ([10.239.97.151])
-  by orsmga006.jf.intel.com with ESMTP; 02 Dec 2021 07:06:33 -0800
+  by orsmga007.jf.intel.com with ESMTP; 02 Dec 2021 07:17:34 -0800
 Received: from kbuild by 9e1e9f9b3bcb with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1msnfN-000GQE-4s; Thu, 02 Dec 2021 15:06:33 +0000
-Date:   Thu, 02 Dec 2021 23:06:03 +0800
+        id 1msnq1-000GQb-AE; Thu, 02 Dec 2021 15:17:33 +0000
+Date:   Thu, 02 Dec 2021 23:16:41 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD SUCCESS
- 896568e5b9c8a170912ff83760dca51703e276f1
-Message-ID: <61a8e0db.0hE+sEk39O09zu36%lkp@intel.com>
+Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
+ c1ba797af83b3a2fca94db611ffcd2f0e441c0d3
+Message-ID: <61a8e359.vxBMtheg1noceRtv%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -39,10 +39,10 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: 896568e5b9c8a170912ff83760dca51703e276f1  dt-bindings: pinctrl: convert controller description to the json-schema
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: c1ba797af83b3a2fca94db611ffcd2f0e441c0d3  Merge branch 'devel' into for-next
 
-elapsed time: 720m
+elapsed time: 730m
 
 configs tested: 147
 configs skipped: 3
@@ -148,8 +148,8 @@ sparc                               defconfig
 i386                                defconfig
 i386                   debian-10.3-kselftests
 i386                              debian-10.3
-mips                             allmodconfig
 mips                             allyesconfig
+mips                             allmodconfig
 powerpc                          allyesconfig
 powerpc                          allmodconfig
 x86_64               randconfig-a016-20211202
