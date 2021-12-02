@@ -2,504 +2,197 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C1D77466D77
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Dec 2021 00:09:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D7CD7466DA6
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Dec 2021 00:25:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349424AbhLBXNC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 2 Dec 2021 18:13:02 -0500
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:11126 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1349369AbhLBXNA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Dec 2021 18:13:00 -0500
+        id S1349329AbhLBX2h (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 2 Dec 2021 18:28:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45752 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S244230AbhLBX2h (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Dec 2021 18:28:37 -0500
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC616C06174A;
+        Thu,  2 Dec 2021 15:25:13 -0800 (PST)
+Received: by mail-ed1-x535.google.com with SMTP id o20so4163678eds.10;
+        Thu, 02 Dec 2021 15:25:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1638486577; x=1670022577;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=nbmqy62m/cmILo8Y6Y47E1TyHv5ik6uqbv+qJuJ6uTs=;
-  b=ebQBZbKWzeslhEheAKFK/SIMeTOTjzwBY1TkfBE1gUV5hFRXTDa1B0mR
-   bcEuCE9FaCg7OlM2R4DJ1L7Ma2PGg8l8q/40iPd8PbSq3tLaOCeX6oENQ
-   P9Me7tXlBqMn7SUsQXYzSOHrddz2qLLTYbwn1w+xHaK6EQrDPQWq9rDGC
-   c=;
-Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 02 Dec 2021 15:09:36 -0800
-X-QCInternal: smtphost
-Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
-  by ironmsg02-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2021 15:09:36 -0800
-Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
- nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.922.19; Thu, 2 Dec 2021 15:09:36 -0800
-Received: from [10.47.233.232] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.922.19; Thu, 2 Dec 2021
- 15:09:36 -0800
-Subject: Re: [PATCH] spmi: pmic-arb: Add support for PMIC v7
-To:     Vinod Koul <vkoul@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-CC:     <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        David Dai <daidavid1@codeaurora.org>,
-        <collinsd@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20211201072718.3969011-1-vkoul@kernel.org>
-From:   Subbaraman Narayanamurthy <quic_subbaram@quicinc.com>
-Message-ID: <8f6645ff-0753-bcd3-f692-6be205cf71b8@quicinc.com>
-Date:   Thu, 2 Dec 2021 15:09:35 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ug/21sYu1auIP5DvnYTXNQcjBVF5VW8r70LbHDK7QcE=;
+        b=pZZTw0RjPY4h0YCqborj+vlwg8t40U1PI+MWuunih2QilvOrRegMM9NngFFLgHiRkl
+         x3CyFbmypVikNwUqXiK3uuzlsP0nmFtcEcQBGBDf6hSRXmF4hSymlCInuDCVtr85hI01
+         i42+T2mWb9WSoJfo1TWaANtR0FPfXpBP2/EyW54oQ8Owe3smBk9DF4sPxntuonbXAkQW
+         R/V4RkrcllulAVeCuucr6x0hTNEWueiSd9bLLdA878U3s+V2vZB/SeOsgCiqJgsEt4k3
+         s55AyeQ/pPsQOume7ynNC9BWEa/BM+ASUpBMgNyamKu4pE8u4V9eZQhlvCjPlcujE9GK
+         7+xQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ug/21sYu1auIP5DvnYTXNQcjBVF5VW8r70LbHDK7QcE=;
+        b=mn+2xT3AVNiIbwo4yjR8Q0zXduceqzR6Lg7h9vZPNtFWAxAwmcZBJSUww+WeoFayi4
+         SFDjXBCklps1x94YaTlU0C7fSWkr0BWd5vPIRJsHz/ryCcUmJPXCzHd4LvDHbOgeWMVW
+         5U1v/4Ztlu2S+Cwko8L+NXbDE1YdtHC5xzTGVplqz7JZ/ll5f1BAzl7Cltgyk1Tn6cOA
+         0msCRFxAkK0UooKcZ/7fJ2hS+91EJxNvcXZTKfmu+Q802CGW9NHL9GhU9OZC8qsmB1UQ
+         LtW9nCEDgYYoz1PvAMWjeE3c95NW1uY99/5Q5XMBjvgDl9V4wiVmCQpTIDFLdrSN+iC6
+         +6Eg==
+X-Gm-Message-State: AOAM530QwdCm2zqj6u0VofqaNO3c0gmz9YLnplciKN5nxihxd9cYL3Un
+        ilXHOvIHIHVQMhmJxNH0/eE=
+X-Google-Smtp-Source: ABdhPJzrLhrBeZPrRa18nASul0aIiPBOfDnbtNlGdf7Wv+adqaYZyEsYvyN1mPLc+3R8rp8tgDRl6w==
+X-Received: by 2002:a17:906:2788:: with SMTP id j8mr18402118ejc.203.1638487512511;
+        Thu, 02 Dec 2021 15:25:12 -0800 (PST)
+Received: from demon-pc.localdomain ([188.24.96.74])
+        by smtp.gmail.com with ESMTPSA id w18sm701898edx.55.2021.12.02.15.25.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Dec 2021 15:25:12 -0800 (PST)
+From:   Cosmin Tanislav <demonsingur@gmail.com>
+X-Google-Original-From: Cosmin Tanislav <cosmin.tanislav@analog.com>
+Cc:     cosmin.tanislav@analog.com, demonsingur@gmail.com,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
+Subject: [PATCH v9 0/3] Add AD74413R driver
+Date:   Fri,  3 Dec 2021 01:25:04 +0200
+Message-Id: <20211202232507.358113-1-cosmin.tanislav@analog.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-In-Reply-To: <20211201072718.3969011-1-vkoul@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [10.49.16.6]
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 11/30/21 11:27 PM, Vinod Koul wrote:
-> From: David Dai <daidavid1@codeaurora.org>
 
-This change was made internally by David Collins.Can you please fix it?
+V1 -> V2
+ * sign off using company email
 
-commit ee7581a559720dd5a45f2f4c3eb7f8b4bde36118
-Author: David Collins <collinsd@codeaurora.org>
-Date:   Thu Oct 8 15:36:46 2020 -0700
+V2 -> V3
+ * replace gpo config firmware flag with flag specifying whether gpo is in
+   comparator mode
+ * create two separate gpiochips, one output-only gpiochip for GPO pins not
+   in comparator mode and one input-only for the value of digital input
+   channels
+ * wire up all gpo functionalities using pinconf
+ * keep number of characters per line under 80
+ * rework locking
+ * do not invalidate other chip revisions
+ * do not set indio device parent
+ * print probe error for refin regulator
+ * move conversion from range register value to range / offset / raw offset
+   into separate function
+ * module.h -> mod_devicetable.h
+ * use generic firmware interface functions
+ * add comment regarding cache alignment
+ * add comment regarding ADC channels buffered read setup
+ * un-inline comment regarding 100us delay for conversion start
+ * inline return statements
+ * remove assignments to val2 where not necessary
+ * local_channels -> chans
+ * index -> i
+ * channel_config -> config
+ * IIO_ALTVOLTAGE -> IIO_VOLTAGE
+ * .info_mask_shared_by_type_available -> .info_mask_separate_available
+ * remove unlikely probe error messages
+ * use an array indexed by channel function for retrieving iio channels
+ * count iio channels while parsing
+ * move HART rate rejection outside of setter
+ * move channel function validation outside of setter
+ * use SPI messages for read and write
+ * validate DAC code earlier
+ * simplify switches to only handle existing iio channels
+ * pass indio_dev into functions needing access to it
+ * pass spi into devm_regmap_init
+ * dt-bindings: sort compatibles
+ * dt-bindings: remove driver word from description
+ * dt-bindings: remove refin supply description
+ * dt-bindings: specify channel function default value
+ * dt-bindings: remove maxItems from scalar value
 
-    spmi: pmic-arb: add support for HW version 7
-   
-    Add support for version 7 of the SPMI PMIC arbiter.  It provides
-    two independent SPMI bus interfaces which share some common PMIC
-    arbiter registers.
-   
-    Change-Id: I7a2f816c9cd6898ada28967b47c8192f4529bc04
-    Signed-off-by: David Collins <collinsd@codeaurora.org>
+V3 -> v4
+ * remove double gpo from macro name
+ * reset at probe
+ * config -> chip_info and store chip name inside chip info
+ * cacheline align every DMA buffer
+ * simplify generation of adc samples message by caching xfer, tx_buf and
+   rx_buf
+ * use mask itself for writing the value of channel enable and gpo data
+ * move reg read and write transfers to the same buffers and use local
+   variables for transfers
+ * merge the two for loops handling gpio configuration
+ * let firmware decide irq edge
+ * remove INDIO_BUFFER_SOFTWARE already set by iio framework
+ * do not set trigger device parent
+ * return dev_err_probe for regulator error case
+ * do not set cs_change to 0 when not needed
+ * do not set spi device drvdata as it is not needed
+ * fix bug regarding wrong channels being created for resistance input,
+   digital input, and current input with hart
+ * use voltage input channels spec for high impedance mode
+ * put () around macro parameters
+ * merge AD74413R_CHANNEL macro into its uses
+ * remove unused switch case scope
+ * inline return IIO_VAL_INT
+ * use {get,put}_unaligned_be16
+ * use proper types for reg and val
+ * move default case handling into switch statements
+ * pass driver state into regmap functions
+ * use genmask for generating a 16bit max value
+ * alphanumeric order for part numbers
+ * dt-bindings: remove $ref from ohms value
 
-We wanted to send this patch once the current spmi-pmic-arb patch series [1] got reviewed and accepted.
+V4 -> V5
+ * dt-bindings: include headers necessary
+ * dt-bindings: add IRQ_TYPE_EDGE_FALLING to interrupt flags
+ * dt-bindings: ohm -> ohms
+ * dt-bindings: spi0 -> spi
 
-[1] https://lore.kernel.org/linux-arm-msm/1638403212-29265-1-git-send-email-quic_fenglinw@quicinc.com/T/#t
->
-> PMIC v7 has different offset values and seqeunces, so add support for
-> this new version of PMIC
->
-> Signed-off-by: David Dai <daidavid1@codeaurora.org>
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  drivers/spmi/spmi-pmic-arb.c | 188 +++++++++++++++++++++++++++++++----
->  1 file changed, 169 insertions(+), 19 deletions(-)
->
-> diff --git a/drivers/spmi/spmi-pmic-arb.c b/drivers/spmi/spmi-pmic-arb.c
-> index bbbd311eda03..28418a10ee5c 100644
-> --- a/drivers/spmi/spmi-pmic-arb.c
-> +++ b/drivers/spmi/spmi-pmic-arb.c
-> @@ -22,8 +22,14 @@
->  #define PMIC_ARB_VERSION_V2_MIN		0x20010000
->  #define PMIC_ARB_VERSION_V3_MIN		0x30000000
->  #define PMIC_ARB_VERSION_V5_MIN		0x50000000
-> +#define PMIC_ARB_VERSION_V7_MIN		0x70000000
->  #define PMIC_ARB_INT_EN			0x0004
->  
-> +#define PMIC_ARB_FEATURES		0x0004
-> +#define PMIC_ARB_FEATURES_PERIPH_MASK	GENMASK(10, 0)
-> +
-> +#define PMIC_ARB_FEATURES1		0x008
-> +
->  /* PMIC Arbiter channel registers offsets */
->  #define PMIC_ARB_CMD			0x00
->  #define PMIC_ARB_CONFIG			0x04
-> @@ -48,7 +54,6 @@
->  #define INVALID_EE				0xFF
->  
->  /* Ownership Table */
-> -#define SPMI_OWNERSHIP_TABLE_REG(N)	(0x0700 + (4 * (N)))
->  #define SPMI_OWNERSHIP_PERIPH2OWNER(X)	((X) & 0x7)
->  
->  /* Channel Status fields */
-> @@ -91,6 +96,7 @@ enum pmic_arb_channel {
->  
->  /* Maximum number of support PMIC peripherals */
->  #define PMIC_ARB_MAX_PERIPHS		512
-> +#define PMIC_ARB_MAX_PERIPHS_V7		1024
->  #define PMIC_ARB_TIMEOUT_US		100
->  #define PMIC_ARB_MAX_TRANS_BYTES	(8)
->  
-> @@ -104,12 +110,12 @@ enum pmic_arb_channel {
->  	((((slave_id) & 0xF)   << 28) | \
->  	(((periph_id) & 0xFF)  << 20) | \
->  	(((irq_id)    & 0x7)   << 16) | \
-> -	(((apid)      & 0x1FF) << 0))
-> +	(((apid)      & 0x3FF) << 0))
->  
->  #define hwirq_to_sid(hwirq)  (((hwirq) >> 28) & 0xF)
->  #define hwirq_to_per(hwirq)  (((hwirq) >> 20) & 0xFF)
->  #define hwirq_to_irq(hwirq)  (((hwirq) >> 16) & 0x7)
-> -#define hwirq_to_apid(hwirq) (((hwirq) >> 0)  & 0x1FF)
-> +#define hwirq_to_apid(hwirq) (((hwirq) >> 0)  & 0x3FF)
->  
->  struct pmic_arb_ver_ops;
->  
-> @@ -149,8 +155,11 @@ struct spmi_pmic_arb {
->  	u8			channel;
->  	int			irq;
->  	u8			ee;
-> +	u32			bus_instance;
->  	u16			min_apid;
->  	u16			max_apid;
-> +	u16			base_apid;
-> +	int			apid_count;
->  	u32			*mapping_table;
->  	DECLARE_BITMAP(mapping_table_valid, PMIC_ARB_MAX_PERIPHS);
->  	struct irq_domain	*domain;
-> @@ -158,7 +167,8 @@ struct spmi_pmic_arb {
->  	const struct pmic_arb_ver_ops *ver_ops;
->  	u16			*ppid_to_apid;
->  	u16			last_apid;
-> -	struct apid_data	apid_data[PMIC_ARB_MAX_PERIPHS];
-> +	struct apid_data	*apid_data;
-> +	int			max_periphs;
->  };
->  
->  /**
-> @@ -196,6 +206,7 @@ struct pmic_arb_ver_ops {
->  	void __iomem *(*irq_status)(struct spmi_pmic_arb *pmic_arb, u16 n);
->  	void __iomem *(*irq_clear)(struct spmi_pmic_arb *pmic_arb, u16 n);
->  	u32 (*apid_map_offset)(u16 n);
-> +	void __iomem *(*apid_owner)(struct spmi_pmic_arb *pmic_arb, u16 n);
->  };
->  
->  static inline void pmic_arb_base_write(struct spmi_pmic_arb *pmic_arb,
-> @@ -530,6 +541,7 @@ static void pmic_arb_chained_irq(struct irq_desc *desc)
->  	struct irq_chip *chip = irq_desc_get_chip(desc);
->  	int first = pmic_arb->min_apid >> 5;
->  	int last = pmic_arb->max_apid >> 5;
-> +	int acc_offsets = pmic_arb->base_apid >> 5;
->  	u8 ee = pmic_arb->ee;
->  	u32 status, enable;
->  	int i, id, apid;
-> @@ -538,7 +550,7 @@ static void pmic_arb_chained_irq(struct irq_desc *desc)
->  
->  	for (i = first; i <= last; ++i) {
->  		status = readl_relaxed(
-> -				ver_ops->owner_acc_status(pmic_arb, ee, i));
-> +				ver_ops->owner_acc_status(pmic_arb, ee, i - acc_offsets));
->  		while (status) {
->  			id = ffs(status) - 1;
->  			status &= ~BIT(id);
-> @@ -839,8 +851,7 @@ static u16 pmic_arb_find_apid(struct spmi_pmic_arb *pmic_arb, u16 ppid)
->  		if (offset >= pmic_arb->core_size)
->  			break;
->  
-> -		regval = readl_relaxed(pmic_arb->cnfg +
-> -				      SPMI_OWNERSHIP_TABLE_REG(apid));
-> +		regval = readl_relaxed(pmic_arb->ver_ops->apid_owner(pmic_arb, apid));
->  		apidd->irq_ee = SPMI_OWNERSHIP_PERIPH2OWNER(regval);
->  		apidd->write_ee = apidd->irq_ee;
->  
-> @@ -876,9 +887,9 @@ static int pmic_arb_ppid_to_apid_v2(struct spmi_pmic_arb *pmic_arb, u16 ppid)
->  
->  static int pmic_arb_read_apid_map_v5(struct spmi_pmic_arb *pmic_arb)
->  {
-> -	struct apid_data *apidd = pmic_arb->apid_data;
-> +	struct apid_data *apidd;
->  	struct apid_data *prev_apidd;
-> -	u16 i, apid, ppid;
-> +	u16 i, apid, ppid, apid_max;
->  	bool valid, is_irq_ee;
->  	u32 regval, offset;
->  
-> @@ -889,7 +900,9 @@ static int pmic_arb_read_apid_map_v5(struct spmi_pmic_arb *pmic_arb)
->  	 * allowed to write to the APID.  The owner of the last (highest) APID
->  	 * for a given PPID will receive interrupts from the PPID.
->  	 */
-> -	for (i = 0; ; i++, apidd++) {
-> +	apidd = &pmic_arb->apid_data[pmic_arb->base_apid];
-> +	apid_max = pmic_arb->base_apid + pmic_arb->apid_count;
-> +	for (i = pmic_arb->base_apid; i < apid_max; i++, apidd++) {
->  		offset = pmic_arb->ver_ops->apid_map_offset(i);
->  		if (offset >= pmic_arb->core_size)
->  			break;
-> @@ -900,8 +913,7 @@ static int pmic_arb_read_apid_map_v5(struct spmi_pmic_arb *pmic_arb)
->  		ppid = (regval >> 8) & PMIC_ARB_PPID_MASK;
->  		is_irq_ee = PMIC_ARB_CHAN_IS_IRQ_OWNER(regval);
->  
-> -		regval = readl_relaxed(pmic_arb->cnfg +
-> -				      SPMI_OWNERSHIP_TABLE_REG(i));
-> +		regval = readl_relaxed(pmic_arb->ver_ops->apid_owner(pmic_arb, i));
->  		apidd->write_ee = SPMI_OWNERSHIP_PERIPH2OWNER(regval);
->  
->  		apidd->irq_ee = is_irq_ee ? apidd->write_ee : INVALID_EE;
-> @@ -995,6 +1007,36 @@ static int pmic_arb_offset_v5(struct spmi_pmic_arb *pmic_arb, u8 sid, u16 addr,
->  	return offset;
->  }
->  
-> +static int pmic_arb_offset_v7(struct spmi_pmic_arb *pmic_arb, u8 sid, u16 addr,
-> +			      enum pmic_arb_channel ch_type)
-> +{
-> +	u16 apid;
-> +	int rc;
-> +	u32 offset = 0;
-> +	u16 ppid = (sid << 8) | (addr >> 8);
-> +
-> +	rc = pmic_arb->ver_ops->ppid_to_apid(pmic_arb, ppid);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	apid = rc;
-> +	switch (ch_type) {
-> +	case PMIC_ARB_CHANNEL_OBS:
-> +		offset = 0x8000 * pmic_arb->ee + 0x20 * apid;
-> +		break;
-> +	case PMIC_ARB_CHANNEL_RW:
-> +		if (pmic_arb->apid_data[apid].write_ee != pmic_arb->ee) {
-> +			dev_err(&pmic_arb->spmic->dev, "disallow spmi write to sid=%u, add: %x\n",
-> +				sid, addr);
-> +			return -EPERM;
-> +		}
-> +		offset = 0x10000 * apid;
-> +		break;
-> +	}
-> +
-> +	return offset;
-> +}
-> +
->  static u32 pmic_arb_fmt_cmd_v1(u8 opc, u8 sid, u16 addr, u8 bc)
->  {
->  	return (opc << 27) | ((sid & 0xf) << 20) | (addr << 4) | (bc & 0x7);
-> @@ -1029,6 +1071,12 @@ pmic_arb_owner_acc_status_v5(struct spmi_pmic_arb *pmic_arb, u8 m, u16 n)
->  	return pmic_arb->intr + 0x10000 * m + 0x4 * n;
->  }
->  
-> +static void __iomem *
-> +pmic_arb_owner_acc_status_v7(struct spmi_pmic_arb *pmic_arb, u8 m, u16 n)
-> +{
-> +	return pmic_arb->intr + 0x1000 * m + 0x4 * n;
-> +}
-> +
->  static void __iomem *
->  pmic_arb_acc_enable_v1(struct spmi_pmic_arb *pmic_arb, u16 n)
->  {
-> @@ -1047,6 +1095,12 @@ pmic_arb_acc_enable_v5(struct spmi_pmic_arb *pmic_arb, u16 n)
->  	return pmic_arb->wr_base + 0x100 + 0x10000 * n;
->  }
->  
-> +static void __iomem *
-> +pmic_arb_acc_enable_v7(struct spmi_pmic_arb *pmic_arb, u16 n)
-> +{
-> +	return pmic_arb->wr_base + 0x100 + 0x1000 * n;
-> +}
-> +
->  static void __iomem *
->  pmic_arb_irq_status_v1(struct spmi_pmic_arb *pmic_arb, u16 n)
->  {
-> @@ -1065,6 +1119,12 @@ pmic_arb_irq_status_v5(struct spmi_pmic_arb *pmic_arb, u16 n)
->  	return pmic_arb->wr_base + 0x104 + 0x10000 * n;
->  }
->  
-> +static void __iomem *
-> +pmic_arb_irq_status_v7(struct spmi_pmic_arb *pmic_arb, u16 n)
-> +{
-> +	return pmic_arb->wr_base + 0x104 + 0x1000 * n;
-> +}
-> +
->  static void __iomem *
->  pmic_arb_irq_clear_v1(struct spmi_pmic_arb *pmic_arb, u16 n)
->  {
-> @@ -1079,6 +1139,12 @@ pmic_arb_irq_clear_v2(struct spmi_pmic_arb *pmic_arb, u16 n)
->  
->  static void __iomem *
->  pmic_arb_irq_clear_v5(struct spmi_pmic_arb *pmic_arb, u16 n)
-> +{
-> +	return pmic_arb->wr_base + 0x108 + 0x1000 * n;
-> +}
-> +
-> +static void __iomem *
-> +pmic_arb_irq_clear_v7(struct spmi_pmic_arb *pmic_arb, u16 n)
->  {
->  	return pmic_arb->wr_base + 0x108 + 0x10000 * n;
->  }
-> @@ -1093,6 +1159,23 @@ static u32 pmic_arb_apid_map_offset_v5(u16 n)
->  	return 0x900 + 0x4 * n;
->  }
->  
-> +static u32 pmic_arb_apid_map_offset_v7(u16 n)
-> +{
-> +	return 0x2000 + 0x4 * n;
-> +}
-> +
-> +static void __iomem *
-> +pmic_arb_apid_owner_v2(struct spmi_pmic_arb *pmic_arb, u16 n)
-> +{
-> +	return pmic_arb->cnfg + 0x700 + 0x4 * n;
-> +}
-> +
-> +static void __iomem *
-> +pmic_arb_apid_owner_v7(struct spmi_pmic_arb *pmic_arb, u16 n)
-> +{
-> +	return pmic_arb->cnfg + 0x4 * (n - pmic_arb->base_apid);
-> +}
-> +
->  static const struct pmic_arb_ver_ops pmic_arb_v1 = {
->  	.ver_str		= "v1",
->  	.ppid_to_apid		= pmic_arb_ppid_to_apid_v1,
-> @@ -1104,6 +1187,7 @@ static const struct pmic_arb_ver_ops pmic_arb_v1 = {
->  	.irq_status		= pmic_arb_irq_status_v1,
->  	.irq_clear		= pmic_arb_irq_clear_v1,
->  	.apid_map_offset	= pmic_arb_apid_map_offset_v2,
-> +	.apid_owner		= pmic_arb_apid_owner_v2,
->  };
->  
->  static const struct pmic_arb_ver_ops pmic_arb_v2 = {
-> @@ -1117,6 +1201,7 @@ static const struct pmic_arb_ver_ops pmic_arb_v2 = {
->  	.irq_status		= pmic_arb_irq_status_v2,
->  	.irq_clear		= pmic_arb_irq_clear_v2,
->  	.apid_map_offset	= pmic_arb_apid_map_offset_v2,
-> +	.apid_owner		= pmic_arb_apid_owner_v2,
->  };
->  
->  static const struct pmic_arb_ver_ops pmic_arb_v3 = {
-> @@ -1130,6 +1215,7 @@ static const struct pmic_arb_ver_ops pmic_arb_v3 = {
->  	.irq_status		= pmic_arb_irq_status_v2,
->  	.irq_clear		= pmic_arb_irq_clear_v2,
->  	.apid_map_offset	= pmic_arb_apid_map_offset_v2,
-> +	.apid_owner		= pmic_arb_apid_owner_v2,
->  };
->  
->  static const struct pmic_arb_ver_ops pmic_arb_v5 = {
-> @@ -1143,6 +1229,21 @@ static const struct pmic_arb_ver_ops pmic_arb_v5 = {
->  	.irq_status		= pmic_arb_irq_status_v5,
->  	.irq_clear		= pmic_arb_irq_clear_v5,
->  	.apid_map_offset	= pmic_arb_apid_map_offset_v5,
-> +	.apid_owner		= pmic_arb_apid_owner_v2,
-> +};
-> +
-> +static const struct pmic_arb_ver_ops pmic_arb_v7 = {
-> +	.ver_str		= "v7",
-> +	.ppid_to_apid		= pmic_arb_ppid_to_apid_v5,
-> +	.non_data_cmd		= pmic_arb_non_data_cmd_v2,
-> +	.offset			= pmic_arb_offset_v7,
-> +	.fmt_cmd		= pmic_arb_fmt_cmd_v2,
-> +	.owner_acc_status	= pmic_arb_owner_acc_status_v7,
-> +	.acc_enable		= pmic_arb_acc_enable_v7,
-> +	.irq_status		= pmic_arb_irq_status_v7,
-> +	.irq_clear		= pmic_arb_irq_clear_v7,
-> +	.apid_map_offset	= pmic_arb_apid_map_offset_v7,
-> +	.apid_owner		= pmic_arb_apid_owner_v7,
->  };
->  
->  static const struct irq_domain_ops pmic_arb_irq_domain_ops = {
-> @@ -1169,8 +1270,12 @@ static int spmi_pmic_arb_probe(struct platform_device *pdev)
->  	pmic_arb = spmi_controller_get_drvdata(ctrl);
->  	pmic_arb->spmic = ctrl;
->  
-> +	/*
-> +	 * Don't use devm_ioremap_resource() as the resources are shared in
-> +	 * PMIC v7 onwards, so causing failure when mapping
-> +	 */
->  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "core");
-> -	core = devm_ioremap_resource(&ctrl->dev, res);
-> +	core = devm_ioremap(&ctrl->dev, res->start, resource_size(res));
->  	if (IS_ERR(core)) {
->  		err = PTR_ERR(core);
->  		goto err_put_ctrl;
-> @@ -1199,12 +1304,14 @@ static int spmi_pmic_arb_probe(struct platform_device *pdev)
->  			pmic_arb->ver_ops = &pmic_arb_v2;
->  		else if (hw_ver < PMIC_ARB_VERSION_V5_MIN)
->  			pmic_arb->ver_ops = &pmic_arb_v3;
-> -		else
-> +		else if (hw_ver < PMIC_ARB_VERSION_V7_MIN)
->  			pmic_arb->ver_ops = &pmic_arb_v5;
-> +		else
-> +			pmic_arb->ver_ops = &pmic_arb_v7;
->  
->  		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
->  						   "obsrvr");
-> -		pmic_arb->rd_base = devm_ioremap_resource(&ctrl->dev, res);
-> +		pmic_arb->rd_base = devm_ioremap(&ctrl->dev, res->start, resource_size(res));
->  		if (IS_ERR(pmic_arb->rd_base)) {
->  			err = PTR_ERR(pmic_arb->rd_base);
->  			goto err_put_ctrl;
-> @@ -1212,25 +1319,68 @@ static int spmi_pmic_arb_probe(struct platform_device *pdev)
->  
->  		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
->  						   "chnls");
-> -		pmic_arb->wr_base = devm_ioremap_resource(&ctrl->dev, res);
-> +		pmic_arb->wr_base = devm_ioremap(&ctrl->dev, res->start, resource_size(res));
->  		if (IS_ERR(pmic_arb->wr_base)) {
->  			err = PTR_ERR(pmic_arb->wr_base);
->  			goto err_put_ctrl;
->  		}
->  	}
->  
-> +	pmic_arb->max_periphs = PMIC_ARB_MAX_PERIPHS;
-> +
-> +	if (hw_ver >= PMIC_ARB_VERSION_V7_MIN) {
-> +		pmic_arb->max_periphs = PMIC_ARB_MAX_PERIPHS_V7;
-> +
-> +		of_property_read_u32(pdev->dev.of_node, "qcom,bus-id", &pmic_arb->bus_instance);
-> +		if (pmic_arb->bus_instance > 1) {
-> +			err = -EINVAL;
-> +			dev_err(&ctrl->dev, "invalid bus instance: %d\n", pmic_arb->bus_instance);
-> +			goto err_put_ctrl;
-> +		}
-> +
-> +		if (pmic_arb->bus_instance == 0) {
-> +			pmic_arb->base_apid = 0;
-> +			pmic_arb->apid_count = readl_relaxed(core + PMIC_ARB_FEATURES) &
-> +							     PMIC_ARB_FEATURES_PERIPH_MASK;
-> +		} else {
-> +			pmic_arb->base_apid = readl_relaxed(core + PMIC_ARB_FEATURES) &
-> +							     PMIC_ARB_FEATURES_PERIPH_MASK;
-> +			pmic_arb->apid_count = readl_relaxed(core + PMIC_ARB_FEATURES1) &
-> +							     PMIC_ARB_FEATURES_PERIPH_MASK;
-> +		}
-> +
-> +	} else if (hw_ver >= PMIC_ARB_VERSION_V5_MIN) {
-> +		pmic_arb->base_apid = 0;
-> +		pmic_arb->apid_count = readl_relaxed(core + PMIC_ARB_FEATURES) &
-> +						     PMIC_ARB_FEATURES_PERIPH_MASK;
-> +	}
-> +
-> +	if (pmic_arb->base_apid + pmic_arb->apid_count > pmic_arb->max_periphs) {
-> +		err = -EINVAL;
-> +		dev_err(&ctrl->dev, "Unsupported APID count: %d\n",
-> +			pmic_arb->base_apid + pmic_arb->apid_count);
-> +		goto err_put_ctrl;
-> +	}
-> +
-> +	pmic_arb->apid_data = devm_kcalloc(&ctrl->dev, pmic_arb->max_periphs,
-> +					   sizeof(*pmic_arb->apid_data), GFP_KERNEL);
-> +	if (!pmic_arb->apid_data) {
-> +		err = -ENOMEM;
-> +		goto err_put_ctrl;
-> +	}
-> +
->  	dev_info(&ctrl->dev, "PMIC arbiter version %s (0x%x)\n",
->  		 pmic_arb->ver_ops->ver_str, hw_ver);
->  
->  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "intr");
-> -	pmic_arb->intr = devm_ioremap_resource(&ctrl->dev, res);
-> +	pmic_arb->intr = devm_ioremap(&ctrl->dev, res->start, resource_size(res));
->  	if (IS_ERR(pmic_arb->intr)) {
->  		err = PTR_ERR(pmic_arb->intr);
->  		goto err_put_ctrl;
->  	}
->  
->  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cnfg");
-> -	pmic_arb->cnfg = devm_ioremap_resource(&ctrl->dev, res);
-> +	pmic_arb->cnfg = devm_ioremap(&ctrl->dev, res->start, resource_size(res));
->  	if (IS_ERR(pmic_arb->cnfg)) {
->  		err = PTR_ERR(pmic_arb->cnfg);
->  		goto err_put_ctrl;
-> @@ -1281,7 +1431,7 @@ static int spmi_pmic_arb_probe(struct platform_device *pdev)
->  	/* Initialize max_apid/min_apid to the opposite bounds, during
->  	 * the irq domain translation, we are sure to update these */
->  	pmic_arb->max_apid = 0;
-> -	pmic_arb->min_apid = PMIC_ARB_MAX_PERIPHS - 1;
-> +	pmic_arb->min_apid = pmic_arb->max_periphs - 1;
->  
->  	platform_set_drvdata(pdev, ctrl);
->  	raw_spin_lock_init(&pmic_arb->lock);
+V5 -> V6
+ * fix warnings regarding overflows
+
+V6 -> V7
+ * remove extra cache-line alignment
+ * adi,rsense-resistance-ohms -> shunt-resistor-micro-ohms
+ * dt-bindings: add product page links
+
+V7 -> V8
+ * also check DAC code lower bound
+ * fix checkpath --strict complaints
+ * add comment regarding mutex lock usage
+ * propagate error when converting adc result to resistance
+
+V8 -> V9
+ * fix spelling mistake
+ * undo propagate error when converting adc result to resistance
+ * return void from adc result to resistance function
+ * limit max adc value when doing resistance calculation to avoid
+   a potential division-by-zero case
+
+Cosmin Tanislav (3):
+  iio: add addac subdirectory
+  dt-bindings: iio: add AD74413R
+  iio: addac: add AD74413R driver
+
+ .../bindings/iio/addac/adi,ad74413r.yaml      |  158 ++
+ MAINTAINERS                                   |    9 +
+ drivers/iio/Kconfig                           |    1 +
+ drivers/iio/Makefile                          |    1 +
+ drivers/iio/addac/Kconfig                     |   20 +
+ drivers/iio/addac/Makefile                    |    7 +
+ drivers/iio/addac/ad74413r.c                  | 1475 +++++++++++++++++
+ include/dt-bindings/iio/addac/adi,ad74413r.h  |   21 +
+ 8 files changed, 1692 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/addac/adi,ad74413r.yaml
+ create mode 100644 drivers/iio/addac/Kconfig
+ create mode 100644 drivers/iio/addac/Makefile
+ create mode 100644 drivers/iio/addac/ad74413r.c
+ create mode 100644 include/dt-bindings/iio/addac/adi,ad74413r.h
+
+-- 
+2.34.1
 
