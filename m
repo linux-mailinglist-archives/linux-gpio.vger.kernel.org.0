@@ -2,85 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AA3F465B98
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Dec 2021 02:25:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E96C465BA4
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Dec 2021 02:28:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354286AbhLBB3B (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 1 Dec 2021 20:29:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57116 "EHLO
+        id S1344767AbhLBBcL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 1 Dec 2021 20:32:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344382AbhLBB3B (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Dec 2021 20:29:01 -0500
-Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9F00C061748
-        for <linux-gpio@vger.kernel.org>; Wed,  1 Dec 2021 17:25:39 -0800 (PST)
-Received: by mail-ot1-x334.google.com with SMTP id u18-20020a9d7212000000b00560cb1dc10bso37813340otj.11
-        for <linux-gpio@vger.kernel.org>; Wed, 01 Dec 2021 17:25:39 -0800 (PST)
+        with ESMTP id S1346268AbhLBBcL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Dec 2021 20:32:11 -0500
+Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E3D2C061757
+        for <linux-gpio@vger.kernel.org>; Wed,  1 Dec 2021 17:28:49 -0800 (PST)
+Received: by mail-oi1-x236.google.com with SMTP id q25so52497111oiw.0
+        for <linux-gpio@vger.kernel.org>; Wed, 01 Dec 2021 17:28:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=MzBxxmck4e22aCPZbpEeNPHu59eaexKB2GZ+l+rjAcE=;
-        b=TqMGkprtUvMHzq6Q85I8DY7F2tio6LvLjW7QzKwPUswejdPcjjBvmh/9W85sR540N2
-         D8RlFWMFKcT+pHyErENuFVMzfkS+dK3SB3QjaF46oLW7jG0vX4s+GFY2zIN1pvcVClnO
-         FRDqzDB62fq84GcDo9JVaA4yhNkV+4jtYzz10H4X6steCB/id/JKSNnW8wYJ8lwI1ZOu
-         fSv8hIVo/bftKxcWyJsqw1Kv6GRWN0QLwoTaWy+hm+L6iwFx/5UlRik/K6L7Z0eHEX05
-         59OjDo8rZhcE+6gMYp+o2+d3MePltd4Jy06L3aQm4DHNFs8UJYq+K71bgJY3Y3fuo5sw
-         siTw==
+        bh=5gpy4sVMzHHpUlsImi5kl58Gd1L0IEwpwxD1YdQQvBQ=;
+        b=PmllECeJTsKVQzyq3fs24scpkhBsQYtimCCEBzVdvfA1Vp9wzh8BEfZW4KAnmXv2VY
+         T/o/CapcXTv2Q5kS4pEiq39mMfppHLCKrsrH6K2aqiWkXz9ln9yB8y/Hb/3hmroHDLjd
+         sJO7VapIW0v8YX5L8y0iCmtalDl4R7tj9LZlFbPYLsvApLlKcuG74fm25mQWhTV9myXk
+         TrKo7k1TWmd0ljc6nvEnXwompmZbt7kaSIQ1aHCUzVbbeXn7MHhX4U7MzhxnspWm1hc6
+         Qn3l8m7qVwVKIPPn5ZimiS38UuR576O3Iigl14HOx6MIRhq1Hz8+1XZju1zBR+1cZyOO
+         eldA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=MzBxxmck4e22aCPZbpEeNPHu59eaexKB2GZ+l+rjAcE=;
-        b=N2jOapt3zoch8aBxcg2nbpgeGUFsAwkvxJVnBT6pKnDNuQZU01ZpI1sCy2Ukrb2ALy
-         xCxokSo19jFSG/1maUViNgdt/OnF8amjNzWhGp2JQT3AV1wBsFweEw8Kc8HA15YdV+TC
-         6H+bUD72Zo/adXSQsJvtPe5LJ28NvHP23krfRp5aEnWE9+3YyzYhMX3pBrbcMOnTRwAe
-         BG5esNIp6p8Kf9ispn6EhE8okwBFOxnnJgFb2KZrXIgRFmuBZUhLjwvd7U8f2gx/8cI7
-         BjGlNaZi9mVx/xnbP+OryxhnenwchQ/Kjjulxe1fQMJGFLJVlbAmWmy7MlKqwJ6W5FWq
-         2Atw==
-X-Gm-Message-State: AOAM530YX/8+JsLqH5S/NeleQcbC9m10SzZvdY/+NCU+8O8R9PrX4lOj
-        nglPlfVy813ewpiNefEhRspti/dbzkD0agIdpJDZMUfsQ7s=
-X-Google-Smtp-Source: ABdhPJyeWavwWu336TbUC5SxcT/gU4WF764NCIliaR5Spu/P2Rnbn7p8bIQnM2m86oSDPqMuforalVdvO0bOdsZmBv0=
-X-Received: by 2002:a9d:74d0:: with SMTP id a16mr8731762otl.237.1638408338988;
- Wed, 01 Dec 2021 17:25:38 -0800 (PST)
+        bh=5gpy4sVMzHHpUlsImi5kl58Gd1L0IEwpwxD1YdQQvBQ=;
+        b=OIRx/G+UX+EufwxP9MaFz0IKbs1f0g76EnOqC7Tcf7rIO/2Gua6BFMBGckynqqZZbm
+         JnF2vy4uIytz3Hs8M3XPFAKxp+jpFDNHuOHDVf6HmSTvQKEcaGT/qQDxP99eArkAuTKw
+         XMwnWAdYy6W+9VPuy+tgGtsGGHk2xoVvwRbK5kU/DfCBAH8ofxWmHV8zSvfuEf7KBJBS
+         YGein9iLx/zZx/+KDEtamrcCEZi0kawney+k0O6CTKAp1o64+85pOBEbITZ8U7oLlRFR
+         WjxYVpTDzm0Csa8EsbJA0LmahQMXel0cDIQ5MhMKe4ocQXzUMFcx2hIVhqXofGcMsWcv
+         GOYw==
+X-Gm-Message-State: AOAM533Sqdngv3BWY7saawXb3zHfhviLD1Lz4ArGHPNIIGj8IXWwxqXo
+        Vkn+3GHa4Ue3pPE/3ZF6jK9wiiIH9HUp/lXdyEsxSg==
+X-Google-Smtp-Source: ABdhPJxecnz1NO0fgLf1UE399iXCnEzQsG+UsmsEG6gIeEhXW9yYIQzCp0kbjcc193owkf4Og+b8awgaUPwSMZC0LNE=
+X-Received: by 2002:a05:6808:60e:: with SMTP id y14mr1921269oih.162.1638408528758;
+ Wed, 01 Dec 2021 17:28:48 -0800 (PST)
 MIME-Version: 1.0
-References: <20211126151352.1509583-1-john@metanate.com>
-In-Reply-To: <20211126151352.1509583-1-john@metanate.com>
+References: <20211125211443.1150135-1-Mr.Bossman075@gmail.com> <20211125211443.1150135-3-Mr.Bossman075@gmail.com>
+In-Reply-To: <20211125211443.1150135-3-Mr.Bossman075@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 2 Dec 2021 02:25:27 +0100
-Message-ID: <CACRpkdaMB9+-+wfJ7idCzByZyxGmX=uYD5LMuKBVy0oagyhg6A@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl/rockchip: fix gpio device creation
-To:     John Keeping <john@metanate.com>
-Cc:     linux-gpio@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>,
-        Jianqun Xu <jay.xu@rock-chips.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Thu, 2 Dec 2021 02:28:36 +0100
+Message-ID: <CACRpkdZ_o=L8t8wysy_wOaUydR-ptEkg07-mOjA32OWzEea8=A@mail.gmail.com>
+Subject: Re: [PATCH v3 02/13] dt-bindings: pinctrl: add i.MXRT1050 pinctrl
+ binding doc
+To:     Jesse Taube <mr.bossman075@gmail.com>
+Cc:     linux-imx@nxp.com, mturquette@baylibre.com, sboyd@kernel.org,
+        robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com, ulf.hansson@linaro.org,
+        aisheng.dong@nxp.com, stefan@agner.ch, gregkh@linuxfoundation.org,
+        arnd@arndb.de, olof@lixom.net, soc@kernel.org,
+        linux@armlinux.org.uk, abel.vesa@nxp.com, adrian.hunter@intel.com,
+        jirislaby@kernel.org, giulio.benetti@benettiengineering.com,
+        nobuhiro1.iwamatsu@toshiba.co.jp, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 26, 2021 at 4:14 PM John Keeping <john@metanate.com> wrote:
+On Thu, Nov 25, 2021 at 10:14 PM Jesse Taube <mr.bossman075@gmail.com> wrote:
 
-> GPIO nodes are not themselves busses, so passing rockchip_bank_match
-> here is wrong.  Passing NULL instead uses the standard bus match table
-> which is more appropriate.
+> From: Jesse Taube <mr.bossman075@gmail.com>
 >
-> devm_of_platform_populate() shows that this is the normal way to call
-> of_platform_populate() from a device driver, so in order to match that
-> more closely also add the pinctrl device as the parent for the newly
-> created GPIO controllers.
+> Add i.MXRT1050 pinctrl binding doc
 >
-> Specifically, using the wrong match here can break dynamic GPIO hogs as
-> marking the GPIO bank as a bus means that of_platform_notify() will set
-> OF_POPULATED on new child nodes and if this happens before
-> of_gpio_notify() is called then the new hog will be skipped as
-> OF_POPULATED is already set.
->
-> Fixes: 9ce9a02039de ("pinctrl/rockchip: drop the gpio related codes")
-> Signed-off-by: John Keeping <john@metanate.com>
+> Cc: Giulio Benetti <giulio.benetti@benettiengineering.com>
+> Signed-off-by: Jesse Taube <Mr.Bossman075@gmail.com>
+> ---
+> V1->V2:
+> * Replace macros with values
+> * Add tab for last pinctrl value
 
-Patch applied.
+Patch applied to the pinctrl tree.
 
 Yours,
 Linus Walleij
