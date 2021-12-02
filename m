@@ -2,98 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EF86246624D
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Dec 2021 12:27:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EA8C466266
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Dec 2021 12:36:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357148AbhLBLa0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 2 Dec 2021 06:30:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50972 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357141AbhLBLaZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Dec 2021 06:30:25 -0500
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99A5EC06174A
-        for <linux-gpio@vger.kernel.org>; Thu,  2 Dec 2021 03:27:03 -0800 (PST)
-Received: by mail-pg1-x52e.google.com with SMTP id 200so26750135pga.1
-        for <linux-gpio@vger.kernel.org>; Thu, 02 Dec 2021 03:27:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zez1rxEqxUa6den/PlCBhFY8prK0HejZIbGceZPfSXw=;
-        b=DPqxH0FMX4rAnAr1pchtyHSlHhAZYliOErJIo0K0K7vLF3KTx/rVN+v7emdLAf9sf9
-         auuz3FeZsCPJCHzU0WDgMEIpbZ3dXphb7lTY6irmmiCwpgeEVv2ge7hAAL01VEbTZN8v
-         SFjTMg/Sm9I9pR8sUzh6kjBUi2Sm/QLBlhtZy3iFnFfioHuM5DX+n+SE4sIoeoPc7X8i
-         ob92gmZskSt6xlj8skPpk3CKl77HSXo/7RSy/yliK7Rpxv3WuF2a0UErbLk8HVrEXGR5
-         dJUvdXEug8seUadTO2EuJIiEB3TatynOA4rRsM7sEEOdpKZ8stuWzk/1eh5gLOroW7uh
-         qNuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zez1rxEqxUa6den/PlCBhFY8prK0HejZIbGceZPfSXw=;
-        b=oiDLnWg5qgDi2M1ifn96jdpLNkfCfgTVPg5F35fg+FV0l8cRRLwWXDBjr9U4mXn7dY
-         aPXQ8+LxprQAgzc1Md7/Mgjv7kdOh/Uocq8Xk/5TOst4sUsFiq2UDc3FPwnPgNjX/y4v
-         yZxiGz18/+f4TmvA3IZ+2TEhb3/ILB2b1tATGCiJ8vcbkTbP1PesfDzv7JZcT97A2T1o
-         PurGicxz/AfYsbWulD39Z/9tpK7FBjbY+QzEBi++xXZAk1Xw9OKli7bMh+me2rAjtrb7
-         tlF1kl+VGHcBxQoulLLxmWUMTjw2gKmNu32EXipU6fAN2PUmBnOk7zBSUyqkojDEaItQ
-         9EVg==
-X-Gm-Message-State: AOAM5300gfepReVmDGDlNPnBHjIRVtLHGvdgwVBoHAOXLIVJSAv+q14b
-        ZGB/csnffCVTLVba/JD4xhOeHg==
-X-Google-Smtp-Source: ABdhPJzH/PVd9bNk2o5EkrDPPp9WP0TgzT0mzFmsPY/nBb6sSAzis/xMBXa0YhWn2cdLzqOn0SWqVA==
-X-Received: by 2002:a63:5c05:: with SMTP id q5mr9153548pgb.599.1638444423086;
-        Thu, 02 Dec 2021 03:27:03 -0800 (PST)
-Received: from localhost ([106.201.42.111])
-        by smtp.gmail.com with ESMTPSA id q5sm3528213pfu.66.2021.12.02.03.27.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Dec 2021 03:27:02 -0800 (PST)
-Date:   Thu, 2 Dec 2021 16:57:00 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Herve Codina <herve.codina@bootlin.com>
-Cc:     Viresh Kumar <vireshk@kernel.org>,
-        Shiraz Hashim <shiraz.linux.kernel@gmail.com>, soc@kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
+        id S1357380AbhLBLkQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 2 Dec 2021 06:40:16 -0500
+Received: from mga18.intel.com ([134.134.136.126]:53083 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1357375AbhLBLjc (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 2 Dec 2021 06:39:32 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10185"; a="223563519"
+X-IronPort-AV: E=Sophos;i="5.87,281,1631602800"; 
+   d="scan'208";a="223563519"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2021 03:36:06 -0800
+X-IronPort-AV: E=Sophos;i="5.87,281,1631602800"; 
+   d="scan'208";a="460428212"
+Received: from smile.fi.intel.com ([10.237.72.184])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2021 03:36:04 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1mskMf-001NKm-CY;
+        Thu, 02 Dec 2021 13:35:01 +0200
+Date:   Thu, 2 Dec 2021 13:35:01 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 0/6] spear: Fix SPEAr3XX plgpio support
-Message-ID: <20211202112700.mkjmwibabj2cpr6u@vireshk-i7>
-References: <20211202095255.165797-1-herve.codina@bootlin.com>
+        Shuah Khan <shuah@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v11 2/6] gpiolib: allow to specify the firmware node in
+ struct gpio_chip
+Message-ID: <YaivZe6Qo9LMoywi@smile.fi.intel.com>
+References: <20211130154127.12272-1-brgl@bgdev.pl>
+ <20211130154127.12272-3-brgl@bgdev.pl>
+ <YaZNyMV5gX5cZpar@smile.fi.intel.com>
+ <CAMRc=Mf5d1i34eBez+pOYjjdyfRL9N_ha_==Cn1rANr=2CB9aQ@mail.gmail.com>
+ <YaaQp2rq7N71dm1l@smile.fi.intel.com>
+ <CAMRc=Me=Oq_V=+p-AFPcyDjBs-+4Ug3k0AWK9fdEEet2JD3eFw@mail.gmail.com>
+ <CAMRc=MdQ+a7UrE7csg3GsiLXYGkzti-wPUwPh5J=7WBj74OVZg@mail.gmail.com>
+ <YaimotqSgHzS2wdA@smile.fi.intel.com>
+ <CAMRc=Mew8xfPb9kgH-bf=t+yb1xGpRwv3Vn0+b-9pPbp3M3g5Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211202095255.165797-1-herve.codina@bootlin.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <CAMRc=Mew8xfPb9kgH-bf=t+yb1xGpRwv3Vn0+b-9pPbp3M3g5Q@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 02-12-21, 10:52, Herve Codina wrote:
-> Hi,
+On Thu, Dec 02, 2021 at 12:24:06PM +0100, Bartosz Golaszewski wrote:
+> On Thu, Dec 2, 2021 at 11:58 AM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > On Wed, Dec 01, 2021 at 02:11:28PM +0100, Bartosz Golaszewski wrote:
+> > > On Tue, Nov 30, 2021 at 10:04 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> >
+> > ...
+> >
+> > > Let me maybe rephrase the problem: currently, for GPIO devices
+> > > instantiating multiple banks created outside of the OF or ACPI
+> > > frameworks (e.g. instantiated manually and configured using a
+> > > hierarchy of software nodes with a single parent swnode and a number
+> > > of child swnodes representing the children), it is impossible to
+> > > assign firmware nodes other than the one representing the top GPIO
+> > > device to the gpiochip child devices.
+> > >
+> > > In fact if we want to drop the OF APIs entirely from gpiolib - this
+> > > would be the right first step as for gpio-sim it actually replaces the
+> > > gc->of_node = some_of_node; assignment that OF-based drivers do for
+> > > sub-nodes defining banks and it does work with device-tree (I verified
+> > > that too) thanks to the fwnode abstraction layer.
+> >
+> > In exchange of acknowledgements I confirm that I understood the issue
+> > you are describing. What I still don't like is this band-aid:ish approach.
+> > What we really need is to replace of_node by fwnode in GPIO library once
+> > for all. But it can be done later after your simulation series (or before,
+> > i.o.w. independently), hence I propose to update TODO and do it separately.
+> >
 > 
-> This patch series fixes the plgpio support on SPEAr3xx SOCs.
+> But this is what we already do for OF. How would the core gpiolib know
+> how the firmware nodes represent the banks? It's the driver's job to
+> tell the framework which node corresponds with what. If anything, we
+> should start replacing of_nodes with fwnodes in drivers and eventually
+> we'd drop the of_node pointer from gpio_chip entirely, but we'd keep
+> the fwnode pointer I added as the driver still needs to assign it
+> itself.
 > 
-> The first four patches of this series fixes a ressources
-> sharing issue between the plgpio driver and the pinmux
-> driver.
-> Indeed, these two drivers can use the same IO address range
-> on some SPEAr3xx SOCs.
-> To solve the issue, a regmap (syscon managed) is used in both
-> drivers and the plgpio driver can reference the pinmux regmap
-> to use it.
+> Again: I may be missing something here but I've been going through
+> this on and on and can't figure out any other way. Looking at
+> gpiolib-acpi.c I don't see it correctly assigning fwnodes to
+> sub-devices either but I don't have any HW to test it.
 > 
-> The second part of this series is related to IRQs.
-> The plgpio on SPEAr320s SOC uses an IRQ line in the reserve
-> range (from SPEAr320 point of view).
-> This issue is fixed enabling all the 'reserved' IRQs and
-> adding a dtsi file for the SPEAr320s with the correct interrupt
-> for the plgpio node.
+> As for this series: I can't really drop this patch as gpio-sim relies
+> on swnodes being correctly associated with gpio_chips to identify the
+> gpiodevs from configfs callbacks.
 
-Are these changes backwards compatible ? I mean new kernel will work
-with old DTBs ? It may be quite important to not break that here.
+Then we need to replace of_node by fwnode as a first step. I have looked
+briefly into the list of drivers that may have been cleaned up and it doesn't
+look too long.
 
 -- 
-viresh
+With Best Regards,
+Andy Shevchenko
+
+
