@@ -2,84 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BED7465BF9
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Dec 2021 03:02:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EC6F465D69
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Dec 2021 05:30:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350356AbhLBCFd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 1 Dec 2021 21:05:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37104 "EHLO
+        id S1355389AbhLBEdY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 1 Dec 2021 23:33:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344707AbhLBCFc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Dec 2021 21:05:32 -0500
-Received: from mail-ot1-x32e.google.com (mail-ot1-x32e.google.com [IPv6:2607:f8b0:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39048C061748
-        for <linux-gpio@vger.kernel.org>; Wed,  1 Dec 2021 18:02:11 -0800 (PST)
-Received: by mail-ot1-x32e.google.com with SMTP id u18-20020a9d7212000000b00560cb1dc10bso37905762otj.11
-        for <linux-gpio@vger.kernel.org>; Wed, 01 Dec 2021 18:02:11 -0800 (PST)
+        with ESMTP id S1355411AbhLBEdX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 1 Dec 2021 23:33:23 -0500
+Received: from mail-qv1-xf2c.google.com (mail-qv1-xf2c.google.com [IPv6:2607:f8b0:4864:20::f2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40A9DC061574
+        for <linux-gpio@vger.kernel.org>; Wed,  1 Dec 2021 20:30:01 -0800 (PST)
+Received: by mail-qv1-xf2c.google.com with SMTP id g9so21960727qvd.2
+        for <linux-gpio@vger.kernel.org>; Wed, 01 Dec 2021 20:30:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=jms.id.au; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=312E8cZrQ5xrvaZwf9TgwEDA4CW6oVfCqWWlc3o5e6o=;
-        b=a0aRS3IYiCOnNER5hhEkr++x8ZAKI2D8m4atvGtrFnynkIDcLq46sxqQhPAsKgi13U
-         s8P5yM3ywrOfu5nvCM2+iPAwAIEL5BOj5IEegX2LtVZv20uVxsAafEwaYULgpauM/Ujo
-         2IM02AA4u/3zi1Csa22rerE1p9Km5K9W8cr96G42TsogJoVFpmPaBCjE+wUN6SjN4hk1
-         idxMyYSM/ZCIVYWgev7G7dAXZOruxb+BV0Hy0OtUkhecdUGYoN+t46Gn9P15Ddf3aZ03
-         0pEwS/zraF1Tni2Q8ARhU+Dzo+EDjj6vunA2Yu5RkxlryJAkTZ6IZYIz5rWXtlaxUsXB
-         e3Bw==
+         :cc;
+        bh=bGCeikFSnVN8dKwJOvIvDzC/KJwmdObCCAzrzpCAJ/E=;
+        b=ep2tyg/axtHnJq6lnmrdZs8eNm+xbpSxf7+cWlCu7wV6drt9PjMvbkZpvbty/9Dfte
+         21n/Th92jFH9tZN2V++oInh+pBLNXAZTpOl8QrgHaDUqkAqaNEX02wDIYmC1yj4fS5kL
+         dBI+jEKrgvPC+fSpSQzoPDArbmymd7vnvpUu8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=312E8cZrQ5xrvaZwf9TgwEDA4CW6oVfCqWWlc3o5e6o=;
-        b=Dig8atX5lKs/l4OVIye3RxV6YTpDo60Utd6jyWUILgAtmeXF7vsHZ4FL6MAS5xy4Tz
-         zCwzH4vawJf8mSMEzw8n4oBhDHBz/Vjr3HNTa7GZ5MtvyGJndET6OV5spuoMIeS9y9J6
-         MreWz1EoazMZHl3S9DcG1206M/i2CTef4Vhle16Cm7llcVIt3LAIuZ6zy46Wa0DzHHVR
-         Fm9D1SZ8NSkpulc7vnGTkIFYOpCZOld5k/S9QtfJkzRHu+h1W+Q+69K9PP+9zXi342Fp
-         JWKSd5hKxifnuxxhBfkGJwJW32Y3Bo0Jj2Gk232+wPBedozOh2CXqnMXBy3JtOI+ZHyv
-         HAXQ==
-X-Gm-Message-State: AOAM530zT1ZOamRrZbVTULQDxchn83m9bsPUmyGorXYJhsynDNvVr2Gi
-        Es2tkH33zW9cE32UebBMfencA3pSW2ClUyKS8FzcIA==
-X-Google-Smtp-Source: ABdhPJyno0Y/OQDmQ7hYJgd98TKCAem8WoKcB87RGMejxUCsR3jJu+nnaV9TJLXT2Z7jZm70pKI/i1FEe+Kx9L8lT/E=
-X-Received: by 2002:a9d:74d0:: with SMTP id a16mr8844708otl.237.1638410530597;
- Wed, 01 Dec 2021 18:02:10 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=bGCeikFSnVN8dKwJOvIvDzC/KJwmdObCCAzrzpCAJ/E=;
+        b=LJmHuCdw3JBrtFoZxhKiO++MU7IohoT7tWC/7eGd0VTFYZD8ALnVurOhTbswa+LGgl
+         xTZX80WxjplyLIwqmrlXv6aqH+1fiPEJNzObNMglUqlwIO6sGNxWHlYg8enS7Ra5M+pA
+         olXtEdhmIQ3VqBzwAuM/2FFhQE7o/Gvuwlahwiwk44ZDBfPyiK63qSE1pj+5EO6oh6VB
+         oUX/sMIFxXyr57N9mi1NEmNl8PZV/ruZRrx7fd+V16fKAEEhgUH3IEpZ17Y5vwTJL6Dn
+         PLiAxh7eVkpY+JY/aZ/77HFC5ZtTtP2KEUkrH5MHvTfZaM9UT/pA0WjKMiVZzBwRf15s
+         GBJQ==
+X-Gm-Message-State: AOAM533Uml2n2BPVON2QtuMcrk4e4ypoqE2w9SKNRWquMKlKeJ3UeEi6
+        lHfhkrjE1h8Gesa2PtTkpIE5j8A9Tt7ymaavw3a8EidYxo3N+g==
+X-Google-Smtp-Source: ABdhPJy9YCb0OsP8aRyRht0rMpOWft/kYkSw1s90maipTvcAICcfj7+aCxTMF4SkGD2KALddT9nXHXyH8pn1qBCU8ck=
+X-Received: by 2002:a0c:c246:: with SMTP id w6mr10924727qvh.130.1638419400288;
+ Wed, 01 Dec 2021 20:30:00 -0800 (PST)
 MIME-Version: 1.0
-References: <20211110165720.30242-1-zajec5@gmail.com> <20211110165720.30242-2-zajec5@gmail.com>
-In-Reply-To: <20211110165720.30242-2-zajec5@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 2 Dec 2021 03:01:58 +0100
-Message-ID: <CACRpkdby+9qwGJ4LqwMw0tQZHSDCBRVtH+FXOYW1ob5tii3pOw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dt-bindings: pinctrl: use pinctrl.yaml
-To:     =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+References: <20211201072902.127542-1-joel@jms.id.au> <CAMRc=McG0stAC_v9_oLjwXa4=nyJVpmuyi2eVWCFA+NW9mWibg@mail.gmail.com>
+In-Reply-To: <CAMRc=McG0stAC_v9_oLjwXa4=nyJVpmuyi2eVWCFA+NW9mWibg@mail.gmail.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Thu, 2 Dec 2021 04:29:47 +0000
+Message-ID: <CACPK8XcEhsz8Xk2m7bdPaFnwQ3BrKTH80r-ir_qwngTZ+FmGBQ@mail.gmail.com>
+Subject: Re: [libgpiod PATCH] gpioget: Add --line-name to lookup GPIO line
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Eddie James <eajames@linux.ibm.com>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 10, 2021 at 5:57 PM Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com> =
-wrote:
-
-> From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
+On Wed, 1 Dec 2021 at 08:29, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 >
-> Also fix some examples to avoid warnings like:
-> brcm,ns-pinmux.example.dt.yaml: pin-controller@1800c1c0: $nodename:0: 'pi=
-n-controller@1800c1c0' does not match '^pinctrl|pinmux@[0-9a-f]+$'
->
-> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
+> On Wed, Dec 1, 2021 at 8:29 AM Joel Stanley <joel@jms.id.au> wrote:
+> >
+> > Systems provide line names to make using GPIOs easier for userspace. Use
+> > this feature to make the tools user friendly by adding the ability to
+> > show the state of a named line.
+> >
+> >  $ gpioget --line-name power-chassis-good
+> >  1
+> >
+> >  $ gpioget -L pcieslot-power
+> >  0
 
-Unfortunately I have some changes in my tree colliding with this.
-This is the development branch for v5.17:
-https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/lo=
-g/?h=3Ddevel
+> I'm not very convinced to be honest. It's not like "gpioget gpiochip0
+> `gpiofind gpiochip0 line-name`" requires much more typing than
+> "gpioget gpiochip --line-name=name".
 
-Do you think you could rebase on this and resend?
+I'm taking on feedback from people working in our labs, and
+implementing userspace applications. We've been building BMCs with
+mainline Linux for about six years now, and it's been a long road
+re-training them from "back in the day we just did devmem <this>
+<that>" and "why can't we just do cat /sys/class/gpio/gpio305/value",
+and now "why does the level of the GPIO change back after I run the
+command?".
 
-I would normally try to do it myself, but I have very little time these day=
-s.
+This usability improvement is one more step towards them using and
+being happy with the "new world" of the gpiod API.
 
-Yours,
-Linus Walleij
+Once we settle on a good API here, I plan on submitting a version of
+gpioget/gpioset added to busybox.
+
+> There are also other questions:
+> this uses getopt and only allows to specify a single line name. What
+> if we want to specify more lines like with offsets? Even if you allow
+> multiple names, getopt() doesn't guarantee ordering of arguments.
+
+If you're happy with the concept I'm happy to iterate on the implementation.
+
+Yes, it only allows a single line name. That tends to be how the tool
+is used, both from the command line and in scripts.
+
+Can you give me an example of your proposed command line API, so I can
+understand what you're suggesting here?
+
+Cheers,
+
+Joel
