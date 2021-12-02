@@ -2,148 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B6D894666E4
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Dec 2021 16:41:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 25513466725
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Dec 2021 16:48:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347917AbhLBPoo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 2 Dec 2021 10:44:44 -0500
-Received: from mga11.intel.com ([192.55.52.93]:64622 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236822AbhLBPol (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 2 Dec 2021 10:44:41 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10185"; a="234238963"
-X-IronPort-AV: E=Sophos;i="5.87,282,1631602800"; 
-   d="scan'208";a="234238963"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2021 07:41:19 -0800
-X-IronPort-AV: E=Sophos;i="5.87,282,1631602800"; 
-   d="scan'208";a="677697629"
-Received: from smile.fi.intel.com ([10.237.72.184])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2021 07:41:15 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1msoBx-001R1B-2s;
-        Thu, 02 Dec 2021 17:40:13 +0200
-Date:   Thu, 2 Dec 2021 17:40:12 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v11 2/6] gpiolib: allow to specify the firmware node in
- struct gpio_chip
-Message-ID: <Yajo3IwiLnG5wreC@smile.fi.intel.com>
-References: <YaaQp2rq7N71dm1l@smile.fi.intel.com>
- <CAMRc=Me=Oq_V=+p-AFPcyDjBs-+4Ug3k0AWK9fdEEet2JD3eFw@mail.gmail.com>
- <CAMRc=MdQ+a7UrE7csg3GsiLXYGkzti-wPUwPh5J=7WBj74OVZg@mail.gmail.com>
- <YaimotqSgHzS2wdA@smile.fi.intel.com>
- <CAMRc=Mew8xfPb9kgH-bf=t+yb1xGpRwv3Vn0+b-9pPbp3M3g5Q@mail.gmail.com>
- <YaivZe6Qo9LMoywi@smile.fi.intel.com>
- <Yaiv470uDhTbPD1A@smile.fi.intel.com>
- <CAMRc=Mdz=pihuTamENmTiWRGeUU=tb_PuxvsarS+oXFpyq4p=g@mail.gmail.com>
- <YajNsrKmEEBr5zWs@smile.fi.intel.com>
- <CAMRc=MeMhyV1kZ7zvkqrk0okh6shxvB_LapusCFzg6UBh-bU-A@mail.gmail.com>
+        id S1359214AbhLBPwD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 2 Dec 2021 10:52:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55272 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1359200AbhLBPwC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Dec 2021 10:52:02 -0500
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60087C061758
+        for <linux-gpio@vger.kernel.org>; Thu,  2 Dec 2021 07:48:39 -0800 (PST)
+Received: by mail-ed1-x52c.google.com with SMTP id y13so117839700edd.13
+        for <linux-gpio@vger.kernel.org>; Thu, 02 Dec 2021 07:48:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iuPSYgzTIlMyDGzehdK7/z8w8X0z+If2BgHEIifEQvk=;
+        b=baNeOyif4KdMCTt9oisfwZJlQZghF+61kAW/QWSTXs5PndIZkJWD7GIiQET4/b2tir
+         zLeboJLCr72To9QovmfQFGoApNbnl+aETWO/h1w/F4aobZshIwLX7RRoiKM5LSNIQDkN
+         SR/OQ+vsBg5oREtxanSw9p76jAIOhAXQ/3PrsYlozBQ5ZyYHMwOAQUGXLRVPklSqNyXZ
+         WO8zg+vMepVbRyLfpTDuVGi1hSn8BzqwzWAzHGx2q7tFBoeIL3q5ecarz9SG7GwrWiut
+         moNFoZSF3uVuBz2D56yIrYyiRbw31A7i0Z7PyQ5/qt8IZVsZQMC2kcj4JQgsqxm/q0/3
+         cf7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iuPSYgzTIlMyDGzehdK7/z8w8X0z+If2BgHEIifEQvk=;
+        b=dXsi1I6mTy7R0YatjVPlloL0YVEIQMR80gX3AlOFm2MZvS8kJ1IMyVEgem4Ec/GRZW
+         OuDOFwb0rOAkudd9wiDHfiZwK8l8O7ROboeQBDYgjwUcqRQ7JDcKdhuCEYfWpfT9CUV8
+         8/O1ddubGKvSctInZflgQdxKHMNI4Wv075smpKeFHU2T5oukrBfa2zWggacamN4DtbMF
+         1YdLXVSL25SujoY/4RQA8LCpAwXyjDWW5Qf3YbhTOV2Bg6dguJAcHfc2+XR9UkLBS2Ls
+         RbgbVw2+fYJDvuRn4P7Wcaff5ZKqUo1kgCNkqqr+D68+54yRhLJqcl4S9BD4/zprKcJf
+         rgXw==
+X-Gm-Message-State: AOAM5328pZR8/WZDkWxdyKRopXWNF+Y8EImf1eYg5TGQ3mTPiSCczvUN
+        k1PvKrMeT7AdCiLKqpTe6ATK3zC/9XhMp3LDJ+PlyA==
+X-Google-Smtp-Source: ABdhPJwLfEGeZ4YffY55vkuPmk1iOWIK2zOfLaU7nlVHQ3/JmmtUDi1cN9GHgdn9ypgpYG37ohSk72uz+A+mKSzjLw0=
+X-Received: by 2002:a17:907:9847:: with SMTP id jj7mr15758583ejc.508.1638460110643;
+ Thu, 02 Dec 2021 07:48:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MeMhyV1kZ7zvkqrk0okh6shxvB_LapusCFzg6UBh-bU-A@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20211202134034.14048-1-brgl@bgdev.pl> <20211202134034.14048-2-brgl@bgdev.pl>
+ <YajoPEgfTvuvjqG/@smile.fi.intel.com>
+In-Reply-To: <YajoPEgfTvuvjqG/@smile.fi.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 2 Dec 2021 16:48:20 +0100
+Message-ID: <CAMRc=MfYKscNMbGqwj6os_SmXhBBqUMWJCwu0K0xO+VZ0vvNfA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] gpiolib: check the 'ngpios' property in core
+ gpiolib code
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Johan Hovold <johan@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Dec 02, 2021 at 02:52:55PM +0100, Bartosz Golaszewski wrote:
-> On Thu, Dec 2, 2021 at 2:45 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
+On Thu, Dec 2, 2021 at 4:38 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Thu, Dec 02, 2021 at 02:40:34PM +0100, Bartosz Golaszewski wrote:
+> > Several drivers read the 'ngpios' device property on their own, but
+> > since it's defined as a standard GPIO property in the device tree bindings
+> > anyway, it's a good candidate for generalization. If the driver didn't
+> > set its gc->ngpio, try to read the 'ngpios' property from the GPIO
+> > device's firmware node before bailing out.
+>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> One nit-pick below (you may amend it when applying)
+>
+> > Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+> > Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> > ---
+> > v1 -> v2:
+> > - use device_property_read_u32() instead of fwnode_property_read_u32()
+> > - reverse the error check logic
 > >
-> > On Thu, Dec 02, 2021 at 02:06:57PM +0100, Bartosz Golaszewski wrote:
-> > > On Thu, Dec 2, 2021 at 12:38 PM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > >
-> > > > On Thu, Dec 02, 2021 at 01:35:01PM +0200, Andy Shevchenko wrote:
-> > > > > On Thu, Dec 02, 2021 at 12:24:06PM +0100, Bartosz Golaszewski wrote:
-> > > > > > On Thu, Dec 2, 2021 at 11:58 AM Andy Shevchenko
-> > > > > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > > > >
-> > > > > > > On Wed, Dec 01, 2021 at 02:11:28PM +0100, Bartosz Golaszewski wrote:
-> > > > > > > > On Tue, Nov 30, 2021 at 10:04 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > > > > > >
-> > > > > > > ...
-> > > > > > >
-> > > > > > > > Let me maybe rephrase the problem: currently, for GPIO devices
-> > > > > > > > instantiating multiple banks created outside of the OF or ACPI
-> > > > > > > > frameworks (e.g. instantiated manually and configured using a
-> > > > > > > > hierarchy of software nodes with a single parent swnode and a number
-> > > > > > > > of child swnodes representing the children), it is impossible to
-> > > > > > > > assign firmware nodes other than the one representing the top GPIO
-> > > > > > > > device to the gpiochip child devices.
-> > > > > > > >
-> > > > > > > > In fact if we want to drop the OF APIs entirely from gpiolib - this
-> > > > > > > > would be the right first step as for gpio-sim it actually replaces the
-> > > > > > > > gc->of_node = some_of_node; assignment that OF-based drivers do for
-> > > > > > > > sub-nodes defining banks and it does work with device-tree (I verified
-> > > > > > > > that too) thanks to the fwnode abstraction layer.
-> > > > > > >
-> > > > > > > In exchange of acknowledgements I confirm that I understood the issue
-> > > > > > > you are describing. What I still don't like is this band-aid:ish approach.
-> > > > > > > What we really need is to replace of_node by fwnode in GPIO library once
-> > > > > > > for all. But it can be done later after your simulation series (or before,
-> > > > > > > i.o.w. independently), hence I propose to update TODO and do it separately.
-> > > > > > >
-> > > > > >
-> > > > > > But this is what we already do for OF. How would the core gpiolib know
-> > > > > > how the firmware nodes represent the banks? It's the driver's job to
-> > > > > > tell the framework which node corresponds with what. If anything, we
-> > > > > > should start replacing of_nodes with fwnodes in drivers and eventually
-> > > > > > we'd drop the of_node pointer from gpio_chip entirely, but we'd keep
-> > > > > > the fwnode pointer I added as the driver still needs to assign it
-> > > > > > itself.
-> > > > > >
-> > > > > > Again: I may be missing something here but I've been going through
-> > > > > > this on and on and can't figure out any other way. Looking at
-> > > > > > gpiolib-acpi.c I don't see it correctly assigning fwnodes to
-> > > > > > sub-devices either but I don't have any HW to test it.
-> > > > > >
-> > > > > > As for this series: I can't really drop this patch as gpio-sim relies
-> > > > > > on swnodes being correctly associated with gpio_chips to identify the
-> > > > > > gpiodevs from configfs callbacks.
-> > > > >
-> > > > > Then we need to replace of_node by fwnode as a first step. I have looked
-> > > > > briefly into the list of drivers that may have been cleaned up and it doesn't
-> > > > > look too long.
-> > > >
-> > > > Let me kick this off by sending couple of patches.
-> > >
-> > > Are you fine with merging this in the meantime to get gpio-sim into mainline?
+> > v2 -> v3:
+> > - don't shadow errors other than -ENODATA in device_property_read_u32()
 > >
-> > gpio-sim, yes, (though I may bikeshed about naming of the configfs attributes,
-> > etc) but not this patch.
+> > v3 -> v4:
+> > - also make sure we return -EINVAL when the device 'ngpios' property is
+> >   set to 0 (thanks Andy!)
 > >
-> 
-> There's no way around it though AFAIK. First - the 'gpio-line-names'
-> property will not work for banks. 'ngpios' will only work because we
-> read it manually in probe() to figure out the number of sysfs groups.
-> And also configfs callbacks will not be able to associate bank devices
-> with configfs groups. I would really like to hear an alternative -
-> even if it's just an idea and not actual implementation.
-> 
-> I'm really curious to see how you'll remove the of_node pointer and
-> not introduce the corresponding fwnode pointer actually.
+> >  drivers/gpio/gpiolib.c | 21 +++++++++++++++++++++
+> >  1 file changed, 21 insertions(+)
+> >
+> > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> > index ede8b8a7aa18..bd9b8cb53476 100644
+> > --- a/drivers/gpio/gpiolib.c
+> > +++ b/drivers/gpio/gpiolib.c
+> > @@ -599,6 +599,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+> >       int base = gc->base;
+> >       unsigned int i;
+> >       int ret = 0;
+> > +     u32 ngpios;
+> >
+> >       /*
+> >        * First: allocate and populate the internal stat container, and
+> > @@ -646,6 +647,26 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+> >               goto err_free_dev_name;
+> >       }
+> >
+> > +     /*
+> > +      * Try the device properties if the driver didn't supply the number
+> > +      * of GPIO lines.
+> > +      */
+> > +     if (gc->ngpio == 0) {
+> > +             ret = device_property_read_u32(&gdev->dev, "ngpios", &ngpios);
+> > +             if (ret == -ENODATA)
+> > +                     /*
+> > +                      * -ENODATA means that there is no property found and
+> > +                      * we want to issue the error message to the user.
+> > +                      * Besides that, we want to return different error code
+> > +                      * to state that supplied value is not valid.
+>
+> > +                      * */
+>
+> First '* ' is not needed.
+>
 
-Seems I was unclear, fwnode pointer will be needed, but what I'm against of is
-having of_node and fwnode at the same time in the struct gpio_chip.
+I'll fix it when applying.
 
-Yes, we may modify this patch to work without that ugly ifdeffery and with both
-in the structure, but I don't think it's a good solution.
-
-Now clearly we have to clean up of_node first.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bart
