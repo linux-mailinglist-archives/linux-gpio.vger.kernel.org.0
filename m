@@ -2,132 +2,125 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0118A466497
-	for <lists+linux-gpio@lfdr.de>; Thu,  2 Dec 2021 14:40:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A44024664AC
+	for <lists+linux-gpio@lfdr.de>; Thu,  2 Dec 2021 14:45:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358278AbhLBNoC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 2 Dec 2021 08:44:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53720 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358269AbhLBNoB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Dec 2021 08:44:01 -0500
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9A52C061758
-        for <linux-gpio@vger.kernel.org>; Thu,  2 Dec 2021 05:40:38 -0800 (PST)
-Received: by mail-wr1-x42d.google.com with SMTP id u1so59717075wru.13
-        for <linux-gpio@vger.kernel.org>; Thu, 02 Dec 2021 05:40:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=t/zjxVoZQh++FPpbJ/CZnvxguhK2M34uqFGsoutqJOs=;
-        b=QHuxgQ3OEeVvQKCD8zkc7wkuya4ZofcO4drj/2f5m8xI57DSdCJ4DByBgWyLd+ElyR
-         Mqjb32vFI475BQ9ppsyqvDA7Kwl5gkp7b3VB71BSJqE9AV72y67zEKItNtcCAuqn/jZY
-         XGzhESVMFy1djJo57XajNnU/2kQ0wfVxX1fDsrjqqmpoWtydF6yPAvCfhosd2MPiqgDa
-         ntw0DxFl6AnS4QJb9vjI+91gIMSBBPSZrT5EV/V35n00kqlbyN1xKG8o9psTXTQeeE+6
-         EFjpbLksmko98uzE6qVEEoNvjBsBos2tGcv1HQlBfzgfUJB8kxwqk0VkYMfiJGPi1NN0
-         q6Fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=t/zjxVoZQh++FPpbJ/CZnvxguhK2M34uqFGsoutqJOs=;
-        b=a+6Gddg8yDWInGZBlEd5d2ZHrEML6VuAgPovbTeFOy7dK0BGULo/6WFaiPY6mjp8Vf
-         8ecy5UdhD5zpUb+BN2EDh+P+syzjVapadJW9AjqOYs/Aq2CzJQpOyV4QjUVJz2bZvRpM
-         9jA+3OJb28gDCuewwUnXNFDKBV+7NfaewYLeYWNoh5TZrizvMwocbHP60V2ulFB0kVJh
-         pD0cOst1Noh+v+OQsMS+fjjSvYaASqzxl8iW5lC3bQu1qBmz4gJLa6YUxgaSpOcpNv/J
-         ktU4t0XekwQHitagAH8Enh1J/BJgO8zlOzyTsRumUuRTlC8GWNzPjWJS7RLXXFd+2y7H
-         h/Fw==
-X-Gm-Message-State: AOAM532CRBTfRJkKd0SVqcGPxFBRURvtfwGaRxYMcXBS768sojyixf3q
-        ow/T8A2Dbq4JzhYGW35F/znS44UnjXbPi/o/
-X-Google-Smtp-Source: ABdhPJy36F01foZeGeqTbCOZ1V0AxIhVD+1OtHsq9HLzzkTDzMVwAw1CS1fr94wx2VwYv692WVVB6A==
-X-Received: by 2002:adf:a193:: with SMTP id u19mr14648689wru.563.1638452437319;
-        Thu, 02 Dec 2021 05:40:37 -0800 (PST)
-Received: from debian-brgl.home ([2a01:cb1d:334:ac00:7d50:ff5:f5c1:e225])
-        by smtp.gmail.com with ESMTPSA id x13sm2660590wrr.47.2021.12.02.05.40.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Dec 2021 05:40:37 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Johan Hovold <johan@kernel.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v4 2/2] gpiolib: check the 'ngpios' property in core gpiolib code
-Date:   Thu,  2 Dec 2021 14:40:34 +0100
-Message-Id: <20211202134034.14048-2-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.30.1
-In-Reply-To: <20211202134034.14048-1-brgl@bgdev.pl>
-References: <20211202134034.14048-1-brgl@bgdev.pl>
+        id S1346920AbhLBNss (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 2 Dec 2021 08:48:48 -0500
+Received: from mga09.intel.com ([134.134.136.24]:61448 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1358325AbhLBNsr (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 2 Dec 2021 08:48:47 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10185"; a="236521709"
+X-IronPort-AV: E=Sophos;i="5.87,282,1631602800"; 
+   d="scan'208";a="236521709"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2021 05:45:24 -0800
+X-IronPort-AV: E=Sophos;i="5.87,282,1631602800"; 
+   d="scan'208";a="459659280"
+Received: from smile.fi.intel.com ([10.237.72.184])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2021 05:45:21 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1msmNm-001PJ2-Q4;
+        Thu, 02 Dec 2021 15:44:18 +0200
+Date:   Thu, 2 Dec 2021 15:44:18 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v11 2/6] gpiolib: allow to specify the firmware node in
+ struct gpio_chip
+Message-ID: <YajNsrKmEEBr5zWs@smile.fi.intel.com>
+References: <YaZNyMV5gX5cZpar@smile.fi.intel.com>
+ <CAMRc=Mf5d1i34eBez+pOYjjdyfRL9N_ha_==Cn1rANr=2CB9aQ@mail.gmail.com>
+ <YaaQp2rq7N71dm1l@smile.fi.intel.com>
+ <CAMRc=Me=Oq_V=+p-AFPcyDjBs-+4Ug3k0AWK9fdEEet2JD3eFw@mail.gmail.com>
+ <CAMRc=MdQ+a7UrE7csg3GsiLXYGkzti-wPUwPh5J=7WBj74OVZg@mail.gmail.com>
+ <YaimotqSgHzS2wdA@smile.fi.intel.com>
+ <CAMRc=Mew8xfPb9kgH-bf=t+yb1xGpRwv3Vn0+b-9pPbp3M3g5Q@mail.gmail.com>
+ <YaivZe6Qo9LMoywi@smile.fi.intel.com>
+ <Yaiv470uDhTbPD1A@smile.fi.intel.com>
+ <CAMRc=Mdz=pihuTamENmTiWRGeUU=tb_PuxvsarS+oXFpyq4p=g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=Mdz=pihuTamENmTiWRGeUU=tb_PuxvsarS+oXFpyq4p=g@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Several drivers read the 'ngpios' device property on their own, but
-since it's defined as a standard GPIO property in the device tree bindings
-anyway, it's a good candidate for generalization. If the driver didn't
-set its gc->ngpio, try to read the 'ngpios' property from the GPIO
-device's firmware node before bailing out.
+On Thu, Dec 02, 2021 at 02:06:57PM +0100, Bartosz Golaszewski wrote:
+> On Thu, Dec 2, 2021 at 12:38 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > On Thu, Dec 02, 2021 at 01:35:01PM +0200, Andy Shevchenko wrote:
+> > > On Thu, Dec 02, 2021 at 12:24:06PM +0100, Bartosz Golaszewski wrote:
+> > > > On Thu, Dec 2, 2021 at 11:58 AM Andy Shevchenko
+> > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > >
+> > > > > On Wed, Dec 01, 2021 at 02:11:28PM +0100, Bartosz Golaszewski wrote:
+> > > > > > On Tue, Nov 30, 2021 at 10:04 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > > > >
+> > > > > ...
+> > > > >
+> > > > > > Let me maybe rephrase the problem: currently, for GPIO devices
+> > > > > > instantiating multiple banks created outside of the OF or ACPI
+> > > > > > frameworks (e.g. instantiated manually and configured using a
+> > > > > > hierarchy of software nodes with a single parent swnode and a number
+> > > > > > of child swnodes representing the children), it is impossible to
+> > > > > > assign firmware nodes other than the one representing the top GPIO
+> > > > > > device to the gpiochip child devices.
+> > > > > >
+> > > > > > In fact if we want to drop the OF APIs entirely from gpiolib - this
+> > > > > > would be the right first step as for gpio-sim it actually replaces the
+> > > > > > gc->of_node = some_of_node; assignment that OF-based drivers do for
+> > > > > > sub-nodes defining banks and it does work with device-tree (I verified
+> > > > > > that too) thanks to the fwnode abstraction layer.
+> > > > >
+> > > > > In exchange of acknowledgements I confirm that I understood the issue
+> > > > > you are describing. What I still don't like is this band-aid:ish approach.
+> > > > > What we really need is to replace of_node by fwnode in GPIO library once
+> > > > > for all. But it can be done later after your simulation series (or before,
+> > > > > i.o.w. independently), hence I propose to update TODO and do it separately.
+> > > > >
+> > > >
+> > > > But this is what we already do for OF. How would the core gpiolib know
+> > > > how the firmware nodes represent the banks? It's the driver's job to
+> > > > tell the framework which node corresponds with what. If anything, we
+> > > > should start replacing of_nodes with fwnodes in drivers and eventually
+> > > > we'd drop the of_node pointer from gpio_chip entirely, but we'd keep
+> > > > the fwnode pointer I added as the driver still needs to assign it
+> > > > itself.
+> > > >
+> > > > Again: I may be missing something here but I've been going through
+> > > > this on and on and can't figure out any other way. Looking at
+> > > > gpiolib-acpi.c I don't see it correctly assigning fwnodes to
+> > > > sub-devices either but I don't have any HW to test it.
+> > > >
+> > > > As for this series: I can't really drop this patch as gpio-sim relies
+> > > > on swnodes being correctly associated with gpio_chips to identify the
+> > > > gpiodevs from configfs callbacks.
+> > >
+> > > Then we need to replace of_node by fwnode as a first step. I have looked
+> > > briefly into the list of drivers that may have been cleaned up and it doesn't
+> > > look too long.
+> >
+> > Let me kick this off by sending couple of patches.
+> 
+> Are you fine with merging this in the meantime to get gpio-sim into mainline?
 
-Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
----
-v1 -> v2:
-- use device_property_read_u32() instead of fwnode_property_read_u32()
-- reverse the error check logic
+gpio-sim, yes, (though I may bikeshed about naming of the configfs attributes,
+etc) but not this patch.
 
-v2 -> v3:
-- don't shadow errors other than -ENODATA in device_property_read_u32()
-
-v3 -> v4:
-- also make sure we return -EINVAL when the device 'ngpios' property is
-  set to 0 (thanks Andy!)
-
- drivers/gpio/gpiolib.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index ede8b8a7aa18..bd9b8cb53476 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -599,6 +599,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	int base = gc->base;
- 	unsigned int i;
- 	int ret = 0;
-+	u32 ngpios;
- 
- 	/*
- 	 * First: allocate and populate the internal stat container, and
-@@ -646,6 +647,26 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 		goto err_free_dev_name;
- 	}
- 
-+	/*
-+	 * Try the device properties if the driver didn't supply the number
-+	 * of GPIO lines.
-+	 */
-+	if (gc->ngpio == 0) {
-+		ret = device_property_read_u32(&gdev->dev, "ngpios", &ngpios);
-+		if (ret == -ENODATA)
-+			/*
-+			 * -ENODATA means that there is no property found and
-+			 * we want to issue the error message to the user.
-+			 * Besides that, we want to return different error code
-+			 * to state that supplied value is not valid.
-+			 * */
-+			ngpios = 0;
-+		else if (ret)
-+			goto err_free_descs;
-+
-+		gc->ngpio = ngpios;
-+	}
-+
- 	if (gc->ngpio == 0) {
- 		chip_err(gc, "tried to insert a GPIO chip with zero lines\n");
- 		ret = -EINVAL;
 -- 
-2.25.1
+With Best Regards,
+Andy Shevchenko
+
 
