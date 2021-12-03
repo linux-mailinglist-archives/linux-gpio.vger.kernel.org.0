@@ -2,111 +2,158 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CE75466E70
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Dec 2021 01:21:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D61EB467093
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Dec 2021 04:13:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343581AbhLCAYW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 2 Dec 2021 19:24:22 -0500
-Received: from smtpcmd0987.aruba.it ([62.149.156.87]:32907 "EHLO
-        smtpcmd0987.aruba.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242524AbhLCAYV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Dec 2021 19:24:21 -0500
-Received: from [192.168.50.18] ([146.241.138.59])
-        by Aruba Outgoing Smtp  with ESMTPSA
-        id swJnmyXe7q3qKswJnmEwWe; Fri, 03 Dec 2021 01:20:54 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
-        t=1638490854; bh=2LjACOrDxyh4Vq04KPQqLKnV2CuYf0EUGRxt70YYlQQ=;
-        h=Subject:To:From:Date:MIME-Version:Content-Type;
-        b=ebYXG4DJCu9IT3vvPgCkpAJS2wtdXKhkE7YzEmLq67Yg0OQp9Fu/f1FOjrnn4mzso
-         GjK0AFpGP/n2qXdPSzkeOHvFgFulNb/8sWdFsKV5AsRlhNz6yPS0sBjrCTwTmeFy4q
-         UyydFPOsVemUJmb1BMYK44O35NmAEozHWIxfjKMXKG5vRbfqspwFPuHls84u/yGaM9
-         NUQgCOgr1m/oQQzsbbJDX9Vhj4MXmXCx5HAzOlgPhb3DpZJBoj79Y75TrHQcIjbjMD
-         Qh3r2x5TIvzkO94SuAfVQppvF0rC4Mom8bDjP+LKOwDRRjvT0PteHHxkyIn0u9BWAU
-         vyjloNBhrLg/A==
-Subject: Re: [PATCH v3 12/13] ARM: dts: imx: add i.MXRT1050-EVK support
-To:     Rob Herring <robh@kernel.org>,
-        Jesse Taube <mr.bossman075@gmail.com>
-Cc:     linux-imx@nxp.com, mturquette@baylibre.com, sboyd@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, ulf.hansson@linaro.org, aisheng.dong@nxp.com,
-        stefan@agner.ch, linus.walleij@linaro.org,
-        gregkh@linuxfoundation.org, arnd@arndb.de, olof@lixom.net,
-        soc@kernel.org, linux@armlinux.org.uk, abel.vesa@nxp.com,
-        adrian.hunter@intel.com, jirislaby@kernel.org,
-        nobuhiro1.iwamatsu@toshiba.co.jp, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org
-References: <20211125211443.1150135-1-Mr.Bossman075@gmail.com>
- <20211125211443.1150135-13-Mr.Bossman075@gmail.com>
- <YaOxu441l41qPvTj@robh.at.kernel.org>
-From:   Giulio Benetti <giulio.benetti@benettiengineering.com>
-Message-ID: <c488ed94-ad0e-a326-adda-c4d782dbd6ef@benettiengineering.com>
-Date:   Fri, 3 Dec 2021 01:20:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        id S236800AbhLCDQs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 2 Dec 2021 22:16:48 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:58810 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232428AbhLCDQs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 2 Dec 2021 22:16:48 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C800662929;
+        Fri,  3 Dec 2021 03:13:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 211E5C00446;
+        Fri,  3 Dec 2021 03:13:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1638501203;
+        bh=DdwSeerV2Xi07oZhGu9qh5VtX+ueZAwyzDuRtv+i7dI=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=USBCYJlPryWKcuiJQe74WOwsbu1u2M+dTdS/X75xp89aVakbgPflKpJ9wGWC1Y+dX
+         kLYky5zJ2rcigzx4mDN/6DfyP72tR0sGogQNAeM2IoTa7xSh93cbsLLY8NRFfuZTUh
+         UP0M7SVlPnnpoLehZ+GJtFhlw/s9OvC4Z0qmntD7NeMNW/eP6B54cLfjhktl2D8Nag
+         PjfnhfxF3b1dGNLj4+uA0r6cxLWk3Z/gsjs31j18nLGf38bSPlA4bai8ak+M1uGIX1
+         Vq4+ZpfnIXVnz7xsVhVh6rftWAhjF0uZxwJvo8HXYHuc+pD0lnl3Vo6xfRGH/gg3HK
+         WE/WNTeMOpeFA==
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <YaOxu441l41qPvTj@robh.at.kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfK8Tdp5T8tvvNmUT9UohQNCeGYnR9anIwxRjKM+y92PDZdL/7HkbCiy6B2m0+SCOO4s5E5LaPzSkdeQvV6Xn9LlcdR0ZzyFCRw4gOntPgC3rx5wfYna1
- Ce3Q7eNiM9qhi1JGlE8GLRmv3N3jDfKwIFQ6gDozWSI3X/9ayBxnXpbsNCKxdyPj/DR1Pv4BbMlEdOSN4nypGyJqovucliUq/snrle2ja+qgjSAA72hYSa6I
- mq66Jmj1S7hGpd/AEIjU+xSjdOOKxS+Do/lrjRQVuPOiEBl8A5/iSQHNC0uiX+CxFl5bcS1YH8MQQx5WdjzGE1GG47CfwDajLgcF9WJFkgTgZ5evEmQ1UCHO
- vi1zGYr9AQRy0LzlChz6SL5y5U3ivQL+L+nErv1iCTJj43gl2hdodzVMDh2jmdEAJy9GRzzl3exPrT+VKMQDURH0Uyv2jbAXGxBP1W76oy+bDeIJ0VXzXEzw
- j4qUPk2YSPJWtFNtKFPZm6zU1JO2+h8RcJPerlnhHAvpT731hKOMcukiGP6s8WUJ75ZfCFiK3iHuhbDoWh4D3wBszJ9iLDtJjViIBCVOjblUL5VKpavZ69DD
- CdHmyB2ST/8oWivEFKzgS0VOQmsxxAqXPLsOKxjMQwVX048FbISdBxwSXVq8UgI9muy9nFYrFb2YwckQRhmDkdiy07wHqNeJClZHiUlwS09NcC7rDVoO9y1A
- SGiiBDhB8TBAYb/ctDvDTzPagKmZj/D2dpUiAigXdrN0t229QFaWCghi+TQJDNC/IbqM/rlRf0OGb9QxOmYuboIOPMI+K4dzap11j+kSxBXXSn8PuskeaFsA
- hozZ8GIen728YS9Rx+grG55BvQzOZAN5+d5jvIHfJeSIduVyBQDilw9bMbkTqqUoU4qXRM3mYPSFvdrCVddlHS+DLc765Q7p9zOLRBj3RSkkPbt8Fuz4AMuR
- xlAg7kV9nw5f+EUZ+QbhHt1w00NWBSS4uNO0PL3eEuUzIE3iB89HVHLP71NEfvcmyY9OUYzh/CZgih9g+PN4rKoxMRLKHAY27x9ZtlaeDBPXKksHbBWagQSL
- Pq6UzehbAQcm15FzeeXZIJcTnYP0xBBdxGmMznk/5c3ExHHBRj5Tf2ZCWrI1dfCjEWTa5BT/Zo1ka9GlY9i4RJbb7z/92TOCzxY=
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <9161450a-40e0-c84f-f529-c903d6f1d722@quicinc.com>
+References: <20211201072718.3969011-1-vkoul@kernel.org> <20211202230624.C05F3C00446@smtp.kernel.org> <9161450a-40e0-c84f-f529-c903d6f1d722@quicinc.com>
+Subject: Re: [PATCH] spmi: pmic-arb: Add support for PMIC v7
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        David Dai <daidavid1@codeaurora.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        David Collins <quic_collinsd@quicinc.com>
+To:     David Collins <quic_collinsd@quicinc.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>
+Date:   Thu, 02 Dec 2021 19:13:21 -0800
+User-Agent: alot/0.9.1
+Message-Id: <20211203031323.211E5C00446@smtp.kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Rob, Jesse,
+Quoting David Collins (2021-12-02 15:51:18)
+> On 12/2/21 3:06 PM, Stephen Boyd wrote:
+> > Quoting Vinod Koul (2021-11-30 23:27:18)
+> >> @@ -1169,8 +1270,12 @@ static int spmi_pmic_arb_probe(struct platform_=
+device *pdev)
+> >>         pmic_arb =3D spmi_controller_get_drvdata(ctrl);
+> >>         pmic_arb->spmic =3D ctrl;
+> >> =20
+> >> +       /*
+> >> +        * Don't use devm_ioremap_resource() as the resources are shar=
+ed in
+> >> +        * PMIC v7 onwards, so causing failure when mapping
+> >> +        */
+> >>         res =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "co=
+re");
+> >> -       core =3D devm_ioremap_resource(&ctrl->dev, res);
+> >> +       core =3D devm_ioremap(&ctrl->dev, res->start, resource_size(re=
+s));
+> >=20
+> > What does this mean? We have two nodes in DT that have the same reg
+> > properties? How does that work?
+>=20
+> PMIC Arbiter v7 has two SPMI bus master interfaces.  These are used to
+> communicate with two sets of PMICs.  The SPMI interfaces operate
+> independently; however, they share some register address ranges (e.g.
+> one common one is used for APID->PPID mapping).
 
-On 28/11/21 17:43, Rob Herring wrote:
+It looks like the two SPMI busses share the mapping table which is OK
+because it's read-only but then the 'chnls' and 'obsrvr' regions are
+also shared. There must be some global lock in place to make sure the
+two controllers aren't writing to the same register in there? Or are we
+saved because the mapping table splits the regions between the two
+busses?
 
-[SNIP]
+> The most
+> straightforward way to handle this is to treat them as two independent
+> top-level DT devices.
+>=20
+> In this case the "cnfg" address is used in the DT node name as that is
+> unique between the two instances.
 
->> diff --git a/arch/arm/boot/dts/imxrt1050.dtsi b/arch/arm/boot/dts/imxrt1050.dtsi
->> new file mode 100644
->> index 000000000000..35943a6896fa
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/imxrt1050.dtsi
->> @@ -0,0 +1,165 @@
->> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->> +/*
->> + * Copyright (C) 2019
->> + * Author(s): Giulio Benetti <giulio.benetti@benettiengineering.com>
->> + */
->> +
->> +#include "armv7-m.dtsi"
->> +#include <dt-bindings/interrupt-controller/arm-gic.h>
->> +#include <dt-bindings/clock/imxrt1050-clock.h>
->> +#include <dt-bindings/gpio/gpio.h>
->> +
->> +/ {
->> +	#address-cells = <1>;
->> +	#size-cells = <1>;
->> +
->> +	clocks {
->> +		osc: osc {
->> +			compatible = "fsl,imx-osc", "fixed-clock";
-> 
-> fsl,imx-osc is not documented. IMO, just drop it.
+Nice trick. The reg properties aren't supposed to change order though so
+we shouldn't do that.
 
-Regarding this ^^^, you're right, so we avoid to add "fsl,imx-osc", but 
-at this point, does it make sense we create a patchset to remove it from 
-the other .dts(i) files that use it? And same goes for "fsl,imx-ckil", 
-"fsl,imx-ckih1", "fsl,imx-ckih2"?
+>=20
+> Here are the DT nodes used downstream on a target with PMIC Arbiter v7:
+>=20
+> spmi0_bus: qcom,spmi@c42d000 {
+>         compatible =3D "qcom,spmi-pmic-arb";
+>         reg =3D <0xc42d000 0x4000>,
+>               <0xc400000 0x3000>,
+>               <0xc500000 0x400000>,
+>               <0xc440000 0x80000>,
+>               <0xc4c0000 0x10000>;
+>         reg-names =3D "cnfg", "core", "chnls", "obsrvr", "intr";
+>         interrupts-extended =3D <&pdc 1 IRQ_TYPE_LEVEL_HIGH>;
+>         interrupt-names =3D "periph_irq";
+>         interrupt-controller;
+>         #interrupt-cells =3D <4>;
+>         #address-cells =3D <2>;
+>         #size-cells =3D <0>;
+>         cell-index =3D <0>;
+>         qcom,channel =3D <0>;
+>         qcom,ee =3D <0>;
+>         qcom,bus-id =3D <0>;
+> };
+>=20
+> spmi1_bus: qcom,spmi@c432000 {
+>         compatible =3D "qcom,spmi-pmic-arb";
+>         reg =3D <0xc432000 0x4000>,
+>               <0xc400000 0x3000>,
+>               <0xc500000 0x400000>,
+>               <0xc440000 0x80000>,
+>               <0xc4d0000 0x10000>;
+>         reg-names =3D "cnfg", "core", "chnls", "obsrvr", "intr";
+>         interrupts-extended =3D <&pdc 3 IRQ_TYPE_LEVEL_HIGH>;
+>         interrupt-names =3D "periph_irq";
+>         interrupt-controller;
+>         #interrupt-cells =3D <4>;
+>         #address-cells =3D <2>;
+>         #size-cells =3D <0>;
+>         cell-index =3D <0>;
+>         qcom,channel =3D <0>;
+>         qcom,ee =3D <0>;
+>         qcom,bus-id =3D <1>;
+> };
 
-I see that those try to repeat the name of the node itself so they are 
-useless. If you say so I send a patchset for that.
+It feels like we should make a parent node that holds the core, chnls,
+obsrvr reg properties with a new compatible string and then have two
+child nodes for each bus. Then the various PMICs can hang off those two
+different bus nodes. Of course, it needs DT review to make sure nothing
+else goes wrong.
 
-Thank you
-Best regards
--- 
-Giulio Benetti
-Benetti Engineering sas
+>=20
+> Note the inclusion of a new DT property: "qcom,bus-id".  This was
+> defined in a DT binding patch that isn't present in Vinod's submission.
+> Here is its definition:
+>=20
+> - qcom,bus-id : Specifies which SPMI bus instance to use.  This property
+>                 is only applicable for PMIC arbiter version 7 and
+>                 beyond.
+>                 Support values: 0 =3D primary bus, 1 =3D secondary bus
+>                 Assumed to be 0 if unspecified.
+>=20
+
+How is it used in the driver? Does something care what is primary and
+what is secondary?
