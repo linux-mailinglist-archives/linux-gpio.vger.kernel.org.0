@@ -2,124 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D587467359
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Dec 2021 09:41:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D5D0A467404
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Dec 2021 10:26:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379239AbhLCIob (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 3 Dec 2021 03:44:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57728 "EHLO
+        id S238134AbhLCJaQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 Dec 2021 04:30:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245058AbhLCIob (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Dec 2021 03:44:31 -0500
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB093C06173E
-        for <linux-gpio@vger.kernel.org>; Fri,  3 Dec 2021 00:41:07 -0800 (PST)
-Received: by mail-ed1-x52d.google.com with SMTP id v1so8625994edx.2
-        for <linux-gpio@vger.kernel.org>; Fri, 03 Dec 2021 00:41:07 -0800 (PST)
+        with ESMTP id S232463AbhLCJaQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Dec 2021 04:30:16 -0500
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB29EC06173E;
+        Fri,  3 Dec 2021 01:26:52 -0800 (PST)
+Received: by mail-pl1-x630.google.com with SMTP id b11so1663731pld.12;
+        Fri, 03 Dec 2021 01:26:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uLBHn9jsbKV7jZYY7Dm+t8lPDQRTZnoOfAaLgWh49GU=;
-        b=LsIAHi4O7+rAKszJKyJ/QwZwolqgX7Xp85HCfWi/OAlf7oOjExVQVB3A1uF6oJMxXi
-         gPosTZ3PyRq9IbJKMX4ESqDGYZZYcom4XQ8JtyMRl5tOE7xlwAkd4FpJbONadp6pWo7I
-         oUoB99whrPg0HGUqiRetXBExiz97qDkf5NdxXb1GpetgxbWitUxWw81WWVuMwB7DeHg4
-         F4fsE0Im8ySC6EvPdTGuYxXIdnTwT10W+OMVEHRanF7YSviRe6CvO4rDs/Sfax7qLy0G
-         GQ8KIQPRWvs0w82uwlN5lRnk2skx92g4UPLasKF6asjvNdNubK/yYeFyTDsn7OcD+219
-         BK3Q==
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dMjtefQPD8LMKp7HsI40U7ExFBle/hPa8kdDB8ErYSQ=;
+        b=DJlpvcH7FkSrOa3ZkTlNitW5TQcKtglRXBezAJRUh9Ahzk7/EHwD7xSltWy1j6mW2u
+         yf47DLXbBp4XtzWSaxZwAFUle8vojCrdF/zfq5lUKwFKHFGgIYZKyhIj0byc4kgQWnk1
+         VqncEYJJbR6QJWnWMa/tSPWIHSe1FjGuvED/nAhSwg0dE1Iew0tm2kcXdAT9s3kcA9kx
+         o82XsRDCp3Z25sOQw4gDeLzu8oRAjEDNlJlSe9eYmY5tshn7cZmDF753ZzDIQ8U6Lr/v
+         LYk7QnVym6mKVY9kl/U7GWLUD5wQmq+/gOesQh8GkUQb3vgVBL6mQiB9O4w3gOuYq8dI
+         FOVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uLBHn9jsbKV7jZYY7Dm+t8lPDQRTZnoOfAaLgWh49GU=;
-        b=b9Mg1VjCj/MnF/hEOSCBHh5CG5Kw+Wc1AytOXv78usd8wpjrPYC1X0UqlPpeJmageY
-         GRuWK+dy/s00ligURGAWr31BCSlKpugv55NL2uTqypad0UGu5ftDHU8ZtULwcmsOVHNl
-         UuCNan+25iLuCOUcxL27k5ul82jFHGoBuxK0HRGUbemUwd/mZVGL/OKkNgpV7IcHlY3R
-         50NroxfNXhIxdGaovIRGwtqOQDblMUojS+OOFBtOrW9gv30dzm8df4n5fZk9RkMbWw/8
-         N+KJnRvCoD/XTpfa4n0cPOpBe8OzI5J1mvXQGVCTseAxCiVAJRHbmidk/dofpMEEuqur
-         CBxA==
-X-Gm-Message-State: AOAM530EJWoS2h7+GdEnN8/IjCj889F1ipzu/ukGCsN7RgdbrjhNtq0G
-        hPl/dfxAKpv4arwSCz9naEjAlhfh8fEbVr6dk7zNOSprwL54cg==
-X-Google-Smtp-Source: ABdhPJzNHiauf+pMC5f/US+c9OIXcWbcKMNg90ABw6xCvQOgNu83JV2BIOiQy03TdGH6uVMTEr4y57dSuqO0jiYbpps=
-X-Received: by 2002:a17:907:75f0:: with SMTP id jz16mr22268827ejc.77.1638520866276;
- Fri, 03 Dec 2021 00:41:06 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dMjtefQPD8LMKp7HsI40U7ExFBle/hPa8kdDB8ErYSQ=;
+        b=WduuRRYeBWupdSshCSCcTO87n6uDmfmGoJriSDKy7dQmFxM4FDQhIj17Pmp8IncGlK
+         HFdpPds2xoiP1Ek2zABs7q8+hCRKZL4To/AhntDo/qa8RnAjCgyCauwPly2i7IJUcs2u
+         wyyuROb5m7oOeoEA4crY71uSP0ua15xyoCW5zCJyUU99fpQru75l16LH9IAA9X8he0TL
+         ry3uqQtWMnP+GHmaSsDyAs2McSchARtIQFZQ/FOp6RHNuodZ8oUD/payYQGk4bu+nCGx
+         b2b5HBm75vEb+UTQidrR3QCvHaNDdkHd9tRP295geBEbQVUwC/MDAN6MBDGkPiTIb6Ug
+         L08w==
+X-Gm-Message-State: AOAM531h5be8H7R2glNQy1hfLjrzZOWbLwHP4DfYaqlj+qzPFuN0eHpu
+        jtHuxccwfQe7ZBb8styZqCDL8yz7iPs=
+X-Google-Smtp-Source: ABdhPJyz00I6JdsvrIgMwB7IELtD022bY6FOhfE0ySNfkapKPEmIGeHUD0GJfqfWcye2xgiTfOUc0g==
+X-Received: by 2002:a17:90b:615:: with SMTP id gb21mr13086859pjb.10.1638523612208;
+        Fri, 03 Dec 2021 01:26:52 -0800 (PST)
+Received: from richard-System-Product-Name.. ([49.216.238.137])
+        by smtp.gmail.com with ESMTPSA id h13sm2489100pfv.37.2021.12.03.01.26.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Dec 2021 01:26:51 -0800 (PST)
+From:   Richard Hsu <saraon640529@gmail.com>
+X-Google-Original-From: Richard Hsu <Richard_Hsu@asmedia.com.tw>
+To:     linus.walleij@linaro.org, brgl@bgdev.pl, Richard_Hsu@asmedia.com.tw
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yd_Tseng@asmedia.com.tw, Cindy1_Hsu@asmedia.com.tw,
+        Andrew_Su@asmedia.com.tw
+Subject: [PATCH] gpio Add my driver new id
+Date:   Fri,  3 Dec 2021 17:26:09 +0800
+Message-Id: <20211203092609.8502-1-Richard_Hsu@asmedia.com.tw>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-References: <20211202210839.79140-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20211202210839.79140-1-andriy.shevchenko@linux.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 3 Dec 2021 09:40:55 +0100
-Message-ID: <CAMRc=Md-TKUETLzf41D2KeQODac153_AumMTW4928XfJ70GRxQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/3] gpio: Get rid of duplicate of_node assignment in
- the drivers
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Baruch Siach <baruch@tkos.co.il>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Tony Lindgren <tony@atomide.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jianqun Xu <jay.xu@rock-chips.com>,
-        Alexandru Ardelean <aardelean@deviqon.com>,
-        Thierry Reding <treding@nvidia.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        patches@opensource.cirrus.com,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        linux-power <linux-power@fi.rohmeurope.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>, linux-pwm@vger.kernel.org,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        linux-unisoc@lists.infradead.org,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-tegra@vger.kernel.org, Ray Jui <rjui@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Gregory Fong <gregory.0xf0@gmail.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Keerthy <j-keerthy@ti.com>, Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Dec 2, 2021 at 10:17 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> GPIO library does copy the of_node from the parent device of
-> the GPIO chip, there is no need to repeat this in the individual
-> drivers. Remove these assignment all at once.
->
-> For the details one may look into the of_gpio_dev_init() implementation.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
+ drivers/gpio/gpio-amdpt.c | 12 ++++++++++--
+ 1 files changed, 11 insertions(+), 2 deletions(-)
 
-I have a bad feeling about this but I've gone through the drivers in
-this patch and it seems like you don't update any of the drivers that
-use multiple child OF nodes so I can't really point out any obvious
-bug.
+diff --git a/drivers/gpio/gpio-amdpt.c b/drivers/gpio/gpio-amdpt.c
+index bbf53e289141..4d01d4341a67 100644
+--- a/drivers/gpio/gpio-amdpt.c
++++ b/drivers/gpio/gpio-amdpt.c
+@@ -14,6 +14,7 @@
+ #include <linux/platform_device.h>
 
-I have another change I'm working on that's related, let me send it shortly.
+ #define PT_TOTAL_GPIO 8
++#define PT_TOTAL_GPIO_EX 24
 
-Bart
+ /* PCI-E MMIO register offsets */
+ #define PT_DIRECTION_REG   0x00
+@@ -72,10 +73,12 @@ static void pt_gpio_free(struct gpio_chip *gc, unsigned offset)
+ static int pt_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
++	struct acpi_device *acpi_dev;
++	acpi_handle handle = ACPI_HANDLE(dev);
+ 	struct pt_gpio_chip *pt_gpio;
+ 	int ret = 0;
+
+-	if (!ACPI_COMPANION(dev)) {
++	if (acpi_bus_get_device(handle, &acpi_dev)) {
+ 		dev_err(dev, "PT GPIO device node not found\n");
+ 		return -ENODEV;
+ 	}
+@@ -100,10 +103,14 @@ static int pt_gpio_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+
++	if (!strncmp(acpi_dev_name(acpi_dev), "AMDIF031", 8))
++		pt_gpio->gc.ngpio = PT_TOTAL_GPIO_EX;
++	else
++		pt_gpio->gc.ngpio = PT_TOTAL_GPIO;
++
+ 	pt_gpio->gc.owner            = THIS_MODULE;
+ 	pt_gpio->gc.request          = pt_gpio_request;
+ 	pt_gpio->gc.free             = pt_gpio_free;
+-	pt_gpio->gc.ngpio            = PT_TOTAL_GPIO;
+ #if defined(CONFIG_OF_GPIO)
+ 	pt_gpio->gc.of_node          = dev->of_node;
+ #endif
+@@ -135,6 +142,7 @@ static int pt_gpio_remove(struct platform_device *pdev)
+ static const struct acpi_device_id pt_gpio_acpi_match[] = {
+ 	{ "AMDF030", 0 },
+ 	{ "AMDIF030", 0 },
++	{ "AMDIF031", 0 },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(acpi, pt_gpio_acpi_match);
+--
+2.30.2
+
