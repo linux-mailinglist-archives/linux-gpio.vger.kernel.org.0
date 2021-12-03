@@ -2,74 +2,195 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 90DD646781E
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Dec 2021 14:23:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 95388467846
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Dec 2021 14:30:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352239AbhLCN0W (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 3 Dec 2021 08:26:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37632 "EHLO
+        id S1352321AbhLCNdu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 Dec 2021 08:33:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232181AbhLCN0W (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Dec 2021 08:26:22 -0500
-Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59200C06174A
-        for <linux-gpio@vger.kernel.org>; Fri,  3 Dec 2021 05:22:58 -0800 (PST)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed10:3191:9890:620a:6f4])
-        by xavier.telenet-ops.be with bizsmtp
-        id RpNw2601B3eLghq01pNw9y; Fri, 03 Dec 2021 14:22:56 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1mt8We-002LFl-CL; Fri, 03 Dec 2021 14:22:56 +0100
-Received: from geert by rox.of.borg with local (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1mt8Wd-000kYw-RD; Fri, 03 Dec 2021 14:22:55 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] pinctrl: renesas: r8a779a0: Align comments
-Date:   Fri,  3 Dec 2021 14:22:55 +0100
-Message-Id: <886ef84ea6b8314d348953792c9616b3e5dc28c0.1638537704.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S1352253AbhLCNdt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Dec 2021 08:33:49 -0500
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5940DC06173E
+        for <linux-gpio@vger.kernel.org>; Fri,  3 Dec 2021 05:30:25 -0800 (PST)
+Received: by mail-wm1-x32d.google.com with SMTP id o19-20020a1c7513000000b0033a93202467so2226363wmc.2
+        for <linux-gpio@vger.kernel.org>; Fri, 03 Dec 2021 05:30:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lwhaUG8BV21D7X8P/5YaBthI1oupop5F8Ojb8aCEATw=;
+        b=55vBNi+8kGb5EpFV3a8gLK41v0xjQwWFIvJZsBj5vj/S0ydkM6oc/YNSQuHpsjsHsA
+         F/U29G4qjbXqPf/6pG8sCYEGTugkVmXhIe3v9Y705cXDBjSXlMOk2Y1cAM6tRoeymhQt
+         7t4fd/sAfiIAnx4vd8lsOH0hjHNr8Cg7Zi+AtRL/efhiQNfeJfldwI9Wq63S7vkvcmTt
+         L+0ILNGhtYX9/dYqIhzqhPx93bh6gV0FKfPXnYHc9UuBfL5418R+LUrW+SKzHnbTkPrO
+         Nx9+cBrYxHKgRyvZx9L4LG9zGnvT8TkTbnTcb/FwqEiIbcyTSb2/AIkrX9AqhQW6cvri
+         L2Og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lwhaUG8BV21D7X8P/5YaBthI1oupop5F8Ojb8aCEATw=;
+        b=3+oK8yb0RPtVfsTZqc4/BBHcTm949hFKLXCfmzGn6GSCd4UP7w6Nr5O97l3mMUsW6w
+         MfBn5W+inQAzU+WCTAZxJhupXz925dnDI7f8rrWPNGH9VXHE+YSS3E1deGmFa1bOYtBE
+         AIN1PTDYfivcEub6UQDdoS/pJilQY8BuUq7o+vGhOE10rLO76vam6plcQFtvqt88GfcF
+         uPNxJYnehP4el0VGJve0kKGWRpllMYSjbc+H28/cmsuGFS7rE1Q2OZUyaI7RE/Rpjtif
+         KYii6PPX9JGd8TPAtWfhopkF1CjNr3JnUO0Vaq3vrTq/+xy5oOpf1A58xgyYo9V+oHHO
+         Y7pg==
+X-Gm-Message-State: AOAM532vwpGGYtxBnDiuZj/6+vhQUrMGnkTlBwPYKHZUs7yO9ezw+VcF
+        b5nLpVTfLiFlwdidoYiBdgwY/Q==
+X-Google-Smtp-Source: ABdhPJwNVofpclBtVapBhWHnRLCZpjdeR//+78Qwf/bGWW9GV94c20PEIl1tZQzT6iORFIYgNYoTWw==
+X-Received: by 2002:a7b:cf35:: with SMTP id m21mr14568512wmg.140.1638538223852;
+        Fri, 03 Dec 2021 05:30:23 -0800 (PST)
+Received: from debian-brgl.home ([2a01:cb1d:334:ac00:7d50:ff5:f5c1:e225])
+        by smtp.gmail.com with ESMTPSA id j11sm2755910wrt.3.2021.12.03.05.30.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 Dec 2021 05:30:23 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v12 0/7] gpio-sim: configfs-based GPIO simulator
+Date:   Fri,  3 Dec 2021 14:29:56 +0100
+Message-Id: <20211203133003.31786-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Align the CANFD4_TX and AVB2_MDC comments with all others.
+Another iteration of gpio-sim patches. This time the changes are quite
+small. I removed the ifdefs from gpiolib.c as requested by Andy. In this
+version gpiolib-of will also prefer fwnodes over of_nodes and - if set -
+will convert them to of_nodes before proceeding.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-To be queued in renesas-pinctrl-for-v5.17.
----
- drivers/pinctrl/renesas/pfc-r8a779a0.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Tested both with configfs as well as device-tree.
 
-diff --git a/drivers/pinctrl/renesas/pfc-r8a779a0.c b/drivers/pinctrl/renesas/pfc-r8a779a0.c
-index ad6532443a785b13..83580385c3ca9b1c 100644
---- a/drivers/pinctrl/renesas/pfc-r8a779a0.c
-+++ b/drivers/pinctrl/renesas/pfc-r8a779a0.c
-@@ -3835,7 +3835,7 @@ static const struct pinmux_drive_reg pinmux_drive_regs[] = {
- 		{ RCAR_GP_PIN(3, 12), 16, 3 },	/* CANFD5_RX */
- 		{ RCAR_GP_PIN(3, 11), 12, 3 },	/* CANFD5_TX */
- 		{ RCAR_GP_PIN(3, 10),  8, 3 },	/* CANFD4_RX */
--		{ RCAR_GP_PIN(3,  9),  4, 3 },	/* CANFD4_TX*/
-+		{ RCAR_GP_PIN(3,  9),  4, 3 },	/* CANFD4_TX */
- 		{ RCAR_GP_PIN(3,  8),  0, 3 },	/* CANFD3_RX */
- 	} },
- 	{ PINMUX_DRIVE_REG("DRV2CTRL3", 0xe6058888) {
-@@ -4305,7 +4305,7 @@ static const struct pinmux_bias_reg pinmux_bias_regs[] = {
- 		[11] = RCAR_GP_PIN(6, 11),	/* AVB2_TD3 */
- 		[12] = RCAR_GP_PIN(6, 12),	/* AVB2_TXCREFCLK */
- 		[13] = RCAR_GP_PIN(6, 13),	/* AVB2_MDIO */
--		[14] = RCAR_GP_PIN(6, 14),	/* AVB2_MDC*/
-+		[14] = RCAR_GP_PIN(6, 14),	/* AVB2_MDC */
- 		[15] = RCAR_GP_PIN(6, 15),	/* AVB2_MAGIC */
- 		[16] = RCAR_GP_PIN(6, 16),	/* AVB2_PHY_INT */
- 		[17] = RCAR_GP_PIN(6, 17),	/* AVB2_LINK */
+v1 -> v2:
+- add selftests for gpio-sim
+- add helper programs for selftests
+- update the configfs rename callback to work with the new API introduced in
+  v5.11
+- fix a missing quote in the documentation
+- use !! whenever using bits operation that are required to return 0 or 1
+- use provided bitmap API instead of reimplementing copy or fill operations
+- fix a deadlock in gpio_sim_direction_output()
+- add new read-only configfs attributes for mapping of configfs items to GPIO
+  device names
+- and address other minor issues pointed out in reviews of v1
+
+v2 -> v3:
+- use devm_bitmap_alloc() instead of the zalloc variant if we're initializing
+  the bitmap with 1s
+- drop the patch exporting device_is_bound()
+- don't return -ENODEV from dev_nam and chip_name configfs attributes, return
+  a string indicating that the device is not available yet ('n/a')
+- fix indentation where it makes sense
+- don't protect IDA functions which use their own locking and where it's not
+  needed
+- use kmemdup() instead of kzalloc() + memcpy()
+- collected review tags
+- minor coding style fixes
+
+v3 -> v4:
+- return 'none' instead of 'n/a' from dev_name and chip_name before the device
+  is registered
+- use sysfs_emit() instead of s*printf()
+- drop GPIO_SIM_MAX_PROP as it's only used in an array's definition where it's
+  fine to hardcode the value
+
+v4 -> v5:
+- drop lib patches that are already upstream
+- use BIT() instead of (1UL << bit) for flags
+- fix refcounting for the configfs_dirent in rename()
+- drop d_move() from the rename() callback
+- free memory allocated for the live and pending groups in configfs_d_iput()
+  and not in detach_groups()
+- make sure that if a group of some name is in the live directory, a new group
+  with the same name cannot be created in the pending directory
+
+v5 -> v6:
+- go back to using (1UL << bit) instead of BIT()
+- if the live group dentry doesn't exist for whatever reason at the time when
+  mkdir() in the pending group is called (would be a BUG()), return -ENOENT
+  instead of -EEXIST which should only be returned if given subsystem already
+  exists in either live or pending group
+
+v6 -> v7:
+- as detailed by Andy in commit 6fda593f3082 ("gpio: mockup: Convert to use
+  software nodes") removing device properties after the platform device is
+  removed but before the GPIO device gets dropped can lead to a use-after-free
+  bug - use software nodes to manually control the freeing of the properties
+
+v7 -> v8:
+- fixed some minor coding style issues as pointed out by Andy
+
+v8 -> v9:
+- dropped the patches implementing committable-items and reworked the
+  driver to not use them
+- reworked the gpio-line-names property and configuring specific lines
+  in general
+- many smaller tweaks here and there
+
+v9 -> v10:
+- make writing to 'live' wait for the probe to finish and report an
+  error to user-space if it failed
+- add the ability to hog lines from the kernel-space
+- rework locking (drop separate locks for line context objects)
+- rework the sysfs interface (create a separate group for each line with
+  a constant number of attributes instead of going the other way around)
+
+v10 -> v11:
+- rework the configfs structure to represent a deeper hierarchy that
+  gpiolib supports, namely: multiple banks per platform device
+
+v11 -> v12:
+- simplify patch 2/7 by removing any mentions of OF from gpiolib.c
+- improve the documentation by adding rest markups
+- add a device-tree sample to the docs
+- drop some trailing whitespaces from the driver
+- make gpio_sim_make_bank_swnode() static
+- fix coding style in patch 6/7
+- add patch 3/7 that makes the OF part of gpiolib prefer to use gpio_chip's fwnode (if set) over of_node
+
+Bartosz Golaszewski (7):
+  gpiolib: provide gpiod_remove_hogs()
+  gpiolib: allow to specify the firmware node in struct gpio_chip
+  gpiolib: of: make fwnode take precedence in struct gpio_chip
+  gpio: sim: new testing module
+  selftests: gpio: provide a helper for reading chip info
+  selftests: gpio: add a helper for reading GPIO line names
+  selftests: gpio: add test cases for gpio-sim
+
+ Documentation/admin-guide/gpio/gpio-sim.rst   |  134 ++
+ drivers/gpio/Kconfig                          |    8 +
+ drivers/gpio/Makefile                         |    1 +
+ drivers/gpio/gpio-sim.c                       | 1594 +++++++++++++++++
+ drivers/gpio/gpiolib-of.c                     |    3 +
+ drivers/gpio/gpiolib.c                        |   18 +-
+ include/linux/gpio/driver.h                   |    2 +
+ include/linux/gpio/machine.h                  |    2 +
+ tools/testing/selftests/gpio/.gitignore       |    2 +
+ tools/testing/selftests/gpio/Makefile         |    4 +-
+ tools/testing/selftests/gpio/config           |    1 +
+ tools/testing/selftests/gpio/gpio-chip-info.c |   57 +
+ tools/testing/selftests/gpio/gpio-line-name.c |   55 +
+ tools/testing/selftests/gpio/gpio-sim.sh      |  396 ++++
+ 14 files changed, 2274 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/admin-guide/gpio/gpio-sim.rst
+ create mode 100644 drivers/gpio/gpio-sim.c
+ create mode 100644 tools/testing/selftests/gpio/gpio-chip-info.c
+ create mode 100644 tools/testing/selftests/gpio/gpio-line-name.c
+ create mode 100755 tools/testing/selftests/gpio/gpio-sim.sh
+
 -- 
 2.25.1
 
