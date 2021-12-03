@@ -2,236 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 403B54676E0
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Dec 2021 12:57:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B55C467760
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Dec 2021 13:26:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380632AbhLCMAi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 3 Dec 2021 07:00:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46472 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343787AbhLCMAi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Dec 2021 07:00:38 -0500
-Received: from nbd.name (nbd.name [IPv6:2a01:4f8:221:3d45::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFFF0C06173E;
-        Fri,  3 Dec 2021 03:57:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
-         s=20160729; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=NPlHa/SDP5Ci/sKdkru33oHRnQqtybel5hDNeRGPe8A=; b=LYOy58OiKpnjpwSp7jxdZoT5ij
-        MejjSR8aHEogfbRmwh8Nql6e19VvkvyWT3HIhSID4IpsG/gOXvH4kNFYr45lxcE5pZJBjg1qyHhtM
-        AlJHM+094sUQ74wCmfjP+gY5ePlPWIOnmEUU/VieVAVBMn8TqZ24NCOt5h0XjL2sowZs=;
-Received: from p54ae943f.dip0.t-ipconnect.de ([84.174.148.63] helo=localhost.localdomain)
-        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <nbd@nbd.name>)
-        id 1mt6p1-0004Ez-TI; Fri, 03 Dec 2021 12:33:48 +0100
-From:   Felix Fietkau <nbd@nbd.name>
-To:     linux-arm-kernel@lists.infradead.org,
+        id S1352126AbhLCMaL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 Dec 2021 07:30:11 -0500
+Received: from mga04.intel.com ([192.55.52.120]:8019 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236481AbhLCMaK (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 3 Dec 2021 07:30:10 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10186"; a="235700117"
+X-IronPort-AV: E=Sophos;i="5.87,284,1631602800"; 
+   d="scan'208";a="235700117"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2021 04:26:46 -0800
+X-IronPort-AV: E=Sophos;i="5.87,284,1631602800"; 
+   d="scan'208";a="678082863"
+Received: from smile.fi.intel.com ([10.237.72.184])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2021 04:26:35 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1mt7d5-001lPG-5I;
+        Fri, 03 Dec 2021 14:25:31 +0200
+Date:   Fri, 3 Dec 2021 14:25:30 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Baruch Siach <baruch@tkos.co.il>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Tony Lindgren <tony@atomide.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     john@phrozen.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH v6 13/14] gpio: Add support for Airoha EN7523 GPIO controller
-Date:   Fri,  3 Dec 2021 12:33:30 +0100
-Message-Id: <20211203113331.20510-14-nbd@nbd.name>
-X-Mailer: git-send-email 2.30.1
-In-Reply-To: <20211203113331.20510-1-nbd@nbd.name>
-References: <20211203113331.20510-1-nbd@nbd.name>
+        Jianqun Xu <jay.xu@rock-chips.com>,
+        Alexandru Ardelean <aardelean@deviqon.com>,
+        Thierry Reding <treding@nvidia.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        patches@opensource.cirrus.com,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        linux-power <linux-power@fi.rohmeurope.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>, linux-pwm@vger.kernel.org,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        linux-unisoc@lists.infradead.org,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-tegra@vger.kernel.org, Ray Jui <rjui@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Keerthy <j-keerthy@ti.com>, Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH v1 1/3] gpio: Get rid of duplicate of_node assignment in
+ the drivers
+Message-ID: <YaoMuoONxbJb0prf@smile.fi.intel.com>
+References: <20211202210839.79140-1-andriy.shevchenko@linux.intel.com>
+ <CAMRc=Md-TKUETLzf41D2KeQODac153_AumMTW4928XfJ70GRxQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=Md-TKUETLzf41D2KeQODac153_AumMTW4928XfJ70GRxQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: John Crispin <john@phrozen.org>
+On Fri, Dec 03, 2021 at 09:40:55AM +0100, Bartosz Golaszewski wrote:
+> On Thu, Dec 2, 2021 at 10:17 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > GPIO library does copy the of_node from the parent device of
+> > the GPIO chip, there is no need to repeat this in the individual
+> > drivers. Remove these assignment all at once.
+> >
+> > For the details one may look into the of_gpio_dev_init() implementation.
+> >
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > ---
+> 
+> I have a bad feeling about this but I've gone through the drivers in
+> this patch and it seems like you don't update any of the drivers that
+> use multiple child OF nodes so I can't really point out any obvious
+> bug.
 
-Airoha's GPIO controller on their ARM EN7523 SoCs consists of two banks of 32
-GPIOs. Each instance in DT is for a single bank.
+Yes, like I said it's just a series to kick off the conversion.
+I left the corner cases to the last.
 
-Signed-off-by: John Crispin <john@phrozen.org>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
----
- drivers/gpio/Kconfig       |   9 +++
- drivers/gpio/Makefile      |   1 +
- drivers/gpio/gpio-en7523.c | 134 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 144 insertions(+)
- create mode 100644 drivers/gpio/gpio-en7523.c
+> I have another change I'm working on that's related, let me send it shortly.
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 072ed610f9c6..e4a34272504f 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -247,6 +247,15 @@ config GPIO_EM
- 	help
- 	  Say yes here to support GPIO on Renesas Emma Mobile SoCs.
- 
-+config GPIO_EN7523
-+	tristate "Airoha GPIO support"
-+	depends on ARCH_AIROHA
-+	default ARCH_AIROHA
-+	select GPIO_GENERIC
-+	select GPIOLIB_IRQCHIP
-+	help
-+	  Say yes here to support the GPIO controller on Airoha EN7523.
-+
- config GPIO_EP93XX
- 	def_bool y
- 	depends on ARCH_EP93XX
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 71ee9fc2ff83..d2269ee0948e 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -56,6 +56,7 @@ obj-$(CONFIG_GPIO_DLN2)			+= gpio-dln2.o
- obj-$(CONFIG_GPIO_DWAPB)		+= gpio-dwapb.o
- obj-$(CONFIG_GPIO_EIC_SPRD)		+= gpio-eic-sprd.o
- obj-$(CONFIG_GPIO_EM)			+= gpio-em.o
-+obj-$(CONFIG_GPIO_EN7523)		+= gpio-en7523.o
- obj-$(CONFIG_GPIO_EP93XX)		+= gpio-ep93xx.o
- obj-$(CONFIG_GPIO_EXAR)			+= gpio-exar.o
- obj-$(CONFIG_GPIO_F7188X)		+= gpio-f7188x.o
-diff --git a/drivers/gpio/gpio-en7523.c b/drivers/gpio/gpio-en7523.c
-new file mode 100644
-index 000000000000..07770c5a4101
---- /dev/null
-+++ b/drivers/gpio/gpio-en7523.c
-@@ -0,0 +1,134 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+#include <linux/gpio/driver.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+
-+#define AIROHA_GPIO_MAX		32
-+
-+/**
-+ * airoha_gpio_ctrl - Airoha GPIO driver data
-+ *
-+ * @gc: Associated gpio_chip instance.
-+ * @data: The data register.
-+ * @dir0: The direction register for the lower 16 pins.
-+ * @dir1: The direction register for the higher 16 pins.
-+ * @output: The output enable register.
-+ */
-+struct airoha_gpio_ctrl {
-+	struct gpio_chip gc;
-+	void __iomem *data;
-+	void __iomem *dir[2];
-+	void __iomem *output;
-+};
-+
-+static struct airoha_gpio_ctrl *gc_to_ctrl(struct gpio_chip *gc)
-+{
-+	return container_of(gc, struct airoha_gpio_ctrl, gc);
-+}
-+
-+static int airoha_dir_set(struct gpio_chip *gc, unsigned int gpio,
-+			  int val, int out)
-+{
-+	struct airoha_gpio_ctrl *ctrl = gc_to_ctrl(gc);
-+	u32 dir = ioread32(ctrl->dir[gpio / 16]);
-+	u32 output = ioread32(ctrl->output);
-+	u32 mask = BIT((gpio % 16) * 2);
-+
-+	if (out) {
-+		dir |= mask;
-+		output |= BIT(gpio);
-+	} else {
-+		dir &= ~mask;
-+		output &= ~BIT(gpio);
-+	}
-+
-+	iowrite32(dir, ctrl->dir[gpio / 16]);
-+	iowrite32(output, ctrl->output);
-+
-+	if (out)
-+		gc->set(gc, gpio, val);
-+
-+	return 0;
-+}
-+
-+static int airoha_dir_out(struct gpio_chip *gc, unsigned int gpio,
-+			  int val)
-+{
-+	return airoha_dir_set(gc, gpio, val, 1);
-+}
-+
-+static int airoha_dir_in(struct gpio_chip *gc, unsigned int gpio)
-+{
-+	return airoha_dir_set(gc, gpio, 0, 0);
-+}
-+
-+static int airoha_get_dir(struct gpio_chip *gc, unsigned int gpio)
-+{
-+	struct airoha_gpio_ctrl *ctrl = gc_to_ctrl(gc);
-+	u32 dir = ioread32(ctrl->dir[gpio / 16]);
-+	u32 mask = BIT((gpio % 16) * 2);
-+
-+	return dir & mask;
-+}
-+
-+static const struct of_device_id airoha_gpio_of_match[] = {
-+	{ .compatible = "airoha,en7523-gpio" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, airoha_gpio_of_match);
-+
-+static int airoha_gpio_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct airoha_gpio_ctrl *ctrl;
-+	int err;
-+
-+	ctrl = devm_kzalloc(dev, sizeof(*ctrl), GFP_KERNEL);
-+	if (!ctrl)
-+		return -ENOMEM;
-+
-+	ctrl->data = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(ctrl->data))
-+		return PTR_ERR(ctrl->data);
-+
-+	ctrl->dir[0] = devm_platform_ioremap_resource(pdev, 1);
-+	if (IS_ERR(ctrl->dir[0]))
-+		return PTR_ERR(ctrl->dir[0]);
-+
-+	ctrl->dir[1] = devm_platform_ioremap_resource(pdev, 2);
-+	if (IS_ERR(ctrl->dir[1]))
-+		return PTR_ERR(ctrl->dir[1]);
-+
-+	ctrl->output = devm_platform_ioremap_resource(pdev, 3);
-+	if (IS_ERR(ctrl->output))
-+		return PTR_ERR(ctrl->output);
-+
-+	err = bgpio_init(&ctrl->gc, dev, 4, ctrl->data, NULL,
-+			 NULL, NULL, NULL, 0);
-+	if (err)
-+		return dev_err_probe(dev, err, "unable to init generic GPIO");
-+
-+	ctrl->gc.ngpio = AIROHA_GPIO_MAX;
-+	ctrl->gc.owner = THIS_MODULE;
-+	ctrl->gc.direction_output = airoha_dir_out;
-+	ctrl->gc.direction_input = airoha_dir_in;
-+	ctrl->gc.get_direction = airoha_get_dir;
-+
-+	return devm_gpiochip_add_data(dev, &ctrl->gc, ctrl);
-+}
-+
-+static struct platform_driver airoha_gpio_driver = {
-+	.driver = {
-+		.name = "airoha-gpio",
-+		.of_match_table	= airoha_gpio_of_match,
-+	},
-+	.probe = airoha_gpio_probe,
-+};
-+module_platform_driver(airoha_gpio_driver);
-+
-+MODULE_DESCRIPTION("Airoha GPIO support");
-+MODULE_AUTHOR("John Crispin <john@phrozen.org>");
-+MODULE_LICENSE("GPL v2");
+Do you mean it should be attached to the series?
+
 -- 
-2.30.1
+With Best Regards,
+Andy Shevchenko
+
 
