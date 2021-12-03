@@ -2,36 +2,36 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DE0A467778
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Dec 2021 13:33:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 90DD646781E
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Dec 2021 14:23:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234333AbhLCMhL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 3 Dec 2021 07:37:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54658 "EHLO
+        id S1352239AbhLCN0W (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 Dec 2021 08:26:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232206AbhLCMhK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Dec 2021 07:37:10 -0500
+        with ESMTP id S232181AbhLCN0W (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Dec 2021 08:26:22 -0500
 Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90058C06174A
-        for <linux-gpio@vger.kernel.org>; Fri,  3 Dec 2021 04:33:46 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59200C06174A
+        for <linux-gpio@vger.kernel.org>; Fri,  3 Dec 2021 05:22:58 -0800 (PST)
 Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed10:3191:9890:620a:6f4])
         by xavier.telenet-ops.be with bizsmtp
-        id RoZk2600B3eLghq01oZkLw; Fri, 03 Dec 2021 13:33:44 +0100
+        id RpNw2601B3eLghq01pNw9y; Fri, 03 Dec 2021 14:22:56 +0100
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.93)
         (envelope-from <geert@linux-m68k.org>)
-        id 1mt7l1-002KeD-53; Fri, 03 Dec 2021 13:33:43 +0100
+        id 1mt8We-002LFl-CL; Fri, 03 Dec 2021 14:22:56 +0100
 Received: from geert by rox.of.borg with local (Exim 4.93)
         (envelope-from <geert@linux-m68k.org>)
-        id 1mt7l0-000ig1-OM; Fri, 03 Dec 2021 13:33:42 +0100
+        id 1mt8Wd-000kYw-RD; Fri, 03 Dec 2021 14:22:55 +0100
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+Cc:     linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [GIT PULL] pinctrl: renesas: Updates for v5.17
-Date:   Fri,  3 Dec 2021 13:33:40 +0100
-Message-Id: <cover.1638534672.git.geert+renesas@glider.be>
+Subject: [PATCH] pinctrl: renesas: r8a779a0: Align comments
+Date:   Fri,  3 Dec 2021 14:22:55 +0100
+Message-Id: <886ef84ea6b8314d348953792c9616b3e5dc28c0.1638537704.git.geert+renesas@glider.be>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -39,59 +39,37 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-	Hi Linus,
+Align the CANFD4_TX and AVB2_MDC comments with all others.
 
-The following changes since commit fa55b7dcdc43c1aa1ba12bca9d2dd4318c2a0dbf:
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+To be queued in renesas-pinctrl-for-v5.17.
+---
+ drivers/pinctrl/renesas/pfc-r8a779a0.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-  Linux 5.16-rc1 (2021-11-14 13:56:52 -0800)
+diff --git a/drivers/pinctrl/renesas/pfc-r8a779a0.c b/drivers/pinctrl/renesas/pfc-r8a779a0.c
+index ad6532443a785b13..83580385c3ca9b1c 100644
+--- a/drivers/pinctrl/renesas/pfc-r8a779a0.c
++++ b/drivers/pinctrl/renesas/pfc-r8a779a0.c
+@@ -3835,7 +3835,7 @@ static const struct pinmux_drive_reg pinmux_drive_regs[] = {
+ 		{ RCAR_GP_PIN(3, 12), 16, 3 },	/* CANFD5_RX */
+ 		{ RCAR_GP_PIN(3, 11), 12, 3 },	/* CANFD5_TX */
+ 		{ RCAR_GP_PIN(3, 10),  8, 3 },	/* CANFD4_RX */
+-		{ RCAR_GP_PIN(3,  9),  4, 3 },	/* CANFD4_TX*/
++		{ RCAR_GP_PIN(3,  9),  4, 3 },	/* CANFD4_TX */
+ 		{ RCAR_GP_PIN(3,  8),  0, 3 },	/* CANFD3_RX */
+ 	} },
+ 	{ PINMUX_DRIVE_REG("DRV2CTRL3", 0xe6058888) {
+@@ -4305,7 +4305,7 @@ static const struct pinmux_bias_reg pinmux_bias_regs[] = {
+ 		[11] = RCAR_GP_PIN(6, 11),	/* AVB2_TD3 */
+ 		[12] = RCAR_GP_PIN(6, 12),	/* AVB2_TXCREFCLK */
+ 		[13] = RCAR_GP_PIN(6, 13),	/* AVB2_MDIO */
+-		[14] = RCAR_GP_PIN(6, 14),	/* AVB2_MDC*/
++		[14] = RCAR_GP_PIN(6, 14),	/* AVB2_MDC */
+ 		[15] = RCAR_GP_PIN(6, 15),	/* AVB2_MAGIC */
+ 		[16] = RCAR_GP_PIN(6, 16),	/* AVB2_PHY_INT */
+ 		[17] = RCAR_GP_PIN(6, 17),	/* AVB2_LINK */
+-- 
+2.25.1
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v5.17-tag1
-
-for you to fetch changes up to 7c50a407b8687ae3589c740d2347d9ae73887889:
-
-  pinctrl: renesas: Remove unneeded locking around sh_pfc_read() calls (2021-11-19 10:55:21 +0100)
-
-----------------------------------------------------------------
-pinctrl: renesas: Updates for v5.17
-
-  - Add generic support for output impedance,
-  - Add drive strength and output impedance support for the RZ/G2L SoC,
-  - Miscellaneous fixes and improvements.
-
-Thanks for pulling!
-----------------------------------------------------------------
-Geert Uytterhoeven (2):
-      pinctrl: renesas: rza1: Fix kerneldoc function names
-      pinctrl: renesas: Remove unneeded locking around sh_pfc_read() calls
-
-Lad Prabhakar (8):
-      dt-bindings: pincfg-node: Add "output-impedance-ohms" property
-      pinctrl: pinconf-generic: Add support for "output-impedance-ohms" to be extracted from DT files
-      dt-bindings: pinctrl: renesas,rzg2l-pinctrl: Add output-impedance-ohms property
-      pinctrl: renesas: rzg2l: Rename RZG2L_SINGLE_PIN_GET_PORT macro
-      pinctrl: renesas: rzg2l: Add helper functions to read/write pin config
-      pinctrl: renesas: rzg2l: Add support to get/set pin config for GPIO port pins
-      pinctrl: renesas: rzg2l: Rename PIN_CFG_* macros to match HW manual
-      pinctrl: renesas: rzg2l: Add support to get/set drive-strength and output-impedance-ohms
-
- .../devicetree/bindings/pinctrl/pincfg-node.yaml   |   3 +
- .../bindings/pinctrl/renesas,rzg2l-pinctrl.yaml    |   2 +
- drivers/pinctrl/pinconf-generic.c                  |   2 +
- drivers/pinctrl/renesas/pinctrl-rza1.c             |   6 +-
- drivers/pinctrl/renesas/pinctrl-rzg2l.c            | 310 ++++++++++++++-------
- drivers/pinctrl/renesas/pinctrl.c                  |   9 +-
- include/linux/pinctrl/pinconf-generic.h            |   3 +
- 7 files changed, 224 insertions(+), 111 deletions(-)
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
