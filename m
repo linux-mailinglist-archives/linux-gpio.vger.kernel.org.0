@@ -2,171 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 53F404679D3
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Dec 2021 15:58:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EC92D4679E1
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Dec 2021 16:00:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381606AbhLCPBw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 3 Dec 2021 10:01:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60178 "EHLO
+        id S1381622AbhLCPDa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 Dec 2021 10:03:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352471AbhLCPBv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Dec 2021 10:01:51 -0500
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEA87C061751
-        for <linux-gpio@vger.kernel.org>; Fri,  3 Dec 2021 06:58:26 -0800 (PST)
-Received: by mail-ed1-x52c.google.com with SMTP id x6so12579053edr.5
-        for <linux-gpio@vger.kernel.org>; Fri, 03 Dec 2021 06:58:26 -0800 (PST)
+        with ESMTP id S1381603AbhLCPD3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Dec 2021 10:03:29 -0500
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D747FC061751
+        for <linux-gpio@vger.kernel.org>; Fri,  3 Dec 2021 07:00:04 -0800 (PST)
+Received: by mail-ed1-x534.google.com with SMTP id t5so12783020edd.0
+        for <linux-gpio@vger.kernel.org>; Fri, 03 Dec 2021 07:00:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=8uwnbjWCW2NbetnVwJHOczwYzHXg75SzbYiTjP9xuJM=;
-        b=itSYy8FbZ19oFa7QhxilrMw5H6qoyCm0duHgSQZbQOZROxNHOCqcDctnEx5vqzflDU
-         N6jUlqj5k29AnB79/vUGpAtkUodSRJHcft3WPsTtnSPJQdk/lrOcrTU3/GaERqzQj4Mo
-         0W6BuGJKAU5xA/nHZNlszqrv62hYMYuMezz68j1sH2gkG7Xlpgc2UbDoCR6J6Kb9E/aW
-         b/biOiolzetfN7+uKT0HLdFhhzQQkUKsenYBfJl2gCEL1DeHfv6+U+tfVD5KY7RmJeZS
-         t6fTQaJpGQZP7y/yzK971Engixb3kVh4nRb0xmUGeyjbPJwpZ+M9v8Hp9FcmUc6az5PQ
-         FQOw==
+        bh=VtY25LFKl7eTwEuZldGmVgghmm7bTt72/KAhGH0LlbA=;
+        b=xZblMOLDD/4vn7XuHfYaLUYz8nzMlGw5OVJuJkQKzdTE+KgvZqhURXkgUYHiDKkJCc
+         90Fh0VtXFstEEf84KgJxhrDr4bxyr7kakzODwLWCgO+0SfJQv6s6sJGNhEpZq6tcNT2r
+         0h8uhV2L+wxQ46QB6RaFmH30r/kf+T/tR+m3/6Qa5Lvgcm87GG10SHnidvjXuvukbYoy
+         4FdR/BPCk7cxFBV/24fnF22tZFwZwwSz+OVQXlpuPDDjvfe1A8Uvf0YjWD19I846/FLG
+         NEXUJTvEuopX+8gvEPAR/VG2+Cr/AjjLhodDAukQM7hOfwl9yJuMRgD505pKD6bF5cTi
+         PkSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=8uwnbjWCW2NbetnVwJHOczwYzHXg75SzbYiTjP9xuJM=;
-        b=WyMVxgYLev0N4YuXhCwZTpaHhCrxvhnUSTxe1qZrxb99394mCz3WsX7ldBCAV4B6RT
-         ZH9qbK7B+dBE/63xaH3paUO9Y7XusoXoHU0aPcmzWvxujmN50Tlwg08kAVJQclFn8wNh
-         iQ3wCdDzqQkWkJMWAP6dv88QC8EGNXWQ+7R/T858RFOEsU0fjVprJKK5o/VB3vAm4abe
-         y2svEzCDoZHY+Q7S80l7MO46Ry6lu5UlpcoZqtzbbEaYEKkfOUOD81VOkma3zRSxrM2f
-         u7LxbkB47Zc56MuCDChPhAzJwUBY606Fdbxn95jGXs/eYzZ9NLj+Oyerj1ZIcYbHMfuM
-         p6Wg==
-X-Gm-Message-State: AOAM5304YWsvGBe0s1h21uLz14Uf2co1XEJ0oevqp4hdcnnYFKF5vPa4
-        t1cPTBTyfmQV7b/QFwcj4TBb/zQ+BZ/+5/v/mGbFgA==
-X-Google-Smtp-Source: ABdhPJzxwFL6qWvmN/+BTvbHoiwaKvQaI0NVlklxFRKIO8SNlltV6yKzNybdFxvRBsZ6lYhom3cwTNMblsarjuCpmsw=
-X-Received: by 2002:aa7:cb45:: with SMTP id w5mr27367673edt.405.1638543503580;
- Fri, 03 Dec 2021 06:58:23 -0800 (PST)
+        bh=VtY25LFKl7eTwEuZldGmVgghmm7bTt72/KAhGH0LlbA=;
+        b=H7XKppsxqi6QTGy5tyhtfDY0ri6jq1EqKMFG36GsIf3zwh1T6r9VhglMlx/2cjtKh0
+         h2fQIedXauE/+D2bPbO98g+y0PCsEU60n6Ch+gUPVVQgzVveVCrHZjMsb2NvAZ29XV7g
+         HlFIw7bDE4r74WOpcMvTxp1GO1JAM9DePAAuTKcSM5zINYPRwvuzuYxBwTSa7um+e+wy
+         ikOm38un3J6nLt1VUoFfp7HZIwiv+XGIqugfxW8MLLeXeWkXP8uCmQLR407ogWTjWh+x
+         M3gO8jpSOj5rIR6BqpEpIaD58w2G8AQf/5SjFxg2Oh6vf3FUwQ6BNykiMOQSb3MdzVHo
+         8JrQ==
+X-Gm-Message-State: AOAM531w4TGKb/JAW4invi+Wf+N/k3rfNlcRzgQebX1dBojFPuERFu92
+        XQdiYgE0MrA0kbxG6QYjjYQM8K27JhWpPTMPKbJDhY8D1v0ftQ==
+X-Google-Smtp-Source: ABdhPJy4TGv4Xq8YWqsEzg5l8Oga2d3eqJo4J7nkcgTKE3wluMMUK6+HGidcMspgGZho9/MvzfDTKV/Hl4J/2S9m9h4=
+X-Received: by 2002:a05:6402:2805:: with SMTP id h5mr21287297ede.267.1638543602223;
+ Fri, 03 Dec 2021 07:00:02 -0800 (PST)
 MIME-Version: 1.0
-References: <ba7f82f348d77b6a65498dd13a92550949e69cc3.1638540167.git.geert+renesas@glider.be>
- <CAMRc=Me2528N_jT6AoSSTajznY4EFP+cFvEbqnw4rONB5nJsQw@mail.gmail.com>
-In-Reply-To: <CAMRc=Me2528N_jT6AoSSTajznY4EFP+cFvEbqnw4rONB5nJsQw@mail.gmail.com>
+References: <20211202155022.2972779-1-john@metanate.com>
+In-Reply-To: <20211202155022.2972779-1-john@metanate.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 3 Dec 2021 15:58:13 +0100
-Message-ID: <CAMRc=Mdw1pEUntRkJRYcuQH9ZhWc9=psPDe7bXwkj=RCYQKO=g@mail.gmail.com>
-Subject: Re: [PATCH resend] gpio: aggregator: Add interrupt support
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Enrico Weigelt metux IT consult <info@metux.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        stratos-dev@op-lists.linaro.org
+Date:   Fri, 3 Dec 2021 15:59:51 +0100
+Message-ID: <CAMRc=MdPCTQm_4_D4WApkL8y1tL__qt-2jnnreGQL0d=tjCADg@mail.gmail.com>
+Subject: Re: [PATCH] gpio/rockchip: lock GPIOs used as interrupts
+To:     John Keeping <john@metanate.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Dec 3, 2021 at 3:56 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Thu, Dec 2, 2021 at 4:50 PM John Keeping <john@metanate.com> wrote:
 >
-> On Fri, Dec 3, 2021 at 3:06 PM Geert Uytterhoeven
-> <geert+renesas@glider.be> wrote:
-> >
-> > Currently the GPIO Aggregator does not support interrupts.  This means
-> > that kernel drivers going from a GPIO to an IRQ using gpiod_to_irq(),
-> > and userspace applications using line events do not work.
-> >
-> > Add interrupt support by providing a gpio_chip.to_irq() callback, which
-> > just calls into the parent GPIO controller.
-> >
-> > Note that this does not implement full interrupt controller (irq_chip)
-> > support, so using e.g. gpio-keys with "interrupts" instead of "gpios"
-> > still does not work.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> > I would prefer to avoid implementing irq_chip support, until there is a
-> > real use case for this.
-> >
-> > This has been tested with gpio-keys and gpiomon on the Koelsch
-> > development board:
-> >
-> >   - gpio-keys, using a DT overlay[1]:
-> >
-> >         $ overlay add r8a7791-koelsch-keyboard-controlled-led
-> >         $ echo gpio-aggregator > /sys/devices/platform/frobnicator/driver_override
-> >         $ echo frobnicator > /sys/bus/platform/drivers/gpio-aggregator/bind
-> >
-> >         $ gpioinfo frobnicator
-> >         gpiochip12 - 3 lines:
-> >                 line   0:      "light"      "light"  output  active-high [used]
-> >                 line   1:         "on"         "On"   input   active-low [used]
-> >                 line   2:        "off"        "Off"   input   active-low [used]
-> >
-> >         $ echo 255 > /sys/class/leds/light/brightness
-> >         $ echo 0 > /sys/class/leds/light/brightness
-> >
-> >         $ evtest /dev/input/event0
-> >
-> >   - gpiomon, using the GPIO sysfs API:
-> >
-> >         $ echo keyboard > /sys/bus/platform/drivers/gpio-keys/unbind
-> >         $ echo e6055800.gpio 2,6 > /sys/bus/platform/drivers/gpio-aggregator/new_device
-> >         $ gpiomon gpiochip12 0 1
-> >
-> > [1] "ARM: dts: koelsch: Add overlay for keyboard-controlled LED"
-> >     https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git/commit/?h=topic/renesas-overlays&id=c78d817869e63a3485bb4ab98aeea6ce368a396e
-> > ---
-> >  drivers/gpio/gpio-aggregator.c | 11 ++++++++++-
-> >  1 file changed, 10 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregator.c
-> > index e9671d1660ef4b40..869dc952cf45218b 100644
-> > --- a/drivers/gpio/gpio-aggregator.c
-> > +++ b/drivers/gpio/gpio-aggregator.c
-> > @@ -371,6 +371,13 @@ static int gpio_fwd_set_config(struct gpio_chip *chip, unsigned int offset,
-> >         return gpiod_set_config(fwd->descs[offset], config);
-> >  }
-> >
-> > +static int gpio_fwd_to_irq(struct gpio_chip *chip, unsigned int offset)
-> > +{
-> > +       struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
-> > +
-> > +       return gpiod_to_irq(fwd->descs[offset]);
-> > +}
-> > +
-> >  /**
-> >   * gpiochip_fwd_create() - Create a new GPIO forwarder
-> >   * @dev: Parent device pointer
-> > @@ -411,7 +418,8 @@ static struct gpiochip_fwd *gpiochip_fwd_create(struct device *dev,
-> >         for (i = 0; i < ngpios; i++) {
-> >                 struct gpio_chip *parent = gpiod_to_chip(descs[i]);
-> >
-> > -               dev_dbg(dev, "%u => gpio-%d\n", i, desc_to_gpio(descs[i]));
-> > +               dev_dbg(dev, "%u => gpio %d irq %d\n", i,
-> > +                       desc_to_gpio(descs[i]), gpiod_to_irq(descs[i]));
-> >
-> >                 if (gpiod_cansleep(descs[i]))
-> >                         chip->can_sleep = true;
-> > @@ -429,6 +437,7 @@ static struct gpiochip_fwd *gpiochip_fwd_create(struct device *dev,
-> >         chip->get_multiple = gpio_fwd_get_multiple_locked;
-> >         chip->set = gpio_fwd_set;
-> >         chip->set_multiple = gpio_fwd_set_multiple_locked;
-> > +       chip->to_irq = gpio_fwd_to_irq;
-> >         chip->base = -1;
-> >         chip->ngpio = ngpios;
-> >         fwd->descs = descs;
-> > --
-> > 2.25.1
-> >
+> Use the standard gpiochip request/release resource functions so that any
+> GPIOs used as interrupts are properly locked.  This allows libgpiod to
+> correctly show these GPIOs as in-use.
 >
-> Applied, thanks!
+> Signed-off-by: John Keeping <john@metanate.com>
+> ---
+>  drivers/gpio/gpio-rockchip.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
 >
-> Bart
+> diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
+> index ce63cbd14d69a..c1b8e5dbbcc47 100644
+> --- a/drivers/gpio/gpio-rockchip.c
+> +++ b/drivers/gpio/gpio-rockchip.c
+> @@ -465,6 +465,22 @@ static int rockchip_irq_set_type(struct irq_data *d, unsigned int type)
+>         return ret;
+>  }
+>
+> +static int rockchip_irq_reqres(struct irq_data *d)
+> +{
+> +       struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
+> +       struct rockchip_pin_bank *bank = gc->private;
+> +
+> +       return gpiochip_reqres_irq(&bank->gpio_chip, d->hwirq);
+> +}
+> +
+> +static void rockchip_irq_relres(struct irq_data *d)
+> +{
+> +       struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
+> +       struct rockchip_pin_bank *bank = gc->private;
+> +
+> +       gpiochip_relres_irq(&bank->gpio_chip, d->hwirq);
+> +}
+> +
+>  static void rockchip_irq_suspend(struct irq_data *d)
+>  {
+>         struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
+> @@ -536,6 +552,8 @@ static int rockchip_interrupts_register(struct rockchip_pin_bank *bank)
+>         gc->chip_types[0].chip.irq_suspend = rockchip_irq_suspend;
+>         gc->chip_types[0].chip.irq_resume = rockchip_irq_resume;
+>         gc->chip_types[0].chip.irq_set_type = rockchip_irq_set_type;
+> +       gc->chip_types[0].chip.irq_request_resources = rockchip_irq_reqres;
+> +       gc->chip_types[0].chip.irq_release_resources = rockchip_irq_relres;
+>         gc->wake_enabled = IRQ_MSK(bank->nr_pins);
+>
+>         /*
+> --
+> 2.34.1
+>
 
-Eek, missed the explanation.
+The title should be: gpio: rockchip: ...
 
-I think this is fine. For user-space eventual switch to a real
-irq_chip won't break anything so let's take it.
+Queued for next, thanks!
 
 Bart
