@@ -2,135 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 51E1E467913
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Dec 2021 15:06:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB94A46798E
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Dec 2021 15:39:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381330AbhLCOKS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 3 Dec 2021 09:10:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48244 "EHLO
+        id S243440AbhLCOnH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 Dec 2021 09:43:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1381172AbhLCOKR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Dec 2021 09:10:17 -0500
-Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35050C06173E
-        for <linux-gpio@vger.kernel.org>; Fri,  3 Dec 2021 06:06:53 -0800 (PST)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed10:3191:9890:620a:6f4])
-        by albert.telenet-ops.be with bizsmtp
-        id Rq6p2600X3eLghq06q6pGr; Fri, 03 Dec 2021 15:06:51 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1mt9D6-002LpO-U9; Fri, 03 Dec 2021 15:06:48 +0100
-Received: from geert by rox.of.borg with local (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1mt9D6-000lfI-H9; Fri, 03 Dec 2021 15:06:48 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Enrico Weigelt metux IT consult <info@metux.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@kernel.org>
-Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        stratos-dev@op-lists.linaro.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH resend] gpio: aggregator: Add interrupt support
-Date:   Fri,  3 Dec 2021 15:06:44 +0100
-Message-Id: <ba7f82f348d77b6a65498dd13a92550949e69cc3.1638540167.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S232079AbhLCOnH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Dec 2021 09:43:07 -0500
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CA7BC061751
+        for <linux-gpio@vger.kernel.org>; Fri,  3 Dec 2021 06:39:43 -0800 (PST)
+Received: by mail-ed1-x52b.google.com with SMTP id g14so12294503edb.8
+        for <linux-gpio@vger.kernel.org>; Fri, 03 Dec 2021 06:39:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bm3OfVnqEM2rPeI03LWJLo7oTjjfBZxbar2wT0kZNrI=;
+        b=efZcrRCb4B2mg4duThjXDrKJJRwMylsRb06cNnOma65sMSP4ZL2BOEQQc0ZpeFMNKo
+         XFbNX4rU9PzDjTokkpn17vJjjC4OScNFEsyf09pQSJZdltk8MEhtWf938Ljienec7S8d
+         ylfqVAZMLY041UWtsgSm9J89L/G1Gf5hMS3FCQE41ZkniOV9KEzL8iBSOEMB+II6r99D
+         ypqIUYov0ZsNGk2Ltzck2FDdnUhwDhVu+UnunMPmw1apkzes0yRuDdaX/kpNe6wJJXdC
+         nAaU4cb1wyq/GKms9CYaOAmYSpT8sSMO6m7hmO5Gw4c0vyHNKnhIrwo8lfd92m/d3OC4
+         TTDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bm3OfVnqEM2rPeI03LWJLo7oTjjfBZxbar2wT0kZNrI=;
+        b=VN2vWHiafnsFEIeENE6zqyOBy8HLmUBXnkwiSGX41FS1LeCaIIVSt3DOGTKdgPQ9ID
+         pmekJQ9THXS3CWnwdGBpSeezVhY0pJTgg+Xjyu6vhvrToVu3rqKi3NJiEJWPesCSqUGh
+         LZdOg/CU42+H0wd9Wvy1kqcXgaDFt3suzVnt0Db9XRjFl28auYgfByEIH9fPCFzwHHCy
+         wCHNGtGsbz9pY8sjqgD6ToI1YU9ExvIwREObTieRe+Ohe96vmPeMVuQm/jjMXIUOjHGf
+         6QhFMO6xXpa5cAeYV8mrhIlTWEmU5rGosJrJVc2ryp2ey+grmS2HpKlmjId4qGqM29iC
+         /GTA==
+X-Gm-Message-State: AOAM53229GOniLR6eR1cYkrFQLAh3HHmBZvHYTYnx2r4cBJEkp1EDLPL
+        RTcO2z/79ztwN8ZsvTUWMZdGRSPTq5MT7sPKEFnKLA==
+X-Google-Smtp-Source: ABdhPJx9H05FQHpdFHLFaWYOytGgjkyIb1PJmuxJmpUPajr/NU4g5SVB3u2hBUxw/0UZoxx9+yWULjmIH/wzzTtj8aI=
+X-Received: by 2002:a05:6402:2805:: with SMTP id h5mr21156766ede.267.1638542381580;
+ Fri, 03 Dec 2021 06:39:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1637917008.git.viresh.kumar@linaro.org> <0471e032dc7e7148956cd7a00519ab26e265df46.1637917008.git.viresh.kumar@linaro.org>
+In-Reply-To: <0471e032dc7e7148956cd7a00519ab26e265df46.1637917008.git.viresh.kumar@linaro.org>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 3 Dec 2021 15:39:30 +0100
+Message-ID: <CAMRc=MeWKyZKb0yR40HoFXMfD8XwXMfNp2YovRy1-ksDc6DfOw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] libgpiod: Remove dummy declaration gpiod_line_config_get_event_clock()
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Kent Gibson <warthog618@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Currently the GPIO Aggregator does not support interrupts.  This means
-that kernel drivers going from a GPIO to an IRQ using gpiod_to_irq(),
-and userspace applications using line events do not work.
+On Fri, Nov 26, 2021 at 10:07 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> gpiod_line_config_get_event_clock() isn't implemented, and just has the
+> declaration available. Drop it.
+>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+>  include/gpiod.h | 12 ------------
+>  1 file changed, 12 deletions(-)
+>
+> diff --git a/include/gpiod.h b/include/gpiod.h
+> index 44deafc83c11..0bc0ceee4b76 100644
+> --- a/include/gpiod.h
+> +++ b/include/gpiod.h
+> @@ -777,18 +777,6 @@ void gpiod_line_config_set_event_clock_subset(struct gpiod_line_config *config,
+>                                               unsigned int num_offsets,
+>                                               const unsigned int *offsets);
+>
+> -/**
+> - * @brief Get the event clock setting for a given line.
+> - * @param config Line config object.
+> - * @param offset Line offset for which to read the event clock setting.
+> - * @return Event clock setting that would have been used for given offset if
+> - *         the config object was used in a request at the time of the call.
+> - * @note If an offset is used for which no config was provided, the function
+> - *       will return the global default value.
+> - */
+> -int gpiod_line_config_get_event_clock(struct gpiod_line_config *config,
+> -                                     unsigned int offset);
+> -
+>  /**
+>   * @brief Set the output value for a single offset.
+>   * @param config Line config object.
+> --
+> 2.31.1.272.g89b43f80a514
+>
 
-Add interrupt support by providing a gpio_chip.to_irq() callback, which
-just calls into the parent GPIO controller.
+But we want this function - it should get implemented, not dropped. :)
 
-Note that this does not implement full interrupt controller (irq_chip)
-support, so using e.g. gpio-keys with "interrupts" instead of "gpios"
-still does not work.
+It's actually added in the devel branch for line_config accessors.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-I would prefer to avoid implementing irq_chip support, until there is a
-real use case for this.
-
-This has been tested with gpio-keys and gpiomon on the Koelsch
-development board:
-
-  - gpio-keys, using a DT overlay[1]:
-
-	$ overlay add r8a7791-koelsch-keyboard-controlled-led
-	$ echo gpio-aggregator > /sys/devices/platform/frobnicator/driver_override
-	$ echo frobnicator > /sys/bus/platform/drivers/gpio-aggregator/bind
-
-	$ gpioinfo frobnicator
-	gpiochip12 - 3 lines:
-		line   0:      "light"      "light"  output  active-high [used]
-		line   1:         "on"         "On"   input   active-low [used]
-		line   2:        "off"        "Off"   input   active-low [used]
-
-	$ echo 255 > /sys/class/leds/light/brightness
-	$ echo 0 > /sys/class/leds/light/brightness
-
-	$ evtest /dev/input/event0
-
-  - gpiomon, using the GPIO sysfs API:
-
-	$ echo keyboard > /sys/bus/platform/drivers/gpio-keys/unbind
-	$ echo e6055800.gpio 2,6 > /sys/bus/platform/drivers/gpio-aggregator/new_device
-	$ gpiomon gpiochip12 0 1
-
-[1] "ARM: dts: koelsch: Add overlay for keyboard-controlled LED"
-    https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git/commit/?h=topic/renesas-overlays&id=c78d817869e63a3485bb4ab98aeea6ce368a396e
----
- drivers/gpio/gpio-aggregator.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregator.c
-index e9671d1660ef4b40..869dc952cf45218b 100644
---- a/drivers/gpio/gpio-aggregator.c
-+++ b/drivers/gpio/gpio-aggregator.c
-@@ -371,6 +371,13 @@ static int gpio_fwd_set_config(struct gpio_chip *chip, unsigned int offset,
- 	return gpiod_set_config(fwd->descs[offset], config);
- }
- 
-+static int gpio_fwd_to_irq(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
-+
-+	return gpiod_to_irq(fwd->descs[offset]);
-+}
-+
- /**
-  * gpiochip_fwd_create() - Create a new GPIO forwarder
-  * @dev: Parent device pointer
-@@ -411,7 +418,8 @@ static struct gpiochip_fwd *gpiochip_fwd_create(struct device *dev,
- 	for (i = 0; i < ngpios; i++) {
- 		struct gpio_chip *parent = gpiod_to_chip(descs[i]);
- 
--		dev_dbg(dev, "%u => gpio-%d\n", i, desc_to_gpio(descs[i]));
-+		dev_dbg(dev, "%u => gpio %d irq %d\n", i,
-+			desc_to_gpio(descs[i]), gpiod_to_irq(descs[i]));
- 
- 		if (gpiod_cansleep(descs[i]))
- 			chip->can_sleep = true;
-@@ -429,6 +437,7 @@ static struct gpiochip_fwd *gpiochip_fwd_create(struct device *dev,
- 	chip->get_multiple = gpio_fwd_get_multiple_locked;
- 	chip->set = gpio_fwd_set;
- 	chip->set_multiple = gpio_fwd_set_multiple_locked;
-+	chip->to_irq = gpio_fwd_to_irq;
- 	chip->base = -1;
- 	chip->ngpio = ngpios;
- 	fwd->descs = descs;
--- 
-2.25.1
-
+Bart
