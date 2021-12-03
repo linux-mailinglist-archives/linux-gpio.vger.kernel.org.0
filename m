@@ -2,120 +2,132 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D5D0A467404
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Dec 2021 10:26:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4506F46749A
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Dec 2021 11:16:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238134AbhLCJaQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 3 Dec 2021 04:30:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40078 "EHLO
+        id S1351165AbhLCKTX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 Dec 2021 05:19:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232463AbhLCJaQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Dec 2021 04:30:16 -0500
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB29EC06173E;
-        Fri,  3 Dec 2021 01:26:52 -0800 (PST)
-Received: by mail-pl1-x630.google.com with SMTP id b11so1663731pld.12;
-        Fri, 03 Dec 2021 01:26:52 -0800 (PST)
+        with ESMTP id S1344816AbhLCKTW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Dec 2021 05:19:22 -0500
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02DC6C06173E
+        for <linux-gpio@vger.kernel.org>; Fri,  3 Dec 2021 02:15:59 -0800 (PST)
+Received: by mail-ed1-x52e.google.com with SMTP id y13so9249987edd.13
+        for <linux-gpio@vger.kernel.org>; Fri, 03 Dec 2021 02:15:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dMjtefQPD8LMKp7HsI40U7ExFBle/hPa8kdDB8ErYSQ=;
-        b=DJlpvcH7FkSrOa3ZkTlNitW5TQcKtglRXBezAJRUh9Ahzk7/EHwD7xSltWy1j6mW2u
-         yf47DLXbBp4XtzWSaxZwAFUle8vojCrdF/zfq5lUKwFKHFGgIYZKyhIj0byc4kgQWnk1
-         VqncEYJJbR6QJWnWMa/tSPWIHSe1FjGuvED/nAhSwg0dE1Iew0tm2kcXdAT9s3kcA9kx
-         o82XsRDCp3Z25sOQw4gDeLzu8oRAjEDNlJlSe9eYmY5tshn7cZmDF753ZzDIQ8U6Lr/v
-         LYk7QnVym6mKVY9kl/U7GWLUD5wQmq+/gOesQh8GkUQb3vgVBL6mQiB9O4w3gOuYq8dI
-         FOVQ==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=46DLVxFI8N9mwu2AB1rjVQJZeSXcwzhTwVUPFhWUT0U=;
+        b=Yu2i/qKo0KMvyVWkZnKbdLxEmH+MCFKkcr1kD/+YucH4lqMtRFnx5sYuM96JeD3EeA
+         T4SbCwPakG+e4CqjsS0TbVC74xGlCHJUGzoJs3Cw3x1xgpLqchcirOq6bP+A0UWcmyPh
+         7WAYADVa9/h5mjILAgQes1Cy+G1/UJe/7pomhtQnGACdVpN6UTMfIPIGmsJb5Noqdrq7
+         TgTFp2Ghm8dMQG1bltRR0OOWsKNxGj/piRSOuf3uQGZn06rh0VSfddf0hkqgRVanIqte
+         d9/mVbEs4ea1Mwtv/p4Z7JgZNHYB1+rK6+lIMh3oiPHHvELE8ekV56NmLDKBtF8/7T6s
+         qlNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dMjtefQPD8LMKp7HsI40U7ExFBle/hPa8kdDB8ErYSQ=;
-        b=WduuRRYeBWupdSshCSCcTO87n6uDmfmGoJriSDKy7dQmFxM4FDQhIj17Pmp8IncGlK
-         HFdpPds2xoiP1Ek2zABs7q8+hCRKZL4To/AhntDo/qa8RnAjCgyCauwPly2i7IJUcs2u
-         wyyuROb5m7oOeoEA4crY71uSP0ua15xyoCW5zCJyUU99fpQru75l16LH9IAA9X8he0TL
-         ry3uqQtWMnP+GHmaSsDyAs2McSchARtIQFZQ/FOp6RHNuodZ8oUD/payYQGk4bu+nCGx
-         b2b5HBm75vEb+UTQidrR3QCvHaNDdkHd9tRP295geBEbQVUwC/MDAN6MBDGkPiTIb6Ug
-         L08w==
-X-Gm-Message-State: AOAM531h5be8H7R2glNQy1hfLjrzZOWbLwHP4DfYaqlj+qzPFuN0eHpu
-        jtHuxccwfQe7ZBb8styZqCDL8yz7iPs=
-X-Google-Smtp-Source: ABdhPJyz00I6JdsvrIgMwB7IELtD022bY6FOhfE0ySNfkapKPEmIGeHUD0GJfqfWcye2xgiTfOUc0g==
-X-Received: by 2002:a17:90b:615:: with SMTP id gb21mr13086859pjb.10.1638523612208;
-        Fri, 03 Dec 2021 01:26:52 -0800 (PST)
-Received: from richard-System-Product-Name.. ([49.216.238.137])
-        by smtp.gmail.com with ESMTPSA id h13sm2489100pfv.37.2021.12.03.01.26.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Dec 2021 01:26:51 -0800 (PST)
-From:   Richard Hsu <saraon640529@gmail.com>
-X-Google-Original-From: Richard Hsu <Richard_Hsu@asmedia.com.tw>
-To:     linus.walleij@linaro.org, brgl@bgdev.pl, Richard_Hsu@asmedia.com.tw
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yd_Tseng@asmedia.com.tw, Cindy1_Hsu@asmedia.com.tw,
-        Andrew_Su@asmedia.com.tw
-Subject: [PATCH] gpio Add my driver new id
-Date:   Fri,  3 Dec 2021 17:26:09 +0800
-Message-Id: <20211203092609.8502-1-Richard_Hsu@asmedia.com.tw>
-X-Mailer: git-send-email 2.30.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=46DLVxFI8N9mwu2AB1rjVQJZeSXcwzhTwVUPFhWUT0U=;
+        b=1gyEvTgyoFE2ajWSLUcJkYUBeknlJtDcgPQs0irEvavKEUGJtyls5PDt5oRxtt11ie
+         4N5r8G82rT6Xhmo1EYEw3yBAL+/fIhP7XWbfb9/AGw++0XIxzChRWrXaN9E9YxTs2+xG
+         JeSm8BPIuLyaJJvh/vDJvV6VHbvy8sKrlqab4524Vlz4DaHWsSHpv94h2K4mhqIhrn4J
+         D75J78qRxSMuSSqIOYTMlH/9XsGthntHlBmBG6e2j66sUdb8Hy5TySiHL68fHuP8FbkP
+         F7SFIG9o3d15g6y/j0mY3DJDBk3QZM/vzV4zIol3M/k4zCWqXMgQSvJAK911b4pSRZmX
+         v30A==
+X-Gm-Message-State: AOAM533WK7S6F92TBfi8Lh6N5qCxNgBVPEvGH1tU4Tm9XC0TnYga/G6k
+        2ixHIzJIylH6XTX5uHATZMadEP0y4Q5TiSuZe798PdinM3o8jg==
+X-Google-Smtp-Source: ABdhPJwdWvxo7DdiQnxEVRk77vCihtyReFZe2IR4QhbtlJxQYsIyfl+t7hTfNF2zuxjnRWuKJw3HYvx7BLCZtVPflCc=
+X-Received: by 2002:a17:907:7f9e:: with SMTP id qk30mr22572663ejc.313.1638526557292;
+ Fri, 03 Dec 2021 02:15:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20211203092609.8502-1-Richard_Hsu@asmedia.com.tw>
+In-Reply-To: <20211203092609.8502-1-Richard_Hsu@asmedia.com.tw>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 3 Dec 2021 11:15:46 +0100
+Message-ID: <CAMRc=McwkKNUt4JZWcUVyd9uiAwJBk7SPw1C3X_F0RH_Qa=row@mail.gmail.com>
+Subject: Re: [PATCH] gpio Add my driver new id
+To:     Richard Hsu <saraon640529@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Richard_Hsu@asmedia.com.tw,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Yd_Tseng@asmedia.com.tw, Cindy1_Hsu@asmedia.com.tw,
+        Andrew_Su@asmedia.com.tw,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
- drivers/gpio/gpio-amdpt.c | 12 ++++++++++--
- 1 files changed, 11 insertions(+), 2 deletions(-)
+On Fri, Dec 3, 2021 at 10:26 AM Richard Hsu <saraon640529@gmail.com> wrote:
+>
+>  drivers/gpio/gpio-amdpt.c | 12 ++++++++++--
+>  1 files changed, 11 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-amdpt.c b/drivers/gpio/gpio-amdpt.c
+> index bbf53e289141..4d01d4341a67 100644
+> --- a/drivers/gpio/gpio-amdpt.c
+> +++ b/drivers/gpio/gpio-amdpt.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/platform_device.h>
+>
+>  #define PT_TOTAL_GPIO 8
+> +#define PT_TOTAL_GPIO_EX 24
+>
+>  /* PCI-E MMIO register offsets */
+>  #define PT_DIRECTION_REG   0x00
+> @@ -72,10 +73,12 @@ static void pt_gpio_free(struct gpio_chip *gc, unsigned offset)
+>  static int pt_gpio_probe(struct platform_device *pdev)
+>  {
+>         struct device *dev = &pdev->dev;
+> +       struct acpi_device *acpi_dev;
+> +       acpi_handle handle = ACPI_HANDLE(dev);
+>         struct pt_gpio_chip *pt_gpio;
+>         int ret = 0;
+>
+> -       if (!ACPI_COMPANION(dev)) {
+> +       if (acpi_bus_get_device(handle, &acpi_dev)) {
+>                 dev_err(dev, "PT GPIO device node not found\n");
+>                 return -ENODEV;
+>         }
+> @@ -100,10 +103,14 @@ static int pt_gpio_probe(struct platform_device *pdev)
+>                 return ret;
+>         }
+>
+> +       if (!strncmp(acpi_dev_name(acpi_dev), "AMDIF031", 8))
+> +               pt_gpio->gc.ngpio = PT_TOTAL_GPIO_EX;
+> +       else
+> +               pt_gpio->gc.ngpio = PT_TOTAL_GPIO;
+> +
+>         pt_gpio->gc.owner            = THIS_MODULE;
+>         pt_gpio->gc.request          = pt_gpio_request;
+>         pt_gpio->gc.free             = pt_gpio_free;
+> -       pt_gpio->gc.ngpio            = PT_TOTAL_GPIO;
+>  #if defined(CONFIG_OF_GPIO)
+>         pt_gpio->gc.of_node          = dev->of_node;
+>  #endif
+> @@ -135,6 +142,7 @@ static int pt_gpio_remove(struct platform_device *pdev)
+>  static const struct acpi_device_id pt_gpio_acpi_match[] = {
+>         { "AMDF030", 0 },
+>         { "AMDIF030", 0 },
+> +       { "AMDIF031", 0 },
+>         { },
+>  };
+>  MODULE_DEVICE_TABLE(acpi, pt_gpio_acpi_match);
+> --
+> 2.30.2
+>
 
-diff --git a/drivers/gpio/gpio-amdpt.c b/drivers/gpio/gpio-amdpt.c
-index bbf53e289141..4d01d4341a67 100644
---- a/drivers/gpio/gpio-amdpt.c
-+++ b/drivers/gpio/gpio-amdpt.c
-@@ -14,6 +14,7 @@
- #include <linux/platform_device.h>
+Hi Richard,
 
- #define PT_TOTAL_GPIO 8
-+#define PT_TOTAL_GPIO_EX 24
+Please Cc Andy next time on any GPIO stuff related to ACPI. I'll let
+him comment on the code. Your commit message must be more descriptive
+- the title should say "gpio: <driver name>: <do this and that>".
+Please also add a commit message explaining what the code does in
+detail.
 
- /* PCI-E MMIO register offsets */
- #define PT_DIRECTION_REG   0x00
-@@ -72,10 +73,12 @@ static void pt_gpio_free(struct gpio_chip *gc, unsigned offset)
- static int pt_gpio_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-+	struct acpi_device *acpi_dev;
-+	acpi_handle handle = ACPI_HANDLE(dev);
- 	struct pt_gpio_chip *pt_gpio;
- 	int ret = 0;
-
--	if (!ACPI_COMPANION(dev)) {
-+	if (acpi_bus_get_device(handle, &acpi_dev)) {
- 		dev_err(dev, "PT GPIO device node not found\n");
- 		return -ENODEV;
- 	}
-@@ -100,10 +103,14 @@ static int pt_gpio_probe(struct platform_device *pdev)
- 		return ret;
- 	}
-
-+	if (!strncmp(acpi_dev_name(acpi_dev), "AMDIF031", 8))
-+		pt_gpio->gc.ngpio = PT_TOTAL_GPIO_EX;
-+	else
-+		pt_gpio->gc.ngpio = PT_TOTAL_GPIO;
-+
- 	pt_gpio->gc.owner            = THIS_MODULE;
- 	pt_gpio->gc.request          = pt_gpio_request;
- 	pt_gpio->gc.free             = pt_gpio_free;
--	pt_gpio->gc.ngpio            = PT_TOTAL_GPIO;
- #if defined(CONFIG_OF_GPIO)
- 	pt_gpio->gc.of_node          = dev->of_node;
- #endif
-@@ -135,6 +142,7 @@ static int pt_gpio_remove(struct platform_device *pdev)
- static const struct acpi_device_id pt_gpio_acpi_match[] = {
- 	{ "AMDF030", 0 },
- 	{ "AMDIF030", 0 },
-+	{ "AMDIF031", 0 },
- 	{ },
- };
- MODULE_DEVICE_TABLE(acpi, pt_gpio_acpi_match);
---
-2.30.2
-
+Bart
