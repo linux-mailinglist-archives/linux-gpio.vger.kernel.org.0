@@ -2,118 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B55C467760
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Dec 2021 13:26:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9DE0A467778
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Dec 2021 13:33:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352126AbhLCMaL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 3 Dec 2021 07:30:11 -0500
-Received: from mga04.intel.com ([192.55.52.120]:8019 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236481AbhLCMaK (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 3 Dec 2021 07:30:10 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10186"; a="235700117"
-X-IronPort-AV: E=Sophos;i="5.87,284,1631602800"; 
-   d="scan'208";a="235700117"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2021 04:26:46 -0800
-X-IronPort-AV: E=Sophos;i="5.87,284,1631602800"; 
-   d="scan'208";a="678082863"
-Received: from smile.fi.intel.com ([10.237.72.184])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Dec 2021 04:26:35 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1mt7d5-001lPG-5I;
-        Fri, 03 Dec 2021 14:25:31 +0200
-Date:   Fri, 3 Dec 2021 14:25:30 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Baruch Siach <baruch@tkos.co.il>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Tony Lindgren <tony@atomide.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jianqun Xu <jay.xu@rock-chips.com>,
-        Alexandru Ardelean <aardelean@deviqon.com>,
-        Thierry Reding <treding@nvidia.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        patches@opensource.cirrus.com,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        linux-power <linux-power@fi.rohmeurope.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>, linux-pwm@vger.kernel.org,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        linux-unisoc@lists.infradead.org,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-tegra@vger.kernel.org, Ray Jui <rjui@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Gregory Fong <gregory.0xf0@gmail.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Keerthy <j-keerthy@ti.com>, Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v1 1/3] gpio: Get rid of duplicate of_node assignment in
- the drivers
-Message-ID: <YaoMuoONxbJb0prf@smile.fi.intel.com>
-References: <20211202210839.79140-1-andriy.shevchenko@linux.intel.com>
- <CAMRc=Md-TKUETLzf41D2KeQODac153_AumMTW4928XfJ70GRxQ@mail.gmail.com>
+        id S234333AbhLCMhL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 Dec 2021 07:37:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54658 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232206AbhLCMhK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Dec 2021 07:37:10 -0500
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90058C06174A
+        for <linux-gpio@vger.kernel.org>; Fri,  3 Dec 2021 04:33:46 -0800 (PST)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed10:3191:9890:620a:6f4])
+        by xavier.telenet-ops.be with bizsmtp
+        id RoZk2600B3eLghq01oZkLw; Fri, 03 Dec 2021 13:33:44 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1mt7l1-002KeD-53; Fri, 03 Dec 2021 13:33:43 +0100
+Received: from geert by rox.of.borg with local (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1mt7l0-000ig1-OM; Fri, 03 Dec 2021 13:33:42 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [GIT PULL] pinctrl: renesas: Updates for v5.17
+Date:   Fri,  3 Dec 2021 13:33:40 +0100
+Message-Id: <cover.1638534672.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=Md-TKUETLzf41D2KeQODac153_AumMTW4928XfJ70GRxQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Dec 03, 2021 at 09:40:55AM +0100, Bartosz Golaszewski wrote:
-> On Thu, Dec 2, 2021 at 10:17 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > GPIO library does copy the of_node from the parent device of
-> > the GPIO chip, there is no need to repeat this in the individual
-> > drivers. Remove these assignment all at once.
-> >
-> > For the details one may look into the of_gpio_dev_init() implementation.
-> >
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> 
-> I have a bad feeling about this but I've gone through the drivers in
-> this patch and it seems like you don't update any of the drivers that
-> use multiple child OF nodes so I can't really point out any obvious
-> bug.
+	Hi Linus,
 
-Yes, like I said it's just a series to kick off the conversion.
-I left the corner cases to the last.
+The following changes since commit fa55b7dcdc43c1aa1ba12bca9d2dd4318c2a0dbf:
 
-> I have another change I'm working on that's related, let me send it shortly.
+  Linux 5.16-rc1 (2021-11-14 13:56:52 -0800)
 
-Do you mean it should be attached to the series?
+are available in the Git repository at:
 
--- 
-With Best Regards,
-Andy Shevchenko
+  git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v5.17-tag1
 
+for you to fetch changes up to 7c50a407b8687ae3589c740d2347d9ae73887889:
 
+  pinctrl: renesas: Remove unneeded locking around sh_pfc_read() calls (2021-11-19 10:55:21 +0100)
+
+----------------------------------------------------------------
+pinctrl: renesas: Updates for v5.17
+
+  - Add generic support for output impedance,
+  - Add drive strength and output impedance support for the RZ/G2L SoC,
+  - Miscellaneous fixes and improvements.
+
+Thanks for pulling!
+----------------------------------------------------------------
+Geert Uytterhoeven (2):
+      pinctrl: renesas: rza1: Fix kerneldoc function names
+      pinctrl: renesas: Remove unneeded locking around sh_pfc_read() calls
+
+Lad Prabhakar (8):
+      dt-bindings: pincfg-node: Add "output-impedance-ohms" property
+      pinctrl: pinconf-generic: Add support for "output-impedance-ohms" to be extracted from DT files
+      dt-bindings: pinctrl: renesas,rzg2l-pinctrl: Add output-impedance-ohms property
+      pinctrl: renesas: rzg2l: Rename RZG2L_SINGLE_PIN_GET_PORT macro
+      pinctrl: renesas: rzg2l: Add helper functions to read/write pin config
+      pinctrl: renesas: rzg2l: Add support to get/set pin config for GPIO port pins
+      pinctrl: renesas: rzg2l: Rename PIN_CFG_* macros to match HW manual
+      pinctrl: renesas: rzg2l: Add support to get/set drive-strength and output-impedance-ohms
+
+ .../devicetree/bindings/pinctrl/pincfg-node.yaml   |   3 +
+ .../bindings/pinctrl/renesas,rzg2l-pinctrl.yaml    |   2 +
+ drivers/pinctrl/pinconf-generic.c                  |   2 +
+ drivers/pinctrl/renesas/pinctrl-rza1.c             |   6 +-
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c            | 310 ++++++++++++++-------
+ drivers/pinctrl/renesas/pinctrl.c                  |   9 +-
+ include/linux/pinctrl/pinconf-generic.h            |   3 +
+ 7 files changed, 224 insertions(+), 111 deletions(-)
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
