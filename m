@@ -2,132 +2,148 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4506F46749A
-	for <lists+linux-gpio@lfdr.de>; Fri,  3 Dec 2021 11:16:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 940A94674A2
+	for <lists+linux-gpio@lfdr.de>; Fri,  3 Dec 2021 11:18:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351165AbhLCKTX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 3 Dec 2021 05:19:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51040 "EHLO
+        id S239694AbhLCKWK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 3 Dec 2021 05:22:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344816AbhLCKTW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Dec 2021 05:19:22 -0500
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02DC6C06173E
-        for <linux-gpio@vger.kernel.org>; Fri,  3 Dec 2021 02:15:59 -0800 (PST)
-Received: by mail-ed1-x52e.google.com with SMTP id y13so9249987edd.13
-        for <linux-gpio@vger.kernel.org>; Fri, 03 Dec 2021 02:15:58 -0800 (PST)
+        with ESMTP id S1379823AbhLCKWJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 3 Dec 2021 05:22:09 -0500
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69B78C06173E
+        for <linux-gpio@vger.kernel.org>; Fri,  3 Dec 2021 02:18:45 -0800 (PST)
+Received: by mail-ed1-x52d.google.com with SMTP id t5so9729591edd.0
+        for <linux-gpio@vger.kernel.org>; Fri, 03 Dec 2021 02:18:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=46DLVxFI8N9mwu2AB1rjVQJZeSXcwzhTwVUPFhWUT0U=;
-        b=Yu2i/qKo0KMvyVWkZnKbdLxEmH+MCFKkcr1kD/+YucH4lqMtRFnx5sYuM96JeD3EeA
-         T4SbCwPakG+e4CqjsS0TbVC74xGlCHJUGzoJs3Cw3x1xgpLqchcirOq6bP+A0UWcmyPh
-         7WAYADVa9/h5mjILAgQes1Cy+G1/UJe/7pomhtQnGACdVpN6UTMfIPIGmsJb5Noqdrq7
-         TgTFp2Ghm8dMQG1bltRR0OOWsKNxGj/piRSOuf3uQGZn06rh0VSfddf0hkqgRVanIqte
-         d9/mVbEs4ea1Mwtv/p4Z7JgZNHYB1+rK6+lIMh3oiPHHvELE8ekV56NmLDKBtF8/7T6s
-         qlNw==
+        bh=XTjnjmHFEpnEFTVjBjOe1NAWxlCV0BUHNCPW5djSw5g=;
+        b=2LaKkFiqei1zR23gg/atHaiYhBx0OqMivxbTdeyOLfY2rNOgPdTC+A+eRnAy068MZI
+         F/sH1VjQRQpZbQVSz2OnsDDPRm5ERrSlFOuO7SNN9AQLZLyAMHWGCcsSDV4OxCBNkOsh
+         o3QP8XT/UPWMKeApPlsTsFEtbmDAK5PaZs4YNbw8jG5b9Z4l/qj43ky4/4WWh1qQWtyP
+         Iu5mrf56nPVUtmzslCG/B7jp9eg6lgGjGJp9h8hrfdU6ZQGkzNTcZhQdb8XUeHqvgiB2
+         a+IxgCExg1FoWtUkICi9H+XxvSaBxcRxNgZumvRqC7i3gGzBcBM93oN23e5Ze+pe40Dg
+         ryNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=46DLVxFI8N9mwu2AB1rjVQJZeSXcwzhTwVUPFhWUT0U=;
-        b=1gyEvTgyoFE2ajWSLUcJkYUBeknlJtDcgPQs0irEvavKEUGJtyls5PDt5oRxtt11ie
-         4N5r8G82rT6Xhmo1EYEw3yBAL+/fIhP7XWbfb9/AGw++0XIxzChRWrXaN9E9YxTs2+xG
-         JeSm8BPIuLyaJJvh/vDJvV6VHbvy8sKrlqab4524Vlz4DaHWsSHpv94h2K4mhqIhrn4J
-         D75J78qRxSMuSSqIOYTMlH/9XsGthntHlBmBG6e2j66sUdb8Hy5TySiHL68fHuP8FbkP
-         F7SFIG9o3d15g6y/j0mY3DJDBk3QZM/vzV4zIol3M/k4zCWqXMgQSvJAK911b4pSRZmX
-         v30A==
-X-Gm-Message-State: AOAM533WK7S6F92TBfi8Lh6N5qCxNgBVPEvGH1tU4Tm9XC0TnYga/G6k
-        2ixHIzJIylH6XTX5uHATZMadEP0y4Q5TiSuZe798PdinM3o8jg==
-X-Google-Smtp-Source: ABdhPJwdWvxo7DdiQnxEVRk77vCihtyReFZe2IR4QhbtlJxQYsIyfl+t7hTfNF2zuxjnRWuKJw3HYvx7BLCZtVPflCc=
-X-Received: by 2002:a17:907:7f9e:: with SMTP id qk30mr22572663ejc.313.1638526557292;
- Fri, 03 Dec 2021 02:15:57 -0800 (PST)
+        bh=XTjnjmHFEpnEFTVjBjOe1NAWxlCV0BUHNCPW5djSw5g=;
+        b=3XCL7YSEyVnTjBTYPeWKwwAvSctE8/KLXzmqXFiaiBpGwmDFEDeLOxjw4+zACStJHX
+         cp5thgIlHsJqw442XLM5duSINcdDKS6bxpch3o0M1HqczomJ5dNicGi47HM8ZtW/MejC
+         LGMNr39cZ44paK/Rdl3F6rOfBYIZUeb1K2r0HUOqMG4yhTahqet0UiXchzsBG3IpLR2I
+         3cfb6+BBQNiYycafDUSJvTbFkIV5lGgq6A4xnKQwbORhO3F0pCfD9c6FjB857eLl5vIy
+         Zj4c5X12v4HRFAk3ZSWs9cgOxiai1Ts3HRb8zOHBqXxMqx5lIVbiXzyQiBasNIpvNc+I
+         +y+w==
+X-Gm-Message-State: AOAM5306h0+5fL4Jz6qgaE2ztUaZuWeIedjzWeELQo22T31Iv1V+GNaW
+        BsFJBJun+FbsZak6haLmPwzgR4lV81phqs4I0qdqQA==
+X-Google-Smtp-Source: ABdhPJxypJv8XErfHRuqkXVHyKtOg3P4RSUfdy/7URwKabJs7JnzL+f50qXCH1okVSwS3waJ+xVS+zB03SQLxFOAPWU=
+X-Received: by 2002:a05:6402:27c7:: with SMTP id c7mr25953722ede.0.1638526721048;
+ Fri, 03 Dec 2021 02:18:41 -0800 (PST)
 MIME-Version: 1.0
-References: <20211203092609.8502-1-Richard_Hsu@asmedia.com.tw>
-In-Reply-To: <20211203092609.8502-1-Richard_Hsu@asmedia.com.tw>
+References: <20211201072902.127542-1-joel@jms.id.au> <CAMRc=McG0stAC_v9_oLjwXa4=nyJVpmuyi2eVWCFA+NW9mWibg@mail.gmail.com>
+ <CACPK8XcEhsz8Xk2m7bdPaFnwQ3BrKTH80r-ir_qwngTZ+FmGBQ@mail.gmail.com>
+ <20211203035019.GC25091@packtop> <56d66cf6-a05f-461f-9db5-b02b30dc12b2@www.fastmail.com>
+In-Reply-To: <56d66cf6-a05f-461f-9db5-b02b30dc12b2@www.fastmail.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 3 Dec 2021 11:15:46 +0100
-Message-ID: <CAMRc=McwkKNUt4JZWcUVyd9uiAwJBk7SPw1C3X_F0RH_Qa=row@mail.gmail.com>
-Subject: Re: [PATCH] gpio Add my driver new id
-To:     Richard Hsu <saraon640529@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Richard_Hsu@asmedia.com.tw,
+Date:   Fri, 3 Dec 2021 11:18:30 +0100
+Message-ID: <CAMRc=Me26z7d26AY-UFe7T83doqXvreuEtjs1W--uJLmzKaNvA@mail.gmail.com>
+Subject: Re: [libgpiod PATCH] gpioget: Add --line-name to lookup GPIO line
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     Zev Weiss <zweiss@equinix.com>, Joel Stanley <joel@jms.id.au>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yd_Tseng@asmedia.com.tw, Cindy1_Hsu@asmedia.com.tw,
-        Andrew_Su@asmedia.com.tw,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Eddie James <eajames@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Dec 3, 2021 at 10:26 AM Richard Hsu <saraon640529@gmail.com> wrote:
+On Fri, Dec 3, 2021 at 7:20 AM Andrew Jeffery <andrew@aj.id.au> wrote:
 >
->  drivers/gpio/gpio-amdpt.c | 12 ++++++++++--
->  1 files changed, 11 insertions(+), 2 deletions(-)
 >
-> diff --git a/drivers/gpio/gpio-amdpt.c b/drivers/gpio/gpio-amdpt.c
-> index bbf53e289141..4d01d4341a67 100644
-> --- a/drivers/gpio/gpio-amdpt.c
-> +++ b/drivers/gpio/gpio-amdpt.c
-> @@ -14,6 +14,7 @@
->  #include <linux/platform_device.h>
 >
->  #define PT_TOTAL_GPIO 8
-> +#define PT_TOTAL_GPIO_EX 24
->
->  /* PCI-E MMIO register offsets */
->  #define PT_DIRECTION_REG   0x00
-> @@ -72,10 +73,12 @@ static void pt_gpio_free(struct gpio_chip *gc, unsigned offset)
->  static int pt_gpio_probe(struct platform_device *pdev)
->  {
->         struct device *dev = &pdev->dev;
-> +       struct acpi_device *acpi_dev;
-> +       acpi_handle handle = ACPI_HANDLE(dev);
->         struct pt_gpio_chip *pt_gpio;
->         int ret = 0;
->
-> -       if (!ACPI_COMPANION(dev)) {
-> +       if (acpi_bus_get_device(handle, &acpi_dev)) {
->                 dev_err(dev, "PT GPIO device node not found\n");
->                 return -ENODEV;
->         }
-> @@ -100,10 +103,14 @@ static int pt_gpio_probe(struct platform_device *pdev)
->                 return ret;
->         }
->
-> +       if (!strncmp(acpi_dev_name(acpi_dev), "AMDIF031", 8))
-> +               pt_gpio->gc.ngpio = PT_TOTAL_GPIO_EX;
-> +       else
-> +               pt_gpio->gc.ngpio = PT_TOTAL_GPIO;
-> +
->         pt_gpio->gc.owner            = THIS_MODULE;
->         pt_gpio->gc.request          = pt_gpio_request;
->         pt_gpio->gc.free             = pt_gpio_free;
-> -       pt_gpio->gc.ngpio            = PT_TOTAL_GPIO;
->  #if defined(CONFIG_OF_GPIO)
->         pt_gpio->gc.of_node          = dev->of_node;
->  #endif
-> @@ -135,6 +142,7 @@ static int pt_gpio_remove(struct platform_device *pdev)
->  static const struct acpi_device_id pt_gpio_acpi_match[] = {
->         { "AMDF030", 0 },
->         { "AMDIF030", 0 },
-> +       { "AMDIF031", 0 },
->         { },
->  };
->  MODULE_DEVICE_TABLE(acpi, pt_gpio_acpi_match);
-> --
-> 2.30.2
->
+> On Fri, 3 Dec 2021, at 14:20, Zev Weiss wrote:
+> > On Wed, Dec 01, 2021 at 08:29:47PM PST, Joel Stanley wrote:
+> >>On Wed, 1 Dec 2021 at 08:29, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> >>>
+> >>> On Wed, Dec 1, 2021 at 8:29 AM Joel Stanley <joel@jms.id.au> wrote:
+> >>> >
+> >>> > Systems provide line names to make using GPIOs easier for userspace. Use
+> >>> > this feature to make the tools user friendly by adding the ability to
+> >>> > show the state of a named line.
+> >>> >
+> >>> >  $ gpioget --line-name power-chassis-good
+> >>> >  1
+> >>> >
+> >>> >  $ gpioget -L pcieslot-power
+> >>> >  0
+> >>
+> >>> I'm not very convinced to be honest. It's not like "gpioget gpiochip0
+> >>> `gpiofind gpiochip0 line-name`" requires much more typing than
+> >>> "gpioget gpiochip --line-name=name".
+> >>
+> >>I'm taking on feedback from people working in our labs, and
+> >>implementing userspace applications. We've been building BMCs with
+> >>mainline Linux for about six years now, and it's been a long road
+> >>re-training them from "back in the day we just did devmem <this>
+> >><that>" and "why can't we just do cat /sys/class/gpio/gpio305/value",
+> >>and now "why does the level of the GPIO change back after I run the
+> >>command?".
+> >>
+> >>This usability improvement is one more step towards them using and
+> >>being happy with the "new world" of the gpiod API.
+> >>
+> >>Once we settle on a good API here, I plan on submitting a version of
+> >>gpioget/gpioset added to busybox.
+> >>
+> >>> There are also other questions:
+> >>> this uses getopt and only allows to specify a single line name. What
+> >>> if we want to specify more lines like with offsets? Even if you allow
+> >>> multiple names, getopt() doesn't guarantee ordering of arguments.
+> >>
+> >>If you're happy with the concept I'm happy to iterate on the implementation.
+> >>
 
-Hi Richard,
+Alright, it looks like this has passed by popular vote.
 
-Please Cc Andy next time on any GPIO stuff related to ACPI. I'll let
-him comment on the code. Your commit message must be more descriptive
-- the title should say "gpio: <driver name>: <do this and that>".
-Please also add a commit message explaining what the code does in
-detail.
+> >>Yes, it only allows a single line name. That tends to be how the tool
+> >>is used, both from the command line and in scripts.
+> >>
+> >>Can you give me an example of your proposed command line API, so I can
+> >>understand what you're suggesting here?
+> >>
+> >
+> > My two cents: like Jeremy, I would very much welcome the ability to
+> > specify GPIOs by name instead of number, but the one-line-only
+> > limitation does seem unfortunate.  How about making a command-line flag
+> > that just means "line-specifier arguments should be interpreted as names
+> > instead of numbers"?
+> >
+> > So you could do:
+> >
+> >   $ gpioget --by-name chassis-intrusion cpu1-prochot
+> >   0 1
+> >
+> >   $ gpioset --by-name led-green=1 led-red=0
 
+I like this more - that way we either allow offsets or names. Please
+make sure corner cases are covered. If you can add this to other tools
+too, I'm fine with that, but put the name lookup code into
+tools-common.c please. I would also like to see bats test cases
+covering this.
+
+Thanks!
 Bart
+
+> >
+>
+> I came up with this approach as well (independently, just thinking
+> about Joel's patch). I think it has good ergonomics. I hadn't figured
+> out how we should interpret the arguments as line index vs line name,
+> but your --by-name option solves that. I like it a lot.
+>
+> Andrew
