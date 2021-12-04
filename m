@@ -2,182 +2,287 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 31E044685F7
-	for <lists+linux-gpio@lfdr.de>; Sat,  4 Dec 2021 16:37:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EA74D468676
+	for <lists+linux-gpio@lfdr.de>; Sat,  4 Dec 2021 18:11:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345113AbhLDPky (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 4 Dec 2021 10:40:54 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:42380 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345013AbhLDPky (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 4 Dec 2021 10:40:54 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 98A81B80D06;
-        Sat,  4 Dec 2021 15:37:27 +0000 (UTC)
-Received: from jic23-huawei (cpc108967-cmbg20-2-0-cust86.5-4.cable.virginm.net [81.101.6.87])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp.kernel.org (Postfix) with ESMTPSA id 4F39BC341C0;
-        Sat,  4 Dec 2021 15:37:22 +0000 (UTC)
-Date:   Sat, 4 Dec 2021 15:42:32 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Cosmin Tanislav <demonsingur@gmail.com>
-Cc:     cosmin.tanislav@analog.com, Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        id S1377107AbhLDROZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 4 Dec 2021 12:14:25 -0500
+Received: from mga02.intel.com ([134.134.136.20]:2775 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1355675AbhLDROZ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 4 Dec 2021 12:14:25 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10188"; a="224384353"
+X-IronPort-AV: E=Sophos;i="5.87,287,1631602800"; 
+   d="scan'208";a="224384353"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2021 09:10:58 -0800
+X-IronPort-AV: E=Sophos;i="5.87,287,1631602800"; 
+   d="scan'208";a="514135791"
+Received: from skoikkar-mobl.ger.corp.intel.com (HELO localhost) ([10.249.144.57])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2021 09:10:54 -0800
+From:   Iwona Winiarska <iwona.winiarska@intel.com>
+To:     linux-gpio@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v8 0/3] Add AD74413R driver
-Message-ID: <20211204154210.535c28c7@jic23-huawei>
-In-Reply-To: <20211202224103.218278-1-cosmin.tanislav@analog.com>
-References: <20211202224103.218278-1-cosmin.tanislav@analog.com>
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.30; x86_64-pc-linux-gnu)
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Iwona Winiarska <iwona.winiarska@intel.com>
+Subject: [PATCH 1/2] gpio: aspeed: Convert aspeed_gpio.lock to raw_spinlock
+Date:   Sat,  4 Dec 2021 18:10:26 +0100
+Message-Id: <20211204171027.451220-1-iwona.winiarska@intel.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri,  3 Dec 2021 00:41:00 +0200
-Cosmin Tanislav <demonsingur@gmail.com> wrote:
+The gpio-aspeed driver implements an irq_chip which need to be invoked
+from hardirq context. Since spin_lock() can sleep with PREEMPT_RT, it is
+no longer legal to invoke it while interrupts are disabled.
+This also causes lockdep to complain about:
+[    0.649797] [ BUG: Invalid wait context ]
+because aspeed_gpio.lock (spin_lock_t) is taken under irq_desc.lock
+(raw_spinlock_t).
+Let's use of raw_spinlock_t instead of spinlock_t.
 
+Signed-off-by: Iwona Winiarska <iwona.winiarska@intel.com>
+---
+ drivers/gpio/gpio-aspeed.c | 52 +++++++++++++++++++-------------------
+ 1 file changed, 26 insertions(+), 26 deletions(-)
 
-Hi Cosmin,
-
-A quick process note.  If you do find an issue with a series you've
-sent out which hasn't had any negative feedback etc, then please send a reply
-to that earlier version to say that.
-
-I've been known to pick up the wrong version when people do multiple series
-without replies like you have here.  Also tends to lead to people reviewing
-the wrong version.
-
-I'll get to v9 shortly :)
-
-Jonathan
-
-
-
-> V1 -> V2
->  * sign off using company email
-> 
-> V2 -> V3
->  * replace gpo config firmware flag with flag specifying whether gpo is in
->    comparator mode
->  * create two separate gpiochips, one output-only gpiochip for GPO pins not
->    in comparator mode and one input-only for the value of digital input
->    channels
->  * wire up all gpo functionalities using pinconf
->  * keep number of characters per line under 80
->  * rework locking
->  * do not invalidate other chip revisions
->  * do not set indio device parent
->  * print probe error for refin regulator
->  * move conversion from range register value to range / offset / raw offset
->    into separate function
->  * module.h -> mod_devicetable.h
->  * use generic firmware interface functions
->  * add comment regarding cache alignment
->  * add comment regarding ADC channels buffered read setup
->  * un-inline comment regarding 100us delay for conversion start
->  * inline return statements
->  * remove assignments to val2 where not necessary
->  * local_channels -> chans
->  * index -> i
->  * channel_config -> config
->  * IIO_ALTVOLTAGE -> IIO_VOLTAGE
->  * .info_mask_shared_by_type_available -> .info_mask_separate_available
->  * remove unlikely probe error messages
->  * use an array indexed by channel function for retrieving iio channels
->  * count iio channels while parsing
->  * move HART rate rejection outside of setter
->  * move channel function validation outside of setter
->  * use SPI messages for read and write
->  * validate DAC code earlier
->  * simplify switches to only handle existing iio channels
->  * pass indio_dev into functions needing access to it
->  * pass spi into devm_regmap_init
->  * dt-bindings: sort compatibles
->  * dt-bindings: remove driver word from description
->  * dt-bindings: remove refin supply description
->  * dt-bindings: specify channel function default value
->  * dt-bindings: remove maxItems from scalar value
-> 
-> V3 -> v4
->  * remove double gpo from macro name
->  * reset at probe
->  * config -> chip_info and store chip name inside chip info
->  * cacheline align every DMA buffer
->  * simplify generation of adc samples message by caching xfer, tx_buf and
->    rx_buf
->  * use mask itself for writing the value of channel enable and gpo data
->  * move reg read and write transfers to the same buffers and use local
->    variables for transfers
->  * merge the two for loops handling gpio configuration
->  * let firmware decide irq edge
->  * remove INDIO_BUFFER_SOFTWARE already set by iio framwork
->  * do not set trigger device parent
->  * return dev_err_probe for regulator error case
->  * do not set cs_change to 0 when not needed
->  * do not set spi device drvdata as it is not needed
->  * fix bug regarding wrong channels being created for resistance input,
->    digital input, and current input with hart
->  * use voltage input channels spec for high impedance mode
->  * put () around macro parameters
->  * merge AD74413R_CHANNEL macro into its uses
->  * remove unused switch case scope
->  * inline return IIO_VAL_INT
->  * use {get,put}_unaligned_be16
->  * use proper types for reg and val
->  * move default case handling into switch statements
->  * pass driver state into regmap functions
->  * use genmask for generating a 16bit max value
->  * alphanumeric order for part numbers
->  * dt-bindings: remove $ref from ohms value
-> 
-> V4 -> V5
->  * dt-bindings: include headers necessary
->  * dt-bindings: add IRQ_TYPE_EDGE_FALLING to interrupt flags
->  * dt-bindings: ohm -> ohms
->  * dt-bindings: spi0 -> spi
-> 
-> V5 -> V6
->  * fix warnings regarding overflows
-> 
-> V6 -> V7
->  * remove extra cache-line alignment
->  * adi,rsense-resistance-ohms -> shunt-resistor-micro-ohms
->  * dt-bindings: add product page links
-> 
-> V7 -> V8
->  * author using company email
->  * also check DAC code lower bound
->  * fix checkpath --strict complaints
->  * add comment regarding mutex lock usage
->  * propagate error when converting adc result to resistance
-> 
-> Cosmin Tanislav (3):
->   iio: add addac subdirectory
->   dt-bindings: iio: add AD74413R
->   iio: addac: add AD74413R driver
-> 
->  .../bindings/iio/addac/adi,ad74413r.yaml      |  158 ++
->  MAINTAINERS                                   |    9 +
->  drivers/iio/Kconfig                           |    1 +
->  drivers/iio/Makefile                          |    1 +
->  drivers/iio/addac/Kconfig                     |   20 +
->  drivers/iio/addac/Makefile                    |    7 +
->  drivers/iio/addac/ad74413r.c                  | 1475 +++++++++++++++++
->  include/dt-bindings/iio/addac/adi,ad74413r.h  |   21 +
->  8 files changed, 1692 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/addac/adi,ad74413r.yaml
->  create mode 100644 drivers/iio/addac/Kconfig
->  create mode 100644 drivers/iio/addac/Makefile
->  create mode 100644 drivers/iio/addac/ad74413r.c
->  create mode 100644 include/dt-bindings/iio/addac/adi,ad74413r.h
-> 
+diff --git a/drivers/gpio/gpio-aspeed.c b/drivers/gpio/gpio-aspeed.c
+index 3c8f20c57695..318a7d95a1a8 100644
+--- a/drivers/gpio/gpio-aspeed.c
++++ b/drivers/gpio/gpio-aspeed.c
+@@ -53,7 +53,7 @@ struct aspeed_gpio_config {
+ struct aspeed_gpio {
+ 	struct gpio_chip chip;
+ 	struct irq_chip irqc;
+-	spinlock_t lock;
++	raw_spinlock_t lock;
+ 	void __iomem *base;
+ 	int irq;
+ 	const struct aspeed_gpio_config *config;
+@@ -413,14 +413,14 @@ static void aspeed_gpio_set(struct gpio_chip *gc, unsigned int offset,
+ 	unsigned long flags;
+ 	bool copro;
+ 
+-	spin_lock_irqsave(&gpio->lock, flags);
++	raw_spin_lock_irqsave(&gpio->lock, flags);
+ 	copro = aspeed_gpio_copro_request(gpio, offset);
+ 
+ 	__aspeed_gpio_set(gc, offset, val);
+ 
+ 	if (copro)
+ 		aspeed_gpio_copro_release(gpio, offset);
+-	spin_unlock_irqrestore(&gpio->lock, flags);
++	raw_spin_unlock_irqrestore(&gpio->lock, flags);
+ }
+ 
+ static int aspeed_gpio_dir_in(struct gpio_chip *gc, unsigned int offset)
+@@ -435,7 +435,7 @@ static int aspeed_gpio_dir_in(struct gpio_chip *gc, unsigned int offset)
+ 	if (!have_input(gpio, offset))
+ 		return -ENOTSUPP;
+ 
+-	spin_lock_irqsave(&gpio->lock, flags);
++	raw_spin_lock_irqsave(&gpio->lock, flags);
+ 
+ 	reg = ioread32(addr);
+ 	reg &= ~GPIO_BIT(offset);
+@@ -445,7 +445,7 @@ static int aspeed_gpio_dir_in(struct gpio_chip *gc, unsigned int offset)
+ 	if (copro)
+ 		aspeed_gpio_copro_release(gpio, offset);
+ 
+-	spin_unlock_irqrestore(&gpio->lock, flags);
++	raw_spin_unlock_irqrestore(&gpio->lock, flags);
+ 
+ 	return 0;
+ }
+@@ -463,7 +463,7 @@ static int aspeed_gpio_dir_out(struct gpio_chip *gc,
+ 	if (!have_output(gpio, offset))
+ 		return -ENOTSUPP;
+ 
+-	spin_lock_irqsave(&gpio->lock, flags);
++	raw_spin_lock_irqsave(&gpio->lock, flags);
+ 
+ 	reg = ioread32(addr);
+ 	reg |= GPIO_BIT(offset);
+@@ -474,7 +474,7 @@ static int aspeed_gpio_dir_out(struct gpio_chip *gc,
+ 
+ 	if (copro)
+ 		aspeed_gpio_copro_release(gpio, offset);
+-	spin_unlock_irqrestore(&gpio->lock, flags);
++	raw_spin_unlock_irqrestore(&gpio->lock, flags);
+ 
+ 	return 0;
+ }
+@@ -492,11 +492,11 @@ static int aspeed_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
+ 	if (!have_output(gpio, offset))
+ 		return GPIO_LINE_DIRECTION_IN;
+ 
+-	spin_lock_irqsave(&gpio->lock, flags);
++	raw_spin_lock_irqsave(&gpio->lock, flags);
+ 
+ 	val = ioread32(bank_reg(gpio, bank, reg_dir)) & GPIO_BIT(offset);
+ 
+-	spin_unlock_irqrestore(&gpio->lock, flags);
++	raw_spin_unlock_irqrestore(&gpio->lock, flags);
+ 
+ 	return val ? GPIO_LINE_DIRECTION_OUT : GPIO_LINE_DIRECTION_IN;
+ }
+@@ -539,14 +539,14 @@ static void aspeed_gpio_irq_ack(struct irq_data *d)
+ 
+ 	status_addr = bank_reg(gpio, bank, reg_irq_status);
+ 
+-	spin_lock_irqsave(&gpio->lock, flags);
++	raw_spin_lock_irqsave(&gpio->lock, flags);
+ 	copro = aspeed_gpio_copro_request(gpio, offset);
+ 
+ 	iowrite32(bit, status_addr);
+ 
+ 	if (copro)
+ 		aspeed_gpio_copro_release(gpio, offset);
+-	spin_unlock_irqrestore(&gpio->lock, flags);
++	raw_spin_unlock_irqrestore(&gpio->lock, flags);
+ }
+ 
+ static void aspeed_gpio_irq_set_mask(struct irq_data *d, bool set)
+@@ -565,7 +565,7 @@ static void aspeed_gpio_irq_set_mask(struct irq_data *d, bool set)
+ 
+ 	addr = bank_reg(gpio, bank, reg_irq_enable);
+ 
+-	spin_lock_irqsave(&gpio->lock, flags);
++	raw_spin_lock_irqsave(&gpio->lock, flags);
+ 	copro = aspeed_gpio_copro_request(gpio, offset);
+ 
+ 	reg = ioread32(addr);
+@@ -577,7 +577,7 @@ static void aspeed_gpio_irq_set_mask(struct irq_data *d, bool set)
+ 
+ 	if (copro)
+ 		aspeed_gpio_copro_release(gpio, offset);
+-	spin_unlock_irqrestore(&gpio->lock, flags);
++	raw_spin_unlock_irqrestore(&gpio->lock, flags);
+ }
+ 
+ static void aspeed_gpio_irq_mask(struct irq_data *d)
+@@ -629,7 +629,7 @@ static int aspeed_gpio_set_type(struct irq_data *d, unsigned int type)
+ 		return -EINVAL;
+ 	}
+ 
+-	spin_lock_irqsave(&gpio->lock, flags);
++	raw_spin_lock_irqsave(&gpio->lock, flags);
+ 	copro = aspeed_gpio_copro_request(gpio, offset);
+ 
+ 	addr = bank_reg(gpio, bank, reg_irq_type0);
+@@ -649,7 +649,7 @@ static int aspeed_gpio_set_type(struct irq_data *d, unsigned int type)
+ 
+ 	if (copro)
+ 		aspeed_gpio_copro_release(gpio, offset);
+-	spin_unlock_irqrestore(&gpio->lock, flags);
++	raw_spin_unlock_irqrestore(&gpio->lock, flags);
+ 
+ 	irq_set_handler_locked(d, handler);
+ 
+@@ -716,7 +716,7 @@ static int aspeed_gpio_reset_tolerance(struct gpio_chip *chip,
+ 
+ 	treg = bank_reg(gpio, to_bank(offset), reg_tolerance);
+ 
+-	spin_lock_irqsave(&gpio->lock, flags);
++	raw_spin_lock_irqsave(&gpio->lock, flags);
+ 	copro = aspeed_gpio_copro_request(gpio, offset);
+ 
+ 	val = readl(treg);
+@@ -730,7 +730,7 @@ static int aspeed_gpio_reset_tolerance(struct gpio_chip *chip,
+ 
+ 	if (copro)
+ 		aspeed_gpio_copro_release(gpio, offset);
+-	spin_unlock_irqrestore(&gpio->lock, flags);
++	raw_spin_unlock_irqrestore(&gpio->lock, flags);
+ 
+ 	return 0;
+ }
+@@ -856,7 +856,7 @@ static int enable_debounce(struct gpio_chip *chip, unsigned int offset,
+ 		return rc;
+ 	}
+ 
+-	spin_lock_irqsave(&gpio->lock, flags);
++	raw_spin_lock_irqsave(&gpio->lock, flags);
+ 
+ 	if (timer_allocation_registered(gpio, offset)) {
+ 		rc = unregister_allocated_timer(gpio, offset);
+@@ -916,7 +916,7 @@ static int enable_debounce(struct gpio_chip *chip, unsigned int offset,
+ 	configure_timer(gpio, offset, i);
+ 
+ out:
+-	spin_unlock_irqrestore(&gpio->lock, flags);
++	raw_spin_unlock_irqrestore(&gpio->lock, flags);
+ 
+ 	return rc;
+ }
+@@ -927,13 +927,13 @@ static int disable_debounce(struct gpio_chip *chip, unsigned int offset)
+ 	unsigned long flags;
+ 	int rc;
+ 
+-	spin_lock_irqsave(&gpio->lock, flags);
++	raw_spin_lock_irqsave(&gpio->lock, flags);
+ 
+ 	rc = unregister_allocated_timer(gpio, offset);
+ 	if (!rc)
+ 		configure_timer(gpio, offset, 0);
+ 
+-	spin_unlock_irqrestore(&gpio->lock, flags);
++	raw_spin_unlock_irqrestore(&gpio->lock, flags);
+ 
+ 	return rc;
+ }
+@@ -1015,7 +1015,7 @@ int aspeed_gpio_copro_grab_gpio(struct gpio_desc *desc,
+ 		return -EINVAL;
+ 	bindex = offset >> 3;
+ 
+-	spin_lock_irqsave(&gpio->lock, flags);
++	raw_spin_lock_irqsave(&gpio->lock, flags);
+ 
+ 	/* Sanity check, this shouldn't happen */
+ 	if (gpio->cf_copro_bankmap[bindex] == 0xff) {
+@@ -1036,7 +1036,7 @@ int aspeed_gpio_copro_grab_gpio(struct gpio_desc *desc,
+ 	if (bit)
+ 		*bit = GPIO_OFFSET(offset);
+  bail:
+-	spin_unlock_irqrestore(&gpio->lock, flags);
++	raw_spin_unlock_irqrestore(&gpio->lock, flags);
+ 	return rc;
+ }
+ EXPORT_SYMBOL_GPL(aspeed_gpio_copro_grab_gpio);
+@@ -1060,7 +1060,7 @@ int aspeed_gpio_copro_release_gpio(struct gpio_desc *desc)
+ 		return -EINVAL;
+ 	bindex = offset >> 3;
+ 
+-	spin_lock_irqsave(&gpio->lock, flags);
++	raw_spin_lock_irqsave(&gpio->lock, flags);
+ 
+ 	/* Sanity check, this shouldn't happen */
+ 	if (gpio->cf_copro_bankmap[bindex] == 0) {
+@@ -1074,7 +1074,7 @@ int aspeed_gpio_copro_release_gpio(struct gpio_desc *desc)
+ 		aspeed_gpio_change_cmd_source(gpio, bank, bindex,
+ 					      GPIO_CMDSRC_ARM);
+  bail:
+-	spin_unlock_irqrestore(&gpio->lock, flags);
++	raw_spin_unlock_irqrestore(&gpio->lock, flags);
+ 	return rc;
+ }
+ EXPORT_SYMBOL_GPL(aspeed_gpio_copro_release_gpio);
+@@ -1148,7 +1148,7 @@ static int __init aspeed_gpio_probe(struct platform_device *pdev)
+ 	if (IS_ERR(gpio->base))
+ 		return PTR_ERR(gpio->base);
+ 
+-	spin_lock_init(&gpio->lock);
++	raw_spin_lock_init(&gpio->lock);
+ 
+ 	gpio_id = of_match_node(aspeed_gpio_of_table, pdev->dev.of_node);
+ 	if (!gpio_id)
+-- 
+2.31.1
 
