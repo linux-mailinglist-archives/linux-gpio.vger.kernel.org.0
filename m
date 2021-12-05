@@ -2,90 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 159C24689DD
-	for <lists+linux-gpio@lfdr.de>; Sun,  5 Dec 2021 09:11:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A8CF1468A63
+	for <lists+linux-gpio@lfdr.de>; Sun,  5 Dec 2021 11:45:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231903AbhLEIO3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 5 Dec 2021 03:14:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38114 "EHLO
+        id S232943AbhLEKtW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 5 Dec 2021 05:49:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231583AbhLEIO3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 5 Dec 2021 03:14:29 -0500
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E385EC061751
-        for <linux-gpio@vger.kernel.org>; Sun,  5 Dec 2021 00:11:01 -0800 (PST)
-Received: by mail-ed1-x536.google.com with SMTP id e3so30024124edu.4
-        for <linux-gpio@vger.kernel.org>; Sun, 05 Dec 2021 00:11:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=eFOKFsG7bK+3U2HPhrs3B7QxCunJHugKrtQkwrA1kg0=;
-        b=sRk2x8Yd8OB9XmewWtAmaz5od59gGkUfBCpvIMtGq9RzsQW7kIY/TyM4MOWMA360Tq
-         MjqXMVe9wZe4CLLQVgCGgmqx/VfEnOmg+6UdTkb3uz/Rx2J6ligCjB/VC+RLoQ5vyjxW
-         cFOoBvmwweWT5jKeRkgIEJo6rdeQMZjlnCV+E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=eFOKFsG7bK+3U2HPhrs3B7QxCunJHugKrtQkwrA1kg0=;
-        b=CXihCDR3U4TXS5UeTc8P20z3stWlqaw1jc67dpBTiJiG6XaRXwLcl/eXN6sJt/useY
-         rr95I5YLmX+1PPd1jpdEagvLEYA1IhbZjzE7oZQ9rLyV2w47jO1ziTj9VV4Ucb5e0cT5
-         LWhdhPNSZQJ2eZoDXjbte/lvnxaGMjpQjmdyXjwoBl7eX17wn3j5ocl5rsfiZ9k36xhp
-         TorTRwIYZv8xdO+ky1wVIfX2fyP5WTECYwrZPuCp45GvoRd5aZ9ESUckyzmrpRmUPiU+
-         i1vhpTdmU1/pdgofguuVDA58MapXMrd9fNJx3eZvoDmNkuLRq4DiaxjDJp+P2Xb4Igze
-         DCUg==
-X-Gm-Message-State: AOAM5339mLwim7cVLow8cNJ0hRxomZJu3UcWZ+MLzqFx1iUZzHonezHh
-        2mjPNtytfjTTL1BgA8U3wMvS/DHpAflnNw==
-X-Google-Smtp-Source: ABdhPJzKHXCmSpWmU0pdGuOH6G/H2dagMZQCWqTiUyDnh/rB1mxGTcvhzWM+r2Wrz0uUO4mjGOjvAw==
-X-Received: by 2002:a17:906:a08d:: with SMTP id q13mr36462501ejy.465.1638691860482;
-        Sun, 05 Dec 2021 00:11:00 -0800 (PST)
-Received: from karbon.home.net (78-83-68-78.spectrumnet.bg. [78.83.68.78])
-        by smtp.gmail.com with ESMTPSA id t5sm5481849edd.68.2021.12.05.00.10.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Dec 2021 00:11:00 -0800 (PST)
-Date:   Sun, 5 Dec 2021 10:10:58 +0200
-From:   Petko Manolov <petko.manolov@konsulko.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>
+        with ESMTP id S232844AbhLEKtW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 5 Dec 2021 05:49:22 -0500
+Received: from lb1-smtp-cloud9.xs4all.net (lb1-smtp-cloud9.xs4all.net [IPv6:2001:888:0:108::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEDB7C061714;
+        Sun,  5 Dec 2021 02:45:54 -0800 (PST)
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id tp1gmvClWlcdAtp1jmhAPi; Sun, 05 Dec 2021 11:45:51 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s2;
+        t=1638701151; bh=AqmxLEyhmx+95wPTZhy7agB/c1wD+x7IRu5awbIcUQ8=;
+        h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From:
+         Subject;
+        b=WwGl0aRDYvs0lJ3MzGaOLgeTpwGP16XdAIvswQsVDESGg1PldfVUsMo+btqwqpLYg
+         jjJ8dajdDvUWgLg7SM4ICb/+mZRBD+YPoUiZTr+WJL4dLzXLwyS+7gVYMblAP0iops
+         amUpndzDY5B/6EZMc2ebDbZ4Q9bNcCDiOxuNlhEbaG4VX7rPA9N8Mz/iIB9fbIuuz5
+         D38TIk8Ro5FFPN3i4O+/QNilCiIKV5Jw6usq5+plO4grqeNtV2yQZIpzk0hLDZXRLC
+         TmCa8sRgiFrULmYKoAnLeBN26UsCQdKoF2cqviqrf3u+o9/GVrJ8BSlRLniMV5VEoO
+         fg7Az6MXNXSkA==
+Message-ID: <1ad23a2a-bd91-526c-ab75-25543c1f4dd5@xs4all.nl>
+Date:   Sun, 5 Dec 2021 11:45:47 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.3.2
 Subject: Re: gpiod_set_value(): BUG: sleeping function called from invalid
  context
-Message-ID: <Yax0ElWLg3N4qILU@karbon.home.net>
+Content-Language: en-US
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
 References: <a06e7c55-f25d-8339-faea-9be6d31d1c87@xs4all.nl>
  <CACRpkdYrZ2pyj+_yS6gn1n-TCQtHMqwrg+4eJRmiKGGyDNPnbQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+From:   Hans Verkuil <hverkuil@xs4all.nl>
 In-Reply-To: <CACRpkdYrZ2pyj+_yS6gn1n-TCQtHMqwrg+4eJRmiKGGyDNPnbQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4xfGzy6DRSSoYS75bhcMgcExD5YMLrhIjffs+Fmcm2EIL7H6Qj/tmt/harLJimxkyzXshfMduGFnGCIGpEnXhK8B8ZdghHnD84zRK9eDL+ICc2Mdv8FxgK
+ AMfki2SsunbrS7RKZvvO9HmBxHeP/NRCXf48o2QMRWyZlQRsPLtVjU13T9C/AKPevgoX9Vvwnph09VkpVFUyb+lmJ11ryDBNBBxS3hRjCSei/ydOSPm9WK+k
+ 0RP1zEu6FoMMH3Z7itskvLlLQPIGMkSPsJa70w3WfNU=
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 21-12-05 01:18:23, Linus Walleij wrote:
+On 05/12/2021 01:18, Linus Walleij wrote:
 > On Wed, Dec 1, 2021 at 10:40 AM Hans Verkuil <hverkuil@xs4all.nl> wrote:
 > 
-> > [ 1674.787685]  ___might_sleep+0x148/0x180
-> > [ 1674.791572]  __might_sleep+0x54/0x90
-> > [ 1674.795195]  mutex_lock+0x28/0x80
-> > [ 1674.798556]  pinctrl_get_device_gpio_range+0x3c/0x110
+>> [ 1674.787685]  ___might_sleep+0x148/0x180
+>> [ 1674.791572]  __might_sleep+0x54/0x90
+>> [ 1674.795195]  mutex_lock+0x28/0x80
+>> [ 1674.798556]  pinctrl_get_device_gpio_range+0x3c/0x110
 > 
 > There is the error ^
 > 
-> > gpiod_set_value() is supposed to be usable from an atomic context, so this 
-> > appears to be a bug. It's probably been there for quite a long time. I 
-> > suspect OPEN_DRAIN isn't very common, and I think this might be the first 
-> > time I tested this driver with this kernel config option set.
+>> gpiod_set_value() is supposed to be usable from an atomic context, so this
+>> appears to be a bug. It's probably been there for quite a long time. I suspect
+>> OPEN_DRAIN isn't very common, and I think this might be the first time I tested
+>> this driver with this kernel config option set.
 > 
 > Nah has nothing to do with open drain :)
-
-OPEN_DRAIN is regularly used in single wire (1W) bit-bang drivers, so no, it 
-isn't related to this flag.
-
-> > Any suggestions?
 > 
-> pinctrl_get_device_gpio_range() needs to be modified to not take a mutex 
+>> Any suggestions?
+> 
+> pinctrl_get_device_gpio_range() needs to be modified to not take a mutex
 > because mutex:es can sleep.
 > 
 > static int pinctrl_get_device_gpio_range(unsigned gpio,
@@ -98,23 +83,39 @@ isn't related to this flag.
 > 
 > BLAM!
 > 
-> And this definitely needs to be called on this path so no way out of that.
+> And this definitely needs to be called on this path so no way out
+> of that.
+
+Any idea why this hasn't been seen/reported before? According to git blame
+that mutex_lock has been there since 2013. Does nobody test with
+CONFIG_DEBUG_ATOMIC_SLEEP? Am I really the first to encounter this?
+
+Before spending time on this I'd like to be sure that, yes, I'm really the
+first in 8 years to see this, and this wasn't introduced by something else.
+
 > 
-> This mutex pinctrldev_list_mutex is there to protect from devices coming and 
-> going as we look for devices with ranges on.
+> This mutex pinctrldev_list_mutex is there to protect from devices coming
+> and going as we look for devices with ranges on.
 > 
-> One way to solve it would be to simply replace it with a spinlock, maybe that 
-> works? (Check the code carefully so there are no things like calls into 
-> drivers that may fire interrupts etc...)
+> One way to solve it would be to simply replace it with a spinlock, maybe
+> that works? (Check the code carefully so there are no things like calls
+> into drivers that may fire interrupts etc...)
+> 
+> If it still need to be sleepable (mutex-ish) you need to convert it to
+> use RCU I think? (Which would be pretty cool anyway.)
 
-Have not seen the code in discussion, but unless the spinlock is taken for a 
-really short period of time, an alternative should be used.  I am not sure 
-refcount would do the trick here, though.
+RCU seems like a reasonable alternative, but I will have to read up on it
+since it's the first time I'll be using this. All those quizzes in the RCU
+docs (1) scare the hell out of me :-)
 
-> If it still need to be sleepable (mutex-ish) you need to convert it to use RCU 
-> I think? (Which would be pretty cool anyway.)
+Regards,
 
-Yeah, this might be RCU-able and, if done, will also make Paul happier. ;)
+	Hans
 
+(1) https://www.kernel.org/doc/html/latest/RCU/listRCU.html
 
-		Petko
+> 
+> Yours,
+> Linus Walleij
+> 
+
