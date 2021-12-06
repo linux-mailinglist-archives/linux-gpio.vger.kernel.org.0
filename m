@@ -2,230 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BCCE4691D3
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Dec 2021 09:55:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A918B469241
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Dec 2021 10:23:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239777AbhLFI65 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Dec 2021 03:58:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52178 "EHLO
+        id S240552AbhLFJ0V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Dec 2021 04:26:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229542AbhLFI65 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Dec 2021 03:58:57 -0500
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16CB5C061746
-        for <linux-gpio@vger.kernel.org>; Mon,  6 Dec 2021 00:55:29 -0800 (PST)
-Received: by mail-wr1-x42a.google.com with SMTP id d9so20868567wrw.4
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Dec 2021 00:55:28 -0800 (PST)
+        with ESMTP id S240475AbhLFJ0V (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Dec 2021 04:26:21 -0500
+Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8DBCC061746
+        for <linux-gpio@vger.kernel.org>; Mon,  6 Dec 2021 01:22:52 -0800 (PST)
+Received: by mail-wm1-x329.google.com with SMTP id j140-20020a1c2392000000b003399ae48f58so9889961wmj.5
+        for <linux-gpio@vger.kernel.org>; Mon, 06 Dec 2021 01:22:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=STO5Jj3dQ1sXzYML+OEYKU3DftiKlpT/Vhi6uTR5tsw=;
-        b=WKb8gZZdVZzkeKXGZzLPX/fdigN1/PCfTTSLLiS672hWdi3ikas1tsV2H8JiVrUtpI
-         +PyZVZhzame2RZd280yDUJruRvVjzucgK4Cd6Imv3YCa0w1r7new7nepF6aiS6PK9K39
-         uYE5FXUzRmXkWdDkSnY045KmcgvFbyla5ve6ufYhN5mWPCRq5spBuTm1KYul275RV8kq
-         yqpHdyY0q6esFpDBt7A2fUmLb1byJVRlTuf/TWHeSYYIO/lj/gbxa1BlgDTQHgbsZhab
-         8oEziyGN8FeCilzG2/jGnUk+/H9dVz9GzjBHHfnyUs5On+n17AC72qG5/FYMpMK2xd5V
-         I+nQ==
+        d=raspberrypi.com; s=google;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8KAEywa7+9RaUAEaQ8kpvoEbjrBvcpPvEdoPTbdrUcY=;
+        b=pB+pqEmxzsGfC+sbmG8wyAD7ci3o0YnpXfSAmTE0ftJkyxez9Fs0iYoCa5tfpnBAz7
+         WZkxyYzEOq6LoX73MI9qKHjvlGVlND//sP+J7iBxmcEDHXhASbu4uNi5I6R1o8W0OxTy
+         9CUYbSm9fmlrq0tQLNpvX/Yak07pJNQXnVEPXc1vETzmZvZsv/SubVHPZiT37JuURC21
+         xfLxphl9dtUoxxTC4Vuespr2P8xVaP/Ai784WPW/Uu6DslEfwTRBCmJdMzF/XYigtlBu
+         OxvbuFb2snDb1IdEepWNJBnIgk2YRQxYTMxlbc1B2HZhE27TK8kpvKpKqjFtj8hmqpHf
+         inFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=STO5Jj3dQ1sXzYML+OEYKU3DftiKlpT/Vhi6uTR5tsw=;
-        b=kmkYZRdOwjt0EZy0GypniKJocIYq6S1fZFnyrVulqb/fRAjkT3OgZwL59RR1qyI+es
-         x8QpPooorndSh9MVGpBOl2v6byH0IcH65zBca3HXKxco79a3L4/CynNNLojueEhbh1Je
-         fg4A7XpP4oZ+5CBIYS9Ley8SgYLq5/m1UGk5XJtiVwx3lv//HwPZzlDxCV6FC6mzNBWn
-         jtf0HDXU8YQt3R1MK3MzXWeUwVgXuAh+lD0H6rdOJ+dBlLTxA1eHk7AWOfV/CV9ci6hm
-         7+vKQO95PV4/0h6alIi/z08cY/fo8QpHrXUQh+S0g6Hw2WZ4qMroUeJxOXsWKjMfbpzh
-         tatA==
-X-Gm-Message-State: AOAM5325cA+GPtLGtxATZflFj8/yczijX7kXID4nGnMThjT1TuvC7YD7
-        rENCkXZDlqfoTZOssOoE48fXdw==
-X-Google-Smtp-Source: ABdhPJwaIiJ3n8JFLStZ486JkHxVBTxr9uvbdyc+8Pot1eFpl+prjMp40JwvJBR3lMR8RxIWcl+NTQ==
-X-Received: by 2002:a5d:5588:: with SMTP id i8mr41456170wrv.552.1638780927546;
-        Mon, 06 Dec 2021 00:55:27 -0800 (PST)
-Received: from google.com ([2.31.167.18])
-        by smtp.gmail.com with ESMTPSA id g13sm14342509wrd.57.2021.12.06.00.55.26
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8KAEywa7+9RaUAEaQ8kpvoEbjrBvcpPvEdoPTbdrUcY=;
+        b=M6QCX2HDlGeO9hmfZrgwLWLcHU3/O5P8V8gGWu3IrrkhouqW0TigVRpm/d4hu2lG6i
+         o5V0ImSQ3BnDS0kRGXuTfF/vIWyVKHtZ4MYEWwOdfwUIdhltfNVpQlRk8kcN59uh+ok2
+         r0jBtbpG734e41VRzkAc9bCigS3eHp+VfOPvxFjmaqQ+5ww8u5QqrIcIQ9U2S/94pxN0
+         4/2DZOCobskYvXI94XlxUlEqkkVfzQE7a3T2/JEPaOLxIsDw4WTxIzRVP2lhMshOyJQl
+         RTH2HAjnVg8gdlKI2rxV8xp+Y1904A3ftbsY3iDQDDohVgqX3RPXhpVpCyqepMo4Uosp
+         tZbg==
+X-Gm-Message-State: AOAM530JZIcFxP08lxGerq4IXhIiPe+7OaZIoE949p7pFkybra9CqI5s
+        4n5Io73D3aTGQR1oOJRi8myXz9I2uRgNwxcp
+X-Google-Smtp-Source: ABdhPJx13sca9eiXP22ZWik+GhPvJAv/EYHZYgUTFK4uVujnCe6xDJhFGePT+V7pa3m2f45z+k4RYg==
+X-Received: by 2002:a05:600c:3d05:: with SMTP id bh5mr37497004wmb.152.1638782571480;
+        Mon, 06 Dec 2021 01:22:51 -0800 (PST)
+Received: from buildbot.pitowers.org ([2a00:1098:3142:14:ae1f:6bff:fedd:de54])
+        by smtp.gmail.com with ESMTPSA id b10sm10746365wrt.36.2021.12.06.01.22.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Dec 2021 00:55:27 -0800 (PST)
-Date:   Mon, 6 Dec 2021 08:55:25 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Colin Foster <colin.foster@in-advantage.com>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Mon, 06 Dec 2021 01:22:51 -0800 (PST)
+From:   Phil Elwell <phil@raspberrypi.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
         Linus Walleij <linus.walleij@linaro.org>,
-        katie.morris@in-advantage.com
-Subject: Re: [RFC v1] mfd: pinctrl: RFC only: add and utilze mfd option in
- pinctrl-ocelot
-Message-ID: <Ya3P/Z3jbMpV1Fso@google.com>
-References: <20211203211611.946658-1-colin.foster@in-advantage.com>
+        Phil Elwell <phil@raspberrypi.com>,
+        Thierry Reding <treding@nvidia.com>,
+        devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH v2 0/2] pinctrl: bcm2835: Fix gpio hogs and pin reinitialisation
+Date:   Mon,  6 Dec 2021 09:22:35 +0000
+Message-Id: <20211206092237.4105895-1-phil@raspberrypi.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211203211611.946658-1-colin.foster@in-advantage.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 03 Dec 2021, Colin Foster wrote:
+Tackle two problems with the pinctrl-bcm2835 driver and its Device Tree
+configuration:
 
-> This is a psuedo-commit, but one that tells the complete story of what I'm
-> looking at. During an actual submission this'll be broken up into two
-> commits, but I'd like to get some feedback on whether this is the correct
-> path for me to be going down.
-> 
-> Background:
-> 
-> Microchip has a family of chips - the VSC7511, 7512, 7513, and 7514. The
-> last two have an internal MIPS processor, which are supported by
-> drivers/net/ethernet/mscc/ocelot_*. The former two lack this processor.
-> 
-> All four chips can be configured externally via a number of interfaces:
-> SPI, I2C, PCIe... This is currently not supported and is my end goal.
-> 
-> The networking portion of these chips have been reused in other products as
-> well. These utilize the common code by way of mscc_ocelot_switch_lib and
-> net/dsa/ocelot/*. Specifically the "Felix" driver.
-> 
-> Current status:
-> 
-> I've put out a few RFCs on the "ocelot_spi" driver. It utilizes Felix and
-> invokes much of the network portion of the hardware (VSC7512). It works
-> great! Thanks community :)
-> 
-> There's more hardware that needs to get configured, however. Currently that
-> includes general pin configuration, and an optional serial GPIO expander.
-> The former is supported by drivers/pinctrl/pinctrl-ocelot.c and the latter
-> by drivers/pinctrl/pinctrl-microchip-sgpio.c.
-> 
-> These drivers have been updated to use regmap instead of iomem, but that
-> isn't the complete story. There are two options I know about, and maybe
-> others I don't.
-> 
-> Option 1 - directly hook into the driver:
-> 
-> This was the path that was done in
-> commit b99658452355 ("net: dsa: ocelot: felix: utilize shared mscc-miim
-> driver for indirect MDIO access").
-> This is in the net-next tree. In this case the Seville driver passes in its
-> regmap to the mscc_miim_setup function, which bypasses mscc_miim_probe but
-> allows the same driver to be used.
-> 
-> This was my initial implementation to hook into pinctrl-ocelot and
-> pinctrl-microchip-sgpio. The good thing about this implementation is I have
-> direct control over the order of things happening. For instance, pinctrl
-> might need to be configured before the MDIO bus gets probed.
-> 
-> The bad thing about this implementation is... it doesn't work yet. My
-> memory is fuzzy on this, but I recall noticing that the application of a
-> devicetree pinctrl function happens in the driver probe. I ventured down
-> this path of walking the devicetree, applying pincfg, etc. That was a path
-> to darkness that I have abandoned.
-> 
-> What is functioning is I have debugfs / sysfs control, so I do have the
-> ability to do some runtime testing and verification.
-> 
-> Option 2 - MFD (this "patch")
-> 
-> It really seems like anything in drivers/net/dsa/ should avoid
-> drivers/pinctl, and that MFD is the answer. This adds some complexity to
-> pinctrl-ocelot, and I'm not sure whether that breaks the concept of MFD. So
-> it seems like I'm either doing something unique, or I'm doing something
-> wrong.
-> 
-> I err on the assumption that I'm doing something wrong.
-> 
-> pinctrl-ocelot gets its resources the device tree by way of
-> platform_get_and_ioremap_resource. This driver has been updated to support
-> regmap in the pinctrl tree:
-> commit 076d9e71bcf8 ("pinctrl: ocelot: convert pinctrl to regmap")
-> 
-> The problem comes about when this driver is probed by way of
-> "mfd_add_devices". In an ideal world it seems like this would be handled by
-> resources. MFD adds resources to the device before it gets probed. The
-> probe happens and the driver is happy because platform_get_resource
-> succeeds.
-> 
-> In this scenario the device gets probed, but needs to know how to get its
-> regmap... not its resource. In the "I'm running from an internal chip"
-> scenario, the existing process of "devm_regmap_init_mmio" will suffice. But
-> in the "I'm running from an externally controlled setup via {SPI,I2C,PCIe}"
-> the process needs to be "get me this regmap from my parent". It seems like
-> dev_get_regmap is a perfect candidate for this.
-> 
-> Perhaps there is something I'm missing in the concept of resources /
-> regmaps. But it seems like pinctrl-ocelot needs to know whether it is in an
-> MFD scenario, and that concept didn't exist. Hence the addition of
-> device_is_mfd as part of this patch. Since "device_is_mfd" didn't exist, it
-> feels like I might be breaking the concept of MFD.
-> 
-> I think this would lend itself to a pretty elegant architecture for the
-> VSC751X externally controlled chips. In a manner similar to
-> drivers/mfd/madera* there would be small drivers handling the prococol
-> layers for SPI, I2C... A core driver would handle the register mappings,
-> and could be gotten by dev_get_regmap. Every sub-device (DSA, pinctrl,
-> other pinctrl, other things I haven't considered yet) could either rely on
-> dev->parent directly, or in this case adjust. I can't imagine a scenario
-> where someone would want pinctrl for the VSC7512 without the DSA side of
-> things... but that would be possible in this architecture that would
-> otherwise not.
-> 
-> Signed-off-by: Colin Foster <colin.foster@in-advantage.com>
-> ---
->  drivers/mfd/mfd-core.c           | 6 ++++++
->  drivers/pinctrl/pinctrl-ocelot.c | 7 ++++++-
->  include/linux/mfd/core.h         | 2 ++
->  3 files changed, 14 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-> index 684a011a6396..2ba6a692499b 100644
-> --- a/drivers/mfd/mfd-core.c
-> +++ b/drivers/mfd/mfd-core.c
-> @@ -33,6 +33,12 @@ static struct device_type mfd_dev_type = {
->  	.name	= "mfd_device",
->  };
->  
-> +int device_is_mfd(struct platform_device *pdev)
-> +{
-> +	return (!strcmp(pdev->dev.type->name, mfd_dev_type.name));
-> +}
-> +EXPORT_SYMBOL(device_is_mfd);
-> +
->  int mfd_cell_enable(struct platform_device *pdev)
->  {
->  	const struct mfd_cell *cell = mfd_get_cell(pdev);
-> diff --git a/drivers/pinctrl/pinctrl-ocelot.c b/drivers/pinctrl/pinctrl-ocelot.c
-> index 0a36ec8775a3..758fbc225244 100644
-> --- a/drivers/pinctrl/pinctrl-ocelot.c
-> +++ b/drivers/pinctrl/pinctrl-ocelot.c
-> @@ -10,6 +10,7 @@
->  #include <linux/gpio/driver.h>
->  #include <linux/interrupt.h>
->  #include <linux/io.h>
-> +#include <linux/mfd/core.h>
->  #include <linux/of_device.h>
->  #include <linux/of_irq.h>
->  #include <linux/of_platform.h>
-> @@ -1368,7 +1369,11 @@ static int ocelot_pinctrl_probe(struct platform_device *pdev)
->  
->  	regmap_config.max_register = OCELOT_GPIO_SD_MAP * info->stride + 15 * 4;
->  
-> -	info->map = devm_regmap_init_mmio(dev, base, &regmap_config);
-> +	if (device_is_mfd(pdev))
-> +		info->map = dev_get_regmap(dev->parent, "GCB");
-> +	else
-> +		info->map = devm_regmap_init_mmio(dev, base, &regmap_config);
+1. The pinctrl-bcm2835 driver is a combined pinctrl/gpio driver.
+Currently the gpio side is registered first, but this breaks gpio hogs
+(which are configured during gpiochip_add_data).
 
-What happens if you were to call the wrong API in either scenario?
+2. Since [1], a "gpio-ranges" property is required in order for pins
+to be returned to inputs when freed. Note that without patch 1, the
+device never gets out of EPROBE_DEFER.
 
-If the answer is 'the call would fail', then why not call one and if
-it fails, call the other?  With provided commits describing the
-reason for the stacked calls of course.
+Note that the Fixes: tags are little more than hooks to hang the back-ports
+on - no blame is intended.
+
+[1] commit 2ab73c6d8323 ("gpio: Support GPIO controllers without
+    pin-ranges")
+
+Changes in v2:
+* Removed wrapping of Fixes: tags.
+* Added Reviewed-by from Linus, who asks that Patch 2 be merged through the
+  Broadcom/SoC tree.
+* Corrected Nicolas's email address.
+
+Phil Elwell (2):
+  pinctrl: bcm2835: Change init order for gpio hogs
+  ARM: dts: gpio-ranges property is now required
+
+ arch/arm/boot/dts/bcm2711.dtsi        |  2 ++
+ arch/arm/boot/dts/bcm283x.dtsi        |  2 ++
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c | 29 +++++++++++++++------------
+ 3 files changed, 20 insertions(+), 13 deletions(-)
 
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.25.1
+
