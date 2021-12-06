@@ -2,60 +2,31 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A097546974B
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Dec 2021 14:40:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F7EB469782
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Dec 2021 14:49:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244607AbhLFNoS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Dec 2021 08:44:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33380 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244063AbhLFNoR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Dec 2021 08:44:17 -0500
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27288C061354
-        for <linux-gpio@vger.kernel.org>; Mon,  6 Dec 2021 05:40:48 -0800 (PST)
-Received: by mail-ed1-x536.google.com with SMTP id v1so43207281edx.2
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Dec 2021 05:40:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZEajfoaUMgQO3wUjsr0AKFBgOxwqqtWRlNRhrN4EWLc=;
-        b=rsfpOa7jUnPYmhMXjrmKvAKDasq15WtsVsUZm+qry6uyWbRWV+ExmAmUBpsmXCWzJV
-         xZryMpANmJu3fX36FKoW5FKO1lODQq+QUi3BW63FBBPF1cmJHduVjLjkjcvods4zC58C
-         APZ2aLAOYq1/lPQd6a49c/7eC6++FrD46747VH9ByKSFrYkP3/NZi77k2k0edvQT8GBT
-         hIHp6272hRrk1bHBniIL7wIsrdeljRSlMdbLxb8NeZumZReV9k2zimk8D3YH8fIfuNF7
-         srclbdtyOuLgKT8o34xNGFQF0cB8JBH68FxtSLwVF5xXGWpJmCNLCsex9zVBzIGokTrO
-         ZmrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZEajfoaUMgQO3wUjsr0AKFBgOxwqqtWRlNRhrN4EWLc=;
-        b=0urLaHS1xTFugnUAuMysVr5hOo+NjgSJIZAuZ2DYWgV8Bc/ppu+92ji5kSKVCJcNH5
-         kYHXZAUlQUPneZLkKhOmq5W+5OkxWrLkk9neEBgVjciQFJW0WdASzUSqdpOKpNXQar1N
-         KjVpAaWgdLbr6zwa2oROWkRXROtA5a/zRgy+kUhJyccTiuWD/KOexbfBOOUh2ZCYYfNu
-         CbENdXm9Th6dbK9xa8FRzxYIq7mXcQ/JuCeZ07Tz3RRou1zgj83wHlHyNidaUPMXVzLX
-         PKnCJAkjbCtqeOMsQ76C/IxgoeRRcE/9R5s5aMS6xRDAad5sdXONvmI41Dl1MGQcp9eR
-         de6Q==
-X-Gm-Message-State: AOAM533ulkC1U4383zPWolyARdRJaX+eCCDy9+ZDTOu++PFZevoUhwmY
-        3o2HdxAu6cVGApvoWDvNFSdBVysnS8lSPn55Ao0q/w==
-X-Google-Smtp-Source: ABdhPJxazH7u1GuRD1TegRa6qncPcoWD07O91rH2xUDjtvi4KfXf7FTGEgPokhCJs5K+iW7F3RABvxremYNKMSnjkE8=
-X-Received: by 2002:a05:6402:354e:: with SMTP id f14mr53829427edd.245.1638798046711;
- Mon, 06 Dec 2021 05:40:46 -0800 (PST)
-MIME-Version: 1.0
-References: <20211203133003.31786-1-brgl@bgdev.pl> <20211203133003.31786-4-brgl@bgdev.pl>
- <YapnTHQZyNCZXrgp@smile.fi.intel.com> <YapoW+DL4jPo69u8@smile.fi.intel.com>
- <Yapp4vakFxH7JV5B@smile.fi.intel.com> <CAMRc=MeWfKHWFKwRjaqczrfwhAodpDLgrWKF-zqXCsjd=gMv3g@mail.gmail.com>
- <Yap5ctmlw6NeNM+7@smile.fi.intel.com> <CAMRc=MffmFgCZFRziw-QJ+Y3WobJZzUh1Nbp2oym6JLqfnZCdQ@mail.gmail.com>
- <Ya4RHA91Ow9frP8t@smile.fi.intel.com>
-In-Reply-To: <Ya4RHA91Ow9frP8t@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 6 Dec 2021 14:40:36 +0100
-Message-ID: <CAMRc=MeqGuVsydk4ZKiEKPUv32FdaOUHg7Ee3efUda==RhjXdg@mail.gmail.com>
-Subject: Re: [PATCH v12 3/7] gpiolib: of: make fwnode take precedence in
- struct gpio_chip
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        id S244840AbhLFNxM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Dec 2021 08:53:12 -0500
+Received: from mga07.intel.com ([134.134.136.100]:26242 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S244804AbhLFNxM (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 6 Dec 2021 08:53:12 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10189"; a="300699248"
+X-IronPort-AV: E=Sophos;i="5.87,291,1631602800"; 
+   d="scan'208";a="300699248"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2021 05:49:43 -0800
+X-IronPort-AV: E=Sophos;i="5.87,291,1631602800"; 
+   d="scan'208";a="678988796"
+Received: from smile.fi.intel.com ([10.237.72.184])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2021 05:49:40 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1muEMB-002nVh-Ul;
+        Mon, 06 Dec 2021 15:48:39 +0200
+Date:   Mon, 6 Dec 2021 15:48:39 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Shuah Khan <shuah@kernel.org>,
@@ -64,29 +35,53 @@ Cc:     Kent Gibson <warthog618@gmail.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v12 3/7] gpiolib: of: make fwnode take precedence in
+ struct gpio_chip
+Message-ID: <Ya4Ut9ECbYhBkke5@smile.fi.intel.com>
+References: <20211203133003.31786-1-brgl@bgdev.pl>
+ <20211203133003.31786-4-brgl@bgdev.pl>
+ <YapnTHQZyNCZXrgp@smile.fi.intel.com>
+ <YapoW+DL4jPo69u8@smile.fi.intel.com>
+ <Yapp4vakFxH7JV5B@smile.fi.intel.com>
+ <CAMRc=MeWfKHWFKwRjaqczrfwhAodpDLgrWKF-zqXCsjd=gMv3g@mail.gmail.com>
+ <Yap5ctmlw6NeNM+7@smile.fi.intel.com>
+ <CAMRc=MffmFgCZFRziw-QJ+Y3WobJZzUh1Nbp2oym6JLqfnZCdQ@mail.gmail.com>
+ <Ya4RHA91Ow9frP8t@smile.fi.intel.com>
+ <CAMRc=MeqGuVsydk4ZKiEKPUv32FdaOUHg7Ee3efUda==RhjXdg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MeqGuVsydk4ZKiEKPUv32FdaOUHg7Ee3efUda==RhjXdg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 6, 2021 at 2:34 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Mon, Dec 06, 2021 at 09:41:33AM +0100, Bartosz Golaszewski wrote:
-> > On Fri, Dec 3, 2021 at 9:10 PM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
->
-> ...
->
-> > This series concerns the gpio-sim driver and it only uses configfs
-> > (with manually created platform devices) or device-tree. I would
-> > prefer to do ACPI separately and I'd like you to lead that because I
-> > neither have any HW to test nor claim to understand it. :)
->
-> Please, mention this in the commit message that ACPI is not covered (yet).
->
+On Mon, Dec 06, 2021 at 02:40:36PM +0100, Bartosz Golaszewski wrote:
+> On Mon, Dec 6, 2021 at 2:34 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > On Mon, Dec 06, 2021 at 09:41:33AM +0100, Bartosz Golaszewski wrote:
+> > > On Fri, Dec 3, 2021 at 9:10 PM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > ...
+> >
+> > > This series concerns the gpio-sim driver and it only uses configfs
+> > > (with manually created platform devices) or device-tree. I would
+> > > prefer to do ACPI separately and I'd like you to lead that because I
+> > > neither have any HW to test nor claim to understand it. :)
+> >
+> > Please, mention this in the commit message that ACPI is not covered (yet).
+> 
+> But the commit message says: "gpiolib: of: make fwnode take precedence
+> in struct gpio_chip" - it says OF right here. :)
 
-But the commit message says: "gpiolib: of: make fwnode take precedence
-in struct gpio_chip" - it says OF right here. :)
+It implies that reader should have a 6th sense to know about ACPI and what
+else? Please, be explicit over implicit.
 
-Bart
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
