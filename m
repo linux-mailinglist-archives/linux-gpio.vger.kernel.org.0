@@ -2,138 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7ABFF46A6D4
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Dec 2021 21:23:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 72E4946AD2F
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Dec 2021 23:50:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349642AbhLFU1W (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Dec 2021 15:27:22 -0500
-Received: from smtpweb146.aruba.it ([62.149.158.146]:33141 "EHLO
-        smtpweb146.aruba.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349507AbhLFU1W (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Dec 2021 15:27:22 -0500
-Received: from [192.168.50.18] ([146.241.138.59])
-        by Aruba Outgoing Smtp  with ESMTPSA
-        id uKPnm567IrmmOuKPnm6yxl; Mon, 06 Dec 2021 21:16:50 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
-        t=1638821810; bh=Qdhx0uLObD6VmjbgQi/LtOmpCJZiNuHaAIau9CFzCwQ=;
-        h=Subject:To:From:Date:MIME-Version:Content-Type;
-        b=b0fR8m/obSGPPpKT7k9c0PgnumBdaFeeclYGZw/vBCPuWkIOLaghSlcg5YGuh/2Yx
-         3p/3sokWT+onlNpbHIfkJKvQq+KqB2r3CVpynKTrSvp8L1opy7gu7aYo9m8LuS19gV
-         UdSgXyxrdY5XWSA4fZDYav5Edgnja4Z52YzgYRgTUhHR+Bqv2kpSq3v4Mh/iUeoexN
-         2e5Gq9xENYFTvMjbYfPARKbXqgw+cwYH+Oaxf+KVPC707c/jlHK/ri7tO6yDhncsmq
-         12ldkM0pHniA2S2mrLyp310xclrrhTubuhYwXNvo1fmEg7dwGInk8uxL+1NDkYTuNR
-         UUSX51Evuby5g==
-Subject: Re: [PATCH v4 13/13] ARM: imxrt1050_defconfig: add i.MXRT1050
- defconfig
-To:     Jesse Taube <mr.bossman075@gmail.com>, linux-imx@nxp.com
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, ulf.hansson@linaro.org, aisheng.dong@nxp.com,
-        stefan@agner.ch, linus.walleij@linaro.org,
-        gregkh@linuxfoundation.org, arnd@arndb.de, olof@lixom.net,
-        soc@kernel.org, linux@armlinux.org.uk, abel.vesa@nxp.com,
-        adrian.hunter@intel.com, jirislaby@kernel.org,
-        nobuhiro1.iwamatsu@toshiba.co.jp, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org
-References: <20211204061042.1248028-1-Mr.Bossman075@gmail.com>
- <20211204061042.1248028-14-Mr.Bossman075@gmail.com>
-From:   Giulio Benetti <giulio.benetti@benettiengineering.com>
-Message-ID: <ab5026f8-4881-6483-5a42-121860a02c10@benettiengineering.com>
-Date:   Mon, 6 Dec 2021 21:16:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        id S1358508AbhLFWyW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Dec 2021 17:54:22 -0500
+Received: from sin.source.kernel.org ([145.40.73.55]:44978 "EHLO
+        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1358484AbhLFWyU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Dec 2021 17:54:20 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 9EA50CE13D5;
+        Mon,  6 Dec 2021 22:50:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C37D5C341C6;
+        Mon,  6 Dec 2021 22:50:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1638831047;
+        bh=/m8B7N3jn07JULFSJmfIN2cB4DvMqUf+Q2gtsAi4WYA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=q3QYj0WmJh35iA/2aBRqyocQHyfRqeWsaer8cRiFNQKHd2o/PymZHP9BXeXn7alCf
+         f8PLNWMRpxdT0t7xXVJWx2Jtx4zV0xoVSKVvlsPbLfhzP/nIzFck4Wv2smi16kMM2E
+         6qdaCS10soNluWvwRIGyCuAc/CU5a0jZaJjY2Y35FgxhrY066IixTTVQrwKkaMURbB
+         FJYmF3HLKWcL1w6v2xYUSZoAgs6tesvcXH6j7TQT+yaEtxxAZv89JOmceUlVxW7hRM
+         6liaOFMQjDH2NLlAv0A5sKU4+5Qp6d+ruCCXPoyzRfSC4IKYRw/VKvnNTi7rAs/xiz
+         nvTKh24U509aA==
+Received: by mail-ed1-f52.google.com with SMTP id g14so48696069edb.8;
+        Mon, 06 Dec 2021 14:50:47 -0800 (PST)
+X-Gm-Message-State: AOAM530/mPupjs6QO8HYHFTyxRWLK3jU5RYmk8OPBfFe8CUO0RUc7mcy
+        1ubgbHxlLFglPyb/Aj74UjB8auRPOEaplo4G4A==
+X-Google-Smtp-Source: ABdhPJzQWjlsdlKnpjt+Djq9bVfhZhkqKmJUQQIFwENFEOID1iyokEcVWDrEBcnv1aslpxs8xFAfwX5TU/JaN2Ay9FA=
+X-Received: by 2002:a17:907:7f25:: with SMTP id qf37mr49050471ejc.147.1638831046133;
+ Mon, 06 Dec 2021 14:50:46 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20211204061042.1248028-14-Mr.Bossman075@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfCbBD1k9Iy5MXE/bMLzKubSwohvt/2zyaZBzfKOfH44CiqXeP9aQj1PLrpsIUVgbO9jY8DsjMVABgzBI2+fgtS5mNkRkACOKuuaewQmfzFc6UFp3gWVy
- sPnsdeNJ8N7Zt9fhBZMEPtv72CBM9SgWED+4dog4RukHKZVyPjpKCgRmg40z9+stiY5m/6krLcnj3PJszuA5/AJw1au5Pb/gAJ0SVysVeyLED8mFi5TQNsrY
- KvXmLJnVM9nYkycSRPV2WykSZNjS4WU9TeDyhtydQMjQOoDVMJbfzEfB7dLQxhrcUpQEpF1Q+6sleQOn7OftMVG/6dPbDAkMyWgzXXIqlKaRMjOU5yljGLli
- 3gwHf3dg2ulJ+IEkpPs3NnENcrZNR3nYvQJBad3+tTwzRNvsexNa3oJlwy4f7/UiZ6Mdz3FNCoADbM4u4YFTqsLTRIG1eLHZy+E9wqQCwA9okDysgGIE35Ju
- QzVPk9720+2mK/iRUtLeX/8rRnAhfSD+6HUDKg4IXwIDA8aHMUTZGb9bNxumBphuZr80WCQ7K4gURi6Y/lOZAiGuRGtvnbUXvWv+nG1886hTSmTfe+ITsRPB
- pf6brlUlLnh+erfLhbZ2Tc/Qg4y16k6g417t651LCH7GOWShXgmUJMGR7qpU/dMYRPauQPcN1CXuwOt2Yrw3ppOhFBYn1PjrOTd+dmNkxhx/nIFBLMs/rhSt
- yg3FQv+XEkTFiGeFDoTMURFY0ydnTpkCP3XHEb2bXjXsxBkgq7InqJy2137xef28/SfmHtyvdyDbzHUg+CuLshmFx8Dt+G6LY6YOM203PF1ZwRmuOPo0P80p
- qJLvSQW+GeaQnfAJHI+zwQ76J/JrfFVDql0587t8bzItbvMuEeK5sPY4sVkijWqCwKLxnBqcQZjlqzO/viUaodxQr3y5IjtdmukmPZGlUWmucq3yKjX9Q39Q
- M3EbTWzXb9umRWdcR47SKsfhwEBQPOyJvV1fnWBNlzAXvjpHH0WUdERwKllPZWb6G8u3IWy6HW2I9duv0kXe8m5tcZMqkoCXMdwA4HXo1LbL1WA/eFZHmPJG
- xJt6REMY58OsrNqS07uCQzV+xxktX2VXinr9isx15PPrDX4MUJ+G24aywKbpzfA2dXzZwAQ+jufKNiGd2JiW/iQQIsxbm68O/7Q=
+References: <20211202063216.24439-1-zajec5@gmail.com>
+In-Reply-To: <20211202063216.24439-1-zajec5@gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 6 Dec 2021 16:50:34 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL=4iUJjQXjGc7eacbYW5YE-VRC4yGhu8pLVd-zUKvhHQ@mail.gmail.com>
+Message-ID: <CAL_JsqL=4iUJjQXjGc7eacbYW5YE-VRC4yGhu8pLVd-zUKvhHQ@mail.gmail.com>
+Subject: Re: [PATCH REBASE] dt-bindings: pinctrl: use pinctrl.yaml
+To:     =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Jesse,
+On Thu, Dec 2, 2021 at 12:32 AM Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com> =
+wrote:
+>
+> From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
+>
+> Also fix some examples to avoid warnings like:
+> brcm,ns-pinmux.example.dt.yaml: pin-controller@1800c1c0: $nodename:0: 'pi=
+n-controller@1800c1c0' does not match '^pinctrl|pinmux@[0-9a-f]+$'
 
-On 04/12/21 07:10, Jesse Taube wrote:
-> From: Giulio Benetti <giulio.benetti@benettiengineering.com>
-> 
-> Add i.MXRT1050 defconfig, that will be the basis for the i.MXRT family.
+I think you missed some. linux-next now has these warnings:
 
-here we need a generic imxrt_defconfig file for i.MXRT1xxx family, like 
-sunxi_defconfig, stm32_defconfig etc.
-
-Kind regards
--- 
-Giulio Benetti
-Benetti Engineering sas
-
-> Signed-off-by: Giulio Benetti <giulio.benetti@benettiengineering.com>
-> Signed-off-by: Jesse Taube <Mr.Bossman075@gmail.com>
-> ---
-> V1->V2:
-> * Nothing done
-> V2->V3:
-> * Nothing done
-> V3->V4:
-> * Remove unnecessary CONFIGs
-> * Add futex suport after "ARM: 9122/1: select HAVE_FUTEX_CMPXCHG"
-> 9d417cbe36eee7afdd85c2e871685f8dab7c2dba
-> ---
->   arch/arm/configs/imxrt_defconfig | 35 ++++++++++++++++++++++++++++++++
->   1 file changed, 35 insertions(+)
->   create mode 100644 arch/arm/configs/imxrt_defconfig
-> 
-> diff --git a/arch/arm/configs/imxrt_defconfig b/arch/arm/configs/imxrt_defconfig
-> new file mode 100644
-> index 000000000000..52dba3762996
-> --- /dev/null
-> +++ b/arch/arm/configs/imxrt_defconfig
-> @@ -0,0 +1,35 @@
-> +# CONFIG_LOCALVERSION_AUTO is not set
-> +CONFIG_BPF_SYSCALL=y
-> +CONFIG_SCHED_AUTOGROUP=y
-> +# CONFIG_MMU is not set
-> +CONFIG_ARCH_MXC=y
-> +CONFIG_SOC_IMXRT=y
-> +CONFIG_SET_MEM_PARAM=y
-> +CONFIG_DRAM_BASE=0x80000000
-> +CONFIG_DRAM_SIZE=0x02000000
-> +CONFIG_BINFMT_FLAT=y
-> +CONFIG_UEVENT_HELPER=y
-> +CONFIG_DEVTMPFS=y
-> +CONFIG_DEVTMPFS_MOUNT=y
-> +CONFIG_IMX_WEIM=y
-> +CONFIG_LEGACY_PTY_COUNT=2
-> +CONFIG_SERIAL_FSL_LPUART=y
-> +CONFIG_SERIAL_FSL_LPUART_CONSOLE=y
-> +CONFIG_SERIAL_DEV_BUS=y
-> +CONFIG_PINCTRL_IMXRT1050=y
-> +CONFIG_GPIO_MXC=y
-> +CONFIG_MMC=y
-> +CONFIG_MMC_SDHCI=y
-> +CONFIG_MMC_SDHCI_PLTFM=y
-> +CONFIG_MMC_SDHCI_ESDHC_IMX=y
-> +CONFIG_DMADEVICES=y
-> +CONFIG_FSL_EDMA=y
-> +CONFIG_CLK_IMXRT1050=y
-> +CONFIG_EXT4_FS=y
-> +CONFIG_EXT4_FS_POSIX_ACL=y
-> +CONFIG_EXT4_FS_SECURITY=y
-> +CONFIG_VFAT_FS=y
-> +CONFIG_FAT_DEFAULT_UTF8=y
-> +CONFIG_EXFAT_FS=y
-> +CONFIG_NLS_ASCII=y
-> +CONFIG_NLS_UTF8=y
-> 
-
+builds/robherring/linux-dt/Documentation/devicetree/bindings/mfd/brcm,cru.e=
+xample.dt.yaml:
+pin-controller@1c0: $nodename:0: 'pin-controller@1c0' does not match
+'^(pinctrl|pinmux)(@[0-9a-f]+)?$'
+From schema: /builds/robherring/linux-dt/Documentation/devicetree/bindings/=
+pinctrl/brcm,ns-pinmux.yaml
+/builds/robherring/linux-dt/Documentation/devicetree/bindings/mfd/cirrus,ma=
+dera.example.dt.yaml:
+codec@1a: $nodename:0: 'codec@1a' does not match
+'^(pinctrl|pinmux)(@[0-9a-f]+)?$'
+From schema: /builds/robherring/linux-dt/Documentation/devicetree/bindings/=
+mfd/cirrus,madera.yaml
+/builds/robherring/linux-dt/Documentation/devicetree/bindings/mfd/cirrus,lo=
+chnagar.example.dt.yaml:
+lochnagar-pinctrl: $nodename:0: 'lochnagar-pinctrl' does not match
+'^(pinctrl|pinmux)(@[0-9a-f]+)?$'
+From schema: /builds/robherring/linux-dt/Documentation/devicetree/bindings/=
+pinctrl/cirrus,lochnagar.yaml
