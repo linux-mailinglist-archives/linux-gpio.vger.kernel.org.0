@@ -2,131 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BFC046967F
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Dec 2021 14:13:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D9544696AA
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Dec 2021 14:17:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244084AbhLFNQa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Dec 2021 08:16:30 -0500
-Received: from mga04.intel.com ([192.55.52.120]:41243 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244041AbhLFNQ3 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 6 Dec 2021 08:16:29 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10189"; a="236046871"
-X-IronPort-AV: E=Sophos;i="5.87,291,1631602800"; 
-   d="scan'208";a="236046871"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2021 05:13:01 -0800
-X-IronPort-AV: E=Sophos;i="5.87,291,1631602800"; 
-   d="scan'208";a="604986568"
-Received: from smile.fi.intel.com ([10.237.72.184])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2021 05:12:50 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1muDmW-002mwh-84;
-        Mon, 06 Dec 2021 15:11:48 +0200
-Date:   Mon, 6 Dec 2021 15:11:48 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Baruch Siach <baruch@tkos.co.il>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Tony Lindgren <tony@atomide.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Jianqun Xu <jay.xu@rock-chips.com>,
-        Alexandru Ardelean <aardelean@deviqon.com>,
-        Thierry Reding <treding@nvidia.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        patches@opensource.cirrus.com,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-power@fi.rohmeurope.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-pwm@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-unisoc@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-tegra@vger.kernel.org, Ray Jui <rjui@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Gregory Fong <gregory.0xf0@gmail.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Keerthy <j-keerthy@ti.com>, Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v1 1/3] gpio: Get rid of duplicate of_node assignment in
- the drivers
-Message-ID: <Ya4MFMWSyj4YbdNG@smile.fi.intel.com>
-References: <20211202210839.79140-1-andriy.shevchenko@linux.intel.com>
- <CACRpkdZbpKqG_uS2N8TW2-HL5CqnuKDpHVCabf66MyQQof0jOw@mail.gmail.com>
+        id S244231AbhLFNVZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Dec 2021 08:21:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56292 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S244222AbhLFNVZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Dec 2021 08:21:25 -0500
+Received: from lb1-smtp-cloud8.xs4all.net (lb1-smtp-cloud8.xs4all.net [IPv6:2001:888:0:108::1b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C57FC0613F8
+        for <linux-gpio@vger.kernel.org>; Mon,  6 Dec 2021 05:17:56 -0800 (PST)
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id uDrMmpEGIQyExuDrPm2JUS; Mon, 06 Dec 2021 14:16:51 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s2;
+        t=1638796611; bh=jO0TUoA+45A9m9vG9AnfIIzZ+3nO+dpDmF32KYvu5oo=;
+        h=From:To:Subject:Date:Message-Id:MIME-Version:From:Subject;
+        b=UHYx+DRuDdSbq/na5EDgsaib+IxdjTtU8j1xzceseJhzckOTcTurONFpRE0L0cMLs
+         7WYMmJMNuXrku7N6Ox6ZhaAr7cUU+s3gxrUgjBlfH3cn6Xrn5FCrmzg6byJB/+LLuH
+         zBzK/2SsYfZIOcHdA2xyNr72ZnV52NIu5RVZgNorQEUHxWVzFjJhqENpOzapVU6fi7
+         knA82deNFgtGZ2bKK5m+s0FCF7os3o+C4bFQWYUAkpJ37QZK7Dt3J2JNIGp+USLelR
+         lw9lUgCmgZpw/IIq/9+DfnCCsqoVEd5ZA4/95MFkBfMoSp89od/98z7ZcNs7DBXaky
+         tOMBS392ReU/A==
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+To:     linux-media@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, Maxime Ripard <maxime@cerno.tech>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Subject: [RFC PATCH 0/3] pinctrl: can_sleep and pinctrl_gpio_direction
+Date:   Mon,  6 Dec 2021 14:16:45 +0100
+Message-Id: <20211206131648.1521868-1-hverkuil-cisco@xs4all.nl>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZbpKqG_uS2N8TW2-HL5CqnuKDpHVCabf66MyQQof0jOw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4xfNdKAb2cv9XamxDB1XdW+MQEwt0sC1y2cbdRAmqQ0Yub81j7bvvaMYrNU2IHqEx8vfIPwA1mhYkFhzskp4H16uq0YM3LWSBi+IhHNZR6BCEcCDyfHglf
+ juBMUceREyGwf06ta9Gvme/S3dIG0UfBav90DxlqqMMFeGSJ3QzPxzMdiw+VenwG/mqqinqc4evfmelq2oEt67aAIdSZXTNFGkviDI7xIJ8KTokaj/x3+MpK
+ lHDx/x3PTig2a4w/bJXAylrZIUESgIU8q9iu/yzIx/RwQVZ3QIBvVS8zV4bOnRpJJtyQMUZMU3g0XiZ08uDVr5leqDkdFvSKX66TQkeoi5inTNifVqhrUTW/
+ b29y+Lwl
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Dec 05, 2021 at 01:06:07AM +0100, Linus Walleij wrote:
-> On Thu, Dec 2, 2021 at 10:17 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> 
-> > GPIO library does copy the of_node from the parent device of
-> > the GPIO chip, there is no need to repeat this in the individual
-> > drivers. Remove these assignment all at once.
-> >
-> > For the details one may look into the of_gpio_dev_init() implementation.
-> >
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> 
-> This is definitely a patch in the right direction, as Bart says
-> it can be a bit dangerous, the outliers are those drivers that
-> assign the .dev to something completely different than the
-> the dev where the of_node is copied from.
+Hi all,
 
-I carefully checked these all and this patch series is only for the cases
-when I'm sure it's the same device, which is used as parent, and its of_node
-supplied.
+Based on this discussion:
 
-> The idea was definitely always to only assign it in the core
-> *unless* there is a reason to have a completely different
-> of_node for some reason.
-> 
-> > +++ b/drivers/gpio/gpio-rda.c
-> > @@ -240,8 +240,6 @@ static int rda_gpio_probe(struct platform_device *pdev)
-> >         rda_gpio->chip.label = dev_name(dev);
-> >         rda_gpio->chip.ngpio = ngpios;
-> >         rda_gpio->chip.base = -1;
-> > -       rda_gpio->chip.parent = dev;
-> > -       rda_gpio->chip.of_node = np;
-> 
-> Mention in the commit message that in this driver
-> you also drop the the .parent assignment because the
-> core will handle it.
+https://lore.kernel.org/linux-gpio/CACRpkdb3q4-9O3dHS6QDWnZZ5JJjXWXS9KPvwXVaowLMRhcejA@mail.gmail.com/T/#t
 
-Okay, I will update it. Also I'll update to the last codebase (dunno if Bart
-is going to pull the IB from Lee where one of the drivers is gone: da53cc634cea
-("gpio: bd70528 Drop BD70528 support").
+I propose this RFC series.
+
+The first patch adds a check if can_sleep is true when pinctrl_gpio_direction()
+is called. It does this only once per pin controller (a new field is added to
+keep track if this has been checked or not). If the gpio driver set can_sleep
+to false, then it makes no sense that pinctrl_gpio_direction() is called since
+it takes two different mutexes. This way you get at least a warning that something
+is wrong, rather than only if CONFIG_DEBUG_ATOMIC_SLEEP is set.
+
+However, if there are gpio drivers that call pinctrl_gpio_direction() always from
+non-atomic contexts (so never via gpiod_get/set_value() etc.) then I'm not sure if
+this check is possible here.
+
+The second and third patches convert the bcm2835 and sunxi pinctrl drivers to
+set the direction in those drivers directly, rather than by calling
+pinctrl_gpio_direction_input/output. Both set can_sleep to false, so going
+through a code path that uses mutexes is not a good idea.
+
+This series has been tested with the cec-gpio driver on a Raspberry Pi 4b and
+with an A10 Cubieboard. Both pincontroller drivers set can_sleep to false, but
+call pinctrl_gpio_direction_input/output().
+
+Those last two patches look sane to me.
+
+Regards,
+
+	Hans
+
+Hans Verkuil (3):
+  pinctrl/core: check that can_sleep is true in pinctrl_gpio_direction()
+  pinctrl-bcm2835: don't call pinctrl_gpio_direction()
+  pinctrl-sunxi: don't call pinctrl_gpio_direction()
+
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c | 12 +++++++++---
+ drivers/pinctrl/core.c                | 11 +++++++++++
+ drivers/pinctrl/core.h                |  4 ++++
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c |  8 ++++++--
+ 4 files changed, 30 insertions(+), 5 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.33.0
 
