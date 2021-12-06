@@ -2,75 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BE8BC469922
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Dec 2021 15:37:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E931D469A4E
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Dec 2021 16:04:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344443AbhLFOkm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Dec 2021 09:40:42 -0500
-Received: from mga18.intel.com ([134.134.136.126]:2250 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S244773AbhLFOkl (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 6 Dec 2021 09:40:41 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10189"; a="224193513"
-X-IronPort-AV: E=Sophos;i="5.87,291,1631602800"; 
-   d="scan'208";a="224193513"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2021 06:37:12 -0800
-X-IronPort-AV: E=Sophos;i="5.87,291,1631602800"; 
-   d="scan'208";a="679008209"
-Received: from smile.fi.intel.com ([10.237.72.184])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2021 06:37:08 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1muF67-002oKr-TQ;
-        Mon, 06 Dec 2021 16:36:07 +0200
-Date:   Mon, 6 Dec 2021 16:36:07 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v12 3/7] gpiolib: of: make fwnode take precedence in
- struct gpio_chip
-Message-ID: <Ya4f1/8N9AQUyY9J@smile.fi.intel.com>
-References: <20211203133003.31786-1-brgl@bgdev.pl>
- <20211203133003.31786-4-brgl@bgdev.pl>
- <Ya4WASlzYGOFWORk@smile.fi.intel.com>
- <CAMRc=MeLVsy3hfVdQdofk+m7VcTYYKLKGyeoyK7T4r87qn6sbA@mail.gmail.com>
+        id S1345558AbhLFPHF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Dec 2021 10:07:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52172 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1345709AbhLFPEv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Dec 2021 10:04:51 -0500
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 882C5C0613F8
+        for <linux-gpio@vger.kernel.org>; Mon,  6 Dec 2021 07:01:22 -0800 (PST)
+Received: by mail-ed1-x530.google.com with SMTP id y13so43985550edd.13
+        for <linux-gpio@vger.kernel.org>; Mon, 06 Dec 2021 07:01:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cqcfDHprQ4uU7aL7/WjRV9bJONnOkLxV2egvULjti60=;
+        b=0fWZ87P6CZJWpqLZkAx3tWoR+y36lmzy+x5groU378oJY+YsBomyFsb/6qEf7peE0x
+         LVhk4JN7CTX1CH2JiQ5l2bWbCFIosNHapX7KCdJgESG1PdCV5bKsub1qXbFg5GyARLFc
+         uQJvH8GO+s1zbd1OZL20oCzb+XjNGZ7aL5V2halu/Moyl51OfUeGQkzTu7HKjkwt1xYy
+         1T9/6q3yOFokI/LnSFe12K9xaQbjEmKIiGRB44d2ODoIbjbSLR/I+34HOUJZTsORoANp
+         9/ICtkWJt0Sbzx7CGqVWsQ+C7lHYRjN05qBICFt5JSBgqFIpy4+B6wnryjn0EJZGKEZL
+         szJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cqcfDHprQ4uU7aL7/WjRV9bJONnOkLxV2egvULjti60=;
+        b=2TENCUz7Gfh48sATmX7Klt0WK6p9unm7g8orCQmTs1ofTGftdTzfdyn4Uzj2990zoO
+         2a9ZS70IAi1YlGNeCV8W55HSFI9pGwb4Yu/SI4BlHZY/PSKh0tAAzqUu3o19b3+ZvG7+
+         dRKBzzhxSIbiPz67rtvAbiD+cVG67R4QnnVHaFcz1VO/j2nwYUsWQDw4pWYBV3+dQW+W
+         bwpQ88cZlL1MH9ACdOWNluPeNu1Y19lBuW+lityXAGA7zG5f+DHBRwYSPJ/+bttV8ubP
+         Tz97rZaXFnGPQiaVGMOWwVKtXMm7M9Y/B2TDHpbgtEIRR0QKViodAvzHrcQufz3pUg/b
+         /VrQ==
+X-Gm-Message-State: AOAM531Kx5yVjTD3L9rVVasVHV3ZA5NwvnWwEx7h5ZVlveOvww3UHlZe
+        hvDEafRxFfQ2975eYhDJEfFi0740yBT2YZOClagiJA==
+X-Google-Smtp-Source: ABdhPJyQ4jAc5EsPxMas1Gud51cuGcTEsUHRqQnMv3uG/phRZoYlWhd7byfzl+Hir6L7anVAwzIjVkxBHvSbHFHX0cE=
+X-Received: by 2002:a50:e611:: with SMTP id y17mr55990370edm.270.1638802881055;
+ Mon, 06 Dec 2021 07:01:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MeLVsy3hfVdQdofk+m7VcTYYKLKGyeoyK7T4r87qn6sbA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20211202134034.14048-1-brgl@bgdev.pl>
+In-Reply-To: <20211202134034.14048-1-brgl@bgdev.pl>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 6 Dec 2021 16:01:10 +0100
+Message-ID: <CAMRc=MeFFiD70+Pj=yDcR=SxEPTtSuMjmxjz7r2RUPfMQb=6jg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] gpiolib: improve coding style for local variables
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Johan Hovold <johan@kernel.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 06, 2021 at 03:03:31PM +0100, Bartosz Golaszewski wrote:
-> On Mon, Dec 6, 2021 at 2:55 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > On Fri, Dec 03, 2021 at 02:29:59PM +0100, Bartosz Golaszewski wrote:
-> > > If the driver sets the fwnode in struct gpio_chip, let it take
-> > > precedence over the of_node.
-> >
-> > By the way, have you tried this on pure DT-less/ACPI-less platform
-> > (CONFIG_OF=n, CONFIG_ACPI=n)? I believe gpio-sim in that case won't work,
-> > because this doesn't affect swnode case, right?
-> >
-> 
-> Works just fine on a BeagleBone Black - both the regular GPIO
-> controllers as well as DT-instantiated gpio-sim.
+On Thu, Dec 2, 2021 at 2:40 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> Drop unneeded whitespaces and put the variables of the same type
+> together for consistency with the rest of the code.
+>
+> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+> v1 -> v2:
+> - no changes
+>
+> v2 -> v3:
+> - keep initializations on separate lines
+>
+> v3 -> v4:
+> - no changes
+>
+>  drivers/gpio/gpiolib.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index abfbf546d159..ede8b8a7aa18 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -594,11 +594,11 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>                                struct lock_class_key *request_key)
+>  {
+>         struct fwnode_handle *fwnode = gc->parent ? dev_fwnode(gc->parent) : NULL;
+> -       unsigned long   flags;
+> -       int             ret = 0;
+> -       unsigned        i;
+> -       int             base = gc->base;
+>         struct gpio_device *gdev;
+> +       unsigned long flags;
+> +       int base = gc->base;
+> +       unsigned int i;
+> +       int ret = 0;
+>
+>         /*
+>          * First: allocate and populate the internal stat container, and
+> --
+> 2.25.1
+>
 
-Yeah, I realized that myself why.
+Queued for next.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bart
