@@ -2,82 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 93A1A4693FD
-	for <lists+linux-gpio@lfdr.de>; Mon,  6 Dec 2021 11:33:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BFC046967F
+	for <lists+linux-gpio@lfdr.de>; Mon,  6 Dec 2021 14:13:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233953AbhLFKhN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Dec 2021 05:37:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46626 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232977AbhLFKhM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Dec 2021 05:37:12 -0500
-Received: from mail-ot1-x32b.google.com (mail-ot1-x32b.google.com [IPv6:2607:f8b0:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66782C0613F8
-        for <linux-gpio@vger.kernel.org>; Mon,  6 Dec 2021 02:33:44 -0800 (PST)
-Received: by mail-ot1-x32b.google.com with SMTP id 47-20020a9d0332000000b005798ac20d72so12952080otv.9
-        for <linux-gpio@vger.kernel.org>; Mon, 06 Dec 2021 02:33:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=idIIka1mu53auPQEDeeVp+5SHwt5ecOY/qD1zuhwjP0=;
-        b=s5NKI1vfcVcdP/hgX0slg1LbmFOYHQvdD54qDsKNlTuEvjhDieF2KBOa+m4AJP+fWa
-         I6RwTWbgikEHoDk4duW2ogZ2n52/99cLU3ebklMcUtRyP6+YA0fkIzvdq7saaWZ6UZug
-         o9PhAa6H+jEGHi+GOkzvgWG8YOYoXcn51hnBPXFiwgD+59Y4Zby8JmtM0LT/ZuPaLAkH
-         qIU2KlnrMrHRd1jjAtSQtQVWmd0+rFjqzBjCOseUfUtuqfA3uqWBAPpht7a+DEE4vXQ2
-         0rR8ORLRyw5ryR0t5ccRd6IYuAdObQzB2mS6cOVGNWdJfxywDzwvbr2Q1W5FuZUwU5BZ
-         bzkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=idIIka1mu53auPQEDeeVp+5SHwt5ecOY/qD1zuhwjP0=;
-        b=xicST9JXfJ1sy8QsDrM8qpJwEfaQllTB0lwkJ8o9LdRcWNN9AyZpsEAN+ZUWvGClAU
-         vAk7E8la/DA3cxbfOiQrcOSik7mG9J6uKGyi4rjIM2WRhL6NEIkaihJRmSg9aztvxFVW
-         H/o7q3ZzWzI+r4wOpZxoycUib+ajokONY3T466TqjOG3S/TjKV4KLNvWZvM8jJFtkIUu
-         yDqhFicW7SYqP//cShq+bAJDw/mYLI60pI0PgosAeOiA7VP/pm0l4x7DtIx+aEQJzmhH
-         JC3piS1+ACIKF3wpjHxzmEBCeLHKt0DMPi35uUeueVst0ssY/GKUYpnS7KwpZdoQiQ0C
-         DyxQ==
-X-Gm-Message-State: AOAM530KOtehP6Qcty4N2FkzJPsZKONNICi/pszdbIIqMm2oAThMlIei
-        zStCs/+AfwodcBkPL1Y6W+hJ+WR4xLxzVh4e61HL8A==
-X-Google-Smtp-Source: ABdhPJy+tsCtsj+QeIrqAMtkmf9IDd2UQ+HzcP4FYj0UXeDJ4SMyh01L0lrgFs/yzvW1/CttamvXLsS+qFDoNkAkXEg=
-X-Received: by 2002:a9d:74d0:: with SMTP id a16mr27600057otl.237.1638786823769;
- Mon, 06 Dec 2021 02:33:43 -0800 (PST)
-MIME-Version: 1.0
-References: <20211206092237.4105895-1-phil@raspberrypi.com> <20211206092237.4105895-3-phil@raspberrypi.com>
-In-Reply-To: <20211206092237.4105895-3-phil@raspberrypi.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 6 Dec 2021 11:33:31 +0100
-Message-ID: <CACRpkdYJAZcr_PPCGPYcitfcwd9GDFf+7hPJkOmjomqCrruNfw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] ARM: dts: gpio-ranges property is now required
-To:     Phil Elwell <phil@raspberrypi.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        id S244084AbhLFNQa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Dec 2021 08:16:30 -0500
+Received: from mga04.intel.com ([192.55.52.120]:41243 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S244041AbhLFNQ3 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 6 Dec 2021 08:16:29 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10189"; a="236046871"
+X-IronPort-AV: E=Sophos;i="5.87,291,1631602800"; 
+   d="scan'208";a="236046871"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2021 05:13:01 -0800
+X-IronPort-AV: E=Sophos;i="5.87,291,1631602800"; 
+   d="scan'208";a="604986568"
+Received: from smile.fi.intel.com ([10.237.72.184])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2021 05:12:50 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1muDmW-002mwh-84;
+        Mon, 06 Dec 2021 15:11:48 +0200
+Date:   Mon, 6 Dec 2021 15:11:48 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Baruch Siach <baruch@tkos.co.il>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Tony Lindgren <tony@atomide.com>,
         Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
+        Jianqun Xu <jay.xu@rock-chips.com>,
+        Alexandru Ardelean <aardelean@deviqon.com>,
         Thierry Reding <treding@nvidia.com>,
-        devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        patches@opensource.cirrus.com,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-power@fi.rohmeurope.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-pwm@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-unisoc@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-tegra@vger.kernel.org, Ray Jui <rjui@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Keerthy <j-keerthy@ti.com>, Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH v1 1/3] gpio: Get rid of duplicate of_node assignment in
+ the drivers
+Message-ID: <Ya4MFMWSyj4YbdNG@smile.fi.intel.com>
+References: <20211202210839.79140-1-andriy.shevchenko@linux.intel.com>
+ <CACRpkdZbpKqG_uS2N8TW2-HL5CqnuKDpHVCabf66MyQQof0jOw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZbpKqG_uS2N8TW2-HL5CqnuKDpHVCabf66MyQQof0jOw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 6, 2021 at 10:22 AM Phil Elwell <phil@raspberrypi.com> wrote:
+On Sun, Dec 05, 2021 at 01:06:07AM +0100, Linus Walleij wrote:
+> On Thu, Dec 2, 2021 at 10:17 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> 
+> > GPIO library does copy the of_node from the parent device of
+> > the GPIO chip, there is no need to repeat this in the individual
+> > drivers. Remove these assignment all at once.
+> >
+> > For the details one may look into the of_gpio_dev_init() implementation.
+> >
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> This is definitely a patch in the right direction, as Bart says
+> it can be a bit dangerous, the outliers are those drivers that
+> assign the .dev to something completely different than the
+> the dev where the of_node is copied from.
 
-> Since [1], added in 5.7, the absence of a gpio-ranges property has
-> prevented GPIOs from being restored to inputs when released.
-> Add those properties for BCM283x and BCM2711 devices.
->
-> [1] commit 2ab73c6d8323 ("gpio: Support GPIO controllers without
->     pin-ranges")
->
-> Fixes: 2ab73c6d8323 ("gpio: Support GPIO controllers without pin-ranges")
-> Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+I carefully checked these all and this patch series is only for the cases
+when I'm sure it's the same device, which is used as parent, and its of_node
+supplied.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> The idea was definitely always to only assign it in the core
+> *unless* there is a reason to have a completely different
+> of_node for some reason.
+> 
+> > +++ b/drivers/gpio/gpio-rda.c
+> > @@ -240,8 +240,6 @@ static int rda_gpio_probe(struct platform_device *pdev)
+> >         rda_gpio->chip.label = dev_name(dev);
+> >         rda_gpio->chip.ngpio = ngpios;
+> >         rda_gpio->chip.base = -1;
+> > -       rda_gpio->chip.parent = dev;
+> > -       rda_gpio->chip.of_node = np;
+> 
+> Mention in the commit message that in this driver
+> you also drop the the .parent assignment because the
+> core will handle it.
 
-Please funnel this patch through the SoC tree.
+Okay, I will update it. Also I'll update to the last codebase (dunno if Bart
+is going to pull the IB from Lee where one of the drivers is gone: da53cc634cea
+("gpio: bd70528 Drop BD70528 support").
 
-Yours,
-Linus Walleij
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
