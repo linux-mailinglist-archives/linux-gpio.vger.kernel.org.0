@@ -2,107 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 93A9346B576
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Dec 2021 09:15:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3290746B61B
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Dec 2021 09:36:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232313AbhLGISf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Dec 2021 03:18:35 -0500
-Received: from bzq-84-110-109-230.red.bezeqint.net ([84.110.109.230]:49891
-        "EHLO mx.tkos.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S232151AbhLGISf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Dec 2021 03:18:35 -0500
-X-Greylist: delayed 516 seconds by postgrey-1.27 at vger.kernel.org; Tue, 07 Dec 2021 03:18:34 EST
-Received: from tarshish (unknown [10.0.8.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx.tkos.co.il (Postfix) with ESMTPS id E1A8A440855;
-        Tue,  7 Dec 2021 10:06:08 +0200 (IST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tkos.co.il;
-        s=default; t=1638864370;
-        bh=esweGkmM1TaFxAsLsotS7LKsL2FjaGbpG3oTnnMt2EY=;
-        h=References:From:To:Cc:Subject:Date:In-reply-to:From;
-        b=GcPgxTp47EJex9304Cwrh1a93q3dHMKWiHIjz8ZTn4NegGPU69yqh7Su5vmg5fO+P
-         Kh7nqdgkBIpI3Rf9UzzHq/x7N7cBaA/7R0ZE12PQaFHPd0XT3nfMmWwSoc6YNW6HJ/
-         sY7u4RIykgN0trrfVUJdtS/HSKo97dqJciT8yZxSr0wjGT9g5g4otk+PHV0JYm9p9k
-         P9YzQWW8WWhUeig+fPqnm1HPGtUlIZxk5urZr4h4aKbE+4xA9oZm9Je0d93bTim8GN
-         1As0GD0fgMDT/yrRdfvnw9AkNJRlBW1Fj0uJad+Crzam3J4mee0elu9epTaexUTQ7t
-         Pqt45gjbFAkpw==
-References: <20211202210839.79140-1-andriy.shevchenko@linux.intel.com>
- <20211207080325.6hfokrrcs45iucx6@pengutronix.de>
-User-agent: mu4e 1.6.10; emacs 27.1
-From:   Baruch Siach <baruch@tkos.co.il>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Tony Lindgren <tony@atomide.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Jianqun Xu <jay.xu@rock-chips.com>,
-        Alexandru Ardelean <aardelean@deviqon.com>,
-        Thierry Reding <treding@nvidia.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        patches@opensource.cirrus.com,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-power@fi.rohmeurope.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-pwm@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-unisoc@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-tegra@vger.kernel.org, Ray Jui <rjui@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Gregory Fong <gregory.0xf0@gmail.com>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Keerthy <j-keerthy@ti.com>, Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v1 1/3] gpio: Get rid of duplicate of_node assignment in
- the drivers
-Date:   Tue, 07 Dec 2021 10:05:08 +0200
-In-reply-to: <20211207080325.6hfokrrcs45iucx6@pengutronix.de>
-Message-ID: <87ilw0on3z.fsf@tarshish>
+        id S233056AbhLGIkJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Dec 2021 03:40:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45952 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233042AbhLGIkI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Dec 2021 03:40:08 -0500
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96E84C061748;
+        Tue,  7 Dec 2021 00:36:38 -0800 (PST)
+Received: by mail-lj1-x22e.google.com with SMTP id 13so25914143ljj.11;
+        Tue, 07 Dec 2021 00:36:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nlYUyB267zRhWHErr+nJIFE9vcvHYd5t7U4mg/8Hi0Y=;
+        b=HSYuJeEYa11G8cde/aHBJ67FLo/70lWm81UkGfm//hqvANeDge/w9FbJnuH8zbiH1a
+         4d95iPPqpho7z6/34c6G141tHm2YzjtQ0BZHc3+qPuOXXtMXSYkApFd3811Ns9UDcOVY
+         3SweIqHNTEtzgaegDRwcXBPsUVgS9XXNwY3l25QjPwJ7sj3/xeqJIU15TQ0c1otuhhmK
+         f22qa5vP3CwvAoDydCnMHfTn6gPAQsaJ5qWBOBZYcXTpsM+GqjjmnU0MjXTjdCbdyCtx
+         hIXQEPfK8TjPz7+lwttBHPSGZiANzUGvJxoyxNs9jq6e1eSk+SEzGax5IgJIGTnkm5NL
+         aSrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nlYUyB267zRhWHErr+nJIFE9vcvHYd5t7U4mg/8Hi0Y=;
+        b=RbHi6krLxFRzmxB2T23sw+0fZJaIKXD74PfxGqaAzNao2YqgTdbt+fNRBiV1uqP7ht
+         hiqABlWXtAvXM0QmrZNoweD2sddAi1MxOI+YmjV7ZxLKlnP74kngDxEappOKRT10QY85
+         W4b4/9PygLmi78qqS6C4iqjwoUup9eP9v80cf3HM3NYYFXAkxCT4TI0ckw+TNu1rwVmY
+         hzLlRwUmYohftbW5bBInmCEjY6YfrUE1zEGQNwtj++Jk3wN8oRECAQUOJcico2MzQg2E
+         VV13TcnlA9/VnehWtmJx8BwYAt8uGDb2rWzWCWltcHh/oiAFwV4h3Ic5ku6L2KIleDIl
+         r2/w==
+X-Gm-Message-State: AOAM533niagd5zKAX+3mhPoqavepOKIi5qI8P9jU0YrkbGVO8OHf5Qa3
+        u3dbs4L0o4AEcbQQvbK3D5Y=
+X-Google-Smtp-Source: ABdhPJy370SD/W2VgTDgwCTyzxI0sgHro2MB8sQzzFjxeK//DcV/vPDGZtzq13i5a+ZxC8k9SDhxOw==
+X-Received: by 2002:a2e:730b:: with SMTP id o11mr41721795ljc.14.1638866196333;
+        Tue, 07 Dec 2021 00:36:36 -0800 (PST)
+Received: from localhost.lan (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
+        by smtp.gmail.com with ESMTPSA id cf34sm1601358lfb.222.2021.12.07.00.36.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Dec 2021 00:36:35 -0800 (PST)
+From:   =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, patches@opensource.cirrus.com,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
+Subject: [PATCH] dt-bindings: mfd: cirrus,lochnagar: fix pin controller nodename
+Date:   Tue,  7 Dec 2021 09:36:18 +0100
+Message-Id: <20211207083618.12940-1-zajec5@gmail.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Uwe,
+From: Rafał Miłecki <rafal@milecki.pl>
 
-On Tue, Dec 07 2021, Uwe Kleine-K=C3=B6nig wrote:
-> Hello Andy,
->
-> you Cc: linux-pwm and the pwm maintainers in this series. I don't spot
-> anything pwm specific here (apart from touching gpio-mvebu which also
-> contains a PWM driver). Do I miss something?
+Replace custom nodename with a generic "pinctrl" to match new pinctrl
+binding requirement. This will fix:
+Documentation/devicetree/bindings/mfd/cirrus,lochnagar.example.dt.yaml: lochnagar-pinctrl: $nodename:0: 'lochnagar-pinctrl' does not match '^(pinctrl|pinmux)(@[0-9a-f]+)?$'
+        From schema: Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.yaml
 
-That's probably because of drivers/gpio/gpio-mvebu.c that appears in the
-MAINTAINERS PWM entry.
+Reported-by: Rob Herring <robh+dt@kernel.org>
+Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+---
+ Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-baruch
+diff --git a/Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml b/Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml
+index c00ad3e21c21..ad285cb480c9 100644
+--- a/Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml
++++ b/Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml
+@@ -126,7 +126,7 @@ properties:
+       clock-frequency:
+         const: 12288000
+ 
+-  lochnagar-pinctrl:
++  pinctrl:
+     type: object
+     $ref: /schemas/pinctrl/cirrus,lochnagar.yaml#
+ 
+@@ -255,7 +255,7 @@ required:
+   - reg
+   - reset-gpios
+   - lochnagar-clk
+-  - lochnagar-pinctrl
++  - pinctrl
+ 
+ additionalProperties: false
+ 
+@@ -293,7 +293,7 @@ examples:
+                 clock-frequency = <32768>;
+             };
+ 
+-            lochnagar-pinctrl {
++            pinctrl {
+                 compatible = "cirrus,lochnagar-pinctrl";
+ 
+                 gpio-controller;
+-- 
+2.31.1
 
---=20
-                                                     ~. .~   Tk Open Systems
-=3D}------------------------------------------------ooO--U--Ooo------------=
-{=3D
-   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
