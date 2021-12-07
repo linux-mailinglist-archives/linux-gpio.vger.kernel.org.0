@@ -2,102 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B00B746B482
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Dec 2021 08:50:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CC0E446B4F9
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Dec 2021 09:00:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231424AbhLGHxr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Dec 2021 02:53:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34484 "EHLO
+        id S231888AbhLGIEL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Dec 2021 03:04:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231354AbhLGHxr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Dec 2021 02:53:47 -0500
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05719C061746;
-        Mon,  6 Dec 2021 23:50:16 -0800 (PST)
-Received: by mail-lf1-x12f.google.com with SMTP id bi37so31588607lfb.5;
-        Mon, 06 Dec 2021 23:50:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=L0Bou1mfaXx2WGsiNNdaHUGQpeB7Iv95i6yCuq9Y0vw=;
-        b=HSXGrPV9/CIOy+RWksj5XEXXeHpTleMSLsEBLfZw1tenfuuYmw9eZ0TnwZqOhEnJ8g
-         Z69zyGsDdV+dGoRJU3vMz5aaYdSXWHCLBYgFh4j7ksqILK2kIhSUDLqknYd6ghqjJrN6
-         5kD9B4UanAbrR3EvM1wDB/fhKNbywNZgXFS6WlmsgRLf8jlJ8IjVm+Eo5Wew8tsjrAW+
-         7kZ81WRU/Pfa8Pq9W4EI6gTDKUH+wsabYAbNc0lVfR472Iyxcv7iwX+xtF0A4e4jf0eH
-         2Ss/xOTwllQwnMnnoYsHEjSldq+th46Ztdq7T3Yirjd6rMI3Eel4rFu4q2RVkNTHFbwN
-         +/bQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=L0Bou1mfaXx2WGsiNNdaHUGQpeB7Iv95i6yCuq9Y0vw=;
-        b=P+QjMuH6XIqoU0IDeBJzUV5qczZ0pdsh023R/ZpHdmOw/NmtAJqvqOdkEFRV52cYqX
-         3P50uIyKn0b8Mjf3FPGSawJQtXMCRmojvElolCtimMZ+7NyP44RQ5Hcg7EuNP2lPj1wt
-         T+02N1BH6maJqzqORfx0gyngV2zxJdD9Cov/+5IBbpYt4pfGcjTjwKv0tKDkxEtX9Y7I
-         SJ4jzD5lm2LRwSf2veYFMjOnDiU35ouLLxFj6y2h+N4WDyPYBHtSg8mtaS5WtJXeHV30
-         7+KoruwiDR8mhVddyOfGlXSxOCbX7B1haWR5wlP+lihX0vJ3J6RJzjWLBpj21QBGDEBC
-         i8yw==
-X-Gm-Message-State: AOAM533UWPip3YztN06dF6Z7wYSbO2GisacIgE1QM2E60gntJcc3s0eM
-        iPEIUdF36gsRAfl5ZMIYRHQ=
-X-Google-Smtp-Source: ABdhPJzAMNECXUa1KxJfJKi0e817+S3oAiDw69meDpREoC6gtNTPQQ1Opy3WTB9LxxTvC7PtRUVYAg==
-X-Received: by 2002:ac2:4bc1:: with SMTP id o1mr40544130lfq.183.1638863415282;
-        Mon, 06 Dec 2021 23:50:15 -0800 (PST)
-Received: from localhost.lan (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
-        by smtp.gmail.com with ESMTPSA id s19sm1679371lji.81.2021.12.06.23.50.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Dec 2021 23:50:15 -0800 (PST)
-From:   =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
-Subject: [PATCH] dt-bindings: mfd: brcm,cru: fix pin controller nodename
-Date:   Tue,  7 Dec 2021 08:50:10 +0100
-Message-Id: <20211207075010.9310-1-zajec5@gmail.com>
-X-Mailer: git-send-email 2.31.1
+        with ESMTP id S231209AbhLGIEK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Dec 2021 03:04:10 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7EC8C061746
+        for <linux-gpio@vger.kernel.org>; Tue,  7 Dec 2021 00:00:40 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1muVOQ-0007PQ-FL; Tue, 07 Dec 2021 09:00:06 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1muVOM-003B7k-DF; Tue, 07 Dec 2021 09:00:01 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1muVOL-00046X-3Z; Tue, 07 Dec 2021 09:00:01 +0100
+Date:   Tue, 7 Dec 2021 08:59:58 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     devicetree@vger.kernel.org,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Markus Mayer <mmayer@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Al Cooper <alcooperx@gmail.com>,
+        Doug Berger <opendmb@gmail.com>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:MULTIMEDIA CARD (MMC), SECURE DIGITAL (SD) AND..." 
+        <linux-mmc@vger.kernel.org>,
+        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
+        kernel@pengutronix.de
+Subject: Re: [PATCH v2 03/14] dt-bindings: pwm: Convert BCM7038 PWM binding
+ to YAML
+Message-ID: <20211207075958.fsw6hcvpocnwokot@pengutronix.de>
+References: <20211206182616.2089677-1-f.fainelli@gmail.com>
+ <20211206182616.2089677-4-f.fainelli@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="icyezc67xbpvw2hr"
+Content-Disposition: inline
+In-Reply-To: <20211206182616.2089677-4-f.fainelli@gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Rafał Miłecki <rafal@milecki.pl>
 
-Replace "pin-controller@" with "pinctrl@" to match new pinctrl binding
-requirement. This will fix:
-Documentation/devicetree/bindings/mfd/brcm,cru.example.dt.yaml: cru-bus@1800c100: 'pinctrl@1c0' does not match any of the regexes: '^clock-controller@[a-f0-9]+$', '^phy@[a-f0-9]+$', '^pin-controller@[a-f0-9]+$', '^syscon@[a-f0-9]+$', '^thermal@[a-f0-9]+$', 'pinctrl-[0-9]+'
-        From schema: Documentation/devicetree/bindings/mfd/brcm,cru.yaml
+--icyezc67xbpvw2hr
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reported-by: Rob Herring <robh+dt@kernel.org>
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
----
- Documentation/devicetree/bindings/mfd/brcm,cru.yaml | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Hello,
 
-diff --git a/Documentation/devicetree/bindings/mfd/brcm,cru.yaml b/Documentation/devicetree/bindings/mfd/brcm,cru.yaml
-index be4a2df71c25..b85819fbb07c 100644
---- a/Documentation/devicetree/bindings/mfd/brcm,cru.yaml
-+++ b/Documentation/devicetree/bindings/mfd/brcm,cru.yaml
-@@ -39,7 +39,7 @@ patternProperties:
-   '^phy@[a-f0-9]+$':
-     $ref: ../phy/bcm-ns-usb2-phy.yaml
- 
--  '^pin-controller@[a-f0-9]+$':
-+  '^pinctrl@[a-f0-9]+$':
-     $ref: ../pinctrl/brcm,ns-pinmux.yaml
- 
-   '^syscon@[a-f0-9]+$':
-@@ -94,7 +94,7 @@ examples:
-             reg = <0x180 0x4>;
-         };
- 
--        pin-controller@1c0 {
-+        pinctrl@1c0 {
-             compatible = "brcm,bcm4708-pinmux";
-             reg = <0x1c0 0x24>;
-             reg-names = "cru_gpio_control";
--- 
-2.31.1
+On Mon, Dec 06, 2021 at 10:26:05AM -0800, Florian Fainelli wrote:
+> Convert the Broadcom STB BCM7038 PWM Device Tree binding to YAML to help
+> with validation.
+>=20
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+
+I assume you intend to take these patches all together via the bcm tree?
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--icyezc67xbpvw2hr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmGvFHsACgkQwfwUeK3K
+7Am9zgf9F6D7Bcmxx5leYwqjEfbY0JtJ3JTkZmn3TENEY7kofnBMDZ9DvgsvnamU
+9GlECGVZSlUN/w6jWu1AEVpchAWRj7R+rzlwLuACXqZuhAAQIanbu/OUm3hjyODa
+EsYa/UNfNYPRtb02YYMeMqSbWWHW7QLNahOTlCs0vPYZqY89qGOK3S4fLtPpxMMT
+CXYHUvAxBFFAXV1Vc63YYok++9FYu66Xwx2JAC71ETrejR/OfTQm9ZwHuzu5Fz73
+kSCtdWm96QyJFhkgrkHlon+KkZcFAmR3LG2E3Pe/AQeNZ2h4ZvQ6DAKHwgdOjfQD
+VY3xAxykgM6YmDnYURchttBrwq9bWw==
+=R7jM
+-----END PGP SIGNATURE-----
+
+--icyezc67xbpvw2hr--
