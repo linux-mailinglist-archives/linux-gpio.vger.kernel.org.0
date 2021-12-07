@@ -2,96 +2,155 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E7F0746C2EA
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Dec 2021 19:32:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FE3346C645
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Dec 2021 22:08:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240505AbhLGSgR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Dec 2021 13:36:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47450 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240160AbhLGSgN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Dec 2021 13:36:13 -0500
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 297AFC061574;
-        Tue,  7 Dec 2021 10:32:43 -0800 (PST)
-Received: by mail-pj1-x102a.google.com with SMTP id k6-20020a17090a7f0600b001ad9d73b20bso137952pjl.3;
-        Tue, 07 Dec 2021 10:32:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=Fz79Zw1XUWo4TTtZ+lJkjDQ8HIjg7qXcQ0lK5kRZaeA=;
-        b=mJSqawCWPruWg4AuJdubaQzSzgcWk0jFx1jXZwPy7c9ijnkoN3KWOYaQ9J2aKjbihR
-         xl7QwFj61Gz4AJzYyxSQcyJ94CpCjVA+BJk/DCmQ/GXskDvY58UPD7UXCj1fV99JptUa
-         fEfdmsvDyXQg43DjAiv9E4WoK0cVebMMeRTPRkZLb8PYKbdbMnSZtaYI+9MdyydXeIoQ
-         dG41nhPBxdBJFwVjtqF5Naga2gWfENwnAw3acQ3mTjR6IQRPw9BGmOlufvDBWEb/ecty
-         p3Q4dey/UkX0Q46hoXAUJgh63sTmG7zJQ8xvOpbptYVvyw4owB1G1GCFEGdWRxOUOVU2
-         FW2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Fz79Zw1XUWo4TTtZ+lJkjDQ8HIjg7qXcQ0lK5kRZaeA=;
-        b=ZDEfTEihRcq5jtgSWr1MYPRQuudqRM0g36WvwXMPKlFj5RrYVMdWOCPpHhvvbYu+Ks
-         taVqgEDB320Q+61FItddUweFpQpgPGQeTDQTKkpPvJzgbf/uCS8k4DV3T0IVpKOz+8w8
-         ijKKVN3UTd7uvtCfx7dNpxtXUSlMvGSU0o43F4F3Mj8hXQKiFitItWjBphvNFTC4dOZD
-         AMDRkY6JnSzQ2i/3yt3F6lmfCYMXHxPohFnIjoQoM4fyIJUmCjpRNVg1V7vZgnBz2VuE
-         8U/Nx9p9RiR4GpYiLgDniFXeGpNEq98lrQYGXlNx/YC4hntyk+lmVIwLL3ytsCui5utT
-         IsBw==
-X-Gm-Message-State: AOAM533ZLYKrJ1mM5b/7xy6TBnJvavewor4RapZD9FwhDN+72ex5olm+
-        Y7DsEku04ypy7N1iSl4nSwa3bQ1XnVs=
-X-Google-Smtp-Source: ABdhPJxTV8FMDebVvQYswEOqZMuSpm8yBtEkdHHC8sJFhOkyQ2i4CR3xSIwSXxYsgwJy3KjTjQzt+g==
-X-Received: by 2002:a17:902:e74e:b0:142:fa5:49f1 with SMTP id p14-20020a170902e74e00b001420fa549f1mr53122970plf.84.1638901962165;
-        Tue, 07 Dec 2021 10:32:42 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id a3sm221845pgj.2.2021.12.07.10.32.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Dec 2021 10:32:41 -0800 (PST)
-Subject: Re: [PATCH v2 1/2] pinctrl: bcm2835: Change init order for gpio hogs
-To:     Phil Elwell <phil@raspberrypi.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Thierry Reding <treding@nvidia.com>,
-        devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org
-References: <20211206092237.4105895-1-phil@raspberrypi.com>
- <20211206092237.4105895-2-phil@raspberrypi.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <2a799587-9e58-4907-e41d-05920509f55d@gmail.com>
-Date:   Tue, 7 Dec 2021 10:32:39 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        id S241609AbhLGVMW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Dec 2021 16:12:22 -0500
+Received: from mout.gmx.net ([212.227.17.20]:55591 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S241971AbhLGVMW (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 7 Dec 2021 16:12:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1638911323;
+        bh=K4vF7NtANaqqajHsilWhxkIG2LZVP7G25JabgORPFjI=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=LDdAbf3rur2gSEH+++YUq4kjIxDYzZjoGzwLi5zLQQk7R/CzZcNtJ5VpPkRWZGxU3
+         MK6pOO7OYweYKI+B8VrbUi+ydkePjrkG5uzwYqct7SocjQc/U5B4Ozf4M9E+1mspah
+         XrFnVOwZ90+sso/yjmEBbQH7RYP4pT2B/QFAj2is=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([5.146.194.160]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MuDbx-1mZJIc0rKX-00uX2z; Tue, 07
+ Dec 2021 22:08:43 +0100
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, openbmc@lists.ozlabs.org,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Joel Stanley <joel@jms.id.au>, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Subject: [PATCH v2 0/8] Nuvoton WPCM450 pinctrl and GPIO driver
+Date:   Tue,  7 Dec 2021 22:08:15 +0100
+Message-Id: <20211207210823.1975632-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-In-Reply-To: <20211206092237.4105895-2-phil@raspberrypi.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:YuSMQ4GRNlylx4koho/4mLk3qqxB2udQnbqjMCtBcyP0tPiO3WS
+ y3pZ/wLkBmFN2NorXTAPDj6GwEElNXfeyOj2SI0SGl2hMkxusGP7DcJEkdUyfDZ7VbXS236
+ 14UTYiNDjx5Lo38xkiU5HCQQ7tYPkBm6UHW1uTB+8buSrx62FA4n+Tj70xjL9PKFqmO3VaE
+ runBuV67kPx4vPeUBuVuw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:R8UxeRZfJd8=:KyF77CNJlPuomFUj4jQ9BM
+ G/Kk+otr4gfpquo1zt5kdH/2rr0t1/+Fq0NxuIXuDVcCZqKlSf2lfb2SGXN3hiSObBaFomc/h
+ 31volWN3MFAXtACtagM0bAJwlh6d547RlTCXAGWrzUGNBh0aN+8qyxod5Juklmr3PlJONCEAC
+ X6nHNjdVZLCIHS7eKSbSGhN+gcxJ6ZAsYL293OpxJrxa5Cyzw8/OyHtFqSnbajWKkDaQ1eO6z
+ t+JccSIXpHEeTTbyqdbCAx4P+nsNtCUYR8tiS3YF4z1XhVNQeYW64O/qnJ99o1kmyRxOmutCY
+ YUOCSW0dzvfKLMBp1It2J15po3gCF6fNNeBLdxDSwAQh/c7D3XFVmkT4WtvsjXxM6M3UMhwq/
+ cpGBl+RZ0SFFVfuRG/r1J02tvImBh2YKT5Cph09kdUD1p6MJxQdrGG6d3C2K8LcGHOd/waE/r
+ Ah7Fwcky9g9abwspFlnLAGknQTje5VOHXI/QLwpH8D3B4dYwwegWne/Vysag+qkb580n22qna
+ KbVgh+lVW8XDKybKwkiYL14BG/VldBMVh+VZhoEta/LlNkgKKNbSEBt99A1Ewe4Zx30fxIbqO
+ lX/2NicebZmNEVnN84vsAp8Fg0B8pxbY57hJX8NH1oPDqIQk/83yX+lUyKylJOsTyVFD21izk
+ MhIzvn/66wkpcHmryc6V5CNFh+8dMV+XopsjA8WO3uRrWMsyJtZvLApA8PwcPHpHpyeWPTS4F
+ GvT2rQsSkZdQETPi1twx9DuDTIaZXQpm+0MJIRvB+77L76+so/CAhAVl/Yo4Y53vG37mW5FcX
+ ukgR0OyKaDaVxjAjxuNeC+OxqDXzBZHOhlF726pVUI5HThnToTxJf1fzHPkxjqjH/iVAH7o/s
+ JT/AyIJX9gLIKz/JgQ64WIUy17YvKReGXIq16xcJT1rRnWcz/X6psvqaBO+IW+7UK94CNEn2v
+ H4a0fYwBDWNc2zpN2f70XeiCHv+WuXn8mcUcbO7oJ8HD2pVeMfYgmA8/62Bx2LLD2SVIZd8Kx
+ xQ0KCyoZcvrpnPKhSo+oTcabTUviIDwLq43G2GfzSMC2KId3mXzv7F1t23hphf07RqWhTXyN/
+ SBzsrIKiSGPKT0=
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 12/6/21 1:22 AM, Phil Elwell wrote:
-> ...and gpio-ranges
-> 
-> pinctrl-bcm2835 is a combined pinctrl/gpio driver. Currently the gpio
-> side is registered first, but this breaks gpio hogs (which are
-> configured during gpiochip_add_data). Part of the hog initialisation
-> is a call to pinctrl_gpio_request, and since the pinctrl driver hasn't
-> yet been registered this results in an -EPROBE_DEFER from which it can
-> never recover.
-> 
-> Change the initialisation sequence to register the pinctrl driver
-> first.
-> 
-> This also solves a similar problem with the gpio-ranges property, which
-> is required in order for released pins to be returned to inputs.
-> 
-> Fixes: 73345a18d464b ("pinctrl: bcm2835: Pass irqchip when adding gpiochip")
-> Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+It's been a while, but here is finally version 2 of the WPCM450 GPIO drive=
+r.
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+The biggest change since v1 has been the restructuring of the DT binding t=
+o
+give each GPIO bank its own node.
+
+Another thing that changed is how pins are muxed to GPIO mode: In v1, this
+happened automatically when the corresponding GPIO was used. I copied this
+feature from the pinctrl-npcm7xx driver, but removed it along with the
+.gpio_request_enable and .gpio_disable_free callbacks. Instead, pins can n=
+ow
+be switched to GPIO explicitly, if needed.
+
+Everything else is noted in the individual patches.
+
+I hope I didn't miss anything that was requested in response to v1. If I d=
+id,
+please make your comment again.
+
+
+Best regards,
+Jonathan Neusch=C3=A4fer
+
+
+v1:
+- https://lore.kernel.org/lkml/20210602120329.2444672-1-j.neuschaefer@gmx.=
+net/
+
+> This series adds support for pinctrl and GPIO in the Nuvoton WPCM450 SoC=
+.
+> Both my DT bindings and my driver are based on the work done by others f=
+or
+> the newer Nuvoton NPCM7xx SoC, and I've tried to keep both similar.
+>
+> Instead of extending the pinctrl-npcm7xx driver to add WPCM450 support,
+> I copied/forked it. The pinmux mechanism is very similar (using MFSEL1 a=
+nd
+> MFSEL2 registers), but the GPIO register interface has been redesigned f=
+or
+> NPCM7xx; adding support for the older GPIO controller would make the dri=
+ver
+> harder to understand, while only enabling a small amount of code sharing=
+.
+>
+> The DT binding in YAML format might make a good template for also conver=
+ting
+> the nuvoton,npcm7xx-pinctrl binding to YAML.
+>
+> Both in the DT binding and in the driver I kept the name "pinctrl". For =
+the
+> driver, I find it accurate enough because it handles pinctrl and GPIO. F=
+or
+> the DT node, it's a bit less accurate because the register block at 0xb8=
+003000
+> is about GPIOs, and pin control happens in the global control registers =
+(GCR)
+> block, except for input debouncing. So, "GPIO" might be the more appropr=
+iate
+> name component there.
+
+
+Jonathan Neusch=C3=A4fer (8):
+  dt-bindings: arm/npcm: Add binding for global control registers (GCR)
+  MAINTAINERS: Match all of bindings/arm/npcm/ as part of NPCM
+    architecture
+  ARM: dts: wpcm450: Add global control registers (GCR) node
+  dt-bindings: pinctrl: Add Nuvoton WPCM450
+  pinctrl: nuvoton: Add driver for WPCM450
+  ARM: dts: wpcm450: Add pinctrl and GPIO nodes
+  ARM: dts: wpcm450: Add pin functions
+  ARM: dts: wpcm450-supermicro-x9sci-ln4f: Add GPIO LEDs and buttons
+
+ .../bindings/arm/npcm/nuvoton,gcr.yaml        |   45 +
+ .../pinctrl/nuvoton,wpcm450-pinctrl.yaml      |  190 +++
+ MAINTAINERS                                   |    2 +
+ .../nuvoton-wpcm450-supermicro-x9sci-ln4f.dts |   43 +
+ arch/arm/boot/dts/nuvoton-wpcm450.dtsi        |  384 ++++++
+ drivers/pinctrl/Makefile                      |    2 +-
+ drivers/pinctrl/nuvoton/Kconfig               |   18 +
+ drivers/pinctrl/nuvoton/Makefile              |    1 +
+ drivers/pinctrl/nuvoton/pinctrl-wpcm450.c     | 1134 +++++++++++++++++
+ 9 files changed, 1818 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/npcm/nuvoton,gcr=
+.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/nuvoton,wpcm=
+450-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/nuvoton/pinctrl-wpcm450.c
+
+=2D-
+2.30.2
+
