@@ -2,102 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D69446BE65
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Dec 2021 15:59:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 227ED46BF07
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Dec 2021 16:16:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238374AbhLGPBw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Dec 2021 10:01:52 -0500
-Received: from mail-ot1-f53.google.com ([209.85.210.53]:42929 "EHLO
-        mail-ot1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238357AbhLGPBt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Dec 2021 10:01:49 -0500
-Received: by mail-ot1-f53.google.com with SMTP id 47-20020a9d0332000000b005798ac20d72so18339311otv.9;
-        Tue, 07 Dec 2021 06:58:18 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
-         :message-id;
-        bh=qKYU7RahhB+pR8vQVfzVcVag502QdQMLxyNdGvE2daw=;
-        b=Be8BSG4iikqo0jti6eTs+ebFJlmOULObTuL5JUZ7bKHBkgbh1WUI1Sk8Zl9OECnUsA
-         KLIcp6MAW9kDzI20NIM/brR+DV7YtkoGM3T0lkoZNjOjmvwVX4hFZLjz6R3im00jvWB0
-         tUrsVU3ZiCk2GvDYkjh5/jqc2vV/SaJmPs2din9N06zwSepFtsMa6knKAKXg44Oelrc5
-         KRxLfKOLdslj6x3eeMzd6HcvjGihIQOuUgqjtoOITYyEDfa7X98TamUiVFtiwx12Shhq
-         Q8wxRcPLNlx4vNc3lgy3yinzdgebYcxdnR2ofVwuHzZUSHbyAazU5rJLVPlvPMmMMTJC
-         cE2Q==
-X-Gm-Message-State: AOAM53154mnT6lUy3yH4EuAO/2e3B68Qns4hRYyWBumaVMrd5iUxe2CA
-        VhQ57Glf9t/BwldUrqrbGQ==
-X-Google-Smtp-Source: ABdhPJyYE5pmNsF0pLu5NUJNgDOTEC8MDLniUWmR0RgVVyGo6aPd5+BUcZ7eVNYaJVTXCG/mVKM0/w==
-X-Received: by 2002:a9d:6855:: with SMTP id c21mr36846388oto.357.1638889097578;
-        Tue, 07 Dec 2021 06:58:17 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id s2sm2778290otr.69.2021.12.07.06.58.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Dec 2021 06:58:16 -0800 (PST)
-Received: (nullmailer pid 5800 invoked by uid 1000);
-        Tue, 07 Dec 2021 14:58:10 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Marc Zyngier <maz@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Doug Berger <opendmb@gmail.com>,
-        linux-usb@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-mmc@vger.kernel.org, Al Cooper <alcooperx@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>, linux-pm@vger.kernel.org,
-        linux-crypto@vger.kernel.org, Markus Mayer <mmayer@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Lee Jones <lee.jones@linaro.org>, linux-gpio@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, linux-rtc@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, Gregory Fong <gregory.0xf0@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Scott Branden <sbranden@broadcom.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        "Rafael J. Wysocki" <rafael@kernel.org>, linux-ide@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-In-Reply-To: <20211206182616.2089677-6-f.fainelli@gmail.com>
-References: <20211206182616.2089677-1-f.fainelli@gmail.com> <20211206182616.2089677-6-f.fainelli@gmail.com>
-Subject: Re: [PATCH v2 05/14] dt-bindings: gpio: Convert Broadcom STB GPIO to YAML
-Date:   Tue, 07 Dec 2021 08:58:10 -0600
-Message-Id: <1638889090.698687.5799.nullmailer@robh.at.kernel.org>
+        id S234394AbhLGPT6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Dec 2021 10:19:58 -0500
+Received: from so254-9.mailgun.net ([198.61.254.9]:25763 "EHLO
+        so254-9.mailgun.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234438AbhLGPT5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Dec 2021 10:19:57 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1638890187; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=lhmLEurJtruYbgU84VYlYJYpIAj8F3QlaKT0LNANdlo=; b=xULvUiBI/JSmZk23O4Jk/koD3+UXPvrl8MITC95nSWWiOP88ZzTE0J3E45WiqYaxBzMt4wYn
+ crboqepW7aOjEXg4UqADnP1CDYeAi+/d2oSTy7iuudZTGLU3OrYCntguaTzH6yjEe8dIRxL5
+ 05HlYjEuSUrhLLrp5dfFPwxKEsE=
+X-Mailgun-Sending-Ip: 198.61.254.9
+X-Mailgun-Sid: WyI0ZDgwZiIsICJsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZyIsICJiZTllNGEiXQ==
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
+ 61af7aca4fca5da46dfa76ab (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 07 Dec 2021 15:16:26
+ GMT
+Sender: srivasam=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A47D0C43635; Tue,  7 Dec 2021 15:16:26 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+        aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-5.3 required=2.0 tests=ALL_TRUSTED,BAYES_00,
+        NICE_REPLY_A,SPF_FAIL,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+        version=3.4.0
+Received: from [10.242.143.72] (unknown [202.46.23.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: srivasam)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BD688C4338F;
+        Tue,  7 Dec 2021 15:16:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org BD688C4338F
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
+Subject: Re: [PATCH v4 4/5] pinctrl: qcom: Update clock voting as optional
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Srinivasa Rao Mandadapu <srivasam@codeaurora.com>
+Cc:     agross@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
+        robh+dt@kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org,
+        perex@perex.cz, tiwai@suse.com, srinivas.kandagatla@linaro.org,
+        rohitkr@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, swboyd@chromium.org,
+        judyhsiao@chromium.org, Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Venkata Prasad Potturu <potturu@codeaurora.org>
+References: <1638531140-25899-1-git-send-email-srivasam@codeaurora.com>
+ <1638531140-25899-5-git-send-email-srivasam@codeaurora.com>
+ <Ya13Bl66oS1hgHFd@ripper>
+From:   Srinivasa Rao Mandadapu <srivasam@codeaurora.org>
+Organization: Qualcomm India Private Limited.
+Message-ID: <bf2b48fc-d97d-d5a5-e934-6c0a8cae72fe@codeaurora.org>
+Date:   Tue, 7 Dec 2021 20:46:16 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
+MIME-Version: 1.0
+In-Reply-To: <Ya13Bl66oS1hgHFd@ripper>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 06 Dec 2021 10:26:07 -0800, Florian Fainelli wrote:
-> Convert the Broadcom STB GPIO Device Tree binding to YAML to help with
-> validation.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  .../bindings/gpio/brcm,brcmstb-gpio.txt       |  83 --------------
->  .../bindings/gpio/brcm,brcmstb-gpio.yaml      | 105 ++++++++++++++++++
->  MAINTAINERS                                   |   2 +-
->  3 files changed, 106 insertions(+), 84 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.txt
->  create mode 100644 Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.yaml
-> 
 
-Running 'make dtbs_check' with the schema in this patch gives the
-following warnings. Consider if they are expected or the schema is
-incorrect. These may not be new warnings.
-
-Note that it is not yet a requirement to have 0 warnings for dtbs_check.
-This will change in the future.
-
-Full log is available here: https://patchwork.ozlabs.org/patch/1564132
-
-
-gpio@4172c0: interrupts-extended: [[6, 6], [7, 5]] is too long
-	arch/arm/boot/dts/bcm7445-bcm97445svmb.dt.yaml
+On 12/6/2021 8:05 AM, Bjorn Andersson wrote:
+Thanks for Your Time Bjorn!!!
+> On Fri 03 Dec 03:32 PST 2021, Srinivasa Rao Mandadapu wrote:
+>
+>> From: Srinivasa Rao Mandadapu <srivasam@codeaurora.org>
+>>
+>> Update bulk clock voting to optional voting as ADSP bypass platform doesn't
+>> need macro and decodec clocks, these are maintained as power domains and
+>> operated from lpass audio core cc.
+>>
+>> Signed-off-by: Srinivasa Rao Mandadapu <srivasam@codeaurora.org>
+>> Co-developed-by: Venkata Prasad Potturu <potturu@codeaurora.org>
+>> Signed-off-by: Venkata Prasad Potturu <potturu@codeaurora.org>
+>> ---
+>>   drivers/pinctrl/qcom/pinctrl-lpass-lpi.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
+>> index bcc12f6..c2a1110 100644
+>> --- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
+>> +++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
+>> @@ -394,7 +394,7 @@ int lpi_pinctrl_probe(struct platform_device *pdev)
+>>   		return dev_err_probe(dev, PTR_ERR(pctrl->slew_base),
+>>   				     "Slew resource not provided\n");
+>>   
+>> -	ret = devm_clk_bulk_get(dev, MAX_LPI_NUM_CLKS, pctrl->clks);
+>> +	ret = devm_clk_bulk_get_optional(dev, MAX_LPI_NUM_CLKS, pctrl->clks);
+> If some platforms requires this clock and others doesn't have one, then
+> please make this statement conditional on the compatible, rather than
+> making it optional on both.
+>
+> Thanks,
+> Bjorn
+Okay. will add one flag in lpi_pinctrl_variant_data structure and handle 
+it accordingly.
+>>   	if (ret)
+>>   		return dev_err_probe(dev, ret, "Can't get clocks\n");
+>>   
+>> -- 
+>> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
+>> is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+>>
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
+is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
