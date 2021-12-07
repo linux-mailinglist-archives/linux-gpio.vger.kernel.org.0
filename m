@@ -2,149 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 08A5546C658
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Dec 2021 22:09:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 81F0E46C6C8
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Dec 2021 22:36:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241597AbhLGVMw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Dec 2021 16:12:52 -0500
-Received: from mout.gmx.net ([212.227.17.21]:33043 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S241706AbhLGVMj (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 7 Dec 2021 16:12:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1638911341;
-        bh=n/IMLw8RlRNMl11ZPwUHyr0pgPADtPhByeB9Tw0skmg=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=FNRyavxNkzUybVYlqRDiUBF4KqPm+OMZ0TK9Q76YZWrZ9TS/zwjSQA3TJ28xp4wkU
-         ZUjZXZqX+VWJv+xzSLgZPBdMdEOzHn28a5ncFmL4tW3tsflrdfgk4cKy+1uqOE4kBZ
-         uD4izYA8RmvKAIyi1IDINzq3RFEiShnmjHBezw0c=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([5.146.194.160]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MV63q-1n1ogk3gJy-00S6Qt; Tue, 07
- Dec 2021 22:09:00 +0100
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+        id S241837AbhLGVkP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Dec 2021 16:40:15 -0500
+Received: from mail-oi1-f180.google.com ([209.85.167.180]:39773 "EHLO
+        mail-oi1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233557AbhLGVkO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Dec 2021 16:40:14 -0500
+Received: by mail-oi1-f180.google.com with SMTP id bf8so1089231oib.6;
+        Tue, 07 Dec 2021 13:36:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=rV8/EZVpS27BBn3eDa1EnMOMGAc5YPoChctOsXPNFRs=;
+        b=tgC7+X2sr7+EXGrQI1cMkMzcxOxonICFVZ285nN8Ue/UBV+CGgXhGeyyYMW93JUzvc
+         4V3uq/iK4zs7RveJEKWXewrUqxP8JKWYPJGyBJh9XhW9XAFvf1RtNL/2Wq+v9Q3Fhu6t
+         lEKzKUuU+DkJFtv8Q0D8IP+XsJNAfX/QN6PuawKUIZBjrMxPS8PUCqZn1L0MG5XU107X
+         iyUzes4by/M483w+Zd5myynqE/61yYyfjwaLGfe7DrfNWUTeQav+3Ndgmw2YYfTeQWyf
+         6T0F1rc1cTo87zjgsBw59NftrIIx0cnObCFP4NMs7Q/JdgHiZeVDBS8r38y07lC39Dxr
+         3Mug==
+X-Gm-Message-State: AOAM530XR7av5sbMEr3t1fK6bXIOYFT2ZedLtPuAheRiaGWjIMGRFsNX
+        Y2x8Z5yEU1jvFg29ZS5f9w==
+X-Google-Smtp-Source: ABdhPJxJ2x3IC1MLNO++M4/ykFszjb71cGqWolgS952n8AM/f7lnxRD3xy9m+oSfLhwlH/ZJpICLLw==
+X-Received: by 2002:aca:6146:: with SMTP id v67mr7752591oib.82.1638913003400;
+        Tue, 07 Dec 2021 13:36:43 -0800 (PST)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id bk41sm215528oib.31.2021.12.07.13.36.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Dec 2021 13:36:42 -0800 (PST)
+Received: (nullmailer pid 876796 invoked by uid 1000);
+        Tue, 07 Dec 2021 21:36:41 -0000
+Date:   Tue, 7 Dec 2021 15:36:41 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Vinod Koul <vkoul@kernel.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, openbmc@lists.ozlabs.org,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Joel Stanley <joel@jms.id.au>, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: [PATCH v2 8/8] ARM: dts: wpcm450-supermicro-x9sci-ln4f: Add GPIO LEDs and buttons
-Date:   Tue,  7 Dec 2021 22:08:23 +0100
-Message-Id: <20211207210823.1975632-9-j.neuschaefer@gmx.net>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20211207210823.1975632-1-j.neuschaefer@gmx.net>
-References: <20211207210823.1975632-1-j.neuschaefer@gmx.net>
+        linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add SM8450 pinctrl
+ bindings
+Message-ID: <Ya/T6SsYRD9T0wE/@robh.at.kernel.org>
+References: <20211201072434.3968768-1-vkoul@kernel.org>
+ <20211201072434.3968768-2-vkoul@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:w6zd2sE7qX7biDctX7/3wm69kxDwHCnk4KmUNJeio84MbEdf15g
- Nk4DGNQcIQZwB1WFZSh9/PQx+THVkVtuSTVWUOPwXdu90s3phD3XLmM7j3Z699COuz29WVL
- Cmegvh5QaJaHEs5/Gu0uKZQDHMBVmO8vmA0V439F55aZdyJdJpT5iUq6gWiNrp2G2WviA9v
- 3xVbF/GMsHJQpPfU/V+GQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:bRTl+6Zn8hA=:cOkpSHY7Gl7GjEPQmOCJqG
- 7B3+v1lKhy9tm0z++wILvQcoyNzdflutetAfJ+8UthJc0bvDoROUhnzTQZEGCyNmWMotgMqjf
- zR6IqqP0rwACE2ZgvuSCIdu4yGHfO83ypsWwArlQVupPUNgqZpZhZFBfkqDlmHrai0XcK7+Bl
- 88YlBbmdnciBXstf3UougA7U6aAU1n7YqJsfpa1QgytE4aEjXSpbX2BP/NCWHYX9XE70R2xZD
- v9B8xdr+sysQgbWbVi+SbPylQd89Zm27Ss/xXifhtI+Zv6Ym8Vqy8mrOw45p7dd/QFJ23cIUy
- qUtLya324sAK+1BA1LIWk3DS/K+hV21ZqXQjsXguOMw90N5mldFtJye8NrGxIGi5lTGTeX/9A
- ruT5eZnDHlpfkoJVgS8Faa9snuAWJcuwXcXOw78j18UnP5JXydLkLxiv3ZUS2fHRXFq+H6ixp
- HVUb8Oc0vuhH/TDVv919SdnSfIGZNPntjcKEeZd8Affjr7BBeraZtbj2ZFa2C+XC0012qJpYF
- fgF13H78PgCU+aTBCrmiDPqhfiiipJ3rIRXf/xWSm5Kpz7krCZ0GoHTNbGMX/gOellWYg17U5
- Ouvt7PlOr3Beitp0EzQOxHPaEx+ufSxELv5wdYYJHNhZWM2I8xfvEqRJTn8XU5nL82Hof1YDl
- o4Ebxzd2mDLadUxRsMG6SOrFMMhN9pz74GmYfIAWGkJl0RlYfPSHXtkKxQ3TB41ojil8e31KZ
- XoAp3vOIxChIPynhhaWrY7uxYn/fivj34AtOIEI9hz9jl9pvusUK2d2mQ6fNTzLnYggD/jkWS
- AXHWJZ5SMMNDTlcc2HeR5y39fBmf8fOnjc/WP70R9vFHqwctQqg6Npg7RA+0xmH/RnN5rZbvl
- qj/KmdhhinGrPfvNXbYKuPPJhMyh5gNV+m5f4iuOA50TcLvyBXLKzFyFDsVeXPA49dLs7yPGx
- JNTNwhGdh1Fo3wsDEBHH4iwl5Vxc6fkYOi0XiHjxoT0e6SICMiB5dVa55Qm3Sp6fQUKjQFbEo
- SPyIs3tEHCxtwbmy2P312zYJDleF+0es0kt40jaVbSrvGhWXLcPnUauGkyXfWwfA7j8ENrPdF
- CID38zHhZk82tU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211201072434.3968768-2-vkoul@kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The Supermicro X9SCi-LN4F server mainboard has a two LEDs and a button
-under the control of the BMC. This patch makes them accessible under
-Linux running on the BMC.
+On Wed, 01 Dec 2021 12:54:33 +0530, Vinod Koul wrote:
+> Add device tree binding Documentation details for Qualcomm SM8450
+> TLMM device
+> 
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  .../bindings/pinctrl/qcom,sm8450-pinctrl.yaml | 143 ++++++++++++++++++
+>  1 file changed, 143 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm8450-pinctrl.yaml
+> 
 
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-
-
-=2D--
-v2:
-- Adjust to new GPIO controller names
-- Explicitly set pinmux to GPIO for GPIO keys and LEDs
-
-v1:
-- https://lore.kernel.org/lkml/20210602120329.2444672-9-j.neuschaefer@gmx.=
-net/
-=2D--
- .../nuvoton-wpcm450-supermicro-x9sci-ln4f.dts | 43 +++++++++++++++++++
- 1 file changed, 43 insertions(+)
-
-diff --git a/arch/arm/boot/dts/nuvoton-wpcm450-supermicro-x9sci-ln4f.dts b=
-/arch/arm/boot/dts/nuvoton-wpcm450-supermicro-x9sci-ln4f.dts
-index 83f27fbf4e939..cd8d3a6bbf853 100644
-=2D-- a/arch/arm/boot/dts/nuvoton-wpcm450-supermicro-x9sci-ln4f.dts
-+++ b/arch/arm/boot/dts/nuvoton-wpcm450-supermicro-x9sci-ln4f.dts
-@@ -8,6 +8,9 @@
-
- #include "nuvoton-wpcm450.dtsi"
-
-+#include <dt-bindings/input/linux-event-codes.h>
-+#include <dt-bindings/gpio/gpio.h>
-+
- / {
- 	model =3D "Supermicro X9SCi-LN4F BMC";
- 	compatible =3D "supermicro,x9sci-ln4f-bmc", "nuvoton,wpcm450";
-@@ -20,6 +23,46 @@ memory@0 {
- 		device_type =3D "memory";
- 		reg =3D <0 0x08000000>; /* 128 MiB */
- 	};
-+
-+	gpio-keys {
-+		compatible =3D "gpio-keys";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&key_pins>;
-+
-+		uid {
-+			label =3D "UID button";
-+			linux,code =3D <KEY_HOME>;
-+			gpios =3D <&gpio0 14 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
-+	gpio-leds {
-+		compatible =3D "gpio-leds";
-+		pinctrl-names =3D "default";
-+		pinctrl-0 =3D <&led_pins>;
-+
-+		uid {
-+			label =3D "UID";
-+			gpios =3D <&gpio1 7 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		heartbeat {
-+			label =3D "heartbeat";
-+			gpios =3D <&gpio1 4 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+};
-+
-+&pinctrl {
-+	key_pins: mux_keys {
-+		groups =3D "gspi", "sspi";
-+		function =3D "gpio";
-+	};
-+
-+	led_pins: mux_leds {
-+		groups =3D "hg3", "hg0", "pwm4";
-+		function =3D "gpio";
-+	};
- };
-
- &serial0 {
-=2D-
-2.30.2
-
+Reviewed-by: Rob Herring <robh@kernel.org>
