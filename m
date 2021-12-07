@@ -2,95 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A518946C2CF
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Dec 2021 19:28:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E7F0746C2EA
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Dec 2021 19:32:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240562AbhLGSb4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Dec 2021 13:31:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46440 "EHLO
+        id S240505AbhLGSgR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Dec 2021 13:36:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231363AbhLGSbz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Dec 2021 13:31:55 -0500
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 628A8C061574;
-        Tue,  7 Dec 2021 10:28:25 -0800 (PST)
-Received: by mail-pj1-x102e.google.com with SMTP id f18-20020a17090aa79200b001ad9cb23022so122953pjq.4;
-        Tue, 07 Dec 2021 10:28:25 -0800 (PST)
+        with ESMTP id S240160AbhLGSgN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Dec 2021 13:36:13 -0500
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 297AFC061574;
+        Tue,  7 Dec 2021 10:32:43 -0800 (PST)
+Received: by mail-pj1-x102a.google.com with SMTP id k6-20020a17090a7f0600b001ad9d73b20bso137952pjl.3;
+        Tue, 07 Dec 2021 10:32:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3K6TOKmuXzbOyoxK5qeZN6UfLrjbFqLBLFd2or1FY3U=;
-        b=bMn4HZzovqnSsKBYjx7SaX/7/1YnQpwZP0+VKOP4iiLq7LSFfCBZV9AU+pFkzJI1Fd
-         4Nw+zBXs8m4ta8JPlqj4SuV8/lpOYJgqD3XTRBRBtwgX4BBCorP93aKWdbbOvahP9Ieu
-         4fclBZDgT1sK/yI1MCQv9+gKiO4Q/+AVDNEtSgu3P9KKH42p1qdgD0C+JoS/spi52ZUo
-         ayTkva3dvK5bn99tb883HDN9TNA9iomarw6Fl3mB9XdQscrwPuSQfQ5YPdDXW/bEzdm7
-         gfdZZzrQtDoMjwOnx3I48NQchGUqZnOwQMwdOskA8X+RCIW6dMoxHO34UGD6PcdG2kp5
-         8Zjg==
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=Fz79Zw1XUWo4TTtZ+lJkjDQ8HIjg7qXcQ0lK5kRZaeA=;
+        b=mJSqawCWPruWg4AuJdubaQzSzgcWk0jFx1jXZwPy7c9ijnkoN3KWOYaQ9J2aKjbihR
+         xl7QwFj61Gz4AJzYyxSQcyJ94CpCjVA+BJk/DCmQ/GXskDvY58UPD7UXCj1fV99JptUa
+         fEfdmsvDyXQg43DjAiv9E4WoK0cVebMMeRTPRkZLb8PYKbdbMnSZtaYI+9MdyydXeIoQ
+         dG41nhPBxdBJFwVjtqF5Naga2gWfENwnAw3acQ3mTjR6IQRPw9BGmOlufvDBWEb/ecty
+         p3Q4dey/UkX0Q46hoXAUJgh63sTmG7zJQ8xvOpbptYVvyw4owB1G1GCFEGdWRxOUOVU2
+         FW2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        h=x-gm-message-state:subject:to:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=3K6TOKmuXzbOyoxK5qeZN6UfLrjbFqLBLFd2or1FY3U=;
-        b=FYIYkCnXeyXZ/dOoJ9TEKSeYcsrw8dsikGa+17VCFd3cf06ruBeq4E73eEOcq76mFb
-         l8LziJw/HpAqm9Taf5fWXvlhH7g6bvyQ0RDOEcelCaei4r3fqjvAK7xrljl8vyQaS4RB
-         SG5iR791V+iLKMaH2RV3SvKjxGCgcN+rxYyHMW23E1m+buMCEjzSEoaaKe8QdOL191um
-         IMPqQ1bZOg2Lrxsz8Tw7TJSbu8fyJw5XR5LsbUwEBh1ujq8FVqh7LEec+DVd6wzQrqdI
-         RHOS5B0YJ5tH7yfc3OSW9LEaf/zHTKG2Kkw7jdS6sgP2uBAQaYJhXPon6xQ2GJg8gaLq
-         kpAA==
-X-Gm-Message-State: AOAM5315rzCPKgmcaoSrdFJtdSuay66GpN40qq+1apgp0S4efQ1C2uDn
-        JhhuFovFaWPVRpKMc36B2XM=
-X-Google-Smtp-Source: ABdhPJzn0pfJRBt8YChyiQar1VcDrvcPxcRCu77UgUdlxwGOW7ggxIp8oNfTZO1IIk1I65ugPQuz/A==
-X-Received: by 2002:a17:903:2443:b0:142:1e92:1d19 with SMTP id l3-20020a170903244300b001421e921d19mr53256611pls.24.1638901704865;
-        Tue, 07 Dec 2021 10:28:24 -0800 (PST)
+        bh=Fz79Zw1XUWo4TTtZ+lJkjDQ8HIjg7qXcQ0lK5kRZaeA=;
+        b=ZDEfTEihRcq5jtgSWr1MYPRQuudqRM0g36WvwXMPKlFj5RrYVMdWOCPpHhvvbYu+Ks
+         taVqgEDB320Q+61FItddUweFpQpgPGQeTDQTKkpPvJzgbf/uCS8k4DV3T0IVpKOz+8w8
+         ijKKVN3UTd7uvtCfx7dNpxtXUSlMvGSU0o43F4F3Mj8hXQKiFitItWjBphvNFTC4dOZD
+         AMDRkY6JnSzQ2i/3yt3F6lmfCYMXHxPohFnIjoQoM4fyIJUmCjpRNVg1V7vZgnBz2VuE
+         8U/Nx9p9RiR4GpYiLgDniFXeGpNEq98lrQYGXlNx/YC4hntyk+lmVIwLL3ytsCui5utT
+         IsBw==
+X-Gm-Message-State: AOAM533ZLYKrJ1mM5b/7xy6TBnJvavewor4RapZD9FwhDN+72ex5olm+
+        Y7DsEku04ypy7N1iSl4nSwa3bQ1XnVs=
+X-Google-Smtp-Source: ABdhPJxTV8FMDebVvQYswEOqZMuSpm8yBtEkdHHC8sJFhOkyQ2i4CR3xSIwSXxYsgwJy3KjTjQzt+g==
+X-Received: by 2002:a17:902:e74e:b0:142:fa5:49f1 with SMTP id p14-20020a170902e74e00b001420fa549f1mr53122970plf.84.1638901962165;
+        Tue, 07 Dec 2021 10:32:42 -0800 (PST)
 Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id l21sm3446135pjt.24.2021.12.07.10.28.20
+        by smtp.googlemail.com with ESMTPSA id a3sm221845pgj.2.2021.12.07.10.32.40
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Dec 2021 10:28:24 -0800 (PST)
-Subject: Re: [PATCH v2 12/14] dt-bindings: ata: Convert Broadcom SATA to YAML
-To:     Rob Herring <robh@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>, linux-pwm@vger.kernel.org,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        linux-gpio@vger.kernel.org, Amit Kucheria <amitk@kernel.org>,
-        linux-rtc@vger.kernel.org,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Marc Zyngier <maz@kernel.org>, Doug Berger <opendmb@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Al Cooper <alcooperx@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-usb@vger.kernel.org, linux-mmc@vger.kernel.org,
-        Ray Jui <rjui@broadcom.com>, linux-pm@vger.kernel.org,
-        Markus Mayer <mmayer@broadcom.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Zhang Rui <rui.zhang@intel.com>, linux-ide@vger.kernel.org,
-        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org,
-        Gregory Fong <gregory.0xf0@gmail.com>,
-        linux-crypto@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
+        Tue, 07 Dec 2021 10:32:41 -0800 (PST)
+Subject: Re: [PATCH v2 1/2] pinctrl: bcm2835: Change init order for gpio hogs
+To:     Phil Elwell <phil@raspberrypi.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Scott Branden <sbranden@broadcom.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>
-References: <20211206182616.2089677-1-f.fainelli@gmail.com>
- <20211206182616.2089677-13-f.fainelli@gmail.com>
- <1638889090.722845.5803.nullmailer@robh.at.kernel.org>
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Thierry Reding <treding@nvidia.com>,
+        devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org
+References: <20211206092237.4105895-1-phil@raspberrypi.com>
+ <20211206092237.4105895-2-phil@raspberrypi.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <f463f454-943c-e081-9005-c7b4df7304af@gmail.com>
-Date:   Tue, 7 Dec 2021 10:28:19 -0800
+Message-ID: <2a799587-9e58-4907-e41d-05920509f55d@gmail.com>
+Date:   Tue, 7 Dec 2021 10:32:39 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.14.0
 MIME-Version: 1.0
-In-Reply-To: <1638889090.722845.5803.nullmailer@robh.at.kernel.org>
+In-Reply-To: <20211206092237.4105895-2-phil@raspberrypi.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -98,68 +73,25 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 12/7/21 6:58 AM, Rob Herring wrote:
-> On Mon, 06 Dec 2021 10:26:14 -0800, Florian Fainelli wrote:
->> Convert the Broadcom SATA3 AHCI controller Device Tree binding to YAML
->> to help with validation.
->>
->> Acked-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
->> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->> ---
->>  .../bindings/ata/brcm,sata-brcm.txt           | 45 ---------
->>  .../bindings/ata/brcm,sata-brcm.yaml          | 91 +++++++++++++++++++
->>  2 files changed, 91 insertions(+), 45 deletions(-)
->>  delete mode 100644 Documentation/devicetree/bindings/ata/brcm,sata-brcm.txt
->>  create mode 100644 Documentation/devicetree/bindings/ata/brcm,sata-brcm.yaml
->>
+On 12/6/21 1:22 AM, Phil Elwell wrote:
+> ...and gpio-ranges
 > 
-> Running 'make dtbs_check' with the schema in this patch gives the
-> following warnings. Consider if they are expected or the schema is
-> incorrect. These may not be new warnings.
+> pinctrl-bcm2835 is a combined pinctrl/gpio driver. Currently the gpio
+> side is registered first, but this breaks gpio hogs (which are
+> configured during gpiochip_add_data). Part of the hog initialisation
+> is a call to pinctrl_gpio_request, and since the pinctrl driver hasn't
+> yet been registered this results in an -EPROBE_DEFER from which it can
+> never recover.
 > 
-> Note that it is not yet a requirement to have 0 warnings for dtbs_check.
-> This will change in the future.
+> Change the initialisation sequence to register the pinctrl driver
+> first.
 > 
-> Full log is available here: https://patchwork.ozlabs.org/patch/1564108
+> This also solves a similar problem with the gpio-ranges property, which
+> is required in order for released pins to be returned to inputs.
 > 
-> 
-> ahci@41000: $nodename:0: 'ahci@41000' does not match '^sata(@.*)?$'
-> 	arch/arm/boot/dts/bcm958522er.dt.yaml
-> 	arch/arm/boot/dts/bcm958525er.dt.yaml
-> 	arch/arm/boot/dts/bcm958525xmc.dt.yaml
-> 	arch/arm/boot/dts/bcm958622hr.dt.yaml
-> 	arch/arm/boot/dts/bcm958623hr.dt.yaml
-> 	arch/arm/boot/dts/bcm958625hr.dt.yaml
-> 	arch/arm/boot/dts/bcm958625k.dt.yaml
-> 	arch/arm/boot/dts/bcm958625-meraki-mx64-a0.dt.yaml
-> 	arch/arm/boot/dts/bcm958625-meraki-mx64.dt.yaml
-> 	arch/arm/boot/dts/bcm958625-meraki-mx64w-a0.dt.yaml
-> 	arch/arm/boot/dts/bcm958625-meraki-mx64w.dt.yaml
-> 	arch/arm/boot/dts/bcm958625-meraki-mx65.dt.yaml
-> 	arch/arm/boot/dts/bcm958625-meraki-mx65w.dt.yaml
-> 	arch/arm/boot/dts/bcm988312hr.dt.yaml
-> 
-> ahci@41000: Unevaluated properties are not allowed ('#address-cells', '#size-cells', 'dma-coherent', 'sata-port@0', 'sata-port@1' were unexpected)
-> 	arch/arm/boot/dts/bcm958522er.dt.yaml
-> 	arch/arm/boot/dts/bcm958525er.dt.yaml
-> 	arch/arm/boot/dts/bcm958525xmc.dt.yaml
-> 	arch/arm/boot/dts/bcm958622hr.dt.yaml
-> 	arch/arm/boot/dts/bcm958623hr.dt.yaml
-> 	arch/arm/boot/dts/bcm958625hr.dt.yaml
-> 	arch/arm/boot/dts/bcm958625k.dt.yaml
-> 	arch/arm/boot/dts/bcm958625-meraki-mx64.dt.yaml
-> 	arch/arm/boot/dts/bcm958625-meraki-mx64w.dt.yaml
-> 	arch/arm/boot/dts/bcm958625-meraki-mx65.dt.yaml
-> 	arch/arm/boot/dts/bcm958625-meraki-mx65w.dt.yaml
-> 	arch/arm/boot/dts/bcm988312hr.dt.yaml
-> 
-> ahci@41000: Unevaluated properties are not allowed ('#address-cells', '#size-cells', 'sata-port@0', 'sata-port@1' were unexpected)
-> 	arch/arm/boot/dts/bcm958625-meraki-mx64-a0.dt.yaml
-> 	arch/arm/boot/dts/bcm958625-meraki-mx64w-a0.dt.yaml
-> 
-> sata@a000: compatible: 'oneOf' conditional failed, one must be fixed:
-> 	arch/arm/boot/dts/bcm963138dvt.dt.yaml
+> Fixes: 73345a18d464b ("pinctrl: bcm2835: Pass irqchip when adding gpiochip")
+> Signed-off-by: Phil Elwell <phil@raspberrypi.com>
 
-All of those fixed in v3.
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
 Florian
