@@ -2,176 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0229C46B0A1
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Dec 2021 03:32:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7028046B191
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Dec 2021 04:41:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243560AbhLGCg0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Dec 2021 21:36:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47930 "EHLO
+        id S234328AbhLGDp1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Dec 2021 22:45:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243541AbhLGCgZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Dec 2021 21:36:25 -0500
-Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 406D7C061746;
-        Mon,  6 Dec 2021 18:32:56 -0800 (PST)
-Received: by mail-qt1-x833.google.com with SMTP id p19so12866690qtw.12;
-        Mon, 06 Dec 2021 18:32:56 -0800 (PST)
+        with ESMTP id S234282AbhLGDp0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Dec 2021 22:45:26 -0500
+Received: from mail-ua1-x92e.google.com (mail-ua1-x92e.google.com [IPv6:2607:f8b0:4864:20::92e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4279BC061746;
+        Mon,  6 Dec 2021 19:41:57 -0800 (PST)
+Received: by mail-ua1-x92e.google.com with SMTP id l24so23994291uak.2;
+        Mon, 06 Dec 2021 19:41:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=QQzMbHoCIHQcabSUmv+A+cuD+7qIgSkwyMRvoh0L3Gs=;
-        b=h7KB6b3EX6ARdK4WUecjmEHeiKvtwdiOJ7RqH4PFeXYLLgP5MFzWNcJCmTMsW2Qo9e
-         CxdPOqBqWoCHISCIxvSQ0ZrXeU25dZarYGcdEbiNY3YIS7IRhpvfPclamQsoo72hliNM
-         +Sf+15JVxmE7F4MdCgG+wpcrZYcyr+er6kzGOCYufjK8QdcK1QuGeKaeK7+Rl6/hoFYn
-         Zx9vsSuzXJGAnzjB4Up5+6FxQ/U6XwLVENAv2jdmqWeuqqGNg9lTY7V2yNtCAJYSXWu5
-         f9mlC+tPdrnFk+OSsHHemX5Z6RX15/hRvxG4cphtCyNBmT758Co+yb2EabAy2C14lxym
-         TVwg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+WjCLq5iyPbhZoOVbo+nvWb9Wp/JdlLnIPR31C337C8=;
+        b=mZiJ1JWBFc1OWU2CphwdToWib2Fs7VeoMvRyd6OGAUdTYE7JuVX3y18pFnbL9d0SYR
+         qnkGAcFy4HWByFCmfen3y9B+gsUBd2Z4vpiAY8cExnT/X6456PRBzYpHz5lzE8xWOBLE
+         /Opn0hwl+/WEjMpD3cFa2zhWfG+2VM8IZAoAwDwKw4uis+328EKo2LCeWhkZKeKEAT9k
+         n3UXrAemi7nOM0I+lBZxbPlnpXZXWks7fOWw21TwqOUg6+DtBOdhLAZp7S1avVtceNWO
+         6hIZiEiJ4irNSwTkZ0WAOuxz06b1U7vebIqVBU87ZImLwZxD31NuI/0Q7jK48HpCxsG6
+         jbJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=QQzMbHoCIHQcabSUmv+A+cuD+7qIgSkwyMRvoh0L3Gs=;
-        b=AJVlwyi/l52Rxc/dq7la/vfuB47U1gG2PUIBPSDmB5VZB9qDfQ7nRBpTfLNRmfpLBg
-         74Rh9OGWS2MsUkkaV0n7V/R1VXEdy8rz74iOJdtF+SPpDCj3hQAvc8iIi8mQNIpYSpf2
-         eBLTT2NkxVlpjNHVtblMOR8IJzuK/hEfIM01wsefCPytcdPpjymFvKTC1ODgK1LA2a5b
-         JNwpYjWhetsQigwsywCxDzGIIvoErwSzmP2ecoTZhnbS5tBltTe4vDOrH6TEwVfocpDu
-         GLCZtQ1sHNk1pg+lMyy+BYOZfRH2Vh32bw89+kkJKHDCsN29KsOes7+Vt9Jr/ZYBZxT8
-         OZUA==
-X-Gm-Message-State: AOAM531ykmHq3HWf8fFYTuQD156CVLtZh/b/76fDA9rYw8pCweHRyI04
-        3nwFdKmKzBMuaNFEfZBarDf1tlIkOPc7jw==
-X-Google-Smtp-Source: ABdhPJz9gAnjJaTSLqSBU8V1XbG1Ba11WfK8eAbaVVjxdKkz3fPB9mJLRZ4pHrpc7sQIC5T8EkI3Mg==
-X-Received: by 2002:ac8:4a0e:: with SMTP id x14mr45094726qtq.345.1638844375373;
-        Mon, 06 Dec 2021 18:32:55 -0800 (PST)
-Received: from [10.4.10.38] (146-115-144-188.s4282.c3-0.nwt-cbr1.sbo-nwt.ma.cable.rcncustomer.com. [146.115.144.188])
-        by smtp.gmail.com with ESMTPSA id t9sm7520523qkp.110.2021.12.06.18.32.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Dec 2021 18:32:54 -0800 (PST)
-Message-ID: <9dab64ca-0d91-3bea-f873-3c2da6ef1645@gmail.com>
-Date:   Mon, 6 Dec 2021 21:32:52 -0500
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+WjCLq5iyPbhZoOVbo+nvWb9Wp/JdlLnIPR31C337C8=;
+        b=5b7/eFbJEOeL9ZNIuyZyAlpO52UWbGZLaf1bg2jfeQ4GVl9evTE4oJzyD9m1cSI9P/
+         DVPyXnB3/68ID+cisJSTq0toGmcK37hgecZUF+s5nTmSNshi7xyjIvERRCANsf5p2Cef
+         yJcC3400mMfT63OzCTqBEdCLqzU8xaCSeUwhc4bGPHFTFKW2b3+ptNWmWBzWiIc0kMa9
+         vZG8GfYGc42M+t896RoqpVEKnJpiKiqgug+D23TQaG32kECWATHpfW8SP/GLfqEUa5hf
+         WwNhY9eNgtRg13me9cjXzUQuEuMd15/WNRvBlpPMtNKPGOv6A2JBl3sGakYnONJo0rIu
+         Ki8w==
+X-Gm-Message-State: AOAM532t6a257QWxIXJkyZ7p6GAsPVSWe/vD+jR6CfEsncfkwhk3ZcV8
+        X+LhJLOcsUU2w0747qhtduReT7g/GebIhBzAkg0d1blr0+c=
+X-Google-Smtp-Source: ABdhPJx6RQZ3n6olyV3sCz9AbKmYBKhNAk0yZ773fOAPjf8R3q9XrHTi0PcC2P6/Zcqz0XN+NMNLS7cMSGYejK/S3F0=
+X-Received: by 2002:ab0:6813:: with SMTP id z19mr46872879uar.28.1638848516162;
+ Mon, 06 Dec 2021 19:41:56 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.2
-Subject: Re: [PATCH v4 06/13] dt-bindings: clock: imx: Add documentation for
- i.MXRT clock
-Content-Language: en-US
-To:     Stephen Boyd <sboyd@kernel.org>, linux-imx@nxp.com
-Cc:     mturquette@baylibre.com, robh+dt@kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        ulf.hansson@linaro.org, aisheng.dong@nxp.com, stefan@agner.ch,
-        linus.walleij@linaro.org, gregkh@linuxfoundation.org,
-        arnd@arndb.de, olof@lixom.net, soc@kernel.org,
-        linux@armlinux.org.uk, abel.vesa@nxp.com, adrian.hunter@intel.com,
-        jirislaby@kernel.org, giulio.benetti@benettiengineering.com,
-        nobuhiro1.iwamatsu@toshiba.co.jp, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-References: <20211204061042.1248028-1-Mr.Bossman075@gmail.com>
- <20211204061042.1248028-7-Mr.Bossman075@gmail.com>
- <20211206223849.554F6C341C6@smtp.kernel.org>
-From:   Jesse Taube <mr.bossman075@gmail.com>
-In-Reply-To: <20211206223849.554F6C341C6@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20211206182616.2089677-1-f.fainelli@gmail.com> <20211206182616.2089677-6-f.fainelli@gmail.com>
+In-Reply-To: <20211206182616.2089677-6-f.fainelli@gmail.com>
+From:   Gregory Fong <gregory.0xf0@gmail.com>
+Date:   Mon, 6 Dec 2021 19:41:29 -0800
+Message-ID: <CADtm3G5Sh5sFhq7ye=aJbzd0v_FiqOPt_RAE3v_qWFQ+jH5bEQ@mail.gmail.com>
+Subject: Re: [PATCH v2 05/14] dt-bindings: gpio: Convert Broadcom STB GPIO to YAML
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     devicetree@vger.kernel.org,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Markus Mayer <mmayer@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Al Cooper <alcooperx@gmail.com>,
+        Doug Berger <opendmb@gmail.com>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:MULTIMEDIA CARD (MMC), SECURE DIGITAL (SD) AND..." 
+        <linux-mmc@vger.kernel.org>,
+        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Mon, Dec 6, 2021 at 10:26 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+> Convert the Broadcom STB GPIO Device Tree binding to YAML to help with
+> validation.
+>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-
-On 12/6/21 17:38, Stephen Boyd wrote:
-> Quoting Jesse Taube (2021-12-03 22:10:35)
->> diff --git a/Documentation/devicetree/bindings/clock/imxrt-clock.yaml b/Documentation/devicetree/bindings/clock/imxrt-clock.yaml
->> new file mode 100644
->> index 000000000000..8af48c59ff99
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/imxrt-clock.yaml
->> @@ -0,0 +1,67 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/clock/imxrt-clock.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Clock bindings for Freescale i.MXRT
->> +
->> +maintainers:
->> +  - Giulio Benetti <giulio.benetti@benettiengineering.com>
->> +  - Jesse Taube <Mr.Bossman075@gmail.com>
->> +
->> +description: |
->> +  The clock consumer should specify the desired clock by having the clock
->> +  ID in its "clocks" phandle cell. See include/dt-bindings/clock/imxrt*-clock.h
->> +  for the full list of i.MXRT clock IDs.
->> +
->> +properties:
->> +  compatible:
->> +    const: fsl,imxrt1050-ccm
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  interrupts:
->> +    maxItems: 2
->> +
->> +  clocks:
->> +    minItems: 1
->> +
->> +  clock-names:
->> +    minItems: 1
-> 
-> Why minitems vs. exactly 1 for osc?
-because i don't understand yaml yet.
-I'll look into this.
-
->> +
->> +  '#clock-cells':
->> +    const: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - interrupts
->> +  - clocks
->> +  - clock-names
->> +  - '#clock-cells'
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/clock/imxrt1050-clock.h>
->> +
->> +    ccm@400fc000 {
-> 
-> s/ccm/clock-controller/
-
-This made my day!
-
-> 
->> +        compatible = "fsl,imxrt1050-ccm";
->> +        reg = <0x400fc000 0x4000>;
->> +        interrupts = <95>, <96>;
->> +        clocks = <&osc>;
->> +        clock-names = "osc";
->> +        #clock-cells = <1>;
->> +    };
->> +
->> +
-> 
-> Nitpick: Drop extra newline
-sorry will fix.
-> 
->> +    lpuart1: serial@40184000 {
->> +        compatible = "fsl,imxrt1050-lpuart";
->> +        reg = <0x40184000 0x4000>;
->> +        interrupts = <20>;
->> +        clocks = <&clks IMXRT1050_CLK_LPUART1>;
->> +        clock-names = "ipg";
->> +    };
->> -- 
->> 2.34.0
->>
+Acked-by: Gregory Fong <gregory.0xf0@gmail.com>
