@@ -2,116 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D37446BAFB
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Dec 2021 13:23:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AA5C046BB0B
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Dec 2021 13:27:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236477AbhLGM1D (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Dec 2021 07:27:03 -0500
-Received: from mga06.intel.com ([134.134.136.31]:21700 "EHLO mga06.intel.com"
+        id S230414AbhLGMbM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 7 Dec 2021 07:31:12 -0500
+Received: from mga18.intel.com ([134.134.136.126]:15932 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236021AbhLGM0y (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 7 Dec 2021 07:26:54 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10190"; a="298358880"
+        id S235422AbhLGMbL (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 7 Dec 2021 07:31:11 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10190"; a="224432359"
 X-IronPort-AV: E=Sophos;i="5.87,293,1631602800"; 
-   d="scan'208";a="298358880"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2021 04:23:23 -0800
+   d="scan'208";a="224432359"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2021 04:27:41 -0800
 X-IronPort-AV: E=Sophos;i="5.87,293,1631602800"; 
-   d="scan'208";a="461239930"
+   d="scan'208";a="579821071"
 Received: from smile.fi.intel.com ([10.237.72.184])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2021 04:23:20 -0800
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2021 04:27:38 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.95)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1muZUC-003Dne-Ij;
-        Tue, 07 Dec 2021 14:22:20 +0200
-Date:   Tue, 7 Dec 2021 14:22:20 +0200
+        id 1muZWF-003Dpl-L4;
+        Tue, 07 Dec 2021 14:24:27 +0200
+Date:   Tue, 7 Dec 2021 14:24:27 +0200
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Richard Hsu <saraon640529@gmail.com>
-Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
-        Richard_Hsu@asmedia.com.tw, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Yd_Tseng@asmedia.com.tw,
-        Cindy1_Hsu@asmedia.com.tw, Andrew_Su@asmedia.com.tw
-Subject: Re: [PATCH] gpio:gpio-amdpt:add new device and that 24-pin support
-Message-ID: <Ya9R/Ab1x43lfxCU@smile.fi.intel.com>
-References: <20211207094239.5059-1-Richard_Hsu@asmedia.com.tw>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v13 2/7] gpiolib: allow to specify the firmware node in
+ struct gpio_chip
+Message-ID: <Ya9Seyco7elB2on2@smile.fi.intel.com>
+References: <20211207093412.27833-1-brgl@bgdev.pl>
+ <20211207093412.27833-3-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211207094239.5059-1-Richard_Hsu@asmedia.com.tw>
+In-Reply-To: <20211207093412.27833-3-brgl@bgdev.pl>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Dec 07, 2021 at 05:42:39PM +0800, Richard Hsu wrote:
-> From: RichardHsu <Richard_Hsu@asmedia.com.tw>
+On Tue, Dec 07, 2021 at 10:34:07AM +0100, Bartosz Golaszewski wrote:
+> Software nodes allow us to represent hierarchies for device components
+> that don't have their struct device representation yet - for instance:
+> banks of GPIOs under a common GPIO expander. The core gpiolib core
+> however doesn't offer any way of passing this information from the
+> drivers.
+> 
+> This extends struct gpio_chip with a pointer to fwnode that can be set
+> by the driver and used to pass device properties for child nodes.
+> 
+> This is similar to how we handle device-tree sub-nodes with
+> CONFIG_OF_GPIO enabled.
 
-Thanks for an update, my comments below.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-First of all, don't forget versioning of the patch (in the Subject it should
-be PATCH v2). Besides that, don't forget to include changelog (see below).
-
-Subject should be:
-
-	gpio: amdpt: add new device ID and 24-pin support
-
-> New ACPI gpio device(AMDIF031) support 24 gpio pins. We add new device id and pin number to .driver_data of acpi_device_id structure
-> and then retrieve it by device_get_match_data() that Andy suggest it.
-
-Please, make sure your text is wrapped at ~72-75 characters.
-
-> Signed-off-by: RichardHsu <Richard_Hsu@asmedia.com.tw>
-
-Is it name out of one work like this? Otherwise put your Real Name here.
-
+> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
 > ---
-
-Changelog should be here, after '--- ' cutter line.
-
->  drivers/gpio/gpio-amdpt.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
+>  drivers/gpio/gpiolib.c      | 7 ++++++-
+>  include/linux/gpio/driver.h | 2 ++
+>  2 files changed, 8 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/gpio/gpio-amdpt.c b/drivers/gpio/gpio-amdpt.c
-> index bbf53e289141..a45693423a07 100644
-> --- a/drivers/gpio/gpio-amdpt.c
-> +++ b/drivers/gpio/gpio-amdpt.c
-> @@ -14,6 +14,7 @@
->  #include <linux/platform_device.h>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 22b98a590a88..6af732bf4c99 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -593,13 +593,18 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>  			       struct lock_class_key *lock_key,
+>  			       struct lock_class_key *request_key)
+>  {
+> -	struct fwnode_handle *fwnode = gc->parent ? dev_fwnode(gc->parent) : NULL;
+> +	struct fwnode_handle *fwnode = NULL;
+>  	unsigned long	flags;
+>  	int		ret = 0;
+>  	unsigned	i;
+>  	int		base = gc->base;
+>  	struct gpio_device *gdev;
+>  
+> +	if (gc->fwnode)
+> +		fwnode = gc->fwnode;
+> +	else if (gc->parent)
+> +		fwnode = dev_fwnode(gc->parent);
+> +
+>  	/*
+>  	 * First: allocate and populate the internal stat container, and
+>  	 * set up the struct device.
+> diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+> index a673a359e20b..b0728c8ad90c 100644
+> --- a/include/linux/gpio/driver.h
+> +++ b/include/linux/gpio/driver.h
+> @@ -289,6 +289,7 @@ struct gpio_irq_chip {
+>   *	number or the name of the SoC IP-block implementing it.
+>   * @gpiodev: the internal state holder, opaque struct
+>   * @parent: optional parent device providing the GPIOs
+> + * @fwnode: optional fwnode providing this controller's properties
+>   * @owner: helps prevent removal of modules exporting active GPIOs
+>   * @request: optional hook for chip-specific activation, such as
+>   *	enabling module power and clock; may sleep
+> @@ -377,6 +378,7 @@ struct gpio_chip {
+>  	const char		*label;
+>  	struct gpio_device	*gpiodev;
+>  	struct device		*parent;
+> +	struct fwnode_handle	*fwnode;
+>  	struct module		*owner;
+>  
+>  	int			(*request)(struct gpio_chip *gc,
+> -- 
+> 2.25.1
 > 
->  #define PT_TOTAL_GPIO 8
-> +#define PT_TOTAL_GPIO_EX 24
-> 
->  /* PCI-E MMIO register offsets */
->  #define PT_DIRECTION_REG   0x00
-> @@ -103,7 +104,8 @@ static int pt_gpio_probe(struct platform_device *pdev)
->  	pt_gpio->gc.owner            = THIS_MODULE;
->  	pt_gpio->gc.request          = pt_gpio_request;
->  	pt_gpio->gc.free             = pt_gpio_free;
-> -	pt_gpio->gc.ngpio            = PT_TOTAL_GPIO;
-
-> +	/* retrieve pin number from .driver_data of acpi_device_id structure */
-
-Everybody understands or can easily get what the below API call does. No need
-to have a comment.
-
-> +	pt_gpio->gc.ngpio            = (uintptr_t)device_get_match_data(dev);
->  #if defined(CONFIG_OF_GPIO)
->  	pt_gpio->gc.of_node          = dev->of_node;
->  #endif
-> @@ -133,8 +135,9 @@ static int pt_gpio_remove(struct platform_device *pdev)
->  }
-> 
->  static const struct acpi_device_id pt_gpio_acpi_match[] = {
-> -	{ "AMDF030", 0 },
-> -	{ "AMDIF030", 0 },
-> +	{ "AMDF030", PT_TOTAL_GPIO },
-> +	{ "AMDIF030", PT_TOTAL_GPIO },
-> +	{ "AMDIF031", PT_TOTAL_GPIO_EX },
->  	{ },
->  };
->  MODULE_DEVICE_TABLE(acpi, pt_gpio_acpi_match);
-
-The code itself looks good!
 
 -- 
 With Best Regards,
