@@ -2,178 +2,176 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B3C746AE7D
-	for <lists+linux-gpio@lfdr.de>; Tue,  7 Dec 2021 00:32:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0229C46B0A1
+	for <lists+linux-gpio@lfdr.de>; Tue,  7 Dec 2021 03:32:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350213AbhLFXfh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 6 Dec 2021 18:35:37 -0500
-Received: from mail-eopbgr60120.outbound.protection.outlook.com ([40.107.6.120]:46864
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S243940AbhLFXfh (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 6 Dec 2021 18:35:37 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aFnKmOTIsAnxEZHDh4M1KRT0Hum963JyUO0WiAt/ct/yZfAfsclDcRA9HN1IF4YVQZm28p6Tyer7BZbcaY4JkOsre9aHNBD09ak+0+PAz3zSOKdHwAuXy01FOiMDhVvN07IwarGBh2oB/QkAM1Uo63zGV90PZIrCAmNia3zmgaIeowQDh+pKBJztySzonRtk11FRLFYOtTDXsFonsIkKPb92talPvhGLhGe3iW6xEeH86VlR/9iH+P3JnD7Vf54xTAj/GoRkmLA8pcZFXuhs8oru0cG7trepOEt7+AEY8LJibiJBF/9luz8tfyXCGu+7ItwaVTKyxetlyrAItxtssA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6doiZQHFai/phyfyJ2/J9eao/4SzhJ8lReE04/Eke/0=;
- b=TCLJRKKu2CeIhwH2TVMVeI+4jvUO4nxiHcr5MI1NFLyFV1p7bdBU8yTHrnuVJndCu+eyRD4iZcMsvsZhA1YUHFQghyy/K85EcHwDWLKQFcZlJsLHAEgcEcLLHB1SJ4r53PTPOO/TfzJYTm6Z0UicpVaH0YqBjw2L3fok9vDSHcrPR7VXoi2b10oNNPxEC45SFArUGlkPCO/dMrjUKg3z5rw96LIobYFq3WfkBw3978O2uXO7kPhEoHvAZsdPJl9CTMQCCsQBi0Evbzxy4P6CEihOXnb44YyUEGGG7jFTK058+Kpv61Dg9jAz6xdZ1JjUHeSSX6jYPz5nmkh37+FVlQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6doiZQHFai/phyfyJ2/J9eao/4SzhJ8lReE04/Eke/0=;
- b=giOOwhBegVPAPySLSaEOzwEXo56MGIqn7v9DGLc0J8kQAG6+91ifQT78FndkazXPJFfbHOeqB7f0JAlLez4YOwltpV0YoqaT5GJXcjGlSvA4RAsYn7YpZzxuGuKM9U3oOMjZ03d+O9s7DumUn1p4gKAucEqigEtKQ//RWVc7CDc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=axentia.se;
-Received: from DB8PR02MB5482.eurprd02.prod.outlook.com (2603:10a6:10:eb::29)
- by DB7PR02MB4105.eurprd02.prod.outlook.com (2603:10a6:10:41::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4755.11; Mon, 6 Dec
- 2021 23:32:06 +0000
-Received: from DB8PR02MB5482.eurprd02.prod.outlook.com
- ([fe80::7519:c72c:98b1:a39]) by DB8PR02MB5482.eurprd02.prod.outlook.com
- ([fe80::7519:c72c:98b1:a39%4]) with mapi id 15.20.4755.022; Mon, 6 Dec 2021
- 23:32:06 +0000
-Message-ID: <4d17866a-d9a4-a3d7-189a-781d18dbea00@axentia.se>
-Date:   Tue, 7 Dec 2021 00:32:03 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.2
-Content-Language: en-US
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-From:   Peter Rosin <peda@axentia.se>
-Subject: [PATCH] pinctrl: at91: allow use of of gpio-line-names property
-Organization: Axentia Technologies AB
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: GV3P280CA0071.SWEP280.PROD.OUTLOOK.COM (2603:10a6:150:a::6)
- To DB8PR02MB5482.eurprd02.prod.outlook.com (2603:10a6:10:eb::29)
+        id S243560AbhLGCg0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 6 Dec 2021 21:36:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47930 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243541AbhLGCgZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 6 Dec 2021 21:36:25 -0500
+Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 406D7C061746;
+        Mon,  6 Dec 2021 18:32:56 -0800 (PST)
+Received: by mail-qt1-x833.google.com with SMTP id p19so12866690qtw.12;
+        Mon, 06 Dec 2021 18:32:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=QQzMbHoCIHQcabSUmv+A+cuD+7qIgSkwyMRvoh0L3Gs=;
+        b=h7KB6b3EX6ARdK4WUecjmEHeiKvtwdiOJ7RqH4PFeXYLLgP5MFzWNcJCmTMsW2Qo9e
+         CxdPOqBqWoCHISCIxvSQ0ZrXeU25dZarYGcdEbiNY3YIS7IRhpvfPclamQsoo72hliNM
+         +Sf+15JVxmE7F4MdCgG+wpcrZYcyr+er6kzGOCYufjK8QdcK1QuGeKaeK7+Rl6/hoFYn
+         Zx9vsSuzXJGAnzjB4Up5+6FxQ/U6XwLVENAv2jdmqWeuqqGNg9lTY7V2yNtCAJYSXWu5
+         f9mlC+tPdrnFk+OSsHHemX5Z6RX15/hRvxG4cphtCyNBmT758Co+yb2EabAy2C14lxym
+         TVwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=QQzMbHoCIHQcabSUmv+A+cuD+7qIgSkwyMRvoh0L3Gs=;
+        b=AJVlwyi/l52Rxc/dq7la/vfuB47U1gG2PUIBPSDmB5VZB9qDfQ7nRBpTfLNRmfpLBg
+         74Rh9OGWS2MsUkkaV0n7V/R1VXEdy8rz74iOJdtF+SPpDCj3hQAvc8iIi8mQNIpYSpf2
+         eBLTT2NkxVlpjNHVtblMOR8IJzuK/hEfIM01wsefCPytcdPpjymFvKTC1ODgK1LA2a5b
+         JNwpYjWhetsQigwsywCxDzGIIvoErwSzmP2ecoTZhnbS5tBltTe4vDOrH6TEwVfocpDu
+         GLCZtQ1sHNk1pg+lMyy+BYOZfRH2Vh32bw89+kkJKHDCsN29KsOes7+Vt9Jr/ZYBZxT8
+         OZUA==
+X-Gm-Message-State: AOAM531ykmHq3HWf8fFYTuQD156CVLtZh/b/76fDA9rYw8pCweHRyI04
+        3nwFdKmKzBMuaNFEfZBarDf1tlIkOPc7jw==
+X-Google-Smtp-Source: ABdhPJz9gAnjJaTSLqSBU8V1XbG1Ba11WfK8eAbaVVjxdKkz3fPB9mJLRZ4pHrpc7sQIC5T8EkI3Mg==
+X-Received: by 2002:ac8:4a0e:: with SMTP id x14mr45094726qtq.345.1638844375373;
+        Mon, 06 Dec 2021 18:32:55 -0800 (PST)
+Received: from [10.4.10.38] (146-115-144-188.s4282.c3-0.nwt-cbr1.sbo-nwt.ma.cable.rcncustomer.com. [146.115.144.188])
+        by smtp.gmail.com with ESMTPSA id t9sm7520523qkp.110.2021.12.06.18.32.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 Dec 2021 18:32:54 -0800 (PST)
+Message-ID: <9dab64ca-0d91-3bea-f873-3c2da6ef1645@gmail.com>
+Date:   Mon, 6 Dec 2021 21:32:52 -0500
 MIME-Version: 1.0
-Received: from [192.168.13.3] (185.178.140.238) by GV3P280CA0071.SWEP280.PROD.OUTLOOK.COM (2603:10a6:150:a::6) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4755.11 via Frontend Transport; Mon, 6 Dec 2021 23:32:05 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a303c2b7-ef59-4298-db0c-08d9b9109d7c
-X-MS-TrafficTypeDiagnostic: DB7PR02MB4105:EE_
-X-Microsoft-Antispam-PRVS: <DB7PR02MB410595DCAAC07C056406DE44BC6D9@DB7PR02MB4105.eurprd02.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: WvRYbvcuYCfD6YRQUhkjz/AHpdydMIeGMljnAitKc837PbYkMgBlDikVkk9K6K94m+s4HBjYXQgz7fkKMPMeE4L/o5eYLPsQa4rZALy1Y9QmLFbvZKcDrngZ1mI6I0sumVz4honQEZSPug2o/j00oAKWBTNPWjx+8M9Nzh7/mEsUXvYxQAL05fnEtlf2QIpqwtR0/3espWAutk+Ft/Jgnl2XwWmNXMhaVdV1YhKymzaqDVYWP264uKSd0BrdqJXhuV7j8IdOJqbP3gMfLWh4hQxD6tmuOnw9+4QfP2MXlVfvfv4y7Rf6iH2W4PYuImseOBJseSph9lxfEARhgzklXov0K9jIgcw3znpNUiJ/KVVhNFBo6JM21+1RqaP8LEdG1ouuN9972xloFECKtnwELvuWLBhhurQ0ZORMJV8heBE30/PaAm2HsV9ignfBwUOC8E7J3So6rI6AFICtNyK4SIZsu6BYx8Xt77B3fv40JQDGuwA+mP+8M4q+0Xwl5CQF9rrn0KC+57b3+HFkbvX9MxcMqLKLBJ6TRB1Yc0eQ6QRuuvgRMoJ4Tt1+p074D5XgUGbezMnoEchFNRwwl49P0ahyOgjjMd0kZqprIqaeQo4VYFbp5nc7ot7uHpM+WZgn3XmijWUSaVF6EddTuthMj7bcbl3Ca2yc4OPrm8gbqBlYCGkZRA29hDZOvoh2jSDr2B41eDmmiQqiBd/JpMoQkZhnEgy3zMUN471KO9k0jKQ=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR02MB5482.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(136003)(366004)(396003)(39830400003)(376002)(5660300002)(83380400001)(54906003)(86362001)(4326008)(6916009)(16576012)(36916002)(31686004)(26005)(316002)(2906002)(508600001)(66946007)(956004)(8676002)(31696002)(8936002)(36756003)(6486002)(2616005)(38100700002)(66556008)(66476007)(186003)(45980500001)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?T1d0TW5SQ1BBbU12UTV5dk5CaENxaXZxK0xDRDRIbUd1enU2MlJnbVhCMTdR?=
- =?utf-8?B?aUtpSmh2MVRlWldhMGZTS1IrOFhzMVhpRWRqYWdZd0t5RXMvNlJmZFVNSVd5?=
- =?utf-8?B?b1c5VjlsNmFSL3hIenBxbmc2RlRlTjhabUhsb2JxTXprYU9CUTEreDZEck5U?=
- =?utf-8?B?VjlWWXk0b2grZDJYNVhIaEVXWTh2WEMwcFpHbE1mNmJsRkJoc1B6QnBtUFRa?=
- =?utf-8?B?Y0Y2ejBEUGk3TGxCc0MwUnQ2N254Q3BuelZMU216a3RQWVpPSUZlZHpxcXZU?=
- =?utf-8?B?RzEzVlVyaU1ldG4zb0dSNTJHR3dvSDMydUV1dlRzVWVMdzRmUXVSYnRZMllj?=
- =?utf-8?B?eEtMY3p5KzNlZjg0Qlp6b2FxcHJ0Z2k5bU5Tek1NOC9wZ3VZUVp1amRtSTZC?=
- =?utf-8?B?L3pjcUlZZ3FWUkc0V2s3RVd3UzVGbWt6QThLQUFuMG1Ka1BaclhFNi9PWW50?=
- =?utf-8?B?c3N0V0IxUGppMCtpUlRkUVRDTDJBVDZlV3NRNjVGUVQ4UkFQbFBhekJYMzBP?=
- =?utf-8?B?OUFHMExQTHhzdVRmMmtVSi9vVTV1QlN6dkY0eTZHcnN1YXZPVkkwMjRNSUU0?=
- =?utf-8?B?amJXZUN5ZHl3azVqR1lhSEJybFNyYUlaM29kYUloQ3RpZnh3eFJ0TXo1cGor?=
- =?utf-8?B?RElqY3A3bEIyVHFTVGxVZXh1QVdDaXhJV3VObUZIWkNFL2NMSUg0dDNMNDhH?=
- =?utf-8?B?dG4xdkZoQzdkTjJLNThva3N3KzhteDEveWtnVjFDakY3bHMzNWZDUm9HTThE?=
- =?utf-8?B?OVo3dFZwVTlrK2RaWExUdjErNS9xd251eklZZE5CNm5kS3VzYlN5N0FtUnZ3?=
- =?utf-8?B?V3NlU3BKOXFncXJHWDh5ZnMyM1ZTQ0dSRXRTcHh0blRtNlRYd2NIdFFlVGpW?=
- =?utf-8?B?TEtETGdzUUVWR0RxTnNQaVRPeHRLMEgwR0NXdEFCeTIwSHFHZ0ZFS0dHYTdV?=
- =?utf-8?B?QVVyRlgvRldmRXlBTkZtRVBEeDZYcVJmL2VDZzFVRnZMSW1EeEJvbFBjMGhy?=
- =?utf-8?B?UlFvR2lDWHd2cVJlWWYvM3JMZi8yNkRoamdlUldOdG42Vk45NitwQmVxQXlx?=
- =?utf-8?B?R2EyN3ZpWlRudTlrVXZRWmFwUG4zU2UyYkxzL1o5M2xBNlZqODN1R3E3bHBE?=
- =?utf-8?B?cVBDL2wrOURSTHhseE5NcjRzK0F3aGtlUkdFRWMrZlROdUlYQmFIUzg4WjdY?=
- =?utf-8?B?Uy92eE5Gc2lVcm5TZndwaFVDWU0yUGsxMWwxTFZodk85M3dxU2tqQXVHbVdz?=
- =?utf-8?B?VFZVTHJQcENaNVRZdnczM3FqTThzdmVWSlNwRWpjK3BLM0wvSnVKQ2dIanFQ?=
- =?utf-8?B?d1pkQ3o3QzluaFBoZHZ2bkFuL0gvd2FwRkU1ZDZEblExNGNXQ1RuUmFObEMv?=
- =?utf-8?B?cXNOWVF0N0s1aG9hMWlqWHM4NG5JNE1HQTI2ZG9scEhCTk5qYk5YOWdVZUdV?=
- =?utf-8?B?TkRVWmd0RkhzRW9aWXpzU2VYWTN3eWc1RmZleWVyQTZ3SFJJbjQ0bHlUSVJw?=
- =?utf-8?B?V21pNGFBd2RKYUNlbnNjNWlILzJCZ0x3REo1aDdEQzk3a0V1RG90cmJWSmp0?=
- =?utf-8?B?czZqNXB6aEVIWG9mMHB3Nk5OWjh6VWFVQ1g0bXN2N3dUVW11ZDVPQVEzRFU2?=
- =?utf-8?B?c3l4VGZLeWNyc25OQ3VFQmVTNjhUbUtVWlovT1M3Ump5RGw4dzYwZFd3Zm5H?=
- =?utf-8?B?SlhGcDIwUUhuNUZSYmRwSEQvYWRhT1M5YTdYTkRqdy9hVTNGalpwWkZFWHlr?=
- =?utf-8?B?SjdkVUpkMWNqeGF3UzlKdk5jMzlCMkZ0OEliU0xmUGp0NW1iN1dsbGoydXBG?=
- =?utf-8?B?aWpMTjRiSVNHZEtKdHJzWUMyZkNYZEtoVHR6QUpmbnNmMWFjaU4wdnlqdlZ3?=
- =?utf-8?B?Y2M0anpHb3RPdnpFbkErQjBKeFhCRmpJWHlNRUh5WlJzaU5xWCtNSTVXaEVt?=
- =?utf-8?B?K3lSR1VFVUxBbVc5Rk5mM3c0SDEvYURzQlNSbW9pTlFqUGppckxhdGtYTmkw?=
- =?utf-8?B?b0FJMzQyZW0rOGJiZnJ5dm1uWk1VNnlXbWVjeWJndXRUZVFKdmNRZFVYZWFR?=
- =?utf-8?B?VTNxdy9SZmhsN3I1OHN6cC8wTlJNUnhNaFl2Sk1OU0VIZXBEVFp4bFZwWVN4?=
- =?utf-8?Q?MqyU=3D?=
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: a303c2b7-ef59-4298-db0c-08d9b9109d7c
-X-MS-Exchange-CrossTenant-AuthSource: DB8PR02MB5482.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Dec 2021 23:32:06.4195
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kfZpJQfiJyFrgyaXOk9EAv9EaTxzFrmTtYVvwAliZjNDE4XUmJUvdhBLwPnHh1ZS
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR02MB4105
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.2
+Subject: Re: [PATCH v4 06/13] dt-bindings: clock: imx: Add documentation for
+ i.MXRT clock
+Content-Language: en-US
+To:     Stephen Boyd <sboyd@kernel.org>, linux-imx@nxp.com
+Cc:     mturquette@baylibre.com, robh+dt@kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        ulf.hansson@linaro.org, aisheng.dong@nxp.com, stefan@agner.ch,
+        linus.walleij@linaro.org, gregkh@linuxfoundation.org,
+        arnd@arndb.de, olof@lixom.net, soc@kernel.org,
+        linux@armlinux.org.uk, abel.vesa@nxp.com, adrian.hunter@intel.com,
+        jirislaby@kernel.org, giulio.benetti@benettiengineering.com,
+        nobuhiro1.iwamatsu@toshiba.co.jp, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
+        Rob Herring <robh@kernel.org>
+References: <20211204061042.1248028-1-Mr.Bossman075@gmail.com>
+ <20211204061042.1248028-7-Mr.Bossman075@gmail.com>
+ <20211206223849.554F6C341C6@smtp.kernel.org>
+From:   Jesse Taube <mr.bossman075@gmail.com>
+In-Reply-To: <20211206223849.554F6C341C6@smtp.kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-If no line name is given (by not having a gpio-line-names property,
-or by having empty "" strings for some lines), fall back to the
-existing pioC12-style line name scheme.
 
-It is useful to be able to explicitly name lines from the schematics
-or its function, rather than having the MCU names forced upon every
-user.
 
-Signed-off-by: Peter Rosin <peda@axentia.se>
----
- drivers/pinctrl/pinctrl-at91.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+On 12/6/21 17:38, Stephen Boyd wrote:
+> Quoting Jesse Taube (2021-12-03 22:10:35)
+>> diff --git a/Documentation/devicetree/bindings/clock/imxrt-clock.yaml b/Documentation/devicetree/bindings/clock/imxrt-clock.yaml
+>> new file mode 100644
+>> index 000000000000..8af48c59ff99
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/imxrt-clock.yaml
+>> @@ -0,0 +1,67 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/clock/imxrt-clock.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Clock bindings for Freescale i.MXRT
+>> +
+>> +maintainers:
+>> +  - Giulio Benetti <giulio.benetti@benettiengineering.com>
+>> +  - Jesse Taube <Mr.Bossman075@gmail.com>
+>> +
+>> +description: |
+>> +  The clock consumer should specify the desired clock by having the clock
+>> +  ID in its "clocks" phandle cell. See include/dt-bindings/clock/imxrt*-clock.h
+>> +  for the full list of i.MXRT clock IDs.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: fsl,imxrt1050-ccm
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  interrupts:
+>> +    maxItems: 2
+>> +
+>> +  clocks:
+>> +    minItems: 1
+>> +
+>> +  clock-names:
+>> +    minItems: 1
+> 
+> Why minitems vs. exactly 1 for osc?
+because i don't understand yaml yet.
+I'll look into this.
 
-I don't know if it's sane to fall back to the pioC12-style on empty
-strings, or if someone adding a gpio-line-names property should be
-responsible for filling in those names "by hand". I generally don't
-care what "unused" pins are named, so either is fine by me...
+>> +
+>> +  '#clock-cells':
+>> +    const: 1
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - interrupts
+>> +  - clocks
+>> +  - clock-names
+>> +  - '#clock-cells'
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/clock/imxrt1050-clock.h>
+>> +
+>> +    ccm@400fc000 {
+> 
+> s/ccm/clock-controller/
 
-Cheers,
-Peter
+This made my day!
 
-diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
-index 6022496bb6a9..4f108d07e6ad 100644
---- a/drivers/pinctrl/pinctrl-at91.c
-+++ b/drivers/pinctrl/pinctrl-at91.c
-@@ -1821,7 +1821,7 @@ static int at91_gpio_probe(struct platform_device *pdev)
- 	int irq, i;
- 	int alias_idx = of_alias_get_id(np, "gpio");
- 	uint32_t ngpio;
--	char **names;
-+	const char **names;
- 
- 	BUG_ON(alias_idx >= ARRAY_SIZE(gpio_chips));
- 	if (gpio_chips[alias_idx]) {
-@@ -1890,8 +1890,15 @@ static int at91_gpio_probe(struct platform_device *pdev)
- 		goto clk_enable_err;
- 	}
- 
--	for (i = 0; i < chip->ngpio; i++)
--		names[i] = kasprintf(GFP_KERNEL, "pio%c%d", alias_idx + 'A', i);
-+	if (of_property_read_string_array(np, "gpio-line-names",
-+					  names, chip->ngpio) != chip->ngpio)
-+		memset(names, 0, chip->ngpio * sizeof(char *));
-+
-+	for (i = 0; i < chip->ngpio; i++) {
-+		if (!names[i] || !names[i][0])
-+			names[i] = kasprintf(GFP_KERNEL,
-+					     "pio%c%d", alias_idx + 'A', i);
-+	}
- 
- 	chip->names = (const char *const *)names;
- 
--- 
-2.20.1
-
+> 
+>> +        compatible = "fsl,imxrt1050-ccm";
+>> +        reg = <0x400fc000 0x4000>;
+>> +        interrupts = <95>, <96>;
+>> +        clocks = <&osc>;
+>> +        clock-names = "osc";
+>> +        #clock-cells = <1>;
+>> +    };
+>> +
+>> +
+> 
+> Nitpick: Drop extra newline
+sorry will fix.
+> 
+>> +    lpuart1: serial@40184000 {
+>> +        compatible = "fsl,imxrt1050-lpuart";
+>> +        reg = <0x40184000 0x4000>;
+>> +        interrupts = <20>;
+>> +        clocks = <&clks IMXRT1050_CLK_LPUART1>;
+>> +        clock-names = "ipg";
+>> +    };
+>> -- 
+>> 2.34.0
+>>
