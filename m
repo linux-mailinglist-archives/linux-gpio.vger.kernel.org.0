@@ -2,131 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7480F46D35E
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Dec 2021 13:33:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E244F46D4B1
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Dec 2021 14:45:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233453AbhLHMhP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Dec 2021 07:37:15 -0500
-Received: from mail.thorsis.com ([92.198.35.195]:53952 "EHLO mail.thorsis.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229598AbhLHMhO (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 8 Dec 2021 07:37:14 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.thorsis.com (Postfix) with ESMTP id BDB6410C8;
-        Wed,  8 Dec 2021 13:33:41 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at mail.thorsis.com
-Received: from mail.thorsis.com ([127.0.0.1])
-        by localhost (mail.thorsis.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id TYdj9XuRCxoj; Wed,  8 Dec 2021 13:33:41 +0100 (CET)
-Received: by mail.thorsis.com (Postfix, from userid 109)
-        id EF044335A; Wed,  8 Dec 2021 13:33:39 +0100 (CET)
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NO_RECEIVED,
-        NO_RELAYS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-        version=3.4.2
-X-Spam-Report: * -1.9 BAYES_00 BODY: Bayes spam probability is 0 to 1%
-        *      [score: 0.0000]
-        *  0.0 URIBL_BLOCKED ADMINISTRATOR NOTICE: The query to URIBL was
-        *      blocked.  See
-        *      http://wiki.apache.org/spamassassin/DnsBlocklists#dnsbl-block
-        *      for more information.
-        *      [URIs: axentia.se]
-        * -0.0 NO_RELAYS Informational: message was not relayed via SMTP
-        * -0.0 NO_RECEIVED Informational: message has no Received headers
-Date:   Wed, 8 Dec 2021 13:33:25 +0100
-From:   Alexander Dahl <ada@thorsis.com>
-To:     Peter Rosin <peda@axentia.se>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        id S234689AbhLHNsZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Dec 2021 08:48:25 -0500
+Received: from mail-oi1-f176.google.com ([209.85.167.176]:34350 "EHLO
+        mail-oi1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234650AbhLHNsS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Dec 2021 08:48:18 -0500
+Received: by mail-oi1-f176.google.com with SMTP id t19so4222343oij.1;
+        Wed, 08 Dec 2021 05:44:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=eIDyK7IaEt6AWxSPZLft57NpyzGJfPRgZj/kMkxWENE=;
+        b=qFcpwEg5l6IsbqJLG6SuXUdjbKREtc3lHgvUTEXtM+kMbOGyoR7rKmzngAFt/Ea2OR
+         i1fxRtelh88+/WFQ0Mh8CWmCYz8/JAIfHjgRXqPCuebBjQLwu7O0BP8QesDtx9a376nb
+         iFcs7X/gDq73HBfy3bhtS2MSJG1y4lET8ULudiYsQdbSxB3F39qg3Zz9fkFeX5BSf27d
+         TFyyuZT8XLj3T30yu5I9KbKwuEFPwhtf6LllJ4R0RYM8r6kzHO5BOV5LjR/wORoTLZfu
+         pGcEh3jHVtpdp5UMt3adimo7x+Jo1NdMZmh3zotU1k8mwnzMtxcNEfl5xaKhDYrjAsLK
+         oaow==
+X-Gm-Message-State: AOAM531iKLq0BOBHyCPywVJiy+9/m9GrX0QusPZgOWXSjWsGwmQ3LZkk
+        9NsAljlc+Q6cT/93JNx99w==
+X-Google-Smtp-Source: ABdhPJz9YvJWuibEYQzebm5H3zO4j8sZZJym7m5fdDKQt86UCjfwAiPutT7QpChbFcbNbWW9u//YRQ==
+X-Received: by 2002:a05:6808:1885:: with SMTP id bi5mr12257718oib.54.1638971086359;
+        Wed, 08 Dec 2021 05:44:46 -0800 (PST)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id w4sm665805oiv.37.2021.12.08.05.44.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Dec 2021 05:44:45 -0800 (PST)
+Received: (nullmailer pid 3857730 invoked by uid 1000);
+        Wed, 08 Dec 2021 13:44:28 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     =?utf-8?q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Cc:     linux-gpio@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH] pinctrl: at91: allow use of of gpio-line-names property
-Message-ID: <YbCmFac6/nU949/Z@ada-deb-carambola.ifak-system.com>
-Mail-Followup-To: Peter Rosin <peda@axentia.se>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-References: <4d17866a-d9a4-a3d7-189a-781d18dbea00@axentia.se>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4d17866a-d9a4-a3d7-189a-781d18dbea00@axentia.se>
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Joel Stanley <joel@jms.id.au>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, openbmc@lists.ozlabs.org
+In-Reply-To: <20211207210823.1975632-5-j.neuschaefer@gmx.net>
+References: <20211207210823.1975632-1-j.neuschaefer@gmx.net> <20211207210823.1975632-5-j.neuschaefer@gmx.net>
+Subject: Re: [PATCH v2 4/8] dt-bindings: pinctrl: Add Nuvoton WPCM450
+Date:   Wed, 08 Dec 2021 07:44:28 -0600
+Message-Id: <1638971068.731875.3857729.nullmailer@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Peter,
-
-Am Tue, Dec 07, 2021 at 12:32:03AM +0100 schrieb Peter Rosin:
-> If no line name is given (by not having a gpio-line-names property,
-> or by having empty "" strings for some lines), fall back to the
-> existing pioC12-style line name scheme.
+On Tue, 07 Dec 2021 22:08:19 +0100, Jonathan Neuschäfer wrote:
+> This binding is heavily based on the one for NPCM7xx, because the
+> hardware is similar. There are some notable differences, however:
 > 
-> It is useful to be able to explicitly name lines from the schematics
-> or its function, rather than having the MCU names forced upon every
-> user.
-
-+1 from me. 
-
-I asked about this some months ago, but I saw no clear
-direction in the discussion. So for reference:
-
-https://lore.kernel.org/linux-gpio/946021874.11132.1615900079722@seven.thorsis.com/
-
-HTH & Greets
-Alex
-
-> Signed-off-by: Peter Rosin <peda@axentia.se>
+> - The addresses of GPIO banks are not physical addresses but simple
+>   indices (0 to 7), because the GPIO registers are not laid out in
+>   convenient blocks.
+> - Pinmux settings can explicitly specify that the GPIO mode is used.
+> 
+> Certain pins support blink patterns in hardware. This is currently not
+> modelled in the DT binding.
+> 
+> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+> 
+> 
 > ---
->  drivers/pinctrl/pinctrl-at91.c | 13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
+> v2:
+> - Move GPIO into subnodes
+> - Improve use of quotes
+> - Remove unnecessary minItems/maxItems lines
+> - Remove "phandle: true"
+> - Use separate prefixes for pinmux and pincfg nodes
+> - Add nuvoton,interrupt-map property
+> - Make it possible to set pinmux to GPIO explicitly
 > 
-> I don't know if it's sane to fall back to the pioC12-style on empty
-> strings, or if someone adding a gpio-line-names property should be
-> responsible for filling in those names "by hand". I generally don't
-> care what "unused" pins are named, so either is fine by me...
+> v1:
+> - https://lore.kernel.org/lkml/20210602120329.2444672-5-j.neuschaefer@gmx.net/
+> ---
+>  .../pinctrl/nuvoton,wpcm450-pinctrl.yaml      | 190 ++++++++++++++++++
+>  1 file changed, 190 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nuvoton,wpcm450-pinctrl.yaml
 > 
-> Cheers,
-> Peter
-> 
-> diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
-> index 6022496bb6a9..4f108d07e6ad 100644
-> --- a/drivers/pinctrl/pinctrl-at91.c
-> +++ b/drivers/pinctrl/pinctrl-at91.c
-> @@ -1821,7 +1821,7 @@ static int at91_gpio_probe(struct platform_device *pdev)
->  	int irq, i;
->  	int alias_idx = of_alias_get_id(np, "gpio");
->  	uint32_t ngpio;
-> -	char **names;
-> +	const char **names;
->  
->  	BUG_ON(alias_idx >= ARRAY_SIZE(gpio_chips));
->  	if (gpio_chips[alias_idx]) {
-> @@ -1890,8 +1890,15 @@ static int at91_gpio_probe(struct platform_device *pdev)
->  		goto clk_enable_err;
->  	}
->  
-> -	for (i = 0; i < chip->ngpio; i++)
-> -		names[i] = kasprintf(GFP_KERNEL, "pio%c%d", alias_idx + 'A', i);
-> +	if (of_property_read_string_array(np, "gpio-line-names",
-> +					  names, chip->ngpio) != chip->ngpio)
-> +		memset(names, 0, chip->ngpio * sizeof(char *));
-> +
-> +	for (i = 0; i < chip->ngpio; i++) {
-> +		if (!names[i] || !names[i][0])
-> +			names[i] = kasprintf(GFP_KERNEL,
-> +					     "pio%c%d", alias_idx + 'A', i);
-> +	}
->  
->  	chip->names = (const char *const *)names;
->  
-> -- 
-> 2.20.1
-> 
+
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/nuvoton,wpcm450-pinctrl.example.dt.yaml: pinctrl@b8003000: gpio@0:interrupts: [[2, 4, 3, 4, 4, 4]] is too short
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/nuvoton,wpcm450-pinctrl.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/nuvoton,wpcm450-pinctrl.example.dt.yaml: pinctrl@b8003000: mux_uid: Additional properties are not allowed ('phandle' was unexpected)
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/nuvoton,wpcm450-pinctrl.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/nuvoton,wpcm450-pinctrl.example.dt.yaml: pinctrl@b8003000: cfg_uid: Additional properties are not allowed ('phandle' was unexpected)
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/nuvoton,wpcm450-pinctrl.yaml
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/nuvoton,wpcm450-pinctrl.example.dt.yaml: pinctrl@b8003000: '#address-cells', '#size-cells' do not match any of the regexes: '^cfg_.*$', '^gpio@.*$', '^mux_.*$', 'pinctrl-[0-9]+'
+	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/nuvoton,wpcm450-pinctrl.yaml
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/patch/1564902
+
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
+
