@@ -2,92 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2EB446CC3A
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Dec 2021 05:14:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E1FC46CDBE
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Dec 2021 07:29:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244220AbhLHERW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 7 Dec 2021 23:17:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41610 "EHLO
+        id S239994AbhLHGcd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Dec 2021 01:32:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238338AbhLHERS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 7 Dec 2021 23:17:18 -0500
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88745C061D72
-        for <linux-gpio@vger.kernel.org>; Tue,  7 Dec 2021 20:13:47 -0800 (PST)
-Received: by mail-pf1-x443.google.com with SMTP id i12so1339547pfd.6
-        for <linux-gpio@vger.kernel.org>; Tue, 07 Dec 2021 20:13:47 -0800 (PST)
+        with ESMTP id S239648AbhLHGcc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Dec 2021 01:32:32 -0500
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DDAFC061574;
+        Tue,  7 Dec 2021 22:29:01 -0800 (PST)
+Received: by mail-ed1-x52e.google.com with SMTP id v1so4876377edx.2;
+        Tue, 07 Dec 2021 22:29:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=w0n14T57zPuvlg1YaFYy3gRfrUPFN1bDHGIrct+fXgc=;
-        b=cGWxDwe8B66FlIrZtrergIqE5+JvdqJ48sEvPTrvhBJ9xEqZLGyWZmuSPdCEFce/7D
-         /sVR44uqtlb2dmBH+iwgt0kboAu4/HTy3OZt9J6nwOu1H5twbKwVBnMykOKrBLHcBBEb
-         cgMJ7/59oMUtMggaQ9x/N1xe+U0YzN1k+xfCXkO5L7YIW30RFDnvCB0PrD7sMExliX7S
-         joeNtgfdJmxv3l42BA4cQp1HveXj/LpauGoYMsZKrrlYurvW6FC9Nrn9v/z7yklCLUv+
-         2uZJGSHlx+O0Rg+LxyFVcXJ8erZC2O96QnEFLkA1QmSl94RBUxOevwSkF8rG8CDqN06m
-         KdcQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ge8duN4sNFU8LlP54a+ac/TMCJbGoRstlWztgA2oT2k=;
+        b=p7Tlb9qJ5H1ZRRcrMS0mlr42Jn6hA8VP2orglLASnbMQBgx1S1WeBr/AMrOSeesXnQ
+         FRluYxOh0U5Ov4HWvBNuv3hTTSzYgFlsq7AC/NSoeEDrdP722tiB+4a45G8ysaCsuumR
+         N25uK9AtBpGiUL2MR7tvUHfXrY4R+C7lwVL22UrSyvojE1/GcpIkz0ZhSJhVcQc3EXuo
+         t1K8/XnGJZowgX+uPrPPkDOfUFvdLzuLndBaVJDj8uHnw9dAq+q/5vmn6PfqnXlaHXkV
+         GC9QBRXfkEqG4YTtx0xMcskL1XccmQ2vBPQsdaCDfBrNPvXnr2YcsX+X7j2hq+9RRlQs
+         VBPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=w0n14T57zPuvlg1YaFYy3gRfrUPFN1bDHGIrct+fXgc=;
-        b=IBYWagGDvnbWJCbn0TiGLPR+16uj2QyEoLMvcGXUzZSCLUp/LoX6HqtekOi7eDBtfK
-         YEkUCcnu9mLTORk5T+6PxpFnDz1NGUc5NVZ2nxXZBS10Wiaw02Oimif655byP3gwl7pq
-         GgP/Bkf69N+xjzDjDuxmTaMqvEPZgH9vKLCpKgnsUZLDh7J2jh1MwR3GsKUk1m1LEN0T
-         zKErsmdXLiYRc1zEXAxFzkzqy6nlqz1tWXonXFqHFxw77UblfqzOQoLaAnWbxOL4t9ly
-         1CxYfvo4QEvE1J58nVXCIVbDQbUrv6heTgojgI1UMJcjp2eQ8GUS9MWcergi+vRLdiXt
-         bYpA==
-X-Gm-Message-State: AOAM530toeXToh16KPirm9b3wY+htAZZvaw/PQDVA4lznawXGLVxz7yN
-        Nz5+UW5udSy4rcl9dNBIp16+VRYR+S+p6emhZu39UWRGRupynw==
-X-Google-Smtp-Source: ABdhPJx498jQ3rDCAEAukf875uPMCUUvAAHHJyp/169nhahBv8dg1ZTt80/LmlBc7j967yPpWx87fZn4PQyrL4JX27A=
-X-Received: by 2002:a92:600f:: with SMTP id u15mr3954317ilb.292.1638936815828;
- Tue, 07 Dec 2021 20:13:35 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ge8duN4sNFU8LlP54a+ac/TMCJbGoRstlWztgA2oT2k=;
+        b=VdYQ0oU03AZwKpXahwajRVV4LroqulA2PGSpUZqmqlIuSY4KaXAinPX2Uji7J7nYp+
+         +mp5LpkVDPLhH025ik/i8kIsL0I9wzPdPPsFmIesJuOgLkU8/fEF4XMNdtAUpX5Pl24n
+         nnseltVNIybMF8CFQzn949OGV3wRwCZojijzWD+bif7wIevvIY/Cth3ownKEPO/hP6Oh
+         V7IxvZcN+xl5W8p+0Oyd47N9YwTfqcOIgCyct/JfYLci1EYyGZYuewyAyUk4SqWYC2n1
+         9JpMex3ew6zh8dVXDOniuznghPIKf4OMkH+RoUby6NMbYnRBIAL5RbWatzGPB/rpxQJR
+         p8wQ==
+X-Gm-Message-State: AOAM533efU7HrkYJZ/UBBJePJPJChS91EyW3bT2Wj7hlPG/BWTW8CZBe
+        vXy/QyHkrExGNCYMD5szQk/4rtQbQVPNRXHzIgE=
+X-Google-Smtp-Source: ABdhPJzGz+VCI7qEgxFax+wzk8JXXv7V0YRLbnxVV2888/gXpKyM/ex1MlxEgxzSYFGBmpSEppU47Zmhh0wuCDsftjc=
+X-Received: by 2002:a17:906:489b:: with SMTP id v27mr4989169ejq.567.1638944939879;
+ Tue, 07 Dec 2021 22:28:59 -0800 (PST)
 MIME-Version: 1.0
-Received: by 2002:a05:6e02:1a07:0:0:0:0 with HTTP; Tue, 7 Dec 2021 20:13:35
- -0800 (PST)
-Reply-To: dj0015639@gmail.com
-From:   David Jackson <enkenpaul@gmail.com>
-Date:   Wed, 8 Dec 2021 05:13:35 +0100
-Message-ID: <CAG7-cQ_JEx-8fDdxn0Ex314ViSE32kaUjoR=sUvV7wmCUiKRGw@mail.gmail.com>
-Subject: FEDERAL BUREAU OF INVESTIGATION
-To:     undisclosed-recipients:;
+References: <1638891339-21806-1-git-send-email-quic_srivasam@quicinc.com> <1638891339-21806-4-git-send-email-quic_srivasam@quicinc.com>
+In-Reply-To: <1638891339-21806-4-git-send-email-quic_srivasam@quicinc.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 8 Dec 2021 08:28:23 +0200
+Message-ID: <CAHp75Vd=47Tv9Sf+styPhxS2=O1H2KUDeKQXTULUYU5fDgGwwA@mail.gmail.com>
+Subject: Re: [PATCH v5 3/5] pinctrl: qcom: Extract chip specific LPASS LPI code
+To:     Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, plai@codeaurora.org,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        rohitkr@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>, judyhsiao@chromium.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Venkata Prasad Potturu <quic_potturu@quicinc.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Our Ref: RTB /SNT/STB
-To: Beneficiary
+On Wed, Dec 8, 2021 at 2:39 AM Srinivasa Rao Mandadapu
+<quic_srivasam@quicinc.com> wrote:
+>
+> Extract the chip specific SM8250 data from the LPASS LPI pinctrl driver
+> to allow reusing the common code in the addition of subsequent
+> platforms.
 
-This is FBI special agents, David Jackson. I was delegated along side
-others by the United Nations to investigate scammers who has been in
-the business of swindling foreigners especially those that has one
-form of transaction/contracts and another. Please be informed that in
-the course of our investigation, we detected that your name and
-details in our Scammed Monitoring Network. We also found out that you
-were scammed of a huge sum of money by scammers via Western union and
-MoneyGram. Be informed here that in a bid to alleviate the suffering
-of scammed victims, the United Nations initiated this compensation
-program and therefore, you are entitled to the sum of Five Million Two
-Hundred Thousand United States Dollars ($5,200,000.00 USD) for being a
-victim.
+...
 
-Note that the said fund will be transfer to you via the Citibank being
-the paying bank mandated by the United Nations officials.
+> @@ -661,8 +454,10 @@ static int lpi_pinctrl_probe(struct platform_device *pdev)
+>
+>         return ret;
+>  }
+> +EXPORT_SYMBOL(lpi_pinctrl_probe);
 
-However, we have to inform you that we have been able to arrest some
-of the swindlers who has been in this illicit business and will all be
-prosecuted accordingly. Be informed as well that we have limited time
-to stay back here, so we will advice that you urgently respond to this
-message ASAP. And do not inform any of the people that collected money
-from you before now about this new development to avoid jeopardizing
-our investigation. All you need to do is to follow our instruction and
-receive your compensation accordingly as directed by the United
-Nations.
+> +
 
-We urgently wait to receive your response.
+Stray change.
 
-Regards,
-DAVID JACKSON
-FEDERAL BUREAU OF INVESTIGATION
-INVESTIGATION ON ALL ONLINE WIRE TRANSFER
+...
+
+> +#ifndef __PINCTRL_LPASS_LPI_H__
+> +#define __PINCTRL_LPASS_LPI_H__
+
+Missed headers.
+At least bits.h.
+
+...
+
+> +#define NO_SLEW                                -1
+
+Naming sucks for the header.
+
+LPI_NO_SLEW ?
+
+...
+
+> +struct lpi_pingroup {
+> +       const char *name;
+> +       const unsigned int *pins;
+> +       unsigned int npins;
+> +       unsigned int pin;
+> +       /* Bit offset in slew register for SoundWire pins only */
+> +       int slew_offset;
+> +       unsigned int *funcs;
+> +       unsigned int nfuncs;
+> +};
+
+Are you going to convert this to use struct group_desc?
+
+...
+
+> +       LPI_MUX__,
+
+Strange naming. Besides, if it is the terminator, drop the comma.
+
+-- 
+With Best Regards,
+Andy Shevchenko
