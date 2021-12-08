@@ -2,259 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A80DD46D0A7
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Dec 2021 11:11:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1441F46D123
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Dec 2021 11:37:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229672AbhLHKPI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Dec 2021 05:15:08 -0500
-Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:28708 "EHLO
-        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229515AbhLHKPH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Dec 2021 05:15:07 -0500
+        id S231713AbhLHKkm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Dec 2021 05:40:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43192 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231770AbhLHKkl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Dec 2021 05:40:41 -0500
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A267C061746;
+        Wed,  8 Dec 2021 02:37:10 -0800 (PST)
+Received: by mail-pg1-x52d.google.com with SMTP id s137so1704841pgs.5;
+        Wed, 08 Dec 2021 02:37:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1638958296; x=1670494296;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=l+S2zXe567w1avDULeOZ2N9QauXrEcklwudDamCl2o8=;
-  b=a9xOkG/wDJdbcd2j2jA4ByQ3igX3A95xLrwzqbL++WM67NX+4pRfYxs5
-   r5GP3tuilxopAIYQBdJSVy+qiGeEBSS2W0HEV7d91dNCBPKrD8stOJYpT
-   YcBc0em6Nv57B+FMQnCtWwgYRocBqUbXXI2AFwSKz8iv2HyFRvjW85UTT
-   s=;
-Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 08 Dec 2021 02:11:35 -0800
-X-QCInternal: smtphost
-Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
-  by ironmsg01-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2021 02:11:35 -0800
-Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
- nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.922.19; Wed, 8 Dec 2021 02:11:34 -0800
-Received: from [10.216.32.99] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.922.19; Wed, 8 Dec 2021
- 02:11:28 -0800
-Subject: Re: [PATCH v5 2/5] dt-bindings: pinctrl: qcom: Add sc7280 lpass lpi
- pinctrl bindings
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        <agross@kernel.org>, <bjorn.andersson@linaro.org>,
-        <lgirdwood@gmail.com>, <broonie@kernel.org>, <robh+dt@kernel.org>,
-        <plai@codeaurora.org>, <bgoswami@codeaurora.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <rohitkr@codeaurora.org>,
-        <linux-arm-msm@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <swboyd@chromium.org>, <judyhsiao@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>
-CC:     Venkata Prasad Potturu <quic_potturu@quicinc.com>
-References: <1638891339-21806-1-git-send-email-quic_srivasam@quicinc.com>
- <1638891339-21806-3-git-send-email-quic_srivasam@quicinc.com>
- <7ae29aa1-34da-c362-5712-4b787474d7f2@linaro.org>
-From:   Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
-Organization: Qualcomm
-Message-ID: <bde0c8b0-7244-1bd1-84b6-8efab4f01fa2@quicinc.com>
-Date:   Wed, 8 Dec 2021 15:41:25 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QAO9WgbdcG7XY4iq2f+Xd4Bi6s7cs1QXT9+5RcWd2OY=;
+        b=XRF2lSZq+zGIP2Vkk5zwpHdGShHUprMtHTasrVm5VV0k7hlIj14fXYunPB4Xx++i81
+         0sEbGMPstlp7VkUhKhOhE9fOhzgtxLUhDVKWaD73HCK5mqbPSUHJ85x3XdAnYOmZlFNG
+         ofq0Yd5neuqffzsWAq2kpSNuVOlk5PRhZDmrPCmBqqD1QwdBx4OIUuMkHNi1YXRg4iNH
+         vZdn8l1JZfWF+SLvWkXAm1rzNZ2JhOlqgK78uMJNFVFns5Y+h92Dykv2keSNNjme93mq
+         EcHbBcwyBdXDjn0gcEO5N8Kb8IrQT5Isr4kjD6WX1LclHFpcNyIa/LsPpo9bBNIp84hB
+         3MDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QAO9WgbdcG7XY4iq2f+Xd4Bi6s7cs1QXT9+5RcWd2OY=;
+        b=bfS/FUCmxGFAhKxSESZJhKU2eCDu93ISLqeoTmDDv6An5SK9xsplLoAI0HBZAlSMb4
+         lxAGQbf7TPP0A0xVgOnhR9+YaCZA4CBkMJY2Dvcr8gn+ZO6Ln7R2lO9Snr3niSWV+WMO
+         qQsEqVV4pVhcEf98djeYe3ALgB7pzo3gACaC2rXqBmT6epMYt0b9UYw+U8VayCeE4EeC
+         9VhekEbN6Jkx2oaZxLOR5cKc+cYrdGU/98nYl1vIWpGTdVqK5XhU7CnHpLr0VDm9PypF
+         yAjSkjKb6FBdydX5fcbOog2Kg5YbfM94AFJmVcLvfEeL0JuM9aqpmgYEiheNHNuljFr8
+         ZCdA==
+X-Gm-Message-State: AOAM532VukTgVUpVqqAcm8intiW0Iy35C0XLWngUHdhWaHskk99bm3xg
+        HyYAzR6uCsEFVV/TGPVVA3jlrhrvDFGnTw==
+X-Google-Smtp-Source: ABdhPJyI9W9Imnrkv/isPspoZGYhH1PJFwKCqlQPI4jabpzGjOKIaRbBr1OjPZWVhWdYAjZGM1hqVg==
+X-Received: by 2002:a63:5520:: with SMTP id j32mr29677836pgb.443.1638959829878;
+        Wed, 08 Dec 2021 02:37:09 -0800 (PST)
+Received: from richard-System-Product-Name.. ([101.10.104.26])
+        by smtp.gmail.com with ESMTPSA id d21sm3247569pfu.52.2021.12.08.02.37.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Dec 2021 02:37:08 -0800 (PST)
+From:   Yuchang Hsu <saraon640529@gmail.com>
+X-Google-Original-From: Yuchang Hsu <Richard_Hsu@asmedia.com.tw>
+To:     linus.walleij@linaro.org, brgl@bgdev.pl,
+        Richard_Hsu@asmedia.com.tw, andriy.shevchenko@linux.intel.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yd_Tseng@asmedia.com.tw, Cindy1_Hsu@asmedia.com.tw,
+        Andrew_Su@asmedia.com.tw
+Subject: [PATCH v2] gpio:amdpt:add new device ID and 24-pin support
+Date:   Wed,  8 Dec 2021 18:36:21 +0800
+Message-Id: <20211208103621.9253-1-Richard_Hsu@asmedia.com.tw>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-In-Reply-To: <7ae29aa1-34da-c362-5712-4b787474d7f2@linaro.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Andy Shevchenko,
+How and what to put the Changelog after '---'?i just remove '---'.
 
-On 12/8/2021 2:54 PM, Srinivas Kandagatla wrote:
-Thanks froYour time Srini!!!
->
-> On 07/12/2021 15:35, Srinivasa Rao Mandadapu wrote:
->> Add device tree binding Documentation details for Qualcomm SC7280
->> LPASS LPI pinctrl driver.
->>
->> Signed-off-by: Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
->> Co-developed-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
->> Signed-off-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
->> ---
->
->
-> I remember in my previous review that I requested you to use git mv 
-> for renaming this
-Yes. Created patch with "git mv" and commit. Not sure why diff is not as 
-expected.
->
-> If you do that you will endup diff stat something like this:
->
-> ------------------------->cut<-----------------------------
-> diff --git 
-> a/Documentation/devicetree/bindings/pinctrl/qcom,lpass-lpi-pinctrl.yaml 
-> b/Documentation/devicetree/bindings/pinctrl/qcom,sm8250-lpass-lpi-pinctrl.yaml 
->
-> similarity index 97%
-> rename from 
-> Documentation/devicetree/bindings/pinctrl/qcom,lpass-lpi-pinctrl.yaml
-> rename to 
-> Documentation/devicetree/bindings/pinctrl/qcom,sm8250-lpass-lpi-pinctrl.yaml
-> index e47ebf934daf..76f205a47640 100644
-> --- 
-> a/Documentation/devicetree/bindings/pinctrl/qcom,lpass-lpi-pinctrl.yaml
-> +++ 
-> b/Documentation/devicetree/bindings/pinctrl/qcom,sm8250-lpass-lpi-pinctrl.yaml
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->  %YAML 1.2
->  ---
-> -$id: http://devicetree.org/schemas/pinctrl/qcom,lpass-lpi-pinctrl.yaml#
-> +$id: 
-> http://devicetree.org/schemas/pinctrl/qcom,sm8250-lpass-lpi-pinctrl.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
->
->  title: Qualcomm Technologies, Inc. Low Power Audio SubSystem (LPASS)
-> ------------------------->cut<-----------------------------
->
-> --srini
->
->> .../pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml     | 115 
->> +++++++++++++++++++++
->>   1 file changed, 115 insertions(+)
->>   create mode 100644 
->> Documentation/devicetree/bindings/pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml
->>
->> diff --git 
->> a/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml 
->> b/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml 
->>
->> new file mode 100644
->> index 0000000..d32ee32
->> --- /dev/null
->> +++ 
->> b/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml
->> @@ -0,0 +1,115 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: 
->> http://devicetree.org/schemas/pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm Technologies, Inc. Low Power Audio SubSystem (LPASS)
->> +  Low Power Island (LPI) TLMM block
->> +
->> +maintainers:
->> +  - Srinivasa Rao Mandadapu <srivasam@codeaurora.org>
->> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> +
->> +description: |
->> +  This binding describes the Top Level Mode Multiplexer block found 
->> in the
->> +  LPASS LPI IP on most Qualcomm SoCs
->> +
->> +properties:
->> +  compatible:
->> +    const: qcom,sc7280-lpass-lpi-pinctrl
->> +
->> +  reg:
->> +    minItems: 2
->> +    maxItems: 2
->> +
->> +  gpio-controller: true
->> +
->> +  '#gpio-cells':
->> +    description: Specifying the pin number and flags, as defined in
->> +      include/dt-bindings/gpio/gpio.h
->> +    const: 2
->> +
->> +  gpio-ranges:
->> +    maxItems: 1
->> +
->> +#PIN CONFIGURATION NODES
->> +patternProperties:
->> +  '-pins$':
->> +    type: object
->> +    description:
->> +      Pinctrl node's client devices use subnodes for desired pin 
->> configuration.
->> +      Client device subnodes use below standard properties.
->> +    $ref: "/schemas/pinctrl/pincfg-node.yaml"
->> +
->> +    properties:
->> +      pins:
->> +        description:
->> +          List of gpio pins affected by the properties specified in 
->> this
->> +          subnode.
->> +        items:
->> +          oneOf:
->> +            - pattern: "^gpio([0-9]|[1-9][0-9])$"
->> +        minItems: 1
->> +        maxItems: 15
->> +
->> +      function:
->> +        enum: [ gpio, swr_tx_clk, qua_mi2s_sclk, swr_tx_data, 
->> qua_mi2s_ws,
->> +                qua_mi2s_data, swr_rx_clk, swr_rx_data, dmic1_clk, 
->> i2s1_clk,
->> +                dmic1_data, i2s1_ws, dmic2_clk, dmic2_data, i2s1_data,
->> +                i2s2_clk, wsa_swr_clk, i2s2_ws, wsa_swr_data, 
->> dmic3_clk,
->> +                dmic3_data, i2s2_data ]
->> +        description:
->> +          Specify the alternative function to be configured for the 
->> specified
->> +          pins.
->> +
->> +      drive-strength:
->> +        enum: [2, 4, 6, 8, 10, 12, 14, 16]
->> +        default: 2
->> +        description:
->> +          Selects the drive strength for the specified pins, in mA.
->> +
->> +      slew-rate:
->> +        enum: [0, 1, 2, 3]
->> +        default: 0
->> +        description: |
->> +            0: No adjustments
->> +            1: Higher Slew rate (faster edges)
->> +            2: Lower Slew rate (slower edges)
->> +            3: Reserved (No adjustments)
->> +
->> +      bias-pull-down: true
->> +
->> +      bias-pull-up: true
->> +
->> +      bias-disable: true
->> +
->> +      output-high: true
->> +
->> +      output-low: true
->> +
->> +    required:
->> +      - pins
->> +      - function
->> +
->> +    additionalProperties: false
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - gpio-controller
->> +  - '#gpio-cells'
->> +  - gpio-ranges
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    lpass_tlmm: pinctrl@33c0000 {
->> +        compatible = "qcom,sc7280-lpass-lpi-pinctrl";
->> +        reg = <0x33c0000 0x20000>,
->> +              <0x3550000 0x10000>;
->> +        gpio-controller;
->> +        #gpio-cells = <2>;
->> +        gpio-ranges = <&lpass_tlmm 0 0 15>;
->> +    };
->>
+This patch adds a ACPI HID(AMDIF031) and pin number in the pt_gpio_acpi_match.
+And We retrieve pin number supporting by device_get_match_data().
+
+Signed-off-by: Yuchang Hsu <Richard_Hsu@asmedia.com.tw>
+
+ drivers/gpio/gpio-amdpt.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpio/gpio-amdpt.c b/drivers/gpio/gpio-amdpt.c
+index bbf53e289141..13f4e2af3800 100644
+--- a/drivers/gpio/gpio-amdpt.c
++++ b/drivers/gpio/gpio-amdpt.c
+@@ -14,6 +14,7 @@
+ #include <linux/platform_device.h>
+
+ #define PT_TOTAL_GPIO 8
++#define PT_TOTAL_GPIO_EX 24
+
+ /* PCI-E MMIO register offsets */
+ #define PT_DIRECTION_REG   0x00
+@@ -103,7 +104,7 @@ static int pt_gpio_probe(struct platform_device *pdev)
+ 	pt_gpio->gc.owner            = THIS_MODULE;
+ 	pt_gpio->gc.request          = pt_gpio_request;
+ 	pt_gpio->gc.free             = pt_gpio_free;
+-	pt_gpio->gc.ngpio            = PT_TOTAL_GPIO;
++	pt_gpio->gc.ngpio            = (uintptr_t)device_get_match_data(dev);
+ #if defined(CONFIG_OF_GPIO)
+ 	pt_gpio->gc.of_node          = dev->of_node;
+ #endif
+@@ -133,8 +134,9 @@ static int pt_gpio_remove(struct platform_device *pdev)
+ }
+
+ static const struct acpi_device_id pt_gpio_acpi_match[] = {
+-	{ "AMDF030", 0 },
+-	{ "AMDIF030", 0 },
++	{ "AMDF030", PT_TOTAL_GPIO },
++	{ "AMDIF030", PT_TOTAL_GPIO },
++	{ "AMDIF031", PT_TOTAL_GPIO_EX },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(acpi, pt_gpio_acpi_match);
+--
+2.30.2
+
+BR
+ Richard
+
