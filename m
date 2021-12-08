@@ -2,141 +2,125 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CF2E46D9BF
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Dec 2021 18:31:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B31DB46D9CD
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Dec 2021 18:33:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237917AbhLHReg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Dec 2021 12:34:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56226 "EHLO
+        id S235115AbhLHRhP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Dec 2021 12:37:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233218AbhLHReg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Dec 2021 12:34:36 -0500
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36D87C061746;
-        Wed,  8 Dec 2021 09:31:04 -0800 (PST)
-Received: by mail-wr1-x436.google.com with SMTP id t9so5347558wrx.7;
-        Wed, 08 Dec 2021 09:31:04 -0800 (PST)
+        with ESMTP id S237956AbhLHRhO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Dec 2021 12:37:14 -0500
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42AEDC0617A2;
+        Wed,  8 Dec 2021 09:33:42 -0800 (PST)
+Received: by mail-pj1-x1036.google.com with SMTP id np3so2409224pjb.4;
+        Wed, 08 Dec 2021 09:33:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=BjXW6fm0PtmxnDuZ5f1C1GLdB8wT64MP92DyErb42Vo=;
-        b=WlFVVdUIfqyXRXOcCdM0AydkNvx+YbClnYT6pE4oYGlxgXXO2P6KTvU8f38aLV5s/6
-         l1AWXIfAM9cRjYyBKd08bwVE+RJ8f0bIUblhYVxA+5um4fNq0+/G5J4rDKb2mWNi4lO5
-         6bZYmFBEWWMSj+Rfs8nb+uJg1dmjqKEGguEJXMtmcMkizFRL8hfVADMyNKqi0HP3r5Ua
-         p9IN0e1RzqEHiGTwnCV8oLv6ght6nxIyJVFJVd/zqKB1yWm2nKz0eSXxg6WHG03rso4D
-         xrifbONIU8Gpi3fBrYxefWQBTOf7ek8oUJe/eu8d7CLrt164F8TNWF5Ts9IoluRyiC3k
-         A9Kw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=j51/wboThEFJzNlTL2/MvStE5Zhc5RgdP9nJ3GHQLi4=;
+        b=SbSD6mZJ015HeEhL/uBJxeceiYhXjXXX8O35V590Ke94L+Ypdy2WwxDQgcz/dz+vI1
+         9iApRbSY2daO38A2/c4VBdCm5/hoAefgOIeLm7P1O52CMdhCW27CIQQo7jkS6qbbrUPO
+         3WKj6PRExiHs43Nuk8VacP7HVUjibVx1bhNJbIiCWvhO4QqWIEn592JcsURU3789agcG
+         ncOxe6HUt2my0cYlDUL8RcSTK9JgX7BPA1pZ7AH8yULqG5uz/ZBHDwvocVsgM8St6ejv
+         1/1FST6raHCiQCFH3cNSEMmx22jHFteyEfVTMXXiJo2nr++5nPj6rqfaXIrTBjcOd4vi
+         jvTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=BjXW6fm0PtmxnDuZ5f1C1GLdB8wT64MP92DyErb42Vo=;
-        b=WxvJm7E9c+PxpKVTcn65nnwAKlr/rL6SBae0rPTKl3B8UyYnknjaVHrYoRSRbxalpS
-         dkjrxLk+JoBURrMeZY5YuGLwnakadeGcERtwwSeuEC0L121wiM4UCvEo2jIHDEVd+9GQ
-         s8ZoBz7xNK/lpV+fZ/pOlTSlQLza7j8/cfUzHWHURzVhaQ0/xYXaXl/cyWg4m213wJVR
-         dhHyMu7Q7uQ/jQauzmgwleOC2FWBEYauV53XSdmkBEylPZjQYZvP8L6h7cs5+DzmQIgQ
-         Bddcqpk/NFUrlAWonFqAWRQdmXaANZR1wtH6DE2UvjXwTO8LTn2ErubPkk0Xe2CsgCnd
-         Yq2w==
-X-Gm-Message-State: AOAM532eVLzVvsXvU1KIoyUYGKz5WIl54wzJDFqGwJwfNpKFQEPncmH6
-        K/TJv8No316QN9WASDg4Vd4=
-X-Google-Smtp-Source: ABdhPJwuOzBuc5WJldmDKmbfbe1VnbwGzgQLXHq0uGorbibjyTvXAGz+Zpu6//9ZBigPVJAy6CuSVw==
-X-Received: by 2002:a5d:4b45:: with SMTP id w5mr98081wrs.272.1638984662762;
-        Wed, 08 Dec 2021 09:31:02 -0800 (PST)
-Received: from localhost ([193.209.96.43])
-        by smtp.gmail.com with ESMTPSA id a198sm6557389wme.1.2021.12.08.09.31.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Dec 2021 09:31:01 -0800 (PST)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Jon Hunter <jonathanh@nvidia.com>,
-        Prathamesh Shete <pshete@nvidia.com>,
-        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: [PATCH v3 6/6] arm64: tegra: Enable gpio-keys on Jetson AGX Orin Developer Kit
-Date:   Wed,  8 Dec 2021 18:30:47 +0100
-Message-Id: <20211208173047.558108-6-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20211208173047.558108-1-thierry.reding@gmail.com>
-References: <20211208173047.558108-1-thierry.reding@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=j51/wboThEFJzNlTL2/MvStE5Zhc5RgdP9nJ3GHQLi4=;
+        b=2r2ZvMPjWwNnf4Uog3b8BzKL7PsJVAYqvAKUuh6M7dFIo79wT3R+a2XzPFsf4/YBX3
+         gcgsUxl5CIg5fZsESW6futNxVGEN5BrqPZZaN0tHg2VJqAUYuFQuG6+geP/drKtvOwEG
+         wD0FNIdYS2/4NxkO52kyD/QkSMHPkJv3AyGZW9YGLIJ6u0iw5K3OV0fD5F426SuGiXXN
+         80FJQFpxe2VTplfG42OVMyuFvxPnQFTYHWScymghZucYE7ACEN4aQuRH1oqVtxzAleVW
+         urQj5LyEiExxVdiyzNvvQavF3jI6VPlYoTLYiZQ+vVmNdDlXLV1OtRdQ2nu76Fv4kkRP
+         z9qQ==
+X-Gm-Message-State: AOAM530AfHmYwKR5Y/NbxYHgSnWiLWJV8pog4ejg+wA+452uS5wpDKDX
+        AFOLdm10Rps3an3MNx6fkGlpHLhRF9U=
+X-Google-Smtp-Source: ABdhPJyY3AKgLSvRqD8BVr8X+ATPHvvEnFQBIBZfXeEJiyOz1hIwOAXlFSUT2pXiD/r3MLJpe5zcrA==
+X-Received: by 2002:a17:90a:e012:: with SMTP id u18mr8961529pjy.103.1638984821458;
+        Wed, 08 Dec 2021 09:33:41 -0800 (PST)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id n31sm3801031pfv.176.2021.12.08.09.33.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 Dec 2021 09:33:40 -0800 (PST)
+Subject: Re: [PATCH v3 13/15] dt-bindings: ata: Convert Broadcom SATA to YAML
+To:     Rob Herring <robh@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>, linux-pwm@vger.kernel.org,
+        linux-mmc@vger.kernel.org, Markus Mayer <mmayer@broadcom.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Ray Jui <rjui@broadcom.com>, Amit Kucheria <amitk@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-pm@vger.kernel.org, Doug Berger <opendmb@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, linux-usb@vger.kernel.org,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-ide@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Scott Branden <sbranden@broadcom.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Al Cooper <alcooperx@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        linux-rtc@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-crypto@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        devicetree@vger.kernel.org
+References: <20211208003727.3596577-1-f.fainelli@gmail.com>
+ <20211208003727.3596577-14-f.fainelli@gmail.com>
+ <1638971068.770579.3857735.nullmailer@robh.at.kernel.org>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <dd170216-fedd-45a1-a3a5-efc99b9f6197@gmail.com>
+Date:   Wed, 8 Dec 2021 09:33:38 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1638971068.770579.3857735.nullmailer@robh.at.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+On 12/8/21 5:44 AM, Rob Herring wrote:
+> On Tue, 07 Dec 2021 16:37:24 -0800, Florian Fainelli wrote:
+>> Convert the Broadcom SATA3 AHCI controller Device Tree binding to YAML
+>> to help with validation.
+>>
+>> Acked-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
+>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>> ---
+>>  .../bindings/ata/brcm,sata-brcm.txt           | 45 ---------
+>>  .../bindings/ata/brcm,sata-brcm.yaml          | 98 +++++++++++++++++++
+>>  2 files changed, 98 insertions(+), 45 deletions(-)
+>>  delete mode 100644 Documentation/devicetree/bindings/ata/brcm,sata-brcm.txt
+>>  create mode 100644 Documentation/devicetree/bindings/ata/brcm,sata-brcm.yaml
+>>
+> 
+> Running 'make dtbs_check' with the schema in this patch gives the
+> following warnings. Consider if they are expected or the schema is
+> incorrect. These may not be new warnings.
+> 
+> Note that it is not yet a requirement to have 0 warnings for dtbs_check.
+> This will change in the future.
+> 
+> Full log is available here: https://patchwork.ozlabs.org/patch/1565011
 
-Expose power, force-recovery and sleep buttons via a gpio-keys device so
-that userspace can receive events from them.
-
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
- .../nvidia/tegra234-p3737-0000+p3701-0000.dts | 31 +++++++++++++++++++
- arch/arm64/boot/dts/nvidia/tegra234.dtsi      |  1 +
- 2 files changed, 32 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts b/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts
-index e3bb874869df..699eaa66824d 100644
---- a/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts
-+++ b/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts
-@@ -1,6 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0
- /dts-v1/;
- 
-+#include <dt-bindings/input/linux-event-codes.h>
-+#include <dt-bindings/input/gpio-keys.h>
-+
- #include "tegra234-p3701-0000.dtsi"
- #include "tegra234-p3737-0000.dtsi"
- 
-@@ -18,6 +21,34 @@ chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		status = "okay";
-+
-+		force-recovery {
-+			label = "Force Recovery";
-+			gpios = <&gpio TEGRA234_MAIN_GPIO(G, 0) GPIO_ACTIVE_LOW>;
-+			linux,input-type = <EV_KEY>;
-+			linux,code = <BTN_1>;
-+		};
-+
-+		power-key {
-+			label = "Power";
-+			gpios = <&gpio_aon TEGRA234_AON_GPIO(EE, 4) GPIO_ACTIVE_LOW>;
-+			linux,input-type = <EV_KEY>;
-+			linux,code = <KEY_POWER>;
-+			wakeup-event-action = <EV_ACT_ASSERTED>;
-+			wakeup-source;
-+		};
-+
-+		suspend {
-+			label = "Suspend";
-+			gpios = <&gpio TEGRA234_MAIN_GPIO(G, 2) GPIO_ACTIVE_LOW>;
-+			linux,input-type = <EV_KEY>;
-+			linux,code = <KEY_SLEEP>;
-+		};
-+	};
-+
- 	tcu {
- 		status = "okay";
- 	};
-diff --git a/arch/arm64/boot/dts/nvidia/tegra234.dtsi b/arch/arm64/boot/dts/nvidia/tegra234.dtsi
-index f715671f0333..f8061b452046 100644
---- a/arch/arm64/boot/dts/nvidia/tegra234.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra234.dtsi
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- 
- #include <dt-bindings/clock/tegra234-clock.h>
-+#include <dt-bindings/gpio/tegra234-gpio.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/mailbox/tegra186-hsp.h>
- #include <dt-bindings/reset/tegra234-reset.h>
+Likewise, those indicate that the preceding patch which renames the sata
+controller unit name has not been applied.
 -- 
-2.34.1
-
+Florian
