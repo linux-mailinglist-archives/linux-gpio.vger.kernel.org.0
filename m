@@ -2,75 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7588246D32A
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Dec 2021 13:20:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7480F46D35E
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Dec 2021 13:33:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233236AbhLHMY0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Dec 2021 07:24:26 -0500
-Received: from mga01.intel.com ([192.55.52.88]:59130 "EHLO mga01.intel.com"
+        id S233453AbhLHMhP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Dec 2021 07:37:15 -0500
+Received: from mail.thorsis.com ([92.198.35.195]:53952 "EHLO mail.thorsis.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233006AbhLHMYX (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 8 Dec 2021 07:24:23 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10191"; a="261894929"
-X-IronPort-AV: E=Sophos;i="5.87,297,1631602800"; 
-   d="scan'208";a="261894929"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2021 04:20:49 -0800
-X-IronPort-AV: E=Sophos;i="5.87,297,1631602800"; 
-   d="scan'208";a="462744017"
-Received: from smile.fi.intel.com ([10.237.72.184])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Dec 2021 04:20:47 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1muvvH-003dZj-DM;
-        Wed, 08 Dec 2021 14:19:47 +0200
-Date:   Wed, 8 Dec 2021 14:19:47 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Yuchang Hsu <saraon640529@gmail.com>
-Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
-        Richard_Hsu@asmedia.com.tw, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Yd_Tseng@asmedia.com.tw,
-        Cindy1_Hsu@asmedia.com.tw, Andrew_Su@asmedia.com.tw
-Subject: Re: [PATCH v2] gpio:amdpt:add new device ID and 24-pin support
-Message-ID: <YbCi4zv8247Jgfhe@smile.fi.intel.com>
-References: <20211208103621.9253-1-Richard_Hsu@asmedia.com.tw>
-MIME-Version: 1.0
+        id S229598AbhLHMhO (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 8 Dec 2021 07:37:14 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.thorsis.com (Postfix) with ESMTP id BDB6410C8;
+        Wed,  8 Dec 2021 13:33:41 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at mail.thorsis.com
+Received: from mail.thorsis.com ([127.0.0.1])
+        by localhost (mail.thorsis.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id TYdj9XuRCxoj; Wed,  8 Dec 2021 13:33:41 +0100 (CET)
+Received: by mail.thorsis.com (Postfix, from userid 109)
+        id EF044335A; Wed,  8 Dec 2021 13:33:39 +0100 (CET)
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NO_RECEIVED,
+        NO_RELAYS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+        version=3.4.2
+X-Spam-Report: * -1.9 BAYES_00 BODY: Bayes spam probability is 0 to 1%
+        *      [score: 0.0000]
+        *  0.0 URIBL_BLOCKED ADMINISTRATOR NOTICE: The query to URIBL was
+        *      blocked.  See
+        *      http://wiki.apache.org/spamassassin/DnsBlocklists#dnsbl-block
+        *      for more information.
+        *      [URIs: axentia.se]
+        * -0.0 NO_RELAYS Informational: message was not relayed via SMTP
+        * -0.0 NO_RECEIVED Informational: message has no Received headers
+Date:   Wed, 8 Dec 2021 13:33:25 +0100
+From:   Alexander Dahl <ada@thorsis.com>
+To:     Peter Rosin <peda@axentia.se>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH] pinctrl: at91: allow use of of gpio-line-names property
+Message-ID: <YbCmFac6/nU949/Z@ada-deb-carambola.ifak-system.com>
+Mail-Followup-To: Peter Rosin <peda@axentia.se>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+References: <4d17866a-d9a4-a3d7-189a-781d18dbea00@axentia.se>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211208103621.9253-1-Richard_Hsu@asmedia.com.tw>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <4d17866a-d9a4-a3d7-189a-781d18dbea00@axentia.se>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Dec 08, 2021 at 06:36:21PM +0800, Yuchang Hsu wrote:
+Hello Peter,
 
-Thanks for update, my comments below.
+Am Tue, Dec 07, 2021 at 12:32:03AM +0100 schrieb Peter Rosin:
+> If no line name is given (by not having a gpio-line-names property,
+> or by having empty "" strings for some lines), fall back to the
+> existing pioC12-style line name scheme.
+> 
+> It is useful to be able to explicitly name lines from the schematics
+> or its function, rather than having the MCU names forced upon every
+> user.
 
-> Hi Andy Shevchenko,
++1 from me. 
 
-> How and what to put the Changelog after '---'?i just remove '---'.
+I asked about this some months ago, but I saw no clear
+direction in the discussion. So for reference:
 
-No, you shouldn't remove it, instead you should add the text after it in a free
-form of what you have done in the submitted version in comparison to the
-previous one.
+https://lore.kernel.org/linux-gpio/946021874.11132.1615900079722@seven.thorsis.com/
 
-To achieve this use `git format-patch ...` and then edit it and then send it
-with a help of `git send-email ...`.
+HTH & Greets
+Alex
 
-> This patch adds a ACPI HID(AMDIF031) and pin number in the pt_gpio_acpi_match.
-
-"This patch adds a ..." --> "Add an ..."
-
-> And We retrieve pin number supporting by device_get_match_data().
-
-"And " --> ""
-"supporting " --> ""
-
-So, waiting for v3.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> Signed-off-by: Peter Rosin <peda@axentia.se>
+> ---
+>  drivers/pinctrl/pinctrl-at91.c | 13 ++++++++++---
+>  1 file changed, 10 insertions(+), 3 deletions(-)
+> 
+> I don't know if it's sane to fall back to the pioC12-style on empty
+> strings, or if someone adding a gpio-line-names property should be
+> responsible for filling in those names "by hand". I generally don't
+> care what "unused" pins are named, so either is fine by me...
+> 
+> Cheers,
+> Peter
+> 
+> diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
+> index 6022496bb6a9..4f108d07e6ad 100644
+> --- a/drivers/pinctrl/pinctrl-at91.c
+> +++ b/drivers/pinctrl/pinctrl-at91.c
+> @@ -1821,7 +1821,7 @@ static int at91_gpio_probe(struct platform_device *pdev)
+>  	int irq, i;
+>  	int alias_idx = of_alias_get_id(np, "gpio");
+>  	uint32_t ngpio;
+> -	char **names;
+> +	const char **names;
+>  
+>  	BUG_ON(alias_idx >= ARRAY_SIZE(gpio_chips));
+>  	if (gpio_chips[alias_idx]) {
+> @@ -1890,8 +1890,15 @@ static int at91_gpio_probe(struct platform_device *pdev)
+>  		goto clk_enable_err;
+>  	}
+>  
+> -	for (i = 0; i < chip->ngpio; i++)
+> -		names[i] = kasprintf(GFP_KERNEL, "pio%c%d", alias_idx + 'A', i);
+> +	if (of_property_read_string_array(np, "gpio-line-names",
+> +					  names, chip->ngpio) != chip->ngpio)
+> +		memset(names, 0, chip->ngpio * sizeof(char *));
+> +
+> +	for (i = 0; i < chip->ngpio; i++) {
+> +		if (!names[i] || !names[i][0])
+> +			names[i] = kasprintf(GFP_KERNEL,
+> +					     "pio%c%d", alias_idx + 'A', i);
+> +	}
+>  
+>  	chip->names = (const char *const *)names;
+>  
+> -- 
+> 2.20.1
+> 
