@@ -2,60 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 02B7046D9BC
-	for <lists+linux-gpio@lfdr.de>; Wed,  8 Dec 2021 18:31:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CF2E46D9BF
+	for <lists+linux-gpio@lfdr.de>; Wed,  8 Dec 2021 18:31:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237915AbhLHRee (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Dec 2021 12:34:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56212 "EHLO
+        id S237917AbhLHReg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Dec 2021 12:34:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233218AbhLHRed (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Dec 2021 12:34:33 -0500
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A41E5C061746;
-        Wed,  8 Dec 2021 09:31:01 -0800 (PST)
-Received: by mail-wr1-x42b.google.com with SMTP id q3so5363190wru.5;
-        Wed, 08 Dec 2021 09:31:01 -0800 (PST)
+        with ESMTP id S233218AbhLHReg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Dec 2021 12:34:36 -0500
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36D87C061746;
+        Wed,  8 Dec 2021 09:31:04 -0800 (PST)
+Received: by mail-wr1-x436.google.com with SMTP id t9so5347558wrx.7;
+        Wed, 08 Dec 2021 09:31:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ChFk72t851+aV2Ogjln4o5C3/5+cLRU/SLpTwsm2C8c=;
-        b=GAIBNnkIuSylvuaNhEfdn0NF2s4tW8aH5MGY7pGA3ssjr3sh5xOb5objHW0seksEQD
-         dO5Zr5BzoSQk8FSuV6NnNmbYuQk8panNfjMNufgnYN+0d42G2Cd+lqWSkmi1VBdM6EGZ
-         kPwrXA+eWPbbG9mgowtMfFIBiBbwqTobMKnQvK8IjHqGIyUw8lFTxcbdP8VkguI5weZ2
-         1WEK+8FrqJTq8R25rkumrvIwdxoHDVg/YKCbwLzkIO+QreLubQJV2xZh6UmgpcxZ2bxQ
-         2HL5ZeFZfQD7BnwD5rv15pmBW2KIcn7CJqfOtuylED3CEgtEL6wdmtwIgN7Ku3Ge9mfw
-         09mw==
+        bh=BjXW6fm0PtmxnDuZ5f1C1GLdB8wT64MP92DyErb42Vo=;
+        b=WlFVVdUIfqyXRXOcCdM0AydkNvx+YbClnYT6pE4oYGlxgXXO2P6KTvU8f38aLV5s/6
+         l1AWXIfAM9cRjYyBKd08bwVE+RJ8f0bIUblhYVxA+5um4fNq0+/G5J4rDKb2mWNi4lO5
+         6bZYmFBEWWMSj+Rfs8nb+uJg1dmjqKEGguEJXMtmcMkizFRL8hfVADMyNKqi0HP3r5Ua
+         p9IN0e1RzqEHiGTwnCV8oLv6ght6nxIyJVFJVd/zqKB1yWm2nKz0eSXxg6WHG03rso4D
+         xrifbONIU8Gpi3fBrYxefWQBTOf7ek8oUJe/eu8d7CLrt164F8TNWF5Ts9IoluRyiC3k
+         A9Kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ChFk72t851+aV2Ogjln4o5C3/5+cLRU/SLpTwsm2C8c=;
-        b=ToNjQ6duQh4bE8ZuBB44+ImIvdZvU9g1yOX/wvitbUoTjySse3SIAFWR20Xf3CizQW
-         TgysQoS5GYWd7n1CpLLEbIrS6liI89n+tGo4Y7w5ubJypXQ6xkgoRBs6Z4UYT03RmUZQ
-         ZLfCtqsYYRlKhkiCDnaSHAKMlweUR4id4yNd9GNR1Gis6FrcXkTo4jYfnEYl9D+k+2WD
-         lgell2mpvdcxjQtkWjUwsLH+vfXFF7Q4ZoqE4s4Bk9GLVSaclhOUxZxUaxWWUdR06Oz9
-         FeBg/CHgcbGSHf8SIHm+LsN50bxgxc62gVBNa6aDVshsShA3U/+2tpCcihSbxnd5zQXF
-         1FLQ==
-X-Gm-Message-State: AOAM531QhMMo4+QoZn+nBgbvjutR0vJucFqpOOi7KtR1ZGsOYksrGMxN
-        wfVNs0taLbp/kHc5mdQO3h0=
-X-Google-Smtp-Source: ABdhPJzQC917gVVu/KvPz7xGW4/AdGXSGvkbrnRc5dQmfSwJoFj2UNAwMd6qpqF6DcNRR9t7y5p3wg==
-X-Received: by 2002:adf:f80c:: with SMTP id s12mr16080wrp.627.1638984660242;
-        Wed, 08 Dec 2021 09:31:00 -0800 (PST)
+        bh=BjXW6fm0PtmxnDuZ5f1C1GLdB8wT64MP92DyErb42Vo=;
+        b=WxvJm7E9c+PxpKVTcn65nnwAKlr/rL6SBae0rPTKl3B8UyYnknjaVHrYoRSRbxalpS
+         dkjrxLk+JoBURrMeZY5YuGLwnakadeGcERtwwSeuEC0L121wiM4UCvEo2jIHDEVd+9GQ
+         s8ZoBz7xNK/lpV+fZ/pOlTSlQLza7j8/cfUzHWHURzVhaQ0/xYXaXl/cyWg4m213wJVR
+         dhHyMu7Q7uQ/jQauzmgwleOC2FWBEYauV53XSdmkBEylPZjQYZvP8L6h7cs5+DzmQIgQ
+         Bddcqpk/NFUrlAWonFqAWRQdmXaANZR1wtH6DE2UvjXwTO8LTn2ErubPkk0Xe2CsgCnd
+         Yq2w==
+X-Gm-Message-State: AOAM532eVLzVvsXvU1KIoyUYGKz5WIl54wzJDFqGwJwfNpKFQEPncmH6
+        K/TJv8No316QN9WASDg4Vd4=
+X-Google-Smtp-Source: ABdhPJwuOzBuc5WJldmDKmbfbe1VnbwGzgQLXHq0uGorbibjyTvXAGz+Zpu6//9ZBigPVJAy6CuSVw==
+X-Received: by 2002:a5d:4b45:: with SMTP id w5mr98081wrs.272.1638984662762;
+        Wed, 08 Dec 2021 09:31:02 -0800 (PST)
 Received: from localhost ([193.209.96.43])
-        by smtp.gmail.com with ESMTPSA id g13sm4882675wrd.57.2021.12.08.09.30.59
+        by smtp.gmail.com with ESMTPSA id a198sm6557389wme.1.2021.12.08.09.31.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Dec 2021 09:30:59 -0800 (PST)
+        Wed, 08 Dec 2021 09:31:01 -0800 (PST)
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Jon Hunter <jonathanh@nvidia.com>,
         Prathamesh Shete <pshete@nvidia.com>,
         linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: [PATCH v3 5/6] arm64: tegra: Add main and AON GPIO controllers on Tegra234
-Date:   Wed,  8 Dec 2021 18:30:46 +0100
-Message-Id: <20211208173047.558108-5-thierry.reding@gmail.com>
+Subject: [PATCH v3 6/6] arm64: tegra: Enable gpio-keys on Jetson AGX Orin Developer Kit
+Date:   Wed,  8 Dec 2021 18:30:47 +0100
+Message-Id: <20211208173047.558108-6-thierry.reding@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20211208173047.558108-1-thierry.reding@gmail.com>
 References: <20211208173047.558108-1-thierry.reding@gmail.com>
@@ -67,106 +67,76 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Thierry Reding <treding@nvidia.com>
 
-These two controllers expose general purpose I/O pins that can be used
-to control or monitor a variety of signals.
+Expose power, force-recovery and sleep buttons via a gpio-keys device so
+that userspace can receive events from them.
 
 Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
- arch/arm64/boot/dts/nvidia/tegra234.dtsi | 74 ++++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
+ .../nvidia/tegra234-p3737-0000+p3701-0000.dts | 31 +++++++++++++++++++
+ arch/arm64/boot/dts/nvidia/tegra234.dtsi      |  1 +
+ 2 files changed, 32 insertions(+)
 
+diff --git a/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts b/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts
+index e3bb874869df..699eaa66824d 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts
++++ b/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts
+@@ -1,6 +1,9 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /dts-v1/;
+ 
++#include <dt-bindings/input/linux-event-codes.h>
++#include <dt-bindings/input/gpio-keys.h>
++
+ #include "tegra234-p3701-0000.dtsi"
+ #include "tegra234-p3737-0000.dtsi"
+ 
+@@ -18,6 +21,34 @@ chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	gpio-keys {
++		compatible = "gpio-keys";
++		status = "okay";
++
++		force-recovery {
++			label = "Force Recovery";
++			gpios = <&gpio TEGRA234_MAIN_GPIO(G, 0) GPIO_ACTIVE_LOW>;
++			linux,input-type = <EV_KEY>;
++			linux,code = <BTN_1>;
++		};
++
++		power-key {
++			label = "Power";
++			gpios = <&gpio_aon TEGRA234_AON_GPIO(EE, 4) GPIO_ACTIVE_LOW>;
++			linux,input-type = <EV_KEY>;
++			linux,code = <KEY_POWER>;
++			wakeup-event-action = <EV_ACT_ASSERTED>;
++			wakeup-source;
++		};
++
++		suspend {
++			label = "Suspend";
++			gpios = <&gpio TEGRA234_MAIN_GPIO(G, 2) GPIO_ACTIVE_LOW>;
++			linux,input-type = <EV_KEY>;
++			linux,code = <KEY_SLEEP>;
++		};
++	};
++
+ 	tcu {
+ 		status = "okay";
+ 	};
 diff --git a/arch/arm64/boot/dts/nvidia/tegra234.dtsi b/arch/arm64/boot/dts/nvidia/tegra234.dtsi
-index bd3a01142704..f715671f0333 100644
+index f715671f0333..f8061b452046 100644
 --- a/arch/arm64/boot/dts/nvidia/tegra234.dtsi
 +++ b/arch/arm64/boot/dts/nvidia/tegra234.dtsi
-@@ -25,6 +25,65 @@ misc@100000 {
- 			status = "okay";
- 		};
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
  
-+		gpio: gpio@2200000 {
-+			compatible = "nvidia,tegra234-gpio";
-+			reg-names = "security", "gpio";
-+			reg = <0x02200000 0x10000>,
-+			      <0x02210000 0x10000>;
-+			interrupts = <GIC_SPI 288 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 289 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 290 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 291 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 292 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 293 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 294 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 295 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 296 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 297 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 298 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 299 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 300 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 301 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 302 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 303 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 306 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 307 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 308 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 309 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 310 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 311 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 312 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 313 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 314 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 316 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 318 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 319 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 320 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 321 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 322 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 323 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 324 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 325 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 326 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 327 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 328 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 329 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 331 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 333 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+		};
-+
- 		uarta: serial@3100000 {
- 			compatible = "nvidia,tegra234-uart", "nvidia,tegra20-uart";
- 			reg = <0x03100000 0x10000>;
-@@ -111,6 +170,21 @@ rtc@c2a0000 {
- 			status = "disabled";
- 		};
- 
-+		gpio_aon: gpio@c2f0000 {
-+			compatible = "nvidia,tegra234-gpio-aon";
-+			reg-names = "security", "gpio";
-+			reg = <0x0c2f0000 0x1000>,
-+			      <0x0c2f1000 0x1000>;
-+			interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
-+			#interrupt-cells = <2>;
-+			interrupt-controller;
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+		};
-+
- 		pmc: pmc@c360000 {
- 			compatible = "nvidia,tegra234-pmc";
- 			reg = <0x0c360000 0x10000>,
+ #include <dt-bindings/clock/tegra234-clock.h>
++#include <dt-bindings/gpio/tegra234-gpio.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/mailbox/tegra186-hsp.h>
+ #include <dt-bindings/reset/tegra234-reset.h>
 -- 
 2.34.1
 
