@@ -2,86 +2,160 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 39B1446E7E6
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Dec 2021 12:59:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DE45B46E833
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Dec 2021 13:14:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235702AbhLIMCs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Dec 2021 07:02:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55322 "EHLO
+        id S230308AbhLIMRe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Dec 2021 07:17:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234781AbhLIMCr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Dec 2021 07:02:47 -0500
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADA30C061746
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Dec 2021 03:59:14 -0800 (PST)
-Received: by mail-pg1-x52a.google.com with SMTP id r5so4887429pgi.6
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Dec 2021 03:59:14 -0800 (PST)
+        with ESMTP id S229976AbhLIMRd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Dec 2021 07:17:33 -0500
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23D9FC061746;
+        Thu,  9 Dec 2021 04:14:00 -0800 (PST)
+Received: by mail-ed1-x536.google.com with SMTP id g14so18512118edb.8;
+        Thu, 09 Dec 2021 04:14:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6K7nH29BUaj31wF9V/fbzYtus8fhNQZXRph84D/C0vw=;
-        b=UbnGYKAg+6z/d6+MPqnM5xaoy4xhJ4FQ0oF6kUsS5Fjvc9rO2V9w0UAdBGGiFY3WCk
-         kWQrgB4eZiKg1Qw99mUCRREU+esH1BGphnHBFbkOdpCdOn84OXKU6+CWPkTighjXQwky
-         Qf7r4GkiwGar7QZZuH4HDJxDo8+7CvgiDwvGOhv9dFAkUl8dypjK29jvWbXRKUOXvqwQ
-         bpsMU8KtZWtRsqRAr2XZ6Mz7JmwuaRBHfllkgHtr3NI/F5joC04Ym0SJZsKGrAv3DylR
-         8UogcrCMB0KKGtrlRXD/uTUz+jsQv09iJw0H02zWUgYe961qZrdoSEgEWRDTg8m4OfSd
-         LzoQ==
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NcqG+yIMRWbvsIxAgzL5tDWYN19ufSQbNnx+qyBgNCg=;
+        b=QgTXc4wE4avCeEzHo1LJZgS/oiLIZjIiunW9Tknt4txUs2kSkCsn738zHkg8+KhU5n
+         bUs1pdb/vsKbi/RCKitDkFHYlZY4Mev7f7TCwrT+ljOjpn+w1SZ/v1n7+BvDXrNt0qL0
+         6ycQpp+eLieRgi1QhAq5GQF1NxvTE236gXi0budmziMEFgkOl0/+4XDq6g1/jT8yldaF
+         7Aiv7qaCmU3CCi/p5H9No2xsG7HA3UTxP30UC2apEn4gJJN813l3fq9SqLBIdhZXzId1
+         yySPm8rfrhQsDeWStev+/EwibqwZI6xAp7nn5x7to+mcl8Jif4peBXEIEKV2kHaWama0
+         u4Og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6K7nH29BUaj31wF9V/fbzYtus8fhNQZXRph84D/C0vw=;
-        b=Kn4Cxf9Z0TymTQNwC/vZqqYRViBmpvEv/1xSi358t1Bsww4xX5xVbsTsBl0zxZV3DL
-         Ol+bNVm4/0QFJr1S7PdG9U1aTeYsdraFWI9w2GgJEHV9benapVPYuVYqkNuZn5J8zE+P
-         dMV3z0fiUQzo2Ie93iEPBgV2oe1a8FLFm61x3Ogid4Lt3WOA2J9DQ4VHMb+GR3yB3DvG
-         qVFpyQvxxb6s8PmlsEgZBkTdesKxgNv6P6/0Myl/uu6Ww67+AD3julOFVTAeOLND8dlh
-         rZ6HheaqGNdlzQ7zN3lIG08tgaXxAKZBXSD/TInom+yRIxgLiIFx1uzCosfZoPIOmbbM
-         QBmQ==
-X-Gm-Message-State: AOAM532qCWRIG+uFm9TAbVTtDDxdx+tIrHsJQXm9FP49zujQ7a8+Ahpx
-        PD1KIOSMpqIoowzQZ6CMoTuCTg==
-X-Google-Smtp-Source: ABdhPJx69QT4KsYCZplzGdEsn/KN/5EaDC3OfnEd9Nh3fAaRIA+JvJURFppab0r0wlznZ3uOdZAgCg==
-X-Received: by 2002:a05:6a00:1a56:b0:4a3:3c0c:11c0 with SMTP id h22-20020a056a001a5600b004a33c0c11c0mr11276122pfv.42.1639051154206;
-        Thu, 09 Dec 2021 03:59:14 -0800 (PST)
-Received: from localhost ([106.201.42.111])
-        by smtp.gmail.com with ESMTPSA id y4sm6958277pfi.178.2021.12.09.03.59.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Dec 2021 03:59:13 -0800 (PST)
-Date:   Thu, 9 Dec 2021 17:29:11 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-gpio@vger.kernel.org, Kent Gibson <warthog618@gmail.com>,
-        Arnd Bergmann <arnd@kernel.org>
-Subject: Re: [PATCH] libgpiod: Fix build failure with musl
-Message-ID: <20211209115911.xhfsttn2cnqf7yy6@vireshk-i7>
-References: <4a8c598db0a78421b074f19eb2157d89f3198440.1639047500.git.viresh.kumar@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NcqG+yIMRWbvsIxAgzL5tDWYN19ufSQbNnx+qyBgNCg=;
+        b=3j45pZRKZxvePk1vXUzJ+L7esii+KKn3Z8JDAKPffCXXt74zOYbiMLRN0odaZDp2EL
+         lVYJxEkGyAROknIAhmhH00swHkhjX6sdVNuPS8ZyVw/nqo5c6DCck92iarTJWAccmXIW
+         Z98381FheR66Pn9GxYQRmCZXiw3ijbQr4kZnf0OQ5Plw7bfT8nShG2fbVEN7hJhGebqg
+         1GiL+gpEQfKzD70Zcc919/jKkkzkub/mQIe+ommudCG1tzarpKgf/bx4uUS8D5zqRF/C
+         H/d0sS6ukhUVA12yl9NFf5jklb0yD+knwf68AmUF6sQ4mZX4NxUsEsRZ46eIvQju6nHU
+         EKIA==
+X-Gm-Message-State: AOAM5326XmpfJk2VNC+hCo9Fl2MUHBTvWHJEnNs03LP/ydxHQ4Ox2Gm3
+        pfL1BO3qrkF2Y2/vxFFFst+k6PbmvcU8MmqxScU=
+X-Google-Smtp-Source: ABdhPJyJs+HRFH8FbMd//DCJMgOGyw2wJO5vu3Ro8RaqWU9inUQ0qYs/mopQZYqSpcimKx/Rpktlsk9bBO84sSYZg0c=
+X-Received: by 2002:a05:6402:291:: with SMTP id l17mr28483542edv.242.1639052037586;
+ Thu, 09 Dec 2021 04:13:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4a8c598db0a78421b074f19eb2157d89f3198440.1639047500.git.viresh.kumar@linaro.org>
-User-Agent: NeoMutt/20180716-391-311a52
+References: <70b1de02-b674-ca17-9219-61fa8e1c00db@axentia.se>
+In-Reply-To: <70b1de02-b674-ca17-9219-61fa8e1c00db@axentia.se>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 9 Dec 2021 14:12:25 +0200
+Message-ID: <CAHp75Ve06-3KU60-tXFR-KMw4iSX9rOSNF3Oq7vm+ST8Qc8ujA@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: allow line names from device props to override
+ driver names
+To:     Peter Rosin <peda@axentia.se>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Alexander Dahl <ada@thorsis.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 09-12-21, 16:28, Viresh Kumar wrote:
-> Musl defines the _IO*() macros in the files included via <sys/ioctl.h>
-> and hence we get redefinition errors during build as <linux/ioctl.h>,
-> included via <uapi/gpio.h>, defines them again.
-> 
-> Fix this by undefining the macros between both the includes, document it
-> all in musl-compat.h as well.
-> 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  lib/internal.h    |  1 +
->  lib/musl-compat.h | 18 ++++++++++++++++++
->  2 files changed, 19 insertions(+)
->  create mode 100644 lib/musl-compat.h
+On Thu, Dec 9, 2021 at 1:32 PM Peter Rosin <peda@axentia.se> wrote:
+>
+> Some gpio providers set names for gpio lines that match the names of
 
-This one is scrapped, please have a look at V2.
+gpio -> GPIO here and everywhere else in the patch where it is applicable.
+
+> the pins on the SoC, or variations on that theme. These names are
+> generally generic, such as pioC12 in the at91 case. These generic names
+
+"generally generic" (reminds me
+https://en.wiktionary.org/wiki/%D0%BC%D0%B0%D1%81%D0%BB%D0%BE_%D0%BC%D0%B0%D1%81%D0%BB%D1%8F%D0%BD%D0%BE%D0%B5)
+
+Perhaps
+
+"These names generally speaking are generic, ..." ?
+
+> block the possibility to name gpio lines with in device properties
+
+within ?
+
+> (i.e. gpio-line-names).
+>
+> Allow overriding a generic name given by the gpio driver if there is
+> a name given to the gpio line using device properties, but leave the
+> generic name alone if no better name is available.
+>
+> However, there is a risk. If user space is depending on the above
+> mentioned fixed gpio names, AND there are device properties that
+> previously did not reach the surface, the name change might cause
+> regressions. But hopefully this stays below the radar...
+
+After addressing the mentioned grammar nit-picks, FWIW,
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Thanks!
+
+> Signed-off-by: Peter Rosin <peda@axentia.se>
+> ---
+>  drivers/gpio/gpiolib.c | 19 ++++++++++++++-----
+>  1 file changed, 14 insertions(+), 5 deletions(-)
+>
+> Instead of doing this only for pinctrl-at91.c as in my recent patch [1], do
+> it for everyone.
+>
+> Cheers,
+> Peter
+>
+> [1] https://lore.kernel.org/lkml/4d17866a-d9a4-a3d7-189a-781d18dbea00@axentia.se/
+>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index abfbf546d159..00a2a689c202 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -422,8 +422,15 @@ static int devprop_gpiochip_set_names(struct gpio_chip *chip)
+>         if (count > chip->ngpio)
+>                 count = chip->ngpio;
+>
+> -       for (i = 0; i < count; i++)
+> -               gdev->descs[i].name = names[chip->offset + i];
+> +       for (i = 0; i < count; i++) {
+> +               /*
+> +                * Allow overriding "fixed" names provided by the gpio
+> +                * provider, the "fixed" names are generally generic and less
+> +                * informative than the names given in device properties.
+> +                */
+> +               if (names[chip->offset + i] && names[chip->offset + i][0])
+> +                       gdev->descs[i].name = names[chip->offset + i];
+> +       }
+>
+>         kfree(names);
+>
+> @@ -708,10 +715,12 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>         INIT_LIST_HEAD(&gdev->pin_ranges);
+>  #endif
+>
+> -       if (gc->names)
+> +       if (gc->names) {
+>                 ret = gpiochip_set_desc_names(gc);
+> -       else
+> -               ret = devprop_gpiochip_set_names(gc);
+> +               if (ret)
+> +                       goto err_remove_from_list;
+> +       }
+> +       ret = devprop_gpiochip_set_names(gc);
+>         if (ret)
+>                 goto err_remove_from_list;
+>
+> --
+> 2.20.1
+>
+
 
 -- 
-viresh
+With Best Regards,
+Andy Shevchenko
