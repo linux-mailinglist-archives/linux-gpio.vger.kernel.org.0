@@ -2,123 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 46E3646F75A
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 00:25:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DA56146F772
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 00:30:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231447AbhLIX3E (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Dec 2021 18:29:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48736 "EHLO
+        id S234396AbhLIXeB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Dec 2021 18:34:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229760AbhLIX3E (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Dec 2021 18:29:04 -0500
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89849C061746;
-        Thu,  9 Dec 2021 15:25:30 -0800 (PST)
-Received: by mail-pf1-x42a.google.com with SMTP id k64so6813759pfd.11;
-        Thu, 09 Dec 2021 15:25:30 -0800 (PST)
+        with ESMTP id S233065AbhLIXeB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Dec 2021 18:34:01 -0500
+Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2EFCC0617A2
+        for <linux-gpio@vger.kernel.org>; Thu,  9 Dec 2021 15:30:26 -0800 (PST)
+Received: by mail-ot1-x329.google.com with SMTP id x19-20020a9d7053000000b0055c8b39420bso7953333otj.1
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Dec 2021 15:30:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=yhEn+HsKVEOR2ZpkrPt9obsTlAm0mNe3CjhrGQZngwI=;
-        b=HNCXaHWJiaTGGztOMHPy+t3lPvmxmOLZT3uIKev1QNrU/rHBQK6Z6olmY8gekpBQyn
-         nM1hmrtkgpu3l6PQJ0ErWY6cPQMGA5AVFY4N2FIVs6zD7QxnUTAF+wzB8+qdCA2npE/4
-         Sh2CPMx6cjHIAE+x6nwrjVE4pdIfSFxbaPeQFkM7+tWdx5bJtbJaXBgfSD+ZiTmGBloX
-         ECruT7f5A1ixZ6eJh/E3/iESO/kANeYPYTSjz2n7rNxBqJrU0q5Yb5reVV3Osm8ovTqd
-         8a8FczZJ2PuzPGnjzoukH1pRiitGz4Ly75J/47dUXxUHI/xgKbBAFEHBU/uO3asB39pe
-         Judw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FepkuaMI2E0UPC3u5jnuq0Z4zznACFIsmRE29I20zT4=;
+        b=vA+YadHRzPiZ920qQWf6itnhO6cSlzRKGuvpku8VZtT0Uqiz+NwyEt4u1SNE8hc5Gd
+         3fiOKtPTqIImMKKkKPlIFip3/X4egE1tGJeZoJ67NcKvNMeeSGF9du3e7p3Xec16v58R
+         s2GL9rbaQTK18Xzy4IVsoqNNwxN5vshCpTT5Lzp+BeL3lnsJLo6YB7rExN13MZsG7/CQ
+         W4UVAda0tc0DjmKQcJTcVVKRGspWmgL9hLwh9q6vO1pvXvtV8GI8SA3rhzN1P9Rw5zZY
+         31eU62nQV2RnUvTT6cH3UjtGs9kB497qC1Q6CJw0PMTTCUfLj4RYtCGSkn33rxBGS3I1
+         l3OQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yhEn+HsKVEOR2ZpkrPt9obsTlAm0mNe3CjhrGQZngwI=;
-        b=Ckl74ZAVXtT1OKsc2lBcPGu/llNTZNRJdoezVlQ4FwF4+4YOVrMs4A4S9SQcKDEYEU
-         ZnhNuiIz/aG4YFjnjcAVqEkRK4FirT4Cl4qtWHzdBIhcyOretfSqcfsB4f3s1ZLIP+oI
-         vRWkP0Ypf/9d3z6T4pu9N0WbQRM3LTWaCky3pbaAQNBU60HgPSKWbcX3oE2WJQeQ6jNK
-         wiR/bOO4zHNWbCLXLYcZEw+RXPxeANScp/hLEq7nAQTFhWIqX8rV61fGxL3ZBj2gYz0J
-         Kz1ab/vLsqMAiCqzchyrkCoDANfMW2yEF1ZZsCngRfDZhRnm933NvLtruwPtL97I3Pdx
-         MXvQ==
-X-Gm-Message-State: AOAM532FUVXVAn1DwJ+rESUWEBXLYNQpiJYP++h4+k1gnVg8bD67ngSE
-        HjOV980yDQ6s4q9QQ7SqV1bl/sIfV40=
-X-Google-Smtp-Source: ABdhPJwyRsGr6WPGru0RwXtRfzS/xGpPNhtpJ1LzcXxk2gAonJHkTvUA09py2j6SL/Ur7wRnrcBw2Q==
-X-Received: by 2002:a65:58cc:: with SMTP id e12mr33921891pgu.59.1639092329633;
-        Thu, 09 Dec 2021 15:25:29 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id y18sm703960pfp.190.2021.12.09.15.25.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Dec 2021 15:25:29 -0800 (PST)
-Subject: Re: [PATCH v3 02/15] dt-bindings: reset: Convert Broadcom STB reset
- to YAML
-To:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        devicetree@vger.kernel.org
-Cc:     Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Gregory Fong <gregory.0xf0@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Markus Mayer <mmayer@broadcom.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Al Cooper <alcooperx@gmail.com>,
-        Doug Berger <opendmb@gmail.com>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:MULTIMEDIA CARD (MMC), SECURE DIGITAL (SD) AND..." 
-        <linux-mmc@vger.kernel.org>,
-        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>
-References: <20211208003727.3596577-1-f.fainelli@gmail.com>
- <20211208003727.3596577-3-f.fainelli@gmail.com>
- <ab45adc2e305c79286f6b63fa42cfd78983cb757.camel@pengutronix.de>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <d68a6115-b076-1eb8-77c1-e0728e8e82dd@gmail.com>
-Date:   Thu, 9 Dec 2021 15:25:24 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FepkuaMI2E0UPC3u5jnuq0Z4zznACFIsmRE29I20zT4=;
+        b=phspUnxutWvaijnd+JwgeUwggKwBSTkVyxTA3SAlto1EpYg2/jgmS5Fo9p6dtm+vw4
+         4t+MEllp+OvCngLaoBcFjlo18lkrU2jMGJ4afdQYQowzLQ4Hayw5JhEaot7+mUUBJwvn
+         42S/M18+INwfEzE/FuOU1PXeBOj5Nl4yx9Ir+WaSnh+BPgZTuAcaizlmrAblkQ4p/7CD
+         D3h2XNLA+8iv2b0Uiejk7IHZq41HaS30z3jIud77N0x7qYlpjI5C4GGhhoE02N8YEy0D
+         J56o3UKBoUiZLsH9ri/jQFZaLgtLSGgqrppv4yG0MfyHYGfIo33MG32rW24Zu49DKW7w
+         0RbQ==
+X-Gm-Message-State: AOAM5309rByvkFLPiKpkIR+XYNuIL9jQj4OVKpEQ2fzxicB41rDbTlD/
+        ZsGtkkEE7xJD08XdZfsdOxQtZ+9EFeWMpHo9HxOJDw==
+X-Google-Smtp-Source: ABdhPJzSklHE2PEylrgMnWrf65WLYMvroWGO2JaHYj9wv9SCkHxG+y59KeRCyqzJbEZxRSlsELsaDB97OqqkhPeFuuI=
+X-Received: by 2002:a9d:a42:: with SMTP id 60mr8513360otg.179.1639092625198;
+ Thu, 09 Dec 2021 15:30:25 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <ab45adc2e305c79286f6b63fa42cfd78983cb757.camel@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1638850665-9474-1-git-send-email-wellslutw@gmail.com> <1638850665-9474-2-git-send-email-wellslutw@gmail.com>
+In-Reply-To: <1638850665-9474-2-git-send-email-wellslutw@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 10 Dec 2021 00:30:13 +0100
+Message-ID: <CACRpkdaBV81OCwHuFCObwv_t55B9ANHaF5jEc=oorZdjpey0Ug@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: pinctrl: Add dt-bindings for Sunplus SP7021
+To:     Wells Lu <wellslutw@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, wells.lu@sunplus.com,
+        dvorkin@tibbo.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 12/9/21 1:41 AM, Philipp Zabel wrote:
-> On Tue, 2021-12-07 at 16:37 -0800, Florian Fainelli wrote:
->> Convert the Broadcom STB SW_INIT style reset controller binding to YAML.
->>
->> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> 
-> Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
+On Tue, Dec 7, 2021 at 5:17 AM Wells Lu <wellslutw@gmail.com> wrote:
 
-Thanks, sorry for not carrying your Ack that you provided in v2 already.
--- 
-Florian
+> Add dt-bindings header files and documentation for Sunplus SP7021 SoC.
+>
+> Signed-off-by: Wells Lu <wellslutw@gmail.com>
+
+> +patternProperties:
+> +  '-pins$':
+> +    if:
+> +      type: object
+> +    then:
+> +      description: |
+> +        A pinctrl node should contain at least one subnodes representing the
+> +        pins or function-pins group available on the machine. Each subnode
+> +        will list the pins it needs, and how they should be configured.
+> +
+> +        Pinctrl node's client devices use subnodes for desired pin
+> +        configuration. Client device subnodes use below standard properties.
+
+I don't understand this if type object stuff here, Rob, help...
+
+> +      properties:
+> +        pins:
+> +          description: |
+> +            Define pins which are used by pinctrl node's client device.
+(...)
+> +          $ref: /schemas/types.yaml#/definitions/uint32-array
+
+Why can this not $ref the standard binings in
+Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml
+
+See for example
+Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
+for a nice example of how to use this.
+
+Yours,
+Linus Walleij
