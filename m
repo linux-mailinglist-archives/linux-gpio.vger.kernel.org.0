@@ -2,94 +2,148 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D9F646E5BC
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Dec 2021 10:42:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 12F9F46E5C7
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Dec 2021 10:44:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230408AbhLIJpf convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 9 Dec 2021 04:45:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51196 "EHLO
+        id S229550AbhLIJrl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Dec 2021 04:47:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230249AbhLIJpd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Dec 2021 04:45:33 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84592C061746
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Dec 2021 01:42:00 -0800 (PST)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1mvFvk-0001TL-1T; Thu, 09 Dec 2021 10:41:36 +0100
-Received: from pza by lupine with local (Exim 4.94.2)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1mvFve-0004Ge-0z; Thu, 09 Dec 2021 10:41:30 +0100
-Message-ID: <ab45adc2e305c79286f6b63fa42cfd78983cb757.camel@pengutronix.de>
-Subject: Re: [PATCH v3 02/15] dt-bindings: reset: Convert Broadcom STB reset
- to YAML
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org
-Cc:     Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Gregory Fong <gregory.0xf0@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Markus Mayer <mmayer@broadcom.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Al Cooper <alcooperx@gmail.com>,
-        Doug Berger <opendmb@gmail.com>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:MULTIMEDIA CARD (MMC), SECURE DIGITAL (SD) AND..." 
-        <linux-mmc@vger.kernel.org>,
-        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>
-Date:   Thu, 09 Dec 2021 10:41:29 +0100
-In-Reply-To: <20211208003727.3596577-3-f.fainelli@gmail.com>
-References: <20211208003727.3596577-1-f.fainelli@gmail.com>
-         <20211208003727.3596577-3-f.fainelli@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.38.3-1 
+        with ESMTP id S229505AbhLIJrk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Dec 2021 04:47:40 -0500
+Received: from mail-io1-xd2d.google.com (mail-io1-xd2d.google.com [IPv6:2607:f8b0:4864:20::d2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E433C0617A1
+        for <linux-gpio@vger.kernel.org>; Thu,  9 Dec 2021 01:44:07 -0800 (PST)
+Received: by mail-io1-xd2d.google.com with SMTP id y16so5884809ioc.8
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Dec 2021 01:44:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sartura-hr.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=c+IM1VGacNvdOaBXump0mFE18Id9qqJc8FVUp6M2y6I=;
+        b=tHMGp3J2410kDfSQ/m+W5wjVWgysgp6f0p9H4j+pjsLl47wg7TrZf1dXMgt1RWG57V
+         OgBBzKRBDdNxSTlaMSqR/D1PnG+DPeWrwUvqYvizJiAFye6+sdJr8/pLqvvDEv7reHco
+         P5TVEgPeCXRwUxE2MFGdg736/4MusLZl3OFL4Fy6Pp8r+W2KNiXHnoFAtgh9+Y0PwZDH
+         jt2glw2midaerGJ7iJcoT5ZH9Y6sUTJ3Ghg64jHoTTw0jwU/LqbbRmEiM2118KWAkDrV
+         gy3shsc4J4SkMMhf0nTlctRhIPL14ayoz3g3e5YGc6w4pcr4j9yh1/7khGoFw5yoEe6B
+         qfYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c+IM1VGacNvdOaBXump0mFE18Id9qqJc8FVUp6M2y6I=;
+        b=2geQnveE41DUOrbEP4weEWCBYvc50k/wQ8nZLpnT5PWc403buKR32m5u3Ms2688FUu
+         VHP204zTb6Vzu8x8APUKHBkT3ePHPR0qIM1spUp7ox2AJiHZxbfUxfm8c+Y3RoGU4Qvh
+         oHnh331gQOBXQjyBNjIrkdj14w2PvD4HDL4BFykoYAdKrDtRtKSJ4/pcli5asdaOlP+3
+         YU7atw+oXm0+cwAYX4ByQgiYXJw1fxbA8eP0o6jFK3KQ03YpZ2uPBNUD+orQ0MQ1PJnw
+         JbkSBor3/dTwtQVfYIXxxttWYKPSFQP3jsUlLO1NfvDmxdrB5jSU+/jzo53Zp+HS/KuL
+         N40w==
+X-Gm-Message-State: AOAM530uYaowBTuD8f9UslPviQLe+7e7/5t3Bv1QBod7Uil5smsUsVi6
+        fxG+sKFIAA6aEz0UiNOW1v8EaJCujBtBNkfpR+ZEQg==
+X-Google-Smtp-Source: ABdhPJyk+bzlkofhmtTYXwU89WtxHQ4cEva0PmdImvz/H5J2Ji9y4jK6Vos9l2NJETVlUAfK2M+2s2qmR0TZBxfdUwo=
+X-Received: by 2002:a05:6638:1607:: with SMTP id x7mr7368635jas.27.1639043046867;
+ Thu, 09 Dec 2021 01:44:06 -0800 (PST)
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+References: <20211109113239.93493-1-robert.marko@sartura.hr>
+ <20211109113239.93493-3-robert.marko@sartura.hr> <CA+HBbNGH9ih5RovU9YHL91osFxDJbWw2Qk=ed30GGQvndNJPKw@mail.gmail.com>
+ <33ab37f5b30252e41f3e0769c7702764a9e77d7f.camel@pengutronix.de>
+In-Reply-To: <33ab37f5b30252e41f3e0769c7702764a9e77d7f.camel@pengutronix.de>
+From:   Robert Marko <robert.marko@sartura.hr>
+Date:   Thu, 9 Dec 2021 10:43:56 +0100
+Message-ID: <CA+HBbNH5Hq7WC7PkpFt=hUsTRstP3KrNCsbWWy5QaZRFDvZDKA@mail.gmail.com>
+Subject: Re: [PATCH v9 3/6] dt-bindings: reset: Add Delta TN48M
+To:     Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Michael Walle <michael@walle.cc>, Andrew Lunn <andrew@lunn.ch>,
+        Luka Perkov <luka.perkov@sartura.hr>,
+        Bruno Banelli <bruno.banelli@sartura.hr>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 2021-12-07 at 16:37 -0800, Florian Fainelli wrote:
-> Convert the Broadcom STB SW_INIT style reset controller binding to YAML.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+On Thu, Dec 9, 2021 at 10:40 AM Philipp Zabel <p.zabel@pengutronix.de> wrote:
+>
+> Hi Robert,
+>
+> On Wed, 2021-12-01 at 22:28 +0100, Robert Marko wrote:
+> > On Tue, Nov 9, 2021 at 12:32 PM Robert Marko <robert.marko@sartura.hr> wrote:
+> > >
+> > > Add header for the Delta TN48M CPLD provided
+> > > resets.
+> > >
+> > > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> > > ---
+> > >  include/dt-bindings/reset/delta,tn48m-reset.h | 20 +++++++++++++++++++
+> > >  1 file changed, 20 insertions(+)
+> > >  create mode 100644 include/dt-bindings/reset/delta,tn48m-reset.h
+> > >
+> > > diff --git a/include/dt-bindings/reset/delta,tn48m-reset.h b/include/dt-bindings/reset/delta,tn48m-reset.h
+> > > new file mode 100644
+> > > index 000000000000..d4e9ed12de3e
+> > > --- /dev/null
+> > > +++ b/include/dt-bindings/reset/delta,tn48m-reset.h
+> > > @@ -0,0 +1,20 @@
+> > > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > > +/*
+> > > + * Delta TN48M CPLD GPIO driver
+> > > + *
+> > > + * Copyright (C) 2021 Sartura Ltd.
+> > > + *
+> > > + * Author: Robert Marko <robert.marko@sartura.hr>
+> > > + */
+> > > +
+> > > +#ifndef _DT_BINDINGS_RESET_TN48M_H
+> > > +#define _DT_BINDINGS_RESET_TN48M_H
+> > > +
+> > > +#define CPU_88F7040_RESET      0
+> > > +#define CPU_88F6820_RESET      1
+> > > +#define MAC_98DX3265_RESET     2
+> > > +#define PHY_88E1680_RESET      3
+> > > +#define PHY_88E1512_RESET      4
+> > > +#define POE_RESET              5
+> > > +
+> > > +#endif /* _DT_BINDINGS_RESET_TN48M_H */
+> > > --
+> > > 2.33.1
+> > >
+> >
+> > Does anybody have any comments on the patch as the reset driver got reviewed and
+> > the bindings have not?
+>
+> Not much to review here, I can't tell if the indices are correct.
+>
+> Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
+>
+> To be merged with the rest of the series. Or do you want me to pick up
+> the reset parts individually? In that case you'd have to split out the
+> reset bindings into a separate patch.
 
-Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
+Thanks,
+It has to go with the rest of the series as it all depends on the MFD.
 
-regards
-Philipp
+We are just waiting for the MFD dt-bindings to be reviewed.
+
+Regards,
+Robert
+>
+>
+> regards
+> Philipp
+
+
+
+-- 
+Robert Marko
+Staff Embedded Linux Engineer
+Sartura Ltd.
+Lendavska ulica 16a
+10000 Zagreb, Croatia
+Email: robert.marko@sartura.hr
+Web: www.sartura.hr
