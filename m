@@ -2,84 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C259546F746
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 00:10:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 92E2D46F758
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 00:24:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233030AbhLIXON (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Dec 2021 18:14:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45510 "EHLO
+        id S234287AbhLIX1v (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Dec 2021 18:27:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232930AbhLIXON (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Dec 2021 18:14:13 -0500
-Received: from mail-ot1-x330.google.com (mail-ot1-x330.google.com [IPv6:2607:f8b0:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 189E5C0617A1
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Dec 2021 15:10:39 -0800 (PST)
-Received: by mail-ot1-x330.google.com with SMTP id 35-20020a9d08a6000000b00579cd5e605eso7959655otf.0
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Dec 2021 15:10:39 -0800 (PST)
+        with ESMTP id S231447AbhLIX1u (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Dec 2021 18:27:50 -0500
+Received: from mail-ot1-x331.google.com (mail-ot1-x331.google.com [IPv6:2607:f8b0:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D069EC061746
+        for <linux-gpio@vger.kernel.org>; Thu,  9 Dec 2021 15:24:16 -0800 (PST)
+Received: by mail-ot1-x331.google.com with SMTP id x3-20020a05683000c300b0057a5318c517so7853142oto.13
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Dec 2021 15:24:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=jwQ3/cvUvZwvZqmL1mCJROo89LdfAWk6eb0jRU/PPfA=;
-        b=bleUAVWorez5jOJY3nEoJbhU7GbSzr7+LS0r/JZcBeOWYf5aC10+VHh1ubUWal9iJd
-         cve8rftd0oSuPhuyK7h5v8ibpurBcfClv8FKcPwStqgxE+CzFri8DEFVIMMa6LqUnAZ5
-         s7qiYV96LEsYjQWMsgZ+hx+gTGbr6JYOD/71Jh6mDb3igAoMD2tjfxy0XFWfonv4iC6W
-         L+hKdh1GAzFl02VL/sCz8Qc/U74qa0skgCKkwXCBDdoSKC+Nv4gi22eJ4jeHjrVat7j7
-         mbSVPxIYpxe9vMpMFzmYxEQzCwCnVhEz7p2vBjDQY9ZvfrxX1CGEj5e/fwcBz1EtGT++
-         N7BQ==
+        bh=v9nxTGqrdRICpvkQsPbmnD13xDFxVdmSzzLDOAXPlv8=;
+        b=L1r3iWYZRcxcJR9rMapow8zqwR4ttCHdDzxTYrB8LYeqJUjgyRGC334CKzn5MWSYN2
+         zX1GIfsEegZAvdGIJm1EKSuT6Basev6QkhxLkunFHpICVEklSBvnCGTau9hz7g5T7RSl
+         2tiTDu3o9yR0N3cBTifD5621joJGOBfp0/zdhpgq6Dp+KWGFPXQOPR/7sj0duqK6jb34
+         1ChOrTCut2Jj/LMUHz2OH+3WSb8H49R2nkUR7DkRPSz+fjF05p/Y73WyM8qZj3YnFXDQ
+         TRgUckCyt0y77wuVvlWmNn81vckzQUZqEHX3MItqktIai8z9jJDXVV0VouB3MONX3yLh
+         RGMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jwQ3/cvUvZwvZqmL1mCJROo89LdfAWk6eb0jRU/PPfA=;
-        b=H/y6vExRvxILDFlKp06xIxfrPsdbjyygVmLKI8OSAG2gxV6wv50+jbjW1LUiieOaqX
-         PHnPfeTUaJZK9iwvWHE71EsNsYivc1wxb51N130lKHiEikwzS/Kkf0YfodwFopZ8CVRt
-         xveBnIGoOKTjefmMpXkCOyYJ4cE57CmJ8Gl71fagYG+Ce8NSREMZmUzA3rN+T57CUjOy
-         aOUpYXAcgvbKWBGu4elr8EnvhyfpB8vzSuS/h3jNSe+dnQRIkm5pmC2ABuznibNJFnDI
-         wSSnjxFqjYuCsQ+vn5hNOZ/uAP9/lth/t2uSwk37ZERFCHjrI2pN7O+BEI3ApZiHV0DE
-         aN5w==
-X-Gm-Message-State: AOAM531iSwqlpx+gmfX4liMMWPSQqE1YZUQ6xCLJMhDqowfKgGXhDYck
-        gaaqZbHJYaHQUuiZ9TbLNvEUOQ1NWG6QN9GFOKwrOA==
-X-Google-Smtp-Source: ABdhPJzo+Qn3beEC2GCP40Dln8g3w03FB1cYts0c1cuXhM0sKcR+azpj0wOy3oZM9W3SYZUtgtldhp9j0UCVfnGVgMc=
-X-Received: by 2002:a9d:a42:: with SMTP id 60mr8426847otg.179.1639091438012;
- Thu, 09 Dec 2021 15:10:38 -0800 (PST)
+        bh=v9nxTGqrdRICpvkQsPbmnD13xDFxVdmSzzLDOAXPlv8=;
+        b=jHD5mcrDAdyYLoY1A+QJLjRx/dyrV5joPsCHk8Ey1XFnl6pE9cwifNYWzld0tskGyR
+         QZea4n7qCsRLiDTddeqn/ZO8RbcKtOIZbbM1TooOhzOib1QIgVnyjoyvziflSmH3Bmln
+         e6e3vA9j5SSzNW7EpBJd0vhkFgH4W58mrhJtgr2fjjQcyBigZxHiGcpxleLINb7gL2/f
+         pSOMmpc8/t8qasDEY3K7Y3ZxparXVLxGZEx4u19pS0jEjpYU6k48Hf6L92N3eUidRw0F
+         Y5iDaM4ZTRdqMMwQYjiWECfsY+bpKBrEpXhdxO0q80IER9XaJDheuMQIeBtYjsI/tE/V
+         7zXQ==
+X-Gm-Message-State: AOAM530zzKdwpsRzwF7WyjzdxSurXor1jYo6mY7uzwRqngbGzGtZbhh2
+        m1js2u2lDl6zJp059I+NTj9dl1Zjp7n324jrvrbljg==
+X-Google-Smtp-Source: ABdhPJxAH20nnPjijr1ZwDomiy0VitqEs+B+FZGyYxGmIhbVYIwjCcbC1mIFjUzABE/Y2y2c07Pdzu94bn24eLLhAmQ=
+X-Received: by 2002:a9d:ed6:: with SMTP id 80mr8386942otj.35.1639092256225;
+ Thu, 09 Dec 2021 15:24:16 -0800 (PST)
 MIME-Version: 1.0
-References: <20211209113456.33977-1-andriy.shevchenko@linux.intel.com> <YbI2Xb7gBfN4Kyid@smile.fi.intel.com>
-In-Reply-To: <YbI2Xb7gBfN4Kyid@smile.fi.intel.com>
+References: <20211206092237.4105895-1-phil@raspberrypi.com> <20211206092237.4105895-2-phil@raspberrypi.com>
+In-Reply-To: <20211206092237.4105895-2-phil@raspberrypi.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 10 Dec 2021 00:10:26 +0100
-Message-ID: <CACRpkdZxWpygHBJFmuXft5yWhA9SWJzEubC6Oac0dUsLeFAjSw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/1] pinctrl: Sort Kconfig and Makefile entries alphabetically
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>
+Date:   Fri, 10 Dec 2021 00:24:05 +0100
+Message-ID: <CACRpkdZ95bCJVDo4tCXsMnsXax4+ZydoLS7AsM-yzMjXbONk=w@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] pinctrl: bcm2835: Change init order for gpio hogs
+To:     Phil Elwell <phil@raspberrypi.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Thierry Reding <treding@nvidia.com>,
+        devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Dec 9, 2021 at 6:05 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> On Thu, Dec 09, 2021 at 01:34:56PM +0200, Andy Shevchenko wrote:
-> > Sort Kconfig and Makefile entries alphabetically for better maintenance
-> > in the future.
-> >
-> > While at it fix some style issues, such as:
-> >   - "Say Y"/"Say yes"/"Say Yes" --> "Say Y"
-> >   - "pullup/pulldown" --> "pull-up and pull-down"
-> >   - wrong indentation
->
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> > v3: fixed more grammar issues in AMD text
-> > v2: rebased on top of very recent pinctrl/devel (Linus), added some grammar fixes
->
-> I have noticed that you applied v2, thanks!
-> Do you want me to sent a followup that fixes AMD help text?
+On Mon, Dec 6, 2021 at 10:22 AM Phil Elwell <phil@raspberrypi.com> wrote:
 
-Nah just pulled it out and applied v3 instead :)
+> ...and gpio-ranges
+>
+> pinctrl-bcm2835 is a combined pinctrl/gpio driver. Currently the gpio
+> side is registered first, but this breaks gpio hogs (which are
+> configured during gpiochip_add_data). Part of the hog initialisation
+> is a call to pinctrl_gpio_request, and since the pinctrl driver hasn't
+> yet been registered this results in an -EPROBE_DEFER from which it can
+> never recover.
+>
+> Change the initialisation sequence to register the pinctrl driver
+> first.
+>
+> This also solves a similar problem with the gpio-ranges property, which
+> is required in order for released pins to be returned to inputs.
+>
+> Fixes: 73345a18d464b ("pinctrl: bcm2835: Pass irqchip when adding gpiochip")
+> Signed-off-by: Phil Elwell <phil@raspberrypi.com>
 
-Thanks,
+This patch (1/2) applied for fixes.
+
+Yours,
 Linus Walleij
