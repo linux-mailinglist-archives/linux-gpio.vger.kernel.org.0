@@ -2,83 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D2CB346EF2B
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Dec 2021 18:00:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D8A3346F0AE
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Dec 2021 18:07:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241906AbhLIRDX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Dec 2021 12:03:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42242 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241916AbhLIRDA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Dec 2021 12:03:00 -0500
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6755C0698C4;
-        Thu,  9 Dec 2021 08:59:26 -0800 (PST)
-Received: by mail-pf1-x429.google.com with SMTP id z6so5952868pfe.7;
-        Thu, 09 Dec 2021 08:59:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xEge/hk2eN3BabVptokevaVEr4JlxJ5oV5yaJ6wABCk=;
-        b=OjV7MlbtFtPC7WEbokYp3V6lqzlmPZcOyXEDAFi0MMl2wz0HgGDtJsLDuDEGFwOkXx
-         fUEUeuJQfUCIhQMbjt+vHIKz8HoP5robjIPg4ADxh9AAOzW1qCIEPF9Oct8HhR0Slyxa
-         YSEvjhHPiXiWqZdHDxKucgHSe/8abnM2B6JlmbdjgZnNNakIxA/Q3zNjTO7gYxLqb4YR
-         nscqae3Ex6cJ4Y3Urf/ErwqXQZF71S3WmI5t9AF27sm1l9XYF4lKygICp0BzO56+R2iV
-         2PAgG8OOJaG3fYjcXOgGbgQYXsCjogZG/OdRnrrvs9RB1dmIm/D+P6r/jLc5D0aSWG0s
-         PE0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xEge/hk2eN3BabVptokevaVEr4JlxJ5oV5yaJ6wABCk=;
-        b=oSKBhLOYJUgWaFlwzSo/KqM3+cLnhp6Ply0Ha4ywvwAW7MpPqts8S8/k7IXRL9mAd4
-         XsQse2t8KuGHD5R78M3jaEEQel+RGWb2ZXAdbyfVx89jjYRtpemV1ihAftPUKALSbzTq
-         Zekj5LpuKprWmz9J0u4RhLM+cM4g3HomVrndtG5QPGDuviYEzJJWrvWuqbt9xYYRfNTa
-         vcIdY6vn0c6C+68dGbZi1MJSwNYXr36K3cSmPVYA4JB4CYoVqdYdOOjGBSx+shEKuFmM
-         WPFC0TwP7DSD0E6OWWeto++fLwvxcvKagVGowsBmLR7OJ0Dt9qXNZqLbDtNesCkiAASl
-         Bt3A==
-X-Gm-Message-State: AOAM533bqXentm1wRt8TkT/+SX3CvgqFs9qr9gVHKx84CRygLGenhlfT
-        JsO9ls7TFqtN/sNTzCa+WrhY+uAcP40=
-X-Google-Smtp-Source: ABdhPJzBV4CLqpERUJ/MGt9P6/fPZdAQbxWpCC+O9Az+thHkMNAH9y2gmdqMGad65Mqtox5yHWwytA==
-X-Received: by 2002:a05:6a00:148c:b0:49f:e048:25dc with SMTP id v12-20020a056a00148c00b0049fe04825dcmr12891120pfu.12.1639069165839;
-        Thu, 09 Dec 2021 08:59:25 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id hk18sm10208235pjb.20.2021.12.09.08.59.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Dec 2021 08:59:25 -0800 (PST)
-Subject: Re: [PATCH] gpio: bcm-kona:add const to of_device_id
-To:     Xiang wangx <wangxiang@cdjrlc.com>, linus.walleij@linaro.org
-Cc:     rjui@broadcom.com, brgl@bgdev.pl, f.fainelli@gmail.com,
-        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20211209131245.23172-1-wangxiang@cdjrlc.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <a3057939-25a2-5d4e-1b38-54436db6560c@gmail.com>
-Date:   Thu, 9 Dec 2021 08:59:23 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        id S238802AbhLIRKT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Dec 2021 12:10:19 -0500
+Received: from mga03.intel.com ([134.134.136.65]:18604 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S238808AbhLIRKH (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 9 Dec 2021 12:10:07 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10193"; a="238095485"
+X-IronPort-AV: E=Sophos;i="5.88,193,1635231600"; 
+   d="scan'208";a="238095485"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2021 09:02:22 -0800
+X-IronPort-AV: E=Sophos;i="5.88,193,1635231600"; 
+   d="scan'208";a="601625797"
+Received: from smile.fi.intel.com ([10.237.72.184])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2021 09:02:17 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1mvMnG-004B17-4s;
+        Thu, 09 Dec 2021 19:01:18 +0200
+Date:   Thu, 9 Dec 2021 19:01:17 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v3 1/1] pinctrl: Sort Kconfig and Makefile entries
+ alphabetically
+Message-ID: <YbI2Xb7gBfN4Kyid@smile.fi.intel.com>
+References: <20211209113456.33977-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20211209131245.23172-1-wangxiang@cdjrlc.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211209113456.33977-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 12/9/21 5:12 AM, Xiang wangx wrote:
-> struct of_device_id should normally be const.
+On Thu, Dec 09, 2021 at 01:34:56PM +0200, Andy Shevchenko wrote:
+> Sort Kconfig and Makefile entries alphabetically for better maintenance
+> in the future.
 > 
-> Signed-off-by: Xiang wangx <wangxiang@cdjrlc.com>
+> While at it fix some style issues, such as:
+>   - "Say Y"/"Say yes"/"Say Yes" --> "Say Y"
+>   - "pullup/pulldown" --> "pull-up and pull-down"
+>   - wrong indentation
 
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+> v3: fixed more grammar issues in AMD text
+> v2: rebased on top of very recent pinctrl/devel (Linus), added some grammar fixes
 
-Would be nice to add a space in the subject and do:
+I have noticed that you applied v2, thanks!
+Do you want me to sent a followup that fixes AMD help text?
 
-gpio: bcm-kona: add const to of_device_id
-
-While applying if not asking too much from maintainers ;)
 -- 
-Florian
+With Best Regards,
+Andy Shevchenko
+
+
