@@ -2,88 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8643646E95B
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Dec 2021 14:48:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8822546E9FA
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Dec 2021 15:30:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229653AbhLINu4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Dec 2021 08:50:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52102 "EHLO
+        id S232195AbhLIOeS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Dec 2021 09:34:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230019AbhLINuz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Dec 2021 08:50:55 -0500
-Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E45AC061746
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Dec 2021 05:47:22 -0800 (PST)
-Received: by mail-lj1-x232.google.com with SMTP id k2so9075441lji.4
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Dec 2021 05:47:22 -0800 (PST)
+        with ESMTP id S232090AbhLIOeS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Dec 2021 09:34:18 -0500
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B880AC061746;
+        Thu,  9 Dec 2021 06:30:44 -0800 (PST)
+Received: by mail-lj1-x229.google.com with SMTP id b19so7464293ljr.12;
+        Thu, 09 Dec 2021 06:30:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=P6qFI3DTqgugF8SKfHhJul9Y0oT0j9ZKA+GiAtvMhPs=;
-        b=adzwLTkG7LH2OZtwnApdMmiFwIcecqrwWmM3Jg6Rkm5ILllR832JTaVlq0PZKfaVkm
-         ux7/BdQjoRUneKywPrXaSKQI6VTOLjBDOjj8XDZ+CinWC79+AonXEuof6NUjBxJEUv6w
-         y/fz+LszoTmKVqB2kbfN8ihukX3aDa6Hdalw4Y2D/LNiE9QOp+it4IJn0Ek4q4qI4HSB
-         EYATjm/21yX3hI8GcCTyK0Gzio6yDp+Yz0XD1zqOLDuhe6au1rG8M1sEUMFN4OHvUyXQ
-         c++8Ck0RIbfGcJoZmxmlZoDGh0aWr7tPxRWlKpTBtT9jQkDGJ2bn42laWLqTv4Zjq9dd
-         NqqQ==
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:to:cc:references
+         :from:in-reply-to:content-transfer-encoding;
+        bh=QT54190t3qfCea6s60BSqaxNZWq4+3MML0gun0ydbX8=;
+        b=fszIPBT7Ax6rweIlHnaAlHXg65ndInswLzHC5UMx5Ls+1QPP4Jzl0KLEbOi5JWVzNc
+         zNZIHxwShlEsQU/fe9TDRO6buCuZRQBucqqZNxcETT8ZnWHZwXBHMC08+VsGpvbwuN7R
+         V/NRNL6IATASuXmNJgBWLTrv7Qe8ezv3Cg4nQhryo1aqwAq6mWT+NaeznW+BasGQkBJL
+         81rv5NzudmlGV32Byx8epU55iVs6Qwar3zninFvcbsn+Dnm8sqkH13pVN4RAc5bzXa1N
+         1x2WCgEvWPjn/lHA0xmZlSmrZo4zpO5qCzfAC5TDuWMB+/RzGBesYzaOyIl8ytSYWy11
+         lDvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=P6qFI3DTqgugF8SKfHhJul9Y0oT0j9ZKA+GiAtvMhPs=;
-        b=JlGSFEXKj0Bf4Us5oYw23xRRzGresPvqsFtw7xn5ieiqTVQuId+lM8wMd6a/7jUYS/
-         9UtbExwShW934izFWKuJYwfxKMyBAZ8OtgtjcFUiv6U652CColQ85r8SKxVZgUdOHfRT
-         zE8rdUx5gPqZacqAefRVHfjSZrPb0ANwmmDTXINWvkpp0y5srM3/f+RU/5xECbzhMJ6h
-         aMGg5nVVaAjcjPWsUccgmkDNB+yJ5LIZhM5vlAJ74R9yGzhb3cy2SxPpTKcC8ghxnibc
-         vUvllgN/lutp4WMq2rMgfBZQh3CWTL/cnnt46Y1HBWu28+SXkA3PEberYqVec87cGIVM
-         Th2Q==
-X-Gm-Message-State: AOAM531ZzrYXKZ69zExSqXateUnd52LSZkwGDUME3KjehfDd6AlI8ty2
-        21S1YstlqX/ecKH/2A6UdE3V0YktqGiKJg==
-X-Google-Smtp-Source: ABdhPJwmNqBy7HSkq3hJl9awHuPXxzPM3wkReN3GUwtE+nrdo0TSUbEef8vdYlRnt1JoeLHM4VWX1A==
-X-Received: by 2002:a2e:a482:: with SMTP id h2mr6138539lji.87.1639057639856;
-        Thu, 09 Dec 2021 05:47:19 -0800 (PST)
-Received: from localhost.localdomain (c-fdcc225c.014-348-6c756e10.bbcust.telenor.se. [92.34.204.253])
-        by smtp.gmail.com with ESMTPSA id h1sm532436lfp.249.2021.12.09.05.47.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Dec 2021 05:47:19 -0800 (PST)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH] pinctrl: bcm2835: Silence uninit warning
-Date:   Thu,  9 Dec 2021 14:45:13 +0100
-Message-Id: <20211209134513.306212-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.33.1
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :to:cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=QT54190t3qfCea6s60BSqaxNZWq4+3MML0gun0ydbX8=;
+        b=Ipe4n3tqnB4ErXz4RjdG+QlNRRdLYVGMyD7PWp6KnEaVxh/nVw76Gt+mdnODJpkL0E
+         h0tjg5LFxQyUgG2BF2qq3tW/qesxXoLjAKwOKrsCZRgzACR5uZpP6xTI7ByCTFFw0+cu
+         SBartj2Pt/td1iJH5hWgzStbC2N4xyLWbnTcsAZZu1dkQsTZza37siNjFpxCht0ruapz
+         dpCnYEWKAieqwUsK1wFloAy/htD34j0Jr1gHChhP010+nPTspGPdA2zAKv4ARwR7hiW+
+         bdqxlVPy6A04D0an5fe5LVKjdxMo2k7dpUVdwUBjo4VMbCRhiJ/5vh5EbPPo7xpW4wsA
+         o1bA==
+X-Gm-Message-State: AOAM530ACSmdnvihrhFfu2AWEG8OaX434V3wSSC+03Q7S+X8YRnI4qrw
+        3QfbYT2tpGYMgY6uTnDEDtM=
+X-Google-Smtp-Source: ABdhPJyWyu5NBs9Pz6LPdYFj/Uk1CCGPaeP5MWzuqoc+GPM04FieHmlpojMmrajjXCh38oadHfQezA==
+X-Received: by 2002:a2e:7807:: with SMTP id t7mr6388090ljc.426.1639060242981;
+        Thu, 09 Dec 2021 06:30:42 -0800 (PST)
+Received: from [192.168.26.149] (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
+        by smtp.googlemail.com with ESMTPSA id k13sm2083lfg.306.2021.12.09.06.30.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Dec 2021 06:30:42 -0800 (PST)
+Message-ID: <ef03eefa-a400-c832-5efd-c6148b053182@gmail.com>
+Date:   Thu, 9 Dec 2021 15:30:41 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:96.0) Gecko/20100101
+ Thunderbird/96.0
+Subject: Re: [PATCH V2 0/6] pinctrl: support platform (e.g. DT) stored pins,
+ groups & functions
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Tony Lindgren <tony@atomide.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>
+References: <20211124230439.17531-1-zajec5@gmail.com>
+ <CAHp75VeyJ5HtH-T9mOexz07WCa=nngqzrcYZie+t+fdYz2Hngg@mail.gmail.com>
+From:   =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+In-Reply-To: <CAHp75VeyJ5HtH-T9mOexz07WCa=nngqzrcYZie+t+fdYz2Hngg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The uninitialized variable would be caught by the BUG_ON()
-logic below, but the kernel test robot cannot see that.
-Silence the warning by initializing the variable.
+On 25.11.2021 10:58, Andy Shevchenko wrote:
+> Besides that, consider test cases to be added (OF has its unittest
+> built-in into the kernel).
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/pinctrl/bcm/pinctrl-bcm2835.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I'm confused here. We indeed have drivers/of/unittest.c but that seems
+to cover in-kernel DT API. All kind of of_*() helper functions.
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-index 2abcc6ce4eba..e473fc1509d3 100644
---- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-+++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-@@ -407,7 +407,7 @@ static void bcm2835_gpio_irq_handler(struct irq_desc *desc)
- 	struct bcm2835_pinctrl *pc = gpiochip_get_data(chip);
- 	struct irq_chip *host_chip = irq_desc_get_chip(desc);
- 	int irq = irq_desc_get_irq(desc);
--	int group;
-+	int group = 0;
- 	int i;
- 
- 	for (i = 0; i < BCM2835_NUM_IRQS; i++) {
--- 
-2.33.1
-
+What I add is a simple binding support. I don't extend kernel API. What
+possibly should I add to unit tests?
