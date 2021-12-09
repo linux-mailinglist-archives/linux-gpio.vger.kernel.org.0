@@ -2,88 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D451746F324
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Dec 2021 19:32:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C259546F746
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 00:10:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231562AbhLISgZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Dec 2021 13:36:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37418 "EHLO
+        id S233030AbhLIXON (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Dec 2021 18:14:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230204AbhLISgZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Dec 2021 13:36:25 -0500
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41C59C061746
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Dec 2021 10:32:51 -0800 (PST)
-Received: by mail-ed1-x531.google.com with SMTP id e3so22809837edu.4
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Dec 2021 10:32:51 -0800 (PST)
+        with ESMTP id S232930AbhLIXON (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Dec 2021 18:14:13 -0500
+Received: from mail-ot1-x330.google.com (mail-ot1-x330.google.com [IPv6:2607:f8b0:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 189E5C0617A1
+        for <linux-gpio@vger.kernel.org>; Thu,  9 Dec 2021 15:10:39 -0800 (PST)
+Received: by mail-ot1-x330.google.com with SMTP id 35-20020a9d08a6000000b00579cd5e605eso7959655otf.0
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Dec 2021 15:10:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ITrA8LG5Uu2KySXeqGyooYpxinj3+NqaK3J0IQKHMm8=;
-        b=FcQXa4v/rr0/5AxV8sphkAbDKywPvSZthCzaThWzfFTyAIYpm6S4ZaNVgKE345sHzX
-         yui+qxyhu5g+3B3XVzj7bm48NrQxM5AN0UN6Xr7eswPEu8TqqGH6De4phm3ex8vch+VK
-         4N3qW0UcxNmicyfUoYFgJtlflw+IwnlHGlMG6crp9KTSrZ+PIgsf6Zjmata4zyhAOS/G
-         zaUqEVd1sznHecNkCmfaw/IrvGiHIQt9QIFTrH5T12ETOvsWUlMMB8Dfio599qbT+DuG
-         sMv6ECeQG9xv7MQW77NOb7xM6xsJM9gtm1yOW3/SA7f+YGniZIxczXgbmlpZxsDoQgh3
-         f2xg==
+        bh=jwQ3/cvUvZwvZqmL1mCJROo89LdfAWk6eb0jRU/PPfA=;
+        b=bleUAVWorez5jOJY3nEoJbhU7GbSzr7+LS0r/JZcBeOWYf5aC10+VHh1ubUWal9iJd
+         cve8rftd0oSuPhuyK7h5v8ibpurBcfClv8FKcPwStqgxE+CzFri8DEFVIMMa6LqUnAZ5
+         s7qiYV96LEsYjQWMsgZ+hx+gTGbr6JYOD/71Jh6mDb3igAoMD2tjfxy0XFWfonv4iC6W
+         L+hKdh1GAzFl02VL/sCz8Qc/U74qa0skgCKkwXCBDdoSKC+Nv4gi22eJ4jeHjrVat7j7
+         mbSVPxIYpxe9vMpMFzmYxEQzCwCnVhEz7p2vBjDQY9ZvfrxX1CGEj5e/fwcBz1EtGT++
+         N7BQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ITrA8LG5Uu2KySXeqGyooYpxinj3+NqaK3J0IQKHMm8=;
-        b=ZwIrThYe/Z3vyb1ttJxy1W7IkqaKBYi+fZVx2WkAjGQpZ3XzIBQfTgnOwCs4tVMxgi
-         ghgQiwKAhmChHm9zdjabaMo+xBu0+JnMl8yVh56QtdJdcEoxWfOfuoE3xB9C7l19+tdv
-         9UiZLAcwm5OXasnTmIx5HuHUr7mNdMoMIDFO1ZYP18TLRyTtvT6BOFQbMroxIXgrUD2Q
-         Tz9LOJQkvOJKDbM3ifsjT9+A3YHEDVuggeHiYeO20NmlLFoMa9IeG3Yd956bzAmWzK2w
-         PwCILgbBCBrySJEm3oy46qYEYlCwkpzo5wSaOOY0c5VWHG4jKHFf/IiBPcoTD042GkAm
-         NUNw==
-X-Gm-Message-State: AOAM530YRLNuGgLJhIQSu1snmk7umOH8vOiWX7b6t6ZYVm2tCXutky5V
-        hG4vxl6YQAdfRUitVu8Bz/EV7Rtjmea6XIXG8PUI3g==
-X-Google-Smtp-Source: ABdhPJyb7tOtNBiZPcBpDOZz1LnRioCgIUq0ERB/3KQvv2DZLc0casnHgThta0fVgX3dUjtAB1RVQHoQFadU3kFUyEM=
-X-Received: by 2002:a50:e611:: with SMTP id y17mr31825129edm.270.1639074769822;
- Thu, 09 Dec 2021 10:32:49 -0800 (PST)
+        bh=jwQ3/cvUvZwvZqmL1mCJROo89LdfAWk6eb0jRU/PPfA=;
+        b=H/y6vExRvxILDFlKp06xIxfrPsdbjyygVmLKI8OSAG2gxV6wv50+jbjW1LUiieOaqX
+         PHnPfeTUaJZK9iwvWHE71EsNsYivc1wxb51N130lKHiEikwzS/Kkf0YfodwFopZ8CVRt
+         xveBnIGoOKTjefmMpXkCOyYJ4cE57CmJ8Gl71fagYG+Ce8NSREMZmUzA3rN+T57CUjOy
+         aOUpYXAcgvbKWBGu4elr8EnvhyfpB8vzSuS/h3jNSe+dnQRIkm5pmC2ABuznibNJFnDI
+         wSSnjxFqjYuCsQ+vn5hNOZ/uAP9/lth/t2uSwk37ZERFCHjrI2pN7O+BEI3ApZiHV0DE
+         aN5w==
+X-Gm-Message-State: AOAM531iSwqlpx+gmfX4liMMWPSQqE1YZUQ6xCLJMhDqowfKgGXhDYck
+        gaaqZbHJYaHQUuiZ9TbLNvEUOQ1NWG6QN9GFOKwrOA==
+X-Google-Smtp-Source: ABdhPJzo+Qn3beEC2GCP40Dln8g3w03FB1cYts0c1cuXhM0sKcR+azpj0wOy3oZM9W3SYZUtgtldhp9j0UCVfnGVgMc=
+X-Received: by 2002:a9d:a42:: with SMTP id 60mr8426847otg.179.1639091438012;
+ Thu, 09 Dec 2021 15:10:38 -0800 (PST)
 MIME-Version: 1.0
-References: <4a8c598db0a78421b074f19eb2157d89f3198440.1639047500.git.viresh.kumar@linaro.org>
- <CAHp75VdwQjcrQLHh49WV5e95KCsyqVyoFO=VeNfK4LC0mEZvNw@mail.gmail.com>
-In-Reply-To: <CAHp75VdwQjcrQLHh49WV5e95KCsyqVyoFO=VeNfK4LC0mEZvNw@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 9 Dec 2021 19:32:39 +0100
-Message-ID: <CAMRc=McUV3-Afhd3yipDfvcEQijqDxf3cXr9egdKAgPt0nv5RA@mail.gmail.com>
-Subject: Re: [PATCH] libgpiod: Fix build failure with musl
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Arnd Bergmann <arnd@kernel.org>
+References: <20211209113456.33977-1-andriy.shevchenko@linux.intel.com> <YbI2Xb7gBfN4Kyid@smile.fi.intel.com>
+In-Reply-To: <YbI2Xb7gBfN4Kyid@smile.fi.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 10 Dec 2021 00:10:26 +0100
+Message-ID: <CACRpkdZxWpygHBJFmuXft5yWhA9SWJzEubC6Oac0dUsLeFAjSw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/1] pinctrl: Sort Kconfig and Makefile entries alphabetically
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Dec 9, 2021 at 4:17 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Thu, Dec 9, 2021 at 5:15 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+On Thu, Dec 9, 2021 at 6:05 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+> On Thu, Dec 09, 2021 at 01:34:56PM +0200, Andy Shevchenko wrote:
+> > Sort Kconfig and Makefile entries alphabetically for better maintenance
+> > in the future.
 > >
-> > Musl defines the _IO*() macros in the files included via <sys/ioctl.h>
-> > and hence we get redefinition errors during build as <linux/ioctl.h>,
-> > included via <uapi/gpio.h>, defines them again.
-> >
-> > Fix this by undefining the macros between both the includes, document it
-> > all in musl-compat.h as well.
+> > While at it fix some style issues, such as:
+> >   - "Say Y"/"Say yes"/"Say Yes" --> "Say Y"
+> >   - "pullup/pulldown" --> "pull-up and pull-down"
+> >   - wrong indentation
 >
-> Is it only me who wonders why it should be fixed here?
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > ---
+> > v3: fixed more grammar issues in AMD text
+> > v2: rebased on top of very recent pinctrl/devel (Linus), added some grammar fixes
 >
-> --
-> With Best Regards,
-> Andy Shevchenko
+> I have noticed that you applied v2, thanks!
+> Do you want me to sent a followup that fixes AMD help text?
 
-No, I'm wondering the same. I see these musl compat issues being
-"fixed" in half the embedded linux projects. Looks to me musl
-introduces these issues, doesn't it? Any reason for it? Can it be
-fixed in the library?
+Nah just pulled it out and applied v3 instead :)
 
-Bart
+Thanks,
+Linus Walleij
