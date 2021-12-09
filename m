@@ -2,68 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 115AC46DF56
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Dec 2021 01:14:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9554E46DFD0
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Dec 2021 01:54:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238592AbhLIARc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Dec 2021 19:17:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35678 "EHLO
+        id S241638AbhLIA6R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Dec 2021 19:58:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238337AbhLIARb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Dec 2021 19:17:31 -0500
-Received: from mail-oo1-xc2f.google.com (mail-oo1-xc2f.google.com [IPv6:2607:f8b0:4864:20::c2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 398C9C061746
-        for <linux-gpio@vger.kernel.org>; Wed,  8 Dec 2021 16:13:59 -0800 (PST)
-Received: by mail-oo1-xc2f.google.com with SMTP id e17-20020a4a8291000000b002c5ee0645e7so1328676oog.2
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Dec 2021 16:13:59 -0800 (PST)
+        with ESMTP id S241624AbhLIA6R (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Dec 2021 19:58:17 -0500
+Received: from mail-ot1-x32f.google.com (mail-ot1-x32f.google.com [IPv6:2607:f8b0:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86849C0617A1
+        for <linux-gpio@vger.kernel.org>; Wed,  8 Dec 2021 16:54:44 -0800 (PST)
+Received: by mail-ot1-x32f.google.com with SMTP id x43-20020a056830246b00b00570d09d34ebso4609675otr.2
+        for <linux-gpio@vger.kernel.org>; Wed, 08 Dec 2021 16:54:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=w9MrGyKd2YDseGwUIaDqf+NFOg4NK6csael6pLQ46v8=;
-        b=ZQA4UqKvpnb/2T72ejsVrp6tKM1s6LEz2Zdk5f1OOyuEXsQT+ChUXWMimeohE4lwPO
-         9HFKASqKR1lEExN9ONMQ8RvnOgvaZXj0utP5miYZ7oDwfDbv6mAgl3j7n5+KBl5TKlFo
-         UU2HDPm9+t7YgkPSjW0HxEHrsx8SFb+VOeXB/ET+nf/Sof1dih+W3I+yJ73Ft90h7Ngh
-         P2hkGyYcYK0iXvuEHTCA6X1bN+Vjn2obX1//kb3OHoCb0iftNcOUHzEyU1e+bO+Qa3j5
-         KBTT5k1Sn7svm71U406KunCaUP07t+UEew38Kt3xCKIPNHJ/eOuXtlvFKrb8CmaTH06C
-         /9dw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oayw19YcubpFrAM2rcGj+T1Oq/bzfF0MfoBjvEgDhvY=;
+        b=DrC9twi4Lta/weWbKj7I1tdRFQUzvZcDA4bRPMXw/xdzUC5w/r7G4HputChGNvDqDi
+         H761KnA9rgUpg32HJOuMzcbMRLV3n/Dl0ekGuVRBniHdYULujTaZ7DtTn9Y6F5AUZ4cU
+         XPTEIPo7Nssr618Oxgciyvxi1LGYYHvWGJ3yPZR1yvp4aQWx8wm8pn5O6RwwRY/oePTH
+         lUdzs4Xoq+plOyFsgXSXHQv0Ef6BRemc4znW09nkfnZQLRCmX8miDDZQJ0N1XcXXddQM
+         iFY9ss/q7GfZe1N+dB7WdlAS37UecYu5sCRGWGCEM/b7/f3plB8jTT2oK86tWZVGStmA
+         Tb0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=w9MrGyKd2YDseGwUIaDqf+NFOg4NK6csael6pLQ46v8=;
-        b=TjghdyzdNdaYZQivCmuEmw5j0T/QPTvL8YWPx7Rsxe6zA7DA3jRRUqCkzlxqYq1e6R
-         B5RNgaHfxFdmYSJBTjOyJhvo4hZLbzyNkHbw22yrJ/WyAzmSnTlKIorpRWfdkLhpSkkX
-         aASDxfukDBk9qByjjgk6eI9IwQ8yJhhzJCOKWNABlH7e07A05zGi3JvWCU2K2RbDzjPi
-         IvKEM8CQLbJX6UM7QppKTMAHdHhoQPeM/77PC4f3azG74pMFUZn7QkbyP4A1ptBi8DOZ
-         tsGrQ+EsGzothoCaaAkqEpv+et0PUbg9W0o1FUMcbrPEimoqoHY9GrhFlVcnOjITQVgD
-         Bq+Q==
-X-Gm-Message-State: AOAM530rFzfivddDmYzDLvtkWXfIkp+bkv+wIYePBkH1Tfn3czkurYpu
-        oLtyAa6eWs7auIxRJ3SOWYSWQqdNsFu3i9MDyl8=
-X-Google-Smtp-Source: ABdhPJzezCj5sN/4PSuJKsJamaYYPxkGSy2erejCyh5qFHoGSeJOCCvKnPfIrDg424GAuBbo21i7Ynmwk5i7ajnzMTU=
-X-Received: by 2002:a4a:8746:: with SMTP id a6mr1829353ooi.93.1639008838394;
- Wed, 08 Dec 2021 16:13:58 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oayw19YcubpFrAM2rcGj+T1Oq/bzfF0MfoBjvEgDhvY=;
+        b=bABc10CdrjZsDWxqbWxJAbflXc7CcB8e7B14/bG+ckE70cssIg3j7FB9G9LAlmkEhp
+         wcWTQQFMjGMxhEGkOHUMDSqaywWQ5Pt63G2asGtDBIYSwQ8AuHRExmnvZkElZ5qGprMu
+         OJHeKjIw6+q4mvpXxwnue2ndxYYywOV7MZ8/zJXeSx66CjByHD+NwVFy9QEsbIssLF6M
+         XIOjUDlvSRAKFo7SZtOhq+uiPCJIBMvZCYM3oU37Gx7Qbq6+JkiX10X7q6EF3aLGiVLr
+         Ll3QBzYXMRZHfXU/hYDOgZGM7SoesVokSp6XQZttmMjtRWzrRhiTxkurXiiIqE+Ex1s4
+         jQGg==
+X-Gm-Message-State: AOAM530NgMerPzW6vcIu1ci3j2aFv5qdIMvlJxJvwff+OoboPh4uTf5l
+        c3AlZ0ST5PA/EA8+9KA+uUtzIHzAfnWMD/gO5ZQDmQ==
+X-Google-Smtp-Source: ABdhPJzGomSzkekQE828bfIUo/WHIX1ZFsfqM14FCi2GjwhNdEgjuJeCXj0n+HSC4lxJQZf70dA/USaOLKrkkQOCskw=
+X-Received: by 2002:a9d:74d0:: with SMTP id a16mr2615930otl.237.1639011283934;
+ Wed, 08 Dec 2021 16:54:43 -0800 (PST)
 MIME-Version: 1.0
-Received: by 2002:a4a:6801:0:0:0:0:0 with HTTP; Wed, 8 Dec 2021 16:13:57 -0800 (PST)
-Reply-To: confianzayrentabilidad@gmail.com
-From:   "Mr. Ali Moses" <alimoses07@gmail.com>
-Date:   Wed, 8 Dec 2021 16:13:57 -0800
-Message-ID: <CADWzZe6jN+ztba4ibrhv+sy8Kt9R8eCkTG194MpO2UFCXysXrw@mail.gmail.com>
-Subject: Greetings,
-To:     undisclosed-recipients:;
+References: <20211207093412.27833-1-brgl@bgdev.pl>
+In-Reply-To: <20211207093412.27833-1-brgl@bgdev.pl>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 9 Dec 2021 01:54:32 +0100
+Message-ID: <CACRpkdbAs+ZpU_uQziXmz2inPG7VHD=746MmjmR8iY3szfy9+w@mail.gmail.com>
+Subject: Re: [PATCH v13 0/7] gpio-sim: configfs-based GPIO simulator
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
--- 
-I'm Mr. Ali Moses, please a huge amount of payment was made into your
-account. as soon as your respond is noted the payment confirmation
-slip will immediately send to you.  please do not hesitate to reply as
-soon as you receive this message. awaiting your urgent reply please.
+On Tue, Dec 7, 2021 at 10:34 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-Thanks
-Mr. Ali Moses,
-Foreign Remittance
+> Hopefully this will be the last iteration of this series. Just some
+> minor changes requested by Andy in this one.
+>
+> Tested both with configfs as well as device-tree.
 
-Best regards
-Prof. Dr Diane
+This patch set:
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+
+Thanks for your perseverance!!
+
+Yours,
+Linus Walleij
