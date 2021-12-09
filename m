@@ -2,88 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 92E2D46F758
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 00:24:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 46E3646F75A
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 00:25:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234287AbhLIX1v (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Dec 2021 18:27:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48456 "EHLO
+        id S231447AbhLIX3E (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Dec 2021 18:29:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231447AbhLIX1u (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Dec 2021 18:27:50 -0500
-Received: from mail-ot1-x331.google.com (mail-ot1-x331.google.com [IPv6:2607:f8b0:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D069EC061746
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Dec 2021 15:24:16 -0800 (PST)
-Received: by mail-ot1-x331.google.com with SMTP id x3-20020a05683000c300b0057a5318c517so7853142oto.13
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Dec 2021 15:24:16 -0800 (PST)
+        with ESMTP id S229760AbhLIX3E (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Dec 2021 18:29:04 -0500
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89849C061746;
+        Thu,  9 Dec 2021 15:25:30 -0800 (PST)
+Received: by mail-pf1-x42a.google.com with SMTP id k64so6813759pfd.11;
+        Thu, 09 Dec 2021 15:25:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v9nxTGqrdRICpvkQsPbmnD13xDFxVdmSzzLDOAXPlv8=;
-        b=L1r3iWYZRcxcJR9rMapow8zqwR4ttCHdDzxTYrB8LYeqJUjgyRGC334CKzn5MWSYN2
-         zX1GIfsEegZAvdGIJm1EKSuT6Basev6QkhxLkunFHpICVEklSBvnCGTau9hz7g5T7RSl
-         2tiTDu3o9yR0N3cBTifD5621joJGOBfp0/zdhpgq6Dp+KWGFPXQOPR/7sj0duqK6jb34
-         1ChOrTCut2Jj/LMUHz2OH+3WSb8H49R2nkUR7DkRPSz+fjF05p/Y73WyM8qZj3YnFXDQ
-         TRgUckCyt0y77wuVvlWmNn81vckzQUZqEHX3MItqktIai8z9jJDXVV0VouB3MONX3yLh
-         RGMA==
+        d=gmail.com; s=20210112;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yhEn+HsKVEOR2ZpkrPt9obsTlAm0mNe3CjhrGQZngwI=;
+        b=HNCXaHWJiaTGGztOMHPy+t3lPvmxmOLZT3uIKev1QNrU/rHBQK6Z6olmY8gekpBQyn
+         nM1hmrtkgpu3l6PQJ0ErWY6cPQMGA5AVFY4N2FIVs6zD7QxnUTAF+wzB8+qdCA2npE/4
+         Sh2CPMx6cjHIAE+x6nwrjVE4pdIfSFxbaPeQFkM7+tWdx5bJtbJaXBgfSD+ZiTmGBloX
+         ECruT7f5A1ixZ6eJh/E3/iESO/kANeYPYTSjz2n7rNxBqJrU0q5Yb5reVV3Osm8ovTqd
+         8a8FczZJ2PuzPGnjzoukH1pRiitGz4Ly75J/47dUXxUHI/xgKbBAFEHBU/uO3asB39pe
+         Judw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v9nxTGqrdRICpvkQsPbmnD13xDFxVdmSzzLDOAXPlv8=;
-        b=jHD5mcrDAdyYLoY1A+QJLjRx/dyrV5joPsCHk8Ey1XFnl6pE9cwifNYWzld0tskGyR
-         QZea4n7qCsRLiDTddeqn/ZO8RbcKtOIZbbM1TooOhzOib1QIgVnyjoyvziflSmH3Bmln
-         e6e3vA9j5SSzNW7EpBJd0vhkFgH4W58mrhJtgr2fjjQcyBigZxHiGcpxleLINb7gL2/f
-         pSOMmpc8/t8qasDEY3K7Y3ZxparXVLxGZEx4u19pS0jEjpYU6k48Hf6L92N3eUidRw0F
-         Y5iDaM4ZTRdqMMwQYjiWECfsY+bpKBrEpXhdxO0q80IER9XaJDheuMQIeBtYjsI/tE/V
-         7zXQ==
-X-Gm-Message-State: AOAM530zzKdwpsRzwF7WyjzdxSurXor1jYo6mY7uzwRqngbGzGtZbhh2
-        m1js2u2lDl6zJp059I+NTj9dl1Zjp7n324jrvrbljg==
-X-Google-Smtp-Source: ABdhPJxAH20nnPjijr1ZwDomiy0VitqEs+B+FZGyYxGmIhbVYIwjCcbC1mIFjUzABE/Y2y2c07Pdzu94bn24eLLhAmQ=
-X-Received: by 2002:a9d:ed6:: with SMTP id 80mr8386942otj.35.1639092256225;
- Thu, 09 Dec 2021 15:24:16 -0800 (PST)
-MIME-Version: 1.0
-References: <20211206092237.4105895-1-phil@raspberrypi.com> <20211206092237.4105895-2-phil@raspberrypi.com>
-In-Reply-To: <20211206092237.4105895-2-phil@raspberrypi.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 10 Dec 2021 00:24:05 +0100
-Message-ID: <CACRpkdZ95bCJVDo4tCXsMnsXax4+ZydoLS7AsM-yzMjXbONk=w@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] pinctrl: bcm2835: Change init order for gpio hogs
-To:     Phil Elwell <phil@raspberrypi.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yhEn+HsKVEOR2ZpkrPt9obsTlAm0mNe3CjhrGQZngwI=;
+        b=Ckl74ZAVXtT1OKsc2lBcPGu/llNTZNRJdoezVlQ4FwF4+4YOVrMs4A4S9SQcKDEYEU
+         ZnhNuiIz/aG4YFjnjcAVqEkRK4FirT4Cl4qtWHzdBIhcyOretfSqcfsB4f3s1ZLIP+oI
+         vRWkP0Ypf/9d3z6T4pu9N0WbQRM3LTWaCky3pbaAQNBU60HgPSKWbcX3oE2WJQeQ6jNK
+         wiR/bOO4zHNWbCLXLYcZEw+RXPxeANScp/hLEq7nAQTFhWIqX8rV61fGxL3ZBj2gYz0J
+         Kz1ab/vLsqMAiCqzchyrkCoDANfMW2yEF1ZZsCngRfDZhRnm933NvLtruwPtL97I3Pdx
+         MXvQ==
+X-Gm-Message-State: AOAM532FUVXVAn1DwJ+rESUWEBXLYNQpiJYP++h4+k1gnVg8bD67ngSE
+        HjOV980yDQ6s4q9QQ7SqV1bl/sIfV40=
+X-Google-Smtp-Source: ABdhPJwyRsGr6WPGru0RwXtRfzS/xGpPNhtpJ1LzcXxk2gAonJHkTvUA09py2j6SL/Ur7wRnrcBw2Q==
+X-Received: by 2002:a65:58cc:: with SMTP id e12mr33921891pgu.59.1639092329633;
+        Thu, 09 Dec 2021 15:25:29 -0800 (PST)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id y18sm703960pfp.190.2021.12.09.15.25.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Dec 2021 15:25:29 -0800 (PST)
+Subject: Re: [PATCH v3 02/15] dt-bindings: reset: Convert Broadcom STB reset
+ to YAML
+To:     Philipp Zabel <p.zabel@pengutronix.de>,
         Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Thierry Reding <treding@nvidia.com>,
-        devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        devicetree@vger.kernel.org
+Cc:     Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Markus Mayer <mmayer@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Al Cooper <alcooperx@gmail.com>,
+        Doug Berger <opendmb@gmail.com>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:MULTIMEDIA CARD (MMC), SECURE DIGITAL (SD) AND..." 
+        <linux-mmc@vger.kernel.org>,
+        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>
+References: <20211208003727.3596577-1-f.fainelli@gmail.com>
+ <20211208003727.3596577-3-f.fainelli@gmail.com>
+ <ab45adc2e305c79286f6b63fa42cfd78983cb757.camel@pengutronix.de>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <d68a6115-b076-1eb8-77c1-e0728e8e82dd@gmail.com>
+Date:   Thu, 9 Dec 2021 15:25:24 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
+MIME-Version: 1.0
+In-Reply-To: <ab45adc2e305c79286f6b63fa42cfd78983cb757.camel@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 6, 2021 at 10:22 AM Phil Elwell <phil@raspberrypi.com> wrote:
+On 12/9/21 1:41 AM, Philipp Zabel wrote:
+> On Tue, 2021-12-07 at 16:37 -0800, Florian Fainelli wrote:
+>> Convert the Broadcom STB SW_INIT style reset controller binding to YAML.
+>>
+>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> 
+> Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-> ...and gpio-ranges
->
-> pinctrl-bcm2835 is a combined pinctrl/gpio driver. Currently the gpio
-> side is registered first, but this breaks gpio hogs (which are
-> configured during gpiochip_add_data). Part of the hog initialisation
-> is a call to pinctrl_gpio_request, and since the pinctrl driver hasn't
-> yet been registered this results in an -EPROBE_DEFER from which it can
-> never recover.
->
-> Change the initialisation sequence to register the pinctrl driver
-> first.
->
-> This also solves a similar problem with the gpio-ranges property, which
-> is required in order for released pins to be returned to inputs.
->
-> Fixes: 73345a18d464b ("pinctrl: bcm2835: Pass irqchip when adding gpiochip")
-> Signed-off-by: Phil Elwell <phil@raspberrypi.com>
-
-This patch (1/2) applied for fixes.
-
-Yours,
-Linus Walleij
+Thanks, sorry for not carrying your Ack that you provided in v2 already.
+-- 
+Florian
