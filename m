@@ -2,114 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AC3346E0D7
-	for <lists+linux-gpio@lfdr.de>; Thu,  9 Dec 2021 03:23:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9328746E0DD
+	for <lists+linux-gpio@lfdr.de>; Thu,  9 Dec 2021 03:27:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230063AbhLIC0j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 8 Dec 2021 21:26:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36546 "EHLO
+        id S230096AbhLICbJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 8 Dec 2021 21:31:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230055AbhLIC0j (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Dec 2021 21:26:39 -0500
-Received: from mail-oi1-x232.google.com (mail-oi1-x232.google.com [IPv6:2607:f8b0:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0A0FC0617A2
-        for <linux-gpio@vger.kernel.org>; Wed,  8 Dec 2021 18:23:06 -0800 (PST)
-Received: by mail-oi1-x232.google.com with SMTP id bj13so6799995oib.4
-        for <linux-gpio@vger.kernel.org>; Wed, 08 Dec 2021 18:23:06 -0800 (PST)
+        with ESMTP id S229909AbhLICbI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 8 Dec 2021 21:31:08 -0500
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 494A2C061746;
+        Wed,  8 Dec 2021 18:27:36 -0800 (PST)
+Received: by mail-pf1-x42a.google.com with SMTP id o4so4052934pfp.13;
+        Wed, 08 Dec 2021 18:27:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ce+3ZLHZVFn6hr/avmz5qPikAqGOU695ooOcBJXu3dg=;
-        b=if2gZp4ZdriFndAsWg8EmVfq9toVFPf33VIceGqgnQvA4udSDGbEZcGFr56gzeqYlB
-         MRr5DwSssiy8+YCF4ya+1z8ql3zlWPf75hsMxeD84VeFGTuJBrHHIwrXcYJ8UU6F4Iti
-         IeItRDbLedrZOCCTPKmXI3tNR2ez8XpCQFdkISpV7YJChxY8/6fFLk88wICt0PbWgMXY
-         YceB2c9q+ne3RjSr6uu4IRccxr0cxl9jGYdilPrn5KzMkLrZ3Mw+K0eTn8Xx+mkdynQX
-         gtO0CJBr2sgx0zl7JA6rvR5ivmBqqOsmhOAb4F6c+LlBBi9lcQp/mkRPA0341pDlfq0s
-         1EXw==
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NN4IHOXyChcCNha1Aa97FuoLYA9NC8iJD0LFtZlQUGQ=;
+        b=etIqSRpLMHUKDoIm5qc8PDyOOzpna4ucc27Z9BJ5nuD3HXuHjBEhSxqREofrc21pIs
+         mSaY9ic6MrobARAMVXZd6E5+NzuPOMnGkZXG+mvcdaFiXTA48DoQm8oxX/+UxV7l0WhC
+         lZHaSEee7A+4V0DStL93cuiTHbf+uTbS7hqMAALaI1XfuDZ6y9V+Q1lwActv5hDarHuv
+         G8ZzkehRvc0LDOK8ezwEW0dFZJBUoclWRjQGq4tiUjsO1g4XGs2CT/FbmKE0KJIcI6qI
+         rhAPaXOzCd+Iw4xtEmcSTLq51IbkGz+JlQyKEu1UdLkWsTUeFwitq1tS0PM60A1AsoAZ
+         YQmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ce+3ZLHZVFn6hr/avmz5qPikAqGOU695ooOcBJXu3dg=;
-        b=cnoVydhXAciky/c4prQv6HG77KvO2wa/qS8XugBuojvK0jEmbmiJIF+8TDgI+1/7JM
-         oKWzHOi+KxeMdLFphcDuvzYVRlXOhlndodqRaCfDkiLxL34KYIUdpiTpk8Kr1d3eD9e7
-         8BnCBpXxgtDI7R8Hd0DL5F4BKSHqrCxc7XMqy5cw50yPURubBJzCs/WhTYnW7k3bRdJp
-         hlmxTY1mrhCZJ8MmpzzKYk2Erl4fmVASboGr25ilWFWystiTyI6V3Zzu1MuAp+uDNYZt
-         jdQFSNYjxJNjusvCZbUc0jb4BNxJ0W2KfF+GPEn70+DabAFmv5unoxCoKj9sR6jvkmwD
-         2IIA==
-X-Gm-Message-State: AOAM530Q6dTb3QxZpHsEQBR1AjRqzjxD+4SrEqFRJVIKGcuPQdpeUsPx
-        U+BJ/sIgpR7HV/wJ6yK9PJP+FrXxS6UBJDt7yv2spQ==
-X-Google-Smtp-Source: ABdhPJyoHCqxuoxzuTYEd7z891USU7AXAoWKFpOZjUl4jhTMLZS9p0jYjZ44oG9JaxR+O6bsYdARh6LMzmzhOafU7Cs=
-X-Received: by 2002:a05:6808:60e:: with SMTP id y14mr3172519oih.162.1639016585914;
- Wed, 08 Dec 2021 18:23:05 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NN4IHOXyChcCNha1Aa97FuoLYA9NC8iJD0LFtZlQUGQ=;
+        b=CJswmZftmgg0hYlx1Cdaauxbm0PAKjblr2+mMNpOsui6JWEVA7KJUlDX+x7t7DxKbY
+         i6VdgJswBB0ld/wjeJcyO6XxCibu6n/sodK4xfEv5vNNSU4OcLQpG+xL0GChMpnQr5hH
+         gjg2XJped1AuAvxoqKqtT6VJ9irhhKgmMsL3d2eH2azeyG2Rw6gr6gmgG5KP7yeQGP1N
+         BHH8yTuz/67BG+Jwch1tgKjvDcHqNFOls0IVXGwQ0pXcQMRtTw1nsC0uSmSwWv+w5PRE
+         Ysbss5hHAMj+b5CsY8+EGX+Q2SUMbMsHdZXvmQROOW3dXFz+rE4HlGvwF/nL2S0XDncq
+         c8TA==
+X-Gm-Message-State: AOAM530prLvYTNVDRS7yFPs6Juw2BjwY1XcOCUULeFfHYcShGOpFJHhj
+        yDgw5R60aH2NYlaaJWj4oRk=
+X-Google-Smtp-Source: ABdhPJxdL3gQtt60ZSUlfI4bfXKzmcyjeO/FpWKhWC2wMULyepz2/CrPJkPqfR/P9ka2nUxSuQWCeg==
+X-Received: by 2002:a63:ee04:: with SMTP id e4mr32290947pgi.266.1639016855788;
+        Wed, 08 Dec 2021 18:27:35 -0800 (PST)
+Received: from richard-System-Product-Name.. ([101.10.104.26])
+        by smtp.gmail.com with ESMTPSA id q8sm5318749pfk.152.2021.12.08.18.27.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Dec 2021 18:27:35 -0800 (PST)
+From:   Yuchang Hsu <saraon640529@gmail.com>
+X-Google-Original-From: Yuchang Hsu <Richard_Hsu@asmedia.com.tw>
+To:     linus.walleij@linaro.org, brgl@bgdev.pl,
+        Richard_Hsu@asmedia.com.tw, andriy.shevchenko@linux.intel.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yd_Tseng@asmedia.com.tw, Cindy1_Hsu@asmedia.com.tw,
+        Andrew_Su@asmedia.com.tw
+Subject: [PATCH v3] gpio:amdpt:add new device ID and 24-pin support
+Date:   Thu,  9 Dec 2021 10:26:05 +0800
+Message-Id: <20211209022605.11250-1-Richard_Hsu@asmedia.com.tw>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-References: <20211201072626.19599-1-lakshmi.sowjanya.d@intel.com> <20211201072626.19599-2-lakshmi.sowjanya.d@intel.com>
-In-Reply-To: <20211201072626.19599-2-lakshmi.sowjanya.d@intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 9 Dec 2021 03:22:54 +0100
-Message-ID: <CACRpkdYFJf=A_isumOO6F5_oYbsdpA5KyCSj1niFRumKW7VJjw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: Add bindings for Intel
- Thunderbay pinctrl driver
-To:     lakshmi.sowjanya.d@intel.com
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        bgolaszewski@baylibre.com, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@linux.intel.com, tamal.saha@intel.com,
-        pandith.n@intel.com, kenchappa.demakkanavar@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Lakshmi,
+From: Hsu Yuchang <Richard_Hsu@asmedia.com.tw>
 
-On Wed, Dec 1, 2021 at 8:26 AM <lakshmi.sowjanya.d@intel.com> wrote:
+This patch add an ACPI HID(AMDIF031) and pin number in the pt_gpio_acpi_match.
+And we retrieve pin number by device_get_match_data().
 
-> +patternProperties:
-> +  '^gpio@[0-9a-f]*$':
-> +    type: object
-> +
-> +    description:
-> +      Child nodes can be specified to contain pin configuration information,
-> +      which can then be utilized by pinctrl client devices.
-> +      The following properties are supported.
-> +
-> +    properties:
-> +      pins:
-> +        description: |
-> +          The name(s) of the pins to be configured in the child node.
-> +          Supported pin names are "GPIO0" up to "GPIO66".
-> +
-> +      bias-disable: true
-> +
-> +      bias-pull-down: true
-> +
-> +      bias-pull-up: true
-> +
-> +      drive-strength:
-> +        description: Drive strength for the pad.
-> +        enum: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
-> +
-> +      bias-bus-hold:
-> +        type: boolean
-> +
-> +      input-schmitt-enable:
-> +        type: boolean
-> +
-> +      slew-rate:
-> +        description: GPIO slew rate control.
-> +                      0 - Slow
-> +                      1 - Fast
-> +        enum: [0, 1]
-> +
-> +additionalProperties: false
+Signed-off-by: Yuchang Hsu <Richard_Hsu@asmedia.com.tw>
+--- Add AMDIF031 support
+ drivers/gpio/gpio-amdpt.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-Can't you reference
-Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
-here?
+diff --git a/drivers/gpio/gpio-amdpt.c b/drivers/gpio/gpio-amdpt.c
+index bbf53e289141..13f4e2af3800 100644
+--- a/drivers/gpio/gpio-amdpt.c
++++ b/drivers/gpio/gpio-amdpt.c
+@@ -14,6 +14,7 @@
+ #include <linux/platform_device.h>
 
-Look at for example:
-Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
+ #define PT_TOTAL_GPIO 8
++#define PT_TOTAL_GPIO_EX 24
 
-Yours,
-Linus Walleij
+ /* PCI-E MMIO register offsets */
+ #define PT_DIRECTION_REG   0x00
+@@ -103,7 +104,7 @@ static int pt_gpio_probe(struct platform_device *pdev)
+ 	pt_gpio->gc.owner            = THIS_MODULE;
+ 	pt_gpio->gc.request          = pt_gpio_request;
+ 	pt_gpio->gc.free             = pt_gpio_free;
+-	pt_gpio->gc.ngpio            = PT_TOTAL_GPIO;
++	pt_gpio->gc.ngpio            = (uintptr_t)device_get_match_data(dev);
+ #if defined(CONFIG_OF_GPIO)
+ 	pt_gpio->gc.of_node          = dev->of_node;
+ #endif
+@@ -133,8 +134,9 @@ static int pt_gpio_remove(struct platform_device *pdev)
+ }
+
+ static const struct acpi_device_id pt_gpio_acpi_match[] = {
+-	{ "AMDF030", 0 },
+-	{ "AMDIF030", 0 },
++	{ "AMDF030", PT_TOTAL_GPIO },
++	{ "AMDIF030", PT_TOTAL_GPIO },
++	{ "AMDIF031", PT_TOTAL_GPIO_EX },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(acpi, pt_gpio_acpi_match);
+--
+2.30.2
+
