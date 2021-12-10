@@ -2,160 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C012447032F
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 15:54:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 960D8470372
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 16:03:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239120AbhLJO6L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Dec 2021 09:58:11 -0500
-Received: from mail-ot1-f47.google.com ([209.85.210.47]:38403 "EHLO
-        mail-ot1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231277AbhLJO6K (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Dec 2021 09:58:10 -0500
-Received: by mail-ot1-f47.google.com with SMTP id n104-20020a9d2071000000b005799790cf0bso9866313ota.5;
-        Fri, 10 Dec 2021 06:54:35 -0800 (PST)
+        id S242403AbhLJPGh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Dec 2021 10:06:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35554 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235206AbhLJPGg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Dec 2021 10:06:36 -0500
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F691C061746
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Dec 2021 07:03:01 -0800 (PST)
+Received: by mail-ed1-x529.google.com with SMTP id v1so31237466edx.2
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Dec 2021 07:03:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:sender:from:date:message-id:subject:to;
+        bh=C6oZMWM+8Skwu6yOHRjbLLU9IbgKUnI4lghF7gFMeQc=;
+        b=pY3PjS+kEF4Y8S1UFniW6xusX9wWSOZ2oNa3A8mcUREratB1Kq/53jJh9VqnYZDQz3
+         zccSJnrrzEJ+CmfekZd2TVFDm2u6+4Ji6kVC4Se67hXEj8RW+n2kiybFzsxi12xneafg
+         v9o5fXoGKrugOCmKsNrRoOsVcYvNCUefsUqTabL8F0AQwUMTpTQgFONJnLwoPTLM0MzM
+         l8JZjvum0X+U+KQvkmSdzA0fY9MAShzRoykgnTCgz8ApL3MPwLHWaIS4GiwdiJfPQID0
+         CUA5mZFCyoBAnREpk7HlMC4nreLAd+RpuXYEm8kJCaMYz/yJiH+d+IegQIeJvMiB3x5k
+         i4Gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Zdc9H3YW1oDCCZbDFkL7On4+7T8yfSZEeO3EBNfcdBg=;
-        b=xsiGoXSr2BYBb/FXfU62VAOaGv4HCaTd3tlKh/Cs3mOVywiTPo0XF+yMMZWH298Z/6
-         kiykZOK5gw/bRrAFpDjiVKOCCUVTdEKEhvOULgiRePKvZ9FYa5roc5zceN91hP1/Ajuq
-         Y5y9lMB4dKwS+DtdHc7nv0oKUw7+cWWLewMc0s4lG+r//69oiv8fBYR+RJ3C2X3P/u7g
-         pQM/DpSUYXQ9POII1tctpQfBeTxrjgFHP0Yvul3giJzZk0TbgE7M0F52JGUN6B0nw0cL
-         nK724Z7x9LXDzd2HuoE025YAsGC3YcZMgDXxyer92E58LW+Bbr+6krY86LD6Uy2cVU3M
-         jlWA==
-X-Gm-Message-State: AOAM531O6JFXAeVuI82KIRUyjpw8hH1bHNxywHcjaAEcEADQ2/U2nuzc
-        1W18YNN9xUgC93YzZg6gMw==
-X-Google-Smtp-Source: ABdhPJxXAJ4hmhe+SH4o7q5tMWlEJ/ynPJzoWoPjxoYwskrBvavXsrur1xInHiNIsTpZzFWEhKFJUg==
-X-Received: by 2002:a05:6830:1688:: with SMTP id k8mr11262889otr.238.1639148075315;
-        Fri, 10 Dec 2021 06:54:35 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id n22sm565324oop.29.2021.12.10.06.54.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Dec 2021 06:54:34 -0800 (PST)
-Received: (nullmailer pid 1333370 invoked by uid 1000);
-        Fri, 10 Dec 2021 14:54:33 -0000
-Date:   Fri, 10 Dec 2021 08:54:33 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        openbmc@lists.ozlabs.org, Tomer Maimon <tmaimon77@gmail.com>,
-        Joel Stanley <joel@jms.id.au>, linux-kernel@vger.kernel.org,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>
-Subject: Re: [PATCH v2 1/8] dt-bindings: arm/npcm: Add binding for global
- control registers (GCR)
-Message-ID: <YbNqKfwYes0rH07B@robh.at.kernel.org>
-References: <20211207210823.1975632-1-j.neuschaefer@gmx.net>
- <20211207210823.1975632-2-j.neuschaefer@gmx.net>
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to;
+        bh=C6oZMWM+8Skwu6yOHRjbLLU9IbgKUnI4lghF7gFMeQc=;
+        b=xGrOk88FRMiIFchcPajEQTZ0j/xOy64j0aWAuOR2tOt6VsLfqytHJIARjpVU9EAxHR
+         W0xqVmPS8SLC48ra80K2BznYFu5K5QuIxCwbOzBqN/VFt/rNBwoiSm+jcDfjIbXmakeC
+         itmX8qoMy0AWjyCh8DRFXIXIgkolDKF4h3AGtu7n1/EZCzczOXsRRr4rJGOgDLocBIsX
+         j4e6wVqWODnJlkBq2pFzEMEkaiGYe1clxZf1C56VTHMclrIdwKWuJu/VngthX538f7GV
+         /TQvEFWuXaHOs52aM6N8uOMu7JEC7JyEhtsA7X91e+MblEeuL9fdy3ZIpGKAfKbbgGc4
+         CdZg==
+X-Gm-Message-State: AOAM533wBkjaCNEi8EBeXymLZxjYe1QsQD08MLfZ1lEX10+DWkyBBOQQ
+        Z5CtINgKEzy6+oE5WOZNiY2lcj/BaoUBhohxj6s=
+X-Google-Smtp-Source: ABdhPJwhTq0hFP1sdQgMKdbDJaJr1Exa//z4D7IRO0MG71YhmkYvSIostoFntBi1DxVTq7E2cdEsirK3yGyDEbejZXw=
+X-Received: by 2002:a17:907:3d94:: with SMTP id he20mr26184144ejc.75.1639148546601;
+ Fri, 10 Dec 2021 07:02:26 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211207210823.1975632-2-j.neuschaefer@gmx.net>
+Sender: missmary.kipkalyakones01@gmail.com
+Received: by 2002:a17:906:5251:0:0:0:0 with HTTP; Fri, 10 Dec 2021 07:02:26
+ -0800 (PST)
+From:   Aisha Al-Qaddafi <aisha.gdaffi24@gmail.com>
+Date:   Fri, 10 Dec 2021 03:02:26 -1200
+X-Google-Sender-Auth: n2_Yi3OnIAFATbiNhUEY-mGuzxo
+Message-ID: <CABGtNUvkaQzvFUNOFY+zHyAm_pNBSyv0NjY2_Bi3hUkxDN5ueQ@mail.gmail.com>
+Subject: My Dear Friend
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Dec 07, 2021 at 10:08:16PM +0100, Jonathan Neuschäfer wrote:
-> A nuvoton,*-gcr node is present in nuvoton-common-npcm7xx.dtsi and will
-> be added to nuvoton-wpcm450.dtsi. It is necessary for the NPCM7xx and
-> WPCM450 pinctrl drivers, and may later be used to retrieve SoC model and
-> version information.
-> 
-> This patch adds a binding to describe this node.
-> 
-> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-> 
-> ---
-> v2:
-> - Rename node in example to syscon@800000
-> - Add subnode to example
-> 
-> v1:
-> - https://lore.kernel.org/lkml/20210602120329.2444672-2-j.neuschaefer@gmx.net/
-> ---
->  .../bindings/arm/npcm/nuvoton,gcr.yaml        | 45 +++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/npcm/nuvoton,gcr.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/npcm/nuvoton,gcr.yaml b/Documentation/devicetree/bindings/arm/npcm/nuvoton,gcr.yaml
-> new file mode 100644
-> index 0000000000000..62020d7ac305b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/npcm/nuvoton,gcr.yaml
-> @@ -0,0 +1,45 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/arm/npcm/nuvoton,gcr.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Global Control Registers block in Nuvoton SoCs
-> +
-> +maintainers:
-> +  - Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-> +
-> +description: |
+Assalamu Alaikum Wa Rahmatullahi Wa Barakatuh
 
-Don't need '|' if no formatting.
-
-> +  The Global Control Registers (GCR) are a block of registers in Nuvoton SoCs
-> +  that expose misc functionality such as chip model and version information or
-> +  pinmux settings.
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - nuvoton,wpcm450-gcr
-> +          - nuvoton,npcm750-gcr
-> +      - const: syscon
-> +      - const: simple-mfd
-
-blank line
-
-> +  reg: true
-
-Need to define how many entries:
-
-maxItems: 1
-
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-
-Ideally, you should define the child node names, but you can do this:
-
-additionalProperties:
-  type: object
-
-which means anything undefined must be a node.
-
-> +
-> +examples:
-> +  - |
-> +    gcr: syscon@800000 {
-> +      compatible = "nuvoton,npcm750-gcr", "syscon", "simple-mfd";
-> +      reg = <0x800000 0x1000>;
-> +
-> +      uart-mux-controller {
-> +        compatible = "mmio-mux";
-> +        #mux-control-cells = <1>;
-> +        mux-reg-masks = <0x38 0x07>;
-> +        idle-states = <2>;
-> +      };
-> +    };
-> --
-> 2.30.2
-> 
-> 
+Dear Friend,
+I came across your e-mail contact prior a private search while in need
+of your assistance. I am Aisha Al-Qaddafi, the only biological
+Daughter of Former President of Libya Col. Muammar Al-Qaddafi. Am a
+single Mother and a Widow with three Children.
+I have investment funds worth Twenty Seven Million Five Hundred
+Thousand United State Dollar ($27.500.000.00 ) and i need a trusted
+investment Manager/Partner because of my current refugee status,
+however, I am interested in you for investment project assistance in
+your country, may be from there, we can build business relationship in
+the nearest future. I am willing to negotiate investment/business
+profit sharing ratio with you base on the future investment earning
+profits. If you are willing to handle this project on my behalf kindly
+reply urgent to enable me provide you more information about the
+investment funds.
+Your Urgent Reply Will Be Appreciated
+Best Regards
