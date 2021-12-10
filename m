@@ -2,181 +2,143 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8525E47009D
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 13:25:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B09A4701B3
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 14:34:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237629AbhLJM2q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Dec 2021 07:28:46 -0500
-Received: from mail.thorsis.com ([92.198.35.195]:47459 "EHLO mail.thorsis.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240974AbhLJM2p (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 10 Dec 2021 07:28:45 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.thorsis.com (Postfix) with ESMTP id CDC8A354A;
-        Fri, 10 Dec 2021 13:25:09 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at mail.thorsis.com
-Received: from mail.thorsis.com ([127.0.0.1])
-        by localhost (mail.thorsis.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id sc9IaSCmdGH8; Fri, 10 Dec 2021 13:25:09 +0100 (CET)
-Received: by mail.thorsis.com (Postfix, from userid 109)
-        id 9778A1D8A; Fri, 10 Dec 2021 13:25:09 +0100 (CET)
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NO_RECEIVED,
-        NO_RELAYS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-        version=3.4.2
-X-Spam-Report: * -1.9 BAYES_00 BODY: Bayes spam probability is 0 to 1%
-        *      [score: 0.0000]
-        *  0.0 URIBL_BLOCKED ADMINISTRATOR NOTICE: The query to URIBL was
-        *      blocked.  See
-        *      http://wiki.apache.org/spamassassin/DnsBlocklists#dnsbl-block
-        *      for more information.
-        *      [URIs: thorsis.com]
-        * -0.0 NO_RELAYS Informational: message was not relayed via SMTP
-        * -0.0 NO_RECEIVED Informational: message has no Received headers
-Date:   Fri, 10 Dec 2021 13:24:58 +0100
-From:   Alexander Dahl <ada@thorsis.com>
-To:     Peter Rosin <peda@axentia.se>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        id S238677AbhLJNiU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Dec 2021 08:38:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43142 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238651AbhLJNiT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Dec 2021 08:38:19 -0500
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4F9FC061746
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Dec 2021 05:34:44 -0800 (PST)
+Received: by mail-ed1-x52e.google.com with SMTP id x10so12708817edd.5
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Dec 2021 05:34:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FPSEs55g+DtadhrlmbupJ6EiEHXiPlVM2kqOvXOraBg=;
+        b=hufh9lbJRb0oJ7mH3ofEFSXMLGRUkPJVS0Pzd+B2GjC4BXqalqm5IObNYoixSA06IR
+         STe38uxNdMvFGttgZXUjkrlKKXky8INm4CjDqCmitH5PJjPYo6vpfB2AV56cW/kGe7K7
+         FkFZbLqwpWRanpHSa4bmalNW1mEaDdSrgXgFrWXKq2p6bkvTxTez09p3x8sc/OfXCoWw
+         mKbV7zqGPLoyKO7kIwgudgfVaSrkSAnpFDfxMuAGhWvW8qPnnlDuIFQZKEihB2xDvkfG
+         XybmgLlQr8ZBWcfyviXVUcbpIOQlUlXgKWVSrlVtFW/QQSm2B3Lzce8/tw1WDw32hSe0
+         13zQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FPSEs55g+DtadhrlmbupJ6EiEHXiPlVM2kqOvXOraBg=;
+        b=JDn2A2CW8OHLGLvM1AxjwJ61kcc48oTDeVIN3mb9N39D3PLWmx3Do/4gjmiuF1XlKh
+         urzQoSWsbRrZOs9HIALzPRAHMm5FiAW2+5sElW4J8f7dw9A05ju11XMNos5kAleHyLe5
+         qISnd99afj50wG9jy10JsmJ0zL10OCUtPvHrI5Gq94TDTKN4ZGc3QpkP1X4b5fNrd7z2
+         uWuzS0thv9yJmz8ZwuTArg74WV+VAco94PoL9JMFsvsPuKqB2wYcbOq5OybjOq+DrQ4Y
+         HIczuTRwjx2YQXM1hDf6nm6DbuPm0Ha5ynrGPbt1UKxn1GVg5R4KWPz/ihbJYRfrfum/
+         2gLA==
+X-Gm-Message-State: AOAM530cHFOhebcyvxBe9a91dfXwMNtBMrD6SamFpxk8huiXx5TRY2rP
+        xd85RrmtMf+KoZyNxQjATGTKxxl5NiSJx4DeY8EjZg==
+X-Google-Smtp-Source: ABdhPJwmsSwmtmE3BmXsHOfQi4mh+f4JiRQfzRLj9pINvfop4k5ApnqKowLICk5v8t0gIe6zpjTa7U3y1DaxmvQ0fw8=
+X-Received: by 2002:a05:6402:2744:: with SMTP id z4mr39310095edd.310.1639143283263;
+ Fri, 10 Dec 2021 05:34:43 -0800 (PST)
+MIME-Version: 1.0
+References: <4a8c598db0a78421b074f19eb2157d89f3198440.1639047500.git.viresh.kumar@linaro.org>
+ <CAHp75VdwQjcrQLHh49WV5e95KCsyqVyoFO=VeNfK4LC0mEZvNw@mail.gmail.com>
+ <CAMRc=McUV3-Afhd3yipDfvcEQijqDxf3cXr9egdKAgPt0nv5RA@mail.gmail.com>
+ <20211210033842.j4h5glg34prjn4ha@vireshk-i7> <20211210105818.tsbzahtcs5nlxqkr@vireshk-i7>
+In-Reply-To: <20211210105818.tsbzahtcs5nlxqkr@vireshk-i7>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 10 Dec 2021 14:34:32 +0100
+Message-ID: <CAMRc=MdLa=uLW18xeeny9+1dJfs3JxufLiJ2nPKXr9AvseaP5g@mail.gmail.com>
+Subject: Re: [PATCH] libgpiod: Fix build failure with musl
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Alexander Dahl <ada@thorsis.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Roelf-Erik Carsjens <rca@thorsis.com>
-Subject: Re: [PATCH] gpiolib: allow line names from device props to override
- driver names
-Message-ID: <YbNHGkhHKQAOwxnB@ada.ifak-system.com>
-Mail-Followup-To: Peter Rosin <peda@axentia.se>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Roelf-Erik Carsjens <rca@thorsis.com>
-References: <70b1de02-b674-ca17-9219-61fa8e1c00db@axentia.se>
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <70b1de02-b674-ca17-9219-61fa8e1c00db@axentia.se>
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Arnd Bergmann <arnd@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Peter,
+On Fri, Dec 10, 2021 at 11:58 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 10-12-21, 09:08, Viresh Kumar wrote:
+> > On 09-12-21, 19:32, Bartosz Golaszewski wrote:
+> > > On Thu, Dec 9, 2021 at 4:17 PM Andy Shevchenko
+> > > <andy.shevchenko@gmail.com> wrote:
+> > > >
+> > > > On Thu, Dec 9, 2021 at 5:15 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > > > >
+> > > > > Musl defines the _IO*() macros in the files included via <sys/ioctl.h>
+> > > > > and hence we get redefinition errors during build as <linux/ioctl.h>,
+> > > > > included via <uapi/gpio.h>, defines them again.
+> > > > >
+> > > > > Fix this by undefining the macros between both the includes, document it
+> > > > > all in musl-compat.h as well.
+> > > >
+> > > > Is it only me who wonders why it should be fixed here?
+> > > >
+> > > > --
+> > > > With Best Regards,
+> > > > Andy Shevchenko
+> > >
+> > > No, I'm wondering the same. I see these musl compat issues being
+> > > "fixed" in half the embedded linux projects. Looks to me musl
+> > > introduces these issues, doesn't it? Any reason for it? Can it be
+> > > fixed in the library?
+> >
+> > Not sure if I can go fix musl here :)
+> >
+> > Btw, another thing that will work better is if we do this:
+> >
+> > diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
+> > index eaaea3d8e6b4..ebf6b5312cc0 100644
+> > --- a/include/uapi/linux/gpio.h
+> > +++ b/include/uapi/linux/gpio.h
+> > @@ -12,8 +12,8 @@
+> >  #define _UAPI_GPIO_H_
+> >
+> >  #include <linux/const.h>
+> > -#include <linux/ioctl.h>
+> >  #include <linux/types.h>
+> > +#include <sys/ioctl.h>
+> >
+> >  /*
+> >   * The maximum size of name and label arrays.
+> >
+> >
+> >
+> > That will fix it properly as well, no undef issues on any library
+> > then. Some of the files in uapi already do this.
+>
+> This got fixed somehow after I played a bit with the toolchain for
+> musl. Abandoning this change for now.
+>
 
-Am Thu, Dec 09, 2021 at 12:32:29PM +0100 schrieb Peter Rosin:
-> Some gpio providers set names for gpio lines that match the names of
-> the pins on the SoC, or variations on that theme. These names are
-> generally generic, such as pioC12 in the at91 case. These generic names
-> block the possibility to name gpio lines with in device properties
-> (i.e. gpio-line-names).
-> 
-> Allow overriding a generic name given by the gpio driver if there is
-> a name given to the gpio line using device properties, but leave the
-> generic name alone if no better name is available.
+Good, because the commit that introduces this <sys/ioctl.h> include in
+some uapi headers looks like this:
 
-I think this is a good solution. For example on at91 if someone did
-not set gpio-line-names yet, and relied on the generic names (PA0,
-PA1, etc.), she won't get new names until she sets line names in dts.
-This at least allows for transitioning dts / userspace at the same
-time, without the kernel getting in the way.
+commit 607ca46e97a1b6594b29647d98a32d545c24bdff
+Author: David Howells <dhowells@redhat.com>
+Date:   Sat Oct 13 10:46:48 2012 +0100
 
-> However, there is a risk. If user space is depending on the above
-> mentioned fixed gpio names, AND there are device properties that
-> previously did not reach the surface, the name change might cause
-> regressions. But hopefully this stays below the radar...
-> 
-> Signed-off-by: Peter Rosin <peda@axentia.se>
+    UAPI: (Scripted) Disintegrate include/linux
 
-I backported the patch to v5.10.65 and tested, this is part of the
-result on a custom board, where line names were set for the sd card
-interface and an I²C port:
+    Signed-off-by: David Howells <dhowells@redhat.com>
+    Acked-by: Arnd Bergmann <arnd@arndb.de>
+    Acked-by: Thomas Gleixner <tglx@linutronix.de>
+    Acked-by: Michael Kerrisk <mtk.manpages@gmail.com>
+    Acked-by: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+    Acked-by: Dave Jones <davej@redhat.com>
 
-    root@DistroKit:~ gpioinfo | head -n20
-    gpiochip0 - 128 lines:
-            line   0:  "SDMMC0_CK"       unused   input  active-high 
-            line   1: "SDMMC0_CMD"       unused   input  active-high 
-            line   2: "SDMMC0_DAT0" unused input active-high 
-            line   3: "SDMMC0_DAT1" unused input active-high 
-            line   4: "SDMMC0_DAT2" unused input active-high 
-            line   5: "SDMMC0_DAT3" unused input active-high 
-            line   6:        "TWD"       unused   input  active-high 
-            line   7:       "TWCK"       unused   input  active-high 
-            line   8:        "PA8"       unused   input  active-high 
-            line   9:        "PA9"       unused   input  active-high 
-            line  10:       "PA10"       unused   input  active-high 
-            line  11:       "PA11"       unused   input  active-high 
-            line  12:       "PA12"       unused   input  active-high 
-            line  13:  "SDMMC0_CD"       unused   input  active-high 
-            line  14:       "PA14"       unused   input  active-high 
-            line  15:       "PA15"       unused   input  active-high 
-            line  16:       "PA16"       unused   input  active-high 
-            line  17:       "PA17"       unused   input  active-high 
-            line  18:       "PA18"       unused   input  active-high 
+and is 68737 lines long.
 
-So if you're okay with testing a backport, you may add my
+No idea what the author meant honestly and why this was acked as it
+is. I can't find any discussion on that anymore.
 
-Tested-by: Alexander Dahl <ada@thorsis.com>
-
-Greets
-Alex
-
-> ---
->  drivers/gpio/gpiolib.c | 19 ++++++++++++++-----
->  1 file changed, 14 insertions(+), 5 deletions(-)
-> 
-> Instead of doing this only for pinctrl-at91.c as in my recent patch [1], do
-> it for everyone.
-> 
-> Cheers,
-> Peter
-> 
-> [1] https://lore.kernel.org/lkml/4d17866a-d9a4-a3d7-189a-781d18dbea00@axentia.se/
-> 
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index abfbf546d159..00a2a689c202 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -422,8 +422,15 @@ static int devprop_gpiochip_set_names(struct gpio_chip *chip)
->  	if (count > chip->ngpio)
->  		count = chip->ngpio;
->  
-> -	for (i = 0; i < count; i++)
-> -		gdev->descs[i].name = names[chip->offset + i];
-> +	for (i = 0; i < count; i++) {
-> +		/*
-> +		 * Allow overriding "fixed" names provided by the gpio
-> +		 * provider, the "fixed" names are generally generic and less
-> +		 * informative than the names given in device properties.
-> +		 */
-> +		if (names[chip->offset + i] && names[chip->offset + i][0])
-> +			gdev->descs[i].name = names[chip->offset + i];
-> +	}
->  
->  	kfree(names);
->  
-> @@ -708,10 +715,12 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
->  	INIT_LIST_HEAD(&gdev->pin_ranges);
->  #endif
->  
-> -	if (gc->names)
-> +	if (gc->names) {
->  		ret = gpiochip_set_desc_names(gc);
-> -	else
-> -		ret = devprop_gpiochip_set_names(gc);
-> +		if (ret)
-> +			goto err_remove_from_list;
-> +	}
-> +	ret = devprop_gpiochip_set_names(gc);
->  	if (ret)
->  		goto err_remove_from_list;
->  
-> -- 
-> 2.20.1
-> 
+Bart
