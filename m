@@ -2,160 +2,346 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BB54546F843
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 02:09:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7072046F86B
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 02:25:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235127AbhLJBMf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Dec 2021 20:12:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43446 "EHLO
+        id S233511AbhLJB2o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Dec 2021 20:28:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235095AbhLJBMf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Dec 2021 20:12:35 -0500
-Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBFDCC061746;
-        Thu,  9 Dec 2021 17:09:00 -0800 (PST)
-Received: by mail-yb1-xb2c.google.com with SMTP id v138so17895065ybb.8;
-        Thu, 09 Dec 2021 17:09:00 -0800 (PST)
+        with ESMTP id S232401AbhLJB2o (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Dec 2021 20:28:44 -0500
+Received: from mail-oi1-x22d.google.com (mail-oi1-x22d.google.com [IPv6:2607:f8b0:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35576C0617A1
+        for <linux-gpio@vger.kernel.org>; Thu,  9 Dec 2021 17:25:10 -0800 (PST)
+Received: by mail-oi1-x22d.google.com with SMTP id 7so11201250oip.12
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Dec 2021 17:25:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=LfUTbG8PwhmwfcI3X4eb2ef5MT1XzgRcYrG9lHwsTDM=;
-        b=IfFmXxUkJzJv5XedaOJcGeZTWEVvHONM1QWiaQ4QURe5r6K11TQcHulAoe9T7u/Al8
-         SPYO35vHhZEVg/bdqf3ZLMMfJB3pTNFxDD/ta8gbV9TD7UeamfflV5FyV4EBozqvWNhd
-         wChWhBcY5E7Nlv7bhE0Bt6xQSh6sSdMPgih2niZLdLt+o7Tqe7nntUbRCgNT4Fpm3eWz
-         XJVr7mJqmq21Lfu0elFpWOvt6c2+5klaYnPZHoMSXLhkJBBM831Ai2uV1FSfJsu+TVDz
-         mMHGAyxXn91ffGaeHOesbzuWbdQROeKbYWkDs75kU+xPuUAkQkSn4ho9Yjg39426zYKD
-         uiTg==
+        bh=0Saab9E6pBZbyO1S7bJJtFbvA3GKfuPhNl8XZDofNXk=;
+        b=wYHTqwZSOFXnBxthVui0OoJ9f745THfBjeI3a4uYZ5GDmchWnbGxNOnrCIjSy2r6rW
+         NFBm9+R3AJR4EMfYUaDQoorto+ktgrolrzRkoQ6pIBREbD7oYo4TNJHFLOLqGt++rmwn
+         t0zHSmMMxQ72NX/ocaKFfhEGMtgjI56/QLm8NHRdaNW6Ru/VYvFJ9AFxWDQJ21vtLQkY
+         HlaBEMoGXOyjU69N7BBcnl7HLCBplQnWw2wauMC273mHr3pUFeTNYejuNtlIoJZszBC/
+         gTYXXPnGXAnfeXbuOLu4KtZZQHfamSgH8UdbxtaSx8YoNdhbi7o6VRTPU4CuNIFC2ZZO
+         vVxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=LfUTbG8PwhmwfcI3X4eb2ef5MT1XzgRcYrG9lHwsTDM=;
-        b=gpJAvAOudM+GmacPhHCBc6WRD/UGRq3x6rdBdYuviPv5v2DnPNJz0st607tklJfIEl
-         AFK3q1qcV/8gzIWScVbGkXW+Npiqn17imPMLO1vQFSrbtOi7M7+7zrrhCeBHtCrCiYd2
-         GJ81+A9gvUDdFFtaWCjlS9ypegu6VQALy931Pl+0a4/0605XWrZDNmPrzFhanU5SlCIh
-         yrvY9XlDirJqamNlJcDT8oAQrcFDIX5/k8cUMiLXMOePk5uQdjopvN8+xj9cJzK9j7RK
-         KCnkvlxdrH0z5vnkSmjJiPmNU3tOC8LF6QkgCO39slE5eTf3Z0WSpcf6NAvGZgJ7Wyhk
-         2QdA==
-X-Gm-Message-State: AOAM530CLrEOUDGOPYH7cHQedcNkBU0C9FIxpuzsWSVTEXpZvZy4RVSR
-        O+1ycTWmEp0R202IZ+/+bYDLUoLinqNw63nYfn8=
-X-Google-Smtp-Source: ABdhPJyR+xc9CjrTsAilDjNty8CnaRLCAIyuAyFILdVqL+SkY5euh9XGtuDIB32BdWzfsBWG7PDOh2I0pV/tDFk2e1I=
-X-Received: by 2002:a25:abe3:: with SMTP id v90mr10194282ybi.315.1639098540099;
- Thu, 09 Dec 2021 17:09:00 -0800 (PST)
+        bh=0Saab9E6pBZbyO1S7bJJtFbvA3GKfuPhNl8XZDofNXk=;
+        b=zWwfHSPCAMnnNEiY3ifEyD/nE9CnRzSqoqz65bXD85iORlFVxFwAZjSsbdiNI6cvzC
+         tmlApmaQ5bACIxskpyoHnbEukL6O99fEoZS7ueFQkyJPXJy2dZuyAmd2+Tbe/5dGlvMj
+         ehtUxkOedLQFl4X63/R5K4XHB8fvVrgNiAyXFdUC1/YyDQ6GUbgczj1B/5aTBDB0mpWQ
+         ua8tcZrYn3Q1S343KqwSvtuHjOWU6Q0pwzW788H5GQQCWGj4ZsS/w7HyaKhYnlZxhrv6
+         Gx1dho+U6529vOcw2psNodqKDRUgHBodA2yllAhCGztUtIMQ39FKcxfoiXvL1F3tB5bx
+         b39w==
+X-Gm-Message-State: AOAM530BTZSj/1JVpoHLozIjWZYlAZkXwxHn0z9ZdrJp1iwCzi6hmZ/Q
+        DpwLhoKYSH/wwcq/ghlGej3CW7bbCaYlMTChpBuP8w==
+X-Google-Smtp-Source: ABdhPJz1o7Hah+1IdxXbQYbbEyHG3lpFOMWj4uNfulfx42ZyR6c5lyHae7DWmvsLE/dZEDtZoZBwadb5yyj6UisZNok=
+X-Received: by 2002:aca:120f:: with SMTP id 15mr9565253ois.132.1639099509287;
+ Thu, 09 Dec 2021 17:25:09 -0800 (PST)
 MIME-Version: 1.0
-References: <20211110225808.16388-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <CA+V-a8sCVkbwYeVGsQpv2q0OjwUSB_jqmjPptHN-ENSdU+pT1Q@mail.gmail.com>
-In-Reply-To: <CA+V-a8sCVkbwYeVGsQpv2q0OjwUSB_jqmjPptHN-ENSdU+pT1Q@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Fri, 10 Dec 2021 01:08:34 +0000
-Message-ID: <CA+V-a8tTm=n+TuE5N1Ptkvh6n1sYjSZWpQpmY1F5RiwK-ocvFQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 0/7] Renesas RZ/G2L IRQC support
-To:     Marc Zyngier <maz@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>
+References: <1638850665-9474-1-git-send-email-wellslutw@gmail.com> <1638850665-9474-3-git-send-email-wellslutw@gmail.com>
+In-Reply-To: <1638850665-9474-3-git-send-email-wellslutw@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 10 Dec 2021 02:24:57 +0100
+Message-ID: <CACRpkdYO-hgEKsra-+qPq=apSqRBHDnzfP6YYLp6wGb++XEsNA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] pinctrl: Add driver for Sunplus SP7021
+To:     Wells Lu <wellslutw@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, wells.lu@sunplus.com,
+        dvorkin@tibbo.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Marc and Linus,
+Hi Wells,
 
-On Mon, Nov 22, 2021 at 7:25 PM Lad, Prabhakar
-<prabhakar.csengg@gmail.com> wrote:
->
-> Hi Marc and Linus,
->
-> On Wed, Nov 10, 2021 at 10:58 PM Lad Prabhakar
-> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> >
-> > Hi All,
-> >
-> > The RZ/G2L Interrupt Controller is a front-end for the GIC found on
-> > Renesas RZ/G2L SoC's with below pins:
-> > - IRQ sense select for 8 external interrupts, mapped to 8 GIC SPI interrupts
-> > - GPIO pins used as external interrupt input pins out of GPIOINT0-122 a
-> >   maximum of only 32 can be mapped to 32 GIC SPI interrupts,
-> > - NMI edge select.
-> >
-> >                                                                 _____________
-> >                                                                 |    GIC     |
-> >                                                                 |  ________  |
-> >                                          ____________           | |        | |
-> > NMI ------------------------------------>|          |  SPI0-479 | | GIC-600| |
-> >                 _______                  |          |------------>|        | |
-> >                 |      |                 |          |  PPI16-31 | |        | |
-> >                 |      | IRQ0-IRQ8       |   IRQC   |------------>|        | |
-> > P0_P48_4 ------>| GPIO |---------------->|          |           | |________| |
-> >                 |      |GPIOINT0-122     |          |           |            |
-> >                 |      |---------------->| TINT0-31 |           |            |
-> >                 |______|                 |__________|           |____________|
-> >
-> > The proposed RFC patches, add the IRQ domains in GPIO (pinctrl driver) and the
-> > IRQC driver. The IRQC domain handles the actual SPI interrupt and upon reception
-> > of the interrupt it propagates to the GPIO IRQ domain to handle virq.
-> > Out of GPIOINT0-122 only 32 can be mapped to GIC SPI, this mapping is handled by
-> > the IRQC driver.
-> >
-> > Cheers,
-> > Prabhakar
-> >
-> > Changes for v3:
-> > -> Re-structured the driver as a hierarchical irq domain instead of chained
-> > -> made use of IRQCHIP_* macros
-> > -> dropped locking
-> > -> Added support for IRQ0-7 interrupts
-> > -> Introduced 2 new patches for GPIOLIB
-> > -> Switched to using GPIOLIB for irqdomains in pinctrl
-> >
-> Gentle ping.
->
-I plan to post a non RFC version soon, can I have your feedback on this please.
+this is improving! Keep working on this driver. I now naturally have
+more comments :)
 
-Cheers,
-Prabhakar
+On Tue, Dec 7, 2021 at 5:17 AM Wells Lu <wellslutw@gmail.com> wrote:
 
->
-> > RFC v2: https://patchwork.kernel.org/project/linux-renesas-soc/cover/
-> > 20210921193028.13099-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
-> > RFC v1: https://patchwork.kernel.org/project/linux-renesas-soc/cover/
-> > 20210803175109.1729-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
-> >
-> > Lad Prabhakar (7):
-> >   dt-bindings: interrupt-controller: Add Renesas RZ/G2L Interrupt
-> >     Controller
-> >   irqchip: Add RZ/G2L IA55 Interrupt Controller driver
-> >   soc: renesas: Enable IRQC driver for RZ/G2L
-> >   gpio: gpiolib: Allow free() callback to be overridden
-> >   gpio: gpiolib: Add ngirq member to struct gpio_irq_chip
-> >   pinctrl: renesas: pinctrl-rzg2l: Add IRQ domain to handle GPIO
-> >     interrupt
-> >   arm64: dts: renesas: r9a07g044: Add IRQC node to SoC DTSI
-> >
-> >  .../renesas,rzg2l-irqc.yaml                   | 137 ++++++
-> >  arch/arm64/boot/dts/renesas/r9a07g044.dtsi    |  60 +++
-> >  drivers/gpio/gpiolib.c                        |  13 +-
-> >  drivers/irqchip/Kconfig                       |   8 +
-> >  drivers/irqchip/Makefile                      |   1 +
-> >  drivers/irqchip/irq-renesas-rzg2l.c           | 465 ++++++++++++++++++
-> >  drivers/pinctrl/renesas/pinctrl-rzg2l.c       | 197 ++++++++
-> >  drivers/soc/renesas/Kconfig                   |   1 +
-> >  include/linux/gpio/driver.h                   |   8 +
-> >  9 files changed, 885 insertions(+), 5 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rzg2l-irqc.yaml
-> >  create mode 100644 drivers/irqchip/irq-renesas-rzg2l.c
-> >
-> > --
-> > 2.17.1
-> >
+> +static void sppctl_func_set(struct sppctl_pdata *pctl, u8 func, u8 val)
+> +{
+> +       u32 reg, offset;
+> +
+> +       /* Note that upper 16-bit word is mask
+> +        * and lower 16-bit word is value.
+> +        * Enable mask before write.
+> +        */
+> +       reg = 0x007f0000 | val; /* Set value and enable mask. */
+
+Define these types of masks and use them like this:
+
+#include <linux/bits.h>
+
+#define SPPCTL_FUNC_MASK GENMASK(22, 16)
+
+Also switch the order with the mask to the right please:
+
+reg = val & SPPCTL_FUNC_MASK;
+
+> +       if (func & 1)
+
+I would write
+
+#define SSPCTL_FUNC_FLAG BIT(0)
+
+if (func & SSPCTL_FUNC_FLAG)
+
+Use the name that bit has in your documentation for the
+define so we know what is going on.
+
+> +               reg <<= 8;
+
+Likewise
+
+#define SSPCTL_FUNC_UPPER_SHIFT 8
+
+reg <<= SSPCTL_FUNC_UPPER_SHIFT;
+
+
+Can also be a comment. The general idea is to break out as many
+of these magic numbers as possible to #defines and give them
+some names from the reference manual, so we understand them
+instead of the numbers being magic.
+
+> +       /* Convert function # to register offset. */
+> +       offset = func & ~1;
+
+Step 1 write:
+offset = func & GENMASK(31, 1);
+
+> +       offset <<= 1;
+
+I would write:
+offset *= 2;
+because we are dealing with an offset and not an arithmetic
+operation. It will be the same to the compiler.
+
+But the best is to just merge all this and write (if I'm not wrong):
+
+#include <linux/bitfield.h>
+
+/*
+ * Bit 1 .. 31 gives the function, index this into a 32-bit offset by
+* multiplying by four to find the register.
+ */
+offset = FIELD_GET(GENMASK(31, 1), func);
+offset *= 4;
+
+This gets pretty clear. We see that we remove BIT(0) and use the
+rest as offset index and there are four bytes per register.
+
+(Beware of bugs in my pseudocode, check it!)
+
+> +static u8 sppctl_func_get(struct sppctl_pdata *pctl, u8 func)
+> +{
+> +       u32 reg, offset;
+> +       u8 val;
+> +
+> +       /* Convert function # to register offset. */
+> +       offset = func & ~1;
+> +       offset <<= 1;
+
+Same comments.
+
+> +       reg = readl(pctl->moon2_base + offset);
+> +       if (func & 1)
+> +               val = reg >> 8;
+> +       else
+> +               val = reg;
+> +       val &= 0x7f;
+
+#define SSPCTL_*_MASK for this 0x7f so we understand it.
+
+> +static void sppctl_gmx_set(struct sppctl_pdata *pctl, u8 reg_off, u8 bit_off, u8 bit_sz,
+> +                          u8 val)
+> +{
+> +       u32 mask, reg;
+> +
+> +       /* Note that upper 16-bit word is mask
+> +        * and lower 16-bit word is value.
+> +        * Enable mask before write.
+> +        */
+> +       mask = ~(~0 << bit_sz);
+> +       reg = (mask << 16) | (val & mask);
+> +       reg <<= bit_off;
+
+Please familiarize yourself with <linux/bitfield.h> and use things like
+FIELD_PREP() for this (I think, atleast).
+
+> +static int sppctl_first_get(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +       struct sppctl_gpio_chip *spp_gchip = gpiochip_get_data(chip);
+> +       u32 reg;
+> +
+> +       reg = readl(spp_gchip->first_base + SPPCTL_GPIO_OFF_FIRST + R32_ROF(offset));
+
+So R32_ROF() is register offset.
+
+> +
+> +       dev_dbg(chip->parent, "%s(%u): addr = %p, reg = %08x, val = %d\n",
+> +               __func__, offset, spp_gchip->first_base + SPPCTL_GPIO_OFF_FIRST +
+> +               R32_ROF(offset), reg, (int)R32_VAL(reg, R32_BOF(offset)));
+> +
+> +       return R32_VAL(reg, R32_BOF(offset));
+
+And R32_BOF is register bit offset.
+
+I think these macros just make it hard to read because the reader has to
+go to another file and look it up and then figure out what does ROF and
+BOF actually mean (no explanation given).
+
+I would just inline the stuff.
+
+u32 reg = (offset / 32) * 4;
+u32 bit = offset % 32;
+
+reg = readl(spp_gchip->first_base + SPPCTL_GPIO_OFF_FIRST + reg);
+
+// Some debug code
+
+return !!(reg & BIT(bit));
+
+> +static void sppctl_gpio_output_inv_set(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +       struct sppctl_gpio_chip *spp_gchip = gpiochip_get_data(chip);
+> +       u32 reg;
+> +
+> +       /* Upper 16-bit word is mask. Lower 16-bit word is value. */
+> +       reg = (BIT(R16_BOF(offset)) << 16) | BIT(R16_BOF(offset));
+> +       writel(reg, spp_gchip->gpioxt2_base + SPPCTL_GPIO_OFF_OINV + R16_ROF(offset));
+> +}
+
+Same comments about the BOF and ROF.
+
+This layout with "mask and value" in registers needs to be explained
+somewhere it looks complex. I don't understand why a machine register
+contains a mask for example.
+
+> +static int stpctl_set_mux(struct pinctrl_dev *pctldev, unsigned int func_selector,
+> +                         unsigned int group_selector)
+> +{
+> +       const struct sppctl_func *f = &sppctl_list_funcs[func_selector];
+> +       struct sppctl_pdata *pctl = pinctrl_dev_get_drvdata(pctldev);
+> +       struct grp2fp_map g2fpm = pctl->g2fp_maps[group_selector];
+> +       int i = -1, j = -1;
+
+Please do not initialize loop variable i to -1, just declare it.
+
+> +       dev_dbg(pctldev->dev, "%s(func: %d, grp: %d)\n", __func__,
+> +               func_selector, group_selector);
+> +
+> +       switch (f->freg) {
+> +       case f_off_0:   /* GPIO. detouch from all funcs - ? */
+> +               for (i = 0; i < sppctl_list_funcs_sz; i++) {
+> +                       if (sppctl_list_funcs[i].freg != f_off_m)
+> +                               continue;
+> +                       j++;
+
+Insert a comment that j is set to -1 so this will be zero here after the first
+iteration.
+
+> +                       if (sppctl_func_get(pctl, j) != group_selector)
+> +                               continue;
+> +                       sppctl_func_set(pctl, j, 0);
+> +               }
+> +               break;
+> +
+> +       case f_off_m:   /* Mux */
+> +               sppctl_first_master_set(&pctl->spp_gchip->chip, group_selector,
+> +                                       mux_f_mux, mux_m_keep);
+> +               sppctl_func_set(pctl, func_selector - 2, (group_selector == 0) ?
+> +                               group_selector : group_selector - 7);
+
+-2 and -7? Why? Add some comments or maybe #define these
+constants?
+
+> +static int stpctl_gpio_request_enable(struct pinctrl_dev *pctldev,
+> +                                     struct pinctrl_gpio_range *range, unsigned int offset)
+> +{
+> +       struct sppctl_pdata *pctl = pinctrl_dev_get_drvdata(pctldev);
+> +       struct pin_desc *pdesc;
+> +       int g_f, g_m;
+> +
+> +       dev_dbg(pctldev->dev, "%s(%d)\n", __func__, offset);
+> +
+> +       g_f = sppctl_first_get(&pctl->spp_gchip->chip, offset);
+> +       g_m = sppctl_master_get(&pctl->spp_gchip->chip, offset);
+> +       if (g_f == mux_f_gpio && g_m == mux_m_gpio)
+> +               return 0;
+> +
+> +       pdesc = pin_desc_get(pctldev, offset);
+> +       if (pdesc->mux_owner)
+> +               return -EACCES;
+
+Do not reimplement the pinmux core please.
+
+What you want to achieve here is "strict pinmux", i.e. setting the field
+"strict" in struct pinmux_ops to true. Then you can just delete this
+check.
+
+> +static const struct pinmux_ops sppctl_pinmux_ops = {
+> +       .request             = stpctl_request,
+> +       .free                = stpctl_free,
+
+These are just set to empty functions. Delete these entries
+and the empty functions.
+
+> +       .get_functions_count = stpctl_get_functions_count,
+> +       .get_function_name   = stpctl_get_function_name,
+> +       .get_function_groups = stpctl_get_function_groups,
+> +       .set_mux             = stpctl_set_mux,
+> +       .gpio_request_enable = stpctl_gpio_request_enable,
+> +       .gpio_disable_free   = stpctl_gpio_disable_free,
+> +       .gpio_set_direction  = stpctl_gpio_set_direction,
+> +       .strict              = 1
+
+Use "true" rather than 1. (And do not reimplement the check.)
+
+> +static int sppctl_remove(struct platform_device *pdev)
+> +{
+> +       struct sppctl_pdata *sppctl = pdev->dev.platform_data;
+> +
+> +       devm_pinctrl_unregister(&pdev->dev, sppctl->pctl_dev);
+
+This defies the idea with devm_* calls. Drop remove() entirely because
+devm_ allocated resources go away by themselves.
+
+> +++ b/drivers/pinctrl/sunplus/sppctl.h
+(...)
+> +/* (/16)*4 */
+> +#define R16_ROF(r)             (((r) >> 4) << 2)
+> +#define R16_BOF(r)             ((r) % 16)
+> +/* (/32)*4 */
+> +#define R32_ROF(r)             (((r) >> 5) << 2)
+> +#define R32_BOF(r)             ((r) % 32)
+
+As mentioned I prefer explicit inlined code for these.
+The bit shifting here makes it really hard to know what is going
+on, the compiler will get it right if you use the right types
+and just write (n / 32) * 4. Please do not try to help the compiler
+optimizing it just leads to code that is hard to read.
+
+> +#define R32_VAL(r, boff)       (((r) >> (boff)) & BIT(0))
+
+To check the value of a certain bit use this pattern:
+
+if (val & BIT(n))
+
+To return a boolean clamped bit (return 0/1) do this idiom:
+
+return !!(val & BIT(n));
+
+Other than these things I didn't notice anything more this
+time, but I might find even more stuff, but hey it's getting there!
+
+Yours,
+Linus Walleij
