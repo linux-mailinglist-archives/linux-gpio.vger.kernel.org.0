@@ -2,77 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 960D8470372
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 16:03:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9541347039C
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 16:16:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242403AbhLJPGh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Dec 2021 10:06:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35554 "EHLO
+        id S242584AbhLJPTl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Dec 2021 10:19:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235206AbhLJPGg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Dec 2021 10:06:36 -0500
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F691C061746
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Dec 2021 07:03:01 -0800 (PST)
-Received: by mail-ed1-x529.google.com with SMTP id v1so31237466edx.2
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Dec 2021 07:03:01 -0800 (PST)
+        with ESMTP id S235353AbhLJPTl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Dec 2021 10:19:41 -0500
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 015F1C061746
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Dec 2021 07:16:05 -0800 (PST)
+Received: by mail-ed1-x531.google.com with SMTP id o20so31377218eds.10
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Dec 2021 07:16:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:sender:from:date:message-id:subject:to;
-        bh=C6oZMWM+8Skwu6yOHRjbLLU9IbgKUnI4lghF7gFMeQc=;
-        b=pY3PjS+kEF4Y8S1UFniW6xusX9wWSOZ2oNa3A8mcUREratB1Kq/53jJh9VqnYZDQz3
-         zccSJnrrzEJ+CmfekZd2TVFDm2u6+4Ji6kVC4Se67hXEj8RW+n2kiybFzsxi12xneafg
-         v9o5fXoGKrugOCmKsNrRoOsVcYvNCUefsUqTabL8F0AQwUMTpTQgFONJnLwoPTLM0MzM
-         l8JZjvum0X+U+KQvkmSdzA0fY9MAShzRoykgnTCgz8ApL3MPwLHWaIS4GiwdiJfPQID0
-         CUA5mZFCyoBAnREpk7HlMC4nreLAd+RpuXYEm8kJCaMYz/yJiH+d+IegQIeJvMiB3x5k
-         i4Gg==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5OH9qBbqvt4WBvP8D0eDsTshfx6d4drjBogVvdSBDcE=;
+        b=GI2pyajyICRQT9VHZY7NCbccijp4sX7SAS0Z5qayxR4B2b/jcMeYn0PHhTO8a/UaZL
+         xObP2o0SBGpkNCQXMBGyYZpHpyhlAliFuwtcWXISq81fih2mqy86vEtqlP13DfWzDNNt
+         fhfbchHZHFKtc8iWSw/F6TfL6eXiC/1CkDyk69VaSkD6NKyMv1B9FjyOvUyucLxh0H/o
+         1X+85NSUs/zt19eXsGdTzZoGm6Au3DM+FvDqGBpeUa3TLyz3fUEP6syAp3YMXp7nDVzK
+         QWbNGPtwXTymSkxRQUIPLHL0Cq41CDTc34ztYY5aOF5yvlQ446PG95+5O0JXRNHbsC7Q
+         VgEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to;
-        bh=C6oZMWM+8Skwu6yOHRjbLLU9IbgKUnI4lghF7gFMeQc=;
-        b=xGrOk88FRMiIFchcPajEQTZ0j/xOy64j0aWAuOR2tOt6VsLfqytHJIARjpVU9EAxHR
-         W0xqVmPS8SLC48ra80K2BznYFu5K5QuIxCwbOzBqN/VFt/rNBwoiSm+jcDfjIbXmakeC
-         itmX8qoMy0AWjyCh8DRFXIXIgkolDKF4h3AGtu7n1/EZCzczOXsRRr4rJGOgDLocBIsX
-         j4e6wVqWODnJlkBq2pFzEMEkaiGYe1clxZf1C56VTHMclrIdwKWuJu/VngthX538f7GV
-         /TQvEFWuXaHOs52aM6N8uOMu7JEC7JyEhtsA7X91e+MblEeuL9fdy3ZIpGKAfKbbgGc4
-         CdZg==
-X-Gm-Message-State: AOAM533wBkjaCNEi8EBeXymLZxjYe1QsQD08MLfZ1lEX10+DWkyBBOQQ
-        Z5CtINgKEzy6+oE5WOZNiY2lcj/BaoUBhohxj6s=
-X-Google-Smtp-Source: ABdhPJwhTq0hFP1sdQgMKdbDJaJr1Exa//z4D7IRO0MG71YhmkYvSIostoFntBi1DxVTq7E2cdEsirK3yGyDEbejZXw=
-X-Received: by 2002:a17:907:3d94:: with SMTP id he20mr26184144ejc.75.1639148546601;
- Fri, 10 Dec 2021 07:02:26 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5OH9qBbqvt4WBvP8D0eDsTshfx6d4drjBogVvdSBDcE=;
+        b=yF1ekD+byHSoWsBR+eRIlU1wUPtcJ87dTnYnoOjvDwzYghK0RlhriN02v7dLh913nJ
+         8lIDTvwD89JpQVFm74u+gxGNveaj4ws28+/HPmhiVIHkPVaCtLm+0CDMYkIBpzEsSQQl
+         7iKJw/i5ZG/ELoLdrqWj33Q3BIgRAeBwBR0/QoJ9MYpq3P5RsAYAVTBA6arkETs4INd6
+         /OWSU/VhjvV99hNHvQTBwbSKmaF7T5A3+VpgIeBlXCahIw3NMYDvjE5xwbczaLbqPbp8
+         9XFqEYRvX5pSYcVzRQUP9YaCRDZCd2sZcRqNO3f1lEwy6K01aLrE7XkjhT2EJr1hjSy7
+         Xllg==
+X-Gm-Message-State: AOAM530W0fhZblsRYm4xga0SfdbqLSjtRjPfNjb5SdLHB32wyIhIRjxK
+        3AlCUcFjMuDEf7FX/RXcg4OEzpI8bX5Ne6K4DWQRpPMTPT4=
+X-Google-Smtp-Source: ABdhPJwaKMUGD0FGA66KUbxvK8xcaa++SfvuFpQu6VS59cWGuJmpxlG88gtXPqegmq1EHGV5YbZVuCHkJ8+BSvnRHJ4=
+X-Received: by 2002:a50:cdd9:: with SMTP id h25mr38332780edj.0.1639149336711;
+ Fri, 10 Dec 2021 07:15:36 -0800 (PST)
 MIME-Version: 1.0
-Sender: missmary.kipkalyakones01@gmail.com
-Received: by 2002:a17:906:5251:0:0:0:0 with HTTP; Fri, 10 Dec 2021 07:02:26
- -0800 (PST)
-From:   Aisha Al-Qaddafi <aisha.gdaffi24@gmail.com>
-Date:   Fri, 10 Dec 2021 03:02:26 -1200
-X-Google-Sender-Auth: n2_Yi3OnIAFATbiNhUEY-mGuzxo
-Message-ID: <CABGtNUvkaQzvFUNOFY+zHyAm_pNBSyv0NjY2_Bi3hUkxDN5ueQ@mail.gmail.com>
-Subject: My Dear Friend
-To:     undisclosed-recipients:;
+References: <20211204171027.451220-1-iwona.winiarska@intel.com>
+In-Reply-To: <20211204171027.451220-1-iwona.winiarska@intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 10 Dec 2021 16:15:26 +0100
+Message-ID: <CAMRc=MdBp6HOKtV2QDrGYrqneXMbJZs6zbXCGnq_B9a4JA2i8g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpio: aspeed: Convert aspeed_gpio.lock to raw_spinlock
+To:     Iwona Winiarska <iwona.winiarska@intel.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed@lists.ozlabs.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Assalamu Alaikum Wa Rahmatullahi Wa Barakatuh
+On Sat, Dec 4, 2021 at 6:11 PM Iwona Winiarska
+<iwona.winiarska@intel.com> wrote:
+>
+> The gpio-aspeed driver implements an irq_chip which need to be invoked
+> from hardirq context. Since spin_lock() can sleep with PREEMPT_RT, it is
+> no longer legal to invoke it while interrupts are disabled.
+> This also causes lockdep to complain about:
+> [    0.649797] [ BUG: Invalid wait context ]
+> because aspeed_gpio.lock (spin_lock_t) is taken under irq_desc.lock
+> (raw_spinlock_t).
+> Let's use of raw_spinlock_t instead of spinlock_t.
+>
+> Signed-off-by: Iwona Winiarska <iwona.winiarska@intel.com>
+> ---
 
-Dear Friend,
-I came across your e-mail contact prior a private search while in need
-of your assistance. I am Aisha Al-Qaddafi, the only biological
-Daughter of Former President of Libya Col. Muammar Al-Qaddafi. Am a
-single Mother and a Widow with three Children.
-I have investment funds worth Twenty Seven Million Five Hundred
-Thousand United State Dollar ($27.500.000.00 ) and i need a trusted
-investment Manager/Partner because of my current refugee status,
-however, I am interested in you for investment project assistance in
-your country, may be from there, we can build business relationship in
-the nearest future. I am willing to negotiate investment/business
-profit sharing ratio with you base on the future investment earning
-profits. If you are willing to handle this project on my behalf kindly
-reply urgent to enable me provide you more information about the
-investment funds.
-Your Urgent Reply Will Be Appreciated
-Best Regards
+Applied, thanks!
+
+Bart
