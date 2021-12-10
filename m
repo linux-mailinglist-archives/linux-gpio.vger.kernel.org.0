@@ -2,77 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F90046FF92
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 12:12:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D4B6346FFB0
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 12:18:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237574AbhLJLPv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Dec 2021 06:15:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38638 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237605AbhLJLPt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Dec 2021 06:15:49 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F8BAC061A32;
-        Fri, 10 Dec 2021 03:12:14 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id CC207CE2A91;
-        Fri, 10 Dec 2021 11:12:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6252C341C8;
-        Fri, 10 Dec 2021 11:12:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639134731;
-        bh=TgqAl8ITfVtfwDaQ625BpAv4Rdz1KSLtUuyWsSaIkbY=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=FEvIQYvjN4SHAVlInPu2HL8XALbPobfrV3SS8c7/xrYs21OHgHv3iA+7odMte0J8V
-         JmMjarZOf705yUVhjGpI9TeFOEmJP/JTzGbWsXPxzCX53mPYXW3t+CkgcCIKJs8W7c
-         RUEWx44L5GqJsjtqeowfaQVJpSDJJwuwj+pYeSxnRB8udOq2WMIKeRVynUBnKLMeBy
-         BgTSB6dAoL4gioUEsR0clsFBXD6SxMYKCe0R9tVEUyikLUncTvVKe2xkXsCwfSjUv+
-         lDvOohj1UiFJUr8PmeX5l3T7QmLUaY75bpLzw9cbDzdsVbFikOZDmjs6F5FZsQIlTF
-         NkpWVkyvu4zsQ==
-Message-ID: <9fc29e688951c7afe4504ae787ef7806ee4dbb7f.camel@kernel.org>
-Subject: Re: [PATCH v2 2/2] ARM: dts: gpio-ranges property is now required
-From:   nicolas saenz julienne <nsaenz@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Phil Elwell <phil@raspberrypi.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Thierry Reding <treding@nvidia.com>,
-        devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org
-Date:   Fri, 10 Dec 2021 12:12:03 +0100
-In-Reply-To: <CACRpkdYJAZcr_PPCGPYcitfcwd9GDFf+7hPJkOmjomqCrruNfw@mail.gmail.com>
-References: <20211206092237.4105895-1-phil@raspberrypi.com>
-         <20211206092237.4105895-3-phil@raspberrypi.com>
-         <CACRpkdYJAZcr_PPCGPYcitfcwd9GDFf+7hPJkOmjomqCrruNfw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.1 (3.42.1-1.fc35) 
+        id S237676AbhLJLWV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Dec 2021 06:22:21 -0500
+Received: from www.zeus03.de ([194.117.254.33]:35496 "EHLO mail.zeus03.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S237710AbhLJLWU (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 10 Dec 2021 06:22:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=k1; bh=2Aqud306rFs88j3dyky/UfXf59yS
+        uJqUHmSVrmdZR2I=; b=qIH3Fs+dCthxL+4Gddomzfhgdc23TO3TG2lYe/tVdsVl
+        OP6Xc4DtvXViVi4xZ0UmoPOkAaZONHbfcW8Q5kpnu+Mz5JPxHoshq8xxvRV5WPSc
+        cfXtfqffh0UyXRfQuFT8O2WV2J5lMk/Msz9xvML9563C8Bq7hdn6BtMcWq9rAU8=
+Received: (qmail 1443055 invoked from network); 10 Dec 2021 12:18:43 +0100
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 10 Dec 2021 12:18:43 +0100
+X-UD-Smtp-Session: l3s3148p1@wUnA4sjSopEgAQnoAEPjAJzPXF1eIEK3
+Date:   Fri, 10 Dec 2021 12:18:41 +0100
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v5 1/1] gpio: add sloppy logic analyzer using polling
+Message-ID: <YbM3kcEW7m9Ado1e@ninjato>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, linux-doc@vger.kernel.org
+References: <20211123164902.35370-1-wsa+renesas@sang-engineering.com>
+ <20211123164902.35370-2-wsa+renesas@sang-engineering.com>
+ <CACRpkdYJqP7WJuhS9G65abCZHK1_LX9hkXU6o+k10t2LXw100w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ZbgJohPepknqqfKx"
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYJqP7WJuhS9G65abCZHK1_LX9hkXU6o+k10t2LXw100w@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 2021-12-06 at 11:33 +0100, Linus Walleij wrote:
-> On Mon, Dec 6, 2021 at 10:22 AM Phil Elwell <phil@raspberrypi.com> wrote:
-> 
-> > Since [1], added in 5.7, the absence of a gpio-ranges property has
-> > prevented GPIOs from being restored to inputs when released.
-> > Add those properties for BCM283x and BCM2711 devices.
-> > 
-> > [1] commit 2ab73c6d8323 ("gpio: Support GPIO controllers without
-> >     pin-ranges")
-> > 
-> > Fixes: 2ab73c6d8323 ("gpio: Support GPIO controllers without pin-ranges")
-> > Signed-off-by: Phil Elwell <phil@raspberrypi.com>
-> 
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> 
-> Please funnel this patch through the SoC tree.
 
-Applied for fixes.
+--ZbgJohPepknqqfKx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Nicolas
+Hi Linus!
+
+> I like this patch.
+
+I am glad!
+
+>=20
+> Maybe a small paragraph first saying what this is, the usecase (feel
+> free to steal, rewrite etc):
+>=20
+> The sloppy logic analyzer will utilize a few GPIO lines in input mode
+> on a system to rapidly sample these digital lines, which will, if the
+> Nyquist criteria is met, result in a time series log with approximate
+> waveforms as they appeared on these lines.
+>=20
+> One way to use it is to analyze external traffic connected to these
+> GPIO lines with wires (i.e. digital probes), acting as a common logic
+> analyzer.
+
+Well, frankly, with the driver depending on EXPERT, this paragraph seems
+a tad superfluous to me. But as it came for free and won't hurt, I took
+the liberty to add this to the beginning of the documentation.
+
+> Another thing it can do is to snoop on on-chip peripherals if the I/O
+> cells of these peripherals can be used in GPIO input mode at the same
+> time as they are being used as inputs or outputs for the peripheral,
+> for example it would be possible to scale down the speed of a certain
+> MMC controller and snoop the traffic between the MMC controller and
+> the SD card by the sloppy logic analyzer. In the pin control subsystem
+> such pin controllers are called "non-strict": a certain pin can be
+> used with a certain peripheral and as a GPIO input line at the same
+> time.
+
+Thanks for pointing out the 'strict' mode. I actually did snoop pins
+muxed to I2C but I had to use a gpiolib hack for it assuming this was
+not supported otherwise. Now, I have a one-liner for the Renesas pinctrl
+driver which makes things work as well. I will work this out with Geert
+hopefully. Would be really great to have this feature without my hack!
+
+That being said, the paragraph above is a bit too long for my taste,
+I'll see if I can make it more concise. But it should be there, yes.
+
+Thanks for your support!
+
+Happy hacking,
+
+   Wolfram
+
+
+--ZbgJohPepknqqfKx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmGzN40ACgkQFA3kzBSg
+KbYDoA//YzZ1PQZYp3ZV9klerZNz8r6wkg4w72xBlW+3z5JUsxVuJLH+JikBgwpF
+t2LiKCBX0MvHX4a9m1q10bhw6p9qGUFSJFT6Q5stfIycnS3r/U9JmMIEyqp09Yd7
+Z4IUUjA40wIkMbJI+YZ70iHYTX1StffmIJQBhMgXcXgk8rwhaY8yafBMFTr/aljU
+A3SvpD3b+pdIvGomXbOpLfknA4k3+e5U8qQYjdgHfvg4qM6V6DTRUgRjrWVVrcli
+PqHNMoj3+g7vtlDjDNaeGYM1Ly+dGP6L/qw0gCb4M2+puRwpfYH2BfIGKQ+mx1Q5
+dUZA+pJ/GWZSY29BrATGlMcjTb0NdnFYY3fqudyY3JDJP1oKIxNeaKkKwKodzu/5
+32VVChWjVCHXy9qvYleY3GSfbSuq7CfSfWqAatm9gXVyxlGOhSACAsjosibaJqUc
+0XoX98DM2Ax2fgShuFwSr+j9MiAmp+/GSeS16W4hk5ZNdlghB1yq26r68pi6oZMN
+tml8Jn7ObbwNrfiAeDiT2BaMwxTVgkvyByWY5CZ3iYKNnhFoG06hhnPqPE65yVoZ
+dqsRe5II/HI2o0PDQmMfZgmtfpH4zAUZFQjzIoG5JNrGdiGzsed6Fnf+CLNZZBB0
+VvgnF15DOm7Js2dVKbkwKG7WpvhekL6JmNuzK/PzIJxUI/+tFlA=
+=uTq2
+-----END PGP SIGNATURE-----
+
+--ZbgJohPepknqqfKx--
