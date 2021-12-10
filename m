@@ -2,253 +2,147 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E0DD746FACA
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 07:49:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1238746FB1C
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 08:08:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233180AbhLJGxd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Dec 2021 01:53:33 -0500
-Received: from mga02.intel.com ([134.134.136.20]:7972 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229853AbhLJGxc (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 10 Dec 2021 01:53:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1639118998; x=1670654998;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=57a+ZxEpF+eixFLveE/FDp2IPxxQzn4NOPop9WRAF9E=;
-  b=L6k20qezQqxPp+7fEXP7TRaZ/T+wwekuwicMGR4Vx1V1dt3OzTKrqY2o
-   8cCi0gr/Gb0CNtiN7Drj8xffYs1YDj2wqU0MEsuHlFT/+XkQkLxTCPFVZ
-   axDj+EqiWEJ++pYlCAgPBwBGZLdERzpqpb4Ypjscsh3AQAmH+79GXe4UX
-   N1TrgLfnc6Tfhdu7ef+3CrYgxb2CgYRWfg64M4P2y++A/CazU7M0RPbVC
-   TwBQ1uM4SWLhm9xtZmJAlvUbjXAEA2nl89sM/OJR9Gr7yGRGRl3jA2eEx
-   /qNIVm3PUSd938TMtSKHWyyJGzD4lb8aiPOpU1TNC2hSZSER+8gI3kk1k
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10193"; a="225561872"
-X-IronPort-AV: E=Sophos;i="5.88,194,1635231600"; 
-   d="scan'208";a="225561872"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2021 22:49:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,194,1635231600"; 
-   d="scan'208";a="612832726"
-Received: from lkp-server02.sh.intel.com (HELO 9e1e9f9b3bcb) ([10.239.97.151])
-  by orsmga004.jf.intel.com with ESMTP; 09 Dec 2021 22:49:57 -0800
-Received: from kbuild by 9e1e9f9b3bcb with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1mvZjA-0002st-9k; Fri, 10 Dec 2021 06:49:56 +0000
-Date:   Fri, 10 Dec 2021 14:49:36 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD SUCCESS
- b124c8bd50c7550ed966c09f69ffdbaaedc0aa15
-Message-ID: <61b2f880.3MDRBiQO6jTcXj3j%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S233441AbhLJHLo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Dec 2021 02:11:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38104 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233193AbhLJHLo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Dec 2021 02:11:44 -0500
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68D3FC061746
+        for <linux-gpio@vger.kernel.org>; Thu,  9 Dec 2021 23:08:09 -0800 (PST)
+Received: by mail-wm1-x333.google.com with SMTP id 137so6082945wma.1
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Dec 2021 23:08:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=mEi8zG32L5BM4knFZEh4X58cQ8vPXgu19KLr41BpThw=;
+        b=Z6V9lTHVh6jLpNPghCGj0gBazVEG9jUCUKQWeKb4JW40szPdmPOHXRE2VDcDyyV0C9
+         216/e2PXEPymhtk8ZdEzo8o17umAnx1VNG1xZeLO6Qth4w6tgfsdsZgbFBtvokkBlCXO
+         ZdkyjO5ptGLEECJp2DrTBIDDjFTmx+e2ggwmOo1+/ldTOkHLBvRwTA4sxulgG1Q3MYr8
+         BIDCb+NzWAiEpcJ+282vAucKi7ooalkj1EG7Spu9OqHH45JbMxCRNb7LokrTxsgSP1EM
+         lboVleVDZfsOBzQ4jBbLnyEILNrEoArDU83Jk2WAcCoFIDugCqG9dOrN7cbVL/hl0BGG
+         p4mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=mEi8zG32L5BM4knFZEh4X58cQ8vPXgu19KLr41BpThw=;
+        b=G8v+3iDzjLrYoCrf70ZpNUR3c27ssg78rzax0zakDO1tZtoTd/06lTSP7HjGqqBswK
+         3N7Jff0MM4Qc/65sHkeFVaKHErYdTXAcpiZXGP4bBdH+2KQayfphr5bpQF3qORLKgBm0
+         uPIFk2fQlGWxD6O8ovBvup9Jr8bQ4dBJpkj+tXsRnfHMNT5TYD5nSwPt9L1DpFxZRaY1
+         yyDuWEMqxuIVL6Bfe50KSMM+3iWpgXyE78kPlIyCAc2b2xQswLcK6MkxCoqOynjz5Ens
+         qk2arXOK2NaDTMNZyKhZRHd8nCVusE7AM0P20XVWmJ0i0KCyzUMRNo8FDL59udPWEByc
+         /wew==
+X-Gm-Message-State: AOAM532RYBbwyo3bkXLGldhoMOgRMhKrHi4v/jjSQpHC/Y0ep9pstIl9
+        8HJ8suzMIG8ZXPuz8/8FywUDEg==
+X-Google-Smtp-Source: ABdhPJxTuFvBSTJZKodLxPpdabMZCi2ERxfZPpgov67fsd+HFyE6MnNUboiG7cgRHbbzpq0oG6+31A==
+X-Received: by 2002:a05:600c:3489:: with SMTP id a9mr14243155wmq.120.1639120087972;
+        Thu, 09 Dec 2021 23:08:07 -0800 (PST)
+Received: from google.com ([2.31.167.18])
+        by smtp.gmail.com with ESMTPSA id p27sm1922934wmi.28.2021.12.09.23.08.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Dec 2021 23:08:07 -0800 (PST)
+Date:   Fri, 10 Dec 2021 07:08:05 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Robert Marko <robert.marko@sartura.hr>
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Michael Walle <michael@walle.cc>, Andrew Lunn <andrew@lunn.ch>,
+        Luka Perkov <luka.perkov@sartura.hr>,
+        Bruno Banelli <bruno.banelli@sartura.hr>
+Subject: Re: [PATCH v9 3/6] dt-bindings: reset: Add Delta TN48M
+Message-ID: <YbL81TEMp8CA7Sam@google.com>
+References: <20211109113239.93493-1-robert.marko@sartura.hr>
+ <20211109113239.93493-3-robert.marko@sartura.hr>
+ <CA+HBbNGH9ih5RovU9YHL91osFxDJbWw2Qk=ed30GGQvndNJPKw@mail.gmail.com>
+ <33ab37f5b30252e41f3e0769c7702764a9e77d7f.camel@pengutronix.de>
+ <CA+HBbNH5Hq7WC7PkpFt=hUsTRstP3KrNCsbWWy5QaZRFDvZDKA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+HBbNH5Hq7WC7PkpFt=hUsTRstP3KrNCsbWWy5QaZRFDvZDKA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: b124c8bd50c7550ed966c09f69ffdbaaedc0aa15  pinctrl: Sort Kconfig and Makefile entries alphabetically
+On Thu, 09 Dec 2021, Robert Marko wrote:
 
-elapsed time: 723m
+> On Thu, Dec 9, 2021 at 10:40 AM Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> >
+> > Hi Robert,
+> >
+> > On Wed, 2021-12-01 at 22:28 +0100, Robert Marko wrote:
+> > > On Tue, Nov 9, 2021 at 12:32 PM Robert Marko <robert.marko@sartura.hr> wrote:
+> > > >
+> > > > Add header for the Delta TN48M CPLD provided
+> > > > resets.
+> > > >
+> > > > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> > > > ---
+> > > >  include/dt-bindings/reset/delta,tn48m-reset.h | 20 +++++++++++++++++++
+> > > >  1 file changed, 20 insertions(+)
+> > > >  create mode 100644 include/dt-bindings/reset/delta,tn48m-reset.h
+> > > >
+> > > > diff --git a/include/dt-bindings/reset/delta,tn48m-reset.h b/include/dt-bindings/reset/delta,tn48m-reset.h
+> > > > new file mode 100644
+> > > > index 000000000000..d4e9ed12de3e
+> > > > --- /dev/null
+> > > > +++ b/include/dt-bindings/reset/delta,tn48m-reset.h
+> > > > @@ -0,0 +1,20 @@
+> > > > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > > > +/*
+> > > > + * Delta TN48M CPLD GPIO driver
+> > > > + *
+> > > > + * Copyright (C) 2021 Sartura Ltd.
+> > > > + *
+> > > > + * Author: Robert Marko <robert.marko@sartura.hr>
+> > > > + */
+> > > > +
+> > > > +#ifndef _DT_BINDINGS_RESET_TN48M_H
+> > > > +#define _DT_BINDINGS_RESET_TN48M_H
+> > > > +
+> > > > +#define CPU_88F7040_RESET      0
+> > > > +#define CPU_88F6820_RESET      1
+> > > > +#define MAC_98DX3265_RESET     2
+> > > > +#define PHY_88E1680_RESET      3
+> > > > +#define PHY_88E1512_RESET      4
+> > > > +#define POE_RESET              5
+> > > > +
+> > > > +#endif /* _DT_BINDINGS_RESET_TN48M_H */
+> > > >
+> > >
+> > > Does anybody have any comments on the patch as the reset driver got reviewed and
+> > > the bindings have not?
+> >
+> > Not much to review here, I can't tell if the indices are correct.
+> >
+> > Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
+> >
+> > To be merged with the rest of the series. Or do you want me to pick up
+> > the reset parts individually? In that case you'd have to split out the
+> > reset bindings into a separate patch.
+> 
+> Thanks,
+> It has to go with the rest of the series as it all depends on the MFD.
+> 
+> We are just waiting for the MFD dt-bindings to be reviewed.
 
-configs tested: 182
-configs skipped: 3
+We need Rob to review the set.  Then I'll happily take it.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arm                                 defconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm64                            allyesconfig
-i386                 randconfig-c001-20211209
-i386                 randconfig-c001-20211210
-powerpc                    socrates_defconfig
-sh                          r7780mp_defconfig
-m68k                       m5208evb_defconfig
-sh                          sdk7780_defconfig
-mips                        qi_lb60_defconfig
-powerpc                    sam440ep_defconfig
-m68k                        m5307c3_defconfig
-arm                           sunxi_defconfig
-xtensa                  cadence_csp_defconfig
-m68k                          amiga_defconfig
-powerpc                           allnoconfig
-mips                           ip28_defconfig
-sh                          polaris_defconfig
-nios2                         10m50_defconfig
-powerpc                     asp8347_defconfig
-mips                        vocore2_defconfig
-powerpc                      tqm8xx_defconfig
-arm                             mxs_defconfig
-sh                        apsh4ad0a_defconfig
-alpha                            allyesconfig
-powerpc                 mpc834x_mds_defconfig
-powerpc                     kilauea_defconfig
-powerpc                      makalu_defconfig
-sh                          lboxre2_defconfig
-nios2                            alldefconfig
-sh                          landisk_defconfig
-powerpc                         wii_defconfig
-arm                           tegra_defconfig
-powerpc                        icon_defconfig
-mips                        bcm63xx_defconfig
-sh                           se7712_defconfig
-arm                             rpc_defconfig
-sparc                       sparc32_defconfig
-sh                  sh7785lcr_32bit_defconfig
-powerpc                 xes_mpc85xx_defconfig
-nds32                             allnoconfig
-sh                           se7705_defconfig
-powerpc                      mgcoge_defconfig
-sh                          sdk7786_defconfig
-arm                           sama7_defconfig
-sh                          rsk7201_defconfig
-mips                         cobalt_defconfig
-arm                        multi_v5_defconfig
-powerpc                     redwood_defconfig
-sh                          rsk7269_defconfig
-arm                           sama5_defconfig
-sh                        sh7763rdp_defconfig
-powerpc                     rainier_defconfig
-arm                            dove_defconfig
-nds32                               defconfig
-m68k                         apollo_defconfig
-arm                     am200epdkit_defconfig
-mips                         mpc30x_defconfig
-powerpc                 canyonlands_defconfig
-powerpc                      pcm030_defconfig
-arm                        keystone_defconfig
-xtensa                              defconfig
-powerpc                     ppa8548_defconfig
-m68k                             alldefconfig
-arm                      jornada720_defconfig
-arm                             pxa_defconfig
-m68k                        m5407c3_defconfig
-powerpc                        warp_defconfig
-riscv             nommu_k210_sdcard_defconfig
-powerpc                 mpc836x_mds_defconfig
-arm                     davinci_all_defconfig
-powerpc                     taishan_defconfig
-sh                             shx3_defconfig
-mips                     loongson1b_defconfig
-sh                             sh03_defconfig
-mips                         db1xxx_defconfig
-arm                      integrator_defconfig
-powerpc                      chrp32_defconfig
-um                           x86_64_defconfig
-arm                       spear13xx_defconfig
-arm                          pxa168_defconfig
-openrisc                 simple_smp_defconfig
-powerpc                      ppc44x_defconfig
-arm                  randconfig-c002-20211210
-arm                  randconfig-c002-20211209
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-s390                                defconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-x86_64               randconfig-a001-20211209
-x86_64               randconfig-a002-20211209
-x86_64               randconfig-a003-20211209
-x86_64               randconfig-a004-20211209
-i386                 randconfig-a001-20211210
-i386                 randconfig-a002-20211210
-i386                 randconfig-a005-20211210
-i386                 randconfig-a003-20211210
-i386                 randconfig-a006-20211210
-i386                 randconfig-a004-20211210
-i386                 randconfig-a001-20211209
-i386                 randconfig-a005-20211209
-i386                 randconfig-a003-20211209
-i386                 randconfig-a002-20211209
-i386                 randconfig-a006-20211209
-i386                 randconfig-a004-20211209
-x86_64               randconfig-a006-20211209
-x86_64               randconfig-a005-20211209
-x86_64               randconfig-a006-20211210
-x86_64               randconfig-a005-20211210
-x86_64               randconfig-a001-20211210
-x86_64               randconfig-a002-20211210
-x86_64               randconfig-a003-20211210
-x86_64               randconfig-a004-20211210
-arc                  randconfig-r043-20211209
-riscv                    nommu_k210_defconfig
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-a011-20211209
-x86_64               randconfig-a013-20211209
-x86_64               randconfig-a015-20211209
-x86_64               randconfig-a012-20211209
-x86_64               randconfig-a014-20211209
-x86_64               randconfig-a016-20211209
-x86_64               randconfig-a011-20211210
-x86_64               randconfig-a012-20211210
-x86_64               randconfig-a014-20211210
-x86_64               randconfig-a013-20211210
-x86_64               randconfig-a016-20211210
-x86_64               randconfig-a015-20211210
-i386                 randconfig-a013-20211210
-i386                 randconfig-a011-20211210
-i386                 randconfig-a016-20211210
-i386                 randconfig-a014-20211210
-i386                 randconfig-a015-20211210
-i386                 randconfig-a012-20211210
-hexagon              randconfig-r041-20211209
-s390                 randconfig-r044-20211209
-hexagon              randconfig-r045-20211209
-riscv                randconfig-r042-20211209
-hexagon              randconfig-r045-20211210
-riscv                randconfig-r042-20211210
-s390                 randconfig-r044-20211210
-hexagon              randconfig-r041-20211210
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
