@@ -2,97 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B93346F89E
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 02:42:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DF7046F8A4
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 02:43:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232772AbhLJBpd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Dec 2021 20:45:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50862 "EHLO
+        id S233628AbhLJBqk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Dec 2021 20:46:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232614AbhLJBpc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Dec 2021 20:45:32 -0500
-Received: from mail-oi1-x231.google.com (mail-oi1-x231.google.com [IPv6:2607:f8b0:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79AD8C0617A1
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Dec 2021 17:41:58 -0800 (PST)
-Received: by mail-oi1-x231.google.com with SMTP id r26so11305694oiw.5
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Dec 2021 17:41:58 -0800 (PST)
+        with ESMTP id S233603AbhLJBqj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Dec 2021 20:46:39 -0500
+Received: from mail-oo1-xc2b.google.com (mail-oo1-xc2b.google.com [IPv6:2607:f8b0:4864:20::c2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C24F4C0617A2
+        for <linux-gpio@vger.kernel.org>; Thu,  9 Dec 2021 17:43:05 -0800 (PST)
+Received: by mail-oo1-xc2b.google.com with SMTP id m37-20020a4a9528000000b002b83955f771so2085957ooi.7
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Dec 2021 17:43:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=CAEs6TA9o6xsdCdp2MRvi3WB7zMwWYnia8jBx/umBqs=;
-        b=dy3rIqlj8uvzBxhcQD03MQEGT9iCSV29dHj5Ey3cpl0BkhBgxHQFcrOPBPvwRGWJEG
-         QuDzh4CPlUK4jhFiKS9pADBoO8aOQSbsfXVlQrwqntPpixr7cwuKCaFtcuO1H+991Hid
-         8hLR5aHaCEKX/BmOB9p6/8vIgQBjssvCGSYahyUURzmIDe4aqboHjLcYBITJWLZdYxRi
-         FRRXvgj5fW8qZCPiyLjsApkXnfGNxKit0nMVPW82luqBaO9Lpq0BYqWYw9xKiIHBLKF7
-         5bNF94kSietC/r1t8Ktl4XUouYu6Wokjei8QFCHTQbDMYg/zl6kwJaFEihy2Y9HIUx2d
-         kZtA==
+        bh=vNt01PgNPd3YSDPf1qGCkNvtxUggbk+ibJ1UrH7sY3g=;
+        b=oTUB7o5tEgUiCdAFBlzj2EI+58ktxVJmCb0G36bbXEX19M223b7F9czGwGQuIkEXrO
+         /TuutKs1GOi25EWlbWKDBRrKgFvBeqz7X/KTB7MYr/tNcuBSxkBBPAWzOUm9Pk2CKL/o
+         XIaO9HKkCfY2rfC/k3re6N/gabMUvctpopS2uTLIAChAnV55LjGd7ApAVaw7vv2AR2RC
+         7RbyV+0cL1l5052RKY2LnNcge64lHUh0q7jeySprTvSt71Wp/hPBm5w6SlEzR2w2DRFh
+         q+9Y+pLE9mPSyL5yyxbdwmNhahPrLKgehKvNDnqFHhPc3xoofrgYhEaIrnAiG/B25AMg
+         wEGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=CAEs6TA9o6xsdCdp2MRvi3WB7zMwWYnia8jBx/umBqs=;
-        b=dAXE6Bj8BdPICpZbONCu+cRg7TOa9CKbdWkOB2EU42gppynQDXOTNp6kpU+mU1H3MM
-         gPMCkf4mW7DCTvwP5b8quObnTqSaLbAU26YojaXTTEO0bVfBIand+ytGx4JZn+Gs2aMN
-         AC3DDio9nur3BQUv/xEPhrU/+Iddy0yxFvVCNTa25+NvZbTd/6mtDC6IrKJJWW0X4o7M
-         ICCIGl8yEu8Ghfwmu/rV2wDIV6put4hpzSKasayR+uc2pY1AVRxrik4BnrV6IbRIyiHD
-         eMJEz1lIcVXsPBPT5+JC5DbFjS9OIUI8aTyw+0NvfnhKwh5oDxavHCXOI+Yyat5lIbG8
-         iQyg==
-X-Gm-Message-State: AOAM533mlTc86OZumCQ+bndSakYSejp+SiuiktqESZXRK/e57M52hm/P
-        3LOIXhG74YySYzgXymesgrqhQQGkPegWZ5yczn5Uwedox5I=
-X-Google-Smtp-Source: ABdhPJwBcRbgcZxhHro1YSDmrt7rzHSafyA3nD3aKcE4a+q4d22XA0r2ItBipMJp1FnUniZp6IqKB/rEgM/fmK1Ki1k=
-X-Received: by 2002:aca:120f:: with SMTP id 15mr9624499ois.132.1639100517622;
- Thu, 09 Dec 2021 17:41:57 -0800 (PST)
+        bh=vNt01PgNPd3YSDPf1qGCkNvtxUggbk+ibJ1UrH7sY3g=;
+        b=VhM9RMlgL4Jjvs8TxSV8uioIgLDl65LtcC4IeJ3GUbp7lIo0P2H81Qb3MDHH94W0YW
+         kyQSdqnYC75Nwh4T3yF2HeYEFmAWjIVrNuRymzOoT5dE5VYLquL3S4k4Ak8gZV2yqSTO
+         qsPtAp+nFvHKlMA3gA3s3BIWob0C0k9pVzg+W1EPNfjh2kT88l/Eo0LHqFR6cxzgy+NB
+         PX0sMRkpqIRTdLQc5jjF36au0vjQ7QeAtNX3eI9kldnm3BFO2WkHIFKW8/+XcIZwnXqB
+         Mm32zZsEeWAvxLJXVqPDKy2ZElTANGtlDvjERH3dwig6dNKjwUaRwoT3WyS/SML5mg/t
+         KPWg==
+X-Gm-Message-State: AOAM532UNSBBVUROuzq1hXzRkzn6BFkojLC6+WpIVFZ8AQ0MvrnEoZIL
+        tiuIrMI7xdzjG+kplDiqAX8DoYAxdldbNlGPAIAQ0g==
+X-Google-Smtp-Source: ABdhPJy7sYPUI5H7vA+hj84AaMMHAMzrvQz8iXXHhrZzqnNVH23YiTM2mUfm1+Oa9j7y73v/T2CtSIwffTt6nWKZuDs=
+X-Received: by 2002:a4a:8515:: with SMTP id k21mr6564505ooh.71.1639100584964;
+ Thu, 09 Dec 2021 17:43:04 -0800 (PST)
 MIME-Version: 1.0
-References: <20211207210823.1975632-1-j.neuschaefer@gmx.net>
- <20211207210823.1975632-6-j.neuschaefer@gmx.net> <CAHp75Vew=M_ofNM5pmeHtTJHXRUbbO4RrtgYAtLBznTBm3CS6Q@mail.gmail.com>
- <YbC6Bv2teZ5CFhFQ@latitude> <20211209082623.GF25091@packtop>
-In-Reply-To: <20211209082623.GF25091@packtop>
+References: <20211207210823.1975632-1-j.neuschaefer@gmx.net> <20211207210823.1975632-7-j.neuschaefer@gmx.net>
+In-Reply-To: <20211207210823.1975632-7-j.neuschaefer@gmx.net>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 10 Dec 2021 02:41:45 +0100
-Message-ID: <CACRpkdb_zGz4+8R0=ORCbbbVeJVkLqBG2CDXAzi2VAA7-PPZ6A@mail.gmail.com>
-Subject: Re: [PATCH v2 5/8] pinctrl: nuvoton: Add driver for WPCM450
-To:     zweiss@equinix.com
-Cc:     =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+Date:   Fri, 10 Dec 2021 02:42:53 +0100
+Message-ID: <CACRpkdb_i4H5+hWTrQQ4KkOaATDHb-Xi-dQ5+SM0jpe+zYJsqw@mail.gmail.com>
+Subject: Re: [PATCH v2 6/8] ARM: dts: wpcm450: Add pinctrl and GPIO nodes
+To:     =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, openbmc@lists.ozlabs.org,
         Tomer Maimon <tmaimon77@gmail.com>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
+        Joel Stanley <joel@jms.id.au>, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Dec 9, 2021 at 9:26 AM Zev Weiss <zweiss@equinix.com> wrote:
-> On Wed, Dec 08, 2021 at 05:58:30AM PST, Jonathan Neusch=C3=A4fer wrote:
+On Tue, Dec 7, 2021 at 10:08 PM Jonathan Neusch=C3=A4fer
+<j.neuschaefer@gmx.net> wrote:
 
-> >> BIT()
-> >
-> >I'll use it, but in this case, I think it doesn't simplify much the
-> >whole expression all that much. Is there perhaps a macro that
-> >constructs a continuous bitmask of N bits, perhaps additionally
-> >left-shifted by M bits?
-> >
-> >Maybe somewhere in the bitmap_* API...
-> >
+> This patch adds the pin controller and GPIO banks to the devicetree for t=
+he
+> WPCM450 SoC.
 >
-> There's GENMASK(), though it takes a high bit and low bit rather than a
-> bit position and count, so it'd require a small bit of arithmetic, e.g.
->
->   lastbit =3D gpio->first_irq_bit + gpio->num_irqs - 1;
->   ours =3D GENMASK(lastbit, gpio->first_irq_bit);
->
-> or a manual shift:
->
->   ours =3D GENMASK(gpio->num_irqs - 1, 0) << gpio->first_irq_bit;
+> Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
 
-I think this can be handled with FIELD_PREP() from
-<linux/bitfield.h>? Some examples at the top of the
-header.
+This looks good.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
