@@ -2,98 +2,160 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA56146F772
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 00:30:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB54546F843
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 02:09:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234396AbhLIXeB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Dec 2021 18:34:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49852 "EHLO
+        id S235127AbhLJBMf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Dec 2021 20:12:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233065AbhLIXeB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Dec 2021 18:34:01 -0500
-Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2EFCC0617A2
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Dec 2021 15:30:26 -0800 (PST)
-Received: by mail-ot1-x329.google.com with SMTP id x19-20020a9d7053000000b0055c8b39420bso7953333otj.1
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Dec 2021 15:30:26 -0800 (PST)
+        with ESMTP id S235095AbhLJBMf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Dec 2021 20:12:35 -0500
+Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBFDCC061746;
+        Thu,  9 Dec 2021 17:09:00 -0800 (PST)
+Received: by mail-yb1-xb2c.google.com with SMTP id v138so17895065ybb.8;
+        Thu, 09 Dec 2021 17:09:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=FepkuaMI2E0UPC3u5jnuq0Z4zznACFIsmRE29I20zT4=;
-        b=vA+YadHRzPiZ920qQWf6itnhO6cSlzRKGuvpku8VZtT0Uqiz+NwyEt4u1SNE8hc5Gd
-         3fiOKtPTqIImMKKkKPlIFip3/X4egE1tGJeZoJ67NcKvNMeeSGF9du3e7p3Xec16v58R
-         s2GL9rbaQTK18Xzy4IVsoqNNwxN5vshCpTT5Lzp+BeL3lnsJLo6YB7rExN13MZsG7/CQ
-         W4UVAda0tc0DjmKQcJTcVVKRGspWmgL9hLwh9q6vO1pvXvtV8GI8SA3rhzN1P9Rw5zZY
-         31eU62nQV2RnUvTT6cH3UjtGs9kB497qC1Q6CJw0PMTTCUfLj4RYtCGSkn33rxBGS3I1
-         l3OQ==
+        bh=LfUTbG8PwhmwfcI3X4eb2ef5MT1XzgRcYrG9lHwsTDM=;
+        b=IfFmXxUkJzJv5XedaOJcGeZTWEVvHONM1QWiaQ4QURe5r6K11TQcHulAoe9T7u/Al8
+         SPYO35vHhZEVg/bdqf3ZLMMfJB3pTNFxDD/ta8gbV9TD7UeamfflV5FyV4EBozqvWNhd
+         wChWhBcY5E7Nlv7bhE0Bt6xQSh6sSdMPgih2niZLdLt+o7Tqe7nntUbRCgNT4Fpm3eWz
+         XJVr7mJqmq21Lfu0elFpWOvt6c2+5klaYnPZHoMSXLhkJBBM831Ai2uV1FSfJsu+TVDz
+         mMHGAyxXn91ffGaeHOesbzuWbdQROeKbYWkDs75kU+xPuUAkQkSn4ho9Yjg39426zYKD
+         uiTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=FepkuaMI2E0UPC3u5jnuq0Z4zznACFIsmRE29I20zT4=;
-        b=phspUnxutWvaijnd+JwgeUwggKwBSTkVyxTA3SAlto1EpYg2/jgmS5Fo9p6dtm+vw4
-         4t+MEllp+OvCngLaoBcFjlo18lkrU2jMGJ4afdQYQowzLQ4Hayw5JhEaot7+mUUBJwvn
-         42S/M18+INwfEzE/FuOU1PXeBOj5Nl4yx9Ir+WaSnh+BPgZTuAcaizlmrAblkQ4p/7CD
-         D3h2XNLA+8iv2b0Uiejk7IHZq41HaS30z3jIud77N0x7qYlpjI5C4GGhhoE02N8YEy0D
-         J56o3UKBoUiZLsH9ri/jQFZaLgtLSGgqrppv4yG0MfyHYGfIo33MG32rW24Zu49DKW7w
-         0RbQ==
-X-Gm-Message-State: AOAM5309rByvkFLPiKpkIR+XYNuIL9jQj4OVKpEQ2fzxicB41rDbTlD/
-        ZsGtkkEE7xJD08XdZfsdOxQtZ+9EFeWMpHo9HxOJDw==
-X-Google-Smtp-Source: ABdhPJzSklHE2PEylrgMnWrf65WLYMvroWGO2JaHYj9wv9SCkHxG+y59KeRCyqzJbEZxRSlsELsaDB97OqqkhPeFuuI=
-X-Received: by 2002:a9d:a42:: with SMTP id 60mr8513360otg.179.1639092625198;
- Thu, 09 Dec 2021 15:30:25 -0800 (PST)
+        bh=LfUTbG8PwhmwfcI3X4eb2ef5MT1XzgRcYrG9lHwsTDM=;
+        b=gpJAvAOudM+GmacPhHCBc6WRD/UGRq3x6rdBdYuviPv5v2DnPNJz0st607tklJfIEl
+         AFK3q1qcV/8gzIWScVbGkXW+Npiqn17imPMLO1vQFSrbtOi7M7+7zrrhCeBHtCrCiYd2
+         GJ81+A9gvUDdFFtaWCjlS9ypegu6VQALy931Pl+0a4/0605XWrZDNmPrzFhanU5SlCIh
+         yrvY9XlDirJqamNlJcDT8oAQrcFDIX5/k8cUMiLXMOePk5uQdjopvN8+xj9cJzK9j7RK
+         KCnkvlxdrH0z5vnkSmjJiPmNU3tOC8LF6QkgCO39slE5eTf3Z0WSpcf6NAvGZgJ7Wyhk
+         2QdA==
+X-Gm-Message-State: AOAM530CLrEOUDGOPYH7cHQedcNkBU0C9FIxpuzsWSVTEXpZvZy4RVSR
+        O+1ycTWmEp0R202IZ+/+bYDLUoLinqNw63nYfn8=
+X-Google-Smtp-Source: ABdhPJyR+xc9CjrTsAilDjNty8CnaRLCAIyuAyFILdVqL+SkY5euh9XGtuDIB32BdWzfsBWG7PDOh2I0pV/tDFk2e1I=
+X-Received: by 2002:a25:abe3:: with SMTP id v90mr10194282ybi.315.1639098540099;
+ Thu, 09 Dec 2021 17:09:00 -0800 (PST)
 MIME-Version: 1.0
-References: <1638850665-9474-1-git-send-email-wellslutw@gmail.com> <1638850665-9474-2-git-send-email-wellslutw@gmail.com>
-In-Reply-To: <1638850665-9474-2-git-send-email-wellslutw@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 10 Dec 2021 00:30:13 +0100
-Message-ID: <CACRpkdaBV81OCwHuFCObwv_t55B9ANHaF5jEc=oorZdjpey0Ug@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: pinctrl: Add dt-bindings for Sunplus SP7021
-To:     Wells Lu <wellslutw@gmail.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, wells.lu@sunplus.com,
-        dvorkin@tibbo.com
+References: <20211110225808.16388-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <CA+V-a8sCVkbwYeVGsQpv2q0OjwUSB_jqmjPptHN-ENSdU+pT1Q@mail.gmail.com>
+In-Reply-To: <CA+V-a8sCVkbwYeVGsQpv2q0OjwUSB_jqmjPptHN-ENSdU+pT1Q@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Fri, 10 Dec 2021 01:08:34 +0000
+Message-ID: <CA+V-a8tTm=n+TuE5N1Ptkvh6n1sYjSZWpQpmY1F5RiwK-ocvFQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 0/7] Renesas RZ/G2L IRQC support
+To:     Marc Zyngier <maz@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Dec 7, 2021 at 5:17 AM Wells Lu <wellslutw@gmail.com> wrote:
+Hi Marc and Linus,
 
-> Add dt-bindings header files and documentation for Sunplus SP7021 SoC.
+On Mon, Nov 22, 2021 at 7:25 PM Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
 >
-> Signed-off-by: Wells Lu <wellslutw@gmail.com>
+> Hi Marc and Linus,
+>
+> On Wed, Nov 10, 2021 at 10:58 PM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> >
+> > Hi All,
+> >
+> > The RZ/G2L Interrupt Controller is a front-end for the GIC found on
+> > Renesas RZ/G2L SoC's with below pins:
+> > - IRQ sense select for 8 external interrupts, mapped to 8 GIC SPI interrupts
+> > - GPIO pins used as external interrupt input pins out of GPIOINT0-122 a
+> >   maximum of only 32 can be mapped to 32 GIC SPI interrupts,
+> > - NMI edge select.
+> >
+> >                                                                 _____________
+> >                                                                 |    GIC     |
+> >                                                                 |  ________  |
+> >                                          ____________           | |        | |
+> > NMI ------------------------------------>|          |  SPI0-479 | | GIC-600| |
+> >                 _______                  |          |------------>|        | |
+> >                 |      |                 |          |  PPI16-31 | |        | |
+> >                 |      | IRQ0-IRQ8       |   IRQC   |------------>|        | |
+> > P0_P48_4 ------>| GPIO |---------------->|          |           | |________| |
+> >                 |      |GPIOINT0-122     |          |           |            |
+> >                 |      |---------------->| TINT0-31 |           |            |
+> >                 |______|                 |__________|           |____________|
+> >
+> > The proposed RFC patches, add the IRQ domains in GPIO (pinctrl driver) and the
+> > IRQC driver. The IRQC domain handles the actual SPI interrupt and upon reception
+> > of the interrupt it propagates to the GPIO IRQ domain to handle virq.
+> > Out of GPIOINT0-122 only 32 can be mapped to GIC SPI, this mapping is handled by
+> > the IRQC driver.
+> >
+> > Cheers,
+> > Prabhakar
+> >
+> > Changes for v3:
+> > -> Re-structured the driver as a hierarchical irq domain instead of chained
+> > -> made use of IRQCHIP_* macros
+> > -> dropped locking
+> > -> Added support for IRQ0-7 interrupts
+> > -> Introduced 2 new patches for GPIOLIB
+> > -> Switched to using GPIOLIB for irqdomains in pinctrl
+> >
+> Gentle ping.
+>
+I plan to post a non RFC version soon, can I have your feedback on this please.
 
-> +patternProperties:
-> +  '-pins$':
-> +    if:
-> +      type: object
-> +    then:
-> +      description: |
-> +        A pinctrl node should contain at least one subnodes representing the
-> +        pins or function-pins group available on the machine. Each subnode
-> +        will list the pins it needs, and how they should be configured.
-> +
-> +        Pinctrl node's client devices use subnodes for desired pin
-> +        configuration. Client device subnodes use below standard properties.
+Cheers,
+Prabhakar
 
-I don't understand this if type object stuff here, Rob, help...
-
-> +      properties:
-> +        pins:
-> +          description: |
-> +            Define pins which are used by pinctrl node's client device.
-(...)
-> +          $ref: /schemas/types.yaml#/definitions/uint32-array
-
-Why can this not $ref the standard binings in
-Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml
-
-See for example
-Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
-for a nice example of how to use this.
-
-Yours,
-Linus Walleij
+>
+> > RFC v2: https://patchwork.kernel.org/project/linux-renesas-soc/cover/
+> > 20210921193028.13099-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
+> > RFC v1: https://patchwork.kernel.org/project/linux-renesas-soc/cover/
+> > 20210803175109.1729-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
+> >
+> > Lad Prabhakar (7):
+> >   dt-bindings: interrupt-controller: Add Renesas RZ/G2L Interrupt
+> >     Controller
+> >   irqchip: Add RZ/G2L IA55 Interrupt Controller driver
+> >   soc: renesas: Enable IRQC driver for RZ/G2L
+> >   gpio: gpiolib: Allow free() callback to be overridden
+> >   gpio: gpiolib: Add ngirq member to struct gpio_irq_chip
+> >   pinctrl: renesas: pinctrl-rzg2l: Add IRQ domain to handle GPIO
+> >     interrupt
+> >   arm64: dts: renesas: r9a07g044: Add IRQC node to SoC DTSI
+> >
+> >  .../renesas,rzg2l-irqc.yaml                   | 137 ++++++
+> >  arch/arm64/boot/dts/renesas/r9a07g044.dtsi    |  60 +++
+> >  drivers/gpio/gpiolib.c                        |  13 +-
+> >  drivers/irqchip/Kconfig                       |   8 +
+> >  drivers/irqchip/Makefile                      |   1 +
+> >  drivers/irqchip/irq-renesas-rzg2l.c           | 465 ++++++++++++++++++
+> >  drivers/pinctrl/renesas/pinctrl-rzg2l.c       | 197 ++++++++
+> >  drivers/soc/renesas/Kconfig                   |   1 +
+> >  include/linux/gpio/driver.h                   |   8 +
+> >  9 files changed, 885 insertions(+), 5 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rzg2l-irqc.yaml
+> >  create mode 100644 drivers/irqchip/irq-renesas-rzg2l.c
+> >
+> > --
+> > 2.17.1
+> >
