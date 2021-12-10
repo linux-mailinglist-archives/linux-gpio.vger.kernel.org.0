@@ -2,317 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 80FBB4703A6
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 16:18:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 864334703C7
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 16:23:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242725AbhLJPVl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Dec 2021 10:21:41 -0500
-Received: from mail-oi1-f172.google.com ([209.85.167.172]:36675 "EHLO
-        mail-oi1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239297AbhLJPVj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Dec 2021 10:21:39 -0500
-Received: by mail-oi1-f172.google.com with SMTP id t23so13676025oiw.3;
-        Fri, 10 Dec 2021 07:18:04 -0800 (PST)
+        id S242839AbhLJP1D (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Dec 2021 10:27:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40430 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242832AbhLJP0z (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Dec 2021 10:26:55 -0500
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C551DC061746
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Dec 2021 07:23:19 -0800 (PST)
+Received: by mail-ed1-x535.google.com with SMTP id r25so30591951edq.7
+        for <linux-gpio@vger.kernel.org>; Fri, 10 Dec 2021 07:23:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CaWHeGP0DuwfkbKXUdYIJmX8F+biVrGWME72+JdzhqU=;
+        b=MgLv3YrA9NlwpapqjGWsPaT057Lv4NTkMge5x9aYIzLu/EWTNZl9PQJ3i9HcLMOx6B
+         B9IguP3K+gzGh6KfKbYSO8oxGj7MjYa00frl0BCd7lnk7OkZoOhbnGk36UU3KzWuB3In
+         ZXMjkVs8K5nE10yvrBZiB/8HDzocgX7Too6WWjeeDpdcoaRlxj/sgAghwl/0IvTuGbeh
+         fAFYqtmGZZZiSOSvOT+oAtgE4HrF1eec+d4mRi7xCG+BmEL2kk0ZRTS2b7waN3H1I0k/
+         3ly7VwemPgrnfSjfL1C507DwBcuWSj3OL9qXJWKAX4/7OLRZbrfLo/DTY1QGnfnvK/nI
+         rVzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=yuPCekkOWDlJ1MkC1Zy+AvR5oDVDh4ZK69iNogA8Tfo=;
-        b=IhjDFbDpIvt9+SR1em4CaggL16zDJxKTQFCRGrsu3EE7UD5XHazCZm5aYZEyN2+wgR
-         eAoosjh1ODtSZ50ej7LKlpHukfCkdFtIT2l3TExdAKdgF+o3VyxQ9Yv9k+X8KtOTEIc3
-         loNoZ6fNyJNBcbL+GLnBwDZ6/DGlAuhZ7tQ60Yc8T9BU/Ls6d8+DpjTZ9/D5BMTHXXla
-         FFCtoDzanr5UrRFo4QDVjJUatRvfekxqvPtnIittPm7ZzjtRkKbPwYX/TUam0HFKc/1x
-         75qtAwZDdm18XoaZAZTXyWx1tOIstCKtwmfxYeeuu2Rl5VpPbtXnBEqjZf0nBJNa0vlB
-         ByDA==
-X-Gm-Message-State: AOAM533QYkaCDKrUY3lEIqZx6FqHSOH1l9rW/zJuxTYRE7inO6tFdjWI
-        cyLO5T/Dmt5ZLz9AJU1H7A==
-X-Google-Smtp-Source: ABdhPJwm2C55O4kr1vksBbBfjQryuN8MgvCMdjox/jFfSWOe880aTZkvbmYWPFdGBzfjuxv8rdNzRg==
-X-Received: by 2002:aca:ab84:: with SMTP id u126mr12619639oie.41.1639149483561;
-        Fri, 10 Dec 2021 07:18:03 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id f20sm775565oiw.48.2021.12.10.07.18.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Dec 2021 07:18:02 -0800 (PST)
-Received: (nullmailer pid 1368897 invoked by uid 1000);
-        Fri, 10 Dec 2021 15:18:01 -0000
-Date:   Fri, 10 Dec 2021 09:18:01 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        openbmc@lists.ozlabs.org, Tomer Maimon <tmaimon77@gmail.com>,
-        Joel Stanley <joel@jms.id.au>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/8] dt-bindings: pinctrl: Add Nuvoton WPCM450
-Message-ID: <YbNvqTUwi1jzff4D@robh.at.kernel.org>
-References: <20211207210823.1975632-1-j.neuschaefer@gmx.net>
- <20211207210823.1975632-5-j.neuschaefer@gmx.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CaWHeGP0DuwfkbKXUdYIJmX8F+biVrGWME72+JdzhqU=;
+        b=CfjLPBvtL3jXzLV/gBqXR2wQUq2e+ARdLu3jkg7pn3jy2Jp4+CQ9GO2dhbZCMAoGGi
+         kgR2casJ56+URfddITPuuQeL7admjrOFqLMVlT2LTMpBZZKuE244Oga+NXJe0bKj5u3+
+         TNkGUWPxpXmuouEvw7EYtBpKqK13RUmXjtj35pT7jlT3khiMycZMBj+ay/oB39D0PVaw
+         eD5GQJagLeDBZZKfHH3L9PuafkNX1BvEiJW0netLeQQB/EPSDoer23SWmBeWKFLQkdeZ
+         3uVmPF3zdaFPqgin3iPzR53se7gqdYNqX/npfBzoTDc0NGZ51TjBZD/M2TSEy2MMo0vw
+         pF/w==
+X-Gm-Message-State: AOAM533ty27Edj9xHoJMiOLHDARUw7gMmxQIZa+3g/AWgUvsQSpjzAUm
+        52mv09wPn49AAciivoYXz6p1OeodeDs9gaqxjNJgBw==
+X-Google-Smtp-Source: ABdhPJzwyJoQo5zS+XCmbkGk9eGVm61YMp0R/nIUhpMaAI0dyZLbksovDhkrc3SVhNC+OXjC0RSzQ3wiLRH8X7JDAvI=
+X-Received: by 2002:a05:6402:2805:: with SMTP id h5mr38690255ede.267.1639149780836;
+ Fri, 10 Dec 2021 07:23:00 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211207210823.1975632-5-j.neuschaefer@gmx.net>
+References: <20211208003727.3596577-1-f.fainelli@gmail.com> <20211208003727.3596577-6-f.fainelli@gmail.com>
+In-Reply-To: <20211208003727.3596577-6-f.fainelli@gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 10 Dec 2021 16:22:50 +0100
+Message-ID: <CAMRc=MdmP5UCi2SJq9Ybhe9evUmM_PhpSUfzRF24yYUiRG+MNg@mail.gmail.com>
+Subject: Re: [PATCH v3 05/15] dt-bindings: gpio: Convert Broadcom STB GPIO to YAML
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     devicetree <devicetree@vger.kernel.org>,
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Markus Mayer <mmayer@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Al Cooper <alcooperx@gmail.com>,
+        Doug Berger <opendmb@gmail.com>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:MULTIMEDIA CARD (MMC), SECURE DIGITAL (SD) AND..." 
+        <linux-mmc@vger.kernel.org>,
+        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Dec 07, 2021 at 10:08:19PM +0100, Jonathan Neuschäfer wrote:
-> This binding is heavily based on the one for NPCM7xx, because the
-> hardware is similar. There are some notable differences, however:
-> 
-> - The addresses of GPIO banks are not physical addresses but simple
->   indices (0 to 7), because the GPIO registers are not laid out in
->   convenient blocks.
-> - Pinmux settings can explicitly specify that the GPIO mode is used.
-> 
-> Certain pins support blink patterns in hardware. This is currently not
-> modelled in the DT binding.
-> 
-> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-> 
-> 
+On Wed, Dec 8, 2021 at 1:37 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+> Convert the Broadcom STB GPIO Device Tree binding to YAML to help with
+> validation.
+>
+> Acked-by: Gregory Fong <gregory.0xf0@gmail.com>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 > ---
-> v2:
-> - Move GPIO into subnodes
-> - Improve use of quotes
-> - Remove unnecessary minItems/maxItems lines
-> - Remove "phandle: true"
-> - Use separate prefixes for pinmux and pincfg nodes
-> - Add nuvoton,interrupt-map property
-> - Make it possible to set pinmux to GPIO explicitly
-> 
-> v1:
-> - https://lore.kernel.org/lkml/20210602120329.2444672-5-j.neuschaefer@gmx.net/
-> ---
->  .../pinctrl/nuvoton,wpcm450-pinctrl.yaml      | 190 ++++++++++++++++++
->  1 file changed, 190 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/nuvoton,wpcm450-pinctrl.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/nuvoton,wpcm450-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/nuvoton,wpcm450-pinctrl.yaml
-> new file mode 100644
-> index 0000000000000..2b783597794d7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/nuvoton,wpcm450-pinctrl.yaml
-> @@ -0,0 +1,190 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/nuvoton,wpcm450-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Nuvoton WPCM450 pin control and GPIO
-> +
-> +maintainers:
-> +  - Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-> +
-> +properties:
-> +  compatible:
-> +    const: nuvoton,wpcm450-pinctrl
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +patternProperties:
-> +  # There are three kinds of subnodes:
-> +  # 1. a GPIO controller node for each GPIO bank
-> +  # 2. a pinmux node configures pin muxing for a group of pins (e.g. rmii2)
-> +  # 3. a pinconf node configures properties of a single pin
-> +
-> +  "^gpio@.*$":
-> +    if:
 
-Not necessary because you can't have a property with '@' in it.
-
-> +      type: object
-> +    then:
-> +      description:
-> +        Eight GPIO banks (gpio@0 to gpio@7), that each contain between 14 and 18
-> +        GPIOs. Some GPIOs support interrupts.
-> +
-> +      allOf:
-> +        - $ref: pinmux-node.yaml#
-> +
-> +      properties:
-> +        reg:
-> +          description: GPIO bank number (0-7)
-> +
-> +        gpio-controller: true
-> +
-> +        "#gpio-cells":
-> +          const: 2
-> +
-> +        interrupt-controller: true
-> +
-> +        "#interrupt-cells":
-> +          const: 2
-> +
-> +        interrupts:
-> +          maxItems: 4
-
-Need to define what each interrupt is.
-
-> +
-> +        nuvoton,interrupt-map:
-
-Reusing 'interrupt-map' with a different definition bothers me... 
-
-> +          description:
-> +            This property defines which bits in the interrupt registers
-> +            correspond to which GPIOs.
-> +          $ref: /schemas/types.yaml#/definitions/uint32-array
-> +          items:
-> +            - description: First interrupt bit
-> +            - description: Number of interrupt bits
-> +            - description: First GPIO associated with an interrupt
-> +
-> +      required:
-> +        - reg
-> +        - gpio-controller
-> +        - '#gpio-cells'
-> +
-> +  "^mux_.*$":
-
-Use '-' rather than '_' and the '.*' is not necessary.
-
-"^mux-"
-
-> +    if:
-
-Don't need this.
-
-> +      type: object
-> +    then:
-> +      allOf:
-> +        - $ref: pinmux-node.yaml#
-> +      properties:
-> +        groups:
-> +          description:
-> +            One or more groups of pins to mux to a certain function
-> +          items:
-> +            enum: [ smb3, smb4, smb5, scs1, scs2, scs3, smb0, smb1, smb2, bsp,
-> +                    hsp1, hsp2, r1err, r1md, rmii2, r2err, r2md, kbcc, dvo,
-> +                    clko, smi, uinc, gspi, mben, xcs2, xcs1, sdio, sspi, fi0,
-> +                    fi1, fi2, fi3, fi4, fi5, fi6, fi7, fi8, fi9, fi10, fi11,
-> +                    fi12, fi13, fi14, fi15, pwm0, pwm1, pwm2, pwm3, pwm4, pwm5,
-> +                    pwm6, pwm7, hg0, hg1, hg2, hg3, hg4, hg5, hg6, hg7 ]
-> +        function:
-> +          description:
-> +            The function that a group of pins is muxed to
-> +          enum: [ smb3, smb4, smb5, scs1, scs2, scs3, smb0, smb1, smb2, bsp,
-> +                  hsp1, hsp2, r1err, r1md, rmii2, r2err, r2md, kbcc, dvo0,
-> +                  dvo1, dvo2, dvo3, dvo4, dvo5, dvo6, dvo7, clko, smi, uinc,
-> +                  gspi, mben, xcs2, xcs1, sdio, sspi, fi0, fi1, fi2, fi3, fi4,
-> +                  fi5, fi6, fi7, fi8, fi9, fi10, fi11, fi12, fi13, fi14, fi15,
-> +                  pwm0, pwm1, pwm2, pwm3, pwm4, pwm5, pwm6, pwm7, hg0, hg1,
-> +                  hg2, hg3, hg4, hg5, hg6, hg7, gpio ]
-> +
-> +      dependencies:
-> +        groups: [ function ]
-> +        function: [ groups ]
-> +
-> +      additionalProperties: false
-> +
-> +  "^cfg_.*$":
-> +    if:
-
-Same comments here
-
-> +      type: object
-> +    then:
-> +      allOf:
-> +        - $ref: pincfg-node.yaml#
-> +      properties:
-> +        pins:
-> +          description:
-> +            A list of pins to configure in certain ways, such as enabling
-> +            debouncing
-> +          items:
-> +            enum: [ gpio0, gpio1, gpio2, gpio3, gpio4, gpio5, gpio6, gpio7,
-> +                    gpio8, gpio9, gpio10, gpio11, gpio12, gpio13, gpio14,
-> +                    gpio15, gpio16, gpio17, gpio18, gpio19, gpio20, gpio21,
-> +                    gpio22, gpio23, gpio24, gpio25, gpio26, gpio27, gpio28,
-> +                    gpio29, gpio30, gpio31, gpio32, gpio33, gpio34, gpio35,
-> +                    gpio36, gpio37, gpio38, gpio39, gpio40, gpio41, gpio42,
-> +                    gpio43, gpio44, gpio45, gpio46, gpio47, gpio48, gpio49,
-> +                    gpio50, gpio51, gpio52, gpio53, gpio54, gpio55, gpio56,
-> +                    gpio57, gpio58, gpio59, gpio60, gpio61, gpio62, gpio63,
-> +                    gpio64, gpio65, gpio66, gpio67, gpio68, gpio69, gpio70,
-> +                    gpio71, gpio72, gpio73, gpio74, gpio75, gpio76, gpio77,
-> +                    gpio78, gpio79, gpio80, gpio81, gpio82, gpio83, gpio84,
-> +                    gpio85, gpio86, gpio87, gpio88, gpio89, gpio90, gpio91,
-> +                    gpio92, gpio93, gpio94, gpio95, gpio96, gpio97, gpio98,
-> +                    gpio99, gpio100, gpio101, gpio102, gpio103, gpio104,
-> +                    gpio105, gpio106, gpio107, gpio108, gpio109, gpio110,
-> +                    gpio111, gpio112, gpio113, gpio114, gpio115, gpio116,
-> +                    gpio117, gpio118, gpio119, gpio120, gpio121, gpio122,
-> +                    gpio123, gpio124, gpio125, gpio126, gpio127 ]
-
-pattern: '^gpio1?[0-9]{1,2}$'
-
-Feel free to tweak it more to limit to 127 if you want.
-
-> +
-> +        input-debounce: true
-> +
-> +      additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    pinctrl: pinctrl@b8003000 {
-> +      compatible = "nuvoton,wpcm450-pinctrl";
-> +      reg = <0xb8003000 0x1000>;
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      gpio0: gpio@0 {
-> +        reg = <0>;
-> +        gpio-controller;
-> +        #gpio-cells = <2>;
-> +        interrupts = <2 IRQ_TYPE_LEVEL_HIGH
-> +                      3 IRQ_TYPE_LEVEL_HIGH
-> +                      4 IRQ_TYPE_LEVEL_HIGH>;
-> +        nuvoton,interrupt-map = <0 16 0>;
-
-Based on the example, you don't need this as it is 1:1.
-
-> +      };
-> +
-> +      mux_rmii2 {
-> +        groups = "rmii2";
-> +        function = "rmii2";
-> +      };
-> +
-> +      pinmux_uid: mux_uid {
-> +        groups = "gspi", "sspi";
-> +        function = "gpio";
-> +      };
-> +
-> +      pinctrl_uid: cfg_uid {
-> +        pins = "gpio14";
-> +        input-debounce = <1>;
-> +      };
-> +    };
-> +
-> +    gpio-keys {
-> +      compatible = "gpio-keys";
-> +      pinctrl-names = "default";
-> +      pinctrl-0 = <&pinctrl_uid>, <&pinmux_uid>;
-> +
-> +      uid {
-> +        label = "UID";
-> +        linux,code = <102>;
-> +        gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
-> +      };
-> +    };
-> --
-> 2.30.2
-> 
-> 
+Acked-by: Bartosz Golaszewski <brgl@bgdev.pl>
