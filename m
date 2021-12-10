@@ -2,180 +2,493 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B00B147026F
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 15:07:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 266ED4702F6
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 15:37:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232555AbhLJOLa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Dec 2021 09:11:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50920 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232310AbhLJOLa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Dec 2021 09:11:30 -0500
-Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31429C061746;
-        Fri, 10 Dec 2021 06:07:55 -0800 (PST)
-Received: by mail-oi1-x229.google.com with SMTP id r26so13356691oiw.5;
-        Fri, 10 Dec 2021 06:07:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=efi5YPskIPAQItI1z28rAsydjETkO5P0a3fdiWWyGao=;
-        b=DoDy0slgWAFCGlcqZSiJyt/Ig64ICzJGK5VkEsmphbnwYq3viqEW+F3IqoxobH0xiw
-         fdgpwg3rvTtwF2b/eE10P/HEBm2H9r7eeNkyg7pIgPTC0rAJAyLMOlk6NaDSe1Hr+QFb
-         1h0ILvQFWz8tZdm1UYjzFOnvznER2ViNvS4eOvQYiAWhaJxDi7ZHNip8ndBYTQtfgwN7
-         EGS0H9qhoZdmjz7k9yXEizGJHgsfXP8T4nIGb9obUNAYJRMkLTSjX/HriR4yhdnyR3QV
-         8PdryMLQBTGc6wqYFXMqNgZZSd/d1QRq+0oGiSH6N2aBxUZuBwKgAWo9V6d2+AADgAs9
-         Bp0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=efi5YPskIPAQItI1z28rAsydjETkO5P0a3fdiWWyGao=;
-        b=iulEHxQ4MvfkxWOsWXTCgFJPjSBY7dBbvLd/aDAGq/Qezw9RD8l1qlRQZq4kdnQbbT
-         blfz8btL1Y3EnWwEomBBsJxG2028DFYpTb3oZcih6HuNjt+Sm5hXo9kYTwxv/Alj63BH
-         /2Hl4e6ThragLZy70QlKW4ptgMX8x3cTIqWb8nVSXEEKw5QY6vGsj64iF4oN+YEchg/g
-         t6FsYRLPh2t1TQnayuy9IJiyz65KaTadxug8A3Cqz1WMZQmUlOjFthdfwvqFJYrIPc4m
-         DDqLiXWdl/kuGZ1BuZqDOlWzow83zd8vDEPHPCjeT2qcnvlp41cT8VPMq9tZSD91nFcG
-         DARg==
-X-Gm-Message-State: AOAM533kZCvsypeHK48aL3vyfyrI5IDtTiVA+hW8SUBRRF/TIZz9jzxf
-        DWXDfoVmMwdLbHVUfGdgW4AVm2vXzaTPIbIZFrz5nk4q
-X-Google-Smtp-Source: ABdhPJzQw8YMdNJFDSjbgmMRNZ+J5xIRiWQHpxMdISfSUi8FEdOFC5Wodk980GUGwT6w6RirYGv7y8K4T4SRf27i/VM=
-X-Received: by 2002:aca:2207:: with SMTP id b7mr12746627oic.24.1639145273996;
- Fri, 10 Dec 2021 06:07:53 -0800 (PST)
-MIME-Version: 1.0
-References: <1638850665-9474-1-git-send-email-wellslutw@gmail.com>
- <1638850665-9474-2-git-send-email-wellslutw@gmail.com> <CACRpkdaBV81OCwHuFCObwv_t55B9ANHaF5jEc=oorZdjpey0Ug@mail.gmail.com>
-In-Reply-To: <CACRpkdaBV81OCwHuFCObwv_t55B9ANHaF5jEc=oorZdjpey0Ug@mail.gmail.com>
-From:   =?UTF-8?B?5ZGC6Iqz6aiw?= <wellslutw@gmail.com>
-Date:   Fri, 10 Dec 2021 22:07:43 +0800
-Message-ID: <CAFnkrskptpWwhKzBegUH8--sJJe5MJpJEnGSwQ2t1aj8i1CR2g@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: pinctrl: Add dt-bindings for Sunplus SP7021
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Wells Lu <wells.lu@sunplus.com>,
-        Dvorkin Dmitry <dvorkin@tibbo.com>
-Content-Type: text/plain; charset="UTF-8"
+        id S242239AbhLJOla (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Dec 2021 09:41:30 -0500
+Received: from sin.source.kernel.org ([145.40.73.55]:34844 "EHLO
+        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242184AbhLJOla (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Dec 2021 09:41:30 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 5736FCE2AF7;
+        Fri, 10 Dec 2021 14:37:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62A73C00446;
+        Fri, 10 Dec 2021 14:37:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1639147070;
+        bh=32C8g9UjzUmtvuQkQpVAGscD/lITnV0kdoBtsBgrpms=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=pjXA+9y8z1aY/MQZbouPSjCcGL9CsBdO9o03o6bNR5L++rKRwXr2OPeJ3JFvHAZdK
+         AoBietD7a3M7PrveZheoWEYacyXoImXwAcEfpr9GQ86g3RJjU8ST9KYdO7fMgnhx05
+         fZIRbjypxBRljC+vh0cc0fdBIS1b2wjcgRhg6g9x3gpN84x/7Gce4LF3sk2I9moqQy
+         azrhV4LRJ5x64UoDs5Z5pmVG6NRIfTHGjCpJvn3U21Sw7el0OPohiRdAvgGFFtO4Cj
+         pDauaQnH6RHHZzuPoxA+NZjpWg5wgKYZJlfl2+jUTNnMY89ni0taDp6TnRCqK8sM85
+         JzuBQIusblsTw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1mvh1w-00BHDM-G9; Fri, 10 Dec 2021 14:37:48 +0000
+Date:   Fri, 10 Dec 2021 14:37:44 +0000
+Message-ID: <87v8zwjzk7.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+Subject: Re: [RFC PATCH v3 2/7] irqchip: Add RZ/G2L IA55 Interrupt Controller driver
+In-Reply-To: <20211110225808.16388-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20211110225808.16388-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        <20211110225808.16388-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: prabhakar.mahadev-lad.rj@bp.renesas.com, tglx@linutronix.de, robh+dt@kernel.org, linus.walleij@linaro.org, geert+renesas@glider.be, magnus.damm@gmail.com, bgolaszewski@baylibre.com, p.zabel@pengutronix.de, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, prabhakar.csengg@gmail.com, biju.das.jz@bp.renesas.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Re-send this email because it was rejected due to the wrong email format!
+On Wed, 10 Nov 2021 22:58:03 +0000,
+Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> 
+> Add a driver for the Renesas RZ/G2L Interrupt Controller.
+> 
+> This supports external pins being used as interrupts. It supports
+> one line for NMI, 8 external pins and 32 GPIO pins (out of 123)
+> to be used as IRQ lines.
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+>  drivers/irqchip/Kconfig             |   8 +
+>  drivers/irqchip/Makefile            |   1 +
+>  drivers/irqchip/irq-renesas-rzg2l.c | 465 ++++++++++++++++++++++++++++
+>  3 files changed, 474 insertions(+)
+>  create mode 100644 drivers/irqchip/irq-renesas-rzg2l.c
+> 
+> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> index 4d5924e9f766..79b8c9274fd7 100644
+> --- a/drivers/irqchip/Kconfig
+> +++ b/drivers/irqchip/Kconfig
+> @@ -236,6 +236,14 @@ config RENESAS_RZA1_IRQC
+>  	  Enable support for the Renesas RZ/A1 Interrupt Controller, to use up
+>  	  to 8 external interrupts with configurable sense select.
+>  
+> +config RENESAS_RZG2L_IRQC
+> +	bool "Renesas RZ/G2L IRQC support" if COMPILE_TEST
+> +	select GENERIC_IRQ_CHIP
+> +	select IRQ_DOMAIN_HIERARCHY
+> +	help
+> +	  Enable support for the Renesas RZ/G2L Interrupt Controller for external
+> +	  devices.
+> +
+>  config SL28CPLD_INTC
+>  	bool "Kontron sl28cpld IRQ controller"
+>  	depends on MFD_SL28CPLD=y || COMPILE_TEST
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index f88cbf36a9d2..8017786fbdac 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -51,6 +51,7 @@ obj-$(CONFIG_RDA_INTC)			+= irq-rda-intc.o
+>  obj-$(CONFIG_RENESAS_INTC_IRQPIN)	+= irq-renesas-intc-irqpin.o
+>  obj-$(CONFIG_RENESAS_IRQC)		+= irq-renesas-irqc.o
+>  obj-$(CONFIG_RENESAS_RZA1_IRQC)		+= irq-renesas-rza1.o
+> +obj-$(CONFIG_RENESAS_RZG2L_IRQC)	+= irq-renesas-rzg2l.o
+>  obj-$(CONFIG_VERSATILE_FPGA_IRQ)	+= irq-versatile-fpga.o
+>  obj-$(CONFIG_ARCH_NSPIRE)		+= irq-zevio.o
+>  obj-$(CONFIG_ARCH_VT8500)		+= irq-vt8500.o
+> diff --git a/drivers/irqchip/irq-renesas-rzg2l.c b/drivers/irqchip/irq-renesas-rzg2l.c
+> new file mode 100644
+> index 000000000000..4258b9752c3b
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-renesas-rzg2l.c
+> @@ -0,0 +1,465 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Renesas RZ/G2L IRQC Driver
+> + *
+> + * Copyright (C) 2021 Renesas Electronics Corporation.
+> + *
+> + * Author: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/irqchip.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/of_address.h>
+> +#include <linux/reset.h>
+> +
+> +#define IRQC_IRQ_START			1
+> +#define IRQC_IRQ_COUNT			8
+> +#define IRQC_TINT_START			9
+> +#define IRQC_TINT_COUNT			32
+> +#define IRQC_NUM_IRQ			41
+> +
+> +#define ISCR				0x10
+> +#define IITSR				0x14
+> +#define TSCR				0x20
+> +#define TITSR0				0x24
+> +#define TITSR1				0x28
+> +#define TITSR0_MAX_INT			16
+> +#define TITSEL_WIDTH			0x2
+> +#define TSSR(n)				(0x30 + ((n) * 4))
+> +#define TIEN				BIT(7)
+> +#define TSSEL_SHIFT(n)			(8 * (n))
+> +#define TSSEL_MASK			GENMASK(7, 0)
+> +#define IRQ_MASK			0x3
+> +
+> +#define TSSR_OFFSET(n)			((n) % 4)
+> +#define TSSR_INDEX(n)			((n) / 4)
+> +
+> +#define TITSR_TITSEL_EDGE_RISING	0
+> +#define TITSR_TITSEL_EDGE_FALLING	1
+> +#define TITSR_TITSEL_LEVEL_HIGH		2
+> +#define TITSR_TITSEL_LEVEL_LOW		3
+> +
+> +#define IITSR_IITSEL(n, sense)		((sense) << ((n) * 2))
+> +#define IITSR_IITSEL_LEVEL_LOW		0
+> +#define IITSR_IITSEL_EDGE_FALLING	1
+> +#define IITSR_IITSEL_EDGE_RISING	2
+> +#define IITSR_IITSEL_EDGE_BOTH		3
+> +#define IITSR_IITSEL_MASK(n)		IITSR_IITSEL((n), 3)
+> +
+> +#define TINT_EXTRACT_HWIRQ(x)		((x) & ~GENMASK(31, 16))
+> +#define TINT_EXTRACT_GPIOINT(x)		((x) >> 16)
+> +
+> +struct rzg2l_irqc_priv {
+> +	void __iomem *base;
+> +	struct of_phandle_args map[IRQC_NUM_IRQ];
+> +};
+> +
+> +struct rzg2l_irqc_chip_data {
+> +	int tint;
+> +};
+> +
+> +static struct rzg2l_irqc_priv *irq_data_to_priv(struct irq_data *data)
+> +{
+> +	return data->domain->host_data;
+> +}
+> +
+> +static void rzg2l_irq_eoi(struct irq_data *d)
+> +{
+> +	struct rzg2l_irqc_priv *priv = irq_data_to_priv(d);
+> +	unsigned int hw_irq = irqd_to_hwirq(d) - IRQC_IRQ_START;
+> +	u16 bit = BIT(hw_irq);
+> +	u32 reg;
+> +
+> +	reg = readl_relaxed(priv->base + ISCR);
+> +	if (reg & bit)
+> +		writel_relaxed(GENMASK(IRQC_IRQ_COUNT - 1, 0) & ~bit,
+> +			       priv->base + ISCR);
 
-Hi Linus,
+RMW of a shared register without locking. Is it safe?
 
-Thank you very much for your review!
+> +
+> +	irq_chip_eoi_parent(d);
+> +}
+> +
+> +static void rzg2l_tint_eoi(struct irq_data *d)
+> +{
+> +	struct rzg2l_irqc_priv *priv = irq_data_to_priv(d);
+> +	unsigned int hw_irq = irqd_to_hwirq(d);
+> +	u32 bit = BIT(hw_irq - IRQC_TINT_START);
+> +	u32 reg;
+> +
+> +	reg = readl_relaxed(priv->base + TSCR);
+> +	if (reg & bit)
+> +		writel_relaxed(GENMASK(IRQC_TINT_COUNT - 1, 0) & ~bit,
+> +			       priv->base + TSCR);
 
-Please see my answers below:
+Same question.
 
-> > Add dt-bindings header files and documentation for Sunplus SP7021 SoC.
-> >
-> > Signed-off-by: Wells Lu <wellslutw@gmail.com>
->
-> > +patternProperties:
-> > +  '-pins$':
-> > +    if:
-> > +      type: object
-> > +    then:
-> > +      description: |
-> > +        A pinctrl node should contain at least one subnodes representing the
-> > +        pins or function-pins group available on the machine. Each subnode
-> > +        will list the pins it needs, and how they should be configured.
-> > +
-> > +        Pinctrl node's client devices use subnodes for desired pin
-> > +        configuration. Client device subnodes use below standard properties.
->
-> I don't understand this if type object stuff here, Rob, help...
+> +
+> +	irq_chip_eoi_parent(d);
+> +}
+> +
+> +static void rzg2l_irqc_eoi(struct irq_data *d)
+> +{
+> +	unsigned int hw_irq = irqd_to_hwirq(d);
+> +
+> +	if (hw_irq >= IRQC_IRQ_START && hw_irq <= IRQC_IRQ_COUNT)
+> +		return rzg2l_irq_eoi(d);
+> +	else if (hw_irq >= IRQC_TINT_START && hw_irq <= IRQC_TINT_COUNT)
+> +		return rzg2l_tint_eoi(d);
+> +}
+> +
+> +static void rzg2l_irqc_irq_disable(struct irq_data *d)
+> +{
+> +	unsigned int hw_irq = irqd_to_hwirq(d);
+> +
+> +	if (hw_irq >= IRQC_TINT_START && hw_irq <= IRQC_TINT_COUNT) {
+> +		struct rzg2l_irqc_priv *priv = irq_data_to_priv(d);
+> +		u32 offset = hw_irq - IRQC_TINT_START;
+> +		u32 tssr_offset = TSSR_OFFSET(offset);
+> +		u8 tssr_index = TSSR_INDEX(offset);
+> +		u32 reg;
+> +
+> +		reg = readl_relaxed(priv->base + TSSR(tssr_index));
+> +		reg &= ~(TSSEL_MASK << tssr_offset);
+> +		writel_relaxed(reg, priv->base + TSSR(tssr_index));
 
-I'll remove "if type object" stuff next patch since
-pinctrl node has no properties with "-pins" suffix.
-except sub nodes.
+And again.
 
+> +	}
+> +	irq_chip_disable_parent(d);
+> +}
+> +
+> +static void rzg2l_irqc_irq_enable(struct irq_data *d)
+> +{
+> +	unsigned int hw_irq = irqd_to_hwirq(d);
+> +
+> +	if (hw_irq >= IRQC_TINT_START && hw_irq <= IRQC_TINT_COUNT) {
+> +		struct rzg2l_irqc_priv *priv = irq_data_to_priv(d);
+> +		struct rzg2l_irqc_chip_data *chip_data = d->chip_data;
+> +		u32 offset = hw_irq - IRQC_TINT_START;
+> +		u32 tssr_offset = TSSR_OFFSET(offset);
+> +		u8 tssr_index = TSSR_INDEX(offset);
+> +		u32 reg;
+> +
+> +		reg = readl_relaxed(priv->base + TSSR(tssr_index));
+> +		reg |= (TIEN | chip_data->tint) << TSSEL_SHIFT(tssr_offset);
+> +		writel_relaxed(reg, priv->base + TSSR(tssr_index));
 
-> > +      properties:
-> > +        pins:
-> > +          description: |
-> > +            Define pins which are used by pinctrl node's client device.
-> (...)
-> > +          $ref: /schemas/types.yaml#/definitions/uint32-array
->
-> Why can this not $ref the standard binings in
-> Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml
->
-> See for example
-> Documentation/devicetree/bindings/pinctrl/actions,s500-pinctrl.yaml
-> for a nice example of how to use this.
-> Yours,
-> Linus Walleij
-The pins' types and control of SP7021 are a bit complex.
-Let me explain:
+And here.
 
-SP7021 has 99 digital GPIO pins which are numbered from
-GPIO 0 to 98. All are multiplexed with some special function
-pins. There are 3 types special function pins:
+> +	}
+> +	irq_chip_enable_parent(d);
+> +}
+> +
+> +static int rzg2l_irq_set_type(struct irq_data *d, unsigned int type)
+> +{
+> +	struct rzg2l_irqc_priv *priv = irq_data_to_priv(d);
+> +	unsigned int hw_irq = irqd_to_hwirq(d) - IRQC_IRQ_START;
+> +	u16 sense, tmp;
+> +
+> +	switch (type & IRQ_TYPE_SENSE_MASK) {
+> +	case IRQ_TYPE_LEVEL_LOW:
+> +		sense = IITSR_IITSEL_LEVEL_LOW;
+> +		break;
+> +
+> +	case IRQ_TYPE_EDGE_FALLING:
+> +		sense = IITSR_IITSEL_EDGE_FALLING;
+> +		break;
+> +
+> +	case IRQ_TYPE_EDGE_RISING:
+> +		sense = IITSR_IITSEL_EDGE_RISING;
+> +		break;
+> +
+> +	case IRQ_TYPE_EDGE_BOTH:
+> +		sense = IITSR_IITSEL_EDGE_BOTH;
+> +		break;
+> +
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	tmp = readl_relaxed(priv->base + IITSR);
+> +	tmp &= ~IITSR_IITSEL_MASK(hw_irq);
+> +	tmp |= IITSR_IITSEL(hw_irq, sense);
+> +	writel_relaxed(tmp, priv->base + IITSR);
 
-(1) function-pins:
-    For example, if control-field SPI_FLASH_SEL is set to 1,
-    GPIO 83, 84, 86 and 87 will be pins of SPI-NOR flash.
-    If it is set to 2, GPIO 76, 78, 79 and 81 will be pins of
-    SPI-NOR flash.
+It's everywhere. I'll stop mentioning it, but this driver is racy as
+hell.
 
-    For example 2, if control-bit UA0_SEL is set to 1,
-    GPIO 88 and 89 will be TX and RX pins of UART_0
-    (UART channel 0).
+> +
+> +	return 0;
+> +}
+> +
+> +static int rzg2l_tint_set_edge(struct irq_data *d, unsigned int type)
+> +{
+> +	struct rzg2l_irqc_priv *priv = irq_data_to_priv(d);
+> +	unsigned int hwirq = irqd_to_hwirq(d);
+> +	u32 titseln = hwirq - IRQC_TINT_START;
+> +	u8 sense;
+> +	u32 reg;
+> +
+> +	switch (type & IRQ_TYPE_SENSE_MASK) {
+> +	case IRQ_TYPE_EDGE_RISING:
+> +		sense = TITSR_TITSEL_EDGE_RISING;
+> +		break;
+> +
+> +	case IRQ_TYPE_EDGE_FALLING:
+> +		sense = TITSR_TITSEL_EDGE_FALLING;
+> +		break;
+> +
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (titseln < TITSR0_MAX_INT) {
+> +		reg = readl_relaxed(priv->base + TITSR0);
+> +		reg &= ~(IRQ_MASK << (titseln * TITSEL_WIDTH));
+> +		reg |= sense << (titseln * TITSEL_WIDTH);
+> +		writel_relaxed(reg, priv->base + TITSR0);
+> +	} else {
+> +		titseln = titseln / TITSEL_WIDTH;
+> +		reg = readl_relaxed(priv->base + TITSR1);
+> +		reg &= ~(IRQ_MASK << (titseln * TITSEL_WIDTH));
+> +		reg |= sense << (titseln * TITSEL_WIDTH);
+> +		writel_relaxed(reg, priv->base + TITSR1);
+> +	}
 
-    For example 3, if control-bit EMMC_SEL is set to 1,
-    GPIO 72, 73, 74, 75, 76, 77, 78, 79, 80, 81 will be
-    pins of an eMMC device.
+Sight:
 
-    The driver defines properties "function" and "groups"
-    to select this kind of pins-function.
+	if (titseln < TITSR0_MAX_INT) {
+		r = TITSR0;
+	} else {
+		titseln /= TITSEL_WIDTH;
+		r  = TITSR1;
+	}
 
-(2) fully pin-mux pins:
-    GPIO 8 to 71 are 'fully pin-mux' pins.
-    Pins of peripherals of SP7021 (ex: UART_1, UART_2,
-    UART_3, UART_4, I2C_0, I2C_1, ..., SPI_0, SPI_1, ...
-    GPIO_INT0, GPIO_INT1, .., RMII_of_Ethernet, and etc.)
-    can be set to any pins of fully pin-mux pins.
+	reg = readl_relaxed(priv->base + r);
+	reg &= ~(IRQ_MASK << (titseln * TITSEL_WIDTH));
+	reg |= sense << (titseln * TITSEL_WIDTH);
+	writel_relaxed(reg, priv->base + r);
 
-    EX1 (UART channel 1):
-    If control-field UA1_TX_SEL is set to 3, TX pin of
-    UART_1 will be routed to GPIO 10 (3 - 1 + 8 = 10)
-    If control-field UA1_RX_SEL is set to 4, RX pin of
-    UART_1 will be routed to GPIO 11 (4 - 1 + 8 = 11)
-    If control-field UA1_RTS_SEL is set to 5, RTS pin of
-    UART_1 will be routed to GPIO 12 (5 - 1 + 8 = 12)
-    If control-field UA1_CTS_SEL is set to 6, CTS pin of
-    UART_1 will be routed to GPIO 13 (6 - 1 + 8 = 13)
+plus the missing locking.
 
-    EX2 (I2C channel 0):
-    If control-field I2C0_CLK_SEL is set to 20, CLK pin
-    of I2C_0 will be routed to GPIO 27 (20 - 1 + 8 = 27)
-    If control-field I2C0_DATA_SEL is set to 21, DATA pin
-    of I2C_0 will be routed to GPIO 28 (21 - 1 + 9 = 28)
+> +
+> +	return 0;
+> +}
+> +
+> +static int rzg2l_irqc_set_type(struct irq_data *d, unsigned int type)
+> +{
+> +	unsigned int hw_irq = irqd_to_hwirq(d);
+> +
+> +	if (hw_irq >= IRQC_IRQ_START && hw_irq <= IRQC_IRQ_COUNT)
+> +		return rzg2l_irq_set_type(d, type);
+> +	else if (hw_irq >= IRQC_TINT_START && hw_irq <= IRQC_TINT_COUNT)
+> +		return rzg2l_tint_set_edge(d, type);
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static struct irq_chip irqc_chip = {
+> +	.name			= "rzg2l-irqc",
+> +	.irq_eoi		= rzg2l_irqc_eoi,
+> +	.irq_mask		= irq_chip_mask_parent,
+> +	.irq_unmask		= irq_chip_unmask_parent,
+> +	.irq_disable		= rzg2l_irqc_irq_disable,
+> +	.irq_enable		= rzg2l_irqc_irq_enable,
+> +	.irq_get_irqchip_state	= irq_chip_get_parent_state,
+> +	.irq_set_irqchip_state	= irq_chip_set_parent_state,
+> +	.irq_retrigger		= irq_chip_retrigger_hierarchy,
+> +	.irq_set_type		= rzg2l_irqc_set_type,
+> +	.flags			= IRQCHIP_MASK_ON_SUSPEND |
+> +				  IRQCHIP_SET_TYPE_MASKED |
+> +				  IRQCHIP_SKIP_SET_WAKE,
+> +};
+> +
+> +static int rzg2l_irqc_alloc(struct irq_domain *domain, unsigned int virq,
+> +			    unsigned int nr_irqs, void *arg)
+> +{
+> +	struct rzg2l_irqc_priv *priv = domain->host_data;
+> +	struct rzg2l_irqc_chip_data *chip_data = NULL;
+> +	struct irq_fwspec spec;
+> +	irq_hw_number_t hwirq;
+> +	int tint = -EINVAL;
+> +	unsigned int type;
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	ret = irq_domain_translate_twocell(domain, arg, &hwirq, &type);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/*
+> +	 * For TINIT interrupts ie where pinctrl driver is child of irqc domain
+> +	 * the hwirq and TINT are encoded in fwspec->param[0].
+> +	 * hwirq for TINIT range from 9-40, hwirq is embedded 0-15 bits and TINT
+> +	 * from 16-31 bits. TINIT from the pinctrl drivers needs to be programmed
+> +	 * in IRQC registers to enable a given gpio pin as interrupt.
+> +	 */
+> +	if (hwirq > IRQC_IRQ_COUNT) {
+> +		tint = TINT_EXTRACT_GPIOINT(hwirq);
+> +		hwirq = TINT_EXTRACT_HWIRQ(hwirq);
+> +	}
+> +
+> +	if (hwirq > (IRQC_NUM_IRQ - 1))
+> +		return -EINVAL;
+> +
+> +	if (tint != -EINVAL && (hwirq < IRQC_TINT_START || hwirq > (IRQC_NUM_IRQ - 1)))
+> +		return -EINVAL;
+> +
+> +	chip_data = kzalloc(sizeof(*chip_data), GFP_KERNEL);
+> +	if (!chip_data)
+> +		return -ENOMEM;
+> +	chip_data->tint = tint;
+> +
+> +	ret = irq_domain_set_hwirq_and_chip(domain, virq, hwirq, &irqc_chip,
+> +					    chip_data);
+> +	if (ret) {
+> +		kfree(chip_data);
+> +		return ret;
+> +	}
+> +
+> +	spec.fwnode = domain->parent->fwnode;
+> +	spec.param_count = priv->map[hwirq].args_count;
+> +	for (i = 0; i < spec.param_count; i++)
+> +		spec.param[i] = priv->map[hwirq].args[i];
+> +
+> +	ret = irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, &spec);
+> +	if (ret)
+> +		kfree(chip_data);
+> +
+> +	return ret;
+> +}
+> +
+> +static void rzg2l_irqc_domain_free(struct irq_domain *domain, unsigned int virq,
+> +				   unsigned int nr_irqs)
+> +{
+> +	struct irq_data *d;
+> +
+> +	d = irq_domain_get_irq_data(domain, virq);
+> +	if (d) {
+> +		struct rzg2l_irqc_chip_data *chip_data = d->chip_data;
+> +
+> +		kfree(chip_data);
+> +	}
+> +	irq_domain_free_irqs_common(domain, virq, nr_irqs);
+> +}
+> +
+> +static const struct irq_domain_ops rzg2l_irqc_domain_ops = {
+> +	.alloc = rzg2l_irqc_alloc,
+> +	.free = rzg2l_irqc_domain_free,
+> +	.translate = irq_domain_translate_twocell,
+> +};
+> +
+> +static int rzg2l_irqc_parse_map(struct rzg2l_irqc_priv *priv,
+> +				struct device_node *np,
+> +				struct device_node *parent)
+> +{
+> +	unsigned int imaplen, i, j, ret;
+> +	struct device_node *ipar;
+> +	const __be32 *imap;
+> +	u32 intsize;
+> +
+> +	imap = of_get_property(np, "interrupt-map", &imaplen);
 
-    Totally, SP7021 has 120 peripheral pins. The
-    peripheral pins can be routed to any of 64  'fully
-     pin-mux' pins. So total combinations are:
-           120 x 64 = 7680
-     This is why we cannot enumerate all combinations.
+We talked about this one already.
 
-(3) I/O processor pins
-    SP7021 has a built-in I/O processor.
-    Any GPIO pins (GPIO 0 to 98) can be set to pins of
-    I/O processor.
+	M.
 
-Property 'pins' is defined as uint32 array. Each item
-defines a pin as below:
-Bit 32~24 defines GPIO number. Its range is 0 ~ 98.
-Bit 23~16 defines types: digital GPIO pins (3), IO processor pins (2)
-or fully pin-mux pins (1)
-Bit 15~8 defines pins of peripherals which are defined in
-'include/dt-binging/pinctrl/sppctl.h'.
-Bit 7~0 defines types or initial-state of digital GPIO pins.
-
-
-Best regards,
-Wells
+-- 
+Without deviation from the norm, progress is not possible.
