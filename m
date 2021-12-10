@@ -2,111 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E70046FD52
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 10:03:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D1F3C46FDF2
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 10:37:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239008AbhLJJHU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Dec 2021 04:07:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36316 "EHLO
+        id S234402AbhLJJlG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Dec 2021 04:41:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236251AbhLJJHT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Dec 2021 04:07:19 -0500
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCCF9C061746;
-        Fri, 10 Dec 2021 01:03:44 -0800 (PST)
-Received: by mail-pg1-x534.google.com with SMTP id l18so2817638pgj.9;
-        Fri, 10 Dec 2021 01:03:44 -0800 (PST)
+        with ESMTP id S229502AbhLJJlG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Dec 2021 04:41:06 -0500
+Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 989CCC061746;
+        Fri, 10 Dec 2021 01:37:31 -0800 (PST)
+Received: by mail-yb1-xb30.google.com with SMTP id 131so19922485ybc.7;
+        Fri, 10 Dec 2021 01:37:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=o3XFOGIsP6ZZ5vZsBuRPmQLl3NqYf5+VCjncPR3DoDc=;
-        b=ISJpK97yMHhZU+4Irs3+RjHVvAkfh2GTc49DKjmH9Sln1qxvRCdRcJPW/V+BcJJYUX
-         pB4F4ZbCNk/9Cc+pQR7JNIwQJAlme1HoKPF42AbcdFiRkPy0GySl6qwLvN9mY2AZuqOL
-         Gk3WxvToTMuupR+g96GCo8q8JkwYevQHylmSMn9Cf+IGN8xcj2QsOY7B2vsxsSStZ8bc
-         GFlTCQ2IJuJYT+IYan5dBy2oMSWCZ/s83RVgu2SwTewszsX7rAUcLXw+hXgu8MeYFBsH
-         KCJk5pWPNoIdVNufeLMQn/itZkdR8s8NLJSRJsyXf3AVm8MVTaOCXlvpaq3mhUeAxi+G
-         skUQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jTTqTSeVWhePE44IwQg6aUNKq4YqbWzy6Vy449Rr4PY=;
+        b=Ad9s0IOzhFfzQ8FAyCIgNcL42WU3LycPM6wSBdGi97oFrivpj2JrsUkabx7rZln1AF
+         TK1LO9rZfwwItIxlEuMyGI8JihiJSZTruLCrjyUrKug7KFoT4kTSqnodSs+TUUQviS7E
+         qXKPn02Y1AHxV19ZnLne8Z8k/d/xZCnQ9q2LI9VDzu/P8ImxBQf+WLMCZZ1Luoy30XJW
+         TlTPwR1e96Eiev1skhduZkpyMzNliBjiFLqVMhJTvd8ERZF3syXT/YnIOuV3LlwhnleY
+         4iHiIrSw7FctTcJ6GGg0+ptrm6xf4wV+Ne8UZ/hD6EN1rXFdEndBl6HzulrN0NOqB7SU
+         /WYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=o3XFOGIsP6ZZ5vZsBuRPmQLl3NqYf5+VCjncPR3DoDc=;
-        b=XLt9JVKBipvMOkEfISlZVb9zN1IE33uGFkvR5x7oqQPiPNFxurxCrRhrwHpnjpQrC3
-         Aa2Y1MSn9FYJ45Wg9ZdHuyyjDnUyZJl8dC4/2nsWaRMaISZgMz5bV7CBPALbRNRiEpaN
-         SwoeSNtdk3kskt1jqiiahIWSwhuGSB+CWZFkmM3PJmOKlGrrs0c+FbNG8DPZfOffoV81
-         T1+JoRAnPhRYJAIRzo+QB3rXWrRUvK7Ni+cdf18SC5+FSNWnp9vwO3j6Z++5KPCDsP3G
-         bBDgq/CD4jBeQcHWctDCjqH6mTuNejubkgv7JiCNv8fz4QyX7KllpyhClYA+ADCERB7A
-         FMLw==
-X-Gm-Message-State: AOAM531mHrJSXUjhROul7He64VslXziiDo5tymFsCnSMvPS9YHJbFfK9
-        2hXeH6MjXDcEpO6Y8BPbuz4gEak717ofAQ==
-X-Google-Smtp-Source: ABdhPJz4trpsmo6mdN6rP8Pz16+sQ3RMK/aIc8nKIZ2dS64lTKF3Cz4FcydP8xNHuF65FAx+5Iwa+Q==
-X-Received: by 2002:a62:820e:0:b0:4b1:3cea:f0f6 with SMTP id w14-20020a62820e000000b004b13ceaf0f6mr2126931pfd.47.1639127024373;
-        Fri, 10 Dec 2021 01:03:44 -0800 (PST)
-Received: from richard-System-Product-Name.. ([101.10.104.26])
-        by smtp.gmail.com with ESMTPSA id u32sm2592357pfg.220.2021.12.10.01.03.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Dec 2021 01:03:43 -0800 (PST)
-From:   Yuchang Hsu <saraon640529@gmail.com>
-X-Google-Original-From: Yuchang Hsu <Richard_Hsu@asmedia.com.tw>
-To:     linus.walleij@linaro.org, brgl@bgdev.pl,
-        Richard_Hsu@asmedia.com.tw, andriy.shevchenko@linux.intel.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yd_Tseng@asmedia.com.tw, Cindy1_Hsu@asmedia.com.tw,
-        Andrew_Su@asmedia.com.tw
-Subject: [PATCH v4] gpio: amdpt: add new device ID and 24-pin support
-Date:   Fri, 10 Dec 2021 17:03:15 +0800
-Message-Id: <20211210090315.4889-1-Richard_Hsu@asmedia.com.tw>
-X-Mailer: git-send-email 2.30.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jTTqTSeVWhePE44IwQg6aUNKq4YqbWzy6Vy449Rr4PY=;
+        b=pBsw1C472/PZ8uA5MRkU554eEcwWZoVXjsriX1nnAwppifUWeZ7MT4x6f4hctTsov3
+         LsdTt2wcV35G49pSAkFFLQRJead8cNmitnZfEkxx0UC483S+ltQaq++ApsMnYX1vrEFn
+         /RNSb5tQriQuNCiLlNLgNQ8zKaj3+aSISNQwldNWHPHqNOIDbfizAzUC/XO2GdzduRNS
+         GVGu3Od2mzlNMS0wDXbgWEu7d45aHzx4D3Emn2WSZP+gY88W0lNDTdnLauPtArQkOHIE
+         Gbqii382bCqpXuS6nifaOoxj3kGfy2KWoxFIJgcTZ6GY05+jGAb3gMXc405fI2gwrCAn
+         5qMA==
+X-Gm-Message-State: AOAM533KVDjABxDAiu01RxDzZ91nFTs55to1KkyU+QHR7zQVCzeMhAKH
+        mpblBr9zzwWvMSDK70Gy953HV6lT37KVEyFLuJQ=
+X-Google-Smtp-Source: ABdhPJw99RXIuMM1D17R51607ElhuT/bzKFzp8BPahTe4tFT6QFRy2/+3CAyFszPRRI49TTS9+QmqvxHikikYeqnj/E=
+X-Received: by 2002:a25:4213:: with SMTP id p19mr13181614yba.41.1639129050834;
+ Fri, 10 Dec 2021 01:37:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20211110225808.16388-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CA+V-a8sCVkbwYeVGsQpv2q0OjwUSB_jqmjPptHN-ENSdU+pT1Q@mail.gmail.com>
+ <CA+V-a8tTm=n+TuE5N1Ptkvh6n1sYjSZWpQpmY1F5RiwK-ocvFQ@mail.gmail.com> <CACRpkdYDNQGWr8u18K7duy9MUd-njuyFQkXvZ4VQuvxXNOOicw@mail.gmail.com>
+In-Reply-To: <CACRpkdYDNQGWr8u18K7duy9MUd-njuyFQkXvZ4VQuvxXNOOicw@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Fri, 10 Dec 2021 09:37:05 +0000
+Message-ID: <CA+V-a8uTGv20dYacb7ieL_G+Nwy-o7PXqyCT68nVFfdAE3dJhA@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 0/7] Renesas RZ/G2L IRQC support
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Hsu Yuchang <Richard_Hsu@asmedia.com.tw>
+On Fri, Dec 10, 2021 at 2:04 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Fri, Dec 10, 2021 at 2:09 AM Lad, Prabhakar
+> <prabhakar.csengg@gmail.com> wrote:
+>
+> > I plan to post a non RFC version soon, can I have your feedback on this please.
+>
+> I actually cannot see the patches (just this cover letter) I wonder if
+> they got stuck.
+>
+I was able to locate them in gpio patchwork
+https://patchwork.ozlabs.org/project/linux-gpio/cover/20211110225808.16388-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
 
-Add an ACPI HID(AMDIF031) and pin number in the pt_gpio_acpi_match.
+> For
+> gpio: gpiolib: Allow free() callback to be overridden
+> gpio: gpiolib: Add ngirq member to struct gpio_irq_chip
+>
+> I trust whatever Marc
+> says. If he agrees we need this, then we need this.
+>
+OK.
 
-Signed-off-by: Yuchang Hsu <Richard_Hsu@asmedia.com.tw>
----
-Reposition and modify the changelog
- drivers/gpio/gpio-amdpt.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+> Yours,
+> Linus Walleij
 
-diff --git a/drivers/gpio/gpio-amdpt.c b/drivers/gpio/gpio-amdpt.c
-index bbf53e289141..13f4e2af3800 100644
---- a/drivers/gpio/gpio-amdpt.c
-+++ b/drivers/gpio/gpio-amdpt.c
-@@ -14,6 +14,7 @@
- #include <linux/platform_device.h>
-
- #define PT_TOTAL_GPIO 8
-+#define PT_TOTAL_GPIO_EX 24
-
- /* PCI-E MMIO register offsets */
- #define PT_DIRECTION_REG   0x00
-@@ -103,7 +104,7 @@ static int pt_gpio_probe(struct platform_device *pdev)
- 	pt_gpio->gc.owner            = THIS_MODULE;
- 	pt_gpio->gc.request          = pt_gpio_request;
- 	pt_gpio->gc.free             = pt_gpio_free;
--	pt_gpio->gc.ngpio            = PT_TOTAL_GPIO;
-+	pt_gpio->gc.ngpio            = (uintptr_t)device_get_match_data(dev);
- #if defined(CONFIG_OF_GPIO)
- 	pt_gpio->gc.of_node          = dev->of_node;
- #endif
-@@ -133,8 +134,9 @@ static int pt_gpio_remove(struct platform_device *pdev)
- }
-
- static const struct acpi_device_id pt_gpio_acpi_match[] = {
--	{ "AMDF030", 0 },
--	{ "AMDIF030", 0 },
-+	{ "AMDF030", PT_TOTAL_GPIO },
-+	{ "AMDIF030", PT_TOTAL_GPIO },
-+	{ "AMDIF031", PT_TOTAL_GPIO_EX },
- 	{ },
- };
- MODULE_DEVICE_TABLE(acpi, pt_gpio_acpi_match);
---
-2.30.2
-
+Cheers,
+Prabhakar
