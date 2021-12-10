@@ -2,100 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D1F3C46FDF2
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 10:37:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E50946FE93
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 11:16:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234402AbhLJJlG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Dec 2021 04:41:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44378 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229502AbhLJJlG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Dec 2021 04:41:06 -0500
-Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 989CCC061746;
-        Fri, 10 Dec 2021 01:37:31 -0800 (PST)
-Received: by mail-yb1-xb30.google.com with SMTP id 131so19922485ybc.7;
-        Fri, 10 Dec 2021 01:37:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jTTqTSeVWhePE44IwQg6aUNKq4YqbWzy6Vy449Rr4PY=;
-        b=Ad9s0IOzhFfzQ8FAyCIgNcL42WU3LycPM6wSBdGi97oFrivpj2JrsUkabx7rZln1AF
-         TK1LO9rZfwwItIxlEuMyGI8JihiJSZTruLCrjyUrKug7KFoT4kTSqnodSs+TUUQviS7E
-         qXKPn02Y1AHxV19ZnLne8Z8k/d/xZCnQ9q2LI9VDzu/P8ImxBQf+WLMCZZ1Luoy30XJW
-         TlTPwR1e96Eiev1skhduZkpyMzNliBjiFLqVMhJTvd8ERZF3syXT/YnIOuV3LlwhnleY
-         4iHiIrSw7FctTcJ6GGg0+ptrm6xf4wV+Ne8UZ/hD6EN1rXFdEndBl6HzulrN0NOqB7SU
-         /WYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jTTqTSeVWhePE44IwQg6aUNKq4YqbWzy6Vy449Rr4PY=;
-        b=pBsw1C472/PZ8uA5MRkU554eEcwWZoVXjsriX1nnAwppifUWeZ7MT4x6f4hctTsov3
-         LsdTt2wcV35G49pSAkFFLQRJead8cNmitnZfEkxx0UC483S+ltQaq++ApsMnYX1vrEFn
-         /RNSb5tQriQuNCiLlNLgNQ8zKaj3+aSISNQwldNWHPHqNOIDbfizAzUC/XO2GdzduRNS
-         GVGu3Od2mzlNMS0wDXbgWEu7d45aHzx4D3Emn2WSZP+gY88W0lNDTdnLauPtArQkOHIE
-         Gbqii382bCqpXuS6nifaOoxj3kGfy2KWoxFIJgcTZ6GY05+jGAb3gMXc405fI2gwrCAn
-         5qMA==
-X-Gm-Message-State: AOAM533KVDjABxDAiu01RxDzZ91nFTs55to1KkyU+QHR7zQVCzeMhAKH
-        mpblBr9zzwWvMSDK70Gy953HV6lT37KVEyFLuJQ=
-X-Google-Smtp-Source: ABdhPJw99RXIuMM1D17R51607ElhuT/bzKFzp8BPahTe4tFT6QFRy2/+3CAyFszPRRI49TTS9+QmqvxHikikYeqnj/E=
-X-Received: by 2002:a25:4213:: with SMTP id p19mr13181614yba.41.1639129050834;
- Fri, 10 Dec 2021 01:37:30 -0800 (PST)
-MIME-Version: 1.0
-References: <20211110225808.16388-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CA+V-a8sCVkbwYeVGsQpv2q0OjwUSB_jqmjPptHN-ENSdU+pT1Q@mail.gmail.com>
- <CA+V-a8tTm=n+TuE5N1Ptkvh6n1sYjSZWpQpmY1F5RiwK-ocvFQ@mail.gmail.com> <CACRpkdYDNQGWr8u18K7duy9MUd-njuyFQkXvZ4VQuvxXNOOicw@mail.gmail.com>
-In-Reply-To: <CACRpkdYDNQGWr8u18K7duy9MUd-njuyFQkXvZ4VQuvxXNOOicw@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Fri, 10 Dec 2021 09:37:05 +0000
-Message-ID: <CA+V-a8uTGv20dYacb7ieL_G+Nwy-o7PXqyCT68nVFfdAE3dJhA@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 0/7] Renesas RZ/G2L IRQC support
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
+        id S239952AbhLJKUA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Dec 2021 05:20:00 -0500
+Received: from www.zeus03.de ([194.117.254.33]:44862 "EHLO mail.zeus03.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229562AbhLJKT7 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 10 Dec 2021 05:19:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=k1; bh=s3LeDggvmW3ag8cnOWdEwafwGfd1
+        5LxqD+plVt2oWuc=; b=bMTZHzdtIroFgIdg7n9H9Fll+PZt2rbXeRnKElX4ph3o
+        4xCVNxwA9i5KmOynOai8rDatR1gsF3BZ/0T5NxNlNvKCOBruYi3981qIfueLP0hs
+        AuJ9oDCHm97tipcfoQM0nptYAoMcSjNTU53rL/U2rIHHHj168/1OSMaXRdDgoqI=
+Received: (qmail 1422109 invoked from network); 10 Dec 2021 11:16:23 +0100
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 10 Dec 2021 11:16:23 +0100
+X-UD-Smtp-Session: l3s3148p1@g8GpA8jS1JAgAQnoAEPjAJzPXF1eIEK3
+Date:   Fri, 10 Dec 2021 11:16:19 +0100
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH v5 1/1] gpio: add sloppy logic analyzer using polling
+Message-ID: <YbMo8+1N2BKAE63Z@ninjato>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Biju Das <biju.das.jz@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+References: <20211123164902.35370-1-wsa+renesas@sang-engineering.com>
+ <20211123164902.35370-2-wsa+renesas@sang-engineering.com>
+ <CAMuHMdUGOEmB8QeHufXVHifYpvZxNpu_kku05eGKk=+YRf+PsQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="teEgrqnjjop4BLE1"
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUGOEmB8QeHufXVHifYpvZxNpu_kku05eGKk=+YRf+PsQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Dec 10, 2021 at 2:04 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Fri, Dec 10, 2021 at 2:09 AM Lad, Prabhakar
-> <prabhakar.csengg@gmail.com> wrote:
->
-> > I plan to post a non RFC version soon, can I have your feedback on this please.
->
-> I actually cannot see the patches (just this cover letter) I wonder if
-> they got stuck.
->
-I was able to locate them in gpio patchwork
-https://patchwork.ozlabs.org/project/linux-gpio/cover/20211110225808.16388-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
 
-> For
-> gpio: gpiolib: Allow free() callback to be overridden
-> gpio: gpiolib: Add ngirq member to struct gpio_irq_chip
->
-> I trust whatever Marc
-> says. If he agrees we need this, then we need this.
->
-OK.
+--teEgrqnjjop4BLE1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Yours,
-> Linus Walleij
 
-Cheers,
-Prabhakar
+> Please preserve sort order, cfr. the (hilarious?) comment at the top
+> of the list:
+
+Ouch, yes. That's what you get for a last minute rename. Fixed in v6!
+
+
+--teEgrqnjjop4BLE1
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmGzKO8ACgkQFA3kzBSg
+KbbT+xAAhcReZsn4U8iPxnddjusiCldpFdsenBANy9yQw/eFAXNLVEab8jm4xjst
+vwy9csA9ETm3MfysPvMfXItJHuah9bi+vC6uWfqoW2NcDEPxDFLx/EqSbF6qv2qu
+UKJQzhIBX6OvOqVYJ4eFE6z0Mey+1X8TijclmtIUfsDwEkXxRTsSs7gsmB4SawFD
+z1vC3sL+0XOKofIhUbH5ki79g7eLYfFrWTvyeI8lovc6xVPqIySFV/xSNTOPByzF
+mHVHxw5xjeYdEPiMjloCIgGqZi/N3f6ncKJsJBJKfq0tNLfO5lH+aldp29vpj33u
+V2ttVhucM31H8/jBi9GiJWC3ajwAEbmcfsPu49GYlR8u5oKeBj6Z6/aQUhHfw1yK
+jKwTS7KpCQw605PJ/UjNHuRDPBxn6IVujlnt419l58lfXZmbEq5pWTp2LqBO6GZD
++1V6G7MzHD4WyK2bQNiWbrolx3Dm+7Jsv7W1ubxelRfEGDXw6WYP568tgzsQVACg
+V/n+4ZJsBKoHkennIDFyJeCvTnkqLOQgcHYlWM5KO0zjgJjoYaRqm89/6NqzkBEG
+wnTgXZCAqT6Z/OxI/nXfRR91SrycSB5EbW6xnOJZMQxrIYyRxk25fewlPQSjZdu3
+7T2doM5XS7jWXN+KUCN1L/f+G+CZvFS4wsGFLrHWfvPBmwEXsz0=
+=OZgG
+-----END PGP SIGNATURE-----
+
+--teEgrqnjjop4BLE1--
