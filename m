@@ -2,153 +2,181 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1785E470044
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 12:42:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8525E47009D
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 13:25:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233311AbhLJLqK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Dec 2021 06:46:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45786 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240667AbhLJLqK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Dec 2021 06:46:10 -0500
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2507DC061746;
-        Fri, 10 Dec 2021 03:42:35 -0800 (PST)
-Received: by mail-lj1-x22a.google.com with SMTP id u22so13308543lju.7;
-        Fri, 10 Dec 2021 03:42:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=//V7LaRZBttRLD6V/Smx8G2LPj0kKVQWcWYSEWdTtcI=;
-        b=cMXzA1cYP92zn81NjewgKnGGHXV1yp8cQQC6vbCqffMDgfEWeIt392hkP/BNotRkOk
-         r0Qso0jxc0Gwz6mRVSka+fUC7e0teuOE9ShNtkIeyPsaX7qq6sz2iX++SEa30modtjoY
-         drXEhEXBDHA81/wdZKzqDLMMOuJcYZaarcT682uMMQhjWy7y4hjHaOtwauTrE4PquJ09
-         Y688QO01pHj5f1CcMBIDP07ojjqYlxN91pjVpvP6i5yxswHOWVEHJhFBsUGkPRDmKz4v
-         kfm094nF3FRX+MADW3NfkKkDUS927joi+kJpRGdh4D1/FChfwgjzXa/pawCrWFaCll+o
-         Us3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=//V7LaRZBttRLD6V/Smx8G2LPj0kKVQWcWYSEWdTtcI=;
-        b=QDQxzUp2hDg8U2zHP3ZUquu1CHWsdstTMijjgRNGIr5HzVyVwYHIa4aAPFBVcBlvuV
-         ZLMLvsHR+4ncVDJV0Na3ihHsugQ3g5m6Q+MyUcIjXMd5IdNtZNVgHiF+zwkcjI/uWWkp
-         eBBXRwyqUxsci1YTFWClwertH2oJlNAwqdNM2TUqWKAPnkn6lZod1L2xJiOraMrKQjFO
-         Nfrqq8wVtavFmBwcw5Yd3fRCZC/82xYQ/7puMzvgrMdxDLwEAs5GGBBlkoABDR4gqki3
-         TLMg4z68VdP+ihHyRbzGP+x30JLMKcRtAvI3mlC5E4WypTxFwqjVG2Kwd6OQx7yqGb5i
-         TDDQ==
-X-Gm-Message-State: AOAM532DVUPLq09T4JmPb6QzwJ+83LcDgRQOGa2x1lVV16yxeDL39Z0x
-        TneYN3Kbf34fDcog2YaH030=
-X-Google-Smtp-Source: ABdhPJzqPCllMxjacR3pU4hIxg/mEoZNtWjW9jIsBC2+9hvSwQmRbImI1zp9dUaYy1FAONw8vVAdDA==
-X-Received: by 2002:a2e:9698:: with SMTP id q24mr12470865lji.246.1639136553447;
-        Fri, 10 Dec 2021 03:42:33 -0800 (PST)
-Received: from localhost.lan (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
-        by smtp.gmail.com with ESMTPSA id j15sm289375lfe.157.2021.12.10.03.42.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Dec 2021 03:42:33 -0800 (PST)
-From:   =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Tony Lindgren <tony@atomide.com>,
+        id S237629AbhLJM2q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Dec 2021 07:28:46 -0500
+Received: from mail.thorsis.com ([92.198.35.195]:47459 "EHLO mail.thorsis.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S240974AbhLJM2p (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 10 Dec 2021 07:28:45 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.thorsis.com (Postfix) with ESMTP id CDC8A354A;
+        Fri, 10 Dec 2021 13:25:09 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at mail.thorsis.com
+Received: from mail.thorsis.com ([127.0.0.1])
+        by localhost (mail.thorsis.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id sc9IaSCmdGH8; Fri, 10 Dec 2021 13:25:09 +0100 (CET)
+Received: by mail.thorsis.com (Postfix, from userid 109)
+        id 9778A1D8A; Fri, 10 Dec 2021 13:25:09 +0100 (CET)
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NO_RECEIVED,
+        NO_RELAYS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+        version=3.4.2
+X-Spam-Report: * -1.9 BAYES_00 BODY: Bayes spam probability is 0 to 1%
+        *      [score: 0.0000]
+        *  0.0 URIBL_BLOCKED ADMINISTRATOR NOTICE: The query to URIBL was
+        *      blocked.  See
+        *      http://wiki.apache.org/spamassassin/DnsBlocklists#dnsbl-block
+        *      for more information.
+        *      [URIs: thorsis.com]
+        * -0.0 NO_RELAYS Informational: message was not relayed via SMTP
+        * -0.0 NO_RECEIVED Informational: message has no Received headers
+Date:   Fri, 10 Dec 2021 13:24:58 +0100
+From:   Alexander Dahl <ada@thorsis.com>
+To:     Peter Rosin <peda@axentia.se>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
-Subject: [PATCH V3 2/2] dt-bindings: pinctrl: brcm,ns-pinmux: describe pins, groups & functions
-Date:   Fri, 10 Dec 2021 12:42:22 +0100
-Message-Id: <20211210114222.26581-3-zajec5@gmail.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20211210114222.26581-1-zajec5@gmail.com>
-References: <20211210114222.26581-1-zajec5@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        Alexander Dahl <ada@thorsis.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Roelf-Erik Carsjens <rca@thorsis.com>
+Subject: Re: [PATCH] gpiolib: allow line names from device props to override
+ driver names
+Message-ID: <YbNHGkhHKQAOwxnB@ada.ifak-system.com>
+Mail-Followup-To: Peter Rosin <peda@axentia.se>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Roelf-Erik Carsjens <rca@thorsis.com>
+References: <70b1de02-b674-ca17-9219-61fa8e1c00db@axentia.se>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <70b1de02-b674-ca17-9219-61fa8e1c00db@axentia.se>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Rafał Miłecki <rafal@milecki.pl>
+Hello Peter,
 
-Use and extend generic pinctrl binding to include info about pins,
-groups & functions.
+Am Thu, Dec 09, 2021 at 12:32:29PM +0100 schrieb Peter Rosin:
+> Some gpio providers set names for gpio lines that match the names of
+> the pins on the SoC, or variations on that theme. These names are
+> generally generic, such as pioC12 in the at91 case. These generic names
+> block the possibility to name gpio lines with in device properties
+> (i.e. gpio-line-names).
+> 
+> Allow overriding a generic name given by the gpio driver if there is
+> a name given to the gpio line using device properties, but leave the
+> generic name alone if no better name is available.
 
-Northstar platform pins have numbers assigned to them (they are needed
-for mux programming) so add a custom "number" property for that.
+I think this is a good solution. For example on at91 if someone did
+not set gpio-line-names yet, and relied on the generic names (PA0,
+PA1, etc.), she won't get new names until she sets line names in dts.
+This at least allows for transitioning dts / userspace at the same
+time, without the kernel getting in the way.
 
-Extend example to provide a complete binding of a single / random
-function.
+> However, there is a risk. If user space is depending on the above
+> mentioned fixed gpio names, AND there are device properties that
+> previously did not reach the surface, the name change might cause
+> regressions. But hopefully this stays below the radar...
+> 
+> Signed-off-by: Peter Rosin <peda@axentia.se>
 
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
----
- .../bindings/pinctrl/brcm,ns-pinmux.yaml      | 38 ++++++++++++++++++-
- 1 file changed, 37 insertions(+), 1 deletion(-)
+I backported the patch to v5.10.65 and tested, this is part of the
+result on a custom board, where line names were set for the sd card
+interface and an I�C port:
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,ns-pinmux.yaml b/Documentation/devicetree/bindings/pinctrl/brcm,ns-pinmux.yaml
-index 8d1e5b1cdd5f..82d3e52a2229 100644
---- a/Documentation/devicetree/bindings/pinctrl/brcm,ns-pinmux.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/brcm,ns-pinmux.yaml
-@@ -30,6 +30,20 @@ properties:
-   reg-names:
-     const: cru_gpio_control
- 
-+  pins:
-+    type: object
-+
-+    patternProperties:
-+      "^.*$":
-+        type: object
-+
-+        properties:
-+          number:
-+            description: Pin number
-+            $ref: /schemas/types.yaml#/definitions/uint32
-+
-+        unevaluatedProperties: false
-+
- patternProperties:
-   '-pins$':
-     type: object
-@@ -74,7 +88,7 @@ required:
-   - reg
-   - reg-names
- 
--additionalProperties: false
-+unevaluatedProperties: false
- 
- examples:
-   - |
-@@ -83,6 +97,28 @@ examples:
-         reg = <0x1800c1c0 0x24>;
-         reg-names = "cru_gpio_control";
- 
-+        pins {
-+            i2c_scl: i2c_scl {
-+                number = <4>;
-+            };
-+
-+            i2c_sda: i2c_sda {
-+                number = <5>;
-+            };
-+        };
-+
-+        groups {
-+            i2c_grp: i2c_grp {
-+                pins = <&i2c_scl &i2c_sda>;
-+            };
-+        };
-+
-+        functions {
-+            i2c {
-+                groups = <&i2c_grp>;
-+            };
-+        };
-+
-         spi-pins {
-             function = "spi";
-             groups = "spi_grp";
--- 
-2.31.1
+    root@DistroKit:~ gpioinfo | head -n20
+    gpiochip0 - 128 lines:
+            line   0:  "SDMMC0_CK"       unused   input  active-high 
+            line   1: "SDMMC0_CMD"       unused   input  active-high 
+            line   2: "SDMMC0_DAT0" unused input active-high 
+            line   3: "SDMMC0_DAT1" unused input active-high 
+            line   4: "SDMMC0_DAT2" unused input active-high 
+            line   5: "SDMMC0_DAT3" unused input active-high 
+            line   6:        "TWD"       unused   input  active-high 
+            line   7:       "TWCK"       unused   input  active-high 
+            line   8:        "PA8"       unused   input  active-high 
+            line   9:        "PA9"       unused   input  active-high 
+            line  10:       "PA10"       unused   input  active-high 
+            line  11:       "PA11"       unused   input  active-high 
+            line  12:       "PA12"       unused   input  active-high 
+            line  13:  "SDMMC0_CD"       unused   input  active-high 
+            line  14:       "PA14"       unused   input  active-high 
+            line  15:       "PA15"       unused   input  active-high 
+            line  16:       "PA16"       unused   input  active-high 
+            line  17:       "PA17"       unused   input  active-high 
+            line  18:       "PA18"       unused   input  active-high 
 
+So if you're okay with testing a backport, you may add my
+
+Tested-by: Alexander Dahl <ada@thorsis.com>
+
+Greets
+Alex
+
+> ---
+>  drivers/gpio/gpiolib.c | 19 ++++++++++++++-----
+>  1 file changed, 14 insertions(+), 5 deletions(-)
+> 
+> Instead of doing this only for pinctrl-at91.c as in my recent patch [1], do
+> it for everyone.
+> 
+> Cheers,
+> Peter
+> 
+> [1] https://lore.kernel.org/lkml/4d17866a-d9a4-a3d7-189a-781d18dbea00@axentia.se/
+> 
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index abfbf546d159..00a2a689c202 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -422,8 +422,15 @@ static int devprop_gpiochip_set_names(struct gpio_chip *chip)
+>  	if (count > chip->ngpio)
+>  		count = chip->ngpio;
+>  
+> -	for (i = 0; i < count; i++)
+> -		gdev->descs[i].name = names[chip->offset + i];
+> +	for (i = 0; i < count; i++) {
+> +		/*
+> +		 * Allow overriding "fixed" names provided by the gpio
+> +		 * provider, the "fixed" names are generally generic and less
+> +		 * informative than the names given in device properties.
+> +		 */
+> +		if (names[chip->offset + i] && names[chip->offset + i][0])
+> +			gdev->descs[i].name = names[chip->offset + i];
+> +	}
+>  
+>  	kfree(names);
+>  
+> @@ -708,10 +715,12 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>  	INIT_LIST_HEAD(&gdev->pin_ranges);
+>  #endif
+>  
+> -	if (gc->names)
+> +	if (gc->names) {
+>  		ret = gpiochip_set_desc_names(gc);
+> -	else
+> -		ret = devprop_gpiochip_set_names(gc);
+> +		if (ret)
+> +			goto err_remove_from_list;
+> +	}
+> +	ret = devprop_gpiochip_set_names(gc);
+>  	if (ret)
+>  		goto err_remove_from_list;
+>  
+> -- 
+> 2.20.1
+> 
