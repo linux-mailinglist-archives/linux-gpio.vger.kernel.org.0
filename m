@@ -2,112 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DE5946F8E3
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 03:01:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A0B5746F8EE
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 03:05:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235542AbhLJCF1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Dec 2021 21:05:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55406 "EHLO
+        id S235734AbhLJCId (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Dec 2021 21:08:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231148AbhLJCF0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Dec 2021 21:05:26 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 717DEC061746;
-        Thu,  9 Dec 2021 18:01:52 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 975D7CE2832;
-        Fri, 10 Dec 2021 02:01:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2EA6C004DD;
-        Fri, 10 Dec 2021 02:01:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639101708;
-        bh=0/QEsc6oFsMgq2zkSyb2IGxgS1BlU/Yso8DEj/Z4yno=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=XI3DioNwF432jswb1OPdH2Ws8xHqwfgQpGXtXN73lv6JVM9SfiTBe3Tda/esQ9Z0Z
-         bqEGgoK/h0pgU8RTpuprrzN0p4xMXDCk9Tf7ginICuiT94M/IQi5VQPRslNAfFjLrO
-         9r1dgUAMdp3ozCvCK5jnn59fSq5h97zxVGh34xS/W5Z6C/yKPerOy5F3mrdvi8PWCX
-         lselrF5WVsUZhVp5105CFZLqxZWOesR9PNNB6STJMz1mYjLGYPL7Ag64+6GgsLBu0e
-         fhh4w9QMKlOQ5t3hSZXgEscwM+nvnsu4gZin7avmpnpICalOimojlD0hM2Y5fKbI+G
-         fslSRNRX2/mIA==
-Content-Type: text/plain; charset="utf-8"
+        with ESMTP id S233928AbhLJCId (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Dec 2021 21:08:33 -0500
+Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08C63C061746
+        for <linux-gpio@vger.kernel.org>; Thu,  9 Dec 2021 18:04:59 -0800 (PST)
+Received: by mail-ot1-x334.google.com with SMTP id x19-20020a9d7053000000b0055c8b39420bso8255694otj.1
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Dec 2021 18:04:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Mk4inzLW8Nyomvz0lak/GtO/CGQzqzuOwnVgsqNwCQI=;
+        b=qn0qlQ/bPPEacAJ+PQi0Et4rabWTmURuuO4Tc0/Od9nlXX+zbCQnAvPxRNcnWQXplH
+         asYldO3ujBfe5CzmGIsmgJtHJ2zhLvD7W2/er0RpvRosq8R8wYBVU05x3odJTertmWDw
+         kzyjVQiwV6Kd5RFy7Ip7wjkypWSSPTWCY3ZBnNRbD7ClexTUynp1aruiM/TUzzv/xC0S
+         ilXuITXUkYATsWGGWQp0SBAfM0S8YIPi6d5kS4RtxUObu0F6bEOVdo6YnzeJlwjbNMMz
+         rl54efomNmzAjBIjc/fRw9bRMP1uT2EFtE7cuI4bk30OMLGgNpCr0QTfwuufjFW1JYqg
+         /RYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Mk4inzLW8Nyomvz0lak/GtO/CGQzqzuOwnVgsqNwCQI=;
+        b=Ey8e2wYbIagOdE8eeJ+2YdyUzTDr/D6tKrxAmw1d8dCQL2poxKHECT0VqAFIJh9A/Q
+         0kIC2RWCFPv7JZRONZQXHc0dLPy8B9/YpWMKfx4qcfCLMdkkvba2LUU6BnF+/JaX5pNP
+         nGySAwhzeeNISoS3Ng+0ufy0CwIm2/l+2KFcbMNEIvsnq0rcF49s7JC99I0iB7YbJfSu
+         6F62J0kTSkfh9xcWfg0BLZnD28FduLuPgJxa0b/qU8H1cPex4RVdVLjb5DmtlOL7a8Re
+         wmBpqx5ZzZhK4sHQgTxrzyJxZZllrYT851TMne5A7C8j1ZfZrHVebeRLYokMgPGz+eFS
+         EyHA==
+X-Gm-Message-State: AOAM530fTmMV/ltRjLyuCqIIxyxeHkGsjdEjl+YPudFBaht8h/nkhYn+
+        aRfgP/POCbpvKXk8g4e23+v/jHP84W60zwORvdL/1Ozd33WL/g==
+X-Google-Smtp-Source: ABdhPJzLKqHHsTQQ+/DZQJn7ag2tMY4yD2GC75lI7BjHJO46vCOl7pBNn7BESbjJFbsLDzye2ZYwZLbcWHnoSS+csIs=
+X-Received: by 2002:a9d:74d0:: with SMTP id a16mr8719458otl.237.1639101898426;
+ Thu, 09 Dec 2021 18:04:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <Ya9K/sF1YDCYCp2Y@matsya>
-References: <20211201072718.3969011-1-vkoul@kernel.org> <20211202230624.C05F3C00446@smtp.kernel.org> <9161450a-40e0-c84f-f529-c903d6f1d722@quicinc.com> <20211203031323.211E5C00446@smtp.kernel.org> <1fb0553b-eca5-a537-4dc3-77437feffc69@quicinc.com> <Ya9K/sF1YDCYCp2Y@matsya>
-Subject: Re: [PATCH] spmi: pmic-arb: Add support for PMIC v7
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Subbaraman Narayanamurthy <quic_subbaram@quicinc.com>
-To:     David Collins <quic_collinsd@quicinc.com>,
-        Vinod Koul <vkoul@kernel.org>
-Date:   Thu, 09 Dec 2021 18:01:47 -0800
-User-Agent: alot/0.9.1
-Message-Id: <20211210020148.B2EA6C004DD@smtp.kernel.org>
+References: <20211110225808.16388-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <CA+V-a8sCVkbwYeVGsQpv2q0OjwUSB_jqmjPptHN-ENSdU+pT1Q@mail.gmail.com> <CA+V-a8tTm=n+TuE5N1Ptkvh6n1sYjSZWpQpmY1F5RiwK-ocvFQ@mail.gmail.com>
+In-Reply-To: <CA+V-a8tTm=n+TuE5N1Ptkvh6n1sYjSZWpQpmY1F5RiwK-ocvFQ@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 10 Dec 2021 03:04:46 +0100
+Message-ID: <CACRpkdYDNQGWr8u18K7duy9MUd-njuyFQkXvZ4VQuvxXNOOicw@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 0/7] Renesas RZ/G2L IRQC support
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Quoting Vinod Koul (2021-12-07 03:52:30)
-> On 03-12-21, 16:45, David Collins wrote:
-> > On 12/2/21 7:13 PM, Stephen Boyd wrote:
-> > > Quoting David Collins (2021-12-02 15:51:18)
-> > >> On 12/2/21 3:06 PM, Stephen Boyd wrote:
-> > >>> Quoting Vinod Koul (2021-11-30 23:27:18)
->=20
-> > > It feels like we should make a parent node that holds the core, chnls,
-> > > obsrvr reg properties with a new compatible string and then have two
-> > > child nodes for each bus. Then the various PMICs can hang off those t=
-wo
-> > > different bus nodes. Of course, it needs DT review to make sure nothi=
-ng
-> > > else goes wrong.
-> >=20
-> > We considered this alternative DT layout when implementing PMIC arbiter
-> > v7 support downstream.  The benefit is allowing common register ranges
-> > to be specified once instead of in both SPMI bus nodes.  However, this
-> > approach has several downsides.
-> >=20
-> > It results in substantially more complex device tree binding
-> > documentation that requires a different layout for SPMI buses for PMIC
-> > arbiter v7 (and above) vs early versions even though support can be
-> > provided with only a minimal modification (i.e. "qcom,bus-id").
-> > Complexity is also increased inside of the spmi-pmic-arb driver.  There,
-> > special data structures and logic would be needed to handle the shared
-> > vs independent register addresses and data.
-> >=20
-> > The SPMI framework currently uses a one-to-one mapping between SPMI
-> > buses and struct device pointers.  This would not work if the new
-> > top-level node represents the true struct device and the per-bus
-> > subnodes are not true devices.  Also, platform_get_resource_byname()
-> > (used in the spmi-pmic-arb probe function) needs a struct
-> > platform_device pointer to read address ranges using "reg" +
-> > "reg-names".  That wouldn't work for the subnodes.
-> >=20
-> > I suppose that "compatible" could be specified for the top-level node
-> > and the per bus subnodes so that all three get probed as struct devices.
-> >  However, that makes things even more complicated and convoluted in the
-> > driver (and DT).
-> >=20
-> > I would prefer to stay with the approach of the two bus instances being
-> > specified independently in DT.
+On Fri, Dec 10, 2021 at 2:09 AM Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
 
-The driver is already pretty hard to read because it combines so many
-generations of spmi arbiter hardware from qcom into one file. It would
-probably be better to start over and simplify the new version of the
-driver, possibly sharing code between the two files if possible, but
-otherwise dropping lots of cruft along the way and simplifying review
-burden.
+> I plan to post a non RFC version soon, can I have your feedback on this please.
 
->=20
-> Steve, David,
->=20
-> Is this the way we are recommending for this to be move forward with?
->=20
+I actually cannot see the patches (just this cover letter) I wonder if
+they got stuck.
 
-Please send the yamlification or update to the yamlification of the
-binding.
+For
+gpio: gpiolib: Allow free() callback to be overridden
+gpio: gpiolib: Add ngirq member to struct gpio_irq_chip
+
+I trust whatever Marc
+says. If he agrees we need this, then we need this.
+
+Yours,
+Linus Walleij
