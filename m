@@ -2,121 +2,247 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B1F046F9A5
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 04:38:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A179946FACB
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 07:50:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236417AbhLJDmW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Dec 2021 22:42:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48616 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231314AbhLJDmW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Dec 2021 22:42:22 -0500
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0308C0617A1
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Dec 2021 19:38:47 -0800 (PST)
-Received: by mail-pf1-x42a.google.com with SMTP id g18so7291868pfk.5
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Dec 2021 19:38:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KWKRXlPipFtxSUDYr/shm3cQl0RCzKqpPoKG0kUOzaY=;
-        b=AV7rSZibG0tCQrl9GhxisCoDaHwDe0kJ3U8n8i0V7ri6cSJMxtpgQybgLFsTnP2bCJ
-         wnhkHgKXizoF81RTpTe5ZJzZ9BvCVtdnKhpVyH25U2FotZxKMvrNbrfscWtZKP5+Vgya
-         MFIXpabjkIY3ZRZKq0DK1MLIoiyIr7AOGdktIEhNRyWUneAb9OJEWBDtdcEWa1GPsMkv
-         gQE+Mwwa1a9exyjyn+NixbpHBXddQmk71srFQ8HU26XXx3pInJYaiwocTtzv1XXJph0M
-         5Ec9CuIC0akJwQETbHnlXGmdCkHLxE8Lq1P/IETx55CebElpXPs8piuGelbejxc7ydZ4
-         SlCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KWKRXlPipFtxSUDYr/shm3cQl0RCzKqpPoKG0kUOzaY=;
-        b=zQP29CBXXzWLBhpAHuP8lPcsiab1YP5JlJmwFWk5IbW1DoPP5VFP7aNC1huTqHm5vk
-         ZkJHrvohUlWq6utiSwOksP/o7vqNI0bOqJEoDcl44GzktSKf3JYHbM1vrHroOVW+XkXW
-         /pTvMWznlJYf9klak7qJr7DBQe8vwrmSYCI2b+3qSy2z+BbbK1C7xB3fYygR719nq0LK
-         Nt1I/C1ZXTnYJW1ebkQyLwLVTXyisTOejMdMA5soLOFyFJ6jQIgPa7/kWjzUBoCthLCF
-         0bp4Xv6h11KicgLCO0czElujaFRalWROleSxkzC26uNK4peY1oqCrCQxB5vUWnx0bhnv
-         cTGw==
-X-Gm-Message-State: AOAM533Li3euXV5zpyGCiOCpmFAsKv1SeLv0GtI/rvJk/nuWinBUslvm
-        ROiBpBAP9JsfqGTz34NR5WXeFQ==
-X-Google-Smtp-Source: ABdhPJxY08YogfYXlyucU5zPY8UfrpTtKWvP6qw0UcmCg1cF+j3OIIXMScJa5TmoHAQbZoEfK2/Cfg==
-X-Received: by 2002:a63:7103:: with SMTP id m3mr19558485pgc.376.1639107527431;
-        Thu, 09 Dec 2021 19:38:47 -0800 (PST)
-Received: from localhost ([106.201.42.111])
-        by smtp.gmail.com with ESMTPSA id v63sm937043pgv.71.2021.12.09.19.38.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Dec 2021 19:38:46 -0800 (PST)
-Date:   Fri, 10 Dec 2021 09:08:42 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Arnd Bergmann <arnd@kernel.org>
-Subject: Re: [PATCH] libgpiod: Fix build failure with musl
-Message-ID: <20211210033842.j4h5glg34prjn4ha@vireshk-i7>
-References: <4a8c598db0a78421b074f19eb2157d89f3198440.1639047500.git.viresh.kumar@linaro.org>
- <CAHp75VdwQjcrQLHh49WV5e95KCsyqVyoFO=VeNfK4LC0mEZvNw@mail.gmail.com>
- <CAMRc=McUV3-Afhd3yipDfvcEQijqDxf3cXr9egdKAgPt0nv5RA@mail.gmail.com>
+        id S229853AbhLJGxd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Dec 2021 01:53:33 -0500
+Received: from mga17.intel.com ([192.55.52.151]:23254 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232985AbhLJGxd (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 10 Dec 2021 01:53:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1639118998; x=1670654998;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=F8mDmyS06gtqXQpzDQDJ+fQp2l6XDpqHMOwb/ZIUfWA=;
+  b=PNMngxkH/agaXbKlDwgwfdQSoXXi0orZxmMDVk3S6Hi6LpY2rdrRlQpr
+   F0rm2jukflZ8YBdnBLH5qRaiwYyttOzj7tCg22iE8VZJxa0Vr9GqvEuJB
+   +hX1wBJmFvsZOs7E4jTflc5hwClcb//NGaU0WijnW06sk6qD4+3A+NE1a
+   /Ful02DzTDRS2XZ6Ct/mihOJm0WPEAkg6QHLGIUZStLH6vA2jB0bgTDN6
+   nez/Pqga99whDsn18tz2RHfBBay7bjZlXjQ9kkP7x3+Js0YPdguxMWzsj
+   kqxQm5ST/vbz3qFMVGGBlzd+F9+sCzMuQ4HcCHMC2E693WdfBMD9xnA41
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10193"; a="218977214"
+X-IronPort-AV: E=Sophos;i="5.88,194,1635231600"; 
+   d="scan'208";a="218977214"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2021 22:49:58 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,194,1635231600"; 
+   d="scan'208";a="680645526"
+Received: from lkp-server02.sh.intel.com (HELO 9e1e9f9b3bcb) ([10.239.97.151])
+  by orsmga005.jf.intel.com with ESMTP; 09 Dec 2021 22:49:56 -0800
+Received: from kbuild by 9e1e9f9b3bcb with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1mvZjA-0002sw-Ac; Fri, 10 Dec 2021 06:49:56 +0000
+Date:   Fri, 10 Dec 2021 14:49:33 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
+ 6ca94c5aa34cd74d09b6f6f90a6c4e211195e170
+Message-ID: <61b2f87d.KprtqqnGwywuiMHz%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=McUV3-Afhd3yipDfvcEQijqDxf3cXr9egdKAgPt0nv5RA@mail.gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 09-12-21, 19:32, Bartosz Golaszewski wrote:
-> On Thu, Dec 9, 2021 at 4:17 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> >
-> > On Thu, Dec 9, 2021 at 5:15 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > >
-> > > Musl defines the _IO*() macros in the files included via <sys/ioctl.h>
-> > > and hence we get redefinition errors during build as <linux/ioctl.h>,
-> > > included via <uapi/gpio.h>, defines them again.
-> > >
-> > > Fix this by undefining the macros between both the includes, document it
-> > > all in musl-compat.h as well.
-> >
-> > Is it only me who wonders why it should be fixed here?
-> >
-> > --
-> > With Best Regards,
-> > Andy Shevchenko
-> 
-> No, I'm wondering the same. I see these musl compat issues being
-> "fixed" in half the embedded linux projects. Looks to me musl
-> introduces these issues, doesn't it? Any reason for it? Can it be
-> fixed in the library?
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: 6ca94c5aa34cd74d09b6f6f90a6c4e211195e170  Merge branch 'devel' into for-next
 
-Not sure if I can go fix musl here :)
+elapsed time: 722m
 
-Btw, another thing that will work better is if we do this:
+configs tested: 176
+configs skipped: 3
 
-diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
-index eaaea3d8e6b4..ebf6b5312cc0 100644
---- a/include/uapi/linux/gpio.h
-+++ b/include/uapi/linux/gpio.h
-@@ -12,8 +12,8 @@
- #define _UAPI_GPIO_H_
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
- #include <linux/const.h>
--#include <linux/ioctl.h>
- #include <linux/types.h>
-+#include <sys/ioctl.h>
+gcc tested configs:
+arm                                 defconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm64                            allyesconfig
+i386                 randconfig-c001-20211209
+i386                 randconfig-c001-20211210
+powerpc                    socrates_defconfig
+sh                          r7780mp_defconfig
+m68k                       m5208evb_defconfig
+sh                          sdk7780_defconfig
+mips                        qi_lb60_defconfig
+powerpc                    sam440ep_defconfig
+m68k                        m5307c3_defconfig
+arm                           sunxi_defconfig
+xtensa                  cadence_csp_defconfig
+m68k                          amiga_defconfig
+powerpc                           allnoconfig
+mips                           ip28_defconfig
+sh                          polaris_defconfig
+nios2                         10m50_defconfig
+powerpc                     asp8347_defconfig
+mips                        vocore2_defconfig
+powerpc                      tqm8xx_defconfig
+arm                             mxs_defconfig
+sh                        apsh4ad0a_defconfig
+alpha                            allyesconfig
+powerpc                 mpc834x_mds_defconfig
+powerpc                     kilauea_defconfig
+powerpc                      makalu_defconfig
+sh                          lboxre2_defconfig
+nios2                            alldefconfig
+sh                          landisk_defconfig
+powerpc                         wii_defconfig
+arm                           tegra_defconfig
+powerpc                        icon_defconfig
+mips                        bcm63xx_defconfig
+sh                           se7712_defconfig
+arm                             rpc_defconfig
+sparc                       sparc32_defconfig
+sh                  sh7785lcr_32bit_defconfig
+powerpc                 xes_mpc85xx_defconfig
+nds32                             allnoconfig
+sh                           se7705_defconfig
+powerpc                      mgcoge_defconfig
+sh                          sdk7786_defconfig
+arm                           sama7_defconfig
+sh                          rsk7201_defconfig
+mips                         cobalt_defconfig
+arm                        multi_v5_defconfig
+powerpc                     redwood_defconfig
+sh                          rsk7269_defconfig
+arm                           sama5_defconfig
+sh                        sh7763rdp_defconfig
+powerpc                     rainier_defconfig
+arm                            dove_defconfig
+nds32                               defconfig
+m68k                         apollo_defconfig
+arm                     am200epdkit_defconfig
+mips                         mpc30x_defconfig
+powerpc                 canyonlands_defconfig
+powerpc                      pcm030_defconfig
+arm                        keystone_defconfig
+xtensa                              defconfig
+powerpc                     ppa8548_defconfig
+m68k                             alldefconfig
+arm                      jornada720_defconfig
+arm                             pxa_defconfig
+m68k                        m5407c3_defconfig
+powerpc                        warp_defconfig
+riscv             nommu_k210_sdcard_defconfig
+powerpc                 mpc836x_mds_defconfig
+arm                     davinci_all_defconfig
+powerpc                     taishan_defconfig
+sh                             shx3_defconfig
+mips                     loongson1b_defconfig
+sh                             sh03_defconfig
+mips                         db1xxx_defconfig
+arm                      integrator_defconfig
+powerpc                      chrp32_defconfig
+um                           x86_64_defconfig
+arm                       spear13xx_defconfig
+arm                          pxa168_defconfig
+openrisc                 simple_smp_defconfig
+powerpc                      ppc44x_defconfig
+arm                  randconfig-c002-20211210
+arm                  randconfig-c002-20211209
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+s390                                defconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+i386                 randconfig-a001-20211210
+i386                 randconfig-a002-20211210
+i386                 randconfig-a005-20211210
+i386                 randconfig-a003-20211210
+i386                 randconfig-a006-20211210
+i386                 randconfig-a004-20211210
+i386                 randconfig-a001-20211209
+i386                 randconfig-a005-20211209
+i386                 randconfig-a003-20211209
+i386                 randconfig-a002-20211209
+i386                 randconfig-a006-20211209
+i386                 randconfig-a004-20211209
+x86_64               randconfig-a006-20211209
+x86_64               randconfig-a005-20211209
+x86_64               randconfig-a001-20211209
+x86_64               randconfig-a002-20211209
+x86_64               randconfig-a004-20211209
+x86_64               randconfig-a003-20211209
+x86_64               randconfig-a006-20211210
+x86_64               randconfig-a005-20211210
+x86_64               randconfig-a001-20211210
+x86_64               randconfig-a002-20211210
+x86_64               randconfig-a003-20211210
+x86_64               randconfig-a004-20211210
+arc                  randconfig-r043-20211209
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
 
- /*
-  * The maximum size of name and label arrays.
+clang tested configs:
+x86_64               randconfig-a011-20211210
+x86_64               randconfig-a012-20211210
+x86_64               randconfig-a014-20211210
+x86_64               randconfig-a013-20211210
+x86_64               randconfig-a016-20211210
+x86_64               randconfig-a015-20211210
+i386                 randconfig-a013-20211210
+i386                 randconfig-a011-20211210
+i386                 randconfig-a016-20211210
+i386                 randconfig-a014-20211210
+i386                 randconfig-a015-20211210
+i386                 randconfig-a012-20211210
+hexagon              randconfig-r045-20211210
+riscv                randconfig-r042-20211210
+s390                 randconfig-r044-20211210
+hexagon              randconfig-r041-20211210
+s390                 randconfig-r044-20211209
+hexagon              randconfig-r041-20211209
+hexagon              randconfig-r045-20211209
+riscv                randconfig-r042-20211209
 
-
-
-That will fix it properly as well, no undef issues on any library
-then. Some of the files in uapi already do this.
-
--- 
-viresh
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
