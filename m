@@ -2,124 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D4B6346FFB0
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 12:18:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B4A847001B
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 12:36:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237676AbhLJLWV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Dec 2021 06:22:21 -0500
-Received: from www.zeus03.de ([194.117.254.33]:35496 "EHLO mail.zeus03.de"
+        id S237875AbhLJLjf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Dec 2021 06:39:35 -0500
+Received: from mga01.intel.com ([192.55.52.88]:57326 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237710AbhLJLWU (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 10 Dec 2021 06:22:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=k1; bh=2Aqud306rFs88j3dyky/UfXf59yS
-        uJqUHmSVrmdZR2I=; b=qIH3Fs+dCthxL+4Gddomzfhgdc23TO3TG2lYe/tVdsVl
-        OP6Xc4DtvXViVi4xZ0UmoPOkAaZONHbfcW8Q5kpnu+Mz5JPxHoshq8xxvRV5WPSc
-        cfXtfqffh0UyXRfQuFT8O2WV2J5lMk/Msz9xvML9563C8Bq7hdn6BtMcWq9rAU8=
-Received: (qmail 1443055 invoked from network); 10 Dec 2021 12:18:43 +0100
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 10 Dec 2021 12:18:43 +0100
-X-UD-Smtp-Session: l3s3148p1@wUnA4sjSopEgAQnoAEPjAJzPXF1eIEK3
-Date:   Fri, 10 Dec 2021 12:18:41 +0100
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v5 1/1] gpio: add sloppy logic analyzer using polling
-Message-ID: <YbM3kcEW7m9Ado1e@ninjato>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, linux-doc@vger.kernel.org
-References: <20211123164902.35370-1-wsa+renesas@sang-engineering.com>
- <20211123164902.35370-2-wsa+renesas@sang-engineering.com>
- <CACRpkdYJqP7WJuhS9G65abCZHK1_LX9hkXU6o+k10t2LXw100w@mail.gmail.com>
+        id S238051AbhLJLje (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 10 Dec 2021 06:39:34 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10193"; a="262441700"
+X-IronPort-AV: E=Sophos;i="5.88,195,1635231600"; 
+   d="scan'208";a="262441700"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2021 03:35:59 -0800
+X-IronPort-AV: E=Sophos;i="5.88,195,1635231600"; 
+   d="scan'208";a="581661751"
+Received: from smile.fi.intel.com ([10.237.72.184])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2021 03:35:57 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1mve8u-004TK8-QX;
+        Fri, 10 Dec 2021 13:32:48 +0200
+Date:   Fri, 10 Dec 2021 13:32:48 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Yuchang Hsu <saraon640529@gmail.com>
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
+        Richard_Hsu@asmedia.com.tw, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Yd_Tseng@asmedia.com.tw,
+        Cindy1_Hsu@asmedia.com.tw, Andrew_Su@asmedia.com.tw
+Subject: Re: [PATCH v4] gpio: amdpt: add new device ID and 24-pin support
+Message-ID: <YbM64Dhlii+lKhRu@smile.fi.intel.com>
+References: <20211210090315.4889-1-Richard_Hsu@asmedia.com.tw>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ZbgJohPepknqqfKx"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACRpkdYJqP7WJuhS9G65abCZHK1_LX9hkXU6o+k10t2LXw100w@mail.gmail.com>
+In-Reply-To: <20211210090315.4889-1-Richard_Hsu@asmedia.com.tw>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Fri, Dec 10, 2021 at 05:03:15PM +0800, Yuchang Hsu wrote:
+> From: Hsu Yuchang <Richard_Hsu@asmedia.com.tw>
+> 
+> Add an ACPI HID(AMDIF031) and pin number in the pt_gpio_acpi_match.
 
---ZbgJohPepknqqfKx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Very well!
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Hi Linus!
+> Signed-off-by: Yuchang Hsu <Richard_Hsu@asmedia.com.tw>
+> ---
+> Reposition and modify the changelog
+>  drivers/gpio/gpio-amdpt.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-amdpt.c b/drivers/gpio/gpio-amdpt.c
+> index bbf53e289141..13f4e2af3800 100644
+> --- a/drivers/gpio/gpio-amdpt.c
+> +++ b/drivers/gpio/gpio-amdpt.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/platform_device.h>
+> 
+>  #define PT_TOTAL_GPIO 8
+> +#define PT_TOTAL_GPIO_EX 24
+> 
+>  /* PCI-E MMIO register offsets */
+>  #define PT_DIRECTION_REG   0x00
+> @@ -103,7 +104,7 @@ static int pt_gpio_probe(struct platform_device *pdev)
+>  	pt_gpio->gc.owner            = THIS_MODULE;
+>  	pt_gpio->gc.request          = pt_gpio_request;
+>  	pt_gpio->gc.free             = pt_gpio_free;
+> -	pt_gpio->gc.ngpio            = PT_TOTAL_GPIO;
+> +	pt_gpio->gc.ngpio            = (uintptr_t)device_get_match_data(dev);
+>  #if defined(CONFIG_OF_GPIO)
+>  	pt_gpio->gc.of_node          = dev->of_node;
+>  #endif
+> @@ -133,8 +134,9 @@ static int pt_gpio_remove(struct platform_device *pdev)
+>  }
+> 
+>  static const struct acpi_device_id pt_gpio_acpi_match[] = {
+> -	{ "AMDF030", 0 },
+> -	{ "AMDIF030", 0 },
+> +	{ "AMDF030", PT_TOTAL_GPIO },
+> +	{ "AMDIF030", PT_TOTAL_GPIO },
+> +	{ "AMDIF031", PT_TOTAL_GPIO_EX },
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(acpi, pt_gpio_acpi_match);
+> --
+> 2.30.2
+> 
 
-> I like this patch.
-
-I am glad!
-
->=20
-> Maybe a small paragraph first saying what this is, the usecase (feel
-> free to steal, rewrite etc):
->=20
-> The sloppy logic analyzer will utilize a few GPIO lines in input mode
-> on a system to rapidly sample these digital lines, which will, if the
-> Nyquist criteria is met, result in a time series log with approximate
-> waveforms as they appeared on these lines.
->=20
-> One way to use it is to analyze external traffic connected to these
-> GPIO lines with wires (i.e. digital probes), acting as a common logic
-> analyzer.
-
-Well, frankly, with the driver depending on EXPERT, this paragraph seems
-a tad superfluous to me. But as it came for free and won't hurt, I took
-the liberty to add this to the beginning of the documentation.
-
-> Another thing it can do is to snoop on on-chip peripherals if the I/O
-> cells of these peripherals can be used in GPIO input mode at the same
-> time as they are being used as inputs or outputs for the peripheral,
-> for example it would be possible to scale down the speed of a certain
-> MMC controller and snoop the traffic between the MMC controller and
-> the SD card by the sloppy logic analyzer. In the pin control subsystem
-> such pin controllers are called "non-strict": a certain pin can be
-> used with a certain peripheral and as a GPIO input line at the same
-> time.
-
-Thanks for pointing out the 'strict' mode. I actually did snoop pins
-muxed to I2C but I had to use a gpiolib hack for it assuming this was
-not supported otherwise. Now, I have a one-liner for the Renesas pinctrl
-driver which makes things work as well. I will work this out with Geert
-hopefully. Would be really great to have this feature without my hack!
-
-That being said, the paragraph above is a bit too long for my taste,
-I'll see if I can make it more concise. But it should be there, yes.
-
-Thanks for your support!
-
-Happy hacking,
-
-   Wolfram
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
---ZbgJohPepknqqfKx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmGzN40ACgkQFA3kzBSg
-KbYDoA//YzZ1PQZYp3ZV9klerZNz8r6wkg4w72xBlW+3z5JUsxVuJLH+JikBgwpF
-t2LiKCBX0MvHX4a9m1q10bhw6p9qGUFSJFT6Q5stfIycnS3r/U9JmMIEyqp09Yd7
-Z4IUUjA40wIkMbJI+YZ70iHYTX1StffmIJQBhMgXcXgk8rwhaY8yafBMFTr/aljU
-A3SvpD3b+pdIvGomXbOpLfknA4k3+e5U8qQYjdgHfvg4qM6V6DTRUgRjrWVVrcli
-PqHNMoj3+g7vtlDjDNaeGYM1Ly+dGP6L/qw0gCb4M2+puRwpfYH2BfIGKQ+mx1Q5
-dUZA+pJ/GWZSY29BrATGlMcjTb0NdnFYY3fqudyY3JDJP1oKIxNeaKkKwKodzu/5
-32VVChWjVCHXy9qvYleY3GSfbSuq7CfSfWqAatm9gXVyxlGOhSACAsjosibaJqUc
-0XoX98DM2Ax2fgShuFwSr+j9MiAmp+/GSeS16W4hk5ZNdlghB1yq26r68pi6oZMN
-tml8Jn7ObbwNrfiAeDiT2BaMwxTVgkvyByWY5CZ3iYKNnhFoG06hhnPqPE65yVoZ
-dqsRe5II/HI2o0PDQmMfZgmtfpH4zAUZFQjzIoG5JNrGdiGzsed6Fnf+CLNZZBB0
-VvgnF15DOm7Js2dVKbkwKG7WpvhekL6JmNuzK/PzIJxUI/+tFlA=
-=uTq2
------END PGP SIGNATURE-----
-
---ZbgJohPepknqqfKx--
