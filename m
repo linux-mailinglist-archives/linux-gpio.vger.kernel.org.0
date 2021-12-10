@@ -2,346 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7072046F86B
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 02:25:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B93346F89E
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 02:42:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233511AbhLJB2o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 9 Dec 2021 20:28:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47096 "EHLO
+        id S232772AbhLJBpd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 9 Dec 2021 20:45:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232401AbhLJB2o (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Dec 2021 20:28:44 -0500
-Received: from mail-oi1-x22d.google.com (mail-oi1-x22d.google.com [IPv6:2607:f8b0:4864:20::22d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35576C0617A1
-        for <linux-gpio@vger.kernel.org>; Thu,  9 Dec 2021 17:25:10 -0800 (PST)
-Received: by mail-oi1-x22d.google.com with SMTP id 7so11201250oip.12
-        for <linux-gpio@vger.kernel.org>; Thu, 09 Dec 2021 17:25:10 -0800 (PST)
+        with ESMTP id S232614AbhLJBpc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 9 Dec 2021 20:45:32 -0500
+Received: from mail-oi1-x231.google.com (mail-oi1-x231.google.com [IPv6:2607:f8b0:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79AD8C0617A1
+        for <linux-gpio@vger.kernel.org>; Thu,  9 Dec 2021 17:41:58 -0800 (PST)
+Received: by mail-oi1-x231.google.com with SMTP id r26so11305694oiw.5
+        for <linux-gpio@vger.kernel.org>; Thu, 09 Dec 2021 17:41:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0Saab9E6pBZbyO1S7bJJtFbvA3GKfuPhNl8XZDofNXk=;
-        b=wYHTqwZSOFXnBxthVui0OoJ9f745THfBjeI3a4uYZ5GDmchWnbGxNOnrCIjSy2r6rW
-         NFBm9+R3AJR4EMfYUaDQoorto+ktgrolrzRkoQ6pIBREbD7oYo4TNJHFLOLqGt++rmwn
-         t0zHSmMMxQ72NX/ocaKFfhEGMtgjI56/QLm8NHRdaNW6Ru/VYvFJ9AFxWDQJ21vtLQkY
-         HlaBEMoGXOyjU69N7BBcnl7HLCBplQnWw2wauMC273mHr3pUFeTNYejuNtlIoJZszBC/
-         gTYXXPnGXAnfeXbuOLu4KtZZQHfamSgH8UdbxtaSx8YoNdhbi7o6VRTPU4CuNIFC2ZZO
-         vVxQ==
+         :cc:content-transfer-encoding;
+        bh=CAEs6TA9o6xsdCdp2MRvi3WB7zMwWYnia8jBx/umBqs=;
+        b=dy3rIqlj8uvzBxhcQD03MQEGT9iCSV29dHj5Ey3cpl0BkhBgxHQFcrOPBPvwRGWJEG
+         QuDzh4CPlUK4jhFiKS9pADBoO8aOQSbsfXVlQrwqntPpixr7cwuKCaFtcuO1H+991Hid
+         8hLR5aHaCEKX/BmOB9p6/8vIgQBjssvCGSYahyUURzmIDe4aqboHjLcYBITJWLZdYxRi
+         FRRXvgj5fW8qZCPiyLjsApkXnfGNxKit0nMVPW82luqBaO9Lpq0BYqWYw9xKiIHBLKF7
+         5bNF94kSietC/r1t8Ktl4XUouYu6Wokjei8QFCHTQbDMYg/zl6kwJaFEihy2Y9HIUx2d
+         kZtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0Saab9E6pBZbyO1S7bJJtFbvA3GKfuPhNl8XZDofNXk=;
-        b=zWwfHSPCAMnnNEiY3ifEyD/nE9CnRzSqoqz65bXD85iORlFVxFwAZjSsbdiNI6cvzC
-         tmlApmaQ5bACIxskpyoHnbEukL6O99fEoZS7ueFQkyJPXJy2dZuyAmd2+Tbe/5dGlvMj
-         ehtUxkOedLQFl4X63/R5K4XHB8fvVrgNiAyXFdUC1/YyDQ6GUbgczj1B/5aTBDB0mpWQ
-         ua8tcZrYn3Q1S343KqwSvtuHjOWU6Q0pwzW788H5GQQCWGj4ZsS/w7HyaKhYnlZxhrv6
-         Gx1dho+U6529vOcw2psNodqKDRUgHBodA2yllAhCGztUtIMQ39FKcxfoiXvL1F3tB5bx
-         b39w==
-X-Gm-Message-State: AOAM530BTZSj/1JVpoHLozIjWZYlAZkXwxHn0z9ZdrJp1iwCzi6hmZ/Q
-        DpwLhoKYSH/wwcq/ghlGej3CW7bbCaYlMTChpBuP8w==
-X-Google-Smtp-Source: ABdhPJz1o7Hah+1IdxXbQYbbEyHG3lpFOMWj4uNfulfx42ZyR6c5lyHae7DWmvsLE/dZEDtZoZBwadb5yyj6UisZNok=
-X-Received: by 2002:aca:120f:: with SMTP id 15mr9565253ois.132.1639099509287;
- Thu, 09 Dec 2021 17:25:09 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=CAEs6TA9o6xsdCdp2MRvi3WB7zMwWYnia8jBx/umBqs=;
+        b=dAXE6Bj8BdPICpZbONCu+cRg7TOa9CKbdWkOB2EU42gppynQDXOTNp6kpU+mU1H3MM
+         gPMCkf4mW7DCTvwP5b8quObnTqSaLbAU26YojaXTTEO0bVfBIand+ytGx4JZn+Gs2aMN
+         AC3DDio9nur3BQUv/xEPhrU/+Iddy0yxFvVCNTa25+NvZbTd/6mtDC6IrKJJWW0X4o7M
+         ICCIGl8yEu8Ghfwmu/rV2wDIV6put4hpzSKasayR+uc2pY1AVRxrik4BnrV6IbRIyiHD
+         eMJEz1lIcVXsPBPT5+JC5DbFjS9OIUI8aTyw+0NvfnhKwh5oDxavHCXOI+Yyat5lIbG8
+         iQyg==
+X-Gm-Message-State: AOAM533mlTc86OZumCQ+bndSakYSejp+SiuiktqESZXRK/e57M52hm/P
+        3LOIXhG74YySYzgXymesgrqhQQGkPegWZ5yczn5Uwedox5I=
+X-Google-Smtp-Source: ABdhPJwBcRbgcZxhHro1YSDmrt7rzHSafyA3nD3aKcE4a+q4d22XA0r2ItBipMJp1FnUniZp6IqKB/rEgM/fmK1Ki1k=
+X-Received: by 2002:aca:120f:: with SMTP id 15mr9624499ois.132.1639100517622;
+ Thu, 09 Dec 2021 17:41:57 -0800 (PST)
 MIME-Version: 1.0
-References: <1638850665-9474-1-git-send-email-wellslutw@gmail.com> <1638850665-9474-3-git-send-email-wellslutw@gmail.com>
-In-Reply-To: <1638850665-9474-3-git-send-email-wellslutw@gmail.com>
+References: <20211207210823.1975632-1-j.neuschaefer@gmx.net>
+ <20211207210823.1975632-6-j.neuschaefer@gmx.net> <CAHp75Vew=M_ofNM5pmeHtTJHXRUbbO4RrtgYAtLBznTBm3CS6Q@mail.gmail.com>
+ <YbC6Bv2teZ5CFhFQ@latitude> <20211209082623.GF25091@packtop>
+In-Reply-To: <20211209082623.GF25091@packtop>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 10 Dec 2021 02:24:57 +0100
-Message-ID: <CACRpkdYO-hgEKsra-+qPq=apSqRBHDnzfP6YYLp6wGb++XEsNA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] pinctrl: Add driver for Sunplus SP7021
-To:     Wells Lu <wellslutw@gmail.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, wells.lu@sunplus.com,
-        dvorkin@tibbo.com
+Date:   Fri, 10 Dec 2021 02:41:45 +0100
+Message-ID: <CACRpkdb_zGz4+8R0=ORCbbbVeJVkLqBG2CDXAzi2VAA7-PPZ6A@mail.gmail.com>
+Subject: Re: [PATCH v2 5/8] pinctrl: nuvoton: Add driver for WPCM450
+To:     zweiss@equinix.com
+Cc:     =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Wells,
-
-this is improving! Keep working on this driver. I now naturally have
-more comments :)
-
-On Tue, Dec 7, 2021 at 5:17 AM Wells Lu <wellslutw@gmail.com> wrote:
-
-> +static void sppctl_func_set(struct sppctl_pdata *pctl, u8 func, u8 val)
-> +{
-> +       u32 reg, offset;
-> +
-> +       /* Note that upper 16-bit word is mask
-> +        * and lower 16-bit word is value.
-> +        * Enable mask before write.
-> +        */
-> +       reg = 0x007f0000 | val; /* Set value and enable mask. */
-
-Define these types of masks and use them like this:
-
-#include <linux/bits.h>
-
-#define SPPCTL_FUNC_MASK GENMASK(22, 16)
-
-Also switch the order with the mask to the right please:
-
-reg = val & SPPCTL_FUNC_MASK;
-
-> +       if (func & 1)
-
-I would write
-
-#define SSPCTL_FUNC_FLAG BIT(0)
-
-if (func & SSPCTL_FUNC_FLAG)
-
-Use the name that bit has in your documentation for the
-define so we know what is going on.
-
-> +               reg <<= 8;
-
-Likewise
-
-#define SSPCTL_FUNC_UPPER_SHIFT 8
-
-reg <<= SSPCTL_FUNC_UPPER_SHIFT;
-
-
-Can also be a comment. The general idea is to break out as many
-of these magic numbers as possible to #defines and give them
-some names from the reference manual, so we understand them
-instead of the numbers being magic.
-
-> +       /* Convert function # to register offset. */
-> +       offset = func & ~1;
-
-Step 1 write:
-offset = func & GENMASK(31, 1);
-
-> +       offset <<= 1;
-
-I would write:
-offset *= 2;
-because we are dealing with an offset and not an arithmetic
-operation. It will be the same to the compiler.
-
-But the best is to just merge all this and write (if I'm not wrong):
-
-#include <linux/bitfield.h>
-
-/*
- * Bit 1 .. 31 gives the function, index this into a 32-bit offset by
-* multiplying by four to find the register.
- */
-offset = FIELD_GET(GENMASK(31, 1), func);
-offset *= 4;
-
-This gets pretty clear. We see that we remove BIT(0) and use the
-rest as offset index and there are four bytes per register.
-
-(Beware of bugs in my pseudocode, check it!)
-
-> +static u8 sppctl_func_get(struct sppctl_pdata *pctl, u8 func)
-> +{
-> +       u32 reg, offset;
-> +       u8 val;
-> +
-> +       /* Convert function # to register offset. */
-> +       offset = func & ~1;
-> +       offset <<= 1;
-
-Same comments.
-
-> +       reg = readl(pctl->moon2_base + offset);
-> +       if (func & 1)
-> +               val = reg >> 8;
-> +       else
-> +               val = reg;
-> +       val &= 0x7f;
-
-#define SSPCTL_*_MASK for this 0x7f so we understand it.
-
-> +static void sppctl_gmx_set(struct sppctl_pdata *pctl, u8 reg_off, u8 bit_off, u8 bit_sz,
-> +                          u8 val)
-> +{
-> +       u32 mask, reg;
-> +
-> +       /* Note that upper 16-bit word is mask
-> +        * and lower 16-bit word is value.
-> +        * Enable mask before write.
-> +        */
-> +       mask = ~(~0 << bit_sz);
-> +       reg = (mask << 16) | (val & mask);
-> +       reg <<= bit_off;
-
-Please familiarize yourself with <linux/bitfield.h> and use things like
-FIELD_PREP() for this (I think, atleast).
-
-> +static int sppctl_first_get(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +       struct sppctl_gpio_chip *spp_gchip = gpiochip_get_data(chip);
-> +       u32 reg;
-> +
-> +       reg = readl(spp_gchip->first_base + SPPCTL_GPIO_OFF_FIRST + R32_ROF(offset));
-
-So R32_ROF() is register offset.
-
-> +
-> +       dev_dbg(chip->parent, "%s(%u): addr = %p, reg = %08x, val = %d\n",
-> +               __func__, offset, spp_gchip->first_base + SPPCTL_GPIO_OFF_FIRST +
-> +               R32_ROF(offset), reg, (int)R32_VAL(reg, R32_BOF(offset)));
-> +
-> +       return R32_VAL(reg, R32_BOF(offset));
-
-And R32_BOF is register bit offset.
-
-I think these macros just make it hard to read because the reader has to
-go to another file and look it up and then figure out what does ROF and
-BOF actually mean (no explanation given).
-
-I would just inline the stuff.
-
-u32 reg = (offset / 32) * 4;
-u32 bit = offset % 32;
-
-reg = readl(spp_gchip->first_base + SPPCTL_GPIO_OFF_FIRST + reg);
-
-// Some debug code
-
-return !!(reg & BIT(bit));
-
-> +static void sppctl_gpio_output_inv_set(struct gpio_chip *chip, unsigned int offset)
-> +{
-> +       struct sppctl_gpio_chip *spp_gchip = gpiochip_get_data(chip);
-> +       u32 reg;
-> +
-> +       /* Upper 16-bit word is mask. Lower 16-bit word is value. */
-> +       reg = (BIT(R16_BOF(offset)) << 16) | BIT(R16_BOF(offset));
-> +       writel(reg, spp_gchip->gpioxt2_base + SPPCTL_GPIO_OFF_OINV + R16_ROF(offset));
-> +}
-
-Same comments about the BOF and ROF.
-
-This layout with "mask and value" in registers needs to be explained
-somewhere it looks complex. I don't understand why a machine register
-contains a mask for example.
-
-> +static int stpctl_set_mux(struct pinctrl_dev *pctldev, unsigned int func_selector,
-> +                         unsigned int group_selector)
-> +{
-> +       const struct sppctl_func *f = &sppctl_list_funcs[func_selector];
-> +       struct sppctl_pdata *pctl = pinctrl_dev_get_drvdata(pctldev);
-> +       struct grp2fp_map g2fpm = pctl->g2fp_maps[group_selector];
-> +       int i = -1, j = -1;
-
-Please do not initialize loop variable i to -1, just declare it.
-
-> +       dev_dbg(pctldev->dev, "%s(func: %d, grp: %d)\n", __func__,
-> +               func_selector, group_selector);
-> +
-> +       switch (f->freg) {
-> +       case f_off_0:   /* GPIO. detouch from all funcs - ? */
-> +               for (i = 0; i < sppctl_list_funcs_sz; i++) {
-> +                       if (sppctl_list_funcs[i].freg != f_off_m)
-> +                               continue;
-> +                       j++;
-
-Insert a comment that j is set to -1 so this will be zero here after the first
-iteration.
-
-> +                       if (sppctl_func_get(pctl, j) != group_selector)
-> +                               continue;
-> +                       sppctl_func_set(pctl, j, 0);
-> +               }
-> +               break;
-> +
-> +       case f_off_m:   /* Mux */
-> +               sppctl_first_master_set(&pctl->spp_gchip->chip, group_selector,
-> +                                       mux_f_mux, mux_m_keep);
-> +               sppctl_func_set(pctl, func_selector - 2, (group_selector == 0) ?
-> +                               group_selector : group_selector - 7);
-
--2 and -7? Why? Add some comments or maybe #define these
-constants?
-
-> +static int stpctl_gpio_request_enable(struct pinctrl_dev *pctldev,
-> +                                     struct pinctrl_gpio_range *range, unsigned int offset)
-> +{
-> +       struct sppctl_pdata *pctl = pinctrl_dev_get_drvdata(pctldev);
-> +       struct pin_desc *pdesc;
-> +       int g_f, g_m;
-> +
-> +       dev_dbg(pctldev->dev, "%s(%d)\n", __func__, offset);
-> +
-> +       g_f = sppctl_first_get(&pctl->spp_gchip->chip, offset);
-> +       g_m = sppctl_master_get(&pctl->spp_gchip->chip, offset);
-> +       if (g_f == mux_f_gpio && g_m == mux_m_gpio)
-> +               return 0;
-> +
-> +       pdesc = pin_desc_get(pctldev, offset);
-> +       if (pdesc->mux_owner)
-> +               return -EACCES;
-
-Do not reimplement the pinmux core please.
-
-What you want to achieve here is "strict pinmux", i.e. setting the field
-"strict" in struct pinmux_ops to true. Then you can just delete this
-check.
-
-> +static const struct pinmux_ops sppctl_pinmux_ops = {
-> +       .request             = stpctl_request,
-> +       .free                = stpctl_free,
-
-These are just set to empty functions. Delete these entries
-and the empty functions.
-
-> +       .get_functions_count = stpctl_get_functions_count,
-> +       .get_function_name   = stpctl_get_function_name,
-> +       .get_function_groups = stpctl_get_function_groups,
-> +       .set_mux             = stpctl_set_mux,
-> +       .gpio_request_enable = stpctl_gpio_request_enable,
-> +       .gpio_disable_free   = stpctl_gpio_disable_free,
-> +       .gpio_set_direction  = stpctl_gpio_set_direction,
-> +       .strict              = 1
-
-Use "true" rather than 1. (And do not reimplement the check.)
-
-> +static int sppctl_remove(struct platform_device *pdev)
-> +{
-> +       struct sppctl_pdata *sppctl = pdev->dev.platform_data;
-> +
-> +       devm_pinctrl_unregister(&pdev->dev, sppctl->pctl_dev);
-
-This defies the idea with devm_* calls. Drop remove() entirely because
-devm_ allocated resources go away by themselves.
-
-> +++ b/drivers/pinctrl/sunplus/sppctl.h
-(...)
-> +/* (/16)*4 */
-> +#define R16_ROF(r)             (((r) >> 4) << 2)
-> +#define R16_BOF(r)             ((r) % 16)
-> +/* (/32)*4 */
-> +#define R32_ROF(r)             (((r) >> 5) << 2)
-> +#define R32_BOF(r)             ((r) % 32)
-
-As mentioned I prefer explicit inlined code for these.
-The bit shifting here makes it really hard to know what is going
-on, the compiler will get it right if you use the right types
-and just write (n / 32) * 4. Please do not try to help the compiler
-optimizing it just leads to code that is hard to read.
-
-> +#define R32_VAL(r, boff)       (((r) >> (boff)) & BIT(0))
-
-To check the value of a certain bit use this pattern:
-
-if (val & BIT(n))
-
-To return a boolean clamped bit (return 0/1) do this idiom:
-
-return !!(val & BIT(n));
-
-Other than these things I didn't notice anything more this
-time, but I might find even more stuff, but hey it's getting there!
+On Thu, Dec 9, 2021 at 9:26 AM Zev Weiss <zweiss@equinix.com> wrote:
+> On Wed, Dec 08, 2021 at 05:58:30AM PST, Jonathan Neusch=C3=A4fer wrote:
+
+> >> BIT()
+> >
+> >I'll use it, but in this case, I think it doesn't simplify much the
+> >whole expression all that much. Is there perhaps a macro that
+> >constructs a continuous bitmask of N bits, perhaps additionally
+> >left-shifted by M bits?
+> >
+> >Maybe somewhere in the bitmap_* API...
+> >
+>
+> There's GENMASK(), though it takes a high bit and low bit rather than a
+> bit position and count, so it'd require a small bit of arithmetic, e.g.
+>
+>   lastbit =3D gpio->first_irq_bit + gpio->num_irqs - 1;
+>   ours =3D GENMASK(lastbit, gpio->first_irq_bit);
+>
+> or a manual shift:
+>
+>   ours =3D GENMASK(gpio->num_irqs - 1, 0) << gpio->first_irq_bit;
+
+I think this can be handled with FIELD_PREP() from
+<linux/bitfield.h>? Some examples at the top of the
+header.
 
 Yours,
 Linus Walleij
