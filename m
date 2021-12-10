@@ -2,126 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AB4A46FF3C
-	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 11:58:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F90046FF92
+	for <lists+linux-gpio@lfdr.de>; Fri, 10 Dec 2021 12:12:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233002AbhLJLB6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 10 Dec 2021 06:01:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35250 "EHLO
+        id S237574AbhLJLPv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 10 Dec 2021 06:15:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240145AbhLJLB4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Dec 2021 06:01:56 -0500
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AFEAC061746
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Dec 2021 02:58:21 -0800 (PST)
-Received: by mail-pj1-x102f.google.com with SMTP id y14-20020a17090a2b4e00b001a5824f4918so9154616pjc.4
-        for <linux-gpio@vger.kernel.org>; Fri, 10 Dec 2021 02:58:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ngAMk46Rz8CHvHSOaJuZFtnRLPNe0W1lLJO40+hKebM=;
-        b=o/bSZdCmjVHUsvyvyNaWZLPG5xHsqhqwELKVkSZVLk3MRze/bjPAdWcaWJaIw0vMgZ
-         riGkSH6NHny1Bdz8QTckRPUU4xXwcGvarGliWbJVb91j2tPBaPnmZrXjvwuE540Cqhge
-         hujtdesG+15OcJNzWbBBuPl0y5qxRO7Jgicr18qc4cRIoe5fK7OaakMG3yJ+7nc/cZ8Y
-         SI80uFDJOkaIPhsEkmWCcrDlbaLuxt+crL1D3hizhCSWuV403qBWMY5S/FWrR4CHpmEg
-         9CnJ3EVmnPfip4ReQwcL2HozOlHqGvOgmGKaU6ERQmXzRpOpmPL7STpDJVaT1yNOdl3I
-         M5nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ngAMk46Rz8CHvHSOaJuZFtnRLPNe0W1lLJO40+hKebM=;
-        b=0Qn6IYPonCjvCZHMWy+5vCPxG//bSicWA8/XBHAMesU47Qqs9tlE9rgs2W9tSzT/0u
-         dkDj5kT6sN4Gr3xa/k3ihukNMSwbrKvPFwJNabkcWkqv/nL3zB4UOYGbWLeqx/DGPlS/
-         MPAuXczswLPUY0UQnH1k1MnRHpD4tsmtZJpc04UnzaBiMBdtD5fdrlEQ2NXqaK1b4vZv
-         4OTyfGg8A+a6rUeRHeOMixG7oBYT9R9zqMfltb/DgxhadAtpPaUfaayNgAk0OljtaFtX
-         imivPBuylzb7lp0+Eo02XH4AIv8up1Pu9zzFMDkt7XkbGP31ivoeIr2okRv/v+wJjcNn
-         Y+IQ==
-X-Gm-Message-State: AOAM530F/I23xOj8vR5wmtS7OKslUWNYHcOxPWKNnlbshUePT0wmYKP3
-        x23nGVAm7KU3Qx5/k36GMoyfkQ==
-X-Google-Smtp-Source: ABdhPJypdNPOS0CLBC8FZMvzGLHUN36EY6d67dGX3+dhhVODd17Ch6DgpQuCKIgXyPcAh1t68yi5FA==
-X-Received: by 2002:a17:90a:3e09:: with SMTP id j9mr22853447pjc.24.1639133901138;
-        Fri, 10 Dec 2021 02:58:21 -0800 (PST)
-Received: from localhost ([106.201.42.111])
-        by smtp.gmail.com with ESMTPSA id 6sm819637pgc.90.2021.12.10.02.58.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Dec 2021 02:58:20 -0800 (PST)
-Date:   Fri, 10 Dec 2021 16:28:18 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Arnd Bergmann <arnd@kernel.org>
-Subject: Re: [PATCH] libgpiod: Fix build failure with musl
-Message-ID: <20211210105818.tsbzahtcs5nlxqkr@vireshk-i7>
-References: <4a8c598db0a78421b074f19eb2157d89f3198440.1639047500.git.viresh.kumar@linaro.org>
- <CAHp75VdwQjcrQLHh49WV5e95KCsyqVyoFO=VeNfK4LC0mEZvNw@mail.gmail.com>
- <CAMRc=McUV3-Afhd3yipDfvcEQijqDxf3cXr9egdKAgPt0nv5RA@mail.gmail.com>
- <20211210033842.j4h5glg34prjn4ha@vireshk-i7>
+        with ESMTP id S237605AbhLJLPt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 10 Dec 2021 06:15:49 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F8BAC061A32;
+        Fri, 10 Dec 2021 03:12:14 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id CC207CE2A91;
+        Fri, 10 Dec 2021 11:12:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6252C341C8;
+        Fri, 10 Dec 2021 11:12:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1639134731;
+        bh=TgqAl8ITfVtfwDaQ625BpAv4Rdz1KSLtUuyWsSaIkbY=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=FEvIQYvjN4SHAVlInPu2HL8XALbPobfrV3SS8c7/xrYs21OHgHv3iA+7odMte0J8V
+         JmMjarZOf705yUVhjGpI9TeFOEmJP/JTzGbWsXPxzCX53mPYXW3t+CkgcCIKJs8W7c
+         RUEWx44L5GqJsjtqeowfaQVJpSDJJwuwj+pYeSxnRB8udOq2WMIKeRVynUBnKLMeBy
+         BgTSB6dAoL4gioUEsR0clsFBXD6SxMYKCe0R9tVEUyikLUncTvVKe2xkXsCwfSjUv+
+         lDvOohj1UiFJUr8PmeX5l3T7QmLUaY75bpLzw9cbDzdsVbFikOZDmjs6F5FZsQIlTF
+         NkpWVkyvu4zsQ==
+Message-ID: <9fc29e688951c7afe4504ae787ef7806ee4dbb7f.camel@kernel.org>
+Subject: Re: [PATCH v2 2/2] ARM: dts: gpio-ranges property is now required
+From:   nicolas saenz julienne <nsaenz@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Phil Elwell <phil@raspberrypi.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Thierry Reding <treding@nvidia.com>,
+        devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org
+Date:   Fri, 10 Dec 2021 12:12:03 +0100
+In-Reply-To: <CACRpkdYJAZcr_PPCGPYcitfcwd9GDFf+7hPJkOmjomqCrruNfw@mail.gmail.com>
+References: <20211206092237.4105895-1-phil@raspberrypi.com>
+         <20211206092237.4105895-3-phil@raspberrypi.com>
+         <CACRpkdYJAZcr_PPCGPYcitfcwd9GDFf+7hPJkOmjomqCrruNfw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.1 (3.42.1-1.fc35) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211210033842.j4h5glg34prjn4ha@vireshk-i7>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 10-12-21, 09:08, Viresh Kumar wrote:
-> On 09-12-21, 19:32, Bartosz Golaszewski wrote:
-> > On Thu, Dec 9, 2021 at 4:17 PM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > >
-> > > On Thu, Dec 9, 2021 at 5:15 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > > >
-> > > > Musl defines the _IO*() macros in the files included via <sys/ioctl.h>
-> > > > and hence we get redefinition errors during build as <linux/ioctl.h>,
-> > > > included via <uapi/gpio.h>, defines them again.
-> > > >
-> > > > Fix this by undefining the macros between both the includes, document it
-> > > > all in musl-compat.h as well.
-> > >
-> > > Is it only me who wonders why it should be fixed here?
-> > >
-> > > --
-> > > With Best Regards,
-> > > Andy Shevchenko
+On Mon, 2021-12-06 at 11:33 +0100, Linus Walleij wrote:
+> On Mon, Dec 6, 2021 at 10:22 AM Phil Elwell <phil@raspberrypi.com> wrote:
+> 
+> > Since [1], added in 5.7, the absence of a gpio-ranges property has
+> > prevented GPIOs from being restored to inputs when released.
+> > Add those properties for BCM283x and BCM2711 devices.
 > > 
-> > No, I'm wondering the same. I see these musl compat issues being
-> > "fixed" in half the embedded linux projects. Looks to me musl
-> > introduces these issues, doesn't it? Any reason for it? Can it be
-> > fixed in the library?
+> > [1] commit 2ab73c6d8323 ("gpio: Support GPIO controllers without
+> >     pin-ranges")
+> > 
+> > Fixes: 2ab73c6d8323 ("gpio: Support GPIO controllers without pin-ranges")
+> > Signed-off-by: Phil Elwell <phil@raspberrypi.com>
 > 
-> Not sure if I can go fix musl here :)
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 > 
-> Btw, another thing that will work better is if we do this:
-> 
-> diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
-> index eaaea3d8e6b4..ebf6b5312cc0 100644
-> --- a/include/uapi/linux/gpio.h
-> +++ b/include/uapi/linux/gpio.h
-> @@ -12,8 +12,8 @@
->  #define _UAPI_GPIO_H_
-> 
->  #include <linux/const.h>
-> -#include <linux/ioctl.h>
->  #include <linux/types.h>
-> +#include <sys/ioctl.h>
-> 
->  /*
->   * The maximum size of name and label arrays.
-> 
-> 
-> 
-> That will fix it properly as well, no undef issues on any library
-> then. Some of the files in uapi already do this.
+> Please funnel this patch through the SoC tree.
 
-This got fixed somehow after I played a bit with the toolchain for
-musl. Abandoning this change for now.
+Applied for fixes.
 
--- 
-viresh
+Thanks,
+Nicolas
