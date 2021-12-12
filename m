@@ -2,133 +2,174 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C416471C7D
-	for <lists+linux-gpio@lfdr.de>; Sun, 12 Dec 2021 20:16:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 80DAA471E81
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Dec 2021 00:02:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230190AbhLLTQw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 12 Dec 2021 14:16:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48060 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230172AbhLLTQv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 12 Dec 2021 14:16:51 -0500
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78749C061714;
-        Sun, 12 Dec 2021 11:16:51 -0800 (PST)
-Received: by mail-ed1-x534.google.com with SMTP id x15so46494271edv.1;
-        Sun, 12 Dec 2021 11:16:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2WtLGnn2I4yp5aHVDKh2fqrAHIX7oLu36/03NalXsP4=;
-        b=EgZBIKxmVgoEz4pWNUPE2aX8oPPXZHoOSY8EO+6CNhbniwx/O46G5mPdpowpIUrWvo
-         B7mDMYzQRkjB6uMAEBmKDAVw47LbbzzITbQuSj0AnuNrs6NWB09rq6QcI614Hn/CkxbW
-         aMmPjwR0yo85bBg5rlQzBmt3VcqPoutKbnBVg6qzT5uwatUVbohldgmFXVZoYw4qu/h6
-         WyA6yMrL+bK1wq1ut5q6VpM14Ug+dKH2TNRCh3Ph/mTCPpfzxWDnnR+CxajyQKRtgdkW
-         iURuIsF+lblN0pN8iSItkvSBYj89V2WtMGnkE21RCC/R3HE/xdQSX6MXN0484BVdFsie
-         lA5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2WtLGnn2I4yp5aHVDKh2fqrAHIX7oLu36/03NalXsP4=;
-        b=Z3oLAXcGjUJHKtlGiP3H3/J9dBlWJhwY9SG2fOmxTXtRTJaPz+perD68On+Dmusxya
-         w+02wLmMW7oaI7udjrLurPyFJlq/nzrh92Y/GubYPtvtLJxtFfuYQJyzObguboYhHrZm
-         yRNCuKi6+EGpUF4//WnflQX4dCJoAX3e6l851Eu7XeZGjZHl7PzCx5jZeliqRlMcWuk3
-         0ZuNpm9scseTJ0VKgWuR+Pmlv8tU9JScShpfMaxorJrexA5w6xOKghwrVlG4a3LpQfm9
-         DJq6U9A5SZRfqJUPoJQXVBG6zjs7QI6JMKHaUZTs3B0HeEUKc6K/oSMmlkQKQdCgwFmh
-         Somg==
-X-Gm-Message-State: AOAM530DjMLUbLCGFcyT3batwExO7w+brbMnGT3gnOOlgm/Vv6+IbXMh
-        lahdmXs+tmGKy5Ghsii+g1j/K0swS60dOeVydII=
-X-Google-Smtp-Source: ABdhPJyR3DAxvQYyrV8I1QdmEu4qeVhS2ErpqwnRgv9Sr93c4Er/VssSmMCJWq8ngXEsUiwVgkMERFE2A+VedCWPLS8=
-X-Received: by 2002:a05:6402:270c:: with SMTP id y12mr57464631edd.258.1639336609873;
- Sun, 12 Dec 2021 11:16:49 -0800 (PST)
-MIME-Version: 1.0
-References: <20211129153330.37719-1-nbd@nbd.name> <20211129153330.37719-13-nbd@nbd.name>
-In-Reply-To: <20211129153330.37719-13-nbd@nbd.name>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 12 Dec 2021 21:16:13 +0200
-Message-ID: <CAHp75VeUn-a=Ob2i1Sxph3C4xa07yHMj7sg9R81R3STjQgSLiw@mail.gmail.com>
-Subject: Re: [PATCH v5 12/13] gpio: Add support for Airoha EN7523 GPIO controller
-To:     Felix Fietkau <nbd@nbd.name>
-Cc:     linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        id S230207AbhLLXCT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 12 Dec 2021 18:02:19 -0500
+Received: from mout.gmx.net ([212.227.17.20]:41771 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S230204AbhLLXCQ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 12 Dec 2021 18:02:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1639350129;
+        bh=pGlgCazVp8nQl5psPTq5BoguCoJqXSVkwS4YQtUO2Qk=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=aNoV0nm3MR+wa1YjB+hXPLMjVwuNE578mJY6SGCHBfMHcIappqtIGqATiBJK2ayNJ
+         2Evtiys5bdECP+jM+/2iiltqB4AsYOaFlix3+shbyre8SvabuwvaWbfxDTFkx5fO7z
+         LdI1hklCBL4ANFRkdLscunzh0t15AHiWHGCv3qnE=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([5.146.194.160]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MLiCu-1nE4hs3a7M-00HjIl; Mon, 13
+ Dec 2021 00:02:08 +0100
+Date:   Mon, 13 Dec 2021 00:02:07 +0100
+From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, john <john@phrozen.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Rob Herring <robh+dt@kernel.org>,
+        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Joel Stanley <joel@jms.id.au>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 5/8] pinctrl: nuvoton: Add driver for WPCM450
+Message-ID: <YbZ/byE4Sj/fxUrj@latitude>
+References: <20211207210823.1975632-1-j.neuschaefer@gmx.net>
+ <20211207210823.1975632-6-j.neuschaefer@gmx.net>
+ <CAHp75Vew=M_ofNM5pmeHtTJHXRUbbO4RrtgYAtLBznTBm3CS6Q@mail.gmail.com>
+ <YbC6Bv2teZ5CFhFQ@latitude>
+ <CAHp75VdYtLbCLi7iD0UT7MrPi9oxJLWA9ZCBo7uGbWxNCBdGyw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="t24WkmUQOwokeUNJ"
+Content-Disposition: inline
+In-Reply-To: <CAHp75VdYtLbCLi7iD0UT7MrPi9oxJLWA9ZCBo7uGbWxNCBdGyw@mail.gmail.com>
+X-Provags-ID: V03:K1:yVb59m40aoo/YNSlVRYLEyk2zd8aBC3T0OVDCEh1lZ8U322m9/z
+ 29azbAowmCnvdVlo8413N504Fr2VNkIUEel040iCBouJNb/Nziz55dQNQT4zoju4iJrlug2
+ 1TwTD8leILU/N91SDCOIbLy7XjHmTpKm5lwHNLkrs9ECoWKoKSKANHwiNNQz3ziP3RLw2y7
+ IJfJNhDQO8f4POfBmh6eQ==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:4vW4Yo80IFk=:19Gq3SwuUqJiQ5Z7eD1paq
+ oUIpJ3J2IfH4HzXTR2nevThZn/npmI+ZSdbqSicl39PHNZjHYCeh0yqKkKIsl0tjjFTs+OVPD
+ brbwBncLbofy73Z3X6IPWLLWxd03IZZIqPH0mUmWlSPgRdJkgHaLn4me6WxgFVS5cM0ameVn2
+ b+cszw91kPEbKIrH+RWtO7YyrM+2d4yX3eHOEw+l5mLFJ/t8lZAlJVNdeQV7GNqQVzYIXbHiv
+ PVKHrVA5LB82oOWnq55DeZQFBt1aP9LBEyiHrrNH1ItvQp+za2VSlHViqmlBS/d9Xmkff2OfM
+ ACeFuUlBuCSb7fm7qBJiLdr2RAsVbaWNbAAIgUoFbNvBfMm2o8jbnqOwWD342dZV+tBDF27Vg
+ tGD4bsY+N6WTxGl7lcL2UTdEUo9v3N31k3RlcPf9k6GPNe18JZKp9pyACnx99UBVI5PIi1kLK
+ 845kUvSK9qVRTGxAK6W3VYISzQZDH42szBRHo8KPWw4awsMVpw5UJjtbvVho+dC6xTaaUBoqQ
+ 5k6RbXcaY7N5/n9RDxJ/mIii95+xBrUh+xLmvf+cMiZkzOBgYEYt6sbNfvy4Iu2O8FgHVEYgo
+ CmfWdTic3envNvZiquAHsyLi/XrTq1uiKzv8vFaHjPobjE17r5o39Lm2UV9ebon12yLc4REk6
+ tG7QGXaB/jYudKzeYKw28T4YwjmIKI4MFBnOId76/5F4zymqpfobiR4ZNnBHTcDPSzwTyaOq1
+ BrfZPUPrYANsCHAmfvKGQ9Qq/xtGHnQY2Gdw6iw/kbWDDlgPKjjwGpFyUPOTFlyzRkd3kxKQk
+ JUWzKt3XiK8jR4rTKUVlx9Q7JhFM+HXSQWPAdismKdo7EiwBT8hiq1hMYFA1Eooeoq/QdIwdB
+ Ns5MsOZGZcEmFguNJamadNb3g2bk73JxvMRwIY64UZ6+jnn7AFJY0FkvMYxuEgskKRvhQzhnO
+ Khq19aIiYB5uz+jy37BchSeGYr9K6k8iKiJS8ScB8+UVpSgEV3+8K/FthVlSbQcEi2URxyBxB
+ 3ABS3p1z/OfhlYySeIdogRC0IGCYAc+Xh1k1lenydNUjl56BBeMMKRlnfNGfCntivga9oDSz5
+ 3ZOwvhbohm4SSU=
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 30, 2021 at 1:08 AM Felix Fietkau <nbd@nbd.name> wrote:
->
-> From: John Crispin <john@phrozen.org>
->
-> Airoha's GPIO controller on their ARM EN7523 SoCs consists of two banks of 32
-> GPIOs. Each instance in DT is for an single bank.
 
-a single
+--t24WkmUQOwokeUNJ
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-...
+On Wed, Dec 08, 2021 at 04:14:38PM +0200, Andy Shevchenko wrote:
+> On Wed, Dec 8, 2021 at 3:58 PM Jonathan Neusch=C3=A4fer <j.neuschaefer@gm=
+x.net> wrote:
+> > On Wed, Dec 08, 2021 at 01:24:18PM +0200, Andy Shevchenko wrote:
+> > > On Tuesday, December 7, 2021, Jonathan Neusch=C3=A4fer <j.neuschaefer=
+@gmx.net>
+> > > wrote:
+>=20
+> ...
+>=20
+> > > > +       ours =3D ((1UL << gpio->num_irqs) - 1) << gpio->first_irq_b=
+it;
+> > >
+> > > BIT()
+> >
+> > I'll use it, but in this case, I think it doesn't simplify much the
+> > whole expression all that much.
+>=20
+> It is still better to use in my opinion.
 
-> +/**
-> + * airoha_gpio_ctrl - Airoha GPIO driver data
+Ok.
 
-> + *
+>=20
+> > Is there perhaps a macro that
+> > constructs a continuous bitmask of N bits, perhaps additionally
+> > left-shifted by M bits?
+>=20
+> > Maybe somewhere in the bitmap_* API...
+>=20
+> Maybe, I dunno since I haven't clearly got this code anyway, so up to
+> you to check and see what to do about it.
 
-Unnecessary blank line.
+Right, I'll evaluate my options and come up with something.
 
-> + * @gc: Associated gpio_chip instance.
-> + * @data: The data register.
-> + * @dir0: The direction register for the lower 16 pins.
-> + * @dir1: The direction register for the higher 16 pins.
-> + * @output: The output enable register.
-> + */
+> ...
+>=20
+> > > > +       struct fwnode_handle *np;
+> > >
+> > >  Either be fully OF, or don=E2=80=99t name =E2=80=98np' here. We usua=
+lly use fwnode or
+> > > =E2=80=98child=E2=80=99 in this case.
+> >
+> > Ah, I thought "np" (=3D node pointer) was still appropriate because I'm
+> > dealing with firmware _nodes_. My intention was indeed to switch fully
+> > to the fwnode API.
+>=20
+> Just a convention "de facto".
 
-...
+Ok, I'll change it.
 
-> +static int airoha_dir_set(struct gpio_chip *gc, unsigned int gpio,
-> +                         int val, int out)
-> +{
-> +       struct airoha_gpio_ctrl *ctrl = gc_to_ctrl(gc);
-> +       u32 dir = ioread32(ctrl->dir[gpio / 16]);
-> +       u32 output = ioread32(ctrl->output);
-> +       u32 mask = BIT((gpio % 16) * 2);
-> +
-> +       if (out) {
-> +               dir |= mask;
-> +               output |= BIT(gpio);
-> +       } else {
-> +               dir &= ~mask;
-> +               output &= ~BIT(gpio);
-> +       }
-> +
-> +       iowrite32(dir, ctrl->dir[gpio / 16]);
-> +       iowrite32(output, ctrl->output);
 
-> +       if (out)
-> +               gc->set(gc, gpio, val);
+> > > > +               ret =3D gpiochip_add_pin_range(&gpio->gc, dev_name(=
+pctrl->dev),
+> > > > +                                            0, bank->base, bank->l=
+ength);
+> > > > +               if (ret) {
+> > > > +                       dev_err(pctrl->dev, "Failed to add pin rang=
+e for GPIO bank %u\n", reg);
+> > > > +                       return ret;
+> > > > +               }
+> > >
+> > > Please move it to the corresponding callback.
+> >
+> > What's the corresponding callback?
+>=20
+> https://elixir.bootlin.com/linux/latest/source/include/linux/gpio/driver.=
+h#L400
 
-Needs a fix or a comment to explain why it's fine that there is a
-glitch possible.
+Thanks.
 
-> +       return 0;
-> +}
 
-...
+Best regards,
+Jonathan Neusch=C3=A4fer
 
-> +       err = bgpio_init(&ctrl->gc, dev, 4, ctrl->data, NULL,
-> +                        NULL, NULL, NULL, 0);
-> +       if (err) {
+--t24WkmUQOwokeUNJ
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +               dev_err(dev, "unable to init generic GPIO");
-> +               return err;
+-----BEGIN PGP SIGNATURE-----
 
-return dev_err_probe(...);
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAmG2f0MACgkQCDBEmo7z
+X9sYXA//SjVBvUSq+Vp4V6n3Mf8tpNS+Lo6WnaDVN1MdPICwlAu8ael1mV2LXLR8
+bl4LhyvW/Z4LejKiJP+ha0ex/9QH2AfmzPIzhcMPIMw7P4mKG9b62MG5Ny3Oh1x/
+6IlnwwNIg1Sl3RZVMqLStf8kFHzMRAsmtmWCWLEwI8fCrdgzJC4wJsMQ0Ersswig
+NIZ4+pnwIrNuE0nZ9fVZp5YMbV0revnIyuFOcQ6AJuKjstzeZkOf68apcEwafOU9
+ytEO9hybxRTJ5u0UFpwzvqb1oXWmoXx9dilWithnFFPbS1PZmWT5l9sAMuCyYoy4
+XpOpNvH6nyaaQDWbQ21fLNzRFZDmB8jEs2SSluFHPwWYQiKjf6c+dwtauKktw/Mb
+v4idD4xqvYK9LimE28vq+N5EuJZCXi4BXQ3GLiG2GTePrHp09+yGRrNowscta5+u
+dDAqt6PCuAMj1BZoaIZ4tczq6sE0p052Agarqt0Gk+IgZ6FIACnGL7OynU+GO0Ls
+PihSquVF09O5V9L2SktaFXvz0vZv7ab9tbQWD/qwjBj2+XJAo2xWpHnJwNF4S8r7
+wGQ1QNNO5AM+3mC8B28bCv13+bY3tfi4+PlPnPib3XZMiGOwOusgap8RargJS1x5
+9+PLYnHSkO9TvVEPwMm4qDvOFG/KR7VpHsfsYAG0HLYMoH0ZNzM=
+=4g/M
+-----END PGP SIGNATURE-----
 
-> +       }
-
--- 
-With Best Regards,
-Andy Shevchenko
+--t24WkmUQOwokeUNJ--
