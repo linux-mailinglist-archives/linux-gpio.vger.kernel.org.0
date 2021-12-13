@@ -2,80 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E0F67472E70
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Dec 2021 15:03:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BCD30472E94
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Dec 2021 15:10:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233792AbhLMOD7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Dec 2021 09:03:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34024 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232193AbhLMOD7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Dec 2021 09:03:59 -0500
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 854FDC06173F
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Dec 2021 06:03:58 -0800 (PST)
-Received: by mail-ed1-x52b.google.com with SMTP id x10so35046729edd.5
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Dec 2021 06:03:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XHS3evdL43UusUkzdyL+Eag9Ud1wvbYwhkTvvLVLKZQ=;
-        b=kQxxS6sCbBzgHe3NuN/zYZkc+LIzALmBm4UOz5HWZBqdQ8ffRQvulekfv02dLh7W82
-         5ql6w3M5xPmdFNpWot2pRBZcrogAtDKqBJl57jAjgoiJ6QXuDNdwh85x9vxvcfb8hK2g
-         mRn+L11bzQ/I8SwHD67KNVkhRYHnywFl/SiXrkJ+m62nOKxHvwQNKV8MziAxQKhlYcUe
-         Dyof44FTxVtig7WM+qCKQxT/WMWyzyPF6D5zXzG6TVtR59Pfu4AUDc6uaDqlob75gaJt
-         PMl7HkO6w5hAXgstzobnqbJceqLy4YAwiUPT4agFYuWQJ8uZsSHef8EOXQkN34yvVXLc
-         FyTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XHS3evdL43UusUkzdyL+Eag9Ud1wvbYwhkTvvLVLKZQ=;
-        b=zotRp0BJUlAZDWCfHjO5onvEBi0MKXWauCQ1wTGQK6m6Id+LSgTKi2zUqy4KEFyA1z
-         rAdybyfQvMNrGcBJN9/AHnUOrJ9YcPM5o70+fl5yTXwPlJUYscxCA0b1HhGumNQNZ3mP
-         lwIknr8YPUQonKI1knZyt6IFhOZB077zB/flMT3QeO+LIwPrkFByY0rWm0C+Wp6dlS69
-         dpcj2fz5bO1O2ErbZSlh2Fp1wU7lTu4slkoLeqfvvnMs+8srXqaFQUweewFvMg84OKV2
-         VCq4tecTmCcSwe3KL9mkEf8mEet6dRm+jcJ52Ro/OdIJuvQBamybWsvzEmy3mdvnLIZv
-         9bbg==
-X-Gm-Message-State: AOAM5332/ygGLkjh87nPsXSmM2gf3pBRBFxxokdCWNPfKVSqi8+CNsEa
-        90ZXY3kQ5BBk0rEj5oftRk0RMbNUv3ACB4toxeiR8g==
-X-Google-Smtp-Source: ABdhPJzbOPDGAHP7Pt938eaLWI6FygxZxb7hKLKl6lUFd7dKTP4HNFDubvq09o/yZ7JbnkxRHM0vm5RQJ004FGwNY8M=
-X-Received: by 2002:a05:6402:51c6:: with SMTP id r6mr64359808edd.365.1639404229973;
- Mon, 13 Dec 2021 06:03:49 -0800 (PST)
-MIME-Version: 1.0
-References: <20211210160206.872998-1-thierry.reding@gmail.com>
-In-Reply-To: <20211210160206.872998-1-thierry.reding@gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 13 Dec 2021 15:03:39 +0100
-Message-ID: <CAMRc=MdeX7P5N-wnHAuAQWWUGL3Qnh6sEpd4zCJuEC17208Hrw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/6] dt-bindings: gpio: tegra: Convert to json-schema
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Prathamesh Shete <pshete@nvidia.com>,
+        id S238732AbhLMOKs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Dec 2021 09:10:48 -0500
+Received: from mga14.intel.com ([192.55.52.115]:3399 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S238725AbhLMOKs (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 13 Dec 2021 09:10:48 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10196"; a="238961836"
+X-IronPort-AV: E=Sophos;i="5.88,202,1635231600"; 
+   d="scan'208";a="238961836"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2021 06:05:41 -0800
+X-IronPort-AV: E=Sophos;i="5.88,202,1635231600"; 
+   d="scan'208";a="609028967"
+Received: from smile.fi.intel.com ([10.237.72.184])
+  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2021 06:05:31 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1mwlwO-005dxK-9w;
+        Mon, 13 Dec 2021 16:04:32 +0200
+Date:   Mon, 13 Dec 2021 16:04:32 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Baruch Siach <baruch@tkos.co.il>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Tony Lindgren <tony@atomide.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jianqun Xu <jay.xu@rock-chips.com>,
+        Alexandru Ardelean <aardelean@deviqon.com>,
+        Thierry Reding <treding@nvidia.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-tegra@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        patches@opensource.cirrus.com,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        linux-power <linux-power@fi.rohmeurope.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        linux-unisoc@lists.infradead.org,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-tegra@vger.kernel.org, Ray Jui <rjui@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Keerthy <j-keerthy@ti.com>, Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH v1 1/3] gpio: Get rid of duplicate of_node assignment in
+ the drivers
+Message-ID: <YbdS8E6lHGzWniba@smile.fi.intel.com>
+References: <20211202210839.79140-1-andriy.shevchenko@linux.intel.com>
+ <CAMRc=Meve=W3yvPmakFap-s6cOY1GUq7c1VjJE2dEH4f0+shag@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=Meve=W3yvPmakFap-s6cOY1GUq7c1VjJE2dEH4f0+shag@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Dec 10, 2021 at 5:02 PM Thierry Reding <thierry.reding@gmail.com> wrote:
->
-> From: Thierry Reding <treding@nvidia.com>
->
-> Convert the NVIDIA Tegra GPIO controller device tree bindings from
-> free-form text format to json-schema.
->
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> ---
+On Mon, Dec 13, 2021 at 02:50:57PM +0100, Bartosz Golaszewski wrote:
+> On Thu, Dec 2, 2021 at 10:17 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > GPIO library does copy the of_node from the parent device of
+> > the GPIO chip, there is no need to repeat this in the individual
+> > drivers. Remove these assignment all at once.
+> >
+> > For the details one may look into the of_gpio_dev_init() implementation.
 
-Queued patches 1-4 for v5.17.
+> If there are no objections, I am willing to apply this to give it some
+> time in next and get the work on dropping the OF APIs from gpiolib
+> going.
 
-Bart
+There was a v2 sent out.
+
+  Message-Id: <20211206131852.74746-1-andriy.shevchenko@linux.intel.com>
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
