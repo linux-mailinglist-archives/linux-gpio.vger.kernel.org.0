@@ -2,90 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E7E1472DC0
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Dec 2021 14:48:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 98789472DE4
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Dec 2021 14:51:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237911AbhLMNsS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Dec 2021 08:48:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58154 "EHLO
+        id S238051AbhLMNvK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Dec 2021 08:51:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232047AbhLMNsR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Dec 2021 08:48:17 -0500
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35536C061574
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Dec 2021 05:48:17 -0800 (PST)
-Received: by mail-ed1-x532.google.com with SMTP id t5so51957706edd.0
-        for <linux-gpio@vger.kernel.org>; Mon, 13 Dec 2021 05:48:17 -0800 (PST)
+        with ESMTP id S238021AbhLMNvK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Dec 2021 08:51:10 -0500
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F11DC061756
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Dec 2021 05:51:09 -0800 (PST)
+Received: by mail-ed1-x536.google.com with SMTP id r11so51692085edd.9
+        for <linux-gpio@vger.kernel.org>; Mon, 13 Dec 2021 05:51:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=wu/ZxCGSsJ+oivX8kkncERiBTBwcaObKtaxtxVxyM6E=;
-        b=Hd9RksSv2OCCKj1GLzBeT3a30JYz5Savl/39eqYLE/ED3ZHJk+/+Pea/sj0tHNnf+o
-         Qu2gZI9YgCWCiTKIgzzEX/E413jC0KZCgLx6oCA9nH68us/bh2W5TvM5E7pNRNAH2J1w
-         V1k+kNyv3U8Q5c2h8lnMvx9UDYrPoyxT59zFfXz+fFBgMV+6Y+lX/q5Tf3DpkXE3mjx6
-         r4p8n1NUdM+XroD4eMysJWUh8ceZ+8c250s2iHf9Bfw+EZWbVai/H/GxAM9REIAHJq7E
-         Nq3pilBVU8weqHwC/j/ibaxqk8hL3CYbhsbcCmg1zquQCL8wkiMRg0aXIC8PfSV87p1g
-         1g1A==
+        bh=JA6W9bf1908WD6cfFb6AhPYhGreRD1L3ZPU1ovM0YAo=;
+        b=JR+DaCc5q3x/nJ52dLl6r+4FwSEv9WD0p7h6CAvJzuCN4LA6+wkAYifxMiKmhtGPMC
+         FTN/0x8gYKn6C0DH+DPrgH6lH2w+WJEIfGDy1/YzVD0zU202RDccLQt46z8yx/mv5SEQ
+         orFijgywNSCXDOJ/OPyq3mvh5NlrdflBnU+13ax6fE2dt0FQGfzQsQKPQMlWf12X6gYS
+         H/d+nrvTinlxhp9IzxuZ3LhRXaM+23FWY9lMgayxh0hvEqluoQhfJStRiFE2+rfIOnQF
+         Iw8LA3Ko152lC8tyud5LtFSKXRrJ7LmTPR7MzT1Pb8/drF5Zj0ygRhSQOmk3y0qr4lHt
+         19ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wu/ZxCGSsJ+oivX8kkncERiBTBwcaObKtaxtxVxyM6E=;
-        b=VunUsb6iy85pwNeBwqcXm+aTY+ITMml/tyFiBhhPmdIUiVYMBKdUV0yI0SMt2uplFu
-         odMb9b8ApEuXOPmXwutkUDr2dy8yoz4XvKDZC59GTy8SSE/pd/hhaogYHz8xc1ksoK5h
-         mKu7mjGNc8APHMZ4GXrDo7hyQqS6uVBeDDcs1cWA3Rz2xUxkrq34Vp5+VYLsI6Wr2BX5
-         /94CmPaIPUczhD8dCD/vzVRxL4OXnxzSM83D3duBLeOWlzQ1IYwHHj7w/5EzKupugIJa
-         nIIz1ORTb8qY+rnyh4QUb9zrh56RcaKC3tNQfcz0a6oA3ICLw1q39WQLl06AWQt9iDAg
-         h8bg==
-X-Gm-Message-State: AOAM532NW/eFyhrawrOXSStksFhqMcNRk4kETO6GxYcEmFRG8opeUize
-        sbFWKYjF0JkS2Zf5i7RVkfmd0rsXX5JmgqyhgYTWX9N2jiw=
-X-Google-Smtp-Source: ABdhPJwOijd5WgV9me5Rti0PSTtwawWMernnmcAkVkEktGsVjkReg4dg+5XeNqBVRLChj0pbMbguqeQBWLObtqbjcvY=
-X-Received: by 2002:a17:906:4787:: with SMTP id cw7mr47479334ejc.311.1639403295706;
- Mon, 13 Dec 2021 05:48:15 -0800 (PST)
+        bh=JA6W9bf1908WD6cfFb6AhPYhGreRD1L3ZPU1ovM0YAo=;
+        b=lH2FGOXU+MFUfzHxNvB2m+BMNGcjrLfms19cy7bLQCGVT074fG6ZrETO4MBAY4p09x
+         3aruYYSBcCmhbNJkRVc0TnzFtJpn++GTpj8CKuVlVQtaiu9a15yy6C3+ohDhj6Av8Vgq
+         NXoJTsWp5M6han8fV6TSa+txZbj+xahhourdp/9TIsP56C2ZB5JDfIhrMkyhxA3GYDdG
+         Wctn5K7AxiaC7UWodtKybrmqcqVfQgHPBaSiTyR5x4UNkpPwj1vJSw0UEKXdGOdfOOvt
+         OUo8StHyYHFYqegNX8Y6UbMMImE07nGNHorK0A2F6mzcDPX7b5im3NEEwBjdo75iWaXi
+         e7VA==
+X-Gm-Message-State: AOAM530EpBL3kOO3uQxfONs7fyruV5vnT1DIqXG0jKU3Juer8RU+w2UG
+        M0uwOL4nUq4wZV/U41HnHfFclcm+gFyEjZevU3ZtCg==
+X-Google-Smtp-Source: ABdhPJyUfRonKaOMYp5CA3+4Qguk6GD9f9+ENkQJ7XEThNqMIaIY/ZVhde1IxmgVdguaMtUOm8hj/b6kBh4NcjdyhEI=
+X-Received: by 2002:a05:6402:354e:: with SMTP id f14mr63951085edd.245.1639403467922;
+ Mon, 13 Dec 2021 05:51:07 -0800 (PST)
 MIME-Version: 1.0
-References: <20211212031335.36369-1-wangborong@cdjrlc.com>
-In-Reply-To: <20211212031335.36369-1-wangborong@cdjrlc.com>
+References: <20211202210839.79140-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20211202210839.79140-1-andriy.shevchenko@linux.intel.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 13 Dec 2021 14:48:04 +0100
-Message-ID: <CAMRc=MfT72KJVQKCRqdToPSf1kysyu=8RLktmB7Dpbv8dDB8ZQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: sta2x11: fix typo in a comment
-To:     wangborong@cdjrlc.com
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+Date:   Mon, 13 Dec 2021 14:50:57 +0100
+Message-ID: <CAMRc=Meve=W3yvPmakFap-s6cOY1GUq7c1VjJE2dEH4f0+shag@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] gpio: Get rid of duplicate of_node assignment in
+ the drivers
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        Baruch Siach <baruch@tkos.co.il>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Tony Lindgren <tony@atomide.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jianqun Xu <jay.xu@rock-chips.com>,
+        Alexandru Ardelean <aardelean@deviqon.com>,
+        Thierry Reding <treding@nvidia.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        patches@opensource.cirrus.com,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        linux-power <linux-power@fi.rohmeurope.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        linux-unisoc@lists.infradead.org,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-tegra@vger.kernel.org, Ray Jui <rjui@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Keerthy <j-keerthy@ti.com>, Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Dec 12, 2021 at 4:13 AM Jason Wang <wangborong@cdjrlc.com> wrote:
+On Thu, Dec 2, 2021 at 10:17 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
-> The double `all' in the comment in line 327 is repeated. Remove one
-> of them from the comment.
+> GPIO library does copy the of_node from the parent device of
+> the GPIO chip, there is no need to repeat this in the individual
+> drivers. Remove these assignment all at once.
 >
-> Signed-off-by: Jason Wang <wangborong@cdjrlc.com>
+> For the details one may look into the of_gpio_dev_init() implementation.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
->  drivers/gpio/gpio-sta2x11.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpio-sta2x11.c b/drivers/gpio/gpio-sta2x11.c
-> index 392fcab06ab8..e07cca0f8d35 100644
-> --- a/drivers/gpio/gpio-sta2x11.c
-> +++ b/drivers/gpio/gpio-sta2x11.c
-> @@ -324,7 +324,7 @@ static int gsta_alloc_irq_chip(struct gsta_gpio *chip)
->         if (rv)
->                 return rv;
->
-> -       /* Set up all all 128 interrupts: code from setup_generic_chip */
-> +       /* Set up all 128 interrupts: code from setup_generic_chip */
->         {
->                 struct irq_chip_type *ct = gc->chip_types;
->                 int i, j;
-> --
-> 2.34.1
->
 
-Applied, thanks!
+If there are no objections, I am willing to apply this to give it some
+time in next and get the work on dropping the OF APIs from gpiolib
+going.
 
 Bart
