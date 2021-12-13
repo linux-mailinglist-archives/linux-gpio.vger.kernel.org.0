@@ -2,56 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 451FA472C1C
-	for <lists+linux-gpio@lfdr.de>; Mon, 13 Dec 2021 13:15:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 67724472C79
+	for <lists+linux-gpio@lfdr.de>; Mon, 13 Dec 2021 13:42:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236636AbhLMMPF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Dec 2021 07:15:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36120 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232853AbhLMMPD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Dec 2021 07:15:03 -0500
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60F91C061574;
-        Mon, 13 Dec 2021 04:15:03 -0800 (PST)
-Received: by mail-ed1-x533.google.com with SMTP id t5so51041409edd.0;
-        Mon, 13 Dec 2021 04:15:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=APONv3SOJu6jCNgkwpRGUa5SLi10GbfkrOQc9B4NjY8=;
-        b=pnT73e/Ftu4uEmb+E16AXdk5b6ca4DPxjdMjO8quZZKijpit8bPkMgIn+X6xOj3NKT
-         h4e19eBUv5LF+pjrK/eGrMS/xiCz6iSxTlHBC1hDlE+vFIW11dLfJPHw+ibiDBGpDzIB
-         ZLOprS+pTuporKHrxq7MEsOksS7mm2k2P4oezg0BuOSaezMZqAL3kWhXh0zA+rlmx19N
-         kqqzHtFdH79xHwI/zNe/Ye0Bu39MY4VWBiNj9v3onZo3tIAQkVTuceOBNwBN2wg3saNJ
-         WbBSImyM2PeZW3+dd/Y17EKHRVautWP9DJpwJzsPg83X+eNO7AXU+B55oEK7DGq1qnmp
-         h+MQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=APONv3SOJu6jCNgkwpRGUa5SLi10GbfkrOQc9B4NjY8=;
-        b=lWTSBlQ+WCSBgjzyWMcikwYJX2ScF4VuD/jxxuHxu9Vnq3l8aiY1u2AMrXMdOzLFC2
-         A8no0kTa40qdcIyQJwEm5SC55WoCse5IvCvEqhCloeUoI94knyBncRmQwc2Slhr0SmRY
-         W9SXBKGeIlPxjLgMo+7OlwXf/LEoEojGXKVLpJrtjwFQ9ainYJNF7AW9G8lzg7mZ7y3s
-         a3J7xJP7KV5wa6gddEh6zIGdGwMShVpCWeCPhq/eFk+yoI7Qpri3lE1rC13h+/BIaAiV
-         Z5HX8xEPP2nY+ikvEWuM3DGaF0H1NKxBmeOGhlvNOT+eaWjbthaSmyqIL6JJ8swAwLlm
-         Zcqw==
-X-Gm-Message-State: AOAM530EbYIS+pAdM6tvDU9lns5VVwC0Kex8dFPCW4sTDbwXCPP8QFUg
-        3ZsL/fhKAOkSyWk5YbDPYY7WAKMVm9jDDDKAJxA=
-X-Google-Smtp-Source: ABdhPJzIhAFiXAukZI7VpH2AcmByRzDMPngbJIecaJ7gymB6ARFyfskeqZxnSgWa4URc7fbRLHmlfOwb6iPmIjZkKBw=
-X-Received: by 2002:aa7:d495:: with SMTP id b21mr65090593edr.363.1639397701965;
- Mon, 13 Dec 2021 04:15:01 -0800 (PST)
-MIME-Version: 1.0
-References: <20211204061042.1248028-1-Mr.Bossman075@gmail.com>
- <20211204061042.1248028-8-Mr.Bossman075@gmail.com> <YbcuweQlw3inhye1@ryzen> <bc7a718c-2cb7-1c23-a8fe-524b327fbcd5@benettiengineering.com>
-In-Reply-To: <bc7a718c-2cb7-1c23-a8fe-524b327fbcd5@benettiengineering.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Mon, 13 Dec 2021 09:14:50 -0300
-Message-ID: <CAOMZO5D9ytHBACojwk3mtaypdc4s5gWT7ctJQiUzmmP15hzGww@mail.gmail.com>
+        id S236909AbhLMMmM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Dec 2021 07:42:12 -0500
+Received: from smtpcmd03117.aruba.it ([62.149.158.117]:34956 "EHLO
+        smtpcmd03117.aruba.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236747AbhLMMmL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Dec 2021 07:42:11 -0500
+Received: from smtpclient.apple ([146.241.138.59])
+        by Aruba Outgoing Smtp  with ESMTPA
+        id wkeYmWeD7Ni3cwkeZm3tZn; Mon, 13 Dec 2021 13:42:09 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+        t=1639399329; bh=HW8jnezXIp3XT9vHzTfAeit8KDYul5E/X+S8lIqCFzA=;
+        h=Content-Type:From:Mime-Version:Subject:Date:To;
+        b=bW3CLmmFgM9n0qt/F1+oAVzlHW1KaA7xfMT070F5NMPjdRZ5hWmmBluO4pAjko8/4
+         0uQHuJHjh2temvPV2ixXykmgaKp4IuDnV7gyp6WvpshPPBH7XffP5lgdr/CEV+xQvs
+         dGCIyTBvKycd3okFGdmY8kZuYnk2/Ar+gseo4RnbaYCFbiRd8KB/PmgD04lQXHspju
+         6cc4BH/0hG5VQM7uCpunOlqgsDdH+zcT3ImLxsVZiUY1F2J73gtL9re2/L1gnyIrSx
+         scXub6a9KanbmbW1+eyNhYCxSney0v5U9RrZp8H7htgb7Z76RSAL//kbtebRcm4oIx
+         8NJSNbOKo71qw==
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Giulio Benetti <giulio.benetti@benettiengineering.com>
+Mime-Version: 1.0 (1.0)
 Subject: Re: [PATCH v4 07/13] clk: imx: Add initial support for i.MXRT clock driver
-To:     Giulio Benetti <giulio.benetti@benettiengineering.com>
+Date:   Mon, 13 Dec 2021 13:42:02 +0100
+Message-Id: <3109BC68-D1F8-4972-9480-F26606085ECD@benettiengineering.com>
+References: <CAOMZO5D9ytHBACojwk3mtaypdc4s5gWT7ctJQiUzmmP15hzGww@mail.gmail.com>
 Cc:     Abel Vesa <abel.vesa@nxp.com>,
         Jesse Taube <mr.bossman075@gmail.com>,
         NXP Linux Team <linux-imx@nxp.com>,
@@ -80,20 +59,44 @@ Cc:     Abel Vesa <abel.vesa@nxp.com>,
         linux-mmc <linux-mmc@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         linux-serial@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAOMZO5D9ytHBACojwk3mtaypdc4s5gWT7ctJQiUzmmP15hzGww@mail.gmail.com>
+To:     Fabio Estevam <festevam@gmail.com>
+X-Mailer: iPhone Mail (19B74)
+X-CMAE-Envelope: MS4wfPDFt+eQTTflaIECVpAthF57sEYmn4Q2RvQhp7B+4VH2gu3iPMFODYUJjPPdHcfy0G6Olr6hvCyb7WbX68JVtMjscZHWb2lZHmJjosX1cRt7ibrFNqkx
+ yF4kBPlqZgYTMtUOcVITfQfiy8VN4ivJgsklw/wIfMFkAaz5W4l+GIk5DlnbnTKasmv8O1VOWWFvDB9xXJ9rs7cKmMBXSZqagQ+7bcGB8eJmRs8pt4c7BBP5
+ h8jwR/Xvwg/l0J0Sse6morf+GOhc4gtceJsUYyxByex/TN6/8sg6ndnpGsvIEwngpHu1kbO9dxv3CTGNYWHPufEbxudq34t0e/h5yHqf75HBf0cl3fDNjUzP
+ vuCw1NQxNTL070XUcwWKHJHv25LhfHdbqbmWgDNh3rfg/WioktumTv17QRmidJM4cwyZ7xIrFda/3mLcYoHtjzLPui8KhJZAUrohDju+malebuF6Yx409YuS
+ tf6InUpQg6WS07uIRu96HGDbpY80pOmkk/+4oBPuvHe1dQNJLwWO/M2kIZ06Jl6zLXSqIL+CjCBmdGdeaW/YNcS/ZF8MpU1FPi0ZEVvUS+BFeNscbVqVoP/T
+ oI9igbJe+gzbmG9oSUOng9LZVe8tJ9+3ra1S3HioTmsF9xV+4E/qsDucSg+2JmXFMcaQLDpEliHoyJOwPpWSegkMpVumYTXcZQTkKcuShJa41AwKinGtORjc
+ yz7Yo8ByOADmKT6C7zPiigPbKclb3VoEQvHo1VC0/R/kdeLtmyevT9v7KqrwQUZXLRfp7sInHHi0TE4gGKHaRX0tL7/Y5fwvADXrWe4SnpkUwLXvbmh6WUXC
+ mmxOm9wVGMQsQ8J/AOE5zHu/xaGBMIkAHKCkBDIiTVCTuycnJsl8msxybTbFdnD3dO0iaN+cCDqv2kukEKc4WzBSYx22mUvptrinTtEtI5m8v3F2vwRF2E0i
+ nA5lw7ar99z1ELSnw4lOzhVik6K9W/PWVQ+MRGCUUd3kXFXbQoJDMzwYr1tRlAe3o21zoA/IoQhOOU4BgfW7ogB28mKV0UFdD1PUjL2EWoz6qvkyGUfGTqGq
+ DVRGthEjuA7rVNjOX+LkyY7aA3c0b0kBU1nrOoeXdDbzQT4QPcUxc+tTsiOGtwuhenm9GhKHEOoig7xzgy3CHtnrjIqH+w+S3hE=
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Giulio,
+Hi Fabio,
 
-On Mon, Dec 13, 2021 at 9:06 AM Giulio Benetti
-<giulio.benetti@benettiengineering.com> wrote:
+> Il giorno 13 dic 2021, alle ore 13:15, Fabio Estevam <festevam@gmail.com> h=
+a scritto:
+>=20
+> =EF=BB=BFHi Giulio,
+>=20
+> On Mon, Dec 13, 2021 at 9:06 AM Giulio Benetti
+> <giulio.benetti@benettiengineering.com> wrote:
+>=20
+>>> I would suggest module platform driver instead.
+>>=20
+>> Can you please point us an example?
+>=20
+> Here is an example of a commit that converts the imx8mm clk driver to
+> platform driver:
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=
+=3Dv5.15.7&id=3Daf7e7ee0e4280c29c41b6ec64b892bb53987a997
 
-> > I would suggest module platform driver instead.
->
-> Can you please point us an example?
+Thanks a lot, this ease us
 
-Here is an example of a commit that converts the imx8mm clk driver to
-platform driver:
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v5.15.7&id=af7e7ee0e4280c29c41b6ec64b892bb53987a997
+Best regards
+Giulio=
+
