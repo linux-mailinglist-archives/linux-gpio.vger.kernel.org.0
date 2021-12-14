@@ -2,412 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BA426474854
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Dec 2021 17:38:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E5C8F4748F8
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Dec 2021 18:12:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236093AbhLNQif (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Dec 2021 11:38:35 -0500
-Received: from mail-ot1-f47.google.com ([209.85.210.47]:34698 "EHLO
-        mail-ot1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235711AbhLNQic (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Dec 2021 11:38:32 -0500
-Received: by mail-ot1-f47.google.com with SMTP id x19-20020a9d7053000000b0055c8b39420bso21479883otj.1;
-        Tue, 14 Dec 2021 08:38:32 -0800 (PST)
+        id S233831AbhLNRMl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Dec 2021 12:12:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43386 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233758AbhLNRMk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Dec 2021 12:12:40 -0500
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EF71C061574;
+        Tue, 14 Dec 2021 09:12:40 -0800 (PST)
+Received: by mail-pg1-x52f.google.com with SMTP id r5so17845039pgi.6;
+        Tue, 14 Dec 2021 09:12:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=c0ijK4rkqUObK3Qna2KfVjEpIRTSrS20P3RvVnUJL0E=;
+        b=pyO9bt0fxCsjxE90seFFJWwEKl5gFHNBb7k+SX1X2JsgMeR76LauZ1anfSYQPakUcP
+         DsvjzWTpWP6aS9gXJg616oRPQ0CZ22TCbIfTLUaIXeORpaINHqchpb2dn+c8DYZRVAAy
+         qbOpzohojNS4eYdZ++ewLJTrVBepeb2JEd1l4eRizZA6KMmAOpzNHLdJsxbr/RFQiV7A
+         4DGfDMELjvZYE7vNZ4aqGc2V1S6eu7lFbogSaHdGtxZByaCk9zgyUBBI3NH1R2GNMXn/
+         DMo0fjLtnW9Q9cAME45Uv0pUY6WQtRP+wpCeg8y9LoCY8a39mnSQWjv0wYq7PUbPj2xs
+         htYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=QM2/tlWF4m4H0IDZNmPQ7oJ/pIe6U5NfI4L3E8LZyOo=;
-        b=fRmGvQDhED5Z1fSPrkAlRAmacCCJyfaiVprqq0OZaGJixPbFUTHkr2GpcdIn9qvLc2
-         EW8qSwc2fmdA3NkA8luGhpUOLzXcM1AkFmrCYoaNbaXAphZ0Nhs++vRvQQ0EySQjj5jc
-         TeLodbEeaEBJJPx3vP4auLMl4ShSqNsYJw18u38z4qkPzNfr9sPCGxOBdxACPSmqtn1t
-         km4e4yGLzrAP6p+bBwJSESRqRpii7U7xobWWxBWHnY9osmJbVg/ThxcKYBcjtmhiF6gf
-         WkJO712B1PmKwzhhF8mP26Dk9P9zVxQWhpEgt3y1E4czuVsQxE3kX9rLXxfEH8EoqUts
-         SK9Q==
-X-Gm-Message-State: AOAM532S5qwlmMTnzdJ+vqoYDTjbEPk0sxuBR4cyn4IGO2u6ai8gGH0F
-        9WMkMCjB9gYD3Gd0yoEf1Q==
-X-Google-Smtp-Source: ABdhPJyPsHdUh009xZPGC2dJCH5F9i05bHswcSnmYZM9pkvZplYAs5LXDQf0IswpoCkzvH4kv7hoYg==
-X-Received: by 2002:a9d:69ce:: with SMTP id v14mr5090534oto.312.1639499911734;
-        Tue, 14 Dec 2021 08:38:31 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id o10sm59268oom.32.2021.12.14.08.38.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Dec 2021 08:38:30 -0800 (PST)
-Received: (nullmailer pid 3518884 invoked by uid 1000);
-        Tue, 14 Dec 2021 16:38:29 -0000
-Date:   Tue, 14 Dec 2021 10:38:29 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Tinghan Shen <tinghan.shen@mediatek.com>
-Cc:     linus.walleij@linaro.org, matthias.bgg@gmail.com,
-        broonie@kernel.org, bgolaszewski@baylibre.com,
-        sean.wang@mediatek.com, bayi.cheng@mediatek.com,
-        gch981213@gmail.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-spi@vger.kernel.org,
-        Project_Global_Chrome_Upstream_Group@mediatek.com
-Subject: Re: [PATCH v6 3/4] dt-bindings: pinctrl: mt8195: add 'pins' wrapping
- node
-Message-ID: <YbjIhaJgxtx9aSU6@robh.at.kernel.org>
-References: <20211211204014.8014-1-tinghan.shen@mediatek.com>
- <20211211204014.8014-4-tinghan.shen@mediatek.com>
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=c0ijK4rkqUObK3Qna2KfVjEpIRTSrS20P3RvVnUJL0E=;
+        b=aZp2X0CYuUrlvtLEcuxUnZVbkpZifF9sRokRFqFj2Tk7FOTx0sycLIYxGXujM2SK/l
+         gJA/WswGfXSrz6GVd68t5Qi2j+cx/RXZHkc3lGx9HFdwiBGGGIM2yMK7RDBMyE5ho4R5
+         Ri8gq0QEZ9fy8oE1GUuPXLCiZM0Jz0+uDFd2XE4mrZluROoFlf1jI37tcmNHAgWhMfIZ
+         C6fOJUsonYAhS7sKyEbNRPEsrL/kYxDRIppbTQw26HozSlgHVsHKTDZeIAl6clabvYNQ
+         EC7NQap5JI92bcwa5mJ8KO/wZpxsFCPicggtHAHhjc4bMVtBTPYHIWGQIU7XhuO8/SUP
+         IM3g==
+X-Gm-Message-State: AOAM53300TpPKwWwRrg5/afBc7IFKAOQYPWuTS2IF45OpALUzcIuhNII
+        mZh6R05rsFEtHPKb5WQjxPksnJulCcY=
+X-Google-Smtp-Source: ABdhPJxgpctV36XTAUnYGSOdSE2GY/FJVcvK49ixErtUs6MUUKbd78YODMtk/4y4FwMBvCwYpkn5rA==
+X-Received: by 2002:a63:6d4f:: with SMTP id i76mr4468714pgc.611.1639501959198;
+        Tue, 14 Dec 2021 09:12:39 -0800 (PST)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id t2sm425953pfd.36.2021.12.14.09.12.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Dec 2021 09:12:38 -0800 (PST)
+Subject: Re: [PATCH v2 2/2] ARM: dts: gpio-ranges property is now required
+To:     Phil Elwell <phil@raspberrypi.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Thierry Reding <treding@nvidia.com>,
+        devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org
+References: <20211206092237.4105895-1-phil@raspberrypi.com>
+ <20211206092237.4105895-3-phil@raspberrypi.com>
+ <CGME20211214142139eucas1p1c100b7fd4b8c8ce85bc03e1ce6b783db@eucas1p1.samsung.com>
+ <8671ebd8-a853-7394-9864-0457514337e2@samsung.com>
+ <2ce5956f-ce8c-80f0-df9a-492a8da00a08@raspberrypi.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <dbba6665-9688-9a5e-091b-eaa8e92e6886@gmail.com>
+Date:   Tue, 14 Dec 2021 09:12:35 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211211204014.8014-4-tinghan.shen@mediatek.com>
+In-Reply-To: <2ce5956f-ce8c-80f0-df9a-492a8da00a08@raspberrypi.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Dec 12, 2021 at 04:40:13AM +0800, Tinghan Shen wrote:
-> The mt8195 pinctrl driver requires a 'pins' subnode to wrap pin properties.
-
-Why?
-
-> Signed-off-by: Tinghan Shen <tinghan.shen@mediatek.com>
-> ---
->  .../bindings/pinctrl/pinctrl-mt8195.yaml      | 307 +++++++++---------
->  1 file changed, 160 insertions(+), 147 deletions(-)
+On 12/14/21 6:32 AM, Phil Elwell wrote:
+> Hi Marek,
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml
-> index 5e2bb2bf3a55..2035bf164740 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml
-> @@ -59,133 +59,143 @@ properties:
->  patternProperties:
->    '-pins$':
->      type: object
-> -    description: |
-> -      A pinctrl node should contain at least one subnodes representing the
-> -      pinctrl groups available on the machine. Each subnode will list the
-> -      pins it needs, and how they should be configured, with regard to muxer
-> -      configuration, pullups, drive strength, input enable/disable and
-> -      input schmitt.
-> -      An example of using macro:
-> -      pincontroller {
-> -        /* GPIO0 set as multifunction GPIO0 */
-> -        gpio_pin {
-> -          pinmux = <PINMUX_GPIO0__FUNC_GPIO0>;
-> -        };
-> -        /* GPIO8 set as multifunction SDA0 */
-> -        i2c0_pin {
-> -          pinmux = <PINMUX_GPIO8__FUNC_SDA0>;
-> -        };
-> -      };
-> -    $ref: "pinmux-node.yaml"
-> -
-> -    properties:
-> -      pinmux:
-> -        description: |
-> -          Integer array, represents gpio pin number and mux setting.
-> -          Supported pin number and mux varies for different SoCs, and are defined
-> -          as macros in dt-bindings/pinctrl/<soc>-pinfunc.h directly.
-> -
-> -      drive-strength:
-> -        enum: [2, 4, 6, 8, 10, 12, 14, 16]
-> -
-> -      bias-pull-down:
-> -        description: |
-> -          For pull down type is normal, it don't need add RSEL & R1R0 define
-> -          and resistance value.
-> -          For pull down type is PUPD/R0/R1 type, it can add R1R0 define to
-> -          set different resistance. It can support "MTK_PUPD_SET_R1R0_00" &
-> -          "MTK_PUPD_SET_R1R0_01" & "MTK_PUPD_SET_R1R0_10" & "MTK_PUPD_SET_R1R0_11"
-> -          define in mt8195.
-> -          For pull down type is RSEL, it can add RSEL define & resistance value(ohm)
-> -          to set different resistance by identifying property "mediatek,rsel_resistance_in_si_unit".
-> -          It can support "MTK_PULL_SET_RSEL_000" & "MTK_PULL_SET_RSEL_001"
-> -          & "MTK_PULL_SET_RSEL_010" & "MTK_PULL_SET_RSEL_011" & "MTK_PULL_SET_RSEL_100"
-> -          & "MTK_PULL_SET_RSEL_101" & "MTK_PULL_SET_RSEL_110" & "MTK_PULL_SET_RSEL_111"
-> -          define in mt8195. It can also support resistance value(ohm) "75000" & "5000" in mt8195.
-> -          oneOf:
-> -            - enum: [100, 101, 102, 103]
-> -            - description: mt8195 pull down PUPD/R0/R1 type define value.
-> -            - enum: [200, 201, 202, 203, 204, 205, 206, 207]
-> -            - description: mt8195 pull down RSEL type define value.
-> -            - enum: [75000, 5000]
-> -            - description: mt8195 pull down RSEL type si unit value(ohm).
-> -
-> -          An example of using RSEL define:
-> -          pincontroller {
-> -            i2c0_pin {
-> -              pinmux = <PINMUX_GPIO8__FUNC_SDA0>;
-> -              bias-pull-down = <MTK_PULL_SET_RSEL_001>;
-> -            };
-> -          };
-> -          An example of using si unit resistance value(ohm):
-> -          &pio {
-> -            mediatek,rsel_resistance_in_si_unit;
-> -          }
-> -          pincontroller {
-> -            i2c0_pin {
-> -              pinmux = <PINMUX_GPIO8__FUNC_SDA0>;
-> -              bias-pull-down = <75000>;
-> -            };
-> -          };
-> -
-> -      bias-pull-up:
-> +    additionalProperties: false
-> +    patternProperties:
-> +      'pins':
-
-Can we constrain this a bit more.
-
-> +        type: object
-> +        additionalProperties: false
->          description: |
-> -          For pull up type is normal, it don't need add RSEL & R1R0 define
-> -          and resistance value.
-> -          For pull up type is PUPD/R0/R1 type, it can add R1R0 define to
-> -          set different resistance. It can support "MTK_PUPD_SET_R1R0_00" &
-> -          "MTK_PUPD_SET_R1R0_01" & "MTK_PUPD_SET_R1R0_10" & "MTK_PUPD_SET_R1R0_11"
-> -          define in mt8195.
-> -          For pull up type is RSEL, it can add RSEL define & resistance value(ohm)
-> -          to set different resistance by identifying property "mediatek,rsel_resistance_in_si_unit".
-> -          It can support "MTK_PULL_SET_RSEL_000" & "MTK_PULL_SET_RSEL_001"
-> -          & "MTK_PULL_SET_RSEL_010" & "MTK_PULL_SET_RSEL_011" & "MTK_PULL_SET_RSEL_100"
-> -          & "MTK_PULL_SET_RSEL_101" & "MTK_PULL_SET_RSEL_110" & "MTK_PULL_SET_RSEL_111"
-> -          define in mt8195. It can also support resistance value(ohm)
-> -          "1000" & "1500" & "2000" & "3000" & "4000" & "5000" & "10000" & "75000" in mt8195.
-> -          oneOf:
-> -            - enum: [100, 101, 102, 103]
-> -            - description: mt8195 pull up PUPD/R0/R1 type define value.
-> -            - enum: [200, 201, 202, 203, 204, 205, 206, 207]
-> -            - description: mt8195 pull up RSEL type define value.
-> -            - enum: [1000, 1500, 2000, 3000, 4000, 5000, 10000, 75000]
-> -            - description: mt8195 pull up RSEL type si unit value(ohm).
-> -          An example of using RSEL define:
-> +          A pinctrl node should contain at least one subnodes representing the
-> +          pinctrl groups available on the machine. Each subnode will list the
-> +          pins it needs, and how they should be configured, with regard to muxer
-> +          configuration, pullups, drive strength, input enable/disable and
-> +          input schmitt.
-> +          An example of using macro:
->            pincontroller {
-> -            i2c0_pin {
-> -              pinmux = <PINMUX_GPIO8__FUNC_SDA0>;
-> -              bias-pull-up = <MTK_PULL_SET_RSEL_001>;
-> +            /* GPIO0 set as multifunction GPIO0 */
-> +            gpio_pin {
-> +              pinmux = <PINMUX_GPIO0__FUNC_GPIO0>;
->              };
-> -          };
-> -          An example of using si unit resistance value(ohm):
-> -          &pio {
-> -            mediatek,rsel_resistance_in_si_unit;
-> -          }
-> -          pincontroller {
-> +            /* GPIO8 set as multifunction SDA0 */
->              i2c0_pin {
->                pinmux = <PINMUX_GPIO8__FUNC_SDA0>;
-> -              bias-pull-up = <1000>;
->              };
->            };
-> -
-> -      bias-disable: true
-> -
-> -      output-high: true
-> -
-> -      output-low: true
-> -
-> -      input-enable: true
-> -
-> -      input-disable: true
-> -
-> -      input-schmitt-enable: true
-> -
-> -      input-schmitt-disable: true
-> -
-> -    required:
-> -      - pinmux
-> -
-> -    additionalProperties: false
-> +        $ref: "pinmux-node.yaml"
-> +
-> +        properties:
-> +          pinmux:
-> +            description: |
-> +              Integer array, represents gpio pin number and mux setting.
-> +              Supported pin number and mux varies for different SoCs, and are
-> +              defined as macros in dt-bindings/pinctrl/<soc>-pinfunc.h
-> +              directly.
-> +
-> +          drive-strength:
-> +            enum: [2, 4, 6, 8, 10, 12, 14, 16]
-> +
-> +          bias-pull-down:
-> +            description: |
-> +              For pull down type is normal, it don't need add RSEL & R1R0 define
-> +              and resistance value.
-> +              For pull down type is PUPD/R0/R1 type, it can add R1R0 define to
-> +              set different resistance. It can support "MTK_PUPD_SET_R1R0_00" &
-> +              "MTK_PUPD_SET_R1R0_01" & "MTK_PUPD_SET_R1R0_10" &
-> +              "MTK_PUPD_SET_R1R0_11" define in mt8195.
-> +              For pull down type is RSEL, it can add RSEL define & resistance
-> +              value(ohm) to set different resistance by identifying property
-> +              "mediatek,rsel_resistance_in_si_unit".
-> +              It can support "MTK_PULL_SET_RSEL_000" & "MTK_PULL_SET_RSEL_001"
-> +              & "MTK_PULL_SET_RSEL_010" & "MTK_PULL_SET_RSEL_011"
-> +              & "MTK_PULL_SET_RSEL_100" & "MTK_PULL_SET_RSEL_101"
-> +              & "MTK_PULL_SET_RSEL_110" & "MTK_PULL_SET_RSEL_111"
-> +              define in mt8195. It can also support resistance value(ohm)
-> +              "75000" & "5000" in mt8195.
-> +              oneOf:
-> +                - enum: [100, 101, 102, 103]
-> +                - description: mt8195 pull down PUPD/R0/R1 type define value.
-> +                - enum: [200, 201, 202, 203, 204, 205, 206, 207]
-> +                - description: mt8195 pull down RSEL type define value.
-> +                - enum: [75000, 5000]
-> +                - description: mt8195 pull down RSEL type si unit value(ohm).
-> +
-> +              An example of using RSEL define:
-> +              pincontroller {
-> +                i2c0_pin {
-> +                  pinmux = <PINMUX_GPIO8__FUNC_SDA0>;
-> +                  bias-pull-down = <MTK_PULL_SET_RSEL_001>;
-
-Isn't this now out of date?
-
-> +                };
-> +              };
-> +              An example of using si unit resistance value(ohm):
-> +              &pio {
-> +                mediatek,rsel_resistance_in_si_unit;
-> +              }
-> +              pincontroller {
-> +                i2c0_pin {
-> +                  pinmux = <PINMUX_GPIO8__FUNC_SDA0>;
-> +                  bias-pull-down = <75000>;
-> +                };
-> +              };
-> +
-> +          bias-pull-up:
-> +            description: |
-> +              For pull up type is normal, it don't need add RSEL & R1R0 define
-> +              and resistance value.
-> +              For pull up type is PUPD/R0/R1 type, it can add R1R0 define to
-> +              set different resistance. It can support "MTK_PUPD_SET_R1R0_00" &
-> +              "MTK_PUPD_SET_R1R0_01" & "MTK_PUPD_SET_R1R0_10" &
-> +              "MTK_PUPD_SET_R1R0_11" define in mt8195.
-> +              For pull up type is RSEL, it can add RSEL define & resistance
-> +              value(ohm) to set different resistance by identifying property
-> +              "mediatek,rsel_resistance_in_si_unit".
-> +              It can support "MTK_PULL_SET_RSEL_000" & "MTK_PULL_SET_RSEL_001"
-> +              & "MTK_PULL_SET_RSEL_010" & "MTK_PULL_SET_RSEL_011"
-> +              & "MTK_PULL_SET_RSEL_100" & "MTK_PULL_SET_RSEL_101"
-> +              & "MTK_PULL_SET_RSEL_110" & "MTK_PULL_SET_RSEL_111"
-> +              define in mt8195. It can also support resistance value(ohm)
-> +              "1000" & "1500" & "2000" & "3000" & "4000" & "5000" & "10000" &
-> +              "75000" in mt8195.
-> +              oneOf:
-> +                - enum: [100, 101, 102, 103]
-> +                - description: mt8195 pull up PUPD/R0/R1 type define value.
-> +                - enum: [200, 201, 202, 203, 204, 205, 206, 207]
-> +                - description: mt8195 pull up RSEL type define value.
-> +                - enum: [1000, 1500, 2000, 3000, 4000, 5000, 10000, 75000]
-> +                - description: mt8195 pull up RSEL type si unit value(ohm).
-> +              An example of using RSEL define:
-> +              pincontroller {
-> +                i2c0_pin {
-> +                  pinmux = <PINMUX_GPIO8__FUNC_SDA0>;
-> +                  bias-pull-up = <MTK_PULL_SET_RSEL_001>;
-> +                };
-> +              };
-> +              An example of using si unit resistance value(ohm):
-> +              &pio {
-> +                mediatek,rsel_resistance_in_si_unit;
-> +              }
-> +              pincontroller {
-> +                i2c0_pin {
-> +                  pinmux = <PINMUX_GPIO8__FUNC_SDA0>;
-> +                  bias-pull-up = <1000>;
-> +                };
-> +              };
-> +
-> +          bias-disable: true
-> +
-> +          output-high: true
-> +
-> +          output-low: true
-> +
-> +          input-enable: true
-> +
-> +          input-disable: true
-> +
-> +          input-schmitt-enable: true
-> +
-> +          input-schmitt-disable: true
-> +
-> +        required:
-> +          - pinmux
->  
->  required:
->    - compatible
-> @@ -201,30 +211,33 @@ additionalProperties: false
->  
->  examples:
->    - |
-> -            #include <dt-bindings/pinctrl/mt8195-pinfunc.h>
-> -            #include <dt-bindings/interrupt-controller/arm-gic.h>
-> -            pio: pinctrl@10005000 {
-> -                    compatible = "mediatek,mt8195-pinctrl";
-> -                    reg = <0x10005000 0x1000>,
-> -                          <0x11d10000 0x1000>,
-> -                          <0x11d30000 0x1000>,
-> -                          <0x11d40000 0x1000>,
-> -                          <0x11e20000 0x1000>,
-> -                          <0x11eb0000 0x1000>,
-> -                          <0x11f40000 0x1000>,
-> -                          <0x1000b000 0x1000>;
-> -                    reg-names = "iocfg0", "iocfg_bm", "iocfg_bl",
-> -                          "iocfg_br", "iocfg_lm", "iocfg_rb",
-> -                          "iocfg_tl", "eint";
-> -                    gpio-controller;
-> -                    #gpio-cells = <2>;
-> -                    gpio-ranges = <&pio 0 0 144>;
-> -                    interrupt-controller;
-> -                    interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH 0>;
-> -                    #interrupt-cells = <2>;
-> -
-> -                    pio-pins {
-> -                      pinmux = <PINMUX_GPIO0__FUNC_GPIO0>;
-> -                      output-low;
-> -                    };
-> -            };
-> +    #include <dt-bindings/pinctrl/mt8195-pinfunc.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #
-> +    pio: pinctrl@10005000 {
-> +      compatible = "mediatek,mt8195-pinctrl";
-> +      reg = <0x10005000 0x1000>,
-> +            <0x11d10000 0x1000>,
-> +            <0x11d30000 0x1000>,
-> +            <0x11d40000 0x1000>,
-> +            <0x11e20000 0x1000>,
-> +            <0x11eb0000 0x1000>,
-> +            <0x11f40000 0x1000>,
-> +            <0x1000b000 0x1000>;
-> +      reg-names = "iocfg0", "iocfg_bm", "iocfg_bl",
-> +                  "iocfg_br", "iocfg_lm", "iocfg_rb",
-> +                  "iocfg_tl", "eint";
-> +      gpio-controller;
-> +      #gpio-cells = <2>;
-> +      gpio-ranges = <&pio 0 0 144>;
-> +      interrupt-controller;
-> +      interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH 0>;
-> +      #interrupt-cells = <2>;
-> +
-> +      pio-pins {
-> +        pins_bus {
-
-Don't use '_' in node names.
-
-> +          pinmux = <PINMUX_GPIO0__FUNC_GPIO0>;
-> +          output-low;
-> +        };
-> +      };
-> +    };
-> -- 
-> 2.18.0
+> On 14/12/2021 14:21, Marek Szyprowski wrote:
+>> Hi Phil,
+>>
+>> On 06.12.2021 10:22, Phil Elwell wrote:
+>>> Since [1], added in 5.7, the absence of a gpio-ranges property has
+>>> prevented GPIOs from being restored to inputs when released.
+>>> Add those properties for BCM283x and BCM2711 devices.
+>>>
+>>> [1] commit 2ab73c6d8323 ("gpio: Support GPIO controllers without
+>>>       pin-ranges")
+>>>
+>>> Fixes: 2ab73c6d8323 ("gpio: Support GPIO controllers without
+>>> pin-ranges")
+>>> Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+>>
+>> This patch breaks today's linux-next (next-20211214) on RPi3 and RPi4.
+>> Either there is something missing or wrong here. Booting stops after
+>> following messages (on RPi4):
+>>
+>> [    3.186786] pinctrl-bcm2835 fe200000.gpio: could not add GPIO chip
+>> [    3.234513] pinctrl-bcm2835 fe200000.gpio: could not add GPIO chip
+>> [    3.276703] mmc0: SDHCI controller on fe340000.mmc [fe340000.mmc]
+>> using ADMA
+>> [    3.287191] pinctrl-bcm2835 fe200000.gpio
 > 
+> This patch is part of a two-patch set, the cover note for which says:
 > 
+>     2. Since [1], a "gpio-ranges" property is required in order for pins
+>     to be returned to inputs when freed. Note that without patch 1, the
+>     device never gets out of EPROBE_DEFER.
+> 
+> It looks as though patch 2 has been merged without/before patch 1
+> ("pinctrl: bcm2835: Change init order for gpio hogs").
+
+Yes, the hope was that there would be no such breakage, I suppose we
+will have to work out a plan to address that and coordinate both changes
+landing in at the same time.
+
+I will work with Arnd to back out the Device Tree changes, sorry about that.
+-- 
+Florian
