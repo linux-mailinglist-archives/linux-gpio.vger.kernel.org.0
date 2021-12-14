@@ -2,75 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC33447384F
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Dec 2021 00:15:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AB3C5473AC8
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Dec 2021 03:36:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244125AbhLMXPZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 13 Dec 2021 18:15:25 -0500
-Received: from mail-oo1-f51.google.com ([209.85.161.51]:33689 "EHLO
-        mail-oo1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244042AbhLMXPZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Dec 2021 18:15:25 -0500
-Received: by mail-oo1-f51.google.com with SMTP id r18-20020a4a7252000000b002c5f52d1834so4576194ooe.0;
-        Mon, 13 Dec 2021 15:15:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=1l56J7RWqJa/4smIcM6LtkyNfMj0tPxmLM93iwFOBsc=;
-        b=iptG6aNkZlZsrkxUL8cXWFQh+hSJT3a+kxdHTi+f+bvRLLUXcVPErRCK/3n2tUOUvH
-         Jwl1hSz2lKqHOjHvnJ2E+7U8o65m6sL6gE5BdCS4odiB7O73hJn4GBXW5ORG3BwkC2ZP
-         lXAuL+SuqpeTmEY8EdE8UOFyMrvZyUhUnJw8foYBtrqKekuJt3GP2AXCSI4PbbL6aGVN
-         7D6MjfFRUz1Jw5cLaN6sxjJ5K76UkDbhgXDFjH6i3KvLag2C9grEfRBEj5VT1n+wXUXg
-         D6vA2MmGbjWVAngdbCVsc1KkFJcEIYDcDxZHwLBa/ktP56PZU7jmmijNYCTUZUp8fCf/
-         dvqg==
-X-Gm-Message-State: AOAM5326V1eqPVcT6bs5VHXEtg7TRr3p342U15dB7p7pbUmquBtctnyv
-        6u4RinAeI5LDqlnFeKXp4Hkjja6R0A==
-X-Google-Smtp-Source: ABdhPJxpWotWwKIP3F/YT+JXqvbzjQW04moW/mer39xF+pInPougmGPsqA9jT+cd4tJTNdZz5ZL/tA==
-X-Received: by 2002:a4a:8746:: with SMTP id a6mr974137ooi.93.1639437324658;
-        Mon, 13 Dec 2021 15:15:24 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id j2sm2433768oor.18.2021.12.13.15.15.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Dec 2021 15:15:23 -0800 (PST)
-Received: (nullmailer pid 1760367 invoked by uid 1000);
-        Mon, 13 Dec 2021 23:15:22 -0000
-Date:   Mon, 13 Dec 2021 17:15:22 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-        devicetree@vger.kernel.org, patches@opensource.cirrus.com,
-        Richard Fitzgerald <rf@opensource.cirrus.com>
-Subject: Re: [PATCH] dt-bindings: mfd: cirrus,lochnagar: fix pin controller
- nodename
-Message-ID: <YbfUCsN2K5RaNgLG@robh.at.kernel.org>
-References: <20211207083618.12940-1-zajec5@gmail.com>
+        id S244209AbhLNCgH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 13 Dec 2021 21:36:07 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:20270 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229616AbhLNCgH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 13 Dec 2021 21:36:07 -0500
+X-Greylist: delayed 902 seconds by postgrey-1.27 at vger.kernel.org; Mon, 13 Dec 2021 21:36:06 EST
+Received: from droid09-sz.software.amlogic (10.28.8.19) by mail-sz.amlogic.com
+ (10.28.11.5) with Microsoft SMTP Server id 15.1.2176.2; Tue, 14 Dec 2021
+ 10:21:02 +0800
+From:   Qianggui Song <qianggui.song@amlogic.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Qianggui Song <qianggui.song@amlogic.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+Subject: [PATCH 0/3] pinctrl: meson-s4: add pinctrl driver
+Date:   Tue, 14 Dec 2021 10:20:57 +0800
+Message-ID: <20211214022100.14841-1-qianggui.song@amlogic.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211207083618.12940-1-zajec5@gmail.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.28.8.19]
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 07 Dec 2021 09:36:18 +0100, Rafał Miłecki wrote:
-> From: Rafał Miłecki <rafal@milecki.pl>
-> 
-> Replace custom nodename with a generic "pinctrl" to match new pinctrl
-> binding requirement. This will fix:
-> Documentation/devicetree/bindings/mfd/cirrus,lochnagar.example.dt.yaml: lochnagar-pinctrl: $nodename:0: 'lochnagar-pinctrl' does not match '^(pinctrl|pinmux)(@[0-9a-f]+)?$'
->         From schema: Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.yaml
-> 
-> Reported-by: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
-> ---
->  Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
+This patchset adds Pin controller driver support for Meson-S4 SoC
+which shares the same register layout with previous Meson-A1
 
-Acked-by: Rob Herring <robh@kernel.org>
+Qianggui Song (3):
+  dt-bindings: pinctrl: meson: Add compatible for S4
+  dt-bindings: gpio: Add a header file for Amlogic Meson S4
+  pinctrl: meson: add pinctrl driver support for Meson-S4 Soc
+
+ .../bindings/pinctrl/meson,pinctrl.txt        |    1 +
+ drivers/pinctrl/meson/Kconfig                 |    6 +
+ drivers/pinctrl/meson/Makefile                |    1 +
+ drivers/pinctrl/meson/pinctrl-meson-s4.c      | 1229 +++++++++++++++++
+ include/dt-bindings/gpio/meson-s4-gpio.h      |   99 ++
+ 5 files changed, 1336 insertions(+)
+ create mode 100644 drivers/pinctrl/meson/pinctrl-meson-s4.c
+ create mode 100644 include/dt-bindings/gpio/meson-s4-gpio.h
+
+-- 
+2.34.1
+
