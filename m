@@ -2,126 +2,171 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 483BF4744A1
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Dec 2021 15:18:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BAC974744AF
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Dec 2021 15:21:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234846AbhLNOSH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Dec 2021 09:18:07 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:49900 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S230231AbhLNOSH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 14 Dec 2021 09:18:07 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 1BEA0Jnx018714;
-        Tue, 14 Dec 2021 15:17:49 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=selector1;
- bh=kdPpc0ul196B8HKuXSFwfNC/mQWJmETws3qeQsCNm8g=;
- b=qdGs8FGYVCyJm+cMmVqP9JbWkmcf/IPFlMjC/tf1A84hu84suF/UCX7kYrq5Aagkj7G+
- Tc8zykVFb8PJ+dFpgbbVZPo2AgAQYPpNzD8J5MYNK2k61hdQHMyLCKZeHDp8pWApo2cm
- KtZln8JmlNciK+EP8N5kkL3VLQYmQYMwJIWKfUCGps7w/N6w9eDYqCLWTJU9kvalTZaG
- oSk7AD0u+sr0b/SE72F+EUgklj0Ii0/bMMLN7lnG9Zvl7Hp55e69WjTNmT5HrS9fRXuR
- oImE0jwXSn/h2K93qUt/I6lka2ukWVTlNnOcfjbgBUSeQePLO+6Mi0Rl29xys71+EWJj xQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3cxk4hm7p1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Dec 2021 15:17:49 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 13DA510002A;
-        Tue, 14 Dec 2021 15:17:49 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag2node2.st.com [10.75.127.5])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0C0BA230F4D;
-        Tue, 14 Dec 2021 15:17:49 +0100 (CET)
-Received: from lmecxl1091.lme.st.com (10.75.127.50) by SFHDAG2NODE2.st.com
- (10.75.127.5) with Microsoft SMTP Server (TLS) id 15.0.1497.26; Tue, 14 Dec
- 2021 15:17:48 +0100
-Subject: Re: [PATCH] Revert "pinctrl: stm32: fix the reported number of GPIO
- lines per bank"
-To:     <chf.fritz@googlemail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-CC:     <linux-gpio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <a5b8e3ea13de0b2976bb9622dd410dd110f3f66c.camel@googlemail.com>
-From:   Fabien DESSENNE <fabien.dessenne@foss.st.com>
-Message-ID: <46f07510-b6aa-4619-9c54-048464bfbaf3@foss.st.com>
-Date:   Tue, 14 Dec 2021 15:17:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        id S234874AbhLNOVm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Dec 2021 09:21:42 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:13243 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232574AbhLNOVm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Dec 2021 09:21:42 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20211214142140euoutp01fa759fa8ff8af378f47027fce26a5bc7~ApQPdfXB-1874218742euoutp01f
+        for <linux-gpio@vger.kernel.org>; Tue, 14 Dec 2021 14:21:40 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20211214142140euoutp01fa759fa8ff8af378f47027fce26a5bc7~ApQPdfXB-1874218742euoutp01f
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1639491700;
+        bh=8Hf52CqS/nSnwXOFc/puEi7DxLCUbagkhetpz8rebpc=;
+        h=Date:Subject:To:From:In-Reply-To:References:From;
+        b=LHAE1ZHLWsbfdMgNUGUALgsk1b4EtSf2AhmIIwXc+7+CePQdZ1/76eDNKFb4/ez7i
+         Oxfb0kT6ROqLDDlxbotVF/4T5UsRPDlM3WN3zLUpgmziL3xGcaQ+tiwVNHXRXU/GVY
+         2Ri6/Y7WB4PiFXPuMY+OXip5szXA0uWCSOTD3CTM=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20211214142140eucas1p199687dc8c123ee53c9b6781d7d6d3187~ApQPSwJjP0150901509eucas1p11;
+        Tue, 14 Dec 2021 14:21:40 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 49.10.10260.378A8B16; Tue, 14
+        Dec 2021 14:21:39 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20211214142139eucas1p1c100b7fd4b8c8ce85bc03e1ce6b783db~ApQO5fitv0147901479eucas1p14;
+        Tue, 14 Dec 2021 14:21:39 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20211214142139eusmtrp24856b18a0a2a55855f634e9218586db7~ApQO4v_3H0350603506eusmtrp2Q;
+        Tue, 14 Dec 2021 14:21:39 +0000 (GMT)
+X-AuditID: cbfec7f5-bf3ff70000002814-22-61b8a873bc6d
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id F8.40.09404.378A8B16; Tue, 14
+        Dec 2021 14:21:39 +0000 (GMT)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20211214142139eusmtip20f3994e8a218a643c09b595cad4f732d~ApQOR6F-K1143311433eusmtip2E;
+        Tue, 14 Dec 2021 14:21:39 +0000 (GMT)
+Message-ID: <8671ebd8-a853-7394-9864-0457514337e2@samsung.com>
+Date:   Tue, 14 Dec 2021 15:21:39 +0100
 MIME-Version: 1.0
-In-Reply-To: <a5b8e3ea13de0b2976bb9622dd410dd110f3f66c.camel@googlemail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0)
+        Gecko/20100101 Thunderbird/91.4.0
+Subject: Re: [PATCH v2 2/2] ARM: dts: gpio-ranges property is now required
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.50]
-X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG2NODE2.st.com
- (10.75.127.5)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.11.62.513
- definitions=2021-12-14_06,2021-12-14_01,2021-12-02_01
+To:     Phil Elwell <phil@raspberrypi.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Thierry Reding <treding@nvidia.com>,
+        devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <20211206092237.4105895-3-phil@raspberrypi.com>
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrNKsWRmVeSWpSXmKPExsWy7djP87rFK3YkGpw+bmWxtvcoi8X8I+dY
+        LX69O8JuMeXPciaLzfP/MFpMvL2B3eLGQ22Ldbdes1m07gVK3v7N58DlMev+WTaPnbPusnts
+        WtXJ5nHn2h42j81L6j16m9+xebQe/cXi8XmTXABHFJdNSmpOZllqkb5dAlfGvFXr2AsmC1Q8
+        apvM3MD4k6eLkZNDQsBE4t6X7yxdjFwcQgIrGCXur3rNDuF8YZS4dP8XM4TzmVHi1uVVjDAt
+        jftOQCWWM0qc+fWdFcL5yCjx4/YRFpAqXgE7iYvbe8FsFgFVia4J79kh4oISJ2c+AYuLCiRJ
+        tHb8YQKxhQW8JGa8aWMGsZkFxCVuPZnPBDJUROA3k8TmuTvBGtgEDCW63naxgdicAjYShye9
+        hmqQl2jeOhvsJAmBLxwS8+ZuYIa41UVi6cMlULawxKvjW9ghbBmJ/zshNkgINDNKPDy3lh3C
+        6WGUuNw0A+pTa4k7534BreMAWqEpsX6XPkTYUeJr+0FmkLCEAJ/EjbeCEEfwSUzaNh0qzCvR
+        0SYEUa0mMev4Ori1By9cgjrHQ+LHpfnMExgVZyGFyywk/89C8toshBsWMLKsYhRPLS3OTU8t
+        Ns5LLdcrTswtLs1L10vOz93ECExfp/8d/7qDccWrj3qHGJk4GA8xSnAwK4nwvrTemijEm5JY
+        WZValB9fVJqTWnyIUZqDRUmcNzlzQ6KQQHpiSWp2ampBahFMlomDU6qByS9sXvp+F3fdeuXv
+        a5aXvruwS4LhmOe8i3NCxe/nVt1sU2lqZ3PMPPPWsGRutcbr5su9/kq3u9dXF31d6sHd6LRc
+        Reha88oN95g4152I/Xg/1sfswSeuptwHU1WU5v5qNkovbb1960mm4bnDtgz8Rn6L3q7a4c7/
+        1CA2U7b4idLjqQUsrbtE7U9ZcH3ZvuffovkT69QPVn05mvr3OFv4hPz0qpmFL+fHTd7dcPXB
+        yvfKK5p3HrC5+tRva3ezxGX5zbOYD6dIN0348OmurpcP37VlHXXHLxi0PzF0e+mmoal0f77X
+        x5Znp2q2f3idufxGpUGP7Pesdfd2/fCpEH36OjNFw3u1zoGJud8b3611jVNiKc5INNRiLipO
+        BABAwxlJzgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrPIsWRmVeSWpSXmKPExsVy+t/xe7rFK3YkGly/rWyxtvcoi8X8I+dY
+        LX69O8JuMeXPciaLzfP/MFpMvL2B3eLGQ22Ldbdes1m07gVK3v7N58DlMev+WTaPnbPusnts
+        WtXJ5nHn2h42j81L6j16m9+xebQe/cXi8XmTXABHlJ5NUX5pSapCRn5xia1StKGFkZ6hpYWe
+        kYmlnqGxeayVkamSvp1NSmpOZllqkb5dgl7GvFXr2AsmC1Q8apvM3MD4k6eLkZNDQsBEonHf
+        CeYuRi4OIYGljBIb1nYxQSRkJE5Oa2CFsIUl/lzrYgOxhQTeM0o0/kwDsXkF7CQubu9lAbFZ
+        BFQluia8Z4eIC0qcnPkELC4qkCSxe91WsF5hAS+JGW/amEFsZgFxiVtP5jOBLBYR+MskMaP3
+        PyvEglyJgwcugTWzCRhKdL2FWMwpYCNxeNJrqGYzia6tXYwQtrxE89bZzBMYBWch2T0LyY5Z
+        SFpmIWlZwMiyilEktbQ4Nz232EivODG3uDQvXS85P3cTIzAmtx37uWUH48pXH/UOMTJxMB5i
+        lOBgVhLhfWm9NVGINyWxsiq1KD++qDQntfgQoykwACYyS4km5wOTQl5JvKGZgamhiZmlgaml
+        mbGSOK9nQUeikEB6YklqdmpqQWoRTB8TB6dUA1PqWUeH3Z/Kzvxa4GTmmVy7+pjoohs7V5xY
+        J3XGOPnind0nwt7ttxUxutxtVyp2K+Fwd5lmkGSOuNnf2IWKfzIcXwq1vNByu72+jL8oetvX
+        k5I8EsnL19UXHdC71JJ7Z4FXlJ3FnwMMMmtWWmR9m+Poe9QicOG/96mPz/vP/ZRY8HcF74vb
+        qncEJEWLfvNrv/68qTe0vC39skfvkQNbGc4wtW3ek7xh139X3vY+vfolwd4dH2UDy/ex6vWl
+        lqf8Uvq57qXsKjdJ3Z27H+epXGj05dh9efJVdV1mialP+lxnFCi8bs0/33k2+m/a4qLfu2/2
+        TNNJ0VwvNjt3x8vMuo0b+zjlJ03KEOTsb1J2CVZiKc5INNRiLipOBAAqJOeWUgMAAA==
+X-CMS-MailID: 20211214142139eucas1p1c100b7fd4b8c8ce85bc03e1ce6b783db
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20211214142139eucas1p1c100b7fd4b8c8ce85bc03e1ce6b783db
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20211214142139eucas1p1c100b7fd4b8c8ce85bc03e1ce6b783db
+References: <20211206092237.4105895-1-phil@raspberrypi.com>
+        <20211206092237.4105895-3-phil@raspberrypi.com>
+        <CGME20211214142139eucas1p1c100b7fd4b8c8ce85bc03e1ce6b783db@eucas1p1.samsung.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Christoph
+Hi Phil,
 
-I have been able to reproduce the issue you reported.
-Instead of reverting the guilty patch, I am working to fix it.
-I am currently testing a candidate patch, and will share it in the 
-coming days.
-BR
-Fabien
+On 06.12.2021 10:22, Phil Elwell wrote:
+> Since [1], added in 5.7, the absence of a gpio-ranges property has
+> prevented GPIOs from being restored to inputs when released.
+> Add those properties for BCM283x and BCM2711 devices.
+>
+> [1] commit 2ab73c6d8323 ("gpio: Support GPIO controllers without
+>      pin-ranges")
+>
+> Fixes: 2ab73c6d8323 ("gpio: Support GPIO controllers without pin-ranges")
+> Signed-off-by: Phil Elwell <phil@raspberrypi.com>
 
+This patch breaks today's linux-next (next-20211214) on RPi3 and RPi4. 
+Either there is something missing or wrong here. Booting stops after 
+following messages (on RPi4):
 
-On 11/12/2021 19:53, Christoph Fritz wrote:
-> This reverts commit 67e2996f72c71ebe4ac2fcbcf77e54479bb7aa11 because it
-> breaks pin usage for gpio-nodes with an offset in gpio-ranges (like
-> &gpiof from stm32mp15xxab-pinctrl.dtsi).
-> 
-> For example the following reset gpio of a wifi module on a stm32mp153c
-> board works again after applying this revert patch:
-> 
-> 	wifi_pwrseq: wifi-pwrseq {
-> 		compatible = "mmc-pwrseq-simple";
-> 		reset-gpios = <&gpiof 9 GPIO_ACTIVE_LOW>;
-> 	};
-> 
-> Signed-off-by: Christoph Fritz <chf.fritz@googlemail.com>
+[    3.186786] pinctrl-bcm2835 fe200000.gpio: could not add GPIO chip
+[    3.234513] pinctrl-bcm2835 fe200000.gpio: could not add GPIO chip
+[    3.276703] mmc0: SDHCI controller on fe340000.mmc [fe340000.mmc] 
+using ADMA
+[    3.287191] pinctrl-bcm2835 fe200000.gpio
+
 > ---
->   drivers/pinctrl/stm32/pinctrl-stm32.c | 9 ++-------
->   1 file changed, 2 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
-> index 24764ebcc936..73f49c596cef 100644
-> --- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-> +++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-> @@ -1225,7 +1225,7 @@ static int stm32_gpiolib_register_bank(struct stm32_pinctrl *pctl,
->   	struct device *dev = pctl->dev;
->   	struct resource res;
->   	int npins = STM32_GPIO_PINS_PER_BANK;
-> -	int bank_nr, err, i = 0;
-> +	int bank_nr, err;
+>   arch/arm/boot/dts/bcm2711.dtsi | 2 ++
+>   arch/arm/boot/dts/bcm283x.dtsi | 2 ++
+>   2 files changed, 4 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.dtsi
+> index 9e01dbca4a011..dff18fc9a9065 100644
+> --- a/arch/arm/boot/dts/bcm2711.dtsi
+> +++ b/arch/arm/boot/dts/bcm2711.dtsi
+> @@ -582,6 +582,8 @@ &gpio {
+>   		     <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
+>   		     <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
 >   
->   	if (!IS_ERR(bank->rstc))
->   		reset_control_deassert(bank->rstc);
-> @@ -1247,14 +1247,9 @@ static int stm32_gpiolib_register_bank(struct stm32_pinctrl *pctl,
+> +	gpio-ranges = <&gpio 0 0 58>;
+> +
+>   	gpclk0_gpio49: gpclk0_gpio49 {
+>   		pin-gpclk {
+>   			pins = "gpio49";
+> diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+> index a3e06b6809476..c113661a6668f 100644
+> --- a/arch/arm/boot/dts/bcm283x.dtsi
+> +++ b/arch/arm/boot/dts/bcm283x.dtsi
+> @@ -126,6 +126,8 @@ gpio: gpio@7e200000 {
+>   			interrupt-controller;
+>   			#interrupt-cells = <2>;
 >   
->   	of_property_read_string(np, "st,bank-name", &bank->gpio_chip.label);
->   
-> -	if (!of_parse_phandle_with_fixed_args(np, "gpio-ranges", 3, i, &args)) {
-> +	if (!of_parse_phandle_with_fixed_args(np, "gpio-ranges", 3, 0, &args)) {
->   		bank_nr = args.args[1] / STM32_GPIO_PINS_PER_BANK;
->   		bank->gpio_chip.base = args.args[1];
-> -
-> -		npins = args.args[2];
-> -		while (!of_parse_phandle_with_fixed_args(np, "gpio-ranges", 3,
-> -							 ++i, &args))
-> -			npins += args.args[2];
->   	} else {
->   		bank_nr = pctl->nbanks;
->   		bank->gpio_chip.base = bank_nr * STM32_GPIO_PINS_PER_BANK;
-> 
+> +			gpio-ranges = <&gpio 0 0 54>;
+> +
+>   			/* Defines common pin muxing groups
+>   			 *
+>   			 * While each pin can have its mux selected
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
