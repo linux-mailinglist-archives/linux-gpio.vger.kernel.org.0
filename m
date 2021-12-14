@@ -2,107 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 347E24749C9
-	for <lists+linux-gpio@lfdr.de>; Tue, 14 Dec 2021 18:39:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 790DF4749FF
+	for <lists+linux-gpio@lfdr.de>; Tue, 14 Dec 2021 18:47:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232929AbhLNRjT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Dec 2021 12:39:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49822 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229912AbhLNRjS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Dec 2021 12:39:18 -0500
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43B6BC061574;
-        Tue, 14 Dec 2021 09:39:18 -0800 (PST)
-Received: by mail-ed1-x52b.google.com with SMTP id e3so66608189edu.4;
-        Tue, 14 Dec 2021 09:39:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LxAuJbLvvTcbumNHXWVkWEBJhfQUVBNZ5jnWFkaTSsc=;
-        b=e1SoDw3pmy2JdP7IPrREK0jG2cn8uEHq3kXD6m0PSAb9xnBxyMJyQpXBuTIRSFH5vr
-         zyVEsFVTqd8MSQXyp/MfyJksmCCFXUXB3qV/Bd+PLR+/NTMM/ADSF7xFeohIHOGpC9pC
-         1B6mV275t3/L/9afXznLmVGlBQImU+BRr3+n5eA21JyFwyPeXmog12j6S9Yzg2bWa6Aq
-         ObcgC3XZAAwTmxxPyK9EO4f2TaErwdSTGDwH9EGwFNkvfiUGH9oQBnMJZ3VHG96cKHrE
-         fp4YSAkbRfctF07IF/z2x+J7CaDV+15TqPXg62JDKZZtjF8pE3JfNgMFqDcoH+Gb3PkO
-         il4Q==
+        id S236708AbhLNRr0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Dec 2021 12:47:26 -0500
+Received: from mail-ot1-f46.google.com ([209.85.210.46]:44620 "EHLO
+        mail-ot1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236465AbhLNRrZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Dec 2021 12:47:25 -0500
+Received: by mail-ot1-f46.google.com with SMTP id u18-20020a9d7212000000b00560cb1dc10bso21678793otj.11;
+        Tue, 14 Dec 2021 09:47:24 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LxAuJbLvvTcbumNHXWVkWEBJhfQUVBNZ5jnWFkaTSsc=;
-        b=M0hUVhia5wQqWt64dsCOsWbIWiNx1bJLMMYohWmlmnE4qehoKINyU4PStQq4x6AVDE
-         e3Qg8RFMaDPTDr5mcWuRc+m5fdcGEFU9F3QRwXK8GO5ZU/nKbnE4q8FfzqCbF5oHP/Sc
-         O/iddlry7W3rdzStn+KrQ1Nq3hAZ1rHOQENx3tZQOySjyYDNPxqRUvy5uus4kGC3Ec8C
-         pip1/XtIfHVnBTz8s2drDzHO+VpLWI3kGlwClS1c1vCJjsjdS+t4NAcg+/LwcwEqUDem
-         a41BNyFcJZmb1dmD1HaA9rom60AUE0H+suwMiS3eXu8Cg0aCzIrcrQD0a2oS50MTwHBM
-         VcVQ==
-X-Gm-Message-State: AOAM5322bQUzs39506mnTtZrKxJWFEpuAOiu3VSShgCEGk17ESOHjnsb
-        7BvuWxEYSvuv/zL2SGqEkD+sXREFCj92ECXdK3g=
-X-Google-Smtp-Source: ABdhPJyfe+m1TWfKEDr/wqXpFTcnF2opPxqMTsYASJHjTvEd+Gg2pPTfJJac6JIWJDSG3LI8qCeW4TcStTKIuDs6H+E=
-X-Received: by 2002:a17:906:a3c6:: with SMTP id ca6mr2672214ejb.639.1639503556811;
- Tue, 14 Dec 2021 09:39:16 -0800 (PST)
-MIME-Version: 1.0
-References: <1638891339-21806-1-git-send-email-quic_srivasam@quicinc.com>
- <1638891339-21806-4-git-send-email-quic_srivasam@quicinc.com>
- <CAHp75Vd=47Tv9Sf+styPhxS2=O1H2KUDeKQXTULUYU5fDgGwwA@mail.gmail.com>
- <0f6621e5-f014-27c9-be8b-6c32ab994304@quicinc.com> <CAHp75VdL3hmr23CcJLDpvbHaKv5HrDZjmVQpCnRNmPM7nEx6WQ@mail.gmail.com>
- <4bcfadd0-8abb-e9e9-ad18-a5b1d3d46308@quicinc.com>
-In-Reply-To: <4bcfadd0-8abb-e9e9-ad18-a5b1d3d46308@quicinc.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 14 Dec 2021 19:37:47 +0200
-Message-ID: <CAHp75Vcnc96QYy5_mzYCbhrsJ=iEghKR0Z8XaX+DnVeNN3DthQ@mail.gmail.com>
-Subject: Re: [PATCH v5 3/5] pinctrl: qcom: Extract chip specific LPASS LPI code
-To:     Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, plai@codeaurora.org,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        rohitkr@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>, judyhsiao@chromium.org,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=eBOnaxzXfCDyZtrqhrW8rtGcUQ7HznDbf48Z3QQIJVI=;
+        b=a0DiRELJ5iuqdh/1tIYpypUhBwhCdJ6ziiuTxS8bW+FA5nOpUXunWgVYrLoyXtbmio
+         wHKE5s9VN3gi6D1TycGeN8FBrlEBlkSIHtSpjOmL8xbWhOhRDvvV0nbx+FzrZqp+38vh
+         PfvCB2IMytVMI/u84u5zBRYr7vqVcCWy7fSKlAN8WJkNN3hbtunJ0Ie95aYJxJ22oKgm
+         ZWvAt4y4TaNFnDM8VGOeTvbTGmSzUiP0QBhDqDZabGDXaVEE2efcefmi0F+0TjtTgGbT
+         6aC/laOaJc701A7H9hjyKDjsQelyI2H7kYz8ttRrHDYWhsdXFa19SlIoaihs0gjyMw0y
+         L2Tg==
+X-Gm-Message-State: AOAM533GgNMxUrHixrh8xV1M1j70gfGrZ1IbniGvetzLKu1GcjV3y3Qa
+        JIQm5uC7Rn0kZZhZoAhL3Q==
+X-Google-Smtp-Source: ABdhPJymNqHOf+pzQ6TP5Ecr3rl8MlTkcaOtkQTwS98dn07H5PgHTQ7hiMxMjBWZBkxzUOOvW7CnYg==
+X-Received: by 2002:a9d:4f0e:: with SMTP id d14mr5462504otl.137.1639504044111;
+        Tue, 14 Dec 2021 09:47:24 -0800 (PST)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id h1sm99241oog.26.2021.12.14.09.47.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Dec 2021 09:47:23 -0800 (PST)
+Received: (nullmailer pid 3618988 invoked by uid 1000);
+        Tue, 14 Dec 2021 17:47:21 -0000
+Date:   Tue, 14 Dec 2021 11:47:21 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Amit Kucheria <amitk@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-rtc@vger.kernel.org,
+        Markus Mayer <mmayer@broadcom.com>, linux-mmc@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com, Ray Jui <rjui@broadcom.com>,
+        linux-pwm@vger.kernel.org,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Scott Branden <sbranden@broadcom.com>,
+        Zhang Rui <rui.zhang@intel.com>, linux-ide@vger.kernel.org,
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        linux-crypto@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Venkata Prasad Potturu <quic_potturu@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
+        Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Doug Berger <opendmb@gmail.com>, linux-usb@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Al Cooper <alcooperx@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Lee Jones <lee.jones@linaro.org>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 02/15] dt-bindings: reset: Convert Broadcom STB reset
+ to YAML
+Message-ID: <YbjYqYHR7i9XXAuH@robh.at.kernel.org>
+References: <20211208003727.3596577-1-f.fainelli@gmail.com>
+ <20211208003727.3596577-3-f.fainelli@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211208003727.3596577-3-f.fainelli@gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Dec 14, 2021 at 7:22 PM Srinivasa Rao Mandadapu
-<quic_srivasam@quicinc.com> wrote:
-> On 12/14/2021 10:46 PM, Andy Shevchenko wrote:
-> > On Tue, Dec 14, 2021 at 7:15 PM Srinivasa Rao Mandadapu
-> > <quic_srivasam@quicinc.com> wrote:
-> >> On 12/8/2021 11:58 AM, Andy Shevchenko wrote:
+On Tue, 07 Dec 2021 16:37:13 -0800, Florian Fainelli wrote:
+> Convert the Broadcom STB SW_INIT style reset controller binding to YAML.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  .../bindings/reset/brcm,brcmstb-reset.txt     | 27 -----------
+>  .../bindings/reset/brcm,brcmstb-reset.yaml    | 48 +++++++++++++++++++
+>  2 files changed, 48 insertions(+), 27 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/reset/brcm,brcmstb-reset.txt
+>  create mode 100644 Documentation/devicetree/bindings/reset/brcm,brcmstb-reset.yaml
+> 
 
-...
-
-> >>>> +struct lpi_pingroup {
-> >>>> +       const char *name;
-> >>>> +       const unsigned int *pins;
-> >>>> +       unsigned int npins;
-> >>>> +       unsigned int pin;
-> >>>> +       /* Bit offset in slew register for SoundWire pins only */
-> >>>> +       int slew_offset;
-> >>>> +       unsigned int *funcs;
-> >>>> +       unsigned int nfuncs;
-> >>>> +};
-> >>> Are you going to convert this to use struct group_desc?
-> > Any comments on this? It sounds like further improvements.
-> Actually this also needs as separate patch. these patches will do as
-> separate series.
-
-Of course, that's why I put  the second sentence after the question in my reply.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Applied, thanks!
