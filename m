@@ -2,77 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4062047507E
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Dec 2021 02:28:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BFE13475084
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Dec 2021 02:30:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238872AbhLOB24 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Dec 2021 20:28:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43790 "EHLO
+        id S235260AbhLOBaX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Dec 2021 20:30:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238814AbhLOB2z (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Dec 2021 20:28:55 -0500
-Received: from mail-ot1-x332.google.com (mail-ot1-x332.google.com [IPv6:2607:f8b0:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91650C06173F
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Dec 2021 17:28:55 -0800 (PST)
-Received: by mail-ot1-x332.google.com with SMTP id 47-20020a9d0332000000b005798ac20d72so22967533otv.9
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Dec 2021 17:28:55 -0800 (PST)
+        with ESMTP id S233511AbhLOBaX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Dec 2021 20:30:23 -0500
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA1E5C061574
+        for <linux-gpio@vger.kernel.org>; Tue, 14 Dec 2021 17:30:22 -0800 (PST)
+Received: by mail-wr1-x429.google.com with SMTP id k9so17608892wrd.2
+        for <linux-gpio@vger.kernel.org>; Tue, 14 Dec 2021 17:30:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:in-reply-to:references:from:user-agent:date:message-id
-         :subject:to;
-        bh=vsh1MhG90sktMnN9grpR54l4uKx6Z6N5tsDDxbZW6o0=;
-        b=JGU0cApMNO/QObrJvFbIIED25d0QAjNji23cp4HxXLFGTpEnaeb2d947VuokTPrJh4
-         GxqIDaSVHw/ZVrgLLUJ36p6hc4fc2Ao3NBWHZY9233yxuiRmSq0+VA+k2c7w+AK1ethh
-         pIXA/919loix9H/jY9SRtqVmU7bJ5WRstSyhE=
+        d=googlemail.com; s=20210112;
+        h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=ssImNAp25VSfpjtWIa6nzdRJnou4SLqvIgmNzKI3Ps8=;
+        b=qydlwCrFMmktBUYxvY5tXGUsd2Ig/GOL2jM1OdBRqZoyXmiVcpR5pagBVHD03wkAFm
+         zUtiW7nUvWS5OyhX3HY9a19PdDYBmrJTaAZhXxjtAk12t7q1ohm3/VDZibA6rlrFz4Ec
+         l/PnpyOmevBH4Z/DSXcJZrYb7ms5A0kqP9qV6C4tWTp+7+irH23kOMpi7y2+LqcQOY6P
+         LE3GNep6Uc6kAOauIeJoszvyV37B2IzGk3crkH6WER57f/5CqtywGg3DSzOHdqHDdwPg
+         WfQVyKmfaaE3bPv/4+6Y967fU1Tk52Oyy/25MVbOZtQOIbdUwtknv88l8C1b/8qMoe13
+         9Rzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from
-         :user-agent:date:message-id:subject:to;
-        bh=vsh1MhG90sktMnN9grpR54l4uKx6Z6N5tsDDxbZW6o0=;
-        b=ZKl9PLMUuH80Lpgc8pk5bCSpv8j8FrwHBdklQOk05NQF+Cp2j3crMmfsjpIbQc4lTk
-         B7o+JzEzyc3f7RzTK1ZSG3fSN9+c2AcsppTMmSFbPMAA/Y+Zcbk6cEa/ATRwHv7eFDVY
-         J7+CvhWj+RKW5Q4ye6B7XTKchwRPIbb7ItupmaaTlKfkL3oGt79cWTH6LfDj/GYiDxbW
-         pbWesOv8+mFkmK9tebj1sPF9nqPBs8nv1TB/Qmi9iGk0lUCfxFUDxTxBKNgpqsp1hBwb
-         qtmhbOyVURP1xoCSMWZIzfZsMfOP+POe2fDQhqw8bv9HDQ6wI2Ub2WAstcbCeF8miFoW
-         QpoQ==
-X-Gm-Message-State: AOAM5320BjWWXl2roFC/0R7IJOIO3hofrqUj+bdnDUV3lONgTk2+BtDN
-        v10yCM822PIjReWMZ6tSHjkOsgQQJOSU5cpaqPfx3w==
-X-Google-Smtp-Source: ABdhPJwVvIEVSzGWkZ6r6tum5sN5c25e8CxEhW4XCE5QW3Fp24XzJo9z3AmfNkACncaxRnmD6mxorka5IqffVKX3Lug=
-X-Received: by 2002:a9d:70ce:: with SMTP id w14mr6875613otj.77.1639531734897;
- Tue, 14 Dec 2021 17:28:54 -0800 (PST)
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 15 Dec 2021 02:28:54 +0100
-MIME-Version: 1.0
-In-Reply-To: <1638891339-21806-1-git-send-email-quic_srivasam@quicinc.com>
-References: <1638891339-21806-1-git-send-email-quic_srivasam@quicinc.com>
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.9.1
-Date:   Wed, 15 Dec 2021 02:28:54 +0100
-Message-ID: <CAE-0n527T71LPe5R+S+YzEqiid2-QrFdvS2T7MWrakTccyG45w@mail.gmail.com>
-Subject: Re: [PATCH v5 0/5] Add pin control support for lpass sc7280
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>,
-        agross@kernel.org, alsa-devel@alsa-project.org,
-        bgoswami@codeaurora.org, bjorn.andersson@linaro.org,
-        broonie@kernel.org, devicetree@vger.kernel.org,
-        judyhsiao@chromium.org, lgirdwood@gmail.com,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, perex@perex.cz, plai@codeaurora.org,
-        robh+dt@kernel.org, rohitkr@codeaurora.org,
-        srinivas.kandagatla@linaro.org, tiwai@suse.com
+        h=x-gm-message-state:message-id:subject:from:reply-to:to:cc:date
+         :in-reply-to:references:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=ssImNAp25VSfpjtWIa6nzdRJnou4SLqvIgmNzKI3Ps8=;
+        b=p5lm/JA990YPgmcCuWYdPBwHgCfvQYSFpZJm4pXhFRlhJKEwlTGQvzbceoJJ7zYqh3
+         V04ew3Dc+jR+kceyw/vcGfATrtK4Lro3uRSqrXkPz2AQntwHdM5PMGGI5zCKeWIrEBQk
+         HuRRXUcMNH+BvSwX6lHHGWn+iI2AXlkaeVmmxfSbQwNsZGw26DdNB9xP53gZuXU31AYI
+         Ndky9Nd8Il7r5+rASa1j0quLUMFqw9/9q0sr5pbVcv2JZPWDKM/eGsTWwHlQI3BTlvI0
+         Y1D3AwTLNrtX5Nd9DM5YqGYKIhygUwHlyM9glpHlDjjiG7q1J6+X+8i3Z3s0CkpglXZQ
+         Rk2Q==
+X-Gm-Message-State: AOAM532nFZrLPiSEGRRIG/00/ryEn2dcexlrSsX/HTjPUuofORP3L8ST
+        F0Ob8xad8TBlGiXcXXgdGB0=
+X-Google-Smtp-Source: ABdhPJypix1kagUzDsn4lpHSfEOLbPLySXi8Ej51HQIsQO0pv/fgBwdDpn3W3hTQqsB9xdvXPM9oMQ==
+X-Received: by 2002:adf:ce0e:: with SMTP id p14mr2159648wrn.423.1639531821452;
+        Tue, 14 Dec 2021 17:30:21 -0800 (PST)
+Received: from mars.fritz.box ([2a02:8070:bb0:8700:3e7c:3fff:fe20:2cae])
+        by smtp.gmail.com with ESMTPSA id e7sm524323wrg.31.2021.12.14.17.30.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Dec 2021 17:30:20 -0800 (PST)
+Message-ID: <4204e95bc2306796fb834e74a01d75a47d45ecbc.camel@googlemail.com>
+Subject: Re: [PATCH] Revert "pinctrl: stm32: fix the reported number of GPIO
+ lines per bank"
+From:   Christoph Fritz <chf.fritz@googlemail.com>
+Reply-To: chf.fritz@googlemail.com
+To:     Fabien Dessenne <fabien.dessenne@foss.st.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Date:   Wed, 15 Dec 2021 02:30:19 +0100
+In-Reply-To: <46f07510-b6aa-4619-9c54-048464bfbaf3@foss.st.com>
+References: <a5b8e3ea13de0b2976bb9622dd410dd110f3f66c.camel@googlemail.com>
+         <46f07510-b6aa-4619-9c54-048464bfbaf3@foss.st.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.3-1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Quoting Srinivasa Rao Mandadapu (2021-12-07 07:35:34)
-> This patch series is to split lpass variant common pin control
-> functions and SoC specific functions and to add lpass sc7280 pincontrol support.
-> It also Adds dt-bindings for lpass sc7280 lpass lpi pincontrol.
+On Tue, 2021-12-14 at 15:17 +0100, Fabien DESSENNE wrote:
+> I have been able to reproduce the issue you reported.
+> Instead of reverting the guilty patch, I am working to fix it.
+> I am currently testing a candidate patch, and will share it in the 
+> coming days.
 
-What ensures that the LPI pins are being muxed out on the pads of the
-SoC? There's the eGPIO support in the tlmm driver, which seems to let us
-override the LPI pins and mux them away from this pinctrl device to the
-tlmm pinctrl device. Should this driver be requesting gpios from tlmm
-and making sure they're not muxed away to tlmm so we don't have
-conflicts?
+FYI, the regression was also merged into most of the stable and
+longterm stable releases: 5.15, 5.10, 5.4 and 4.19.
+> 
+
