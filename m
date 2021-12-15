@@ -2,109 +2,150 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D8E1E4765FA
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Dec 2021 23:35:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C111476667
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Dec 2021 00:18:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231352AbhLOWfF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Dec 2021 17:35:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52022 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230453AbhLOWfF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Dec 2021 17:35:05 -0500
-Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8E09C061574;
-        Wed, 15 Dec 2021 14:35:04 -0800 (PST)
-Received: by mail-lj1-x234.google.com with SMTP id b19so33753410ljr.12;
-        Wed, 15 Dec 2021 14:35:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:to:cc:references
-         :from:in-reply-to:content-transfer-encoding;
-        bh=B+/8bjTUUb+/Fn//dn2pyAEEUa0LwW4iCF5ahtOf/lE=;
-        b=AjzyQcXiEfiPKbwoXKQ3r8WMyW/0o0gT6yol+GMNPbjSs2FmenbMl/QFy0eIVtydOi
-         acwl5hIr6GB6iu8ySopgKZoPe8nntzxx0AweAqZpNDUSdMWjCAwBoE2DTJEwn3T1Rlns
-         AIZb47xmpL+FN0h7YKaw/gDpjNH5iJ0Nv2pEg4R4x1KOL/+sT2+cRC+8SxOaQq2uQH25
-         oPIX95XV/DcKYbAR16CuX0jrAD9zeR0rWeTomQXclxABAQ3ruTwEu2LV6KhxJrvNwLu/
-         I+q+sEO8IJADtZjs6cfKl8axZFEH0RAzbnXO2lEiMMYZLZVg7tJf8lhrFIrrWn/GabrB
-         f9Sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :to:cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=B+/8bjTUUb+/Fn//dn2pyAEEUa0LwW4iCF5ahtOf/lE=;
-        b=UFXk9Vg9zPw7FJUI05gVC//gxNCJK8IS0AvV1QHtAnPsjjooSq3+TAxMxaVGh8qZqS
-         SozrMLD1ShYByvvhb3GrSFTpKqQMxPn1qvsc4PLqqX0TQhZVVdjit12m61L8HYX6czsW
-         gIp3sJmPEsSC3ppeDagM+ReGuuCkTWaWdz+S8hPzPm7AbJC352Dz1MOFctg++x7FREUk
-         kON/z2zkcxXWsnYkv7p+ZNn7UT8eWi0KinLCLaF/RiD1Q3pXN7MfaH7SQc0AoNOiDKoL
-         7dUTCCXkkE85ORwTZIf2xV8DVV/JBK5oef1PwwTiEZ61gkCt0Pm/+lMPdf2l0qkO0A3S
-         tpyA==
-X-Gm-Message-State: AOAM5324rufrYxnLdRnZ9k0ZH4hektMKlthyhl5Q1HTAND0bUlMP3auN
-        LHAzAQzvxz0DuIkHKzvoP0c=
-X-Google-Smtp-Source: ABdhPJwsz3FdD/Gr/SfvgGD3H91hSFlJod6yZ6Y+otn16TT923Jda80hduw/Kdt0kcynL8EyBxCumA==
-X-Received: by 2002:a2e:9c8:: with SMTP id 191mr13487617ljj.262.1639607703161;
-        Wed, 15 Dec 2021 14:35:03 -0800 (PST)
-Received: from [192.168.26.149] (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
-        by smtp.googlemail.com with ESMTPSA id u7sm708716lja.58.2021.12.15.14.35.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Dec 2021 14:35:02 -0800 (PST)
-Message-ID: <e97e3795-b468-8334-7c12-bfd52e22f363@gmail.com>
-Date:   Wed, 15 Dec 2021 23:35:01 +0100
+        id S231861AbhLOXS0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Dec 2021 18:18:26 -0500
+Received: from mga05.intel.com ([192.55.52.43]:27488 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231843AbhLOXS0 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 15 Dec 2021 18:18:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1639610305; x=1671146305;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=J9CVgNUuhMP1qYMs4+idikxQqt8JvMU/Q608H6x0Bq4=;
+  b=oEXhTL0hGgh6J5cBjFRi2VF3QcLtnZ5Rx01RAWt4DXKtmWBH0gJWJ77e
+   NknFyXhANm+R71nTN7OsJ2BdvcYVzYGPGNqFjGj8APGDEGNahBKMVt1DC
+   GT5/R1sfzrB3wEPqwA3mSOQ/prsMArC15y1A8B4bJg/DoQeE3943R3EW9
+   oUVPWDAOHfuHAXhKyTS7vXFLny9E5y/kjZ9dTjktELF8yNyoCVCzUyTBs
+   T8yrpTsSENBG3bRM5wcleAsSiIibv39OscuQqDENJaHiQPvVFVziZ4U6S
+   y2H4PqMw8Ie990PRgm06OCmhCrVLtpZk/e0QO6UWCan/2Lozi3M+7EKk1
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10199"; a="325637363"
+X-IronPort-AV: E=Sophos;i="5.88,209,1635231600"; 
+   d="scan'208";a="325637363"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2021 15:18:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,209,1635231600"; 
+   d="scan'208";a="464461571"
+Received: from lkp-server02.sh.intel.com (HELO 9f38c0981d9f) ([10.239.97.151])
+  by orsmga003.jf.intel.com with ESMTP; 15 Dec 2021 15:18:23 -0800
+Received: from kbuild by 9f38c0981d9f with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1mxdXS-0002TR-Px; Wed, 15 Dec 2021 23:18:22 +0000
+Date:   Thu, 16 Dec 2021 07:18:19 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     kbuild-all@lists.01.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Subject: Re: [PATCH] pinctrl: add one more "const" for generic function groups
+Message-ID: <202112160723.nSvHR7gk-lkp@intel.com>
+References: <20211215174821.21668-1-zajec5@gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:96.0) Gecko/20100101
- Thunderbird/96.0
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: Add binding for BCM4908 pinctrl
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-        Jonas Gorski <jonas.gorski@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-References: <20211215204753.5956-1-zajec5@gmail.com>
- <1639607248.075072.1954724.nullmailer@robh.at.kernel.org>
-From:   =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-In-Reply-To: <1639607248.075072.1954724.nullmailer@robh.at.kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211215174821.21668-1-zajec5@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Rob,
+Hi "Rafał,
 
-On 15.12.2021 23:27, Rob Herring wrote:
-> On Wed, 15 Dec 2021 21:47:52 +0100, Rafał Miłecki wrote:
->> From: Rafał Miłecki <rafal@milecki.pl>
->>
->> It's hardware block that is part of every SoC from BCM4908 family.
->>
->> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
->> ---
->>   .../pinctrl/brcm,bcm4908-pinctrl.yaml         | 72 +++++++++++++++++++
->>   MAINTAINERS                                   |  7 ++
->>   2 files changed, 79 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm4908-pinctrl.yaml
->>
-> 
-> My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-> on your patch (DT_CHECKER_FLAGS is new in v5.13):
-> 
-> yamllint warnings/errors:
-> 
-> dtschema/dtc warnings/errors:
-> Unknown file referenced: [Errno 2] No such file or directory: '/usr/local/lib/python3.8/dist-packages/dtschema/schemas/pinctrl/pinctrl.yaml'
-> xargs: dt-doc-validate: exited with status 255; aborting
-> make[1]: *** Deleting file 'Documentation/devicetree/bindings/pinctrl/brcm,bcm4908-pinctrl.example.dt.yaml'
-> Unknown file referenced: [Errno 2] No such file or directory: '/usr/local/lib/python3.8/dist-packages/dtschema/schemas/pinctrl/pinctrl.yaml'
-> make[1]: *** [scripts/Makefile.lib:373: Documentation/devicetree/bindings/pinctrl/brcm,bcm4908-pinctrl.example.dt.yaml] Error 255
-> make[1]: *** Waiting for unfinished jobs....
-> make: *** [Makefile:1413: dt_binding_check] Error 2
+I love your patch! Yet something to improve:
 
-this patch targets Linus's git tree:
-https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=for-next
+[auto build test ERROR on linusw-pinctrl/devel]
+[also build test ERROR on v5.16-rc5 next-20211214]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-Above tree contains 896568e5b9c8 ("dt-bindings: pinctrl: convert
-controller description to the json-schema") which provides pinctrl.yaml.
+url:    https://github.com/0day-ci/linux/commits/Rafa-Mi-ecki/pinctrl-add-one-more-const-for-generic-function-groups/20211216-014859
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+config: arm-randconfig-c002-20211214 (https://download.01.org/0day-ci/archive/20211216/202112160723.nSvHR7gk-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 11.2.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/0day-ci/linux/commit/e4338a6ad34998afb60c5ad294aafa06cd7110a7
+        git remote add linux-review https://github.com/0day-ci/linux
+        git fetch --no-tags linux-review Rafa-Mi-ecki/pinctrl-add-one-more-const-for-generic-function-groups/20211216-014859
+        git checkout e4338a6ad34998afb60c5ad294aafa06cd7110a7
+        # save the config file to linux build tree
+        mkdir build_dir
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross O=build_dir ARCH=arm SHELL=/bin/bash drivers/pinctrl/freescale/
+
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+   drivers/pinctrl/freescale/pinctrl-imx.c: In function 'imx_pinctrl_parse_functions':
+>> drivers/pinctrl/freescale/pinctrl-imx.c:672:38: error: assignment of read-only location '*(func->group_names + (sizetype)(i * 4))'
+     672 |                 func->group_names[i] = child->name;
+         |                                      ^
+
+
+vim +672 drivers/pinctrl/freescale/pinctrl-imx.c
+
+ae75ff81453840 drivers/pinctrl/pinctrl-imx.c           Dong Aisheng       2012-04-27  642  
+150632b09aadf1 drivers/pinctrl/pinctrl-imx.c           Greg Kroah-Hartman 2012-12-21  643  static int imx_pinctrl_parse_functions(struct device_node *np,
+e566fc11ea76ec drivers/pinctrl/freescale/pinctrl-imx.c Gary Bisson        2017-01-02  644  				       struct imx_pinctrl *ipctl,
+150632b09aadf1 drivers/pinctrl/pinctrl-imx.c           Greg Kroah-Hartman 2012-12-21  645  				       u32 index)
+ae75ff81453840 drivers/pinctrl/pinctrl-imx.c           Dong Aisheng       2012-04-27  646  {
+e566fc11ea76ec drivers/pinctrl/freescale/pinctrl-imx.c Gary Bisson        2017-01-02  647  	struct pinctrl_dev *pctl = ipctl->pctl;
+ae75ff81453840 drivers/pinctrl/pinctrl-imx.c           Dong Aisheng       2012-04-27  648  	struct device_node *child;
+3fd6d6ad73af90 drivers/pinctrl/freescale/pinctrl-imx.c Gary Bisson        2017-01-02  649  	struct function_desc *func;
+e566fc11ea76ec drivers/pinctrl/freescale/pinctrl-imx.c Gary Bisson        2017-01-02  650  	struct group_desc *grp;
+ae75ff81453840 drivers/pinctrl/pinctrl-imx.c           Dong Aisheng       2012-04-27  651  	u32 i = 0;
+ae75ff81453840 drivers/pinctrl/pinctrl-imx.c           Dong Aisheng       2012-04-27  652  
+94f4e54cecaf3e drivers/pinctrl/freescale/pinctrl-imx.c Rob Herring        2018-08-27  653  	dev_dbg(pctl->dev, "parse function(%d): %pOFn\n", index, np);
+ae75ff81453840 drivers/pinctrl/pinctrl-imx.c           Dong Aisheng       2012-04-27  654  
+3fd6d6ad73af90 drivers/pinctrl/freescale/pinctrl-imx.c Gary Bisson        2017-01-02  655  	func = pinmux_generic_get_function(pctl, index);
+a51c158bf0f7ca drivers/pinctrl/freescale/pinctrl-imx.c Gary Bisson        2016-12-02  656  	if (!func)
+a51c158bf0f7ca drivers/pinctrl/freescale/pinctrl-imx.c Gary Bisson        2016-12-02  657  		return -EINVAL;
+ae75ff81453840 drivers/pinctrl/pinctrl-imx.c           Dong Aisheng       2012-04-27  658  
+ae75ff81453840 drivers/pinctrl/pinctrl-imx.c           Dong Aisheng       2012-04-27  659  	/* Initialise function */
+ae75ff81453840 drivers/pinctrl/pinctrl-imx.c           Dong Aisheng       2012-04-27  660  	func->name = np->name;
+3fd6d6ad73af90 drivers/pinctrl/freescale/pinctrl-imx.c Gary Bisson        2017-01-02  661  	func->num_group_names = of_get_child_count(np);
+3fd6d6ad73af90 drivers/pinctrl/freescale/pinctrl-imx.c Gary Bisson        2017-01-02  662  	if (func->num_group_names == 0) {
+f5843492ecefcf drivers/pinctrl/freescale/pinctrl-imx.c Stefan Agner       2018-01-06  663  		dev_err(ipctl->dev, "no groups defined in %pOF\n", np);
+ae75ff81453840 drivers/pinctrl/pinctrl-imx.c           Dong Aisheng       2012-04-27  664  		return -EINVAL;
+ae75ff81453840 drivers/pinctrl/pinctrl-imx.c           Dong Aisheng       2012-04-27  665  	}
+f5843492ecefcf drivers/pinctrl/freescale/pinctrl-imx.c Stefan Agner       2018-01-06  666  	func->group_names = devm_kcalloc(ipctl->dev, func->num_group_names,
+3fd6d6ad73af90 drivers/pinctrl/freescale/pinctrl-imx.c Gary Bisson        2017-01-02  667  					 sizeof(char *), GFP_KERNEL);
+49af64e6b52208 drivers/pinctrl/freescale/pinctrl-imx.c Christophe JAILLET 2017-05-06  668  	if (!func->group_names)
+49af64e6b52208 drivers/pinctrl/freescale/pinctrl-imx.c Christophe JAILLET 2017-05-06  669  		return -ENOMEM;
+ae75ff81453840 drivers/pinctrl/pinctrl-imx.c           Dong Aisheng       2012-04-27  670  
+ae75ff81453840 drivers/pinctrl/pinctrl-imx.c           Dong Aisheng       2012-04-27  671  	for_each_child_of_node(np, child) {
+3fd6d6ad73af90 drivers/pinctrl/freescale/pinctrl-imx.c Gary Bisson        2017-01-02 @672  		func->group_names[i] = child->name;
+a51c158bf0f7ca drivers/pinctrl/freescale/pinctrl-imx.c Gary Bisson        2016-12-02  673  
+f5843492ecefcf drivers/pinctrl/freescale/pinctrl-imx.c Stefan Agner       2018-01-06  674  		grp = devm_kzalloc(ipctl->dev, sizeof(struct group_desc),
+a51c158bf0f7ca drivers/pinctrl/freescale/pinctrl-imx.c Gary Bisson        2016-12-02  675  				   GFP_KERNEL);
+bf4b87b0d06aa3 drivers/pinctrl/freescale/pinctrl-imx.c Nishka Dasgupta    2019-08-08  676  		if (!grp) {
+bf4b87b0d06aa3 drivers/pinctrl/freescale/pinctrl-imx.c Nishka Dasgupta    2019-08-08  677  			of_node_put(child);
+a51c158bf0f7ca drivers/pinctrl/freescale/pinctrl-imx.c Gary Bisson        2016-12-02  678  			return -ENOMEM;
+bf4b87b0d06aa3 drivers/pinctrl/freescale/pinctrl-imx.c Nishka Dasgupta    2019-08-08  679  		}
+a51c158bf0f7ca drivers/pinctrl/freescale/pinctrl-imx.c Gary Bisson        2016-12-02  680  
+f5843492ecefcf drivers/pinctrl/freescale/pinctrl-imx.c Stefan Agner       2018-01-06  681  		mutex_lock(&ipctl->mutex);
+e566fc11ea76ec drivers/pinctrl/freescale/pinctrl-imx.c Gary Bisson        2017-01-02  682  		radix_tree_insert(&pctl->pin_group_tree,
+f5843492ecefcf drivers/pinctrl/freescale/pinctrl-imx.c Stefan Agner       2018-01-06  683  				  ipctl->group_index++, grp);
+f5843492ecefcf drivers/pinctrl/freescale/pinctrl-imx.c Stefan Agner       2018-01-06  684  		mutex_unlock(&ipctl->mutex);
+a51c158bf0f7ca drivers/pinctrl/freescale/pinctrl-imx.c Gary Bisson        2016-12-02  685  
+a5cadbbb081cb8 drivers/pinctrl/freescale/pinctrl-imx.c Dong Aisheng       2017-05-19  686  		imx_pinctrl_parse_groups(child, grp, ipctl, i++);
+ae75ff81453840 drivers/pinctrl/pinctrl-imx.c           Dong Aisheng       2012-04-27  687  	}
+ae75ff81453840 drivers/pinctrl/pinctrl-imx.c           Dong Aisheng       2012-04-27  688  
+ae75ff81453840 drivers/pinctrl/pinctrl-imx.c           Dong Aisheng       2012-04-27  689  	return 0;
+ae75ff81453840 drivers/pinctrl/pinctrl-imx.c           Dong Aisheng       2012-04-27  690  }
+ae75ff81453840 drivers/pinctrl/pinctrl-imx.c           Dong Aisheng       2012-04-27  691  
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
