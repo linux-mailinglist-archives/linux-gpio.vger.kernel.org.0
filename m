@@ -2,116 +2,163 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D82B6476509
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Dec 2021 22:58:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 69BF2476529
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Dec 2021 23:05:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230283AbhLOV6r (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Dec 2021 16:58:47 -0500
-Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:38401 "EHLO
-        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230116AbhLOV6o (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 15 Dec 2021 16:58:44 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id 675BB3200B23;
-        Wed, 15 Dec 2021 16:58:42 -0500 (EST)
-Received: from imap43 ([10.202.2.93])
-  by compute4.internal (MEProxy); Wed, 15 Dec 2021 16:58:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm1; bh=X4Mjz1gSwctzS5BqbmLnHFsBnm1B/10
-        sggy8KjqskWk=; b=UTMHkvJKfYL3boy2Zb/XROQDALb8tpmPcCzI2vckncPpz8n
-        3aMD3d0cYXVMPpr1U0u7DwU2P9PrPP0GGl+ss45FDgoxCXDxW8sGC1WFgqZNivc0
-        Tdto0pcAE772biGs/Qju6VB2xGGyk85zCxDbzT3jCRxT2iMK0vYwiVLxNTuF6lao
-        Y16TUcx7N9giVRqjL8VuuX1H4wyZhfB+hniy6CGm4PxB8hjs/V2BwAVRh73Vckpz
-        wl9yojO1tA7zMKfof+OU3oZYUXBl9/Pbrs7j11iKLBp7q09xeavrGXpVqx3VOkrK
-        a2b9NH9gJGw0J6iv3OwXy/9B8urFcKl3C1FDB/g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=X4Mjz1
-        gSwctzS5BqbmLnHFsBnm1B/10sggy8KjqskWk=; b=V7R38EvDn/4qcJsqKbiCQt
-        3TwCeujb5SbMkkNQMjQZW4lDJ82rxdcfIXHgYoxCYeukMeR/W4cJ1N79MJtCdrm4
-        821BtzlH8U1UK1qjWg4ToJmfmLP3a8VMlOmzVBTqT6uhRzH3FWjyp9jWvadsDt6T
-        dMcMqIo07sIx6vGuvVR2YD9eEA8pF1dQBtdyy0BqsCVY10xJW/E0UOT5f1gQcbOb
-        Ji+MRi7mCtVAYdZFVXEzedxvU5ebMAmEAIxc8VMvX/8llMh/cNXnpc7utGn2KXu5
-        UTfkafObVt0Xo4I4JUvDmacQbOyV9NRut80gfnyyORZGe8MAaVFJ9CikYi5H2vCQ
-        ==
-X-ME-Sender: <xms:EWW6Yb0prKNAE7wES0yXr--3npTfNq6LLL-KEXYNwzOb-Ps6t7aN-w>
-    <xme:EWW6YaGv_wWjopLw9ItH2eJdj9o5Ob6bwdU7U9_nRBfnEyAzFfwk1HyyYoRcOoKAL
-    gex70hZvLW4fW6eUw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvuddrledvgdduheejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecuggftrf
-    grthhtvghrnhephefhfeekgfekudevheffheeihedujeefjeevjeefudfgfeeutdeuvdeh
-    hfevueffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
-    eprghnughrvgifsegrjhdrihgurdgruh
-X-ME-Proxy: <xmx:EWW6Yb7FdMNHuD0UfUiAjvoH6yAsZDweHNtNaVsAR4nfReG2VgY9pw>
-    <xmx:EWW6YQ1SbHbfNRbfKbFgXedaiclyeUlhL1HvQvBkKNAcvDM8KdGMYg>
-    <xmx:EWW6YeFhFuTZFbdPG4-_hkNTt3qwh98mZxzzUBWVPiDncDZvV7lJ_Q>
-    <xmx:EWW6YT54G1zO4o4wGZBnY6wqKO5nharSRNEPA3RYa16V8qnyDJc0tg>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 8E9C0AC03DB; Wed, 15 Dec 2021 16:58:41 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.5.0-alpha0-4524-g5e5d2efdba-fm-20211214.001-g5e5d2efd
-Mime-Version: 1.0
-Message-Id: <05d64453-09a3-4399-bd8c-595efd185ade@www.fastmail.com>
-In-Reply-To: <20211215214022.146391-1-julianbraha@gmail.com>
-References: <20211215214022.146391-1-julianbraha@gmail.com>
-Date:   Thu, 16 Dec 2021 08:28:21 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Julian Braha" <julianbraha@gmail.com>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "Joel Stanley" <joel@jms.id.au>
-Cc:     linux-aspeed@lists.ozlabs.org, linux-gpio@vger.kernel.org,
-        openbmc@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, fazilyildiran@gmail.com
-Subject: Re: [PATCH v1] pinctrl: aspeed: fix unmet dependencies on MFD_SYSCON for
- PINCTRL_ASPEED
-Content-Type: text/plain
+        id S230378AbhLOWFn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Dec 2021 17:05:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45018 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230022AbhLOWFm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Dec 2021 17:05:42 -0500
+Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E893C061574;
+        Wed, 15 Dec 2021 14:05:42 -0800 (PST)
+Received: by mail-qk1-x731.google.com with SMTP id m192so21558051qke.2;
+        Wed, 15 Dec 2021 14:05:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=82TjwUfk9T2/ds3Ciyj/zGT4kaKZHzrrPS0KAqF4ALY=;
+        b=Vw4Ln5z5bJ1z4j37TQH8Minz9tGBBCeVuWNd1Zp92mp05MfCGPJyyfL9T2gzSFrVuA
+         L5I/AE2EXSJ7/+1dwo2uE/6OeXAfmOlCKXAQUoaw3GGQXJHgE9trosGjCuj0XIhYVgDM
+         vVdmAsbqu+MYJkM1Nn3Nof6BeNvrOfLUPUDxYY83n+YeJyJXukMZPPivAnsSQDGwWYH2
+         k3cDEkw6XaLun4Oa+uCzy/U8TxzJYd8pVqi3Xzz35P/kNXrXFbC85WWeShHcHorfrgqo
+         zgBWO+yUUyBLJ6uV2MV2XzIVwZAXev3QfxK4zlMIz0Cx9ktR3kHUM1VOjI9hhcgfBNfz
+         16Lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=82TjwUfk9T2/ds3Ciyj/zGT4kaKZHzrrPS0KAqF4ALY=;
+        b=B523/dQWDbD41kjfaUWCCsh0wlcr0o7b7nNcGYOKz3y4ErMmMjs9pXw0qHlsqG3aeh
+         v5l0P1aBuB51xuUuqeIN6lveDfDeYHKf5MB0LWjJynEZBcUUFTa7N1HD3aWvcAtlp4rS
+         cq57T7kfh8h2xLSS3dO81BDuLMjd6MEOt2cM2hkWKQVTBM24N4tyy6EBvz3IAN+jqzSx
+         6oDb5PeBBf+y3RnEgBw9EIeQOdU4ltamDVYyIMVqXZOSry0yHkox64EVcfJlxr7Nj8WM
+         tcDrX2bUfLXm+ORKLvmnMbOKsEdxOXLXhunInmRlxcfXP2wwKVP28N5leNwCh0f3iNOF
+         bVGw==
+X-Gm-Message-State: AOAM532l1A/F1qM7Ln/8WUGn7cGBoF48D2nToV7vNpvm2YKpTcm8i+g5
+        h+3aLo/qRaW/rLiZdQNCn30=
+X-Google-Smtp-Source: ABdhPJy6zw4A2uEDI0uCUlM5KpQmgZDOHGlxjcoHCdvjCKDQYGLWVUUcTm5W6ciyxP6apXSAQr1dJQ==
+X-Received: by 2002:a37:9ed5:: with SMTP id h204mr10494788qke.35.1639605941389;
+        Wed, 15 Dec 2021 14:05:41 -0800 (PST)
+Received: from jesse-desktop.jtp-bos.lab (146-115-144-188.s4282.c3-0.nwt-cbr1.sbo-nwt.ma.cable.rcncustomer.com. [146.115.144.188])
+        by smtp.gmail.com with ESMTPSA id s20sm2471592qtc.75.2021.12.15.14.05.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Dec 2021 14:05:40 -0800 (PST)
+From:   Jesse Taube <mr.bossman075@gmail.com>
+X-Google-Original-From: Jesse Taube <Mr.Bossman075@gmail.com>
+To:     linux-imx@nxp.com
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, ulf.hansson@linaro.org, aisheng.dong@nxp.com,
+        stefan@agner.ch, linus.walleij@linaro.org,
+        gregkh@linuxfoundation.org, arnd@arndb.de, olof@lixom.net,
+        soc@kernel.org, linux@armlinux.org.uk, abel.vesa@nxp.com,
+        adrian.hunter@intel.com, jirislaby@kernel.org,
+        giulio.benetti@benettiengineering.com,
+        nobuhiro1.iwamatsu@toshiba.co.jp, Mr.Bossman075@gmail.com,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Subject: [PATCH v5 0/9]  Add initial support for the i.MXRTxxxx SoC family starting from i.IMXRT1050 SoC.
+Date:   Wed, 15 Dec 2021 17:05:29 -0500
+Message-Id: <20211215220538.4180616-1-Mr.Bossman075@gmail.com>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+This patchset contains:
+- i.MXRT10xx family infrastructure
+- i.MXRT1050 pinctrl driver adaption
+- i.MXRT1050 clock driver adaption
+- i.MXRT1050 sd-card driver adaption
+- i.MXRT1050 uart driver adaption
+- i.MXRT1050-evk basic support
 
+The i.MXRTxxxx family that could have support by Linux actually spreads
+from i.MXRT1020 to i.MXRT1170 with the first one supporting 1 USB OTG &
+100M ethernet with a cortex-M7@500Mhz up to the latter with i.MXRT1170
+with cortex-M7@1Ghz and cortex-M4@400Mhz, 2MB of internal SRAM, 2D GPU,
+2x 1Gb and 1x 100Mb ENET. The i.MXRT family is NXP's answer to
+STM32F7XX, as it uses only simple SDRAM, it gives the chance of a 4 or
+less layer PCBs. Seeing that these chips are comparable to the
+STM32F7XXs which have linux ported to them it seems reasonable to add
+support for them.
 
-On Thu, 16 Dec 2021, at 08:10, Julian Braha wrote:
-> When PINCTRL_ASPEED_G* is selected,
-> and MFD_SYSCON is not selected,
-> Kbuild gives the following warnings:
->
-> WARNING: unmet direct dependencies detected for PINCTRL_ASPEED
->   Depends on [n]: PINCTRL [=y] && (ARCH_ASPEED [=n] || COMPILE_TEST 
-> [=y]) && OF [=y] && MFD_SYSCON [=n]
->   Selected by [y]:
->   - PINCTRL_ASPEED_G4 [=y] && PINCTRL [=y] && (MACH_ASPEED_G4 [=n] || 
-> COMPILE_TEST [=y]) && OF [=y]
->
-> WARNING: unmet direct dependencies detected for PINCTRL_ASPEED
->   Depends on [n]: PINCTRL [=y] && (ARCH_ASPEED [=n] || COMPILE_TEST 
-> [=y]) && OF [=y] && MFD_S>
->   Selected by [y]:
->   - PINCTRL_ASPEED_G5 [=y] && PINCTRL [=y] && (MACH_ASPEED_G5 [=n] || 
-> COMPILE_TEST [=y]) && O>
->
-> WARNING: unmet direct dependencies detected for PINCTRL_ASPEED
->   Depends on [n]: PINCTRL [=y] && (ARCH_ASPEED [=n] || COMPILE_TEST 
-> [=y]) && OF [=y] && MFD_S>
->   Selected by [y]:
->   - PINCTRL_ASPEED_G6 [=y] && PINCTRL [=y] && (MACH_ASPEED_G6 [=n] || 
-> COMPILE_TEST [=y]) && O>
->
-> This is because MACH_ASPEED_G* depend on (ARCH_ASPEED || COMPILE_TEST).
-> ARCH_ASPEED enables the MFD_SYSCON dependency, but COMPILE_TEST doesn't.
->
-> These unmet dependency bugs were detected by Kismet,
-> a static analysis tool for Kconfig. Please advise
-> if this is not the appropriate solution.
->
-> Signed-off-by: Julian Braha <julianbraha@gmail.com>
+Giving Linux support to this family should ease the development process,
+instead of using a RTOS they could use Embedded Linux allowing for more
+portability, ease of design and will broaden the scope of people using
+embedded linux.
 
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+The EVK has very little SDRAM, generally 32MB starting from
+i.MXRT1020(the lowest P/N), although the i.MXRT1160/70 provide instead
+64MB of SDRAM for more functionality.
 
-Thanks.
+At the moment we do not support XIP for either u-boot or Linux but it
+should be done in the future. XIP will also save SDRAM.
+
+Another interesting fact is the amount of internal SRAM, as the P/N
+increases the SRAM will reach up to 2MB(some could be for cache and
+some would be for video).
+
+Also, some parts have embed flash of 4MB that can be used for
+u-boot/Linux, if both correctly sized it will leave the SDRAM free.
+
+External flash can be Quad SPI and HyperFlash, so throughput would be
+decent.
+
+The i.MXRT11xx series supports MIPI interface too.
+
+The family in general provide CAN bus, audio I/O, 1 or more
+USB(otg/host), 1 or more 100Mb/1Gb ethernet, camera interface, sd-card.
+
+All this can be used for simple GUIs, web-servers, point-of-sale
+stations, etc.
+
+Giulio Benetti (4):
+  ARM: imx: Add initial support for i.MXRT10xx family
+  dt-bindings: imx: Add clock binding for i.MXRT1050
+  ARM: dts: imx: Add i.MXRT1050-EVK support
+  ARM: imxrt_defconfig: Add i.MXRT family defconfig
+
+Jesse Taube (5):
+  ARM: dts: imxrt1050-pinfunc: Add pinctrl binding header
+  dt-bindings: clock: imx: Add documentation for i.MXRT1050 clock
+  clk: imx: Add initial support for i.MXRT1050 clock driver
+  dt-bindings: serial: fsl-lpuart: add i.MXRT1050 compatible
+  tty: serial: fsl_lpuart: Add i.MXRT1050 support
+
+ .../bindings/clock/imxrt1050-clock.yaml       |  66 ++
+ .../bindings/serial/fsl-lpuart.yaml           |   1 +
+ arch/arm/boot/dts/Makefile                    |   2 +
+ arch/arm/boot/dts/imxrt1050-evk.dts           |  72 ++
+ arch/arm/boot/dts/imxrt1050-pinfunc.h         | 993 ++++++++++++++++++
+ arch/arm/boot/dts/imxrt1050.dtsi              | 154 +++
+ arch/arm/configs/imxrt_defconfig              |  35 +
+ arch/arm/mach-imx/Kconfig                     |   7 +
+ arch/arm/mach-imx/Makefile                    |   2 +
+ arch/arm/mach-imx/mach-imxrt.c                |  19 +
+ drivers/clk/imx/Kconfig                       |   5 +
+ drivers/clk/imx/Makefile                      |   1 +
+ drivers/clk/imx/clk-imxrt1050.c               | 181 ++++
+ drivers/tty/serial/fsl_lpuart.c               |   8 +
+ include/dt-bindings/clock/imxrt1050-clock.h   |  73 ++
+ 15 files changed, 1619 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/imxrt1050-clock.yaml
+ create mode 100644 arch/arm/boot/dts/imxrt1050-evk.dts
+ create mode 100644 arch/arm/boot/dts/imxrt1050-pinfunc.h
+ create mode 100644 arch/arm/boot/dts/imxrt1050.dtsi
+ create mode 100644 arch/arm/configs/imxrt_defconfig
+ create mode 100644 arch/arm/mach-imx/mach-imxrt.c
+ create mode 100644 drivers/clk/imx/clk-imxrt1050.c
+ create mode 100644 include/dt-bindings/clock/imxrt1050-clock.h
+
+-- 
+2.34.1
+
