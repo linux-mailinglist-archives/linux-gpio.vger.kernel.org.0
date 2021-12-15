@@ -2,83 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BFE13475084
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Dec 2021 02:30:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AE8F4750AD
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Dec 2021 03:03:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235260AbhLOBaX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 14 Dec 2021 20:30:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44122 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233511AbhLOBaX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Dec 2021 20:30:23 -0500
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA1E5C061574
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Dec 2021 17:30:22 -0800 (PST)
-Received: by mail-wr1-x429.google.com with SMTP id k9so17608892wrd.2
-        for <linux-gpio@vger.kernel.org>; Tue, 14 Dec 2021 17:30:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20210112;
-        h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=ssImNAp25VSfpjtWIa6nzdRJnou4SLqvIgmNzKI3Ps8=;
-        b=qydlwCrFMmktBUYxvY5tXGUsd2Ig/GOL2jM1OdBRqZoyXmiVcpR5pagBVHD03wkAFm
-         zUtiW7nUvWS5OyhX3HY9a19PdDYBmrJTaAZhXxjtAk12t7q1ohm3/VDZibA6rlrFz4Ec
-         l/PnpyOmevBH4Z/DSXcJZrYb7ms5A0kqP9qV6C4tWTp+7+irH23kOMpi7y2+LqcQOY6P
-         LE3GNep6Uc6kAOauIeJoszvyV37B2IzGk3crkH6WER57f/5CqtywGg3DSzOHdqHDdwPg
-         WfQVyKmfaaE3bPv/4+6Y967fU1Tk52Oyy/25MVbOZtQOIbdUwtknv88l8C1b/8qMoe13
-         9Rzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:reply-to:to:cc:date
-         :in-reply-to:references:user-agent:mime-version
-         :content-transfer-encoding;
-        bh=ssImNAp25VSfpjtWIa6nzdRJnou4SLqvIgmNzKI3Ps8=;
-        b=p5lm/JA990YPgmcCuWYdPBwHgCfvQYSFpZJm4pXhFRlhJKEwlTGQvzbceoJJ7zYqh3
-         V04ew3Dc+jR+kceyw/vcGfATrtK4Lro3uRSqrXkPz2AQntwHdM5PMGGI5zCKeWIrEBQk
-         HuRRXUcMNH+BvSwX6lHHGWn+iI2AXlkaeVmmxfSbQwNsZGw26DdNB9xP53gZuXU31AYI
-         Ndky9Nd8Il7r5+rASa1j0quLUMFqw9/9q0sr5pbVcv2JZPWDKM/eGsTWwHlQI3BTlvI0
-         Y1D3AwTLNrtX5Nd9DM5YqGYKIhygUwHlyM9glpHlDjjiG7q1J6+X+8i3Z3s0CkpglXZQ
-         Rk2Q==
-X-Gm-Message-State: AOAM532nFZrLPiSEGRRIG/00/ryEn2dcexlrSsX/HTjPUuofORP3L8ST
-        F0Ob8xad8TBlGiXcXXgdGB0=
-X-Google-Smtp-Source: ABdhPJypix1kagUzDsn4lpHSfEOLbPLySXi8Ej51HQIsQO0pv/fgBwdDpn3W3hTQqsB9xdvXPM9oMQ==
-X-Received: by 2002:adf:ce0e:: with SMTP id p14mr2159648wrn.423.1639531821452;
-        Tue, 14 Dec 2021 17:30:21 -0800 (PST)
-Received: from mars.fritz.box ([2a02:8070:bb0:8700:3e7c:3fff:fe20:2cae])
-        by smtp.gmail.com with ESMTPSA id e7sm524323wrg.31.2021.12.14.17.30.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Dec 2021 17:30:20 -0800 (PST)
-Message-ID: <4204e95bc2306796fb834e74a01d75a47d45ecbc.camel@googlemail.com>
-Subject: Re: [PATCH] Revert "pinctrl: stm32: fix the reported number of GPIO
- lines per bank"
-From:   Christoph Fritz <chf.fritz@googlemail.com>
-Reply-To: chf.fritz@googlemail.com
-To:     Fabien Dessenne <fabien.dessenne@foss.st.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Date:   Wed, 15 Dec 2021 02:30:19 +0100
-In-Reply-To: <46f07510-b6aa-4619-9c54-048464bfbaf3@foss.st.com>
-References: <a5b8e3ea13de0b2976bb9622dd410dd110f3f66c.camel@googlemail.com>
-         <46f07510-b6aa-4619-9c54-048464bfbaf3@foss.st.com>
+        id S239040AbhLOCDh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 14 Dec 2021 21:03:37 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:33186 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S238932AbhLOCDg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 14 Dec 2021 21:03:36 -0500
+X-UUID: 7321fadf45f9404c9cae01c8e99ef3d5-20211215
+X-UUID: 7321fadf45f9404c9cae01c8e99ef3d5-20211215
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <tinghan.shen@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1772619576; Wed, 15 Dec 2021 10:03:32 +0800
+Received: from mtkcas10.mediatek.inc (172.21.101.39) by
+ mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.2.792.15; Wed, 15 Dec 2021 10:03:31 +0800
+Received: from mtksdccf07 (172.21.84.99) by mtkcas10.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 15 Dec 2021 10:03:31 +0800
+Message-ID: <768b202c7bf78e26102c91ae558d4d0887e11124.camel@mediatek.com>
+Subject: Re: [PATCH v6 2/4] dt-bindings: spi: add new clock name 'axi' for
+ spi nor
+From:   Tinghan Shen <tinghan.shen@mediatek.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     <robh+dt@kernel.org>, <linus.walleij@linaro.org>,
+        <matthias.bgg@gmail.com>, <bgolaszewski@baylibre.com>,
+        <sean.wang@mediatek.com>, <bayi.cheng@mediatek.com>,
+        <gch981213@gmail.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <linux-spi@vger.kernel.org>,
+        <Project_Global_Chrome_Upstream_Group@mediatek.com>
+Date:   Wed, 15 Dec 2021 10:03:31 +0800
+In-Reply-To: <YbdvIPq1hKPmKXXs@sirena.org.uk>
+References: <20211211204014.8014-1-tinghan.shen@mediatek.com>
+         <20211211204014.8014-3-tinghan.shen@mediatek.com>
+         <YbdvIPq1hKPmKXXs@sirena.org.uk>
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.3-1 
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 2021-12-14 at 15:17 +0100, Fabien DESSENNE wrote:
-> I have been able to reproduce the issue you reported.
-> Instead of reverting the guilty patch, I am working to fix it.
-> I am currently testing a candidate patch, and will share it in the 
-> coming days.
+Hi Mark,
 
-FYI, the regression was also merged into most of the stable and
-longterm stable releases: 5.15, 5.10, 5.4 and 4.19.
+Thanks for the reviews and advice.
+
+
+On Mon, 2021-12-13 at 16:04 +0000, Mark Brown wrote:
+> On Sun, Dec 12, 2021 at 04:40:12AM +0800, Tinghan Shen wrote:
 > 
+> > Some mtk spi nor has dedicated dma(s) inside. Add a new clock name,
+> > axi,
+> > for spi nor dma bus clock.
+> >    clock-names:
+> > +    minItems: 2
+> >      items:
+> >        - const: spi
+> >        - const: sf
+> > +      - const: axi
+> 
+> This will cause any existing DTs that don't have both spi and sf
+> clocks
+> defined to fail to validate which doesn't seem great.  Given that
+> your
+> commit message says this is only required for some SoCs shouldn't the
+> minimum clocks requirement depend on which particular SoC/IP version
+> is
+> being used?  Not exactly sure how one specifies that in the YAML
+> format.
+> 
+> Please submit patches using subject lines reflecting the style for
+> the
+> subsystem, this makes it easier for people to identify relevant
+> patches.
+> Look at what existing commits in the area you're changing are doing
+> and
+> make sure your subject lines visually resemble what they're doing.
+> There's no need to resubmit to fix this alone.
+
+I'll update the subject at next version.
+It'll be "dt-bindings: spi: mtk-spi-nor: ...".
+
+
+regards,
+TingHan
 
