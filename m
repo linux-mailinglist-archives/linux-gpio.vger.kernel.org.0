@@ -2,110 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 29D70475A72
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Dec 2021 15:17:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 03899475AB2
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Dec 2021 15:33:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243276AbhLOORN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Dec 2021 09:17:13 -0500
-Received: from mga04.intel.com ([192.55.52.120]:44608 "EHLO mga04.intel.com"
+        id S243388AbhLOOdd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Dec 2021 09:33:33 -0500
+Received: from mga07.intel.com ([134.134.136.100]:26314 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S243291AbhLOORI (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 15 Dec 2021 09:17:08 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10198"; a="237973151"
+        id S234528AbhLOOdc (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 15 Dec 2021 09:33:32 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10198"; a="302611786"
 X-IronPort-AV: E=Sophos;i="5.88,207,1635231600"; 
-   d="scan'208";a="237973151"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2021 06:17:08 -0800
+   d="scan'208";a="302611786"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2021 06:33:07 -0800
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,207,1635231600"; 
-   d="scan'208";a="567937520"
-Received: from smile.fi.intel.com ([10.237.72.184])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2021 06:16:57 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1mxV4Z-006d5b-Tn;
-        Wed, 15 Dec 2021 16:15:59 +0200
-Date:   Wed, 15 Dec 2021 16:15:59 +0200
+   d="scan'208";a="614720004"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga004.jf.intel.com with ESMTP; 15 Dec 2021 06:33:05 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id D1F2AD4; Wed, 15 Dec 2021 16:33:11 +0200 (EET)
+Date:   Wed, 15 Dec 2021 16:33:11 +0200
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
+To:     Linux GPIO <linux-gpio@vger.kernel.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Sam Shih <sam.shih@mediatek.com>,
-        Zhiyong Tao <zhiyong.tao@mediatek.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Radim Pavlik <radim.pavlik@tbs-biometrics.com>,
-        Kavyasree Kotagiri <kavyasree.kotagiri@microchip.com>,
-        Colin Foster <colin.foster@in-advantage.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Herve Codina <herve.codina@bootlin.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-actions@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>,
-        - <patches@opensource.cirrus.com>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        linux-mediatek@lists.infradead.org, linux-oxnas@groups.io,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Richard Fitzgerald <rf@opensource.cirrus.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Baruch Siach <baruch@tkos.co.il>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Andy Gross <agross@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Shiraz Hashim <shiraz.linux.kernel@gmail.com>,
-        arm-soc <soc@kernel.org>
-Subject: Re: [PATCH v1 1/2] pinctrl: Get rid of duplicate of_node assignment
- in the drivers
-Message-ID: <Ybn4ny0YY/Sbld+Q@smile.fi.intel.com>
-References: <20211213163929.7509-1-andriy.shevchenko@linux.intel.com>
- <CAMuHMdW_CKcXwOSUAbCreHVM62E35yjiCfpXC_wM0zK-V43CnA@mail.gmail.com>
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [GIT PULL] intel-gpio for 5.17-1
+Message-ID: <Ybn8pxv5xPgc5nGz@black.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdW_CKcXwOSUAbCreHVM62E35yjiCfpXC_wM0zK-V43CnA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Dec 15, 2021 at 11:28:34AM +0100, Geert Uytterhoeven wrote:
-> On Mon, Dec 13, 2021 at 5:40 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > GPIO library does copy the of_node from the parent device of
-> > the GPIO chip, there is no need to repeat this in the individual
-> > drivers. Remove these assignment all at once.
-> >
-> > For the details one may look into the of_gpio_dev_init() implementation.
+Hi Linux GPIO  maintainers,
 
-> >  drivers/pinctrl/renesas/pinctrl-rza2.c     | 1 -
-> 
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Approximately a dozen of changes for v5.17 against Intel GPIO drivers and
+GPIO ACPI library. It has ben a while in Linux Next without any error reported.
 
-Thanks, there is v2 with this patch w/o changes. I take a liberty to
-extrapolate the tags to it. I need to send a v3 in case Linus hasn't
-taken the first patch before it happens.
+Thanks,
+
+With Best Regards,
+Andy Shevchenko
+
+The following changes since commit fa55b7dcdc43c1aa1ba12bca9d2dd4318c2a0dbf:
+
+  Linux 5.16-rc1 (2021-11-14 13:56:52 -0800)
+
+are available in the Git repository at:
+
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/andy/linux-gpio-intel.git tags/intel-gpio-v5.17-1
+
+for you to fetch changes up to 9d5f0f6644b1404f40266a2682add712dc9931f5:
+
+  gpio: sch: fix typo in a comment (2021-12-13 13:29:09 +0200)
+
+----------------------------------------------------------------
+intel-gpio for v5.17-1
+
+* Don't set type for IRQ already in use in case of ACPI
+* Drop unused call from GPIO ACPI library
+* Clean up ML IOH and PCH GPIO drivers to make it closer to each other
+* Clarify use of register file version in DesignWare driver
+
+The following is an automated git shortlog grouped by driver:
+
+dwapb:
+ -  clarify usage of the register file version
+
+gpiolib:
+ -  acpi: Unify debug and other messages format
+ -  acpi: Do not set the IRQ type if the IRQ is already in use
+ -  acpi: shrink devm_acpi_dev_add_driver_gpios()
+ -  acpi: Remove never used devm_acpi_dev_remove_driver_gpios()
+
+ml-ioh:
+ -  Change whitespace to match gpio-pch.c
+ -  Use BIT() to match gpio-pch.c
+ -  Cache &pdev->dev to reduce repetition
+
+pch:
+ -  Cache &pdev->dev to reduce repetition
+ -  Use .driver_data instead of checking Device IDs again
+
+sch:
+ -  fix typo in a comment
+
+----------------------------------------------------------------
+Andy Shevchenko (4):
+      gpiolib: acpi: Remove never used devm_acpi_dev_remove_driver_gpios()
+      gpiolib: acpi: shrink devm_acpi_dev_add_driver_gpios()
+      gpiolib: acpi: Unify debug and other messages format
+      gpio: dwapb: clarify usage of the register file version
+
+Bjorn Helgaas (5):
+      gpio: pch: Use .driver_data instead of checking Device IDs again
+      gpio: pch: Cache &pdev->dev to reduce repetition
+      gpio: ml-ioh: Cache &pdev->dev to reduce repetition
+      gpio: ml-ioh: Use BIT() to match gpio-pch.c
+      gpio: ml-ioh: Change whitespace to match gpio-pch.c
+
+Hans de Goede (1):
+      gpiolib: acpi: Do not set the IRQ type if the IRQ is already in use
+
+Jason Wang (1):
+      gpio: sch: fix typo in a comment
+
+ drivers/gpio/gpio-dwapb.c     | 10 +++++----
+ drivers/gpio/gpio-ml-ioh.c    | 52 +++++++++++++++++++++----------------------
+ drivers/gpio/gpio-pch.c       | 42 +++++++++++++++++-----------------
+ drivers/gpio/gpio-sch.c       |  2 +-
+ drivers/gpio/gpiolib-acpi.c   | 51 ++++++++++++++++++------------------------
+ include/linux/gpio/consumer.h |  2 --
+ 6 files changed, 75 insertions(+), 84 deletions(-)
 
 -- 
 With Best Regards,
