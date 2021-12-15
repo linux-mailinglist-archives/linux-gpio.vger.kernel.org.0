@@ -2,100 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 46E104755A9
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Dec 2021 10:58:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BAA67475659
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Dec 2021 11:28:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241420AbhLOJ6g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Dec 2021 04:58:36 -0500
-Received: from mx07-00178001.pphosted.com ([185.132.182.106]:34726 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236424AbhLOJ6g (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 15 Dec 2021 04:58:36 -0500
-Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 1BF8xCws015281;
-        Wed, 15 Dec 2021 10:58:21 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=selector1;
- bh=lZG15mDYfKTrDheVg7teKe9LQIF/Jfc46902xSXLzgI=;
- b=zBRAqCT8KYZa7beH85eh1dEHtckpKK9HirwREw40i6SDzTKgpOS3+jyzkeKrjftz+X5O
- 8uARJNmO4fZ38QRtRkp7CbKcX78oQ5sdD8GmvcZ3Gq96lmpAubY3TFaktkkaKIXR0elc
- XuWuKZ0zZtPQsSAnf0zY/2Ep22gNYNEo4zzvh4rE8NnaVE1Owjq110cCSVAzSzf50g4g
- 7yzG1pZHxChnodRArwIN9nkMVvKBqwPlomY2bU5Kd8QlXM1nbyDghjhKuHkOTSW3Uy2h
- 5C7oQxfKL1qRzpSThy5T8PbA3nxKWSMK99EPOcsFlXg6o3j5fMrYgpvNAaFDHM7Tt5mB vQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3cxrthxn6q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Dec 2021 10:58:21 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4DCCC100034;
-        Wed, 15 Dec 2021 10:58:21 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag2node2.st.com [10.75.127.5])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4462F22D195;
-        Wed, 15 Dec 2021 10:58:21 +0100 (CET)
-Received: from localhost (10.75.127.45) by SFHDAG2NODE2.st.com (10.75.127.5)
- with Microsoft SMTP Server (TLS) id 15.0.1497.26; Wed, 15 Dec 2021 10:58:20
- +0100
-From:   Fabien Dessenne <fabien.dessenne@foss.st.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
+        id S236652AbhLOK2s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Dec 2021 05:28:48 -0500
+Received: from mail-ua1-f49.google.com ([209.85.222.49]:34502 "EHLO
+        mail-ua1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231710AbhLOK2r (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Dec 2021 05:28:47 -0500
+Received: by mail-ua1-f49.google.com with SMTP id u40so6890059uad.1;
+        Wed, 15 Dec 2021 02:28:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6KatagByVh+i+7U2cQTugmti3xcd82C2QfCSX1Fy8Jo=;
+        b=ZdSXZmf2lY0qFDYqOx3eNuTs5WT7NOc6ukNoEOMkaxZ3NNhCpjouW0yF1pkoFljy1w
+         HUSS2IR71ynLU9QlZ+vceOeosIVH98QKlmfMF5TFoWdN+FaaBnjoHI3XHLineo26rzcE
+         L0vF8a6M1a/3QqyO1XXl4iReb6AAPWS7DIgPCyJaoblQI5jz5UDBrQcdx04SU9xZb2QR
+         MFBHNN2oSD17oX/fLz0rbzVT3EJja1mF7+0PDVUu/W9NwV/tSFs+9tY2jW9oOO5uvmGl
+         SkYAn5jV4i8X6jz7yD5oFr9YdifBUPl5Z5D5KHafq9jVlQD+ixm6j2IKe/edzR3LtK/z
+         yIsg==
+X-Gm-Message-State: AOAM532tZOoro+pWrwNdT0Nz9aGG95R0gzUD1kyUzFYnMOXK0zAR4e7z
+        ZMLwwxQuMeH3sReVJfwW4BBtp5ETUY9i9w==
+X-Google-Smtp-Source: ABdhPJwJk+bggskRQZYTIK19Vj5/gOsc8Xt4U6CwTBeOCMMcwolTZ42DFwnIN3oQ/01lOMVIoFXaHg==
+X-Received: by 2002:a9f:2d8c:: with SMTP id v12mr9159217uaj.25.1639564126939;
+        Wed, 15 Dec 2021 02:28:46 -0800 (PST)
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com. [209.85.221.181])
+        by smtp.gmail.com with ESMTPSA id j192sm325337vkc.39.2021.12.15.02.28.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Dec 2021 02:28:46 -0800 (PST)
+Received: by mail-vk1-f181.google.com with SMTP id q21so14325294vkn.2;
+        Wed, 15 Dec 2021 02:28:45 -0800 (PST)
+X-Received: by 2002:a05:6122:920:: with SMTP id j32mr2889520vka.20.1639564125403;
+ Wed, 15 Dec 2021 02:28:45 -0800 (PST)
+MIME-Version: 1.0
+References: <20211213163929.7509-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20211213163929.7509-1-andriy.shevchenko@linux.intel.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 15 Dec 2021 11:28:34 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdW_CKcXwOSUAbCreHVM62E35yjiCfpXC_wM0zK-V43CnA@mail.gmail.com>
+Message-ID: <CAMuHMdW_CKcXwOSUAbCreHVM62E35yjiCfpXC_wM0zK-V43CnA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] pinctrl: Get rid of duplicate of_node assignment
+ in the drivers
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Sam Shih <sam.shih@mediatek.com>,
+        Zhiyong Tao <zhiyong.tao@mediatek.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Radim Pavlik <radim.pavlik@tbs-biometrics.com>,
+        Kavyasree Kotagiri <kavyasree.kotagiri@microchip.com>,
+        Colin Foster <colin.foster@in-advantage.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Herve Codina <herve.codina@bootlin.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-actions@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>,
+        - <patches@opensource.cirrus.com>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        linux-mediatek@lists.infradead.org, linux-oxnas@groups.io,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Baruch Siach <baruch@tkos.co.il>,
+        Neil Armstrong <narmstrong@baylibre.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Christoph Fritz <chf.fritz@googlemail.com>
-CC:     Fabien Dessenne <fabien.dessenne@foss.st.com>
-Subject: [PATCH] pinctrl: stm32: consider the GPIO offset to expose all the GPIO lines
-Date:   Wed, 15 Dec 2021 10:58:08 +0100
-Message-ID: <20211215095808.621716-1-fabien.dessenne@foss.st.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG2NODE2.st.com
- (10.75.127.5)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.11.62.513
- definitions=2021-12-15_07,2021-12-14_01,2021-12-02_01
+        Andy Gross <agross@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Shiraz Hashim <shiraz.linux.kernel@gmail.com>,
+        arm-soc <soc@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Consider the GPIO controller offset (from "gpio-ranges") to compute the
-maximum GPIO line number.
-This fixes an issue where gpio-ranges uses a non-null offset.
-  e.g.: gpio-ranges = <&pinctrl 6 86 10>
-        In that case the last valid GPIO line is not 9 but 15 (6 + 10 - 1)
+On Mon, Dec 13, 2021 at 5:40 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+> GPIO library does copy the of_node from the parent device of
+> the GPIO chip, there is no need to repeat this in the individual
+> drivers. Remove these assignment all at once.
+>
+> For the details one may look into the of_gpio_dev_init() implementation.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Fixes: 67e2996f72c7 ("pinctrl: stm32: fix the reported number of GPIO lines per bank")
-Reported-by: Christoph Fritz <chf.fritz@googlemail.com>
-Signed-off-by: Fabien Dessenne <fabien.dessenne@foss.st.com>
----
- drivers/pinctrl/stm32/pinctrl-stm32.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+>  drivers/pinctrl/renesas/pinctrl-rza2.c     | 1 -
 
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
-index 24764ebcc936..9ed764731570 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-@@ -1251,10 +1251,10 @@ static int stm32_gpiolib_register_bank(struct stm32_pinctrl *pctl,
- 		bank_nr = args.args[1] / STM32_GPIO_PINS_PER_BANK;
- 		bank->gpio_chip.base = args.args[1];
- 
--		npins = args.args[2];
--		while (!of_parse_phandle_with_fixed_args(np, "gpio-ranges", 3,
--							 ++i, &args))
--			npins += args.args[2];
-+		/* get the last defined gpio line (offset + nb of pins) */
-+		npins = args.args[0] + args.args[2];
-+		while (!of_parse_phandle_with_fixed_args(np, "gpio-ranges", 3, ++i, &args))
-+			npins = max(npins, (int)(args.args[0] + args.args[2]));
- 	} else {
- 		bank_nr = pctl->nbanks;
- 		bank->gpio_chip.base = bank_nr * STM32_GPIO_PINS_PER_BANK;
--- 
-2.25.1
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
