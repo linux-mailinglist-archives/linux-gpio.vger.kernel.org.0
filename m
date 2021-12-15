@@ -2,142 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D395447654D
-	for <lists+linux-gpio@lfdr.de>; Wed, 15 Dec 2021 23:06:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 35C2847659C
+	for <lists+linux-gpio@lfdr.de>; Wed, 15 Dec 2021 23:27:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231131AbhLOWGE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Dec 2021 17:06:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45106 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230493AbhLOWF6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Dec 2021 17:05:58 -0500
-Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4692C06173E;
-        Wed, 15 Dec 2021 14:05:57 -0800 (PST)
-Received: by mail-qk1-x731.google.com with SMTP id d2so21499275qki.12;
-        Wed, 15 Dec 2021 14:05:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=TitC2dO0wkJLqs3RK/Mubu0CIrjVhTLfeZ4/lpetFHg=;
-        b=eakHrVjduzGabRW3rtq25pnGCL9y5N8+eoHz/VVlCoIe5YHmKiSsAzeOnubV40DS87
-         G+Ub5W98G7Gqn9aYvrnpmjyYOVTdu12wY630FCgz/i6pa6m32adVwg3uuohZ6ehso01j
-         NaTFEhgOXmIkraCqyPtJk/HgkaSuoQlqhQFSD4rMlkzMI00epCvqG4X8TKALKmw4nw4C
-         VMyCFuuW7X2Ue/QyHQdQq8bsPOBo01uxvrsqlF8K7eS1k1pSyG+x87XAQcB4aIcvE8FM
-         wq/xIqKestZSrDINVdHEEPtxRt3lQh8dukisguX/sj/amcPR4zAy1caT5IMWfnEs2Mgb
-         zBCQ==
+        id S230352AbhLOW1b (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Dec 2021 17:27:31 -0500
+Received: from mail-oi1-f182.google.com ([209.85.167.182]:38746 "EHLO
+        mail-oi1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229445AbhLOW1a (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Dec 2021 17:27:30 -0500
+Received: by mail-oi1-f182.google.com with SMTP id r26so33678926oiw.5;
+        Wed, 15 Dec 2021 14:27:30 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=TitC2dO0wkJLqs3RK/Mubu0CIrjVhTLfeZ4/lpetFHg=;
-        b=ALJUY00I5jTZqjK+6mNCqmon10fnTSaUZM8hGqGoKV3+zOm7yPIEZfgo/zqv9nNxWw
-         AzFEyzDUghfadiKM/fB/bnP1fWU54Ky0NWcNEVrir7WaXBOnW7qvhu+VcQ7P2Xanfs15
-         TgZoupSuTit8UtieyznK2Z93Ixa/zks58UmCDz4AWLCIQkbrsyfz4YIMYG5XhEsOzPHI
-         G0aaX2xSepBHzacALFPrZbhlW24vbyTK+90HPcVlnMTD/5v27heBw18tkd4r+DrL+cNT
-         9fGr6HRup5pGRbD6hMMInVvtD3e9nkgXUVkGbr9hNSw0NSAi++Szlz4DI4zzYiVomHEc
-         ZjAQ==
-X-Gm-Message-State: AOAM5313x3jo6Y492vFG/KuriuVhnAZycQUwhx+9RbpqORKPn04nEDmc
-        VlphBZW6bqKOd3EQHnHYkBA=
-X-Google-Smtp-Source: ABdhPJzRXboEiigLc5/HpDt4yqwG5O6jjwuy0h6MgYRO+8pT2GhcG3iZQQ59psJfOLycw+DGYkMrqA==
-X-Received: by 2002:a05:620a:4712:: with SMTP id bs18mr10306929qkb.246.1639605957098;
-        Wed, 15 Dec 2021 14:05:57 -0800 (PST)
-Received: from jesse-desktop.jtp-bos.lab (146-115-144-188.s4282.c3-0.nwt-cbr1.sbo-nwt.ma.cable.rcncustomer.com. [146.115.144.188])
-        by smtp.gmail.com with ESMTPSA id s20sm2471592qtc.75.2021.12.15.14.05.55
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=HfqN6FJMlfs7L3+Cs2CO8gMcSI1LPysdwY7vFCHYvzg=;
+        b=Ot+jWr6a6MieyBiAIdbsodDA+mJpUyMgLHKQ3B2xgxPdXqX3YWxGN1f8OW84Ll2QKn
+         fuC1LN0oVpA65CS8UZDlCuNMyPrNvBp9baUIKyRsmdIuAwje6bhvrkg875qPvHTXQrae
+         JYGKMHOD/+yJbqbfZeDL+R2LRiMtFC8AvNYVbPLkWSkQqOsv1edZmD7E88lSeDZvwnht
+         w51hpUJSv3og4Kdlqw/6eA0CEPG5JT7TuSePtd9x+/THqIi3MI2gc1TyVyL0Qrle7GRg
+         bBJ5YprpnA+O3MKSiXzzQXyhYCRSrO5PBCAUPsyS3c5sHttjc3gKKoq0gaOmmB2/+Zb6
+         yKEg==
+X-Gm-Message-State: AOAM532ZhBJda+2JCmXcwwZ9HQ141IyGpDIZ48xy21XdXhxQwpslNzjV
+        6PFWcRQLA4PNtJKgw0AOebjXx2t5CA==
+X-Google-Smtp-Source: ABdhPJwUUpSaTZQw9i1ks1KxUw1drlRY9guiYYYGHetb3L8jIHN/4b8OlPJoJ4EGBe/cpXqnBV3mZA==
+X-Received: by 2002:aca:1204:: with SMTP id 4mr1830445ois.136.1639607250051;
+        Wed, 15 Dec 2021 14:27:30 -0800 (PST)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id m2sm742734oop.12.2021.12.15.14.27.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Dec 2021 14:05:56 -0800 (PST)
-From:   Jesse Taube <mr.bossman075@gmail.com>
-X-Google-Original-From: Jesse Taube <Mr.Bossman075@gmail.com>
-To:     linux-imx@nxp.com
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, ulf.hansson@linaro.org, aisheng.dong@nxp.com,
-        stefan@agner.ch, linus.walleij@linaro.org,
-        gregkh@linuxfoundation.org, arnd@arndb.de, olof@lixom.net,
-        soc@kernel.org, linux@armlinux.org.uk, abel.vesa@nxp.com,
-        adrian.hunter@intel.com, jirislaby@kernel.org,
-        giulio.benetti@benettiengineering.com,
-        nobuhiro1.iwamatsu@toshiba.co.jp, Mr.Bossman075@gmail.com,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Subject: [PATCH v5 9/9] ARM: imxrt_defconfig: Add i.MXRT family defconfig
-Date:   Wed, 15 Dec 2021 17:05:38 -0500
-Message-Id: <20211215220538.4180616-10-Mr.Bossman075@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20211215220538.4180616-1-Mr.Bossman075@gmail.com>
-References: <20211215220538.4180616-1-Mr.Bossman075@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 15 Dec 2021 14:27:29 -0800 (PST)
+Received: (nullmailer pid 1954725 invoked by uid 1000);
+        Wed, 15 Dec 2021 22:27:28 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     =?utf-8?b?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        =?utf-8?b?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+        Jonas Gorski <jonas.gorski@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        =?utf-8?q?=C3=81lvaro_Fern=C3=A1ndez_Rojas?= <noltari@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+In-Reply-To: <20211215204753.5956-1-zajec5@gmail.com>
+References: <20211215204753.5956-1-zajec5@gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: Add binding for BCM4908 pinctrl
+Date:   Wed, 15 Dec 2021 16:27:28 -0600
+Message-Id: <1639607248.075072.1954724.nullmailer@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Giulio Benetti <giulio.benetti@benettiengineering.com>
+On Wed, 15 Dec 2021 21:47:52 +0100, Rafał Miłecki wrote:
+> From: Rafał Miłecki <rafal@milecki.pl>
+> 
+> It's hardware block that is part of every SoC from BCM4908 family.
+> 
+> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+> ---
+>  .../pinctrl/brcm,bcm4908-pinctrl.yaml         | 72 +++++++++++++++++++
+>  MAINTAINERS                                   |  7 ++
+>  2 files changed, 79 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm4908-pinctrl.yaml
+> 
 
-Add generic i.MXRT family defconfig.
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-Signed-off-by: Giulio Benetti <giulio.benetti@benettiengineering.com>
-Signed-off-by: Jesse Taube <Mr.Bossman075@gmail.com>
----
-V1->V2:
-* Nothing done
-V2->V3:
-* Nothing done
-V3->V4:
-* Remove unnecessary CONFIGs
-* Add futex suport after "ARM: 9122/1: select HAVE_FUTEX_CMPXCHG"
-9d417cbe36eee7afdd85c2e871685f8dab7c2dba
-V4->V5:
-* Change commit description
----
- arch/arm/configs/imxrt_defconfig | 35 ++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 arch/arm/configs/imxrt_defconfig
+yamllint warnings/errors:
 
-diff --git a/arch/arm/configs/imxrt_defconfig b/arch/arm/configs/imxrt_defconfig
-new file mode 100644
-index 000000000000..52dba3762996
---- /dev/null
-+++ b/arch/arm/configs/imxrt_defconfig
-@@ -0,0 +1,35 @@
-+# CONFIG_LOCALVERSION_AUTO is not set
-+CONFIG_BPF_SYSCALL=y
-+CONFIG_SCHED_AUTOGROUP=y
-+# CONFIG_MMU is not set
-+CONFIG_ARCH_MXC=y
-+CONFIG_SOC_IMXRT=y
-+CONFIG_SET_MEM_PARAM=y
-+CONFIG_DRAM_BASE=0x80000000
-+CONFIG_DRAM_SIZE=0x02000000
-+CONFIG_BINFMT_FLAT=y
-+CONFIG_UEVENT_HELPER=y
-+CONFIG_DEVTMPFS=y
-+CONFIG_DEVTMPFS_MOUNT=y
-+CONFIG_IMX_WEIM=y
-+CONFIG_LEGACY_PTY_COUNT=2
-+CONFIG_SERIAL_FSL_LPUART=y
-+CONFIG_SERIAL_FSL_LPUART_CONSOLE=y
-+CONFIG_SERIAL_DEV_BUS=y
-+CONFIG_PINCTRL_IMXRT1050=y
-+CONFIG_GPIO_MXC=y
-+CONFIG_MMC=y
-+CONFIG_MMC_SDHCI=y
-+CONFIG_MMC_SDHCI_PLTFM=y
-+CONFIG_MMC_SDHCI_ESDHC_IMX=y
-+CONFIG_DMADEVICES=y
-+CONFIG_FSL_EDMA=y
-+CONFIG_CLK_IMXRT1050=y
-+CONFIG_EXT4_FS=y
-+CONFIG_EXT4_FS_POSIX_ACL=y
-+CONFIG_EXT4_FS_SECURITY=y
-+CONFIG_VFAT_FS=y
-+CONFIG_FAT_DEFAULT_UTF8=y
-+CONFIG_EXFAT_FS=y
-+CONFIG_NLS_ASCII=y
-+CONFIG_NLS_UTF8=y
--- 
-2.34.1
+dtschema/dtc warnings/errors:
+Unknown file referenced: [Errno 2] No such file or directory: '/usr/local/lib/python3.8/dist-packages/dtschema/schemas/pinctrl/pinctrl.yaml'
+xargs: dt-doc-validate: exited with status 255; aborting
+make[1]: *** Deleting file 'Documentation/devicetree/bindings/pinctrl/brcm,bcm4908-pinctrl.example.dt.yaml'
+Unknown file referenced: [Errno 2] No such file or directory: '/usr/local/lib/python3.8/dist-packages/dtschema/schemas/pinctrl/pinctrl.yaml'
+make[1]: *** [scripts/Makefile.lib:373: Documentation/devicetree/bindings/pinctrl/brcm,bcm4908-pinctrl.example.dt.yaml] Error 255
+make[1]: *** Waiting for unfinished jobs....
+make: *** [Makefile:1413: dt_binding_check] Error 2
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/patch/1568760
+
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
 
