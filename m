@@ -2,75 +2,215 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 32BD5477608
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Dec 2021 16:35:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BFEE477646
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Dec 2021 16:47:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235182AbhLPPfE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Dec 2021 10:35:04 -0500
-Received: from mail-oi1-f181.google.com ([209.85.167.181]:43521 "EHLO
-        mail-oi1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235074AbhLPPfD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Dec 2021 10:35:03 -0500
-Received: by mail-oi1-f181.google.com with SMTP id w64so3007388oif.10;
-        Thu, 16 Dec 2021 07:35:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Tzhyv7NNF7027JUFF/IG6LCltND4kDLQ7SHvh0WotTc=;
-        b=0I1Q7nD4se471xmd0HzLwwJbezTljxzK39mLTf+f+ovq592fGNtHfpIhp3ZP8mpuaI
-         HmXh/yQr3QsjIPHerOWDL/Av6BVRaTLQG+qTr/uj6so4OE3I1CKrMskfHVqDHKBndlkn
-         3oaAwOUcc6hjO0siQPEPRJUZJRC9aA2lhcHvI1KIKo3FCdlupKxrrDUBT9BXU/zkoqFt
-         5dk2fJbRsikn+KLYvx02kYEwMdIfOdGbiQ2K1wkaWMoQjepR4Jqrdrn5sZXpd2kudfUn
-         52unOQxW8ptMJXUO225A9rPuImq3h7ZA128x1KTmnmM3oAaxkPiaKOurjpy/VUwr2oUh
-         uccw==
-X-Gm-Message-State: AOAM533v+GGaMI2EFsn4cVryB45RtV2ldKGCi3P/jP4Cg3JxTio+I624
-        Q5vgeMrtW1XUspWyu7zOjw==
-X-Google-Smtp-Source: ABdhPJxrqO+9RtItEezdVson2d2d60GMBm2W2a5PxEHKDpLl3bbr6SRznUOSvL1zUtJJz1oxNqLDZg==
-X-Received: by 2002:a54:4104:: with SMTP id l4mr4432313oic.17.1639668902580;
-        Thu, 16 Dec 2021 07:35:02 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id m6sm1082852ooe.24.2021.12.16.07.35.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Dec 2021 07:35:01 -0800 (PST)
-Received: (nullmailer pid 259578 invoked by uid 1000);
-        Thu, 16 Dec 2021 15:35:01 -0000
-Date:   Thu, 16 Dec 2021 09:35:01 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc:     bcm-kernel-feedback-list@broadcom.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>,
-        linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jonas Gorski <jonas.gorski@gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: Add binding for BCM4908 pinctrl
-Message-ID: <YbtcpbLIlUV89qEK@robh.at.kernel.org>
-References: <20211215204753.5956-1-zajec5@gmail.com>
+        id S231948AbhLPPrL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Dec 2021 10:47:11 -0500
+Received: from mga06.intel.com ([134.134.136.31]:42881 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S238658AbhLPPrL (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 16 Dec 2021 10:47:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1639669630; x=1671205630;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=YK9xlYFFv27EIDqVmb+rsg3WQK4vuCsyGJqEz5/1qAs=;
+  b=hZWWL44r/Mrt+Dcl1k5MCJ9PdsoS/vOnxY5iujYT3bxeisytRUUSqtKW
+   CbPEt8zfdGnwq5yqbRdqYA4emPYYh6TpGmN9540c3gFnq31rwHvh+Feag
+   tJuAG+FFon34ke1m8rgRWwsGdT+v2CrexLjVA6q4V7ENDFhL146/5dCya
+   ZZVAzuKJ5mlFjFpiNEYZMXaGJutpf101bTRGPciIsFkxnWry2H7UFGNBv
+   +FSSFDBwGzex4eLagOFtNLAENqdnS45dJlEvS+015tAqdFqNZLPT6zs18
+   WXLyLjkbgxo1sEHp/hlY2L6EgkF5bTlBIKOCreM3bUnU19TPf9e4YBqT8
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10199"; a="300299588"
+X-IronPort-AV: E=Sophos;i="5.88,211,1635231600"; 
+   d="scan'208";a="300299588"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2021 07:47:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,211,1635231600"; 
+   d="scan'208";a="568569953"
+Received: from lkp-server02.sh.intel.com (HELO 9f38c0981d9f) ([10.239.97.151])
+  by fmsmga008.fm.intel.com with ESMTP; 16 Dec 2021 07:47:09 -0800
+Received: from kbuild by 9f38c0981d9f with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1mxsyK-0003On-Bi; Thu, 16 Dec 2021 15:47:08 +0000
+Date:   Thu, 16 Dec 2021 23:46:47 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:fixes] BUILD SUCCESS
+ b67210cc217f9ca1c576909454d846970c13dfd4
+Message-ID: <61bb5f67.TQjDODy/mnM4Tnjm%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211215204753.5956-1-zajec5@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 15 Dec 2021 21:47:52 +0100, Rafał Miłecki wrote:
-> From: Rafał Miłecki <rafal@milecki.pl>
-> 
-> It's hardware block that is part of every SoC from BCM4908 family.
-> 
-> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
-> ---
->  .../pinctrl/brcm,bcm4908-pinctrl.yaml         | 72 +++++++++++++++++++
->  MAINTAINERS                                   |  7 ++
->  2 files changed, 79 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,bcm4908-pinctrl.yaml
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git fixes
+branch HEAD: b67210cc217f9ca1c576909454d846970c13dfd4  pinctrl: stm32: consider the GPIO offset to expose all the GPIO lines
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+elapsed time: 724m
+
+configs tested: 144
+configs skipped: 3
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                 randconfig-c001-20211216
+m68k                          hp300_defconfig
+arm                        clps711x_defconfig
+arc                    vdk_hs38_smp_defconfig
+powerpc                     tqm8540_defconfig
+um                             i386_defconfig
+mips                        workpad_defconfig
+arm                        keystone_defconfig
+arm                         lpc32xx_defconfig
+xtensa                              defconfig
+microblaze                          defconfig
+powerpc                  iss476-smp_defconfig
+arm                       cns3420vb_defconfig
+arm                            dove_defconfig
+arm                        trizeps4_defconfig
+arc                          axs103_defconfig
+mips                           mtx1_defconfig
+arm                       netwinder_defconfig
+sh                        dreamcast_defconfig
+powerpc                      makalu_defconfig
+powerpc                 mpc8315_rdb_defconfig
+powerpc                        cell_defconfig
+m68k                        stmark2_defconfig
+sh                          lboxre2_defconfig
+nds32                             allnoconfig
+sh                         microdev_defconfig
+sh                           se7712_defconfig
+i386                                defconfig
+arm                         nhk8815_defconfig
+arm                       omap2plus_defconfig
+sh                          rsk7203_defconfig
+arc                            hsdk_defconfig
+powerpc                     pseries_defconfig
+sh                                  defconfig
+sh                        edosk7760_defconfig
+mips                          ath79_defconfig
+powerpc                      walnut_defconfig
+powerpc                     mpc83xx_defconfig
+mips                         tb0226_defconfig
+h8300                            alldefconfig
+powerpc                     kmeter1_defconfig
+arm                         shannon_defconfig
+sh                          landisk_defconfig
+powerpc                    adder875_defconfig
+mips                      pic32mzda_defconfig
+arm                            mmp2_defconfig
+sparc                               defconfig
+powerpc                      katmai_defconfig
+riscv             nommu_k210_sdcard_defconfig
+arm                          lpd270_defconfig
+mips                           ci20_defconfig
+arm                              alldefconfig
+sh                           se7722_defconfig
+sh                   secureedge5410_defconfig
+mips                        qi_lb60_defconfig
+powerpc                      ppc40x_defconfig
+arm                             mxs_defconfig
+mips                       capcella_defconfig
+powerpc                     taishan_defconfig
+sh                   rts7751r2dplus_defconfig
+arm                          imote2_defconfig
+h8300                       h8s-sim_defconfig
+arm                           h3600_defconfig
+powerpc                 mpc8313_rdb_defconfig
+sh                               j2_defconfig
+sh                        edosk7705_defconfig
+mips                         tb0287_defconfig
+powerpc                     powernv_defconfig
+arc                      axs103_smp_defconfig
+arm                         orion5x_defconfig
+m68k                       m5275evb_defconfig
+nios2                               defconfig
+arm                  randconfig-c002-20211216
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+arc                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a006-20211216
+x86_64               randconfig-a005-20211216
+x86_64               randconfig-a001-20211216
+x86_64               randconfig-a002-20211216
+x86_64               randconfig-a003-20211216
+x86_64               randconfig-a004-20211216
+i386                 randconfig-a001-20211216
+i386                 randconfig-a002-20211216
+i386                 randconfig-a005-20211216
+i386                 randconfig-a003-20211216
+i386                 randconfig-a006-20211216
+i386                 randconfig-a004-20211216
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
+
+clang tested configs:
+x86_64               randconfig-a011-20211216
+x86_64               randconfig-a014-20211216
+x86_64               randconfig-a012-20211216
+x86_64               randconfig-a013-20211216
+x86_64               randconfig-a016-20211216
+x86_64               randconfig-a015-20211216
+hexagon              randconfig-r045-20211216
+s390                 randconfig-r044-20211216
+riscv                randconfig-r042-20211216
+hexagon              randconfig-r041-20211216
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
