@@ -2,97 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 171404773E0
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Dec 2021 15:02:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E8E624773F8
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Dec 2021 15:10:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234613AbhLPOCG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Dec 2021 09:02:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37142 "EHLO
+        id S237612AbhLPOKR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Dec 2021 09:10:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230227AbhLPOCG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Dec 2021 09:02:06 -0500
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDB17C061574
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Dec 2021 06:02:05 -0800 (PST)
-Received: by mail-ed1-x534.google.com with SMTP id g14so86374081edb.8
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Dec 2021 06:02:05 -0800 (PST)
+        with ESMTP id S237531AbhLPOKQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Dec 2021 09:10:16 -0500
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84634C061574;
+        Thu, 16 Dec 2021 06:10:16 -0800 (PST)
+Received: by mail-wm1-x32b.google.com with SMTP id j140-20020a1c2392000000b003399ae48f58so1820123wmj.5;
+        Thu, 16 Dec 2021 06:10:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RdU1E7Xc9LDK8aDPS2k1yPPFV+VdC5eQrZuLbZ/U5FQ=;
-        b=qACEawK6atXDHxNlCDo1wU22dktJox0tDdFY5UAKTl1/1Y2VAy8XJifOA0YWFtj6W/
-         J45e6vK/KCag8P+bn5UddgcxsmVm2bmg+J1krE66mHN4erivLDXyHQWY6785MjdPX9Qc
-         kWGMxwjNLmuahxWF+FHEmGIY89nAIann58cBn+Q0YRHkNFlU9kxsEmmgkF51vgCHbxOK
-         9D9awYpzwuy7cW9Gf82jWP8MaxYNOQjvSRvn7OpxjAVjYhoNp0PFstFv7OMgLu8gBumn
-         dlmt/Clz3mxVptIZqSKpvpGjObYp5co68AxWHWSMsX1++9k30CL28pKabnyDsfFGxxEM
-         cDcg==
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=l5uZzj2HREZlkQkg6V05gCWd+HHMWkzcCuOsxTkeJ70=;
+        b=SVQ6qloS1jWGnBZmEWPmtFA5SUJXLoi47E4p6+gY1pTCuyQaB6Ab8SKCe19Y8HI1R8
+         6E+tnF6XNff3ns0GXEiDUuYG95Rum/WOn/01PQUdwpdT5zBbksnASjuEMCh7fLtSx6gU
+         9vESOtjlwh9G8FN70JJuxwecnxgWjzOXyCtLCOR2ooNylAvksgWinMdNjGQJ04Ppsc1q
+         NHyWj86GUs04zU/6bg2ogAz850VwaPAstXyFQDxnific2rJpYNQUpFpj+g23JqD0WvoQ
+         sL3PyEJLJJHh5xwYGtzhVtX+k2NNLNtldkrEEuaySHZ/iHq2JGkufVxUSZe1/yD/9Og7
+         hoNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RdU1E7Xc9LDK8aDPS2k1yPPFV+VdC5eQrZuLbZ/U5FQ=;
-        b=Vzm6w0DuDyL3ZBr57plQuOoOoms4LeAB+QvecZYONO+BZEuIcV/7YFXYcYbzuKHJdr
-         SbzmgQwqCnjhn2R+M+u2bS+VM15TiDwTSJtMKFQOMvNq8FBVc34XFsC2O6mymYtGzLE4
-         w5nQxGtsQbM7vG9FMPM8ZZxZSAlcEJpBgBY/hsqXaAqB11bbTxZe+PWLKa7jmw2FaPzc
-         c1cmqyYcUDHLFe35ajcFdOxBcmxJcqgMDfNNK1Y6L2Vccrqnqt34lTXHCzUdRskz9E2l
-         NB9RPGe6hAM3KHBWXi65W2axL4N8LvDguoIUdZa4B7uV5p829OpBWBMH5zC0UXPiedhu
-         grSw==
-X-Gm-Message-State: AOAM532ZICU/R4SSgjXkwKVuxK8TFHWx3YEu0L6a0R86Oi1jv13hNx/+
-        0TMHmKF0aTvBcoWMBN5L3a5m/8LnOYIq3bE7+TA0jQ==
-X-Google-Smtp-Source: ABdhPJxcCphsUB1z4oE3YG+iocQu1KgoOp4PUYFAnddYF60HqeamCv55HgCL0vn8Z+CuukAbH7hxyuMa/8iRRHH4IkA=
-X-Received: by 2002:a17:907:86a6:: with SMTP id qa38mr16110613ejc.286.1639663319878;
- Thu, 16 Dec 2021 06:01:59 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=l5uZzj2HREZlkQkg6V05gCWd+HHMWkzcCuOsxTkeJ70=;
+        b=DY92wGTNDXii7WWE38p4oe1POpvxfEEvQg9qCvkk7wF6fTKTTlbxAgS5RpndVP2uH3
+         v28DWrG45xpxtFN6Ofwi1FrN6Ems7jO2+V9UlqxUN7aRGHb+5/adXNkOGE9TXzGDUudj
+         /y57Qsvw4VEGM3y3ADng3z/6kHB644eLflXnoEmfhW9Ddmj7kwR9aeyYZdUAYDl4Wzw3
+         D+qX54FKMFHz4PJ0Arl0ZRqKK1hncKzhvvFeClYLqDRfQSMolt1I1+O4M530O9pQOTez
+         nIlP9M8PvjWZNbeoG0jUt6xXEFCOfOyKteqz9prF0Cbbiy2FSkV8YZJ0NFC7s+JsNA/R
+         H18A==
+X-Gm-Message-State: AOAM532TTpGwB87lA7SlevmFmoxOj1OrTEsR7hTzoh7V2mVyDU91x00M
+        M1L5+4i/spVQMmBEfRV2TLE=
+X-Google-Smtp-Source: ABdhPJzme2TYnUlOODJae45eozPJivlOVJi6npRdm5AzIsyCag4h2b2vQW6cZA/KSfvgWfT9wpRk4g==
+X-Received: by 2002:a1c:9d55:: with SMTP id g82mr3209275wme.58.1639663815109;
+        Thu, 16 Dec 2021 06:10:15 -0800 (PST)
+Received: from localhost ([193.209.96.43])
+        by smtp.gmail.com with ESMTPSA id h4sm4930284wrf.93.2021.12.16.06.10.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Dec 2021 06:10:14 -0800 (PST)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Akhil R <akhilrajeev@nvidia.com>, linux-gpio@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH 0/2] gpio: tegra186: Add support for Tegra241
+Date:   Thu, 16 Dec 2021 15:10:07 +0100
+Message-Id: <20211216141009.1478562-1-thierry.reding@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <Ybn8pxv5xPgc5nGz@black.fi.intel.com> <CAMRc=MceOZWt5Qb6kFSALOOwyYb_MikFusxZqt9KgqqQPfnwgQ@mail.gmail.com>
- <YbskttzHvxlprBPM@smile.fi.intel.com> <CAMRc=McSULw2YpCgsK-C6+pTx85mtH3c5Y+MbawO+SSgUXM1gg@mail.gmail.com>
- <Ybs5jqW3zyDh18Vx@smile.fi.intel.com>
-In-Reply-To: <Ybs5jqW3zyDh18Vx@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 16 Dec 2021 15:01:49 +0100
-Message-ID: <CAMRc=MdWQEk-+-rq5ML=Yj-7ZTFMv6B0WocgqWJQu6GPkOsx2g@mail.gmail.com>
-Subject: Re: [GIT PULL] intel-gpio for 5.17-1
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linux GPIO <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Dec 16, 2021 at 2:06 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Thu, Dec 16, 2021 at 12:46:11PM +0100, Bartosz Golaszewski wrote:
-> > On Thu, Dec 16, 2021 at 12:37 PM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > >
-> > > On Thu, Dec 16, 2021 at 10:14:05AM +0100, Bartosz Golaszewski wrote:
-> > > > On Wed, Dec 15, 2021 at 3:33 PM Andy Shevchenko
-> > > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > >
-> > > > > Hi Linux GPIO  maintainers,
-> > > > >
-> > > > > Approximately a dozen of changes for v5.17 against Intel GPIO drivers and
-> > > > > GPIO ACPI library. It has ben a while in Linux Next without any error reported.
-> > >
-> > > > Pulled, thanks!
-> > >
-> > > Thanks!
-> > >
-> > > Are you going to pull series with the OF node assignments clean up?
-> > > I forgot to mention here that my PR does not include them.
-> > >
-> >
-> > Yes, I'll queue it this week.
->
-> Thanks!
->
-> Do you know that your branches were kicked off from the Linux Next?
-> Are you going to drop previous gpio-sim from the Linux Next?
->
+From: Thierry Reding <treding@nvidia.com>
 
-No, I didn't, thanks for the heads-up. Old gpio-sim code conflicted
-with the one that was queued for v5.17. Should be good now.
+Hi,
 
-Bart
+this is another extension of the Tegra186 GPIO driver, this time for the
+upcoming Tegra241 (Grace) chip. Note that while this adds the DT binding
+header, it doesn't actually define a new DT compatible string because it
+is unlikely that the Tegra241 will ever boot using DT but will use ACPI
+instead.
+
+The pin definitions are still in the "DT binding" header for consistency
+with previous chips. Just wanted to highlight this to preempt questions
+as to why I haven't Cc'ed Rob or the devicetree mailing list.
+
+Thierry
+
+Akhil R (2):
+  dt-bindings: gpio: Add Tegra241 support
+  gpio: tegra186: Add support for Tegra241
+
+ drivers/gpio/gpio-tegra186.c             | 52 ++++++++++++++++++++++++
+ include/dt-bindings/gpio/tegra241-gpio.h | 42 +++++++++++++++++++
+ 2 files changed, 94 insertions(+)
+ create mode 100644 include/dt-bindings/gpio/tegra241-gpio.h
+
+-- 
+2.34.1
+
