@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BECE477892
+	by mail.lfdr.de (Postfix) with ESMTP id A86A3477893
 	for <lists+linux-gpio@lfdr.de>; Thu, 16 Dec 2021 17:23:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239495AbhLPQWY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Dec 2021 11:22:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43138 "EHLO
+        id S239542AbhLPQWZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Dec 2021 11:22:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239566AbhLPQWS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Dec 2021 11:22:18 -0500
-Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 873ABC061401
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Dec 2021 08:22:17 -0800 (PST)
-Received: by mail-lj1-x22f.google.com with SMTP id 207so39278164ljf.10
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Dec 2021 08:22:17 -0800 (PST)
+        with ESMTP id S239599AbhLPQWW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Dec 2021 11:22:22 -0500
+Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67038C061748
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Dec 2021 08:22:19 -0800 (PST)
+Received: by mail-lj1-x22b.google.com with SMTP id 207so39278266ljf.10
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Dec 2021 08:22:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=lUnqODC8l6jXMRXSjWHaW3K51f2Zp3o4i2EaGR4+YbQ=;
-        b=lvXiAF1d3Vs6sdW3IGqJJAUJXmkC98UgqlCJXdWz4XRv6C+B2cDS1Bf41kUY0g2Zkz
-         xYZiJ+HHUlS4YHH4irezA1s/Xn+KoDL/90rVDnGDTT2oHgjhwqlmlSy6cNxnvxCmw9lO
-         vFJlw0d5k4Oj5l64lX3jLconjiLdN2tEcyHmnUuH3Rcqdow/Rm841YmWY7Awofrw+RIh
-         1kZHNv+RMH2gYu8zKPOiMijlsd6RYSAv4g5ocOwpMStnlo/T3wEOXp6aOx6/tcbtfJNO
-         V3Zh0jJQkwhculKk8tpYf4EqFP6MnmJRJ2Cn9v97qeNzMfDNimWbJ1u8zbKQJ92rtnrs
-         YTUw==
+        bh=JUJgiOCeEkvWRBfsS4oHMEMSHGIv4GiMwDTH+LmBGxo=;
+        b=IoU2buhjcjWp2q7dTYztQ+qpX9khq7w3X58Xw/LgcxE4PGjKWNNhJYajACUrAVTjAV
+         0pAehz9KDe0vabDtPwrPpT5+5cx+ekArogFvQRRudrAEWggcwLdZ9jDNqkfX2O7EeYVj
+         VXLvZmB/auujRtxBKEHPiF6EEMSOYd/nEJJMPgB6kgGx2Q+TTohdHLGqTj/EK8/ACs5B
+         qqm/a36vKUR5A3lsXy1FMwKyEZ0YhoCgw3aiidLX52s9PVy2Uy8rleHC+KwfQqeTYfc2
+         30yXUfz4MzD+gAr1XW3ghh9tEAPdLXsn7sJR5hhgn4lJYW4+eeg5AWWBs+W9MPVFrBT1
+         mCTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=lUnqODC8l6jXMRXSjWHaW3K51f2Zp3o4i2EaGR4+YbQ=;
-        b=D3bOGZ9VBtvKFqkCkvFrqUDTNZxQ65OuXhyLU6+YJV1VPyFGr1W4/S5TQcixidUisx
-         cl26raVXj0lNMEU8Zm37+6BCp26BPFdy954s3klAMj1pUgVCn2LIfony/cZMznTO5oOW
-         plcib0YkT7HuXi/sM7RTss8FYXxhLS1PlQZ1t2dmvxk/D9cPDaQ2zbe7iOaImblefLZe
-         /yuj1ihxvuy//Bbg0t0pEFr5aYb1tR+SJiV9WAtKJ0RUr7tkqF9CH3wQkjYB43ZjtWmw
-         qqkTf0ruE/01sHKQOaUZN1gkw9WOxaE+Uf28Ewdudjd4UEFjDJfb/U7WHrPiXl0KhPdM
-         genA==
-X-Gm-Message-State: AOAM533igyuI7CVuJ+lWLJ0Pc47jO+9wOz025x9xHM+IR5F+/bc7rlaF
-        YaW/z1AgAGWNPdVHQV0JXvw=
-X-Google-Smtp-Source: ABdhPJwCahoizSn2WH15Q57HOXkXWNpk/FmVvJXcE9B0YnDgR8bHY5REokQAOeCUiLKOMPZGnP+GsA==
-X-Received: by 2002:a2e:5d6:: with SMTP id 205mr15153216ljf.270.1639671735855;
-        Thu, 16 Dec 2021 08:22:15 -0800 (PST)
+        bh=JUJgiOCeEkvWRBfsS4oHMEMSHGIv4GiMwDTH+LmBGxo=;
+        b=QbxmYIaFC25ikzVjOR6z0ubf2K6oEXBP772FjbPHUfpDzNKDfhvEceWxF/sS31h42y
+         c27jUEyuwM48Qhbrsy3phvME1EJRf9EytWRHqTgphmoBPVQbtsktV/TbmE4u+3Px9el5
+         gVwMGssdGoRfrtFv982XiHeRJ7e+QQvqZluBg/h4IjnfnZi7NlgdIoxeA3Xgk5xW6Iah
+         AUvvQ/n7sA3vMTpKxzPqt1VajNqsJee6lwkxDo7zPdcNzPnGQFrUE6d9l3GsIbHzGCjW
+         EHZyICe70S+yhKTakuWYgtfst2j8K7F8guW6p0SpJy4gQv+3xDLW7j7PUqpnyjWas/xF
+         EiAg==
+X-Gm-Message-State: AOAM533zV4zsWVAZq/by/XEdZ5Wd0YN6J8bUnWNYh+656tbdEHd5iGCJ
+        QxKDfFn4G49kEk770NooAOc=
+X-Google-Smtp-Source: ABdhPJyrGXI7ioAaKnKKAK2OC5i6FS7Rxk9DNehos53wIcXBnCY1INj+5OTISTqtn/SLfMS9qHQipg==
+X-Received: by 2002:a2e:bd0e:: with SMTP id n14mr15323654ljq.159.1639671737725;
+        Thu, 16 Dec 2021 08:22:17 -0800 (PST)
 Received: from localhost.lan (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
-        by smtp.gmail.com with ESMTPSA id s13sm938623lfg.126.2021.12.16.08.22.15
+        by smtp.gmail.com with ESMTPSA id s13sm938623lfg.126.2021.12.16.08.22.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Dec 2021 08:22:15 -0800 (PST)
+        Thu, 16 Dec 2021 08:22:17 -0800 (PST)
 From:   =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
@@ -59,9 +59,9 @@ Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
         Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>,
         linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
-Subject: [PATCH V2 3/4] pinctrl: keembay: rework loops looking for groups names
-Date:   Thu, 16 Dec 2021 17:22:05 +0100
-Message-Id: <20211216162206.8027-3-zajec5@gmail.com>
+Subject: [PATCH V2 4/4] pinctrl: add one more "const" for generic function groups
+Date:   Thu, 16 Dec 2021 17:22:06 +0100
+Message-Id: <20211216162206.8027-4-zajec5@gmail.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20211216162206.8027-1-zajec5@gmail.com>
 References: <20211216162206.8027-1-zajec5@gmail.com>
@@ -74,117 +74,51 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Rafał Miłecki <rafal@milecki.pl>
 
-Make the outer loop iterate over functions as that's the real subject.
-This simplifies code (and reduces amount of lines of code) as allocating
-memory for names doesn't require extra checks anymore.
-
-While at it use local "group_names" variable. The plan for
-"struct function_desc" is to make its "group_names" /double/ const. That
-will allow drivers to use it with static const data.
-
-This keembay "group_names" change is required to avoid:
-drivers/pinctrl/pinctrl-keembay.c: In function 'keembay_add_functions':
-drivers/pinctrl/pinctrl-keembay.c:1594:8: warning: assignment discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
- 1594 |    grp = func->group_names;
-      |        ^
+Generic code doesn't modify those strings and .get_function_groups
+callback has that extra "const" as well. This allows more flexibility in
+GENERIC_PINMUX_FUNCTIONS users.
 
 Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
 ---
-This has been runtime tested. I verified that output of
-/sys/kernel/debug/pinctrl/*/pinmux-functions is the same without and
-with my patches.
----
- drivers/pinctrl/pinctrl-keembay.c | 66 ++++++++++++-------------------
- 1 file changed, 25 insertions(+), 41 deletions(-)
+ drivers/pinctrl/pinmux.c | 2 +-
+ drivers/pinctrl/pinmux.h | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-keembay.c b/drivers/pinctrl/pinctrl-keembay.c
-index 9a602abad8df..152c35bce8ec 100644
---- a/drivers/pinctrl/pinctrl-keembay.c
-+++ b/drivers/pinctrl/pinctrl-keembay.c
-@@ -1555,58 +1555,42 @@ static int keembay_pinctrl_reg(struct keembay_pinctrl *kpc,  struct device *dev)
- }
- 
- static int keembay_add_functions(struct keembay_pinctrl *kpc,
--				 struct function_desc *function)
-+				 struct function_desc *functions)
+diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
+index 6cdbd9ccf2f0..f94d43b082d9 100644
+--- a/drivers/pinctrl/pinmux.c
++++ b/drivers/pinctrl/pinmux.c
+@@ -875,7 +875,7 @@ EXPORT_SYMBOL_GPL(pinmux_generic_get_function);
+  */
+ int pinmux_generic_add_function(struct pinctrl_dev *pctldev,
+ 				const char *name,
+-				const char **groups,
++				const char * const *groups,
+ 				const unsigned int num_groups,
+ 				void *data)
  {
- 	unsigned int i;
+diff --git a/drivers/pinctrl/pinmux.h b/drivers/pinctrl/pinmux.h
+index 78c3a31be882..72fcf03eaa43 100644
+--- a/drivers/pinctrl/pinmux.h
++++ b/drivers/pinctrl/pinmux.h
+@@ -129,7 +129,7 @@ static inline void pinmux_init_device_debugfs(struct dentry *devroot,
+  */
+ struct function_desc {
+ 	const char *name;
+-	const char **group_names;
++	const char * const *group_names;
+ 	int num_group_names;
+ 	void *data;
+ };
+@@ -150,7 +150,7 @@ struct function_desc *pinmux_generic_get_function(struct pinctrl_dev *pctldev,
  
- 	/* Assign the groups for each function */
--	for (i = 0; i < kpc->npins; i++) {
--		const struct pinctrl_pin_desc *pdesc = keembay_pins + i;
--		struct keembay_mux_desc *mux = pdesc->drv_data;
--
--		while (mux->name) {
--			struct function_desc *func;
--			const char **grp;
--			size_t grp_size;
--			u32 j, grp_num;
--
--			for (j = 0; j < kpc->nfuncs; j++) {
--				if (!strcmp(mux->name, function[j].name))
--					break;
--			}
--
--			if (j == kpc->nfuncs)
--				return -EINVAL;
--
--			func = function + j;
--			grp_num = func->num_group_names;
--			grp_size = sizeof(*func->group_names);
--
--			if (!func->group_names) {
--				func->group_names = devm_kcalloc(kpc->dev,
--								 grp_num,
--								 grp_size,
--								 GFP_KERNEL);
--				if (!func->group_names)
--					return -ENOMEM;
-+	for (i = 0; i < kpc->nfuncs; i++) {
-+		struct function_desc *func = &functions[i];
-+		const char **group_names;
-+		unsigned int grp_idx = 0;
-+		int j;
-+
-+		group_names = devm_kcalloc(kpc->dev, func->num_group_names,
-+					   sizeof(*group_names), GFP_KERNEL);
-+		if (!group_names)
-+			return -ENOMEM;
-+
-+		for (j = 0; j < kpc->npins; j++) {
-+			const struct pinctrl_pin_desc *pdesc = &keembay_pins[j];
-+			struct keembay_mux_desc *mux;
-+
-+			for (mux = pdesc->drv_data; mux->name; mux++) {
-+				if (!strcmp(mux->name, func->name))
-+					group_names[grp_idx++] = pdesc->name;
- 			}
--
--			grp = func->group_names;
--			while (*grp)
--				grp++;
--
--			*grp = pdesc->name;
--			mux++;
- 		}
-+
-+		func->group_names = group_names;
- 	}
+ int pinmux_generic_add_function(struct pinctrl_dev *pctldev,
+ 				const char *name,
+-				const char **groups,
++				const char * const *groups,
+ 				unsigned const num_groups,
+ 				void *data);
  
- 	/* Add all functions */
- 	for (i = 0; i < kpc->nfuncs; i++) {
- 		pinmux_generic_add_function(kpc->pctrl,
--					    function[i].name,
--					    function[i].group_names,
--					    function[i].num_group_names,
--					    function[i].data);
-+					    functions[i].name,
-+					    functions[i].group_names,
-+					    functions[i].num_group_names,
-+					    functions[i].data);
- 	}
- 
- 	return 0;
 -- 
 2.31.1
 
