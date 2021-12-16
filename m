@@ -2,88 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6984A476CC1
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Dec 2021 10:03:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 48792476CFA
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Dec 2021 10:11:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230306AbhLPJCc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Dec 2021 04:02:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50836 "EHLO
+        id S232950AbhLPJLd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Dec 2021 04:11:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230247AbhLPJCb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Dec 2021 04:02:31 -0500
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDEEAC061574
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Dec 2021 01:02:30 -0800 (PST)
-Received: by mail-ed1-x52f.google.com with SMTP id t5so84178418edd.0
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Dec 2021 01:02:30 -0800 (PST)
+        with ESMTP id S232932AbhLPJLa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Dec 2021 04:11:30 -0500
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7913C06173E
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Dec 2021 01:11:30 -0800 (PST)
+Received: by mail-pl1-x62d.google.com with SMTP id y7so19001007plp.0
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Dec 2021 01:11:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pIbH4SBUTuR0l4tTL7AOxNkBOgGIn/iy+LZnKcqvvgA=;
-        b=o8+RashkwgCrlNotfXLtqTsFevD8f50yVDdW+L4a62MZUsf/U1UGMDnJF8P2YoRyha
-         GEsAMaruSO85MGPl4XWKn15AooxtYn3QF4lLMPSziwQSmSgjMXDBouRA8fM/qli0LMbZ
-         xV3AvI3IZXH1ssWssl6jbadMCEN3IpF6o38TscsPT66kWBDxo/y8lblOPMw9109TyYUQ
-         T95h4i+AAnASqpU3j2emLTbXsLWEKxUMuAxfn19SdAT3SK0xceneHAeT3cSe6b5Ry6VU
-         SGrPEa8oCv6+FNiJVy7tn4fYFCzg/Aol32zEajFd0FZWfe6FpWTOSGSujXP1J63JPKke
-         ORuA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0bBmUzm0as3OLbndyFlyofK8xxLs8ALB2oAWJJxPOhE=;
+        b=yxWWeISm2rHo+YBcukBXjB9i+caN6YYc7f82ST6CNu8zjkrFF8tUXqvCHuE0WBRKMh
+         9ZWs6zpfseC00xWKtLdavV3oa+H43U/Ja+qJfmeOC+oxTld+vYkTR12+DFAeB0PGMqPC
+         8G8h5suN70st5WnXpyWqKt2hhHonwMityF5pLQYDUCAtS1oofWx6l53JHscwvb20k26B
+         WlHLxtVgv9na+6UEHcOeMCxRZznWoIb6X/gs/wGSK1d16paPf48nehJZ1qmQ6qJCVLfB
+         w0hooocuHcPfBonViAxE9OtRw6qQv3wLcQOFIP89stBEtMqy4zzEJlzmN4LM1viS/prw
+         7/jA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pIbH4SBUTuR0l4tTL7AOxNkBOgGIn/iy+LZnKcqvvgA=;
-        b=QgOtEAVUAmKTNzWGq5QZIZkeFnia8T6EpvDOjhN3xSMuSq6iqwPE+v6CRDw8dKPE3R
-         a05YJIt5zHMRYelGVq+42VfLLs2ikTO3Jg+7dOkTe5hKhK7qjxh7dVCfoNTcKshKuIsR
-         XdWPefH1er9MfhpZqVRqQd3xcBL6eKug+5Pebzxvt7WbPMNmoks4yb9/pmO1IUHHOAjF
-         A51wTXfro4Cx6y4GShwz2EEYrJiYTXelj1i6YtF8pLoVyxUWDCR6dwer5d7cTLXdF/4J
-         ksYVj93Aim6jnB6dkmMGcP0k6SgaXMRQrZyhSbOmgUpRQg2RoMADGSvK7K92AZ93ims1
-         ptBg==
-X-Gm-Message-State: AOAM530f2r+FuGHHCJMlUXDFNmFma3JGa5VPYcoBq2tKOWwSLxjgD15A
-        5X9KTjWcY2Two4B+dmfXmbyUIQMyCl/cmNaSl77XMg==
-X-Google-Smtp-Source: ABdhPJySShxGp6YbFcUrtOlrqvy9G7/3hwoav4HzaV1/xvWq/Hhe1DphVlmvTcYd4WCYYxbQtiCJBZEzhnGMkyZPWCE=
-X-Received: by 2002:a17:907:6289:: with SMTP id nd9mr14700005ejc.101.1639645349406;
- Thu, 16 Dec 2021 01:02:29 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0bBmUzm0as3OLbndyFlyofK8xxLs8ALB2oAWJJxPOhE=;
+        b=FbjqsJM0BZrIU3/qbrf1hcE+EhRLzfjpj8s7Bvoj0JIBnrBsbsRFNN8BGotnxs9fyA
+         lrkS+q2f2mxVYH3XJO3ouyauoi2TDH9G+EvS9WjSd86fGcQ4WExK0S7Af70PIgxs9QNj
+         FVeamwfHHgDkecLyjnbMuhSfgjhZ7rgOqMIpwXCcWPvFI8gdx1f3Ud49cl0orisir3k7
+         gOENTWKBQ/avVBpe4eKA9+e0byDRNqaMojVdEJGnQu132pR3Kiyf+DW7pKzv//Pb/Clu
+         CDQpCpK+nyCDxCqzfC9E2BVSki2sUc6N9g1YI8S0fhEKb4hfd6BqeIg6ovUV/9TOedIH
+         p7Aw==
+X-Gm-Message-State: AOAM533Yj8JNMlnZ1iSoYI3jdqT1EcB+bz6GxVzWCHxjA4fU8cCYpIC0
+        j2E6JGC99CnPefVd3tdY/j1UQQ==
+X-Google-Smtp-Source: ABdhPJzWhW2mHVViWXQ4Bb/vYvLOGowYzSqqm8m7PVmSAL3Z2ap/hIBsiBQ8y7oR4K2x398UIMxDPQ==
+X-Received: by 2002:a17:902:6b05:b0:148:a2e8:27a6 with SMTP id o5-20020a1709026b0500b00148a2e827a6mr8460721plk.173.1639645890165;
+        Thu, 16 Dec 2021 01:11:30 -0800 (PST)
+Received: from localhost ([106.201.42.111])
+        by smtp.gmail.com with ESMTPSA id y126sm4986250pfy.40.2021.12.16.01.11.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Dec 2021 01:11:29 -0800 (PST)
+Date:   Thu, 16 Dec 2021 14:41:27 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Gerard Ryan <g.m0n3y.2503@gmail.com>
+Cc:     linux-gpio@vger.kernel.org
+Subject: Re: [libgpiod] Generated Rust lang bindings
+Message-ID: <20211216091127.qg6qqqq4angmiryw@vireshk-i7>
+References: <CAKycSdDMxfto6oTqt06TbJxXY=S7p_gtEXWDQv8mz0d9zt3Gvw@mail.gmail.com>
 MIME-Version: 1.0
-References: <adc9d6a4-5cab-d8c1-a7bc-d9edc673e4b9@axentia.se>
-In-Reply-To: <adc9d6a4-5cab-d8c1-a7bc-d9edc673e4b9@axentia.se>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 16 Dec 2021 10:02:18 +0100
-Message-ID: <CAMRc=MeukM8-1P6t9LBgjs9VEQ8JhqNyUVAiZ1yaALsPSxSUTQ@mail.gmail.com>
-Subject: Re: [PATCH v2] gpiolib: allow line names from device props to
- override driver names
-To:     Peter Rosin <peda@axentia.se>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Alexander Dahl <ada@thorsis.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKycSdDMxfto6oTqt06TbJxXY=S7p_gtEXWDQv8mz0d9zt3Gvw@mail.gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Dec 14, 2021 at 11:00 PM Peter Rosin <peda@axentia.se> wrote:
->
-> Some GPIO providers set names for GPIO lines that match the names of
-> the pins on the SoC, or variations on that theme. These names are
-> generic more often that not, such as pioC12 in the at91 case. These
-> generic names block the possibility to set more useful GPIO line
-> names with device properties (i.e. gpio-line-names).
->
-> Allow overriding a generic name given by the GPIO driver if there is
-> a name given to the GPIO line using device properties, but leave the
-> generic name alone if no better name is available.
->
-> However, there is a risk. If user space is depending on the above
-> mentioned fixed GPIO names, AND there are device properties that
-> previously did not reach the surface, the name change might cause
-> regressions. But hopefully this stays below the radar...
->
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Tested-by: Alexander Dahl <ada@thorsis.com>
-> Signed-off-by: Peter Rosin <peda@axentia.se>
-> ---
+On 16-12-21, 18:56, Gerard Ryan wrote:
+> Hello,
+> I created a build script to generate rust sys/unsafe bindings to build
+> safe bindings upon.
+> I have not reserved the `libgpiod-sys` or `libgpiod` crate names on
+> crates.io as I figured it'd be easier for someone here to manage the
+> credentials for that.
+> Also, I'm not sure when I'll get time to work on the safe bindings
+> (`libgpiod`) but figured this would be a good starting point.
+> As for licensing, I couldn't find any agreements or preferred
+> licensing for submissions so I submit this under a tentative MIT
+> license.
 
-Applied, thanks!
+Hey,
 
-Bart
+Nice to see someone else looking forward to these as well, please have a look at
+this.
+
+https://lore.kernel.org/all/cover.1638443930.git.viresh.kumar@linaro.org/
+
+-- 
+viresh
