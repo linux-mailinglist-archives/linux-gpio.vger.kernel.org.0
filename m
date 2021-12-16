@@ -2,48 +2,48 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BFEE477646
+	by mail.lfdr.de (Postfix) with ESMTP id C515C477647
 	for <lists+linux-gpio@lfdr.de>; Thu, 16 Dec 2021 16:47:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231948AbhLPPrL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Dec 2021 10:47:11 -0500
-Received: from mga06.intel.com ([134.134.136.31]:42881 "EHLO mga06.intel.com"
+        id S238660AbhLPPrM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Dec 2021 10:47:12 -0500
+Received: from mga09.intel.com ([134.134.136.24]:13547 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238658AbhLPPrL (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        id S238657AbhLPPrL (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
         Thu, 16 Dec 2021 10:47:11 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1639669630; x=1671205630;
+  t=1639669631; x=1671205631;
   h=date:from:to:cc:subject:message-id:mime-version:
    content-transfer-encoding;
-  bh=YK9xlYFFv27EIDqVmb+rsg3WQK4vuCsyGJqEz5/1qAs=;
-  b=hZWWL44r/Mrt+Dcl1k5MCJ9PdsoS/vOnxY5iujYT3bxeisytRUUSqtKW
-   CbPEt8zfdGnwq5yqbRdqYA4emPYYh6TpGmN9540c3gFnq31rwHvh+Feag
-   tJuAG+FFon34ke1m8rgRWwsGdT+v2CrexLjVA6q4V7ENDFhL146/5dCya
-   ZZVAzuKJ5mlFjFpiNEYZMXaGJutpf101bTRGPciIsFkxnWry2H7UFGNBv
-   +FSSFDBwGzex4eLagOFtNLAENqdnS45dJlEvS+015tAqdFqNZLPT6zs18
-   WXLyLjkbgxo1sEHp/hlY2L6EgkF5bTlBIKOCreM3bUnU19TPf9e4YBqT8
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10199"; a="300299588"
+  bh=z2tCPqU7k1RrFA5AatQjWc4srsLqVvJ+knHVgrqrM8o=;
+  b=dREy30f+tK48AAk1tjtG2Yx/QN2GqHs0f3Q3AtI4eEevKpYfnv8buXOS
+   RxN3Z6R2F78mXF9n+RrI/zMocgSja2cJqyJFOjPerxdi5PE3IAaKfjaIE
+   khO+Eokmy9qI05Xj8WBaS0Z5819gaomNMgBDKEnkumdh9RChCIDDC2Vzf
+   7fr7pAcH5fcmK7DjYIAIK0ruIoJ6N+3XitMBHAa1npOwimH44QlDZ69Ax
+   MHoqdmzhDNQWu88jAWzIJFLnGtDscZcBP3TkghVnziR5FLkl9icW8tzt7
+   mnBOnTtkQXF5aFRrBmnQFHoWWsXNAaDxrhd55bw7q4vXRRNKjDv5xh87y
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10199"; a="239335839"
 X-IronPort-AV: E=Sophos;i="5.88,211,1635231600"; 
-   d="scan'208";a="300299588"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2021 07:47:10 -0800
+   d="scan'208";a="239335839"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2021 07:47:10 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,211,1635231600"; 
-   d="scan'208";a="568569953"
+   d="scan'208";a="662487752"
 Received: from lkp-server02.sh.intel.com (HELO 9f38c0981d9f) ([10.239.97.151])
-  by fmsmga008.fm.intel.com with ESMTP; 16 Dec 2021 07:47:09 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 16 Dec 2021 07:47:09 -0800
 Received: from kbuild by 9f38c0981d9f with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1mxsyK-0003On-Bi; Thu, 16 Dec 2021 15:47:08 +0000
-Date:   Thu, 16 Dec 2021 23:46:47 +0800
+        id 1mxsyK-0003Ot-Cp; Thu, 16 Dec 2021 15:47:08 +0000
+Date:   Thu, 16 Dec 2021 23:46:54 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:fixes] BUILD SUCCESS
- b67210cc217f9ca1c576909454d846970c13dfd4
-Message-ID: <61bb5f67.TQjDODy/mnM4Tnjm%lkp@intel.com>
+Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
+ 804f2dbd8c7626bc3c379e19ad5a77e821102d9a
+Message-ID: <61bb5f6e.jOm9wuWUZfb+PPr0%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -52,12 +52,12 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git fixes
-branch HEAD: b67210cc217f9ca1c576909454d846970c13dfd4  pinctrl: stm32: consider the GPIO offset to expose all the GPIO lines
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: 804f2dbd8c7626bc3c379e19ad5a77e821102d9a  Merge branch 'devel' into for-next
 
-elapsed time: 724m
+elapsed time: 723m
 
-configs tested: 144
+configs tested: 141
 configs skipped: 3
 
 The following configs have been built successfully.
@@ -93,11 +93,6 @@ powerpc                 mpc8315_rdb_defconfig
 powerpc                        cell_defconfig
 m68k                        stmark2_defconfig
 sh                          lboxre2_defconfig
-nds32                             allnoconfig
-sh                         microdev_defconfig
-sh                           se7712_defconfig
-i386                                defconfig
-arm                         nhk8815_defconfig
 arm                       omap2plus_defconfig
 sh                          rsk7203_defconfig
 arc                            hsdk_defconfig
@@ -149,6 +144,7 @@ m68k                             allmodconfig
 m68k                                defconfig
 m68k                             allyesconfig
 arc                              allyesconfig
+nds32                             allnoconfig
 nds32                               defconfig
 nios2                            allyesconfig
 csky                                defconfig
@@ -165,6 +161,7 @@ parisc                           allyesconfig
 s390                                defconfig
 i386                             allyesconfig
 sparc                            allyesconfig
+i386                                defconfig
 i386                   debian-10.3-kselftests
 i386                              debian-10.3
 mips                             allyesconfig
