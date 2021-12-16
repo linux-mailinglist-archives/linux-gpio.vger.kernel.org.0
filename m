@@ -2,166 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A5CF447672B
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Dec 2021 02:00:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D08D947683A
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Dec 2021 03:43:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229551AbhLPBA3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Dec 2021 20:00:29 -0500
-Received: from mga14.intel.com ([192.55.52.115]:22823 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229441AbhLPBA3 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 15 Dec 2021 20:00:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1639616429; x=1671152429;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=gN4+d66eBI/gXay2wWeA6BkAs5oa3s8HM8occSuZ8po=;
-  b=ZXxJAlcZr+wr6+qafdLnQzH63QN0mSeQt5bcUcIO92A+sZ8d/jFfBzPT
-   Vj4u2/6BCrrCtKfbzUlXHwy3dN5sIOZcEmJ32doCVHGRRaFOj7pkyHkHn
-   YKs4TKl+5ZI9owj+AdXluAgNIajTHNoxADvCNST4zykn4W1NN0Ka6GDib
-   J41NXZU2khWwTyOtKwHXPHpiA7TB8qLjGCQISimPwv/NzCs76k9gsGByA
-   LLsFdI6RbOhLDCT4M+3c6NaCtqs7vmM/5p3+WsRvEWiXV2I3J8IYCd+qG
-   TJb7z3jGrMTTki6CCIkl64YskwsBPccef1sjjE+9lED83tpQoipzcrVcp
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10199"; a="239594361"
-X-IronPort-AV: E=Sophos;i="5.88,210,1635231600"; 
-   d="scan'208";a="239594361"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2021 17:00:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,210,1635231600"; 
-   d="scan'208";a="545784568"
-Received: from lkp-server02.sh.intel.com (HELO 9f38c0981d9f) ([10.239.97.151])
-  by orsmga001.jf.intel.com with ESMTP; 15 Dec 2021 17:00:25 -0800
-Received: from kbuild by 9f38c0981d9f with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1mxf8D-0002Xr-5A; Thu, 16 Dec 2021 01:00:25 +0000
-Date:   Thu, 16 Dec 2021 09:00:05 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
-Subject: Re: [PATCH] pinctrl: add one more "const" for generic function groups
-Message-ID: <202112160816.btxt2IyR-lkp@intel.com>
-References: <20211215174821.21668-1-zajec5@gmail.com>
+        id S231206AbhLPCng (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Dec 2021 21:43:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51082 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230436AbhLPCnf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Dec 2021 21:43:35 -0500
+Received: from mail-oi1-x22c.google.com (mail-oi1-x22c.google.com [IPv6:2607:f8b0:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ABD8C061574
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Dec 2021 18:43:35 -0800 (PST)
+Received: by mail-oi1-x22c.google.com with SMTP id bk14so34443110oib.7
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Dec 2021 18:43:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SZBQ577Z00Gsm2ELBgWvaGZ7PZo29hRdVb3EOpEKqss=;
+        b=eYYmyBfqnAYpsCbL05z+3k3G5fpCc4Z/EeMS545DBILp9csCvzNnATnPqIYfAIsA1q
+         o/z32a3YKosoDTl6zOn5P4YNabxqk2HrAazzugbLevahDvtQOZlQJYCUxIQ2HzqOYbhN
+         B6uaoUlX8+2BIU1r5fYRWqyTTO60K53uxM/gmmGB+qAt6sG5H6i45RED7qun3fB1pLjj
+         IDabNWFLkpni+lkFUomfbEint9i1AUqmeQEFPhIx1RRMhjj8O7x1EyT2grotjvcQjgIA
+         OAXDTq++AGqZiWfTpiRwT6EMWvM4RRguxMkSNsSdRK/nzbezmjdjXwTZFUFGHK/hNLGG
+         fqXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SZBQ577Z00Gsm2ELBgWvaGZ7PZo29hRdVb3EOpEKqss=;
+        b=ZVQ7SWp+qmxx1oLsDcXbwndO194eoNYRzZxfyZA8U1sBx/EZsNj8xJrkr2pXmpiXuI
+         ifSzNofxB6gyPx2UqkxccrYqcB4MzSVHJw/zJvytiKbLZCJ13WipypNVrdnaEGkVCUkf
+         8y2m6AOmcb4uue9Qs96lJqC0IdfaZUZ2p5atEtK3lqPEL7ypblsEenYi+bkCMmFhL7bq
+         7XzoafLmHtF99yXXOFaXJOTX2zOQC2D3vnrxqTtSaJU2SmaBD6f0r/4NMSTZOhGDivRn
+         CHo9Wqevj9xiqXv0fxlhX5BIOgV7fM/g+lqACJr4K+0iYZXWSebX0ipHfaO8JOCQkTN9
+         bxNA==
+X-Gm-Message-State: AOAM532zkZ3atYGXvDl/2uO/nk3RPRQMI1vqe0T8Ighp1YJ5WZblEYGH
+        h0G7Io0akwfylPwvDSiRhWrBOeRoNdw3Pfvj6F3oNcaveTo=
+X-Google-Smtp-Source: ABdhPJwNJgqrfeC5CN/Gvm+NgkvRXKGZS2NCxanweRecHxOftNdIweNOo08zNh4qiNSFqwGqnz/kOIrsGlbo0tpzaB4=
+X-Received: by 2002:aca:120f:: with SMTP id 15mr2525146ois.132.1639622614228;
+ Wed, 15 Dec 2021 18:43:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211215174821.21668-1-zajec5@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20211206131648.1521868-1-hverkuil-cisco@xs4all.nl> <20211206131648.1521868-3-hverkuil-cisco@xs4all.nl>
+In-Reply-To: <20211206131648.1521868-3-hverkuil-cisco@xs4all.nl>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 16 Dec 2021 03:43:22 +0100
+Message-ID: <CACRpkdbsGekjw78jmR1yy5xRbup3L67Xga12zd1LJiyHmaEs7A@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/3] pinctrl-bcm2835: don't call pinctrl_gpio_direction()
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc:     linux-media@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Maxime Ripard <maxime@cerno.tech>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi "Rafał,
+On Mon, Dec 6, 2021 at 2:16 PM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
 
-I love your patch! Yet something to improve:
+> Set the direction directly without calling pinctrl_gpio_direction().
+> This avoids the mutex_lock() calls in that function, which would
+> invalid the can_sleep = false.
+>
+> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-[auto build test ERROR on linusw-pinctrl/devel]
-[also build test ERROR on v5.16-rc5 next-20211214]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
+Patch applied.
 
-url:    https://github.com/0day-ci/linux/commits/Rafa-Mi-ecki/pinctrl-add-one-more-const-for-generic-function-groups/20211216-014859
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-config: arm64-randconfig-r031-20211215 (https://download.01.org/0day-ci/archive/20211216/202112160816.btxt2IyR-lkp@intel.com/config)
-compiler: clang version 14.0.0 (https://github.com/llvm/llvm-project dd245bab9fbb364faa1581e4f92ba3119a872fba)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # install arm64 cross compiling tool for clang build
-        # apt-get install binutils-aarch64-linux-gnu
-        # https://github.com/0day-ci/linux/commit/e4338a6ad34998afb60c5ad294aafa06cd7110a7
-        git remote add linux-review https://github.com/0day-ci/linux
-        git fetch --no-tags linux-review Rafa-Mi-ecki/pinctrl-add-one-more-const-for-generic-function-groups/20211216-014859
-        git checkout e4338a6ad34998afb60c5ad294aafa06cd7110a7
-        # save the config file to linux build tree
-        mkdir build_dir
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm64 SHELL=/bin/bash drivers/pinctrl/
-
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
-
-All errors (new ones prefixed by >>):
-
->> drivers/pinctrl/pinctrl-keembay.c:1594:8: error: assigning to 'const char **' from 'const char *const *' discards qualifiers [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
-                           grp = func->group_names;
-                               ^ ~~~~~~~~~~~~~~~~~
-   1 error generated.
---
->> drivers/pinctrl/freescale/pinctrl-imx.c:672:24: error: read-only variable is not assignable
-                   func->group_names[i] = child->name;
-                   ~~~~~~~~~~~~~~~~~~~~ ^
-   1 error generated.
-
-
-vim +1594 drivers/pinctrl/pinctrl-keembay.c
-
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1556  
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1557  static int keembay_add_functions(struct keembay_pinctrl *kpc,
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1558  				 struct function_desc *function)
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1559  {
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1560  	unsigned int i;
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1561  
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1562  	/* Assign the groups for each function */
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1563  	for (i = 0; i < kpc->npins; i++) {
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1564  		const struct pinctrl_pin_desc *pdesc = keembay_pins + i;
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1565  		struct keembay_mux_desc *mux = pdesc->drv_data;
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1566  
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1567  		while (mux->name) {
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1568  			struct function_desc *func;
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1569  			const char **grp;
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1570  			size_t grp_size;
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1571  			u32 j, grp_num;
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1572  
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1573  			for (j = 0; j < kpc->nfuncs; j++) {
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1574  				if (!strcmp(mux->name, function[j].name))
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1575  					break;
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1576  			}
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1577  
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1578  			if (j == kpc->nfuncs)
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1579  				return -EINVAL;
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1580  
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1581  			func = function + j;
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1582  			grp_num = func->num_group_names;
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1583  			grp_size = sizeof(*func->group_names);
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1584  
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1585  			if (!func->group_names) {
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1586  				func->group_names = devm_kcalloc(kpc->dev,
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1587  								 grp_num,
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1588  								 grp_size,
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1589  								 GFP_KERNEL);
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1590  				if (!func->group_names)
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1591  					return -ENOMEM;
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1592  			}
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1593  
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06 @1594  			grp = func->group_names;
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1595  			while (*grp)
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1596  				grp++;
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1597  
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1598  			*grp = pdesc->name;
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1599  			mux++;
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1600  		}
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1601  	}
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1602  
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1603  	/* Add all functions */
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1604  	for (i = 0; i < kpc->nfuncs; i++) {
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1605  		pinmux_generic_add_function(kpc->pctrl,
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1606  					    function[i].name,
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1607  					    function[i].group_names,
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1608  					    function[i].num_group_names,
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1609  					    function[i].data);
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1610  	}
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1611  
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1612  	return 0;
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1613  }
-ffd4e739358be0 Lakshmi Sowjanya D 2021-08-06  1614  
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Yours,
+Linus Walleij
