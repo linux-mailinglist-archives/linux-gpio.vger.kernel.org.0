@@ -2,75 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A9E3247689F
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Dec 2021 04:21:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B63904768AE
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Dec 2021 04:28:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230323AbhLPDVR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 15 Dec 2021 22:21:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59482 "EHLO
+        id S233362AbhLPD12 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 15 Dec 2021 22:27:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230317AbhLPDVR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Dec 2021 22:21:17 -0500
-Received: from mail-oi1-x22e.google.com (mail-oi1-x22e.google.com [IPv6:2607:f8b0:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 365A9C061574
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Dec 2021 19:21:17 -0800 (PST)
-Received: by mail-oi1-x22e.google.com with SMTP id t23so34558398oiw.3
-        for <linux-gpio@vger.kernel.org>; Wed, 15 Dec 2021 19:21:17 -0800 (PST)
+        with ESMTP id S233350AbhLPD12 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 15 Dec 2021 22:27:28 -0500
+Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97FB4C06173E
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Dec 2021 19:27:27 -0800 (PST)
+Received: by mail-ot1-x329.google.com with SMTP id n104-20020a9d2071000000b005799790cf0bso27411117ota.5
+        for <linux-gpio@vger.kernel.org>; Wed, 15 Dec 2021 19:27:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=4nk6Vi4dum4Dtr6XVy2PhW6mJaB72PkT9o/OF4tXf5k=;
-        b=uRUJvPuBzEN+FbXDTj7efDN+fSRp0Y6PhdoPNZ7UyT6TkQ1wCdOJCZs52w9qpX9To9
-         MKPmH74jSbKjD3vlQvJaBVi22R2WIxp2VsTztsksXNM/q+A6KBVGyvWIw+Cm8b1wJz18
-         8FGasmkG9+uj6fL5CLJXo9IfM5N7aOAUoocxJ8LFnHG0cyHMpMAO99w7Sroz1zlfVZbi
-         aMd+ttMRq3NMDkCZ/G6HZXfQCTbaIdEQjx9kOWl/bMddJ65DpFEJsJpAXCI0n7LLquya
-         6+9ZIYwhFNT1It9nR0X5CMnqmeSKEALoAKtM2XbASHu3BcZvioR4Ma/JsrTdpDZBFycl
-         iB7g==
+        bh=OGfCOgui3LtT3q9T9qzB90ie9BosBfXB2FplBkH2YpE=;
+        b=XB9wS+80fk8mU4DcQIMnqW/vt25+UQifdFJ/WVgs8XMWMXaVLax8S3Q1+dBV6KKFyn
+         8NvPf+B4hBTFTAGJGB41Z76M/T35QwVBiB5eEit9f0d3CWeJ8lLtJrL0L4m6sYgW7ZEW
+         2snX/KTc3kP3B0Ww1lIoef1e9lVHM+M6Yf5Ihx2LJ249dfxp00ovXe2dC6S2ssTxiF4J
+         EEt5PXxBitZJbskSFOIPguOYV+wvq7kCywpE1i2MRShhnIYUyFOYsVRsz9AAAoyZ+jB5
+         328yh2HWdKBEtIzuDDfivjNKPrSAaQ3aOdFPxmIUZJg6ixwseQDU71jOPLJ8IJykRCId
+         M/CA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=4nk6Vi4dum4Dtr6XVy2PhW6mJaB72PkT9o/OF4tXf5k=;
-        b=Dak7EBcZsX57375mWGBIEaeOLmOh7WUgkEJcIFFgI7dRch4jjDDRwWE89AzssVq5mk
-         w4tIAdEu8Xoexi+T2aZiN3mHlJDpkT7KI86E/24LXWO0qLllrCt6g4Q4IYS1CINMHCzR
-         AlzV8xj8fOjR63R4CLoEMHVQ0vLC+Hvcy8MY6Hywonv3APBbOI4t7IVLGjZn7+NVdwB9
-         0azV/w2kIGEsWJCGn61g+CHflYTkzDhLIWBvdWxdkBrzAtEDDryFDZTkTecKyIZ7cWCT
-         BsFRGxDPPjYLiXs/Xuc/K+1SRN0xavAgniqhLr4Wl6LMQNCOd+ZTxvQ9FdTBjO2MYU/v
-         8OLQ==
-X-Gm-Message-State: AOAM531t+3rY79ADHbtTZyCTDH0Vvr+o4Co1CpekVpqPcXHccZ0iiod+
-        fq+GqekXyRdBb/I3EGY6gHl6+CKlbzEguQButrHWOA==
-X-Google-Smtp-Source: ABdhPJxBG6G4ao7iRohWTlpEgDPSWWAp/AkOD0Tws/Zp6khRVkKS8EsKYwo5lMd8bkgOSbHWx82f97v1hO5QqDQfvsM=
-X-Received: by 2002:aca:120f:: with SMTP id 15mr2614105ois.132.1639624876611;
- Wed, 15 Dec 2021 19:21:16 -0800 (PST)
+        bh=OGfCOgui3LtT3q9T9qzB90ie9BosBfXB2FplBkH2YpE=;
+        b=I2Eh3WhoKJo0H93d765p5bKA9Yx0bUQsQlDUP4e3WvYIOo7RbqFnHiBQO9LlQlU8JD
+         y5/eHfacvXLmdB1qe72xuVcHxzJ/UasE6afFCLd8f1gLK1vefzyABR9EGK96SR7siUsB
+         KZ9k0Hr5nZPAZW4UVmFPGJumnorYIChhM/ao5GWQcGmcJ16ecMaBH0ThcPuTAdfdtrH6
+         yvakBuG+S+TGw2l3mux9xwj0GF006oDHEGBZnwXgqSixYz0CgW7yqj4Ibhl8bFI38ms7
+         DDyws0eDUr2a9IgsDuU69zS+I9mSf2IdqQ28Kq8j2ZMzIgN+PhcNMGKUtzmI+klIfA5F
+         Rbww==
+X-Gm-Message-State: AOAM5314V5zQTiT50S+Z4aNSJjzqemO4XFtp1myN2RVzZylkyrjl7oCP
+        Y6Ff0HzOoV7YI+5eZvhmQgqQyw8ZjyLXOUMj0oFFqA==
+X-Google-Smtp-Source: ABdhPJx/CxbB6ZeC0jtuzDlfsovBMgCah7FzcAPML1ZZCB/vj5gGvCvDQy0S/JfsqKSxR6d1/cksM1SJsu14tmfKzDw=
+X-Received: by 2002:a9d:a42:: with SMTP id 60mr11514782otg.179.1639625246983;
+ Wed, 15 Dec 2021 19:27:26 -0800 (PST)
 MIME-Version: 1.0
-References: <YboONMsLk8eUlvYD@black.fi.intel.com>
-In-Reply-To: <YboONMsLk8eUlvYD@black.fi.intel.com>
+References: <20211206092237.4105895-1-phil@raspberrypi.com>
+ <20211206092237.4105895-3-phil@raspberrypi.com> <CGME20211214142139eucas1p1c100b7fd4b8c8ce85bc03e1ce6b783db@eucas1p1.samsung.com>
+ <8671ebd8-a853-7394-9864-0457514337e2@samsung.com> <2ce5956f-ce8c-80f0-df9a-492a8da00a08@raspberrypi.com>
+ <dbba6665-9688-9a5e-091b-eaa8e92e6886@gmail.com> <83bda801c9be665086f94acce46d44da5d24ba9c.camel@kernel.org>
+ <45fa0de1-c2be-84dd-782e-184ab608895f@gmail.com>
+In-Reply-To: <45fa0de1-c2be-84dd-782e-184ab608895f@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 Dec 2021 04:21:05 +0100
-Message-ID: <CACRpkdZwJvZZ6pRg9PLFU8-71TwTGHtCsY_12Mjz67wqY83TaQ@mail.gmail.com>
-Subject: Re: [GIT PULL] intel-pinctrl for 5.17-3
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linux pin control <linux-gpio@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
+Date:   Thu, 16 Dec 2021 04:27:14 +0100
+Message-ID: <CACRpkdbyi4QrHXpPaZvPaZZhuO0-iMwTi=UmVHy5XagSFqJnzQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] ARM: dts: gpio-ranges property is now required
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     nicolas saenz julienne <nsaenz@kernel.org>,
+        Phil Elwell <phil@raspberrypi.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Thierry Reding <treding@nvidia.com>,
+        devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Dec 15, 2021 at 4:48 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Wed, Dec 15, 2021 at 6:14 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+> On 12/15/21 1:02 AM, nicolas saenz julienne wrote:
 
-> Hi Linux pin control  maintainers,
+> > As for channeling the path, would it make sense for linusw to take it alonside
+> > GPIO fix?
 >
-> Second part of the Intel pin control drivers PR for v5.17. It has been a while
-> in the Linux Next without any errors reported.
->
-> Note, the List of changes done against upstream that's why it has all changes
-> listed, including the pulled ones. Nevertheless, tag describes the latest delta.
+> That would definitively work, Linus, are you comfortable with doing
+> that? I will reply to the patch with an Acked-by if that helps.
 
-Pulled in!
-Thanks a lot Andy!
+Do you want me to merge this patch (2/2) into the pinctrl tree,
+where patch (1/2) is already merged?
+
+Sorry just a bit confused.
 
 Yours,
 Linus Walleij
