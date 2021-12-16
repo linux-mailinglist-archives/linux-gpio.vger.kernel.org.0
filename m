@@ -2,89 +2,159 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D415B477D9F
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Dec 2021 21:31:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EAED1477E86
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Dec 2021 22:14:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241310AbhLPUbr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Dec 2021 15:31:47 -0500
-Received: from mail-ot1-f44.google.com ([209.85.210.44]:46826 "EHLO
-        mail-ot1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236123AbhLPUbr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Dec 2021 15:31:47 -0500
-Received: by mail-ot1-f44.google.com with SMTP id x3-20020a05683000c300b0057a5318c517so282985oto.13;
-        Thu, 16 Dec 2021 12:31:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/WZk6rTknr9ohPbMfgyEB9lTmn2kskX3wnXdJpxoO54=;
-        b=xxDciDiEjcMe8H0Qqc3ZRcX3iRQvIYBqjSdJMgEJXfQKSK9Bh15tLHWEDSgl/HCnsO
-         I1YfQYTtKZxxq/Inq3LEr8QSY9tZI4GqlxbeEDXF+VNm0j2cVWHYh2kA/Jgnshe+jqho
-         zEe2J6zp2QV546JTofpV9vsXkcnqYVX5z4CGMG+f8H/S7er8v0wstXxBoHLMhEYJzKLf
-         f83mxEOny7CDjhjndETGnMpX9T/ftj/tyqIuI+ipbOZBykUytfAEYu6eLlc2KuMq2Yfh
-         TgXdZY8BSpENfFYD3eznYnMejvEPiW9EXQmFagXkNBmklyB1HHB3sOC4eh25+ooME83O
-         M9ew==
-X-Gm-Message-State: AOAM5334PaleF3liw6iTMRm4n0N8NlXHYz7Q/T7d40BwmTQhZr1l4Non
-        Etmnh99UQyBfGXM7RnlYwg==
-X-Google-Smtp-Source: ABdhPJxolUuSHrXvVWwD1DwilZGwq7k1Tjchu9lac4l0lol5CTbTY9vjTqv4KL+RF7m1rNgxNg36Gg==
-X-Received: by 2002:a05:6830:1617:: with SMTP id g23mr13541257otr.117.1639686706300;
-        Thu, 16 Dec 2021 12:31:46 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id d12sm1196566otq.67.2021.12.16.12.31.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Dec 2021 12:31:45 -0800 (PST)
-Received: (nullmailer pid 705688 invoked by uid 1000);
-        Thu, 16 Dec 2021 20:31:44 -0000
-Date:   Thu, 16 Dec 2021 14:31:44 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jesse Taube <mr.bossman075@gmail.com>
-Cc:     nobuhiro1.iwamatsu@toshiba.co.jp, abel.vesa@nxp.com,
-        ulf.hansson@linaro.org, stefan@agner.ch, sboyd@kernel.org,
-        soc@kernel.org, linux-serial@vger.kernel.org,
-        adrian.hunter@intel.com, aisheng.dong@nxp.com,
-        linux@armlinux.org.uk, shawnguo@kernel.org,
-        giulio.benetti@benettiengineering.com,
-        linux-kernel@vger.kernel.org, s.hauer@pengutronix.de,
-        gregkh@linuxfoundation.org, kernel@pengutronix.de,
-        robh+dt@kernel.org, mturquette@baylibre.com,
-        linux-mmc@vger.kernel.org, Mr.Bossman075@gmail.com, olof@lixom.net,
-        linus.walleij@linaro.org, jirislaby@kernel.org,
-        devicetree@vger.kernel.org, festevam@gmail.com,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
-        arnd@arndb.de
-Subject: Re: [PATCH v5 6/9] dt-bindings: serial: fsl-lpuart: add i.MXRT1050
- compatible
-Message-ID: <YbuiMIfmBGIc/vao@robh.at.kernel.org>
-References: <20211215220538.4180616-1-Mr.Bossman075@gmail.com>
- <20211215220538.4180616-7-Mr.Bossman075@gmail.com>
+        id S231650AbhLPVOT convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 16 Dec 2021 16:14:19 -0500
+Received: from mout.kundenserver.de ([212.227.126.133]:54953 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229818AbhLPVOS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Dec 2021 16:14:18 -0500
+Received: from mail-wr1-f51.google.com ([209.85.221.51]) by
+ mrelayeu.kundenserver.de (mreue011 [213.165.67.97]) with ESMTPSA (Nemesis) id
+ 1MpUIW-1mAIuo1K1s-00pt2F; Thu, 16 Dec 2021 22:14:14 +0100
+Received: by mail-wr1-f51.google.com with SMTP id u17so371147wrt.3;
+        Thu, 16 Dec 2021 13:14:14 -0800 (PST)
+X-Gm-Message-State: AOAM530PkeRe7zhgh9Vlocxcwd5jIJhdtIs1chKw1wQHdBotE+eFAsKN
+        E6INXH95RVH0wUcvICfb+SJeGRVPxAR2uuHG9HY=
+X-Google-Smtp-Source: ABdhPJx5ftEfPH4qvIzikYkTAI2QfNEBmismxp18qt3xtWOd9p6RwUc2SZYuv+4lj5MKuQ7wJcPfZffT71zk71LPRZ8=
+X-Received: by 2002:a05:6000:1aca:: with SMTP id i10mr10867640wry.407.1639689253768;
+ Thu, 16 Dec 2021 13:14:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211215220538.4180616-7-Mr.Bossman075@gmail.com>
+References: <20211215220538.4180616-1-Mr.Bossman075@gmail.com>
+ <CAK8P3a29tzgd_4WncippZBEJra9n0bQTysBkPBp_WA0sb28gTg@mail.gmail.com> <1360c4fe-4a09-a8a1-3224-7f1d4af59f6f@benettiengineering.com>
+In-Reply-To: <1360c4fe-4a09-a8a1-3224-7f1d4af59f6f@benettiengineering.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 16 Dec 2021 22:13:57 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1oZK1qMRBE3D8otCTY6Lg4jMXxVpAZHQzLTA8woA3_UQ@mail.gmail.com>
+Message-ID: <CAK8P3a1oZK1qMRBE3D8otCTY6Lg4jMXxVpAZHQzLTA8woA3_UQ@mail.gmail.com>
+Subject: Re: [RESEND in plain-test] Re: [PATCH v5 0/9] Add initial support for
+ the i.MXRTxxxx SoC family starting from i.IMXRT1050 SoC.
+To:     Giulio Benetti <giulio.benetti@benettiengineering.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Jesse Taube <mr.bossman075@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        gregkh <gregkh@linuxfoundation.org>,
+        Olof Johansson <olof@lixom.net>, SoC Team <soc@kernel.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Vladimir Murzin <vladimir.murzin@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:jLcfKWuFEKdB88gRT6zG+WNsy+2D4zMGcg9vmzSiKMpG4GXwiHA
+ TZ3Mod5cZQg9ulqi6UikNcrt3jaz1VE+NWg4wqwrTHPpjw0c6kkKEO11y3p2tcAj8fbzPRZ
+ yRH+Z+gDtqDy16EgfNJc1Cz7xLy9taRKNvTbR14ZrJrk8+/Dc3TNL+kTIEarR5LENeKDMuE
+ k7Gl/EGFBNgEmg3ndaWxQ==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Z/D4V6ISYL4=:swO45RG2EqZcuUukJekSUQ
+ ZCPRAjKX7GuMlkxZdBlPUxtXKnqYmJYkIYAjnemcueOrpTKtEh0xwApd+O4q1XrMsx/vTYU+j
+ WUeAf59gRSlIn/J4O0o6iW1QAwuKDH+K4NOD/alhj7/g2UZxs9QEeW/kx6CDpOT8RUNneiP7X
+ maTFLoumWOXvRhRgPQxC109YEtPGQ7ABThgDaxTeJ7AjqQV2GA45Gtb5Of2rzEN8yOHkp9WJC
+ EFyn59AUyJx82p+arn6cbwNUaRMKoHxy+Mfjoc43jAsjLC5a5mxw8DL986mtlNKt2BfUaZHyb
+ Yf6WEOZClGTDYG9gtO4XudZw9vOcDTiw5SfHKZhYmd5PpW3hsaAxdINlqnCxgZ5h+ybYD1lQ7
+ V+BWjLzfxDAyT+OcZuHrau+R3L2M+t3RsGZyzCRVoEFP21ubA1R5B1HTbPCZJzaxSrD5eWOcO
+ XbIUfV6Aq7Nrp6ffXVGw0HKB3QuP/ldQfsihvjSiZdVmufpGK4RT7d4pxHw13WBkSpRdJBLJY
+ onG6zFCoUt25pWYVpv9TfWPd0RTDIbdYWJ+E/ko0Xl7e++cjBOT+3MEApGSOX6DGFFE0bOlWr
+ r3VrGLRnNyG2G9PvObId3SMOcCnUZiOImcnO8N+xJJ9NMGPIEwmQlE4LZupP4G7YYvs1oZlup
+ z8/4vax5s1BpCj4G40rYaGM2eb2A1lJrb5UL0IQBATLkRqyVPQcXLsQ4r/YPoGmMTk0JTAR2N
+ QraYHtKXw8kEDmD1CHoOzFjZ7Yi106LGkBKKalTUCiGI7aAMMFrZNkH+boqUlMwJKS7vQxKOE
+ wPzvxJ8K7Nu+Gd8MdMPoKN7tyUassekAK+XRq8GzHmAdGfFcTs=
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 15 Dec 2021 17:05:35 -0500, Jesse Taube wrote:
-> From: Jesse Taube <mr.bossman075@gmail.com>
-> 
-> Add i.MXRT1050 documentation for compatible string.
-> 
-> Cc: Giulio Benetti <giulio.benetti@benettiengineering.com>
-> Signed-off-by: Jesse Taube <Mr.Bossman075@gmail.com>
-> ---
-> V1->V2:
-> * Nothing done
-> V2->V3:
-> * Rename imxrt to imxrt1050
-> V3->V4:
-> * Nothing done
-> V4->V5:
-> * Change commit description to just 1050
-> ---
->  Documentation/devicetree/bindings/serial/fsl-lpuart.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
+On Thu, Dec 16, 2021 at 6:33 PM Giulio Benetti
+<giulio.benetti@benettiengineering.com> wrote:
+> On 16/12/21 09:26, Arnd Bergmann wrote:
+> > On Wed, Dec 15, 2021 at 11:05 PM Jesse Taube <mr.bossman075@gmail.com> wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> > As a more general comment, it's always nice to see newly added SoC
+> > platforms, especially when they are this well implemented and done
+> > by hobbyists. However, I do think you are being overly optimistic
+> > as to how useful this is going to be to other people: interest in NOMMU
+> > ARM platforms has dropped a lot over the past 5 years, and as far as I
+> > can tell, it is only being kept alive for existing stm32 customers
+> > as the economics do not favor Linux on Cortex-M for new products
+> > compare to Linux on Cortex-A or some RTOS on Cortex-M.
+> >
+> > The existing users will inevitably stop updating their kernels at some
+> > point, and then it's most likely just you and Vladimir Murzin that care.
+>
+>
+> About this will you accept support for the other SoCs in the family?
+> We would like to add in the near future:
+> - i.MXRT1020(uboot support is already upstreamed)
+> - i.MXRT1024(almost equal to 1020)
+> - i.MXRT1060(almost equal to 1050)
+> - i.MXRT1064(almost equal to 1060)
+> And
+> - i.MXRT1160/70 new family with faster core clock(1Ghz) and a cortex M4
+>
+> We need to add missing lcd(uboot upstreamed), usb(uboot upstreamed),
+> ethernet(wip) supports for i.MXRT10xx family.
+
+Sure, anything you want to work on supporting can be added to the kernel,
+the important bit is that it's well written and can be maintained going forward.
+
+My best guess is that we'll end up ripping out all NOMMU support in
+a few years, when we get to a point when both of these things happen:
+
+- the number of actual users that still update their kernels becomes
+  really low
+
+- There is some treewide refactoring that isn't easily supportable without an
+   MMU unless someone puts extra work into it.
+
+At the moment, we still support NOMMU kernels on a bunch of architectures
+(Arm, riscv/k210, sh/j2, m68k/coldfire, xtensa and h8300). Out of these,
+Arm is by far the most active, and if Arm NOMMU support was to go away
+for some reason, the others would likely follow.
+
+> This is to organize with Jesse also about buying evaluation boards and
+> timing.
+>
+> We’ve meant this porting also as an exercise to deal with Linux deeper
+> for us and for the other newbies.
+>
+> We’ve been also asked about a possible support for s32s(quad cortex-R52)
+> on initial emails but it has no mmu too.
+> While I’m seeing that some cortex-R is landing inside Linux.
+> Would it be interesting anyway?
+
+I brought that up during the initial review, but I think this is even
+less interesting
+than Cortex-M support from the perspective of potential use cases. While
+Cortex-M MCUs have some advantages over larger SoCs in terms of
+power consumption and cost, this is generally not true for running Linux
+on Cortex-R. The Cortex-R and Cortex-A cores are closely related, so
+they tend have similar power/performance/area characteristics, but
+the lack of an MMU makes the Cortex-R much less useful. If there was
+an advantage to running with the MMU disabled, you could actually do that
+on a Cortex-A as well, but clearly nobody does that either.
+
+Vladimir has put some work into making Cortex-R work in the kernel, and
+he may have some other thoughts on this question.
+
+          Arnd
