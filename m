@@ -2,212 +2,178 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E82F4477645
-	for <lists+linux-gpio@lfdr.de>; Thu, 16 Dec 2021 16:47:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A88F47766B
+	for <lists+linux-gpio@lfdr.de>; Thu, 16 Dec 2021 16:58:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238659AbhLPPrL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Dec 2021 10:47:11 -0500
-Received: from mga01.intel.com ([192.55.52.88]:30671 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231948AbhLPPrK (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 16 Dec 2021 10:47:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1639669630; x=1671205630;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=PFX1t+eaNeaXk/Y4FntkqtZGDGWwD6Z92KBbhmnNAqs=;
-  b=Q7v+LAo3g+oQ5Rd/XfGC6lGKvwAvXSW3qdYatMli6GNozzl0U9frFXks
-   yzHgKyt2BLvXx76kAtbfzlLkRB/GGItXO7FD1vr/yJi7F4rp8IRRfeqng
-   IdD8Y0QAycF6I6R7JzAAhLfKHvcrIMhj8wZgAuCbnCx673UXWi5oMUW0d
-   zOxhPj6Zb6+sZm4cmine94NBTWGxq9rVOk5H5rIerYlCJrPq6V2I78/hI
-   f6BjpnG0ibTaHZfmvSBdXcKU9F7J/LVAj09CQM1c+nM2eWHdJgUp0Glzq
-   840wT3yiTwOx8t8j7u9w+dEsS+CE/fUi3mFqBnm3evkv+Hg3FiBI9RXdV
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10199"; a="263687464"
-X-IronPort-AV: E=Sophos;i="5.88,211,1635231600"; 
-   d="scan'208";a="263687464"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2021 07:47:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,211,1635231600"; 
-   d="scan'208";a="546025625"
-Received: from lkp-server02.sh.intel.com (HELO 9f38c0981d9f) ([10.239.97.151])
-  by orsmga001.jf.intel.com with ESMTP; 16 Dec 2021 07:47:08 -0800
-Received: from kbuild by 9f38c0981d9f with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1mxsyK-0003Ok-Ac; Thu, 16 Dec 2021 15:47:08 +0000
-Date:   Thu, 16 Dec 2021 23:46:58 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD SUCCESS
- e8f24c58d1b69ecf410a673c22f546dc732bb879
-Message-ID: <61bb5f72.W/8rF5L0J6AUnOVB%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S232940AbhLPP6I (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Dec 2021 10:58:08 -0500
+Received: from mail-oi1-f169.google.com ([209.85.167.169]:38501 "EHLO
+        mail-oi1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230358AbhLPP6I (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Dec 2021 10:58:08 -0500
+Received: by mail-oi1-f169.google.com with SMTP id r26so37017582oiw.5;
+        Thu, 16 Dec 2021 07:58:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+fzbfD0CHCHcZI8DY35QBo25aGSKtXHSKqSLSMk0x8w=;
+        b=uc7xpUmocjS3gvRMwY9H5w7HnnYfokVjLuAIUPyVuFBT1u+XCd8oqzYaC2JLQdioEs
+         lhDy9KEIAeCeGOTxetg/NL/iWTsHNDjokcJVD1fy4QNwGwgdj+m1lobQW0XNJS5ZcycM
+         qKYIXnFvv/VycfmwIUo8XhLQQ1m+BTT1Jrr2uUvrieoZOZzCgOLArW/tjVgjA0uPIwmo
+         Kirx83pn6WNiyAWXWUp3UEI/1qPH93tH9FAFkbIdWVKaC1n2RI2Qb2vf/5PPFsjaWbri
+         SzpT4nQvCOQe4wrSuA4ESyDIJXav27ZSCCFN+rLN6qTReNqEMClUy82sQr0qhJno93UT
+         XEYQ==
+X-Gm-Message-State: AOAM5337I1duHd2B3VX9BzK8Io89EPaev/KSlen1eVpVH/4C3sbOfaSo
+        eBGkZLCzElNZkk3mCWw31Q==
+X-Google-Smtp-Source: ABdhPJwR/W9c0idlUUFwTUnVK1aHR+vR6mP87PEAo+XWvtX5jqFfuKZ69KQePrNkBHEO052l92GdjA==
+X-Received: by 2002:a05:6808:15a:: with SMTP id h26mr4515968oie.123.1639670287583;
+        Thu, 16 Dec 2021 07:58:07 -0800 (PST)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id e14sm1027527oie.7.2021.12.16.07.58.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Dec 2021 07:58:06 -0800 (PST)
+Received: (nullmailer pid 293314 invoked by uid 1000);
+        Thu, 16 Dec 2021 15:58:05 -0000
+Date:   Thu, 16 Dec 2021 09:58:05 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jesse Taube <mr.bossman075@gmail.com>
+Cc:     linux-imx@nxp.com, mturquette@baylibre.com, sboyd@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, ulf.hansson@linaro.org, aisheng.dong@nxp.com,
+        stefan@agner.ch, linus.walleij@linaro.org,
+        gregkh@linuxfoundation.org, arnd@arndb.de, olof@lixom.net,
+        soc@kernel.org, linux@armlinux.org.uk, abel.vesa@nxp.com,
+        adrian.hunter@intel.com, jirislaby@kernel.org,
+        giulio.benetti@benettiengineering.com,
+        nobuhiro1.iwamatsu@toshiba.co.jp, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: Re: [PATCH v5 4/9] dt-bindings: clock: imx: Add documentation for
+ i.MXRT1050 clock
+Message-ID: <YbtiDa3CpVmiCkto@robh.at.kernel.org>
+References: <20211215220538.4180616-1-Mr.Bossman075@gmail.com>
+ <20211215220538.4180616-5-Mr.Bossman075@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20211215220538.4180616-5-Mr.Bossman075@gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: e8f24c58d1b69ecf410a673c22f546dc732bb879  ARM: dts: gpio-ranges property is now required
+On Wed, Dec 15, 2021 at 05:05:33PM -0500, Jesse Taube wrote:
+> From: Jesse Taube <mr.bossman075@gmail.com>
+> 
+> Add DT binding documentation for i.MXRT1050 clock driver.
+> 
+> Cc: Giulio Benetti <giulio.benetti@benettiengineering.com>
+> Signed-off-by: Jesse Taube <Mr.Bossman075@gmail.com>
+> ---
+> V1->V2:
+> * Replace macros with values
+> V2->V3:
+> * Remove anatop
+> * Use lpuart not gpt
+> * include imxrt1050-clock.h
+> * 2 space tabs to 4
+> * Remove oneOf enum
+> * Change maxItems to 2
+> V3->V4:
+> * Nothing done
+> V4->V5:
+> * Remove extra newline
+> * Rename ccm to clock-controller
+> * Change minItems to const
+> * Change minItems to description
+> * Rename file to add 1050
+> * Change commit description to just 1050
+> ---
+>  .../bindings/clock/imxrt1050-clock.yaml       | 66 +++++++++++++++++++
+>  1 file changed, 66 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/imxrt1050-clock.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/imxrt1050-clock.yaml b/Documentation/devicetree/bindings/clock/imxrt1050-clock.yaml
+> new file mode 100644
+> index 000000000000..8caf0572733b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/imxrt1050-clock.yaml
+> @@ -0,0 +1,66 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/imxrt1050-clock.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Clock bindings for Freescale i.MXRT
+> +
+> +maintainers:
+> +  - Giulio Benetti <giulio.benetti@benettiengineering.com>
+> +  - Jesse Taube <Mr.Bossman075@gmail.com>
+> +
+> +description: |
+> +  The clock consumer should specify the desired clock by having the clock
+> +  ID in its "clocks" phandle cell. See include/dt-bindings/clock/imxrt*-clock.h
+> +  for the full list of i.MXRT clock IDs.
+> +
+> +properties:
+> +  compatible:
+> +    const: fsl,imxrt1050-ccm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 2
+> +
+> +  clocks:
+> +    description: 24m osc
 
-elapsed time: 724m
+maxItems: 1
 
-configs tested: 141
-configs skipped: 3
+With that,
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                 randconfig-c001-20211216
-mips                             allyesconfig
-um                             i386_defconfig
-mips                             allmodconfig
-riscv                            allmodconfig
-um                           x86_64_defconfig
-riscv                            allyesconfig
-m68k                          hp300_defconfig
-arm                        clps711x_defconfig
-arc                    vdk_hs38_smp_defconfig
-powerpc                     tqm8540_defconfig
-mips                        workpad_defconfig
-arm                        keystone_defconfig
-arm                         lpc32xx_defconfig
-xtensa                              defconfig
-microblaze                          defconfig
-powerpc                  iss476-smp_defconfig
-arm                       cns3420vb_defconfig
-arm                            dove_defconfig
-arm                        trizeps4_defconfig
-arc                          axs103_defconfig
-mips                           mtx1_defconfig
-arm                       netwinder_defconfig
-sh                        dreamcast_defconfig
-powerpc                      makalu_defconfig
-powerpc                 mpc8315_rdb_defconfig
-powerpc                        cell_defconfig
-m68k                        stmark2_defconfig
-sh                          lboxre2_defconfig
-arm                       omap2plus_defconfig
-sh                          rsk7203_defconfig
-arc                            hsdk_defconfig
-powerpc                     pseries_defconfig
-sh                                  defconfig
-sh                        edosk7760_defconfig
-mips                          ath79_defconfig
-powerpc                      walnut_defconfig
-powerpc                     mpc83xx_defconfig
-mips                         tb0226_defconfig
-h8300                            alldefconfig
-powerpc                     kmeter1_defconfig
-arm                         shannon_defconfig
-sh                          landisk_defconfig
-powerpc                    adder875_defconfig
-mips                      pic32mzda_defconfig
-arm                            mmp2_defconfig
-sparc                               defconfig
-powerpc                      katmai_defconfig
-riscv             nommu_k210_sdcard_defconfig
-arm                          lpd270_defconfig
-mips                           ci20_defconfig
-arm                              alldefconfig
-sh                           se7722_defconfig
-sh                   secureedge5410_defconfig
-mips                        qi_lb60_defconfig
-powerpc                      ppc40x_defconfig
-arm                             mxs_defconfig
-mips                       capcella_defconfig
-powerpc                     taishan_defconfig
-sh                   rts7751r2dplus_defconfig
-arm                          imote2_defconfig
-h8300                       h8s-sim_defconfig
-arm                           h3600_defconfig
-powerpc                 mpc8313_rdb_defconfig
-sh                               j2_defconfig
-sh                        edosk7705_defconfig
-mips                         tb0287_defconfig
-powerpc                     powernv_defconfig
-arc                      axs103_smp_defconfig
-arm                         orion5x_defconfig
-m68k                       m5275evb_defconfig
-nios2                               defconfig
-arm                  randconfig-c002-20211216
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                             allmodconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-i386                                defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a006-20211216
-x86_64               randconfig-a005-20211216
-x86_64               randconfig-a001-20211216
-x86_64               randconfig-a002-20211216
-x86_64               randconfig-a003-20211216
-x86_64               randconfig-a004-20211216
-i386                 randconfig-a001-20211216
-i386                 randconfig-a002-20211216
-i386                 randconfig-a005-20211216
-i386                 randconfig-a003-20211216
-i386                 randconfig-a006-20211216
-i386                 randconfig-a004-20211216
-riscv                    nommu_k210_defconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                                  kexec
-
-clang tested configs:
-x86_64               randconfig-a011-20211216
-x86_64               randconfig-a014-20211216
-x86_64               randconfig-a012-20211216
-x86_64               randconfig-a013-20211216
-x86_64               randconfig-a016-20211216
-x86_64               randconfig-a015-20211216
-hexagon              randconfig-r045-20211216
-s390                 randconfig-r044-20211216
-riscv                randconfig-r042-20211216
-hexagon              randconfig-r041-20211216
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> +
+> +  clock-names:
+> +    const: osc
+> +
+> +  '#clock-cells':
+> +    const: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +  - '#clock-cells'
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/imxrt1050-clock.h>
+> +
+> +    clks: clock-controller@400fc000 {
+> +        compatible = "fsl,imxrt1050-ccm";
+> +        reg = <0x400fc000 0x4000>;
+> +        interrupts = <95>, <96>;
+> +        clocks = <&osc>;
+> +        clock-names = "osc";
+> +        #clock-cells = <1>;
+> +    };
+> +
+> +    lpuart1: serial@40184000 {
+> +        compatible = "fsl,imxrt1050-lpuart";
+> +        reg = <0x40184000 0x4000>;
+> +        interrupts = <20>;
+> +        clocks = <&clks IMXRT1050_CLK_LPUART1>;
+> +        clock-names = "ipg";
+> +    };
+> -- 
+> 2.34.1
+> 
+> 
