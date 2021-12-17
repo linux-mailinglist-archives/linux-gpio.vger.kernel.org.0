@@ -2,104 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BCD84788D1
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Dec 2021 11:29:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AE59A478910
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Dec 2021 11:38:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235010AbhLQK3I (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Dec 2021 05:29:08 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:43735 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230052AbhLQK3C (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Dec 2021 05:29:02 -0500
-Received: from mail-wm1-f50.google.com ([209.85.128.50]) by
- mrelayeu.kundenserver.de (mreue009 [213.165.67.97]) with ESMTPSA (Nemesis) id
- 1M3DBd-1mv9H70c1t-003cnj; Fri, 17 Dec 2021 11:29:00 +0100
-Received: by mail-wm1-f50.google.com with SMTP id o19-20020a1c7513000000b0033a93202467so1275980wmc.2;
-        Fri, 17 Dec 2021 02:28:59 -0800 (PST)
-X-Gm-Message-State: AOAM530TIWsOjX56L5p48423QNaanac0qxcA9nMJBgwtpgl1S2w4O6L5
-        dMonB9WfKEi4m4IpWug4Q3eDoYD3Zjvmh6/+d1c=
-X-Google-Smtp-Source: ABdhPJzt5zYuPDN2kyerQhSiMM2qDbHR33/fmfF5ts41gKt3J8mLkHRysVIEdlJk2pNUlh3mDSd/3MBFVv8V8UNy0j0=
-X-Received: by 2002:a05:600c:6d2:: with SMTP id b18mr2096113wmn.98.1639736939561;
- Fri, 17 Dec 2021 02:28:59 -0800 (PST)
+        id S234734AbhLQKig (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Dec 2021 05:38:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45300 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233421AbhLQKig (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Dec 2021 05:38:36 -0500
+Received: from mail-io1-xd2e.google.com (mail-io1-xd2e.google.com [IPv6:2607:f8b0:4864:20::d2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26D2FC061574
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Dec 2021 02:38:36 -0800 (PST)
+Received: by mail-io1-xd2e.google.com with SMTP id x6so2177889iol.13
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Dec 2021 02:38:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1NX/z1yIBmJGPFjey8JIOWaLcMKRl6k7AS9cDOmNB+I=;
+        b=oWhT587UbEaa4Qh0rD9kz7S3vhUesiNS/RqKp/44Jz37X83GW8Sl7ig5aLP7gLhKR8
+         vxBaYz6cUZ7Abi7X1AQkgemuKsfo9FwGbiWSRUpWzUBDJeLTHF8eUvz2kt/k1YKq3o48
+         mGtrwDR8/5vxzpxnGQQSMVotVebl0tt7Qinazi1N6mfyKnwBn+wB7SXhKv8F837ThUZ5
+         CvcFHwzSq/VNFmqRapz3ASZUIUixI9Q63IOKLrNWfNg7TfHyikSRRc/l5XIinqmx7ggs
+         rMFzux6Y4/WAV85NO6uFnLGPT5uoBHV/pppdEZsV4CF8rI8NrlUF6OJF8ALiFRPp73nN
+         LCLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1NX/z1yIBmJGPFjey8JIOWaLcMKRl6k7AS9cDOmNB+I=;
+        b=7oRb8Bh0miMQZpL+c+w2GkeWMqY7asVAbHADGqh0MY+SLiph6nMc4srJ4JMHd4iBLC
+         rlGgtuNvI/+6kJJ0b0/9JtIazTaKuv7VV4suQED+lqL1WAsknkTc3BfHTUmnp9hsOi95
+         a1kUTY524yd91/Fp2uM94tc+O8ixaxTAOYotOqk2lwcGF/UVUTYPIjGjFYGiu6lsoev3
+         c21Z7vo+mMaENXHC5ggXUdmDQaVq48IUdE0mlr+Orr0SYvskMbNDgvgh/3LPuv7CY6/w
+         ovzLAn1wH56Utxe0H84PhyzfxDCJRRSNBbFnnm9ao5ts7P6fHDSGUriN8Mk7xjy+HHY0
+         OibQ==
+X-Gm-Message-State: AOAM531RbJyLA9KJE5PBfug4BgXjkqhVZjCtR4WBqnOVZZS/jY/qcU5A
+        qQNLc3juVkJvk0gUwj+RUdacaihvR9X23vOGTdQ=
+X-Google-Smtp-Source: ABdhPJzljBYOKdmb6eXIGFq8yZ29GGLgW4+bL2WnToTpGLBi4Ya3UyHmQk9Hp9LbcfcDDyDNsUNomrrmUVh59SdALxU=
+X-Received: by 2002:a05:6638:1920:: with SMTP id p32mr1326759jal.199.1639737515602;
+ Fri, 17 Dec 2021 02:38:35 -0800 (PST)
 MIME-Version: 1.0
-References: <20211215220538.4180616-1-Mr.Bossman075@gmail.com>
- <CAK8P3a29tzgd_4WncippZBEJra9n0bQTysBkPBp_WA0sb28gTg@mail.gmail.com>
- <1360c4fe-4a09-a8a1-3224-7f1d4af59f6f@benettiengineering.com>
- <CAK8P3a1oZK1qMRBE3D8otCTY6Lg4jMXxVpAZHQzLTA8woA3_UQ@mail.gmail.com> <634e9304-2eba-4ea9-65ac-5d4f5d011b70@benettiengineering.com>
-In-Reply-To: <634e9304-2eba-4ea9-65ac-5d4f5d011b70@benettiengineering.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 17 Dec 2021 11:28:43 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a3kpzi6ozLkTH9GtWqvs=JHkm6mp=dLs2vOHjrW=FoYdw@mail.gmail.com>
-Message-ID: <CAK8P3a3kpzi6ozLkTH9GtWqvs=JHkm6mp=dLs2vOHjrW=FoYdw@mail.gmail.com>
-Subject: Re: [RESEND in plain-test] Re: [PATCH v5 0/9] Add initial support for
- the i.MXRTxxxx SoC family starting from i.IMXRT1050 SoC.
-To:     Giulio Benetti <giulio.benetti@benettiengineering.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Jesse Taube <mr.bossman075@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Stefan Agner <stefan@agner.ch>,
+References: <CAKycSdDgLYRU9d5dw8SUGX5Jow1LUM4ySb5n4v4FeUFKTwnYPg@mail.gmail.com>
+ <20211217055001.535wscahbxfkrxn5@vireshk-i7>
+In-Reply-To: <20211217055001.535wscahbxfkrxn5@vireshk-i7>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Fri, 17 Dec 2021 11:38:24 +0100
+Message-ID: <CANiq72nimetRmi+aHF1h+hqvSjFJxVXsBYKQHUEnTQ50Lp5eqw@mail.gmail.com>
+Subject: Re: [PATCH V2 1/4] libgpiod: Generate rust FFI bindings
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Gerard Ryan <g.m0n3y.2503@gmail.com>,
+        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
         Linus Walleij <linus.walleij@linaro.org>,
-        gregkh <gregkh@linuxfoundation.org>,
-        Olof Johansson <olof@lixom.net>, SoC Team <soc@kernel.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Vladimir Murzin <vladimir.murzin@arm.com>
+        stratos-dev@op-lists.linaro.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Wedson Almeida Filho <wedsonaf@google.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:WK5VepgWAxnURy8YRejIh8hTkw5BVDQTSGj/3hPn3SfcZcCrTNG
- lyrjT7Khp69AhFY2gmWBqy8B7mI0u376qu/e8G+ii1vIN8sgfc/1+L3rjj94EI3UnaG0z57
- RO+Pq9Xqvyn/wjbT7TA9Te2G/+YJro8CWVtmzVrYJxaS1Z5N6psweEF9CjLox9uW8fNy32M
- GbCTb7+MTwkGrVS+vq8ww==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:lLY2FP303Ug=:MZPZYIsXwYO/ZM4ROB9bVL
- ek+5PS1T7DfV9tiQ87KICIi9k6x4nuPH98rqb0m7oJUEJWrPLc2ez8ADmiMGAyYwyC8pv1AAy
- xya0TCnN5uypyLGXuGqcxBeQcKTGk1FHhTaiW5o7ohDxUPljwJ/lnLJk1XlfmaFbJ+ffXmz3X
- n8KrmA2dUCShP1GgdHOZVG/09ZNaTw7t3VcQws87+YsdmR6tMyfOS0B4iMv2h0HqqdKg6EpNr
- 4C4VpPGy5Z1sc1fTDgaFrb+tfiFu88DMyb3gv0EU/6MpzBfBSa9RUQupHb4llGvYJL6sqQsIw
- M5bODNoegAojZzX9YZxk4DqT19BmGrsGEsvvp9EgOU4rd3+mq5etrOVaPre9w6YkJEuG9oSRP
- U9F+WsDgBJNkfoolfjYhu5Jz3Jim8au0jpykcloY6yE7iLL+CQ2H7Z27p1OyJidBRmZB1Yunn
- wDlOCeCCDsKpMisu6DMCIfzT+vwyA5+fyJ9RGWXOH0oSy4ar0+IawfV80JEMp7mjOvQu+eNir
- oO3OiwkaTYaDkPZ7muehPSYq0Po6AcHR4fA3H69wKOaIbq058nkE6Fi49b0d/cLymY/q6cfVV
- 4mzsltuA093tdpFohN4LP9Rk3Jb1Bq2lN1LdApMefoWcniNQDghB3pZ5J8XIXWUqRs2N7PX5o
- CWJ1F1IGni4qppXt7S1SD0jXlbNKuJ62jmwzE+R7VqLFp1zm3ruQ5/uncYdUf9Lcwkq8=
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Dec 17, 2021 at 10:54 AM Giulio Benetti
-<giulio.benetti@benettiengineering.com> wrote:
-> On 16/12/21 22:13, Arnd Bergmann wrote:
+On Fri, Dec 17, 2021 at 6:50 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
 >
-> > Vladimir has put some work into making Cortex-R work in the kernel, and
-> > he may have some other thoughts on this question.
+> I don't have a strong preference either way, whatever works best.
 >
-> I'm curious if he has something specific to Cortex-R to tell.
->
-> I've found that Cortex-R82 has a MMU:
-> https://www.arm.com/products/silicon-ip-cpu/cortex-r/cortex-r82
-> but I can't find any SoC that uses it. Also, I don't know how many
-> people could use it honestly.
+> Miguel, any suggestions ?
 
-R82 is fairly new, but I expect that we will see support in Linux in the
-future. Aside from having an MMU, it also 64-bit-only, so we'd treat
-it like a normal ARMv8-A core in arch/arm64.
+Having optional pre-generated bindings may be good for some users,
+e.g. libsqlite3-sys does it. I guess the main question is whether you
+are willing to support/maintain it. Also consider cross-compilation.
 
-        Arnd
+But I wouldn't only provide pre-generated ones if you are using
+`bindgen` anyway.
+
+In any case, I am not a Rust expert, so please take that with a grain of salt :)
+
+Cheers,
+Miguel
