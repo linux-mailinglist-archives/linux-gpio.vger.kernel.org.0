@@ -2,102 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A69BC478853
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Dec 2021 11:04:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BCD84788D1
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Dec 2021 11:29:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234558AbhLQKEe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Dec 2021 05:04:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37336 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231968AbhLQKEe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Dec 2021 05:04:34 -0500
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24F93C061574
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Dec 2021 02:04:34 -0800 (PST)
-Received: by mail-pj1-x102d.google.com with SMTP id a11-20020a17090a854b00b001b11aae38d6so2258820pjw.2
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Dec 2021 02:04:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nrvl2Z15AsfPSxn/R4yQgzxP2Mg2Jnd5O7FmMsYyfl4=;
-        b=SnHI9TKUhEETAE5WFAwgL1wn+cI3YkL5V1muglDGurPHeB4wWy/bSPesi2pyDIf+hu
-         Sgt5t/YIpyVjUnC4jC7Ve73RXQionhgNXf+WyQXqf1dtw7TtjA+P9vKNBm5aAI6d9KVl
-         aOpFYRRFW7BtXIeR1unRP9VNp6WiuSck0jT9w3xfc2bC3ixPD0l8g3fwVSB9GEMPVWbo
-         fxvA4IP7hmcPIeZU76otC5g4OuY3XunZHq5QsjF3KYAtbBzypoPecG3WGBgcXleA+7pP
-         RIrBqGRt9iivfkjEgWnevXKR59h5vOH+BOnsfGAvXavoqq4j4tqsw94iPnDwmIkMgQut
-         iShw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nrvl2Z15AsfPSxn/R4yQgzxP2Mg2Jnd5O7FmMsYyfl4=;
-        b=O9pXt8S3pquUxSJYXy8zjvUywBh4ECt1yjk5nX+fYYmXbgqu5ClCXpVaDv9C/IQeFC
-         DfprMlxoM9a7Nuv7rDsc5VtibZv0c7vqOMvP4PaCUXAkbJvW8kSko19JDnwTdBwHTI3n
-         NnCs4jHiVk1PPAi19hPt9qcbsEKzasq9KN66XEaZRZgpa84XBPgTAbTc1b44XmKK6/+O
-         VmAzvvbqNxnuCx/B6+5+Ii0jXdKKH8DoSb07n9AFshLXL2BdcT3+Co8fbgwjFpFjcWuT
-         r4NV7J2eEFoFolo6ew7nx7EeXMJUjOim0yJoCpXl39dYomkZQV2l/iAJTLuCORKtnkOc
-         hgPg==
-X-Gm-Message-State: AOAM532Tf9WPq5ddovnLNrd7QZ7BegzpXTymY6JodJhbicQwkXAvZW/0
-        7snGjw2miC+lv8kTGvM0wklJyA==
-X-Google-Smtp-Source: ABdhPJzou1Je/FOAbSXC2kVkCtNS6LlujCRqY+FsMaDsFkEaqj8TfrDjc/GLCnlYVDTlXLzcABjAYA==
-X-Received: by 2002:a17:902:e88a:b0:141:dfde:eed7 with SMTP id w10-20020a170902e88a00b00141dfdeeed7mr2492913plg.17.1639735472897;
-        Fri, 17 Dec 2021 02:04:32 -0800 (PST)
-Received: from localhost ([106.201.42.111])
-        by smtp.gmail.com with ESMTPSA id t8sm8234943pgk.66.2021.12.17.02.04.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Dec 2021 02:04:32 -0800 (PST)
-Date:   Fri, 17 Dec 2021 15:34:30 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Wedson Almeida Filho <wedsonaf@google.com>,
-        Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org
-Subject: Re: [PATCH V2 2/4] libgpiod: Add rust wrappers
-Message-ID: <20211217100430.iyabqm4dxt7tkhdz@vireshk-i7>
-References: <cover.1638443930.git.viresh.kumar@linaro.org>
- <7ace171379783b73a8f560737fd47900ac28924c.1638443930.git.viresh.kumar@linaro.org>
- <CAMRc=MeoTiUOjM_D36ZEU=echpM9jVhr1HY7fuxTDs0t0jf2Jg@mail.gmail.com>
- <20211217050135.l7p3sudbdvzewi6y@vireshk-i7>
- <CANiq72n=i9e5y8ONhZdH72tNuQJp8TJKY2Xa-y4NEpSDOq0+rw@mail.gmail.com>
+        id S235010AbhLQK3I (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Dec 2021 05:29:08 -0500
+Received: from mout.kundenserver.de ([212.227.126.131]:43735 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230052AbhLQK3C (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Dec 2021 05:29:02 -0500
+Received: from mail-wm1-f50.google.com ([209.85.128.50]) by
+ mrelayeu.kundenserver.de (mreue009 [213.165.67.97]) with ESMTPSA (Nemesis) id
+ 1M3DBd-1mv9H70c1t-003cnj; Fri, 17 Dec 2021 11:29:00 +0100
+Received: by mail-wm1-f50.google.com with SMTP id o19-20020a1c7513000000b0033a93202467so1275980wmc.2;
+        Fri, 17 Dec 2021 02:28:59 -0800 (PST)
+X-Gm-Message-State: AOAM530TIWsOjX56L5p48423QNaanac0qxcA9nMJBgwtpgl1S2w4O6L5
+        dMonB9WfKEi4m4IpWug4Q3eDoYD3Zjvmh6/+d1c=
+X-Google-Smtp-Source: ABdhPJzt5zYuPDN2kyerQhSiMM2qDbHR33/fmfF5ts41gKt3J8mLkHRysVIEdlJk2pNUlh3mDSd/3MBFVv8V8UNy0j0=
+X-Received: by 2002:a05:600c:6d2:: with SMTP id b18mr2096113wmn.98.1639736939561;
+ Fri, 17 Dec 2021 02:28:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANiq72n=i9e5y8ONhZdH72tNuQJp8TJKY2Xa-y4NEpSDOq0+rw@mail.gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+References: <20211215220538.4180616-1-Mr.Bossman075@gmail.com>
+ <CAK8P3a29tzgd_4WncippZBEJra9n0bQTysBkPBp_WA0sb28gTg@mail.gmail.com>
+ <1360c4fe-4a09-a8a1-3224-7f1d4af59f6f@benettiengineering.com>
+ <CAK8P3a1oZK1qMRBE3D8otCTY6Lg4jMXxVpAZHQzLTA8woA3_UQ@mail.gmail.com> <634e9304-2eba-4ea9-65ac-5d4f5d011b70@benettiengineering.com>
+In-Reply-To: <634e9304-2eba-4ea9-65ac-5d4f5d011b70@benettiengineering.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 17 Dec 2021 11:28:43 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a3kpzi6ozLkTH9GtWqvs=JHkm6mp=dLs2vOHjrW=FoYdw@mail.gmail.com>
+Message-ID: <CAK8P3a3kpzi6ozLkTH9GtWqvs=JHkm6mp=dLs2vOHjrW=FoYdw@mail.gmail.com>
+Subject: Re: [RESEND in plain-test] Re: [PATCH v5 0/9] Add initial support for
+ the i.MXRTxxxx SoC family starting from i.IMXRT1050 SoC.
+To:     Giulio Benetti <giulio.benetti@benettiengineering.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Jesse Taube <mr.bossman075@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        gregkh <gregkh@linuxfoundation.org>,
+        Olof Johansson <olof@lixom.net>, SoC Team <soc@kernel.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Vladimir Murzin <vladimir.murzin@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:WK5VepgWAxnURy8YRejIh8hTkw5BVDQTSGj/3hPn3SfcZcCrTNG
+ lyrjT7Khp69AhFY2gmWBqy8B7mI0u376qu/e8G+ii1vIN8sgfc/1+L3rjj94EI3UnaG0z57
+ RO+Pq9Xqvyn/wjbT7TA9Te2G/+YJro8CWVtmzVrYJxaS1Z5N6psweEF9CjLox9uW8fNy32M
+ GbCTb7+MTwkGrVS+vq8ww==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:lLY2FP303Ug=:MZPZYIsXwYO/ZM4ROB9bVL
+ ek+5PS1T7DfV9tiQ87KICIi9k6x4nuPH98rqb0m7oJUEJWrPLc2ez8ADmiMGAyYwyC8pv1AAy
+ xya0TCnN5uypyLGXuGqcxBeQcKTGk1FHhTaiW5o7ohDxUPljwJ/lnLJk1XlfmaFbJ+ffXmz3X
+ n8KrmA2dUCShP1GgdHOZVG/09ZNaTw7t3VcQws87+YsdmR6tMyfOS0B4iMv2h0HqqdKg6EpNr
+ 4C4VpPGy5Z1sc1fTDgaFrb+tfiFu88DMyb3gv0EU/6MpzBfBSa9RUQupHb4llGvYJL6sqQsIw
+ M5bODNoegAojZzX9YZxk4DqT19BmGrsGEsvvp9EgOU4rd3+mq5etrOVaPre9w6YkJEuG9oSRP
+ U9F+WsDgBJNkfoolfjYhu5Jz3Jim8au0jpykcloY6yE7iLL+CQ2H7Z27p1OyJidBRmZB1Yunn
+ wDlOCeCCDsKpMisu6DMCIfzT+vwyA5+fyJ9RGWXOH0oSy4ar0+IawfV80JEMp7mjOvQu+eNir
+ oO3OiwkaTYaDkPZ7muehPSYq0Po6AcHR4fA3H69wKOaIbq058nkE6Fi49b0d/cLymY/q6cfVV
+ 4mzsltuA093tdpFohN4LP9Rk3Jb1Bq2lN1LdApMefoWcniNQDghB3pZ5J8XIXWUqRs2N7PX5o
+ CWJ1F1IGni4qppXt7S1SD0jXlbNKuJ62jmwzE+R7VqLFp1zm3ruQ5/uncYdUf9Lcwkq8=
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 17-12-21, 10:44, Miguel Ojeda wrote:
-> On Fri, Dec 17, 2021 at 6:01 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> >
-> > Miguel, what's your take on stuff like this ? I am not sure if we should just
-> > drop this check altogether.
-> 
-> Given the C side documents that the pointer is valid (I think; since
-> others are documented as "or NULL" etc., but it is a bit implicit),
-> then avoiding the check is a possibility.
-> 
-> However, to answer this, one needs to understand the risk profile of
-> the project, the stability of the C API, the performance expectations
-> (e.g. is the call supposed to be in the hot path of clients?), etc.
-> 
-> When in doubt (or when there is no reason to not do the check), it is
-> usually better to err on the safe side, specially if you aren't close
-> to the maintainers of the API etc. But since you have access to
-> Linus/Bartosz here, it is best to discuss this with them :) And, after
-> all, you are already trusting the C side to some degree anyway, and it
-> would be good to make sure both sides understand and clearly document
-> the contracts of the functions so that no bindings break in the future
-> (Rust or otherwise).
+On Fri, Dec 17, 2021 at 10:54 AM Giulio Benetti
+<giulio.benetti@benettiengineering.com> wrote:
+> On 16/12/21 22:13, Arnd Bergmann wrote:
+>
+> > Vladimir has put some work into making Cortex-R work in the kernel, and
+> > he may have some other thoughts on this question.
+>
+> I'm curious if he has something specific to Cortex-R to tell.
+>
+> I've found that Cortex-R82 has a MMU:
+> https://www.arm.com/products/silicon-ip-cpu/cortex-r/cortex-r82
+> but I can't find any SoC that uses it. Also, I don't know how many
+> people could use it honestly.
 
-And the null-checks are dropped, with an update to SAFETY comment :)
+R82 is fairly new, but I expect that we will see support in Linux in the
+future. Aside from having an MMU, it also 64-bit-only, so we'd treat
+it like a normal ARMv8-A core in arch/arm64.
 
--- 
-viresh
+        Arnd
