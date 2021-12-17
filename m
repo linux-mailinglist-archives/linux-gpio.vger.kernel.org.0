@@ -2,105 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3275C4789E7
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Dec 2021 12:30:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 307E9478A13
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Dec 2021 12:35:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233586AbhLQLaD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Dec 2021 06:30:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57152 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229817AbhLQLaC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Dec 2021 06:30:02 -0500
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 685EDC061574
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Dec 2021 03:30:02 -0800 (PST)
-Received: by mail-ed1-x52b.google.com with SMTP id y13so6453041edd.13
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Dec 2021 03:30:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BTA2nXvdFwwc3m0/iWzHcSoz8qgj1Cg+yjrMT+WtD1M=;
-        b=Kjk329bLbSlcTYRsT2D3HQUHqs9EASv4H+8ZwUIlY5kIVj9mbhlmnewaI/WH/gSkJ2
-         OiS9wh3IUYS9e9JvIxjsRat+lrESfWIPd4RD/HLEjxYZdUW1KFK2iGVDBjlK2Q1K6vap
-         mltbm74bcnliDg535vjS+JVoXO7zFaAH6EusRk3LvXoD60bPWf5VEL93hzoliCxvRpiT
-         Ia3wI9X0yWihkzKad2/ePWdBKhAxhcf86wtUrtV1xNc6fCmKOneUisl3PNIiYpYSk4Jx
-         Z+WiD7e11K5g5YJbn9Ci1NTxzrCyZER4Yv/gYYSabSGYHOzkdliZVMReoJXiQlPdY8tt
-         GG4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BTA2nXvdFwwc3m0/iWzHcSoz8qgj1Cg+yjrMT+WtD1M=;
-        b=YcB2YRU2mqoDT9kwGqER7pnqrwnEXc0ZfCu6x+1voBmswxZSZcv7Nn2XEvxbh3wS8S
-         gDlhEgcGgo4wXwktC4Nlc84bU/xzSBBEUXmOck9nXTR7jijRHufcMwDaN7T64hAdbdsY
-         Nu/MWgg2cP+hJH/FKMuqDySJvtZgawESUSlAYQr7WgG1s/3euCNOQ4RwAipdVsYfEtN1
-         Wr82QkCCZBOyO3KTXyEwhZjnjfx4HwFHUUrhO3m96tntYATuQE3nAYM+/ttHrXEnhAQH
-         auafbU/Xwrchtpg+zCdwLqb6AEZBTaPFdnp5f9HGNihoqFH4+3J4zXMmgAYe4vMaSOqz
-         rAZw==
-X-Gm-Message-State: AOAM530coj0j/ejELsfIf2sgjR68zq8mOxAxKs/N4MzRom3ztLq7UJOz
-        PPnmlVgvSi7timjxsxQBXqu1I8TPyq+KbXUdJIuzNTtCZ9M=
-X-Google-Smtp-Source: ABdhPJxEjeCtOn2mKso3xe2SZWQ3ESzTrtR+h/b5/tkEg47RWhcuuAbB2MZ7f6ocOMMunw5gcsWaekVJFedMFdUg+IU=
-X-Received: by 2002:a05:6402:22c6:: with SMTP id dm6mr2433764edb.405.1639740600973;
- Fri, 17 Dec 2021 03:30:00 -0800 (PST)
+        id S235547AbhLQLe7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Dec 2021 06:34:59 -0500
+Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:6082 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231717AbhLQLex (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 17 Dec 2021 06:34:53 -0500
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+        by mx0b-001ae601.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 1BH8OJiB016240;
+        Fri, 17 Dec 2021 05:33:41 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=PODMain02222019;
+ bh=qQFrIlpFszZ1RBg9pe9JzRRyFu+mammDM6kqccfXLE8=;
+ b=Yg+MvWuvysTVkyIgfPcJ5PQtMnreTVx82mpk3ZiP8ycfdJdl/WRhkDSEycI4U7OpTenz
+ zxkYqASWtupMkWASRAYLb/xgBjF7UlAFFFPI6VGaknAcc5t4+6sYDRNkjgiNjQjEBabZ
+ tTUgzBOilnmmA3TwDlMDQLi40TDhzCnLPi/QXNxz20VkZ/iUDQQUtL/AcVs7ZIu4XBBo
+ ETX8cPnerazAewrqi7UbsS31QohDCX0EagbjjcWjgoTLYMHjgin5DR8G/+ErZEI3zAaD
+ TcFfoQKwUZ4VO9SoqrNq69Fyuk9W3AG9aWeWfpDXeNozq+YS/G/kJIEr4lTe+hAvZ9Rr zQ== 
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+        by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3d0q0m05wg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 17 Dec 2021 05:33:41 -0600
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.17; Fri, 17 Dec
+ 2021 11:33:40 +0000
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.2375.17 via Frontend
+ Transport; Fri, 17 Dec 2021 11:33:40 +0000
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 96C10478;
+        Fri, 17 Dec 2021 11:33:39 +0000 (UTC)
+Date:   Fri, 17 Dec 2021 11:33:39 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     <alsa-devel@alsa-project.org>, <patches@opensource.cirrus.com>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Support Opensource <support.opensource@diasemi.com>
+Subject: Re: [PATCH v3 1/1] pinctrl: Propagate firmware node from a parent
+ device
+Message-ID: <20211217113339.GV18506@ediswmail.ad.cirrus.com>
+References: <20211216151227.58687-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-References: <Ybn8pxv5xPgc5nGz@black.fi.intel.com> <CAMRc=MceOZWt5Qb6kFSALOOwyYb_MikFusxZqt9KgqqQPfnwgQ@mail.gmail.com>
- <YbskttzHvxlprBPM@smile.fi.intel.com> <CAMRc=McSULw2YpCgsK-C6+pTx85mtH3c5Y+MbawO+SSgUXM1gg@mail.gmail.com>
- <Ybs5jqW3zyDh18Vx@smile.fi.intel.com> <CAMRc=MdWQEk-+-rq5ML=Yj-7ZTFMv6B0WocgqWJQu6GPkOsx2g@mail.gmail.com>
- <CAHp75VfTQ-V6UMt570PV91ZkGFX8GOHepPsM3i2DSwp3J9ht1Q@mail.gmail.com> <CAMRc=MeZoDKOymaSyotXaD=7B+U-dM7G44b601agVqDXzRWnWQ@mail.gmail.com>
-In-Reply-To: <CAMRc=MeZoDKOymaSyotXaD=7B+U-dM7G44b601agVqDXzRWnWQ@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 17 Dec 2021 12:29:50 +0100
-Message-ID: <CAMRc=Mf+MNTkA6=xg=vhfEY8P8w9MnMzura7OwOQYOBjxcemQw@mail.gmail.com>
-Subject: Re: [GIT PULL] intel-gpio for 5.17-1
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux GPIO <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20211216151227.58687-1-andriy.shevchenko@linux.intel.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-ORIG-GUID: nzCZZVgiqNxCMOFILECwBs6o2giAwtqQ
+X-Proofpoint-GUID: nzCZZVgiqNxCMOFILECwBs6o2giAwtqQ
+X-Proofpoint-Spam-Reason: safe
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Dec 17, 2021 at 12:13 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> On Fri, Dec 17, 2021 at 10:53 AM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> >
-> > On Fri, Dec 17, 2021 at 1:38 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > > On Thu, Dec 16, 2021 at 2:06 PM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > On Thu, Dec 16, 2021 at 12:46:11PM +0100, Bartosz Golaszewski wrote:
-> > > > > On Thu, Dec 16, 2021 at 12:37 PM Andy Shevchenko
-> > > > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > > > On Thu, Dec 16, 2021 at 10:14:05AM +0100, Bartosz Golaszewski wrote:
-> >
-> > ...
-> >
-> > > > > > Are you going to pull series with the OF node assignments clean up?
-> > > > > > I forgot to mention here that my PR does not include them.
-> > > > >
-> > > > > Yes, I'll queue it this week.
-> > > >
-> > > > Thanks!
-> > > >
-> > > > Do you know that your branches were kicked off from the Linux Next?
-> > > > Are you going to drop previous gpio-sim from the Linux Next?
-> > >
-> > > No, I didn't, thanks for the heads-up. Old gpio-sim code conflicted
-> > > with the one that was queued for v5.17. Should be good now.
-> >
-> > Thanks
-> >
-> > Btw, I have noticed you rebased your tree, can you, please, do not
-> > forget to put --rebase-merges to your `git rebase` command line so the
-> > merge won't change commit IDs?
-> >
->
-> Oof you saved me from another LinusRant. I already pushed it, let's
-> see if I can get back to the previous state...
->
+On Thu, Dec 16, 2021 at 05:12:27PM +0200, Andy Shevchenko wrote:
+> When creating MFD platform devices the firmware node is left unset.
+> This, in particular, prevents GPIO library to use it for different
+> purposes. Propagate firmware node from the parent device and let
+> GPIO library do the right thing.
+> 
+> While at it, slightly modify the headers to reflect the usage of APIs.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
 
-Done, reflog is my best friend now. Please take a look if all looks good to you.
+For the Madera bits:
 
-Bart
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+
+Thanks,
+Charles
