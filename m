@@ -2,160 +2,164 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EE519479013
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Dec 2021 16:36:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A40E4479043
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Dec 2021 16:47:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229608AbhLQPgR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Dec 2021 10:36:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58464 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232296AbhLQPgQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Dec 2021 10:36:16 -0500
-Received: from mail-qv1-xf33.google.com (mail-qv1-xf33.google.com [IPv6:2607:f8b0:4864:20::f33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87831C061574;
-        Fri, 17 Dec 2021 07:36:16 -0800 (PST)
-Received: by mail-qv1-xf33.google.com with SMTP id kk22so2766209qvb.0;
-        Fri, 17 Dec 2021 07:36:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2LwWlutyqD7nYHQDeBKlm46WqzAPw9nhQoOANdu3Uaw=;
-        b=q8IUWkXLVm8YCthA9Y5eGFPWI3h1KYJ8ThNN5a++xPVUcxGdtmWWiaPE2yTvW5iKd3
-         jlSramBjUPaGLM0nKipLU9eXOwGZKFL4c0NoogduBGdH8Oz8rwRmkWZ+orG6LPg2Mm1b
-         D06/7ZShkX8JAutkIks8rVE8AcJu/on4ZdWMB5LHuAVFO4d4V4tdB8S0icRkLb97+H8i
-         ShLNW1xByib/KQFWrSH6mYBvFs+qi1lIshIwHCDvUqkHn2gC0Sai26OCCgQmaW7dkSLk
-         Mzo0Ak9uJ4cfeG6juFlrCn1C+wR94/PPsuy/BCSNumCHrY1gxAyFmYGXysd9twEPCtiZ
-         uZdQ==
+        id S235736AbhLQPrl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Dec 2021 10:47:41 -0500
+Received: from smtp-relay-internal-1.canonical.com ([185.125.188.123]:60680
+        "EHLO smtp-relay-internal-1.canonical.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230512AbhLQPrl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 17 Dec 2021 10:47:41 -0500
+Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com [209.85.208.198])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 447363F1F3
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Dec 2021 15:47:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1639756060;
+        bh=hhDHhyLf8ciLV/pb2fq9VsORYOGJ7hjmmAlIVCJH7WY=;
+        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+         In-Reply-To:Content-Type;
+        b=aQq7/hCGPbFg/bKpuDhxmMdGsPCz2nESFfYYOtxbUGf73njWF2ysqdelDGWVTPYjN
+         0qPGbVq69gfCb+TJiTc4RBMJAwqw/XmYWIC7IDNwShAYaQEsDGg/If/avYIbe9j3aC
+         m306ygumpQ8/zdLkEk/qCZVciqFtXmn+HaaPlBnd4vm6SaV3gB6culYsSxyb0SliYx
+         24hxS+QbqY/cKNblCEeRAaX+cqkJBCOcG9iZ7XolZbcdZhYQtlzjDDyW5Z8PuiT0+x
+         JVYiDJIDuaDk3A7gxyWo3ss4JVIAYA3zuBmyunmU860NYPJwTe+lNYo2rOlZH4EokP
+         qsbhx7QFxTwLg==
+Received: by mail-lj1-f198.google.com with SMTP id p1-20020a2e7401000000b00218d0d11e91so817661ljc.15
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Dec 2021 07:47:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=2LwWlutyqD7nYHQDeBKlm46WqzAPw9nhQoOANdu3Uaw=;
-        b=DgeW1LFzJueWVb+KCPCGkQ54ySTVRJpT3CHLNzFmkLmmcGOAgVvUkQVFvnJSe6vuvf
-         Ewa+cq9Ti1e6qWveKet3/EY0a6SeOc0/PdUcoDlZuuwe5ZkukLm6x8Oe6TFaM8VfkdVk
-         OF1BDjwSw7WHFCp5u6zozrNPEswkvPJ61P1Vd85YzYOIrK0XXc8bDv7HuHnP4w1Sh6Ey
-         ZyVK2/6/IxfRV+M3mI6Ifk9sMpBz5CA0BRH6mB1QYylPJPxYuDdgGc8TnXJhMhF2RV6D
-         GQqkeLw7lHLFRuHkDx5KXG+XGHhJnfebCQkvu+vZSA6uEew9nFpuoDC4vGbF5Zocrk7B
-         Rslw==
-X-Gm-Message-State: AOAM533l9L1wozecIczDnKlbsDKSSp9DC7h6RZaDqwEEJHX/Bf1LIN/w
-        hXc8p5dWX2gtxGuWyMJ4bK7Vz6boA5Z5VQ==
-X-Google-Smtp-Source: ABdhPJyux52uQUndq+YCULd3pt1Vq6dc9/BDuceV3zj9qPUux3TNaYwH1G2ATvEgO+X5MI+MOXb8xQ==
-X-Received: by 2002:a05:6214:3004:: with SMTP id ke4mr3120202qvb.48.1639755374470;
-        Fri, 17 Dec 2021 07:36:14 -0800 (PST)
-Received: from linux-af78.suse ([189.122.236.87])
-        by smtp.gmail.com with ESMTPSA id w14sm5086438qkp.54.2021.12.17.07.36.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Dec 2021 07:36:14 -0800 (PST)
-From:   Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
-To:     stable@vger.kernel.org, regressions@lists.linux.dev,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-gpio@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Edmond Chung <edmondchung@google.com>,
-        Andrew Chant <achant@google.com>,
-        Will McVicker <willmcvicker@google.com>,
-        Sergio Tanzilli <tanzilli@acmesystems.it>
-Cc:     Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
-Subject: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
-Date:   Fri, 17 Dec 2021 12:35:55 -0300
-Message-Id: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
-X-Mailer: git-send-email 2.30.2
+        bh=hhDHhyLf8ciLV/pb2fq9VsORYOGJ7hjmmAlIVCJH7WY=;
+        b=vMtC+rpq4dQ7TbSxmzR7O/kcZ+PCOYgzN2CqBGjOFPNNbDYTl4Qajx1uw5/m9i7KaC
+         1ChGbyGxjf5A0fDn22OJ1mtarNimvxH6TkD73Zq1l7v/lYNyt7pYFEE98MZDkHELKeKd
+         WcNQLQlHA/nZvTF3Jwz6E4n+wHx+iLtFgWiLosFvxY0fPrRsJaI2zXxiKAbLntIjE6M7
+         cJ5DtcP+/iaciVb6EpJcdOe43WLInjcZVUAVlN12wdFUtnqi4S94OIuSKS4qsTkLq+Rk
+         0vCzAOqslX6AcyN9CIkc7emyEVu8zuXzAAe0hrwIpc1KSFWeXgPWRAeuEwrO1ge/al/w
+         DKKQ==
+X-Gm-Message-State: AOAM531VkIWF1LIQqHc/IWDtOsgGZ3sOdoclBdV8aC6t43MTW/tWNxGa
+        zJlJ4ZIUzEamLCg7hj19en2SQWxsBLBBMvyi8va5/dLdw2Wq4vp3apNfsj9pDVnsyyzalXyCmq3
+        DM7brsbLuMV4A4YoDPyXYvZf+fwJ0ltYitY6nPXs=
+X-Received: by 2002:a05:6512:2150:: with SMTP id s16mr3408742lfr.519.1639756059691;
+        Fri, 17 Dec 2021 07:47:39 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwt9tJHIq/B3JqqY9RpHltS5AsBubgidwCcIwxibp52U1LQxYs+vVjkCeSXk+SDsWN3QzhEUw==
+X-Received: by 2002:a05:6512:2150:: with SMTP id s16mr3408731lfr.519.1639756059505;
+        Fri, 17 Dec 2021 07:47:39 -0800 (PST)
+Received: from [192.168.3.67] (89-77-68-124.dynamic.chello.pl. [89.77.68.124])
+        by smtp.gmail.com with ESMTPSA id w25sm356919lfl.33.2021.12.17.07.47.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Dec 2021 07:47:39 -0800 (PST)
+Message-ID: <2e7588e5-9dc5-571f-d7e9-0ee5c89ab39e@canonical.com>
+Date:   Fri, 17 Dec 2021 16:47:36 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.1
+Subject: Re: [PATCH v2 06/17] dt-bindings: rng: add bindings for microchip
+ mpfs rng
+Content-Language: en-US
+To:     Conor.Dooley@microchip.com, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, robh+dt@kernel.org,
+        jassisinghbrar@gmail.com, paul.walmsley@sifive.com,
+        palmer@dabbelt.com, aou@eecs.berkeley.edu, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, broonie@kernel.org,
+        gregkh@linuxfoundation.org, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-crypto@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org
+Cc:     geert@linux-m68k.org, bin.meng@windriver.com, heiko@sntech.de,
+        Lewis.Hanly@microchip.com, Daire.McNamara@microchip.com,
+        Ivan.Griffin@microchip.com, atish.patra@wdc.com
+References: <20211217093325.30612-1-conor.dooley@microchip.com>
+ <20211217093325.30612-7-conor.dooley@microchip.com>
+ <e59a60d5-4397-1f7f-66ab-3dd522e166a0@canonical.com>
+ <19cbe2ba-7df5-7c7c-289f-6dc419d9f477@canonical.com>
+ <422126ac-ce26-2940-5b4d-fe79a1fa89c5@microchip.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+In-Reply-To: <422126ac-ce26-2940-5b4d-fe79a1fa89c5@microchip.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Some GPIO lines have stopped working after the patch
-commit 2ab73c6d8323f ("gpio: Support GPIO controllers without pin-ranges")
+On 17/12/2021 16:22, Conor.Dooley@microchip.com wrote:
+> On 17/12/2021 15:07, Krzysztof Kozlowski wrote:
+>> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+>>
+>> On 17/12/2021 15:53, Krzysztof Kozlowski wrote:
+>>> On 17/12/2021 10:33, conor.dooley@microchip.com wrote:
+>>>> From: Conor Dooley <conor.dooley@microchip.com>
+>>>>
+>>>> Add device tree bindings for the hardware rng device accessed via
+>>>> the system services on the Microchip PolarFire SoC.
+>>>>
+>>>> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+>>>> ---
+>>>>   .../bindings/rng/microchip,mpfs-rng.yaml      | 29 +++++++++++++++++++
+>>>>   1 file changed, 29 insertions(+)
+>>>>   create mode 100644 Documentation/devicetree/bindings/rng/microchip,mpfs-rng.yaml
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/rng/microchip,mpfs-rng.yaml b/Documentation/devicetree/bindings/rng/microchip,mpfs-rng.yaml
+>>>> new file mode 100644
+>>>> index 000000000000..32cbc37c9292
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/rng/microchip,mpfs-rng.yaml
+>>>> @@ -0,0 +1,29 @@
+>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>>> +%YAML 1.2
+>>>> +---
+>>>> +$id: "http://devicetree.org/schemas/rng/microchip,mpfs-rng.yaml#"
+>>>> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+>>>> +
+>>>> +title: Microchip MPFS random number generator
+>>>> +
+>>>> +maintainers:
+>>>> +  - Conor Dooley <conor.dooley@microchip.com>
+>>>> +
+>>>> +description: |
+>>>> +  The hardware random number generator on the Polarfire SoC is
+>>>> +  accessed via the mailbox interface provided by the system controller
+>>>> +
+>>>> +properties:
+>>>> +  compatible:
+>>>> +    const: microchip,mpfs-rng
+>>>> +
+>>>> +required:
+>>>> +  - compatible
+>>>> +
+>>>> +additionalProperties: false
+>>>> +
+>>>> +examples:
+>>>> +  - |
+>>>> +    hwrandom: hwrandom {
+>>>
+>>> Three topics:
+>>> 1. Node name (as most of others are using): rng
+>>> 2. skip the label, not helping in example.
+>>> 3. This looks very simple, so I wonder if the bindings are complete. No
+>>> IO space/address... How is it going to be instantiated?
+>>>
+>>
+>> OK, now I saw the usage in DTS. I have doubts this makes sense as
+>> separate bindings. It looks like integrated part of syscontroller, so
+>> maybe make it part of that binding? Or at least add ref to syscontroller
+>> bindings that such child is expected.
+> Acking the rest of this, re: adding the ref: is what is being done in 
+> patch 03/17 insufficient?
 
-And this has supposedly been fixed in the following patches
-commit 89ad556b7f96a ("gpio: Avoid using pin ranges with !PINCTRL")
-commit 6dbbf84603961 ("gpiolib: Don't free if pin ranges are not defined")
+Ops, I missed the 03/17. Yeah, it looks it is sufficient and in such
+case I think you do not need this patch. The compatible is documented in
+03/17. The same for sysserv.
 
-But an erratic behavior where some GPIO lines work while others do not work
-has been introduced.
-
-This patch reverts those changes so that the sysfs-gpio interface works
-properly again.
-
-Signed-off-by: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
----
-
-Hi,
-
-My system is ARM926EJ-S rev 5 (v5l) (AT91SAM9G25), the board is an ACME Systems Arietta.
-
-The system used sysfs-gpio to manage a few gpio lines, and I have noticed that some have stopped working.
-
-The test script is very simple:
-
-	#! /bin/bash
-
-	cd /sys/class/gpio/
-	echo 24 > export 
-
-	cd pioA24
-	echo out > direction
-
-	echo 0 > value
-	cat value
-	echo 1 > value
-	cat value
-	echo 0 > value
-	cat value
-	echo 1 > value
-	cat value
-
-	cd ..
-	echo 24 > unexport
-
-In a "good" kernel, this script outputs 0, 1, 0, 1. In a bad kernel, the output result is 1, 1, 1, 1. Also it must be possible to run this script twice without errors, that was the issue with the gpiochip_generic_free() call that had been addressed in another patch.
-
-In my system PINCTRL is automatically selected by 
-SOC_AT91SAM9 [=y] && ARCH_AT91 [=y] && ARCH_MULTI_V5 [=y]
-
-So it is not an option to disable it to make it work.
 
 Best regards,
-Marcelo.
-
-
- drivers/gpio/gpiolib.c | 10 ----------
- 1 file changed, 10 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index af5bb8fedfea..ac69ec8fb37a 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1804,11 +1804,6 @@ static inline void gpiochip_irqchip_free_valid_mask(struct gpio_chip *gc)
-  */
- int gpiochip_generic_request(struct gpio_chip *gc, unsigned offset)
- {
--#ifdef CONFIG_PINCTRL
--	if (list_empty(&gc->gpiodev->pin_ranges))
--		return 0;
--#endif
--
- 	return pinctrl_gpio_request(gc->gpiodev->base + offset);
- }
- EXPORT_SYMBOL_GPL(gpiochip_generic_request);
-@@ -1820,11 +1815,6 @@ EXPORT_SYMBOL_GPL(gpiochip_generic_request);
-  */
- void gpiochip_generic_free(struct gpio_chip *gc, unsigned offset)
- {
--#ifdef CONFIG_PINCTRL
--	if (list_empty(&gc->gpiodev->pin_ranges))
--		return;
--#endif
--
- 	pinctrl_gpio_free(gc->gpiodev->base + offset);
- }
- EXPORT_SYMBOL_GPL(gpiochip_generic_free);
--- 
-2.30.2
-
+Krzysztof
