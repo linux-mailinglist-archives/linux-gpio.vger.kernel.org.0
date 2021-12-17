@@ -2,290 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5228E4780AF
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Dec 2021 00:34:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 39A99478124
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Dec 2021 01:12:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229468AbhLPXeL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 16 Dec 2021 18:34:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58406 "EHLO
+        id S229555AbhLQAMP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 16 Dec 2021 19:12:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229673AbhLPXeJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Dec 2021 18:34:09 -0500
-Received: from mail-oi1-x231.google.com (mail-oi1-x231.google.com [IPv6:2607:f8b0:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0F55C061401
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Dec 2021 15:34:08 -0800 (PST)
-Received: by mail-oi1-x231.google.com with SMTP id m6so1178466oim.2
-        for <linux-gpio@vger.kernel.org>; Thu, 16 Dec 2021 15:34:08 -0800 (PST)
+        with ESMTP id S229525AbhLQAMO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 16 Dec 2021 19:12:14 -0500
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82205C061574
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Dec 2021 16:12:14 -0800 (PST)
+Received: by mail-pl1-x629.google.com with SMTP id y7so409009plp.0
+        for <linux-gpio@vger.kernel.org>; Thu, 16 Dec 2021 16:12:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20210112;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=wVN9Cdst75YteBeeIFGNl0na8PJu1PxWjHvdKRsuLNo=;
-        b=HjENK0B9HW76vw8xIIFcJA0IC3D9n2s3W+qR5y0bHYRZNJwAQgqyMg67KQ5oX7Cjpk
-         1tBi7NGzC/4YJI3ThIywLGGClCUcnzfkZSq+I0Rs9bz5/xCcm6jl5jr2lPIgSCLbaH2u
-         vEl+/iaypGo/qxv816XdLF0aZrgkDlf1X/ADKXOTzwPBCF3n81iMJk0ICHzh1CHFIFir
-         W34nfJiJYW+G2E8AA3TI7ZIJNttLnhX7gI2xABw9PaJbkjv/GkYmXEVE77DyRlnyw6dA
-         iY2iwcSoDGPe6FyQBPMym3RozkZZbmucrUF21orOEGPqNfx1EdygBBdHg0iFDR+y+yvY
-         VAYQ==
+        bh=Vi/Ok+gpSQDOOK9eLilwzk36bHNWjM+yp80y0wHsmCs=;
+        b=efemdLPvF/B4xfoXC0tH9ZVv5o9/VJomapNrTnROWOQ3JcwDCS8xyj+6tuxyYrIc7h
+         d/+ylXWK4N9qUKU/+LJndO4Ra7Zt80QONstUD4Eo46wdhFVf3w53+pvEtMw69cTLH/Pk
+         b0crNvV3kP0fecGo+1EkebSPX+zaXi5XPsxNfIFXmtFpX7qmlEa2Zvmbj9Ee+VhsEp92
+         yujkzSJ1FTPOJNOTK2Hs8GsT0XsEk1qEPavW9RYufaERduf5vZLy+stJmtULxtT62/86
+         +cuYn+7zG+XPrI1wgsaKG8GvIA7vYWRZWmHg9cYMOX7MDXXkXNb12dbCOWsXwwmASiD4
+         STLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=wVN9Cdst75YteBeeIFGNl0na8PJu1PxWjHvdKRsuLNo=;
-        b=X4Q2f/rVJQB/Nli5ar3AHwuUdQItPhiHIjUTmpQ7oG8cnrY9r30v/NvJH0VemLnIxS
-         ykhDvInzM5KKMR6OQN1NA7GCcmjpxh8bVMaDw34puC4rs6bJPNDolPY3qOK1IhGWaOaK
-         P6+WrMqetx1IdT7zmvrgH3PlW0oG30DoWK9yCsYH2yX3D/ZjM3KMdpWPEc1Qx1j6nN9o
-         oEm7lGgNe5GFN2orJwJtS+gweo2noHOFCInOqW4K2sz5Sq8AtRDUAuCnmqtrUgZgrfi1
-         8KpRWtVy5nBsdyudYs3pZYeEn2oGQk/aC5aOAa9F3g6bJzEBWW6Z0I5+5BBEAATXbu2l
-         QbRQ==
-X-Gm-Message-State: AOAM531kbzCcnd1x56fgm4C/iXMx2SW+/lSdhqCf9w9KoxKYePrYPNjf
-        CP6YgJLt79/LPtXmuxE3CfBEWA==
-X-Google-Smtp-Source: ABdhPJzVmPPYwv1YIcyUN6xIib5xQXy6q7OQQrigQ9KAdWSJxAYxjsL16fUSS1c0ugQMQ/lxpItSOQ==
-X-Received: by 2002:a05:6808:1597:: with SMTP id t23mr173283oiw.24.1639697648165;
-        Thu, 16 Dec 2021 15:34:08 -0800 (PST)
-Received: from ripper (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id bi20sm1431910oib.29.2021.12.16.15.34.07
+        bh=Vi/Ok+gpSQDOOK9eLilwzk36bHNWjM+yp80y0wHsmCs=;
+        b=XFAWknxm0zqHM/tdz3ByrH1By4nYv4KP6SJc99YAi93t7L4dpIdLj9g5fYwZ7qYAfr
+         wao7aVYEGBEsBoViaP2dI+r+LhV9oy7TS06cwPuJjrwLJuM+XNWNvRm7Q9giIXsNeQMq
+         SCMMUlrsJ+8EFwe/ViE5ugFtIlP2DtlixHnwehGdnl+z7R9HezVkKslZJCzaaixPegi9
+         jQVZdCZcxRyhsWhJCuiqmKqlPvODnCepPd3sv7rlK2rOffjiCkgSA/iT5GAQWqzjZt/B
+         lUCsuFPtIjjX2QGqNx3OKNMN6fW0vlmww1YUiD8bYj5ix2EI8qdwbaU2M9Jaye783jXB
+         VVcg==
+X-Gm-Message-State: AOAM532MbR/mPOJS2Pv2hYG8TdHOi/C8V5PqiETJsfXAnzSGUsnF2GiW
+        GHSAFa/XN8tNld5fv2KlJjs=
+X-Google-Smtp-Source: ABdhPJxOAzPmpID6Zt58KUUzmVunYcFAyw15Iff+lP3YAbJJpQkMRdYiiOBORQLxp5Vx7OJL4f7DFQ==
+X-Received: by 2002:a17:90b:4c0d:: with SMTP id na13mr9099133pjb.177.1639699934006;
+        Thu, 16 Dec 2021 16:12:14 -0800 (PST)
+Received: from sol (14-201-12-235.tpgi.com.au. [14.201.12.235])
+        by smtp.gmail.com with ESMTPSA id u22sm7436363pfk.148.2021.12.16.16.12.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Dec 2021 15:34:07 -0800 (PST)
-Date:   Thu, 16 Dec 2021 15:35:23 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     quic_vamslank@quicinc.com
-Cc:     agross@kernel.org, linus.walleij@linaro.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        manivannan.sadhasivam@linaro.org
-Subject: Re: [PATCH v6 1/2] dt-bindings: pinctrl: qcom: Add SDX65 pinctrl
- bindings
-Message-ID: <YbvNO8uS/x5qFqx8@ripper>
-References: <cover.1639696427.git.quic_vamslank@quicinc.com>
- <ff9abf953c274a1e34f59114642f67ecf02acb6f.1639696427.git.quic_vamslank@quicinc.com>
+        Thu, 16 Dec 2021 16:12:13 -0800 (PST)
+Date:   Fri, 17 Dec 2021 08:12:07 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Wedson Almeida Filho <wedsonaf@google.com>,
+        Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org
+Subject: Re: [PATCH V2 2/4] libgpiod: Add rust wrappers
+Message-ID: <20211217001207.GA6287@sol>
+References: <cover.1638443930.git.viresh.kumar@linaro.org>
+ <7ace171379783b73a8f560737fd47900ac28924c.1638443930.git.viresh.kumar@linaro.org>
+ <CAMRc=MeoTiUOjM_D36ZEU=echpM9jVhr1HY7fuxTDs0t0jf2Jg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ff9abf953c274a1e34f59114642f67ecf02acb6f.1639696427.git.quic_vamslank@quicinc.com>
+In-Reply-To: <CAMRc=MeoTiUOjM_D36ZEU=echpM9jVhr1HY7fuxTDs0t0jf2Jg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu 16 Dec 15:18 PST 2021, quic_vamslank@quicinc.com wrote:
-
-> From: Vamsi Krishna Lanka <quic_vamslank@quicinc.com>
+On Thu, Dec 16, 2021 at 02:59:25PM +0100, Bartosz Golaszewski wrote:
+> On Thu, Dec 2, 2021 at 12:23 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> >
+> > Add rust wrappers around FFI bindings to provide a convenient interface
+> > for the users.
+> >
+> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > ---
 > 
-> Add device tree binding Documentation details for Qualcomm SDX65
-> pinctrl driver.
+> Hi Viresh, thanks for the hard work.
 > 
-> Signed-off-by: Vamsi Krishna Lanka <quic_vamslank@quicinc.com>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  .../bindings/pinctrl/qcom,sdx65-pinctrl.yaml  | 191 ++++++++++++++++++
->  1 file changed, 191 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sdx65-pinctrl.yaml
+> Obviously this is not something we can merge yet but it's a good base
+> to continue the work.
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdx65-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sdx65-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..cdfcf29dffee
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdx65-pinctrl.yaml
-> @@ -0,0 +1,191 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/qcom,sdx65-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Technologies, Inc. SDX65 TLMM block
-> +
-> +maintainers:
-> +  - Vamsi krishna Lanka <quic_vamslank@quicinc.com>
-> +
-> +description:
-> +  This binding describes the Top Level Mode Multiplexer block found in the
-> +  SDX65 platform.
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,sdx65-tlmm
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  interrupt-controller: true
-> +
-> +  '#interrupt-cells':
-> +    description: Specifies the PIN numbers and Flags, as defined in
-> +      include/dt-bindings/interrupt-controller/irq.h
-> +    const: 2
-> +
-> +  gpio-controller: true
-> +
-> +  '#gpio-cells':
-> +    description: Specifying the pin number and flags, as defined in
-> +      include/dt-bindings/gpio/gpio.h
-> +    const: 2
-> +
-> +  gpio-ranges:
-> +    maxItems: 1
-> +
-> +  gpio-reserved-ranges:
-> +    maxItems: 1
-> +
-> +#PIN CONFIGURATION NODES
-> +patternProperties:
-> +  '-state$':
-> +    oneOf:
-> +      - $ref: "#/$defs/qcom-sdx65-tlmm-state"
-> +      - patternProperties:
-> +          ".*":
-> +            $ref: "#/$defs/qcom-sdx65-tlmm-state"
-> +'$defs':
-> +  qcom-sdx65-tlmm-state:
-
-Thanks.
-
-This looks good now.
-
-Regards,
-Bjorn
-
-> +    type: object
-> +    description:
-> +      Pinctrl node's client devices use subnodes for desired pin configuration.
-> +      Client device subnodes use below standard properties.
-> +    $ref: "qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state"
-> +
-> +    properties:
-> +      pins:
-> +        description:
-> +          List of gpio pins affected by the properties specified in this subnode.
-> +        items:
-> +          oneOf:
-> +            - pattern: "^gpio([0-9]|[1-9][0-9]|10[0-7])$"
-> +            - enum: [ ufs_reset, sdc1_clk, sdc1_cmd, sdc1_data, sdc2_clk, sdc2_cmd, sdc2_data, sdc1_rclk ]
-> +        minItems: 1
-> +        maxItems: 150
-> +
-> +      function:
-> +        description:
-> +          Specify the alternative function to be configured for the specified
-> +          pins. Functions are only valid for gpio pins.
-> +        enum: [ blsp_uart1, blsp_spi1, blsp_i2c1, blsp_uim1, atest_tsens,
-> +                bimc_dte1, dac_calib0, blsp_spi8, blsp_uart8, blsp_uim8,
-> +                qdss_cti_trig_out_b, bimc_dte0, dac_calib1, qdss_cti_trig_in_b,
-> +                dac_calib2, atest_tsens2, atest_usb1, blsp_spi10, blsp_uart10,
-> +                blsp_uim10, atest_bbrx1, atest_usb13, atest_bbrx0, atest_usb12,
-> +                mdp_vsync, edp_lcd, blsp_i2c10, atest_gpsadc1, atest_usb11,
-> +                atest_gpsadc0, edp_hot, atest_usb10, m_voc, dac_gpio, atest_char,
-> +                cam_mclk, pll_bypassnl, qdss_stm7, blsp_i2c8, qdss_tracedata_b,
-> +                pll_reset, qdss_stm6, qdss_stm5, qdss_stm4, atest_usb2, cci_i2c,
-> +                qdss_stm3, dac_calib3, atest_usb23, atest_char3, dac_calib4,
-> +                qdss_stm2, atest_usb22, atest_char2, qdss_stm1, dac_calib5,
-> +                atest_usb21, atest_char1, dbg_out, qdss_stm0, dac_calib6,
-> +                atest_usb20, atest_char0, dac_calib10, qdss_stm10,
-> +                qdss_cti_trig_in_a, cci_timer4, blsp_spi6, blsp_uart6, blsp_uim6,
-> +                blsp2_spi, qdss_stm9, qdss_cti_trig_out_a, dac_calib11,
-> +                qdss_stm8, cci_timer0, qdss_stm13, dac_calib7, cci_timer1,
-> +                qdss_stm12, dac_calib8, cci_timer2, blsp1_spi, qdss_stm11,
-> +                dac_calib9, cci_timer3, cci_async, dac_calib12, blsp_i2c6,
-> +                qdss_tracectl_a, dac_calib13, qdss_traceclk_a, dac_calib14,
-> +                dac_calib15, hdmi_rcv, dac_calib16, hdmi_cec, pwr_modem,
-> +                dac_calib17, hdmi_ddc, pwr_nav, dac_calib18, pwr_crypto,
-> +                dac_calib19, hdmi_hot, dac_calib20, dac_calib21, pci_e0,
-> +                dac_calib22, dac_calib23, dac_calib24, tsif1_sync, dac_calib25,
-> +                sd_write, tsif1_error, blsp_spi2, blsp_uart2, blsp_uim2,
-> +                qdss_cti, blsp_i2c2, blsp_spi3, blsp_uart3, blsp_uim3, blsp_i2c3,
-> +                uim3, blsp_spi9, blsp_uart9, blsp_uim9, blsp10_spi, blsp_i2c9,
-> +                blsp_spi7, blsp_uart7, blsp_uim7, qdss_tracedata_a, blsp_i2c7,
-> +                qua_mi2s, gcc_gp1_clk_a, ssc_irq, uim4, blsp_spi11, blsp_uart11,
-> +                blsp_uim11, gcc_gp2_clk_a, gcc_gp3_clk_a, blsp_i2c11, cri_trng0,
-> +                cri_trng1, cri_trng, qdss_stm18, pri_mi2s, qdss_stm17, blsp_spi4,
-> +                blsp_uart4, blsp_uim4, qdss_stm16, qdss_stm15, blsp_i2c4,
-> +                qdss_stm14, dac_calib26, spkr_i2s, audio_ref, lpass_slimbus,
-> +                isense_dbg, tsense_pwm1, tsense_pwm2, btfm_slimbus, ter_mi2s,
-> +                qdss_stm22, qdss_stm21, qdss_stm20, qdss_stm19, gcc_gp1_clk_b,
-> +                sec_mi2s, blsp_spi5, blsp_uart5, blsp_uim5, gcc_gp2_clk_b,
-> +                gcc_gp3_clk_b, blsp_i2c5, blsp_spi12, blsp_uart12, blsp_uim12,
-> +                qdss_stm25, qdss_stm31, blsp_i2c12, qdss_stm30, qdss_stm29,
-> +                tsif1_clk, qdss_stm28, tsif1_en, tsif1_data, sdc4_cmd, qdss_stm27,
-> +                qdss_traceclk_b, tsif2_error, sdc43, vfr_1, qdss_stm26, tsif2_clk,
-> +                sdc4_clk, qdss_stm24, tsif2_en, sdc42, qdss_stm23, qdss_tracectl_b,
-> +                sd_card, tsif2_data, sdc41, tsif2_sync, sdc40, mdp_vsync_p_b,
-> +                ldo_en, mdp_vsync_s_b, ldo_update, blsp11_uart_tx_b, blsp11_uart_rx_b,
-> +                blsp11_i2c_sda_b, prng_rosc, blsp11_i2c_scl_b, uim2, uim1, uim_batt,
-> +                pci_e2, pa_indicator, adsp_ext, ddr_bist, qdss_tracedata_11,
-> +                qdss_tracedata_12, modem_tsync, nav_dr, nav_pps, pci_e1, gsm_tx,
-> +                qspi_cs, ssbi2, ssbi1, mss_lte, qspi_clk, qspi0, qspi1, qspi2, qspi3,
-> +                gpio ]
-> +
-> +      drive-strength:
-> +        enum: [2, 4, 6, 8, 10, 12, 14, 16]
-> +        default: 2
-> +        description:
-> +          Selects the drive strength for the specified pins, in mA.
-> +
-> +      bias-pull-down: true
-> +
-> +      bias-pull-up: true
-> +
-> +      bias-disable: true
-> +
-> +      output-high: true
-> +
-> +      output-low: true
-> +
-> +    required:
-> +      - pins
-> +      - function
-> +
-> +    additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupt-controller
-> +  - '#interrupt-cells'
-> +  - gpio-controller
-> +  - '#gpio-cells'
-> +  - gpio-ranges
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    tlmm: pinctrl@f100000 {
-> +        compatible = "qcom,sdx65-tlmm";
-> +        reg = <0x03000000 0xdc2000>;
-> +        gpio-controller;
-> +        #gpio-cells = <2>;
-> +        gpio-ranges = <&tlmm 0 0 109>;
-> +        interrupt-controller;
-> +        #interrupt-cells = <2>;
-> +        interrupts = <GIC_SPI 212 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +        gpio-wo-subnode-state {
-> +            pins = "gpio1";
-> +            function = "gpio";
-> +        };
-> +
-> +        uart-w-subnodes-state {
-> +            rx {
-> +                pins = "gpio4";
-> +                function = "blsp_uart1";
-> +                bias-pull-up;
-> +            };
-> +
-> +            tx {
-> +                pins = "gpio5";
-> +                function = "blsp_uart1";
-> +                bias-disable;
-> +            };
-> +        };
-> +    };
-> +...
-> -- 
-> 2.33.1
+> General comment on the naming convention:
 > 
+> The line from one of the examples: 'use libgpiod::chip::GpiodChip;'
+> looks like it has a lot of redundancy in it. How about calling the
+> crate gpiod and dropping the chip package entirely? Basically follow
+> what C++ and python bindings do by having `use gpiod::Chip` etc.?
+> 
+
+I'm of the opinion that a rust implementation would be better targetting
+the ioctls directly rather than libgpiod, as my Go library does and for
+essentially the same reasons.
+To test that theory, and as an exercise to learn rust, I've been writing
+one, and so far I've been calling it gpiod :-|.
+
+Since this crate targets libgpiod it would make sense for it to
+remain named libgpiod.
+
+I agree with the chip::Chip repitition point - found the same thing
+myself.  OTOH chip::Info and line::Info etc work well, and in rust
+you can always rename them as you import them into your namespace if it
+bothers you.  So overall I'm still on the fence on this one.
+
+> [snip]
+> 
+> > +
+> > +impl GpiodChipInternal {
+> > +    /// Find a GPIO chip by path.
+> > +    pub(crate) fn open(path: &str) -> Result<Self> {
+> > +        let chip = unsafe { bindings::gpiod_chip_open(path.as_ptr() as *const c_char) };
+> > +        if chip.is_null() {
+> > +            return Err(Error::OperationFailed("GpiodChip open", IoError::last()));
+> 
+> One of my concerns last time was error handling. Does this now
+> translate the error codes from the underlying C code to some kind of
+> rust errors? Can you elaborate on how that works? I see it always
+> returns IoError. In my WIP C++ and Python code I try to translate the
+> errnos into some meaningful exceptions - for instance EINVAL ->
+> ::std::invalid_argument etc. Can we have a similar thing here?
+> 
+> [snip]
+> 
+> > +
+> > +    /// Get the GPIO chip name as represented in the kernel.
+> > +    pub fn get_name(&self) -> Result<&str> {
+> > +        // SAFETY: The string returned by libgpiod is guaranteed to live as long
+> > +        // as the `struct GpiodChip`.
+> > +        let name = unsafe { bindings::gpiod_chip_get_name(self.ichip.chip()) };
+> > +        if name.is_null() {
+> 
+> This is not possible, the string can be empty at the very least but
+> never null. Same for label and path.
+> 
+
+On the subject of strings, are paths, names, labels, and consumers
+guaranteed to be valid UTF-8?
+If not then failing to convert them using UTF-8 is not an error (not
+here but elsewhere in the patch).
+
+Cheers,
+Kent.
