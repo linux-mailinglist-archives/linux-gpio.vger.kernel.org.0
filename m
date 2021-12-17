@@ -2,90 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D3F60478802
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Dec 2021 10:45:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 19614478810
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Dec 2021 10:49:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232626AbhLQJpJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Dec 2021 04:45:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32794 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229874AbhLQJpI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Dec 2021 04:45:08 -0500
-Received: from mail-il1-x129.google.com (mail-il1-x129.google.com [IPv6:2607:f8b0:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F4C2C061574
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Dec 2021 01:45:08 -0800 (PST)
-Received: by mail-il1-x129.google.com with SMTP id 15so1165258ilq.2
-        for <linux-gpio@vger.kernel.org>; Fri, 17 Dec 2021 01:45:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RWm+5eJ1NKkZ8kLgeaYQHXXc1vko4JCUGYVct8hkwCA=;
-        b=FldaIL+ND/TLB30rHBuGiJsqJ2BgRL2AajJ4+r++1FDwVMdP8Jp/XgksUq94t9cKnM
-         zyuHznSzj/Np81V+qTvZDTmu3sqZII1igqUehI7CbnOuOIgmm/rPwWCkSOzn4HpXch0G
-         3f1zMe/Aj1S5sY0KfYthar2geMv5bEmpzJANlF+/4CUmZNLlNEl5CqBihqcshWbHbz8g
-         icveRLeMDVFgXFFWcflV2cvgPcCtfiG2vLFXK1z9WBBRB50SWlLvhc1lJMsYuMrVlRME
-         xZ49CkIZ6BpEiS5ZXH8t6kmhvi8Yf2cmSIOLZLdpvXZymmTgSSB7LJejyEHMatedHemo
-         NRlQ==
+        id S234394AbhLQJtC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Dec 2021 04:49:02 -0500
+Received: from mail-vk1-f177.google.com ([209.85.221.177]:42998 "EHLO
+        mail-vk1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233096AbhLQJtC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Dec 2021 04:49:02 -0500
+Received: by mail-vk1-f177.google.com with SMTP id s1so1136054vks.9;
+        Fri, 17 Dec 2021 01:49:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=RWm+5eJ1NKkZ8kLgeaYQHXXc1vko4JCUGYVct8hkwCA=;
-        b=rcvQej6jsfAySN/N2x4w7BKUn0b+woSu4sSeOtvvHNJGHUvScadvJzznuVFiFmwh4g
-         HCJx3y3WowpkD+InTKrofht0agvjw+q6+Sd9Qaz13MaSaX2hix7aBJtKqW2Jo6Qi8M3N
-         wsQPOdpye2R+1rRAk1ypWjjXbpLWTW0YyKsXM5VzUYXnV5umr67eyAlxJmSCJgs3vwWJ
-         UrGBcNGFAzoy9lgl7tLlKuU4BBqwLyV16TweSFH/e8v+XglygNKuf000jChVDNz7hydu
-         m0pccVUF3jeejqv2gfoCCJ3jYcdhvJx/+I3o7uEqTxmb+/yJ7pw3Nb8vXXUnSyW3EqTY
-         FNDQ==
-X-Gm-Message-State: AOAM5316V49kDMicoT8iOy3C7ia/b+1jTZOyhhPGeMHOTzmWCdGs3A6z
-        q/6yJJFRoKOdRR7vc2zcPVl45QZ2DIBN+mJDfN8=
-X-Google-Smtp-Source: ABdhPJx6fSoovzABjA9IoDrGU4lBh9+PMDQFI3MyYqi1l1i4AkazXPrOWJ2ZbUVRximBUmavoCyTsPr3vOD5wOhGbCg=
-X-Received: by 2002:a92:c56c:: with SMTP id b12mr1003274ilj.237.1639734307943;
- Fri, 17 Dec 2021 01:45:07 -0800 (PST)
+        bh=pV3wufp8Dvr2hDhjItQtnYu6eMKRgXVIFNhbTAtUVzU=;
+        b=yvw5bl0T3tZKXmmpbo/vH01xbr9fzBmv3P+W8H9MtsOKaHt097Nw+0XrQD2L+wMmvr
+         z42lzBUSdFLgxNCKEfMrizK1dIgAR36ZSS6XknytaEWq4mCVg6lsRzb+E1VV6U2BZWbA
+         0mDznrCCYwfZMU3VPpLgdJdCGP2DhqorfKRiuUYFpyabSrujE/j2ofb0DZqwuDOYv1ca
+         qVs97xUcVgHu8B4juOldyJ8X4eTq2aQszGvEcWRea/Ij2wDse4yb7HW/Qht5Sw9cP7oQ
+         2TIUtTHA8iiYmAVgma7H7PrU9qGz1cQb7gG0iGdvHUFWfm4kibiUQErz83Y7dsE5mH3g
+         7kWg==
+X-Gm-Message-State: AOAM531njpYNAKJMNAqxkfZBOusG9qAeRZ8tO0G/b+dUbhBV+QKsnRT/
+        gzDMo1flr+ij0c2Qpxc0ZdqgZ5Je5BWdSw==
+X-Google-Smtp-Source: ABdhPJzlqo2h8WQv5SAzvK4/3sicPepHkLvrIy/RzWGDskdL9bfhn0NyB/ZFWmKRXYRwhZRJgvObZA==
+X-Received: by 2002:a1f:a556:: with SMTP id o83mr811562vke.9.1639734540702;
+        Fri, 17 Dec 2021 01:49:00 -0800 (PST)
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
+        by smtp.gmail.com with ESMTPSA id v8sm1679419vkc.52.2021.12.17.01.48.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Dec 2021 01:48:59 -0800 (PST)
+Received: by mail-ua1-f49.google.com with SMTP id u40so3318675uad.1;
+        Fri, 17 Dec 2021 01:48:59 -0800 (PST)
+X-Received: by 2002:a67:c106:: with SMTP id d6mr650580vsj.77.1639734538930;
+ Fri, 17 Dec 2021 01:48:58 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1638443930.git.viresh.kumar@linaro.org> <7ace171379783b73a8f560737fd47900ac28924c.1638443930.git.viresh.kumar@linaro.org>
- <CAMRc=MeoTiUOjM_D36ZEU=echpM9jVhr1HY7fuxTDs0t0jf2Jg@mail.gmail.com> <20211217050135.l7p3sudbdvzewi6y@vireshk-i7>
-In-Reply-To: <20211217050135.l7p3sudbdvzewi6y@vireshk-i7>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Fri, 17 Dec 2021 10:44:56 +0100
-Message-ID: <CANiq72n=i9e5y8ONhZdH72tNuQJp8TJKY2Xa-y4NEpSDOq0+rw@mail.gmail.com>
-Subject: Re: [PATCH V2 2/4] libgpiod: Add rust wrappers
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
+References: <20211217093325.30612-1-conor.dooley@microchip.com>
+In-Reply-To: <20211217093325.30612-1-conor.dooley@microchip.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 17 Dec 2021 10:48:47 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWTjrAiHosU0cGyJYkK=9JzNgHb=tjHXPdYxTWmkVzeYQ@mail.gmail.com>
+Message-ID: <CAMuHMdWTjrAiHosU0cGyJYkK=9JzNgHb=tjHXPdYxTWmkVzeYQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/17] Update the Icicle Kit device tree
+To:     Conor Dooley <conor.dooley@microchip.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Wedson Almeida Filho <wedsonaf@google.com>,
-        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        linux-rtc@vger.kernel.org, linux-spi <linux-spi@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Bin Meng <bin.meng@windriver.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Lewis Hanly <lewis.hanly@microchip.com>,
+        daire.mcnamara@microchip.com, ivan.griffin@microchip.com,
+        Atish Patra <atish.patra@wdc.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Dec 17, 2021 at 6:01 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+Hi Conor,
+
+On Fri, Dec 17, 2021 at 10:31 AM <conor.dooley@microchip.com> wrote:
+> Also depends on Geert's format changes to interrupt grouping etc [2].
 >
-> Miguel, what's your take on stuff like this ? I am not sure if we should just
-> drop this check altogether.
+> Additionally, the interrupt-extended warnings on the plic/clint are
+> cleared by [3] & [4], which lore appears to have been very confused about.
 
-Given the C side documents that the pointer is valid (I think; since
-others are documented as "or NULL" etc., but it is a bit implicit),
-then avoiding the check is a possibility.
+Right, it ended up being even more messier than I thought, and confuses
+"b4 am" too.
+I will resend these 3 series later today.
 
-However, to answer this, one needs to understand the risk profile of
-the project, the stability of the C API, the performance expectations
-(e.g. is the call supposed to be in the hot path of clients?), etc.
+> [1] https://lore.kernel.org/linux-clk/20211216140022.16146-1-conor.dooley@microchip.com/T/
+> [2] https://lore.kernel.org/linux-riscv/cover.1639660956.git.geert@linux-m68k.org/T/
+> [3] https://patchwork.kernel.org/project/linux-riscv/cover/cover.1639662093.git.geert@linux-m68k.org/
+> [4] https://patchwork.kernel.org/project/linux-riscv/cover/cover.1639661878.git.geert@linux-m68k.org/
 
-When in doubt (or when there is no reason to not do the check), it is
-usually better to err on the safe side, specially if you aren't close
-to the maintainers of the API etc. But since you have access to
-Linus/Bartosz here, it is best to discuss this with them :) And, after
-all, you are already trusting the C side to some degree anyway, and it
-would be good to make sure both sides understand and clearly document
-the contracts of the functions so that no bindings break in the future
-(Rust or otherwise).
+Gr{oetje,eeting}s,
 
-Cheers,
-Miguel
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
