@@ -2,235 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F1964789DA
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Dec 2021 12:25:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3275C4789E7
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Dec 2021 12:30:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233563AbhLQLZP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Dec 2021 06:25:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55884 "EHLO
+        id S233586AbhLQLaD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Dec 2021 06:30:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235448AbhLQLZN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Dec 2021 06:25:13 -0500
-Received: from nbd.name (nbd.name [IPv6:2a01:4f8:221:3d45::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B437C061574;
-        Fri, 17 Dec 2021 03:25:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
-         s=20160729; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=GVpCgi6bkaPNBn8b9NGcbzAZF3oNsyrclg0S9ZQ7TR8=; b=e60VoKEqqQ4m8VNbqwVpP5Dv8n
-        F5KXXyYCedU9MEg5eIgLrwTnl8DqgvjBKdxC1c20h59/xtKWfuPN0/m1PBBnWFb07YyRIi0RXMuGB
-        aV6FrIIWAlXeT9K0Vnm5s8fSdty4WPRxLuKUeeUhblEcUINUjuTpPohYaoBGg1NiU/oo=;
-Received: from p54ae911a.dip0.t-ipconnect.de ([84.174.145.26] helo=localhost.localdomain)
-        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <nbd@nbd.name>)
-        id 1myBLM-000742-8M; Fri, 17 Dec 2021 12:24:08 +0100
-From:   Felix Fietkau <nbd@nbd.name>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     john@phrozen.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH v7 13/14] gpio: Add support for Airoha EN7523 GPIO controller
-Date:   Fri, 17 Dec 2021 12:23:43 +0100
-Message-Id: <20211217112345.14029-14-nbd@nbd.name>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20211217112345.14029-1-nbd@nbd.name>
-References: <20211217112345.14029-1-nbd@nbd.name>
+        with ESMTP id S229817AbhLQLaC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Dec 2021 06:30:02 -0500
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 685EDC061574
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Dec 2021 03:30:02 -0800 (PST)
+Received: by mail-ed1-x52b.google.com with SMTP id y13so6453041edd.13
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Dec 2021 03:30:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BTA2nXvdFwwc3m0/iWzHcSoz8qgj1Cg+yjrMT+WtD1M=;
+        b=Kjk329bLbSlcTYRsT2D3HQUHqs9EASv4H+8ZwUIlY5kIVj9mbhlmnewaI/WH/gSkJ2
+         OiS9wh3IUYS9e9JvIxjsRat+lrESfWIPd4RD/HLEjxYZdUW1KFK2iGVDBjlK2Q1K6vap
+         mltbm74bcnliDg535vjS+JVoXO7zFaAH6EusRk3LvXoD60bPWf5VEL93hzoliCxvRpiT
+         Ia3wI9X0yWihkzKad2/ePWdBKhAxhcf86wtUrtV1xNc6fCmKOneUisl3PNIiYpYSk4Jx
+         Z+WiD7e11K5g5YJbn9Ci1NTxzrCyZER4Yv/gYYSabSGYHOzkdliZVMReoJXiQlPdY8tt
+         GG4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BTA2nXvdFwwc3m0/iWzHcSoz8qgj1Cg+yjrMT+WtD1M=;
+        b=YcB2YRU2mqoDT9kwGqER7pnqrwnEXc0ZfCu6x+1voBmswxZSZcv7Nn2XEvxbh3wS8S
+         gDlhEgcGgo4wXwktC4Nlc84bU/xzSBBEUXmOck9nXTR7jijRHufcMwDaN7T64hAdbdsY
+         Nu/MWgg2cP+hJH/FKMuqDySJvtZgawESUSlAYQr7WgG1s/3euCNOQ4RwAipdVsYfEtN1
+         Wr82QkCCZBOyO3KTXyEwhZjnjfx4HwFHUUrhO3m96tntYATuQE3nAYM+/ttHrXEnhAQH
+         auafbU/Xwrchtpg+zCdwLqb6AEZBTaPFdnp5f9HGNihoqFH4+3J4zXMmgAYe4vMaSOqz
+         rAZw==
+X-Gm-Message-State: AOAM530coj0j/ejELsfIf2sgjR68zq8mOxAxKs/N4MzRom3ztLq7UJOz
+        PPnmlVgvSi7timjxsxQBXqu1I8TPyq+KbXUdJIuzNTtCZ9M=
+X-Google-Smtp-Source: ABdhPJxEjeCtOn2mKso3xe2SZWQ3ESzTrtR+h/b5/tkEg47RWhcuuAbB2MZ7f6ocOMMunw5gcsWaekVJFedMFdUg+IU=
+X-Received: by 2002:a05:6402:22c6:: with SMTP id dm6mr2433764edb.405.1639740600973;
+ Fri, 17 Dec 2021 03:30:00 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <Ybn8pxv5xPgc5nGz@black.fi.intel.com> <CAMRc=MceOZWt5Qb6kFSALOOwyYb_MikFusxZqt9KgqqQPfnwgQ@mail.gmail.com>
+ <YbskttzHvxlprBPM@smile.fi.intel.com> <CAMRc=McSULw2YpCgsK-C6+pTx85mtH3c5Y+MbawO+SSgUXM1gg@mail.gmail.com>
+ <Ybs5jqW3zyDh18Vx@smile.fi.intel.com> <CAMRc=MdWQEk-+-rq5ML=Yj-7ZTFMv6B0WocgqWJQu6GPkOsx2g@mail.gmail.com>
+ <CAHp75VfTQ-V6UMt570PV91ZkGFX8GOHepPsM3i2DSwp3J9ht1Q@mail.gmail.com> <CAMRc=MeZoDKOymaSyotXaD=7B+U-dM7G44b601agVqDXzRWnWQ@mail.gmail.com>
+In-Reply-To: <CAMRc=MeZoDKOymaSyotXaD=7B+U-dM7G44b601agVqDXzRWnWQ@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 17 Dec 2021 12:29:50 +0100
+Message-ID: <CAMRc=Mf+MNTkA6=xg=vhfEY8P8w9MnMzura7OwOQYOBjxcemQw@mail.gmail.com>
+Subject: Re: [GIT PULL] intel-gpio for 5.17-1
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linux GPIO <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: John Crispin <john@phrozen.org>
+On Fri, Dec 17, 2021 at 12:13 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> On Fri, Dec 17, 2021 at 10:53 AM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> >
+> > On Fri, Dec 17, 2021 at 1:38 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > > On Thu, Dec 16, 2021 at 2:06 PM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > On Thu, Dec 16, 2021 at 12:46:11PM +0100, Bartosz Golaszewski wrote:
+> > > > > On Thu, Dec 16, 2021 at 12:37 PM Andy Shevchenko
+> > > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > > > On Thu, Dec 16, 2021 at 10:14:05AM +0100, Bartosz Golaszewski wrote:
+> >
+> > ...
+> >
+> > > > > > Are you going to pull series with the OF node assignments clean up?
+> > > > > > I forgot to mention here that my PR does not include them.
+> > > > >
+> > > > > Yes, I'll queue it this week.
+> > > >
+> > > > Thanks!
+> > > >
+> > > > Do you know that your branches were kicked off from the Linux Next?
+> > > > Are you going to drop previous gpio-sim from the Linux Next?
+> > >
+> > > No, I didn't, thanks for the heads-up. Old gpio-sim code conflicted
+> > > with the one that was queued for v5.17. Should be good now.
+> >
+> > Thanks
+> >
+> > Btw, I have noticed you rebased your tree, can you, please, do not
+> > forget to put --rebase-merges to your `git rebase` command line so the
+> > merge won't change commit IDs?
+> >
+>
+> Oof you saved me from another LinusRant. I already pushed it, let's
+> see if I can get back to the previous state...
+>
 
-Airoha's GPIO controller on their ARM EN7523 SoCs consists of two banks of 32
-GPIOs. Each instance in DT is for a single bank.
+Done, reflog is my best friend now. Please take a look if all looks good to you.
 
-Signed-off-by: John Crispin <john@phrozen.org>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
----
- drivers/gpio/Kconfig       |   9 +++
- drivers/gpio/Makefile      |   1 +
- drivers/gpio/gpio-en7523.c | 134 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 144 insertions(+)
- create mode 100644 drivers/gpio/gpio-en7523.c
-
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 072ed610f9c6..e4a34272504f 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -247,6 +247,15 @@ config GPIO_EM
- 	help
- 	  Say yes here to support GPIO on Renesas Emma Mobile SoCs.
- 
-+config GPIO_EN7523
-+	tristate "Airoha GPIO support"
-+	depends on ARCH_AIROHA
-+	default ARCH_AIROHA
-+	select GPIO_GENERIC
-+	select GPIOLIB_IRQCHIP
-+	help
-+	  Say yes here to support the GPIO controller on Airoha EN7523.
-+
- config GPIO_EP93XX
- 	def_bool y
- 	depends on ARCH_EP93XX
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 71ee9fc2ff83..d2269ee0948e 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -56,6 +56,7 @@ obj-$(CONFIG_GPIO_DLN2)			+= gpio-dln2.o
- obj-$(CONFIG_GPIO_DWAPB)		+= gpio-dwapb.o
- obj-$(CONFIG_GPIO_EIC_SPRD)		+= gpio-eic-sprd.o
- obj-$(CONFIG_GPIO_EM)			+= gpio-em.o
-+obj-$(CONFIG_GPIO_EN7523)		+= gpio-en7523.o
- obj-$(CONFIG_GPIO_EP93XX)		+= gpio-ep93xx.o
- obj-$(CONFIG_GPIO_EXAR)			+= gpio-exar.o
- obj-$(CONFIG_GPIO_F7188X)		+= gpio-f7188x.o
-diff --git a/drivers/gpio/gpio-en7523.c b/drivers/gpio/gpio-en7523.c
-new file mode 100644
-index 000000000000..67631396cd93
---- /dev/null
-+++ b/drivers/gpio/gpio-en7523.c
-@@ -0,0 +1,134 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+#include <linux/gpio/driver.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+
-+#define AIROHA_GPIO_MAX		32
-+
-+/**
-+ * airoha_gpio_ctrl - Airoha GPIO driver data
-+ * @gc: Associated gpio_chip instance.
-+ * @data: The data register.
-+ * @dir0: The direction register for the lower 16 pins.
-+ * @dir1: The direction register for the higher 16 pins.
-+ * @output: The output enable register.
-+ */
-+struct airoha_gpio_ctrl {
-+	struct gpio_chip gc;
-+	void __iomem *data;
-+	void __iomem *dir[2];
-+	void __iomem *output;
-+};
-+
-+static struct airoha_gpio_ctrl *gc_to_ctrl(struct gpio_chip *gc)
-+{
-+	return container_of(gc, struct airoha_gpio_ctrl, gc);
-+}
-+
-+static int airoha_dir_set(struct gpio_chip *gc, unsigned int gpio,
-+			  int val, int out)
-+{
-+	struct airoha_gpio_ctrl *ctrl = gc_to_ctrl(gc);
-+	u32 dir = ioread32(ctrl->dir[gpio / 16]);
-+	u32 output = ioread32(ctrl->output);
-+	u32 mask = BIT((gpio % 16) * 2);
-+
-+	if (out) {
-+		dir |= mask;
-+		output |= BIT(gpio);
-+	} else {
-+		dir &= ~mask;
-+		output &= ~BIT(gpio);
-+	}
-+
-+	iowrite32(dir, ctrl->dir[gpio / 16]);
-+
-+	if (out)
-+		gc->set(gc, gpio, val);
-+
-+	iowrite32(output, ctrl->output);
-+
-+	return 0;
-+}
-+
-+static int airoha_dir_out(struct gpio_chip *gc, unsigned int gpio,
-+			  int val)
-+{
-+	return airoha_dir_set(gc, gpio, val, 1);
-+}
-+
-+static int airoha_dir_in(struct gpio_chip *gc, unsigned int gpio)
-+{
-+	return airoha_dir_set(gc, gpio, 0, 0);
-+}
-+
-+static int airoha_get_dir(struct gpio_chip *gc, unsigned int gpio)
-+{
-+	struct airoha_gpio_ctrl *ctrl = gc_to_ctrl(gc);
-+	u32 dir = ioread32(ctrl->dir[gpio / 16]);
-+	u32 mask = BIT((gpio % 16) * 2);
-+
-+	return (dir & mask) ? GPIO_LINE_DIRECTION_OUT : GPIO_LINE_DIRECTION_IN;
-+}
-+
-+static const struct of_device_id airoha_gpio_of_match[] = {
-+	{ .compatible = "airoha,en7523-gpio" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, airoha_gpio_of_match);
-+
-+static int airoha_gpio_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct airoha_gpio_ctrl *ctrl;
-+	int err;
-+
-+	ctrl = devm_kzalloc(dev, sizeof(*ctrl), GFP_KERNEL);
-+	if (!ctrl)
-+		return -ENOMEM;
-+
-+	ctrl->data = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(ctrl->data))
-+		return PTR_ERR(ctrl->data);
-+
-+	ctrl->dir[0] = devm_platform_ioremap_resource(pdev, 1);
-+	if (IS_ERR(ctrl->dir[0]))
-+		return PTR_ERR(ctrl->dir[0]);
-+
-+	ctrl->dir[1] = devm_platform_ioremap_resource(pdev, 2);
-+	if (IS_ERR(ctrl->dir[1]))
-+		return PTR_ERR(ctrl->dir[1]);
-+
-+	ctrl->output = devm_platform_ioremap_resource(pdev, 3);
-+	if (IS_ERR(ctrl->output))
-+		return PTR_ERR(ctrl->output);
-+
-+	err = bgpio_init(&ctrl->gc, dev, 4, ctrl->data, NULL,
-+			 NULL, NULL, NULL, 0);
-+	if (err)
-+		return dev_err_probe(dev, err, "unable to init generic GPIO");
-+
-+	ctrl->gc.ngpio = AIROHA_GPIO_MAX;
-+	ctrl->gc.owner = THIS_MODULE;
-+	ctrl->gc.direction_output = airoha_dir_out;
-+	ctrl->gc.direction_input = airoha_dir_in;
-+	ctrl->gc.get_direction = airoha_get_dir;
-+
-+	return devm_gpiochip_add_data(dev, &ctrl->gc, ctrl);
-+}
-+
-+static struct platform_driver airoha_gpio_driver = {
-+	.driver = {
-+		.name = "airoha-gpio",
-+		.of_match_table	= airoha_gpio_of_match,
-+	},
-+	.probe = airoha_gpio_probe,
-+};
-+module_platform_driver(airoha_gpio_driver);
-+
-+MODULE_DESCRIPTION("Airoha GPIO support");
-+MODULE_AUTHOR("John Crispin <john@phrozen.org>");
-+MODULE_LICENSE("GPL v2");
--- 
-2.34.1
-
+Bart
