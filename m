@@ -2,74 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5AD13478A62
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Dec 2021 12:48:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5228D478A6F
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Dec 2021 12:54:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232302AbhLQLsv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Dec 2021 06:48:51 -0500
-Received: from mga06.intel.com ([134.134.136.31]:54064 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230396AbhLQLsu (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 17 Dec 2021 06:48:50 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10200"; a="300513235"
-X-IronPort-AV: E=Sophos;i="5.88,213,1635231600"; 
-   d="scan'208";a="300513235"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Dec 2021 03:48:22 -0800
-X-IronPort-AV: E=Sophos;i="5.88,213,1635231600"; 
-   d="scan'208";a="683357314"
-Received: from smile.fi.intel.com ([10.237.72.184])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Dec 2021 03:48:21 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1myBhv-007Odb-28;
-        Fri, 17 Dec 2021 13:47:27 +0200
-Date:   Fri, 17 Dec 2021 13:47:26 +0200
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linux GPIO <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [GIT PULL] intel-gpio for 5.17-1
-Message-ID: <Ybx4zg9UbqiSrbtA@smile.fi.intel.com>
-References: <Ybn8pxv5xPgc5nGz@black.fi.intel.com>
- <CAMRc=MceOZWt5Qb6kFSALOOwyYb_MikFusxZqt9KgqqQPfnwgQ@mail.gmail.com>
- <YbskttzHvxlprBPM@smile.fi.intel.com>
- <CAMRc=McSULw2YpCgsK-C6+pTx85mtH3c5Y+MbawO+SSgUXM1gg@mail.gmail.com>
- <Ybs5jqW3zyDh18Vx@smile.fi.intel.com>
- <CAMRc=MdWQEk-+-rq5ML=Yj-7ZTFMv6B0WocgqWJQu6GPkOsx2g@mail.gmail.com>
- <CAHp75VfTQ-V6UMt570PV91ZkGFX8GOHepPsM3i2DSwp3J9ht1Q@mail.gmail.com>
- <CAMRc=MeZoDKOymaSyotXaD=7B+U-dM7G44b601agVqDXzRWnWQ@mail.gmail.com>
- <CAMRc=Mf+MNTkA6=xg=vhfEY8P8w9MnMzura7OwOQYOBjxcemQw@mail.gmail.com>
+        id S235724AbhLQLyL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Dec 2021 06:54:11 -0500
+Received: from smtpcmd0871.aruba.it ([62.149.156.71]:56585 "EHLO
+        smtpcmd0871.aruba.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233522AbhLQLyK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Dec 2021 06:54:10 -0500
+Received: from [192.168.50.18] ([146.241.138.59])
+        by Aruba Outgoing Smtp  with ESMTPSA
+        id yBoMmGIqJAiELyBoMmk6vi; Fri, 17 Dec 2021 12:54:08 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+        t=1639742048; bh=Cg6MxKPvLr6Syz/mZJuzyddObRpzBUMOq66KSTVgZcY=;
+        h=Subject:To:From:Date:MIME-Version:Content-Type;
+        b=YsK1gOTHau77ToD4V3DSSMyI7USDTkBZwjl/woPrapr/aTfPHPS0/GTxklvDY8ec4
+         Jm1+a2tF0knFjA8/Jx/yNjAIk3WpE4DeAkr58+XhjYn4nxMmBUHj2fWzUWwVI6052I
+         e+xTjt7/WaN21gWO7T7lCwQoi0OlwHjZFRcvo+ByNiUL6UlLOklSFoPPgSbZQzxXMc
+         dLgBd92UMup1b6Bc9e4CF6dWRCfohLkugosh37uTaJmvkvden7X9le4bd1G1Bf4VbO
+         L7LXWJTT1QrasjtS7fa/uj3C16xs4UMTvGYkliZYnToAYR7sKcd+jBlDoOPQz5E1mR
+         QorLYS3xfKQrw==
+Subject: Re: [RESEND in plain-test] Re: [PATCH v5 0/9] Add initial support for
+ the i.MXRTxxxx SoC family starting from i.IMXRT1050 SoC.
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Jesse Taube <mr.bossman075@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        gregkh <gregkh@linuxfoundation.org>,
+        Olof Johansson <olof@lixom.net>, SoC Team <soc@kernel.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Vladimir Murzin <vladimir.murzin@arm.com>
+References: <20211215220538.4180616-1-Mr.Bossman075@gmail.com>
+ <CAK8P3a29tzgd_4WncippZBEJra9n0bQTysBkPBp_WA0sb28gTg@mail.gmail.com>
+ <1360c4fe-4a09-a8a1-3224-7f1d4af59f6f@benettiengineering.com>
+ <CAK8P3a1oZK1qMRBE3D8otCTY6Lg4jMXxVpAZHQzLTA8woA3_UQ@mail.gmail.com>
+ <634e9304-2eba-4ea9-65ac-5d4f5d011b70@benettiengineering.com>
+ <CAK8P3a3kpzi6ozLkTH9GtWqvs=JHkm6mp=dLs2vOHjrW=FoYdw@mail.gmail.com>
+From:   Giulio Benetti <giulio.benetti@benettiengineering.com>
+Message-ID: <88f5ec3a-8765-48b2-0429-d182402826be@benettiengineering.com>
+Date:   Fri, 17 Dec 2021 12:54:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=Mf+MNTkA6=xg=vhfEY8P8w9MnMzura7OwOQYOBjxcemQw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <CAK8P3a3kpzi6ozLkTH9GtWqvs=JHkm6mp=dLs2vOHjrW=FoYdw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfJkrPNgY2+yCcbV01jLFZAj1mqsZnNe8M/nRv60DgHLOmija7PShQ+EryWAp90sIzvVBOOmU9lzp3hN/5wtsXuLUTv/PpOoR3jJE3ByA5PuCx+8ImBF6
+ bNNvhhw1qf58KbFLdL+BjpDhoXoFBJlwBgcSb8c2H2lpAUuufgHAfRiAHrka1/R/SampTSjjHwiQlgKjj71a7MoVRj4IPbd4M53DKvluKfROlfQTFJv7UqHM
+ ROMGiZEO/UrWyowI8X8RUja+FsHyXMqgFhvmnc2mf5fPJfXjgAABfTU/Tae437yyToK/lMzhSoc8fw7ZWn09WfT7+5vjVeGLsQGPhN29R63yQgC5lh9jSckL
+ eNm4oWEFDxh5xbihmqI1SOXV4xLya5KmgiehLCj8U9LPteR1kMPjALtPShU/YgZIewwT0jt92y6tnAtCsgkqwjdkZxA1L1c6MyHhmPYxFW80h6cWExblQhMg
+ /aPT/EURA/fgwS4/JgDj/RPiWdIsB3zD857uNDnMzlP9Auq6yr/t0ZnylZ+I7NYjfvAwOZeiNeUxRz5+hhpjW5CBrP/eLegkCl3tTXgwezY6HkM5ikYJE+OS
+ v9XT6jlGaKNj0ZJybeUWzGQ9zq32CPNoJPMlTFtxpK2FAEfxXOofQHbTp9umQ367/Ib5L+hZP3SHszgNze0QRSghRq+UZ0VCFQwlm6y9BKOGSYrV1FF2azBD
+ UZxPArzt+mvZEja2/thGmIHLhDn3kKsgCsmBzbIpOadwU986xSOaVWqBj9a7s3TG3RMY3OtBPrdvD17mkvOK599Z0P2x18yGxpBXT9WvEMmy+EoGU3Jj1iCR
+ 0PZNREN2Ia4Xtm9FpftLzuhgeUR1OtuDIqIn+SmjZMbsm8ImNXlfAe2EB0Tu8+RqOMGH831DwHK8CJCdq/06uOaG0bMQB5Pw4xaWZZGThJ5bRLPROHxj7Vuu
+ xXm5iaGAzsiwptM6t16hU/4vS0xgpnZmLPGKaPlbXsCiZHI9kpVYoMh4rBbs7MtRjsM3Opiir7z/ZH4fZ5xIB9Skwr5lgVTo/4MPheKkXtLSI6d0Y3rlkowo
+ VK6P7nIbxg/7rPJLqPaRtZhw4NoTzOECAWzFqxsCepa0W+o0ZbkkiOJqJJ5Wz/lAStg8Ypm/VM00P4QpuH+qAa/uw2ZANULR0KTElLNKAPibBwRv8rKqpzdJ
+ ReshPf2u4Q5p1FV2JBFzWQ==
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Dec 17, 2021 at 12:29:50PM +0100, Bartosz Golaszewski wrote:
-> On Fri, Dec 17, 2021 at 12:13 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > On Fri, Dec 17, 2021 at 10:53 AM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > > On Fri, Dec 17, 2021 at 1:38 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-
-...
-
-> > > Btw, I have noticed you rebased your tree, can you, please, do not
-> > > forget to put --rebase-merges to your `git rebase` command line so the
-> > > merge won't change commit IDs?
-> >
-> > Oof you saved me from another LinusRant. I already pushed it, let's
-> > see if I can get back to the previous state...
+On 17/12/21 11:28, Arnd Bergmann wrote:
+> On Fri, Dec 17, 2021 at 10:54 AM Giulio Benetti
+> <giulio.benetti@benettiengineering.com> wrote:
+>> On 16/12/21 22:13, Arnd Bergmann wrote:
+>>
+>>> Vladimir has put some work into making Cortex-R work in the kernel, and
+>>> he may have some other thoughts on this question.
+>>
+>> I'm curious if he has something specific to Cortex-R to tell.
+>>
+>> I've found that Cortex-R82 has a MMU:
+>> https://www.arm.com/products/silicon-ip-cpu/cortex-r/cortex-r82
+>> but I can't find any SoC that uses it. Also, I don't know how many
+>> people could use it honestly.
 > 
-> Done, reflog is my best friend now. Please take a look if all looks good to you.
+> R82 is fairly new, but I expect that we will see support in Linux in the
+> future. Aside from having an MMU, it also 64-bit-only, so we'd treat
+> it like a normal ARMv8-A core in arch/arm64.
 
-Looks excellent, thanks!
+Ah yes, that's fine. So let's wait for the future, in the meanwhile we 
+focus con i.MXRT :-)
 
+Thank you
+Best regards
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Giulio Benetti
+Benetti Engineering sas
