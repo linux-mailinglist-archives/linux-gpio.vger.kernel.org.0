@@ -2,113 +2,148 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5228D478A6F
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Dec 2021 12:54:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 01356478ABF
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Dec 2021 13:02:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235724AbhLQLyL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Dec 2021 06:54:11 -0500
-Received: from smtpcmd0871.aruba.it ([62.149.156.71]:56585 "EHLO
-        smtpcmd0871.aruba.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233522AbhLQLyK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Dec 2021 06:54:10 -0500
-Received: from [192.168.50.18] ([146.241.138.59])
-        by Aruba Outgoing Smtp  with ESMTPSA
-        id yBoMmGIqJAiELyBoMmk6vi; Fri, 17 Dec 2021 12:54:08 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
-        t=1639742048; bh=Cg6MxKPvLr6Syz/mZJuzyddObRpzBUMOq66KSTVgZcY=;
-        h=Subject:To:From:Date:MIME-Version:Content-Type;
-        b=YsK1gOTHau77ToD4V3DSSMyI7USDTkBZwjl/woPrapr/aTfPHPS0/GTxklvDY8ec4
-         Jm1+a2tF0knFjA8/Jx/yNjAIk3WpE4DeAkr58+XhjYn4nxMmBUHj2fWzUWwVI6052I
-         e+xTjt7/WaN21gWO7T7lCwQoi0OlwHjZFRcvo+ByNiUL6UlLOklSFoPPgSbZQzxXMc
-         dLgBd92UMup1b6Bc9e4CF6dWRCfohLkugosh37uTaJmvkvden7X9le4bd1G1Bf4VbO
-         L7LXWJTT1QrasjtS7fa/uj3C16xs4UMTvGYkliZYnToAYR7sKcd+jBlDoOPQz5E1mR
-         QorLYS3xfKQrw==
-Subject: Re: [RESEND in plain-test] Re: [PATCH v5 0/9] Add initial support for
- the i.MXRTxxxx SoC family starting from i.IMXRT1050 SoC.
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Jesse Taube <mr.bossman075@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        gregkh <gregkh@linuxfoundation.org>,
-        Olof Johansson <olof@lixom.net>, SoC Team <soc@kernel.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Vladimir Murzin <vladimir.murzin@arm.com>
-References: <20211215220538.4180616-1-Mr.Bossman075@gmail.com>
- <CAK8P3a29tzgd_4WncippZBEJra9n0bQTysBkPBp_WA0sb28gTg@mail.gmail.com>
- <1360c4fe-4a09-a8a1-3224-7f1d4af59f6f@benettiengineering.com>
- <CAK8P3a1oZK1qMRBE3D8otCTY6Lg4jMXxVpAZHQzLTA8woA3_UQ@mail.gmail.com>
- <634e9304-2eba-4ea9-65ac-5d4f5d011b70@benettiengineering.com>
- <CAK8P3a3kpzi6ozLkTH9GtWqvs=JHkm6mp=dLs2vOHjrW=FoYdw@mail.gmail.com>
-From:   Giulio Benetti <giulio.benetti@benettiengineering.com>
-Message-ID: <88f5ec3a-8765-48b2-0429-d182402826be@benettiengineering.com>
-Date:   Fri, 17 Dec 2021 12:54:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        id S231676AbhLQMCU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Dec 2021 07:02:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36624 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230463AbhLQMCT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Dec 2021 07:02:19 -0500
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D5B1C061574
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Dec 2021 04:02:19 -0800 (PST)
+Received: by mail-ed1-x530.google.com with SMTP id z7so6828813edc.11
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Dec 2021 04:02:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8wosAwyrR6VljhsOchzxVh5KWh7HJDzHnE4J5mt7FHg=;
+        b=tmTj3awKHY9kcPxpujnh8QbOSwUOY+Jy9mnHn2OQxKDofrzsonypHL1gKYaQY/ier/
+         JxCsS2PlcludPEnJq49qlOFvIhAGg+6rus3QMewxstmn/Dzpv08YYkPNQpbOToZxnwdu
+         MS4tPmVBbMiy08jw1e3Pl251w2rW5+pDgLzvRiFZKiRSWqkAu6qK357otiVDqMwHTf/5
+         O5Bouw/jznxFlDGXGyVeMLbwL8OQ352l5qU/VkSOHIqHhwE2UMjeQ4E5TVVP4RdOS76+
+         g7MrWfsPZofwkj1PMlPkhqkfiGiLE6MAZIJV8SXUmm+QZeluy0HNJ+96MjZWVdhxin0a
+         Z5Ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8wosAwyrR6VljhsOchzxVh5KWh7HJDzHnE4J5mt7FHg=;
+        b=uTpG6tloaqFK+4amB32G0OUz5qMR/1p5ZCRXTj4UzAtxzctymVqKy4nYidnpOxTYNp
+         s/FpVzRsvttJ5yOdLygZQdpGHYPGtiSJ4F8WW9jBdLWdSaG3BU62sDoutcJAxWZ3s9c/
+         bL0tFUQCQjd9Qg/Fn3hAPh+UA9R6XNAaqm0wa1BEi6jG/bTQceugc2SPRpwVL3MJT4rJ
+         JZfhDAre4fGTFnF8+gHrMHW1Drr/qd2o3sHWnC30BzckzE7EepFZq2S7pUi5GbfHqhcC
+         xUCQ6XGPMjKncASriMSuqfRCyB622WaNdV1ZfNhMLDlbjQ2JA4FPkWKyGwH5bmdtbze2
+         OD3Q==
+X-Gm-Message-State: AOAM530GU6C0mfBDKxz7K58ioy2aaMJutP1RS1YILYiqyBwlT7h9HUnO
+        Z6vefT7hs6pMfu5+tOl84tPWyOe2zVC3wTYKXdLM9g==
+X-Google-Smtp-Source: ABdhPJwFvVPgA/7AyXMJsVCU8BCQiz8GLsFtRImYMU7p58YFBEMo0V9sXLerXYFhfSN4UDeghqWKMKfKciMXFR1Vjlk=
+X-Received: by 2002:a17:906:249a:: with SMTP id e26mr2296463ejb.492.1639742537689;
+ Fri, 17 Dec 2021 04:02:17 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a3kpzi6ozLkTH9GtWqvs=JHkm6mp=dLs2vOHjrW=FoYdw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfJkrPNgY2+yCcbV01jLFZAj1mqsZnNe8M/nRv60DgHLOmija7PShQ+EryWAp90sIzvVBOOmU9lzp3hN/5wtsXuLUTv/PpOoR3jJE3ByA5PuCx+8ImBF6
- bNNvhhw1qf58KbFLdL+BjpDhoXoFBJlwBgcSb8c2H2lpAUuufgHAfRiAHrka1/R/SampTSjjHwiQlgKjj71a7MoVRj4IPbd4M53DKvluKfROlfQTFJv7UqHM
- ROMGiZEO/UrWyowI8X8RUja+FsHyXMqgFhvmnc2mf5fPJfXjgAABfTU/Tae437yyToK/lMzhSoc8fw7ZWn09WfT7+5vjVeGLsQGPhN29R63yQgC5lh9jSckL
- eNm4oWEFDxh5xbihmqI1SOXV4xLya5KmgiehLCj8U9LPteR1kMPjALtPShU/YgZIewwT0jt92y6tnAtCsgkqwjdkZxA1L1c6MyHhmPYxFW80h6cWExblQhMg
- /aPT/EURA/fgwS4/JgDj/RPiWdIsB3zD857uNDnMzlP9Auq6yr/t0ZnylZ+I7NYjfvAwOZeiNeUxRz5+hhpjW5CBrP/eLegkCl3tTXgwezY6HkM5ikYJE+OS
- v9XT6jlGaKNj0ZJybeUWzGQ9zq32CPNoJPMlTFtxpK2FAEfxXOofQHbTp9umQ367/Ib5L+hZP3SHszgNze0QRSghRq+UZ0VCFQwlm6y9BKOGSYrV1FF2azBD
- UZxPArzt+mvZEja2/thGmIHLhDn3kKsgCsmBzbIpOadwU986xSOaVWqBj9a7s3TG3RMY3OtBPrdvD17mkvOK599Z0P2x18yGxpBXT9WvEMmy+EoGU3Jj1iCR
- 0PZNREN2Ia4Xtm9FpftLzuhgeUR1OtuDIqIn+SmjZMbsm8ImNXlfAe2EB0Tu8+RqOMGH831DwHK8CJCdq/06uOaG0bMQB5Pw4xaWZZGThJ5bRLPROHxj7Vuu
- xXm5iaGAzsiwptM6t16hU/4vS0xgpnZmLPGKaPlbXsCiZHI9kpVYoMh4rBbs7MtRjsM3Opiir7z/ZH4fZ5xIB9Skwr5lgVTo/4MPheKkXtLSI6d0Y3rlkowo
- VK6P7nIbxg/7rPJLqPaRtZhw4NoTzOECAWzFqxsCepa0W+o0ZbkkiOJqJJ5Wz/lAStg8Ypm/VM00P4QpuH+qAa/uw2ZANULR0KTElLNKAPibBwRv8rKqpzdJ
- ReshPf2u4Q5p1FV2JBFzWQ==
+References: <cover.1638443930.git.viresh.kumar@linaro.org> <7ace171379783b73a8f560737fd47900ac28924c.1638443930.git.viresh.kumar@linaro.org>
+ <CAMRc=MeoTiUOjM_D36ZEU=echpM9jVhr1HY7fuxTDs0t0jf2Jg@mail.gmail.com>
+ <20211217050135.l7p3sudbdvzewi6y@vireshk-i7> <CAMRc=MeP7xPsaiEoJ4ML8SNMo7BH9pb34eUkG6+3SLf+A=biMA@mail.gmail.com>
+ <20211217093239.to4u5b5zorr2hpee@vireshk-i7> <CAMRc=Md33nLhMMOSQgQXW5hzXFbkPE3P9Drkj6DK543-cSjCaA@mail.gmail.com>
+ <20211217095415.axgq7t6pni5sb7rp@vireshk-i7>
+In-Reply-To: <20211217095415.axgq7t6pni5sb7rp@vireshk-i7>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 17 Dec 2021 13:02:06 +0100
+Message-ID: <CAMRc=Meh7Q=01PpM6vuwMf2S5at2OsSyNT5jXqnUE_f+n0vzXg@mail.gmail.com>
+Subject: Re: [PATCH V2 2/4] libgpiod: Add rust wrappers
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Wedson Almeida Filho <wedsonaf@google.com>,
+        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 17/12/21 11:28, Arnd Bergmann wrote:
-> On Fri, Dec 17, 2021 at 10:54 AM Giulio Benetti
-> <giulio.benetti@benettiengineering.com> wrote:
->> On 16/12/21 22:13, Arnd Bergmann wrote:
->>
->>> Vladimir has put some work into making Cortex-R work in the kernel, and
->>> he may have some other thoughts on this question.
->>
->> I'm curious if he has something specific to Cortex-R to tell.
->>
->> I've found that Cortex-R82 has a MMU:
->> https://www.arm.com/products/silicon-ip-cpu/cortex-r/cortex-r82
->> but I can't find any SoC that uses it. Also, I don't know how many
->> people could use it honestly.
-> 
-> R82 is fairly new, but I expect that we will see support in Linux in the
-> future. Aside from having an MMU, it also 64-bit-only, so we'd treat
-> it like a normal ARMv8-A core in arch/arm64.
+On Fri, Dec 17, 2021 at 10:54 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 17-12-21, 10:43, Bartosz Golaszewski wrote:
+> > On Fri, Dec 17, 2021 at 10:32 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > >
+> > > On 17-12-21, 10:12, Bartosz Golaszewski wrote:
+> > > > No, it's a different story altogether. In C the buffer allocates
+> > > > memory for events and when you "get" an event, you only have a pointer
+> > > > to the memory space in the buffer that you must not free. But you can
+> > > > "copy" an event with gpiod_edge_event_copy() which returns you a deep
+> > > > copy of the event that will survive the parent and that must be freed
+> > > > with gpiod_edge_event_free(). This is done so that by default we try
+> > > > to limit the number of allocations (as there can be a lot of events)
+> > > > unless the user decides to manually copy the event.
+> > > >
+> > > > In C++ I used that mechanism together with the buffer's const
+> > > > event_get() and event's copy assignment operator. "Getting" an event
+> > > > returns a const reference to the event (still in buffer's memory) but
+> > > > copying it triggers a deep copy. The memory management is of course
+> > > > handled by the destructor.
+> > > >
+> > > > This is not used in Python as speed is no longer a concern and we'd be
+> > > > creating new python objects anyway. But in Rust, I think it makes
+> > > > sense to reuse this mechanism.
+> > >
+> > > Ahh, what about this then, it just caches all the values when the event is
+> > > requested ?
+> > >
+> > > pub struct EdgeEvent {
+> > >     event_type: LineEdgeEvent,
+> > >     timestamp: Duration,
+> > >     line_offset: u32,
+> > >     global_seqno: u64,
+> > >     line_seqno: u64,
+> > > }
+> > >
+> >
+> > Then does it make sense to make it a binding to libgpiod? :)
+>
+> Yes, because EdgeEvent::new() gets all these values from the internal C libgpiod
+> library itself. We are going to make the same copy of data, either at the C
+> library level, or here.
+>
+> > I don't know Rust that well to be able to come up with an idea off the
+> > top of my head but I assume inheritance in one way or another exists
+> > in rust? Can you have an EdgeEvent interface implemented by two
+> > specialized structs, one that's stored in the buffer (stores a pointer
+> > to the internal event)
+>
+> This is what my initial patch had, right? It isn't safe. There is no way for
+> libgpiod-rust to guarantee that the users don't access the EdgeEvent after the
+> buffer is freed and this needs to be made safer at libgpiod itself.
+>
 
-Ah yes, that's fine. So let's wait for the future, in the meanwhile we 
-focus con i.MXRT :-)
+I'm not sure it had the same thing. In libgpiod it's simple a matter
+of definition. The docs state that a pointer retrieved using
+gpiod_edge_event_buffer_get_event() must not be freed while one
+obtained with gpiod_edge_event_copy() does have to be disposed of. In
+C++ it's safe because either you hold a const reference to the object
+stored in the event buffer or you have copied it and now it will
+survive the parent meaning the user can access the event even after
+the buffer was deleted.
 
-Thank you
-Best regards
--- 
-Giulio Benetti
-Benetti Engineering sas
+> > and one that stores the copy (and frees it when
+> > it goes out of scope)?
+>
+> I don't understand what we will get out of such a scheme? Is there any benefit
+> of getting these values via the pointer to the internal C event ?
+>
+
+You avoid allocating memory for those objects. The memory exists in
+the C buffer. In order to keep a similar level of performance you'd
+need to replicate the behavior of the buffer in rust as well.
+
+Bart
+
+> Any user that wants to use the edge-event data, needs to call the edge-event
+> APIs at least once and this is what the new version does, just calls them from
+> new() itself.
