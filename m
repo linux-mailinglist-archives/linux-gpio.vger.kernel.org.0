@@ -2,176 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C0C06478834
-	for <lists+linux-gpio@lfdr.de>; Fri, 17 Dec 2021 10:54:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A69BC478853
+	for <lists+linux-gpio@lfdr.de>; Fri, 17 Dec 2021 11:04:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234598AbhLQJyt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 17 Dec 2021 04:54:49 -0500
-Received: from smtpcmd0871.aruba.it ([62.149.156.71]:56521 "EHLO
-        smtpcmd0871.aruba.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234603AbhLQJyt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Dec 2021 04:54:49 -0500
-Received: from [192.168.50.18] ([146.241.138.59])
-        by Aruba Outgoing Smtp  with ESMTPSA
-        id y9wmmE4RXAiELy9wmmiOfW; Fri, 17 Dec 2021 10:54:47 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
-        t=1639734887; bh=SZpxkK7voOVV6I9udbetrLHOGGCCs8Xt0yuASUFvYww=;
-        h=Subject:To:From:Date:MIME-Version:Content-Type;
-        b=VYOwqyw+gYObPpq5d0SwF1zxdtyJ2bR9+h9nHOW/BpYCwPu1u9f58uB9lioNjxORH
-         upzt4BP8Mvma18ZqTivxKzdDyUCmxS7s/K2Wn08QgSXpFqdhzoBEFt9Kw8fu1qUgHF
-         NlhFcMQ7YnEwP9w83AJmAOOZxUNW+YZesus1sDPJFa9a45jbIXpnHKiFnH5ofs0cCx
-         nl1Lwnz8DRV0/rY6P8pvnEVNrONfvJT2Bxo30LOHiC60PCIQbRo3CVBN1Iu8rkkpFm
-         oorf/K9I1O29cIOar84O3jC2clxKj8uMOCaonhoVd1D5nnI8H44nKPWlhqXbLPpDxM
-         TZrkcOMYdzh3w==
-Subject: Re: [RESEND in plain-test] Re: [PATCH v5 0/9] Add initial support for
- the i.MXRTxxxx SoC family starting from i.IMXRT1050 SoC.
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Jesse Taube <mr.bossman075@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Stefan Agner <stefan@agner.ch>,
+        id S234558AbhLQKEe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 17 Dec 2021 05:04:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37336 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231968AbhLQKEe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 17 Dec 2021 05:04:34 -0500
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24F93C061574
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Dec 2021 02:04:34 -0800 (PST)
+Received: by mail-pj1-x102d.google.com with SMTP id a11-20020a17090a854b00b001b11aae38d6so2258820pjw.2
+        for <linux-gpio@vger.kernel.org>; Fri, 17 Dec 2021 02:04:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nrvl2Z15AsfPSxn/R4yQgzxP2Mg2Jnd5O7FmMsYyfl4=;
+        b=SnHI9TKUhEETAE5WFAwgL1wn+cI3YkL5V1muglDGurPHeB4wWy/bSPesi2pyDIf+hu
+         Sgt5t/YIpyVjUnC4jC7Ve73RXQionhgNXf+WyQXqf1dtw7TtjA+P9vKNBm5aAI6d9KVl
+         aOpFYRRFW7BtXIeR1unRP9VNp6WiuSck0jT9w3xfc2bC3ixPD0l8g3fwVSB9GEMPVWbo
+         fxvA4IP7hmcPIeZU76otC5g4OuY3XunZHq5QsjF3KYAtbBzypoPecG3WGBgcXleA+7pP
+         RIrBqGRt9iivfkjEgWnevXKR59h5vOH+BOnsfGAvXavoqq4j4tqsw94iPnDwmIkMgQut
+         iShw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nrvl2Z15AsfPSxn/R4yQgzxP2Mg2Jnd5O7FmMsYyfl4=;
+        b=O9pXt8S3pquUxSJYXy8zjvUywBh4ECt1yjk5nX+fYYmXbgqu5ClCXpVaDv9C/IQeFC
+         DfprMlxoM9a7Nuv7rDsc5VtibZv0c7vqOMvP4PaCUXAkbJvW8kSko19JDnwTdBwHTI3n
+         NnCs4jHiVk1PPAi19hPt9qcbsEKzasq9KN66XEaZRZgpa84XBPgTAbTc1b44XmKK6/+O
+         VmAzvvbqNxnuCx/B6+5+Ii0jXdKKH8DoSb07n9AFshLXL2BdcT3+Co8fbgwjFpFjcWuT
+         r4NV7J2eEFoFolo6ew7nx7EeXMJUjOim0yJoCpXl39dYomkZQV2l/iAJTLuCORKtnkOc
+         hgPg==
+X-Gm-Message-State: AOAM532Tf9WPq5ddovnLNrd7QZ7BegzpXTymY6JodJhbicQwkXAvZW/0
+        7snGjw2miC+lv8kTGvM0wklJyA==
+X-Google-Smtp-Source: ABdhPJzou1Je/FOAbSXC2kVkCtNS6LlujCRqY+FsMaDsFkEaqj8TfrDjc/GLCnlYVDTlXLzcABjAYA==
+X-Received: by 2002:a17:902:e88a:b0:141:dfde:eed7 with SMTP id w10-20020a170902e88a00b00141dfdeeed7mr2492913plg.17.1639735472897;
+        Fri, 17 Dec 2021 02:04:32 -0800 (PST)
+Received: from localhost ([106.201.42.111])
+        by smtp.gmail.com with ESMTPSA id t8sm8234943pgk.66.2021.12.17.02.04.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Dec 2021 02:04:32 -0800 (PST)
+Date:   Fri, 17 Dec 2021 15:34:30 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
         Linus Walleij <linus.walleij@linaro.org>,
-        gregkh <gregkh@linuxfoundation.org>,
-        Olof Johansson <olof@lixom.net>, SoC Team <soc@kernel.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Vladimir Murzin <vladimir.murzin@arm.com>
-References: <20211215220538.4180616-1-Mr.Bossman075@gmail.com>
- <CAK8P3a29tzgd_4WncippZBEJra9n0bQTysBkPBp_WA0sb28gTg@mail.gmail.com>
- <1360c4fe-4a09-a8a1-3224-7f1d4af59f6f@benettiengineering.com>
- <CAK8P3a1oZK1qMRBE3D8otCTY6Lg4jMXxVpAZHQzLTA8woA3_UQ@mail.gmail.com>
-From:   Giulio Benetti <giulio.benetti@benettiengineering.com>
-Message-ID: <634e9304-2eba-4ea9-65ac-5d4f5d011b70@benettiengineering.com>
-Date:   Fri, 17 Dec 2021 10:54:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        Kent Gibson <warthog618@gmail.com>,
+        Wedson Almeida Filho <wedsonaf@google.com>,
+        Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org
+Subject: Re: [PATCH V2 2/4] libgpiod: Add rust wrappers
+Message-ID: <20211217100430.iyabqm4dxt7tkhdz@vireshk-i7>
+References: <cover.1638443930.git.viresh.kumar@linaro.org>
+ <7ace171379783b73a8f560737fd47900ac28924c.1638443930.git.viresh.kumar@linaro.org>
+ <CAMRc=MeoTiUOjM_D36ZEU=echpM9jVhr1HY7fuxTDs0t0jf2Jg@mail.gmail.com>
+ <20211217050135.l7p3sudbdvzewi6y@vireshk-i7>
+ <CANiq72n=i9e5y8ONhZdH72tNuQJp8TJKY2Xa-y4NEpSDOq0+rw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a1oZK1qMRBE3D8otCTY6Lg4jMXxVpAZHQzLTA8woA3_UQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfCO5ZxBkSOe6VyonaZaERyIFPW9nQXKE7kgm/BIFTSsLWOxmM3ufVMlenl7VhAwO/hNSogkLP9ETYHuxlCP8ovNM+DsknmjkKeRS6OoClIrA/Cje3uBR
- iUktLT8tvgvm3O5Zmac+WtEVC/ukanqHnUyB00NA4bFw6753FaUxo/FOZtlp5KPYOkFGIWPNFwt96L2n1J7AH1rcyZbkOaTt+Z59xYp60J1se8IO1kXxkzEM
- et3ySZ4h6VK+MhuKaI3+drInuvkSbbiCIAVNfFuWEf1PiMiwDn537NT9WDQD208VrLZkfdm2t0ZB5vTMWj4We/mpRQDQmyV8c3N70B0UyHih0BJjzNMQVPo0
- Ydt6oz8csA0Vgqbc0m0KuDARJojBOe7GIzu9nwHYr3qhRFcyKR4OQZ8UFABASZ3C96D0p/1ALHmYzSs0IWOPAb60+3HGp1lDrO9BjMHvcM4T0vc29jOBw0UL
- veqYMBar0zXMBY6FREn2I+MswhfeMG4EmwE2hAj/wPXTlpiRpJ33nh4TKnxc9PEsY7cfKrLBRFW18bhJj15CHCGHihVV/+/RUwKHY6zPFJCj0iq6gMYwJfDm
- loYYHz6P1Ya0G77HVeGL4f0yUWMR8Xitrx/o/G7jRiwooqIhAyctSvquOcpjuN6H2EajrnzdxwGCJokRX3xOjYzXPEhCap18dec3z6oLaeswj+FksC/mwqOf
- hZfTT4ohICqxAz3RNQMVUpNcVFNI8Ggp2sq51fP983x2r3v4fgM9DmqBqrAgjp1TB89ieG0J5ybGNiMVysjrrqtOM6+uBqWRHrOG9NPjoBsyH2N+Q4SWJnJh
- 5+XzBQwJF6VLbNDw10MJQmpaXjKAc9pwIP8RqByFSUeAJKVr0hPsXKEn8Ga6QrR6g3fnbjpou7uq9d8HhzfNRpsozQMF23rS9wWSU3m9SCrEldyMIVuk+iUk
- fVUu8U63Eflmn80WncPSUwRiIfvxDvNGfvhAu/IMI2xDw+5XnkOPKU33F6A0j9K/dfiTTonoJZtAuy/eVfdaKzW3uievQ/Kx66D49emKSU37TYYVS/nKiDgs
- E1iakE8DA7DplABPwW/yjgiXFwwF/MW+93IOac97O7zTLRChCS2gZwNAao2gxXMhoEMag7fxWNT3aZ/eIT5BxBjG8SExyN3qqPIsNosVYVr7SnFdaxAjF3Nr
- rMeXuCZwap3Q0w5jOUMa5w==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANiq72n=i9e5y8ONhZdH72tNuQJp8TJKY2Xa-y4NEpSDOq0+rw@mail.gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Arnd,
-
-On 16/12/21 22:13, Arnd Bergmann wrote:
-> On Thu, Dec 16, 2021 at 6:33 PM Giulio Benetti
-> <giulio.benetti@benettiengineering.com> wrote:
->> On 16/12/21 09:26, Arnd Bergmann wrote:
->>> On Wed, Dec 15, 2021 at 11:05 PM Jesse Taube <mr.bossman075@gmail.com> wrote:
+On 17-12-21, 10:44, Miguel Ojeda wrote:
+> On Fri, Dec 17, 2021 at 6:01 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> >
+> > Miguel, what's your take on stuff like this ? I am not sure if we should just
+> > drop this check altogether.
 > 
->>> As a more general comment, it's always nice to see newly added SoC
->>> platforms, especially when they are this well implemented and done
->>> by hobbyists. However, I do think you are being overly optimistic
->>> as to how useful this is going to be to other people: interest in NOMMU
->>> ARM platforms has dropped a lot over the past 5 years, and as far as I
->>> can tell, it is only being kept alive for existing stm32 customers
->>> as the economics do not favor Linux on Cortex-M for new products
->>> compare to Linux on Cortex-A or some RTOS on Cortex-M.
->>>
->>> The existing users will inevitably stop updating their kernels at some
->>> point, and then it's most likely just you and Vladimir Murzin that care.
->>
->>
->> About this will you accept support for the other SoCs in the family?
->> We would like to add in the near future:
->> - i.MXRT1020(uboot support is already upstreamed)
->> - i.MXRT1024(almost equal to 1020)
->> - i.MXRT1060(almost equal to 1050)
->> - i.MXRT1064(almost equal to 1060)
->> And
->> - i.MXRT1160/70 new family with faster core clock(1Ghz) and a cortex M4
->>
->> We need to add missing lcd(uboot upstreamed), usb(uboot upstreamed),
->> ethernet(wip) supports for i.MXRT10xx family.
+> Given the C side documents that the pointer is valid (I think; since
+> others are documented as "or NULL" etc., but it is a bit implicit),
+> then avoiding the check is a possibility.
 > 
-> Sure, anything you want to work on supporting can be added to the kernel,
-> the important bit is that it's well written and can be maintained going forward.
+> However, to answer this, one needs to understand the risk profile of
+> the project, the stability of the C API, the performance expectations
+> (e.g. is the call supposed to be in the hot path of clients?), etc.
 > 
-> My best guess is that we'll end up ripping out all NOMMU support in
-> a few years, when we get to a point when both of these things happen:
-> 
-> - the number of actual users that still update their kernels becomes
->    really low
-> 
-> - There is some treewide refactoring that isn't easily supportable without an
->     MMU unless someone puts extra work into it.
-> 
-> At the moment, we still support NOMMU kernels on a bunch of architectures
-> (Arm, riscv/k210, sh/j2, m68k/coldfire, xtensa and h8300). Out of these,
-> Arm is by far the most active, and if Arm NOMMU support was to go away
-> for some reason, the others would likely follow.
+> When in doubt (or when there is no reason to not do the check), it is
+> usually better to err on the safe side, specially if you aren't close
+> to the maintainers of the API etc. But since you have access to
+> Linus/Bartosz here, it is best to discuss this with them :) And, after
+> all, you are already trusting the C side to some degree anyway, and it
+> would be good to make sure both sides understand and clearly document
+> the contracts of the functions so that no bindings break in the future
+> (Rust or otherwise).
 
-Ok, I understad now.
+And the null-checks are dropped, with an update to SAFETY comment :)
 
->> This is to organize with Jesse also about buying evaluation boards and
->> timing.
->>
->> We’ve meant this porting also as an exercise to deal with Linux deeper
->> for us and for the other newbies.
->>
->> We’ve been also asked about a possible support for s32s(quad cortex-R52)
->> on initial emails but it has no mmu too.
->> While I’m seeing that some cortex-R is landing inside Linux.
->> Would it be interesting anyway?
-> 
-> I brought that up during the initial review, but I think this is even
-> less interesting
-> than Cortex-M support from the perspective of potential use cases. While
-> Cortex-M MCUs have some advantages over larger SoCs in terms of
-> power consumption and cost, this is generally not true for running Linux
-> on Cortex-R. The Cortex-R and Cortex-A cores are closely related, so
-> they tend have similar power/performance/area characteristics, but
-> the lack of an MMU makes the Cortex-R much less useful. If there was
-> an advantage to running with the MMU disabled, you could actually do that
-> on a Cortex-A as well, but clearly nobody does that either.
-
-Yes
-
-Thank you for the answer
-
-> Vladimir has put some work into making Cortex-R work in the kernel, and
-> he may have some other thoughts on this question.
-
-I'm curious if he has something specific to Cortex-R to tell.
-
-I've found that Cortex-R82 has a MMU:
-https://www.arm.com/products/silicon-ip-cpu/cortex-r/cortex-r82
-but I can't find any SoC that uses it. Also, I don't know how many 
-people could use it honestly.
-
-Best regards
 -- 
-Giulio Benetti
-Benetti Engineering sas
+viresh
