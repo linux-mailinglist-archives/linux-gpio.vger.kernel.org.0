@@ -2,100 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1700B479B96
-	for <lists+linux-gpio@lfdr.de>; Sat, 18 Dec 2021 16:27:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 63195479D68
+	for <lists+linux-gpio@lfdr.de>; Sat, 18 Dec 2021 22:34:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232660AbhLRP1U (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 18 Dec 2021 10:27:20 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:53237 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233479AbhLRP1T (ORCPT
+        id S229684AbhLRVeS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 18 Dec 2021 16:34:18 -0500
+Received: from st43p00im-zteg10063501.me.com ([17.58.63.176]:38550 "EHLO
+        st43p00im-zteg10063501.me.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229480AbhLRVeS (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 18 Dec 2021 10:27:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1639841238;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=86SiuzQkzNAn+schu4EkUzziC+m9VbK+PfQYtTZrNxs=;
-        b=ZrVUHF6HLgZ7wh7/OiE+1vo0xPtBD+rUQ/6kkd5ZX6wnTzyAbohjAVnkDFMBWAuLFYHN8S
-        iCSc5En6mKkzVMhqO9E3zD88rNvmp+kYVW+YbGM/l9wuzuRhiUK7w8NWJiKe5vEWXvfunM
-        DQsdmmHKYK26gDIiWTBU/xYBgDJBhww=
-Received: from mail-oo1-f71.google.com (mail-oo1-f71.google.com
- [209.85.161.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-336-iyyLkN2KNgyYdpMeIQjGLw-1; Sat, 18 Dec 2021 10:27:17 -0500
-X-MC-Unique: iyyLkN2KNgyYdpMeIQjGLw-1
-Received: by mail-oo1-f71.google.com with SMTP id i27-20020a4a929b000000b002c672a291dfso3419584ooh.23
-        for <linux-gpio@vger.kernel.org>; Sat, 18 Dec 2021 07:27:17 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=86SiuzQkzNAn+schu4EkUzziC+m9VbK+PfQYtTZrNxs=;
-        b=su5VJTXVDi/N0hpgv256N3BtGcVKpGt93pDsF+69oEP4xJomE1XBS9aCYWWBD3H8Ws
-         v2PaS/xdglW8f3n4gPmb0X4/H/o3Nz2g8fwlZlFvKxdN0Q8i459kUG/owFdBdEI07ai2
-         k5xBkU3jsZLmOisf9TILdAgzupxcf9V4Gtd9R0lLRDbCBzj8XKziwVCFWSEBvjEMS3I7
-         CCUNNE8ph2otGmLGyNknLwgcxNmKn/5yzOZfVUhgKM9gCyNnAmSIFUaSE42elKMPAUa8
-         CxgWiX/OK0uE926QLENVPTnXuN5eTzTsFU0o+p0Wbho6p/8enNKqsrzO2BGGqC8owmbG
-         Mwqw==
-X-Gm-Message-State: AOAM531YsmKpOnYmlLTMdlKJq0V8V3GYa5SB+SOEuGH7utEPoFDeHNVe
-        751RDKj0jmMN0W9+vSB+UnNbvHu3cYDUgMIPOzZmVt33ErZk1Jc3iaFJtnnVqU5sYQxtP0IgVs9
-        YRAAmMAXcM71anOnGxFxnnA==
-X-Received: by 2002:a05:6830:1258:: with SMTP id s24mr5798779otp.226.1639841236961;
-        Sat, 18 Dec 2021 07:27:16 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyQXs8/YlLAB/Dah8N/DouTHOvgWlTfYorr/QdF2xSDDW13RsfjVj/NVWwFUZ/bdOydpAXgVQ==
-X-Received: by 2002:a05:6830:1258:: with SMTP id s24mr5798767otp.226.1639841236770;
-        Sat, 18 Dec 2021 07:27:16 -0800 (PST)
-Received: from localhost.localdomain.com (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id z12sm2161206oor.45.2021.12.18.07.27.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 18 Dec 2021 07:27:16 -0800 (PST)
-From:   trix@redhat.com
-To:     linus.walleij@linaro.org, brgl@bgdev.pl, nathan@kernel.org,
-        ndesaulniers@google.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, Tom Rix <trix@redhat.com>
-Subject: [PATCH] gpio: sim: fix uninitialized ret variable
-Date:   Sat, 18 Dec 2021 07:27:12 -0800
-Message-Id: <20211218152712.2832502-1-trix@redhat.com>
-X-Mailer: git-send-email 2.26.3
+        Sat, 18 Dec 2021 16:34:18 -0500
+X-Greylist: delayed 542 seconds by postgrey-1.27 at vger.kernel.org; Sat, 18 Dec 2021 16:34:18 EST
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=me.com; s=1a1hai;
+        t=1639862716; bh=r2AqSVvsI4gnERwbd/GXYlwpPKfe4HPm19LsZqj9yhg=;
+        h=From:To:Subject:Date:Message-Id:MIME-Version;
+        b=TkczeVpF0AoPIlhZIFmYD3I/E09pjBj0l/a102MCLX+r0O4iR0/u7MqvRFsXkG7Xx
+         oz+mxYTCYRDgDj8GN3ULgfzNB5RcWU6j8kTB6iRs3kzfRpJ+/+enNjT4Hr7NclnPlP
+         lxAghN8/R8+/FxfYD+KVYZ93XLNomRvEu/ldEcuvZu8yrguxtNUxp4iKwHMics/siq
+         j9n0/KeQ7oG28uLToYx2xCVD57/+uMQRh3t8SMqnu1HYHwr+uTB1m5SKeA0yDUw2hY
+         4vHC+Sg6Duki78pLEKNiEWSM42MLyK2SN7rLUEXZOLsaHDpn12CdMQ244fTjNm86et
+         af3i2cSFUZ6uQ==
+Received: from localhost (101.220.150.77.rev.sfr.net [77.150.220.101])
+        by st43p00im-zteg10063501.me.com (Postfix) with ESMTPSA id 74AB5C80666;
+        Sat, 18 Dec 2021 21:25:15 +0000 (UTC)
+From:   Alain Volmat <avolmat@me.com>
+To:     Patrice Chotard <patrice.chotard@foss.st.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, avolmat@me.com
+Subject: [PATCH] pinctrl: st: fix comments compilation warnings
+Date:   Sat, 18 Dec 2021 22:25:12 +0100
+Message-Id: <20211218212512.196866-1-avolmat@me.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: =?UTF-8?Q?vendor=3Dfsecure_engine=3D1.1.170-22c6f66c430a71ce266a39bfe25bc?=
+ =?UTF-8?Q?2903e8d5c8f:6.0.425,18.0.790,17.11.62.513.0000000_definitions?=
+ =?UTF-8?Q?=3D2021-12-18=5F07:2021-12-16=5F01,2021-12-18=5F07,2021-12-02?=
+ =?UTF-8?Q?=5F01_signatures=3D0?=
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
+ clxscore=1011 phishscore=0 bulkscore=0 mlxscore=0 mlxlogscore=744
+ adultscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2009150000 definitions=main-2112180129
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+This commit fixes 2 compilation warnings due to comment starting with
+/** while not being kernel-doc comments.
 
-Building with clang returns this error:
+drivers/pinctrl/pinctrl-st.c:59: warning: This comment starts with '/**',
+but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+ *  Packed style retime configuration.
+drivers/pinctrl/pinctrl-st.c:73: warning: This comment starts with '/**',
+but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+ * Dedicated style retime Configuration register
 
-gpio-sim.c:889:7: error: variable 'ret' is uninitialized
-  when used here
-
-ret should be the status of the call to
-gpio_sim_make_bank_swnode stored in bank->swnode.
-
-Fixes: 83960fcf4818 ("gpio: sim: new testing module")
-Signed-off-by: Tom Rix <trix@redhat.com>
+Signed-off-by: Alain Volmat <avolmat@me.com>
 ---
- drivers/gpio/gpio-sim.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pinctrl/pinctrl-st.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-index ef6145f51c8ae..bef00dcc4dc8f 100644
---- a/drivers/gpio/gpio-sim.c
-+++ b/drivers/gpio/gpio-sim.c
-@@ -886,7 +886,8 @@ static int gpio_sim_device_activate_unlocked(struct gpio_sim_device *dev)
+diff --git a/drivers/pinctrl/pinctrl-st.c b/drivers/pinctrl/pinctrl-st.c
+index 1482a01dfec7..ae8783b34ed2 100644
+--- a/drivers/pinctrl/pinctrl-st.c
++++ b/drivers/pinctrl/pinctrl-st.c
+@@ -55,7 +55,7 @@
+ #define ST_GPIO_DIRECTION_OUT	0x2
+ #define ST_GPIO_DIRECTION_IN	0x4
  
- 	list_for_each_entry(bank, &dev->bank_list, siblings) {
- 		bank->swnode = gpio_sim_make_bank_swnode(bank, swnode);
--		if (ret) {
-+		if (IS_ERR(bank->swnode)) {
-+			ret = PTR_ERR(bank->swnode);
- 			gpio_sim_remove_swnode_recursive(swnode);
- 			return ret;
- 		}
+-/**
++/*
+  *  Packed style retime configuration.
+  *  There are two registers cfg0 and cfg1 in this style for each bank.
+  *  Each field in this register is 8 bit corresponding to 8 pins in the bank.
+@@ -69,7 +69,7 @@
+ #define RT_P_CFG1_CLKNOTDATA_FIELD(reg)		REG_FIELD(reg, 16, 23)
+ #define RT_P_CFG1_DOUBLE_EDGE_FIELD(reg)	REG_FIELD(reg, 24, 31)
+ 
+-/**
++/*
+  * Dedicated style retime Configuration register
+  * each register is dedicated per pin.
+  */
 -- 
-2.26.3
+2.25.1
 
