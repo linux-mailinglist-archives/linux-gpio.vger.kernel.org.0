@@ -2,80 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 070D6479E7E
-	for <lists+linux-gpio@lfdr.de>; Sun, 19 Dec 2021 01:01:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B19D3479F0E
+	for <lists+linux-gpio@lfdr.de>; Sun, 19 Dec 2021 05:04:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229995AbhLSAB3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 18 Dec 2021 19:01:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35136 "EHLO
+        id S235183AbhLSEEg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 18 Dec 2021 23:04:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229641AbhLSAB2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 18 Dec 2021 19:01:28 -0500
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [IPv6:2a01:5b40:0:3005::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92C25C061574;
-        Sat, 18 Dec 2021 16:01:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=tronnes.org
-        ; s=ds202112; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-        References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=BG4C7QRJ227T6gfSl2abCwK4zoPig3VkuYG7jnALxtc=; b=Y8vT0fnAiuLrYuud4qfOSXHtFH
-        Ua6IMVr9r6PsY/s2UgB6w66vP047yII1DLc8NWW+5pIjLOpJpxpQcefNqpsP4m1VS5NrAcHMAvvNk
-        T7lcB5CJnao4ms7aJlJ+c3OZ0ooM6WaapNgA/JywiXf1LoLcfgTrHvg8cDRn49EikHQU0x8hbD+pm
-        2+96AmpREzmdb4FXgYtbRVbxFAyBQjy8oulDP15KUFPeccJheJv8y9XqZhqyfrvuzPJepVIqOS7tY
-        t1kYMZcyO6htrVTyzSBcSURXIqhGP6rnfIyl0Xrs6hfaIW1j9aZ1QQzrfMCmwS9Sqko86UqMCsOI7
-        Eha7QUbQ==;
-Received: from 211.81-166-168.customer.lyse.net ([81.166.168.211]:59007 helo=[192.168.10.61])
-        by smtp.domeneshop.no with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <noralf@tronnes.org>)
-        id 1myjdl-0000sb-2S; Sun, 19 Dec 2021 01:01:25 +0100
-Message-ID: <1e95e757-a0e3-a1e9-8430-3accc25d0f84@tronnes.org>
-Date:   Sun, 19 Dec 2021 01:01:23 +0100
+        with ESMTP id S235181AbhLSEEf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 18 Dec 2021 23:04:35 -0500
+Received: from mail-oi1-x232.google.com (mail-oi1-x232.google.com [IPv6:2607:f8b0:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33450C061574
+        for <linux-gpio@vger.kernel.org>; Sat, 18 Dec 2021 20:04:35 -0800 (PST)
+Received: by mail-oi1-x232.google.com with SMTP id t23so10260348oiw.3
+        for <linux-gpio@vger.kernel.org>; Sat, 18 Dec 2021 20:04:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yJWt+KkmO0YLrs+UtVANxUD2GMcpvaDOALr1uWCtdM8=;
+        b=BQL8sIVFJbDnIAbdP/g2N5jIawM/Hj+QHQ1O4hkd2MnUlUHvEPqvCh+/vlGS3JjNxp
+         MlHfjfnzD9KEwCRNff928OrN1LP4Qa07pWgL3VcJv2COFhEBUx3rzf0gUqSllvHtcojO
+         zwdSNgDAfNak9q24G20o8Q5+rc2QomtPMV47DDLdboU+bU2UCZwnpwyrt+vc1qFpEVP9
+         HgMCGNyCrXKwQGANq9u4C+CmL05E1wu8kmWC+yA2vOVlqFxiiZagRtpH95inrPcuO4Uu
+         48yLA1Gn5aDhB4wkyCI32StnpRO5rwtFi+AuWSh3NFLvrZA3xWJVj84JQTRdbA52ZfWw
+         INyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yJWt+KkmO0YLrs+UtVANxUD2GMcpvaDOALr1uWCtdM8=;
+        b=ixKuI3/h2SsBUc8v70lSGEtkhK/BYbpOKTeXLukr3qPhbevzBCWk4atr1690LZSkrQ
+         G7yVp9uXngKpYk4FVx2OPRXhIcwKp8IP8KmX1vQBPunaPaIs49BKJeKShLC8QxAWKQKV
+         q2c7vAKv3l8FGdW5OxIU8Wd0eWwb+4NTZumL9/g0qwAvYVtM7Oug0xrZMF62dG5kuHaq
+         6vjfccRVIRaOuXabQ4LAXo64iI0rVvfcncn8KA8at4c5tQGG/HW9YdJD8XX7SOyHB1js
+         lco98pXXSJ8P2OsdYT8PfmI3osHU4aCAye8IdBLvM57UL2ecVRQbF7I8BZ87+i2e0fac
+         NhDg==
+X-Gm-Message-State: AOAM532Yq94XUdSLBwin4ccwoD+0Nfwukdcq6aRF4ITubyb47/5NXcYU
+        9zCWOnHYdyASl6tSBAsN3/mDpfBA/p3T6qXY6QE=
+X-Google-Smtp-Source: ABdhPJx0ldqUaFXeuP1Kjl95uV+6l0NkipfkAJU43DVowxSD2/ro+g6CacMxIQr+5SFXSC/caA2p/AAjQozf9fzm0vc=
+X-Received: by 2002:aca:230b:: with SMTP id e11mr13213688oie.22.1639886673176;
+ Sat, 18 Dec 2021 20:04:33 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH] gpio: dln2: Fix interrupts when replugging the device
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+References: <CAKycSdDgLYRU9d5dw8SUGX5Jow1LUM4ySb5n4v4FeUFKTwnYPg@mail.gmail.com>
+ <20211217055001.535wscahbxfkrxn5@vireshk-i7> <CANiq72nimetRmi+aHF1h+hqvSjFJxVXsBYKQHUEnTQ50Lp5eqw@mail.gmail.com>
+ <20211217104920.dxvgmw3536ii2de7@vireshk-i7>
+In-Reply-To: <20211217104920.dxvgmw3536ii2de7@vireshk-i7>
+From:   Gerard Ryan <g.m0n3y.2503@gmail.com>
+Date:   Sun, 19 Dec 2021 14:04:22 +1000
+Message-ID: <CAKycSdB791-yCjdoEAHZoRrEvNAEWaN5WO5pTKW4AGkSZM7CCQ@mail.gmail.com>
+Subject: Re: [PATCH V2 1/4] libgpiod: Generate rust FFI bindings
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Daniel Baluta <daniel.baluta@gmail.com>
-References: <20211018112201.25424-1-noralf@tronnes.org>
- <CACRpkdZQSB+McOGK9HZUNAr2p+FX=6ddbY=5-sQ8difh1pEqGg@mail.gmail.com>
-From:   =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
-In-Reply-To: <CACRpkdZQSB+McOGK9HZUNAr2p+FX=6ddbY=5-sQ8difh1pEqGg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        stratos-dev@op-lists.linaro.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Wedson Almeida Filho <wedsonaf@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On 17-12-2021, 3:50 PM, Viresh Kumar wrote:
+> followed by wrapper crate to contain the wrappers around it.
 
+If by wrapper you mean the safe/idiomatic wrapper then I agree.
 
-Den 24.10.2021 23.09, skrev Linus Walleij:
-> On Mon, Oct 18, 2021 at 1:23 PM Noralf Trønnes <noralf@tronnes.org> wrote:
-> 
->> When replugging the device the following message shows up:
->>
->> gpio gpiochip2: (dln2): detected irqchip that is shared with multiple gpiochips: please fix the driver.
->>
->> This also has the effect that interrupts won't work.
->> The same problem would also show up if multiple devices where plugged in.
->>
->> Fix this by allocating the irq_chip data structure per instance like other
->> drivers do.
->>
->> I don't know when this problem appeared, but it is present in 5.10.
->>
->> Cc: <stable@vger.kernel.org> # 5.10+
->> Cc: Daniel Baluta <daniel.baluta@gmail.com>
->> Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
-> 
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> 
+> When I do a cargo build there (for vhost-device crate), it will try to build the
+> dependencies as well, i.e. libgpiod, and I need to build the libgpiod's C files
+> as well there. There are good chances that I need to build from source and
+> libgpiod isn't installed there. How do I do it with Make ?
 
-Ping, has this been forgotten? Can't see it in -next.
+Hmmm, I was thinking `pkg-config` or make from this repo would be enough.
+I haven't used it myself as I don't do much c/cpp work anymore, but
+I've looked into https://vcpkg.io/ seems quite good.
+and there is https://crates.io/crates/vcpkg to integrate it.
+for now, perhaps `cc` is enough.
 
-Noralf.
+On 17-12-2021, 8:49 PM, Viresh Kumar wrote:
+> Perhaps, we should make it compile-only for the time being. Once the ABI is
+> stable enough, we can think of committing something to the source tree.
+
+Sounds good.
+
+On Fri, Dec 17, 2021 at 8:49 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 17-12-21, 11:38, Miguel Ojeda wrote:
+> > Having optional pre-generated bindings may be good for some users,
+> > e.g. libsqlite3-sys does it. I guess the main question is whether you
+> > are willing to support/maintain it. Also consider cross-compilation.
+> >
+> > But I wouldn't only provide pre-generated ones if you are using
+> > `bindgen` anyway.
+>
+> The pre-generated ones are normally good for kernel headers, where the userspace
+> ABI is stable and so we don't need to change the generated bindings soon.
+>
+> But in our case here, the ABI isn't that stable and will likely change soon
+> again for the first few months after v2.0 is released for libgpiod.
+>
+> Perhaps, we should make it compile-only for the time being. Once the ABI is
+> stable enough, we can think of committing something to the source tree.
+>
+> > In any case, I am not a Rust expert, so please take that with a grain of salt :)
+>
+> :)
+>
+> --
+> viresh
