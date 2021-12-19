@@ -2,101 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 93FFD47A0B7
-	for <lists+linux-gpio@lfdr.de>; Sun, 19 Dec 2021 14:48:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B610D47A0C5
+	for <lists+linux-gpio@lfdr.de>; Sun, 19 Dec 2021 15:02:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235825AbhLSNsv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 19 Dec 2021 08:48:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42376 "EHLO
+        id S231822AbhLSOCf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 19 Dec 2021 09:02:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234727AbhLSNsv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 19 Dec 2021 08:48:51 -0500
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9EC4C06173E
-        for <linux-gpio@vger.kernel.org>; Sun, 19 Dec 2021 05:48:50 -0800 (PST)
-Received: by mail-ed1-x52b.google.com with SMTP id e3so27621675edu.4
-        for <linux-gpio@vger.kernel.org>; Sun, 19 Dec 2021 05:48:50 -0800 (PST)
+        with ESMTP id S233038AbhLSOCf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 19 Dec 2021 09:02:35 -0500
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDDFBC06173E
+        for <linux-gpio@vger.kernel.org>; Sun, 19 Dec 2021 06:02:34 -0800 (PST)
+Received: by mail-ed1-x52e.google.com with SMTP id z7so27602141edc.11
+        for <linux-gpio@vger.kernel.org>; Sun, 19 Dec 2021 06:02:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BDw8C0oiQt8krM7GPl59F/SHmEkDcuvz/QP/KiGHzGc=;
-        b=tDq3jJ0Jfjv8roeqADo2cS65CRt1dPQigjxyfk9BrR4WFccgqyTkjbJ0da4Z9Mdtb6
-         wEyiQETEG6qJ3wGHzbXQcQtsp/CSVWGm2Jj8w+v8lIUZ1TGJZUiSYSbWzzct6R/vdaKS
-         h3bLapiirIA8xg2x/QLX5ubCks0y0f2maBRgbwDxR0aVyNBG2zoqkirJ1G8pG4UXdgqi
-         fAn9CBg1kVz/zGMYu/xt6JUxJJ0dA9VFdPrBQRwRbanuKgN2fkjXaLcwwgzrTvvvS1uj
-         Y4DeI0Z8G+3KnVQBQWzvdcUVhdOtAD/2bZe1qu+SU23LeTv1aATkay4zQhEFRykw4Mi5
-         X0Iw==
+         :cc:content-transfer-encoding;
+        bh=8Rn7MzjWfN2l13l2VUjM7MiiPLjH10XqIwfX7gmND9g=;
+        b=tmT2x5VLkXrLywwrkT2gY8UM8F0jdpYos6wTPRn6wD+tiwo1AVYPrDOFzAU6hkO58h
+         v9naRUU+Sl84Y69wc3kLGrbxPp6KOjEeEn9w1mhwVC0NQD2XyBp4AsmlI7JhJhB0YVHw
+         dE+cg8k+fyv/6WI9m4YzbSmfpyXOv4jsmk6HwzZQJHGcgcNR1IDNL+fZeFz6wDWg0oE8
+         L+Tpza73CJImHN9zDJEOTcqm/wSujBbuXrJmoGyrULUdNJo2Z13bo9TFLL09SLGcaTLS
+         VffZwgQ9qEkuI5heVWE6pju4rdpkcicsaBhrh1/CHa/+grTEyKCGnanzCH++O/M+dahu
+         N/uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BDw8C0oiQt8krM7GPl59F/SHmEkDcuvz/QP/KiGHzGc=;
-        b=rTt9OCxB/fs934UN1gZ0HApLVf7d/q43zAlenrWiCN8CddAJZ5Juk0tEEef7HFpNnp
-         5rQIRDcH/NbHj4sXshGbUjfe4dMYv8H5e7/pl60x5K/ztZmd58v1J/BmhrW5z5xOCvX8
-         PBsmE7s4gE9FvDLXuvI6GwURdR8mHrqcjClJpJqTykuDH0d78lwGzc8XXDJLLzt7yV49
-         75rgCfu0g5I9ytFl0kzLj8tvS34iK3JXpip783iZ5WuQpJ6qwrZ5hVhcvEkfuleaXRqP
-         xeyjvyI3XMXaukXlryDEPwCNCreSlYezrUPL4ABYhu1VPdLzEF562XIA7KpyCHNV2SX0
-         WvQA==
-X-Gm-Message-State: AOAM532HjDoLk/KT8cEL4sNNrzkiXKwZmioDIJ0O/P4mKAemMmTD/bYu
-        TpKYCHoPeRhKd+SDczOWAaAUOGyFje4EmYlwJlS2QQ==
-X-Google-Smtp-Source: ABdhPJzRohxotF39Bs+wpTjUL/P/dXK8VIR3E96T8ZEEXKcZ19/PnOSHQCC5M5ao7RmwWjnw+f+CBnuXdx+VvzpqGKc=
-X-Received: by 2002:a05:6402:51c6:: with SMTP id r6mr11474208edd.365.1639921729252;
- Sun, 19 Dec 2021 05:48:49 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=8Rn7MzjWfN2l13l2VUjM7MiiPLjH10XqIwfX7gmND9g=;
+        b=osLxG7rBE26KZeG5ISyoDBa2IpVIhitUb4qex7cRm5KP4eNzbCGshxKPocIEPxNs1K
+         Sfn1zGYuN2besARIF2VWaesGaX2xbNGMgk9b4PFXL9Q9nK67CaqYdI2E5TVCFEey7fjc
+         6ewPG5UmPhweVWjtQ6G9NX+ENGyVtIkjtMBtwDrCLJ6tSz1J1d9ReIyPcGW65CKeBdC4
+         TnOA3HiSB+kMMhpfmcM6W/8EHew1VQhR4Vt6HeS08cUbmgshS+Dl214fRAJsJk/ETdff
+         UI1dBcmEoJc8DfoeibExum0KVkL8ycd1oTSHFE2xIyf2K/Z9haTXoAi3LZl4yxg/6NjJ
+         mvzg==
+X-Gm-Message-State: AOAM531bMXUiEyRfn8FY9kha7+Kd9ksrP43UQr+vwjxPS+V7zRZW3taM
+        qYLMELuKp5W6cPeM+hoS+ccK5W0VMFxUdpbV/HKgKw==
+X-Google-Smtp-Source: ABdhPJxGRncr7cZAZNhqgBIxWgY7w7hv5Styt1A51kAQl7Qy1MNrtWkL1qQj7D38WlbzPbP7ue+vvBkHTPI+cJ9c5/o=
+X-Received: by 2002:a17:906:249a:: with SMTP id e26mr9520277ejb.492.1639922553118;
+ Sun, 19 Dec 2021 06:02:33 -0800 (PST)
 MIME-Version: 1.0
-References: <20211218152712.2832502-1-trix@redhat.com>
-In-Reply-To: <20211218152712.2832502-1-trix@redhat.com>
+References: <20211018112201.25424-1-noralf@tronnes.org> <CACRpkdZQSB+McOGK9HZUNAr2p+FX=6ddbY=5-sQ8difh1pEqGg@mail.gmail.com>
+ <1e95e757-a0e3-a1e9-8430-3accc25d0f84@tronnes.org>
+In-Reply-To: <1e95e757-a0e3-a1e9-8430-3accc25d0f84@tronnes.org>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Sun, 19 Dec 2021 14:48:38 +0100
-Message-ID: <CAMRc=Md5xqpu1vkipN+boN-=SnC4MOkHz=Cj3UnGnvr_Qv+21g@mail.gmail.com>
-Subject: Re: [PATCH] gpio: sim: fix uninitialized ret variable
-To:     trix@redhat.com
-Cc:     Linus Walleij <linus.walleij@linaro.org>, nathan@kernel.org,
-        ndesaulniers@google.com,
+Date:   Sun, 19 Dec 2021 15:02:22 +0100
+Message-ID: <CAMRc=Mdwn3=n7j1hPsadzSRegA23RTiWEabiJPWJs67UTYDuCw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: dln2: Fix interrupts when replugging the device
+To:     =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        llvm@lists.linux.dev
+        stable <stable@vger.kernel.org>,
+        Daniel Baluta <daniel.baluta@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Dec 18, 2021 at 4:27 PM <trix@redhat.com> wrote:
+On Sun, Dec 19, 2021 at 1:01 AM Noralf Tr=C3=B8nnes <noralf@tronnes.org> wr=
+ote:
 >
-> From: Tom Rix <trix@redhat.com>
 >
-> Building with clang returns this error:
 >
-> gpio-sim.c:889:7: error: variable 'ret' is uninitialized
->   when used here
+> Den 24.10.2021 23.09, skrev Linus Walleij:
+> > On Mon, Oct 18, 2021 at 1:23 PM Noralf Tr=C3=B8nnes <noralf@tronnes.org=
+> wrote:
+> >
+> >> When replugging the device the following message shows up:
+> >>
+> >> gpio gpiochip2: (dln2): detected irqchip that is shared with multiple =
+gpiochips: please fix the driver.
+> >>
+> >> This also has the effect that interrupts won't work.
+> >> The same problem would also show up if multiple devices where plugged =
+in.
+> >>
+> >> Fix this by allocating the irq_chip data structure per instance like o=
+ther
+> >> drivers do.
+> >>
+> >> I don't know when this problem appeared, but it is present in 5.10.
+> >>
+> >> Cc: <stable@vger.kernel.org> # 5.10+
+> >> Cc: Daniel Baluta <daniel.baluta@gmail.com>
+> >> Signed-off-by: Noralf Tr=C3=B8nnes <noralf@tronnes.org>
+> >
+> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> >
 >
-> ret should be the status of the call to
-> gpio_sim_make_bank_swnode stored in bank->swnode.
+> Ping, has this been forgotten? Can't see it in -next.
 >
-> Fixes: 83960fcf4818 ("gpio: sim: new testing module")
-> Signed-off-by: Tom Rix <trix@redhat.com>
-> ---
->  drivers/gpio/gpio-sim.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-> index ef6145f51c8ae..bef00dcc4dc8f 100644
-> --- a/drivers/gpio/gpio-sim.c
-> +++ b/drivers/gpio/gpio-sim.c
-> @@ -886,7 +886,8 @@ static int gpio_sim_device_activate_unlocked(struct gpio_sim_device *dev)
->
->         list_for_each_entry(bank, &dev->bank_list, siblings) {
->                 bank->swnode = gpio_sim_make_bank_swnode(bank, swnode);
-> -               if (ret) {
-> +               if (IS_ERR(bank->swnode)) {
-> +                       ret = PTR_ERR(bank->swnode);
->                         gpio_sim_remove_swnode_recursive(swnode);
->                         return ret;
->                 }
-> --
-> 2.26.3
->
+> Noralf.
 
-Applied, thanks!
+Hi Noralf,
+
+As of commit d1d598104336075e7475d932d200b33108399225 my email address
+has changed and the relevant commit has been in mainline for a while
+now. I only by accident noticed this patch now. Please use
+scripts/get_maintainer.pl in the future.
+
+Now queued, thanks!
 
 Bart
