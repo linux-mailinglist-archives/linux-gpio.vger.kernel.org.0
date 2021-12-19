@@ -2,115 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B19D3479F0E
-	for <lists+linux-gpio@lfdr.de>; Sun, 19 Dec 2021 05:04:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FB0F479F1C
+	for <lists+linux-gpio@lfdr.de>; Sun, 19 Dec 2021 05:08:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235183AbhLSEEg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 18 Dec 2021 23:04:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58936 "EHLO
+        id S235237AbhLSEIx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 18 Dec 2021 23:08:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235181AbhLSEEf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 18 Dec 2021 23:04:35 -0500
-Received: from mail-oi1-x232.google.com (mail-oi1-x232.google.com [IPv6:2607:f8b0:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33450C061574
-        for <linux-gpio@vger.kernel.org>; Sat, 18 Dec 2021 20:04:35 -0800 (PST)
-Received: by mail-oi1-x232.google.com with SMTP id t23so10260348oiw.3
-        for <linux-gpio@vger.kernel.org>; Sat, 18 Dec 2021 20:04:35 -0800 (PST)
+        with ESMTP id S235233AbhLSEIx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 18 Dec 2021 23:08:53 -0500
+Received: from mail-vk1-xa2f.google.com (mail-vk1-xa2f.google.com [IPv6:2607:f8b0:4864:20::a2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF17FC06173E
+        for <linux-gpio@vger.kernel.org>; Sat, 18 Dec 2021 20:08:52 -0800 (PST)
+Received: by mail-vk1-xa2f.google.com with SMTP id g65so1143026vkf.4
+        for <linux-gpio@vger.kernel.org>; Sat, 18 Dec 2021 20:08:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=0x0f.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=yJWt+KkmO0YLrs+UtVANxUD2GMcpvaDOALr1uWCtdM8=;
-        b=BQL8sIVFJbDnIAbdP/g2N5jIawM/Hj+QHQ1O4hkd2MnUlUHvEPqvCh+/vlGS3JjNxp
-         MlHfjfnzD9KEwCRNff928OrN1LP4Qa07pWgL3VcJv2COFhEBUx3rzf0gUqSllvHtcojO
-         zwdSNgDAfNak9q24G20o8Q5+rc2QomtPMV47DDLdboU+bU2UCZwnpwyrt+vc1qFpEVP9
-         HgMCGNyCrXKwQGANq9u4C+CmL05E1wu8kmWC+yA2vOVlqFxiiZagRtpH95inrPcuO4Uu
-         48yLA1Gn5aDhB4wkyCI32StnpRO5rwtFi+AuWSh3NFLvrZA3xWJVj84JQTRdbA52ZfWw
-         INyg==
+        bh=YzP3Tp0AphEvmykMrgQMzrR3Qf/LWzjoW3P1IKbZm0g=;
+        b=vrm6BpP0WKqCQONwmdZb3wFKOHnNswIO28257SwMW+4jk1CCzutSs1jyJcRzyp3jkz
+         p7ViWBaAkAUaf0yrj24an3ip/fuhdmqKB89vplFCmof1eTyQO7em7ZTEYhOC9GtNllhq
+         PKT1ULwSnAhu+jYjQy6yZML09r2hVBVQZNYVA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=yJWt+KkmO0YLrs+UtVANxUD2GMcpvaDOALr1uWCtdM8=;
-        b=ixKuI3/h2SsBUc8v70lSGEtkhK/BYbpOKTeXLukr3qPhbevzBCWk4atr1690LZSkrQ
-         G7yVp9uXngKpYk4FVx2OPRXhIcwKp8IP8KmX1vQBPunaPaIs49BKJeKShLC8QxAWKQKV
-         q2c7vAKv3l8FGdW5OxIU8Wd0eWwb+4NTZumL9/g0qwAvYVtM7Oug0xrZMF62dG5kuHaq
-         6vjfccRVIRaOuXabQ4LAXo64iI0rVvfcncn8KA8at4c5tQGG/HW9YdJD8XX7SOyHB1js
-         lco98pXXSJ8P2OsdYT8PfmI3osHU4aCAye8IdBLvM57UL2ecVRQbF7I8BZ87+i2e0fac
-         NhDg==
-X-Gm-Message-State: AOAM532Yq94XUdSLBwin4ccwoD+0Nfwukdcq6aRF4ITubyb47/5NXcYU
-        9zCWOnHYdyASl6tSBAsN3/mDpfBA/p3T6qXY6QE=
-X-Google-Smtp-Source: ABdhPJx0ldqUaFXeuP1Kjl95uV+6l0NkipfkAJU43DVowxSD2/ro+g6CacMxIQr+5SFXSC/caA2p/AAjQozf9fzm0vc=
-X-Received: by 2002:aca:230b:: with SMTP id e11mr13213688oie.22.1639886673176;
- Sat, 18 Dec 2021 20:04:33 -0800 (PST)
+        bh=YzP3Tp0AphEvmykMrgQMzrR3Qf/LWzjoW3P1IKbZm0g=;
+        b=Asy2Qs7w/IgkK/R5zmSi+nHXjmJbLWagi/ld8UnY/G0b4cAfnApVUv1jcu+OJvFBFx
+         7wXi1TnG5saVbjx0WgfgLsOQg7vUptgk4MojA6CNlKKQ02sFFqkex3hLGBDrCHYKskIy
+         Ulf/65izJICPl4d1smjKRhIJWtiNI4/i32ITOOdb1vk+dLpl9tx7eTt5sxfePtkJB9uo
+         9K/ArkuHeDtNgp1Aahmwu/xI8xS3aZtiCrOYotCvQXQTKgftvqIvuoWM6Hl0edmQlc13
+         I0ItLzWKIfLgzUGxZ2IudY5WjA5Sset9Rp4aMJIwY67J2Nky/DC/imPtYcqToHg5zQEu
+         hHeg==
+X-Gm-Message-State: AOAM530rf78DfjjMEf3R4hRGajUO18k0Up+IjFbmxO7462mgdEboLj0Y
+        fBxPfKKxoKJPd1TQ7Nf3hyrc2BVuxQVK4hkrQt9S/w==
+X-Google-Smtp-Source: ABdhPJz54UP/JnsWT9Xj9GvOLNh0ciOdDIibZByO2ZIJzfqMLmbIq4DPIc84KW9ugoeNj7CdFM+smKuwgCIhwHFDlJs=
+X-Received: by 2002:ac5:ca0c:: with SMTP id c12mr3813624vkm.34.1639886931827;
+ Sat, 18 Dec 2021 20:08:51 -0800 (PST)
 MIME-Version: 1.0
-References: <CAKycSdDgLYRU9d5dw8SUGX5Jow1LUM4ySb5n4v4FeUFKTwnYPg@mail.gmail.com>
- <20211217055001.535wscahbxfkrxn5@vireshk-i7> <CANiq72nimetRmi+aHF1h+hqvSjFJxVXsBYKQHUEnTQ50Lp5eqw@mail.gmail.com>
- <20211217104920.dxvgmw3536ii2de7@vireshk-i7>
-In-Reply-To: <20211217104920.dxvgmw3536ii2de7@vireshk-i7>
-From:   Gerard Ryan <g.m0n3y.2503@gmail.com>
-Date:   Sun, 19 Dec 2021 14:04:22 +1000
-Message-ID: <CAKycSdB791-yCjdoEAHZoRrEvNAEWaN5WO5pTKW4AGkSZM7CCQ@mail.gmail.com>
-Subject: Re: [PATCH V2 1/4] libgpiod: Generate rust FFI bindings
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
+References: <20211213094036.1787950-1-daniel@0x0f.com> <CACRpkdaLt8O4ONZL0vY44gMbuSR_tT3Gkbh9f3sg7m23tUKO2g@mail.gmail.com>
+In-Reply-To: <CACRpkdaLt8O4ONZL0vY44gMbuSR_tT3Gkbh9f3sg7m23tUKO2g@mail.gmail.com>
+From:   Daniel Palmer <daniel@0x0f.com>
+Date:   Sun, 19 Dec 2021 13:08:41 +0900
+Message-ID: <CAFr9PXnjAKw_ex=O7wjtHi9cOrUrPDVegomCKBCz2zL801KnFA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/5] gpio: msc313: Add gpio support for ssd20xd
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        stratos-dev@op-lists.linaro.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Wedson Almeida Filho <wedsonaf@google.com>
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 17-12-2021, 3:50 PM, Viresh Kumar wrote:
-> followed by wrapper crate to contain the wrappers around it.
+Hi Linus,
 
-If by wrapper you mean the safe/idiomatic wrapper then I agree.
+On Thu, 16 Dec 2021 at 11:52, Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Mon, Dec 13, 2021 at 10:40 AM Daniel Palmer <daniel@0x0f.com> wrote:
+>
+> > As suggested by Linus I have dropped the DTS commits that were
+> > in the series to add a usage of this code to a target.
+> > If possible can you take the first 4 commits for the GPIO driver
+> > for me? The final DTS commit will go via our tree.
+>
+> Looks to me like patches 1-4 are good to go, but Bartosz
+> must decide if he wants to merge this late in the development
+> cycle.
 
-> When I do a cargo build there (for vhost-device crate), it will try to build the
-> dependencies as well, i.e. libgpiod, and I need to build the libgpiod's C files
-> as well there. There are good chances that I need to build from source and
-> libgpiod isn't installed there. How do I do it with Make ?
+I'd like them in 5.17 as we have a ton of DTS updates that use this
+stuff to wire up LEDs and buttons,
+but if that doesn't happen it's not a major problem.
+Some response from Bartosz to say if he wants anything done before
+taking them would be nice.
 
-Hmmm, I was thinking `pkg-config` or make from this repo would be enough.
-I haven't used it myself as I don't do much c/cpp work anymore, but
-I've looked into https://vcpkg.io/ seems quite good.
-and there is https://crates.io/crates/vcpkg to integrate it.
-for now, perhaps `cc` is enough.
+Thanks,
 
-On 17-12-2021, 8:49 PM, Viresh Kumar wrote:
-> Perhaps, we should make it compile-only for the time being. Once the ABI is
-> stable enough, we can think of committing something to the source tree.
-
-Sounds good.
-
-On Fri, Dec 17, 2021 at 8:49 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 17-12-21, 11:38, Miguel Ojeda wrote:
-> > Having optional pre-generated bindings may be good for some users,
-> > e.g. libsqlite3-sys does it. I guess the main question is whether you
-> > are willing to support/maintain it. Also consider cross-compilation.
-> >
-> > But I wouldn't only provide pre-generated ones if you are using
-> > `bindgen` anyway.
->
-> The pre-generated ones are normally good for kernel headers, where the userspace
-> ABI is stable and so we don't need to change the generated bindings soon.
->
-> But in our case here, the ABI isn't that stable and will likely change soon
-> again for the first few months after v2.0 is released for libgpiod.
->
-> Perhaps, we should make it compile-only for the time being. Once the ABI is
-> stable enough, we can think of committing something to the source tree.
->
-> > In any case, I am not a Rust expert, so please take that with a grain of salt :)
->
-> :)
->
-> --
-> viresh
+Daniel
