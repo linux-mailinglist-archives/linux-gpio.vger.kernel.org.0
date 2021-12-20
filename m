@@ -2,99 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B168247B02B
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Dec 2021 16:27:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 81BC647AFA4
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Dec 2021 16:16:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236399AbhLTP1Y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Dec 2021 10:27:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42406 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236753AbhLTP1A (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Dec 2021 10:27:00 -0500
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC9E9C08EB1F;
-        Mon, 20 Dec 2021 07:11:16 -0800 (PST)
-Received: by mail-ed1-x535.google.com with SMTP id z5so39666392edd.3;
-        Mon, 20 Dec 2021 07:11:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hBIoGw/e/zcvG+pHiU6S4HSaNOHwibSXXHgdcOqKpt0=;
-        b=g5w3zq2NJj7FJNKB6S4eRDs8mFKJE6NotK7FF6GXMEgZ18UwBT107QQbz/ylRJ7XAD
-         rxMXVmWZocz1dWweCJ2U+MWs5LfN2YOXXpHQ6R7YVX5Ap6+8XTiet4rQbNbnW3nowwVS
-         8N3oMITPRhSHD2f7ULqqZ3trHI9x/5BuskLxk0KwxbygoH3ALIDkpcUmyg5RMTzRvGHh
-         yJPWWLUNnGQXmUvhgp+o3fwjdRsRwO37RHPCmyC3K0n8P3fhLxW5ZcrZ8dqdALg1cNZN
-         3tFRVXQDd6/az+dttSn69qu74M70HGJj0fpJpn/KayqQWWY0VpUau1OGGvvFa2CIThk3
-         G+uw==
+        id S236572AbhLTPQ2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Dec 2021 10:16:28 -0500
+Received: from mail-ua1-f49.google.com ([209.85.222.49]:44871 "EHLO
+        mail-ua1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237016AbhLTPOb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Dec 2021 10:14:31 -0500
+Received: by mail-ua1-f49.google.com with SMTP id p2so18208816uad.11;
+        Mon, 20 Dec 2021 07:14:30 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=hBIoGw/e/zcvG+pHiU6S4HSaNOHwibSXXHgdcOqKpt0=;
-        b=M4Z6D2R37WqYrdEc4PdJtZb2FEj53mcIJM3dll0GH61st0/LI8DB4eL2dzMUfCrjH4
-         G8X4bmzH5NM6zQ1mBylel0K0cQrJWMPMYgxPLfY9wramDGTabByYr4wfLPQAjhWEr+Tr
-         4XzYmFPyP4f1h+gGqRPgF1OScHhRqBNSILxErfUtL6GTUgJn2AQTPpB+gLlPX6LhQ6Mi
-         6XcRl1AIJPROTIJmzl6abu9MmjNYIg/4jDjt8zXG1ny9racmdrinuox0S/AbmK41in2y
-         G304VEcdxUNYw/z09k9UC3D82Ixwhad1Zpk6mCBgwlRaxQfG5uIu4UMOtX/56xfQ6Q7z
-         9drA==
-X-Gm-Message-State: AOAM5329OnYupZ1heotXo4kC6Vm26L8VLSKcqtdHWdLXIJvtCtsOHh3x
-        zEQLvUIfhxIxY5JtqdJl8Fm8pFYzzMsoLrk2iYU=
-X-Google-Smtp-Source: ABdhPJwNPdlFiyq6tdH9hFgzAwymj19tpiQ0KxZM4gqqznfenD0pSWIWIRrWm9wcb1jCZbCyqF5YMjt/cuc4WnfY9lc=
-X-Received: by 2002:aa7:c7cd:: with SMTP id o13mr16731637eds.37.1640013075412;
- Mon, 20 Dec 2021 07:11:15 -0800 (PST)
+        bh=1RrQd9GJbr8VHOo3UvKL+r03emDIirUU1mO3qVTnuYM=;
+        b=3XOnZL4iH1g8qcNmMWjxGHfPI3AX0/isMQHTWVpftMLNFO1idbKx9cyeGyK8+udwOO
+         1On2T/jg29z/wTOzwsHgqTFvPQrSmjEF8Tk6rQVMV5srcs/U9u62owWDjg8O842fUKUT
+         Frjm9m6v+cArKImmnacto+1e7eCR2qVtLl0gycxDtbYAY++jt/8jOgE8i5CtLi/Cy2IB
+         b1C0K6Ub7ogcasGsuh4O1tsvnyI8i876qC3lnRoi9UfVgGIMCiTp3kM2JYunlT8kZqbk
+         IYkMPamxsMKdvSpNFylTMeVxClTJlV0vE3imyc6lsekFOJYJZA1QOb1/t1FjT8lRJIeX
+         LsGw==
+X-Gm-Message-State: AOAM531REjL5EQID0NEhDRnMpkuj89YywhQ6uGdwaDwmsVVrRUC01C1i
+        QQke6dPP3To2iE/MNUMKuVQZFFSxq8bZzw==
+X-Google-Smtp-Source: ABdhPJx1SwCbCv6Yyod5pRZs7WEMI3XY0JRVQg/V/k5uXzc5nIHmxL085ZvJa0u26rjTxqqUuvfS5A==
+X-Received: by 2002:a05:6102:3554:: with SMTP id e20mr4987497vss.50.1640013269993;
+        Mon, 20 Dec 2021 07:14:29 -0800 (PST)
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
+        by smtp.gmail.com with ESMTPSA id x34sm2418512uac.12.2021.12.20.07.14.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Dec 2021 07:14:29 -0800 (PST)
+Received: by mail-ua1-f51.google.com with SMTP id t13so18218557uad.9;
+        Mon, 20 Dec 2021 07:14:28 -0800 (PST)
+X-Received: by 2002:a9f:3e01:: with SMTP id o1mr5360780uai.89.1640013268654;
+ Mon, 20 Dec 2021 07:14:28 -0800 (PST)
 MIME-Version: 1.0
-References: <20211220132439.1194-1-andriy.shevchenko@linux.intel.com> <CAMRc=Md3bpCJe_eFBjiKuhCRO_xqnFxSc1sw100fgNmajy6gaw@mail.gmail.com>
-In-Reply-To: <CAMRc=Md3bpCJe_eFBjiKuhCRO_xqnFxSc1sw100fgNmajy6gaw@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 20 Dec 2021 17:09:15 +0200
-Message-ID: <CAHp75VcbaYXfDpc7xE=asSqUspscRoHfqrg-yMtx=uo5UNqxfw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpio: Remove unused local OF node pointers
+References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
+ <a7fbb773-eb85-ccc7-8bfb-0bfab062ffe1@leemhuis.info> <CAMRc=MfAxzmAfATV2NwfTgpfmyxFx8bgTbaAfWxSi9zmBecPng@mail.gmail.com>
+In-Reply-To: <CAMRc=MfAxzmAfATV2NwfTgpfmyxFx8bgTbaAfWxSi9zmBecPng@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 20 Dec 2021 16:14:17 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVp621B0DywkW6sx6wNcPFez9=3-=cfSo7UoRttJ6QXCg@mail.gmail.com>
+Message-ID: <CAMuHMdVp621B0DywkW6sx6wNcPFez9=3-=cfSo7UoRttJ6QXCg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        Marc Zyngier <maz@kernel.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        linux-unisoc@lists.infradead.org,
-        Gregory Fong <gregory.0xf0@gmail.com>,
+Cc:     Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>,
+        Thorsten Leemhuis <regressions@leemhuis.info>,
+        stable <stable@vger.kernel.org>, regressions@lists.linux.dev,
         Linus Walleij <linus.walleij@linaro.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Edmond Chung <edmondchung@google.com>,
+        Andrew Chant <achant@google.com>,
+        Will McVicker <willmcvicker@google.com>,
+        Sergio Tanzilli <tanzilli@acmesystems.it>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 20, 2021 at 5:09 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> On Mon, Dec 20, 2021 at 2:24 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
+On Mon, Dec 20, 2021 at 3:57 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> On Sat, Dec 18, 2021 at 7:28 AM Thorsten Leemhuis
+> <regressions@leemhuis.info> wrote:
+> > [TLDR: I'm adding this regression to regzbot, the Linux kernel
+> > regression tracking bot; most text you find below is compiled from a few
+> > templates paragraphs some of you might have seen already.]
 > >
-> > After the commit 448cf90513d9 ("gpio: Get rid of duplicate of_node
-> > assignment in the drivers") the OF node local pointers become unused.
-> > Remove them for good and make compiler happy about.
+> > On 17.12.21 16:35, Marcelo Roberto Jimenez wrote:
+> > > Some GPIO lines have stopped working after the patch
+> > > commit 2ab73c6d8323f ("gpio: Support GPIO controllers without pin-ranges")
+> > >
+> > > And this has supposedly been fixed in the following patches
+> > > commit 89ad556b7f96a ("gpio: Avoid using pin ranges with !PINCTRL")
+> > > commit 6dbbf84603961 ("gpiolib: Don't free if pin ranges are not defined")
 > >
-> > Fixes: 448cf90513d9 ("gpio: Get rid of duplicate of_node assignment in the drivers")
-> > Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-...
-
-> > -               gc->label = devm_kasprintf(dev, GFP_KERNEL, "%pOF", dev->of_node);
-> > +               gc->label = devm_kasprintf(dev, GFP_KERNEL, "%pOF", np);
+> > There seems to be a backstory here. Are there any entries and bug
+> > trackers or earlier discussions everyone that looks into this should be
+> > aware of?
+> >
 >
-> This is unrelated though. Can you make it a separate patch?
+> Agreed with Thorsten. I'd like to first try to determine what's wrong
+> before reverting those, as they are correct in theory but maybe the
+> implementation missed something.
+>
+> Have you tried tracing the execution on your platform in order to see
+> what the driver is doing?
 
-It actually makes use of the local np IIRC.
-It's related, no?
+Looking at commits that have related Fixes tags:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=bf781869e5cf3e4ec1a47dad69b6f0df97629cbd
+https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/commit/?id=e8f24c58d1b69ecf410a673c22f546dc732bb879
 
--- 
-With Best Regards,
-Andy Shevchenko
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
