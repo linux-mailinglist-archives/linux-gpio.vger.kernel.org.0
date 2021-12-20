@@ -2,149 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F3AB47B3A9
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Dec 2021 20:25:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BE5747B428
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Dec 2021 21:01:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234270AbhLTTZM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Dec 2021 14:25:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41628 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233001AbhLTTZM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Dec 2021 14:25:12 -0500
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7DE0C06173E
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Dec 2021 11:25:11 -0800 (PST)
-Received: by mail-ed1-x52e.google.com with SMTP id o20so42521524eds.10
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Dec 2021 11:25:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oJjZyoMEz6X8QZ+nRT7KOb+gfe1I0SKawSZhB5aruPE=;
-        b=su9Y/CkoSWxaKwldVUT3CtIth3TGerz4kcfFjRhC7bTsjdv4Abi95GgngqUTRyQLdg
-         Z6502yXJ4duoRlNaN8uoTwE6l6zTa3vLgV3eM+V1ZQE/FkGKMJzt41vqxTkdk+rAN1LE
-         e9H6bf3rdhQeD97x20QTm4H+qjCIIWKDxPFHgJ47w5ra+2M+7m/rFeAuF4xwfW4D3nFe
-         oOXR55YAuvcbrDNutAVFCaNTyWOWraWO6/tCcNCuUOXCk2ODkyIVBlsGQ8BYIJZAPHhX
-         SPFDyYwv8NUEqIFOlbhd7UzvT2En2xHriDsvMEnw7+5e9r8dEcMfqiVkzeFnfeFNeEn+
-         PS4A==
+        id S231287AbhLTUB5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Dec 2021 15:01:57 -0500
+Received: from mail-ua1-f51.google.com ([209.85.222.51]:42932 "EHLO
+        mail-ua1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230260AbhLTUB4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Dec 2021 15:01:56 -0500
+Received: by mail-ua1-f51.google.com with SMTP id t13so19680211uad.9;
+        Mon, 20 Dec 2021 12:01:56 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=oJjZyoMEz6X8QZ+nRT7KOb+gfe1I0SKawSZhB5aruPE=;
-        b=oYoZ/4ejW5U6ACo7I/TcmNM1jyBmDTst5QnH+CicitE9lubKha4MqasmJrFL8jtBQS
-         GUQIxAGIWyP5XKdlDLm/+MYxw4aH0iClzwdbY354IjYM+HUSbVccqZ9vJImqtjSrYYqk
-         NIdwJQjehFGUB85AjOhvHvhko+qybG6aXN5H/ioxLz5sGRg13Q9P5C35ZRAinL1gfouP
-         SlQLxg9yVOYPT4MnLhAj43dVMocpJSijv3mY1ehWlbeSAdjhDBcNVddFB25gOZi33KTR
-         wDxA+XmJOpat/uKp+EkM2035h+PfUdMWX67RlPFD585uQ07GJ5EqUK1JJkNxbDgakm1c
-         CUmw==
-X-Gm-Message-State: AOAM530hhVGfbTtaOuvlL4Gh9uZFL8rsrdD+uicIv8S72xuFXG4dyIuf
-        kIrF/9PJWgJ+UlMjbPJIX9C2KsWZK8bFlhuMfv/2HA==
-X-Google-Smtp-Source: ABdhPJx187CSWNjhZ46xw6UV3rJD4dVrv+U4cX641iKcm/e2YLbtgl7O8tXfKBWjOem/Az6G1NnVK/BmC9zObylBPo4=
-X-Received: by 2002:a05:6402:3488:: with SMTP id v8mr17458750edc.398.1640028310148;
- Mon, 20 Dec 2021 11:25:10 -0800 (PST)
+        bh=2HdgFe/F0Xrd6v2TuIEuIzQpQGOwif0mlIowSrXHAWw=;
+        b=LMo2H/exIFBAWT9culQl8w5eHr83SqXQ8uRusgV5g8msibBOPbMxB9Ea99aIrKi+en
+         ntx7IrQb9n2T8HMlU+2QT0jRehPeq7Ish8EQuoSIbX5/9426KLMX2CDJbpiEqs5yUFpc
+         DP/PGWeJ9GtT+jSGnPXE5O4g6znMHBjxWwo3RjlPWZzybjjvtQS+xyXVqszmGhvYTYKe
+         vgvzgQb0t9Ufj1Awx+OHEZUFlKsrjCYowPQ2cZ8RNYvG/ZDTPOJRtol/JQUvUORux8Tp
+         XgbBiXv5zb25eDS2qogxtL81SQ3hY83H6Al/z1Hpsru1PtUjyIrxsDixmrbzhGG82P3h
+         Gy1g==
+X-Gm-Message-State: AOAM5302GW3GryyEp0ynC3eWf5OGb0LPTrCBN7zxDhxDtTTUVA0FRy9C
+        yudS/66c7srZ44zLl8v1fVqr1N2/yDuyaw==
+X-Google-Smtp-Source: ABdhPJwBCARbRCpTr8OpZ9H37RtiX8Un5lNmA7qNg0gpJtbhaPxPyYhWwR/Gf67rFQEvdOs0E2Cq+g==
+X-Received: by 2002:a67:fb81:: with SMTP id n1mr2497516vsr.65.1640030515758;
+        Mon, 20 Dec 2021 12:01:55 -0800 (PST)
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com. [209.85.222.47])
+        by smtp.gmail.com with ESMTPSA id x21sm3770370ual.11.2021.12.20.12.01.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Dec 2021 12:01:55 -0800 (PST)
+Received: by mail-ua1-f47.google.com with SMTP id r15so19748002uao.3;
+        Mon, 20 Dec 2021 12:01:55 -0800 (PST)
+X-Received: by 2002:a67:2e09:: with SMTP id u9mr661275vsu.77.1640030515217;
+ Mon, 20 Dec 2021 12:01:55 -0800 (PST)
 MIME-Version: 1.0
-References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
- <a7fbb773-eb85-ccc7-8bfb-0bfab062ffe1@leemhuis.info> <CAMRc=MfAxzmAfATV2NwfTgpfmyxFx8bgTbaAfWxSi9zmBecPng@mail.gmail.com>
- <CAMuHMdVp621B0DywkW6sx6wNcPFez9=3-=cfSo7UoRttJ6QXCg@mail.gmail.com>
-In-Reply-To: <CAMuHMdVp621B0DywkW6sx6wNcPFez9=3-=cfSo7UoRttJ6QXCg@mail.gmail.com>
-From:   Will McVicker <willmcvicker@google.com>
-Date:   Mon, 20 Dec 2021 11:24:53 -0800
-Message-ID: <CABYd82b2i4Uuyi5+zLoTgiC-QMS1y=VkwmMznZqxLca0iP9qTQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>,
-        Thorsten Leemhuis <regressions@leemhuis.info>,
-        stable <stable@vger.kernel.org>, regressions@lists.linux.dev,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Edmond Chung <edmondchung@google.com>,
-        Andrew Chant <achant@google.com>,
-        Sergio Tanzilli <tanzilli@acmesystems.it>
+References: <20211219132442.4080-1-wsa+renesas@sang-engineering.com>
+ <20211219132442.4080-2-wsa+renesas@sang-engineering.com> <CAMuHMdVh60ocfzkJKz8zR1hODr8SWp=sbyHrR3KGx2ntLmuFGQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdVh60ocfzkJKz8zR1hODr8SWp=sbyHrR3KGx2ntLmuFGQ@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 20 Dec 2021 21:01:44 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVuxfndapH2eyBVGrqqyoeA9gwrCq1zbbjdxab2DvA-MQ@mail.gmail.com>
+Message-ID: <CAMuHMdVuxfndapH2eyBVGrqqyoeA9gwrCq1zbbjdxab2DvA-MQ@mail.gmail.com>
+Subject: Re: [PATCH v6 1/1] gpio: add sloppy logic analyzer using polling
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 20, 2021 at 7:14 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+On Mon, Dec 20, 2021 at 3:12 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+ On Mon, Dec 20, 2021 at 10:07 AM Wolfram Sang
+> <wsa+renesas@sang-engineering.com> wrote:
+> > +       [ -d "$lacpusetdir" ] || mkdir "$lacpusetdir"
+> > +
+> > +       cur_cpu="$(cat "$lacpusetdir"/cpus)"
 >
-> On Mon, Dec 20, 2021 at 3:57 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > On Sat, Dec 18, 2021 at 7:28 AM Thorsten Leemhuis
-> > <regressions@leemhuis.info> wrote:
-> > > [TLDR: I'm adding this regression to regzbot, the Linux kernel
-> > > regression tracking bot; most text you find below is compiled from a few
-> > > templates paragraphs some of you might have seen already.]
-> > >
-> > > On 17.12.21 16:35, Marcelo Roberto Jimenez wrote:
-> > > > Some GPIO lines have stopped working after the patch
-> > > > commit 2ab73c6d8323f ("gpio: Support GPIO controllers without pin-ranges")
-> > > >
-> > > > And this has supposedly been fixed in the following patches
-> > > > commit 89ad556b7f96a ("gpio: Avoid using pin ranges with !PINCTRL")
-> > > > commit 6dbbf84603961 ("gpiolib: Don't free if pin ranges are not defined")
-> > >
-> > > There seems to be a backstory here. Are there any entries and bug
-> > > trackers or earlier discussions everyone that looks into this should be
-> > > aware of?
-> > >
-> >
-> > Agreed with Thorsten. I'd like to first try to determine what's wrong
-> > before reverting those, as they are correct in theory but maybe the
-> > implementation missed something.
-> >
-> > Have you tried tracing the execution on your platform in order to see
-> > what the driver is doing?
+> cat: /dev/cpuset/gpio-sloppy-logic-analyzer/cpus: No such file or directory
 >
-> Looking at commits that have related Fixes tags:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=bf781869e5cf3e4ec1a47dad69b6f0df97629cbd
-> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/commit/?id=e8f24c58d1b69ecf410a673c22f546dc732bb879
+> I do have a "cpuset.cpus" file.
 >
-> Gr{oetje,eeting}s,
+> > +       [ "$cur_cpu" = "$isol_cpu" ] && return
+> > +       [ -z "$cur_cpu" ] || fail "CPU$isol_cpu requested but CPU$cur_cpu already isolated"
+> > +
+> > +       echo "$isol_cpu" > "$lacpusetdir"/cpus || fail "Could not isolate CPU$isol_cpu. Does it exist?"
+> > +       echo 1 > "$lacpusetdir"/cpu_exclusive
+> > +       echo 0 > "$lacpusetdir"/mems
 >
->                         Geert
+> No complaint, although the real files have a "cpuset."-prefix again.
 >
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> [...]
 >
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+> > +workcpu=$(cat "$lacpusetdir"/effective_cpus)
+>
+> cat: /dev/cpuset/gpio-sloppy-logic-analyzer/effective_cpus: No such
+> file or directory
+>
+> I do have a "cpuset.effective_cpus" file.
+>
+> > +[ -n "$workcpu" ] || fail "No isolated CPU found"
+> > +cpumask=$(printf '%x' $((1 << workcpu)))
+> > +instance=${lasysfsdir##*/}
+> > +echo "Setting up '$instance': $numsamples samples at ${samplefreq}Hz with ${triggerdat:-no} trigger using CPU$workcpu"
+> > +do_capture "$cpumask" &
+>
+> Anyone with a clue? Thanks!
 
-Hi Marcelo,
+Documentation/admin-guide/cgroup-v1/cpusets.rst also has the prefixes,
+so I'm wondering if you have some "legacy compatibility" config option
+enabled?
 
-Thanks for reporting this issue. I can give you a little context on
-why commit 6dbbf84603961 ("gpiolib: Don't free if pin ranges are not
-defined") was created. We were seeing a refcounting issue on Pixel 6.
-In our kernel CONFIG_PINCTRL is defined. Basically, the camera kernel
-module requests for a GPIO on sensor enable (when the camera sensor is
-turned on) and releases that GPIO on sensor disable (when the camera
-sensor is turned off). Before commit 6dbbf84603961, if we constantly
-switched between the front and back camera eventually we would hit the
-below error in drivers/pinctrl/pinmux.c:pin_request():
+Gr{oetje,eeting}s,
 
-    E samsung-pinctrl 10840000.pinctrl: could not increase module
-refcount for pin 134
+                        Geert
 
-In our kernel the sensor GPIOs don't have pin_ranges defined. So you
-would get these call stacks:
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Sensor Enable:
-  gpiochip_generic_request()
-  -> return 0
-
-Sensor Disable:
-  gpiochip_generic_free()
-  -> pinctrl_gpio_free()
-
-This led to an imbalance of request vs free calls leading to the
-refcounting error. When we added commit 6dbbf84603961 ("gpiolib: Don't
-free if pin ranges are not defined"), this issue was resolved. My
-recommendation would be to drill down into your driver to figure out
-what happens in these functions to see why you're getting the results
-you reported.
-
---Will
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
