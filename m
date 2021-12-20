@@ -2,108 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BE5747B428
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Dec 2021 21:01:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4822847B47A
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Dec 2021 21:41:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231287AbhLTUB5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Dec 2021 15:01:57 -0500
-Received: from mail-ua1-f51.google.com ([209.85.222.51]:42932 "EHLO
-        mail-ua1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230260AbhLTUB4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Dec 2021 15:01:56 -0500
-Received: by mail-ua1-f51.google.com with SMTP id t13so19680211uad.9;
-        Mon, 20 Dec 2021 12:01:56 -0800 (PST)
+        id S229817AbhLTUly (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Dec 2021 15:41:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58856 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229796AbhLTUlx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Dec 2021 15:41:53 -0500
+Received: from mail-ot1-x32d.google.com (mail-ot1-x32d.google.com [IPv6:2607:f8b0:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3418C061574;
+        Mon, 20 Dec 2021 12:41:53 -0800 (PST)
+Received: by mail-ot1-x32d.google.com with SMTP id x43-20020a056830246b00b00570d09d34ebso14037250otr.2;
+        Mon, 20 Dec 2021 12:41:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1bAoxn3SWu3BR7U54EL+ODdosFSa9pvjsulKehydkZU=;
+        b=AwObBPlb4sHQUAx/63u36oQ+nzUt1Z9G1cx2CpjKAJg49K71g2/JpuZ90aXAVjZwyG
+         Zmwz1e7qTlsqdtAWOoiRj6dPjtnRrQa6p4moM5JL281oAFKwgBtC6tAHZXwgYzymPrMO
+         Aal2NcgT61+6uBsT0AmwpA7nu190F0blunGOZUzorBR52aMqZFMAjS/2bhQ9z8P5BpjZ
+         hh+NPc5V2M8/ca+x/BH/w+qFekM6dOEk1F3gIjRn7xvYYY4Z5Flq2tEnVI20rPfAzD8p
+         GOJ8Oln0fN65FNpvdVQ3SEWcWT4J0agXEJHFE8xapYUoj47EimehrV2md5HrVNOH1O0T
+         4oQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2HdgFe/F0Xrd6v2TuIEuIzQpQGOwif0mlIowSrXHAWw=;
-        b=LMo2H/exIFBAWT9culQl8w5eHr83SqXQ8uRusgV5g8msibBOPbMxB9Ea99aIrKi+en
-         ntx7IrQb9n2T8HMlU+2QT0jRehPeq7Ish8EQuoSIbX5/9426KLMX2CDJbpiEqs5yUFpc
-         DP/PGWeJ9GtT+jSGnPXE5O4g6znMHBjxWwo3RjlPWZzybjjvtQS+xyXVqszmGhvYTYKe
-         vgvzgQb0t9Ufj1Awx+OHEZUFlKsrjCYowPQ2cZ8RNYvG/ZDTPOJRtol/JQUvUORux8Tp
-         XgbBiXv5zb25eDS2qogxtL81SQ3hY83H6Al/z1Hpsru1PtUjyIrxsDixmrbzhGG82P3h
-         Gy1g==
-X-Gm-Message-State: AOAM5302GW3GryyEp0ynC3eWf5OGb0LPTrCBN7zxDhxDtTTUVA0FRy9C
-        yudS/66c7srZ44zLl8v1fVqr1N2/yDuyaw==
-X-Google-Smtp-Source: ABdhPJwBCARbRCpTr8OpZ9H37RtiX8Un5lNmA7qNg0gpJtbhaPxPyYhWwR/Gf67rFQEvdOs0E2Cq+g==
-X-Received: by 2002:a67:fb81:: with SMTP id n1mr2497516vsr.65.1640030515758;
-        Mon, 20 Dec 2021 12:01:55 -0800 (PST)
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com. [209.85.222.47])
-        by smtp.gmail.com with ESMTPSA id x21sm3770370ual.11.2021.12.20.12.01.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Dec 2021 12:01:55 -0800 (PST)
-Received: by mail-ua1-f47.google.com with SMTP id r15so19748002uao.3;
-        Mon, 20 Dec 2021 12:01:55 -0800 (PST)
-X-Received: by 2002:a67:2e09:: with SMTP id u9mr661275vsu.77.1640030515217;
- Mon, 20 Dec 2021 12:01:55 -0800 (PST)
+        bh=1bAoxn3SWu3BR7U54EL+ODdosFSa9pvjsulKehydkZU=;
+        b=jwnAdWsVn76REZSySk9aXwDOY/FQzZ6Gm6tqyf8Z+7Jvb/0EB14curX6dIkY0W+dlY
+         ydW2nc+jYXKb8bRKc1MPpO+LxWyo34nLCXoY7hw5YEoimxxNjT0kaN4br0JvI77lnfaV
+         mmeLPIAsnIhN2O7kzlFazryVf4f7zBFDbPqFoeI/fk/wZpf5yrniISznIsx5VJjNLH7n
+         Iz9g7cjK2BWZBayqEsDaYvwGdrFzzWzHKJb+sUuvrG5Z628PkT33evdiSoBY2zW0B3F/
+         jNgttcIqJ4ZUxAT5ltU4ZRWcPCrhQW0T0fwc8SaxfrhNFG8bEWdkg38+eQyJdV7b7sGO
+         v+aw==
+X-Gm-Message-State: AOAM530S7cMaL/LuDSw9yTzsqd6UlZjXhQNJrkDLaKcQ1vOGwwiBW1xb
+        fF1yZ+xis7LcUCGQdCBg6c0FXHYyPbeWk6BH1ZgnrNb+
+X-Google-Smtp-Source: ABdhPJwcpwgOLeS67uvf8iN1ICtw078ovGMMts9dIyNOOJiyTdlZ1E/OGpblwdsx7t8LRPAE5ZPVCiG9Caneuj/pXg4=
+X-Received: by 2002:a9d:69ce:: with SMTP id v14mr12414227oto.312.1640032912957;
+ Mon, 20 Dec 2021 12:41:52 -0800 (PST)
 MIME-Version: 1.0
-References: <20211219132442.4080-1-wsa+renesas@sang-engineering.com>
- <20211219132442.4080-2-wsa+renesas@sang-engineering.com> <CAMuHMdVh60ocfzkJKz8zR1hODr8SWp=sbyHrR3KGx2ntLmuFGQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdVh60ocfzkJKz8zR1hODr8SWp=sbyHrR3KGx2ntLmuFGQ@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 20 Dec 2021 21:01:44 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVuxfndapH2eyBVGrqqyoeA9gwrCq1zbbjdxab2DvA-MQ@mail.gmail.com>
-Message-ID: <CAMuHMdVuxfndapH2eyBVGrqqyoeA9gwrCq1zbbjdxab2DvA-MQ@mail.gmail.com>
-Subject: Re: [PATCH v6 1/1] gpio: add sloppy logic analyzer using polling
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
+ <a7fbb773-eb85-ccc7-8bfb-0bfab062ffe1@leemhuis.info> <CAMRc=MfAxzmAfATV2NwfTgpfmyxFx8bgTbaAfWxSi9zmBecPng@mail.gmail.com>
+In-Reply-To: <CAMRc=MfAxzmAfATV2NwfTgpfmyxFx8bgTbaAfWxSi9zmBecPng@mail.gmail.com>
+From:   Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Mon, 20 Dec 2021 17:41:27 -0300
+Message-ID: <CACjc_5puGpg85XseEjKxnwE2R_XoH8EWvdwp4g2WKNBmW7pX+w@mail.gmail.com>
+Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Thorsten Leemhuis <regressions@leemhuis.info>,
+        stable <stable@vger.kernel.org>, regressions@lists.linux.dev,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Edmond Chung <edmondchung@google.com>,
+        Andrew Chant <achant@google.com>,
+        Will McVicker <willmcvicker@google.com>,
+        Sergio Tanzilli <tanzilli@acmesystems.it>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 20, 2021 at 3:12 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
- On Mon, Dec 20, 2021 at 10:07 AM Wolfram Sang
-> <wsa+renesas@sang-engineering.com> wrote:
-> > +       [ -d "$lacpusetdir" ] || mkdir "$lacpusetdir"
-> > +
-> > +       cur_cpu="$(cat "$lacpusetdir"/cpus)"
->
-> cat: /dev/cpuset/gpio-sloppy-logic-analyzer/cpus: No such file or directory
->
-> I do have a "cpuset.cpus" file.
->
-> > +       [ "$cur_cpu" = "$isol_cpu" ] && return
-> > +       [ -z "$cur_cpu" ] || fail "CPU$isol_cpu requested but CPU$cur_cpu already isolated"
-> > +
-> > +       echo "$isol_cpu" > "$lacpusetdir"/cpus || fail "Could not isolate CPU$isol_cpu. Does it exist?"
-> > +       echo 1 > "$lacpusetdir"/cpu_exclusive
-> > +       echo 0 > "$lacpusetdir"/mems
->
-> No complaint, although the real files have a "cpuset."-prefix again.
->
-> [...]
->
-> > +workcpu=$(cat "$lacpusetdir"/effective_cpus)
->
-> cat: /dev/cpuset/gpio-sloppy-logic-analyzer/effective_cpus: No such
-> file or directory
->
-> I do have a "cpuset.effective_cpus" file.
->
-> > +[ -n "$workcpu" ] || fail "No isolated CPU found"
-> > +cpumask=$(printf '%x' $((1 << workcpu)))
-> > +instance=${lasysfsdir##*/}
-> > +echo "Setting up '$instance': $numsamples samples at ${samplefreq}Hz with ${triggerdat:-no} trigger using CPU$workcpu"
-> > +do_capture "$cpumask" &
->
-> Anyone with a clue? Thanks!
+Hi Bart,
 
-Documentation/admin-guide/cgroup-v1/cpusets.rst also has the prefixes,
-so I'm wondering if you have some "legacy compatibility" config option
-enabled?
+On Mon, Dec 20, 2021 at 11:57 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> On Sat, Dec 18, 2021 at 7:28 AM Thorsten Leemhuis
+> <regressions@leemhuis.info> wrote:
+> >
+> > [TLDR: I'm adding this regression to regzbot, the Linux kernel
+> > regression tracking bot; most text you find below is compiled from a few
+> > templates paragraphs some of you might have seen already.]
+> >
+> > On 17.12.21 16:35, Marcelo Roberto Jimenez wrote:
+> > > Some GPIO lines have stopped working after the patch
+> > > commit 2ab73c6d8323f ("gpio: Support GPIO controllers without pin-ranges")
+> > >
+> > > And this has supposedly been fixed in the following patches
+> > > commit 89ad556b7f96a ("gpio: Avoid using pin ranges with !PINCTRL")
+> > > commit 6dbbf84603961 ("gpiolib: Don't free if pin ranges are not defined")
+> >
+> > There seems to be a backstory here. Are there any entries and bug
+> > trackers or earlier discussions everyone that looks into this should be
+> > aware of?
+> >
+>
+> Agreed with Thorsten. I'd like to first try to determine what's wrong
+> before reverting those, as they are correct in theory but maybe the
+> implementation missed something.
+>
+> Have you tried tracing the execution on your platform in order to see
+> what the driver is doing?
 
-Gr{oetje,eeting}s,
+Yes. The problem is that there is no list defined for the sysfs-gpio
+interface. The driver will not perform pinctrl_gpio_request() and will
+return zero (failure).
 
-                        Geert
+I don't know if this is the case to add something to a global DTD or
+to fix it in the sysfs-gpio code.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> Bart
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Regards,
+Marcelo.
