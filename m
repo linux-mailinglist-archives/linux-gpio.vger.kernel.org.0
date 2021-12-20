@@ -2,109 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B610D47A0C5
-	for <lists+linux-gpio@lfdr.de>; Sun, 19 Dec 2021 15:02:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 38EF647A37F
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Dec 2021 03:15:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231822AbhLSOCf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 19 Dec 2021 09:02:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45372 "EHLO
+        id S233930AbhLTCP1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 19 Dec 2021 21:15:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233038AbhLSOCf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 19 Dec 2021 09:02:35 -0500
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDDFBC06173E
-        for <linux-gpio@vger.kernel.org>; Sun, 19 Dec 2021 06:02:34 -0800 (PST)
-Received: by mail-ed1-x52e.google.com with SMTP id z7so27602141edc.11
-        for <linux-gpio@vger.kernel.org>; Sun, 19 Dec 2021 06:02:34 -0800 (PST)
+        with ESMTP id S233890AbhLTCP0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 19 Dec 2021 21:15:26 -0500
+Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BD6AC06173E
+        for <linux-gpio@vger.kernel.org>; Sun, 19 Dec 2021 18:15:26 -0800 (PST)
+Received: by mail-ot1-x334.google.com with SMTP id u18-20020a9d7212000000b00560cb1dc10bso10751196otj.11
+        for <linux-gpio@vger.kernel.org>; Sun, 19 Dec 2021 18:15:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=8Rn7MzjWfN2l13l2VUjM7MiiPLjH10XqIwfX7gmND9g=;
-        b=tmT2x5VLkXrLywwrkT2gY8UM8F0jdpYos6wTPRn6wD+tiwo1AVYPrDOFzAU6hkO58h
-         v9naRUU+Sl84Y69wc3kLGrbxPp6KOjEeEn9w1mhwVC0NQD2XyBp4AsmlI7JhJhB0YVHw
-         dE+cg8k+fyv/6WI9m4YzbSmfpyXOv4jsmk6HwzZQJHGcgcNR1IDNL+fZeFz6wDWg0oE8
-         L+Tpza73CJImHN9zDJEOTcqm/wSujBbuXrJmoGyrULUdNJo2Z13bo9TFLL09SLGcaTLS
-         VffZwgQ9qEkuI5heVWE6pju4rdpkcicsaBhrh1/CHa/+grTEyKCGnanzCH++O/M+dahu
-         N/uA==
+         :cc;
+        bh=5h2KtcdPv4y3SmM2InmueE/jIOkvBdjenQb53tW6148=;
+        b=cBz4mUamnc7CUE7Ih+IjPPfzhfBNJT3KyyvkV3qZpgW6EuQhCh/mJ7JI0tGzfWkPBQ
+         cawyvcHPm6Byz3w2Po4WAg13M2r8VqieV/yN+xTmIcs7HhmkWvWLNDqi/6RFDfYhNX5p
+         EbuxC514XghPW4Zo1HzZK/Q9O8H+oXXgXySOH4qnwe78n7GCvJ8MqvpP64xDf1hJVhd4
+         t4YWCQ30Te2/v3pHOIyUOv4AX1dHxZZdWmPPUgFspQy/GLmLBv1dEk81D4vd9K7UamXW
+         Uex1RIBASXN8I/HaNiArw6ZCHZQqL8oqb9Qg4sxUJnBfIRGfjBGl3m3Et0IS/4XlCnZf
+         Vekg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=8Rn7MzjWfN2l13l2VUjM7MiiPLjH10XqIwfX7gmND9g=;
-        b=osLxG7rBE26KZeG5ISyoDBa2IpVIhitUb4qex7cRm5KP4eNzbCGshxKPocIEPxNs1K
-         Sfn1zGYuN2besARIF2VWaesGaX2xbNGMgk9b4PFXL9Q9nK67CaqYdI2E5TVCFEey7fjc
-         6ewPG5UmPhweVWjtQ6G9NX+ENGyVtIkjtMBtwDrCLJ6tSz1J1d9ReIyPcGW65CKeBdC4
-         TnOA3HiSB+kMMhpfmcM6W/8EHew1VQhR4Vt6HeS08cUbmgshS+Dl214fRAJsJk/ETdff
-         UI1dBcmEoJc8DfoeibExum0KVkL8ycd1oTSHFE2xIyf2K/Z9haTXoAi3LZl4yxg/6NjJ
-         mvzg==
-X-Gm-Message-State: AOAM531bMXUiEyRfn8FY9kha7+Kd9ksrP43UQr+vwjxPS+V7zRZW3taM
-        qYLMELuKp5W6cPeM+hoS+ccK5W0VMFxUdpbV/HKgKw==
-X-Google-Smtp-Source: ABdhPJxGRncr7cZAZNhqgBIxWgY7w7hv5Styt1A51kAQl7Qy1MNrtWkL1qQj7D38WlbzPbP7ue+vvBkHTPI+cJ9c5/o=
-X-Received: by 2002:a17:906:249a:: with SMTP id e26mr9520277ejb.492.1639922553118;
- Sun, 19 Dec 2021 06:02:33 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=5h2KtcdPv4y3SmM2InmueE/jIOkvBdjenQb53tW6148=;
+        b=3p56gv0u8a96i5YDZacNibfUJ/c79m0WmNoFHhgI237P/q68s7l5GZQJx2aE3xlHTg
+         w3Iei3i282/sJeQhiYDYPcpP6WFdLtAGHdS9q2rOZlXGrxBgiez6M71QMv76By6BGyLl
+         J8Gbfdcu0gI4tdZ4ljbkk1FFHrQTRF3Gz+oDQ4kiruwmbCUe0BKZaNI9fKiTGyqZuXuE
+         3WPxcuVOgkgi9W5a56Gr5xT0I/G8LfjgKq9IaOYzRGolDsoZlk1d8jrMOsJhNuZKr77d
+         D1pVkX/r2H1tsZV6OAVwULsgKxKw4aAcN1FPR/loIydh3mcRK9bx/h4tYHrKxe1kRXI/
+         XD3g==
+X-Gm-Message-State: AOAM531K2CQHBVfHq0owab2+X0oMBIKRofYInqf29pIy358j5ImkznZs
+        HryB0VzNUAnFY50Yv0mWCBjxRs3EA1PEry9HF8ghCqaj2TI=
+X-Google-Smtp-Source: ABdhPJxVAFt48JolAeGMsaufCVGExDvCPz3S/Yp8XmDDk3CKAwtkfbSRI4yVpcEjwc04TzWmalvEs7oFGVMBIadtX8c=
+X-Received: by 2002:a9d:74d0:: with SMTP id a16mr9557267otl.237.1639966525423;
+ Sun, 19 Dec 2021 18:15:25 -0800 (PST)
 MIME-Version: 1.0
-References: <20211018112201.25424-1-noralf@tronnes.org> <CACRpkdZQSB+McOGK9HZUNAr2p+FX=6ddbY=5-sQ8difh1pEqGg@mail.gmail.com>
- <1e95e757-a0e3-a1e9-8430-3accc25d0f84@tronnes.org>
-In-Reply-To: <1e95e757-a0e3-a1e9-8430-3accc25d0f84@tronnes.org>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Sun, 19 Dec 2021 15:02:22 +0100
-Message-ID: <CAMRc=Mdwn3=n7j1hPsadzSRegA23RTiWEabiJPWJs67UTYDuCw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: dln2: Fix interrupts when replugging the device
-To:     =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Daniel Baluta <daniel.baluta@gmail.com>
+References: <cover.1639736856.git.geert+renesas@glider.be>
+In-Reply-To: <cover.1639736856.git.geert+renesas@glider.be>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 20 Dec 2021 03:15:13 +0100
+Message-ID: <CACRpkdYVuyBMvo4MnKzwfzv88-d1mu+jW_XZ9jRChSm21=ff0w@mail.gmail.com>
+Subject: Re: [GIT PULL] pinctrl: renesas: Updates for v5.17 (take two)
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Dec 19, 2021 at 1:01 AM Noralf Tr=C3=B8nnes <noralf@tronnes.org> wr=
-ote:
->
->
->
-> Den 24.10.2021 23.09, skrev Linus Walleij:
-> > On Mon, Oct 18, 2021 at 1:23 PM Noralf Tr=C3=B8nnes <noralf@tronnes.org=
-> wrote:
-> >
-> >> When replugging the device the following message shows up:
-> >>
-> >> gpio gpiochip2: (dln2): detected irqchip that is shared with multiple =
-gpiochips: please fix the driver.
-> >>
-> >> This also has the effect that interrupts won't work.
-> >> The same problem would also show up if multiple devices where plugged =
-in.
-> >>
-> >> Fix this by allocating the irq_chip data structure per instance like o=
-ther
-> >> drivers do.
-> >>
-> >> I don't know when this problem appeared, but it is present in 5.10.
-> >>
-> >> Cc: <stable@vger.kernel.org> # 5.10+
-> >> Cc: Daniel Baluta <daniel.baluta@gmail.com>
-> >> Signed-off-by: Noralf Tr=C3=B8nnes <noralf@tronnes.org>
-> >
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> >
->
-> Ping, has this been forgotten? Can't see it in -next.
->
-> Noralf.
+On Fri, Dec 17, 2021 at 12:07 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-Hi Noralf,
+> The following changes since commit 7c50a407b8687ae3589c740d2347d9ae73887889:
+>
+>   pinctrl: renesas: Remove unneeded locking around sh_pfc_read() calls (2021-11-19 10:55:21 +0100)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v5.17-tag2
+>
+> for you to fetch changes up to ea7e26ebe6a90fe7962823a70ac91f010df71239:
+>
+>   pinctrl: renesas: r8a779a0: Align comments (2021-12-07 16:58:02 +0100)
 
-As of commit d1d598104336075e7475d932d200b33108399225 my email address
-has changed and the relevant commit has been in mainline for a while
-now. I only by accident noticed this patch now. Please use
-scripts/get_maintainer.pl in the future.
+Pulled in!
 
-Now queued, thanks!
-
-Bart
+Yours,
+Linus Walleij
