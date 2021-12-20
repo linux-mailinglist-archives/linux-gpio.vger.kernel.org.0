@@ -2,97 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 50FB647AFA6
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Dec 2021 16:16:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F2B947AFCA
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Dec 2021 16:19:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236938AbhLTPQa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Dec 2021 10:16:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39734 "EHLO
+        id S238928AbhLTPTA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Dec 2021 10:19:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237162AbhLTPOb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Dec 2021 10:14:31 -0500
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38BE0C0D940D
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Dec 2021 06:57:40 -0800 (PST)
-Received: by mail-ed1-x52c.google.com with SMTP id j21so35008570edt.9
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Dec 2021 06:57:40 -0800 (PST)
+        with ESMTP id S234933AbhLTPRr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Dec 2021 10:17:47 -0500
+Received: from mail-ua1-x933.google.com (mail-ua1-x933.google.com [IPv6:2607:f8b0:4864:20::933])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92669C08ECB4
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Dec 2021 06:58:54 -0800 (PST)
+Received: by mail-ua1-x933.google.com with SMTP id i6so18164633uae.6
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Dec 2021 06:58:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        d=0x0f.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=HUHmWuXX8VlTF9hpA1y1c+iXS8fi7L43NGXx9Hiegjg=;
-        b=dvs02sSsAlxhiB6e0PVeHzVhBcEy2reW7+Wj9pgM3BKiZ/Gjqf8TFrL6XaVgX4k2HS
-         ap3rX8JYih7erDXKhcGrmWwesnfbgjInwgVz6xHzv80g88dKY98/ke7o2GkeXbFvhLuG
-         XZp3zYy0h/alewh36FJK29g0IxhZsEU8nsl+vCEP23gL/tf03swDjvG7KrM/ZyLLomjz
-         Tw99P2+OhpdT3ADZD3wwlo+0ppbE7S1tqHD1tglcdmSivbKrKQZC8LN748Q9cfgLwc8h
-         cyb+Y6c2gBfmq+eS/SHjTliQCRXg5SMEqfVqUtHaCXQVaIHhtA4UrJScca/BLpyfcprj
-         wwQg==
+        bh=QDssa22PhMGtbl20NqdUydglCsPzDhQ+/kIfIMV54VE=;
+        b=VNARcXCfe63PrdPYsk3dsMjHDo34eHTOtCfDqLrExExXU3wO1DBiOP52cFcFmMtqic
+         NbOPyzO2VDWuUqABih5Nm7vlUAOs0OXV2CKoMY7OWw3W2EJiZX1l5hNblqPvVSiOlSZ3
+         zCCFE2NeNypdjcj2dF2djKZuRjoRXHzEMzWS0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=HUHmWuXX8VlTF9hpA1y1c+iXS8fi7L43NGXx9Hiegjg=;
-        b=Rk50fV0MYpwCAWJO0ycxeFBEhOTNP52Z5VR/HbGB7zvGmGfglDw1g+axXUCh+WeCHM
-         XkeMljpjgDp2LR2nuPktrtKTcj8oYQta6bfWpTBWwkoalNq01fnMR3bAi+O8zFw0LJ7f
-         h88Og/mBZWm2g/apb16NQtzPGnJCRgkYPFmv0NdlpQv57jXaews0vMphCPnMXWhBq7HH
-         F4vOUmq7nc/DcbpBNhvD7y19CmtbrG4pP+xxZahgnFZK8rjmdHSm3yxLgNhI0+eWcjAB
-         n8LQkm2G8rst6PgdYXkWzJOAdZTH1vhQ4e8qnK6TFULZy2xpghCS/88ucep0N0HmNKj5
-         Wx5w==
-X-Gm-Message-State: AOAM531TC6Hf/pSZuWmy3C4q50XOI+d2as+vwdxopPKjQO4MI5LcSktH
-        DyYY+OD0VychNNEx87NZgIRWa28fqAodbFQUiAqfpw==
-X-Google-Smtp-Source: ABdhPJz9B8jdW71VfZkn6ik656/P3HPcergQlD1ReF7ru9atjKHTO6NZEt3lypROwqtqHQM4b1hb7fZyG+IO7ljSSQw=
-X-Received: by 2002:a17:907:6289:: with SMTP id nd9mr13119600ejc.101.1640012258769;
- Mon, 20 Dec 2021 06:57:38 -0800 (PST)
+        bh=QDssa22PhMGtbl20NqdUydglCsPzDhQ+/kIfIMV54VE=;
+        b=jneGY4rft5Wzue6w0WevhvJJyDF2zD79AmrUrvAIhtRs75+E9EYaFe4jg8o0F9GO/a
+         bKtW6zIORKgYvycYBg6uapZFFwgTJmWGjdyTcIwqKJkBfgtVR8WqWrTaCS77/o8PKKi9
+         CKlXbp9PitCJEM5IqlfagiNkQWscrewcPrz+wOxSl5av6TQDB68DQBCdYqWo2QlSkEM5
+         TMUpxjjKrbItRgdlpSvWK89giBBpIB1AieECQkixhKpKQNGs5X4iIAwrDMkBQhrJmIYb
+         bykLmkVWpJia7tk5vIEnAzj9DgakZNvVcvD6MnXv2jYgpxqk+dGzxBPYWg5JAXuYzlqe
+         18Og==
+X-Gm-Message-State: AOAM533S5zAL2Fb1SHkbiZ0wolFuu9Ruyg80+JoV2gc6cRk1ojvcYymw
+        x6gf47drOwY+7nqjMgSFOZ3xt3Uk+zCuk+qK4Zl9mw==
+X-Google-Smtp-Source: ABdhPJyTQPfX4cHVqBvCyRUj4DqcBhzYOXOwS7xn4vLsweFAl3oW5gSqs6O2hZ7oAQ1/FsAxvoD3e28q68NQLEfwXYk=
+X-Received: by 2002:a05:6102:3a0c:: with SMTP id b12mr4955593vsu.48.1640012333603;
+ Mon, 20 Dec 2021 06:58:53 -0800 (PST)
 MIME-Version: 1.0
-References: <20211217153555.9413-1-marcelo.jimenez@gmail.com> <a7fbb773-eb85-ccc7-8bfb-0bfab062ffe1@leemhuis.info>
-In-Reply-To: <a7fbb773-eb85-ccc7-8bfb-0bfab062ffe1@leemhuis.info>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 20 Dec 2021 15:57:28 +0100
-Message-ID: <CAMRc=MfAxzmAfATV2NwfTgpfmyxFx8bgTbaAfWxSi9zmBecPng@mail.gmail.com>
-Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
-To:     Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>,
-        Thorsten Leemhuis <regressions@leemhuis.info>
-Cc:     stable <stable@vger.kernel.org>, regressions@lists.linux.dev,
-        Linus Walleij <linus.walleij@linaro.org>,
+References: <20211213094036.1787950-1-daniel@0x0f.com> <20211213094036.1787950-5-daniel@0x0f.com>
+ <CAMRc=Md_2b-sBnPQL-E59byYSv+Z0+d3V8JrbPqpGSMjGS+tgA@mail.gmail.com>
+In-Reply-To: <CAMRc=Md_2b-sBnPQL-E59byYSv+Z0+d3V8JrbPqpGSMjGS+tgA@mail.gmail.com>
+From:   Daniel Palmer <daniel@0x0f.com>
+Date:   Tue, 21 Dec 2021 00:02:04 +0900
+Message-ID: <CAFr9PXkkp8B5Vv0eu+2gPF2S4CNaxZDwjPg+UXRgvyUkAZBFpA@mail.gmail.com>
+Subject: Re: [PATCH v3 4/5] gpio: msc313: Add support for SSD201 and SSD202D
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Edmond Chung <edmondchung@google.com>,
-        Andrew Chant <achant@google.com>,
-        Will McVicker <willmcvicker@google.com>,
-        Sergio Tanzilli <tanzilli@acmesystems.it>
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Dec 18, 2021 at 7:28 AM Thorsten Leemhuis
-<regressions@leemhuis.info> wrote:
+Hi Bartosz,
+
+On Mon, 20 Dec 2021 at 23:50, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 >
-> [TLDR: I'm adding this regression to regzbot, the Linux kernel
-> regression tracking bot; most text you find below is compiled from a few
-> templates paragraphs some of you might have seen already.]
->
-> On 17.12.21 16:35, Marcelo Roberto Jimenez wrote:
-> > Some GPIO lines have stopped working after the patch
-> > commit 2ab73c6d8323f ("gpio: Support GPIO controllers without pin-ranges")
+> On Mon, Dec 13, 2021 at 10:40 AM Daniel Palmer <daniel@0x0f.com> wrote:
 > >
-> > And this has supposedly been fixed in the following patches
-> > commit 89ad556b7f96a ("gpio: Avoid using pin ranges with !PINCTRL")
-> > commit 6dbbf84603961 ("gpiolib: Don't free if pin ranges are not defined")
+> > This adds GPIO support for the SSD201 and SSD202D chips.
+> >
+> > Signed-off-by: Daniel Palmer <daniel@0x0f.com>
+> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> > ---
 >
-> There seems to be a backstory here. Are there any entries and bug
-> trackers or earlier discussions everyone that looks into this should be
-> aware of?
->
+> I applied patches 1-3. This triggers a bunch of checkpatch errors.
+> Please address them and resend this single patch.
 
-Agreed with Thorsten. I'd like to first try to determine what's wrong
-before reverting those, as they are correct in theory but maybe the
-implementation missed something.
+The warnings about complex macros being wrapped in parentheses when
+the things it's complaining about are defined lists not macros?
+Not going to say I know better than checkpatch but I think the errors
+there are wrong. Putting parentheses around the lists would break the
+arrays they get put into.
 
-Have you tried tracing the execution on your platform in order to see
-what the driver is doing?
+Cheers,
 
-Bart
+Daniel
