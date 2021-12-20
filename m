@@ -2,110 +2,149 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6109947B063
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Dec 2021 16:35:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F3AB47B3A9
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Dec 2021 20:25:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235890AbhLTPfw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Dec 2021 10:35:52 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:59737 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235730AbhLTPfv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 20 Dec 2021 10:35:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1640014551;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=s0lGMD0pC7skWIYrRhVwKOPgTmBx4KUrBkR78qYxnqw=;
-        b=aE2i3fF0gSE/adNGT206nyHGT8EhTXs7q1HrG0O79BvhT2NKrH4EPqerfl8okbrGH3O6NE
-        3MEEFqvdns8wzb/MhNbNPYR4CmVPkpXjUnyifa41Vu5011cUIGTmhB0FhO5Ql5p95o5VO0
-        U2JtZ+D7umP95nYjp6aaGZh/BN0bgUA=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-634-P95eD9JRNrSIZ-LR6jiXNQ-1; Mon, 20 Dec 2021 10:35:50 -0500
-X-MC-Unique: P95eD9JRNrSIZ-LR6jiXNQ-1
-Received: by mail-wm1-f70.google.com with SMTP id 138-20020a1c0090000000b00338bb803204so2045647wma.1
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Dec 2021 07:35:50 -0800 (PST)
+        id S234270AbhLTTZM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Dec 2021 14:25:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41628 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233001AbhLTTZM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Dec 2021 14:25:12 -0500
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7DE0C06173E
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Dec 2021 11:25:11 -0800 (PST)
+Received: by mail-ed1-x52e.google.com with SMTP id o20so42521524eds.10
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Dec 2021 11:25:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oJjZyoMEz6X8QZ+nRT7KOb+gfe1I0SKawSZhB5aruPE=;
+        b=su9Y/CkoSWxaKwldVUT3CtIth3TGerz4kcfFjRhC7bTsjdv4Abi95GgngqUTRyQLdg
+         Z6502yXJ4duoRlNaN8uoTwE6l6zTa3vLgV3eM+V1ZQE/FkGKMJzt41vqxTkdk+rAN1LE
+         e9H6bf3rdhQeD97x20QTm4H+qjCIIWKDxPFHgJ47w5ra+2M+7m/rFeAuF4xwfW4D3nFe
+         oOXR55YAuvcbrDNutAVFCaNTyWOWraWO6/tCcNCuUOXCk2ODkyIVBlsGQ8BYIJZAPHhX
+         SPFDyYwv8NUEqIFOlbhd7UzvT2En2xHriDsvMEnw7+5e9r8dEcMfqiVkzeFnfeFNeEn+
+         PS4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=s0lGMD0pC7skWIYrRhVwKOPgTmBx4KUrBkR78qYxnqw=;
-        b=iwF/CS5VEZqP49dqwxLc6xNiahjmHkjENr5DnWoaISX2OmC105PxzsPL8/O+x/NlxF
-         sZJqOTVF9ri6ToMQfpzOBCyMDVe2jF7SAJZEKC2OSXTjLcIX+DQgx/M3LwMfzdx+EkHj
-         7H2IZAePoPNcD0hNnXvoXgqLDvgDFWjdE/uKhzPARnwyjuvMqPU6kWvQLsbjK6iCa1dT
-         gN2OVpUdD1pLIFuo0H7HPr1EAEvxYjy3lyHGs6RlFiQ/Ve80Fh6ZfaKVdeTEHA+xMNSH
-         zni7miexUsvb+PZFOsNQEwouYyl1cpY6CT1tXPmsL6NA38f0Yb+LGOnalyJoiz2pBlBV
-         CTXA==
-X-Gm-Message-State: AOAM531WPPeSj3NWaYBwUmsT0IaUHvzqqtNquF3YX4phEU87PIJm/cwj
-        zdtVHhNjGG2dj801gqbqAZEGGxYa48HvWJVw4Maq6hCrnFB/avOfL2wuJ/CUrOwvu7xghQeg/ad
-        F7UBSLx7LApGdQCwrS1ZwPg==
-X-Received: by 2002:a05:600c:1da3:: with SMTP id p35mr2388568wms.9.1640014549025;
-        Mon, 20 Dec 2021 07:35:49 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxlGp7cXs8bcGDDTJ9A4ThRV7yXkHYo3y8iw5DiCoay9PJOvjvzhVsl1lQ5A8vn6i0apYrFCQ==
-X-Received: by 2002:a05:600c:1da3:: with SMTP id p35mr2388548wms.9.1640014548781;
-        Mon, 20 Dec 2021 07:35:48 -0800 (PST)
-Received: from redhat.com ([2.55.19.224])
-        by smtp.gmail.com with ESMTPSA id b2sm7974828wrd.35.2021.12.20.07.35.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Dec 2021 07:35:48 -0800 (PST)
-Date:   Mon, 20 Dec 2021 10:35:43 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Vincent Whitchurch <vincent.whitchurch@axis.com>
-Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, kernel@axis.com,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: virtio: remove timeout
-Message-ID: <20211220103537-mutt-send-email-mst@kernel.org>
-References: <20211220130656.16900-1-vincent.whitchurch@axis.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oJjZyoMEz6X8QZ+nRT7KOb+gfe1I0SKawSZhB5aruPE=;
+        b=oYoZ/4ejW5U6ACo7I/TcmNM1jyBmDTst5QnH+CicitE9lubKha4MqasmJrFL8jtBQS
+         GUQIxAGIWyP5XKdlDLm/+MYxw4aH0iClzwdbY354IjYM+HUSbVccqZ9vJImqtjSrYYqk
+         NIdwJQjehFGUB85AjOhvHvhko+qybG6aXN5H/ioxLz5sGRg13Q9P5C35ZRAinL1gfouP
+         SlQLxg9yVOYPT4MnLhAj43dVMocpJSijv3mY1ehWlbeSAdjhDBcNVddFB25gOZi33KTR
+         wDxA+XmJOpat/uKp+EkM2035h+PfUdMWX67RlPFD585uQ07GJ5EqUK1JJkNxbDgakm1c
+         CUmw==
+X-Gm-Message-State: AOAM530hhVGfbTtaOuvlL4Gh9uZFL8rsrdD+uicIv8S72xuFXG4dyIuf
+        kIrF/9PJWgJ+UlMjbPJIX9C2KsWZK8bFlhuMfv/2HA==
+X-Google-Smtp-Source: ABdhPJx187CSWNjhZ46xw6UV3rJD4dVrv+U4cX641iKcm/e2YLbtgl7O8tXfKBWjOem/Az6G1NnVK/BmC9zObylBPo4=
+X-Received: by 2002:a05:6402:3488:: with SMTP id v8mr17458750edc.398.1640028310148;
+ Mon, 20 Dec 2021 11:25:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211220130656.16900-1-vincent.whitchurch@axis.com>
+References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
+ <a7fbb773-eb85-ccc7-8bfb-0bfab062ffe1@leemhuis.info> <CAMRc=MfAxzmAfATV2NwfTgpfmyxFx8bgTbaAfWxSi9zmBecPng@mail.gmail.com>
+ <CAMuHMdVp621B0DywkW6sx6wNcPFez9=3-=cfSo7UoRttJ6QXCg@mail.gmail.com>
+In-Reply-To: <CAMuHMdVp621B0DywkW6sx6wNcPFez9=3-=cfSo7UoRttJ6QXCg@mail.gmail.com>
+From:   Will McVicker <willmcvicker@google.com>
+Date:   Mon, 20 Dec 2021 11:24:53 -0800
+Message-ID: <CABYd82b2i4Uuyi5+zLoTgiC-QMS1y=VkwmMznZqxLca0iP9qTQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>,
+        Thorsten Leemhuis <regressions@leemhuis.info>,
+        stable <stable@vger.kernel.org>, regressions@lists.linux.dev,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Edmond Chung <edmondchung@google.com>,
+        Andrew Chant <achant@google.com>,
+        Sergio Tanzilli <tanzilli@acmesystems.it>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 20, 2021 at 02:06:56PM +0100, Vincent Whitchurch wrote:
-> The driver imposes an arbitrary one second timeout on virtio requests,
-> but the specification doesn't prevent the virtio device from taking
-> longer to process requests, so remove this timeout to support all
-> systems and device implementations.
-> 
-> Fixes: 3a29355a22c0275fe86 ("gpio: Add virtio-gpio driver")
-> Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+On Mon, Dec 20, 2021 at 7:14 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> On Mon, Dec 20, 2021 at 3:57 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > On Sat, Dec 18, 2021 at 7:28 AM Thorsten Leemhuis
+> > <regressions@leemhuis.info> wrote:
+> > > [TLDR: I'm adding this regression to regzbot, the Linux kernel
+> > > regression tracking bot; most text you find below is compiled from a few
+> > > templates paragraphs some of you might have seen already.]
+> > >
+> > > On 17.12.21 16:35, Marcelo Roberto Jimenez wrote:
+> > > > Some GPIO lines have stopped working after the patch
+> > > > commit 2ab73c6d8323f ("gpio: Support GPIO controllers without pin-ranges")
+> > > >
+> > > > And this has supposedly been fixed in the following patches
+> > > > commit 89ad556b7f96a ("gpio: Avoid using pin ranges with !PINCTRL")
+> > > > commit 6dbbf84603961 ("gpiolib: Don't free if pin ranges are not defined")
+> > >
+> > > There seems to be a backstory here. Are there any entries and bug
+> > > trackers or earlier discussions everyone that looks into this should be
+> > > aware of?
+> > >
+> >
+> > Agreed with Thorsten. I'd like to first try to determine what's wrong
+> > before reverting those, as they are correct in theory but maybe the
+> > implementation missed something.
+> >
+> > Have you tried tracing the execution on your platform in order to see
+> > what the driver is doing?
+>
+> Looking at commits that have related Fixes tags:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=bf781869e5cf3e4ec1a47dad69b6f0df97629cbd
+> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/commit/?id=e8f24c58d1b69ecf410a673c22f546dc732bb879
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
 
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
+Hi Marcelo,
 
-> ---
->  drivers/gpio/gpio-virtio.c | 6 +-----
->  1 file changed, 1 insertion(+), 5 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-virtio.c b/drivers/gpio/gpio-virtio.c
-> index 84f96b78f32a..9f4941bc5760 100644
-> --- a/drivers/gpio/gpio-virtio.c
-> +++ b/drivers/gpio/gpio-virtio.c
-> @@ -100,11 +100,7 @@ static int _virtio_gpio_req(struct virtio_gpio *vgpio, u16 type, u16 gpio,
->  	virtqueue_kick(vgpio->request_vq);
->  	mutex_unlock(&vgpio->lock);
->  
-> -	if (!wait_for_completion_timeout(&line->completion, HZ)) {
-> -		dev_err(dev, "GPIO operation timed out\n");
-> -		ret = -ETIMEDOUT;
-> -		goto out;
-> -	}
-> +	wait_for_completion(&line->completion);
->  
->  	if (unlikely(res->status != VIRTIO_GPIO_STATUS_OK)) {
->  		dev_err(dev, "GPIO request failed: %d\n", gpio);
-> -- 
-> 2.33.1
+Thanks for reporting this issue. I can give you a little context on
+why commit 6dbbf84603961 ("gpiolib: Don't free if pin ranges are not
+defined") was created. We were seeing a refcounting issue on Pixel 6.
+In our kernel CONFIG_PINCTRL is defined. Basically, the camera kernel
+module requests for a GPIO on sensor enable (when the camera sensor is
+turned on) and releases that GPIO on sensor disable (when the camera
+sensor is turned off). Before commit 6dbbf84603961, if we constantly
+switched between the front and back camera eventually we would hit the
+below error in drivers/pinctrl/pinmux.c:pin_request():
 
+    E samsung-pinctrl 10840000.pinctrl: could not increase module
+refcount for pin 134
+
+In our kernel the sensor GPIOs don't have pin_ranges defined. So you
+would get these call stacks:
+
+Sensor Enable:
+  gpiochip_generic_request()
+  -> return 0
+
+Sensor Disable:
+  gpiochip_generic_free()
+  -> pinctrl_gpio_free()
+
+This led to an imbalance of request vs free calls leading to the
+refcounting error. When we added commit 6dbbf84603961 ("gpiolib: Don't
+free if pin ranges are not defined"), this issue was resolved. My
+recommendation would be to drill down into your driver to figure out
+what happens in these functions to see why you're getting the results
+you reported.
+
+--Will
