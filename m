@@ -2,97 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D1A1547B023
-	for <lists+linux-gpio@lfdr.de>; Mon, 20 Dec 2021 16:26:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B168247B02B
+	for <lists+linux-gpio@lfdr.de>; Mon, 20 Dec 2021 16:27:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238525AbhLTPZ7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Dec 2021 10:25:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42770 "EHLO
+        id S236399AbhLTP1Y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Dec 2021 10:27:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239477AbhLTPZV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Dec 2021 10:25:21 -0500
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0E3EC09B11F
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Dec 2021 07:07:17 -0800 (PST)
-Received: by mail-ed1-x534.google.com with SMTP id z29so39460060edl.7
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Dec 2021 07:07:17 -0800 (PST)
+        with ESMTP id S236753AbhLTP1A (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Dec 2021 10:27:00 -0500
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC9E9C08EB1F;
+        Mon, 20 Dec 2021 07:11:16 -0800 (PST)
+Received: by mail-ed1-x535.google.com with SMTP id z5so39666392edd.3;
+        Mon, 20 Dec 2021 07:11:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=UHn9hs89sVWzHh2SxeZRz3wuaNP8dfg8lMqa/q5seRs=;
-        b=vgF02nBpQ3V4vsHgN8izdvvyBF59f7lhmGfqzrZJ0Jf1dUy6W16GhEi14bWHcJcIij
-         Mcnf2LwTaESVLdVII8c+4NKJmyVpw2xSvmbFxjMEqq6dtP05lE090lUqEBzGEa62BT60
-         jKd7VTG+gYNCttakmN/gr/tayyHd7Hvl9o0+crIbPcVNWIdkfOimtePTMyaFcNTy9MWG
-         Emc7EbtCEJT6X1Qa2Lr8QanC0fuMegXfnTALjdmapcEFKsUSakKBPt74Bh2Eqnieo4Oo
-         S3dZflJkrXwxrASjL/lv4TRzRj8/mL45if+9b9kMA1UycCucLDkk/PacTWR2N988xiGM
-         FRZA==
+        bh=hBIoGw/e/zcvG+pHiU6S4HSaNOHwibSXXHgdcOqKpt0=;
+        b=g5w3zq2NJj7FJNKB6S4eRDs8mFKJE6NotK7FF6GXMEgZ18UwBT107QQbz/ylRJ7XAD
+         rxMXVmWZocz1dWweCJ2U+MWs5LfN2YOXXpHQ6R7YVX5Ap6+8XTiet4rQbNbnW3nowwVS
+         8N3oMITPRhSHD2f7ULqqZ3trHI9x/5BuskLxk0KwxbygoH3ALIDkpcUmyg5RMTzRvGHh
+         yJPWWLUNnGQXmUvhgp+o3fwjdRsRwO37RHPCmyC3K0n8P3fhLxW5ZcrZ8dqdALg1cNZN
+         3tFRVXQDd6/az+dttSn69qu74M70HGJj0fpJpn/KayqQWWY0VpUau1OGGvvFa2CIThk3
+         G+uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=UHn9hs89sVWzHh2SxeZRz3wuaNP8dfg8lMqa/q5seRs=;
-        b=trNjBj5gB59sb6N6ESRBR9A/k76o2qyPrFzTWlgvTLau4DzaZakEuEOBN1mpnLOEDF
-         uKiuYDNIKvIc1Z6x1fOi/WQ57S7K+kTn9TQ7svHYZd6gL2sKD/rPO9DwhsaMwwfRk07K
-         ucl/DRuAWuXXkPjUegTTmfJSd+MS2a0+UYTR5jmugfr5Q/3T8AeH7xCGjOus6j0HYjJN
-         KzO8inFo6pnaGFSpnWKKP7rGzfOMj32adiZjAUB8/tAGwVt4CLpNHQMof8l5Zsufd4CF
-         JmV/i9HykECjVmzuo4C0ePADEiVBoHH17LEtZf+PXIP11DGFJsoPQBnO5GPByzdJ6hUo
-         ej0w==
-X-Gm-Message-State: AOAM531ZAkNL/YTQXjeyiT1TXZPDNsCM8kptwDE0/1RyO45eoelMqSHh
-        n7yQVG4LbFJIMNolVt24tWcup03bcFVyStbNlRN0iQ==
-X-Google-Smtp-Source: ABdhPJzuKAvGN7YAcp5nXrRc+WQPSK8YcFJyMnHXzWvnC4eZi5W05eFHf1c18Qp4YPWMEXc61KRbWMDdYdIc53EOYAM=
-X-Received: by 2002:a50:e611:: with SMTP id y17mr16496269edm.270.1640012836555;
- Mon, 20 Dec 2021 07:07:16 -0800 (PST)
+        bh=hBIoGw/e/zcvG+pHiU6S4HSaNOHwibSXXHgdcOqKpt0=;
+        b=M4Z6D2R37WqYrdEc4PdJtZb2FEj53mcIJM3dll0GH61st0/LI8DB4eL2dzMUfCrjH4
+         G8X4bmzH5NM6zQ1mBylel0K0cQrJWMPMYgxPLfY9wramDGTabByYr4wfLPQAjhWEr+Tr
+         4XzYmFPyP4f1h+gGqRPgF1OScHhRqBNSILxErfUtL6GTUgJn2AQTPpB+gLlPX6LhQ6Mi
+         6XcRl1AIJPROTIJmzl6abu9MmjNYIg/4jDjt8zXG1ny9racmdrinuox0S/AbmK41in2y
+         G304VEcdxUNYw/z09k9UC3D82Ixwhad1Zpk6mCBgwlRaxQfG5uIu4UMOtX/56xfQ6Q7z
+         9drA==
+X-Gm-Message-State: AOAM5329OnYupZ1heotXo4kC6Vm26L8VLSKcqtdHWdLXIJvtCtsOHh3x
+        zEQLvUIfhxIxY5JtqdJl8Fm8pFYzzMsoLrk2iYU=
+X-Google-Smtp-Source: ABdhPJwNPdlFiyq6tdH9hFgzAwymj19tpiQ0KxZM4gqqznfenD0pSWIWIRrWm9wcb1jCZbCyqF5YMjt/cuc4WnfY9lc=
+X-Received: by 2002:aa7:c7cd:: with SMTP id o13mr16731637eds.37.1640013075412;
+ Mon, 20 Dec 2021 07:11:15 -0800 (PST)
 MIME-Version: 1.0
-References: <20211213094036.1787950-1-daniel@0x0f.com> <20211213094036.1787950-5-daniel@0x0f.com>
- <CAMRc=Md_2b-sBnPQL-E59byYSv+Z0+d3V8JrbPqpGSMjGS+tgA@mail.gmail.com> <CAFr9PXkkp8B5Vv0eu+2gPF2S4CNaxZDwjPg+UXRgvyUkAZBFpA@mail.gmail.com>
-In-Reply-To: <CAFr9PXkkp8B5Vv0eu+2gPF2S4CNaxZDwjPg+UXRgvyUkAZBFpA@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 20 Dec 2021 16:07:05 +0100
-Message-ID: <CAMRc=MepS1rh13kYGvvsMmAec93fdtSHiddxqO1W4Bg+uy-dNg@mail.gmail.com>
-Subject: Re: [PATCH v3 4/5] gpio: msc313: Add support for SSD201 and SSD202D
-To:     Daniel Palmer <daniel@0x0f.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+References: <20211220132439.1194-1-andriy.shevchenko@linux.intel.com> <CAMRc=Md3bpCJe_eFBjiKuhCRO_xqnFxSc1sw100fgNmajy6gaw@mail.gmail.com>
+In-Reply-To: <CAMRc=Md3bpCJe_eFBjiKuhCRO_xqnFxSc1sw100fgNmajy6gaw@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 20 Dec 2021 17:09:15 +0200
+Message-ID: <CAHp75VcbaYXfDpc7xE=asSqUspscRoHfqrg-yMtx=uo5UNqxfw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] gpio: Remove unused local OF node pointers
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        Marc Zyngier <maz@kernel.org>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        linux-unisoc@lists.infradead.org,
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 20, 2021 at 3:58 PM Daniel Palmer <daniel@0x0f.com> wrote:
+On Mon, Dec 20, 2021 at 5:09 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 >
-> Hi Bartosz,
->
-> On Mon, 20 Dec 2021 at 23:50, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> On Mon, Dec 20, 2021 at 2:24 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
 > >
-> > On Mon, Dec 13, 2021 at 10:40 AM Daniel Palmer <daniel@0x0f.com> wrote:
-> > >
-> > > This adds GPIO support for the SSD201 and SSD202D chips.
-> > >
-> > > Signed-off-by: Daniel Palmer <daniel@0x0f.com>
-> > > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> > > ---
+> > After the commit 448cf90513d9 ("gpio: Get rid of duplicate of_node
+> > assignment in the drivers") the OF node local pointers become unused.
+> > Remove them for good and make compiler happy about.
 > >
-> > I applied patches 1-3. This triggers a bunch of checkpatch errors.
-> > Please address them and resend this single patch.
->
-> The warnings about complex macros being wrapped in parentheses when
-> the things it's complaining about are defined lists not macros?
-> Not going to say I know better than checkpatch but I think the errors
-> there are wrong. Putting parentheses around the lists would break the
-> arrays they get put into.
->
-> Cheers,
->
-> Daniel
+> > Fixes: 448cf90513d9 ("gpio: Get rid of duplicate of_node assignment in the drivers")
+> > Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-I took a closer look now and it got even worse. This is some major
-obfuscation with those names being defined as macros defining partial
-lists...
+...
 
-Anyway, it was already there when you got there so I guess we can
-address it separately. Queued for v5.17.
+> > -               gc->label = devm_kasprintf(dev, GFP_KERNEL, "%pOF", dev->of_node);
+> > +               gc->label = devm_kasprintf(dev, GFP_KERNEL, "%pOF", np);
+>
+> This is unrelated though. Can you make it a separate patch?
 
-Bart
+It actually makes use of the local np IIRC.
+It's related, no?
+
+-- 
+With Best Regards,
+Andy Shevchenko
