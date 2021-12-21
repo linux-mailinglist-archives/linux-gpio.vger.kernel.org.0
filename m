@@ -2,100 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ABA5647C198
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Dec 2021 15:36:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B8A0047C2B7
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Dec 2021 16:22:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238509AbhLUOgN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Dec 2021 09:36:13 -0500
-Received: from mail-qv1-f54.google.com ([209.85.219.54]:39554 "EHLO
-        mail-qv1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234548AbhLUOgM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Dec 2021 09:36:12 -0500
-Received: by mail-qv1-f54.google.com with SMTP id g15so11243446qvi.6;
-        Tue, 21 Dec 2021 06:36:11 -0800 (PST)
+        id S239250AbhLUPWf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Dec 2021 10:22:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58562 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235958AbhLUPWf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Dec 2021 10:22:35 -0500
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA2B7C061401
+        for <linux-gpio@vger.kernel.org>; Tue, 21 Dec 2021 07:22:34 -0800 (PST)
+Received: by mail-ed1-x52e.google.com with SMTP id j21so49031448edt.9
+        for <linux-gpio@vger.kernel.org>; Tue, 21 Dec 2021 07:22:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NXqZoCi6bFzrtVtfX7brMYS+xGEp73oZA5ti3zFyQHs=;
+        b=Di2qnlX38KdMWngxFVbSDFQfjq/BigeQIN75VnyGhGL88sn2N8bWzoZt1G5JN20YyW
+         6VOuVAfyh12OGwZx8fSN3MJEAofIXI/pBDvGad3HFaARAbuQQbanJx744HGNPiETjKyC
+         //Px55seoFD5lqHAdUYxkE7M3giUf+znX0082+zbVRrNH8mGkWsPerV2w2SifpvAGuXE
+         mf7nr65PcIWpvqxuqVQspyqB0hmBt7uqb+Q0P7OIBqECz2e5bnig3jYOTxRewml/fFHA
+         yoMBz5UfCg8IQYGel2BTWfQjzNTeA3I4/+5q8hlHlx5/2R+QLUSwNhVSLWiBWP0Q4mO2
+         s8zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
-         :message-id;
-        bh=DAgxIL5+LfBMOUij7dixBA2kzok+uhqjW0YOVP3FJ64=;
-        b=iPqQbnlc5nFOllfSKi7vz2BQst5cYpXBWvcKH2KEQVbvvGNBfbr+wC0BXMaOBbw9Um
-         UyMfW2guV3g5SFzi4Xf8nar2CaS3crpjp1IAAL2FrmF8xwLnkLJf2zWmPna5MELV7PHz
-         +k3RCGkJFLhPc8wlQR4x6PV1EhNEiHrdiTvZVqhT4MVUNtxpnE1vXzfOarVFA+dPiCzO
-         i7S7qLgTTGh27JYGlwvzSlJH7xghu5w7FGKHGuJg/EYubAwu5Hv2O8wC4pka/djP58Mx
-         MpiEp9q9Vdopi3DLSDpOTJpIKwqmbrn77WJ7KQthDW5NZFZqKQgo37laEXnZ1zewMoC0
-         KK/g==
-X-Gm-Message-State: AOAM532vTVHO4fFFcIHdRgKp7fQgXmfW6zSPkvmefcyczcjVjfgxpT6A
-        QOoZ4Mm9inVrPILzKNq7hA==
-X-Google-Smtp-Source: ABdhPJylBXG4muz9ukCyJcRPgG5j/wh/YvvIRKT8d1OTxRKfi+lOHWdekpwKJ6hBomGZ8F/6CfNqsA==
-X-Received: by 2002:a05:6214:76a:: with SMTP id f10mr2246866qvz.80.1640097371373;
-        Tue, 21 Dec 2021 06:36:11 -0800 (PST)
-Received: from robh.at.kernel.org ([24.55.105.145])
-        by smtp.gmail.com with ESMTPSA id u7sm14864481qkp.17.2021.12.21.06.36.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Dec 2021 06:36:10 -0800 (PST)
-Received: (nullmailer pid 1365872 invoked by uid 1000);
-        Tue, 21 Dec 2021 14:36:08 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Jakub Kicinski <kuba@kernel.org>, devicetree@vger.kernel.org,
-        linux-serial@vger.kernel.org,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stephen Boyd <sboyd@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Sergey Shtylyov <s.shtylyov@omp.ru>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>, dmaengine@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        netdev@vger.kernel.org, linux-clk@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20211221094717.16187-12-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20211221094717.16187-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20211221094717.16187-12-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH 11/16] dt-bindings: pinctrl: renesas: Document RZ/V2L pinctrl
-Date:   Tue, 21 Dec 2021 10:36:08 -0400
-Message-Id: <1640097368.261963.1365871.nullmailer@robh.at.kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NXqZoCi6bFzrtVtfX7brMYS+xGEp73oZA5ti3zFyQHs=;
+        b=7Hb0fwBKi8ZwdMVGXGhkW/3Jq8zyRx6PfJOHtiMnJKECY8PBg+r43p+D+r9ciZLR98
+         0NkjOBEheGexHf9/Jm0/zS4OJrog2wKZhgpMrVY2Ej6gnCihHTOJYMvkisMFiVJXNhB4
+         6QYQk8CkOE5OfUsTc0Fiq6iIrJ9KSKXP8YRNIDDm9RAvUbEQw0BflphNYaZcZPDzvE62
+         a/5rwGTjWNNsGTW2cmWKwBgOfVnhwjf6C2MxhFBegHYh+j9SCOVmikeohllYYWhCaygZ
+         yNPeLyN7BXYmI/5DIkOatgrMksv2/xpcct91hkQ0IU9lcJa4sMY8Dp8jWAFy+lfm09z8
+         vZxg==
+X-Gm-Message-State: AOAM532lHQmyKFewGxDZsywAfFlRBMQJIIHUuII/+k27KmTKHQ2iYJyF
+        YQNUPGgN7LhPuUSnw12hR4k2uKJ6uD2fUMnaPLi7/BuB5ws=
+X-Google-Smtp-Source: ABdhPJxC8jMk+u361VafMW+SAgJhdjljhacITgcBclmQ37kVkk1G/wIdZPndCGxJ4zNkvuTNnXEIxtopJ73Hi1pUg/s=
+X-Received: by 2002:a17:906:4c8f:: with SMTP id q15mr3197240eju.736.1640100153188;
+ Tue, 21 Dec 2021 07:22:33 -0800 (PST)
+MIME-Version: 1.0
+References: <20211221113825.334782-1-yangyingliang@huawei.com>
+In-Reply-To: <20211221113825.334782-1-yangyingliang@huawei.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 21 Dec 2021 16:22:22 +0100
+Message-ID: <CAMRc=Md7xfn5-XtbVs_sEWt7YtdzMF0eUCqUME4_W6Bxv4d84g@mail.gmail.com>
+Subject: Re: [PATCH -next] gpio: sim: add missing fwnode_handle_put() in gpio_sim_probe()
+To:     Yang Yingliang <yangyingliang@huawei.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 21 Dec 2021 09:47:12 +0000, Lad Prabhakar wrote:
-> From: Biju Das <biju.das.jz@bp.renesas.com>
-> 
-> Document Renesas RZ/V2L pinctrl bindings. The RZ/V2L is package- and
-> pin-compatible with the RZ/G2L. No driver changes are required as RZ/G2L
-> compatible string "renesas,r9a07g044-pinctrl" will be used as a fallback.
-> 
-> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Tue, Dec 21, 2021 at 12:32 PM Yang Yingliang
+<yangyingliang@huawei.com> wrote:
+>
+> Calling fwnode_handle_put() when break out of device_for_each_child_node(),
+> or the device node reference will be leakd.
+>
+> Fixes: 83960fcf4818 ("gpio: sim: new testing module")
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
 > ---
->  .../bindings/pinctrl/renesas,rzg2l-pinctrl.yaml   | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
-> 
+>  drivers/gpio/gpio-sim.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
+> index ef6145f51c8a..520ee923b516 100644
+> --- a/drivers/gpio/gpio-sim.c
+> +++ b/drivers/gpio/gpio-sim.c
+> @@ -444,8 +444,10 @@ static int gpio_sim_probe(struct platform_device *pdev)
+>
+>         device_for_each_child_node(dev, swnode) {
+>                 ret = gpio_sim_add_bank(swnode, dev);
+> -               if (ret)
+> +               if (ret) {
+> +                       fwnode_handle_put(swnode);
+>                         return ret;
+> +               }
+>         }
+>
+>         return 0;
+> --
+> 2.25.1
+>
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+Applied, thanks!
 
-yamllint warnings/errors:
-./Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml:26:13: [warning] wrong indentation: expected 14 but found 12 (indentation)
-
-dtschema/dtc warnings/errors:
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/patch/1571555
-
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit.
-
+Bart
