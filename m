@@ -2,68 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 42AB847B6DE
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Dec 2021 02:34:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BE98447B88D
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Dec 2021 03:51:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230319AbhLUBeH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Dec 2021 20:34:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39130 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230284AbhLUBeE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Dec 2021 20:34:04 -0500
-Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE506C06173E
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Dec 2021 17:34:03 -0800 (PST)
-Received: by mail-lf1-x12e.google.com with SMTP id k37so25778617lfv.3
-        for <linux-gpio@vger.kernel.org>; Mon, 20 Dec 2021 17:34:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=/hHgBKaozpyohhRsiYLOj0WZK8ScsciyYJn+ZRKFKfo=;
-        b=NmWe9GJ4ZAnK4jiKgzkrDqHn2s1Dhkh9he/1fT1teTS1VQqwhkn1T02E7sE69jm2rE
-         AD61z9BysxbEhTdkBsssaZt+/mChXafU8va8Hn7bOJKO6HL7A0RAaxA9PMBYsqKE9vQj
-         xaoF63eDIIubuhQQ2YuNg7P2UYWd0m6UbkgV35zGchEgQiTwTIhMaSaff5GWwXHp6O5l
-         c1NQdGcMm8BC8hjASz9QVTvbibtiJcxbHAq/+cUiFb8+Qmnn+3SDD/QRwGt7YQYVUOQr
-         e+RA5SotEd8LRNl7O++O1RfNi+bU+qmdjN/j5pWCMWjb8XfRKoaBMuAAPuD4B2H3mCLf
-         +QpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=/hHgBKaozpyohhRsiYLOj0WZK8ScsciyYJn+ZRKFKfo=;
-        b=1CnMlHhe/xd+WQuHjgmSMSJvwSqkOu+mkTCFJdnyA9jbO1F8/2STzayPKUzkjpyjNE
-         UvMovNRvQGPjqxktOBNBAwWRj7DnyKARE80ob+RStrGAyMaWycY+127xRM/zr4SRkrxY
-         /2p6s3LltVuyWyROazwvtmIxsKSPvXQOFq8IeebuGhw2XoxKxxIRg8DI3MuxCCLZSRce
-         HPCTfH+tYT1dudlaTzifMmTKNJVZOvyTU2e+SAUWGfAZHnia3fYU/TAjGOPrLkLkt2DW
-         WuNL6z1apdmcFMCh77iEGrRDqUp+bEZoRQCRY2yOOk6wGGQPsDFbVXJYzsHVgoGztOeY
-         YMxw==
-X-Gm-Message-State: AOAM533/QuJ6Y2KarR6PeMQkB/tWRrGMu2qFC+45oFlcVhO2LC0Y/stO
-        U9KeJSn8+2kWBLIzZtVjkGzaOOawFYFfp7SyGoQ=
-X-Google-Smtp-Source: ABdhPJxOcvzHq9yWiVfRO/g5dfdb052VxUk5d3NJt+np17jsN+4QksmFfqA6RRVpreOa0T/pIFAAi1gubBte5wceG5g=
-X-Received: by 2002:a05:6512:3e09:: with SMTP id i9mr896877lfv.132.1640050441990;
- Mon, 20 Dec 2021 17:34:01 -0800 (PST)
+        id S233947AbhLUCvH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Dec 2021 21:51:07 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:53044 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233891AbhLUCvG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Dec 2021 21:51:06 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 6B9C4B8108E;
+        Tue, 21 Dec 2021 02:51:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E090C36AE8;
+        Tue, 21 Dec 2021 02:51:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1640055064;
+        bh=MWsSe+f/4lMO4ek8jRQKfguvVlMxW/ReWXj6iBmyEvg=;
+        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+        b=X/O5ikSYgLXRodJDAAnqTOhuyNlIrIuAM9T9rObSgJhXQe5hi4q16Rk8N2mHD8I46
+         4USHq6FL8+6WYdYrCJImrmzYsf6nfp5buosLqARxr2fWRfGqN5+8sjW/gF2/AOHuDN
+         Dog2B/4btB9HkKiGIiq3W51b/jXTK92gMdlnGMxwG3xz3Sh7R/CsxRkLy8+OlxdBeM
+         JRSEktZ+eF9/9Mb94GreDbTS+qVwp48oUZcHjDWOTsNiOUKMLv3XYfTO5ML+36dQTq
+         QZdMJA/LXkiKHdsQbgX9e1A4OQEsC29ny2QgaCHsod7CrF/VkaovlZG8lFE0GWPPCz
+         fHTFL8WWctCVA==
+From:   Mark Brown <broonie@kernel.org>
+To:     linus.walleij@linaro.org, matthias.bgg@gmail.com,
+        robh+dt@kernel.org, Tinghan Shen <tinghan.shen@mediatek.com>
+Cc:     linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+        bayi.cheng@mediatek.com, sean.wang@mediatek.com,
+        linux-arm-kernel@lists.infradead.org, gch981213@gmail.com,
+        bgolaszewski@baylibre.com, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        Project_Global_Chrome_Upstream_Group@mediatek.com
+In-Reply-To: <20211220121825.6446-1-tinghan.shen@mediatek.com>
+References: <20211220121825.6446-1-tinghan.shen@mediatek.com>
+Subject: Re: (subset) [PATCH v7 0/4] Add basic SoC support for mediatek mt8195
+Message-Id: <164005506109.2648034.14953790658708739553.b4-ty@kernel.org>
+Date:   Tue, 21 Dec 2021 02:51:01 +0000
 MIME-Version: 1.0
-Received: by 2002:a05:6512:3f2:0:0:0:0 with HTTP; Mon, 20 Dec 2021 17:34:01
- -0800 (PST)
-Reply-To: lisshuuu1@gmail.com
-From:   Ms Lisa Hugh <lisahugh531@gmail.com>
-Date:   Mon, 20 Dec 2021 17:34:01 -0800
-Message-ID: <CAFnQ+S47ma5PkwQq+YbqJxn1b4Gm7XNF3qQLPVD3ro4eUgF8eQ@mail.gmail.com>
-Subject: YOU WILL HAVE THE DETAILS AS SOON I HEAR FROM YOU(Ms Lisa Hugh)
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dear Friend,
+On Mon, 20 Dec 2021 20:18:21 +0800, Tinghan Shen wrote:
+> This series adds basic SoC support for Mediatek's SoC MT8195.
+> 
 
-I am Ms Lisa Hugh accountant and files keeping by profession with the bank.
+Applied to
 
-I need your co-operation for the  transferring of ($4,500,000,00
-,U.S.DOLLARS)to your bank account for both of us benefit.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-Please send the follow below,
-1)AGE....2)TELEPHONE NUMBER,,,,,...,3)COUNTRY.....4)OCCUPATION......
-Thanks.
-Ms Lisa Hugh
+Thanks!
+
+[2/4] dt-bindings: spi: spi-mtk-nor: add new clock name 'axi' for spi nor
+      commit: 6008cb4c98d935a844edf2f3c13639104f533e30
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
