@@ -2,81 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BE98447B88D
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Dec 2021 03:51:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F2EB47B929
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Dec 2021 05:26:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233947AbhLUCvH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 20 Dec 2021 21:51:07 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:53044 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233891AbhLUCvG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Dec 2021 21:51:06 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6B9C4B8108E;
-        Tue, 21 Dec 2021 02:51:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E090C36AE8;
-        Tue, 21 Dec 2021 02:51:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1640055064;
-        bh=MWsSe+f/4lMO4ek8jRQKfguvVlMxW/ReWXj6iBmyEvg=;
-        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=X/O5ikSYgLXRodJDAAnqTOhuyNlIrIuAM9T9rObSgJhXQe5hi4q16Rk8N2mHD8I46
-         4USHq6FL8+6WYdYrCJImrmzYsf6nfp5buosLqARxr2fWRfGqN5+8sjW/gF2/AOHuDN
-         Dog2B/4btB9HkKiGIiq3W51b/jXTK92gMdlnGMxwG3xz3Sh7R/CsxRkLy8+OlxdBeM
-         JRSEktZ+eF9/9Mb94GreDbTS+qVwp48oUZcHjDWOTsNiOUKMLv3XYfTO5ML+36dQTq
-         QZdMJA/LXkiKHdsQbgX9e1A4OQEsC29ny2QgaCHsod7CrF/VkaovlZG8lFE0GWPPCz
-         fHTFL8WWctCVA==
-From:   Mark Brown <broonie@kernel.org>
-To:     linus.walleij@linaro.org, matthias.bgg@gmail.com,
-        robh+dt@kernel.org, Tinghan Shen <tinghan.shen@mediatek.com>
-Cc:     linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-        bayi.cheng@mediatek.com, sean.wang@mediatek.com,
-        linux-arm-kernel@lists.infradead.org, gch981213@gmail.com,
-        bgolaszewski@baylibre.com, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        Project_Global_Chrome_Upstream_Group@mediatek.com
-In-Reply-To: <20211220121825.6446-1-tinghan.shen@mediatek.com>
-References: <20211220121825.6446-1-tinghan.shen@mediatek.com>
-Subject: Re: (subset) [PATCH v7 0/4] Add basic SoC support for mediatek mt8195
-Message-Id: <164005506109.2648034.14953790658708739553.b4-ty@kernel.org>
-Date:   Tue, 21 Dec 2021 02:51:01 +0000
+        id S231984AbhLUE0P (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 20 Dec 2021 23:26:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49930 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230054AbhLUE0P (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 20 Dec 2021 23:26:15 -0500
+Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2870C061574
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Dec 2021 20:26:14 -0800 (PST)
+Received: by mail-pg1-x536.google.com with SMTP id f125so11254461pgc.0
+        for <linux-gpio@vger.kernel.org>; Mon, 20 Dec 2021 20:26:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=o5xgDMJ+wA2AyFoIMAcbqy3DgLh40+fFYdFo8qBjJE8=;
+        b=fkWX4FE2fKrGc6jIjzKBmNKopUVPnx18uxX1pok12ZjhvxhROZb1GWoV7T1MvpBudt
+         6LHtXXg3Dpq54L43Wbbh0IFlLECarR9vn4gzWVGlxCL+05x4ZUchsuSf3HtjEwXEchJs
+         wT7cfIKPEEchrPfwStWJcDb16pM6OULVQjtxnhl1hCls1CblwwWetho8UJoQwN/7K52j
+         teHRSPOW+R8nb61KTxIg/N8XuATrU4Mikrjzst6vSYHd/ixBwH27C4ih/CH+CvTDWPoi
+         aCQGd31zo9gDEYXil4snjCsnNhQUDrRrTevLWe2cnYL1SEus0alZW3o1AHN+QGcuodXS
+         DAtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=o5xgDMJ+wA2AyFoIMAcbqy3DgLh40+fFYdFo8qBjJE8=;
+        b=d5cKt/jTQ0Yj34qCrIk1sc8u25TbRUfSmowE0L9tblKLA4PaHtiA2av9mwUfIOZrc1
+         LTbHG9uuBj3ETorUjK16hScSk7WKGp6ZQ5Ng3OmrDXqYmdCFwsLY0ESIDzJ8DyttwcJd
+         BPswLIS4pHK38GVv2G87LevQY44mWErJdBlgj0tw+SHNTO3GuLUkTD2ngx6JnAaY/qKy
+         Rc/MTo1eQrNONRmSNgDOw5M1yBM3LreFDTvphVlBVb2dcgE9vOIL4wvL1aCFCHpM8DzN
+         T/Bdu06YME2Ezq2ApnR6OHB4r/IRkNwmuJL24hIIuYT4HEAxFczTj5LhzQZPUPvVg3eU
+         e2ZA==
+X-Gm-Message-State: AOAM533e/4KADwtUixedl76vaDm8HhWUBtthpl8PJ0ihS7wyysE1YOJA
+        yFu+8w/agmye4Jr+Qd/3SgczwmpYjOO0LQ==
+X-Google-Smtp-Source: ABdhPJztA7MLr2E6odObLfxQK6j2NDLvXaQUVbwCfwZV8inZmomln2BM1g3CwJ4xazgwkg1+6VwdeQ==
+X-Received: by 2002:a05:6a00:1792:b0:4ba:c60b:a63a with SMTP id s18-20020a056a00179200b004bac60ba63amr1422411pfg.0.1640060774320;
+        Mon, 20 Dec 2021 20:26:14 -0800 (PST)
+Received: from localhost ([106.201.42.111])
+        by smtp.gmail.com with ESMTPSA id ls6sm986959pjb.33.2021.12.20.20.26.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Dec 2021 20:26:13 -0800 (PST)
+Date:   Tue, 21 Dec 2021 09:56:09 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Vincent Whitchurch <vincent.whitchurch@axis.com>
+Cc:     "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, kernel@axis.com,
+        mst@redhat.com, Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpio: virtio: remove timeout
+Message-ID: <20211221042609.zeo6ci45sxzjxgrt@vireshk-i7>
+References: <20211220130656.16900-1-vincent.whitchurch@axis.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211220130656.16900-1-vincent.whitchurch@axis.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 20 Dec 2021 20:18:21 +0800, Tinghan Shen wrote:
-> This series adds basic SoC support for Mediatek's SoC MT8195.
+On 20-12-21, 14:06, Vincent Whitchurch wrote:
+> The driver imposes an arbitrary one second timeout on virtio requests,
+> but the specification doesn't prevent the virtio device from taking
+> longer to process requests, so remove this timeout to support all
+> systems and device implementations.
 > 
+> Fixes: 3a29355a22c0275fe86 ("gpio: Add virtio-gpio driver")
+> Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+> ---
+>  drivers/gpio/gpio-virtio.c | 6 +-----
+>  1 file changed, 1 insertion(+), 5 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-virtio.c b/drivers/gpio/gpio-virtio.c
+> index 84f96b78f32a..9f4941bc5760 100644
+> --- a/drivers/gpio/gpio-virtio.c
+> +++ b/drivers/gpio/gpio-virtio.c
+> @@ -100,11 +100,7 @@ static int _virtio_gpio_req(struct virtio_gpio *vgpio, u16 type, u16 gpio,
+>  	virtqueue_kick(vgpio->request_vq);
+>  	mutex_unlock(&vgpio->lock);
+>  
+> -	if (!wait_for_completion_timeout(&line->completion, HZ)) {
+> -		dev_err(dev, "GPIO operation timed out\n");
+> -		ret = -ETIMEDOUT;
+> -		goto out;
+> -	}
+> +	wait_for_completion(&line->completion);
+>  
+>  	if (unlikely(res->status != VIRTIO_GPIO_STATUS_OK)) {
+>  		dev_err(dev, "GPIO request failed: %d\n", gpio);
 
-Applied to
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
-
-Thanks!
-
-[2/4] dt-bindings: spi: spi-mtk-nor: add new clock name 'axi' for spi nor
-      commit: 6008cb4c98d935a844edf2f3c13639104f533e30
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+-- 
+viresh
