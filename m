@@ -2,153 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 48BDD47BDAD
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Dec 2021 10:50:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7338947BEF7
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Dec 2021 12:32:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236845AbhLUJtP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Dec 2021 04:49:15 -0500
-Received: from relmlor1.renesas.com ([210.160.252.171]:6254 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S236910AbhLUJs5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 21 Dec 2021 04:48:57 -0500
-X-IronPort-AV: E=Sophos;i="5.88,223,1635174000"; 
-   d="scan'208";a="104225128"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 21 Dec 2021 18:48:53 +0900
-Received: from localhost.localdomain (unknown [10.226.36.204])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 5CB394006199;
-        Tue, 21 Dec 2021 18:48:49 +0900 (JST)
-From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        Sergey Shtylyov <s.shtylyov@omp.ru>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        dmaengine@vger.kernel.org, netdev@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Subject: [PATCH 16/16] arm64: dts: renesas: Add initial device tree for RZ/V2L SMARC EVK
-Date:   Tue, 21 Dec 2021 09:47:17 +0000
-Message-Id: <20211221094717.16187-17-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20211221094717.16187-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20211221094717.16187-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        id S229735AbhLULcZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Dec 2021 06:32:25 -0500
+Received: from szxga02-in.huawei.com ([45.249.212.188]:29277 "EHLO
+        szxga02-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233186AbhLULcZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Dec 2021 06:32:25 -0500
+Received: from dggpeml500020.china.huawei.com (unknown [172.30.72.55])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4JJDnY0ChPzbjVd;
+        Tue, 21 Dec 2021 19:32:01 +0800 (CST)
+Received: from dggpeml500017.china.huawei.com (7.185.36.243) by
+ dggpeml500020.china.huawei.com (7.185.36.88) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Tue, 21 Dec 2021 19:32:23 +0800
+Received: from huawei.com (10.175.103.91) by dggpeml500017.china.huawei.com
+ (7.185.36.243) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Tue, 21 Dec
+ 2021 19:32:23 +0800
+From:   Yang Yingliang <yangyingliang@huawei.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
+CC:     <brgl@bgdev.pl>, <linus.walleij@linaro.org>
+Subject: [PATCH -next] gpio: sim: add missing fwnode_handle_put() in gpio_sim_probe()
+Date:   Tue, 21 Dec 2021 19:38:25 +0800
+Message-ID: <20211221113825.334782-1-yangyingliang@huawei.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.103.91]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpeml500017.china.huawei.com (7.185.36.243)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Biju Das <biju.das.jz@bp.renesas.com>
+Calling fwnode_handle_put() when break out of device_for_each_child_node(),
+or the device node reference will be leakd.
 
-Add basic support for RZ/V2L SMARC EVK (based on R9A07G054L2):
-- memory
-- External input clock
-- CPG
-- Pin controller
-- SCIF
-- GbEthernet
-- Audio Clock
-
-It shares the same carrier board with RZ/G2L with the same pin mapping.
-Delete the gpio-hog nodes from pinctrl as this will be added later when
-the functionality has been tested.
-
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Fixes: 83960fcf4818 ("gpio: sim: new testing module")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
 ---
- arch/arm64/boot/dts/renesas/Makefile          |  1 +
- .../boot/dts/renesas/r9a07g054l2-smarc.dts    | 25 +++++++++++++++++++
- .../dts/renesas/rzg2l-smarc-pinfunction.dtsi  |  2 +-
- .../boot/dts/renesas/rzg2l-smarc-som.dtsi     |  2 +-
- arch/arm64/boot/dts/renesas/rzg2l-smarc.dtsi  |  2 +-
- 5 files changed, 29 insertions(+), 3 deletions(-)
- create mode 100644 arch/arm64/boot/dts/renesas/r9a07g054l2-smarc.dts
+ drivers/gpio/gpio-sim.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
-index 8e696a38c560..2daba38d1161 100644
---- a/arch/arm64/boot/dts/renesas/Makefile
-+++ b/arch/arm64/boot/dts/renesas/Makefile
-@@ -77,3 +77,4 @@ dtb-$(CONFIG_ARCH_R8A77965) += r8a779m5-salvator-xs.dtb
+diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
+index ef6145f51c8a..520ee923b516 100644
+--- a/drivers/gpio/gpio-sim.c
++++ b/drivers/gpio/gpio-sim.c
+@@ -444,8 +444,10 @@ static int gpio_sim_probe(struct platform_device *pdev)
  
- dtb-$(CONFIG_ARCH_R9A07G044) += r9a07g044l2-smarc.dtb
- dtb-$(CONFIG_ARCH_R9A07G044) += r9a07g044c2-smarc.dtb
-+dtb-$(CONFIG_ARCH_R9A07G054) += r9a07g054l2-smarc.dtb
-diff --git a/arch/arm64/boot/dts/renesas/r9a07g054l2-smarc.dts b/arch/arm64/boot/dts/renesas/r9a07g054l2-smarc.dts
-new file mode 100644
-index 000000000000..39ef55bfe0c3
---- /dev/null
-+++ b/arch/arm64/boot/dts/renesas/r9a07g054l2-smarc.dts
-@@ -0,0 +1,25 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+/*
-+ * Device Tree Source for the RZ/G2L SMARC EVK board
-+ *
-+ * Copyright (C) 2021 Renesas Electronics Corp.
-+ */
-+
-+/dts-v1/;
-+#include "r9a07g054l2.dtsi"
-+#include "rzg2l-smarc-som.dtsi"
-+#include "rzg2l-smarc-pinfunction.dtsi"
-+#include "rzg2l-smarc.dtsi"
-+
-+/ {
-+	model = "Renesas SMARC EVK based on r9a07g054l2";
-+	compatible = "renesas,smarc-evk", "renesas,r9a07g054l2", "renesas,r9a07g054";
-+};
-+
-+&pinctrl {
-+	/delete-node/ can0-stb;
-+	/delete-node/ can1-stb;
-+	/delete-node/ gpio-sd0-pwr-en-hog;
-+	/delete-node/ sd0-dev-sel-hog;
-+	/delete-node/ sd1-pwr-en-hog;
-+};
-diff --git a/arch/arm64/boot/dts/renesas/rzg2l-smarc-pinfunction.dtsi b/arch/arm64/boot/dts/renesas/rzg2l-smarc-pinfunction.dtsi
-index 71d83e447670..2ef217445f72 100644
---- a/arch/arm64/boot/dts/renesas/rzg2l-smarc-pinfunction.dtsi
-+++ b/arch/arm64/boot/dts/renesas/rzg2l-smarc-pinfunction.dtsi
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
- /*
-- * Device Tree Source for the RZ/G2L SMARC pincontrol parts
-+ * Device Tree Source for the RZ/{G2L,V2L} SMARC pincontrol parts
-  *
-  * Copyright (C) 2021 Renesas Electronics Corp.
-  */
-diff --git a/arch/arm64/boot/dts/renesas/rzg2l-smarc-som.dtsi b/arch/arm64/boot/dts/renesas/rzg2l-smarc-som.dtsi
-index 41fdae7ba66b..879375c0395e 100644
---- a/arch/arm64/boot/dts/renesas/rzg2l-smarc-som.dtsi
-+++ b/arch/arm64/boot/dts/renesas/rzg2l-smarc-som.dtsi
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
- /*
-- * Device Tree Source for the RZ/G2L SMARC SOM common parts
-+ * Device Tree Source for the RZ/{G2L,V2L} SMARC SOM common parts
-  *
-  * Copyright (C) 2021 Renesas Electronics Corp.
-  */
-diff --git a/arch/arm64/boot/dts/renesas/rzg2l-smarc.dtsi b/arch/arm64/boot/dts/renesas/rzg2l-smarc.dtsi
-index 46abb29718cc..78034f36156d 100644
---- a/arch/arm64/boot/dts/renesas/rzg2l-smarc.dtsi
-+++ b/arch/arm64/boot/dts/renesas/rzg2l-smarc.dtsi
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
- /*
-- * Device Tree Source for the RZ/G2L SMARC EVK common parts
-+ * Device Tree Source for the RZ/{G2L,V2L} SMARC EVK common parts
-  *
-  * Copyright (C) 2021 Renesas Electronics Corp.
-  */
+ 	device_for_each_child_node(dev, swnode) {
+ 		ret = gpio_sim_add_bank(swnode, dev);
+-		if (ret)
++		if (ret) {
++			fwnode_handle_put(swnode);
+ 			return ret;
++		}
+ 	}
+ 
+ 	return 0;
 -- 
-2.17.1
+2.25.1
 
