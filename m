@@ -2,86 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 92F4747C5F7
-	for <lists+linux-gpio@lfdr.de>; Tue, 21 Dec 2021 19:10:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1686F47C58F
+	for <lists+linux-gpio@lfdr.de>; Tue, 21 Dec 2021 18:55:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230391AbhLUSKi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Dec 2021 13:10:38 -0500
-Received: from mga02.intel.com ([134.134.136.20]:29388 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236910AbhLUSKh (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 21 Dec 2021 13:10:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1640110237; x=1671646237;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=5rAkGo7m3btbz/rVfCE7AaZjZ9uyiTmkMcIFoB+AHtw=;
-  b=HRz7We4tjYDxmxn/m/qNkL4MlSekvmCG4y6J/KRUXUdDx2OIiiWzn4/V
-   vmevis2iRe/7aflkySb4nnZhbN5NpVAjrVBX3qvjJfO+SuISoner5ZND/
-   nZGOa4iLBm6MjyUCH8lfw4xxtQY7O1NiaX2zU3TVTRbRMI2TiJE7VfBlg
-   YGXeBRa+OaNZcJz6wTMtJmZKqF7++RJoDDyip82ibe9S0PH8guNUCfKZT
-   /BhBZtRQtpP3lKKb4xtDRyPnoriFLtpiOoMKTWTXLSlBFbXl70J+ibcYq
-   l2EoZ2ZplJhgyEFfz26DEz1rzSymoJRURG03KGIoJUZrKJOlYcAEMixaC
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10205"; a="227753031"
-X-IronPort-AV: E=Sophos;i="5.88,224,1635231600"; 
-   d="scan'208";a="227753031"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2021 09:50:36 -0800
-X-IronPort-AV: E=Sophos;i="5.88,224,1635231600"; 
-   d="scan'208";a="586768160"
-Received: from smile.fi.intel.com ([10.237.72.61])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2021 09:50:32 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1mzjG5-000WYP-OM;
-        Tue, 21 Dec 2021 19:49:05 +0200
-Date:   Tue, 21 Dec 2021 19:49:05 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Tan Jui Nee <jui.nee.tan@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Kate Hsuan <hpa@redhat.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
+        id S240763AbhLURzk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Dec 2021 12:55:40 -0500
+Received: from mail-qk1-f171.google.com ([209.85.222.171]:34778 "EHLO
+        mail-qk1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240752AbhLURzj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Dec 2021 12:55:39 -0500
+Received: by mail-qk1-f171.google.com with SMTP id t6so13346038qkg.1;
+        Tue, 21 Dec 2021 09:55:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4GSGA/qwtNXG0IPZ01RqeQiJyKL3VoAZk2c0sbKkobg=;
+        b=hlfjFvMtD79EiL/LGYq82Z1elOoAOubXKDaCJkEHPoftWwakQIsYns8HVhu/mnQPum
+         2k1ZiIHWFYJYRo1XuE7Ni9+1ToDmJbOMqtJ7gWazRPyS0o0OsE8mFT5ZBwB6WnAryTYt
+         0Aogzc2pbINGNJQavvaoc4eE1/WzLf4de6pG6YL8vIavMjiDgeRedqTlGlAu6zqlGrq0
+         SShn+4CUa0bAvoN/dCtNBwnxUdYSIqdBc1uEFiEuZISrUs/Py5e7HjRIDexdJxhEjwsm
+         cCDzeljhIj/Q8KnwpHOYIQeEhB1wFJx873LVBp1XCjR+mfph2ZMhX45IpiA4k23p3+Or
+         Q/Xg==
+X-Gm-Message-State: AOAM531pTbm2BROPCb0zP4FG6ljA96TPzvJtT390rerLdu1ti+w1gYAk
+        0xHaYFz1lF6FU/pEHWvjWQ==
+X-Google-Smtp-Source: ABdhPJz5vgBn1TjeZtoc2YYKvQ+HmcEPZTFsNL3qHHc8SbteC0W1UmfcNlqbGX3NnNYb5boB3sk4Pg==
+X-Received: by 2002:a05:620a:258e:: with SMTP id x14mr2824830qko.578.1640109338673;
+        Tue, 21 Dec 2021 09:55:38 -0800 (PST)
+Received: from robh.at.kernel.org ([24.55.105.145])
+        by smtp.gmail.com with ESMTPSA id bm35sm14659623qkb.86.2021.12.21.09.55.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Dec 2021 09:55:38 -0800 (PST)
+Received: (nullmailer pid 1495705 invoked by uid 1000);
+        Tue, 21 Dec 2021 17:55:33 -0000
+Date:   Tue, 21 Dec 2021 13:55:33 -0400
+From:   Rob Herring <robh@kernel.org>
+To:     conor.dooley@microchip.com
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        jassisinghbrar@gmail.com, paul.walmsley@sifive.com,
+        palmer@dabbelt.com, aou@eecs.berkeley.edu, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, broonie@kernel.org,
+        gregkh@linuxfoundation.org, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Cc:     Jean Delvare <jdelvare@suse.com>, Peter Tyser <ptyser@xes-inc.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Gross <markgross@kernel.org>
-Subject: Re: [PATCH v2 1/8] PCI: Introduce pci_bus_*() printing macros when
- device is not available
-Message-ID: <YcITkYx6dnjRjdCd@smile.fi.intel.com>
-References: <20211221173945.53674-1-andriy.shevchenko@linux.intel.com>
+        linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-crypto@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
+        krzysztof.kozlowski@canonical.com, geert@linux-m68k.org,
+        bin.meng@windriver.com, heiko@sntech.de, lewis.hanly@microchip.com,
+        daire.mcnamara@microchip.com, ivan.griffin@microchip.com,
+        atish.patra@wdc.com
+Subject: Re: [PATCH v2 03/17] dt-bindings: soc/microchip: make
+ systemcontroller a mfd
+Message-ID: <YcIVFZSqt/JSuk3J@robh.at.kernel.org>
+References: <20211217093325.30612-1-conor.dooley@microchip.com>
+ <20211217093325.30612-4-conor.dooley@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211221173945.53674-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20211217093325.30612-4-conor.dooley@microchip.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Dec 21, 2021 at 07:39:38PM +0200, Andy Shevchenko wrote:
-> In some cases PCI device structure is not available and we want to print
-> information based on the bus and devfn parameters. For this cases introduce
-> pci_bus_*() printing macros and replace in existing users.
+On Fri, Dec 17, 2021 at 09:33:11AM +0000, conor.dooley@microchip.com wrote:
+> From: Conor Dooley <conor.dooley@microchip.com>
+> 
+> Make the system controller on the Polarfire SoC
+> a "simple,mfd" so that the services can be child
+> nodes of the system controller node.
+> 
+> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
+>  .../microchip,mpfs-sys-controller.yaml        | 33 +++++++++++++++++--
+>  1 file changed, 30 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-sys-controller.yaml b/Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-sys-controller.yaml
+> index f699772fedf3..014cb44b8f31 100644
+> --- a/Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-sys-controller.yaml
+> +++ b/Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-sys-controller.yaml
+> @@ -13,13 +13,34 @@ description: |
+>    The PolarFire SoC system controller is communicated with via a mailbox.
+>    This document describes the bindings for the client portion of that mailbox.
+>  
+> -
+>  properties:
+>    mboxes:
+>      maxItems: 1
+>  
+>    compatible:
+> -    const: microchip,mpfs-sys-controller
+> +    items:
+> +      - const: microchip,mpfs-sys-controller
+> +      - const: simple-mfd
 
-Please, ignore this version (the code will be kept the same in v3, but what
-is missed is cover letter and changelog).
+'simple-mfd' means there is zero dependency on the parent for the child 
+nodes. Isn't 'mboxes' a dependency?
 
-I will send it as soon as I prepare the cover letter.
+> +
+> +  hwrandom:
+> +    type: object
+> +
+> +    properties:
+> +      compatible:
+> +        const: microchip,mpfs-rng
+> +
+> +    required:
+> +      - compatible
+> +
+> +  sysserv:
+> +    type: object
+> +
+> +    properties:
+> +      compatible:
+> +        const: microchip,mpfs-generic-service
+> +
+> +    required:
+> +      - compatible
 
-It also missed Henning in the Cc list.
+There's not really any need to have child nodes which have no resources. 
+The driver for microchip,mpfs-sys-controller can create child devices.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Rob
