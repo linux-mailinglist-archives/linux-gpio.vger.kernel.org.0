@@ -2,77 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B95BB47D605
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Dec 2021 18:50:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6719347D66D
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Dec 2021 19:20:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344410AbhLVRuT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Dec 2021 12:50:19 -0500
-Received: from mail-qk1-f173.google.com ([209.85.222.173]:36841 "EHLO
-        mail-qk1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234375AbhLVRuS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Dec 2021 12:50:18 -0500
-Received: by mail-qk1-f173.google.com with SMTP id i130so2055397qke.3;
-        Wed, 22 Dec 2021 09:50:18 -0800 (PST)
+        id S1344575AbhLVSUy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Dec 2021 13:20:54 -0500
+Received: from mail-qt1-f174.google.com ([209.85.160.174]:42948 "EHLO
+        mail-qt1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233546AbhLVSUy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Dec 2021 13:20:54 -0500
+Received: by mail-qt1-f174.google.com with SMTP id z9so2698045qtj.9;
+        Wed, 22 Dec 2021 10:20:53 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=G0Bo2xi487zsjbvsxUHGM60Jt3WTXGtaD5AP/5FQrYU=;
-        b=U1DRQ1kyz3tC1gqyuCFbkXgWUH0kb8lnL9SZw0Aon7ymbzCDayP+dytcedCCW5enb1
-         93g2QNKvKmuNw7KKDqCaINW9/JRBwQma/W+r4i1q36TKmVMO51JpUGiaDLMs9hQdPv61
-         P2o1pTTCKEfkixWwQPh1hmxgxZ4MxhG1oiYxSNFXZnrF8gKaOypgLj5v7ZdvVLHpW7Xq
-         7us32IGd9iI5c0szbp5+welX1sWvshnRE/bS+XWyC3J9ScUIIY0WWekjB6QOr/QckjtY
-         5JJtrgHqO7kyUd81kGmp85Lju8P6tFE6zP1QuVIwCDdGFCKPGtzWj68+vvmhMIbKceIo
-         qWQg==
-X-Gm-Message-State: AOAM530s36eZFWgKXPkaszVP98soKAQQRrz6EqeN53Z2kReLSyy0ZKo8
-        xdfoaGa1JLXq260QgyIg9A==
-X-Google-Smtp-Source: ABdhPJyvAAEpmHO21h+BgfeOi40PfsFEpHcNduiO7Js5mzx8z/J1daeSExKuDA/ssJQ+ZFmLU9Ujqg==
-X-Received: by 2002:a05:620a:15cb:: with SMTP id o11mr2820061qkm.371.1640195417674;
-        Wed, 22 Dec 2021 09:50:17 -0800 (PST)
+        bh=XRcKcj+cA5XUzfaaLDrt+fgsCeFBFXEbRB10f73PiyY=;
+        b=HpQkxD8PFEW1pXKzrcbAq4JNa/CYjCzCyVbK/FeoAPuu+lI2G4CORO39HWa77WlXJ5
+         KuQV0zWDfTz55rXrNGljIuVnqgH8ppTXTxjNqIjTr5am9uOTaQJjGXen45Eq4nLvixUV
+         JCpEBsaNaDyWif/zPbdJN8GQVYzahE9kSDGThS9e0PtPTmMTtHcUEp8mHUkJw4yn9NQg
+         76+RHoo/j0DcPhnVkLToNa542R5AapmPdzs7JsBtDajybkjRXeFEXEjCNSYkSoMQvgU8
+         Q+kQEkAWsq/EKUzVcgMEMi7ZRWITpz0/1ZF38hFNRREoBfKEjU/g8866AWZAeLx8YnET
+         e/mQ==
+X-Gm-Message-State: AOAM530+CgEbBBEvJ2AO2riZMibE5SLLHYm+A/i/T0MFsU8//gjvSZ/R
+        tmeZkF+BvX1CI73hnXYnTg==
+X-Google-Smtp-Source: ABdhPJzBkXsa+9kAJPWbu/0STBGBkUvlqE6y6OnQfmhaZwkNESHTX36Exuu8bQZ3A42RH4J1RtvjSA==
+X-Received: by 2002:a05:622a:43:: with SMTP id y3mr3143240qtw.575.1640197252979;
+        Wed, 22 Dec 2021 10:20:52 -0800 (PST)
 Received: from robh.at.kernel.org ([24.55.105.145])
-        by smtp.gmail.com with ESMTPSA id f18sm2518981qko.34.2021.12.22.09.50.15
+        by smtp.gmail.com with ESMTPSA id t3sm2256640qtc.7.2021.12.22.10.20.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Dec 2021 09:50:16 -0800 (PST)
-Received: (nullmailer pid 2400088 invoked by uid 1000);
-        Wed, 22 Dec 2021 17:50:15 -0000
-Date:   Wed, 22 Dec 2021 13:50:15 -0400
+        Wed, 22 Dec 2021 10:20:52 -0800 (PST)
+Received: (nullmailer pid 2451021 invoked by uid 1000);
+        Wed, 22 Dec 2021 18:20:50 -0000
+Date:   Wed, 22 Dec 2021 14:20:50 -0400
 From:   Rob Herring <robh@kernel.org>
-To:     Tinghan Shen <tinghan.shen@mediatek.com>
-Cc:     broonie@kernel.org, sean.wang@mediatek.com,
-        linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org,
-        matthias.bgg@gmail.com, devicetree@vger.kernel.org,
-        bgolaszewski@baylibre.com, linux-mediatek@lists.infradead.org,
-        bayi.cheng@mediatek.com, linux-arm-kernel@lists.infradead.org,
-        linus.walleij@linaro.org, gch981213@gmail.com,
-        Project_Global_Chrome_Upstream_Group@mediatek.com,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 3/4] dt-bindings: pinctrl: mt8195: add wrapping node
- of pin configurations
-Message-ID: <YcNlVzSZAWCM9eKO@robh.at.kernel.org>
-References: <20211220121825.6446-1-tinghan.shen@mediatek.com>
- <20211220121825.6446-4-tinghan.shen@mediatek.com>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     linux-clk@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-serial@vger.kernel.org, netdev@vger.kernel.org,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Magnus Damm <magnus.damm@gmail.com>, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+        Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH 01/16] dt-bindings: arm: renesas: Document Renesas RZ/V2L
+ SoC
+Message-ID: <YcNsggkexM75uxni@robh.at.kernel.org>
+References: <20211221094717.16187-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20211221094717.16187-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211220121825.6446-4-tinghan.shen@mediatek.com>
+In-Reply-To: <20211221094717.16187-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 20 Dec 2021 20:18:24 +0800, Tinghan Shen wrote:
-> On mt8195, the pinctrl node has pinctrl groups to group pin
-> configurations by users' need. In each pinctrl group, it has
-> subnode(s) to list pins needed and pin configurations. By supporting
-> multiple subnodes, we can configure different pin characteristics
-> (driving/pull-up/pull-down/etc.) in a pinctrl group.
+On Tue, 21 Dec 2021 09:47:02 +0000, Lad Prabhakar wrote:
+> From: Biju Das <biju.das.jz@bp.renesas.com>
 > 
-> Update pinctrl-mt8195.yaml to add subnode in pinctrl groups and an
-> example to illustrate the usage.
+> Document Renesas RZ/V2L SoC.
 > 
-> Signed-off-by: Tinghan Shen <tinghan.shen@mediatek.com>
+> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > ---
->  .../bindings/pinctrl/pinctrl-mt8195.yaml      | 338 ++++++++++--------
->  1 file changed, 188 insertions(+), 150 deletions(-)
+>  Documentation/devicetree/bindings/arm/renesas.yaml | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
