@@ -2,92 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 08D7247CB2B
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Dec 2021 02:58:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7608A47CB35
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Dec 2021 03:02:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234937AbhLVB6O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Dec 2021 20:58:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34352 "EHLO
+        id S231563AbhLVCCf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Dec 2021 21:02:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231315AbhLVB6O (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Dec 2021 20:58:14 -0500
-Received: from mail-ot1-x32b.google.com (mail-ot1-x32b.google.com [IPv6:2607:f8b0:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C8F6C061574
-        for <linux-gpio@vger.kernel.org>; Tue, 21 Dec 2021 17:58:14 -0800 (PST)
-Received: by mail-ot1-x32b.google.com with SMTP id 45-20020a9d0a30000000b0058f1a6df088so863489otg.4
-        for <linux-gpio@vger.kernel.org>; Tue, 21 Dec 2021 17:58:14 -0800 (PST)
+        with ESMTP id S230185AbhLVCCe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Dec 2021 21:02:34 -0500
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20635C061574;
+        Tue, 21 Dec 2021 18:02:34 -0800 (PST)
+Received: by mail-ed1-x535.google.com with SMTP id b13so2329306edd.8;
+        Tue, 21 Dec 2021 18:02:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=09/XagtxaFMH2QnJ4URCSc7DC4A5u+QKkKmeEcy5fEc=;
-        b=KBQJqQ3IrW024qvO3DLIxd50vlmofL6QQiA/6g4cC0hTPvHP4DJWSZCb99Hg/OcGO9
-         MclocX85aybCK+xolmb/JPjoQmKndc2rtX1oQzl3U+U4jQV5NaeDjB7xBGrSOKat8eEs
-         90EIvldRoNpIAJHaiU+4O/JnLRgMNBHkjIptJhjIY4qNSLjwGzjmLj/dVfA9w8gTg0vN
-         QPYwaMsAw/0/VVt7dnGUvPZ44I/6yt8P8q+MbdLdTrtoumbS5DZPA/OQ6PbibZUo8dfA
-         2F+BF5ew85EA+NiNvwhJC4mask+qFpMSIuXAlqU3exkcATRq+2iUPWojcdt7i/12paJq
-         +RKg==
+         :cc;
+        bh=0pvJ0VJBvj9qiKz1E6D8UeM5hFtVE1+1j1opSDSflxo=;
+        b=hso3Yd7IWueqzl2mIgrOpP66XETFw/Qq6TD71x/nVKTezClSMd/aVDBCarWi1F3D3i
+         nEwOP1sxgBDEslD6aKDTAFIN/JhQpIdVH2xWXv8G0WxGtpGnQGIGwrEhQDUExRVE6pOm
+         7vQPP7Mry2+W5V2toB26R8UJyxWHJS5EKR/F8jiNQv3D0VzsjLQ/DYikkdfEwhC8oeiV
+         hBHZdkKcZJXCo7o4bQZ/5I3rhrbCZ/J/hDqbFn0jiD/ukhw9tTS8VrVtRqwqH0NixuYr
+         NZbvBwT3kPOxYXnF6YYJlfe7shMMAhQI87TWQC41zrPRxXMyCblQgvhC2Cz5yuUH3MDO
+         uBsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=09/XagtxaFMH2QnJ4URCSc7DC4A5u+QKkKmeEcy5fEc=;
-        b=c/aKdHqznl41Ex3jyb1800wLo5XXgkfnT7Cm92NOH057zrAQySJJWaMnofMUf9vUDw
-         6F13kXMUOOCtcPjicWF8jxKZzdskGGhgn7M89zR38vqHpB2Pf/gi5Wus+3IP5+eGpPvg
-         fSnoFMJ0RJS+SYD/p8rGQXF2+zkxRmSQONhqQfquQgHvClvoYUoKo9Zux+yq0vPOE0o4
-         upD+j8cFnQJMiq73HHQPFJzEzFLiSRpKbKy3RavdhHEUHSHAC4zaQOA4H/AWv61+MFFb
-         CfRTmCfJ+0JrU+iyEJTqFNHDYTjlOM9jFQX24nO/NM6zphUMPC6LcI82oo+2EptanoBY
-         xMHw==
-X-Gm-Message-State: AOAM532Ea9tTbWtIcZIlaWmCZtv0S0J8g+Hunhh2IZ6ayQwQcj1i1cbq
-        +RdHzkSjrxcK+pehYw1UR5FQ/IvBt8MB9zf51HzKcA==
-X-Google-Smtp-Source: ABdhPJwUBYU2kXW+VkI99dpmJ1UOrvwMqrY+7GzDoydvX5I1wbbSfZPSH0ZFdfb2VW2EEJi8/4MHSkxcAQRRc1RmUuI=
-X-Received: by 2002:a9d:ed6:: with SMTP id 80mr724527otj.35.1640138293491;
- Tue, 21 Dec 2021 17:58:13 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=0pvJ0VJBvj9qiKz1E6D8UeM5hFtVE1+1j1opSDSflxo=;
+        b=Xsxr4pEDLSK6M2+s97MGNGNkOip6fn3t81VuM7+aJWdS9UWdnuOkHvL1jLTpeg29xm
+         4VkCf7zMyAHfmUiXwL/i3kuGZiXmC/VSMqsA0v5l6I9EB2fhkTAgl//hbWOkoV60WXJK
+         OrEY0IXC1ISC6yc2CTlqjSxM3ZlCT3INBd1l4MaO512pv+QcDUqpAKXM6wKp1T+7OmtK
+         iCi/vc49hEUXAFTgYC2bPbHnOztoErxa5lQVpBBn+lUdwKTWoWWiUP1GldUU2Ru/B6DL
+         22H5ID/QnBQwvOXzeS9ZPqGfNLAUfrzTuqovbUbiiEb2Tfk0GfWGN1KmTtQFxbErO6Ls
+         FqBQ==
+X-Gm-Message-State: AOAM530D/RSBfOv4NU7yOv7/Kbzk5FE8DNmf4rqPLQl6+j0AbI1A/pPz
+        UTFW2rbXR54IhqV3wmQPpHGwfeYRDKkoEgmIBV4=
+X-Google-Smtp-Source: ABdhPJzLpnG/UsK725GwrFFKPbmxb8uA6enGbrXJVIDRT1VOpS7WXzeYwddNf5loslL9Xzc0bUG2deH5QOcNKv1rmo8=
+X-Received: by 2002:a17:907:7205:: with SMTP id dr5mr791523ejc.696.1640138552651;
+ Tue, 21 Dec 2021 18:02:32 -0800 (PST)
 MIME-Version: 1.0
-References: <20211216162206.8027-1-zajec5@gmail.com>
-In-Reply-To: <20211216162206.8027-1-zajec5@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 22 Dec 2021 02:58:02 +0100
-Message-ID: <CACRpkdbw6B0nzLHfxY4SK+zay=iLXtEJdfirbw=0+6309zLuJA@mail.gmail.com>
-Subject: Re: [PATCH V2 1/4] pinctrl: imx: prepare for making "group_names" in
- "function_desc" const
-To:     =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
+References: <20211222015244.2464671-1-Mr.Bossman075@gmail.com> <20211222015244.2464671-6-Mr.Bossman075@gmail.com>
+In-Reply-To: <20211222015244.2464671-6-Mr.Bossman075@gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Tue, 21 Dec 2021 23:02:21 -0300
+Message-ID: <CAOMZO5DV7WKU_dO3KRERpcoManFZs1MbdL54BtSmtMnVY5ujrg@mail.gmail.com>
+Subject: Re: [PATCH v6 5/7] clk: imx: Add initial support for i.MXRT1050 clock driver
+To:     Jesse Taube <mr.bossman075@gmail.com>
+Cc:     NXP Linux Team <linux-imx@nxp.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Shawn Guo <shawnguo@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
         Sascha Hauer <s.hauer@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+        Sascha Hauer <kernel@pengutronix.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        soc@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Giulio Benetti <giulio.benetti@benettiengineering.com>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-serial@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Dec 16, 2021 at 5:22 PM Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com> =
-wrote:
+On Tue, Dec 21, 2021 at 10:52 PM Jesse Taube <mr.bossman075@gmail.com> wrote:
 
-> From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
->
-> The plan for "struct function_desc" is to make its "group_names"
-> /double/ const. That will allow drivers to use it with static const
-> data.
->
-> This imx change is required to avoid:
-> drivers/pinctrl/freescale/pinctrl-imx.c: In function 'imx_pinctrl_parse_f=
-unctions':
-> drivers/pinctrl/freescale/pinctrl-imx.c:672:24: error: assignment of read=
--only location '*(func->group_names + (sizetype)(i * 4))'
->   672 |   func->group_names[i] =3D child->name;
->       |                        ^
->
-> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
 
-Patches applied, let's see what happens!
+> +static struct platform_driver imxrt1050_clk_driver = {
+> +       .probe = imxrt1050_clocks_probe,
+> +       .driver = {
+> +               .name = "imxrt1050-ccm",
+> +               .of_match_table = of_match_ptr(imxrt1050_clk_of_match),
 
-Yours,
-Linus Walleij
+No need for of_match_ptr() here.
