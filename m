@@ -2,78 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D340247CDBD
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Dec 2021 08:57:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 60CF347CED1
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Dec 2021 10:07:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243125AbhLVH5H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 22 Dec 2021 02:57:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57108 "EHLO
+        id S236562AbhLVJHG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 22 Dec 2021 04:07:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243129AbhLVH5A (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Dec 2021 02:57:00 -0500
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41FBFC06173F
-        for <linux-gpio@vger.kernel.org>; Tue, 21 Dec 2021 23:57:00 -0800 (PST)
-Received: by mail-ed1-x52b.google.com with SMTP id f5so5267394edq.6
-        for <linux-gpio@vger.kernel.org>; Tue, 21 Dec 2021 23:57:00 -0800 (PST)
+        with ESMTP id S231476AbhLVJHG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 22 Dec 2021 04:07:06 -0500
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0782DC061574
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Dec 2021 01:07:06 -0800 (PST)
+Received: by mail-ed1-x535.google.com with SMTP id o20so5861518eds.10
+        for <linux-gpio@vger.kernel.org>; Wed, 22 Dec 2021 01:07:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=57jHD0OdL14EUGEqDYzo37RswgmLRuGmUw9QgPTmuNw=;
-        b=27qP1JXtVXnAlzwzbjbRsxMVkmSvYyXXHRcqYsMjbWh/sI12vHax+mWHUKZE1XJ2Dl
-         BRrBvYIqfvyQqwwmQTCukFIOlUurykqOOsQY38RP6Jhz6q+AL13EP5fCQWPWIShQrUOq
-         0rkWPxcRgBbXZ9HctmJki0xsmIZHewP8RSU0PQ2k9Ctk+uCClrTEfTeTLQJjGZOVXj0R
-         vuw8/5gr9N2e6YB8xI7QO3Ga1VAbBgkhIb4DG2+T2H+di4gdUcfqsFmwbUpjvjTUhHUF
-         zZyiqOaG3qJiyn8cJVbP1KxtQnaEHbuLmX+M2aTjkkUGn6RKOfSqEHqQYDXQJch4v2JF
-         bXVg==
+        bh=OH9lUZGvbIYsFS6r93OdVkoyWwer11g866A2zNPeehk=;
+        b=r3WN6KoV0SzdgtxvaGk6qQynqc2rvj3SjmK9MBxRug7Pb+EVJpUK3t+F+yktx2DuJc
+         OBYJ2S/tGlHwp1SwDX3Tk8FzNeauleOXb8tli4nGClkgMNhBrB5Ix0fTy1fZ49TXXAdD
+         2zmt7dP0B7bijNj6jcyR5tlg2IMGqdpZNx90la65lXq+rIS/tpWu1Xm0N3FCPJn1YdV3
+         sVjtI99DrXEc8h+K9oqIjtQ/ZRjSkQmJ/zpQHi4QlRjTedfonW7XGiqlDGfZBk2S4CWi
+         A5DG5wlrtcO62lxYpYfdJNGpLp/TihBJ092A4EYWpnn0zu66tWHrhZlqA6gWE9bQckw8
+         h80A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=57jHD0OdL14EUGEqDYzo37RswgmLRuGmUw9QgPTmuNw=;
-        b=jMp79IctJmEykeg8Q/4cyjmqCI1TrGW3zeVKkNzMTcg1zGI32t6eNfqZRDQBqW0YZ+
-         oi/M5jODEJT3N8iNqbnFGqTzlwc56NGrcoORoPEhORd4EJHpTSEe+wHL/N3KhRzb1+J0
-         aeMNZJe3iiANFfZrEPer1Yvq0+9z+LGMhiOcxmVUQBh7aG2NUY7Da5Rng9kwnrcqPZis
-         pqFR/hfG0j5ONLwEBd/N3dAPlUNXgoMqay765RMSnZKXSbQwjWb6Dqo9xze04PGe3Wh6
-         +XODCTgfI2eWMUDXhkzIOcSbw2AWrGsrJKw69hFydF8gcDX8SvcvdpLS+pklsGRpgIAu
-         RI+Q==
-X-Gm-Message-State: AOAM533H4wu49bhwwa5kukNkkL+4zEfb3HQHoyzWxG3QiJPq/ZiDqjD4
-        8InpFaWwHVX34yE9ItVM1JrtY3Sw0xDzuztC08lC5g==
-X-Google-Smtp-Source: ABdhPJxGvaPn9/yi0hcMtF7GBIkd43pQMw1Wpy4PsZv6kGEoNl15XNgtX5ldnP6raaFVVA7uaLCMMCI8giDrIxYJs5o=
-X-Received: by 2002:a17:906:3ed0:: with SMTP id d16mr1505403ejj.636.1640159818788;
- Tue, 21 Dec 2021 23:56:58 -0800 (PST)
+        bh=OH9lUZGvbIYsFS6r93OdVkoyWwer11g866A2zNPeehk=;
+        b=SRg6M8BjFbxXaHOoNI+D+58E6dmwm2oAtNx00As+oMuo/tx5KUyfGjAWiNNjkh4Vxb
+         9/zQNK77ujKAgK5aNjqFB5pV7Vxbiq8lUYe6boHKUZS1KsuRzAvUJ0fNpvyUW9DSGUFp
+         rm6fIRlFD0PIq0W5ntNI8ez4/2TmtLaeu9ecETxkhybeIwhqaRQggXwmgrRdb2Tr66T4
+         lWyOl4QzoqrrVxLc2NIz0RdjfYbrh+sW50gm1Jz0UzT2yW7aS2AtL5nyAMUVW0YSEkta
+         juRMpqscpOzRqO4ToUbT67Qb3hPMFwyqAL3VhIatn7vUr6cc27TqDlJ6EGOCg92ePozv
+         7/MQ==
+X-Gm-Message-State: AOAM532SpU+pwYA4tK/Fu19idzldD2+sjT6/l/x1ODlTVMvTnjIt6xBb
+        2vcs7OKkbNKw/gtiAuvYW7AxDBJgK2v/tYeMOV02UQ==
+X-Google-Smtp-Source: ABdhPJwlTOwQkimbTWuIr5y0SujyhX/GH7oxW5rFLOJAM7Fb2ZmmwI2kQCMkhG9muS1yczRmhCgRLzxKggSNitGnEZ0=
+X-Received: by 2002:a17:907:7208:: with SMTP id dr8mr1727842ejc.697.1640164024530;
+ Wed, 22 Dec 2021 01:07:04 -0800 (PST)
 MIME-Version: 1.0
-References: <20211220211854.89452-1-nbd@nbd.name> <20211220211854.89452-14-nbd@nbd.name>
-In-Reply-To: <20211220211854.89452-14-nbd@nbd.name>
+References: <20211220132439.1194-1-andriy.shevchenko@linux.intel.com>
+ <CAMRc=Md3bpCJe_eFBjiKuhCRO_xqnFxSc1sw100fgNmajy6gaw@mail.gmail.com>
+ <CAHp75VcbaYXfDpc7xE=asSqUspscRoHfqrg-yMtx=uo5UNqxfw@mail.gmail.com>
+ <CAMRc=MfWqV8UFWLaJO7JSo7N6MhYVMWdquMDJU7xR5gu8604AQ@mail.gmail.com> <CAHp75VfhY9zFxC_vDj0OH0Y0ah3RUgEEYO9p_uQsm7Xe63QF8w@mail.gmail.com>
+In-Reply-To: <CAHp75VfhY9zFxC_vDj0OH0Y0ah3RUgEEYO9p_uQsm7Xe63QF8w@mail.gmail.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 22 Dec 2021 08:56:48 +0100
-Message-ID: <CAMRc=MdXnJnRPGX0GSnWUwfRSDFEU4CFP-N0PoxuwQMnNCTDmA@mail.gmail.com>
-Subject: Re: [PATCH v8 13/14] gpio: Add support for Airoha EN7523 GPIO controller
-To:     Felix Fietkau <nbd@nbd.name>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        John Crispin <john@phrozen.org>,
+Date:   Wed, 22 Dec 2021 10:06:53 +0100
+Message-ID: <CAMRc=Mfn9P30niRMNqV4f7VByzV0a+Sf2vS4OcU1qPa4o1O8Lg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] gpio: Remove unused local OF node pointers
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        Marc Zyngier <maz@kernel.org>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
+        linux-unisoc@lists.infradead.org,
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 20, 2021 at 10:24 PM Felix Fietkau <nbd@nbd.name> wrote:
+On Tue, Dec 21, 2021 at 9:21 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 >
-> From: John Crispin <john@phrozen.org>
+> On Tue, Dec 21, 2021 at 9:13 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > On Mon, Dec 20, 2021 at 4:11 PM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > > On Mon, Dec 20, 2021 at 5:09 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > > > On Mon, Dec 20, 2021 at 2:24 PM Andy Shevchenko
+> > > > <andriy.shevchenko@linux.intel.com> wrote:
 >
-> Airoha's GPIO controller on their ARM EN7523 SoCs consists of two banks of 32
-> GPIOs. Each instance in DT is for a single bank.
+> ...
 >
-> Signed-off-by: John Crispin <john@phrozen.org>
-> Signed-off-by: Felix Fietkau <nbd@nbd.name>
-> ---
+> > > > > -               gc->label = devm_kasprintf(dev, GFP_KERNEL, "%pOF", dev->of_node);
+> > > > > +               gc->label = devm_kasprintf(dev, GFP_KERNEL, "%pOF", np);
+> > > >
+> > > > This is unrelated though. Can you make it a separate patch?
+> > >
+> > > It actually makes use of the local np IIRC.
+> > > It's related, no?
+> >
+> > No, the np pointer is already used elsewhere. You just replace the
+> > dev->of_node here with np. Rightfully so, but it's not part of this
+> > commit logically.
+>
+> I see. Probably I missed that somehow.
+> Nevertheless, do you want a new version or can you just revert that
+> particular change?
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
 
-Acked-by: Bartosz Golaszewski <brgl@bgdev.pl>
-
-Arnd: Please go ahead and take it through the arm-soc tree.
+I removed it and queued the rest.
 
 Bart
