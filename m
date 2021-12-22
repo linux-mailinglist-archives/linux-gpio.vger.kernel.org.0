@@ -2,95 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7608A47CB35
-	for <lists+linux-gpio@lfdr.de>; Wed, 22 Dec 2021 03:02:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 73F5747CB3E
+	for <lists+linux-gpio@lfdr.de>; Wed, 22 Dec 2021 03:04:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231563AbhLVCCf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 21 Dec 2021 21:02:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35284 "EHLO
+        id S238496AbhLVCEW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 21 Dec 2021 21:04:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230185AbhLVCCe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Dec 2021 21:02:34 -0500
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20635C061574;
-        Tue, 21 Dec 2021 18:02:34 -0800 (PST)
-Received: by mail-ed1-x535.google.com with SMTP id b13so2329306edd.8;
-        Tue, 21 Dec 2021 18:02:34 -0800 (PST)
+        with ESMTP id S232493AbhLVCEW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 21 Dec 2021 21:04:22 -0500
+Received: from mail-ot1-x32e.google.com (mail-ot1-x32e.google.com [IPv6:2607:f8b0:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 144DFC061401
+        for <linux-gpio@vger.kernel.org>; Tue, 21 Dec 2021 18:04:22 -0800 (PST)
+Received: by mail-ot1-x32e.google.com with SMTP id w6-20020a9d77c6000000b0055e804fa524so877342otl.3
+        for <linux-gpio@vger.kernel.org>; Tue, 21 Dec 2021 18:04:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=0pvJ0VJBvj9qiKz1E6D8UeM5hFtVE1+1j1opSDSflxo=;
-        b=hso3Yd7IWueqzl2mIgrOpP66XETFw/Qq6TD71x/nVKTezClSMd/aVDBCarWi1F3D3i
-         nEwOP1sxgBDEslD6aKDTAFIN/JhQpIdVH2xWXv8G0WxGtpGnQGIGwrEhQDUExRVE6pOm
-         7vQPP7Mry2+W5V2toB26R8UJyxWHJS5EKR/F8jiNQv3D0VzsjLQ/DYikkdfEwhC8oeiV
-         hBHZdkKcZJXCo7o4bQZ/5I3rhrbCZ/J/hDqbFn0jiD/ukhw9tTS8VrVtRqwqH0NixuYr
-         NZbvBwT3kPOxYXnF6YYJlfe7shMMAhQI87TWQC41zrPRxXMyCblQgvhC2Cz5yuUH3MDO
-         uBsw==
+        bh=Al9bVe7ZlBBHxflPN7dDbRiQZxeGn2j4XWyGYUriWq4=;
+        b=mlBAw9YdE/jogBzhUlrHKbx2cOXg5XI0v+CxuCs2lnBROr9s9cu+pUB+KQ8CzijjKq
+         t9k/Xeeh3M7aUPlNUjMNfkDXxlKjRCUaTVQvAYgBxJp0TQZruoa2JjQKVSXplDS90yI/
+         +0+v3XJHhw7ku3kr1ufQL+oZbL4HU0hrQCmF4vm+rdYPMDl/MXtd9b3l0z4QyTKJwnWw
+         HkLXg6x54/+dIlkkY0L8eZQZFyOLmSuEyePf8QrUsKCpo+rUHzkmwdl1Et+AdjXjpIgy
+         ZOrcCkOXfg4mss29mb1L15b8oNP25/5vAZjUvKanLdBsD8a38ECCTixEDylDsDB8gSFx
+         uB7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=0pvJ0VJBvj9qiKz1E6D8UeM5hFtVE1+1j1opSDSflxo=;
-        b=Xsxr4pEDLSK6M2+s97MGNGNkOip6fn3t81VuM7+aJWdS9UWdnuOkHvL1jLTpeg29xm
-         4VkCf7zMyAHfmUiXwL/i3kuGZiXmC/VSMqsA0v5l6I9EB2fhkTAgl//hbWOkoV60WXJK
-         OrEY0IXC1ISC6yc2CTlqjSxM3ZlCT3INBd1l4MaO512pv+QcDUqpAKXM6wKp1T+7OmtK
-         iCi/vc49hEUXAFTgYC2bPbHnOztoErxa5lQVpBBn+lUdwKTWoWWiUP1GldUU2Ru/B6DL
-         22H5ID/QnBQwvOXzeS9ZPqGfNLAUfrzTuqovbUbiiEb2Tfk0GfWGN1KmTtQFxbErO6Ls
-         FqBQ==
-X-Gm-Message-State: AOAM530D/RSBfOv4NU7yOv7/Kbzk5FE8DNmf4rqPLQl6+j0AbI1A/pPz
-        UTFW2rbXR54IhqV3wmQPpHGwfeYRDKkoEgmIBV4=
-X-Google-Smtp-Source: ABdhPJzLpnG/UsK725GwrFFKPbmxb8uA6enGbrXJVIDRT1VOpS7WXzeYwddNf5loslL9Xzc0bUG2deH5QOcNKv1rmo8=
-X-Received: by 2002:a17:907:7205:: with SMTP id dr5mr791523ejc.696.1640138552651;
- Tue, 21 Dec 2021 18:02:32 -0800 (PST)
+        bh=Al9bVe7ZlBBHxflPN7dDbRiQZxeGn2j4XWyGYUriWq4=;
+        b=QdfKhBKYzeX6cu9378k8MC3pQu7qdtg+OH7xHl0w5Pdw4r0T8QKTJ8NEuX7wIubU3v
+         o5UncuYW5qJUK6Z2UZhHkAYfWAgjRfYy9oGOY6ZQD19I3fKwZbXeWFuHzV/i36B2+8N0
+         30i9ZnpArpRNBjCt0i9nnkUQVXuwrPmnjM7EmCfqpJNCh9nhz14NeX0kRoWQxD2IHWUN
+         O4j9VL54OGRQ1VWlSzXWMukGP8B8rQF40PpSI5Jt3513B++oGpBVpojGzh924NOaxx6v
+         YfiK5D/FJjVpmJc6s4kME/jkdunWAwXUXF01VKeacUVbKtPCsepjtrl06nY9GAxIk/5R
+         e5qw==
+X-Gm-Message-State: AOAM531sv7Xhvd5m3yH/mDBBukEsF/3jzH2O00gjR0vb5WlXq16sLhFx
+        qe7H3SfLs4LzuxM9VJndaMlgYIbmEckIt9iKCAIYXg==
+X-Google-Smtp-Source: ABdhPJzP8xGfPla++awyn1G27r3LXkIK3wvrijkd0Yt2tCqMYT1XZqk96h9xZY+z6BFU5GitM9gSj9v4Yy16fmVlvh4=
+X-Received: by 2002:a9d:74d0:: with SMTP id a16mr708127otl.237.1640138661156;
+ Tue, 21 Dec 2021 18:04:21 -0800 (PST)
 MIME-Version: 1.0
-References: <20211222015244.2464671-1-Mr.Bossman075@gmail.com> <20211222015244.2464671-6-Mr.Bossman075@gmail.com>
-In-Reply-To: <20211222015244.2464671-6-Mr.Bossman075@gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Tue, 21 Dec 2021 23:02:21 -0300
-Message-ID: <CAOMZO5DV7WKU_dO3KRERpcoManFZs1MbdL54BtSmtMnVY5ujrg@mail.gmail.com>
-Subject: Re: [PATCH v6 5/7] clk: imx: Add initial support for i.MXRT1050 clock driver
-To:     Jesse Taube <mr.bossman075@gmail.com>
-Cc:     NXP Linux Team <linux-imx@nxp.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        soc@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Giulio Benetti <giulio.benetti@benettiengineering.com>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-serial@vger.kernel.org
+References: <cover.1639696427.git.quic_vamslank@quicinc.com> <ff9abf953c274a1e34f59114642f67ecf02acb6f.1639696427.git.quic_vamslank@quicinc.com>
+In-Reply-To: <ff9abf953c274a1e34f59114642f67ecf02acb6f.1639696427.git.quic_vamslank@quicinc.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 22 Dec 2021 03:04:09 +0100
+Message-ID: <CACRpkdYR2e3PgtzS5T69m9B4yEZ0wgAm=6HxOSpwwMz95nBBXg@mail.gmail.com>
+Subject: Re: [PATCH v6 1/2] dt-bindings: pinctrl: qcom: Add SDX65 pinctrl bindings
+To:     quic_vamslank@quicinc.com
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        manivannan.sadhasivam@linaro.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Dec 21, 2021 at 10:52 PM Jesse Taube <mr.bossman075@gmail.com> wrote:
+On Fri, Dec 17, 2021 at 12:19 AM <quic_vamslank@quicinc.com> wrote:
 
+> From: Vamsi Krishna Lanka <quic_vamslank@quicinc.com>
+>
+> Add device tree binding Documentation details for Qualcomm SDX65
+> pinctrl driver.
+>
+> Signed-off-by: Vamsi Krishna Lanka <quic_vamslank@quicinc.com>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-> +static struct platform_driver imxrt1050_clk_driver = {
-> +       .probe = imxrt1050_clocks_probe,
-> +       .driver = {
-> +               .name = "imxrt1050-ccm",
-> +               .of_match_table = of_match_ptr(imxrt1050_clk_of_match),
+I applied this updated binding instead of the broken one
+that I reverted a while back.
 
-No need for of_match_ptr() here.
+Yours,
+Linus Walleij
