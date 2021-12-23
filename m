@@ -2,100 +2,139 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DFDF547E64E
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Dec 2021 17:22:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7723B47E696
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Dec 2021 18:00:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235510AbhLWQWQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Dec 2021 11:22:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43352 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233575AbhLWQWP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Dec 2021 11:22:15 -0500
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37514C061401
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Dec 2021 08:22:15 -0800 (PST)
-Received: by mail-wr1-x433.google.com with SMTP id s1so12467648wra.6
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Dec 2021 08:22:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rhXkMPwGBcSiPIpTPBgElSyd1pb6V+FAdMLbsowPpAo=;
-        b=l0bK405IzA9dOS9RCKUDC2HVVCiW9v+mP19KiOl1DCzpA8d5Cb8xPWWTSv2NVfgxjk
-         ZPWLbD4lJNM+fQwX0gAT1x8Y5xnxRNv/KQXYOUPR2cULEqX3TaRSSx/9F6FUTxfOrvot
-         4A586SbASZzQyo8YDFmqH+KV3jCi51Az4eYh8G0AeVH6X4ox09PzEAgDfkpU+VqhnzRg
-         4uZ7eHckjnkwFqVrGAIbPA76K8LwS1RY9XhU32I6tPgTxeX+srrBH3WxmDdN7vykRNb/
-         G/OzvpM9QYPWH8MP0eg2SzSvOaKEOOffiu4cX/0pxVIrYqRistAxfbHGJ6Ig8cOOy9Jv
-         Gtgw==
+        id S1349374AbhLWRAU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Dec 2021 12:00:20 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:45805 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1349363AbhLWRAS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 23 Dec 2021 12:00:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1640278817;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nvsfcMVBWJERgEqnOROoErbQ2mtiiEO1pkWlJPmYlIg=;
+        b=GjMjpYBJtNxLEJvjRJYNisE0QOVe7+1dOqRCyFtiMZ5kz2J0ZwwTEwT3Nvs783lQktIak7
+        PtgTz+JkqvzCaEmb8UUDhL7UMJNelpmMcf09AilF6W/zXstwlQc5ed6Tz704+o/G+b5Bqx
+        RVPp+4Fh/yadduQYiHuWfF2BM0RYsAI=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-48-_s8MbibjPJqup63SkEmYnw-1; Thu, 23 Dec 2021 12:00:16 -0500
+X-MC-Unique: _s8MbibjPJqup63SkEmYnw-1
+Received: by mail-ed1-f72.google.com with SMTP id x19-20020a05640226d300b003f8b80f5729so3763452edd.13
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Dec 2021 09:00:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=rhXkMPwGBcSiPIpTPBgElSyd1pb6V+FAdMLbsowPpAo=;
-        b=ayrlpqx4AKvUWZsYvxoIuNCZzUsTr7dlYI+1UCxCPTljLgoqOG5x7HM/0gqmeSihjY
-         BrFtKr82Z/vkHiRtBzc2OfKrkrdzKysN4QVHEnrGJ+HmG2++mDOAksF0M2MlM9U9tc6z
-         CrUYkGYFheMKZ2uyudlHEiekxCAGPoCHCRi2i4gf7cHRnXjNTgO4zvfhwKuBCF3UPzTU
-         Xi1SIhHsH/PJ5s4I/saBj0fOOn3oXlCiHkNcblHYdiuu1LFGxhoB1CWeDKDGTjQaXG+6
-         dRJvKK8y1F6hCIjk7Am0MaMJuEDR+8pSa6OkV/E2BwLbIhVinn7weHdIgn5KoH68NhOh
-         aNow==
-X-Gm-Message-State: AOAM5323mP+L9r/0aXue9KMldZXwO5DJH/4+qKSe4tugl82L9Nk7ysHM
-        EL7NjdKPzm450OTERLjkpXx+Ug==
-X-Google-Smtp-Source: ABdhPJykmvluCdyMXmFAJL7sq1JZ3lSc9YQVLVSIJEt3A/VIsOFSUeNE/c4uuGcjHZEeFk6OyoVOqA==
-X-Received: by 2002:a5d:52c6:: with SMTP id r6mr2189264wrv.135.1640276533808;
-        Thu, 23 Dec 2021 08:22:13 -0800 (PST)
-Received: from debian-brgl.home ([2a01:cb1d:334:ac00:7d50:ff5:f5c1:e225])
-        by smtp.gmail.com with ESMTPSA id j13sm9440166wmq.11.2021.12.23.08.22.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Dec 2021 08:22:13 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [GIT PULL] gpio: fixes for v5.16-rc7
-Date:   Thu, 23 Dec 2021 17:22:09 +0100
-Message-Id: <20211223162209.26870-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.30.1
+        bh=nvsfcMVBWJERgEqnOROoErbQ2mtiiEO1pkWlJPmYlIg=;
+        b=lFPgMO5PkOkNbnKy/ucyDd5drJftjcJCs3IZnaIrJqkkBbRX2sGVAfD+ZTqcbXGNgh
+         Ai0mhM+JFKWXGVKcE4to1/4DkhN4rlftmW9fKPypaxbPhftpjslaf86AyEM0IqBrOZ4W
+         Bx0U4WSvlNrQSdxHlM4y77++R6P+BLHmep+H1S42+tPYksKVC5SlRhZdcg59blkq5P6F
+         fqy/JRnRSSUmzjxmO1aeKUSDobOQk/3D8pLD13m19BEKOYiY6gR5bQI2+1Vllqyvq2Ja
+         GRnglu6Ko3VzWZRKgIUsXy85v8JkshrIw2EX0IVBxD88qqnqVlnhEULkdalVJnDg7EPp
+         lNDw==
+X-Gm-Message-State: AOAM531zrPLgxRpOdghWmrZiQ4EFefWBwh1EaAXWYIekWq3GyGkLLfe9
+        WG3e9MMekXd5UB9dPwekh+WpiEI+nWzkNfAsWT6YV02LocYS0EGP22l+CkmZCJkaZmpWRgVAlKN
+        sLfoGz5NlHBe8oc9q/uo/ug==
+X-Received: by 2002:a05:6402:d0a:: with SMTP id eb10mr2784902edb.48.1640278815468;
+        Thu, 23 Dec 2021 09:00:15 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJw87UhCINhB18oUYfK4gbd/3DsjSTlRJLtf/0Dh2g1Vscsz3MP7wWjdmIMopMNKIhj0qff5DA==
+X-Received: by 2002:a05:6402:d0a:: with SMTP id eb10mr2784889edb.48.1640278815306;
+        Thu, 23 Dec 2021 09:00:15 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
+        by smtp.gmail.com with ESMTPSA id mp9sm1919620ejc.106.2021.12.23.09.00.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Dec 2021 09:00:14 -0800 (PST)
+Message-ID: <08236e18-f1ae-303c-3d2e-96f795d96c1f@redhat.com>
+Date:   Thu, 23 Dec 2021 18:00:14 +0100
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [PATCH v3 0/8] platform/x86: introduce p2sb_bar() helper
+Content-Language: en-US
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Tan Jui Nee <jui.nee.tan@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kate Hsuan <hpa@redhat.com>,
+        Jonathan Yong <jonathan.yong@intel.com>,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Cc:     Jean Delvare <jdelvare@suse.com>, Peter Tyser <ptyser@xes-inc.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Gross <markgross@kernel.org>,
+        Henning Schild <henning.schild@siemens.com>
+References: <20211221181526.53798-1-andriy.shevchenko@linux.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20211221181526.53798-1-andriy.shevchenko@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Linus,
+Hi,
 
-Here are two more fixes from the GPIO subsystem for this release cycle.
+On 12/21/21 19:15, Andy Shevchenko wrote:
+> There are a few users and at least one more is coming that would
+> like to utilize P2SB mechanism of hiding and unhiding a device from
+> the PCI configuration space.
+> 
+> Here is the series to deduplicate existing users and provide
+> a generic way for new comers.
+> 
+> It also includes a patch to enable GPIO controllers on Apollo Lake
+> when it's used with ABL bootloader w/o ACPI support.
+> 
+> The patch that bring the helper ("platform/x86/intel: Add Primary
+> to Sideband (P2SB) bridge support") has a commit message that
+> sheds a light on what the P2SB is and why this is needed.
+> 
+> Please, comment on the approach and individual patches.
+> 
+> The changes made in v2 do not change the main idea and the functionality
+> in a big scale. What we need is probably one more (RE-)test done by Henning.
+> I hope to have it merged to v5.17-rc1 that Siemens can develop their changes
+> based on this series.
+> 
+> I have tested this on Apollo Lake platform (I'm able to see SPI NOR and
+> since we have an ACPI device for GPIO I do not see any attempts to recreate
+> one).
+> 
+> (Since it's cross subsystem, the PDx86 seems the main one and
+> I think it makes sense to route it throught it with immutable
+> tag or branch provided for the others).
 
-Please pull,
-Bartosz
+The series looks good to me:
 
-The following changes since commit d6912b1251b47e6b04ea8c8881dfb35a6e7a3e29:
+Acked-by: Hans de Goede <hdegoede@redhat.com>
 
-  gpio: rockchip: needs GENERIC_IRQ_CHIP to fix build errors (2021-11-16 09:41:44 +0100)
+For the series.
 
-are available in the Git repository at:
+Not sure if this is really 5.17 material this late in the cycle though,
+but lets wait and see what Bjorn and Lee have to say (patch 8/8 still
+needs an ack from Lee).
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.16-rc7
+I'm fine with taking this upstream through the pdx86 tree, please
+prepare a pull-req for everyone involved with an immutable branch
+pushed to pdx86/platform-drivers-x86.git/
+based on 5.16-rc1 (if everyone is happy with merging this for 5.17) or
+based on 5.17-rc1 once that is out.
 
-for you to fetch changes up to 3e4d9a485029aa9e172dab5420abe775fd86f8e8:
+Regards,
 
-  gpio: virtio: remove timeout (2021-12-21 16:22:58 +0100)
+Hans
 
-----------------------------------------------------------------
-gpio fixes for v5.16-rc7
-
-- fix interrupts when replugging the device in gpio-dln2
-- remove the arbitrary timeout on virtio requests from gpio-virtio
-
-----------------------------------------------------------------
-Noralf Trønnes (1):
-      gpio: dln2: Fix interrupts when replugging the device
-
-Vincent Whitchurch (1):
-      gpio: virtio: remove timeout
-
- drivers/gpio/gpio-dln2.c   | 19 +++++++++----------
- drivers/gpio/gpio-virtio.c |  6 +-----
- 2 files changed, 10 insertions(+), 15 deletions(-)
