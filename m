@@ -2,36 +2,36 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7EEAC47E4BE
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Dec 2021 15:42:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D1F5347E49C
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Dec 2021 15:42:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348876AbhLWOmY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Dec 2021 09:42:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49000 "EHLO
+        id S1348867AbhLWOmP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Dec 2021 09:42:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348890AbhLWOmQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Dec 2021 09:42:16 -0500
-Received: from michel.telenet-ops.be (michel.telenet-ops.be [IPv6:2a02:1800:110:4::f00:18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5BE6C061784
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Dec 2021 06:42:15 -0800 (PST)
+        with ESMTP id S231823AbhLWOmP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Dec 2021 09:42:15 -0500
+Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6697BC061759
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Dec 2021 06:42:14 -0800 (PST)
 Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed20:a9f6:6306:a80a:fe6a])
-        by michel.telenet-ops.be with bizsmtp
-        id ZqiD260091rdBcm06qiDal; Thu, 23 Dec 2021 15:42:13 +0100
+        by albert.telenet-ops.be with bizsmtp
+        id ZqiC2600R1rdBcm06qiCq2; Thu, 23 Dec 2021 15:42:12 +0100
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.93)
         (envelope-from <geert@linux-m68k.org>)
-        id 1n0PIK-006a8v-P3; Thu, 23 Dec 2021 15:42:12 +0100
+        id 1n0PIK-006a8w-Bs; Thu, 23 Dec 2021 15:42:12 +0100
 Received: from geert by rox.of.borg with local (Exim 4.93)
         (envelope-from <geert@linux-m68k.org>)
-        id 1n0PIJ-003rYR-Pe; Thu, 23 Dec 2021 15:42:11 +0100
+        id 1n0PIJ-003rYY-Qa; Thu, 23 Dec 2021 15:42:11 +0100
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 02/60] pinctrl: renesas: Rename sh_pfc_soc_operations instances
-Date:   Thu, 23 Dec 2021 15:41:12 +0100
-Message-Id: <2ab33ad1d6a20a57d16922678b78810fa55b7fc0.1640269757.git.geert+renesas@glider.be>
+Subject: [PATCH 03/60] pinctrl: renesas: Reformat macros defining struct initializers
+Date:   Thu, 23 Dec 2021 15:41:13 +0100
+Message-Id: <03a1eed3c4f57d7b14ef53ab49e04de10d0e383c.1640269757.git.geert+renesas@glider.be>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1640269757.git.geert+renesas@glider.be>
 References: <cover.1640269757.git.geert+renesas@glider.be>
@@ -41,426 +41,193 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Some instances of struct sh_pfc_soc_operations are called
-"<soc>_pfc_ops", others are called "<soc>_pinmux_ops" or just
-"pinmux_ops".  Settle on the first variant, to avoid confusion with
-"struct pinmux_ops" in the pinctrl core, and to increase consistency.
+Reformat all macros that define structure initializers, to visually
+resemble structure definitions:
+  - Move the opening curly brace to the previous line,
+  - Move the closing curly brace to the first position,
+  - Reduce indentation of the block to a single TAB, decreasing the need
+    for line breaks,
+  - Align backslashes for line continuation to the last TAB block where
+    possible,
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/pinctrl/renesas/pfc-r8a77470.c |  4 ++--
- drivers/pinctrl/renesas/pfc-r8a7790.c  |  6 +++---
- drivers/pinctrl/renesas/pfc-r8a7791.c  | 10 +++++-----
- drivers/pinctrl/renesas/pfc-r8a7792.c  |  4 ++--
- drivers/pinctrl/renesas/pfc-r8a7794.c  |  6 +++---
- drivers/pinctrl/renesas/pfc-r8a77950.c |  4 ++--
- drivers/pinctrl/renesas/pfc-r8a77951.c |  6 +++---
- drivers/pinctrl/renesas/pfc-r8a7796.c  |  8 ++++----
- drivers/pinctrl/renesas/pfc-r8a77965.c |  6 +++---
- drivers/pinctrl/renesas/pfc-r8a77970.c |  4 ++--
- drivers/pinctrl/renesas/pfc-r8a77980.c |  4 ++--
- drivers/pinctrl/renesas/pfc-r8a77990.c |  6 +++---
- drivers/pinctrl/renesas/pfc-r8a77995.c |  4 ++--
- drivers/pinctrl/renesas/pfc-r8a779a0.c |  4 ++--
- 14 files changed, 38 insertions(+), 38 deletions(-)
+ drivers/pinctrl/renesas/sh_pfc.h | 115 +++++++++++++++----------------
+ 1 file changed, 54 insertions(+), 61 deletions(-)
 
-diff --git a/drivers/pinctrl/renesas/pfc-r8a77470.c b/drivers/pinctrl/renesas/pfc-r8a77470.c
-index cf7153d06a953863..0d5b603b870fb079 100644
---- a/drivers/pinctrl/renesas/pfc-r8a77470.c
-+++ b/drivers/pinctrl/renesas/pfc-r8a77470.c
-@@ -3683,7 +3683,7 @@ static const struct pinmux_bias_reg pinmux_bias_regs[] = {
- 	{ /* sentinel */ }
+diff --git a/drivers/pinctrl/renesas/sh_pfc.h b/drivers/pinctrl/renesas/sh_pfc.h
+index 2479b4fb9cf957ff..d355e60244c6e5a8 100644
+--- a/drivers/pinctrl/renesas/sh_pfc.h
++++ b/drivers/pinctrl/renesas/sh_pfc.h
+@@ -49,14 +49,13 @@ struct sh_pfc_pin {
+ 	u16 enum_id;
  };
  
--static const struct sh_pfc_soc_operations r8a77470_pinmux_ops = {
-+static const struct sh_pfc_soc_operations r8a77470_pfc_ops = {
- 	.pin_to_pocctrl = r8a77470_pin_to_pocctrl,
- 	.get_bias = rcar_pinmux_get_bias,
- 	.set_bias = rcar_pinmux_set_bias,
-@@ -3692,7 +3692,7 @@ static const struct sh_pfc_soc_operations r8a77470_pinmux_ops = {
- #ifdef CONFIG_PINCTRL_PFC_R8A77470
- const struct sh_pfc_soc_info r8a77470_pinmux_info = {
- 	.name = "r8a77470_pfc",
--	.ops = &r8a77470_pinmux_ops,
-+	.ops = &r8a77470_pfc_ops,
- 	.unlock_reg = 0xe6060000, /* PMMR */
+-#define SH_PFC_PIN_GROUP_ALIAS(alias, n)		\
+-	{						\
+-		.name = #alias,				\
+-		.pins = n##_pins,			\
+-		.mux = n##_mux,				\
+-		.nr_pins = ARRAY_SIZE(n##_pins) +	\
+-		BUILD_BUG_ON_ZERO(sizeof(n##_pins) != sizeof(n##_mux)), \
+-	}
++#define SH_PFC_PIN_GROUP_ALIAS(alias, n) {				\
++	.name = #alias,							\
++	.pins = n##_pins,						\
++	.mux = n##_mux,							\
++	.nr_pins = ARRAY_SIZE(n##_pins) +				\
++	BUILD_BUG_ON_ZERO(sizeof(n##_pins) != sizeof(n##_mux)),		\
++}
+ #define SH_PFC_PIN_GROUP(n)	SH_PFC_PIN_GROUP_ALIAS(n, n)
  
- 	.function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
-diff --git a/drivers/pinctrl/renesas/pfc-r8a7790.c b/drivers/pinctrl/renesas/pfc-r8a7790.c
-index 85b2ca9733214da1..936fec3d715bb1bf 100644
---- a/drivers/pinctrl/renesas/pfc-r8a7790.c
-+++ b/drivers/pinctrl/renesas/pfc-r8a7790.c
-@@ -6282,7 +6282,7 @@ static int r8a7790_pinmux_soc_init(struct sh_pfc *pfc)
- 	return 0;
- }
+ struct sh_pfc_pin_group {
+@@ -72,13 +71,12 @@ struct sh_pfc_pin_group {
+  * in this case. It accepts an optional 'version' argument used when the
+  * same group can appear on a different set of pins.
+  */
+-#define VIN_DATA_PIN_GROUP(n, s, ...)					\
+-	{								\
+-		.name = #n#s#__VA_ARGS__,				\
+-		.pins = n##__VA_ARGS__##_pins.data##s,			\
+-		.mux = n##__VA_ARGS__##_mux.data##s,			\
+-		.nr_pins = ARRAY_SIZE(n##__VA_ARGS__##_pins.data##s),	\
+-	}
++#define VIN_DATA_PIN_GROUP(n, s, ...) {					\
++	.name = #n#s#__VA_ARGS__,					\
++	.pins = n##__VA_ARGS__##_pins.data##s,				\
++	.mux = n##__VA_ARGS__##_mux.data##s,				\
++	.nr_pins = ARRAY_SIZE(n##__VA_ARGS__##_pins.data##s),		\
++}
  
--static const struct sh_pfc_soc_operations r8a7790_pinmux_ops = {
-+static const struct sh_pfc_soc_operations r8a7790_pfc_ops = {
- 	.init = r8a7790_pinmux_soc_init,
- 	.pin_to_pocctrl = r8a7790_pin_to_pocctrl,
- 	.get_bias = rcar_pinmux_get_bias,
-@@ -6292,7 +6292,7 @@ static const struct sh_pfc_soc_operations r8a7790_pinmux_ops = {
- #ifdef CONFIG_PINCTRL_PFC_R8A7742
- const struct sh_pfc_soc_info r8a7742_pinmux_info = {
- 	.name = "r8a77420_pfc",
--	.ops = &r8a7790_pinmux_ops,
-+	.ops = &r8a7790_pfc_ops,
- 	.unlock_reg = 0xe6060000, /* PMMR */
- 
- 	.function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
-@@ -6315,7 +6315,7 @@ const struct sh_pfc_soc_info r8a7742_pinmux_info = {
- #ifdef CONFIG_PINCTRL_PFC_R8A7790
- const struct sh_pfc_soc_info r8a7790_pinmux_info = {
- 	.name = "r8a77900_pfc",
--	.ops = &r8a7790_pinmux_ops,
-+	.ops = &r8a7790_pfc_ops,
- 	.unlock_reg = 0xe6060000, /* PMMR */
- 
- 	.function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
-diff --git a/drivers/pinctrl/renesas/pfc-r8a7791.c b/drivers/pinctrl/renesas/pfc-r8a7791.c
-index e3b886b95545cab3..e636e1b9bc79b341 100644
---- a/drivers/pinctrl/renesas/pfc-r8a7791.c
-+++ b/drivers/pinctrl/renesas/pfc-r8a7791.c
-@@ -6989,7 +6989,7 @@ static const struct pinmux_bias_reg pinmux_bias_regs[] = {
- 	{ /* sentinel */ },
+ union vin_data12 {
+ 	unsigned int data12[12];
+@@ -103,12 +101,11 @@ union vin_data {
+ 	unsigned int data4[4];
  };
  
--static const struct sh_pfc_soc_operations r8a7791_pinmux_ops = {
-+static const struct sh_pfc_soc_operations r8a7791_pfc_ops = {
- 	.pin_to_pocctrl = r8a7791_pin_to_pocctrl,
- 	.get_bias = rcar_pinmux_get_bias,
- 	.set_bias = rcar_pinmux_set_bias,
-@@ -6998,7 +6998,7 @@ static const struct sh_pfc_soc_operations r8a7791_pinmux_ops = {
- #ifdef CONFIG_PINCTRL_PFC_R8A7743
- const struct sh_pfc_soc_info r8a7743_pinmux_info = {
- 	.name = "r8a77430_pfc",
--	.ops = &r8a7791_pinmux_ops,
-+	.ops = &r8a7791_pfc_ops,
- 	.unlock_reg = 0xe6060000, /* PMMR */
+-#define SH_PFC_FUNCTION(n)				\
+-	{						\
+-		.name = #n,				\
+-		.groups = n##_groups,			\
+-		.nr_groups = ARRAY_SIZE(n##_groups),	\
+-	}
++#define SH_PFC_FUNCTION(n) {						\
++	.name = #n,							\
++	.groups = n##_groups,						\
++	.nr_groups = ARRAY_SIZE(n##_groups),				\
++}
  
- 	.function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
-@@ -7021,7 +7021,7 @@ const struct sh_pfc_soc_info r8a7743_pinmux_info = {
- #ifdef CONFIG_PINCTRL_PFC_R8A7744
- const struct sh_pfc_soc_info r8a7744_pinmux_info = {
- 	.name = "r8a77440_pfc",
--	.ops = &r8a7791_pinmux_ops,
-+	.ops = &r8a7791_pfc_ops,
- 	.unlock_reg = 0xe6060000, /* PMMR */
+ struct sh_pfc_function {
+ 	const char *name;
+@@ -231,8 +228,9 @@ struct pinmux_irq {
+  * Describe the mapping from GPIOs to a single IRQ
+  *   - ids...: List of GPIOs that are mapped to the same IRQ
+  */
+-#define PINMUX_IRQ(ids...)			   \
+-	{ .gpios = (const short []) { ids, -1 } }
++#define PINMUX_IRQ(ids...) {						\
++	.gpios = (const short []) { ids, -1 }				\
++}
  
- 	.function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
-@@ -7044,7 +7044,7 @@ const struct sh_pfc_soc_info r8a7744_pinmux_info = {
- #ifdef CONFIG_PINCTRL_PFC_R8A7791
- const struct sh_pfc_soc_info r8a7791_pinmux_info = {
- 	.name = "r8a77910_pfc",
--	.ops = &r8a7791_pinmux_ops,
-+	.ops = &r8a7791_pfc_ops,
- 	.unlock_reg = 0xe6060000, /* PMMR */
+ struct pinmux_range {
+ 	u16 begin;
+@@ -624,13 +622,12 @@ extern const struct sh_pfc_soc_info shx3_pinmux_info;
+ #define GP_ALL(str)			CPU_ALL_GP(_GP_ALL, str)
  
- 	.function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
-@@ -7069,7 +7069,7 @@ const struct sh_pfc_soc_info r8a7791_pinmux_info = {
- #ifdef CONFIG_PINCTRL_PFC_R8A7793
- const struct sh_pfc_soc_info r8a7793_pinmux_info = {
- 	.name = "r8a77930_pfc",
--	.ops = &r8a7791_pinmux_ops,
-+	.ops = &r8a7791_pfc_ops,
- 	.unlock_reg = 0xe6060000, /* PMMR */
+ /* PINMUX_GPIO_GP_ALL - Expand to a list of sh_pfc_pin entries */
+-#define _GP_GPIO(bank, _pin, _name, sfx, cfg)				\
+-	{								\
+-		.pin = (bank * 32) + _pin,				\
+-		.name = __stringify(_name),				\
+-		.enum_id = _name##_DATA,				\
+-		.configs = cfg,						\
+-	}
++#define _GP_GPIO(bank, _pin, _name, sfx, cfg) {				\
++	.pin = (bank * 32) + _pin,					\
++	.name = __stringify(_name),					\
++	.enum_id = _name##_DATA,					\
++	.configs = cfg,							\
++}
+ #define PINMUX_GPIO_GP_ALL()		CPU_ALL_GP(_GP_GPIO, unused)
  
- 	.function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
-diff --git a/drivers/pinctrl/renesas/pfc-r8a7792.c b/drivers/pinctrl/renesas/pfc-r8a7792.c
-index 3ab56dc768de76d4..bba34609b57f680c 100644
---- a/drivers/pinctrl/renesas/pfc-r8a7792.c
-+++ b/drivers/pinctrl/renesas/pfc-r8a7792.c
-@@ -3281,14 +3281,14 @@ static const struct pinmux_bias_reg pinmux_bias_regs[] = {
- 	{ /* sentinel */ }
- };
+ /* PINMUX_DATA_GP_ALL -  Expand to a list of name_DATA, name_FN marks */
+@@ -688,13 +685,12 @@ extern const struct sh_pfc_soc_info shx3_pinmux_info;
+ 	}
  
--static const struct sh_pfc_soc_operations r8a7792_pinmux_ops = {
-+static const struct sh_pfc_soc_operations r8a7792_pfc_ops = {
- 	.get_bias = rcar_pinmux_get_bias,
- 	.set_bias = rcar_pinmux_set_bias,
- };
+ /* SH_PFC_PIN_CFG - Expand to a sh_pfc_pin entry (named PORT#) with config */
+-#define SH_PFC_PIN_CFG(_pin, cfgs)					\
+-	{								\
+-		.pin = _pin,						\
+-		.name = __stringify(PORT##_pin),			\
+-		.enum_id = PORT##_pin##_DATA,				\
+-		.configs = cfgs,					\
+-	}
++#define SH_PFC_PIN_CFG(_pin, cfgs) {					\
++	.pin = _pin,							\
++	.name = __stringify(PORT##_pin),				\
++	.enum_id = PORT##_pin##_DATA,					\
++	.configs = cfgs,						\
++}
  
- const struct sh_pfc_soc_info r8a7792_pinmux_info = {
- 	.name = "r8a77920_pfc",
--	.ops = &r8a7792_pinmux_ops,
-+	.ops = &r8a7792_pfc_ops,
- 	.unlock_reg = 0xe6060000, /* PMMR */
+ /* PINMUX_DATA_ALL - Expand to a list of PORT_name_DATA, PORT_name_FN0,
+  *		     PORT_name_OUT, PORT_name_IN marks
+@@ -743,35 +739,32 @@ extern const struct sh_pfc_soc_info shx3_pinmux_info;
+ #define NOGP_ALL()				CPU_ALL_NOGP(_NOGP_ALL)
  
- 	.function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
-diff --git a/drivers/pinctrl/renesas/pfc-r8a7794.c b/drivers/pinctrl/renesas/pfc-r8a7794.c
-index 08a4269565e2e54a..d3c23e7f3132a27d 100644
---- a/drivers/pinctrl/renesas/pfc-r8a7794.c
-+++ b/drivers/pinctrl/renesas/pfc-r8a7794.c
-@@ -5935,7 +5935,7 @@ static int r8a7794_pinmux_soc_init(struct sh_pfc *pfc)
- 	return 0;
- }
+ /* PINMUX_NOGP_ALL - Expand to a list of sh_pfc_pin entries */
+-#define _NOGP_PINMUX(_pin, _name, cfg)					\
+-	{								\
+-		.pin = PIN_##_pin,					\
+-		.name = "PIN_" _name,					\
+-		.configs = SH_PFC_PIN_CFG_NO_GPIO | cfg,		\
+-	}
++#define _NOGP_PINMUX(_pin, _name, cfg) {				\
++	.pin = PIN_##_pin,						\
++	.name = "PIN_" _name,						\
++	.configs = SH_PFC_PIN_CFG_NO_GPIO | cfg,			\
++}
+ #define PINMUX_NOGP_ALL()		CPU_ALL_NOGP(_NOGP_PINMUX)
  
--static const struct sh_pfc_soc_operations r8a7794_pinmux_ops = {
-+static const struct sh_pfc_soc_operations r8a7794_pfc_ops = {
- 	.init = r8a7794_pinmux_soc_init,
- 	.pin_to_pocctrl = r8a7794_pin_to_pocctrl,
- 	.get_bias = rcar_pinmux_get_bias,
-@@ -5945,7 +5945,7 @@ static const struct sh_pfc_soc_operations r8a7794_pinmux_ops = {
- #ifdef CONFIG_PINCTRL_PFC_R8A7745
- const struct sh_pfc_soc_info r8a7745_pinmux_info = {
- 	.name = "r8a77450_pfc",
--	.ops = &r8a7794_pinmux_ops,
-+	.ops = &r8a7794_pfc_ops,
- 	.unlock_reg = 0xe6060000, /* PMMR */
+ /*
+  * PORTnCR helper macro for SH-Mobile/R-Mobile
+  */
+-#define PORTCR(nr, reg)							\
+-	{								\
+-		PINMUX_CFG_REG_VAR("PORT" nr "CR", reg, 8,		\
+-				   GROUP(2, 2, 1, 3),			\
+-				   GROUP(				\
+-			/* PULMD[1:0], handled by .set_bias() */	\
+-			0, 0, 0, 0,					\
+-			/* IE and OE */					\
+-			0, PORT##nr##_OUT, PORT##nr##_IN, 0,		\
+-			/* SEC, not supported */			\
+-			0, 0,						\
+-			/* PTMD[2:0] */					\
+-			PORT##nr##_FN0, PORT##nr##_FN1,			\
+-			PORT##nr##_FN2, PORT##nr##_FN3,			\
+-			PORT##nr##_FN4, PORT##nr##_FN5,			\
+-			PORT##nr##_FN6, PORT##nr##_FN7			\
+-		))							\
+-	}
++#define PORTCR(nr, reg) {						\
++	PINMUX_CFG_REG_VAR("PORT" nr "CR", reg, 8, GROUP(2, 2, 1, 3),	\
++			   GROUP(					\
++		/* PULMD[1:0], handled by .set_bias() */		\
++		0, 0, 0, 0,						\
++		/* IE and OE */						\
++		0, PORT##nr##_OUT, PORT##nr##_IN, 0,			\
++		/* SEC, not supported */				\
++		0, 0,							\
++		/* PTMD[2:0] */						\
++		PORT##nr##_FN0, PORT##nr##_FN1,				\
++		PORT##nr##_FN2, PORT##nr##_FN3,				\
++		PORT##nr##_FN4, PORT##nr##_FN5,				\
++		PORT##nr##_FN6, PORT##nr##_FN7				\
++	))								\
++}
  
- 	.function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
-@@ -5968,7 +5968,7 @@ const struct sh_pfc_soc_info r8a7745_pinmux_info = {
- #ifdef CONFIG_PINCTRL_PFC_R8A7794
- const struct sh_pfc_soc_info r8a7794_pinmux_info = {
- 	.name = "r8a77940_pfc",
--	.ops = &r8a7794_pinmux_ops,
-+	.ops = &r8a7794_pfc_ops,
- 	.unlock_reg = 0xe6060000, /* PMMR */
- 
- 	.function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
-diff --git a/drivers/pinctrl/renesas/pfc-r8a77950.c b/drivers/pinctrl/renesas/pfc-r8a77950.c
-index c86064900c6e2d01..ea10dfe8726ab4fe 100644
---- a/drivers/pinctrl/renesas/pfc-r8a77950.c
-+++ b/drivers/pinctrl/renesas/pfc-r8a77950.c
-@@ -5832,7 +5832,7 @@ static const struct pinmux_bias_reg pinmux_bias_regs[] = {
- 	{ /* sentinel */ },
- };
- 
--static const struct sh_pfc_soc_operations r8a77950_pinmux_ops = {
-+static const struct sh_pfc_soc_operations r8a77950_pfc_ops = {
- 	.pin_to_pocctrl = r8a77950_pin_to_pocctrl,
- 	.get_bias = rcar_pinmux_get_bias,
- 	.set_bias = rcar_pinmux_set_bias,
-@@ -5840,7 +5840,7 @@ static const struct sh_pfc_soc_operations r8a77950_pinmux_ops = {
- 
- const struct sh_pfc_soc_info r8a77950_pinmux_info = {
- 	.name = "r8a77950_pfc",
--	.ops = &r8a77950_pinmux_ops,
-+	.ops = &r8a77950_pfc_ops,
- 	.unlock_reg = 0xe6060000, /* PMMR */
- 
- 	.function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
-diff --git a/drivers/pinctrl/renesas/pfc-r8a77951.c b/drivers/pinctrl/renesas/pfc-r8a77951.c
-index ee9ce5f8eb86da87..9408ac0108a97588 100644
---- a/drivers/pinctrl/renesas/pfc-r8a77951.c
-+++ b/drivers/pinctrl/renesas/pfc-r8a77951.c
-@@ -6316,7 +6316,7 @@ static const struct pinmux_bias_reg pinmux_bias_regs[] = {
- 	{ /* sentinel */ },
- };
- 
--static const struct sh_pfc_soc_operations r8a77951_pinmux_ops = {
-+static const struct sh_pfc_soc_operations r8a77951_pfc_ops = {
- 	.pin_to_pocctrl = r8a77951_pin_to_pocctrl,
- 	.get_bias = rcar_pinmux_get_bias,
- 	.set_bias = rcar_pinmux_set_bias,
-@@ -6325,7 +6325,7 @@ static const struct sh_pfc_soc_operations r8a77951_pinmux_ops = {
- #ifdef CONFIG_PINCTRL_PFC_R8A774E1
- const struct sh_pfc_soc_info r8a774e1_pinmux_info = {
- 	.name = "r8a774e1_pfc",
--	.ops = &r8a77951_pinmux_ops,
-+	.ops = &r8a77951_pfc_ops,
- 	.unlock_reg = 0xe6060000, /* PMMR */
- 
- 	.function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
-@@ -6350,7 +6350,7 @@ const struct sh_pfc_soc_info r8a774e1_pinmux_info = {
- #ifdef CONFIG_PINCTRL_PFC_R8A77951
- const struct sh_pfc_soc_info r8a77951_pinmux_info = {
- 	.name = "r8a77951_pfc",
--	.ops = &r8a77951_pinmux_ops,
-+	.ops = &r8a77951_pfc_ops,
- 	.unlock_reg = 0xe6060000, /* PMMR */
- 
- 	.function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
-diff --git a/drivers/pinctrl/renesas/pfc-r8a7796.c b/drivers/pinctrl/renesas/pfc-r8a7796.c
-index de3df502f971a92e..929a67e84f88b3b2 100644
---- a/drivers/pinctrl/renesas/pfc-r8a7796.c
-+++ b/drivers/pinctrl/renesas/pfc-r8a7796.c
-@@ -6267,7 +6267,7 @@ static const struct pinmux_bias_reg pinmux_bias_regs[] = {
- 	{ /* sentinel */ },
- };
- 
--static const struct sh_pfc_soc_operations r8a7796_pinmux_ops = {
-+static const struct sh_pfc_soc_operations r8a7796_pfc_ops = {
- 	.pin_to_pocctrl = r8a7796_pin_to_pocctrl,
- 	.get_bias = rcar_pinmux_get_bias,
- 	.set_bias = rcar_pinmux_set_bias,
-@@ -6276,7 +6276,7 @@ static const struct sh_pfc_soc_operations r8a7796_pinmux_ops = {
- #ifdef CONFIG_PINCTRL_PFC_R8A774A1
- const struct sh_pfc_soc_info r8a774a1_pinmux_info = {
- 	.name = "r8a774a1_pfc",
--	.ops = &r8a7796_pinmux_ops,
-+	.ops = &r8a7796_pfc_ops,
- 	.unlock_reg = 0xe6060000, /* PMMR */
- 
- 	.function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
-@@ -6301,7 +6301,7 @@ const struct sh_pfc_soc_info r8a774a1_pinmux_info = {
- #ifdef CONFIG_PINCTRL_PFC_R8A77960
- const struct sh_pfc_soc_info r8a77960_pinmux_info = {
- 	.name = "r8a77960_pfc",
--	.ops = &r8a7796_pinmux_ops,
-+	.ops = &r8a7796_pfc_ops,
- 	.unlock_reg = 0xe6060000, /* PMMR */
- 
- 	.function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
-@@ -6328,7 +6328,7 @@ const struct sh_pfc_soc_info r8a77960_pinmux_info = {
- #ifdef CONFIG_PINCTRL_PFC_R8A77961
- const struct sh_pfc_soc_info r8a77961_pinmux_info = {
- 	.name = "r8a77961_pfc",
--	.ops = &r8a7796_pinmux_ops,
-+	.ops = &r8a7796_pfc_ops,
- 	.unlock_reg = 0xe6060000, /* PMMR */
- 
- 	.function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
-diff --git a/drivers/pinctrl/renesas/pfc-r8a77965.c b/drivers/pinctrl/renesas/pfc-r8a77965.c
-index 268129f82929f552..fbce972366a36af3 100644
---- a/drivers/pinctrl/renesas/pfc-r8a77965.c
-+++ b/drivers/pinctrl/renesas/pfc-r8a77965.c
-@@ -6524,7 +6524,7 @@ static const struct pinmux_bias_reg pinmux_bias_regs[] = {
- 	{ /* sentinel */ },
- };
- 
--static const struct sh_pfc_soc_operations r8a77965_pinmux_ops = {
-+static const struct sh_pfc_soc_operations r8a77965_pfc_ops = {
- 	.pin_to_pocctrl = r8a77965_pin_to_pocctrl,
- 	.get_bias = rcar_pinmux_get_bias,
- 	.set_bias = rcar_pinmux_set_bias,
-@@ -6533,7 +6533,7 @@ static const struct sh_pfc_soc_operations r8a77965_pinmux_ops = {
- #ifdef CONFIG_PINCTRL_PFC_R8A774B1
- const struct sh_pfc_soc_info r8a774b1_pinmux_info = {
- 	.name = "r8a774b1_pfc",
--	.ops = &r8a77965_pinmux_ops,
-+	.ops = &r8a77965_pfc_ops,
- 	.unlock_reg = 0xe6060000, /* PMMR */
- 
- 	.function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
-@@ -6558,7 +6558,7 @@ const struct sh_pfc_soc_info r8a774b1_pinmux_info = {
- #ifdef CONFIG_PINCTRL_PFC_R8A77965
- const struct sh_pfc_soc_info r8a77965_pinmux_info = {
- 	.name = "r8a77965_pfc",
--	.ops = &r8a77965_pinmux_ops,
-+	.ops = &r8a77965_pfc_ops,
- 	.unlock_reg = 0xe6060000, /* PMMR */
- 
- 	.function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
-diff --git a/drivers/pinctrl/renesas/pfc-r8a77970.c b/drivers/pinctrl/renesas/pfc-r8a77970.c
-index 45b0b235c5cc0138..bf24c39b3597d530 100644
---- a/drivers/pinctrl/renesas/pfc-r8a77970.c
-+++ b/drivers/pinctrl/renesas/pfc-r8a77970.c
-@@ -2656,7 +2656,7 @@ static const struct pinmux_bias_reg pinmux_bias_regs[] = {
- 	{ /* sentinel */ }
- };
- 
--static const struct sh_pfc_soc_operations pinmux_ops = {
-+static const struct sh_pfc_soc_operations r8a77970_pfc_ops = {
- 	.pin_to_pocctrl = r8a77970_pin_to_pocctrl,
- 	.get_bias = rcar_pinmux_get_bias,
- 	.set_bias = rcar_pinmux_set_bias,
-@@ -2664,7 +2664,7 @@ static const struct sh_pfc_soc_operations pinmux_ops = {
- 
- const struct sh_pfc_soc_info r8a77970_pinmux_info = {
- 	.name = "r8a77970_pfc",
--	.ops = &pinmux_ops,
-+	.ops = &r8a77970_pfc_ops,
- 	.unlock_reg = 0xe6060000, /* PMMR */
- 
- 	.function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
-diff --git a/drivers/pinctrl/renesas/pfc-r8a77980.c b/drivers/pinctrl/renesas/pfc-r8a77980.c
-index c4825b01449e9e3e..f80b327530b580d9 100644
---- a/drivers/pinctrl/renesas/pfc-r8a77980.c
-+++ b/drivers/pinctrl/renesas/pfc-r8a77980.c
-@@ -3139,7 +3139,7 @@ static const struct pinmux_bias_reg pinmux_bias_regs[] = {
- 	{ /* sentinel */ }
- };
- 
--static const struct sh_pfc_soc_operations pinmux_ops = {
-+static const struct sh_pfc_soc_operations r8a77980_pfc_ops = {
- 	.pin_to_pocctrl = r8a77980_pin_to_pocctrl,
- 	.get_bias = rcar_pinmux_get_bias,
- 	.set_bias = rcar_pinmux_set_bias,
-@@ -3147,7 +3147,7 @@ static const struct sh_pfc_soc_operations pinmux_ops = {
- 
- const struct sh_pfc_soc_info r8a77980_pinmux_info = {
- 	.name = "r8a77980_pfc",
--	.ops = &pinmux_ops,
-+	.ops = &r8a77980_pfc_ops,
- 	.unlock_reg = 0xe6060000, /* PMMR */
- 
- 	.function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
-diff --git a/drivers/pinctrl/renesas/pfc-r8a77990.c b/drivers/pinctrl/renesas/pfc-r8a77990.c
-index f44c7da3ec167de7..c7f0db09937ee489 100644
---- a/drivers/pinctrl/renesas/pfc-r8a77990.c
-+++ b/drivers/pinctrl/renesas/pfc-r8a77990.c
-@@ -5339,7 +5339,7 @@ static const struct pinmux_bias_reg pinmux_bias_regs[] = {
- 	{ /* sentinel */ },
- };
- 
--static const struct sh_pfc_soc_operations r8a77990_pinmux_ops = {
-+static const struct sh_pfc_soc_operations r8a77990_pfc_ops = {
- 	.pin_to_pocctrl = r8a77990_pin_to_pocctrl,
- 	.get_bias = rcar_pinmux_get_bias,
- 	.set_bias = rcar_pinmux_set_bias,
-@@ -5348,7 +5348,7 @@ static const struct sh_pfc_soc_operations r8a77990_pinmux_ops = {
- #ifdef CONFIG_PINCTRL_PFC_R8A774C0
- const struct sh_pfc_soc_info r8a774c0_pinmux_info = {
- 	.name = "r8a774c0_pfc",
--	.ops = &r8a77990_pinmux_ops,
-+	.ops = &r8a77990_pfc_ops,
- 	.unlock_reg = 0xe6060000, /* PMMR */
- 
- 	.function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
-@@ -5372,7 +5372,7 @@ const struct sh_pfc_soc_info r8a774c0_pinmux_info = {
- #ifdef CONFIG_PINCTRL_PFC_R8A77990
- const struct sh_pfc_soc_info r8a77990_pinmux_info = {
- 	.name = "r8a77990_pfc",
--	.ops = &r8a77990_pinmux_ops,
-+	.ops = &r8a77990_pfc_ops,
- 	.unlock_reg = 0xe6060000, /* PMMR */
- 
- 	.function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
-diff --git a/drivers/pinctrl/renesas/pfc-r8a77995.c b/drivers/pinctrl/renesas/pfc-r8a77995.c
-index c56e1e4c13b39cf3..e522e15769b91299 100644
---- a/drivers/pinctrl/renesas/pfc-r8a77995.c
-+++ b/drivers/pinctrl/renesas/pfc-r8a77995.c
-@@ -3144,7 +3144,7 @@ static void r8a77995_pinmux_set_bias(struct sh_pfc *pfc, unsigned int pin,
- 	sh_pfc_write(pfc, reg->puen, enable);
- }
- 
--static const struct sh_pfc_soc_operations r8a77995_pinmux_ops = {
-+static const struct sh_pfc_soc_operations r8a77995_pfc_ops = {
- 	.pin_to_pocctrl = r8a77995_pin_to_pocctrl,
- 	.get_bias = r8a77995_pinmux_get_bias,
- 	.set_bias = r8a77995_pinmux_set_bias,
-@@ -3152,7 +3152,7 @@ static const struct sh_pfc_soc_operations r8a77995_pinmux_ops = {
- 
- const struct sh_pfc_soc_info r8a77995_pinmux_info = {
- 	.name = "r8a77995_pfc",
--	.ops = &r8a77995_pinmux_ops,
-+	.ops = &r8a77995_pfc_ops,
- 	.unlock_reg = 0xe6060000, /* PMMR */
- 
- 	.function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
-diff --git a/drivers/pinctrl/renesas/pfc-r8a779a0.c b/drivers/pinctrl/renesas/pfc-r8a779a0.c
-index 83580385c3ca9b1c..81c0baea36f19ca1 100644
---- a/drivers/pinctrl/renesas/pfc-r8a779a0.c
-+++ b/drivers/pinctrl/renesas/pfc-r8a779a0.c
-@@ -4429,7 +4429,7 @@ static const struct pinmux_bias_reg pinmux_bias_regs[] = {
- 	{ /* sentinel */ },
- };
- 
--static const struct sh_pfc_soc_operations pinmux_ops = {
-+static const struct sh_pfc_soc_operations r8a779a0_pfc_ops = {
- 	.pin_to_pocctrl = r8a779a0_pin_to_pocctrl,
- 	.get_bias = rcar_pinmux_get_bias,
- 	.set_bias = rcar_pinmux_set_bias,
-@@ -4437,7 +4437,7 @@ static const struct sh_pfc_soc_operations pinmux_ops = {
- 
- const struct sh_pfc_soc_info r8a779a0_pinmux_info = {
- 	.name = "r8a779a0_pfc",
--	.ops = &pinmux_ops,
-+	.ops = &r8a779a0_pfc_ops,
- 	.unlock_reg = 0x1ff,	/* PMMRn mask */
- 
- 	.function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
+ /*
+  * GPIO number helper macro for R-Car
 -- 
 2.25.1
 
