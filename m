@@ -2,72 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B2BB647E513
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Dec 2021 15:44:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8186E47E52E
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Dec 2021 15:56:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234226AbhLWOoM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Dec 2021 09:44:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49572 "EHLO
+        id S243929AbhLWO4f (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Dec 2021 09:56:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232621AbhLWOoL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Dec 2021 09:44:11 -0500
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AE37C061401;
-        Thu, 23 Dec 2021 06:44:11 -0800 (PST)
-Received: by mail-ed1-x536.google.com with SMTP id z29so22290705edl.7;
-        Thu, 23 Dec 2021 06:44:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :in-reply-to;
-        bh=Y6HKwPC6DjAMqeX8HR858hunWd2fFPpLR+z2PX/mMB8=;
-        b=R3cWSJMAl3wNEBFA1/YJtKa+Cvcmo53dWvU2qTJx+fXLhCEVW1XKybBlwnjCrXS2D6
-         xJYIuiV/knrvU2qYXK5iQL1ZsbJawR1m01Pn+L7pCBZru/xP0m35fQy4f3X3jPH7EPpZ
-         Uje5JE34MBY+33vH31XMXyJar9tmkvJedNa0BUCmahyJsu5PhcavTp3Rtm2oi0YnsqyS
-         6mu5mWQiITDXSTGGOcwjpToo8uLgoZjxhDWUxTdDbPqmYyQWMZKLKIocqUKKeVc9/WU5
-         hWqY/wPWKI9mAFkm0x26yj3r+cS2AeYmzOKd87wrC1ZtnlANP8jmlczAkXTN3yPOszl3
-         8Rnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:in-reply-to;
-        bh=Y6HKwPC6DjAMqeX8HR858hunWd2fFPpLR+z2PX/mMB8=;
-        b=WOQZuw8B8sAU+ZRU4D74xglzcgIDlE/Z+gw21DUiX3y8akVnwT5ibbLp0Ukzk97DbG
-         uQsUNYYo4U/teOF6E96dpMdNFOpmG+KrVgN3d+/7pfE2Pa7tVCS0Q/Z6jBieizA3phU5
-         gd2UQTbZrfSRtxjNpd17xiOK6vn4+R9nO3aepOC251ujv4fOrFvxJbGWSyKsijFaZf2F
-         5GRyuKzuvx/UUYWTVCYO5Ic3EzjRH5Spfv1RzBmACrUR6J6z7ChphDU67Z+IGDoKseqR
-         6PHd5P9Obj3TmQU4XeI+/wwXMDA37OlRiEWzIkhZmH2zDTo+/IS68JD1IeNIoAVvBLxM
-         fIlA==
-X-Gm-Message-State: AOAM5328wyDf/21Vczbkd/vg856TdxJ5DnHoWXo/vowc6pK36F8h327n
-        jy+/G/gPhauVPtBwv7uU9TQ=
-X-Google-Smtp-Source: ABdhPJxJMVmMIWzbe/OhVCW6laNXPBvuyepul4fTOMhcYemBst6k9WKlC5I86G0CXSk2huD7933Z3w==
-X-Received: by 2002:a17:906:2192:: with SMTP id 18mr2066992eju.635.1640270650213;
-        Thu, 23 Dec 2021 06:44:10 -0800 (PST)
-Received: from standask-GA-A55M-S2HP ([188.123.115.255])
-        by smtp.gmail.com with ESMTPSA id qt5sm1769086ejb.214.2021.12.23.06.44.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Dec 2021 06:44:09 -0800 (PST)
-Date:   Thu, 23 Dec 2021 15:44:07 +0100
-From:   Stanislav Jakubek <stano.jakubek@gmail.com>
-To:     bjorn.andersson@linaro.org
-Cc:     agross@kernel.org, devicetree@vger.kernel.org,
-        linus.walleij@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        manivannan.sadhasivam@linaro.org, olof@lixom.net,
-        quic_vamslank@quicinc.com, robh+dt@kernel.org,
-        sboyd@codeaurora.org, soc@kernel.org
-Subject: Re: [PATCH v3 0/3] Add devicetree support for SDX65 Modem and MTP
-Message-ID: <20211223144407.GA6503@standask-GA-A55M-S2HP>
+        with ESMTP id S239907AbhLWO4c (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Dec 2021 09:56:32 -0500
+Received: from andre.telenet-ops.be (andre.telenet-ops.be [IPv6:2a02:1800:120:4::f00:15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58514C06179B
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Dec 2021 06:56:31 -0800 (PST)
+Received: from ramsan.of.borg ([84.195.186.194])
+        by andre.telenet-ops.be with bizsmtp
+        id ZqwV2600c4C55Sk01qwVZM; Thu, 23 Dec 2021 15:56:29 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1n0PW9-006aMA-8X; Thu, 23 Dec 2021 15:56:29 +0100
+Received: from geert by rox.of.borg with local (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1n0PW7-003rwS-Tl; Thu, 23 Dec 2021 15:56:27 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 00/10] pinctrl: renesas: checker: Miscellaneous improvements
+Date:   Thu, 23 Dec 2021 15:56:16 +0100
+Message-Id: <cover.1640270559.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <163960723735.3062250.7838330411965052999.b4-ty@linaro.org>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Bjorn, it seems to me like a patch similar to Patch 1/3 was applied
-some time ago, see 61339f368d59d25e22401731f89de44e3215508b, and applying
-this patch has caused the compatible to be documented twice.
+	Hi Linus,
 
-Stanislav
+This patch series improves the Renesas pin control table validator
+(enabled when DEBUG is defined, e.g. with CONFIG_DEBUG_PINCTRL=y), by:
+  1. Suggesting which pin groups can share pins,
+  2. Adding more checks to catch common errors.
+
+If you enable the checker, you may be disappointed by the (lack of)
+output.  Indeed, it is much easier to fix detected issues, than to get
+the checker code in a state that is suitable for upstream submission
+;-)
+Hence most issues detected have been fixed already for quite some time,
+or never arrived upstream in the first place. Recent fixes are [1] and
+[2].
+
+If accepted, I intend to queue this in renesas-pinctrl for v5.18.
+Thanks for your comments!
+
+[1] "[PATCH 00/60] pinctrl: renesas: Share more pin group data"
+    https://lore.kernel.org/r/cover.1640269757.git.geert+renesas@glider.be/
+[2] "[PATCH] pinctrl: renesas: r8a7794: Add range checking to
+     .pin_to_pocctrl()"
+    https://lore.kernel.org/r/d23767ad7152327654192d7191f4b8ae19493966.1640269510.git.geert+renesas@glider.be/
+
+Geert Uytterhoeven (10):
+  pinctrl: renesas: Remove unused pfc parameter from .pin_to_pocctrl()
+  pinctrl: renesas: Factor out .pin_to_portcr() address handling
+  pinctrl: renesas: Pass sh_pfc_soc_info to rcar_pin_to_bias_reg()
+  pinctrl: renesas: checker: Simplify same_name()
+  pinctrl: renesas: checker: Add pin group sharing checks
+  pinctrl: renesas: checker: Validate bias configs consistency
+  pinctrl: renesas: checker: Validate drive strength configs consistency
+  pinctrl: renesas: checker: Validate I/O voltage configs consistency
+  pinctrl: renesas: checker: Check bias pin conflicts
+  pinctrl: renesas: checker: Check drive pin conflicts
+
+ drivers/pinctrl/renesas/core.c         | 208 ++++++++++++++++++++++---
+ drivers/pinctrl/renesas/pfc-r8a73a4.c  |   4 +-
+ drivers/pinctrl/renesas/pfc-r8a7740.c  |   6 +-
+ drivers/pinctrl/renesas/pfc-r8a77470.c |   3 +-
+ drivers/pinctrl/renesas/pfc-r8a7790.c  |   2 +-
+ drivers/pinctrl/renesas/pfc-r8a7791.c  |   2 +-
+ drivers/pinctrl/renesas/pfc-r8a7794.c  |   2 +-
+ drivers/pinctrl/renesas/pfc-r8a77950.c |   3 +-
+ drivers/pinctrl/renesas/pfc-r8a77951.c |   3 +-
+ drivers/pinctrl/renesas/pfc-r8a7796.c  |   3 +-
+ drivers/pinctrl/renesas/pfc-r8a77965.c |   3 +-
+ drivers/pinctrl/renesas/pfc-r8a77970.c |   3 +-
+ drivers/pinctrl/renesas/pfc-r8a77980.c |   3 +-
+ drivers/pinctrl/renesas/pfc-r8a77990.c |   3 +-
+ drivers/pinctrl/renesas/pfc-r8a77995.c |   4 +-
+ drivers/pinctrl/renesas/pfc-r8a779a0.c |   3 +-
+ drivers/pinctrl/renesas/pfc-sh73a0.c   |   4 +-
+ drivers/pinctrl/renesas/pinctrl.c      |  24 +--
+ drivers/pinctrl/renesas/sh_pfc.h       |   6 +-
+ 19 files changed, 227 insertions(+), 62 deletions(-)
+
+-- 
+2.25.1
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
