@@ -2,96 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A46A47E191
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Dec 2021 11:38:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 81D4847E2DC
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Dec 2021 13:04:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347759AbhLWKiI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Dec 2021 05:38:08 -0500
-Received: from mga14.intel.com ([192.55.52.115]:29250 "EHLO mga14.intel.com"
+        id S1348101AbhLWMEt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Dec 2021 07:04:49 -0500
+Received: from mga01.intel.com ([192.55.52.88]:54141 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1347755AbhLWKiI (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 23 Dec 2021 05:38:08 -0500
+        id S1348085AbhLWMEs (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 23 Dec 2021 07:04:48 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1640255887; x=1671791887;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=PuR52/Ba94yPsgQ4lSZpBqqDPD9qPXxRGfzZH9LoHw8=;
-  b=KmkPKtePD+ZbztE7IWV24FNuik5c78VLQn4XKsJfAI0Vim9De2oXzbpA
-   1gln9F/EuibwIRduI/p1vETqUGOA9MnFH6cGh+kKMmYIRwwmW5VaoX550
-   ZX5gFDCGDNir/9nK6qQXMBeD9o8LQi9ERTl/npU4rbv5wz+IGARKGzB9k
-   /9r2CLr+Mdkd0dqo2h6hUv1XAQjvHZ0M6rMjAfkeMiDYR8oEW3+ehybRE
-   yW7DlJ2n5TCTzVJ6o0kiEgKlQU/Y1LomgeV2Q4YPTJqCv0XqKr7HI4v1l
-   Z/oKKJEJ7goT79HPQWqtyQeYkfk6dSIlJofbtVXYYLPXBwyVjFhmpIN9u
+  t=1640261088; x=1671797088;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=j7Iz0oIwoUZhkLnHFpLk+ZAFJFPFIJXK1GEWhh4vA2M=;
+  b=AXCiiWfGF8NgRWt25uvrX09lDuS33/EHDuHtBHyF2lRNbTzZtZ6rXv8u
+   qNoPj7QLA5eOJVzQN8RbI7/KEmMucOTjA6035vBEUTDed3pywl4lTCD9m
+   xCcmGmpinK6VGuN/RjRxscXEWeQHP9CTaGsf5bxbend9gVNfoMp9E+qcu
+   BnuiN3obuAEIM6GIxX0baIXynzOzJhlzrOWXCdF33lnymFyEgzb0siONC
+   3fhJ5BvmZ7IW9n04LsFrTy/SsERydn3/b53X5Y1gIBe0hfc546KKptrFF
+   2GBOQIv6nvz2oyLLsnqTfKnd+/LgX3NH+vfNhxZSBcTLZr/tISkCYGd7z
    Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10206"; a="241027274"
+X-IronPort-AV: E=McAfee;i="6200,9189,10206"; a="265022973"
 X-IronPort-AV: E=Sophos;i="5.88,229,1635231600"; 
-   d="scan'208";a="241027274"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Dec 2021 02:38:07 -0800
-X-ExtLoop1: 1
+   d="scan'208";a="265022973"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Dec 2021 04:04:48 -0800
 X-IronPort-AV: E=Sophos;i="5.88,229,1635231600"; 
-   d="scan'208";a="664546190"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 23 Dec 2021 02:38:05 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id AD5ADD4; Thu, 23 Dec 2021 12:38:13 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Cc:     Hoan Tran <hoan@os.amperecomputing.com>,
+   d="scan'208";a="570912439"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.162])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Dec 2021 04:04:45 -0800
+Received: by lahna (sSMTP sendmail emulation); Thu, 23 Dec 2021 14:04:43 +0200
+Date:   Thu, 23 Dec 2021 14:04:43 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org,
+        Hoan Tran <hoan@os.amperecomputing.com>,
         Serge Semin <fancer.lancer@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH v1 2/2] gpio: dwapb: Switch to use fwnode instead of of_node
-Date:   Thu, 23 Dec 2021 12:38:09 +0200
-Message-Id: <20211223103809.12343-2-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20211223103809.12343-1-andriy.shevchenko@linux.intel.com>
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH v1 1/2] gpiolib: acpi: make fwnode take precedence in
+ struct gpio_chip
+Message-ID: <YcRl29vhMQrNBF+e@lahna>
 References: <20211223103809.12343-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211223103809.12343-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-GPIO library now accepts fwnode as a firmware node, so
-switch the driver to use it and hence rectify the ACPI
-case which uses software nodes.
+On Thu, Dec 23, 2021 at 12:38:08PM +0200, Andy Shevchenko wrote:
+> If the driver sets the fwnode in struct gpio_chip, let it take
+> precedence over the parent's fwnode.
+> 
+> This is a follow up to the commit 9126a738edc1 ("gpiolib: of: make
+> fwnode take precedence in struct gpio_chip").
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Note, in this case it's rather logical fix that doesn't
-affect functionality, thus no backporting required.
-
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpio-dwapb.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
-
-diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-index ec0767d7800d..b0f3aca61974 100644
---- a/drivers/gpio/gpio-dwapb.c
-+++ b/drivers/gpio/gpio-dwapb.c
-@@ -15,7 +15,6 @@
- #include <linux/irq.h>
- #include <linux/mod_devicetable.h>
- #include <linux/module.h>
--#include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/property.h>
- #include <linux/reset.h>
-@@ -515,9 +514,7 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
- 		return err;
- 	}
- 
--#ifdef CONFIG_OF_GPIO
--	port->gc.of_node = to_of_node(pp->fwnode);
--#endif
-+	port->gc.fwnode = pp->fwnode;
- 	port->gc.ngpio = pp->ngpio;
- 	port->gc.base = pp->gpio_base;
- 
--- 
-2.34.1
-
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
