@@ -2,132 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3373F47E614
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Dec 2021 16:55:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 61EA947E62A
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Dec 2021 17:09:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244461AbhLWPzc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Dec 2021 10:55:32 -0500
-Received: from mga05.intel.com ([192.55.52.43]:47181 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231974AbhLWPzb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 23 Dec 2021 10:55:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1640274931; x=1671810931;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Eoq3IQ3HEs2cTlYpYY/HXtuejXWzsO7qZJoQ6uinrMU=;
-  b=KpkDSfxkMD/+eOjwDqvI78OB9nfKqhTpr4RDlct/Y3LTtFZFPL4MFt64
-   9ettBKW0nxTL3p/OF8m1hMwmcB/ttYKTvsFrMoRlD65GHHjMNWOkBnWbm
-   XY1QNa94lqIt6SjIW4MdUmeHmTH6vWue5zDygOAFE+3rR1mLAQuCXPek+
-   XgJ5jUN11wmWE+Efh30O+s5IeMlNJoxLsvEX6x13/VqmUJVEpeJVcrPjf
-   mXVQmzaS141mYwc4ekbYldrzXVmNtxB7tdurTTOHYrFblqxN3Ti0ZBFMu
-   QV9PDvw1rMTpIjh5F4+hQ2nTXJ3RCDBWIWV/SlytoOM+p9tCIC4Cce4vi
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10206"; a="327157245"
-X-IronPort-AV: E=Sophos;i="5.88,229,1635231600"; 
-   d="scan'208";a="327157245"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Dec 2021 07:55:31 -0800
-X-IronPort-AV: E=Sophos;i="5.88,229,1635231600"; 
-   d="scan'208";a="587346317"
-Received: from smile.fi.intel.com ([10.237.72.61])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Dec 2021 07:55:26 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1n0QPp-001Iqq-B3;
-        Thu, 23 Dec 2021 17:54:01 +0200
-Date:   Thu, 23 Dec 2021 17:54:01 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Tan Jui Nee <jui.nee.tan@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Kate Hsuan <hpa@redhat.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org
-Cc:     Jean Delvare <jdelvare@suse.com>, Peter Tyser <ptyser@xes-inc.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Gross <markgross@kernel.org>,
-        Henning Schild <henning.schild@siemens.com>
-Subject: Re: [PATCH v3 0/8] platform/x86: introduce p2sb_bar() helper
-Message-ID: <YcSbmQq4sCd9Dshy@smile.fi.intel.com>
-References: <20211221181526.53798-1-andriy.shevchenko@linux.intel.com>
+        id S233535AbhLWQJ0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Dec 2021 11:09:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40528 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229552AbhLWQJ0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Dec 2021 11:09:26 -0500
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A29C8C061401
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Dec 2021 08:09:25 -0800 (PST)
+Received: by mail-ed1-x531.google.com with SMTP id o20so23193404eds.10
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Dec 2021 08:09:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vAWRTJ/Vj93VeXITSdxDCkG1NaXY20kZz97z8hvTV2A=;
+        b=lzTtd0XAQGASGsI8HT0L6xI7sHKIWM0wpQphdu0pQ0zq5+DZ8xBKI8qn6NIdY/cSsm
+         JMuSgjbl8zVr5NEqDVDGzXqGvJkt+5dnjm7tvvB3vp7l51aaU97pZy58jmPrZn4wXW0x
+         cILb5AEdN8rElgnrmi4lv7CsWg1DrP+f8ku6q6e77qQcZJ894hMzrslaxA7QDNE7J0h3
+         k90O13DxhVjEe39yQtOhfezOktKcFn4nOvWCr+oUAcKRCUUd8PMTVfhxHZPU/6cG2rfZ
+         vbepAe+N2tt82KLPmDkNYbG5QoCgUlqvSqU4oKk5PpWYkfE+3FI6GEZWpmOHXy1bnvXJ
+         AL2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vAWRTJ/Vj93VeXITSdxDCkG1NaXY20kZz97z8hvTV2A=;
+        b=Ze134e9t2mIDnBtNCrbNzgKsrmtYeK7YkmnNmaso82lXBqhq/X84MIJw3aVuuyqe16
+         DuQAY5Y4uAmdgE0vwrf0OnU3GoH2xIiTAbVUlxbVAyYO6SOua4ZtXSYLYxuKbfbDyomp
+         Kh2KJbAGjgUxu9qzWP6Bk1IqZirKS182tk59Eg5d9gXg/iDR9IqIb3LeAqBxIWm99jGT
+         6U9+gaO2uWdVsbTqa0HoABvZpXsCryU/8C3kwAqUrKjtiKB+u1xP4RrMiwbqqxAMQWnM
+         QYoCAJ/PpJTwlU/FTusBFJJ9JFjXZQ4xOyHc9HalGKLbwtvXRbTTuYi84qgbNGl/ZvWg
+         Isdg==
+X-Gm-Message-State: AOAM532HM6mSCXItNRnqr+xeEnsMPDdm28G0+/YioZXZMODlVO2vhVFC
+        Cug6NEpgPeMGZ795Gmh98PnjjjbnvLT1d6dCET2l6A==
+X-Google-Smtp-Source: ABdhPJw4ZZf850jerNDYpWjONxPDhjw0UTMb62rjpJ7hddvU+uHiW/skylf/g82SITQP+P4RMMhUsvAX61g46kE++eM=
+X-Received: by 2002:a50:9556:: with SMTP id v22mr2506487eda.69.1640275764209;
+ Thu, 23 Dec 2021 08:09:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211221181526.53798-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20211223131538.88768-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20211223131538.88768-1-andriy.shevchenko@linux.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 23 Dec 2021 17:09:13 +0100
+Message-ID: <CAMRc=McGmpcNd9ccq9qvAh8p9mYwhUDAsin=ttE_DS0v-Yurgg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] gpio: brcmstb: Use local variable to access OF node
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Dec 21, 2021 at 08:15:18PM +0200, Andy Shevchenko wrote:
-> There are a few users and at least one more is coming that would
-> like to utilize P2SB mechanism of hiding and unhiding a device from
-> the PCI configuration space.
-> 
-> Here is the series to deduplicate existing users and provide
-> a generic way for new comers.
-> 
-> It also includes a patch to enable GPIO controllers on Apollo Lake
-> when it's used with ABL bootloader w/o ACPI support.
-> 
-> The patch that bring the helper ("platform/x86/intel: Add Primary
-> to Sideband (P2SB) bridge support") has a commit message that
-> sheds a light on what the P2SB is and why this is needed.
-> 
-> Please, comment on the approach and individual patches.
-> 
-> The changes made in v2 do not change the main idea and the functionality
-> in a big scale. What we need is probably one more (RE-)test done by Henning.
-> I hope to have it merged to v5.17-rc1 that Siemens can develop their changes
-> based on this series.
-> 
-> I have tested this on Apollo Lake platform (I'm able to see SPI NOR and
-> since we have an ACPI device for GPIO I do not see any attempts to recreate
-> one).
-> 
-> (Since it's cross subsystem, the PDx86 seems the main one and
-> I think it makes sense to route it throught it with immutable
-> tag or branch provided for the others).
-> 
-> Bjorn, are you okay with this approach and the commit message in the main
-> patch?
-> 
-> Changes in v3:
-> - resent with cover letter
-> 
-> Changes in v2:
-> - added parentheses around bus in macros (Joe)
-> - added tag (Jean)
-> - fixed indentation and wrapping in the header (Christoph)
-> - moved out of PCI realm to PDx86 as the best common denominator (Bjorn)
-> - added a verbose commit message to explain P2SB thingy (Bjorn)
-> - converted first parameter from pci_dev to pci_bus
-> - made first two parameters (bus and devfn) optional (Henning, Lee)
-> - added Intel pin control patch to the series (Henning, Mika)
-> - fixed English style in the commit message of one of MFD patch (Lee)
-> - added tags to my MFD LPC ICH patches (Lee)
-> - used consistently (c) (Lee)
-> - made indexing for MFD cell and resource arrays (Lee)
-> - fixed the resource size in i801 (Jean)
+On Thu, Dec 23, 2021 at 2:15 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> We already have a local variable that contains a copy of OF node pointer.
+> Use it instead of dereferencing it again from struct device.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/gpio/gpio-brcmstb.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpio/gpio-brcmstb.c b/drivers/gpio/gpio-brcmstb.c
+> index 176c264bb959..74ef89248867 100644
+> --- a/drivers/gpio/gpio-brcmstb.c
+> +++ b/drivers/gpio/gpio-brcmstb.c
+> @@ -704,7 +704,7 @@ static int brcmstb_gpio_probe(struct platform_device *pdev)
+>                 }
+>
+>                 gc->owner = THIS_MODULE;
+> -               gc->label = devm_kasprintf(dev, GFP_KERNEL, "%pOF", dev->of_node);
+> +               gc->label = devm_kasprintf(dev, GFP_KERNEL, "%pOF", np);
+>                 if (!gc->label) {
+>                         err = -ENOMEM;
+>                         goto fail;
+> --
+> 2.34.1
+>
 
-I'm going to be on vacation till 2022-01-03, I'll address comments if any
-during the first week of January and I hope it can make v5.17. Hans, what
-do you think?
+Applied, thanks!
 
-(Meanwhile I'm expecting that my patch to fix dependencies will be applied,
- so kbuild bot won't complain anymore on them being broken)
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bart
