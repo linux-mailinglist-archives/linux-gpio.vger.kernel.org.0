@@ -2,102 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC01347E63B
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Dec 2021 17:15:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DFDF547E64E
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Dec 2021 17:22:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349110AbhLWQPK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Dec 2021 11:15:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41780 "EHLO
+        id S235510AbhLWQWQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Dec 2021 11:22:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349131AbhLWQPD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Dec 2021 11:15:03 -0500
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29AC3C061759
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Dec 2021 08:15:03 -0800 (PST)
-Received: by mail-ed1-x536.google.com with SMTP id b13so23278169edd.8
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Dec 2021 08:15:03 -0800 (PST)
+        with ESMTP id S233575AbhLWQWP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Dec 2021 11:22:15 -0500
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37514C061401
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Dec 2021 08:22:15 -0800 (PST)
+Received: by mail-wr1-x433.google.com with SMTP id s1so12467648wra.6
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Dec 2021 08:22:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7vIhnilgSh+Fia1MLez8IlVcdelDNWzlS9+D9/jDYmE=;
-        b=mpNud0kKzvR+WQ0gBFa5kVXhk7gulH24cYrsgD/5AhkGKPs+M/vEErjulnFUs6N4A5
-         DQTSYiAAmncV8N9/HfeCWWV3wOT1zoTg4cyzCO/rBm+cIDzBHBNbT01fq30TcKvvsPSo
-         pcyttAnrEF7653+uOBIeS6nMlCV789/lEIFT93UcWbkO2CFh5ZoaBsjOAdw3sMjYpLgY
-         crFKrA5pVvE13NVOwdtz3aDkR0WZawwXvAbeRgHqCpakYKM5NxmfBsXe1Stas5jh5vSV
-         WVjzwHZn/tKw7Jat9UXoeHkQ+FB8FforGzGTDIZ+qjltxs1EuNTfdzRsIQOcSDux+9hd
-         GyxQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rhXkMPwGBcSiPIpTPBgElSyd1pb6V+FAdMLbsowPpAo=;
+        b=l0bK405IzA9dOS9RCKUDC2HVVCiW9v+mP19KiOl1DCzpA8d5Cb8xPWWTSv2NVfgxjk
+         ZPWLbD4lJNM+fQwX0gAT1x8Y5xnxRNv/KQXYOUPR2cULEqX3TaRSSx/9F6FUTxfOrvot
+         4A586SbASZzQyo8YDFmqH+KV3jCi51Az4eYh8G0AeVH6X4ox09PzEAgDfkpU+VqhnzRg
+         4uZ7eHckjnkwFqVrGAIbPA76K8LwS1RY9XhU32I6tPgTxeX+srrBH3WxmDdN7vykRNb/
+         G/OzvpM9QYPWH8MP0eg2SzSvOaKEOOffiu4cX/0pxVIrYqRistAxfbHGJ6Ig8cOOy9Jv
+         Gtgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7vIhnilgSh+Fia1MLez8IlVcdelDNWzlS9+D9/jDYmE=;
-        b=QYNYyW2wEZsShnZw3Fyf2TGiF4B+NbvxGD0HM6d6oaOaQGoaG6/FKVXntIHFc0j6sv
-         Yr/mCldzxpoeTNdoBN1s5YRDRxS0MH2GXggKBXTRGo8Fj2u3irRhnW+I+aWsu4MooWBq
-         QSe9I18HWH09/X/bTAAfoLxweCnFC84ZWnkDDiKYfnXt6odVqFsHuOXhtE5poR/bMiys
-         DVmp4+usZdAJQCKfySVd1q4vTYbfzUpPmfQAntruteQ2CTMTfz5xtiaszCJx9OnHAVXH
-         ZBkys7UFuq3C4lqS3G58yYZ0lCI5Hbmm49OLY/LeUiyxvQGFXs6rsf/NoeQNCnToFxK0
-         0qjw==
-X-Gm-Message-State: AOAM531thosZVOSTD87EnanM+lxhcE2IrDbt049Bdj7B7XfMo/mzCFXN
-        8udSBP1V3Kt0eWtbFtLv5WgZFnEw37ZOFWwyiQkwYA==
-X-Google-Smtp-Source: ABdhPJwYwGpkU4nU8vEiR/jvrZqHtdO6zYZ1DfYr7cVN1PStGTew60erncoMWe1J2wBUAQPAqvqaqzt66PNibkI8TtU=
-X-Received: by 2002:aa7:dd59:: with SMTP id o25mr2597851edw.288.1640276101735;
- Thu, 23 Dec 2021 08:15:01 -0800 (PST)
-MIME-Version: 1.0
-References: <20211223121606.67055-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20211223121606.67055-1-andriy.shevchenko@linux.intel.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rhXkMPwGBcSiPIpTPBgElSyd1pb6V+FAdMLbsowPpAo=;
+        b=ayrlpqx4AKvUWZsYvxoIuNCZzUsTr7dlYI+1UCxCPTljLgoqOG5x7HM/0gqmeSihjY
+         BrFtKr82Z/vkHiRtBzc2OfKrkrdzKysN4QVHEnrGJ+HmG2++mDOAksF0M2MlM9U9tc6z
+         CrUYkGYFheMKZ2uyudlHEiekxCAGPoCHCRi2i4gf7cHRnXjNTgO4zvfhwKuBCF3UPzTU
+         Xi1SIhHsH/PJ5s4I/saBj0fOOn3oXlCiHkNcblHYdiuu1LFGxhoB1CWeDKDGTjQaXG+6
+         dRJvKK8y1F6hCIjk7Am0MaMJuEDR+8pSa6OkV/E2BwLbIhVinn7weHdIgn5KoH68NhOh
+         aNow==
+X-Gm-Message-State: AOAM5323mP+L9r/0aXue9KMldZXwO5DJH/4+qKSe4tugl82L9Nk7ysHM
+        EL7NjdKPzm450OTERLjkpXx+Ug==
+X-Google-Smtp-Source: ABdhPJykmvluCdyMXmFAJL7sq1JZ3lSc9YQVLVSIJEt3A/VIsOFSUeNE/c4uuGcjHZEeFk6OyoVOqA==
+X-Received: by 2002:a5d:52c6:: with SMTP id r6mr2189264wrv.135.1640276533808;
+        Thu, 23 Dec 2021 08:22:13 -0800 (PST)
+Received: from debian-brgl.home ([2a01:cb1d:334:ac00:7d50:ff5:f5c1:e225])
+        by smtp.gmail.com with ESMTPSA id j13sm9440166wmq.11.2021.12.23.08.22.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Dec 2021 08:22:13 -0800 (PST)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 23 Dec 2021 17:14:50 +0100
-Message-ID: <CAMRc=McyA5n2vYLP1pSJYuy35AjGfugaM91JYxxmrmm0Lz_Q6A@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpio: regmap: Switch to use fwnode instead of of_node
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Michael Walle <michael@walle.cc>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [GIT PULL] gpio: fixes for v5.16-rc7
+Date:   Thu, 23 Dec 2021 17:22:09 +0100
+Message-Id: <20211223162209.26870-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.30.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Dec 23, 2021 at 1:16 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> GPIO library now accepts fwnode as a firmware node, so
-> switch the driver to use it.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/gpio/gpio-regmap.c | 6 +-----
->  1 file changed, 1 insertion(+), 5 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
-> index 69c219742083..6383136cbe59 100644
-> --- a/drivers/gpio/gpio-regmap.c
-> +++ b/drivers/gpio/gpio-regmap.c
-> @@ -244,16 +244,12 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
->
->         chip = &gpio->gpio_chip;
->         chip->parent = config->parent;
-> +       chip->fwnode = config->fwnode;
->         chip->base = -1;
->         chip->ngpio = config->ngpio;
->         chip->names = config->names;
->         chip->label = config->label ?: dev_name(config->parent);
->
-> -#if defined(CONFIG_OF_GPIO)
-> -       /* gpiolib will use of_node of the parent if chip->of_node is NULL */
-> -       chip->of_node = to_of_node(config->fwnode);
-> -#endif /* CONFIG_OF_GPIO */
-> -
->         /*
->          * If our regmap is fast_io we should probably set can_sleep to false.
->          * Right now, the regmap doesn't save this property, nor is there any
-> --
-> 2.34.1
->
+Linus,
 
-Applied, thanks!
+Here are two more fixes from the GPIO subsystem for this release cycle.
 
-Bart
+Please pull,
+Bartosz
+
+The following changes since commit d6912b1251b47e6b04ea8c8881dfb35a6e7a3e29:
+
+  gpio: rockchip: needs GENERIC_IRQ_CHIP to fix build errors (2021-11-16 09:41:44 +0100)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.16-rc7
+
+for you to fetch changes up to 3e4d9a485029aa9e172dab5420abe775fd86f8e8:
+
+  gpio: virtio: remove timeout (2021-12-21 16:22:58 +0100)
+
+----------------------------------------------------------------
+gpio fixes for v5.16-rc7
+
+- fix interrupts when replugging the device in gpio-dln2
+- remove the arbitrary timeout on virtio requests from gpio-virtio
+
+----------------------------------------------------------------
+Noralf Trønnes (1):
+      gpio: dln2: Fix interrupts when replugging the device
+
+Vincent Whitchurch (1):
+      gpio: virtio: remove timeout
+
+ drivers/gpio/gpio-dln2.c   | 19 +++++++++----------
+ drivers/gpio/gpio-virtio.c |  6 +-----
+ 2 files changed, 10 insertions(+), 15 deletions(-)
