@@ -2,70 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BABBA47E787
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Dec 2021 19:13:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B42E947E804
+	for <lists+linux-gpio@lfdr.de>; Thu, 23 Dec 2021 20:09:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349758AbhLWSNQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Dec 2021 13:13:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39952 "EHLO
+        id S1349946AbhLWTJD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Dec 2021 14:09:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349756AbhLWSNQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Dec 2021 13:13:16 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6297C061756;
-        Thu, 23 Dec 2021 10:13:15 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 635AAB818A0;
-        Thu, 23 Dec 2021 18:13:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 32B97C36AEB;
-        Thu, 23 Dec 2021 18:13:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1640283193;
-        bh=XGFOxNKl6UzVkCrzAi0UNTUcSKaRFSjfM3FEMD196CE=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=KMlXsMfWTaSX76K9YV5kFT/2Htm4IqdAhFi/Tq02x2qcT3bVSr6jErL/fKkxuxx+R
-         2Knjpjzv5TrknlXbbfh10NGGcunMkVzD25mJhb7txvs3/9itlVd3FAefelTnMeRxAi
-         wK0WU/PlH3AkjUhVpfwOtmbZuSrO6YUFGwOqcrnh43nK4JrhG0vLCaPWsDzZX3J9Fh
-         9ShgWWuQ936PBON/XGUpojnsPP7sN7SVcRaGsRZtDVBC58vLJBqZtBn1sk3eW28BJ1
-         E5PfQad1ekTDa+zZwayrm7hLxVM1kLdSAIFHB8cUpE+ojyfleknXjDXPcaBciq7A+T
-         uxBGUhwDxbpkg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 22AC8EAC065;
-        Thu, 23 Dec 2021 18:13:13 +0000 (UTC)
-Subject: Re: [GIT PULL] gpio: fixes for v5.16-rc7
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20211223162209.26870-1-brgl@bgdev.pl>
-References: <20211223162209.26870-1-brgl@bgdev.pl>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20211223162209.26870-1-brgl@bgdev.pl>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.16-rc7
-X-PR-Tracked-Commit-Id: 3e4d9a485029aa9e172dab5420abe775fd86f8e8
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3bf6f013980a9cf255c52135b74339a8fc332dfc
-Message-Id: <164028319313.29771.7185709258971409438.pr-tracker-bot@kernel.org>
-Date:   Thu, 23 Dec 2021 18:13:13 +0000
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>
+        with ESMTP id S1349942AbhLWTJA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Dec 2021 14:09:00 -0500
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D36D4C061401
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Dec 2021 11:08:59 -0800 (PST)
+Received: by mail-pg1-x531.google.com with SMTP id m15so5691585pgu.11
+        for <linux-gpio@vger.kernel.org>; Thu, 23 Dec 2021 11:08:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=PA5Eb3SKatYFaqsO/40bx9AAytaL07oA6ydkj8EAbzQ=;
+        b=FQOMmgFbeXkt63ZDqItPcpzau+Mr81/+uHztFwcOx1bi0ZlMVN2OvE5K/C5r/7VllO
+         8I4X90FWTqaQAZMKRe7PRGXOeiTM/Z1M7/0IgfQrUB0+F3cjvA5eVIQlxODEmlZCekl0
+         onUHaxmL2Z6kdzQ049vEazjWOP9Ff0rSjoaSRwd4guKJ5F58/82nVlqYzehfzFEmCVY9
+         hebZd2L8/dEGqEiMXcJRs6YuCZAcKLHCscu7kpX5zR+mncM27mFG/V14xn1NkN6993hO
+         QgtT0uedtt6wHwDiTIDviPPRxjh8AZ+3aVugey+NI/l6yDMFkEIQkIy13OakHwWaQn7C
+         aLYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=PA5Eb3SKatYFaqsO/40bx9AAytaL07oA6ydkj8EAbzQ=;
+        b=W2NGMVA9tV7E8BnHFWjfq5uNT7H2LuKRfosWAy2vHsi3iuFqik1KmypxrCTkmK6b/3
+         huSMJ/L/jX5Eqcoz9Jfuw7euu6dgx4Klx7r9y3rCXE3aj3z2f6TkSlEcEE8JaNiY49HC
+         utguQQeEGqyD85LetKL7rojzZyUiNAs5mtk56ZsKI9n5gnzgofz0ZSjgNKq1WPCUFpww
+         ajGlCvs38H9AghDK2/ijLjFnigOea++wVFo83w7i7zZpsI0A4iDBvWEdFb8shj+d1+4y
+         eqr+tRLqbv1twki2GwIkND0+DJpAn0pPSJpIxqdyG7q7aksJlB0bWIiZgqewkpaMp69l
+         QtIQ==
+X-Gm-Message-State: AOAM532wQR4HCx1OYAAaXVI61Dz7q00S0R5gnp+xhd/DJf1BoVLPxGwi
+        6RpzB5ckWDNQ7Qk8qP1r3surCqNE/K1dsAU2Qr0=
+X-Google-Smtp-Source: ABdhPJzTE8gox+z89WFUmWwL1bf3/DGIEqZALxe0l64HyERiSBogVUlWU4ZBXHf7lNZExZJ0mBxdIaCcNwdyeJa4Kqs=
+X-Received: by 2002:a63:4755:: with SMTP id w21mr3174076pgk.218.1640286539299;
+ Thu, 23 Dec 2021 11:08:59 -0800 (PST)
+MIME-Version: 1.0
+Received: by 2002:a05:6a20:789d:b0:68:7657:a7bf with HTTP; Thu, 23 Dec 2021
+ 11:08:58 -0800 (PST)
+Reply-To: revfrpaulwilliams2@gmail.com
+From:   "Rev. Fr. Paul Williams" <melindagatesfoundation53@gmail.com>
+Date:   Fri, 24 Dec 2021 00:38:58 +0530
+Message-ID: <CAMk=7SRHb=e7tVmRxJDyyxMvWRYLxv+Xa303K_irL_9u2vHpOw@mail.gmail.com>
+Subject: Donation From Williams Foundation.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pull request you sent on Thu, 23 Dec 2021 17:22:09 +0100:
-
-> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.16-rc7
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3bf6f013980a9cf255c52135b74339a8fc332dfc
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Contact Rev. Fr. Paul Williams Immediately For A Charity Donation Of
+$6,200,000.00 United States Dollars At E-Mail:
+revfrpaulwilliams2@gmail.com
