@@ -2,114 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B3E247EDDA
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Dec 2021 10:36:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A363347EF3E
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Dec 2021 14:47:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352293AbhLXJgj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 24 Dec 2021 04:36:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44710 "EHLO
+        id S235805AbhLXNra (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 Dec 2021 08:47:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241582AbhLXJgi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Dec 2021 04:36:38 -0500
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 684ECC061401
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Dec 2021 01:36:38 -0800 (PST)
-Received: by mail-qv1-xf43.google.com with SMTP id h5so7393043qvh.8
-        for <linux-gpio@vger.kernel.org>; Fri, 24 Dec 2021 01:36:38 -0800 (PST)
+        with ESMTP id S235783AbhLXNr3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Dec 2021 08:47:29 -0500
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 149A4C061401;
+        Fri, 24 Dec 2021 05:47:29 -0800 (PST)
+Received: by mail-lf1-x12f.google.com with SMTP id x7so19192341lfu.8;
+        Fri, 24 Dec 2021 05:47:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=DA2RfWm5BfTc8dY4tRUxJejPvziWb2AgHmDwtjqgqi8=;
-        b=EU3oByVab7ZfYVaOljkbDoO4gbcHhebbpIzvSxD8aa5Bjn5YUe+8N3kcGquge9564b
-         EJxGbewkJJs650DLUZcZhcPVC3s015Xar7tzNcE4LM6toQX7hIMMXC5H1W5RklQ8rX06
-         jUaWr+i8l4zMhdFtNJU2vw6VXdQiNa2TZ5Kcd2lhOI8Gj1NvsxtZYnF68gnhiOzpdBd4
-         ngrVTss8n+eDHlvdUsajKrPLd0j/Mf1MfeZppPPQOo93y1u0eBir56c15AWx+HqqCuTP
-         9UmGlMsVjqp7H4abZaiVGyGMVuAESQvLvJ8YizQnUNJe1sTrCRDc+O5bM4qD1a4aO85P
-         Lraw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=afCIlcjFXpeKvqs8SychKCeXq2Sds3zEsMBHblNJTN8=;
+        b=JzsdVHfZYqcVTB1yGagX/EHlWkPXar/sg3v61Ep6VkhoE50ULNjB8cD+XAqmov15so
+         nn4zRg7SxZCw0YD6DqjPZ0wTDDvoua/hvoK8SBmGVyDLAakxPfm1Sb1trqcDtRHzJhTJ
+         ArTeSUH2NPBJbtXED7Ie41nQkpuUoWCgq1wER1+MpLfnEhA5XjXzqAlRnfBeRP8G10EQ
+         DOByg2GRTxJcx6fuLMaIYnwEnE2+j4iZZA2mVEMzJpMPyAJTT6N0TK5Fg5SAiUdSOhyj
+         gFm3Vrjlo3Nn5jXVtjH1X7MV2fiXyKztM5A9HnVer0uraQj81VFT+d9dQJRzXyr1Il1T
+         t49A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=DA2RfWm5BfTc8dY4tRUxJejPvziWb2AgHmDwtjqgqi8=;
-        b=bf8Qmv0TVjmM0JoNP74PWHbTONYSp3ofAqpWrhe3XHMt7sD3P4I6M+VztCKcOKs/eW
-         1o+O1EbYXFmh9tGPkzTQjZQ9IcSpqOr4lp7ngOAad+vy1gtYB4mHRglc12e/RJX7sciw
-         IfUxceJcpwkOMILh0zJwykTeH6wGjo0zH0Ckf4Kn5WhCCC8O1ec1xZBwvU3fkNHQuMtJ
-         C7jPttUJ+HEfsw4vVUU7DAX666+bhXcDslQYXhUQsacK/sBaL1yB8iiwHnv+DoqF3Uiq
-         9Ny8vWpdefuWTrgQQuxuXI8jaQMXyLYRQHeFP4i1qTs4kXH9JkBM4GBg6fSXYX+mWxNu
-         XT0A==
-X-Gm-Message-State: AOAM532VKwLI6ODhjEka8rE5KgcUVPizgoXUwtA45WXWud8SaS9JHt7y
-        1kGsgQTf8qv4NFqAUEb4gNdmDHF6uMLDy20ulJxWr5f0jJMYXQ==
-X-Google-Smtp-Source: ABdhPJwq25UOhuoqnOwPhzowIypiNw6XyNmceBnLh4BqztRQ9NDxByjxDNQajeWtu5eKyzwIuGhr0bLo472WjtTKd2M=
-X-Received: by 2002:a05:6214:2349:: with SMTP id hu9mr4787481qvb.120.1640338597556;
- Fri, 24 Dec 2021 01:36:37 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=afCIlcjFXpeKvqs8SychKCeXq2Sds3zEsMBHblNJTN8=;
+        b=JOua+5Gs3dgGq0U0ezr5y3heGLWRfK7X1I02TpsX0EzBgvDdNrrGxVRX6wsIiQeS19
+         yNVrGecrSWxsL3J2XASyRmFyW2jIcB38aVFvn8WI8kTfLfV9Nz8YFc2IUQe7p/slrH0l
+         5vTUKu7RAg1LH6asxI+1hC0xt9yZiOXLa0xHwhYhodPLrxUPTtN1JKXgiGLZ3aZS1HSa
+         R7DD6fK//NOy6CXGtjNnx7kQFEvhwFL334ZoRRFaBp72YSqYuMpeufEqWWcZlpMK7rOy
+         CF6rx3nues59cZFaVg/1F3Tcf+eOLJFfeTqnIWVLUC0UcpCK9N/qeKw+a53dZNRcpK+z
+         Xwsg==
+X-Gm-Message-State: AOAM5329us4BtZXt26vRllHmxwFrmbBuFI7HXfJF15yfCmcz0GMltDHW
+        /jExWbc1NTvDE+31y0WTsns=
+X-Google-Smtp-Source: ABdhPJz9GCrC1UyzH/vLs9fb2lYqZclxDnnUK+QdggBJ5s7bsuQPmVbu4X6vIlq24u2LvduMWRgDUA==
+X-Received: by 2002:a05:6512:472:: with SMTP id x18mr5187110lfd.566.1640353647407;
+        Fri, 24 Dec 2021 05:47:27 -0800 (PST)
+Received: from mobilestation ([95.79.218.126])
+        by smtp.gmail.com with ESMTPSA id d3sm811274lfg.116.2021.12.24.05.47.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Dec 2021 05:47:26 -0800 (PST)
+Date:   Fri, 24 Dec 2021 16:47:24 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH v1 2/2] gpio: dwapb: Switch to use fwnode instead of
+ of_node
+Message-ID: <20211224134724.klsfulobcwxojfi3@mobilestation>
+References: <20211223103809.12343-1-andriy.shevchenko@linux.intel.com>
+ <20211223103809.12343-2-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Received: by 2002:ad4:5c62:0:0:0:0:0 with HTTP; Fri, 24 Dec 2021 01:36:37
- -0800 (PST)
-Reply-To: williamsreneta2019@gmail.com
-From:   MISS WILLIAMS <info.turvateealfastar@gmail.com>
-Date:   Fri, 24 Dec 2021 01:36:37 -0800
-Message-ID: <CAM-qQYbOw_Nf-3E0c5SdpimG8tNZa_cXzZ116yMJEvS6XQpHCw@mail.gmail.com>
-Subject: Greetings Dearest One,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211223103809.12343-2-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Greetings Dearest One,
+On Thu, Dec 23, 2021 at 12:38:09PM +0200, Andy Shevchenko wrote:
+> GPIO library now accepts fwnode as a firmware node, so
+> switch the driver to use it and hence rectify the ACPI
+> case which uses software nodes.
+> 
+> Note, in this case it's rather logical fix that doesn't
+> affect functionality, thus no backporting required.
 
-How are you today, together with your family?Hope fine.I would like to
-use this opportunity to introduce myself to you. I am Miss Reneta
-Williams, From Benin Republic, West Africa. And my late parents are
-Mr. and Mrs. Dikko Williams; my father was a highly reputable business
-magnet who operated in Benin Republic during his days.
+Thanks for the patch.
+Acked-by: Serge Semin <fancer.lancer@gmail.com>
 
-I am writing this mail to you with tears and sorrow from my heart.
-With due respect trust and humanity, I know this mail will come to you
-as a surprise since we haven't known or come across each other before,
-considering the fact that I sourced your email contact through the
-Internet in search of trusted person who can be trusted and will
-assist me.
+-Sergey
 
-It is sad to say that he passed away mysteriously in France during one
-of his business trips abroad. Though his sudden death was linked or
-rather suspected to have been masterminded by an uncle of his who
-traveled with him at that time. But God knows the truth! My mother
-died when I was just 6yrs old, and since then my father took me so
-special.
-
-Before his death, he called me and informed me that he has the sum of
-Eighteen Million Five Hundred , United State Dollar
-(USD$18.500,000.00) left in fixed deposit account in one of the
-leading banks in Africa. He further told me that he deposited the
-money in my name, and also gave me all the necessary but legal
-documents to this fund with the bank.
-
-I am 21 years old and a university undergraduate and really don't know
-what to do. Now I want an account overseas where I can transfer this
-funds and after the transaction I will come and reside permanently in
-your country till such a time that it will be convenient for me to
-return back home if I so desire.
-
-The death of my father actually brought sorrow to my life. I also want
-to invest the fund under your care because I am ignorant of business
-world. I am in a sincere desire of your humble assistance in this
-regards. Your suggestions and ideas will be highly regarded.
-
-Now permit me to ask these few questions:
-
-1. Can you honestly help me from your heart?
-
-2. Can I completely trust you?
-
-3. What percentage of the total amount in question will be good for
-you after the money is in your account?
-
-Please, consider this and get back to me as soon as
-possible.Immediately and confirm your willingness on this my
-email(williamsreneta2019@gmail.com), here is one of my Picture and
-also i will inform you more details involved in this matter.
-
-Regards,
-
-Miss Reneta Williams.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/gpio/gpio-dwapb.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+> index ec0767d7800d..b0f3aca61974 100644
+> --- a/drivers/gpio/gpio-dwapb.c
+> +++ b/drivers/gpio/gpio-dwapb.c
+> @@ -15,7 +15,6 @@
+>  #include <linux/irq.h>
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/module.h>
+> -#include <linux/of.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/property.h>
+>  #include <linux/reset.h>
+> @@ -515,9 +514,7 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
+>  		return err;
+>  	}
+>  
+> -#ifdef CONFIG_OF_GPIO
+> -	port->gc.of_node = to_of_node(pp->fwnode);
+> -#endif
+> +	port->gc.fwnode = pp->fwnode;
+>  	port->gc.ngpio = pp->ngpio;
+>  	port->gc.base = pp->gpio_base;
+>  
+> -- 
+> 2.34.1
+> 
