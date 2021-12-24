@@ -2,83 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E11A447EA9E
-	for <lists+linux-gpio@lfdr.de>; Fri, 24 Dec 2021 03:44:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5780C47ECD6
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Dec 2021 08:50:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350949AbhLXCoC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Dec 2021 21:44:02 -0500
-Received: from smtp25.cstnet.cn ([159.226.251.25]:47272 "EHLO cstnet.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1350885AbhLXCoB (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 23 Dec 2021 21:44:01 -0500
-Received: from localhost.localdomain (unknown [124.16.138.126])
-        by APP-05 (Coremail) with SMTP id zQCowADHzQHZM8VhJwPHBA--.5875S2;
-        Fri, 24 Dec 2021 10:43:38 +0800 (CST)
-From:   Jiasheng Jiang <jiasheng@iscas.ac.cn>
-To:     albeu@free.fr, linus.walleij@linaro.org, bgolaszewski@baylibre.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jiasheng Jiang <jiasheng@iscas.ac.cn>
-Subject: [PATCH] gpio: ath79: Check for error irq
-Date:   Fri, 24 Dec 2021 10:43:36 +0800
-Message-Id: <20211224024336.1517858-1-jiasheng@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: zQCowADHzQHZM8VhJwPHBA--.5875S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7JF48ur15ur43CryfCF47CFg_yoWkKrg_Cw
-        4kZr17Gr4kCFnIqF17Aw1ayrZayrs7urn3AFn2gayaqryUAwnrurnruwn5uF17WrWUKFyD
-        Ga4DWrWSvrs3CjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbcAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-        Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJV
-        W0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_Gr1l
-        42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
-        WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAK
-        I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
-        4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
-        42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUojg4DUUUU
-X-Originating-IP: [124.16.138.126]
-X-CM-SenderInfo: pmld2xxhqjqxpvfd2hldfou0/
+        id S1343551AbhLXHut (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 24 Dec 2021 02:50:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49658 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234111AbhLXHut (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 24 Dec 2021 02:50:49 -0500
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D349C061401;
+        Thu, 23 Dec 2021 23:50:48 -0800 (PST)
+Received: by mail-pg1-x535.google.com with SMTP id r138so7014217pgr.13;
+        Thu, 23 Dec 2021 23:50:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id;
+        bh=jPo9yF90yb6Tml8cLFg4vSSw+Zf7GoEQngD5eTEX1OY=;
+        b=o6AZ60TksFPsSJSQ72DUDRRzpUTtoGNPTBNGcr+wGf7lQ1LC2fDWb6Wp2pWlMWU+gr
+         r+OrkV3RhoGY/YdyXuC7B5NRyUQOrvpLAknVyXgsWzzem4e6FkHsFjK+UHbtzTwTofne
+         W1Ff5TsY6ReEsTZdGidJM/4LxxRrprscedzYY0ix/cg9jkuBx4lhIMHZcT6x7i6eqp/c
+         aUGXFMzFq37hO+ivg1jmeG7tC2uxvT9JeQEdknzB/IZN3Jc+v+xAM6eRit0kNsjrb1Oc
+         wDj3jEONytF9chIcDoEzAFWWPDYxCqWTYd7Ri/jqdbHZkexwZlbkZFjj4QTh4sx4pnl5
+         IiMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=jPo9yF90yb6Tml8cLFg4vSSw+Zf7GoEQngD5eTEX1OY=;
+        b=DKATj2wsE/XwaTQ6v5bEoVK/e9Yrci1PgRnkQKyRrtIbHeNTihW7Q2Qk8D7DSDVy2O
+         7VOh4ETVKby80BWNx2cBqrAF25+z3vspPfiDl8hP8wmNaTXqC1tufiYWxkUmfAuKKiah
+         trvZxBAsH6JruYM+AGdLmOwd/xYNQ8aG9q4IEYSU9S/nD1ImCnErktZF9L1eg7aLnIBL
+         /TycLosV2eegtcNPhRMtbevSqLz03Jxz1H8ohdImCP3JuM0Q4ph781+kndpm0uHAUfHt
+         JsZ6zCvjt+Tc7BdREnoZ2W4JGaGc6D5UMSPznLwafG3NOEgOMqdPYMNEECqnAJoksLB/
+         edaw==
+X-Gm-Message-State: AOAM530wQcdzzQSVlVmIg+pjTsdbukFlPGlyCbqh0VvujC2bCZSM6qL1
+        hLJ9PCuX92LGXr2RQ9TPXlU=
+X-Google-Smtp-Source: ABdhPJyL+M7kwA3RB1jOBULDmZL382fyohtjDHLYMATrFA4XD7buEb0hwEr5OLXp0B5kr89XXQRzGQ==
+X-Received: by 2002:a63:7c1b:: with SMTP id x27mr5158267pgc.176.1640332247743;
+        Thu, 23 Dec 2021 23:50:47 -0800 (PST)
+Received: from scdiu3.sunplus.com ([113.196.136.192])
+        by smtp.googlemail.com with ESMTPSA id h15sm8649164pfc.134.2021.12.23.23.50.45
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 23 Dec 2021 23:50:47 -0800 (PST)
+From:   Wells Lu <wellslutw@gmail.com>
+To:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     wells.lu@sunplus.com, dvorkin@tibbo.com,
+        Wells Lu <wellslutw@gmail.com>
+Subject: [PATCH v5 0/2] This is a patch series for pinctrl driver of Sunplus SP7021 SoC.
+Date:   Fri, 24 Dec 2021 15:42:57 +0800
+Message-Id: <1640331779-18277-1-git-send-email-wellslutw@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-For the possible failure of the platform_get_irq(), the returned irq
-could be error number and will finally cause the failure of the
-request_irq().
-Consider that platform_get_irq() can now in certain cases return
--EPROBE_DEFER, and the consequences of letting request_irq() effectively
-convert that into -EINVAL, even at probe time rather than later on.
-So it might be better to check just now.
+Sunplus SP7021 is an ARM Cortex A7 (4 cores) based SoC. It integrates
+many peripherals (ex: UART, I2C, SPI, SDIO, eMMC, USB, SD card and
+etc.) into a single chip. It is designed for industrial control
+applications.
 
-Fixes: 1d473c2cb9fe ("MIPS: ath79: Move the GPIO driver to drivers/gpio")
-Signed-off-by: Jiasheng Jiang <jiasheng@iscas.ac.cn>
----
- drivers/gpio/gpio-ath79.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+Refer to:
+https://sunplus-tibbo.atlassian.net/wiki/spaces/doc/overview
+https://tibbo.com/store/plus1.html
 
-diff --git a/drivers/gpio/gpio-ath79.c b/drivers/gpio/gpio-ath79.c
-index 678ddd375891..11f49998e56a 100644
---- a/drivers/gpio/gpio-ath79.c
-+++ b/drivers/gpio/gpio-ath79.c
-@@ -285,7 +285,13 @@ static int ath79_gpio_probe(struct platform_device *pdev)
- 					     GFP_KERNEL);
- 		if (!girq->parents)
- 			return -ENOMEM;
--		girq->parents[0] = platform_get_irq(pdev, 0);
-+
-+		err = platform_get_irq(pdev, 0);
-+		if (err < 0)
-+			return err;
-+
-+		girq->parents[0] = err;
-+
- 		girq->default_type = IRQ_TYPE_NONE;
- 		girq->handler = handle_simple_irq;
- 	}
+Wells Lu (2):
+  dt-bindings: pinctrl: Add dt-bindings for Sunplus SP7021
+  pinctrl: Add driver for Sunplus SP7021
+
+ .../bindings/pinctrl/sunplus,sp7021-pinctrl.yaml   |  373 +++++++
+ MAINTAINERS                                        |   10 +
+ drivers/pinctrl/Kconfig                            |    1 +
+ drivers/pinctrl/Makefile                           |    1 +
+ drivers/pinctrl/sunplus/Kconfig                    |   21 +
+ drivers/pinctrl/sunplus/Makefile                   |    5 +
+ drivers/pinctrl/sunplus/sppctl.c                   | 1178 ++++++++++++++++++++
+ drivers/pinctrl/sunplus/sppctl.h                   |  155 +++
+ drivers/pinctrl/sunplus/sppctl_sp7021.c            |  584 ++++++++++
+ include/dt-bindings/pinctrl/sppctl-sp7021.h        |  171 +++
+ include/dt-bindings/pinctrl/sppctl.h               |   30 +
+ 11 files changed, 2529 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/sunplus,sp7021-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/sunplus/Kconfig
+ create mode 100644 drivers/pinctrl/sunplus/Makefile
+ create mode 100644 drivers/pinctrl/sunplus/sppctl.c
+ create mode 100644 drivers/pinctrl/sunplus/sppctl.h
+ create mode 100644 drivers/pinctrl/sunplus/sppctl_sp7021.c
+ create mode 100644 include/dt-bindings/pinctrl/sppctl-sp7021.h
+ create mode 100644 include/dt-bindings/pinctrl/sppctl.h
+
 -- 
-2.25.1
+2.7.4
 
