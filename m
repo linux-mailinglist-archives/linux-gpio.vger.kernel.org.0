@@ -2,60 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B42E947E804
-	for <lists+linux-gpio@lfdr.de>; Thu, 23 Dec 2021 20:09:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E11A447EA9E
+	for <lists+linux-gpio@lfdr.de>; Fri, 24 Dec 2021 03:44:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349946AbhLWTJD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 23 Dec 2021 14:09:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52486 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349942AbhLWTJA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 23 Dec 2021 14:09:00 -0500
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D36D4C061401
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Dec 2021 11:08:59 -0800 (PST)
-Received: by mail-pg1-x531.google.com with SMTP id m15so5691585pgu.11
-        for <linux-gpio@vger.kernel.org>; Thu, 23 Dec 2021 11:08:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=PA5Eb3SKatYFaqsO/40bx9AAytaL07oA6ydkj8EAbzQ=;
-        b=FQOMmgFbeXkt63ZDqItPcpzau+Mr81/+uHztFwcOx1bi0ZlMVN2OvE5K/C5r/7VllO
-         8I4X90FWTqaQAZMKRe7PRGXOeiTM/Z1M7/0IgfQrUB0+F3cjvA5eVIQlxODEmlZCekl0
-         onUHaxmL2Z6kdzQ049vEazjWOP9Ff0rSjoaSRwd4guKJ5F58/82nVlqYzehfzFEmCVY9
-         hebZd2L8/dEGqEiMXcJRs6YuCZAcKLHCscu7kpX5zR+mncM27mFG/V14xn1NkN6993hO
-         QgtT0uedtt6wHwDiTIDviPPRxjh8AZ+3aVugey+NI/l6yDMFkEIQkIy13OakHwWaQn7C
-         aLYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=PA5Eb3SKatYFaqsO/40bx9AAytaL07oA6ydkj8EAbzQ=;
-        b=W2NGMVA9tV7E8BnHFWjfq5uNT7H2LuKRfosWAy2vHsi3iuFqik1KmypxrCTkmK6b/3
-         huSMJ/L/jX5Eqcoz9Jfuw7euu6dgx4Klx7r9y3rCXE3aj3z2f6TkSlEcEE8JaNiY49HC
-         utguQQeEGqyD85LetKL7rojzZyUiNAs5mtk56ZsKI9n5gnzgofz0ZSjgNKq1WPCUFpww
-         ajGlCvs38H9AghDK2/ijLjFnigOea++wVFo83w7i7zZpsI0A4iDBvWEdFb8shj+d1+4y
-         eqr+tRLqbv1twki2GwIkND0+DJpAn0pPSJpIxqdyG7q7aksJlB0bWIiZgqewkpaMp69l
-         QtIQ==
-X-Gm-Message-State: AOAM532wQR4HCx1OYAAaXVI61Dz7q00S0R5gnp+xhd/DJf1BoVLPxGwi
-        6RpzB5ckWDNQ7Qk8qP1r3surCqNE/K1dsAU2Qr0=
-X-Google-Smtp-Source: ABdhPJzTE8gox+z89WFUmWwL1bf3/DGIEqZALxe0l64HyERiSBogVUlWU4ZBXHf7lNZExZJ0mBxdIaCcNwdyeJa4Kqs=
-X-Received: by 2002:a63:4755:: with SMTP id w21mr3174076pgk.218.1640286539299;
- Thu, 23 Dec 2021 11:08:59 -0800 (PST)
+        id S1350949AbhLXCoC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 23 Dec 2021 21:44:02 -0500
+Received: from smtp25.cstnet.cn ([159.226.251.25]:47272 "EHLO cstnet.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1350885AbhLXCoB (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 23 Dec 2021 21:44:01 -0500
+Received: from localhost.localdomain (unknown [124.16.138.126])
+        by APP-05 (Coremail) with SMTP id zQCowADHzQHZM8VhJwPHBA--.5875S2;
+        Fri, 24 Dec 2021 10:43:38 +0800 (CST)
+From:   Jiasheng Jiang <jiasheng@iscas.ac.cn>
+To:     albeu@free.fr, linus.walleij@linaro.org, bgolaszewski@baylibre.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jiasheng Jiang <jiasheng@iscas.ac.cn>
+Subject: [PATCH] gpio: ath79: Check for error irq
+Date:   Fri, 24 Dec 2021 10:43:36 +0800
+Message-Id: <20211224024336.1517858-1-jiasheng@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Received: by 2002:a05:6a20:789d:b0:68:7657:a7bf with HTTP; Thu, 23 Dec 2021
- 11:08:58 -0800 (PST)
-Reply-To: revfrpaulwilliams2@gmail.com
-From:   "Rev. Fr. Paul Williams" <melindagatesfoundation53@gmail.com>
-Date:   Fri, 24 Dec 2021 00:38:58 +0530
-Message-ID: <CAMk=7SRHb=e7tVmRxJDyyxMvWRYLxv+Xa303K_irL_9u2vHpOw@mail.gmail.com>
-Subject: Donation From Williams Foundation.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: zQCowADHzQHZM8VhJwPHBA--.5875S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7JF48ur15ur43CryfCF47CFg_yoWkKrg_Cw
+        4kZr17Gr4kCFnIqF17Aw1ayrZayrs7urn3AFn2gayaqryUAwnrurnruwn5uF17WrWUKFyD
+        Ga4DWrWSvrs3CjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbcAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+        Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJV
+        W0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_Gr1l
+        42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
+        WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAK
+        I48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r
+        4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+        42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUojg4DUUUU
+X-Originating-IP: [124.16.138.126]
+X-CM-SenderInfo: pmld2xxhqjqxpvfd2hldfou0/
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Contact Rev. Fr. Paul Williams Immediately For A Charity Donation Of
-$6,200,000.00 United States Dollars At E-Mail:
-revfrpaulwilliams2@gmail.com
+For the possible failure of the platform_get_irq(), the returned irq
+could be error number and will finally cause the failure of the
+request_irq().
+Consider that platform_get_irq() can now in certain cases return
+-EPROBE_DEFER, and the consequences of letting request_irq() effectively
+convert that into -EINVAL, even at probe time rather than later on.
+So it might be better to check just now.
+
+Fixes: 1d473c2cb9fe ("MIPS: ath79: Move the GPIO driver to drivers/gpio")
+Signed-off-by: Jiasheng Jiang <jiasheng@iscas.ac.cn>
+---
+ drivers/gpio/gpio-ath79.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/gpio-ath79.c b/drivers/gpio/gpio-ath79.c
+index 678ddd375891..11f49998e56a 100644
+--- a/drivers/gpio/gpio-ath79.c
++++ b/drivers/gpio/gpio-ath79.c
+@@ -285,7 +285,13 @@ static int ath79_gpio_probe(struct platform_device *pdev)
+ 					     GFP_KERNEL);
+ 		if (!girq->parents)
+ 			return -ENOMEM;
+-		girq->parents[0] = platform_get_irq(pdev, 0);
++
++		err = platform_get_irq(pdev, 0);
++		if (err < 0)
++			return err;
++
++		girq->parents[0] = err;
++
+ 		girq->default_type = IRQ_TYPE_NONE;
+ 		girq->handler = handle_simple_irq;
+ 	}
+-- 
+2.25.1
+
