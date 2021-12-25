@@ -2,190 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 17C4547F44C
-	for <lists+linux-gpio@lfdr.de>; Sat, 25 Dec 2021 20:17:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 52D9C47F455
+	for <lists+linux-gpio@lfdr.de>; Sat, 25 Dec 2021 20:26:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232719AbhLYTRU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 25 Dec 2021 14:17:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55736 "EHLO
+        id S232747AbhLYT0V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 25 Dec 2021 14:26:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232694AbhLYTRU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 25 Dec 2021 14:17:20 -0500
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9FD7C061759
-        for <linux-gpio@vger.kernel.org>; Sat, 25 Dec 2021 11:17:19 -0800 (PST)
-Received: by mail-lf1-x12b.google.com with SMTP id u13so25653356lff.12
-        for <linux-gpio@vger.kernel.org>; Sat, 25 Dec 2021 11:17:19 -0800 (PST)
+        with ESMTP id S232739AbhLYT0V (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 25 Dec 2021 14:26:21 -0500
+Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 158E6C061401
+        for <linux-gpio@vger.kernel.org>; Sat, 25 Dec 2021 11:26:21 -0800 (PST)
+Received: by mail-yb1-xb2d.google.com with SMTP id d201so8455046ybc.7
+        for <linux-gpio@vger.kernel.org>; Sat, 25 Dec 2021 11:26:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WJNrRIjHHYf+GPgQViyRAYjVslLnt06sXu04ZoOwHts=;
-        b=Gveyeo2okQd7D9oOp4BlMV4Mo7gu3+oAU+tPjrgT/XFk1Jo+YQmG89VxkSf1jUI8UR
-         0seCzeyaJggnIzbGhAbmIwRgz8Nm0NTZiEFKAwyk3G8gCyVde2hmcnOrBPVq9Ksi1s+q
-         aoEjGOuNn87Z3TTyVr+bTnUIloztyFyoHwW2luJJYhSQV+XAIopPpeOU7sR6DM/XqUWd
-         Qjtcn0N3aJaxjlfEYIhnPtFcjcXu/ts/m8f6i0kuMgqW/5BtGYFz4TgFoaFHsPv0Ha5M
-         GYFiAHhXrrdeNKCaC/lq1wLLv3tmD4oCryw5ewOCJlkdnt++7o3aqiVeteb/1kNqff81
-         5YhQ==
+        d=gmail.com; s=20210112;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=BKg+9vAejA2Ct26Kbi9NE7+VUa+BlHarruky9ShakkM=;
+        b=UrD6bpXSB4bHFfu3jWjncYL/0Rhn1OkovtOUeQ43sE79nmI3OoUnXw4e4W1HL6KY/A
+         yLuqFBRyY9eUdB9sukB9YzUU/BD5aNbGjfwRF/WSjt1mcexFcYe2HUVokm3ZuJ+9TE+r
+         MXNJtkJ5ZpKfPEj4/k3XUeSvpsurTnoiBghzoes2FQ2GqiH4ddjXE/rg+mHyllpJH//2
+         SZ5j5xf+lkSw0qoR5lGu2Ux+UcI4XoKNl7Z8ShVeDn3HH3+0Ja0sMU2pwzSXAWNnTpUh
+         bEvS0IUXF8MrlpmqMfJBtZcO+AgcUqKhEO2TLWr024+nw6HLqw+Syw56tJDZMkyBkdIl
+         xCuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WJNrRIjHHYf+GPgQViyRAYjVslLnt06sXu04ZoOwHts=;
-        b=G+S9ZTZEEFzmfEOnLEKcSA+wg7IMEE/LBrVdXmQxnPT+yYKgmE634nQYjTD/0Vz2rx
-         mB4erZFnGm03z1VuzzmKHCLENAPRVbXlFvTBXb5hPtqpEbt4mMET1OG/X46lqYJT+pVq
-         Xta0REnQ9vM9qQG01rI6DF9D74HufUO/Re2d9+b9pUFhqxW5pjGw9flG/E+uCxE0KRed
-         rjXR2lzcK/ykMopWlxJFWA7Ku6TPwvwHzEXZmrWaOIDNHqaVm2l8GSWM6m8hZntQy+KA
-         jZwy9IyiaQhthr6VZeH0Cto6ms1vDvfbB/w9JB2MuE4j5e5vwYm8jkgxthaFpHchHHBT
-         B9OQ==
-X-Gm-Message-State: AOAM533t9bQyb23ovyRvdP0mEif1e31umzbei8OQFFV8W5uI/NcK+TiK
-        rRKXOvEzqMjIfVhDMMR7R+Et9A==
-X-Google-Smtp-Source: ABdhPJzIjE8GJoJ+svQ3ALHAQwA3mymJTGLISXogHXHEsapsVqXpYH+w83Iux53FVVo+kHxa2lyNow==
-X-Received: by 2002:a05:6512:3996:: with SMTP id j22mr2600088lfu.74.1640459837886;
-        Sat, 25 Dec 2021 11:17:17 -0800 (PST)
-Received: from cobook.home (nikaet.starlink.ru. [94.141.168.29])
-        by smtp.gmail.com with ESMTPSA id 194sm252169ljj.60.2021.12.25.11.17.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Dec 2021 11:17:17 -0800 (PST)
-From:   Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Subject: [PATCH] pinctrl: renesas: r8a7799[05]: Add MediaLB pins
-Date:   Sat, 25 Dec 2021 22:17:13 +0300
-Message-Id: <20211225191713.2187975-1-nikita.yoush@cogentembedded.com>
-X-Mailer: git-send-email 2.30.2
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=BKg+9vAejA2Ct26Kbi9NE7+VUa+BlHarruky9ShakkM=;
+        b=hUPHfXoHGn0csM2nj4N/tG2SnhM2tWF6nGQzWIjzIDvb7vhwsVPu9oh+qP+zEPZ7fH
+         Hx3KzVKFvZATlscGzxByzx0P5KbINpJpU40HsyGYxFebhFsd9Y0z4kPSPL35YHm2FS17
+         VilGNl6G2aWxZ97C2JrJpJQn1E9I3Qj3Mnd/osVQSBkQYXSvXNCueubh7e8hp6dtQ9dr
+         2VqGIPPvANkv3Y1miOWa89TvYZuLG0G4hxX4LMnfgn7+JeD3d3jCNcRfiezjSPXxSh0K
+         Z1Cl2sqWUW+d4uTi1cy92cNGnlUA13YqHK8ntTNodxNEpkrlsRS8OpSCQaXUM+6IDpz8
+         xrZw==
+X-Gm-Message-State: AOAM532q79mkPe8b1IoNHGfV7mR/amdBEZm4262qFDjK64wbgeZAQlco
+        1LD63fYkLK3PKBcq2mSlREdUNHxWJeA8bvDTgftT0RswSi4mKR2R
+X-Google-Smtp-Source: ABdhPJxECBdOVl0LqF9LjL0DNdhMYzSngvU4pg/GGY3dKYuFX2bGgu4Rm0sH3k+FLIPSW6SDEXpMaWDnHaZjcsEVU3U=
+X-Received: by 2002:a25:380b:: with SMTP id f11mr14950148yba.49.1640460380020;
+ Sat, 25 Dec 2021 11:26:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From:   Ashayam Gupta <ashayamg@gmail.com>
+Date:   Sun, 26 Dec 2021 00:56:09 +0530
+Message-ID: <CAOgBvpkPOaKdwi-eWR2WAzJxQpOqAZWijKKs2twAZ9dUQ+ibgg@mail.gmail.com>
+Subject: [libgpiod] Issue in gpioset (Tag v1.6.3)
+To:     linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This adds pins, groups, and functions for MediaLB devices on Renesas
-R-Car E3 and D3 SoCs.
+Hi All,
+I have used the v1.6.3 Tag from the website
+https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/?h=v1.6.3,
+for doing a simple testing on the breadboard(Hobby Project).
+The source code has been compiled with these flags: ./autogen.sh
+--enable-tools=yes --prefix=/home/pi/gpio/install
+--enable-bindings-cxx.
+I am facing the below mentioned issue with this build.
 
-Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
----
- drivers/pinctrl/renesas/pfc-r8a77990.c | 22 ++++++++++++++++++++--
- drivers/pinctrl/renesas/pfc-r8a77995.c | 14 ++++++++++++++
- 2 files changed, 34 insertions(+), 2 deletions(-)
+Issue:
+Command used: ./gpioset --mode=time --sec=1 pinctrl-bcm2711 27=1
+As per my understanding, after 1 sec the pin @27 should switch to 0 ,
+but the LED keeps glowing even after the command is complete and later
+on when I run the
+./gpioget gpiochip0 27, the LED switches off  and the value printed is 0.
+Is this supposed to be the desired behavior for the above set command,
+or it is supposed to EXIT on default after the mentioned time limit.
 
-diff --git a/drivers/pinctrl/renesas/pfc-r8a77990.c b/drivers/pinctrl/renesas/pfc-r8a77990.c
-index f44c7da3ec16..b7ab4c520ae5 100644
---- a/drivers/pinctrl/renesas/pfc-r8a77990.c
-+++ b/drivers/pinctrl/renesas/pfc-r8a77990.c
-@@ -2339,6 +2339,16 @@ static const unsigned int intc_ex_irq5_mux[] = {
- 	IRQ5_MARK,
- };
- 
-+#ifdef CONFIG_PINCTRL_PFC_R8A77990
-+/* - MLB+ ------------------------------------------------------------------- */
-+static const unsigned int mlb_3pin_pins[] = {
-+	RCAR_GP_PIN(5, 17), RCAR_GP_PIN(5, 18), RCAR_GP_PIN(5, 19),
-+};
-+static const unsigned int mlb_3pin_mux[] = {
-+	MLB_CLK_MARK, MLB_SIG_MARK, MLB_DAT_MARK,
-+};
-+#endif /* CONFIG_PINCTRL_PFC_R8A77990 */
-+
- /* - MSIOF0 ----------------------------------------------------------------- */
- static const unsigned int msiof0_clk_pins[] = {
- 	/* SCK */
-@@ -3842,7 +3852,7 @@ static const unsigned int vin5_clk_b_mux[] = {
- static const struct {
- 	struct sh_pfc_pin_group common[255];
- #ifdef CONFIG_PINCTRL_PFC_R8A77990
--	struct sh_pfc_pin_group automotive[21];
-+	struct sh_pfc_pin_group automotive[22];
- #endif
- } pinmux_groups = {
- 	.common = {
-@@ -4125,6 +4135,7 @@ static const struct {
- 		SH_PFC_PIN_GROUP(drif3_ctrl_b),
- 		SH_PFC_PIN_GROUP(drif3_data0_b),
- 		SH_PFC_PIN_GROUP(drif3_data1_b),
-+		SH_PFC_PIN_GROUP(mlb_3pin),
- 	}
- #endif /* CONFIG_PINCTRL_PFC_R8A77990 */
- };
-@@ -4315,6 +4326,12 @@ static const char * const intc_ex_groups[] = {
- 	"intc_ex_irq5",
- };
- 
-+#ifdef CONFIG_PINCTRL_PFC_R8A77990
-+static const char * const mlb_3pin_groups[] = {
-+	"mlb_3pin",
-+};
-+#endif /* CONFIG_PINCTRL_PFC_R8A77990 */
-+
- static const char * const msiof0_groups[] = {
- 	"msiof0_clk",
- 	"msiof0_sync",
-@@ -4569,7 +4586,7 @@ static const char * const vin5_groups[] = {
- static const struct {
- 	struct sh_pfc_function common[49];
- #ifdef CONFIG_PINCTRL_PFC_R8A77990
--	struct sh_pfc_function automotive[4];
-+	struct sh_pfc_function automotive[5];
- #endif
- } pinmux_functions = {
- 	.common = {
-@@ -4629,6 +4646,7 @@ static const struct {
- 		SH_PFC_FUNCTION(drif1),
- 		SH_PFC_FUNCTION(drif2),
- 		SH_PFC_FUNCTION(drif3),
-+		SH_PFC_FUNCTION(mlb_3pin),
- 	}
- #endif /* CONFIG_PINCTRL_PFC_R8A77990 */
- };
-diff --git a/drivers/pinctrl/renesas/pfc-r8a77995.c b/drivers/pinctrl/renesas/pfc-r8a77995.c
-index c56e1e4c13b3..d0f0d6b0f979 100644
---- a/drivers/pinctrl/renesas/pfc-r8a77995.c
-+++ b/drivers/pinctrl/renesas/pfc-r8a77995.c
-@@ -1295,6 +1295,14 @@ static const unsigned int mmc_ctrl_mux[] = {
- 	MMC_CLK_MARK, MMC_CMD_MARK,
- };
- 
-+/* - MLB+ ------------------------------------------------------------------- */
-+static const unsigned int mlb_3pin_pins[] = {
-+	RCAR_GP_PIN(0, 6), RCAR_GP_PIN(0, 7), RCAR_GP_PIN(0, 8),
-+};
-+static const unsigned int mlb_3pin_mux[] = {
-+	MLB_CLK_MARK, MLB_SIG_MARK, MLB_DAT_MARK,
-+};
-+
- /* - MSIOF0 ----------------------------------------------------------------- */
- static const unsigned int msiof0_clk_pins[] = {
- 	/* SCK */
-@@ -2049,6 +2057,7 @@ static const struct sh_pfc_pin_group pinmux_groups[] = {
- 	SH_PFC_PIN_GROUP(i2c2_b),
- 	SH_PFC_PIN_GROUP(i2c3_a),
- 	SH_PFC_PIN_GROUP(i2c3_b),
-+	SH_PFC_PIN_GROUP(mlb_3pin),
- 	SH_PFC_PIN_GROUP(mmc_data1),
- 	SH_PFC_PIN_GROUP(mmc_data4),
- 	SH_PFC_PIN_GROUP(mmc_data8),
-@@ -2314,6 +2323,10 @@ static const char * const vin4_groups[] = {
- 	"vin4_clk",
- };
- 
-+static const char * const mlb_3pin_groups[] = {
-+	"mlb_3pin",
-+};
-+
- static const char * const msiof0_groups[] = {
- 	"msiof0_clk",
- 	"msiof0_sync",
-@@ -2370,6 +2383,7 @@ static const struct sh_pfc_function pinmux_functions[] = {
- 	SH_PFC_FUNCTION(i2c1),
- 	SH_PFC_FUNCTION(i2c2),
- 	SH_PFC_FUNCTION(i2c3),
-+	SH_PFC_FUNCTION(mlb_3pin),
- 	SH_PFC_FUNCTION(mmc),
- 	SH_PFC_FUNCTION(msiof0),
- 	SH_PFC_FUNCTION(msiof1),
--- 
-2.30.2
+Setup:
+A simple LED connected using a resistor with GPIO @27 for output pin,
+and a GND pin used.
 
+Please let me know if some more information is needed, or if there is
+some help I can provide in testing the library further with my small
+setup, also kindly let me know if my format for filling issue/bugs is
+not correct, and in case it needs to be posted elsewhere.
+
+Thanks
+Ashayam Gupta
