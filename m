@@ -2,114 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C71F047F301
-	for <lists+linux-gpio@lfdr.de>; Sat, 25 Dec 2021 11:41:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E27F447F32A
+	for <lists+linux-gpio@lfdr.de>; Sat, 25 Dec 2021 13:00:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231441AbhLYKlh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 25 Dec 2021 05:41:37 -0500
-Received: from smtp-relay-internal-1.canonical.com ([185.125.188.123]:52794
-        "EHLO smtp-relay-internal-1.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231439AbhLYKlg (ORCPT
+        id S229463AbhLYMAp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 25 Dec 2021 07:00:45 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:31914 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229827AbhLYMAp (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 25 Dec 2021 05:41:36 -0500
-Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com [209.85.208.197])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        Sat, 25 Dec 2021 07:00:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1640433645;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=ncLZ10RziAYxRYvsypSZ1WLJ4bmcu28FExAIvhN+O2w=;
+        b=Bzl/4TIkkQtjDwn6rdZVW9vci6zrQG85GoGb7LXphoR50uhhyftdO7UkU6OmR41sKVAzxH
+        R7HmHMyNjVsjKUCm1iTSG/8tuESviU6gizMgy7404YK9Orrs7lq13xRP/2kxgE0/pzTCi9
+        AL0wnwwY+IavzA1UymEl4hKc/P9Acd0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-247-Y74cXq0rNiiLhC4ccmAyQg-1; Sat, 25 Dec 2021 07:00:43 -0500
+X-MC-Unique: Y74cXq0rNiiLhC4ccmAyQg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id C9A2C3FFDA
-        for <linux-gpio@vger.kernel.org>; Sat, 25 Dec 2021 10:41:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1640428895;
-        bh=QauqV2pTGxSKDYX2CC7YbyGe29QyyH/cOCLamRKi74c=;
-        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
-        b=k6RSmyukQKrar1hdhfhDJ5N6bWvPhaQAna8hnJgPSfvuiLG61Z8b7a4VMYSMxn+CL
-         mbymK63MwA6w4fdgWU1WlQrS0IQ33wNL52TQvi+nhqzD4b1UFLOIyW6l7HSEexVCeE
-         Ow/MHvnglv+SRqUnUfRWpm2V3nRnxwMxOPmPFjtHZ712e4ABMqvufjXI6c4Nuix/KG
-         +kQMycqGba24nFXySx+fhr8T6EtXzrxzDNASTwn5NlNL5fpIUC6tjGn3pa+wby15GP
-         FlyWsH/LkOJWKyMPsDFou4N+E38Kn3kqapvJSe9ZcdRgu0xtPe1RbyMtSKb99HjSnw
-         y5GCzAFEfiLGg==
-Received: by mail-lj1-f197.google.com with SMTP id k20-20020a2e9214000000b0022d6b13bc8aso2894908ljg.13
-        for <linux-gpio@vger.kernel.org>; Sat, 25 Dec 2021 02:41:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QauqV2pTGxSKDYX2CC7YbyGe29QyyH/cOCLamRKi74c=;
-        b=1+JwdVRDW2yYUZz75G3eeagoByw9vNvrtuBkYjEAHvImlfLDY6JF/3cFFZePtTOa5f
-         AOydpywRjyR3WpNh2hawa/jg6f8cy2kQMQpLLjhqiPCpHjkM1wrFFgoXBAqDMMgmp0a1
-         z1+QwEdHAmqMkwvY/aUCUAWcKi70StlM5ulEq+5qBSsI89aoloiU+kIpHKiPn0dOQ7CS
-         bbXh4/STFP0WO3gZczb4jAs4FOwrA0Wk7tXq5H+DL9CYyAxE9x5lTbV3mYHno/iHW4fz
-         TgN31+3ndGiM0ICbrTkmFU0e76lhcE/CR2YWNadHYSiG6yeXIIHXm/Q6sbJw5gN9pNyl
-         D7qQ==
-X-Gm-Message-State: AOAM533gy/wVMBWb6hK6dSkZEBAQ0QuwTSmLOMLHp0+PkEouGsvu79jX
-        nEZX9Pg6BBMX/L9efBiHz9ZGGGx4op0zBpG8fMIjzuS0berEGu2v8C2aMDXRKTfTn6c/ENRxLqb
-        BL4OMVnbPWtSIlyVFW65lyD5OCBOGWNrrVNyoAsU=
-X-Received: by 2002:a2e:9d4:: with SMTP id 203mr3998864ljj.437.1640428895050;
-        Sat, 25 Dec 2021 02:41:35 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJw+fdyArzWCtOfCrFbRkFIfMjOff+PenYaeghN2vyX7RnRFogTvS0/Oy2lypvtzNtOU6hdlYA==
-X-Received: by 2002:a2e:9d4:: with SMTP id 203mr3998847ljj.437.1640428894858;
-        Sat, 25 Dec 2021 02:41:34 -0800 (PST)
-Received: from krzk-bin.lan (89-77-68-124.dynamic.chello.pl. [89.77.68.124])
-        by smtp.gmail.com with ESMTPSA id e12sm1077330lfr.179.2021.12.25.02.41.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Dec 2021 02:41:34 -0800 (PST)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [GIT PULL] pinctrl: samsung: drivers for v5.17
-Date:   Sat, 25 Dec 2021 11:41:29 +0100
-Message-Id: <20211225104129.56077-1-krzysztof.kozlowski@canonical.com>
-X-Mailer: git-send-email 2.32.0
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 310B318460E6;
+        Sat, 25 Dec 2021 12:00:41 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.192.12])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 378FB9AA2C;
+        Sat, 25 Dec 2021 12:00:27 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Andy Shevchenko <andy@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: [PATCH 1/2] gpio: tps68470: Allow building as module
+Date:   Sat, 25 Dec 2021 13:00:25 +0100
+Message-Id: <20211225120026.95268-1-hdegoede@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+The gpio-tps68470 driver binds to a tps68470-gpio platform-device which
+itself gets instantiated by a special MFD driver from
+drivers/platform/x86/intel/int3472/tps68470.c
 
-Samsung stuff for v5.17.
+This MFD driver itself can be build as a module, so it makes no sense to
+force the gpio-tps68470 driver to always be builtin.
 
-Best regards,
-Krzysztof
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/gpio/Kconfig         | 6 +-----
+ drivers/gpio/gpio-tps68470.c | 6 +++++-
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 60d9374c72c0..3ac5860e0aeb 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -1393,7 +1393,7 @@ config GPIO_TPS65912
+ 	  This driver supports TPS65912 GPIO chip.
+ 
+ config GPIO_TPS68470
+-	bool "TPS68470 GPIO"
++	tristate "TPS68470 GPIO"
+ 	depends on INTEL_SKL_INT3472
+ 	help
+ 	  Select this option to enable GPIO driver for the TPS68470
+@@ -1403,10 +1403,6 @@ config GPIO_TPS68470
+ 	  input or output as appropriate, the sensor related GPIOs
+ 	  are "output only" GPIOs.
+ 
+-	  This driver config is bool, as the GPIO functionality
+-	  of the TPS68470 must be available before dependent
+-	  drivers are loaded.
+-
+ config GPIO_TQMX86
+ 	tristate "TQ-Systems QTMX86 GPIO"
+ 	depends on MFD_TQMX86 || COMPILE_TEST
+diff --git a/drivers/gpio/gpio-tps68470.c b/drivers/gpio/gpio-tps68470.c
+index 423b7bc30ae8..ce12c5a54fd4 100644
+--- a/drivers/gpio/gpio-tps68470.c
++++ b/drivers/gpio/gpio-tps68470.c
+@@ -155,4 +155,8 @@ static struct platform_driver tps68470_gpio_driver = {
+ 	.probe = tps68470_gpio_probe,
+ };
+ 
+-builtin_platform_driver(tps68470_gpio_driver)
++module_platform_driver(tps68470_gpio_driver);
++
++MODULE_ALIAS("platform:tps68470-gpio");
++MODULE_DESCRIPTION("GPIO driver for TPS68470 PMIC");
++MODULE_LICENSE("GPL v2");
+-- 
+2.33.1
 
-The following changes since commit fa55b7dcdc43c1aa1ba12bca9d2dd4318c2a0dbf:
-
-  Linux 5.16-rc1 (2021-11-14 13:56:52 -0800)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/samsung.git tags/samsung-pinctrl-5.17
-
-for you to fetch changes up to a382d568f144b9e533ad210117c6c50d8dbdcaf1:
-
-  pinctrl: samsung: Use platform_get_irq_optional() to get the interrupt (2021-12-25 11:18:06 +0100)
-
-----------------------------------------------------------------
-Samsung pinctrl drivers changes for v5.17
-
-1. Add support for Exynos7885.
-2. Drop usage of platform_get_resource().
-
-----------------------------------------------------------------
-David Virag (2):
-      dt-bindings: pinctrl: samsung: Document Exynos7885
-      pinctrl: samsung: Add Exynos7885 SoC specific data
-
-Lad Prabhakar (1):
-      pinctrl: samsung: Use platform_get_irq_optional() to get the interrupt
-
-Wei Yongjun (1):
-      pinctrl: samsung: Make symbol 'exynos7885_pin_ctrl' static
-
- .../bindings/pinctrl/samsung-pinctrl.txt           |  1 +
- drivers/pinctrl/samsung/pinctrl-exynos-arm64.c     | 81 ++++++++++++++++++++++
- drivers/pinctrl/samsung/pinctrl-samsung.c          | 11 +--
- drivers/pinctrl/samsung/pinctrl-samsung.h          |  1 +
- 4 files changed, 90 insertions(+), 4 deletions(-)
