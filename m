@@ -2,72 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 54B3D47F50D
-	for <lists+linux-gpio@lfdr.de>; Sun, 26 Dec 2021 04:34:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8602847F514
+	for <lists+linux-gpio@lfdr.de>; Sun, 26 Dec 2021 05:02:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231222AbhLZDe4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 25 Dec 2021 22:34:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48896 "EHLO
+        id S231305AbhLZECR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 25 Dec 2021 23:02:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230289AbhLZDez (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 25 Dec 2021 22:34:55 -0500
-Received: from mail-oi1-x233.google.com (mail-oi1-x233.google.com [IPv6:2607:f8b0:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D3ADC061401
-        for <linux-gpio@vger.kernel.org>; Sat, 25 Dec 2021 19:34:55 -0800 (PST)
-Received: by mail-oi1-x233.google.com with SMTP id u21so6555510oie.10
-        for <linux-gpio@vger.kernel.org>; Sat, 25 Dec 2021 19:34:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8KU7qyVWCeCPhrgSi7WlMC4yfAlwyr+FRaOQribuaQs=;
-        b=brOuap0t2AD/GGjjhEn5TAeC5+UUW0xmzP361kI7ixJHUVcKIp5lYQjBX7VLjQFIFq
-         LCV1OWhaA3Feg9qHemx4H8Gwtqiufe6s6df35XyBAt+LNcfCSHGX88D5sx8CzG4u1CgP
-         UhK/zLHFrXR92zRIQkgM0mVpvBX3MMRgLgJQMn8XxtGpgHMVsfqkp8w6yxf5XmqABUvD
-         GBB+G1ivvfhHha1CjlZlXVZ7ZBeDUKwEUGnyUPtLbdEjCWKF99dTNuHNkcrni94iJGjN
-         yC+F+Df7hfbmxSxb238Os89lCmzjeXp4NfUx0oEs6N2fNA1TKxWE/0sZvd/Fi+yjAe8h
-         rRgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8KU7qyVWCeCPhrgSi7WlMC4yfAlwyr+FRaOQribuaQs=;
-        b=oHRJTcLcCkDY0EkjPJVIlQLXzNPofAhRFcZvdveg0eSD1E4SCFjDxd1ZMwsDOUl1Fp
-         sytQllKmHzbh07PpwgRA9gLPtjWV7dcd8KCyxXCAZB6luklwBm39dBVy57Oc/kKnvu6z
-         dqYfhOvpOB5kujl0U8WlQrzbhh2Ij7Q9F8FC1tNW4msW7BlAvV6ZwS9tRHDfcZ2+c/ub
-         nDiOU8um47pozKjsPjUFcHadF4HrpVu4aUFJxtxDbyO/n+q4tDrXjITmFuEKAdyzcVtq
-         YlgCQMjQsIaZOu0mcFKOL/FEL3R1rMJdDCEn1uARixtOYl6+R79so6oJcYoCIO2xdPBl
-         wzwQ==
-X-Gm-Message-State: AOAM5311B0NVxIZeJ5TSdrp3YlLOWFq6jpSFLHXZCNyHmQ7OkiotNJ+H
-        ITJRupoN4UmluLTL5YDsSORWvSiny2idQflIqe1/TQ==
-X-Google-Smtp-Source: ABdhPJxsyZ12l/8bne3hB0Nc/6/qpU+8uLgJXjDkYJntGVFZtUPE+k2NElPi6OpYSWuYp7PlDdCDJUCIqE8uXK1g0jM=
-X-Received: by 2002:aca:120f:: with SMTP id 15mr9087993ois.132.1640489694029;
- Sat, 25 Dec 2021 19:34:54 -0800 (PST)
-MIME-Version: 1.0
-References: <20211225104129.56077-1-krzysztof.kozlowski@canonical.com>
-In-Reply-To: <20211225104129.56077-1-krzysztof.kozlowski@canonical.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 26 Dec 2021 04:34:42 +0100
-Message-ID: <CACRpkdbDuC5wbPcQBuP0WfXZ_JtF6Hh4vmY9fxFo57arb4kENQ@mail.gmail.com>
-Subject: Re: [GIT PULL] pinctrl: samsung: drivers for v5.17
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        with ESMTP id S231304AbhLZECR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 25 Dec 2021 23:02:17 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01C59C061401;
+        Sat, 25 Dec 2021 20:02:16 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 1E2EFB80D8C;
+        Sun, 26 Dec 2021 04:02:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C4AC7C36AE8;
+        Sun, 26 Dec 2021 04:02:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1640491333;
+        bh=5oW5dTTd44pR/Z+MMBj5BYW0uOMCf1Dty2ZJWyFxM4Q=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=cMJ58itdYQ+ARTHfyWYPfhMrhMAon4oT1rAzCJfP/CtLxp6st8utAJ7Y9nOwRKDUI
+         N1Kg0TUnANZXbvTqDyDotNedLLL1/uUt5fJzLaLtIL9pdVXH06yGGkRCDE6jqMF3pR
+         Hor1OR6j+IQ8uj04/c6DcDBR+Um/s/uVuMFblkyBDdIS3xcwHMZoX31W9qCJ0tf7P6
+         7K5husWBV5vj0/leHPkNzdei1kBtemhTJn4FWxaJX1DejBPnoxm635iML8yT/EdhXB
+         ZROv+VKCEpKmbFsdac/L7Wzs+Xs7DKgjoUxWcCiLHpL0zaOH7Ra45BJJJ4magg/3py
+         m9iBmagmMAOZw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A7E57EAC068;
+        Sun, 26 Dec 2021 04:02:13 +0000 (UTC)
+Subject: Re: [GIT PULL] pin control fixes for v5.16
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CACRpkdaJMVS5vmw5KweS8c1ptz+OoEguifdqRFP4mzU_chH8-w@mail.gmail.com>
+References: <CACRpkdaJMVS5vmw5KweS8c1ptz+OoEguifdqRFP4mzU_chH8-w@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CACRpkdaJMVS5vmw5KweS8c1ptz+OoEguifdqRFP4mzU_chH8-w@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5.16-3
+X-PR-Tracked-Commit-Id: b67210cc217f9ca1c576909454d846970c13dfd4
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 438645193e59e91761ccb3fa55f6ce70b615ff93
+Message-Id: <164049133363.407.11123026157818378174.pr-tracker-bot@kernel.org>
+Date:   Sun, 26 Dec 2021 04:02:13 +0000
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Dec 25, 2021 at 11:41 AM Krzysztof Kozlowski
-<krzysztof.kozlowski@canonical.com> wrote:
+The pull request you sent on Sun, 26 Dec 2021 04:15:32 +0100:
 
-> Samsung stuff for v5.17.
+> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5.16-3
 
-Pulled in!
-Merry christmas!
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/438645193e59e91761ccb3fa55f6ce70b615ff93
 
-Yours,
-Linus Walleij
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
