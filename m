@@ -2,68 +2,50 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8602847F514
-	for <lists+linux-gpio@lfdr.de>; Sun, 26 Dec 2021 05:02:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E40F47F60E
+	for <lists+linux-gpio@lfdr.de>; Sun, 26 Dec 2021 10:41:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231305AbhLZECR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 25 Dec 2021 23:02:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54768 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231304AbhLZECR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 25 Dec 2021 23:02:17 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01C59C061401;
-        Sat, 25 Dec 2021 20:02:16 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1E2EFB80D8C;
-        Sun, 26 Dec 2021 04:02:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C4AC7C36AE8;
-        Sun, 26 Dec 2021 04:02:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1640491333;
-        bh=5oW5dTTd44pR/Z+MMBj5BYW0uOMCf1Dty2ZJWyFxM4Q=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=cMJ58itdYQ+ARTHfyWYPfhMrhMAon4oT1rAzCJfP/CtLxp6st8utAJ7Y9nOwRKDUI
-         N1Kg0TUnANZXbvTqDyDotNedLLL1/uUt5fJzLaLtIL9pdVXH06yGGkRCDE6jqMF3pR
-         Hor1OR6j+IQ8uj04/c6DcDBR+Um/s/uVuMFblkyBDdIS3xcwHMZoX31W9qCJ0tf7P6
-         7K5husWBV5vj0/leHPkNzdei1kBtemhTJn4FWxaJX1DejBPnoxm635iML8yT/EdhXB
-         ZROv+VKCEpKmbFsdac/L7Wzs+Xs7DKgjoUxWcCiLHpL0zaOH7Ra45BJJJ4magg/3py
-         m9iBmagmMAOZw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A7E57EAC068;
-        Sun, 26 Dec 2021 04:02:13 +0000 (UTC)
-Subject: Re: [GIT PULL] pin control fixes for v5.16
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CACRpkdaJMVS5vmw5KweS8c1ptz+OoEguifdqRFP4mzU_chH8-w@mail.gmail.com>
-References: <CACRpkdaJMVS5vmw5KweS8c1ptz+OoEguifdqRFP4mzU_chH8-w@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CACRpkdaJMVS5vmw5KweS8c1ptz+OoEguifdqRFP4mzU_chH8-w@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5.16-3
-X-PR-Tracked-Commit-Id: b67210cc217f9ca1c576909454d846970c13dfd4
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 438645193e59e91761ccb3fa55f6ce70b615ff93
-Message-Id: <164049133363.407.11123026157818378174.pr-tracker-bot@kernel.org>
-Date:   Sun, 26 Dec 2021 04:02:13 +0000
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+        id S232994AbhLZJlP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 26 Dec 2021 04:41:15 -0500
+Received: from slot0.jllresort.com ([62.197.136.5]:57075 "EHLO
+        slot0.jllresort.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232947AbhLZJlP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 26 Dec 2021 04:41:15 -0500
+X-Greylist: delayed 700 seconds by postgrey-1.27 at vger.kernel.org; Sun, 26 Dec 2021 04:41:14 EST
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; s=dkim; d=jllresort.com;
+ h=Reply-To:From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding; i=ele.mon@jllresort.com;
+ bh=fw+ZB1c4OVNap3xgvJ2djaXsm5I=;
+ b=H7Vi0ZFTQvMhZ6nHS9aN4o5VWR8kwWXEDUI2gnA6z7wZc80K1QCKEWWSI/w5KXJ8Xefa5gSnAUaU
+   GWs89g5W109mhPgbqY6TC/+INrZ9tSmSZ9yV00mOAJJRaxvp6Yc0BZaurE6mtQq1mq263TM8cPGO
+   0mf8NKQiD7zCZRzIOxoRs47mjMcvfT8iluE0xcOcy2svCj52iv1fA5JyOPdxwLIaOAxDMup3c5MN
+   KIRpPd2BddCocea0bXR4VTXWG4GeTZTxlruvnbvKLyuUM8fyfH+8tK+Mby8QswdfYuSxry6Zy5gV
+   h0a86IgKXtHhe2TRysrkTLYgQIDHi1LP2Ziu2A==
+DomainKey-Signature: a=rsa-sha1; c=nofws; q=dns; s=dkim; d=jllresort.com;
+ b=r1u3f0ratBhQ0aPjUrdKzpYMrXYUlZsSQNCfPo4sjgkmO7rfy1xGIwCmw2ejzOsK/ZuaLyc4Toim
+   EdNUYwDnCB/W8B6Az8qY600d6om5x8xXNRFgwKOS0qZqISKYqF8AseI//I9qGfY1S+dvyly7Lm+U
+   aHgOTaaI01T1g7/ZafbehB5AhVgRso/8yeLLPCgZvixofwLW/CvAQsoYXtsSIybkk6Htgsid46sZ
+   ThKjvnYzuoCGqG+RO0gRoMRrqh7hZ/yc9zOv641BEixfBDy7FF3ifRht1WAsxZRt2qCHHPcwzJYh
+   OstU3u7lZe8Si6jwjI0bvgaXDNtQK8XYxpCxbQ==;
+Reply-To: mustafa.ayvaz@ayvazburosu.com
+From:   ele.mon@jllresort.com
+To:     linux-gpio@vger.kernel.org
+Subject: Happy Weekend:
+Date:   26 Dec 2021 10:29:24 +0100
+Message-ID: <20211226102855.CA4B404397419470@jllresort.com>
+MIME-Version: 1.0
+Content-Type: text/plain;
+        charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pull request you sent on Sun, 26 Dec 2021 04:15:32 +0100:
+Greetings to you linux-gpio,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5.16-3
+I was wondering if you got my previous email? I have been trying=20
+to reach you by email linux-gpio@vger.kernel.org, kindly get back=20
+to me swiftly, it is very important and urgent.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/438645193e59e91761ccb3fa55f6ce70b615ff93
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Thanks
+Mustafa Ayvaz
+Email: mustafa.ayvaz@ayvazburosu.com
