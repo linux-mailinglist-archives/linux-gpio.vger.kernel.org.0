@@ -2,105 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6728C47F4FB
-	for <lists+linux-gpio@lfdr.de>; Sun, 26 Dec 2021 04:15:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B3D6547F4FF
+	for <lists+linux-gpio@lfdr.de>; Sun, 26 Dec 2021 04:20:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229590AbhLZDPr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 25 Dec 2021 22:15:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44766 "EHLO
+        id S229748AbhLZDUZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 25 Dec 2021 22:20:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229456AbhLZDPq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 25 Dec 2021 22:15:46 -0500
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E84FC061401
-        for <linux-gpio@vger.kernel.org>; Sat, 25 Dec 2021 19:15:46 -0800 (PST)
-Received: by mail-lf1-x129.google.com with SMTP id bp20so27126923lfb.6
-        for <linux-gpio@vger.kernel.org>; Sat, 25 Dec 2021 19:15:46 -0800 (PST)
+        with ESMTP id S229460AbhLZDUY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 25 Dec 2021 22:20:24 -0500
+Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2507EC061401
+        for <linux-gpio@vger.kernel.org>; Sat, 25 Dec 2021 19:20:24 -0800 (PST)
+Received: by mail-lj1-x233.google.com with SMTP id h15so6471124ljh.12
+        for <linux-gpio@vger.kernel.org>; Sat, 25 Dec 2021 19:20:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=ykUfjX5LT2jLYM0XsemzshtieJCaQu4S3FzJvDLxa5c=;
-        b=vOIjXgzHrljYC2cS6fgSQffzfI/3R0zL7ZsId5DYoQaZSQxn3eg5Po0tVVh9mG2700
-         wQF1AAH5hsA46YsU1uWHAwqJD8LftcXXI+dDwbEUjZf4l0Gn1VguHSe521767UlnwoEP
-         iCWq0MGlNOhRwRtQwNx1cRMLy16vUOlSApaVggijn25FQ5tc1FgkcMqRGVRWpF+jPvUu
-         +oIDYBKESvyvz8I0XqUeeUx2nEM5kvlj+bqGgUWkC3BqTLmy97/rOR8SGDcEh1wNo9t+
-         8Adwb1zRPd1/xS87mJTo98w0YHXu0p2uxqGlHlUuB5W5gL6xbMkZrB0W3cu9Llz9BdBS
-         8c5w==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=jdSL9aVeOuoAth8IYdefiCkOwwscz9N5zIOBpWED8n4=;
+        b=X0fepHUvnufOR2cUJ6TosJbTtjD6DAMn3xoqPl0CrUUgVLJ1kEVHb9UyDXPl8ugijF
+         iToByT7SyQL4hTWJCnrc2Fsp5/CWEHAmi6L/jrq6rvlDplh+ZorphD4M3BRqF9tk63h4
+         dMU4oMRecg+9/BgAxP71+C5Cdt0Ljw57DCwVSGEEzpaBfgNJw79SMNKTgBkaMRowaPd0
+         1pp1JdALSrDTObPPeMbnj7KZzggYzkJ+HV1wgzUCpM8BGdXLLPLniIEBG1jm5fi6yl9l
+         QlyPvhTG4i+fntCdGM4xnKDBU3CZr6NEd8y18dEppGmt0QkzywF144A09OCk7JBIZqm2
+         9cbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=ykUfjX5LT2jLYM0XsemzshtieJCaQu4S3FzJvDLxa5c=;
-        b=P+cPOPLc0paCN2NKZTmVIrb1JCY3cKIqeSqXdhMnpQIPozZEbPWhWU/HDd8z1tpIwF
-         sQbRT7FqNWpZkAq+jQzKAYA1T5BcCuO/qbUxkcCrCU8va/3j38fK+xkzWIXSDWIweBKH
-         7V0IMwSolblYjCSVOANb0NuGFvn4A0NpTiu5F6me9f01dXNR8DShGYmw+7W9nJEuUo14
-         9OGEDnI8GWlNWoLsQz7k+CabS82XgZeGO3wqMg6haRsc6qUMsgf9j2E1vSCPPQY/YmRW
-         t7ak8L+FP/lgZX7eD8EchpWLavw4FeV0c5ICPlE1rY71/90ypMX2UoTlMbczKV3uXwCa
-         xDOg==
-X-Gm-Message-State: AOAM531CI2Xf522iavhWbMhaz4qCs8vBrb5KTDTnr/ApF21NyhR1t8OG
-        b4HWdqHqHhd+628HI1bz9rPRp0dqRdwOebFydxU1BN4aTZnJeg==
-X-Google-Smtp-Source: ABdhPJyn8FczVXK27tRYjNZyW5SfT51h0WmIGcbi1ql8NbPyBuFQE5vu9H7hCJDg/xxB4N8XVMal9zdxCqrlIQrgm+g=
-X-Received: by 2002:ac2:5445:: with SMTP id d5mr10759396lfn.349.1640488544426;
- Sat, 25 Dec 2021 19:15:44 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=jdSL9aVeOuoAth8IYdefiCkOwwscz9N5zIOBpWED8n4=;
+        b=Lo3cOfvlX0oJafrWmQ3nZQjItgLVzP0F2/lGnDNd6yaFjJ3x2WMl2yt6g78Z/UNhnu
+         XrQ3y6PbRda3IpI9AtHgvoskCGnDQxjbAWfny2RfF+f2A5PIVBczXmbGqqLgCNcaGadX
+         JeDOyLtkRO2t1KZ6T4WrqGtoU5/iq10TBaqesTP11G3QNgmpnWCtMErUyib8jrl3jFTB
+         0VFimtGoUx0v17osxLnn/S6S3mzDITbG9BiZRpIzIhHDYwbelnLJInxJC/IAHjgFRW2x
+         Lll4VyPy+ULHIc2fL7oM+LqU0ho8bOYjpYnzTPwlvj2tAySxGonV5n9NYmaO6j7BHHV3
+         ELBQ==
+X-Gm-Message-State: AOAM532ncxykvG+7qYkj+ICFttLPdpklTZz86SNuWvD1e6Np+wa9BQIQ
+        RYepa0ieDXk0JSIRG8j8U5/Xqyk17mYHHmSSxUWdyQ==
+X-Google-Smtp-Source: ABdhPJx15hRL1lAP6AvgntjhwVVAxdXbFNo+p1djwIvBsgkcuwsS5cyektM2NkbVkiyIf22jOur7jXkBbMSxJ7adFFg=
+X-Received: by 2002:a05:651c:623:: with SMTP id k35mr9495992lje.133.1640488822311;
+ Sat, 25 Dec 2021 19:20:22 -0800 (PST)
 MIME-Version: 1.0
+References: <20211222212807.27122-1-zajec5@gmail.com>
+In-Reply-To: <20211222212807.27122-1-zajec5@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 26 Dec 2021 04:15:32 +0100
-Message-ID: <CACRpkdaJMVS5vmw5KweS8c1ptz+OoEguifdqRFP4mzU_chH8-w@mail.gmail.com>
-Subject: [GIT PULL] pin control fixes for v5.16
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Date:   Sun, 26 Dec 2021 04:20:10 +0100
+Message-ID: <CACRpkdYg8Q79W-wH4wM3J4K10BuzZB5PKf2dnYhuwDuxEk9pzQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: imx: fix allocation result check
+To:     =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+        Abel Vesa <abel.vesa@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+On Wed, Dec 22, 2021 at 10:28 PM Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com>=
+ wrote:
 
-here are some hopefully final pin control fixes for the
-v5.16 kernel series.
+> From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
+>
+> Fix code to check correct variable value.
+>
+> Reported-by: Abel Vesa <abel.vesa@nxp.com>
+> Fixes: 02f117134952 ("pinctrl: imx: prepare for making "group_names" in "=
+function_desc" const")
+> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
 
-Please pull it in!
+Patch applied!
 
-God Jul och Gott Nytt =C3=85r
+> Linus: I'm not sure if you can rebase your tree. Treat it as separated
+> patch or fixup. Depending on how to manage your repository.
+
+Just applied it. It is usually nice to see this history.
+
+Yours,
 Linus Walleij
-
-The following changes since commit 136057256686de39cc3a07c2e39ef6bc43003ff6=
-:
-
-  Linux 5.16-rc2 (2021-11-21 13:47:39 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-tags/pinctrl-v5.16-3
-
-for you to fetch changes up to b67210cc217f9ca1c576909454d846970c13dfd4:
-
-  pinctrl: stm32: consider the GPIO offset to expose all the GPIO
-lines (2021-12-16 04:14:56 +0100)
-
-----------------------------------------------------------------
-Some hopefully final pin control fixes for the v5.16 kernel:
-
-- Fix an out-of-bounds bug in the Mediatek driver
-- Fix an init order bug in the Broadcom BCM2835 driver
-- Fix a GPIO offset bug in the STM32 driver
-
-----------------------------------------------------------------
-Fabien Dessenne (1):
-      pinctrl: stm32: consider the GPIO offset to expose all the GPIO lines
-
-Guodong Liu (1):
-      pinctrl: mediatek: fix global-out-of-bounds issue
-
-Phil Elwell (1):
-      pinctrl: bcm2835: Change init order for gpio hogs
-
- drivers/pinctrl/bcm/pinctrl-bcm2835.c            | 29 +++++++++++++-------=
-----
- drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c |  8 +++++--
- drivers/pinctrl/stm32/pinctrl-stm32.c            |  8 +++----
- 3 files changed, 26 insertions(+), 19 deletions(-)
