@@ -2,87 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FE3647FCA6
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Dec 2021 13:34:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7994648015C
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Dec 2021 17:02:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233684AbhL0Meb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Dec 2021 07:34:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52386 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233041AbhL0Mea (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Dec 2021 07:34:30 -0500
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A5D3C061401
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Dec 2021 04:34:30 -0800 (PST)
-Received: by mail-ed1-x531.google.com with SMTP id l5so26491076edj.13
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Dec 2021 04:34:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=kDL4/ZM1Hmnh5oYIPoU4vZe66noVMu1PR8VyIXYKcS4=;
-        b=IMU/XB/JIh/22rS8ERkqU+P9wRUZCfQ8S5p4ab0p5dK0Roor3+I8nAZRVND2sP5hMn
-         Fi2vjkwicywiQuhaYWZ65vQlPjbY9MQui9W/TPDskkJXYFXgTBEHCS5ObcqgjVek0yQm
-         2vootvePqpslbHdYwc2owJIiyIznt12HdqA9OZWrTEmWbjhqqMMbUYFKVR+c+DIvXOAx
-         OXGBoaZzZm6/93Ojc91wGzE9bugWcZ4uBisFdy5F8ppLipkpfHHvxh97i7q1pRjyXZSN
-         Gi2T3hgTwyDiDkxkQ90RsgmYxBGifpWk31aZRYdjSRHoEuw0NHVBYU4l/kJhEm0XN5CR
-         Ro7g==
+        id S233251AbhL0QCY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Dec 2021 11:02:24 -0500
+Received: from mail-qk1-f175.google.com ([209.85.222.175]:35553 "EHLO
+        mail-qk1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233575AbhL0QCX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Dec 2021 11:02:23 -0500
+Received: by mail-qk1-f175.google.com with SMTP id 131so14777826qkk.2;
+        Mon, 27 Dec 2021 08:02:23 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=kDL4/ZM1Hmnh5oYIPoU4vZe66noVMu1PR8VyIXYKcS4=;
-        b=GdQdC3pk8oamj+TdBk0TC9GhqMfwSj14ZpnPLqTQdSfTuSt30AOx7pVId8MwxKTYKK
-         GGaeyLJQX/L658uJO9YEPFnoSgc0M9YmlBSLKibXUxdOUvOHvTsXf3fPfp7cS0Agrj9y
-         qon2kh0Qp2MVgQ6HHL/Zvlnlcpg9MIupwClhBytIYzDMm6uYrueZMXXf/AS4uQ0aPova
-         67eAz+8RW14uAX2Mq6zeWxpvPftis4HbvUWF5KGhJ37XBNY9VdiQZAqRcku0loiWuKVk
-         pW3izR1PT7WNcJ4l0bbcYwSA6oG6rk/xHi9xlLdLWUXnm36D61GP4aFctlxkdhI2tcTh
-         DpfA==
-X-Gm-Message-State: AOAM533KwsOPjocVs/aaED0v0Rs5Ar7uMYBxVmMgrrdniOi3gN2bcuQR
-        oG//luVWjdDkwp7JsIHaWQvz/O465btqrhAZRms=
-X-Google-Smtp-Source: ABdhPJz1EpENSMQ4mjXbzUyR+XzMQeuQ1W9B7VF7WXO1qWkM9csxp7LL1Yv3srFHsuROWAefCS267AjE+MixE/bKHmw=
-X-Received: by 2002:a17:906:5948:: with SMTP id g8mr13681427ejr.4.1640608468707;
- Mon, 27 Dec 2021 04:34:28 -0800 (PST)
-MIME-Version: 1.0
-References: <20211227122237.6363-1-zajec5@gmail.com>
-In-Reply-To: <20211227122237.6363-1-zajec5@gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Mon, 27 Dec 2021 09:34:17 -0300
-Message-ID: <CAOMZO5D_kKCUhU6S86-4KNPyGjXOiFLbOG3+k-mqA8nWd1qOcg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: imx: fix assigning groups names
-To:     =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=72b7qtnlhIwvuhkRbhpWgwlpCXI2ABLdzVqP9BokJ/0=;
+        b=dyZkNnQbjYfoKhGDhxI6fjqcw4tMLk6IdLxTE5wBSKn7yyMa6P86laFqSuvg2ySLEh
+         +959vJQhdVVRL/2tqpVX09QPdb4MRr1mGaz3DZfxiVP8HeHTl+hp/VOBFTDKtRnVt5LS
+         299bPofzDFHIbkM94rad/qLPuKZJH8xxDigEit52z8NFZGFRO8BFloAtDABi/2Ow/0fJ
+         Y2SDftexHmt46rY/eceGT5TsSoEneFS2Hz0eLKwVKQdfo9mkwDkk4E54L+M57eUHGcAH
+         0w4yiR2VzAbiWaWpKrXAy+R0SfRqBGH00SZajKM/2xNlmJCF0Ac5X9zr4E2UQ1o6Uxmm
+         x/uA==
+X-Gm-Message-State: AOAM530bNtrevdJQzK3TzByf79bcodSfbpkFsWeeB0tu3ySdIAHwJD73
+        2iHylc7h57aPTOvh85Z6Xw==
+X-Google-Smtp-Source: ABdhPJzhUfn1ljd+iEYwyHyPKRAIZ+0Cuqt0J1Jz8ysNrIC4Q7ORN4kxEELMFLm2rG2UrLLMx6NU5A==
+X-Received: by 2002:a05:620a:1a9e:: with SMTP id bl30mr12229618qkb.130.1640620942770;
+        Mon, 27 Dec 2021 08:02:22 -0800 (PST)
+Received: from robh.at.kernel.org ([24.55.105.145])
+        by smtp.gmail.com with ESMTPSA id z5sm12613140qti.57.2021.12.27.08.02.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Dec 2021 08:02:22 -0800 (PST)
+Received: (nullmailer pid 564562 invoked by uid 1000);
+        Mon, 27 Dec 2021 16:02:19 -0000
+Date:   Mon, 27 Dec 2021 12:02:19 -0400
+From:   Rob Herring <robh@kernel.org>
+To:     Wells Lu =?utf-8?B?5ZGC6Iqz6aiw?= <wells.lu@sunplus.com>
+Cc:     Wells Lu <wellslutw@gmail.com>,
+        "dvorkin@tibbo.com" <dvorkin@tibbo.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5 1/2] dt-bindings: pinctrl: Add dt-bindings for Sunplus
+ SP7021
+Message-ID: <Ycnji5pNLnA/YZbX@robh.at.kernel.org>
+References: <1640331779-18277-1-git-send-email-wellslutw@gmail.com>
+ <1640331779-18277-2-git-send-email-wellslutw@gmail.com>
+ <1640443722.885735.363337.nullmailer@robh.at.kernel.org>
+ <666ad4caaafa4090a9f3c99f56c10bc8@sphcmbx02.sunplus.com.tw>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <666ad4caaafa4090a9f3c99f56c10bc8@sphcmbx02.sunplus.com.tw>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Rafa=C5=82,
+On Sun, Dec 26, 2021 at 12:44:25PM +0000, Wells Lu 呂芳騰 wrote:
+> Hi Rob,
+> 
+> Thanks a lot for review.
+> 
+> I ran 'make dt_binding_check' and got PASS before I submitted the dt-binding doc (yaml) file.
+> 
+> I found the "dtschema/dtc warnings/errors:" is resulted from lack of vendor name in "vendor-prefixes.yaml".
+> 
+> My colleague has submitted a patch for adding our company name to the yaml file. It was acknowledged by you but not yet committed into Linux tree.
+> 
+> Refer to:
+> 
+> On Mon, 01 Nov 2021 13:01:51 +0800, Qin Jian wrote:
+> > Add vendor prefix for Sunplus Technology Co., Ltd.
+> > 
+> > Signed-off-by: Qin Jian <qinjian@cqplus1.com>
+> > ---
+> >  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
+> 
+> 
+> Can this error be waived?
 
-On Mon, Dec 27, 2021 at 9:23 AM Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com> =
-wrote:
->
-> From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
->
-> This fixes regression caused by incorrect array indexing.
->
-> Reported-by: Fabio Estevam <festevam@gmail.com>
-> Fixes: 02f117134952 ("pinctrl: imx: prepare for making "group_names" in "=
-function_desc" const")
-> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
+No. The patch for vendor prefix has to be applied before this one or 
+we'll keep getting this error.
 
-This fixes the "invalid group" errors I was seeing on an imx7s-warp
-board, thanks:
+> When I send a new patch, should I add "vendor-prefixes.yaml"?
 
-Tested-by: Fabio Estevam <festevam@gmail.com>
+As it doesn't look like that series is going to make 5.17?, I can apply 
+the vendor prefix patch.
+
+Rob
