@@ -2,32 +2,32 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E3A48480380
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Dec 2021 20:03:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F0E04803CA
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Dec 2021 20:05:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231165AbhL0TDd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Dec 2021 14:03:33 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:40756 "EHLO
+        id S232419AbhL0TFh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Dec 2021 14:05:37 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:41734 "EHLO
         ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229603AbhL0TDd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Dec 2021 14:03:33 -0500
+        with ESMTP id S232571AbhL0TFI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Dec 2021 14:05:08 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C985AB810BA;
-        Mon, 27 Dec 2021 19:03:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4389EC36AE7;
-        Mon, 27 Dec 2021 19:03:29 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A5C00B8113E;
+        Mon, 27 Dec 2021 19:05:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3635BC36AEC;
+        Mon, 27 Dec 2021 19:05:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1640631810;
-        bh=WY7/IBQQ7PCl+D+qAmJBhE5XKqIk0FCvNlIT9/7d9Q8=;
+        s=k20201202; t=1640631905;
+        bh=6fG/y6fFgYC/n6uFlQXSelvuYn77cmuHtBGrfaLuPxA=;
         h=From:To:Cc:Subject:Date:From;
-        b=J8ngXBKahixF83dT0V7W8ipBzgGEeJq1b4oLb5mMznhSNIN3eNAE9cDvz4dD6JeL6
-         wUMRktxHO1It/46XEeSqPxxVoqaQdvdkWjbYR0crKXvDyL5LUPM2sLxAv0l0z/Ev5p
-         JMERrwTyG6dtGVmL26T5n1oEj32qgGyteu2oiZPTdoKoLD9RqmUFhjzrtDRDuv2Jxr
-         nwO8Zk+KzR3l3gVsg8LkHd8P9RdcsPn8eSLPuZSSv4SnI0NgrNY03VsSEi1vMpwazK
-         owAqZvrT4hBo3O5xBWQpjnjTt4iZujWubLrMvreaQMtkjsnD+Csjpw/m/gdvHEAXyM
-         cnKvL/JYMTYBg==
+        b=IEe0ReczKkDMB4g7U8PB4nxW+ge7s8MQORxs5rG6hIQHOlF4pnu9QbFutFPOJHvPv
+         C3YevZOQEGZUAzw8x7m4NJjulfcfxmg7DyF+oQqE+QdDmF+Pd+zjG23DSHkXkykkPx
+         luT8eTNKDs9tE+HBdR/aj9TZ6ls3iNqtx0EJ7N+23A5dPxQqwyzjJHakHSarEeUYNP
+         bXTp4OsHk8A65fFW015QyGxXMABBKKUUaQwRZ2mb9o17AxeSC7c0MEzeRFJYJ4s36j
+         kUq+EuUvtGlitAUcmW3iOOKSTEyo1mxo/x7mBpJeHPZX4+AhS9dikuf4p/XmVGhYYk
+         vzdMLQqC7zZdg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Guodong Liu <guodong.liu@mediatek.corp-partner.google.com>,
@@ -37,9 +37,9 @@ Cc:     Guodong Liu <guodong.liu@mediatek.corp-partner.google.com>,
         Sasha Levin <sashal@kernel.org>, sean.wang@kernel.org,
         matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org,
         linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.15 01/26] pinctrl: mediatek: fix global-out-of-bounds issue
-Date:   Mon, 27 Dec 2021 14:03:02 -0500
-Message-Id: <20211227190327.1042326-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 01/14] pinctrl: mediatek: fix global-out-of-bounds issue
+Date:   Mon, 27 Dec 2021 14:04:39 -0500
+Message-Id: <20211227190452.1042714-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 X-stable: review
@@ -67,10 +67,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-index 45ebdeba985ae..12163d3c4bcb0 100644
+index 10002b8497fea..fbb7807e0da29 100644
 --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
 +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-@@ -285,8 +285,12 @@ static int mtk_xt_get_gpio_n(void *data, unsigned long eint_n,
+@@ -280,8 +280,12 @@ static int mtk_xt_get_gpio_n(void *data, unsigned long eint_n,
  	desc = (const struct mtk_pin_desc *)hw->soc->pins;
  	*gpio_chip = &hw->chip;
  
