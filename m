@@ -2,32 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F0E04803CA
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Dec 2021 20:05:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 09C5F4803F7
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Dec 2021 20:06:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232419AbhL0TFh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Dec 2021 14:05:37 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:41734 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232571AbhL0TFI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Dec 2021 14:05:08 -0500
+        id S233137AbhL0TGg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Dec 2021 14:06:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56980 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232395AbhL0TFw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Dec 2021 14:05:52 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2152BC06175D;
+        Mon, 27 Dec 2021 11:05:52 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A5C00B8113E;
-        Mon, 27 Dec 2021 19:05:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3635BC36AEC;
-        Mon, 27 Dec 2021 19:05:04 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D16D7B8113A;
+        Mon, 27 Dec 2021 19:05:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67141C36AE7;
+        Mon, 27 Dec 2021 19:05:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1640631905;
-        bh=6fG/y6fFgYC/n6uFlQXSelvuYn77cmuHtBGrfaLuPxA=;
+        s=k20201202; t=1640631949;
+        bh=8VZ29EPK+glZgDwGOcZ0XbkQAD0GWI9t47yLwmdbulo=;
         h=From:To:Cc:Subject:Date:From;
-        b=IEe0ReczKkDMB4g7U8PB4nxW+ge7s8MQORxs5rG6hIQHOlF4pnu9QbFutFPOJHvPv
-         C3YevZOQEGZUAzw8x7m4NJjulfcfxmg7DyF+oQqE+QdDmF+Pd+zjG23DSHkXkykkPx
-         luT8eTNKDs9tE+HBdR/aj9TZ6ls3iNqtx0EJ7N+23A5dPxQqwyzjJHakHSarEeUYNP
-         bXTp4OsHk8A65fFW015QyGxXMABBKKUUaQwRZ2mb9o17AxeSC7c0MEzeRFJYJ4s36j
-         kUq+EuUvtGlitAUcmW3iOOKSTEyo1mxo/x7mBpJeHPZX4+AhS9dikuf4p/XmVGhYYk
-         vzdMLQqC7zZdg==
+        b=pWW0CejeRylZXNwMuxVpE3Ki/cD/tO4igsF8A/AoMaUaIi0pnWSHeXHRixpIyd5vR
+         VbgxQ8wTacpEZQXf36gCb8pS6YxcgL0DVRkhMHtdPAcyDEd1dt7O28rRN8Ckj4QKyC
+         m1A/LuZ/q2fpmqp/xGHTYVHUAMkFW5RMAPFI4Y5jOmEW2IKlfrAp+cohDd9zcxDz+H
+         iGIprO8tnMS3XpRedVDBUsDTQeO/oB1DYaGklCKZ7AQZc3lj1wpa3J7oCbJISyQdAR
+         zKnD/UnRvGfFx+UN5eUqvfZHwfaGsLUZzezHxwcreBjBQfK9K5fzgVqtmUty2L3PrG
+         0rkXp6e+Hc9nQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Guodong Liu <guodong.liu@mediatek.corp-partner.google.com>,
@@ -37,9 +40,9 @@ Cc:     Guodong Liu <guodong.liu@mediatek.corp-partner.google.com>,
         Sasha Levin <sashal@kernel.org>, sean.wang@kernel.org,
         matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org,
         linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.10 01/14] pinctrl: mediatek: fix global-out-of-bounds issue
-Date:   Mon, 27 Dec 2021 14:04:39 -0500
-Message-Id: <20211227190452.1042714-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 1/9] pinctrl: mediatek: fix global-out-of-bounds issue
+Date:   Mon, 27 Dec 2021 14:05:28 -0500
+Message-Id: <20211227190536.1042975-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 X-stable: review
@@ -67,10 +70,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-index 10002b8497fea..fbb7807e0da29 100644
+index 20e1c890e73b3..c3e6f3c1b4743 100644
 --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
 +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-@@ -280,8 +280,12 @@ static int mtk_xt_get_gpio_n(void *data, unsigned long eint_n,
+@@ -236,8 +236,12 @@ static int mtk_xt_get_gpio_n(void *data, unsigned long eint_n,
  	desc = (const struct mtk_pin_desc *)hw->soc->pins;
  	*gpio_chip = &hw->chip;
  
