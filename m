@@ -2,82 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 164CC47FAA0
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Dec 2021 07:49:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8482C47FAE0
+	for <lists+linux-gpio@lfdr.de>; Mon, 27 Dec 2021 09:06:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231522AbhL0Gtt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Dec 2021 01:49:49 -0500
-Received: from mga01.intel.com ([192.55.52.88]:60364 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229490AbhL0Gtt (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 27 Dec 2021 01:49:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1640587789; x=1672123789;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=DdDGXc2F7CYN9wfJUMRNMmlJCgC3nyXppiE6EdDZFFg=;
-  b=LY2BQGbnizIOFI8gHKpAbCfe1J/1CsPUeahRsUIbHiomOqglLytpmV+S
-   KODwrnXe8Z4Wmdm7LDqn2au81S4aPq2MG3xg7zhI20U84TQmetGeopLt2
-   9fMMU9TPSoiL5KsKKrNOyFwSuQbzJFfHvWedj8dJci+bQnkRF7zrWibqF
-   bo+XixYexi6gUwmI9DEX8UzWfXRnccdkxFODRZHAF151sVCJeOsaHW6UM
-   UOs9uAHPmVxfXYz62l7fCZiSsfwnyRj1HT8giY5lG2FFpSqp94pmnZ3sE
-   3u62N3IhUBKCdbhl8CYOB/FckJhQyy75rQB1ZdSrXXmExqp3N9KXKIa4B
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10209"; a="265391178"
-X-IronPort-AV: E=Sophos;i="5.88,238,1635231600"; 
-   d="scan'208";a="265391178"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Dec 2021 22:49:48 -0800
-X-IronPort-AV: E=Sophos;i="5.88,238,1635231600"; 
-   d="scan'208";a="469640732"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.162])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Dec 2021 22:48:41 -0800
-Received: by lahna (sSMTP sendmail emulation); Mon, 27 Dec 2021 08:48:32 +0200
-Date:   Mon, 27 Dec 2021 08:48:32 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Tan Jui Nee <jui.nee.tan@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Kate Hsuan <hpa@redhat.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Jean Delvare <jdelvare@suse.com>,
-        Peter Tyser <ptyser@xes-inc.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Gross <markgross@kernel.org>,
-        Henning Schild <henning.schild@siemens.com>
-Subject: Re: [PATCH v3 4/8] pinctrl: intel: Check against matching data
- instead of ACPI companion
-Message-ID: <YclhwMldCseidCCh@lahna>
-References: <20211221181526.53798-1-andriy.shevchenko@linux.intel.com>
- <20211221181526.53798-5-andriy.shevchenko@linux.intel.com>
+        id S231485AbhL0IG4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Dec 2021 03:06:56 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:59793 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231358AbhL0IGz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Dec 2021 03:06:55 -0500
+Received: from droid09-sz.software.amlogic (10.28.8.19) by mail-sz.amlogic.com
+ (10.28.11.5) with Microsoft SMTP Server id 15.1.2176.2; Mon, 27 Dec 2021
+ 16:06:53 +0800
+From:   Qianggui Song <qianggui.song@amlogic.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>
+CC:     Qianggui Song <qianggui.song@amlogic.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+Subject: [PATCH v2 0/2] pinctrl: meson-s4: add pinctrl driver
+Date:   Mon, 27 Dec 2021 16:06:47 +0800
+Message-ID: <20211227080649.32275-1-qianggui.song@amlogic.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211221181526.53798-5-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.28.8.19]
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Dec 21, 2021 at 08:15:22PM +0200, Andy Shevchenko wrote:
-> In some cases we may get a platform device that has ACPI companion
-> which is different to the pin control described in the ACPI tables.
-> This is primarily happens when device is instantiated by board file.
-> 
-> In order to allow this device being enumerated, refactor
-> intel_pinctrl_get_soc_data() to check the matching data instead of
-> ACPI companion.
-> 
-> Reported-by: Henning Schild <henning.schild@siemens.com>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+This patchset adds Pin controller driver support for Meson-A1 Soc
+which shares the same register layout with previous Meson-S4
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Note that since dt-binding header file patch(already get ack) has been removed
+from this patch set, compiling need header file in patch 2 of [0].
+
+Changes since v1 at [0]:
+- fix typos in commit message
+- fix coding style problem in pinctrl-meson-s4.c
+- change tdm groups makeup and split mclk groups
+
+[0] https://lore.kernel.org/linux-amlogic/20211214022100.14841-1-qianggui.song@amlogic.com/
+
+Qianggui Song (2):
+  dt-bindings: pinctrl: meson: Add compatible for S4
+  pinctrl: meson: add pinctrl driver support for Meson-S4 Soc
+
+ .../bindings/pinctrl/meson,pinctrl.txt        |    1 +
+ drivers/pinctrl/meson/Kconfig                 |    6 +
+ drivers/pinctrl/meson/Makefile                |    1 +
+ drivers/pinctrl/meson/pinctrl-meson-s4.c      | 1289 +++++++++++++++++
+ 4 files changed, 1297 insertions(+)
+ create mode 100644 drivers/pinctrl/meson/pinctrl-meson-s4.c
+
+-- 
+2.34.1
+
