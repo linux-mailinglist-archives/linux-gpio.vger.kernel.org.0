@@ -2,48 +2,48 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B4A504806A9
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Dec 2021 07:10:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 426594806AA
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Dec 2021 07:10:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235033AbhL1GKz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 28 Dec 2021 01:10:55 -0500
-Received: from mga17.intel.com ([192.55.52.151]:56925 "EHLO mga17.intel.com"
+        id S235034AbhL1GK4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 28 Dec 2021 01:10:56 -0500
+Received: from mga04.intel.com ([192.55.52.120]:33129 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235007AbhL1GKy (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 28 Dec 2021 01:10:54 -0500
+        id S235007AbhL1GKz (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 28 Dec 2021 01:10:55 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1640671854; x=1672207854;
+  t=1640671855; x=1672207855;
   h=date:from:to:cc:subject:message-id:mime-version:
    content-transfer-encoding;
-  bh=DwlqR21P5zRNaxKU59QcVskIubdF2/jLOCAlJtGd0qg=;
-  b=VNq9kD0tYnJjttst/eUzzP7rQ7gSy/MrdHBVLRZkXlcV/zZ54oYwrhG6
-   vPxQllGtshBpVx1qorBWNN7Y9SF8U23dSScZQerQFhCSNKBVcWcV2SREF
-   0Payi913ji8d+B2pSPTTm63izUZ9ekdWStGBou9pdugImp9srX/7yWXXj
-   HIjZCMvepv8J13FIBqT1zLh+C3bWbTM0rsrbH2Be1o+3y+69r2sYOcVNy
-   UsM9hZUwcNvsXWyImN62oLoeQaA9LHPOikynOgZbBevVwEbY+QNY6rUAF
-   263eXAsocTEv3e9z3G7yPiMQdAsNqQBPwnwp+J7QAJZW/DktI+ZXpPIm2
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10210"; a="221991041"
+  bh=NFmLOvqXjwGUIiUnuqVKhW6rUUUqDaxIJfdwdjd5LkI=;
+  b=RKN3f8iCIePyKw6nSpRuzy9K7H4kx0/U+jQp0wpP8QKHQ90n2r2iDMrf
+   bwMIFjrx2xBFARrifjP+qPqGXPzMYt4T1dc1dkjVrpUW2QgC1DUMR3jT8
+   yoyLHc/u/+rZuhMmjRFLOEnYONaVy1RU7/G0+4en5S7PxFvis/bk4ENet
+   fwuzKA3Up++fyaloYHPHRNJ4FXhbgEQEa/rQAB2EHLeSdldpnH2/MNun7
+   evFlzj0+2B1AvhMv01/ysvZEfO1n73OVVWnb7aT1BJoUWnOAhQihPitxl
+   EB7VZFdwDzsJuLvbQkCLptan6U8QjnQ8ndbhylmeRPjFcSIgczoJ3TPat
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10210"; a="240101225"
 X-IronPort-AV: E=Sophos;i="5.88,241,1635231600"; 
-   d="scan'208";a="221991041"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2021 22:10:54 -0800
+   d="scan'208";a="240101225"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2021 22:10:54 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,241,1635231600"; 
-   d="scan'208";a="686501393"
+   d="scan'208";a="469933683"
 Received: from lkp-server01.sh.intel.com (HELO e357b3ef1427) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 27 Dec 2021 22:10:52 -0800
+  by orsmga006.jf.intel.com with ESMTP; 27 Dec 2021 22:10:52 -0800
 Received: from kbuild by e357b3ef1427 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1n25hE-0007Ir-9Y; Tue, 28 Dec 2021 06:10:52 +0000
-Date:   Tue, 28 Dec 2021 14:09:51 +0800
+        id 1n25hE-0007Ip-8Q; Tue, 28 Dec 2021 06:10:52 +0000
+Date:   Tue, 28 Dec 2021 14:09:55 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
- c9c838d55ed17c1f9b45ed03a5880145b7ab118d
-Message-ID: <61caaa2f.brwjPaUwkkjxSRdb%lkp@intel.com>
+Subject: [linusw-pinctrl:devel] BUILD SUCCESS
+ c8eefdbfa18e3c8d39133ee2a3143489fab3d911
+Message-ID: <61caaa33.KBtpnMHTMSxwV7tr%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -52,12 +52,12 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: c9c838d55ed17c1f9b45ed03a5880145b7ab118d  Merge branch 'devel' into for-next
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: c8eefdbfa18e3c8d39133ee2a3143489fab3d911  Merge tag 'samsung-pinctrl-5.17' of https://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/samsung into devel
 
-elapsed time: 3019m
+elapsed time: 3020m
 
-configs tested: 286
+configs tested: 284
 configs skipped: 3
 
 The following configs have been built successfully.
@@ -69,6 +69,12 @@ arm64                            allyesconfig
 arm64                               defconfig
 arm                              allyesconfig
 arm                              allmodconfig
+powerpc                          allyesconfig
+m68k                             allmodconfig
+powerpc                          allmodconfig
+m68k                             allyesconfig
+s390                             allmodconfig
+s390                             allyesconfig
 i386                 randconfig-c001-20211228
 mips                  cavium_octeon_defconfig
 h8300                     edosk2674_defconfig
@@ -81,11 +87,6 @@ powerpc                      obs600_defconfig
 mips                        jmr3927_defconfig
 powerpc                   microwatt_defconfig
 sh                            shmin_defconfig
-arm64                            alldefconfig
-ia64                            zx1_defconfig
-arm                      integrator_defconfig
-arm                        multi_v7_defconfig
-powerpc                       eiger_defconfig
 m68k                       m5475evb_defconfig
 m68k                       m5275evb_defconfig
 mips                            gpr_defconfig
@@ -188,6 +189,11 @@ i386                             alldefconfig
 sh                          rsk7269_defconfig
 powerpc                 linkstation_defconfig
 mips                           ip22_defconfig
+nios2                         3c120_defconfig
+arm                         socfpga_defconfig
+powerpc                 mpc8560_ads_defconfig
+m68k                       bvme6000_defconfig
+powerpc64                        alldefconfig
 powerpc64                           defconfig
 sh                           sh2007_defconfig
 powerpc                        icon_defconfig
@@ -207,22 +213,19 @@ arm                        clps711x_defconfig
 powerpc                 mpc8313_rdb_defconfig
 sh                          r7785rp_defconfig
 ia64                             allyesconfig
-arc                        vdk_hs38_defconfig
-sh                        sh7757lcr_defconfig
-powerpc                 mpc8315_rdb_defconfig
-m68k                             allyesconfig
 sh                          landisk_defconfig
 mips                           jazz_defconfig
 mips                            ar7_defconfig
 arc                            hsdk_defconfig
-sh                         microdev_defconfig
+mips                        workpad_defconfig
 powerpc                  storcenter_defconfig
+mips                       rbtx49xx_defconfig
+powerpc                     kmeter1_defconfig
+sh                         microdev_defconfig
+arm                      integrator_defconfig
 riscv                    nommu_k210_defconfig
 sh                               alldefconfig
 riscv             nommu_k210_sdcard_defconfig
-arc                          axs101_defconfig
-arm                           omap1_defconfig
-arm                        cerfcube_defconfig
 riscv                            alldefconfig
 mips                         mpc30x_defconfig
 arm                           h5000_defconfig
@@ -236,7 +239,6 @@ arm                  randconfig-c002-20211228
 arm                  randconfig-c002-20211226
 ia64                             allmodconfig
 ia64                                defconfig
-m68k                             allmodconfig
 m68k                                defconfig
 nios2                               defconfig
 arc                              allyesconfig
@@ -247,8 +249,6 @@ alpha                            allyesconfig
 xtensa                           allyesconfig
 h8300                            allyesconfig
 arc                                 defconfig
-s390                             allyesconfig
-s390                             allmodconfig
 parisc                           allyesconfig
 s390                                defconfig
 i386                             allyesconfig
@@ -258,8 +258,6 @@ i386                   debian-10.3-kselftests
 i386                              debian-10.3
 mips                             allyesconfig
 mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
 powerpc                           allnoconfig
 x86_64               randconfig-a005-20211228
 x86_64               randconfig-a001-20211228
@@ -321,18 +319,18 @@ i386                 randconfig-a002-20211227
 i386                 randconfig-a003-20211227
 i386                 randconfig-a005-20211227
 i386                 randconfig-a001-20211227
+x86_64               randconfig-a014-20211226
+x86_64               randconfig-a015-20211226
+x86_64               randconfig-a012-20211226
+x86_64               randconfig-a011-20211226
+x86_64               randconfig-a016-20211226
+x86_64               randconfig-a013-20211226
 x86_64               randconfig-a015-20211228
 x86_64               randconfig-a014-20211228
 x86_64               randconfig-a013-20211228
 x86_64               randconfig-a012-20211228
 x86_64               randconfig-a011-20211228
 x86_64               randconfig-a016-20211228
-x86_64               randconfig-a013-20211226
-x86_64               randconfig-a014-20211226
-x86_64               randconfig-a015-20211226
-x86_64               randconfig-a012-20211226
-x86_64               randconfig-a011-20211226
-x86_64               randconfig-a016-20211226
 i386                 randconfig-a012-20211228
 i386                 randconfig-a011-20211228
 i386                 randconfig-a014-20211228
@@ -341,10 +339,10 @@ i386                 randconfig-a013-20211228
 i386                 randconfig-a015-20211228
 i386                 randconfig-a012-20211226
 i386                 randconfig-a011-20211226
-i386                 randconfig-a014-20211226
-i386                 randconfig-a016-20211226
-i386                 randconfig-a015-20211226
 i386                 randconfig-a013-20211226
+i386                 randconfig-a014-20211226
+i386                 randconfig-a015-20211226
+i386                 randconfig-a016-20211226
 hexagon              randconfig-r041-20211226
 hexagon              randconfig-r045-20211226
 riscv                randconfig-r042-20211226
