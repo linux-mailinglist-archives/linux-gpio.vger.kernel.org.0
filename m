@@ -2,92 +2,163 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 09C5F4803F7
-	for <lists+linux-gpio@lfdr.de>; Mon, 27 Dec 2021 20:06:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 19AA64805A7
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Dec 2021 03:10:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233137AbhL0TGg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 27 Dec 2021 14:06:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56980 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232395AbhL0TFw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Dec 2021 14:05:52 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2152BC06175D;
-        Mon, 27 Dec 2021 11:05:52 -0800 (PST)
+        id S234553AbhL1CKJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 27 Dec 2021 21:10:09 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:43708 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232504AbhL1CKJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 27 Dec 2021 21:10:09 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D16D7B8113A;
-        Mon, 27 Dec 2021 19:05:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67141C36AE7;
-        Mon, 27 Dec 2021 19:05:48 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 1B799B8117D;
+        Tue, 28 Dec 2021 02:10:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C19A8C36AEA;
+        Tue, 28 Dec 2021 02:09:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1640631949;
-        bh=8VZ29EPK+glZgDwGOcZ0XbkQAD0GWI9t47yLwmdbulo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=pWW0CejeRylZXNwMuxVpE3Ki/cD/tO4igsF8A/AoMaUaIi0pnWSHeXHRixpIyd5vR
-         VbgxQ8wTacpEZQXf36gCb8pS6YxcgL0DVRkhMHtdPAcyDEd1dt7O28rRN8Ckj4QKyC
-         m1A/LuZ/q2fpmqp/xGHTYVHUAMkFW5RMAPFI4Y5jOmEW2IKlfrAp+cohDd9zcxDz+H
-         iGIprO8tnMS3XpRedVDBUsDTQeO/oB1DYaGklCKZ7AQZc3lj1wpa3J7oCbJISyQdAR
-         zKnD/UnRvGfFx+UN5eUqvfZHwfaGsLUZzezHxwcreBjBQfK9K5fzgVqtmUty2L3PrG
-         0rkXp6e+Hc9nQ==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guodong Liu <guodong.liu@mediatek.corp-partner.google.com>,
-        Zhiyong Tao <zhiyong.tao@mediatek.com>,
-        Chen-Yu Tsai <wenst@chromium.org>,
+        s=k20201202; t=1640657404;
+        bh=SWYw07zmaaDNu+bU6UjWMUGttSEKl48ssAwYr917Irk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=AP7PTZtlYcp1DDFFD9oOox44rlGILxnZhjrWGoppO9nx889cG994Anev93Fi8avnE
+         QKDjPgXQd+0j5ryyJUZRF2fBwkLwO80XrnSF/7Fx+x50yneeRCMv+6NTewDTm+M3mY
+         UmjlUI3lKpBa+eY+azArRNs2im3Ff4KiJ7Zi2yf5dhhdWeFi5sankCfKs3hH/NkcWY
+         C3nDae4xyYfSY866Hl7iueZkbXg7sQjQFFHeioueEr+2zR+wkgXwGDiPuaIoio9xml
+         rwSFGRLZ2Ry45efsPcHYEzY5Wj/FdpgdsOlVeG8/L54LBpew0o0F/pJgWb5CCAbMPX
+         5d9alQgd1Ngqw==
+Date:   Tue, 28 Dec 2021 03:09:46 +0100
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Niklas Schnelle <schnelle@linux.ibm.com>
+Cc:     Arnd Bergmann <arnd@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        John Garry <john.garry@huawei.com>,
+        Nick Hu <nickhu@andestech.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+        Ian Abbott <abbotti@mev.co.uk>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, sean.wang@kernel.org,
-        matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 1/9] pinctrl: mediatek: fix global-out-of-bounds issue
-Date:   Mon, 27 Dec 2021 14:05:28 -0500
-Message-Id: <20211227190536.1042975-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.34.1
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Karsten Keil <isdn@linux-pingi.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Sathya Prakash <sathya.prakash@broadcom.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        Michael Grzeschik <m.grzeschik@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        Kalle Valo <kvalo@kernel.org>, Jouni Malinen <j@w1.fi>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Kashyap Desai <kashyap.desai@broadcom.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        Nilesh Javali <njavali@marvell.com>,
+        GR-QLogic-Storage-Upstream@marvell.com,
+        Mark Brown <broonie@kernel.org>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Teddy Wang <teddy.wang@siliconmotion.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Forest Bond <forest@alittletooquiet.net>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-csky@vger.kernel.org,
+        linux-ide@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-input@vger.kernel.org, netdev@vger.kernel.org,
+        linux-media@vger.kernel.org, MPT-FusionLinux.pdl@broadcom.com,
+        linux-scsi@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+        linux-wireless@vger.kernel.org, megaraidlinux.pdl@broadcom.com,
+        linux-spi@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-staging@lists.linux.dev, linux-serial@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-watchdog@vger.kernel.org,
+        alsa-devel@alsa-project.org
+Subject: Re: [RFC 01/32] Kconfig: introduce and depend on LEGACY_PCI
+Message-ID: <20211228030946.65932d2e@coco.lan>
+In-Reply-To: <20211227164317.4146918-2-schnelle@linux.ibm.com>
+References: <20211227164317.4146918-1-schnelle@linux.ibm.com>
+        <20211227164317.4146918-2-schnelle@linux.ibm.com>
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.30; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Guodong Liu <guodong.liu@mediatek.corp-partner.google.com>
+Em Mon, 27 Dec 2021 17:42:46 +0100
+Niklas Schnelle <schnelle@linux.ibm.com> escreveu:
 
-[ Upstream commit 2d5446da5acecf9c67db1c9d55ae2c3e5de01f8d ]
+> Introduce a new LEGACY_PCI Kconfig option which gates support for legacy
+> PCI devices including those attached to a PCI-to-PCI Express bridge and
+> PCI Express devices using legacy I/O spaces. Note that this is different
+> from non PCI uses of I/O ports such as by ACPI.
+> 
+> Add dependencies on LEGACY_PCI for all PCI drivers which only target
+> legacy PCI devices and ifdef legacy PCI specific functions in ata
+> handling.
+> 
+> Co-developed-by: Arnd Bergmann <arnd@kernel.org>
+> Signed-off-by: Arnd Bergmann <arnd@kernel.org>
+> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> ---
+>  drivers/ata/Kconfig                          | 34 ++++++++--------
+>  drivers/ata/ata_generic.c                    |  3 +-
+>  drivers/ata/libata-sff.c                     |  2 +
+>  drivers/comedi/Kconfig                       | 42 +++++++++++++++++++
+>  drivers/gpio/Kconfig                         |  2 +-
+>  drivers/hwmon/Kconfig                        |  6 +--
+>  drivers/i2c/busses/Kconfig                   | 24 +++++------
+>  drivers/input/gameport/Kconfig               |  4 +-
+>  drivers/isdn/hardware/mISDN/Kconfig          | 14 +++----
 
-When eint virtual eint number is greater than gpio number,
-it maybe produce 'desc[eint_n]' size globle-out-of-bounds issue.
+>  drivers/media/cec/platform/Kconfig           |  2 +-
+>  drivers/media/pci/dm1105/Kconfig             |  2 +-
+>  drivers/media/radio/Kconfig                  |  2 +-
 
-Signed-off-by: Guodong Liu <guodong.liu@mediatek.corp-partner.google.com>
-Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
-Reviewed-by: Chen-Yu Tsai <wenst@chromium.org>
-Link: https://lore.kernel.org/r/20211110071900.4490-2-zhiyong.tao@mediatek.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Not sure what you meant by "legacy I/O spaces" on this patch. 
+I mean, I would expect non-PCIe devices - like bttv and other
+devices developed at the past millennium or so to be "legacy",
+but at least on media, it is touching some drivers that aren't
+that old, while keeping the really old ones untouched. Instead,
+it is touching a driver developed in 2017 plus two other ones
+that are a way newer than other drivers.
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-index 20e1c890e73b3..c3e6f3c1b4743 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-@@ -236,8 +236,12 @@ static int mtk_xt_get_gpio_n(void *data, unsigned long eint_n,
- 	desc = (const struct mtk_pin_desc *)hw->soc->pins;
- 	*gpio_chip = &hw->chip;
- 
--	/* Be greedy to guess first gpio_n is equal to eint_n */
--	if (desc[eint_n].eint.eint_n == eint_n)
-+	/*
-+	 * Be greedy to guess first gpio_n is equal to eint_n.
-+	 * Only eint virtual eint number is greater than gpio number.
-+	 */
-+	if (hw->soc->npins > eint_n &&
-+	    desc[eint_n].eint.eint_n == eint_n)
- 		*gpio_n = eint_n;
- 	else
- 		*gpio_n = mtk_xt_find_eint_num(hw, eint_n);
--- 
-2.34.1
+The support for the Bt8xx chipset, in particular, is really 
+weird, as a sound driver for such chipset:
 
+> @@ -172,6 +177,7 @@ config SND_AZT3328
+>  
+>  config SND_BT87X
+>  	tristate "Bt87x Audio Capture"
+> +	depends on LEGACY_PCI
+>  	select SND_PCM
+>  	help
+>  	  If you want to record audio from TV cards based on
+
+was marked as dependent of LEGACY_PCI, while the DVB and V4L2 ones 
+weren't.
+
+Sounds confusing to me, as the PCI bridge used by a Bt87x device 
+should be the same for all three subdevices.
+
+I'm confused...
+
+Regards,
+Mauro
