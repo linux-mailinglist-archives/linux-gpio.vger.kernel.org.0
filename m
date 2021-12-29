@@ -2,169 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 54350481691
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Dec 2021 21:12:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C170A4816EB
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Dec 2021 22:11:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231772AbhL2UMt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Dec 2021 15:12:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53840 "EHLO
+        id S232086AbhL2VLL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Dec 2021 16:11:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231701AbhL2UMs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Dec 2021 15:12:48 -0500
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B1F1C06173E
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Dec 2021 12:12:48 -0800 (PST)
-Received: by mail-wr1-x432.google.com with SMTP id a9so46362107wrr.8
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Dec 2021 12:12:48 -0800 (PST)
+        with ESMTP id S229754AbhL2VLL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Dec 2021 16:11:11 -0500
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 704D6C061574;
+        Wed, 29 Dec 2021 13:11:11 -0800 (PST)
+Received: by mail-pj1-x1029.google.com with SMTP id n30-20020a17090a5aa100b001b2b6509685so3635471pji.3;
+        Wed, 29 Dec 2021 13:11:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=n8krvMOUPEK6F0o+N9+XFosmRDgMxP8QBHCs3kla8RI=;
-        b=IC55bGUOP7ZwPBye4DspVIQhb7jnifJNc6BUf+60ovYN536DYgrUoQJNAp5410jb/4
-         e/ks53xs822USd9st6cR77JrMKZxO5J6/oHfsVL4P4E+D+F7wD9r91+tT5uwIIQKf9rj
-         KvM7dfOXxKIikyOcOV3f1WtaYMqJGwBl9mV9OH5qhrJXoi8qfN+JZQiyEl80P4rZWFfS
-         6ogr2fgBAd26OWTKlfr/k2uUyxdhRsAS4dQGoG54aoa6U+wbvfskVs3NIPQzWjSvlc5L
-         g1afh6Dme2yrInsdibLTo/P+Einq4ADBJgMIQIkSHsgpr06x6LxydSQ+qzIKPZ3yeMYs
-         /vYQ==
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=lUnDghFJEnX7HKIkKaL2v/UI+FnjGpWjBjAatHbaNyk=;
+        b=SDadAKXPNwYijC1AOhPAM5AgMIX9fs8P1KgwyPT5waMcWKHvI8dR80dztwfZa2E2R7
+         S8xZcBNqEGnadZM9eesKZMJmWw5OHgW4dQoH4FF9uJjsghMT0zjdvfEVx4nOZje3pRiO
+         3BVlOX96ehGgywIkZxEWyMP+y68Kj7qw1Qd8+gW9g+AHhPg3lYVo3KuHuEvSO5fciwL6
+         dYzgZaTj0CQCFpRr2WarQmvhFF6nD+wHtZ3hBdNGi5P7WgX4IWS+DbQntqzsG4D6ijNS
+         T+r0JQhKScO7bSGX1mZDk1HuzYtfxc4hLKAxFlIJ73QMVHGRYwIK0jBXqgBudJEHaP9V
+         XXQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=n8krvMOUPEK6F0o+N9+XFosmRDgMxP8QBHCs3kla8RI=;
-        b=3w6m+rf8c5Mz2Rk1OOZ0RLmwe7GGdbs7UT+OFfjY+fnuMf7Qcg//8EwL/l2MdeVc4O
-         JzBHHSv/wYuJ9Kwphgeg+/deV56WL3UCaZ10eUYTqMkbJmyJs0WlpohsHiUrxnLKtWJT
-         TcorS21XBo508dUjFIsyyFlRqgA5pHxH4jVUR4dQrtpOmv/MqNvr1HATulJM6zgaQgw9
-         hVXVgdhDv4ZOeDSCEUEXgFHwA0I40aBh4unhUhD2JLbPXiRSSxvb8rEiIr/Dh29gpnOY
-         Itcv65yKocXY2OygVMrp8dIwVxLM6mYnowrl51WUH/Z7AjTdXaT4283qxipK95zVhoO0
-         cubg==
-X-Gm-Message-State: AOAM533SFtAdz2Q7GZTCI+ATGulXONUa/grFuauafz7qzfZ533I6/KxQ
-        SGbMfxyT0dMJJ6ShBeZ/9rSBSQ==
-X-Google-Smtp-Source: ABdhPJy1yOGQ3+RzhnmTKk1jgmLANfR6jpUQUpuuGNa9PKHTT1y4KLRkmer2xcdLOcLWqLSwp2IsXg==
-X-Received: by 2002:adf:e844:: with SMTP id d4mr21464307wrn.151.1640808766838;
-        Wed, 29 Dec 2021 12:12:46 -0800 (PST)
-Received: from google.com ([2.31.167.18])
-        by smtp.gmail.com with ESMTPSA id l12sm27352493wmq.2.2021.12.29.12.12.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Dec 2021 12:12:46 -0800 (PST)
-Date:   Wed, 29 Dec 2021 20:12:39 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Colin Foster <colin.foster@in-advantage.com>,
-        linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, UNGLinuxDriver@microchip.com,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        clement.leger@bootlin.com
-Subject: Re: [RFC v5 net-next 02/13] mfd: ocelot: offer an interface for MFD
- children to get regmaps
-Message-ID: <YczBN3CT1qSXHpMw@google.com>
-References: <20211218214954.109755-1-colin.foster@in-advantage.com>
- <20211218214954.109755-3-colin.foster@in-advantage.com>
- <Ycx9j3bflcTGsb7b@google.com>
- <Ycy4VPy+XVgYmfeg@piout.net>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=lUnDghFJEnX7HKIkKaL2v/UI+FnjGpWjBjAatHbaNyk=;
+        b=SrWyP5nC62Io/i0IkTsnew7SGICY23ZLUBXVXczsYubepx7Q0YsPBF6hAVnTm+ECht
+         /XICcLolK2QNkgd0C6LjwZddFzD3GKPdRL7w3l2ZK9WlcE6u3GjM/Ium8LQ358Czu0m5
+         RhTg2TMdkKKpicu9XNxyCNK0vyBOGiFNbz/49AlRyV0Lk1+P4oYAa82XS/b+AM6FnC+t
+         Gv9qY2zEqczDEywANpXrC//eFmEwcVDl2lfw2lllzidPMUodFZ25JXTp3svdmYs9B+DK
+         QX7IL4PtnxLq7/OvWTteZ9kwBBPaQaTsEr+pL6twVoE4PclWpicLWfZOg2szz81kLZuZ
+         fjNA==
+X-Gm-Message-State: AOAM531t3wV5xNhTVo1uH0N0Rd2BITePpqfPwsv2Dv+yEFqnZKahu0Pz
+        ipIKTrVU6u/9/3PUiF7oVw0=
+X-Google-Smtp-Source: ABdhPJxgjH2BR2Fy0OP7CMCAJhKPBcHuWX/2CL0KSZ7eg2bVhtRnS+AyKSrwtfEwTmuke3HvOb0w3w==
+X-Received: by 2002:a17:90b:33cd:: with SMTP id lk13mr34215326pjb.35.1640812270900;
+        Wed, 29 Dec 2021 13:11:10 -0800 (PST)
+Received: from ?IPV6:2600:8802:b00:4a48:580b:8916:6bbf:96c9? ([2600:8802:b00:4a48:580b:8916:6bbf:96c9])
+        by smtp.gmail.com with ESMTPSA id q28sm20840398pgn.14.2021.12.29.13.11.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Dec 2021 13:11:10 -0800 (PST)
+Message-ID: <1df8425c-c1bb-3d1e-4a78-87b6d0967d57@gmail.com>
+Date:   Wed, 29 Dec 2021 13:11:08 -0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Ycy4VPy+XVgYmfeg@piout.net>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.1
+Subject: Re: [PATCH v2 1/2] pinctrl: bcm2835: Change init order for gpio hogs
+Content-Language: en-US
+To:     Stefan Wahren <stefan.wahren@i2se.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Phil Elwell <phil@raspberrypi.com>
+Cc:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        linux-gpio@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        Thierry Reding <treding@nvidia.com>
+References: <20211206092237.4105895-1-phil@raspberrypi.com>
+ <20211206092237.4105895-2-phil@raspberrypi.com>
+ <CACRpkdZ95bCJVDo4tCXsMnsXax4+ZydoLS7AsM-yzMjXbONk=w@mail.gmail.com>
+ <95851343-2887-1e04-9598-e8c8ae74a99a@i2se.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+In-Reply-To: <95851343-2887-1e04-9598-e8c8ae74a99a@i2se.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> > This is almost certainly not the right way to do whatever it is you're
-> > trying to do!
-> > 
-> > Please don't try to upstream "somewhat a hack"s into the Mainline
-> > kernel.
-> > 
+
+
+On 12/29/2021 11:07 AM, Stefan Wahren wrote:
+> Am 10.12.21 um 00:24 schrieb Linus Walleij:
+>> On Mon, Dec 6, 2021 at 10:22 AM Phil Elwell <phil@raspberrypi.com> wrote:
+>>
+>>> ...and gpio-ranges
+>>>
+>>> pinctrl-bcm2835 is a combined pinctrl/gpio driver. Currently the gpio
+>>> side is registered first, but this breaks gpio hogs (which are
+>>> configured during gpiochip_add_data). Part of the hog initialisation
+>>> is a call to pinctrl_gpio_request, and since the pinctrl driver hasn't
+>>> yet been registered this results in an -EPROBE_DEFER from which it can
+>>> never recover.
+>>>
+>>> Change the initialisation sequence to register the pinctrl driver
+>>> first.
+>>>
+>>> This also solves a similar problem with the gpio-ranges property, which
+>>> is required in order for released pins to be returned to inputs.
+>>>
+>>> Fixes: 73345a18d464b ("pinctrl: bcm2835: Pass irqchip when adding gpiochip")
+>>> Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+>> This patch (1/2) applied for fixes.
 > 
-> Please elaborate on the correct way to do that. What we have here is a
-> SoC (vsc7514) that has MMIO devices. This SoC has a MIPS CPU and
-> everything is fine when using it. However, the CPU can be disabled and
-> the SoC connected to another CPU using SPI or PCIe. What Colin is doing
-> here is using this SoC over SPI. Don't tell me this is not an MFD
-
-When did anyone say that?
-
-> because this is exactly what this is, a single chip with a collection of
-> devices that are also available separately.
+> Unfortunately this change breaks all GPIO LEDs at least on the Raspberry
+> Pi 3 Plus (Linux 5.16-rc7, multi_v7_defconfig). The ACT LED for instance
+> stays in the last state instead of the configured heartbeat behavior.
+> Also there are no GPIO LEDs in /sys/class/leds/ directory.
 > 
-> The various drivers for the VSC7514 have been written using regmap
-> exactly for this use case. The missing piece is probing the devices over
-> SPI instead of MMIO.
-> 
-> Notice that all of that gets worse when using PCIe on architectures that
-> don't have device tree support and Clément will submit multiple series
-> trying to fix that.
+> After reverting this change everything is back to normal.
 
-Okay, it sounds like I'm missing some information, let's see if we can
-get to the bottom of this so that I can provide some informed
-guidance.
-
-> On 29/12/2021 15:23:59+0000, Lee Jones wrote:
-> > On Sat, 18 Dec 2021, Colin Foster wrote:
-> > 
-> > > Child devices need to get a regmap from a resource struct,
-> > > specifically from the MFD parent.
-
-Child devices usually fetch the Regmap from a pointer the parent
-provides.  Usually via either 'driver_data' or 'platform_data'.
-
-However, we can't do that here because ...
-
-> > > The MFD parent has the interface to the hardware
-> > > layer, which could be I2C, SPI, PCIe, etc.
-> > > 
-> > > This is somewhat a hack... ideally child devices would interface with the
-> > > struct device* directly, by way of a function like
-> > > devm_get_regmap_from_resource which would be akin to
-> > > devm_get_and_ioremap_resource.
-
-However, we can't do that here because ...
-
-> > > A less ideal option would be to interface
-> > > directly with MFD to get a regmap from the parent.
-> > > 
-> > > This solution is even less ideal than both of the two suggestions, so is
-> > > intentionally left in a separate commit after the initial MFD addition.
-> > > 
-> > > Signed-off-by: Colin Foster <colin.foster@in-advantage.com>
-> > > ---
-> > >  drivers/mfd/ocelot-core.c |  9 +++++++++
-> > >  include/soc/mscc/ocelot.h | 12 ++++++++++++
-> > >  2 files changed, 21 insertions(+)
-> > > 
-> > > diff --git a/drivers/mfd/ocelot-core.c b/drivers/mfd/ocelot-core.c
-> > > index a65619a8190b..09132ea52760 100644
-> > > --- a/drivers/mfd/ocelot-core.c
-> > > +++ b/drivers/mfd/ocelot-core.c
-> > > @@ -94,6 +94,15 @@ static struct regmap *ocelot_mfd_regmap_init(struct ocelot_mfd_core *core,
-> > >  	return regmap;
-> > >  }
-> > >  
-> > > +struct regmap *ocelot_mfd_get_regmap_from_resource(struct device *dev,
-> > > +						   const struct resource *res)
-> > > +{
-> > > +	struct ocelot_mfd_core *core = dev_get_drvdata(dev);
-> > > +
-> > > +	return ocelot_mfd_regmap_init(core, res);
-> > > +}
-> > > +EXPORT_SYMBOL(ocelot_mfd_get_regmap_from_resource);
-> > 
-> 
-
+And this patch has already been applied to the stable 5.15 and 5.10 
+branches as well, FWIW.
 -- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Florian
