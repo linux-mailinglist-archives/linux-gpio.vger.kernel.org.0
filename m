@@ -2,53 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 85FDE48111E
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Dec 2021 09:55:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 404F7481146
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Dec 2021 10:30:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239412AbhL2Izy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Dec 2021 03:55:54 -0500
-Received: from mail.portyid.pl ([192.36.61.58]:51946 "EHLO mail.portyid.pl"
+        id S234234AbhL2Ja6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Dec 2021 04:30:58 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:44190 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239391AbhL2Izy (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 29 Dec 2021 03:55:54 -0500
-X-Greylist: delayed 588 seconds by postgrey-1.27 at vger.kernel.org; Wed, 29 Dec 2021 03:55:54 EST
-Received: by mail.portyid.pl (Postfix, from userid 1001)
-        id E3BBB410C3; Wed, 29 Dec 2021 09:45:53 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=portyid.pl; s=mail;
-        t=1640767564; bh=RZjfFpT9KGSFHXuIOzTjcb+Gwkun4EXriv7y2I0PG0A=;
-        h=Date:From:To:Subject:From;
-        b=J7zsdMA7oAklcB2oA8tLGHdi3BRnwOvYqLvDmtpj8nkNjK3S3TPjgksrJnExzamc1
-         l6/pkMhUVhgyP5jDTV5ErqQnreugly+UP0f0hwRhJRm+UExflAcCGAQmEHVrQ5k8rW
-         wcFYmZJRvLNFfPlvnomkVC+n9fz5+wVU8f9ytZFZd5a5BQcpRWLVSQ4lwR14/iN/FM
-         A3jtEJpZjdzxIKNUW/g8Mw0w/yW4bxRmnMXQi/i5Lphwt3eJ8R09/uHNdfhW3ubRP+
-         TPuk0a8un9eVti85rmWf/9Eqou3UYr2frwytwJAt0WuGDubD2udnoQy9o6VlmLH1JC
-         0q56GSy1sz/5w==
-Received: by mail.portyid.pl for <linux-gpio@vger.kernel.org>; Wed, 29 Dec 2021 08:45:43 GMT
-Message-ID: <20211229084500-0.1.w.2u3i.0.9gc6kxh8a5@portyid.pl>
-Date:   Wed, 29 Dec 2021 08:45:43 GMT
-From:   =?UTF-8?Q? "Pawe=C5=82_Jasi=C5=84ski" ?= 
-        <pawel.jasinski@portyid.pl>
-To:     <linux-gpio@vger.kernel.org>
-Subject: Wycena paneli fotowoltaicznych
-X-Mailer: mail.portyid.pl
+        id S232237AbhL2Ja5 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 29 Dec 2021 04:30:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+        Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+        bh=OmEP0vlBess7yf0G2D2gupKNnfHYjQqlkRVEW2GfamA=; b=wtKGvYFlIeFSNFKxxz/r3pTMw+
+        cLH5t0E+MY8zwJRaluOoLMzSgsSLiEWtgtZ3z/kUawUjqTFo8sdJ6a6ZI6uQbI7a1tCdk1SoyJ16e
+        BLQ7R28Xmg3dOZ22vWQSG2umq9lGI0Y/aioCuGSlWO2QTIAxzHxy8qfboDqjFa5VPBsE=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1n2VIM-0005sX-3W; Wed, 29 Dec 2021 10:30:54 +0100
+Date:   Wed, 29 Dec 2021 10:30:54 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Colin Foster <colin.foster@in-advantage.com>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        UNGLinuxDriver@microchip.com,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>
+Subject: Re: [PATCH v1 pinctrl-next 0/1] add blink and activity functions to
+ SGPIO
+Message-ID: <YcwqznBTLZgNcU7o@lunn.ch>
+References: <20211229003729.618079-1-colin.foster@in-advantage.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211229003729.618079-1-colin.foster@in-advantage.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dzie=C5=84 dobry,
+On Tue, Dec 28, 2021 at 04:37:28PM -0800, Colin Foster wrote:
+> Expose a debugfs / devicetree interface for Microsemi SGPIO controllers.
+> By writing values of 2-5, the SGPIO pins can be configured for either
+> automatic blinking or activity.
+> 
+> The implementation is modeled after the code in
+> /drivers/pinctrl/pinctrl-ocelot.c.
+> 
+> I have only tested this with currently out-of-tree patches for the
+> VSC7512 that I hope to get in soon. They are not needed for VSC7513 /
+> VSC7514, SPARX5, or LUTON - but I don't have any hardware to test.
+> 
+> Of note: the 7512 chip has a discrepancy between the datasheet and the
+> registers. The datahseet claims 20Hz blink default frequency, the
+> registers claim 5 Hz default frequency for BMODE_0. I override the
+> OCELOT registers to correct for this. I don't know if that is needed for
+> LUTON or SPARX, but having two blink modes at the same frequency isn't
+> beneficial. As such, I make the blink modes match the 5Hz / 20Hz for the
+> two modes.
+> 
+> Tested with VSC7512 by way of:
+> echo SGPIO_O_p1b0 {blink0,blink1,activity0,activity1} > 
+> /sys/kernel/debug/pinctrl/pinctrl-sgpio-pinctrl-sgpio-output/pinmux-select
 
-dostrzegam mo=C5=BCliwo=C5=9B=C4=87 wsp=C3=B3=C5=82pracy z Pa=C5=84stwa f=
-irm=C4=85.
+Hi Colin
 
-=C5=9Awiadczymy kompleksow=C4=85 obs=C5=82ug=C4=99 inwestycji w fotowolta=
-ik=C4=99, kt=C3=B3ra obni=C5=BCa koszty energii elektrycznej nawet o 90%.
+Since this is an LED, you should be using the Linux LED interface in
+/sys/class/leds. See Documentation/leds/leds-class.rst. It includes a
+way to make an LED blink, using hardware.
 
-Czy s=C4=85 Pa=C5=84stwo zainteresowani weryfikacj=C4=85 wst=C4=99pnych p=
-ropozycji?
+Activity is another story. I assume you mean Ethernet frame Rx and Tx?
+For that you should wait until the Ethernet LED offload code
+eventually lands.
 
-
-Pozdrawiam
-Pawe=C5=82 Jasi=C5=84ski
+	   Andrew
