@@ -2,115 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B79BD48165D
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Dec 2021 20:34:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BCAE48166A
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Dec 2021 20:40:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230507AbhL2Teu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Dec 2021 14:34:50 -0500
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:49523 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230494AbhL2Teu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Dec 2021 14:34:50 -0500
-Received: (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 182BC20002;
-        Wed, 29 Dec 2021 19:34:44 +0000 (UTC)
-Date:   Wed, 29 Dec 2021 20:34:44 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Colin Foster <colin.foster@in-advantage.com>,
-        linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, UNGLinuxDriver@microchip.com,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        clement.leger@bootlin.com
-Subject: Re: [RFC v5 net-next 02/13] mfd: ocelot: offer an interface for MFD
- children to get regmaps
-Message-ID: <Ycy4VPy+XVgYmfeg@piout.net>
-References: <20211218214954.109755-1-colin.foster@in-advantage.com>
- <20211218214954.109755-3-colin.foster@in-advantage.com>
- <Ycx9j3bflcTGsb7b@google.com>
+        id S231226AbhL2Tky (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Dec 2021 14:40:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46836 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230494AbhL2Tkx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Dec 2021 14:40:53 -0500
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A373C061574;
+        Wed, 29 Dec 2021 11:40:53 -0800 (PST)
+Received: by mail-wr1-x42e.google.com with SMTP id e5so46298547wrc.5;
+        Wed, 29 Dec 2021 11:40:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=hGRJ1HYHgx6Z5TD/JKBwqHCaslyKNZyupIsR2i8Poyw=;
+        b=YCaq8M0RQ4k5mZfPFoejGPd+TZ2z34WbpOscTPjrml2fkckagkJz9v34SuLJc4qaa4
+         yF/31YJvfaIYvysmBWjd0PxW1fL0YnqSCnmOyowAeiSr8wg4XN98O8UVDXbm9rr3kenx
+         3DVduU8Kzc1FvSYVdf0xL17Oa6zmJ3LB2boxOTYHtMTKY5RMMNA/B9LZjk2NqCWPUhkc
+         h97n+NPbD4pYZIoGPCKaTTHdiGa5ESzMF31bhHAtkwXhJV4LgLRo6IrDvz/J1zy/ibbc
+         MQr8cq+RiIzfH8Z26qkpOCjx72xGGTARvSc00ULHXhV607yZW64/mzqAbOOW38IHUXGG
+         7dSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=hGRJ1HYHgx6Z5TD/JKBwqHCaslyKNZyupIsR2i8Poyw=;
+        b=FYnKWBk/yU7dnXAvRf2BxSFWtRsSneya/w9WkTppwkIYnVBzbmSYWlWTr81ULRVpU5
+         w8dpr1ZN+KtI7gEhIB4GLnvlESyhNVxay/2l9t0hgcUPRH4ZvAhW7Ylj2oBQBweZC/0n
+         XTYayx9M1RYoQGzWqPArAkCI0Yj4d+dAifY8mmgVaai6kQZ3Ye0rQiEN56ucJ9Weot7J
+         sxV8e1WFwXNZRkru9iHJ2QMEysjozy5y55s5ecf8W7+l2O92tUzboE5SB2QQNUFQmsqe
+         5UWJKCb4cSFeYGgcVoKN4C4Zd13+PeSyjUdM+fC7A/6zImQxTSfGd7PlslmUwo/lOoVb
+         7RsA==
+X-Gm-Message-State: AOAM532Y84z8XN/WXzGd//oOtPMV10P7ESnaleHKj3ZHDknkHPfZnDq7
+        WuRTLVUh/w6LUoWiHPu6jfUEDEvFh02sPw==
+X-Google-Smtp-Source: ABdhPJwXpLlka8AsE24wSg4a1QSRHYJhtq9ZoTOxBuTvDapaJJDktWT/iUH9gkB6MFV6VqhffpiFDQ==
+X-Received: by 2002:a5d:58f2:: with SMTP id f18mr22004078wrd.98.1640806852049;
+        Wed, 29 Dec 2021 11:40:52 -0800 (PST)
+Received: from [192.168.2.177] ([207.188.161.251])
+        by smtp.gmail.com with ESMTPSA id b19sm26799443wmb.38.2021.12.29.11.40.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Dec 2021 11:40:50 -0800 (PST)
+Message-ID: <c2b47f56-ff83-d36a-2c4f-6e1fee439c5b@gmail.com>
+Date:   Wed, 29 Dec 2021 20:40:49 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Ycx9j3bflcTGsb7b@google.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Subject: Re: [PATCH v7 2/4] dt-bindings: spi: spi-mtk-nor: add new clock name
+ 'axi' for spi nor
+Content-Language: en-US
+To:     Tinghan Shen <tinghan.shen@mediatek.com>, robh+dt@kernel.org,
+        linus.walleij@linaro.org, broonie@kernel.org
+Cc:     bgolaszewski@baylibre.com, sean.wang@mediatek.com,
+        bayi.cheng@mediatek.com, gch981213@gmail.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-spi@vger.kernel.org,
+        Project_Global_Chrome_Upstream_Group@mediatek.com
+References: <20211220121825.6446-1-tinghan.shen@mediatek.com>
+ <20211220121825.6446-3-tinghan.shen@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+In-Reply-To: <20211220121825.6446-3-tinghan.shen@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Lee,
 
-On 29/12/2021 15:23:59+0000, Lee Jones wrote:
-> On Sat, 18 Dec 2021, Colin Foster wrote:
+
+On 20/12/2021 13:18, Tinghan Shen wrote:
+> Some mtk spi nor has dedicated dma(s) inside. Add a new clock name, axi,
+> for spi nor dma bus clock.
 > 
-> > Child devices need to get a regmap from a resource struct, specifically
-> > from the MFD parent. The MFD parent has the interface to the hardware
-> > layer, which could be I2C, SPI, PCIe, etc.
-> > 
-> > This is somewhat a hack... ideally child devices would interface with the
-> > struct device* directly, by way of a function like
-> > devm_get_regmap_from_resource which would be akin to
-> > devm_get_and_ioremap_resource. A less ideal option would be to interface
-> > directly with MFD to get a regmap from the parent.
-> > 
-> > This solution is even less ideal than both of the two suggestions, so is
-> > intentionally left in a separate commit after the initial MFD addition.
-> > 
-> > Signed-off-by: Colin Foster <colin.foster@in-advantage.com>
-> > ---
-> >  drivers/mfd/ocelot-core.c |  9 +++++++++
-> >  include/soc/mscc/ocelot.h | 12 ++++++++++++
-> >  2 files changed, 21 insertions(+)
-> > 
-> > diff --git a/drivers/mfd/ocelot-core.c b/drivers/mfd/ocelot-core.c
-> > index a65619a8190b..09132ea52760 100644
-> > --- a/drivers/mfd/ocelot-core.c
-> > +++ b/drivers/mfd/ocelot-core.c
-> > @@ -94,6 +94,15 @@ static struct regmap *ocelot_mfd_regmap_init(struct ocelot_mfd_core *core,
-> >  	return regmap;
-> >  }
-> >  
-> > +struct regmap *ocelot_mfd_get_regmap_from_resource(struct device *dev,
-> > +						   const struct resource *res)
-> > +{
-> > +	struct ocelot_mfd_core *core = dev_get_drvdata(dev);
-> > +
-> > +	return ocelot_mfd_regmap_init(core, res);
-> > +}
-> > +EXPORT_SYMBOL(ocelot_mfd_get_regmap_from_resource);
+> Signed-off-by: Tinghan Shen <tinghan.shen@mediatek.com>
+
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+
+> ---
+>   .../devicetree/bindings/spi/mediatek,spi-mtk-nor.yaml       | 6 +++++-
+>   1 file changed, 5 insertions(+), 1 deletion(-)
 > 
-> This is almost certainly not the right way to do whatever it is you're
-> trying to do!
+> diff --git a/Documentation/devicetree/bindings/spi/mediatek,spi-mtk-nor.yaml b/Documentation/devicetree/bindings/spi/mediatek,spi-mtk-nor.yaml
+> index 7393f30535df..478afebfec9c 100644
+> --- a/Documentation/devicetree/bindings/spi/mediatek,spi-mtk-nor.yaml
+> +++ b/Documentation/devicetree/bindings/spi/mediatek,spi-mtk-nor.yaml
+> @@ -43,14 +43,19 @@ properties:
+>       maxItems: 1
+>   
+>     clocks:
+> +    minItems: 2
+>       items:
+>         - description: clock used for spi bus
+>         - description: clock used for controller
+> +      - description: clock used for nor dma bus. this depends on hardware
+> +                     design, so this is optional.
+>   
+>     clock-names:
+> +    minItems: 2
+>       items:
+>         - const: spi
+>         - const: sf
+> +      - const: axi
+>   
+>   required:
+>     - compatible
+> @@ -84,4 +89,3 @@ examples:
+>           };
+>         };
+>       };
+> -
 > 
-> Please don't try to upstream "somewhat a hack"s into the Mainline
-> kernel.
-> 
-
-Please elaborate on the correct way to do that. What we have here is a
-SoC (vsc7514) that has MMIO devices. This SoC has a MIPS CPU and
-everything is fine when using it. However, the CPU can be disabled and
-the SoC connected to another CPU using SPI or PCIe. What Colin is doing
-here is using this SoC over SPI. Don't tell me this is not an MFD
-because this is exactly what this is, a single chip with a collection of
-devices that are also available separately.
-
-The various drivers for the VSC7514 have been written using regmap
-exactly for this use case. The missing piece is probing the devices over
-SPI instead of MMIO.
-
-Notice that all of that gets worse when using PCIe on architectures that
-don't have device tree support and Clément will submit multiple series
-trying to fix that.
-
--- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
