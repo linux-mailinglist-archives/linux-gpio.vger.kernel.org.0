@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 287E548146D
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Dec 2021 16:26:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BE4C6481470
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Dec 2021 16:26:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240547AbhL2P00 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 29 Dec 2021 10:26:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47260 "EHLO
+        id S240554AbhL2P0p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 29 Dec 2021 10:26:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236997AbhL2P00 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Dec 2021 10:26:26 -0500
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 021C3C06173F
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Dec 2021 07:26:26 -0800 (PST)
-Received: by mail-wr1-x430.google.com with SMTP id q16so45113450wrg.7
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Dec 2021 07:26:25 -0800 (PST)
+        with ESMTP id S237113AbhL2P0p (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 29 Dec 2021 10:26:45 -0500
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA5B5C06173E
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Dec 2021 07:26:44 -0800 (PST)
+Received: by mail-wr1-x433.google.com with SMTP id w20so36105717wra.9
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Dec 2021 07:26:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=AX3qxdEvTJwh2Uh3nDiQuU6AkRUobLTqCSR6yPpfdX0=;
-        b=rkKqI6TE6vXogFh3+4TATT0MPPUjGkfXvrN3cBDT03N6M+HlBBwtFaG3AVDZ6zdAik
-         Kp6lOcqyMiBelqtmB3nwbsln21VbaLAz1UN1rVTtDvU5gbxCAqPF8kaHeSDwbODqFPAW
-         1/rnADHWkNXQZ61Z9P5tHth8vkZcPAcU3bgw+9r096Wf4gRo/7gAxQiDakqaIQnJu8iS
-         Tw3ZlVOLicSodSTyPDR1oA55gbWMiiV0sQt9ImzB4yS7VxLIHkw5syoLLbDGeG0epbw2
-         ko3pGXszlwoyqjx+JJcX1ST0uAvyKLnk98cU1V/Yt/JygR2XpmsSUW7fu8G9NofsZuC7
-         IsuA==
+        bh=kcQxTAn3v/S923+meTxfcYvk0OXYojNzNro1NaE6gHw=;
+        b=dz4TCQt3ohJzpaDwzE6E7Y/HFTYydbe1ir/EngWnIo4aR08JTnK3XAfx+cziXHNQ+y
+         g+H5l4i6YAiJiRTaYvNEx6LZH81G8I0oBSiXuZunhofR6klKK+n0X8c/VX9KI4xad56E
+         E3j6xA6FI1TP1SxQy8TjJ/qbR6KugoR93eMIgoayPnP3ZxQX5zZNKyVmAdakCiaLR1Cp
+         /uMuhjTovp/RzXiWWv4g0UPBKGeyFxFoM2ucQjEIE4Id+WWx1a7Us3Wtf1qCG1UL8Vdr
+         /UgtUBC+Jl/0w9HmD9fUzreHALL+hBiSb2NaihypBzxw4mtVvuYOMg6G01T5ssC1dcQ1
+         pZCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to;
-        bh=AX3qxdEvTJwh2Uh3nDiQuU6AkRUobLTqCSR6yPpfdX0=;
-        b=tFkVVM93RgSDdL+8AkBBcN+KTUSI8MdwgucMjFM9xv85KPKPxpFpfjE612jmQ0e+LM
-         i/epMSD2azP1UvTehUg0emVUXcyGuXJCOKmSCCd+DKZNsif+EFEro1pzXcaOmJu1KEgW
-         4UDjAWTHZNuYF4MJZ9rVibfRa6ZGSC05pzP/eRHtB56Mydqklm00OQfQOTTjv6GqCEBx
-         7AI2pWaB0soEJCMvDRILxQjMtEeLPvR+WbZmgyKJJMf8xF+qeeLfW1OtFH/JqgCxc1mr
-         u+/DqpvGqyaVUCt5UvU2drIzABqDxuC7M2oZl7RSCwk6Vcjx5fRob90gNHZ71jmeIYYF
-         zrnw==
-X-Gm-Message-State: AOAM530YAPGYozn3+IMQ25IfDjhkNonGz1ak6P3UcM8S7jyypf6f7Ogl
-        KPViUBc7RQIeOj0ZR74R9GjQLA==
-X-Google-Smtp-Source: ABdhPJx+WjofkRBJ9D+G9God3XXMPiUmRWUjekgXHbOJvH9uS8ZmmqlEiPExUZmYDJAjraiUxA/nCQ==
-X-Received: by 2002:a5d:40d0:: with SMTP id b16mr19785073wrq.709.1640791584534;
-        Wed, 29 Dec 2021 07:26:24 -0800 (PST)
+        bh=kcQxTAn3v/S923+meTxfcYvk0OXYojNzNro1NaE6gHw=;
+        b=u6Qnh5Vc6Z5FDvJmP0tdKTHQJ5PMtbsi7GTqCzFcf+NykzB3Znai/aHntDueli93N4
+         5YgmAeRc4CQRLLLCOEOnsZ3e4NQYaf2qgr8KDaaCM//BzDZm3gYoxxxyn5LJE5mopfvK
+         P/bnG03N6HscOulubUKrZbfIqd2XH4h54z44fchYNNx3nLfQvKkK7auukMmqHboA6Mvy
+         t4YdgbKB9yh8L+ZJFK2y5xkQcJ4I1H2qzG+HSxLDPAF5c4a4l+JO28PFSFZ7yRIhajYI
+         uBEWrTzVOIYgiB+sg5I3YvUk80hfxLygsEGrZ9X+esRQenxwP/2IDsZzX4lQ5cnc4Dkw
+         YhyQ==
+X-Gm-Message-State: AOAM530cbYVGg09YYF86xoImRz6l/deXuvuGXNvZ/w+Qhs6e1w1GSGFw
+        0TIIDwyM77LRgMOZkYOlJJKIvw==
+X-Google-Smtp-Source: ABdhPJzS7sCiQ7+uD75qM8a8p9tojwVsOVKYyirHAPGAd3sc/vdNJ6yZAhg7v5WMtjc5cyITCgRRjw==
+X-Received: by 2002:adf:d0cb:: with SMTP id z11mr21322655wrh.470.1640791603195;
+        Wed, 29 Dec 2021 07:26:43 -0800 (PST)
 Received: from google.com ([2.31.167.18])
-        by smtp.gmail.com with ESMTPSA id u14sm20831018wrf.39.2021.12.29.07.26.23
+        by smtp.gmail.com with ESMTPSA id g187sm20096450wmg.40.2021.12.29.07.26.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Dec 2021 07:26:24 -0800 (PST)
-Date:   Wed, 29 Dec 2021 15:26:22 +0000
+        Wed, 29 Dec 2021 07:26:42 -0800 (PST)
+Date:   Wed, 29 Dec 2021 15:26:40 +0000
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Colin Foster <colin.foster@in-advantage.com>
 Cc:     linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
@@ -64,58 +64,70 @@ Cc:     linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Claudiu Manoil <claudiu.manoil@nxp.com>,
         Vladimir Oltean <vladimir.oltean@nxp.com>
-Subject: Re: [RFC v5 net-next 11/13] mfd: ocelot-core: add control for the
- external mdio interface
-Message-ID: <Ycx+Ht/rLroaYQRf@google.com>
+Subject: Re: [RFC v5 net-next 13/13] mfd: ocelot: add ocelot-pinctrl as a
+ supported child interface
+Message-ID: <Ycx+MNV1edWhdLM5@google.com>
 References: <20211218214954.109755-1-colin.foster@in-advantage.com>
- <20211218214954.109755-12-colin.foster@in-advantage.com>
+ <20211218214954.109755-14-colin.foster@in-advantage.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211218214954.109755-12-colin.foster@in-advantage.com>
+In-Reply-To: <20211218214954.109755-14-colin.foster@in-advantage.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Sat, 18 Dec 2021, Colin Foster wrote:
 
-> Utilize the mscc-miim-mdio driver as a child of the ocelot MFD.
+> The ocelot-pinctrl device is able to be utilized by ocelot_mfd. This simply
+> enables that child driver.
 > 
 > Signed-off-by: Colin Foster <colin.foster@in-advantage.com>
 > ---
->  drivers/mfd/ocelot-core.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
+>  drivers/mfd/ocelot-core.c | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
 
 Squash please.
 
 > diff --git a/drivers/mfd/ocelot-core.c b/drivers/mfd/ocelot-core.c
-> index 52aa7b824d02..c67e433f467c 100644
+> index c67e433f467c..71e062934812 100644
 > --- a/drivers/mfd/ocelot-core.c
 > +++ b/drivers/mfd/ocelot-core.c
-> @@ -104,7 +104,22 @@ struct regmap *ocelot_mfd_get_regmap_from_resource(struct device *dev,
->  }
->  EXPORT_SYMBOL(ocelot_mfd_get_regmap_from_resource);
+> @@ -113,7 +113,22 @@ static const struct resource vsc7512_miim1_resources[] = {
+>  	},
+>  };
 >  
-> +static const struct resource vsc7512_miim1_resources[] = {
+> +static const struct resource vsc7512_pinctrl_resources[] = {
 > +	{
-> +		.start = 0x710700c0,
-> +		.end = 0x710700e3,
-> +		.name = "gcb_miim1",
+> +		.start = 0x71070034,
+> +		.end = 0x7107009f,
+> +		.name = "gcb_gpio",
 > +		.flags = IORESOURCE_MEM,
 > +	},
 > +};
 > +
 >  static const struct mfd_cell vsc7512_devs[] = {
 > +	{
-> +		.name = "ocelot-miim1",
-> +		.of_compatible = "mscc,ocelot-miim",
-> +		.num_resources = ARRAY_SIZE(vsc7512_miim1_resources),
-> +		.resources = vsc7512_miim1_resources,
+> +		.name = "pinctrl-ocelot",
+> +		.of_compatible = "mscc,ocelot-pinctrl",
+> +		.num_resources = ARRAY_SIZE(vsc7512_pinctrl_resources),
+> +		.resources = vsc7512_pinctrl_resources,
 > +	},
 >  	{
->  		.name = "ocelot-ext-switch",
->  		.of_compatible = "mscc,vsc7512-ext-switch",
+>  		.name = "ocelot-miim1",
+>  		.of_compatible = "mscc,ocelot-miim",
+> @@ -164,6 +179,10 @@ int ocelot_mfd_init(struct ocelot_mfd_config *config)
+>  
+>  	ret = mfd_add_devices(dev, PLATFORM_DEVID_NONE, vsc7512_devs,
+>  			      ARRAY_SIZE(vsc7512_devs), NULL, 0, NULL);
+> +	if (ret) {
+> +		dev_err(dev, "error adding mfd devices\n");
+> +		return ret;
+> +	}
+>  
+>  	dev_info(dev, "ocelot mfd core setup complete\n");
+>  
 
 -- 
 Lee Jones [李琼斯]
