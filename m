@@ -2,103 +2,155 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 26080481A25
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Dec 2021 08:15:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BEC30481C98
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Dec 2021 14:44:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236849AbhL3HPA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 30 Dec 2021 02:15:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56328 "EHLO
+        id S239640AbhL3NoF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 30 Dec 2021 08:44:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236741AbhL3HPA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Dec 2021 02:15:00 -0500
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E702C061574
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Dec 2021 23:15:00 -0800 (PST)
-Received: by mail-pf1-x42b.google.com with SMTP id u20so20667095pfi.12
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Dec 2021 23:15:00 -0800 (PST)
+        with ESMTP id S239636AbhL3NoF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Dec 2021 08:44:05 -0500
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6FC1C061574
+        for <linux-gpio@vger.kernel.org>; Thu, 30 Dec 2021 05:44:02 -0800 (PST)
+Received: by mail-wr1-x433.google.com with SMTP id d9so50639506wrb.0
+        for <linux-gpio@vger.kernel.org>; Thu, 30 Dec 2021 05:44:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=sfUkye3DfZxSEaJ0fGLgaSVK2OVRkK/LShat9HhuZXE=;
-        b=ZMnra6inFvlv8LhHWG9m8Pq169tNeyQHUY8vesZ12mEJnERrvwpazFScW/bBQBWN7D
-         r1zZg3Fpib9Lge9+4R5LzkW4wNBWW9D4AdcQakaKn3+r/09Vcga5AQXHxLcoVyN/cNlk
-         M2twU1/a7RF8iHnJ4eLn4J+beqkxknXf/PAAjA9GcSZjDM5mgpZxkLPjKiJ9esaxicef
-         aYHfE/+d244yWsLBsw/OCQuOF6sdIX1uFrH7N4GBYYtpIcssaemxItMK63TYF+P8TnVO
-         GY8Y6Quz7xgfQR2FUlvyeA9ULLN8sShY3fFlORHCdd1SkmbxpuUh7l2Gw72PnC++D3Qc
-         Y9Rw==
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Ig6zmVlsXZoVU3qS9GYP8SWQ0yGF84n3e2wM7iJ8EaM=;
+        b=xuHu6OJyHwstTvs/pGh7nrljGZGVw4IATi8sBlZfVNUgOzeSetWxHN/cP27hJfg3ed
+         HSyktYnCNEjgn9hsuZuJSLS3WuIScLK/TDCmP+ZSvIxJskvBJNJgvDFdgmAZdXWLFs4z
+         A/nKRKNPqThw3dxfxtdukMBXvShPb5S1Z2QMSaZSpr5Fa8Pa5QgHsfpibYfqNwwAnZWS
+         J2FePdAyaAuKl0iTxdHPQormUYAGFymTNIFabqIPSpTTu/UaE0S2RilRBBUxah0t9e4V
+         GrP8KTKIPHdbm6C1WSLwk3Hej0S7zkSHAnvoiWAHxzu9iIF+Kfw/VMGZHJ6cPnS0zlpg
+         B2gQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=sfUkye3DfZxSEaJ0fGLgaSVK2OVRkK/LShat9HhuZXE=;
-        b=p5GfeG0BUJBW/6pkbwA4v6y8SvnUdVQy2PnchZ5hQwW8NZ41V6EcN+ZtZ9PpAj2r2f
-         5sb0sVNr2JmmHsqb0096Nvs3WfUbGkC35y3yeuQ0tPU1EoEKFzx4fQbWftMVbxi1zutN
-         jC//BRtBgBghtSjcSXonMitmfoZ/3/auTtEJIa9CC+oNj1d2cEV6fsFkalLsI0h640tQ
-         ie98uSfVM1sqhIL44zrPo3T44u7MrXQ26+PhVo6JbE8Sb1ru8y/pgV5SKCOed6XJ/BHX
-         ZKhjVOcVnIZlWjZYCB7FLLv+HM1rzLqWAkEQaqL1HTCRzO4ZvWS66kSLkdLBhERoVwBD
-         Ou3w==
-X-Gm-Message-State: AOAM532l+t5CbXpD9g0jDQ2d9RmB+ClRGC4PVoTIraxfEK5u8p6Gqzds
-        JcP96myJh/mUh5kdiCn/d0v7cSdRzPE=
-X-Google-Smtp-Source: ABdhPJxgAf43oswhY06Lv/KwvzYrJaC4zKYRNelitMqSRs7mFu8D8qJuIlJDS93JGIZXDEOR0InmPA==
-X-Received: by 2002:a62:88ce:0:b0:4ba:72e1:e2f3 with SMTP id l197-20020a6288ce000000b004ba72e1e2f3mr30172067pfd.13.1640848499860;
-        Wed, 29 Dec 2021 23:14:59 -0800 (PST)
-Received: from sol (14-201-12-235.tpgi.com.au. [14.201.12.235])
-        by smtp.gmail.com with ESMTPSA id s3sm25007765pfm.0.2021.12.29.23.14.57
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Ig6zmVlsXZoVU3qS9GYP8SWQ0yGF84n3e2wM7iJ8EaM=;
+        b=rLTxWL3SgfJU1iGVKKQ2yamd5Pqx2g+hhy+gRymnYXBqDhNG2gPrvYm07uv88Ph3z8
+         TnDlvsZPATS21mbi8u9P3sErGzIhTL3Q3lYyzlJMMVJNahMIHt/LuQ9erVhyBXe4xDNt
+         9lPefBLYeiavXvV0xd+7kdI2dPGh9rRPDz4TlTHbMRNKoZ7p6h9DowLf0LipZ80QVjY4
+         khmc+QVQyoB6KYbSG9iloZwgiiDP8TYSKCJK3xgfJunDxiJw9SdflykGkb+imCbuMzMv
+         fWwItADll8yANYeKPHnZXQjSAFiv1mEDEYQRGNfFyFAjukPh5XQIpsOKO69tPAHm8XON
+         R2bQ==
+X-Gm-Message-State: AOAM5328H5M5cP1ALo38+SSyY1ZjSLYrbeFRNe5eIleSj4lbX6pe1AWX
+        QzANI6gLv58hco9nit4yOT0fCw==
+X-Google-Smtp-Source: ABdhPJzxPkunGX9tRgikCmqk6FG7VSXFwaZometrgf66b91ZcRQVpqO+FoZ4PpOTn2e5axxy42HAtw==
+X-Received: by 2002:adf:ed82:: with SMTP id c2mr25290496wro.183.1640871841367;
+        Thu, 30 Dec 2021 05:44:01 -0800 (PST)
+Received: from google.com ([31.124.24.179])
+        by smtp.gmail.com with ESMTPSA id g7sm24269589wrx.104.2021.12.30.05.44.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Dec 2021 23:14:59 -0800 (PST)
-Date:   Thu, 30 Dec 2021 15:14:55 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Ashayam Gupta <ashayamg@gmail.com>
-Cc:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [libgpiod] Issue in gpioset (Tag v1.6.3)
-Message-ID: <20211230071455.GA37120@sol>
-References: <CAOgBvpkPOaKdwi-eWR2WAzJxQpOqAZWijKKs2twAZ9dUQ+ibgg@mail.gmail.com>
+        Thu, 30 Dec 2021 05:44:00 -0800 (PST)
+Date:   Thu, 30 Dec 2021 13:43:53 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Colin Foster <colin.foster@in-advantage.com>
+Cc:     linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>, UNGLinuxDriver@microchip.com,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>
+Subject: Re: [RFC v5 net-next 08/13] mfd: add interface to check whether a
+ device is mfd
+Message-ID: <Yc23mTo6g1tBiMjT@google.com>
+References: <20211218214954.109755-1-colin.foster@in-advantage.com>
+ <20211218214954.109755-9-colin.foster@in-advantage.com>
+ <Ycx+A4KNKiVmH2PJ@google.com>
+ <20211230020443.GB1347882@euler>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAOgBvpkPOaKdwi-eWR2WAzJxQpOqAZWijKKs2twAZ9dUQ+ibgg@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211230020443.GB1347882@euler>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Dec 26, 2021 at 12:56:09AM +0530, Ashayam Gupta wrote:
-> Hi All,
-> I have used the v1.6.3 Tag from the website
-> https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/?h=v1.6.3,
-> for doing a simple testing on the breadboard(Hobby Project).
-> The source code has been compiled with these flags: ./autogen.sh
-> --enable-tools=yes --prefix=/home/pi/gpio/install
-> --enable-bindings-cxx.
-> I am facing the below mentioned issue with this build.
+On Wed, 29 Dec 2021, Colin Foster wrote:
+
+> On Wed, Dec 29, 2021 at 03:25:55PM +0000, Lee Jones wrote:
+> > On Sat, 18 Dec 2021, Colin Foster wrote:
+> > 
+> > > Some drivers will need to create regmaps differently based on whether they
+> > > are a child of an MFD or a standalone device. An example of this would be
+> > > if a regmap were directly memory-mapped or an external bus. In the
+> > > memory-mapped case a call to devm_regmap_init_mmio would return the correct
+> > > regmap. In the case of an MFD, the regmap would need to be requested from
+> > > the parent device.
+> > > 
+> > > This addition allows the driver to correctly reason about these scenarios.
+> > > 
+> > > Signed-off-by: Colin Foster <colin.foster@in-advantage.com>
+> > > ---
+> > >  drivers/mfd/mfd-core.c   |  5 +++++
+> > >  include/linux/mfd/core.h | 10 ++++++++++
+> > >  2 files changed, 15 insertions(+)
+> > > 
+> > > diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
+> > > index 684a011a6396..905f508a31b4 100644
+> > > --- a/drivers/mfd/mfd-core.c
+> > > +++ b/drivers/mfd/mfd-core.c
+> > > @@ -33,6 +33,11 @@ static struct device_type mfd_dev_type = {
+> > >  	.name	= "mfd_device",
+> > >  };
+> > >  
+> > > +int device_is_mfd(struct platform_device *pdev)
+> > > +{
+> > > +	return (!strcmp(pdev->dev.type->name, mfd_dev_type.name));
+> > > +}
+> > > +
+> > 
+> > Why is this device different to any other that has ever been
+> > mainlined?
 > 
-> Issue:
-> Command used: ./gpioset --mode=time --sec=1 pinctrl-bcm2711 27=1
-> As per my understanding, after 1 sec the pin @27 should switch to 0 ,
-> but the LED keeps glowing even after the command is complete and later
-> on when I run the
-> ./gpioget gpiochip0 27, the LED switches off  and the value printed is 0.
-> Is this supposed to be the desired behavior for the above set command,
-> or it is supposed to EXIT on default after the mentioned time limit.
+> Hi Lee,
 > 
+> First, let me apologize for not responding to your response from the
+> related RFC from earlier this month. It had been blocked by my spam
+> filter and I had not seen it until just now. I'll have to check that
+> more diligently now.
+> 
+> Moving on...
+> 
+> That's a question I keep asking myself. Either there's something I'm
+> missing, or there's something new I'm doing.
+> 
+> This is taking existing drivers that work via MMIO regmaps and making
+> them interface-independent. As Vladimir pointed out here:
+> https://lore.kernel.org/all/20211204022037.dkipkk42qet4u7go@skbuf/T/
+> device_is_mfd could be dropped in lieu of an mfd-specific probe
+> function.
+> 
+> If there's something I'm missing, please let me know. But it feels like
+> devm_get_regmap_from_resource at the end of the day would be the best
+> solution to the design, and that doesn't exist. And implementing
+> something like that is a task that I feel I'm not capable of tackling at
+> this time.
 
-Hi Ashayam,
+I'm really not a fan of leaking any MFD API outside of drivers/mfd.
+MFD isn't a tangible thing.  It's a Linuxiusm, something we made up, a
+figment of your imagination.
 
-You misunderstand gpioset and gpioget - what you are seeing is expected
-behaviour.
+What happens if you were to all dev_get_regmap() in the non-MFD case
+or when you call devm_regmap_init_mmio() when the driver was
+registered via the MFD framework?
 
-gpioset does not restore the line to its original state when it exits, nor
-make any other guarantees about the line state after it exits.
-Quite the opposite - as the line is no longer under your control you
-should make no assumptions regarding its state.
-The timer on gpioset is intended to guarantee the minimum time the line
-will stay set, not to schedule a transition.
-
-And gpioget sets the line direction to input so, as you have a load
-attached, the LED will switch off and the line will get pulled low and
-report the 0 you are seeing.
-
-That is my understanding - I'm sure Bart will correct if I'm mistaken.
-
-Cheers,
-Kent.
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
