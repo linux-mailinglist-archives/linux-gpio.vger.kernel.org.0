@@ -2,155 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BEC30481C98
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Dec 2021 14:44:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4757E481E2C
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Dec 2021 17:36:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239640AbhL3NoF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 30 Dec 2021 08:44:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57532 "EHLO
+        id S241224AbhL3QgT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 30 Dec 2021 11:36:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239636AbhL3NoF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Dec 2021 08:44:05 -0500
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6FC1C061574
-        for <linux-gpio@vger.kernel.org>; Thu, 30 Dec 2021 05:44:02 -0800 (PST)
-Received: by mail-wr1-x433.google.com with SMTP id d9so50639506wrb.0
-        for <linux-gpio@vger.kernel.org>; Thu, 30 Dec 2021 05:44:02 -0800 (PST)
+        with ESMTP id S241230AbhL3QgS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 30 Dec 2021 11:36:18 -0500
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 802FBC061747
+        for <linux-gpio@vger.kernel.org>; Thu, 30 Dec 2021 08:36:18 -0800 (PST)
+Received: by mail-ed1-x544.google.com with SMTP id m21so101303583edc.0
+        for <linux-gpio@vger.kernel.org>; Thu, 30 Dec 2021 08:36:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Ig6zmVlsXZoVU3qS9GYP8SWQ0yGF84n3e2wM7iJ8EaM=;
-        b=xuHu6OJyHwstTvs/pGh7nrljGZGVw4IATi8sBlZfVNUgOzeSetWxHN/cP27hJfg3ed
-         HSyktYnCNEjgn9hsuZuJSLS3WuIScLK/TDCmP+ZSvIxJskvBJNJgvDFdgmAZdXWLFs4z
-         A/nKRKNPqThw3dxfxtdukMBXvShPb5S1Z2QMSaZSpr5Fa8Pa5QgHsfpibYfqNwwAnZWS
-         J2FePdAyaAuKl0iTxdHPQormUYAGFymTNIFabqIPSpTTu/UaE0S2RilRBBUxah0t9e4V
-         GrP8KTKIPHdbm6C1WSLwk3Hej0S7zkSHAnvoiWAHxzu9iIF+Kfw/VMGZHJ6cPnS0zlpg
-         B2gQ==
+        d=gmail.com; s=20210112;
+        h=mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=tJuk50ldQ3muMSuXbgoS9j25a+T88Kj8cRwalO+iQW8=;
+        b=Tl2guSR4m3xEw3rpULIHJ++wqFW/SYEQmQ7WMIbnHy2zYaUoARg7cK9PknZf6cN0W3
+         Peuy4aLjRGAefGaAUwuauVVgDEtZLCzlwjNxLtx80PQlCxoGSnVjxl5sdsVysUIYKcXe
+         ZHEvY5FhgjEl58lOLJ1A9t4h30umP/Ypa+sfhqsYwU7Yrt1WkeUurBVz0ENELi+zsR3u
+         BJQNY1VfxHUUaE/8TT5cdKRGj8c4KYFh+H7dGlxuQ+DG6onDg8Jr518b+Y5yocGrGcCe
+         yh+h+XVHDxXODtQ3qlmex9RXZy1vi5EDfVkrKOrMBn882gkRab822AE3oOXEEvSNp6yc
+         Cq3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Ig6zmVlsXZoVU3qS9GYP8SWQ0yGF84n3e2wM7iJ8EaM=;
-        b=rLTxWL3SgfJU1iGVKKQ2yamd5Pqx2g+hhy+gRymnYXBqDhNG2gPrvYm07uv88Ph3z8
-         TnDlvsZPATS21mbi8u9P3sErGzIhTL3Q3lYyzlJMMVJNahMIHt/LuQ9erVhyBXe4xDNt
-         9lPefBLYeiavXvV0xd+7kdI2dPGh9rRPDz4TlTHbMRNKoZ7p6h9DowLf0LipZ80QVjY4
-         khmc+QVQyoB6KYbSG9iloZwgiiDP8TYSKCJK3xgfJunDxiJw9SdflykGkb+imCbuMzMv
-         fWwItADll8yANYeKPHnZXQjSAFiv1mEDEYQRGNfFyFAjukPh5XQIpsOKO69tPAHm8XON
-         R2bQ==
-X-Gm-Message-State: AOAM5328H5M5cP1ALo38+SSyY1ZjSLYrbeFRNe5eIleSj4lbX6pe1AWX
-        QzANI6gLv58hco9nit4yOT0fCw==
-X-Google-Smtp-Source: ABdhPJzxPkunGX9tRgikCmqk6FG7VSXFwaZometrgf66b91ZcRQVpqO+FoZ4PpOTn2e5axxy42HAtw==
-X-Received: by 2002:adf:ed82:: with SMTP id c2mr25290496wro.183.1640871841367;
-        Thu, 30 Dec 2021 05:44:01 -0800 (PST)
-Received: from google.com ([31.124.24.179])
-        by smtp.gmail.com with ESMTPSA id g7sm24269589wrx.104.2021.12.30.05.44.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Dec 2021 05:44:00 -0800 (PST)
-Date:   Thu, 30 Dec 2021 13:43:53 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Colin Foster <colin.foster@in-advantage.com>
-Cc:     linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, UNGLinuxDriver@microchip.com,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>
-Subject: Re: [RFC v5 net-next 08/13] mfd: add interface to check whether a
- device is mfd
-Message-ID: <Yc23mTo6g1tBiMjT@google.com>
-References: <20211218214954.109755-1-colin.foster@in-advantage.com>
- <20211218214954.109755-9-colin.foster@in-advantage.com>
- <Ycx+A4KNKiVmH2PJ@google.com>
- <20211230020443.GB1347882@euler>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=tJuk50ldQ3muMSuXbgoS9j25a+T88Kj8cRwalO+iQW8=;
+        b=1xMUz4RWAZ+fg6Vk9zrZdhImJn9xY0O4bBna9nAoUoaioLSAd1YoHqUx5DdiIZj/O2
+         yI8qZyN1LbYW/fsVMrplr5aGpdAm1TMxaEP1fGXtE9LdsxwxfuAXzKq+wxJuAghIXoaD
+         7XbiUAr1EO714laeZmra8O0TKUS7HMVTAw83pZTMJxyTc8XTHDl8UhfxodCNLa9wSXRc
+         weiTpW5N5MDvhwlFUT6xoJ1Awmk2Ax28N1OhPVMF7gae9QwZQqg8GJzvxPuPxPOhe8ke
+         PX/6J0HSldYJbQqi92G6/ummPbRChSR7fXoyA/GR3l40WBY3mVieYFIrKY766AXtMiYc
+         P/xA==
+X-Gm-Message-State: AOAM5310Oz5a6inDg0taCzR8kpGQiXP0zwV8MuyCYIM4kKScwXExPRKE
+        HVx0QurcvqFXQMskCdv/TFTFDzcTs4uSCitd3ps=
+X-Google-Smtp-Source: ABdhPJzOomp7dfsSHzp32oQmbyN2PzdvUl16PkfjdGA/zQ1JLDHrj2HPGycg1+BKCtW6WdYSjbqXMvD8Y4OnayGP3mo=
+X-Received: by 2002:a17:907:9805:: with SMTP id ji5mr25733798ejc.431.1640882176818;
+ Thu, 30 Dec 2021 08:36:16 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211230020443.GB1347882@euler>
+Received: by 2002:a05:6402:524a:0:0:0:0 with HTTP; Thu, 30 Dec 2021 08:36:16
+ -0800 (PST)
+From:   saleem norman <norsaleem74@gmail.com>
+Date:   Thu, 30 Dec 2021 08:36:16 -0800
+Message-ID: <CALzdWh_x5jjnnv1r9eGK9qr1a48HO-KCPT0FhG6Jv8RmohjA0g@mail.gmail.com>
+Subject: DEAR FRIEND CONTACTS MY SECRETARY HIS E-MAIL nelson_salah@aol.com.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 29 Dec 2021, Colin Foster wrote:
+I'M SORRY BUT HAPPY TO INFORM YOU ABOUT MY SUCCESS IN GETTING THOSE
+FUNDS TRANSFERRED UNDER THE CO-OPERATION OF A NEW PARTNER FROM
+PARAGUAY THOUGH I TRIED MY BEST TO INVOLVE YOU IN THE GOLD/DIAMOND
+BUSINESS BUT GOD DECIDED THE WHOLE SITUATIONS. PRESENTLY AM IN UNITED
+ARAB EMIRATES FOR INVESTMENT PROJECTS WITH MY OWN SHARE OF THE TOTAL
+SUM OF THE MONEY. MEANWHILE, I DIDN'T FORGET YOU=E2=80=99RE PAST EFFORTS AN=
+D
+ATTEMPTS TO ASSIST ME IN TRANSFERRING THOSE FUNDS DESPITE THAT
+EVERYTHING FAILED US SOMEHOW. NOW CONTACT MY SECRETARY IN BURKINA
+FASO. MR. NELSON SALAH BY NAME: HIS E-MAIL nelson_salah@aol.com.
 
-> On Wed, Dec 29, 2021 at 03:25:55PM +0000, Lee Jones wrote:
-> > On Sat, 18 Dec 2021, Colin Foster wrote:
-> > 
-> > > Some drivers will need to create regmaps differently based on whether they
-> > > are a child of an MFD or a standalone device. An example of this would be
-> > > if a regmap were directly memory-mapped or an external bus. In the
-> > > memory-mapped case a call to devm_regmap_init_mmio would return the correct
-> > > regmap. In the case of an MFD, the regmap would need to be requested from
-> > > the parent device.
-> > > 
-> > > This addition allows the driver to correctly reason about these scenarios.
-> > > 
-> > > Signed-off-by: Colin Foster <colin.foster@in-advantage.com>
-> > > ---
-> > >  drivers/mfd/mfd-core.c   |  5 +++++
-> > >  include/linux/mfd/core.h | 10 ++++++++++
-> > >  2 files changed, 15 insertions(+)
-> > > 
-> > > diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-> > > index 684a011a6396..905f508a31b4 100644
-> > > --- a/drivers/mfd/mfd-core.c
-> > > +++ b/drivers/mfd/mfd-core.c
-> > > @@ -33,6 +33,11 @@ static struct device_type mfd_dev_type = {
-> > >  	.name	= "mfd_device",
-> > >  };
-> > >  
-> > > +int device_is_mfd(struct platform_device *pdev)
-> > > +{
-> > > +	return (!strcmp(pdev->dev.type->name, mfd_dev_type.name));
-> > > +}
-> > > +
-> > 
-> > Why is this device different to any other that has ever been
-> > mainlined?
-> 
-> Hi Lee,
-> 
-> First, let me apologize for not responding to your response from the
-> related RFC from earlier this month. It had been blocked by my spam
-> filter and I had not seen it until just now. I'll have to check that
-> more diligently now.
-> 
-> Moving on...
-> 
-> That's a question I keep asking myself. Either there's something I'm
-> missing, or there's something new I'm doing.
-> 
-> This is taking existing drivers that work via MMIO regmaps and making
-> them interface-independent. As Vladimir pointed out here:
-> https://lore.kernel.org/all/20211204022037.dkipkk42qet4u7go@skbuf/T/
-> device_is_mfd could be dropped in lieu of an mfd-specific probe
-> function.
-> 
-> If there's something I'm missing, please let me know. But it feels like
-> devm_get_regmap_from_resource at the end of the day would be the best
-> solution to the design, and that doesn't exist. And implementing
-> something like that is a task that I feel I'm not capable of tackling at
-> this time.
+ASK HIM TO SEND YOU THE VISA CARD TOTAL SUM OF $2.500, 000.00.USD
+WHICH I KEPT FOR YOUR COMPENSATION FOR ALL THE PAST EFFORTS AND
+ATTEMPT TO ASSIST ME IN THIS MATTER. I DEEPLY APPRECIATED YOUR EFFORTS
+AT THAT TIME VERY MUCH. SO FEEL FREE AND KEEP IN TOUCHED WITH MY
+SECRETARY; MR. NELSON SALAH AND INSTRUCT HIM WHERE TO SEND THE VISA
+CARD VALUE SUM OF $2.500, 000.00.USD TO YOU. NOW THIS AMOUNT IS ME AND
+THE NEW PARTNER CONTRIBUTE AND OFFER YOU THIS AMOUNT
+$1.500.000.00.USD. IS FROM MY OWN SHARE WHILE MY NEW PARTNER SUPPORTED
+YOU ALSO WITH SUM OF $ 1000000.USD. FROM HIS OWN SHARE ALSO BECAUSE I
+EXPLAIN THE WHOLE FACTS TO HIM THAT YOU ARE THE FIRST PERSON I
+CONTACTED THAT WANTED TO ASSIST ME WHILE YOU COULD NOT MAKE IT AND HE
+SAID OKAY THERE'S NO PROBLEM.
 
-I'm really not a fan of leaking any MFD API outside of drivers/mfd.
-MFD isn't a tangible thing.  It's a Linuxiusm, something we made up, a
-figment of your imagination.
+SO YOU HAVE TO KEEP THE WHOLE SECRET ABOUT MY SUCCESS, BECAUSE I
+BELIEVE ONLY YOU KNOW HOW I MADE THIS MONEY SO TRY TO KEEP EVERYTHING
+SECRET. I HOPE YOU UNDERSTAND THE REASON WHY THIS HUGE AMOUNT OF FUNDS
+WAS KEPT FOR YOU? PLEASE DO LET ME KNOW IMMEDIATELY YOU RECEIVE THE
+VISA CARD SO THAT WE CAN SHARE THE JOY AFTER ALL THE SUFFERINGS AT
+THAT TIME; IN THIS MOMENT OF TIME, I'M VERY BUSY HERE BECAUSE OF THE
+INVESTMENT PROJECTS WHICH MYSELF AND THE NEW PARTNER ARE HAVING AT
+HAND, FINALLY;
 
-What happens if you were to all dev_get_regmap() in the non-MFD case
-or when you call devm_regmap_init_mmio() when the driver was
-registered via the MFD framework?
+REMEMBER THAT I HAVE ALREADY FORWARD THE INSTRUCTION TO THE SECRETARY
+ON YOUR BEHALF TO RECEIVE THAT MONEY, SO FEEL FREE TO KEEP IN TOUCH
+WITH HIM, SO THAT HE WILL SEND THE VISA CARD VALUE SUM OF
+$2.500,000.00.USD. TWO MILLION FIVE HUNDRED THOUSAND UNITED STATE
+DOLLARS TO YOU WITHOUT ANY DELAY.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+BEST REGARDS,
+MR. NORMAN SALEEM.
