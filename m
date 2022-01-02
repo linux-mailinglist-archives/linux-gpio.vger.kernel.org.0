@@ -2,83 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B0EA482A47
-	for <lists+linux-gpio@lfdr.de>; Sun,  2 Jan 2022 07:34:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 10A7C482A59
+	for <lists+linux-gpio@lfdr.de>; Sun,  2 Jan 2022 07:55:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231465AbiABGeg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 2 Jan 2022 01:34:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48764 "EHLO
+        id S232181AbiABGzH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 2 Jan 2022 01:55:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230374AbiABGeg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 2 Jan 2022 01:34:36 -0500
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D97FBC061574
-        for <linux-gpio@vger.kernel.org>; Sat,  1 Jan 2022 22:34:35 -0800 (PST)
-Received: by mail-lf1-x12f.google.com with SMTP id j11so66793617lfg.3
-        for <linux-gpio@vger.kernel.org>; Sat, 01 Jan 2022 22:34:35 -0800 (PST)
+        with ESMTP id S230374AbiABGzH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 2 Jan 2022 01:55:07 -0500
+Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87C74C061574
+        for <linux-gpio@vger.kernel.org>; Sat,  1 Jan 2022 22:55:06 -0800 (PST)
+Received: by mail-lj1-x236.google.com with SMTP id q8so35429192ljp.9
+        for <linux-gpio@vger.kernel.org>; Sat, 01 Jan 2022 22:55:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=MkkhGWtRXJ+s6tneHW+1NPBM8ELNNlMxQCKQEngHxD0=;
-        b=ZPxZKS+HBK9LhtzE2X0Pk+7PmowfQCYq/MsjisGCry5eZLUyybwIXi9vKYZevDuqgO
-         1cYmu+Bn/MlBhLMz9hAiXcpeWg7h5hwS8l1imBThACKjvJ6dXkxHk90rLyCTTdUZAWjo
-         uJcuVBj5LiaY5BzKR4putn2AKSUqbzZ8xtXLYkSX6+N+Zh5FPPsU/BK3+17nmV2f9axG
-         dx8ULVspau249Dg9SSO+dGNRtQftbnw7IcNCzvQ1teH6QiNRYTMF/o9/RJoiN14IgTHn
-         CbRNs+ZrLE7Ua2UfehER6lD+bIHaNM+nxToCHLTTe1tN3CNxOVmsSdbzyjrFgXRhkVdj
-         rwzg==
+         :cc;
+        bh=Kv12+WA1jF2AlUYCYjHHAd0Tak6OQnSLGxoOqQxBcsE=;
+        b=MMYztllzlunmdM37HH5SQJYnNQp0UHBgLBTr4Uubc0iM98H2hKuzyFFHXvaLCXp6Te
+         V7KAB4YpJmbXNGSBxfEiIxJBZ23vqt+YSfRGjRI0QRl7gBBGl2MqqifF96+Tu3C+KbUP
+         QC2SNNapjEfmdRW9VtZPWVZPDI1XugXnUnxh1dY7Y80jVsjAh8ldxyPYFQakzy/fbiKC
+         FL037rwKrbGVFar+G2M2bxVG7MdquM/S06ltvOcv2+TpNBXtbVK14Vdfx5IGczJ/dzwa
+         1H/Y7Grs89A5aq5Zc4+O1f9w+EWLhn9hhTi2AjFncCC9sQ3Gg4N5Cgd6KVCqY0udBSyY
+         QhCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=MkkhGWtRXJ+s6tneHW+1NPBM8ELNNlMxQCKQEngHxD0=;
-        b=U227ERe8Lup3Hita5VkDzUn9mAQrIjI+Hcl8gDO7EPAagJq/4ZDo9YyHGvhnmdQYYy
-         EJ9b0jN9aY3nL2+HOtOCgt/WYw0rF/xHz5wTnjEQPAdux8l845tSM6n5YkcQNNaT9j2L
-         8ILWXJL/d+7sKOvSL2x885k/PS4odsYQZfoSx3iZdD2kSJs0CIx5e+mvPvqsdqK1TGTR
-         4zOLHYOOw8mYSktmgiwAcdnGnOP1ov7gSidYPVJ8H8A5nwikFy1zzhn/fSVs1AhgjynN
-         rXL9k7N8fIifpmBJtewg0Xm0RHGfyCYKO8FiZbWUHBgo7xLqGnPgCEaTpzl7TFp9eZli
-         5qJQ==
-X-Gm-Message-State: AOAM530QikL5tuqnM7KXtrkdXey/HDlDN2VutPoZ89HL7G3wjE4JzWMG
-        MVcQOUNGVDAZoDP8FgU9gImHOz8I4fmAKcrp5lGkEg==
-X-Google-Smtp-Source: ABdhPJyAXf6tOqco4h3bq8cESjf4rT9k6XdAEU/lifxuzNRUtH/WYHyPTmFwBNPn7Vb1baZhiR3xcONm2SA2EVvf6CU=
-X-Received: by 2002:a05:6512:118d:: with SMTP id g13mr36303466lfr.591.1641105274195;
- Sat, 01 Jan 2022 22:34:34 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=Kv12+WA1jF2AlUYCYjHHAd0Tak6OQnSLGxoOqQxBcsE=;
+        b=LJDwn+rKEIQkZOPghR/0rCcLn1yGH78WIfZisfQQifUtC7hPgR+sKU3miGsEE+E8Fr
+         exl6ovxXDolcNqmkVaj0vi9X2mG6WXgC3Gytf+3OMIoQXqfOR4Cox3bxcAJRq3JPvASN
+         aZzVyN2cMcW3Vk9Ax8RRGAiMPLEm5Zoozmo5IedoIdiJcxvykUmYGfBbUd/ZFR23j4pJ
+         wGw3jcSEYPSvvvdeURkE/bKGaQlc+SBLLAK/oxKackhGlBDh/mAEJdBDrvM8YVq4FZtN
+         gcbDNGn64Z21k2f/I+vzYKxRkcwuAcCgYYzJ2eBhLsc9TGiiviQbrDZm1AwJOVQ4536S
+         FdPw==
+X-Gm-Message-State: AOAM531alVETxrGb9YxD+Ior58iShW3R7FZxvy6yJvCi7MWd/pE+QWcB
+        GtKbRklhQQyXK8LajItMfXOS9Exa3K4x9a1k9aVfGw==
+X-Google-Smtp-Source: ABdhPJy8SkMIUaCPL6CnGGjDRlohYgjTkCinX6ZY/84Heq8ow6XZzJ/W29u8OwYNDi5J8uzA1XvXExN5gXYnFs0i7QY=
+X-Received: by 2002:a05:651c:623:: with SMTP id k35mr35632707lje.133.1641106504873;
+ Sat, 01 Jan 2022 22:55:04 -0800 (PST)
 MIME-Version: 1.0
-References: <20211227122237.6363-1-zajec5@gmail.com>
-In-Reply-To: <20211227122237.6363-1-zajec5@gmail.com>
+References: <20211206092237.4105895-1-phil@raspberrypi.com>
+ <20211206092237.4105895-2-phil@raspberrypi.com> <CACRpkdZ95bCJVDo4tCXsMnsXax4+ZydoLS7AsM-yzMjXbONk=w@mail.gmail.com>
+ <95851343-2887-1e04-9598-e8c8ae74a99a@i2se.com>
+In-Reply-To: <95851343-2887-1e04-9598-e8c8ae74a99a@i2se.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 2 Jan 2022 07:34:21 +0100
-Message-ID: <CACRpkdbvZ+fZoGsVDY+kNEo4FFTUwJbfAq6ciC+mJN03Mm2jvQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: imx: fix assigning groups names
-To:     =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Date:   Sun, 2 Jan 2022 07:54:52 +0100
+Message-ID: <CACRpkdbnqq+hwXt1oUWZfyxFjdd4aSAz0MzhzYVWuqqVAe4Eig@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] pinctrl: bcm2835: Change init order for gpio hogs
+To:     Stefan Wahren <stefan.wahren@i2se.com>
+Cc:     Phil Elwell <phil@raspberrypi.com>, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        Thierry Reding <treding@nvidia.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 27, 2021 at 1:23 PM Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com> =
-wrote:
-
-> From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
+On Wed, Dec 29, 2021 at 8:07 PM Stefan Wahren <stefan.wahren@i2se.com> wrote:
+> Am 10.12.21 um 00:24 schrieb Linus Walleij:
+> > On Mon, Dec 6, 2021 at 10:22 AM Phil Elwell <phil@raspberrypi.com> wrote:
+> >
+> >> ...and gpio-ranges
+> >>
+> >> pinctrl-bcm2835 is a combined pinctrl/gpio driver. Currently the gpio
+> >> side is registered first, but this breaks gpio hogs (which are
+> >> configured during gpiochip_add_data). Part of the hog initialisation
+> >> is a call to pinctrl_gpio_request, and since the pinctrl driver hasn't
+> >> yet been registered this results in an -EPROBE_DEFER from which it can
+> >> never recover.
+> >>
+> >> Change the initialisation sequence to register the pinctrl driver
+> >> first.
+> >>
+> >> This also solves a similar problem with the gpio-ranges property, which
+> >> is required in order for released pins to be returned to inputs.
+> >>
+> >> Fixes: 73345a18d464b ("pinctrl: bcm2835: Pass irqchip when adding gpiochip")
+> >> Signed-off-by: Phil Elwell <phil@raspberrypi.com>
+> > This patch (1/2) applied for fixes.
 >
-> This fixes regression caused by incorrect array indexing.
+> Unfortunately this change breaks all GPIO LEDs at least on the Raspberry
+> Pi 3 Plus (Linux 5.16-rc7, multi_v7_defconfig). The ACT LED for instance
+> stays in the last state instead of the configured heartbeat behavior.
+> Also there are no GPIO LEDs in /sys/class/leds/ directory.
 >
-> Reported-by: Fabio Estevam <festevam@gmail.com>
-> Fixes: 02f117134952 ("pinctrl: imx: prepare for making "group_names" in "=
-function_desc" const")
-> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
+> After reverting this change everything is back to normal.
 
-Patch applied!
+Oh what a mess. OK I reverted the fix.
 
 Yours,
 Linus Walleij
