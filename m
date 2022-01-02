@@ -2,88 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BB73E4828E9
-	for <lists+linux-gpio@lfdr.de>; Sun,  2 Jan 2022 03:09:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AC09482925
+	for <lists+linux-gpio@lfdr.de>; Sun,  2 Jan 2022 06:17:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229626AbiABCI5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 1 Jan 2022 21:08:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47814 "EHLO
+        id S229474AbiABFRK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 2 Jan 2022 00:17:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229547AbiABCI5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 1 Jan 2022 21:08:57 -0500
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D044C061574;
-        Sat,  1 Jan 2022 18:08:57 -0800 (PST)
-Received: by mail-pj1-x1030.google.com with SMTP id mj19so26271244pjb.3;
-        Sat, 01 Jan 2022 18:08:57 -0800 (PST)
+        with ESMTP id S229526AbiABFRI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 2 Jan 2022 00:17:08 -0500
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9FFAC061401
+        for <linux-gpio@vger.kernel.org>; Sat,  1 Jan 2022 21:17:07 -0800 (PST)
+Received: by mail-lf1-x134.google.com with SMTP id i31so68272103lfv.10
+        for <linux-gpio@vger.kernel.org>; Sat, 01 Jan 2022 21:17:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1ccSIOZd64GvaHS3TUywTQrdgyuVHIwhkxdkNz92oDQ=;
-        b=hW+pdDtlj7TRxyd8E5Ro1HRBHuwMhGS0hWnZpPwDbKoggAJPcqhM7AAcxTYD/UEJid
-         h1roG0BPbWe3uijIECDBieYzKvlEyBzfCwDO4jMACAALW7fgYSWSX1BCEKRm7/muycjb
-         5vRVs7disfc17qzl41djjpiA9WIY/4xkFDB7uaopNYcHWL+s9gEUTuUsWIiC/AgWQnkR
-         Zp7f9Mf6b6v2sYLm+nqamueJIuovrFOKHt+8K+afLa2LO4j58WDtwK5vvlrOVja5BCEg
-         8UO4EvTAzHPgPNt0DddkEaBvWNrDcvEEp9ZU2EpHjrzYl4H4bvZRm3jDJOAvBnMxvFs/
-         +SGw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9OUJm1l1Lkz1YaEdfh/UEwDaTVMcLzVdwO6tOQfKl7o=;
+        b=EhPaLrzIg6G1hnSZHwGOBFaFHxH4UcQg44k8y7RnCfMMJ26s5yYuh3KY+LGCoUO72S
+         zJ6UWj/g3J+AduMZdZqDx9LQwmBSwgLNID7w37AIoSfThf/Id7LBJF1IqdhQF/4U8IRB
+         YyxQq5z7zRdxF77bI6jV79EMMjbhK3HRul9oK57hQO+cDjpiN/zUwHELKzk9UcWHf7fx
+         dncoZMGHqFNmmiLDT/ehp5122zyz/vLMKwkgXoUhuRhVC2B55nmx/oqyLkdIkRrmPKp5
+         1k64Q55v8bTDmR+ZAnkBIWNQ5fi+1UCfb8LXztefaq7WGWOkRL0Q8P8TIPqxSD2AuWe4
+         d1rA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1ccSIOZd64GvaHS3TUywTQrdgyuVHIwhkxdkNz92oDQ=;
-        b=Hz7y+xNXyYhfhbFhFAvDuiwSLLspQ3ZPsTGSDftt5jum/8VYeR24/l0lwCy/1XPmPB
-         XvDORPw18kjCN4U436OMMebfWanwztOv0AoYCxaDM7n3+7V8BXLq+8UoGly8lsZe2eky
-         QifuKt/di5UDHG/C9CWDKqnWugCxlWb+ospRVrgmOm9v1GEE78SEeraMLRg2/WDBLYmz
-         k+ESVyp2bHDF4kACCC14bzfeKZSb/fEGi+iJn9Wviyo/5Kp2uMP9j/nNuGxK9CVmGbWU
-         oaYncPFWzdLve2TevvQ7gb+P4Y5cgLHRqcDbrosNvMOarwjpHN4YN8fWUUbrKik8cJHk
-         T9ww==
-X-Gm-Message-State: AOAM533hu+8Mo+Na5kMNJD9jvMC2PALe59HbLx+CLneMODND28oTk29v
-        /N4OAPJMNHBkv1tJMXjIaRTAwHskFHA=
-X-Google-Smtp-Source: ABdhPJwShUb3IEbhIGIe65Jy1F70ufw1rq3eiD+1/U9sRg2NFzne24n9t4onIkk1A8q/ruWw3sasoA==
-X-Received: by 2002:a17:902:8b8b:b0:149:6d32:4b4c with SMTP id ay11-20020a1709028b8b00b001496d324b4cmr33870972plb.8.1641089336649;
-        Sat, 01 Jan 2022 18:08:56 -0800 (PST)
-Received: from kessel.lan ([47.147.80.75])
-        by smtp.gmail.com with ESMTPSA id h1sm13283318pfi.109.2022.01.01.18.08.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Jan 2022 18:08:56 -0800 (PST)
-From:   Gregory Fong <gregory.0xf0@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Doug Berger <opendmb@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: update gpio-brcmstb maintainers
-Date:   Sat,  1 Jan 2022 18:08:11 -0800
-Message-Id: <20220102020811.8013-1-gregory.0xf0@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9OUJm1l1Lkz1YaEdfh/UEwDaTVMcLzVdwO6tOQfKl7o=;
+        b=ZqNWn7nKoyBOeo1zZG0AN7QT9PMjxTimqSny2xg81BfhMtupEe1Rc9GzVqpOhWS1GA
+         UhbsKNDoIOitHuznHokAfn6FePBMzdHhkrLEIvxQYemW/z4X77xBtOfo5KOc4yw92Kli
+         WqWdOrlcYirKOxkKuxtCDVouUoCBGmeWPP8C1FRWimA76yAlPy7y98bKPFKq0XMPzafT
+         3IZKnexIX0Jwfbd7VIR/kUSnyEf03hig8EPE3sUhPS2HSeJo6NbiE3S0qO5Sb4b/Sm6U
+         fY4fVghHmVwLUS7Rlgk7g499QQ5wMlH7FjvF7BkaUlIty6tSw4EbXnqf4lfuXJs+XB5Z
+         eI4w==
+X-Gm-Message-State: AOAM532SCU1SjUAdgdhsiZF3rIaHr3L4iAV2F9Evcf8eb+FyAKsI9d6t
+        lkuZG5WArGca4SnWzZMFgtd84QL61yUGzp3B5Eek0w==
+X-Google-Smtp-Source: ABdhPJx1AorkEc1HSDDatFay0OziPayU+K/x43xNs6lLbJwcnlEBOfMLwN9/X8ZQciCUI5gZ71NO+Ml7PdU9DJ0OS/g=
+X-Received: by 2002:a05:6512:39ce:: with SMTP id k14mr18954362lfu.508.1641100625527;
+ Sat, 01 Jan 2022 21:17:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20211220121825.6446-1-tinghan.shen@mediatek.com> <20211220121825.6446-4-tinghan.shen@mediatek.com>
+In-Reply-To: <20211220121825.6446-4-tinghan.shen@mediatek.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sun, 2 Jan 2022 06:16:53 +0100
+Message-ID: <CACRpkdaGui4ULm7E7Y7YFLZ1BXKfvKKqv4KC=eTMBDExJThPdA@mail.gmail.com>
+Subject: Re: [PATCH v7 3/4] dt-bindings: pinctrl: mt8195: add wrapping node of
+ pin configurations
+To:     Tinghan Shen <tinghan.shen@mediatek.com>
+Cc:     robh+dt@kernel.org, matthias.bgg@gmail.com, broonie@kernel.org,
+        bgolaszewski@baylibre.com, sean.wang@mediatek.com,
+        bayi.cheng@mediatek.com, gch981213@gmail.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-spi@vger.kernel.org,
+        Project_Global_Chrome_Upstream_Group@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add Doug and Florian as maintainers for gpio-brcmstb, and remove myself.
+On Mon, Dec 20, 2021 at 1:18 PM Tinghan Shen <tinghan.shen@mediatek.com> wrote:
 
-Signed-off-by: Gregory Fong <gregory.0xf0@gmail.com>
----
- MAINTAINERS | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> On mt8195, the pinctrl node has pinctrl groups to group pin
+> configurations by users' need. In each pinctrl group, it has
+> subnode(s) to list pins needed and pin configurations. By supporting
+> multiple subnodes, we can configure different pin characteristics
+> (driving/pull-up/pull-down/etc.) in a pinctrl group.
+>
+> Update pinctrl-mt8195.yaml to add subnode in pinctrl groups and an
+> example to illustrate the usage.
+>
+> Signed-off-by: Tinghan Shen <tinghan.shen@mediatek.com>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5ea5655a29c3..674cfd8b43d2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3804,7 +3804,8 @@ S:	Supported
- F:	drivers/net/wireless/broadcom/brcm80211/
- 
- BROADCOM BRCMSTB GPIO DRIVER
--M:	Gregory Fong <gregory.0xf0@gmail.com>
-+M:	Doug Berger <opendmb@gmail.com>
-+M:	Florian Fainelli <f.fainelli@gmail.com>
- L:	bcm-kernel-feedback-list@broadcom.com
- S:	Supported
- F:	Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.yaml
--- 
-2.25.1
+This patch applied.
 
+Yours,
+Linus Walleij
