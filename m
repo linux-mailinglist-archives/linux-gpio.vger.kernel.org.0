@@ -2,82 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AC09482925
-	for <lists+linux-gpio@lfdr.de>; Sun,  2 Jan 2022 06:17:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B0EA482A47
+	for <lists+linux-gpio@lfdr.de>; Sun,  2 Jan 2022 07:34:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229474AbiABFRK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 2 Jan 2022 00:17:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59584 "EHLO
+        id S231465AbiABGeg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 2 Jan 2022 01:34:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229526AbiABFRI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 2 Jan 2022 00:17:08 -0500
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9FFAC061401
-        for <linux-gpio@vger.kernel.org>; Sat,  1 Jan 2022 21:17:07 -0800 (PST)
-Received: by mail-lf1-x134.google.com with SMTP id i31so68272103lfv.10
-        for <linux-gpio@vger.kernel.org>; Sat, 01 Jan 2022 21:17:07 -0800 (PST)
+        with ESMTP id S230374AbiABGeg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 2 Jan 2022 01:34:36 -0500
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D97FBC061574
+        for <linux-gpio@vger.kernel.org>; Sat,  1 Jan 2022 22:34:35 -0800 (PST)
+Received: by mail-lf1-x12f.google.com with SMTP id j11so66793617lfg.3
+        for <linux-gpio@vger.kernel.org>; Sat, 01 Jan 2022 22:34:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9OUJm1l1Lkz1YaEdfh/UEwDaTVMcLzVdwO6tOQfKl7o=;
-        b=EhPaLrzIg6G1hnSZHwGOBFaFHxH4UcQg44k8y7RnCfMMJ26s5yYuh3KY+LGCoUO72S
-         zJ6UWj/g3J+AduMZdZqDx9LQwmBSwgLNID7w37AIoSfThf/Id7LBJF1IqdhQF/4U8IRB
-         YyxQq5z7zRdxF77bI6jV79EMMjbhK3HRul9oK57hQO+cDjpiN/zUwHELKzk9UcWHf7fx
-         dncoZMGHqFNmmiLDT/ehp5122zyz/vLMKwkgXoUhuRhVC2B55nmx/oqyLkdIkRrmPKp5
-         1k64Q55v8bTDmR+ZAnkBIWNQ5fi+1UCfb8LXztefaq7WGWOkRL0Q8P8TIPqxSD2AuWe4
-         d1rA==
+         :cc:content-transfer-encoding;
+        bh=MkkhGWtRXJ+s6tneHW+1NPBM8ELNNlMxQCKQEngHxD0=;
+        b=ZPxZKS+HBK9LhtzE2X0Pk+7PmowfQCYq/MsjisGCry5eZLUyybwIXi9vKYZevDuqgO
+         1cYmu+Bn/MlBhLMz9hAiXcpeWg7h5hwS8l1imBThACKjvJ6dXkxHk90rLyCTTdUZAWjo
+         uJcuVBj5LiaY5BzKR4putn2AKSUqbzZ8xtXLYkSX6+N+Zh5FPPsU/BK3+17nmV2f9axG
+         dx8ULVspau249Dg9SSO+dGNRtQftbnw7IcNCzvQ1teH6QiNRYTMF/o9/RJoiN14IgTHn
+         CbRNs+ZrLE7Ua2UfehER6lD+bIHaNM+nxToCHLTTe1tN3CNxOVmsSdbzyjrFgXRhkVdj
+         rwzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9OUJm1l1Lkz1YaEdfh/UEwDaTVMcLzVdwO6tOQfKl7o=;
-        b=ZqNWn7nKoyBOeo1zZG0AN7QT9PMjxTimqSny2xg81BfhMtupEe1Rc9GzVqpOhWS1GA
-         UhbsKNDoIOitHuznHokAfn6FePBMzdHhkrLEIvxQYemW/z4X77xBtOfo5KOc4yw92Kli
-         WqWdOrlcYirKOxkKuxtCDVouUoCBGmeWPP8C1FRWimA76yAlPy7y98bKPFKq0XMPzafT
-         3IZKnexIX0Jwfbd7VIR/kUSnyEf03hig8EPE3sUhPS2HSeJo6NbiE3S0qO5Sb4b/Sm6U
-         fY4fVghHmVwLUS7Rlgk7g499QQ5wMlH7FjvF7BkaUlIty6tSw4EbXnqf4lfuXJs+XB5Z
-         eI4w==
-X-Gm-Message-State: AOAM532SCU1SjUAdgdhsiZF3rIaHr3L4iAV2F9Evcf8eb+FyAKsI9d6t
-        lkuZG5WArGca4SnWzZMFgtd84QL61yUGzp3B5Eek0w==
-X-Google-Smtp-Source: ABdhPJx1AorkEc1HSDDatFay0OziPayU+K/x43xNs6lLbJwcnlEBOfMLwN9/X8ZQciCUI5gZ71NO+Ml7PdU9DJ0OS/g=
-X-Received: by 2002:a05:6512:39ce:: with SMTP id k14mr18954362lfu.508.1641100625527;
- Sat, 01 Jan 2022 21:17:05 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=MkkhGWtRXJ+s6tneHW+1NPBM8ELNNlMxQCKQEngHxD0=;
+        b=U227ERe8Lup3Hita5VkDzUn9mAQrIjI+Hcl8gDO7EPAagJq/4ZDo9YyHGvhnmdQYYy
+         EJ9b0jN9aY3nL2+HOtOCgt/WYw0rF/xHz5wTnjEQPAdux8l845tSM6n5YkcQNNaT9j2L
+         8ILWXJL/d+7sKOvSL2x885k/PS4odsYQZfoSx3iZdD2kSJs0CIx5e+mvPvqsdqK1TGTR
+         4zOLHYOOw8mYSktmgiwAcdnGnOP1ov7gSidYPVJ8H8A5nwikFy1zzhn/fSVs1AhgjynN
+         rXL9k7N8fIifpmBJtewg0Xm0RHGfyCYKO8FiZbWUHBgo7xLqGnPgCEaTpzl7TFp9eZli
+         5qJQ==
+X-Gm-Message-State: AOAM530QikL5tuqnM7KXtrkdXey/HDlDN2VutPoZ89HL7G3wjE4JzWMG
+        MVcQOUNGVDAZoDP8FgU9gImHOz8I4fmAKcrp5lGkEg==
+X-Google-Smtp-Source: ABdhPJyAXf6tOqco4h3bq8cESjf4rT9k6XdAEU/lifxuzNRUtH/WYHyPTmFwBNPn7Vb1baZhiR3xcONm2SA2EVvf6CU=
+X-Received: by 2002:a05:6512:118d:: with SMTP id g13mr36303466lfr.591.1641105274195;
+ Sat, 01 Jan 2022 22:34:34 -0800 (PST)
 MIME-Version: 1.0
-References: <20211220121825.6446-1-tinghan.shen@mediatek.com> <20211220121825.6446-4-tinghan.shen@mediatek.com>
-In-Reply-To: <20211220121825.6446-4-tinghan.shen@mediatek.com>
+References: <20211227122237.6363-1-zajec5@gmail.com>
+In-Reply-To: <20211227122237.6363-1-zajec5@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 2 Jan 2022 06:16:53 +0100
-Message-ID: <CACRpkdaGui4ULm7E7Y7YFLZ1BXKfvKKqv4KC=eTMBDExJThPdA@mail.gmail.com>
-Subject: Re: [PATCH v7 3/4] dt-bindings: pinctrl: mt8195: add wrapping node of
- pin configurations
-To:     Tinghan Shen <tinghan.shen@mediatek.com>
-Cc:     robh+dt@kernel.org, matthias.bgg@gmail.com, broonie@kernel.org,
-        bgolaszewski@baylibre.com, sean.wang@mediatek.com,
-        bayi.cheng@mediatek.com, gch981213@gmail.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+Date:   Sun, 2 Jan 2022 07:34:21 +0100
+Message-ID: <CACRpkdbvZ+fZoGsVDY+kNEo4FFTUwJbfAq6ciC+mJN03Mm2jvQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: imx: fix assigning groups names
+To:     =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
         linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-spi@vger.kernel.org,
-        Project_Global_Chrome_Upstream_Group@mediatek.com
+        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 20, 2021 at 1:18 PM Tinghan Shen <tinghan.shen@mediatek.com> wrote:
+On Mon, Dec 27, 2021 at 1:23 PM Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com> =
+wrote:
 
-> On mt8195, the pinctrl node has pinctrl groups to group pin
-> configurations by users' need. In each pinctrl group, it has
-> subnode(s) to list pins needed and pin configurations. By supporting
-> multiple subnodes, we can configure different pin characteristics
-> (driving/pull-up/pull-down/etc.) in a pinctrl group.
+> From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
 >
-> Update pinctrl-mt8195.yaml to add subnode in pinctrl groups and an
-> example to illustrate the usage.
+> This fixes regression caused by incorrect array indexing.
 >
-> Signed-off-by: Tinghan Shen <tinghan.shen@mediatek.com>
+> Reported-by: Fabio Estevam <festevam@gmail.com>
+> Fixes: 02f117134952 ("pinctrl: imx: prepare for making "group_names" in "=
+function_desc" const")
+> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
 
-This patch applied.
+Patch applied!
 
 Yours,
 Linus Walleij
