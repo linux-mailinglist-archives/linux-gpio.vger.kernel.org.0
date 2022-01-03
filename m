@@ -2,58 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4ACAF48348E
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jan 2022 17:06:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 338CD4834EC
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jan 2022 17:40:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231570AbiACQGz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 3 Jan 2022 11:06:55 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:21526 "EHLO
+        id S231398AbiACQkv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 3 Jan 2022 11:40:51 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:39462 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231648AbiACQGz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Jan 2022 11:06:55 -0500
+        by vger.kernel.org with ESMTP id S231733AbiACQku (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Jan 2022 11:40:50 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1641226013;
+        s=mimecast20190719; t=1641228049;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=ftvSdEE1vQYQNtDIjX8enMqUlrXXR+e8zbSbx6jdbHw=;
-        b=c6skVOfv8pnOih8WwxwUfTvxxVhaUd+++lP81H1PvvTP34iiI8wSRg3lxkIZ3vXUwy1v74
-        CERjT5ZomYiDLd9XWpN4ydykQE4yn1i03XRVcX/2W/4dXXHqfXMmuA4KTBbUDpT4+yD6Bo
-        LXu0pA3QIbAl+2vkK5GDC1YjGx8Ec20=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=j8y4yEmk0veKGavmME8mZr1dkwGPCQ0/MIQ1r8V5Sj8=;
+        b=cC/5iztIvVvEUt4m0akIvl8fX5+PlTLu0OvW3DGkItI7YlhuV/5BBeuw4aSqN42f4THcYT
+        ZUZ7rmMYTFvxXZ0uJC0RfZiJn/84/Sc1dcJCa8H8oVLL1Qg6XFxoRmWVZLt6UF0rA8VAqp
+        qx14Ym/ATilj9viPzpFRfeqc0fQ6tnQ=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-191-lyr87FJlN3u4JUv4PWx3SA-1; Mon, 03 Jan 2022 11:06:51 -0500
-X-MC-Unique: lyr87FJlN3u4JUv4PWx3SA-1
-Received: by mail-ed1-f72.google.com with SMTP id z8-20020a056402274800b003f8580bfb99so23218564edd.11
-        for <linux-gpio@vger.kernel.org>; Mon, 03 Jan 2022 08:06:51 -0800 (PST)
+ us-mta-656-vlPxIOSTNvmaRkpTC9mhnQ-1; Mon, 03 Jan 2022 11:40:46 -0500
+X-MC-Unique: vlPxIOSTNvmaRkpTC9mhnQ-1
+Received: by mail-ed1-f70.google.com with SMTP id h6-20020a056402280600b003f9967993aeso2422940ede.10
+        for <linux-gpio@vger.kernel.org>; Mon, 03 Jan 2022 08:40:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=ftvSdEE1vQYQNtDIjX8enMqUlrXXR+e8zbSbx6jdbHw=;
-        b=si4gNm/odToRB6R/02oeJaU8rootkeWHxU854kKRCP5nAZw6dzHGAxK59vehXmp9dD
-         nQNyyNNuEsGzrbQIQCOvGZgIQn2xOvjnlNMwH+WRko8BaLz1zDfImp+AqiHd83wflIQq
-         PPLfz0nMqAFL4yC7biqGjAFixHBSDcKphg4V6EjUApY7fUMskQcRZkubEpB3pOD9IqXZ
-         yKYLWvSsnM1L0KquLhl/Rc/ODVO3LtgcMrrcj/7a3A9l8E/97Qz5XPUgB8RfO1UeVUwX
-         GYfTWYq4NqmxvmjCiuO9ffXmp57MfYvL0PzY3wOZT7NXvhIyukZu6/gEywis5hvysFxO
-         NV4w==
-X-Gm-Message-State: AOAM530wWWqiJ4k9Gc03MNRd7grWPdlskTsv8bf0bXGN9wtPtR7A3VR7
-        E5Yt3ac2i9uPk502Sb0+Hif9RlhyqeA6Msn1N04BUqIB7b2SFVUZxS2KRSy0kUI7xO9HSeSJ+wa
-        kuOK2fiyF019s1fR8Gd+Q7g==
-X-Received: by 2002:a17:907:7d86:: with SMTP id oz6mr35117858ejc.312.1641226010419;
-        Mon, 03 Jan 2022 08:06:50 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyL+sLi0R/kzh83giaP1ERlHIWcHAFDjEF3wBaQHMlZ9rTUpxehoqUGaBM4wcqCdqzeGp2+Yw==
-X-Received: by 2002:a17:907:7d86:: with SMTP id oz6mr35117837ejc.312.1641226010130;
-        Mon, 03 Jan 2022 08:06:50 -0800 (PST)
+         :content-language:to:cc:references:from:in-reply-to;
+        bh=j8y4yEmk0veKGavmME8mZr1dkwGPCQ0/MIQ1r8V5Sj8=;
+        b=b68DwQH75QJZplvshy5K7uIosqMYXyspNAOYEDe96eJft7TxeJ6B3tEWb8/XLtydrB
+         cwVNZEV4fCgrf2059OfFQUWSZ0mkVCNHFzT0mkhqtNvL/Q3zG9cMm2i78ihmer0zwpaJ
+         bgSHM3ZPNn6ad/cI5xdzqUUCQ/ePwbWngDOHCwg0JdPfCsUleLel6eW2rszwvVxs1WuU
+         RnDbYpuShn3xgR2lper6dkkbfrP6TewY0aNXsA8MIarbVoQotRB4FnSB4nqfNtvFkwxp
+         GzG0IhHMif9Wr49pcxms4IWjrAulX038QV7ywFBmWwxknmQ+Qq7e4Zv6LeF9iZw9IohE
+         j/fQ==
+X-Gm-Message-State: AOAM532++3tP3CxXvt23Gzmy2GlgUgajK17THQ8sXFlOyoF3sAn68xhb
+        3iGFX8bqs3k3fZ5NTjjrCAGXQc47SxiCTZRQtK5IFddaO684gEp1SKX2UNq5WTIJkdNasb+ygSD
+        tNVovGEhljjlG3BQoeUXpQg==
+X-Received: by 2002:a17:907:1b21:: with SMTP id mp33mr35409656ejc.580.1641228044995;
+        Mon, 03 Jan 2022 08:40:44 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwV/r7AVm/yXXQbGnttDc1pHtYtygOtr5NXDhvkbmFxYXvQzGrwRsC1jB20EYpHx/3pBiEd1g==
+X-Received: by 2002:a17:907:1b21:: with SMTP id mp33mr35409643ejc.580.1641228044783;
+        Mon, 03 Jan 2022 08:40:44 -0800 (PST)
 Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
-        by smtp.gmail.com with ESMTPSA id a18sm14014997eds.42.2022.01.03.08.06.49
+        by smtp.gmail.com with ESMTPSA id n8sm11590981edb.41.2022.01.03.08.40.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Jan 2022 08:06:49 -0800 (PST)
-Message-ID: <65701305-e0b4-c3fa-aca3-ecbb2084038c@redhat.com>
-Date:   Mon, 3 Jan 2022 17:06:49 +0100
+        Mon, 03 Jan 2022 08:40:44 -0800 (PST)
+Content-Type: multipart/mixed; boundary="------------qvz3dsMh0DXQsGWK0un8s7GS"
+Message-ID: <c29e98f5-c8e4-1967-a249-a461776488ad@redhat.com>
+Date:   Mon, 3 Jan 2022 17:40:43 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.0
@@ -69,11 +68,14 @@ References: <70004f1a-fef5-f6e9-6824-47eeb59f8014@linux.intel.com>
  <a8b6d8f1-ad8c-23ac-a85b-2c903530735f@linux.intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
 In-Reply-To: <a8b6d8f1-ad8c-23ac-a85b-2c903530735f@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
+
+This is a multi-part message in MIME format.
+--------------qvz3dsMh0DXQsGWK0un8s7GS
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 Hi,
 
@@ -162,5 +164,73 @@ would fix things.
 Oh, that is actually interesting, this is a per gpio controller thing, so if we
 filter on the controller then we end up with:
 
-> [   16.562282] cherryview-pinctrl INT33FF:03: using interrupt line 0 for pin 81
+[   15.465425] cherryview-pinctrl INT33FF:00: interrupt on unmapped interrupt line 0
+[   17.850170] cherryview-pinctrl INT33FF:00: using interrupt line 0 for pin 76
+
+So we do eventually get an IRQ request for a pin using the GPIO controller
+internal interrupt-line 0. But the IRQ triggers at least once before then and
+even though we haven't set a handler yet, calling generic_handle_irq for the
+GPIO-chips irqdomain, offset 0 IRQ does manage to silence the interrupt.
+
+I've been tracing this through the kernel code and AFAICT we end up in:
+
+arch/x86/kernel/irq.c: ack_bad_irq() in this case:
+
+Which means that this message should show up in dmesg:
+
+        if (printk_ratelimit())
+                pr_err("unexpected IRQ trap at vector %02x\n", irq);
+
+Can you confirm this? Also can you share the full dmesg output of this
+device (with both patches, with dyndbg option) ?
+
+###
+
+Note what we are seeing here is basically a spurious IRQ. Except on a few
+known broken devices the cherryview pinctrl code relies on the BIOS having
+configured things so that there are no spurious IRQs. I've attached a
+quick hack which activates the workaround for known broken devices
+unconditionally. This replace my previous 2 patches. I expect this to
+fix things too.
+
+If you can make some time to give this one a test too that would be
+great, then we have some options on how to fix this :)
+
+Regards,
+
+Hans
+
+
+--------------qvz3dsMh0DXQsGWK0un8s7GS
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0001-pinctrl-cherryview-Hack-to-try-and-workaround-linux-.patch"
+Content-Disposition: attachment;
+ filename*0="0001-pinctrl-cherryview-Hack-to-try-and-workaround-linux-.pa";
+ filename*1="tch"
+Content-Transfer-Encoding: base64
+
+RnJvbSA0OGM3MzliMTAyMDUxYjcxYTlkNGRlMmQxMjhmNGYyNjMzY2Q2NjhkIE1vbiBTZXAg
+MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBIYW5zIGRlIEdvZWRlIDxoZGVnb2VkZUByZWRoYXQu
+Y29tPgpEYXRlOiBNb24sIDMgSmFuIDIwMjIgMTc6MzE6MzYgKzAxMDAKU3ViamVjdDogW1BB
+VENIXSBwaW5jdHJsOiBjaGVycnl2aWV3OiBIYWNrIHRvIHRyeSBhbmQgd29ya2Fyb3VuZCBs
+aW51eC1uZXh0CiByZWdyZXNzaW9uCgpTaWduZWQtb2ZmLWJ5OiBIYW5zIGRlIEdvZWRlIDxo
+ZGVnb2VkZUByZWRoYXQuY29tPgotLS0KIGRyaXZlcnMvcGluY3RybC9pbnRlbC9waW5jdHJs
+LWNoZXJyeXZpZXcuYyB8IDQgKystLQogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygr
+KSwgMiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL3BpbmN0cmwvaW50ZWwv
+cGluY3RybC1jaGVycnl2aWV3LmMgYi9kcml2ZXJzL3BpbmN0cmwvaW50ZWwvcGluY3RybC1j
+aGVycnl2aWV3LmMKaW5kZXggNjgzYjk1ZTk2MzlhLi4yZWU5MzNjNjMwNGEgMTAwNjQ0Ci0t
+LSBhL2RyaXZlcnMvcGluY3RybC9pbnRlbC9waW5jdHJsLWNoZXJyeXZpZXcuYworKysgYi9k
+cml2ZXJzL3BpbmN0cmwvaW50ZWwvcGluY3RybC1jaGVycnl2aWV3LmMKQEAgLTE1NTgsMTMg
+KzE1NTgsMTMgQEAgc3RhdGljIGludCBjaHZfZ3Bpb19pcnFfaW5pdF9odyhzdHJ1Y3QgZ3Bp
+b19jaGlwICpjaGlwKQogCSAqCiAJICogU2VlIGFsc28gaHR0cHM6Ly9idWd6aWxsYS5rZXJu
+ZWwub3JnL3Nob3dfYnVnLmNnaT9pZD0xOTc5NTMuCiAJICovCi0JaWYgKCFwY3RybC0+Y2hp
+cC5pcnEuaW5pdF92YWxpZF9tYXNrKSB7CisvLwlpZiAoIXBjdHJsLT5jaGlwLmlycS5pbml0
+X3ZhbGlkX21hc2spIHsKIAkJLyoKIAkJICogTWFzayBhbGwgaW50ZXJydXB0cyB0aGUgY29t
+bXVuaXR5IGlzIGFibGUgdG8gZ2VuZXJhdGUKIAkJICogYnV0IGxlYXZlIHRoZSBvbmVzIHRo
+YXQgY2FuIG9ubHkgZ2VuZXJhdGUgR1BFcyB1bm1hc2tlZC4KIAkJICovCiAJCWNodl9wY3Ry
+bF93cml0ZWwocGN0cmwsIENIVl9JTlRNQVNLLCBHRU5NQVNLKDMxLCBjb21tdW5pdHktPm5p
+cnFzKSk7Ci0JfQorLy8JfQogCiAJLyogQ2xlYXIgYWxsIGludGVycnVwdHMgKi8KIAljaHZf
+cGN0cmxfd3JpdGVsKHBjdHJsLCBDSFZfSU5UU1RBVCwgMHhmZmZmKTsKLS0gCjIuMzMuMQoK
+
+--------------qvz3dsMh0DXQsGWK0un8s7GS--
 
