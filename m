@@ -2,92 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F41BD482FB3
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jan 2022 10:56:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0622F482FC2
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jan 2022 11:05:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229835AbiACJ4p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 3 Jan 2022 04:56:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35336 "EHLO
+        id S232541AbiACKFk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 3 Jan 2022 05:05:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229504AbiACJ4p (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Jan 2022 04:56:45 -0500
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00D23C061761
-        for <linux-gpio@vger.kernel.org>; Mon,  3 Jan 2022 01:56:45 -0800 (PST)
-Received: by mail-ed1-x532.google.com with SMTP id j21so133710671edt.9
-        for <linux-gpio@vger.kernel.org>; Mon, 03 Jan 2022 01:56:44 -0800 (PST)
+        with ESMTP id S232467AbiACKFj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Jan 2022 05:05:39 -0500
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB035C061785
+        for <linux-gpio@vger.kernel.org>; Mon,  3 Jan 2022 02:05:38 -0800 (PST)
+Received: by mail-ed1-x52c.google.com with SMTP id w16so133979118edc.11
+        for <linux-gpio@vger.kernel.org>; Mon, 03 Jan 2022 02:05:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ZYmLW1iCugZWDafFfjWBpnrR+V72rU1sXDxZFERWSRE=;
-        b=fVQLeDoqKsQsGrdu/XIQatReeKlByUvi43fIYrDTkgEnyhMZYvQKyuJKZjglj9HMG2
-         S73A67TU7uE/i2si5ueH1bMkInifnhCg8bcT8ivd5iqap3tak9lzVXwsUKyJHW0HzPzS
-         nnip41Htoag3X+/zAsFdnB7KFew+ZmxCX38Uw8n4reqwYpU20xGn9B1VDqLIeSc4UOmv
-         MZYMjzFonmhU5yaijJeLuQoLZ6AvW6xG65UfKtoiDVYkVQYROW039mt+NRNzakvbx/iV
-         uEeUP4fRxm5LFmIqp+0TcqmYrxXDE+KsOiblGKzOOupe7zI3fthFRtwV9OJMoYwiH5Bw
-         2LuQ==
+        bh=zyqrhqFrOjKgAQ/NgiI6myye+ZTSj+oGpoQCEyxK7I8=;
+        b=hh82xL5h3iuQi0w0UWmziHKDei2V7WmW8Q1scEW+3QAUMeU9NQzjI4tQbE7SdjFtf1
+         jSJxTC6JXmJC30t8UiD4KSbWgFjgI5vzj/f4kgXCMMF1cXpyBUaEbmKaciHqvMxsbzsA
+         s6srxiCjzdc1gKO+ggXM4XDCqtT2PwzGVzkb/jUr2J2ZhWo5kOfS2MJEdIdlgYONwV+r
+         8UXM2kZvxf61JNCPztpCEKlCSclwA8LLCiKZq9s5TG2Hj+M4q7kIxpkcgP2mbBpk/j8b
+         XueqCMflL2VGG7B2jaKdv/ucS5zBVJXPEWQ01p2ABMjOQzlW4lcBw20nefVTfWSS2F8G
+         U11g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ZYmLW1iCugZWDafFfjWBpnrR+V72rU1sXDxZFERWSRE=;
-        b=i4990yg6a8P8wVIILGC3dPkBWkMJrL5niaF94N61zZf83049xHkYESl+YaO/AzQ3al
-         HsuFizVfKFcU/XO1kMqV5sPe5t3NLyER78CAWZIn061QiImJJlyJb6+pqAyO/3De/H2A
-         k/+zR1ujTVxTZVQwtGGtQXYbWMWbCmZwg+O6ZyZCiwzNQ/gzKC5vpUUokKvc36AbEv2s
-         qVWlJplkptETHP2SW47AskPuF6OCVLcDeSo7rA341K4cqpgpKU8k6B8lC29KY0VGTtd7
-         lxmmz1JrxgQjMZnCumWOcnaAPdtIyZZ1nubHfQQWNhSYRjr5hW31/gU6ZJB95VGq0WeM
-         v4mQ==
-X-Gm-Message-State: AOAM531wZGMRgAVq8HCvooaP8Xkn+mqogeTBCaTmcTimOSO4nU23K1Bf
-        B/9EVCLc1MaoPC2wU7eQHlsHh55oOgqLFSYk2pRazA==
-X-Google-Smtp-Source: ABdhPJxbx52Adux3G4VWzQsgGjJtaUsAH+IcJISTybeXzp891Xr1xUR5KkAx0GFW5npSUBhAg3bKSuavaTuUq0HarbM=
-X-Received: by 2002:a17:907:6093:: with SMTP id ht19mr36512360ejc.286.1641203803504;
- Mon, 03 Jan 2022 01:56:43 -0800 (PST)
+        bh=zyqrhqFrOjKgAQ/NgiI6myye+ZTSj+oGpoQCEyxK7I8=;
+        b=hGhhKgxQqbOWFmB4IBiBC1Dbg0PlElDIZFc4t6vqNscWAT7+jIAPwgmtXLu/ouHRlR
+         gSnSdYYx++VFfy778I2XiPiLUMZEZkMabAcOJNycV4jvQyUVd7nPFv+iIuej+97XTWc+
+         UWNbuOiGGBfocMdUJzCmYvfhCjY43G6cWFI1ffPcE2ES5gItTV9dSAavybjco02Zxpcb
+         dz/aqsDoEiqodv8lMknaxK5t3VbACuYfITjiB9hdRc0fObhXkdU33pqCwNQ8tDt+iXTR
+         Qfe2z6jzGS7hn8JGMI7HdT1tC5NrdBAz5Rye2nfdM15akoNbzGNCemr9kG/Z/gnViRF7
+         Mh3Q==
+X-Gm-Message-State: AOAM5337AJB54szgJj5z25kbLILykrn10fMyCxPUC6EfseUrQ89vzot9
+        UIAGPElEpuochnOqWQE+L0ccW/vclqRjWrAkmtMZhA==
+X-Google-Smtp-Source: ABdhPJz0LLpdg5ZlhYjWS1ccr4u0SOQqQpZlRsNizsQSMtlQ61aLAXVlFvutkF5sr+/qADHHxZmu4uWBVmQTZlrVwhI=
+X-Received: by 2002:a50:9556:: with SMTP id v22mr43073644eda.69.1641204336956;
+ Mon, 03 Jan 2022 02:05:36 -0800 (PST)
 MIME-Version: 1.0
-References: <20220102020811.8013-1-gregory.0xf0@gmail.com>
-In-Reply-To: <20220102020811.8013-1-gregory.0xf0@gmail.com>
+References: <20211223103809.12343-1-andriy.shevchenko@linux.intel.com> <20211223103809.12343-2-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20211223103809.12343-2-andriy.shevchenko@linux.intel.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 3 Jan 2022 10:56:32 +0100
-Message-ID: <CAMRc=Md7L07uvorfaFPt2bEHnQqqO7ZKY8WfdcMO__6XoRZLEQ@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: update gpio-brcmstb maintainers
-To:     Gregory Fong <gregory.0xf0@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Doug Berger <opendmb@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Mon, 3 Jan 2022 11:05:26 +0100
+Message-ID: <CAMRc=MfCu8Z-FLdyz8eAqjj+soARUk3zoL8jDFpe2VyLCd2r5Q@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] gpio: dwapb: Switch to use fwnode instead of of_node
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Hoan Tran <hoan@os.amperecomputing.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Jan 2, 2022 at 3:08 AM Gregory Fong <gregory.0xf0@gmail.com> wrote:
+On Thu, Dec 23, 2021 at 11:38 AM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
-> Add Doug and Florian as maintainers for gpio-brcmstb, and remove myself.
+> GPIO library now accepts fwnode as a firmware node, so
+> switch the driver to use it and hence rectify the ACPI
+> case which uses software nodes.
 >
-> Signed-off-by: Gregory Fong <gregory.0xf0@gmail.com>
+> Note, in this case it's rather logical fix that doesn't
+> affect functionality, thus no backporting required.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
->  MAINTAINERS | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 5ea5655a29c3..674cfd8b43d2 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -3804,7 +3804,8 @@ S:        Supported
->  F:     drivers/net/wireless/broadcom/brcm80211/
->
->  BROADCOM BRCMSTB GPIO DRIVER
-> -M:     Gregory Fong <gregory.0xf0@gmail.com>
-> +M:     Doug Berger <opendmb@gmail.com>
-> +M:     Florian Fainelli <f.fainelli@gmail.com>
->  L:     bcm-kernel-feedback-list@broadcom.com
->  S:     Supported
->  F:     Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.yaml
-> --
-> 2.25.1
->
 
-Queued, thanks!
+Applied, thanks!
 
 Bart
