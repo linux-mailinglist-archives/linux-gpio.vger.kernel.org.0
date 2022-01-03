@@ -2,296 +2,1116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E67A48375B
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jan 2022 20:06:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9EC06483849
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Jan 2022 22:19:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235959AbiACTG3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 3 Jan 2022 14:06:29 -0500
-Received: from mail-bn8nam08on2130.outbound.protection.outlook.com ([40.107.100.130]:39877
-        "EHLO NAM04-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S235886AbiACTG2 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 3 Jan 2022 14:06:28 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FsOBCiQS4liGJ/Bgzd66if36Yyu/dU4R8W6We/M/qpjBFWy4jBfX9VLj2AfANl9LjEJHc0ttEAi2v0OL9fvRB9vfErtfpyj3LWpwDO7atiw3JllnqkV3uq97eAzZkBwdR31QDYLVKbGlh8cESfnhqQFcCAGqwq8icoXri+xbYiDpWBKdSjPMfYPmaTchAhj+OOylawASDz7abF7k8EZ3iBAYBWryOI+K8XBU3spTTgP2v76iAyyd1WtDQ6/UbPUqBwcw7199Hhezv1i4ryMXuJxce+MkQP5x5Z8gr5JrnBe9QS04WJE/qr+bz4evGGvTzVjANYGBPebYzr2wOMsYNA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=W82td1gs/IfzolkK8LRb+auUNkZjJMnkoMDTF+gSoEY=;
- b=WnoFevauJpt5BDfHaf6xV3Ptf+qacyvYpBHR4th5nzwXNNXkvUiiqlV5enlP9nI7EMuwNNIksPUX49zztOzDVPdJRfmEvgEXWwEtoUt5R8aZS5k50lz8vKI7aYad18LMpW/sP21Bd8wSB3ULgB9PIhLWcxyEyu8LOqHgdG/dYQsHMzCrM8O7/EONhushpj5hZ2oK7sXASBC6TmB/CZW5fCZzoqAUuXs/k7IVPkhdD5asHRJWKieLWEglhzHNhuwmJdmgazBX4WSEd9ZJ/mZXimiS9Gz4sgb/0bwDBaJ+YTI1ZveVmwdln9WN8Ha2JlmNWClbSYdx0km8reHOheP2rg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=in-advantage.com; dmarc=pass action=none
- header.from=in-advantage.com; dkim=pass header.d=in-advantage.com; arc=none
+        id S229812AbiACVT4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 3 Jan 2022 16:19:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48708 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229817AbiACVT4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Jan 2022 16:19:56 -0500
+Received: from mail-ua1-x92d.google.com (mail-ua1-x92d.google.com [IPv6:2607:f8b0:4864:20::92d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9647C061784
+        for <linux-gpio@vger.kernel.org>; Mon,  3 Jan 2022 13:19:55 -0800 (PST)
+Received: by mail-ua1-x92d.google.com with SMTP id p37so59657106uae.8
+        for <linux-gpio@vger.kernel.org>; Mon, 03 Jan 2022 13:19:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=inadvantage.onmicrosoft.com; s=selector2-inadvantage-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=W82td1gs/IfzolkK8LRb+auUNkZjJMnkoMDTF+gSoEY=;
- b=J/z3P2tZeJvDlqYEUyWqlGnHIl/13j94PoAS8S3tKbRr27dYKvdoceBFpL97MXXoBRwPT4sFx4E53xE/ZeDvbLXLkM06a1ZfMGgeUUkASIIHcldsxjvmc9qu1ABCpiLDKwSLEvwD4PPvaSSbNRkLT4L1WQZmKNiQs6obvX4O/qc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=in-advantage.com;
-Received: from MWHPR1001MB2351.namprd10.prod.outlook.com
- (2603:10b6:301:35::37) by CO1PR10MB4401.namprd10.prod.outlook.com
- (2603:10b6:303:6d::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4844.13; Mon, 3 Jan
- 2022 19:06:18 +0000
-Received: from MWHPR1001MB2351.namprd10.prod.outlook.com
- ([fe80::2d52:2a96:7e6c:460f]) by MWHPR1001MB2351.namprd10.prod.outlook.com
- ([fe80::2d52:2a96:7e6c:460f%4]) with mapi id 15.20.4844.016; Mon, 3 Jan 2022
- 19:06:18 +0000
-Date:   Mon, 3 Jan 2022 11:06:12 -0800
-From:   Colin Foster <colin.foster@in-advantage.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        katie.morris@in-advantage.com
-Subject: Re: [RFC v1] mfd: pinctrl: RFC only: add and utilze mfd option in
- pinctrl-ocelot
-Message-ID: <20220103190612.GA2813119@euler>
-References: <20211203211611.946658-1-colin.foster@in-advantage.com>
- <Ya3P/Z3jbMpV1Fso@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Ya3P/Z3jbMpV1Fso@google.com>
-X-ClientProxiedBy: MW2PR2101CA0017.namprd21.prod.outlook.com
- (2603:10b6:302:1::30) To MWHPR1001MB2351.namprd10.prod.outlook.com
- (2603:10b6:301:35::37)
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tK8vUKjefX4V+QEcjSy/gyOu0i5yacuW++2f0k6UNoo=;
+        b=C06jho+qfyogxVzULzOqaOQd/F3JBJ58PLssf96XY5fAOf1MvYHuZVOfKzQ4cG9WFv
+         VaUoBosngZqtAQ54OX/5oYAf/ooc33/C0glhs43yP+UDRhd6NEDmwbOb3v76jxz3/cwS
+         5qieec5Mkb0XBMhpjO3fgYeMIBs0Pp+DFJnjQL2uQE9mTZwPIzesdKBalwg82OqV2V95
+         uNbEcxSbrI1MYVUDUUNYm5vXSxiPVGGqw81Xx2O6N4F9/X+gpBc029H867m802p0sfyx
+         GlY6zS4/9aWryBxeSFwqDx/dPw/GFyGYv5pxHDC5SuzZWtPsWo1PdpK6OJRSfnFW5Gbx
+         A1zA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tK8vUKjefX4V+QEcjSy/gyOu0i5yacuW++2f0k6UNoo=;
+        b=refXagWcmzMPL+3m1j+fVwoMirAT4aWxRINn89mIn+j/74TpBEiJaSzv743jUPZsd8
+         9cRgP6Xw1z7QdOoxMB0zw3ioQ8Wzj7Uy1vRO0ncGxAdietUJbNXZH4prNO6yS18/YC6t
+         SUFThcOQ9F4g5S8nuJs6poNrRsOM9XsbZirEej1neOq73OGftlAcslKSBsJWk6ojcGhT
+         WE/6ujnaAAPbpWCKTkM5KwN1PZkpiLT0qtOBHLf57J/BYgMn2tsfzLM1ihKGO2H7LIfi
+         v2bgBJo9OguF14cWI9ddBroLtMW48BfD1RpZUbJTNeqVw9kKmvt4K0aLMH0fSmc4byRs
+         A//w==
+X-Gm-Message-State: AOAM530g9ON/hZ4hoxClB6KSom+i9zpMsmOoQyiKyDqBVgkN9txkq71K
+        NT4ai5L3RrwHaCUo7FNTvz7uaH0kw3sD7C/sxoVvqw==
+X-Google-Smtp-Source: ABdhPJwfFn0cpf44wj6UumLoL8R5m+KKN9jkQ5ZNFKO0pB0CFI0BiRplId+PuzZLHYjp6kQDOST+gK1Ol2dobtmeuMw=
+X-Received: by 2002:ab0:2b8d:: with SMTP id q13mr14721340uar.139.1641244794569;
+ Mon, 03 Jan 2022 13:19:54 -0800 (PST)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 3ae5b332-79b7-426f-949c-08d9ceec1eef
-X-MS-TrafficTypeDiagnostic: CO1PR10MB4401:EE_
-X-Microsoft-Antispam-PRVS: <CO1PR10MB440181DBC34DE361C24AA6E8A4499@CO1PR10MB4401.namprd10.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: FETyVmNfdCWYSNZL0hfqJSTOlNtL1ExCAFZfG6UX5ZrWzsDz7ic0OeheB2s4WvPG8YoIl3ln4EMVW47GiXI3w6z+J4kvFbiIiAZ9z+yR9NxZtdmg/33rk/AtuyBxKOwQS3b8gf0i/S5O2vF3wq38cwVwNjLHyLeo8WKQ6Rv4Q3+tfLc27ZE2v9DEJ5uREky6Bk+Vx9wDqVOhCqmD7wV+/yOaPn+w7UVE1feN31feJkvM75b1zsNweMT7GWTDC0FownORtREaGvXrQ1dtXzRFGj2hHhM5CiVyXKp67p1JeYcmm3xUe6AED/0tJSfYf0HQ3TgspSKypk/VS40h1E033Mw7bEU4gefnovhL87ko0zgpqvokR/mYEMLVtv4dx6IWADndFkbVNRI8xPalsrD3aahFOBQ49MeTvAkS7uzsEje+rXh9lYmeyJbvJ5U5eH4HW49FmwDEG69wHbtgjL1UGAL2YnTlV8wQsJXx42+MzV2nD5Qz/et7Baoj2a7l+Z9jXTLggu+wqrQZOkOiUaR1udvBHg0sfeZIGlmzmL/eKUyzMddYhROPEj7WUt6wEMfq7zez3eF1LA1vYOTXq9SDZIYEEa3tMo78nmbWgz2KXCEX5goCEJl3sCGXHRRZ2YeysPj4lcT2SXgwLkJLJnBZs0Zbm7xvQCPC9O+lIDQDPeGqyo5DwqwwoS9mPPbaf3Hs14aUsrpnDPne4H0M/lHBSQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1001MB2351.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(7916004)(396003)(136003)(376002)(42606007)(39830400003)(346002)(366004)(6486002)(6506007)(66946007)(26005)(5660300002)(52116002)(66476007)(38100700002)(186003)(107886003)(6666004)(508600001)(33716001)(8936002)(6512007)(66556008)(9686003)(316002)(54906003)(8676002)(6916009)(38350700002)(86362001)(44832011)(1076003)(2906002)(4326008)(33656002)(83380400001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TUpqbFBxdmNDWEZxTVYwR3UweGlHMWZuQ2JQTks2T1lCdEx1Qmt4ZnUyOG80?=
- =?utf-8?B?azVWRGNKZzlXWFRuaVV3UGxIZVB6YjBrQkt4a1dFbXlCRkMwZXNEWCttN2RD?=
- =?utf-8?B?Y1E0VEVPdFlxMWpWYjFzSU5yWVdmOW10czlxalVQMHF0WlFNdzZZRC94dzFM?=
- =?utf-8?B?bTI5anZkUFhrNlJCbjE0bHVYekpQRktIY0doQUdxcWkvNCtUZnZUbkxCVkZH?=
- =?utf-8?B?dXBXMlUzbmNUeHJaMkIzMTYrZVV2M1hCUlEvZ21tWUhaamdLMm4yUXhpVy9y?=
- =?utf-8?B?U3RubTdWeHVpeDYzd0c2T2hNQ3VLd2E4TWtzdUZyQTZ2ZXl5cFZXSUdhelNI?=
- =?utf-8?B?WWJsb3R6eHM5MVpGVW04ZEpGaXdDZ2RiSEdWa0NPWFRNQmo4WTE3eGRhQlhT?=
- =?utf-8?B?bzIzTThFaU0xRmZzdXRNUU43elhiQm9VWDRBRG16UFRJeWRjTkZWck0yRDRq?=
- =?utf-8?B?ckRYSk5MdldWVHk2cDFXalZhMnhLYjhIWitGdHZnSW9DNXRMNldhUENZT0pR?=
- =?utf-8?B?aUR5S0RPUFZwdzNrekZhWW1SbkJkeVdLWVN0K2U1dlI5T1dDanNZcVMxdUVp?=
- =?utf-8?B?ZHdWSzFGSXdiKzJUb2N4MU9BZVJDeDRjQnBvYVJKRUpMNHltdVZFYlRRWmRz?=
- =?utf-8?B?M0JQMVJLOWNEVGhieTIyU3B0RE8vNlpNL0RLbXozT1ljRm9HQUJwSjZDcEow?=
- =?utf-8?B?dnU3YkdndXJiQmhrZ2JLaDBndWIvMkVOYnZGL2ErN1BZdExzK0U4WmFGbERr?=
- =?utf-8?B?aXJ3RFRLOTVrczZVUXBuSHVGSGlMcVlPNFBSWUxyOStWdm9hc2NFS0Rua3Zm?=
- =?utf-8?B?cGhCaFVEYUh0ZVRER2tRR0VET1pvUTE3UXNqZjJwakFTUkRad0Vtd1dIS1FZ?=
- =?utf-8?B?Z09LdXNKTnZBYlllYUROdy8yMmJ4YmJCWHduQU05K0xqL2FOUkFtMFNEL2xM?=
- =?utf-8?B?WnM0Uit5WkI3cDIwcWJyTERDckxINktTNmZ0UzVFcUZPOVNiMUlBWmxBOUVF?=
- =?utf-8?B?SGVhLys5dkVFM1pnMHJZdGJvekU0Ky82MUwxNEI5VnNubW9ieTdjeUUyWGNo?=
- =?utf-8?B?WEFtczFSRmhmbVZvc2ZoZGxUYSs3b1JjaGx3ckhraldPeHp2OU5kbHowMHhT?=
- =?utf-8?B?bXdoekpmRFBWYnFpS3IwcTVXWjhsWFFGaVR4dGRxRys4bnpNYUlsWFI3OEph?=
- =?utf-8?B?N3pqUWZCakNQMGkvd2FIeENIM3MvSkJiYzgrT3Irand5WW03b3gwMWFpSGlJ?=
- =?utf-8?B?SjlEaUV3UXNjMlQ1WUdxdGpwRU5pbnd6MUtscDlJdUZYaE5WWkxmQTFDM05U?=
- =?utf-8?B?RXpiQ0kzNlRsUFhXNkRNOWlyREE1bkpTajQrQXdYNnNzWHFYM3g2YUtYSVpm?=
- =?utf-8?B?ZVNvMXFLYjYrdEVHYWx4U3lrUFJRcDZvVURIWG9ZU2lyUmpocXpGbCtXbmN6?=
- =?utf-8?B?bjVDTUo5RXlyYWpUdmJOLzFSaWpjZDRjTS9VTkFDcEU4OXpjU2hYc0NIWFJq?=
- =?utf-8?B?SVZvNFh5V0xTd3lldGRHZEcwZFV3NU5SeUcrSlNBdlAvbkJ2VU5XNnMyQldu?=
- =?utf-8?B?MlJyZXBQckRFQmxUbnMvT2UyRnJTcXFsOGp4a2lyYkg0UmtuaTg4dEpJVlFE?=
- =?utf-8?B?SldCd25sUWVRbEJ5V1NzaHVEVlBRM3YyS0tEdXZlR3JJLzNOUGxkbFp6Tlhi?=
- =?utf-8?B?UHE3NkpzVnM4V2hiZVR2R0tDMHIzbkZEUVhILzNHc3ZwUjk1QXp4MGd0aFMv?=
- =?utf-8?B?L3U0SktDRHJiaXlkVEFLSWFyM0ZXR2hnQ2FxZDJrTFBtQkczaHRMS2lueitT?=
- =?utf-8?B?cDNkZHFvRDVrNFJUeGU1cDhRaWxqcGlWc0lnMisyTjRsem9OUHlYN2Z1Y2U2?=
- =?utf-8?B?QVIrRG5ZNGVnT3NzMmZvVDhEYTh3SWtjak13dGh4aFBVdVloK1Z4eTZ0bnYz?=
- =?utf-8?B?cE1rbXFEd1RabW0yaWxrQXVNdFhPYnh0akdoV01vQVRqZTJoZHpGL0Zkb25n?=
- =?utf-8?B?bTUyN1ZHSTRqV285RzVlRnBoNWZUR3owKzIzRDg3c1BmQzJYeXRpNlFLV3VM?=
- =?utf-8?B?QUxhSmFQY0Y5VHJNd1ZSaWtLa3Q1VlZ2WXBab0N0bk5QNzJVb2xGOVVlcUxj?=
- =?utf-8?B?dk1XZjZHTWE0R0hKeUNZVlI5YmdZdHBRZnZUV2ZzTWx0dlN3YWQxRGJkY2ti?=
- =?utf-8?B?a3BzTVVGbVZ2VDM3cmxadEEzamdyWCtNNEtESCtaL3FoMkNneS9KNzhSZVdE?=
- =?utf-8?B?eUZiUDJNZmErQXZFNlhFVTRpODBBPT0=?=
-X-OriginatorOrg: in-advantage.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3ae5b332-79b7-426f-949c-08d9ceec1eef
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR1001MB2351.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jan 2022 19:06:18.1100
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 48e842ca-fbd8-4633-a79d-0c955a7d3aae
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0jpZOTQMtLCVCN2+L5dM2j96hOmW+E/Q0unS0rqfZ5sENIbdpzYLlYJj3IsjwQljxi+kw7DZ3OGwEQv5HkRTxDbMOOtsYa2byXYU0kP/MJk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR10MB4401
+References: <20211231161930.256733-1-krzysztof.kozlowski@canonical.com> <20211231162309.257587-7-krzysztof.kozlowski@canonical.com>
+In-Reply-To: <20211231162309.257587-7-krzysztof.kozlowski@canonical.com>
+From:   Sam Protsenko <semen.protsenko@linaro.org>
+Date:   Mon, 3 Jan 2022 23:19:41 +0200
+Message-ID: <CAPLW+4kbn9-gCOy3f_ykVN_fbrKvQkYHR_wwj=4ETLS1PHKNFQ@mail.gmail.com>
+Subject: Re: [PATCH 24/24] dt-bindings: pinctrl: samsung: convert to dtschema
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        Chanho Park <chanho61.park@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 06, 2021 at 08:55:25AM +0000, Lee Jones wrote:
-> On Fri, 03 Dec 2021, Colin Foster wrote:
-> 
-> > This is a psuedo-commit, but one that tells the complete story of what I'm
-> > looking at. During an actual submission this'll be broken up into two
-> > commits, but I'd like to get some feedback on whether this is the correct
-> > path for me to be going down.
-> > 
-> > Background:
-> > 
-> > Microchip has a family of chips - the VSC7511, 7512, 7513, and 7514. The
-> > last two have an internal MIPS processor, which are supported by
-> > drivers/net/ethernet/mscc/ocelot_*. The former two lack this processor.
-> > 
-> > All four chips can be configured externally via a number of interfaces:
-> > SPI, I2C, PCIe... This is currently not supported and is my end goal.
-> > 
-> > The networking portion of these chips have been reused in other products as
-> > well. These utilize the common code by way of mscc_ocelot_switch_lib and
-> > net/dsa/ocelot/*. Specifically the "Felix" driver.
-> > 
-> > Current status:
-> > 
-> > I've put out a few RFCs on the "ocelot_spi" driver. It utilizes Felix and
-> > invokes much of the network portion of the hardware (VSC7512). It works
-> > great! Thanks community :)
-> > 
-> > There's more hardware that needs to get configured, however. Currently that
-> > includes general pin configuration, and an optional serial GPIO expander.
-> > The former is supported by drivers/pinctrl/pinctrl-ocelot.c and the latter
-> > by drivers/pinctrl/pinctrl-microchip-sgpio.c.
-> > 
-> > These drivers have been updated to use regmap instead of iomem, but that
-> > isn't the complete story. There are two options I know about, and maybe
-> > others I don't.
-> > 
-> > Option 1 - directly hook into the driver:
-> > 
-> > This was the path that was done in
-> > commit b99658452355 ("net: dsa: ocelot: felix: utilize shared mscc-miim
-> > driver for indirect MDIO access").
-> > This is in the net-next tree. In this case the Seville driver passes in its
-> > regmap to the mscc_miim_setup function, which bypasses mscc_miim_probe but
-> > allows the same driver to be used.
-> > 
-> > This was my initial implementation to hook into pinctrl-ocelot and
-> > pinctrl-microchip-sgpio. The good thing about this implementation is I have
-> > direct control over the order of things happening. For instance, pinctrl
-> > might need to be configured before the MDIO bus gets probed.
-> > 
-> > The bad thing about this implementation is... it doesn't work yet. My
-> > memory is fuzzy on this, but I recall noticing that the application of a
-> > devicetree pinctrl function happens in the driver probe. I ventured down
-> > this path of walking the devicetree, applying pincfg, etc. That was a path
-> > to darkness that I have abandoned.
-> > 
-> > What is functioning is I have debugfs / sysfs control, so I do have the
-> > ability to do some runtime testing and verification.
-> > 
-> > Option 2 - MFD (this "patch")
-> > 
-> > It really seems like anything in drivers/net/dsa/ should avoid
-> > drivers/pinctl, and that MFD is the answer. This adds some complexity to
-> > pinctrl-ocelot, and I'm not sure whether that breaks the concept of MFD. So
-> > it seems like I'm either doing something unique, or I'm doing something
-> > wrong.
-> > 
-> > I err on the assumption that I'm doing something wrong.
-> > 
-> > pinctrl-ocelot gets its resources the device tree by way of
-> > platform_get_and_ioremap_resource. This driver has been updated to support
-> > regmap in the pinctrl tree:
-> > commit 076d9e71bcf8 ("pinctrl: ocelot: convert pinctrl to regmap")
-> > 
-> > The problem comes about when this driver is probed by way of
-> > "mfd_add_devices". In an ideal world it seems like this would be handled by
-> > resources. MFD adds resources to the device before it gets probed. The
-> > probe happens and the driver is happy because platform_get_resource
-> > succeeds.
-> > 
-> > In this scenario the device gets probed, but needs to know how to get its
-> > regmap... not its resource. In the "I'm running from an internal chip"
-> > scenario, the existing process of "devm_regmap_init_mmio" will suffice. But
-> > in the "I'm running from an externally controlled setup via {SPI,I2C,PCIe}"
-> > the process needs to be "get me this regmap from my parent". It seems like
-> > dev_get_regmap is a perfect candidate for this.
-> > 
-> > Perhaps there is something I'm missing in the concept of resources /
-> > regmaps. But it seems like pinctrl-ocelot needs to know whether it is in an
-> > MFD scenario, and that concept didn't exist. Hence the addition of
-> > device_is_mfd as part of this patch. Since "device_is_mfd" didn't exist, it
-> > feels like I might be breaking the concept of MFD.
-> > 
-> > I think this would lend itself to a pretty elegant architecture for the
-> > VSC751X externally controlled chips. In a manner similar to
-> > drivers/mfd/madera* there would be small drivers handling the prococol
-> > layers for SPI, I2C... A core driver would handle the register mappings,
-> > and could be gotten by dev_get_regmap. Every sub-device (DSA, pinctrl,
-> > other pinctrl, other things I haven't considered yet) could either rely on
-> > dev->parent directly, or in this case adjust. I can't imagine a scenario
-> > where someone would want pinctrl for the VSC7512 without the DSA side of
-> > things... but that would be possible in this architecture that would
-> > otherwise not.
-> > 
-> > Signed-off-by: Colin Foster <colin.foster@in-advantage.com>
-> > ---
-> >  drivers/mfd/mfd-core.c           | 6 ++++++
-> >  drivers/pinctrl/pinctrl-ocelot.c | 7 ++++++-
-> >  include/linux/mfd/core.h         | 2 ++
-> >  3 files changed, 14 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-> > index 684a011a6396..2ba6a692499b 100644
-> > --- a/drivers/mfd/mfd-core.c
-> > +++ b/drivers/mfd/mfd-core.c
-> > @@ -33,6 +33,12 @@ static struct device_type mfd_dev_type = {
-> >  	.name	= "mfd_device",
-> >  };
-> >  
-> > +int device_is_mfd(struct platform_device *pdev)
-> > +{
-> > +	return (!strcmp(pdev->dev.type->name, mfd_dev_type.name));
-> > +}
-> > +EXPORT_SYMBOL(device_is_mfd);
-> > +
-> >  int mfd_cell_enable(struct platform_device *pdev)
-> >  {
-> >  	const struct mfd_cell *cell = mfd_get_cell(pdev);
-> > diff --git a/drivers/pinctrl/pinctrl-ocelot.c b/drivers/pinctrl/pinctrl-ocelot.c
-> > index 0a36ec8775a3..758fbc225244 100644
-> > --- a/drivers/pinctrl/pinctrl-ocelot.c
-> > +++ b/drivers/pinctrl/pinctrl-ocelot.c
-> > @@ -10,6 +10,7 @@
-> >  #include <linux/gpio/driver.h>
-> >  #include <linux/interrupt.h>
-> >  #include <linux/io.h>
-> > +#include <linux/mfd/core.h>
-> >  #include <linux/of_device.h>
-> >  #include <linux/of_irq.h>
-> >  #include <linux/of_platform.h>
-> > @@ -1368,7 +1369,11 @@ static int ocelot_pinctrl_probe(struct platform_device *pdev)
-> >  
-> >  	regmap_config.max_register = OCELOT_GPIO_SD_MAP * info->stride + 15 * 4;
-> >  
-> > -	info->map = devm_regmap_init_mmio(dev, base, &regmap_config);
-> > +	if (device_is_mfd(pdev))
-> > +		info->map = dev_get_regmap(dev->parent, "GCB");
-> > +	else
-> > +		info->map = devm_regmap_init_mmio(dev, base, &regmap_config);
-> 
-> What happens if you were to call the wrong API in either scenario?
-> 
-> If the answer is 'the call would fail', then why not call one and if
-> it fails, call the other?  With provided commits describing the
-> reason for the stacked calls of course.
+On Fri, 31 Dec 2021 at 18:23, Krzysztof Kozlowski
+<krzysztof.kozlowski@canonical.com> wrote:
+>
+> Convert the Samsung SoC (S3C24xx, S3C64xx, S5Pv210, Exynos) pin
+> controller bindings to DT schema format.  Parts of description and DTS
+> example was copied from existing sources, so keep the license as
+> GPL-2.0-only.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+> ---
 
-Hi Lee, 
+Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
 
-As I said in the other thread, sorry for missing this response. My email
-blocked it.
+Kudos for doing that, converting and splitting. It's fascinating how
+time consuming that bindings conversion work can be (at least for me,
+hehe).
 
-That's a good idea. I'll keep this in mind when the final
-"get_mfd_regamp" implementation shakes out.
-
-Thanks for the feedback!
-
-> 
-> -- 
-> Lee Jones [李琼斯]
-> Senior Technical Lead - Developer Services
-> Linaro.org │ Open source software for Arm SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+>  .../pinctrl/samsung,pinctrl-gpio-bank.yaml    |  52 +++
+>  .../pinctrl/samsung,pinctrl-pins-cfg.yaml     |  81 ++++
+>  .../samsung,pinctrl-wakeup-interrupt.yaml     |  76 ++++
+>  .../bindings/pinctrl/samsung,pinctrl.yaml     | 381 +++++++++++++++++
+>  .../bindings/pinctrl/samsung-pinctrl.txt      | 383 ------------------
+>  MAINTAINERS                                   |   2 +-
+>  6 files changed, 591 insertions(+), 384 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-gpio-bank.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-pins-cfg.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
+>
+> diff --git a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-gpio-bank.yaml b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-gpio-bank.yaml
+> new file mode 100644
+> index 000000000000..f73348c54748
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-gpio-bank.yaml
+> @@ -0,0 +1,52 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/samsung,pinctrl-gpio-bank.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Samsung S3C/S5P/Exynos SoC pin controller - gpio bank
+> +
+> +maintainers:
+> +  - Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+> +  - Sylwester Nawrocki <s.nawrocki@samsung.com>
+> +  - Tomasz Figa <tomasz.figa@gmail.com>
+> +
+> +description: |
+> +  This is a part of device tree bindings for Samsung S3C/S5P/Exynos SoC pin
+> +  controller.
+> +
+> +  GPIO bank description for Samsung S3C/S5P/Exynos SoC pin controller.
+> +
+> +  See also Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml for
+> +  additional information and example.
+> +
+> +properties:
+> +  '#gpio-cells':
+> +    const: 2
+> +
+> +  gpio-controller: true
+> +
+> +  '#interrupt-cells':
+> +    description:
+> +      For GPIO banks supporting external GPIO interrupts or external wake-up
+> +      interrupts.
+> +    const: 2
+> +
+> +  interrupt-controller:
+> +    description:
+> +      For GPIO banks supporting external GPIO interrupts or external wake-up
+> +      interrupts.
+> +
+> +  interrupts:
+> +    description:
+> +      For GPIO banks supporting direct external wake-up interrupts (without
+> +      multiplexing).  Number of interrupts must match number of wake-up capable
+> +      pins of this bank.
+> +    minItems: 1
+> +    maxItems: 8
+> +
+> +required:
+> +  - '#gpio-cells'
+> +  - gpio-controller
+> +
+> +additionalProperties: false
+> diff --git a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-pins-cfg.yaml b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-pins-cfg.yaml
+> new file mode 100644
+> index 000000000000..637f4c05b344
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-pins-cfg.yaml
+> @@ -0,0 +1,81 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/samsung,pinctrl-pins-cfg.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Samsung S3C/S5P/Exynos SoC pin controller - pins configuration
+> +
+> +maintainers:
+> +  - Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+> +  - Sylwester Nawrocki <s.nawrocki@samsung.com>
+> +  - Tomasz Figa <tomasz.figa@gmail.com>
+> +
+> +description: |
+> +  This is a part of device tree bindings for Samsung S3C/S5P/Exynos SoC pin
+> +  controller.
+> +
+> +  Pins configuration for Samsung S3C/S5P/Exynos SoC pin controller.
+> +
+> +  See also Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml for
+> +  additional information and example.
+> +
+> +  The values used for config properties should be derived from the hardware
+> +  manual and these values are programmed as-is into the pin pull up/down and
+> +  driver strength register of the pin-controller.
+> +  See also include/dt-bindings/pinctrl/samsung.h with useful constants.
+> +
+> +properties:
+> +  samsung,pins:
+> +    description: |
+> +      List of pins to configure. For initial and sleep states, the maximum
+> +      number is one pin. In other cases there is no upper limit.
+> +
+> +      The pins should use lowercase names matching hardware manual, e.g. for
+> +      GPA0 bank: gpa0-0, gpa0-1, gpa0-2.
+> +    $ref: /schemas/types.yaml#/definitions/string-array
+> +
+> +  samsung,pin-function:
+> +    description: |
+> +      The pin function selection that should be applied on the pins listed in the
+> +      child node is specified using the "samsung,pin-function" property. The value
+> +      of this property that should be applied to each of the pins listed in the
+> +      "samsung,pins" property should be picked from the hardware manual of the SoC
+> +      for the specified pin group. This property is optional in the child node if
+> +      no specific function selection is desired for the pins listed in the child
+> +      node. The value of this property is used as-is to program the pin-controller
+> +      function selector register of the pin-bank.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    minimum: 0
+> +    maximum: 15
+> +
+> +  samsung,pin-drv:
+> +    description: Drive strength configuration.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    minimum: 0
+> +    maximum: 15
+> +
+> +  samsung,pin-pud:
+> +    description: Pull up/down configuration.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    enum: [0, 1, 2, 3]
+> +
+> +  samsung,pin-val:
+> +    description: Initial value of pin output buffer.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    enum: [0, 1]
+> +
+> +  samsung,pin-con-pdn:
+> +    description: Function in power down mode.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    enum: [0, 1, 2, 3]
+> +
+> +  samsung,pin-pud-pdn:
+> +    description: Pull up/down configuration in power down mode.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    enum: [0, 1, 2, 3]
+> +
+> +required:
+> +  - samsung,pins
+> +
+> +additionalProperties: false
+> diff --git a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml
+> new file mode 100644
+> index 000000000000..eac56a087643
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml
+> @@ -0,0 +1,76 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Samsung S3C/S5P/Exynos SoC pin controller - wakeup interrupt controller
+> +
+> +maintainers:
+> +  - Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+> +  - Sylwester Nawrocki <s.nawrocki@samsung.com>
+> +  - Tomasz Figa <tomasz.figa@gmail.com>
+> +
+> +description: |
+> +  This is a part of device tree bindings for Samsung S3C/S5P/Exynos SoC pin
+> +  controller.
+> +
+> +  External wake-up interrupts for Samsung S3C/S5P/Exynos SoC pin controller.
+> +  Only one pin-controller device node can include external wakeup interrupts
+> +  child node (in other words, only one External wake-up interrupts
+> +  pin-controller is supported).
+> +
+> +  See also Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml for
+> +  additional information and example.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - samsung,s3c2410-wakeup-eint
+> +      - samsung,s3c2412-wakeup-eint
+> +      - samsung,s3c64xx-wakeup-eint
+> +      - samsung,s5pv210-wakeup-eint
+> +      - samsung,exynos4210-wakeup-eint
+> +      - samsung,exynos7-wakeup-eint
+> +
+> +  interrupts:
+> +    description:
+> +      Interrupt used by multiplexed external wake-up interrupts.
+> +    minItems: 1
+> +    maxItems: 6
+> +
+> +required:
+> +  - compatible
+> +  - interrupts
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - samsung,s3c2410-wakeup-eint
+> +              - samsung,s3c2412-wakeup-eint
+> +    then:
+> +      properties:
+> +        interrupts:
+> +          minItems: 6
+> +          maxItems: 6
+> +    else:
+> +      if:
+> +        properties:
+> +          compatible:
+> +            contains:
+> +              const: samsung,s3c64xx-wakeup-eint
+> +      then:
+> +        properties:
+> +          interrupts:
+> +            minItems: 4
+> +            maxItems: 4
+> +      else:
+> +        properties:
+> +          interrupts:
+> +            minItems: 1
+> +            maxItems: 1
+> +
+> +additionalProperties: false
+> diff --git a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
+> new file mode 100644
+> index 000000000000..37cd03805cab
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
+> @@ -0,0 +1,381 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/samsung,pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Samsung S3C/S5P/Exynos SoC pin controller
+> +
+> +maintainers:
+> +  - Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+> +  - Sylwester Nawrocki <s.nawrocki@samsung.com>
+> +  - Tomasz Figa <tomasz.figa@gmail.com>
+> +
+> +description: |
+> +  This is a part of device tree bindings for Samsung S3C/S5P/Exynos SoC pin
+> +  controller.
+> +
+> +  Pin group settings (like drive strength, pull up/down) are available as
+> +  macros in include/dt-bindings/pinctrl/samsung.h.
+> +
+> +  All the pin controller nodes should be represented in the aliases node using
+> +  the following format 'pinctrl{n}' where n is a unique number for the alias.
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "^pinctrl(@.*)?"
+> +
+> +  compatible:
+> +    enum:
+> +      - samsung,s3c2412-pinctrl
+> +      - samsung,s3c2416-pinctrl
+> +      - samsung,s3c2440-pinctrl
+> +      - samsung,s3c2450-pinctrl
+> +      - samsung,s3c64xx-pinctrl
+> +      - samsung,s5pv210-pinctrl
+> +      - samsung,exynos3250-pinctrl
+> +      - samsung,exynos4210-pinctrl
+> +      - samsung,exynos4x12-pinctrl
+> +      - samsung,exynos5250-pinctrl
+> +      - samsung,exynos5260-pinctrl
+> +      - samsung,exynos5410-pinctrl
+> +      - samsung,exynos5420-pinctrl
+> +      - samsung,exynos5433-pinctrl
+> +      - samsung,exynos7-pinctrl
+> +      - samsung,exynos7885-pinctrl
+> +      - samsung,exynos850-pinctrl
+> +      - samsung,exynosautov9-pinctrl
+> +
+> +  interrupts:
+> +    description:
+> +      Required for GPIO banks supporting external GPIO interrupts.
+> +    maxItems: 1
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  reg:
+> +    description:
+> +      Second base address of the pin controller if the specific registers of
+> +      the pin controller are separated into the different base address.
+> +      Only certain banks of certain pin controller might need it.
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  wakeup-interrupt-controller:
+> +    $ref: samsung,pinctrl-wakeup-interrupt.yaml
+> +
+> +patternProperties:
+> +  "^[a-z]+[0-9]*-gpio-bank$":
+> +    description:
+> +      Pin banks of the controller are represented by child nodes of the
+> +      controller node. Bank name is taken from name of the node.
+> +    $ref: samsung,pinctrl-gpio-bank.yaml
+> +
+> +  "^[a-z0-9-]+-pins$":
+> +    oneOf:
+> +      - $ref: samsung,pinctrl-pins-cfg.yaml
+> +        required:
+> +          - samsung,pins
+> +      - type: object
+> +        patternProperties:
+> +          "^[a-z0-9-]+-pins$":
+> +            $ref: samsung,pinctrl-pins-cfg.yaml
+> +
+> +        additionalProperties: false
+> +
+> +  "^(initial|sleep)-state$":
+> +    patternProperties:
+> +      "^(pin-[a-z0-9-]+|[a-z0-9-]+-pin)$":
+> +        $ref: samsung,pinctrl-pins-cfg.yaml
+> +
+> +        properties:
+> +          samsung,pins:
+> +            description: See samsung,pinctrl-pins-cfg.yaml
+> +            $ref: /schemas/types.yaml#/definitions/string-array
+> +            maxItems: 1
+> +
+> +        required:
+> +          - samsung,pins
+> +
+> +        unevaluatedProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +allOf:
+> +  - $ref: "pinctrl.yaml#"
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: samsung,exynos5433-pinctrl
+> +    then:
+> +      properties:
+> +        reg:
+> +          minItems: 1
+> +          maxItems: 2
+> +    else:
+> +      properties:
+> +        reg:
+> +          minItems: 1
+> +          maxItems: 1
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/pinctrl/samsung.h>
+> +
+> +    pinctrl@7f008000 {
+> +        compatible = "samsung,s3c64xx-pinctrl";
+> +        reg = <0x7f008000 0x1000>;
+> +        interrupt-parent = <&vic1>;
+> +        interrupts = <21>;
+> +
+> +        wakeup-interrupt-controller {
+> +            compatible = "samsung,s3c64xx-wakeup-eint";
+> +            interrupts-extended = <&vic0 0>,
+> +                                  <&vic0 1>,
+> +                                  <&vic1 0>,
+> +                                  <&vic1 1>;
+> +        };
+> +
+> +        /* Pin bank with external GPIO or muxed external wake-up interrupts */
+> +        gpa-gpio-bank {
+> +            gpio-controller;
+> +            #gpio-cells = <2>;
+> +            interrupt-controller;
+> +            #interrupt-cells = <2>;
+> +        };
+> +
+> +        // ...
+> +
+> +        uart0-data-pins {
+> +            samsung,pins = "gpa-0", "gpa-1";
+> +            samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
+> +            samsung,pin-pud = <S3C64XX_PIN_PULL_NONE>;
+> +        };
+> +
+> +        // ...
+> +    };
+> +
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/pinctrl/samsung.h>
+> +
+> +    pinctrl@11400000 {
+> +        compatible = "samsung,exynos4210-pinctrl";
+> +        reg = <0x11400000 0x1000>;
+> +        interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +        pinctrl-names = "default";
+> +        pinctrl-0 = <&sleep0>;
+> +
+> +        /* Pin bank with external GPIO or muxed external wake-up interrupts */
+> +        gpa0-gpio-bank {
+> +            gpio-controller;
+> +            #gpio-cells = <2>;
+> +            interrupt-controller;
+> +            #interrupt-cells = <2>;
+> +        };
+> +
+> +        // ...
+> +
+> +        uart0-data-pins {
+> +            samsung,pins = "gpa0-0", "gpa0-1";
+> +            samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
+> +            samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+> +            samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
+> +        };
+> +
+> +        // ...
+> +
+> +        sleep0: sleep-state {
+> +            gpa0-0-pin {
+> +                samsung,pins = "gpa0-0";
+> +                samsung,pin-con-pdn = <EXYNOS_PIN_PDN_INPUT>;
+> +                samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
+> +            };
+> +
+> +            gpa0-1-pin {
+> +                samsung,pins = "gpa0-1";
+> +                samsung,pin-con-pdn = <EXYNOS_PIN_PDN_OUT0>;
+> +                samsung,pin-pud-pdn = <EXYNOS_PIN_PULL_NONE>;
+> +            };
+> +
+> +            // ...
+> +        };
+> +    };
+> +
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/pinctrl/samsung.h>
+> +
+> +    pinctrl@11000000 {
+> +        compatible = "samsung,exynos4210-pinctrl";
+> +        reg = <0x11000000 0x1000>;
+> +        interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +        wakeup-interrupt-controller {
+> +            compatible = "samsung,exynos4210-wakeup-eint";
+> +            interrupt-parent = <&gic>;
+> +            interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+> +        };
+> +
+> +        /* Pin bank with external GPIO or muxed external wake-up interrupts */
+> +        gpj0-gpio-bank {
+> +            gpio-controller;
+> +            #gpio-cells = <2>;
+> +            interrupt-controller;
+> +            #interrupt-cells = <2>;
+> +        };
+> +
+> +        /* Pin bank without external interrupts */
+> +        gpy0-gpio-bank {
+> +            gpio-controller;
+> +            #gpio-cells = <2>;
+> +        };
+> +
+> +        /* Pin bank with external direct wake-up interrupts */
+> +        gpx0-gpio-bank {
+> +            gpio-controller;
+> +            #gpio-cells = <2>;
+> +
+> +            interrupt-controller;
+> +            interrupt-parent = <&gic>;
+> +            interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
+> +            #interrupt-cells = <2>;
+> +        };
+> +
+> +        // ...
+> +
+> +        sd0-clk-pins {
+> +            samsung,pins = "gpk0-0";
+> +            samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
+> +            samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+> +            samsung,pin-drv = <EXYNOS4_PIN_DRV_LV4>;
+> +        };
+> +
+> +        sd4-bus-width8-pins {
+> +            part-1-pins {
+> +                samsung,pins = "gpk0-3", "gpk0-4",
+> +                               "gpk0-5", "gpk0-6";
+> +                samsung,pin-function = <EXYNOS_PIN_FUNC_3>;
+> +                samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
+> +                samsung,pin-drv = <EXYNOS4_PIN_DRV_LV4>;
+> +            };
+> +
+> +            part-2-pins {
+> +                samsung,pins = "gpk1-3", "gpk1-4",
+> +                               "gpk1-5", "gpk1-6";
+> +                samsung,pin-function = <EXYNOS_PIN_FUNC_4>;
+> +                samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
+> +                samsung,pin-drv = <EXYNOS4_PIN_DRV_LV4>;
+> +            };
+> +        };
+> +
+> +        // ...
+> +
+> +        otg-gp-pins {
+> +            samsung,pins = "gpx3-3";
+> +            samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
+> +            samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+> +            samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
+> +            samsung,pin-val = <0>;
+> +        };
+> +    };
+> +
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/pinctrl/samsung.h>
+> +
+> +    pinctrl@10580000 {
+> +        compatible = "samsung,exynos5433-pinctrl";
+> +        reg = <0x10580000 0x1a20>, <0x11090000 0x100>;
+> +
+> +        pinctrl-names = "default";
+> +        pinctrl-0 = <&initial_alive>;
+> +
+> +        wakeup-interrupt-controller {
+> +            compatible = "samsung,exynos7-wakeup-eint";
+> +            interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
+> +        };
+> +
+> +        /* Pin bank with external direct wake-up interrupts */
+> +        gpa0-gpio-bank {
+> +            gpio-controller;
+> +            #gpio-cells = <2>;
+> +
+> +            interrupt-controller;
+> +            interrupt-parent = <&gic>;
+> +            interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+> +            #interrupt-cells = <2>;
+> +        };
+> +
+> +        // ...
+> +
+> +        te-irq-pins {
+> +            samsung,pins = "gpf1-3";
+> +            samsung,pin-function = <0xf>;
+> +        };
+> +
+> +        // ..
+> +
+> +        initial_alive: initial-state {
+> +            gpa0-0-pin {
+> +                samsung,pins = "gpa0-0";
+> +                samsung,pin-function = <EXYNOS_PIN_FUNC_INPUT>;
+> +                samsung,pin-pud = <EXYNOS_PIN_PULL_DOWN>;
+> +                samsung,pin-drv = <EXYNOS5433_PIN_DRV_FAST_SR1>;
+> +            };
+> +
+> +            // ...
+> +        };
+> +    };
+> +
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/pinctrl/samsung.h>
+> +
+> +    pinctrl@114b0000 {
+> +        compatible = "samsung,exynos5433-pinctrl";
+> +        reg = <0x114b0000 0x1000>;
+> +        interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
+> +        power-domains = <&pd_aud>;
+> +
+> +        /* Pin bank with external GPIO or muxed external wake-up interrupts */
+> +        gpz0-gpio-bank {
+> +            gpio-controller;
+> +            #gpio-cells = <2>;
+> +            interrupt-controller;
+> +            #interrupt-cells = <2>;
+> +        };
+> +
+> +        // ...
+> +
+> +        i2s0-bus-pins {
+> +            samsung,pins = "gpz0-0", "gpz0-1", "gpz0-2", "gpz0-3",
+> +                           "gpz0-4", "gpz0-5", "gpz0-6";
+> +            samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
+> +            samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+> +            samsung,pin-drv = <EXYNOS5433_PIN_DRV_FAST_SR1>;
+> +        };
+> +
+> +        // ...
+> +    };
+> diff --git a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
+> deleted file mode 100644
+> index 9e70edceb21b..000000000000
+> --- a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
+> +++ /dev/null
+> @@ -1,383 +0,0 @@
+> -Samsung GPIO and Pin Mux/Config controller
+> -
+> -Samsung's ARM based SoC's integrates a GPIO and Pin mux/config hardware
+> -controller. It controls the input/output settings on the available pads/pins
+> -and also provides ability to multiplex and configure the output of various
+> -on-chip controllers onto these pads.
+> -
+> -Required Properties:
+> -- compatible: should be one of the following.
+> -  - "samsung,s3c2412-pinctrl": for S3C2412-compatible pin-controller,
+> -  - "samsung,s3c2416-pinctrl": for S3C2416-compatible pin-controller,
+> -  - "samsung,s3c2440-pinctrl": for S3C2440-compatible pin-controller,
+> -  - "samsung,s3c2450-pinctrl": for S3C2450-compatible pin-controller,
+> -  - "samsung,s3c64xx-pinctrl": for S3C64xx-compatible pin-controller,
+> -  - "samsung,s5pv210-pinctrl": for S5PV210-compatible pin-controller,
+> -  - "samsung,exynos3250-pinctrl": for Exynos3250 compatible pin-controller.
+> -  - "samsung,exynos4210-pinctrl": for Exynos4210 compatible pin-controller.
+> -  - "samsung,exynos4x12-pinctrl": for Exynos4x12 compatible pin-controller.
+> -  - "samsung,exynos5250-pinctrl": for Exynos5250 compatible pin-controller.
+> -  - "samsung,exynos5260-pinctrl": for Exynos5260 compatible pin-controller.
+> -  - "samsung,exynos5410-pinctrl": for Exynos5410 compatible pin-controller.
+> -  - "samsung,exynos5420-pinctrl": for Exynos5420 compatible pin-controller.
+> -  - "samsung,exynos5433-pinctrl": for Exynos5433 compatible pin-controller.
+> -  - "samsung,exynos7-pinctrl": for Exynos7 compatible pin-controller.
+> -  - "samsung,exynos7885-pinctrl": for Exynos7885 compatible pin-controller.
+> -  - "samsung,exynos850-pinctrl": for Exynos850 compatible pin-controller.
+> -  - "samsung,exynosautov9-pinctrl": for ExynosAutov9 compatible pin-controller.
+> -
+> -- reg: Base address of the pin controller hardware module and length of
+> -  the address space it occupies.
+> -
+> -  - reg: Second base address of the pin controller if the specific registers
+> -  of the pin controller are separated into the different base address.
+> -
+> -       Eg: GPF[1-5] of Exynos5433 are separated into the two base address.
+> -       - First base address is for GPAx and GPF[1-5] external interrupt
+> -         registers.
+> -       - Second base address is for GPF[1-5] pinctrl registers.
+> -
+> -       pinctrl_0: pinctrl@10580000 {
+> -               compatible = "samsung,exynos5433-pinctrl";
+> -               reg = <0x10580000 0x1a20>, <0x11090000 0x100>;
+> -
+> -               wakeup-interrupt-controller {
+> -                       compatible = "samsung,exynos7-wakeup-eint";
+> -                       interrupts = <0 16 0>;
+> -               };
+> -       };
+> -
+> -- Pin banks as child nodes: Pin banks of the controller are represented by child
+> -  nodes of the controller node. Bank name is taken from name of the node. Each
+> -  bank node must contain following properties:
+> -
+> -  - gpio-controller: identifies the node as a gpio controller and pin bank.
+> -  - #gpio-cells: number of cells in GPIO specifier. Since the generic GPIO
+> -    binding is used, the amount of cells must be specified as 2. See the below
+> -    mentioned gpio binding representation for description of particular cells.
+> -
+> -       Eg: <&gpx2 6 0>
+> -       <[phandle of the gpio controller node]
+> -       [pin number within the gpio controller]
+> -       [flags]>
+> -
+> -       Values for gpio specifier:
+> -       - Pin number: is a value between 0 to 7.
+> -       - Flags: 0 - Active High
+> -                1 - Active Low
+> -
+> -- Pin mux/config groups as child nodes: The pin mux (selecting pin function
+> -  mode) and pin config (pull up/down, driver strength) settings are represented
+> -  as child nodes of the pin-controller node. There should be at least one
+> -  child node and there is no limit on the count of these child nodes. It is
+> -  also possible for a child node to consist of several further child nodes
+> -  to allow grouping multiple pinctrl groups into one. The format of second
+> -  level child nodes is exactly the same as for first level ones and is
+> -  described below.
+> -
+> -  The child node should contain a list of pin(s) on which a particular pin
+> -  function selection or pin configuration (or both) have to applied. This
+> -  list of pins is specified using the property name "samsung,pins". There
+> -  should be at least one pin specified for this property and there is no upper
+> -  limit on the count of pins that can be specified. The pins are specified
+> -  using pin names which are derived from the hardware manual of the SoC. As
+> -  an example, the pins in GPA0 bank of the pin controller can be represented
+> -  as "gpa0-0", "gpa0-1", "gpa0-2" and so on. The names should be in lower case.
+> -  The format of the pin names should be (as per the hardware manual)
+> -  "[pin bank name]-[pin number within the bank]".
+> -
+> -  The pin function selection that should be applied on the pins listed in the
+> -  child node is specified using the "samsung,pin-function" property. The value
+> -  of this property that should be applied to each of the pins listed in the
+> -  "samsung,pins" property should be picked from the hardware manual of the SoC
+> -  for the specified pin group. This property is optional in the child node if
+> -  no specific function selection is desired for the pins listed in the child
+> -  node. The value of this property is used as-is to program the pin-controller
+> -  function selector register of the pin-bank.
+> -
+> -  The child node can also optionally specify one or more of the pin
+> -  configuration that should be applied on all the pins listed in the
+> -  "samsung,pins" property of the child node. The following pin configuration
+> -  properties are supported.
+> -
+> -  - samsung,pin-val: Initial value of pin output buffer.
+> -  - samsung,pin-pud: Pull up/down configuration.
+> -  - samsung,pin-drv: Drive strength configuration.
+> -  - samsung,pin-pud-pdn: Pull up/down configuration in power down mode.
+> -  - samsung,pin-drv-pdn: Drive strength configuration in power down mode.
+> -
+> -  The values specified by these config properties should be derived from the
+> -  hardware manual and these values are programmed as-is into the pin
+> -  pull up/down and driver strength register of the pin-controller.
+> -
+> -  Note: A child should include at least a pin function selection property or
+> -  pin configuration property (one or more) or both.
+> -
+> -  The client nodes that require a particular pin function selection and/or
+> -  pin configuration should use the bindings listed in the "pinctrl-bindings.txt"
+> -  file.
+> -
+> -External GPIO and Wakeup Interrupts:
+> -
+> -The controller supports two types of external interrupts over gpio. The first
+> -is the external gpio interrupt and second is the external wakeup interrupts.
+> -The difference between the two is that the external wakeup interrupts can be
+> -used as system wakeup events.
+> -
+> -A. External GPIO Interrupts: For supporting external gpio interrupts, the
+> -   following properties should be specified in the pin-controller device node.
+> -
+> -   - interrupts: interrupt specifier for the controller. The format and value of
+> -     the interrupt specifier depends on the interrupt parent for the controller.
+> -
+> -   In addition, following properties must be present in node of every bank
+> -   of pins supporting GPIO interrupts:
+> -
+> -   - interrupt-controller: identifies the controller node as interrupt-parent.
+> -   - #interrupt-cells: the value of this property should be 2.
+> -     - First Cell: represents the external gpio interrupt number local to the
+> -       external gpio interrupt space of the controller.
+> -     - Second Cell: flags to identify the type of the interrupt
+> -       - 1 = rising edge triggered
+> -       - 2 = falling edge triggered
+> -       - 3 = rising and falling edge triggered
+> -       - 4 = high level triggered
+> -       - 8 = low level triggered
+> -
+> -B. External Wakeup Interrupts: For supporting external wakeup interrupts, a
+> -   child node representing the external wakeup interrupt controller should be
+> -   included in the pin-controller device node.
+> -
+> -   Only one pin-controller device node can include external wakeup interrupts
+> -   child node (in other words, only one External Wakeup Interrupts
+> -   pin-controller is supported).
+> -
+> -   This child node should include following properties:
+> -
+> -   - compatible: identifies the type of the external wakeup interrupt controller
+> -     The possible values are:
+> -     - samsung,s3c2410-wakeup-eint: represents wakeup interrupt controller
+> -       found on Samsung S3C24xx SoCs except S3C2412 and S3C2413,
+> -     - samsung,s3c2412-wakeup-eint: represents wakeup interrupt controller
+> -       found on Samsung S3C2412 and S3C2413 SoCs,
+> -     - samsung,s3c64xx-wakeup-eint: represents wakeup interrupt controller
+> -       found on Samsung S3C64xx SoCs,
+> -     - samsung,s5pv210-wakeup-eint: represents wakeup interrupt controller
+> -       found on Samsung S5Pv210 SoCs,
+> -     - samsung,exynos4210-wakeup-eint: represents wakeup interrupt controller
+> -       found on Samsung Exynos4210 and S5PC110/S5PV210 SoCs.
+> -     - samsung,exynos7-wakeup-eint: represents wakeup interrupt controller
+> -       found on Samsung Exynos7 SoC.
+> -   - interrupts: interrupt used by multiplexed wakeup interrupts.
+> -
+> -   In addition, following properties must be present in node of every bank
+> -   of pins supporting wake-up interrupts:
+> -
+> -   - interrupt-controller: identifies the node as interrupt-parent.
+> -   - #interrupt-cells: the value of this property should be 2
+> -     - First Cell: represents the external wakeup interrupt number local to
+> -       the external wakeup interrupt space of the controller.
+> -     - Second Cell: flags to identify the type of the interrupt
+> -       - 1 = rising edge triggered
+> -       - 2 = falling edge triggered
+> -       - 3 = rising and falling edge triggered
+> -       - 4 = high level triggered
+> -       - 8 = low level triggered
+> -
+> -   Node of every bank of pins supporting direct wake-up interrupts (without
+> -   multiplexing) must contain following properties:
+> -
+> -   - interrupts: interrupts of the interrupt parent which are used for external
+> -     wakeup interrupts from pins of the bank, must contain interrupts for all
+> -     pins of the bank.
+> -
+> -Aliases:
+> -
+> -All the pin controller nodes should be represented in the aliases node using
+> -the following format 'pinctrl{n}' where n is a unique number for the alias.
+> -
+> -Aliases for controllers compatible with "samsung,exynos7-pinctrl":
+> -- pinctrl0: pin controller of ALIVE block,
+> -- pinctrl1: pin controller of BUS0 block,
+> -- pinctrl2: pin controller of NFC block,
+> -- pinctrl3: pin controller of TOUCH block,
+> -- pinctrl4: pin controller of FF block,
+> -- pinctrl5: pin controller of ESE block,
+> -- pinctrl6: pin controller of FSYS0 block,
+> -- pinctrl7: pin controller of FSYS1 block,
+> -- pinctrl8: pin controller of BUS1 block,
+> -- pinctrl9: pin controller of AUDIO block,
+> -
+> -Example: A pin-controller node with pin banks:
+> -
+> -       pinctrl_0: pinctrl@11400000 {
+> -               compatible = "samsung,exynos4210-pinctrl";
+> -               reg = <0x11400000 0x1000>;
+> -               interrupts = <0 47 0>;
+> -
+> -               /* ... */
+> -
+> -               /* Pin bank without external interrupts */
+> -               gpy0: gpy0 {
+> -                       gpio-controller;
+> -                       #gpio-cells = <2>;
+> -               };
+> -
+> -               /* ... */
+> -
+> -               /* Pin bank with external GPIO or muxed wake-up interrupts */
+> -               gpj0: gpj0 {
+> -                       gpio-controller;
+> -                       #gpio-cells = <2>;
+> -
+> -                       interrupt-controller;
+> -                       #interrupt-cells = <2>;
+> -               };
+> -
+> -               /* ... */
+> -
+> -               /* Pin bank with external direct wake-up interrupts */
+> -               gpx0: gpx0 {
+> -                       gpio-controller;
+> -                       #gpio-cells = <2>;
+> -
+> -                       interrupt-controller;
+> -                       interrupt-parent = <&gic>;
+> -                       interrupts = <0 16 0>, <0 17 0>, <0 18 0>, <0 19 0>,
+> -                                    <0 20 0>, <0 21 0>, <0 22 0>, <0 23 0>;
+> -                       #interrupt-cells = <2>;
+> -               };
+> -
+> -               /* ... */
+> -       };
+> -
+> -Example 1: A pin-controller node with pin groups.
+> -
+> -       #include <dt-bindings/pinctrl/samsung.h>
+> -
+> -       pinctrl_0: pinctrl@11400000 {
+> -               compatible = "samsung,exynos4210-pinctrl";
+> -               reg = <0x11400000 0x1000>;
+> -               interrupts = <0 47 0>;
+> -
+> -               /* ... */
+> -
+> -               uart0_data: uart0-data {
+> -                       samsung,pins = "gpa0-0", "gpa0-1";
+> -                       samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
+> -                       samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+> -                       samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
+> -               };
+> -
+> -               uart0_fctl: uart0-fctl {
+> -                       samsung,pins = "gpa0-2", "gpa0-3";
+> -                       samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
+> -                       samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+> -                       samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
+> -               };
+> -
+> -               uart1_data: uart1-data {
+> -                       samsung,pins = "gpa0-4", "gpa0-5";
+> -                       samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
+> -                       samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+> -                       samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
+> -               };
+> -
+> -               uart1_fctl: uart1-fctl {
+> -                       samsung,pins = "gpa0-6", "gpa0-7";
+> -                       samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
+> -                       samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+> -                       samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
+> -               };
+> -
+> -               i2c2_bus: i2c2-bus {
+> -                       samsung,pins = "gpa0-6", "gpa0-7";
+> -                       samsung,pin-function = <EXYNOS_PIN_FUNC_3>;
+> -                       samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
+> -                       samsung,pin-drv = <EXYNOS4_PIN_DRV_LV1>;
+> -               };
+> -
+> -               sd4_bus8: sd4-bus-width8 {
+> -                       part-1 {
+> -                               samsung,pins = "gpk0-3", "gpk0-4",
+> -                                               "gpk0-5", "gpk0-6";
+> -                               samsung,pin-function = <EXYNOS_PIN_FUNC_3>;
+> -                               samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
+> -                               samsung,pin-drv = <EXYNOS4_PIN_DRV_LV4>;
+> -                       };
+> -                       part-2 {
+> -                               samsung,pins = "gpk1-3", "gpk1-4",
+> -                                               "gpk1-5", "gpk1-6";
+> -                               samsung,pin-function = <EXYNOS_PIN_FUNC_4>;
+> -                               samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
+> -                               samsung,pin-drv = <EXYNOS4_PIN_DRV_LV4>;
+> -                       };
+> -               };
+> -       };
+> -
+> -Example 2: A pin-controller node with external wakeup interrupt controller node.
+> -
+> -       pinctrl_1: pinctrl@11000000 {
+> -               compatible = "samsung,exynos4210-pinctrl";
+> -               reg = <0x11000000 0x1000>;
+> -               interrupts = <0 46 0>
+> -
+> -               /* ... */
+> -
+> -               wakeup-interrupt-controller {
+> -                       compatible = "samsung,exynos4210-wakeup-eint";
+> -                       interrupt-parent = <&gic>;
+> -                       interrupts = <0 32 0>;
+> -               };
+> -       };
+> -
+> -Example 3: A uart client node that supports 'default' and 'flow-control' states.
+> -
+> -       uart@13800000 {
+> -               compatible = "samsung,exynos4210-uart";
+> -               reg = <0x13800000 0x100>;
+> -               interrupts = <0 52 0>;
+> -               pinctrl-names = "default", "flow-control;
+> -               pinctrl-0 = <&uart0_data>;
+> -               pinctrl-1 = <&uart0_data>, <&uart0_fctl>;
+> -       };
+> -
+> -Example 4: Set up the default pin state for uart controller.
+> -
+> -       static int s3c24xx_serial_probe(struct platform_device *pdev) {
+> -               struct pinctrl *pinctrl;
+> -
+> -               /* ... */
+> -
+> -               pinctrl = devm_pinctrl_get_select_default(&pdev->dev);
+> -       }
+> -
+> -Example 5: A display port client node that supports 'default' pinctrl state
+> -          and gpio binding.
+> -
+> -       display-port-controller {
+> -               /* ... */
+> -
+> -               samsung,hpd-gpio = <&gpx2 6 0>;
+> -               pinctrl-names = "default";
+> -               pinctrl-0 = <&dp_hpd>;
+> -       };
+> -
+> -Example 6: Request the gpio for display port controller
+> -
+> -       static int exynos_dp_probe(struct platform_device *pdev)
+> -       {
+> -               int hpd_gpio, ret;
+> -               struct device *dev = &pdev->dev;
+> -               struct device_node *dp_node = dev->of_node;
+> -
+> -               /* ... */
+> -
+> -               hpd_gpio = of_get_named_gpio(dp_node, "samsung,hpd-gpio", 0);
+> -
+> -               /* ... */
+> -
+> -               ret = devm_gpio_request_one(&pdev->dev, hpd_gpio, GPIOF_IN,
+> -                                           "hpd_gpio");
+> -               /* ... */
+> -       }
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 5ea5655a29c3..33005c10e956 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15242,7 +15242,7 @@ L:      linux-samsung-soc@vger.kernel.org
+>  S:     Maintained
+>  Q:     https://patchwork.kernel.org/project/linux-samsung-soc/list/
+>  T:     git git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/samsung.git
+> -F:     Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
+> +F:     Documentation/devicetree/bindings/pinctrl/samsung,pinctrl*yaml
+>  F:     drivers/pinctrl/samsung/
+>  F:     include/dt-bindings/pinctrl/samsung.h
+>
+> --
+> 2.32.0
+>
