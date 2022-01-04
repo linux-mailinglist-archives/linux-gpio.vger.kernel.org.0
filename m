@@ -2,87 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 07C52484909
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jan 2022 21:00:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B1114849E4
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jan 2022 22:31:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231140AbiADUA3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Jan 2022 15:00:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46810 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229962AbiADUA3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Jan 2022 15:00:29 -0500
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA8F3C061761;
-        Tue,  4 Jan 2022 12:00:28 -0800 (PST)
-Received: by mail-lf1-x136.google.com with SMTP id u13so83961110lff.12;
-        Tue, 04 Jan 2022 12:00:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=acwKczvWyIUy4HDb+EQ5WSebsiTaZduWta3iesC5T2o=;
-        b=of2xzanTwLPRofEdYDfJGZ7/CoMWgSS8Md5kjX7oWnUmZK+aA5FdLew+X78eRnN9U2
-         CHrusCivKs1kdX4TT1kxva+bNWUSJnYQb5WmU5Iosgzgmmn2lULhUFvMD86IizF3YzH9
-         RxtOH6L3gfL7hE4onLysV8trj0WeMf4665okuSeXSYsqo9E3uKq2v2HDamivsE1uQxij
-         qCJBMg+RNK0xUCybM4lHnN8+NvCKmfTLB4Y+QnWv7AZwI1DW7hdhZ/qxC8lYNdwirem8
-         CsAImeyoGl9XHAfnDjzTYPLN9KPpExoD53FOjIT+ZlnP1p+jKuErIlSFy4BuaqfLwVJA
-         4grg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=acwKczvWyIUy4HDb+EQ5WSebsiTaZduWta3iesC5T2o=;
-        b=O0QQbWoUhXR7PwcK46xB6jM5Zo8LcThBuaWR//4IhO6YEuPpCaiB7uuZnu51pbAKVJ
-         j4Z5lZFC8qA53LT5s4akre4q+226Gm2xcLdUbP3B2aHz8M3mwGzGgVB/mvFCYVet2y1f
-         1pLjuZNTSnP6Zo0yxMaZ8Hos0SgI2dpck6vQ6Chwd/mbmJD7T561EJkh0W/xj9FXn1bI
-         myxYuVhcncngRJx0iPzcs79lAcQ4VdFn7MG2DEPs3SUd2eWpfwbaT3ssUmoOagIssbiO
-         ZPAFHBxW1SWh21Y4CShNPtzPNwriAysg8tj94sQ3xQ+OPhhLcMvDiAZULxIM49B4SDxp
-         +DYw==
-X-Gm-Message-State: AOAM530Qk2d+jbSbf7BNOl+2Xy2TicMktRYP2Wm72FRctb7uqmtQ4RZf
-        XHnkX4el3Q/anvF2u3g53in6S1VoRDU=
-X-Google-Smtp-Source: ABdhPJwN9a4/n7mSeTAgjpESf7lwUlBb/mEqYITglVbNni2b2Q6VyvJuIm4OWafPWe+oNLiIkWi/Sw==
-X-Received: by 2002:a05:6512:1110:: with SMTP id l16mr44192566lfg.193.1641326426901;
-        Tue, 04 Jan 2022 12:00:26 -0800 (PST)
-Received: from [192.168.1.103] ([178.176.72.219])
-        by smtp.gmail.com with ESMTPSA id u26sm4017510lfi.62.2022.01.04.12.00.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Jan 2022 12:00:26 -0800 (PST)
-Subject: Re: [PATCH] gpio: rcar: Propagate errors from devm_request_irq()
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
+        id S233873AbiADVb2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Jan 2022 16:31:28 -0500
+Received: from mga17.intel.com ([192.55.52.151]:21721 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232437AbiADVb1 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 4 Jan 2022 16:31:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1641331887; x=1672867887;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=7RkX0G4ff38JzBl1hu8k4XOdmO23whLzdLTauYUvclM=;
+  b=JukgViWZpaIIslxuD10VOJGd8f0ajpxli9jjV5O04slRlA/aBN3jGCrr
+   717zWYabJPEWNXGzxjommmzuktme6UqSt3VjgKOScpXx/dhFFlNSg+3MZ
+   7qcXZa6shj93DrU23DNM0FZy5rjR1jriCQs++XKhvfCAsd9xQsUckWPr+
+   nnGy0wD3ZaZSxXm4Okz84aZ4eYpqOD0t8TvYwVQhLraTB837YrfQ30Ql0
+   eUwY8j+r9bsPmVtP8aY/+hEFJf0pydMxnpJcYycA82vJHCl8flj+R/DYm
+   h303FVN2JDSwJhj60F5EUi4vAD+OkMjKyYzko4PsvyHFzXBLcQX9O1NnD
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="222978949"
+X-IronPort-AV: E=Sophos;i="5.88,262,1635231600"; 
+   d="scan'208";a="222978949"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2022 13:31:27 -0800
+X-IronPort-AV: E=Sophos;i="5.88,262,1635231600"; 
+   d="scan'208";a="611225621"
+Received: from smile.fi.intel.com ([10.237.72.61])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2022 13:31:25 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1n4rNf-006RUp-SF;
+        Tue, 04 Jan 2022 23:30:07 +0200
+Date:   Tue, 4 Jan 2022 23:30:07 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Prabhakar <prabhakar.csengg@gmail.com>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20220104153615.13393-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Message-ID: <255da762-5402-fab3-d1a6-944dcf028743@gmail.com>
-Date:   Tue, 4 Jan 2022 23:00:24 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        linux-gpio@vger.kernel.org,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Subject: Re: [PATCH] pinctrl: cherryview: Trigger hwirq0 for interrupt-lines
+ without a mapping
+Message-ID: <YdS8X1w7YWizdady@smile.fi.intel.com>
+References: <20220104164238.253142-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20220104153615.13393-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220104164238.253142-1-hdegoede@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello!
-
-On 1/4/22 6:36 PM, Lad Prabhakar wrote:
-
-> The driver overrides the error code returned by devm_request_irq() to
-> -ENOENT. Switch to propagating the error code upstream.
+On Tue, Jan 04, 2022 at 05:42:38PM +0100, Hans de Goede wrote:
+> Commit bdfbef2d29dc ("pinctrl: cherryview: Don't use selection 0 to mark
+> an interrupt line as unused") made the code properly differentiate
+> between unset vs (hwirq) 0 entries in the GPIO-controller interrupt-line
+> to GPIO pinnumber/hwirq mapping.
 > 
-> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-[...]
+> This is causing some boards to not boot. This commit restores the old
+> behavior of triggering hwirq 0 when receiving an interrupt on an
+> interrupt-line for which there is no mapping.
 
-Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-MBR, Sergey
+Linus, can you apply this directly for v5.16 release?
+
+> Fixes: bdfbef2d29dc ("pinctrl: cherryview: Don't use selection 0 to mark an interrupt line as unused")
+> Reported-and-tested-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/pinctrl/intel/pinctrl-cherryview.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/intel/pinctrl-cherryview.c b/drivers/pinctrl/intel/pinctrl-cherryview.c
+> index 683b95e9639a..5d85ef5d5da8 100644
+> --- a/drivers/pinctrl/intel/pinctrl-cherryview.c
+> +++ b/drivers/pinctrl/intel/pinctrl-cherryview.c
+> @@ -1471,8 +1471,9 @@ static void chv_gpio_irq_handler(struct irq_desc *desc)
+>  
+>  		offset = cctx->intr_lines[intr_line];
+>  		if (offset == CHV_INVALID_HWIRQ) {
+> -			dev_err(dev, "interrupt on unused interrupt line %u\n", intr_line);
+> -			continue;
+> +			dev_warn_once(dev, "interrupt on unmapped interrupt line %u\n", intr_line);
+> +			/* Some boards expect hwirq 0 to trigger in this case */
+> +			offset = 0;
+>  		}
+>  
+>  		generic_handle_domain_irq(gc->irq.domain, offset);
+> -- 
+> 2.33.1
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
