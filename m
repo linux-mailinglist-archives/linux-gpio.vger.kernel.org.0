@@ -2,48 +2,48 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 989CF483BC1
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jan 2022 06:48:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FE19483BC3
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jan 2022 06:48:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231261AbiADFsb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Jan 2022 00:48:31 -0500
-Received: from mga18.intel.com ([134.134.136.126]:26193 "EHLO mga18.intel.com"
+        id S231349AbiADFsv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Jan 2022 00:48:51 -0500
+Received: from mga09.intel.com ([134.134.136.24]:61063 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230181AbiADFsb (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 4 Jan 2022 00:48:31 -0500
+        id S230181AbiADFsv (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 4 Jan 2022 00:48:51 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641275311; x=1672811311;
+  t=1641275331; x=1672811331;
   h=date:from:to:cc:subject:message-id:mime-version:
    content-transfer-encoding;
-  bh=IQcIUBHdp25tYzxN5yAEjxDqDbEQ3WR+7vq5vHn71Qs=;
-  b=R+k1frIwp1gmxBp+EGTG3RcYmWnsXnvCPlbCW6MG29lQ1+6XpZv4SeSQ
-   IZNOJKyzJfuZX/n30l/TMa9MEJzG7NdBSwov+gD+UvhrBAg4IlDbFgogm
-   OUYTy00B7XLOmEk4/YRCaIUqGArWLVSzndCY/mm111At8qHwWuBDii+n5
-   UoTf+zqF0HNqmJE8MQdg/wFmHjzB27RcAqEkWDfHkkMGqhWpspQI5UbSu
-   1tSL0IkP4UQZrE9/RoFdKNofgk3okEYUOE4T1PjlZPVthT69Ocp3/7Mle
-   uf3MOR0t6JbneN2+ToGUYqa6STNLZeVEZVbtz91h7Ni41v/Gi/qekPwUt
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10216"; a="228981950"
+  bh=6M/NsuoG5yBDdckcDmP053RuZ8kpVO8bEueMQ7XMwCY=;
+  b=BtUfha/06DlrITxh0eNf89qMNTBW2EcfztOqe/nkSyllNVxqw8mFAmxv
+   e9rVSB5zkRiZA7jahfkTWd6MErlxHCk+iqupJbBRx/yC365+ReqN2MMOA
+   yERJga30JWOZGUMr4UELXt7cvDv82C3fKFlDRd/qW30Ziusi4B33lmkjW
+   x5gygc/8hbuWVKJYg/4p6VRolM+5vxeVk8pd7g9J/b8brBt0lMhotfsx1
+   uG4LD5kqW3WQ1hHqC16BdLxfWdjuqgF8gpHHoDKxpxQnBhEn4vbxHdBu5
+   I3YLQVvAqIGabrjcZsWnX01JMc3tVOhwFe7/N2s2DqWx5KjPBC/4/MNsH
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10216"; a="241957898"
 X-IronPort-AV: E=Sophos;i="5.88,260,1635231600"; 
-   d="scan'208";a="228981950"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2022 21:48:30 -0800
+   d="scan'208";a="241957898"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jan 2022 21:48:30 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,260,1635231600"; 
-   d="scan'208";a="688447462"
+   d="scan'208";a="488068030"
 Received: from lkp-server01.sh.intel.com (HELO e357b3ef1427) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 03 Jan 2022 21:48:29 -0800
+  by orsmga002.jf.intel.com with ESMTP; 03 Jan 2022 21:48:29 -0800
 Received: from kbuild by e357b3ef1427 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1n4cgO-000EpO-Lp; Tue, 04 Jan 2022 05:48:28 +0000
-Date:   Tue, 04 Jan 2022 13:47:58 +0800
+        id 1n4cgO-000EpR-N2; Tue, 04 Jan 2022 05:48:28 +0000
+Date:   Tue, 04 Jan 2022 13:48:01 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
- acd6fb558aa80cf34b120118258e25f3159466b2
-Message-ID: <61d3df8e.Yeh9e9n8qeKMe1lk%lkp@intel.com>
+Subject: [linusw-pinctrl:devel] BUILD SUCCESS
+ 7442936633bd1906a2571116ae334b68c56c8a72
+Message-ID: <61d3df91.QoZ5kvoss/KNXmic%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -52,12 +52,12 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: acd6fb558aa80cf34b120118258e25f3159466b2  Merge branch 'devel' into for-next
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: 7442936633bd1906a2571116ae334b68c56c8a72  pinctrl: imx: fix assigning groups names
 
-elapsed time: 2751m
+elapsed time: 2752m
 
-configs tested: 184
+configs tested: 182
 configs skipped: 4
 
 The following configs have been built successfully.
@@ -131,9 +131,9 @@ arm                  randconfig-c002-20220103
 arm                  randconfig-c002-20220102
 ia64                             allmodconfig
 ia64                             allyesconfig
+m68k                             allmodconfig
 m68k                                defconfig
 m68k                             allyesconfig
-m68k                             allmodconfig
 nios2                               defconfig
 arc                              allyesconfig
 nds32                             allnoconfig
@@ -151,11 +151,11 @@ s390                             allmodconfig
 parisc                           allyesconfig
 s390                                defconfig
 i386                             allyesconfig
+sparc                            allyesconfig
 sparc                               defconfig
 i386                                defconfig
 i386                   debian-10.3-kselftests
 i386                              debian-10.3
-sparc                            allyesconfig
 mips                             allyesconfig
 mips                             allmodconfig
 powerpc                          allyesconfig
@@ -252,8 +252,6 @@ i386                 randconfig-a013-20220103
 hexagon              randconfig-r041-20220103
 hexagon              randconfig-r045-20220103
 riscv                randconfig-r042-20220103
-hexagon              randconfig-r041-20220102
-hexagon              randconfig-r045-20220102
 
 ---
 0-DAY CI Kernel Test Service, Intel Corporation
