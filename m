@@ -2,71 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 47834484652
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jan 2022 17:59:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 24C4C484664
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jan 2022 18:04:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235599AbiADQ7Y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Jan 2022 11:59:24 -0500
-Received: from mga11.intel.com ([192.55.52.93]:63055 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234144AbiADQ7X (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 4 Jan 2022 11:59:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641315563; x=1672851563;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+mWYmrxAfaLpcJKO/M8Je5p5ckacGBATlNl1RQUUuFc=;
-  b=Omr9KZgViQb77fF6nSA3pz73MS/4b5szsK8YiEJauaQFqZ+HntBHgCYy
-   RRWGxlSj7no6Vq1Krbidl+PVfrP07HQChSqd3zHihCT0S1qUFdyFsNI5a
-   P/s9cFSTRmPGXX/4PydyNljbKZtojSAXYNqA1yk3JloWOhJ8OjRevKW2I
-   pBkPATRIdBLl4QWV/YZRIR2GxhXx36E+bUXMF3B/QEP1Vd4Gb5PWrWBx7
-   4BVNGA+tFbdzrdwnRn0wv1o4hv6ydEHrAeC1PK5urXdSjACfZ0S7Nhu3L
-   XssLzups4NqQm7tfKf/F9m8sozffk1rovSNdOjJno7Qcgla0u1E5O1QaW
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10216"; a="239798596"
-X-IronPort-AV: E=Sophos;i="5.88,261,1635231600"; 
-   d="scan'208";a="239798596"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2022 08:59:23 -0800
-X-IronPort-AV: E=Sophos;i="5.88,261,1635231600"; 
-   d="scan'208";a="556219881"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.162])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2022 08:59:20 -0800
-Received: by lahna (sSMTP sendmail emulation); Tue, 04 Jan 2022 18:57:07 +0200
-Date:   Tue, 4 Jan 2022 18:57:07 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Andy Shevchenko <andy@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Subject: Re: [PATCH] pinctrl: cherryview: Trigger hwirq0 for interrupt-lines
- without a mapping
-Message-ID: <YdR8Y8U3xxBQRPHq@lahna>
-References: <20220104164238.253142-1-hdegoede@redhat.com>
+        id S235635AbiADREx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Jan 2022 12:04:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34256 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235636AbiADREw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Jan 2022 12:04:52 -0500
+Received: from mail-ot1-x32c.google.com (mail-ot1-x32c.google.com [IPv6:2607:f8b0:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95D83C061785
+        for <linux-gpio@vger.kernel.org>; Tue,  4 Jan 2022 09:04:52 -0800 (PST)
+Received: by mail-ot1-x32c.google.com with SMTP id w19-20020a056830061300b0058f1dd48932so47505508oti.11
+        for <linux-gpio@vger.kernel.org>; Tue, 04 Jan 2022 09:04:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jbFt9L6krYBtcAbEWqf0z5PDV9qPyLwggi9o0oOg8Q4=;
+        b=tcZMB5CjcUmMaN+9Id/E0rFrxKPtu2D180QRxxDNQ+eUXqMRI5iXCpeIlPhxwt8xtL
+         7kl50sONeFBSybYsP5pD3FfaBi2T3p5ZTocjbRR3wOBPLEqyH1dqamzOn8xI2Iozxbf1
+         kE5coq8UPARsp+ArLP9KPaGT5cojTcaKXyEkwJhFYIJc4Emgr3F0fzyQ/syLJ3dQNwUo
+         laBYrJJ2e2f153V8+uo5MqtcRlq6zszD57q9a8FR76bzMbNK8cRomdQoPg53DA2xAi5f
+         88YoZtiL2v4Aj88HHQeyXic6cS7vgfKCjrRLvYFM3Qru74Y9Iqa9eYsOIEawT20mjoYV
+         AU8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jbFt9L6krYBtcAbEWqf0z5PDV9qPyLwggi9o0oOg8Q4=;
+        b=Pn8/3P1LhQkNdm3vrhOkj8W/P4N+ZpZwtYGB4Bw/DO96suM0oI149gnMeb1Qk1VimL
+         jcofojYlmk0VUdBi7DXViprjL8NEcsliKgMJH9N2dhAORJqG4QQG1qSdroVPQY8w9Wib
+         EWzisoAptoOm8FGXcWA8V63HCJ+8iJn3nwgfa/i40lIiej1vqVJwA6fb9kFYMLRA6kmO
+         EL6kxdDPAsCYLH5rFOMAveiYOPJjPzOO/ZLu8hslkENc4da5/yxyNsyEo/4KD0aXHN5W
+         Qo1Uh+MDm6QwTRZdHVBvEhmtLkujGRPE9+wYra/XNZihseCulacNsYiKj1g8elapRTGV
+         HMqQ==
+X-Gm-Message-State: AOAM530K4UTELkY7zEoE50i5qgMDU/q6rgToMQyhe//kLeZxMguIzQ0v
+        T47jpHhknO1P0rtJXY58bNsB2VJm7gtZFyp5p+cWaw==
+X-Google-Smtp-Source: ABdhPJwCVupKQYxDzpYMKPhj1MXJZPz+3XUECsNjRfYFrPd16sAtNpJ/PYjjfuyAFjwn0935xEp+qI2DeVBLrvPkuKs=
+X-Received: by 2002:a9d:a42:: with SMTP id 60mr37978893otg.179.1641315891943;
+ Tue, 04 Jan 2022 09:04:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220104164238.253142-1-hdegoede@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20211206092237.4105895-1-phil@raspberrypi.com>
+ <20211206092237.4105895-2-phil@raspberrypi.com> <CACRpkdZ95bCJVDo4tCXsMnsXax4+ZydoLS7AsM-yzMjXbONk=w@mail.gmail.com>
+ <95851343-2887-1e04-9598-e8c8ae74a99a@i2se.com> <CACRpkdbnqq+hwXt1oUWZfyxFjdd4aSAz0MzhzYVWuqqVAe4Eig@mail.gmail.com>
+ <ec8090b6-6c91-e9ae-fd02-955c8c10ee3e@web.de> <ec60b52b-7a59-266d-9608-11c0da9053a6@i2se.com>
+ <5a5bc9ac-6d8e-d6de-eec2-ea72970b88bf@web.de> <0951facb-8b19-c0f3-4f25-a5ac4a798859@web.de>
+In-Reply-To: <0951facb-8b19-c0f3-4f25-a5ac4a798859@web.de>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 4 Jan 2022 18:04:36 +0100
+Message-ID: <CACRpkdZCiRJ-8eN3arKgt0s5iWgGwGE=aZMo7yx7UtUn=GNF2g@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] pinctrl: bcm2835: Change init order for gpio hogs
+To:     Jan Kiszka <jan.kiszka@web.de>
+Cc:     Stefan Wahren <stefan.wahren@i2se.com>,
+        Phil Elwell <phil@raspberrypi.com>, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        Thierry Reding <treding@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 04, 2022 at 05:42:38PM +0100, Hans de Goede wrote:
-> Commit bdfbef2d29dc ("pinctrl: cherryview: Don't use selection 0 to mark
-> an interrupt line as unused") made the code properly differentiate
-> between unset vs (hwirq) 0 entries in the GPIO-controller interrupt-line
-> to GPIO pinnumber/hwirq mapping.
-> 
-> This is causing some boards to not boot. This commit restores the old
-> behavior of triggering hwirq 0 when receiving an interrupt on an
-> interrupt-line for which there is no mapping.
-> 
-> Fixes: bdfbef2d29dc ("pinctrl: cherryview: Don't use selection 0 to mark an interrupt line as unused")
-> Reported-and-tested-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+On Sun, Jan 2, 2022 at 4:16 PM Jan Kiszka <jan.kiszka@web.de> wrote:
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> But, in fact, this series was misordered then, suggesting that patch 1
+> was independent of patch 2, but it actually depended on patch 2 to avoid
+> even temporary regressions.
+
+I picked patch 2/2 out of my tree and sent it off to the SoC tree that applies
+DTS fixes.
+
+Let's see if they manage to get it to Torvalds before the merge window.
+
+Yours,
+Linus Walleij
