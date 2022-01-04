@@ -2,110 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A21BF484849
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jan 2022 20:08:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DD74484895
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jan 2022 20:31:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236466AbiADTIB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Jan 2022 14:08:01 -0500
-Received: from mail-ot1-f47.google.com ([209.85.210.47]:39574 "EHLO
-        mail-ot1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234842AbiADTIA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Jan 2022 14:08:00 -0500
-Received: by mail-ot1-f47.google.com with SMTP id r10-20020a056830080a00b0055c8fd2cebdso48394529ots.6;
-        Tue, 04 Jan 2022 11:08:00 -0800 (PST)
+        id S229748AbiADTb2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Jan 2022 14:31:28 -0500
+Received: from mail-ot1-f49.google.com ([209.85.210.49]:40644 "EHLO
+        mail-ot1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229508AbiADTb2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Jan 2022 14:31:28 -0500
+Received: by mail-ot1-f49.google.com with SMTP id v15-20020a9d604f000000b0056cdb373b82so48545359otj.7;
+        Tue, 04 Jan 2022 11:31:27 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=Zol8RqhcqrOeExkKxHD6i/0eMcZgg4YGQ9xIXDGBZL0=;
-        b=PjW3z79RptREbGLfbP+x+XsFuASMO38iK4GD+0s8viJLQg73kyiDYHo7ueIu+LciFO
-         PNGK1YqTJOvhOiVI7gufSf6vw0l1cuGm/5Vk9WZoSY1v2LDE8GuA96PCS2oIEgK0whRG
-         dSglLdpMuQzCebFqhRkiRIV4wfjklJTcqHppZ4PHjITrkVs7YJmY/PSsSS9wM08ahFUL
-         zni7nUylYa8seGCosDSVne8jobjcf7QYzPmK/msVsPvXPNCp5g33tOxNapk8g+e9DqQV
-         6Fyu5fQxMrBTVjRJLiN0C9ywaKdZCRN23jUUPFcG/l+kQjcvPqDDefmgxav302ArcK/z
-         3TFg==
-X-Gm-Message-State: AOAM532Nb31/airPzf6jy9jxlzK9zoG3FDTHcldZ85/aXfxfpWmbFvIu
-        P04aJxwV3RgYtfuJdpxatT87Pls4ZQ==
-X-Google-Smtp-Source: ABdhPJwD6As9c1PJJ5b5sN3V+8tRevP6v+G+WluIcZqLUbDDpYLuCj4xh6m/A3masXZmj4ALYIcjWg==
-X-Received: by 2002:a9d:a55:: with SMTP id 79mr37401880otg.275.1641323279784;
-        Tue, 04 Jan 2022 11:07:59 -0800 (PST)
+        bh=KTGs3+rdHyCKA35lj1ufu+1n2FGA4o6nnx82oWhTh/I=;
+        b=nTHSPjgmL4ssC2V6e1g75ZS0d+aq/qpG1xrTo6fQrDWVG25QoofRerc95G0zs0FQpQ
+         65SSjz4aP9Won+y4d2YUX6BSgTPdkGfSKSFqHCQNkhGZHvQN9aBpucffBzpYfAnVdC7T
+         jHAeu1XeGJ7ZRMG/GN1xXwsoZLh31L4rZhVFFyvY+7CFs7rKFDLxN0c3rW9+zWWkScSv
+         phxEGpKa9odXKgwwEhen0rjMt21THhBLxXCSxQlttZe3KFpaSV1UH8XxbxjSPLvtbNSL
+         DbhozZm+EI73zhkh7emiJ/b3uCqXJlUF2z1FWGt5X5V9s+Iy7imCMHBRiJGkRfLRaIXD
+         1r+g==
+X-Gm-Message-State: AOAM532g3I+lJSeuHxz2PH8Y26jF6Sontngb5uuFFKsXNldVcwOOG+zw
+        j3k+kQDB6iltQ244e7rdrw==
+X-Google-Smtp-Source: ABdhPJwORFRXYaYQCIVPXzdG+4AMu81mGLj9/SF0d0fDR/VzwnoWuvyIkrkPOgTDTqn6KlHe7tk2Xg==
+X-Received: by 2002:a05:6830:2b25:: with SMTP id l37mr37284224otv.298.1641324687296;
+        Tue, 04 Jan 2022 11:31:27 -0800 (PST)
 Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id x4sm10005968oiv.35.2022.01.04.11.07.58
+        by smtp.gmail.com with ESMTPSA id bh12sm10034224oib.25.2022.01.04.11.31.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jan 2022 11:07:59 -0800 (PST)
-Received: (nullmailer pid 1229576 invoked by uid 1000);
-        Tue, 04 Jan 2022 19:07:57 -0000
-Date:   Tue, 4 Jan 2022 13:07:57 -0600
+        Tue, 04 Jan 2022 11:31:26 -0800 (PST)
+Received: (nullmailer pid 1269921 invoked by uid 1000);
+        Tue, 04 Jan 2022 19:31:25 -0000
+Date:   Tue, 4 Jan 2022 13:31:25 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Jesse Taube <mr.bossman075@gmail.com>
-Cc:     linux@armlinux.org.uk, jirislaby@kernel.org,
-        linux-kernel@vger.kernel.org, festevam@gmail.com,
-        abel.vesa@nxp.com, olof@lixom.net, kernel@pengutronix.de,
-        stefan@agner.ch, ulf.hansson@linaro.org,
-        linux-gpio@vger.kernel.org, linux-imx@nxp.com,
-        Mr.Bossman075@gmail.com, linux-mmc@vger.kernel.org,
-        shawnguo@kernel.org, mturquette@baylibre.com,
-        nobuhiro1.iwamatsu@toshiba.co.jp,
-        linux-arm-kernel@lists.infradead.org, arnd@arndb.de,
-        soc@kernel.org, gregkh@linuxfoundation.org, sboyd@kernel.org,
-        devicetree@vger.kernel.org, s.hauer@pengutronix.de,
-        adrian.hunter@intel.com, linus.walleij@linaro.org,
-        linux-serial@vger.kernel.org, robh+dt@kernel.org,
-        giulio.benetti@benettiengineering.com, linux-clk@vger.kernel.org,
-        aisheng.dong@nxp.com
-Subject: Re: [PATCH v7 4/7] dt-bindings: clock: imx: Add documentation for
- i.MXRT1050 clock
-Message-ID: <YdSbDTcA6qyZdJJv@robh.at.kernel.org>
-References: <20220103233948.198119-1-Mr.Bossman075@gmail.com>
- <20220103233948.198119-5-Mr.Bossman075@gmail.com>
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Prabhakar <prabhakar.csengg@gmail.com>,
+        linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] dt-bindings: pinctrl: renesas,rzg2l-pinctrl: Add
+ description for power-source property
+Message-ID: <YdSgjf5TYtwjDJWj@robh.at.kernel.org>
+References: <20211222145901.23661-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220103233948.198119-5-Mr.Bossman075@gmail.com>
+In-Reply-To: <20211222145901.23661-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 03 Jan 2022 18:39:45 -0500, Jesse Taube wrote:
-> From: Jesse Taube <mr.bossman075@gmail.com>
+On Wed, 22 Dec 2021 14:59:01 +0000, Lad Prabhakar wrote:
+> Add description for "power-source" property mentioning the values in enum
+> are in millivolts.
 > 
-> Add DT binding documentation for i.MXRT1050 clock driver.
-> 
-> Cc: Giulio Benetti <giulio.benetti@benettiengineering.com>
-> Signed-off-by: Jesse Taube <Mr.Bossman075@gmail.com>
+> Suggested-by: Pavel Machek <pavel@denx.de>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > ---
-> V1->V2:
-> * Replace macros with values
-> V2->V3:
-> * Remove anatop
-> * Use lpuart not gpt
-> * include imxrt1050-clock.h
-> * 2 space tabs to 4
-> * Remove oneOf enum
-> * Change maxItems to 2
-> V3->V4:
-> * Nothing done
-> V4->V5:
-> * Remove extra newline
-> * Rename ccm to clock-controller
-> * Change minItems to const
-> * Change minItems to description
-> * Rename file to add 1050
-> * Change commit description to just 1050
-> V5->V6:
-> * Add maxItems for clocks description
-> V6->V7:
-> * Nothing done
-> ---
->  .../bindings/clock/imxrt1050-clock.yaml       | 67 +++++++++++++++++++
->  1 file changed, 67 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/imxrt1050-clock.yaml
+>  .../devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml       | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
-
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
-
-If a tag was not added on purpose, please state why and what changed.
-
+Acked-by: Rob Herring <robh@kernel.org>
