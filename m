@@ -2,69 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DD74484895
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jan 2022 20:31:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 07C52484909
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jan 2022 21:00:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229748AbiADTb2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Jan 2022 14:31:28 -0500
-Received: from mail-ot1-f49.google.com ([209.85.210.49]:40644 "EHLO
-        mail-ot1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229508AbiADTb2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Jan 2022 14:31:28 -0500
-Received: by mail-ot1-f49.google.com with SMTP id v15-20020a9d604f000000b0056cdb373b82so48545359otj.7;
-        Tue, 04 Jan 2022 11:31:27 -0800 (PST)
+        id S231140AbiADUA3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Jan 2022 15:00:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46810 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229962AbiADUA3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Jan 2022 15:00:29 -0500
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA8F3C061761;
+        Tue,  4 Jan 2022 12:00:28 -0800 (PST)
+Received: by mail-lf1-x136.google.com with SMTP id u13so83961110lff.12;
+        Tue, 04 Jan 2022 12:00:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=acwKczvWyIUy4HDb+EQ5WSebsiTaZduWta3iesC5T2o=;
+        b=of2xzanTwLPRofEdYDfJGZ7/CoMWgSS8Md5kjX7oWnUmZK+aA5FdLew+X78eRnN9U2
+         CHrusCivKs1kdX4TT1kxva+bNWUSJnYQb5WmU5Iosgzgmmn2lULhUFvMD86IizF3YzH9
+         RxtOH6L3gfL7hE4onLysV8trj0WeMf4665okuSeXSYsqo9E3uKq2v2HDamivsE1uQxij
+         qCJBMg+RNK0xUCybM4lHnN8+NvCKmfTLB4Y+QnWv7AZwI1DW7hdhZ/qxC8lYNdwirem8
+         CsAImeyoGl9XHAfnDjzTYPLN9KPpExoD53FOjIT+ZlnP1p+jKuErIlSFy4BuaqfLwVJA
+         4grg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KTGs3+rdHyCKA35lj1ufu+1n2FGA4o6nnx82oWhTh/I=;
-        b=nTHSPjgmL4ssC2V6e1g75ZS0d+aq/qpG1xrTo6fQrDWVG25QoofRerc95G0zs0FQpQ
-         65SSjz4aP9Won+y4d2YUX6BSgTPdkGfSKSFqHCQNkhGZHvQN9aBpucffBzpYfAnVdC7T
-         jHAeu1XeGJ7ZRMG/GN1xXwsoZLh31L4rZhVFFyvY+7CFs7rKFDLxN0c3rW9+zWWkScSv
-         phxEGpKa9odXKgwwEhen0rjMt21THhBLxXCSxQlttZe3KFpaSV1UH8XxbxjSPLvtbNSL
-         DbhozZm+EI73zhkh7emiJ/b3uCqXJlUF2z1FWGt5X5V9s+Iy7imCMHBRiJGkRfLRaIXD
-         1r+g==
-X-Gm-Message-State: AOAM532g3I+lJSeuHxz2PH8Y26jF6Sontngb5uuFFKsXNldVcwOOG+zw
-        j3k+kQDB6iltQ244e7rdrw==
-X-Google-Smtp-Source: ABdhPJwORFRXYaYQCIVPXzdG+4AMu81mGLj9/SF0d0fDR/VzwnoWuvyIkrkPOgTDTqn6KlHe7tk2Xg==
-X-Received: by 2002:a05:6830:2b25:: with SMTP id l37mr37284224otv.298.1641324687296;
-        Tue, 04 Jan 2022 11:31:27 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id bh12sm10034224oib.25.2022.01.04.11.31.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jan 2022 11:31:26 -0800 (PST)
-Received: (nullmailer pid 1269921 invoked by uid 1000);
-        Tue, 04 Jan 2022 19:31:25 -0000
-Date:   Tue, 4 Jan 2022 13:31:25 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=acwKczvWyIUy4HDb+EQ5WSebsiTaZduWta3iesC5T2o=;
+        b=O0QQbWoUhXR7PwcK46xB6jM5Zo8LcThBuaWR//4IhO6YEuPpCaiB7uuZnu51pbAKVJ
+         j4Z5lZFC8qA53LT5s4akre4q+226Gm2xcLdUbP3B2aHz8M3mwGzGgVB/mvFCYVet2y1f
+         1pLjuZNTSnP6Zo0yxMaZ8Hos0SgI2dpck6vQ6Chwd/mbmJD7T561EJkh0W/xj9FXn1bI
+         myxYuVhcncngRJx0iPzcs79lAcQ4VdFn7MG2DEPs3SUd2eWpfwbaT3ssUmoOagIssbiO
+         ZPAFHBxW1SWh21Y4CShNPtzPNwriAysg8tj94sQ3xQ+OPhhLcMvDiAZULxIM49B4SDxp
+         +DYw==
+X-Gm-Message-State: AOAM530Qk2d+jbSbf7BNOl+2Xy2TicMktRYP2Wm72FRctb7uqmtQ4RZf
+        XHnkX4el3Q/anvF2u3g53in6S1VoRDU=
+X-Google-Smtp-Source: ABdhPJwN9a4/n7mSeTAgjpESf7lwUlBb/mEqYITglVbNni2b2Q6VyvJuIm4OWafPWe+oNLiIkWi/Sw==
+X-Received: by 2002:a05:6512:1110:: with SMTP id l16mr44192566lfg.193.1641326426901;
+        Tue, 04 Jan 2022 12:00:26 -0800 (PST)
+Received: from [192.168.1.103] ([178.176.72.219])
+        by smtp.gmail.com with ESMTPSA id u26sm4017510lfi.62.2022.01.04.12.00.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Jan 2022 12:00:26 -0800 (PST)
+Subject: Re: [PATCH] gpio: rcar: Propagate errors from devm_request_irq()
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Prabhakar <prabhakar.csengg@gmail.com>,
-        linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] dt-bindings: pinctrl: renesas,rzg2l-pinctrl: Add
- description for power-source property
-Message-ID: <YdSgjf5TYtwjDJWj@robh.at.kernel.org>
-References: <20211222145901.23661-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20220104153615.13393-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Message-ID: <255da762-5402-fab3-d1a6-944dcf028743@gmail.com>
+Date:   Tue, 4 Jan 2022 23:00:24 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211222145901.23661-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20220104153615.13393-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 22 Dec 2021 14:59:01 +0000, Lad Prabhakar wrote:
-> Add description for "power-source" property mentioning the values in enum
-> are in millivolts.
-> 
-> Suggested-by: Pavel Machek <pavel@denx.de>
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
->  .../devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml       | 1 +
->  1 file changed, 1 insertion(+)
-> 
+Hello!
 
-Acked-by: Rob Herring <robh@kernel.org>
+On 1/4/22 6:36 PM, Lad Prabhakar wrote:
+
+> The driver overrides the error code returned by devm_request_irq() to
+> -ENOENT. Switch to propagating the error code upstream.
+> 
+> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+[...]
+
+Reviewed-by: Sergey Shtylyov <s.shtylyov@omp.ru>
+
+MBR, Sergey
