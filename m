@@ -2,73 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E1DBB48430E
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jan 2022 15:09:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CAE848430F
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jan 2022 15:10:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230400AbiADOJt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Jan 2022 09:09:49 -0500
-Received: from mga03.intel.com ([134.134.136.65]:52208 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232748AbiADOJs (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 4 Jan 2022 09:09:48 -0500
-X-IronPort-AV: E=McAfee;i="6200,9189,10216"; a="242185065"
-X-IronPort-AV: E=Sophos;i="5.88,261,1635231600"; 
-   d="scan'208";a="242185065"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2022 06:09:47 -0800
-X-IronPort-AV: E=Sophos;i="5.88,261,1635231600"; 
-   d="scan'208";a="688575793"
-Received: from smile.fi.intel.com ([10.237.72.61])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2022 06:09:45 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1n4kUG-006EDv-87;
-        Tue, 04 Jan 2022 16:08:28 +0200
-Date:   Tue, 4 Jan 2022 16:08:28 +0200
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Andy Shevchenko <andy@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        id S232792AbiADOKH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Jan 2022 09:10:07 -0500
+Received: from relmlor2.renesas.com ([210.160.252.172]:53871 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S232748AbiADOKH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Jan 2022 09:10:07 -0500
+X-IronPort-AV: E=Sophos;i="5.88,261,1635174000"; 
+   d="scan'208";a="106004409"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 04 Jan 2022 23:10:05 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 728D141F57FF;
+        Tue,  4 Jan 2022 23:10:03 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Ludovic Desroches <ludovic.desroches@microchip.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH 1/2] gpio: tps68470: Allow building as module
-Message-ID: <YdRU3DVsByJzyXmn@smile.fi.intel.com>
-References: <20211225120026.95268-1-hdegoede@redhat.com>
- <CAHp75Vdz1zxE5V_ff+jSp6VUo34aRinLj-gK_HOi5-2Zgw3E8w@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vdz1zxE5V_ff+jSp6VUo34aRinLj-gK_HOi5-2Zgw3E8w@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] pinctrl: at91-pio4: Use platform_get_irq() to get the interrupt
+Date:   Tue,  4 Jan 2022 14:09:13 +0000
+Message-Id: <20220104140913.29699-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Dec 25, 2021 at 04:41:58PM +0200, Andy Shevchenko wrote:
-> On Sat, Dec 25, 2021 at 2:00 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> >
-> > The gpio-tps68470 driver binds to a tps68470-gpio platform-device which
-> > itself gets instantiated by a special MFD driver from
-> > drivers/platform/x86/intel/int3472/tps68470.c
-> >
-> > This MFD driver itself can be build as a module, so it makes no sense to
-> 
-> built
-> 
-> > force the gpio-tps68470 driver to always be builtin.
-> 
-> built-in
-> 
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> (see one minor comment below)
+platform_get_resource(pdev, IORESOURCE_IRQ, ..) relies on static
+allocation of IRQ resources in DT core code, this causes an issue
+when using hierarchical interrupt domains using "interrupts" property
+in the node as this bypasses the hierarchical setup and messes up the
+irq chaining.
 
-I don't see the next version, in any case it's too far from the beginning of
-the v5.16 cycle and I gave my tags so Bart may (or may not :-) apply them. If
-it's okay to be v5.18 material, I'll take a new version sent after v5.17-rc1.
+In preparation for removal of static setup of IRQ resource from DT core
+code use platform_get_irq().
 
+While at it, replace the dev_err() with dev_dbg() as platform_get_irq()
+prints an error message upon error.
+
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+---
+v1->v2
+* Switched using platform_get_irq()
+* Replaced dev_err() with dev_dbg()
+
+v1: https://lore.kernel.org/lkml/20211224145748.18754-3-prabhakar.mahadev-lad.rj@bp.renesas.com/
+---
+ drivers/pinctrl/pinctrl-at91-pio4.c | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-at91-pio4.c
+index fafd1f55cba7..517f2a6330ad 100644
+--- a/drivers/pinctrl/pinctrl-at91-pio4.c
++++ b/drivers/pinctrl/pinctrl-at91-pio4.c
+@@ -1045,7 +1045,6 @@ static int atmel_pinctrl_probe(struct platform_device *pdev)
+ 	const char **group_names;
+ 	const struct of_device_id *match;
+ 	int i, ret;
+-	struct resource	*res;
+ 	struct atmel_pioctrl *atmel_pioctrl;
+ 	const struct atmel_pioctrl_data *atmel_pioctrl_data;
+ 
+@@ -1164,16 +1163,15 @@ static int atmel_pinctrl_probe(struct platform_device *pdev)
+ 
+ 	/* There is one controller but each bank has its own irq line. */
+ 	for (i = 0; i < atmel_pioctrl->nbanks; i++) {
+-		res = platform_get_resource(pdev, IORESOURCE_IRQ, i);
+-		if (!res) {
+-			dev_err(dev, "missing irq resource for group %c\n",
++		ret = platform_get_irq(pdev, i);
++		if (ret < 0) {
++			dev_dbg(dev, "missing irq resource for group %c\n",
+ 				'A' + i);
+-			return -EINVAL;
++			return ret;
+ 		}
+-		atmel_pioctrl->irqs[i] = res->start;
+-		irq_set_chained_handler_and_data(res->start,
+-			atmel_gpio_irq_handler, atmel_pioctrl);
+-		dev_dbg(dev, "bank %i: irq=%pr\n", i, res);
++		atmel_pioctrl->irqs[i] = ret;
++		irq_set_chained_handler_and_data(ret, atmel_gpio_irq_handler, atmel_pioctrl);
++		dev_dbg(dev, "bank %i: irq=%d\n", i, ret);
+ 	}
+ 
+ 	atmel_pioctrl->irq_domain = irq_domain_add_linear(dev->of_node,
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.17.1
 
