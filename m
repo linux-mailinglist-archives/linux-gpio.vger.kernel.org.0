@@ -2,81 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 24C4C484664
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jan 2022 18:04:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C389148483C
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jan 2022 20:07:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235635AbiADREx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Jan 2022 12:04:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34256 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235636AbiADREw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Jan 2022 12:04:52 -0500
-Received: from mail-ot1-x32c.google.com (mail-ot1-x32c.google.com [IPv6:2607:f8b0:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95D83C061785
-        for <linux-gpio@vger.kernel.org>; Tue,  4 Jan 2022 09:04:52 -0800 (PST)
-Received: by mail-ot1-x32c.google.com with SMTP id w19-20020a056830061300b0058f1dd48932so47505508oti.11
-        for <linux-gpio@vger.kernel.org>; Tue, 04 Jan 2022 09:04:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jbFt9L6krYBtcAbEWqf0z5PDV9qPyLwggi9o0oOg8Q4=;
-        b=tcZMB5CjcUmMaN+9Id/E0rFrxKPtu2D180QRxxDNQ+eUXqMRI5iXCpeIlPhxwt8xtL
-         7kl50sONeFBSybYsP5pD3FfaBi2T3p5ZTocjbRR3wOBPLEqyH1dqamzOn8xI2Iozxbf1
-         kE5coq8UPARsp+ArLP9KPaGT5cojTcaKXyEkwJhFYIJc4Emgr3F0fzyQ/syLJ3dQNwUo
-         laBYrJJ2e2f153V8+uo5MqtcRlq6zszD57q9a8FR76bzMbNK8cRomdQoPg53DA2xAi5f
-         88YoZtiL2v4Aj88HHQeyXic6cS7vgfKCjrRLvYFM3Qru74Y9Iqa9eYsOIEawT20mjoYV
-         AU8Q==
+        id S236448AbiADTHA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Jan 2022 14:07:00 -0500
+Received: from mail-oi1-f171.google.com ([209.85.167.171]:45009 "EHLO
+        mail-oi1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234678AbiADTHA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Jan 2022 14:07:00 -0500
+Received: by mail-oi1-f171.google.com with SMTP id be32so60783520oib.11;
+        Tue, 04 Jan 2022 11:07:00 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jbFt9L6krYBtcAbEWqf0z5PDV9qPyLwggi9o0oOg8Q4=;
-        b=Pn8/3P1LhQkNdm3vrhOkj8W/P4N+ZpZwtYGB4Bw/DO96suM0oI149gnMeb1Qk1VimL
-         jcofojYlmk0VUdBi7DXViprjL8NEcsliKgMJH9N2dhAORJqG4QQG1qSdroVPQY8w9Wib
-         EWzisoAptoOm8FGXcWA8V63HCJ+8iJn3nwgfa/i40lIiej1vqVJwA6fb9kFYMLRA6kmO
-         EL6kxdDPAsCYLH5rFOMAveiYOPJjPzOO/ZLu8hslkENc4da5/yxyNsyEo/4KD0aXHN5W
-         Qo1Uh+MDm6QwTRZdHVBvEhmtLkujGRPE9+wYra/XNZihseCulacNsYiKj1g8elapRTGV
-         HMqQ==
-X-Gm-Message-State: AOAM530K4UTELkY7zEoE50i5qgMDU/q6rgToMQyhe//kLeZxMguIzQ0v
-        T47jpHhknO1P0rtJXY58bNsB2VJm7gtZFyp5p+cWaw==
-X-Google-Smtp-Source: ABdhPJwCVupKQYxDzpYMKPhj1MXJZPz+3XUECsNjRfYFrPd16sAtNpJ/PYjjfuyAFjwn0935xEp+qI2DeVBLrvPkuKs=
-X-Received: by 2002:a9d:a42:: with SMTP id 60mr37978893otg.179.1641315891943;
- Tue, 04 Jan 2022 09:04:51 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8CgkkbPTMgwITurXcyYa8txS8XSAkqNrdvXpQYKmlLs=;
+        b=PW+Zbue2x9sV2A7jkKgm3L0/yF5RAmig5KXW3AQ0OYlPzVN4Z1uegLYyNUNd8SsrZX
+         /TytF5+gzGw14GaJrrXjUN+MuPePTuvy+BElpAFf3ZsjFB5F0j8w5ln2bP7sARW092e3
+         yJ625SkPFB0EUtUNAX8Lfm79qJq5z6dMv2fpaa4IDq/x+n5PgYvBYBnNO7bTrt7zNhUZ
+         1/o371Ap6KWv3Ct4rM3NaG5FkLPS67N3Esu0u2YDI3fLMrGGopBWny9A7bEzQlGGKbjL
+         9+iWmiuJWVo4uULU30mTc2gC6DPGecjXGJFv1rZRgJ+1O1GCZZKvndjZvhwvtgtF6io0
+         k+Mw==
+X-Gm-Message-State: AOAM531aiEwfFfPfCGnj86iMpS9+Tu2tOGOzUaDPE9xBKMlDd9b/j0HS
+        /mK1zUayrpjeZkgxtcR3bA==
+X-Google-Smtp-Source: ABdhPJw0hrSMFia3kzR3oD+Vdenn5ohLpgJhiNYL5ZTwCMdi+PUKKbvtKnFvGJJVRysmx2lanYsxeg==
+X-Received: by 2002:a05:6808:155:: with SMTP id h21mr31124067oie.121.1641323219578;
+        Tue, 04 Jan 2022 11:06:59 -0800 (PST)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id r17sm8378611otc.65.2022.01.04.11.06.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Jan 2022 11:06:59 -0800 (PST)
+Received: (nullmailer pid 1227279 invoked by uid 1000);
+        Tue, 04 Jan 2022 19:06:57 -0000
+Date:   Tue, 4 Jan 2022 13:06:57 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jesse Taube <mr.bossman075@gmail.com>
+Cc:     adrian.hunter@intel.com, linux-arm-kernel@lists.infradead.org,
+        abel.vesa@nxp.com, shawnguo@kernel.org, jirislaby@kernel.org,
+        nobuhiro1.iwamatsu@toshiba.co.jp, robh+dt@kernel.org,
+        festevam@gmail.com, linus.walleij@linaro.org,
+        linux-clk@vger.kernel.org, kernel@pengutronix.de,
+        linux-imx@nxp.com, s.hauer@pengutronix.de,
+        devicetree@vger.kernel.org, soc@kernel.org,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        olof@lixom.net, mturquette@baylibre.com, linux-mmc@vger.kernel.org,
+        giulio.benetti@benettiengineering.com, sboyd@kernel.org,
+        linux-gpio@vger.kernel.org, Mr.Bossman075@gmail.com, arnd@arndb.de,
+        gregkh@linuxfoundation.org, linux@armlinux.org.uk, stefan@agner.ch,
+        ulf.hansson@linaro.org, aisheng.dong@nxp.com
+Subject: Re: [PATCH v7 2/7] ARM: dts: imxrt1050-pinfunc: Add pinctrl binding
+ header
+Message-ID: <YdSa0ScOpb/5sMF/@robh.at.kernel.org>
+References: <20220103233948.198119-1-Mr.Bossman075@gmail.com>
+ <20220103233948.198119-3-Mr.Bossman075@gmail.com>
 MIME-Version: 1.0
-References: <20211206092237.4105895-1-phil@raspberrypi.com>
- <20211206092237.4105895-2-phil@raspberrypi.com> <CACRpkdZ95bCJVDo4tCXsMnsXax4+ZydoLS7AsM-yzMjXbONk=w@mail.gmail.com>
- <95851343-2887-1e04-9598-e8c8ae74a99a@i2se.com> <CACRpkdbnqq+hwXt1oUWZfyxFjdd4aSAz0MzhzYVWuqqVAe4Eig@mail.gmail.com>
- <ec8090b6-6c91-e9ae-fd02-955c8c10ee3e@web.de> <ec60b52b-7a59-266d-9608-11c0da9053a6@i2se.com>
- <5a5bc9ac-6d8e-d6de-eec2-ea72970b88bf@web.de> <0951facb-8b19-c0f3-4f25-a5ac4a798859@web.de>
-In-Reply-To: <0951facb-8b19-c0f3-4f25-a5ac4a798859@web.de>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 4 Jan 2022 18:04:36 +0100
-Message-ID: <CACRpkdZCiRJ-8eN3arKgt0s5iWgGwGE=aZMo7yx7UtUn=GNF2g@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] pinctrl: bcm2835: Change init order for gpio hogs
-To:     Jan Kiszka <jan.kiszka@web.de>
-Cc:     Stefan Wahren <stefan.wahren@i2se.com>,
-        Phil Elwell <phil@raspberrypi.com>, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        Thierry Reding <treding@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220103233948.198119-3-Mr.Bossman075@gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Jan 2, 2022 at 4:16 PM Jan Kiszka <jan.kiszka@web.de> wrote:
+On Mon, 03 Jan 2022 18:39:43 -0500, Jesse Taube wrote:
+> From: Jesse Taube <mr.bossman075@gmail.com>
+> 
+> Add binding header for i.MXRT1050 pinctrl device tree.
+> 
+> Signed-off-by: Giulio Benetti <giulio.benetti@benettiengineering.com>
+> Signed-off-by: Jesse Taube <Mr.Bossman075@gmail.com>
+> [Jesse: move pinfunc from dt-bindings to dts folder]
+> ---
+> V1->V2:
+> * Move pinfunc from dt-binding to dts
+> * Change subject and description
+> * Change licence to "GPL-2.0+ OR MIT"
+> V2->V3:
+> * Change License comment style
+> V3->V4:
+> * Nothing done
+> V4->V5:
+> * Nothing done
+> V5->V6:
+> * Nothing done
+> V6->V7:
+> * Nothing done
+> ---
+>  arch/arm/boot/dts/imxrt1050-pinfunc.h | 993 ++++++++++++++++++++++++++
+>  1 file changed, 993 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imxrt1050-pinfunc.h
+> 
 
-> But, in fact, this series was misordered then, suggesting that patch 1
-> was independent of patch 2, but it actually depended on patch 2 to avoid
-> even temporary regressions.
 
-I picked patch 2/2 out of my tree and sent it off to the SoC tree that applies
-DTS fixes.
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-Let's see if they manage to get it to Torvalds before the merge window.
+If a tag was not added on purpose, please state why and what changed.
 
-Yours,
-Linus Walleij
