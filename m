@@ -2,140 +2,172 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BCE2C485A09
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jan 2022 21:31:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 05B15485BF2
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jan 2022 23:57:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244038AbiAEUbn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 5 Jan 2022 15:31:43 -0500
-Received: from smtp-relay-internal-0.canonical.com ([185.125.188.122]:55570
-        "EHLO smtp-relay-internal-0.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S244044AbiAEUbk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Jan 2022 15:31:40 -0500
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 909F24075B
-        for <linux-gpio@vger.kernel.org>; Wed,  5 Jan 2022 20:31:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1641414698;
-        bh=V4kULDmcSO9fvI4MXJMndJlczlOJyUZ0Dz0uloeZzoM=;
-        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-         In-Reply-To:Content-Type;
-        b=u9tvnpV1cyQG9gtZEV+OOJ8Grsggg+mX8ZXGy2EB+/q51HtZ9rnk1+NZDvU6fVJm9
-         bzcOJanVviCXhahVlQZ1hSIoxXAFe8tuN9bIlPhLjHGCEEYAXNiL6exxb2OBIutJRc
-         WfLIRwdig8FrdOI6YuJRBnWMKgPbE/2Q2MsJUxV4HgtVJVRkOhZEyarqun8FIIgYvp
-         w2MO0RMY3iVujWz6/Cx9iHZu3aLxobtDKa4MA0PYhHBHHT3Gdc0rUOTDZ/pl2UX/o2
-         gs567RlW0c2ofvPYfdgm8tr7ElNrrRIhjocIFXfmh87rY53Q5Y4n29fEJNtuFVFtOw
-         ALKHGUwOI6mdQ==
-Received: by mail-wm1-f71.google.com with SMTP id p18-20020a05600c1d9200b00346da4a9e26so957854wms.1
-        for <linux-gpio@vger.kernel.org>; Wed, 05 Jan 2022 12:31:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=V4kULDmcSO9fvI4MXJMndJlczlOJyUZ0Dz0uloeZzoM=;
-        b=LGgKDhzXnYCOOiuJ692VFwK2ZE8PfmNNT2axzGQAXqEEqGBw7+7mkrByioLWzaGYQO
-         sgoWFrgzIVASWnEeCIn1vF+G6BgO14w2Wu+IVWTTFfbX67oX20z2e18kdE4PLeU7Ohkm
-         I/P8F3DcKVQ5gR0agawxWMOiTmNWI5TIquTe8VN9dlBVdkUuGTcNlAX+B2PjL8ts/e/W
-         3NEWwdKfp59LlcpQW/rT9Fi9Faeuu0/zyOvbB+ohm47iSTtIF9ejxKlnqWmpwyayHzmG
-         qXCvF1y1aa60Z20mLqiDY2Ihgx4e9ER71Jtv1BslvVraHMN8azAadfTORGKUNxmAg5rv
-         4Kbg==
-X-Gm-Message-State: AOAM5326UcWMxvkvoXSsl+HZGEBNLA0AS5z8RGeTfG3+Eom/exP/xIQl
-        AQNpio+C6IClY4oDDU7eYheaq6DUl3AQmW5kq2MnpgzBs2Wv/DOkqIBBhrpAFsTnfPn7WWjg0W6
-        SI0BM0FoKfR8fMjSlgbtg2ZZ9xDYJAdXcsx/mUc8=
-X-Received: by 2002:adf:f8cb:: with SMTP id f11mr47726195wrq.700.1641414698088;
-        Wed, 05 Jan 2022 12:31:38 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwfycNJZSN3SIT7Pdqt18EECjlkeSLsfzV4kAhj6FeSMwg1AcBqMTk4rYmgxR4Fp+L98Z2zeA==
-X-Received: by 2002:adf:f8cb:: with SMTP id f11mr47726180wrq.700.1641414697952;
-        Wed, 05 Jan 2022 12:31:37 -0800 (PST)
-Received: from [192.168.1.124] (xdsl-188-155-168-84.adslplus.ch. [188.155.168.84])
-        by smtp.gmail.com with ESMTPSA id f6sm4185158wmq.6.2022.01.05.12.31.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Jan 2022 12:31:37 -0800 (PST)
-Message-ID: <9c4d825a-1f35-3e47-b91c-499525213343@canonical.com>
-Date:   Wed, 5 Jan 2022 21:31:36 +0100
+        id S245190AbiAEW5W (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 5 Jan 2022 17:57:22 -0500
+Received: from mail-bn8nam12on2052.outbound.protection.outlook.com ([40.107.237.52]:22624
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S245153AbiAEW5T (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 5 Jan 2022 17:57:19 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Rncjs3U5miZVV8ymAq99aa7EXH7+txZpi07zFfVxUE8cwF0s2asyMnwGvd/+ntgBrzARXdqC+N0nVneotkA4dau7x+gqxJqZ3FlwwKajmtwT3fQOv24NdgGUNNaIhTTGWNqTDOrLGiK7sBqocHCtJveDmb63dEZUf1/UzcEapMJKzYj/gVJseYDk1PvLUf84ONBxynntK4qk2hkAuS+Gast2NavmICfY2PRbOk5WOUp8hkp0s+Yq3gIQmLYWdYcukmMbhppridqfe+mKHJPsmKGBIt6NOquIN0keWRM7P2Y2h5SilEBeV5ZbEB4X7DC59dKU92HFoFIb/F076siKNg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7Jml4yKGgz+x3JaOgTvWcF5aVgmK417mgRLejxz1iTU=;
+ b=Bv3zBky1vvmpw8dDRAWNgHyCP9mdn80pDC5h5MAaDWj7MVogUQtsxTIqBO9ZYZhQfKVFPtN0AQi44Av+BPLE+aSfTMkUhF+gLDN+yOwwmu6laEOR+XmvgNUaRtP8aJFtPL88bWl78AhJUPhqNJ9Klir7AE8PoZiUOja1XROGdIPMwtTvbAyffnaKG7Ek2H3SmftZKhBh/lxnmoSUZpuR3MorWb04juFiSIEcUnetLitsnZAzZvKa9tJfVHYD2UjFB6GB9CwjK/TNAcmWC37ATM6XwxkmEI31vlsIcNdUyQe/JzF6gu1OmveTGwQvcc7S2Zs7ahKzKR5U6Cd5/iEWLA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 12.22.5.238) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7Jml4yKGgz+x3JaOgTvWcF5aVgmK417mgRLejxz1iTU=;
+ b=PihulWsKd0WF/+YdjmVq6i/qhYNT0I1qmx5T5a9lrdmF8+qth+F5KpU4sRuoi73nYLb6Ga36441F8jSkU7qLS8gGuqiNofGqdeVTZozsNwaPnT1OkaTENn2nXpQ/kwKEcThxpigEqk6XSt3KYYUpE85ca7mMrrRrnr9oUNoSX98H8qz7fTaVVS7PKg192pKnjds/r9K8K0hs4kqyFzJYAB8YXA4xn9UY+kNI8BM+ER3vRlf4rVvGxiS7gny5idvVIXQcMechFSKcOiEPieHeeY4+9FBVCc+/xJO7bqb5HdwDJr3z7y59twGNoXzjjBd65YBg4UvEX1fPvxPYf41TNw==
+Received: from MWHPR19CA0014.namprd19.prod.outlook.com (2603:10b6:300:d4::24)
+ by CH0PR12MB5234.namprd12.prod.outlook.com (2603:10b6:610:d1::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4867.9; Wed, 5 Jan
+ 2022 22:57:17 +0000
+Received: from CO1NAM11FT057.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:300:d4:cafe::29) by MWHPR19CA0014.outlook.office365.com
+ (2603:10b6:300:d4::24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4867.7 via Frontend
+ Transport; Wed, 5 Jan 2022 22:57:16 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 12.22.5.238)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 12.22.5.238 as permitted sender) receiver=protection.outlook.com;
+ client-ip=12.22.5.238; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (12.22.5.238) by
+ CO1NAM11FT057.mail.protection.outlook.com (10.13.174.205) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4867.9 via Frontend Transport; Wed, 5 Jan 2022 22:57:16 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by DRHQMAIL105.nvidia.com
+ (10.27.9.14) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Wed, 5 Jan
+ 2022 22:57:15 +0000
+Received: from [172.17.173.69] (172.20.187.5) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.986.9; Wed, 5 Jan 2022
+ 14:57:13 -0800
+Subject: Re: [RFC v3 09/12] gpiolib: cdev: Add hardware timestamp clock type
+To:     Kent Gibson <warthog618@gmail.com>
+CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linus.walleij@linaro.org>,
+        <brgl@bgdev.pl>, <devicetree@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <robh+dt@kernel.org>
+References: <20211123193039.25154-1-dipenp@nvidia.com>
+ <20211123193039.25154-10-dipenp@nvidia.com> <20211126013137.GC10380@sol>
+ <9ad666ec-eedd-8075-73e6-1e47a1eb228b@nvidia.com>
+ <20211201171638.GA31045@sol>
+ <4c7c3db1-a1b3-1944-4278-cb37e8a4f373@nvidia.com> <20211202005349.GA7007@sol>
+From:   Dipen Patel <dipenp@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <498da060-b02d-528a-9dbc-81dd22fc13a0@nvidia.com>
+Date:   Wed, 5 Jan 2022 15:00:24 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.1
-Subject: Re: [PATCH 02/24] pinctrl: samsung: accept GPIO bank nodes with a
- suffix
-Content-Language: en-US
-To:     Sam Protsenko <semen.protsenko@linaro.org>
-Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        Chanho Park <chanho61.park@samsung.com>
-References: <20211231161930.256733-1-krzysztof.kozlowski@canonical.com>
- <20211231161930.256733-3-krzysztof.kozlowski@canonical.com>
- <CAPLW+4kVjswvcx7PjkBq_cPrmoi1_yJw9qGOO2tcRCDm27zKmA@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-In-Reply-To: <CAPLW+4kVjswvcx7PjkBq_cPrmoi1_yJw9qGOO2tcRCDm27zKmA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20211202005349.GA7007@sol>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [172.20.187.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: b8fda927-a3c0-47c3-c207-08d9d09eb861
+X-MS-TrafficTypeDiagnostic: CH0PR12MB5234:EE_
+X-Microsoft-Antispam-PRVS: <CH0PR12MB5234D1FFEEC254BD8EAD91BBAE4B9@CH0PR12MB5234.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 251phr4WELwNemvji/D6p4OxDyhELrn8PjGzuodi7BDhYlUfCT6mtqU0hlDa+KQLjvQDsUq5oIhwwaD5/faYvvCSJwUCzMpZ/cu2svI/hce9JeKAQVyWcDsvp6KLbOqWl96tDUPjiB/SV+Es4ahCxBkJ/fJ/2UJhP60usqt57H84mJBEn3lmnpKY/cZEEJSo6RRmVAF4pJS2BgJ7hg+D/XxUUYOzeelOV+8sJBHJcvMijJby2qDDPynCQShqvHuUvcGKa3AQMEU53MxjvrUp34sJdiRBvWQ8/lYyta7pwx6tcOBZSDsOl0HNzPeIx9BR/xk+Ysi5WP/uXzaWfURUSYCimyd1QUb9H/ky2iHI3ATzPl0Jv5VkKGohIx8k9vtOZmxSi6P6pmvC/Hmvu+HYrwZRjcAW8hc6SKqj1VkZ6Owz8hpR0MF1cbR8gEPlYib1uHBRrRdcYV96kdecyXxWzBvVvY0h8H/7WFrAiIz6Yl6Y+TPiK6P9rDhpEhXLJpKfQeK7nYcpCKDc3+N33F3nLpE5QONZzJLdw0e1B/uSfF5vLgUijQZnT5c5gdf6VwylM5hpa/kARpern0Dj+iIZn/4xxeFYMMQ+G7PPFsuThvdWBq4vOjkVdS+xHEp/rRa0Zgc0mA76LwFi9fyPOpK5IlFaY3yYRZsQzdygztc4dn7YdiXVOBR9kz0Cl0YtlvKOOW3UG5mYDAzTmQRsF3ZyctAgb5T1JU0mOEJK8Taw3E8GdHPe1+QPOGxjMBpbm+zDm2o5896iWSm4Ycsbg/pJkNofLex9kolIQXk2ZYL2yk19hR6xWIphyxIkJzQYuPSTX1/1frb+HwXg0XSA0nE7eg==
+X-Forefront-Antispam-Report: CIP:12.22.5.238;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:mail.nvidia.com;PTR:InfoNoRecords;CAT:NONE;SFS:(4636009)(40470700002)(36840700001)(46966006)(36860700001)(54906003)(31686004)(6666004)(508600001)(7416002)(40460700001)(82310400004)(47076005)(2906002)(336012)(186003)(16526019)(26005)(8676002)(4326008)(2616005)(8936002)(70586007)(70206006)(426003)(53546011)(86362001)(83380400001)(6916009)(36756003)(5660300002)(356005)(31696002)(316002)(16576012)(81166007)(36900700001)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jan 2022 22:57:16.5366
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b8fda927-a3c0-47c3-c207-08d9d09eb861
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[12.22.5.238];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT057.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB5234
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 03/01/2022 19:43, Sam Protsenko wrote:
-> On Fri, 31 Dec 2021 at 18:20, Krzysztof Kozlowski
-> <krzysztof.kozlowski@canonical.com> wrote:
->>
->> Existing dt-bindings expected that each GPIO/pin bank within pin
->> controller has its own node with name matching the bank (e.g. gpa0,
->> gpx2) and "gpio-controller" property.  The node name is then used for
->> matching between driver data and DTS.
->>
->> Newly introduced dtschema expects to have nodes ending with "-gpio-bank"
->> suffix, so rewrite bank-devicetree matching to look for old and new
->> style of naming.
->>
->> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
->> ---
->>  drivers/pinctrl/samsung/pinctrl-samsung.c | 57 ++++++++++++++++++-----
->>  1 file changed, 45 insertions(+), 12 deletions(-)
->>
->> diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/samsung/pinctrl-samsung.c
->> index f2864a7869b3..561853df8ef7 100644
->> --- a/drivers/pinctrl/samsung/pinctrl-samsung.c
->> +++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
->> @@ -1011,13 +1011,56 @@ static void samsung_banks_of_node_put(struct samsung_pinctrl_drv_data *d)
->>                 of_node_put(bank->of_node);
->>  }
->>
->> +/*
->> + * Iterate over all driver pin banks to find one matching the name of node,
->> + * skipping optional "-gpio" node suffix. When found, assign node to the bank.
->> + */
->> +static void samsung_banks_of_node_get(struct device *dev,
->> +                                     struct samsung_pinctrl_drv_data *d,
->> +                                     struct device_node *node)
->> +{
->> +       const char *suffix = "-gpio-bank";
->> +       struct samsung_pin_bank *bank;
->> +       struct device_node *child;
->> +       /* Pin bank names are up to 4 characters */
->> +       char node_name[20];
->> +       unsigned int i;
->> +       size_t len;
->> +
->> +       bank = d->pin_banks;
->> +       for (i = 0; i < d->nr_banks; ++i, ++bank) {
->> +               strscpy(node_name, bank->name, sizeof(node_name));
->> +               len = strlcat(node_name, suffix, sizeof(node_name));
->> +               if (len == sizeof(sizeof(node_name))) {
-> 
-> Double sizeof is probably wrong?
-
-Thanks, copy-paste error... it should be also "len >= sizeof".
+Hi,
 
 
-Best regards,
-Krzysztof
+On 12/1/21 4:53 PM, Kent Gibson wrote:
+> On Wed, Dec 01, 2021 at 10:01:46AM -0800, Dipen Patel wrote:
+>> Hi,
+>>
+>>
+>> On 12/1/21 9:16 AM, Kent Gibson wrote:
+>>> On Tue, Nov 30, 2021 at 07:29:20PM -0800, Dipen Patel wrote:
+>>>> Hi,
+>>>>
+>>>> On 11/25/21 5:31 PM, Kent Gibson wrote:
+>>>>> On Tue, Nov 23, 2021 at 11:30:36AM -0800, Dipen Patel wrote:
+>>>>>> This patch adds new clock type for the GPIO controller which can
+>>>>>> timestamp gpio lines in realtime using hardware means. To expose such
+>>>>>> functionalities to the userspace, code has been added in this patch
+>>>>>> where during line create call, it checks for new clock type and if
+>>>>>> requested, calls hardware timestamp related API from gpiolib.c.
+>>>>>> During line change event, the HTE subsystem pushes timestamp data
+>>>>>> through callbacks.
+>>>>>>
+>>>>>> Signed-off-by: Dipen Patel <dipenp@nvidia.com>
+>>>>>> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+>>>>>> ---
+>>>>>> Changes in v2:
+>>>>>> - Added hte_dir and static structure hte_ts_desc.
+>>>>>> - Added callbacks which get invoked by HTE when new data is available.
+>>>>>> - Better use of hte_dir and seq from hte_ts_desc.
+>>>>>> - Modified sw debounce function to accommodate hardware timestamping.
+>>>>>>
+>>>>>>  drivers/gpio/gpiolib-cdev.c | 161 ++++++++++++++++++++++++++++++++++--
+>>>>>>  include/uapi/linux/gpio.h   |   1 +
+>>>>>>  2 files changed, 153 insertions(+), 9 deletions(-)
+>>>>>>
+>>>>>> [snip]
+> The code here has to deal with the general case, not just the one example
+> driver you have provided.  So in general there COULD be gaps in the
+> ts->seq, right?
+>
+> I do see that using the ts-seq for sw debounced lines is problematic
+> though. The debouncer itself will be discarding hte events, but that
+> shouldn't be considered a lost event to the user.  You could track
+> how many events are discarded by the debouncer and subtract those from
+> the sequence numbers reported to userspace?
+
+This could be little complicated, especially for "hybrid" scenario where
+
+cdev debouncer receives partial events to discard and rest is dropped in hw fifo
+
+in hte core. For example, if there were 5 events to discard before debounce period,
+
+cdev receives only 3 events to discard and rest 2 is dropped in hte core. In this
+
+case, when debounce period ends and work func gets executed, it will take 3rd event
+
+as that was the last seen in cdev debouncer. This makes both ts and seq unstable and
+
+out of sync. In the absence of actual hardware which can drop, its probably hard to
+
+simulate and implement complete solution to tackle this.
+
+
+>
+>
