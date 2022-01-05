@@ -2,75 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DB01A4854A3
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jan 2022 15:34:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A34F48549A
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jan 2022 15:32:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240936AbiAEOc4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 5 Jan 2022 09:32:56 -0500
-Received: from mga04.intel.com ([192.55.52.120]:17307 "EHLO mga04.intel.com"
+        id S230469AbiAEOcN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 5 Jan 2022 09:32:13 -0500
+Received: from mga17.intel.com ([192.55.52.151]:2677 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240913AbiAEOcw (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 5 Jan 2022 09:32:52 -0500
+        id S240918AbiAEOcJ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 5 Jan 2022 09:32:09 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641393172; x=1672929172;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=mubmu9RPixbi5TiZQepwRzGoG99UemGHfUe1VS/usmU=;
-  b=K12BkOyXPH2krTkGr/KYVv1zwCeHVFQO0fzj67jeSPn5QVoeG3u0W7BV
-   up7cA8CbbU50sC7oaYdJE8OTW5xXGhfwZqE3tNtQGj+EDiSaV4aFWbKRq
-   JAEBqTxE5J+W4SyRxOrevsIzjqw9MeqJpbvd39U/HK1MEq3s6H3Q8/DFB
-   WFUrKrjPDvFrW889bUs1N6tBAbPThSrTe4+TXl2KtOSAP/GUO7ITJP4nS
-   8s19Dmr7sJZnRIyH5gC6DeyERCAV+1QpP6TBsJ8LcJbRIl4pBEC5mFVbB
-   ynh+Kje41R7GM8XIGjz37sMuXIj+TwfWOjWWp2VYlBORxx7ZR4VcXjwuN
+  t=1641393129; x=1672929129;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=MIb266mzAe1OmHItr3ekG/hS6Ob4ACfCHQRZYW42My8=;
+  b=m1qQGnuFKaK7jZvm060nNF6lLLnebAfoc+rlGv2JV6hXI8SsXjcu4h5r
+   wBu8N/IqkVssFAJ2ocUPCIZ3tk4/zD0M4H0J/djCvABK3Al1ulw93SdH6
+   aQswG9c3TOljGzJW4hjjHLdPI7/mkY0AdnDIpqHeNmtMUmacD/MpcfL9a
+   9aAAmiaBmdOAz5aluPlGQqsMLWEf8J92QdpqnwQ1V5oStOwRbeuQDWr2E
+   wzhuHvXlF3TegsvKmupwV4eYaZcc34XaoiEOCHsqVm9C+5O0DojSV/YoO
+   +LdRvAp8EZtEJFMhPj4y2w/s6z6r6Uun1+tWnz/boFuEHaaOcPyRmOLJ6
    g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="241273926"
+X-IronPort-AV: E=McAfee;i="6200,9189,10217"; a="223136255"
 X-IronPort-AV: E=Sophos;i="5.88,264,1635231600"; 
-   d="scan'208";a="241273926"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2022 06:24:36 -0800
+   d="scan'208";a="223136255"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2022 06:23:27 -0800
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,264,1635231600"; 
-   d="scan'208";a="470582650"
-Received: from smile.fi.intel.com ([10.237.72.61])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2022 06:24:33 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1n57C7-006jGY-Vp;
-        Wed, 05 Jan 2022 16:23:15 +0200
-Date:   Wed, 5 Jan 2022 16:23:15 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Thierry Reding <treding@nvidia.com>,
-        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH v1 1/1] gpio: tegra: Get rid of duplicate of_node
- assignment
-Message-ID: <YdWp09bj4SP5oNvc@smile.fi.intel.com>
-References: <20211223122639.86923-1-andriy.shevchenko@linux.intel.com>
+   d="scan'208";a="526551796"
+Received: from mylly.fi.intel.com (HELO [10.237.72.50]) ([10.237.72.50])
+  by orsmga008.jf.intel.com with ESMTP; 05 Jan 2022 06:23:25 -0800
+Message-ID: <0c6900c2-656b-833f-5775-b76a852bc8eb@linux.intel.com>
+Date:   Wed, 5 Jan 2022 16:23:24 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211223122639.86923-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.4.1
+Subject: Re: pinctrl-cherryview regression in linux-next on preproduction
+ Braswell
+Content-Language: en-US
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     linux-gpio@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>
+References: <70004f1a-fef5-f6e9-6824-47eeb59f8014@linux.intel.com>
+ <6d133b89-cc03-6308-6da7-dcea95a93a8c@redhat.com>
+ <a8b6d8f1-ad8c-23ac-a85b-2c903530735f@linux.intel.com>
+ <c29e98f5-c8e4-1967-a249-a461776488ad@redhat.com>
+ <65271fd1-1c1c-f2ad-9b0f-60174e791eaa@linux.intel.com>
+ <27a870e5-675a-564f-2bfe-ee913bdec0ac@redhat.com>
+ <60adc8c5-3d58-b7bf-6c53-70599118b83f@redhat.com>
+ <e3052473-0dba-49b3-c58c-c100742c978d@linux.intel.com>
+ <d04b5312-a38f-e7a7-f6cf-35320daade39@redhat.com>
+From:   Jarkko Nikula <jarkko.nikula@linux.intel.com>
+In-Reply-To: <d04b5312-a38f-e7a7-f6cf-35320daade39@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Dec 23, 2021 at 02:26:39PM +0200, Andy Shevchenko wrote:
-> GPIO library does copy the of_node from the parent device of
-> the GPIO chip, there is no need to repeat this in the individual
-> drivers. Remove these assignment all at once.
+On 1/4/22 16:47, Hans de Goede wrote:
+> Hi Jarkko,
 > 
-> For the details one may look into the of_gpio_dev_init() implementation.
+> On 1/4/22 15:38, Jarkko Nikula wrote:
+>> That gave me an idea to look at is there anything suspicious in "top" or /proc/interrupts (no and no) but powertop shows CPU 0 is over 90 % in C0 state and max frequency.
+>>
+>> But comparing powertop on v5.16-rc8 it does look sometimes the same and sometimes CPU 0 is less in C0 (but still over 30 %). Hard to say is there difference but obviously v5.16-rc8 either is not good on this machine since CPU 0 and package seems to reach idle only 5 % or less.
+> 
+> Hmm, does this happen to with the "hack" patch to initially mask interrupts
+> triggered by all the interrupt-lines of the GPIO-controller ?
+> 
+> Ah upon reading your reply a second time I see you already checked
+> /proc/interrupts; and that you are also seeing this with 5.16-rc8.
+> 
+> So the load is likely not caused by the pinctrl issue and there also
+> is some other issue I guess...
+> 
+> For the high cpu-load issue it would be good to know if this is
+> also present on older kernels.
+> 
+Sorry I mean cpu load is near idle according to top and no visible 
+interrupt flood in /proc/interrupts but powertop shows CPU 0 is mostly 
+in C0 or C1 state and doesn't idle or idles very near to 0 %. This is 
+from v5.16-rc8.
 
-Any comments on this one?
+I think on this machine only MMC card detect is using the pincontrol. At 
+least pinctrl_cherryview module usage drops to zero and no users in 
+/sys/kernel/debug/gpio after unbinding all devices from 
+/sys/bus/platform/drivers/sdhci-acpi/.
 
--- 
-With Best Regards,
-Andy Shevchenko
+MMC looks like to be well behaving since nothing changes after unbinding 
+it and card detect is this one "INT33FF:03: using interrupt line 0 for 
+pin 81".
 
+However if I blacklist cherryview-pinctrl then CPU 0 and package will 
+reach deeper C states. Perhaps misconfigured pin etc by the firmware?
 
+But since those issues were here before the regression and your fix 
+makes the machine booting again this case is solved by it.
+
+Jarkko
