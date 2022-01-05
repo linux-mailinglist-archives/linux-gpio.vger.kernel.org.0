@@ -2,285 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A68C2484A7D
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Jan 2022 23:12:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 03BB8484FF9
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jan 2022 10:24:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235273AbiADWMY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Jan 2022 17:12:24 -0500
-Received: from mail-oi1-f174.google.com ([209.85.167.174]:33695 "EHLO
-        mail-oi1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231725AbiADWMX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Jan 2022 17:12:23 -0500
-Received: by mail-oi1-f174.google.com with SMTP id w7so40770329oiw.0;
-        Tue, 04 Jan 2022 14:12:23 -0800 (PST)
+        id S238845AbiAEJYR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 5 Jan 2022 04:24:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57114 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233916AbiAEJYP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Jan 2022 04:24:15 -0500
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C333C061784
+        for <linux-gpio@vger.kernel.org>; Wed,  5 Jan 2022 01:24:15 -0800 (PST)
+Received: by mail-ed1-x535.google.com with SMTP id j6so159287335edw.12
+        for <linux-gpio@vger.kernel.org>; Wed, 05 Jan 2022 01:24:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VZAhL8Z5rng0WZNy2ynW2iZqVPg+qWEaR8nX4oo1zQU=;
+        b=pUND0ycnRiGiPxx6TpuN8kVUUBkLax1m/IqBdhKhthNhTBimoM3UuAogqAhYXCxK11
+         oLt2A04bYIwzzgcfEPg8yqJTrVono8AGKFf53GbYoXApyPhKYJWXe1KDDOHLPmPuEkqt
+         zzkhAkicsYYOheKEEVRXqdJWxbUm4msfQ1EHXuHdmLKU/3hP8QGif1aK+pQ/f1Q0nkmW
+         ALhR4HIw8L5xYreiJJ6ipFWl8CDAxBfotFfmSbVfPBJvnFTRFJV+78lqHQN3bp/AcD8c
+         cEohFB+R7dtIgWjfmqT/Vy8oc2YpZz/7iIfZ4a5AIQiogWPssJAyFGZ8VQq2V1ekKodJ
+         g6AQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Zxat3RxZ2kL6hVjxEg9Pud3VyF3p+RYKJBac3eG1N4Y=;
-        b=p6IkxNqCdDLJddUthHbejGcgv19Iocqxu5fVvM5Qscimn7QGIaQj/OMPTGbD9sbwsW
-         mZ807OKcbc7bBx6ohY5Q+rQz1EOP7QnR3/7dB4JnHLLmevqltkBc9Br7vgtU4SOPVzC4
-         vZz2J9TFTATgYBEk+7OcMuUidzdQIF2GPYdz7NTeVFzq85qh3W/moIEFd1XGhnxnNxAt
-         UweUlj9+9LADVESeG1LeiMPAWU2LFXWbHAqNIYDHCyUt+venIdoXGj3adYOtesHDHZ6J
-         E4ioULe/8lFLU/iJdBm5KDKqXKgSSB6nuZiQsHMlzAr6yf2nt8wB7CA/Ret2YlOSzz8l
-         QVmg==
-X-Gm-Message-State: AOAM533Amsbnm6R0Ye6q+htETj1YrGY/y1qq0u0R/84BvdXKbUdwibfV
-        V2RX8rHwy3TTrr9MqdhS/Hc+5RtbFA==
-X-Google-Smtp-Source: ABdhPJzKklA8L9Ga3Uu5ApL9Su61SC8+C1UDzKMN6qYRyq2KiheeDRYnHu8/n6rnH31NuYcAyKwz+Q==
-X-Received: by 2002:aca:902:: with SMTP id 2mr319380oij.79.1641334343260;
-        Tue, 04 Jan 2022 14:12:23 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id h14sm7631620otr.4.2022.01.04.14.12.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jan 2022 14:12:22 -0800 (PST)
-Received: (nullmailer pid 1534010 invoked by uid 1000);
-        Tue, 04 Jan 2022 22:12:21 -0000
-Date:   Tue, 4 Jan 2022 16:12:21 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        openbmc@lists.ozlabs.org, Tomer Maimon <tmaimon77@gmail.com>,
-        Joel Stanley <joel@jms.id.au>, linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>
-Subject: Re: [PATCH v3 4/9] dt-bindings: pinctrl: Add Nuvoton WPCM450
-Message-ID: <YdTGRY+n9XY522jg@robh.at.kernel.org>
-References: <20211224200935.93817-1-j.neuschaefer@gmx.net>
- <20211224200935.93817-5-j.neuschaefer@gmx.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VZAhL8Z5rng0WZNy2ynW2iZqVPg+qWEaR8nX4oo1zQU=;
+        b=07fvdpdjraJEUHFKpFM4gfxpPymgvet0+rdEtXSmnVPiMui0UVGoHFMAlgOGa4Y0Dy
+         3xt6cW4F8QPgUmamblON5JjCZIwQuwQKH4kNgTWMw+mPWaNO/wKNvaNo53EA/elqDZVP
+         UKt+BbZ63a300wWRS0zU72xC5OQXSN9yMqa9DaxIr3Sx0WITNvSUhWPrckWvrDTnYffJ
+         2ocxZsVkj8bs647MwnbiM5tLwn4Rb88O45eJqj61H2smlCz31bHnUuMEJeS4s0MZvGk2
+         lOUhazeqNGeMLANstDF1yzI0a7Nv8QOioywhhqya1RqmwgVFXhJKYo7MiFRQNNQyCcqw
+         o3yA==
+X-Gm-Message-State: AOAM532rc5CHHkGeJsficGexhaEb92vnP1CNHo1aFS4i3Ro43na+2f13
+        aqDBEqRLIREptI3YrM24N1QzfzSvNUnYKMKUct0UyQ==
+X-Google-Smtp-Source: ABdhPJyfx7kDEB6a+g4pnomAPfhLVnL8TwNUhADSs1P6ZZzCMT2lPQxF7hDvyfVtsYAt/Y8XbPCv6BcJsUfrLsMrBlk=
+X-Received: by 2002:a17:906:249a:: with SMTP id e26mr41387622ejb.492.1641374653771;
+ Wed, 05 Jan 2022 01:24:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211224200935.93817-5-j.neuschaefer@gmx.net>
+References: <20211222171915.9053-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20211222171915.9053-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20211222171915.9053-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 5 Jan 2022 10:24:03 +0100
+Message-ID: <CAMRc=MdLqea6dka+rM8xM2TcUStWg-oBEp3XKa6A=btC3BnY-g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpio: ts5500: Use platform_get_irq() to get the interrupt
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Prabhakar <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Dec 24, 2021 at 09:09:30PM +0100, Jonathan Neuschäfer wrote:
-> This binding is heavily based on the one for NPCM7xx, because the
-> hardware is similar. There are some notable differences, however:
-> 
-> - The addresses of GPIO banks are not physical addresses but simple
->   indices (0 to 7), because the GPIO registers are not laid out in
->   convenient blocks.
-> - Pinmux settings can explicitly specify that the GPIO mode is used.
-> 
-> Certain pins support blink patterns in hardware. This is currently not
-> modelled in the DT binding.
-> 
-> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-> 
-> 
+On Wed, Dec 22, 2021 at 6:19 PM Lad Prabhakar
+<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+>
+> platform_get_resource(pdev, IORESOURCE_IRQ, ..) relies on static
+> allocation of IRQ resources in DT core code, this causes an issue
+> when using hierarchical interrupt domains using "interrupts" property
+> in the node as this bypassed the hierarchical setup and messed up the
+> irq chaining.
+>
+> In preparation for removal of static setup of IRQ resource from DT core
+> code use platform_get_irq().
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > ---
-> v3:
-> - Make changes suggested by Rob Herring
-> - Fix lint errors
-> - Simplify child node patterns
-> - Remove if/type=object/then trick
-> - Reduce interrupts.maxItems to 3: 4 aren't necessary
-> - Replace list of gpio0/1/2/etc. with pattern
-> - Remove nuvoton,interrupt-map again, to simplify the binding
-> - Make tuples clearer
-> 
-> v2:
-> - https://lore.kernel.org/lkml/20211207210823.1975632-5-j.neuschaefer@gmx.net/
-> - Move GPIO into subnodes
-> - Improve use of quotes
-> - Remove unnecessary minItems/maxItems lines
-> - Remove "phandle: true"
-> - Use separate prefixes for pinmux and pincfg nodes
-> - Add nuvoton,interrupt-map property
-> - Make it possible to set pinmux to GPIO explicitly
-> 
-> v1:
-> - https://lore.kernel.org/lkml/20210602120329.2444672-5-j.neuschaefer@gmx.net/
-> ---
->  .../pinctrl/nuvoton,wpcm450-pinctrl.yaml      | 159 ++++++++++++++++++
->  1 file changed, 159 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/nuvoton,wpcm450-pinctrl.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/nuvoton,wpcm450-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/nuvoton,wpcm450-pinctrl.yaml
-> new file mode 100644
-> index 0000000000000..2d15737b5815e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/nuvoton,wpcm450-pinctrl.yaml
-> @@ -0,0 +1,159 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/nuvoton,wpcm450-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Nuvoton WPCM450 pin control and GPIO
-> +
-> +maintainers:
-> +  - Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-> +
-> +properties:
-> +  compatible:
-> +    const: nuvoton,wpcm450-pinctrl
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 0
-> +
-> +patternProperties:
-> +  # There are three kinds of subnodes:
-> +  # 1. a GPIO controller node for each GPIO bank
-> +  # 2. a pinmux node configures pin muxing for a group of pins (e.g. rmii2)
-> +  # 3. a pinconf node configures properties of a single pin
-> +
-> +  "^gpio":
-
-'^gpio@[0-7]$'
-
-> +    type: object
-> +
-> +    description:
-> +      Eight GPIO banks (gpio@0 to gpio@7), that each contain between 14 and 18
-> +      GPIOs. Some GPIOs support interrupts.
-> +
-> +    properties:
-> +      reg:
-> +        description: GPIO bank number (0-7)
-
-reg:
-  minimum: 0
-  maximum: 7
-
-But there's not an actual register address range you could use instead?
-
-> +
-> +      gpio-controller: true
-> +
-> +      "#gpio-cells":
-> +        const: 2
-> +
-> +      interrupt-controller: true
-> +
-> +      "#interrupt-cells":
-> +        const: 2
-> +
-> +      interrupts:
-> +        maxItems: 3
-> +        description:
-> +          The interrupts associated with this GPIO bank
-> +
-> +    required:
-> +      - reg
-> +      - gpio-controller
-> +      - '#gpio-cells'
-> +
-> +  "^mux-":
-> +    $ref: pinmux-node.yaml#
-> +
-> +    properties:
-> +      groups:
-> +        description:
-> +          One or more groups of pins to mux to a certain function
-> +        items:
-> +          enum: [ smb3, smb4, smb5, scs1, scs2, scs3, smb0, smb1, smb2, bsp,
-> +                  hsp1, hsp2, r1err, r1md, rmii2, r2err, r2md, kbcc, dvo,
-> +                  clko, smi, uinc, gspi, mben, xcs2, xcs1, sdio, sspi, fi0,
-> +                  fi1, fi2, fi3, fi4, fi5, fi6, fi7, fi8, fi9, fi10, fi11,
-> +                  fi12, fi13, fi14, fi15, pwm0, pwm1, pwm2, pwm3, pwm4, pwm5,
-> +                  pwm6, pwm7, hg0, hg1, hg2, hg3, hg4, hg5, hg6, hg7 ]
-> +      function:
-> +        description:
-> +          The function that a group of pins is muxed to
-> +        enum: [ smb3, smb4, smb5, scs1, scs2, scs3, smb0, smb1, smb2, bsp,
-> +                hsp1, hsp2, r1err, r1md, rmii2, r2err, r2md, kbcc, dvo0,
-> +                dvo1, dvo2, dvo3, dvo4, dvo5, dvo6, dvo7, clko, smi, uinc,
-> +                gspi, mben, xcs2, xcs1, sdio, sspi, fi0, fi1, fi2, fi3, fi4,
-> +                fi5, fi6, fi7, fi8, fi9, fi10, fi11, fi12, fi13, fi14, fi15,
-> +                pwm0, pwm1, pwm2, pwm3, pwm4, pwm5, pwm6, pwm7, hg0, hg1,
-> +                hg2, hg3, hg4, hg5, hg6, hg7, gpio ]
-> +
-> +    dependencies:
-> +      groups: [ function ]
-> +      function: [ groups ]
-> +
-> +    additionalProperties: false
-> +
-> +  "^cfg-":
-> +    $ref: pincfg-node.yaml#
-> +
-> +    properties:
-> +      pins:
-> +        description:
-> +          A list of pins to configure in certain ways, such as enabling
-> +          debouncing
-> +        items:
-> +          pattern: "^gpio1?[0-9]{1,2}$"
-> +
-> +      input-debounce: true
-> +
-> +    additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    pinctrl: pinctrl@b8003000 {
-> +      compatible = "nuvoton,wpcm450-pinctrl";
-> +      reg = <0xb8003000 0x1000>;
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      gpio0: gpio@0 {
-> +        reg = <0>;
-> +        gpio-controller;
-> +        #gpio-cells = <2>;
-> +        interrupts = <2 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <3 IRQ_TYPE_LEVEL_HIGH>,
-> +                     <4 IRQ_TYPE_LEVEL_HIGH>;
-> +      };
-> +
-> +      mux-rmii2 {
-> +        groups = "rmii2";
-> +        function = "rmii2";
-> +      };
-> +
-> +      pinmux_uid: mux-uid {
-> +        groups = "gspi", "sspi";
-> +        function = "gpio";
-> +      };
-> +
-> +      pinctrl_uid: cfg-uid {
-> +        pins = "gpio14";
-> +        input-debounce = <1>;
-> +      };
-> +    };
-> +
-> +    gpio-keys {
-> +      compatible = "gpio-keys";
-> +      pinctrl-names = "default";
-> +      pinctrl-0 = <&pinctrl_uid>, <&pinmux_uid>;
-> +
-> +      uid {
-> +        label = "UID";
-> +        linux,code = <102>;
-> +        gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
-> +      };
-> +    };
+>  drivers/gpio/gpio-ts5500.c | 11 ++++-------
+>  1 file changed, 4 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-ts5500.c b/drivers/gpio/gpio-ts5500.c
+> index c91890488402..b159e92a3612 100644
+> --- a/drivers/gpio/gpio-ts5500.c
+> +++ b/drivers/gpio/gpio-ts5500.c
+> @@ -317,22 +317,19 @@ static int ts5500_dio_probe(struct platform_device *pdev)
+>         struct device *dev = &pdev->dev;
+>         const char *name = dev_name(dev);
+>         struct ts5500_priv *priv;
+> -       struct resource *res;
+>         unsigned long flags;
+>         int ret;
+>
+> -       res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+> -       if (!res) {
+> -               dev_err(dev, "missing IRQ resource\n");
+> -               return -EINVAL;
+> -       }
+> +       ret = platform_get_irq(pdev, 0);
+> +       if (ret < 0)
+> +               return ret;
+>
+>         priv = devm_kzalloc(dev, sizeof(struct ts5500_priv), GFP_KERNEL);
+>         if (!priv)
+>                 return -ENOMEM;
+>
+>         platform_set_drvdata(pdev, priv);
+> -       priv->hwirq = res->start;
+> +       priv->hwirq = ret;
+>         spin_lock_init(&priv->lock);
+>
+>         priv->gpio_chip.owner = THIS_MODULE;
 > --
-> 2.30.2
-> 
-> 
+> 2.17.1
+>
+
+Applied, thanks!
+
+Bart
