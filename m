@@ -2,166 +2,252 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 961384854C5
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jan 2022 15:40:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DE594856C2
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Jan 2022 17:39:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240984AbiAEOkb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 5 Jan 2022 09:40:31 -0500
-Received: from mout.gmx.net ([212.227.17.21]:48219 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236305AbiAEOka (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 5 Jan 2022 09:40:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1641393621;
-        bh=mKw/05+8dlDOK1gyFsZxxQMwltPU4uxy0b37Wi8Vt4c=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=Z9X06Km9SYng8CmYdVQc7UrvL0Sugy7jC3CjQLcqmvfFGh6GZE2wxflGxEEeLvXGS
-         DrzkzsWDu946rk4CtwK5QRvLLBPPqhmtN9TeB5wirHJcLj18V/AdczamFe/FlnGRAp
-         u+4YVzwsz0AOXnoen+G04PVae8qGAJjIqRWSw6T8=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([5.146.194.160]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mf0BG-1mU90w37Eo-00gWIf; Wed, 05
- Jan 2022 15:40:20 +0100
-Date:   Wed, 5 Jan 2022 15:40:19 +0100
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        openbmc@lists.ozlabs.org, Tomer Maimon <tmaimon77@gmail.com>,
-        Joel Stanley <joel@jms.id.au>, linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>
-Subject: Re: [PATCH v3 4/9] dt-bindings: pinctrl: Add Nuvoton WPCM450
-Message-ID: <YdWt0zUh4ds1xlPz@latitude>
-References: <20211224200935.93817-1-j.neuschaefer@gmx.net>
- <20211224200935.93817-5-j.neuschaefer@gmx.net>
- <YdTGRY+n9XY522jg@robh.at.kernel.org>
+        id S241952AbiAEQjS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 5 Jan 2022 11:39:18 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:56836 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231463AbiAEQjR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Jan 2022 11:39:17 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8F2B761807;
+        Wed,  5 Jan 2022 16:39:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAF7EC36AF6;
+        Wed,  5 Jan 2022 16:39:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1641400756;
+        bh=x1d4jr/+fx6ugz5GA/Jkyo7ittb6atO1cNRYg8TyyoU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Q4B8H4Kxi1NqUvGtv7KQQ1pHjjLQRWWpMjMcjBa+/9HWY9Qs0GSMCRP73R2G1q+Jr
+         eCfVA/y6l9v4B6WgcaFrWQ1R4yWwhK6IxV+tS4X2TiB1Zf2K6V2OGjqm8nB9tJyO5i
+         sfSjdJs6/y0jPBCifqHsQZiYNuBOv35Ro+2auUg+b8E1K7s2959IWujJBlyVz+90UG
+         ++d8U4ll4VE3MwszIsp5BOKuIBet75Ag1+/dOAPoe27YNLKJSJm28Tih3wHOSgjwPe
+         fVNvgmmYJfviX7Y1sJi02S1MFqJjAqfXxXPe0wmPUsjcpWabgPIY6L5SAioHAoRVu0
+         VisTHJ8Sv2VZA==
+Received: by mail-ed1-f50.google.com with SMTP id j6so164245810edw.12;
+        Wed, 05 Jan 2022 08:39:15 -0800 (PST)
+X-Gm-Message-State: AOAM533vxfaB9ntbOmdyb3cQk5OA687cM+yyhM4obvmX0FX+QgUGsWGv
+        0tufWhmDtRYlQwzXb4DrxS9FMGinak+uMLJxiQ==
+X-Google-Smtp-Source: ABdhPJx0xFMDNamZPUImxbepZLgOYZlha4IHe2F7Hkoj3uMjPftdotFuxc2dp8/E2n3dnwtfRNVsYRDwLcPhykr5Ej4=
+X-Received: by 2002:a17:906:5284:: with SMTP id c4mr42991464ejm.423.1641400754134;
+ Wed, 05 Jan 2022 08:39:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="AegnL8PRarm8VMMK"
-Content-Disposition: inline
-In-Reply-To: <YdTGRY+n9XY522jg@robh.at.kernel.org>
-X-Provags-ID: V03:K1:t38DKzr0APcEybTCihKRzDiRZ98dAfGVOF/UQtV5l9e2SL/Q42A
- oUNz2uzIC+0ZwnDJytxJAoz/eRv5FxTf/lRo1W0kJTrBhGk1Y01wtkRGYTaznrHosKnzaG9
- pqhUnlXSjm/gONM7ADMGdYxFlVZvF4kMcQ/0j0hV8c9g4L/3SnZOiHxPxHaS1i6V68whZES
- hFrWiNi2g3NMIfjE017cQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Ahh9kZkiTME=:8F5CgqUwhOliqITJt0h/l+
- FOkiomXBM4jtnbBFrl71IsanQowlDHvXFr1b3P9/5WxpQkURis++1vyDTaD2YZ3t7kyc6fWj+
- Kb2jSNdUWffNMw5EvCEv0bC82OwTsckuoCGfO96xdlX0CjZyQkR1SutCX7ATDxFx+V6jtFQLV
- btPyKyDrpIGOKas6rUcWNRI3v2etsRGSSqqnWaoxiaUx4uCaW8dJMrtKH4YjorF3k5P7EAv6S
- bOcKd/ukzQ1nxKGGIqNof3TnVAtPJ2VdcnHIFKr1wa9obuuECDRgSvqKm5HNtJtnjBXKM8jun
- 3jgGC7NLntanjoRyEAi1N37x0y5N6BRGVFQWbeOUC40AO5iffou447gBB5aBR/xLNxM8KoyUi
- z7fVZLowpB8y48KroLwc8DqmAIGBdHjv5yYq4sUn2tIZO03v4ZwF6oZyzDVOrBW52VANomIS2
- NAfbNrFzcATJH3+38tdaIhx4Hn9scTUjRzAs+ljlyxEl+MylcFcg7BeoJpxajbcBvVyEk+pgq
- V13hZD8qfAVBHyF36WKTGqmu9kMvOuc5nfaM7/xV+ENlBXl9Ty0uAmbdMH5XZ8jz1DawLS1DG
- EO6dxlqEZ5IPAAJbNxLtxpY04jdsAgBTeBXxmoHO0CJ2DRyyJtGaI8wLD4HWYTSD5NUKi4cpl
- y0e0c/3DASQ0G6zeIIq+JP1r51JH19t4r9dBxfwmMzV6fyxfeoF5wSj0wDNlnokeUyji0IVgA
- g3paouAHkfeCO0/HJdvx8P1Bd9GB+RJohjLZROMO4fibFS4YXkNaEhmJ+hD/Yczj/ihccr8hK
- WYun0vg3Q1pJNuP1klyLVXLhdJR8wL8f2hJY+Iv/rXWDAxDt30qXFMlq8VAChBTAPsDpMYvw9
- hfCYdJ6wccwiGgynn5L61E5qB9taJ4h2FLAoXUmstf8ijKsCcDgBIatkzS5MyuPVPLhuDvsYU
- C4CaMgdYCYEob/vWfOQl37XeS9wo+z0/dSbj9av3tPi8Y+20IJSR4W5IwaUVJTE002AXA2OLV
- 56CmzoOK2yo5+bZwuAhYNbjpwdAQEAxcOV+Ch+6kBaHNx/HzN54A5Sl9IzciL5fjqrhjSrDoD
- GbldNS5m22ronA=
+References: <20211208003727.3596577-1-f.fainelli@gmail.com> <20211208003727.3596577-2-f.fainelli@gmail.com>
+In-Reply-To: <20211208003727.3596577-2-f.fainelli@gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 5 Jan 2022 10:39:02 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+0E8CPeAegp0mV_qBTVcoLuywppRiOvCtHGp6_cOxH3Q@mail.gmail.com>
+Message-ID: <CAL_Jsq+0E8CPeAegp0mV_qBTVcoLuywppRiOvCtHGp6_cOxH3Q@mail.gmail.com>
+Subject: Re: [PATCH v3 01/15] dt-bindings: mmc: Convert Broadcom STB SDHCI
+ binding to YAML
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     devicetree@vger.kernel.org,
+        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Gregory Fong <gregory.0xf0@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Markus Mayer <mmayer@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Al Cooper <alcooperx@gmail.com>,
+        Doug Berger <opendmb@gmail.com>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:MULTIMEDIA CARD (MMC), SECURE DIGITAL (SD) AND..." 
+        <linux-mmc@vger.kernel.org>,
+        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue, Dec 7, 2021 at 6:37 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+> Convert the Broadcom STB SDHCI controller Device Tree binding to YAML.
+>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  .../bindings/mmc/brcm,sdhci-brcmstb.txt       |  53 ----------
+>  .../bindings/mmc/brcm,sdhci-brcmstb.yaml      | 100 ++++++++++++++++++
+>  2 files changed, 100 insertions(+), 53 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.txt
+>  create mode 100644 Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.txt b/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.txt
+> deleted file mode 100644
+> index ae2074184528..000000000000
+> --- a/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.txt
+> +++ /dev/null
+> @@ -1,53 +0,0 @@
+> -* BROADCOM BRCMSTB/BMIPS SDHCI Controller
+> -
+> -This file documents differences between the core properties in mmc.txt
+> -and the properties used by the sdhci-brcmstb driver.
+> -
+> -NOTE: The driver disables all UHS speed modes by default and depends
+> -on Device Tree properties to enable them for SoC/Board combinations
+> -that support them.
+> -
+> -Required properties:
+> -- compatible: should be one of the following
+> -  - "brcm,bcm7425-sdhci"
+> -  - "brcm,bcm7445-sdhci"
+> -  - "brcm,bcm7216-sdhci"
+> -
+> -Refer to clocks/clock-bindings.txt for generic clock consumer properties.
+> -
+> -Example:
+> -
+> -       sdhci@84b0000 {
+> -               sd-uhs-sdr50;
+> -               sd-uhs-ddr50;
+> -               sd-uhs-sdr104;
+> -               sdhci,auto-cmd12;
+> -               compatible = "brcm,bcm7216-sdhci",
+> -                          "brcm,bcm7445-sdhci",
+> -                          "brcm,sdhci-brcmstb";
+> -               reg = <0x84b0000 0x260 0x84b0300 0x200>;
+> -               reg-names = "host", "cfg";
+> -               interrupts = <0x0 0x26 0x4>;
+> -               interrupt-names = "sdio0_0";
+> -               clocks = <&scmi_clk 245>;
+> -               clock-names = "sw_sdio";
+> -       };
+> -
+> -       sdhci@84b1000 {
+> -               mmc-ddr-1_8v;
+> -               mmc-hs200-1_8v;
+> -               mmc-hs400-1_8v;
+> -               mmc-hs400-enhanced-strobe;
+> -               supports-cqe;
+> -               non-removable;
+> -               bus-width = <0x8>;
+> -               compatible = "brcm,bcm7216-sdhci",
+> -                          "brcm,bcm7445-sdhci",
+> -                          "brcm,sdhci-brcmstb";
+> -               reg = <0x84b1000 0x260 0x84b1300 0x200>;
+> -               reg-names = "host", "cfg";
+> -               interrupts = <0x0 0x27 0x4>;
+> -               interrupt-names = "sdio1_0";
+> -               clocks = <&scmi_clk 245>;
+> -               clock-names = "sw_sdio";
+> -       };
+> diff --git a/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.yaml b/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.yaml
+> new file mode 100644
+> index 000000000000..dccd5ad96981
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/brcm,sdhci-brcmstb.yaml
+> @@ -0,0 +1,100 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mmc/brcm,sdhci-brcmstb.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Broadcom BRCMSTB/BMIPS SDHCI Controller binding
+> +
+> +maintainers:
+> +  - Al Cooper <alcooperx@gmail.com>
+> +  - Florian Fainelli <f.fainelli@gmail.com>
+> +
+> +allOf:
+> +  - $ref: mmc-controller.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - enum:
+> +              - brcm,bcm7216-sdhci
+> +          - const: brcm,bcm7445-sdhci
+> +          - const: brcm,sdhci-brcmstb
+> +      - items:
+> +          - enum:
+> +              - brcm,bcm7445-sdhci
+> +          - const: brcm,sdhci-brcmstb
+> +      - items:
+> +          - enum:
+> +              - brcm,bcm7425-sdhci
+> +          - const: brcm,sdhci-brcmstb
+> +
+> +  reg:
+> +    minItems: 2
+> +
+> +  reg-names:
+> +    items:
+> +      - const: host
+> +      - const: cfg
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +    description:
+> +      handle to core clock for the sdhci controller.
+> +
+> +  clock-names:
+> +    items:
+> +      - const: sw_sdio
+> +
+> +  sdhci,auto-cmd12:
+> +    type: boolean
+> +    description: Specifies that controller should use auto CMD12
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    mmc@84b0000 {
+> +      sd-uhs-sdr50;
+> +      sd-uhs-ddr50;
+> +      sd-uhs-sdr104;
+> +      sdhci,auto-cmd12;
+> +      compatible = "brcm,bcm7216-sdhci",
+> +                   "brcm,bcm7445-sdhci",
+> +                   "brcm,sdhci-brcmstb";
+> +      reg = <0x84b0000 0x260>, <0x84b0300 0x200>;
+> +      reg-names = "host", "cfg";
+> +      interrupts = <0x0 0x26 0x4>;
+> +      interrupt-names = "sdio0_0";
 
---AegnL8PRarm8VMMK
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Not documented.
 
-Hi,
-
-On Tue, Jan 04, 2022 at 04:12:21PM -0600, Rob Herring wrote:
-> On Fri, Dec 24, 2021 at 09:09:30PM +0100, Jonathan Neusch=C3=A4fer wrote:
-> > This binding is heavily based on the one for NPCM7xx, because the
-> > hardware is similar. There are some notable differences, however:
-> >=20
-> > - The addresses of GPIO banks are not physical addresses but simple
-> >   indices (0 to 7), because the GPIO registers are not laid out in
-> >   convenient blocks.
-> > - Pinmux settings can explicitly specify that the GPIO mode is used.
-> >=20
-> > Certain pins support blink patterns in hardware. This is currently not
-> > modelled in the DT binding.
-> >=20
-> > Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-> >=20
-> >=20
-> > ---
-[...]
-> > +patternProperties:
-> > +  # There are three kinds of subnodes:
-> > +  # 1. a GPIO controller node for each GPIO bank
-> > +  # 2. a pinmux node configures pin muxing for a group of pins (e.g. r=
-mii2)
-> > +  # 3. a pinconf node configures properties of a single pin
-> > +
-> > +  "^gpio":
->=20
-> '^gpio@[0-7]$'
-
-Makes sense, I'll change it.
-
-> > +    type: object
-> > +
-> > +    description:
-> > +      Eight GPIO banks (gpio@0 to gpio@7), that each contain between 1=
-4 and 18
-> > +      GPIOs. Some GPIOs support interrupts.
-> > +
-> > +    properties:
-> > +      reg:
-> > +        description: GPIO bank number (0-7)
->=20
-> reg:
->   minimum: 0
->   maximum: 7
->=20
-> But there's not an actual register address range you could use instead?
-
-Unfortunately no, not easily.
-
-The GPIO bank specific registers are not arranged in a regular pattern,
-so the address/offset of the first register in a bank does not suffice
-to know the addresses of all other registers. Instead, different banks
-support slightly different functionality (e.g. power source configurations
-or automatic blinking), and the registers were crammed into the register
-space as tightly as possible.
-
-The full table of register offsets is in the driver, and for the
-aforementioned reasons, a full table is necessary.
-
-
-Thanks,
-Jonathan Neusch=C3=A4fer
-
---AegnL8PRarm8VMMK
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAmHVra8ACgkQCDBEmo7z
-X9suOg/+ODrZdL9EHnUWYJXMx2NcBGgtpeypbvXtcEfuPE2jhg27RuwrCccE5BFY
-Hdkmv9t9RpTdHebQ/w8T53GB7CcrBM6scBrbQiYTIY51U5yeycOEUT6ZNpWtm62X
-Vkzwx7hPEqb3uieuHHSZ8sxtVOGr/FgH7VUS7c+M/MyJlvzhc6KfatBqfc3KnXth
-XPKVFBd6zDScfCHcmsc4FDwBsmktKWZ66c1BwEMrKHwwzNkDJ3GDdKOSdc/KgUL4
-ASo1DFAi3dwp+J24iCEMm3JroaujJC0qdmWGBhZAyT90g3Rc9DgZ+wpCQXwgElP9
-/1UUWLRUa8XYBd0CWnHC+GVllVugNoAusagCe/GiNngEOoYat3XEvzuw155oqjMA
-NRKf9KuB+n4SQlnYkdg3IomnMca378Dm02mU0bvSOajj6kH7ziTXNOe3DuGemoq1
-wDhdHtxEHjtcTue9CVBSem5Pt9zzyerJrOIN6xnWaPXqTwD8Bw2x+U4IvfrJ5Up5
-XPQn9h1dTDElSDSRaGidKJi4QH14w9ubBUMBlphAuVM1rhEDDMMUX5wmLjB3gqTC
-74MICrHDtcNYbtbZUzcXtapY7DN5BQnOIK2HPDJpNI/+0BWcwkdTk8syZqYFiRoc
-9fsEGDBJwYRipphIbkXf6lp/o1yGUH79nVPhtyN9UnNuIvdL+8Y=
-=PgLj
------END PGP SIGNATURE-----
-
---AegnL8PRarm8VMMK--
+Rob
