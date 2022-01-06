@@ -2,102 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8ADE548668C
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Jan 2022 16:11:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CBC68486705
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Jan 2022 16:47:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240372AbiAFPLK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 6 Jan 2022 10:11:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38182 "EHLO
+        id S240580AbiAFPrc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 6 Jan 2022 10:47:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240369AbiAFPLK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Jan 2022 10:11:10 -0500
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D160C061245
-        for <linux-gpio@vger.kernel.org>; Thu,  6 Jan 2022 07:11:10 -0800 (PST)
-Received: by mail-il1-x143.google.com with SMTP id v18so2281404ilm.11
-        for <linux-gpio@vger.kernel.org>; Thu, 06 Jan 2022 07:11:10 -0800 (PST)
+        with ESMTP id S239388AbiAFPrc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Jan 2022 10:47:32 -0500
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D48C5C061245
+        for <linux-gpio@vger.kernel.org>; Thu,  6 Jan 2022 07:47:31 -0800 (PST)
+Received: by mail-pl1-x62e.google.com with SMTP id l8so532657plt.6
+        for <linux-gpio@vger.kernel.org>; Thu, 06 Jan 2022 07:47:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=6VA2nNhw86JzejaPzJ17MeUqpGjec4CrVrDeoAq5rvA=;
-        b=p6n/n80Qerrd8Acn2idrOjvkVILMVEipkPCy6Ri7s2eoNNGYO9Uj+YH7ugM+tsl/sr
-         CAkku35dxWukC7Qm7JFcy+cX6YtQuTcrACRS1daOsfkrUO/3nEiahM7j7tcnLPo3i72q
-         ERWJ8kUCv6LwB/AC9s9upk91jzfuaOKCTIuu3ZYsfdtol5hUzoRrIil1xpHYFxsc1nxB
-         b4Y8qDAdHUCkEcC0D6K7Tied+h0qHiagvRCKRSMUYian9dlydbgR78U5ZRLI0FAksejr
-         VVutkXS1H/geqQQr6+xXksco7nHOwJE7mEtcNDs0jhsi7wsxF7KOu/LCkRedU4UcuBWN
-         W/Ww==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=gvg/eQNpfZeB61AgBC4TtyzfvhRmZBsZ6+8UEPVb5fA=;
+        b=F2kcKDsjERv8p+75KqyWkjIIDBeP/xQhvrkOk0vy1k/bbxcZ1jFrh5Y+rF2djsXEB5
+         /zrmt1oM8ojUJ5ybyy1PW0BTMhcIlPZt7kr2Gx5BMmXSrBevgQlTzgnqu3TzfQ5kb45a
+         AoBKO62lp64MeAdWAQO1COObTZWYLJzueih/68zb6A+eldW8Mmbc+DglTUWbYDuvq45d
+         u4FDAcYfS2WcUvnqmROStP1HJZVUzxf4Hh7H5/2Z4Bn0FYDZTU6Q0bd7YdP78fNS8ii+
+         rjEWVNTBL4ib1kXb4VwFm2PqyVLoNmbhmCFej+2551pfB3SwrFhl0dU7JLTB2iqrXSN0
+         S5aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=6VA2nNhw86JzejaPzJ17MeUqpGjec4CrVrDeoAq5rvA=;
-        b=Ik7adUhLVg7P4sqzKmCvDHIno2cxPTz24oRtUDqkAAMDEkEoZlS/JeQpcRW7/mRKG7
-         /bSbpoX93+2bxLWdxy/Mr76z49xU0F2OMObswScphRAPVrmowxp6hLIu1kU2CQGQnPVo
-         OzTDdh/nvKnyp5meIoacqXx/1H311c1m7HR3h0QMPv0t4LRZCQRmw366rVvJVj0yvgmj
-         EK4zJLhsftnY6SKJWDb9oQ0TJMcAW8GQrWSJUV85G2rYPIQHq51ZGFGgGKAPligAMxkF
-         ac73r57pwQi8kTgE2yLaMgBpJqfBkH47GN/UJcdChmnZGty391U7sAOFwqLYMWImaa1E
-         t84Q==
-X-Gm-Message-State: AOAM532O/KwgGTkkoJYVpC8pFTippZ7iQ7GVieuPzaJc3cxxhJfV7whw
-        bJLDcGntrpRd1/ztILSqBuGBExvtVdjJgNY2UmA=
-X-Google-Smtp-Source: ABdhPJz6Pc/ACdV9paDsqlPxPbti1ft4xL2ViaxDXBwuF2S+dpUqcfAzQF014MaPp03kJ91USaGDjWpiLbZc81T7U8Y=
-X-Received: by 2002:a05:6e02:1b05:: with SMTP id i5mr29733432ilv.60.1641481869335;
- Thu, 06 Jan 2022 07:11:09 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gvg/eQNpfZeB61AgBC4TtyzfvhRmZBsZ6+8UEPVb5fA=;
+        b=r6K2xfkz40d1xvIks2jiIMW/KBz4M02XfxWAOuGt/1TJanyPdncPhxk2EiKM4/ZP6F
+         VGSrQK4BXrFrHRbNa9oN5sO5N5XsKjt1ZyrWU6TtAaiV4CDGVUABZPp+9VR887OZA7yt
+         ortXBQIDvPn2uVYj9oDp4Dyxf8fXHBCstokPjrSRMCURUXhjCg4eRIVvSfGq8NOmKiY9
+         utqeeWZjZnm3i9IyMDfv46+fSFlHBDTpcXrZtk901+qsmP0deJxFJxdjF0Qgukhc444V
+         uTKfUE7NrWjd/qGvutjYa5FznY9+z1JAHfuxG0TH+7lg0ZsU9bW7UuSFIGGzeGHFc8E+
+         WX+w==
+X-Gm-Message-State: AOAM533OE5oX349cyAfiWOfx2v4K5WugbDdhst8QOXnJVh2KxGMXnKVh
+        Um+WlcC2g+UvqLziBQ6ywmo=
+X-Google-Smtp-Source: ABdhPJyGp86rhcvdrYUYSXS+m3zIV8Nim/VZdA40QIcFDOctnAFWn2fPIBS7czlwrph08dUMHe+wAg==
+X-Received: by 2002:a17:90b:4c41:: with SMTP id np1mr10715111pjb.71.1641484051361;
+        Thu, 06 Jan 2022 07:47:31 -0800 (PST)
+Received: from sol (110-174-161-167.tpgi.com.au. [110.174.161.167])
+        by smtp.gmail.com with ESMTPSA id oo14sm2849340pjb.34.2022.01.06.07.47.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Jan 2022 07:47:30 -0800 (PST)
+Date:   Thu, 6 Jan 2022 23:47:24 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Wedson Almeida Filho <wedsonaf@google.com>,
+        Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org
+Subject: Re: [PATCH V2 2/4] libgpiod: Add rust wrappers
+Message-ID: <20220106154724.GA109697@sol>
+References: <cover.1638443930.git.viresh.kumar@linaro.org>
+ <7ace171379783b73a8f560737fd47900ac28924c.1638443930.git.viresh.kumar@linaro.org>
+ <CAMRc=MeoTiUOjM_D36ZEU=echpM9jVhr1HY7fuxTDs0t0jf2Jg@mail.gmail.com>
+ <20211217001207.GA6287@sol>
+ <20211217051133.c6pipmhxxysyxdrx@vireshk-i7>
 MIME-Version: 1.0
-Received: by 2002:a05:6638:204a:0:0:0:0 with HTTP; Thu, 6 Jan 2022 07:11:08
- -0800 (PST)
-Reply-To: alhouttta@gmail.com
-From:   Al Haji Ouattara <bankbankb38@gmail.com>
-Date:   Thu, 6 Jan 2022 16:11:08 +0100
-Message-ID: <CAHJX93aQn4gi6hAYMo4pSgZ_-evS+vvP7bBCnbPLEMJhnyssLA@mail.gmail.com>
-Subject: Assalam alaikum
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211217051133.c6pipmhxxysyxdrx@vireshk-i7>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Assalam alaikum,
+On Fri, Dec 17, 2021 at 10:41:33AM +0530, Viresh Kumar wrote:
+> On 17-12-21, 08:12, Kent Gibson wrote:
+> > I'm of the opinion that a rust implementation would be better targetting
+> > the ioctls directly rather than libgpiod, as my Go library does and for
+> > essentially the same reasons.
+> 
+> I remember asking Linus initially about this and I was suggested to use libgpiod
+> instead :)
+> 
+> > To test that theory, and as an exercise to learn rust, I've been writing
+> > one, and so far I've been calling it gpiod :-|.
+> > 
 
-I am an active banker,  I saw your email address while browsing
-through the bank DTC Screen in my office yesterday. now  I am in a
-better position to transfer about $8.3 million US Dollars into a
-foreign account. If you are willing and capable to work with me to
-receive this fund into a personal or company's account, I will give
-you the full detailed information. No risk is involved as it will pass
-through normal banking procedures.
+In case you are interested, the first pass of my take on a Rust GPIO
+library[1] has finally gotten to the point of being core feature complete,
+and may be usable, although it is sorely lacking any integration tests.
+And the documentation is still pretty light, or even non-existant for
+github.
+And the event interface is either polled or blocking - haven't gotten to
+an async interface yet.
 
-Hence, I am inviting you for a business deal where this money can be
-transfer to your account which we will shared between us in the ratio
-of 50% for me,50% for you and both of us will share any expenses that
-will come during the release/transfer from our bank to your bank
-account, if you agree to my business proposal. Further details of this
-Fund release and transfer will be forwarded to you as soon as I
-receive your detail Mail.
+Anyway, there are three crates there:
+ - gpiod-uapi provides a thin and safe wrapper around the ioctls and
+   file reads, for both uAPI versions.
+ - gpiod provides a more idiomatic abstraction, and hides the uAPI
+   version being used - unless you need v2 specific features.
+ - gpiodctl provides a binary that bundles all the gpio tools into one.
 
-1)Your Full Names. (2)Your country. (3)Your Telephone
-(4)Your Occupation .(5)Your Age. (6) Your full Address.
-I will use these detail information=E2=80=99s to fill a release/transfer an=
-d
-arrange some documents on your behalf in our bank here as the
-beneficiary owner of this fund abandoned in our bank
+There are a couple of minimal example apps in the gpiod crate, in
+addition to the example that gpiodctl provides.
 
+Cheers,
+Kent.
 
-I want you to reply urgently so I will give you full details on how
-this business transaction will be executed. Please listen, this is
-real and goes on in Banks all over the world without people knowing.
-Let us utilize this opportunity because it does not always come, A lot
-of customers open private accounts with different Banks without the
-knowledge of their families and when they die, the money will be lost
-to the Bank unless someone comes to claim it. This is how a lot of
-Bank Directors make so much money silently. Also note I have the
-ability to conduct this transaction with total confidentiality with
-any company or individual involved, and both of us will share any
-expenses that will come during the release/transfer Anticipating your
-communication.
+[1] https://github.com/warthog618/gpiod-rs
 
-Please contact me through my private Email:  alhouttta@gmail.com
-
-All THE BEST Thanks
-Alh Idriss Akim Outta
