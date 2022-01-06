@@ -2,110 +2,158 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CBC68486705
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Jan 2022 16:47:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EEDA14868D0
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Jan 2022 18:41:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240580AbiAFPrc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 6 Jan 2022 10:47:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46262 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239388AbiAFPrc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Jan 2022 10:47:32 -0500
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D48C5C061245
-        for <linux-gpio@vger.kernel.org>; Thu,  6 Jan 2022 07:47:31 -0800 (PST)
-Received: by mail-pl1-x62e.google.com with SMTP id l8so532657plt.6
-        for <linux-gpio@vger.kernel.org>; Thu, 06 Jan 2022 07:47:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=gvg/eQNpfZeB61AgBC4TtyzfvhRmZBsZ6+8UEPVb5fA=;
-        b=F2kcKDsjERv8p+75KqyWkjIIDBeP/xQhvrkOk0vy1k/bbxcZ1jFrh5Y+rF2djsXEB5
-         /zrmt1oM8ojUJ5ybyy1PW0BTMhcIlPZt7kr2Gx5BMmXSrBevgQlTzgnqu3TzfQ5kb45a
-         AoBKO62lp64MeAdWAQO1COObTZWYLJzueih/68zb6A+eldW8Mmbc+DglTUWbYDuvq45d
-         u4FDAcYfS2WcUvnqmROStP1HJZVUzxf4Hh7H5/2Z4Bn0FYDZTU6Q0bd7YdP78fNS8ii+
-         rjEWVNTBL4ib1kXb4VwFm2PqyVLoNmbhmCFej+2551pfB3SwrFhl0dU7JLTB2iqrXSN0
-         S5aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gvg/eQNpfZeB61AgBC4TtyzfvhRmZBsZ6+8UEPVb5fA=;
-        b=r6K2xfkz40d1xvIks2jiIMW/KBz4M02XfxWAOuGt/1TJanyPdncPhxk2EiKM4/ZP6F
-         VGSrQK4BXrFrHRbNa9oN5sO5N5XsKjt1ZyrWU6TtAaiV4CDGVUABZPp+9VR887OZA7yt
-         ortXBQIDvPn2uVYj9oDp4Dyxf8fXHBCstokPjrSRMCURUXhjCg4eRIVvSfGq8NOmKiY9
-         utqeeWZjZnm3i9IyMDfv46+fSFlHBDTpcXrZtk901+qsmP0deJxFJxdjF0Qgukhc444V
-         uTKfUE7NrWjd/qGvutjYa5FznY9+z1JAHfuxG0TH+7lg0ZsU9bW7UuSFIGGzeGHFc8E+
-         WX+w==
-X-Gm-Message-State: AOAM533OE5oX349cyAfiWOfx2v4K5WugbDdhst8QOXnJVh2KxGMXnKVh
-        Um+WlcC2g+UvqLziBQ6ywmo=
-X-Google-Smtp-Source: ABdhPJyGp86rhcvdrYUYSXS+m3zIV8Nim/VZdA40QIcFDOctnAFWn2fPIBS7czlwrph08dUMHe+wAg==
-X-Received: by 2002:a17:90b:4c41:: with SMTP id np1mr10715111pjb.71.1641484051361;
-        Thu, 06 Jan 2022 07:47:31 -0800 (PST)
-Received: from sol (110-174-161-167.tpgi.com.au. [110.174.161.167])
-        by smtp.gmail.com with ESMTPSA id oo14sm2849340pjb.34.2022.01.06.07.47.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jan 2022 07:47:30 -0800 (PST)
-Date:   Thu, 6 Jan 2022 23:47:24 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        id S242114AbiAFRlY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 6 Jan 2022 12:41:24 -0500
+Received: from frasgout.his.huawei.com ([185.176.79.56]:4360 "EHLO
+        frasgout.his.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241966AbiAFRlY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Jan 2022 12:41:24 -0500
+Received: from fraeml714-chm.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4JVD6c3dG6z67wb3;
+        Fri,  7 Jan 2022 01:36:24 +0800 (CST)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ fraeml714-chm.china.huawei.com (10.206.15.33) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.20; Thu, 6 Jan 2022 18:41:19 +0100
+Received: from [10.47.27.56] (10.47.27.56) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.20; Thu, 6 Jan
+ 2022 17:41:15 +0000
+Subject: Re: [RFC 01/32] Kconfig: introduce and depend on LEGACY_PCI
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Niklas Schnelle <schnelle@linux.ibm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Ettore Chimenti <ek5.chimenti@gmail.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Nick Hu <nickhu@andestech.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        "Paul Walmsley" <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
+        "Damien Le Moal" <damien.lemoal@opensource.wdc.com>,
+        Ian Abbott <abbotti@mev.co.uk>,
+        "H Hartley Sweeten" <hsweeten@visionengravers.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Wedson Almeida Filho <wedsonaf@google.com>,
-        Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org
-Subject: Re: [PATCH V2 2/4] libgpiod: Add rust wrappers
-Message-ID: <20220106154724.GA109697@sol>
-References: <cover.1638443930.git.viresh.kumar@linaro.org>
- <7ace171379783b73a8f560737fd47900ac28924c.1638443930.git.viresh.kumar@linaro.org>
- <CAMRc=MeoTiUOjM_D36ZEU=echpM9jVhr1HY7fuxTDs0t0jf2Jg@mail.gmail.com>
- <20211217001207.GA6287@sol>
- <20211217051133.c6pipmhxxysyxdrx@vireshk-i7>
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Karsten Keil <isdn@linux-pingi.de>,
+        "Sathya Prakash" <sathya.prakash@broadcom.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        Michael Grzeschik <m.grzeschik@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Jakub Kicinski" <kuba@kernel.org>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        Kalle Valo <kvalo@kernel.org>, Jouni Malinen <j@w1.fi>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Kashyap Desai <kashyap.desai@broadcom.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        Nilesh Javali <njavali@marvell.com>,
+        <GR-QLogic-Storage-Upstream@marvell.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        "Teddy Wang" <teddy.wang@siliconmotion.com>,
+        Forest Bond <forest@alittletooquiet.net>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        "Wim Van Sebroeck" <wim@linux-watchdog.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        "Takashi Iwai" <tiwai@suse.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arch@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>, <linux-csky@vger.kernel.org>,
+        <linux-ide@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-hwmon@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        <linux-input@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <MPT-FusionLinux.pdl@broadcom.com>,
+        <linux-scsi@vger.kernel.org>, <intel-wired-lan@lists.osuosl.org>,
+        <linux-wireless@vger.kernel.org>, <megaraidlinux.pdl@broadcom.com>,
+        <linux-spi@vger.kernel.org>, <linux-fbdev@vger.kernel.org>,
+        <linux-serial@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <linux-watchdog@vger.kernel.org>
+References: <20220105194748.GA215560@bhelgaas>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <74bf4fde-3972-1c36-ca04-58089da0d82b@huawei.com>
+Date:   Thu, 6 Jan 2022 17:41:00 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211217051133.c6pipmhxxysyxdrx@vireshk-i7>
+In-Reply-To: <20220105194748.GA215560@bhelgaas>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.47.27.56]
+X-ClientProxiedBy: lhreml736-chm.china.huawei.com (10.201.108.87) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Dec 17, 2021 at 10:41:33AM +0530, Viresh Kumar wrote:
-> On 17-12-21, 08:12, Kent Gibson wrote:
-> > I'm of the opinion that a rust implementation would be better targetting
-> > the ioctls directly rather than libgpiod, as my Go library does and for
-> > essentially the same reasons.
+On 05/01/2022 19:47, Bjorn Helgaas wrote:
+>>>>>   ok if the PCI maintainers decide otherwise.
+>>>> I don't really like the "LEGACY_PCI" Kconfig option.  "Legacy" just
+>>>> means something old and out of favor; it doesn't say*what*  that
+>>>> something is.
+>>>>
+>>>> I think you're specifically interested in I/O port space usage, and it
+>>>> seems that you want all PCI drivers that*only*  use I/O port space to
+>>>> depend on LEGACY_PCI?  Drivers that can use either I/O or memory
+>>>> space or both would not depend on LEGACY_PCI?  This seems a little
+>>>> murky and error-prone.
+>>> I'd like to hear Arnd's opinion on this but you're the PCI maintainer
+>>> so of course your buy-in would be quite important for such an option.
+> I'd like to hear Arnd's opinion, too.  If we do add LEGACY_PCI, I
+> think we need a clear guide for when to use it, e.g., "a PCI driver
+> that uses inb() must depend on LEGACY_PCI" or whatever it is.
 > 
-> I remember asking Linus initially about this and I was suggested to use libgpiod
-> instead :)
+> I must be missing something because I don't see what we gain from
+> this.  We have PCI drivers, e.g., megaraid [1], for devices that have
+> either MEM or I/O BARs.  I think we want to build drivers like that on
+> any arch that supports PCI.
 > 
-> > To test that theory, and as an exercise to learn rust, I've been writing
-> > one, and so far I've been calling it gpiod :-|.
-> > 
+> If the arch doesn't support I/O port space, devices that only have I/O
+> BARs won't work, of course, and hopefully the PCI core and driver can
+> figure that out and gracefully fail the probe.
+> 
+> But that same driver should still work with devices that have MEM
+> BARs.  If inb() isn't always present, I guess we could litter these
+> drivers with #ifdefs, but that would be pretty ugly. 
 
-In case you are interested, the first pass of my take on a Rust GPIO
-library[1] has finally gotten to the point of being core feature complete,
-and may be usable, although it is sorely lacking any integration tests.
-And the documentation is still pretty light, or even non-existant for
-github.
-And the event interface is either polled or blocking - haven't gotten to
-an async interface yet.
+There were some ifdefs added to the 8250 drivers in Arnd's original 
+patch [0], but it does not seem included here.
 
-Anyway, there are three crates there:
- - gpiod-uapi provides a thin and safe wrapper around the ioctls and
-   file reads, for both uAPI versions.
- - gpiod provides a more idiomatic abstraction, and hides the uAPI
-   version being used - unless you need v2 specific features.
- - gpiodctl provides a binary that bundles all the gpio tools into one.
+Niklas, what happened to the 8250 and the other driver changes?
 
-There are a couple of minimal example apps in the gpiod crate, in
-addition to the example that gpiodctl provides.
+[0] 
+https://lore.kernel.org/lkml/CAK8P3a0MNbx-iuzW_-=0ab6-TTZzwV-PT_6gAC1Gp5PgYyHcrA@mail.gmail.com/
 
-Cheers,
-Kent.
+> IMO inb() should
+> be present but do something innocuous like return ~0, as it would if
+> I/O port space is supported but there's no device at that address.
+> 
+> [1]https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/scsi/megaraid.c?id=v5.15#n4210
+> 
 
-[1] https://github.com/warthog618/gpiod-rs
+That driver would prob not be used on systems which does not support 
+PIO, and so could have a HAS_IOPORT dependency. But it is not strictly 
+necessary.
 
+Anyway, it would be good to have an idea of how much ifdeffery is 
+required in drivers.
+
+Thanks,
+John
