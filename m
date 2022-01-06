@@ -2,127 +2,129 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DC40486973
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Jan 2022 19:14:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BC4EE4869A9
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Jan 2022 19:21:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242453AbiAFSOP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 6 Jan 2022 13:14:15 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:57816 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241192AbiAFSOM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Jan 2022 13:14:12 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4870561D17;
-        Thu,  6 Jan 2022 18:14:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A780C36AEB;
-        Thu,  6 Jan 2022 18:14:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641492850;
-        bh=pk9c3vFsS24A9H9YRNmuoLU04tTgveyiSfxz/RguLrg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=tWL9ah320xPJ7ZLvQrLFkjIeV1LTlPrJ2qSY/t0fKFbU+5MxnpWBBUesVfIjO0xOO
-         l+Yvi8TANgRjNK2vReZYRlLqehfzP4qE2oNJarfvWixIS0OfQkuKWpI6rrQEfWGn25
-         oroVHI/IQA8JEpMkHqxWMkHxAKg+IVXn/Zqji7RoVtpWyymeRt5WcM4qay0A7EFOWe
-         jnI4JpbaAmAttF9a/Yhl/wWUUgx6A1s8zF9Wpc8ft5Y9hFSMLv91rRujQQ/od6scnA
-         LsHiF+8iYMGoQ6RcvIn/+ZU8WqHN0Y3LnsXMJdYHRbXi/+K/WGfnGi+pM9zExj10bs
-         +smYL/+iBYHZg==
-Date:   Thu, 6 Jan 2022 12:14:09 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     John Garry <john.garry@huawei.com>
-Cc:     Niklas Schnelle <schnelle@linux.ibm.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Ettore Chimenti <ek5.chimenti@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Nick Hu <nickhu@andestech.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
-        Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-        Ian Abbott <abbotti@mev.co.uk>,
-        H Hartley Sweeten <hsweeten@visionengravers.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Karsten Keil <isdn@linux-pingi.de>,
-        Sathya Prakash <sathya.prakash@broadcom.com>,
-        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-        Suganath Prabu Subramani 
-        <suganath-prabu.subramani@broadcom.com>,
-        Michael Grzeschik <m.grzeschik@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        Kalle Valo <kvalo@kernel.org>, Jouni Malinen <j@w1.fi>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Kashyap Desai <kashyap.desai@broadcom.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        Nilesh Javali <njavali@marvell.com>,
-        GR-QLogic-Storage-Upstream@marvell.com,
-        Mark Brown <broonie@kernel.org>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Teddy Wang <teddy.wang@siliconmotion.com>,
-        Forest Bond <forest@alittletooquiet.net>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-csky@vger.kernel.org,
-        linux-ide@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-input@vger.kernel.org, netdev@vger.kernel.org,
-        linux-media@vger.kernel.org, MPT-FusionLinux.pdl@broadcom.com,
-        linux-scsi@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-        linux-wireless@vger.kernel.org, megaraidlinux.pdl@broadcom.com,
-        linux-spi@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        linux-serial@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-watchdog@vger.kernel.org
-Subject: Re: [RFC 01/32] Kconfig: introduce and depend on LEGACY_PCI
-Message-ID: <20220106181409.GA297735@bhelgaas>
+        id S242661AbiAFSVd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 6 Jan 2022 13:21:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53612 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242610AbiAFSVd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Jan 2022 13:21:33 -0500
+Received: from mail-io1-xd2d.google.com (mail-io1-xd2d.google.com [IPv6:2607:f8b0:4864:20::d2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3E87C061245;
+        Thu,  6 Jan 2022 10:21:32 -0800 (PST)
+Received: by mail-io1-xd2d.google.com with SMTP id p65so4179401iof.3;
+        Thu, 06 Jan 2022 10:21:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=u8PUM8urpd0DlumCQ6HFzJRnLfbm6k/u/SEQzO1ZixQ=;
+        b=JSO6SdtWZPDHtHmO9+Gd4ccCnwDAdiwIw83TCUdJm4givFE6rNf+5bx8Hb13PRHvX1
+         kZDIE/WxOomL6ZkJaqMJ3fTIvoEAHHYlY88B9yNJkSNyTkiKMRVeuwOhGl1byQlbTYIh
+         s+6HatHxg2Ma5NqFf3WyhsbmYtvobug7eaMzm4atAIwACA1YTtpR7PqAX/cIXrO5gXA7
+         z5FPqCnlyZuMWQtoNQTENppMZ7wREFEiYI7GE0kCST0Z/Iy5PPpFNm6JZv/M3TqXzLp4
+         UCmJ8w2xgraE34WqSXFrWDMnLWPV7UBViGHYP3DriB2DZ9+pxPfpHAE+JU/Xcjn4InPY
+         fu7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=u8PUM8urpd0DlumCQ6HFzJRnLfbm6k/u/SEQzO1ZixQ=;
+        b=wsrJwWZrRgcneY7jvj+V6G5kxbpbGSVrvoAfdJIQ/yB3WngHyEJDR1o8fNYUalNnci
+         F7DZA1J4PJNprxhOcHMu8BDOTOiAp5kyXYJkvTnBySUM3o2hXBHDIiK7hZlgbkiJfUhl
+         Hf9hio+981OagQEDji8UiGgWBb9mR33+ZCu1GRb1HyU5/yAmu5Wp1SMrdIWgKegF5dxg
+         Bcnh+vfgMny/6IeRri8jxh2VtihUE8sw+0MJZZJjsez3vcQez68PGPAG+GfPMDpEgOyb
+         04dH4PBEgU9h+Nt67y1z7w322mnsDRtPteNXTF69xJLaNdjp0ovJgFx4N0U9Ab9OdbEG
+         47mQ==
+X-Gm-Message-State: AOAM531p9lh4bgGcSCURNUl71FCkA8xKm/eBeqjSEXkLjbBCsm50bJpO
+        2hQu5jR/VdZfVybF2ViXY7VmVrW0s2+IdAXM8rk=
+X-Google-Smtp-Source: ABdhPJzY3+2ThXwMJw9yk0og+D6oKUxAyjl8KnT5uG3I140A+SYP0sC3mm/izURJuOZOF9vwnYg9BstEsPptSKj1Azk=
+X-Received: by 2002:a02:b384:: with SMTP id p4mr26798509jan.167.1641493292213;
+ Thu, 06 Jan 2022 10:21:32 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <74bf4fde-3972-1c36-ca04-58089da0d82b@huawei.com>
+References: <20211231161930.256733-1-krzysztof.kozlowski@canonical.com> <20211231161930.256733-4-krzysztof.kozlowski@canonical.com>
+In-Reply-To: <20211231161930.256733-4-krzysztof.kozlowski@canonical.com>
+From:   Alim Akhtar <alim.akhtar@gmail.com>
+Date:   Thu, 6 Jan 2022 23:50:56 +0530
+Message-ID: <CAGOxZ51OdwYFpzz1JaqHRUi3ruwqgEkLiQCCz+Yg9ROCHSQBeQ@mail.gmail.com>
+Subject: Re: [PATCH 03/24] ARM: dts: exynos: drop unused pinctrl defines in Exynos3250
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        Sam Protsenko <semen.protsenko@linaro.org>,
+        Chanho Park <chanho61.park@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jan 06, 2022 at 05:41:00PM +0000, John Garry wrote:
-> On 05/01/2022 19:47, Bjorn Helgaas wrote:
+Hello Krzysztof
 
-> > IMO inb() should
-> > be present but do something innocuous like return ~0, as it would if
-> > I/O port space is supported but there's no device at that address.
-> > 
-> > [1]https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/scsi/megaraid.c?id=v5.15#n4210
-> > 
-> 
-> That driver would prob not be used on systems which does not support PIO,
-> and so could have a HAS_IOPORT dependency. But it is not strictly necessary.
+On Sat, Jan 1, 2022 at 10:42 AM Krzysztof Kozlowski
+<krzysztof.kozlowski@canonical.com> wrote:
+>
+> The PIN_OUT/PIN_OUT_SET/PIN_CFG defines for pin controller pin
+> configuration are not used.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+> ---
+Thanks!
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
 
-I don't want the path of "this driver isn't needed because the device
-is unlikely to be used on this arch."
+>  arch/arm/boot/dts/exynos3250-pinctrl.dtsi | 25 -----------------------
+>  1 file changed, 25 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/exynos3250-pinctrl.dtsi b/arch/arm/boot/dts/exynos3250-pinctrl.dtsi
+> index dff3c6e3aa1f..a616cb1aca29 100644
+> --- a/arch/arm/boot/dts/exynos3250-pinctrl.dtsi
+> +++ b/arch/arm/boot/dts/exynos3250-pinctrl.dtsi
+> @@ -19,31 +19,6 @@ _pin {                                                               \
+>                 samsung,pin-drv = <EXYNOS4_PIN_DRV_ ##_drv>;            \
+>         }
+>
+> -#define PIN_OUT(_pin, _drv)                                            \
+> -       _pin {                                                          \
+> -               samsung,pins = #_pin;                                   \
+> -               samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;        \
+> -               samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;               \
+> -               samsung,pin-drv = <EXYNOS4_PIN_DRV_ ##_drv>;            \
+> -       }
+> -
+> -#define PIN_OUT_SET(_pin, _val, _drv)                                  \
+> -       _pin {                                                          \
+> -               samsung,pins = #_pin;                                   \
+> -               samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;        \
+> -               samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;               \
+> -               samsung,pin-drv = <EXYNOS4_PIN_DRV_ ##_drv>;            \
+> -               samsung,pin-val = <_val>;                               \
+> -       }
+> -
+> -#define PIN_CFG(_pin, _sel, _pull, _drv)                               \
+> -       _pin {                                                          \
+> -               samsung,pins = #_pin;                                   \
+> -               samsung,pin-function = <_sel>;                          \
+> -               samsung,pin-pud = <EXYNOS_PIN_PULL_ ##_pull>;           \
+> -               samsung,pin-drv = <EXYNOS4_PIN_DRV_ ##_drv>;            \
+> -       }
+> -
+>  #define PIN_SLP(_pin, _mode, _pull)                                    \
+>         _pin {                                                          \
+>                 samsung,pins = #_pin;                                   \
+> --
+> 2.32.0
+>
 
-Maybe it's not _always_ possible, but if the device can be plugged
-into the platform, I think we should be able to build the driver for
-it.
 
-If the device requires I/O port space and the platform doesn't support
-it, the PCI core or the driver should detect that and give a useful
-diagnostic.
-
-Bjorn
+-- 
+Regards,
+Alim
