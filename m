@@ -2,308 +2,197 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A269048742E
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jan 2022 09:36:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EE76A4874B8
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jan 2022 10:31:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345847AbiAGIg3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Jan 2022 03:36:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48950 "EHLO
+        id S1346463AbiAGJbn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Jan 2022 04:31:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235962AbiAGIg2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jan 2022 03:36:28 -0500
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6241BC061245
-        for <linux-gpio@vger.kernel.org>; Fri,  7 Jan 2022 00:36:28 -0800 (PST)
-Received: by mail-lf1-x133.google.com with SMTP id bp20so13020536lfb.6
-        for <linux-gpio@vger.kernel.org>; Fri, 07 Jan 2022 00:36:28 -0800 (PST)
+        with ESMTP id S1346458AbiAGJbn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jan 2022 04:31:43 -0500
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AA67C061201
+        for <linux-gpio@vger.kernel.org>; Fri,  7 Jan 2022 01:31:42 -0800 (PST)
+Received: by mail-ed1-x529.google.com with SMTP id w16so19745422edc.11
+        for <linux-gpio@vger.kernel.org>; Fri, 07 Jan 2022 01:31:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=vVZIGQpO4cybh1F58lhYGN2Aw4cqAqidnu7imo4TqmI=;
-        b=MvBUt7zxF6L9tiAjAJSe8pmrMblL38mDhm8malfZ8P1fhgvpXTOOytqAIF+ZQjKpug
-         wbY6KUOhe7lxpObroPJ3GhjVyqU4ymJhTz52SozEvjF3yrVcy/a8wGe8DaoVrZdQNkUO
-         3EMJ5mfIe7R+TPG/WY78MQ3F8qddVYDdYgEZ0=
+         :cc;
+        bh=TezwQvy/GrVo/VcXl6Kmghnct9UHJH58seMMxyEI02A=;
+        b=w2V+iJUefGp3KlCNcBsEDN8BorejU5hp+6CahknIVFUn1oU3ZtxwjYoPDxNPziGlUz
+         a0NH22cY2sthTfr8gRtlzr68GQu94z9Vv96M1sr/BVNCzMP7KwH1oLc7Y7uPIprMBJGp
+         jTor+uLGWD9ND97HWJEqboKIKTNtxd8Zvqy6BGjuUSvq1G+ejn9P6ls5DRx/e8AnqPY1
+         oaAsTxnPIOOhhcMRfiaCuwrI7HEMhNpBw6z8s5N4t1kc9kc1BvoA7/mW0OOcWAqSy0qI
+         cnNGy3ahX/tVMOrHF3dRzQQbbFBVtWLE/ojZIbe0r6fp77jLr7sD41Ov5rETXekX5g/5
+         kEfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=vVZIGQpO4cybh1F58lhYGN2Aw4cqAqidnu7imo4TqmI=;
-        b=eEKzZDs2Td3AF2VghLCZiYVbaFQOceSXr6l08jQbhLU2MJsbeEJRvV+vrVCQLOwyH9
-         YGQkYOtfeLLQfwGDNqsmm9XNfiZdR3ducvriOFS6yvflDjrVhCqwVsTAJ8UFWUwn4iXp
-         8zt3QIVpqZ8X7prEmBemJBoZ6Nzie1UXyOgpP5UxyrEy0XnzvNNhwubntKcjP+ahQt2i
-         5KYSi8YwcythENoDVFVhryi9uR2Jp00ozHc5zD0A8Q5mruIRd6cBNuPUZFGWuyYgUM8q
-         tSu4joX0vXRb1B/LNvVuFbAJzQm4el8k6W5kkYUPMGnPXSO4E9RkckBB8m1kXMEj51Ci
-         gjww==
-X-Gm-Message-State: AOAM530ExluasQ1WCiOuiWM+l0jWqIO7AMjtxdzUNCVl4NyQ+4mfpZdA
-        ZcnqgXGFpMyMpngyT2hPtWSKU5OvH/myiOE7BPkt2A==
-X-Google-Smtp-Source: ABdhPJwbMO3nPmHq3UYiC04tI8XJ/H2V1ImVa9SFgE0UWTCDPzZftmUWkNrOf6I+UA8AnpJK6C/hSqiXE+zr1pMseBI=
-X-Received: by 2002:a2e:2a84:: with SMTP id q126mr47333341ljq.457.1641544586649;
- Fri, 07 Jan 2022 00:36:26 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=TezwQvy/GrVo/VcXl6Kmghnct9UHJH58seMMxyEI02A=;
+        b=4vEqQ40f0ZCo/tySt6r6M5HD/wRq8/FKa885wj6/Ma7J3u8nhZj9+DdRA3QVg+D/VY
+         Tp4tmlXvh8ha9fr0xX1e7NbrBFJal7WWZIlR4Cejj8+NjVVzk+uBqH1dU49/vlxp3bEl
+         imPHZb3xBi5kAPZxboaUPXpiYA7+cRbKKzCxgLU50zSievrIiNXUyzdkEikj5Yj5LT6V
+         UQH489iUO+zdV5nBC4wXs1tuot2EykXOcJ96HZmwnx7zC7q8XAlqUI3dHtqYGYYBLFY0
+         YmEErO8O3ZrZwjuwBC1QAdWgMgUma2/nLvekVPnxGHgrtkEQVVvpHRsvYXTLZm6ZiITY
+         sZiw==
+X-Gm-Message-State: AOAM532BOSGmM5qe8m7AzY2SAS+5cJ+K2dQL1wlTqRzv+VjS6W9nhhpw
+        6cL7d/U75JWJrZ5yvyoY7F08BhRCqOlhTYmOeQmpjQ==
+X-Google-Smtp-Source: ABdhPJy6Pd5StasJd8Vr9TrAn4EyS2U33Mwnkud6vbrw4HpmRdCGAwwGrmolTePbriBG/I8s4Z7aITOOhf8mDSkaceA=
+X-Received: by 2002:a17:907:386:: with SMTP id ss6mr6976366ejb.101.1641547901133;
+ Fri, 07 Jan 2022 01:31:41 -0800 (PST)
 MIME-Version: 1.0
-References: <20211220121825.6446-1-tinghan.shen@mediatek.com>
- <20211220121825.6446-5-tinghan.shen@mediatek.com> <CAGXv+5GaFikojqYYv0TfQsz3NSqn7QPmTWyCJY8V2g8UYoV4OA@mail.gmail.com>
- <18c342b20ccac520eabe8019562432030ddfe017.camel@mediatek.com>
-In-Reply-To: <18c342b20ccac520eabe8019562432030ddfe017.camel@mediatek.com>
-From:   Chen-Yu Tsai <wenst@chromium.org>
-Date:   Fri, 7 Jan 2022 16:36:15 +0800
-Message-ID: <CAGXv+5G45UP=kvk8UOiFWYfdWgdjboL-UfkBbfPuEmQpwKMNHQ@mail.gmail.com>
-Subject: Re: [PATCH v7 4/4] arm64: dts: Add mediatek SoC mt8195 and evaluation board
-To:     Tinghan Shen <tinghan.shen@mediatek.com>
-Cc:     robh+dt@kernel.org, linus.walleij@linaro.org,
-        matthias.bgg@gmail.com, broonie@kernel.org,
-        bgolaszewski@baylibre.com, sean.wang@mediatek.com,
-        bayi.cheng@mediatek.com, gch981213@gmail.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-spi@vger.kernel.org,
-        Project_Global_Chrome_Upstream_Group@mediatek.com,
-        Seiya Wang <seiya.wang@mediatek.com>, chunfeng.yun@mediatek.com
+References: <20220107031905.2406176-1-robh@kernel.org>
+In-Reply-To: <20220107031905.2406176-1-robh@kernel.org>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 7 Jan 2022 10:31:30 +0100
+Message-ID: <CAMRc=MdmOMfyyiguowrU52BvoxMr8u3sLQfzCiY_Rqs=qUsX-Q@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: Drop required 'interrupt-parent'
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Suman Anna <s-anna@ti.com>, - <patches@opensource.cirrus.com>,
+        John Crispin <john@phrozen.org>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        netdev <netdev@vger.kernel.org>, linux-pci@vger.kernel.org,
+        linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jan 6, 2022 at 7:15 PM Tinghan Shen <tinghan.shen@mediatek.com> wro=
-te:
-> On Thu, 2021-12-23 at 17:59 +0800, Chen-Yu Tsai wrote:
-> > On Mon, Dec 20, 2021 at 8:20 PM Tinghan Shen <tinghan.shen@mediatek.com=
-> wrote:
-
-[...]
-
-> > [...]
-> >
-> > > +               xhci0: usb@11200000 {
-> > > +                       compatible =3D "mediatek,mt8195-xhci",
-> > > +                                    "mediatek,mtk-xhci";
-> > > +                       reg =3D <0 0x11200000 0 0x1000>,
-> > > +                             <0 0x11203e00 0 0x0100>;
-> > > +                       reg-names =3D "mac", "ippc";
-> > > +                       interrupts =3D <GIC_SPI 129
-> > > IRQ_TYPE_LEVEL_HIGH 0>;
-> > > +                       phys =3D <&u2port0 PHY_TYPE_USB2>,
-> > > +                              <&u3port0 PHY_TYPE_USB3>;
-> > > +                       assigned-clocks =3D <&topckgen
-> > > CLK_TOP_USB_TOP>,
-> > > +                                         <&topckgen
-> > > CLK_TOP_SSUSB_XHCI>;
-> > > +                       assigned-clock-parents =3D <&topckgen
-> > > CLK_TOP_UNIVPLL_D5_D4>,
-> > > +                                                <&topckgen
-> > > CLK_TOP_UNIVPLL_D5_D4>;
-> > > +                       clocks =3D <&infracfg_ao CLK_INFRA_AO_SSUSB>,
-> > > +                                <&infracfg_ao
-> > > CLK_INFRA_AO_SSUSB_XHCI>,
-> > > +                                <&topckgen CLK_TOP_SSUSB_REF>,
-> > > +                                <&apmixedsys CLK_APMIXED_USB1PLL>;
-> > > +                       clock-names =3D "sys_ck", "xhci_ck",
-> > > "ref_ck", "mcu_ck";
-> >
-> > The binding for this needs to be fixed. It expects clocks in the
-> > order
-> > specified in the binding, and this doesn't match.
+On Fri, Jan 7, 2022 at 4:19 AM Rob Herring <robh@kernel.org> wrote:
 >
-> ok
+> 'interrupt-parent' is never required as it can be in a parent node or a
+> parent node itself can be an interrupt provider. Where exactly it lives is
+> outside the scope of a binding schema.
 >
-> > Also, "dma_ck" is missing
-> > and will likely cause warnings to be generated.
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/gpio/toshiba,gpio-visconti.yaml  | 1 -
+>  .../devicetree/bindings/mailbox/ti,omap-mailbox.yaml     | 9 ---------
+>  Documentation/devicetree/bindings/mfd/cirrus,madera.yaml | 1 -
+>  .../devicetree/bindings/net/lantiq,etop-xway.yaml        | 1 -
+>  .../devicetree/bindings/net/lantiq,xrx200-net.yaml       | 1 -
+>  .../devicetree/bindings/pci/sifive,fu740-pcie.yaml       | 1 -
+>  .../devicetree/bindings/pci/xilinx-versal-cpm.yaml       | 1 -
+>  7 files changed, 15 deletions(-)
 >
-> only sys_ck is required, others are optional as described in binding
-
-I understand, but the bindings language is somewhat limited and right now
-is written in a way that if "dma_ck" is missing it would fail the DT
-bindings check.
-
-> >
-> > This goes for all the xhci device nodes.
-> >
-> > > +                       status =3D "disabled";
-> > > +               };
-> > > +
-> > > +               mmc0: mmc@11230000 {
-> > > +                       compatible =3D "mediatek,mt8195-mmc",
-> > > +                                    "mediatek,mt8183-mmc";
-> > > +                       reg =3D <0 0x11230000 0 0x10000>,
-> > > +                             <0 0x11f50000 0 0x1000>;
-> >
-> > The binding only allows one entry. Please fix the binding first.
-> > This was added with MT8183, and the fix should list the relavent
-> > commit.
-> >
-> > > +                       interrupts =3D <GIC_SPI 131
-> > > IRQ_TYPE_LEVEL_HIGH 0>;
-> > > +                       clocks =3D <&topckgen CLK_TOP_MSDC50_0>,
-> > > +                                <&infracfg_ao CLK_INFRA_AO_MSDC0>,
-> > > +                                <&infracfg_ao
-> > > CLK_INFRA_AO_MSDC0_SRC>;
-> > > +                       clock-names =3D "source", "hclk",
-> > > "source_cg";
-> > > +                       status =3D "disabled";
-> > > +               };
-> > > +
-> >
-> > [...]
-> >
-> > > +
-> > > +               xhci1: usb@11290000 {
-> > > +                       compatible =3D "mediatek,mt8195-xhci",
-> > > +                                    "mediatek,mtk-xhci";
-> > > +                       reg =3D <0 0x11290000 0 0x1000>,
-> > > +                             <0 0x11293e00 0 0x0100>;
-> > > +                       reg-names =3D "mac", "ippc";
-> > > +                       interrupts =3D <GIC_SPI 530
-> > > IRQ_TYPE_LEVEL_HIGH 0>;
-> > > +                       phys =3D <&u2port1 PHY_TYPE_USB2>;
-> >
-> > Shouldn't there be a USB3 phy?
+> diff --git a/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml b/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
+> index 9ad470e01953..b085450b527f 100644
+> --- a/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
+> @@ -43,7 +43,6 @@ required:
+>    - gpio-controller
+>    - interrupt-controller
+>    - "#interrupt-cells"
+> -  - interrupt-parent
 >
-> currently only enable usb2, usb3 phy is used by pcie.
-
-Got it.
-
-> >
-> > > +                       assigned-clocks =3D <&topckgen
-> > > CLK_TOP_USB_TOP_1P>,
-> > > +                                         <&topckgen
-> > > CLK_TOP_SSUSB_XHCI_1P>;
-> > > +                       assigned-clock-parents =3D <&topckgen
-> > > CLK_TOP_UNIVPLL_D5_D4>,
-> > > +                                                <&topckgen
-> > > CLK_TOP_UNIVPLL_D5_D4>;
-> > > +                       clocks =3D <&pericfg_ao
-> > > CLK_PERI_AO_SSUSB_1P_BUS>,
-> > > +                                <&topckgen CLK_TOP_SSUSB_P1_REF>,
-> > > +                                <&pericfg_ao
-> > > CLK_PERI_AO_SSUSB_1P_XHCI>,
-> > > +                                <&apmixedsys CLK_APMIXED_USB1PLL>;
-> > > +                       clock-names =3D "sys_ck", "ref_ck",
-> > > "xhci_ck", "mcu_ck";
-> > > +                       status =3D "disabled";
-> > > +               };
-> > > +
-> > > +               xhci2: usb@112a0000 {
-> > > +                       compatible =3D "mediatek,mt8195-xhci",
-> > > +                                    "mediatek,mtk-xhci";
-> > > +                       reg =3D <0 0x112a0000 0 0x1000>,
-> > > +                             <0 0x112a3e00 0 0x0100>;
-> > > +                       reg-names =3D "mac", "ippc";
-> > > +                       interrupts =3D <GIC_SPI 533
-> > > IRQ_TYPE_LEVEL_HIGH 0>;
-> > > +                       phys =3D <&u2port2 PHY_TYPE_USB2>;
-> > > +                       assigned-clocks =3D <&topckgen
-> > > CLK_TOP_USB_TOP_2P>,
-> > > +                                         <&topckgen
-> > > CLK_TOP_SSUSB_XHCI_2P>;
-> > > +                       assigned-clock-parents =3D <&topckgen
-> > > CLK_TOP_UNIVPLL_D5_D4>,
-> > > +                                                <&topckgen
-> > > CLK_TOP_UNIVPLL_D5_D4>;
-> > > +                       clocks =3D <&pericfg_ao
-> > > CLK_PERI_AO_SSUSB_2P_BUS>,
-> > > +                                <&topckgen CLK_TOP_SSUSB_P2_REF>,
-> > > +                                <&pericfg_ao
-> > > CLK_PERI_AO_SSUSB_2P_XHCI>;
-> > > +                       clock-names =3D "sys_ck", "ref_ck",
-> > > "xhci_ck";
-> > > +                       status =3D "disabled";
-> > > +               };
-> > > +
-> > > +               xhci3: usb@112b0000 {
-> > > +                       compatible =3D "mediatek,mt8195-xhci",
-> > > +                                    "mediatek,mtk-xhci";
-> > > +                       reg =3D <0 0x112b0000 0 0x1000>,
-> > > +                             <0 0x112b3e00 0 0x0100>;
-> > > +                       reg-names =3D "mac", "ippc";
-> > > +                       interrupts =3D <GIC_SPI 536
-> > > IRQ_TYPE_LEVEL_HIGH 0>;
-> > > +                       phys =3D <&u2port3 PHY_TYPE_USB2>;
-> > > +                       assigned-clocks =3D <&topckgen
-> > > CLK_TOP_USB_TOP_3P>,
-> > > +                                         <&topckgen
-> > > CLK_TOP_SSUSB_XHCI_3P>;
-> > > +                       assigned-clock-parents =3D <&topckgen
-> > > CLK_TOP_UNIVPLL_D5_D4>,
-> > > +                                                <&topckgen
-> > > CLK_TOP_UNIVPLL_D5_D4>;
-> > > +                       clocks =3D <&pericfg_ao
-> > > CLK_PERI_AO_SSUSB_3P_BUS>,
-> > > +                                <&pericfg_ao
-> > > CLK_PERI_AO_SSUSB_3P_XHCI>,
-> > > +                                <&topckgen CLK_TOP_SSUSB_P3_REF>;
-> > > +                       clock-names =3D "sys_ck", "xhci_ck",
-> > > "ref_ck";
-> > > +                       usb2-lpm-disable;
-> >
-> > Could you explain why this is needed only for this controller?
+>  additionalProperties: false
 >
-> This controller is fixed with a BT, there is something issue when
-> enable usb2 lpm, so just disabled tmp.
-
-Please add a comment explaining things.
-
-> > > +                       status =3D "disabled";
-> > > +               };
-> > > +
-> > > +               u3phy2: t-phy@11c40000 {
-> >
-> > Just "phy" for the node name. (Or maybe "serdes".) t-phy is not
-> > generic.
+> diff --git a/Documentation/devicetree/bindings/mailbox/ti,omap-mailbox.yaml b/Documentation/devicetree/bindings/mailbox/ti,omap-mailbox.yaml
+> index e864d798168d..d433e496ec6e 100644
+> --- a/Documentation/devicetree/bindings/mailbox/ti,omap-mailbox.yaml
+> +++ b/Documentation/devicetree/bindings/mailbox/ti,omap-mailbox.yaml
+> @@ -175,15 +175,6 @@ required:
+>    - ti,mbox-num-fifos
 >
-> following t-phy=E2=80=99s dt-binding.
-> here using t-phy is to avoid dt-check warning, because it has some sub-
-> phys.
+>  allOf:
+> -  - if:
+> -      properties:
+> -        compatible:
+> -          enum:
+> -            - ti,am654-mailbox
+> -    then:
+> -      required:
+> -        - interrupt-parent
+> -
+>    - if:
+>        properties:
+>          compatible:
+> diff --git a/Documentation/devicetree/bindings/mfd/cirrus,madera.yaml b/Documentation/devicetree/bindings/mfd/cirrus,madera.yaml
+> index 499c62c04daa..5dce62a7eff2 100644
+> --- a/Documentation/devicetree/bindings/mfd/cirrus,madera.yaml
+> +++ b/Documentation/devicetree/bindings/mfd/cirrus,madera.yaml
+> @@ -221,7 +221,6 @@ required:
+>    - '#gpio-cells'
+>    - interrupt-controller
+>    - '#interrupt-cells'
+> -  - interrupt-parent
+>    - interrupts
+>    - AVDD-supply
+>    - DBVDD1-supply
+> diff --git a/Documentation/devicetree/bindings/net/lantiq,etop-xway.yaml b/Documentation/devicetree/bindings/net/lantiq,etop-xway.yaml
+> index 437502c5ca96..3ce9f9a16baf 100644
+> --- a/Documentation/devicetree/bindings/net/lantiq,etop-xway.yaml
+> +++ b/Documentation/devicetree/bindings/net/lantiq,etop-xway.yaml
+> @@ -46,7 +46,6 @@ properties:
+>  required:
+>    - compatible
+>    - reg
+> -  - interrupt-parent
+>    - interrupts
+>    - interrupt-names
+>    - lantiq,tx-burst-length
+> diff --git a/Documentation/devicetree/bindings/net/lantiq,xrx200-net.yaml b/Documentation/devicetree/bindings/net/lantiq,xrx200-net.yaml
+> index 7bc074a42369..5bc1a21ca579 100644
+> --- a/Documentation/devicetree/bindings/net/lantiq,xrx200-net.yaml
+> +++ b/Documentation/devicetree/bindings/net/lantiq,xrx200-net.yaml
+> @@ -38,7 +38,6 @@ properties:
+>  required:
+>    - compatible
+>    - reg
+> -  - interrupt-parent
+>    - interrupts
+>    - interrupt-names
+>    - "#address-cells"
+> diff --git a/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml b/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
+> index 2b9d1d6fc661..72c78f4ec269 100644
+> --- a/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
+> @@ -61,7 +61,6 @@ required:
+>    - num-lanes
+>    - interrupts
+>    - interrupt-names
+> -  - interrupt-parent
+>    - interrupt-map-mask
+>    - interrupt-map
+>    - clock-names
+> diff --git a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> index a2bbc0eb7220..32f4641085bc 100644
+> --- a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> +++ b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> @@ -55,7 +55,6 @@ required:
+>    - reg-names
+>    - "#interrupt-cells"
+>    - interrupts
+> -  - interrupt-parent
+>    - interrupt-map
+>    - interrupt-map-mask
+>    - bus-range
+> --
+> 2.32.0
+>
 
-I see. t-phy it is, then.
+For GPIO:
 
-> > > +                       compatible =3D "mediatek,mt8195-tphy",
-> > > "mediatek,generic-tphy-v3";
-> > > +                       #address-cells =3D <1>;
-> > > +                       #size-cells =3D <1>;
-> > > +                       ranges =3D <0 0 0x11c40000 0x700>;
-> > > +                       status =3D "disabled";
-> > > +
-> > > +                       u2port2: usb-phy@0 {
-> > > +                               reg =3D <0x0 0x700>;
-> > > +                               clocks =3D <&topckgen
-> > > CLK_TOP_SSUSB_PHY_P2_REF>;
-> > > +                               clock-names =3D "ref";
-> > > +                               #phy-cells =3D <1>;
-> > > +                       };
-> > > +               };
-> > > +
-> >
-> > [...]
-> >
-> > > +               ufsphy: ufs-phy@11fa0000 {
-> >
-> > I would have preferred "phy" for the device node, but this seems
-> > already
-> > defined in the binding.
-> >
-> > This IP block is not listed in the datasheet I have, so I am unable
-> > to
-> > verify the properties listed here.
-> >
-> > > +                       compatible =3D "mediatek,mt8195-ufsphy",
-> > > "mediatek,mt8183-ufsphy";
-> > > +                       reg =3D <0 0x11fa0000 0 0xc000>;
-> > > +                       clocks =3D <&clk26m>, <&clk26m>;
-> > > +                       clock-names =3D "unipro", "mp";
-> > > +                       #phy-cells =3D <0>;
-> > > +                       status =3D "disabled";
-> > > +               };
-> > > +
-> >
-> > Most of the issues I raised in this version were issues with things
-> > not
-> > matching the bindings. Please apply your patches on -next and run
-> > `make dtbs_check`.
->
-> ok. I'll apply comments at next version. Thank you.
->
-> >
-> >
-> > ChenYu
->
+Acked-by: Bartosz Golaszewski <brgl@bgdev.pl>
