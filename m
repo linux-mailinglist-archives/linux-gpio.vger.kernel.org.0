@@ -2,177 +2,364 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A2EE5487125
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jan 2022 04:19:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 27E784872D2
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jan 2022 06:43:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345800AbiAGDTr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 6 Jan 2022 22:19:47 -0500
-Received: from mail-oi1-f175.google.com ([209.85.167.175]:34791 "EHLO
-        mail-oi1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344897AbiAGDTq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Jan 2022 22:19:46 -0500
-Received: by mail-oi1-f175.google.com with SMTP id r131so6537209oig.1;
-        Thu, 06 Jan 2022 19:19:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=N/+02Uu7Xsp1Sp9baEddjo+2GjQCq8pPfkwGXAATyL4=;
-        b=h8DgHNc0YRkw52axUfUCpRduO1WL1Addg7w4C6DZnNnLLZbxzq2RQQUBWUdEBnf+BA
-         +q5oSqer1RL5JCWqm2OlT1rIWEtGHF3rHpwaLw99KjlkXS8YkVjgQlK1IozK7L89AnKg
-         5vROE+hb6LpD5OQYe4Iwcz7+Chw9OO2Yn4S2Ie7xgZytmYklTK9gRdtOhrs5juxyX1A7
-         pyQ34QXfZyi51bY4WRlP/HJeUdRtnNdPX+fsLX1JnSoV0DB+uFfFAR45Tay1K4ZOwk+w
-         f665aYX9vJYLOocsjqq1FFd61f6VK51pZfgHWb6rfxZc4CtdZ8aMwnPEFCIpJwK9HLJ+
-         qBXw==
-X-Gm-Message-State: AOAM5324wlUrOb81/3kGdLkXTSChYQOaIKPwmasbSYTv0KDOwB9/7sW2
-        7F3OSrhsY7MUUPvCCY3hAg==
-X-Google-Smtp-Source: ABdhPJxFwsoov8BM23F84ePRF4MesulXZT7/QFwJgwS4jJCHX9pjJTcfT92RcdErUYh2DLqb705wyg==
-X-Received: by 2002:a05:6808:f11:: with SMTP id m17mr4241451oiw.36.1641525585657;
-        Thu, 06 Jan 2022 19:19:45 -0800 (PST)
-Received: from xps15.herring.priv (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.googlemail.com with ESMTPSA id q13sm555020otf.76.2022.01.06.19.19.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jan 2022 19:19:45 -0800 (PST)
-From:   Rob Herring <robh@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Richard Fitzgerald <rf@opensource.cirrus.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Suman Anna <s-anna@ti.com>, - <patches@opensource.cirrus.com>,
-        John Crispin <john@phrozen.org>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        alsa-devel@alsa-project.org, netdev@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: [PATCH] dt-bindings: Drop required 'interrupt-parent'
-Date:   Thu,  6 Jan 2022 21:19:04 -0600
-Message-Id: <20220107031905.2406176-1-robh@kernel.org>
-X-Mailer: git-send-email 2.32.0
+        id S231971AbiAGFnp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Jan 2022 00:43:45 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:42734 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S229585AbiAGFno (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jan 2022 00:43:44 -0500
+X-UUID: 39b55fbe961c41f5a67f0b323c5ee1dc-20220107
+X-UUID: 39b55fbe961c41f5a67f0b323c5ee1dc-20220107
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1515343863; Fri, 07 Jan 2022 13:43:40 +0800
+Received: from mtkexhb02.mediatek.inc (172.21.101.103) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Fri, 7 Jan 2022 13:43:39 +0800
+Received: from mtkcas10.mediatek.inc (172.21.101.39) by mtkexhb02.mediatek.inc
+ (172.21.101.103) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 7 Jan
+ 2022 13:43:39 +0800
+Received: from mhfsdcap04 (10.17.3.154) by mtkcas10.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 7 Jan 2022 13:43:37 +0800
+Message-ID: <6dd101e4e65ef56dbf81d67496a383a7db8cefb5.camel@mediatek.com>
+Subject: Re: [PATCH v7 4/4] arm64: dts: Add mediatek SoC mt8195 and
+ evaluation board
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Tinghan Shen <tinghan.shen@mediatek.com>,
+        Chen-Yu Tsai <wenst@chromium.org>
+CC:     <robh+dt@kernel.org>, <linus.walleij@linaro.org>,
+        <matthias.bgg@gmail.com>, <broonie@kernel.org>,
+        <bgolaszewski@baylibre.com>, <sean.wang@mediatek.com>,
+        <bayi.cheng@mediatek.com>, <gch981213@gmail.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <linux-spi@vger.kernel.org>,
+        <Project_Global_Chrome_Upstream_Group@mediatek.com>,
+        Seiya Wang <seiya.wang@mediatek.com>
+Date:   Fri, 7 Jan 2022 13:43:37 +0800
+In-Reply-To: <18c342b20ccac520eabe8019562432030ddfe017.camel@mediatek.com>
+References: <20211220121825.6446-1-tinghan.shen@mediatek.com>
+         <20211220121825.6446-5-tinghan.shen@mediatek.com>
+         <CAGXv+5GaFikojqYYv0TfQsz3NSqn7QPmTWyCJY8V2g8UYoV4OA@mail.gmail.com>
+         <18c342b20ccac520eabe8019562432030ddfe017.camel@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-'interrupt-parent' is never required as it can be in a parent node or a
-parent node itself can be an interrupt provider. Where exactly it lives is
-outside the scope of a binding schema.
+On Thu, 2022-01-06 at 19:14 +0800, Tinghan Shen wrote:
+> On Thu, 2021-12-23 at 17:59 +0800, Chen-Yu Tsai wrote:
+> > Hi,
+> > 
+> > On Mon, Dec 20, 2021 at 8:20 PM Tinghan Shen <
+> > tinghan.shen@mediatek.com> wrote:
+> > > 
+> > > Add basic chip support for mediatek mt8195.
+> > > 
+> > > Signed-off-by: Seiya Wang <seiya.wang@mediatek.com>
+> > > Signed-off-by: Tinghan Shen <tinghan.shen@mediatek.com>
+> > > ---
+> > >  arch/arm64/boot/dts/mediatek/Makefile       |    1 +
+> > >  arch/arm64/boot/dts/mediatek/mt8195-evb.dts |  209 ++++
+> > >  arch/arm64/boot/dts/mediatek/mt8195.dtsi    | 1034
+> > > +++++++++++++++++++
+> > >  3 files changed, 1244 insertions(+)
+> > >  create mode 100644 arch/arm64/boot/dts/mediatek/mt8195-evb.dts
+> > >  create mode 100644 arch/arm64/boot/dts/mediatek/mt8195.dtsi
+> > > 
+> > > diff --git a/arch/arm64/boot/dts/mediatek/Makefile
+> > > b/arch/arm64/boot/dts/mediatek/Makefile
+> > > index 4f68ebed2e31..7aa08bb4c078 100644
+> > > --- a/arch/arm64/boot/dts/mediatek/Makefile
+> > > +++ b/arch/arm64/boot/dts/mediatek/Makefile
+> > > @@ -32,4 +32,5 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt8183-kukui-
+> > > krane-sku0.dtb
+> > >  dtb-$(CONFIG_ARCH_MEDIATEK) += mt8183-kukui-krane-sku176.dtb
+> > >  dtb-$(CONFIG_ARCH_MEDIATEK) += mt8183-pumpkin.dtb
+> > >  dtb-$(CONFIG_ARCH_MEDIATEK) += mt8192-evb.dtb
+> > > +dtb-$(CONFIG_ARCH_MEDIATEK) += mt8195-evb.dtb
+> > >  dtb-$(CONFIG_ARCH_MEDIATEK) += mt8516-pumpkin.dtb
+> > > diff --git a/arch/arm64/boot/dts/mediatek/mt8195-evb.dts
+> > > b/arch/arm64/boot/dts/mediatek/mt8195-evb.dts
+> > > new file mode 100644
+> > > index 000000000000..e581c6bbead6
+> > > --- /dev/null
+> > > +++ b/arch/arm64/boot/dts/mediatek/mt8195-evb.dts
+> > > @@ -0,0 +1,209 @@
+> > > +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> > > +/*
+> > > + * Copyright (C) 2021 MediaTek Inc.
+> > > + * Author: Seiya Wang <seiya.wang@mediatek.com>
+> > > + */
+> > > +/dts-v1/;
+> > > +#include "mt8195.dtsi"
+> > > +
+> > > +/ {
+> > > +       model = "MediaTek MT8195 evaluation board";
+> > > +       compatible = "mediatek,mt8195-evb", "mediatek,mt8195";
+> > > +
+> > > +       aliases {
+> > > +               serial0 = &uart0;
+> > > +       };
+> > > +
+> > > +       chosen {
+> > > +               stdout-path = "serial0:921600n8";
+> > > +       };
+> > > +
+> > > +       memory@40000000 {
+> > > +               device_type = "memory";
+> > > +               reg = <0 0x40000000 0 0x80000000>;
+> > > +       };
+> > > +};
+> > > +
+> > > +&auxadc {
+> > > +       status = "okay";
+> > > +};
+> > > +
+> > > +&i2c0 {
+> > > +       pinctrl-names = "default";
+> > > +       pinctrl-0 = <&i2c0_pin>;
+> > > +       clock-frequency = <100000>;
+> > > +       status = "okay";
+> > > +};
+> > > +
+> > > +&i2c1 {
+> > > +       pinctrl-names = "default";
+> > > +       pinctrl-0 = <&i2c1_pin>;
+> > > +       clock-frequency = <400000>;
+> > > +       status = "okay";
+> > > +};
+> > > +
+> > > +&i2c2 {
+> > > +       pinctrl-names = "default";
+> > > +       pinctrl-0 = <&i2c2_pin>;
+> > > +       status = "disabled";
+> > > +};
+> > > +
+> > > +&i2c3 {
+> > > +       pinctrl-names = "default";
+> > > +       pinctrl-0 = <&i2c3_pin>;
+> > > +       status = "disabled";
+> > > +};
+> > 
+> > Is there any reason in particular to list "disabled" devices here?
+> > Are they part of some GPIO header? If they are not accessible, then
+> > it's better to not list them. If they are, please leave a comment
+> > about it.
+> > 
+> > > +
+> > > +&i2c4 {
+> > > +       pinctrl-names = "default";
+> > > +       pinctrl-0 = <&i2c4_pin>;
+> > > +       clock-frequency = <400000>;
+> > > +       status = "okay";
+> > > +};
+> > > +
+> > > +&i2c5 {
+> > > +       pinctrl-names = "default";
+> > > +       pinctrl-0 = <&i2c5_pin>;
+> > > +       status = "disabled";
+> > > +};
+> > > +
+> > > +&i2c6 {
+> > > +       pinctrl-names = "default";
+> > > +       pinctrl-0 = <&i2c6_pin>;
+> > > +       clock-frequency = <400000>;
+> > > +       status = "disabled";
+> > > +};
+> > 
+> > Same here.
+> > 
+> > > +
+> > > +&nor_flash {
+> > > +       status = "okay";
+> > > +       pinctrl-names = "default";
+> > > +       pinctrl-0 = <&nor_pins_default>;
+> > 
+> > Please add an empty line between properties and child device nodes.
+> > It helps
+> > with readability and also fits the style of other parts and other
+> > DT
+> > files.
+> > 
+> > > +       flash@0 {
+> > > +               compatible = "jedec,spi-nor";
+> > > +               reg = <0>;
+> > > +               spi-max-frequency = <50000000>;
+> > > +       };
+> > > +};
+> > > +
+> > > +&pio {
+> > > +       i2c0_pin: i2c0-pins {
+> > > +               pins {
+> > > +                       pinmux = <PINMUX_GPIO8__FUNC_SDA0>,
+> > > +                                <PINMUX_GPIO9__FUNC_SCL0>;
+> > > +                       bias-pull-up = <1>;
+> > > +                       mediatek,rsel = <7>;
+> > 
+> > Please use the MTK_PULL_SET_RSEL_* macros with the bias-pull-*
+> > properties.
+> > We spent a lot of time defining those.
+> > 
+> > > +                       mediatek,drive-strength-adv = <0>;
+> > 
+> > This property is not part of the DT binding.
+> > 
+> > > +                       drive-strength = <MTK_DRIVE_6mA>;
+> > 
+> > Please just use raw numbers here. MTK_DRIVE_6mA just translates to
+> > 6.
+> > The binding already specifies mA as the unit for "drive-strength".
+> > 
+> > > +               };
+> > > +       };
+> > 
+> > Above comments apply to all the other "pins" nodes.
+> > 
+> > Please add an empty line between different child device nodes. It
+> > helps
+> > with readability and also fits the style of other parts and other
+> > DT
+> > files.
+> > 
+> > > +       i2c1_pin: i2c1-pins {
+> > > +               pins {
+> > > +                       pinmux = <PINMUX_GPIO10__FUNC_SDA1>,
+> > > +                                <PINMUX_GPIO11__FUNC_SCL1>;
+> > > +                       bias-pull-up = <1>;
+> > > +                       mediatek,rsel = <7>;
+> > > +                       mediatek,drive-strength-adv = <0>;
+> > > +                       drive-strength = <MTK_DRIVE_6mA>;
+> > > +               };
+> > > +       };
+> > > +       i2c2_pin: i2c2-pins {
+> > > +               pins {
+> > > +                       pinmux = <PINMUX_GPIO12__FUNC_SDA2>,
+> > > +                                <PINMUX_GPIO13__FUNC_SCL2>;
+> > > +                       bias-pull-up = <1>;
+> > > +                       mediatek,rsel = <7>;
+> > > +                       mediatek,drive-strength-adv = <7>;
+> > > +               };
+> > > +       };
+> > > +       i2c3_pin: i2c3-pins {
+> > > +               pins {
+> > > +                       pinmux = <PINMUX_GPIO14__FUNC_SDA3>,
+> > > +                                <PINMUX_GPIO15__FUNC_SCL3>;
+> > > +                       bias-pull-up = <1>;
+> > > +                       mediatek,rsel = <7>;
+> > > +                       mediatek,drive-strength-adv = <7>;
+> > > +               };
+> > > +       };
+> > > +       i2c4_pin: i2c4-pins {
+> > > +               pins {
+> > > +                       pinmux = <PINMUX_GPIO16__FUNC_SDA4>,
+> > > +                                <PINMUX_GPIO17__FUNC_SCL4>;
+> > > +                       bias-pull-up = <1>;
+> > > +                       mediatek,rsel = <7>;
+> > > +                       mediatek,drive-strength-adv = <7>;
+> > > +               };
+> > > +       };
+> > > +       i2c5_pin: i2c5-pins {
+> > > +               pins {
+> > > +                       pinmux = <PINMUX_GPIO29__FUNC_SCL5>,
+> > > +                                <PINMUX_GPIO30__FUNC_SDA5>;
+> > > +                       bias-pull-up = <1>;
+> > > +                       mediatek,rsel = <7>;
+> > > +                       mediatek,drive-strength-adv = <7>;
+> > > +               };
+> > > +       };
+> > > +       i2c6_pin: i2c6-pins {
+> > > +               pins {
+> > > +                       pinmux = <PINMUX_GPIO25__FUNC_SDA6>,
+> > > +                                <PINMUX_GPIO26__FUNC_SCL6>;
+> > > +                       bias-pull-up = <1>;
+> > > +               };
+> > > +       };
+> > > +       i2c7_pin: i2c7-pins {
+> > > +               pins {
+> > > +                       pinmux = <PINMUX_GPIO27__FUNC_SCL7>,
+> > > +                                <PINMUX_GPIO28__FUNC_SDA7>;
+> > > +                       bias-pull-up = <1>;
+> > > +               };
+> > > +       };
+> > > +       nor_pins_default: nor-pins {
+> > > +               pins0 {
+> > > +                       pinmux =
+> > > <PINMUX_GPIO142__FUNC_SPINOR_IO0>,
+> > > +                                        <PINMUX_GPIO141__FUNC_SP
+> > > IN
+> > > OR_CK>,
+> > > +                                        <PINMUX_GPIO143__FUNC_SP
+> > > IN
+> > > OR_IO1>;
+> > > +                       bias-pull-down;
+> > > +               };
+> > > +               pins1 {
+> > > +                       pinmux =
+> > > <PINMUX_GPIO140__FUNC_SPINOR_CS>,
+> > > +                                    <PINMUX_GPIO130__FUNC_SPINOR
+> > > _I
+> > > O2>,
+> > > +                                    <PINMUX_GPIO131__FUNC_SPINOR
+> > > _I
+> > > O3>;
+> > > +                       bias-pull-up;
+> > > +               };
+> > > +       };
+> > > +       uart0_pin: uart0-pins {
+> > > +               pins {
+> > > +                       pinmux = <PINMUX_GPIO98__FUNC_UTXD0>,
+> > > +                               <PINMUX_GPIO99__FUNC_URXD0>;
+> > > +               };
+> > > +       };
+> > > +};
+> > > +
+> > > +&u2port0 {
+> > > +       status = "okay";
+> > > +};
+> > > +
+> > > +&u2port1 {
+> > > +       status = "okay";
+> > > +};
+> > > +
+> > > +&u3phy0 {
+> > > +       status="okay";
+> > > +};
+> > > +
+> > > +&u3phy1 {
+> > > +       status="okay";
+> > > +};
+> > > +
+> > > +&u3port0 {
+> > > +       status = "okay";
+> > > +};
+> > > +
+> > > +&u3port1 {
+> > > +       status = "okay";
+> > > +};
+No need add status property for those u*port* subnodes, add it in
+parent node u*phy* is enough.
 
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/gpio/toshiba,gpio-visconti.yaml  | 1 -
- .../devicetree/bindings/mailbox/ti,omap-mailbox.yaml     | 9 ---------
- Documentation/devicetree/bindings/mfd/cirrus,madera.yaml | 1 -
- .../devicetree/bindings/net/lantiq,etop-xway.yaml        | 1 -
- .../devicetree/bindings/net/lantiq,xrx200-net.yaml       | 1 -
- .../devicetree/bindings/pci/sifive,fu740-pcie.yaml       | 1 -
- .../devicetree/bindings/pci/xilinx-versal-cpm.yaml       | 1 -
- 7 files changed, 15 deletions(-)
+Thanks
 
-diff --git a/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml b/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
-index 9ad470e01953..b085450b527f 100644
---- a/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
-+++ b/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
-@@ -43,7 +43,6 @@ required:
-   - gpio-controller
-   - interrupt-controller
-   - "#interrupt-cells"
--  - interrupt-parent
- 
- additionalProperties: false
- 
-diff --git a/Documentation/devicetree/bindings/mailbox/ti,omap-mailbox.yaml b/Documentation/devicetree/bindings/mailbox/ti,omap-mailbox.yaml
-index e864d798168d..d433e496ec6e 100644
---- a/Documentation/devicetree/bindings/mailbox/ti,omap-mailbox.yaml
-+++ b/Documentation/devicetree/bindings/mailbox/ti,omap-mailbox.yaml
-@@ -175,15 +175,6 @@ required:
-   - ti,mbox-num-fifos
- 
- allOf:
--  - if:
--      properties:
--        compatible:
--          enum:
--            - ti,am654-mailbox
--    then:
--      required:
--        - interrupt-parent
--
-   - if:
-       properties:
-         compatible:
-diff --git a/Documentation/devicetree/bindings/mfd/cirrus,madera.yaml b/Documentation/devicetree/bindings/mfd/cirrus,madera.yaml
-index 499c62c04daa..5dce62a7eff2 100644
---- a/Documentation/devicetree/bindings/mfd/cirrus,madera.yaml
-+++ b/Documentation/devicetree/bindings/mfd/cirrus,madera.yaml
-@@ -221,7 +221,6 @@ required:
-   - '#gpio-cells'
-   - interrupt-controller
-   - '#interrupt-cells'
--  - interrupt-parent
-   - interrupts
-   - AVDD-supply
-   - DBVDD1-supply
-diff --git a/Documentation/devicetree/bindings/net/lantiq,etop-xway.yaml b/Documentation/devicetree/bindings/net/lantiq,etop-xway.yaml
-index 437502c5ca96..3ce9f9a16baf 100644
---- a/Documentation/devicetree/bindings/net/lantiq,etop-xway.yaml
-+++ b/Documentation/devicetree/bindings/net/lantiq,etop-xway.yaml
-@@ -46,7 +46,6 @@ properties:
- required:
-   - compatible
-   - reg
--  - interrupt-parent
-   - interrupts
-   - interrupt-names
-   - lantiq,tx-burst-length
-diff --git a/Documentation/devicetree/bindings/net/lantiq,xrx200-net.yaml b/Documentation/devicetree/bindings/net/lantiq,xrx200-net.yaml
-index 7bc074a42369..5bc1a21ca579 100644
---- a/Documentation/devicetree/bindings/net/lantiq,xrx200-net.yaml
-+++ b/Documentation/devicetree/bindings/net/lantiq,xrx200-net.yaml
-@@ -38,7 +38,6 @@ properties:
- required:
-   - compatible
-   - reg
--  - interrupt-parent
-   - interrupts
-   - interrupt-names
-   - "#address-cells"
-diff --git a/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml b/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
-index 2b9d1d6fc661..72c78f4ec269 100644
---- a/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
-@@ -61,7 +61,6 @@ required:
-   - num-lanes
-   - interrupts
-   - interrupt-names
--  - interrupt-parent
-   - interrupt-map-mask
-   - interrupt-map
-   - clock-names
-diff --git a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-index a2bbc0eb7220..32f4641085bc 100644
---- a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-+++ b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
-@@ -55,7 +55,6 @@ required:
-   - reg-names
-   - "#interrupt-cells"
-   - interrupts
--  - interrupt-parent
-   - interrupt-map
-   - interrupt-map-mask
-   - bus-range
--- 
-2.32.0
+> > > +
+> > > +&uart0 {
+> > > +       pinctrl-names = "default";
+> > > +       pinctrl-0 = <&uart0_pin>;
+> > > +       status = "okay";
+> > > +};
+> > > 
+> > 
+> 
+> 
 
