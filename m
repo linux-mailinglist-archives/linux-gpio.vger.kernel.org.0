@@ -2,109 +2,308 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 26FE24873A6
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jan 2022 08:37:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A269048742E
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jan 2022 09:36:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235128AbiAGHhz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Jan 2022 02:37:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35914 "EHLO
+        id S1345847AbiAGIg3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Jan 2022 03:36:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235176AbiAGHhz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jan 2022 02:37:55 -0500
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14CF9C061245
-        for <linux-gpio@vger.kernel.org>; Thu,  6 Jan 2022 23:37:55 -0800 (PST)
-Received: by mail-pg1-x52e.google.com with SMTP id v25so4799723pge.2
-        for <linux-gpio@vger.kernel.org>; Thu, 06 Jan 2022 23:37:55 -0800 (PST)
+        with ESMTP id S235962AbiAGIg2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jan 2022 03:36:28 -0500
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6241BC061245
+        for <linux-gpio@vger.kernel.org>; Fri,  7 Jan 2022 00:36:28 -0800 (PST)
+Received: by mail-lf1-x133.google.com with SMTP id bp20so13020536lfb.6
+        for <linux-gpio@vger.kernel.org>; Fri, 07 Jan 2022 00:36:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MoMnrCmCJo+9tmeFKMK9XytI2RpI9qkkLVxs3xiCUxM=;
-        b=C63qMB7m7bEAePeqZlj6LahYYxmS/Sygkwiy82wg+5ioR+b0HPoQ1Ytihhh6h1xuG+
-         nPIA6NOA2+Zo7GlkUJMP2mOT0Bz2driIBsGfhD/45PjLFB0N2HcLaD2AoKvZXg017OsD
-         6WpULVewBjzYaZi9XU2B+5Di8lHFombXXpixm/meIjEnEAg2fubBb6rjla3hUSMQ8OYa
-         Ggzod3Hj4nUNuSXD6ulzO7Lvb1zsVTb/aD+YuR8lDLslTTvSPhkNDHoje9NDqHUR4tIJ
-         s6D0PQh+0yaiI1L2OQL3Wiv5catAxOOz6ePCOJn+M+tYBT948fZnam6M5qsBOVHbB9ih
-         BmKg==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=vVZIGQpO4cybh1F58lhYGN2Aw4cqAqidnu7imo4TqmI=;
+        b=MvBUt7zxF6L9tiAjAJSe8pmrMblL38mDhm8malfZ8P1fhgvpXTOOytqAIF+ZQjKpug
+         wbY6KUOhe7lxpObroPJ3GhjVyqU4ymJhTz52SozEvjF3yrVcy/a8wGe8DaoVrZdQNkUO
+         3EMJ5mfIe7R+TPG/WY78MQ3F8qddVYDdYgEZ0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MoMnrCmCJo+9tmeFKMK9XytI2RpI9qkkLVxs3xiCUxM=;
-        b=Pyj/i/o0uKjP0WuhTZ5DwwNOT1Wcrvk7LYLzyYuDvBex6Fe6MGtDCaz9gBcIoCRjKV
-         Tcv8FEBtfXW/dHqBrv3Gzh2qvpVtea+SsmeRWzw9+mmUQoPCCGy85nj83rCQ2FrTR69t
-         ee/+4Uu0M0ip9zytb5Ii7jGl3ucgL8qrbEATrzDW90qWLFyyLRCa4LVmNtdSJ9UUxrK6
-         vP/xN96P9Kor4d/FHqLPBMu/yXSC/8ELJIqFj2bvIThLA3jtTcPYkuQ4q4anGf2P+ViM
-         Zq7JbhtjZjdvASJX8SwwqnKi9/pTYHMDRe/ti3u2ZIOJhoyEARkz7JHD6kYUedQ9POHZ
-         QJBg==
-X-Gm-Message-State: AOAM531xD4yPYsFHv/BhP2BqevwmlvmKRSVxTdtt4e9QhfobChinnTE7
-        8qp99erLhijZw1qPjElZc2+9gw==
-X-Google-Smtp-Source: ABdhPJytXRDIOoSRf9TBAikq/4RHOnOWxGi4auzwYPcPgV0JpAYDYdf4O5ozn7IV1vQTWPhLKpsaaA==
-X-Received: by 2002:a63:6687:: with SMTP id a129mr54534750pgc.477.1641541074542;
-        Thu, 06 Jan 2022 23:37:54 -0800 (PST)
-Received: from localhost ([106.201.42.111])
-        by smtp.gmail.com with ESMTPSA id j8sm5280794pfc.11.2022.01.06.23.37.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jan 2022 23:37:54 -0800 (PST)
-Date:   Fri, 7 Jan 2022 13:07:52 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Wedson Almeida Filho <wedsonaf@google.com>,
-        Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org
-Subject: Re: [PATCH V2 2/4] libgpiod: Add rust wrappers
-Message-ID: <20220107073752.irorzkoqpztytyme@vireshk-i7>
-References: <cover.1638443930.git.viresh.kumar@linaro.org>
- <7ace171379783b73a8f560737fd47900ac28924c.1638443930.git.viresh.kumar@linaro.org>
- <CAMRc=MeoTiUOjM_D36ZEU=echpM9jVhr1HY7fuxTDs0t0jf2Jg@mail.gmail.com>
- <20211217001207.GA6287@sol>
- <20211217051133.c6pipmhxxysyxdrx@vireshk-i7>
- <20220106154724.GA109697@sol>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=vVZIGQpO4cybh1F58lhYGN2Aw4cqAqidnu7imo4TqmI=;
+        b=eEKzZDs2Td3AF2VghLCZiYVbaFQOceSXr6l08jQbhLU2MJsbeEJRvV+vrVCQLOwyH9
+         YGQkYOtfeLLQfwGDNqsmm9XNfiZdR3ducvriOFS6yvflDjrVhCqwVsTAJ8UFWUwn4iXp
+         8zt3QIVpqZ8X7prEmBemJBoZ6Nzie1UXyOgpP5UxyrEy0XnzvNNhwubntKcjP+ahQt2i
+         5KYSi8YwcythENoDVFVhryi9uR2Jp00ozHc5zD0A8Q5mruIRd6cBNuPUZFGWuyYgUM8q
+         tSu4joX0vXRb1B/LNvVuFbAJzQm4el8k6W5kkYUPMGnPXSO4E9RkckBB8m1kXMEj51Ci
+         gjww==
+X-Gm-Message-State: AOAM530ExluasQ1WCiOuiWM+l0jWqIO7AMjtxdzUNCVl4NyQ+4mfpZdA
+        ZcnqgXGFpMyMpngyT2hPtWSKU5OvH/myiOE7BPkt2A==
+X-Google-Smtp-Source: ABdhPJwbMO3nPmHq3UYiC04tI8XJ/H2V1ImVa9SFgE0UWTCDPzZftmUWkNrOf6I+UA8AnpJK6C/hSqiXE+zr1pMseBI=
+X-Received: by 2002:a2e:2a84:: with SMTP id q126mr47333341ljq.457.1641544586649;
+ Fri, 07 Jan 2022 00:36:26 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220106154724.GA109697@sol>
-User-Agent: NeoMutt/20180716-391-311a52
+References: <20211220121825.6446-1-tinghan.shen@mediatek.com>
+ <20211220121825.6446-5-tinghan.shen@mediatek.com> <CAGXv+5GaFikojqYYv0TfQsz3NSqn7QPmTWyCJY8V2g8UYoV4OA@mail.gmail.com>
+ <18c342b20ccac520eabe8019562432030ddfe017.camel@mediatek.com>
+In-Reply-To: <18c342b20ccac520eabe8019562432030ddfe017.camel@mediatek.com>
+From:   Chen-Yu Tsai <wenst@chromium.org>
+Date:   Fri, 7 Jan 2022 16:36:15 +0800
+Message-ID: <CAGXv+5G45UP=kvk8UOiFWYfdWgdjboL-UfkBbfPuEmQpwKMNHQ@mail.gmail.com>
+Subject: Re: [PATCH v7 4/4] arm64: dts: Add mediatek SoC mt8195 and evaluation board
+To:     Tinghan Shen <tinghan.shen@mediatek.com>
+Cc:     robh+dt@kernel.org, linus.walleij@linaro.org,
+        matthias.bgg@gmail.com, broonie@kernel.org,
+        bgolaszewski@baylibre.com, sean.wang@mediatek.com,
+        bayi.cheng@mediatek.com, gch981213@gmail.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-spi@vger.kernel.org,
+        Project_Global_Chrome_Upstream_Group@mediatek.com,
+        Seiya Wang <seiya.wang@mediatek.com>, chunfeng.yun@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 06-01-22, 23:47, Kent Gibson wrote:
-> In case you are interested, the first pass of my take on a Rust GPIO
-> library[1] has finally gotten to the point of being core feature complete,
-> and may be usable, although it is sorely lacking any integration tests.
-> And the documentation is still pretty light, or even non-existant for
-> github.
-> And the event interface is either polled or blocking - haven't gotten to
-> an async interface yet.
-> 
-> Anyway, there are three crates there:
->  - gpiod-uapi provides a thin and safe wrapper around the ioctls and
->    file reads, for both uAPI versions.
->  - gpiod provides a more idiomatic abstraction, and hides the uAPI
->    version being used - unless you need v2 specific features.
->  - gpiodctl provides a binary that bundles all the gpio tools into one.
-> 
-> There are a couple of minimal example apps in the gpiod crate, in
-> addition to the example that gpiodctl provides.
-> 
-> Cheers,
-> Kent.
-> 
-> [1] https://github.com/warthog618/gpiod-rs
+On Thu, Jan 6, 2022 at 7:15 PM Tinghan Shen <tinghan.shen@mediatek.com> wro=
+te:
+> On Thu, 2021-12-23 at 17:59 +0800, Chen-Yu Tsai wrote:
+> > On Mon, Dec 20, 2021 at 8:20 PM Tinghan Shen <tinghan.shen@mediatek.com=
+> wrote:
 
-Nice stuff, thanks Kent for sharing that.
+[...]
 
-I may end up using the libgpiod wrappers though, since I have already done the
-development using it and it is going to be low maintenance work for me :)
+> > [...]
+> >
+> > > +               xhci0: usb@11200000 {
+> > > +                       compatible =3D "mediatek,mt8195-xhci",
+> > > +                                    "mediatek,mtk-xhci";
+> > > +                       reg =3D <0 0x11200000 0 0x1000>,
+> > > +                             <0 0x11203e00 0 0x0100>;
+> > > +                       reg-names =3D "mac", "ippc";
+> > > +                       interrupts =3D <GIC_SPI 129
+> > > IRQ_TYPE_LEVEL_HIGH 0>;
+> > > +                       phys =3D <&u2port0 PHY_TYPE_USB2>,
+> > > +                              <&u3port0 PHY_TYPE_USB3>;
+> > > +                       assigned-clocks =3D <&topckgen
+> > > CLK_TOP_USB_TOP>,
+> > > +                                         <&topckgen
+> > > CLK_TOP_SSUSB_XHCI>;
+> > > +                       assigned-clock-parents =3D <&topckgen
+> > > CLK_TOP_UNIVPLL_D5_D4>,
+> > > +                                                <&topckgen
+> > > CLK_TOP_UNIVPLL_D5_D4>;
+> > > +                       clocks =3D <&infracfg_ao CLK_INFRA_AO_SSUSB>,
+> > > +                                <&infracfg_ao
+> > > CLK_INFRA_AO_SSUSB_XHCI>,
+> > > +                                <&topckgen CLK_TOP_SSUSB_REF>,
+> > > +                                <&apmixedsys CLK_APMIXED_USB1PLL>;
+> > > +                       clock-names =3D "sys_ck", "xhci_ck",
+> > > "ref_ck", "mcu_ck";
+> >
+> > The binding for this needs to be fixed. It expects clocks in the
+> > order
+> > specified in the binding, and this doesn't match.
+>
+> ok
+>
+> > Also, "dma_ck" is missing
+> > and will likely cause warnings to be generated.
+>
+> only sys_ck is required, others are optional as described in binding
 
-But it is really nice to have raw ioctl interface too for the GPIO devices.
+I understand, but the bindings language is somewhat limited and right now
+is written in a way that if "dma_ck" is missing it would fail the DT
+bindings check.
 
--- 
-viresh
+> >
+> > This goes for all the xhci device nodes.
+> >
+> > > +                       status =3D "disabled";
+> > > +               };
+> > > +
+> > > +               mmc0: mmc@11230000 {
+> > > +                       compatible =3D "mediatek,mt8195-mmc",
+> > > +                                    "mediatek,mt8183-mmc";
+> > > +                       reg =3D <0 0x11230000 0 0x10000>,
+> > > +                             <0 0x11f50000 0 0x1000>;
+> >
+> > The binding only allows one entry. Please fix the binding first.
+> > This was added with MT8183, and the fix should list the relavent
+> > commit.
+> >
+> > > +                       interrupts =3D <GIC_SPI 131
+> > > IRQ_TYPE_LEVEL_HIGH 0>;
+> > > +                       clocks =3D <&topckgen CLK_TOP_MSDC50_0>,
+> > > +                                <&infracfg_ao CLK_INFRA_AO_MSDC0>,
+> > > +                                <&infracfg_ao
+> > > CLK_INFRA_AO_MSDC0_SRC>;
+> > > +                       clock-names =3D "source", "hclk",
+> > > "source_cg";
+> > > +                       status =3D "disabled";
+> > > +               };
+> > > +
+> >
+> > [...]
+> >
+> > > +
+> > > +               xhci1: usb@11290000 {
+> > > +                       compatible =3D "mediatek,mt8195-xhci",
+> > > +                                    "mediatek,mtk-xhci";
+> > > +                       reg =3D <0 0x11290000 0 0x1000>,
+> > > +                             <0 0x11293e00 0 0x0100>;
+> > > +                       reg-names =3D "mac", "ippc";
+> > > +                       interrupts =3D <GIC_SPI 530
+> > > IRQ_TYPE_LEVEL_HIGH 0>;
+> > > +                       phys =3D <&u2port1 PHY_TYPE_USB2>;
+> >
+> > Shouldn't there be a USB3 phy?
+>
+> currently only enable usb2, usb3 phy is used by pcie.
+
+Got it.
+
+> >
+> > > +                       assigned-clocks =3D <&topckgen
+> > > CLK_TOP_USB_TOP_1P>,
+> > > +                                         <&topckgen
+> > > CLK_TOP_SSUSB_XHCI_1P>;
+> > > +                       assigned-clock-parents =3D <&topckgen
+> > > CLK_TOP_UNIVPLL_D5_D4>,
+> > > +                                                <&topckgen
+> > > CLK_TOP_UNIVPLL_D5_D4>;
+> > > +                       clocks =3D <&pericfg_ao
+> > > CLK_PERI_AO_SSUSB_1P_BUS>,
+> > > +                                <&topckgen CLK_TOP_SSUSB_P1_REF>,
+> > > +                                <&pericfg_ao
+> > > CLK_PERI_AO_SSUSB_1P_XHCI>,
+> > > +                                <&apmixedsys CLK_APMIXED_USB1PLL>;
+> > > +                       clock-names =3D "sys_ck", "ref_ck",
+> > > "xhci_ck", "mcu_ck";
+> > > +                       status =3D "disabled";
+> > > +               };
+> > > +
+> > > +               xhci2: usb@112a0000 {
+> > > +                       compatible =3D "mediatek,mt8195-xhci",
+> > > +                                    "mediatek,mtk-xhci";
+> > > +                       reg =3D <0 0x112a0000 0 0x1000>,
+> > > +                             <0 0x112a3e00 0 0x0100>;
+> > > +                       reg-names =3D "mac", "ippc";
+> > > +                       interrupts =3D <GIC_SPI 533
+> > > IRQ_TYPE_LEVEL_HIGH 0>;
+> > > +                       phys =3D <&u2port2 PHY_TYPE_USB2>;
+> > > +                       assigned-clocks =3D <&topckgen
+> > > CLK_TOP_USB_TOP_2P>,
+> > > +                                         <&topckgen
+> > > CLK_TOP_SSUSB_XHCI_2P>;
+> > > +                       assigned-clock-parents =3D <&topckgen
+> > > CLK_TOP_UNIVPLL_D5_D4>,
+> > > +                                                <&topckgen
+> > > CLK_TOP_UNIVPLL_D5_D4>;
+> > > +                       clocks =3D <&pericfg_ao
+> > > CLK_PERI_AO_SSUSB_2P_BUS>,
+> > > +                                <&topckgen CLK_TOP_SSUSB_P2_REF>,
+> > > +                                <&pericfg_ao
+> > > CLK_PERI_AO_SSUSB_2P_XHCI>;
+> > > +                       clock-names =3D "sys_ck", "ref_ck",
+> > > "xhci_ck";
+> > > +                       status =3D "disabled";
+> > > +               };
+> > > +
+> > > +               xhci3: usb@112b0000 {
+> > > +                       compatible =3D "mediatek,mt8195-xhci",
+> > > +                                    "mediatek,mtk-xhci";
+> > > +                       reg =3D <0 0x112b0000 0 0x1000>,
+> > > +                             <0 0x112b3e00 0 0x0100>;
+> > > +                       reg-names =3D "mac", "ippc";
+> > > +                       interrupts =3D <GIC_SPI 536
+> > > IRQ_TYPE_LEVEL_HIGH 0>;
+> > > +                       phys =3D <&u2port3 PHY_TYPE_USB2>;
+> > > +                       assigned-clocks =3D <&topckgen
+> > > CLK_TOP_USB_TOP_3P>,
+> > > +                                         <&topckgen
+> > > CLK_TOP_SSUSB_XHCI_3P>;
+> > > +                       assigned-clock-parents =3D <&topckgen
+> > > CLK_TOP_UNIVPLL_D5_D4>,
+> > > +                                                <&topckgen
+> > > CLK_TOP_UNIVPLL_D5_D4>;
+> > > +                       clocks =3D <&pericfg_ao
+> > > CLK_PERI_AO_SSUSB_3P_BUS>,
+> > > +                                <&pericfg_ao
+> > > CLK_PERI_AO_SSUSB_3P_XHCI>,
+> > > +                                <&topckgen CLK_TOP_SSUSB_P3_REF>;
+> > > +                       clock-names =3D "sys_ck", "xhci_ck",
+> > > "ref_ck";
+> > > +                       usb2-lpm-disable;
+> >
+> > Could you explain why this is needed only for this controller?
+>
+> This controller is fixed with a BT, there is something issue when
+> enable usb2 lpm, so just disabled tmp.
+
+Please add a comment explaining things.
+
+> > > +                       status =3D "disabled";
+> > > +               };
+> > > +
+> > > +               u3phy2: t-phy@11c40000 {
+> >
+> > Just "phy" for the node name. (Or maybe "serdes".) t-phy is not
+> > generic.
+>
+> following t-phy=E2=80=99s dt-binding.
+> here using t-phy is to avoid dt-check warning, because it has some sub-
+> phys.
+
+I see. t-phy it is, then.
+
+> > > +                       compatible =3D "mediatek,mt8195-tphy",
+> > > "mediatek,generic-tphy-v3";
+> > > +                       #address-cells =3D <1>;
+> > > +                       #size-cells =3D <1>;
+> > > +                       ranges =3D <0 0 0x11c40000 0x700>;
+> > > +                       status =3D "disabled";
+> > > +
+> > > +                       u2port2: usb-phy@0 {
+> > > +                               reg =3D <0x0 0x700>;
+> > > +                               clocks =3D <&topckgen
+> > > CLK_TOP_SSUSB_PHY_P2_REF>;
+> > > +                               clock-names =3D "ref";
+> > > +                               #phy-cells =3D <1>;
+> > > +                       };
+> > > +               };
+> > > +
+> >
+> > [...]
+> >
+> > > +               ufsphy: ufs-phy@11fa0000 {
+> >
+> > I would have preferred "phy" for the device node, but this seems
+> > already
+> > defined in the binding.
+> >
+> > This IP block is not listed in the datasheet I have, so I am unable
+> > to
+> > verify the properties listed here.
+> >
+> > > +                       compatible =3D "mediatek,mt8195-ufsphy",
+> > > "mediatek,mt8183-ufsphy";
+> > > +                       reg =3D <0 0x11fa0000 0 0xc000>;
+> > > +                       clocks =3D <&clk26m>, <&clk26m>;
+> > > +                       clock-names =3D "unipro", "mp";
+> > > +                       #phy-cells =3D <0>;
+> > > +                       status =3D "disabled";
+> > > +               };
+> > > +
+> >
+> > Most of the issues I raised in this version were issues with things
+> > not
+> > matching the bindings. Please apply your patches on -next and run
+> > `make dtbs_check`.
+>
+> ok. I'll apply comments at next version. Thank you.
+>
+> >
+> >
+> > ChenYu
+>
