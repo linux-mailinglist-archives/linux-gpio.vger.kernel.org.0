@@ -2,150 +2,203 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C20E4878D9
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jan 2022 15:23:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D96C4878EB
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jan 2022 15:27:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232971AbiAGOXx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Jan 2022 09:23:53 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:22623 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230324AbiAGOXw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jan 2022 09:23:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1641565432;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=vsxllOmwTqbsnBhBtlTCVau64wziBnZUhdgoXMBsAmE=;
-        b=B5EBuxV3rX9vYUC49w0ZfaDZ2QPPjuZwRRmjbtHkhhj45iBaOv+9AjJyk5IuhfWBrE1twU
-        3NG14LLjaUCFCGV5+ZDliXY21RKGBPYc4sRWcHpRX2zXsqcB+1S5ic50Myk939nxJN5Vhi
-        NBMcfsARZ+f60GMvLqBdwyoQNLa2asY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-255-yEfmojSDMmq1JQavBKgPhw-1; Fri, 07 Jan 2022 09:23:47 -0500
-X-MC-Unique: yEfmojSDMmq1JQavBKgPhw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AC9FF108088A;
-        Fri,  7 Jan 2022 14:23:45 +0000 (UTC)
-Received: from shalem.redhat.com (unknown [10.39.192.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 675FA7E130;
-        Fri,  7 Jan 2022 14:23:44 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org
-Subject: [PATCH v2] pinctrl: baytrail: Clear direct_irq_en flag on broken configs
-Date:   Fri,  7 Jan 2022 15:23:43 +0100
-Message-Id: <20220107142343.38560-1-hdegoede@redhat.com>
+        id S239230AbiAGO1d (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Jan 2022 09:27:33 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:45046 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239226AbiAGO1d (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jan 2022 09:27:33 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 207EQahw093477;
+        Fri, 7 Jan 2022 08:26:36 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1641565596;
+        bh=bbpnL2bqMN5H6aNKxgvIvY9vGPdi1O8RpGftvud1Gx8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=OBKsSOCXPMflYsrV1dtvfOQBQCM+dt8F3FowNuexaOIHWQXksqzPVDy0tCsNmKU2B
+         Cyo5sTcLNQCSGiL5++OUNoVs8GVUsnWwKJ7+dasTTs1eDbEXRaAXQ9VRVkgekvWx+v
+         LsAhce0fL/LqhXDcbeLszNQkVccx71MkVTOsZPw8=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 207EQZXO115620
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 7 Jan 2022 08:26:35 -0600
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Fri, 7
+ Jan 2022 08:26:35 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
+ Frontend Transport; Fri, 7 Jan 2022 08:26:35 -0600
+Received: from [10.249.36.164] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 207EQZKj097440;
+        Fri, 7 Jan 2022 08:26:35 -0600
+Subject: Re: [PATCH] dt-bindings: Drop required 'interrupt-parent'
+To:     Rob Herring <robh@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        - <patches@opensource.cirrus.com>,
+        John Crispin <john@phrozen.org>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+CC:     <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <netdev@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>,
+        "Nagalla, Hari" <hnagalla@ti.com>
+References: <20220107031905.2406176-1-robh@kernel.org>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <cf75f1ee-8424-b6b2-f873-beea4676a29f@ti.com>
+Date:   Fri, 7 Jan 2022 08:26:34 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20220107031905.2406176-1-robh@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Some boards set the direct_irq_en flag in the conf0 register without
-setting any of the trigger bits. The direct_irq_en flag just means that
-the GPIO will send IRQs directly to the APIC instead of going through
-the shared interrupt for the GPIO controller, in order for the pin to
-be able to actually generate IRQs the trigger flags must still be set.
+Hi Rob,
 
-So having the direct_irq_en flag set without any trigger flags is
-non-sense, log a FW_BUG warning when encountering this and clear the flag
-so that a driver can actually use the pin as IRQ through gpiod_to_irq().
+On 1/6/22 9:19 PM, Rob Herring wrote:
+> 'interrupt-parent' is never required as it can be in a parent node or a
+> parent node itself can be an interrupt provider. Where exactly it lives is
+> outside the scope of a binding schema.
+> 
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/gpio/toshiba,gpio-visconti.yaml  | 1 -
+>  .../devicetree/bindings/mailbox/ti,omap-mailbox.yaml     | 9 ---------
+>  Documentation/devicetree/bindings/mfd/cirrus,madera.yaml | 1 -
+>  .../devicetree/bindings/net/lantiq,etop-xway.yaml        | 1 -
+>  .../devicetree/bindings/net/lantiq,xrx200-net.yaml       | 1 -
+>  .../devicetree/bindings/pci/sifive,fu740-pcie.yaml       | 1 -
+>  .../devicetree/bindings/pci/xilinx-versal-cpm.yaml       | 1 -
+>  7 files changed, 15 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml b/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
+> index 9ad470e01953..b085450b527f 100644
+> --- a/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
+> @@ -43,7 +43,6 @@ required:
+>    - gpio-controller
+>    - interrupt-controller
+>    - "#interrupt-cells"
+> -  - interrupt-parent
+>  
+>  additionalProperties: false
+>  
+> diff --git a/Documentation/devicetree/bindings/mailbox/ti,omap-mailbox.yaml b/Documentation/devicetree/bindings/mailbox/ti,omap-mailbox.yaml
+> index e864d798168d..d433e496ec6e 100644
+> --- a/Documentation/devicetree/bindings/mailbox/ti,omap-mailbox.yaml
+> +++ b/Documentation/devicetree/bindings/mailbox/ti,omap-mailbox.yaml
+> @@ -175,15 +175,6 @@ required:
+>    - ti,mbox-num-fifos
+>  
+>  allOf:
+> -  - if:
+> -      properties:
+> -        compatible:
+> -          enum:
+> -            - ti,am654-mailbox
+> -    then:
+> -      required:
+> -        - interrupt-parent
+> -
 
-Specifically this allows the edt-ft5x06 touchscreen driver to use
-INT33FC:02 pin 3 as touchscreen IRQ on the Nextbook Ares 8 tablet,
-accompanied by the following new log message:
+There are multiple interrupt controllers on TI K3 devices, and we need this
+property to be defined _specifically_ to point to the relevant interrupt router
+parent node.
 
-byt_gpio INT33FC:02: [Firmware Bug]: pin 3: direct_irq_en set without trigger, clearing
+While what you state in general is true, I cannot have a node not define this on
+K3 devices, and end up using the wrong interrupt parent (GIC
+interrupt-controller). That's why the conditional compatible check.
 
-The new byt_direct_irq_sanity_check() function also checks that the
-pin is actually appointed to one of the 16 direct-IRQs which the
-GPIO controller support and on success prints debug msg like these:
+regards
+Suman
 
-byt_gpio INT33FC:02: Pin 0: uses direct IRQ 0 (APIC 67)
-byt_gpio INT33FC:02: Pin 15: uses direct IRQ 2 (APIC 69)
-
-This is useful to figure out the GPIO pin belonging to ACPI
-resources like this one: "Interrupt () { 0x00000043 }" or
-the other way around.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v2:
-- Add "FW_BUG pin %i: direct_irq_en set but no IRQ assigned, clearing" warning
----
- drivers/pinctrl/intel/pinctrl-baytrail.c | 38 ++++++++++++++++++++++--
- 1 file changed, 36 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
-index 4c01333e1406..a7179aa30b78 100644
---- a/drivers/pinctrl/intel/pinctrl-baytrail.c
-+++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
-@@ -32,6 +32,7 @@
- #define BYT_VAL_REG		0x008
- #define BYT_DFT_REG		0x00c
- #define BYT_INT_STAT_REG	0x800
-+#define BYT_DIRECT_IRQ_REG	0x980
- #define BYT_DEBOUNCE_REG	0x9d0
- 
- /* BYT_CONF0_REG register bits */
-@@ -1465,6 +1466,34 @@ static void byt_gpio_irq_handler(struct irq_desc *desc)
- 	chip->irq_eoi(data);
- }
- 
-+static bool byt_direct_irq_sanity_check(struct intel_pinctrl *vg, int pin, u32 value)
-+{
-+	void __iomem *reg;
-+	int i, j;
-+
-+	if (!(value & (BYT_TRIG_POS | BYT_TRIG_NEG))) {
-+		dev_warn(vg->dev,
-+			 FW_BUG "pin %i: direct_irq_en set without trigger, clearing\n", pin);
-+		return false;
-+	}
-+
-+	reg = vg->communities->pad_regs + BYT_DIRECT_IRQ_REG;
-+	for (i = 0; i < 16; i += 4) {
-+		value = readl(reg + i);
-+		for (j = 0; j < 4; j++) {
-+			if (((value >> j * 8) & 0xff) == pin) {
-+				dev_dbg(vg->dev, "Pin %i: uses direct IRQ %d (APIC %d)\n",
-+					pin, i + j, 0x43 + i + j);
-+				return true;
-+			}
-+		}
-+	}
-+
-+	dev_warn(vg->dev,
-+		 FW_BUG "pin %i: direct_irq_en set but no IRQ assigned, clearing\n", pin);
-+	return false;
-+}
-+
- static void byt_init_irq_valid_mask(struct gpio_chip *chip,
- 				    unsigned long *valid_mask,
- 				    unsigned int ngpios)
-@@ -1492,8 +1521,13 @@ static void byt_init_irq_valid_mask(struct gpio_chip *chip,
- 
- 		value = readl(reg);
- 		if (value & BYT_DIRECT_IRQ_EN) {
--			clear_bit(i, valid_mask);
--			dev_dbg(vg->dev, "excluding GPIO %d from IRQ domain\n", i);
-+			if (byt_direct_irq_sanity_check(vg, i, value)) {
-+				clear_bit(i, valid_mask);
-+			} else {
-+				value &= ~(BYT_DIRECT_IRQ_EN | BYT_TRIG_POS |
-+					   BYT_TRIG_NEG | BYT_TRIG_LVL);
-+				writel(value, reg);
-+			}
- 		} else if ((value & BYT_PIN_MUX) == byt_get_gpio_mux(vg, i)) {
- 			byt_gpio_clear_triggering(vg, i);
- 			dev_dbg(vg->dev, "disabling GPIO %d\n", i);
--- 
-2.33.1
+>    - if:
+>        properties:
+>          compatible:
+> diff --git a/Documentation/devicetree/bindings/mfd/cirrus,madera.yaml b/Documentation/devicetree/bindings/mfd/cirrus,madera.yaml
+> index 499c62c04daa..5dce62a7eff2 100644
+> --- a/Documentation/devicetree/bindings/mfd/cirrus,madera.yaml
+> +++ b/Documentation/devicetree/bindings/mfd/cirrus,madera.yaml
+> @@ -221,7 +221,6 @@ required:
+>    - '#gpio-cells'
+>    - interrupt-controller
+>    - '#interrupt-cells'
+> -  - interrupt-parent
+>    - interrupts
+>    - AVDD-supply
+>    - DBVDD1-supply
+> diff --git a/Documentation/devicetree/bindings/net/lantiq,etop-xway.yaml b/Documentation/devicetree/bindings/net/lantiq,etop-xway.yaml
+> index 437502c5ca96..3ce9f9a16baf 100644
+> --- a/Documentation/devicetree/bindings/net/lantiq,etop-xway.yaml
+> +++ b/Documentation/devicetree/bindings/net/lantiq,etop-xway.yaml
+> @@ -46,7 +46,6 @@ properties:
+>  required:
+>    - compatible
+>    - reg
+> -  - interrupt-parent
+>    - interrupts
+>    - interrupt-names
+>    - lantiq,tx-burst-length
+> diff --git a/Documentation/devicetree/bindings/net/lantiq,xrx200-net.yaml b/Documentation/devicetree/bindings/net/lantiq,xrx200-net.yaml
+> index 7bc074a42369..5bc1a21ca579 100644
+> --- a/Documentation/devicetree/bindings/net/lantiq,xrx200-net.yaml
+> +++ b/Documentation/devicetree/bindings/net/lantiq,xrx200-net.yaml
+> @@ -38,7 +38,6 @@ properties:
+>  required:
+>    - compatible
+>    - reg
+> -  - interrupt-parent
+>    - interrupts
+>    - interrupt-names
+>    - "#address-cells"
+> diff --git a/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml b/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
+> index 2b9d1d6fc661..72c78f4ec269 100644
+> --- a/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/sifive,fu740-pcie.yaml
+> @@ -61,7 +61,6 @@ required:
+>    - num-lanes
+>    - interrupts
+>    - interrupt-names
+> -  - interrupt-parent
+>    - interrupt-map-mask
+>    - interrupt-map
+>    - clock-names
+> diff --git a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> index a2bbc0eb7220..32f4641085bc 100644
+> --- a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> +++ b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> @@ -55,7 +55,6 @@ required:
+>    - reg-names
+>    - "#interrupt-cells"
+>    - interrupts
+> -  - interrupt-parent
+>    - interrupt-map
+>    - interrupt-map-mask
+>    - bus-range
+> 
 
