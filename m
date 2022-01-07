@@ -2,189 +2,143 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B016487A59
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jan 2022 17:30:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 27010487A97
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Jan 2022 17:42:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239989AbiAGQaE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Jan 2022 11:30:04 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:33218 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239599AbiAGQaE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jan 2022 11:30:04 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 207GTWdY126346;
-        Fri, 7 Jan 2022 10:29:32 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1641572972;
-        bh=gSPa2SrN3YqB2RHUn1JNHASwQpxAuZUnLG52GBxt0Yg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=MQOUv676jgbtfoWqniRW7KLxTX7A9n1bLd9Z69Xp6udLs91KhMVg1QG+avjqYHped
-         0Ja1d7ORgD9PT6zqJiEEUMcDTCYDjP0WrPJBNR0eknL4hdQUPwdnCarQ63770u3c9K
-         tUWddqEeuiK82jmgg4MTVDeLLjtXsmesyaqcWE4c=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 207GTVuI030190
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 7 Jan 2022 10:29:31 -0600
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Fri, 7
- Jan 2022 10:29:31 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
- Frontend Transport; Fri, 7 Jan 2022 10:29:30 -0600
-Received: from [10.249.36.164] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 207GTU8O054945;
-        Fri, 7 Jan 2022 10:29:30 -0600
-Subject: Re: [PATCH] dt-bindings: Drop required 'interrupt-parent'
-To:     Rob Herring <robh@kernel.org>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Richard Fitzgerald <rf@opensource.cirrus.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        - <patches@opensource.cirrus.com>,
-        John Crispin <john@phrozen.org>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        netdev <netdev@vger.kernel.org>, PCI <linux-pci@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "Nagalla, Hari" <hnagalla@ti.com>, "Menon, Nishanth" <nm@ti.com>,
-        Vignesh R <vigneshr@ti.com>
-References: <20220107031905.2406176-1-robh@kernel.org>
- <cf75f1ee-8424-b6b2-f873-beea4676a29f@ti.com>
- <CAL_JsqL3PGqmzA0wW37G7TXhbRVgByznk==Q8GhA0_OFBKAycQ@mail.gmail.com>
-From:   Suman Anna <s-anna@ti.com>
-Message-ID: <8902cefa-e2d7-1bcc-aae2-f272be53d675@ti.com>
-Date:   Fri, 7 Jan 2022 10:29:30 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        id S239986AbiAGQmu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Jan 2022 11:42:50 -0500
+Received: from mga14.intel.com ([192.55.52.115]:37239 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S239949AbiAGQmt (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 7 Jan 2022 11:42:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1641573769; x=1673109769;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=kbs5xRru6OG7wwLWVfqaaIyTU/WcyJAmRAcgEUD2+5A=;
+  b=gT94S0mSEb/7v5fqOOp7f66zw+mDGt3byhJcva9A9iF5Tk+7UVZci+gO
+   wroKpdOXNGflHC/SGTgzOIGHvPIbBGuh2Os2kQM4JAIeqocB14ry7rXOd
+   khFVY306pHdFsJ6JGzdr4O6LQa7ZduisXKxjaV0HnJdL0VHnrSFdMrwdu
+   yrwYRWn9kF52cGkej3f6VyWJnob7hB1sk5zmvQ0ljmenRYy77UgYrXcsr
+   i7ogb8/GxI6KC2xnuYL3u7c/8ZvkvRElTuD0SZtY8SWsfPkDhLCj6A7yj
+   jgi8dVAa+jFSYRhP63kvb5Xhm4dEQO5AoXSub8ULPh/8oL/Pzy4npy1w3
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10219"; a="243093744"
+X-IronPort-AV: E=Sophos;i="5.88,270,1635231600"; 
+   d="scan'208";a="243093744"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2022 08:42:48 -0800
+X-IronPort-AV: E=Sophos;i="5.88,270,1635231600"; 
+   d="scan'208";a="621968041"
+Received: from smile.fi.intel.com ([10.237.72.61])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jan 2022 08:42:46 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1n5sJ1-007SuE-2Y;
+        Fri, 07 Jan 2022 18:41:31 +0200
+Date:   Fri, 7 Jan 2022 18:41:30 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2] pinctrl: baytrail: Clear direct_irq_en flag on broken
+ configs
+Message-ID: <YdhtOrVjyx7k9nt4@smile.fi.intel.com>
+References: <20220107142343.38560-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqL3PGqmzA0wW37G7TXhbRVgByznk==Q8GhA0_OFBKAycQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220107142343.38560-1-hdegoede@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Rob,
-
-On 1/7/22 9:20 AM, Rob Herring wrote:
-> On Fri, Jan 7, 2022 at 8:27 AM Suman Anna <s-anna@ti.com> wrote:
->>
->> Hi Rob,
->>
->> On 1/6/22 9:19 PM, Rob Herring wrote:
->>> 'interrupt-parent' is never required as it can be in a parent node or a
->>> parent node itself can be an interrupt provider. Where exactly it lives is
->>> outside the scope of a binding schema.
->>>
->>> Signed-off-by: Rob Herring <robh@kernel.org>
->>> ---
->>>  .../devicetree/bindings/gpio/toshiba,gpio-visconti.yaml  | 1 -
->>>  .../devicetree/bindings/mailbox/ti,omap-mailbox.yaml     | 9 ---------
->>>  Documentation/devicetree/bindings/mfd/cirrus,madera.yaml | 1 -
->>>  .../devicetree/bindings/net/lantiq,etop-xway.yaml        | 1 -
->>>  .../devicetree/bindings/net/lantiq,xrx200-net.yaml       | 1 -
->>>  .../devicetree/bindings/pci/sifive,fu740-pcie.yaml       | 1 -
->>>  .../devicetree/bindings/pci/xilinx-versal-cpm.yaml       | 1 -
->>>  7 files changed, 15 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml b/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
->>> index 9ad470e01953..b085450b527f 100644
->>> --- a/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
->>> +++ b/Documentation/devicetree/bindings/gpio/toshiba,gpio-visconti.yaml
->>> @@ -43,7 +43,6 @@ required:
->>>    - gpio-controller
->>>    - interrupt-controller
->>>    - "#interrupt-cells"
->>> -  - interrupt-parent
->>>
->>>  additionalProperties: false
->>>
->>> diff --git a/Documentation/devicetree/bindings/mailbox/ti,omap-mailbox.yaml b/Documentation/devicetree/bindings/mailbox/ti,omap-mailbox.yaml
->>> index e864d798168d..d433e496ec6e 100644
->>> --- a/Documentation/devicetree/bindings/mailbox/ti,omap-mailbox.yaml
->>> +++ b/Documentation/devicetree/bindings/mailbox/ti,omap-mailbox.yaml
->>> @@ -175,15 +175,6 @@ required:
->>>    - ti,mbox-num-fifos
->>>
->>>  allOf:
->>> -  - if:
->>> -      properties:
->>> -        compatible:
->>> -          enum:
->>> -            - ti,am654-mailbox
->>> -    then:
->>> -      required:
->>> -        - interrupt-parent
->>> -
->>
->> There are multiple interrupt controllers on TI K3 devices, and we need this
->> property to be defined _specifically_ to point to the relevant interrupt router
->> parent node.
->>
->> While what you state in general is true, I cannot have a node not define this on
->> K3 devices, and end up using the wrong interrupt parent (GIC
->> interrupt-controller). That's why the conditional compatible check.
+On Fri, Jan 07, 2022 at 03:23:43PM +0100, Hans de Goede wrote:
+> Some boards set the direct_irq_en flag in the conf0 register without
+> setting any of the trigger bits. The direct_irq_en flag just means that
+> the GPIO will send IRQs directly to the APIC instead of going through
+> the shared interrupt for the GPIO controller, in order for the pin to
+> be able to actually generate IRQs the trigger flags must still be set.
 > 
-> But you could.
+> So having the direct_irq_en flag set without any trigger flags is
+> non-sense, log a FW_BUG warning when encountering this and clear the flag
+> so that a driver can actually use the pin as IRQ through gpiod_to_irq().
 > 
-> The parent node can have a default interrupt-parent and child nodes
-> can override that. It doesn't matter which one is the default though
-> typically you would want the one used the most to be the default.
-> Looking at your dts files, it looks like you all did the opposite. 
-
-Hmm, I am not sure I understood your last comment. Can you point out the
-specific usage?
-
-All our K3 dts files have the interrupt-parent = <&gic500> defined at the
-root-node, which is the default ARM GIC.
-
-Let us know if we need to fix something in our dts files.
-
-The
-> only way that wouldn't work is if the parent node is if the parent
-> node has its own 'interrupts' or you are just abusing
-> 'interrupt-parent' where the standard parsing doesn't work.
-
-All our K3 gic500 nodes does have an 'interrupts' property.
-
+> Specifically this allows the edt-ft5x06 touchscreen driver to use
+> INT33FC:02 pin 3 as touchscreen IRQ on the Nextbook Ares 8 tablet,
+> accompanied by the following new log message:
 > 
-> You are also free to use 'interrupts-extended' anywhere 'interrupts'
-> is used and then interrupt-parent being present is an error. 
-
-Yes, this is understood. The OMAP Mailbox binding is reused between multiple SoC
-families, some of which do not use an Interrupt Router in between.
-
-So, whats the best way to enforce this in the specific schema? I have used the
-common 'interrupts' property that applies to all SoCs, and enforced the
-conditional 'interrupt-parent' only on relevant compatibles.
-
-regards
-Suman
-
-How you
-> structure all this is outside the scope of binding schemas which only
-> need to define how many interrupts and what are they. Ensuring parents
-> and cell sizes are correct is mostly done by dtc.
+> byt_gpio INT33FC:02: [Firmware Bug]: pin 3: direct_irq_en set without trigger, clearing
 > 
-> Rob
+> The new byt_direct_irq_sanity_check() function also checks that the
+> pin is actually appointed to one of the 16 direct-IRQs which the
+> GPIO controller support and on success prints debug msg like these:
+
+supports ?
+
+> byt_gpio INT33FC:02: Pin 0: uses direct IRQ 0 (APIC 67)
+> byt_gpio INT33FC:02: Pin 15: uses direct IRQ 2 (APIC 69)
 > 
+> This is useful to figure out the GPIO pin belonging to ACPI
+> resources like this one: "Interrupt () { 0x00000043 }" or
+> the other way around.
+
+...
+
+> +static bool byt_direct_irq_sanity_check(struct intel_pinctrl *vg, int pin, u32 value)
+> +{
+> +	void __iomem *reg;
+> +	int i, j;
+> +
+> +	if (!(value & (BYT_TRIG_POS | BYT_TRIG_NEG))) {
+> +		dev_warn(vg->dev,
+> +			 FW_BUG "pin %i: direct_irq_en set without trigger, clearing\n", pin);
+> +		return false;
+> +	}
+> +
+> +	reg = vg->communities->pad_regs + BYT_DIRECT_IRQ_REG;
+
+> +	for (i = 0; i < 16; i += 4) {
+> +		value = readl(reg + i);
+> +		for (j = 0; j < 4; j++) {
+> +			if (((value >> j * 8) & 0xff) == pin) {
+
+Can it be like
+
+	u32 direct_irq[16];
+	void __iomem *reg;
+	void *match;
+
+
+	memcpy_fromio(...);
+	match = memchr(...);
+	if (match)
+		dev_dbg();
+	else
+		dev_warn();
+
+	return !!match;
+
+?
+
+> +				dev_dbg(vg->dev, "Pin %i: uses direct IRQ %d (APIC %d)\n",
+> +					pin, i + j, 0x43 + i + j);
+> +				return true;
+> +			}
+> +		}
+> +	}
+> +
+> +	dev_warn(vg->dev,
+> +		 FW_BUG "pin %i: direct_irq_en set but no IRQ assigned, clearing\n", pin);
+> +	return false;
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
