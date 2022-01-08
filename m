@@ -2,150 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ABB62487F8B
-	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jan 2022 00:45:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C7E2F488014
+	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jan 2022 01:52:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231520AbiAGXpN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Jan 2022 18:45:13 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:35631 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231482AbiAGXpN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jan 2022 18:45:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1641599112;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=WM6pTeaK0dsDXcy1SksCI9/dPL7/3ZqZWfG7+hwjDyQ=;
-        b=PvJne6Tw+3I08wuedkKSwi9cCTWSZIelWJYvF06eUeoojDs6E/FKAK3yvwCrmef1lzAZu/
-        Nx6xo1Y4AYKgQtC3qDcg3fXOAM2M9zlWkv9ap3hlvwcXTtWqnqFIHPKIp8/ie8eC/Sgjc/
-        Fi2p89+EzAmEMY7RCJzJXo0ZcFUgWT0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-43-hofnx1-xMJmEbTQw4E_0vg-1; Fri, 07 Jan 2022 18:45:09 -0500
-X-MC-Unique: hofnx1-xMJmEbTQw4E_0vg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S232071AbiAHAwN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Jan 2022 19:52:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43810 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232075AbiAHAwN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jan 2022 19:52:13 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B43F0C061746;
+        Fri,  7 Jan 2022 16:52:12 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E88DF2F25;
-        Fri,  7 Jan 2022 23:45:07 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.39.192.30])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 97EF6108BC;
-        Fri,  7 Jan 2022 23:45:04 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org
-Subject: [PATCH v3] pinctrl: baytrail: Clear direct_irq_en flag on broken configs
-Date:   Sat,  8 Jan 2022 00:44:56 +0100
-Message-Id: <20220107234456.148389-1-hdegoede@redhat.com>
+        by ams.source.kernel.org (Postfix) with ESMTPS id B32FAB827C1;
+        Sat,  8 Jan 2022 00:52:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5140EC36AEB;
+        Sat,  8 Jan 2022 00:52:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1641603129;
+        bh=uZRAQjD0Cu/0AvHcRJoik8x/i5Cs4BQt2RicFubNe2Q=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=twiSvBeUnQLf648h4LtbyDAficRfIrrlKkylkdzGKySNf1AQ2aCU6ZCiagyt6t78G
+         3OkJqjpR8RT1jyYDVdOVZen4X6iYiv6T8eFNEwYl6Rn3knK7oZdraYFFmKblNaJfDJ
+         K3n95ddtss3WVDnriVvma9PluZ9jcLJT8HIdqyXyTsa5SFjq4Td4Vcitj5CO8m7BBn
+         B5MWlZTwE/OSUCKNwPXioi82R8FdpRHK8Ay4aJwLHxFVUYnW78lxdqATcKheDO2vvQ
+         rToSnFPIsmZekELuXJyVT+AQ5xBn/043+/L3PLvBhfZkzcDdM/KINJOHPHI4JezH6T
+         tZNxoO+S5gHGQ==
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20211209163720.106185-2-nikita@trvn.ru>
+References: <20211209163720.106185-1-nikita@trvn.ru> <20211209163720.106185-2-nikita@trvn.ru>
+Subject: Re: [PATCH 1/4] clk: qcom: clk-rcg2: Fail Duty-Cycle configuration if MND divider is not enabled.
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     bjorn.andersson@linaro.org, agross@kernel.org, tdas@codeaurora.org,
+        joonwoop@codeaurora.org, svarbanov@mm-sol.com,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht,
+        Nikita Travkin <nikita@trvn.ru>
+To:     Nikita Travkin <nikita@trvn.ru>, linus.walleij@linaro.org,
+        mturquette@baylibre.com
+Date:   Fri, 07 Jan 2022 16:52:08 -0800
+User-Agent: alot/0.9.1
+Message-Id: <20220108005209.5140EC36AEB@smtp.kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Some boards set the direct_irq_en flag in the conf0 register without
-setting any of the trigger bits. The direct_irq_en flag just means that
-the GPIO will send IRQs directly to the APIC instead of going through
-the shared interrupt for the GPIO controller, in order for the pin to
-be able to actually generate IRQs the trigger flags must still be set.
+Quoting Nikita Travkin (2021-12-09 08:37:17)
+> In cases when MND is not enabled (e.g. when only Half Integer Divider is
+> used), setting D registers makes no effect. Fail instead of making
+> ineffective write.
+>=20
+> Fixes: 7f891faf596e ("clk: qcom: clk-rcg2: Add support for duty-cycle for=
+ RCG")
+> Signed-off-by: Nikita Travkin <nikita@trvn.ru>
+> ---
+>  drivers/clk/qcom/clk-rcg2.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/clk/qcom/clk-rcg2.c b/drivers/clk/qcom/clk-rcg2.c
+> index e1b1b426fae4..6964cf914b60 100644
+> --- a/drivers/clk/qcom/clk-rcg2.c
+> +++ b/drivers/clk/qcom/clk-rcg2.c
+> @@ -396,7 +396,7 @@ static int clk_rcg2_get_duty_cycle(struct clk_hw *hw,=
+ struct clk_duty *duty)
+>  static int clk_rcg2_set_duty_cycle(struct clk_hw *hw, struct clk_duty *d=
+uty)
+>  {
+>         struct clk_rcg2 *rcg =3D to_clk_rcg2(hw);
+> -       u32 notn_m, n, m, d, not2d, mask, duty_per;
+> +       u32 notn_m, n, m, d, not2d, mask, duty_per, cfg;
+>         int ret;
+> =20
+>         /* Duty-cycle cannot be modified for non-MND RCGs */
+> @@ -407,6 +407,11 @@ static int clk_rcg2_set_duty_cycle(struct clk_hw *hw=
+, struct clk_duty *duty)
+> =20
+>         regmap_read(rcg->clkr.regmap, RCG_N_OFFSET(rcg), &notn_m);
+>         regmap_read(rcg->clkr.regmap, RCG_M_OFFSET(rcg), &m);
+> +       regmap_read(rcg->clkr.regmap, RCG_CFG_OFFSET(rcg), &cfg);
+> +
+> +       /* Duty-cycle cannot be modified if MND divider is in bypass mode=
+. */
+> +       if (!(cfg & CFG_MODE_MASK))
+> +               return -EINVAL;
 
-So having the direct_irq_en flag set without any trigger flags is
-non-sense, log a FW_BUG warning when encountering this and clear the flag
-so that a driver can actually use the pin as IRQ through gpiod_to_irq().
-
-Specifically this allows the edt-ft5x06 touchscreen driver to use
-INT33FC:02 pin 3 as touchscreen IRQ on the Nextbook Ares 8 tablet,
-accompanied by the following new log message:
-
-byt_gpio INT33FC:02: [Firmware Bug]: pin 3: direct_irq_en set without trigger, clearing
-
-The new byt_direct_irq_sanity_check() function also checks that the
-pin is actually appointed to one of the 16 direct-IRQs which the GPIO
-controller supports and on success prints debug messages like these:
-
-byt_gpio INT33FC:02: Pin 0: uses direct IRQ 0 (APIC 67)
-byt_gpio INT33FC:02: Pin 15: uses direct IRQ 2 (APIC 69)
-
-This is useful to figure out the GPIO pin belonging to ACPI
-resources like this one: "Interrupt () { 0x00000043 }" or
-the other way around.
-
-Suggested-by: Andy Shevchenko <andy@kernel.org>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v3:
-- Rework code to check if the pin is assigned one of the 16 direct IRQs
-  (new code suggested-by Andy)
-- Drop dev_dbg of the (likely?) APIC IRQ, only log the direct IRQ index
-
-Changes in v2:
-- Add "FW_BUG pin %i: direct_irq_en set but no IRQ assigned, clearing" warning
----
- drivers/pinctrl/intel/pinctrl-baytrail.c | 31 ++++++++++++++++++++++--
- 1 file changed, 29 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
-index 4c01333e1406..508b8a1cad1f 100644
---- a/drivers/pinctrl/intel/pinctrl-baytrail.c
-+++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
-@@ -32,6 +32,7 @@
- #define BYT_VAL_REG		0x008
- #define BYT_DFT_REG		0x00c
- #define BYT_INT_STAT_REG	0x800
-+#define BYT_DIRECT_IRQ_REG	0x980
- #define BYT_DEBOUNCE_REG	0x9d0
- 
- /* BYT_CONF0_REG register bits */
-@@ -1465,6 +1466,27 @@ static void byt_gpio_irq_handler(struct irq_desc *desc)
- 	chip->irq_eoi(data);
- }
- 
-+static bool byt_direct_irq_sanity_check(struct intel_pinctrl *vg, int pin, u32 value)
-+{
-+	u8 *match, direct_irq[16];
-+
-+	if (!(value & (BYT_TRIG_POS | BYT_TRIG_NEG))) {
-+		dev_warn(vg->dev,
-+			 FW_BUG "pin %i: direct_irq_en set without trigger, clearing\n", pin);
-+		return false;
-+	}
-+
-+	memcpy_fromio(direct_irq, vg->communities->pad_regs + BYT_DIRECT_IRQ_REG,
-+		      sizeof(direct_irq));
-+	match = memchr(direct_irq, pin, sizeof(direct_irq));
-+	if (match)
-+		dev_dbg(vg->dev, "Pin %i: uses direct IRQ %ld\n", pin, match - direct_irq);
-+	else
-+		dev_warn(vg->dev, FW_BUG "pin %i: direct_irq_en set but no IRQ assigned, clearing\n", pin);
-+
-+	return match;
-+}
-+
- static void byt_init_irq_valid_mask(struct gpio_chip *chip,
- 				    unsigned long *valid_mask,
- 				    unsigned int ngpios)
-@@ -1492,8 +1514,13 @@ static void byt_init_irq_valid_mask(struct gpio_chip *chip,
- 
- 		value = readl(reg);
- 		if (value & BYT_DIRECT_IRQ_EN) {
--			clear_bit(i, valid_mask);
--			dev_dbg(vg->dev, "excluding GPIO %d from IRQ domain\n", i);
-+			if (byt_direct_irq_sanity_check(vg, i, value)) {
-+				clear_bit(i, valid_mask);
-+			} else {
-+				value &= ~(BYT_DIRECT_IRQ_EN | BYT_TRIG_POS |
-+					   BYT_TRIG_NEG | BYT_TRIG_LVL);
-+				writel(value, reg);
-+			}
- 		} else if ((value & BYT_PIN_MUX) == byt_get_gpio_mux(vg, i)) {
- 			byt_gpio_clear_triggering(vg, i);
- 			dev_dbg(vg->dev, "disabling GPIO %d\n", i);
--- 
-2.33.1
-
+Should we still allow 50% duty cycle to succeed?
