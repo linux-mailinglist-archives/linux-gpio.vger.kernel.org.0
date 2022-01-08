@@ -2,96 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2869648803D
-	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jan 2022 01:57:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 615AE488224
+	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jan 2022 08:25:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232298AbiAHA4b (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Jan 2022 19:56:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44748 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232324AbiAHA4G (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jan 2022 19:56:06 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C7A1C061746;
-        Fri,  7 Jan 2022 16:56:06 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S233698AbiAHHZ0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 8 Jan 2022 02:25:26 -0500
+Received: from box.trvn.ru ([194.87.146.52]:56037 "EHLO box.trvn.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233484AbiAHHZZ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 8 Jan 2022 02:25:25 -0500
+Received: from authenticated-user (box.trvn.ru [194.87.146.52])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4B402B827C3;
-        Sat,  8 Jan 2022 00:56:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05575C36AEB;
-        Sat,  8 Jan 2022 00:56:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641603364;
-        bh=st53BHQLvyLzo/b3A3D4UNXb37sg+UZodRPGTnSnFWY=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=Hpfsrk/In3BFFgMIQLxj0MO5/DK2K22Qwq6mtxs+4GXPHnLzAyeDZNyzTWQANwwym
-         WJgyirFL+ZS3jclL4WCvoi9G2O8JTMW4zvfqMGg23mCZ7ZfCuzzYd6fkZiTyOF9tak
-         FZE84sT8tK5nfJliA3OXnqI4cuuZ8z33DoeFwwHyQDSaI41mpFV46D1r2xTvPhseub
-         sYyCn/YCvpAXZeSCLWi1ohQA7Dj08JwS67ynz9+JV6j3/nz4akxzGnXY26fGx8nuVI
-         xuJlNNbRjMEwS3A7/P/3oeYLj1zoevo3iOUXKoxpPB2GyQapQWUBr0O4PskE0Cf1gf
-         Ks8K5M/MXYENA==
-Content-Type: text/plain; charset="utf-8"
+        by box.trvn.ru (Postfix) with ESMTPSA id 513EC4038B;
+        Sat,  8 Jan 2022 12:25:19 +0500 (+05)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
+        t=1641626721; bh=xSTjwXWm03zXFQo0llbV1rDWCB+tlvOs66q7D/jrNgg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=epAcW3haHkcxECO4fhpYKScBgMXqNlBNUG2+cW5jDomY+kcf0MDNq3gAPA6UuyXM+
+         yKTgRwUYchNnwuexw8rggh7wSOkYc3Y9+bpc88nQd0ApHcJGU83jR2Sr0VFOtBljH7
+         cX1o/eGahOki14stGjyeiRwDZNNms7owI7d4I/GVPv2IDaPLKRZp2sEeXv/HwQezBK
+         fBujLPdT6vZNaoTMQ53mVYlaK3tvHE1r3HWMvb3vl5NM+L+vPrDCAVHjY8JRTYavWw
+         hkSreKo+bgTthBvEbg+LMs6JYtRDbPAuECg5n1ZbNa0j1Cx0gf7Es7N4DRTiUUsPUe
+         65q5iO/G5lgWA==
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20211209163720.106185-3-nikita@trvn.ru>
-References: <20211209163720.106185-1-nikita@trvn.ru> <20211209163720.106185-3-nikita@trvn.ru>
-Subject: Re: [PATCH 2/4] clk: qcom: clk-rcg2: Make sure to not write d=0 to the NMD register
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     bjorn.andersson@linaro.org, agross@kernel.org, tdas@codeaurora.org,
-        joonwoop@codeaurora.org, svarbanov@mm-sol.com,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Nikita Travkin <nikita@trvn.ru>
-To:     Nikita Travkin <nikita@trvn.ru>, linus.walleij@linaro.org,
-        mturquette@baylibre.com
-Date:   Fri, 07 Jan 2022 16:56:02 -0800
-User-Agent: alot/0.9.1
-Message-Id: <20220108005604.05575C36AEB@smtp.kernel.org>
+Date:   Sat, 08 Jan 2022 12:25:19 +0500
+From:   Nikita Travkin <nikita@trvn.ru>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     linus.walleij@linaro.org, mturquette@baylibre.com,
+        bjorn.andersson@linaro.org, agross@kernel.org, tdas@codeaurora.org,
+        svarbanov@mm-sol.com, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH 1/4] clk: qcom: clk-rcg2: Fail Duty-Cycle configuration if
+ MND divider is not enabled.
+In-Reply-To: <20220108005209.5140EC36AEB@smtp.kernel.org>
+References: <20211209163720.106185-1-nikita@trvn.ru>
+ <20211209163720.106185-2-nikita@trvn.ru>
+ <20220108005209.5140EC36AEB@smtp.kernel.org>
+Message-ID: <991533e0fddd6999c8a06a536ae57999@trvn.ru>
+X-Sender: nikita@trvn.ru
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Quoting Nikita Travkin (2021-12-09 08:37:18)
-> Sometimes calculation of d value may result in 0 because of the
-> rounding after integer division. This causes the following error:
->=20
-> [  113.969689] camss_gp1_clk_src: rcg didn't update its configuration.
-> [  113.969754] WARNING: CPU: 3 PID: 35 at drivers/clk/qcom/clk-rcg2.c:122=
- update_config+0xc8/0xdc
->=20
-> Make sure that D value is never zero.
->=20
-> Fixes: 7f891faf596e ("clk: qcom: clk-rcg2: Add support for duty-cycle for=
- RCG")
-> Signed-off-by: Nikita Travkin <nikita@trvn.ru>
-> ---
->  drivers/clk/qcom/clk-rcg2.c | 4 ++++
->  1 file changed, 4 insertions(+)
->=20
-> diff --git a/drivers/clk/qcom/clk-rcg2.c b/drivers/clk/qcom/clk-rcg2.c
-> index 6964cf914b60..fdfd43e2a01b 100644
-> --- a/drivers/clk/qcom/clk-rcg2.c
-> +++ b/drivers/clk/qcom/clk-rcg2.c
-> @@ -424,6 +424,10 @@ static int clk_rcg2_set_duty_cycle(struct clk_hw *hw=
-, struct clk_duty *duty)
->         if (d > mask)
->                 d =3D mask;
-> =20
-> +       /* Hardware can't handle d=3D0, make sure it's at least 1 */
-> +       if (!d)
-> +               d =3D 1;
+Hi,
 
-Maybe clamp() would be better
+Stephen Boyd писал(а) 08.01.2022 05:52:
+> Quoting Nikita Travkin (2021-12-09 08:37:17)
+>> In cases when MND is not enabled (e.g. when only Half Integer Divider is
+>> used), setting D registers makes no effect. Fail instead of making
+>> ineffective write.
+>>
+>> Fixes: 7f891faf596e ("clk: qcom: clk-rcg2: Add support for duty-cycle for RCG")
+>> Signed-off-by: Nikita Travkin <nikita@trvn.ru>
+>> ---
+>>  drivers/clk/qcom/clk-rcg2.c | 7 ++++++-
+>>  1 file changed, 6 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/clk/qcom/clk-rcg2.c b/drivers/clk/qcom/clk-rcg2.c
+>> index e1b1b426fae4..6964cf914b60 100644
+>> --- a/drivers/clk/qcom/clk-rcg2.c
+>> +++ b/drivers/clk/qcom/clk-rcg2.c
+>> @@ -396,7 +396,7 @@ static int clk_rcg2_get_duty_cycle(struct clk_hw *hw, struct clk_duty *duty)
+>>  static int clk_rcg2_set_duty_cycle(struct clk_hw *hw, struct clk_duty *duty)
+>>  {
+>>         struct clk_rcg2 *rcg = to_clk_rcg2(hw);
+>> -       u32 notn_m, n, m, d, not2d, mask, duty_per;
+>> +       u32 notn_m, n, m, d, not2d, mask, duty_per, cfg;
+>>         int ret;
+>>
+>>         /* Duty-cycle cannot be modified for non-MND RCGs */
+>> @@ -407,6 +407,11 @@ static int clk_rcg2_set_duty_cycle(struct clk_hw *hw, struct clk_duty *duty)
+>>
+>>         regmap_read(rcg->clkr.regmap, RCG_N_OFFSET(rcg), &notn_m);
+>>         regmap_read(rcg->clkr.regmap, RCG_M_OFFSET(rcg), &m);
+>> +       regmap_read(rcg->clkr.regmap, RCG_CFG_OFFSET(rcg), &cfg);
+>> +
+>> +       /* Duty-cycle cannot be modified if MND divider is in bypass mode. */
+>> +       if (!(cfg & CFG_MODE_MASK))
+>> +               return -EINVAL;
+> 
+> Should we still allow 50% duty cycle to succeed?
 
-	/*
- 	 * Check bit widths of 2d. If D is too big reduce duty cycle and
-	 * ensure it is non-zero.
-	 */
-	clamp(d, 1, mask);
+*Technically* setting 50% duty cycle works since it's the default,
+but how I understand it, the main way to get there is to call
+clk_set_duty_cycle() which implies that it's caller intends
+to control duty cycle specifically but the call doesn't actually
+control anything as the hardware block is disabled.
 
-> +
->         if ((d / 2) > (n - m))
->                 d =3D (n - m) * 2;
->         else if ((d / 2) < (m / 2))
+I'm adding this error here primarily to bring attention of the
+user (e.g. developer enabling some peripheral that needs
+duty cycle control) who might have to change their clock tree
+to make this control effective. So, assuming that if someone
+sets the duty cycle to 50% then they might set it to some other
+value later, it makes sense to fail the first call anyway.
+
+If you think there are some other possibilities for this call
+to happen specifically with 50% duty cycle (e.g. some
+preparations or cleanups in the clk subsystem or some drivers
+that I'm not aware of) then I can make an exemption in the check
+for that.
+
+Thanks,
+Nikita
