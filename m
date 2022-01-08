@@ -2,41 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F988488019
-	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jan 2022 01:53:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2869648803D
+	for <lists+linux-gpio@lfdr.de>; Sat,  8 Jan 2022 01:57:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232090AbiAHAxM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Jan 2022 19:53:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44054 "EHLO
+        id S232298AbiAHA4b (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Jan 2022 19:56:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231181AbiAHAxL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jan 2022 19:53:11 -0500
+        with ESMTP id S232324AbiAHA4G (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Jan 2022 19:56:06 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62ED7C061574;
-        Fri,  7 Jan 2022 16:53:11 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C7A1C061746;
+        Fri,  7 Jan 2022 16:56:06 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 19D19B827C0;
-        Sat,  8 Jan 2022 00:53:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A322DC36AE5;
-        Sat,  8 Jan 2022 00:53:08 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 4B402B827C3;
+        Sat,  8 Jan 2022 00:56:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05575C36AEB;
+        Sat,  8 Jan 2022 00:56:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641603188;
-        bh=n1Bs7zFAAfDihSUExic/LMl/gY/kBvXNDJla2yrKgMo=;
+        s=k20201202; t=1641603364;
+        bh=st53BHQLvyLzo/b3A3D4UNXb37sg+UZodRPGTnSnFWY=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=rtnI+aM5IRB/oXGut6Nrw3GhjIY+cus8eAuh/cmLI3Da3eekb3izft6XCVRMbVCpt
-         6EP+cb2GypYCik+yd1R2/Xg2u9FdlnAAoOpCmjOfCydXxzewL5lDrt7MKTFl6tqJvq
-         BZyxwlGRc4R36QdcOZCfW8mGodVlXzQ382L76ZwLogRj3VU639TZdvntCaPlhX04dS
-         w84AbycgxRigEsPRVD0meKuOpRUrsbQ1h0ZzzXPm1g0hzWZRDFZhhCFKpO4Sns1/MH
-         eys6JurMdHBIHh3nM8Cp1Numb7Cy0efdABVFOlTy0p0SCPnwMn3zGdoxK6L+h0z7st
-         kf7zMvIQaq3JQ==
+        b=Hpfsrk/In3BFFgMIQLxj0MO5/DK2K22Qwq6mtxs+4GXPHnLzAyeDZNyzTWQANwwym
+         WJgyirFL+ZS3jclL4WCvoi9G2O8JTMW4zvfqMGg23mCZ7ZfCuzzYd6fkZiTyOF9tak
+         FZE84sT8tK5nfJliA3OXnqI4cuuZ8z33DoeFwwHyQDSaI41mpFV46D1r2xTvPhseub
+         sYyCn/YCvpAXZeSCLWi1ohQA7Dj08JwS67ynz9+JV6j3/nz4akxzGnXY26fGx8nuVI
+         xuJlNNbRjMEwS3A7/P/3oeYLj1zoevo3iOUXKoxpPB2GyQapQWUBr0O4PskE0Cf1gf
+         Ks8K5M/MXYENA==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20211209163720.106185-5-nikita@trvn.ru>
-References: <20211209163720.106185-1-nikita@trvn.ru> <20211209163720.106185-5-nikita@trvn.ru>
-Subject: Re: [PATCH 4/4] clk: qcom: gcc-msm8916: Add rates to the GP clocks
+In-Reply-To: <20211209163720.106185-3-nikita@trvn.ru>
+References: <20211209163720.106185-1-nikita@trvn.ru> <20211209163720.106185-3-nikita@trvn.ru>
+Subject: Re: [PATCH 2/4] clk: qcom: clk-rcg2: Make sure to not write d=0 to the NMD register
 From:   Stephen Boyd <sboyd@kernel.org>
 Cc:     bjorn.andersson@linaro.org, agross@kernel.org, tdas@codeaurora.org,
         joonwoop@codeaurora.org, svarbanov@mm-sol.com,
@@ -46,27 +46,52 @@ Cc:     bjorn.andersson@linaro.org, agross@kernel.org, tdas@codeaurora.org,
         Nikita Travkin <nikita@trvn.ru>
 To:     Nikita Travkin <nikita@trvn.ru>, linus.walleij@linaro.org,
         mturquette@baylibre.com
-Date:   Fri, 07 Jan 2022 16:53:07 -0800
+Date:   Fri, 07 Jan 2022 16:56:02 -0800
 User-Agent: alot/0.9.1
-Message-Id: <20220108005308.A322DC36AE5@smtp.kernel.org>
+Message-Id: <20220108005604.05575C36AEB@smtp.kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Quoting Nikita Travkin (2021-12-09 08:37:20)
-> msm8916 has (at least) 6 "General Purpose" clocks that can be muxed to
-> SoC pins. These clocks are:
+Quoting Nikita Travkin (2021-12-09 08:37:18)
+> Sometimes calculation of d value may result in 0 because of the
+> rounding after integer division. This causes the following error:
 >=20
-> GP_CLK{0, 1} : GPIO_{31, 32} (Belongs to CAMSS according to Linux)
-> GP_CLK_{1-3}{A, B} : GPIO_{49-51, 97, 12, 13} (Belongs to GCC itself)
-> GP_MN : GPIO_110 (Doesn't seem to be described in gcc,
->     ignored in this patch)
+> [  113.969689] camss_gp1_clk_src: rcg didn't update its configuration.
+> [  113.969754] WARNING: CPU: 3 PID: 35 at drivers/clk/qcom/clk-rcg2.c:122=
+ update_config+0xc8/0xdc
 >=20
-> Those clocks may be used as e.g. PWM sources for external peripherals.
-> Add more frequencies to the table for those clocks so it's possible
-> for arbitrary peripherals to make use of them.
+> Make sure that D value is never zero.
 >=20
+> Fixes: 7f891faf596e ("clk: qcom: clk-rcg2: Add support for duty-cycle for=
+ RCG")
 > Signed-off-by: Nikita Travkin <nikita@trvn.ru>
 > ---
+>  drivers/clk/qcom/clk-rcg2.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>=20
+> diff --git a/drivers/clk/qcom/clk-rcg2.c b/drivers/clk/qcom/clk-rcg2.c
+> index 6964cf914b60..fdfd43e2a01b 100644
+> --- a/drivers/clk/qcom/clk-rcg2.c
+> +++ b/drivers/clk/qcom/clk-rcg2.c
+> @@ -424,6 +424,10 @@ static int clk_rcg2_set_duty_cycle(struct clk_hw *hw=
+, struct clk_duty *duty)
+>         if (d > mask)
+>                 d =3D mask;
+> =20
+> +       /* Hardware can't handle d=3D0, make sure it's at least 1 */
+> +       if (!d)
+> +               d =3D 1;
 
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Maybe clamp() would be better
+
+	/*
+ 	 * Check bit widths of 2d. If D is too big reduce duty cycle and
+	 * ensure it is non-zero.
+	 */
+	clamp(d, 1, mask);
+
+> +
+>         if ((d / 2) > (n - m))
+>                 d =3D (n - m) * 2;
+>         else if ((d / 2) < (m / 2))
