@@ -2,82 +2,153 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC437488947
-	for <lists+linux-gpio@lfdr.de>; Sun,  9 Jan 2022 13:14:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B963B488B3C
+	for <lists+linux-gpio@lfdr.de>; Sun,  9 Jan 2022 18:34:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235464AbiAIMOp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 9 Jan 2022 07:14:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50614 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235456AbiAIMOp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 9 Jan 2022 07:14:45 -0500
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A57F8C06173F;
-        Sun,  9 Jan 2022 04:14:44 -0800 (PST)
-Received: by mail-ed1-x532.google.com with SMTP id q25so33616238edb.2;
-        Sun, 09 Jan 2022 04:14:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+ODzzEtdzx+BLKoHw0Ew8QLVtY3SVHT6OOV7UeJFfcg=;
-        b=P3MeS9UhL7JO3PCCFgx4ITcvl5JyUGA7PO0YbQ7bmjxlrRfTJ64yj6LpoC2/Essyqr
-         QU7+K/cEWBEAn/5SGL5Zr6usiHGrFDpg6nBM02SvjHVeYsNf9tV3skpg8puOlNXcGtC0
-         nA6JluQjJjyQhWC7Hd1P/J1UDGeyVvzy87cIuf1rfF72wV5oEvvTOGJSrB76P0uwbtEM
-         U8/2vi8/nfv1nn9xXwJFK2pU2l0YtYLELAT0gXb+cUoI+4RJ3cwVAhcMIq8WWmnY4xNu
-         UuPwgkCNzwZhGpx89yvBKAiFBXgHAcf1N+5y0SvoUmeT+5BfiWOx+B09waJ5HJC6B3e3
-         8viQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+ODzzEtdzx+BLKoHw0Ew8QLVtY3SVHT6OOV7UeJFfcg=;
-        b=X+TCKLNpzPJhPPTs5/6EkYE86IR9yovvmfbhC3NvFMhD7qGWtpyvHwCZNFAjMVJ7Re
-         /fcq6SMjuljh6v9RdNW/DXhZzT6g9KkZHPVEDplDB5xmicNL9m4YtAZmDCM+uAQctuEp
-         86XCWZ8DL49EJUji5HnwsoBe9vpgfA+w2BL6Wm1t93FtWu6imejLkiF7WQqlmaEYklMW
-         riO/SLIHtkUEM5RFUZsjUI+DLXcJIn7ZIZv2XzE2Ft8T3WkE9qRWzXIwnUxhVKGwVYe8
-         w6oRFmqQjBGxIGlP+wUwDeFoClsWY6+gwQiyf7SS3kUeWtYBsVD5xtT4S48hGzRXQ8Hg
-         +pkA==
-X-Gm-Message-State: AOAM530L+mwqsJejvxoF6rUlal607PdB/UHuTB53oWfx+n2mu1B4uCxu
-        OHkFHUwhVKlwRrxtwUa5+a8BzuvXa1RNc/MTt8A=
-X-Google-Smtp-Source: ABdhPJy+9tXir56/D7W5HXQcPbozaD3w093HKKc4pk0Hk+kyzQ50keWucatAcFNy1hsqx6nrEnhOCUZK5kGzq5VcZzA=
-X-Received: by 2002:a17:907:6d8d:: with SMTP id sb13mr56501013ejc.132.1641730482630;
- Sun, 09 Jan 2022 04:14:42 -0800 (PST)
+        id S236253AbiAIReW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 9 Jan 2022 12:34:22 -0500
+Received: from mout.gmx.net ([212.227.15.19]:37761 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234436AbiAIReU (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 9 Jan 2022 12:34:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1641749650;
+        bh=zAkaWJtIEiaF5BfrxXNSoNcVTm5LuijzYenPGRzKFfY=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=EtLMy0lNnp534bvX0eXuPogRMdMSytQIZ67ZliFa8+COM9XLaGU7mgHMzIHbgWaZR
+         DGgwfB7M5lJLN2bJVGB4bafLqwlau2Nu1i7HH3PMz7dcLf0eeVr9S4xyEzl2wjSP6w
+         /a+e5X1hAvousPQRGrj2/jsNr/fPzRropOssd8pU=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([89.0.222.244]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1N17Ye-1mM6HI1RAQ-012ZBi; Sun, 09
+ Jan 2022 18:34:10 +0100
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, openbmc@lists.ozlabs.org,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Joel Stanley <joel@jms.id.au>, linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Subject: [PATCH v4 0/9] Nuvoton WPCM450 pinctrl and GPIO driver
+Date:   Sun,  9 Jan 2022 18:29:51 +0100
+Message-Id: <20220109173000.1242703-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-References: <20220106062255.3208817-1-cosmin.tanislav@analog.com>
- <20220106062255.3208817-3-cosmin.tanislav@analog.com> <CAHp75Vcq76iaHHp2oXFsaE4d_+EGH87DxQRYu7Ys-adN_4mmUw@mail.gmail.com>
-In-Reply-To: <CAHp75Vcq76iaHHp2oXFsaE4d_+EGH87DxQRYu7Ys-adN_4mmUw@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 9 Jan 2022 14:14:06 +0200
-Message-ID: <CAHp75VeTNaMBZy-ZS68iKNq+GJNJgFSGxmcohr9-bGiN9KswSw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] iio: addac: ad74413r: correct comparator gpio getters
- mask usage
-To:     Cosmin Tanislav <demonsingur@gmail.com>
-Cc:     cosmin.tanislav@analog.com, Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:lJDLqNjp7ysf9WlEHyM8eGXsDJj7j+Frzh8G7J7w5jv5TCQhCD7
+ Rogey9YoPUoD8Ni40TfPiwrALwDCmZVhp+LHdGogPZ5R0sx9jhiVQ3ZdPgdHiLhjFo/AGtZ
+ GRR9A7idEXcKkZjoq2+OwePQmQSYg8Lqt0fqEpCduCM41Q4bdyO8pSG5seaq7OnBivvofwk
+ DVW2IzqhG7op/Utd7F9Vw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:M7KWjGScLuE=:dcmuNyJu0CCqHDSq9p9xpZ
+ gXM5rmscCC/kQ+HxOGNqr63s2xPlthIsbuOs0ahwvWKllKEQuVdwQNYwkxzC6xH7yIjvP0CxS
+ v/wUqpr+iMEnbiOWCXnlWdpzqOSxt1eTvsPx2rwVHB8CH4Y5OkEE0rlrel6diSwaA3XJu2E3s
+ Vvp5zVrj1gyA1ZH4StKvsK1Fcy82PJiyoRoV5SsibzrvZx2rl/IgEE1Pj+KS9h9A+GEBlaRoM
+ BhAc5nxPMzq+thOkESyBqXVD3bBr1cNxHFs6odVb95PbxQB1eqhyu2DZhdfOzD32TPQEEeIYW
+ XX7v3Y+1O3Ms32OzqBtPjcbrt7+Hd0D6HJj/a1+TSe4rrAEMYUy6QkHc4cdYci0aD9/A+YUdp
+ NgB1+MFXWhiRpi4cG/E3VHBbDWlf0CWNbXHmPVAjTUImRhqu/A1V0aL6bohD/JCg5UJNj4h3A
+ nj4Rx3gDEmGk25hEUXsw1JSMC1qNcoufGg3n7VdYzyNSawnJ8S69lLXnRijqg+IgqGQsN2+bG
+ SpEwAVGSmKhw+OHS+2bphX8RhdbwE4KC1YCKb2TMZ+vhZBByIAwyOodrFnNzvTznYv41/wz43
+ 1gZSLBXRhhYGAucds4HhLHMnzjFDBFrY4wnF8AZq+YYrwIHniXHUnPz1Cfo/nZVRrcYL0ggQN
+ C49+631wYqE+39vWE7PqgIiFR0oABljsYXjqbsu65zw3v3ZxcVd9GynVvbCE0wJ+zFWDHI33o
+ Z8+e6YSg9NLCV+YAwyb06jQetGVAT1UV3fZVgquArXrdLwlcamyIW4RymCMrAqr7uniQaQePR
+ ayZGGJyBEP+Rxeg/hIw9DAHKzmIldRpFZQilDSXxhIDFYmXiu6PGRweWPxTNGxiv7asH49LnJ
+ mTFaw5RhRRwveDEOcZMV91ozO5Xbjg4o6r8wcSfWzgJ5EHVUaL2+D0kPK8QjLzAYvYAt76UPc
+ sqADX3SNsgduU7xYhOhjCbjuiS1Yek5cU2IvIxl10tT1CwyN3bdu3baHT4xIgqNBSg7x6tu1J
+ AN0L3KKcTEaAo0znoGSN6sJlID79T3KhWym0qk3Yl2+KSMnieKTwhNGvFUaXNWgFndc3hR1Xf
+ f5AuZxGvtbUdus=
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Jan 9, 2022 at 2:13 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Fri, Jan 7, 2022 at 7:34 AM Cosmin Tanislav <demonsingur@gmail.com> wrote:
+This is version 4 of the WPCM450 pinctrl/GPIO driver patchset,
+with some small, (hopefully) final improvements and cleanups
+(see patches 4 and 5).
 
-> > +       bitmap_zero(bits, chip->ngpio);
+I'm targetting 5.18, it's now too close to the 5.17 merge window anyway.
 
-> (At least this conditional can be replaced with __asign_bit() call,
-> but I think refactoring the entire loop may reveal a better approach)
+Best regards,
+Jonathan Neusch=C3=A4fer
 
-Switching to it makes bitmap_zero() redundant.
+v3:
+- https://lore.kernel.org/lkml/20211224200935.93817-1-j.neuschaefer@gmx.ne=
+t/
 
--- 
-With Best Regards,
-Andy Shevchenko
+v2:
+- https://lore.kernel.org/lkml/20211207210823.1975632-1-j.neuschaefer@gmx.=
+net/
+
+v1:
+- https://lore.kernel.org/lkml/20210602120329.2444672-1-j.neuschaefer@gmx.=
+net/
+
+> This series adds support for pinctrl and GPIO in the Nuvoton WPCM450 SoC=
+.
+> Both my DT bindings and my driver are based on the work done by others f=
+or
+> the newer Nuvoton NPCM7xx SoC, and I've tried to keep both similar.
+>
+> Instead of extending the pinctrl-npcm7xx driver to add WPCM450 support,
+> I copied/forked it. The pinmux mechanism is very similar (using MFSEL1 a=
+nd
+> MFSEL2 registers), but the GPIO register interface has been redesigned f=
+or
+> NPCM7xx; adding support for the older GPIO controller would make the dri=
+ver
+> harder to understand, while only enabling a small amount of code sharing=
+.
+>
+> The DT binding in YAML format might make a good template for also conver=
+ting
+> the nuvoton,npcm7xx-pinctrl binding to YAML.
+>
+> Both in the DT binding and in the driver I kept the name "pinctrl". For =
+the
+> driver, I find it accurate enough because it handles pinctrl and GPIO. F=
+or
+> the DT node, it's a bit less accurate because the register block at 0xb8=
+003000
+> is about GPIOs, and pin control happens in the global control registers =
+(GCR)
+> block, except for input debouncing. So, "GPIO" might be the more appropr=
+iate
+> name component there.
+
+Jonathan Neusch=C3=A4fer (9):
+  dt-bindings: arm/npcm: Add binding for global control registers (GCR)
+  MAINTAINERS: Match all of bindings/arm/npcm/ as part of NPCM
+    architecture
+  ARM: dts: wpcm450: Add global control registers (GCR) node
+  dt-bindings: pinctrl: Add Nuvoton WPCM450
+  pinctrl: nuvoton: Add driver for WPCM450
+  ARM: dts: wpcm450: Add pinctrl and GPIO nodes
+  ARM: dts: wpcm450: Add pin functions
+  ARM: dts: wpcm450-supermicro-x9sci-ln4f: Add GPIO LEDs and buttons
+  ARM: dts: wpcm450: Add pinmux information to UART0
+
+ .../bindings/arm/npcm/nuvoton,gcr.yaml        |   48 +
+ .../pinctrl/nuvoton,wpcm450-pinctrl.yaml      |  160 +++
+ MAINTAINERS                                   |    2 +
+ .../nuvoton-wpcm450-supermicro-x9sci-ln4f.dts |   43 +
+ arch/arm/boot/dts/nuvoton-wpcm450.dtsi        |  384 ++++++
+ drivers/pinctrl/Makefile                      |    2 +-
+ drivers/pinctrl/nuvoton/Kconfig               |   18 +
+ drivers/pinctrl/nuvoton/Makefile              |    1 +
+ drivers/pinctrl/nuvoton/pinctrl-wpcm450.c     | 1130 +++++++++++++++++
+ 9 files changed, 1787 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/npcm/nuvoton,gcr=
+.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/nuvoton,wpcm=
+450-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/nuvoton/pinctrl-wpcm450.c
+
+=2D-
+2.30.2
+
