@@ -2,78 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E23FE48A0C6
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jan 2022 21:14:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7432548A10F
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jan 2022 21:44:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241097AbiAJUOx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 Jan 2022 15:14:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58654 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240449AbiAJUOx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Jan 2022 15:14:53 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 493F3C061748;
-        Mon, 10 Jan 2022 12:14:53 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D6E99612FA;
-        Mon, 10 Jan 2022 20:14:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B3E4C36AE3;
-        Mon, 10 Jan 2022 20:14:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641845692;
-        bh=r24yN07MYyKv+1b+zerD+vIcwUaYal1HbYEztIuAink=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=eqKYahqLBtySojhaUYLMfHwwWrop8HUssVOK1RSArk4sNkP4aMfaQFOaIvKyhN6Ry
-         +oFc9QZVKBUO+yDxhmpYrCJ1lj0AD+QEN5M3q1VDXAlr6bknoZv+kgdXSZxY+ccQzv
-         wQS1hb8c0QDqW45uLGIjIy1A9RhoG/jbFgeldyTVBSmTYOOlSKhY9m55xFJBt6584F
-         bNFbOll8dr7XCRuqFcXa3ZQdo6gv6A2mgps+I5KLl22IZhZsohb9re50cfoTbzOEvp
-         L2co/3GWBYQJIiW/S+ZiiaCr1acyI1dFokyxYspvEXrTfqwiDUvEqxHRFslEzzO9wX
-         rkIhUOF+eW6Hw==
-Content-Type: text/plain; charset="utf-8"
+        id S242986AbiAJUn6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 Jan 2022 15:43:58 -0500
+Received: from mail-ot1-f42.google.com ([209.85.210.42]:43634 "EHLO
+        mail-ot1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239763AbiAJUn5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Jan 2022 15:43:57 -0500
+Received: by mail-ot1-f42.google.com with SMTP id i5-20020a05683033e500b0057a369ac614so16327786otu.10;
+        Mon, 10 Jan 2022 12:43:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=35ppYNSAmjaG5G1WU9sJ70GdaIEALpVsBIAt+1Hioso=;
+        b=rm7+kKDAsEY1HMxNaXuxFX8Ca8wgDjCiSuw1bURub7Rw+daGP5rxHOKqA1i7GRbv/5
+         JcZdrCXGYT81VrSyEVzqbKS/Hbh2GIS/wHI+lDNZ30Emdfe4TybTJP5mdDTl4XYIEbno
+         +OqbA/HU1if1mh4fZR2DADpFmUXPy9RcIYntcc7+NzS7WbXUXLhBaMdTE2FAIIJtEj5Y
+         XhdIa8H3TfrdfL+HV+3YKumCJEzfgOi1n0U94+U64NKb0vkjd/JIiYf6BJbm+RNRbbk1
+         f/d8CK/D/WHbq4CSQkWTaRYcc7w4GSjxSc/YSOodh8guH8WCAf1zlUjLRo7dgkHzDNBH
+         FN1g==
+X-Gm-Message-State: AOAM531gx+VtbdqTrMiqAT22+C1FMRLw1juP2I2NtbdlOe1o7tBrgYdJ
+        xk/0+9iIcjD1u7XxI2XZdw==
+X-Google-Smtp-Source: ABdhPJyBvbsbnfquLYElQlWNfNFL9BS8th3+wl64bJOBJNXkRXWAnCwSdEzfhIomEwmml1ZpoFdukg==
+X-Received: by 2002:a9d:f63:: with SMTP id 90mr1164831ott.268.1641847437087;
+        Mon, 10 Jan 2022 12:43:57 -0800 (PST)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id o145sm1507049ooo.1.2022.01.10.12.43.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Jan 2022 12:43:56 -0800 (PST)
+Received: (nullmailer pid 1472820 invoked by uid 1000);
+        Mon, 10 Jan 2022 20:43:55 -0000
+Date:   Mon, 10 Jan 2022 14:43:55 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Sam Protsenko <semen.protsenko@linaro.org>,
+        linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        Chanho Park <chanho61.park@samsung.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        linux-samsung-soc@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 24/24] dt-bindings: pinctrl: samsung: convert to dtschema
+Message-ID: <Ydyai46oaXI5+ixU@robh.at.kernel.org>
+References: <20211231161930.256733-1-krzysztof.kozlowski@canonical.com>
+ <20211231162309.257587-7-krzysztof.kozlowski@canonical.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <991533e0fddd6999c8a06a536ae57999@trvn.ru>
-References: <20211209163720.106185-1-nikita@trvn.ru> <20211209163720.106185-2-nikita@trvn.ru> <20220108005209.5140EC36AEB@smtp.kernel.org> <991533e0fddd6999c8a06a536ae57999@trvn.ru>
-Subject: Re: [PATCH 1/4] clk: qcom: clk-rcg2: Fail Duty-Cycle configuration if MND divider is not enabled.
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linus.walleij@linaro.org, mturquette@baylibre.com,
-        bjorn.andersson@linaro.org, agross@kernel.org, tdas@codeaurora.org,
-        svarbanov@mm-sol.com, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-To:     Nikita Travkin <nikita@trvn.ru>
-Date:   Mon, 10 Jan 2022 12:14:50 -0800
-User-Agent: alot/0.9.1
-Message-Id: <20220110201452.2B3E4C36AE3@smtp.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211231162309.257587-7-krzysztof.kozlowski@canonical.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Quoting Nikita Travkin (2022-01-07 23:25:19)
-> Hi,
->=20
-> Stephen Boyd =D0=BF=D0=B8=D1=81=D0=B0=D0=BB(=D0=B0) 08.01.2022 05:52:
-> > Quoting Nikita Travkin (2021-12-09 08:37:17)
-> I'm adding this error here primarily to bring attention of the
-> user (e.g. developer enabling some peripheral that needs
-> duty cycle control) who might have to change their clock tree
-> to make this control effective. So, assuming that if someone
-> sets the duty cycle to 50% then they might set it to some other
-> value later, it makes sense to fail the first call anyway.
->=20
-> If you think there are some other possibilities for this call
-> to happen specifically with 50% duty cycle (e.g. some
-> preparations or cleanups in the clk subsystem or some drivers
-> that I'm not aware of) then I can make an exemption in the check
-> for that.
->=20
+On Fri, 31 Dec 2021 17:23:09 +0100, Krzysztof Kozlowski wrote:
+> Convert the Samsung SoC (S3C24xx, S3C64xx, S5Pv210, Exynos) pin
+> controller bindings to DT schema format.  Parts of description and DTS
+> example was copied from existing sources, so keep the license as
+> GPL-2.0-only.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+> ---
+>  .../pinctrl/samsung,pinctrl-gpio-bank.yaml    |  52 +++
+>  .../pinctrl/samsung,pinctrl-pins-cfg.yaml     |  81 ++++
+>  .../samsung,pinctrl-wakeup-interrupt.yaml     |  76 ++++
+>  .../bindings/pinctrl/samsung,pinctrl.yaml     | 381 +++++++++++++++++
+>  .../bindings/pinctrl/samsung-pinctrl.txt      | 383 ------------------
+>  MAINTAINERS                                   |   2 +-
+>  6 files changed, 591 insertions(+), 384 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-gpio-bank.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-pins-cfg.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
+> 
 
-I don't see anywhere in clk_set_duty_cycle() where it would bail out
-early if the duty cycle was set to what it already is. The default for
-these clks is 50%, so I worry that some driver may try to set the duty
-cycle to 50% and then fail now. Either we need to check the duty cycle
-in the core before calling down into the driver or we need to check it
-here in the driver. Can you send a patch to check the current duty cycle
-in the core before calling down into the clk ops?
+Reviewed-by: Rob Herring <robh@kernel.org>
