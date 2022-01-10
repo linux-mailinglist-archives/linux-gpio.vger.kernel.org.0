@@ -2,190 +2,139 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B1813489885
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jan 2022 13:23:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E054489971
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jan 2022 14:12:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245391AbiAJMXV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 Jan 2022 07:23:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33072 "EHLO
+        id S231261AbiAJNLw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 Jan 2022 08:11:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245376AbiAJMXO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Jan 2022 07:23:14 -0500
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4C36C061756
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Jan 2022 04:23:13 -0800 (PST)
-Received: by mail-wr1-x42c.google.com with SMTP id q8so26332716wra.12
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Jan 2022 04:23:13 -0800 (PST)
+        with ESMTP id S230412AbiAJNLr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Jan 2022 08:11:47 -0500
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 865E2C034005
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Jan 2022 05:11:46 -0800 (PST)
+Received: by mail-lf1-x12a.google.com with SMTP id x7so44113981lfu.8
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Jan 2022 05:11:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=d5pQe12aMTp9K2Ar029wPLMoAM2l+tag/tJuNAihSfA=;
-        b=oJPzZWiJGiiJbT4/DpmWXxwLQYl6V3un3f2VMq9gR7xu1Vg0i7bZ927q0i6k6AQopH
-         EMyuitOKXW8UrzPrA8eOw7VIwHiup4VsiSBK70Fwh3ZHQOw8z80zEoQuv/4CO+GM9ivz
-         F5QUJ+ddCeY/O2IGHQoaAHfFjZBPVjvkv+z5R1r8GVyPWIRO/0eMm5lWFMJ9u0SODO/G
-         MdBs5h8FelfgOYX3f78MFfDQiSxzbfqga00uHApimjp9PagVhvMXJoFmnNYqNKov7brQ
-         vTMyqbYIDiV5KSYQLZHE20N7CHzkl+83RKoT9KdBiD7amP2upvF6OjdjXJB6L3Rolsqe
-         gmUA==
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=STst/NZz7XpLuhkw/fjT1YooCLQUEgoChj9j28RAYfs=;
+        b=Bgie3w5lZXcUpEJsNUNnYT9D80sz6831OKMgWSWMpAMR4c04HQM1hwHkoZ1AqHgJ5M
+         pQJfhFBsNTGc+jfMsWTuSDXhNBe5XPwJ8/UQZKbYcWTDQ68Eu4MBBVsHf0V3Baa+27Pp
+         IUJW/950IUGNsTto2NnsTW49/Cy4Vf+KfgzDT0+KZ2gcb/QkEKg3LEIj8qPJpiII0Qbk
+         buE3CbPl0T8T6omQLXT3KYJBxN98pPIrfxDam1Qs0diPFN43pWVugWbd8LU8WaIGviK3
+         O/t/NLMKhR03EdE8rMi5c8T5epCw09Yzc4YmAU5QrO9ZaREbayNwAtpm1SWYSR1IiBuY
+         5w9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=d5pQe12aMTp9K2Ar029wPLMoAM2l+tag/tJuNAihSfA=;
-        b=dVgkjhCc893RUB5mE/Fpc1PZOtGuggJOWyiDIYdntbXphSbp1YuCEewtsGlgiJFYsG
-         1e3eBzxNu+oSRs1jtIQwGuS0tg1Q3WOKq86xVBVUQb8dpIHYTaShM6lqvq+E91j81aHM
-         LS+mdMdISAiw9zP2lb7KH7CcDrHhOpbi/2GIWA5OtCsij5JZ+v6JODdgiysNsbkq3Nmg
-         AJNmfgRcPqCGXqdvaLjl49WzGw2TcrJ7VYY/l0TFKlUPMbF8qPN/ME2ZloIGqvaAvM4o
-         BVtEgCcab0o1pmxa+fiQvSvzCfxGNItgqPocZX5I4+MAYG5jEyvbNqrYmi69nv6YTdW7
-         oOEg==
-X-Gm-Message-State: AOAM532YF0yDvPRIx+6lK7vhHZ2GN0p6uU1EXWUvm99oXqOoFAGyDLvy
-        7JzGayjkvDDA9Lyela5RZ7UdmQ==
-X-Google-Smtp-Source: ABdhPJxJTGBqADrh2dO8M5zq/V0efObTWO7ybtVGTQGANdUuw72l8ka3sOvJLzv6aUoWNXVdmQ1BEQ==
-X-Received: by 2002:adf:e2cc:: with SMTP id d12mr17686855wrj.107.1641817392300;
-        Mon, 10 Jan 2022 04:23:12 -0800 (PST)
-Received: from google.com ([31.124.24.179])
-        by smtp.gmail.com with ESMTPSA id l4sm6533168wrm.62.2022.01.10.04.23.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Jan 2022 04:23:11 -0800 (PST)
-Date:   Mon, 10 Jan 2022 12:23:09 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Colin Foster <colin.foster@in-advantage.com>
-Cc:     linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, UNGLinuxDriver@microchip.com,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>
-Subject: Re: [RFC v5 net-next 08/13] mfd: add interface to check whether a
- device is mfd
-Message-ID: <YdwlLYFPU16roS8E@google.com>
-References: <20211218214954.109755-1-colin.foster@in-advantage.com>
- <20211218214954.109755-9-colin.foster@in-advantage.com>
- <Ycx+A4KNKiVmH2PJ@google.com>
- <20211230020443.GB1347882@euler>
- <Yc23mTo6g1tBiMjT@google.com>
- <20211230201253.GA1484230@euler>
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=STst/NZz7XpLuhkw/fjT1YooCLQUEgoChj9j28RAYfs=;
+        b=ZOjyeYZtgzL12t6UACorjOPqwbnoQebIaY38BfesMXVTwFPD+pVvaq3yA8RpcUDQty
+         YZ6p761cLnbH0MW2qAT6f2XVYaQYojCee2kKEqFyuILt80O6MnmdTy1ZH4iCn2WIycMy
+         RB18KEsIWRmUpzrfWuybVNXMTlQicqc3s7rcu9KiHezyMEa52r78PVRAArXu7fC8XKot
+         +NfPUBpwZWE2zQC2v/0tE486SH2hIflEIBQWj9djaEJkapvEa/jPqCerH8RwaCzEwlJa
+         iZL55sTC6JXJry3dCXahULAmW8X9Tvr1KuSBx+QVH26XY+K66MqFW909TApefCPvCMoT
+         QFWA==
+X-Gm-Message-State: AOAM532Pcb5q1CQ2kXhazSN93E1yDoP5ez2vCQVKy1icEvloCxMq8i8v
+        hmreqKEOPFunWSdVTG67p9qTjnXWZDtGhIMmPZvasGwB7vY=
+X-Google-Smtp-Source: ABdhPJyUuzfRq9+VAp3YIslVsNF7E8r6u+SDvjtiaFw6sfTA9uOxrmlrl9JDay/jDh10uqplhgk07a+YHTpM3Ge0znw=
+X-Received: by 2002:ac2:4c51:: with SMTP id o17mr60639917lfk.558.1641820293776;
+ Mon, 10 Jan 2022 05:11:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20211230201253.GA1484230@euler>
+Received: by 2002:a05:6504:15d1:0:0:0:0 with HTTP; Mon, 10 Jan 2022 05:11:32
+ -0800 (PST)
+Reply-To: gtbank107@yahoo.com
+From:   Barr Robert Richter <westernunion.benin982@gmail.com>
+Date:   Mon, 10 Jan 2022 14:11:32 +0100
+Message-ID: <CAP=nHBK9zHzp_=-EVswWQiLxEoc+HV4oqddgtnEqf-9qYab_4Q@mail.gmail.com>
+Subject: Contact GT Bank-Benin to receive your transfer amount of $18.5m US Dollars.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 30 Dec 2021, Colin Foster wrote:
+Attn,Dear
+I need you to know that the fear of the LORD is
+the beginning of wisdom, and knowledge of the Holy One is
+understanding. As power of God Most High. And This is the confidence
+we have in approaching God, that if we ask anything according to his
+will, he hears us. I will make you know that Slow and steady wins the race.
+It is your turn to receive your overdue compensation funds total
+amount $18.5Milion  USD.
+I actualized that you will receive your transfer today without any more delay
+No More fee OK, Believe me , I am your Attorney standing here on your favor.
+I just concluded conversation with the Gt Bank Director, Mrs Mary Gate
+And She told me that your transfer is ready today
 
-> On Thu, Dec 30, 2021 at 01:43:53PM +0000, Lee Jones wrote:
-> > On Wed, 29 Dec 2021, Colin Foster wrote:
-> > 
-> > > On Wed, Dec 29, 2021 at 03:25:55PM +0000, Lee Jones wrote:
-> > > > On Sat, 18 Dec 2021, Colin Foster wrote:
-> > > > 
-> > > > > Some drivers will need to create regmaps differently based on whether they
-> > > > > are a child of an MFD or a standalone device. An example of this would be
-> > > > > if a regmap were directly memory-mapped or an external bus. In the
-> > > > > memory-mapped case a call to devm_regmap_init_mmio would return the correct
-> > > > > regmap. In the case of an MFD, the regmap would need to be requested from
-> > > > > the parent device.
-> > > > > 
-> > > > > This addition allows the driver to correctly reason about these scenarios.
-> > > > > 
-> > > > > Signed-off-by: Colin Foster <colin.foster@in-advantage.com>
-> > > > > ---
-> > > > >  drivers/mfd/mfd-core.c   |  5 +++++
-> > > > >  include/linux/mfd/core.h | 10 ++++++++++
-> > > > >  2 files changed, 15 insertions(+)
-> > > > > 
-> > > > > diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-> > > > > index 684a011a6396..905f508a31b4 100644
-> > > > > --- a/drivers/mfd/mfd-core.c
-> > > > > +++ b/drivers/mfd/mfd-core.c
-> > > > > @@ -33,6 +33,11 @@ static struct device_type mfd_dev_type = {
-> > > > >  	.name	= "mfd_device",
-> > > > >  };
-> > > > >  
-> > > > > +int device_is_mfd(struct platform_device *pdev)
-> > > > > +{
-> > > > > +	return (!strcmp(pdev->dev.type->name, mfd_dev_type.name));
-> > > > > +}
-> > > > > +
-> > > > 
-> > > > Why is this device different to any other that has ever been
-> > > > mainlined?
-> > > 
-> > > Hi Lee,
-> > > 
-> > > First, let me apologize for not responding to your response from the
-> > > related RFC from earlier this month. It had been blocked by my spam
-> > > filter and I had not seen it until just now. I'll have to check that
-> > > more diligently now.
-> > > 
-> > > Moving on...
-> > > 
-> > > That's a question I keep asking myself. Either there's something I'm
-> > > missing, or there's something new I'm doing.
-> > > 
-> > > This is taking existing drivers that work via MMIO regmaps and making
-> > > them interface-independent. As Vladimir pointed out here:
-> > > https://lore.kernel.org/all/20211204022037.dkipkk42qet4u7go@skbuf/T/
-> > > device_is_mfd could be dropped in lieu of an mfd-specific probe
-> > > function.
-> > > 
-> > > If there's something I'm missing, please let me know. But it feels like
-> > > devm_get_regmap_from_resource at the end of the day would be the best
-> > > solution to the design, and that doesn't exist. And implementing
-> > > something like that is a task that I feel I'm not capable of tackling at
-> > > this time.
-> > 
-> > I'm really not a fan of leaking any MFD API outside of drivers/mfd.
-> > MFD isn't a tangible thing.  It's a Linuxiusm, something we made up, a
-> > figment of your imagination.
-> > 
-> > What happens if you were to all dev_get_regmap() in the non-MFD case
-> > or when you call devm_regmap_init_mmio() when the driver was
-> > registered via the MFD framework?
-> 
-> I'd imagine dev_get_regmap in a non-MFD case would be the same as
-> dev_get_and_ioremap_resource() followed by devm_regmap_init_mmio().
-> 
-> In the MFD case it would possibly request the regmap from the parent,
-> which could reason about how to create the regmap. As you understand,
-> this is exactly the behavior I created in this patch set. I did it by
-> way of ocelot_get_regmap_from_resource, and admit it isn't the best way.
-> But it certainly seems there isn't an existing method that I'm missing.
-> 
-> I'm coming from a pretty narrow field of view, but believe my use-case
-> is a valid one. If that is true, and there isn't another design I should
-> use... this is the opportunity to create it. Implementing
-> ocelot_get_regmap_from_resource is a way to achieve my needs without
-> affecting anyone else. 
-> 
-> Going one step further and implementing mfd_get_regmap_from_parent (or
-> similar) would creep into the design of MFD. I don't know enough about
-> MFD and the users to suggest this. I wouldn't want to start venturing
-> down that path without blessing from the community. And this would
-> indirectly affect every MFD driver.
-> 
-> Going all in and implementing device_get_regmap_from_resource... I don't
-> know that I'd be comfortable even starting down that path knowing that
-> it would affect every device. Perhaps it would have to utilize something
-> like IORESOURCE_REG that seems to only get utilized in a handful of 
-> files:
-> https://elixir.bootlin.com/linux/v5.16-rc7/C/ident/IORESOURCE_REG
+So the Bank Asked you to contact them immediately by re-confirming
+your Bank details asap.
+Because this is the Only thing holding this transfer
+If you did not trust me and Mrs Mary Gate,Who Else will you Trust?
+For we are the ones trying to protect your funds here
+and make sure that your funds is secure.
+So Promisingly, I am here to assure you, that Grate Miracle is coming on
+your way, and this funds total amount of $18.500,000 is your
+compensation, entitlement inheritance overdue funds on your name.
+Which you cannot let anything delay you from receiving your funds now,
 
-Let's speak to Mark and see if he can provide any insight.
+Finally i advised you to try your possible best and contact Gt Bank Benin
+once you get this message to receive your transfer $18.5 USD today.
+I know that a journey of thousand miles begins with a single step.
+Always put your best foot forward
+Try as hard as you can, God give you best.
+take my advice and follow the due process of your payment, the
+transfer will be released to
+you smoothly without any hitches or hindrance.
 
--- 
-Lee Jones [李琼斯]
-Principal Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Contact DR.MRS MARY GATE, Director Gt bank-Benin to receive your
+transfer amount of $18.5m US Dollars
+It was deposited and registered to your name this morning.
+Contact the Bank now to know when they will transfer to your
+country today
+
+Email id: gtbank107@yahoo.com
+Tel/mobile, +229 99069872
+Contact person, Mrs Mary Gate,Director Gt bank-Benin.
+Among the blind the one-eyed man is king
+
+As you sow, so you shall reap, i want you to receive your funds
+Best things in life are free
+Send to her your Bank Details as i listed here.
+
+Your account name-------------
+Your Bank Name----------------
+Account Number----------
+your Bank address----------
+Country-----------
+Your private phone number---------
+Routing Numbers-------------
+Swift Code-----------
+
+Note, Your funds is %100 Percent ready for
+transfer.
+Everything you do remember that Good things come to those who wait.
+I have done this work for you with my personally effort, Honesty is
+the best policy.
+now your transfer is currently deposited with paying bank this morning.
+It is by the grace of God that I received Christ, having known the truth.
+I had no choice than to do what is lawful and justice in the
+sight of God for eternal life and in the sight of man for witness of
+God & His Mercies and glory upon my life.
+
+send this needed bank details to the bank today, so that you receive
+your transfer today as
+it is available for your confirmation today.
+Please do your best as a serious person and send the fee urgent, Note
+that this transfer of $18.500.000 M USD is a Gift from God to Bless
+you.
+
+If you did not contact the bank urgent, finally the Bank will release
+your transfer of $18.500.000M USD to  Mr. David Bollen as your
+representative.
+So not allow another to claim your Money.
+Thanks For your Understanding.
+
+Barr Robert Richter, UN Attorney At Law Court-Benin
