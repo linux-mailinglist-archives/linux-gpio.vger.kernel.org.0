@@ -2,85 +2,177 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7432548A10F
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jan 2022 21:44:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 36F0448A16F
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jan 2022 22:08:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242986AbiAJUn6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 Jan 2022 15:43:58 -0500
-Received: from mail-ot1-f42.google.com ([209.85.210.42]:43634 "EHLO
-        mail-ot1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239763AbiAJUn5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Jan 2022 15:43:57 -0500
-Received: by mail-ot1-f42.google.com with SMTP id i5-20020a05683033e500b0057a369ac614so16327786otu.10;
-        Mon, 10 Jan 2022 12:43:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=35ppYNSAmjaG5G1WU9sJ70GdaIEALpVsBIAt+1Hioso=;
-        b=rm7+kKDAsEY1HMxNaXuxFX8Ca8wgDjCiSuw1bURub7Rw+daGP5rxHOKqA1i7GRbv/5
-         JcZdrCXGYT81VrSyEVzqbKS/Hbh2GIS/wHI+lDNZ30Emdfe4TybTJP5mdDTl4XYIEbno
-         +OqbA/HU1if1mh4fZR2DADpFmUXPy9RcIYntcc7+NzS7WbXUXLhBaMdTE2FAIIJtEj5Y
-         XhdIa8H3TfrdfL+HV+3YKumCJEzfgOi1n0U94+U64NKb0vkjd/JIiYf6BJbm+RNRbbk1
-         f/d8CK/D/WHbq4CSQkWTaRYcc7w4GSjxSc/YSOodh8guH8WCAf1zlUjLRo7dgkHzDNBH
-         FN1g==
-X-Gm-Message-State: AOAM531gx+VtbdqTrMiqAT22+C1FMRLw1juP2I2NtbdlOe1o7tBrgYdJ
-        xk/0+9iIcjD1u7XxI2XZdw==
-X-Google-Smtp-Source: ABdhPJyBvbsbnfquLYElQlWNfNFL9BS8th3+wl64bJOBJNXkRXWAnCwSdEzfhIomEwmml1ZpoFdukg==
-X-Received: by 2002:a9d:f63:: with SMTP id 90mr1164831ott.268.1641847437087;
-        Mon, 10 Jan 2022 12:43:57 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id o145sm1507049ooo.1.2022.01.10.12.43.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Jan 2022 12:43:56 -0800 (PST)
-Received: (nullmailer pid 1472820 invoked by uid 1000);
-        Mon, 10 Jan 2022 20:43:55 -0000
-Date:   Mon, 10 Jan 2022 14:43:55 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Sam Protsenko <semen.protsenko@linaro.org>,
-        linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        Chanho Park <chanho61.park@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        linux-samsung-soc@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 24/24] dt-bindings: pinctrl: samsung: convert to dtschema
-Message-ID: <Ydyai46oaXI5+ixU@robh.at.kernel.org>
-References: <20211231161930.256733-1-krzysztof.kozlowski@canonical.com>
- <20211231162309.257587-7-krzysztof.kozlowski@canonical.com>
+        id S1343791AbiAJVIj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 Jan 2022 16:08:39 -0500
+Received: from mga04.intel.com ([192.55.52.120]:30171 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1343788AbiAJVIj (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 10 Jan 2022 16:08:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1641848919; x=1673384919;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=noXDmlMb/EBRvid+M0xTN4DJrqhApqmO9Jn6H9SNPpk=;
+  b=lrwTqACLWTe81ZxqCH/BWfzQGN91+hs8RtoBMi1k7VTBjiNpTA/5x7ha
+   d/8INGCxUD5A6e2YXt+QSceu40k/hxSwWoyqxyhEo04PQ2NAQ+vP1KjXl
+   2mNCg0Dsxu1XXtCMM4yTZEAtIrdIb8BaTD/uz2kPL7NO536uZDmpeY289
+   E3go6tZFo3D6y0blg0CWhbTxGjFUSM+qjQ1lr8c6pH6UwtgQFiB3tjd0L
+   X1EVaDHXV3/vdfuYootLB1E1utULamPpyTKWfQ2uO1Rz5Ycj6kQNhDgKY
+   UhIcZ6luhoLIm//3CNhMBAMS3P2O6qjM8mg8J8sZY789435IYjb5FUZwl
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10223"; a="242135056"
+X-IronPort-AV: E=Sophos;i="5.88,278,1635231600"; 
+   d="scan'208";a="242135056"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2022 13:08:38 -0800
+X-IronPort-AV: E=Sophos;i="5.88,278,1635231600"; 
+   d="scan'208";a="490132599"
+Received: from smile.fi.intel.com ([10.237.72.61])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jan 2022 13:08:20 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1n71sd-00915P-Sm;
+        Mon, 10 Jan 2022 23:07:03 +0200
+Date:   Mon, 10 Jan 2022 23:07:03 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>, linux-iio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>, alsa-devel@alsa-project.org,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-phy@lists.infradead.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-mtd@lists.infradead.org, linux-i2c@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        openipmi-developer@lists.sourceforge.net,
+        Saravanan Sekar <sravanhome@gmail.com>,
+        Khuong Dinh <khuong@os.amperecomputing.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        kvm@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-serial@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Robert Richter <rric@kernel.org>,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        Corey Minyard <minyard@acm.org>, linux-pm@vger.kernel.org,
+        Peter Korsgaard <peter@korsgaard.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Mark Brown <broonie@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
+        Tony Luck <tony.luck@intel.com>,
+        Mun Yew Tham <mun.yew.tham@intel.com>,
+        Eric Auger <eric.auger@redhat.com>, netdev@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Cornelia Huck <cohuck@redhat.com>, linux-mmc@vger.kernel.org,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        linux-spi@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Vinod Koul <vkoul@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>,
+        linux-mediatek@lists.infradead.org,
+        Brian Norris <computersforpeace@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH 1/2] platform: make platform_get_irq_optional() optional
+Message-ID: <Ydyf93VD8FrV7GH+@smile.fi.intel.com>
+References: <20220110195449.12448-1-s.shtylyov@omp.ru>
+ <20220110195449.12448-2-s.shtylyov@omp.ru>
+ <20220110201014.mtajyrfcfznfhyqm@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20211231162309.257587-7-krzysztof.kozlowski@canonical.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220110201014.mtajyrfcfznfhyqm@pengutronix.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 31 Dec 2021 17:23:09 +0100, Krzysztof Kozlowski wrote:
-> Convert the Samsung SoC (S3C24xx, S3C64xx, S5Pv210, Exynos) pin
-> controller bindings to DT schema format.  Parts of description and DTS
-> example was copied from existing sources, so keep the license as
-> GPL-2.0-only.
+On Mon, Jan 10, 2022 at 09:10:14PM +0100, Uwe Kleine-König wrote:
+> On Mon, Jan 10, 2022 at 10:54:48PM +0300, Sergey Shtylyov wrote:
+> > This patch is based on the former Andy Shevchenko's patch:
+> > 
+> > https://lore.kernel.org/lkml/20210331144526.19439-1-andriy.shevchenko@linux.intel.com/
+> > 
+> > Currently platform_get_irq_optional() returns an error code even if IRQ
+> > resource simply has not been found. It prevents the callers from being
+> > error code agnostic in their error handling:
+> > 
+> > 	ret = platform_get_irq_optional(...);
+> > 	if (ret < 0 && ret != -ENXIO)
+> > 		return ret; // respect deferred probe
+> > 	if (ret > 0)
+> > 		...we get an IRQ...
+> > 
+> > All other *_optional() APIs seem to return 0 or NULL in case an optional
+> > resource is not available. Let's follow this good example, so that the
+> > callers would look like:
+> > 
+> > 	ret = platform_get_irq_optional(...);
+> > 	if (ret < 0)
+> > 		return ret;
+> > 	if (ret > 0)
+> > 		...we get an IRQ...
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-> ---
->  .../pinctrl/samsung,pinctrl-gpio-bank.yaml    |  52 +++
->  .../pinctrl/samsung,pinctrl-pins-cfg.yaml     |  81 ++++
->  .../samsung,pinctrl-wakeup-interrupt.yaml     |  76 ++++
->  .../bindings/pinctrl/samsung,pinctrl.yaml     | 381 +++++++++++++++++
->  .../bindings/pinctrl/samsung-pinctrl.txt      | 383 ------------------
->  MAINTAINERS                                   |   2 +-
->  6 files changed, 591 insertions(+), 384 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-gpio-bank.yaml
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-pins-cfg.yaml
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
-> 
+> The difference to gpiod_get_optional (and most other *_optional) is that
+> you can use the NULL value as if it were a valid GPIO.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+The problem is not only there, but also in the platform_get_irq() and that
+problem is called vIRQ0. Or as Linus put it "_cookie_" for IRQ, which never
+ever should be 0.
+
+> As this isn't given with for irqs, I don't think changing the return
+> value has much sense. In my eyes the problem with platform_get_irq() and
+> platform_get_irq_optional() is that someone considered it was a good
+> idea that a global function emits an error message. The problem is,
+> that's only true most of the time. (Sometimes the caller can handle an
+> error (here: the absence of an irq) just fine, sometimes the generic
+> error message just isn't as good as a message by the caller could be.
+> (here: The caller could emit "TX irq not found" which is a much nicer
+> message than "IRQ index 5 not found".)
+> 
+> My suggestion would be to keep the return value of
+> platform_get_irq_optional() as is, but rename it to
+> platform_get_irq_silent() to get rid of the expectation invoked by the
+> naming similarity that motivated you to change
+> platform_get_irq_optional().
+
+This won't fix the issue with vIRQ0.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
