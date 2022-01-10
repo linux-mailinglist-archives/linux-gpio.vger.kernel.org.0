@@ -2,115 +2,284 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8039F489F28
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jan 2022 19:24:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 41B5D489F65
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Jan 2022 19:43:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239116AbiAJSYM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 Jan 2022 13:24:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60234 "EHLO
+        id S240337AbiAJSn2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 Jan 2022 13:43:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239088AbiAJSYL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Jan 2022 13:24:11 -0500
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A986C06173F;
-        Mon, 10 Jan 2022 10:24:11 -0800 (PST)
-Received: by mail-ed1-x536.google.com with SMTP id c71so45572041edf.6;
-        Mon, 10 Jan 2022 10:24:11 -0800 (PST)
+        with ESMTP id S241852AbiAJSn1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Jan 2022 13:43:27 -0500
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55ED6C06173F;
+        Mon, 10 Jan 2022 10:43:27 -0800 (PST)
+Received: by mail-ed1-x533.google.com with SMTP id i5so3717675edf.9;
+        Mon, 10 Jan 2022 10:43:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+OBKlMrGeRwIefZjUnO53bTZIl+uI828EXtV9Nyw2sk=;
-        b=etturC84fe4kezIFLvLDguzVmw3WtSl1PjQhSslQESVDw15acoPKNOEyn2KDaMzbh0
-         eKVXnyMxtUxw1lzjA6bH0ZFmr8JW+CHBmoK3HetA3iYGVhshyWHK1X4vbyZ6dCdMwDs4
-         fiDKOcj6jt3eO2eBqSxltrQ8J/Hs6VgiVnPCGN2CQqQp2F7zh+ziQgT2xDv06bbguSOI
-         Z6/M29xIJGy4MpKMx+MYSlOKZiaPQ1FPOSOs3VDiJP0jxVhRaQhvbhnoO3mWB73d/Oi9
-         UAoJImpUxyeqtPwm93dKmyJOvI6RP6YQcSRkBLRWu8Npbbsx54fh2FyZ91IJXDkFYrTa
-         ds0g==
+         :cc:content-transfer-encoding;
+        bh=ktWa16PHInydFUoIdRaEpmLgiNbk/GAQbHlU2gA4X+E=;
+        b=UTXtWU1SRqUKoqId3SFiqE+nwbfvzrdqPFdxJ3sOtpxCyoIPidhNNA8K8bghcoxZCC
+         2I9ijhlFlXmzrnn5xZYPqYZ559Nb/ZV5Hv18LjpdD2BhgfpmqTe0SHRcifNKMBYdk93+
+         H2jkGwqi5lQC9Wkz2t4v3VNhIbJ5cy7f31io8h7EhfLLUr5ghVUsXR0ycifnk7Q0X47/
+         3eiHLA3GEz4mpaBWLti7DSqzyDa/Q+RotIrMGjDKdwYkc9LxbDSoLKzNs/TwhBYHurqq
+         C9/+d194NKXMuhWlJ28506frmgoX45QbXDhhBJjTZiJwMwi7JzW/hL1P66yBu0fMNb6v
+         Hjtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+OBKlMrGeRwIefZjUnO53bTZIl+uI828EXtV9Nyw2sk=;
-        b=OGNWmvWbkCLtcT17igyqNv3nRlvaD7FDVUV9hhEBb9z2U8lDjxZuGjgMPcZ54jKPx+
-         ffByXdiYlYLgKvOsNySKXkTfIQgravmQcVpPGBN2/oPKGBXUf/eX5tcZMrh9ACW63dRy
-         hBMwK35OU5foFcyORMU+I5lsWxPM90BBS5uyZn2qW63teln3WsBC4UKr5zZnN2XZRWSo
-         OORek1eMC46sVCurFo0Us8wMe7YbaT8GUvliBSKnRn4qUhMmup2TaHWPBDtC4hCDJCTD
-         fro+Enj2sxGOt5w1ISThG0QU8LJzoWXTdm+hnXpBhxgMWesfCPUD1ttrDhp8+txLkrwk
-         FkSg==
-X-Gm-Message-State: AOAM5332FUBftCa3dRSbp6qrzVucrD3kmUWtTd1Vzbnyvu7zm5Qx5UdQ
-        /hY3s/vFoyecMeD67fmjMQiYLDRnrFM46LPgpz2uZANtq2w=
-X-Google-Smtp-Source: ABdhPJxDtUnFS0ICcjJjaUcy6GqZkIiQUUUJ1CXLBLx6+TORFdiGKNjZrq2NLGQCVYpdw4GkjRi2LHxnXMFlvgV1yyo=
-X-Received: by 2002:a17:907:97cd:: with SMTP id js13mr639572ejc.497.1641839049368;
- Mon, 10 Jan 2022 10:24:09 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ktWa16PHInydFUoIdRaEpmLgiNbk/GAQbHlU2gA4X+E=;
+        b=2zWp0NfpH9A0kpKGcLpRuz4ar0KYRvojzrjoCyQ0100ZtJURwIyGlNV0usycI9znMR
+         O6YEj6fFN3MunH36DWrHQ746piCfEy0gevMPnwwM5V+UQwWxkuS958qe0RWcdT88+/c2
+         hn1O+HTzsIaYvkt6ZgaXFKq743TtgViwqxXfkoSn+QMxmj5DCkUldyaCxM7g4MBezejd
+         Va17yjREj8/EKDrZokq4k0wPvlj0LgpVwe2iLtTTcJi7YqRnymW3+N/95KoxMOmAFYOj
+         C9xiAv/4LhJJcTcLmuuCgT38/j8irxN6xm6kOYOopHECZebqo4/9v5YRLAGp6oqSRNcZ
+         N3yw==
+X-Gm-Message-State: AOAM531CnYPMxdMMYGmdP49lnXoQ40/HlKxeWckyAPImyOLBMkijxbqd
+        AteqNz/UdKNsLeYcJYt95Lw779wfLnvcNAKNnoU=
+X-Google-Smtp-Source: ABdhPJw5NQ7WwbPQ44x/U8u6NJGKgs389IA8RlqoWZDkV1dVdAXLxnBzvO3aB0TappuObRxAgwj8FO3hxsKoz899Jk0=
+X-Received: by 2002:a05:6402:4c5:: with SMTP id n5mr985184edw.122.1641840205797;
+ Mon, 10 Jan 2022 10:43:25 -0800 (PST)
 MIME-Version: 1.0
-References: <20220106062255.3208817-1-cosmin.tanislav@analog.com>
- <20220106062255.3208817-3-cosmin.tanislav@analog.com> <CAHp75Vcq76iaHHp2oXFsaE4d_+EGH87DxQRYu7Ys-adN_4mmUw@mail.gmail.com>
- <953f1539-a4fc-ab8e-bcf9-287ac91ba42b@gmail.com>
-In-Reply-To: <953f1539-a4fc-ab8e-bcf9-287ac91ba42b@gmail.com>
+References: <1640331779-18277-1-git-send-email-wellslutw@gmail.com>
+ <1640331779-18277-3-git-send-email-wellslutw@gmail.com> <CAHp75Vd3iMM+NteJXP_mMAyw5momk3xzp1Y2GX-YJZfFSAwo9A@mail.gmail.com>
+ <f87b21407ed44630a86b2661deab4a58@sphcmbx02.sunplus.com.tw>
+In-Reply-To: <f87b21407ed44630a86b2661deab4a58@sphcmbx02.sunplus.com.tw>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 10 Jan 2022 20:22:20 +0200
-Message-ID: <CAHp75Vc=+378EzDsibOaHRHCUoR8jBLO8ZZgf-G1i6N6Jm-AOg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] iio: addac: ad74413r: correct comparator gpio getters
- mask usage
-To:     Cosmin Tanislav <demonsingur@gmail.com>
-Cc:     cosmin.tanislav@analog.com, Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+Date:   Mon, 10 Jan 2022 20:41:37 +0200
+Message-ID: <CAHp75VcPB_K6RD8tnMarwGCeaOKcQ_knxvKEW9WNn_4ce41szw@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] pinctrl: Add driver for Sunplus SP7021
+To:     =?UTF-8?B?V2VsbHMgTHUg5ZGC6Iqz6aiw?= <wells.lu@sunplus.com>
+Cc:     Wells Lu <wellslutw@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "dvorkin@tibbo.com" <dvorkin@tibbo.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 10, 2022 at 6:55 PM Cosmin Tanislav <demonsingur@gmail.com> wrote:
-> On 1/9/22 14:13, Andy Shevchenko wrote:
-> > On Fri, Jan 7, 2022 at 7:34 AM Cosmin Tanislav <demonsingur@gmail.com> wrote:
+On Tue, Dec 28, 2021 at 5:38 PM Wells Lu =E5=91=82=E8=8A=B3=E9=A8=B0 <wells=
+.lu@sunplus.com> wrote:
 
 ...
 
-> >> -       status &= AD74413R_DIN_COMP_OUT_SHIFT_X(real_offset);
-> >> +       status &= BIT(real_offset);
+> > > +       bool "Sunplus SP7021 PinMux and GPIO driver"
 > >
-> > But this is completely different.
+> > Why bool and not tristate?
 >
-> What do you mean by this is completely different?
+> Pinctrl driver is selected by many drivers in SP7021 platform.
+> We never build it as a module, but build-in to kernel.
+> So we use "bool".
 >
-> It was broken before, it is fixed now. Indeed, I'm missing
-> the Fixes tag, if that's what you meant.
+> Should we set it to tristate?
 
-Yeah, I explained myself below. I think you got the idea.
+You still haven't answered "why", so I can't tell you.
 
 ...
 
-> >> +       bitmap_zero(bits, chip->ngpio);
-> >> +
-> >>          for_each_set_bit(offset, mask, chip->ngpio) {
-> >>                  unsigned int real_offset = st->comp_gpio_offsets[offset];
-> >>
-> >>                  if (val & BIT(real_offset))
-> >> -                       *bits |= offset;
-> >> +                       *bits |= BIT(offset);
+> > > +               /*
+> > > +                * Upper 16-bit word is mask. Lower 16-bit word is va=
+lue.
+> > > +                * Refer to descriptions of function sppctl_master_ge=
+t().
+> > > +                */
+> > > +               reg_off =3D (offset / 16) * 4;
+> > > +               bit_off =3D offset % 16;
+> > > +               reg =3D BIT(bit_off + SPPCTL_GPIO_MASK_SHIFT) |
+> > > + BIT(bit_off);
 > >
-> > So, how was it working before? If it fixes, it should go with the
-> > Fixes tag and before patch 2.
-> >
-> > On top of that, you may try to see if one of bitmap_*() APIs can be
-> > suitable here to perform the above in a more optimal way.
-> > (At least this conditional can be replaced with __asign_bit() call,
-> > but I think refactoring the entire loop may reveal a better approach)
+> > As I commented above use helper function which takes offset as input an=
+d returns you reg
+> > and reg_off.
 >
-> I can replace the if and bitmap_zero with __assign_bit, as you
-> suggested. I'm not familiar with bitmap APIs, do you have a suggestion?
+> I'll modify code as shown below:
+>
+>                 reg =3D SPPCTL_SET_MOON_REG_BIT(bit_off);
+>
+> Sorry, I don't understand your meaning "returns you reg and reg_off".
+> The helper macro will return reg but not reg_off, right?
 
-For now I'm lacking any new suggestions. If you don't see any better
-approaches, let's go with __assign_bit().
+Something like (fix types accordingly to your needs):
 
--- 
+static inline u32 sppctl_get_reg_and_offset(unsigned int offset, u32 *roff)
+{
+              u32 boff =3D offset % 16;
+              *roff =3D (offset / 16) * 4;
+
+               return  MY_COOL_MACRO(boff); // BIT(boff +
+SPPCTL_GPIO_MASK_SHIFT) | BIT(boff)
+}
+
+    reg =3D sppctl_get_reg_and_offset(offset, &reg_off);
+
+...
+
+> > > +       if (!of_find_property(pdev->dev.of_node, "gpio-controller", N=
+ULL))
+> > > +               return dev_err_probe(&pdev->dev, -EINVAL, "Not a
+> > > + gpio-controller!\n");
+> >
+> > Why do you need this check for?
+>
+> By referring to other pinctrl driver, we check if property "gpio-controll=
+er" exists?
+> Will core help us check this?
+> Is this redundant?
+
+You should answer this question, not me.
+
+...
+
+> Should I also remove the assignment:
+>
+>                 gchip->base             =3D 0;
+
+Actually this is a good catch. Why do you use 0 as a base? In the new
+code we are supposed to have -1 to be assigned.
+
+...
+
+> > > +       case pinmux_type_fpmx:  /* fully-pinmux */
+> >
+> > Why do you need these comments?
+> > Shouldn't you rather to kernel doc your enum entries?
+>
+> I'll remove the comments.
+> Could you please tell me where I should write and put my kernel doc?
+> Is there any examples I can refer to?
+
+In the enum definition you do something like this (and read documentation):
+
+/**
+ * enum ...
+ * @pinmux_type_fpmx: fully pin muxing
+ * @pinmux_type_grp: group pin muxing
+ * ...
+ */
+
+...
+
+> > > +       if (unlikely(check_mul_overflow(sppctl->unq_grps_sz + 1,
+> > > +                                       sizeof(*sppctl->g2fp_maps), &=
+prod)))
+> > > +               return -EINVAL;
+> >
+> > What the point to check it after? What the point to use it with kcalloc=
+()? Please, do your
+> > homework, i.e. read the code which implements that.
+>
+> I'll remove the "if (unlikely(check_mul_overflow()...) return -EINVAL" st=
+atement next patch.
+>
+> I think I mis-understood your previous comment.
+> I thought I was asked to add check_mul_overflow() function for devm_kcall=
+oc(...).
+> Sorry for strange codes.
+
+There were basically two iterative comments, i.e.
+first one suggested adding a check, but second one suggested switching
+to kcalloc() API.
+
+> I should study devm_kcalloc() furthermore. Now I know devm_kcalloc(...) d=
+oes
+> multiplication overflow check for us. That's why we need to devm_kzalloc(=
+) with
+> devm_kcalloc().
+>
+> One question left in my mind is, in this case, even we have 10,000 pins,
+> we will never get overflow. It looks not so necessary.
+
+But it's not your issue, the kcalloc() does it for you for the good sake.
+
+...
+
+> > > +       struct device_node *np =3D of_node_get(pdev->dev.of_node);
+> >
+> > What's the role of of_node_get()?
+>
+> I'll remove the unused codes.
+> I think it was used to check if OF node exists.
+
+And if it doesn't, what is the difference?
+
+You are the author of this code, please be prepared to explain every line i=
+n it.
+
+...
+
+> > > +       dev_info(&pdev->dev, "SP7021 PinCtrl by Sunplus/Tibbo Tech.")=
+;
+> >
+> > Is it useful?
+>
+> I think yes. It tells users that Pinctrl driver has probed successfully.
+> If no this message, users don't know if Pinctrl driver has probed
+> successfully or not. For example, because that dts node of pinctrl is
+> "disabled" or Pinctrl driver is even not enabled.
+>
+> Can I keep this?
+
+You can, but I think it's not needed.
+Users may easily get this from other sources. Why do you need to have
+such noise in the valuable resource, i.e. kernel message buffer?
+
+...
+
+> > > + *    - mux_f_mux:  Select the pin to a fully-pinmux pin
+> > > + *    - mux_f_gpio: Select the pin to a GPIO or IOP pin
+> > > + *    - mux_f_keep: Don't change (keep intact)
+
+> > > +       mux_f_mux =3D 0,          /* select fully-pinmux       */
+> > > +       mux_f_gpio =3D 1,         /* select GPIO or IOP pinmux */
+> > > +       mux_f_keep =3D 2,         /* keep no change            */
+
+These comments are replaced by the kernel doc above, no need to keep them.
+
+...
+
+> > Why is this in the header?
+>
+> Do you mean I need to move this "struct sppctl_gpio_chip { ... }" declara=
+tion
+> to c file because it is only used by the c file?
+
+Yes.
+
+...
+
+> Your previous comments:
+> > > > > +static int sppctl_dt_node_to_map(struct pinctrl_dev *pctldev, st=
+ruct device_node *np_config,
+> > > > > +                                struct pinctrl_map **map, unsign=
+ed
+> > > > > +int *num_maps) {
+> > > >
+> > > > Looking into this rather quite big function why you can't use what =
+pin control core provides?
+> > >
+> > > No, we cannot use functions pin-control core provides.
+> > > Please refer to dt-bindings document, "pinctrl/sunplus,sp7021-pinctrl=
+.yaml".
+> > > We have more explanation there.
+> >
+> > Fine, can you reuse some library functions, etc? Please, consider refac=
+toring to make it more readable.
+>
+> Could you please share me your idea about "refactoring"?
+> Or could you give me some hints?
+> I think many times, but have no idea about refactoring.
+
+Just split it to a few logical parts so that code can be easier to read.
+
+--=20
 With Best Regards,
 Andy Shevchenko
