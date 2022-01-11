@@ -2,51 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A646548A8D1
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jan 2022 08:50:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A09F48A8AE
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jan 2022 08:47:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235039AbiAKHuN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Jan 2022 02:50:13 -0500
-Received: from mail.BETTERBIZ.PL ([45.86.209.138]:50378 "EHLO
-        mail.betterbiz.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235026AbiAKHuM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jan 2022 02:50:12 -0500
-Received: by mail.betterbiz.pl (Postfix, from userid 1001)
-        id A413982826; Tue, 11 Jan 2022 02:45:56 -0500 (EST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=betterbiz.pl; s=mail;
-        t=1641887412; bh=07NAgW1e0WiNB9zqagiM2BnwZfWBCpNa2E4+ccxBPgw=;
-        h=Date:From:To:Subject:From;
-        b=k9QUQG76EqPZTl/94XZ/CJWBFnwBSjBVAS/CtL/ERxbceBcEgLRPN4m++U5bb9BGn
-         fa1ceON+oQIxg20rh5nYQx+UffJ/2qReOrBhM4tIg7m6fHKsaPSuGWnLdFNCARbY1n
-         VAz3cgIHL2hcciKxDKXzBZWvAsvjNk2a2Y3JxjpspOSdFIJo3K1zu42e8wNP6YrMtM
-         5lN1qDV/RL8OWIVvg9jKfBlBFlDWI7CsqTEVsa7c4+gAhHsWyFGc/mii7nZd397lk3
-         BWFCo18lOH4BHCOP/FEkOz2vX7AiHvL0y4gMIkbBI1wMw08al6qyLUJ9n97y2RuiOV
-         3+OnJopAa/UFQ==
-Received: by mail.betterbiz.pl for <linux-gpio@vger.kernel.org>; Tue, 11 Jan 2022 07:45:52 GMT
-Message-ID: <20220111024500-0.1.o.10c5.0.4br4fq220i@betterbiz.pl>
-Date:   Tue, 11 Jan 2022 07:45:52 GMT
-From:   "Jakub Daroch" <jakub.daroch@betterbiz.pl>
-To:     <linux-gpio@vger.kernel.org>
-Subject: Wycena paneli fotowoltaicznych
-X-Mailer: mail.betterbiz.pl
+        id S1348623AbiAKHr4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Jan 2022 02:47:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49192 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1348620AbiAKHr4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jan 2022 02:47:56 -0500
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80855C06173F;
+        Mon, 10 Jan 2022 23:47:55 -0800 (PST)
+Received: by mail-ed1-x532.google.com with SMTP id o6so63659861edc.4;
+        Mon, 10 Jan 2022 23:47:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nM/uwZwpqJW2H4ac2VQWs6cOpPGqITY+VBtnGv3nTiE=;
+        b=XTwGvD53MBV256bvS8LuVW3PvGGeLrJslg/rc7qaD1PF+hfb5208xwdDXBGQPyO1Bb
+         F1HtEoCrMfXLunOM3Hl78wR+K1oJsls1InG8qWY0FPZZ7oRpbWQX+DRxyFzOkUKh3plb
+         oLIaZZ4JT9aW1R6Q/FdjelU+PdmxzPkXOz8lvrojeck6WOjumPjrqpNc5rzmgXfhB2xT
+         amINwuXgXUbtQf5PMT13LhXqqUsZAAjfGZm9LW3y0fPSQRlwIQslAS1AySysIz1hF/Nz
+         SYtolXo85W9yNm3s4wUKFLNydeVJYc9McjwC+XOUdqTcXE0s681x7WvGmlSqAoLr1fc7
+         fbvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nM/uwZwpqJW2H4ac2VQWs6cOpPGqITY+VBtnGv3nTiE=;
+        b=SdsZUJFlWlmIkdxfXPiWE6TP4OqBEY9NJD1oUbjM2kCTfbmjEd4ukdG+e2zY4sm50g
+         KpAicHvV/iBffhUSIP2X6Z9NpTQWUzeeCXBx5pSn9mXvPIr4jIby5SDcU81zUv8YMe6X
+         oO3N/Sy1ZzOSTaRriZktB4CsVf6jVoLZ/in2sSG7MdAVSxiHC0U6mKZim7gLNrgVQkdt
+         TFmcooNANvaxtucIVp4hyekqGRbEU/J81AZWBrdV5sA+/U6DCKkQnMbCPwFV3FvXP9Go
+         2g8SrolWjRXzZPhNczQRIv49ogjgQ1lMuXQWRWejIhBSl31mosm9aV3gF7cdH4tF147S
+         KqEw==
+X-Gm-Message-State: AOAM533Pj/AT2+LGqdNI5W5Jm0n2rXexArrKPqcLalX+RtNRx1rrWCOJ
+        dAj6Ch2Hdii7XDAZ0wffhgXe2IFaEs6WjQ==
+X-Google-Smtp-Source: ABdhPJzjyMLOpWeTbx1gSQaL8x3d5JjLlwmJarPjnmSW/CfZug1OrOzJuN39Hg9sgFVh+CqQjMRqNQ==
+X-Received: by 2002:a17:906:16d5:: with SMTP id t21mr2724958ejd.547.1641887274130;
+        Mon, 10 Jan 2022 23:47:54 -0800 (PST)
+Received: from demon-pc.localdomain ([79.119.107.253])
+        by smtp.gmail.com with ESMTPSA id ga10sm3318827ejc.12.2022.01.10.23.47.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Jan 2022 23:47:53 -0800 (PST)
+From:   Cosmin Tanislav <demonsingur@gmail.com>
+X-Google-Original-From: Cosmin Tanislav <cosmin.tanislav@analog.com>
+To:     andy.shevchenko@gmail.com
+Cc:     cosmin.tanislav@analog.com, demonsingur@gmail.com,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
+Subject: [PATCH v3 1/3] iio: addac: ad74413r: use ngpio size when iterating over mask
+Date:   Tue, 11 Jan 2022 09:47:01 +0200
+Message-Id: <20220111074703.3677392-1-cosmin.tanislav@analog.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dzie=C5=84 dobry,
+ngpio is the actual number of GPIOs handled by the GPIO chip,
+as opposed to the max number of GPIOs.
 
-dostrzegam mo=C5=BCliwo=C5=9B=C4=87 wsp=C3=B3=C5=82pracy z Pa=C5=84stwa f=
-irm=C4=85.
+Fixes: fea251b6a5db ("iio: addac: add AD74413R driver")
+Signed-off-by: Cosmin Tanislav <cosmin.tanislav@analog.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+---
+V1 -> V2
+ * add Fixes tag
+---
+ drivers/iio/addac/ad74413r.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-=C5=9Awiadczymy kompleksow=C4=85 obs=C5=82ug=C4=99 inwestycji w fotowolta=
-ik=C4=99, kt=C3=B3ra obni=C5=BCa koszty energii elektrycznej nawet o 90%.
+diff --git a/drivers/iio/addac/ad74413r.c b/drivers/iio/addac/ad74413r.c
+index 5271073bb74e..6ea3cd933d05 100644
+--- a/drivers/iio/addac/ad74413r.c
++++ b/drivers/iio/addac/ad74413r.c
+@@ -288,7 +288,7 @@ static void ad74413r_gpio_set_multiple(struct gpio_chip *chip,
+ 	unsigned int offset = 0;
+ 	int ret;
+ 
+-	for_each_set_bit_from(offset, mask, AD74413R_CHANNEL_MAX) {
++	for_each_set_bit_from(offset, mask, chip->ngpio) {
+ 		unsigned int real_offset = st->gpo_gpio_offsets[offset];
+ 
+ 		ret = ad74413r_set_gpo_config(st, real_offset,
+@@ -334,7 +334,7 @@ static int ad74413r_gpio_get_multiple(struct gpio_chip *chip,
+ 	if (ret)
+ 		return ret;
+ 
+-	for_each_set_bit_from(offset, mask, AD74413R_CHANNEL_MAX) {
++	for_each_set_bit_from(offset, mask, chip->ngpio) {
+ 		unsigned int real_offset = st->comp_gpio_offsets[offset];
+ 
+ 		if (val & BIT(real_offset))
+-- 
+2.34.1
 
-Czy s=C4=85 Pa=C5=84stwo zainteresowani weryfikacj=C4=85 wst=C4=99pnych p=
-ropozycji?
-
-
-Pozdrawiam,
-Jakub Daroch
