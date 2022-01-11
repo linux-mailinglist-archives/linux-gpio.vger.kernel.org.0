@@ -2,108 +2,179 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E092848ACE5
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jan 2022 12:46:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9334F48ACE7
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jan 2022 12:47:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238706AbiAKLqV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Jan 2022 06:46:21 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:22580 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S238505AbiAKLqU (ORCPT
+        id S238543AbiAKLr2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Jan 2022 06:47:28 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:45688 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S238505AbiAKLr2 (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 11 Jan 2022 06:46:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1641901579;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RzuBgljlPMxvVkB0baeQwY9PJZw8EqXemDkfwx+V21A=;
-        b=QpgonbI7qfxt7EcVSAcDsbdk+lA2WiXaLA1TTzVHlUCnu2qixmkMz8gc0rNE4fS2tv8GkW
-        cyMKCcmlCQMsSVKuFkJ+rPYFaJ3uXOtbYJBo9ifuOD+6LuNdOEGdznwQQk3NzMj4JCk1uK
-        pM1BQMdWRvMAkYuurmg2koAr5fEJ2Jc=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-571-NBoVNMYJODeMTUiIQNz1Fw-1; Tue, 11 Jan 2022 06:46:18 -0500
-X-MC-Unique: NBoVNMYJODeMTUiIQNz1Fw-1
-Received: by mail-ed1-f69.google.com with SMTP id c8-20020a05640227c800b003fdc1684cdeso5049262ede.12
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Jan 2022 03:46:18 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=RzuBgljlPMxvVkB0baeQwY9PJZw8EqXemDkfwx+V21A=;
-        b=lyQS6dD3ZoXKHoxd/a0Q37mjrANYfTEtNGDUB07xQT6awgM2vmVhzVJcktoXstC5rL
-         tEWn8B2y/Ic8CKPTHicYlpPllWFXPmGLWgy3LOGqCBAuoPK8huVn1WkluoCUczfi6gGs
-         jnHtKy4J6c0HZ9Fc9Y7n1xtGLOcs970j8gnSWwsimNyZa2DUpnOHdidknhgu+kY+TBj2
-         14kxpQL5B3iNhAb3mo8mzkEU0QSuPTjg3oPsbPZAf/Lpfyu/2Oy7gHWFf9tMnWhts5VV
-         rmXWxyxH9cw0PN8cT+D7YndQuxg/+VLpFumRiUGHE8XAKKNFS0NgRe/PvfrsYogDUK0q
-         6KAQ==
-X-Gm-Message-State: AOAM531FNx8DjT4UtwU4Uwx3L0haUMJUZQT8vzBuKgn63yOXOb+5owKz
-        52T65I4EfEdMRv9TgVKtcpGSwKd4nlIkGJYpFhMVE5wBMplEzO8ofRu+EWrPCyph3S1yg9C5QAO
-        xX7A/DxbY8EfbXwBaPoq67Q==
-X-Received: by 2002:a05:6402:14f:: with SMTP id s15mr3921750edu.118.1641901577081;
-        Tue, 11 Jan 2022 03:46:17 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJws87UF8esr8l6TmOLBBU3sGoSNFTH92DcHwwCzd5szm8rakM4iAM1IipqI9wBTbKwSWofbVA==
-X-Received: by 2002:a05:6402:14f:: with SMTP id s15mr3921745edu.118.1641901576942;
-        Tue, 11 Jan 2022 03:46:16 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
-        by smtp.gmail.com with ESMTPSA id l16sm5031362edb.3.2022.01.11.03.46.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Jan 2022 03:46:16 -0800 (PST)
-Message-ID: <dd4387d7-76e7-2831-18ce-c57bfdb3f9a4@redhat.com>
-Date:   Tue, 11 Jan 2022 12:46:16 +0100
+        Tue, 11 Jan 2022 06:47:28 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 20B8ckfK009826;
+        Tue, 11 Jan 2022 06:47:26 -0500
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 3dggyquq9m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 11 Jan 2022 06:47:26 -0500
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 20BBlPjW032575
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 11 Jan 2022 06:47:25 -0500
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.14; Tue, 11 Jan
+ 2022 06:47:24 -0500
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
+ Transport; Tue, 11 Jan 2022 06:47:23 -0500
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 20BBlFJq029369;
+        Tue, 11 Jan 2022 06:47:18 -0500
+From:   Cristian Pop <cristian.pop@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>, <devicetree@vger.kernel.org>,
+        <robh+dt@kernel.org>, Cristian Pop <cristian.pop@analog.com>
+Subject: [PATCH v2 1/2] dt-bindings: iio: addac: one-bit-adc-dac yaml documentation
+Date:   Tue, 11 Jan 2022 13:59:18 +0200
+Message-ID: <20220111115919.14645-1-cristian.pop@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: [PATCH v2] gpio: tps68470: Allow building as module
-Content-Language: en-US
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Andy Shevchenko <andy@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <20220111105632.219581-1-hdegoede@redhat.com>
- <Yd1qgTKIFa7pTEwg@smile.fi.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <Yd1qgTKIFa7pTEwg@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-ORIG-GUID: VuZIzhY65L52ED6t4w0flfq1xcoqoOvp
+X-Proofpoint-GUID: VuZIzhY65L52ED6t4w0flfq1xcoqoOvp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.11.62.513
+ definitions=2022-01-11_04,2022-01-11_01,2021-12-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 malwarescore=0 mlxscore=0 mlxlogscore=999 clxscore=1011
+ bulkscore=0 adultscore=0 impostorscore=0 suspectscore=0 phishscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2110150000 definitions=main-2201110070
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+This adds device tree bindings for the one-bit-adc-dac.
 
-On 1/11/22 12:31, Andy Shevchenko wrote:
-> On Tue, Jan 11, 2022 at 11:56:32AM +0100, Hans de Goede wrote:
->> The gpio-tps68470 driver binds to a tps68470-gpio platform-device which
->> itself gets instantiated by a special MFD driver from
->> drivers/platform/x86/intel/int3472/tps68470.c
->>
->> This MFD driver itself can be built as a module, so it makes no sense to
->> force the gpio-tps68470 driver to always be built-in.
->>
->> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> 
->> Changes in v2:
->> - Fix some spelling errors in the commit msg
->> - Remove blank line between tps68470_gpio_driver decleration and
->>   module_platform_driver(tps68470_gpio_driver)
-> 
-> It used to be 2 patches in the series, are you going to send another one
-> separately?
+Signed-off-by: Cristian Pop <cristian.pop@analog.com>
+V1->V2                                                                     
+ - I am aware of the recommendation of rename/move this driver. Should we  
+   consider "drivers/io/gpio.c"?                                           
+ - Add .yaml file                                                          
+ - Remove blank lines, remove unnecessary coma                             
+ - Remove macros for channels                                              
+ - Check if channel is input for write_raw                                 
+ - Use labels instead of extend_name                                       
+ - Fix channel indexing                                                    
+ - Use "sizeof(*channels)" in devm_kcalloc()                               
+ - Remove assignment: " indio_dev->dev.parent = &pdev->dev;"               
+ - Remove "platform_set_drvdata"                                           
+ - Remove "adi" from compatible string since is not ADI specific driver.
+---
+ .../bindings/iio/addac/one-bit-adc-dac.yaml   | 89 +++++++++++++++++++
+ 1 file changed, 89 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/addac/one-bit-adc-dac.yaml
 
-Ah right, I forgot this was a series. The other one had no review comments,
-so v1 is still valid, you can find it here:
-
-https://lore.kernel.org/linux-gpio/20211225120026.95268-2-hdegoede@redhat.com/
-
-Regards,
-
-Hans
-
+diff --git a/Documentation/devicetree/bindings/iio/addac/one-bit-adc-dac.yaml b/Documentation/devicetree/bindings/iio/addac/one-bit-adc-dac.yaml
+new file mode 100644
+index 000000000000..dbed0f3b1ca4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/addac/one-bit-adc-dac.yaml
+@@ -0,0 +1,89 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2020 Analog Devices Inc.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/addac/one-bit-adc-dac.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analog Devices one bit ADC DAC driver
++
++maintainers:
++  - Cristian Pop <cristian.pop@analog.com>
++
++description: |
++  One bit ADC DAC driver
++
++properties:
++  compatible:
++    enum:
++      - adi,one-bit-adc-dac
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 0
++
++  in-gpios:
++    description: Input GPIOs
++
++  out-gpios:
++    description: Output GPIOs
++
++required:
++  - compatible
++  - in-gpios
++  - out-gpios
++
++patternProperties:
++  "^channel@([0-9]|1[0-5])$":
++    type: object
++    description: |
++      Represents the external channels which are connected to the ADDAC.
++
++    properties:
++      reg:
++        maxItems: 1
++        description: |
++          The channel number.
++
++      label:
++        description: |
++          Unique name to identify which channel this is.
++
++    required:
++      - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    one-bit-adc-dac@0 {
++        compatible = "one-bit-adc-dac";
++
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        in-gpios = <&gpio 17 0>, <&gpio 27 0>;
++        out-gpios = <&gpio 23 0>, <&gpio 24 0>;
++
++        channel@0 {
++          reg = <0>;
++          label = "i_17";
++        };
++
++        channel@1 {
++          reg = <1>;
++          label = "i_27";
++        };
++
++        channel@2 {
++          reg = <2>;
++          label = "o_23";
++        };
++
++        channel@3 {
++          reg = <3>;
++          label = "o_24";
++        };
++    };
+-- 
+2.17.1
 
