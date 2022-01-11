@@ -2,97 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E3E5C48B098
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jan 2022 16:15:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E4CD48B0E8
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jan 2022 16:34:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343531AbiAKPO5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Jan 2022 10:14:57 -0500
-Received: from mail-oo1-f46.google.com ([209.85.161.46]:38423 "EHLO
-        mail-oo1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343535AbiAKPO4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jan 2022 10:14:56 -0500
-Received: by mail-oo1-f46.google.com with SMTP id w15-20020a4a9d0f000000b002c5cfa80e84so4508314ooj.5;
-        Tue, 11 Jan 2022 07:14:56 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
-         :message-id;
-        bh=+Ve86bAGdGykE9lQJLEQz82ky5oOJ7dhVkEvbIarDHo=;
-        b=kzBvxLXj49gN2gI33lHYfi4AQbKBb5ZATzINsmkPQBFx2bLrCLSVAIhOFFoFjrPFNY
-         fLhV7XAeCGsvUmoWAcH4hQO4sPw7m7e1yN6Y7pIzOd+rojxqawkYVVPylFxawRr1FnBq
-         iQE/KKwG4hSGKwLQ3qwAGQ5bR4xVTvWb8jioXdDSCftw7h/aBaRjWU2fvwq3/+qTf1xd
-         HiHUS4YPiioerT7Ur20BgIUnc0wzHxNfG+aKZqbsAdwgY/7Nbo0rvvmLhfCMSktQtN2B
-         NAVjLC5lJdSHnBcFcXZGIlFzYNdgFU4CeVOJT8gWRlXJa8+379zQBGmAPRRDy3vUKFHY
-         HHKw==
-X-Gm-Message-State: AOAM5310Rc9Uib0yLWqSruuADkUtSG0/d634ZXEnvGRovXz7B4JJOU67
-        NFj1QHPcKTI5U5iFK81UPQ==
-X-Google-Smtp-Source: ABdhPJzjz2Fl/tJM014yyLIjAKIl2z4NYeuhqHWYT1P04MdAmWcunSWmcc2GwFcYCq5ubVq1ltr1WA==
-X-Received: by 2002:a4a:9446:: with SMTP id j6mr3393880ooi.87.1641914095662;
-        Tue, 11 Jan 2022 07:14:55 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id b17sm2165131ots.66.2022.01.11.07.14.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jan 2022 07:14:55 -0800 (PST)
-Received: (nullmailer pid 2944760 invoked by uid 1000);
-        Tue, 11 Jan 2022 15:14:49 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     Cristian Pop <cristian.pop@analog.com>
-Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jic23@kernel.org,
-        linux-iio@vger.kernel.org, linux-gpio@vger.kernel.org
-In-Reply-To: <20220111115919.14645-1-cristian.pop@analog.com>
-References: <20220111115919.14645-1-cristian.pop@analog.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: iio: addac: one-bit-adc-dac yaml documentation
-Date:   Tue, 11 Jan 2022 09:14:49 -0600
-Message-Id: <1641914089.194827.2944759.nullmailer@robh.at.kernel.org>
+        id S245121AbiAKPeS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Jan 2022 10:34:18 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:52628 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240480AbiAKPeR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jan 2022 10:34:17 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A6777B81B61
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Jan 2022 15:34:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5CF8C36AEB;
+        Tue, 11 Jan 2022 15:34:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1641915255;
+        bh=8YEEKJFVfxZ84YjTI2jSz/Yz8gvZv4P4YbrKwT1xBCk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HamDLsSnjEyYn2X6ZyvPEc24qknTsSUlsZ+RR4R6lGLEeaTaUMYbFO67q44JSY1Eg
+         IKtppDOuUyLwTriE8xqc9Ol5G3dfDJkLNJbAziR4s7Qb5lfF4Y4SDYjHoAkaX3yVGo
+         GTGP6iGTMCPL95jfuAvPfxAMOy54IAp5RBkBDnhEqyU8ZVhXY9JrJk6+qs8heSFkea
+         cvCq2vA/uttlNhi/XMAOp6lKCgOSGoPGVHgwUyrV2yKfrVfSITbJoyv535+Zit9uJn
+         0uTrL/mZ43wgFLauzTCC0fwGQ+gm5IXCDapst8zkDvmDwLDDT0dPZnVTviwWa4FpuP
+         3rONA+Qo/+9Lw==
+Date:   Tue, 11 Jan 2022 08:34:09 -0700
+From:   Nathan Chancellor <nathan@kernel.org>
+To:     =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Subject: Re: [PATCH V2 4/4] pinctrl: add one more "const" for generic
+ function groups
+Message-ID: <Yd2jcfXqqKHK/NaG@archlinux-ax161>
+References: <20211216162206.8027-1-zajec5@gmail.com>
+ <20211216162206.8027-4-zajec5@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20211216162206.8027-4-zajec5@gmail.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 11 Jan 2022 13:59:18 +0200, Cristian Pop wrote:
-> This adds device tree bindings for the one-bit-adc-dac.
+Hi Rafał,
+
+On Thu, Dec 16, 2021 at 05:22:06PM +0100, Rafał Miłecki wrote:
+> From: Rafał Miłecki <rafal@milecki.pl>
 > 
-> Signed-off-by: Cristian Pop <cristian.pop@analog.com>
-> V1->V2
->  - I am aware of the recommendation of rename/move this driver. Should we
->    consider "drivers/io/gpio.c"?
->  - Add .yaml file
->  - Remove blank lines, remove unnecessary coma
->  - Remove macros for channels
->  - Check if channel is input for write_raw
->  - Use labels instead of extend_name
->  - Fix channel indexing
->  - Use "sizeof(*channels)" in devm_kcalloc()
->  - Remove assignment: " indio_dev->dev.parent = &pdev->dev;"
->  - Remove "platform_set_drvdata"
->  - Remove "adi" from compatible string since is not ADI specific driver.
+> Generic code doesn't modify those strings and .get_function_groups
+> callback has that extra "const" as well. This allows more flexibility in
+> GENERIC_PINMUX_FUNCTIONS users.
+> 
+> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
 > ---
->  .../bindings/iio/addac/one-bit-adc-dac.yaml   | 89 +++++++++++++++++++
->  1 file changed, 89 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/addac/one-bit-adc-dac.yaml
+>  drivers/pinctrl/pinmux.c | 2 +-
+>  drivers/pinctrl/pinmux.h | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
+> index 6cdbd9ccf2f0..f94d43b082d9 100644
+> --- a/drivers/pinctrl/pinmux.c
+> +++ b/drivers/pinctrl/pinmux.c
+> @@ -875,7 +875,7 @@ EXPORT_SYMBOL_GPL(pinmux_generic_get_function);
+>   */
+>  int pinmux_generic_add_function(struct pinctrl_dev *pctldev,
+>  				const char *name,
+> -				const char **groups,
+> +				const char * const *groups,
+>  				const unsigned int num_groups,
+>  				void *data)
+>  {
+> diff --git a/drivers/pinctrl/pinmux.h b/drivers/pinctrl/pinmux.h
+> index 78c3a31be882..72fcf03eaa43 100644
+> --- a/drivers/pinctrl/pinmux.h
+> +++ b/drivers/pinctrl/pinmux.h
+> @@ -129,7 +129,7 @@ static inline void pinmux_init_device_debugfs(struct dentry *devroot,
+>   */
+>  struct function_desc {
+>  	const char *name;
+> -	const char **group_names;
+> +	const char * const *group_names;
+>  	int num_group_names;
+>  	void *data;
+>  };
+> @@ -150,7 +150,7 @@ struct function_desc *pinmux_generic_get_function(struct pinctrl_dev *pctldev,
+>  
+>  int pinmux_generic_add_function(struct pinctrl_dev *pctldev,
+>  				const char *name,
+> -				const char **groups,
+> +				const char * const *groups,
+>  				unsigned const num_groups,
+>  				void *data);
+>  
+> -- 
+> 2.31.1
+> 
 > 
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+I have not seen this reported yet, even though it has been broken for a
+couple of weeks now. I see the following error in -next:
 
-yamllint warnings/errors:
+$ make -skj"$(nproc)" ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- allmodconfig drivers/pinctrl/pinctrl-thunderbay.o
+drivers/pinctrl/pinctrl-thunderbay.c: In function ‘thunderbay_add_functions’:
+drivers/pinctrl/pinctrl-thunderbay.c:815:29: error: assignment discards ‘const’ qualifier from pointer target type [-Werror=discarded-qualifiers]
+  815 |                         grp = func->group_names;
+      |                             ^
+cc1: all warnings being treated as errors
 
-dtschema/dtc warnings/errors:
-Documentation/devicetree/bindings/iio/addac/one-bit-adc-dac.example.dts:19.27-47.11: Warning (unit_address_vs_reg): /example-0/one-bit-adc-dac@0: node has a unit name, but no reg or ranges property
-Documentation/devicetree/bindings/iio/addac/one-bit-adc-dac.example.dt.yaml:0:0: /example-0/one-bit-adc-dac@0: failed to match any schema with compatible: ['one-bit-adc-dac']
+Looks like something like the third patch of the series is needed for
+the Thunderbay driver, which it appears was in development at the same
+time as this series.
 
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/patch/1578401
-
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit.
-
+Cheers,
+Nathan
