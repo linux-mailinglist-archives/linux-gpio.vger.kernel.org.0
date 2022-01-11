@@ -2,312 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC3A648B158
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jan 2022 16:53:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EE6648B1B4
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jan 2022 17:13:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349709AbiAKPxB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Jan 2022 10:53:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47738 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229868AbiAKPxB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jan 2022 10:53:01 -0500
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5127C06173F
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Jan 2022 07:53:00 -0800 (PST)
-Received: by mail-wr1-x42a.google.com with SMTP id s1so33814629wra.6
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Jan 2022 07:53:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WCe3PWueBfoiBPs5+yHGhsz6wUccRD673id4rHWJuXk=;
-        b=ec7lsS8QG/hQxr0Ge0hqBV4d4vvTHGlFIMYTfzmdVGhyGWbU8o9bLO03h4mffWVlQ7
-         b/aH6vUHImyB0HOQLePpbr0RkP+h1yXb6O0QGIA90jefkroT8j/Yzo52PlEyVDSLoIHF
-         ssMd2KadPson8R6Sc7yKoq+WcsUU8/9WLiKMZYnwdwHDYL8AXBMQ7i8t/Qlca3coNbvB
-         Htw1cQEr0qH5U/+NYSn1JHq1NNHflbGcQAAWnAl//2g0nyXlGsVBVtmW78swTC2mfMvX
-         CamE0bOWxYemymP8PTDhizVhmXNDT0pK3Leq70+yGjI0nGrdE7ysyryMsHMMC8swtj8G
-         7KTA==
+        id S240968AbiAKQN1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Jan 2022 11:13:27 -0500
+Received: from mail-vk1-f175.google.com ([209.85.221.175]:43553 "EHLO
+        mail-vk1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240877AbiAKQN1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jan 2022 11:13:27 -0500
+Received: by mail-vk1-f175.google.com with SMTP id w206so9778560vkd.10;
+        Tue, 11 Jan 2022 08:13:27 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WCe3PWueBfoiBPs5+yHGhsz6wUccRD673id4rHWJuXk=;
-        b=HUPPAUYr//yMLZLgyi0jTMz9Qf1ep7ojlG8ALU+ikXZ7abKe75957Mc6p6YrmMZn4b
-         mcw4s21Uk59sxWJVy/C0wNIVfEcfz/S10KrsjCHpSGkjzd/uEHNMJ4pTG/+IvSHjpAUF
-         helDJJbe1FlqSbEw8nhN7lwrbdyvu1v5UbBMTWyHhXqNNkhZAFpDf4l3mGUrxykGnQaN
-         dRKfOr5RnmFHIPtUkQaDZxg2b7ljpxXLz7rUZyJSXWJrvQ+uwJNuRy+Sm0UDJkkeMLfF
-         wtmw7Q+mafRMBfoEIAzyHCvLOzLEVHCGspIqcH/ELp+t6c/MS6HBFI5bPyrREmTdPI/n
-         oJ+Q==
-X-Gm-Message-State: AOAM531YhYB1oOnlbpVfWqfRzeQF6eA4OOg30le/LW+3tCf18AVHLqI/
-        SfSG72oBF+5IANYO1FcVj1lv/Q==
-X-Google-Smtp-Source: ABdhPJzHEnxVhH4Iw1f74jiyID+/Rbjamp+gqyWN7LCxc/rP8UMUn/5BaVaSXyy/1/9slpOEE7qtxA==
-X-Received: by 2002:a05:6000:1ac9:: with SMTP id i9mr4221846wry.531.1641916379170;
-        Tue, 11 Jan 2022 07:52:59 -0800 (PST)
-Received: from debian-brgl.home ([2a01:cb1d:334:ac00:7d50:ff5:f5c1:e225])
-        by smtp.gmail.com with ESMTPSA id u11sm2211629wmq.41.2022.01.11.07.52.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jan 2022 07:52:58 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [GIT PULL] gpio: updates for v5.17
-Date:   Tue, 11 Jan 2022 16:52:55 +0100
-Message-Id: <20220111155255.745428-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.30.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2TMyac3teIzHsCPgKUQl60FrQqQoiQPUMwrCuorFe9U=;
+        b=25jYlq4Q1p+cECJbwwJ+3HSb6PSt0em9ukpaKwEPX2b90WYYC0ic0xDnYSCyyYR4Pd
+         Vgva/JD5RCFvuxLrAKocsdvE6jZA+ANALnXPfWCeJZBUzl6b3VKWUz/Csk1lc9UZ9JHT
+         0H1aNs1cv0LKLv4/DErWQ1xUyZAiyRvSDx9VZ8I2d9P2qkRgqG5JLmZ2yTlzwL1SkVFx
+         a06VQnWtA/sk3/zcoHGnGmpaYS1OXTs5mJw4smiLJ3w5GLAnyC3Qh7BykrV9hERbKfOe
+         Mq8YOlzSU6N3b0wEPJ2xHa8UVz7AmEyNAFOLg8VsXcabLgZuDAqOu/XIN0H9PFX8N4AH
+         4cJw==
+X-Gm-Message-State: AOAM5312wUSei9VztuLi/VZdCQhDHsOG0Pfh2vwJLPiL/b8RN4fKKAgp
+        ToAJq4a2GA/0f6RA7lou/+NsX/oxVDO3rw==
+X-Google-Smtp-Source: ABdhPJwerfLuNKAiAKWhR+wuYOaRMwfmMXdbLlHJpQR53vD3m3rX1hvcM7NSPkWgnwc1FatNIUMFJw==
+X-Received: by 2002:a05:6122:513:: with SMTP id x19mr2626828vko.19.1641917606259;
+        Tue, 11 Jan 2022 08:13:26 -0800 (PST)
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
+        by smtp.gmail.com with ESMTPSA id k6sm5776632uak.9.2022.01.11.08.13.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Jan 2022 08:13:25 -0800 (PST)
+Received: by mail-ua1-f51.google.com with SMTP id m15so16355201uap.6;
+        Tue, 11 Jan 2022 08:13:25 -0800 (PST)
+X-Received: by 2002:a05:6102:21dc:: with SMTP id r28mr2305199vsg.57.1641917605412;
+ Tue, 11 Jan 2022 08:13:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20211210113226.40111-1-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20211210113226.40111-1-wsa+renesas@sang-engineering.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 11 Jan 2022 17:13:14 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWP4UVWoGB3N8mOhbvLMmSJWZYOPY6-aeS9zO9K0bQkpg@mail.gmail.com>
+Message-ID: <CAMuHMdWP4UVWoGB3N8mOhbvLMmSJWZYOPY6-aeS9zO9K0bQkpg@mail.gmail.com>
+Subject: Re: [RFC PATCH] pinctrl: renesas: rcar: don't enforce GPIO if already muxed
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linus Walleij <linusw@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus!
+Hi Wolfram,
 
-This is the main pull-request from the GPIO subsystem for the next release
-cycle.
+On Fri, Dec 10, 2021 at 12:32 PM Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
+> For Renesas PFCs not setting .strict, we can snoop GPIOs which are
+> already muxed to some other function. To actually make use of that, we
+> shouldn't mux them back to GPIO if they have been already muxed to
+> something.
+>
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-The gpio-sim module is back, this time without any changes to configfs. This
-results in a less elegant user-space interface but I never got any follow-up on
-the committable items and didn't want to delay this module for several more
-months.
+Thanks for your patch!
 
-Other than that we have support for several new models and some support going
-away. We started working on converting GPIO drivers to using fwnode exclusively
-in order to limit references to OF symbols to gpiolib-of.c exclusively. We also
-have regular tweaks and improvements all over the place.
+> ---
+>
+> Not sure if this is a proper solution, but at least this is a
+> proof-of-concept. It makes the sloppy GPIO analyzer work by assigning it
+> GPIOs which are already muxed to, say, I2C or PWM. I didn't see any
+> side-effects, but there may be some I missed. Tested on a Salvator-XS
+> with R-Car M3-N where the only occasions of MUX+GPIO at the same time
+> were the logic analyzer. AFAIU if '.strict' is set, the request will be
+> rejected at higher levels, so on those systems should be no harm.
+>
+>  drivers/pinctrl/renesas/pinctrl.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/pinctrl/renesas/pinctrl.c b/drivers/pinctrl/renesas/pinctrl.c
+> index f3eecb20c086..8d4541ac43a9 100644
+> --- a/drivers/pinctrl/renesas/pinctrl.c
+> +++ b/drivers/pinctrl/renesas/pinctrl.c
+> @@ -397,7 +397,7 @@ static int sh_pfc_gpio_request_enable(struct pinctrl_dev *pctldev,
+>
+>         spin_lock_irqsave(&pfc->lock, flags);
+>
+> -       if (!pfc->gpio) {
+> +       if (!pfc->gpio && !cfg->mux_mark) {
+>                 /* If GPIOs are handled externally the pin mux type needs to be
+>                  * set to GPIO here.
+>                  */
 
-The details are in the signed tag. Please pull!
+I can confirm this works fine to get the sloppy GPIO analyzer going.
+I tested it on koelsch (R-Car M2-W), with additional debug prints
+to see the full impact on PFC register configuration, and everything
+looked fine.  I also gave it a run on the variety of Renesas hardware
+I have access to, and there seem to be no ill effects.
 
-Best Regards,
-Bartosz Golaszewski
+Hence I think it is safe to queue in renesas-pinctrl-for-v5.18.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-The following changes since commit fa55b7dcdc43c1aa1ba12bca9d2dd4318c2a0dbf:
+Gr{oetje,eeting}s,
 
-  Linux 5.16-rc1 (2021-11-14 13:56:52 -0800)
+                        Geert
 
-are available in the Git repository at:
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v5.17
-
-for you to fetch changes up to ffe31c9ed35d70069ee76d6b6d41ac86a17d7a07:
-
-  gpio: rcar: Propagate errors from devm_request_irq() (2022-01-05 09:57:34 +0100)
-
-----------------------------------------------------------------
-gpio updates for v5.17
-
-- new testing module: gpio-sim that is scheduled to replace gpio-mockup
-- initial changes aiming at converting all GPIO drivers to using the fwnode
-  interface and limiting any references to OF symbols to gpiolib-of.c
-- add support for Tegra234 and Tegra241 to gpio-tegra186
-- add support for new models (SSD201 and SSD202D) to gpio-msc313
-- add basic support for interrupts to gpio-aggregator
-- add support for AMDIF031 HID device to gpio-amdpt
-- drop support for unused platforms in gpio-xlp
-- cleanup leftovers from the removal of the legacy Samsung Exynos GPIO driver
-- use raw spinlocks in gpio-aspeed and gpio-aspeed-sgpio to make PREEMPT_RT
-  happy
-- generalize the common 'ngpios' device property by reading it in the core
-  gpiolib code so that we can remove duplicate reads from drivers
-- allow line names from device properties to override names set by drivers
-- code shrink in gpiod_add_lookup_table()
-- add new model to the DT bindings for gpio-vf610
-- convert DT bindings for tegra devices to YAML
-- improvements to interrupt handling in gpio-rcar and gpio-rockchip
-- updates to intel drivers from Andy (details in the merge commit)
-- some minor tweaks, improvements and coding-style fixes all around the
-  subsystem
-
-----------------------------------------------------------------
-Akhil R (2):
-      dt-bindings: gpio: Add Tegra241 support
-      gpio: tegra186: Add support for Tegra241
-
-Andy Shevchenko (12):
-      gpiolib: acpi: Remove never used devm_acpi_dev_remove_driver_gpios()
-      gpiolib: acpi: shrink devm_acpi_dev_add_driver_gpios()
-      gpiolib: acpi: Unify debug and other messages format
-      gpio: dwapb: clarify usage of the register file version
-      gpio: Get rid of duplicate of_node assignment in the drivers
-      gpio: Setup parent device and get rid of unnecessary of_node assignment
-      gpio: Propagate firmware node from a parent device
-      gpio: Remove unused local OF node pointers
-      gpio: brcmstb: Use local variable to access OF node
-      gpio: regmap: Switch to use fwnode instead of of_node
-      gpiolib: acpi: make fwnode take precedence in struct gpio_chip
-      gpio: dwapb: Switch to use fwnode instead of of_node
-
-Bartosz Golaszewski (12):
-      gpiolib: improve coding style for local variables
-      gpiolib: check the 'ngpios' property in core gpiolib code
-      gpiolib: provide gpiod_remove_hogs()
-      gpiolib: allow to specify the firmware node in struct gpio_chip
-      gpiolib: of: make fwnode take precedence in struct gpio_chip
-      gpio: sim: new testing module
-      selftests: gpio: provide a helper for reading chip info
-      selftests: gpio: add a helper for reading GPIO line names
-      selftests: gpio: add test cases for gpio-sim
-      selftests: gpio: gpio-sim: remove bashisms
-      selftests: gpio: gpio-sim: avoid forking test twice
-      Merge tag 'intel-gpio-v5.17-1' of gitolite.kernel.org:pub/scm/linux/kernel/git/andy/linux-gpio-intel into gpio/for-next
-
-Bjorn Helgaas (5):
-      gpio: pch: Use .driver_data instead of checking Device IDs again
-      gpio: pch: Cache &pdev->dev to reduce repetition
-      gpio: ml-ioh: Cache &pdev->dev to reduce repetition
-      gpio: ml-ioh: Use BIT() to match gpio-pch.c
-      gpio: ml-ioh: Change whitespace to match gpio-pch.c
-
-Christophe JAILLET (1):
-      gpio: max3191x: Use bitmap_free() to free bitmap
-
-Daniel Palmer (4):
-      dt-bindings: gpio: msc313: Add compatible for ssd20xd
-      dt-bindings: gpio: msc313: Add offsets for ssd20xd
-      gpio: msc313: Code clean ups
-      gpio: msc313: Add support for SSD201 and SSD202D
-
-Geert Uytterhoeven (3):
-      dt-bindings: gpio: sifive,gpio: Group interrupt tuples
-      gpiolib: Let gpiod_add_lookup_table() call gpiod_add_lookup_tables()
-      gpio: aggregator: Add interrupt support
-
-Hans de Goede (1):
-      gpiolib: acpi: Do not set the IRQ type if the IRQ is already in use
-
-Hsu Yuchang (1):
-      gpio: amdpt: add new device ID and 24-pin support
-
-Iwona Winiarska (2):
-      gpio: aspeed: Convert aspeed_gpio.lock to raw_spinlock
-      gpio: aspeed-sgpio: Convert aspeed_sgpio.lock to raw_spinlock
-
-Jacky Bai (1):
-      dt-bindings: gpio: gpio-vf610: Add imx8ulp compatible string
-
-Jason Wang (2):
-      gpio: sch: fix typo in a comment
-      gpio: sta2x11: fix typo in a comment
-
-John Keeping (1):
-      gpio: rockchip: lock GPIOs used as interrupts
-
-Krzysztof Kozlowski (1):
-      dt-bindings: gpio: samsung: drop unused bindings
-
-Lad Prabhakar (3):
-      gpio: ts5500: Use platform_get_irq() to get the interrupt
-      gpio: rcar: Use platform_get_irq() to get the interrupt
-      gpio: rcar: Propagate errors from devm_request_irq()
-
-Peter Rosin (1):
-      gpiolib: allow line names from device props to override driver names
-
-Prathamesh Shete (2):
-      dt-bindings: gpio: Add Tegra234 support
-      gpio: tegra186: Add support for Tegra234
-
-Rob Herring (2):
-      gpio: xlp: Remove Netlogic XLP variants
-      gpio: xlp: Fix build errors from Netlogic XLP removal
-
-Thierry Reding (2):
-      dt-bindings: gpio: tegra: Convert to json-schema
-      dt-bindings: gpio: tegra186: Convert to json-schema
-
-Tom Rix (1):
-      gpio: sim: fix uninitialized ret variable
-
-Yang Yingliang (1):
-      gpio: sim: add missing fwnode_handle_put() in gpio_sim_probe()
-
- Documentation/admin-guide/gpio/gpio-sim.rst        |  134 ++
- .../devicetree/bindings/gpio/gpio-samsung.txt      |   41 -
- .../devicetree/bindings/gpio/gpio-vf610.yaml       |    3 +
- .../bindings/gpio/mstar,msc313-gpio.yaml           |    4 +-
- .../bindings/gpio/nvidia,tegra186-gpio.txt         |  165 --
- .../bindings/gpio/nvidia,tegra186-gpio.yaml        |  214 +++
- .../bindings/gpio/nvidia,tegra20-gpio.txt          |   40 -
- .../bindings/gpio/nvidia,tegra20-gpio.yaml         |  110 ++
- .../devicetree/bindings/gpio/sifive,gpio.yaml      |    3 +-
- drivers/gpio/Kconfig                               |   18 +-
- drivers/gpio/Makefile                              |    1 +
- drivers/gpio/gpio-adnp.c                           |    1 -
- drivers/gpio/gpio-aggregator.c                     |   11 +-
- drivers/gpio/gpio-amdpt.c                          |   12 +-
- drivers/gpio/gpio-arizona.c                        |    5 +-
- drivers/gpio/gpio-aspeed-sgpio.c                   |   32 +-
- drivers/gpio/gpio-aspeed.c                         |   52 +-
- drivers/gpio/gpio-bcm-kona.c                       |    2 +-
- drivers/gpio/gpio-bd71828.c                        |    1 -
- drivers/gpio/gpio-brcmstb.c                        |    3 +-
- drivers/gpio/gpio-creg-snps.c                      |    2 +-
- drivers/gpio/gpio-davinci.c                        |    1 -
- drivers/gpio/gpio-dwapb.c                          |   15 +-
- drivers/gpio/gpio-eic-sprd.c                       |    1 -
- drivers/gpio/gpio-em.c                             |    1 -
- drivers/gpio/gpio-ge.c                             |    1 -
- drivers/gpio/gpio-grgpio.c                         |    1 -
- drivers/gpio/gpio-gw-pld.c                         |    2 -
- drivers/gpio/gpio-lpc32xx.c                        |    2 +-
- drivers/gpio/gpio-max3191x.c                       |    2 +-
- drivers/gpio/gpio-ml-ioh.c                         |   52 +-
- drivers/gpio/gpio-msc313.c                         |  266 +++-
- drivers/gpio/gpio-mt7621.c                         |    6 +-
- drivers/gpio/gpio-mvebu.c                          |    1 -
- drivers/gpio/gpio-omap.c                           |    3 -
- drivers/gpio/gpio-palmas.c                         |    4 +-
- drivers/gpio/gpio-pch.c                            |   42 +-
- drivers/gpio/gpio-pmic-eic-sprd.c                  |    1 -
- drivers/gpio/gpio-pxa.c                            |    8 +-
- drivers/gpio/gpio-raspberrypi-exp.c                |    1 -
- drivers/gpio/gpio-rcar.c                           |   16 +-
- drivers/gpio/gpio-rda.c                            |    3 -
- drivers/gpio/gpio-regmap.c                         |    6 +-
- drivers/gpio/gpio-rockchip.c                       |   21 +-
- drivers/gpio/gpio-sama5d2-piobu.c                  |    1 -
- drivers/gpio/gpio-sch.c                            |    2 +-
- drivers/gpio/gpio-sim.c                            | 1592 ++++++++++++++++++++
- drivers/gpio/gpio-sprd.c                           |    1 -
- drivers/gpio/gpio-sta2x11.c                        |    2 +-
- drivers/gpio/gpio-stmpe.c                          |    1 -
- drivers/gpio/gpio-tc3589x.c                        |    1 -
- drivers/gpio/gpio-tegra186.c                       |  129 +-
- drivers/gpio/gpio-tps65218.c                       |    3 -
- drivers/gpio/gpio-tps6586x.c                       |    5 +-
- drivers/gpio/gpio-tps65910.c                       |    6 +-
- drivers/gpio/gpio-ts5500.c                         |   11 +-
- drivers/gpio/gpio-twl6040.c                        |    5 +-
- drivers/gpio/gpio-vf610.c                          |    1 -
- drivers/gpio/gpio-wm831x.c                         |    5 +-
- drivers/gpio/gpio-xlp.c                            |  147 +-
- drivers/gpio/gpiolib-acpi.c                        |   54 +-
- drivers/gpio/gpiolib-of.c                          |    3 +
- drivers/gpio/gpiolib.c                             |   73 +-
- include/dt-bindings/gpio/msc313-gpio.h             |   71 +
- include/dt-bindings/gpio/tegra234-gpio.h           |   63 +
- include/dt-bindings/gpio/tegra241-gpio.h           |   42 +
- include/linux/gpio/consumer.h                      |    2 -
- include/linux/gpio/driver.h                        |    2 +
- include/linux/gpio/machine.h                       |    2 +
- tools/testing/selftests/gpio/.gitignore            |    2 +
- tools/testing/selftests/gpio/Makefile              |    4 +-
- tools/testing/selftests/gpio/config                |    1 +
- tools/testing/selftests/gpio/gpio-chip-info.c      |   57 +
- tools/testing/selftests/gpio/gpio-line-name.c      |   55 +
- tools/testing/selftests/gpio/gpio-sim.sh           |  396 +++++
- 75 files changed, 3415 insertions(+), 634 deletions(-)
- create mode 100644 Documentation/admin-guide/gpio/gpio-sim.rst
- delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-samsung.txt
- delete mode 100644 Documentation/devicetree/bindings/gpio/nvidia,tegra186-gpio.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/nvidia,tegra186-gpio.yaml
- delete mode 100644 Documentation/devicetree/bindings/gpio/nvidia,tegra20-gpio.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/nvidia,tegra20-gpio.yaml
- create mode 100644 drivers/gpio/gpio-sim.c
- create mode 100644 include/dt-bindings/gpio/tegra234-gpio.h
- create mode 100644 include/dt-bindings/gpio/tegra241-gpio.h
- create mode 100644 tools/testing/selftests/gpio/gpio-chip-info.c
- create mode 100644 tools/testing/selftests/gpio/gpio-line-name.c
- create mode 100755 tools/testing/selftests/gpio/gpio-sim.sh
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
