@@ -2,113 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B8E4848AEBE
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jan 2022 14:44:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E3E5C48B098
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jan 2022 16:15:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240639AbiAKNoj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Jan 2022 08:44:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46126 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240958AbiAKNog (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jan 2022 08:44:36 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08B86C06173F;
-        Tue, 11 Jan 2022 05:44:36 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9D3C161648;
-        Tue, 11 Jan 2022 13:44:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E5E0C36AED;
-        Tue, 11 Jan 2022 13:44:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641908675;
-        bh=BHLwESV3C1+judhGas88m0TCb+8Y2uK1WnqFrETfivw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JvXtNrBtjwgM1pDgZwMpFR4YrXqV9trzm/6uTSl6PMV6QITIcc12DYCKcHvr3tF9t
-         xcEFUK7fRkKkX7OmKHf5q2+A7wz4G/6+LOrEkxdZQUhmQS7Q4Ms2ok0ll6qKBvFIlt
-         gwqL0HrayiVmPw7q4xBnc3kX9DBzDp4fQ77MinMLvEGp8/cvmmDkUtJxLn8NUDFd/3
-         bemiSHPpqXAYMItz0qWZ5V1EE6sP4qCuRAlpbdmcpQich5S2XOFbVn/6zM9DUruIAC
-         MfkmeEltaGxejWqGnpFLm4bn7eNhPTcIp0GgFNY3KQXj/i6myXElnOTHVgfZ62+7H5
-         hppCNfCwxDqfA==
-Date:   Tue, 11 Jan 2022 13:44:28 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Colin Foster <colin.foster@in-advantage.com>,
-        linux-gpio@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, UNGLinuxDriver@microchip.com,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>
-Subject: Re: [RFC v5 net-next 01/13] mfd: ocelot: add support for external
- mfd control over SPI for the VSC7512
-Message-ID: <Yd2JvH/D2xmH8Ry7@sirena.org.uk>
-References: <20211218214954.109755-1-colin.foster@in-advantage.com>
- <20211218214954.109755-2-colin.foster@in-advantage.com>
- <Ycx9MMc+2ZhgXzvb@google.com>
- <20211230014300.GA1347882@euler>
- <Ydwju35sN9QJqJ/P@google.com>
- <20220111003306.GA27854@COLIN-DESKTOP1.localdomain>
- <Yd1YV+eUIaCnttYd@google.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="9wb1RMRykkpn3qwq"
-Content-Disposition: inline
-In-Reply-To: <Yd1YV+eUIaCnttYd@google.com>
-X-Cookie: Many a family tree needs trimming.
+        id S1343531AbiAKPO5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Jan 2022 10:14:57 -0500
+Received: from mail-oo1-f46.google.com ([209.85.161.46]:38423 "EHLO
+        mail-oo1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1343535AbiAKPO4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jan 2022 10:14:56 -0500
+Received: by mail-oo1-f46.google.com with SMTP id w15-20020a4a9d0f000000b002c5cfa80e84so4508314ooj.5;
+        Tue, 11 Jan 2022 07:14:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=+Ve86bAGdGykE9lQJLEQz82ky5oOJ7dhVkEvbIarDHo=;
+        b=kzBvxLXj49gN2gI33lHYfi4AQbKBb5ZATzINsmkPQBFx2bLrCLSVAIhOFFoFjrPFNY
+         fLhV7XAeCGsvUmoWAcH4hQO4sPw7m7e1yN6Y7pIzOd+rojxqawkYVVPylFxawRr1FnBq
+         iQE/KKwG4hSGKwLQ3qwAGQ5bR4xVTvWb8jioXdDSCftw7h/aBaRjWU2fvwq3/+qTf1xd
+         HiHUS4YPiioerT7Ur20BgIUnc0wzHxNfG+aKZqbsAdwgY/7Nbo0rvvmLhfCMSktQtN2B
+         NAVjLC5lJdSHnBcFcXZGIlFzYNdgFU4CeVOJT8gWRlXJa8+379zQBGmAPRRDy3vUKFHY
+         HHKw==
+X-Gm-Message-State: AOAM5310Rc9Uib0yLWqSruuADkUtSG0/d634ZXEnvGRovXz7B4JJOU67
+        NFj1QHPcKTI5U5iFK81UPQ==
+X-Google-Smtp-Source: ABdhPJzjz2Fl/tJM014yyLIjAKIl2z4NYeuhqHWYT1P04MdAmWcunSWmcc2GwFcYCq5ubVq1ltr1WA==
+X-Received: by 2002:a4a:9446:: with SMTP id j6mr3393880ooi.87.1641914095662;
+        Tue, 11 Jan 2022 07:14:55 -0800 (PST)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id b17sm2165131ots.66.2022.01.11.07.14.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Jan 2022 07:14:55 -0800 (PST)
+Received: (nullmailer pid 2944760 invoked by uid 1000);
+        Tue, 11 Jan 2022 15:14:49 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Cristian Pop <cristian.pop@analog.com>
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jic23@kernel.org,
+        linux-iio@vger.kernel.org, linux-gpio@vger.kernel.org
+In-Reply-To: <20220111115919.14645-1-cristian.pop@analog.com>
+References: <20220111115919.14645-1-cristian.pop@analog.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: iio: addac: one-bit-adc-dac yaml documentation
+Date:   Tue, 11 Jan 2022 09:14:49 -0600
+Message-Id: <1641914089.194827.2944759.nullmailer@robh.at.kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue, 11 Jan 2022 13:59:18 +0200, Cristian Pop wrote:
+> This adds device tree bindings for the one-bit-adc-dac.
+> 
+> Signed-off-by: Cristian Pop <cristian.pop@analog.com>
+> V1->V2
+>  - I am aware of the recommendation of rename/move this driver. Should we
+>    consider "drivers/io/gpio.c"?
+>  - Add .yaml file
+>  - Remove blank lines, remove unnecessary coma
+>  - Remove macros for channels
+>  - Check if channel is input for write_raw
+>  - Use labels instead of extend_name
+>  - Fix channel indexing
+>  - Use "sizeof(*channels)" in devm_kcalloc()
+>  - Remove assignment: " indio_dev->dev.parent = &pdev->dev;"
+>  - Remove "platform_set_drvdata"
+>  - Remove "adi" from compatible string since is not ADI specific driver.
+> ---
+>  .../bindings/iio/addac/one-bit-adc-dac.yaml   | 89 +++++++++++++++++++
+>  1 file changed, 89 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/addac/one-bit-adc-dac.yaml
+> 
 
---9wb1RMRykkpn3qwq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-On Tue, Jan 11, 2022 at 10:13:43AM +0000, Lee Jones wrote:
+yamllint warnings/errors:
 
-> Unless something has changed or my understanding is not correct,
-> regmap does not support over-lapping register ranges.
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/iio/addac/one-bit-adc-dac.example.dts:19.27-47.11: Warning (unit_address_vs_reg): /example-0/one-bit-adc-dac@0: node has a unit name, but no reg or ranges property
+Documentation/devicetree/bindings/iio/addac/one-bit-adc-dac.example.dt.yaml:0:0: /example-0/one-bit-adc-dac@0: failed to match any schema with compatible: ['one-bit-adc-dac']
 
-If there's no caches and we're always going direct to hardware it will
-work a lot of the time since the buses generally have concurrency
-protection at the lowest level, though if the drivers ever do any
-read/modify/write operations the underlying hardware bus isn't going to
-know about it so you could get data corruption if two drivers decide to
-try to operate on the same register.  If there's caches things will
-probably go badly since the cache will tend to amplify the
-read/modify/write issues.
+doc reference errors (make refcheckdocs):
 
-> However, even if that is required, I still think we can come up with
-> something cleaner than creating a whole API based around creating
-> and fetching different regmap configurations depending on how the
-> system was initialised.
+See https://patchwork.ozlabs.org/patch/1578401
 
-Yeah, I'd expect the usual pattern is to have wrapper drivers that
-instantiate a regmap then have the bulk of the driver be a library that
-they call into should work.
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
 
---9wb1RMRykkpn3qwq
-Content-Type: application/pgp-signature; name="signature.asc"
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
------BEGIN PGP SIGNATURE-----
+pip3 install dtschema --upgrade
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmHdibsACgkQJNaLcl1U
-h9CIgQf/U9s+7J8sh8p+9sc4ATc+DCY4/XtKgT87NmW3zuHSGn5Lbqme8BW6ynYP
-Z2C1r1cWVgFQxWUGrNeYUO4khkmVEdltMwO9duToYMHy8L2sCOL4TgNh4Asg9h8I
-a4rbYLRtubTS8pFBI3lJRR7z/psfJiWBMpwKKRetAt4BNrJGMXWEzDL3oyaGIRRK
-eKtVWTOBJTZNYGPdZiQsfGAHe568jiqeq4yJpviQgQnKZfr2sJ5Os4d7HsM35zGs
-fUNyWjOkGd7MpXLyYrP7EfPpcoyXOM7Qo42kUcRJJyIeXjLV8/dlBphkH8gJ4tbY
-3qPvVlNlr93AIMU9Uj228O4fkUXCUQ==
-=tbl+
------END PGP SIGNATURE-----
+Please check and re-submit.
 
---9wb1RMRykkpn3qwq--
