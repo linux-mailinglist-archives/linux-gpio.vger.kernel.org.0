@@ -2,172 +2,195 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D38FB48BA50
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jan 2022 22:57:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 03D3C48BA63
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jan 2022 23:03:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245669AbiAKV5r (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Jan 2022 16:57:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49686 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230508AbiAKV5q (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jan 2022 16:57:46 -0500
-Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF443C06173F;
-        Tue, 11 Jan 2022 13:57:46 -0800 (PST)
-Received: by mail-qk1-x731.google.com with SMTP id h16so406144qkp.3;
-        Tue, 11 Jan 2022 13:57:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=tAICFwgK+5loeH6T2WZmu2JcAthYSYGSu13AnEoNjNo=;
-        b=fu4Ru7hpqv2MN1GE7X5Z3Yv5Iy511hZj7DD6BAf57927si2x3BZBW2nMIeOvUGbBUc
-         rGsNOTrsbFcKZaoopAV518MvWttifE9a7k43KazdqQeoWPpfs/oAE3tZoOrRnbya0QgT
-         CBrnkz08m0SVDhNBAVVepWaL6YOI7BHez6Y9I83lGBNT/+KPkSDzlHrcfLvK11OikIPy
-         1COTr9fJev3Ak4Afq+vFvAApjPWYn8HGdcGzxpBYXmHRjQicFA5rDUmgsS9pkieQubar
-         fO7DsnREFVGz2mKFKCxZiF2HU6JA/6bqKaByttjUC3IAtDs1R2Un9I4LmRd1PSfnQH+R
-         +E4w==
+        id S1344856AbiAKWC7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Jan 2022 17:02:59 -0500
+Received: from mail-oi1-f180.google.com ([209.85.167.180]:34553 "EHLO
+        mail-oi1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1343842AbiAKWC7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jan 2022 17:02:59 -0500
+Received: by mail-oi1-f180.google.com with SMTP id r131so997868oig.1;
+        Tue, 11 Jan 2022 14:02:59 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=tAICFwgK+5loeH6T2WZmu2JcAthYSYGSu13AnEoNjNo=;
-        b=eJTtGYWPemRpS2jl8J256moWewny6zBYBhuw3rAuVd4KJ9Vg2aOkjwCWha8gIUIgdG
-         uvEAsMuj8FIpiS2fB+bv2jNpf6L4sVhTGqC3kkI4Vkdw/4MUJgF05yfdwUGnlAhNUAZc
-         MqoNUNFg+/JvCAAd48pLh3X4M+04CLjHfoJitRPFi8DiBr8ONdIJrSquodZFFhlFt+yu
-         4/WxEl/ZEiVgYd37iXtvkg5l/YUJkksbNgG3ZkkABwHjecEK4YXTinyWnrpPUTR+ezW9
-         WG3bBSjGjAb28wHGvT9jiTShqW7aDzGWXPkx+oN8eeYumxcbjbBP93vyMZcAfEUvcZU7
-         cuUw==
-X-Gm-Message-State: AOAM53090kinnDkjralEYghbcJbUnOZHkQiYnCIJIwkuobvE/RI4ItlE
-        FFMWkdSlm4zkiaZ26xcxakw=
-X-Google-Smtp-Source: ABdhPJxGF2boBf45RLlVY7W/rjQ/EenPnnKU3Yl1sJb7Tyb7flGCBD30h037BkXfrIZQB0I1TRKIMQ==
-X-Received: by 2002:a05:620a:1b:: with SMTP id j27mr4553408qki.308.1641938265879;
-        Tue, 11 Jan 2022 13:57:45 -0800 (PST)
-Received: from [10.4.10.38] (146-115-144-188.s4282.c3-0.nwt-cbr1.sbo-nwt.ma.cable.rcncustomer.com. [146.115.144.188])
-        by smtp.gmail.com with ESMTPSA id n129sm7050881qkn.64.2022.01.11.13.57.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Jan 2022 13:57:45 -0800 (PST)
-Message-ID: <fc0169c3-eea7-e067-784b-eebeccee13b8@gmail.com>
-Date:   Tue, 11 Jan 2022 16:57:42 -0500
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=SzcggNXrl+/nvnyNoDfUICfrCjf9o6dGiDjvwXyMqlU=;
+        b=ZHdHFKZdtX3TVcByzZ7iyNE8EDr1d9T2QnneDK46fS1chqSeCMyHmc8DRJ9varvfrw
+         hDtvdDqIwey/9yNBbNfK/y24LGaRQtAxTPtyeoaRILfKz27ftwez0ZChY/lN11H9GFk+
+         U1dghNJpUKo/XlfGNrcyw3P0IwJa2QAqFHySLy38+lvpm+917qIi2LZAzdGhsvbR7HYQ
+         C4ZnZnvrBIALRkl/TiOyPJWTq7ap/RnmYfxfMAlfn5ePeg/Rfd4FM46H+2DoFvCpUqKa
+         C9tUKKvhzO4pctTMXUuLEmYDY53U/zjM8vFX9urMn+X7Sn5DBrI1EDigQIJiZmZP9OCp
+         4fQg==
+X-Gm-Message-State: AOAM533sGu51+LhXZmTHx+s+UtdLaBO2wdWucw+fPdPbYhp98ammRNA4
+        cEaRZ9QB9bGxFid54EBLz0FIh8bK5g==
+X-Google-Smtp-Source: ABdhPJy9tSOjgmQ2GN+VKcOL/vf6bOsG38+XJvZa3GbKbRmrs5Uxp1HgGdX4SPbn93MDf9qW2pd3Cw==
+X-Received: by 2002:a05:6808:138e:: with SMTP id c14mr3307430oiw.55.1641938578643;
+        Tue, 11 Jan 2022 14:02:58 -0800 (PST)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id l1sm2250342oti.51.2022.01.11.14.02.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Jan 2022 14:02:58 -0800 (PST)
+Received: (nullmailer pid 3582417 invoked by uid 1000);
+        Tue, 11 Jan 2022 22:02:57 -0000
+Date:   Tue, 11 Jan 2022 16:02:57 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Cristian Pop <cristian.pop@analog.com>
+Cc:     linux-iio@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jic23@kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: iio: addac: one-bit-adc-dac yaml
+ documentation
+Message-ID: <Yd3+kSr5xtL53jUQ@robh.at.kernel.org>
+References: <20220111115919.14645-1-cristian.pop@analog.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH v7 0/7] Add initial support for the i.MXRTxxxx SoC family
- starting from i.IMXRT1050 SoC.
-Content-Language: en-US
-To:     linux-imx@nxp.com
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, ulf.hansson@linaro.org, aisheng.dong@nxp.com,
-        stefan@agner.ch, linus.walleij@linaro.org,
-        gregkh@linuxfoundation.org, arnd@arndb.de, olof@lixom.net,
-        soc@kernel.org, linux@armlinux.org.uk, abel.vesa@nxp.com,
-        adrian.hunter@intel.com, jirislaby@kernel.org,
-        giulio.benetti@benettiengineering.com,
-        nobuhiro1.iwamatsu@toshiba.co.jp, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org
-References: <20220111212606.2072669-1-Mr.Bossman075@gmail.com>
-From:   Jesse Taube <mr.bossman075@gmail.com>
-In-Reply-To: <20220111212606.2072669-1-Mr.Bossman075@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220111115919.14645-1-cristian.pop@analog.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue, Jan 11, 2022 at 01:59:18PM +0200, Cristian Pop wrote:
+> This adds device tree bindings for the one-bit-adc-dac.
 
+I have no idea what a one-bit-adc-dac is. Please describe or provide a 
+reference to what this h/w looks like.
 
-On 1/11/22 16:25, Jesse Taube wrote:
-> This patchset contains:
-> - i.MXRT10xx family infrastructure
-> - i.MXRT1050 pinctrl driver adaption
-> - i.MXRT1050 clock driver adaption
-> - i.MXRT1050 sd-card driver adaption
-> - i.MXRT1050 uart driver adaption
-> - i.MXRT1050-evk basic support
 > 
-> The i.MXRTxxxx family that could have support by Linux actually spreads
-> from i.MXRT1020 to i.MXRT1170 with the first one supporting 1 USB OTG &
-> 100M ethernet with a cortex-M7@500Mhz up to the latter with i.MXRT1170
-> with cortex-M7@1Ghz and cortex-M4@400Mhz, 2MB of internal SRAM, 2D GPU,
-> 2x 1Gb and 1x 100Mb ENET. The i.MXRT family is NXP's answer to
-> STM32F7XX, as it uses only simple SDRAM, it gives the chance of a 4 or
-> less layer PCBs. Seeing that these chips are comparable to the
-> STM32F7XXs which have linux ported to them it seems reasonable to add
-> support for them.
-> 
-> Giving Linux support to this family should ease the development process,
-> instead of using a RTOS they could use Embedded Linux allowing for more
-> portability, ease of design and will broaden the scope of people using
-> embedded linux.
-> 
-> The EVK has very little SDRAM, generally 32MB starting from
-> i.MXRT1020(the lowest P/N), although the i.MXRT1160/70 provide instead
-> 64MB of SDRAM for more functionality.
-> 
-> At the moment we do not support XIP for either u-boot or Linux but it
-> should be done in the future. XIP will also save SDRAM.
-> 
-> Another interesting fact is the amount of internal SRAM, as the P/N
-> increases the SRAM will reach up to 2MB(some could be for cache and
-> some would be for video).
-> 
-> Also, some parts have embed flash of 4MB that can be used for
-> u-boot/Linux, if both correctly sized it will leave the SDRAM free.
-> 
-> External flash can be Quad SPI and HyperFlash, so throughput would be
-> decent.
-> 
-> The i.MXRT11xx series supports MIPI interface too.
-> 
-> The family in general provide CAN bus, audio I/O, 1 or more
-> USB(otg/host), 1 or more 100Mb/1Gb ethernet, camera interface, sd-card.
-> 
-> All this can be used for simple GUIs, web-servers, point-of-sale
-> stations, etc.
-> 
-> 
-> Giulio Benetti (4):
->    ARM: imx: Add initial support for i.MXRT10xx family
->    dt-bindings: imx: Add clock binding for i.MXRT1050
->    ARM: dts: imx: Add i.MXRT1050-EVK support
->    ARM: imxrt_defconfig: Add i.MXRT family defconfig
-> 
-> Jesse Taube (3):
->    ARM: dts: imxrt1050-pinfunc: Add pinctrl binding header
->    dt-bindings: clock: imx: Add documentation for i.MXRT1050 clock
->    clk: imx: Add initial support for i.MXRT1050 clock driver
-> 
->   .../bindings/clock/imxrt1050-clock.yaml       |  67 ++
->   arch/arm/boot/dts/Makefile                    |   2 +
->   arch/arm/boot/dts/imxrt1050-evk.dts           |  72 ++
->   arch/arm/boot/dts/imxrt1050-pinfunc.h         | 993 ++++++++++++++++++
->   arch/arm/boot/dts/imxrt1050.dtsi              | 160 +++
->   arch/arm/configs/imxrt_defconfig              |  35 +
->   arch/arm/mach-imx/Kconfig                     |   7 +
->   arch/arm/mach-imx/Makefile                    |   2 +
->   arch/arm/mach-imx/mach-imxrt.c                |  19 +
->   drivers/clk/imx/Kconfig                       |   7 +
->   drivers/clk/imx/Makefile                      |   1 +
->   drivers/clk/imx/clk-imxrt1050.c               | 168 +++
->   include/dt-bindings/clock/imxrt1050-clock.h   |  72 ++
->   13 files changed, 1605 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/clock/imxrt1050-clock.yaml
->   create mode 100644 arch/arm/boot/dts/imxrt1050-evk.dts
->   create mode 100644 arch/arm/boot/dts/imxrt1050-pinfunc.h
->   create mode 100644 arch/arm/boot/dts/imxrt1050.dtsi
->   create mode 100644 arch/arm/configs/imxrt_defconfig
->   create mode 100644 arch/arm/mach-imx/mach-imxrt.c
->   create mode 100644 drivers/clk/imx/clk-imxrt1050.c
->   create mode 100644 include/dt-bindings/clock/imxrt1050-clock.h
-> 
+> Signed-off-by: Cristian Pop <cristian.pop@analog.com>
+> V1->V2                                                                     
 
-Oh No!
-I'm very sorry I sent v8 under the wrong version number. I sent it again...
+This belongs below the '---'
 
-Sincerely,
-	Jesse Taube
+>  - I am aware of the recommendation of rename/move this driver. Should we  
+>    consider "drivers/io/gpio.c"?                                           
+>  - Add .yaml file                                                          
+>  - Remove blank lines, remove unnecessary coma                             
+>  - Remove macros for channels                                              
+>  - Check if channel is input for write_raw                                 
+>  - Use labels instead of extend_name                                       
+>  - Fix channel indexing                                                    
+>  - Use "sizeof(*channels)" in devm_kcalloc()                               
+>  - Remove assignment: " indio_dev->dev.parent = &pdev->dev;"               
+>  - Remove "platform_set_drvdata"                                           
+>  - Remove "adi" from compatible string since is not ADI specific driver.
+> ---
+>  .../bindings/iio/addac/one-bit-adc-dac.yaml   | 89 +++++++++++++++++++
+>  1 file changed, 89 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/addac/one-bit-adc-dac.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/addac/one-bit-adc-dac.yaml b/Documentation/devicetree/bindings/iio/addac/one-bit-adc-dac.yaml
+> new file mode 100644
+> index 000000000000..dbed0f3b1ca4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/addac/one-bit-adc-dac.yaml
+> @@ -0,0 +1,89 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2020 Analog Devices Inc.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/addac/one-bit-adc-dac.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices one bit ADC DAC driver
+> +
+> +maintainers:
+> +  - Cristian Pop <cristian.pop@analog.com>
+> +
+> +description: |
+> +  One bit ADC DAC driver
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,one-bit-adc-dac
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+> +
+> +  in-gpios:
+> +    description: Input GPIOs
+> +
+> +  out-gpios:
+> +    description: Output GPIOs
 
+No constraints on how many GPIOs?
+
+> +
+> +required:
+> +  - compatible
+> +  - in-gpios
+> +  - out-gpios
+> +
+> +patternProperties:
+> +  "^channel@([0-9]|1[0-5])$":
+> +    type: object
+> +    description: |
+> +      Represents the external channels which are connected to the ADDAC.
+> +
+> +    properties:
+> +      reg:
+> +        maxItems: 1
+> +        description: |
+> +          The channel number.
+> +
+> +      label:
+> +        description: |
+> +          Unique name to identify which channel this is.
+> +
+> +    required:
+> +      - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    one-bit-adc-dac@0 {
+> +        compatible = "one-bit-adc-dac";
+> +
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        in-gpios = <&gpio 17 0>, <&gpio 27 0>;
+> +        out-gpios = <&gpio 23 0>, <&gpio 24 0>;
+> +
+> +        channel@0 {
+> +          reg = <0>;
+
+What does '0' correspond to?
+
+> +          label = "i_17";
+
+Why is this needed? 'label' is supposed to correspond to physical 
+labelling of ports. IOW, for identification by humans looking at the 
+device.
+
+This all looks duplicated from information in in-gpios and out-gpios.
+
+> +        };
+> +
+> +        channel@1 {
+> +          reg = <1>;
+> +          label = "i_27";
+> +        };
+> +
+> +        channel@2 {
+> +          reg = <2>;
+> +          label = "o_23";
+> +        };
+> +
+> +        channel@3 {
+> +          reg = <3>;
+> +          label = "o_24";
+> +        };
+> +    };
+> -- 
+> 2.17.1
+> 
+> 
