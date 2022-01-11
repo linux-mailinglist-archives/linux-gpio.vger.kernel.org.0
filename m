@@ -2,85 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5453B48AB35
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jan 2022 11:14:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9DEF248AB9C
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jan 2022 11:42:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232546AbiAKKOx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Jan 2022 05:14:53 -0500
-Received: from mail-ua1-f49.google.com ([209.85.222.49]:44813 "EHLO
-        mail-ua1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231667AbiAKKOw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jan 2022 05:14:52 -0500
-Received: by mail-ua1-f49.google.com with SMTP id l15so17242873uai.11;
-        Tue, 11 Jan 2022 02:14:52 -0800 (PST)
+        id S237828AbiAKKmV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Jan 2022 05:42:21 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:25029 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1348523AbiAKKmS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 11 Jan 2022 05:42:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1641897738;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=exGhddzIuXzYbFHzsLvqaYt7el+DtaIKJsXSkGywEqs=;
+        b=Pv2F7lMUOsALc3i57MhGI8ocZ2+FiSnWUi2KqtNFKgDdVns+eI44O1bynLQ9PTvkEKbIyr
+        v3XxR/5ZGbMbZi2y1vpiQkTCr8b+m6WAheUVDUXxcVB3QAuOBjGd+a9rvNT3kIN0Vi5PKY
+        LaSfDXzXD547Q5+Cl2jpVmNqGprKrM0=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-620-fi-0OEZwNpSYIKSbQu_TvA-1; Tue, 11 Jan 2022 05:42:16 -0500
+X-MC-Unique: fi-0OEZwNpSYIKSbQu_TvA-1
+Received: by mail-ed1-f71.google.com with SMTP id z10-20020a05640235ca00b003f8efab3342so12935547edc.2
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Jan 2022 02:42:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WC7G6vkWzKe7686M1twI77VkZDIsn5dgTzG4HQCrkC8=;
-        b=apLqzgVN7TqCMGSnMT8TFDohQdEisJxTJA40CyofJ2db5RGaYCmk5F9sK54TAWBqCP
-         RnPrUUjMP2ZlFkt8rk4HcqQBgcCwsbLRBlU/4eXI+ZXDQz5wVyxY+hhv3QVHpsK2rZDx
-         rEgyJX54VN57DFM8U91lL3YY7SvWJ4wHGr2K9Q6StFXLTmT7z7frfnVtEmUdTBKq7oXS
-         epUYGp/zoExuz4apJ4EBKb965+vrV/YWlIUWu6F+bdZmFAJyAZrZzW8A6mM8ZQcr7agf
-         PTJSMi99Ld/t0u6NGoKWwmsYtX1+ic3jPN4bbXI15SfYze3qJ+IhgPuyX3Ht162f6xSa
-         77Ow==
-X-Gm-Message-State: AOAM5332nSQ+Ux5YSuf7XFbPBZsaORKlhPd7cxNV3V0j2vSSSe1vkE3m
-        ivO9t54HMw5iOJREWhZjQYMi6zTLV8aEdw==
-X-Google-Smtp-Source: ABdhPJxu2FBL+CNRIadogtn9xPTxK7mkYG/b3cbLWUoHdsdgGnnzKINDqbdphcoJSXFey3yTUWfbdA==
-X-Received: by 2002:ab0:59cf:: with SMTP id k15mr1560872uad.47.1641896091677;
-        Tue, 11 Jan 2022 02:14:51 -0800 (PST)
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com. [209.85.221.173])
-        by smtp.gmail.com with ESMTPSA id m62sm5545204uam.0.2022.01.11.02.14.51
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=exGhddzIuXzYbFHzsLvqaYt7el+DtaIKJsXSkGywEqs=;
+        b=ENA8UbhUvgy0rSqoymtnXZJ4MvdeDqNzopeUUmCqgqZMYYvliudgNYxAG5QyfXSDLX
+         /BiMm3Yt+HEg/GnsEmDsVg2EgIyaT4r+CBuHNxqpcaBtWWhkM9J/6dBMrIcNHZUt0tWF
+         7B13xASHPpI7IZTgQ9OPpTXl43nk4zLqAf7sc9+romExZu8vAeGnwmo/JsfsTHiJe12t
+         CSu0SIeMb3Cb9e1gwuzJsuXYi4qwykc/RMMXmANLMNMFGpDSdYoKiXRweIxluZE3T9TE
+         EzjdxRuhwpXSKs7lV9xMh8BZXLFwRH631MX0/6Gv24oESfTtdXvQzgPTR1MtT2fJRH7m
+         s3Vw==
+X-Gm-Message-State: AOAM531FSHIGFWSsdX64T/TCdNkYUu7jF+A/nbxIf78fvLZ1k+hfdlpn
+        RNleWahzS4RdjT6l+U+fgIRI0EafWMB+1DFweP1waRXDJ9K/wxc7P1AkvXnZBWX4trB+uO9Myqd
+        HyG7rzvZhMetH5RgeZxqmMA==
+X-Received: by 2002:a05:6402:230e:: with SMTP id l14mr3775449eda.370.1641897735630;
+        Tue, 11 Jan 2022 02:42:15 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzYt5xyRCuivW+wX2Tg7or8bWPjmW58fj295UBS5wMFzS+PKkPqWf06ZwdYN4+wJAFqJpCJ0w==
+X-Received: by 2002:a05:6402:230e:: with SMTP id l14mr3775438eda.370.1641897735513;
+        Tue, 11 Jan 2022 02:42:15 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
+        by smtp.gmail.com with ESMTPSA id p16sm3523637ejn.76.2022.01.11.02.42.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Jan 2022 02:14:51 -0800 (PST)
-Received: by mail-vk1-f173.google.com with SMTP id 19so2254669vkl.2;
-        Tue, 11 Jan 2022 02:14:51 -0800 (PST)
-X-Received: by 2002:a05:6122:c89:: with SMTP id ba9mr290347vkb.39.1641896091170;
- Tue, 11 Jan 2022 02:14:51 -0800 (PST)
+        Tue, 11 Jan 2022 02:42:15 -0800 (PST)
+Message-ID: <71ce63a0-d460-8b79-5c56-1018076e6901@redhat.com>
+Date:   Tue, 11 Jan 2022 11:42:14 +0100
 MIME-Version: 1.0
-References: <20211222145901.23661-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdW6wZLYGttKaSiX_ZknfGrqo5Z6mFBA6ZhqxURtzbaHCw@mail.gmail.com>
-In-Reply-To: <CAMuHMdW6wZLYGttKaSiX_ZknfGrqo5Z6mFBA6ZhqxURtzbaHCw@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 11 Jan 2022 11:14:40 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWcZr0mXQFL6Q3Cu6rpU4WaM2tBw+N06LtmaD_=D00tSg@mail.gmail.com>
-Message-ID: <CAMuHMdWcZr0mXQFL6Q3Cu6rpU4WaM2tBw+N06LtmaD_=D00tSg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: pinctrl: renesas,rzg2l-pinctrl: Add
- description for power-source property
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [PATCH 1/2] gpio: tps68470: Allow building as module
+Content-Language: en-US
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Andy Shevchenko <andy@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <20211225120026.95268-1-hdegoede@redhat.com>
+ <CAHp75Vdz1zxE5V_ff+jSp6VUo34aRinLj-gK_HOi5-2Zgw3E8w@mail.gmail.com>
+ <YdRU3DVsByJzyXmn@smile.fi.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <YdRU3DVsByJzyXmn@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 10, 2022 at 4:30 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Wed, Dec 22, 2021 at 3:59 PM Lad Prabhakar
-> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> > Add description for "power-source" property mentioning the values in enum
-> > are in millivolts.
-> >
-> > Suggested-by: Pavel Machek <pavel@denx.de>
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> i.e. will queue in renesas-pinctrl-for-v5.18.
+Hi,
 
-... with s/millivolts/millivolt/.
+On 1/4/22 15:08, Andy Shevchenko wrote:
+> On Sat, Dec 25, 2021 at 04:41:58PM +0200, Andy Shevchenko wrote:
+>> On Sat, Dec 25, 2021 at 2:00 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>>>
+>>> The gpio-tps68470 driver binds to a tps68470-gpio platform-device which
+>>> itself gets instantiated by a special MFD driver from
+>>> drivers/platform/x86/intel/int3472/tps68470.c
+>>>
+>>> This MFD driver itself can be build as a module, so it makes no sense to
+>>
+>> built
+>>
+>>> force the gpio-tps68470 driver to always be builtin.
+>>
+>> built-in
+>>
+>> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+>> (see one minor comment below)
+> 
+> I don't see the next version, in any case it's too far from the beginning of
+> the v5.16 cycle and I gave my tags so Bart may (or may not :-) apply them. If
+> it's okay to be v5.18 material, I'll take a new version sent after v5.17-rc1.
 
-Gr{oetje,eeting}s,
+It is fine for this to go into v5.18, thank you for your review. I'll send
+a new version addressing your comments.
 
-                        Geert
+Regards,
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Hans
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
