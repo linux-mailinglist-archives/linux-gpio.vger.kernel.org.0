@@ -2,57 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C66E48B7FE
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jan 2022 21:15:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A543048B803
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jan 2022 21:15:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242525AbiAKUPU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Jan 2022 15:15:20 -0500
-Received: from smtp-relay-internal-1.canonical.com ([185.125.188.123]:37702
+        id S242898AbiAKUPX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Jan 2022 15:15:23 -0500
+Received: from smtp-relay-internal-1.canonical.com ([185.125.188.123]:37744
         "EHLO smtp-relay-internal-1.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236743AbiAKUPS (ORCPT
+        by vger.kernel.org with ESMTP id S242489AbiAKUPU (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 11 Jan 2022 15:15:18 -0500
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com [209.85.208.71])
+        Tue, 11 Jan 2022 15:15:20 -0500
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com [209.85.208.70])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 2D3483F207
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Jan 2022 20:15:17 +0000 (UTC)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id BC68240049
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Jan 2022 20:15:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1641932117;
-        bh=lPhJuPIv3O/CdoWKkJQZ8TgTKphU5KVeriAN8qLF+3w=;
-        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
-        b=QhcYrAg8z8sUONc49JVwHWn3RSIprd9JULrePRaBbNanbQnuiGq5DD/P0+4psJNyn
-         6TDKHyNgr3JzfiynGv0VsoieaezHjTDHkCksS5she7z2vd3rJcoltb2Haq5YC4MEjF
-         Z1xOkwmh3yLIZ0ZgghYcqpFePUO36yc6etDa61Lz7YNQ4jEpIQbg0KEw8EK4C+i+v4
-         YrOHthZ7HBUnwqgw3gBvuLGo8MHYmMka2lL98Ip8WpP5oGDZJaF8pYMub/bPNEj46t
-         y//xRXUCNe0Utu5ZGdP9egKiVTjZzcTLasWdnbBCW5J+04cOH81QjNmNyOFYHchXPs
-         U8CiVEI0w00Lg==
-Received: by mail-ed1-f71.google.com with SMTP id v18-20020a056402349200b003f8d3b7ee8dso139581edc.23
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Jan 2022 12:15:17 -0800 (PST)
+        s=20210705; t=1641932118;
+        bh=d5pGhmqJ0JRQXzooQo2hGyeaXgPlX3UQHjrncRGcciU=;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+         MIME-Version;
+        b=QHinbmk/hEe8kxmSqWnKfU9mpCK0LcV8zcVMzPd8qs5AnDp2Tcl37Qf9BLAFPPyx7
+         RtGr8UeyeLIB0zqpMdvf6UgKSshBrTUIBF2R7Le6V7NasTT0AlWpVBW0GDcHs1vUnc
+         +zVdVDrKbSSiaXZMKb43tzQHYbbgj708RpBnIEqQTaKKuL6cF6NGkEgGkevmpIBlh/
+         yeMSOqUiWSCzhMMgUh2mKtw//XlHIbE7+beYeTK8ynkdSLDoAwXdMQBB6H/bZ0KPBd
+         uAiX2KY07vwNovuMqmi7YRC94BckYXq0XrguKl5BLfHY/c6VJvAnC2vr0PMKDQgyr+
+         6HGCHn5BRiThg==
+Received: by mail-ed1-f70.google.com with SMTP id h11-20020a05640250cb00b003fa024f87c2so205357edb.4
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Jan 2022 12:15:18 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lPhJuPIv3O/CdoWKkJQZ8TgTKphU5KVeriAN8qLF+3w=;
-        b=3aKCK7KMg3vz2m0Ze5S/8fL+fDSCwlznPErpSk5dY/7SAOjTXeldALFLnu1kFbEy5a
-         XLJS5CAS9ffG8W67Xu2yoj2AnZcjFRViacc6LtGRXH5DmZtKei/ToGyJeneH9mNPxizl
-         BZqBWo/C8iX/QepHnVtgRxA9e/yNWAKSulep4eJg1r3YdZrE4wxIi+jP9bG/B17hRG33
-         6Y7c7zp/SqxEKxw1m7SLX63fLzHySwJlhgBXwzP/IEY3z6PpY9FqRrWKFyOnqMHEauGU
-         fzv1AXF2tP8o0N7GrDITrd4KktUSH02suCU2jZSr6ps1k/0tUx/3FRJkxHbeQDXsBVeR
-         dJJQ==
-X-Gm-Message-State: AOAM531yXEnpJaCWP77KQoTCWshPpljxvrPD+iev393NSR7M7PTs1dgO
-        5HJr/0EoVjEWpJpnX9ofk/I81Fd++lvzK2TSZ2q/4rMCPNJiKYx5NgxX5f+uzdRE7vGVV1deGol
-        Ll+gHbg+t21DniuwgELSq2lpTb+0lTcQ2QRCQsXw=
-X-Received: by 2002:a17:906:1405:: with SMTP id p5mr4956196ejc.113.1641932116249;
-        Tue, 11 Jan 2022 12:15:16 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwaxUmxBzgzWGTbTGdz1mYjm0oVEAku2/BN2r0BtcEZ2s0exOxr22WH6LCKYnzoXk7FithEBQ==
-X-Received: by 2002:a17:906:1405:: with SMTP id p5mr4956173ejc.113.1641932116052;
-        Tue, 11 Jan 2022 12:15:16 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=d5pGhmqJ0JRQXzooQo2hGyeaXgPlX3UQHjrncRGcciU=;
+        b=xE5uahPosFD7cvVjcuJWAEZYEmgNss8wekOw3ZlKUdQptGbcashhS5QUkwAIwUX88j
+         kuNsed+to3fn+8hb6QRDbLHzJVCZrlFZBVDvlNrsUTkblcv3qJtNTE7Yon3FgMCIVu6y
+         f+xjmVFFkTN0ooXikCbPzhTagvI2zfIYepFFk0/8de6NyytdfOwkB68oQZ8a2JQdLFRz
+         vAE/TBil2vujIl4uVn+RdLw/jXekVwthDG5JmXNU0sSRdKl5+uAtmSWXArbTTQItZkI6
+         /IWnjWa6v/ZXJh8Yv3eCi3IAnHbONgN1oM8S1lelzSe3STxhO3lUWHvbMn9Ws4uWQcFE
+         /HEA==
+X-Gm-Message-State: AOAM530+nm3plmGSQIqJceKz54u+Z901hHWe1zplAfax9+B9mSvhZGl3
+        oq0T6NPYkktqftNtT6SkpvqdWU0B13LLiib8jodBLdht/krnwuuU8W5xmfJy2AtaQzwYLSkvq9A
+        vmXA0HlK+X9GxSd+hXRpy/KFo2mtIUDgBjS6biTM=
+X-Received: by 2002:a17:907:ea2:: with SMTP id ho34mr4926910ejc.168.1641932117432;
+        Tue, 11 Jan 2022 12:15:17 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyVXIzemSiT3Glycmt0qLBDrfwwgWfKCYqgbL01msK36gJb1e8KFMLVuCJzheYC99dB0RaOlw==
+X-Received: by 2002:a17:907:ea2:: with SMTP id ho34mr4926894ejc.168.1641932117257;
+        Tue, 11 Jan 2022 12:15:17 -0800 (PST)
 Received: from localhost.localdomain (xdsl-188-155-168-84.adslplus.ch. [188.155.168.84])
-        by smtp.gmail.com with ESMTPSA id f23sm3852212ejj.128.2022.01.11.12.15.14
+        by smtp.gmail.com with ESMTPSA id f23sm3852212ejj.128.2022.01.11.12.15.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jan 2022 12:15:15 -0800 (PST)
+        Tue, 11 Jan 2022 12:15:16 -0800 (PST)
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
 To:     Tomasz Figa <tomasz.figa@gmail.com>,
         Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
@@ -65,144 +66,91 @@ To:     Tomasz Figa <tomasz.figa@gmail.com>,
 Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
         Sam Protsenko <semen.protsenko@linaro.org>,
         Chanho Park <chanho61.park@samsung.com>,
-        Alim Akhtar <alim.akhtar@gmail.com>
-Subject: [PATCH v2 00/28] pinctrl: dt-bindings: samsung: convert to dtschema
-Date:   Tue, 11 Jan 2022 21:13:58 +0100
-Message-Id: <20220111201426.326777-1-krzysztof.kozlowski@canonical.com>
+        Alim Akhtar <alim.akhtar@gmail.com>, stable@vger.kernel.org
+Subject: [PATCH v2 01/28] pinctrl: samsung: drop pin banks references on error paths
+Date:   Tue, 11 Jan 2022 21:13:59 +0100
+Message-Id: <20220111201426.326777-2-krzysztof.kozlowski@canonical.com>
 X-Mailer: git-send-email 2.32.0
+In-Reply-To: <20220111201426.326777-1-krzysztof.kozlowski@canonical.com>
+References: <20220111201426.326777-1-krzysztof.kozlowski@canonical.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+The driver iterates over its devicetree children with
+for_each_child_of_node() and stores for later found node pointer.  This
+has to be put in error paths to avoid leak during re-probing.
 
-Changes since v1
-================
-1. Patch #1: add missing pin assignment (Alim).
-2. Patch #2: correct double sizeof() (Alim).
-3. Patch #7, #8: put label-override in proper patch (Alim).
-4. Patch #24: Extend doc, change the 'if' clause for wake-up interrupts.
-5. New patches: #25 - #28.
-   Exynos850 and ExynosAutov9 seems to be different in pin ctrl interrupt
-   handling, so they need their own compatibles.
-   Please kindly review and provide feedback on these as I do not have
-   details.
-6. Add review tags.
+Fixes: ab663789d697 ("pinctrl: samsung: Match pin banks with their device nodes")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+---
+ drivers/pinctrl/samsung/pinctrl-samsung.c | 30 +++++++++++++++++------
+ 1 file changed, 23 insertions(+), 7 deletions(-)
 
-Dependencies
-============
-1. Patch #2 ("pinctrl: samsung: accept GPIO bank nodes with a suffix") is
-   necessary for DTS patches.
-
-2. Last patches #27 and #28 depend on patch #26 adding the compatibles.
-
-Best regards,
-Krzysztof
-
-Krzysztof Kozlowski (28):
-  pinctrl: samsung: drop pin banks references on error paths
-  pinctrl: samsung: accept GPIO bank nodes with a suffix
-  ARM: dts: exynos: drop unused pinctrl defines in Exynos3250
-  ARM: dts: exynos: simplify PMIC DVS pin configuration in Odroid XU
-  ARM: dts: exynos: override pins by label in Peach Pit
-  ARM: dts: exynos: simplify PMIC DVS pin configuration in Peach Pit
-  ARM: dts: exynos: override pins by label in Peach Pi
-  ARM: dts: exynos: simplify PMIC DVS pin configuration in Peach Pi
-  ARM: dts: s3c64xx: drop unneeded pinctrl wake-up interrupt mapping
-  ARM: dts: exynos: align pinctrl with dtschema in Exynos3250
-  ARM: dts: exynos: align pinctrl with dtschema in Exynos4210
-  ARM: dts: exynos: align pinctrl with dtschema in Exynos4412
-  ARM: dts: exynos: align pinctrl with dtschema in Exynos5250
-  ARM: dts: exynos: align pinctrl with dtschema in Exynos5260
-  ARM: dts: exynos: align pinctrl with dtschema in Exynos5410
-  ARM: dts: exynos: align pinctrl with dtschema in Exynos542x/5800
-  arm64: dts: exynos: align pinctrl with dtschema in Exynos5433
-  arm64: dts: exynos: align pinctrl with dtschema in Exynos7
-  arm64: dts: exynos: align pinctrl with dtschema in Exynos850
-  arm64: dts: exynos: align pinctrl with dtschema in ExynosAutov9
-  ARM: dts: s3c24xx: align pinctrl with dtschema
-  ARM: dts: s3c64xx: align pinctrl with dtschema
-  ARM: dts: s5pv210: align pinctrl with dtschema
-  dt-bindings: pinctrl: samsung: convert to dtschema
-  dt-bindings: pinctrl: samsung: describe Exynos850 and ExynosAutov9
-    wake-ups
-  pinctrl: samsung: add support for Exynos850 and ExynosAutov9 wake-ups
-  arm64: dts: exynos: use dedicated wake-up pinctrl compatible in
-    Exynos850
-  arm64: dts: exynos: use dedicated wake-up pinctrl compatible in
-    ExynosAutov9
-
- .../pinctrl/samsung,pinctrl-gpio-bank.yaml    |  52 +++
- .../pinctrl/samsung,pinctrl-pins-cfg.yaml     |  81 ++++
- .../samsung,pinctrl-wakeup-interrupt.yaml     | 106 +++++
- .../bindings/pinctrl/samsung,pinctrl.yaml     | 392 ++++++++++++++++++
- .../bindings/pinctrl/samsung-pinctrl.txt      | 383 -----------------
- MAINTAINERS                                   |   2 +-
- arch/arm/boot/dts/exynos3250-artik5.dtsi      |  10 +-
- arch/arm/boot/dts/exynos3250-pinctrl.dtsi     | 165 ++++----
- arch/arm/boot/dts/exynos4210-i9100.dts        |  30 +-
- arch/arm/boot/dts/exynos4210-origen.dts       |   2 +-
- arch/arm/boot/dts/exynos4210-pinctrl.dtsi     | 226 +++++-----
- arch/arm/boot/dts/exynos4210-smdkv310.dts     |   4 +-
- arch/arm/boot/dts/exynos4210-trats.dts        |   6 +-
- .../boot/dts/exynos4210-universal_c210.dts    |  12 +-
- arch/arm/boot/dts/exynos4412-galaxy-s3.dtsi   |   4 +-
- arch/arm/boot/dts/exynos4412-itop-elite.dts   |   2 +-
- .../boot/dts/exynos4412-itop-scp-core.dtsi    |   2 +-
- arch/arm/boot/dts/exynos4412-midas.dtsi       |  30 +-
- .../boot/dts/exynos4412-odroid-common.dtsi    |   8 +-
- arch/arm/boot/dts/exynos4412-odroidx.dts      |   2 +-
- arch/arm/boot/dts/exynos4412-origen.dts       |   4 +-
- arch/arm/boot/dts/exynos4412-p4note.dtsi      |  44 +-
- arch/arm/boot/dts/exynos4412-pinctrl.dtsi     | 252 +++++------
- arch/arm/boot/dts/exynos4412-smdk4412.dts     |   4 +-
- arch/arm/boot/dts/exynos5250-arndale.dts      |   2 +-
- arch/arm/boot/dts/exynos5250-pinctrl.dtsi     | 220 +++++-----
- arch/arm/boot/dts/exynos5250-smdk5250.dts     |   2 +-
- arch/arm/boot/dts/exynos5250-snow-common.dtsi |  22 +-
- arch/arm/boot/dts/exynos5250-snow-rev5.dts    |   2 +-
- arch/arm/boot/dts/exynos5250-snow.dts         |   2 +-
- arch/arm/boot/dts/exynos5250-spring.dts       |  20 +-
- arch/arm/boot/dts/exynos5260-pinctrl.dtsi     | 148 +++----
- arch/arm/boot/dts/exynos5260-xyref5260.dts    |   2 +-
- arch/arm/boot/dts/exynos5410-odroidxu.dts     |  22 +-
- arch/arm/boot/dts/exynos5410-pinctrl.dtsi     | 170 ++++----
- arch/arm/boot/dts/exynos5410-smdk5410.dts     |   4 +-
- arch/arm/boot/dts/exynos5420-arndale-octa.dts |   2 +-
- arch/arm/boot/dts/exynos5420-peach-pit.dts    |  89 ++--
- arch/arm/boot/dts/exynos5420-pinctrl.dtsi     | 194 ++++-----
- arch/arm/boot/dts/exynos5420-smdk5420.dts     |   6 +-
- arch/arm/boot/dts/exynos5422-odroid-core.dtsi |   2 +-
- .../boot/dts/exynos5422-odroidxu3-common.dtsi |   6 +-
- arch/arm/boot/dts/exynos5800-peach-pi.dts     |  89 ++--
- arch/arm/boot/dts/s3c2416-pinctrl.dtsi        |  60 +--
- arch/arm/boot/dts/s3c6410-mini6410.dts        |   4 +-
- arch/arm/boot/dts/s3c64xx-pinctrl.dtsi        | 210 +++++-----
- arch/arm/boot/dts/s3c64xx.dtsi                |  16 +-
- arch/arm/boot/dts/s5pv210-aquila.dts          |   2 +-
- arch/arm/boot/dts/s5pv210-aries.dtsi          |  40 +-
- arch/arm/boot/dts/s5pv210-fascinate4g.dts     |  12 +-
- arch/arm/boot/dts/s5pv210-galaxys.dts         |  16 +-
- arch/arm/boot/dts/s5pv210-pinctrl.dtsi        | 226 +++++-----
- .../boot/dts/exynos/exynos5433-pinctrl.dtsi   | 211 +++++-----
- .../dts/exynos/exynos5433-tm2-common.dtsi     | 259 ++++++------
- .../boot/dts/exynos/exynos7-espresso.dts      |   6 +-
- .../boot/dts/exynos/exynos7-pinctrl.dtsi      | 176 ++++----
- .../boot/dts/exynos/exynos850-pinctrl.dtsi    |  52 +--
- arch/arm64/boot/dts/exynos/exynos850.dtsi     |   4 +-
- .../boot/dts/exynos/exynosautov9-pinctrl.dtsi |  50 +--
- arch/arm64/boot/dts/exynos/exynosautov9.dtsi  |   2 +-
- drivers/pinctrl/samsung/pinctrl-exynos.c      |   4 +
- drivers/pinctrl/samsung/pinctrl-samsung.c     |  87 +++-
- 62 files changed, 2261 insertions(+), 2003 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-gpio-bank.yaml
- create mode 100644 Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-pins-cfg.yaml
- create mode 100644 Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml
- create mode 100644 Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
-
+diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/samsung/pinctrl-samsung.c
+index 8941f658e7f1..b19ebc43d886 100644
+--- a/drivers/pinctrl/samsung/pinctrl-samsung.c
++++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
+@@ -1002,6 +1002,16 @@ samsung_pinctrl_get_soc_data_for_of_alias(struct platform_device *pdev)
+ 	return &(of_data->ctrl[id]);
+ }
+ 
++static void samsung_banks_of_node_put(struct samsung_pinctrl_drv_data *d)
++{
++	struct samsung_pin_bank *bank;
++	unsigned int i;
++
++	bank = d->pin_banks;
++	for (i = 0; i < d->nr_banks; ++i, ++bank)
++		of_node_put(bank->of_node);
++}
++
+ /* retrieve the soc specific data */
+ static const struct samsung_pin_ctrl *
+ samsung_pinctrl_get_soc_data(struct samsung_pinctrl_drv_data *d,
+@@ -1116,19 +1126,19 @@ static int samsung_pinctrl_probe(struct platform_device *pdev)
+ 	if (ctrl->retention_data) {
+ 		drvdata->retention_ctrl = ctrl->retention_data->init(drvdata,
+ 							  ctrl->retention_data);
+-		if (IS_ERR(drvdata->retention_ctrl))
+-			return PTR_ERR(drvdata->retention_ctrl);
++		if (IS_ERR(drvdata->retention_ctrl)) {
++			ret = PTR_ERR(drvdata->retention_ctrl);
++			goto err_put_banks;
++		}
+ 	}
+ 
+ 	ret = samsung_pinctrl_register(pdev, drvdata);
+ 	if (ret)
+-		return ret;
++		goto err_put_banks;
+ 
+ 	ret = samsung_gpiolib_register(pdev, drvdata);
+-	if (ret) {
+-		samsung_pinctrl_unregister(pdev, drvdata);
+-		return ret;
+-	}
++	if (ret)
++		goto err_unregister;
+ 
+ 	if (ctrl->eint_gpio_init)
+ 		ctrl->eint_gpio_init(drvdata);
+@@ -1138,6 +1148,12 @@ static int samsung_pinctrl_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, drvdata);
+ 
+ 	return 0;
++
++err_unregister:
++	samsung_pinctrl_unregister(pdev, drvdata);
++err_put_banks:
++	samsung_banks_of_node_put(drvdata);
++	return ret;
+ }
+ 
+ /*
 -- 
 2.32.0
 
