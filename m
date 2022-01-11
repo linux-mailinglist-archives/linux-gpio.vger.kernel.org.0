@@ -2,33 +2,30 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BC3E48AEA2
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jan 2022 14:42:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 18BE448AEA7
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jan 2022 14:42:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240698AbiAKNl6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Jan 2022 08:41:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45394 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240677AbiAKNl4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jan 2022 08:41:56 -0500
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB0DAC06173F;
-        Tue, 11 Jan 2022 05:41:56 -0800 (PST)
+        id S240813AbiAKNmW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Jan 2022 08:42:22 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:50284 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240760AbiAKNmW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jan 2022 08:42:22 -0500
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: kholk11)
-        with ESMTPSA id B33CB1F41335
+        with ESMTPSA id 4DB811F41337
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1641908515;
-        bh=XWzCJsaH6wHTXJqGMpj21M7J1fiTCwiWPz1Rvurv6F0=;
+        s=mail; t=1641908540;
+        bh=lDIG2k9eO2sPUSgI8LCCCH2mTrm9xRp/KzzWiMNNXf0=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=i63l37cdQxVHCycznoQLNqikVpR+XWURwD9UxexkQHuN5615sQmYug73Vj/l5IGvH
-         ijC/fM9UARd3rdmuNeDZHp8clUFmoOP1AiSykJW6X7iNgID+N1MnaW2VpAXDRF7sIC
-         x0OGlTAu8EHyM5SCUQglTJ+AJN7PFYsztLudLzwNbpRRPAQzTz27b1YPs1iQcq7aHf
-         Vrfs9VD8aemndlNgvUC9r8upngqYOjpeSvNlcxuVFGPPuu09++d/TVm1XiFASpizud
-         rHnx9KMKSiVCX5G1etKLPY+gF5HSPqYVM6Hao5vgZLykpTj6hIkboonZUgMA0DYHVD
-         jpWarfJdQRtTw==
-Subject: Re: [PATCH 6/7] pinctrl: mediatek: paris: Skip custom extra pin
- config dump for vrtual GPIOs
+        b=SfFOkBYkK2fg5l+m5qJdXlftvPEmqYa4m+zRVveFr01WmlrICnNry3gsvZm9p08Zs
+         /U/GWOrAHBEkGcZsvm8g3WZrLJVbzh7CLtq6qtwo/pse/YEVjoDLFjMaHCn3Yy10Oo
+         OUrJOEbHIwpMRoLJ+nVsZ4qlJRwM8Glu+HyPV/1LvHVSbExGiqD8RSCO0jIuKL1dUl
+         /oVJS7aPSrhid5G9fU9EXoyi83XpGByDm2vfE1czjjgcTlW0uYOPhwdYnZ8vd5zqy9
+         Nhap0hmwxuqJo0pyeZQ1xGIMVa7qLqTwx9JU9FWLElWD3WOCBtayQFuH2wHDJVxLT4
+         hq/DwkmduIIoQ==
+Subject: Re: [PATCH 2/7] pinctrl: mediatek: paris: Fix PIN_CONFIG_BIAS_DISABLE
+ readback
 To:     Chen-Yu Tsai <wenst@chromium.org>,
         Sean Wang <sean.wang@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -38,15 +35,15 @@ Cc:     linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
         Zhiyong Tao <zhiyong.tao@mediatek.com>,
         Guodong Liu <guodong.liu@mediatek.com>
 References: <20220111112244.1483783-1-wenst@chromium.org>
- <20220111112244.1483783-7-wenst@chromium.org>
+ <20220111112244.1483783-3-wenst@chromium.org>
 From:   AngeloGioacchino Del Regno 
         <angelogioacchino.delregno@collabora.com>
-Message-ID: <a8251721-9df2-8bea-11fd-87806d70f444@collabora.com>
-Date:   Tue, 11 Jan 2022 14:41:52 +0100
+Message-ID: <8ca8dd15-30c3-a89e-9a18-c8b8788e0904@collabora.com>
+Date:   Tue, 11 Jan 2022 14:42:17 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.13.0
 MIME-Version: 1.0
-In-Reply-To: <20220111112244.1483783-7-wenst@chromium.org>
+In-Reply-To: <20220111112244.1483783-3-wenst@chromium.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -55,40 +52,36 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 Il 11/01/22 12:22, Chen-Yu Tsai ha scritto:
-> Virtual GPIOs do not have any hardware state associated with them. Any
-> attempt to read back hardware state for these pins result in error
-> codes.
+> When reading back pin bias settings, if the pin is not in a
+> bias-disabled state, the function should return -EINVAL.
 > 
-> Skip dumping extra pin config information for these virtual GPIOs.
+> Fix this in the mediatek-paris pinctrl library so that the read back
+> state is not littered with bogus a "input bias disabled" combined with
+> "pull up" or "pull down" states.
 > 
-> Fixes: 184d8e13f9b1 ("pinctrl: mediatek: Add support for pin configuration dump via debugfs.")
+> Fixes: 805250982bb5 ("pinctrl: mediatek: add pinctrl-paris that implements the vendor dt-bindings")
 > Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
 
-Can you please fix the typo in the commit title? "vrtual"->"virtual"
-
-After the typo fix:
 
 Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-Thank you!
-
 > ---
->   drivers/pinctrl/mediatek/pinctrl-paris.c | 3 +++
->   1 file changed, 3 insertions(+)
+>   drivers/pinctrl/mediatek/pinctrl-paris.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
 > 
 > diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> index 1bacabfbc183..678c8aa33012 100644
+> index f9f9110f2107..1ca598ea7ba7 100644
 > --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
 > +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> @@ -585,6 +585,9 @@ ssize_t mtk_pctrl_show_one_pin(struct mtk_pinctrl *hw,
->   	if (gpio >= hw->soc->npins)
->   		return -EINVAL;
->   
-> +	if (mtk_is_virt_gpio(hw, gpio))
-> +		return -EINVAL;
-> +
->   	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
->   	pinmux = mtk_pctrl_get_pinmux(hw, gpio);
->   	if (pinmux >= hw->soc->nfuncs)
+> @@ -97,8 +97,8 @@ static int mtk_pinconf_get(struct pinctrl_dev *pctldev,
+>   			if (err)
+>   				goto out;
+>   			if (param == PIN_CONFIG_BIAS_DISABLE) {
+> -				if (ret == MTK_PUPD_SET_R1R0_00)
+> -					ret = MTK_DISABLE;
+> +				if (ret != MTK_PUPD_SET_R1R0_00)
+> +					err = -EINVAL;
+>   			} else if (param == PIN_CONFIG_BIAS_PULL_UP) {
+>   				/* When desire to get pull-up value, return
+>   				 *  error if current setting is pull-down
 > 
-
