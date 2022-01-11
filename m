@@ -2,53 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6534748BA27
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jan 2022 22:55:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D38FB48BA50
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Jan 2022 22:57:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345348AbiAKVyo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Jan 2022 16:54:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48776 "EHLO
+        id S245669AbiAKV5r (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Jan 2022 16:57:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343613AbiAKVya (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jan 2022 16:54:30 -0500
-Received: from mail-qv1-xf29.google.com (mail-qv1-xf29.google.com [IPv6:2607:f8b0:4864:20::f29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECA1AC061751;
-        Tue, 11 Jan 2022 13:54:29 -0800 (PST)
-Received: by mail-qv1-xf29.google.com with SMTP id iw1so837130qvb.1;
-        Tue, 11 Jan 2022 13:54:29 -0800 (PST)
+        with ESMTP id S230508AbiAKV5q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Jan 2022 16:57:46 -0500
+Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF443C06173F;
+        Tue, 11 Jan 2022 13:57:46 -0800 (PST)
+Received: by mail-qk1-x731.google.com with SMTP id h16so406144qkp.3;
+        Tue, 11 Jan 2022 13:57:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=gcay47mnt+Y1wwFTi1j1d7+PqOItiKhQGaCcgWf4Lbk=;
-        b=pBTor3+wP7S0SOqary/oB7az5TpEZWSB3ynmH0oeeEp2xF3q/CFzJjzqQeeAN/Sj6r
-         SFIfEEJPy7BU64kDC7uWgTG9IQZ7/VgzawNpMiP07Cq31J2l3trJeNdoIuZmErUyg2dS
-         XcWX4nmlXL9madFJ10uKxUCI7KoL29Shtd8tzegWVFEAaV49wlkSpnyS5ymFWvcI/Rl8
-         FAIBV3d0JeWLuQ0FRNfOpXJGKYTmgQd+qguA/lFc+6GgHx6jhkLsI5WcodGoVMCAsRxs
-         IdSCwIArwV6n6Q+KyVrW/gj6zb2re+B+7aqfwMIBXl3zFcdV53+n2KRlRX25OxZUIdLI
-         I4ZA==
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=tAICFwgK+5loeH6T2WZmu2JcAthYSYGSu13AnEoNjNo=;
+        b=fu4Ru7hpqv2MN1GE7X5Z3Yv5Iy511hZj7DD6BAf57927si2x3BZBW2nMIeOvUGbBUc
+         rGsNOTrsbFcKZaoopAV518MvWttifE9a7k43KazdqQeoWPpfs/oAE3tZoOrRnbya0QgT
+         CBrnkz08m0SVDhNBAVVepWaL6YOI7BHez6Y9I83lGBNT/+KPkSDzlHrcfLvK11OikIPy
+         1COTr9fJev3Ak4Afq+vFvAApjPWYn8HGdcGzxpBYXmHRjQicFA5rDUmgsS9pkieQubar
+         fO7DsnREFVGz2mKFKCxZiF2HU6JA/6bqKaByttjUC3IAtDs1R2Un9I4LmRd1PSfnQH+R
+         +E4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=gcay47mnt+Y1wwFTi1j1d7+PqOItiKhQGaCcgWf4Lbk=;
-        b=c3xkxVHxdy3mL69edM+iIFmwZUZsT+q0i+lQVESlGXep5Bww3mnGTac525RBmc0iFJ
-         +6GhUslFxYQL1cQ40z4wEr3Xb778jZQBSi5+40mIgR3hIg33VNFKVnVH4VlMdX2dk0Na
-         SoGo+ENDjSK2HWrHuIMfMgPgxnBx+vwP/Jmvf32JD6031zl62QBhEKN8NECycpJDCoWb
-         vBeYv9LEol5vAWxuzUYyMt++A4B7IOhNun/wTZHkdPB+Z9zeUsn9OuSGGv5P6iMgthOC
-         ltrl7RWOMy/jiHBZussnBiQy7g6eGaFks6Zl5p+lvzMaGaxlqEVXPY1WJUWqG9TaGW3L
-         nkCQ==
-X-Gm-Message-State: AOAM531vk2EIsj/YguF6plK9+eQhk7PPnWLry/Kh4w3M+E6x6UwJ+Luz
-        R2eM530yBBQZwiKfD1iNq5I=
-X-Google-Smtp-Source: ABdhPJzALPYqChRutdtzquXDFIRPBPOJyNZxQ9ygFSsLztYwti//GeSdU4E5Zlfzdb86+BFSUlUBSA==
-X-Received: by 2002:a05:6214:c22:: with SMTP id a2mr5742820qvd.71.1641938069182;
-        Tue, 11 Jan 2022 13:54:29 -0800 (PST)
-Received: from jesse-desktop.jtp-bos.lab (146-115-144-188.s4282.c3-0.nwt-cbr1.sbo-nwt.ma.cable.rcncustomer.com. [146.115.144.188])
-        by smtp.gmail.com with ESMTPSA id l10sm7591020qtk.18.2022.01.11.13.54.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jan 2022 13:54:28 -0800 (PST)
-From:   Jesse Taube <mr.bossman075@gmail.com>
-X-Google-Original-From: Jesse Taube <Mr.Bossman075@gmail.com>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=tAICFwgK+5loeH6T2WZmu2JcAthYSYGSu13AnEoNjNo=;
+        b=eJTtGYWPemRpS2jl8J256moWewny6zBYBhuw3rAuVd4KJ9Vg2aOkjwCWha8gIUIgdG
+         uvEAsMuj8FIpiS2fB+bv2jNpf6L4sVhTGqC3kkI4Vkdw/4MUJgF05yfdwUGnlAhNUAZc
+         MqoNUNFg+/JvCAAd48pLh3X4M+04CLjHfoJitRPFi8DiBr8ONdIJrSquodZFFhlFt+yu
+         4/WxEl/ZEiVgYd37iXtvkg5l/YUJkksbNgG3ZkkABwHjecEK4YXTinyWnrpPUTR+ezW9
+         WG3bBSjGjAb28wHGvT9jiTShqW7aDzGWXPkx+oN8eeYumxcbjbBP93vyMZcAfEUvcZU7
+         cuUw==
+X-Gm-Message-State: AOAM53090kinnDkjralEYghbcJbUnOZHkQiYnCIJIwkuobvE/RI4ItlE
+        FFMWkdSlm4zkiaZ26xcxakw=
+X-Google-Smtp-Source: ABdhPJxGF2boBf45RLlVY7W/rjQ/EenPnnKU3Yl1sJb7Tyb7flGCBD30h037BkXfrIZQB0I1TRKIMQ==
+X-Received: by 2002:a05:620a:1b:: with SMTP id j27mr4553408qki.308.1641938265879;
+        Tue, 11 Jan 2022 13:57:45 -0800 (PST)
+Received: from [10.4.10.38] (146-115-144-188.s4282.c3-0.nwt-cbr1.sbo-nwt.ma.cable.rcncustomer.com. [146.115.144.188])
+        by smtp.gmail.com with ESMTPSA id n129sm7050881qkn.64.2022.01.11.13.57.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 11 Jan 2022 13:57:45 -0800 (PST)
+Message-ID: <fc0169c3-eea7-e067-784b-eebeccee13b8@gmail.com>
+Date:   Tue, 11 Jan 2022 16:57:42 -0500
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [PATCH v7 0/7] Add initial support for the i.MXRTxxxx SoC family
+ starting from i.IMXRT1050 SoC.
+Content-Language: en-US
 To:     linux-imx@nxp.com
 Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
         shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
@@ -58,93 +65,109 @@ Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
         soc@kernel.org, linux@armlinux.org.uk, abel.vesa@nxp.com,
         adrian.hunter@intel.com, jirislaby@kernel.org,
         giulio.benetti@benettiengineering.com,
-        nobuhiro1.iwamatsu@toshiba.co.jp, Mr.Bossman075@gmail.com,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Subject: [PATCH v8 7/7] ARM: imxrt_defconfig: Add i.MXRT family defconfig
-Date:   Tue, 11 Jan 2022 16:54:15 -0500
-Message-Id: <20220111215415.2075257-8-Mr.Bossman075@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220111215415.2075257-1-Mr.Bossman075@gmail.com>
+        nobuhiro1.iwamatsu@toshiba.co.jp, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org
 References: <20220111212606.2072669-1-Mr.Bossman075@gmail.com>
- <20220111215415.2075257-1-Mr.Bossman075@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From:   Jesse Taube <mr.bossman075@gmail.com>
+In-Reply-To: <20220111212606.2072669-1-Mr.Bossman075@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Giulio Benetti <giulio.benetti@benettiengineering.com>
 
-Add generic i.MXRT family defconfig.
 
-Signed-off-by: Giulio Benetti <giulio.benetti@benettiengineering.com>
-Signed-off-by: Jesse Taube <Mr.Bossman075@gmail.com>
----
-V1->V2:
-* Nothing done
-V2->V3:
-* Nothing done
-V3->V4:
-* Remove unnecessary CONFIGs
-* Add futex suport after "ARM: 9122/1: select HAVE_FUTEX_CMPXCHG"
-9d417cbe36eee7afdd85c2e871685f8dab7c2dba
-V4->V5:
-* Change commit description
-V5->V6:
-* Nothing done
-V6->V7:
-* Nothing done
-V7->V8:
-* Nothing done
----
- arch/arm/configs/imxrt_defconfig | 35 ++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 arch/arm/configs/imxrt_defconfig
+On 1/11/22 16:25, Jesse Taube wrote:
+> This patchset contains:
+> - i.MXRT10xx family infrastructure
+> - i.MXRT1050 pinctrl driver adaption
+> - i.MXRT1050 clock driver adaption
+> - i.MXRT1050 sd-card driver adaption
+> - i.MXRT1050 uart driver adaption
+> - i.MXRT1050-evk basic support
+> 
+> The i.MXRTxxxx family that could have support by Linux actually spreads
+> from i.MXRT1020 to i.MXRT1170 with the first one supporting 1 USB OTG &
+> 100M ethernet with a cortex-M7@500Mhz up to the latter with i.MXRT1170
+> with cortex-M7@1Ghz and cortex-M4@400Mhz, 2MB of internal SRAM, 2D GPU,
+> 2x 1Gb and 1x 100Mb ENET. The i.MXRT family is NXP's answer to
+> STM32F7XX, as it uses only simple SDRAM, it gives the chance of a 4 or
+> less layer PCBs. Seeing that these chips are comparable to the
+> STM32F7XXs which have linux ported to them it seems reasonable to add
+> support for them.
+> 
+> Giving Linux support to this family should ease the development process,
+> instead of using a RTOS they could use Embedded Linux allowing for more
+> portability, ease of design and will broaden the scope of people using
+> embedded linux.
+> 
+> The EVK has very little SDRAM, generally 32MB starting from
+> i.MXRT1020(the lowest P/N), although the i.MXRT1160/70 provide instead
+> 64MB of SDRAM for more functionality.
+> 
+> At the moment we do not support XIP for either u-boot or Linux but it
+> should be done in the future. XIP will also save SDRAM.
+> 
+> Another interesting fact is the amount of internal SRAM, as the P/N
+> increases the SRAM will reach up to 2MB(some could be for cache and
+> some would be for video).
+> 
+> Also, some parts have embed flash of 4MB that can be used for
+> u-boot/Linux, if both correctly sized it will leave the SDRAM free.
+> 
+> External flash can be Quad SPI and HyperFlash, so throughput would be
+> decent.
+> 
+> The i.MXRT11xx series supports MIPI interface too.
+> 
+> The family in general provide CAN bus, audio I/O, 1 or more
+> USB(otg/host), 1 or more 100Mb/1Gb ethernet, camera interface, sd-card.
+> 
+> All this can be used for simple GUIs, web-servers, point-of-sale
+> stations, etc.
+> 
+> 
+> Giulio Benetti (4):
+>    ARM: imx: Add initial support for i.MXRT10xx family
+>    dt-bindings: imx: Add clock binding for i.MXRT1050
+>    ARM: dts: imx: Add i.MXRT1050-EVK support
+>    ARM: imxrt_defconfig: Add i.MXRT family defconfig
+> 
+> Jesse Taube (3):
+>    ARM: dts: imxrt1050-pinfunc: Add pinctrl binding header
+>    dt-bindings: clock: imx: Add documentation for i.MXRT1050 clock
+>    clk: imx: Add initial support for i.MXRT1050 clock driver
+> 
+>   .../bindings/clock/imxrt1050-clock.yaml       |  67 ++
+>   arch/arm/boot/dts/Makefile                    |   2 +
+>   arch/arm/boot/dts/imxrt1050-evk.dts           |  72 ++
+>   arch/arm/boot/dts/imxrt1050-pinfunc.h         | 993 ++++++++++++++++++
+>   arch/arm/boot/dts/imxrt1050.dtsi              | 160 +++
+>   arch/arm/configs/imxrt_defconfig              |  35 +
+>   arch/arm/mach-imx/Kconfig                     |   7 +
+>   arch/arm/mach-imx/Makefile                    |   2 +
+>   arch/arm/mach-imx/mach-imxrt.c                |  19 +
+>   drivers/clk/imx/Kconfig                       |   7 +
+>   drivers/clk/imx/Makefile                      |   1 +
+>   drivers/clk/imx/clk-imxrt1050.c               | 168 +++
+>   include/dt-bindings/clock/imxrt1050-clock.h   |  72 ++
+>   13 files changed, 1605 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/clock/imxrt1050-clock.yaml
+>   create mode 100644 arch/arm/boot/dts/imxrt1050-evk.dts
+>   create mode 100644 arch/arm/boot/dts/imxrt1050-pinfunc.h
+>   create mode 100644 arch/arm/boot/dts/imxrt1050.dtsi
+>   create mode 100644 arch/arm/configs/imxrt_defconfig
+>   create mode 100644 arch/arm/mach-imx/mach-imxrt.c
+>   create mode 100644 drivers/clk/imx/clk-imxrt1050.c
+>   create mode 100644 include/dt-bindings/clock/imxrt1050-clock.h
+> 
 
-diff --git a/arch/arm/configs/imxrt_defconfig b/arch/arm/configs/imxrt_defconfig
-new file mode 100644
-index 000000000000..52dba3762996
---- /dev/null
-+++ b/arch/arm/configs/imxrt_defconfig
-@@ -0,0 +1,35 @@
-+# CONFIG_LOCALVERSION_AUTO is not set
-+CONFIG_BPF_SYSCALL=y
-+CONFIG_SCHED_AUTOGROUP=y
-+# CONFIG_MMU is not set
-+CONFIG_ARCH_MXC=y
-+CONFIG_SOC_IMXRT=y
-+CONFIG_SET_MEM_PARAM=y
-+CONFIG_DRAM_BASE=0x80000000
-+CONFIG_DRAM_SIZE=0x02000000
-+CONFIG_BINFMT_FLAT=y
-+CONFIG_UEVENT_HELPER=y
-+CONFIG_DEVTMPFS=y
-+CONFIG_DEVTMPFS_MOUNT=y
-+CONFIG_IMX_WEIM=y
-+CONFIG_LEGACY_PTY_COUNT=2
-+CONFIG_SERIAL_FSL_LPUART=y
-+CONFIG_SERIAL_FSL_LPUART_CONSOLE=y
-+CONFIG_SERIAL_DEV_BUS=y
-+CONFIG_PINCTRL_IMXRT1050=y
-+CONFIG_GPIO_MXC=y
-+CONFIG_MMC=y
-+CONFIG_MMC_SDHCI=y
-+CONFIG_MMC_SDHCI_PLTFM=y
-+CONFIG_MMC_SDHCI_ESDHC_IMX=y
-+CONFIG_DMADEVICES=y
-+CONFIG_FSL_EDMA=y
-+CONFIG_CLK_IMXRT1050=y
-+CONFIG_EXT4_FS=y
-+CONFIG_EXT4_FS_POSIX_ACL=y
-+CONFIG_EXT4_FS_SECURITY=y
-+CONFIG_VFAT_FS=y
-+CONFIG_FAT_DEFAULT_UTF8=y
-+CONFIG_EXFAT_FS=y
-+CONFIG_NLS_ASCII=y
-+CONFIG_NLS_UTF8=y
--- 
-2.34.1
+Oh No!
+I'm very sorry I sent v8 under the wrong version number. I sent it again...
+
+Sincerely,
+	Jesse Taube
 
