@@ -2,167 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D5D3648C967
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jan 2022 18:30:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9852748CB8B
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jan 2022 20:09:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355623AbiALRaS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Jan 2022 12:30:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33024 "EHLO
+        id S229843AbiALTJo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Jan 2022 14:09:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355662AbiALRaQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jan 2022 12:30:16 -0500
-Received: from mail-io1-xd35.google.com (mail-io1-xd35.google.com [IPv6:2607:f8b0:4864:20::d35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2725AC06175B
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Jan 2022 09:30:10 -0800 (PST)
-Received: by mail-io1-xd35.google.com with SMTP id 19so4697023ioz.4
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Jan 2022 09:30:10 -0800 (PST)
+        with ESMTP id S1356570AbiALTJn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jan 2022 14:09:43 -0500
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F1DDC061748
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Jan 2022 11:09:43 -0800 (PST)
+Received: by mail-ed1-x529.google.com with SMTP id z22so13819505edd.12
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Jan 2022 11:09:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura-hr.20210112.gappssmtp.com; s=20210112;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=TmZAL/MnV8LbmVbiqZ1OEFiVcEbxLNyGgtkt/9M4QU0=;
-        b=FLOGaZc2wTV6XBpJcacBYlCynB6FFXF14cszYTrxhWcv5mNGRR2Db9ED+T0wg2L0Vj
-         Lm7QY0Oem0iipFvDBwZ4QzPR3K6ShEN0F76bRom/Royfpxz7gK+J78T+BYKYAB8UALp/
-         N+gdJqarZLYDIzzCo+ib++M2GMA21w8F/EbRwFflBUiawF3Sn9dCIj8CAWvh8jFSyfX6
-         Mj8Zo0f+s9liVMVi2TfPz/MEP9p40uUxD/nxnNnPPDGpLTyn2hUsjXmG1+vHPelTaQ6X
-         xplDhZyV80aR8NjWHqaUpQIcg2E3xkp1Gk1SgMdnmu3gQMsU9TFoAhHihMJgzWou4KvW
-         FjUg==
+         :cc;
+        bh=S0Bi+PWU2J4PuOPK6RgZxdh0OQGveZD1PdBvsl6+KPU=;
+        b=TIlaOXnsdGNm15sqxJCKY5LqIYqszIlxboCLdApQ73MhYdu65t9R86g0zWelDUDQ1K
+         0JsHoAejAK2zKwTz52pXsFfxkgB/+jYwb1f9ZJGBMW1/UfomXvFq04/pZLakvQc+5I0l
+         /DLGay7ikSX1uDR4BqigoPmVj96TSQgtKx+BU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=TmZAL/MnV8LbmVbiqZ1OEFiVcEbxLNyGgtkt/9M4QU0=;
-        b=cM0iDva3WOsrYO5KmW/z0mE5EvfgVvI0jULcpoeL+CdhbhO6Fta+K9NPimrRccVAyz
-         qx4c1pGRxkvJSTAFyWR1BMl7m1Sn9abQrnFu0qgOvNSw41bNdqgE/JlyasJr5rAZjKVR
-         mits6cWO6PivEWp157qJg3YxRwVChZ9heEKFe2wO8iGPEBHocAGVXIbJPfDIjxYxnNG+
-         TbPPbtPmeIrvOtwLzcdPaVqz/yVv0SqYNXJ/Td/L/AjPg4nU6ukx0gqT9wXgNo3QCMoc
-         sHJq4h9k9FMiJ1bDXFIS4A0hnBz6wEos6tP07r54Kq4Q8QQtVwrNEup3RnWZScmacDSH
-         jAZg==
-X-Gm-Message-State: AOAM530ZPAwMZ79buCse5KUiXm6+WEP//Xg6W7kDQEm2CDNtBiYKsfko
-        NR8kaz9V9Yd3iM6BP92XKWxaKwK8FZf4Th55ZGvvWg==
-X-Google-Smtp-Source: ABdhPJzSrj3kHAvQucrazGglk9hPLl53CQun0JOjQBpWSjEDktGiXUalv1+0pCIKGWg9btvGY6uBst7hRXXrHG66Zas=
-X-Received: by 2002:a05:6638:2054:: with SMTP id t20mr374221jaj.87.1642008609578;
- Wed, 12 Jan 2022 09:30:09 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=S0Bi+PWU2J4PuOPK6RgZxdh0OQGveZD1PdBvsl6+KPU=;
+        b=d7R/OLV0qJ1NQ3+eq15I9AXBL08lfG8WHj5CuISN5/Gzklgeb2dxf721qi4F1w1S9I
+         eq8ZSlQHbG3SCzuM5jrRU4MdTxUJR7a8US/s5UyuqW3yYDkznNjESeYeuSu4Jx5Rxc9r
+         DcN3epdJ+hGZGc29f9dcAhNlMviY2Ftqv+Ag9V4KcLXSj5vwtt3vowYMam1ilwZbdSv/
+         yil/s+d2a8jyHSBxsfp/Qwm3983bfkF4uxi8TgZYqVyKiz/zZr0aZO6z1SXSJHgqAeC/
+         nI18K9KNtKrOZlrrCiefQVhglvtSRTkxM6xRcSR7JYqXHzA/VX6MY7/NNy46AMHGibFU
+         bxSQ==
+X-Gm-Message-State: AOAM533a+D4YYmpUFdnAACq1lexBXJahIJ8VQi4JhBw0uFW41M/ZMQtt
+        6f6YtTlJedPcEP/TKR8hJEkx9fUUgS4bymPgyNY=
+X-Google-Smtp-Source: ABdhPJzLEoS4bNGf0iybRHWw9AudCCa02j/B48xoESkd8cUmkkp1yrTdGHfUtMupUVG8EZJ5RNiv3A==
+X-Received: by 2002:a17:907:7b8a:: with SMTP id ne10mr856962ejc.587.1642014581672;
+        Wed, 12 Jan 2022 11:09:41 -0800 (PST)
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com. [209.85.128.42])
+        by smtp.gmail.com with ESMTPSA id x20sm256514edd.28.2022.01.12.11.09.40
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Jan 2022 11:09:40 -0800 (PST)
+Received: by mail-wm1-f42.google.com with SMTP id q9-20020a7bce89000000b00349e697f2fbso3454571wmj.0
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Jan 2022 11:09:40 -0800 (PST)
+X-Received: by 2002:a05:600c:4c94:: with SMTP id g20mr8030335wmp.26.1642014579646;
+ Wed, 12 Jan 2022 11:09:39 -0800 (PST)
 MIME-Version: 1.0
-References: <20211109113239.93493-1-robert.marko@sartura.hr>
- <20211109113239.93493-3-robert.marko@sartura.hr> <CA+HBbNGH9ih5RovU9YHL91osFxDJbWw2Qk=ed30GGQvndNJPKw@mail.gmail.com>
- <33ab37f5b30252e41f3e0769c7702764a9e77d7f.camel@pengutronix.de>
- <CA+HBbNH5Hq7WC7PkpFt=hUsTRstP3KrNCsbWWy5QaZRFDvZDKA@mail.gmail.com> <YbL81TEMp8CA7Sam@google.com>
-In-Reply-To: <YbL81TEMp8CA7Sam@google.com>
-From:   Robert Marko <robert.marko@sartura.hr>
-Date:   Wed, 12 Jan 2022 18:29:59 +0100
-Message-ID: <CA+HBbNGnB=zHOvn3gh_bAPr_3=74K0pyAcgHxz2QKKisqasyUw@mail.gmail.com>
-Subject: Re: [PATCH v9 3/6] dt-bindings: reset: Add Delta TN48M
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
+References: <CACRpkdaVGwu=Bo5bxVQYZXD-k+x++SuOTApGoK2a_S-1M4Q+nQ@mail.gmail.com>
+In-Reply-To: <CACRpkdaVGwu=Bo5bxVQYZXD-k+x++SuOTApGoK2a_S-1M4Q+nQ@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 12 Jan 2022 11:09:23 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whcTsfaQWjNKP+DUSqfo+3rf1o8-N9CpjpogMhAxiJZ=Q@mail.gmail.com>
+Message-ID: <CAHk-=whcTsfaQWjNKP+DUSqfo+3rf1o8-N9CpjpogMhAxiJZ=Q@mail.gmail.com>
+Subject: Re: [GIT PULL] pin control changes for v5.17
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Michael Walle <michael@walle.cc>, Andrew Lunn <andrew@lunn.ch>,
-        Luka Perkov <luka.perkov@sartura.hr>, skhan@linuxfoundation.org
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "D, Lakshmi Sowjanya" <lakshmi.sowjanya.d@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Dec 10, 2021 at 8:08 AM Lee Jones <lee.jones@linaro.org> wrote:
+On Wed, Jan 12, 2022 at 3:23 AM Linus Walleij <linus.walleij@linaro.org> wrote:
 >
-> On Thu, 09 Dec 2021, Robert Marko wrote:
->
-> > On Thu, Dec 9, 2021 at 10:40 AM Philipp Zabel <p.zabel@pengutronix.de> =
-wrote:
-> > >
-> > > Hi Robert,
-> > >
-> > > On Wed, 2021-12-01 at 22:28 +0100, Robert Marko wrote:
-> > > > On Tue, Nov 9, 2021 at 12:32 PM Robert Marko <robert.marko@sartura.=
-hr> wrote:
-> > > > >
-> > > > > Add header for the Delta TN48M CPLD provided
-> > > > > resets.
-> > > > >
-> > > > > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-> > > > > ---
-> > > > >  include/dt-bindings/reset/delta,tn48m-reset.h | 20 +++++++++++++=
-++++++
-> > > > >  1 file changed, 20 insertions(+)
-> > > > >  create mode 100644 include/dt-bindings/reset/delta,tn48m-reset.h
-> > > > >
-> > > > > diff --git a/include/dt-bindings/reset/delta,tn48m-reset.h b/incl=
-ude/dt-bindings/reset/delta,tn48m-reset.h
-> > > > > new file mode 100644
-> > > > > index 000000000000..d4e9ed12de3e
-> > > > > --- /dev/null
-> > > > > +++ b/include/dt-bindings/reset/delta,tn48m-reset.h
-> > > > > @@ -0,0 +1,20 @@
-> > > > > +/* SPDX-License-Identifier: GPL-2.0-only */
-> > > > > +/*
-> > > > > + * Delta TN48M CPLD GPIO driver
-> > > > > + *
-> > > > > + * Copyright (C) 2021 Sartura Ltd.
-> > > > > + *
-> > > > > + * Author: Robert Marko <robert.marko@sartura.hr>
-> > > > > + */
-> > > > > +
-> > > > > +#ifndef _DT_BINDINGS_RESET_TN48M_H
-> > > > > +#define _DT_BINDINGS_RESET_TN48M_H
-> > > > > +
-> > > > > +#define CPU_88F7040_RESET      0
-> > > > > +#define CPU_88F6820_RESET      1
-> > > > > +#define MAC_98DX3265_RESET     2
-> > > > > +#define PHY_88E1680_RESET      3
-> > > > > +#define PHY_88E1512_RESET      4
-> > > > > +#define POE_RESET              5
-> > > > > +
-> > > > > +#endif /* _DT_BINDINGS_RESET_TN48M_H */
-> > > > >
-> > > >
-> > > > Does anybody have any comments on the patch as the reset driver got=
- reviewed and
-> > > > the bindings have not?
-> > >
-> > > Not much to review here, I can't tell if the indices are correct.
-> > >
-> > > Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > >
-> > > To be merged with the rest of the series. Or do you want me to pick u=
-p
-> > > the reset parts individually? In that case you'd have to split out th=
-e
-> > > reset bindings into a separate patch.
-> >
-> > Thanks,
-> > It has to go with the rest of the series as it all depends on the MFD.
-> >
-> > We are just waiting for the MFD dt-bindings to be reviewed.
->
-> We need Rob to review the set.  Then I'll happily take it.
+> - There will be conflicts! Kconfig and Makefile conflicts due to
+>   some RISC-V Starfive patches getting merged through the
+>   SoC tree while we were tidying up the Kconfig and Makefile
+>   (to avoid merge conflicts, heh) there is a resolution in linux-next
+>   which was discussed and reviewed to be correct.
 
-Hi,
+Whoever sorted the Makefile entries (yeah, it was Andy) isn't very good at it.
 
-Rob, can you please review the dt-bindings?
-Everything else is ready to go.
+The broken sorting put CONFIG_PINCTRL_STMFX before CONFIG_PINCTRL_ST,
+and I have no idea how you can sort that way.
 
-Regards,
-Robert
->
-> --
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
-> Senior Technical Lead - Developer Services
-> Linaro.org =E2=94=82 Open source software for Arm SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+I left the broken sorting in place, because changing the sort order in
+the merge would just be even *more* confusing.
 
+There may be other cases of that kind of oddity, I just happened to
+notice that one because the 'starfive' thing ended up having that same
+'st' beginning, and I went D'Oh when trying to make sure my merge kept
+the ordering.
 
+The sort order is fine in the Kconfig file. Maybe some odd sorting got
+confused by the next non-letter character (either ')' after the config
+name, or '.o' of the object file name).
 
---=20
-Robert Marko
-Staff Embedded Linux Engineer
-Sartura Ltd.
-Lendavska ulica 16a
-10000 Zagreb, Croatia
-Email: robert.marko@sartura.hr
-Web: www.sartura.hr
+Obviously not a big deal, but it's an oddity.
+
+               Linus
