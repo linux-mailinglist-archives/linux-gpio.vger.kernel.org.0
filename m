@@ -2,142 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B05AD48CD06
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jan 2022 21:21:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8701B48CD26
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jan 2022 21:40:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357421AbiALUUd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Jan 2022 15:20:33 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:41980 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1357486AbiALUUa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 12 Jan 2022 15:20:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1642018829;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AYdoUK1+ZTJmFqyOA1Rmp7H/7B5+lpKuOBsI5qSJDMs=;
-        b=KJVcOTdRxjmyYdx7orHC2/lK9tC8efxRjUKdbW+9n+zLSHQqxpK2pm/Fiym3XwG8Zcoqmz
-        rBDrBxL6nXt6udxedU0jB9PQwnckBSxRhVSmW6q6nYlByc6SS0NQq0QsbA8UDUowhvBbZy
-        J3gXQBCL4awJQ4fwQqu2DQ5BnV+02yQ=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-175-bg9r8f2UPiiNPxyG39arhQ-1; Wed, 12 Jan 2022 15:20:28 -0500
-X-MC-Unique: bg9r8f2UPiiNPxyG39arhQ-1
-Received: by mail-ed1-f71.google.com with SMTP id z10-20020a05640235ca00b003f8efab3342so3297371edc.2
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Jan 2022 12:20:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:from:to:cc:references:in-reply-to
-         :content-transfer-encoding;
-        bh=AYdoUK1+ZTJmFqyOA1Rmp7H/7B5+lpKuOBsI5qSJDMs=;
-        b=ATEK7QZ4Q1UkC6VhAu6XK81v0IvjEbKxgRdrcTzR6Is1sue0nrA9L7TuILsETlAX0g
-         EKa5zceDQYSYLkOf0jIH5Pq0CmN89onU84vwxlzPvijiqlq4+2fIz1rIGVJc/CRD4f0K
-         Jz+WPmo+mrMqnub7D3t7N8bemgomec32jcQ4kkIbMEPLWrCPY8ak64JSA6POoi0aSvAh
-         71S+DkrWAa5Krq/Uhpkf9tsOe/8MyUnMav1IOnewVeQLuwVwr/wAunuFwYFMsazjQ09s
-         hcC+OwBp3mei/w1c0BjV/RgkgvZT1vZmsTUN86QeRRsClKv1tk50tmjp4I7ahnyQvKw9
-         G1ew==
-X-Gm-Message-State: AOAM530xm4wSw+9Nz4Sic9+ZLaNu1EnADjcG8RMaxpSdti+I1Y82vdmr
-        Ch1EaBnI1c2u1zqNdwbYcA19IaxPHfCRLwqPxgSRIp51vyY4tuE8OsX7K0Phyr/V2OEt1LpeXG4
-        k62JlmiOzpeCRObbMVS4Gag==
-X-Received: by 2002:a05:6402:50c6:: with SMTP id h6mr1205896edb.156.1642018826969;
-        Wed, 12 Jan 2022 12:20:26 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzq75FwHbTUQwYAl+sZSboQVq8WbdqQg8h9gc8LEpg5QTGhgWSb9/RA2ryRFhjSjY7QF5PyOw==
-X-Received: by 2002:a05:6402:50c6:: with SMTP id h6mr1205879edb.156.1642018826798;
-        Wed, 12 Jan 2022 12:20:26 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
-        by smtp.gmail.com with ESMTPSA id r17sm293609edw.70.2022.01.12.12.20.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Jan 2022 12:20:26 -0800 (PST)
-Message-ID: <7cda97fe-4af3-694d-7e16-a523a205ad9f@redhat.com>
-Date:   Wed, 12 Jan 2022 21:20:25 +0100
+        id S1357667AbiALUkA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Jan 2022 15:40:00 -0500
+Received: from mga14.intel.com ([192.55.52.115]:34975 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1357655AbiALUj5 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 12 Jan 2022 15:39:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1642019997; x=1673555997;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=nNEUA/P/1w/GkH+jNBDAOF/3Gc4E5HEnxKB0wtLwd1A=;
+  b=TazIcftFprC6og4prNGjP58eGSycDdQ0SrLTxmJ896qGJUOeUr8nwtE9
+   BRzFSQzXOJMRkdpDkBrFnWz414VPoQle5CWL7PgkmNBOG+GxDxqpSibgV
+   dUBjY8apKk/rIWnZ4jPDLjFHpl81LzPh9qa9K8A1ebxssKSmKnIRg/QnI
+   3KwIdrlUPXysJKVV4JscqleggSjyhy4y1TrqJXIYdEl893AQF4lBi0M9W
+   87ciq+L3rMVIKfynAotxX4hQC/yv5d+cEU86bFVCJDkYO5AJ7+DeiFbZH
+   DcN2+VVXC+FAG80uBicUAhx0UxFPWaKamFmfrgPVqQz3G0cd6GKxmyMR/
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10225"; a="244053669"
+X-IronPort-AV: E=Sophos;i="5.88,284,1635231600"; 
+   d="scan'208";a="244053669"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2022 12:39:55 -0800
+X-IronPort-AV: E=Sophos;i="5.88,284,1635231600"; 
+   d="scan'208";a="623604095"
+Received: from smile.fi.intel.com ([10.237.72.61])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2022 12:39:53 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1n7kOG-009v4J-KR;
+        Wed, 12 Jan 2022 22:38:40 +0200
+Date:   Wed, 12 Jan 2022 22:38:40 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "D, Lakshmi Sowjanya" <lakshmi.sowjanya.d@intel.com>
+Subject: Re: [GIT PULL] pin control changes for v5.17
+Message-ID: <Yd88UBp9uaDSc2qW@smile.fi.intel.com>
+References: <CACRpkdaVGwu=Bo5bxVQYZXD-k+x++SuOTApGoK2a_S-1M4Q+nQ@mail.gmail.com>
+ <CAHk-=whcTsfaQWjNKP+DUSqfo+3rf1o8-N9CpjpogMhAxiJZ=Q@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: [PATCH] pinctrl: baytrail: Clear direct_irq_en flag on broken
- configs
-Content-Language: en-US
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-References: <20220107234456.148389-1-hdegoede@redhat.com>
- <CAHp75Vfgpm7sROw_Ay8+tK0bhu-kCbS=O_kwax+i_vaH7H4wXA@mail.gmail.com>
- <ba1e407a-76e4-5a81-1cf2-45766be35b2a@redhat.com>
-In-Reply-To: <ba1e407a-76e4-5a81-1cf2-45766be35b2a@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whcTsfaQWjNKP+DUSqfo+3rf1o8-N9CpjpogMhAxiJZ=Q@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
-
-On 1/8/22 10:59, Hans de Goede wrote:
-> Hi,
+On Wed, Jan 12, 2022 at 11:09:23AM -0800, Linus Torvalds wrote:
+> On Wed, Jan 12, 2022 at 3:23 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+> >
+> > - There will be conflicts! Kconfig and Makefile conflicts due to
+> >   some RISC-V Starfive patches getting merged through the
+> >   SoC tree while we were tidying up the Kconfig and Makefile
+> >   (to avoid merge conflicts, heh) there is a resolution in linux-next
+> >   which was discussed and reviewed to be correct.
 > 
-> On 1/8/22 01:04, Andy Shevchenko wrote:
->>
->>
->> On Saturday, January 8, 2022, Hans de Goede <hdegoede@redhat.com <mailto:hdegoede@redhat.com>> wrote:
->>
->>     Some boards set the direct_irq_en flag in the conf0 register without
->>     setting any of the trigger bits. The direct_irq_en flag just means that
->>     the GPIO will send IRQs directly to the APIC instead of going through
->>     the shared interrupt for the GPIO controller, in order for the pin to
->>     be able to actually generate IRQs the trigger flags must still be set.
->>
->>     So having the direct_irq_en flag set without any trigger flags is
->>     non-sense, log a FW_BUG warning when encountering this and clear the flag
->>     so that a driver can actually use the pin as IRQ through gpiod_to_irq().
->>
->>     Specifically this allows the edt-ft5x06 touchscreen driver to use
->>     INT33FC:02 pin 3 as touchscreen IRQ on the Nextbook Ares 8 tablet,
->>     accompanied by the following new log message:
->>
->>     byt_gpio INT33FC:02: [Firmware Bug]: pin 3: direct_irq_en set without trigger, clearing
->>
->>     The new byt_direct_irq_sanity_check() function also checks that the
->>     pin is actually appointed to one of the 16 direct-IRQs which the GPIO
->>     controller supports and on success prints debug messages like these:
->>
->>     byt_gpio INT33FC:02: Pin 0: uses direct IRQ 0 (APIC 67)
->>     byt_gpio INT33FC:02: Pin 15: uses direct IRQ 2 (APIC 69)
->>
->>
->> Should be these updated?
-> 
-> Yes the " (APIC 6x)" part is gone now. I will fix this for v4.
-> 
->>     This is useful to figure out the GPIO pin belonging to ACPI
->>     resources like this one: "Interrupt () { 0x00000043 }" or
->>     the other way around.
->>
->>     Suggested-by: Andy Shevchenko <andy@kernel.org <mailto:andy@kernel.org>>
->>     Signed-off-by: Hans de Goede <hdegoede@redhat.com <mailto:hdegoede@redhat.com>>
->>     ---
->>     Changes in v3:
->>     - Rework code to check if the pin is assigned one of the 16 direct IRQs
->>       (new code suggested-by Andy)
->>     - Drop dev_dbg of the (likely?) APIC IRQ, only log the direct IRQ index
->>
->>
->> Thinking about direct IRQ mappings I will look into the Datasheet next week.
-> 
-> Ok, I will wait for you to get back to me then before posting a v4.
+> Whoever sorted the Makefile entries (yeah, it was Andy) isn't very good at it.
 
-Note I've found the direct IRQ to IO-APIC pin mappings now, they are
-described in: atom-e3800-family-datasheet.pdf, so I've re-added
-the APIC IRQ to the printed log msg for v4.
+Indeed. Sorry for that, I will send an update for next cycle.
 
-Regards,
+> The broken sorting put CONFIG_PINCTRL_STMFX before CONFIG_PINCTRL_ST,
+> and I have no idea how you can sort that way.
+> 
+> I left the broken sorting in place, because changing the sort order in
+> the merge would just be even *more* confusing.
+> 
+> There may be other cases of that kind of oddity, I just happened to
+> notice that one because the 'starfive' thing ended up having that same
+> 'st' beginning, and I went D'Oh when trying to make sure my merge kept
+> the ordering.
+> 
+> The sort order is fine in the Kconfig file. Maybe some odd sorting got
+> confused by the next non-letter character (either ')' after the config
+> name, or '.o' of the object file name).
+> 
+> Obviously not a big deal, but it's an oddity.
 
-Hans
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
