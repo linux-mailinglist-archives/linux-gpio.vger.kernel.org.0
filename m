@@ -2,92 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8701B48CD26
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jan 2022 21:40:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 629BC48CD34
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jan 2022 21:43:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357667AbiALUkA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Jan 2022 15:40:00 -0500
-Received: from mga14.intel.com ([192.55.52.115]:34975 "EHLO mga14.intel.com"
+        id S1357712AbiALUne (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Jan 2022 15:43:34 -0500
+Received: from mga02.intel.com ([134.134.136.20]:10497 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1357655AbiALUj5 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 12 Jan 2022 15:39:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642019997; x=1673555997;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=nNEUA/P/1w/GkH+jNBDAOF/3Gc4E5HEnxKB0wtLwd1A=;
-  b=TazIcftFprC6og4prNGjP58eGSycDdQ0SrLTxmJ896qGJUOeUr8nwtE9
-   BRzFSQzXOJMRkdpDkBrFnWz414VPoQle5CWL7PgkmNBOG+GxDxqpSibgV
-   dUBjY8apKk/rIWnZ4jPDLjFHpl81LzPh9qa9K8A1ebxssKSmKnIRg/QnI
-   3KwIdrlUPXysJKVV4JscqleggSjyhy4y1TrqJXIYdEl893AQF4lBi0M9W
-   87ciq+L3rMVIKfynAotxX4hQC/yv5d+cEU86bFVCJDkYO5AJ7+DeiFbZH
-   DcN2+VVXC+FAG80uBicUAhx0UxFPWaKamFmfrgPVqQz3G0cd6GKxmyMR/
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10225"; a="244053669"
+        id S1344640AbiALUnd (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 12 Jan 2022 15:43:33 -0500
+X-IronPort-AV: E=McAfee;i="6200,9189,10225"; a="231192613"
 X-IronPort-AV: E=Sophos;i="5.88,284,1635231600"; 
-   d="scan'208";a="244053669"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2022 12:39:55 -0800
+   d="scan'208";a="231192613"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2022 12:43:31 -0800
 X-IronPort-AV: E=Sophos;i="5.88,284,1635231600"; 
-   d="scan'208";a="623604095"
+   d="scan'208";a="490886076"
 Received: from smile.fi.intel.com ([10.237.72.61])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2022 12:39:53 -0800
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2022 12:43:30 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1n7kOG-009v4J-KR;
-        Wed, 12 Jan 2022 22:38:40 +0200
-Date:   Wed, 12 Jan 2022 22:38:40 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "D, Lakshmi Sowjanya" <lakshmi.sowjanya.d@intel.com>
-Subject: Re: [GIT PULL] pin control changes for v5.17
-Message-ID: <Yd88UBp9uaDSc2qW@smile.fi.intel.com>
-References: <CACRpkdaVGwu=Bo5bxVQYZXD-k+x++SuOTApGoK2a_S-1M4Q+nQ@mail.gmail.com>
- <CAHk-=whcTsfaQWjNKP+DUSqfo+3rf1o8-N9CpjpogMhAxiJZ=Q@mail.gmail.com>
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1n7kRk-009v7w-Ia;
+        Wed, 12 Jan 2022 22:42:16 +0200
+Date:   Wed, 12 Jan 2022 22:42:16 +0200
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH] pinctrl: baytrail: Clear direct_irq_en flag on broken
+ configs
+Message-ID: <Yd89KCUIz9m4QBOt@smile.fi.intel.com>
+References: <20220107234456.148389-1-hdegoede@redhat.com>
+ <CAHp75Vfgpm7sROw_Ay8+tK0bhu-kCbS=O_kwax+i_vaH7H4wXA@mail.gmail.com>
+ <ba1e407a-76e4-5a81-1cf2-45766be35b2a@redhat.com>
+ <7cda97fe-4af3-694d-7e16-a523a205ad9f@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAHk-=whcTsfaQWjNKP+DUSqfo+3rf1o8-N9CpjpogMhAxiJZ=Q@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7cda97fe-4af3-694d-7e16-a523a205ad9f@redhat.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jan 12, 2022 at 11:09:23AM -0800, Linus Torvalds wrote:
-> On Wed, Jan 12, 2022 at 3:23 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> >
-> > - There will be conflicts! Kconfig and Makefile conflicts due to
-> >   some RISC-V Starfive patches getting merged through the
-> >   SoC tree while we were tidying up the Kconfig and Makefile
-> >   (to avoid merge conflicts, heh) there is a resolution in linux-next
-> >   which was discussed and reviewed to be correct.
-> 
-> Whoever sorted the Makefile entries (yeah, it was Andy) isn't very good at it.
+On Wed, Jan 12, 2022 at 09:20:25PM +0100, Hans de Goede wrote:
+> On 1/8/22 10:59, Hans de Goede wrote:
+> > On 1/8/22 01:04, Andy Shevchenko wrote:
+> >> On Saturday, January 8, 2022, Hans de Goede <hdegoede@redhat.com <mailto:hdegoede@redhat.com>> wrote:
 
-Indeed. Sorry for that, I will send an update for next cycle.
+...
 
-> The broken sorting put CONFIG_PINCTRL_STMFX before CONFIG_PINCTRL_ST,
-> and I have no idea how you can sort that way.
+> >>     byt_gpio INT33FC:02: Pin 0: uses direct IRQ 0 (APIC 67)
+> >>     byt_gpio INT33FC:02: Pin 15: uses direct IRQ 2 (APIC 69)
+> >>
+> >>
+> >> Should be these updated?
+> > 
+> > Yes the " (APIC 6x)" part is gone now. I will fix this for v4.
+> > 
+> >>     This is useful to figure out the GPIO pin belonging to ACPI
+> >>     resources like this one: "Interrupt () { 0x00000043 }" or
+> >>     the other way around.
+> >>
+> >>     Suggested-by: Andy Shevchenko <andy@kernel.org <mailto:andy@kernel.org>>
+> >>     Signed-off-by: Hans de Goede <hdegoede@redhat.com <mailto:hdegoede@redhat.com>>
+> >>     ---
+> >>     Changes in v3:
+> >>     - Rework code to check if the pin is assigned one of the 16 direct IRQs
+> >>       (new code suggested-by Andy)
+> >>     - Drop dev_dbg of the (likely?) APIC IRQ, only log the direct IRQ index
+> >>
+> >>
+> >> Thinking about direct IRQ mappings I will look into the Datasheet next week.
+> > 
+> > Ok, I will wait for you to get back to me then before posting a v4.
 > 
-> I left the broken sorting in place, because changing the sort order in
-> the merge would just be even *more* confusing.
-> 
-> There may be other cases of that kind of oddity, I just happened to
-> notice that one because the 'starfive' thing ended up having that same
-> 'st' beginning, and I went D'Oh when trying to make sure my merge kept
-> the ordering.
-> 
-> The sort order is fine in the Kconfig file. Maybe some odd sorting got
-> confused by the next non-letter character (either ')' after the config
-> name, or '.o' of the object file name).
-> 
-> Obviously not a big deal, but it's an oddity.
+> Note I've found the direct IRQ to IO-APIC pin mappings now, they are
+> described in: atom-e3800-family-datasheet.pdf, so I've re-added
+> the APIC IRQ to the printed log msg for v4.
+
+You mean below?
+
+The 16 GPSCORE direct IRQs are mapped to IOAPIC_IRQ [66:51].
+The 16 GPSSUS direct IRQs are mapped to IOAPIC_IRQ [82:67].
+
+Ack!
 
 -- 
 With Best Regards,
