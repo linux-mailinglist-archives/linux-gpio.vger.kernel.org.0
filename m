@@ -2,134 +2,174 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C24148BFEA
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jan 2022 09:30:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 16C7D48BFF8
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jan 2022 09:34:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345755AbiALIal (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Jan 2022 03:30:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50048 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237957AbiALIak (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jan 2022 03:30:40 -0500
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87583C06173F
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Jan 2022 00:30:40 -0800 (PST)
-Received: by mail-wm1-x330.google.com with SMTP id d187-20020a1c1dc4000000b003474b4b7ebcso1046530wmd.5
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Jan 2022 00:30:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=zeGkS/AWYnZy47we+qF8wCuwX52GEkI6vQJfLEPaRTM=;
-        b=tisGOzLAWxSxmmGKxIOeVzPciTEN9rH2KFH9Do55+GiVOO50bmLiwt3AEhdYYG42Po
-         aHDhJq32SXbrFH40QHtpSfox94sDcOJmebPmt6VYf/FyAX0hBz7bTx6V74ZUzJjHRMFT
-         NKSsDLag8uUI6DX2OlfLhMw0Uq8aelMqibO86f+oellRFdSU2Z8vznyCpT41Rht/TsZ9
-         YpBcCMh0AvGURo15h6GZxdcGoThQggQuIh5Z3s6o1GH0vq9YzD8nbLoP91RvGeCWRp0Y
-         2ZqA5XuNDZqJqYXWj/T1Vy+yGyMQ9v+MqHS713torJ8+XxAnkLqfNorHiSEHmJpiuObF
-         6ViQ==
+        id S1349403AbiALIeF convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Wed, 12 Jan 2022 03:34:05 -0500
+Received: from mail-ua1-f49.google.com ([209.85.222.49]:41614 "EHLO
+        mail-ua1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237928AbiALIeE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jan 2022 03:34:04 -0500
+Received: by mail-ua1-f49.google.com with SMTP id p37so3317815uae.8;
+        Wed, 12 Jan 2022 00:34:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=zeGkS/AWYnZy47we+qF8wCuwX52GEkI6vQJfLEPaRTM=;
-        b=zfv5E9kVzJnXl6s1uXOy2j3emua+NBZgB9Au7WtyoyBC1S6v+IXtT1cqWIc7M7xiLD
-         LRWk/Rsvl6C+r025jzkmbE6uJhU5R20dFPOWmeJimRkzAa4Her54HZsgYLLqjmTsFH0j
-         9Qbi7Ckwxg809ytNhPmVN4diFcPOKWrUHege6HQbaXRdpbMa6ZxU2kKOmlVtaOPmqOW6
-         KzSuNHygwOyoyyPrXM6LZmsq9dTF5iHorN6pYry33V44GIfuTeF3tgdNEXjQd2u/R4rg
-         UbrpTitw6eD7I94Gk7rpTyKdbAskz+wewEpyiUZyZsBsRp4mtpvJYykBZSQdbsxGWmwD
-         kEXg==
-X-Gm-Message-State: AOAM530g/v5UxsOX9wvqGkoQOo88nyc3ZplXngsS1VqM4Gc6cpl/+0Mz
-        iNmYqZAHi4xCP/iL/jcnD20BBA==
-X-Google-Smtp-Source: ABdhPJyXFR6mrywvto4d9XMnjLkxRHK9EpZKHxrQ7Z64/zyNjYP4o9flE665UZPXnZvUNqaJuhAqFQ==
-X-Received: by 2002:a05:600c:154f:: with SMTP id f15mr5869719wmg.62.1641976239060;
-        Wed, 12 Jan 2022 00:30:39 -0800 (PST)
-Received: from ?IPv6:2001:861:44c0:66c0:381b:6e50:a892:5269? ([2001:861:44c0:66c0:381b:6e50:a892:5269])
-        by smtp.gmail.com with ESMTPSA id b6sm11730973wri.56.2022.01.12.00.30.37
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=phWLHSZjGguJkLwzqhKqiJsmBiGXyQV/Ve2Tok5pS7g=;
+        b=xQ+L+sbnDvIN7pQZoS8oBhJ5hzOFEnlOOpe0OQGj7QGmg7rD/yK5U1MGDB+JbrfrmQ
+         Og+LufblsPcyAVbZiGFfqtw3N2LGMeLNEhUeKdnNxSYyOEPDVOTY9uaxHaH7LtUo7nUu
+         ZvT/QTfefrqC1vON97MKHf+PjxRKic3ayHsJFD6oS5cU9Z1f7gnSF2qJbpA31ujslifE
+         tDhl4Uz+JeZB66TZl0+hAwQWxum4Vlt01A1vgRSNzGq5560NZ2vCuDBsqQpogRY4cL0O
+         CcUQMHrLamCovqXDX55XYYap2uK0R+WbsTNj8+rS638rfgH4JfDPr/fLf/9RMA7JbLil
+         8mIw==
+X-Gm-Message-State: AOAM530bCf0yLZUGo4uESq65lDQwMDIPSwXAwTd0KJYxcY+rNfkltWlc
+        SMx9dbIt3QtupXLLf1ZRuArJNDEz+J0gPZMr
+X-Google-Smtp-Source: ABdhPJzhw6BMVIlG0RK3C7ZFhyThZLkewdr5PHsq29ggIRCtRT34EBNJubspsNzz4yr+xS05jmWBlw==
+X-Received: by 2002:a67:f84e:: with SMTP id b14mr3562668vsp.32.1641976442903;
+        Wed, 12 Jan 2022 00:34:02 -0800 (PST)
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com. [209.85.222.52])
+        by smtp.gmail.com with ESMTPSA id n15sm6569086vkf.35.2022.01.12.00.34.00
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Jan 2022 00:30:38 -0800 (PST)
-Subject: Re: [PATCH 1/3] pinctrl: meson-g12a: add more pwm_f options
-To:     Gary Bisson <gary.bisson@boundarydevices.com>,
-        linux-amlogic@lists.infradead.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20220103154616.308376-1-gary.bisson@boundarydevices.com>
- <20220103154616.308376-2-gary.bisson@boundarydevices.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Organization: Baylibre
-Message-ID: <cd92df54-caa1-deed-3a93-929ba43adba8@baylibre.com>
-Date:   Wed, 12 Jan 2022 09:30:37 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        Wed, 12 Jan 2022 00:34:00 -0800 (PST)
+Received: by mail-ua1-f52.google.com with SMTP id m90so3385529uam.2;
+        Wed, 12 Jan 2022 00:34:00 -0800 (PST)
+X-Received: by 2002:ab0:2118:: with SMTP id d24mr3735076ual.78.1641976440167;
+ Wed, 12 Jan 2022 00:34:00 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20220103154616.308376-2-gary.bisson@boundarydevices.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20220110195449.12448-1-s.shtylyov@omp.ru> <20220110195449.12448-2-s.shtylyov@omp.ru>
+ <20220110201014.mtajyrfcfznfhyqm@pengutronix.de> <YdyilpjC6rtz6toJ@lunn.ch>
+In-Reply-To: <YdyilpjC6rtz6toJ@lunn.ch>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 12 Jan 2022 09:33:48 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWK3RKVXRzMASN4HaYfLckdS7rBvSopafq+iPADtGEUzA@mail.gmail.com>
+Message-ID: <CAMuHMdWK3RKVXRzMASN4HaYfLckdS7rBvSopafq+iPADtGEUzA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] platform: make platform_get_irq_optional() optional
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>, linux-iio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-phy@lists.infradead.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-mtd@lists.infradead.org, linux-i2c@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        openipmi-developer@lists.sourceforge.net,
+        Saravanan Sekar <sravanhome@gmail.com>,
+        Khuong Dinh <khuong@os.amperecomputing.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        kvm@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-serial@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Robert Richter <rric@kernel.org>,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        Corey Minyard <minyard@acm.org>, linux-pm@vger.kernel.org,
+        Peter Korsgaard <peter@korsgaard.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Mark Brown <broonie@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
+        Tony Luck <tony.luck@intel.com>,
+        Mun Yew Tham <mun.yew.tham@intel.com>,
+        Eric Auger <eric.auger@redhat.com>, netdev@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Cornelia Huck <cohuck@redhat.com>, linux-mmc@vger.kernel.org,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        linux-spi@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Vinod Koul <vkoul@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        linux-mediatek@lists.infradead.org,
+        Brian Norris <computersforpeace@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 03/01/2022 16:46, Gary Bisson wrote:
-> Add missing PWM_F pin muxing for GPIOA_11 and GPIOZ_12.
-> 
-> Signed-off-by: Gary Bisson <gary.bisson@boundarydevices.com>
-> ---
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Neil Armstrong <narmstrong@baylibre.com>
-> Cc: Kevin Hilman <khilman@baylibre.com>
-> Cc: Jerome Brunet <jbrunet@baylibre.com>
-> Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> Cc: linux-gpio@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  drivers/pinctrl/meson/pinctrl-meson-g12a.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pinctrl/meson/pinctrl-meson-g12a.c b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
-> index cd9656b13836..d182a575981e 100644
-> --- a/drivers/pinctrl/meson/pinctrl-meson-g12a.c
-> +++ b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
-> @@ -283,6 +283,8 @@ static const unsigned int pwm_d_x6_pins[]		= { GPIOX_6 };
->  static const unsigned int pwm_e_pins[]			= { GPIOX_16 };
->  
->  /* pwm_f */
-> +static const unsigned int pwm_f_z_pins[]		= { GPIOZ_12 };
-> +static const unsigned int pwm_f_a_pins[]		= { GPIOA_11 };
->  static const unsigned int pwm_f_x_pins[]		= { GPIOX_7 };
->  static const unsigned int pwm_f_h_pins[]		= { GPIOH_5 };
->  
-> @@ -618,6 +620,7 @@ static struct meson_pmx_group meson_g12a_periphs_groups[] = {
->  	GROUP(tdm_c_dout2_z,		4),
->  	GROUP(tdm_c_dout3_z,		4),
->  	GROUP(mclk1_z,			4),
-> +	GROUP(pwm_f_z,			5),
->  
->  	/* bank GPIOX */
->  	GROUP(sdio_d0,			1),
-> @@ -768,6 +771,7 @@ static struct meson_pmx_group meson_g12a_periphs_groups[] = {
->  	GROUP(tdm_c_dout3_a,		2),
->  	GROUP(mclk0_a,			1),
->  	GROUP(mclk1_a,			2),
-> +	GROUP(pwm_f_a,			3),
->  };
->  
->  /* uart_ao_a */
-> @@ -1069,7 +1073,7 @@ static const char * const pwm_e_groups[] = {
->  };
->  
->  static const char * const pwm_f_groups[] = {
-> -	"pwm_f_x", "pwm_f_h",
-> +	"pwm_f_z", "pwm_f_a", "pwm_f_x", "pwm_f_h",
->  };
->  
->  static const char * const cec_ao_a_h_groups[] = {
-> 
+Hi Andrew,
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+On Mon, Jan 10, 2022 at 10:20 PM Andrew Lunn <andrew@lunn.ch> wrote:
+> On Mon, Jan 10, 2022 at 09:10:14PM +0100, Uwe Kleine-König wrote:
+> > On Mon, Jan 10, 2022 at 10:54:48PM +0300, Sergey Shtylyov wrote:
+> > > This patch is based on the former Andy Shevchenko's patch:
+> > >
+> > > https://lore.kernel.org/lkml/20210331144526.19439-1-andriy.shevchenko@linux.intel.com/
+> > >
+> > > Currently platform_get_irq_optional() returns an error code even if IRQ
+> > > resource simply has not been found. It prevents the callers from being
+> > > error code agnostic in their error handling:
+> > >
+> > >     ret = platform_get_irq_optional(...);
+> > >     if (ret < 0 && ret != -ENXIO)
+> > >             return ret; // respect deferred probe
+> > >     if (ret > 0)
+> > >             ...we get an IRQ...
+> > >
+> > > All other *_optional() APIs seem to return 0 or NULL in case an optional
+> > > resource is not available. Let's follow this good example, so that the
+> > > callers would look like:
+> > >
+> > >     ret = platform_get_irq_optional(...);
+> > >     if (ret < 0)
+> > >             return ret;
+> > >     if (ret > 0)
+> > >             ...we get an IRQ...
+> >
+> > The difference to gpiod_get_optional (and most other *_optional) is that
+> > you can use the NULL value as if it were a valid GPIO.
+> >
+> > As this isn't given with for irqs, I don't think changing the return
+> > value has much sense.
+>
+> We actually want platform_get_irq_optional() to look different to all
+> the other _optional() methods because it is not equivalent. If it
+> looks the same, developers will assume it is the same, and get
+> themselves into trouble.
+
+Developers already assume it is the same, and thus forget they have
+to check against -ENXIO instead of zero.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
