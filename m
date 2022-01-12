@@ -2,200 +2,220 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A0E4C48C065
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jan 2022 09:54:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CEA948C05E
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Jan 2022 09:53:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351787AbiALIx7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Jan 2022 03:53:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55346 "EHLO
+        id S1348974AbiALIxp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Jan 2022 03:53:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351779AbiALIx6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jan 2022 03:53:58 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE0A3C061757
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Jan 2022 00:53:57 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1n7ZLN-0005mh-UE; Wed, 12 Jan 2022 09:50:57 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1n7ZL6-009rFV-QA; Wed, 12 Jan 2022 09:50:40 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1n7ZL5-00061g-Dl; Wed, 12 Jan 2022 09:50:39 +0100
-Date:   Wed, 12 Jan 2022 09:50:09 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Andrew Lunn <andrew@lunn.ch>, Ulf Hansson <ulf.hansson@linaro.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>, kvm@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>, linux-iio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-mtd@lists.infradead.org, linux-i2c@vger.kernel.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-phy@lists.infradead.org, Jiri Slaby <jirislaby@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Khuong Dinh <khuong@os.amperecomputing.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        Joakim Zhang <qiangqing.zhang@nxp.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-serial@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Robert Richter <rric@kernel.org>,
-        Saravanan Sekar <sravanhome@gmail.com>,
-        Corey Minyard <minyard@acm.org>, linux-pm@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Peter Korsgaard <peter@korsgaard.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Mark Gross <markgross@kernel.org>, linux-gpio@vger.kernel.org,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Mark Brown <broonie@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Eric Auger <eric.auger@redhat.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        openipmi-developer@lists.sourceforge.net,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Benson Leung <bleung@chromium.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
-        Sergey Shtylyov <s.shtylyov@omp.ru>,
-        Richard Weinberger <richard@nod.at>,
-        Mun Yew Tham <mun.yew.tham@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Cornelia Huck <cohuck@redhat.com>, linux-mmc@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spi@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Vinod Koul <vkoul@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        linux-mediatek@lists.infradead.org,
-        Brian Norris <computersforpeace@gmail.com>,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH 1/2] platform: make platform_get_irq_optional() optional
-Message-ID: <20220112085009.dbasceh3obfok5dc@pengutronix.de>
-References: <20220110195449.12448-1-s.shtylyov@omp.ru>
- <20220110195449.12448-2-s.shtylyov@omp.ru>
- <20220110201014.mtajyrfcfznfhyqm@pengutronix.de>
- <YdyilpjC6rtz6toJ@lunn.ch>
- <CAMuHMdWK3RKVXRzMASN4HaYfLckdS7rBvSopafq+iPADtGEUzA@mail.gmail.com>
+        with ESMTP id S238305AbiALIxp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Jan 2022 03:53:45 -0500
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7404AC061748
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Jan 2022 00:53:44 -0800 (PST)
+Received: by mail-lf1-x12f.google.com with SMTP id j11so5686711lfg.3
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Jan 2022 00:53:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QX44NtMzpgo+l2Ho0SHw53qmGi3kaH4gIg9bfUEaJf8=;
+        b=GwrhxtFMs32fVtJhHB7d1TFxrETcq3mcE7NxamZu/6SOWSIdtZ4+Srz4LvEcSQmDB9
+         LGFQ2vBPVGkMp3fk+4mJMplM1VhKxsHdEqD7JU4j3PciOrX6Zd64Jq9V2eEXn6NbELug
+         K4bzHQ4527hYt4Ei4Xt8net4BaK/oZ4fiVvYM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QX44NtMzpgo+l2Ho0SHw53qmGi3kaH4gIg9bfUEaJf8=;
+        b=1JDP/V5+dURWsGhr2Nni4Aor2iQ5im4dCq33xI6BTe+gDcjEBJF7koAMWsmF/dD+nL
+         E/7IpZKxXYMWBPo7wsWBhItLd+I7c8D21h6/dpfMkRWRlDU5aif2c5O9mlk83DSPr3qE
+         Tb8mzheqPkuZYPKAzluhy0lJ3RsX7d1TY3msRb4VILeK1bvNEYp6NgLd5upczt3fYEBo
+         qQgpr0X+z46AIaaNwG7m19Xo3G2vG0eTPJA3t947diDcVjSgp+ErbOJ37kRlL4XpgkLY
+         tKdCbHCK60f6rI1isErNztdrxWI6qz78T3cNo9FVPfUYNJvas+VmfFpO3YtfWnY5cgI4
+         kdUQ==
+X-Gm-Message-State: AOAM530Z5vACXYKLrzvqqQOd/94JI+E0PM9j8bdydQ5XXuEtMY2EucqW
+        R73BhBYfDXLhA0GBpT7Kwzdo2t+04cA81OZiCCQVaw==
+X-Google-Smtp-Source: ABdhPJxEbYrAx/hnpV9Nn6yck1TYbHCWYGr7VZUmUHpP5vookcO09X5JJ9gm0O/ez/CfSZpUBOe1UT3KZO6sItHHMFc=
+X-Received: by 2002:a2e:7f1a:: with SMTP id a26mr5747639ljd.414.1641977622599;
+ Wed, 12 Jan 2022 00:53:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xmww6gsp5dtrk3ed"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWK3RKVXRzMASN4HaYfLckdS7rBvSopafq+iPADtGEUzA@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+References: <20220111112244.1483783-1-wenst@chromium.org> <20220111112244.1483783-8-wenst@chromium.org>
+In-Reply-To: <20220111112244.1483783-8-wenst@chromium.org>
+From:   Chen-Yu Tsai <wenst@chromium.org>
+Date:   Wed, 12 Jan 2022 16:53:31 +0800
+Message-ID: <CAGXv+5Gq0uH-eA799f1MRgzeUU9fsfi-Xz0XyW7ZJW==i_mcYg@mail.gmail.com>
+Subject: Re: [PATCH 7/7] pinctrl: mediatek: paris: Support generic PIN_CONFIG_DRIVE_STRENGTH_UA
+To:     Sean Wang <sean.wang@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Zhiyong Tao <zhiyong.tao@mediatek.com>,
+        Guodong Liu <guodong.liu@mediatek.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue, Jan 11, 2022 at 7:23 PM Chen-Yu Tsai <wenst@chromium.org> wrote:
+>
+> Some of the MediaTek chips that utilize the Paris pinctrl driver library
+> support a lower drive strength (<= 1mA) than the standard drive strength
+> settings (2~16 mA) on certain pins. This was previously supported by the
+> custom MTK_PIN_CONFIG_DRV_ADV parameter along with the
+> "mediatek,drive-strength-adv" device tree property.
+>
+> The drive strength values for this hardware are 125, 250, 500, and 1000 mA,
+> and can be readily described by the existing "drive-strength-microamp",
+> which then gets parsed by the generic pinconf library into the parameter
+> PIN_CONFIG_DRIVE_STRENGTH_UA.
 
---xmww6gsp5dtrk3ed
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+So I am actually unsure how to implement support for this properly.
+My intention was to map "mediatek,drive-strength-adv" to
+"drive-strength-microamp". This implies using the advanced mode if
+the property is present, and vice versa.
 
-On Wed, Jan 12, 2022 at 09:33:48AM +0100, Geert Uytterhoeven wrote:
-> Hi Andrew,
->=20
-> On Mon, Jan 10, 2022 at 10:20 PM Andrew Lunn <andrew@lunn.ch> wrote:
-> > On Mon, Jan 10, 2022 at 09:10:14PM +0100, Uwe Kleine-K=F6nig wrote:
-> > > On Mon, Jan 10, 2022 at 10:54:48PM +0300, Sergey Shtylyov wrote:
-> > > > This patch is based on the former Andy Shevchenko's patch:
-> > > >
-> > > > https://lore.kernel.org/lkml/20210331144526.19439-1-andriy.shevchen=
-ko@linux.intel.com/
-> > > >
-> > > > Currently platform_get_irq_optional() returns an error code even if=
- IRQ
-> > > > resource simply has not been found. It prevents the callers from be=
-ing
-> > > > error code agnostic in their error handling:
-> > > >
-> > > >     ret =3D platform_get_irq_optional(...);
-> > > >     if (ret < 0 && ret !=3D -ENXIO)
-> > > >             return ret; // respect deferred probe
-> > > >     if (ret > 0)
-> > > >             ...we get an IRQ...
-> > > >
-> > > > All other *_optional() APIs seem to return 0 or NULL in case an opt=
-ional
-> > > > resource is not available. Let's follow this good example, so that =
-the
-> > > > callers would look like:
-> > > >
-> > > >     ret =3D platform_get_irq_optional(...);
-> > > >     if (ret < 0)
-> > > >             return ret;
-> > > >     if (ret > 0)
-> > > >             ...we get an IRQ...
-> > >
-> > > The difference to gpiod_get_optional (and most other *_optional) is t=
-hat
-> > > you can use the NULL value as if it were a valid GPIO.
-> > >
-> > > As this isn't given with for irqs, I don't think changing the return
-> > > value has much sense.
-> >
-> > We actually want platform_get_irq_optional() to look different to all
-> > the other _optional() methods because it is not equivalent. If it
-> > looks the same, developers will assume it is the same, and get
-> > themselves into trouble.
->=20
-> Developers already assume it is the same, and thus forget they have
-> to check against -ENXIO instead of zero.
+(Also unsure if such a binding would be acceptable.)
 
-Is this an ack for renaming platform_get_irq_optional() to
-platform_get_irq_silent()?
+However the pin configs are passed in one-by-one within the driver, so
+it doesn't seem viable to check for the absence of a certain parameter.
+This might involve a bit more rewriting.
 
-And then a coccinelle or sparse or ... hook that catches people testing
-the return value against 0 would be great.
+ChenYu
 
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---xmww6gsp5dtrk3ed
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmHeljYACgkQwfwUeK3K
-7AljMgf/RPunUgCLZTRo6HVoWGaeXoeKF+2cGlwuAsz4Z00TAkiSHfoaeZtHOlTi
-q5shu1KHHU618Mhtt6XvXodObLXVJs41ty1v6SytKsW7BJQt5naWkyRnggT5tFWu
-ggmVGMBXOmKX/wp2DCDa7dah1/SOrnFqP53whp6ZTB6oejvTyXmM97J3490sqGq5
-MsUAM2Z9/yyDuSZevN858NdTs3OZGSfWvvhFoG4EurYBcNo4znZgjQ6JgBbg3L5J
-/m2yKP4XrG0hiM86Q5XlzUdX3r5ERS4K78HS9ywkjsC/gmXD3i3XQGIjcG5VMN7F
-HGppnegV30H+5MPW7Ws6xs2xopwryw==
-=d8xy
------END PGP SIGNATURE-----
-
---xmww6gsp5dtrk3ed--
+> Add support for PIN_CONFIG_DRIVE_STRENGTH_UA while keeping the old
+> custom parameter around for backward compatibility.
+>
+> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+> ---
+>
+> The indentation in the switch/case blocks is getting somewhat out of
+> control. I also have some cleanup changes to reverse the logic of the
+> if/break statements. Not sure if it should be done before or after this
+> patch though.
+>
+> ---
+>  drivers/pinctrl/mediatek/pinctrl-paris.c | 84 ++++++++++++++++++++++++
+>  1 file changed, 84 insertions(+)
+>
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
+> index 678c8aa33012..5a94903ae372 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
+> @@ -48,6 +48,53 @@ static const char * const mtk_gpio_functions[] = {
+>         "func12", "func13", "func14", "func15",
+>  };
+>
+> +/*
+> + * This section supports converting to/from custom MTK_PIN_CONFIG_DRV_ADV
+> + * and standard PIN_CONFIG_DRIVE_STRENGTH_UA pin configs.
+> + *
+> + * The custom value encodes three hardware bits as follows:
+> + *
+> + *   |           Bits           |
+> + *   | 2 (E1) | 1 (E0) | 0 (EN) | drive strength (uA)
+> + *   ------------------------------------------------
+> + *   |    x   |    x   |    0   | disabled, use standard drive strength
+> + *   -------------------------------------
+> + *   |    0   |    0   |    1   |  125 uA
+> + *   |    0   |    1   |    1   |  250 uA
+> + *   |    1   |    0   |    1   |  500 uA
+> + *   |    1   |    1   |    1   | 1000 uA
+> + */
+> +static const int mtk_drv_adv_uA[] = { 125, 250, 500, 1000 };
+> +
+> +static int mtk_drv_adv_to_uA(int val)
+> +{
+> +       /* This should never happen. */
+> +       if (WARN_ON_ONCE(val < 0 || val > 7))
+> +               return -EINVAL;
+> +
+> +       /* Bit 0 simply enables this hardware part */
+> +       if (!(val & BIT(0)))
+> +               return -EINVAL;
+> +
+> +       return mtk_drv_adv_uA[(val >> 1)];
+> +}
+> +
+> +static int mtk_drv_uA_to_adv(int val)
+> +{
+> +       switch (val) {
+> +       case 125:
+> +               return 0x1;
+> +       case 250:
+> +               return 0x3;
+> +       case 500:
+> +               return 0x5;
+> +       case 1000:
+> +               return 0x7;
+> +       }
+> +
+> +       return -EINVAL;
+> +}
+> +
+>  static int mtk_pinmux_gpio_request_enable(struct pinctrl_dev *pctldev,
+>                                           struct pinctrl_gpio_range *range,
+>                                           unsigned int pin)
+> @@ -151,11 +198,38 @@ static int mtk_pinconf_get(struct pinctrl_dev *pctldev,
+>
+>                 break;
+>         case PIN_CONFIG_DRIVE_STRENGTH:
+> +               if (hw->soc->adv_drive_get) {
+> +                       err = hw->soc->adv_drive_get(hw, desc, &ret);
+> +                       if (!err) {
+> +                               err = mtk_drv_adv_to_uA(ret);
+> +                               if (err > 0) {
+> +                                       /* PIN_CONFIG_DRIVE_STRENGTH_UA used */
+> +                                       err = -EINVAL;
+> +                                       break;
+> +                               }
+> +                       }
+> +               }
+> +
+>                 if (hw->soc->drive_get)
+>                         err = hw->soc->drive_get(hw, desc, &ret);
+>                 else
+>                         err = -ENOTSUPP;
+>                 break;
+> +       case PIN_CONFIG_DRIVE_STRENGTH_UA:
+> +               if (hw->soc->adv_drive_get) {
+> +                       err = hw->soc->adv_drive_get(hw, desc, &ret);
+> +                       if (err)
+> +                               break;
+> +                       err = mtk_drv_adv_to_uA(ret);
+> +                       if (err < 0)
+> +                               break;
+> +
+> +                       ret = err;
+> +                       err = 0;
+> +               } else {
+> +                       err = -ENOTSUPP;
+> +               }
+> +               break;
+>         case MTK_PIN_CONFIG_TDSEL:
+>         case MTK_PIN_CONFIG_RDSEL:
+>                 reg = (param == MTK_PIN_CONFIG_TDSEL) ?
+> @@ -271,6 +345,16 @@ static int mtk_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+>                 else
+>                         err = -ENOTSUPP;
+>                 break;
+> +       case PIN_CONFIG_DRIVE_STRENGTH_UA:
+> +               if (hw->soc->adv_drive_set) {
+> +                       err = mtk_drv_uA_to_adv(arg);
+> +                       if (err < 0)
+> +                               break;
+> +                       err = hw->soc->adv_drive_set(hw, desc, err);
+> +               } else {
+> +                       err = -ENOTSUPP;
+> +               }
+> +               break;
+>         case MTK_PIN_CONFIG_TDSEL:
+>         case MTK_PIN_CONFIG_RDSEL:
+>                 reg = (param == MTK_PIN_CONFIG_TDSEL) ?
+> --
+> 2.34.1.575.g55b058a8bb-goog
+>
