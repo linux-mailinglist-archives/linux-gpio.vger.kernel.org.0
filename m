@@ -2,106 +2,154 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D6D548DBB4
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jan 2022 17:26:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4606F48DBCF
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jan 2022 17:32:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236656AbiAMQ0v (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 13 Jan 2022 11:26:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34836 "EHLO
+        id S232718AbiAMQcB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 13 Jan 2022 11:32:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236653AbiAMQ0u (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Jan 2022 11:26:50 -0500
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DDDDC06161C
-        for <linux-gpio@vger.kernel.org>; Thu, 13 Jan 2022 08:26:50 -0800 (PST)
-Received: by mail-pj1-x102c.google.com with SMTP id r16-20020a17090a0ad000b001b276aa3aabso19478791pje.0
-        for <linux-gpio@vger.kernel.org>; Thu, 13 Jan 2022 08:26:50 -0800 (PST)
+        with ESMTP id S232397AbiAMQcB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Jan 2022 11:32:01 -0500
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEDF1C061574;
+        Thu, 13 Jan 2022 08:32:00 -0800 (PST)
+Received: by mail-wr1-x42d.google.com with SMTP id s1so11133936wra.6;
+        Thu, 13 Jan 2022 08:32:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=npBib3KnStiwZAtrbLJqvr+A+8yK4FqQUbTllMeZ3VQ=;
-        b=s2/4iYSFa8XHts7+q/OEyWRsscl7Q7AUw/wlLRJSTcLhTzdFkd/qWJT02fEz/0pLeM
-         ZflaEW2ZF7sTGgo8gflu4tI9jZNj4Xhbm0xuTAqmp3S2kpeyPpHMBQ765XnWrsnio0Ek
-         Z33llmQLQWePlvgrpgZ0cS6tGH7nkOMF+h45EgUxQ/9kU1mV6y+Wb/T5xlOT8m9g8jtG
-         tt0qNJaBImZjwDuf3/8fHvtyKmmV4wXi/ka/Tig4dYsysfFwJkLGZ5EJmukEN5RajFmE
-         Wa1hmnDpO7cNzkV8XQXJyfz5yba/Z2bNDqsJxkh22RgHgkMoZCYSMZB8cA4+oThkvyCD
-         8i/Q==
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=stJa+t6N7piCO/G9WOrqhozs1aIJeDJMCX2Hc5YW/E4=;
+        b=maMcAzeBBfspfDIjpKaMxzI5mlxkmJd8BsYGLHKd274zOBEBxERbjDYCCSm9t9mFer
+         e0nC3OgbAcstei0ExP0dOqEC7bu6xECBBLdA0IkDM7cGVmVju9N4skvu+h6UucLMkjiC
+         FvpdQoFAMnxg5oCt2BtBBoosRZEqZDascNyUYCx3KUjy0ZFEgKXIPouUbRsBRYeDLgsu
+         EusPagXiugBX2ZQTjLlNzbGdkhmyvUh+JCE3WYj4/pjyTFEZ6KrmkAKoO0uBafcGfqN8
+         a4Gyb8NH3RCzdDHK9+06EMolyGzt0xnndvHQrsK8PZrF0X8D8y8wBtFEhtvlOzRgIywF
+         33qA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=npBib3KnStiwZAtrbLJqvr+A+8yK4FqQUbTllMeZ3VQ=;
-        b=RcTO/dIw5RBp/xayXbLcln9KvHu4TBj/FY4nLYtnqVUMkyho7ljdfNiSXt5S/DDt2t
-         WcSAKsHVW3h9dIUm4tcjROCx7/Shh8PCe2tigi+4LijsPqrsCLAt5LwoBkbByOVPjFem
-         NFfzK34k1VSJ6eAdu6sN9L45SBkKozQOkVR4unbObvu3GbGd+ey+/X+lA4Qt+99BnNn4
-         ncoRWoYBDFXjV9eQmZggVpgUxK1X1KJqwsEBRXt1IOiguP93dmXKVYV7rvB3DS/qSpeC
-         PVBI9PxIcdVAohiKRv+VhAmVLGeyydmFG/voQTr0iXv97BTH8y78Cqbb9lOKRlc5dGeL
-         SjeA==
-X-Gm-Message-State: AOAM530MM1eNJBBeFn92oZu/JiIwxT/1deaORWND4x3dn0X93b7eNKMF
-        vrjaqdsEhdGuK85W0D5+q2PW
-X-Google-Smtp-Source: ABdhPJxUlAjlZWpGGpC+duPC5VDacjSRkY0IB4fgJPQqQrAOG4kEVXEXEk7H27RcJh3uBD8vDLDqgg==
-X-Received: by 2002:a17:902:ce90:b0:14a:7166:a186 with SMTP id f16-20020a170902ce9000b0014a7166a186mr5322278plg.107.1642091209497;
-        Thu, 13 Jan 2022 08:26:49 -0800 (PST)
-Received: from localhost.localdomain ([202.21.43.95])
-        by smtp.gmail.com with ESMTPSA id h11sm3033131pjs.10.2022.01.13.08.26.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Jan 2022 08:26:49 -0800 (PST)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     linus.walleij@linaro.org
-Cc:     bjorn.andersson@linaro.org, dianders@chromium.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH] pinctrl: qcom: Return -EINVAL for setting affinity if no IRQ parent
-Date:   Thu, 13 Jan 2022 21:56:17 +0530
-Message-Id: <20220113162617.131697-1-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.25.1
+        bh=stJa+t6N7piCO/G9WOrqhozs1aIJeDJMCX2Hc5YW/E4=;
+        b=P0PyOCwfQktAvkIuLsh/59vp9gMyezADY+Ijp2DbNKKZPPslZgaeUyrIdQM4395YTy
+         1YjWH663y+eIeOAI4i4lubI8SokZ27lirAEwTjD1qLtHMWEF0UwIUyyvUuj4bVaEBPqS
+         TB+EpRQdToYCABAwhMapTHpRx5Fu77Ym6ACt8n7pWVjwTjMUDmtXyCbfK0zMfaK29Onr
+         LsHurb5COqjfql+2zJZkwf5uyJNa7wx2SbT/8PUO36khqxZFcUDEi//iYW6f6eWNW2in
+         Q45b4cygLswvRB3uauGXLpMiUSEIFlwt4g4yTnjYnmawFhHlKQSnN/jqDqv6JwUGhuPB
+         +gPQ==
+X-Gm-Message-State: AOAM5330/f2BW/WuC4mDz7usgTEB0LpkLq12EsdS3wXDOv/QF4uDAWzi
+        /PcAuaBGHHc0NEXAZ63zF1pkz3Gg+vo=
+X-Google-Smtp-Source: ABdhPJzJBCLgIXVpW2ER0o2F54q3owOxB0C/KPwuwCJi9K//QZFSw+IEmYjjLP1k4kYswRx5CQH2kw==
+X-Received: by 2002:adf:d08b:: with SMTP id y11mr4616297wrh.384.1642091519264;
+        Thu, 13 Jan 2022 08:31:59 -0800 (PST)
+Received: from [192.168.0.18] (81.172.62.207.dyn.user.ono.com. [81.172.62.207])
+        by smtp.gmail.com with ESMTPSA id y17sm2880846wrr.84.2022.01.13.08.31.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 13 Jan 2022 08:31:58 -0800 (PST)
+Message-ID: <18f7a647-6153-6d38-dff1-727b9592b01e@gmail.com>
+Date:   Thu, 13 Jan 2022 17:31:57 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Subject: Re: [PATCH v9 2/3] dt-bindings: pinctrl: mt8195: Add
+ mediatek,drive-strength-adv property
+Content-Language: en-US
+To:     Tinghan Shen <tinghan.shen@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        David Matlack <dmatlack@google.com>,
+        Jing Zhang <jingzhangos@google.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sean Wang <sean.wang@mediatek.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Project_Global_Chrome_Upstream_Group@mediatek.com,
+        ryder.lee@kernel.org, wenst@chromium.org, chunfeng.yun@mediatek.com
+References: <20220112114724.1953-1-tinghan.shen@mediatek.com>
+ <20220112114724.1953-3-tinghan.shen@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+In-Reply-To: <20220112114724.1953-3-tinghan.shen@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The MSM GPIO IRQ controller relies on the parent IRQ controller to set the
-CPU affinity for the IRQ. And this is only valid if there is any wakeup
-parent available and defined in DT.
+[dopping Maciej, Paolo and Sean Christopherson]
 
-For the case of no parent IRQ controller defined in DT,
-msm_gpio_irq_set_affinity() and msm_gpio_irq_set_vcpu_affinity() should
-return -EINVAL instead of 0 as the affinity can't be set.
+On 12/01/2022 12:47, Tinghan Shen wrote:
+> Extend driving support for I2C pins on SoC mt8195.
+> This property is already documented in mediatek,mt8183-pinctrl.yaml.
+> 
+> Signed-off-by: Tinghan Shen <tinghan.shen@mediatek.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Otherwise, below warning will be printed by genirq:
+Looks good to me. Linus please let me know when you are queuing this patch and 
+I'll take the rest of the series. Another option is, that you provide an 
+Acked-by and I can take the whole set through my branch.
 
-genirq: irq_chip msmgpio did not update eff. affinity mask of irq 70
+Regards,
+Matthias
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pinctrl/qcom/pinctrl-msm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index 8476a8ac4451..a42ff4b22a04 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -1157,7 +1157,7 @@ static int msm_gpio_irq_set_affinity(struct irq_data *d,
- 	if (d->parent_data && test_bit(d->hwirq, pctrl->skip_wake_irqs))
- 		return irq_chip_set_affinity_parent(d, dest, force);
- 
--	return 0;
-+	return -EINVAL;
- }
- 
- static int msm_gpio_irq_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
-@@ -1168,7 +1168,7 @@ static int msm_gpio_irq_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
- 	if (d->parent_data && test_bit(d->hwirq, pctrl->skip_wake_irqs))
- 		return irq_chip_set_vcpu_affinity_parent(d, vcpu_info);
- 
--	return 0;
-+	return -EINVAL;
- }
- 
- static void msm_gpio_irq_handler(struct irq_desc *desc)
--- 
-2.25.1
-
+> ---
+>   .../bindings/pinctrl/pinctrl-mt8195.yaml      | 35 +++++++++++++++++++
+>   1 file changed, 35 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml
+> index 328ea59c5466..4db4899af6b1 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml
+> @@ -98,6 +98,32 @@ patternProperties:
+>             drive-strength:
+>               enum: [2, 4, 6, 8, 10, 12, 14, 16]
+>   
+> +          mediatek,drive-strength-adv:
+> +            description: |
+> +              Describe the specific driving setup property.
+> +              For I2C pins, the existing generic driving setup can only support
+> +              2/4/6/8/10/12/14/16mA driving. But in specific driving setup, they
+> +              can support 0.125/0.25/0.5/1mA adjustment. If we enable specific
+> +              driving setup, the existing generic setup will be disabled.
+> +              The specific driving setup is controlled by E1E0EN.
+> +              When E1=0/E0=0, the strength is 0.125mA.
+> +              When E1=0/E0=1, the strength is 0.25mA.
+> +              When E1=1/E0=0, the strength is 0.5mA.
+> +              When E1=1/E0=1, the strength is 1mA.
+> +              EN is used to enable or disable the specific driving setup.
+> +              Valid arguments are described as below:
+> +              0: (E1, E0, EN) = (0, 0, 0)
+> +              1: (E1, E0, EN) = (0, 0, 1)
+> +              2: (E1, E0, EN) = (0, 1, 0)
+> +              3: (E1, E0, EN) = (0, 1, 1)
+> +              4: (E1, E0, EN) = (1, 0, 0)
+> +              5: (E1, E0, EN) = (1, 0, 1)
+> +              6: (E1, E0, EN) = (1, 1, 0)
+> +              7: (E1, E0, EN) = (1, 1, 1)
+> +              So the valid arguments are from 0 to 7.
+> +            $ref: /schemas/types.yaml#/definitions/uint32
+> +            enum: [0, 1, 2, 3, 4, 5, 6, 7]
+> +
+>             bias-pull-down:
+>               description: |
+>                 For pull down type is normal, it don't need add RSEL & R1R0 define
+> @@ -268,4 +294,13 @@ examples:
+>             bias-pull-down;
+>           };
+>         };
+> +
+> +      i2c0-pins {
+> +        pins {
+> +          pinmux = <PINMUX_GPIO8__FUNC_SDA0>,
+> +                   <PINMUX_GPIO9__FUNC_SCL0>;
+> +          bias-disable;
+> +          mediatek,drive-strength-adv = <7>;
+> +        };
+> +      };
+>       };
+> 
