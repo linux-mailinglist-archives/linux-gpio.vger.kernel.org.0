@@ -2,142 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 68D0248DF41
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jan 2022 21:57:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 774F048DF75
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Jan 2022 22:18:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234697AbiAMU5z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 13 Jan 2022 15:57:55 -0500
-Received: from mxout04.lancloud.ru ([45.84.86.114]:43128 "EHLO
-        mxout04.lancloud.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230369AbiAMU5y (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Jan 2022 15:57:54 -0500
-Received: from LanCloud
-DKIM-Filter: OpenDKIM Filter v2.11.0 mxout04.lancloud.ru 29AAB20A6FFC
-Received: from LanCloud
-Received: from LanCloud
-Received: from LanCloud
-Subject: Re: [PATCH] driver core: platform: Rename platform_get_irq_optional()
- to platform_get_irq_silent()
-To:     Mark Brown <broonie@kernel.org>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-CC:     Andrew Lunn <andrew@lunn.ch>, Ulf Hansson <ulf.hansson@linaro.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        KVM list <kvm@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        <linux-iio@vger.kernel.org>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        "ALSA Development Mailing List" <alsa-devel@alsa-project.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Guenter Roeck <groeck@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        <linux-phy@lists.infradead.org>, Jiri Slaby <jirislaby@kernel.org>,
-        <openipmi-developer@lists.sourceforge.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Khuong Dinh <khuong@os.amperecomputing.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        Joakim Zhang <qiangqing.zhang@nxp.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        "Bartosz Golaszewski" <brgl@bgdev.pl>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        Robert Richter <rric@kernel.org>,
-        Saravanan Sekar <sravanhome@gmail.com>,
-        Corey Minyard <minyard@acm.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Peter Korsgaard <peter@korsgaard.com>,
-        "William Breathitt Gray" <vilhelm.gray@gmail.com>,
-        Mark Gross <markgross@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "Borislav Petkov" <bp@alien8.de>,
-        Sebastian Reichel <sre@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        <platform-driver-x86@vger.kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        <linux-edac@vger.kernel.org>,
-        Mun Yew Tham <mun.yew.tham@intel.com>,
-        "Eric Auger" <eric.auger@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        "Linux MMC List" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Richard Weinberger <richard@nod.at>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
-        <linux-mediatek@lists.infradead.org>,
-        "Brian Norris" <computersforpeace@gmail.com>,
-        <netdev@vger.kernel.org>
-References: <20220110201014.mtajyrfcfznfhyqm@pengutronix.de>
- <YdyilpjC6rtz6toJ@lunn.ch>
- <CAMuHMdWK3RKVXRzMASN4HaYfLckdS7rBvSopafq+iPADtGEUzA@mail.gmail.com>
- <20220112085009.dbasceh3obfok5dc@pengutronix.de>
- <CAMuHMdWsMGPiQaPS0-PJ_+Mc5VQ37YdLfbHr_aS40kB+SfW-aw@mail.gmail.com>
- <20220112213121.5ruae5mxwj6t3qiy@pengutronix.de>
- <Yd9L9SZ+g13iyKab@sirena.org.uk>
- <20220113110831.wvwbm75hbfysbn2d@pengutronix.de>
- <YeA7CjOyJFkpuhz/@sirena.org.uk>
- <20220113194358.xnnbhsoyetihterb@pengutronix.de>
- <YeCI47ltlWzjzjYy@sirena.org.uk>
-From:   Sergey Shtylyov <s.shtylyov@omp.ru>
-Organization: Open Mobile Platform
-Message-ID: <1df04d74-8aa2-11f1-54e9-34d0e8f4e58b@omp.ru>
-Date:   Thu, 13 Jan 2022 23:57:43 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        id S231853AbiAMVSZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 13 Jan 2022 16:18:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44330 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229931AbiAMVSZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Jan 2022 16:18:25 -0500
+Received: from mail-oi1-x22d.google.com (mail-oi1-x22d.google.com [IPv6:2607:f8b0:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4043C061574;
+        Thu, 13 Jan 2022 13:18:24 -0800 (PST)
+Received: by mail-oi1-x22d.google.com with SMTP id w188so9551536oiw.13;
+        Thu, 13 Jan 2022 13:18:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3U7xOer6sVly35j98UB0sJ9y2HM48yZDB/QDh60PHbU=;
+        b=JH3d15RUin0nTH8Ayj5BEWgODrPOPrwVEkCsrskOBAC/QKzwqaQuFcT1pW58RiAnb4
+         YJ6Ppu9RVisSHpFYPHyJePiRczvMd2SxJJy0z2Shaa40tbb+VVzu0HuK6C8cZ6tnKJdb
+         xpF/OrgLjm1kIS5FItD8q/x++1jaJTFzqUn36znrghK3hIDGc/6HPlThESC4pUs9Bq21
+         PbDaFbUTmQ0HurqF4vwNltxzOBpJjdApT7vX1IT4s3naZ0DvV9Jw410H5swUQO+WCxRs
+         1uutuhK9pwVmlQRN7vkG2URo5gMHWYuTvdDbLer7ScWwxo3R9vnZXRTQfMq9DWPKy7Z1
+         GVLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3U7xOer6sVly35j98UB0sJ9y2HM48yZDB/QDh60PHbU=;
+        b=Qnh0CpoCcD1SOso3gMqVG/r3nHmteGRJAm6uSea1hBl0UabFJhfk/uosX/gjJA17i6
+         e/AE0n1NjieNSGja18/1saFs25eHmQDkKgrUWnXbZBRZHxKntOmy99oFthlzThjCz+kY
+         bwZNtWvKZczVodzQIGte5eyEZoMDqnQxWIL4Nds2aFeidYwaLwWhbwAf0YOEGGcNH9mq
+         Z6Zn+e0h6iqSWafxAvttuCJHEY8+tCLzAtjUoRaBwA6vw3asPyfxhwEPaZlo/XQiBMsR
+         gvW+jzyWB7KVpUFfhmCnDW4RMvuiJTxXqGGKyZj691f7CO4Vlff6L5t/iNcuRhFB+uvN
+         RkOA==
+X-Gm-Message-State: AOAM530IDMu5Zx4alItXWBAPdhh4Ks11Wn1ZlT5gyddPYFG6TJudewwP
+        vYM/WoKwXPv7oHFBOyW3b5M=
+X-Google-Smtp-Source: ABdhPJzXE/1It7WKP+/LtUmegsDmnTpvyMx15/3Iav2IhHGUrEnkgWndiF4moTtfVpUJnGCy8umDlQ==
+X-Received: by 2002:a05:6808:190f:: with SMTP id bf15mr4742157oib.23.1642108704077;
+        Thu, 13 Jan 2022 13:18:24 -0800 (PST)
+Received: from Andrews-MBP-2.attlocal.com ([2600:1700:19e0:3310:f8ba:b1e:54e1:cdfc])
+        by smtp.gmail.com with ESMTPSA id z188sm932015ooa.8.2022.01.13.13.18.23
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Jan 2022 13:18:23 -0800 (PST)
+From:   Andrew Geissler <geissonator@gmail.com>
+X-Google-Original-From: Andrew Geissler <geissonator@yahoo.com>
+To:     joel@jms.id.au, andrew@aj.id.au, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc:     Andrew Geissler <geissonator@yahoo.com>,
+        linux-gpio@vger.kernel.org, openbmc@lists.ozlabs.org
+Subject: [PATCH 1/2] ARM: dts: aspeed: rainier: add reset-cause-pinhole
+Date:   Thu, 13 Jan 2022 15:17:34 -0600
+Message-Id: <20220113211735.37861-1-geissonator@yahoo.com>
+X-Mailer: git-send-email 2.30.1 (Apple Git-130)
 MIME-Version: 1.0
-In-Reply-To: <YeCI47ltlWzjzjYy@sirena.org.uk>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [192.168.11.198]
-X-ClientProxiedBy: LFEXT01.lancloud.ru (fd00:f066::141) To
- LFEX1907.lancloud.ru (fd00:f066::207)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 1/13/22 11:17 PM, Mark Brown wrote:
+This GPIO is used on the rainier system to indicate the BMC was reset
+due to a physical pinhole reset.
 
->> The subsystems regulator, clk and gpio have the concept of a dummy
->> resource. For regulator, clk and gpio there is a semantic difference
->> between the regular _get() function and the _get_optional() variant.
->> (One might return the dummy resource, the other won't. Unfortunately
->> which one implements which isn't the same for these three.) The
->> difference between platform_get_irq() and platform_get_irq_optional() is
->> only that the former might emit an error message and the later won't.
+See the following doc for more information:
+https://github.com/openbmc/docs/blob/master/designs/device-tree-gpio-naming.md
 
-   This is only a current difference but I'm still going to return 0 ISO
--ENXIO from latform_get_irq_optional(), no way I'd leave that -ENXIO there
-alone... :-)
+Signed-off-by: Andrew Geissler <geissonator@yahoo.com>
+---
+ arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> Reviewed-by: Mark Brown <broonie@kernel.org>
+diff --git a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
+index cfaa606666e2..7ea70c7d698f 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
+@@ -247,7 +247,8 @@ &gpio0 {
+ 	/*C0-C7*/	"","","","","","","","",
+ 	/*D0-D7*/	"","","","","","","","",
+ 	/*E0-E7*/	"","","","","","","","",
+-	/*F0-F7*/	"","","battery-voltage-read-enable","","","","factory-reset-toggle","",
++	/*F0-F7*/	"","","battery-voltage-read-enable","reset-cause-pinhole","","",
++				"factory-reset-toggle","",
+ 	/*G0-G7*/	"","","","","","","","",
+ 	/*H0-H7*/	"","bmc-ingraham0","rear-enc-id0","rear-enc-fault0","","","","",
+ 	/*I0-I7*/	"","","","","","","bmc-secure-boot","",
+-- 
+2.25.1
 
-   Hm... I'm seeing a tag bit not seeing the patch itself...
-
-MBR, Sergey
