@@ -2,209 +2,172 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6405948F0A3
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jan 2022 20:45:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D6D2E48F0BC
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jan 2022 21:01:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244150AbiANTpt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Jan 2022 14:45:49 -0500
-Received: from mxout01.lancloud.ru ([45.84.86.81]:39066 "EHLO
-        mxout01.lancloud.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237113AbiANTps (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jan 2022 14:45:48 -0500
-Received: from LanCloud
-DKIM-Filter: OpenDKIM Filter v2.11.0 mxout01.lancloud.ru EBF8C209322E
-Received: from LanCloud
-Received: from LanCloud
-Received: from LanCloud
-Subject: Re: [PATCH] driver core: platform: Rename platform_get_irq_optional()
- to platform_get_irq_silent()
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        "Mark Brown" <broonie@kernel.org>
-CC:     Andrew Lunn <andrew@lunn.ch>, Ulf Hansson <ulf.hansson@linaro.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        KVM list <kvm@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        <linux-iio@vger.kernel.org>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        "ALSA Development Mailing List" <alsa-devel@alsa-project.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Guenter Roeck <groeck@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        <linux-phy@lists.infradead.org>, Jiri Slaby <jirislaby@kernel.org>,
-        <openipmi-developer@lists.sourceforge.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Khuong Dinh <khuong@os.amperecomputing.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        Joakim Zhang <qiangqing.zhang@nxp.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        "Bartosz Golaszewski" <brgl@bgdev.pl>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        Robert Richter <rric@kernel.org>,
-        Saravanan Sekar <sravanhome@gmail.com>,
-        Corey Minyard <minyard@acm.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Peter Korsgaard <peter@korsgaard.com>,
-        "William Breathitt Gray" <vilhelm.gray@gmail.com>,
-        Mark Gross <markgross@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "Borislav Petkov" <bp@alien8.de>,
-        Sebastian Reichel <sre@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        <platform-driver-x86@vger.kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        <linux-edac@vger.kernel.org>, Sergey Shtylyov <s.shtylyov@omp.ru>,
-        "Mun Yew Tham" <mun.yew.tham@intel.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        "Linux MMC List" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Richard Weinberger <richard@nod.at>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
-        <linux-mediatek@lists.infradead.org>,
-        "Brian Norris" <computersforpeace@gmail.com>,
-        <netdev@vger.kernel.org>
-References: <20220110195449.12448-2-s.shtylyov@omp.ru>
- <20220110201014.mtajyrfcfznfhyqm@pengutronix.de> <YdyilpjC6rtz6toJ@lunn.ch>
- <CAMuHMdWK3RKVXRzMASN4HaYfLckdS7rBvSopafq+iPADtGEUzA@mail.gmail.com>
- <20220112085009.dbasceh3obfok5dc@pengutronix.de>
- <CAMuHMdWsMGPiQaPS0-PJ_+Mc5VQ37YdLfbHr_aS40kB+SfW-aw@mail.gmail.com>
- <20220112213121.5ruae5mxwj6t3qiy@pengutronix.de>
- <Yd9L9SZ+g13iyKab@sirena.org.uk>
- <20220113110831.wvwbm75hbfysbn2d@pengutronix.de>
- <YeA7CjOyJFkpuhz/@sirena.org.uk>
- <20220113194358.xnnbhsoyetihterb@pengutronix.de>
-From:   Sergey Shtylyov <s.shtylyov@omp.ru>
-Organization: Open Mobile Platform
-Message-ID: <386a7f56-38c8-229c-4fec-4b38a77c4121@omp.ru>
-Date:   Fri, 14 Jan 2022 22:45:38 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        id S239761AbiANUBp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Jan 2022 15:01:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42246 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229471AbiANUBp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jan 2022 15:01:45 -0500
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3FC6C061574
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Jan 2022 12:01:44 -0800 (PST)
+Received: by mail-lf1-x12a.google.com with SMTP id d3so33579756lfv.13
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Jan 2022 12:01:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=semihalf-com.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=22iDP+EDN50ukyEGH/TTpJIxd7/X2niB/p91tYDKLDA=;
+        b=AMuATPm5PasQvE6isui+RnAVqITgGSW4Kn72845nsUvsYkJ3JfJeEOanSdOn37szhs
+         OkWFOLgL2QHCj1BGS8wmgWZZNBxDEAn1DxaLC99QHe5b57JoY1Drooh10Ni95GVTc2LN
+         /ezletpZB9yUytof8L61rRUd+XS8A5dvM8HyfVNWFOLv61CqYa0tFraeRk2e6F+s6wUy
+         hi2UWWUyR9TQufwoBkdX4AQZDW8L7Jpu3A1XFGQ1vDRFYJ+UiL9nnEdrHPwgP/jYt8ow
+         YPzlDYxNNQjpwdiLkFRarp4qXwVXnhEdSV4iIxIDkMrfgGg1CKVRFeDvUo0HY1hSvzgH
+         ltzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=22iDP+EDN50ukyEGH/TTpJIxd7/X2niB/p91tYDKLDA=;
+        b=rgTxf3BbV60Vz2l3+WoKg9DJ+KdfLCN74pV5lTbrBA1oLnmwFuAW7O37mvO1melJDP
+         2HWDpBmx//GqCrT2kcGHFi49n3C6iiqrMJM6cq6v927tFj3SiakxBvzppDAcAJtOS2+k
+         UOPqney5q4kFiLI5PNqgj+x0B4RRbNa+WMWEycqXoxJTJryVVs5iD2e3LsY2Gdb+aOFl
+         tvS0SgXevT/f3PccIlQO+SqhLj7VYlE98mMJJb3NKozwy9s0DM8CZxEAv0aCJWbgGDFW
+         XYOdy6D7cHLKrhGIfI2VbGIXOjmAZrYTYPYkMdpbWK5V9aba/7Lor3TcUL7XRomb7h4/
+         XTGg==
+X-Gm-Message-State: AOAM53381AbJZ9itoFJ8/OqCBdfDhwpbapUuCwYwK/HRpEERbdPKIxX5
+        2BuDVVf62WK7FQSW7MHp0UKu
+X-Google-Smtp-Source: ABdhPJw564LeP2pqVJH41ORvW/RP3d3ffJVtHjeWuq5NQF+p2Rmd956t6SuicFpvCkQIjZemfLfNVg==
+X-Received: by 2002:a05:6512:12d5:: with SMTP id p21mr7609176lfg.569.1642190502785;
+        Fri, 14 Jan 2022 12:01:42 -0800 (PST)
+Received: from localhost.localdomain (public-gprs377099.centertel.pl. [37.47.104.76])
+        by smtp.gmail.com with ESMTPSA id v13sm647444ljv.124.2022.01.14.12.01.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Jan 2022 12:01:42 -0800 (PST)
+From:   Lukasz Bartosik <lb@semihalf.com>
+X-Google-Original-From: Lukasz Bartosik <lukasz.bartosik@semihalf.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>, linus.walleij@linaro.org
+Cc:     linux-gpio@vger.kernel.org, upstream@semihalf.com
+Subject: [PATCH v1] pinctrl: intel: fix unexpected interrupt
+Date:   Fri, 14 Jan 2022 21:01:38 +0100
+Message-Id: <20220114200138.28254-1-lukasz.bartosik@semihalf.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20220113194358.xnnbhsoyetihterb@pengutronix.de>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [192.168.11.198]
-X-ClientProxiedBy: LFEXT02.lancloud.ru (fd00:f066::142) To
- LFEX1907.lancloud.ru (fd00:f066::207)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 1/13/22 10:43 PM, Uwe Kleine-Kˆnig wrote:
+From: ≈Åukasz Bartosik <lb@semihalf.com>
 
-> The subsystems regulator, clk and gpio have the concept of a dummy
-> resource. For regulator, clk and gpio there is a semantic difference
-> between the regular _get() function and the _get_optional() variant.
-> (One might return the dummy resource, the other won't. Unfortunately
-> which one implements which isn't the same for these three.) The
-> difference between platform_get_irq() and platform_get_irq_optional() is
-> only that the former might emit an error message and the later won't.
-> 
-> To prevent people's expectations that there is a semantic difference
-> between these too, rename platform_get_irq_optional() to
-> platform_get_irq_silent() to make the actual difference more obvious.
-> 
-> The #define for the old name can and should be removed once all patches
-> currently in flux still relying on platform_get_irq_optional() are
-> fixed.
+ASUS Chromebook C223 with Celeron N3350 crashes sometimes during
+cold booot. Inspection of the kernel log showed that it gets into
+an inifite loop logging the following message:
 
-   Hm... I'm afraid that with this #define they would never get fixed... :-)
+->handle_irq():  000000009cdb51e8, handle_bad_irq+0x0/0x251
+->irq_data.chip(): 000000005ec212a7, 0xffffa043009d8e7
+->action(): 00000
+   IRQ_NOPROBE set
+unexpected IRQ trap at vector 7c
 
-> Signed-off-by: Uwe Kleine-Kˆnig <u.kleine-koenig@pengutronix.de>
-> ---
-> Hello,
-> 
-> On Thu, Jan 13, 2022 at 02:45:30PM +0000, Mark Brown wrote:
->> On Thu, Jan 13, 2022 at 12:08:31PM +0100, Uwe Kleine-Kˆnig wrote:
->>
->>> This is all very unfortunate. In my eyes b) is the most sensible
->>> sense, but the past showed that we don't agree here. (The most annoying
->>> part of regulator_get is the warning that is emitted that regularily
->>> makes customers ask what happens here and if this is fixable.)
->>
->> Fortunately it can be fixed, and it's safer to clearly specify things.
->> The prints are there because when the description is wrong enough to
->> cause things to blow up we can fail to boot or run messily and
->> forgetting to describe some supplies (or typoing so they haven't done
->> that) and people were having a hard time figuring out what might've
->> happened.
-> 
-> Yes, that's right. I sent a patch for such a warning in 2019 and pinged
-> occationally. Still waiting for it to be merged :-\
-> (https://lore.kernel.org/r/20190625100412.11815-1-u.kleine-koenig@pengutronix.de)
-> 
->>> I think at least c) is easy to resolve because
->>> platform_get_irq_optional() isn't that old yet and mechanically
->>> replacing it by platform_get_irq_silent() should be easy and safe.
->>> And this is orthogonal to the discussion if -ENOXIO is a sensible return
->>> value and if it's as easy as it could be to work with errors on irq
->>> lookups.
->>
->> It'd certainly be good to name anything that doesn't correspond to one
->> of the existing semantics for the API (!) something different rather
->> than adding yet another potentially overloaded meaning.
-> 
-> It seems we're (at least) three who agree about this. Here is a patch
-> fixing the name.
+The issue happens during cold boot but only if cold boot happens
+at most several dozen seconds after Chromebook is powered off. For
+longer intervals between power off and power on (cold boot) the issue
+does not reproduce. The unexpected interrupt is sourced from INT3452
+GPIO pin which is used for SD card detect. Investigation relevealed
+that when the interval between power off and power on (cold boot)
+is less than several dozen seconds then values of INT3452 GPIO interrupt
+enable and interrupt pending registers survive power off and power
+on sequence and interrupt for SD card detect pin is enabled and pending
+during probe of SD controller which causes the unexpected IRQ message.
+"Intel Pentium and Celeron Processor N- and J- Series" volume 3 doc
+mentions that GPIO interrupt enable and status registers default
+value is 0x0.
+The fix clears INT3452 GPIO interrupt enabled and interrupt pending
+registers in its probe function.
 
-   I can't say I genrally agree with this patch...
+Fixes: 7981c0015af2 ("pinctrl: intel: Add Intel Sunrisepoint pin controller and GPIO support")
+Signed-off-by: ≈Åukasz Bartosik <lb@semihalf.com>
+---
+ drivers/pinctrl/intel/pinctrl-intel.c | 46 +++++++++++++++------------
+ 1 file changed, 26 insertions(+), 20 deletions(-)
+
+diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+index b6ef1911c1dd..b8282d5f485e 100644
+--- a/drivers/pinctrl/intel/pinctrl-intel.c
++++ b/drivers/pinctrl/intel/pinctrl-intel.c
+@@ -1428,6 +1428,26 @@ static int intel_pinctrl_pm_init(struct intel_pinctrl *pctrl)
+ 	return 0;
+ }
  
-[...]
-> diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
-> index 7c96f169d274..6d495f15f717 100644
-> --- a/include/linux/platform_device.h
-> +++ b/include/linux/platform_device.h
-> @@ -69,7 +69,14 @@ extern void __iomem *
->  devm_platform_ioremap_resource_byname(struct platform_device *pdev,
->  				      const char *name);
->  extern int platform_get_irq(struct platform_device *, unsigned int);
-> -extern int platform_get_irq_optional(struct platform_device *, unsigned int);
-> +extern int platform_get_irq_silent(struct platform_device *, unsigned int);
-> +
-> +/*
-> + * platform_get_irq_optional was recently renamed to platform_get_irq_silent.
-> + * Fixup users to not break patches that were created before the rename.
-> + */
-> +#define platform_get_irq_optional(pdev, index) platform_get_irq_silent(pdev, index)
-> +
++static void intel_gpio_irq_init(struct intel_pinctrl *pctrl)
++{
++	size_t i;
++
++	for (i = 0; i < pctrl->ncommunities; i++) {
++		const struct intel_community *community;
++		void __iomem *base;
++		unsigned int gpp;
++
++		community = &pctrl->communities[i];
++		base = community->regs;
++
++		for (gpp = 0; gpp < community->ngpps; gpp++) {
++			/* Mask and clear all interrupts */
++			writel(0, base + community->ie_offset + gpp * 4);
++			writel(0xffff, base + community->is_offset + gpp * 4);
++		}
++	}
++}
++
+ static int intel_pinctrl_probe(struct platform_device *pdev,
+ 			       const struct intel_pinctrl_soc_data *soc_data)
+ {
+@@ -1488,6 +1508,12 @@ static int intel_pinctrl_probe(struct platform_device *pdev,
+ 			return ret;
+ 	}
+ 
++	/*
++	 * Make sure the interrupt lines are in a proper state before
++	 * further configuration
++	 */
++	intel_gpio_irq_init(pctrl);
++
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq < 0)
+ 		return irq;
+@@ -1640,26 +1666,6 @@ int intel_pinctrl_suspend_noirq(struct device *dev)
+ }
+ EXPORT_SYMBOL_GPL(intel_pinctrl_suspend_noirq);
+ 
+-static void intel_gpio_irq_init(struct intel_pinctrl *pctrl)
+-{
+-	size_t i;
+-
+-	for (i = 0; i < pctrl->ncommunities; i++) {
+-		const struct intel_community *community;
+-		void __iomem *base;
+-		unsigned int gpp;
+-
+-		community = &pctrl->communities[i];
+-		base = community->regs;
+-
+-		for (gpp = 0; gpp < community->ngpps; gpp++) {
+-			/* Mask and clear all interrupts */
+-			writel(0, base + community->ie_offset + gpp * 4);
+-			writel(0xffff, base + community->is_offset + gpp * 4);
+-		}
+-	}
+-}
+-
+ static bool intel_gpio_update_reg(void __iomem *reg, u32 mask, u32 value)
+ {
+ 	u32 curr, updated;
+-- 
+2.34.1.703.g22d0c6ccf7-goog
 
-   Yeah, why bother fixing if it compiles anyway?
-   I think an inline wrapper with an indication to gcc that the function is deprecated
-(I just forgot how it should look) would be better instead...
-
->  extern int platform_irq_count(struct platform_device *);
->  extern int devm_platform_get_irqs_affinity(struct platform_device *dev,
->  					   struct irq_affinity *affd,
-[...]
-MBR, Sergey
