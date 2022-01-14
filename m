@@ -2,124 +2,200 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E94E148E949
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jan 2022 12:36:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DF16C48EA4C
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jan 2022 14:06:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234676AbiANLgQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Jan 2022 06:36:16 -0500
-Received: from 113.196.136.162.ll.static.sparqnet.net ([113.196.136.162]:37638
-        "EHLO mg.sunplus.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S234586AbiANLgQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jan 2022 06:36:16 -0500
-X-MailGates: (flag:3,DYNAMIC,RELAY,NOHOST:PASS)(compute_score:DELIVER,40
-        ,3)
-Received: from 172.17.9.202
-        by mg01.sunplus.com with MailGates ESMTP Server V5.0(23040:0:AUTH_RELAY)
-        (envelope-from <wells.lu@sunplus.com>); Fri, 14 Jan 2022 19:36:31 +0800 (CST)
-Received: from sphcmbx02.sunplus.com.tw (172.17.9.112) by
- sphcmbx01.sunplus.com.tw (172.17.9.202) with Microsoft SMTP Server (TLS) id
- 15.0.1497.26; Fri, 14 Jan 2022 19:36:31 +0800
-Received: from sphcmbx02.sunplus.com.tw ([fe80::fd3d:ad1a:de2a:18bd]) by
- sphcmbx02.sunplus.com.tw ([fe80::fd3d:ad1a:de2a:18bd%14]) with mapi id
- 15.00.1497.026; Fri, 14 Jan 2022 19:36:31 +0800
-From:   =?utf-8?B?V2VsbHMgTHUg5ZGC6Iqz6aiw?= <wells.lu@sunplus.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Wells Lu <wellslutw@gmail.com>,
+        id S241168AbiANNGL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Jan 2022 08:06:11 -0500
+Received: from mga14.intel.com ([192.55.52.115]:42810 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231283AbiANNGK (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 14 Jan 2022 08:06:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1642165570; x=1673701570;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=Eo7EfpdrH3wA8s8pzPgaa2QUgdkyHS+qVWfq0/cogWQ=;
+  b=TUibVCDD1lMQhtQD/MPJ/IlalGJGZ+o9Xn3zE/4aZNHlWoemmz1CZVRX
+   Uc4t32rMHTgl+PhV1LWJQ0p4p254E4BDkqJQMkRfXv0GEajIoUj5R34vJ
+   /n+2IK7yjcjPcgO26PoR/eoUA2DaA/1n2pYGGbC04J1QJrRIuBiqzDgC+
+   QnrkoszTHNKv2IU40h4CW6Y9rz3j74Xihrzb+We+eea89NSSqu2IOaZlQ
+   rugZ+1ZxPwYqBHskwFT/BFUvqzcIS6ods5Z4T04uCC+YOqrc9jHfq2wwf
+   aYhMhurAiIlcAzhT/3ykGMl7xRYzGMDf2mvO2W+/DpGIb/QmVsOmxRHyS
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10226"; a="244441648"
+X-IronPort-AV: E=Sophos;i="5.88,288,1635231600"; 
+   d="scan'208";a="244441648"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2022 05:06:09 -0800
+X-IronPort-AV: E=Sophos;i="5.88,288,1635231600"; 
+   d="scan'208";a="530231083"
+Received: from smile.fi.intel.com ([10.237.72.61])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2022 05:05:53 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1n8MFy-00AcJJ-9G;
+        Fri, 14 Jan 2022 15:04:38 +0200
+Date:   Fri, 14 Jan 2022 15:04:38 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Mark Brown <broonie@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        KVM list <kvm@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, linux-iio@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Guenter Roeck <groeck@chromium.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        linux-phy@lists.infradead.org, Jiri Slaby <jirislaby@kernel.org>,
+        openipmi-developer@lists.sourceforge.net,
+        "David S. Miller" <davem@davemloft.net>,
+        Khuong Dinh <khuong@os.amperecomputing.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Robert Richter <rric@kernel.org>,
+        Saravanan Sekar <sravanhome@gmail.com>,
+        Corey Minyard <minyard@acm.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Peter Korsgaard <peter@korsgaard.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Sebastian Reichel <sre@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        platform-driver-x86@vger.kernel.org,
+        Benson Leung <bleung@chromium.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-edac@vger.kernel.org, Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Mun Yew Tham <mun.yew.tham@intel.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "dvorkin@tibbo.com" <dvorkin@tibbo.com>
-Subject: RE: [PATCH v5 2/2] pinctrl: Add driver for Sunplus SP7021
-Thread-Topic: [PATCH v5 2/2] pinctrl: Add driver for Sunplus SP7021
-Thread-Index: AQHX+JsJQRl6kRXEwk+dQHdfPj/+4axC0feAgAMwBYCAFioXgIAEjh2ggAAegACAARLWMP//9D8AgACSwAD//4aTgIAAiKZw
-Date:   Fri, 14 Jan 2022 11:36:31 +0000
-Message-ID: <cbfe10d1243f4d6bb37cf936f5926351@sphcmbx02.sunplus.com.tw>
-References: <1640331779-18277-1-git-send-email-wellslutw@gmail.com>
- <1640331779-18277-3-git-send-email-wellslutw@gmail.com>
- <CAHp75Vd3iMM+NteJXP_mMAyw5momk3xzp1Y2GX-YJZfFSAwo9A@mail.gmail.com>
- <f87b21407ed44630a86b2661deab4a58@sphcmbx02.sunplus.com.tw>
- <CAHp75VcPB_K6RD8tnMarwGCeaOKcQ_knxvKEW9WNn_4ce41szw@mail.gmail.com>
- <cf53f5dc57e342078ec14a771ba639ca@sphcmbx02.sunplus.com.tw>
- <CAHp75Vf0=Sf8sGtgCo7bMjVFGYDcJOasLqdSHTnQ0YPgSbrr2g@mail.gmail.com>
- <9e15ccc8ee844f1eab320001bc8bc235@sphcmbx02.sunplus.com.tw>
- <CAHp75VfxtGue7bbMm_MU2GWwWo4aZLW2Pj_U9ocCQmWr6wfGMw@mail.gmail.com>
- <b9c1876c9d0f48a3a8d7e091d47fc069@sphcmbx02.sunplus.com.tw>
- <CAHp75VdTm5T=VGgrqfp+3bLAu4chosirJ2uBeoA5MxvV+FMg_Q@mail.gmail.com>
-In-Reply-To: <CAHp75VdTm5T=VGgrqfp+3bLAu4chosirJ2uBeoA5MxvV+FMg_Q@mail.gmail.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [172.25.108.39]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Cornelia Huck <cohuck@redhat.com>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Richard Weinberger <richard@nod.at>,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>,
+        linux-mediatek@lists.infradead.org,
+        Brian Norris <computersforpeace@gmail.com>,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH] driver core: platform: Rename
+ platform_get_irq_optional() to platform_get_irq_silent()
+Message-ID: <YeF05vBOzkN+xYCq@smile.fi.intel.com>
+References: <20220110201014.mtajyrfcfznfhyqm@pengutronix.de>
+ <YdyilpjC6rtz6toJ@lunn.ch>
+ <CAMuHMdWK3RKVXRzMASN4HaYfLckdS7rBvSopafq+iPADtGEUzA@mail.gmail.com>
+ <20220112085009.dbasceh3obfok5dc@pengutronix.de>
+ <CAMuHMdWsMGPiQaPS0-PJ_+Mc5VQ37YdLfbHr_aS40kB+SfW-aw@mail.gmail.com>
+ <20220112213121.5ruae5mxwj6t3qiy@pengutronix.de>
+ <Yd9L9SZ+g13iyKab@sirena.org.uk>
+ <20220113110831.wvwbm75hbfysbn2d@pengutronix.de>
+ <YeA7CjOyJFkpuhz/@sirena.org.uk>
+ <20220113194358.xnnbhsoyetihterb@pengutronix.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220113194358.xnnbhsoyetihterb@pengutronix.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-PiAuLi4NCj4gDQo+ID4gPiA+ID4gPiA+ID4gPiA+ICsgICAgICAgYm9vbCAiU3VucGx1cyBTUDcw
-MjEgUGluTXV4IGFuZCBHUElPIGRyaXZlciINCj4gPiA+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4g
-PiA+ID4gPiBXaHkgYm9vbCBhbmQgbm90IHRyaXN0YXRlPw0KPiA+ID4gPiA+ID4gPiA+DQo+ID4g
-PiA+ID4gPiA+ID4gUGluY3RybCBkcml2ZXIgaXMgc2VsZWN0ZWQgYnkgbWFueSBkcml2ZXJzIGlu
-IFNQNzAyMSBwbGF0Zm9ybS4NCj4gPiA+ID4gPiA+ID4gPiBXZSBuZXZlciBidWlsZCBpdCBhcyBh
-IG1vZHVsZSwgYnV0IGJ1aWxkLWluIHRvIGtlcm5lbC4NCj4gPiA+ID4gPiA+ID4gPiBTbyB3ZSB1
-c2UgImJvb2wiLg0KPiA+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ID4gU2hvdWxkIHdlIHNl
-dCBpdCB0byB0cmlzdGF0ZT8NCj4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gWW91IHN0aWxs
-IGhhdmVuJ3QgYW5zd2VyZWQgIndoeSIsIHNvIEkgY2FuJ3QgdGVsbCB5b3UuDQo+ID4gPiA+ID4g
-Pg0KPiA+ID4gPiA+ID4gSSBhbSBwdXp6bGVkIGJlY2F1c2UgSSB0aGluayBJIGhhdmUgYW5zd2Vy
-ZWQgIndoeSIuDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBOb3BlLiA6LSkNCj4gPiA+ID4gPg0KPiA+
-ID4gPiA+ID4gQmVjYXVzZSBQaW5jdHJsIGRyaXZlciBpcyBuZWNlc3NhcnkgZm9yIGFsbCBTUDcw
-MjEtYmFzZWQgcGxhdGZvcm1zLg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gIldoeT8iIFdoeSBpcyBp
-dCBuZWNlc3NhcnkgKHRvIGJlIGJ1aWx0LWluKT8NCj4gPiA+ID4NCj4gPiA+ID4gUGluY3RybCBp
-cyBuZWNlc3NhcnkgdG8gYmUgYnVpbHQtaW4gYmVjYXVzZSBkcml2ZXJzIG9mDQo+ID4gPiA+IGJv
-b3QtZGV2aWNlLCBsaWtlIGVNTUMsIFNEIGNhcmQsIE5BTkQgZmxhc2gsIGFuZCBOT1IgZmxhc2gg
-ZHJpdmVycywgbmVlZCBpdC4NCj4gPiA+ID4NCj4gPiA+ID4gU1A3MDIxIHN1cHBvcnRzIGJvb3Rp
-bmcgZnJvbSBlTU1DLCBTRCBjYXJkLCBOQU5EIGZsYXNoIGFuZCBOT1INCj4gPiA+ID4gZmxhc2gg
-ZGV2aWNlcy4gVGhlaXIgZHJpdmVycyBuZWVkIFBpbmN0cmwgZHJpdmVyIHByb2JlcyBpbiBhZHZh
-bmNlLg0KPiA+ID4NCj4gPiA+IE9uIHg4NiBwbGF0Zm9ybXMsIGZvciBleGFtcGxlLCBib290aW5n
-IGZyb20gZU1NQyBhbmQgU0QgY2FyZCBkb2VzDQo+ID4gPiBub3QgcmVxdWlyZSBhIHBpbiBjb250
-cm9sIGRyaXZlciB0byBiZSBidWlsdC1pbi4gV2h5IGlzIHRoaXMgcmVxdWlyZW1lbnQgZm9yIFNQ
-DQo+IHBsYXRmb3Jtcz8NCj4gDQo+ID4gQmVjYXVzZSBhbGwgcGlucyBvZiBib290LWRldmljZSBt
-dWx0aXBsZXggd2l0aCBHUElPIHBpbnMuDQo+ID4NCj4gPiBTUDcwMjEgcGxhdGZvcm1zIHN1cHBv
-cnQgbXVsdGkgYm9vdCBkZXZpY2VzLCBpbmNsdWRpbmcgZU1NQywgU0QgY2FyZCwNCj4gPiBTUEkt
-Tk9SIGZsYXNoLCBTUEktTkFORCBmbGFzaC4gRWFjaCBib290IGRldmljZSBoYXMgY29udHJvbC1i
-aXQocykgdG8NCj4gPiBlbmFibGUgaXQuDQo+ID4NCj4gPiBGb3IgZXhhbXBsZSAjMSwgaWYgY29u
-dHJvbC1iaXRzIG9mIFNQSS1OT1IgZmxhc2ggaXMgc2V0IDEsIEdQSU8gODMsDQo+ID4gODQsIDg2
-LCA4NyBhcmUgY29ubmVjdGVkIHRvIFNQSS1OT1IgZmxhc2guDQo+ID4gSWYgY29udHJvbC1iaXRz
-IG9mIFNQSS1OT1IgZmxhc2ggaXMgc2V0IDIsIEdQSU8gNzYsIDc4LCA3OSwgODEgYXJlDQo+ID4g
-Y29ubmVjdGVkIHRvIFNQSS1OT1IgZmxhc2guDQo+ID4gSWYgY29udHJvbC1iaXRzIG9mIFNQSS1O
-T1IgZmxhc2ggaXMgc2V0IDAsIG5vIHBpbiBpcyBjb25uZWN0ZWQgU1BJLU5PUg0KPiA+IGZsYXNo
-Lg0KPiA+DQo+ID4gRm9yIGV4YW1wbGUgIzIsIGlmIGNvbnRyb2wtYml0cyBvZiBlTU1DIGRldmlj
-ZSBpcyBzZXQgMSwgR1BJTyA3MiwgNzMsDQo+ID4gNzQsIDc1LCA3NiwgNzcsIDc4LCA3OSwgODAs
-IDgxIGFyZSBjb25uZWN0ZWQgdG8gZU1NQyBkZXZpY2UuDQo+ID4gSWYgY29udHJvbC1iaXRzIG9m
-IGVNTUMgZGV2aWNlIGlzIHNldCAwLCBubyBwaW4gaXMgY29ubmVjdGVkIGVNTUMNCj4gPiBkZXZp
-Y2UuDQo+ID4NCj4gPiBGb3IgZXhhbXBsZSAjMywgaWYgY29udHJvbC1iaXRzIG9mIFNEQ2FyZCBk
-ZXZpY2UgaXMgc2V0IDEsIEdQSU8gNjUsDQo+ID4gNjYsIDY3LCA2OCwgNjksIDcwIGFyZSBjb25u
-ZWN0ZWQgdG8gU0QgQ2FyZCBkZXZpY2UuDQo+ID4gSWYgY29udHJvbC1iaXRzIG9mIFNEQ2FyZCBk
-ZXZpY2UgaXMgc2V0IDAsIG5vIHBpbiBpcyBjb25uZWN0ZWQgU0RDYXJkDQo+ID4gZGV2aWNlLg0K
-PiA+DQo+ID4gTm90ZSB0aGF0IGFsbCBwaW5zIG11bHRpcGxleCB3aXRoIEdQSU8gcGlucy4NCj4g
-Pg0KPiA+IE5vcm1hbGx5LCBvbmx5IGEgYm9vdC1kZXZpY2UgaXMgZW5hYmxlZC4gQWxsIG90aGVy
-IEdQSU8gcGlucyBhcmUNCj4gPiByZWxlYXNlZCBmb3IgcGVyaXBoZXJhbHMgKGNvbnRyb2xsZWQg
-YnkgZnVsbHktcGlubXV4IE9yIGdyb3VwIHBpbm11eCkNCj4gPiBvciBJTyBwcm9jZXNzb3INCj4g
-DQo+IFRoYW5rcyBmb3IgdGhpcyBkZXRhaWxlZCBwaWN0dXJlIG9mIHRoZSBIVyBjb25maWd1cmF0
-aW9uLg0KPiANCj4gPiBQaW5jdHJsIGRyaXZlciBpcyByZXNwb25zaWJsZSBmb3Igc2V0dXAgdGhl
-IHBpbnMuDQo+ID4gSWYgUGluY3RybCBmYWlscyB0byBwcm9iZSwgYm9vdC1kZXZpY2UgYWxzbyBm
-YWlscyB0byBwcm9iZS4NCj4gDQo+IEJ1dCBoYXZlIHlvdSB0cmllZCB0byBjb21waWxlIGl0IGFz
-IGEgbW9kdWxlIGFuZCBzdXBwbHkgaXQgaW4gdGhlIGluaXRyYW1mcz8NCj4gDQo+IFdoYXQga2Vy
-bmVsIGRvZXMgaW4gdGhpcyBjYXNlIGl0IHRha2VzIGFkZHJlc3Mgb2YgaW5pdHJhbWZzIGZyb20g
-bWVtb3J5IChJIGJlbGlldmUNCj4geW91IGhhdmUgYm9vdGxvYWRlciB0aGF0IGNhcGFibGUgdG8g
-c2V0dXAga2VybmVsLCBpbml0cmFtZnMsIGNvbW1hbmQgbGluZSwgYW5kIGRldmljZQ0KPiB0cmVl
-IGJsb2IgYW5kIHBhc3MgdGhlIGNvbnRyb2wgdG8gdGhlIGtlcm5lbCkgYXQgc29tZSBwb2ludCwg
-bW91bnRzIGl0IGFuZCBwcm9iZXMgdGhlDQo+IG1vZHVsZXMgdGhhdCBhcmUgcmVxdWlyZWQgdG8g
-Z2V0IHlvdXIgYm9vdCBkZXZpY2UgcmVhZHkuDQo+IA0KPiAtLQ0KPiBXaXRoIEJlc3QgUmVnYXJk
-cywNCj4gQW5keSBTaGV2Y2hlbmtvDQoNClllcywgSSdsbCBtb2RpZnkgS2NvbmZpZyBhbmQgTWFr
-ZWZpbGUgdG8gc3VwcG9ydCAiY29tcGlsZSBhcyBtb2R1bGUiLg0KDQpBY3R1YWxseSwgU1A3MDIx
-IHBsYXRmb3JtcyBhbHNvIHN1cHBvcnQgYm9vdGluZyBmcm9tIHRmdHAgYW5kIG5mcyBzZXJ2ZXIu
-DQpJbiB0aGVzZSB0d28gY2FzZXMsIG5vIGJvb3QgZGV2aWNlIGlzIGVuYWJsZWQgaW4gTGludXgg
-a2VybmVsIChidXQgDQpib290IGRldmljZSBpcyBlbmFibGVkIGluIFUtQm9vdCkuIFBpbmN0cmwg
-ZHJpdmVyIGNhbiBiZSBhIG1vZHVsZS4NCg0KDQpUaGFua3MsDQpXZWxscyBMdQ0K
+On Thu, Jan 13, 2022 at 08:43:58PM +0100, Uwe Kleine-König wrote:
+> The subsystems regulator, clk and gpio have the concept of a dummy
+> resource. For regulator, clk and gpio there is a semantic difference
+> between the regular _get() function and the _get_optional() variant.
+> (One might return the dummy resource, the other won't. Unfortunately
+> which one implements which isn't the same for these three.) The
+> difference between platform_get_irq() and platform_get_irq_optional() is
+> only that the former might emit an error message and the later won't.
+> 
+> To prevent people's expectations that there is a semantic difference
+> between these too, rename platform_get_irq_optional() to
+> platform_get_irq_silent() to make the actual difference more obvious.
+> 
+> The #define for the old name can and should be removed once all patches
+> currently in flux still relying on platform_get_irq_optional() are
+> fixed.
+> 
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> ---
+> Hello,
+> 
+> On Thu, Jan 13, 2022 at 02:45:30PM +0000, Mark Brown wrote:
+> > On Thu, Jan 13, 2022 at 12:08:31PM +0100, Uwe Kleine-König wrote:
+> > 
+> > > This is all very unfortunate. In my eyes b) is the most sensible
+> > > sense, but the past showed that we don't agree here. (The most annoying
+> > > part of regulator_get is the warning that is emitted that regularily
+> > > makes customers ask what happens here and if this is fixable.)
+> > 
+> > Fortunately it can be fixed, and it's safer to clearly specify things.
+> > The prints are there because when the description is wrong enough to
+> > cause things to blow up we can fail to boot or run messily and
+> > forgetting to describe some supplies (or typoing so they haven't done
+> > that) and people were having a hard time figuring out what might've
+> > happened.
+> 
+> Yes, that's right. I sent a patch for such a warning in 2019 and pinged
+> occationally. Still waiting for it to be merged :-\
+> (https://lore.kernel.org/r/20190625100412.11815-1-u.kleine-koenig@pengutronix.de)
+> 
+> > > I think at least c) is easy to resolve because
+> > > platform_get_irq_optional() isn't that old yet and mechanically
+> > > replacing it by platform_get_irq_silent() should be easy and safe.
+> > > And this is orthogonal to the discussion if -ENOXIO is a sensible return
+> > > value and if it's as easy as it could be to work with errors on irq
+> > > lookups.
+> > 
+> > It'd certainly be good to name anything that doesn't correspond to one
+> > of the existing semantics for the API (!) something different rather
+> > than adding yet another potentially overloaded meaning.
+> 
+> It seems we're (at least) three who agree about this. Here is a patch
+> fixing the name.
+
+
+And similar number of people are on the other side.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
