@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 97F5C48EE56
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jan 2022 17:39:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AEC648EE61
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jan 2022 17:39:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243450AbiANQiv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Jan 2022 11:38:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53194 "EHLO
+        id S236249AbiANQj1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Jan 2022 11:39:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235179AbiANQiu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jan 2022 11:38:50 -0500
-Received: from mail-ua1-x935.google.com (mail-ua1-x935.google.com [IPv6:2607:f8b0:4864:20::935])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 961E6C061401
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Jan 2022 08:38:50 -0800 (PST)
-Received: by mail-ua1-x935.google.com with SMTP id c36so17785420uae.13
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Jan 2022 08:38:50 -0800 (PST)
+        with ESMTP id S239330AbiANQjZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jan 2022 11:39:25 -0500
+Received: from mail-ua1-x936.google.com (mail-ua1-x936.google.com [IPv6:2607:f8b0:4864:20::936])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71050C06173E
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Jan 2022 08:39:25 -0800 (PST)
+Received: by mail-ua1-x936.google.com with SMTP id i5so17806673uaq.10
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Jan 2022 08:39:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=kqh5lKYwnkN37kX/95ffH9A9xkW766WBUrIjfUiOtBY=;
-        b=qYb0+aQJEJ0rzV5FWH45IVRX0rF7G6xG4H5zBgLJ5BQ0nYX8VUyDo1exod8NR+G70c
-         uUhCkJ1oPjPsyO7yF5Xh+a2x8aWliDLS7AQahujnGlxHXRypN4/MRZu99b7pyB3Rrg5b
-         eth+QoX5sOzDN8SgD3pxxH44+AK960G12fGA6WBa3UoXqRhf/9TgeD0hNVj1gNnkBMfz
-         8jGFnRU1nbOK5/NmPWgCO/S977btAOFBJy7GsekugUpkWpQqzt5UUUTnBciNQwSuEFMx
-         0qS7i4Vl7yHs4iKnthxTpjs3jdN1aJ2cr1k4+UtrielOfEPtCEM9NVxww1fD9eaeyqIj
-         EFhw==
+        bh=TB9rYYWA3RApYigUmdeDs7Nca9Nz3elgch2NBvZeOg0=;
+        b=j5kYZtWic5x9+6IfULEPREXK9iQOEZYgqqSp7rnA+0/szMDEk1papPfzOyMRUM/gsI
+         Xllf07dgl7ZXTQPAoEcIN8l+DfX/W8W7DYHHjaxIUAkrgQIRdFdeGV5awXOD7kODdh31
+         cnVsTZ8AfcWbnOyXO27A6BOUriLw9nXYpUrf5anxD2NDnvz8PumlTe0iXaiX3CsTTN7v
+         923umi1sTD5OaPdkOis+mJ1urd6AYUMuFK5+GhsMUXECPkpPBbYceX28FYuKle+oDpEe
+         IzsK3ZzkB3Y9ZmE5yZT1oEOqtJ1u6G3rEYSb7EsdHKSpLnB3/6B1/Ksj7ZzXdvm1IkhL
+         uf6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=kqh5lKYwnkN37kX/95ffH9A9xkW766WBUrIjfUiOtBY=;
-        b=L9i8J8TGDCjhlA/oZdkDCpnLk39pxrhMe0ZdPk3atbBJk1zuoys7A8aXtgUZxhcayK
-         XRCfvXetFwty6D5hfr2luaknEvzhugSDhvhJaBcIc4obsWzHGrkzF8tfhhblWzoR1aIx
-         6AIkr9zobYWJMBgVn8wftHguqIzLk8gAB6fV1eugxHVgglfyctQlugHD1tFfHIQAwUSN
-         el6WR6SyQWzwf91c69bYFr7JoCZBg6xQtbNdii5j6bFrKogL1nIZrbdblavPqvIurIVM
-         Go+GKcAuuALeljblFpz8Z67V0tpaf2hjNOtJqiT9koG6J/V98DKyZIiMvqhiGTM/v0dL
-         Jfdw==
-X-Gm-Message-State: AOAM533sscoDfFDiETI4tems/DZn4o7ZkZTS/VncrH9G2mO5XFDL8pJW
-        AWpyD0/wt/Ot64A+fzpZ+/3h8Qe0p55uCPR1uB5Fog==
-X-Google-Smtp-Source: ABdhPJyAOisMhvKMOns8BJKxp2lPM/5PjFuxHnM4pqpl5scSi2WoU18z/odQ7iI4CCAzffQuqDyyJOPkpKUdMicgwNc=
-X-Received: by 2002:a05:6102:108c:: with SMTP id s12mr4465397vsr.20.1642178329640;
- Fri, 14 Jan 2022 08:38:49 -0800 (PST)
+        bh=TB9rYYWA3RApYigUmdeDs7Nca9Nz3elgch2NBvZeOg0=;
+        b=G7AEjQInGFF6n+hozkaYTcyuO2Zs0kuPrKIJSWi0z6/gPEYrfhJoK289ctltrT8w+n
+         LFdp/TbnmYL70IzLgis7YgsST8Z2YxDmtPUJkjxm/UgpdparNnUTzjmQvXbhM1aNyvUR
+         lFdDuGnbke6maGES8U+CPs+sA5YYnJwDE+0sOL4BHgOaaQynsT18jSwaZGWjDFg6ZemL
+         fVaAU3LFzO5WGFsWjUUuu7nfTCtlYEbRZmMZZ+PoCcGEhx/Ig9pu1NcQg4Plw1wH5ZpB
+         H80+vaQDOR9nsgrW/Ycu9ax+d8RF0T3LD0U93XzRsZCzs8gZTZ7oeR4tif4FGWlnKC4r
+         7jWw==
+X-Gm-Message-State: AOAM530cF6EXOcQK+Y9IibkTwXWRbOMnyi7XHLiIsyaNucvB50iTwJs1
+        pvK0vcVhy/d8sVgTYHrQ4R6kT71nqT6LjSQWgfdSbg==
+X-Google-Smtp-Source: ABdhPJxbgJnPkI9Tq2dgW1Q5XbXJ8e/r8vZnzrtBuMqFg0KMsO4wZ60iX5gYpy2VvwwP+v1QEaq/YykPn3ntOjBBxh8=
+X-Received: by 2002:a05:6102:94c:: with SMTP id a12mr4531319vsi.86.1642178364582;
+ Fri, 14 Jan 2022 08:39:24 -0800 (PST)
 MIME-Version: 1.0
-References: <20220111201426.326777-1-krzysztof.kozlowski@canonical.com> <20220111201426.326777-2-krzysztof.kozlowski@canonical.com>
-In-Reply-To: <20220111201426.326777-2-krzysztof.kozlowski@canonical.com>
+References: <20220111201426.326777-1-krzysztof.kozlowski@canonical.com> <20220111201722.327219-20-krzysztof.kozlowski@canonical.com>
+In-Reply-To: <20220111201722.327219-20-krzysztof.kozlowski@canonical.com>
 From:   Sam Protsenko <semen.protsenko@linaro.org>
-Date:   Fri, 14 Jan 2022 18:38:37 +0200
-Message-ID: <CAPLW+4k18Gz8-CEX_YjgS9tOxMq8xHk9GaUvfHWnPXkOnkinqw@mail.gmail.com>
-Subject: Re: [PATCH v2 01/28] pinctrl: samsung: drop pin banks references on
- error paths
+Date:   Fri, 14 Jan 2022 18:39:13 +0200
+Message-ID: <CAPLW+4k3Pypn6t-hHVtxg216oj=LMtchdRtsJmKBANN639oRgQ@mail.gmail.com>
+Subject: Re: [PATCH v2 26/28] pinctrl: samsung: add support for Exynos850 and
+ ExynosAutov9 wake-ups
 To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
 Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
         Sylwester Nawrocki <s.nawrocki@samsung.com>,
@@ -61,90 +61,46 @@ Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Marek Szyprowski <m.szyprowski@samsung.com>,
         Chanho Park <chanho61.park@samsung.com>,
-        Alim Akhtar <alim.akhtar@gmail.com>, stable@vger.kernel.org
+        Alim Akhtar <alim.akhtar@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 11 Jan 2022 at 22:15, Krzysztof Kozlowski
+On Tue, 11 Jan 2022 at 22:18, Krzysztof Kozlowski
 <krzysztof.kozlowski@canonical.com> wrote:
 >
-> The driver iterates over its devicetree children with
-> for_each_child_of_node() and stores for later found node pointer.  This
-> has to be put in error paths to avoid leak during re-probing.
+> It seems that newer ARMv8 Exynos SoC like Exynos850 and
+> ExynosAutov9 have differences of their pin controller node capable of
+> external wake-up interrupts:
+> 1. No multiplexed external wake-up interrupt, only direct,
+> 2. More than one pin controller capable of external wake-up interrupts.
 >
-> Fixes: ab663789d697 ("pinctrl: samsung: Match pin banks with their device nodes")
-> Cc: <stable@vger.kernel.org>
+> Add support for dedicated Exynos850 and ExynosAutov9 compatibles.
+>
 > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
 > ---
 
 Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
 
->  drivers/pinctrl/samsung/pinctrl-samsung.c | 30 +++++++++++++++++------
->  1 file changed, 23 insertions(+), 7 deletions(-)
+>  drivers/pinctrl/samsung/pinctrl-exynos.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 >
-> diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/samsung/pinctrl-samsung.c
-> index 8941f658e7f1..b19ebc43d886 100644
-> --- a/drivers/pinctrl/samsung/pinctrl-samsung.c
-> +++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
-> @@ -1002,6 +1002,16 @@ samsung_pinctrl_get_soc_data_for_of_alias(struct platform_device *pdev)
->         return &(of_data->ctrl[id]);
->  }
+> diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c b/drivers/pinctrl/samsung/pinctrl-exynos.c
+> index 0489c899b401..a158d587814e 100644
+> --- a/drivers/pinctrl/samsung/pinctrl-exynos.c
+> +++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
+> @@ -465,6 +465,10 @@ static const struct of_device_id exynos_wkup_irq_ids[] = {
+>                         .data = &exynos4210_wkup_irq_chip },
+>         { .compatible = "samsung,exynos7-wakeup-eint",
+>                         .data = &exynos7_wkup_irq_chip },
+> +       { .compatible = "samsung,exynos850-wakeup-eint",
+> +                       .data = &exynos7_wkup_irq_chip },
+> +       { .compatible = "samsung,exynosautov9-wakeup-eint",
+> +                       .data = &exynos7_wkup_irq_chip },
+>         { }
+>  };
 >
-> +static void samsung_banks_of_node_put(struct samsung_pinctrl_drv_data *d)
-> +{
-> +       struct samsung_pin_bank *bank;
-> +       unsigned int i;
-> +
-> +       bank = d->pin_banks;
-> +       for (i = 0; i < d->nr_banks; ++i, ++bank)
-> +               of_node_put(bank->of_node);
-> +}
-> +
->  /* retrieve the soc specific data */
->  static const struct samsung_pin_ctrl *
->  samsung_pinctrl_get_soc_data(struct samsung_pinctrl_drv_data *d,
-> @@ -1116,19 +1126,19 @@ static int samsung_pinctrl_probe(struct platform_device *pdev)
->         if (ctrl->retention_data) {
->                 drvdata->retention_ctrl = ctrl->retention_data->init(drvdata,
->                                                           ctrl->retention_data);
-> -               if (IS_ERR(drvdata->retention_ctrl))
-> -                       return PTR_ERR(drvdata->retention_ctrl);
-> +               if (IS_ERR(drvdata->retention_ctrl)) {
-> +                       ret = PTR_ERR(drvdata->retention_ctrl);
-> +                       goto err_put_banks;
-> +               }
->         }
->
->         ret = samsung_pinctrl_register(pdev, drvdata);
->         if (ret)
-> -               return ret;
-> +               goto err_put_banks;
->
->         ret = samsung_gpiolib_register(pdev, drvdata);
-> -       if (ret) {
-> -               samsung_pinctrl_unregister(pdev, drvdata);
-> -               return ret;
-> -       }
-> +       if (ret)
-> +               goto err_unregister;
->
->         if (ctrl->eint_gpio_init)
->                 ctrl->eint_gpio_init(drvdata);
-> @@ -1138,6 +1148,12 @@ static int samsung_pinctrl_probe(struct platform_device *pdev)
->         platform_set_drvdata(pdev, drvdata);
->
->         return 0;
-> +
-> +err_unregister:
-> +       samsung_pinctrl_unregister(pdev, drvdata);
-> +err_put_banks:
-> +       samsung_banks_of_node_put(drvdata);
-> +       return ret;
->  }
->
->  /*
 > --
 > 2.32.0
 >
