@@ -2,63 +2,149 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1789548EE38
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jan 2022 17:35:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 97F5C48EE56
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jan 2022 17:39:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229697AbiANQfQ convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Fri, 14 Jan 2022 11:35:16 -0500
-Received: from mail-4018.proton.ch ([185.70.40.18]:49902 "EHLO
-        mail-4018.proton.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243399AbiANQfP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jan 2022 11:35:15 -0500
-Date:   Fri, 14 Jan 2022 16:35:10 +0000
-Authentication-Results: mail-4018.proton.ch; dkim=none
-To:     conor.dooley@microchip.com
-From:   conor dooley <mail@conchuod.ie>
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        robh+dt@kernel.org, jassisinghbrar@gmail.com,
-        paul.walmsley@sifive.com, palmer@dabbelt.com,
-        aou@eecs.berkeley.edu, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, broonie@kernel.org,
-        gregkh@linuxfoundation.org, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-crypto@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
-        krzysztof.kozlowski@canonical.com, geert@linux-m68k.org,
-        bin.meng@windriver.com, heiko@sntech.de, lewis.hanly@microchip.com,
-        daire.mcnamara@microchip.com, ivan.griffin@microchip.com,
-        atishp@rivosinc.com
-Reply-To: conor dooley <mail@conchuod.ie>
-Subject: Re: [PATCH v3 14/15] riscv: dts: microchip: add new peripherals to icicle kit device tree
-Message-ID: <6vH-XrwcUvrBsf_iYIhoEE2BQluly7BTbPn097cV0fh2zo4xKmjsmf8__RoEQWL4XWXOddP8K9kPwpsqbHHPTqhrZbpQw4pl7DXp88MlQqI=@conchuod.ie>
-In-Reply-To: <20220114151727.2319915-15-conor.dooley@microchip.com>
-References: <20220114151727.2319915-1-conor.dooley@microchip.com> <20220114151727.2319915-15-conor.dooley@microchip.com>
+        id S243450AbiANQiv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Jan 2022 11:38:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53194 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235179AbiANQiu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jan 2022 11:38:50 -0500
+Received: from mail-ua1-x935.google.com (mail-ua1-x935.google.com [IPv6:2607:f8b0:4864:20::935])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 961E6C061401
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Jan 2022 08:38:50 -0800 (PST)
+Received: by mail-ua1-x935.google.com with SMTP id c36so17785420uae.13
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Jan 2022 08:38:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kqh5lKYwnkN37kX/95ffH9A9xkW766WBUrIjfUiOtBY=;
+        b=qYb0+aQJEJ0rzV5FWH45IVRX0rF7G6xG4H5zBgLJ5BQ0nYX8VUyDo1exod8NR+G70c
+         uUhCkJ1oPjPsyO7yF5Xh+a2x8aWliDLS7AQahujnGlxHXRypN4/MRZu99b7pyB3Rrg5b
+         eth+QoX5sOzDN8SgD3pxxH44+AK960G12fGA6WBa3UoXqRhf/9TgeD0hNVj1gNnkBMfz
+         8jGFnRU1nbOK5/NmPWgCO/S977btAOFBJy7GsekugUpkWpQqzt5UUUTnBciNQwSuEFMx
+         0qS7i4Vl7yHs4iKnthxTpjs3jdN1aJ2cr1k4+UtrielOfEPtCEM9NVxww1fD9eaeyqIj
+         EFhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kqh5lKYwnkN37kX/95ffH9A9xkW766WBUrIjfUiOtBY=;
+        b=L9i8J8TGDCjhlA/oZdkDCpnLk39pxrhMe0ZdPk3atbBJk1zuoys7A8aXtgUZxhcayK
+         XRCfvXetFwty6D5hfr2luaknEvzhugSDhvhJaBcIc4obsWzHGrkzF8tfhhblWzoR1aIx
+         6AIkr9zobYWJMBgVn8wftHguqIzLk8gAB6fV1eugxHVgglfyctQlugHD1tFfHIQAwUSN
+         el6WR6SyQWzwf91c69bYFr7JoCZBg6xQtbNdii5j6bFrKogL1nIZrbdblavPqvIurIVM
+         Go+GKcAuuALeljblFpz8Z67V0tpaf2hjNOtJqiT9koG6J/V98DKyZIiMvqhiGTM/v0dL
+         Jfdw==
+X-Gm-Message-State: AOAM533sscoDfFDiETI4tems/DZn4o7ZkZTS/VncrH9G2mO5XFDL8pJW
+        AWpyD0/wt/Ot64A+fzpZ+/3h8Qe0p55uCPR1uB5Fog==
+X-Google-Smtp-Source: ABdhPJyAOisMhvKMOns8BJKxp2lPM/5PjFuxHnM4pqpl5scSi2WoU18z/odQ7iI4CCAzffQuqDyyJOPkpKUdMicgwNc=
+X-Received: by 2002:a05:6102:108c:: with SMTP id s12mr4465397vsr.20.1642178329640;
+ Fri, 14 Jan 2022 08:38:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.0 required=10.0 tests=ALL_TRUSTED shortcircuit=no
-        autolearn=disabled version=3.4.4
-X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on
-        mailout.protonmail.ch
+References: <20220111201426.326777-1-krzysztof.kozlowski@canonical.com> <20220111201426.326777-2-krzysztof.kozlowski@canonical.com>
+In-Reply-To: <20220111201426.326777-2-krzysztof.kozlowski@canonical.com>
+From:   Sam Protsenko <semen.protsenko@linaro.org>
+Date:   Fri, 14 Jan 2022 18:38:37 +0200
+Message-ID: <CAPLW+4k18Gz8-CEX_YjgS9tOxMq8xHk9GaUvfHWnPXkOnkinqw@mail.gmail.com>
+Subject: Re: [PATCH v2 01/28] pinctrl: samsung: drop pin banks references on
+ error paths
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Chanho Park <chanho61.park@samsung.com>,
+        Alim Akhtar <alim.akhtar@gmail.com>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> From: Conor Dooley <conor.dooley@microchip.com>
+On Tue, 11 Jan 2022 at 22:15, Krzysztof Kozlowski
+<krzysztof.kozlowski@canonical.com> wrote:
 >
-> Add new peripherals to the MPFS, and enable them in the Icicle kit
-> device tree:
+> The driver iterates over its devicetree children with
+> for_each_child_of_node() and stores for later found node pointer.  This
+> has to be put in error paths to avoid leak during re-probing.
 >
-> 2x SPI, QSPI, 3x GPIO, 2x I2C, Real Time Counter, PCIE controller,
-> USB host & system controller.
->
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> Fixes: ab663789d697 ("pinctrl: samsung: Match pin banks with their device nodes")
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
 > ---
->  .../microchip/microchip-mpfs-icicle-kit.dts   |  53 ++++++
->  .../boot/dts/microchip/microchip-mpfs.dtsi    | 168 ++++++++++++++++++
->  2 files changed, 221 insertions(+)
+
+Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
+
+>  drivers/pinctrl/samsung/pinctrl-samsung.c | 30 +++++++++++++++++------
+>  1 file changed, 23 insertions(+), 7 deletions(-)
 >
-realised i forgot to run checkpatch, will fix the trailing whitespace
+> diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/samsung/pinctrl-samsung.c
+> index 8941f658e7f1..b19ebc43d886 100644
+> --- a/drivers/pinctrl/samsung/pinctrl-samsung.c
+> +++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
+> @@ -1002,6 +1002,16 @@ samsung_pinctrl_get_soc_data_for_of_alias(struct platform_device *pdev)
+>         return &(of_data->ctrl[id]);
+>  }
+>
+> +static void samsung_banks_of_node_put(struct samsung_pinctrl_drv_data *d)
+> +{
+> +       struct samsung_pin_bank *bank;
+> +       unsigned int i;
+> +
+> +       bank = d->pin_banks;
+> +       for (i = 0; i < d->nr_banks; ++i, ++bank)
+> +               of_node_put(bank->of_node);
+> +}
+> +
+>  /* retrieve the soc specific data */
+>  static const struct samsung_pin_ctrl *
+>  samsung_pinctrl_get_soc_data(struct samsung_pinctrl_drv_data *d,
+> @@ -1116,19 +1126,19 @@ static int samsung_pinctrl_probe(struct platform_device *pdev)
+>         if (ctrl->retention_data) {
+>                 drvdata->retention_ctrl = ctrl->retention_data->init(drvdata,
+>                                                           ctrl->retention_data);
+> -               if (IS_ERR(drvdata->retention_ctrl))
+> -                       return PTR_ERR(drvdata->retention_ctrl);
+> +               if (IS_ERR(drvdata->retention_ctrl)) {
+> +                       ret = PTR_ERR(drvdata->retention_ctrl);
+> +                       goto err_put_banks;
+> +               }
+>         }
+>
+>         ret = samsung_pinctrl_register(pdev, drvdata);
+>         if (ret)
+> -               return ret;
+> +               goto err_put_banks;
+>
+>         ret = samsung_gpiolib_register(pdev, drvdata);
+> -       if (ret) {
+> -               samsung_pinctrl_unregister(pdev, drvdata);
+> -               return ret;
+> -       }
+> +       if (ret)
+> +               goto err_unregister;
+>
+>         if (ctrl->eint_gpio_init)
+>                 ctrl->eint_gpio_init(drvdata);
+> @@ -1138,6 +1148,12 @@ static int samsung_pinctrl_probe(struct platform_device *pdev)
+>         platform_set_drvdata(pdev, drvdata);
+>
+>         return 0;
+> +
+> +err_unregister:
+> +       samsung_pinctrl_unregister(pdev, drvdata);
+> +err_put_banks:
+> +       samsung_banks_of_node_put(drvdata);
+> +       return ret;
+>  }
+>
+>  /*
+> --
+> 2.32.0
+>
