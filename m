@@ -2,59 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B493648E462
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jan 2022 07:48:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 05F4448E46F
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jan 2022 07:51:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229560AbiANGsc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Jan 2022 01:48:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57548 "EHLO
+        id S235596AbiANGvc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Jan 2022 01:51:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233576AbiANGsc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jan 2022 01:48:32 -0500
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D968C061574;
-        Thu, 13 Jan 2022 22:48:32 -0800 (PST)
-Received: by mail-pl1-x633.google.com with SMTP id p14so12568128plf.3;
-        Thu, 13 Jan 2022 22:48:32 -0800 (PST)
+        with ESMTP id S235613AbiANGvb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jan 2022 01:51:31 -0500
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93E19C061574;
+        Thu, 13 Jan 2022 22:51:31 -0800 (PST)
+Received: by mail-pl1-x630.google.com with SMTP id c3so12536805pls.5;
+        Thu, 13 Jan 2022 22:51:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id;
-        bh=i9LyRM/Cvn/+ZP3AQxRWnhMX0KWeMjk3mtcIWGDqIOY=;
-        b=Yu+SIb7UPWWNf98D86v7vRcE53pixxEAAUzjpQsuI98UZloflGLRvoFkiVzFHocyGU
-         OqLrJmE8XMYqUKsxrMv+/QY2H4zTkj26a5AUVqKkgeBx/kzguZjJzL6zIp+Wok4+YZJW
-         WsmjToMMq371jWtupX73Km4F40GewrZA+MF4VetPFPDXSz6zm+TxV1LydLiXs9ERfCEY
-         /3Rbsh32aHRnVmSgPTiPXk22CrqGXU3JGvZgkKgIvT34bqjMG3IbAS6hH1aOiaPr2IRx
-         hxyOxWGVa1VSy32mSGKhCtKfFP9YmWYK+HJ6fQXfuJoQm4fPL/KWIcX2VENAG4BSpOly
-         dHQg==
+        bh=/FuM/QD+EctsS/kjOLzGFdhAH/fX2Jrazs1qclcw3iw=;
+        b=D+bM9I19GX24QqOi2zLpVE4+xk68Z8mboXS4xh34YEhYfxs2hnr/UDOP7OGHAdqnHf
+         U23s8uJynnbYJ4itaVH9IhQVoC5LDh6w76VoiCTVy3AO7pp+n2VoD6O9DUVjrgO07so/
+         OIdsl0e/auOmdE3v1D6DfuffjFCWj6DT/f+TM80EZ8Hb5cii6qNbpIgokrCB5Se/Lw5W
+         5FwMnz5Lsm6+/hOlmpfO7ClaEwNltTYI/JviWZO4BphoBfNyUfCgX0JnBSoENNSFqRn9
+         uN/D19oVbvP+pX+WctZ2rZqhAbIa9YfNp2FaKulY1WZrRcZUlyYJlD0SQZc1K86fsKNe
+         ZPXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=i9LyRM/Cvn/+ZP3AQxRWnhMX0KWeMjk3mtcIWGDqIOY=;
-        b=iAmPmzLHVDJK1fJe8g588PrsIOtB8l3+vS3QRrm4ttVUjTDJ/grpKKESpuJ0ggHWci
-         fcNCxTgdPChCwp8zezH6ZFMqR1Vr7UI1CSaFeNaXPQVU8f2ezU03+Iirk0wbqxatLqF0
-         mqQ7Recxxi06zgZ5qZ/DEGv6yDk8cOXBHX42quY3qhYqSEtOyojffr/f0wynnaeywRqt
-         36PzgLTKulJUYHPC2n5tcyhiGnBmM2hx6i5BqAerPKDYFaUPdMhl5Z0IV1OoWXWaXj1M
-         jGk8oatRBFsr/RUp4rawfCt90HCBwM6JSZEWB0M7iiggIECdVZ2TA54DWWGKH0PADSs3
-         QcDg==
-X-Gm-Message-State: AOAM532NXlfwNuZ6sUtjIpiXhnsE3rpSFWlbQ7XU1K5GPTvu4Ll4/ZQg
-        gLwb8cU9XRQGyjJummMX06VMJ377LyMQ67uL5vo=
-X-Google-Smtp-Source: ABdhPJxr3Eu7BCOij8hAseKJMFyZ5bBaDFUsQeVAYjhRhQ2HbzVBrf/L7t1Y743sFpvYe3fPkgjLtQ==
-X-Received: by 2002:a17:90a:d901:: with SMTP id c1mr18430192pjv.204.1642142911621;
-        Thu, 13 Jan 2022 22:48:31 -0800 (PST)
+        bh=/FuM/QD+EctsS/kjOLzGFdhAH/fX2Jrazs1qclcw3iw=;
+        b=5WPPah+vrw3e7Nzb6p0gIUSczpYW/qKZg5M8qRv0VR3sm/xcDYLcVMR4ah9mbAg4ss
+         1XKmBZHbWmjbUcRHtJHvI9YZBMS8f/gDKvt+1xg3yJYdTNl6Ax3V8j5jqxXf+marwhNv
+         Vc3tFTmrfZTZgZJnrnlX/JlMfn1spY8FKnMcQnki9WCm9Iq7PDX5Y/EpxcpCFqgIq0tp
+         gtrf3ZQTVZJXZJzc+jmfYJppxRjzFU9xsi9dvrUZlgHTsFrfly0C52DlH+hsqHY3EFHg
+         u7svDDugOKLVEfzth46A+lXIZ3qgbzO4srtgIr+OslSTD0AhycrhQIrT7NL1plPzT/Gh
+         0fjg==
+X-Gm-Message-State: AOAM530WuMRv8RlvPELCsvu5ybaSHn6eWtNNp08jZ1AHQ+CQfMt6h1Cf
+        4TmKW0TJkCttKowQ+pOuBhw=
+X-Google-Smtp-Source: ABdhPJzHNmLpxruW/RVPRtt4U7cfP9PeRVU9Al79sBEOvSgBQAC7iuTKpbviJHpCte6NzNRCX+zWfQ==
+X-Received: by 2002:a17:90a:7786:: with SMTP id v6mr18589187pjk.11.1642143091193;
+        Thu, 13 Jan 2022 22:51:31 -0800 (PST)
 Received: from localhost.localdomain ([159.226.95.43])
-        by smtp.googlemail.com with ESMTPSA id q9sm11679568pjg.1.2022.01.13.22.48.29
+        by smtp.googlemail.com with ESMTPSA id r13sm3718606pga.29.2022.01.13.22.51.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Jan 2022 22:48:31 -0800 (PST)
+        Thu, 13 Jan 2022 22:51:30 -0800 (PST)
 From:   Miaoqian Lin <linmq006@gmail.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Ran Wang <ran.wang_1@nxp.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     linmq006@gmail.com
-Subject: [PATCH] gpio: mpc8xxx: Fix IRQ check in mpc8xxx_probe
-Date:   Fri, 14 Jan 2022 06:48:20 +0000
-Message-Id: <20220114064821.20200-1-linmq006@gmail.com>
+Subject: [PATCH] gpio: idt3243x: Fix IRQ check in idt_gpio_probe
+Date:   Fri, 14 Jan 2022 06:51:24 +0000
+Message-Id: <20220114065125.21208-1-linmq006@gmail.com>
 X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
@@ -69,27 +68,27 @@ And the doc of platform_get_irq() provides a usage example:
 
 Fix the check of return value to catch errors correctly.
 
-Fixes: 76c47d1449fc ("gpio: mpc8xxx: Add ACPI support")
+Fixes: 4195926aedca ("gpio: Add support for IDT 79RC3243x GPIO controller")
 Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
 ---
- drivers/gpio/gpio-mpc8xxx.c | 4 ++--
+ drivers/gpio/gpio-idt3243x.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-index 70d6ae20b1da..01634c8d27b3 100644
---- a/drivers/gpio/gpio-mpc8xxx.c
-+++ b/drivers/gpio/gpio-mpc8xxx.c
-@@ -388,8 +388,8 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 	}
+diff --git a/drivers/gpio/gpio-idt3243x.c b/drivers/gpio/gpio-idt3243x.c
+index 50003ad2e589..08493b05be2d 100644
+--- a/drivers/gpio/gpio-idt3243x.c
++++ b/drivers/gpio/gpio-idt3243x.c
+@@ -164,8 +164,8 @@ static int idt_gpio_probe(struct platform_device *pdev)
+ 			return PTR_ERR(ctrl->pic);
  
- 	mpc8xxx_gc->irqn = platform_get_irq(pdev, 0);
--	if (!mpc8xxx_gc->irqn)
--		return 0;
-+	if (mpc8xxx_gc->irqn < 0)
-+		return mpc8xxx_gc->irqn;
+ 		parent_irq = platform_get_irq(pdev, 0);
+-		if (!parent_irq)
+-			return -EINVAL;
++		if (parent_irq < 0)
++			return parent_irq;
  
- 	mpc8xxx_gc->irq = irq_domain_create_linear(fwnode,
- 						   MPC8XXX_GPIO_PINS,
+ 		girq = &ctrl->gc.irq;
+ 		girq->chip = &idt_gpio_irqchip;
 -- 
 2.17.1
 
