@@ -2,148 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B85748E938
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jan 2022 12:34:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E94E148E949
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jan 2022 12:36:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240732AbiANLe1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Jan 2022 06:34:27 -0500
-Received: from mxout01.lancloud.ru ([45.84.86.81]:56428 "EHLO
-        mxout01.lancloud.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236513AbiANLe0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jan 2022 06:34:26 -0500
-Received: from LanCloud
-DKIM-Filter: OpenDKIM Filter v2.11.0 mxout01.lancloud.ru 0230320DD201
-Received: from LanCloud
-Received: from LanCloud
-Received: from LanCloud
-Subject: Re: [PATCH] driver core: platform: Rename platform_get_irq_optional()
- to platform_get_irq_silent()
-From:   Sergey Shtylyov <s.shtylyov@omp.ru>
-To:     Mark Brown <broonie@kernel.org>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-CC:     Andrew Lunn <andrew@lunn.ch>, Ulf Hansson <ulf.hansson@linaro.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        KVM list <kvm@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        <linux-iio@vger.kernel.org>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        "ALSA Development Mailing List" <alsa-devel@alsa-project.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Guenter Roeck <groeck@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        <linux-phy@lists.infradead.org>, Jiri Slaby <jirislaby@kernel.org>,
-        <openipmi-developer@lists.sourceforge.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Khuong Dinh <khuong@os.amperecomputing.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        Joakim Zhang <qiangqing.zhang@nxp.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        "Bartosz Golaszewski" <brgl@bgdev.pl>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        Robert Richter <rric@kernel.org>,
-        Saravanan Sekar <sravanhome@gmail.com>,
-        Corey Minyard <minyard@acm.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Peter Korsgaard <peter@korsgaard.com>,
-        "William Breathitt Gray" <vilhelm.gray@gmail.com>,
-        Mark Gross <markgross@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "Borislav Petkov" <bp@alien8.de>,
-        Sebastian Reichel <sre@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        <platform-driver-x86@vger.kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        <linux-edac@vger.kernel.org>,
-        Mun Yew Tham <mun.yew.tham@intel.com>,
-        "Eric Auger" <eric.auger@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        id S234676AbiANLgQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Jan 2022 06:36:16 -0500
+Received: from 113.196.136.162.ll.static.sparqnet.net ([113.196.136.162]:37638
+        "EHLO mg.sunplus.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S234586AbiANLgQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jan 2022 06:36:16 -0500
+X-MailGates: (flag:3,DYNAMIC,RELAY,NOHOST:PASS)(compute_score:DELIVER,40
+        ,3)
+Received: from 172.17.9.202
+        by mg01.sunplus.com with MailGates ESMTP Server V5.0(23040:0:AUTH_RELAY)
+        (envelope-from <wells.lu@sunplus.com>); Fri, 14 Jan 2022 19:36:31 +0800 (CST)
+Received: from sphcmbx02.sunplus.com.tw (172.17.9.112) by
+ sphcmbx01.sunplus.com.tw (172.17.9.202) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.26; Fri, 14 Jan 2022 19:36:31 +0800
+Received: from sphcmbx02.sunplus.com.tw ([fe80::fd3d:ad1a:de2a:18bd]) by
+ sphcmbx02.sunplus.com.tw ([fe80::fd3d:ad1a:de2a:18bd%14]) with mapi id
+ 15.00.1497.026; Fri, 14 Jan 2022 19:36:31 +0800
+From:   =?utf-8?B?V2VsbHMgTHUg5ZGC6Iqz6aiw?= <wells.lu@sunplus.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Wells Lu <wellslutw@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        "Linux MMC List" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Richard Weinberger <richard@nod.at>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
-        <linux-mediatek@lists.infradead.org>,
-        "Brian Norris" <computersforpeace@gmail.com>,
-        <netdev@vger.kernel.org>
-References: <20220110201014.mtajyrfcfznfhyqm@pengutronix.de>
- <YdyilpjC6rtz6toJ@lunn.ch>
- <CAMuHMdWK3RKVXRzMASN4HaYfLckdS7rBvSopafq+iPADtGEUzA@mail.gmail.com>
- <20220112085009.dbasceh3obfok5dc@pengutronix.de>
- <CAMuHMdWsMGPiQaPS0-PJ_+Mc5VQ37YdLfbHr_aS40kB+SfW-aw@mail.gmail.com>
- <20220112213121.5ruae5mxwj6t3qiy@pengutronix.de>
- <Yd9L9SZ+g13iyKab@sirena.org.uk>
- <20220113110831.wvwbm75hbfysbn2d@pengutronix.de>
- <YeA7CjOyJFkpuhz/@sirena.org.uk>
- <20220113194358.xnnbhsoyetihterb@pengutronix.de>
- <YeCI47ltlWzjzjYy@sirena.org.uk>
- <1df04d74-8aa2-11f1-54e9-34d0e8f4e58b@omp.ru>
-Organization: Open Mobile Platform
-Message-ID: <fba81d0d-c7e3-394d-5929-1706ac9ef5b7@omp.ru>
-Date:   Fri, 14 Jan 2022 14:34:16 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "dvorkin@tibbo.com" <dvorkin@tibbo.com>
+Subject: RE: [PATCH v5 2/2] pinctrl: Add driver for Sunplus SP7021
+Thread-Topic: [PATCH v5 2/2] pinctrl: Add driver for Sunplus SP7021
+Thread-Index: AQHX+JsJQRl6kRXEwk+dQHdfPj/+4axC0feAgAMwBYCAFioXgIAEjh2ggAAegACAARLWMP//9D8AgACSwAD//4aTgIAAiKZw
+Date:   Fri, 14 Jan 2022 11:36:31 +0000
+Message-ID: <cbfe10d1243f4d6bb37cf936f5926351@sphcmbx02.sunplus.com.tw>
+References: <1640331779-18277-1-git-send-email-wellslutw@gmail.com>
+ <1640331779-18277-3-git-send-email-wellslutw@gmail.com>
+ <CAHp75Vd3iMM+NteJXP_mMAyw5momk3xzp1Y2GX-YJZfFSAwo9A@mail.gmail.com>
+ <f87b21407ed44630a86b2661deab4a58@sphcmbx02.sunplus.com.tw>
+ <CAHp75VcPB_K6RD8tnMarwGCeaOKcQ_knxvKEW9WNn_4ce41szw@mail.gmail.com>
+ <cf53f5dc57e342078ec14a771ba639ca@sphcmbx02.sunplus.com.tw>
+ <CAHp75Vf0=Sf8sGtgCo7bMjVFGYDcJOasLqdSHTnQ0YPgSbrr2g@mail.gmail.com>
+ <9e15ccc8ee844f1eab320001bc8bc235@sphcmbx02.sunplus.com.tw>
+ <CAHp75VfxtGue7bbMm_MU2GWwWo4aZLW2Pj_U9ocCQmWr6wfGMw@mail.gmail.com>
+ <b9c1876c9d0f48a3a8d7e091d47fc069@sphcmbx02.sunplus.com.tw>
+ <CAHp75VdTm5T=VGgrqfp+3bLAu4chosirJ2uBeoA5MxvV+FMg_Q@mail.gmail.com>
+In-Reply-To: <CAHp75VdTm5T=VGgrqfp+3bLAu4chosirJ2uBeoA5MxvV+FMg_Q@mail.gmail.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [172.25.108.39]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <1df04d74-8aa2-11f1-54e9-34d0e8f4e58b@omp.ru>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [192.168.11.198]
-X-ClientProxiedBy: LFEXT01.lancloud.ru (fd00:f066::141) To
- LFEX1907.lancloud.ru (fd00:f066::207)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 1/13/22 11:57 PM, Sergey Shtylyov wrote:
-
->>> The subsystems regulator, clk and gpio have the concept of a dummy
->>> resource. For regulator, clk and gpio there is a semantic difference
->>> between the regular _get() function and the _get_optional() variant.
->>> (One might return the dummy resource, the other won't. Unfortunately
->>> which one implements which isn't the same for these three.) The
->>> difference between platform_get_irq() and platform_get_irq_optional() is
->>> only that the former might emit an error message and the later won't.
-> 
->    This is only a current difference but I'm still going to return 0 ISO
-> -ENXIO from latform_get_irq_optional(), no way I'd leave that -ENXIO there
-
-   platform.
-
-> alone... :-)
-> 
->> Reviewed-by: Mark Brown <broonie@kernel.org>
-> 
->    Hm... I'm seeing a tag bit not seeing the patch itself...
-
-   Grr, my mail server tossed it into the spam folder... :-(
-
-MBR, Sergey
+PiAuLi4NCj4gDQo+ID4gPiA+ID4gPiA+ID4gPiA+ICsgICAgICAgYm9vbCAiU3VucGx1cyBTUDcw
+MjEgUGluTXV4IGFuZCBHUElPIGRyaXZlciINCj4gPiA+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4g
+PiA+ID4gPiBXaHkgYm9vbCBhbmQgbm90IHRyaXN0YXRlPw0KPiA+ID4gPiA+ID4gPiA+DQo+ID4g
+PiA+ID4gPiA+ID4gUGluY3RybCBkcml2ZXIgaXMgc2VsZWN0ZWQgYnkgbWFueSBkcml2ZXJzIGlu
+IFNQNzAyMSBwbGF0Zm9ybS4NCj4gPiA+ID4gPiA+ID4gPiBXZSBuZXZlciBidWlsZCBpdCBhcyBh
+IG1vZHVsZSwgYnV0IGJ1aWxkLWluIHRvIGtlcm5lbC4NCj4gPiA+ID4gPiA+ID4gPiBTbyB3ZSB1
+c2UgImJvb2wiLg0KPiA+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ID4gU2hvdWxkIHdlIHNl
+dCBpdCB0byB0cmlzdGF0ZT8NCj4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gWW91IHN0aWxs
+IGhhdmVuJ3QgYW5zd2VyZWQgIndoeSIsIHNvIEkgY2FuJ3QgdGVsbCB5b3UuDQo+ID4gPiA+ID4g
+Pg0KPiA+ID4gPiA+ID4gSSBhbSBwdXp6bGVkIGJlY2F1c2UgSSB0aGluayBJIGhhdmUgYW5zd2Vy
+ZWQgIndoeSIuDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBOb3BlLiA6LSkNCj4gPiA+ID4gPg0KPiA+
+ID4gPiA+ID4gQmVjYXVzZSBQaW5jdHJsIGRyaXZlciBpcyBuZWNlc3NhcnkgZm9yIGFsbCBTUDcw
+MjEtYmFzZWQgcGxhdGZvcm1zLg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gIldoeT8iIFdoeSBpcyBp
+dCBuZWNlc3NhcnkgKHRvIGJlIGJ1aWx0LWluKT8NCj4gPiA+ID4NCj4gPiA+ID4gUGluY3RybCBp
+cyBuZWNlc3NhcnkgdG8gYmUgYnVpbHQtaW4gYmVjYXVzZSBkcml2ZXJzIG9mDQo+ID4gPiA+IGJv
+b3QtZGV2aWNlLCBsaWtlIGVNTUMsIFNEIGNhcmQsIE5BTkQgZmxhc2gsIGFuZCBOT1IgZmxhc2gg
+ZHJpdmVycywgbmVlZCBpdC4NCj4gPiA+ID4NCj4gPiA+ID4gU1A3MDIxIHN1cHBvcnRzIGJvb3Rp
+bmcgZnJvbSBlTU1DLCBTRCBjYXJkLCBOQU5EIGZsYXNoIGFuZCBOT1INCj4gPiA+ID4gZmxhc2gg
+ZGV2aWNlcy4gVGhlaXIgZHJpdmVycyBuZWVkIFBpbmN0cmwgZHJpdmVyIHByb2JlcyBpbiBhZHZh
+bmNlLg0KPiA+ID4NCj4gPiA+IE9uIHg4NiBwbGF0Zm9ybXMsIGZvciBleGFtcGxlLCBib290aW5n
+IGZyb20gZU1NQyBhbmQgU0QgY2FyZCBkb2VzDQo+ID4gPiBub3QgcmVxdWlyZSBhIHBpbiBjb250
+cm9sIGRyaXZlciB0byBiZSBidWlsdC1pbi4gV2h5IGlzIHRoaXMgcmVxdWlyZW1lbnQgZm9yIFNQ
+DQo+IHBsYXRmb3Jtcz8NCj4gDQo+ID4gQmVjYXVzZSBhbGwgcGlucyBvZiBib290LWRldmljZSBt
+dWx0aXBsZXggd2l0aCBHUElPIHBpbnMuDQo+ID4NCj4gPiBTUDcwMjEgcGxhdGZvcm1zIHN1cHBv
+cnQgbXVsdGkgYm9vdCBkZXZpY2VzLCBpbmNsdWRpbmcgZU1NQywgU0QgY2FyZCwNCj4gPiBTUEkt
+Tk9SIGZsYXNoLCBTUEktTkFORCBmbGFzaC4gRWFjaCBib290IGRldmljZSBoYXMgY29udHJvbC1i
+aXQocykgdG8NCj4gPiBlbmFibGUgaXQuDQo+ID4NCj4gPiBGb3IgZXhhbXBsZSAjMSwgaWYgY29u
+dHJvbC1iaXRzIG9mIFNQSS1OT1IgZmxhc2ggaXMgc2V0IDEsIEdQSU8gODMsDQo+ID4gODQsIDg2
+LCA4NyBhcmUgY29ubmVjdGVkIHRvIFNQSS1OT1IgZmxhc2guDQo+ID4gSWYgY29udHJvbC1iaXRz
+IG9mIFNQSS1OT1IgZmxhc2ggaXMgc2V0IDIsIEdQSU8gNzYsIDc4LCA3OSwgODEgYXJlDQo+ID4g
+Y29ubmVjdGVkIHRvIFNQSS1OT1IgZmxhc2guDQo+ID4gSWYgY29udHJvbC1iaXRzIG9mIFNQSS1O
+T1IgZmxhc2ggaXMgc2V0IDAsIG5vIHBpbiBpcyBjb25uZWN0ZWQgU1BJLU5PUg0KPiA+IGZsYXNo
+Lg0KPiA+DQo+ID4gRm9yIGV4YW1wbGUgIzIsIGlmIGNvbnRyb2wtYml0cyBvZiBlTU1DIGRldmlj
+ZSBpcyBzZXQgMSwgR1BJTyA3MiwgNzMsDQo+ID4gNzQsIDc1LCA3NiwgNzcsIDc4LCA3OSwgODAs
+IDgxIGFyZSBjb25uZWN0ZWQgdG8gZU1NQyBkZXZpY2UuDQo+ID4gSWYgY29udHJvbC1iaXRzIG9m
+IGVNTUMgZGV2aWNlIGlzIHNldCAwLCBubyBwaW4gaXMgY29ubmVjdGVkIGVNTUMNCj4gPiBkZXZp
+Y2UuDQo+ID4NCj4gPiBGb3IgZXhhbXBsZSAjMywgaWYgY29udHJvbC1iaXRzIG9mIFNEQ2FyZCBk
+ZXZpY2UgaXMgc2V0IDEsIEdQSU8gNjUsDQo+ID4gNjYsIDY3LCA2OCwgNjksIDcwIGFyZSBjb25u
+ZWN0ZWQgdG8gU0QgQ2FyZCBkZXZpY2UuDQo+ID4gSWYgY29udHJvbC1iaXRzIG9mIFNEQ2FyZCBk
+ZXZpY2UgaXMgc2V0IDAsIG5vIHBpbiBpcyBjb25uZWN0ZWQgU0RDYXJkDQo+ID4gZGV2aWNlLg0K
+PiA+DQo+ID4gTm90ZSB0aGF0IGFsbCBwaW5zIG11bHRpcGxleCB3aXRoIEdQSU8gcGlucy4NCj4g
+Pg0KPiA+IE5vcm1hbGx5LCBvbmx5IGEgYm9vdC1kZXZpY2UgaXMgZW5hYmxlZC4gQWxsIG90aGVy
+IEdQSU8gcGlucyBhcmUNCj4gPiByZWxlYXNlZCBmb3IgcGVyaXBoZXJhbHMgKGNvbnRyb2xsZWQg
+YnkgZnVsbHktcGlubXV4IE9yIGdyb3VwIHBpbm11eCkNCj4gPiBvciBJTyBwcm9jZXNzb3INCj4g
+DQo+IFRoYW5rcyBmb3IgdGhpcyBkZXRhaWxlZCBwaWN0dXJlIG9mIHRoZSBIVyBjb25maWd1cmF0
+aW9uLg0KPiANCj4gPiBQaW5jdHJsIGRyaXZlciBpcyByZXNwb25zaWJsZSBmb3Igc2V0dXAgdGhl
+IHBpbnMuDQo+ID4gSWYgUGluY3RybCBmYWlscyB0byBwcm9iZSwgYm9vdC1kZXZpY2UgYWxzbyBm
+YWlscyB0byBwcm9iZS4NCj4gDQo+IEJ1dCBoYXZlIHlvdSB0cmllZCB0byBjb21waWxlIGl0IGFz
+IGEgbW9kdWxlIGFuZCBzdXBwbHkgaXQgaW4gdGhlIGluaXRyYW1mcz8NCj4gDQo+IFdoYXQga2Vy
+bmVsIGRvZXMgaW4gdGhpcyBjYXNlIGl0IHRha2VzIGFkZHJlc3Mgb2YgaW5pdHJhbWZzIGZyb20g
+bWVtb3J5IChJIGJlbGlldmUNCj4geW91IGhhdmUgYm9vdGxvYWRlciB0aGF0IGNhcGFibGUgdG8g
+c2V0dXAga2VybmVsLCBpbml0cmFtZnMsIGNvbW1hbmQgbGluZSwgYW5kIGRldmljZQ0KPiB0cmVl
+IGJsb2IgYW5kIHBhc3MgdGhlIGNvbnRyb2wgdG8gdGhlIGtlcm5lbCkgYXQgc29tZSBwb2ludCwg
+bW91bnRzIGl0IGFuZCBwcm9iZXMgdGhlDQo+IG1vZHVsZXMgdGhhdCBhcmUgcmVxdWlyZWQgdG8g
+Z2V0IHlvdXIgYm9vdCBkZXZpY2UgcmVhZHkuDQo+IA0KPiAtLQ0KPiBXaXRoIEJlc3QgUmVnYXJk
+cywNCj4gQW5keSBTaGV2Y2hlbmtvDQoNClllcywgSSdsbCBtb2RpZnkgS2NvbmZpZyBhbmQgTWFr
+ZWZpbGUgdG8gc3VwcG9ydCAiY29tcGlsZSBhcyBtb2R1bGUiLg0KDQpBY3R1YWxseSwgU1A3MDIx
+IHBsYXRmb3JtcyBhbHNvIHN1cHBvcnQgYm9vdGluZyBmcm9tIHRmdHAgYW5kIG5mcyBzZXJ2ZXIu
+DQpJbiB0aGVzZSB0d28gY2FzZXMsIG5vIGJvb3QgZGV2aWNlIGlzIGVuYWJsZWQgaW4gTGludXgg
+a2VybmVsIChidXQgDQpib290IGRldmljZSBpcyBlbmFibGVkIGluIFUtQm9vdCkuIFBpbmN0cmwg
+ZHJpdmVyIGNhbiBiZSBhIG1vZHVsZS4NCg0KDQpUaGFua3MsDQpXZWxscyBMdQ0K
