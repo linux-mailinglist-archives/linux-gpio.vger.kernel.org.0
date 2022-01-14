@@ -2,118 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C7EF48EFFC
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jan 2022 19:34:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 06E2348F019
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jan 2022 19:46:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239532AbiANSeb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Jan 2022 13:34:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51118 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236950AbiANSea (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jan 2022 13:34:30 -0500
-Received: from mail-ua1-x935.google.com (mail-ua1-x935.google.com [IPv6:2607:f8b0:4864:20::935])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F910C06161C
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Jan 2022 10:34:30 -0800 (PST)
-Received: by mail-ua1-x935.google.com with SMTP id r15so18497398uao.3
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Jan 2022 10:34:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V96mUntwkVD/M9voiZYXRxUZ8PDxNZwCxxuws9P238g=;
-        b=E0npOSjXYRBaFiksAYRhQcEwQvl2+tzb1kLGuZBhdagf12ZqUBxzVbNKt0DGkYnlNt
-         jZCeJ+vMXPEAMRoO08nhm37POLYrlfALYsRa/RvjwCcSQ2VHjr38ED3vnPD8G1W17956
-         8pp+fZ/I5PdHzb+UcHPiZRvONLVxCI58tRiBft2a59l2DkoWRiSfpxEni862ZUt5Vd+Y
-         3Baz7WUcb9h8nlrCpUoJESyBBe0fWFiPiGvQRw+RJsP/tJc5MfKIBCHYEY6qnE0FnfQc
-         R2WzNBrlPk0SpgxCiDH5wt0y5UmMnZ6wSP2Ca5Am6cDx4QDsRCBePq5j0flPkT38wBWb
-         uJRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V96mUntwkVD/M9voiZYXRxUZ8PDxNZwCxxuws9P238g=;
-        b=QYKuKgsJFaMhIDMryunOMHwUz974yQx2rGwiiVevIwwL9/hNoB0qj4pRegHOrW3Seh
-         C6MNtM48hmQ3D4ILD755+Jb2OrQhQX3oCX23ZvXK5Xt7S/wYvVt63j8arGapqsrpQXfL
-         lj+nCkCEmEJu6ZM+AuuuQUj4WGwcI+JFbm2QTmGF4apyoLN9pJt2X8y+3FHlBDehufSP
-         HvQtg7hS86nPY9TZji+GHyNCpWZWw5hbWRfdrQ3SHxeOZ9mYNAaFlxOYUzSydL8lOgmB
-         xRVD+Q1bGNDGlY5hCzLcAIdTgbzH8Bhu/pjamW86Ghdyanb9feBVSZDBEn+lis+NKS1c
-         8Deg==
-X-Gm-Message-State: AOAM532KPisbrFPX36VICVzYZin8zgBKzE0CbuTzEkOSzrEWGvgj0Sc3
-        +glrrj8niMD6Ycn8pmvum3fFHAwdMR2ZjqWbMuY9Gw==
-X-Google-Smtp-Source: ABdhPJzlbpQpwJ+6thPQ2vI0/TXRKqjGSerRJn43cDtBUJbDhQUr2X3qeYtuI5mIMCLVTfqVsamzTx6shhsQLAWBtE8=
-X-Received: by 2002:a9f:3e09:: with SMTP id o9mr4730368uai.114.1642185269608;
- Fri, 14 Jan 2022 10:34:29 -0800 (PST)
-MIME-Version: 1.0
-References: <20220111201426.326777-1-krzysztof.kozlowski@canonical.com> <20220111201722.327219-21-krzysztof.kozlowski@canonical.com>
-In-Reply-To: <20220111201722.327219-21-krzysztof.kozlowski@canonical.com>
-From:   Sam Protsenko <semen.protsenko@linaro.org>
-Date:   Fri, 14 Jan 2022 20:34:17 +0200
-Message-ID: <CAPLW+4m-_GSPFAOOaxkBQ7z5M6KcCm9jDKnfgCvgsKfLKKoM+g@mail.gmail.com>
-Subject: Re: [PATCH v2 27/28] arm64: dts: exynos: use dedicated wake-up
- pinctrl compatible in Exynos850
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        id S243215AbiANSqO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Jan 2022 13:46:14 -0500
+Received: from mxout04.lancloud.ru ([45.84.86.114]:39038 "EHLO
+        mxout04.lancloud.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236181AbiANSqN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jan 2022 13:46:13 -0500
+Received: from LanCloud
+DKIM-Filter: OpenDKIM Filter v2.11.0 mxout04.lancloud.ru CAE4720A74BC
+Received: from LanCloud
+Received: from LanCloud
+Received: from LanCloud
+Subject: Re: [PATCH 1/2] platform: make platform_get_irq_optional() optional
+From:   Sergey Shtylyov <s.shtylyov@omp.ru>
+To:     Mark Brown <broonie@kernel.org>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        KVM list <kvm@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        <linux-iio@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Chanho Park <chanho61.park@samsung.com>,
-        Alim Akhtar <alim.akhtar@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        "Amit Kucheria" <amitk@kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        <linux-phy@lists.infradead.org>, <netdev@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        <openipmi-developer@lists.sourceforge.net>,
+        "Khuong Dinh" <khuong@os.amperecomputing.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        "Lee Jones" <lee.jones@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "Daniel Lezcano" <daniel.lezcano@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Robert Richter <rric@kernel.org>,
+        Saravanan Sekar <sravanhome@gmail.com>,
+        Corey Minyard <minyard@acm.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "John Garry" <john.garry@huawei.com>,
+        Peter Korsgaard <peter@korsgaard.com>,
+        "William Breathitt Gray" <vilhelm.gray@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "Sebastian Reichel" <sre@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Takashi Iwai" <tiwai@suse.com>,
+        <platform-driver-x86@vger.kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        <linux-edac@vger.kernel.org>, Tony Luck <tony.luck@intel.com>,
+        Mun Yew Tham <mun.yew.tham@intel.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        "Linux MMC List" <linux-mmc@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        "James Morse" <james.morse@arm.com>,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        "Pengutronix Kernel Team" <kernel@pengutronix.de>,
+        Richard Weinberger <richard@nod.at>,
+        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
+        <linux-mediatek@lists.infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+References: <20220110195449.12448-1-s.shtylyov@omp.ru>
+ <20220110195449.12448-2-s.shtylyov@omp.ru>
+ <20220110201014.mtajyrfcfznfhyqm@pengutronix.de> <YdyilpjC6rtz6toJ@lunn.ch>
+ <CAMuHMdWK3RKVXRzMASN4HaYfLckdS7rBvSopafq+iPADtGEUzA@mail.gmail.com>
+ <20220112085009.dbasceh3obfok5dc@pengutronix.de>
+ <CAMuHMdWsMGPiQaPS0-PJ_+Mc5VQ37YdLfbHr_aS40kB+SfW-aw@mail.gmail.com>
+ <20220112213121.5ruae5mxwj6t3qiy@pengutronix.de>
+ <Yd9L9SZ+g13iyKab@sirena.org.uk>
+ <29f0c65d-77f2-e5b2-f6cc-422add8a707d@omp.ru>
+Organization: Open Mobile Platform
+Message-ID: <3a6b7348-ffcf-e26a-1874-830e78ae2d57@omp.ru>
+Date:   Fri, 14 Jan 2022 21:46:04 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
+MIME-Version: 1.0
+In-Reply-To: <29f0c65d-77f2-e5b2-f6cc-422add8a707d@omp.ru>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [192.168.11.198]
+X-ClientProxiedBy: LFEXT02.lancloud.ru (fd00:f066::142) To
+ LFEX1907.lancloud.ru (fd00:f066::207)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 11 Jan 2022 at 22:19, Krzysztof Kozlowski
-<krzysztof.kozlowski@canonical.com> wrote:
->
-> Older Samsung Exynos SoC pin controller nodes (Exynos3250, Exynos4,
-> Exynos5, Exynos5433) with external wake-up interrupts, expected to have
-> one interrupt for multiplexing these wake-up interrupts.  Also they
-> expected to have exactly one pin controller capable of external wake-up
-> interrupts.
->
-> It seems however that newer ARMv8 Exynos SoC like Exynos850 and
-> ExynosAutov9 have differences:
-> 1. No multiplexed external wake-up interrupt, only direct,
-> 2. More than one pin controller capable of external wake-up interrupts.
->
-> Use dedicated Exynos850 compatible for its external wake-up interrupts
-> controller to indicate the differences.
->
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-> ---
+On 1/13/22 11:35 PM, Sergey Shtylyov wrote:
 
-Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
+[...]
+>> (Do we really need *all* the CCs here?)
+> 
+>    Yeah, 25 files were changed and that resulted in 75 persons/lists addressed.
+> I didn't expect such a wide audience myself... :-)
 
->  arch/arm64/boot/dts/exynos/exynos850.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/exynos/exynos850.dtsi b/arch/arm64/boot/dts/exynos/exynos850.dtsi
-> index 4f0a40de5e67..bcae772e8d91 100644
-> --- a/arch/arm64/boot/dts/exynos/exynos850.dtsi
-> +++ b/arch/arm64/boot/dts/exynos/exynos850.dtsi
-> @@ -346,7 +346,7 @@ pinctrl_alive: pinctrl@11850000 {
->                         reg = <0x11850000 0x1000>;
->
->                         wakeup-interrupt-controller {
-> -                               compatible = "samsung,exynos7-wakeup-eint";
-> +                               compatible = "samsung,exynos850-wakeup-eint";
->                         };
->                 };
->
-> @@ -355,7 +355,7 @@ pinctrl_cmgp: pinctrl@11c30000 {
->                         reg = <0x11c30000 0x1000>;
->
->                         wakeup-interrupt-controller {
-> -                               compatible = "samsung,exynos7-wakeup-eint";
-> +                               compatible = "samsung,exynos850-wakeup-eint";
->                         };
->                 };
->
-> --
-> 2.32.0
->
+   And, of course, I specified --nogit-fallback to scripts/get_maintainers.pl, so
+there's no random people...
+
+[...]
+
+MBR, Sergey
