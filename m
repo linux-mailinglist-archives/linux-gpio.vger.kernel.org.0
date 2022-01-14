@@ -2,185 +2,205 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 00C3848EF7E
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jan 2022 18:55:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0416948EFE6
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jan 2022 19:32:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243985AbiANRzV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Jan 2022 12:55:21 -0500
-Received: from mxout02.lancloud.ru ([45.84.86.82]:37634 "EHLO
-        mxout02.lancloud.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244005AbiANRzR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jan 2022 12:55:17 -0500
-Received: from LanCloud
-DKIM-Filter: OpenDKIM Filter v2.11.0 mxout02.lancloud.ru 02F2120606E9
-Received: from LanCloud
-Received: from LanCloud
-Received: from LanCloud
-Subject: Re: [PATCH] driver core: platform: Rename platform_get_irq_optional()
- to platform_get_irq_silent()
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Mark Brown <broonie@kernel.org>
-CC:     Andrew Lunn <andrew@lunn.ch>, Ulf Hansson <ulf.hansson@linaro.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        KVM list <kvm@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        <linux-iio@vger.kernel.org>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        "ALSA Development Mailing List" <alsa-devel@alsa-project.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Guenter Roeck <groeck@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        <linux-phy@lists.infradead.org>, Jiri Slaby <jirislaby@kernel.org>,
-        <openipmi-developer@lists.sourceforge.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Khuong Dinh <khuong@os.amperecomputing.com>,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        Joakim Zhang <qiangqing.zhang@nxp.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        "Geert Uytterhoeven" <geert@linux-m68k.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        Robert Richter <rric@kernel.org>,
-        Saravanan Sekar <sravanhome@gmail.com>,
-        Corey Minyard <minyard@acm.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Peter Korsgaard <peter@korsgaard.com>,
-        "William Breathitt Gray" <vilhelm.gray@gmail.com>,
-        Mark Gross <markgross@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "Borislav Petkov" <bp@alien8.de>,
-        Sebastian Reichel <sre@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        <platform-driver-x86@vger.kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        <linux-edac@vger.kernel.org>,
-        Mun Yew Tham <mun.yew.tham@intel.com>,
-        "Eric Auger" <eric.auger@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        "Linux MMC List" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Richard Weinberger <richard@nod.at>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
-        <linux-mediatek@lists.infradead.org>,
-        "Brian Norris" <computersforpeace@gmail.com>,
-        <netdev@vger.kernel.org>
-References: <20220110195449.12448-2-s.shtylyov@omp.ru>
- <20220110201014.mtajyrfcfznfhyqm@pengutronix.de> <YdyilpjC6rtz6toJ@lunn.ch>
- <CAMuHMdWK3RKVXRzMASN4HaYfLckdS7rBvSopafq+iPADtGEUzA@mail.gmail.com>
- <20220112085009.dbasceh3obfok5dc@pengutronix.de>
- <CAMuHMdWsMGPiQaPS0-PJ_+Mc5VQ37YdLfbHr_aS40kB+SfW-aw@mail.gmail.com>
- <20220112213121.5ruae5mxwj6t3qiy@pengutronix.de>
- <Yd9L9SZ+g13iyKab@sirena.org.uk>
- <20220113110831.wvwbm75hbfysbn2d@pengutronix.de>
- <YeA7CjOyJFkpuhz/@sirena.org.uk>
- <20220113194358.xnnbhsoyetihterb@pengutronix.de>
- <745c601f-c782-0904-f786-c9bfced8f11c@gmail.com>
-From:   Sergey Shtylyov <s.shtylyov@omp.ru>
-Organization: Open Mobile Platform
-Message-ID: <cae0b73e-46df-a491-4a8e-415205038c2c@omp.ru>
-Date:   Fri, 14 Jan 2022 20:55:07 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        id S242891AbiANScG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Jan 2022 13:32:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50548 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242195AbiANScG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jan 2022 13:32:06 -0500
+Received: from mail-vk1-xa35.google.com (mail-vk1-xa35.google.com [IPv6:2607:f8b0:4864:20::a35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE5E5C06161C
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Jan 2022 10:32:05 -0800 (PST)
+Received: by mail-vk1-xa35.google.com with SMTP id 78so6354559vkz.7
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Jan 2022 10:32:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hn+A8P116rCnn7HEj9dWUkNwMIEiSdg8WOInC5uXxPQ=;
+        b=MFqg2RW7qMn21NYGIs9rFVWkicYDr4Wwk2P/lEu3eeHYdkIuVzITqOaqsFJi3H9GPN
+         R7ywM2TC0NL1qFR0JwY/fkVcEGeP0WDb00nj8tjeXXRDNhBxlZRkMoeP/by/XuBqu21g
+         d79b5m3VsgaYvbNM0qjP1xDkfVDG7SwWxQ3NsFVGw1QYakxU5jfE1J/q4EVDFPW6W9wP
+         h8ND6KST1M1NtbDAF5rQTs6ATsqh0lqSmXDpJNEcb4FeprjVVpFao7hFxnnE/Di49gie
+         CINrNL3Gr+mYcaTod2ZPMJj3xGWtM5ravvkcSKP/zyXJcYxBY3KDAWeDt0GiUCH1Jzhv
+         0eOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hn+A8P116rCnn7HEj9dWUkNwMIEiSdg8WOInC5uXxPQ=;
+        b=5FzaPPGUaGg8EskwNBpmTI1aatX1kD1qPJvanz2B54bnTf+EakZviTjjWG1DsBKZlV
+         vS2xtGgeXTF0wqP1VDSHfunfmsVIeoPWjC+xJfynCB8YusCgPhE//mKzmeq5qxooLjr3
+         +7sGqgFrtt4msOctmRFGdgc5DvJ++HX9v77B4pobwU3mhFOF8o/4kwh9PKkaRSelmJaq
+         MhPsffpWiaqERPaJDq6XRhvHkbPcCBb4oQgoP4Bsxfi55Kz/VzfMeS6eALHXt6C7e//c
+         +3+RCjnVA4XoSbRzDskSXW4oPgUch1F1lEz/6xxzm8XNJ5Ow+HYKHh/+3Reo/hLGD6+2
+         KWxQ==
+X-Gm-Message-State: AOAM5333tFTvCQ9zyjRYNJSymN+1+urwHipWENdNNPjhuWS93BaSDyTJ
+        VXlDzBoOiwxwVO0yJGxfPmuPD9HzAjWb3tmx6OeZ5A==
+X-Google-Smtp-Source: ABdhPJzwlsp9Jc37hhqnGWqFrtnRbGHHAPt2Zpg7eV1k7xgINU9ux3m2GySP/hjouOw1rPA3/6D6znNsGgEecTwJNJw=
+X-Received: by 2002:ac5:cdb0:: with SMTP id l16mr3040124vka.14.1642185124766;
+ Fri, 14 Jan 2022 10:32:04 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <745c601f-c782-0904-f786-c9bfced8f11c@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [192.168.11.198]
-X-ClientProxiedBy: LFEXT02.lancloud.ru (fd00:f066::142) To
- LFEX1907.lancloud.ru (fd00:f066::207)
+References: <20220111201426.326777-1-krzysztof.kozlowski@canonical.com>
+In-Reply-To: <20220111201426.326777-1-krzysztof.kozlowski@canonical.com>
+From:   Sam Protsenko <semen.protsenko@linaro.org>
+Date:   Fri, 14 Jan 2022 20:31:52 +0200
+Message-ID: <CAPLW+4k3VNuQGfi_mnAWYUSXYaPmoFj1D55pHH0ByUsNu9kSyQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/28] pinctrl: dt-bindings: samsung: convert to dtschema
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Chanho Park <chanho61.park@samsung.com>,
+        Alim Akhtar <alim.akhtar@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 1/14/22 12:42 AM, Florian Fainelli wrote:
+On Tue, 11 Jan 2022 at 22:15, Krzysztof Kozlowski
+<krzysztof.kozlowski@canonical.com> wrote:
+>
+> Hi,
+>
+> Changes since v1
+> ================
+> 1. Patch #1: add missing pin assignment (Alim).
+> 2. Patch #2: correct double sizeof() (Alim).
+> 3. Patch #7, #8: put label-override in proper patch (Alim).
+> 4. Patch #24: Extend doc, change the 'if' clause for wake-up interrupts.
+> 5. New patches: #25 - #28.
+>    Exynos850 and ExynosAutov9 seems to be different in pin ctrl interrupt
+>    handling, so they need their own compatibles.
+>    Please kindly review and provide feedback on these as I do not have
+>    details.
+> 6. Add review tags.
+>
+> Dependencies
+> ============
+> 1. Patch #2 ("pinctrl: samsung: accept GPIO bank nodes with a suffix") is
+>    necessary for DTS patches.
+>
+> 2. Last patches #27 and #28 depend on patch #26 adding the compatibles.
+>
+> Best regards,
+> Krzysztof
+>
+> Krzysztof Kozlowski (28):
+>   pinctrl: samsung: drop pin banks references on error paths
+>   pinctrl: samsung: accept GPIO bank nodes with a suffix
+>   ARM: dts: exynos: drop unused pinctrl defines in Exynos3250
+>   ARM: dts: exynos: simplify PMIC DVS pin configuration in Odroid XU
+>   ARM: dts: exynos: override pins by label in Peach Pit
+>   ARM: dts: exynos: simplify PMIC DVS pin configuration in Peach Pit
+>   ARM: dts: exynos: override pins by label in Peach Pi
+>   ARM: dts: exynos: simplify PMIC DVS pin configuration in Peach Pi
+>   ARM: dts: s3c64xx: drop unneeded pinctrl wake-up interrupt mapping
+>   ARM: dts: exynos: align pinctrl with dtschema in Exynos3250
+>   ARM: dts: exynos: align pinctrl with dtschema in Exynos4210
+>   ARM: dts: exynos: align pinctrl with dtschema in Exynos4412
+>   ARM: dts: exynos: align pinctrl with dtschema in Exynos5250
+>   ARM: dts: exynos: align pinctrl with dtschema in Exynos5260
+>   ARM: dts: exynos: align pinctrl with dtschema in Exynos5410
+>   ARM: dts: exynos: align pinctrl with dtschema in Exynos542x/5800
+>   arm64: dts: exynos: align pinctrl with dtschema in Exynos5433
+>   arm64: dts: exynos: align pinctrl with dtschema in Exynos7
+>   arm64: dts: exynos: align pinctrl with dtschema in Exynos850
+>   arm64: dts: exynos: align pinctrl with dtschema in ExynosAutov9
+>   ARM: dts: s3c24xx: align pinctrl with dtschema
+>   ARM: dts: s3c64xx: align pinctrl with dtschema
+>   ARM: dts: s5pv210: align pinctrl with dtschema
+>   dt-bindings: pinctrl: samsung: convert to dtschema
+>   dt-bindings: pinctrl: samsung: describe Exynos850 and ExynosAutov9
+>     wake-ups
+>   pinctrl: samsung: add support for Exynos850 and ExynosAutov9 wake-ups
+>   arm64: dts: exynos: use dedicated wake-up pinctrl compatible in
+>     Exynos850
+>   arm64: dts: exynos: use dedicated wake-up pinctrl compatible in
+>     ExynosAutov9
+>
 
->> The subsystems regulator, clk and gpio have the concept of a dummy
->> resource. For regulator, clk and gpio there is a semantic difference
->> between the regular _get() function and the _get_optional() variant.
->> (One might return the dummy resource, the other won't. Unfortunately
->> which one implements which isn't the same for these three.) The
->> difference between platform_get_irq() and platform_get_irq_optional() is
->> only that the former might emit an error message and the later won't.
->>
->> To prevent people's expectations that there is a semantic difference
->> between these too, rename platform_get_irq_optional() to
->> platform_get_irq_silent() to make the actual difference more obvious.
->>
->> The #define for the old name can and should be removed once all patches
->> currently in flux still relying on platform_get_irq_optional() are
->> fixed.
->>
->> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-[...]
->>>> I think at least c) is easy to resolve because
->>>> platform_get_irq_optional() isn't that old yet and mechanically
->>>> replacing it by platform_get_irq_silent() should be easy and safe.
->>>> And this is orthogonal to the discussion if -ENOXIO is a sensible return
->>>> value and if it's as easy as it could be to work with errors on irq
->>>> lookups.
->>>
->>> It'd certainly be good to name anything that doesn't correspond to one
->>> of the existing semantics for the API (!) something different rather
->>> than adding yet another potentially overloaded meaning.
->>
->> It seems we're (at least) three who agree about this. Here is a patch
->> fixing the name.
-> 
-> From an API naming perspective this does not make much sense anymore with the name chosen,
-> it is understood that whent he function is called platform_get_irq_optional(), optional applies
-> to the IRQ. An optional IRQ is something people can reason about because it makes sense.
+Maybe it makes sense to include my patch [1] for gpm6/gpm7 in this series?
 
-   Right! :-)
+[1] https://lore.kernel.org/linux-arm-kernel/20220103181826.2136-1-semen.protsenko@linaro.org/T/
 
-> What is a a "silent" IRQ however? It does not apply to the object it is trying to fetch to
-> anymore, but to the message that may not be printed in case the resource failed to be obtained,
-> because said resource is optional. Woah, that's quite a stretch.
-
-   Right again! :-)
-
-> Following the discussion and original 2 patches set from Sergey, it is not entirely clear to me
-> anymore what is it that we are trying to fix.
-
-   Andy and me tried to fix the platform_get_irq[_byname]_optional() value, corresponding to
-a missing (optional) IRQ resource from -ENXIO to 0, in order to keep the callers error code
-agnostic. This change completely aligns e.g. platform_get_irq_optional() with clk_get_optional()
-and gpiod_get_optional()...
-   Unforunately, we can't "fix" request_irq() and company to treat 0 as missing IRQ -- they have
-to keep the ability to get called from the arch/ code (that doesn't use platform_get_irq(), etc.
-
-> I nearly forgot, I would paint it blue, sky blue, not navy blue, not light blue ;)
-
-   :-)
-
-PS: Florian, something was wrong with your mail client -- I had to manually wrap your quotes,
-else there were super long unbroken paragraphs...
+>  .../pinctrl/samsung,pinctrl-gpio-bank.yaml    |  52 +++
+>  .../pinctrl/samsung,pinctrl-pins-cfg.yaml     |  81 ++++
+>  .../samsung,pinctrl-wakeup-interrupt.yaml     | 106 +++++
+>  .../bindings/pinctrl/samsung,pinctrl.yaml     | 392 ++++++++++++++++++
+>  .../bindings/pinctrl/samsung-pinctrl.txt      | 383 -----------------
+>  MAINTAINERS                                   |   2 +-
+>  arch/arm/boot/dts/exynos3250-artik5.dtsi      |  10 +-
+>  arch/arm/boot/dts/exynos3250-pinctrl.dtsi     | 165 ++++----
+>  arch/arm/boot/dts/exynos4210-i9100.dts        |  30 +-
+>  arch/arm/boot/dts/exynos4210-origen.dts       |   2 +-
+>  arch/arm/boot/dts/exynos4210-pinctrl.dtsi     | 226 +++++-----
+>  arch/arm/boot/dts/exynos4210-smdkv310.dts     |   4 +-
+>  arch/arm/boot/dts/exynos4210-trats.dts        |   6 +-
+>  .../boot/dts/exynos4210-universal_c210.dts    |  12 +-
+>  arch/arm/boot/dts/exynos4412-galaxy-s3.dtsi   |   4 +-
+>  arch/arm/boot/dts/exynos4412-itop-elite.dts   |   2 +-
+>  .../boot/dts/exynos4412-itop-scp-core.dtsi    |   2 +-
+>  arch/arm/boot/dts/exynos4412-midas.dtsi       |  30 +-
+>  .../boot/dts/exynos4412-odroid-common.dtsi    |   8 +-
+>  arch/arm/boot/dts/exynos4412-odroidx.dts      |   2 +-
+>  arch/arm/boot/dts/exynos4412-origen.dts       |   4 +-
+>  arch/arm/boot/dts/exynos4412-p4note.dtsi      |  44 +-
+>  arch/arm/boot/dts/exynos4412-pinctrl.dtsi     | 252 +++++------
+>  arch/arm/boot/dts/exynos4412-smdk4412.dts     |   4 +-
+>  arch/arm/boot/dts/exynos5250-arndale.dts      |   2 +-
+>  arch/arm/boot/dts/exynos5250-pinctrl.dtsi     | 220 +++++-----
+>  arch/arm/boot/dts/exynos5250-smdk5250.dts     |   2 +-
+>  arch/arm/boot/dts/exynos5250-snow-common.dtsi |  22 +-
+>  arch/arm/boot/dts/exynos5250-snow-rev5.dts    |   2 +-
+>  arch/arm/boot/dts/exynos5250-snow.dts         |   2 +-
+>  arch/arm/boot/dts/exynos5250-spring.dts       |  20 +-
+>  arch/arm/boot/dts/exynos5260-pinctrl.dtsi     | 148 +++----
+>  arch/arm/boot/dts/exynos5260-xyref5260.dts    |   2 +-
+>  arch/arm/boot/dts/exynos5410-odroidxu.dts     |  22 +-
+>  arch/arm/boot/dts/exynos5410-pinctrl.dtsi     | 170 ++++----
+>  arch/arm/boot/dts/exynos5410-smdk5410.dts     |   4 +-
+>  arch/arm/boot/dts/exynos5420-arndale-octa.dts |   2 +-
+>  arch/arm/boot/dts/exynos5420-peach-pit.dts    |  89 ++--
+>  arch/arm/boot/dts/exynos5420-pinctrl.dtsi     | 194 ++++-----
+>  arch/arm/boot/dts/exynos5420-smdk5420.dts     |   6 +-
+>  arch/arm/boot/dts/exynos5422-odroid-core.dtsi |   2 +-
+>  .../boot/dts/exynos5422-odroidxu3-common.dtsi |   6 +-
+>  arch/arm/boot/dts/exynos5800-peach-pi.dts     |  89 ++--
+>  arch/arm/boot/dts/s3c2416-pinctrl.dtsi        |  60 +--
+>  arch/arm/boot/dts/s3c6410-mini6410.dts        |   4 +-
+>  arch/arm/boot/dts/s3c64xx-pinctrl.dtsi        | 210 +++++-----
+>  arch/arm/boot/dts/s3c64xx.dtsi                |  16 +-
+>  arch/arm/boot/dts/s5pv210-aquila.dts          |   2 +-
+>  arch/arm/boot/dts/s5pv210-aries.dtsi          |  40 +-
+>  arch/arm/boot/dts/s5pv210-fascinate4g.dts     |  12 +-
+>  arch/arm/boot/dts/s5pv210-galaxys.dts         |  16 +-
+>  arch/arm/boot/dts/s5pv210-pinctrl.dtsi        | 226 +++++-----
+>  .../boot/dts/exynos/exynos5433-pinctrl.dtsi   | 211 +++++-----
+>  .../dts/exynos/exynos5433-tm2-common.dtsi     | 259 ++++++------
+>  .../boot/dts/exynos/exynos7-espresso.dts      |   6 +-
+>  .../boot/dts/exynos/exynos7-pinctrl.dtsi      | 176 ++++----
+>  .../boot/dts/exynos/exynos850-pinctrl.dtsi    |  52 +--
+>  arch/arm64/boot/dts/exynos/exynos850.dtsi     |   4 +-
+>  .../boot/dts/exynos/exynosautov9-pinctrl.dtsi |  50 +--
+>  arch/arm64/boot/dts/exynos/exynosautov9.dtsi  |   2 +-
+>  drivers/pinctrl/samsung/pinctrl-exynos.c      |   4 +
+>  drivers/pinctrl/samsung/pinctrl-samsung.c     |  87 +++-
+>  62 files changed, 2261 insertions(+), 2003 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-gpio-bank.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-pins-cfg.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
+>
+> --
+> 2.32.0
+>
