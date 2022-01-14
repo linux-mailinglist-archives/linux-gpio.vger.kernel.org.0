@@ -2,159 +2,148 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CF82448E902
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jan 2022 12:17:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B85748E938
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jan 2022 12:34:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232396AbiANLRW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Jan 2022 06:17:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34640 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229901AbiANLRV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jan 2022 06:17:21 -0500
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20086C061574;
-        Fri, 14 Jan 2022 03:17:21 -0800 (PST)
-Received: by mail-ed1-x532.google.com with SMTP id o6so33773631edc.4;
-        Fri, 14 Jan 2022 03:17:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=45IsoyUFs05UjmT6vES5f8wHj27//gmuBJIoFOvqsrg=;
-        b=EyZyFIE3jqFT7NgA8yE+G0QtldmIR7voX/RG7OScka0V8joYtLLnXZJ962QHfXo7Ek
-         Og8EOdSOYBunD1Nk4/LQ0kWfxsSRNKutMfzvhnt0Whd0h4ItBc7UOzpBuyaput+1VzIP
-         ysyMZK5ZN2Eltko/BUnrygeVUk5+D0W2pQo0XCHnGQH3i/hzZGlKZxeVQnP+tp1iY/bX
-         HBCaTa/OgOPk2UV8qifaWz8/5niDGI5ojkpguHju5CAeoqv4TmK2/weV2K/giFGUshQC
-         q2CxsoMc/F7eQGrMZRxUJ4H+kR4GOXGcf70EzLTNHSIw7w+L7OoruwD82DSfYJBRSidA
-         AxGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=45IsoyUFs05UjmT6vES5f8wHj27//gmuBJIoFOvqsrg=;
-        b=XexVH73UqCAUbVzVkCgTuKn5iCZoV5sk+FTvwMQGjuilvKPAnDdlOPzGOvdXtne8Zc
-         QCW/s/AZ+HWoYA9qa3JFh09B13P+AZEeB2ZtgIZzgVJbI3Xg+ikamzAT/BW9R4/ppPlW
-         uOFA+42gAnSmlCyVBGTvYPafYz/I+4zFdzvjLWg1LDncwtgv+MqgjKh9hGQ9hGW/0q8q
-         pbi0TduiKVc/lLb3uWo/aG82DIm/M87PukdyYgLDddbERELcBfuCfM4TzAq27AUGVyvy
-         9ctYsLKCU5HdHHWMvJcsnuECYTDNjNbUz8crjWm3b2U79Vygqe4XJlqdRJzBcYLL6Udv
-         npUQ==
-X-Gm-Message-State: AOAM533U47JZiGFa3d7JLPM/4V8B/nOcs4UgzZzQUo1OPxb9kFzDlO1j
-        1B/pW5vx/tiLWRpsjqyE5+4SRbEHup4TlfzJHB0=
-X-Google-Smtp-Source: ABdhPJy96Gr9ab5YVTlCZnTNpf9s27u81X1qMWomspeqxnz7zPIsqkK9FKFyU5kF68PRfdJvGIymp8QFjmgsThi8s5Y=
-X-Received: by 2002:a17:906:b24d:: with SMTP id ce13mr6843513ejb.44.1642159039557;
- Fri, 14 Jan 2022 03:17:19 -0800 (PST)
-MIME-Version: 1.0
-References: <1640331779-18277-1-git-send-email-wellslutw@gmail.com>
- <1640331779-18277-3-git-send-email-wellslutw@gmail.com> <CAHp75Vd3iMM+NteJXP_mMAyw5momk3xzp1Y2GX-YJZfFSAwo9A@mail.gmail.com>
- <f87b21407ed44630a86b2661deab4a58@sphcmbx02.sunplus.com.tw>
- <CAHp75VcPB_K6RD8tnMarwGCeaOKcQ_knxvKEW9WNn_4ce41szw@mail.gmail.com>
- <cf53f5dc57e342078ec14a771ba639ca@sphcmbx02.sunplus.com.tw>
- <CAHp75Vf0=Sf8sGtgCo7bMjVFGYDcJOasLqdSHTnQ0YPgSbrr2g@mail.gmail.com>
- <9e15ccc8ee844f1eab320001bc8bc235@sphcmbx02.sunplus.com.tw>
- <CAHp75VfxtGue7bbMm_MU2GWwWo4aZLW2Pj_U9ocCQmWr6wfGMw@mail.gmail.com> <b9c1876c9d0f48a3a8d7e091d47fc069@sphcmbx02.sunplus.com.tw>
-In-Reply-To: <b9c1876c9d0f48a3a8d7e091d47fc069@sphcmbx02.sunplus.com.tw>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 14 Jan 2022 13:16:43 +0200
-Message-ID: <CAHp75VdTm5T=VGgrqfp+3bLAu4chosirJ2uBeoA5MxvV+FMg_Q@mail.gmail.com>
-Subject: Re: [PATCH v5 2/2] pinctrl: Add driver for Sunplus SP7021
-To:     =?UTF-8?B?V2VsbHMgTHUg5ZGC6Iqz6aiw?= <wells.lu@sunplus.com>
-Cc:     Wells Lu <wellslutw@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        id S240732AbiANLe1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Jan 2022 06:34:27 -0500
+Received: from mxout01.lancloud.ru ([45.84.86.81]:56428 "EHLO
+        mxout01.lancloud.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236513AbiANLe0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jan 2022 06:34:26 -0500
+Received: from LanCloud
+DKIM-Filter: OpenDKIM Filter v2.11.0 mxout01.lancloud.ru 0230320DD201
+Received: from LanCloud
+Received: from LanCloud
+Received: from LanCloud
+Subject: Re: [PATCH] driver core: platform: Rename platform_get_irq_optional()
+ to platform_get_irq_silent()
+From:   Sergey Shtylyov <s.shtylyov@omp.ru>
+To:     Mark Brown <broonie@kernel.org>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+CC:     Andrew Lunn <andrew@lunn.ch>, Ulf Hansson <ulf.hansson@linaro.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        KVM list <kvm@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        <linux-iio@vger.kernel.org>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        "ALSA Development Mailing List" <alsa-devel@alsa-project.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Guenter Roeck <groeck@chromium.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        <linux-phy@lists.infradead.org>, Jiri Slaby <jirislaby@kernel.org>,
+        <openipmi-developer@lists.sourceforge.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Khuong Dinh <khuong@os.amperecomputing.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        "Bartosz Golaszewski" <brgl@bgdev.pl>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Robert Richter <rric@kernel.org>,
+        Saravanan Sekar <sravanhome@gmail.com>,
+        Corey Minyard <minyard@acm.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Peter Korsgaard <peter@korsgaard.com>,
+        "William Breathitt Gray" <vilhelm.gray@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "Borislav Petkov" <bp@alien8.de>,
+        Sebastian Reichel <sre@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        <platform-driver-x86@vger.kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        <linux-edac@vger.kernel.org>,
+        Mun Yew Tham <mun.yew.tham@intel.com>,
+        "Eric Auger" <eric.auger@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        "Linux MMC List" <linux-mmc@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "dvorkin@tibbo.com" <dvorkin@tibbo.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Richard Weinberger <richard@nod.at>,
+        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
+        <linux-mediatek@lists.infradead.org>,
+        "Brian Norris" <computersforpeace@gmail.com>,
+        <netdev@vger.kernel.org>
+References: <20220110201014.mtajyrfcfznfhyqm@pengutronix.de>
+ <YdyilpjC6rtz6toJ@lunn.ch>
+ <CAMuHMdWK3RKVXRzMASN4HaYfLckdS7rBvSopafq+iPADtGEUzA@mail.gmail.com>
+ <20220112085009.dbasceh3obfok5dc@pengutronix.de>
+ <CAMuHMdWsMGPiQaPS0-PJ_+Mc5VQ37YdLfbHr_aS40kB+SfW-aw@mail.gmail.com>
+ <20220112213121.5ruae5mxwj6t3qiy@pengutronix.de>
+ <Yd9L9SZ+g13iyKab@sirena.org.uk>
+ <20220113110831.wvwbm75hbfysbn2d@pengutronix.de>
+ <YeA7CjOyJFkpuhz/@sirena.org.uk>
+ <20220113194358.xnnbhsoyetihterb@pengutronix.de>
+ <YeCI47ltlWzjzjYy@sirena.org.uk>
+ <1df04d74-8aa2-11f1-54e9-34d0e8f4e58b@omp.ru>
+Organization: Open Mobile Platform
+Message-ID: <fba81d0d-c7e3-394d-5929-1706ac9ef5b7@omp.ru>
+Date:   Fri, 14 Jan 2022 14:34:16 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
+MIME-Version: 1.0
+In-Reply-To: <1df04d74-8aa2-11f1-54e9-34d0e8f4e58b@omp.ru>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [192.168.11.198]
+X-ClientProxiedBy: LFEXT01.lancloud.ru (fd00:f066::141) To
+ LFEX1907.lancloud.ru (fd00:f066::207)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jan 14, 2022 at 12:55 PM Wells Lu =E5=91=82=E8=8A=B3=E9=A8=B0 <well=
-s.lu@sunplus.com> wrote:
+On 1/13/22 11:57 PM, Sergey Shtylyov wrote:
 
-...
+>>> The subsystems regulator, clk and gpio have the concept of a dummy
+>>> resource. For regulator, clk and gpio there is a semantic difference
+>>> between the regular _get() function and the _get_optional() variant.
+>>> (One might return the dummy resource, the other won't. Unfortunately
+>>> which one implements which isn't the same for these three.) The
+>>> difference between platform_get_irq() and platform_get_irq_optional() is
+>>> only that the former might emit an error message and the later won't.
+> 
+>    This is only a current difference but I'm still going to return 0 ISO
+> -ENXIO from latform_get_irq_optional(), no way I'd leave that -ENXIO there
 
-> > > > > > > > > +       bool "Sunplus SP7021 PinMux and GPIO driver"
-> > > > > > > >
-> > > > > > > > Why bool and not tristate?
-> > > > > > >
-> > > > > > > Pinctrl driver is selected by many drivers in SP7021 platform=
-.
-> > > > > > > We never build it as a module, but build-in to kernel.
-> > > > > > > So we use "bool".
-> > > > > > >
-> > > > > > > Should we set it to tristate?
-> > > > > >
-> > > > > > You still haven't answered "why", so I can't tell you.
-> > > > >
-> > > > > I am puzzled because I think I have answered "why".
-> > > >
-> > > > Nope. :-)
-> > > >
-> > > > > Because Pinctrl driver is necessary for all SP7021-based platform=
-s.
-> > > >
-> > > > "Why?" Why is it necessary (to be built-in)?
-> > >
-> > > Pinctrl is necessary to be built-in because drivers of boot-device,
-> > > like eMMC, SD card, NAND flash, and NOR flash drivers, need it.
-> > >
-> > > SP7021 supports booting from eMMC, SD card, NAND flash and NOR flash
-> > > devices. Their drivers need Pinctrl driver probes in advance.
-> >
-> > On x86 platforms, for example, booting from eMMC and SD card does not r=
-equire a pin
-> > control driver to be built-in. Why is this requirement for SP platforms=
-?
+   platform.
 
-> Because all pins of boot-device multiplex with GPIO pins.
->
-> SP7021 platforms support multi boot devices, including eMMC, SD card,
-> SPI-NOR flash, SPI-NAND flash. Each boot device has control-bit(s)
-> to enable it.
->
-> For example #1, if control-bits of SPI-NOR flash is set 1,
-> GPIO 83, 84, 86, 87 are connected to SPI-NOR flash.
-> If control-bits of SPI-NOR flash is set 2,
-> GPIO 76, 78, 79, 81 are connected to SPI-NOR flash.
-> If control-bits of SPI-NOR flash is set 0, no pin is
-> connected SPI-NOR flash.
->
-> For example #2, if control-bits of eMMC device is set 1,
-> GPIO 72, 73, 74, 75, 76, 77, 78, 79, 80, 81 are connected to
-> eMMC device.
-> If control-bits of eMMC device is set 0, no pin is connected
-> eMMC device.
->
-> For example #3, if control-bits of SDCard device is set 1,
-> GPIO 65, 66, 67, 68, 69, 70 are connected to SD Card device.
-> If control-bits of SDCard device is set 0, no pin is connected
-> SDCard device.
->
-> Note that all pins multiplex with GPIO pins.
->
-> Normally, only a boot-device is enabled. All other GPIO pins
-> are released for peripherals (controlled by fully-pinmux
-> Or group pinmux) or IO processor
+> alone... :-)
+> 
+>> Reviewed-by: Mark Brown <broonie@kernel.org>
+> 
+>    Hm... I'm seeing a tag bit not seeing the patch itself...
 
-Thanks for this detailed picture of the HW configuration.
+   Grr, my mail server tossed it into the spam folder... :-(
 
-> Pinctrl driver is responsible for setup the pins.
-> If Pinctrl fails to probe, boot-device also fails to probe.
-
-But have you tried to compile it as a module and supply it in the initramfs=
-?
-
-What kernel does in this case it takes address of initramfs from
-memory (I believe you have bootloader that capable to setup kernel,
-initramfs, command line, and device
-tree blob and pass the control to the kernel) at some point, mounts it
-and probes the modules that are required to get your boot device
-ready.
-
---=20
-With Best Regards,
-Andy Shevchenko
+MBR, Sergey
