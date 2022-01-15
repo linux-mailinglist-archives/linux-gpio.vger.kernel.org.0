@@ -2,224 +2,225 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8FBC048F448
-	for <lists+linux-gpio@lfdr.de>; Sat, 15 Jan 2022 03:08:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B99A248F6FA
+	for <lists+linux-gpio@lfdr.de>; Sat, 15 Jan 2022 14:09:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232106AbiAOCID (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Jan 2022 21:08:03 -0500
-Received: from mail-dm3nam07on2115.outbound.protection.outlook.com ([40.107.95.115]:44512
-        "EHLO NAM02-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S231258AbiAOCID (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 14 Jan 2022 21:08:03 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SKBC8pJA6HUtaaAmF5Y9IAB83X9Iy3WHIKXmyp46+udBRLjg1SKky2lzgE/jrwLRQxaNQnJAdfsTTsV69sz4RGFfrpQ/RlZubKXq+yTHIW+q2YjLpIlU5hEATUZ2P7smdtaiAmpkxTnxhNiipFi21lG1BsNDj17D5RwdvsfwaDf9bM4DKnYPiYBMH+KfFUMZ4Lp5Uz1ZRXAidOvEx+y7eHdwn1pePZfl5wG8wS6rDkCeXUdVuK0e8YUPUVJGNaGMqIRKH7U0YE1QZjUVvdfZ9dEe68jzQorgNmkFU4FG4DjVYb2cwCyxJn0dKr2ygb8Mwy+a50lypfXkApcTm3HBOw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9ceb/y/n6X+IMdV333snPRK4x6Ofax5dBmjhtApnR8A=;
- b=j4XyDfZwMVYRAuvHW3q/ULMPFEA2LQNjjDLVGBsDN19FF4DDaLJFUpOjysKmEIpcQw4aTqfTfXhsfZFcd4p0Asm8+ClLQ/CeSQdjwARfPC2KkcCX5VKP0lf3ZmPnFtoHJ9dEymHOZA6zWg23/YzA290vFQTsztcfOcxPMXKdXHoW9qiaqm8kBEW78rf9I2MQ3VUL+JrSbrKmUddTmhW/s9j09YW6B58cGThR7t76BKUFG0VisBfz0YqOZwK+1QHaawTujAeO17pKjzbIKfVvS+URJZIlkKxen8Qvm0GKIA+/74rfFuwSHZsxMFp8V3CmIgi9rz7HY2fxQaAAtlQ+Gw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=in-advantage.com; dmarc=pass action=none
- header.from=in-advantage.com; dkim=pass header.d=in-advantage.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=inadvantage.onmicrosoft.com; s=selector2-inadvantage-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9ceb/y/n6X+IMdV333snPRK4x6Ofax5dBmjhtApnR8A=;
- b=d+pNE84BmE1gZ3VxZoIfoiG1Y/l0TtG+TeXLuvLYTB4ejop0q/4aSYTWm2Xoz24123X/CiUSrU2+SpE87WetrMgvsOYjmqx/MZ+eMgupic6KZseXCz2IUo64HuZ0OuO5s5KujJxjjPfBDwB0r4YW0wgIARAEdy+QTL49L/BBkZs=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=in-advantage.com;
-Received: from MWHPR1001MB2351.namprd10.prod.outlook.com
- (2603:10b6:301:35::37) by CO6PR10MB5396.namprd10.prod.outlook.com
- (2603:10b6:303:13c::9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4888.9; Sat, 15 Jan
- 2022 02:08:00 +0000
-Received: from MWHPR1001MB2351.namprd10.prod.outlook.com
- ([fe80::2d52:2a96:7e6c:460f]) by MWHPR1001MB2351.namprd10.prod.outlook.com
- ([fe80::2d52:2a96:7e6c:460f%4]) with mapi id 15.20.4867.012; Sat, 15 Jan 2022
- 02:08:00 +0000
-Date:   Fri, 14 Jan 2022 18:07:54 -0800
-From:   Colin Foster <colin.foster@in-advantage.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Mark Brown <broonie@kernel.org>, linux-gpio@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        id S231773AbiAONJC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 15 Jan 2022 08:09:02 -0500
+Received: from mxout01.lancloud.ru ([45.84.86.81]:33656 "EHLO
+        mxout01.lancloud.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231700AbiAONJB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 15 Jan 2022 08:09:01 -0500
+Received: from LanCloud
+DKIM-Filter: OpenDKIM Filter v2.11.0 mxout01.lancloud.ru C5E4720E291F
+Received: from LanCloud
+Received: from LanCloud
+Received: from LanCloud
+Subject: Re: [PATCH] driver core: platform: Rename platform_get_irq_optional()
+ to platform_get_irq_silent()
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+CC:     Mark Brown <broonie@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        KVM list <kvm@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        <linux-iio@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
+        "Amit Kucheria" <amitk@kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        "Guenter Roeck" <groeck@chromium.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        "MTD Maling List" <linux-mtd@lists.infradead.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        <linux-phy@lists.infradead.org>, <netdev@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Khuong Dinh <khuong@os.amperecomputing.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, UNGLinuxDriver@microchip.com,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>
-Subject: Re: [RFC v5 net-next 01/13] mfd: ocelot: add support for external
- mfd control over SPI for the VSC7512
-Message-ID: <20220115020754.GA1510938@euler>
-References: <20211218214954.109755-2-colin.foster@in-advantage.com>
- <Ycx9MMc+2ZhgXzvb@google.com>
- <20211230014300.GA1347882@euler>
- <Ydwju35sN9QJqJ/P@google.com>
- <20220111003306.GA27854@COLIN-DESKTOP1.localdomain>
- <Yd1YV+eUIaCnttYd@google.com>
- <Yd2JvH/D2xmH8Ry7@sirena.org.uk>
- <20220111165330.GA28004@COLIN-DESKTOP1.localdomain>
- <Yd23m1WH80qB5wsU@google.com>
- <20220111182815.GC28004@COLIN-DESKTOP1.localdomain>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220111182815.GC28004@COLIN-DESKTOP1.localdomain>
-X-ClientProxiedBy: MW4PR02CA0021.namprd02.prod.outlook.com
- (2603:10b6:303:16d::31) To MWHPR1001MB2351.namprd10.prod.outlook.com
- (2603:10b6:301:35::37)
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Kishon Vijay Abraham I" <kishon@ti.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        <platform-driver-x86@vger.kernel.org>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Robert Richter <rric@kernel.org>,
+        "Saravanan Sekar" <sravanhome@gmail.com>,
+        Corey Minyard <minyard@acm.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Peter Korsgaard <peter@korsgaard.com>,
+        "William Breathitt Gray" <vilhelm.gray@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <openipmi-developer@lists.sourceforge.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Benson Leung <bleung@chromium.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        <linux-edac@vger.kernel.org>, "Tony Luck" <tony.luck@intel.com>,
+        Richard Weinberger <richard@nod.at>,
+        Mun Yew Tham <mun.yew.tham@intel.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        "Linux MMC List" <linux-mmc@vger.kernel.org>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        "James Morse" <james.morse@arm.com>,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        "Sebastian Reichel" <sre@kernel.org>,
+        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
+        <linux-mediatek@lists.infradead.org>,
+        "Brian Norris" <computersforpeace@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+References: <YdyilpjC6rtz6toJ@lunn.ch>
+ <CAMuHMdWK3RKVXRzMASN4HaYfLckdS7rBvSopafq+iPADtGEUzA@mail.gmail.com>
+ <20220112085009.dbasceh3obfok5dc@pengutronix.de>
+ <CAMuHMdWsMGPiQaPS0-PJ_+Mc5VQ37YdLfbHr_aS40kB+SfW-aw@mail.gmail.com>
+ <20220112213121.5ruae5mxwj6t3qiy@pengutronix.de>
+ <Yd9L9SZ+g13iyKab@sirena.org.uk>
+ <20220113110831.wvwbm75hbfysbn2d@pengutronix.de>
+ <YeA7CjOyJFkpuhz/@sirena.org.uk>
+ <20220113194358.xnnbhsoyetihterb@pengutronix.de>
+ <386a7f56-38c8-229c-4fec-4b38a77c4121@omp.ru>
+ <20220114202939.5kq5ud5opfosjlyc@pengutronix.de>
+From:   Sergey Shtylyov <s.shtylyov@omp.ru>
+Organization: Open Mobile Platform
+Message-ID: <cd89d952-b7a6-cd37-9df3-f3565cb2f802@omp.ru>
+Date:   Sat, 15 Jan 2022 16:08:52 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e459200b-4abe-4d54-7b16-08d9d7cbdab7
-X-MS-TrafficTypeDiagnostic: CO6PR10MB5396:EE_
-X-Microsoft-Antispam-PRVS: <CO6PR10MB5396F22D4006D5662CC487D0A4559@CO6PR10MB5396.namprd10.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: wpVMJaIv76nQt0uliMZ7z1somKjHBvFnxQ98hljwZIbyu9S0svLH3vjgKw42FxlhiKk3sP93208r/cO7tYXEVyH/gXXulanjiKyC+Iww1ztGuSnToZmlYR9mIjvGg8m0KApz/HTVdqBHKzEMRLVCAaHPW2J9dJvpX4lSb8Q+u9fi5foSS+TxgWjgVf1Dg02Df9npZ/0xETgXVRWh3faHcsSxpf2AAy8fF1YPUR3oiroESOWSJIxw1TUjKGYIDRZ2wLskloVNHti4IjOcc7VgRss8Q/Wdvpym6mS6eQ2dvL12mZMRWRkWbD1WaWvaziFki/pETvGvwYOQPrg5SaYGZSzkK8BVBXPZkQTmaNo1dic041sYaD6f5vfqEjmcLJzVHwz9ck+3ghRy+6XBTytnZ7IigdwvGZiB/KikYmMkTGxpsC9x035GxpBHFz01qPkpDKmJPtTR/Z9cnT+XkwrljuauUYjiAIUDTRMJTD9xWXWclUMBvihXgTCodqjiblQOLYykmMKSsxX8iKfh4fJLNzhuaCVmE8Fz6UlK4jlH0rYiW4wDkMAHE+llVb/D71w/T56Xksyq+rI5NmVhbPqlyRYxhDpvpjGIFgk1uLcRVbCDZGGM+LcVzBlJI5ynnpLrBv4h7he/OS0t+A+1rBZIVTJZa7eK8hDkpfK7U0vVMKQpSy3LTnLXrIWxBeQziBPorZhIlS6OT0N8Egt8pF08YQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1001MB2351.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(7916004)(366004)(39830400003)(42606007)(376002)(346002)(396003)(136003)(54906003)(316002)(33656002)(2906002)(508600001)(6666004)(86362001)(52116002)(1076003)(6486002)(9686003)(66556008)(4326008)(38350700002)(38100700002)(33716001)(44832011)(5660300002)(6506007)(66946007)(66476007)(6512007)(6916009)(8676002)(26005)(8936002)(186003)(7416002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?NcdA1sjlm9XBy6zJgy6kN8ARdCYDjO2TBwdQkGveVRlJa6KGKbZj4I/5XE4Q?=
- =?us-ascii?Q?gTxlgSwO7PrEfZCuR1zSm7nFmD3rlfQpvg6geiGNLVQOt88oKENfOC6gXE7R?=
- =?us-ascii?Q?H9GSPLjakZA/wb/FCTDOpiBnvMNB+JOBu04uuEafZPZ+Ir2ir4/XSgZICFzu?=
- =?us-ascii?Q?xi+QRUj+R3K6wJaTS5o81GIIrGIf8uJ76AS32hn++DYuNa4LBPxN/AiyRc3W?=
- =?us-ascii?Q?URPWS4JU/uLndnXbXZVEjrtQPA309xkCqmVill5zZJKLGi799/dFw60xk/tD?=
- =?us-ascii?Q?s7TnT/Seh81NJWlFDeUH1baVHyp+nqg6/Prgjl+GSDe68XnDmsLQaFLovKqa?=
- =?us-ascii?Q?ne6b2aSQYVZ/vO7ahMLpQl2zkmJtxUXCJNIgVR4G5uCJLmS+A/KuHC2HhwpS?=
- =?us-ascii?Q?ZtJpx0LYs7qGPob7WXKj5d/WMSkGZezYTOZbcgHI2dOsnVQrOPepVNJPuAKk?=
- =?us-ascii?Q?IxEvV3pMVdVtn4D+DbqsfMoxmx5yMCQg44EA/4S2M6hasfZTkCVbiACpuyM5?=
- =?us-ascii?Q?w+gUNQPGmA4gf/x0TxQ7u2hNHXlwlOudDGGbHYRkXyLCYRgP5/GWGay9vDTo?=
- =?us-ascii?Q?pFA6rilW0XwujASPrEXG12e4GWrOJc03FVzjZSTq9e0sGG6dI14MKG/QJnv9?=
- =?us-ascii?Q?P0dIX0zSKCm97ojSXhTH3WRuHFN0DaC4/xEwvXUnJPQvjlnZIQ0V3x5Fqj2K?=
- =?us-ascii?Q?bwpTIeJQf3Tb7iwbemGu/sHrRqxVDf9ECsQ7gn+g1JvrVlbp2rcuy6678yb0?=
- =?us-ascii?Q?6fl0NRNNOQ542rUiw/2xalrzTMaX66dRDz8H2rKcQJPK6Ka1BwVwBesWwMWT?=
- =?us-ascii?Q?xMK4u2JxxPRBOP4UOLeap7nBXNqd/S6OvceA8CpLeHp9cxqgGOKAz9aQh03J?=
- =?us-ascii?Q?SEtcswyasmsQg+gkQALY0LdU/iXm6//wHw5oeVnl08aaFI9L6bwxNCnHZDfb?=
- =?us-ascii?Q?xJJjvwtL+YUqWFjENSiVydGGhcKYHykLhl6p+qPbwzAjgOK7PUEVwbYKllkg?=
- =?us-ascii?Q?D9sv/x/JdHSl6RiXufq/ON4eN4PSA/rq4Afthf/qV3EwlQXuZvIMY36v2GWM?=
- =?us-ascii?Q?CZgc+NohW/DkyASs+8WgsS6/uCXt/H7YxozLMJH7KAMSJPEJY2fjcxfRzMLP?=
- =?us-ascii?Q?bjAl+b7ybNUT5Hsge0P3TlKyq1Ff8BLi76r0djPbwsGs40wZjxhvQuU4ubGV?=
- =?us-ascii?Q?3LM69JtEgnslH+vb27ycmILaxl9jFyPt1KERgrCwoe4OUJ0h/X/DY5xF8Gys?=
- =?us-ascii?Q?0ifWK1aX7vpD9R2w7SVY9eAiFLP0qT/VcvghGbYD/92wQBYwG0ufdzKgoVCq?=
- =?us-ascii?Q?QeR9fFQi9S+QH95wjBvMUYMqaPClqMAH115ntdIBI4BexQd5u/4KaytjaWtJ?=
- =?us-ascii?Q?KJgomLmzOPm4h2sai3DZhQnaIQSbxvKKLbotoLDX8HUaTcq95Oxie5MG1S9g?=
- =?us-ascii?Q?wBQALLcohO8OoOuCCVmvGLTrzSaTmD8MCyiTSR18wdcqFMgeW/nHy1rqoscF?=
- =?us-ascii?Q?EshZz7J4pJ9+JSX52OAz0u8JsrxTwN2vhRuASHl3+4f7dyH5rFphnBFaYy1C?=
- =?us-ascii?Q?0Ru8hLfjRpYTBmpEJuIYUv3Bo61Tmb6EyfF0G1nWXUmfufYFNSq+95WV1Fko?=
- =?us-ascii?Q?/EpFi7aYZPwOkAbQtnXPgzMJ/TC13okF6j8qRD5PV5kfwqYUEBBzIBUdcMIv?=
- =?us-ascii?Q?DyKUmg=3D=3D?=
-X-OriginatorOrg: in-advantage.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e459200b-4abe-4d54-7b16-08d9d7cbdab7
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR1001MB2351.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jan 2022 02:08:00.1957
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 48e842ca-fbd8-4633-a79d-0c955a7d3aae
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: J17attrkZk6UtK2CUrvSQfZlDOs6byw6Jg6D/WFFKJc4+8wGS2sKSrJCZquZfE2u8GoRtZxNRYAzqccwrUSepFTuDa9l3MjJvWBbjUi4UCU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO6PR10MB5396
+In-Reply-To: <20220114202939.5kq5ud5opfosjlyc@pengutronix.de>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [192.168.11.198]
+X-ClientProxiedBy: LFEXT01.lancloud.ru (fd00:f066::141) To
+ LFEX1907.lancloud.ru (fd00:f066::207)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 11, 2022 at 10:28:15AM -0800, Colin Foster wrote:
-> Hi Lee,
+On 1/14/22 11:29 PM, Uwe Kleine-König wrote:
+
+>>> The subsystems regulator, clk and gpio have the concept of a dummy
+>>> resource. For regulator, clk and gpio there is a semantic difference
+>>> between the regular _get() function and the _get_optional() variant.
+>>> (One might return the dummy resource, the other won't. Unfortunately
+>>> which one implements which isn't the same for these three.) The
+>>> difference between platform_get_irq() and platform_get_irq_optional() is
+>>> only that the former might emit an error message and the later won't.
+>>>
+>>> To prevent people's expectations that there is a semantic difference
+>>> between these too, rename platform_get_irq_optional() to
+>>> platform_get_irq_silent() to make the actual difference more obvious.
+>>>
+>>> The #define for the old name can and should be removed once all patches
+>>> currently in flux still relying on platform_get_irq_optional() are
+>>> fixed.
+>>
+>>    Hm... I'm afraid that with this #define they would never get fixed... :-)
 > 
-> On Tue, Jan 11, 2022 at 05:00:11PM +0000, Lee Jones wrote:
-> > On Tue, 11 Jan 2022, Colin Foster wrote:
-> > 
-> > > Hi Mark and Lee,
-> > > 
-> > > > 
-> > > > > However, even if that is required, I still think we can come up with
-> > > > > something cleaner than creating a whole API based around creating
-> > > > > and fetching different regmap configurations depending on how the
-> > > > > system was initialised.
-> > > > 
-> > > > Yeah, I'd expect the usual pattern is to have wrapper drivers that
-> > > > instantiate a regmap then have the bulk of the driver be a library that
-> > > > they call into should work.
+> I will care for it.
 
-I'm re-reading this with a fresh set of eyes. I've been jumping back and
-forth between the relatively small drivers (sgpio, pinctrl) and more
-complex ones (felix). I was looking at this from the narrow scope of the
-smaller drivers, which typically only handle a small regmap... only a
-handful of registers each. For those, there's no problem, and is pretty
-much what I've done.
+  Ah! OK then. :-)
 
-The Felix driver is different. Currently the VSC7512 has to allocate 20
-different regmaps. Nine for different features, some optional. 11 for
-each of the different ports. The VSC7511 will likely have 19 different
-ones because their ranges might not be identical. Same with the 7513,
-7514.
+>>> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+>>> ---
+>>> Hello,
+>>>
+>>> On Thu, Jan 13, 2022 at 02:45:30PM +0000, Mark Brown wrote:
+>>>> On Thu, Jan 13, 2022 at 12:08:31PM +0100, Uwe Kleine-König wrote:
+>>>>
+>>>>> This is all very unfortunate. In my eyes b) is the most sensible
+>>>>> sense, but the past showed that we don't agree here. (The most annoying
+>>>>> part of regulator_get is the warning that is emitted that regularily
+>>>>> makes customers ask what happens here and if this is fixable.)
+>>>>
+>>>> Fortunately it can be fixed, and it's safer to clearly specify things.
+>>>> The prints are there because when the description is wrong enough to
+>>>> cause things to blow up we can fail to boot or run messily and
+>>>> forgetting to describe some supplies (or typoing so they haven't done
+>>>> that) and people were having a hard time figuring out what might've
+>>>> happened.
+>>>
+>>> Yes, that's right. I sent a patch for such a warning in 2019 and pinged
+>>> occationally. Still waiting for it to be merged :-\
+>>> (https://lore.kernel.org/r/20190625100412.11815-1-u.kleine-koenig@pengutronix.de)
+>>>
+>>>>> I think at least c) is easy to resolve because
+>>>>> platform_get_irq_optional() isn't that old yet and mechanically
+>>>>> replacing it by platform_get_irq_silent() should be easy and safe.
+>>>>> And this is orthogonal to the discussion if -ENOXIO is a sensible return
+>>>>> value and if it's as easy as it could be to work with errors on irq
+>>>>> lookups.
+>>>>
+>>>> It'd certainly be good to name anything that doesn't correspond to one
+>>>> of the existing semantics for the API (!) something different rather
+>>>> than adding yet another potentially overloaded meaning.
+>>>
+>>> It seems we're (at least) three who agree about this. Here is a patch
+>>> fixing the name.
+>>
+>>    I can't say I genrally agree with this patch...
+> 
+> Yes, I didn't count you to the three people signaling agreement.
 
-In this example code, the resources are getting defined and allocated
-entirely within the felix system itself:
+   :-D
 
-(drivers/net/dsa/ocelot/felix_vsc9959.c):
-static const struct resource vsc9959_target_io_res[TARGET_MAX] = {
-        [ANA] = {
-                .start  = 0x0280000,
-                .end    = 0x028ffff,
-                .name   = "ana",
-        },
-        [QS] = {
-                .start  = 0x0080000,
-                .end    = 0x00800ff,
-                .name   = "qs",
-        },
-        ...
-};
+>> [...]
+>>> diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
+>>> index 7c96f169d274..6d495f15f717 100644
+>>> --- a/include/linux/platform_device.h
+>>> +++ b/include/linux/platform_device.h
+>>> @@ -69,7 +69,14 @@ extern void __iomem *
+>>>  devm_platform_ioremap_resource_byname(struct platform_device *pdev,
+>>>  				      const char *name);
+>>>  extern int platform_get_irq(struct platform_device *, unsigned int);
+>>> -extern int platform_get_irq_optional(struct platform_device *, unsigned int);
+>>> +extern int platform_get_irq_silent(struct platform_device *, unsigned int);
+>>> +
+>>> +/*
+>>> + * platform_get_irq_optional was recently renamed to platform_get_irq_silent.
+>>> + * Fixup users to not break patches that were created before the rename.
+>>> + */
+>>> +#define platform_get_irq_optional(pdev, index) platform_get_irq_silent(pdev, index)
+>>> +
+>>
+>>    Yeah, why bother fixing if it compiles anyway?
+> 
+> The plan is to remove the define in one or two kernel releases. The idea
+> is only to not break patches that are currently in next.
+> 
+>>    I think an inline wrapper with an indication to gcc that the function is deprecated
+>> (I just forgot how it should look) would be better instead...
+> 
+> The deprecated function annotation is generally frowned upon. See
+> 771c035372a0.
 
-(drivers/net/dsa/ocelot/felix.c):
-for (i = 0; i < TARGET_MAX; i++) {
-        struct regmap *target;
+   Not sure I share the sentiment but good to know about that.
 
-        if (!felix->info->target_io_res[i].name)
-                continue;
+> Best regards
+> Uwe
 
-        memcpy(&res, &felix->info->target_io_res[i], sizeof(res));
-        res.flags = IORESOURCE_MEM;
-        res.start += felix->switch_base;
-        res.end += felix->switch_base;
-
-        target = felix->info->init_regmap(ocelot, &res);
-        if (IS_ERR(target)) {
-                dev_err(ocelot->dev,
-                        "Failed to map device memory space\n");
-                kfree(port_phy_modes);
-                return PTR_ERR(target);
-        }
-
-        ocelot->targets[i] = target;
-}
-
-So Felix will say "give me regmaps from this array of resources."
-Resources have been added as development of Felix has progressed - in
-this type of scenario they should be able to do exactly that without
-having to "pre-register" with MFD. More specifically: why should adding
-precision time protocol to drivers/net/dsa/felix/ocelot_ext.c have any
-effect on drivers/mfd/ocelot-core.c?
-
-The patch that I submitted utilized the function
-ocelot_get_regmap_from_resource. Does this qualify as a "wrapper driver
-that instantates a regmap"? The more I think about it, the more I think
-that's exacly what the current implementation is. It just creates
-regmaps for all the child devices... and it creates a lot of regmaps...
-and it will have a lot of child devices...
-
-Maybe something will come to me in the next week or two - clearly I'm
-prone to changing my mind. But in the meantime I'll focus on cleaning up
-the rest of the changes that were suggested and prepare a new RFC.
-
-Thanks, and I'm looking forward to continuing work on this for
-(hopefully) 5.18!
-
-Colin Foster
+MBR, Sergey
