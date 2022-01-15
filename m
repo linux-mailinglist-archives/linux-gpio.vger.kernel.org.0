@@ -2,107 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BA4748F184
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Jan 2022 21:38:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B6F0048F43A
+	for <lists+linux-gpio@lfdr.de>; Sat, 15 Jan 2022 02:46:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237100AbiANUiB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Jan 2022 15:38:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50548 "EHLO
+        id S232065AbiAOBqs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Jan 2022 20:46:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230115AbiANUiA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jan 2022 15:38:00 -0500
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54A53C06173F
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Jan 2022 12:38:00 -0800 (PST)
-Received: by mail-lf1-x12b.google.com with SMTP id x7so33977614lfu.8
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Jan 2022 12:38:00 -0800 (PST)
+        with ESMTP id S231781AbiAOBqr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Jan 2022 20:46:47 -0500
+Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84F54C061574;
+        Fri, 14 Jan 2022 17:46:47 -0800 (PST)
+Received: by mail-yb1-xb2d.google.com with SMTP id v186so28686783ybg.1;
+        Fri, 14 Jan 2022 17:46:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HUGzTTyriTXZ8n39Zh2yraY+YbTAIxFn2aNWIIs8oNQ=;
-        b=lHnbPLnlJnWZf4BOMgmL2WqcLhiNaGPR/dRyJ+W4VokrCg0QyE0qjyGQzu70znnfRN
-         JgnFwglHtOeXECzW+ZZgqy0HEoSeFG5lKatmVX0JLcK5El8sDxc/Ct8e5poffUjcdpcE
-         DMt1jsK2b2xhzdqlUCuoCjI69QqxErIeO3636yS7B7BiWp56sJzMi39LWt2YiSAgPyfQ
-         W/J8cKN7U2ztZfhK34tF9fzmwv7A2tHK3bY77Mp+lgO3GhAb6TM3w9H79V+Rjf0Mfc5z
-         ocNlQgM9I0QO7kTjTNPSGLMy/pb7iz77FLe9OZ5JsnfCR1SEs9GYj4XY/xnRWn60RcHB
-         gHtw==
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tWKYqjMToQiYNKjbuCtLFgDL3xooRgPiVQeOXmHwMgs=;
+        b=nwt9fdkM8Jjyr8Qk9lQ3nikJt45z3ZIWItehvNMCq582HhZP8/Oh6b6RjDfJmYArPe
+         ieCs/E6lFaO4d6AriWHvI+bzTth+kfSwjf1RnbHxYyyUKCIpNxKoe/QHJ9Q5jzcdFpfd
+         FbGlZuzaiA44s0JyKbeHGe8aFfrl4DydWRmdRXsCOFni4zYlF/L493G0jeeKCEW+f/o2
+         shvM/YO1PgtuMiXhu5GPDb4eobmjPwBx/YQMSvNEwy99/99y3mPq1RpE+EI9V9Zyoqe+
+         I5XffLZuCwrZ2TllmVItNccGKkOw8Ve/hLX7dU2qKMm6ar7xWxxke9c9amp96VLpnUB5
+         u7ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HUGzTTyriTXZ8n39Zh2yraY+YbTAIxFn2aNWIIs8oNQ=;
-        b=QxBbrmE8DTR5YYy0+knc0Tdm56nOKdZvrCBDP+A36IthK20BPAa0HcQMm4VeLCW6M2
-         SLO+n8yHkADeausXw/0+cdfQagwuw+/nHWRLecwRe7OOWIhGQr5+XCyhHnQVTMFMG1CI
-         kuJqXN6hs62U/5jrFP7d5F01bxTsRyu9CwKNJjFlLn7VVG9vQY5JWXky6DWEyXkH/p4K
-         FFWxnBJYi8eEOSgGI7SsSZTNU4TEeo9UTGs84/hFeu69J41NwcXqijFKoAyFie+tRW3C
-         TrDmtMl4iQ6LeObyR5/bKxWX+mhv5m95ava7GWSaK77h3YjSyUP8MBxkYpn3dnVbxj/0
-         5HgA==
-X-Gm-Message-State: AOAM532sOmkddojr4rvf692uaqDAXCF7XmkmjctYOUnAmsgDa2e9b0gh
-        R2TwU2mMujfS6FIL+eJn8MvotwWYxUsOe1A4
-X-Google-Smtp-Source: ABdhPJyeB8FDojDbTY19RElb4UtHYMamhY3DprjLgedvmvQQCZDyifUK3I/wm9pcJvBq8VX6y1Z4jA==
-X-Received: by 2002:a05:6512:3044:: with SMTP id b4mr1614836lfb.7.1642192678674;
-        Fri, 14 Jan 2022 12:37:58 -0800 (PST)
-Received: from localhost ([31.134.121.151])
-        by smtp.gmail.com with ESMTPSA id c3sm371492lff.261.2022.01.14.12.37.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Jan 2022 12:37:58 -0800 (PST)
-From:   Sam Protsenko <semen.protsenko@linaro.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Chanho Park <chanho61.park@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: samsung: Remove EINT handler for Exynos850 ALIVE and CMGP gpios
-Date:   Fri, 14 Jan 2022 22:37:57 +0200
-Message-Id: <20220114203757.4860-1-semen.protsenko@linaro.org>
-X-Mailer: git-send-email 2.30.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tWKYqjMToQiYNKjbuCtLFgDL3xooRgPiVQeOXmHwMgs=;
+        b=JzZDj96o6lX7kNjMFDSNhC0z3/j9GYl/544DuqZ5NEisNAU9C5ZTcnOTudbYWOjOkw
+         dbjRaYeRAI0d2BfC4LaZAJQjWM+tazgs3JhRpvKSZyE/TEY+6dhMA8+2EwEc06pg1O5Q
+         qdnke2dQg4dmyJdUWAjjrU7nPsjN1FO6Z8l+Lw7XdVRfbYQfi481AbhgOUCfXQ2d+w5N
+         DEOiPIC+FyuKNNL1MNkIOjzNn/1PIYhSPI3wVif17g/5cOsHi/6aTOaHmi2mtn88+wot
+         Vlw+Gik8QAmR6RE5tb4QFRPIwa4M9Dv88mPacmIRrx2OV4leY8nrurIKEJ6S3yCfGHRC
+         OKoA==
+X-Gm-Message-State: AOAM531/z/2M8M8qurQz34LOI9os+2GDjkx4N0xBpOrywUlAVYgtxdMA
+        mQD2xoAPBjrQFpu6VbStbJvjAIGI9DPcUKyafaU=
+X-Google-Smtp-Source: ABdhPJwgzZLZHSnjfCYS1rIjQLZjd5tRg1w+jXNopdsIY1kj6ZrznRiU7nGR8CaxCU3f3tXLpA+HKePIHs69ZRR2jjU=
+X-Received: by 2002:a25:874a:: with SMTP id e10mr16006654ybn.422.1642211206642;
+ Fri, 14 Jan 2022 17:46:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20211221094717.16187-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20211221094717.16187-7-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdUB-wK_0Vqn4fmqQ0jaHWmo9OTRPT1bwWsZh76U1J729A@mail.gmail.com>
+In-Reply-To: <CAMuHMdUB-wK_0Vqn4fmqQ0jaHWmo9OTRPT1bwWsZh76U1J729A@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Sat, 15 Jan 2022 01:46:20 +0000
+Message-ID: <CA+V-a8sMfAT8DAxQJeAM6BvGOvrBE5sqVfm6ErS4y3wqT-UwVQ@mail.gmail.com>
+Subject: Re: [PATCH 06/16] dt-bindings: serial: renesas,scif: Document RZ/V2L SoC
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Sergey Shtylyov <s.shtylyov@omp.ru>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-GPIO_ALIVE and GPIO_CMGP blocks in Exynos850 SoC don't have EINT
-capabilities (like EINT_SVC register), and there are no corresponding
-interrupts wired to GIC. Instead those blocks have wake-up interrupts
-for each pin. The ".eint_gpio_init" callbacks were specified by mistake
-for these blocks, when porting pinctrl code from downstream kernel. That
-leads to error messages like this:
+Hi Geert,
 
-    samsung-pinctrl 11850000.pinctrl: irq number not available
+Thank you for the review.
 
-Remove ".eint_gpio_init" for pinctrl_alive and pinctrl_gpmc to fix this
-error. This change doesn't affect proper interrupt handling for related
-pins, as all those pins are handled in ".eint_wkup_init".
+On Tue, Jan 11, 2022 at 4:23 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Tue, Dec 21, 2021 at 10:48 AM Lad Prabhakar
+> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > From: Biju Das <biju.das.jz@bp.renesas.com>
+> >
+> > Add SCIF binding documentation for Renesas RZ/V2L SoC. SCIF block on RZ/V2L
+> > is identical to one found on the RZ/G2L SoC. No driver changes are required
+> > as RZ/G2L compatible string "renesas,scif-r9a07g044" will be used as a
+> > fallback.
+> >
+> > Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Thanks for your patch!
+>
+> > --- a/Documentation/devicetree/bindings/serial/renesas,scif.yaml
+> > +++ b/Documentation/devicetree/bindings/serial/renesas,scif.yaml
+> > @@ -67,6 +67,12 @@ properties:
+> >        - items:
+> >            - enum:
+> >                - renesas,scif-r9a07g044      # RZ/G2{L,LC}
+> > +              - renesas,scif-r9a07g054      # RZ/V2L
+>
+> As the idea is to rely on the RZ/G2L fallback for matching, cfr. below,
+> the above addition is not needed or wanted.
+>
+Agreed I will drop that.
 
-Fixes: cdd3d945dcec ("pinctrl: samsung: Add Exynos850 SoC specific data")
-Signed-off-by: Sam Protsenko <semen.protsenko@linaro.org>
----
- drivers/pinctrl/samsung/pinctrl-exynos-arm64.c | 2 --
- 1 file changed, 2 deletions(-)
+> > +
+> > +      - items:
+> > +          - enum:
+> > +              - renesas,scif-r9a07g054      # RZ/V2L
+> > +          - const: renesas,scif-r9a07g044   # RZ/G2{L,LC} fallback for RZ/V2L
+> >
+> >    reg:
+> >      maxItems: 1
+> > @@ -154,6 +160,7 @@ if:
+> >            - renesas,rcar-gen2-scif
+> >            - renesas,rcar-gen3-scif
+> >            - renesas,scif-r9a07g044
+> > +          - renesas,scif-r9a07g054
+>
+> This addition is not needed if the fallback is always present.
+>
+Ditto.
+> >  then:
+> >    required:
+> >      - resets
+>
+> Given Greg already applied your patch, I think you have to send a
+> follow-up patch.
+Will do.
 
-diff --git a/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c b/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
-index 2e490e7696f4..4102ce955bd7 100644
---- a/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
-@@ -585,13 +585,11 @@ static const struct samsung_pin_ctrl exynos850_pin_ctrl[] __initconst = {
- 		/* pin-controller instance 0 ALIVE data */
- 		.pin_banks	= exynos850_pin_banks0,
- 		.nr_banks	= ARRAY_SIZE(exynos850_pin_banks0),
--		.eint_gpio_init = exynos_eint_gpio_init,
- 		.eint_wkup_init = exynos_eint_wkup_init,
- 	}, {
- 		/* pin-controller instance 1 CMGP data */
- 		.pin_banks	= exynos850_pin_banks1,
- 		.nr_banks	= ARRAY_SIZE(exynos850_pin_banks1),
--		.eint_gpio_init = exynos_eint_gpio_init,
- 		.eint_wkup_init = exynos_eint_wkup_init,
- 	}, {
- 		/* pin-controller instance 2 AUD data */
--- 
-2.30.2
-
+Cheers,
+Prabhakar
