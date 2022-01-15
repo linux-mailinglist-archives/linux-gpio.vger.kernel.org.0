@@ -2,159 +2,263 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 59D5448F79F
-	for <lists+linux-gpio@lfdr.de>; Sat, 15 Jan 2022 16:47:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC7D948F7C2
+	for <lists+linux-gpio@lfdr.de>; Sat, 15 Jan 2022 17:24:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233024AbiAOPrA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 15 Jan 2022 10:47:00 -0500
-Received: from smtp-relay-internal-0.canonical.com ([185.125.188.122]:50340
-        "EHLO smtp-relay-internal-0.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233029AbiAOPq7 (ORCPT
+        id S232075AbiAOQYR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 15 Jan 2022 11:24:17 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:44195 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230030AbiAOQYQ (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Sat, 15 Jan 2022 10:46:59 -0500
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id B0FE2402A6
-        for <linux-gpio@vger.kernel.org>; Sat, 15 Jan 2022 15:46:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1642261618;
-        bh=pyv6K6/e4gWbzQck3Fw4qwBASmMwpzUJ8XeTxnDZIvo=;
-        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-         In-Reply-To:Content-Type;
-        b=RkOM1FW8neJduttmQzjpOtxQWkyR5MaaIorfH0QleVQUIx0WKaox8ZWqUUYKErTZe
-         rDc5A21Sef8DvxZgfxuiclsoKKlipwaf9vtGgCMq7hQxNBzUA7gmkMHAfpHsWu34xG
-         b/H80A1CdpURB7Imb8f7cjHvVyBq80ModDG0BJrXmnEKmsd8RiM4JacShkf820f0cI
-         nk3++oNjKFf8quE28ZqJNe2h9bFWNhuyFjBwMPviTPv6CUEQ4tgD5Ow9KnbftNdLgJ
-         b7Grn8JOh1EnEPlc7CJUE4y3+0XP/2bp+fOYXCaf8Rjfdw/AQ1jQ8ElaH4K2GfAi2L
-         v9updVNMvTHcQ==
-Received: by mail-wm1-f70.google.com with SMTP id n25-20020a05600c3b9900b00348b83fbd0dso7544163wms.0
-        for <linux-gpio@vger.kernel.org>; Sat, 15 Jan 2022 07:46:58 -0800 (PST)
+        Sat, 15 Jan 2022 11:24:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1642263855;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=S179sfX/6St8koX4G8jsY0xWuXkHoijD2h0R2aJtXSc=;
+        b=O9EhEE9m04QHUq8GsEu/MNSVn9wmzodtsBjlywd3kL7VUBfDp8vk9RGrYFTQuiCG8ZeSbv
+        PX5CnlAjJcj6cktebuAENRPyCdtqLYzJA88AWlXCwq7c19uNKjgg93N/PthVozc6gpIQyj
+        7Cw/g6FM/J8GCfJeTOvsB62EP2m7xvQ=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-106-SASbwZZLOFuqO5NlascZbA-1; Sat, 15 Jan 2022 11:24:13 -0500
+X-MC-Unique: SASbwZZLOFuqO5NlascZbA-1
+Received: by mail-ed1-f71.google.com with SMTP id y18-20020a056402271200b003fa16a5debcso10603985edd.14
+        for <linux-gpio@vger.kernel.org>; Sat, 15 Jan 2022 08:24:13 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+         :content-language:from:to:cc:references:in-reply-to
          :content-transfer-encoding;
-        bh=pyv6K6/e4gWbzQck3Fw4qwBASmMwpzUJ8XeTxnDZIvo=;
-        b=S3xLGYMb4OJ6intwcJLZOITaYudc28VrD93Z85IyxLKbPGGeyVTQVchVVm8DSWSE7R
-         kS9D4Hw2l9RUVQ33ne2TDYut7M9ldDLXuHWFl5DF5xhDNsKbX10bHEMnGre+0DyGAJrc
-         VopcmY+EYRXc3XQNPoqEcIxTyugfsJFYFdOQ/TeajSTw2biPz6o56d4CA48B1RWhnA9V
-         o/hBGwdkJ52gQdrw5HwVR7UwCYNtPQOftmk/+1kpA/itsT8amJQ+YKiwMTv/mVFECngD
-         KHvJvNIfU37jtiWmD+9Cvi+eksRAIfiSluYWOJO50z+iUBicy5K/h3azNNicLoLRq4Gw
-         CZlQ==
-X-Gm-Message-State: AOAM5302GwXvQkaUvY8yp0q30IYETlHZX6XI2HYV7G2zJS1piXwfAkeI
-        xeoWBhpXjgjV6tWeQql3TQFkhYNgytmxD0ei+c8hMn6H5E+6mm/msZ9KqX6FHdI9bydr9zQ+TJJ
-        X4S93lepnuGPdR9S30EAxvvhzOYWuabKWpfzltI0=
-X-Received: by 2002:a5d:64a3:: with SMTP id m3mr11902329wrp.36.1642261618194;
-        Sat, 15 Jan 2022 07:46:58 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzvsYLrH59WYGEMq9tEgh144HFNZsyjoe4tLn3KHcCiTauqFCWHR3XfTzCp3wI/MCFtaFxKwg==
-X-Received: by 2002:a5d:64a3:: with SMTP id m3mr11902313wrp.36.1642261617998;
-        Sat, 15 Jan 2022 07:46:57 -0800 (PST)
-Received: from [192.168.0.35] (xdsl-188-155-168-84.adslplus.ch. [188.155.168.84])
-        by smtp.gmail.com with ESMTPSA id j16sm8717042wrp.76.2022.01.15.07.46.57
+        bh=S179sfX/6St8koX4G8jsY0xWuXkHoijD2h0R2aJtXSc=;
+        b=nqrhdWHtAriUXeOv4j8C+JfpqYZIJM/QUDL9OgRaNVx6anGYJ65qQ26lWNEVmSr6g2
+         Q5H40ShESZc/LZM6uV+DmKyvSJ10DfrA+oS9SXBEgIKu+oi9dS0xdag6+ceztVjzbt3/
+         7TETRwYexDXqWDpYWLkhO+VUNBsszp/beFoOgXWq6yL+xXaTBdsClndCnkCRuHX9FUEd
+         7CoLcfzNEOcXRFDZv6UYCEHg03EjiqvkrL80JsSEhZIXD3vLv1eYVtYBDED6sFXsdVNM
+         jpszIL7M1BlSLY+bRBEUnSyKYQBdNqwce5kwa+XGvSu90NLBWpikI8tJLKBVm+0aSVPV
+         URCw==
+X-Gm-Message-State: AOAM533HHKF/ZnH7kxYGywIOm8AT0uZQ6WMUbGmOGLsK5glBS0wh9/lM
+        N4Fj+cSUOpCj3lzl4x4SicjnIT4C0ymgy6q3mcMKVYoLLg7wzOzK8YcpnOKLjKac5RVzl0uWjmL
+        XNgpSfg6W0BM9vrBR/j55kw==
+X-Received: by 2002:a17:907:c29:: with SMTP id ga41mr11446375ejc.676.1642263852715;
+        Sat, 15 Jan 2022 08:24:12 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzy2ExAQuYsiKxLa7ouYzxWiEC62j3285lyKYXXjIO1b6xIMlXkUJKM2DzghUwBnW+dlLXoNw==
+X-Received: by 2002:a17:907:c29:: with SMTP id ga41mr11446358ejc.676.1642263852443;
+        Sat, 15 Jan 2022 08:24:12 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
+        by smtp.gmail.com with ESMTPSA id jg3sm2674948ejc.37.2022.01.15.08.24.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 15 Jan 2022 07:46:57 -0800 (PST)
-Message-ID: <cced7901-a855-c733-e716-f4a7f822b213@canonical.com>
-Date:   Sat, 15 Jan 2022 16:46:56 +0100
+        Sat, 15 Jan 2022 08:24:11 -0800 (PST)
+Message-ID: <051a9e42-02e3-4db0-bdbd-f8d7855b5db0@redhat.com>
+Date:   Sat, 15 Jan 2022 17:24:11 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.1
-Subject: Re: [PATCH v2 00/28] pinctrl: dt-bindings: samsung: convert to
- dtschema
+ Thunderbird/91.3.0
+Subject: Re: [PATCH] pinctrl: baytrail: Pick first supported debounce value
+ larger then the requested value
 Content-Language: en-US
-To:     Sam Protsenko <semen.protsenko@linaro.org>
-Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Chanho Park <chanho61.park@samsung.com>,
-        Alim Akhtar <alim.akhtar@gmail.com>
-References: <20220111201426.326777-1-krzysztof.kozlowski@canonical.com>
- <CAPLW+4k3VNuQGfi_mnAWYUSXYaPmoFj1D55pHH0ByUsNu9kSyQ@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-In-Reply-To: <CAPLW+4k3VNuQGfi_mnAWYUSXYaPmoFj1D55pHH0ByUsNu9kSyQ@mail.gmail.com>
+        linux-gpio@vger.kernel.org
+References: <20210819203952.785132-1-hdegoede@redhat.com>
+ <YR+qHHVgALcpQ6k+@smile.fi.intel.com>
+ <ee7274c0-15f1-3ca0-cca3-bcdc37350334@redhat.com>
+ <YeANkfsFivOpulog@smile.fi.intel.com>
+ <82f6ccb3-7b15-8a5f-d142-8b4087fe4582@redhat.com>
+In-Reply-To: <82f6ccb3-7b15-8a5f-d142-8b4087fe4582@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 14/01/2022 19:31, Sam Protsenko wrote:
-> On Tue, 11 Jan 2022 at 22:15, Krzysztof Kozlowski
-> <krzysztof.kozlowski@canonical.com> wrote:
->>
->> Hi,
->>
->> Changes since v1
->> ================
->> 1. Patch #1: add missing pin assignment (Alim).
->> 2. Patch #2: correct double sizeof() (Alim).
->> 3. Patch #7, #8: put label-override in proper patch (Alim).
->> 4. Patch #24: Extend doc, change the 'if' clause for wake-up interrupts.
->> 5. New patches: #25 - #28.
->>    Exynos850 and ExynosAutov9 seems to be different in pin ctrl interrupt
->>    handling, so they need their own compatibles.
->>    Please kindly review and provide feedback on these as I do not have
->>    details.
->> 6. Add review tags.
->>
->> Dependencies
->> ============
->> 1. Patch #2 ("pinctrl: samsung: accept GPIO bank nodes with a suffix") is
->>    necessary for DTS patches.
->>
->> 2. Last patches #27 and #28 depend on patch #26 adding the compatibles.
->>
->> Best regards,
->> Krzysztof
->>
->> Krzysztof Kozlowski (28):
->>   pinctrl: samsung: drop pin banks references on error paths
->>   pinctrl: samsung: accept GPIO bank nodes with a suffix
->>   ARM: dts: exynos: drop unused pinctrl defines in Exynos3250
->>   ARM: dts: exynos: simplify PMIC DVS pin configuration in Odroid XU
->>   ARM: dts: exynos: override pins by label in Peach Pit
->>   ARM: dts: exynos: simplify PMIC DVS pin configuration in Peach Pit
->>   ARM: dts: exynos: override pins by label in Peach Pi
->>   ARM: dts: exynos: simplify PMIC DVS pin configuration in Peach Pi
->>   ARM: dts: s3c64xx: drop unneeded pinctrl wake-up interrupt mapping
->>   ARM: dts: exynos: align pinctrl with dtschema in Exynos3250
->>   ARM: dts: exynos: align pinctrl with dtschema in Exynos4210
->>   ARM: dts: exynos: align pinctrl with dtschema in Exynos4412
->>   ARM: dts: exynos: align pinctrl with dtschema in Exynos5250
->>   ARM: dts: exynos: align pinctrl with dtschema in Exynos5260
->>   ARM: dts: exynos: align pinctrl with dtschema in Exynos5410
->>   ARM: dts: exynos: align pinctrl with dtschema in Exynos542x/5800
->>   arm64: dts: exynos: align pinctrl with dtschema in Exynos5433
->>   arm64: dts: exynos: align pinctrl with dtschema in Exynos7
->>   arm64: dts: exynos: align pinctrl with dtschema in Exynos850
->>   arm64: dts: exynos: align pinctrl with dtschema in ExynosAutov9
->>   ARM: dts: s3c24xx: align pinctrl with dtschema
->>   ARM: dts: s3c64xx: align pinctrl with dtschema
->>   ARM: dts: s5pv210: align pinctrl with dtschema
->>   dt-bindings: pinctrl: samsung: convert to dtschema
->>   dt-bindings: pinctrl: samsung: describe Exynos850 and ExynosAutov9
->>     wake-ups
->>   pinctrl: samsung: add support for Exynos850 and ExynosAutov9 wake-ups
->>   arm64: dts: exynos: use dedicated wake-up pinctrl compatible in
->>     Exynos850
->>   arm64: dts: exynos: use dedicated wake-up pinctrl compatible in
->>     ExynosAutov9
->>
-> 
-> Maybe it makes sense to include my patch [1] for gpm6/gpm7 in this series?
-> 
-> [1] https://lore.kernel.org/linux-arm-kernel/20220103181826.2136-1-semen.protsenko@linaro.org/T/
-> 
+Hi,
 
-Yes, if I am going to resend, I'll include yours. Otherwise, I will try
-to remember when applying.
+On 1/13/22 12:56, Hans de Goede wrote:
+> Hi,
+> 
+> On 1/13/22 12:31, Andy Shevchenko wrote:
+>> On Mon, Aug 23, 2021 at 12:32:18PM +0200, Hans de Goede wrote:
+>>> On 8/20/21 3:11 PM, Andy Shevchenko wrote:
+>>>> On Thu, Aug 19, 2021 at 10:39:52PM +0200, Hans de Goede wrote:
+>>>>> Bay Trail pin control only supports a couple of discrete debounce timeout
+>>>>> values. Instead of returning -EINVAL for other values, pick the first
+>>>>> supported debounce timeout value larger then the requested timeout.
+>>>>>
+>>>>> E.g. on a HP ElitePad 1000 G2, where the ACPI tables specify a timeout of
+>>>>> 20 ms for various _AIE ACPI event sources, this will result in a timeout
+>>>>> of 24 ms instead of returning -EINVAL to the caller.
+>>
+>> Old thread which I forgot to answer to...
+> 
+> No problem I did happen to accidentally do some work on this over
+> the Christmas Holidays and made some notes.
+> 
+> Spoiler: I believe the best thing we can do here is to just
+> never touch the debounce settings at all, see below.
+> 
+>>>> I would prefer to see case 1...375: case 376...750: It makes it more explicit
+>>>> what we choose. Also it will be in align with debounce getter switch-case.
+>>>
+>>> Ok, that works for me.
+>>>
+>>>> Nevertheless, there is the bigger problem here, which is that the debounce
+>>>> setting is global per community and neither current nor new code addresses.
+>>>>
+>>>> What we need is to have a bitmap of size 3-bit * N_pins (per community) to save
+>>>> settings and each time we try to adjust them, we have to go through that bitmap
+>>>> and check actual users and see if we have conflicting requests.
+>>>>
+>>>> You may ask why we have to keep the actual debounce value and not the biggest
+>>>> one. The reason why is simple, if the following flow of requests comes we will
+>>>> have better setting at the end:
+>>>>
+>>>> 1) A asks for debounce of 1ms (we set to 1.5ms)
+>>>> 2) B asks for 10ms (we set likely to 12ms *)
+>>>> 3) B gone (we should return to 1.5ms)
+>>>> 4) C asks for 400us (*)
+>>>>
+>>>> *) TBH I have no idea what to do with these cases, i.e. when better to satisfy
+>>>>    the bigger, when issue warning, when just print a debug message. I admit
+>>>>    that debounce on BYT has been not thought through on HW level.
+>>>
+>>> I believe that most DSDTs only use 1 value, so the whole bitmap thing seems
+>>> over-complicated.
+>>
+>> Since you are in possession of plenty of them, can you confirm?
+> 
+> I could go look at this, yes, but I would need to make some time
+> for that. And since last time I'm not so sure this is the case
+> anymore, from the top of my head most DSDTs don't use this at all
+> and those that do use nice round numbers, not the very specific
+> supported values which suggests that the DSDT authors are not
+> aware that all the pins in a single community need to have the
+> same debounce setting.
+> 
+>>> I did noticed the dev_dbg which I added triggering by a requested value of 50 ms.
+>>> I've tracked that down to  drivers/input/misc/soc_button_array.c setting
+>>> debounce_interval to 50, which then gets passed to gpiod_set_debounce() by
+>>> drivers/input/keyboard/gpio_keys.c. gpio_keys.c will fallback to sw debouncing using
+>>> mod_delayed_work() if gpiod_set_debounce() fails, so I think we should deny
+>>> big debounce values to keep that fallback working.
+>>
+>> I'm not sure I got this. If DSDT asks for big debounce timeout how can we be
+>> sure it's incorrect request?
+> 
+> This is not coming from the DSDT, the DSDT is merely listing GPIOs to
+> use for the volume and power-buttons. The 50 ms debounce value is hardcoded in
+> drivers/input/misc/soc_button_array.c
+> 
+> That code creates platform-devs + pdata for drivers/input/keyboard/gpio_keys.c
+> and that latter code tries to use hw debouncing before falling back to sw
+> debouncing. I still had the patch from this thread in my personal WIP tree
+> and the version in my tree simply picked 24 ms for this as yuo suggest
+> below (continued below).
+> 
+>>
+>> At least I see the way out (yes, over complicated) in keeping bitmap and / or
+>> (not sure about bitmap) the mean / average debounce timeout. In such case if
+>> 5x users wants 10ms and one wants 50ms, we will set something like 12ms.
+>>
+>>> I suggest we do the following:
+>>>
+>>> 1. Reject value < 0 || value > 24 ms values (avoiding the gpio_keys case)
+>>
+>> Why not to set 24ms? Perhaps we need some heuristics here. If there ask for
+>> 30ms, 24ms sounds good enough, no?
+> 
+> True, there is a bigger problem though as said my the code in my WIP tree
+> was selecting 24ms for the 50ms debounce of the volume buttons and
+> I noticed that the volume buttons where not properly debounced resulting
+> in multiple evdev keypress events and those were grouped much closer together
+> in time then 24ms, it was more like 1ms or less even in between the bounces.
+> 
+> So it seems that the 24ms debounce setting does not work. IIRC (not sure)
+> I did check that there was not another later call changing the shared
+> debounce time to a lower value.
+> 
+> Looking back at my notes my intermediate conclusion was that (24ms)
+> debouncing seems to just not work; and that this needs more investigation.
+> 
+>>> 2. Determine rounded-up value using modified switch-case as you suggest 
+>>
+>> Ack.
+>>
+>>> 3. Check vs last set rounded-debounce value (if set) and warn + fail
+>>>    the set_debounce if it is different
+>>
+>> Ack.
+>>
+>>> 4. Remember the last set debounce value
+>>
+>> Ack with the above comment that perhaps better to keep mean / average.
+>>
+>>> If the warnings turn out to trigger, we can then look at the DSDT of
+>>> that specific device and figure out a way forward from there, with the
+>>> knowledge of how a troublesome device actually uses this (I know a sample
+>>> of 1 troublesome device is not necessarily representative, but it is
+>>> better then no samples and I expect / hope there to simply be no samples).
+>>
+>> Ack.
+>>
+>>> (we can then also skip the debounce-time programming when it is unchanged)
+>>
+>> Or close enough, sounds like we need margin in percentage of the asked value,
+>> like ±20% is okay.
+> 
+> I'm fine with adding a margin, but:
+> 
+> 1. Given what a mess this is with the shared debounce register
+> 2. That the current code expects the exact values from the datasheet,
+>    and otherwise returns -EINVAL.
+> 3. AFAICT no DSDTs actually use the exact datasheet values.
+> 4. 2 + 3 mean that in essence setting the debounce time currently is
+>    a no-op since it always returns -EINVAL.
+> 
+> I wonder if it is not better to preserve the current behavior of
+> setting the debounce-time being a no-op by just ripping out support
+> for setting it all together?
+> 
+> This seems like a nice KISS solution to all potential problems here,
+> just rely on whatever the BIOS has setup, which is in essence what
+> we have been doing so far.
+> 
+> Note I suggest to just keep the "get" path, it is is fine and I guess
+> it might be useful for some cases, or at least for debugging?
 
+So one more argument in favor of just disabling support for
+setting the debounce value, while looking at a git log of
+the baytrail pinctrl driver I noticed this:
 
-Best regards,
-Krzysztof
+commit ccd025eaddaeb99e982029446197c544252108e2
+Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Date:   Wed Dec 11 19:32:54 2019 +0200
+
+    pinctrl: baytrail: Enable pin configuration setting for GPIO chip
+
+    It appears that pin configuration for GPIO chip hasn't been enabled yet
+    due to absence of ->set_config() callback.
+
+    Enable it here for Intel Baytrail.
+
+    Fixes: c501d0b149de ("pinctrl: baytrail: Add pin control operations")
+    Depends-on: 2956b5d94a76 ("pinctrl / gpio: Introduce .set_config() callback for GPIO chips
+    Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+    Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+
+So before that (which is not that long ago) we were never doing any
+of the pinctrl stuff at all AFAICT, which to me seems like another
+argument that the best answer to the debounce settings challenges
+is to just not do it ?
+
+Regards,
+
+Hans
+
