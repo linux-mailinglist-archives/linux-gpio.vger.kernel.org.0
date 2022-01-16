@@ -2,80 +2,125 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E6B7048FC8E
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 Jan 2022 13:14:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 04B5348FD5F
+	for <lists+linux-gpio@lfdr.de>; Sun, 16 Jan 2022 15:19:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235054AbiAPMNq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 16 Jan 2022 07:13:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57112 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232025AbiAPMNq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 16 Jan 2022 07:13:46 -0500
-Received: from mail-ot1-x331.google.com (mail-ot1-x331.google.com [IPv6:2607:f8b0:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28240C06161C
-        for <linux-gpio@vger.kernel.org>; Sun, 16 Jan 2022 04:13:46 -0800 (PST)
-Received: by mail-ot1-x331.google.com with SMTP id m8-20020a9d4c88000000b00592bae7944bso13051567otf.1
-        for <linux-gpio@vger.kernel.org>; Sun, 16 Jan 2022 04:13:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UO8vyFXvwX7SYghDbHUuZM8heKAVpRc2v8cLwYWVW4o=;
-        b=DjeVuuDA0KdW/nC+q7IdYmQb9nZIn8j7wxygw5t2/5T4newz9evcma+miU7y1/p/0I
-         eXwnj1nfNhOiiI4ws48ScbwqL+cXjT5j8t5aCZ4dgEanylNdJ7FR+7u1lg57iT/+tAVE
-         ysgkLMRcOs5vvV74olBjf56f8WxLVe9FVgQg/O40Xz+7ucN2n0Q+oP7MDD1x99ondwqF
-         FFR8ITiPDvE015UKgutcCc7IxeocpTcQC6JUQiAcB0xbql2rVXF+UXffzyY9kEj9M7Lo
-         zQqsczhvBg5Fs1mCgIbWyUbeUHz3G9DwbuEofmpHMITCk8GEQNe6eSYW5JSp5PR1+a3O
-         6sOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UO8vyFXvwX7SYghDbHUuZM8heKAVpRc2v8cLwYWVW4o=;
-        b=yIdc7MzgMlsELlLYoMUluOYdb+Bo9ilVh29aZF4zzgHKy6H9fkQE5xSpxL5W6ccMNH
-         QOB8mDUi7wy/m79lc05TkXVdOuKqZ0xSUGt00Lg78RORtkIuobbLoM+daEQyGrVmduO4
-         4U3Lec5nwRPtojRaw29WHDGUMAokP31v9CWOUxkabKXx2EMpT5o613uk4ywGcfa9q6wp
-         UWHqdqacM9OB5y2AF0pDt9sA0snHqsnb5mtiI0ZlBqcx1JBqLNkKob6OnA1HrA4XDJ4a
-         M1ZIhfdRPBFLzTbOfoVJD42yhWSebQ9AN1+bTOq19j9yMJbB2geVzs1UjY/LtVCtDTeL
-         Xd6Q==
-X-Gm-Message-State: AOAM530nLjZ+7Ysjokv8r4iyHnyMJexy7OMW/Jcz5/TbNC0e6NcO+y69
-        60SG5JzRfy/tm6H3sNYB4bIgc1kPpMCwjoPsAAbrvg==
-X-Google-Smtp-Source: ABdhPJzdicsKDrKNgLtStCnnhN2DtxD7a6BfPYtUCC55jkQfRghWaCtzmmu1EZ0JbC7fzfUIvqyXnGrAUYFMDAGTJy4=
-X-Received: by 2002:a9d:a42:: with SMTP id 60mr13252447otg.179.1642335225538;
- Sun, 16 Jan 2022 04:13:45 -0800 (PST)
-MIME-Version: 1.0
-References: <20220114141507.395271-1-marcel@ziswiler.com> <20220114141507.395271-3-marcel@ziswiler.com>
-In-Reply-To: <20220114141507.395271-3-marcel@ziswiler.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 16 Jan 2022 13:13:34 +0100
-Message-ID: <CACRpkdb+62jojDXTjEXjgMrpo6XkZy8AZg+jDdhqt-7w6nVQig@mail.gmail.com>
-Subject: Re: [PATCH v2 02/11] dt-bindings: gpio: fix gpio-hog example
-To:     Marcel Ziswiler <marcel@ziswiler.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Rob Herring <robh@kernel.org>,
+        id S232297AbiAPOTN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 16 Jan 2022 09:19:13 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:50044 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229785AbiAPOTM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 16 Jan 2022 09:19:12 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 31DF260F2E;
+        Sun, 16 Jan 2022 14:19:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D360C36AE7;
+        Sun, 16 Jan 2022 14:19:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1642342750;
+        bh=KujYZ44NbqHewC3hStYnBx16eqgxm1SsBiD7vgCzy1A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sKsNPdg/t/aehm0kbBx0+iaMt7Vs15thP7mY+lgsvv2wpHp7hhFp/CL3s/+VFunx8
+         VMGsJpG9T+206AG5qxqWiAVL+YwMP+lMdgO6G29sYG5yQOnXi5Wp9YcaTPGre6QZaH
+         1Q5W85dO5PtMcGij5VwJ57avVdKo6t7UZumaWiEk=
+Date:   Sun, 16 Jan 2022 15:19:06 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Sergey Shtylyov <s.shtylyov@omp.ru>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>, linux-iio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>, alsa-devel@alsa-project.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-phy@lists.infradead.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-mtd@lists.infradead.org, linux-i2c@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        openipmi-developer@lists.sourceforge.net,
+        Saravanan Sekar <sravanhome@gmail.com>,
+        Khuong Dinh <khuong@os.amperecomputing.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        kvm@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-serial@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Robert Richter <rric@kernel.org>,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        Corey Minyard <minyard@acm.org>, linux-pm@vger.kernel.org,
+        Peter Korsgaard <peter@korsgaard.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Mark Brown <broonie@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
+        Tony Luck <tony.luck@intel.com>,
+        Mun Yew Tham <mun.yew.tham@intel.com>,
+        Eric Auger <eric.auger@redhat.com>, netdev@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Cornelia Huck <cohuck@redhat.com>, linux-mmc@vger.kernel.org,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        linux-spi@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Vinod Koul <vkoul@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>,
+        linux-mediatek@lists.infradead.org,
+        Brian Norris <computersforpeace@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH 1/2] platform: make platform_get_irq_optional() optional
+ (summary)
+Message-ID: <YeQpWu2sUVOSaT9I@kroah.com>
+References: <20220110195449.12448-1-s.shtylyov@omp.ru>
+ <20220110195449.12448-2-s.shtylyov@omp.ru>
+ <20220115183643.6zxalxqxrhkfgdfq@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220115183643.6zxalxqxrhkfgdfq@pengutronix.de>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jan 14, 2022 at 3:15 PM Marcel Ziswiler <marcel@ziswiler.com> wrote:
+On Sat, Jan 15, 2022 at 07:36:43PM +0100, Uwe Kleine-König wrote:
+> A possible compromise: We can have both. We rename
+> platform_get_irq_optional() to platform_get_irq_silent() (or
+> platform_get_irq_silently() if this is preferred) and once all users are
+> are changed (which can be done mechanically), we reintroduce a
+> platform_get_irq_optional() with Sergey's suggested semantic (i.e.
+> return 0 on not-found, no error message printking).
 
-> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
->
-> Even if this is no yaml yet at least fix the example to be compliant to
-> later schema as e.g. found in gpio-pca95xx.yaml, fairchild,74hc595.yaml
-> and gpio/fsl-imx-gpio.yaml.
->
-> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> Acked-by: Rob Herring <robh@kernel.org>
+Please do not do that as anyone trying to forward-port an old driver
+will miss the abi change of functionality and get confused.  Make
+build-breaking changes, if the way a function currently works is
+changed in order to give people a chance.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+thanks,
 
-Yours,
-Linus Walleij
+greg k-h
