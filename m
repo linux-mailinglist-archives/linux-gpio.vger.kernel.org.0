@@ -2,77 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 49DC948FBA9
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 Jan 2022 09:33:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 04BD148FBFE
+	for <lists+linux-gpio@lfdr.de>; Sun, 16 Jan 2022 10:38:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234780AbiAPIdN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 16 Jan 2022 03:33:13 -0500
-Received: from out162-62-57-49.mail.qq.com ([162.62.57.49]:56211 "EHLO
-        out162-62-57-49.mail.qq.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234779AbiAPIdN (ORCPT
+        id S231992AbiAPJiL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 16 Jan 2022 04:38:11 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:37871 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231261AbiAPJiK (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 16 Jan 2022 03:33:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-        s=s201512; t=1642321989;
-        bh=So3WZ5FvjllBHQzS197yDZc/bzSJMtX1iMxl4muakzA=;
-        h=From:To:Cc:Subject:Date;
-        b=vSo6fiS5OQSe2eTBNXUtVQhIM7S64f7fQ0+IVarUXhF0R2HzaPJ/dnE8pxchT70+7
-         7QIR9oPKI5B/BKyq+Tk9cIvGvNAEXXapOSduy98ZkOMulzCKQGaix0w2NLQW+4NDeI
-         4tH70MfY/ioAiHqdENTgtx8yrxKjrtWUzkB+rFWI=
-Received: from localhost.localdomain ([43.227.136.188])
-        by newxmesmtplogicsvrsza9.qq.com (NewEsmtp) with SMTP
-        id 45A8D61B; Sun, 16 Jan 2022 16:17:26 +0800
-X-QQ-mid: xmsmtpt1642321046t4sl5l64s
-Message-ID: <tencent_949564FE01410898F3734D38FA284CC2E909@qq.com>
-X-QQ-XMAILINFO: Ng3M1C/wDpyJYXCUJikaVHNA7js7JxKDFsyQSgSOzIFX1Ou7rzeXI/GvQqqQG2
-         jeJQdwGI8g4hPFHuvhLr4iAEvrq7gGKc1rEdTy5Ye9Xb/2WxTM/vqc8bPzM+Ebf8AYC10i9VMlQM
-         6lZxecf2x3PWVCv9WduYeRyyaR9iJwbBwBQFB5q2mCW+VmwW3aXpqpViE9bJod7Mrkg3FZX6kuyW
-         gHP281X463p0T5zvGu0y+hcaKN3wYjMszZIsL6xwJeiUXe/PowhmvVOKaM6QeWmiTE8x7oP3A5B9
-         YfxUCCFXB8BUJ4AMCPrdCpzVxJPn+Y6iP75RcpP8RwmTNvrvPjrk0ZjcccGM2Z4anFjADjMnLuQu
-         BTvVHj5KUVImi+SQr+Pq8WHSBNiG8JR5mk4PPxWhD9W00wIxLrDIhCTmVvOJBS7hO/7rzSN4Bv9z
-         U4MH4YojMHErVf051AmVBh1UbZARbnO1xjUF3Wcj0yzGbOdqLImHmc+9LdxR1X1FqZ0v2dpqSaxV
-         ypjkS+2YPviSBYPUywARWCic5PJAtIMaUi22nEacpN7s0X7/Aif7ol4/hCqfU/B9jvMrI3cpCmul
-         +s2E06/ifQbcSVvQfS8l/qPjvp2yWMmgoZWfFdDOdU2lFCpyr1qETiOSOoAR7uyDBjmbLbv5hKiF
-         NHSsb+deT2Z6gZ0ltamsfijqjQA5T52nkyu5PCoUwpVNoUh70z/6rktpkDol8lEs1+bLT9Z65/VU
-         HcXDbnrjq8ztQPGfRXUMyDsT5XU94EjcSDBIZeer9HJa2E6Tj/ZBWzLm+lOB5IwVS+LBLqQHpkbC
-         fi8kB1SY0N56f+HrWw5BAwsyD9KUBIowKti223okH2y/cdQi6HtdN1XDWjU9oYl+aGLjNOqLk6f+
-         KnbYNkBzYqbzLKaRwXMebH3REqSQXv6ubalMRA8Isqnr1bdmuLPkfmB+kkJOWtDcdyrZiWyx9p
-From:   xkernel.wang@foxmail.com
-To:     andy@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xiaoke Wang <xkernel.wang@foxmail.com>
-Subject: [PATCH] gpio: merrifield: check the return value of devm_kstrdup()
-Date:   Sun, 16 Jan 2022 16:16:38 +0800
-X-OQ-MSGID: <20220116081638.2676-1-xkernel.wang@foxmail.com>
-X-Mailer: git-send-email 2.33.0.windows.2
+        Sun, 16 Jan 2022 04:38:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1642325890;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=XM7twxV5fcYmhWZi9on2pwh6tX7Y+btUVEYKhEYQmW0=;
+        b=asZuBBj7/ZJaMAeas7xqfs0SupixqmN02XjwtfwuJFGdqI6cF7ktoezDH6+jM/gWfdzYu1
+        /s8pvnwdhCp5Q8gotJkuExbQUcc1MlXwEXFHcmkZYQLi09FbLYgKmnUuzpX/z2nzOTC6xG
+        d0jYEeRLsE89Gh2P2IPhUZZI4qfSCkA=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-608-TwVPi_EINUuZu_rK1yJQrA-1; Sun, 16 Jan 2022 04:38:08 -0500
+X-MC-Unique: TwVPi_EINUuZu_rK1yJQrA-1
+Received: by mail-ed1-f70.google.com with SMTP id x19-20020a05640226d300b003f8b80f5729so11627690edd.13
+        for <linux-gpio@vger.kernel.org>; Sun, 16 Jan 2022 01:38:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=XM7twxV5fcYmhWZi9on2pwh6tX7Y+btUVEYKhEYQmW0=;
+        b=2qSzMfKg+mnsx5j5DkbZBXpoZGN4kWV/RmOOnotlZcF1EjiYgnpFYweNyEA08t56OK
+         JaSiNpj6pdG9msw9O31pz8rw9sits03nAth8lNWH55DXy4jHK7d+r7gn/dUoZCxnq+bn
+         c9f3BNRFUeykNAf/W+9S9stOEddRHCkGGw27EH7m9jLOLmGoPy+USaq9bFT+bSIVvKLE
+         SFau43FvDxO4PtOIeTeLBmkKVT8LBZakrHKlQRq6qcHWE9J4SDS80KPg7g2kA9152rJ5
+         wCjO8vzETTZrM6isHhGeGoeMnkeb0Y7n41TOhtaFEiM39UhFAyL0lV+ReCuvGpSz5ZGc
+         8UUQ==
+X-Gm-Message-State: AOAM533MqsLINZYazZQY0kwRc5tUhSKmvsYZQ12V8LoBvBMYm2fJu/ne
+        +Z5qMpZHdfZM3mrSP1jKH5krS5l2xH26tbBTp9cfNBfd4RptzkC9FazaFaL+epUwcaHg2J8c+0l
+        w9kxBFLRIt2l1LFh4eczF6Q==
+X-Received: by 2002:a05:6402:5216:: with SMTP id s22mr574010edd.44.1642325887583;
+        Sun, 16 Jan 2022 01:38:07 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwyjqSYKYOIiX7r82o3B8yNVo+jx1JCi65D/vF8iNnGK/gwpxQdlfAFtLLplSFiGSZfOdjvDA==
+X-Received: by 2002:a05:6402:5216:: with SMTP id s22mr574000edd.44.1642325887431;
+        Sun, 16 Jan 2022 01:38:07 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
+        by smtp.gmail.com with ESMTPSA id r17sm4318000edw.70.2022.01.16.01.38.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 16 Jan 2022 01:38:06 -0800 (PST)
+Message-ID: <99b07461-750f-fcd3-efc3-4dc4d9f9a859@redhat.com>
+Date:   Sun, 16 Jan 2022 10:38:06 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [PATCH] pinctrl: cherryview: Trigger hwirq0 for interrupt-lines
+ without a mapping
+Content-Language: en-US
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>
+References: <20220104164238.253142-1-hdegoede@redhat.com>
+ <YdS8X1w7YWizdady@smile.fi.intel.com>
+ <CACRpkdbHwKyJnwYno9OOWrFtapAp=bN_VYLu_p6xG2wMJjQKJA@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CACRpkdbHwKyJnwYno9OOWrFtapAp=bN_VYLu_p6xG2wMJjQKJA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Xiaoke Wang <xkernel.wang@foxmail.com>
+Hi,
 
-devm_kstrdup() returns pointer to allocated string on success,
-NULL on failure. So it is better to check the return value of it.
+On 1/16/22 02:01, Linus Walleij wrote:
+> On Tue, Jan 4, 2022 at 10:31 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> 
+>> On Tue, Jan 04, 2022 at 05:42:38PM +0100, Hans de Goede wrote:
+>>> Commit bdfbef2d29dc ("pinctrl: cherryview: Don't use selection 0 to mark
+>>> an interrupt line as unused") made the code properly differentiate
+>>> between unset vs (hwirq) 0 entries in the GPIO-controller interrupt-line
+>>> to GPIO pinnumber/hwirq mapping.
+>>>
+>>> This is causing some boards to not boot. This commit restores the old
+>>> behavior of triggering hwirq 0 when receiving an interrupt on an
+>>> interrupt-line for which there is no mapping.
+>>
+>> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>>
+>> Linus, can you apply this directly for v5.16 release?
+> 
+> Unfortunately I am a bit snowed under by backlog but I have now
+> applied it for fixes for v5.17.
 
-Signed-off-by: Xiaoke Wang <xkernel.wang@foxmail.com>
----
- drivers/gpio/gpio-merrifield.c | 3 +++
- 1 file changed, 3 insertions(+)
+Thank you.
 
-diff --git a/drivers/gpio/gpio-merrifield.c b/drivers/gpio/gpio-merrifield.c
-index 42c4d9d..f3d1bae 100644
---- a/drivers/gpio/gpio-merrifield.c
-+++ b/drivers/gpio/gpio-merrifield.c
-@@ -409,6 +409,9 @@ static int mrfld_gpio_add_pin_ranges(struct gpio_chip *chip)
- 	int retval;
- 
- 	pinctrl_dev_name = mrfld_gpio_get_pinctrl_dev_name(priv);
-+	if (!pinctrl_dev_name)
-+		return -ENOMEM;
-+
- 	for (i = 0; i < ARRAY_SIZE(mrfld_gpio_ranges); i++) {
- 		range = &mrfld_gpio_ranges[i];
- 		retval = gpiochip_add_pin_range(&priv->chip, pinctrl_dev_name,
--- 
+> Should I now also tag it for stable?
+
+The troublesome commit this fixes / worksaround is only in Torvald's
+current master, not in the v5.16 tag, so there is no need for this to
+go stable.
+
+Regards,
+
+Hans
+
