@@ -2,116 +2,187 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AC7548FE22
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 Jan 2022 18:10:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5035D48FE58
+	for <lists+linux-gpio@lfdr.de>; Sun, 16 Jan 2022 19:15:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235853AbiAPRKR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 16 Jan 2022 12:10:17 -0500
-Received: from smtp-relay-internal-1.canonical.com ([185.125.188.123]:49676
-        "EHLO smtp-relay-internal-1.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235775AbiAPRKQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 16 Jan 2022 12:10:16 -0500
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com [209.85.208.70])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 639F43F1C7
-        for <linux-gpio@vger.kernel.org>; Sun, 16 Jan 2022 17:10:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1642353015;
-        bh=EhxJCJbUdgTgKtzOcyBHRUPuVpieLDdqxSMQQuY+TMQ=;
-        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-         In-Reply-To:Content-Type;
-        b=DAQ/nFGEHgUfOWpxI246IQqCdcl/g2M+AFe+3u3GGbjRo5VUUo/OO/QqyY3hbEQhF
-         R0NLmqW9Lnk8bqZzyN9qiYTQo1BQNlTEmlxN5zzk9N89oJg+rbcZQZo19P/JYg875J
-         GypuHQxMbit//I9QvXh1pGF6yOAcnunB+YXDbC+ws4vw9ki8hOGmKcKNx97e6mKrHF
-         7smGwzRi8cae5ESHyxty8SHeFCLRwbYsqWKgc7jsj8VXwnHu0ycH2dgtKhcdIQ3d7M
-         9J1RPRrHe03SPpxxUEoZr68taG0fqFiP8LlJbGE6vEWMcUfcJvTTyOpozZpPQTyWaR
-         SG9zVmStNCnhA==
-Received: by mail-ed1-f70.google.com with SMTP id b8-20020a056402350800b003f8f42a883dso12195963edd.16
-        for <linux-gpio@vger.kernel.org>; Sun, 16 Jan 2022 09:10:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=EhxJCJbUdgTgKtzOcyBHRUPuVpieLDdqxSMQQuY+TMQ=;
-        b=NIhCQ5N7gaLh0qONLstHFM3wjd6EqLwJDerR/752x2Db2IhOPr05em0gYLOUUGvxAS
-         QQ3zxuGRawpGA9ZUjUylCbg1e8zSFJUJjSiQfVso5AX6mSY44wl8HVkilpScFY2ZQH9a
-         C+R00pV6yXaw4jkxF8rK6umamFDr6ZA0UbPRVvSEFzNTfy4ce/sKWkNwUio6i8d5kz+9
-         G5aBTiq7cvnG9gqykp0KEWmIcYo2lBSYZv8wv/ZCTTTe/Ewr7GlOpzLrZ71zCpEFZGBe
-         ivzi6LxSeE/QLG4Qy1jWjxem97vMHlaENqw4q2LgHzF5dw8pLwnIWcO+q0lqHX37ifq1
-         s9Nw==
-X-Gm-Message-State: AOAM531/LUXnTjP0Yc8Ohy9SDqYisEhTz3u4sR5ESNdIn7lpFO8w39Nv
-        tk3PoZ9aMNRAx6W0DQYxRLDr1Lc67g1Rx8flNDTGRk5OAQ6/e49S9goXHhg+k7J2faEGitfAkzw
-        1ymSRoo9IkwyWCTOMabgTSE3mJqfD1nGllLb1jbc=
-X-Received: by 2002:a05:6402:4382:: with SMTP id o2mr17362776edc.38.1642353012339;
-        Sun, 16 Jan 2022 09:10:12 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJza5CxAsjW3okTGXopRWNrhyQPGIvdCMmcUOjfP9egRyMTlefnsZXuW0WKLs2dmgxPbUpWabA==
-X-Received: by 2002:a05:6402:4382:: with SMTP id o2mr17362749edc.38.1642353012118;
-        Sun, 16 Jan 2022 09:10:12 -0800 (PST)
-Received: from [192.168.0.35] (xdsl-188-155-168-84.adslplus.ch. [188.155.168.84])
-        by smtp.gmail.com with ESMTPSA id l2sm3117556ejk.187.2022.01.16.09.10.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 16 Jan 2022 09:10:11 -0800 (PST)
-Message-ID: <5047da7c-d3a6-5472-b0ca-7ed3dbe8a5fe@canonical.com>
-Date:   Sun, 16 Jan 2022 18:10:10 +0100
+        id S235976AbiAPSPd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 16 Jan 2022 13:15:33 -0500
+Received: from mxout03.lancloud.ru ([45.84.86.113]:59572 "EHLO
+        mxout03.lancloud.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235965AbiAPSPd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 16 Jan 2022 13:15:33 -0500
+Received: from LanCloud
+DKIM-Filter: OpenDKIM Filter v2.11.0 mxout03.lancloud.ru 2173F206F618
+Received: from LanCloud
+Received: from LanCloud
+Received: from LanCloud
+Subject: Re: [PATCH 1/2] platform: make platform_get_irq_optional() optional
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+CC:     Andrew Lunn <andrew@lunn.ch>, Ulf Hansson <ulf.hansson@linaro.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        KVM list <kvm@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        <linux-iio@vger.kernel.org>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        "ALSA Development Mailing List" <alsa-devel@alsa-project.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Guenter Roeck <groeck@chromium.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        <linux-phy@lists.infradead.org>, Jiri Slaby <jirislaby@kernel.org>,
+        <openipmi-developer@lists.sourceforge.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Khuong Dinh <khuong@os.amperecomputing.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        "Bartosz Golaszewski" <brgl@bgdev.pl>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Robert Richter <rric@kernel.org>,
+        Saravanan Sekar <sravanhome@gmail.com>,
+        Corey Minyard <minyard@acm.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Peter Korsgaard <peter@korsgaard.com>,
+        "William Breathitt Gray" <vilhelm.gray@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Mark Brown <broonie@kernel.org>,
+        "Borislav Petkov" <bp@alien8.de>,
+        Sebastian Reichel <sre@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        <platform-driver-x86@vger.kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        <linux-edac@vger.kernel.org>, Tony Luck <tony.luck@intel.com>,
+        Mun Yew Tham <mun.yew.tham@intel.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        "Linux MMC List" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Richard Weinberger <richard@nod.at>,
+        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
+        <linux-mediatek@lists.infradead.org>,
+        "Brian Norris" <computersforpeace@gmail.com>,
+        <netdev@vger.kernel.org>
+References: <20220110201014.mtajyrfcfznfhyqm@pengutronix.de>
+ <YdyilpjC6rtz6toJ@lunn.ch>
+ <CAMuHMdWK3RKVXRzMASN4HaYfLckdS7rBvSopafq+iPADtGEUzA@mail.gmail.com>
+ <20220112085009.dbasceh3obfok5dc@pengutronix.de>
+ <CAMuHMdWsMGPiQaPS0-PJ_+Mc5VQ37YdLfbHr_aS40kB+SfW-aw@mail.gmail.com>
+ <20220112213121.5ruae5mxwj6t3qiy@pengutronix.de>
+ <Yd9L9SZ+g13iyKab@sirena.org.uk>
+ <29f0c65d-77f2-e5b2-f6cc-422add8a707d@omp.ru>
+ <20220114092557.jrkfx7ihg26ekzci@pengutronix.de>
+ <61b80939-357d-14f5-df99-b8d102a4e1a1@omp.ru>
+ <20220114202226.ugzklxv4wzr6egwj@pengutronix.de>
+From:   Sergey Shtylyov <s.shtylyov@omp.ru>
+Organization: Open Mobile Platform
+Message-ID: <57af1851-9341-985e-7b28-d2ba86770ecb@omp.ru>
+Date:   Sun, 16 Jan 2022 21:15:20 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.1
-Subject: Re: [PATCH v2 24/28] dt-bindings: pinctrl: samsung: convert to
- dtschema
+In-Reply-To: <20220114202226.ugzklxv4wzr6egwj@pengutronix.de>
+Content-Type: text/plain; charset="windows-1252"
 Content-Language: en-US
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sam Protsenko <semen.protsenko@linaro.org>,
-        Chanho Park <chanho61.park@samsung.com>,
-        Alim Akhtar <alim.akhtar@gmail.com>,
-        Rob Herring <robh@kernel.org>
-References: <20220111201426.326777-1-krzysztof.kozlowski@canonical.com>
- <20220111201722.327219-18-krzysztof.kozlowski@canonical.com>
- <CACRpkdYTXSOW+sOX3wVtF4jj6xm0jr-F3HKQPGHOdAVjbasP3A@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-In-Reply-To: <CACRpkdYTXSOW+sOX3wVtF4jj6xm0jr-F3HKQPGHOdAVjbasP3A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [192.168.11.198]
+X-ClientProxiedBy: LFEXT01.lancloud.ru (fd00:f066::141) To
+ LFEX1907.lancloud.ru (fd00:f066::207)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 16/01/2022 01:55, Linus Walleij wrote:
-> On Tue, Jan 11, 2022 at 9:18 PM Krzysztof Kozlowski
-> <krzysztof.kozlowski@canonical.com> wrote:
-> 
->> Convert the Samsung SoC (S3C24xx, S3C64xx, S5Pv210, Exynos) pin
->> controller bindings to DT schema format.  Parts of description and DTS
->> example was copied from existing sources, so keep the license as
->> GPL-2.0-only.
+Hello!
+
+On 1/14/22 11:22 PM, Uwe Kleine-König wrote:
+
+>>>>>>> To me it sounds much more logical for the driver to check if an
+>>>>>>> optional irq is non-zero (available) or zero (not available), than to
+>>>>>>> sprinkle around checks for -ENXIO. In addition, you have to remember
+>>>>>>> that this one returns -ENXIO, while other APIs use -ENOENT or -ENOSYS
+>>>>>>> (or some other error code) to indicate absence. I thought not having
+>>>>>>> to care about the actual error code was the main reason behind the
+>>>>>>> introduction of the *_optional() APIs.
+>>>>>
+>>>>>> No, the main benefit of gpiod_get_optional() (and clk_get_optional()) is
+>>>>>> that you can handle an absent GPIO (or clk) as if it were available.
+>>>>
+>>>>    Hm, I've just looked at these and must note that they match 1:1 with
+>>>> platform_get_irq_optional(). Unfortunately, we can't however behave the
+>>>> same way in request_irq() -- because it has to support IRQ0 for the sake
+>>>> of i8253 drivers in arch/...
+>>>
+>>> Let me reformulate your statement to the IMHO equivalent:
+>>>
+>>> 	If you set aside the differences between
+>>> 	platform_get_irq_optional() and gpiod_get_optional(),
 >>
->> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
->> Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
->> Reviewed-by: Rob Herring <robh@kernel.org>
+>>    Sorry, I should make it clear this is actually the diff between a would-be
+>> platform_get_irq_optional() after my patch, not the current code...
 > 
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> The similarity is that with your patch both gpiod_get_optional() and
+> platform_get_irq_optional() return NULL and 0 on not-found. The relevant
+> difference however is that for a gpiod NULL is a dummy value, while for
+> irqs it's not. So the similarity is only syntactically, but not
+> semantically.
+
+   I have noting to say here, rather than optional IRQ could well have a different
+meaning than for clk/gpio/etc.
+
+[...]
+>>> However for an interupt this cannot work. You will always have to check
+>>> if the irq is actually there or not because if it's not you cannot just
+>>> ignore that. So there is no benefit of an optional irq.
+>>>
+>>> Leaving error message reporting aside, the introduction of
+>>> platform_get_irq_optional() allows to change
+>>>
+>>> 	irq = platform_get_irq(...);
+>>> 	if (irq < 0 && irq != -ENXIO) {
+>>> 		return irq;
+>>> 	} else if (irq >= 0) {
+>>
+>>    Rather (irq > 0) actually, IRQ0 is considered invalid (but still returned).
 > 
-> I expect that you will merge this into ARM SoC with the rest
-> of the DTS fixes?
+> This is a topic I don't feel strong for, so I'm sloppy here. If changing
+> this is all that is needed to convince you of my point ...
 
-Yes, that would be the most clean approach, although there is no strict
-dependency requirement between bindings and DTS. If they go via two
-separate trees (ARM SoC and pinctrl), there will be a branch when
-dtschema complains about DTS, which is not nice, but also not fatal.
+   Note that we should absolutely (and first of all) stop returning 0 from platform_get_irq()
+on a "real" IRQ0. Handling that "still good" zero absolutely doesn't scale e.g. for the subsystems
+(like libata) which take 0 as an indication that the polling mode should be used... We can't afford
+to be sloppy here. ;-)
 
-Anyway DTS and dtschema will have to wait for one release, because they
-depend on samsung pinctrl driver change (patch #2).
+[...]
 
+> Best regards
+> Uwe
 
-Best regards,
-Krzysztof
+MBR, Sergey
