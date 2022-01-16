@@ -2,82 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B6DB48FC71
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 Jan 2022 13:02:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A3A148FC7D
+	for <lists+linux-gpio@lfdr.de>; Sun, 16 Jan 2022 13:07:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231983AbiAPMCv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 16 Jan 2022 07:02:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54650 "EHLO
+        id S235006AbiAPMHJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 16 Jan 2022 07:07:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231918AbiAPMCv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 16 Jan 2022 07:02:51 -0500
-Received: from mail-oi1-x230.google.com (mail-oi1-x230.google.com [IPv6:2607:f8b0:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD76FC06161C
-        for <linux-gpio@vger.kernel.org>; Sun, 16 Jan 2022 04:02:50 -0800 (PST)
-Received: by mail-oi1-x230.google.com with SMTP id i9so19390453oih.4
-        for <linux-gpio@vger.kernel.org>; Sun, 16 Jan 2022 04:02:50 -0800 (PST)
+        with ESMTP id S231932AbiAPMHJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 16 Jan 2022 07:07:09 -0500
+Received: from mail-ot1-x32a.google.com (mail-ot1-x32a.google.com [IPv6:2607:f8b0:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89C43C061574
+        for <linux-gpio@vger.kernel.org>; Sun, 16 Jan 2022 04:07:08 -0800 (PST)
+Received: by mail-ot1-x32a.google.com with SMTP id x31-20020a056830245f00b00599111c8b20so2713711otr.7
+        for <linux-gpio@vger.kernel.org>; Sun, 16 Jan 2022 04:07:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=MQugVzR0HUW1l8YQ855U1R3u4rbB4xlEWOyDYT7TwoM=;
-        b=s0yHRZxkpbimGufWxMOVBXxk5R6yRG83z9/XZ9iOTsE+YGZA1cWYi0Zi8fRs2kNaN0
-         eIVgSWV8wxFPOSX1u5DZCLWjSJyhP4NPoY0s9tQfCMq+D3JErlR6sez3A8q8Idu/Zbob
-         pLbqeWLXwGP419yPkutzyTfQf6IauG1pPSExJPOoFOkAhlo6g8wB8BnWbiG9nu/o/H5Q
-         DICRotGEhLY18p8HIWkHifxmVMSOWm9CIMLIVQDzQpwMsV1UCzusUQVI8jiyzOZlWmpy
-         DoMxEqLo1X3LqktlT2cmTUjQEE3a2bB3/Ea1AGr3lCMuusNLXyaNExyDhBQ9mRl/b+CL
-         mD2A==
+        bh=7o2yHBJnbdgBA14paBxnQ07Miq57N45X/orHzH3UYOU=;
+        b=LO+72frJu+DNTvMhQZVhuGanlYhZPe4ZG9J8lwuaPGnb79xbpLy/Fvdo2kesOn2Rin
+         81WFCPtwZYnCHbTZ10vA+fp0fAnIOnKvjqHTM1RIwCnAYgPrWt115M8kwke52A+BXuYV
+         uMTdvQEQN6pZwYYZm868xk/PtYzlm1Xx2Rp0wmtwoqhDIkt55Ajp9GMn0zNQzzHYfGlc
+         uw9mWbRYRj3rk1by15iR97Mf+OIdaDL8uj0P+igWbFmgei7VgSzWLKFmL9gGtEwkcKRa
+         jZftuMKhTo8GqhPWPr8C/t/bUIXmOH8plS1PFfhuJERBOgEnUzpX8dAWVweJUg5iILN+
+         gVDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=MQugVzR0HUW1l8YQ855U1R3u4rbB4xlEWOyDYT7TwoM=;
-        b=hfOFdwRfym8WbNmDJBhABQYG4XOi+Xe/vxAqNWxWe8oH+PpZrwr+gMcGp6YBIMtP0r
-         unJVJzt7wBIdElh1ETTUGIfjCmsSPEVBecwpah18hti5Hr68nr0H19AHX02hJWcpvlWy
-         Gn48fV5UUOXaayKvtpMg04W/3I8eA8g6EZtNnpbIZOfVecU83YxBAVQs8FIAUpi1i0yu
-         YzNMI2HWz4ADZq0Q6dn/Q0eEevmIO1gb/PAdBnVIyt+7lQF2euRDkVeliRAM73byOZWa
-         qBoOClflb0ula28h7cWhkN0fYQVdqWsFZeGAnBhwLsoJVY5fiz9GF7mlCfzfO84hjcpI
-         xxuA==
-X-Gm-Message-State: AOAM531AkRg0mk5qSXAMDoK8tn214f0e9QasDmzRna+5Xk+bM7I1Ey3+
-        8vQize9a9h8wVD8uXrr7cerWUB7jkaoCzUplc3thSQ==
-X-Google-Smtp-Source: ABdhPJz5Vivaiqv+f1v9kMNzZy+LxZx0FYcqZ8u6a+PsYoKEcQKvQ5CcKRTey5EKw7ysWPJCtK7HWm3FeghHnLp48DM=
-X-Received: by 2002:a54:4613:: with SMTP id p19mr13356731oip.162.1642334569955;
- Sun, 16 Jan 2022 04:02:49 -0800 (PST)
+        bh=7o2yHBJnbdgBA14paBxnQ07Miq57N45X/orHzH3UYOU=;
+        b=rLfIeezfanPl64vy4nwJ8KkD4Sl5wdzU6w4Li85TWO/1FWsfXoABneFsSR1DENZ/YQ
+         jl9tmiPo1TSOqmUrVgKB2HcwdZSnaIG4HoCIrpEIDb4gVUTDbX/E3FfL6tl5H6itkCY4
+         ZDSwSnUql4fVVkqf7+VwT26IAt703MdebCjyHgKBxBPIIcTIuTWJ4ymeJuFlHUzV226/
+         FRIDzfveEhvTJuBT4OxAiuQ96aFMtzn6MKCZh9cSADdRe03toMMO9DaqMGqiUaGb0aG8
+         oIxFaU7zlOzE3zbv6pi3dnjyPupZN1veVYO8yzlWjwuUwuJIoGRpZ963+h0BXyisdX7d
+         QtFQ==
+X-Gm-Message-State: AOAM530qJNzOOpv/y6lkyNt8MXyEkZw02tOWOTDT+tIbU/jiZ1L4K5VL
+        4Y0ZHQ6qAnBsJFu4F/3jhLm5NEFZD7Q26avJWci61w==
+X-Google-Smtp-Source: ABdhPJzC7R5kASQ5N7DSNlI11orcz/x4ZKwts91l8N+wYwPvWdzadkjEJzbCp6IPTu6rcJ59GjTIw6RyJwvdn/ooapY=
+X-Received: by 2002:a9d:465:: with SMTP id 92mr12890735otc.35.1642334827966;
+ Sun, 16 Jan 2022 04:07:07 -0800 (PST)
 MIME-Version: 1.0
-References: <20220113162617.131697-1-manivannan.sadhasivam@linaro.org>
-In-Reply-To: <20220113162617.131697-1-manivannan.sadhasivam@linaro.org>
+References: <20220114064821.20200-1-linmq006@gmail.com>
+In-Reply-To: <20220114064821.20200-1-linmq006@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 16 Jan 2022 13:02:38 +0100
-Message-ID: <CACRpkdYraGHxYPW5JL49RMg3Wo8wQgRP8d29VYGqHg4Oc=7Lbg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: qcom: Return -EINVAL for setting affinity if no
- IRQ parent
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     bjorn.andersson@linaro.org, dianders@chromium.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+Date:   Sun, 16 Jan 2022 13:06:56 +0100
+Message-ID: <CACRpkdaKYwse8NhKVgKi5y7xykEtB+UrL-cGo70mV9Q23K372A@mail.gmail.com>
+Subject: Re: [PATCH] gpio: mpc8xxx: Fix IRQ check in mpc8xxx_probe
+To:     Miaoqian Lin <linmq006@gmail.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>, Ran Wang <ran.wang_1@nxp.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jan 13, 2022 at 5:26 PM Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
+On Fri, Jan 14, 2022 at 7:48 AM Miaoqian Lin <linmq006@gmail.com> wrote:
 
-> The MSM GPIO IRQ controller relies on the parent IRQ controller to set the
-> CPU affinity for the IRQ. And this is only valid if there is any wakeup
-> parent available and defined in DT.
+> platform_get_irq() returns negative error number instead 0 on failure.
+> And the doc of platform_get_irq() provides a usage example:
 >
-> For the case of no parent IRQ controller defined in DT,
-> msm_gpio_irq_set_affinity() and msm_gpio_irq_set_vcpu_affinity() should
-> return -EINVAL instead of 0 as the affinity can't be set.
+>     int irq = platform_get_irq(pdev, 0);
+>     if (irq < 0)
+>         return irq;
 >
-> Otherwise, below warning will be printed by genirq:
+> Fix the check of return value to catch errors correctly.
 >
-> genirq: irq_chip msmgpio did not update eff. affinity mask of irq 70
->
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Fixes: 76c47d1449fc ("gpio: mpc8xxx: Add ACPI support")
+> Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
 
-Patch applied for v5.18!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
