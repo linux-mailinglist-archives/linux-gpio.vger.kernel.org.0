@@ -2,87 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A0F6C48FA0D
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 Jan 2022 01:55:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 554A848FA12
+	for <lists+linux-gpio@lfdr.de>; Sun, 16 Jan 2022 01:58:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234004AbiAPAzQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 15 Jan 2022 19:55:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52662 "EHLO
+        id S234017AbiAPA64 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 15 Jan 2022 19:58:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234000AbiAPAzP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 15 Jan 2022 19:55:15 -0500
-Received: from mail-ot1-x330.google.com (mail-ot1-x330.google.com [IPv6:2607:f8b0:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96502C06161C
-        for <linux-gpio@vger.kernel.org>; Sat, 15 Jan 2022 16:55:15 -0800 (PST)
-Received: by mail-ot1-x330.google.com with SMTP id z25-20020a0568301db900b005946f536d85so6008295oti.9
-        for <linux-gpio@vger.kernel.org>; Sat, 15 Jan 2022 16:55:15 -0800 (PST)
+        with ESMTP id S234012AbiAPA64 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 15 Jan 2022 19:58:56 -0500
+Received: from mail-oi1-x22e.google.com (mail-oi1-x22e.google.com [IPv6:2607:f8b0:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC705C06161C
+        for <linux-gpio@vger.kernel.org>; Sat, 15 Jan 2022 16:58:55 -0800 (PST)
+Received: by mail-oi1-x22e.google.com with SMTP id i9so18103674oih.4
+        for <linux-gpio@vger.kernel.org>; Sat, 15 Jan 2022 16:58:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=/7DbCdtUYPRvvfrey8dH3J+v5+7pirUqjyG4vhhFOvA=;
-        b=BTC/kf0IbDgPTefLMkQyZwz6sWq48UZhUvC7FPyPsl7ZdQEdMMQxabRIvK3OOzUTIA
-         PXMS+u8/ErvpElfiZbvYQxc76885kNWGvQSTJB+sVVxUj+bJhRMkAybn/1UCnttfEfb2
-         iHj6Uj2fOPXR7hRuLDSaVZqjkjDOHzXk8vdropXWXv+9fwHpetM86IcAZ348Hv90tdLc
-         srT/UTkB5YqBI+lCVeB/q1mxXazc3UQVRDZ7feo28dUuxU3Xz3N7SvRzum7v1Y0mdbgF
-         U5I8Y9QluAu9OcOk0LvknHTfd2HLhahqJvvikCbdQl031TtSvUmNcbxfgkz76N8FM/TY
-         QR9g==
+        bh=3Zbir2HQFQZdW9Tmc/FhUTrgl/itixs+HF0NKBgjfVc=;
+        b=Yh0vPDd1G6keQC/FJtF4agKsRM/U93onYrsMyZG2hqH4zxiYv8BwcyI2njKr6aFPMB
+         iCqLfls8da11QehL5xhjaZRimYnfreZ/848FN6buJv6vnAUW8BBHYWW0tHRCTb+DqBpp
+         AQad/LL9E2wlF6MLj9SmH9rh2W96loC1zXRyVTSoJ/a1Rer3usmihSpx+/G1DHnMUsCW
+         bdjgrGTE8033EaBQecjg1vG0sBJVERrEnV69ZipfazKz5cdIioboi42YAy4aKi9wTLjY
+         SH4HggOONaq8/vGf6WlM3wIqq/5XJLlWaRyz1SYJwEmlBJ/rJp/cZ8jV4Nm9AE5szaek
+         uWTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=/7DbCdtUYPRvvfrey8dH3J+v5+7pirUqjyG4vhhFOvA=;
-        b=6NCG3U+kCO8xI7g5Na8x5B7IXsNc8DhAES8tOgjzE1JYzTojgtfceSvXzmark5zjAA
-         kyrFUVdu6Z3FpDqvT+gz71xxoLE+9fhWqk5+m90PYKpOI97ZD3hvrurB75JAg2my5hJE
-         NFodSx826h91NivCL9sVFd/96/lNKagcZBGkcENm/5H55dOoLZI8wLCmrnfRrtaSGTHx
-         0SD/B7S5iAMJvVm5zjCVvUxj1oKSMu2q1tZtm2q1REr8FxTjK7W65fr1kIkNRsBF+HRI
-         i8tqhdmfHl2ZkAd5UiSNnjsM/Ls9AGzVQhlp59/vG/H9Pp+0enuWDdSRrBptbXBUmAhK
-         /rTw==
-X-Gm-Message-State: AOAM530IoQjxFJZAyfpxEpVc/du7WZaxDwBNNfWMl6AHkxgqrBOu+PC+
-        V4AHJgdMGo45rCLLxCe/uhX/5tjvkWrLptaIOilGXw==
-X-Google-Smtp-Source: ABdhPJw0GoT+Pxoo5AYMG9PLC6TejN6Ph2asyDgImhLt8p4ZFNfCFuqwr4O9t/7HOepZTUfhDs/wJ7yG1zlT7bxr9ZU=
-X-Received: by 2002:a05:6830:4:: with SMTP id c4mr275474otp.237.1642294514823;
- Sat, 15 Jan 2022 16:55:14 -0800 (PST)
+        bh=3Zbir2HQFQZdW9Tmc/FhUTrgl/itixs+HF0NKBgjfVc=;
+        b=BDfbQs0Gozn4snMc4eQQYvUJvRCBpSQSTnc8tvjoZUcPInikpHXuJinvEdwQfWG5dr
+         LMB5GR7YdLmdINghkDXtIRpBiwnT8dItNOvuBTyURWdc3AmNb7ezoAKai0kMikH4TK0w
+         DxzBBicD3eMmlh/4/sZ4B8VwkoGNCDpmilLvKxLpqvdOVBP98j3EszzBcZXIxzWBswGS
+         KYSAnw96C/cq0HTNrXX5/IVWToJhbyj1Yw0gNaZaN67TXZQDcB1sn7oeUDIJTOxWjwMM
+         GAzxGk2358V9V8AK01y1aiuhAQVzMAvpYIhBOoiYJJCEEz7chG0SZ6MyTbgLQ9fstd3A
+         U0LA==
+X-Gm-Message-State: AOAM530tBuUOZX1By/ESBemr3jDlC42VcFrMLDFJWxeoANGAGcb6DNNh
+        GsgT167sog/CXVUKyyhAitgEgH8vIb70LKGtFqRzOw==
+X-Google-Smtp-Source: ABdhPJxWMRX3TsxnLYFJRGSaSneOnzs9jAel1b3dZQqFej3Jh5BIbaG7pKz3veRZwsjhuRLRjjczmU3tGMJEt2q+IJ4=
+X-Received: by 2002:a05:6808:2097:: with SMTP id s23mr8350127oiw.132.1642294735018;
+ Sat, 15 Jan 2022 16:58:55 -0800 (PST)
 MIME-Version: 1.0
-References: <20220111201426.326777-1-krzysztof.kozlowski@canonical.com> <20220111201722.327219-18-krzysztof.kozlowski@canonical.com>
-In-Reply-To: <20220111201722.327219-18-krzysztof.kozlowski@canonical.com>
+References: <20220111140519.1.Ie2662d6289af1e9758b14b37149703c846d5f509@changeid>
+In-Reply-To: <20220111140519.1.Ie2662d6289af1e9758b14b37149703c846d5f509@changeid>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 16 Jan 2022 01:55:03 +0100
-Message-ID: <CACRpkdYTXSOW+sOX3wVtF4jj6xm0jr-F3HKQPGHOdAVjbasP3A@mail.gmail.com>
-Subject: Re: [PATCH v2 24/28] dt-bindings: pinctrl: samsung: convert to dtschema
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sam Protsenko <semen.protsenko@linaro.org>,
-        Chanho Park <chanho61.park@samsung.com>,
-        Alim Akhtar <alim.akhtar@gmail.com>,
-        Rob Herring <robh@kernel.org>
+Date:   Sun, 16 Jan 2022 01:58:43 +0100
+Message-ID: <CACRpkdZ=dNw19Qx4C5w59hxTuOx7O7x9Dw+5wxSTc99WxPRO8g@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: drive-strength doesn't default to 2
+ if unspecified
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 11, 2022 at 9:18 PM Krzysztof Kozlowski
-<krzysztof.kozlowski@canonical.com> wrote:
+On Tue, Jan 11, 2022 at 11:05 PM Douglas Anderson <dianders@chromium.org> wrote:
 
-> Convert the Samsung SoC (S3C24xx, S3C64xx, S5Pv210, Exynos) pin
-> controller bindings to DT schema format.  Parts of description and DTS
-> example was copied from existing sources, so keep the license as
-> GPL-2.0-only.
+> If the drive-strength isn't specified in the device tree then it
+> doesn't actually default to 2. Instead, it defaults to whatever the
+> heck the BIOS left it at. If the BIOS doesn't touch it then that means
+> it's whatever the heck the initial state of the pin was when the SoC
+> booted.
 >
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-> Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reported-by: Matthias Kaehlcke <mka@chromium.org>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-I expect that you will merge this into ARM SoC with the rest
-of the DTS fixes?
+Patch applied.
 
 Yours,
 Linus Walleij
