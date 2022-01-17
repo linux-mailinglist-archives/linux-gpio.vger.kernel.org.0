@@ -2,96 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A28549028B
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jan 2022 08:08:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9223849030F
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jan 2022 08:45:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237292AbiAQHGk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Jan 2022 02:06:40 -0500
-Received: from out162-62-57-64.mail.qq.com ([162.62.57.64]:49763 "EHLO
-        out162-62-57-64.mail.qq.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237310AbiAQHGj (ORCPT
+        id S237633AbiAQHpi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Jan 2022 02:45:38 -0500
+Received: from smtp-relay-internal-0.canonical.com ([185.125.188.122]:58170
+        "EHLO smtp-relay-internal-0.canonical.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S237634AbiAQHpi (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 17 Jan 2022 02:06:39 -0500
-X-Greylist: delayed 81946 seconds by postgrey-1.27 at vger.kernel.org; Mon, 17 Jan 2022 02:06:38 EST
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-        s=s201512; t=1642403195;
-        bh=FNEpumVdR0V042HQu4zqL7oQurwNLap94AMGiqd5IpE=;
-        h=From:To:Cc:Subject:Date;
-        b=vBUxB9WO8/vHnqZrp5HTqGgZA8nw+ZQJvKFjMd1Z/j6vy9pyr/pTgkJ0O0BxnzUUP
-         OeMC6lY25gyYVOTx8ffjJq6/pWT1Y4BLegAiWbiCqtYIpWCAglX+K3aagDzsZ6JLgk
-         DLvttTM/SsGaGj6PA92Q0PmnXnA2gJzX/LXDSqNQ=
-Received: from localhost.localdomain ([43.227.138.48])
-        by newxmesmtplogicsvrszc9.qq.com (NewEsmtp) with SMTP
-        id 1A08A296; Mon, 17 Jan 2022 15:06:32 +0800
-X-QQ-mid: xmsmtpt1642403192tfdsxvpxm
-Message-ID: <tencent_A3850F2901FD5B80E831ABE7C27144509C0A@qq.com>
-X-QQ-XMAILINFO: OAHLEV5KK0oz88TejDCCjtxc1/NDx0qMqz5+bhh+SN7UqDz7QcIBHoAgThmCVG
-         xfRCclSwS5/RIGjiZpijD2udeR23s/j/B1ajJ9uYkT0WO7cFnZA5bMGBgk4cooCz3i04aDYZAtQ8
-         NALm1pxIcm+UM4sZ/p0TMNn28kf+eWgEPlM8pas+pWjHobgVxq4qUriJlHRLzyOTgmhu8Ly0er7M
-         sFyLKow1gqLkEQtewUKLCHoULLdGClp6l2j12aPkikBMUFMHQUdvdwcRYBEL571UgWKUJRIRLYN6
-         +uUWjxGDXDrTqEoQw9FmU/S+SKt//EHj1cEGO25u14mTULG+HfGIdz9xTQ0hh1DnSoM6SFUf4o2m
-         +6hxpaBK5eW90hUHTEnpjocBNK03RTVXtTyo2K/MIJvIyGVcCkQmJKsOOPH6BB6xb861oZgIbhUk
-         mQN0omePJ9xN9yEKiz+8/CAWfaL3hj2CN2lOxDGNCEmOWJp/RQ4M4JD9htWfK9O4yZeQyrYab/Ws
-         sg9pAjVd6IGDXFXqAfXPf5sFEn0eb24+r6rVzDHiYbgFnMzf8ivrhBP6Ky7tueTKG3MOxjqyDxG6
-         1SP6nD6Bpb42JYFJye/afrzePd5xyrBgN6lG4piUnBSv2FoT2OIvSH7kx+kUniOe/39KundlTYhG
-         hSLaJJUwZpYvhMhE63iS70DCHZAfar/HpiZPwBzpAfoWFMMywViLdWDIS3hqvai+nK6kQhuzirl0
-         kKGvtMfmjZ/ynMau7nM6iDSy/04HzzH8F4bVvN3P2WCjtG+7VJDDdfIuOGkD6OV46O4Aot+r78rC
-         9tGMwAD5MU5Gyl9j1Mva4MfJHg5LR5L7Cw0XaZ6OPNoprTsOqPmz9Qjy8oBPkzpZAmWmccgumgmA
-         5S1OovJdyVGZHdwxcByH0qOTeeIt82CwKEhTO1F/LCppUdtF8Uc9c=
-From:   xkernel.wang@foxmail.com
-To:     andy@kernel.org
-Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xiaoke Wang <xkernel.wang@foxmail.com>
-Subject: [PATCH v2] gpio: merrifield: check the return value of devm_kstrdup()
-Date:   Mon, 17 Jan 2022 15:06:06 +0800
-X-OQ-MSGID: <20220117070606.3475-1-xkernel.wang@foxmail.com>
-X-Mailer: git-send-email 2.33.0.windows.2
+        Mon, 17 Jan 2022 02:45:38 -0500
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com [209.85.208.70])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 2A08D402A5
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Jan 2022 07:45:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1642405537;
+        bh=BnlFRfnEyWAxe1fw6gmGyUXzbXb/Exxy2EiruYyTAbQ=;
+        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+         In-Reply-To:Content-Type;
+        b=StB5wBV1XLTBI84hCIoZtLuROo0ozvFtdtwF3vN4ht4NUjcz3nnjfl9k15XGhYHCq
+         lNhO7y40gxfI41FrSGRqeVyXaHwIIVkgJWuQYqdQR0jJbMOEypykpJOhyUeN9YBjBB
+         pJ5CaoOplMEFvSUSEwjaj0b+/bx5dzcMjx1H7RKpen8Vs6loq5B1xnm+FNPnOuAJ5m
+         Bn2q5/qCL2HxWrPYdeTUQ+E4TUauSpKuwlD3/Xth44M2hlR2j5WSLZ3YqTApJFR8Yg
+         mL5M6TyBdax002cSbGiwHZ6JR1fEJ5SArvMa3mWB8S1K1uVPBzEb86niC9WNRVuMPn
+         UiXQBSAWAgCYw==
+Received: by mail-ed1-f70.google.com with SMTP id c11-20020a056402120b00b0040321cea9d4so291978edw.23
+        for <linux-gpio@vger.kernel.org>; Sun, 16 Jan 2022 23:45:37 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=BnlFRfnEyWAxe1fw6gmGyUXzbXb/Exxy2EiruYyTAbQ=;
+        b=7zHs8USD36X+UtnaVfDibA+GrLK1ob/WeGVF/zvrQ6kT+QnvmJcJZH63E0AYXbZMsy
+         8HtqSz6zjlDZYjC8/oCDJRzf2CvY4r4Pemn1OJVTMwVxJl1xcym1wOQZ6xOnjuHjzFgx
+         zdRMyteDJHQstYLwG9N2FqzS4KXuJAk7TsVgnqTnbaHR+FISLnxcTWur/YO/WY/RUIY4
+         dhJgSMRhByzycE+pEDj/XGNGecj2pYnjLNCa8zZebwukA7tDhgrA6o81JsyntI7mwccT
+         2uWc5thAXT+oYRjMpynS0/oB3vJ5NS4wStsJEPX9ilSRALClXjQ0K/PmHUP+rpR2Defk
+         WoNg==
+X-Gm-Message-State: AOAM533LIkWGmaxVfuNaR+N8KhXnSqF1en8hho+fsJKfIX+zg08WqdFw
+        7ydEGtlb9BfixkA5g1c28LsFo52A8zRELOEmBRI5PuG2qdQoMh7w9p0f5EqJNE3CPnDkpfNncFm
+        C6LuHL2d4qN8H/w6/9KVzYwpI1m+ON7Q5y9JtNGo=
+X-Received: by 2002:a05:6402:50d3:: with SMTP id h19mr5266033edb.346.1642405536683;
+        Sun, 16 Jan 2022 23:45:36 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzMuqDcqMplgNTykVRmag/eEAnjZ76C8iPXMJNJiJNejm5c5xQel4/ESmkmvuy3yxY7PGuFQA==
+X-Received: by 2002:a05:6402:50d3:: with SMTP id h19mr5266017edb.346.1642405536552;
+        Sun, 16 Jan 2022 23:45:36 -0800 (PST)
+Received: from [192.168.0.35] (xdsl-188-155-168-84.adslplus.ch. [188.155.168.84])
+        by smtp.gmail.com with ESMTPSA id hp14sm4151387ejc.97.2022.01.16.23.45.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 16 Jan 2022 23:45:36 -0800 (PST)
+Message-ID: <77bd8fa4-2b35-352c-da07-ef91fcbed454@canonical.com>
+Date:   Mon, 17 Jan 2022 08:45:35 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.1
+Subject: Re: [PATCH v2 24/28] dt-bindings: pinctrl: samsung: convert to
+ dtschema
+Content-Language: en-US
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sam Protsenko <semen.protsenko@linaro.org>,
+        Chanho Park <chanho61.park@samsung.com>,
+        Alim Akhtar <alim.akhtar@gmail.com>,
+        Rob Herring <robh@kernel.org>
+References: <20220111201426.326777-1-krzysztof.kozlowski@canonical.com>
+ <20220111201722.327219-18-krzysztof.kozlowski@canonical.com>
+ <CACRpkdYTXSOW+sOX3wVtF4jj6xm0jr-F3HKQPGHOdAVjbasP3A@mail.gmail.com>
+ <5047da7c-d3a6-5472-b0ca-7ed3dbe8a5fe@canonical.com>
+ <CACRpkdbhmJ91EW395C5F2WYjWJQdJ-SBHaDm7XnQsxMuyoMmLg@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+In-Reply-To: <CACRpkdbhmJ91EW395C5F2WYjWJQdJ-SBHaDm7XnQsxMuyoMmLg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Xiaoke Wang <xkernel.wang@foxmail.com>
+On 16/01/2022 22:38, Linus Walleij wrote:
+> On Sun, Jan 16, 2022 at 6:10 PM Krzysztof Kozlowski
+> <krzysztof.kozlowski@canonical.com> wrote:
+> 
+>> Anyway DTS and dtschema will have to wait for one release, because they
+>> depend on samsung pinctrl driver change (patch #2).
+> 
+> What about I put that (and maybe this schema) on an immutable
+> branch so you can pull the commit into your for-arm-soc branch and
+> put the DTS changes on top?
 
-devm_kstrdup() returns pointer to allocated string on success, NULL on
-failure. So it is better to check the return value of it.
+That would be a solution if not a policy for arm-soc of keeping DTS
+separate. Arnd and Olof since some time are not happy when DTS branch
+receives any driver updates.
 
-Before, if devm_kstrdup() fails, pinctrl_dev_name will be NULL, then the
-retval below will be a negative error-code(inside gpiochip_add_pin_range(),
-pinctrl_find_and_add_gpio_range()->get_pinctrl_dev_from_devname() will
-finally check pinctrl_dev_name and return error), so the failure of
-devm_kstrdup() can be only implicitly caught after a long call chain.
-While this patch is to explicitly catch the failure in time.
-> retval = gpiochip_add_pin_range(&priv->chip, pinctrl_dev_name,
->				  range->gpio_base,
->				  range->pin_base,
->				  range->npins);
-> if (retval) {
-> 	dev_err(priv->dev, "failed to add GPIO pin range\n");
-> 	return retval;
-> }
+Arnd, Olof,
+This is a set of dtschema conversion + DTS alignment with new schema:
+1. Driver change necessary to accept new DTS (driver depends on node
+names and this has to change because of dtschema),
+2. DTS commits depending on above, which convert node name to new format,
+3. Finally dtschema requiring new naming of the GPIO nodes.
 
-Signed-off-by: Xiaoke Wang <xkernel.wang@foxmail.com>
----
-Changelogs:
-v1 -> v2: update the commit message.
- drivers/gpio/gpio-merrifield.c | 3 +++
- 1 file changed, 3 insertions(+)
+If I got correctly, the policy of not mixing drivers and DTS requires
+that #2 above (DTS changes) will wait for one more release. During the
+time, if dtschema (#3 above) is applied, there will be new warnings
+about non-compliant DTS.
 
-diff --git a/drivers/gpio/gpio-merrifield.c b/drivers/gpio/gpio-merrifield.c
-index 42c4d9d..f3d1bae 100644
---- a/drivers/gpio/gpio-merrifield.c
-+++ b/drivers/gpio/gpio-merrifield.c
-@@ -409,6 +409,9 @@ static int mrfld_gpio_add_pin_ranges(struct gpio_chip *chip)
- 	int retval;
- 
- 	pinctrl_dev_name = mrfld_gpio_get_pinctrl_dev_name(priv);
-+	if (!pinctrl_dev_name)
-+		return -ENOMEM;
-+
- 	for (i = 0; i < ARRAY_SIZE(mrfld_gpio_ranges); i++) {
- 		range = &mrfld_gpio_ranges[i];
- 		retval = gpiochip_add_pin_range(&priv->chip, pinctrl_dev_name,
--- 
+Do you see any chance of merging driver + DTS + dtschema via same tree
+in same release?
+
+
+Best regards,
+Krzysztof
