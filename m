@@ -2,57 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B5CA490AA6
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jan 2022 15:39:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BC984490AC5
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Jan 2022 15:53:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237138AbiAQOjE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Jan 2022 09:39:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40456 "EHLO
+        id S237212AbiAQOxI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Jan 2022 09:53:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234367AbiAQOjD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jan 2022 09:39:03 -0500
-Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11BB3C061574;
-        Mon, 17 Jan 2022 06:39:03 -0800 (PST)
-Received: by mail-yb1-xb2e.google.com with SMTP id g81so46359468ybg.10;
-        Mon, 17 Jan 2022 06:39:03 -0800 (PST)
+        with ESMTP id S237192AbiAQOxH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Jan 2022 09:53:07 -0500
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 042F3C061574;
+        Mon, 17 Jan 2022 06:53:07 -0800 (PST)
+Received: by mail-lf1-x12c.google.com with SMTP id o15so58480906lfo.11;
+        Mon, 17 Jan 2022 06:53:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=kHhCRgvF9Wf+R6yEgWiaK5gOZflCu4gFexOOmAZwK3A=;
-        b=YsHtL+blfxwmFULnGvT3ULZ4xkuIYMK/Pd/Zg8NTRgLF6XqOZdWNT0SzetQ/F01GQo
-         6Dld83r6NDOqox7MsT8O765x4oqVXIZD6EuiS7gZ0tJU+IlRB/C3veG4LcHqIwTrOUrO
-         6HZA5rNpF4+dyXvRhpV6GxtZ6uRY/afq/4vyRWf4Wos3kZ5SEwwXgruJD2VBqTyRsmDi
-         kEkd/HDGq3rYUHneKgp9Ik3B3yA+1EniOwtbuJ6yEdgckNeRbaEvJhGHXLdoEOUYihAs
-         9XXDzpdCuxTxtSsjzAOmpMo6T5Qiqo8MDQfHpp56eqBtzDgrYiFzC5t4nVd+p7p99C2d
-         9nKw==
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=onWdt0fyeqqEsMifvTUGSb7FG4MeJVVCrnl4WB/xhwg=;
+        b=HlBqFcVJUgeG+7AzJjGBH0RvzQNnFMma5/bY22sKBRoLna4EicyPr5dp5uy+m/kif7
+         sw4UvpGlY1XCqoek48qGhJoVrK1PV41rEYtzYJ1FhoQGb0vb1z2eaSTlWDTkBRjsPFgA
+         iJmJcExF29aZEVSsKjpMHdBDdar/ZYhsYQEhQ9dT2CdgZHoDZ5eA4leKvMVLYiwJE1Nr
+         k37RKbl6BCJ41ZStGYk/h33vS9OpAHi9av8S/VOCGIfa1QL5jSuqwN97WCV+GIGF3Cy3
+         Sk4XDGZly2uPs1+RLDGjolamZ91PIuGkTrBy2bzKdoNMIM1hEBbY30rcf5Bd/k8fdYu1
+         wUpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=kHhCRgvF9Wf+R6yEgWiaK5gOZflCu4gFexOOmAZwK3A=;
-        b=uJy4XWwpqLWeCZ+AmnjzaLl1Tva5HtkyYMjT8SgapMiHuO4ORKMTXLPSSXjFds+jdC
-         oSkXtg17rUc+0JwQWE4g4pFES0A4wj77lDDkFzth3ZqHiuyhOp4sytrr5a/Xqs2mgm6V
-         8DlCmPsf629GKzokC6+s7VLjSLfQoQT+pOGKSMAsD/BsBVtfdQIBEDL7xQUwYjYHmAqI
-         QIdgm7ss/BJWp4OcZIZmwRNrdutq0OdWHmW1NrPPoF6voaQK70wUreZws4qqi+tAv+Fa
-         WhJo96CaKLmTxOdZAfcxPx+k+t+IgmmYZfBHc6uTLP8pAOhuNNTGUt5y8nWE7N6hYjHd
-         3OAw==
-X-Gm-Message-State: AOAM5305CNU+yizbswBZkeZGxftnTu+4eXIJPhNmImkagrXKsuZfbsRA
-        u005aCA4NOv9HsjRI+USduohlpVaxYBvlLfajZc=
-X-Google-Smtp-Source: ABdhPJyJ+PolclN9RQf6xwmgvGfwBqjnkvt5u/uY1RWTKSTVwNniNgVw5KppymYp82qhh17PSy5Z9SnKj28hDizciBY=
-X-Received: by 2002:a25:6d06:: with SMTP id i6mr26656526ybc.216.1642430342223;
- Mon, 17 Jan 2022 06:39:02 -0800 (PST)
-MIME-Version: 1.0
-References: <20210728135534.703028-1-pgwipeout@gmail.com> <20210728135534.703028-6-pgwipeout@gmail.com>
- <C3AE0A81-A829-4241-A65E-EB28825E3C33@gmail.com> <CAMdYzYo2gkNvNYjU9_kc4cTwNBFU+kg3bRwaS3yCCAsMdo-Tow@mail.gmail.com>
- <E3AA167E-1E40-45CD-8CBB-3EB280856604@gmail.com>
-In-Reply-To: <E3AA167E-1E40-45CD-8CBB-3EB280856604@gmail.com>
-From:   Peter Geis <pgwipeout@gmail.com>
-Date:   Mon, 17 Jan 2022 09:38:50 -0500
-Message-ID: <CAMdYzYqsPgAbLBt+xwDL2s7ViLDJw5mnzDnupimRVESt0xFksQ@mail.gmail.com>
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=onWdt0fyeqqEsMifvTUGSb7FG4MeJVVCrnl4WB/xhwg=;
+        b=GiTWchsnh/k2l40D+LFFqZWx6ddIl4CTo8uX+Z4d5Nc+gvWGm6SMnA6LByAZJ94/7A
+         XrFaXg8YuWbDPW+9DE/OBmNVpNkM8tqN+okwXZJzhQlKnCOmDsh+lQvQ2XbIWpC0WcNI
+         YCfTgktusT5BLH8YnQzIS4I2Q9yflL9fncpnecSMcrTjWaeHlsKqHGVShfCEeIkdnmEL
+         EsDkdhk+ruiakF6kCL/Cu80QYnvtvX+j6/14iSJMCNiYrS70GLFNtbash/lKfEWB4gWb
+         ZkADBKlGhUTwVsdDpfDWXNxPImDxTBx7iZmRvqePxeSKMf6ebZjWSWXXkYTDx85tGHRF
+         DgIA==
+X-Gm-Message-State: AOAM5308StXjC7weVIEb9yhYQ6+OpEU0ZxR/g3jKzMhdLnAdnNTbioID
+        gp67YNzB3EwaAn3uesnlUdQ=
+X-Google-Smtp-Source: ABdhPJzCgLZE2f1V4ZTHHLY0+82A8Z0lem/5f4KqeZD0C75yveNJ5NrqaZPCkP/ybtda2xUf2KLx8g==
+X-Received: by 2002:a05:6512:2606:: with SMTP id bt6mr16873651lfb.202.1642431185384;
+        Mon, 17 Jan 2022 06:53:05 -0800 (PST)
+Received: from smtpclient.apple (31-178-191-245.dynamic.chello.pl. [31.178.191.245])
+        by smtp.gmail.com with ESMTPSA id p13sm1418432lfa.42.2022.01.17.06.53.04
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Jan 2022 06:53:04 -0800 (PST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.120.0.1.13\))
 Subject: Re: [PATCH 5/9] arm64: dts: rockchip: add rk3568 tsadc nodes
-To:     Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
+From:   Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
+In-Reply-To: <CAMdYzYqsPgAbLBt+xwDL2s7ViLDJw5mnzDnupimRVESt0xFksQ@mail.gmail.com>
+Date:   Mon, 17 Jan 2022 15:53:03 +0100
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -63,77 +64,61 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         <linux-arm-kernel@lists.infradead.org>,
         "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <A6AF0F12-FB41-4C60-96AA-660C1E8B379C@gmail.com>
+References: <20210728135534.703028-1-pgwipeout@gmail.com>
+ <20210728135534.703028-6-pgwipeout@gmail.com>
+ <C3AE0A81-A829-4241-A65E-EB28825E3C33@gmail.com>
+ <CAMdYzYo2gkNvNYjU9_kc4cTwNBFU+kg3bRwaS3yCCAsMdo-Tow@mail.gmail.com>
+ <E3AA167E-1E40-45CD-8CBB-3EB280856604@gmail.com>
+ <CAMdYzYqsPgAbLBt+xwDL2s7ViLDJw5mnzDnupimRVESt0xFksQ@mail.gmail.com>
+To:     Peter Geis <pgwipeout@gmail.com>
+X-Mailer: Apple Mail (2.3654.120.0.1.13)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 17, 2022 at 9:13 AM Piotr Oniszczuk
-<piotr.oniszczuk@gmail.com> wrote:
->
->
->
-> > Wiadomo=C5=9B=C4=87 napisana przez Peter Geis <pgwipeout@gmail.com> w d=
-niu 17.01.2022, o godz. 14:49:
-> >
-> >>
-> >> Peter,
-> >>
-> >> I'm trying to use this series to get thermal on rk3566 based tvbox (x9=
-6-x6).
-> >> Driver loads but i'm getting following error:
-> >>
-> >> [  132.873979] rockchip-thermal fe710000.tsadc: failed to register sen=
-sor 0: -517
-> >> [  132.874650] rockchip-thermal fe710000.tsadc: failed to register sen=
-sor[0] : error =3D -517
-> >>
-> >> Maybe you have some hints here?
-> >
-> > Error -517 means -EPROBE_DEFER, a device it relies on hasn't probed.
-> > TSADC doesn't directly rely on anything that shouldn't already be
-> > enabled. (Pinctrl, clocks, and grf all break a lot more than tsadc if
-> > disabled)
-> > Does your kernel config have all of the rockchip elements enabled?
-> >
->
-> Peter,
-> For sure I can't say 'yes' with 100% confidence.
-> I'm trying do my best for rk3566 (currently have working: SD/Eth/HDMI/Sou=
-nd/USB2port0/BT).
->
-> Maybe you may point me pls for good reference of rk356x defconfig?
->
-> btw: a bit of  context:
-> In my application (https://github.com/warpme/minimyth2) i have target to =
-have single OS binary for all supported Allwinner/Amlogic/Rockchip/Broadcom=
- devices.
-> By this kernel config i'm using is painfully assembled to have minimal wo=
-rking kernel for all targets.
-> It's a painful road....but still want to go this route for: minimal image=
- size; shortest build time & one-for-all binary.
-> my current config: https://github.com/warpme/minimyth2/blob/master/script=
-/kernel/linux-5.16/files/linux-5.16-arm64-armv8.config
 
-I recommend you use `make savedefconfig`.
-It produces a simplified defconfig based on your .config.
 
-Your issue is in your dts.
-You have retained the quartz64-a &cpu_thermal active thermal node
-without tying in an active thermal control device (a fan).
-By default the rk356x dtsi passive thermal trips are hooked up and
-will throttle the device in case of overtemp.
-If your device has no active thermal control, you don't need to add
-the &cpu_thermal node at all to your dts.
+> Wiadomo=C5=9B=C4=87 napisana przez Peter Geis <pgwipeout@gmail.com> w =
+dniu 17.01.2022, o godz. 15:38:
+>=20
+>=20
+>=20
+> Your issue is in your dts.
+> You have retained the quartz64-a &cpu_thermal active thermal node
+> without tying in an active thermal control device (a fan).
+> By default the rk356x dtsi passive thermal trips are hooked up and
+> will throttle the device in case of overtemp.
+> If your device has no active thermal control, you don't need to add
+> the &cpu_thermal node at all to your dts.
+>=20
+>>=20
+>> btw2: for rk3566 i'm using majority of your patches!
+>> Great work of you!
 
->
-> btw2: for rk3566 i'm using majority of your patches!
-> Great work of you!
->
->
->
->
->
->
->
+Peter,
+
+Many thx!
+
+Now it works nicely:
+
+cpu_thermal-virtual-0
+Adapter: Virtual device
+temp1:        +33.8=C2=B0C  (crit =3D +95.0=C2=B0C)
+
+gpu_thermal-virtual-0
+Adapter: Virtual device
+temp1:        +34.4=C2=B0C  (crit =3D +95.0=C2=B0C)
+
+again: many thx!
+
+
+
+forgive me unrelated q:
+may hint me for script you are using in your gitlab ci for building =
+quartz64 u-boot in ci pipeline?
+I'm using yours binaries - but want to add building from sources in my =
+project....=20
+
+
