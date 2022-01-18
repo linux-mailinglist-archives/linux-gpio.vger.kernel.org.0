@@ -2,143 +2,194 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 01A24492091
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jan 2022 08:52:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CD2F49211E
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jan 2022 09:25:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234433AbiARHwh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Jan 2022 02:52:37 -0500
-Received: from smtp-relay-internal-1.canonical.com ([185.125.188.123]:39988
-        "EHLO smtp-relay-internal-1.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235942AbiARHwg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 18 Jan 2022 02:52:36 -0500
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com [209.85.208.69])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 4E89B40515
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Jan 2022 07:52:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1642492355;
-        bh=aNtiM+Mkd9efU1H0Wh+stfJIqfRGDAuGYHwSDx2cIxk=;
-        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-         In-Reply-To:Content-Type;
-        b=pUEsfnD4G8rzpPF1W6GCucVZvTUXP6TTMslAC6eB+nKtKLpTmsIBtPdM435v3YobL
-         CJ/Rca7bY4fKXDP6LlNt0ipz/hfM2wS9TVqiDyCI/2tY0f0TRFta1XdEPUETKQ8HeV
-         nXVme2Ec83QCAVlAO04ADZRvpjFesLr+Yy8AknVRTywmm50MlASnea40Gc9NAtO/l6
-         SjoF7a0i2oXG7AtQzQUTqFMYpCFmTts48mcC9IFElg1tmcFGBSZUMsw/0yVZP6EPo3
-         TR+vj5cZA8+FIPC4Twcf5KmKpvnv+uqsk2SlDNbjWkLrgZNsFLSl9tYFN01VAg+rD3
-         IdbmZ4IigM5HQ==
-Received: by mail-ed1-f69.google.com with SMTP id o10-20020a056402438a00b00403212b6b1aso3123175edc.13
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Jan 2022 23:52:35 -0800 (PST)
+        id S1344164AbiARIZR convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 18 Jan 2022 03:25:17 -0500
+Received: from mail-ua1-f45.google.com ([209.85.222.45]:42760 "EHLO
+        mail-ua1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232989AbiARIZQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Jan 2022 03:25:16 -0500
+Received: by mail-ua1-f45.google.com with SMTP id p1so35034049uap.9;
+        Tue, 18 Jan 2022 00:25:15 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=aNtiM+Mkd9efU1H0Wh+stfJIqfRGDAuGYHwSDx2cIxk=;
-        b=myhOjhYyJcsesAo1BTECUDmtNJj8gZdi8jskP1PymQ+FCUpwnnOxqgGBISN57BonHC
-         k9RTeuBBPNDB1xSxQEMm21Dgd/yJ81kg+QnsA0583BUS2Ee1kurQXHidNUuO+T9IXgzR
-         qSQcR/XuuyOe7elkqxGG4sOasVkBjclvHRzu4AC0ACNUxxqRoKv4ZvvNQ3aBlh11FcVJ
-         rrGrYLA2oLgAw2F/38/iswFVZpt41vG3Pghwn+GEaIOTJWip7givqJhKIppy9XAslgcP
-         Pq8G/FTTJZwksfo34PyiZ5d7PD3VDqzIbDBsiTAAdD+A49AB4FXDeQxZo7zDQMMNg+Jg
-         AbVg==
-X-Gm-Message-State: AOAM533vSkcKMtIGjXQjv//rmxmzoBgCD1diEuJu9cVbGKxreYspX6u8
-        YzdbLKMXtFnhXDjbKNbJ8Zl3Wt3kVPIgzKyNI/Dce5gaMxLQT+Y6AyOqx82eagja8LfmOAq9XXD
-        B/eRcCOWKivXNyI+dxavV+3V4T8McrgYrsNiSMcw=
-X-Received: by 2002:a17:907:1b0d:: with SMTP id mp13mr19153543ejc.29.1642492354936;
-        Mon, 17 Jan 2022 23:52:34 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwBxln2AY6zvpOpDMIrbY3pJ2WqNGAK6xMIm4ZKaNEKJULRafQ8SSXBijKpYwqfIhylcmfhEA==
-X-Received: by 2002:a17:907:1b0d:: with SMTP id mp13mr19153526ejc.29.1642492354785;
-        Mon, 17 Jan 2022 23:52:34 -0800 (PST)
-Received: from [192.168.0.40] (xdsl-188-155-168-84.adslplus.ch. [188.155.168.84])
-        by smtp.gmail.com with ESMTPSA id a3sm5071801ejd.34.2022.01.17.23.52.33
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=wwyuk2lsKqIfL1r34uR4hiV5J4os/EyMOhjZZucVxAA=;
+        b=I2i1nK3KE49ayM/k/7+QwdNB1Zw/V8rfgqp4QCmvWpqWYqVHuXXZLHkoGFbUNZwQoa
+         5n58deiE9GIRaPOlMyVpmgpPhdeM6+XjSafr9D/U+9wMw7QnCwIKSHifBPKaKoKI7ghV
+         GPjZiS0nW+lz1lWDERj4p5QQ60xQw9CHXpsjRJ1hmG+OzAfo7VdqIEEb5MXSZJ4tk/sN
+         wK6lF0d8e/ePocJHJLPejU1HF8xld5m/zmPX0RLIdCeaaIPTzpkjHd0Jw8D0cXvhbrYZ
+         FHbmY3rE4GmX6ZIIgeSp6MmNKyIiUbHsjMTOOage5nc+kV1Al0PTA5oAEiRtF6XNNBFK
+         UC4A==
+X-Gm-Message-State: AOAM531TjjIono2QQrSzMZER0NUpWw9YWmdyoa4VDcXGutV5AUI3N5Qk
+        NMu4UvqkxsalSADZQSGZWKANBWSt+9lqXV/t
+X-Google-Smtp-Source: ABdhPJxEapMDT1TLJpP3jj0kK0vs2RhIajlcXxONwhZS+EvdSgowj8ApkJ3nRAIXNWOHwgyRPrDJbQ==
+X-Received: by 2002:ab0:e13:: with SMTP id g19mr9097770uak.135.1642494314740;
+        Tue, 18 Jan 2022 00:25:14 -0800 (PST)
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com. [209.85.222.44])
+        by smtp.gmail.com with ESMTPSA id j76sm4044397vke.27.2022.01.18.00.25.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Jan 2022 23:52:34 -0800 (PST)
-Message-ID: <794f39ed-3436-432c-767d-8fa60779d510@canonical.com>
-Date:   Tue, 18 Jan 2022 08:52:33 +0100
+        Tue, 18 Jan 2022 00:25:13 -0800 (PST)
+Received: by mail-ua1-f44.google.com with SMTP id 2so10353317uax.10;
+        Tue, 18 Jan 2022 00:25:13 -0800 (PST)
+X-Received: by 2002:ab0:4d42:: with SMTP id k2mr7281422uag.78.1642494312957;
+ Tue, 18 Jan 2022 00:25:12 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.1
-Subject: Re: [PATCH v2 24/28] dt-bindings: pinctrl: samsung: convert to
- dtschema
-Content-Language: en-US
-To:     Olof Johansson <olof@lixom.net>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" 
-        <linux-samsung-soc@vger.kernel.org>,
+References: <29f0c65d-77f2-e5b2-f6cc-422add8a707d@omp.ru> <20220114092557.jrkfx7ihg26ekzci@pengutronix.de>
+ <61b80939-357d-14f5-df99-b8d102a4e1a1@omp.ru> <20220114202226.ugzklxv4wzr6egwj@pengutronix.de>
+ <c9026f17-2b3f-ee94-0ea3-5630f981fbc1@omp.ru> <CAMuHMdXVbRudGs69f9ZzaP1PXhteDNZiXA658eMFAwP4nr9r3w@mail.gmail.com>
+ <20220117092444.opoedfcf5k5u6otq@pengutronix.de> <CAMuHMdUgZUeraHadRAi2Z=DV+NuNBrKPkmAKsvFvir2MuquVoA@mail.gmail.com>
+ <20220117114923.d5vajgitxneec7j7@pengutronix.de> <CAMuHMdWCKERO20R2iVHq8P=BaoauoBAtiampWzfMRYihi3Sb0g@mail.gmail.com>
+ <20220117170609.yxaamvqdkivs56ju@pengutronix.de>
+In-Reply-To: <20220117170609.yxaamvqdkivs56ju@pengutronix.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 18 Jan 2022 09:25:01 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXbuZqEpYivyS6hkaRN+CwTOGaHq_OROwVAWvDD6OXODQ@mail.gmail.com>
+Message-ID: <CAMuHMdXbuZqEpYivyS6hkaRN+CwTOGaHq_OROwVAWvDD6OXODQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] platform: make platform_get_irq_optional() optional
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Andrew Lunn <andrew@lunn.ch>, Ulf Hansson <ulf.hansson@linaro.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        KVM list <kvm@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, linux-iio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Guenter Roeck <groeck@chromium.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        linux-phy@lists.infradead.org,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Khuong Dinh <khuong@os.amperecomputing.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        platform-driver-x86@vger.kernel.org,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Robert Richter <rric@kernel.org>,
+        Saravanan Sekar <sravanhome@gmail.com>,
+        Corey Minyard <minyard@acm.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Peter Korsgaard <peter@korsgaard.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Mark Brown <broonie@kernel.org>,
+        Borislav Petkov <bp@alien8.de>, Takashi Iwai <tiwai@suse.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        openipmi-developer@lists.sourceforge.net,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Benson Leung <bleung@chromium.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-edac@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
+        Richard Weinberger <richard@nod.at>,
+        Mun Yew Tham <mun.yew.tham@intel.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sam Protsenko <semen.protsenko@linaro.org>,
-        Chanho Park <chanho61.park@samsung.com>,
-        Alim Akhtar <alim.akhtar@gmail.com>,
-        Rob Herring <robh@kernel.org>
-References: <20220111201426.326777-1-krzysztof.kozlowski@canonical.com>
- <20220111201722.327219-18-krzysztof.kozlowski@canonical.com>
- <CACRpkdYTXSOW+sOX3wVtF4jj6xm0jr-F3HKQPGHOdAVjbasP3A@mail.gmail.com>
- <5047da7c-d3a6-5472-b0ca-7ed3dbe8a5fe@canonical.com>
- <CACRpkdbhmJ91EW395C5F2WYjWJQdJ-SBHaDm7XnQsxMuyoMmLg@mail.gmail.com>
- <77bd8fa4-2b35-352c-da07-ef91fcbed454@canonical.com>
- <CAOesGMg2eH1B94h+etPBDW3B1LMeHBytz0v2e0GfVRDv8gU0YA@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-In-Reply-To: <CAOesGMg2eH1B94h+etPBDW3B1LMeHBytz0v2e0GfVRDv8gU0YA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Vinod Koul <vkoul@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        linux-mediatek@lists.infradead.org,
+        Brian Norris <computersforpeace@gmail.com>,
+        netdev <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 17/01/2022 21:26, Olof Johansson wrote:
-> On Sun, Jan 16, 2022 at 11:45 PM Krzysztof Kozlowski
-> <krzysztof.kozlowski@canonical.com> wrote:
->>
->> On 16/01/2022 22:38, Linus Walleij wrote:
->>> On Sun, Jan 16, 2022 at 6:10 PM Krzysztof Kozlowski
->>> <krzysztof.kozlowski@canonical.com> wrote:
->>>
->>>> Anyway DTS and dtschema will have to wait for one release, because they
->>>> depend on samsung pinctrl driver change (patch #2).
->>>
->>> What about I put that (and maybe this schema) on an immutable
->>> branch so you can pull the commit into your for-arm-soc branch and
->>> put the DTS changes on top?
->>
->> That would be a solution if not a policy for arm-soc of keeping DTS
->> separate. Arnd and Olof since some time are not happy when DTS branch
->> receives any driver updates.
->>
->> Arnd, Olof,
->> This is a set of dtschema conversion + DTS alignment with new schema:
->> 1. Driver change necessary to accept new DTS (driver depends on node
->> names and this has to change because of dtschema),
->> 2. DTS commits depending on above, which convert node name to new format,
->> 3. Finally dtschema requiring new naming of the GPIO nodes.
->>
->> If I got correctly, the policy of not mixing drivers and DTS requires
->> that #2 above (DTS changes) will wait for one more release. During the
->> time, if dtschema (#3 above) is applied, there will be new warnings
->> about non-compliant DTS.
->>
->> Do you see any chance of merging driver + DTS + dtschema via same tree
->> in same release?
-> 
-> Our general guidance to separate DTS and driver changes is to avoid
-> large entangled changes between the two, and to discourage a developer
-> mentality of "the implementation is the binding".
-> 
-> I think this is a good example of when it makes sense to bring in what
-> is a fairly small and clean driver change to deal with this. So the
-> right answer here is to stage such a stable branch and merge into both
-> arm-soc and the pinctrl subsystem trees as proposed.
+Hi Uwe,
 
-Thanks for clarification, I'll go with this approach.
+On Mon, Jan 17, 2022 at 6:06 PM Uwe Kleine-König
+<u.kleine-koenig@pengutronix.de> wrote:
+> On Mon, Jan 17, 2022 at 02:08:19PM +0100, Geert Uytterhoeven wrote:
+> > On Mon, Jan 17, 2022 at 12:49 PM Uwe Kleine-König
+> > <u.kleine-koenig@pengutronix.de> wrote:
+> > > > The logic in e.g. drivers/tty/serial/sh-sci.c and
+> > > > drivers/spi/spi-rspi.c could be simplified and improved (currently
+> > > > it doesn't handle deferred probe) if platform_get_irq_optional()
+> > > > would return 0 instead of -ENXIO.
 
-Best regards,
-Krzysztof
+> > > Also for spi-rspi.c I don't see how platform_get_irq_byname_optional()
+> > > returning 0 instead of -ENXIO would help. Please talk in patches.
+
+[...]
+
+> This is not a simplification, just looking at the line count and the
+> added gotos. That's because it also improves error handling and so the
+> effect isn't easily spotted.
+
+Yes, it's larger because it adds currently missing error handling.
+
+> What about the following idea (in pythonic pseudo code for simplicity):
+
+No idea what you gain by throwing in a language that is irrelevant
+to kernel programming (why no Rust? ;-)
+
+> > > > So there are three reasons: because the absence of an optional IRQ
+> > > > is not an error, and thus that should not cause (a) an error code
+> > > > to be returned, and (b) an error message to be printed, and (c)
+> > > > because it can simplify the logic in device drivers.
+> > >
+> > > I don't agree to (a). If the value signaling not-found is -ENXIO or 0
+> > > (or -ENODEV) doesn't matter much. I wouldn't deviate from the return
+> > > code semantics of platform_get_irq() just for having to check against 0
+> > > instead of -ENXIO. Zero is then just another magic value.
+> >
+> > Zero is a natural magic value (also for pointers).
+> > Errors are always negative.
+> > Positive values are cookies (or pointers) associated with success.
+>
+> Yeah, the issue where we don't agree is if "not-found" is special enough
+> to deserve the natural magic value. For me -ENXIO is magic enough to
+> handle the absence of an irq line. I consider it even the better magic
+> value.
+
+It differs from other subsystems (clk, gpio, reset), which do return
+zero on not found.
+What's the point in having *_optional() APIs if they just return the
+same values as the non-optional ones?
+
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
