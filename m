@@ -2,90 +2,156 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 789E7492254
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jan 2022 10:13:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B266C492279
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jan 2022 10:19:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345407AbiARJNb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Jan 2022 04:13:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40114 "EHLO
+        id S1345577AbiARJTG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Jan 2022 04:19:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345404AbiARJN2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Jan 2022 04:13:28 -0500
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3603CC061574
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Jan 2022 01:13:28 -0800 (PST)
-Received: by mail-ed1-x535.google.com with SMTP id f21so19439944eds.11
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Jan 2022 01:13:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xFkr916A59/iZYNJ2RnAI4LzW0nraRLeM/wre+Hz2FA=;
-        b=RO4R63hT3CaDgTK2ljRqgocZoMGKShjFi1U3mC29a5s3o5RzryF0d4yI4X49VzC+bn
-         IK7MYKdrGFYo/vXf1MWPP1dEEabwLIA7RnbAPGrhtjXurJOoSEM78mVCLlTmlqYPWCzA
-         4tOA+igSOWpj2chlWBtx+jdWc2Tc0369sgGnJ9u5CcJdSH0YskOkWlU+YITqt7E1bqRm
-         IRgQjF39525GMNA3Tg8LJHQjujf56X71+RROo2IMLjXDzuo7Og8YiTF4d44TxAcQ1qA0
-         WgNjJwMo/YTK+S6vJIgULdUMy+gVNt3KIp20WOvYkPv01v75j9mIL2dUURyTeARjzBWE
-         YGnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xFkr916A59/iZYNJ2RnAI4LzW0nraRLeM/wre+Hz2FA=;
-        b=cQ9YjGSBhlkw6k5iZHFLd2dJ0OIJgvyvfoAIIMhpu6RQ+UsgRf0pm2V8fBkvgkFtQE
-         rzC7fU3HOA1MTwV8aBSxqLX5cEiNKhZfKeaf+ieS9j2sQPwLv192w/T9nM7NAetyrxmq
-         z/PcM10TqHHJlhWiJ7rF8s7Ab+Q2JRyytlUtDU5l2WcBEIOPoLIIUoHGOISvG7ds/8EH
-         QGNy97+Y0XJfTacQHIebs8UbOZUAKBWsBiSE+nc0Fb1KaoihfPd7OB5eVNdkKaEavTGK
-         W63QEsxd4JK2ZuMpNeJLX0TBlchXiEqWBKh5j/utUI21Kbq1j7xtOvoP/t6qPxU5aRhd
-         sCdw==
-X-Gm-Message-State: AOAM5324Tn3u+Fze91X4fSvjUkTlFoOd41P+AzbHK2ue1PLCKzPlUGwS
-        fy3iqZPaeucII+P/yTAh87qUvt0+6RNdTigYefI=
-X-Google-Smtp-Source: ABdhPJwSXpfWxO5rNfnlyn9cG8YiLgs7bc2QhIETzqUNBu8OCF4uUIL7kwLAPMUCZ0/V6JRYyYcjF07gvGUC42GX0TU=
-X-Received: by 2002:a50:c388:: with SMTP id h8mr18801605edf.218.1642497206641;
- Tue, 18 Jan 2022 01:13:26 -0800 (PST)
-MIME-Version: 1.0
-References: <20210819203952.785132-1-hdegoede@redhat.com> <YR+qHHVgALcpQ6k+@smile.fi.intel.com>
- <ee7274c0-15f1-3ca0-cca3-bcdc37350334@redhat.com> <YeANkfsFivOpulog@smile.fi.intel.com>
- <82f6ccb3-7b15-8a5f-d142-8b4087fe4582@redhat.com> <051a9e42-02e3-4db0-bdbd-f8d7855b5db0@redhat.com>
-In-Reply-To: <051a9e42-02e3-4db0-bdbd-f8d7855b5db0@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 18 Jan 2022 11:12:50 +0200
-Message-ID: <CAHp75VdKFWKYCa8N0BbSJu7f1OUEo0_XFWe0Bf+7S4338Z0t1A@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: baytrail: Pick first supported debounce value
- larger then the requested value
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
+        with ESMTP id S1345560AbiARJTC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Jan 2022 04:19:02 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1BC6C061574
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Jan 2022 01:19:01 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1n9kdD-0006Nd-T3; Tue, 18 Jan 2022 10:18:23 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1n9kdA-00Ayd5-Tc; Tue, 18 Jan 2022 10:18:20 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1n9kd9-0003a7-SE; Tue, 18 Jan 2022 10:18:19 +0100
+Date:   Tue, 18 Jan 2022 10:18:19 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Andrew Lunn <andrew@lunn.ch>, Ulf Hansson <ulf.hansson@linaro.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>, kvm@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>, linux-iio@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Amit Kucheria <amitk@kernel.org>, alsa-devel@alsa-project.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-mtd@lists.infradead.org, linux-i2c@vger.kernel.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        linux-phy@lists.infradead.org, Lee Jones <lee.jones@linaro.org>,
+        Khuong Dinh <khuong@os.amperecomputing.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-serial@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Robert Richter <rric@kernel.org>,
+        Saravanan Sekar <sravanhome@gmail.com>,
+        Corey Minyard <minyard@acm.org>, linux-pm@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Peter Korsgaard <peter@korsgaard.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Mark Gross <markgross@kernel.org>, linux-gpio@vger.kernel.org,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Mark Brown <broonie@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Eric Auger <eric.auger@redhat.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        openipmi-developer@lists.sourceforge.net,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Benson Leung <bleung@chromium.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
+        Sergey Shtylyov <s.shtylyov@omp.ru>,
+        Richard Weinberger <richard@nod.at>,
+        Mun Yew Tham <mun.yew.tham@intel.com>,
+        Hans de Goede <hdegoede@redhat.com>, netdev@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Cornelia Huck <cohuck@redhat.com>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        linux-mediatek@lists.infradead.org,
+        Brian Norris <computersforpeace@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH 1/2] platform: make platform_get_irq_optional() optional
+ (summary)
+Message-ID: <20220118091819.zzxpffrxbckoxiys@pengutronix.de>
+References: <20220110195449.12448-1-s.shtylyov@omp.ru>
+ <20220110195449.12448-2-s.shtylyov@omp.ru>
+ <20220115183643.6zxalxqxrhkfgdfq@pengutronix.de>
+ <YeQpWu2sUVOSaT9I@kroah.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="4nmi7jsy4ulpuolr"
+Content-Disposition: inline
+In-Reply-To: <YeQpWu2sUVOSaT9I@kroah.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Jan 15, 2022 at 6:24 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> On 1/13/22 12:56, Hans de Goede wrote:
-> > On 1/13/22 12:31, Andy Shevchenko wrote:
 
-...
+--4nmi7jsy4ulpuolr
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > Spoiler: I believe the best thing we can do here is to just
-> > never touch the debounce settings at all, see below.
+On Sun, Jan 16, 2022 at 03:19:06PM +0100, Greg Kroah-Hartman wrote:
+> On Sat, Jan 15, 2022 at 07:36:43PM +0100, Uwe Kleine-K=F6nig wrote:
+> > A possible compromise: We can have both. We rename
+> > platform_get_irq_optional() to platform_get_irq_silent() (or
+> > platform_get_irq_silently() if this is preferred) and once all users are
+> > are changed (which can be done mechanically), we reintroduce a
+> > platform_get_irq_optional() with Sergey's suggested semantic (i.e.
+> > return 0 on not-found, no error message printking).
+>=20
+> Please do not do that as anyone trying to forward-port an old driver
+> will miss the abi change of functionality and get confused.  Make
+> build-breaking changes, if the way a function currently works is
+> changed in order to give people a chance.
 
-> So one more argument in favor of just disabling support for
-> setting the debounce value, while looking at a git log of
-> the baytrail pinctrl driver I noticed this:
+Fine for me. I assume this is a Nack for Sergey's patch?
 
-> So before that (which is not that long ago) we were never doing any
-> of the pinctrl stuff at all AFAICT, which to me seems like another
-> argument that the best answer to the debounce settings challenges
-> is to just not do it ?
+Best regards
+Uwe
 
-Hesitating between enabling this feature and practical applications, I
-think you are right. No need to keep the code that never has been
-properly enabled on the real products (as I read from your research).
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
--- 
-With Best Regards,
-Andy Shevchenko
+--4nmi7jsy4ulpuolr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmHmhdgACgkQwfwUeK3K
+7AlOfwf/RajwcOGZOaXu4/Hu0uIDDH01Izth3e7+cbt0DvzofBxZhrwLi6+7R8Ii
+FDvio63jvvz41IZoKpB3Sp3cJe6N5nHxfoeVbVFx1oDC5ZSb3xpzIKBpz6usYWSK
+mpEzG1FLl/zHhNcFBvzOrkoJNhHOKKqTkCMQ9+SMFB2QpzY2GlhGyeloYsR5wRlS
+36dfdheA3MnzMe+YgqcykvdU78oW4Ajcnq+31xfkY4u4FtLXz44Pz4j32buAaqtw
+/Ryrr0NnSSAdwMkNMebBf3XX8emOhXd3w/ActLJA50YN3K1ePF1ViBaNwB6wIGGA
+DmnwP6lCav2JoRm3yOWVlcLDeltVJA==
+=IrhS
+-----END PGP SIGNATURE-----
+
+--4nmi7jsy4ulpuolr--
