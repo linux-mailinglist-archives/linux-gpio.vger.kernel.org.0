@@ -2,76 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D6BA9492618
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jan 2022 13:51:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0AD7B492658
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jan 2022 14:02:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237950AbiARMu5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Jan 2022 07:50:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33840 "EHLO
+        id S241466AbiARNCz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Jan 2022 08:02:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233393AbiARMu5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Jan 2022 07:50:57 -0500
-Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9BDDC061574;
-        Tue, 18 Jan 2022 04:50:56 -0800 (PST)
-Received: by mail-wm1-x32a.google.com with SMTP id az27-20020a05600c601b00b0034d2956eb04so4698058wmb.5;
-        Tue, 18 Jan 2022 04:50:56 -0800 (PST)
+        with ESMTP id S241428AbiARNCy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Jan 2022 08:02:54 -0500
+Received: from mail-vk1-xa2d.google.com (mail-vk1-xa2d.google.com [IPv6:2607:f8b0:4864:20::a2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67556C06173E
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Jan 2022 05:02:54 -0800 (PST)
+Received: by mail-vk1-xa2d.google.com with SMTP id 191so12394599vkc.1
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Jan 2022 05:02:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=6Y1Ova7Y1eOHP74TgEiFjPPk+lw3tUNdNdvPlgpu9No=;
-        b=RtjWIbAtRny80mz/OpmyKJ9FC9+6jLFxBi1LOeq1D08R8ox/YYC9dIhi/RR+vuuY+0
-         xBPqA0HJKsRhn0HRiCMJcmp3K5gneAiuh7BbFne9+7Q6Svu0xRSu2hUSRlTUwj9SJ/ro
-         ntlzb6FK7uGuObaeT1zn1cyF+gKFOKp6O5bm2U9tst+uabLJ0R5WLvwI5Vip9Qa2/tpl
-         quwnGyWi0M/39GvFJV0ehHCLRNbh+EshK//WyZDGqMkh/9yItgsfkvaqvkkhq0sNl8lw
-         ZoKlOxX7jHZhSgm2AEFLfmQiXdqakvNIjZWcGloCn8SUn8q0Cc6MeWaSFer36O7U9bRt
-         GTaA==
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=kt7BSYvG+rr2bLEECwLOEMCvBVZotJIk44/4XcKD9H0=;
+        b=mXvJrnybJacX8aHjVt+eV0sC36/5xIHkpjbmZiSsEU6+vmyFO8umD9Zd0iD3X38GiN
+         5o7Nt1uZ8FP9HA2hxOOWgYGDdrf7PS9r4ypj43zJhhArnTO9wRXMjwSnbZg0fBV88nvQ
+         SAcVNYmFeVb26xY+W/aeInB7fhE2HDuZJhNr9bhbhBWWBcbWsreQjBUjhGdWOy4GvDIE
+         tl+XGos71fe69zOoIaaUPNdiKKqGosKHJ0gvM7fxAWvSEehMp8Z9BJG9wDiRFqfw/gTz
+         M5RZotthcPVZ7TghGsOHWoXOgVWdkI8wkseURykNTUVasqSDSEtzHMu3VFSzWaw9n+oH
+         D8vQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=6Y1Ova7Y1eOHP74TgEiFjPPk+lw3tUNdNdvPlgpu9No=;
-        b=ZtLX1dG/5cgxlWazyd2ZuzK/GrtQZzsOJ3rVf8IvQV+F9y1hvIqFWh5IntyUug8/76
-         9s6IwF6I5UVYDRXpef+ZSynumALs5S/868ryBLyc8tvjOcjuHWs34alMOr3IY5DQzTB/
-         nJojLSTtaoU1LXPj7UJaGNbBPbZrJUOIZFpdHXuhkIZKm3IQ6V+YonGk2GhagRuG8Dx4
-         AZl5qJaRZkPT2CBFt9ZyACRv4CzSOBfbclR9WR5zxKjvmWSfy7SM3sUcIz7gBriFSo1f
-         wdWQOiiy8RJPMlJteOzCsV0Q4XThz/DhN8D7YToT4v6wvMs2ZseVByfhQIZVblPy1wj4
-         3aag==
-X-Gm-Message-State: AOAM530cAMa2K4E7vftP1trS8VYVhH37U0niZlcBmIboqBe4ODRyeUzt
-        wDBDzfizWsND7VLh/DyF9tI=
-X-Google-Smtp-Source: ABdhPJyDSrvcv7mWnHIq6RZY+NtmzayswEkL/ZHaSgHVOBpfNr4TFBPTmJ0DRNqLKr5usyY9+ic0MQ==
-X-Received: by 2002:a05:600c:3488:: with SMTP id a8mr24525180wmq.131.1642510255432;
-        Tue, 18 Jan 2022 04:50:55 -0800 (PST)
-Received: from Red ([2a01:cb1d:3d5:a100:264b:feff:fe03:2806])
-        by smtp.googlemail.com with ESMTPSA id o8sm10636835wry.112.2022.01.18.04.50.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jan 2022 04:50:55 -0800 (PST)
-Date:   Tue, 18 Jan 2022 13:50:52 +0100
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     linus.walleij@linaro.org, mripard@kernel.org, wens@csie.org,
-        jernej.skrabec@gmail.com, hverkuil-cisco@xs4all.nl
-Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
-        zhangn1985@gmail.com
-Subject: [BUG] pinctrl: reg-fixed-voltage usb0-vbus: error -EINVAL: can't get
- GPIO
-Message-ID: <Yea3rBmY+MO4AhhV@Red>
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=kt7BSYvG+rr2bLEECwLOEMCvBVZotJIk44/4XcKD9H0=;
+        b=UWMXVY/YvqFSU/LkAPbq6KCBHoWB1F9Txb5LxLDFlzajEiXpjNbxPBc6mg6agHG7Ze
+         5/lYpPSz06e9GgaY0I81sf0bv1eQbqG5/dNzqNdqet/sqEW5o7+YYZhMQzweQTeHKAPJ
+         FKFD78kVsmQl8eq9ZmjhcxvRNhl2dA/SLgJI4AFzaNY4Y7g5H5tbDo8kWjk7LKI4oTYb
+         pKXRTx8t/F3m3j8Ud4EzacQcaPiyyrBMc+w3wPia/ExIycpkPc8msdD+stH0xqI5Xarz
+         mgmHd/eNQNS0H4mwS+ulnyGLZ6wSQN/GzZuigLPtQr1Uv4hByLLBtm8zk5wWvKvr+lMN
+         Jerg==
+X-Gm-Message-State: AOAM531K9sGuurCusJ4uMqY35ck430ixkJkj05Qy7F1Ny3mtXcWoQdyv
+        KAMB9jhhohHaY8CQ6q+j8zncNvZrh4FvTrEB/qM=
+X-Google-Smtp-Source: ABdhPJw9YNxfy46iB81dLAN5XkBgtzg7graUAOCfLyrYNFkchp4Licry1PTRvMyDJqCyRXZimqZoNIwlDYi7tw/RkL4=
+X-Received: by 2002:a05:6122:98d:: with SMTP id g13mr8009815vkd.11.1642510973479;
+ Tue, 18 Jan 2022 05:02:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Received: by 2002:ab0:3793:0:0:0:0:0 with HTTP; Tue, 18 Jan 2022 05:02:53
+ -0800 (PST)
+Reply-To: mohsheikhalhamed@gmail.com
+From:   bratikox <bratikox@gmail.com>
+Date:   Tue, 18 Jan 2022 14:02:53 +0100
+Message-ID: <CAFuXTSy353g81BovphwAr8b1gzr5U8y93cVQLCtnzT1zPuaJCw@mail.gmail.com>
+Subject: Salam Alaikum /ADIA LOAN OFFER
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello
+Salam Alaikum,
 
-As reported on old googlegroup sunxi mainling list, on linux-next-20220118, USB storage fail to bring up on orangepiPC.
-We can see some error logs in dmesg:
-reg-fixed-voltage usb0-vbus: error -EINVAL: can't get GPIO
-reg-fixed-voltage: probe of usb0-vbus failed with error -22
+We are a United Arab Emirates based investment company known as Abu
+Dhabi Investment Authority working on expanding its portfolio globally
+and financing projects.
 
-This is bisected to: 8df89a7cbc63c7598c00611ad17b67e8d5b4fad3 pinctrl-sunxi: don't call pinctrl_gpio_direction()
+We are offering Corporate and Personal Loan at 3.5% Interest Rate for
+a duration of 5 to 10 years.
 
-Reverting this commit lead to a working USB storage being setuped.
+Please get back to us on Email: mohsheikhalhamed@gmail.com ,if you are
+interested for further embellishment.
 
-Regards
+We also pay 2% commission to brokers who introduce project owners for
+finance or other opportunities.
+
+
+ Yours truly,
+ Hamed Mohammad
+ (Personal Assistant)
+ Abu Dhabi Investment Authority
+ 211 Corniche, P.O Box 3600
+ Abu Dhabi,United Arab Emirates
