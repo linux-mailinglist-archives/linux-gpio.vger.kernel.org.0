@@ -2,118 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 999FC492B93
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jan 2022 17:52:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 44C9B492BDE
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jan 2022 18:07:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232705AbiARQwR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Jan 2022 11:52:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33612 "EHLO
+        id S244176AbiARRG7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Jan 2022 12:06:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346366AbiARQwM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Jan 2022 11:52:12 -0500
-Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C1D5C06161C
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Jan 2022 08:52:12 -0800 (PST)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed20:76d0:2bff:fec8:549])
-        by baptiste.telenet-ops.be with bizsmtp
-        id kGsA260030kcUhD01GsAW7; Tue, 18 Jan 2022 17:52:10 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1n9riL-00AGwn-RZ; Tue, 18 Jan 2022 17:52:09 +0100
-Received: from geert by rox.of.borg with local (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1n9riL-001BFH-Bp; Tue, 18 Jan 2022 17:52:09 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] pinctrl: renesas: r8a779a0: Rename MOD_SEL2_* definitions
-Date:   Tue, 18 Jan 2022 17:52:08 +0100
-Message-Id: <4880e4cbc112ee26569bf29a21c070125461e58d.1642524603.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S230126AbiARRG7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Jan 2022 12:06:59 -0500
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D261C061574;
+        Tue, 18 Jan 2022 09:06:59 -0800 (PST)
+Received: by mail-ed1-x52c.google.com with SMTP id j2so884343edj.8;
+        Tue, 18 Jan 2022 09:06:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=T+4KTXN2MyPk5h2NaJWjBVuUnjRXsreM7Vqs8LDWdrI=;
+        b=pAn+jxyEYSHJdfcoa2E2EcGtseKd1LUSIEE+bIVTWa55oeQ7D1Hw/OGSuWFoAjdI1e
+         KQAVVue4LWWIKuYADHF111mi25qZTlscNogoazDmexf/4sFpQtCqY5mtARGMRqSv4iIr
+         OxPmaUQST1fcuxNbAqcgJ2v1rFGV+exgWuy0QrLnsbnwZzwmXWrrFsrvk+Rb+QAuKJx/
+         Z3qT/SI0RTIOJ1bTUfBAYGKQe8gpPwS+1uvfnvW3jOlMllk197RS57tw0osZl/qFkCB3
+         zz82C0Wt7+MfqD4c3Szcjng9Qvto6yGoXkjsx+r5I0Y+rCTKFZi6EAemqMf808HQsP11
+         QPTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=T+4KTXN2MyPk5h2NaJWjBVuUnjRXsreM7Vqs8LDWdrI=;
+        b=0hWslPAu4QBm5zo0rrwwuxhFprGcX6WzGc9ZYjaykn3uCzFyfMFbkpavGG/omFseRV
+         O4a1Y9YKKNAjDjzxs056qTxI06pd3N95rvrgvHC5iGCRhGtiHdVgfo5/AfL7iTZqqeOU
+         sQWCTG1ipD50BfjV0UQ15PxFfOqLZQoWryiya3RIc7Rp6pW+oZO24vMbHJKZjLp+8Y5X
+         4HqsejWxVXIxJxV3CMdzUS/UdJz9MpMFZJbKGjeQ3QENzzbtH/+3B6GfB+uiejYaj7Re
+         Z6KQbbD/Bl80C7oYGcrVldIDrzo1uny8Q5AzPpyaWsO3X31qEkimU2+IsPM7gyE0vMOl
+         leFA==
+X-Gm-Message-State: AOAM531EqjMsUXapnCbKAqfCRtoK3zZv+mtiF9NNXsDlK8L7gyYACNDx
+        wLOkwl5xzBhTBAnfB3lWWS1Nu86T5D1TyOiD7QLLsI2Qbv7E4w==
+X-Google-Smtp-Source: ABdhPJz9ajbfoxq27WakO0O+HLS9Uvs5z/U9yrSCS73qihJQQf0dxS+tGGfLSrBrJF9UbJ4U5KfTGp3lY0K4QicV2VY=
+X-Received: by 2002:a17:906:7948:: with SMTP id l8mr3262885ejo.636.1642525617578;
+ Tue, 18 Jan 2022 09:06:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220111115919.14645-1-cristian.pop@analog.com>
+ <20220111115919.14645-2-cristian.pop@analog.com> <20220116115228.1f7b4728@jic23-huawei>
+In-Reply-To: <20220116115228.1f7b4728@jic23-huawei>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 18 Jan 2022 19:06:20 +0200
+Message-ID: <CAHp75VeakSDtDfGO1tcZKgoJ0KTAHgYMKG1v=cYDSHoc-zLUbw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] one-bit-adc-dac: Add initial version of one bit ADC-DAC
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Cristian Pop <cristian.pop@analog.com>, linux-iio@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Rename the MOD_SEL2_* definitions, to match the bitfield order in
-IPxSRy_* definitions and in MOD_SEL* definitions in other drivers.
+On Mon, Jan 17, 2022 at 8:41 AM Jonathan Cameron <jic23@kernel.org> wrote:
+> On Tue, 11 Jan 2022 13:59:19 +0200
+> Cristian Pop <cristian.pop@analog.com> wrote:
 
-No changes in generated code.
+> > +     st->labels = devm_kzalloc(device, sizeof(*st->labels) * child_num, GFP_KERNEL);
+> > +     if (!st->labels)
+> > +             return -ENOMEM;
+> > +
+> > +     i = child_num;
+> > +     fwnode_for_each_child_node(fwnode, child) {
+> > +             if (fwnode_property_read_u32(child, "reg", &crt_ch))
+> > +                     continue;
+> > +
+> > +             if (crt_ch >= num_channels)
+> > +                     continue;
+> > +
+> > +             if (fwnode_property_read_string(child, "label", &label))
+> > +                     continue;
+> > +
+> > +             chan = &channels[crt_ch];
+> ? Not used.
+>
+> > +             st->labels[--i] = label;
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-To be queued in renesas-pinctrl for v5.18.
+> I've no idea how this works...  Should be looking for the chan->channel
+> value as that's what your read uses to index.
 
- drivers/pinctrl/renesas/pfc-r8a779a0.c | 42 +++++++++++++-------------
- 1 file changed, 21 insertions(+), 21 deletions(-)
+It's an implicit memcpy().
 
-diff --git a/drivers/pinctrl/renesas/pfc-r8a779a0.c b/drivers/pinctrl/renesas/pfc-r8a779a0.c
-index 155294d0dd5abfb4..4a668a04b7ca6820 100644
---- a/drivers/pinctrl/renesas/pfc-r8a779a0.c
-+++ b/drivers/pinctrl/renesas/pfc-r8a779a0.c
-@@ -576,23 +576,23 @@ FM(IP0SR5_27_24)	IP0SR5_27_24	FM(IP1SR5_27_24)	IP1SR5_27_24	FM(IP2SR5_27_24)	IP2
- FM(IP0SR5_31_28)	IP0SR5_31_28	FM(IP1SR5_31_28)	IP1SR5_31_28	FM(IP2SR5_31_28)	IP2SR5_31_28
- 
- /* MOD_SEL2 */			/* 0 */		/* 1 */		/* 2 */		/* 3 */
--#define MOD_SEL2_14_15		FM(SEL_I2C6_0)	F_(0, 0)	F_(0, 0)	FM(SEL_I2C6_3)
--#define MOD_SEL2_12_13		FM(SEL_I2C5_0)	F_(0, 0)	F_(0, 0)	FM(SEL_I2C5_3)
--#define MOD_SEL2_10_11		FM(SEL_I2C4_0)	F_(0, 0)	F_(0, 0)	FM(SEL_I2C4_3)
--#define MOD_SEL2_8_9		FM(SEL_I2C3_0)	F_(0, 0)	F_(0, 0)	FM(SEL_I2C3_3)
--#define MOD_SEL2_6_7		FM(SEL_I2C2_0)	F_(0, 0)	F_(0, 0)	FM(SEL_I2C2_3)
--#define MOD_SEL2_4_5		FM(SEL_I2C1_0)	F_(0, 0)	F_(0, 0)	FM(SEL_I2C1_3)
--#define MOD_SEL2_2_3		FM(SEL_I2C0_0)	F_(0, 0)	F_(0, 0)	FM(SEL_I2C0_3)
-+#define MOD_SEL2_15_14		FM(SEL_I2C6_0)	F_(0, 0)	F_(0, 0)	FM(SEL_I2C6_3)
-+#define MOD_SEL2_13_12		FM(SEL_I2C5_0)	F_(0, 0)	F_(0, 0)	FM(SEL_I2C5_3)
-+#define MOD_SEL2_11_10		FM(SEL_I2C4_0)	F_(0, 0)	F_(0, 0)	FM(SEL_I2C4_3)
-+#define MOD_SEL2_9_8		FM(SEL_I2C3_0)	F_(0, 0)	F_(0, 0)	FM(SEL_I2C3_3)
-+#define MOD_SEL2_7_6		FM(SEL_I2C2_0)	F_(0, 0)	F_(0, 0)	FM(SEL_I2C2_3)
-+#define MOD_SEL2_5_4		FM(SEL_I2C1_0)	F_(0, 0)	F_(0, 0)	FM(SEL_I2C1_3)
-+#define MOD_SEL2_3_2		FM(SEL_I2C0_0)	F_(0, 0)	F_(0, 0)	FM(SEL_I2C0_3)
- 
- #define PINMUX_MOD_SELS \
- \
--MOD_SEL2_14_15 \
--MOD_SEL2_12_13 \
--MOD_SEL2_10_11 \
--MOD_SEL2_8_9 \
--MOD_SEL2_6_7 \
--MOD_SEL2_4_5 \
--MOD_SEL2_2_3
-+MOD_SEL2_15_14 \
-+MOD_SEL2_13_12 \
-+MOD_SEL2_11_10 \
-+MOD_SEL2_9_8 \
-+MOD_SEL2_7_6 \
-+MOD_SEL2_5_4 \
-+MOD_SEL2_3_2
- 
- #define PINMUX_PHYS \
- 	FM(SCL0) FM(SDA0) FM(SCL1) FM(SDA1) FM(SCL2) FM(SDA2) FM(SCL3) FM(SDA3) \
-@@ -3666,13 +3666,13 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 		0, 0, 0, 0, 0, 0, 0, 0,	0, 0, 0, 0, 0, 0, 0, 0,
- 		/* RESERVED 19, 18, 17, 16 */
- 		0, 0, 0, 0, 0, 0, 0, 0,	0, 0, 0, 0, 0, 0, 0, 0,
--		MOD_SEL2_14_15
--		MOD_SEL2_12_13
--		MOD_SEL2_10_11
--		MOD_SEL2_8_9
--		MOD_SEL2_6_7
--		MOD_SEL2_4_5
--		MOD_SEL2_2_3
-+		MOD_SEL2_15_14
-+		MOD_SEL2_13_12
-+		MOD_SEL2_11_10
-+		MOD_SEL2_9_8
-+		MOD_SEL2_7_6
-+		MOD_SEL2_5_4
-+		MOD_SEL2_3_2
- 		0, 0,
- 		0, 0, ))
- 	},
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+
+
+
 -- 
-2.25.1
-
+With Best Regards,
+Andy Shevchenko
