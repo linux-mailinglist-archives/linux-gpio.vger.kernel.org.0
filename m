@@ -2,149 +2,189 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 16B7B492C2C
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jan 2022 18:20:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A592492E78
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jan 2022 20:28:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243743AbiARRTp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Jan 2022 12:19:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40090 "EHLO
+        id S1348439AbiART2i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Jan 2022 14:28:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347149AbiARRTp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Jan 2022 12:19:45 -0500
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 124DEC061574;
-        Tue, 18 Jan 2022 09:19:44 -0800 (PST)
-Received: from pendragon.ideasonboard.com (cpc89244-aztw30-2-0-cust3082.18-1.cable.virginm.net [86.31.172.11])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7FED014C3;
-        Tue, 18 Jan 2022 18:19:42 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1642526382;
-        bh=DzBjQOlNtw5qOzuh4tnHr/oiWRI6Z3LjQkD8BsAOp2M=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=ro5AdUSDAv1TkcyNN5g08ZLNBInKed2d/haAFF8OBgaNAW327yFJISeY5I5kmBZlg
-         Ybk/UBTpJt0Fwgc061dSwC2K5UivNTUinl54NSJnWhgCk2xb35YZZbLVw3C85bXw2S
-         9ximCBLb53ESqz8x95ZyQeKYqpsjg0q7CANKqVyE=
-Content-Type: text/plain; charset="utf-8"
+        with ESMTP id S1348234AbiART2i (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Jan 2022 14:28:38 -0500
+Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 537A2C06161C
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Jan 2022 11:28:38 -0800 (PST)
+Received: by mail-il1-x130.google.com with SMTP id a18so127571ilq.6
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Jan 2022 11:28:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sartura-hr.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=GiscRwMgwHTCV2FFr3KtMrGAUo1JZf4vKySsfUfDm7s=;
+        b=qCvWH2ZRpU6Z/3wjDsBhuUNqapmYfnSbFlgP/sWlAbqpzbwAyCechggIShNEa+encd
+         W/g7eAwkHhXWBhDkdhI8jVH73nSTpsHJ7niChNQZWx7otZ4m/5Y9Y+t05JiHeUQaWK1w
+         uQIdzxL5d0tBj/VOt26ETq/SEfL11oTBP+1ud6aJ2iCYoXxELJEZXYSbWb+AwLQbRL1N
+         A5e5AZy+6uwJ8mJTSwYWhUP3S+GWxT1tETcZHUhZwDH24nmXImskdtAvwFjVWg0+cruR
+         ZNIh0EQqmm8yjd1h7Ppv9i0OHrH+mwFcwOZFZZ4KN03ngtN/BVpnDbC5gL7cSBnuaoZe
+         hUzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=GiscRwMgwHTCV2FFr3KtMrGAUo1JZf4vKySsfUfDm7s=;
+        b=ea/fBLKQ0KGjUPCDWgIj8bxEesI6g2TMu9KxGPv4O3EVKJn3onUzo3ShKKMjHVwxKV
+         +ShAKrRHeOS6e+/V/mWWX3Fgrex/8T+ou4nYCHp9NWBDOUycWEdozg8hY9V2fdRowGSW
+         +J+o+xzk3RjcisOoYqBNgcYaHczBeAb0kYAWN48IdeAM+Dljhdg8qitBxZAuJwxszOt4
+         v5Eqx90FITLERzE+p3yd4l2RFo3bOXF5iDErOaQuS7sXrMBibg60yR7x/l6ryW9xYhq4
+         XymRB4kFBj9NN2MRBYquypMhjs9nMDowDYYuYhOKejp3Gmny/IezutXwGhQi8fgHdzNh
+         Hh3g==
+X-Gm-Message-State: AOAM533p7Qni3OIWC6nNENx0fH/e3kIY49bZ0YOGiyFlQlGmihXXqDBo
+        v10hzu0bo/mXG0AfoXLmRl190oR486HJonzPsL9JiQ==
+X-Google-Smtp-Source: ABdhPJzta8BFxU09fJQlnw45XYIldZqHPaHLrQXGJXTtVR2Ug8RisI3wMZ2NG51G39iruxLQ9TkEab+EHZWT8szf+hU=
+X-Received: by 2002:a05:6e02:198b:: with SMTP id g11mr14356997ilf.27.1642534117751;
+ Tue, 18 Jan 2022 11:28:37 -0800 (PST)
 MIME-Version: 1.0
+References: <20211109113239.93493-1-robert.marko@sartura.hr>
+ <20211109113239.93493-3-robert.marko@sartura.hr> <CA+HBbNGH9ih5RovU9YHL91osFxDJbWw2Qk=ed30GGQvndNJPKw@mail.gmail.com>
+ <33ab37f5b30252e41f3e0769c7702764a9e77d7f.camel@pengutronix.de>
+ <CA+HBbNH5Hq7WC7PkpFt=hUsTRstP3KrNCsbWWy5QaZRFDvZDKA@mail.gmail.com>
+ <YbL81TEMp8CA7Sam@google.com> <CA+HBbNGnB=zHOvn3gh_bAPr_3=74K0pyAcgHxz2QKKisqasyUw@mail.gmail.com>
+In-Reply-To: <CA+HBbNGnB=zHOvn3gh_bAPr_3=74K0pyAcgHxz2QKKisqasyUw@mail.gmail.com>
+From:   Robert Marko <robert.marko@sartura.hr>
+Date:   Tue, 18 Jan 2022 20:28:27 +0100
+Message-ID: <CA+HBbNHmwzSD7H0cuPzSyLAFs-sidUbABWYhZ9hK0c2PE2Ly=g@mail.gmail.com>
+Subject: Re: [PATCH v9 3/6] dt-bindings: reset: Add Delta TN48M
+To:     Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>, skhan@linuxfoundation.org
+Cc:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Michael Walle <michael@walle.cc>, Andrew Lunn <andrew@lunn.ch>,
+        Luka Perkov <luka.perkov@sartura.hr>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <4880e4cbc112ee26569bf29a21c070125461e58d.1642524603.git.geert+renesas@glider.be>
-References: <4880e4cbc112ee26569bf29a21c070125461e58d.1642524603.git.geert+renesas@glider.be>
-Subject: Re: [PATCH] pinctrl: renesas: r8a779a0: Rename MOD_SEL2_* definitions
-From:   Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc:     linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 18 Jan 2022 17:19:39 +0000
-Message-ID: <164252637980.10801.8177844941829819862@Monstersaurus>
-User-Agent: alot/0.10
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Geert,
-
-Quoting Geert Uytterhoeven (2022-01-18 16:52:08)
-> Rename the MOD_SEL2_* definitions, to match the bitfield order in
-> IPxSRy_* definitions and in MOD_SEL* definitions in other drivers.
->=20
-> No changes in generated code.
->=20
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-I've looked through and the changes seem consistent as far as I can see.
-
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-
-> ---
-> To be queued in renesas-pinctrl for v5.18.
->=20
->  drivers/pinctrl/renesas/pfc-r8a779a0.c | 42 +++++++++++++-------------
->  1 file changed, 21 insertions(+), 21 deletions(-)
->=20
-> diff --git a/drivers/pinctrl/renesas/pfc-r8a779a0.c b/drivers/pinctrl/ren=
-esas/pfc-r8a779a0.c
-> index 155294d0dd5abfb4..4a668a04b7ca6820 100644
-> --- a/drivers/pinctrl/renesas/pfc-r8a779a0.c
-> +++ b/drivers/pinctrl/renesas/pfc-r8a779a0.c
-> @@ -576,23 +576,23 @@ FM(IP0SR5_27_24)  IP0SR5_27_24    FM(IP1SR5_27_24) =
-       IP1SR5_27_24    FM(IP2SR5_27_24)        IP2
->  FM(IP0SR5_31_28)       IP0SR5_31_28    FM(IP1SR5_31_28)        IP1SR5_31=
-_28    FM(IP2SR5_31_28)        IP2SR5_31_28
-> =20
->  /* MOD_SEL2 */                 /* 0 */         /* 1 */         /* 2 */  =
-       /* 3 */
-> -#define MOD_SEL2_14_15         FM(SEL_I2C6_0)  F_(0, 0)        F_(0, 0) =
-       FM(SEL_I2C6_3)
-> -#define MOD_SEL2_12_13         FM(SEL_I2C5_0)  F_(0, 0)        F_(0, 0) =
-       FM(SEL_I2C5_3)
-> -#define MOD_SEL2_10_11         FM(SEL_I2C4_0)  F_(0, 0)        F_(0, 0) =
-       FM(SEL_I2C4_3)
-> -#define MOD_SEL2_8_9           FM(SEL_I2C3_0)  F_(0, 0)        F_(0, 0) =
-       FM(SEL_I2C3_3)
-> -#define MOD_SEL2_6_7           FM(SEL_I2C2_0)  F_(0, 0)        F_(0, 0) =
-       FM(SEL_I2C2_3)
-> -#define MOD_SEL2_4_5           FM(SEL_I2C1_0)  F_(0, 0)        F_(0, 0) =
-       FM(SEL_I2C1_3)
-> -#define MOD_SEL2_2_3           FM(SEL_I2C0_0)  F_(0, 0)        F_(0, 0) =
-       FM(SEL_I2C0_3)
-> +#define MOD_SEL2_15_14         FM(SEL_I2C6_0)  F_(0, 0)        F_(0, 0) =
-       FM(SEL_I2C6_3)
-> +#define MOD_SEL2_13_12         FM(SEL_I2C5_0)  F_(0, 0)        F_(0, 0) =
-       FM(SEL_I2C5_3)
-> +#define MOD_SEL2_11_10         FM(SEL_I2C4_0)  F_(0, 0)        F_(0, 0) =
-       FM(SEL_I2C4_3)
-> +#define MOD_SEL2_9_8           FM(SEL_I2C3_0)  F_(0, 0)        F_(0, 0) =
-       FM(SEL_I2C3_3)
-> +#define MOD_SEL2_7_6           FM(SEL_I2C2_0)  F_(0, 0)        F_(0, 0) =
-       FM(SEL_I2C2_3)
-> +#define MOD_SEL2_5_4           FM(SEL_I2C1_0)  F_(0, 0)        F_(0, 0) =
-       FM(SEL_I2C1_3)
-> +#define MOD_SEL2_3_2           FM(SEL_I2C0_0)  F_(0, 0)        F_(0, 0) =
-       FM(SEL_I2C0_3)
-> =20
->  #define PINMUX_MOD_SELS \
->  \
-> -MOD_SEL2_14_15 \
-> -MOD_SEL2_12_13 \
-> -MOD_SEL2_10_11 \
-> -MOD_SEL2_8_9 \
-> -MOD_SEL2_6_7 \
-> -MOD_SEL2_4_5 \
-> -MOD_SEL2_2_3
-> +MOD_SEL2_15_14 \
-> +MOD_SEL2_13_12 \
-> +MOD_SEL2_11_10 \
-> +MOD_SEL2_9_8 \
-> +MOD_SEL2_7_6 \
-> +MOD_SEL2_5_4 \
-> +MOD_SEL2_3_2
-> =20
->  #define PINMUX_PHYS \
->         FM(SCL0) FM(SDA0) FM(SCL1) FM(SDA1) FM(SCL2) FM(SDA2) FM(SCL3) FM=
-(SDA3) \
-> @@ -3666,13 +3666,13 @@ static const struct pinmux_cfg_reg pinmux_config_=
-regs[] =3D {
->                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
->                 /* RESERVED 19, 18, 17, 16 */
->                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-> -               MOD_SEL2_14_15
-> -               MOD_SEL2_12_13
-> -               MOD_SEL2_10_11
-> -               MOD_SEL2_8_9
-> -               MOD_SEL2_6_7
-> -               MOD_SEL2_4_5
-> -               MOD_SEL2_2_3
-> +               MOD_SEL2_15_14
-> +               MOD_SEL2_13_12
-> +               MOD_SEL2_11_10
-> +               MOD_SEL2_9_8
-> +               MOD_SEL2_7_6
-> +               MOD_SEL2_5_4
-> +               MOD_SEL2_3_2
->                 0, 0,
->                 0, 0, ))
->         },
-> --=20
-> 2.25.1
+On Wed, Jan 12, 2022 at 6:29 PM Robert Marko <robert.marko@sartura.hr> wrot=
+e:
 >
+> On Fri, Dec 10, 2021 at 8:08 AM Lee Jones <lee.jones@linaro.org> wrote:
+> >
+> > On Thu, 09 Dec 2021, Robert Marko wrote:
+> >
+> > > On Thu, Dec 9, 2021 at 10:40 AM Philipp Zabel <p.zabel@pengutronix.de=
+> wrote:
+> > > >
+> > > > Hi Robert,
+> > > >
+> > > > On Wed, 2021-12-01 at 22:28 +0100, Robert Marko wrote:
+> > > > > On Tue, Nov 9, 2021 at 12:32 PM Robert Marko <robert.marko@sartur=
+a.hr> wrote:
+> > > > > >
+> > > > > > Add header for the Delta TN48M CPLD provided
+> > > > > > resets.
+> > > > > >
+> > > > > > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> > > > > > ---
+> > > > > >  include/dt-bindings/reset/delta,tn48m-reset.h | 20 +++++++++++=
+++++++++
+> > > > > >  1 file changed, 20 insertions(+)
+> > > > > >  create mode 100644 include/dt-bindings/reset/delta,tn48m-reset=
+.h
+> > > > > >
+> > > > > > diff --git a/include/dt-bindings/reset/delta,tn48m-reset.h b/in=
+clude/dt-bindings/reset/delta,tn48m-reset.h
+> > > > > > new file mode 100644
+> > > > > > index 000000000000..d4e9ed12de3e
+> > > > > > --- /dev/null
+> > > > > > +++ b/include/dt-bindings/reset/delta,tn48m-reset.h
+> > > > > > @@ -0,0 +1,20 @@
+> > > > > > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > > > > > +/*
+> > > > > > + * Delta TN48M CPLD GPIO driver
+> > > > > > + *
+> > > > > > + * Copyright (C) 2021 Sartura Ltd.
+> > > > > > + *
+> > > > > > + * Author: Robert Marko <robert.marko@sartura.hr>
+> > > > > > + */
+> > > > > > +
+> > > > > > +#ifndef _DT_BINDINGS_RESET_TN48M_H
+> > > > > > +#define _DT_BINDINGS_RESET_TN48M_H
+> > > > > > +
+> > > > > > +#define CPU_88F7040_RESET      0
+> > > > > > +#define CPU_88F6820_RESET      1
+> > > > > > +#define MAC_98DX3265_RESET     2
+> > > > > > +#define PHY_88E1680_RESET      3
+> > > > > > +#define PHY_88E1512_RESET      4
+> > > > > > +#define POE_RESET              5
+> > > > > > +
+> > > > > > +#endif /* _DT_BINDINGS_RESET_TN48M_H */
+> > > > > >
+> > > > >
+> > > > > Does anybody have any comments on the patch as the reset driver g=
+ot reviewed and
+> > > > > the bindings have not?
+> > > >
+> > > > Not much to review here, I can't tell if the indices are correct.
+> > > >
+> > > > Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
+> > > >
+> > > > To be merged with the rest of the series. Or do you want me to pick=
+ up
+> > > > the reset parts individually? In that case you'd have to split out =
+the
+> > > > reset bindings into a separate patch.
+> > >
+> > > Thanks,
+> > > It has to go with the rest of the series as it all depends on the MFD=
+.
+> > >
+> > > We are just waiting for the MFD dt-bindings to be reviewed.
+> >
+> > We need Rob to review the set.  Then I'll happily take it.
+>
+> Hi,
+>
+> Rob, can you please review the dt-bindings?
+> Everything else is ready to go.
+
+Rob, can you please review the dt-bindings?
+
+Regards,
+Robert
+>
+> Regards,
+> Robert
+> >
+> > --
+> > Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
+> > Senior Technical Lead - Developer Services
+> > Linaro.org =E2=94=82 Open source software for Arm SoCs
+> > Follow Linaro: Facebook | Twitter | Blog
+>
+>
+>
+> --
+> Robert Marko
+> Staff Embedded Linux Engineer
+> Sartura Ltd.
+> Lendavska ulica 16a
+> 10000 Zagreb, Croatia
+> Email: robert.marko@sartura.hr
+> Web: www.sartura.hr
+
+
+
+--=20
+Robert Marko
+Staff Embedded Linux Engineer
+Sartura Ltd.
+Lendavska ulica 16a
+10000 Zagreb, Croatia
+Email: robert.marko@sartura.hr
+Web: www.sartura.hr
