@@ -2,100 +2,149 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 44C9B492BDE
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jan 2022 18:07:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 16B7B492C2C
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Jan 2022 18:20:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244176AbiARRG7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Jan 2022 12:06:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37062 "EHLO
+        id S243743AbiARRTp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Jan 2022 12:19:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230126AbiARRG7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Jan 2022 12:06:59 -0500
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D261C061574;
-        Tue, 18 Jan 2022 09:06:59 -0800 (PST)
-Received: by mail-ed1-x52c.google.com with SMTP id j2so884343edj.8;
-        Tue, 18 Jan 2022 09:06:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=T+4KTXN2MyPk5h2NaJWjBVuUnjRXsreM7Vqs8LDWdrI=;
-        b=pAn+jxyEYSHJdfcoa2E2EcGtseKd1LUSIEE+bIVTWa55oeQ7D1Hw/OGSuWFoAjdI1e
-         KQAVVue4LWWIKuYADHF111mi25qZTlscNogoazDmexf/4sFpQtCqY5mtARGMRqSv4iIr
-         OxPmaUQST1fcuxNbAqcgJ2v1rFGV+exgWuy0QrLnsbnwZzwmXWrrFsrvk+Rb+QAuKJx/
-         Z3qT/SI0RTIOJ1bTUfBAYGKQe8gpPwS+1uvfnvW3jOlMllk197RS57tw0osZl/qFkCB3
-         zz82C0Wt7+MfqD4c3Szcjng9Qvto6yGoXkjsx+r5I0Y+rCTKFZi6EAemqMf808HQsP11
-         QPTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=T+4KTXN2MyPk5h2NaJWjBVuUnjRXsreM7Vqs8LDWdrI=;
-        b=0hWslPAu4QBm5zo0rrwwuxhFprGcX6WzGc9ZYjaykn3uCzFyfMFbkpavGG/omFseRV
-         O4a1Y9YKKNAjDjzxs056qTxI06pd3N95rvrgvHC5iGCRhGtiHdVgfo5/AfL7iTZqqeOU
-         sQWCTG1ipD50BfjV0UQ15PxFfOqLZQoWryiya3RIc7Rp6pW+oZO24vMbHJKZjLp+8Y5X
-         4HqsejWxVXIxJxV3CMdzUS/UdJz9MpMFZJbKGjeQ3QENzzbtH/+3B6GfB+uiejYaj7Re
-         Z6KQbbD/Bl80C7oYGcrVldIDrzo1uny8Q5AzPpyaWsO3X31qEkimU2+IsPM7gyE0vMOl
-         leFA==
-X-Gm-Message-State: AOAM531EqjMsUXapnCbKAqfCRtoK3zZv+mtiF9NNXsDlK8L7gyYACNDx
-        wLOkwl5xzBhTBAnfB3lWWS1Nu86T5D1TyOiD7QLLsI2Qbv7E4w==
-X-Google-Smtp-Source: ABdhPJz9ajbfoxq27WakO0O+HLS9Uvs5z/U9yrSCS73qihJQQf0dxS+tGGfLSrBrJF9UbJ4U5KfTGp3lY0K4QicV2VY=
-X-Received: by 2002:a17:906:7948:: with SMTP id l8mr3262885ejo.636.1642525617578;
- Tue, 18 Jan 2022 09:06:57 -0800 (PST)
+        with ESMTP id S1347149AbiARRTp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Jan 2022 12:19:45 -0500
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 124DEC061574;
+        Tue, 18 Jan 2022 09:19:44 -0800 (PST)
+Received: from pendragon.ideasonboard.com (cpc89244-aztw30-2-0-cust3082.18-1.cable.virginm.net [86.31.172.11])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 7FED014C3;
+        Tue, 18 Jan 2022 18:19:42 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1642526382;
+        bh=DzBjQOlNtw5qOzuh4tnHr/oiWRI6Z3LjQkD8BsAOp2M=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=ro5AdUSDAv1TkcyNN5g08ZLNBInKed2d/haAFF8OBgaNAW327yFJISeY5I5kmBZlg
+         Ybk/UBTpJt0Fwgc061dSwC2K5UivNTUinl54NSJnWhgCk2xb35YZZbLVw3C85bXw2S
+         9ximCBLb53ESqz8x95ZyQeKYqpsjg0q7CANKqVyE=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20220111115919.14645-1-cristian.pop@analog.com>
- <20220111115919.14645-2-cristian.pop@analog.com> <20220116115228.1f7b4728@jic23-huawei>
-In-Reply-To: <20220116115228.1f7b4728@jic23-huawei>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 18 Jan 2022 19:06:20 +0200
-Message-ID: <CAHp75VeakSDtDfGO1tcZKgoJ0KTAHgYMKG1v=cYDSHoc-zLUbw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] one-bit-adc-dac: Add initial version of one bit ADC-DAC
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Cristian Pop <cristian.pop@analog.com>, linux-iio@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <4880e4cbc112ee26569bf29a21c070125461e58d.1642524603.git.geert+renesas@glider.be>
+References: <4880e4cbc112ee26569bf29a21c070125461e58d.1642524603.git.geert+renesas@glider.be>
+Subject: Re: [PATCH] pinctrl: renesas: r8a779a0: Rename MOD_SEL2_* definitions
+From:   Kieran Bingham <kieran.bingham@ideasonboard.com>
+Cc:     linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 18 Jan 2022 17:19:39 +0000
+Message-ID: <164252637980.10801.8177844941829819862@Monstersaurus>
+User-Agent: alot/0.10
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 17, 2022 at 8:41 AM Jonathan Cameron <jic23@kernel.org> wrote:
-> On Tue, 11 Jan 2022 13:59:19 +0200
-> Cristian Pop <cristian.pop@analog.com> wrote:
+Hi Geert,
 
-> > +     st->labels = devm_kzalloc(device, sizeof(*st->labels) * child_num, GFP_KERNEL);
-> > +     if (!st->labels)
-> > +             return -ENOMEM;
-> > +
-> > +     i = child_num;
-> > +     fwnode_for_each_child_node(fwnode, child) {
-> > +             if (fwnode_property_read_u32(child, "reg", &crt_ch))
-> > +                     continue;
-> > +
-> > +             if (crt_ch >= num_channels)
-> > +                     continue;
-> > +
-> > +             if (fwnode_property_read_string(child, "label", &label))
-> > +                     continue;
-> > +
-> > +             chan = &channels[crt_ch];
-> ? Not used.
+Quoting Geert Uytterhoeven (2022-01-18 16:52:08)
+> Rename the MOD_SEL2_* definitions, to match the bitfield order in
+> IPxSRy_* definitions and in MOD_SEL* definitions in other drivers.
+>=20
+> No changes in generated code.
+>=20
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+I've looked through and the changes seem consistent as far as I can see.
+
+Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+
+> ---
+> To be queued in renesas-pinctrl for v5.18.
+>=20
+>  drivers/pinctrl/renesas/pfc-r8a779a0.c | 42 +++++++++++++-------------
+>  1 file changed, 21 insertions(+), 21 deletions(-)
+>=20
+> diff --git a/drivers/pinctrl/renesas/pfc-r8a779a0.c b/drivers/pinctrl/ren=
+esas/pfc-r8a779a0.c
+> index 155294d0dd5abfb4..4a668a04b7ca6820 100644
+> --- a/drivers/pinctrl/renesas/pfc-r8a779a0.c
+> +++ b/drivers/pinctrl/renesas/pfc-r8a779a0.c
+> @@ -576,23 +576,23 @@ FM(IP0SR5_27_24)  IP0SR5_27_24    FM(IP1SR5_27_24) =
+       IP1SR5_27_24    FM(IP2SR5_27_24)        IP2
+>  FM(IP0SR5_31_28)       IP0SR5_31_28    FM(IP1SR5_31_28)        IP1SR5_31=
+_28    FM(IP2SR5_31_28)        IP2SR5_31_28
+> =20
+>  /* MOD_SEL2 */                 /* 0 */         /* 1 */         /* 2 */  =
+       /* 3 */
+> -#define MOD_SEL2_14_15         FM(SEL_I2C6_0)  F_(0, 0)        F_(0, 0) =
+       FM(SEL_I2C6_3)
+> -#define MOD_SEL2_12_13         FM(SEL_I2C5_0)  F_(0, 0)        F_(0, 0) =
+       FM(SEL_I2C5_3)
+> -#define MOD_SEL2_10_11         FM(SEL_I2C4_0)  F_(0, 0)        F_(0, 0) =
+       FM(SEL_I2C4_3)
+> -#define MOD_SEL2_8_9           FM(SEL_I2C3_0)  F_(0, 0)        F_(0, 0) =
+       FM(SEL_I2C3_3)
+> -#define MOD_SEL2_6_7           FM(SEL_I2C2_0)  F_(0, 0)        F_(0, 0) =
+       FM(SEL_I2C2_3)
+> -#define MOD_SEL2_4_5           FM(SEL_I2C1_0)  F_(0, 0)        F_(0, 0) =
+       FM(SEL_I2C1_3)
+> -#define MOD_SEL2_2_3           FM(SEL_I2C0_0)  F_(0, 0)        F_(0, 0) =
+       FM(SEL_I2C0_3)
+> +#define MOD_SEL2_15_14         FM(SEL_I2C6_0)  F_(0, 0)        F_(0, 0) =
+       FM(SEL_I2C6_3)
+> +#define MOD_SEL2_13_12         FM(SEL_I2C5_0)  F_(0, 0)        F_(0, 0) =
+       FM(SEL_I2C5_3)
+> +#define MOD_SEL2_11_10         FM(SEL_I2C4_0)  F_(0, 0)        F_(0, 0) =
+       FM(SEL_I2C4_3)
+> +#define MOD_SEL2_9_8           FM(SEL_I2C3_0)  F_(0, 0)        F_(0, 0) =
+       FM(SEL_I2C3_3)
+> +#define MOD_SEL2_7_6           FM(SEL_I2C2_0)  F_(0, 0)        F_(0, 0) =
+       FM(SEL_I2C2_3)
+> +#define MOD_SEL2_5_4           FM(SEL_I2C1_0)  F_(0, 0)        F_(0, 0) =
+       FM(SEL_I2C1_3)
+> +#define MOD_SEL2_3_2           FM(SEL_I2C0_0)  F_(0, 0)        F_(0, 0) =
+       FM(SEL_I2C0_3)
+> =20
+>  #define PINMUX_MOD_SELS \
+>  \
+> -MOD_SEL2_14_15 \
+> -MOD_SEL2_12_13 \
+> -MOD_SEL2_10_11 \
+> -MOD_SEL2_8_9 \
+> -MOD_SEL2_6_7 \
+> -MOD_SEL2_4_5 \
+> -MOD_SEL2_2_3
+> +MOD_SEL2_15_14 \
+> +MOD_SEL2_13_12 \
+> +MOD_SEL2_11_10 \
+> +MOD_SEL2_9_8 \
+> +MOD_SEL2_7_6 \
+> +MOD_SEL2_5_4 \
+> +MOD_SEL2_3_2
+> =20
+>  #define PINMUX_PHYS \
+>         FM(SCL0) FM(SDA0) FM(SCL1) FM(SDA1) FM(SCL2) FM(SDA2) FM(SCL3) FM=
+(SDA3) \
+> @@ -3666,13 +3666,13 @@ static const struct pinmux_cfg_reg pinmux_config_=
+regs[] =3D {
+>                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+>                 /* RESERVED 19, 18, 17, 16 */
+>                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+> -               MOD_SEL2_14_15
+> -               MOD_SEL2_12_13
+> -               MOD_SEL2_10_11
+> -               MOD_SEL2_8_9
+> -               MOD_SEL2_6_7
+> -               MOD_SEL2_4_5
+> -               MOD_SEL2_2_3
+> +               MOD_SEL2_15_14
+> +               MOD_SEL2_13_12
+> +               MOD_SEL2_11_10
+> +               MOD_SEL2_9_8
+> +               MOD_SEL2_7_6
+> +               MOD_SEL2_5_4
+> +               MOD_SEL2_3_2
+>                 0, 0,
+>                 0, 0, ))
+>         },
+> --=20
+> 2.25.1
 >
-> > +             st->labels[--i] = label;
-
-> I've no idea how this works...  Should be looking for the chan->channel
-> value as that's what your read uses to index.
-
-It's an implicit memcpy().
-
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-
-
-
--- 
-With Best Regards,
-Andy Shevchenko
