@@ -2,128 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C5A894938FB
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jan 2022 11:56:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C1956493910
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jan 2022 11:57:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353174AbiASK4W (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 Jan 2022 05:56:22 -0500
-Received: from mxout04.lancloud.ru ([45.84.86.114]:57474 "EHLO
-        mxout04.lancloud.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240254AbiASK4V (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Jan 2022 05:56:21 -0500
-Received: from LanCloud
-DKIM-Filter: OpenDKIM Filter v2.11.0 mxout04.lancloud.ru A771820D27E6
-Received: from LanCloud
-Received: from LanCloud
-Received: from LanCloud
-Subject: Re: [PATCH 1/2] platform: make platform_get_irq_optional() optional
- (summary)
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-CC:     Andrew Lunn <andrew@lunn.ch>, Ulf Hansson <ulf.hansson@linaro.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>, <kvm@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        <linux-iio@vger.kernel.org>,
+        id S1353734AbiASK55 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 Jan 2022 05:57:57 -0500
+Received: from mx0a-001ae601.pphosted.com ([67.231.149.25]:13802 "EHLO
+        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1353723AbiASK5z (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 19 Jan 2022 05:57:55 -0500
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 20J5aNQc003098;
+        Wed, 19 Jan 2022 04:57:27 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=PODMain02222019;
+ bh=YeXjvt2a/3UPggig0LgeC8zG+kAXAN5PBZnu2EVj7xY=;
+ b=LrPgXwdH8VKL3HwRWaA6o8fKipetDIcgkbBL5GAST84W3pDLptBnYV5kxG7+L+BbEBid
+ C/Kjm8mA761mT3PTXrMT6e2sJhJhnYD244TOsdNmGn+NRzc8LW0N6W5mbj0Kp77ZK0vy
+ eg+1iuwXVygQPud3lxG8lHsCtImFhokOD9Kz372YX4Y2m9Qkj24Nd34Dah9erEYj5Ppt
+ tw9PMtj8Fdj9uEXqGIth5cdSwAYKw4vbuKmE2Fz9kuj3JEAcwzaTwdpX7Rh5UP5chgwo
+ knQP6V666OzxQe8dcg4399G7genTjTRx6DRYBytS3Fi4tggXiLKofGKaTqQ6xyxhj3aM lQ== 
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+        by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3dnaxhtd5c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 19 Jan 2022 04:57:27 -0600
+Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.18; Wed, 19 Jan
+ 2022 10:57:25 +0000
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server id 15.1.2375.18 via Frontend
+ Transport; Wed, 19 Jan 2022 10:57:25 +0000
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 89617B0E;
+        Wed, 19 Jan 2022 10:57:24 +0000 (UTC)
+Date:   Wed, 19 Jan 2022 10:57:24 +0000
+From:   Charles Keepax <ckeepax@opensource.cirrus.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Sandy Huang <hjc@rock-chips.com>,
+        Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        <alsa-devel@alsa-project.org>, Liam Girdwood <lgirdwood@gmail.com>,
-        "Guenter Roeck" <groeck@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        <linux-mtd@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        <linux-phy@lists.infradead.org>, Lee Jones <lee.jones@linaro.org>,
-        Khuong Dinh <khuong@os.amperecomputing.com>,
-        "Florian Fainelli" <f.fainelli@gmail.com>,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        Joakim Zhang <qiangqing.zhang@nxp.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        "Bartosz Golaszewski" <brgl@bgdev.pl>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Tony Luck" <tony.luck@intel.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        <bcm-kernel-feedback-list@broadcom.com>,
-        <linux-serial@vger.kernel.org>, Jakub Kicinski <kuba@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        <platform-driver-x86@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        Robert Richter <rric@kernel.org>,
-        "Saravanan Sekar" <sravanhome@gmail.com>,
-        Corey Minyard <minyard@acm.org>, <linux-pm@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "John Garry" <john.garry@huawei.com>,
-        Peter Korsgaard <peter@korsgaard.com>,
-        "William Breathitt Gray" <vilhelm.gray@gmail.com>,
-        Mark Gross <markgross@kernel.org>,
-        <linux-gpio@vger.kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
         Mark Brown <broonie@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Eric Auger <eric.auger@redhat.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jaroslav Kysela <perex@perex.cz>,
-        <openipmi-developer@lists.sourceforge.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Benson Leung <bleung@chromium.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        - <patches@opensource.cirrus.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-edac@vger.kernel.org>,
-        "Richard Weinberger" <richard@nod.at>,
-        Mun Yew Tham <mun.yew.tham@intel.com>,
-        "Hans de Goede" <hdegoede@redhat.com>, <netdev@vger.kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Cornelia Huck <cohuck@redhat.com>, <linux-mmc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>, Vinod Koul <vkoul@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
-        <linux-mediatek@lists.infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-References: <20220110195449.12448-1-s.shtylyov@omp.ru>
- <20220110195449.12448-2-s.shtylyov@omp.ru>
- <20220115183643.6zxalxqxrhkfgdfq@pengutronix.de> <YeQpWu2sUVOSaT9I@kroah.com>
- <20220118091819.zzxpffrxbckoxiys@pengutronix.de>
-From:   Sergey Shtylyov <s.shtylyov@omp.ru>
-Organization: Open Mobile Platform
-Message-ID: <b6038ec2-da4a-de92-b845-cac2be0efcd1@omp.ru>
-Date:   Wed, 19 Jan 2022 13:56:12 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        <linux-rockchip@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-input@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <alsa-devel@alsa-project.org>
+Subject: Re: [PATCH] dt-bindings: Drop unnecessary pinctrl properties
+Message-ID: <20220119105724.GQ18506@ediswmail.ad.cirrus.com>
+References: <20220119015325.2438277-1-robh@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20220118091819.zzxpffrxbckoxiys@pengutronix.de>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [192.168.11.198]
-X-ClientProxiedBy: LFEXT02.lancloud.ru (fd00:f066::142) To
- LFEX1907.lancloud.ru (fd00:f066::207)
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20220119015325.2438277-1-robh@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-GUID: qX5Mw540ExmwrU_vS7Og4PEUG2Xrc84A
+X-Proofpoint-ORIG-GUID: qX5Mw540ExmwrU_vS7Og4PEUG2Xrc84A
+X-Proofpoint-Spam-Reason: safe
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 1/18/22 12:18 PM, Uwe Kleine-König wrote:
-> On Sun, Jan 16, 2022 at 03:19:06PM +0100, Greg Kroah-Hartman wrote:
->> On Sat, Jan 15, 2022 at 07:36:43PM +0100, Uwe Kleine-König wrote:
->>> A possible compromise: We can have both. We rename
->>> platform_get_irq_optional() to platform_get_irq_silent() (or
->>> platform_get_irq_silently() if this is preferred) and once all users are
->>> are changed (which can be done mechanically), we reintroduce a
->>> platform_get_irq_optional() with Sergey's suggested semantic (i.e.
->>> return 0 on not-found, no error message printking).
->>
->> Please do not do that as anyone trying to forward-port an old driver
->> will miss the abi change of functionality and get confused.  Make
->> build-breaking changes, if the way a function currently works is
->> changed in order to give people a chance.
+On Tue, Jan 18, 2022 at 07:53:25PM -0600, Rob Herring wrote:
+> For a single pinctrl mode, it is not necessary to define pinctrl
+> properties as the tools always allow pinctrl properties.
 > 
-> Fine for me. I assume this is a Nack for Sergey's patch?
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
 
-   Which patch do you mean? I'm starting to get really muddled... :-(
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-> Best regards
-> Uwe
-
-MBR, Sergey
+Thanks,
+Charles
