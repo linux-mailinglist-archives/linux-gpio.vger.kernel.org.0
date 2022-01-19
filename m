@@ -2,173 +2,139 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E5957493296
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jan 2022 02:54:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 883984932AF
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jan 2022 03:05:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350789AbiASByo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Jan 2022 20:54:44 -0500
-Received: from mail-ot1-f44.google.com ([209.85.210.44]:33473 "EHLO
-        mail-ot1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350779AbiASByn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Jan 2022 20:54:43 -0500
-Received: by mail-ot1-f44.google.com with SMTP id y11-20020a0568302a0b00b0059a54d66106so1103811otu.0;
-        Tue, 18 Jan 2022 17:54:42 -0800 (PST)
+        id S1350843AbiASCE6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Jan 2022 21:04:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46236 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1350404AbiASCE6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Jan 2022 21:04:58 -0500
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E52FC061574
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Jan 2022 18:04:58 -0800 (PST)
+Received: by mail-pg1-x52d.google.com with SMTP id q75so927987pgq.5
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Jan 2022 18:04:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=1V+p1Yq+eXMZCzFEYvtGwPmOOZ8dgWHAsoo9fHqxNUg=;
+        b=gn+nuMrHu5YEiajSBJ/Tvb8kqdPDSBXfQ0gvnPuFOxFZ2lmQcpgFrs15YN4hysuP7v
+         1eNedy0jxuWVwMrpEmBG3vCZPMHNnL8qrTEi7XktgUcEXG+7Yt5rxzgqgXnXPTugYpvJ
+         kjllwC8URU89pbFRH1hagMFXSOEDAtle0PO5g8gtpLXvZKj18CpNB4UmMQqWw7cr2qH7
+         yGwrMXc0o9ryD6NAF8Eh1xk90HoWH3zXRX4inqHVoN7XceuUsVVIOOf8NlezNxU4uJ0J
+         mSd1aNEkZGFZqL+mxBu/RX52zGwTTYNwznFGGUJf3B9Dkci/jIq+Jemd+5HSA/I0yrsx
+         MlBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qwNF7gDQbaVP4ndpQ6YMR5OTB3DEGyDODGB0cvvqRfI=;
-        b=Uv2i19NbpnnyyV2GJmevQVO2Sq8KR+/9DN9Td27rdvyhK0AJwiPDv8mdmZbyOfC/Bt
-         JLmuwZR03YB1bTXyYIyUnU6a8G41XrXL2/dkYooz2sPXfHJdEZI19LwSaa0nfNuN8unJ
-         0qN6LmcNPFK+p/aaWz3GAumICtL9F5zzSS/TIJOwNOYd5lFy+kksTO1GdGpTokAbC6tL
-         OEzS80qJMJ++BcMV9D1uBk4JLZuZjcWOu6kPJ+eVG+AEmwuvmBX0keJk0u2HMOXMxHQX
-         1V4tPegfRUqVqgccgwX8HvcrVN/AP6NnDrbfaEYUE8nS+YS3yOGVxcD9J3CFXGwFJha7
-         hRIg==
-X-Gm-Message-State: AOAM5310ful6QlKImfmatHT6c6C3fOZ6w7bLV5hhtE/TFmEhoO4cROcA
-        W+47O6sZfYiFgdr9NRRRhQ==
-X-Google-Smtp-Source: ABdhPJzVUKXAC2YcMFSv4hVv2ACgxjnkM4ifG2UCVa32kabvoUCd5Cz5lVIyctz4yYEGV/7yATw++g==
-X-Received: by 2002:a9d:4b13:: with SMTP id q19mr22246546otf.300.1642557282257;
-        Tue, 18 Jan 2022 17:54:42 -0800 (PST)
-Received: from xps15.herring.priv (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.googlemail.com with ESMTPSA id x26sm8030086ote.78.2022.01.18.17.54.40
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1V+p1Yq+eXMZCzFEYvtGwPmOOZ8dgWHAsoo9fHqxNUg=;
+        b=Y8GG3rSdpTZ8LzZkjj04T87JAP1afQ89wOD0pAPYEpkXxNT/4ATjYNRrxYSH4MPUCO
+         YncJ2qpMFTtlxeICV3JvRYOa8/7dEiYwPC0w5EiJ8k9aM/zXwVfEoIpUXe0KyjEcjQO6
+         j34MJ3hAFPMxnzrDI26UzF9yLGQiTZkDXqCjOKtzCQL19jcJIuOuRpST28lFvvkAXHbH
+         oZ9d50k/Q+wwUxnrimnxj/2YEHj6k4QPV7fKhwYCGWhauB7j90PzlcC7qKgwqSKa9VPV
+         AmGShetnaW8UsOwJz//Y9JZbSKuFnRHTcQ6KXruFtkMkIDJYAizXWctqt8xJPJEKP8Em
+         MmAQ==
+X-Gm-Message-State: AOAM533RInKUHvnFX2AMgNfX4FyOxaPwUKfAWEBA86Mg2ysXMO0njKP1
+        iPDmpNqywWlCO7B145YFK80=
+X-Google-Smtp-Source: ABdhPJwTrPjyUKbGiqi3Ytxn7Tux7emVQeIoFkrgiV5Z7sUZ3QbysR/SQD+AijwvdV0B66eULxZ54A==
+X-Received: by 2002:aa7:9e5a:0:b0:4bf:32da:b179 with SMTP id z26-20020aa79e5a000000b004bf32dab179mr28263696pfq.1.1642557897910;
+        Tue, 18 Jan 2022 18:04:57 -0800 (PST)
+Received: from shinobu (113x37x72x24.ap113.ftth.ucom.ne.jp. [113.37.72.24])
+        by smtp.gmail.com with ESMTPSA id c19sm18489085pfo.91.2022.01.18.18.04.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jan 2022 17:54:41 -0800 (PST)
-From:   Rob Herring <robh@kernel.org>
-To:     Sandy Huang <hjc@rock-chips.com>,
-        =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Richard Fitzgerald <rf@opensource.cirrus.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        - <patches@opensource.cirrus.com>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-gpio@vger.kernel.org,
-        alsa-devel@alsa-project.org
-Subject: [PATCH] dt-bindings: Drop unnecessary pinctrl properties
-Date:   Tue, 18 Jan 2022 19:53:25 -0600
-Message-Id: <20220119015325.2438277-1-robh@kernel.org>
-X-Mailer: git-send-email 2.32.0
+        Tue, 18 Jan 2022 18:04:56 -0800 (PST)
+Date:   Wed, 19 Jan 2022 11:04:52 +0900
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Jose Paez <jose.m.paez@icloud.com>
+Cc:     linux-gpio@vger.kernel.org
+Subject: Re: Ubuntu 20.04 GPIO Issue
+Message-ID: <YedxxHuD3uCc4+IZ@shinobu>
+References: <87A74AAB-198B-4A87-9403-2840810C541D@icloud.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="R0BpYZ5SOGiD7OGg"
+Content-Disposition: inline
+In-Reply-To: <87A74AAB-198B-4A87-9403-2840810C541D@icloud.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-For a single pinctrl mode, it is not necessary to define pinctrl
-properties as the tools always allow pinctrl properties.
 
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- .../display/rockchip/rockchip,rk3066-hdmi.yaml         |  8 --------
- Documentation/devicetree/bindings/input/gpio-keys.yaml |  6 ------
- .../devicetree/bindings/pinctrl/cirrus,lochnagar.yaml  |  9 ---------
- .../devicetree/bindings/pinctrl/cirrus,madera.yaml     | 10 ----------
- .../devicetree/bindings/sound/samsung-i2s.yaml         |  6 ------
- 5 files changed, 39 deletions(-)
+--R0BpYZ5SOGiD7OGg
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.yaml
-index 008c144257cb..1a68a940d165 100644
---- a/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.yaml
-+++ b/Documentation/devicetree/bindings/display/rockchip/rockchip,rk3066-hdmi.yaml
-@@ -26,14 +26,6 @@ properties:
-   clock-names:
-     const: hclk
- 
--  pinctrl-0:
--    maxItems: 2
--
--  pinctrl-names:
--    const: default
--    description:
--      Switch the iomux for the HPD/I2C pins to HDMI function.
--
-   power-domains:
-     maxItems: 1
- 
-diff --git a/Documentation/devicetree/bindings/input/gpio-keys.yaml b/Documentation/devicetree/bindings/input/gpio-keys.yaml
-index dbe7ecc19ccb..7fe1966ea28a 100644
---- a/Documentation/devicetree/bindings/input/gpio-keys.yaml
-+++ b/Documentation/devicetree/bindings/input/gpio-keys.yaml
-@@ -88,12 +88,6 @@ patternProperties:
-             which can be disabled to suppress events from the button.
-           type: boolean
- 
--        pinctrl-0:
--          maxItems: 1
--
--        pinctrl-names:
--          maxItems: 1
--
-       required:
-         - linux,code
- 
-diff --git a/Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.yaml b/Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.yaml
-index 80020539c3bb..5cd512b7d5ba 100644
---- a/Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.yaml
-@@ -51,15 +51,6 @@ properties:
-       appropriate of the LOCHNAGARx_PIN_NUM_GPIOS define, see [3].
-     maxItems: 1
- 
--  pinctrl-0:
--    description:
--      A phandle to the default pinctrl state.
--
--  pinctrl-names:
--    description:
--      A pinctrl state named "default" must be defined.
--    const: default
--
-   pin-settings:
-     type: object
-     patternProperties:
-diff --git a/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml b/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml
-index e50d7ad5c229..c85f759ae5a3 100644
---- a/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml
-@@ -30,16 +30,6 @@ description: |
-     Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
- 
- properties:
--  pinctrl-0:
--    description:
--      A phandle to the node containing the subnodes containing default
--      configurations.
--
--  pinctrl-names:
--    description:
--      A pinctrl state named "default" must be defined.
--    const: default
--
-   pin-settings:
-     description:
-       One subnode is required to contain the default settings. It
-diff --git a/Documentation/devicetree/bindings/sound/samsung-i2s.yaml b/Documentation/devicetree/bindings/sound/samsung-i2s.yaml
-index 2e3628ef48df..84c4d6cba521 100644
---- a/Documentation/devicetree/bindings/sound/samsung-i2s.yaml
-+++ b/Documentation/devicetree/bindings/sound/samsung-i2s.yaml
-@@ -110,12 +110,6 @@ properties:
-       Internal DMA register base address of the audio
-       subsystem (used in secondary sound source).
- 
--  pinctrl-0:
--    description: Should specify pin control groups used for this controller.
--
--  pinctrl-names:
--    const: default
--
-   power-domains:
-     maxItems: 1
- 
--- 
-2.32.0
+On Tue, Jan 18, 2022 at 05:33:58PM -0500, Jose Paez wrote:
+> Good evening guys,
+>=20
+> Recently, I installed an Ubuntu upgrade to the Linux kernel that must hav=
+e had an update to the GPIO driver. As of now, Ubuntu fails to boot unless =
+it is in safe mode. This was not an issue with kernel 5.11.0-44 but it is a=
+n issue in 5.11.0-46 and above.
+>=20
+> I was not sure what the problem was because the issue happens early after=
+ selecting a kernel from GRUB. It hangs without me being able to see any lo=
+gs as to what=E2=80=99s going on in the background. Disabling `quiet splash=
+` didn=E2=80=99t yield any information either. However, attempting to boot =
+Ubuntu from a USB stick yields the following error right off:
+>=20
+> ```
+> Gpio gpiochip2: (gpio_aaeon): tried to insert a GPIO chip with zero lines
+> Gpiochip_add_data_with_key: GPIOs 0..-1 (gpio_aaeon) failed to register, =
+-22
+> ```
+> Nothing happens after this. I don=E2=80=99t appear to be the only one aff=
+ected, as there=E2=80=99s this useful entry in stackexchange about it:
+>=20
+> https://unix.stackexchange.com/questions/665526/what-gpio-gpiochip0-kerne=
+l-error-means-and-how-to-solve
+>=20
+> If it helps of anything, my setup is as follows:
+> - TUF B550 Plus Wifi Motherboard
+> - 16GB Memory
+> - AMD 5700G
+> - Dual boot Ubuntu/Win11
+>=20
+> Feel free to reach out if there=E2=80=99s anything I can help with.
+>=20
+> Kind regards,
+>=20
+> Jose M Paez
+> Pittsburgh, PA
+> jose.m.paez@icloud.com
 
+Hi Jose,
+
+Canonical maintains their own Ubuntu patches on top of the mainline
+Linux kernels. It may be more appropriate to contact the Ubuntu kernel
+team first to report this issue to see if it's something specific to
+their kernel: https://lists.ubuntu.com/
+
+William Breathitt Gray
+
+--R0BpYZ5SOGiD7OGg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEk5I4PDJ2w1cDf/bghvpINdm7VJIFAmHnca4ACgkQhvpINdm7
+VJJkLBAAybtCpAPsQohMJzgxyEkMbdyOq4a/cxJQxyghrQDYACn9CUChFAXgorgD
+Gb2Mbk0w+zcZlz0F6zdLBto9wSCOxJRTtzvalxpSuhaOua5k2fZ2m5uEtu3z5qZ+
+SEZ9MeFm9DxeXc+mH7kwuCBFuHH31nCmHg8HgIbJ6j3gbU2mLsqqiEHvpziX9Gsc
+HwizMonKwb9p5LmQnKT9uN3+2oKX5no8QH1aqBtyIpoR+UcTYhuzt6/0I7yE1qAO
+AV+u2HwFmfjFGDHpGY502UUjn0vLDYbdMR5F4M4wjVqwk96iUe+9gP7Mrd6qwWaY
+KdKQobAGp35PlhsjfwqzwRrxTwrSqKSmgpiX47S2WzOJWK9qIJ6zSQP6AK6pYyo/
+2kG/8aIeKokOvys2qZwc/D3bdrIsu7FJDcZMHLYQSsUPwr1llDZDt3jtmajl4bVm
+qVL+hPJp5Ht3dti+2n3hLlFYwa7+D2KE4iiRmW3a2ErokwwssouTQKTAp9Cy+rck
+qaeoX5fGSFfGTI2+LtO2Zdj7dW/z987HSaRDfGdxv94xKaBTxJ/Wu40IjrDpMG+R
+v5rP+8l/7IXIJzZAacXEz/VfBSKv5AjHGFY+ElK8uAnr7limysg7pV8AP4ZGu5tq
+eRWmSMpod+RhSXny3UG/59fjPBpb6rQcWVOQb2DeXq6UrUI9nDQ=
+=/rhf
+-----END PGP SIGNATURE-----
+
+--R0BpYZ5SOGiD7OGg--
