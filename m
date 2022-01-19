@@ -2,90 +2,166 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 84D96493E50
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jan 2022 17:30:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 48CDC493FE3
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jan 2022 19:30:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356130AbiASQan (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 Jan 2022 11:30:43 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:56892 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356145AbiASQaj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Jan 2022 11:30:39 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 095FBB80E09;
-        Wed, 19 Jan 2022 16:30:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 955B2C004E1;
-        Wed, 19 Jan 2022 16:30:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642609836;
-        bh=NPkrUgRYzcxwa3lnZh2dJ3qyPo1V5StcWneeKtWaOTI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GMhWu7C3B60BdL8/99pPFWzH0CB7LU7Dz7GFXyQtbGWeKeKQJEE+V2fEbRhv/QrJW
-         yYagtUm7pysfgqkJMyR27/xktDwbdWcoif82n5bf4F716uAgvyW4CrM7nnlUKhGZf0
-         FU8zZ8ZvZl+QEyzj+ByrVczubpcuk9CdfXWCIEjg23SntmAfLaHiquJ5KbvTGWQWfn
-         Hr8GUX32FKay/k82RyllkJOyRWhWEFPpRz5SEs7TiLsMcVgix5+RDcoF6No3Mm8HeE
-         dgP9NlrSSG2qLfoDBPumyLb9lbK1A0ADtU3DkLXQ9hZS91Urze/uzDqpkaas6/c5dZ
-         OCMIIrEVF0X5A==
-Date:   Wed, 19 Jan 2022 16:30:29 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Sandy Huang <hjc@rock-chips.com>,
-        Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Richard Fitzgerald <rf@opensource.cirrus.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        id S1356746AbiASS3l (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 Jan 2022 13:29:41 -0500
+Received: from mxout02.lancloud.ru ([45.84.86.82]:60414 "EHLO
+        mxout02.lancloud.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1356737AbiASS3l (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Jan 2022 13:29:41 -0500
+Received: from LanCloud
+DKIM-Filter: OpenDKIM Filter v2.11.0 mxout02.lancloud.ru EFD8920BF006
+Received: from LanCloud
+Received: from LanCloud
+Received: from LanCloud
+From:   Sergey Shtylyov <s.shtylyov@omp.ru>
+Subject: Re: [PATCH 1/2] platform: make platform_get_irq_optional() optional
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        "Geert Uytterhoeven" <geert@linux-m68k.org>
+CC:     Andrew Lunn <andrew@lunn.ch>, Ulf Hansson <ulf.hansson@linaro.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        KVM list <kvm@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        <linux-iio@vger.kernel.org>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        "ALSA Development Mailing List" <alsa-devel@alsa-project.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Guenter Roeck <groeck@chromium.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        <linux-phy@lists.infradead.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Khuong Dinh <khuong@os.amperecomputing.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        <platform-driver-x86@vger.kernel.org>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Robert Richter <rric@kernel.org>,
+        "Saravanan Sekar" <sravanhome@gmail.com>,
+        Corey Minyard <minyard@acm.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        - <patches@opensource.cirrus.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-gpio@vger.kernel.org,
-        alsa-devel@alsa-project.org
-Subject: Re: [PATCH] dt-bindings: Drop unnecessary pinctrl properties
-Message-ID: <Yeg8pWYUwWKqOjhe@sirena.org.uk>
-References: <20220119015325.2438277-1-robh@kernel.org>
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Peter Korsgaard <peter@korsgaard.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Mark Brown" <broonie@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Takashi Iwai <tiwai@suse.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <openipmi-developer@lists.sourceforge.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Benson Leung <bleung@chromium.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        <linux-edac@vger.kernel.org>, "Tony Luck" <tony.luck@intel.com>,
+        Richard Weinberger <richard@nod.at>,
+        Mun Yew Tham <mun.yew.tham@intel.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        netdev <netdev@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        "Linux MMC List" <linux-mmc@vger.kernel.org>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        "James Morse" <james.morse@arm.com>,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        "Sebastian Reichel" <sre@kernel.org>,
+        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
+        <linux-mediatek@lists.infradead.org>,
+        "Brian Norris" <computersforpeace@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+References: <20220117092444.opoedfcf5k5u6otq@pengutronix.de>
+ <CAMuHMdUgZUeraHadRAi2Z=DV+NuNBrKPkmAKsvFvir2MuquVoA@mail.gmail.com>
+ <20220117114923.d5vajgitxneec7j7@pengutronix.de>
+ <CAMuHMdWCKERO20R2iVHq8P=BaoauoBAtiampWzfMRYihi3Sb0g@mail.gmail.com>
+ <20220117170609.yxaamvqdkivs56ju@pengutronix.de>
+ <CAMuHMdXbuZqEpYivyS6hkaRN+CwTOGaHq_OROwVAWvDD6OXODQ@mail.gmail.com>
+ <20220118090913.pjumkq4zf4iqtlha@pengutronix.de>
+ <CAMuHMdUW8+Y_=uszD+JOZO3Lpa9oDayk+GO+cg276i2f2T285w@mail.gmail.com>
+ <20220118120806.pbjsat4ulg3vnhsh@pengutronix.de>
+ <CAMuHMdWkwV9XE_R5FZ=jPtDwLpDbEngG6+X2JmiDJCZJZvUjYA@mail.gmail.com>
+ <20220118142945.6y3rmvzt44pjpr4z@pengutronix.de>
+ <6370798a-7a7e-243d-99f9-09bf772ddbac@omp.ru>
+Organization: Open Mobile Platform
+Message-ID: <96ff907a-4ad2-5b2e-9bcc-09592d65a6df@omp.ru>
+Date:   Wed, 19 Jan 2022 21:29:28 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="pa3KE12yHs9Xnd2D"
-Content-Disposition: inline
-In-Reply-To: <20220119015325.2438277-1-robh@kernel.org>
-X-Cookie: This bag is recyclable.
+In-Reply-To: <6370798a-7a7e-243d-99f9-09bf772ddbac@omp.ru>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [192.168.11.198]
+X-ClientProxiedBy: LFEXT02.lancloud.ru (fd00:f066::142) To
+ LFEX1907.lancloud.ru (fd00:f066::207)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On 1/19/22 7:12 PM, Sergey Shtylyov wrote:
 
---pa3KE12yHs9Xnd2D
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+[...]
+>>> So there's still a need for two functions.
+>>
+>> Or a single function not emitting an error message together with the
+>> callers being responsible for calling dev_err().
+>>
+>> So the options in my preference order (first is best) are:
+>>
+>>  - Remove the printk from platform_get_irq() and remove
+>>    platform_get_irq_optional();
+> 
+>    Strong NAK here:
+> - dev_err() in our function saves a lot of (repeatable!) comments;
 
-On Tue, Jan 18, 2022 at 07:53:25PM -0600, Rob Herring wrote:
-> For a single pinctrl mode, it is not necessary to define pinctrl
-> properties as the tools always allow pinctrl properties.
+   s/comments/code/.
+   Actually, I think I can accept the removal of dev_err_probe() in platform_get_irq()
+as this is not a common practice anyway (yet? :-))...
 
-Acked-by: Mark Brown <broonie@kernel.org>
+> - we've already discussed that it's more optimal to check againt 0 than
 
---pa3KE12yHs9Xnd2D
-Content-Type: application/pgp-signature; name="signature.asc"
+   Against. :-)
 
------BEGIN PGP SIGNATURE-----
+>   against -ENXIO in the callers.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmHoPKQACgkQJNaLcl1U
-h9CK5ggAgSoOi6gEd+9fFCP6FCxOQatzUUojOHSGhmWyvIDZNwu17IQjUqhzZ5Lk
-8Z9Or7iFzVcEVfaKQ0w1HRWHQIrPLjnGtm1pnD26p3iqmdDC/1hDvKb/kd7EjOmF
-NEx6LRQoJL0LQX9I/c8rkwoW5mXpxaBck270IlQAaOI5/iOQFHp2oDn02Csbli0e
-XtJH3S6dPtjKQN/+SC9ruVF3usw6u4Vxi5FNXA1ABQYeKP+4/lyft2SWzGZEShhy
-Kmn6JJCH6fa4Aqbz85d4dpvuG9t9ukvdK8zrRCpsH2xw8AlHDeJtcDG6/LXw5hPG
-u+NgtzFSWl0tPBvoyeSNpNi3YEkbyg==
-=vG1Q
------END PGP SIGNATURE-----
+   And we also aim to be the error code agnostic in the callers...
 
---pa3KE12yHs9Xnd2D--
+>>  - Rename platform_get_irq_optional() to platform_get_irq_silently()
+> 
+>    NAK as well. We'd better off complaining about irq < 0 in this function.
+
+>>  - Keep platform_get_irq_optional() as is
+> 
+>    NAK, it's suboptimal in the call sites.
+
+   s/in/on/.
+
+[...]
+
+>> Best regards
+>> Uwe
+
+MBR, Sergey
