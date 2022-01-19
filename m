@@ -2,133 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E05F4934B2
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jan 2022 06:57:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B1F449358A
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jan 2022 08:36:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351627AbiASF5g (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 Jan 2022 00:57:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40876 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236524AbiASF5b (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Jan 2022 00:57:31 -0500
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34189C061574
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Jan 2022 21:57:31 -0800 (PST)
-Received: by mail-lf1-x12a.google.com with SMTP id x22so4800112lfd.10
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Jan 2022 21:57:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=180p+GQo845oNXpNatB24v9mg/wSi3AnjTHWzy7lW5Q=;
-        b=UMqQVImtdZBindUj0UKw3O5evttBaDA8C0gzixzt987uQXT8Y5eu/XzX82QJPB1v23
-         hEQEO1o+ew6SPORt1AWDbFZAMBA92ijdtJ/2jla70icSIGsX1pWs+rHcXMKrEPkJSoQK
-         jLBPjtEkJPK0cfb3/43ILnt6EnITHPad14/tU=
+        id S1352036AbiASHfw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 Jan 2022 02:35:52 -0500
+Received: from smtp-relay-internal-0.canonical.com ([185.125.188.122]:37858
+        "EHLO smtp-relay-internal-0.canonical.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1352026AbiASHfv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 19 Jan 2022 02:35:51 -0500
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com [209.85.208.72])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 51FFF4000F
+        for <linux-gpio@vger.kernel.org>; Wed, 19 Jan 2022 07:35:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1642577745;
+        bh=ov9egi5r5E4XVL9ynR9hw1P76CtrpDcSLc1Oc2aKDbw=;
+        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+         In-Reply-To:Content-Type;
+        b=gxLylVZri5t+kiY0MNzi0fhQ8Dl/PG54f5u9ZZcsY628Q/6i+R64bBocxz65P7+vl
+         VNxRJUMyFasYobCA3ZS8bYm15EF2VXHOIH7B2714u4BVzRK3cIRzc/Da1MILNdqfq3
+         bfEj6dlhcCz3JeF+AwEf0fNY0VVpwaSOgUAAEHQ+ePTPnWVW8I19kCn2rLCTyiS5UZ
+         vSTxd8pGkb/qxMQA5KG95pmfC9KufIfWCIh+l+EVz5pqR08qNDU4+OdL+5kPkUOMcq
+         gxqAa5PWcR4Rfh5MfUPPbOk+R4tZL+ENpuveMWlnd8cKgI3eTOAt4UvJLpKgavUm69
+         sguu60/4Uxr4Q==
+Received: by mail-ed1-f72.google.com with SMTP id c11-20020a056402120b00b0040321cea9d4so1409932edw.23
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Jan 2022 23:35:45 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=180p+GQo845oNXpNatB24v9mg/wSi3AnjTHWzy7lW5Q=;
-        b=0cYGpxBaceQmLQlL3Meo+Lehl6mKkXmZeVRdReG//jw/9QYUd57wKsbRSxFQyVwO4z
-         Ina7IMksGqNONmDUZEoHk5WkiNryCvgHpFzpDtTa7mY4ej8mmgaoWuX1eO49Ji+XnF0W
-         c4YAvhrpOYvX4H4FqWRL3BMaMK6RuFr0vC/kMg4rvti6GbSGYJ6RjEJ+Dh5iwZcrSoMV
-         DncvmfKXdlBUEMJhfn8lRW7Z8xeM6s4IUUzdG3mPZjEukkVJlDKQq5Lr1UqDXEAVyMUT
-         inTkH2gXjlcl2KOGQ1r9/Wb5cM6I2TyCB+DhlrBGugXe34+ulRz5MINeXXEtEssGxEaI
-         BZdw==
-X-Gm-Message-State: AOAM532dxBkAvSblfLqjpTUv97rZ4s2P/7UJITvQtstkzS7wNzchKtbI
-        kBpOF+n7vgf6oWxPW4++4FIKEZNnHjnjqze6pNb3WEj936I=
-X-Google-Smtp-Source: ABdhPJwmAbYBsIM1/e9VW3yeneVaeA59D14d9Js8kiEwjDiXSmFYOjsOytWEf0XP24p3zVI6PrzW1M84bl2PP9RLYm0=
-X-Received: by 2002:ac2:5bc9:: with SMTP id u9mr24297297lfn.371.1642571849473;
- Tue, 18 Jan 2022 21:57:29 -0800 (PST)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=ov9egi5r5E4XVL9ynR9hw1P76CtrpDcSLc1Oc2aKDbw=;
+        b=eLqaa1OVAHuIIzf0+40pQvj05QTMsYE5xCNHa7je/OV0PIMUJavGW2m/3K5p4AoROV
+         SJLjJ/sUidKMHN6sx1SUL/UyClC9YozWPYMFDauF7NB8ou5FWxaaaV4V0KxzyOIIXCTO
+         lTT6bT2orrajMKe0xxSBpGl79eJnsf52pj0bxudWDu/++yEhOMj1MiWMpWFDoi4Br7Tl
+         RbfOTmesRPvgHh/moYJ7wr5glXm+4+X7hLZM57zCBXUnh/hbLsLInGw333i5mXRCbY35
+         sEVxssvYonZXQUa2pQ/A8jCNBK8u0Op2s5fvoArVIBCDtvOwbL7bzYN1uUQpWSvBrAre
+         1J5Q==
+X-Gm-Message-State: AOAM532NIAzfW6dChjFsUOBOYwuabOxRSsxawerlo14lFE6QHVo6y1q/
+        NGGRSV+jSmfBnlJc9COc6xWfAhtKiKxcMkRYoGOPZeSnbGJX1vrAKE5Zhb4H/3ZoSFJVf2yTdye
+        czZyvZTTK5CpU84R3wcOmHxPqWO7CWgU7JyuqfkY=
+X-Received: by 2002:a05:6402:214b:: with SMTP id bq11mr21727236edb.380.1642577745079;
+        Tue, 18 Jan 2022 23:35:45 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzGlkI4a+0j+FDYNuwrTHdaztz/FiAtsum5k959TJvtVGlwEMpbTA7l76r5zGrSraIO2PK8xw==
+X-Received: by 2002:a05:6402:214b:: with SMTP id bq11mr21727224edb.380.1642577744928;
+        Tue, 18 Jan 2022 23:35:44 -0800 (PST)
+Received: from [192.168.0.42] (xdsl-188-155-168-84.adslplus.ch. [188.155.168.84])
+        by smtp.gmail.com with ESMTPSA id t25sm779819edr.90.2022.01.18.23.35.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Jan 2022 23:35:44 -0800 (PST)
+Message-ID: <b303e38e-109b-e049-f536-c5b00830249b@canonical.com>
+Date:   Wed, 19 Jan 2022 08:35:42 +0100
 MIME-Version: 1.0
-References: <20220111112244.1483783-1-wenst@chromium.org> <20220111112244.1483783-3-wenst@chromium.org>
- <eca4a0c18fe75536c8276410628b9459c040dce2.camel@mediatek.com>
-In-Reply-To: <eca4a0c18fe75536c8276410628b9459c040dce2.camel@mediatek.com>
-From:   Chen-Yu Tsai <wenst@chromium.org>
-Date:   Wed, 19 Jan 2022 13:57:18 +0800
-Message-ID: <CAGXv+5GHVtCO9tN7B0O2c5V_Bk61-LL79LvbE1CRbyBfnvKSGQ@mail.gmail.com>
-Subject: Re: [PATCH 2/7] pinctrl: mediatek: paris: Fix PIN_CONFIG_BIAS_DISABLE readback
-To:     Guodong Liu <guodong.liu@mediatek.com>
-Cc:     Sean Wang <sean.wang@kernel.org>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.1
+Subject: Re: [PATCH] dt-bindings: Drop unnecessary pinctrl properties
+Content-Language: en-US
+To:     Rob Herring <robh@kernel.org>, Sandy Huang <hjc@rock-chips.com>,
+        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Zhiyong Tao <zhiyong.tao@mediatek.com>,
-        Hui Liu <hui.liu@mediatek.com>,
-        Light Hsieh <light.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        - <patches@opensource.cirrus.com>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-gpio@vger.kernel.org,
+        alsa-devel@alsa-project.org
+References: <20220119015325.2438277-1-robh@kernel.org>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+In-Reply-To: <20220119015325.2438277-1-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jan 19, 2022 at 9:42 AM Guodong Liu <guodong.liu@mediatek.com> wrote:
->
-> -----Original Message-----
-> From: Chen-Yu Tsai <wenst@chromium.org>
-> To: Sean Wang <sean.wang@kernel.org>, Linus Walleij <
-> linus.walleij@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>
-> Cc: Chen-Yu Tsai <wenst@chromium.org>,
-> linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-> linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-> Zhiyong Tao <zhiyong.tao@mediatek.com>, Guodong Liu <
-> guodong.liu@mediatek.com>
-> Subject: [PATCH 2/7] pinctrl: mediatek: paris: Fix
-> PIN_CONFIG_BIAS_DISABLE readback
-> Date: Tue, 11 Jan 2022 19:22:39 +0800
->
-> When reading back pin bias settings, if the pin is not in a
-> bias-disabled state, the function should return -EINVAL.
->
-> Fix this in the mediatek-paris pinctrl library so that the read back
-> state is not littered with bogus a "input bias disabled" combined with
-> "pull up" or "pull down" states.
->
-> Fixes: 805250982bb5 ("pinctrl: mediatek: add pinctrl-paris that
-> implements the vendor dt-bindings")
-> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+On 19/01/2022 02:53, Rob Herring wrote:
+> For a single pinctrl mode, it is not necessary to define pinctrl
+> properties as the tools always allow pinctrl properties.
+> 
+> Signed-off-by: Rob Herring <robh@kernel.org>
 > ---
->  drivers/pinctrl/mediatek/pinctrl-paris.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c
-> b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> index f9f9110f2107..1ca598ea7ba7 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> @@ -97,8 +97,8 @@ static int mtk_pinconf_get(struct pinctrl_dev
-> *pctldev,
->                         if (err)
->                                 goto out;
->                         if (param == PIN_CONFIG_BIAS_DISABLE) {
-> -                               if (ret == MTK_PUPD_SET_R1R0_00)
-> -                                       ret = MTK_DISABLE;
-> +                               if (ret != MTK_PUPD_SET_R1R0_00)
-> +                                       err = -EINVAL;
-> Hi Chen-Yu
->
-> When tht API "hw->soc->bias_get_combo(hw, desc, &pullup, &ret)" is
-> called,
-> The ret vaule of may be MTK_DISABLE OR MTK_PUPD_SET_R1R0_00 or  (pullen
-> == 0),  All those cases are expected to be as "bias-disable".
-> We advices to keep original code,
-> +                               if (ret == MTK_PUPD_SET_R1R0_00)
-> +
->                                 ret = MTK_DISABLE;
-> +                               if (ret != MTK_DISABLE)
-> +                                       err = -EINVAL;
+>  .../display/rockchip/rockchip,rk3066-hdmi.yaml         |  8 --------
+>  Documentation/devicetree/bindings/input/gpio-keys.yaml |  6 ------
+>  .../devicetree/bindings/pinctrl/cirrus,lochnagar.yaml  |  9 ---------
+>  .../devicetree/bindings/pinctrl/cirrus,madera.yaml     | 10 ----------
+>  .../devicetree/bindings/sound/samsung-i2s.yaml         |  6 ------
+>  5 files changed, 39 deletions(-)
+> 
 
-IIUC you are suggesting to assign MTK_DISABLE to ret in the other two cases,
-and then check if ret == MTK_DISABLE.
 
-Thanks for pointing that out.
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
 
-ChenYu
 
-> Thanks
->                         } else if (param == PIN_CONFIG_BIAS_PULL_UP) {
->                                 /* When desire to get pull-up value,
-> return
->                                  *  error if current setting is pull-
-> down
->
+Best regards,
+Krzysztof
