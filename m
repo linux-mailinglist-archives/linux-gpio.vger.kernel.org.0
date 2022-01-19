@@ -2,229 +2,234 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 72148493DA0
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jan 2022 16:50:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C6AF7493DFB
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jan 2022 17:08:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355928AbiASPuW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 Jan 2022 10:50:22 -0500
-Received: from mxout03.lancloud.ru ([45.84.86.113]:37512 "EHLO
-        mxout03.lancloud.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355931AbiASPuU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Jan 2022 10:50:20 -0500
-Received: from LanCloud
-DKIM-Filter: OpenDKIM Filter v2.11.0 mxout03.lancloud.ru D78A320F7143
-Received: from LanCloud
-Received: from LanCloud
-Received: from LanCloud
-Subject: Re: [PATCH 1/2] platform: make platform_get_irq_optional() optional
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        <linux-kernel@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        <linux-iio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        <alsa-devel@alsa-project.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        <linux-phy@lists.infradead.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        <linux-mtd@lists.infradead.org>, <linux-i2c@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        <openipmi-developer@lists.sourceforge.net>,
-        Saravanan Sekar <sravanhome@gmail.com>,
-        Khuong Dinh <khuong@os.amperecomputing.com>,
-        "Florian Fainelli" <f.fainelli@gmail.com>,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        <kvm@vger.kernel.org>, Kamal Dasu <kdasu.kdev@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        "Bartosz Golaszewski" <brgl@bgdev.pl>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        <bcm-kernel-feedback-list@broadcom.com>,
-        <linux-serial@vger.kernel.org>, Jakub Kicinski <kuba@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        "Jaroslav Kysela" <perex@perex.cz>,
-        <platform-driver-x86@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        "Robert Richter" <rric@kernel.org>,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Corey Minyard <minyard@acm.org>, <linux-pm@vger.kernel.org>,
-        Peter Korsgaard <peter@korsgaard.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        "Mark Gross" <markgross@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "Alex Williamson" <alex.williamson@redhat.com>,
-        Mark Brown <broonie@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-edac@vger.kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Mun Yew Tham <mun.yew.tham@intel.com>,
-        Eric Auger <eric.auger@redhat.com>, <netdev@vger.kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Cornelia Huck <cohuck@redhat.com>, <linux-mmc@vger.kernel.org>,
-        Joakim Zhang <qiangqing.zhang@nxp.com>,
-        <linux-spi@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        "Pengutronix Kernel Team" <kernel@pengutronix.de>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
-        <linux-mediatek@lists.infradead.org>,
-        "Brian Norris" <computersforpeace@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-References: <20220110195449.12448-1-s.shtylyov@omp.ru>
- <20220110195449.12448-2-s.shtylyov@omp.ru>
- <770fb569-03c8-78f9-c174-94b31e866017@omp.ru>
- <20220119150238.5sru3vtuwsswdnkx@pengutronix.de>
-From:   Sergey Shtylyov <s.shtylyov@omp.ru>
-Organization: Open Mobile Platform
-Message-ID: <f0470e8b-67af-6788-0bca-0be03bb5d0b3@omp.ru>
-Date:   Wed, 19 Jan 2022 18:50:12 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        id S1355844AbiASQHl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 Jan 2022 11:07:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39832 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1356082AbiASQHk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Jan 2022 11:07:40 -0500
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42DA4C06173F
+        for <linux-gpio@vger.kernel.org>; Wed, 19 Jan 2022 08:07:40 -0800 (PST)
+Received: by mail-lf1-x12d.google.com with SMTP id d3so11209705lfv.13
+        for <linux-gpio@vger.kernel.org>; Wed, 19 Jan 2022 08:07:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eswjr5Bz87q3EsUt/pv2Kdh92llEv1bESkAKh+3EVxk=;
+        b=Sb2vg2NB+/JisRX3kJhYIJb5Fh0ngSUP9AG6DUTYmba56HfzZNt7U9aeGH1nyljvBo
+         EGY9uRtf14qJ0jwWX6W34mY21rDYdhbPLco4rmeN9cpXCJJVt0qqphM8lLu+c9lpeNwT
+         R7209spplluAwiNIYY7IlPlSTrt0O/mM+h4EnY0dlYnDHO+XO255fE6dOGXXDXALwbDD
+         eBZtNKPN+440DgOj1KlJpkePWKzL+WSRxIX5ujBY8/b9nrXXAm/KtzxO6TdsBGLb56Je
+         X0tzhJfPgLXgNDfKNb6EOfddDZ+rbG1hT+kq4gKdZ2KuFAmKs601di1Z6wp9dgm62dlp
+         v7vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eswjr5Bz87q3EsUt/pv2Kdh92llEv1bESkAKh+3EVxk=;
+        b=Jfvgvoz7o0E9eUqzAf1cc9He8pUwEuh4kG+AsOhJTD75DYTumM/3LpDc0488nTtAse
+         RegpP1QDLLWxB4ejs8UjRGOPK9qJAjE1NHCj7SvDqrNdWZzY2ieuhCMvUuNdxAVKSrb3
+         wJZrFZoiZLW3qwQlySQSA79OTrOQityeRnL4d0NxJvM7/wuqWTQb6OcnCEGm5HaKKmr3
+         Egq8lPEUhHvbVlrYCUE528k0KT5X1eZi5TtlSJV2+j/qxoF3foOsI/oRspjAX1vjWPCy
+         Zb1rjxcCHZm/hE4E4PZkt7zz4oQ9XkYBjB5fgaEdH+6GcQu/wVItJooRGvx6WTRv7eym
+         9Ztg==
+X-Gm-Message-State: AOAM530uXc+A0AcSneqiy3eBtYJ83hNDcdB0O0ZCokLVbnb3X2nZJhon
+        xXqThP1Mcp9cY9D9vTSrWHbzSw==
+X-Google-Smtp-Source: ABdhPJxVUOK7kQDfguFieQID5Ft6in9D6xJGPrqJpodfUcX0pTCrZ9g+TkuO3JrpCPxJ3Ns7n1+Ueg==
+X-Received: by 2002:a05:6512:3c85:: with SMTP id h5mr26712466lfv.273.1642608458617;
+        Wed, 19 Jan 2022 08:07:38 -0800 (PST)
+Received: from cobook.home (nikaet.starlink.ru. [94.141.168.29])
+        by smtp.gmail.com with ESMTPSA id a1sm6783ljn.54.2022.01.19.08.07.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Jan 2022 08:07:37 -0800 (PST)
+From:   Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Marc Zyngier <maz@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Subject: [PATCH/RFC] gpiolib: create irq_domain hierarchy bottom if possible
+Date:   Wed, 19 Jan 2022 19:07:15 +0300
+Message-Id: <20220119160715.650535-1-nikita.yoush@cogentembedded.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-In-Reply-To: <20220119150238.5sru3vtuwsswdnkx@pengutronix.de>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [192.168.11.198]
-X-ClientProxiedBy: LFEXT01.lancloud.ru (fd00:f066::141) To
- LFEX1907.lancloud.ru (fd00:f066::207)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 1/19/22 6:02 PM, Uwe Kleine-König wrote:
+Currently, gpiolib creates irq_domain compatible with hierarchical API
+only when interrupts provided by gpiochip lay on top of existing
+hierarchy. Otherwise, legacy API is used.
 
-[...]
->>> This patch is based on the former Andy Shevchenko's patch:
->>>
->>> https://lore.kernel.org/lkml/20210331144526.19439-1-andriy.shevchenko@linux.intel.com/
->>>
->>> Currently platform_get_irq_optional() returns an error code even if IRQ
->>> resource simply has not been found. It prevents the callers from being
->>> error code agnostic in their error handling:
->>>
->>> 	ret = platform_get_irq_optional(...);
->>> 	if (ret < 0 && ret != -ENXIO)
->>> 		return ret; // respect deferred probe
->>> 	if (ret > 0)
->>> 		...we get an IRQ...
->>>
->>> All other *_optional() APIs seem to return 0 or NULL in case an optional
->>> resource is not available. Let's follow this good example, so that the
->>> callers would look like:
->>>
->>> 	ret = platform_get_irq_optional(...);
->>> 	if (ret < 0)
->>> 		return ret;
->>> 	if (ret > 0)
->>> 		...we get an IRQ...
->>>
->>> Reported-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
->>> Signed-off-by: Sergey Shtylyov <s.shtylyov@omp.ru>
->> [...]
->>
->>    Please don't merge this as yet, I'm going thru this patch once again
->> and have already found some sloppy code. :-/
-> 
-> Who would you expect to merge this? I would have expected Greg, but he
+With this patch, as soon as
+- irq_domain hierarchical API is enabled in the kernel config,
+- chip driver does not request preallocated interrupt numbers,
+- chip driver does not provide it's own irq_domain_ops,
+- chip driver provides fwnode, either explicitly or via it's struct
+  device,
+irq_domain created by gpiolib will use hierarchical API even without
+parent.
 
-   Me too, it's his area, the message was addressed to Greg KH...
+This allows other irqchips to lay on top of this irq_domain.
+Example target use case is irq_inverter [1].
 
-> seems to have given up this thread.
+[1] https://lore.kernel.org/lkml/87fsqbznc2.wl-maz@kernel.org/
 
-   You instill too much uncertainty in him. :-)
+Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+---
+ drivers/gpio/gpiolib.c | 99 +++++++++++++++++++++++++-----------------
+ 1 file changed, 60 insertions(+), 39 deletions(-)
 
->>> diff --git a/drivers/char/ipmi/bt-bmc.c b/drivers/char/ipmi/bt-bmc.c
->>> index 7450904e330a..fdc63bfa5be4 100644
->>> --- a/drivers/char/ipmi/bt-bmc.c
->>> +++ b/drivers/char/ipmi/bt-bmc.c
->>> @@ -382,12 +382,14 @@ static int bt_bmc_config_irq(struct bt_bmc *bt_bmc,
->>>  	bt_bmc->irq = platform_get_irq_optional(pdev, 0);
->>>  	if (bt_bmc->irq < 0)
->>>  		return bt_bmc->irq;
->>> +	if (!bt_bmc->irq)
->>> +		return 0;
->>
->>    Hm, this is sloppy. Will recast and rebase to the -next branch.
-> 
-> I didn't think about what you mean with sloppy, but the code is
-> equivalent to
-> 
-> 	if (bt_bmc->irq <= 0)
-> 		return bt_bmc->irq;
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index abfbf546d159..db8eee07a8d7 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1095,14 +1095,6 @@ static int gpiochip_hierarchy_irq_domain_alloc(struct irq_domain *d,
+ 
+ 	chip_dbg(gc, "allocate IRQ %d, hwirq %lu\n", irq,  hwirq);
+ 
+-	ret = girq->child_to_parent_hwirq(gc, hwirq, type,
+-					  &parent_hwirq, &parent_type);
+-	if (ret) {
+-		chip_err(gc, "can't look up hwirq %lu\n", hwirq);
+-		return ret;
+-	}
+-	chip_dbg(gc, "found parent hwirq %u\n", parent_hwirq);
+-
+ 	/*
+ 	 * We set handle_bad_irq because the .set_type() should
+ 	 * always be invoked and set the right type of handler.
+@@ -1116,27 +1108,40 @@ static int gpiochip_hierarchy_irq_domain_alloc(struct irq_domain *d,
+ 			    NULL, NULL);
+ 	irq_set_probe(irq);
+ 
+-	/* This parent only handles asserted level IRQs */
+-	parent_arg = girq->populate_parent_alloc_arg(gc, parent_hwirq, parent_type);
+-	if (!parent_arg)
+-		return -ENOMEM;
+-
+-	chip_dbg(gc, "alloc_irqs_parent for %d parent hwirq %d\n",
+-		  irq, parent_hwirq);
+ 	irq_set_lockdep_class(irq, gc->irq.lock_key, gc->irq.request_key);
+-	ret = irq_domain_alloc_irqs_parent(d, irq, 1, parent_arg);
+-	/*
+-	 * If the parent irqdomain is msi, the interrupts have already
+-	 * been allocated, so the EEXIST is good.
+-	 */
+-	if (irq_domain_is_msi(d->parent) && (ret == -EEXIST))
+-		ret = 0;
+-	if (ret)
+-		chip_err(gc,
+-			 "failed to allocate parent hwirq %d for hwirq %lu\n",
+-			 parent_hwirq, hwirq);
+ 
+-	kfree(parent_arg);
++	if (d->parent) {
++		ret = girq->child_to_parent_hwirq(gc, hwirq, type,
++						  &parent_hwirq, &parent_type);
++		if (ret) {
++			chip_err(gc, "can't look up hwirq %lu\n", hwirq);
++			return ret;
++		}
++		chip_dbg(gc, "found parent hwirq %u\n", parent_hwirq);
++
++		/* This parent only handles asserted level IRQs */
++		parent_arg = girq->populate_parent_alloc_arg(gc, parent_hwirq,
++							     parent_type);
++		if (!parent_arg)
++			return -ENOMEM;
++
++		chip_dbg(gc, "alloc_irqs_parent for %d parent hwirq %d\n",
++			  irq, parent_hwirq);
++		ret = irq_domain_alloc_irqs_parent(d, irq, 1, parent_arg);
++		/*
++		 * If the parent irqdomain is msi, the interrupts have already
++		 * been allocated, so the EEXIST is good.
++		 */
++		if (irq_domain_is_msi(d->parent) && (ret == -EEXIST))
++			ret = 0;
++		if (ret)
++			chip_err(gc,
++				 "failed to allocate parent hwirq %d for hwirq %lu\n",
++				 parent_hwirq, hwirq);
++
++		kfree(parent_arg);
++	}
++
+ 	return ret;
+ }
+ 
+@@ -1164,8 +1169,8 @@ static void gpiochip_hierarchy_setup_domain_ops(struct irq_domain_ops *ops)
+ 
+ static int gpiochip_hierarchy_add_domain(struct gpio_chip *gc)
+ {
+-	if (!gc->irq.child_to_parent_hwirq ||
+-	    !gc->irq.fwnode) {
++	if (gc->irq.parent_domain &&
++	    (!gc->irq.child_to_parent_hwirq || !gc->irq.fwnode)) {
+ 		chip_err(gc, "missing irqdomain vital data\n");
+ 		return -EINVAL;
+ 	}
+@@ -1179,25 +1184,41 @@ static int gpiochip_hierarchy_add_domain(struct gpio_chip *gc)
+ 
+ 	gpiochip_hierarchy_setup_domain_ops(&gc->irq.child_irq_domain_ops);
+ 
+-	gc->irq.domain = irq_domain_create_hierarchy(
+-		gc->irq.parent_domain,
+-		0,
+-		gc->ngpio,
+-		gc->irq.fwnode,
+-		&gc->irq.child_irq_domain_ops,
+-		gc);
++	if (gc->irq.parent_domain) {
++		gc->irq.domain = irq_domain_create_hierarchy(
++			gc->irq.parent_domain,
++			0,
++			gc->ngpio,
++			gc->irq.fwnode,
++			&gc->irq.child_irq_domain_ops,
++			gc);
++
++		if (gc->irq.domain)
++			gpiochip_set_hierarchical_irqchip(gc, gc->irq.chip);
++	} else {
++		gc->irq.domain = irq_domain_create_linear(
++			gc->irq.fwnode ?: dev_fwnode(&gc->gpiodev->dev),
++			gc->ngpio,
++			&gc->irq.child_irq_domain_ops,
++			gc);
++	}
+ 
+ 	if (!gc->irq.domain)
+ 		return -ENOMEM;
+ 
+-	gpiochip_set_hierarchical_irqchip(gc, gc->irq.chip);
+-
+ 	return 0;
+ }
+ 
+ static bool gpiochip_hierarchy_is_hierarchical(struct gpio_chip *gc)
+ {
+-	return !!gc->irq.parent_domain;
++	if (gc->irq.parent_domain)
++		return true;	/* will add to existing hierarchy */
++
++	if (!gc->irq.first && !gc->irq.domain_ops &&
++	    (gc->irq.fwnode || dev_fwnode(&gc->gpiodev->dev)))
++		return true;	/* will create hierarchy bottom */
++
++	return false;
+ }
+ 
+ void *gpiochip_populate_parent_fwspec_twocell(struct gpio_chip *gc,
+-- 
+2.30.2
 
-   Exactly.
-
-[...]
->>> diff --git a/drivers/edac/xgene_edac.c b/drivers/edac/xgene_edac.c
->>> index 2ccd1db5e98f..0d1bdd27cd78 100644
->>> --- a/drivers/edac/xgene_edac.c
->>> +++ b/drivers/edac/xgene_edac.c
->>> @@ -1917,7 +1917,7 @@ static int xgene_edac_probe(struct platform_device *pdev)
->>>  
->>>  		for (i = 0; i < 3; i++) {
->>>  			irq = platform_get_irq_optional(pdev, i);
->>
->>    Is *_optinal() even correct here?
-> 
-> _optinal isn't correct, _optional maybe is. :-)
-
-   No. :-)
-
-> Anyhow, look at e26124cd5f7099949109608845bba9e9bf96599c, the driver was
-> fixed not to print two error messages and the wrong option was picked.
-
-   I think this patch is wrong...
-
->>> -			if (irq < 0) {
->>> +			if (irq <= 0) {
->>>  				dev_err(&pdev->dev, "No IRQ resource\n");
-
-   This is what needed to be thrown overboard... :-)
-
->>>  				rc = -EINVAL;
->>>  				goto out_err;
-> 
-> What's wrong here is that the return code is hardcoded ...
-
-  This is wrong as well -- kills the deferred probing. I have 2 separate patches
-for this driver now... just need some time to get 'em ready...
-
-[...]
->>> index bdf924b73e47..51289700a7ac 100644
->>> --- a/drivers/power/supply/mp2629_charger.c
->>> +++ b/drivers/power/supply/mp2629_charger.c
->>> @@ -581,9 +581,9 @@ static int mp2629_charger_probe(struct platform_device *pdev)
->>>  	platform_set_drvdata(pdev, charger);
->>>  
->>>  	irq = platform_get_irq_optional(to_platform_device(dev->parent), 0);
->>
->>    Again, is *_optional() even correct here?
->>
->>> -	if (irq < 0) {
->>> +	if (irq <= 0) {
->>>  		dev_err(dev, "get irq fail: %d\n", irq);
->>> -		return irq;
->>> +		return irq < 0 ? irq : -ENXIO;
-> 
-> Ack, could be simplified by switching to platform_get_irq().
-
-   Have a draft patch...
-
-> Best regards
-> Uwe
-
-MBR, Sergey
