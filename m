@@ -2,179 +2,152 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B977494227
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Jan 2022 21:57:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 93D9D49459C
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jan 2022 02:47:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244610AbiASU4i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 Jan 2022 15:56:38 -0500
-Received: from mga17.intel.com ([192.55.52.151]:54135 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229541AbiASU4h (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 19 Jan 2022 15:56:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1642625797; x=1674161797;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Zn3K2EdVeDLJCMJ0xbcykPqu/tTiNlke9kM/JdHhcyA=;
-  b=UKP5BPWQ+uw2sBH+BM1UqeeTghbHvgaSjb/HR8XqV2m/L0x+YVEmxOGG
-   flhgx042uwtvDmyFlbH1w3PHokLzPGv6z+k+i45vi98jaPXt+vr175APx
-   AbZt1GcjiOufYlT52vxr4qzItwd0SVdtcN8WG3VZf89UFYd8sgki/FTZ0
-   nAJVaJF3b9itTPyNWKR/tIDClRlUTOZwB+qhiCz2ulEGjz2iqqn3ekqLu
-   wBY0+mwl9tNWjORFuFbtJE0r88oQiNJ8px6dZJvxRVbsCoXYnnCWjk+qF
-   bKdDmFFe8Dlc4vZoy0A9phMp1kTFErGo9dZCebUQjx5RAQ/pMMDiEL2gZ
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10231"; a="225862988"
-X-IronPort-AV: E=Sophos;i="5.88,300,1635231600"; 
-   d="scan'208";a="225862988"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2022 12:56:37 -0800
-X-IronPort-AV: E=Sophos;i="5.88,300,1635231600"; 
-   d="scan'208";a="615845335"
-Received: from smile.fi.intel.com ([10.237.72.61])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2022 12:56:21 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nAHz3-00CGxM-Ht;
-        Wed, 19 Jan 2022 22:55:09 +0200
-Date:   Wed, 19 Jan 2022 22:55:09 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Sergey Shtylyov <s.shtylyov@omp.ru>
-Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Andrew Lunn <andrew@lunn.ch>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        KVM list <kvm@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, linux-iio@vger.kernel.org,
+        id S1358079AbiATBrI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 Jan 2022 20:47:08 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:34354 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1358052AbiATBrH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Jan 2022 20:47:07 -0500
+X-UUID: 242f6a14f1454019a8b2e2b6c9b59e30-20220120
+X-UUID: 242f6a14f1454019a8b2e2b6c9b59e30-20220120
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <guodong.liu@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1829855336; Thu, 20 Jan 2022 09:47:02 +0800
+Received: from mtkcas11.mediatek.inc (172.21.101.40) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.792.3;
+ Thu, 20 Jan 2022 09:47:01 +0800
+Received: from mhfsdcap04 (10.17.3.154) by mtkcas11.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 20 Jan 2022 09:47:00 +0800
+Message-ID: <883391d5642d217e79fb09bebd81f9b5027ce20a.camel@mediatek.com>
+Subject: Re: [PATCH 2/7] pinctrl: mediatek: paris: Fix
+ PIN_CONFIG_BIAS_DISABLE readback
+From:   Guodong Liu <guodong.liu@mediatek.com>
+To:     Chen-Yu Tsai <wenst@chromium.org>
+CC:     Sean Wang <sean.wang@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Guenter Roeck <groeck@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-phy@lists.infradead.org, netdev@vger.kernel.org,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Khuong Dinh <khuong@os.amperecomputing.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        platform-driver-x86@vger.kernel.org,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        Robert Richter <rric@kernel.org>,
-        Saravanan Sekar <sravanhome@gmail.com>,
-        Corey Minyard <minyard@acm.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        John Garry <john.garry@huawei.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Peter Korsgaard <peter@korsgaard.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Mark Gross <markgross@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Mark Brown <broonie@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Jakub Kicinski <kuba@kernel.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        openipmi-developer@lists.sourceforge.net,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Benson Leung <bleung@chromium.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-edac@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
-        Richard Weinberger <richard@nod.at>,
-        Mun Yew Tham <mun.yew.tham@intel.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        Joakim Zhang <qiangqing.zhang@nxp.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>,
-        linux-mediatek@lists.infradead.org,
-        Brian Norris <computersforpeace@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH] driver core: platform: Rename
- platform_get_irq_optional() to platform_get_irq_silent()
-Message-ID: <Yeh6rdBjEMiavLfh@smile.fi.intel.com>
-References: <CAMuHMdWsMGPiQaPS0-PJ_+Mc5VQ37YdLfbHr_aS40kB+SfW-aw@mail.gmail.com>
- <20220112213121.5ruae5mxwj6t3qiy@pengutronix.de>
- <Yd9L9SZ+g13iyKab@sirena.org.uk>
- <20220113110831.wvwbm75hbfysbn2d@pengutronix.de>
- <YeA7CjOyJFkpuhz/@sirena.org.uk>
- <20220113194358.xnnbhsoyetihterb@pengutronix.de>
- <YeF05vBOzkN+xYCq@smile.fi.intel.com>
- <20220115154539.j3tsz5ioqexq2yuu@pengutronix.de>
- <YehdsUPiOTwgZywq@smile.fi.intel.com>
- <b7edb713-dd91-14e7-34ff-d8fb559e8e92@omp.ru>
+        <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Zhiyong Tao <zhiyong.tao@mediatek.com>,
+        Hui Liu <hui.liu@mediatek.com>,
+        Light Hsieh <light.hsieh@mediatek.com>
+Date:   Thu, 20 Jan 2022 09:47:00 +0800
+In-Reply-To: <CAGXv+5GHVtCO9tN7B0O2c5V_Bk61-LL79LvbE1CRbyBfnvKSGQ@mail.gmail.com>
+References: <20220111112244.1483783-1-wenst@chromium.org>
+         <20220111112244.1483783-3-wenst@chromium.org>
+         <eca4a0c18fe75536c8276410628b9459c040dce2.camel@mediatek.com>
+         <CAGXv+5GHVtCO9tN7B0O2c5V_Bk61-LL79LvbE1CRbyBfnvKSGQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b7edb713-dd91-14e7-34ff-d8fb559e8e92@omp.ru>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jan 19, 2022 at 10:47:06PM +0300, Sergey Shtylyov wrote:
-> On 1/19/22 9:51 PM, Andy Shevchenko wrote:
+-----Original Message-----
+From: Chen-Yu Tsai <wenst@chromium.org>
+To: Guodong Liu <guodong.liu@mediatek.com>
+Cc: Sean Wang <sean.wang@kernel.org>, Linus Walleij <
+linus.walleij@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org, 
+linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+Zhiyong Tao <zhiyong.tao@mediatek.com>, Hui Liu <hui.liu@mediatek.com>,
+Light Hsieh <light.hsieh@mediatek.com>
+Subject: Re: [PATCH 2/7] pinctrl: mediatek: paris: Fix
+PIN_CONFIG_BIAS_DISABLE readback
+Date: Wed, 19 Jan 2022 13:57:18 +0800
 
-> >>>>> It'd certainly be good to name anything that doesn't correspond to one
-> >>>>> of the existing semantics for the API (!) something different rather
-> >>>>> than adding yet another potentially overloaded meaning.
-> >>>>
-> >>>> It seems we're (at least) three who agree about this. Here is a patch
-> >>>> fixing the name.
-> >>>
-> >>> And similar number of people are on the other side.
-> >>
-> >> If someone already opposed to the renaming (and not only the name) I
-> >> must have missed that.
-> >>
-> >> So you think it's a good idea to keep the name
-> >> platform_get_irq_optional() despite the "not found" value returned by it
-> >> isn't usable as if it were a normal irq number?
-> > 
-> > I meant that on the other side people who are in favour of Sergey's patch.
-> > Since that I commented already that I opposed the renaming being a standalone
-> > change.
-> > 
-> > Do you agree that we have several issues with platform_get_irq*() APIs?
-> > 
-> > 1. The unfortunate naming
+On Wed, Jan 19, 2022 at 9:42 AM Guodong Liu <guodong.liu@mediatek.com>
+wrote:
 > 
->    Mmm, "what's in a name?"... is this the topmost prio issue?
-
-The order is arbitrary.
-
-> > 2. The vIRQ0 handling: a) WARN() followed by b) returned value 0
+> -----Original Message-----
+> From: Chen-Yu Tsai <wenst@chromium.org>
+> To: Sean Wang <sean.wang@kernel.org>, Linus Walleij <
+> linus.walleij@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>
+> Cc: Chen-Yu Tsai <wenst@chromium.org>,
+> linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+> linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+> Zhiyong Tao <zhiyong.tao@mediatek.com>, Guodong Liu <
+> guodong.liu@mediatek.com>
+> Subject: [PATCH 2/7] pinctrl: mediatek: paris: Fix
+> PIN_CONFIG_BIAS_DISABLE readback
+> Date: Tue, 11 Jan 2022 19:22:39 +0800
 > 
->    This is the most severe issue, I think...
+> When reading back pin bias settings, if the pin is not in a
+> bias-disabled state, the function should return -EINVAL.
 > 
-> > 3. The specific cookie for "IRQ not found, while no error happened" case
+> Fix this in the mediatek-paris pinctrl library so that the read back
+> state is not littered with bogus a "input bias disabled" combined
+> with
+> "pull up" or "pull down" states.
+> 
+> Fixes: 805250982bb5 ("pinctrl: mediatek: add pinctrl-paris that
+> implements the vendor dt-bindings")
+> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+> ---
+>  drivers/pinctrl/mediatek/pinctrl-paris.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c
+> b/drivers/pinctrl/mediatek/pinctrl-paris.c
+> index f9f9110f2107..1ca598ea7ba7 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
+> @@ -97,8 +97,8 @@ static int mtk_pinconf_get(struct pinctrl_dev
+> *pctldev,
+>                         if (err)
+>                                 goto out;
+>                         if (param == PIN_CONFIG_BIAS_DISABLE) {
+> -                               if (ret == MTK_PUPD_SET_R1R0_00)
+> -                                       ret = MTK_DISABLE;
+> +                               if (ret != MTK_PUPD_SET_R1R0_00)
+> +                                       err = -EINVAL;
+> Hi Chen-Yu
+> 
+> When the API "hw->soc->bias_get_combo(hw, desc, &pullup, &ret)" is
+> called,
+> The ret vaule of ret may be MTK_DISABLE or MTK_PUPD_SET_R1R0_00
+> or  (pullen
+> == 0),  All those cases are expected to be as "bias-disable".
+> We advices to keep original code,
+> +                               if (ret == MTK_PUPD_SET_R1R0_00)
+> +                                       ret = MTK_DISABLE;
+> +                               if (ret != MTK_DISABLE)
+> +                                       err = -EINVAL;
 
--- 
-With Best Regards,
-Andy Shevchenko
+IIUC you are suggesting to assign MTK_DISABLE to ret in the other two
+cases,
+and then check if ret == MTK_DISABLE.
 
+Thanks for pointing that out.
+
+ChenYu
+
+> Thanks
+
+Hi Chen-Yu
+
+Yes, just for pins with config of MTK_PUPD_SET_R1R0_00 are required to
+do additional assignment operations(ret = MTK_DISABLE;), in the other
+two cases, the assignment operations of ret as MTK_DISABLE is obtained
+by function call "hw->soc->bias_get_combo(hw, desc, &pullup, &ret)".
+
+Thanks
+
+>                         } else if (param == PIN_CONFIG_BIAS_PULL_UP)
+> {
+>                                 /* When desire to get pull-up value,
+> return
+>                                  *  error if current setting is pull-
+> down
+> 
 
