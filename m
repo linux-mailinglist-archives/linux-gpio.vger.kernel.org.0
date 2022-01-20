@@ -2,91 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D415449517E
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jan 2022 16:32:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ECB4549519D
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jan 2022 16:42:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1376543AbiATPcL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Jan 2022 10:32:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46850 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346385AbiATPcL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jan 2022 10:32:11 -0500
-Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35D17C061574
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Jan 2022 07:32:11 -0800 (PST)
-Received: by mail-lf1-x130.google.com with SMTP id s30so23054502lfo.7
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Jan 2022 07:32:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=XIum57TJjEo8tnkhLenk48MFnTWbdQGql8jgVrRZrVA=;
-        b=MEXwXAHx7ZyGrJRTgtD7XOD28VJ/HbQhEUh/bH9Z7/jcJ7w0N+X8OFm7epDtLXFWfY
-         qeqBrB0I+NurBcLLSqLou2n0dG5hXa1VZ756fA32L8BWa2X/sfYC3zj+QJdWM6lPo0sX
-         HR+Ms0GkKJ0w48cemsOHi2VhLhxPwK2qszMoAcMxIUUVnOoXuk68xum9mGL5wXvqO6jQ
-         cFvYPwDUiQFxGa20+O7lCgkDLjYMDkiqmRt8RbfYkRPlXWBcIWv4+4EDyqy+AEy8DhiO
-         9SlNV8zLBNfOqNGPSU4ODaTiKegW07+vhunMGO3IPEXS720Nt+76VaaqeSYlZYA0PfNO
-         IkcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=XIum57TJjEo8tnkhLenk48MFnTWbdQGql8jgVrRZrVA=;
-        b=alHXTH88ZCtc/v3ztqtokJhrYB/i8FkV0+5N1cohgeVq5yVoY+l/RXzQ5nkC81/67s
-         MSsUYLTTksqzXTrR32X310xUiK+CqoXpoZPnnoBkdLkJxiE2wN5W3zwzU4HP6qcd7YTD
-         YrNvqG02m0Qz+4bZI3PnSKC9WZIdoWs/r/m8meM3+YoI/9GB6PO+Z5e+Pq1SA1vhsSzI
-         83dzQ5Jo+JsU+zLWHbUfcXnCmCsWK6SlcOErDDNFvY03FNQQgCmwuN5H4gMP89yxOALR
-         kNywCU4+W1Gbdvz5wRU1YnWpK6na6HMhnbz9q1AkeOCwKCn/LOmRugqXHhpXLID145xc
-         1e9w==
-X-Gm-Message-State: AOAM530BX7PQvB+pqWJcSW28P24svdP+NvSEm9lsz/mjzod8NQH+li51
-        dd0rnclTtr2wfvg1lDhy0w6u/8kjIUjMDNbc4J4=
-X-Google-Smtp-Source: ABdhPJzuOpr4CuhC8gHfN2PZxIZC+UB3C+ne6vBhr3VBkFu4H3k2rY0YhmU6h2BK9Kwft2llbEwwVoMIialVtPwmYNo=
-X-Received: by 2002:a05:651c:1546:: with SMTP id y6mr12381719ljp.334.1642692729335;
- Thu, 20 Jan 2022 07:32:09 -0800 (PST)
+        id S1346563AbiATPmJ convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 20 Jan 2022 10:42:09 -0500
+Received: from mail-4022.proton.ch ([185.70.40.22]:13832 "EHLO
+        mail-4022.proton.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231282AbiATPmJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jan 2022 10:42:09 -0500
+Date:   Thu, 20 Jan 2022 15:42:06 +0000
+Authentication-Results: mail-4018.proton.ch; dkim=none
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+From:   conor dooley <mail@conchuod.ie>
+Cc:     Conor Dooley <Conor.Dooley@microchip.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?utf-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        linux-rtc@vger.kernel.org, linux-spi <linux-spi@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Bin Meng <bin.meng@windriver.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Lewis Hanly <Lewis.Hanly@microchip.com>,
+        Daire.McNamara@microchip.com, Ivan.Griffin@microchip.com,
+        Atish Patra <atishp@rivosinc.com>
+Reply-To: conor dooley <mail@conchuod.ie>
+Subject: Re: [PATCH v4 03/14] dt-bindings: i2c: add bindings for microchip mpfs i2c
+Message-ID: <Op5n9imM72IZnLCmMZ8lEZ7GxZD-r4cYZDB6zF0DcNNRu5dwpGEgi7PyjsAfQFnTMEtB8DTS76wLNWcnTtfDMUa1KDZYO3_geq-oOVXOr50=@conchuod.ie>
+In-Reply-To: <CAMuHMdXU_M89W7w064YsjuFfqE2m_PeM9HVps0nmaC1+aUHAQw@mail.gmail.com>
+References: <20220117110755.3433142-1-conor.dooley@microchip.com> <20220117110755.3433142-4-conor.dooley@microchip.com> <CAMuHMdXwe3_F8NeePnoFrLwyzKUwnHtmETC=ambgsC2N3w_h8A@mail.gmail.com> <889dab52-95eb-f36d-0af9-beea958a97e7@microchip.com> <CAMuHMdXU_M89W7w064YsjuFfqE2m_PeM9HVps0nmaC1+aUHAQw@mail.gmail.com>
 MIME-Version: 1.0
-Received: by 2002:a05:6520:2181:b0:18f:6e24:d47b with HTTP; Thu, 20 Jan 2022
- 07:32:08 -0800 (PST)
-Reply-To: mrahmedibrahim199@gmail.com
-From:   Mr Ahmed Ibrahim <addyslice75@gmail.com>
-Date:   Thu, 20 Jan 2022 07:32:08 -0800
-Message-ID: <CALgJpPAaNwUAtrChFFRChUeZY24pOJ2vgk8FwoTgrxEbcLGFQQ@mail.gmail.com>
-Subject: Greetings
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.0 required=10.0 tests=ALL_TRUSTED shortcircuit=no
+        autolearn=disabled version=3.4.4
+X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on
+        mailout.protonmail.ch
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
---=20
-My Good Friend
+>Hi Conor,
+>
+>On Thu, Jan 20, 2022 at 2:42 PM <Conor.Dooley@microchip.com> wrote:
+>> On 20/01/2022 08:30, Geert Uytterhoeven wrote:
+>> > On Mon, Jan 17, 2022 at 12:06 PM <conor.dooley@microchip.com> wrote:
+>> > Wouldn't it be more logical to have:
+>> >
+>> >      items:
+>> >        - const: microchip,mpfs-i2c # Microchip PolarFire SoC compatible SoCs
+>> >        - const: microchip,corei2c-rtl-v7 # Microchip Fabric based i2c IP core
+>> >
+>> > ?
+>> This would be fine for mpfs-i2c since corei2c is a "superset" - but how
+>> would that look for the fabric core? I don't think falling back from the
+>> fabric core onto the "hard" one makes sense. This would mean the
+>> following two entries:
+>>
+>> i2c2: i2c@44000000 { //fabric
+>>         compatible = "microchip,corei2c-rtl-v7";
+>> };
+>> i2c1: i2c@2010b000 { //"hard" mpfs peripheral
+>>         compatible = "microchip,mpfs-i2c", "microchip,corei2c-rtl-v7";
+>> };
+>
+>Oops, I missed that you have both forms.
+>But in se, they're the same IP core, just hard vs. soft? Then the
+>below makes sense.
+A lot (but not all) of the peripherals on Polarfire SoC are "subsets"
+of the IP cores: I think corei2c is almost identical but for others
+the hard version has some of the optional features disabled or slight
+changes made.
 
-I'm deeply sorry to berg into your privacy as we haven't met before,
-as a matter of fact, I will be very brief since I'm in urgent need of
-a trust person to help move out a valuable funds deposit by later
-Libyan leader Muammar Gaddafi into a foreign bank account which will
-later be used for any profitable joint investment between me and you,
-
-as a civil servant i cannot do this alone, The Libya=E2=80=99s sovereign
-wealth fund said five EU countries paid out money from frozen accounts
-in Europe that once belonged to Muammar Qaddafi despite international
-sanctions, according to POLITICO.
-
-But no one are aware of this Total Amount is $19.5 Million us Dollars
-that currently available under QNB Fineness bank Turkey and placed in
-an ESCROW CALL ACCOUNT without a beneficiary, it will be of advantage
-for me to solicit for a foreigner on my behalf since the funds origin
-is from a genuine source. Total Amount is $19.5 Million us Dollars.
-
-https://english.alarabiya.net/en/features/2018/11/18/Where-are-Libya-s-bill=
-ions-under-Qaddafi-abroad-and-who-benefits-from-them-
-
-https://www.politico.eu/article/muammar-gaddafi-frozen-funds-belgium-unknow=
-n-beneficiaries/
-
-For more details kindly indicate your willingness by responding via my
-private email id below=3D=3D=3D=3D
-mrahmedibrahim199@gmail.com
-
- Best regards,
-From Mr Ahmed Ibrahim
+If the IP is already written why not use it ;)
+>
+>> But this generates errors in dt_binding_check w/ your suggestion - so
+>> how about the following (similar to ti,omap4-i2c.yaml):
+>>
+>>    compatible:
+>>      oneOf:
+>>        - items:
+>>          - const: microchip,mpfs-i2c #  Microchip PolarFire...
+>>          - const: microchip,corei2c-rtl-v7 # Microchip Fabric...
+>>        - const: microchip,corei2c-rtl-v7 # Microchip Fabric...
+>>
+>> Is there a prettier way than this duplication?
+>
+>I'm afraid not, and the above scheme is used a lot.
+Fair enough!
+>
+>> > If the IP core is reused, it can become:
+>> >
+>> >      items:
+>> >        - enum:
+>> >            - microchip,mpfs-i2c # Microchip PolarFire SoC compatible SoCs
+>> >            - microchip,<foo>-i2c # ...
+>> >        - const: microchip,corei2c-rtl-v7 # Microchip Fabric based i2c IP core
+>> >
+>> > That way the driver can just match on the second (fallback) value,
+>> > and no further driver changes will be needed (until v8 or later).
