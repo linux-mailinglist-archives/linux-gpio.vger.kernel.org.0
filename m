@@ -2,181 +2,160 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DD54349509F
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jan 2022 15:57:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 168664950BE
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jan 2022 16:01:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242653AbiATO5B (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Jan 2022 09:57:01 -0500
-Received: from mail-vk1-f178.google.com ([209.85.221.178]:42639 "EHLO
-        mail-vk1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232592AbiATO5A (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jan 2022 09:57:00 -0500
-Received: by mail-vk1-f178.google.com with SMTP id m57so3726299vkf.9;
-        Thu, 20 Jan 2022 06:56:59 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1L35cmAx7uCLqrcryWAZKBNOGx+ekbrBkpQCXHRgWJQ=;
-        b=oEJ0SaQXI4alA5reStSBMsu+rR77UWNbxgSB4YjV2zNu21QyT0ULxYvpB741T+zCrx
-         Ce1vo+XVBj/Fvs9g2XlKGZ4B8yBTLAVPOvi8oE/zCvlvF+UGuxIBftD+EblhAiV0KZeS
-         zNThkrRGwyxQ3b7t7Rg6QB6SB3HHMdUTRftK2GiVVkcCXpY6y4wa7ums24QlsUJhoEoo
-         tUp6yEZRg6DGXmVIUXku1zblaZXROtR8buqyBkLBQBICj+HtDvFafMD6DmS0EiwIITj7
-         9VoLrKfQxhFgL++SDeFjoKSFP4spgjg/YQfkQ17ItqaEvi9fb8bu1A2Zv+Bbbb9iuku4
-         Or8A==
-X-Gm-Message-State: AOAM533Ypntc+0G3BNd3a388YHlSJcm29LRBHvLOoXxyNjO2kWEupfKY
-        3mORqfYZCwEdv++xk1jB4eFw04uyN8Hp0w==
-X-Google-Smtp-Source: ABdhPJwtBz5xu6kkUSgMDWT3reX8oOw/ICTZRv6mefGmvRx9v+0CD6OCOR52cNTnIgrnTf+RyXzN5A==
-X-Received: by 2002:a05:6122:208c:: with SMTP id i12mr14370747vkd.2.1642690619315;
-        Thu, 20 Jan 2022 06:56:59 -0800 (PST)
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com. [209.85.222.50])
-        by smtp.gmail.com with ESMTPSA id ba16sm474926vkb.39.2022.01.20.06.56.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Jan 2022 06:56:58 -0800 (PST)
-Received: by mail-ua1-f50.google.com with SMTP id n15so9789369uaq.5;
-        Thu, 20 Jan 2022 06:56:57 -0800 (PST)
-X-Received: by 2002:a05:6102:3581:: with SMTP id h1mr14235247vsu.5.1642690617601;
- Thu, 20 Jan 2022 06:56:57 -0800 (PST)
-MIME-Version: 1.0
-References: <20220117110755.3433142-1-conor.dooley@microchip.com>
- <20220117110755.3433142-4-conor.dooley@microchip.com> <CAMuHMdXwe3_F8NeePnoFrLwyzKUwnHtmETC=ambgsC2N3w_h8A@mail.gmail.com>
- <889dab52-95eb-f36d-0af9-beea958a97e7@microchip.com>
-In-Reply-To: <889dab52-95eb-f36d-0af9-beea958a97e7@microchip.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 20 Jan 2022 15:56:46 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXU_M89W7w064YsjuFfqE2m_PeM9HVps0nmaC1+aUHAQw@mail.gmail.com>
-Message-ID: <CAMuHMdXU_M89W7w064YsjuFfqE2m_PeM9HVps0nmaC1+aUHAQw@mail.gmail.com>
-Subject: Re: [PATCH v4 03/14] dt-bindings: i2c: add bindings for microchip
- mpfs i2c
-To:     Conor Dooley <Conor.Dooley@microchip.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        id S1359501AbiATPAx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Jan 2022 10:00:53 -0500
+Received: from relay12.mail.gandi.net ([217.70.178.232]:59005 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235669AbiATPAu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jan 2022 10:00:50 -0500
+Received: (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 2708D200010;
+        Thu, 20 Jan 2022 15:00:43 +0000 (UTC)
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Mark Brown <broonie@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        linux-rtc@vger.kernel.org, linux-spi <linux-spi@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Bin Meng <bin.meng@windriver.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Lewis Hanly <Lewis.Hanly@microchip.com>,
-        Daire.McNamara@microchip.com, Ivan.Griffin@microchip.com,
-        Atish Patra <atishp@rivosinc.com>
-Content-Type: text/plain; charset="UTF-8"
+        Lee Jones <lee.jones@linaro.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: [PATCH v10 0/6] drm: LogiCVC display controller support
+Date:   Thu, 20 Jan 2022 16:00:18 +0100
+Message-Id: <20220120150024.646714-1-paul.kocialkowski@bootlin.com>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Conor,
+This series introduces support for the LogiCVC display controller.
+The controller is a bit unusual since it is usually loaded as
+programmable logic on Xilinx FPGAs or Zynq-7000 SoCs.
+More details are presented on the main commit for the driver.
 
-On Thu, Jan 20, 2022 at 2:42 PM <Conor.Dooley@microchip.com> wrote:
-> On 20/01/2022 08:30, Geert Uytterhoeven wrote:
-> > On Mon, Jan 17, 2022 at 12:06 PM <conor.dooley@microchip.com> wrote:
-> >> From: Conor Dooley <conor.dooley@microchip.com>
-> >>
-> >> Add device tree bindings for the i2c controller on
-> >> the Microchip PolarFire SoC.
-> >>
-> >> Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
-> >> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> >
-> > Thanks for your patch!
-> >
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/i2c/microchip,mpfs-i2c.yaml
-> >> @@ -0,0 +1,55 @@
-> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> >> +%YAML 1.2
-> >> +---
-> >> +$id: http://devicetree.org/schemas/i2c/microchip,mpfs-i2c.yaml#
-> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> +
-> >> +title: Microchip MPFS I2C Controller Device Tree Bindings
-> >> +
-> >> +maintainers:
-> >> +  - Daire McNamara <daire.mcnamara@microchip.com>
-> >> +
-> >> +allOf:
-> >> +  - $ref: /schemas/i2c/i2c-controller.yaml#
-> >> +
-> >> +properties:
-> >> +  compatible:
-> >> +    enum:
-> >> +      - microchip,mpfs-i2c # Microchip PolarFire SoC compatible SoCs
-> >> +      - microchip,corei2c-rtl-v7 # Microchip Fabric based i2c IP core
-> >
-> > Wouldn't it be more logical to have:
-> >
-> >      items:
-> >        - const: microchip,mpfs-i2c # Microchip PolarFire SoC compatible SoCs
-> >        - const: microchip,corei2c-rtl-v7 # Microchip Fabric based i2c IP core
-> >
-> > ?
-> This would be fine for mpfs-i2c since corei2c is a "superset" - but how
-> would that look for the fabric core? I don't think falling back from the
-> fabric core onto the "hard" one makes sense. This would mean the
-> following two entries:
->
-> i2c2: i2c@44000000 { //fabric
->         compatible = "microchip,corei2c-rtl-v7";
-> };
-> i2c1: i2c@2010b000 { //"hard" mpfs peripheral
->         compatible = "microchip,mpfs-i2c", "microchip,corei2c-rtl-v7";
-> };
+More information about the controller is available on the dedicated
+web page: https://www.logicbricks.com/Products/logiCVC-ML.aspx
 
-Oops, I missed that you have both forms.
-But in se, they're the same IP core, just hard vs. soft? Then the
-below makes sense.
+Note that this driver has rather simple connector management, which was
+not converted to drm_panel_bridge to keep the ability to enable the panel
+at first vblank but also to support DVI.
 
-> But this generates errors in dt_binding_check w/ your suggestion - so
-> how about the following (similar to ti,omap4-i2c.yaml):
->
->    compatible:
->      oneOf:
->        - items:
->          - const: microchip,mpfs-i2c #  Microchip PolarFire...
->          - const: microchip,corei2c-rtl-v7 # Microchip Fabric...
->        - const: microchip,corei2c-rtl-v7 # Microchip Fabric...
->
-> Is there a prettier way than this duplication?
+Changes since v9:
+- Added common compatibles for major logicvc versions;
+- Add support for logicvc-5;
+- Rebased on latest drm-misc next.
 
-I'm afraid not, and the above scheme is used a lot.
+Changes since v8:
+- Rebased on top of the latest drm-misc-next;
+- Dropped useless phandle-based syscon regmap support;
+- Switched to a single-port graph description;
+- Updated the device-tree schema to the port schema and added a
+  description for the port.
 
-> > If the IP core is reused, it can become:
-> >
-> >      items:
-> >        - enum:
-> >            - microchip,mpfs-i2c # Microchip PolarFire SoC compatible SoCs
-> >            - microchip,<foo>-i2c # ...
-> >        - const: microchip,corei2c-rtl-v7 # Microchip Fabric based i2c IP core
-> >
-> > That way the driver can just match on the second (fallback) value,
-> > and no further driver changes will be needed (until v8 or later).
+Change since v7:
+- Replaced DRM_INFO/DRM_ERROR/DRM_DEBUG_DRIVER with fashions using drm_device;
+- Fixed yaml binding alignment issue;
+- Renamed logicvc-display name to the generic "display" name;
+- Added patternProperties match for display in the parent mfd binding;
+- Used drm_atomic_get_new_crtc_state when needed;
+- Checked mode in mode_valid instead of atomic_check;
+- Switched to drmm_mode_config_init;
+- Removed useless logicvc_connector_destroy wrapper;
+- Removed useless drm_dev_put calls;
+- Removed atomic_commit_tail that enables the panel and streamlined the logic;
+- Reworked Makefile cosmetics;
+- Fixed checkpatch issues.
 
-Gr{oetje,eeting}s,
+Changes since v6:
+- Updated to the latest DRM internal API changes; 
+- Used an enum to index dt properties instead of the name string.
 
-                        Geert
+Changes since v5:
+- Subclass DRM device and use devm_drm_dev_alloc for allocation;
+- Removed call to drm_mode_config_cleanup (done automatically with devm);
+- Some related code cleanups;
+- Bring back not-for-merge patch adding colorkey support.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Changes since v4:
+- Updated to internal DRM API changes (rebased on drm-misc-next);
+- Added Kconfig dependency on OF;
+- Added MAINTAINERS entry;
+- Used drm_err and dev_err instead of DRM_ERROR where possible;
+- Various cosmetic changes.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Changes since v3:
+- Rebased on latest drm-misc;
+- Improved event lock wrapping;
+- Added collect tag;
+- Added color-key support patch (not for merge, for reference only).
+
+Changes since v2:
+- Fixed and slightly improved dt schema.
+
+Changes since v1:
+- Switched dt bindings documentation to dt schema;
+- Described more possible dt parameters;
+- Added support for the lvds-3bit interface;
+- Added support for grabbing syscon regmap from parent node;
+- Removed layers count property and count layers child nodes instead.
+
+Paul Kocialkowski (6):
+  dt-bindings: mfd: logicvc: Add a compatible with the major version
+    only
+  dt-bindings: gpio: logicvc: Add a compatible with major version only
+  gpio: logicvc: Support compatible with major version only
+  dt-bindings: display: Add compatibles with major versions only
+  drm: Add support for the LogiCVC display controller
+  NOTFORMERGE: drm/logicvc: Add plane colorkey support
+
+ .../display/xylon,logicvc-display.yaml        |   3 +
+ .../bindings/gpio/xylon,logicvc-gpio.yaml     |   1 +
+ .../bindings/mfd/xylon,logicvc.yaml           |   1 +
+ MAINTAINERS                                   |   6 +
+ drivers/gpio/gpio-logicvc.c                   |   5 +-
+ drivers/gpu/drm/Kconfig                       |   2 +
+ drivers/gpu/drm/Makefile                      |   1 +
+ drivers/gpu/drm/logicvc/Kconfig               |   9 +
+ drivers/gpu/drm/logicvc/Makefile              |   9 +
+ drivers/gpu/drm/logicvc/logicvc_crtc.c        | 280 +++++++
+ drivers/gpu/drm/logicvc/logicvc_crtc.h        |  21 +
+ drivers/gpu/drm/logicvc/logicvc_drm.c         | 483 +++++++++++
+ drivers/gpu/drm/logicvc/logicvc_drm.h         |  67 ++
+ drivers/gpu/drm/logicvc/logicvc_interface.c   | 214 +++++
+ drivers/gpu/drm/logicvc/logicvc_interface.h   |  28 +
+ drivers/gpu/drm/logicvc/logicvc_layer.c       | 767 ++++++++++++++++++
+ drivers/gpu/drm/logicvc/logicvc_layer.h       |  71 ++
+ drivers/gpu/drm/logicvc/logicvc_mode.c        |  80 ++
+ drivers/gpu/drm/logicvc/logicvc_mode.h        |  15 +
+ drivers/gpu/drm/logicvc/logicvc_of.c          | 185 +++++
+ drivers/gpu/drm/logicvc/logicvc_of.h          |  46 ++
+ drivers/gpu/drm/logicvc/logicvc_regs.h        |  88 ++
+ 22 files changed, 2379 insertions(+), 3 deletions(-)
+ create mode 100644 drivers/gpu/drm/logicvc/Kconfig
+ create mode 100644 drivers/gpu/drm/logicvc/Makefile
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_crtc.c
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_crtc.h
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_drm.c
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_drm.h
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_interface.c
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_interface.h
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_layer.c
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_layer.h
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_mode.c
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_mode.h
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_of.c
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_of.h
+ create mode 100644 drivers/gpu/drm/logicvc/logicvc_regs.h
+
+-- 
+2.34.1
+
