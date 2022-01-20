@@ -2,63 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 06AAB494C1C
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jan 2022 11:51:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BA4EC494C3B
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jan 2022 11:55:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229672AbiATKu7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Jan 2022 05:50:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37656 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1376412AbiATKtc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jan 2022 05:49:32 -0500
-Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83B95C061747
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Jan 2022 02:49:32 -0800 (PST)
-Received: by mail-yb1-xb2e.google.com with SMTP id o80so16523222yba.6
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Jan 2022 02:49:32 -0800 (PST)
+        id S229775AbiATKyH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Jan 2022 05:54:07 -0500
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:20783 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229526AbiATKyG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 20 Jan 2022 05:54:06 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=6Llb3z0/5OIzG6RJ3l9/Z14PDgc6xtj5MthS1YNcYzc=;
-        b=eHf7VM8nwKnMuPlR+rCoLSiO9EmRnsWfVr0RRKXi/fwOIHWiKOODrw6FLkTVvG0tZH
-         2cFw9u4SmT/PpLSFb3jl3RSQKuWR0BbNdrRD1fVGYWkGWyKaoqH5f+1+JlyQ/CSZo+BL
-         XBugH95SB5SMVUoqeYdSZF+fPxV8tk15nu5e4Wra2eMjxV+ojLiTkDfW7ONz3VZMm51b
-         f2pbUx6bDnaYZxRJpGQ/HeLiDUvJLr4P3QynSAoHOWMEzsmfPE9XArOwSAwSg2vgIcGv
-         rq6rc7o4ojdmeOhPWzn2lW03PAKsW8Zq8m4UyEOpi6/ylFOMBrxJZtcB/JHQZ3WR2EQw
-         LaSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=6Llb3z0/5OIzG6RJ3l9/Z14PDgc6xtj5MthS1YNcYzc=;
-        b=j2tLdWuXLeKVqYFuxWc3krcaAKkIWZeCSpDEIzR7JlOY6gj/ujYnPcG+RHg3cjppmM
-         vOmKzeCI8qV7+cRfk9Rrphy3QBkeNximwOUnCe5mKS7HCU8bhhKpD/gUtocm87gbqwOa
-         KDOv2YSHd/a3OQAeeF4AHkqvfd4ovP3vsgQYYLutHokO0NWzgnlrNG/tlxWwE7ZEVhFT
-         kSLQRNJfI5dbO6YhUdKJKQGY+zvxIRBk/k0FUkOHurRTUIoo4vI8pnz1BKsTsyLQCQod
-         mxVoZCJHwm355qVlzsNjOqLSWadoaMnqlvlMj7owXn+Ym8LyVJzHTu+quOFg6w6+ZTmj
-         6+6w==
-X-Gm-Message-State: AOAM530jClThcXD+1BCSDm0KV+rgnHvgd07QzaU51xJrxG2fpL+nLd1T
-        IjrU3r8tkZG1ZKy2Yyw9EMClLxUbgmaNUANT3QM=
-X-Google-Smtp-Source: ABdhPJzZMsqM9GJcLX58zAOeMA22IYBlCD5R1pK8NsHzK/VPEDbXzqFuCYxQsQb9XYkftW0VZZQfuhIakSL3UKhBXBg=
-X-Received: by 2002:a25:73d6:: with SMTP id o205mr13544613ybc.678.1642675771801;
- Thu, 20 Jan 2022 02:49:31 -0800 (PST)
+  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
+  t=1642676046; x=1674212046;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=OQxEySdr4f1nr1SBYHxpL92c8SRLaP68TBUursFakxg=;
+  b=k0uhan7wA1J/TqCRb06WRcaYOEL38yKZA/Fnh1fEVfBubfqrDBgHwkLl
+   JR5rEREwWaY+v0sqrwyKDvOKVPhvqlPw60AetnN9AnkE4dXgnpR0G0SAW
+   4AZUq9cpAod+JhyeyUkE5gqwx/y3UuxgzZ4zfxWk/7gRGJvygiYar3G+f
+   8=;
+Received: from unknown (HELO ironmsg01-sd.qualcomm.com) ([10.53.140.141])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 20 Jan 2022 02:54:05 -0800
+X-QCInternal: smtphost
+Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
+  by ironmsg01-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2022 02:54:05 -0800
+Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
+ nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.922.19; Thu, 20 Jan 2022 02:54:05 -0800
+Received: from [10.216.6.136] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.922.19; Thu, 20 Jan
+ 2022 02:53:59 -0800
+Message-ID: <816df5c9-aa89-e019-4036-6c9a79e534bd@quicinc.com>
+Date:   Thu, 20 Jan 2022 16:23:52 +0530
 MIME-Version: 1.0
-Received: by 2002:a05:7000:49c7:0:0:0:0 with HTTP; Thu, 20 Jan 2022 02:49:31
- -0800 (PST)
-Reply-To: barristerjohnsonphillip1@gmail.com
-From:   Johnson Phillip <bourahime.saliou0907521@gmail.com>
-Date:   Thu, 20 Jan 2022 10:49:31 +0000
-Message-ID: <CAE7kwUav3OiHqxm+8e9gTNuvjYYY0Q8_9+jvKqJGNsXDskx4qQ@mail.gmail.com>
-Subject: Hallo
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.1
+Subject: Re: [PATCH 3/4] arm64: dts: qcom: sm8150: Add pdc interrupt
+ controller node
+To:     Bhupesh Sharma <bhupesh.sharma@linaro.org>,
+        <linux-arm-msm@vger.kernel.org>
+CC:     <bhupesh.linux@gmail.com>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linus.walleij@linaro.org>,
+        <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh@kernel.org>
+References: <20220119203133.467264-1-bhupesh.sharma@linaro.org>
+ <20220119203133.467264-4-bhupesh.sharma@linaro.org>
+From:   Maulik Shah <quic_mkshah@quicinc.com>
+In-Reply-To: <20220119203133.467264-4-bhupesh.sharma@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello,
+Hi,
 
-I am still waiting for your response.
+On 1/20/2022 2:01 AM, Bhupesh Sharma wrote:
+> Add pdc interrupt controller for sm8150.
+>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
+> ---
+>   arch/arm64/boot/dts/qcom/sm8150.dtsi | 10 ++++++++++
+>   1 file changed, 10 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> index 6012322a5984..cc4dc11b2585 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> @@ -1626,6 +1626,16 @@ system-cache-controller@9200000 {
+>   			interrupts = <GIC_SPI 582 IRQ_TYPE_LEVEL_HIGH>;
+>   		};
+>   
+> +		pdc: interrupt-controller@b220000 {
+> +			compatible = "qcom,sm8150-pdc", "qcom,pdc";
+> +			reg = <0 0x0b220000 0 0x400>, <0 0x17c000f0 0 0x60>;
 
-Regards
-Barr. Johnson Phillip
+<0x17c000f0 0x64>;
+
+Remove the second reg, its not used in the driver and also not 
+documented yet.
+
+Thanks,
+Maulik
+> +			qcom,pdc-ranges = <0 480 94>, <94 609 31>,
+> +					  <125 63 1>;
+> +			#interrupt-cells = <2>;
+> +			interrupt-parent = <&intc>;
+> +			interrupt-controller;
+> +		};
+> +
+>   		ufs_mem_hc: ufshc@1d84000 {
+>   			compatible = "qcom,sm8150-ufshc", "qcom,ufshc",
+>   				     "jedec,ufs-2.0";
