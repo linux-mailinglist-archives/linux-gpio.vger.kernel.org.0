@@ -2,101 +2,181 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 990B449502E
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jan 2022 15:33:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD54349509F
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jan 2022 15:57:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242911AbiATOco (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Jan 2022 09:32:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32836 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346352AbiATOcc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jan 2022 09:32:32 -0500
-Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAF89C06173F
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Jan 2022 06:32:31 -0800 (PST)
-Received: by mail-wm1-x32a.google.com with SMTP id n8so12475363wmk.3
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Jan 2022 06:32:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=voV9tUwcW7nggwh4Y3zh2zTjDE2cl1ie6Z0l0K1hTCA=;
-        b=eZ6VJwEXkx9+hYAePyeUZUBkBTxDurhGPf7yes93v96F3qAbQ+djfek27GlTi+/y0B
-         30jcQqUhSoW4eYol2ftRdipGi0y9GJbMoKQOo6bsidoODlAuvyZomza9DRej81KIozpF
-         UgccHBPqKcNJMip6RTzX+DAEJpi8CiMlPKP9XJrvIAO+G4BuMcXayJLIWBTA2BlLgXi7
-         oJb+ynilG6aqgYjoyAKekZv8MzWtb9DT0fm3nLhO813hW6UUyvrYA6YAXvUTOQwBdSmg
-         uhk5s3HWM1hI6/fFfhxdFbKChHc6mqHnt5dr/XJbA4KcsJaFmo+/ikIq85fKcfe3t6XA
-         1NPg==
+        id S242653AbiATO5B (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Jan 2022 09:57:01 -0500
+Received: from mail-vk1-f178.google.com ([209.85.221.178]:42639 "EHLO
+        mail-vk1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232592AbiATO5A (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jan 2022 09:57:00 -0500
+Received: by mail-vk1-f178.google.com with SMTP id m57so3726299vkf.9;
+        Thu, 20 Jan 2022 06:56:59 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=voV9tUwcW7nggwh4Y3zh2zTjDE2cl1ie6Z0l0K1hTCA=;
-        b=cNoC6bfcF9M8fRT5VB7oQiaMm3QkzOh5+gKwJIOPnmNt4+CiVyoVDSBpfuLe4Gtdmn
-         UtLUUasvcABkWx3oH9T+ggMG+5Rt5yfoHZrgmzwwrBgCKZ8tieCa3Ezm5VXlcwH7LE69
-         Z4tUMRbEHL3acrExtW58GX6VgCz88PVHI0/SvTbW4nQ76SoMhBJXTOrbY1bJTK0y8CUz
-         y4wwdGveIo1Xrp01unYdn89WRbtGvyZGEjiacQKcmARYW3Fk+jj4/w5M76xqFfUwmCQN
-         cYuvdphsdobznCYrZKGM5u/27XsArnfln7jEMTbaIAUYkQWV6p6q7gsg03u3uCgN5ZGj
-         mWBw==
-X-Gm-Message-State: AOAM531YGZWfHb4hbpEfjABBh8lLw8pMBvU0kkm2yZmWsZVSc4+L6Vg7
-        6zbaq5jyx37U3h5IRz6CQ7rNz2NGRuvZDA==
-X-Google-Smtp-Source: ABdhPJx9j0HddK3ForJvKbPMk+lEeKepafT2U9sUHCAXUuWaYL9NhGuJ24YyBmkxRNNxmpdWLLzEHQ==
-X-Received: by 2002:a05:600c:3510:: with SMTP id h16mr9242829wmq.122.1642689150322;
-        Thu, 20 Jan 2022 06:32:30 -0800 (PST)
-Received: from debian-brgl.home ([2a01:cb1d:334:ac00:7d50:ff5:f5c1:e225])
-        by smtp.gmail.com with ESMTPSA id 8sm3630760wrz.57.2022.01.20.06.32.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Jan 2022 06:32:30 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [GIT PULL] gpio: fixes for v5.17-rc1
-Date:   Thu, 20 Jan 2022 15:32:28 +0100
-Message-Id: <20220120143228.444087-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.30.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1L35cmAx7uCLqrcryWAZKBNOGx+ekbrBkpQCXHRgWJQ=;
+        b=oEJ0SaQXI4alA5reStSBMsu+rR77UWNbxgSB4YjV2zNu21QyT0ULxYvpB741T+zCrx
+         Ce1vo+XVBj/Fvs9g2XlKGZ4B8yBTLAVPOvi8oE/zCvlvF+UGuxIBftD+EblhAiV0KZeS
+         zNThkrRGwyxQ3b7t7Rg6QB6SB3HHMdUTRftK2GiVVkcCXpY6y4wa7ums24QlsUJhoEoo
+         tUp6yEZRg6DGXmVIUXku1zblaZXROtR8buqyBkLBQBICj+HtDvFafMD6DmS0EiwIITj7
+         9VoLrKfQxhFgL++SDeFjoKSFP4spgjg/YQfkQ17ItqaEvi9fb8bu1A2Zv+Bbbb9iuku4
+         Or8A==
+X-Gm-Message-State: AOAM533Ypntc+0G3BNd3a388YHlSJcm29LRBHvLOoXxyNjO2kWEupfKY
+        3mORqfYZCwEdv++xk1jB4eFw04uyN8Hp0w==
+X-Google-Smtp-Source: ABdhPJwtBz5xu6kkUSgMDWT3reX8oOw/ICTZRv6mefGmvRx9v+0CD6OCOR52cNTnIgrnTf+RyXzN5A==
+X-Received: by 2002:a05:6122:208c:: with SMTP id i12mr14370747vkd.2.1642690619315;
+        Thu, 20 Jan 2022 06:56:59 -0800 (PST)
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com. [209.85.222.50])
+        by smtp.gmail.com with ESMTPSA id ba16sm474926vkb.39.2022.01.20.06.56.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Jan 2022 06:56:58 -0800 (PST)
+Received: by mail-ua1-f50.google.com with SMTP id n15so9789369uaq.5;
+        Thu, 20 Jan 2022 06:56:57 -0800 (PST)
+X-Received: by 2002:a05:6102:3581:: with SMTP id h1mr14235247vsu.5.1642690617601;
+ Thu, 20 Jan 2022 06:56:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220117110755.3433142-1-conor.dooley@microchip.com>
+ <20220117110755.3433142-4-conor.dooley@microchip.com> <CAMuHMdXwe3_F8NeePnoFrLwyzKUwnHtmETC=ambgsC2N3w_h8A@mail.gmail.com>
+ <889dab52-95eb-f36d-0af9-beea958a97e7@microchip.com>
+In-Reply-To: <889dab52-95eb-f36d-0af9-beea958a97e7@microchip.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 20 Jan 2022 15:56:46 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXU_M89W7w064YsjuFfqE2m_PeM9HVps0nmaC1+aUHAQw@mail.gmail.com>
+Message-ID: <CAMuHMdXU_M89W7w064YsjuFfqE2m_PeM9HVps0nmaC1+aUHAQw@mail.gmail.com>
+Subject: Re: [PATCH v4 03/14] dt-bindings: i2c: add bindings for microchip
+ mpfs i2c
+To:     Conor Dooley <Conor.Dooley@microchip.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mark Brown <broonie@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        linux-rtc@vger.kernel.org, linux-spi <linux-spi@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Bin Meng <bin.meng@windriver.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Lewis Hanly <Lewis.Hanly@microchip.com>,
+        Daire.McNamara@microchip.com, Ivan.Griffin@microchip.com,
+        Atish Patra <atishp@rivosinc.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Linus,
+Hi Conor,
 
-Please pull the following fixes for the upcoming RC. They fix the same issue
-in two drivers and then the drivers are fixed even more because the first
-patches were incomplete which I missed.
+On Thu, Jan 20, 2022 at 2:42 PM <Conor.Dooley@microchip.com> wrote:
+> On 20/01/2022 08:30, Geert Uytterhoeven wrote:
+> > On Mon, Jan 17, 2022 at 12:06 PM <conor.dooley@microchip.com> wrote:
+> >> From: Conor Dooley <conor.dooley@microchip.com>
+> >>
+> >> Add device tree bindings for the i2c controller on
+> >> the Microchip PolarFire SoC.
+> >>
+> >> Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
+> >> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> >
+> > Thanks for your patch!
+> >
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/i2c/microchip,mpfs-i2c.yaml
+> >> @@ -0,0 +1,55 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/i2c/microchip,mpfs-i2c.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: Microchip MPFS I2C Controller Device Tree Bindings
+> >> +
+> >> +maintainers:
+> >> +  - Daire McNamara <daire.mcnamara@microchip.com>
+> >> +
+> >> +allOf:
+> >> +  - $ref: /schemas/i2c/i2c-controller.yaml#
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    enum:
+> >> +      - microchip,mpfs-i2c # Microchip PolarFire SoC compatible SoCs
+> >> +      - microchip,corei2c-rtl-v7 # Microchip Fabric based i2c IP core
+> >
+> > Wouldn't it be more logical to have:
+> >
+> >      items:
+> >        - const: microchip,mpfs-i2c # Microchip PolarFire SoC compatible SoCs
+> >        - const: microchip,corei2c-rtl-v7 # Microchip Fabric based i2c IP core
+> >
+> > ?
+> This would be fine for mpfs-i2c since corei2c is a "superset" - but how
+> would that look for the fabric core? I don't think falling back from the
+> fabric core onto the "hard" one makes sense. This would mean the
+> following two entries:
+>
+> i2c2: i2c@44000000 { //fabric
+>         compatible = "microchip,corei2c-rtl-v7";
+> };
+> i2c1: i2c@2010b000 { //"hard" mpfs peripheral
+>         compatible = "microchip,mpfs-i2c", "microchip,corei2c-rtl-v7";
+> };
 
-Bart
+Oops, I missed that you have both forms.
+But in se, they're the same IP core, just hard vs. soft? Then the
+below makes sense.
 
-The following changes since commit df0cc57e057f18e44dac8e6c18aba47ab53202f9:
+> But this generates errors in dt_binding_check w/ your suggestion - so
+> how about the following (similar to ti,omap4-i2c.yaml):
+>
+>    compatible:
+>      oneOf:
+>        - items:
+>          - const: microchip,mpfs-i2c #  Microchip PolarFire...
+>          - const: microchip,corei2c-rtl-v7 # Microchip Fabric...
+>        - const: microchip,corei2c-rtl-v7 # Microchip Fabric...
+>
+> Is there a prettier way than this duplication?
 
-  Linux 5.16 (2022-01-09 14:55:34 -0800)
+I'm afraid not, and the above scheme is used a lot.
 
-are available in the Git repository at:
+> > If the IP core is reused, it can become:
+> >
+> >      items:
+> >        - enum:
+> >            - microchip,mpfs-i2c # Microchip PolarFire SoC compatible SoCs
+> >            - microchip,<foo>-i2c # ...
+> >        - const: microchip,corei2c-rtl-v7 # Microchip Fabric based i2c IP core
+> >
+> > That way the driver can just match on the second (fallback) value,
+> > and no further driver changes will be needed (until v8 or later).
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.17-rc1
+Gr{oetje,eeting}s,
 
-for you to fetch changes up to 9f51ce0b9e73f83bab2442b36d5e247a81bd3401:
+                        Geert
 
-  gpio: mpc8xxx: Fix an ignored error return from platform_get_irq() (2022-01-20 09:05:57 +0100)
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-----------------------------------------------------------------
-gpio fixes for v5.17-rc1
-
-- fix the error checks of platform_get_irq() in gpio-mpc8xxx and gpio-idt3243x
-
-----------------------------------------------------------------
-Miaoqian Lin (2):
-      gpio: mpc8xxx: Fix IRQ check in mpc8xxx_probe
-      gpio: idt3243x: Fix IRQ check in idt_gpio_probe
-
-Yang Li (2):
-      gpio: idt3243x: Fix an ignored error return from platform_get_irq()
-      gpio: mpc8xxx: Fix an ignored error return from platform_get_irq()
-
- drivers/gpio/gpio-idt3243x.c | 6 +++---
- drivers/gpio/gpio-mpc8xxx.c  | 6 +++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
