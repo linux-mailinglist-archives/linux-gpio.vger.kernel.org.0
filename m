@@ -2,122 +2,173 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D387494C3F
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jan 2022 11:55:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A928494CDC
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Jan 2022 12:27:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229903AbiATKyT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Jan 2022 05:54:19 -0500
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:27014 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229755AbiATKyQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jan 2022 05:54:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1642676057; x=1674212057;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=PWXf9U9ip1SlEBsO3DM5W2hgX/Z8F0qlAhGez6OXS/k=;
-  b=qy6SAarL7xNSYLLaJe8M/HI2WnltMqZpRn+c0b0Y2yKlbqR0GEq0xPh+
-   K3be9VrLSOm33k74vBs6w27Y3zTl3n5EWcicWweEqiTJayRa5IQ1OjrIJ
-   xuik23iAI8hGF4QuRrpVEW5cjIa5PRzNOq0Kyg/R2KCIAVfI2RaVRoWLY
-   w=;
-Received: from ironmsg-lv-alpha.qualcomm.com ([10.47.202.13])
-  by alexa-out.qualcomm.com with ESMTP; 20 Jan 2022 02:54:16 -0800
-X-QCInternal: smtphost
-Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
-  by ironmsg-lv-alpha.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2022 02:54:15 -0800
-Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
- nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.922.19; Thu, 20 Jan 2022 02:54:15 -0800
-Received: from [10.216.6.136] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.922.19; Thu, 20 Jan
- 2022 02:54:09 -0800
-Message-ID: <2f208798-2ec5-4c29-1362-0de102f29718@quicinc.com>
-Date:   Thu, 20 Jan 2022 16:24:05 +0530
+        id S230523AbiATL1X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Jan 2022 06:27:23 -0500
+Received: from mxout04.lancloud.ru ([45.84.86.114]:54944 "EHLO
+        mxout04.lancloud.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230371AbiATL1T (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Jan 2022 06:27:19 -0500
+Received: from LanCloud
+DKIM-Filter: OpenDKIM Filter v2.11.0 mxout04.lancloud.ru C003420DA1E6
+Received: from LanCloud
+Received: from LanCloud
+Received: from LanCloud
+From:   Sergey Shtylyov <s.shtylyov@omp.ru>
+Subject: Re: [PATCH 1/2] platform: make platform_get_irq_optional() optional
+To:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+CC:     Andrew Lunn <andrew@lunn.ch>, Ulf Hansson <ulf.hansson@linaro.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        KVM list <kvm@vger.kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        <linux-iio@vger.kernel.org>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        "ALSA Development Mailing List" <alsa-devel@alsa-project.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Guenter Roeck <groeck@chromium.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        <linux-phy@lists.infradead.org>, Jiri Slaby <jirislaby@kernel.org>,
+        <openipmi-developer@lists.sourceforge.net>,
+        "Khuong Dinh" <khuong@os.amperecomputing.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        "Bartosz Golaszewski" <brgl@bgdev.pl>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "Tony Luck" <tony.luck@intel.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Robert Richter <rric@kernel.org>,
+        "Saravanan Sekar" <sravanhome@gmail.com>,
+        Corey Minyard <minyard@acm.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        John Garry <john.garry@huawei.com>,
+        Peter Korsgaard <peter@korsgaard.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Mark Brown <broonie@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "Sebastian Reichel" <sre@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        <platform-driver-x86@vger.kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        <linux-edac@vger.kernel.org>,
+        Mun Yew Tham <mun.yew.tham@intel.com>,
+        "Hans de Goede" <hdegoede@redhat.com>,
+        netdev <netdev@vger.kernel.org>,
+        "Yoshihiro Shimoda" <yoshihiro.shimoda.uh@renesas.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Linux MMC List <linux-mmc@vger.kernel.org>,
+        "Liam Girdwood" <lgirdwood@gmail.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Richard Weinberger <richard@nod.at>,
+        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
+        <linux-mediatek@lists.infradead.org>,
+        "Brian Norris" <computersforpeace@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+References: <20220112213121.5ruae5mxwj6t3qiy@pengutronix.de>
+ <Yd9L9SZ+g13iyKab@sirena.org.uk>
+ <29f0c65d-77f2-e5b2-f6cc-422add8a707d@omp.ru>
+ <20220114092557.jrkfx7ihg26ekzci@pengutronix.de>
+ <61b80939-357d-14f5-df99-b8d102a4e1a1@omp.ru>
+ <20220114202226.ugzklxv4wzr6egwj@pengutronix.de>
+ <c9026f17-2b3f-ee94-0ea3-5630f981fbc1@omp.ru>
+ <CAMuHMdXVbRudGs69f9ZzaP1PXhteDNZiXA658eMFAwP4nr9r3w@mail.gmail.com>
+ <20220117092444.opoedfcf5k5u6otq@pengutronix.de>
+ <CAMuHMdUgZUeraHadRAi2Z=DV+NuNBrKPkmAKsvFvir2MuquVoA@mail.gmail.com>
+ <20220117114923.d5vajgitxneec7j7@pengutronix.de>
+ <CAMuHMdWCKERO20R2iVHq8P=BaoauoBAtiampWzfMRYihi3Sb0g@mail.gmail.com>
+Organization: Open Mobile Platform
+Message-ID: <b8fda2ae-07b7-af30-2b0d-213a60a7b802@omp.ru>
+Date:   Thu, 20 Jan 2022 14:27:08 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.1
-Subject: Re: [PATCH 2/4] pinctrl: qcom: sm8150: Specify PDC map
-To:     Bhupesh Sharma <bhupesh.sharma@linaro.org>,
-        <linux-arm-msm@vger.kernel.org>
-CC:     <bhupesh.linux@gmail.com>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linus.walleij@linaro.org>,
-        <bjorn.andersson@linaro.org>
-References: <20220119203133.467264-1-bhupesh.sharma@linaro.org>
- <20220119203133.467264-3-bhupesh.sharma@linaro.org>
-From:   Maulik Shah <quic_mkshah@quicinc.com>
-In-Reply-To: <20220119203133.467264-3-bhupesh.sharma@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+In-Reply-To: <CAMuHMdWCKERO20R2iVHq8P=BaoauoBAtiampWzfMRYihi3Sb0g@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
+X-Originating-IP: [192.168.11.198]
+X-ClientProxiedBy: LFEXT02.lancloud.ru (fd00:f066::142) To
+ LFEX1907.lancloud.ru (fd00:f066::207)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On 1/17/22 4:08 PM, Geert Uytterhoeven wrote:
 
-On 1/20/2022 2:01 AM, Bhupesh Sharma wrote:
-> Specify the PDC mapping for SM8150, so that gpio interrupts are
-> propertly mapped to the wakeup IRQs of the PDC.
+[...]
+>>> But as we were all in a hurry to kill the non-applicable error
+>>> message, we went for the quick and dirty fix.
+>>>
+>>>> Also I fail to see how a caller of (today's) platform_get_irq_optional()
+>>>> is simpler than a caller of platform_get_irq() given that there is no
+>>>> semantic difference between the two. Please show me a single
+>>>> conversion from platform_get_irq to platform_get_irq_optional that
+>>>> yielded a simplification.
+>>>
+>>> That's exactly why we want to change the latter to return 0 ;-)
+>>
+>> OK. So you agree to my statement "The reason for
+>> platform_get_irq_optional()'s existence is just that platform_get_irq()
+>> emits an error message [...]". Actually you don't want to oppose but
+>> say: It's unfortunate that the silent variant of platform_get_irq() took
+>> the obvious name of a function that could have an improved return code
+>> semantic.
+>>
+>> So my suggestion to rename todays platform_get_irq_optional() to
+>> platform_get_irq_silently() and then introducing
+>> platform_get_irq_optional() with your suggested semantic seems
+>> intriguing and straigt forward to me.
+> 
+> I don't really see the point of needing platform_get_irq_silently(),
+> unless as an intermediary step, where it's going to be removed again
+> once the conversion has completed.
+> Still, the rename would touch all users at once anyway.
+> 
+>> Another thought: platform_get_irq emits an error message for all
+>> problems. Wouldn't it be consistent to let platform_get_irq_optional()
+>> emit an error message for all problems but "not found"?
+>> Alternatively remove the error printk from platform_get_irq().
+> 
+> Yes, all problems but not found are real errors.
 
-s/propertly/properly
+   ACK for using dev_err_probe() in platfrom_get_irq_optional()
+for the real errors...
+   I've also noted that only platfrom_get_irq_optional() got converted
+from dev_err() to dev_err_probe() but not platfrom_get_irq_byname_optional()...
 
->
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
-> ---
->   drivers/pinctrl/qcom/pinctrl-sm8150.c | 21 +++++++++++++++++++++
->   1 file changed, 21 insertions(+)
->
-> diff --git a/drivers/pinctrl/qcom/pinctrl-sm8150.c b/drivers/pinctrl/qcom/pinctrl-sm8150.c
-> index 7359bae68c69..499dd05c3e3d 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-sm8150.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-sm8150.c
-> @@ -1500,6 +1500,25 @@ static const struct msm_pingroup sm8150_groups[] = {
->   	[178] = SDC_QDSD_PINGROUP(sdc2_data, 0xB2000, 9, 0),
->   };
->   
-> +static const struct msm_gpio_wakeirq_map sm8150_pdc_map[] = {
-> +	{ 3, 31 }, { 5, 32 }, { 8, 33 }, { 9, 34 }, { 10, 100 },
-> +	{ 12, 104 }, { 24, 37 }, { 26, 38 }, { 27, 41 }, { 28, 42 },
-> +	{ 30, 39 }, { 36, 43 }, { 37, 44 }, { 38, 30 }, { 39, 118 },
-> +	{ 39, 125 },
-GPIO 39 is duplicated. 39 is used with 118 PDC interrupt in downstream. 
-so { 39, 125 } can be removed.
-> { 41, 47 }, { 42, 48 }, { 46, 50 }, { 47, 49 },
-> +	{ 48, 51 }, { 49, 53 }, { 50, 52 }, { 51, 116 }, { 51, 123 },
-GPIO 51 is duplicated. 51 is used with 116 PDC interrupt in downstream 
-so { 51, 123 } can be removed
-> +	{ 53, 54 }, { 54, 55 }, { 55, 56 }, { 56, 57 }, { 58, 58 },
-> +	{ 60, 60 }, { 61, 61 }, { 68, 62 }, { 70, 63 }, { 76, 71 },
-> +	{ 77, 66 }, { 81, 64 }, { 83, 65 }, { 86, 67 }, { 87, 84 },
-> +	{ 88, 117 }, { 88, 124 }, { 90, 69 }, { 91, 70 }, { 93, 75 },
-> +	{ 95, 72 }, { 96, 73 }, { 97, 74 }, { 101, 40 }, { 103, 77 },
-> +	{ 104, 78 }, { 108, 79 }, { 112, 80 }, { 113, 81 }, { 114, 82 },
-> +	{ 117, 85 }, { 118, 101 }, { 119, 87 }, { 120, 88 }, { 121, 89 },
-> +	{ 122, 90 }, { 123, 91 }, { 124, 92 }, { 125, 93 }, { 129, 94 },
-> +	{ 132, 105 }, { 133, 83 }, { 134, 36 }, { 136, 97 }, { 142, 103 },
-> +	{ 144, 115 }, { 144, 122 }, { 147, 102 }, { 150, 107 },
-> +	{ 152, 108 }, { 153, 109 }
-> +};
-> +
->   static const struct msm_pinctrl_soc_data sm8150_pinctrl = {
->   	.pins = sm8150_pins,
->   	.npins = ARRAY_SIZE(sm8150_pins),
-> @@ -1510,6 +1529,8 @@ static const struct msm_pinctrl_soc_data sm8150_pinctrl = {
->   	.ngpios = 176,
->   	.tiles = sm8150_tiles,
->   	.ntiles = ARRAY_SIZE(sm8150_tiles),
-> +	.wakeirq_map = sm8150_pdc_map,
-> +	.nwakeirq_map = ARRAY_SIZE(sm8150_pdc_map),
+[...]
 
-On SM8150 need to set .wakeirq_dual_edge_errata = true, similar to sc7180.
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
 
-Thanks,
-Maulik
+MBR, Sergey
