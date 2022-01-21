@@ -2,81 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D624D495DBF
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jan 2022 11:28:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A7041495E0D
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Jan 2022 11:58:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379999AbiAUK2U (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Jan 2022 05:28:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46222 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344593AbiAUK2S (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Jan 2022 05:28:18 -0500
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB17CC061574;
-        Fri, 21 Jan 2022 02:28:17 -0800 (PST)
-Received: by mail-ed1-x52d.google.com with SMTP id u18so26930571edt.6;
-        Fri, 21 Jan 2022 02:28:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/YTbY1T0th9FlgLE+y1cmjd6nPDOK5Mo4NKzJkpO+nY=;
-        b=Uc9Eq3gFDreyO0TiPr/A5WXeLxBpv9JnLBXcPtzcyMr8WspUbhjZMBtd7SCJQJoZ7X
-         ByiLZyjSW6PNQRBmB5QVSz9bNDDee7+j3+4DtoGEVDfZ6mCJt7zpOKTScKJzoZZ4OxQI
-         BYxfw0E+mmoMcKx9HrbLyDqSyA9MHTn80aTl4q/SWwCY6i+PyGenbYmuyWG3aRm61Pwm
-         rwUfeD1EfJiDFyffZwHBFwdNXXEF/zAOGg1+wscPflwY4NWw2h3JDunafHYfmRpsto/j
-         jHLMLBA0i/feX1cu4JUfcaBnzRBtMAN+N62fi9/Qse+UAawU4+xabsgqFc78yvnebVJT
-         BClQ==
+        id S1349010AbiAUK6z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Jan 2022 05:58:55 -0500
+Received: from mail-ua1-f45.google.com ([209.85.222.45]:41826 "EHLO
+        mail-ua1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1380062AbiAUK6j (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Jan 2022 05:58:39 -0500
+Received: by mail-ua1-f45.google.com with SMTP id l1so14297448uap.8;
+        Fri, 21 Jan 2022 02:58:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=/YTbY1T0th9FlgLE+y1cmjd6nPDOK5Mo4NKzJkpO+nY=;
-        b=LpDMUiddzsO9vLhGrbS3mUlJqgQWoWNZ6XYhbSEP5RYrXq6ezEjRk/Pr0a4J1PFgF6
-         c1xcykdtB7F8Cty4qZIPlBafRsW1b3RHhdc/OMWm41zWZxoA9AJ/ReLEdubmSq8PGT0x
-         U7CG1s87e/vtJdXIRcLiNuIlb0ijMFCfrR6YUKTo5QOTWNeB+FIfAMY5jGrHAU945sWz
-         B1847VNbzXfQ5xck1t19ieiK1XFa+JQM9q68xPdedTs3f1XAC8cz1PVmt0B2jf95zwGn
-         PxTxG1ZVtfPtEdYXPY1tNHHxgtCpxksaYGNWD7ZCFpjahSukttjDemN7cHS1jlbk272d
-         fcHQ==
-X-Gm-Message-State: AOAM532v5YgaUmLd8jVPNNgC3kTwcudbQuVEOFDcv7RLSRC6hcciigQ1
-        HZGk5pzAfmOfDPX5OSTMDPBKD4HacUaRyWK/wdmdD2sD/UtLxA==
-X-Google-Smtp-Source: ABdhPJwk/gzx6qo+6nl7Eu0aoZil8vPZuVhGJJZAl5vufe0kYyn9R5J2ofDTjDYQModnpNU5qy2MckXBBeP5GqKxaAU=
-X-Received: by 2002:a17:907:9802:: with SMTP id ji2mr2886960ejc.44.1642760896412;
- Fri, 21 Jan 2022 02:28:16 -0800 (PST)
+        bh=bSK9AkQMt2uMFcP1Sp7pz89lE9zDge2o6SCEybiJdFc=;
+        b=0tiuMF7hbFyHSSgs5K3oelqxIqYAId01e5LD5NW1rLPZwRMM/wv2DFOHOI9L5lpQax
+         Pp/IVtkKiJ+70pz0nPa7Z6OEPcfKHwBDjzu2BoHBHR8l0zckN1qDyNf18gV20DDvhdlD
+         abLkFXNAex1sn4GPOA0AoVH4t+IC+gxpCLaOG1qLBKf586s4dumE95uCpeIIg0i/4bMb
+         iIahkZtrAP+yV2Hn7nAO9RqZh0b3SV/SiDVTdnU0AhDWp4EQSjM0Me4cYqA5ZyfMGdXT
+         10BhxItAXp4dxoIFAQ1M/L3b7gqdgp+akZXx20TsS1n9QyB5Lzutr9BswLZLaexC71qz
+         UiVg==
+X-Gm-Message-State: AOAM531Q7G+EZ8RHH+TBLNG0Jst3twK+xsJ3FjHljpO49GXINQLn2qhA
+        Vo6AM446SJ7gk+XX12kCKZfXO+rQMVPjBg==
+X-Google-Smtp-Source: ABdhPJwE4Qht1Z5rYCMx+6d885FZkyq/xehWiNDfgygvVtG6dqVZz6Fc0LIkbqfOWUN+a4M2vGtZrw==
+X-Received: by 2002:a67:c198:: with SMTP id h24mr1562455vsj.40.1642762718869;
+        Fri, 21 Jan 2022 02:58:38 -0800 (PST)
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com. [209.85.222.41])
+        by smtp.gmail.com with ESMTPSA id m7sm1426200uam.0.2022.01.21.02.58.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Jan 2022 02:58:38 -0800 (PST)
+Received: by mail-ua1-f41.google.com with SMTP id u6so16259576uaq.0;
+        Fri, 21 Jan 2022 02:58:38 -0800 (PST)
+X-Received: by 2002:a9f:3d89:: with SMTP id c9mr1506700uai.78.1642762718240;
+ Fri, 21 Jan 2022 02:58:38 -0800 (PST)
 MIME-Version: 1.0
-References: <20220121093426.6336-1-grace.kao@intel.com>
-In-Reply-To: <20220121093426.6336-1-grace.kao@intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 21 Jan 2022 12:27:40 +0200
-Message-ID: <CAHp75VfD72ZzTw4wc4Oteg+XvRqRipN-YjLqQjUGGy8f83By+w@mail.gmail.com>
-Subject: Re: pinctrl: intel: Fix a glitch when updating IRQ flags on a
- preconfigured line
-To:     Grace Kao <grace.kao@intel.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Kane Chen <kane.chen@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <20211225191713.2187975-1-nikita.yoush@cogentembedded.com>
+In-Reply-To: <20211225191713.2187975-1-nikita.yoush@cogentembedded.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 21 Jan 2022 11:58:26 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXNTukh69MR7cz9kcqMeTrPoeumRknrO3eEuTteJvY-gg@mail.gmail.com>
+Message-ID: <CAMuHMdXNTukh69MR7cz9kcqMeTrPoeumRknrO3eEuTteJvY-gg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: renesas: r8a7799[05]: Add MediaLB pins
+To:     Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jan 21, 2022 at 11:35 AM Grace Kao <grace.kao@intel.com> wrote:
+Hi Nikita,
 
-> Tested-by: Grace Kao <grace.kao@intel.com>
+On Sat, Dec 25, 2021 at 8:17 PM Nikita Yushchenko
+<nikita.yoush@cogentembedded.com> wrote:
+> This adds pins, groups, and functions for MediaLB devices on Renesas
+> R-Car E3 and D3 SoCs.
+>
+> Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
 
-Thanks for testing. I will apply the tag to the original patch. The
-idea that you simply reply to the original message with the line above
-and that's it, no need to resend a full patch.
+Thanks for your patch!
 
-> Change-Id: I6ff5cf0c42a76dce709a445c1820c8f3a84d6d89
+> --- a/drivers/pinctrl/renesas/pfc-r8a77995.c
+> +++ b/drivers/pinctrl/renesas/pfc-r8a77995.c
+> @@ -1295,6 +1295,14 @@ static const unsigned int mmc_ctrl_mux[] = {
+>         MMC_CLK_MARK, MMC_CMD_MARK,
+>  };
+>
+> +/* - MLB+ ------------------------------------------------------------------- */
+> +static const unsigned int mlb_3pin_pins[] = {
 
-I see it comes from the internal tree.
+Sort order.
 
+> +       RCAR_GP_PIN(0, 6), RCAR_GP_PIN(0, 7), RCAR_GP_PIN(0, 8),
 
--- 
-With Best Regards,
-Andy Shevchenko
+According to Rev 0.7 of the R-Car D3 pin function sheet, you
+mixed up MLB_SIG and MLB_DAT.  Doesn't matter much, though.
+
+> +};
+> +static const unsigned int mlb_3pin_mux[] = {
+> +       MLB_CLK_MARK, MLB_SIG_MARK, MLB_DAT_MARK,
+> +};
+> +
+>  /* - MSIOF0 ----------------------------------------------------------------- */
+>  static const unsigned int msiof0_clk_pins[] = {
+>         /* SCK */
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-pinctrl-for-v5.18 with the above fixed.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
