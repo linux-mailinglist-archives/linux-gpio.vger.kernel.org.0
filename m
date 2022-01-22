@@ -2,114 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 34237496964
-	for <lists+linux-gpio@lfdr.de>; Sat, 22 Jan 2022 03:22:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 69346496B94
+	for <lists+linux-gpio@lfdr.de>; Sat, 22 Jan 2022 10:58:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231558AbiAVCWU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Jan 2022 21:22:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35176 "EHLO
+        id S231903AbiAVJ6M (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 22 Jan 2022 04:58:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229689AbiAVCWT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Jan 2022 21:22:19 -0500
-Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DB19C06173B;
-        Fri, 21 Jan 2022 18:22:19 -0800 (PST)
-Received: by mail-yb1-xb30.google.com with SMTP id c6so32739153ybk.3;
-        Fri, 21 Jan 2022 18:22:19 -0800 (PST)
+        with ESMTP id S229773AbiAVJ6L (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 22 Jan 2022 04:58:11 -0500
+Received: from mail-qk1-x733.google.com (mail-qk1-x733.google.com [IPv6:2607:f8b0:4864:20::733])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B295EC06173B
+        for <linux-gpio@vger.kernel.org>; Sat, 22 Jan 2022 01:58:11 -0800 (PST)
+Received: by mail-qk1-x733.google.com with SMTP id a21so13163207qkn.0
+        for <linux-gpio@vger.kernel.org>; Sat, 22 Jan 2022 01:58:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=0WFsl464O1plaAdb1DqUc2FVm3sL9ZIJC+WKaUWfUbY=;
-        b=GDj/J3wvMb7a7yQnhMjuXVC+fNwBgi7tTQcyVGHVuY6nxhGeKrskBjuEelpg1nrpGp
-         +TkzOpNNWRPqKMrFwiX71+kqmI/TTNo7MN6Q5u0YI8fgvJalTUKkRnsNqREEujjszKOd
-         iXTWa66eagtiGSbe1V+MTtLEJpg8uU5oBHP5kq2OvwuQsAzrBVJAuFiEnx+hG/wLKu8R
-         egaMLbWAVq8POsKHE/bR8PEqI/0ryKBjztSeoeOOwNS9SOtyIzfxlsbSGAODzCaH+Skj
-         USYPyfOtRAgBBeqRPa9Px1TlqpkPLGEFJQ5LMzFg0gpaIPEahSOBPoqN+NP91yWwJLEv
-         PU4g==
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=NECtG84cCLFnWWPYTXCpfwyzMXVlCEyzDRvpSwrPiH8=;
+        b=WxWlZMstt2ke+AjUhyjsHp+RULcCDLXb2UlQJld1sY6cMbxzn6o7e0WBrej5AaCKam
+         uv8O3eSpvTHUch9OaVftKiFfy82Q81BE7vyjHcJSzju4nhBOs9aE5vPjAmyZkLnXjg0J
+         Vzp/hO4MSPJO7Pxkr+zAjxhyJP3iDDTVzz4Yz3MXRy3uH9csj1fanIX0FQd2CHSRgCiI
+         gI3rwO5Zd+ouesOAdMRaImcpV/huo+VIB718ltZb4FWMmRg2BndJffyU5teRBvIxYQfD
+         SbHvD5rq5g+ItRrir7+/VBg/PqZAxKSBCmu5H4Zy8FnUjap/81E0zNQhNFa8BIpfIWqi
+         aRJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=0WFsl464O1plaAdb1DqUc2FVm3sL9ZIJC+WKaUWfUbY=;
-        b=QlIrb1rYog1DvKwXOwMygYmZhWvD+gc9wJ/ol/NqL19BK8zvvqsDk+48JoHQkgs2Jq
-         rapzU6n+A3YONNYyZkK5o40DEg4VQtdRS0iFxKCTYtoAcRfHVESo8rj06sEKSsjuiEWw
-         oCtEsAtB+HhPYuCGfS+gWKemIHMdU0lsHFXvyPqwvqFHdndnfvKW3Hd5NTrv10m+hNG1
-         MufokmiJgQ9s8B+8IulI4/JY9gQBw2y8kOmkg8DlbLpasD0UFonln5lLae1IXJ8opnP+
-         z7Q2hOv5Wk/hW9HdFUhCsCa8P5G6kFcULifb37ezKqHzU+fv7U+2p/keEpHVqGo1YsZ7
-         /Jbw==
-X-Gm-Message-State: AOAM530nA8ZS8COTecacOuP8IIDeutHwrM5SFi4VOL5RkqUaoGND/l7w
-        dfDs5Yf1CBvNzpreAxnnbRwiIDlYQ7mYxypR3XzTorsSidU=
-X-Google-Smtp-Source: ABdhPJwYwPQ+DUeWkFo38oGf0XBHqn1JkHM8zwXVbMjt7Yr8cw+7ws6W+uTuj1bLmgjPZIJZgKAiPk6GzvFVpJIPc+U=
-X-Received: by 2002:a25:6f0a:: with SMTP id k10mr10232548ybc.536.1642818138850;
- Fri, 21 Jan 2022 18:22:18 -0800 (PST)
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=NECtG84cCLFnWWPYTXCpfwyzMXVlCEyzDRvpSwrPiH8=;
+        b=DktD7xuhiMStUWLTkxzM+edXngtcrBEq7UAnTr+RPs8Oc25Ajbi7T2ZP4Kf+Z0TwVE
+         cjKRvCvLSArbEm1LlB9LQb7nCicgzEkUDTyNaWgAJQDzkJomJ+Qwm5um46hnEqXIAmbX
+         pe4W8Y543XJmVtrU3PaKWEuieq+zacYO8bBW81GtEypVX34nB4vrAx3RBsHY4iY3VSTH
+         5iEKUzTXj9O0B8SMKUUmZrD7s+ZK+inkvl0IS0s/n/9h5kU+R6eZoEByMYjkLd1QhaFI
+         UshxNjJ/+zLj0/Grgf7UzQYVfMeIcr9wuufTl8/g+uujFGuAbsrmV72JbnmKuUQ22EMt
+         zA2A==
+X-Gm-Message-State: AOAM531GFTZG5rIPimpeh36aAbYkCo8gbT+TVGVqj12flfZkGjebrl3m
+        m4iOulamVojaeobS2LLKD7eqZxXcTG61Fpx3U5g=
+X-Google-Smtp-Source: ABdhPJxcIrggJ5H5w0Dx/imf4SkR3fs3uf/Mu61YVsSOyK2ZvYvJwVFUbB9mKhN6eBy3oUlsuy8eA3sYMAIrd+OIV38=
+X-Received: by 2002:a05:620a:b8f:: with SMTP id k15mr5384315qkh.667.1642845490664;
+ Sat, 22 Jan 2022 01:58:10 -0800 (PST)
 MIME-Version: 1.0
-References: <20220118002214.18271-1-dipenp@nvidia.com> <20220118002214.18271-2-dipenp@nvidia.com>
- <CAMU9jJoFAG4taoN0SSbVGPFMKyUnkT9VkrtatGuRpU-ek+hJ2g@mail.gmail.com> <7c8a32fd-8233-cc69-d4d3-668a3a14aa14@nvidia.com>
-In-Reply-To: <7c8a32fd-8233-cc69-d4d3-668a3a14aa14@nvidia.com>
-From:   teng sterling <sterlingteng@gmail.com>
-Date:   Sat, 22 Jan 2022 10:22:07 +0800
-Message-ID: <CAMU9jJrBOdV79Ho34bgT808gTPoTrGHA_mZLQbbzNigmg0myGw@mail.gmail.com>
-Subject: Re: [RFC v4 01/11] Documentation: Add HTE subsystem guide
-To:     Dipen Patel <dipenp@nvidia.com>
-Cc:     smangipudi@nvidia.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, LKML <linux-kernel@vger.kernel.org>,
-        linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        bgolaszewski@baylibre.com, warthog618@gmail.com,
-        devicetree@vger.kernel.org,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        robh+dt@kernel.org
+Received: by 2002:a05:6214:1cc5:0:0:0:0 with HTTP; Sat, 22 Jan 2022 01:58:10
+ -0800 (PST)
+Reply-To: advocate.barisozdogans@gmail.com
+From:   Advocate Baris <hamaraegbu001@gmail.com>
+Date:   Sat, 22 Jan 2022 09:58:10 +0000
+Message-ID: <CAA9=n3du=ZG_J9deE1TS7cGR3yomfwk5CYzgiVp4vibgN0JeNQ@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dipen Patel <dipenp@nvidia.com> =E4=BA=8E2022=E5=B9=B41=E6=9C=8820=E6=97=A5=
-=E5=91=A8=E5=9B=9B 12:21=E5=86=99=E9=81=93=EF=BC=9A
->
-> Hi Teng,
->
->  I believe I added in patch 0003. Before sending this patch series, I did=
- make htmldocs and did compile successfully. Let me know in case I am missi=
-ng something.
-Sorry I didn't read through your patch carefully.
-
- I'll be happy to translate fresh documentation into Chinese, please
-let me know if these are applied, Thank you!   >_<
-
-Thanks,
-Yanteng
->
-> On 1/19/22 6:03 PM, teng sterling wrote:
-> > Dipen Patel <dipenp@nvidia.com> =E4=BA=8E2022=E5=B9=B41=E6=9C=8818=E6=
-=97=A5=E5=91=A8=E4=BA=8C 11:06=E5=86=99=E9=81=93=EF=BC=9A
-> >> Adding hte document which can help understand various APIs implemented
-> >> in HTE framework for the HTE producers and the consumers.
-> >>
-> >> Signed-off-by: Dipen Patel <dipenp@nvidia.com>
-> >> ---
-> >> Changes in v2:
-> >> - Removed explanation, instead added kernel-doc references.
-> >>
-> >> Changes in v3:
-> >> - Addressed grammatical errors.
-> >>
-> >> Changes in v4:
-> >> - Added new API hte_req_ts_by_linedata_ns description.
-> >> - Removed hte_req_ts_by_hte_name.
-> >>
-> >>  Documentation/hte/hte.rst | 83 ++++++++++++++++++++++++++++++++++++++=
-+
-> > Hi Dipen
-> >
-> > A document build warning will be introduced=EF=BC=8CNeed to add it to t=
-he index:
-> >
-> > 1) Create Documentation/hte/index.rst
-> > 2) Add hte/index.rst into Documentation/index.rst
-> > 3) Add hte.rst into Documentation/hte/index.rst
-> >
-> > Thanks,
-> > Yanteng
+Hello friend,
+ How are you doing ?compliment of the season .
+Dear friend i have a deal to talk with you please ,hope to hear from
+you as soon as you see the message.
+BEST Regard,
+   Advocate Baris Ozdogan.
