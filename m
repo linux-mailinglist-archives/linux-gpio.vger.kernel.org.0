@@ -2,112 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ECF6D496819
-	for <lists+linux-gpio@lfdr.de>; Sat, 22 Jan 2022 00:08:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 34237496964
+	for <lists+linux-gpio@lfdr.de>; Sat, 22 Jan 2022 03:22:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230235AbiAUXIS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Jan 2022 18:08:18 -0500
-Received: from mail-ot1-f53.google.com ([209.85.210.53]:40455 "EHLO
-        mail-ot1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230209AbiAUXIS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Jan 2022 18:08:18 -0500
-Received: by mail-ot1-f53.google.com with SMTP id x31-20020a056830245f00b00599111c8b20so13634307otr.7;
-        Fri, 21 Jan 2022 15:08:18 -0800 (PST)
+        id S231558AbiAVCWU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Jan 2022 21:22:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35176 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229689AbiAVCWT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Jan 2022 21:22:19 -0500
+Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DB19C06173B;
+        Fri, 21 Jan 2022 18:22:19 -0800 (PST)
+Received: by mail-yb1-xb30.google.com with SMTP id c6so32739153ybk.3;
+        Fri, 21 Jan 2022 18:22:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=0WFsl464O1plaAdb1DqUc2FVm3sL9ZIJC+WKaUWfUbY=;
+        b=GDj/J3wvMb7a7yQnhMjuXVC+fNwBgi7tTQcyVGHVuY6nxhGeKrskBjuEelpg1nrpGp
+         +TkzOpNNWRPqKMrFwiX71+kqmI/TTNo7MN6Q5u0YI8fgvJalTUKkRnsNqREEujjszKOd
+         iXTWa66eagtiGSbe1V+MTtLEJpg8uU5oBHP5kq2OvwuQsAzrBVJAuFiEnx+hG/wLKu8R
+         egaMLbWAVq8POsKHE/bR8PEqI/0ryKBjztSeoeOOwNS9SOtyIzfxlsbSGAODzCaH+Skj
+         USYPyfOtRAgBBeqRPa9Px1TlqpkPLGEFJQ5LMzFg0gpaIPEahSOBPoqN+NP91yWwJLEv
+         PU4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=riTVZXDdFirHSqQYOJ8NhNlm44IGv5r1Q6vZ1IVXuTk=;
-        b=h9hN5n74traH9vozu0V9iDZxMAwLzRLjXPLO92N55GCdsk/GD7+j9opXZxxuIX7F8v
-         JSwPmWVO5rwHHbj0lZXKBe3aVL5MiR8sbVXkenu2SVkwY5lYGpkmN+7DzyXTol8/1ko7
-         QjNFlNg8YSIA7NpMllTlPtRf4jI18zdhwjgEWx3wUaNdxv4wHCzvx+Lylo13Ez5W3E7W
-         X06dqWg9Vl+Io4eIeDq60eS4iuJVyiYLUZs82Pe3o3ML7frgS1Y3qnj11P+ISzVkBnsb
-         FJY/FUCjhh6Iba/IBZk5feKoFFc73YvA2ixyvQ4fX5imWrtdJUe8X0qnTVUy44m0KQqw
-         eCEA==
-X-Gm-Message-State: AOAM5315hTg06cgyKOt6OtsLfx5vbfYb/i3twkGPypdaR1sVNOPdvP4R
-        Uc75943PqWCA7cDLriZGuQ==
-X-Google-Smtp-Source: ABdhPJwGhLZDGPflDcwJnvSTrejxqDj5W3rP/J3cP4rNS/CI6GPpYV+L9BGUr/yHQCN3MX9CNcWpdw==
-X-Received: by 2002:a9d:360b:: with SMTP id w11mr4298264otb.102.1642806497818;
-        Fri, 21 Jan 2022 15:08:17 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id bl16sm1912752oib.2.2022.01.21.15.08.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jan 2022 15:08:17 -0800 (PST)
-Received: (nullmailer pid 1779915 invoked by uid 1000);
-        Fri, 21 Jan 2022 23:08:15 -0000
-Date:   Fri, 21 Jan 2022 17:08:15 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        devicetree@vger.kernel.org, Nancy Yuen <yuenn@google.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Joel Stanley <joel@jms.id.au>, linux-kernel@vger.kernel.org,
-        Benjamin Fair <benjaminfair@google.com>,
-        Patrick Venture <venture@google.com>,
-        linux-gpio@vger.kernel.org, Avi Fishman <avifishman70@gmail.com>,
-        openbmc@lists.ozlabs.org
-Subject: Re: [PATCH v4 4/9] dt-bindings: pinctrl: Add Nuvoton WPCM450
-Message-ID: <Yes830dXetys05hV@robh.at.kernel.org>
-References: <20220109173000.1242703-1-j.neuschaefer@gmx.net>
- <20220109173000.1242703-5-j.neuschaefer@gmx.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=0WFsl464O1plaAdb1DqUc2FVm3sL9ZIJC+WKaUWfUbY=;
+        b=QlIrb1rYog1DvKwXOwMygYmZhWvD+gc9wJ/ol/NqL19BK8zvvqsDk+48JoHQkgs2Jq
+         rapzU6n+A3YONNYyZkK5o40DEg4VQtdRS0iFxKCTYtoAcRfHVESo8rj06sEKSsjuiEWw
+         oCtEsAtB+HhPYuCGfS+gWKemIHMdU0lsHFXvyPqwvqFHdndnfvKW3Hd5NTrv10m+hNG1
+         MufokmiJgQ9s8B+8IulI4/JY9gQBw2y8kOmkg8DlbLpasD0UFonln5lLae1IXJ8opnP+
+         z7Q2hOv5Wk/hW9HdFUhCsCa8P5G6kFcULifb37ezKqHzU+fv7U+2p/keEpHVqGo1YsZ7
+         /Jbw==
+X-Gm-Message-State: AOAM530nA8ZS8COTecacOuP8IIDeutHwrM5SFi4VOL5RkqUaoGND/l7w
+        dfDs5Yf1CBvNzpreAxnnbRwiIDlYQ7mYxypR3XzTorsSidU=
+X-Google-Smtp-Source: ABdhPJwYwPQ+DUeWkFo38oGf0XBHqn1JkHM8zwXVbMjt7Yr8cw+7ws6W+uTuj1bLmgjPZIJZgKAiPk6GzvFVpJIPc+U=
+X-Received: by 2002:a25:6f0a:: with SMTP id k10mr10232548ybc.536.1642818138850;
+ Fri, 21 Jan 2022 18:22:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220109173000.1242703-5-j.neuschaefer@gmx.net>
+References: <20220118002214.18271-1-dipenp@nvidia.com> <20220118002214.18271-2-dipenp@nvidia.com>
+ <CAMU9jJoFAG4taoN0SSbVGPFMKyUnkT9VkrtatGuRpU-ek+hJ2g@mail.gmail.com> <7c8a32fd-8233-cc69-d4d3-668a3a14aa14@nvidia.com>
+In-Reply-To: <7c8a32fd-8233-cc69-d4d3-668a3a14aa14@nvidia.com>
+From:   teng sterling <sterlingteng@gmail.com>
+Date:   Sat, 22 Jan 2022 10:22:07 +0800
+Message-ID: <CAMU9jJrBOdV79Ho34bgT808gTPoTrGHA_mZLQbbzNigmg0myGw@mail.gmail.com>
+Subject: Re: [RFC v4 01/11] Documentation: Add HTE subsystem guide
+To:     Dipen Patel <dipenp@nvidia.com>
+Cc:     smangipudi@nvidia.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, LKML <linux-kernel@vger.kernel.org>,
+        linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        bgolaszewski@baylibre.com, warthog618@gmail.com,
+        devicetree@vger.kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        robh+dt@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, 09 Jan 2022 18:29:55 +0100, Jonathan Neuschäfer wrote:
-> This binding is heavily based on the one for NPCM7xx, because the
-> hardware is similar. There are some notable differences, however:
-> 
-> - The addresses of GPIO banks are not physical addresses but simple
->   indices (0 to 7), because the GPIO registers are not laid out in
->   convenient blocks.
-> - Pinmux settings can explicitly specify that the GPIO mode is used.
-> 
-> Certain pins support blink patterns in hardware. This is currently not
-> modelled in the DT binding.
-> 
-> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-> 
-> ---
-> v4:
-> - Small improvements around gpio node addresses, suggested by Rob Herring
-> 
-> v3:
-> - https://lore.kernel.org/lkml/20211224200935.93817-5-j.neuschaefer@gmx.net/
-> - Make changes suggested by Rob Herring
-> - Fix lint errors
-> - Simplify child node patterns
-> - Remove if/type=object/then trick
-> - Reduce interrupts.maxItems to 3: 4 aren't necessary
-> - Replace list of gpio0/1/2/etc. with pattern
-> - Remove nuvoton,interrupt-map again, to simplify the binding
-> - Make tuples clearer
-> 
-> v2:
-> - https://lore.kernel.org/lkml/20211207210823.1975632-5-j.neuschaefer@gmx.net/
-> - Move GPIO into subnodes
-> - Improve use of quotes
-> - Remove unnecessary minItems/maxItems lines
-> - Remove "phandle: true"
-> - Use separate prefixes for pinmux and pincfg nodes
-> - Add nuvoton,interrupt-map property
-> - Make it possible to set pinmux to GPIO explicitly
-> 
-> v1:
-> - https://lore.kernel.org/lkml/20210602120329.2444672-5-j.neuschaefer@gmx.net/
-> ---
->  .../pinctrl/nuvoton,wpcm450-pinctrl.yaml      | 160 ++++++++++++++++++
->  1 file changed, 160 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/nuvoton,wpcm450-pinctrl.yaml
-> 
+Dipen Patel <dipenp@nvidia.com> =E4=BA=8E2022=E5=B9=B41=E6=9C=8820=E6=97=A5=
+=E5=91=A8=E5=9B=9B 12:21=E5=86=99=E9=81=93=EF=BC=9A
+>
+> Hi Teng,
+>
+>  I believe I added in patch 0003. Before sending this patch series, I did=
+ make htmldocs and did compile successfully. Let me know in case I am missi=
+ng something.
+Sorry I didn't read through your patch carefully.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+ I'll be happy to translate fresh documentation into Chinese, please
+let me know if these are applied, Thank you!   >_<
+
+Thanks,
+Yanteng
+>
+> On 1/19/22 6:03 PM, teng sterling wrote:
+> > Dipen Patel <dipenp@nvidia.com> =E4=BA=8E2022=E5=B9=B41=E6=9C=8818=E6=
+=97=A5=E5=91=A8=E4=BA=8C 11:06=E5=86=99=E9=81=93=EF=BC=9A
+> >> Adding hte document which can help understand various APIs implemented
+> >> in HTE framework for the HTE producers and the consumers.
+> >>
+> >> Signed-off-by: Dipen Patel <dipenp@nvidia.com>
+> >> ---
+> >> Changes in v2:
+> >> - Removed explanation, instead added kernel-doc references.
+> >>
+> >> Changes in v3:
+> >> - Addressed grammatical errors.
+> >>
+> >> Changes in v4:
+> >> - Added new API hte_req_ts_by_linedata_ns description.
+> >> - Removed hte_req_ts_by_hte_name.
+> >>
+> >>  Documentation/hte/hte.rst | 83 ++++++++++++++++++++++++++++++++++++++=
++
+> > Hi Dipen
+> >
+> > A document build warning will be introduced=EF=BC=8CNeed to add it to t=
+he index:
+> >
+> > 1) Create Documentation/hte/index.rst
+> > 2) Add hte/index.rst into Documentation/index.rst
+> > 3) Add hte.rst into Documentation/hte/index.rst
+> >
+> > Thanks,
+> > Yanteng
