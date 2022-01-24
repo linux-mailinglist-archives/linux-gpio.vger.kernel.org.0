@@ -2,90 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B3BB149813D
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jan 2022 14:38:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C0AE6498153
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jan 2022 14:46:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243122AbiAXNiF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 Jan 2022 08:38:05 -0500
-Received: from mga05.intel.com ([192.55.52.43]:10476 "EHLO mga05.intel.com"
+        id S229718AbiAXNqX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Jan 2022 08:46:23 -0500
+Received: from mga14.intel.com ([192.55.52.115]:36514 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S242805AbiAXNiF (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 24 Jan 2022 08:38:05 -0500
+        id S229562AbiAXNqW (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 24 Jan 2022 08:46:22 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643031485; x=1674567485;
+  t=1643031982; x=1674567982;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=a1PvZoXdi3eZ4pNxeDvVQM8Mgu1K/7QAjtKXbKbV6xk=;
-  b=a5iZ+wfowl1QoAkaq8WEVMzchJJ5WZvbi1TIZrPQpEbXIcN+36Tt8L09
-   gJZovggf570T0Xa+SMKshUV2jFMOsKJiLytKC7s7n3CTac+hlFnW++EWZ
-   /fi+G5GFmuTtCbNHCkzo4c6ZNbAAX0AOjphz8H8GnDK7A3VIYabird6wq
-   zKD+Ja0W+fIYpq58eKCnl7Pa7Y6Oc70r5QTSY+UBzKZYFVtG62Lzw1+NP
-   WmFc3ujdfyRVD6nvkOpADL+GM8lRkmlf38EPJptIFfh3coElB2vQmS5yX
-   t7IkCeb7yvG+9GwI2muCwfSaAgC1HJMvcfXTxWaoptHCvZ/CthLCcE2Cw
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10236"; a="332398208"
+  bh=JqT7w+jmr16g6nhf2sFMCeI70E8Qapcp3FqDAj0rZUQ=;
+  b=cHNeGHa9kV9WsH4Cq3/VOxQ+e8WE7MUE42kH6c/6mxUPleEGo7BJku+p
+   vFuLS8LULhICbMVhrxKBJoPu8uRbooSaKCx6HI9hq9fLofw1fKAFDtNcB
+   ryr1cSRdS5xqGkQcKq7Ej1oOpgcuqhS7D0vYIdcUz0JrIyxXCq09roQw3
+   RBd9bB6kafv1IyHKMbdCd5ZX7Zr5Cab5ibLjn8hk8ajtWwwzlAZLsVzyN
+   NgBzu2lVZ8f5gDjGRQA/xJUKyy5iuudcPN+b2BouzaodzgT8phG6GP4aX
+   1kM1uPTkDo2NZjKaDOwxBWKAjNUbuhMmJKBAnIxx5BAPPcVaV9ro7L7ww
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10236"; a="246262724"
 X-IronPort-AV: E=Sophos;i="5.88,311,1635231600"; 
-   d="scan'208";a="332398208"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2022 05:38:04 -0800
+   d="scan'208";a="246262724"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2022 05:46:22 -0800
 X-IronPort-AV: E=Sophos;i="5.88,311,1635231600"; 
-   d="scan'208";a="479074173"
+   d="scan'208";a="695424489"
 Received: from smile.fi.intel.com ([10.237.72.61])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2022 05:38:02 -0800
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2022 05:46:20 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.95)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nBzWh-00Du6c-MU;
-        Mon, 24 Jan 2022 15:36:55 +0200
-Date:   Mon, 24 Jan 2022 15:36:55 +0200
+        id 1nBzej-00DuDp-H8;
+        Mon, 24 Jan 2022 15:45:13 +0200
+Date:   Mon, 24 Jan 2022 15:45:13 +0200
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Grace Kao <grace.kao@intel.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Andy Shevchenko <andy@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Kane Chen <kane.chen@intel.com>
-Subject: Re: [PATCH v1 1/1] pinctrl: intel: Fix a glitch when updating IRQ
- flags on a preconfigured line
-Message-ID: <Ye6rd3UzmLoMWq7S@smile.fi.intel.com>
-References: <20220119181915.27519-1-andriy.shevchenko@linux.intel.com>
- <YekS9O5Xhl6VL9GM@lahna>
+Subject: Re: pinctrl: intel: Fix a glitch when updating IRQ flags on a
+ preconfigured line
+Message-ID: <Ye6taW8fCoLj83Pa@smile.fi.intel.com>
+References: <20220121093426.6336-1-grace.kao@intel.com>
+ <CAHp75VfD72ZzTw4wc4Oteg+XvRqRipN-YjLqQjUGGy8f83By+w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YekS9O5Xhl6VL9GM@lahna>
+In-Reply-To: <CAHp75VfD72ZzTw4wc4Oteg+XvRqRipN-YjLqQjUGGy8f83By+w@mail.gmail.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jan 20, 2022 at 09:44:52AM +0200, Mika Westerberg wrote:
-> On Wed, Jan 19, 2022 at 08:19:15PM +0200, Andy Shevchenko wrote:
-> > The commit af7e3eeb84e2 ("pinctrl: intel: Disable input and output buffer
-> > when switching to GPIO") hadn't taken into account an update of the IRQ
-> > flags scenario.
-> > 
-> > When updating the IRQ flags on the preconfigured line the ->irq_set_type()
-> > is called again. In such case the sequential Rx buffer configuration
-> > changes may trigger a falling or rising edge interrupt that may lead,
-> > on some platforms, to an undesired event.
-> > 
-> > This may happen because each of intel_gpio_set_gpio_mode() and
-> > __intel_gpio_set_direction() updates the pad configuration with a different
-> > value of the GPIORXDIS bit. Notable, that the intel_gpio_set_gpio_mode() is
-> > called only for the pads that are configured as an input. Due to this fact,
-> > integrate the logic of __intel_gpio_set_direction() call into the
-> > intel_gpio_set_gpio_mode() so that the Rx buffer won't be disabled and
-> > immediately re-enabled.
-> > 
-> > Fixes: af7e3eeb84e2 ("pinctrl: intel: Disable input and output buffer when switching to GPIO")
-> > Reported-by: Kane Chen <kane.chen@intel.com>
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Fri, Jan 21, 2022 at 12:27:40PM +0200, Andy Shevchenko wrote:
+> On Fri, Jan 21, 2022 at 11:35 AM Grace Kao <grace.kao@intel.com> wrote:
 > 
-> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > Tested-by: Grace Kao <grace.kao@intel.com>
 > 
-> Please mark this for stable too.
+> Thanks for testing. I will apply the tag to the original patch. The
+> idea that you simply reply to the original message with the line above
+> and that's it, no need to resend a full patch.
+> 
+> > Change-Id: I6ff5cf0c42a76dce709a445c1820c8f3a84d6d89
+> 
+> I see it comes from the internal tree.
 
-Pushed to my review and testing queue with the Grace Kao's tag, thanks!
+Original patch with your tag has been pushed to my review and testing queue, thanks!
 
 -- 
 With Best Regards,
