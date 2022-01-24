@@ -2,120 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F21BD4979E2
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jan 2022 08:58:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 69352497A27
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jan 2022 09:21:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241955AbiAXH67 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 Jan 2022 02:58:59 -0500
-Received: from www381.your-server.de ([78.46.137.84]:42952 "EHLO
-        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235469AbiAXH67 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jan 2022 02:58:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
-         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        References:Cc:To:From:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID;
-        bh=0T0jN2oGYVmc8e5eKIfvBFNvkkhdV65lfFlgJ4nzy+U=; b=BUDWPGEIaYzulc+VuiTJpZStzc
-        rtvNOJzotmgSVkJyrKmFy5tSzRWTg0RrPsV5s18oqsTcKvKyuc3PQ1ZNHTx6ImtthAKSHze51fdIj
-        ZsETX7JyNEflNYxcx70wF1Z5p/g94Rg2tn1/mPYdTFt9IoDNUNh8g/1Yo5yBrsaXwheMO8PA8DPyR
-        GCF7lbnN/wK/6mzTWs7t46FFvkH22U1OvHCRivzCwWsN1n20emojfZS/fHcpvniq5k3FE8Ag4A2No
-        VqEvMMdz1S+ld2Zt7JEtMbEgTqAcmoitbLdpMvfCjpykN6rrsrhFncmSVimyfc8SBzH3GHOmUk8Os
-        jN3s4YmQ==;
-Received: from [78.46.152.42] (helo=sslproxy04.your-server.de)
-        by www381.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92.3)
-        (envelope-from <lars@metafoo.de>)
-        id 1nBuFd-000E9f-VT; Mon, 24 Jan 2022 08:58:57 +0100
-Received: from [2001:a61:2ac4:3301:9e5c:8eff:fe01:8578]
-        by sslproxy04.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <lars@metafoo.de>)
-        id 1nBuFd-0000Ys-RR; Mon, 24 Jan 2022 08:58:57 +0100
-Message-ID: <1c646fb4-16d5-bf93-cb7d-12683a428893@metafoo.de>
-Date:   Mon, 24 Jan 2022 08:58:57 +0100
+        id S242128AbiAXIVE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Jan 2022 03:21:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35440 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236188AbiAXIVB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jan 2022 03:21:01 -0500
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF9D4C06173B
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Jan 2022 00:21:00 -0800 (PST)
+Received: by mail-ed1-x531.google.com with SMTP id b13so55315803edn.0
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Jan 2022 00:21:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AAMMEDZZzMf+LhDFVyfybnNEp9s+ZQbRnxY43yAdhBc=;
+        b=cen5QV0takQ/mGGbfXpus9s9nmPQ0K5oChBYcINSq+KSi0jx3B2m1/GxFO8heFiIKM
+         R8up/UGScUZ4gyY9ifgTbmV/MWlK3Cl/yf0IIOeJOcHESguecoanMyw87+Tfh4vmotSJ
+         jR39o4WbfGLaGjB+kXKj/RvG7YZStUl3yplJ1dT3Spu2QARb9gSrAmFwWblomHy26HbY
+         Ao5WcLskmsOstsI9VMU0hJqCpuEj/DtmZCUGwQjq6j1xiu2uxJKQKJ+vnXKI3A0Oxbf1
+         LPnJwLUeF4Z973iyk7zkFyLoN/Ym6HaOkelDPyEaYHS1rkGW8fG7SWl2skRunbHpgk1N
+         symw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AAMMEDZZzMf+LhDFVyfybnNEp9s+ZQbRnxY43yAdhBc=;
+        b=CpRA10XSxWqHvzt0zNTS73DwTFHUPsJdx9V0FTIXU/RIwCdJ1A9yWK548OPleB3Agm
+         tRoUezbo3li+E2YSQqvn5wkNjqVrEggQZwrwQSrVXYMXagHQ65Rc4pBmHVYKsiN5oDDt
+         et4t5NUbOQLMJ7nujN18tckFC0Zadfd4j2/K6wLaKVMsfPqkjFpYUeTKeYxZ4waBuXRl
+         E0TsEVH0BpaHmbNZlfMHV5MfQso3aWE6NXZG82YFG2l+ZrcmmwbeQzlCKRXHjVmEedYa
+         n3Q5g5Fv3Q8PpFTomXhD7d0dQYvUnjrpk0ObD77mrc6uQhT4BuKbt9Akl67T+EjClIRN
+         Fs1A==
+X-Gm-Message-State: AOAM5320Iw1X0BVJTcEX3ZhedrmxLnWw/p+F68H2jVZLN8UMdsQEpgV8
+        vVTpAnZFFp7JHAaly2Pd7vIPQNj9SxqMgQ5UUfeh2XyYVTE=
+X-Google-Smtp-Source: ABdhPJxzLY7SmmusgtbKJ4wR7DmJ47bk3SEXPPOZ8MDHu+7tOCsvOmwszITt5o6T4LlhbuP1S/utZ1cNmjFYxdelIyQ=
+X-Received: by 2002:a05:6402:299a:: with SMTP id eq26mr14792410edb.373.1643012459359;
+ Mon, 24 Jan 2022 00:20:59 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.1
-Subject: Re: Sv: GPIO level IRQ fires twice each time.
-Content-Language: en-US
-From:   Lars-Peter Clausen <lars@metafoo.de>
-To:     Markus Mirevik <markus.mirevik@dpsolutions.se>,
-        Kent Gibson <warthog618@gmail.com>
-Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-References: <HE1PR04MB3100579720F6EBBD634C99EEE65B9@HE1PR04MB3100.eurprd04.prod.outlook.com>
- <20220122235959.GA10737@sol>
- <HE1PR04MB310027275C077FFA647E93CAE65E9@HE1PR04MB3100.eurprd04.prod.outlook.com>
- <ea65d00c-b2d8-3be5-51d9-05c4dc1616c4@metafoo.de>
-In-Reply-To: <ea65d00c-b2d8-3be5-51d9-05c4dc1616c4@metafoo.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: lars@metafoo.de
-X-Virus-Scanned: Clear (ClamAV 0.103.3/26431/Sun Jan 23 10:22:56 2022)
+References: <20220120194948.1138813-1-brgl@bgdev.pl> <20220120221812.GA8128@sol>
+In-Reply-To: <20220120221812.GA8128@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 24 Jan 2022 09:20:48 +0100
+Message-ID: <CAMRc=Mek4QbY-_MeXyV5nOeJ=_QrPYKBdeb-ms29ecV0D6Opwg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: sim: check the label length when setting up device properties
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 1/24/22 08:56, Lars-Peter Clausen wrote:
-> On 1/24/22 08:12, Markus Mirevik wrote:
->>> On Fri, Jan 21, 2022 at 09:03:43AM +0000, Markus Mirevik wrote:
->>>> I have a problem with a custom bord based on SoC am335x and a driver
->>> utilizing a GPIO line for interrupts.
->>>> I have two mcp2518fd chip connected on one SPI line and everything
->>> works, but it's hogs a lot of CPU.
->>>> In the current setup only one chip is connected and it only 
->>>> receives packets.
->>>>
->>>> The mcp2518fd is connected with 2 interrupt lines one "main" and 
->>>> one for
->>> rx frames.
->>>> The problem is that for every frame received the interrupt handler 
->>>> is run
->>> twice, which is kind of expensive since it's a SPI call to the chip 
->>> to check
->>> interrupt registers.
->>>> To me it looks like the interrupt is fired again as soon as it's 
->>>> unmasked.
->>> Either because it's queued? or maybe not cleared internally?
->>>> I have scoped the interrupt signal and its real good without any 
->>>> glitches.
->>>>
->>>> I'm currently running a yocto build:
->>>> Linux botekcc 5.10.79-yocto-tiny #1 SMP Tue Nov 16 03:57:43 UTC 2021
->>>> armv7l armv7l armv7l GNU/Linux
->>>>
->>>> But the mcp251xfd driver is from net-next/master
->>>>
->>>> mcp251xfd_irq is the irqhandler for the mcp2518fd and is added like 
->>>> this:
->>>> err = request_threaded_irq(spi->irq, NULL, mcp251xfd_irq,
->>>>                                     IRQF_SHARED | IRQF_ONESHOT,
->>>> dev_name(&spi->dev), priv);
->>>>
->>> You haven't set a IRQF_TRIGGER flag, so you are getting the 
->>> "as-already-
->>> configured" behaviour, which on your setup is both edges?
->>> Try adding IRQF_TRIGGER_RISING, IRQF_TRIGGER_FALLING,
->>> IRQF_TRIGGER_HIGH or IRQF_TRIGGER_LOW, as appropriate to your use
->>> case, to your flags.
->>>
->>> Cheers,
->>> Kent.
->> I have tried with the IRQF_TRIGGGER_LOW flag as well. With same 
->> result. i.e the interrupt is fired again as soon as the handler is 
->> ready. Even if the interrupt line is deactivated.
->> However if I change the trigger to edge falling the interrupt will 
->> only fire once. But his will inevitably lead to a missed edge 
->> eventually.
+On Thu, Jan 20, 2022 at 11:18 PM Kent Gibson <warthog618@gmail.com> wrote:
 >
-> Depending on how the mcp2518 GPIO controller works internally its 
-> driver might have to use the handle_fasteoi_irq() flow to avoid this. 
-> It is not uncommon to have hardware which needs a level IRQ acked 
-> after the interrupt handler has run, rather than before like the 
-> handle_level_irq() does. E.g. 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/gpio/gpio-zynq.c?id=6dd859508336f0fd078fd62f3b9fe42a32aa38e2
+> On Thu, Jan 20, 2022 at 08:49:48PM +0100, Bartosz Golaszewski wrote:
+> > If the user-space sets the chip label to an empty string - we should
+> > check the length and assign the default name or otherwise line hogs
+> > will not be properly attached.
+> >
 >
-> - Lars
+> "assign" -> "not override"?
 >
-Sorry, I meant `Depending on how the am335x interrupt controller works...`
+> Cheers,
+> Kent.
+>
+> > Fixes: cb8c474e79be ("gpio: sim: new testing module")
+> > Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+> > ---
+> >  drivers/gpio/gpio-sim.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
+> > index 838bbfed11d3..04b137eca8da 100644
+> > --- a/drivers/gpio/gpio-sim.c
+> > +++ b/drivers/gpio/gpio-sim.c
+> > @@ -816,7 +816,7 @@ gpio_sim_make_bank_swnode(struct gpio_sim_bank *bank,
+> >
+> >       properties[prop_idx++] = PROPERTY_ENTRY_U32("ngpios", bank->num_lines);
+> >
+> > -     if (bank->label)
+> > +     if (bank->label && (strlen(bank->label) > 0))
+> >               properties[prop_idx++] = PROPERTY_ENTRY_STRING("gpio-sim,label",
+> >                                                              bank->label);
+> >
+> > --
+> > 2.30.1
+> >
 
+Fixed when applying.
+
+Bart
