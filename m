@@ -2,48 +2,48 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E29A049824F
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jan 2022 15:30:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FD4749824D
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jan 2022 15:30:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238533AbiAXOad (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 Jan 2022 09:30:33 -0500
-Received: from mga12.intel.com ([192.55.52.136]:2500 "EHLO mga12.intel.com"
+        id S238658AbiAXOab (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Jan 2022 09:30:31 -0500
+Received: from mga07.intel.com ([134.134.136.100]:15396 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239507AbiAXO3q (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        id S239199AbiAXO3q (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
         Mon, 24 Jan 2022 09:29:46 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1643034586; x=1674570586;
   h=date:from:to:cc:subject:message-id:mime-version:
    content-transfer-encoding;
-  bh=JueAFEG8f00tJpawqJpjqdQIPSDkLO0b0DrbnoeoPD8=;
-  b=OIp/9pdV70ovHsqwHFaaQURPsNNYMll6ObBDZV0oirLLHajeiog3p0r9
-   QMauRTxH7w/vpo97fE8PAFb8FYoApmqof58c08a6kTvNcV6Hgil2RW395
-   PFB3z6NaHsZPk0syf/UDOlSiBxm/TqSxvzCvAhT2cv8Y8OIysJ4hdQnj7
-   ZZqvpamrIAS/GDSUmZK1bEW9p1CTT5IUqdB0yoZUkSHs8uQHnBkhoCy/x
-   dppfo3cYRiWLBc/nDJLWNXi5k88Uqzss1+jVjDH9O1fyGIjGg2L4X+o20
-   ppPIcbTLwPzh7siwrYcgwm213x0XXGD5iN/Yvdo60YzydNHgFoRYjIGSN
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10236"; a="226036521"
+  bh=kL9YtLaDuTLNAp5J1rnPoJprLu9oJq8WvzvkMBx4WyE=;
+  b=J4UscB9JVUEal3Bx5Sj5ViaY6DdtataIqj+ascDE0nHGhrj6squj9Vqv
+   sONVPIR1kGeHLevWS+8ruXHwdGNFAxH79I3of78US5IqKk3MNBaDS0cUq
+   dtFRbcl30IeurGv/6di1JXB+IA2bnSSS74fP+U07v8vG25maAkV1z5IpV
+   mjkNWC13cKroIEsS4KBvFpU/jxL7dQxciNTRAxnpq4hs+OGgTFQ61I70N
+   n3+qakay+9aeQUA1Qp0PbPJlV+fib4HZnFyYDW5C6R2y/CbVBnDuhVmcd
+   KwLFGJ3FU2ujMzUaUDwzyEeaSXMLs/hUqL+vUmisDaaMVWFkrnQQPtA/A
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10236"; a="309375851"
 X-IronPort-AV: E=Sophos;i="5.88,311,1635231600"; 
-   d="scan'208";a="226036521"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2022 06:29:46 -0800
+   d="scan'208";a="309375851"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2022 06:29:46 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,311,1635231600"; 
-   d="scan'208";a="562672159"
+   d="scan'208";a="479094688"
 Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 24 Jan 2022 06:29:44 -0800
+  by orsmga006.jf.intel.com with ESMTP; 24 Jan 2022 06:29:44 -0800
 Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1nC0Lo-000ISL-66; Mon, 24 Jan 2022 14:29:44 +0000
-Date:   Mon, 24 Jan 2022 22:29:08 +0800
+        id 1nC0Lo-000ISG-4N; Mon, 24 Jan 2022 14:29:44 +0000
+Date:   Mon, 24 Jan 2022 22:29:12 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:fixes] BUILD SUCCESS
- 1fd6bb5b47a65eacb063b37e6fa6df2b8fa92959
-Message-ID: <61eeb7b4.ori+sjo2NC65iagX%lkp@intel.com>
+Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
+ 8ef7a5bfbb60a172a223bbcce73d4a6719036e15
+Message-ID: <61eeb7b8.61IIuwigfsUV2o/n%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -52,12 +52,12 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git fixes
-branch HEAD: 1fd6bb5b47a65eacb063b37e6fa6df2b8fa92959  pinctrl: sunxi: Fix H616 I2S3 pin data
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: 8ef7a5bfbb60a172a223bbcce73d4a6719036e15  Merge branch 'devel' into for-next
 
 elapsed time: 727m
 
-configs tested: 177
+configs tested: 179
 configs skipped: 3
 
 The following configs have been built successfully.
@@ -131,9 +131,11 @@ m68k                          amiga_defconfig
 mips                            ar7_defconfig
 arm                           u8500_defconfig
 powerpc                     tqm8541_defconfig
+sh                          sdk7780_defconfig
 mips                            gpr_defconfig
 microblaze                      mmu_defconfig
-sh                          sdk7780_defconfig
+arc                    vdk_hs38_smp_defconfig
+m68k                             alldefconfig
 arc                     haps_hs_smp_defconfig
 parisc                generic-32bit_defconfig
 sh                      rts7751r2d1_defconfig
@@ -229,7 +231,7 @@ mips                         tb0287_defconfig
 arm                        vexpress_defconfig
 mips                            e55_defconfig
 mips                      maltaaprp_defconfig
-arm                         shannon_defconfig
+arm                          ixp4xx_defconfig
 x86_64               randconfig-a011-20220124
 x86_64               randconfig-a013-20220124
 x86_64               randconfig-a015-20220124
