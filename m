@@ -2,75 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DD1F4985FA
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jan 2022 18:12:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BEA94986AE
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Jan 2022 18:26:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241321AbiAXRMg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 Jan 2022 12:12:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47538 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244122AbiAXRMc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Jan 2022 12:12:32 -0500
-Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 714C0C06173B
-        for <linux-gpio@vger.kernel.org>; Mon, 24 Jan 2022 09:12:32 -0800 (PST)
-Received: by mail-il1-x130.google.com with SMTP id i1so8453652ils.5
-        for <linux-gpio@vger.kernel.org>; Mon, 24 Jan 2022 09:12:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=CMzdAZWvSREUxL9gyi7ZDNRKXhnPhof45SdOgpKoP4Q=;
-        b=Cr2xUI+QXGLMwSeAHds+VNiKTp0unQPqo5+FzL7JAgGHtAZeZAFmg55Ty8RAatvf2C
-         odbfguVC+4OdG7PIp9KRlPBkRdQpbjrrPQ34nnGGGbOWlVcZVmqgojpIYYTWp4pNhru8
-         F4xh44zm2kcQskeNxCcO8v6pebvg4MJhrI8fDOLG5C9VoiL2mjKTdrXGDxAjYOto8C6b
-         MBtqnXgJq9C90fgCqyM94QYGI6MOIFy2V25lQVdZXrkrKDZxOOGl3mGQbM52n0dskotH
-         cVPoXkB2zrW5jg9yH3OjJ5CAMLO+0kBY5ebNSrKtTCh6ocId4TXZkwzq76WvwUbmEaaL
-         Angg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=CMzdAZWvSREUxL9gyi7ZDNRKXhnPhof45SdOgpKoP4Q=;
-        b=TJ++eVOlRwXay6vpHc6Ow+89U/6X0eTpMlY8zgNWSfaVAWhHY9RUjvsSrJtAiO+5P3
-         r4xd/uSZ8VJwnsSbmPpNveq3CvOO/RUXvxIYbMkiqBmaRdljjMzf+gy8ByFCKZcaPDxu
-         P2guI285eS5wUAI8JU6zLWSAJbq6xeO/DnaXcMQeQPcey9s/7L/XSu0WBktBsN4Z1601
-         sDlL76rXu1tXIxxo9ajrwSKlwUP3h1Ebf796bLD9dVplBF/dCGq0MCFEBkosx9VL7e50
-         wLO3Jzdeij8myFOktHLcNE8sUA5M23zlg/UGnPAQwdQnAGsuSx31mKmHXwHGjbPXm2+F
-         UEjg==
-X-Gm-Message-State: AOAM531TLCPVox/Fb4q8xa5rNwSKySJN26UWRywFv1zSfma3QErCjYt8
-        xw+sD7zF4TH0qx6e6pUNY5+jw2aVhD/XojU3nKM=
-X-Google-Smtp-Source: ABdhPJy4xneieg8pAt0kb5gwi4qGSVxHrcHU3wnP6p3ov7cAPx3SuCaUYE9Vb5V0z8bY6O2R75i4VIsNXwPwUaUOjis=
-X-Received: by 2002:a92:ca4c:: with SMTP id q12mr5708222ilo.189.1643044351892;
- Mon, 24 Jan 2022 09:12:31 -0800 (PST)
+        id S244553AbiAXR0v (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Jan 2022 12:26:51 -0500
+Received: from fwd1.porkbun.com ([52.10.174.57]:36316 "EHLO fwd1.porkbun.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S244541AbiAXR0u (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Mon, 24 Jan 2022 12:26:50 -0500
+Received: by fwd1.porkbun.com (Postfix, from userid 497)
+        id 898CB41690; Mon, 24 Jan 2022 17:16:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ansari.sh;
+        s=default; t=1643044689;
+        bh=gxvgpUI7CywQc3XL9HhVRlq8qejwxf/AG4pnQ/62QdA=;
+        h=From:To:Cc:Subject:Date;
+        b=Y0LKzux3Euveb6p+BeFD4kp4Qk/S09Le9YmB90sPioiIhTKx5cY0oUO3oTimdVuZd
+         gXEK1M+wDXy7OVJMukDI4Selk0yF+YAT8mMagXxGYmT54TvD4U2HnN2GJaDXH3dzXC
+         xUxfOhRCpcrYbcxqpk7nZ5M/LTEeVxvqJIjeVE/c=
+X-Spam-Checker-Version: SpamAssassin 3.4.3 (2019-12-06) on
+        ip-172-31-37-14.us-west-2.compute.internal
+X-Spam-Level: 
+X-Spam-Status: No, score=-3.0 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU autolearn=unavailable
+        autolearn_force=no version=3.4.3
+Received: from rayyan-pc.broadband (unknown [90.242.138.108])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: rayyan@ansari.sh)
+        by fwd1.porkbun.com (Postfix) with ESMTPSA id 90D0140A88;
+        Mon, 24 Jan 2022 17:15:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ansari.sh;
+        s=default; t=1643044562;
+        bh=gxvgpUI7CywQc3XL9HhVRlq8qejwxf/AG4pnQ/62QdA=;
+        h=From:To:Cc:Subject:Date;
+        b=BiSVUl/wwpkQgTnAVh4a0DMXUOb21tKHJOHXnL3S7PmogxWbXpP/3m3SpCajX2hnd
+         oSfRFmzbHzn47yahXhSoWs9deqpYPjA4DpjcItvVTno/nEFG7U/EKlwCPmEbpCg/OD
+         CLNoNMGKQC63WCgnaQG4tAc6QB+6waj5ligx0CPA=
+From:   Rayyan Ansari <rayyan@ansari.sh>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        Rayyan Ansari <rayyan@ansari.sh>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] dt-bindings: pinctrl: qcom,pmic-mpp: Document PM8226 compatible
+Date:   Mon, 24 Jan 2022 17:15:36 +0000
+Message-Id: <20220124171538.18088-1-rayyan@ansari.sh>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Received: by 2002:a02:c4d5:0:0:0:0:0 with HTTP; Mon, 24 Jan 2022 09:12:31
- -0800 (PST)
-Reply-To: lisahugh159@gmail.com
-From:   LISA HUGH <mrssafi.kabore2@gmail.com>
-Date:   Mon, 24 Jan 2022 18:12:31 +0100
-Message-ID: <CACP6L_jhjscXz_FCKh1HRR9UAnFNraK1_aX+Y1Yauwa3kSp-Kw@mail.gmail.com>
-Subject: YOUR CO-OPERATION FOR THIS BUSINESS FROM Ms Lisa Hugh.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dear Friend,
+Document the Device Tree binding for PM8226 MPPs.
 
-I am Ms Lisa Hugh accountant and files keeping by profession with the bank.
+Signed-off-by: Rayyan Ansari <rayyan@ansari.sh>
+---
+ Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-I need your co-operation for the  transferring of
-($4,500,000,00,U.S.DOLLARS)to your bank account for both of us
-benefit.
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml
+index 35c846f59979..df79274d0ec3 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml
+@@ -21,6 +21,7 @@ properties:
+           - qcom,pm8019-mpp
+           - qcom,pm8038-mpp
+           - qcom,pm8058-mpp
++          - qcom,pm8226-mpp
+           - qcom,pm8821-mpp
+           - qcom,pm8841-mpp
+           - qcom,pm8916-mpp
+-- 
+2.34.1
 
-Please send the follow below,
-
-1)AGE....
-2)TELEPHONE NUMBER,,,,,...
-3)COUNTRY.....
-4)OCCUPATION..
-....
-Thanks.
-
-Ms Lisa Hugh
