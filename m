@@ -2,76 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FEA749BAC4
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jan 2022 18:58:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8596549BC52
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jan 2022 20:43:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1385611AbiAYR5P (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Jan 2022 12:57:15 -0500
-Received: from mailgw01.mediatek.com ([60.244.123.138]:44874 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1357574AbiAYRzE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Jan 2022 12:55:04 -0500
-X-UUID: 780410943c914273a37e948af8ad6595-20220126
-X-UUID: 780410943c914273a37e948af8ad6595-20220126
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <miles.chen@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 823797339; Wed, 26 Jan 2022 01:54:59 +0800
-Received: from mtkexhb01.mediatek.inc (172.21.101.102) by
- mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.792.3;
- Wed, 26 Jan 2022 01:54:58 +0800
-Received: from mtkcas11.mediatek.inc (172.21.101.40) by mtkexhb01.mediatek.inc
- (172.21.101.102) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 26 Jan
- 2022 01:54:58 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas11.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 26 Jan 2022 01:54:58 +0800
-From:   Miles Chen <miles.chen@mediatek.com>
-To:     Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>,
+        id S230440AbiAYTm4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 Jan 2022 14:42:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53744 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230321AbiAYTma (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Jan 2022 14:42:30 -0500
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00E2BC06173B;
+        Tue, 25 Jan 2022 11:42:30 -0800 (PST)
+Received: by mail-pl1-x630.google.com with SMTP id i1so2678641pla.9;
+        Tue, 25 Jan 2022 11:42:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kTJVFwQiwO8BLs8+JSIrt1xbVtpPlaHIF9g4dJgPwyg=;
+        b=SyXfO+Gr4ipD0NgzH7yFZK+MKSyx/TYpzEWenjNrvAJK7/k8Sv1e90gy8KTJ3cafxv
+         i4vXkUY+tbYbZzpzNTc41vQae9avLgqw3V2ws76+cxDIzrM6d6Z4hDa9uABSSXus5uw0
+         KB538qzdLugNghL1YT0N0OdEP/U5sAB2tQI5PDJAOGEHVHeHM8bEmeHRJCgzTgAKB0gN
+         HTLeC0ezktnwu2QaQWk/xmpqnXXFo+MFI2AxCoNBQpzFOXehl1OCvRJRDwMyq5FV7ias
+         eb5stz1lQcZ7kARQ5sZTuoYJwbHUkEjC9hiojwcEB/w0sd0qc/UWDjMy9SUMNxioBJjH
+         0Kmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kTJVFwQiwO8BLs8+JSIrt1xbVtpPlaHIF9g4dJgPwyg=;
+        b=TMddaNlHTxNlTkSv4ERVS9VbDhA9Nl5xrnqgsSeC5jHqZ678MxQdjYC224jKFKbM9e
+         gxyvT6DFdM5qjEkc30f3RzP22DCRX+U4d7aTX9StBOFZ7ss/5PiHW4pWNuouel4wVXAR
+         m4hobJy7Ek38cQtkIO6NpGhbeEpKYdeJ6eu8a/iOe0z9Ofr7Y92XfKiY5SggHPFteb2C
+         QMaQUJ/aPepDc2g4vGY3SygQ+RpMjb3wf8mdLa5GdAYgT2PjqsCq9x5kB5QVWHStIoKb
+         dDdae+x+kcgLVL8zmDDR35EzpoUVCiGU0z6YSRcBaaUx7+TS+ZM8m3I4TiuBR0XCn8B6
+         xzQg==
+X-Gm-Message-State: AOAM532BhBreD+BGTx/Spdu7sVU9eVMW3HEVjPlXM1+y80/vUg66eL2i
+        /SjFMJqHkj9BW61fvaGZuGkk8TnemCk=
+X-Google-Smtp-Source: ABdhPJxuJxb83PUP7ERdwGGSRwW06hDJbWyMuOkH4UW2Zs4HZhWJdCDZl8gnu3XQqPk2WL2F8upHUw==
+X-Received: by 2002:a17:903:32d2:b0:14b:612:7fae with SMTP id i18-20020a17090332d200b0014b06127faemr20140195plr.80.1643139749065;
+        Tue, 25 Jan 2022 11:42:29 -0800 (PST)
+Received: from 7YHHR73.igp.broadcom.net (ip72-194-116-95.oc.oc.cox.net. [72.194.116.95])
+        by smtp.gmail.com with ESMTPSA id a1sm15087343pgm.83.2022.01.25.11.42.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jan 2022 11:42:28 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     stable@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM
+        BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE...),
         Linus Walleij <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Kiran Kumar S" <kiran.kumar1.s@intel.com>
-CC:     Miles Chen <miles.chen@mediatek.com>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Subject: [PATCH] pinctrl: fix a discarded-qualifiers build error
-Date:   Wed, 26 Jan 2022 01:54:55 +0800
-Message-ID: <20220125175457.23728-1-miles.chen@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Eric Anholt <eric@anholt.net>,
+        Stefan Wahren <wahrenst@gmx.net>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Phil Elwell <phil@raspberrypi.com>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list),
+        linux-gpio@vger.kernel.org (open list:PIN CONTROL SUBSYSTEM),
+        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE)
+Subject: [PATCH stable 5.4 0/7] pinctrl-bcm2835 gpio-ranges bugfix
+Date:   Tue, 25 Jan 2022 11:42:15 -0800
+Message-Id: <20220125194222.12783-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Fix COMPILER=gcc ARCH=arm64 DEFCONFIG=allyesconfig build:
+Hi all,
 
-log:
-drivers/pinctrl/pinctrl-thunderbay.c:815:29: error: assignment discards
-'const' qualifier from pointer target type [-Werror=discarded-qualifiers]
+This patch series is intended to backport the fix from Phil "pinctrl:
+bcm2835: Change init order for gpio hogs" into the 5.4 tree since the
+blamed commit:
 
-Fixes: 12422af8194d ("pinctrl: Add Intel Thunder Bay pinctrl driver")
-Signed-off-by: Miles Chen <miles.chen@mediatek.com>
----
- drivers/pinctrl/pinctrl-thunderbay.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+73345a18d464b ("pinctrl: bcm2835: Pass irqchip when adding gpiochip")
 
-diff --git a/drivers/pinctrl/pinctrl-thunderbay.c b/drivers/pinctrl/pinctrl-thunderbay.c
-index b5b47f4dd774..4e6d718c03fc 100644
---- a/drivers/pinctrl/pinctrl-thunderbay.c
-+++ b/drivers/pinctrl/pinctrl-thunderbay.c
-@@ -812,7 +812,7 @@ static int thunderbay_add_functions(struct thunderbay_pinctrl *tpc, struct funct
- 				}
- 			}
- 
--			grp = func->group_names;
-+			grp = (const char **)func->group_names;
- 			while (*grp)
- 				grp++;
- 
+is in 5.4. To get there, I did backport a number of changes in order for
+the commit "pinctrl: bcm2835: Change init order for gpio hogs" to apply
+cleanly with no hunks.
+
+Those should have no functional impact since we do not have support for
+7211 or 2711 in the upstream stable 5.4.
+
+Both the pinctrl *and* the DTS changes must be taken in lockstep
+otherwise the GPIO pins are simply not usable unfortunately.
+
+Thanks!
+
+Florian Fainelli (2):
+  pinctrl: bcm2835: Match BCM7211 compatible string
+  pinctrl: bcm2835: Add support for wake-up interrupts
+
+Phil Elwell (2):
+  pinctrl: bcm2835: Change init order for gpio hogs
+  ARM: dts: gpio-ranges property is now required
+
+Stefan Wahren (3):
+  pinctrl: bcm2835: Drop unused define
+  pinctrl: bcm2835: Refactor platform data
+  pinctrl: bcm2835: Add support for all GPIOs on BCM2711
+
+ arch/arm/boot/dts/bcm283x.dtsi        |   1 +
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c | 209 +++++++++++++++++++++-----
+ 2 files changed, 175 insertions(+), 35 deletions(-)
+
 -- 
-2.18.0
+2.25.1
 
