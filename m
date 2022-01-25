@@ -2,129 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7031949BC64
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jan 2022 20:43:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1092249BE4F
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Jan 2022 23:17:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230398AbiAYTm7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Jan 2022 14:42:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53806 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230352AbiAYTmn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Jan 2022 14:42:43 -0500
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF3FFC061744;
-        Tue, 25 Jan 2022 11:42:42 -0800 (PST)
-Received: by mail-pl1-x62f.google.com with SMTP id c9so20366778plg.11;
-        Tue, 25 Jan 2022 11:42:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=0cB0U/qTfVrjxCk13SDAIYBFzvkQfg0+clBVJtK1GVQ=;
-        b=V+4pHlEgFyQF/CyHl5QAShWssnm5bfbswQeFfGT9QiSmf/Qgpw8lPXaoSqd6e+3ddM
-         GqJgXOrwSUOSGjYrn6Fteap+nOwM04d65keB+ADBqbSsrKEiNNvrenMFrYS8U1Abec1o
-         Vzl/v4gHk7E3hwJoeaF66ut9hy6Rw3p+VHD5tDfCahzM4SkOir325efKHkb3nqobkgW7
-         hhVCN+DdQ9Tjx8cQ+ns8/y006xj9qcDi0rfncmLtX0X/MzIYhZoG09XUWo2Hqkv6I0Ia
-         jA9qTh1/9+X+1WaE8wCpw7JRzvl7Xlh6jIOjgIKP9bJHmmVKwknut5CqhTfEQiNoJ1hv
-         fLpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=0cB0U/qTfVrjxCk13SDAIYBFzvkQfg0+clBVJtK1GVQ=;
-        b=qKt1hGWR/R7lLsGqQufDkHcM1mr+L2ANx+/iz7UzjIuONlPFdUlL4DqxN05xtE4Ycr
-         Y6d+CXm3VzgcCuJLcCn9+kEgXRp74+JeG500Jts5Xx0+ttuejL7kH8ztJY3nbH1R+ml4
-         jAoh/+LMbgWGQHyaypdtNyvNFjN5T9xs7iaST8noMeq1b62djs4uqItyEsIH9RD9J24V
-         qn+QCM38058b7lu6b5Ky2yth4A3Q8rF/C/0AKeLAwzx/OtcRrHXR+TkO0MHfIYRm2N/f
-         Cy64MyDTnCwFdr61S/6rd8JaHTtu8rk0I5BGO1H+N0PqPiD9abBDxAPAoUrS4r+pcGaM
-         QaJA==
-X-Gm-Message-State: AOAM5326jgpllLwtNjtsjs01+IVzokFedFMQoumkycXUh6flIxAsUYcf
-        uUgwXyLcijYfcZ0KgGmzRF0JGozHwZY=
-X-Google-Smtp-Source: ABdhPJyekVzvln7kXoeVQzAkLY24+tcynbgAQ2yyphguimJ9BZzjFLPBkvCJwNKUW8IVXgNuPz+ivQ==
-X-Received: by 2002:a17:902:6a8b:b0:149:82bb:560a with SMTP id n11-20020a1709026a8b00b0014982bb560amr19852322plk.158.1643139762131;
-        Tue, 25 Jan 2022 11:42:42 -0800 (PST)
-Received: from 7YHHR73.igp.broadcom.net (ip72-194-116-95.oc.oc.cox.net. [72.194.116.95])
-        by smtp.gmail.com with ESMTPSA id a1sm15087343pgm.83.2022.01.25.11.42.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jan 2022 11:42:41 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     stable@vger.kernel.org
-Cc:     Phil Elwell <phil@raspberrypi.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jan Kiszka <jan.kiszka@web.de>,
+        id S233638AbiAYWRn convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 25 Jan 2022 17:17:43 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.85.151]:47599 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233634AbiAYWRm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 25 Jan 2022 17:17:42 -0500
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-64-8G7QQxJmMpexI7aZc5095w-1; Tue, 25 Jan 2022 22:17:40 +0000
+X-MC-Unique: 8G7QQxJmMpexI7aZc5095w-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
+ Server (TLS) id 15.0.1497.28; Tue, 25 Jan 2022 22:17:39 +0000
+Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
+ AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
+ 15.00.1497.028; Tue, 25 Jan 2022 22:17:39 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Miles Chen' <miles.chen@mediatek.com>,
+        Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Olof Johansson <olof@lixom.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM
-        BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE...),
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list),
-        linux-gpio@vger.kernel.org (open list:PIN CONTROL SUBSYSTEM),
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE)
-Subject: [PATCH stable 5.4 7/7] ARM: dts: gpio-ranges property is now required
-Date:   Tue, 25 Jan 2022 11:42:22 -0800
-Message-Id: <20220125194222.12783-8-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220125194222.12783-1-f.fainelli@gmail.com>
-References: <20220125194222.12783-1-f.fainelli@gmail.com>
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Kiran Kumar S <kiran.kumar1.s@intel.com>
+CC:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>
+Subject: RE: [PATCH] pinctrl: fix a discarded-qualifiers build error
+Thread-Topic: [PATCH] pinctrl: fix a discarded-qualifiers build error
+Thread-Index: AQHYEhUH+MbwXf5NQkuzulFLQ312/qx0Tidg
+Date:   Tue, 25 Jan 2022 22:17:38 +0000
+Message-ID: <693a71e17b364afd987f2d2178b7e5cb@AcuMS.aculab.com>
+References: <20220125175457.23728-1-miles.chen@mediatek.com>
+In-Reply-To: <20220125175457.23728-1-miles.chen@mediatek.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Phil Elwell <phil@raspberrypi.com>
+From: Miles Chen
+> Sent: 25 January 2022 17:55
+> 
+> Fix COMPILER=gcc ARCH=arm64 DEFCONFIG=allyesconfig build:
+> 
+> log:
+> drivers/pinctrl/pinctrl-thunderbay.c:815:29: error: assignment discards
+> 'const' qualifier from pointer target type [-Werror=discarded-qualifiers]
+> 
+> Fixes: 12422af8194d ("pinctrl: Add Intel Thunder Bay pinctrl driver")
+> Signed-off-by: Miles Chen <miles.chen@mediatek.com>
+> ---
+>  drivers/pinctrl/pinctrl-thunderbay.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pinctrl/pinctrl-thunderbay.c b/drivers/pinctrl/pinctrl-thunderbay.c
+> index b5b47f4dd774..4e6d718c03fc 100644
+> --- a/drivers/pinctrl/pinctrl-thunderbay.c
+> +++ b/drivers/pinctrl/pinctrl-thunderbay.c
+> @@ -812,7 +812,7 @@ static int thunderbay_add_functions(struct thunderbay_pinctrl *tpc, struct funct
+>  				}
+>  			}
+> 
+> -			grp = func->group_names;
+> +			grp = (const char **)func->group_names;
 
-commit c8013355ead68dce152cf426686f8a5f80d88b40 upstream
+You should change the type of 'grp' not add a cast.
+The compiler can warn about casts removing 'const' as well.
 
-Since [1], added in 5.7, the absence of a gpio-ranges property has
-prevented GPIOs from being restored to inputs when released.
-Add those properties for BCM283x and BCM2711 devices.
+	David
 
-[1] commit 2ab73c6d8323 ("gpio: Support GPIO controllers without
-    pin-ranges")
-
-Link: https://lore.kernel.org/r/20220104170247.956760-1-linus.walleij@linaro.org
-Fixes: 2ab73c6d8323 ("gpio: Support GPIO controllers without pin-ranges")
-Fixes: 266423e60ea1 ("pinctrl: bcm2835: Change init order for gpio hogs")
-Reported-by: Stefan Wahren <stefan.wahren@i2se.com>
-Reported-by: Florian Fainelli <f.fainelli@gmail.com>
-Reported-by: Jan Kiszka <jan.kiszka@web.de>
-Signed-off-by: Phil Elwell <phil@raspberrypi.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Link: https://lore.kernel.org/r/20211206092237.4105895-3-phil@raspberrypi.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Olof Johansson <olof@lixom.net>
-[florian: Remove bcm2711.dtsi hunk which does not exist in 5.4]
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- arch/arm/boot/dts/bcm283x.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-index 50c64146d492..af81f386793c 100644
---- a/arch/arm/boot/dts/bcm283x.dtsi
-+++ b/arch/arm/boot/dts/bcm283x.dtsi
-@@ -183,6 +183,7 @@
- 
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
-+			gpio-ranges = <&gpio 0 0 54>;
- 
- 			/* Defines pin muxing groups according to
- 			 * BCM2835-ARM-Peripherals.pdf page 102.
--- 
-2.25.1
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
