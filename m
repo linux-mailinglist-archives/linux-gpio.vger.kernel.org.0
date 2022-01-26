@@ -2,97 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 51FB949C85D
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jan 2022 12:13:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CB0FE49C861
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jan 2022 12:14:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233536AbiAZLNJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Jan 2022 06:13:09 -0500
-Received: from ewsoutbound.kpnmail.nl ([195.121.94.183]:62258 "EHLO
+        id S233490AbiAZLOM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Jan 2022 06:14:12 -0500
+Received: from ewsoutbound.kpnmail.nl ([195.121.94.168]:63277 "EHLO
         ewsoutbound.kpnmail.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233490AbiAZLNI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Jan 2022 06:13:08 -0500
-X-Greylist: delayed 662 seconds by postgrey-1.27 at vger.kernel.org; Wed, 26 Jan 2022 06:13:08 EST
-X-KPN-MessageId: 668bfd3f-7e97-11ec-a7c6-005056992ed3
-Received: from smtp.kpnmail.nl (unknown [10.31.155.7])
+        with ESMTP id S240525AbiAZLOM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Jan 2022 06:14:12 -0500
+X-KPN-MessageId: 8b98a59c-7e97-11ec-8f5a-005056aba152
+Received: from smtp.kpnmail.nl (unknown [10.31.155.38])
         by ewsoutbound.so.kpn.org (Halon) with ESMTPS
-        id 668bfd3f-7e97-11ec-a7c6-005056992ed3;
-        Wed, 26 Jan 2022 12:02:06 +0100 (CET)
+        id 8b98a59c-7e97-11ec-8f5a-005056aba152;
+        Wed, 26 Jan 2022 12:03:08 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=xs4all.nl; s=xs4all01;
-        h=content-type:to:subject:from:mime-version:date:message-id;
-        bh=4x3cthZyPSyklwuCW6G09I7Tgeak4a48kh8iaIfkmag=;
-        b=JVOe0eic/2Vydr+8GQYeCqHmsh/nILgAxgEg4LQcWhYrA33ECaMTaGSQkrBiYugVVRyLpadNNsNHD
-         MbpILyNjUcaMwE5eAEtbVSqWVlzSVwOtPoNLmwzwOefxpE5n4YdEm+xDaQYQp/hHCAEzCCrhmAJ0oa
-         9MIBdJzd8lHVGy3PWYbdGutt5N24jsQBQPnZLJqewsCnPUJhB4CNPj4veoXOy00o9JkoCVE9XK9aiP
-         YSy2ne8RB8ND5ZyYluPA3+4+VLpgSI0HoJoEKJqNACiPkHmZKALcIGv1BWJqmaM+WwqSRIuRR1YaCI
-         6WiJ5KgB8IBOtqqwkbprEWVGR2SRIsw==
+        h=content-type:to:from:subject:mime-version:date:message-id;
+        bh=hpRXVYQAeLF7Lzo7fENLhR+NrCXnkhg6vrFNrU9sDzQ=;
+        b=lPF2MKr43JmTbMmOoxI2HRZKq5NhW7XaLhGLt+Jqdn1RrWVV4s77+65+ZD3i9Bw/C/xeFY0YHg7wQ
+         H0y2noosmHOeMhG5sAxReoxMzDUgTD5/cNanfhjLe7pBJTQgt9hoLicdZkmWfsFJe7lrAE0a9OlS6N
+         O2JFmFos6jvPtGK7YWao37ysGRmDB++ufsNpQgdJdXNNfidwJB0ZY2YXCnYZpbGnKJH5eXu/rp+Nbs
+         HyJfKelp9Frw6DPx/O/5L+S6qNHkr3zMTxj1Q5td/1r4PP3/wvtV9Kh6nnwPV9DDetM/BA0Dh6kTjB
+         qpj+ilkSAJkozm2I/jJVe03xdWyMc6g==
 X-KPN-VerifiedSender: No
-X-CMASSUN: 33|WQ1Kr7QFYOHHRhCBRHmXWYu3tAWZhafWefmF1aAE9OJ8jVimcx1354jXk+WTSiX
- 0FcHsVfZPZvHTbT9FYjVSiw==
+X-CMASSUN: 33|/C7XuEzgB9S8L3t+I4MsWICp/jGohKOA2pwymdZ5uESaHf3NzAUuYLgF9I8xf7/
+ xPkgeAeLQPSfzogGGyB5cUQ==
 X-Originating-IP: 80.101.105.217
 Received: from [192.168.1.10] (marune.xs4all.nl [80.101.105.217])
         by smtp.xs4all.nl (Halon) with ESMTPSA
-        id 65701bce-7e97-11ec-8459-005056998788;
-        Wed, 26 Jan 2022 12:02:05 +0100 (CET)
-Message-ID: <0f536cd8-01db-5d16-2cec-ec6d19409a49@xs4all.nl>
-Date:   Wed, 26 Jan 2022 12:02:04 +0100
+        id 8af0249c-7e97-11ec-a3ee-005056abf0db;
+        Wed, 26 Jan 2022 12:03:08 +0100 (CET)
+Message-ID: <ef2317a5-d9a7-a663-2477-b435b777d4e0@xs4all.nl>
+Date:   Wed, 26 Jan 2022 12:03:07 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Subject: [PATCH for 5.17] pinctrl-sunxi:
- sunxi_pinctrl_gpio_direction_in/output: use correct offset
-To:     linux-media@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, Maxime Ripard <maxime@cerno.tech>,
-        Florian Fainelli <f.fainelli@gmail.com>, 5kft <5kft@5kft.org>,
-        Corentin Labbe <clabbe.montjoie@gmail.com>
-References: <20211206131648.1521868-1-hverkuil-cisco@xs4all.nl>
+Subject: Re: [BUG] pinctrl: reg-fixed-voltage usb0-vbus: error -EINVAL: can't
+ get GPIO
 Content-Language: en-US
-In-Reply-To: <20211206131648.1521868-1-hverkuil-cisco@xs4all.nl>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>,
+        linus.walleij@linaro.org, mripard@kernel.org, wens@csie.org,
+        jernej.skrabec@gmail.com
+Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+        zhangn1985@gmail.com
+References: <Yea3rBmY+MO4AhhV@Red>
+ <2f82dbe8-50d6-d905-9065-d3869948aa06@xs4all.nl>
+In-Reply-To: <2f82dbe8-50d6-d905-9065-d3869948aa06@xs4all.nl>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The commit that sets the direction directly without calling
-pinctrl_gpio_direction(), forgot to add chip->base to the offset when
-calling sunxi_pmx_gpio_set_direction().
+On 18/01/2022 15:13, Hans Verkuil wrote:
+> On 1/18/22 13:50, Corentin Labbe wrote:
+>> Hello
+>>
+>> As reported on old googlegroup sunxi mainling list, on linux-next-20220118, USB storage fail to bring up on orangepiPC.
+>> We can see some error logs in dmesg:
+>> reg-fixed-voltage usb0-vbus: error -EINVAL: can't get GPIO
+>> reg-fixed-voltage: probe of usb0-vbus failed with error -22
+>>
+>> This is bisected to: 8df89a7cbc63c7598c00611ad17b67e8d5b4fad3 pinctrl-sunxi: don't call pinctrl_gpio_direction()
+>>
+>> Reverting this commit lead to a working USB storage being setuped.
 
-This caused failures for various Allwinner boards which have two
-GPIO blocks.
+Hopefully this is resolved by this patch:
 
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Reported-by: 5kft <5kft@5kft.org>
-Suggested-by: 5kft <5kft@5kft.org>
-Reported-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-Fixes: 8df89a7cbc63 (pinctrl-sunxi: don't call pinctrl_gpio_direction())
----
-Corentin, can you please test this patch to verify that this fixes your
-issue on the orangepiPC?
----
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-index 80d6750c74a6..061323eab8b1 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
-@@ -837,7 +837,8 @@ static int sunxi_pinctrl_gpio_direction_input(struct gpio_chip *chip,
- {
- 	struct sunxi_pinctrl *pctl = gpiochip_get_data(chip);
+https://patchwork.linuxtv.org/project/linux-media/patch/0f536cd8-01db-5d16-2cec-ec6d19409a49@xs4all.nl/
 
--	return sunxi_pmx_gpio_set_direction(pctl->pctl_dev, NULL, offset, true);
-+	return sunxi_pmx_gpio_set_direction(pctl->pctl_dev, NULL,
-+					    chip->base + offset, true);
- }
+Please test!
 
- static int sunxi_pinctrl_gpio_get(struct gpio_chip *chip, unsigned offset)
-@@ -890,7 +891,8 @@ static int sunxi_pinctrl_gpio_direction_output(struct gpio_chip *chip,
- 	struct sunxi_pinctrl *pctl = gpiochip_get_data(chip);
+Regards,
 
- 	sunxi_pinctrl_gpio_set(chip, offset, value);
--	return sunxi_pmx_gpio_set_direction(pctl->pctl_dev, NULL, offset, false);
-+	return sunxi_pmx_gpio_set_direction(pctl->pctl_dev, NULL,
-+					    chip->base + offset, false);
- }
+	Hans
 
- static int sunxi_pinctrl_gpio_of_xlate(struct gpio_chip *gc,
+> 
+> Hmm, I'll bet it's EPROBE_DEFER related.
+> 
+> The original call (pre that commit) of pinctrl_gpio_direction_output() checks
+> if the pin controller could find the pin (pinctrl_get_device_gpio_range()).
+> 
+> That doesn't happen in the new code.
+> 
+> The sunxi appears to have two pincontrollers in the device tree (&pio and &r_pio),
+> that might be part of the reason this is an issue here.
+> 
+> Linus, should there be a check somewhere for a missing pincontroller in
+> gpiod_get_index()? I suspect that before my commit it was the gpiod_configure_flags
+> call in that function that returned -EPROBE_DEFER, but I'm not completely certain.
+> 
+> If someone can give me a hint about what should be done, then I can make a patch.
+> 
+> The alternative is to revert this sunxi patch, but perhaps this is a deeper
+> problem with these pincontroller drivers that set the direction directly
+> instead of going through pinctrl_gpio_direction_output().
+> 
+> Corentin, it would help me if you can figure out where the EPROBE_DEFER is
+> returned (pre-commit) in drivers/pinctrl/core.c. Probably pinctrl_get_device_gpio_range().
+> 
+> And I'd love to have the WARN_ON(1) output from just before the 'return -EPROBE_DEFER'.
+> 
+> Regards,
+> 
+> 	Hans
+> 
+>>
+>> Regards
+
