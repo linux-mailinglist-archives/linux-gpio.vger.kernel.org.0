@@ -2,156 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CB2249C9B3
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jan 2022 13:29:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3572E49CDB4
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jan 2022 16:14:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241315AbiAZM3h (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Jan 2022 07:29:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58346 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234212AbiAZM3f (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Jan 2022 07:29:35 -0500
-Received: from andre.telenet-ops.be (andre.telenet-ops.be [IPv6:2a02:1800:120:4::f00:15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63A52C061753
-        for <linux-gpio@vger.kernel.org>; Wed, 26 Jan 2022 04:29:35 -0800 (PST)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:c4c8:1afa:4649:d034])
-        by andre.telenet-ops.be with bizsmtp
-        id nQVZ2600V2MCa5R01QVZ66; Wed, 26 Jan 2022 13:29:33 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1nChQb-00BUGo-Ai; Wed, 26 Jan 2022 13:29:33 +0100
-Received: from geert by rox.of.borg with local (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1nChQa-004bWu-N1; Wed, 26 Jan 2022 13:29:32 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 3/3] pinctrl: renesas: r8a77995: Restore pin group sort order
-Date:   Wed, 26 Jan 2022 13:29:31 +0100
-Message-Id: <da1018c56134b910121b085b736fe7f664b96df1.1643199959.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1643199959.git.geert+renesas@glider.be>
-References: <cover.1643199959.git.geert+renesas@glider.be>
+        id S242631AbiAZPOZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Jan 2022 10:14:25 -0500
+Received: from box.trvn.ru ([194.87.146.52]:55205 "EHLO box.trvn.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S242627AbiAZPOZ (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 26 Jan 2022 10:14:25 -0500
+Received: from authenticated-user (box.trvn.ru [194.87.146.52])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by box.trvn.ru (Postfix) with ESMTPSA id C19254004F;
+        Wed, 26 Jan 2022 20:14:21 +0500 (+05)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
+        t=1643210062; bh=ZkAZXMIgqilPJj8e1mA63+BflcezAKtWBuHyp0zxpAg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=HEHJK4TGhMCf8ucDJEoUAc1FrJh6B5rQImzxOguKYBmEcNx56wWEMAY+IvtoBhbTU
+         rt/ZQBF/4yy8OelwqQDzpXLS/m+1AamP9gjgISLY7Xc8WgrrbasGd3iSdqaytbENn3
+         YGFOrfOHFouCM/He5S2+plvRM0VNi/Kx0SpHz6F+Sz64f/mLlKn4yBfXmHEJoV4he3
+         g3KrCE3zxxKRPDAM46f9OG3KsHmOP72s6OFuOuZJb43JDncFmIni59r3+L21b0ACB5
+         BrQXkFYotElWxoDGuFe2Y5eTfs1rtZjalOR7Z9U/vSHvtWTueCGUs6v27nGpw15ci7
+         MQoEjEOcjMG5g==
 MIME-Version: 1.0
+Date:   Wed, 26 Jan 2022 20:14:21 +0500
+From:   Nikita Travkin <nikita@trvn.ru>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     linus.walleij@linaro.org, mturquette@baylibre.com,
+        bjorn.andersson@linaro.org, agross@kernel.org, tdas@codeaurora.org,
+        svarbanov@mm-sol.com, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH 1/4] clk: qcom: clk-rcg2: Fail Duty-Cycle configuration if
+ MND divider is not enabled.
+In-Reply-To: <20220110201452.2B3E4C36AE3@smtp.kernel.org>
+References: <20211209163720.106185-1-nikita@trvn.ru>
+ <20211209163720.106185-2-nikita@trvn.ru>
+ <20220108005209.5140EC36AEB@smtp.kernel.org>
+ <991533e0fddd6999c8a06a536ae57999@trvn.ru>
+ <20220110201452.2B3E4C36AE3@smtp.kernel.org>
+Message-ID: <cc4241105bfd2249c1c309a4efa2e6aa@trvn.ru>
+X-Sender: nikita@trvn.ru
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Move the msiof* pin groups where they belong.
+Stephen Boyd писал(а) 11.01.2022 01:14:
+> Quoting Nikita Travkin (2022-01-07 23:25:19)
+>> Hi,
+>>
+>> Stephen Boyd писал(а) 08.01.2022 05:52:
+>> > Quoting Nikita Travkin (2021-12-09 08:37:17)
+>> I'm adding this error here primarily to bring attention of the
+>> user (e.g. developer enabling some peripheral that needs
+>> duty cycle control) who might have to change their clock tree
+>> to make this control effective. So, assuming that if someone
+>> sets the duty cycle to 50% then they might set it to some other
+>> value later, it makes sense to fail the first call anyway.
+>>
+>> If you think there are some other possibilities for this call
+>> to happen specifically with 50% duty cycle (e.g. some
+>> preparations or cleanups in the clk subsystem or some drivers
+>> that I'm not aware of) then I can make an exemption in the check
+>> for that.
+>>
+> 
+> I don't see anywhere in clk_set_duty_cycle() where it would bail out
+> early if the duty cycle was set to what it already is. The default for
+> these clks is 50%, so I worry that some driver may try to set the duty
+> cycle to 50% and then fail now. Either we need to check the duty cycle
+> in the core before calling down into the driver or we need to check it
+> here in the driver. Can you send a patch to check the current duty cycle
+> in the core before calling down into the clk ops?
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/pinctrl/renesas/pfc-r8a77995.c | 86 +++++++++++++-------------
- 1 file changed, 43 insertions(+), 43 deletions(-)
+Hi, sorry for a rather delayed response,
+I spent a bit of time looking at how to make the clk core be
+careful with ineffective duty-cycle calls and I can't find a
+nice way to do this... My idea was something like this:
 
-diff --git a/drivers/pinctrl/renesas/pfc-r8a77995.c b/drivers/pinctrl/renesas/pfc-r8a77995.c
-index 52918dda6d5895f1..445c903a121acedd 100644
---- a/drivers/pinctrl/renesas/pfc-r8a77995.c
-+++ b/drivers/pinctrl/renesas/pfc-r8a77995.c
-@@ -2210,6 +2210,49 @@ static const char * const mmc_groups[] = {
- 	"mmc_ctrl",
- };
- 
-+static const char * const msiof0_groups[] = {
-+	"msiof0_clk",
-+	"msiof0_sync",
-+	"msiof0_ss1",
-+	"msiof0_ss2",
-+	"msiof0_txd",
-+	"msiof0_rxd",
-+};
-+
-+static const char * const msiof1_groups[] = {
-+	"msiof1_clk",
-+	"msiof1_sync",
-+	"msiof1_ss1",
-+	"msiof1_ss2",
-+	"msiof1_txd",
-+	"msiof1_rxd",
-+};
-+
-+static const char * const msiof2_groups[] = {
-+	"msiof2_clk",
-+	"msiof2_sync_a",
-+	"msiof2_sync_b",
-+	"msiof2_ss1",
-+	"msiof2_ss2",
-+	"msiof2_txd",
-+	"msiof2_rxd",
-+};
-+
-+static const char * const msiof3_groups[] = {
-+	"msiof3_clk_a",
-+	"msiof3_sync_a",
-+	"msiof3_ss1_a",
-+	"msiof3_ss2_a",
-+	"msiof3_txd_a",
-+	"msiof3_rxd_a",
-+	"msiof3_clk_b",
-+	"msiof3_sync_b",
-+	"msiof3_ss1_b",
-+	"msiof3_ss2_b",
-+	"msiof3_txd_b",
-+	"msiof3_rxd_b",
-+};
-+
- static const char * const pwm0_groups[] = {
- 	"pwm0_a",
- 	"pwm0_b",
-@@ -2307,49 +2350,6 @@ static const char * const vin4_groups[] = {
- 	"vin4_clk",
- };
- 
--static const char * const msiof0_groups[] = {
--	"msiof0_clk",
--	"msiof0_sync",
--	"msiof0_ss1",
--	"msiof0_ss2",
--	"msiof0_txd",
--	"msiof0_rxd",
--};
--
--static const char * const msiof1_groups[] = {
--	"msiof1_clk",
--	"msiof1_sync",
--	"msiof1_ss1",
--	"msiof1_ss2",
--	"msiof1_txd",
--	"msiof1_rxd",
--};
--
--static const char * const msiof2_groups[] = {
--	"msiof2_clk",
--	"msiof2_sync_a",
--	"msiof2_sync_b",
--	"msiof2_ss1",
--	"msiof2_ss2",
--	"msiof2_txd",
--	"msiof2_rxd",
--};
--
--static const char * const msiof3_groups[] = {
--	"msiof3_clk_a",
--	"msiof3_sync_a",
--	"msiof3_ss1_a",
--	"msiof3_ss2_a",
--	"msiof3_txd_a",
--	"msiof3_rxd_a",
--	"msiof3_clk_b",
--	"msiof3_sync_b",
--	"msiof3_ss1_b",
--	"msiof3_ss2_b",
--	"msiof3_txd_b",
--	"msiof3_rxd_b",
--};
--
- static const struct sh_pfc_function pinmux_functions[] = {
- 	SH_PFC_FUNCTION(audio_clk),
- 	SH_PFC_FUNCTION(avb0),
--- 
-2.25.1
+static int clk_core_set_duty_cycle_nolock(struct clk_core *core,
+					  struct clk_duty *duty)
+{	/* ... */
 
+	/* Update core->duty values */
+	clk_core_update_duty_cycle_nolock(core);
+
+	if ( /* duty doesn't match core->duty */ ) {
+		ret = core->ops->set_duty_cycle(core->hw, duty);
+	/* ... */
+}
+
+However there seem to be drawbacks to any variant of the
+comparison that I could come up with:
+
+Naive one would be to do
+    if (duty->num != core->duty->num || duty->den != core->duty->den)
+but it won't correctly compare e.g. 1/2 and 10/20.
+
+Other idea was to do
+    if (duty->den / duty->num != core->duty->den / core->duty->num)
+but it will likely fail with very close values (e.g. 100/500 and 101/500)
+
+I briefly thought of some more sophisticated math but I don't
+like the idea of complicating this too far.
+
+I briefly grepped the kernel sources for duty-cycle related methods
+and I saw only one user of the clk_set_duty_cycle:
+    sound/soc/meson/axg-tdm-interface.c
+Notably it sets the cycle to 1/2 in some cases, though it seems to
+be tied to the drivers/clk/meson/sclk-div.c clock driver by being
+the blocks of the same SoC.
+
+Thinking of it a bit more, I saw another approach to the problem
+I want to solve: Since I just want to make developers aware of the
+hardware quirk, maybe I don't need to fail the set but just put a
+WARN or even WARN_ONCE there? This way the behavior will be unchanged.
+
+Thanks,
+Nikita
