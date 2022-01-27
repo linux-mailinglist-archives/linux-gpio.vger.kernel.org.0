@@ -2,69 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 34F5C49D4F7
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Jan 2022 23:08:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 841A049DF8E
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Jan 2022 11:37:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232941AbiAZWIM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Jan 2022 17:08:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52744 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232934AbiAZWIK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Jan 2022 17:08:10 -0500
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54525C06173B
-        for <linux-gpio@vger.kernel.org>; Wed, 26 Jan 2022 14:08:10 -0800 (PST)
-Received: by mail-ed1-x52d.google.com with SMTP id r10so1102826edt.1
-        for <linux-gpio@vger.kernel.org>; Wed, 26 Jan 2022 14:08:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=an4OUklU1nkbaneD74UCJ1LWVu18nnEY1P9uR4GuoNo=;
-        b=AXBAuhVBCdCoyE5QnGI8btMq7Nia+Ax2mrxWjNHOL9ZHK2q9zQ5Phg1Fj3IJcD/Wem
-         PuuFSSXHIjgr7bRDeI69xn/ILY7cnfz2zUh/L3GEcNmY7UU5ewFOZtoGGawzOD8JaheI
-         r2HOCe8Zoz3YpPAdTtgVyZ7nfk8/knBgd/pYwVTYTV2miqNf3HDbbA28f+YfLphs9DTj
-         cyeQjUoeSFnDhn5ZkWGpAkmhrweTeuEaimaR1w2BelBB04tgeVYz0xdOX3OlRNXXUX5O
-         ohxlDVWKaVRvzRiiqxlN3sJ9QFvnzewsox96CjpQjlnzAqcVuiLw/Vs031usiJtvKEtW
-         BdDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=an4OUklU1nkbaneD74UCJ1LWVu18nnEY1P9uR4GuoNo=;
-        b=brBJNF5ucwA4j//VRcIBV48GSbFgjkJ+r20ACEHD0UQ5KwxQ/1VYCPW2SGj+UAdJYH
-         WAqVauMahg4zvDl1WQJSXyKe/YudNBZKGUcx2OKrNZRyWypLbpT4ElAUa4S9eEw3jMBE
-         tdS41zhDlmJRArPGI45uFZIpo2O751FipXkPKjZ6fVhQj6Q5dqSiApfrylOBRDu8/tIT
-         MNo6DP3sJ3Rh9Q8UnN57um5sSU5MrUnhp/Uu/WnsAsSxyCeH40yh4QoR/+/3vYrsJVYg
-         QQWKp7GB9+x8azLoPiLKQB2MYtv/Y136wjW8fj9By4Oo2UJGyxoNbSwqrEG44mgbvRql
-         LEpw==
-X-Gm-Message-State: AOAM5303SIVhO+pdIsBXgO/g2MkOg13oSQCDNYm/Rv9XMFEQ/QLGKU8N
-        VA20hZ+qtGGV6T8SHhnC/Zhe1XKgnrcYzt84VV0=
-X-Google-Smtp-Source: ABdhPJy8cXpwGjFo/ROn4y1r8FsI0Qi5e5oG6DnXetP93dMgCbzLF2b+jxnxOrRjvyLinDdA63FrjHSqLYcmJc/5+Hg=
-X-Received: by 2002:aa7:c5cf:: with SMTP id h15mr992718eds.352.1643234888383;
- Wed, 26 Jan 2022 14:08:08 -0800 (PST)
+        id S231278AbiA0Kh6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Jan 2022 05:37:58 -0500
+Received: from esa.microchip.iphmx.com ([68.232.154.123]:33930 "EHLO
+        esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235281AbiA0Kh5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Jan 2022 05:37:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1643279877; x=1674815877;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=jQQW6o4yavoDToUKue4f/G6mHjTCqpN91pJTYtcfuhw=;
+  b=h0kI/w6U839UWRpOC2TzDuyPzn+PZaCKTp60LSaOaFJjJ1qIGqPS7T/h
+   +YF5GgKZYthJS2hEeN8TP06wkfCjEBIzen2PhPMItMBgtHn2hLB4VIGcZ
+   rP3RpTYvCTiqTZrc0q5TixaaB75JwZOqHx4s2irE0lBsWyvUiF6sJ1lnZ
+   +GICeBI+L0nXzqRiv1dexUaBzWKqQUiAhtwpjVLFV5ClzPnMNjPUUMjsF
+   /x68zLthg+d3oOCnf0SD+8px37dYhulzk4ughc8YHq5xV5BG8CyNR+wTF
+   ZfIlapZUqQ6l1lPAW/+NkNOjble06R27zMbxlrj6+Cvs8TJpmKAHf4jiS
+   A==;
+IronPort-SDR: vfO46qe7nWI4oxy+PtqppYt4Njs8migAVIj+1pcs3WPbmpsOkyJRegg7tOMcrh0arJctFKSi3x
+ 3KgMDhXbmMzbElmp1vxTRE9QK20TEKIZsv+wO314oGlsZQvWoWIQXNtAVub/6eHkENZW0ckcVz
+ 7xhFhmsIQ+72t7tc76/6WdsJCcAAqxUmA1R3kUqsPZEd2yvLQo0q/9VwNOM5yBqctEfT50R+86
+ bC279OuYGF3DxZfN8TpBBjlYgSl29HjrqeH1vWWgKBrSaQEfFLPDk5pmqcjSgdT0pBZwbvULtZ
+ Tjaxt+FIk5FIvBmnjBowBFF6
+X-IronPort-AV: E=Sophos;i="5.88,320,1635231600"; 
+   d="scan'208";a="83851515"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 27 Jan 2022 03:37:57 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.17; Thu, 27 Jan 2022 03:37:56 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex04.mchp-main.com
+ (10.10.85.152) with Microsoft SMTP Server id 15.1.2375.17 via Frontend
+ Transport; Thu, 27 Jan 2022 03:37:56 -0700
+Date:   Thu, 27 Jan 2022 11:40:23 +0100
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     Colin Foster <colin.foster@in-advantage.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <lars.povlsen@microchip.com>, <Steen.Hegelund@microchip.com>,
+        <UNGLinuxDriver@microchip.com>, <linus.walleij@linaro.org>
+Subject: Re: [PATCH] pinctrl: microchip-sgpio: Fix support for regmap
+Message-ID: <20220127104023.5dwcrod7toi4hpb7@soft-dev3-1.localhost>
+References: <20220125161245.418882-1-horatiu.vultur@microchip.com>
+ <20220125164659.GA31440@COLIN-DESKTOP1.localdomain>
 MIME-Version: 1.0
-Received: by 2002:ab4:a32e:0:0:0:0:0 with HTTP; Wed, 26 Jan 2022 14:08:07
- -0800 (PST)
-Reply-To: wijh555@gmail.com
-From:   "Mr. Ali Moses" <alimoses07@gmail.com>
-Date:   Wed, 26 Jan 2022 14:08:07 -0800
-Message-ID: <CADWzZe6zt8Pjxs6=p2w=NDod6NER0MEkHaoSqTsrP9Xfhf4z7A@mail.gmail.com>
-Subject: Greetings,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <20220125164659.GA31440@COLIN-DESKTOP1.localdomain>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+The 01/25/2022 08:46, Colin Foster wrote:
+> 
+> Hi Horatiu,
+
+Hi Colin,
+
+> 
+> On Tue, Jan 25, 2022 at 05:12:45PM +0100, Horatiu Vultur wrote:
+> > Initially the driver accessed the registers using u32 __iomem but then
+> > in the blamed commit it changed it to use regmap. The problem is that now
+> > the offset of the registers is not calculated anymore at word offset but
+> > at byte offset. Therefore make sure to multiply the offset with word size.
+> >
+> 
+> Sorry about this one. I see it must have slipped through the cracks
+> because I had made the same change in my tree. The only difference is I
+> had copied reg_stride into sgpio_priv instead of making regmap_config
+> file-scope. For what its worth, with apologies:
+
+No worries, sorry that I missed your patch initially. And thanks for
+reviewing this patch.
+
+> 
+> Reviewed-by: Colin Foster <colin.foster@in-advantage.com>
+
+
+
+> 
+> > Fixes: 2afbbab45c261a ("pinctrl: microchip-sgpio: update to support regmap")
+> > Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> > ---
+> >  drivers/pinctrl/pinctrl-microchip-sgpio.c | 13 +++++++------
+> >  1 file changed, 7 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/pinctrl/pinctrl-microchip-sgpio.c b/drivers/pinctrl/pinctrl-microchip-sgpio.c
+> > index 8e081c90bdb2..2999c98bbdee 100644
+> > --- a/drivers/pinctrl/pinctrl-microchip-sgpio.c
+> > +++ b/drivers/pinctrl/pinctrl-microchip-sgpio.c
+> > @@ -98,6 +98,12 @@ static const struct sgpio_properties properties_sparx5 = {
+> >       .regoff = { 0x00, 0x06, 0x26, 0x04, 0x05, 0x2a, 0x32, 0x3a, 0x3e, 0x42 },
+> >  };
+> >
+> > +static const struct regmap_config regmap_config = {
+> > +             .reg_bits = 32,
+> > +             .val_bits = 32,
+> > +             .reg_stride = 4,
+> > +};
+> > +
+> >  static const char * const functions[] = { "gpio" };
+> >
+> >  struct sgpio_bank {
+> > @@ -137,7 +143,7 @@ static inline int sgpio_addr_to_pin(struct sgpio_priv *priv, int port, int bit)
+> >
+> >  static inline u32 sgpio_get_addr(struct sgpio_priv *priv, u32 rno, u32 off)
+> >  {
+> > -     return priv->properties->regoff[rno] + off;
+> > +     return (priv->properties->regoff[rno] + off) * regmap_config.reg_stride;
+> >  }
+> >
+> >  static u32 sgpio_readl(struct sgpio_priv *priv, u32 rno, u32 off)
+> > @@ -821,11 +827,6 @@ static int microchip_sgpio_probe(struct platform_device *pdev)
+> >       struct clk *clk;
+> >       u32 __iomem *regs;
+> >       u32 val;
+> > -     struct regmap_config regmap_config = {
+> > -             .reg_bits = 32,
+> > -             .val_bits = 32,
+> > -             .reg_stride = 4,
+> > -     };
+> >
+> >       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> >       if (!priv)
+> > --
+> > 2.33.0
+> >
+
 -- 
-Good Day,
-I'm Mr. Ali Moses, how are you doing hope you are in good health, the
-Board director try to reach you on phone several times Meanwhile, your
-number was not connecting. before he ask me to send you an email to
-hear from you if you are fine. hoping to hear from you soonest.
-
-Thanks
-Mr. Ali Moses
-
-Sincerely
-Dr. Irene Lam
+/Horatiu
