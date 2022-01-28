@@ -2,118 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B3FB549FBD7
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jan 2022 15:37:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 913DC49FBE6
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jan 2022 15:40:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349329AbiA1OhJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Jan 2022 09:37:09 -0500
-Received: from mga14.intel.com ([192.55.52.115]:26056 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1349324AbiA1OhI (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 28 Jan 2022 09:37:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643380628; x=1674916628;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Zw3XX/fGUlnc9TdMF747lxwOgOa9xXLLuawIXyx0fyg=;
-  b=HmEjVop2/eTuKiydgurlgnGQOwukl6lUMNtoxDxmM5LYGQiikp9lktIk
-   P6lIC3hVW3r8IMdQsapS/goLiuhfFBmRWFEMEEOW20E+g4Qy3mQqYtfnI
-   bdQ8JbfqBIpL2tqG2VFSyneNXZKCru6ht+iMGXVPMTAD1ormtLfeaLJl/
-   msB6I/Y2iGG17qd1K1bTySiHO8Zd3XqkC4hQaJtYmmdbFZBuFKflDklYc
-   yFImkv4S9O1338E6fGyb7iVSqB14rOGnm95Zo/ytsPwS9w/7ZaH76w+Zw
-   2HYnbF6pj3sQTBK6vqN10lg5dRK4g/C6t1EEjbwCxB1FFRP5+tq1r/MZB
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10240"; a="247350302"
-X-IronPort-AV: E=Sophos;i="5.88,324,1635231600"; 
-   d="scan'208";a="247350302"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2022 06:37:08 -0800
-X-IronPort-AV: E=Sophos;i="5.88,324,1635231600"; 
-   d="scan'208";a="697106965"
-Received: from smile.fi.intel.com ([10.237.72.61])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2022 06:37:04 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nDSM3-00FRXn-4S;
-        Fri, 28 Jan 2022 16:35:59 +0200
-Date:   Fri, 28 Jan 2022 16:35:58 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Jason Wang <wangborong@cdjrlc.com>,
-        Marc Zyngier <maz@kernel.org>,
-        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] pinctrl: bcm2835: Fix a few error paths
-Message-ID: <YfP/TuEERCrgst+k@smile.fi.intel.com>
-References: <20220127215033.267227-1-f.fainelli@gmail.com>
+        id S1349359AbiA1Oke (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Jan 2022 09:40:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45670 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1349356AbiA1Oke (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Jan 2022 09:40:34 -0500
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAFCAC061714
+        for <linux-gpio@vger.kernel.org>; Fri, 28 Jan 2022 06:40:33 -0800 (PST)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:3999:e79d:cb59:f2ec])
+        by xavier.telenet-ops.be with bizsmtp
+        id oEgX2600904fKGS01EgXd6; Fri, 28 Jan 2022 15:40:31 +0100
+Received: from geert (helo=localhost)
+        by ramsan.of.borg with local-esmtp (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1nDSQR-00BmRj-CD; Fri, 28 Jan 2022 15:40:31 +0100
+Date:   Fri, 28 Jan 2022 15:40:31 +0100 (CET)
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+X-X-Sender: geert@ramsan.of.borg
+To:     =?ISO-8859-15?Q?Mikko_Salom=E4ki?= <ms@datarespons.se>
+cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: gpio: aggregator: Using chips with can_sleep
+In-Reply-To: <CAHp75VdOY8a85us-DEAbySRAMNz9F50JHjov0nJRsQva0huzOQ@mail.gmail.com>
+Message-ID: <alpine.DEB.2.22.394.2201281537170.2807703@ramsan.of.borg>
+References: <AM9PR03MB76077A7FB926CAE37E1D8565AA209@AM9PR03MB7607.eurprd03.prod.outlook.com> <CAHp75VdOY8a85us-DEAbySRAMNz9F50JHjov0nJRsQva0huzOQ@mail.gmail.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220127215033.267227-1-f.fainelli@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: multipart/mixed; boundary="8323329-190950414-1643380831=:2807703"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jan 27, 2022 at 01:50:31PM -0800, Florian Fainelli wrote:
-> After commit 266423e60ea1 ("pinctrl: bcm2835: Change init order for gpio
-> hogs") a few error paths would not unwind properly the registration of
-> gpio ranges. Correct that by assigning a single error label and goto it
-> whenever we encounter a fatal error.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
->  1 file changed, 15 insertions(+), 8 deletions(-)
+--8323329-190950414-1643380831=:2807703
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8BIT
 
-While this seems legit per se, my eyes caught this:
+ 	Hi Mikko,
 
+On Fri, 28 Jan 2022, Andy Shevchenko wrote:
+> +Cc: author, maintainers
 
->  	if (!girq->parents) {
-> -		pinctrl_remove_gpio_range(pc->pctl_dev, &pc->gpio_range);
-> -		return -ENOMEM;
-> +		err = -ENOMEM;
-> +		goto out_remove;
+Thank you, Andy
 
-Non-devm....
+> On Wed, Jan 26, 2022 at 10:38 PM Mikko Salomäki <ms@datarespons.se> wrote:
+>
+>> Trying to map gpio from i2c connected chips triggered kernel warnings from libgpiod when setting or getting values. By my understanding the get and set calls need to change to their _cansleep counterparts for chips with chip->can_sleep.
+>>
+>> For example:
+>> gpiod_get_value() -> gpiod_get_value_cansleep()
+>>
+>> Is this an actual bug or my misunderstanding?
 
->  	}
->  
->  	if (is_7211) {
->  		pc->wake_irq = devm_kcalloc(dev, BCM2835_NUM_IRQS,
->  					    sizeof(*pc->wake_irq),
->  					    GFP_KERNEL);
+Thanks for your report!
+I think this is an oversight, i.e. an actual bug.
 
-...followed by devm.
+Does the below (compile-tested only) help?
 
-It means more ordering bugs in the ->remove() and error path are lurking
-around. Can you double check and be sure that we do not have a case where
-non-devm registration code followed by devm?
+diff --git a/drivers/gpio/gpio-aggregator.c b/drivers/gpio/gpio-aggregator.c
+index 869dc952cf45218b..70ccad102cb1df96 100644
+--- a/drivers/gpio/gpio-aggregator.c
++++ b/drivers/gpio/gpio-aggregator.c
+@@ -278,7 +278,8 @@ static int gpio_fwd_get(struct gpio_chip *chip, unsigned int offset)
+  {
+  	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
 
-If that is the case it has to be fixed as well.
+-	return gpiod_get_value(fwd->descs[offset]);
++	return chip->can_sleep ? gpiod_get_value_cansleep(fwd->descs[offset])
++			       : gpiod_get_value(fwd->descs[offset]);
+  }
 
-> -		if (!pc->wake_irq)
-> -			return -ENOMEM;
-> +		if (!pc->wake_irq) {
-> +			err = -ENOMEM;
-> +			goto out_remove;
-> +		}
->  	}
+  static int gpio_fwd_get_multiple(struct gpiochip_fwd *fwd, unsigned long *mask,
+@@ -293,7 +294,10 @@ static int gpio_fwd_get_multiple(struct gpiochip_fwd *fwd, unsigned long *mask,
+  	for_each_set_bit(i, mask, fwd->chip.ngpio)
+  		descs[j++] = fwd->descs[i];
 
+-	error = gpiod_get_array_value(j, descs, NULL, values);
++	if (fwd->chip.can_sleep)
++		error = gpiod_get_array_value_cansleep(j, descs, NULL, values);
++	else
++		error = gpiod_get_array_value(j, descs, NULL, values);
+  	if (error)
+  		return error;
 
--- 
-With Best Regards,
-Andy Shevchenko
+@@ -328,7 +332,10 @@ static void gpio_fwd_set(struct gpio_chip *chip, unsigned int offset, int value)
+  {
+  	struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
 
+-	gpiod_set_value(fwd->descs[offset], value);
++	if (chip->can_sleep)
++		gpiod_set_value_cansleep(fwd->descs[offset], value);
++	else
++		gpiod_set_value(fwd->descs[offset], value);
+  }
 
+  static void gpio_fwd_set_multiple(struct gpiochip_fwd *fwd, unsigned long *mask,
+@@ -343,7 +350,10 @@ static void gpio_fwd_set_multiple(struct gpiochip_fwd *fwd, unsigned long *mask,
+  		descs[j++] = fwd->descs[i];
+  	}
+
+-	gpiod_set_array_value(j, descs, NULL, values);
++	if (fwd->chip.can_sleep)
++		gpiod_set_array_value_cansleep(j, descs, NULL, values);
++	else
++		gpiod_set_array_value(j, descs, NULL, values);
+  }
+
+  static void gpio_fwd_set_multiple_locked(struct gpio_chip *chip,
+
+Gr{oetje,eeting}s,
+
+ 						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+ 							    -- Linus Torvalds
+--8323329-190950414-1643380831=:2807703--
