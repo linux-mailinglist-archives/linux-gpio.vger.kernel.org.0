@@ -2,116 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DEE2549FE42
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jan 2022 17:44:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A782A49FE92
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jan 2022 18:00:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239696AbiA1QoK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Jan 2022 11:44:10 -0500
-Received: from mga18.intel.com ([134.134.136.126]:48002 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239249AbiA1QoK (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 28 Jan 2022 11:44:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643388250; x=1674924250;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=TTVAu1eU8Jx+Ggxko+9ltTDY/expKG3KCqEJi5tZ7kA=;
-  b=DGfY0rXX68w2kl6LxSgBbcczXGXC4rgi/X17GsHD7C8OczaYdziPaoDY
-   XO2Jhcgxdoy76A731felPAAOKfXhjLJlz9uN0aK11PlrUDERpzOZ7rCtX
-   IysMQFn5ljTD63DfvgJkljXFgpBtVonGxEERVLBh/lGTFQsuYqz3zOW56
-   B+95lE7rtacc1xpto2nMcEAmafDFaRg8Gf4Cf2PJ2nONGpF9Na5llyAtF
-   qvDyF9+nRBH9vvVKAHLPItWoZbZm6XTC0jtMfoniy8MMDpaP8Xl4/bEzI
-   gMZy7F8evPeU2z/eRMViOptjYZCWnLRsyNaJYwJJD463mwuR1ARXB2nky
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10240"; a="230730745"
-X-IronPort-AV: E=Sophos;i="5.88,324,1635231600"; 
-   d="scan'208";a="230730745"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2022 08:44:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,324,1635231600"; 
-   d="scan'208";a="675141184"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 28 Jan 2022 08:44:08 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id D609A167; Fri, 28 Jan 2022 18:44:21 +0200 (EET)
-Date:   Fri, 28 Jan 2022 18:44:21 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linux pin control <linux-gpio@vger.kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [GIT PULL] intel-pinctrl for 5.17-4
-Message-ID: <YfQdZTCvhjqjFUjm@black.fi.intel.com>
+        id S245683AbiA1RA5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Jan 2022 12:00:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50296 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239133AbiA1RA5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Jan 2022 12:00:57 -0500
+Received: from mail-io1-xd2b.google.com (mail-io1-xd2b.google.com [IPv6:2607:f8b0:4864:20::d2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18EA8C061714
+        for <linux-gpio@vger.kernel.org>; Fri, 28 Jan 2022 09:00:57 -0800 (PST)
+Received: by mail-io1-xd2b.google.com with SMTP id e79so8449508iof.13
+        for <linux-gpio@vger.kernel.org>; Fri, 28 Jan 2022 09:00:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=allocor.tech; s=google;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=AoqAIBvSUNT5UuLr7zPUndOb6SydL/PaK9Vn3i7De3c=;
+        b=ngI3XO0RKCALjWxZvV2a6WHVstU/T+j6rLgtcNOTQv5jMa9SLmtp5i+Lr6pTIhYaSg
+         k2aNcrz5ZcE3n9DqEAAYHusURGJ8+v+aSZwoAV5WhF8kwnZHiZPvH6tFToMr/Jeu+PrV
+         XpwCKDXdH8vha6LIn0C4ZSoOgZNrJTLqSe1pLi45NqmuyqoSKeak/Lb8Tn6Sy0pc5lNX
+         u7yHC6q/nHfhu8iB4WCEe2tgrgJvSJD8qKDizs6jCeCRGPLBEjPBfsWytXhz+k8JsOd6
+         W+NZ5rt3QScK8ru+GjXx3Km2VQCiZjO1Xz9yEWaaXHUHxfWu/R+NZ6FR1czPaMkwccHa
+         t8Vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=AoqAIBvSUNT5UuLr7zPUndOb6SydL/PaK9Vn3i7De3c=;
+        b=Me4k7IHt387UZtyogxu3sTI4BTwXebqK9moX1SLCUoUreV0wx2/Dy37PQZYoJ9dwfz
+         Bg0pDZy3EuRW7XzSR8ZHVHB9rrcaS3orhWeaphsmulDmCwG9XjguEaP8+DntLIv+yKPQ
+         cpxcFEq0za8jpsXi5hVw+Y4GxnNPf102apT+rxNJS1/YJm63lIFmDooMBS53i4cy6kH1
+         T4iEj6+NCIBpfiV8hf6UsVD1G7MXmJkpgI8rYw/K7xo3ha0gZwxesvsASNHw7LJuZ+AJ
+         fhloSXBchnaoGkddWDbyS1IIHUWgkz6T1/S4IvNhsjVcdDJBaLa9dsV3/xBLxUyUnUCO
+         7ZIQ==
+X-Gm-Message-State: AOAM532UrA3upkM8Gw+UicCS5espZRzxxgCKNIOuQZHQejiHF7RXH57N
+        oX1u96Hsd3IAxqe3/7PjXMtgPlOOFVvlq7QCDmcrompDI/KfyuYe
+X-Google-Smtp-Source: ABdhPJz7vmHrITwWnrYh2CXABx54Ib+QFyuoCbQXN2Nmra2d7/FfOCyk0tXMY7DjGY038QyIT31CIxdiWDy9bpO5AlI=
+X-Received: by 2002:a05:6638:4195:: with SMTP id az21mr3918687jab.141.1643389255784;
+ Fri, 28 Jan 2022 09:00:55 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+From:   Matt Walker <m@allocor.tech>
+Date:   Fri, 28 Jan 2022 12:00:44 -0500
+Message-ID: <CACjtZiTK2oUbAQJ5W6CcB=RgNvA=5x0RiEev5eT-SS3RzF9_iQ@mail.gmail.com>
+Subject: Device Tree Property for Setting of Labels
+To:     linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linux pin control  maintainers,
+All;
 
-Not many but still important fixes for Intel, ZynqMQ and pin control subsystem.
-Please, consider to pull for v5.17-rc2 (or nearest one).
+I have a need to reliably identify GPIO pins in userspace,
+specifically I would like the method I use to be invariant to
+declaration order in the device tree (so not based on gpiochip#.)
+
+There doesn't seem to be any existing method to accomplish this; and
+there's no existing device tree property in pinctrl that I can see, or
+in any driver that I looked at, that would persistently set a label,
+name, or other queryable property. (Although some devices like the
+stm32pinctrl add a sysfs node like st,bank-name.)
+
+I propose that a new optional property `label` or `names` is added to
+the base pinctrl schema that drivers would then use to set the `label`
+property in `struct gpio_chip` which can be queried from userspace via
+`GPIO_GET_CHIPINFO_IOCTL`.
+
+Two things come to mind to consider in this scheme
+1) I think I've seen other solutions like this where the device tree
+node name is used instead of some additional property, but that seems
+like it would be a breaking change if accepted because then all the
+labels would change as the drivers are updated.
+
+2) Some pinctrl devices (I'm dealing with an mcp23sxx) register
+multiple chips under the same node. Right now the label is assigned by
+<mcp23sxx>.<address> and it could be something similar such as <label
+| mcp23sxx>.<address> but if we had a property that accepted a list of
+strings then each one could have a unique label if desired.
+
+If this is an acceptable proposal then I'll put together some patches.
+Or if someone else has a method I could use instead that already
+exists I'd love to hear about it.
 
 Thanks,
-
-With Best Regards,
-Andy Shevchenko
-
-The following changes since commit e783362eb54cd99b2cac8b3a9aeac942e6f6ac07:
-
-  Linux 5.17-rc1 (2022-01-23 10:12:53 +0200)
-
-are available in the Git repository at:
-
-  git@gitolite.kernel.org:pub/scm/linux/kernel/git/pinctrl/intel.git tags/intel-pinctrl-v5.17-4
-
-for you to fetch changes up to 500c77eed0feabddd5b3afb48e32c204614a8eab:
-
-  pinctrl: zynqmp: Revert "Unify pin naming" (2022-01-28 16:52:04 +0200)
-
-----------------------------------------------------------------
-intel-pinctrl for v5.17-4
-
-* Couple of fixes on how Intel driver handles an interrupt
-* Revert pin renaming change in ZynqMQ as it appears to be part of
-  the Device Tree bindings
-* Fix ordering of the files in the Makefile
-
-The following is an automated git shortlog grouped by driver:
-
-intel:
- -  Fix a glitch when updating IRQ flags on a preconfigured line
- -  fix unexpected interrupt
-
-Place correctly CONFIG_PINCTRL_ST in the Makefile:
- - Place correctly CONFIG_PINCTRL_ST in the Makefile
-
-zynqmp:
- -  Revert "Unify pin naming"
-
-----------------------------------------------------------------
-Andy Shevchenko (2):
-      pinctrl: Place correctly CONFIG_PINCTRL_ST in the Makefile
-      pinctrl: intel: Fix a glitch when updating IRQ flags on a preconfigured line
-
-Gerhard Engleder (1):
-      pinctrl: zynqmp: Revert "Unify pin naming"
-
-Łukasz Bartosik (1):
-      pinctrl: intel: fix unexpected interrupt
-
- drivers/pinctrl/Makefile              |  2 +-
- drivers/pinctrl/intel/pinctrl-intel.c | 64 ++++++++++++++++++++---------------
- drivers/pinctrl/pinctrl-zynqmp.c      | 10 +++---
- 3 files changed, 41 insertions(+), 35 deletions(-)
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Matt Walker
