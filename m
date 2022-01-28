@@ -2,133 +2,249 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A288849FF84
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jan 2022 18:24:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AACD14A001F
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jan 2022 19:31:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240157AbiA1RXJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Jan 2022 12:23:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54760 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350997AbiA1RVw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Jan 2022 12:21:52 -0500
-Received: from mail-ot1-x32c.google.com (mail-ot1-x32c.google.com [IPv6:2607:f8b0:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEF0BC0613A7;
-        Fri, 28 Jan 2022 09:20:05 -0800 (PST)
-Received: by mail-ot1-x32c.google.com with SMTP id d18-20020a9d51d2000000b005a09728a8c2so6359563oth.3;
-        Fri, 28 Jan 2022 09:20:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=UwbQPftUNn9yAB4yzqKeQDB/pWC4kXl5NucfopNQ3ag=;
-        b=PWuAAkFkDtJVYG819y6ifto/NACTzta68iof02lYXGK4TQCZ6YMwgpN6x9wGagpTkD
-         i0EsTVdeo+F/4UtWOICMnSpByL4d8E2QtiDXKxRyVNS23Ik15kjtMaH5bsNQ8KZCBR7I
-         a0d+7BEf2jH6K+izh54gYOll0z3ec2q43de18V1jcr1UPlgSxdSC4l+dmcThpwizmIq4
-         w0EYEQFz1T1zElGgk8xJ7KRPprPSoDGttAyOnXaxCp8Ze2AC4WE9ije+JsSVAn82xuFK
-         uweG/N5/k6zc4rYLV0ib3U4euYOuQOvLVaqCDK7o1M7eGyF+94uMF1V8xB/t0cXov9ju
-         HYlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=UwbQPftUNn9yAB4yzqKeQDB/pWC4kXl5NucfopNQ3ag=;
-        b=VlJCHt3bLnn5Q8so5UtvXO4uB1jetm9y6GrF4tLnNw2NyQA2P+Wjb8j3R17V3WXkFT
-         sZOyXi4Qh/Jphixj9j0bRD6gzxVs4q8qrSQvFiTuv8U/stj34G8NiLnCt4F+9zs1El3y
-         FUPS7PvUj0R5OXhZ/qb2NiABBQXjaeD+cqFPC9iHNnrweRZraPXwRHN9hz2XPJxjX+HW
-         sA/6OqWDnB2FguyBAEX7plK8pHsquMJ94WtB2qNnYlMUhM9ilsMG8e2jeQuw8agJauu8
-         gG0gfPWOjXw//4OGD+QKtBLQqIazva48yeh4Ie3kHRNk1NWGeNRUJ1ApzddX3kn/4Awb
-         HwcQ==
-X-Gm-Message-State: AOAM5331xnxEFsLmwr/lOJiaPzv0xFCOcHT1DYHKb18zlayHOaNkzpMv
-        KAunmngZKoYJ2Qb0Ut9AyW8=
-X-Google-Smtp-Source: ABdhPJyvhy6GpcH81DShxWe8ImoRoO9OShyxokZ7SwtkWzv+0GKqFn3QzOSGVNutpWMxaWa4rky3xQ==
-X-Received: by 2002:a9d:7e88:: with SMTP id m8mr5100388otp.123.1643390405340;
-        Fri, 28 Jan 2022 09:20:05 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id t21sm3983087otq.81.2022.01.28.09.20.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jan 2022 09:20:04 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Fri, 28 Jan 2022 09:20:03 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc:     Corentin Labbe <clabbe.montjoie@gmail.com>,
-        linus.walleij@linaro.org, mripard@kernel.org, wens@csie.org,
-        jernej.skrabec@gmail.com, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-        linux-kernel@vger.kernel.org, zhangn1985@gmail.com
-Subject: Re: [BUG] pinctrl: reg-fixed-voltage usb0-vbus: error -EINVAL: can't
- get GPIO
-Message-ID: <20220128172003.GA2666058@roeck-us.net>
-References: <Yea3rBmY+MO4AhhV@Red>
- <2f82dbe8-50d6-d905-9065-d3869948aa06@xs4all.nl>
+        id S239396AbiA1Sbh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Jan 2022 13:31:37 -0500
+Received: from mga06.intel.com ([134.134.136.31]:21875 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229827AbiA1Sbd (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 28 Jan 2022 13:31:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1643394693; x=1674930693;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=VY3aZdeFzyu6Va/UkaJ2MHdYDdTIzl5209jkDxWmEc4=;
+  b=gNL88JAhyKeb30oQaaWuOrk0BgUfnCtxHXTmAja8YyaKkjk3m9Q80DOL
+   Q6EFuw+CMMwenEYcAGvrMotEF7jvIK6XDNQgdFSFWCAOor9l39Nbw9CIk
+   zIzHnDnzRQph+5GaPYcr+QifJ5AlG8Y+HMI18iIQZ418rxaaPiMfxKzwI
+   VuTdl2Oo71p2WBvkEqc+Y74j4GxCy8Zb67YG1aqJLJTjs5h0KqS2cW9ej
+   hfsS4yW6T2/SzbaCpsd6PNaGZzjS4xrAL8dzE3qV4DMaBvOQBTHgmUNcp
+   5EajkI4ZGIszHdcHDbcsq+1LsulssNHq6VloRKy7FUQ1gIVAaakDSKX/H
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10240"; a="307903943"
+X-IronPort-AV: E=Sophos;i="5.88,324,1635231600"; 
+   d="scan'208";a="307903943"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2022 10:31:32 -0800
+X-IronPort-AV: E=Sophos;i="5.88,324,1635231600"; 
+   d="scan'208";a="598286304"
+Received: from smile.fi.intel.com ([10.237.72.61])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2022 10:31:26 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1nDW0q-00FWNa-S2;
+        Fri, 28 Jan 2022 20:30:20 +0200
+Date:   Fri, 28 Jan 2022 20:30:20 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Tan Jui Nee <jui.nee.tan@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Kate Hsuan <hpa@redhat.com>,
+        Jonathan Yong <jonathan.yong@intel.com>,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Jean Delvare <jdelvare@suse.com>,
+        Peter Tyser <ptyser@xes-inc.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Gross <markgross@kernel.org>,
+        Henning Schild <henning.schild@siemens.com>
+Subject: Re: [PATCH v3 3/8] platform/x86/intel: Add Primary to Sideband
+ (P2SB) bridge support
+Message-ID: <YfQ2PGzOyiBfCppd@smile.fi.intel.com>
+References: <YdhUqhflS/0YsRWJ@smile.fi.intel.com>
+ <20220107171108.GA381493@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2f82dbe8-50d6-d905-9065-d3869948aa06@xs4all.nl>
+In-Reply-To: <20220107171108.GA381493@bhelgaas>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 18, 2022 at 03:13:20PM +0100, Hans Verkuil wrote:
-> On 1/18/22 13:50, Corentin Labbe wrote:
-> > Hello
-> > 
-> > As reported on old googlegroup sunxi mainling list, on linux-next-20220118, USB storage fail to bring up on orangepiPC.
-> > We can see some error logs in dmesg:
-> > reg-fixed-voltage usb0-vbus: error -EINVAL: can't get GPIO
-> > reg-fixed-voltage: probe of usb0-vbus failed with error -22
-> > 
-> > This is bisected to: 8df89a7cbc63c7598c00611ad17b67e8d5b4fad3 pinctrl-sunxi: don't call pinctrl_gpio_direction()
-> > 
-> > Reverting this commit lead to a working USB storage being setuped.
-> 
-> Hmm, I'll bet it's EPROBE_DEFER related.
-> 
+On Fri, Jan 07, 2022 at 11:11:08AM -0600, Bjorn Helgaas wrote:
+> On Fri, Jan 07, 2022 at 04:56:42PM +0200, Andy Shevchenko wrote:
+> > On Thu, Jan 06, 2022 at 07:03:05PM -0600, Bjorn Helgaas wrote:
+> > > On Tue, Dec 21, 2021 at 08:15:21PM +0200, Andy Shevchenko wrote:
 
-No. For me the problem is only seen if I try to boot from the second usb
-interface with the orangepi-pc qemu emulation, but not when I try to boot
-from the first usb interface. That alone makes it unlikely to be an
-EPROBE_DEFER related problem.
-
-Some debugging with your code in the tree:
-
-[    7.076227] sun8i-h3-r-pinctrl 1f02c00.pinctrl: ########### sunxi_pmx_gpio_set_direction: offset=10, input=0
-[    7.076567] sun8i-h3-r-pinctrl 1f02c00.pinctrl: ########### sunxi_pinctrl_gpio_direction_output: offset=10, value=1, ret=-22
-[    7.076992] leds-gpio: probe of leds failed with error -22
-[    7.081645] sun8i-h3-r-pinctrl 1f02c00.pinctrl: ########### sunxi_pmx_gpio_set_direction: offset=2, input=0
-[    7.081887] sun8i-h3-r-pinctrl 1f02c00.pinctrl: ########### sunxi_pinctrl_gpio_direction_output: offset=2, value=0, ret=-22
-[    7.082424] reg-fixed-voltage usb0-vbus: error -EINVAL: can't get GPIO
-[    7.082793] reg-fixed-voltage: probe of usb0-vbus failed with error -22
-[    7.129355] sun8i-h3-pinctrl 1c20800.pinctrl: ########### sunxi_pmx_gpio_set_direction: offset=166, input=1
-[    7.129844] sun8i-h3-pinctrl 1c20800.pinctrl: ######### sunxi_pinctrl_gpio_direction_input: offset=166, ret=0
-[    7.130788] sunxi-mmc 1c0f000.mmc: Got CD GPIO
-[    7.169391] sun8i-h3-r-pinctrl 1f02c00.pinctrl: ########### sunxi_pmx_gpio_set_direction: offset=3, input=1
-[    7.169663] sun8i-h3-r-pinctrl 1f02c00.pinctrl: ######### sunxi_pinctrl_gpio_direction_input: offset=3, ret=-22
-[    7.170054] gpio-keys r_gpio_keys: failed to get gpio: -22
-[    7.170262] gpio-keys: probe of r_gpio_keys failed with error -22
-
-And after reverting it:
-
-[    6.138097] sun8i-h3-r-pinctrl 1f02c00.pinctrl: ########### sunxi_pmx_gpio_set_direction: offset=362, input=0
-[    6.138375] sun8i-h3-r-pinctrl 1f02c00.pinctrl: ########### sunxi_pinctrl_gpio_direction_output: offset=10, value=1, ret=0
-[    6.140762] sun8i-h3-pinctrl 1c20800.pinctrl: ########### sunxi_pmx_gpio_set_direction: offset=15, input=0
-[    6.140918] sun8i-h3-pinctrl 1c20800.pinctrl: ########### sunxi_pinctrl_gpio_direction_output: offset=15, value=0, ret=0
-[    6.142808] sun8i-h3-pinctrl 1c20800.pinctrl: supply vcc-pf not found, using dummy regulator
-[    6.148879] sun8i-h3-r-pinctrl 1f02c00.pinctrl: ########### sunxi_pmx_gpio_set_direction: offset=354, input=0
-[    6.149086] sun8i-h3-r-pinctrl 1f02c00.pinctrl: ########### sunxi_pinctrl_gpio_direction_output: offset=2, value=0, ret=0
-[    6.154485] sun8i-h3-pinctrl 1c20800.pinctrl: supply vcc-pg not found, using dummy regulator
-[    6.155657] sun8i-h3-pinctrl 1c20800.pinctrl: ########### sunxi_pmx_gpio_set_direction: offset=204, input=1
-[    6.155853] sun8i-h3-pinctrl 1c20800.pinctrl: ######### sunxi_pinctrl_gpio_direction_input: offset=204, ret=0
-[    6.174411] ehci-platform 1c1b000.usb: EHCI Host Controller
-[    6.174737] ehci-platform 1c1b000.usb: new USB bus registered, assigned bus number 3
-[    6.188776] sun8i-h3-pinctrl 1c20800.pinctrl: ########### sunxi_pmx_gpio_set_direction: offset=166, input=1
-[    6.189149] sun8i-h3-pinctrl 1c20800.pinctrl: ######### sunxi_pinctrl_gpio_direction_input: offset=166, ret=0
-[    6.189720] sunxi-mmc 1c0f000.mmc: Got CD GPIO
 ...
-[    6.674660] sun8i-h3-r-pinctrl 1f02c00.pinctrl: ########### sunxi_pmx_gpio_set_direction: offset=355, input=1
-[    6.674796] sun8i-h3-r-pinctrl 1f02c00.pinctrl: ######### sunxi_pinctrl_gpio_direction_input: offset=3, ret=0
 
-In other words, there is some offset translation missing with your patch,
-causing -EINVAL returns.
+> > The unhide/hide back has been tested and we have
+> > already users in the kernel (they have other issues though with the
+> > PCI rescan lock, but it doesn't mean it wasn't ever tested).
+> 
+> Does the firmware team that hid this device sign off on the OS
+> unhiding and using it?  How do we know that BIOS is not using the
+> device?
 
-Guenter
+BIOS might use the device via OperationRegion() in ACPI, but that means
+that _CRS needs to have that region available. It seems not the case.
+
+And as far I as see in the internal documentation the hide / unhide
+approach is not forbidden for OS side.
+
+Moreover, we have already this approach in the 3 device drivers on different
+platforms. If you not agree with it, probably you can send a removal to that
+drivers. In the terms of use this code doesn't change the status quo. What
+it does is the concentration of the p2sb code in one place as a library on
+obvious (?) purposes, e.g. maintenance.
+
+> > > And the fact that they went to all this trouble to hide it means
+> > > the BIOS is likely using it for its own purposes and the OS may
+> > > cause conflicts if it also uses it.
+> > 
+> > What purposes do you have in mind?
+> 
+> The functionality implemented in the P2SB MMIO space is not specified,
+> so I have no idea what it does or whether BIOS could be using it.
+
+It's specified based on how MMIO address is encoded.
+
+The third byte (bits [23:16]) representing the port ID on IOSF that
+belongs to the certain IPs, such as GPIO.
+
+> But here's a hypothetical example: some platform firmware logs errors
+> to NVRAM.  That NVRAM could exist on a device like the P2SB, where the
+> firmware assigns the MMIO address and hides the device from the OS.
+> The firmware legitimately assumes it has exclusive control of the
+> device and the OS will never touch it.  If the OS unhides the device
+> and also uses that NVRAM, the platform error logging no longer works.
+> 
+> My point is that the unhide is architecturally messed up.  The OS runs
+> on the platform as described by ACPI.  Devices that cannot be
+> enumerated are described in the ACPI namespace.
+
+This device may or may not be _partially_ or _fully_ (due to being
+multifunctional) described in ACPI. I agree, that ideally the devices
+in question it has behind should be represented properly by firmware.
+However, the firmwares in the wild for selected products / devices
+don't do that. We need to solve (work around) it in the software.
+
+This is already done for a few devices. This series consolidates that
+and enables it for very known GPIO IPs.
+
+> If the OS goes outside that ACPI-described platform and pokes at
+> things it "knows" should be there, the architectural model falls
+> apart.  The OS relies on things the firmware didn't guarantee, and
+> the firmware can't rely on non-interference from the OS.
+> 
+> If you want to go outside the ACPI model, that's up to you, but I
+> don't think we should tweak the PCI core to work with things that
+> the BIOS has explicitly arranged to *not* be PCI devices.
+
+PCI core just provides a code that is very similar to what we need
+here. Are you specifically suggesting that we have to copy'n'paste
+that rather long function and maintain in parallel with PCI?
+
+> > > The way the BIOS has this set up, P2SB is logically not a PCI
+> > > device.  It is not enumerable.  The MMIO space it uses is not in
+> > > the _CRS of a PCI host bridge.  That means it's now a platform
+> > > device.
+> > 
+> > I do not follow what you are implying here.
+> 
+> On an ACPI system, the way we enumerate PCI devices is to find all the
+> PCI host bridges (ACPI PNP0A03 devices), and scan config space to find
+> the PCI devices below them.  That doesn't find P2SB, so from a
+> software point of view, it is not a PCI device.
+
+It's a PCI device that has a PCI programming interface but it has some
+tricks behind. Do you mean that those tricks automatically make it non-PCI
+(software speaking) compatible?
+
+> Platform devices are by definition non-enumerable, and they have to be
+> described via ACPI, DT, or some kind of platform-specific code.  P2SB
+> is not enumerable, so I think a platform device is the most natural
+> way to handle it.
+
+How does it fit the proposed library model? Are you suggesting to create a
+hundreds of LOCs in order just to have some platform device which does what?
+
+I do not follow here the design you are proposing, sorry.
+
+> > As you see the code, it's not a driver, it's a library that reuses
+> > PCI functions because the hardware is represented by an IP inside
+> > PCI hierarchy and with PCI programming interface.
+> 
+> Yes, it's a PCI programming interface at the hardware level, but at
+> the software level, it's not part of PCI.
+
+Why?
+
+> This series does quite a lot of work in the PCI core to read that one
+> register in a device the PCI core doesn't know about.  I think it will
+> be simpler overall if instead of wedging this into PCI, we make p2sb.c
+> start with the ECAM base, ioremap() it, compute the register address,
+> readl() the MMIO address, and be done with it.  No need to deal with
+> pci_find_bus(), pci_lock_rescan_remove(), change the core's BAR sizing
+> code, etc.
+
+So, you are suggesting to write a (simplified) PCI core for the certain device,
+did I get you right? Would it have good long-term maintenance perspective?
+
+> > > The correct way to use this would be as an ACPI device so the OS
+> > > can enumerate it and the firmware can mediate access to it.  Going
+> > > behind the back of the firmware does not sound advisable to me.
+> > 
+> > Are you going to fix all firmwares and devices on the market?  We
+> > have it's done like this and unfortunately we can't fix what's is
+> > done due to users who won't update their firmwares by one or another
+> > reason.
+> 
+> I just mean that from a platform design standpoint, an ACPI device
+> would be the right way to do this.  Obviously it's not practical to
+> add that to systems in the field.  You could create a platform_device
+> manually now, and if there ever is an ACPI device, ACPI can create a
+> platform_device for you.
+
+Why do I need that device? What for? I really don't see a point here.
+
+> > > If you want to hack something in, I think it might be easier to
+> > > treat this purely as a platform device instead of a PCI device.
+> > > You can hack up the config accesses you need, discover the MMIO
+> > > address, plug that in as a resource of the platform device, and go
+> > > wild.  I don't think the PCI core needs to be involved at all.
+> > 
+> > Sorry, I do not follow you. The device is PCI, but it's taken out of
+> > PCI subsystem control by this hardware trick.
+> 
+> The electrical connection might be PCI, but from the software point of
+> view, it's only a PCI device if it can be enumerated by the mechanism
+> specified by the spec, namely, reading the Vendor ID of each potential
+> device.
+> 
+> Yes, doing it as a platform device would involve some code in p2sb.c
+> that looks sort of like code in the PCI core.  But I don't think it's
+> actually very much, and I think it would be less confusing than trying
+> to pretend that this device sometimes behaves like a PCI device and
+> sometimes not.
+
+So, duplicating code is good, right? Why do we have libraries in the code?
+
+> > There are document numbers that make sense.
+> > I believe that
+> > 
+> > [2]: https://cdrdv2.intel.com/v1/dl/getContent/332690?wapkw=332690
+> > [3]: https://cdrdv2.intel.com/v1/dl/getContent/332691?wapkw=332691
+> > 
+> > work for you. Tell me if not (Meanwhile I have changed locally)
+> 
+> Great, thanks.  The links work for me (currently).  I think a proper
+> citation would also include the document title and document number,
+> since I doubt Intel guarantees those URLs will work forever.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
