@@ -2,122 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AA35F49FE0A
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jan 2022 17:28:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DEE2549FE42
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jan 2022 17:44:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232174AbiA1Q2F (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Jan 2022 11:28:05 -0500
-Received: from mga05.intel.com ([192.55.52.43]:9372 "EHLO mga05.intel.com"
+        id S239696AbiA1QoK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Jan 2022 11:44:10 -0500
+Received: from mga18.intel.com ([134.134.136.126]:48002 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231221AbiA1Q2F (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 28 Jan 2022 11:28:05 -0500
+        id S239249AbiA1QoK (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 28 Jan 2022 11:44:10 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643387285; x=1674923285;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=iDEdIyx/eA82CyxCDokO/3tZLh4lgebJYwjeiPMLUqE=;
-  b=QoKMLjxhxXAMPvweGpnCH4NYh9N5pTf4F4EMdUmYjLjmLtVIh4DzePIC
-   fl1uJXW7a0MpZpqnPVGB2gH3XizTgG9NRWNT2nxhfxDo3Ns+XysQJ4ubd
-   1HWS8nO82OI0MjL0t/YYFLjj/touNqPM29WTvMKHSTl1uPVI+j0Ws6mnM
-   8wShmmSlJus/wdHghdMr9DPX3UL6paQIMz16j+8vPx+j4cfGR/iFTV7g1
-   aYBd22JnmMFDCAtXldPJCNQjhT9ie3lsYqk6kcRoQMQ23g7/LjZWg+mp1
-   pRwyo45l9dqkFDp4gzHog+gJvdDzxx7KoC0B39X06hu1EUMiqgDNBvHIq
+  t=1643388250; x=1674924250;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=TTVAu1eU8Jx+Ggxko+9ltTDY/expKG3KCqEJi5tZ7kA=;
+  b=DGfY0rXX68w2kl6LxSgBbcczXGXC4rgi/X17GsHD7C8OczaYdziPaoDY
+   XO2Jhcgxdoy76A731felPAAOKfXhjLJlz9uN0aK11PlrUDERpzOZ7rCtX
+   IysMQFn5ljTD63DfvgJkljXFgpBtVonGxEERVLBh/lGTFQsuYqz3zOW56
+   B+95lE7rtacc1xpto2nMcEAmafDFaRg8Gf4Cf2PJ2nONGpF9Na5llyAtF
+   qvDyF9+nRBH9vvVKAHLPItWoZbZm6XTC0jtMfoniy8MMDpaP8Xl4/bEzI
+   gMZy7F8evPeU2z/eRMViOptjYZCWnLRsyNaJYwJJD463mwuR1ARXB2nky
    A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10240"; a="333502956"
+X-IronPort-AV: E=McAfee;i="6200,9189,10240"; a="230730745"
 X-IronPort-AV: E=Sophos;i="5.88,324,1635231600"; 
-   d="scan'208";a="333502956"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2022 08:28:05 -0800
+   d="scan'208";a="230730745"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2022 08:44:09 -0800
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,324,1635231600"; 
-   d="scan'208";a="480790453"
-Received: from smile.fi.intel.com ([10.237.72.61])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2022 08:28:01 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nDU5P-00FTd6-Vl;
-        Fri, 28 Jan 2022 18:26:55 +0200
-Date:   Fri, 28 Jan 2022 18:26:55 +0200
+   d="scan'208";a="675141184"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 28 Jan 2022 08:44:08 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id D609A167; Fri, 28 Jan 2022 18:44:21 +0200 (EET)
+Date:   Fri, 28 Jan 2022 18:44:21 +0200
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Phil Elwell <phil@raspberrypi.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Jason Wang <wangborong@cdjrlc.com>,
-        Marc Zyngier <maz@kernel.org>,
-        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] pinctrl: bcm2835: Fix a few error paths
-Message-ID: <YfQZT3NokrgF5OQA@smile.fi.intel.com>
-References: <20220127215033.267227-1-f.fainelli@gmail.com>
- <YfP/TuEERCrgst+k@smile.fi.intel.com>
- <f28cba7f-6799-9f08-71b2-249a2a506913@gmail.com>
+To:     Linux pin control <linux-gpio@vger.kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [GIT PULL] intel-pinctrl for 5.17-4
+Message-ID: <YfQdZTCvhjqjFUjm@black.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <f28cba7f-6799-9f08-71b2-249a2a506913@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jan 28, 2022 at 08:12:02AM -0800, Florian Fainelli wrote:
-> On 1/28/2022 6:35 AM, Andy Shevchenko wrote:
-> > On Thu, Jan 27, 2022 at 01:50:31PM -0800, Florian Fainelli wrote:
-> > > After commit 266423e60ea1 ("pinctrl: bcm2835: Change init order for gpio
-> > > hogs") a few error paths would not unwind properly the registration of
-> > > gpio ranges. Correct that by assigning a single error label and goto it
-> > > whenever we encounter a fatal error.
-> > 
-> > >   1 file changed, 15 insertions(+), 8 deletions(-)
-> > 
-> > While this seems legit per se, my eyes caught this:
-> > 
-> > 
-> > >   	if (!girq->parents) {
-> > > -		pinctrl_remove_gpio_range(pc->pctl_dev, &pc->gpio_range);
-> > > -		return -ENOMEM;
-> > > +		err = -ENOMEM;
-> > > +		goto out_remove;
-> > 
-> > Non-devm....
-> > 
-> > >   	}
-> > >   	if (is_7211) {
-> > >   		pc->wake_irq = devm_kcalloc(dev, BCM2835_NUM_IRQS,
-> > >   					    sizeof(*pc->wake_irq),
-> > >   					    GFP_KERNEL);
-> > 
-> > ...followed by devm.
-> > 
-> > It means more ordering bugs in the ->remove() and error path are lurking
-> > around. Can you double check and be sure that we do not have a case where
-> > non-devm registration code followed by devm?
-> 
-> It seems to me like we are fine with the patch as is, because:
-> 
-> - girq->parents is allocated with devm
-> - pc->wake_irq is allocated with devm
-> - name is allocated with devm
-> 
-> and those are the only variables being allocated for which we also process
-> an error handling path.
+Hi Linux pin control  maintainers,
 
-Okay, thanks.
+Not many but still important fixes for Intel, ZynqMQ and pin control subsystem.
+Please, consider to pull for v5.17-rc2 (or nearest one).
 
-My worries that it might be the case when the GPIO ranges have been removed by
-explicit call in ->remove() followed by some interrupt or so and oops or
-misbehaviour because of that.
+Thanks,
+
+With Best Regards,
+Andy Shevchenko
+
+The following changes since commit e783362eb54cd99b2cac8b3a9aeac942e6f6ac07:
+
+  Linux 5.17-rc1 (2022-01-23 10:12:53 +0200)
+
+are available in the Git repository at:
+
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/pinctrl/intel.git tags/intel-pinctrl-v5.17-4
+
+for you to fetch changes up to 500c77eed0feabddd5b3afb48e32c204614a8eab:
+
+  pinctrl: zynqmp: Revert "Unify pin naming" (2022-01-28 16:52:04 +0200)
+
+----------------------------------------------------------------
+intel-pinctrl for v5.17-4
+
+* Couple of fixes on how Intel driver handles an interrupt
+* Revert pin renaming change in ZynqMQ as it appears to be part of
+  the Device Tree bindings
+* Fix ordering of the files in the Makefile
+
+The following is an automated git shortlog grouped by driver:
+
+intel:
+ -  Fix a glitch when updating IRQ flags on a preconfigured line
+ -  fix unexpected interrupt
+
+Place correctly CONFIG_PINCTRL_ST in the Makefile:
+ - Place correctly CONFIG_PINCTRL_ST in the Makefile
+
+zynqmp:
+ -  Revert "Unify pin naming"
+
+----------------------------------------------------------------
+Andy Shevchenko (2):
+      pinctrl: Place correctly CONFIG_PINCTRL_ST in the Makefile
+      pinctrl: intel: Fix a glitch when updating IRQ flags on a preconfigured line
+
+Gerhard Engleder (1):
+      pinctrl: zynqmp: Revert "Unify pin naming"
+
+Łukasz Bartosik (1):
+      pinctrl: intel: fix unexpected interrupt
+
+ drivers/pinctrl/Makefile              |  2 +-
+ drivers/pinctrl/intel/pinctrl-intel.c | 64 ++++++++++++++++++++---------------
+ drivers/pinctrl/pinctrl-zynqmp.c      | 10 +++---
+ 3 files changed, 41 insertions(+), 35 deletions(-)
 
 -- 
 With Best Regards,
