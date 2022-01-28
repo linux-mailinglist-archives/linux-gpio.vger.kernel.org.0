@@ -2,74 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B2F9149FC07
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jan 2022 15:46:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3802E49FC1F
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Jan 2022 15:50:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349435AbiA1OqW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Jan 2022 09:46:22 -0500
-Received: from mga01.intel.com ([192.55.52.88]:15609 "EHLO mga01.intel.com"
+        id S244902AbiA1Ouq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Jan 2022 09:50:46 -0500
+Received: from mga03.intel.com ([134.134.136.65]:34145 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1349429AbiA1OqV (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Fri, 28 Jan 2022 09:46:21 -0500
+        id S240449AbiA1Oup (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Fri, 28 Jan 2022 09:50:45 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643381181; x=1674917181;
+  t=1643381445; x=1674917445;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=gngqOiUeR2m46p7MVs22OwqlK1CJHBbYd0zK1GE/vrQ=;
-  b=Xm9soSbJM/vpwWUgXDp7Ygrjfs+WU9ZRp3K/NvDs9gKkxdZEX+rMt8qX
-   FQYmEStwQk3jnNpc/6W1b+zjM75MhT9bHFBiz6AUOiIea6cr+CqPr+03z
-   hMdthx+eIwyeU2vnTg1u7ffqeiXM8vFb3B21tjQG2gUTIclvWn6mQ1VOY
-   bP8jTyvft4XT9WZteyV6URTc1ghkfDLuYqBx915h2irZp77gU+5lMkTNR
-   8Th4ymdea5tR9E74u/wESG85oFs9PCHDxuaeNv5M1gqH0zYGK54k9iYSS
-   5ExFV3Omi0F2dkTgGb4zw5JF/CiSAshiOvH8rgwSXkIf+XDv/8jmo8Hnw
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10240"; a="271592687"
+  bh=KENKt9ih+Iecy5W/jOM89XmtX4xsj3KyDe4f17+4BZk=;
+  b=jgvW6ke0JjW7CYezUdEtesIRv1VNt62pJnD65Y6SmhzGhbPWisxFSncQ
+   R5wQNURm3l70crcrusucS9ss43Jy95/RTgb9ATIbqk8wc0kPRkQmzvuaQ
+   /g0CgUp46u/vUVZQK7MQGa5w1e6zJCsCUP/xmYicTnq3Nu+1le6lZnXe6
+   g1CCAAswYp22cvIoZRsHeyrcy/SYLo7CgYXYGBEPW1UkXpMDQ4ANDYY0Z
+   ypGzAmoG36XZ30h5tDltWuoFRfif8GwMxXfue603Kvr/NVBcYzynBkHUo
+   Iax34ryoZVgGQGnXOm8EW6E18sgVjUO058SSv+59T/fu4ZXXIIEiRVCsa
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10240"; a="247078286"
 X-IronPort-AV: E=Sophos;i="5.88,324,1635231600"; 
-   d="scan'208";a="271592687"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2022 06:46:21 -0800
+   d="scan'208";a="247078286"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2022 06:50:45 -0800
 X-IronPort-AV: E=Sophos;i="5.88,324,1635231600"; 
-   d="scan'208";a="478305093"
+   d="scan'208";a="564215331"
 Received: from smile.fi.intel.com ([10.237.72.61])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2022 06:46:19 -0800
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2022 06:50:43 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.95)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nDSV0-00FRfY-Ko;
-        Fri, 28 Jan 2022 16:45:14 +0200
-Date:   Fri, 28 Jan 2022 16:45:14 +0200
+        id 1nDSZG-00FRjI-V2;
+        Fri, 28 Jan 2022 16:49:38 +0200
+Date:   Fri, 28 Jan 2022 16:49:38 +0200
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Gerhard Engleder <gerhard@engleder-embedded.com>
 Cc:     linus.walleij@linaro.org, michal.simek@xilinx.com,
         linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] Revert "pinctrl: zynqmp: Unify pin naming"
-Message-ID: <YfQBemA3bCz0FdYS@smile.fi.intel.com>
+Message-ID: <YfQCgnmyMOvB0V/k@smile.fi.intel.com>
 References: <20220127194602.21987-1-gerhard@engleder-embedded.com>
+ <YfQBemA3bCz0FdYS@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220127194602.21987-1-gerhard@engleder-embedded.com>
+In-Reply-To: <YfQBemA3bCz0FdYS@smile.fi.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jan 27, 2022 at 08:46:02PM +0100, Gerhard Engleder wrote:
-> From: Gerhard Engleder <gerhard@engleder-embedded.com>
-
-Thanks for your report, my comments below.
-
-> This reverts commit 54784ff24971ed5bd3f1056edce998148709d0a7.
+On Fri, Jan 28, 2022 at 04:45:14PM +0200, Andy Shevchenko wrote:
+> On Thu, Jan 27, 2022 at 08:46:02PM +0100, Gerhard Engleder wrote:
+> > From: Gerhard Engleder <gerhard@engleder-embedded.com>
 > 
-> This patch changes the pin names from "MIO%d" to "MIO-%d", but all dts
-> in arch/arm64/boot/dts/xilinx still use the old name. As a result my
-> ZCU104 has no output on serial terminal and is not reachable over
-> network.
+> Thanks for your report, my comments below.
+> 
+> > This reverts commit 54784ff24971ed5bd3f1056edce998148709d0a7.
+> > 
+> > This patch changes the pin names from "MIO%d" to "MIO-%d", but all dts
+> > in arch/arm64/boot/dts/xilinx still use the old name. As a result my
+> > ZCU104 has no output on serial terminal and is not reachable over
+> > network.
+> 
+> And question here again, is the pin names ABI or not?
+> If it's an ABI, then it should be clarified in the documentation.
+> Otherwise, I'm wondering how this even may break anything.
 
-And question here again, is the pin names ABI or not?
-If it's an ABI, then it should be clarified in the documentation.
-Otherwise, I'm wondering how this even may break anything.
+Meanwhile I apply this to my tree and send as fix PR to Linus.
 
 -- 
 With Best Regards,
