@@ -2,174 +2,150 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4192A4A38F8
-	for <lists+linux-gpio@lfdr.de>; Sun, 30 Jan 2022 21:18:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A9044A3A63
+	for <lists+linux-gpio@lfdr.de>; Sun, 30 Jan 2022 22:30:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356049AbiA3USW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 30 Jan 2022 15:18:22 -0500
-Received: from mout.gmx.net ([212.227.17.20]:39749 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230437AbiA3UST (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 30 Jan 2022 15:18:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1643573878;
-        bh=WHKec9KlEABs2CO4vZCuTuGwlLqgGtsX2DEZx9TfIYw=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=LXxa1GmF8ddjigRYsLk+FUcrCdHYq8TnmRIoZ+Xx5guD2rSHfvsVloQKkzdSk5szM
-         b22Jy3BNbZweQkGz1xCaMtYA5bRNHr9MPQogaJavsM5dfQ2z0eEEKZo4IfVI1owydq
-         +YDSMzN6XQNWlp8bE5LlfI4IxH9qWSTw8fR1PLuQ=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([5.146.194.160]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N4hvb-1mD3jd2Upb-011mKE; Sun, 30
- Jan 2022 21:17:58 +0100
-Date:   Sun, 30 Jan 2022 21:17:55 +0100
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     kernel test robot <lkp@intel.com>,
-        Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>, kbuild-all@lists.01.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Avi Fishman <avifishman70@gmail.com>
-Subject: Re: [PATCH v5 5/9] pinctrl: nuvoton: Add driver for WPCM450
-Message-ID: <Yfbyc8AZ0i9b377V@latitude>
-References: <20220129115228.2257310-6-j.neuschaefer@gmx.net>
- <202201292234.NpSNe4TD-lkp@intel.com>
- <CAHp75VdVoqRk6bLwaOPfGdfyVoH_9DUj2Lb4VBOHrhM9SpoMNA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jm0/6VIYyZJCcLqN"
+        id S238433AbiA3Vab (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 30 Jan 2022 16:30:31 -0500
+Received: from mail-bn7nam10on2132.outbound.protection.outlook.com ([40.107.92.132]:1428
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S233152AbiA3Vaa (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 30 Jan 2022 16:30:30 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BPjq41o37r85P6NKfSNw3KuAVvBfXFwfQQPotN+p41fVxufwBtC3cZWJa+JMR5JVGnqf9g3vHFmGiHVaE0lqABsqgXTgRgB3m7BC6D6qVVAdv+8dNEn6jP5mUngm+kTB9WzhJhJ55/b0StrveITP47I6oL2ok4T/7OjqX5xP23KyVr6YuJNdX5/3YDHgXboMbl9LUY3WYblZ2NNhimEwz//rEvRkwFbwRYhXTCfnrivF7yPSPzClBCPQejltgd8W1SBk38BgFco2fjxzuV2mYWvrJVZlLNg3Jg98ZedDA2iQlTR5ocOOnse+OvBpDlzb9PVHRsVY7VQ+oJ19Y9Fliw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1W/7Pv/VG54X5i9Yxdw6glDOI71LuDcCFDkCHA0UT8g=;
+ b=B9xM0BmoNuBIM4NV+/Lj4EXFDx/l3wj1+EsgpV/rAgDmoT8lO2/KiwlGjkYNiAensXjsapGb4Kk8YUoagn6L0UQMHx9Io4Ju2hQYUBkGKmzFHLj/NyTLVPFb7019r1sJ9CYHWPET5I6ip4ICLCFqirRkU6mBqI4emJDFdZBRDEO0E/3ZBC7CJcXeladEq58ZZ7x2hdEWNZEEyFaYfCqRT9zH9vTMfj31CVGlVBSXYZ0hOwpPRDUYpqjz/p3oBoUn17dgbNsuIDWxPA/M2JB3qdl3dPu8fAeHYuYPRVFrWV8yqbx1ieeBu2JUcNvW8ZjL6wZq0sPWnXWgKl28pje3mQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=inadvantage.onmicrosoft.com; s=selector2-inadvantage-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1W/7Pv/VG54X5i9Yxdw6glDOI71LuDcCFDkCHA0UT8g=;
+ b=yRrntmGv6cnHH1FwrppfI6LLFkaIZCF9AX6vpMBJaBrUlEDF7xl7Of5n0iA3Tx+OkUM7HMfd0vAUQ2cBxmePTInkEl4/h9AimtXd4OtQxoR5oyLYTDoBJXl1VFlP76+QXIqFL0syE3ieFrp6v0zzHLCyyOhKqKKjja4HIRAk8MQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=in-advantage.com;
+Received: from MWHPR1001MB2351.namprd10.prod.outlook.com
+ (2603:10b6:301:35::37) by DM6PR10MB3403.namprd10.prod.outlook.com
+ (2603:10b6:5:1a3::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4930.17; Sun, 30 Jan
+ 2022 21:30:28 +0000
+Received: from MWHPR1001MB2351.namprd10.prod.outlook.com
+ ([fe80::2d52:2a96:7e6c:460f]) by MWHPR1001MB2351.namprd10.prod.outlook.com
+ ([fe80::2d52:2a96:7e6c:460f%4]) with mapi id 15.20.4930.020; Sun, 30 Jan 2022
+ 21:30:28 +0000
+Date:   Sun, 30 Jan 2022 13:30:22 -0800
+From:   Colin Foster <colin.foster@in-advantage.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>, UNGLinuxDriver@microchip.com,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Lee Jones <lee.jones@linaro.org>, katie.morris@in-advantage.com
+Subject: Re: [RFC v6 net-next 1/9] pinctrl: ocelot: allow pinctrl-ocelot to
+ be loaded as a module
+Message-ID: <20220130213022.GA2914669@euler>
+References: <20220129220221.2823127-1-colin.foster@in-advantage.com>
+ <20220129220221.2823127-2-colin.foster@in-advantage.com>
+ <CACRpkdbFOB-uoVKiG0qTcHDa45bNjwdkP=AzAB7kU2Car37QYg@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHp75VdVoqRk6bLwaOPfGdfyVoH_9DUj2Lb4VBOHrhM9SpoMNA@mail.gmail.com>
-X-Provags-ID: V03:K1:4GOCgY+HgfHqSlLftYw6Ss7XZF65gtr6I+38e5TfVJVdft2pkLV
- tNVN5znJSp0VIpFM+Z/1LWK5odLxH4nAUNBglXxOmdg+UL79u4bTXgMeM/q5firchyHbGRL
- Zf4UsbsJkpG06C4Gjwgo8drGGLS/sPuP7a9OK6SbxDzpksiNZiO4Hd/MJa8LM9hLA70HahT
- uQf6ryOoFoBv5bp7+a1MQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:M/s+H1A7UcU=:3p+osN6ZE2pCys44ed+POz
- IAB0S01wkwGH8ykcEB1MP5KJGCzNhqPWBRzdEFHbYnLDK+AvCVFvVGAhCW0pNEV2XTfuYyjQ7
- YdhVb49zO21bnytEgYrybCUURAz7LIWSL/j7D4u/4E/Ye9TM+3JywABdCH7oCufWevimxyCoj
- lHN7aFTyCAf2NhtXGZRQKkBTNXlOuq+sDTfVL6TYNLywNhKxFNlFhS2VNKmJmfOmYFWLFm2gC
- F2TIFx71nmJ1es3XYyb16AhWvb/0lFhb2xA0F5zsHA3s2nRrpJmbuBTUqb8kn9nQUI3vwFNlB
- jxKuJZEZZ/Z2TSBKigu+BCwj++NZz/CHgQPSC9szBQ86koVf8Eg5li7k+PR3HsAamx2jdEtsQ
- EsMmqEQOWw97q4IrNrZEa0QIeD24uwrS/9OInUm7Do4ySDkrdX1oBlqFde9REjDE31XZZjbf8
- 2iDTPeKkT2yl6eRuhkB3x9upACqr9fv6HvTd26DjJ9qFlv4mMNvCUaYH5wn40G8jzh49Y8Cra
- 4JymDDrfDvXcnNv9ZIPZL5/ixSHA+ZxbT13q+AHka+VGFqMYg+55qGvOzu3iMfilgMUoPSI0P
- x7Sv2o6MNf3d0kffz4ZTG46fAaRGRfqenNu7JTEi8WnIcKC0435mE1PgVBC7A1tODFTwU74p1
- aR6K8T7QTApRM1cwmrQgMnVbacY83KMC10eqmtYDZFg+2e+qKmF8B8TQ8y4mD4dYqQigVhOrh
- Ng9Z/NrBePwTu6lfhDeXw8HSvvEjByFny7idzcekaTR2QXjiocGVxX5ghdSlI/1tSe5CquD3p
- Nl1sxXUrcg3MEYamRPvD7ST9sVjc1t/wb8Cso32c0BFkw9yZQrfB3Rff9Z1jpthGptPD9/Zyq
- ZH1Q4/PYGo/PFrqNQnC712VKAI9hX3NTczzt0uGDgPN2j/j8EUg3aEWaxfpHcqjTXhdUf0Y3M
- SBk6Gv2gGc4GiQbqvV+qeclVa5PbKn+bkVp3rtOlqqlKBLoAj0caqTKWeJmVxikc/E/2zrZCF
- VmCK/IM+AX/9zf5mCNP3LMntgBkSE1RCO1Fp55jt1ucSTyJYYRQliiVr4PluRxqR4anBwOw9Y
- LEcOqZuEeify28=
+In-Reply-To: <CACRpkdbFOB-uoVKiG0qTcHDa45bNjwdkP=AzAB7kU2Car37QYg@mail.gmail.com>
+X-ClientProxiedBy: MWHPR1601CA0006.namprd16.prod.outlook.com
+ (2603:10b6:300:da::16) To MWHPR1001MB2351.namprd10.prod.outlook.com
+ (2603:10b6:301:35::37)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 7ebfd3e3-1e2e-4991-73ee-08d9e437bc1e
+X-MS-TrafficTypeDiagnostic: DM6PR10MB3403:EE_
+X-Microsoft-Antispam-PRVS: <DM6PR10MB340355E2589A0A6D94F284B3A4249@DM6PR10MB3403.namprd10.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: nHOnohzChxqu1r+GrLDh7ilAYRMBfRsaD/NdUg1cJ+UA/I9wzrqYkMfSviJGfGi9ttt+WGnB4oFpqAokXgMza6TAy7dt+KZBTVEgX7odCdsefpX0DfxGI+uqAeqoAaNbhSkLI7WfwP02TU6l0LrslNaLzitHhgtlEJJlZEhT0vkhROn6btD0Ghjq67yfYnrkkcOWrycVpX0YpULgCAjZgerD1JnukQpZ027zCN7k4c4SeZmAplwnSjXX2gUDEj/R0F/32qjWunp9VZ/+9RxJgchnell9D7gMhUh4X+T6qzSDuCxht2wXfflrBY5S3eqU4nyXSHbsGcd3YQsISiuqFmSumCV7guqQFcIbROuiOVduhaeXHP0KbLlbiz2/oe7G/1Xg2XxM2crmJ2kvcFkVedOTMi7HEy7/4HyiROeHoxkoiCg9POYERrvea27vNQ1A5ko8mGyW/4LNhGm8F4vNtK1b1lpNKwXYeND8Tjn0SAL3LZ3QD4qt5p634TTiR7vdK/+IPkJyxgCI2Ub02uqUtp9VSDYCEU9E5orVeiftG5EmSf3Z+niowbtcv9ususpz4K25kH6b7HmpG1zD4wHWX0wVOq1zWNBMvUw2VFgwKYVdliaNSSpuoF08Pdkwd4ZlCA+bxiLdKd0FIl+163w+BweInL5x6Ap499fiLahde/LNb2ZTepcQOhz+Ini/jFaHM2zpJcisndWmLsMszfpQpA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1001MB2351.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(7916004)(346002)(376002)(366004)(136003)(39830400003)(42606007)(396003)(7416002)(33656002)(8676002)(316002)(66946007)(4326008)(66476007)(66556008)(5660300002)(6916009)(2906002)(44832011)(33716001)(8936002)(54906003)(52116002)(53546011)(9686003)(6512007)(186003)(6666004)(26005)(6486002)(6506007)(508600001)(86362001)(107886003)(1076003)(38100700002)(38350700002)(20210929001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?leIaw6GL1+TdpaoR4xbmRFwdPDuUhjei84WKvQ24ETwZA9rATyOer0Z5Mpq/?=
+ =?us-ascii?Q?1cWwlnwS/bXQ8DnQT9iHt4/bfXLKHVVtG30imyZsqvegNoeRmDp9UyOffpcD?=
+ =?us-ascii?Q?1mz9z1pivyW7VtYZIHmkvNysPcr+qUIF6WPklm7Ke51YsqIqQjkMZ9w//S16?=
+ =?us-ascii?Q?7hI3inqYoR48++RQd5X2WgPiUzSc1b7x47p0D3ZyOu29maDwaTkGB8+ho0KV?=
+ =?us-ascii?Q?ll6Iu6zhw0oxqaFmVU+bpFVguAQk8koJEkCQR7FhOPwg3nc+lzN9tODQaQgz?=
+ =?us-ascii?Q?4uLgbdvXz83w0qW5AqGw7kJJu2ZMje6JrGAi4BjrAqg6ZnjvUfA+txLtHeva?=
+ =?us-ascii?Q?rta8JCdCbtP46gZIfmT3FJJei3oWhLDLckTJgAvdsU6wrKM0xrNL97dHEp5D?=
+ =?us-ascii?Q?BoVILFJbYryV3b9obaa/p1DhexHed7pK5KpjQcuAKoX8b5sQ0dsDv61ByTaQ?=
+ =?us-ascii?Q?I+Xg+0DaRTHF9/G1Ur+VeJzmn+Xdt5d7sNp/WieijX7fhvlE4MEQuv71Nivf?=
+ =?us-ascii?Q?q0rT43zjX9xY0308MN4EfZda/beH2BXZiic7a7ZnNh9qm9Zd7eVHVqvbkSs5?=
+ =?us-ascii?Q?XCVBbJV8l6wEqedLYlzPnLr0jeoyBJJkItTgURX4LYQxPveVWtntto6VIbjs?=
+ =?us-ascii?Q?gMkIALdEakDxBrhsT7qwm9EhrjFjznwbbaJAt8GmSewt15kRLaO4jDj2tDYi?=
+ =?us-ascii?Q?Uagb8e8XBaXckqnVds02dHwi8fJVIBp0rb1Bgvg1fTBXScJZxueL6zaPzfJ5?=
+ =?us-ascii?Q?uBkEHEZusXzWGIXaTAq+CdrE1fIGsolj5ON5XLPRE+6TGAEFej0tUjPGgphY?=
+ =?us-ascii?Q?guKP6DyPueQ4SMGAUgZvc5PHQztGZrrmAl+3XXZy6ZNJdav016OYmTUCV/H3?=
+ =?us-ascii?Q?rEts7qa9N9Qye8xMMBXogTR3zb9cwXyD5vF4DQjHPUhs6WkgCSfHN8yeJQVG?=
+ =?us-ascii?Q?JN2DmroiaXYewUV+lfem2YHfXAVKtNbCt6BD4C5PznfJF2ErZD8+nFu/VL3d?=
+ =?us-ascii?Q?F3TTBtS7MmQb4BfXq05resNONYP6ZsBvQ4Fo44jGDKJuGkKEBC2eroNVD76y?=
+ =?us-ascii?Q?KZPerjQi8D0Lt0Mm8QCftzTPw6v42TWji+gnR6sOSDPrTHrFc4ASX7/ueeLv?=
+ =?us-ascii?Q?BYBIk4uTPSHlA1HDqO5a+3Hs0GxQhovUO3O7VOiZrgDh99qstndzMd0Zs8m4?=
+ =?us-ascii?Q?1HKfHjrTXczEZ6fK5rcYKZ7NkIAuo4983it7ha6LPSIsCZqip1haIbrgyZWu?=
+ =?us-ascii?Q?p/1gbjF436RA2A8nvWcbcoPQ7j2fGS4ycQHriUJO2Q6gEwHjDVzh0YwJ+x2T?=
+ =?us-ascii?Q?Gike6Ds/BelId+DCpOgKFOnd7klTHZwmcD484x+NmGIYxJKD9oMoWK5hv5qR?=
+ =?us-ascii?Q?GKPDCOh+KbfwSsbCidgrMm6aIHOXQOgK+/p13O6jyyC7W1MmSSCvv4sB//PS?=
+ =?us-ascii?Q?efP2UbtRSMjOpG6wptoeXaVvKKE6FmGdhNeO1DaNe3wuIu/Rlx5sp7jjmhWS?=
+ =?us-ascii?Q?wPbGXLDPahlQfIU2B1A3COakpf9V0bne7ezuUtMBgn9lpI5h7BH/3LhUYH6W?=
+ =?us-ascii?Q?jdLWxrYHk0mmAk5fgBWI6BDZ6RIMN7BN+oHbuJs/rKnBSEWkjWpzV49SibHV?=
+ =?us-ascii?Q?pnvieQKGdkUBJf5q1UvYxeOliClIYpBwvGoBIDktISOAj4fkpI5UbycYtf6B?=
+ =?us-ascii?Q?aPodB6/r44bawOK8OGBSaOZeRZI=3D?=
+X-OriginatorOrg: in-advantage.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7ebfd3e3-1e2e-4991-73ee-08d9e437bc1e
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR1001MB2351.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2022 21:30:28.3988
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 48e842ca-fbd8-4633-a79d-0c955a7d3aae
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: yzxCviRp/njiPTS+bqdbz+3tAgSdyGC8wP7NPS5iYosdAlkqgarZ32E0Cq+N40J1zcwqBc//9EDB6iaQBiHJiWPPVPIVsFJ6eJ1sTH16Fdg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR10MB3403
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
---jm0/6VIYyZJCcLqN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sun, Jan 30, 2022 at 08:47:23PM +0200, Andy Shevchenko wrote:
-> On Sat, Jan 29, 2022 at 4:10 PM kernel test robot <lkp@intel.com> wrote:
+On Sun, Jan 30, 2022 at 01:30:57AM +0100, Linus Walleij wrote:
+> On Sat, Jan 29, 2022 at 11:02 PM Colin Foster
+> <colin.foster@in-advantage.com> wrote:
+> 
+> > Work is being done to allow external control of Ocelot chips. When pinctrl
+> > drivers are used internally, it wouldn't make much sense to allow them to
+> > be loaded as modules. In the case where the Ocelot chip is controlled
+> > externally, this scenario becomes practical.
 > >
-> > Hi "Jonathan,
-> >
-> > I love your patch! Perhaps something to improve:
-> >
-> > [auto build test WARNING on linusw-pinctrl/devel]
-> > [also build test WARNING on robh/for-next linus/master v5.17-rc1 next-2=
-0220128]
-> > [If your patch is applied to the wrong git tree, kindly drop us a note.
-> > And when submitting patch, we suggest to use '--base' as documented in
-> > https://git-scm.com/docs/git-format-patch]
-> >
-> > url:    https://github.com/0day-ci/linux/commits/Jonathan-Neusch-fer/Nu=
-voton-WPCM450-pinctrl-and-GPIO-driver/20220129-195955
-> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pi=
-nctrl.git devel
-> > config: um-allmodconfig (https://download.01.org/0day-ci/archive/202201=
-29/202201292234.NpSNe4TD-lkp@intel.com/config)
-> > compiler: gcc-9 (Debian 9.3.0-22) 9.3.0
-> > reproduce (this is a W=3D1 build):
-> >         # https://github.com/0day-ci/linux/commit/3fd91ea1bad905592e89c=
-8f987f6bd3740329b80
-> >         git remote add linux-review https://github.com/0day-ci/linux
-> >         git fetch --no-tags linux-review Jonathan-Neusch-fer/Nuvoton-WP=
-CM450-pinctrl-and-GPIO-driver/20220129-195955
-> >         git checkout 3fd91ea1bad905592e89c8f987f6bd3740329b80
-> >         # save the config file to linux build tree
-> >         mkdir build_dir
-> >         make W=3D1 O=3Dbuild_dir ARCH=3Dum SHELL=3D/bin/bash drivers/pi=
-nctrl/nuvoton/
-> >
-> > If you fix the issue, kindly add following tag as appropriate
-> > Reported-by: kernel test robot <lkp@intel.com>
-> >
-> > All warnings (new ones prefixed by >>):
->=20
-> ...
->=20
-> > >> drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c:908: warning: "DS" redefin=
-ed
-> >      908 | #define DS(lo, hi) (((lo) << DRIVE_STRENGTH_LO_SHIFT) | \
-> >          |
->=20
-> >    arch/x86/um/shared/sysdep/ptrace_64.h:38: note: this is the location=
- of the previous definition
-> >       38 | #define DS (HOST_DS * sizeof(long))
->=20
-> This is a good example why short and namespace-less definitions are
-> not always good even in standalone module.
->=20
-> ...
->=20
-> >    drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c: In function 'npcm7xx_get_=
-groups_count':
-> >    drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c:1564:21: warning: format '=
-%d' expects argument of type 'int', but argument 4 has type 'long unsigned =
-int' [-Wformat=3D]
->=20
-> Should be %zu
->=20
-> If it's already in for-next, there should be two patches to fix these iss=
-ues.
+> > Signed-off-by: Colin Foster <colin.foster@in-advantage.com>
+> 
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> This is fine to merge through the netdev tree, if you prefer I merge patches
+> 1 & 2 to the pinctrl tree just tell me.
 
-These warnings are about the pinctrl-npcm7xx driver, which was merged
-many releases ago, but started to be built due to the Kconfig change in
-my patchset.
+I'd thought about splitting these out, but they really don't make much
+sense to be anywhere until the MFD is added in. The big one I needed in
+pinctrl was the regmap conversions that are in 5.17-rc1, so I'm hopeful
+I won't need to bounce back and forth much moving forward.
 
-I'll fix them anyway.
+Thanks for reviewing!
 
-
-Jonathan
-
---jm0/6VIYyZJCcLqN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAmH28k4ACgkQCDBEmo7z
-X9tbGBAAjvOrvlyTms9k3lD/kxnuNMDuDsix2wT4GRbtDD4LZgJPYBBMeDKHpc2R
-CZWEBrGZpbK4FUYynHIFqvjPjEN8FiY8QVtwkI7Zc7M966v1SLe2YrOZK++p5U4L
-HcuZW3hpRB7etlfSzprH6RVP3Lg/xnn9fj1o5LS6VsCLiMR+Phz7CKnQzEhd7v+G
-ytmg1pOCi40zSwZkjI1D6IPwUvZKvz+FUUszL60zS4xVKv5SQFFuGCPDJAWRTYrR
-sNf9HSvHXKjxS6LPuEvzQDR+FGy/ICS8/yEmEsasgzCdbpW2ehJiVsp4S07WHQe1
-ALyonug6EpCISBpZGIXEPKojVcCkcqFat/5ZFkH2rOT5o9avhZ3p5YtWt9YXBbZZ
-1yhLHRuNuJI3sjKYgFtBQHvA/d+yjKPz3KtkthZs8UGI8Fi5jc4+zSMbvDav9U3B
-lUm4x8hF9VbLTHKDM40D7sIUlx2jHQjRKCkcLEdr3CtJRNbrN/Vy554PZ7wTq6OW
-9Dqo7ExjmQbQQqwOn9vDVtrwkgdO9LTasZba+MpqRPYaKomPsNZrU26I9HyAccLY
-W8AY2AR1iwVl3JCrIgpJKCWTNJJzZGh7cI0HtMLY3DKmuTWJc9j+p8dP/Q6dFIXK
-Hoq5G12A8HXJvR+46QdMeq20tfkGx1MVT+0xvXQnfkkg+gh/W2U=
-=y+iT
------END PGP SIGNATURE-----
-
---jm0/6VIYyZJCcLqN--
+> 
+> Yours,
+> Linus Walleij
