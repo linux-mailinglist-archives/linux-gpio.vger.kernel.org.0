@@ -2,85 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C4F954A32E4
-	for <lists+linux-gpio@lfdr.de>; Sun, 30 Jan 2022 01:38:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D02E74A32E8
+	for <lists+linux-gpio@lfdr.de>; Sun, 30 Jan 2022 01:43:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245021AbiA3AiX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 29 Jan 2022 19:38:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44524 "EHLO
+        id S1353471AbiA3Anx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 29 Jan 2022 19:43:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232643AbiA3AiX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Jan 2022 19:38:23 -0500
-Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAC75C06173B
-        for <linux-gpio@vger.kernel.org>; Sat, 29 Jan 2022 16:38:22 -0800 (PST)
-Received: by mail-yb1-xb2d.google.com with SMTP id k31so29636541ybj.4
-        for <linux-gpio@vger.kernel.org>; Sat, 29 Jan 2022 16:38:22 -0800 (PST)
+        with ESMTP id S242625AbiA3Anw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Jan 2022 19:43:52 -0500
+Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83576C06173B
+        for <linux-gpio@vger.kernel.org>; Sat, 29 Jan 2022 16:43:52 -0800 (PST)
+Received: by mail-yb1-xb33.google.com with SMTP id k17so29587672ybk.6
+        for <linux-gpio@vger.kernel.org>; Sat, 29 Jan 2022 16:43:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=kD5EeMfWUZCSsdRFixk1so34OOReUXkCj6tRRq5J/Uc=;
-        b=O4Tw7KGaXWjdqt9T970Y8/kH7N+ViE2uO4IeA3UWwfb5LWDhLAgdQ13kGqqCFktiMk
-         4Vv7jQT52fSqMz5OkdAC4KjLplOciEm3LyV6cOLM6+pAEnWGc4o6mZJDCbioWpGVOUG1
-         2lHSyAOBMCN5Frc3Cdsg6bg7HxZ6b231c3GvytE0674ovgf2FlDq0ID6gg9gLJDi45+I
-         pa7EYF80KoI9HtvPwgzfHMaG8Zw3WLlC+MOQe/xA8bSx8j0mMvs5X1TcC/ArieNb5T2Y
-         ho9dk3Xhanq8jicrHV0bc2yPvangtdehWkknv7962AdwCimsA+Te/k139zwe+cHAzd0y
-         wkNQ==
+        bh=i0heOt0MsnfbggLnL41BYSYo+JW4b1v4laT3az03jyE=;
+        b=NTUUoAwKu7RD+Vz0K3+O7Xn0Q+qJK8lQEW5wXkAOwblKwjVUeOWeoXjSuUyHQOm2WU
+         QLR05VjCiSdHhC2r3/lfYWWwxot6fMes++uNzubU/E+IosIe0VZaK2yrLpeqYGxCFj6t
+         qFNdYlyHv5gFrXHes9twon2u56e+90H5YMqGrOXE4MzzkTFwZ23E4ZtBJ+fUlSMO9n7k
+         ivfk/0fKeZCdf8ARYxPfnEY7xjBDObjf0TTLwfcttTXLcf8GT7iatHOW1toEDwZPeH0b
+         PpMtLUQWp+S/baBvVEqBvBBbuXp1QHTqyMILfqFgRxiyqoDR7Hb8a6Bla3MPFzt424Ko
+         2Hhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=kD5EeMfWUZCSsdRFixk1so34OOReUXkCj6tRRq5J/Uc=;
-        b=WjC+3gMABCEH2VWnc09+MDN4Ott0RtH/O3Ko3c+UObJ8I6ryGeIZa/rjlHApQDH6ep
-         adn4RbLWzlUPajnMoF1F0zf5vrrGPxyWBftV/rNHxY6y4ewxVeyfyk0pbbPKC2V6ejw1
-         OpQ5ElLxPSV3YrZQ6aIvqMcBWfQ7ZeV5zVEYD8RGZ6EQNrj10T9Xhveo96TAApQtkhr8
-         D5OM7khKJFW7ErwuqUsjg/uIMijiCNW/1kOMYyMAiSIVZ2JTFMn9Z3hLIe89LQLKuXu6
-         IVHb1If/Un0q2oVV6P0TdXSBS7yfrtTDcZaJzAAqAcOqlgHUbj0/f36X+98lHS4ICAze
-         3Ugw==
-X-Gm-Message-State: AOAM532Y4+Y/c/FquXVoVkDfLroKldTdIwOBFmQ3Jyb9QtmyXG0OM9He
-        yhHaNlbPAVIfSfaoYK+iZ3Amww8ykFlsIZAxHOFWSw==
-X-Google-Smtp-Source: ABdhPJxrsg7lw1QYllN4dx+IUpwLh8pIspc1kHtZgNyj3fI5O7+wptcqpiBXNZmBeah8UrGe2QSTVaJBq7sQALlEU/w=
-X-Received: by 2002:a25:cfc6:: with SMTP id f189mr21225792ybg.322.1643503102047;
- Sat, 29 Jan 2022 16:38:22 -0800 (PST)
+        bh=i0heOt0MsnfbggLnL41BYSYo+JW4b1v4laT3az03jyE=;
+        b=dbDST32NM0CR/ilNtpsQJ15M4eJJGZ23jPNmdIdQOyAsbfTKRkXZGWIN6Es3uIYIvu
+         CJlLdQhb0HLzfmud6vNWhgB+GxrQb++NWnK4sVVE5dLMb0v6PmrbwqcmJYZM5OgaiBZ/
+         JB+AYgRyX+oaFh6KpuQ2DDSef/8JL2xYOjYqClP7pEFWJkUq1KkB0SDKrscoyOVhyUHi
+         ggHDrj88eviXmgDsCO4C7B6FolkKTTFRF910tO1OY/sDKxJtvvHIF2U6yP+pY/Wf7drE
+         zNHW5wfLIW2bpzP0ho6rJJjUNulluxfB5jJ+fX8mdDXnn9aSMP5XTTv7G1RuZgQc6Dgb
+         Yd4w==
+X-Gm-Message-State: AOAM531jbixzwDlZ55SbCCIuj/Tk0MLuxo5QotBAD8wJQ3IspupJppkM
+        mrFEERL36CqZtJVdqdflwiM2b47Srwya/6PPtfUDDA9zSDs=
+X-Google-Smtp-Source: ABdhPJydy6ZkeacI3rT8jHNSi9nSVdfyeZ6fzuQWvUGVLQ53U3TfGwQChT4mT+0l3VMAP7QbbCFsXkBR31fK2hp451E=
+X-Received: by 2002:a25:8c3:: with SMTP id 186mr21032329ybi.587.1643503431458;
+ Sat, 29 Jan 2022 16:43:51 -0800 (PST)
 MIME-Version: 1.0
-References: <20220112114724.1953-1-tinghan.shen@mediatek.com>
- <20220112114724.1953-3-tinghan.shen@mediatek.com> <18f7a647-6153-6d38-dff1-727b9592b01e@gmail.com>
- <102ea6303dd16fdf9ec931d0a1845a93afe92545.camel@mediatek.com>
-In-Reply-To: <102ea6303dd16fdf9ec931d0a1845a93afe92545.camel@mediatek.com>
+References: <20220120150024.646714-1-paul.kocialkowski@bootlin.com> <20220120150024.646714-4-paul.kocialkowski@bootlin.com>
+In-Reply-To: <20220120150024.646714-4-paul.kocialkowski@bootlin.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 30 Jan 2022 01:38:10 +0100
-Message-ID: <CACRpkdZ194_7+mHauDPwMHG3TeGnp2ENdcSDjZnWny1X4YTT7w@mail.gmail.com>
-Subject: Re: [PATCH v9 2/3] dt-bindings: pinctrl: mt8195: Add
- mediatek,drive-strength-adv property
-To:     Tinghan Shen <tinghan.shen@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+Date:   Sun, 30 Jan 2022 01:43:40 +0100
+Message-ID: <CACRpkdZnw-Tf2eQwO+LZRW4UacR09qWRWct00=XLb4pfa-N3=g@mail.gmail.com>
+Subject: Re: [PATCH v10 3/6] gpio: logicvc: Support compatible with major
+ version only
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        David Matlack <dmatlack@google.com>,
-        Jing Zhang <jingzhangos@google.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Project_Global_Chrome_Upstream_Group@mediatek.com,
-        ryder.lee@kernel.org, wenst@chromium.org, chunfeng.yun@mediatek.com
+        Lee Jones <lee.jones@linaro.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 25, 2022 at 7:21 AM Tinghan Shen <tinghan.shen@mediatek.com> wrote:
+On Thu, Jan 20, 2022 at 4:00 PM Paul Kocialkowski
+<paul.kocialkowski@bootlin.com> wrote:
 
-> I want to send next version to update the CC list of this series, but I'm not sure
-> whether this will break the conversation between you and Linus.
+> Support the newly-introduced common compatible for version 3.
 >
-> Is it ok to send next version? or waiting the response?
+> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-Send a new version, I'll apply the v10 version!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Are there dependencies between the GPIO patches and the rest?
+Doesn't look like that.
+Can Bartosz just merge the GPIO stuff to the GPIO tree?
 
 Yours,
 Linus Walleij
