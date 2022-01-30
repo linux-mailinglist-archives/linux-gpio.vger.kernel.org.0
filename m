@@ -2,87 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CA7DC4A32DE
-	for <lists+linux-gpio@lfdr.de>; Sun, 30 Jan 2022 01:31:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C4F954A32E4
+	for <lists+linux-gpio@lfdr.de>; Sun, 30 Jan 2022 01:38:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353584AbiA3Abm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 29 Jan 2022 19:31:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43070 "EHLO
+        id S245021AbiA3AiX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 29 Jan 2022 19:38:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242480AbiA3Abl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Jan 2022 19:31:41 -0500
-Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 622CAC061714
-        for <linux-gpio@vger.kernel.org>; Sat, 29 Jan 2022 16:31:41 -0800 (PST)
-Received: by mail-yb1-xb30.google.com with SMTP id j2so16313331ybu.0
-        for <linux-gpio@vger.kernel.org>; Sat, 29 Jan 2022 16:31:41 -0800 (PST)
+        with ESMTP id S232643AbiA3AiX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Jan 2022 19:38:23 -0500
+Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAC75C06173B
+        for <linux-gpio@vger.kernel.org>; Sat, 29 Jan 2022 16:38:22 -0800 (PST)
+Received: by mail-yb1-xb2d.google.com with SMTP id k31so29636541ybj.4
+        for <linux-gpio@vger.kernel.org>; Sat, 29 Jan 2022 16:38:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=pme32IFXRNHgrXZ/dj8GMepH+ska0RwjBdlk1fihJ0A=;
-        b=IltbbM1EQZqZOXk2OvOAxzFGYEGyIcXl0ze+Gd6uqe80Yl441IZCeUTU/rBTVpvJCF
-         KIXazu/IDMXkGcjo+FKTks/BRGXeuUCz+25eZD77PYKVmNBrXCcKb0UzTzGfGIS5/KsK
-         GJkAMdZSlu0tseCMyhAia/aB9i9WbvlP6lz9vmkAXtTeiWyunPOWGvGmz7UdePwIeZ/M
-         j4FN8lMJFu3P7EO8CWdKag9uzRC/ATVhyyZH3h479vSUSTqoYAGTiuh9r0CQJOHD10sh
-         Gh79f795EdnRlH6dlo4y4XRQkyUhWw8rJGLgOmWVdJRpEeoczaVsi0x2jBDHXgveJpES
-         viCw==
+        bh=kD5EeMfWUZCSsdRFixk1so34OOReUXkCj6tRRq5J/Uc=;
+        b=O4Tw7KGaXWjdqt9T970Y8/kH7N+ViE2uO4IeA3UWwfb5LWDhLAgdQ13kGqqCFktiMk
+         4Vv7jQT52fSqMz5OkdAC4KjLplOciEm3LyV6cOLM6+pAEnWGc4o6mZJDCbioWpGVOUG1
+         2lHSyAOBMCN5Frc3Cdsg6bg7HxZ6b231c3GvytE0674ovgf2FlDq0ID6gg9gLJDi45+I
+         pa7EYF80KoI9HtvPwgzfHMaG8Zw3WLlC+MOQe/xA8bSx8j0mMvs5X1TcC/ArieNb5T2Y
+         ho9dk3Xhanq8jicrHV0bc2yPvangtdehWkknv7962AdwCimsA+Te/k139zwe+cHAzd0y
+         wkNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=pme32IFXRNHgrXZ/dj8GMepH+ska0RwjBdlk1fihJ0A=;
-        b=Boytw1V7CRujWq5m3blnK5sQbJyh4dnoamYkmlWZFbRTvTXCFfhrvfB3k+XHdg6GPD
-         TpAYcumS/mVPmFDUTpz+OvJF85+yhB+E8mUKtJoCM7qidnpFfdnd1UdGDBSAElzsJBuj
-         pC+wliMlaVXfjPFhIq/uAmQFgWch/vuJdBGPHCoK6tiOb0G21yd5T1w+YV20ANDuPn8c
-         dL69nVvtC5YNz7MafOG0ZkpyjMFTEU0eXJ2Boh+tRPPvXDIAQ8/y/RZrsBhOdiaIh4F5
-         YfAhTXQDCmZ6yubBBwATy9KKfXX8KjygVtGjvYeh5iyeDGHt6XJCK08RFPJ14J1T4ya6
-         +D/w==
-X-Gm-Message-State: AOAM531dbwS8fDEk02TZFHHqDlcYnv426LFTvJnY0nZX2ii2rbpn+i6W
-        cTe2r3yZpDBjCLPAlZSw+A0r8ucAJkMuyPZi2kdByA==
-X-Google-Smtp-Source: ABdhPJzxAbrXaVgDQ08MBW1JI8bn63pnojvyZBxce+CBlsONQJOt0o6ierYk3+5NsIeuVr0qUpocfIe0c5ve35EnJKw=
-X-Received: by 2002:a25:cfc6:: with SMTP id f189mr21205071ybg.322.1643502700641;
- Sat, 29 Jan 2022 16:31:40 -0800 (PST)
+        bh=kD5EeMfWUZCSsdRFixk1so34OOReUXkCj6tRRq5J/Uc=;
+        b=WjC+3gMABCEH2VWnc09+MDN4Ott0RtH/O3Ko3c+UObJ8I6ryGeIZa/rjlHApQDH6ep
+         adn4RbLWzlUPajnMoF1F0zf5vrrGPxyWBftV/rNHxY6y4ewxVeyfyk0pbbPKC2V6ejw1
+         OpQ5ElLxPSV3YrZQ6aIvqMcBWfQ7ZeV5zVEYD8RGZ6EQNrj10T9Xhveo96TAApQtkhr8
+         D5OM7khKJFW7ErwuqUsjg/uIMijiCNW/1kOMYyMAiSIVZ2JTFMn9Z3hLIe89LQLKuXu6
+         IVHb1If/Un0q2oVV6P0TdXSBS7yfrtTDcZaJzAAqAcOqlgHUbj0/f36X+98lHS4ICAze
+         3Ugw==
+X-Gm-Message-State: AOAM532Y4+Y/c/FquXVoVkDfLroKldTdIwOBFmQ3Jyb9QtmyXG0OM9He
+        yhHaNlbPAVIfSfaoYK+iZ3Amww8ykFlsIZAxHOFWSw==
+X-Google-Smtp-Source: ABdhPJxrsg7lw1QYllN4dx+IUpwLh8pIspc1kHtZgNyj3fI5O7+wptcqpiBXNZmBeah8UrGe2QSTVaJBq7sQALlEU/w=
+X-Received: by 2002:a25:cfc6:: with SMTP id f189mr21225792ybg.322.1643503102047;
+ Sat, 29 Jan 2022 16:38:22 -0800 (PST)
 MIME-Version: 1.0
-References: <20220129220221.2823127-1-colin.foster@in-advantage.com> <20220129220221.2823127-3-colin.foster@in-advantage.com>
-In-Reply-To: <20220129220221.2823127-3-colin.foster@in-advantage.com>
+References: <20220112114724.1953-1-tinghan.shen@mediatek.com>
+ <20220112114724.1953-3-tinghan.shen@mediatek.com> <18f7a647-6153-6d38-dff1-727b9592b01e@gmail.com>
+ <102ea6303dd16fdf9ec931d0a1845a93afe92545.camel@mediatek.com>
+In-Reply-To: <102ea6303dd16fdf9ec931d0a1845a93afe92545.camel@mediatek.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 30 Jan 2022 01:31:29 +0100
-Message-ID: <CACRpkdbXD0cA07zPQtVH1_hdc-aLq5ktm1DpUW=dB-i+B5dacw@mail.gmail.com>
-Subject: Re: [RFC v6 net-next 2/9] pinctrl: microchip-sgpio: allow sgpio
- driver to be used as a module
-To:     Colin Foster <colin.foster@in-advantage.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, UNGLinuxDriver@microchip.com,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Lee Jones <lee.jones@linaro.org>, katie.morris@in-advantage.com
+Date:   Sun, 30 Jan 2022 01:38:10 +0100
+Message-ID: <CACRpkdZ194_7+mHauDPwMHG3TeGnp2ENdcSDjZnWny1X4YTT7w@mail.gmail.com>
+Subject: Re: [PATCH v9 2/3] dt-bindings: pinctrl: mt8195: Add
+ mediatek,drive-strength-adv property
+To:     Tinghan Shen <tinghan.shen@mediatek.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        David Matlack <dmatlack@google.com>,
+        Jing Zhang <jingzhangos@google.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Project_Global_Chrome_Upstream_Group@mediatek.com,
+        ryder.lee@kernel.org, wenst@chromium.org, chunfeng.yun@mediatek.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Jan 29, 2022 at 11:02 PM Colin Foster
-<colin.foster@in-advantage.com> wrote:
+On Tue, Jan 25, 2022 at 7:21 AM Tinghan Shen <tinghan.shen@mediatek.com> wrote:
 
-> As the commit message suggests, this simply adds the ability to select
-> SGPIO pinctrl as a module. This becomes more practical when the SGPIO
-> hardware exists on an external chip, controlled indirectly by I2C or SPI.
-> This commit enables that level of control.
+> I want to send next version to update the CC list of this series, but I'm not sure
+> whether this will break the conversation between you and Linus.
 >
-> Signed-off-by: Colin Foster <colin.foster@in-advantage.com>
+> Is it ok to send next version? or waiting the response?
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Send a new version, I'll apply the v10 version!
 
 Yours,
 Linus Walleij
