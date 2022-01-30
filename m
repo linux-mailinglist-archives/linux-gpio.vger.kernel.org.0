@@ -2,76 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D1154A332E
-	for <lists+linux-gpio@lfdr.de>; Sun, 30 Jan 2022 02:57:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EFB44A3345
+	for <lists+linux-gpio@lfdr.de>; Sun, 30 Jan 2022 03:32:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353641AbiA3B46 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 29 Jan 2022 20:56:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33346 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244195AbiA3B45 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Jan 2022 20:56:57 -0500
-Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E904C061741
-        for <linux-gpio@vger.kernel.org>; Sat, 29 Jan 2022 17:56:57 -0800 (PST)
-Received: by mail-yb1-xb34.google.com with SMTP id p5so29740325ybd.13
-        for <linux-gpio@vger.kernel.org>; Sat, 29 Jan 2022 17:56:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PhqoonLW0MG4xXzGhCB6St73UBw/+Ws3aRva1qAiNsQ=;
-        b=WevqdraLzwXsGJtybKj+ekmLgpoWVwkH0IfdaA0hqeH4DZm+szPFvpBqKQudbpTjux
-         7xG7eu+ICDBix9q7403hGYFZfu/+7ZHbTY5KpdyVxC36TokrOY3NyTqEDRPU6Mya/dnM
-         lsqqCxgsLfWMQecuDvGwBYmAZiMWBm5A9yh0eB5zoU/uJPdWTDf7K2fd4TjbvsttMSW0
-         0cjqNpB35OOjCCa+mGcEVsqCNZ0PrghKTXeyUojNBzBhAp03lkquFvUqJ+jR/V5scVee
-         O86Px9I2UAHHRMkSoIBQwcZtdPtQAW6z/L+YJu8RbNNr2y7eEtcr+ezta0+M5LeZkJa2
-         6Klw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PhqoonLW0MG4xXzGhCB6St73UBw/+Ws3aRva1qAiNsQ=;
-        b=fFCRqocMKJW9/ww+Z0DYjBb+jmgOE/59blKIikTtKcdPiUKLX3/dI8/3hoU5okqX9I
-         gV501KwHl/f2PqDWVXU1w/FkiXz/lYBAGkKWtFLK8lP1NhUDuEJHnYN9QA6pocrktgqC
-         e3d7qPOCbyRrjwq6rw+XypVyEuX3t8qtpIzIZHK6YJQ4qFZKBEtU8L5bkM5+pOo9p1/z
-         DS97y67dbI3v7G3zFI/9Sy+1/XCTylfYQR6yxLFmygH5lmNDzDlBfQ+sa6auEMRFzhlq
-         lNJqpo9FN90nN8f2wHYMRN8sSuoXH1szBdecKb6+0wr2toIjslfPxhrOqUWwRHLbRp7F
-         CVog==
-X-Gm-Message-State: AOAM530uF7iFmhqBf5YTB/jwgf1I2oLRDsyuF5lWxNAx2yjcjEj81pSC
-        WQRxbO3VkMvlc36WAntA3uwAMfaseMtXMzrZB+/2WA==
-X-Google-Smtp-Source: ABdhPJyFmHL7lzEc8bPbVZ3VkRKNkvAzFB6GLXrckR/nTRmxNx97pFDsRV+wRhAXM0r8TZJRolEbVVaBgHbr7NVz8d0=
-X-Received: by 2002:a05:6902:124a:: with SMTP id t10mr20375015ybu.634.1643507816772;
- Sat, 29 Jan 2022 17:56:56 -0800 (PST)
+        id S1353567AbiA3CcS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 29 Jan 2022 21:32:18 -0500
+Received: from mailgw01.mediatek.com ([60.244.123.138]:56378 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1346564AbiA3CcR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Jan 2022 21:32:17 -0500
+X-UUID: acce27d7611f4ec2bece075ccab458be-20220130
+X-UUID: acce27d7611f4ec2bece075ccab458be-20220130
+Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw01.mediatek.com
+        (envelope-from <tinghan.shen@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1626602513; Sun, 30 Jan 2022 10:32:14 +0800
+Received: from mtkexhb01.mediatek.inc (172.21.101.102) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Sun, 30 Jan 2022 10:32:13 +0800
+Received: from mtkcas11.mediatek.inc (172.21.101.40) by mtkexhb01.mediatek.inc
+ (172.21.101.102) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Sun, 30 Jan
+ 2022 10:32:13 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas11.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Sun, 30 Jan 2022 10:32:12 +0800
+From:   Tinghan Shen <tinghan.shen@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tinghan Shen <tinghan.shen@mediatek.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sean Wang <sean.wang@mediatek.com>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <Project_Global_Chrome_Upstream_Group@mediatek.com>,
+        <ryder.lee@kernel.org>, <wenst@chromium.org>,
+        <chunfeng.yun@mediatek.com>
+Subject: [PATCH v10 0/3] Add basic SoC support for mediatek mt8195
+Date:   Sun, 30 Jan 2022 10:32:06 +0800
+Message-ID: <20220130023209.16275-1-tinghan.shen@mediatek.com>
+X-Mailer: git-send-email 2.15.GIT
 MIME-Version: 1.0
-References: <1642344734-27229-1-git-send-email-wellslutw@gmail.com>
-In-Reply-To: <1642344734-27229-1-git-send-email-wellslutw@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 30 Jan 2022 02:56:45 +0100
-Message-ID: <CACRpkdZsrsFK69hUOBtOBz+OSEfTVaukxQ4woXwwjCAB3EgJ+A@mail.gmail.com>
-Subject: Re: [PATCH v6 0/2] This is a patch series for pinctrl driver of
- Sunplus SP7021 SoC.
-To:     Wells Lu <wellslutw@gmail.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, wells.lu@sunplus.com,
-        dvorkin@tibbo.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-MTK:  N
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Jan 16, 2022 at 3:52 PM Wells Lu <wellslutw@gmail.com> wrote:
+This series adds basic SoC support for Mediatek's SoC MT8195.
 
-> Sunplus SP7021 is an ARM Cortex A7 (4 cores) based SoC. It integrates
-> many peripherals (ex: UART, I2C, SPI, SDIO, eMMC, USB, SD card and
-> etc.) into a single chip. It is designed for industrial control
-> applications.
+---
+Changes in v10:
+  - clean CC list
+Changes in v9:
+  - remove duplicated cpus dt-bindings patch in v8
+Changes in v8:
+  - v7 mediatek,spi-mtk-nor.yaml patch is applied in branch for-5.17 at 
+    kernel/git/broonie/spi.git
+  - v7 pinctrl-mt8195.yaml patch is applied in branch for-next at 
+    kernel/git/linusw/linux-pinctrl.git
+  - add cortex-a78 compatible to cpus dt-bindings
+  - add mediatek,drive-strength-adv property to pinctrl dt-bindings
+  - fix evb dts
+    - remove i2c nodes with disabled status from dts
+    - fix pin properties not match pinctrl dt-bindings
+    - remove unnecessary u3port*
+  - fix dtsi
+    - fix node format
+    - reorder oscillator* nodes 
+    - fix node name of cpu idle nodes
+    - remove clock-frequency property in the timer node
+    - reorder clock and clock names in usb nodes
+Changes in v7:
+  - refine title of spi-nor dt-bindings patch
+  - refine commit message of pinctrl dt-bindings patch
+  - update pinctrl-mt8195.yaml
+    - change property pattern from 'pins' to '^pins'
+    - update examples with new property in descriptions
+    - add new example
+  - drop '_' from node names of pinctrl subnodes in mt8195-evb.dts
+Changes in v6:
+  - rebase on 5.16-rc1
+  - add new clock name to spi-nor dt-bindings
+  - add "pins" property in pinctrl dt-bindings
+  - fix fails of dtbs_checks
+    - remove "arm,armv8" not matched in yaml from cpu compatile
+    - fix node name of xhci
+    - remvoe xhci upstreaming wakeup properties
+    - remove xhci unused properties address-cells and size-cells
+    - fix node name of ufs-phy 
+    - fix node name of spi-nor
+    - fix node name and sub-nodes of pinctrl
+    - fix mmc compatible
+Changes in v5:
+  - enable basic nodes in mt8195-evb.dts
+  - remove dedicated clock nodes
+  - add mmc2 node
+  - fix interrupt number of pinctrl node
+  - update clock nodes to apply internal fixes
+  - add dt-bindings for perficfg node
 
-No further comments for some two weeks so patches applied!
-Any remaining issues can be fixed in-tree.
+v4 thread:
+https://lore.kernel.org/all/20210922093303.23720-2-seiya.wang@mediatek.com/
+v3 thread:
+https://lore.kernel.org/all/20210601075350.31515-2-seiya.wang@mediatek.com/
+v2 thread:
+https://lore.kernel.org/all/20210319023427.16711-10-seiya.wang@mediatek.com/
+v1 thread:
+https://lore.kernel.org/all/20210316111443.3332-11-seiya.wang@mediatek.com/
+---
 
-Thanks for you efforts to fix this up!
+Tinghan Shen (3):
+  dt-bindings: arm: mediatek: Add mt8195 pericfg compatible
+  dt-bindings: pinctrl: mt8195: Add mediatek,drive-strength-adv property
+  arm64: dts: Add mediatek SoC mt8195 and evaluation board
 
-Yours,
-Linus Walleij
+ .../arm/mediatek/mediatek,pericfg.yaml        |    1 +
+ .../bindings/pinctrl/pinctrl-mt8195.yaml      |   35 +
+ arch/arm64/boot/dts/mediatek/Makefile         |    1 +
+ arch/arm64/boot/dts/mediatek/mt8195-evb.dts   |  161 +++
+ arch/arm64/boot/dts/mediatek/mt8195.dtsi      | 1049 +++++++++++++++++
+ 5 files changed, 1247 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8195-evb.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8195.dtsi
+
+-- 
+2.18.0
+
