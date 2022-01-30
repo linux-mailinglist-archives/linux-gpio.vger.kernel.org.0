@@ -2,227 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C1874A36C0
-	for <lists+linux-gpio@lfdr.de>; Sun, 30 Jan 2022 15:37:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 94D764A3703
+	for <lists+linux-gpio@lfdr.de>; Sun, 30 Jan 2022 15:54:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347218AbiA3Ohm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 30 Jan 2022 09:37:42 -0500
-Received: from mga11.intel.com ([192.55.52.93]:39923 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S238650AbiA3Ohl (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 30 Jan 2022 09:37:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643553461; x=1675089461;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Fpkx+fcrs5psnvgeLe4OUN4u1HSOufrr8zoEvdRf8BM=;
-  b=IeIAfCjcurQ22YPm+fSyS608KZpJI/c9dFlD7FQpEBGNUpjQ3jDTkaOY
-   jRSztXMCG6OEWHYeacCG2aHY4jOKbQ/Q+inYo8kd+hvcnabwbXxJRh/B9
-   kcdPsRMFQEFs8Bde/h3F/8OPGWqoqYIHa7W6PBFBUpr7avzq6ZGkFuyaX
-   GWr6bPBvm29eIs5K+zM4nomGYQgfEpeSFco0Y4Fte5N3FFahe6BBd5vZq
-   z1uIHsrpFcL/fPnVnun6Au1Gu/kkchsIfV1bpi1uzh7rGdAR5kCUfUd5K
-   GuxudN8KOY6Xu+Ikkq+fPIbci/X0rmxmwF91G761bZLaDll9d3LgcBi32
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10242"; a="244947212"
-X-IronPort-AV: E=Sophos;i="5.88,328,1635231600"; 
-   d="scan'208";a="244947212"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2022 06:37:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,328,1635231600"; 
-   d="scan'208";a="598631877"
-Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 30 Jan 2022 06:37:39 -0800
-Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1nEBKk-000QcB-MU; Sun, 30 Jan 2022 14:37:38 +0000
-Date:   Sun, 30 Jan 2022 22:37:05 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD SUCCESS WITH WARNING
- aa74c44be19c8b1de38d955c2c45c309991c805a
-Message-ID: <61f6a291.iw7QyPPjStpgpt1+%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1355268AbiA3Oyd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 30 Jan 2022 09:54:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32780 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1347339AbiA3Oy1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 30 Jan 2022 09:54:27 -0500
+Received: from nbd.name (nbd.name [IPv6:2a01:4f8:221:3d45::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44562C061714;
+        Sun, 30 Jan 2022 06:54:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
+         s=20160729; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=9LNCxByVJfB01XgfTzWT/WHLAUj6DbOsTr33pwsf6iQ=; b=SF/9GSjb4y8NCa89dD1GXg/5/A
+        N4m8fFIXfbRCnmiztwfcVCHvPlK0/Z/izxXOzG6lW/x6wLTpW417yuTkQQLP+HoqX/xhs7E6vMU/G
+        nAxsMZxQKu7HuoXAEiZbkgit+AOJ6yLNtZE9li/EY9JYFEK130P52avws9BwIiABYr14=;
+Received: from p200300daa716f900d40f7dfd86c385e0.dip0.t-ipconnect.de ([2003:da:a716:f900:d40f:7dfd:86c3:85e0] helo=Maecks.lan)
+        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <nbd@nbd.name>)
+        id 1nEBYC-0002if-JZ; Sun, 30 Jan 2022 15:51:32 +0100
+From:   Felix Fietkau <nbd@nbd.name>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        John Crispin <john@phrozen.org>
+Cc:     soc@kernel.org, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v9 11/13] dt-bindings: arm: airoha: Add binding for Airoha GPIO controller
+Date:   Sun, 30 Jan 2022 15:51:14 +0100
+Message-Id: <20220130145116.88406-12-nbd@nbd.name>
+X-Mailer: git-send-email 2.32.0 (Apple Git-132)
+In-Reply-To: <20220130145116.88406-1-nbd@nbd.name>
+References: <20220130145116.88406-1-nbd@nbd.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: aa74c44be19c8b1de38d955c2c45c309991c805a  pinctrl: Add driver for Sunplus SP7021
+From: John Crispin <john@phrozen.org>
 
-Warning reports:
+Airoha's GPIO controller on their ARM EN7523 SoCs consists of two banks of 32
+GPIOs
 
-https://lore.kernel.org/llvm/202201301326.VmKBKVNC-lkp@intel.com
-
-Warning in current branch:
-
-drivers/pinctrl/meson/pinctrl-meson-s4.c:178:27: warning: unused variable 'tdm_sclk1_c_pins' [-Wunused-const-variable]
-
-Warning ids grouped by kconfigs:
-
-clang_recent_errors
-|-- arm64-allmodconfig
-|   `-- drivers-pinctrl-meson-pinctrl-meson-s4.c:warning:unused-variable-tdm_sclk1_c_pins
-|-- arm64-buildonly-randconfig-r005-20220130
-|   `-- drivers-pinctrl-meson-pinctrl-meson-s4.c:warning:unused-variable-tdm_sclk1_c_pins
-`-- arm64-buildonly-randconfig-r006-20220130
-    `-- drivers-pinctrl-meson-pinctrl-meson-s4.c:warning:unused-variable-tdm_sclk1_c_pins
-
-elapsed time: 725m
-
-configs tested: 139
-configs skipped: 3
-
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                          randconfig-c001
-m68k                             allmodconfig
-powerpc                          allmodconfig
-m68k                             allyesconfig
-s390                             allmodconfig
-powerpc                          allyesconfig
-s390                             allyesconfig
-sh                  sh7785lcr_32bit_defconfig
-arm                           sunxi_defconfig
-powerpc                 mpc8540_ads_defconfig
-m68k                          amiga_defconfig
-arm                           u8500_defconfig
-sparc64                             defconfig
-powerpc                        cell_defconfig
-powerpc                     ep8248e_defconfig
-sh                                  defconfig
-sh                          r7785rp_defconfig
-powerpc                      bamboo_defconfig
-mips                        jmr3927_defconfig
-arm                           sama5_defconfig
-parisc                generic-32bit_defconfig
-sh                           se7750_defconfig
-arm                         s3c6400_defconfig
-mips                             allmodconfig
-sh                           se7721_defconfig
-powerpc                      arches_defconfig
-mips                       capcella_defconfig
-arm                         lubbock_defconfig
-nds32                               defconfig
-nds32                             allnoconfig
-arc                    vdk_hs38_smp_defconfig
-m68k                         amcore_defconfig
-powerpc                     tqm8541_defconfig
-arm                        spear6xx_defconfig
-xtensa                           alldefconfig
-m68k                                defconfig
-i386                             alldefconfig
-arm                             rpc_defconfig
-powerpc                       eiger_defconfig
-powerpc                    adder875_defconfig
-mips                 decstation_r4k_defconfig
-powerpc                      pcm030_defconfig
-sh                               allmodconfig
-mips                         tb0226_defconfig
-sh                        edosk7705_defconfig
-powerpc                 mpc837x_rdb_defconfig
-sh                          polaris_defconfig
-sh                         microdev_defconfig
-arm                        cerfcube_defconfig
-h8300                    h8300h-sim_defconfig
-sh                      rts7751r2d1_defconfig
-arm                         lpc18xx_defconfig
-powerpc                      ep88xc_defconfig
-mips                  maltasmvp_eva_defconfig
-riscv                    nommu_k210_defconfig
-sh                           se7206_defconfig
-powerpc                      ppc6xx_defconfig
-powerpc                 mpc834x_mds_defconfig
-sh                          rsk7264_defconfig
-sh                             espt_defconfig
-sh                           se7712_defconfig
-i386                                defconfig
-arm                  randconfig-c002-20220130
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-parisc                              defconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                             allyesconfig
-powerpc                           allnoconfig
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-i386                          randconfig-a003
-i386                          randconfig-a001
-i386                          randconfig-a005
-x86_64                        randconfig-a011
-x86_64                        randconfig-a013
-x86_64                        randconfig-a015
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-riscv                randconfig-r042-20220130
-arc                  randconfig-r043-20220130
-s390                 randconfig-r044-20220130
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                                  kexec
-
-clang tested configs:
-riscv                randconfig-c006-20220130
-x86_64                        randconfig-c007
-arm                  randconfig-c002-20220130
-powerpc              randconfig-c003-20220130
-mips                 randconfig-c004-20220130
-i386                          randconfig-c001
-arm                        multi_v5_defconfig
-arm                          ixp4xx_defconfig
-arm                        spear3xx_defconfig
-hexagon                             defconfig
-powerpc                 mpc8315_rdb_defconfig
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a011
-i386                          randconfig-a013
-i386                          randconfig-a015
-hexagon              randconfig-r045-20220130
-hexagon              randconfig-r041-20220130
-
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: John Crispin <john@phrozen.org>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ .../bindings/gpio/airoha,en7523-gpio.yaml     | 67 +++++++++++++++++++
+ 1 file changed, 67 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/airoha,en7523-gpio.yaml
+
+diff --git a/Documentation/devicetree/bindings/gpio/airoha,en7523-gpio.yaml b/Documentation/devicetree/bindings/gpio/airoha,en7523-gpio.yaml
+new file mode 100644
+index 000000000000..66c00ec85731
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/airoha,en7523-gpio.yaml
+@@ -0,0 +1,67 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/airoha,en7523-gpio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Airoha EN7523 GPIO controller
++
++maintainers:
++  - John Crispin <john@phrozen.org>
++
++description: |
++  Airoha's GPIO controller on their ARM EN7523 SoCs consists of two banks of 32
++  GPIOs.
++
++properties:
++  $nodename:
++    pattern: "^gpio@[0-9a-f]+$"
++
++  compatible:
++    items:
++      - const: airoha,en7523-gpio
++
++  reg:
++    description: |
++      The first tuple points to the input register.
++      The second and third tuple point to the direction registers
++      The fourth tuple points to the output register
++    maxItems: 4
++
++  "#gpio-cells":
++    const: 2
++
++  gpio-controller: true
++
++required:
++  - compatible
++  - reg
++  - "#gpio-cells"
++  - gpio-controller
++
++additionalProperties: false
++
++examples:
++  - |
++    gpio0: gpio@1fbf0200 {
++        compatible = "airoha,en7523-gpio";
++        reg = <0x1fbf0204 0x4>,
++              <0x1fbf0200 0x4>,
++              <0x1fbf0220 0x4>,
++              <0x1fbf0214 0x4>;
++        gpio-controller;
++        #gpio-cells = <2>;
++    };
++
++    gpio1: gpio@1fbf0270 {
++        compatible = "airoha,en7523-gpio";
++        reg = <0x1fbf0270 0x4>,
++              <0x1fbf0260 0x4>,
++              <0x1fbf0264 0x4>,
++              <0x1fbf0278 0x4>;
++        gpio-controller;
++        #gpio-cells = <2>;
++    };
++
++
++...
+-- 
+2.32.0 (Apple Git-132)
+
