@@ -2,132 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BD6EE4A359B
-	for <lists+linux-gpio@lfdr.de>; Sun, 30 Jan 2022 11:12:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C34D4A36A1
+	for <lists+linux-gpio@lfdr.de>; Sun, 30 Jan 2022 15:19:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346127AbiA3KMj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 30 Jan 2022 05:12:39 -0500
-Received: from mout.gmx.net ([212.227.15.15]:44745 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232545AbiA3KMi (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Sun, 30 Jan 2022 05:12:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1643537548;
-        bh=SgtETV3pmtkRyAIs7r+Qn+jWrpPpCwX59UiK37U4GL0=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=C6kw3R2Jlje1tsUpZ6yAJYu9CAjFfFBN2ilcdWRH335IeYHzP+9M4os2F03BntwNl
-         bx2LTarKShpP7DOxWD4FxYUaRMA5X0lXWKbjdL3IqcgjbeomKSvtCaUUlhHaHA5YW/
-         4tF6ugtko5mVSF5N958uvu4HiXCAUO5YSfU5Q9Xo=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([5.146.194.160]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mg6Zw-1mbECw2pG2-00hdmK; Sun, 30
- Jan 2022 11:12:28 +0100
-Date:   Sun, 30 Jan 2022 11:12:26 +0100
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, openbmc@lists.ozlabs.org,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Joel Stanley <joel@jms.id.au>, linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>
-Subject: Re: [PATCH v5 0/9] Nuvoton WPCM450 pinctrl and GPIO driver
-Message-ID: <YfZkis8M81Ejpagq@latitude>
-References: <20220129115228.2257310-1-j.neuschaefer@gmx.net>
- <CACRpkdYEigGHkoGfBg15tFXadgpXUAjDOnw7ePXhmvHJqPEJXw@mail.gmail.com>
+        id S1354969AbiA3OTh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 30 Jan 2022 09:19:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53124 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1354964AbiA3OTh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 30 Jan 2022 09:19:37 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8B81C061714;
+        Sun, 30 Jan 2022 06:19:36 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6C03F611CC;
+        Sun, 30 Jan 2022 14:19:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F7F0C340E4;
+        Sun, 30 Jan 2022 14:19:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643552375;
+        bh=FXqdfvlHdxXHs0sfXOkYGblZu370Bn3tuKiBuBJhrvk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=K5zafbIJOAiS5oaIZlg6JzyAH9thIIPX5vEez4qWoI3RMVTtkqcybHAgcReojW/U/
+         qRgYr8MH9RVeJ1gHuVIACZl0nfFVfOS9E4NbDN/41Rvff8fTgWGiSNaKhRiTrHcqh/
+         7qigUnziJe0kDNu/fmVARZ7TZjH9pZkr7cZj3NYcPRf7ZkDcDYx+0eWCl1HAkmwwDt
+         ZrcXRbIDML5IjEOfL4SYcsxQDRThAEwVSyUE83pxdOy+y/BTi1+LriYSBlFiwN/YaQ
+         8b/hIxAD5qY4an4Y5NmWs7S1Am4gVEcxGmcbQdPjznMujrmF11uhmdMkcW9nhVl91l
+         jN1gR3sZbFgNQ==
+Date:   Sun, 30 Jan 2022 14:25:58 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Cosmin Tanislav <demonsingur@gmail.com>,
+        cosmin.tanislav@analog.com, Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v3 3/3] iio: addac: ad74413r: for_each_set_bit_from ->
+ for_each_set_bit
+Message-ID: <20220130142558.7601722c@jic23-huawei>
+In-Reply-To: <20220115185948.56f227df@jic23-huawei>
+References: <20220111074703.3677392-1-cosmin.tanislav@analog.com>
+        <20220111074703.3677392-3-cosmin.tanislav@analog.com>
+        <CAHp75VeVRwbMhQp-oBYM7yVzL_ma0jRu3ESEjz19zLQDFWyzkA@mail.gmail.com>
+        <20220115185948.56f227df@jic23-huawei>
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.31; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="9tf0nr/Ix68M68t8"
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYEigGHkoGfBg15tFXadgpXUAjDOnw7ePXhmvHJqPEJXw@mail.gmail.com>
-X-Provags-ID: V03:K1:iyp26pep5akVPgkkRAuLOIJKj6qresdBew0FhiMgO53ykHBRXCj
- ZUS/yZ5ZMaODKymNpSMy7CwW0jwzsvIrbtxnFSXJIPiCJuQiHfsV7QX8oW2qe4fa+aaARWh
- idmnGoAOn9/7mux6flNazuAWMtzU7pQV8qEUpK6BBbSd0sK9XrEwsbxNJs9+Bry8yUcDhc2
- 1awIOR24QYNFrLXhoK7kQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/msJRPAl0fo=:acJASe3vTTJl+wJlquGII2
- K0GKv3bPw0VowCPxLJ/1SjnyIGGrgcTpFWppmFXBz5GfVdn25Hq7ASEs56vhXEweIxYU/EE7T
- 3nHOp/pBHeSXfq9ca+Rjdy3WT1PlGKKd7fppare3knu/IVh192RLK7IRpUXWyQS/jV+N/J8MP
- RPS7h4RQukGvfC2bSffK+BW+iIEYfXFw9m2gDBNrDkVrMO8x5x/8klnbMs8+GqQcCCv8hDfI8
- 4Ik9q9quhZoAnXrr2St3bBI+/hIz3lI+7GO7dD9QqDN8NzdSEhSuB+mXin96HnJT4tqxdDYXG
- oh59wNKPE2b/g0RUfL+a2BGoBr3X5hqtQHMQ0BtRe3dpO5sx7p2TwGUdhstW714Vsu5hNN6Xw
- Nf9rH5UrBCZDiovJ4D3eeugHKjdZI6Tocw3xBoo/zMJO4FTb/c1l+PwM0W07wrnYGZEKmVAcz
- 0unDq9ub1EfQeiC/hhPAK7GOZuXaCn86YJJgr2QwIx/dE2wiV18wuT2MRYifdWH6dqQ5mz8jR
- XIkq7kLP3Zhx/c/vfgDJsHuNySgSk+jz+9BWAcOjAfKyoCWXAOcu+/XapTjUYOAJRpYMVfmF+
- 1E2/ILEJAxS4kOeoFSaKVUEgyP2I4gUSlte9ygHHviD6Cku2KVTQGJWRIxc547bwdH57OEanR
- vpaeZZhYRLaWREbCVCskv6gfOiePo5+EBFja0n2wNEisGDbCXQRYmyBMqFI6B99JltgygcaUr
- NwqN9Dq9yN7mEOabDDbYasi+GnQQprcVcEGiuJR2pwi8YdCYT10QRn1Hz829fzLwefEss/UNF
- DbH75AzkCaakGIh/eurItrfoOFy/hoIKutMMOcFhp0C6l3tAb9T8eClsRUeeS8wQnoW4M4Ebq
- Jg2+t48tgsl2CYhdzCs1qI06j8ygOMECYPUpXAvqXPomHhCvQv0Fplb3Ljc3kykxYDuxgLY6q
- BRrCA68WmQYrSUSv4MKxbGJZsIMOouLJjYgeGztq9r0qYz6V3eCIHDEU+RNuALndvMJdrTeZW
- vAoAuI0rS4s+PHzQqYAXNUFVoiVH0a2AN3DiTs3+5P+nOK6qTEeM9ma8N4knmmoneZCMaxsuI
- Wx7+mgNNnrL5bQ=
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Sat, 15 Jan 2022 18:59:48 +0000
+Jonathan Cameron <jic23@kernel.org> wrote:
 
---9tf0nr/Ix68M68t8
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Tue, 11 Jan 2022 11:22:23 +0200
+> Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> 
+> > On Tue, Jan 11, 2022 at 9:47 AM Cosmin Tanislav <demonsingur@gmail.com> wrote:  
+> > >
+> > > The starting bit is always zero, it doesn't make much sense to
+> > > use for_each_set_bit_from. Replace it with for_each_set_bit
+> > > which doesn't start from a particular bit.    
+> > 
+> > We refer to the function() like this.
+> > But no need to resend, I hope Jonathan may amend this when applying.
+> >   
+> 
+> I'll need to wait for rc1 to have the relevant code in my fixes-togreg
+> branch to pick these up.
+> 
+> They look fine to me and hopefully I'll remember to cleanup the above ;)
+> 
+First 2 applied to the fixes-togreg branch of iio.git.
 
-On Sun, Jan 30, 2022 at 02:50:25AM +0100, Linus Walleij wrote:
-> On Sat, Jan 29, 2022 at 12:57 PM Jonathan Neusch=C3=A4fer
-> <j.neuschaefer@gmx.net> wrote:
->=20
-> > This is version 5 of the WPCM450 pinctrl/GPIO driver patchset.
->=20
-> I haven't had time to look in detail but the kernel robot is complaining
-> about patch 5...
-
-These are warnings about the pinctrl-npcm7xx driver that became (more
-easily) visible under CONFIG_COMPILE_TEST through my patch.
-
->=20
-> > I was originally just going to rebase the patchset on top of v5.17-rc1,
-> > but while testing, I found that the IRQ handling code violated locking
-> > rules, specifically that it used spin locks (which can sleep on RT kern=
-els)
-> > in IRQ contexts. So I made a few changes to fix that, mainly switching
-> > to raw spin locks.
->=20
-> Which patches do you expect to be applied to the pin control tree?
-
-These two:
-
-[PATCH v5 4/9] dt-bindings: pinctrl: Add Nuvoton WPCM450
-[PATCH v5 5/9] pinctrl: nuvoton: Add driver for WPCM450
-
-and the rest can go through Joel Stanley's BMC tree, I think.
-
+This 3rd one isn't a fix so will have to wait for those to end up in
+my togreg branch.  Give me a shout if I seem to have lost this once that
+is true.
 
 Thanks,
+
 Jonathan
 
---9tf0nr/Ix68M68t8
-Content-Type: application/pgp-signature; name="signature.asc"
+> Thanks,
+> 
+> Jonathan
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAmH2ZGcACgkQCDBEmo7z
-X9tKThAAkxBAOkurvxwqssGXBIiKgfhR5IhR5guWRy/IpQvWJDOLHP5thgxHFAHC
-w228HDmeyx1LfCeUlmxTy7R3i9lOaLkKfuTSW/K08DdqLg1HBmYTGxg+q9kYQAhX
-VCujcFu8l6orsSJvtG/v9Y7bZSCK0rz9jvULMdZv+TaBNsMszsS8UuCfNs15tiIm
-9ZxxAB6GsrOSSTlBcZlzAelj+f3+ipcRw0+PCotO1G+fwC0wNqD6/bbc2YTsLFtd
-wj+B4g9DPdzO27KT46LTydrowkzX8V3m5EzJly4FnLRdNWXA5m7gBw9PjZXcgbF7
-fbKboRslghYE1bkm3L8l2K+bWxeHxJ9hWJGZZxqGA5d1i4JznuyIAuXJpYttuTlg
-rtZarxAmWhX8UsxbqAidvFcJu8XFioMhZgmVTSgbB9qj9bzW8iTHru4O981D3YoE
-FKVp3KcOCk4otZ0M+C21lMwdAyLhD9OqzNjhe9jkMpfD+AnZLlCNxzRptjD+8d5n
-1mRtaXNl2zIQG7HxIUKLqPWNPylHJcOhWE8NZsFJHvardu44ifYh9/3Yb4F0prR/
-HgsKHp1l8dMk0ZErKCDZkKgEHuL0gN5aJ4bihqF3x+Purb1PG3rjpuNhY/qTVKyx
-Zv6rk33ASllBwz89Ai41fTm5eiXbFApwqF6If3gHlvFaaebZ0PI=
-=sqaZ
------END PGP SIGNATURE-----
-
---9tf0nr/Ix68M68t8--
