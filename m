@@ -2,66 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 533924A33EE
-	for <lists+linux-gpio@lfdr.de>; Sun, 30 Jan 2022 05:28:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C89B4A344E
+	for <lists+linux-gpio@lfdr.de>; Sun, 30 Jan 2022 06:34:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354273AbiA3E2r (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 29 Jan 2022 23:28:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38128 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354227AbiA3E2a (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Jan 2022 23:28:30 -0500
-Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 679E2C06177F
-        for <linux-gpio@vger.kernel.org>; Sat, 29 Jan 2022 20:28:25 -0800 (PST)
-Received: by mail-yb1-xb32.google.com with SMTP id i62so30422359ybg.5
-        for <linux-gpio@vger.kernel.org>; Sat, 29 Jan 2022 20:28:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=B5teSI3NqSzeGu7ngV/22RiyR60khzQ8THYZDZ9DX3Q=;
-        b=QI2firgHOSt+2ZiRAEUqBnRqfCndbuygIyUz1kdYlPzS6AXkdk+mfMubksdM+6U8hJ
-         A4UbXdfo0bhasYFmsw5ceBBj4ub2bgaEqkI+Cp5foQd/M11l9HiEax3hX9+hB29fNDF1
-         4XtAbOKK0Jrn48roHo8mUNvKaz7FG0Csy4DWdnw8Q+/oXs7GbWFZBjN+ifwhy6Rfe8k0
-         Pzhs5uXUX+5v6iQyGpPCJWV84GisQUz+5cfOraMc3PalgV6vYI9t2Z4JMkhIMshepKV2
-         BM+Zj3o1QTUTRt1Kxwo+5vz+cvvR7n44irHUjPq0LbDCW52O0lwQK7qPtMHxw7vn0Id9
-         5U2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=B5teSI3NqSzeGu7ngV/22RiyR60khzQ8THYZDZ9DX3Q=;
-        b=oj3XkCdN1KGwRPfpZ+ixCr6UpfunnmcUu8CiJvxKKotGETRelZfoPWW0llOld4H1N6
-         /Ytp4VWtH0pho0ev8JzlwLW79U4zp/j4oiMe58wK7AKJ+Zdqkrwo1k0egHdGkoEq2MpD
-         KAHvY3R960KmvaysIvMpgMeGHU8RKucWzEBdkTuPqnERnXa0g9Qo8SmlwFj6/KyY+tYX
-         k6dZuTBfhf35gosjL8RNuNISa1qY5ipfzi6xoXvdLlcwpHa6l79wbfasSzLrt6gIgFWW
-         4Ido8f1sVQ97qSAXfL3zM6X7cxqBPpQOZ5WV8YlcxGxC69hCLEWTdVv/pCMRmiiCSvQM
-         rrhg==
-X-Gm-Message-State: AOAM533nnkJiVL1+Eb+AGPztM1tch6zzqRfSeW0l2I5qRy4ZzaiK4W65
-        YpKvuaI9jL2OyMQ0xjo2QZiIIWML4bVl3xBYyaGcBA3oi9E=
-X-Google-Smtp-Source: ABdhPJz3bgso8viJFkNwiW8XigzdjL6JZBPDE3NfxKOCgEqvWjdU/qagorQKM5joSRLXylFmq9/zlHP85rUYuZ5fTGQ=
-X-Received: by 2002:a25:6d45:: with SMTP id i66mr23246397ybc.352.1643516893721;
- Sat, 29 Jan 2022 20:28:13 -0800 (PST)
+        id S241076AbiA3FeW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 30 Jan 2022 00:34:22 -0500
+Received: from mga14.intel.com ([192.55.52.115]:52077 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235695AbiA3FeW (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sun, 30 Jan 2022 00:34:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1643520862; x=1675056862;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=Hi9uhMZHjkc+PHGC57s+tNz1pN79YMle8QAf/D0eiDU=;
+  b=li9Jj8T+0RrCr+/XbBW1ioAZM22LIOYoxPwC4DeM7LyFij3YpGEDdKef
+   2inAZiu+I4mVJyyCcblJkYi8Nug/BV0ix0S4nZ4rbxuk0a71dRUNJmKeh
+   Lku07I43kBmy77T2dhQqjJXB3uLBL/gZAJAIb1cP80IHhnUqkFYsMvcNh
+   +3Lx03q3zbThQgKYnJxn0MeCJLL61NS6W3bF5npiK4/ZoRlWU/JwXOMq+
+   s1L7qRoYM3kR4fZOYicnGdkEaiTst56fsLFUNpDNG71R4m9VdI4EQOkAM
+   KTVHd6QAiRpwbfJj37/mC72LsJbDP8HIhDCZGKqMA50fLvHt6mhUor6kn
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10242"; a="247540149"
+X-IronPort-AV: E=Sophos;i="5.88,328,1635231600"; 
+   d="scan'208";a="247540149"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2022 21:34:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,328,1635231600"; 
+   d="scan'208";a="598564917"
+Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 29 Jan 2022 21:34:20 -0800
+Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1nE2qy-000Q6C-1k; Sun, 30 Jan 2022 05:34:20 +0000
+Date:   Sun, 30 Jan 2022 13:33:23 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Qianggui Song <qianggui.song@amlogic.com>
+Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
+        linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [linusw-pinctrl:devel 10/12]
+ drivers/pinctrl/meson/pinctrl-meson-s4.c:178:27: warning: unused variable
+ 'tdm_sclk1_c_pins'
+Message-ID: <202201301326.VmKBKVNC-lkp@intel.com>
 MIME-Version: 1.0
-Received: by 2002:a05:7010:2312:b0:201:cd76:102e with HTTP; Sat, 29 Jan 2022
- 20:28:13 -0800 (PST)
-Reply-To: mrs.bill.chantalone01@gmail.com
-From:   "Mrs.Bill.Chantal" <grassroot309@gmail.com>
-Date:   Sun, 30 Jan 2022 05:28:13 +0100
-Message-ID: <CAO3iUMDzg_ZovNWXtuQhU6sDXk7LsNwvNc2pOb7zvX7pPCdMAw@mail.gmail.com>
-Subject: Hello....
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-You have been compensated with the sum of 9.5 million dollars in this
-united nation the payment will be issue into atm visa  card and send
-to you from the santander bank we need your address and your
-Whatsapp number  + 1 6465853907  this my email.ID
-( mrs.bill.chantal.roland@gmail.com )  contact  me
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+head:   aa74c44be19c8b1de38d955c2c45c309991c805a
+commit: 775214d389c259c77ff2b4de50bdaab5c9bd5db3 [10/12] pinctrl: meson: add pinctrl driver support for Meson-S4 Soc
+config: arm64-buildonly-randconfig-r005-20220130 (https://download.01.org/0day-ci/archive/20220130/202201301326.VmKBKVNC-lkp@intel.com/config)
+compiler: clang version 14.0.0 (https://github.com/llvm/llvm-project f1c18acb07aa40f42b87b70462a6d1ab77a4825c)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # install arm64 cross compiling tool for clang build
+        # apt-get install binutils-aarch64-linux-gnu
+        # https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/commit/?id=775214d389c259c77ff2b4de50bdaab5c9bd5db3
+        git remote add linusw-pinctrl https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+        git fetch --no-tags linusw-pinctrl devel
+        git checkout 775214d389c259c77ff2b4de50bdaab5c9bd5db3
+        # save the config file to linux build tree
+        mkdir build_dir
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm64 SHELL=/bin/bash drivers/pinctrl/meson/
 
-Thanks my
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
 
-mrs bill chantal
+All warnings (new ones prefixed by >>):
+
+>> drivers/pinctrl/meson/pinctrl-meson-s4.c:178:27: warning: unused variable 'tdm_sclk1_c_pins' [-Wunused-const-variable]
+   static const unsigned int tdm_sclk1_c_pins[]            = { GPIOC_3 };
+                             ^
+   1 warning generated.
+
+
+vim +/tdm_sclk1_c_pins +178 drivers/pinctrl/meson/pinctrl-meson-s4.c
+
+   173	
+   174	/* Bank C func4 */
+   175	static const unsigned int tdm_d2_c_pins[]		= { GPIOC_0 };
+   176	static const unsigned int tdm_d3_c_pins[]		= { GPIOC_1 };
+   177	static const unsigned int tdm_fs1_c_pins[]		= { GPIOC_2 };
+ > 178	static const unsigned int tdm_sclk1_c_pins[]		= { GPIOC_3 };
+   179	static const unsigned int mclk_1_c_pins[]		= { GPIOC_4 };
+   180	static const unsigned int tdm_d4_c_pins[]		= { GPIOC_5 };
+   181	static const unsigned int tdm_d5_c_pins[]		= { GPIOC_6 };
+   182	
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
