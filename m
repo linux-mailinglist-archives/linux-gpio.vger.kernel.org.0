@@ -2,111 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0674E4A32FA
-	for <lists+linux-gpio@lfdr.de>; Sun, 30 Jan 2022 02:08:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FE414A330D
+	for <lists+linux-gpio@lfdr.de>; Sun, 30 Jan 2022 02:28:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353622AbiA3BIv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 29 Jan 2022 20:08:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51114 "EHLO
+        id S1346526AbiA3B2H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 29 Jan 2022 20:28:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233927AbiA3BIv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Jan 2022 20:08:51 -0500
-Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5769C06173B
-        for <linux-gpio@vger.kernel.org>; Sat, 29 Jan 2022 17:08:50 -0800 (PST)
-Received: by mail-yb1-xb2a.google.com with SMTP id m6so29634319ybc.9
-        for <linux-gpio@vger.kernel.org>; Sat, 29 Jan 2022 17:08:50 -0800 (PST)
+        with ESMTP id S238167AbiA3B2G (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 29 Jan 2022 20:28:06 -0500
+Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7173C061714
+        for <linux-gpio@vger.kernel.org>; Sat, 29 Jan 2022 17:28:06 -0800 (PST)
+Received: by mail-yb1-xb2e.google.com with SMTP id g14so29704184ybs.8
+        for <linux-gpio@vger.kernel.org>; Sat, 29 Jan 2022 17:28:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=02uHw9l58hh+muQ0KbMFsY5uF5yxmJgiUPQGP+bydes=;
-        b=SFWZj0gBP6IRp9aDFoy+xQUE8PPySKJ2umdyyTH0/76Ude/Sa/8rlfSvjRzOSZuCe1
-         oI6l+vseIe7/wXn6K3j1gw7WNCxH2Kb6dO46ZlmI9ZtUvV+Xsci0jYIZiVFh/GorOMWY
-         XW+NSPF5dIGmv7XqLzUPcuOmN6fqf3R1AombzO9zj2ZVhbhC3PDzYow+rhUZR7RFqf6I
-         DhuknS+cFKrmSjx+0En68Njj7Y9UjJhPu1duqbPCjKZyVWgmstU+nKDqpMZIbfbptud0
-         /yxVS1IUB97IlmE3oa8oTm2CACbtR/U9NOnRpqMQVCt6hx7VqsEcmAoR2bJUzhPGhRKB
-         s55Q==
+        bh=hsdAuwoAg7qwnLJlVMEDDTXi021Zq4Ivm1dCM+vbPPs=;
+        b=TyRsph2/gOZcdWLHXcIspQWZuEx9+p1RXg52Tw6+N8sZdgTlYkyP+Vn9sDAUlpkiB6
+         N+Lsj0ysGkkKnaAhjAkWTPxRgVI9ItrEnPA0SgzbTmg6tXqYAw1dOPXcy+0BwJ3RV1La
+         l4/6qx/dLSiT2jna20tDUrcSwHNLz8LJAED/lNy2FrkDXs0ppXCMqKnh0NCxzwZrqurX
+         1EGku7PSnHTSZJ0s67/8lYPBzFm30SDfHYeFfHf/75a1qk7qALECeCwgWQADMwOqAXP1
+         Ut7J7McFUud1HJLksYmn3Jy3BbyEymcVZrJJH13uQ0N7sfFTjJoHjce8y8DS+/cODja1
+         rT+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=02uHw9l58hh+muQ0KbMFsY5uF5yxmJgiUPQGP+bydes=;
-        b=7WBLXrxUw0cTIoU225kCzvLl94gX+BqbS+dk3szEvWANGSObUccvng+1dwKiO2bj3a
-         OJ7yk0HvvZ31hWaNybGG16o5bDRNd1FXaEWY3uMCg9XN7crnTe+QYmZcFPFYHIq6B6NN
-         K0/W7yZCuTK6WCdAC4RwyPeaZkbQDM+DODYGNmLMii7uVqRhStQlMIn4qycwueFvfcft
-         6Owww7yH2Eyjp/O+zAZhVOJ3ZXC1BmrM2AesXKeGO2hlrLDKIpYSeLTy0lh6VdCXmJtD
-         i3x6sGLntyhiKZfEaOuVmV/VLYDSN3ZQe/SlZ6hWVvyDkDFlZmHyTMcOSQsjJ27lEv1s
-         fwyw==
-X-Gm-Message-State: AOAM5316MpXucUFZEO24BsxUJuSaZKGFGbEZ3NVOAXwywYiqm/XLy0eq
-        x+FnPI3z5mevo2WiGR83C3k5LDVVaiWc7upy6H0QhQ==
-X-Google-Smtp-Source: ABdhPJyxe/T6VMm8ymvO6Ahfr5MEhtC4jE74F8HctHiIiYxrOIhRbLOh6y0Ddd9fyCHF8SU029pA7zW3pKDOLCSxsdo=
-X-Received: by 2002:a05:6902:124a:: with SMTP id t10mr20237420ybu.634.1643504929797;
- Sat, 29 Jan 2022 17:08:49 -0800 (PST)
+        bh=hsdAuwoAg7qwnLJlVMEDDTXi021Zq4Ivm1dCM+vbPPs=;
+        b=kuMcGvZYDrdFxbrNTcpKMirBGCV/wI8eT1Vcnu1RHW0vOztvYy2MhHOmlFTa9gAz91
+         niomKMg+rZY50fqIR4wlz9xUaEpAxmATQOuKx8sIPgDnE15su/IQxLcrEfUuJH5i08KB
+         e5nxAiD4+6CZqNW5/7btN+LGFv4vdgXXw0GorwHBhLcJdAOSfIWl/JQ25HykIeb8cI8x
+         odyy7cAEWBug91FeFmO8lh5nhbtQPTklzCFQfFef2LetvtmySLSGLsM2L/sMzxEkLacg
+         iV0AvFjrnWHHPD5zjwao7Dyye6fW0Jm7bImiKs7ViIDnjRWwcvAT9LhCjqD8yyX/fjSx
+         4PoA==
+X-Gm-Message-State: AOAM532LichoBlaJj69gSscBSU+yBGo7+VwaStxM+nEDr5McV0m0eOrE
+        obTHxxJD3vYdPqnF1DYSlmMK3wclJ6//LJoD2CMwQA==
+X-Google-Smtp-Source: ABdhPJyYJw7J1i2DU0pSR3z84ZATECJU70/tjvi/ZTOQjqBngtHmjnsVgVBEEXb7Fhp6bMyxhDtbn9RTBqTnOomGCGU=
+X-Received: by 2002:a05:6902:1104:: with SMTP id o4mr21055261ybu.309.1643506085885;
+ Sat, 29 Jan 2022 17:28:05 -0800 (PST)
 MIME-Version: 1.0
-References: <20220119160715.650535-1-nikita.yoush@cogentembedded.com>
-In-Reply-To: <20220119160715.650535-1-nikita.yoush@cogentembedded.com>
+References: <YfQdZTCvhjqjFUjm@black.fi.intel.com>
+In-Reply-To: <YfQdZTCvhjqjFUjm@black.fi.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 30 Jan 2022 02:08:38 +0100
-Message-ID: <CACRpkdZ2rBii88APKacg=LyVY-9m9pxM5z08YawkvjuWmjSJrA@mail.gmail.com>
-Subject: Re: [PATCH/RFC] gpiolib: create irq_domain hierarchy bottom if possible
-To:     Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Sun, 30 Jan 2022 02:27:54 +0100
+Message-ID: <CACRpkdYngg0_M0F2Om3VTgjGMCYOqNWMvtKgGBKSxXum2-FrdQ@mail.gmail.com>
+Subject: Re: [GIT PULL] intel-pinctrl for 5.17-4
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linux pin control <linux-gpio@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jan 19, 2022 at 5:07 PM Nikita Yushchenko
-<nikita.yoush@cogentembedded.com> wrote:
+On Fri, Jan 28, 2022 at 5:44 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-> Currently, gpiolib creates irq_domain compatible with hierarchical API
-> only when interrupts provided by gpiochip lay on top of existing
-> hierarchy. Otherwise, legacy API is used.
->
-> With this patch, as soon as
-> - irq_domain hierarchical API is enabled in the kernel config,
-> - chip driver does not request preallocated interrupt numbers,
-> - chip driver does not provide it's own irq_domain_ops,
-> - chip driver provides fwnode, either explicitly or via it's struct
->   device,
-> irq_domain created by gpiolib will use hierarchical API even without
-> parent.
->
-> This allows other irqchips to lay on top of this irq_domain.
+> Not many but still important fixes for Intel, ZynqMQ and pin control subsystem.
+> Please, consider to pull for v5.17-rc2 (or nearest one).
 
-I see what you're trying to do, but we definitely need Marc Z to
-provide review for this patch before we merge it.
-
-> @@ -1095,14 +1095,6 @@ static int gpiochip_hierarchy_irq_domain_alloc(struct irq_domain *d,
-(...)
-> +       if (d->parent) {
-
-You have just put a big if (d->parent) around 95% of the code, invent
-a different
-function name and make that do what you want if parent is set, or just
-inline the code you need for that case.
-
->  static bool gpiochip_hierarchy_is_hierarchical(struct gpio_chip *gc)
->  {
-> -       return !!gc->irq.parent_domain;
-> +       if (gc->irq.parent_domain)
-> +               return true;    /* will add to existing hierarchy */
-
-OK the old case...
-
-> +       if (!gc->irq.first && !gc->irq.domain_ops &&
-> +           (gc->irq.fwnode || dev_fwnode(&gc->gpiodev->dev)))
-> +               return true;    /* will create hierarchy bottom */
-
-This will turn a *lot* of GPIO chips created with this helper
-into hierarchical root controllers.
-
-Is this really the right thing to do? (Marc?)
+Pulled in, I hope to send it off to Torvalds tomorrow.
 
 Yours,
 Linus Walleij
