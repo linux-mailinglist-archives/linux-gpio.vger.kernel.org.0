@@ -2,48 +2,48 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BF47B4A36BE
-	for <lists+linux-gpio@lfdr.de>; Sun, 30 Jan 2022 15:37:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C1874A36C0
+	for <lists+linux-gpio@lfdr.de>; Sun, 30 Jan 2022 15:37:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242954AbiA3Ohl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 30 Jan 2022 09:37:41 -0500
-Received: from mga07.intel.com ([134.134.136.100]:12051 "EHLO mga07.intel.com"
+        id S1347218AbiA3Ohm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 30 Jan 2022 09:37:42 -0500
+Received: from mga11.intel.com ([192.55.52.93]:39923 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236744AbiA3Ohl (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        id S238650AbiA3Ohl (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
         Sun, 30 Jan 2022 09:37:41 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643553460; x=1675089460;
+  t=1643553461; x=1675089461;
   h=date:from:to:cc:subject:message-id:mime-version:
    content-transfer-encoding;
-  bh=HNIRx+ojfIjp1FK7FhwayW3mXHFJ2ivYF/GP9m+Y0BQ=;
-  b=L7NMCfiQiHXS3ldW0J6I2hz1HwupF5CkXu1HiCJy1bNIGM7cAbo27q1t
-   FCxGY8Y0NzQmOBX4uMQV88LsUKQDm6/zPDoJEpJt75BtpiLSpCBsQonfC
-   WXfuGbBEdgjsFTIh1H6v9y6Ghp0GwwA+ULUBAllCSAA8BePXf7ODQmIqq
-   GRwyQKPysC5aLVOFXE5z63G1zoZKBTuiV93118vdEP1i/Oa7Yf7F+/K53
-   E/cWsLtdoruJ/tlMYH97FhIkVLeHWGtLJR3PXXE6E5oOCC4HRE2XgrVI6
-   QE0Q251lpGefnP9Jq2nRZ3xyHvzUNy8st3OeZTMSaP+l9J8KhLG9nLLS1
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10242"; a="310662746"
+  bh=Fpkx+fcrs5psnvgeLe4OUN4u1HSOufrr8zoEvdRf8BM=;
+  b=IeIAfCjcurQ22YPm+fSyS608KZpJI/c9dFlD7FQpEBGNUpjQ3jDTkaOY
+   jRSztXMCG6OEWHYeacCG2aHY4jOKbQ/Q+inYo8kd+hvcnabwbXxJRh/B9
+   kcdPsRMFQEFs8Bde/h3F/8OPGWqoqYIHa7W6PBFBUpr7avzq6ZGkFuyaX
+   GWr6bPBvm29eIs5K+zM4nomGYQgfEpeSFco0Y4Fte5N3FFahe6BBd5vZq
+   z1uIHsrpFcL/fPnVnun6Au1Gu/kkchsIfV1bpi1uzh7rGdAR5kCUfUd5K
+   GuxudN8KOY6Xu+Ikkq+fPIbci/X0rmxmwF91G761bZLaDll9d3LgcBi32
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10242"; a="244947212"
 X-IronPort-AV: E=Sophos;i="5.88,328,1635231600"; 
-   d="scan'208";a="310662746"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2022 06:37:40 -0800
+   d="scan'208";a="244947212"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2022 06:37:40 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,328,1635231600"; 
-   d="scan'208";a="770549333"
+   d="scan'208";a="598631877"
 Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 30 Jan 2022 06:37:39 -0800
+  by fmsmga004.fm.intel.com with ESMTP; 30 Jan 2022 06:37:39 -0800
 Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1nEBKk-000QcE-N6; Sun, 30 Jan 2022 14:37:38 +0000
-Date:   Sun, 30 Jan 2022 22:37:01 +0800
+        id 1nEBKk-000QcB-MU; Sun, 30 Jan 2022 14:37:38 +0000
+Date:   Sun, 30 Jan 2022 22:37:05 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
- f2d9fa75574d2962c9689575d83b48c641f855d2
-Message-ID: <61f6a28d.3SYrcnrbJhjxuo1H%lkp@intel.com>
+Subject: [linusw-pinctrl:devel] BUILD SUCCESS WITH WARNING
+ aa74c44be19c8b1de38d955c2c45c309991c805a
+Message-ID: <61f6a291.iw7QyPPjStpgpt1+%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -52,16 +52,31 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: f2d9fa75574d2962c9689575d83b48c641f855d2  Merge branch 'devel' into for-next
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: aa74c44be19c8b1de38d955c2c45c309991c805a  pinctrl: Add driver for Sunplus SP7021
 
-elapsed time: 723m
+Warning reports:
 
-configs tested: 136
+https://lore.kernel.org/llvm/202201301326.VmKBKVNC-lkp@intel.com
+
+Warning in current branch:
+
+drivers/pinctrl/meson/pinctrl-meson-s4.c:178:27: warning: unused variable 'tdm_sclk1_c_pins' [-Wunused-const-variable]
+
+Warning ids grouped by kconfigs:
+
+clang_recent_errors
+|-- arm64-allmodconfig
+|   `-- drivers-pinctrl-meson-pinctrl-meson-s4.c:warning:unused-variable-tdm_sclk1_c_pins
+|-- arm64-buildonly-randconfig-r005-20220130
+|   `-- drivers-pinctrl-meson-pinctrl-meson-s4.c:warning:unused-variable-tdm_sclk1_c_pins
+`-- arm64-buildonly-randconfig-r006-20220130
+    `-- drivers-pinctrl-meson-pinctrl-meson-s4.c:warning:unused-variable-tdm_sclk1_c_pins
+
+elapsed time: 725m
+
+configs tested: 139
 configs skipped: 3
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
 
 gcc tested configs:
 arm                                 defconfig
@@ -73,8 +88,8 @@ i386                          randconfig-c001
 m68k                             allmodconfig
 powerpc                          allmodconfig
 m68k                             allyesconfig
-powerpc                          allyesconfig
 s390                             allmodconfig
+powerpc                          allyesconfig
 s390                             allyesconfig
 sh                  sh7785lcr_32bit_defconfig
 arm                           sunxi_defconfig
@@ -160,6 +175,9 @@ x86_64                        randconfig-a002
 i386                          randconfig-a003
 i386                          randconfig-a001
 i386                          randconfig-a005
+x86_64                        randconfig-a011
+x86_64                        randconfig-a013
+x86_64                        randconfig-a015
 i386                          randconfig-a012
 i386                          randconfig-a014
 i386                          randconfig-a016
@@ -172,10 +190,10 @@ riscv                             allnoconfig
 riscv                               defconfig
 riscv                          rv32_defconfig
 riscv                            allmodconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           allyesconfig
 x86_64                    rhel-8.3-kselftests
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                           allyesconfig
 x86_64                              defconfig
 x86_64                               rhel-8.3
 x86_64                          rhel-8.3-func
