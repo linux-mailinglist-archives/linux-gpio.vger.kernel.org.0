@@ -2,104 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AC7A54A4855
-	for <lists+linux-gpio@lfdr.de>; Mon, 31 Jan 2022 14:38:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 79D384A4925
+	for <lists+linux-gpio@lfdr.de>; Mon, 31 Jan 2022 15:14:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379083AbiAaNiO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 31 Jan 2022 08:38:14 -0500
-Received: from mail-oi1-f169.google.com ([209.85.167.169]:39583 "EHLO
-        mail-oi1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1378954AbiAaNho (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Jan 2022 08:37:44 -0500
-Received: by mail-oi1-f169.google.com with SMTP id e81so26662029oia.6;
-        Mon, 31 Jan 2022 05:37:44 -0800 (PST)
+        id S1346623AbiAaOOw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 31 Jan 2022 09:14:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33506 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1379346AbiAaOOv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Jan 2022 09:14:51 -0500
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E95A4C06173B
+        for <linux-gpio@vger.kernel.org>; Mon, 31 Jan 2022 06:14:50 -0800 (PST)
+Received: by mail-ej1-x62f.google.com with SMTP id k25so43218464ejp.5
+        for <linux-gpio@vger.kernel.org>; Mon, 31 Jan 2022 06:14:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GMBCFmw9ChBGF2oPlPR6ZxE0ECTBg0uAfijnK5pLjCk=;
+        b=OOiYgA4Mh1nOc8UPczHmtyc8rjsO6ZCZ5xq0a6+U2EsrLH55LZNNlq/8ckg7+6003d
+         Yl7yDkfAWPUm+ygawoWMrcQc/lIBCPJu6pQTOBg5kS8V49SsYGjBPqS1Z/hHh2xfCDN4
+         lg2Oq4EXhIJexkOX4KOv84+UHB2FtHIKbbsaJO10PHExGSl/2uu3AR7EKLvfmHe2RF5F
+         46BAKdUtwiU5ftwW+K6Yh9J7AH4kMSn0Q7gfT+rndOdcS5kNgyvsJmQCf3btY7N5Tjs0
+         rwBDNfF2Y+m3GvH6nrFhsD8jx1mCHeiwD2Rwt4+kHNgQUQeqPWgEj/EYyEWTgBprs/Nn
+         GSow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
-         :message-id;
-        bh=dRJYxYg6M513ADX19fELFRfGgMGqN9dmswwNJo+15eU=;
-        b=AV2IqK4xRs/rT7tPWZqMx2P8lA4si+tnHS2yLGGezrs7BAuFH+2pB19ePT2Ja5uflH
-         OscYP3X3WIig6k4WNZgU+b56cW27zhwZk7ZRaCg0w09+e60vdSMJVN6Vpbepg1pvzX52
-         UhTtgLeXkCqpduRh9UIYIANTFwMr26epVJBH9eDBD0gHazods54GU/M4CqezLuCWKhOx
-         aiwI1AzH/sNvl4NimEVrFsXokgdbD8WgiKOyMqSZtHUJqG3qkK8frXnLjYWLO590G8C7
-         OyMpmvscUR5sYJvCGA7h5ACS5/khD7TZ6MHbImpWsB5ZcTJvrHNWrvUVIF3YinktcwAx
-         J3Mw==
-X-Gm-Message-State: AOAM533qM2fB1I8JPZ2e1xm1OGeXv80SmJMbq69gaPmrgNYI/sRiweJn
-        BA733UEkOi2hll12t9k4mw==
-X-Google-Smtp-Source: ABdhPJxf7xEF6ASgsS22KYFq2drQaTLC9zin7gpaq+t/OkVYsMOveK/Vxr4nFYjFUepMzMyIvAUqNw==
-X-Received: by 2002:a05:6808:168e:: with SMTP id bb14mr17517593oib.106.1643636259228;
-        Mon, 31 Jan 2022 05:37:39 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id n66sm14639502oif.35.2022.01.31.05.37.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Jan 2022 05:37:38 -0800 (PST)
-Received: (nullmailer pid 140173 invoked by uid 1000);
-        Mon, 31 Jan 2022 13:37:31 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     conor.dooley@microchip.com
-Cc:     linux-riscv@lists.infradead.org, linux-gpio@vger.kernel.org,
-        atishp@rivosinc.com, heiko@sntech.de, jassisinghbrar@gmail.com,
-        thierry.reding@gmail.com, linux-i2c@vger.kernel.org,
-        robh+dt@kernel.org, daire.mcnamara@microchip.com,
-        alexandre.belloni@bootlin.com, paul.walmsley@sifive.com,
-        brgl@bgdev.pl, geert@linux-m68k.org, aou@eecs.berkeley.edu,
-        linux-rtc@vger.kernel.org, palmer@dabbelt.com,
-        lee.jones@linaro.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bin.meng@windriver.com,
-        a.zummo@towertech.it, krzysztof.kozlowski@canonical.com,
-        linus.walleij@linaro.org, u.kleine-koenig@pengutronix.de,
-        ivan.griffin@microchip.com, linux-pwm@vger.kernel.org,
-        lewis.hanly@microchip.com
-In-Reply-To: <20220131114726.973690-7-conor.dooley@microchip.com>
-References: <20220131114726.973690-1-conor.dooley@microchip.com> <20220131114726.973690-7-conor.dooley@microchip.com>
-Subject: Re: [PATCH v5 06/12] dt-bindings: pwm: add microchip corepwm binding
-Date:   Mon, 31 Jan 2022 07:37:31 -0600
-Message-Id: <1643636251.124352.140172.nullmailer@robh.at.kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GMBCFmw9ChBGF2oPlPR6ZxE0ECTBg0uAfijnK5pLjCk=;
+        b=Dnek2y81j4ey4EvAZu/t69Hd54LYLHBqLGV0umDZGDu0AA9pDLjHpC4GaZRXDuYn36
+         qbn72xOF8QdGZMx0bNCeNlXNrNNlN5oIMVmojmdVRMt6ddiKIaaGPELzL8hPrAtn92mv
+         wz4x2EPiIMGvYMasx1PPLcomKDebm7znmbDhnHnD419XErDMmjS/3R6kb0YGTxNzQCjw
+         wyxSkmYkgClArx5lnePqWm0YRR/SzLeWEm3X1pnPObsgyFbBMmT/VslOO34Lq/wnm/yM
+         yEEMeVxrfDKQrF+Epdvxt1pbiaLSbFvL52IkTHT8D3SlT1fABul+u7AVJPjwF2Z06Aag
+         /WRQ==
+X-Gm-Message-State: AOAM531HkpwXr8Q8pKg0Q9gqce9JAdqojCZnGsDFwXwUCK5r+J/3XkAG
+        N1Yz81AlwgYw42KkQRfXE0pAud12VVEH04PwDJ4f0sxHz8c=
+X-Google-Smtp-Source: ABdhPJyO70OdA6/WPizruhGQpoU2FXQobOkNtnJ4Fcop3GbQoE7A/r5V1MdeH5frmjIn97oCt8aMCYDPLsvKoNydIHM=
+X-Received: by 2002:a17:906:7948:: with SMTP id l8mr16987855ejo.636.1643638489363;
+ Mon, 31 Jan 2022 06:14:49 -0800 (PST)
+MIME-Version: 1.0
+References: <CACjtZiTK2oUbAQJ5W6CcB=RgNvA=5x0RiEev5eT-SS3RzF9_iQ@mail.gmail.com>
+In-Reply-To: <CACjtZiTK2oUbAQJ5W6CcB=RgNvA=5x0RiEev5eT-SS3RzF9_iQ@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 31 Jan 2022 16:13:13 +0200
+Message-ID: <CAHp75Ve+cZ41K2goqeJv8ow91cNx7uNGprwR50+X3fqAWsddmw@mail.gmail.com>
+Subject: Re: Device Tree Property for Setting of Labels
+To:     Matt Walker <m@allocor.tech>, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 31 Jan 2022 11:47:21 +0000, conor.dooley@microchip.com wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
-> 
-> Add device tree bindings for the Microchip fpga fabric based "core" PWM
-> controller.
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> ---
->  .../bindings/pwm/microchip,corepwm.yaml       | 75 +++++++++++++++++++
->  1 file changed, 75 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/microchip,corepwm.yaml
-> 
+On Mon, Jan 31, 2022 at 1:21 PM Matt Walker <m@allocor.tech> wrote:
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+> I have a need to reliably identify GPIO pins in userspace,
+> specifically I would like the method I use to be invariant to
+> declaration order in the device tree (so not based on gpiochip#.)
 
-yamllint warnings/errors:
+Not sure I understand the goal. We are trying hard to drop any global
+namespace for GPIOs so each of the pins is addressed by [chip,
+relative pin #].
 
-dtschema/dtc warnings/errors:
-Documentation/devicetree/bindings/pwm/microchip,corepwm.example.dts:19:18: fatal error: dt-bindings/clock/microchip,mpfs-clock.h: No such file or directory
-   19 |         #include "dt-bindings/clock/microchip,mpfs-clock.h"
-      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
-make[1]: *** [scripts/Makefile.lib:378: Documentation/devicetree/bindings/pwm/microchip,corepwm.example.dt.yaml] Error 1
-make[1]: *** Waiting for unfinished jobs....
-make: *** [Makefile:1398: dt_binding_check] Error 2
+> There doesn't seem to be any existing method to accomplish this; and
+> there's no existing device tree property in pinctrl that I can see, or
+> in any driver that I looked at, that would persistently set a label,
+> name, or other queryable property. (Although some devices like the
+> stm32pinctrl add a sysfs node like st,bank-name.)
+>
+> I propose that a new optional property `label` or `names` is added to
+> the base pinctrl schema that drivers would then use to set the `label`
+> property in `struct gpio_chip` which can be queried from userspace via
+> `GPIO_GET_CHIPINFO_IOCTL`.
 
-doc reference errors (make refcheckdocs):
+Names of the lines are visible if you supply gpio-line-names DT property.
 
-See https://patchwork.ozlabs.org/patch/1586680
+> Two things come to mind to consider in this scheme
+> 1) I think I've seen other solutions like this where the device tree
+> node name is used instead of some additional property, but that seems
+> like it would be a breaking change if accepted because then all the
+> labels would change as the drivers are updated.
+>
+> 2) Some pinctrl devices (I'm dealing with an mcp23sxx) register
+> multiple chips under the same node. Right now the label is assigned by
+> <mcp23sxx>.<address> and it could be something similar such as <label
+> | mcp23sxx>.<address> but if we had a property that accepted a list of
+> strings then each one could have a unique label if desired.
+>
+> If this is an acceptable proposal then I'll put together some patches.
+> Or if someone else has a method I could use instead that already
+> exists I'd love to hear about it.
 
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
 
-pip3 install dtschema --upgrade
-
-Please check and re-submit.
-
+-- 
+With Best Regards,
+Andy Shevchenko
