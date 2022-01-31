@@ -2,95 +2,154 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C5E7E4A4662
-	for <lists+linux-gpio@lfdr.de>; Mon, 31 Jan 2022 12:55:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EB334A45CB
+	for <lists+linux-gpio@lfdr.de>; Mon, 31 Jan 2022 12:49:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359726AbiAaLzy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 31 Jan 2022 06:55:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55092 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1378856AbiAaLwq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Jan 2022 06:52:46 -0500
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11D2FC0797A6
-        for <linux-gpio@vger.kernel.org>; Mon, 31 Jan 2022 03:39:43 -0800 (PST)
-Received: by mail-pf1-x42d.google.com with SMTP id a19so6673740pfx.4
-        for <linux-gpio@vger.kernel.org>; Mon, 31 Jan 2022 03:39:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=aJl03y4sj7I4fLBHMYSkPGgkmbwZzIw68Hv1wix3JkY=;
-        b=P3ZgP+CtMnay7/0V5ddaLgFVVlZYY6B2a6ooBiHoxOEatDz9qtYDQ9SFiMCFPAhe/Z
-         TlXWJuMnXNqB7OevqmpLxrNVZ87gAIszPX3v4YTKLF+Ct4bnjApvxmiG1Xq6aQsEyDxg
-         WEO5ykZdaLL38GZatTXTxK23pkphsidB7gY+Juq25Pr51B+EqX1WFIJdk1P0S911Z2mU
-         4eRvC9C8wDoCVkLoEXgynXK7xD4rHOfv9BmIkPV/m9p2QTaSEkBVrxh/LFX2hNpOGR0L
-         4mFAdiqROwyavWrrXL14Kk1aYcM6XTcFBs29I8mQNAvo8TVv2FHzdgC2/unk1IN8whM/
-         Hmwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=aJl03y4sj7I4fLBHMYSkPGgkmbwZzIw68Hv1wix3JkY=;
-        b=vQq3rJrvOpLrzCf8Oda/mfjJPGhanh1ikFh+bFRzXg/SjUn0DsSaMOFSqgJSqtSKlU
-         aap0Q+YZJ5sDeSM7MyIzalOtUbuRlp/Lto2yG1MTscxDN2V/sxRYBUS46YqfYQ40Q1DT
-         pYmrbsT02ltyGKcYqZYBmcC93LA6lM/dXDmXeEJlFa7Q6sj0W5daCFAWbswtYBKy0/Is
-         lXwiilWYLaPNhTGGtDzH5gfW8AeOGpn06A0p+XueV0AjJUVlAEWk86Kpi6rzOPsFBzeK
-         MPsTpAQBreECyziPJ+1FWNgs7f+PdAAgLpJEGQ/KUBjBsdt6pW0E/MJFGPHhYe+UXKZx
-         JY5w==
-X-Gm-Message-State: AOAM531VDrcCnwXJfPJ3vwZr1SxQFtVRQX//6z1hZGCV7oMhYsenKjtp
-        Zndmba/Vrf/VnCXFGAb8PX1DUYSXW3jJFw==
-X-Google-Smtp-Source: ABdhPJwL/3S0oo6E9Zw10OJ8LGZObkmcsGuR3KmQIovrMvIFDuBucv8QTcbyCi3Pp4s2iZqvaFFubQ==
-X-Received: by 2002:a63:1665:: with SMTP id 37mr16511425pgw.253.1643629182240;
-        Mon, 31 Jan 2022 03:39:42 -0800 (PST)
-Received: from sol (123-243-144-88.static.tpgi.com.au. [123.243.144.88])
-        by smtp.gmail.com with ESMTPSA id q9sm11129502pjm.20.2022.01.31.03.39.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Jan 2022 03:39:41 -0800 (PST)
-Date:   Mon, 31 Jan 2022 19:39:37 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Gasai Maple <gasaimaple@gmail.com>, linux-gpio@vger.kernel.org,
-        brgl@bgdev.pl
-Subject: Re: A problem with gpios on my sunxi board.
-Message-ID: <20220131113937.GA54861@sol>
-References: <CAA=7Zrk43M3Q_cRnRwoJyyBk-C-3ACqvLg6toMou6eobsua7Uw@mail.gmail.com>
- <20220131005924.GA11753@sol>
- <YffHbHRJLlF/kJ8F@smile.fi.intel.com>
+        id S1351622AbiAaLqw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 31 Jan 2022 06:46:52 -0500
+Received: from esa.microchip.iphmx.com ([68.232.153.233]:59027 "EHLO
+        esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1380459AbiAaLpd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Jan 2022 06:45:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1643629532; x=1675165532;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=qaDyYutC4DMWlORMqJ4RRry+JwfuVOx8TPg8xTh5c6g=;
+  b=g8xSIqFWZed9AF2QaTSwtQepJDqxywCo3f2YdKZdBvQpfhwd0Si4MlyU
+   lNgpkjkiGToTM8yYAYYSTk/MVoc+AZJgIgm1hLS6e1P1p7wcToNliJHL4
+   GzXaNfV6qq1W8D3GF/4pDcrd6amr3Nw36uX29imUyXw9U0l6LT/gXeS+d
+   t3cxNj4/Gu0faNZRRL7Pb7PDE5Gq1POPF5xlLJZHnZFRHMBcQ+35wxGQG
+   PaLA4KfW6Gly65nIMBw9vpAFM2HABl9zC5H3clh393wzmnJGZbsHM41J2
+   ibarWYNSKBferoMnSBnIbTdDRD+9Ts6etBJt19SFKmUI1ljamHWNKy29g
+   w==;
+IronPort-SDR: 6AbAz63xhdKutO6wmjfyWT5TCdnTeZSXwqiEawG4GhgdT7JhGKaHo2bWof7F3zZO+nMuLbpMz+
+ iAUi7IWPvEf9nEjAKFsdX72SoSlJpDNbvb6O0pEqF+xYlJ6oGVwtrhGb23tkDiezWrpvdyUvLr
+ ij+j1BHJDXwxieNEyZkb3nPrbacktK4X5fcp60/q1VVhA5EMXvoa4CSNNku6RCpG6Hk8DIc9fz
+ NJ+phcmwBqgtMcIKssiM6s7K2AFyztlhvLYep5g7FPCsHRjr8As6J/EXyw8BkoTdKZ6c79fkdd
+ 5hqj8ybUtWXfpebQMQT4pnAy
+X-IronPort-AV: E=Sophos;i="5.88,330,1635231600"; 
+   d="scan'208";a="160544943"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 31 Jan 2022 04:45:31 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.17; Mon, 31 Jan 2022 04:45:31 -0700
+Received: from wendy.microchip.com (10.10.115.15) by chn-vm-ex04.mchp-main.com
+ (10.10.85.152) with Microsoft SMTP Server id 15.1.2375.17 via Frontend
+ Transport; Mon, 31 Jan 2022 04:45:26 -0700
+From:   <conor.dooley@microchip.com>
+To:     <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <robh+dt@kernel.org>,
+        <jassisinghbrar@gmail.com>, <thierry.reding@gmail.com>,
+        <u.kleine-koenig@pengutronix.de>, <lee.jones@linaro.org>,
+        <a.zummo@towertech.it>, <alexandre.belloni@bootlin.com>,
+        <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
+        <aou@eecs.berkeley.edu>, <geert@linux-m68k.org>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
+        <linux-pwm@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>
+CC:     <krzysztof.kozlowski@canonical.com>, <bin.meng@windriver.com>,
+        <heiko@sntech.de>, <lewis.hanly@microchip.com>,
+        <conor.dooley@microchip.com>, <daire.mcnamara@microchip.com>,
+        <ivan.griffin@microchip.com>, <atishp@rivosinc.com>
+Subject: [PATCH v5 00/12] Update the Icicle Kit device tree
+Date:   Mon, 31 Jan 2022 11:47:15 +0000
+Message-ID: <20220131114726.973690-1-conor.dooley@microchip.com>
+X-Mailer: git-send-email 2.35.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YffHbHRJLlF/kJ8F@smile.fi.intel.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 31, 2022 at 01:26:36PM +0200, Andy Shevchenko wrote:
-> On Mon, Jan 31, 2022 at 08:59:24AM +0800, Kent Gibson wrote:
-> > On Fri, Jan 28, 2022 at 10:12:13PM +0800, Gasai Maple wrote:
-> > > I posted a question on stackoverflow, it's basically about me having
-> > > problems operating gpio with libgpiod, and a user advised me to drop a
-> > > message, the link is here
-> > > https://stackoverflow.com/questions/70863283/libgpiod-tests-fails-on-pcduino3-nano
-> > 
-> > It would be helpful to restate your question rather than providing the
-> > link.  But anyway...
-> > 
-> > My best guess is that your kernel is built with only v2 of the GPIO CDEV ABI.
-> > libgpiod support for v2 is a WIP, and 1.6.3 only supports ABI v1.
-> > The CHIP_INFO ioctl is common to both, so will still work.
-> > But all the line request ioctls changed so they wont.
-> > So libgpiod is probably making ioctl calls that your kernel doesn't
-> > support.
-> 
-> If this the case, can we add some warning to libgpiod tools to tell user that
-> the results may be way wrong because of that?
-> 
+From: Conor Dooley <conor.dooley@microchip.com>
 
-Turns out not to be the case here, but the results wont be "way wrong"
-- the ioctl call will just fail as it doesn't exist in the kernel.
-Unfortunately that returns a generic EINVAL that can't be distinquished
-from other causes of the same error.
+This series updates the Microchip Icicle Kit device tree by adding a
+host of peripherals, and some updates to the memory map. In addition,
+the device tree has been split into a third part, which contains "soft"
+peripherals that are in the fpga fabric.
 
-Cheers,
-Kent.
+Several of the entries are for peripherals that have not get had their
+drivers upstreamed, so in those cases the dt bindings are included where
+appropriate in order to avoid the many "DT compatible string <x> appears
+un-documented" errors.
+
+Depends on mpfs clock driver binding (on clk/next) to provide 
+dt-bindings/clock/microchip,mpfs-clock.h
+and on the other changes to the icicle/mpfs device tree from geert
+that are already in linux/riscv/for-next.
+
+Additionally, the interrupt-extended warnings on the plic/clint are 
+cleared by [1] & [2].
+
+[1] https://lore.kernel.org/linux-riscv/cover.1639744468.git.geert@linux-m68k.org/
+[2] https://lore.kernel.org/linux-riscv/cover.1639744106.git.geert@linux-m68k.org/
+
+Changes from v4:
+- dont include icicle_kit_defconfig, accidentally added in v3
+- drop prescaler from mpfs-rtc & calculate the value instead
+- use corei2c as a fallback device for mpfs-i2c
+- drop spi dt-binding (on spi-next)
+  commit 2da187304e556ac59cf2dacb323cc78ded988169
+- drop usb dt-binding (on usb-next)
+
+Changes from v3:
+- drop "mailbox: change mailbox-mpfs compatible string", already upstream:
+  commit f10b1fc0161cd99e ("mailbox: change mailbox-mpfs compatible string")
+- fix copy paste error in microchip,mpfs-mailbox dt-binding
+- remove whitespace in syscontroller dt entry
+
+Changes from v2:
+- dropped plic int header & corresponding defines in dts{,i}
+- use $ref to drmode in mpfs-musb binding
+- split changes to dts{,i} again: functional changes to existing
+  elements now are in a new patch
+- drop num-cs property in mpfs-spi binding
+- dont make the system controller a simple-mfd
+- move the separate bindings for rng/generic system services into the 
+  system controller binding
+- added an instance corei2c as i2c2 in the fabric dtsi
+- add version numbering to corepwm and corei2c compat string (-rtl-vN)
+
+Conor Dooley (12):
+  dt-bindings: soc/microchip: update syscontroller compatibles
+  dt-bindings: soc/microchip: add services as children of sys ctrlr
+  dt-bindings: i2c: add bindings for microchip mpfs i2c
+  dt-bindings: rtc: add bindings for microchip mpfs rtc
+  dt-bindings: gpio: add bindings for microchip mpfs gpio
+  dt-bindings: pwm: add microchip corepwm binding
+  riscv: dts: microchip: use clk defines for icicle kit
+  riscv: dts: microchip: add fpga fabric section to icicle kit
+  riscv: dts: microchip: refactor icicle kit device tree
+  riscv: dts: microchip: update peripherals in icicle kit device tree
+  riscv: dts: microchip: add new peripherals to icicle kit device tree
+  MAINTAINERS: update riscv/microchip entry
+
+ .../bindings/gpio/microchip,mpfs-gpio.yaml    |  80 ++++++
+ .../bindings/i2c/microchip,mpfs-i2c.yaml      |  57 ++++
+ ...ilbox.yaml => microchip,mpfs-mailbox.yaml} |   6 +-
+ .../bindings/pwm/microchip,corepwm.yaml       |  75 +++++
+ .../bindings/rtc/microchip,mfps-rtc.yaml      |  58 ++++
+ .../microchip,mpfs-sys-controller.yaml        |  72 +++++
+ ...icrochip,polarfire-soc-sys-controller.yaml |  35 ---
+ MAINTAINERS                                   |   2 +
+ .../dts/microchip/microchip-mpfs-fabric.dtsi  |  25 ++
+ .../microchip/microchip-mpfs-icicle-kit.dts   | 115 ++++++--
+ .../boot/dts/microchip/microchip-mpfs.dtsi    | 262 +++++++++++++++---
+ 11 files changed, 683 insertions(+), 104 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml
+ create mode 100644 Documentation/devicetree/bindings/i2c/microchip,mpfs-i2c.yaml
+ rename Documentation/devicetree/bindings/mailbox/{microchip,polarfire-soc-mailbox.yaml => microchip,mpfs-mailbox.yaml} (82%)
+ create mode 100644 Documentation/devicetree/bindings/pwm/microchip,corepwm.yaml
+ create mode 100644 Documentation/devicetree/bindings/rtc/microchip,mfps-rtc.yaml
+ create mode 100644 Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-sys-controller.yaml
+ delete mode 100644 Documentation/devicetree/bindings/soc/microchip/microchip,polarfire-soc-sys-controller.yaml
+ create mode 100644 arch/riscv/boot/dts/microchip/microchip-mpfs-fabric.dtsi
+
+-- 
+2.35.0
+
