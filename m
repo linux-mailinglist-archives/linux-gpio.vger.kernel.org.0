@@ -2,90 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 04F0B4A519F
-	for <lists+linux-gpio@lfdr.de>; Mon, 31 Jan 2022 22:38:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9DF554A52F4
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Feb 2022 00:11:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381249AbiAaVix (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 31 Jan 2022 16:38:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51532 "EHLO
+        id S237245AbiAaXLu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 31 Jan 2022 18:11:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358076AbiAaViS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Jan 2022 16:38:18 -0500
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F78BC061757
-        for <linux-gpio@vger.kernel.org>; Mon, 31 Jan 2022 13:38:10 -0800 (PST)
-Received: by mail-oi1-x243.google.com with SMTP id u13so13195619oie.5
-        for <linux-gpio@vger.kernel.org>; Mon, 31 Jan 2022 13:38:10 -0800 (PST)
+        with ESMTP id S237418AbiAaXLu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Jan 2022 18:11:50 -0500
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14F96C061714;
+        Mon, 31 Jan 2022 15:11:50 -0800 (PST)
+Received: by mail-pj1-x1036.google.com with SMTP id o16-20020a17090aac1000b001b62f629953so698922pjq.3;
+        Mon, 31 Jan 2022 15:11:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=RcCyF58LaRxi/j1nHAT0ApLeXmQ9s66f3iMVqhPacvY=;
-        b=dEuqzCa7Zlz6s4mRGbRbRWXXanD59qsT+xmKk7tBbCVL8shmNgt9pnuL3r3GZQALql
-         Y63DqHUGCnZO0yzAtzp7ZNS2CuC8pMKUMaMtNqE3s9gB45FDt9/C7CdeYDqwmv7HZJbj
-         h6fZit5aG7dGp8FvXKTscfcGshyIKAGZl/Y4NFvWe+GDkg5MDDBzPsbgzyvzZ7B1mfX4
-         ltlQ0tRJrdsWlCdvxMPpvS+PhwNDM1Zp7MYHnfnHzWMTP4bbhrhxbQSB0Xw9LPR0gSp/
-         L2Vas/DZH4ZiZyplfhihUfOHaOD2GjtH1tg3ZI6lVgxDcwRnl8d4U3qCI5tj+07J/ZXk
-         SzvA==
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=wjPghJ2FTNZ5W0woqreUfJCGSMslHYBonQKjH2YGK/c=;
+        b=CvdPCAeHHR21ncoEVeefAryOB7PeUjmTLQpgdRDC71EmL1xqO3H+Hx4DW6HE2p0RFf
+         O+T7udhR7D6dm31kO8XXiapdKceb9tJHB0n876eluLE2DyU4uhX/zrsJ2PbFqQaabhtF
+         NsWZ5Ri+sYInM7Tjv5Y82XzF+NtEsifDn83nmHX5NzsVqox/0hnr/SdqT+wMmR03nGBv
+         r/rBHKKKAXbDSYJlzTA1Kycs8/GzHt1eYLp1squtI6DwJM5wPja2DlSOvk8ljLPF8PYM
+         1fefTAVgAYWolPAauJuYoibcEahy9yWVDu8iMenxd71y9ks90zBECKtXEDdHKPNC2K1Z
+         grbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=RcCyF58LaRxi/j1nHAT0ApLeXmQ9s66f3iMVqhPacvY=;
-        b=5nLpxMpu82kbX8jr9UnUM532rLNGfeOvyjf9dGQQ12V4u+gdOjc40BB8MomvhaMVJZ
-         Sb+85xxbDvoKIuifSmNdlAqcLxMr8G4VVtVctKWiVAnFcWlfsUStd2Ce5MYEPMvucJFB
-         drwW2j/flbT9Aj0MWMsPTs3DK27H6HIUcs60DYYj+nHhg2pzQZvmy9IC25Xss4sl9pYH
-         x/n6GJIdTnm7sjB/XnCEe4EApqOIWKtlMoPgbs2qpt2R5O66st1avzTxEDaArnnjBOqh
-         Pw1K1R3e+XQojTeZYFfCpnVud+GAIJWKPFA/5uzzMLk8lOx//VtEt7R16R9xYqbmK14x
-         zQGg==
-X-Gm-Message-State: AOAM530HDFAH/1QJttj8P4DmD+AgPuZ8eFcbNpvSf5LsDdCyYkRL3TrI
-        rc0feJeBoiLUu18C8tOIUzzxO3L19a3+OBfDChM=
-X-Google-Smtp-Source: ABdhPJzjG4nHBnpm1YeRsvfpKVsM6nmNJIeFJaztEJrNHMe+iyJctx1iGavTAT23A2IhS4j6LtYbunRiUquAn1xj08o=
-X-Received: by 2002:a54:4490:: with SMTP id v16mr14818764oiv.157.1643665089421;
- Mon, 31 Jan 2022 13:38:09 -0800 (PST)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=wjPghJ2FTNZ5W0woqreUfJCGSMslHYBonQKjH2YGK/c=;
+        b=Gi9U/T7/Hq4Tn3hYxzAacP9lhQ42ScTt34OrYAsbc3975CqEgkvS96GfnPKr9b4vih
+         tbIaCnjQhw2kzG1JbWTJHACHsIXdJLgC+IyBGOdAWEM0U7AAqQuVQtnH35GlxDPlJqB1
+         He3N66iigz9KYIYEaX6ZWZwnf77w2az+ZYqvZ+C+JWKZM+nc2fWqCaQewU8b1aoSsaU3
+         wKCAj80etHhernwJEjjdn8uRIw+uvAB9jTUOqqF9qqVL7UAehMxoeM4+gf+9w+QbziHe
+         KRGii1twZAti8OD6lBZSlQikxMs9cZcwHoTC/WNEFmUj7LMo+5b/2CQJenbyCciklLAo
+         KCfw==
+X-Gm-Message-State: AOAM531Trmdj7XOV+3coYBXJ9k9sYWKBpqaZiX/E9Yn9BPevuCCN+Tg3
+        7hVvNAALXfyc9PRXpO0rZ5A=
+X-Google-Smtp-Source: ABdhPJxQ2tP/Cu7ZsuYkoiUe8W9KnvlUk5iFT3DsEwgDbApIk6MQqNi0ruCaBHn7qX2M4CJk/c2ryw==
+X-Received: by 2002:a17:90b:33c6:: with SMTP id lk6mr26990073pjb.213.1643670709597;
+        Mon, 31 Jan 2022 15:11:49 -0800 (PST)
+Received: from [192.168.1.3] (ip72-194-116-95.oc.oc.cox.net. [72.194.116.95])
+        by smtp.gmail.com with ESMTPSA id j12sm19449219pgf.63.2022.01.31.15.11.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Jan 2022 15:11:48 -0800 (PST)
+Message-ID: <38635f9f-eec3-57fc-a72f-7cd6b0a0c590@gmail.com>
+Date:   Mon, 31 Jan 2022 15:11:47 -0800
 MIME-Version: 1.0
-Received: by 2002:a4a:c30d:0:0:0:0:0 with HTTP; Mon, 31 Jan 2022 13:38:09
- -0800 (PST)
-Reply-To: westerunion909@gmail.com
-From:   "Antonia Lloyd." <anthonylloydatmxxx04@gmail.com>
-Date:   Mon, 31 Jan 2022 13:38:09 -0800
-Message-ID: <CAExPwBBpihjV-rv_-+hYqb1WD3wpSWx81B_Q3ES15U3TXSPsyw@mail.gmail.com>
-Subject: Dear Email ID Owner.(USD$4000 IMF COMPENSATION FUND TO PICK UP TODAY).
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [RFC v6 net-next 1/9] pinctrl: ocelot: allow pinctrl-ocelot to be
+ loaded as a module
+Content-Language: en-US
+To:     Colin Foster <colin.foster@in-advantage.com>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>, UNGLinuxDriver@microchip.com,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Lee Jones <lee.jones@linaro.org>, katie.morris@in-advantage.com
+References: <20220129220221.2823127-1-colin.foster@in-advantage.com>
+ <20220129220221.2823127-2-colin.foster@in-advantage.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+In-Reply-To: <20220129220221.2823127-2-colin.foster@in-advantage.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dear Email ID Owner.
 
-The IMF is compensating all the email address that was funds as one of
-the ward win Victims and your email address and your name is among the
-listed one of approved to pay the sum of $3.6 million U.S Dollars. We
-have concluded to effect your own payment through Western Union Money
-Transfer for easy pick-up of those funds in good condition,$4000 twice
-daily,till the $3.6 million is completely transferred to you.We now
-need your information where we will be sending the funds,such
-as;Receiver name(Your full Name)address and phone number.Contact
-Western Union agent with this Email: ( westerunion995@gmail.com  ) for
-your payment fund.
 
-Ms.Maria Zatto
-E-mail:westerunion995@gmail.com
-Telephone: +229 682 97 169
+On 1/29/2022 2:02 PM, Colin Foster wrote:
+> Work is being done to allow external control of Ocelot chips. When pinctrl
+> drivers are used internally, it wouldn't make much sense to allow them to
+> be loaded as modules. In the case where the Ocelot chip is controlled
+> externally, this scenario becomes practical.
+> 
+> Signed-off-by: Colin Foster <colin.foster@in-advantage.com>
 
-Contact Ms.Maria,immediately you get this mail through western union
-email address above to enable her speed-up.your payment and release
-the $4000 dollars MTCN today for you to pick up the payment OK.
-
-You are expected to provide us with the details as prescribed below to
-enable safe and easy release of your funds today.
-
-(1)Your Full name:
-(2)Your Phone number:
-(3)Your Country:
-(4)Your Age:
-
-Thank you,
-Dr.Antonia Lloyd.
-Contact Dir.Western Union Money Transfer,
-Cotonou-Benin Republic.
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
