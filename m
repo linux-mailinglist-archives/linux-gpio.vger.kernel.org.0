@@ -2,94 +2,158 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C67A4A3C94
-	for <lists+linux-gpio@lfdr.de>; Mon, 31 Jan 2022 03:30:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A3E914A3ED2
+	for <lists+linux-gpio@lfdr.de>; Mon, 31 Jan 2022 09:47:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236291AbiAaCaJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 30 Jan 2022 21:30:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43182 "EHLO
+        id S235607AbiAaIri (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 31 Jan 2022 03:47:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236210AbiAaCaI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 30 Jan 2022 21:30:08 -0500
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B54F2C061714
-        for <linux-gpio@vger.kernel.org>; Sun, 30 Jan 2022 18:30:08 -0800 (PST)
-Received: by mail-pj1-x1036.google.com with SMTP id s2-20020a17090ad48200b001b501977b23so16918436pju.2
-        for <linux-gpio@vger.kernel.org>; Sun, 30 Jan 2022 18:30:08 -0800 (PST)
+        with ESMTP id S234868AbiAaIrh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Jan 2022 03:47:37 -0500
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78E61C06173D
+        for <linux-gpio@vger.kernel.org>; Mon, 31 Jan 2022 00:47:37 -0800 (PST)
+Received: by mail-wr1-x42e.google.com with SMTP id c23so23878803wrb.5
+        for <linux-gpio@vger.kernel.org>; Mon, 31 Jan 2022 00:47:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=w7jJWZe+uSnOeyLb4i1kuP6M3tYmVGwjx53IF++ro6k=;
-        b=exEtj7HdcMgAWQ67UEQsPMewBXga/P8PmdmJpyDNmU6POLoRPzp7i6omL6cWkMdDcj
-         2cqMHxTf5VD3Pzxv/V8HB0LFut1jY0YLrA0SNPy38kTUhPeNL6DZu/KlBQ/SjwpYyr+b
-         vwGqxtj3IbPdT2VU7XWH4O7g2Waj0/yjXfYspVgzI9ih/Cn1O7EhrSU5uG74mtXX+0Tp
-         oYmzxr4DVQIGkch0fcpksM+SuJ7o2i/v2qPF8/RoxyfbqXKwSgw3rBcxqIZpY8jV5qM0
-         I56i1Wamgv7MrcvPqC5qPxpQ4Mzfy512OXE1abZ6i1Di4bAZjv6s80mqbrv9DmQZGKOc
-         3NvQ==
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=t7jPwPhPro6Iv9HSiNOKR1rT0o1K1FCdRP2oY2jpf+w=;
+        b=QzZYqxiaPC9Nq5ye22er2udgF5fExREUxs03Oa7WhWa6T3IpYz+t8negIwYhl+jGHa
+         CgdYaW+6E75ONwCsuBQZMdPmo8762DvgwHsw8SGZ9ywzd0fQedjjAtVEZrI77yxMZhbq
+         4kZAR8qrJmQ2GmQ3iqLVH9jgpMX072Clf65RoR/S/diKjC/XHFDc5ZBR7ad2bARR7vnv
+         FQV+AnulBMJz0XfAWygjxA3XSv5YnwRhjn/Bl+NggIK97vEu6PXPUoN8nzhp6hs5unP5
+         hBSH8uwTk13nzmkUZCwsPV9VJ3XXmCNpySljO21CZHxJxBwdwh9xtSjnfyAwemnt22n6
+         Z3Zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=w7jJWZe+uSnOeyLb4i1kuP6M3tYmVGwjx53IF++ro6k=;
-        b=iHa6UhLjBko0WXMPyZFccOICjlHcbeoFjvUaBEM02ADzZytcb0XcE0u6rOStQjCGk9
-         jXHygs0HRA5PpN57LlKJ0t9c1UyjpOSEUlJWVnQ3o5BdzFrrWWyDEOja2BwOMMNY4H/C
-         0ZGXVg5YE264i9Hir4km/iPcTKa3d9Y27lMT4kcb+9nWK7c6OMGvsx9Xp0ogKchJr/0n
-         cnSTmWIuNjD4KKtid5J0gciGTk8cWkxlbSSgw4wAVPTaAxbGt6QtZn19WVu9lr93MQ8G
-         AwR1Rx8+LPTfi3wBw2F4ONnK5A30jrHKrFl0pvSUIbx6tJsqeVZpW4i9bq0rhX9pH6kj
-         IVWg==
-X-Gm-Message-State: AOAM530z+wTv66oe+36DNk0yftOv04z0q8/dxBkNnZ+eJU9uJ5/O0dQG
-        bFR7Hzo/SGTR7CI54BZl45Xr8djiBxA5Lw==
-X-Google-Smtp-Source: ABdhPJx4qJ5H1Hg9RojA4d4gtxDBFu4L81vGZt1WgRNa5V5JjXhLY8CgAQOiOPoTG/Ffe3D9TvHxIQ==
-X-Received: by 2002:a17:902:ed8c:: with SMTP id e12mr3895082plj.17.1643596208146;
-        Sun, 30 Jan 2022 18:30:08 -0800 (PST)
-Received: from sol (123-243-144-88.static.tpgi.com.au. [123.243.144.88])
-        by smtp.gmail.com with ESMTPSA id s6sm27285327pgk.44.2022.01.30.18.30.05
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=t7jPwPhPro6Iv9HSiNOKR1rT0o1K1FCdRP2oY2jpf+w=;
+        b=65dTorn8Ho7sUdj80fjEBK0XfcdYvCllDa73UvNyDxcA0TjVfxdGW8xGbLwSxn4a1u
+         yOpHGpc5NdaiFEyHtgbliAIYor6Y/Rm7uvnZx9JXWdF+yP1B0KYYaTl3h68/Bl4TEnPZ
+         0uF5ZGYvEO6oZlluEpfvuGRSrbmUJRNsqsTrx/qxorgkyanQpLGHEGjpUz1IRtyqlPbJ
+         gflwoRn2SfJ+beogn8iHwIeauAVkSDqJ9f5ld7o+W3im7Ah8Cc/C6z3/idDRpp/srJjy
+         trwFFMHmk+0Pr895tFU5kp4J2rL/PD69EJskzNDwo4js+oDy7lmCenU5kAUMP7zV8hWt
+         HSZw==
+X-Gm-Message-State: AOAM533UJmW0bWHPtxQjNUWHJOdijQsh96j/bmD1c59b5Rx5KjiOzi/Y
+        VZ0QEwSGS5NIGW7bl3KFJHxXyg==
+X-Google-Smtp-Source: ABdhPJyyc+x7qpUHDAy6jWDjoouaxef+ekdgY+9XelsF9wARb21PUz7MLztASeLFL5087U3C0mFR5A==
+X-Received: by 2002:a05:6000:1848:: with SMTP id c8mr10310760wri.241.1643618855967;
+        Mon, 31 Jan 2022 00:47:35 -0800 (PST)
+Received: from google.com (cpc106310-bagu17-2-0-cust853.1-3.cable.virginm.net. [86.15.223.86])
+        by smtp.gmail.com with ESMTPSA id a14sm13421217wri.25.2022.01.31.00.47.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Jan 2022 18:30:07 -0800 (PST)
-Date:   Mon, 31 Jan 2022 10:30:02 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Gasai Maple <gasaimaple@gmail.com>
-Cc:     linux-gpio@vger.kernel.org, andriy.shevchenko@linux.intel.com,
-        brgl@bgdev.pl
-Subject: Re: A problem with gpios on my sunxi board.
-Message-ID: <20220131023002.GA19962@sol>
-References: <CAA=7Zrk43M3Q_cRnRwoJyyBk-C-3ACqvLg6toMou6eobsua7Uw@mail.gmail.com>
- <20220131005924.GA11753@sol>
+        Mon, 31 Jan 2022 00:47:35 -0800 (PST)
+Date:   Mon, 31 Jan 2022 08:47:33 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Colin Foster <colin.foster@in-advantage.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>, UNGLinuxDriver@microchip.com,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        katie.morris@in-advantage.com
+Subject: Re: [RFC v6 net-next 5/9] mfd: add interface to check whether a
+ device is mfd
+Message-ID: <YfeiJVmAbLa497Ht@google.com>
+References: <20220129220221.2823127-1-colin.foster@in-advantage.com>
+ <20220129220221.2823127-6-colin.foster@in-advantage.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20220131005924.GA11753@sol>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220129220221.2823127-6-colin.foster@in-advantage.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 31, 2022 at 08:59:24AM +0800, Kent Gibson wrote:
-> On Fri, Jan 28, 2022 at 10:12:13PM +0800, Gasai Maple wrote:
-> > I posted a question on stackoverflow, it's basically about me having
-> > problems operating gpio with libgpiod, and a user advised me to drop a
-> > message, the link is here
-> > https://stackoverflow.com/questions/70863283/libgpiod-tests-fails-on-pcduino3-nano
+On Sat, 29 Jan 2022, Colin Foster wrote:
+
+> Some drivers will need to create regmaps differently based on whether they
+> are a child of an MFD or a standalone device. An example of this would be
+> if a regmap were directly memory-mapped or an external bus. In the
+> memory-mapped case a call to devm_regmap_init_mmio would return the correct
+> regmap. In the case of an MFD, the regmap would need to be requested from
+> the parent device.
 > 
-> It would be helpful to restate your question rather than providing the
-> link.  But anyway...
+> This addition allows the driver to correctly reason about these scenarios.
 > 
-> My best guess is that your kernel is built with only v2 of the GPIO CDEV ABI.
-> libgpiod support for v2 is a WIP, and 1.6.3 only supports ABI v1.
-> The CHIP_INFO ioctl is common to both, so will still work.
-> But all the line request ioctls changed so they wont.
-> So libgpiod is probably making ioctl calls that your kernel doesn't
-> support.
+> Signed-off-by: Colin Foster <colin.foster@in-advantage.com>
+> ---
+>  drivers/mfd/mfd-core.c   |  6 ++++++
+>  include/linux/mfd/core.h | 10 ++++++++++
+>  2 files changed, 16 insertions(+)
 > 
+> diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
+> index 684a011a6396..2ba6a692499b 100644
+> --- a/drivers/mfd/mfd-core.c
+> +++ b/drivers/mfd/mfd-core.c
+> @@ -33,6 +33,12 @@ static struct device_type mfd_dev_type = {
+>  	.name	= "mfd_device",
+>  };
+>  
+> +int device_is_mfd(struct platform_device *pdev)
+> +{
+> +	return (!strcmp(pdev->dev.type->name, mfd_dev_type.name));
+> +}
+> +EXPORT_SYMBOL(device_is_mfd);
 
-On re-reading your issue I realise it is the LINE_INFO ioctl that is
-working for you, not CHIP_INFO.  That indicates ABI v1 is present in
-your kernel, so the above is wrong.
+As I said before, I really don't want MFDness leaking out into other
+parts of the kernel.  Please find another way to differentiate between
+devices registered via the MFD API and by other means.
 
-That brings me back to using strace to see what is happening in the
-ioctl calls.
+I'm happy to help here.
 
-And what does gpioget return?
+How else could these devices be enumerated? 
 
-Cheers,
-Kent.
+>  int mfd_cell_enable(struct platform_device *pdev)
+>  {
+>  	const struct mfd_cell *cell = mfd_get_cell(pdev);
+> diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
+> index 0bc7cba798a3..c0719436b652 100644
+> --- a/include/linux/mfd/core.h
+> +++ b/include/linux/mfd/core.h
+> @@ -10,6 +10,7 @@
+>  #ifndef MFD_CORE_H
+>  #define MFD_CORE_H
+>  
+> +#include <generated/autoconf.h>
+>  #include <linux/platform_device.h>
+>  
+>  #define MFD_RES_SIZE(arr) (sizeof(arr) / sizeof(struct resource))
+> @@ -123,6 +124,15 @@ struct mfd_cell {
+>  	int			num_parent_supplies;
+>  };
+>  
+> +#ifdef CONFIG_MFD_CORE
+> +int device_is_mfd(struct platform_device *pdev);
+> +#else
+> +static inline int device_is_mfd(struct platform_device *pdev)
+> +{
+> +	return 0;
+> +}
+> +#endif
+> +
+>  /*
+>   * Convenience functions for clients using shared cells.  Refcounting
+>   * happens automatically, with the cell's enable/disable callbacks
+
+-- 
+Lee Jones [李琼斯]
+Principal Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
