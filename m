@@ -2,209 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 376944A554B
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Feb 2022 03:39:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 51B7C4A55B7
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Feb 2022 04:52:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232321AbiBACjn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 31 Jan 2022 21:39:43 -0500
-Received: from mga05.intel.com ([192.55.52.43]:33597 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S232234AbiBACjn (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Mon, 31 Jan 2022 21:39:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643683183; x=1675219183;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=xaBZJS7WfaF6e80XTFBpr/2N57heaG610PYwY7CL+Mk=;
-  b=PW7MnDKUp4sIHchPVXdI3vCrvLFPIRqBLDPie4n0V7mvQQbP2NdRYt3G
-   I2q0n9pGoNyiS77Ux4gg8woh6AWHnVX5UsOvXJwV6PiMJ2zHGCdxdp1nv
-   KROvIxBHLMrr+4Lq4FSAfZFApV/82MLt01Dbi3ivpYcxyyTB49UPJhNUN
-   ehwU0C6OoyvDbsQOW2p21Q2I3AxBcq1YFCuy0Z0Re6NvV2/M+ZuPYri6a
-   geq+STMA1kBKfNkHeVZAXgeddQTjG65Kl/qqHnl40TYUFmnNs+lwvTUrz
-   AyIOUxEz1U93NQ/kxuX8sdxk/x7jZnAfFZ05oGW83qMmfsE0IdVVEt7VP
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10244"; a="333965077"
-X-IronPort-AV: E=Sophos;i="5.88,332,1635231600"; 
-   d="scan'208";a="333965077"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2022 18:39:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,332,1635231600"; 
-   d="scan'208";a="770977962"
-Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 31 Jan 2022 18:39:09 -0800
-Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1nEj4X-000SeD-9g; Tue, 01 Feb 2022 02:39:09 +0000
-Date:   Tue, 01 Feb 2022 10:38:20 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
- 003c30d8ad1cbfd52e50a75fd5b23832b72063db
-Message-ID: <61f89d1c.+aUvJUXmZdexNfOb%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S233358AbiBADww (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 31 Jan 2022 22:52:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51420 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233281AbiBADwr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Jan 2022 22:52:47 -0500
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FF51C061714;
+        Mon, 31 Jan 2022 19:52:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
+        :In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=ZzioqqgLZdVxmKvLRkJFf0foSG1h34D0rS7M26dR5rE=; b=nqdFFjdKrmNfyfxWsDzlL5sLkD
+        Qe4jym8NDMKyWBAECaonK3yp1aOfch8o181A5ygatDqNi4ghJHVoCWKG3H+TTfpb+SN+sGiY41JJU
+        WlE/g6fHe7lhpim9+IRI/akMfha35KJz8g+Q5ckyHAkZAXYK91JeK3ASoNy7jCnUh2UfWX/vyd6rO
+        4zzdPI/5pLBYlCatyM5oQvtkuxxJ4MME6qg/r+oieSLwjRCaFtPO3rCFG05drr6W8F5i0sHR/VURb
+        uUykUqo3T/ie8pp/x//lUPL81LJEVkBj/Ja3bh1rJE7rJag0ofmcqDNuGZQHvcTaryZIV4oCSbhe2
+        vbgWgoFg==;
+Received: from [2601:1c0:6280:3f0::aa0b]
+        by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nEkDk-005j5N-Cd; Tue, 01 Feb 2022 03:52:44 +0000
+Message-ID: <d6bb8733-6e6b-0479-d723-0bbdb65ae994@infradead.org>
+Date:   Mon, 31 Jan 2022 19:52:39 -0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH] gpio/consumer.h: don't use "/**" for non-kernel-doc
+ comments
+Content-Language: en-US
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-gpio@vger.kernel.org
+References: <20220130073103.26792-1-rdunlap@infradead.org>
+ <CACRpkdYsqXqfxDbovvKOED-wbBOC3Q0OQqN-20LtmLt4SD-Orw@mail.gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <CACRpkdYsqXqfxDbovvKOED-wbBOC3Q0OQqN-20LtmLt4SD-Orw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: 003c30d8ad1cbfd52e50a75fd5b23832b72063db  Merge branch 'devel' into for-next
 
-elapsed time: 727m
 
-configs tested: 137
-configs skipped: 3
+On 1/31/22 03:24, Linus Walleij wrote:
+> On Sun, Jan 30, 2022 at 8:31 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+> 
+>> Use "/*" to begin non-kernel-doc comments instead of "/**",
+>> which indicates the beginning of kernel-doc notation.
+>>
+>> Quietens these kernel-doc warnings:
+>>
+>> consumer.h:13: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+>>  * Opaque descriptor for a GPIO. These are obtained using gpiod_get() and are
+>> consumer.h:13: warning: missing initial short description on line:
+>>  * Opaque descriptor for a GPIO. These are obtained using gpiod_get() and are
+>> consumer.h:22: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+>>  * Opaque descriptor for a structure of GPIO array attributes.  This structure
+>> consumer.h:22: warning: missing initial short description on line:
+>>  * Opaque descriptor for a structure of GPIO array attributes.  This structure
+>> consumer.h:30: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+>>  * Struct containing an array of descriptors that can be obtained using
+>> consumer.h:30: warning: missing initial short description on line:
+>>  * Struct containing an array of descriptors that can be obtained using
+>> consumer.h:46: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+>>  * Optional flags that can be passed to one of gpiod_* to configure direction
+>> consumer.h:46: warning: missing initial short description on line:
+>>  * Optional flags that can be passed to one of gpiod_* to configure direction
+>>
+>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+>> Cc: Linus Walleij <linus.walleij@linaro.org>
+>> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+>> Cc: linux-gpio@vger.kernel.org
+> 
+> In this case the ambition was to provide proper kerneldoc for sure.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Well, the 2 opaque warnings (lines 13 and 22) are just bare "struct gpio_zzz;",
+so kernel-doc wouldn't be appropriate there. Those structs are in drivers/gpio/gpiolib.h
+(for anyone else who is reading along) -- and not documented there either.
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                 randconfig-c001-20220131
-powerpc                          allyesconfig
-m68k                             allmodconfig
-powerpc                          allmodconfig
-m68k                             allyesconfig
-s390                             allmodconfig
-s390                             allyesconfig
-sh                          rsk7203_defconfig
-m68k                       m5475evb_defconfig
-powerpc                mpc7448_hpc2_defconfig
-sh                        sh7763rdp_defconfig
-mips                         mpc30x_defconfig
-sh                 kfr2r09-romimage_defconfig
-sh                               alldefconfig
-arm                          pxa910_defconfig
-arm                          lpd270_defconfig
-m68k                       m5208evb_defconfig
-mips                 decstation_r4k_defconfig
-powerpc                        warp_defconfig
-arm                        oxnas_v6_defconfig
-sh                          rsk7269_defconfig
-powerpc                    klondike_defconfig
-powerpc                      ppc40x_defconfig
-powerpc                 mpc837x_rdb_defconfig
-parisc                           alldefconfig
-xtensa                           allyesconfig
-arc                    vdk_hs38_smp_defconfig
-powerpc                 mpc837x_mds_defconfig
-riscv                    nommu_k210_defconfig
-mips                      fuloong2e_defconfig
-powerpc                      arches_defconfig
-arm                           stm32_defconfig
-sh                  sh7785lcr_32bit_defconfig
-powerpc                     asp8347_defconfig
-arm                      footbridge_defconfig
-csky                             alldefconfig
-arc                                 defconfig
-m68k                          sun3x_defconfig
-mips                      maltasmvp_defconfig
-powerpc                      bamboo_defconfig
-mips                        jmr3927_defconfig
-x86_64                           alldefconfig
-xtensa                  nommu_kc705_defconfig
-arm                       omap2plus_defconfig
-mips                       capcella_defconfig
-sh                        apsh4ad0a_defconfig
-arm                            mps2_defconfig
-arm                  randconfig-c002-20220131
-arm                  randconfig-c002-20220130
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                                defconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-h8300                            allyesconfig
-sh                               allmodconfig
-parisc                              defconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a004-20220131
-x86_64               randconfig-a003-20220131
-x86_64               randconfig-a001-20220131
-x86_64               randconfig-a006-20220131
-x86_64               randconfig-a005-20220131
-x86_64               randconfig-a002-20220131
-i386                 randconfig-a006-20220131
-i386                 randconfig-a005-20220131
-i386                 randconfig-a003-20220131
-i386                 randconfig-a002-20220131
-i386                 randconfig-a001-20220131
-i386                 randconfig-a004-20220131
-riscv                randconfig-r042-20220130
-arc                  randconfig-r043-20220130
-s390                 randconfig-r044-20220130
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                                  kexec
+For the other 2 /** warnings, I don't think that I am the right person
+to add kernel-doc info for them...
 
-clang tested configs:
-powerpc                          allyesconfig
-arm                             mxs_defconfig
-arm                        spear3xx_defconfig
-mips                        bcm63xx_defconfig
-arm                       versatile_defconfig
-arm                         orion5x_defconfig
-mips                   sb1250_swarm_defconfig
-powerpc                      acadia_defconfig
-powerpc                 mpc832x_rdb_defconfig
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64               randconfig-a013-20220131
-x86_64               randconfig-a015-20220131
-x86_64               randconfig-a014-20220131
-x86_64               randconfig-a016-20220131
-x86_64               randconfig-a011-20220131
-x86_64               randconfig-a012-20220131
-i386                 randconfig-a011-20220131
-i386                 randconfig-a013-20220131
-i386                 randconfig-a014-20220131
-i386                 randconfig-a012-20220131
-i386                 randconfig-a015-20220131
-i386                 randconfig-a016-20220131
-riscv                randconfig-r042-20220131
-hexagon              randconfig-r045-20220131
-hexagon              randconfig-r041-20220131
-hexagon              randconfig-r045-20220130
-hexagon              randconfig-r041-20220130
+> Is it possible to just fix the documentation?
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+or just ignore this patch.
+
+-- 
+~Randy
