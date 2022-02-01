@@ -2,190 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 10A2F4A6443
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Feb 2022 19:53:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B3414A65AC
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Feb 2022 21:31:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232185AbiBASxb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Feb 2022 13:53:31 -0500
-Received: from mga05.intel.com ([192.55.52.43]:6832 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229881AbiBASxa (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Tue, 1 Feb 2022 13:53:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643741610; x=1675277610;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=L5s7qXF8ZnJhH7lDBIzCGnJ7UK6joH+p4ghvw+Jnw64=;
-  b=HqBfNQbi0e/9Ca/l1Jw4C4DUiLGfIdizzs+0EQl+Jx5MlYZI5g+6krGF
-   hXkhln3ApPBJMMjWFTnPLJVkCMxEKw5sDTDHXrdpSO14mlgV0NkgjWM1h
-   r2LeOoful8MjvMjCc92pO2cm3oKouW8Op4dFLT9PRuPE2d3OOh8y0Ffrt
-   p0EFhvDTRSriwQiH2Bqmho/0jwVOQK96IdZC/9Y3JJvOLYu5vtzINo3LC
-   vHBzIKCfOwXPES+zPU6O+tQqkNu7w7/35w7XgvIdoPRaYF2CcJKAI7jdI
-   L6uJMXA7I1jrqvj2xZrhHuAsQ9suWXSgvS6kI8H+6qpTdbA2SamNPUusz
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10245"; a="334119745"
-X-IronPort-AV: E=Sophos;i="5.88,334,1635231600"; 
-   d="scan'208";a="334119745"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 10:53:30 -0800
-X-IronPort-AV: E=Sophos;i="5.88,334,1635231600"; 
-   d="scan'208";a="534612213"
-Received: from smile.fi.intel.com ([10.237.72.61])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 10:53:25 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nEyGM-00HR0W-Bi;
-        Tue, 01 Feb 2022 20:52:22 +0200
-Date:   Tue, 1 Feb 2022 20:52:22 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Tan Jui Nee <jui.nee.tan@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Kate Hsuan <hpa@redhat.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Jean Delvare <jdelvare@suse.com>,
-        Peter Tyser <ptyser@xes-inc.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Gross <markgross@kernel.org>,
-        Henning Schild <henning.schild@siemens.com>
-Subject: Re: [PATCH v3 3/8] platform/x86/intel: Add Primary to Sideband
- (P2SB) bridge support
-Message-ID: <YfmBZvQ28y/Mh60J@smile.fi.intel.com>
-References: <YfQ2PGzOyiBfCppd@smile.fi.intel.com>
- <20220201181401.GA292815@bhelgaas>
+        id S236635AbiBAUbK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Feb 2022 15:31:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53358 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234508AbiBAUbJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Feb 2022 15:31:09 -0500
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74515C061714;
+        Tue,  1 Feb 2022 12:31:09 -0800 (PST)
+Received: by mail-ej1-x62c.google.com with SMTP id ah7so57646663ejc.4;
+        Tue, 01 Feb 2022 12:31:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=871htcl5Y6GDsL/12E1mDAY6z1Cjye967VwgYm9q+Gg=;
+        b=hvlVn+CVcEnV+tlmPHp78A14rGo2OGfM2X0oCX7frzFrhbwbvUT4M7Dyq3fYezi/aZ
+         hQrJXfo/LL7uwEIF/G2UWjjeOSmQk9g/CX+qc/oq7KOqiZY+Q725ENqrUq8YDOD+Udia
+         4XgQgOqyVWv3w/QlWp/S9Afui0CuUPZu3en+9BrEXn1+ikqrWOSFiudaFmNLcOWi9TwN
+         Ka6ymt53BBUJl0zhiemfQQED/2Wy5aq+fweFEruWk0YkzJ3rQbE3CfOCfauJjhSa08QX
+         smgFEHiXMSrtlRiziaW6bNwHOEOvB+lq4ak4OFt4MYzx1bkT7jqvKwNodj1jZwQADeb8
+         3JIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=871htcl5Y6GDsL/12E1mDAY6z1Cjye967VwgYm9q+Gg=;
+        b=d3tV/EO4W1ZS9weoIo1cTe5SkQ5A2awVu9azIoouqD4mBY+QkE4IAUoYtd2NhAvkcr
+         vDnUYJ7So8VRyL2QR6nDvyxw6QmHsPT8dNNc5mEOJyP0rq9/fmGW228RMJccX8xegJpx
+         3558vvP1Xh1d3iTT1BxnJt07ccz6Z4oUXPClrILTFIRt+rlInKNSwDdu9rUFZ97De8WT
+         VhpPqQSzvdgeEl/qTb28/8PMCacKu6sAhhobo8NBV/7qGqJwem+mNGYthxVlYMJ6gOq6
+         klHuPtLIQcdNuSGLgw822voaGuYeW+O/UIgBEvlKpZVnhgLAaOkCUH4S1+YBzbhV939+
+         fN7g==
+X-Gm-Message-State: AOAM530HHRFv8KQ0Lys5pEJ12ddfTBOGMAJeegg0WESvUpz5PeidC2eT
+        KxBgzy9czsiIEA/R1bBIsE5/gndPJlvcQlCUpyA=
+X-Google-Smtp-Source: ABdhPJxkt038fDi0CxsQYm22/dTA7Yyk8WXF4gwZgsFk7C6/L85VmkSfCoJ3PfkU6B3/uMwgE0DALb5sA11SzLIxvto=
+X-Received: by 2002:a17:907:a40a:: with SMTP id sg10mr23120532ejc.44.1643747467808;
+ Tue, 01 Feb 2022 12:31:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220201181401.GA292815@bhelgaas>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20220130232122.GA119248@adroid>
+In-Reply-To: <20220130232122.GA119248@adroid>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 1 Feb 2022 22:29:32 +0200
+Message-ID: <CAHp75VdAo9BzQ+PnH5v1P2GZTjbYPqiEhp+j6H5+fbX+2o=76g@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: samsung: improve wake irq info on console
+To:     =?UTF-8?Q?Martin_J=C3=BCcker?= <martin.juecker@gmail.com>
+Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Feb 01, 2022 at 12:14:01PM -0600, Bjorn Helgaas wrote:
-> On Fri, Jan 28, 2022 at 08:30:20PM +0200, Andy Shevchenko wrote:
-> > On Fri, Jan 07, 2022 at 11:11:08AM -0600, Bjorn Helgaas wrote:
-> > > On Fri, Jan 07, 2022 at 04:56:42PM +0200, Andy Shevchenko wrote:
-> > 
-> > ...
-> > 
-> > > > The unhide/hide back has been tested and we have already users
-> > > > in the kernel (they have other issues though with the PCI rescan
-> > > > lock, but it doesn't mean it wasn't ever tested).
-> > > 
-> > > Does the firmware team that hid this device sign off on the OS
-> > > unhiding and using it?  How do we know that BIOS is not using the
-> > > device?
-> > 
-> > BIOS might use the device via OperationRegion() in ACPI, but that
-> > means that _CRS needs to have that region available. It seems not
-> > the case.
-> > 
-> > And as far I as see in the internal documentation the hide / unhide
-> > approach is not forbidden for OS side.
-> 
-> Unhiding is device-specific behavior, so generic PCI enumeration
-> cannot use it.  We have to know there's a P2SB device at some address
-> before we can safely do a config write to it.  PCI enumeration would
-> learn there's a P2SB device at an address by reading a Vendor/Device
-> ID.
-> 
-> > > My point is that the unhide is architecturally messed up.  The OS
-> > > runs on the platform as described by ACPI.  Devices that cannot be
-> > > enumerated are described in the ACPI namespace.
-> > 
-> > This device may or may not be _partially_ or _fully_ (due to being
-> > multifunctional) described in ACPI. I agree, that ideally the
-> > devices in question it has behind should be represented properly by
-> > firmware.  However, the firmwares in the wild for selected products
-> > / devices don't do that. We need to solve (work around) it in the
-> > software.
-> > 
-> > This is already done for a few devices. This series consolidates
-> > that and enables it for very known GPIO IPs.
-> 
-> Consolidating the code to unhide the device and size the BAR is fine.
-> 
-> I would prefer the PCI core to be involved as little as possible
-> because we're violating some key assumptions and we could trip over
-> those later.  We're assuming the existence of P2SB based on the fact
-> that we found some *other* device, we're assuming firmware isn't using
-> P2SB (may be true now, but impossible to verify), we're assuming the
-> P2SB BAR contains a valid address that's not used elsewhere but also
-> won't be assigned to anything.
-> 
-> > PCI core just provides a code that is very similar to what we need
-> > here. Are you specifically suggesting that we have to copy'n'paste
-> > that rather long function and maintain in parallel with PCI?
-> 
-> I think we're talking about __pci_read_base(), which is currently an
-> internal PCI interface.  This series adds pci_bus_info/warn/etc(),
+On Tue, Feb 1, 2022 at 5:11 PM Martin J=C3=BCcker <martin.juecker@gmail.com=
+> wrote:
+>
+> Improve the wake irq message by also printing the bank name and hwirq
+> number that matches this irq number.
 
-The patch that adds those macros is good on its own, if you think so...
-I tried to submit it separately, but it was no response, so I don't know.
+Perhaps wait a bit and replace the first argument with str_enabled_disabled=
+()?
 
-> reworks __pci_read_base() to operate on a struct pci_bus *, exports
-> it, and uses it via #include <../../../pci/pci.h>.
-
-Yes, which allows at least to have the same code, doing same things to be
-in one copy in one place.
-
-> __pci_read_base() is fairly long, but you apparently don't need all
-> the functionality there because the core of the patch is this:
-> 
->   -   pci_bus_read_config_dword(bus, spi, PCI_BASE_ADDRESS_0,
->   -                             &spi_base);
->   -   if (spi_base != ~0) {
->   -           res->start = spi_base & 0xfffffff0;
->   -           res->end = res->start + SPIBASE_APL_SZ - 1;
->   -   }
->   +   __pci_bus_read_base(bus, devfn, pci_bar_unknown, mem, PCI_BASE_ADDRESS_0, true)
-
-You probably took the least pleasant (to me) example, because it's buggy in a
-few ways:
-
-- it misses 64-bit handling code
-- it misses PCI rescan lock (in case PCI code decides to change addresses,
-  previously ones will be invalid, while other drivers may still use that
-  MMIO space
-- it doesn't check if (for a new version Hans suggested me to add this check as
-  it's done in one out of 3 cases)
-
-It also useful to have some messages to be printed just in cases of errors
-or success in a standard (PCI core provided) way.
-
-> I don't think it's worth all the __pci_read_base() changes to do that.
-> What if you made a library function that looks like this?
-> 
->   int p2sb_bar(...)
->   {
->     pci_bus_write_config_byte(bus, devfn_p2sb, P2SBC_HIDE_BYTE, 0);
->     pci_bus_read_config_dword(bus, devfn, PCI_BASE_ADDRESS_0, &orig);
->     if (orig) {
->       pci_bus_write_config_dword(bus, devfn, PCI_BASE_ADDRESS_0, ~0);
->       pci_bus_read_config_dword(bus, devfn, PCI_BASE_ADDRESS_0, &val);
->       pci_bus_write_config_dword(bus, devfn, PCI_BASE_ADDRESS_0, orig);
->       res->start = orig;
->       res->end = res->start + (~val + 1);
->     }
->     pci_bus_write_config_byte(bus, devfn, P2SBC_HIDE_BYTE, P2SBC_HIDE_BIT);
->   }
-
-It seems simple, but with the above mentioned adjustments, it will become
-closer to the size of the original __pci_read_base().
-
--- 
+--=20
 With Best Regards,
 Andy Shevchenko
-
-
