@@ -2,98 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F235D4A5FD2
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Feb 2022 16:16:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E03E94A600E
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Feb 2022 16:28:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239823AbiBAPQw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Feb 2022 10:16:52 -0500
-Received: from mail-pg1-f176.google.com ([209.85.215.176]:33470 "EHLO
-        mail-pg1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229472AbiBAPQv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Feb 2022 10:16:51 -0500
-Received: by mail-pg1-f176.google.com with SMTP id 133so15620240pgb.0;
-        Tue, 01 Feb 2022 07:16:51 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LY0Jv14zZsje7/vHQSOHToHuOdksSPX4R2A4AD12wOM=;
-        b=BkP98Agy5ZJZBktiv84tDvBVxNYaPkwvfYwRiStrvqTIRGCb5PM78XThYVDFK3vKnK
-         WN1W7YtPru9qzRM6ObYs5Jq36RD2jrk4jOTIPnTNXNlYJGUacDVOzhy7Jo1wPbfitHnQ
-         +HQH49pcp5d0uhWsmwoqre+2JRWxf3Yg9A0PvEHNdrEXbmp1ull4YKL4cHVtYWoB78bE
-         bB4HCULXSsXXFkTT+EB4Hxj+/0pWIx4OCxUW7vYAvlhVCsa/y0r71pkuH7AyVGoECLmw
-         T116EjQhiicRKvR8wLGK65Od90SZnahdXZ+NyyXnNNIYsscHCBYuJQzHEck0noGS2sGM
-         ZoIw==
-X-Gm-Message-State: AOAM532y01bPiZl0z8QiGi43/HI6fHqrChXTk0DjozvrC8aPfKP6EoCW
-        yFl+dM6pUNaOfj0Y1PNGfZVcp/FWetYXgKiQfA4=
-X-Google-Smtp-Source: ABdhPJzMM6DKe2TD1hOG7K71ff+PLE71AdlCmcIrtDVMD21uR4nKDkEtbCJu7CJ3qll0XUJJEoo2PbmWHDla8a7YMKI=
-X-Received: by 2002:a62:2982:: with SMTP id p124mr25626587pfp.53.1643728610762;
- Tue, 01 Feb 2022 07:16:50 -0800 (PST)
+        id S240312AbiBAP2J (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Feb 2022 10:28:09 -0500
+Received: from mga11.intel.com ([192.55.52.93]:50145 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S240291AbiBAP2I (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Tue, 1 Feb 2022 10:28:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1643729288; x=1675265288;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=mUqio7p7oQ4SXILXZ4GtuOsMQERZFpZ7ZLYHPqpcNQA=;
+  b=QLz82PLqyZTDk6qwDPLe7M2jXU/BUYT6/aomjWmLerDlG9AP1UVpymDq
+   ycB7Stqzcgxo4gWmK1rLgKMatP/DydWE+VqNgmTGyr8I3rBdZi9VOzA9a
+   uo7X4hkst21jSSBwIZy8e9Xa9zrXl9tzNigs9NhQHXPu3MMyWc/09P+kM
+   oTajYtQtSGoz6GAOk6W7uxlcrRzCcYCT76XFV+0c6VqkNBm752cYhuL8k
+   iH1MsTygMLC7L1o1wkyP3NoD3zebsyVOpMoFjQ5fO//OupAu35CWlAIRu
+   N7zjbKBC4DLPVqNNWYfpMKXXn5CfLqDqRAO0nlxKjvZWewbEZhSwMOTR1
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10244"; a="245307492"
+X-IronPort-AV: E=Sophos;i="5.88,334,1635231600"; 
+   d="scan'208";a="245307492"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2022 07:28:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,334,1635231600"; 
+   d="scan'208";a="479722748"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga003.jf.intel.com with ESMTP; 01 Feb 2022 07:28:03 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id CF29F15E; Tue,  1 Feb 2022 17:28:17 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v3 0/4] gpiolib: A fix and a few cleanups
+Date:   Tue,  1 Feb 2022 17:27:54 +0200
+Message-Id: <20220201152758.40391-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20220201120310.878267-1-maz@kernel.org> <20220201120310.878267-12-maz@kernel.org>
-In-Reply-To: <20220201120310.878267-12-maz@kernel.org>
-From:   Emil Renner Berthing <kernel@esmil.dk>
-Date:   Tue, 1 Feb 2022 16:16:39 +0100
-Message-ID: <CANBLGcxCmeaXXFWi6GFSHN=RhjUp5BVRYTMXHQihsLJCocD1xg@mail.gmail.com>
-Subject: Re: [PATCH 11/12] pinctrl: starfive: Move PM device over to irq domain
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-omap@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 1 Feb 2022 at 13:19, Marc Zyngier <maz@kernel.org> wrote:
->
-> Move the reference to the device over to the irq domain.
->
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> ---
->  drivers/pinctrl/pinctrl-starfive.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/pinctrl/pinctrl-starfive.c b/drivers/pinctrl/pinctrl-starfive.c
-> index 0b912152a405..5be9866c2b3c 100644
-> --- a/drivers/pinctrl/pinctrl-starfive.c
-> +++ b/drivers/pinctrl/pinctrl-starfive.c
-> @@ -1307,7 +1307,6 @@ static int starfive_probe(struct platform_device *pdev)
->         sfp->gc.base = -1;
->         sfp->gc.ngpio = NR_GPIOS;
->
-> -       starfive_irq_chip.parent_device = dev;
->         starfive_irq_chip.name = sfp->gc.label;
->
->         sfp->gc.irq.chip = &starfive_irq_chip;
-> @@ -1330,6 +1329,8 @@ static int starfive_probe(struct platform_device *pdev)
->         if (ret)
->                 return dev_err_probe(dev, ret, "could not register gpiochip\n");
->
-> +       irq_domain_set_pm_device(sfp->gc.irq.domain, dev);
-> +
+Patch 1 is a fix for wrong error code to user space.
+Patches 2-4 are small cleanups.
 
-The gpio framework uses the irq_domain at sfp->gc.irq.domain, so
-shouldn't this be set before registering the gpio_chip with
-devm_gpiochip_add_data above?
+Can be routed via my tree, or directly into GPIO, whatever maintainers
+prefer.
 
->  out_pinctrl_enable:
->         return pinctrl_enable(sfp->pctl);
->  }
-> --
-> 2.30.2
->
+Changelog v3:
+- joined two patches into a single fix (Bart)
+- added Rb tag (Linus)
+- renamed for_each_gpio_desc_with_flag() macro to be descriptive (Johan)
+- added two new cleanups
+
+Andy Shevchenko (4):
+  gpiolib: Never return internal error codes to user space
+  gpiolib: Introduce for_each_gpio_desc_with_flag() macro
+  gpiolib: Use short form of ternary operator in gpiod_get_index()
+  gpiolib: Simplify error path in gpiod_get_index() when requesting GPIO
+
+ drivers/gpio/gpiolib-cdev.c  |  6 +++---
+ drivers/gpio/gpiolib-of.c    | 10 ++++------
+ drivers/gpio/gpiolib-sysfs.c | 14 ++++----------
+ drivers/gpio/gpiolib.c       | 35 ++++++++++++++++-------------------
+ drivers/gpio/gpiolib.h       | 19 +++++++++++++++++++
+ 5 files changed, 46 insertions(+), 38 deletions(-)
+
+-- 
+2.34.1
+
