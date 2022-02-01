@@ -2,308 +2,186 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 005444A57DA
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Feb 2022 08:36:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 99C9D4A5825
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Feb 2022 08:58:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234948AbiBAHg0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Feb 2022 02:36:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44218 "EHLO
+        id S231232AbiBAH6p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Feb 2022 02:58:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234345AbiBAHg0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Feb 2022 02:36:26 -0500
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D82E3C06173B
-        for <linux-gpio@vger.kernel.org>; Mon, 31 Jan 2022 23:36:25 -0800 (PST)
-Received: by mail-wr1-x435.google.com with SMTP id v13so30064068wrv.10
-        for <linux-gpio@vger.kernel.org>; Mon, 31 Jan 2022 23:36:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=Bb6Mga8U7K4glRZ6MmtVlPXAX6IIPgGD3C6UTBEFxHU=;
-        b=Ahq7jif3/GDZalygQ6KbDff2Y7Dn6Zh26zZBI/jiyAdElTrO/SSvFV7SCpPjKoWt5g
-         hI+7EPZ+BHYlw21dR2EzdcWdHDt9eqSqKaYK9X/RO9aX2CeDYLot8Ro+/LzCJa1IovPc
-         ZU6I4uP//AAniwRZHOYDYnhMl4gVGG5MqVwZHSVKdlOQUB/PjBpS7gfAu7MZJk9wGz2S
-         i05ByWDb4ie8AQ142sd3m67EBW/v5+dk3Y4J2S4UfY9FDrd5PCWyIzxcnIoyKEd8PIr0
-         UA6UFRdfO3pGykYvR0eKAyaIC+QLHlD8abJ0+08XRqYdZtcpPHqjhMaMWep+rNPelcJm
-         fyyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Bb6Mga8U7K4glRZ6MmtVlPXAX6IIPgGD3C6UTBEFxHU=;
-        b=VE2YC+jkpiTPGWZ+HdPyepNZ6wzcqfg6AVQopqtz+9EQqTnWoA7qmBPpmcng9BEO9r
-         S5eXpZIjVSV91H/gVL6FYpf53uW6b509V4y7B29XCLo59AN/v5Jys2lk9z08SK9tJHWI
-         KVtLSEtKtzOeN+wOizFM0NJl74Xv09hgBaPM+Aql9ULRUJWoOJ0rbHAL+Yzc75wh761d
-         Rizs9Z65wJ2DRrN+TtcHsn//Apb10PejSKin0fpgEh97pWu7aWNkFiWdCSEN/p5TeNXX
-         gjPCzSgsrTThIwa6P9l+k5mjQJYtrVPBXEqOHDox3sDkZ7qJZP7d8HrL58B5E1DD7rpf
-         zDyg==
-X-Gm-Message-State: AOAM533RvzumM/KzDZMdtPp1cVxycWJsf2gaytUjgCcAwGX7AzjrJ1UC
-        RouEtymVJobTLBPFsyikEk5qVA==
-X-Google-Smtp-Source: ABdhPJw0te5xOcbBzC+a3jqrrIgxBT+vb9ApuO2zXf7MyjEmiqExE7WWqNHRMqZA2vyoiNlbCKfslQ==
-X-Received: by 2002:a05:6000:1885:: with SMTP id a5mr19750194wri.705.1643700984292;
-        Mon, 31 Jan 2022 23:36:24 -0800 (PST)
-Received: from google.com (cpc106310-bagu17-2-0-cust853.1-3.cable.virginm.net. [86.15.223.86])
-        by smtp.gmail.com with ESMTPSA id 1sm16170216wry.52.2022.01.31.23.36.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Jan 2022 23:36:23 -0800 (PST)
-Date:   Tue, 1 Feb 2022 07:36:21 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Colin Foster <colin.foster@in-advantage.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>, UNGLinuxDriver@microchip.com,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        katie.morris@in-advantage.com
-Subject: Re: [RFC v6 net-next 6/9] mfd: ocelot: add support for external mfd
- control over SPI for the VSC7512
-Message-ID: <Yfji9Yy/VtrVv+Js@google.com>
-References: <20220129220221.2823127-1-colin.foster@in-advantage.com>
- <20220129220221.2823127-7-colin.foster@in-advantage.com>
- <Yfer/qJmwRdShv4y@google.com>
- <20220131172934.GB28107@COLIN-DESKTOP1.localdomain>
+        with ESMTP id S229929AbiBAH6p (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Feb 2022 02:58:45 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66198C061714
+        for <linux-gpio@vger.kernel.org>; Mon, 31 Jan 2022 23:58:45 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nEo3e-00046y-6s; Tue, 01 Feb 2022 08:58:34 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nEo3V-00Dmxz-QK; Tue, 01 Feb 2022 08:58:25 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nEo3U-002kWK-5c; Tue, 01 Feb 2022 08:58:24 +0100
+Date:   Tue, 1 Feb 2022 08:58:24 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     conor.dooley@microchip.com
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
+        jassisinghbrar@gmail.com, thierry.reding@gmail.com,
+        lee.jones@linaro.org, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, paul.walmsley@sifive.com,
+        palmer@dabbelt.com, aou@eecs.berkeley.edu, geert@linux-m68k.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-riscv@lists.infradead.org, krzysztof.kozlowski@canonical.com,
+        bin.meng@windriver.com, heiko@sntech.de, lewis.hanly@microchip.com,
+        daire.mcnamara@microchip.com, ivan.griffin@microchip.com,
+        atishp@rivosinc.com, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 06/12] dt-bindings: pwm: add microchip corepwm binding
+Message-ID: <20220201075824.aixrvkvmjde2ihxx@pengutronix.de>
+References: <20220131114726.973690-1-conor.dooley@microchip.com>
+ <20220131114726.973690-7-conor.dooley@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="pqylyjr6p2p3xcpl"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220131172934.GB28107@COLIN-DESKTOP1.localdomain>
+In-Reply-To: <20220131114726.973690-7-conor.dooley@microchip.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 31 Jan 2022, Colin Foster wrote:
 
-> Hi Lee,
-> 
-> Thank you very much for your time / feedback.
-> 
-> On Mon, Jan 31, 2022 at 09:29:34AM +0000, Lee Jones wrote:
-> > On Sat, 29 Jan 2022, Colin Foster wrote:
-> > 
-> > > Create a single SPI MFD ocelot device that manages the SPI bus on the
-> > > external chip and can handle requests for regmaps. This should allow any
-> > > ocelot driver (pinctrl, miim, etc.) to be used externally, provided they
-> > > utilize regmaps.
-> > > 
-> > > Signed-off-by: Colin Foster <colin.foster@in-advantage.com>
-> > > ---
-> > >  drivers/mfd/Kconfig                       |  19 ++
-> > >  drivers/mfd/Makefile                      |   3 +
-> > >  drivers/mfd/ocelot-core.c                 | 165 +++++++++++
-> > >  drivers/mfd/ocelot-spi.c                  | 325 ++++++++++++++++++++++
-> > >  drivers/mfd/ocelot.h                      |  36 +++
-> > 
-> > >  drivers/net/mdio/mdio-mscc-miim.c         |  21 +-
-> > >  drivers/pinctrl/pinctrl-microchip-sgpio.c |  22 +-
-> > >  drivers/pinctrl/pinctrl-ocelot.c          |  29 +-
-> > >  include/soc/mscc/ocelot.h                 |  11 +
-> > 
-> > Please avoid mixing subsystems in patches if at all avoidable.
-> > 
-> > If there are not build time dependencies/breakages, I'd suggest
-> > firstly applying support for this into MFD *then* utilising that
-> > support in subsequent patches.
-> 
-> My last RFC did this, and you had suggested to squash the commits. To
-> clarify, are you suggesting the MFD / Pinctrl get applied in a single
-> patch, then the MIIM get applied in a separate one? Because I had
-> started with what sounds like you're describing - an "empty" MFD with
-> subsequent patches rolling in each subsystem.
-> 
-> Perhaps I misinterpreted your initial feedback.
+--pqylyjr6p2p3xcpl
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I want you to add all device support into the MFD driver at once.
+On Mon, Jan 31, 2022 at 11:47:21AM +0000, conor.dooley@microchip.com wrote:
+> From: Conor Dooley <conor.dooley@microchip.com>
+>=20
+> Add device tree bindings for the Microchip fpga fabric based "core" PWM
+> controller.
+>=20
+> Reviewed-by: Rob Herring <robh@kernel.org>
+>=20
+> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
+>  .../bindings/pwm/microchip,corepwm.yaml       | 75 +++++++++++++++++++
+>  1 file changed, 75 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/microchip,corep=
+wm.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/pwm/microchip,corepwm.yaml=
+ b/Documentation/devicetree/bindings/pwm/microchip,corepwm.yaml
+> new file mode 100644
+> index 000000000000..26a77cde2465
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/microchip,corepwm.yaml
+> @@ -0,0 +1,75 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/microchip,corepwm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Microchip ip core PWM controller bindings
+> +
+> +maintainers:
+> +  - Conor Dooley <conor.dooley@microchip.com>
+> +
+> +description: |
+> +  corePWM is an 16 channel pulse width modulator FPGA IP
+> +
+> +  https://www.microsemi.com/existing-parts/parts/152118
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: microchip,corepwm-rtl-v4
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  "#pwm-cells":
+> +    const: 2
+> +
+> +  microchip,sync-update:
+> +    description: |
+> +      In synchronous mode, all channels are updated at the beginning of =
+the PWM period.
+> +      Asynchronous mode is relevant to applications such as LED control,=
+ where
+> +      synchronous updates are not required. Asynchronous mode lowers the=
+ area size,
+> +      reducing shadow register requirements. This can be set at run time=
+, provided
+> +      SHADOW_REG_EN is asserted. SHADOW_REG_EN is set by the FPGA bitstr=
+eam programmed
+> +      to the device.
+> +      Each bit corresponds to a PWM channel & represents whether synchro=
+nous mode is
+> +      possible for the PWM channel.
+> +
+> +    $ref: /schemas/types.yaml#/definitions/uint16
+> +    default: 0
 
-The associated drivers, the ones that live in other subsystems, should
-be applied as separate patches.  There seldom exist any *build time*
-dependencies between the device side and the driver side.
+I'm not sure I understand this correctly. This is a soft-core and you
+can synthesize it either with or without the ability to do synchronous
+updates or not, right? All 16 channels share the same period length and
+in the simple implementation changing the duty cycle is done at once
+(maybe introducing a glitch) and in the more expensive implementation
+there is a register to implement both variants?
 
-> > >  9 files changed, 614 insertions(+), 17 deletions(-)
-> > >  create mode 100644 drivers/mfd/ocelot-core.c
-> > >  create mode 100644 drivers/mfd/ocelot-spi.c
-> > >  create mode 100644 drivers/mfd/ocelot.h
-> > > 
-> > > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > > index ba0b3eb131f1..57bbf2d11324 100644
-> > > --- a/drivers/mfd/Kconfig
-> > > +++ b/drivers/mfd/Kconfig
-> > > @@ -948,6 +948,25 @@ config MFD_MENF21BMC
-> > >  	  This driver can also be built as a module. If so the module
-> > >  	  will be called menf21bmc.
-> > >  
-> > > +config MFD_OCELOT
-> > > +	tristate "Microsemi Ocelot External Control Support"
-> > 
-> > Please explain exactly what an ECS is in the help below.
-> 
-> I thought I had by way of the second paragraph below. I'm trying to
-> think of what extra information could be of use at this point... 
-> 
-> I could describe how they have internal processors and using this level
-> of control would basically bypass that functionality.
 
-Yes please.
+> +  microchip,dac-mode:
+> +    description: |
+> +      Optional, per-channel Low Ripple DAC mode is possible on this IP c=
+ore. It creates
+> +      a minimum period pulse train whose High/Low average is that of the=
+ chosen duty
+> +      cycle. This "DAC" will have far better bandwidth and ripple perfor=
+mance than the
+> +      standard PWM algorithm can achieve.
+> +      Each bit corresponds to a PWM channel & represents whether dac mod=
+e is enabled
+> +      that PWM channel.
 
-Also provide details about what the device actually does.
+In the last sentence a "for" is missing?
 
-> > > +static struct regmap *ocelot_devm_regmap_init(struct ocelot_core *core,
-> > > +					      struct device *dev,
-> > > +					      const struct resource *res)
-> > > +{
-> > > +	struct regmap *regmap;
-> > > +
-> > > +	regmap = dev_get_regmap(dev, res->name);
-> > > +	if (!regmap)
-> > > +		regmap = ocelot_spi_devm_get_regmap(core, dev, res);
-> > 
-> > Why are you making SPI specific calls from the Core driver?
-> 
-> This was my interpretation of your initial feedback. It was initially
-> implemented as a config->get_regmap() function pointer so that core
-> didn't need to know anything about ocelot_spi.
-> 
-> If function pointers aren't used, it seems like core would have to know
-> about all possible bus types... Maybe my naming led to some
-> misunderstandings. Specifically I'd used "init_bus" which was intended
-> to be "set up the chip to be able to properly communicate via SPI" but
-> could have been interpreted as "tell the user of this driver that the
-> bus is being initialized by way of a callback"?
+These two properties are not detectable in software?
 
-Okay, I see what's happening now.
+Best regards
+Uwe
 
-Please add a comment to describe why you're calling one helper, what
-failure means in the first instance and what you hope to achieve by
-calling the subsequent one.
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
-> > > +	return regmap;
-> > > +}
-> > > +
-> > > +struct regmap *ocelot_get_regmap_from_resource(struct device *dev,
-> > > +					       const struct resource *res)
-> > > +{
-> > > +	struct ocelot_core *core = dev_get_drvdata(dev);
-> > > +
-> > > +	return ocelot_devm_regmap_init(core, dev, res);
-> > > +}
-> > > +EXPORT_SYMBOL(ocelot_get_regmap_from_resource);
-> > 
-> > Why don't you always call ocelot_devm_regmap_init() with the 'core'
-> > parameter dropped and just do dev_get_drvdata() inside of there?
-> > 
-> > You're passing 'dev' anyway.
-> 
-> This might be an error. I'll look into this, but I changed the intended
-> behavior of this between v5 and v6.
-> 
-> In v5 I had intended to attach all regmaps to the spi_device. This way
-> they could be shared amongst child devices of spi->dev. I think that was
-> a bad design decision on my part, so I abandoned it. If the child
-> devices are to share regmaps, they should explicitly do so by way of
-> syscon, not implicitly by name.
-> 
-> In v6 my intent is to have every regmap be devm-linked to the children.
-> This way the regmap would be destroyed and recreated by rmmod / insmod,
-> of the sub-modules, instead of being kept around the MFD module.
+--pqylyjr6p2p3xcpl
+Content-Type: application/pgp-signature; name="signature.asc"
 
-What's the reason for using an MFD to handle the Regmap(s) if you're
-going to have per-device ones anyway?  Why not handle them in the
-children?
+-----BEGIN PGP SIGNATURE-----
 
-> So perhaps to clear this up I should rename "dev" to "child" because it
-> seems that the naming has already gotten too confusing. What I intended
-> to do was:
-> 
-> struct regmap *ocelot_get_regmap_from_resource(struct device *parent,
-> 					       struct device *child,
-> 					       const struct resource *res)
-> {
-> 	struct ocelot_core *core = dev_get_drvdata(parent);
-> 
-> 	return ocelot_devm_regmap_init(core, child, res);
-> }
-> 
-> Or maybe even:
-> struct regmap *ocelot_get_regmap_from_resource(struct device *child,
-> 					       const struct resource *res)
-> {
-> 	struct ocelot_core *core = dev_get_drvdata(child->parent);
-> 
-> 	return ocelot_devm_regmap_init(core, child, res);
-> }
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmH46B0ACgkQwfwUeK3K
+7Am3Sgf/UTtQSsIPttdHYyNUxSYZF6fH8Mu324npdIKQ+39Z6OX/+MjR27kWtIP9
+PnRVaiT3ysheX8NpDwOr4mFokpvxx6yswleZStNKVh+xzGfPDwvGMbCElcf/RL7P
+UdSovN/QCVE/X+dCUDz+sZtlbnXMW3+mJmDr2Qs1xh0/R+wuHwIwetY/8jW8t1Hy
+AkxUBTyiszRkAlXctrW+k+NaoXvtJnLLS3oCyp/vuHXvsCuwzp5GwHjL7alf89uE
+h/EMEzivdI/Bks9p9w9jDMg6GNp3KoL4RYeQwCWz4DkO3kezyhIwIgbMRLF57IqZ
+HYcnZow7dopjm+dWBk/s32mz7/prow==
+=622s
+-----END PGP SIGNATURE-----
 
-Or just call:
-
-  ocelot_devm_regmap_init(core, dev->parent, res);
-
-... from the original call-site?
-
-Or, as I previously suggested:
-
-  ocelot_devm_regmap_init(dev->parent, res);
-
-[...]
-
-> > > +	ret = devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE, vsc7512_devs,
-> > 
-> > Why NONE?
-> 
-> I dont know the implication here. Example taken from
-> drivers/mfd/madera-core.c. I imagine PLATFORM_DEVID_AUTO is the correct
-> macro to use here?
-
-That's why I asked.  Please read-up on the differences and use the
-correct one for your device instead of just blindly copy/pasting from
-other sources. :)
-
-[...]
-
-> > > +	WARN_ON(!val);
-> > 
-> > Is this possible?
-> 
-> Hmm... I don't know if regmap_read guards against val == NULL. It
-> doesn't look like it does. It is very much a "this should never happen"
-> moment...
-> 
-> I can remove it, or change this to return an error if !val, which is
-> what I probably should have done in the first place. Thoughts?
-
-Not really.  Just make sure whatever you decide to do is informed.
-
-[...]
-
-> > > -	regs = devm_platform_ioremap_resource(pdev, 0);
-> > > -	if (IS_ERR(regs))
-> > > -		return PTR_ERR(regs);
-> > > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > > +
-> > > +	if (!device_is_mfd(pdev)) {
-> > > +		regs = devm_ioremap_resource(dev, res);
-> > 
-> > What happens if you call this if the device was registered via MFD?
-> 
-> I don't recall if it was your suggestion, but I tried this.
-> devm_ioremap_resource on the MFD triggered a kernel crash. I didn't look
-> much more into things than that, but if trying devm_ioremap_resource and
-> falling back to ocelot_get_regmap_from_resource is the desired path, I
-> can investigate further.
-
-Yes please.  It should never crash.  That's probably a bug.
-
--- 
-Lee Jones [李琼斯]
-Principal Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+--pqylyjr6p2p3xcpl--
