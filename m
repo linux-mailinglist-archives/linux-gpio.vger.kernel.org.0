@@ -2,42 +2,47 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B37C4A5C1A
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Feb 2022 13:21:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F235D4A5FD2
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Feb 2022 16:16:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236263AbiBAMVJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Feb 2022 07:21:09 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:57000 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229892AbiBAMVJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Feb 2022 07:21:09 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 777636157C;
-        Tue,  1 Feb 2022 12:20:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05A4CC340F3;
-        Tue,  1 Feb 2022 12:19:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643717990;
-        bh=YPnsZuKHzTt0USZewAkQ8dcDN1KgYjxmgRotElZ29kA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lzzyS+Je27Vic0KQ6SKZsB0x5RgTquGiRDYZvxgfXQeUubcPo3/lUdndokVU4WUBD
-         6D44M30SVOrfUIVhqtOvyZLkqzjGzIn83fqhDIc2QiJtdB9PxmA9WP5rzY03djGxze
-         pFuiyLhORMfcnsTguuG//idDDgk86SV3+HCRzQ47UmWN5NdRKx7S4NJdyJ9JVm/bJ4
-         yV655smSrIyI869ex8sGxnUOy9XtmOkFTAG/pwIQfdTbRZ+91xxLLDLfOjZRsg4jik
-         ppogTt/KiEfwFfkSrx1VFWY7uiaWYb9o8WA6vmEDclI10v38BM4NLxBOXOY0g+DJKg
-         LpJqqIbFh++ww==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=why.lan)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <maz@kernel.org>)
-        id 1nErsj-004d46-RR; Tue, 01 Feb 2022 12:03:33 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        id S239823AbiBAPQw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Feb 2022 10:16:52 -0500
+Received: from mail-pg1-f176.google.com ([209.85.215.176]:33470 "EHLO
+        mail-pg1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229472AbiBAPQv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Feb 2022 10:16:51 -0500
+Received: by mail-pg1-f176.google.com with SMTP id 133so15620240pgb.0;
+        Tue, 01 Feb 2022 07:16:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LY0Jv14zZsje7/vHQSOHToHuOdksSPX4R2A4AD12wOM=;
+        b=BkP98Agy5ZJZBktiv84tDvBVxNYaPkwvfYwRiStrvqTIRGCb5PM78XThYVDFK3vKnK
+         WN1W7YtPru9qzRM6ObYs5Jq36RD2jrk4jOTIPnTNXNlYJGUacDVOzhy7Jo1wPbfitHnQ
+         +HQH49pcp5d0uhWsmwoqre+2JRWxf3Yg9A0PvEHNdrEXbmp1ull4YKL4cHVtYWoB78bE
+         bB4HCULXSsXXFkTT+EB4Hxj+/0pWIx4OCxUW7vYAvlhVCsa/y0r71pkuH7AyVGoECLmw
+         T116EjQhiicRKvR8wLGK65Od90SZnahdXZ+NyyXnNNIYsscHCBYuJQzHEck0noGS2sGM
+         ZoIw==
+X-Gm-Message-State: AOAM532y01bPiZl0z8QiGi43/HI6fHqrChXTk0DjozvrC8aPfKP6EoCW
+        yFl+dM6pUNaOfj0Y1PNGfZVcp/FWetYXgKiQfA4=
+X-Google-Smtp-Source: ABdhPJzMM6DKe2TD1hOG7K71ff+PLE71AdlCmcIrtDVMD21uR4nKDkEtbCJu7CJ3qll0XUJJEoo2PbmWHDla8a7YMKI=
+X-Received: by 2002:a62:2982:: with SMTP id p124mr25626587pfp.53.1643728610762;
+ Tue, 01 Feb 2022 07:16:50 -0800 (PST)
+MIME-Version: 1.0
+References: <20220201120310.878267-1-maz@kernel.org> <20220201120310.878267-12-maz@kernel.org>
+In-Reply-To: <20220201120310.878267-12-maz@kernel.org>
+From:   Emil Renner Berthing <kernel@esmil.dk>
+Date:   Tue, 1 Feb 2022 16:16:39 +0100
+Message-ID: <CANBLGcxCmeaXXFWi6GFSHN=RhjUp5BVRYTMXHQihsLJCocD1xg@mail.gmail.com>
+Subject: Re: [PATCH 11/12] pinctrl: starfive: Move PM device over to irq domain
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-omap@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Matthias Brugger <matthias.bgg@gmail.com>,
         Grygorii Strashko <grygorii.strashko@ti.com>,
@@ -48,67 +53,47 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Avi Fishman <avifishman70@gmail.com>,
         Tomer Maimon <tmaimon77@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Emil Renner Berthing <kernel@esmil.dk>
-Subject: [PATCH 12/12] genirq: Kill irq_chip::parent_device
-Date:   Tue,  1 Feb 2022 12:03:10 +0000
-Message-Id: <20220201120310.878267-13-maz@kernel.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220201120310.878267-1-maz@kernel.org>
-References: <20220201120310.878267-1-maz@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, matthias.bgg@gmail.com, grygorii.strashko@ti.com, ssantosh@kernel.org, khilman@kernel.org, tglx@linutronix.de, shawnguo@kernel.org, s.hauer@pengutronix.de, avifishman70@gmail.com, tmaimon77@gmail.com, tali.perry1@gmail.com, kernel@esmil.dk
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Tali Perry <tali.perry1@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Now that noone is using irq_chip::parent_device in the tree, get
-rid of it.
+On Tue, 1 Feb 2022 at 13:19, Marc Zyngier <maz@kernel.org> wrote:
+>
+> Move the reference to the device over to the irq domain.
+>
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> ---
+>  drivers/pinctrl/pinctrl-starfive.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/pinctrl/pinctrl-starfive.c b/drivers/pinctrl/pinctrl-starfive.c
+> index 0b912152a405..5be9866c2b3c 100644
+> --- a/drivers/pinctrl/pinctrl-starfive.c
+> +++ b/drivers/pinctrl/pinctrl-starfive.c
+> @@ -1307,7 +1307,6 @@ static int starfive_probe(struct platform_device *pdev)
+>         sfp->gc.base = -1;
+>         sfp->gc.ngpio = NR_GPIOS;
+>
+> -       starfive_irq_chip.parent_device = dev;
+>         starfive_irq_chip.name = sfp->gc.label;
+>
+>         sfp->gc.irq.chip = &starfive_irq_chip;
+> @@ -1330,6 +1329,8 @@ static int starfive_probe(struct platform_device *pdev)
+>         if (ret)
+>                 return dev_err_probe(dev, ret, "could not register gpiochip\n");
+>
+> +       irq_domain_set_pm_device(sfp->gc.irq.domain, dev);
+> +
 
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
- include/linux/irq.h | 2 --
- kernel/irq/chip.c   | 3 ---
- 2 files changed, 5 deletions(-)
+The gpio framework uses the irq_domain at sfp->gc.irq.domain, so
+shouldn't this be set before registering the gpio_chip with
+devm_gpiochip_add_data above?
 
-diff --git a/include/linux/irq.h b/include/linux/irq.h
-index 848e1e12c5c6..2cb2e2ac2703 100644
---- a/include/linux/irq.h
-+++ b/include/linux/irq.h
-@@ -456,7 +456,6 @@ static inline irq_hw_number_t irqd_to_hwirq(struct irq_data *d)
- /**
-  * struct irq_chip - hardware interrupt chip descriptor
-  *
-- * @parent_device:	pointer to parent device for irqchip
-  * @name:		name for /proc/interrupts
-  * @irq_startup:	start up the interrupt (defaults to ->enable if NULL)
-  * @irq_shutdown:	shut down the interrupt (defaults to ->disable if NULL)
-@@ -503,7 +502,6 @@ static inline irq_hw_number_t irqd_to_hwirq(struct irq_data *d)
-  * @flags:		chip specific flags
-  */
- struct irq_chip {
--	struct device	*parent_device;
- 	const char	*name;
- 	unsigned int	(*irq_startup)(struct irq_data *data);
- 	void		(*irq_shutdown)(struct irq_data *data);
-diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
-index a2a12cdbe872..24b6f2b40e5e 100644
---- a/kernel/irq/chip.c
-+++ b/kernel/irq/chip.c
-@@ -1560,9 +1560,6 @@ int irq_chip_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
- 
- static struct device *irq_get_parent_device(struct irq_data *data)
- {
--	if (data->chip->parent_device)
--		return data->chip->parent_device;
--
- 	if (data->domain)
- 		return data->domain->dev;
- 
--- 
-2.30.2
-
+>  out_pinctrl_enable:
+>         return pinctrl_enable(sfp->pctl);
+>  }
+> --
+> 2.30.2
+>
