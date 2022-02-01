@@ -2,51 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 77BDA4A6677
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Feb 2022 21:54:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B24054A66BA
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Feb 2022 21:59:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234150AbiBAUyM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Feb 2022 15:54:12 -0500
-Received: from mail-ua1-f48.google.com ([209.85.222.48]:43775 "EHLO
-        mail-ua1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231542AbiBAUyL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Feb 2022 15:54:11 -0500
-Received: by mail-ua1-f48.google.com with SMTP id a24so1728102uat.10;
-        Tue, 01 Feb 2022 12:54:11 -0800 (PST)
+        id S229902AbiBAU7t (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Feb 2022 15:59:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60548 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229830AbiBAU7s (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Feb 2022 15:59:48 -0500
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16A68C061714;
+        Tue,  1 Feb 2022 12:59:48 -0800 (PST)
+Received: by mail-ej1-x634.google.com with SMTP id o12so58028528eju.13;
+        Tue, 01 Feb 2022 12:59:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qGx7EBxSb7IDUm+z7hlUIuBW5gm80SRoN1CR0+IVN6U=;
+        b=PG+aNUZZf2B9D5GG8wTtKnX+q3LbKWzMroa/mXmUFckusWa/NpATh3MZCxGY3GHssN
+         jKkrW14ardEHwPpydENxpqpODWr+4TCC+iljCFvb+MVGG1UGMPFgPzbAmz8iAJYVD+ZZ
+         F8dPiBmijlIKMKMoOOFTcKMJ9TNnBQT5LuIy48J5A9vzKyfacREYoJwrSRVQ4ZWbRdG2
+         hLQ/gFypnoNnfDE0VphhpvoC0Q5X62UUlhhFi0uNlo2HdIIaxl2CXjhtwjvhgJlFvSUD
+         Gdg1gmtsXCamBVvHXkWkhy9P4ApBkpvzY1BxEY7de6UDoViyuqlSxwDOjOWYxbY+kPqX
+         Mf2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9hzPMVYA6JSyF04scFOLCtVol/sa3kyshLCHF8CeYoQ=;
-        b=vDWXg2Z/zopD6by1ebOQFuBOjdV31StMoRlJLvF6XWDPnfHA/EcmhuA7aAS0hjX9et
-         ge6/1ThY0oZnowVnkPTbExwDno7RijKM+EHMZ02/I/WgQEoRyTFaQ4vMYcuPG96Y6mbt
-         GSoJS3znki2HBpYkSKYJuSwbC9WjIulTznxp1YqV5OZ3Bsve7ucXwj+izoX+nMPZS+eG
-         HzY/s108Uy1j+WFRLngTjtN/7ifQZsgpNYS44Z/+mpLcT6+Ljl2B1K4N3AjteaVruj2b
-         0JNlAIP7X32iyUy9vW/hS2giCen+St7Nb+kW8g481uVvQt+Hwcc5tzM83/5ccffr+sho
-         AySA==
-X-Gm-Message-State: AOAM530zi66qOlTaVVQUWq7pYqStKQFMpqxN2jaw9vrv8/FsKuhns62p
-        KxAErxz2Ax2FHtPIZfqXEemHH/aQ2HGQFQ==
-X-Google-Smtp-Source: ABdhPJxWMRTFsT6jXnSEqZ+pkaD88aqDKpzpQ6MjZ7jT77+ZAXfX0CrXUDM7rRK5jMp+i4SM7GIMFQ==
-X-Received: by 2002:a05:6102:2922:: with SMTP id cz34mr10596276vsb.55.1643748850537;
-        Tue, 01 Feb 2022 12:54:10 -0800 (PST)
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com. [209.85.222.46])
-        by smtp.gmail.com with ESMTPSA id t190sm74705vst.16.2022.02.01.12.54.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Feb 2022 12:54:10 -0800 (PST)
-Received: by mail-ua1-f46.google.com with SMTP id b37so15394511uad.12;
-        Tue, 01 Feb 2022 12:54:09 -0800 (PST)
-X-Received: by 2002:a67:c198:: with SMTP id h24mr11140054vsj.5.1643748849729;
- Tue, 01 Feb 2022 12:54:09 -0800 (PST)
+        bh=qGx7EBxSb7IDUm+z7hlUIuBW5gm80SRoN1CR0+IVN6U=;
+        b=NwVZt010jL9OgXqwbXi9RAHiEl1UdRk/rrKcYuPzE9a64XOkJPzZ8qga7Zoa8rs06M
+         I65MF7wO1hc/3B4LQM3Ttl8kwKeH416ZVscT0f/JU1fnx6wrvYgLXv+dug0w8kF98FSn
+         BZo0OvB64c7+/mTIxYPgF0Wt7dAE09r0zYbSgrophSC3ZXhjimAV2Xd1mOX41oDTJVam
+         B4qkTT7cHV6YtylfG7dHwMGGV6z/HFSFrmmwu3L53PawG3K6OEiGF/9/MBdF4GNyuPme
+         uh5LE5+eeSolyOmZg2gfk1v+FSq0ZOKKrkfIJDS4qfSTANMi0SuMtJ9Uyue74r+jgWmX
+         Ru5Q==
+X-Gm-Message-State: AOAM531uiLSlM3xjbg6IsYEssSfGv9b+KfOLAFY6i1Khxw/tMwtw/KOM
+        Tl/0jyC0fvnTed/1P8y6A2l1r38XH2Xmj1Z/iTo=
+X-Google-Smtp-Source: ABdhPJyBs6j7rayRkeF33MDCePZGEQaAf9X/tnXtfnHli4PRFmua9ltKdvOBiWPDEZiMzWisVZ9Aut1MWB7NonTYFog=
+X-Received: by 2002:a17:906:99c5:: with SMTP id s5mr22830959ejn.497.1643749186681;
+ Tue, 01 Feb 2022 12:59:46 -0800 (PST)
 MIME-Version: 1.0
 References: <6a62a531227cd4f20d77d50cdde60c7a18b9f052.1643625325.git.geert+renesas@glider.be>
- <CAHp75Vd68gsU-NWTGv4Y7Mo4-Vq7DBePa_yVxpDq=DAN5GLEBA@mail.gmail.com>
-In-Reply-To: <CAHp75Vd68gsU-NWTGv4Y7Mo4-Vq7DBePa_yVxpDq=DAN5GLEBA@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 1 Feb 2022 21:53:58 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUq3qZqVHH-QSVnwemVRyCp7b2Ldd-7Q2V8CXcj0+9aow@mail.gmail.com>
-Message-ID: <CAMuHMdUq3qZqVHH-QSVnwemVRyCp7b2Ldd-7Q2V8CXcj0+9aow@mail.gmail.com>
+ <CAHp75Vd68gsU-NWTGv4Y7Mo4-Vq7DBePa_yVxpDq=DAN5GLEBA@mail.gmail.com> <CAMuHMdUq3qZqVHH-QSVnwemVRyCp7b2Ldd-7Q2V8CXcj0+9aow@mail.gmail.com>
+In-Reply-To: <CAMuHMdUq3qZqVHH-QSVnwemVRyCp7b2Ldd-7Q2V8CXcj0+9aow@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 1 Feb 2022 22:58:10 +0200
+Message-ID: <CAHp75VccHbfmmk7bEXRrQOcePYxCb28sEY-RV6GBCgXAo8A5Sw@mail.gmail.com>
 Subject: Re: [PATCH] gpio: aggregator: Fix calling into sleeping GPIO controllers
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         =?UTF-8?Q?Mikko_Salom=C3=A4ki?= <ms@datarespons.se>,
@@ -57,65 +62,44 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andy,
+On Tue, Feb 1, 2022 at 10:54 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Tue, Feb 1, 2022 at 9:35 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Tue, Feb 1, 2022 at 10:09 PM Geert Uytterhoeven
+> > <geert+renesas@glider.be> wrote:
 
-On Tue, Feb 1, 2022 at 9:35 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Tue, Feb 1, 2022 at 10:09 PM Geert Uytterhoeven
-> <geert+renesas@glider.be> wrote:
-> > If the parent GPIO controller is a sleeping controller (e.g. a GPIO
-> > controller connected to I2C), getting or setting a GPIO triggers a
-> > might_sleep() warning.  This happens because the GPIO Aggregator takes
-> > the can_sleep flag into account only for its internal locking, not for
-> > calling into the parent GPIO controller.
+...
+
+> > > +       return chip->can_sleep ? gpiod_get_value_cansleep(fwd->descs[offset])
+> > > +                              : gpiod_get_value(fwd->descs[offset]);
 > >
-> > Fix this by using the gpiod_[gs]et*_cansleep() APIs when calling into a
-> > sleeping GPIO controller.
+> > This indentation kills the perfectionist in me :-)
 >
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-Thanks!
-
-> > +++ b/drivers/gpio/gpio-aggregator.c
-> > @@ -278,7 +278,8 @@ static int gpio_fwd_get(struct gpio_chip *chip, unsigned int offset)
-> >  {
-> >         struct gpiochip_fwd *fwd = gpiochip_get_data(chip);
+> Why? The above is aligned perfectly ("?" just above ":")?
+>
+> > What about:
 > >
-> > -       return gpiod_get_value(fwd->descs[offset]);
+> >        return chip->can_sleep ?
+> >                gpiod_get_value_cansleep(fwd->descs[offset]) :
+> > gpiod_get_value(fwd->descs[offset]);
+> >
+> > ?
+> >
+> > Or as variant
+> >
+> >        struct gpio_desc *desc = fwd->descs[offset];
+> >
+> >        return chip->can_sleep ? gpiod_get_value_cansleep(desc) :
+> > gpiod_get_value(desc);
+> >
+> > ?
 >
-> > +       return chip->can_sleep ? gpiod_get_value_cansleep(fwd->descs[offset])
-> > +                              : gpiod_get_value(fwd->descs[offset]);
->
-> This indentation kills the perfectionist in me :-)
+> IMHO, those are ugly as hell ;-)
 
-Why? The above is aligned perfectly ("?" just above ":")?
+I have the same opinion about your initial variant. :-)
 
-> What about:
->
->        return chip->can_sleep ?
->                gpiod_get_value_cansleep(fwd->descs[offset]) :
-> gpiod_get_value(fwd->descs[offset]);
->
-> ?
->
-> Or as variant
->
->        struct gpio_desc *desc = fwd->descs[offset];
->
->        return chip->can_sleep ? gpiod_get_value_cansleep(desc) :
-> gpiod_get_value(desc);
->
-> ?
+So, up to the maintainer(s) what to do.
 
-IMHO, those are ugly as hell ;-)
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+With Best Regards,
+Andy Shevchenko
