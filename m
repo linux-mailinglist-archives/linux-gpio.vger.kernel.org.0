@@ -2,42 +2,44 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 417D44A6025
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Feb 2022 16:30:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D0A24A60F3
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Feb 2022 17:06:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235766AbiBAPaP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Feb 2022 10:30:15 -0500
-Received: from mail-pg1-f177.google.com ([209.85.215.177]:39566 "EHLO
-        mail-pg1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232988AbiBAPaO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Feb 2022 10:30:14 -0500
-Received: by mail-pg1-f177.google.com with SMTP id j10so15634622pgc.6;
-        Tue, 01 Feb 2022 07:30:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/NI5/5cwcQQunIPAZVQCMWs9N9hH37FdlDTNKGxYQ7E=;
-        b=czGicOYjyzjexnLsimliwumlykAb8e3USmaeRjoflReW4k2qDZxjNz9d0obk2Gnebv
-         Z4Iozt/EKNnVANnHAH8+omAl2gKzzvIboQZOEBdm9ro1Uz4g8LP1uiwH4s6a8wqzkWlK
-         oTr8h8HfKb+5SpR9vUKYqx3j48Jpya0H4IEgQEDms2Mrf+2Gux2s7b75RZaveHT4vVtk
-         0lKxT2i1AfKi2Knz6hgREMcP04qc4AOf+OAt6vB9h2U0oSk+Uks9k8iwK3m7Xxg1bcmL
-         hy+baL52Pv4GsJ8udwg/PzCOlD1VFE6oVu8IJLeuuhFuvcEx0q3nVj6ErfaSBhhXZBWM
-         Zb9w==
-X-Gm-Message-State: AOAM530HbJSb0t6JFgsMiKeCYwKc9kVw1tosQr/aygy23Zkx1IzGG1h2
-        1F0OaBeDnSgksn2xnMmxcIU8LDCOSUwqbG6KhQM=
-X-Google-Smtp-Source: ABdhPJwZNq0IinMera7zRuVK7Muwvrp92NYs2qCGjwudmM11k2zeBJdEaahQlwH16dsk6UqlFGc0aAuF4CaTORjd4vE=
-X-Received: by 2002:a63:904c:: with SMTP id a73mr21118692pge.449.1643729414082;
- Tue, 01 Feb 2022 07:30:14 -0800 (PST)
-MIME-Version: 1.0
-References: <20220201120310.878267-1-maz@kernel.org> <20220201120310.878267-12-maz@kernel.org>
- <CANBLGcxCmeaXXFWi6GFSHN=RhjUp5BVRYTMXHQihsLJCocD1xg@mail.gmail.com>
-In-Reply-To: <CANBLGcxCmeaXXFWi6GFSHN=RhjUp5BVRYTMXHQihsLJCocD1xg@mail.gmail.com>
-From:   Emil Renner Berthing <kernel@esmil.dk>
-Date:   Tue, 1 Feb 2022 16:30:02 +0100
-Message-ID: <CANBLGcy_zEY7qkMe96v+tpsxbp9CDJh14utug5wseCfBhOSvdA@mail.gmail.com>
-Subject: Re: [PATCH 11/12] pinctrl: starfive: Move PM device over to irq domain
-To:     Marc Zyngier <maz@kernel.org>
+        id S240752AbiBAQG5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Feb 2022 11:06:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47924 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234704AbiBAQG4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Feb 2022 11:06:56 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2B57C061714;
+        Tue,  1 Feb 2022 08:06:56 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6E4CF61708;
+        Tue,  1 Feb 2022 16:06:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1936C340EB;
+        Tue,  1 Feb 2022 16:06:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643731615;
+        bh=wCusUGW69do8zdL1IFraRPrsU9+EHiNfdech3A1Xt2E=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=GCqkp12U2d1lF6WZIlwueos5RFb44pInCD9Ah+1yNj2GV3INPhYcyQywpz3GlB04Y
+         Da8ubuViEBrES19LuGvR0owKJPw+xTWzJJ0CT7lJBsLkFX7Q1czcIf6ZlVVTJwa72b
+         r41fBP1DPGVupupZsCLMnJM6VCEdXBtdCt09lUmfhW3zP1CtNTqU2XiGTbOmDibx+/
+         ptzJPQpcaQKmAT8lASTyf7oRO8DxDEXHV2ODKnGdwwKpzpX6737Hfn3u0Kzk4tLnDP
+         iSC7Ine/0Uq1dYRL3rjObK3NIGOq9sooCiwC9Ryj0x70edt3tQ9sFT3P4SY9vlTVaQ
+         9oHhaaA7de+lg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1nEvgD-004gZY-KM; Tue, 01 Feb 2022 16:06:53 +0000
+Date:   Tue, 01 Feb 2022 16:06:53 +0000
+Message-ID: <87fsp2606a.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Emil Renner Berthing <kernel@esmil.dk>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
         linux-mediatek@lists.infradead.org,
@@ -55,12 +57,27 @@ Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Avi Fishman <avifishman70@gmail.com>,
         Tomer Maimon <tmaimon77@gmail.com>,
         Tali Perry <tali.perry1@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH 11/12] pinctrl: starfive: Move PM device over to irq domain
+In-Reply-To: <CANBLGcxCmeaXXFWi6GFSHN=RhjUp5BVRYTMXHQihsLJCocD1xg@mail.gmail.com>
+References: <20220201120310.878267-1-maz@kernel.org>
+        <20220201120310.878267-12-maz@kernel.org>
+        <CANBLGcxCmeaXXFWi6GFSHN=RhjUp5BVRYTMXHQihsLJCocD1xg@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: kernel@esmil.dk, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, matthias.bgg@gmail.com, grygorii.strashko@ti.com, ssantosh@kernel.org, khilman@kernel.org, tglx@linutronix.de, shawnguo@kernel.org, s.hauer@pengutronix.de, avifishman70@gmail.com, tmaimon77@gmail.com, tali.perry1@gmail.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 1 Feb 2022 at 16:16, Emil Renner Berthing <kernel@esmil.dk> wrote:
+On Tue, 01 Feb 2022 15:16:39 +0000,
+Emil Renner Berthing <kernel@esmil.dk> wrote:
+> 
 > On Tue, 1 Feb 2022 at 13:19, Marc Zyngier <maz@kernel.org> wrote:
 > >
 > > Move the reference to the device over to the irq domain.
@@ -88,12 +105,17 @@ On Tue, 1 Feb 2022 at 16:16, Emil Renner Berthing <kernel@esmil.dk> wrote:
 > >
 > > +       irq_domain_set_pm_device(sfp->gc.irq.domain, dev);
 > > +
->
+> 
 > The gpio framework uses the irq_domain at sfp->gc.irq.domain, so
 > shouldn't this be set before registering the gpio_chip with
 > devm_gpiochip_add_data above?
 
-Ah, no. sfp->gc.irq.domain is a pointer to an irq_domain that is
-initialised when adding the gpio_chip.
+It is devm_gpiochip_add_data() that create the domain, so there is
+nothing to set before.
 
-Reviewed-by: Emil Renner Berthing <kernel@esmil.dk>
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
