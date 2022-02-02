@@ -2,103 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 217C44A7300
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Feb 2022 15:27:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 464184A730A
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Feb 2022 15:28:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234818AbiBBO0f (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 2 Feb 2022 09:26:35 -0500
-Received: from foss.arm.com ([217.140.110.172]:34440 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237320AbiBBO0f (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 2 Feb 2022 09:26:35 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D13A0ED1;
-        Wed,  2 Feb 2022 06:26:34 -0800 (PST)
-Received: from [10.57.68.47] (unknown [10.57.68.47])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 02D393F718;
-        Wed,  2 Feb 2022 06:26:32 -0800 (PST)
-Message-ID: <6f0e58dc-4b81-d819-13e3-9e0f79ba279c@arm.com>
-Date:   Wed, 2 Feb 2022 14:26:28 +0000
+        id S232464AbiBBO1x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 2 Feb 2022 09:27:53 -0500
+Received: from mail-ua1-f45.google.com ([209.85.222.45]:42724 "EHLO
+        mail-ua1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232327AbiBBO1x (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Feb 2022 09:27:53 -0500
+Received: by mail-ua1-f45.google.com with SMTP id e17so19406186uad.9;
+        Wed, 02 Feb 2022 06:27:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tMuf6Mgi8WTV8TVhhqxvBDCExEnbdcrTWjjU3gY+Vog=;
+        b=BFVjDkvgyWEhYCTNyYDec9lwfKEVPeQt0ZfAvN9qMX60TJW/giU5pTMqUNacl0D0JQ
+         P/kUQprsydcRCsuYaHflsOE52/0CPu/niMr211xo7vlXygkHRYvsCaX6Xf3M2m6tWpGD
+         5y9JiKAznVcJepUTCiVs6KwdletFKVLn7YQwzYZ6yEnWU+nbYZ9gGhMADUxOhNY70Lmb
+         iTGZjtXl592Dvctg7tGA++hI2GhCvs+jX7PDclFjA4AR61IIjOMch8bNWpeCyilQkJ58
+         FN1coYlqIxRsJqy8NDhpjS1TjaWaqAtjxsiPfOIVWm9fWCY/3yzLoxYbLivOVpEifUPl
+         jb0Q==
+X-Gm-Message-State: AOAM533ZKzDnyhBa0OwSorqOAv/ifezzwUxLi5xReaBcGCiBjth35MrM
+        ngXAqk1VIJrupy+14wAhVnVugMyKkGl0IQ==
+X-Google-Smtp-Source: ABdhPJweIUJ2u0LpWZ+xuXmOPq3hAOa2td2QomfNUjIdQtiEJl65VvmkhEvUOYUz3KBekYegh6cZCw==
+X-Received: by 2002:a67:e1c3:: with SMTP id p3mr11372473vsl.31.1643812072309;
+        Wed, 02 Feb 2022 06:27:52 -0800 (PST)
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com. [209.85.222.43])
+        by smtp.gmail.com with ESMTPSA id q22sm3459500vsj.23.2022.02.02.06.27.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Feb 2022 06:27:51 -0800 (PST)
+Received: by mail-ua1-f43.google.com with SMTP id e17so19405997uad.9;
+        Wed, 02 Feb 2022 06:27:50 -0800 (PST)
+X-Received: by 2002:a67:c198:: with SMTP id h24mr12318471vsj.5.1643812070591;
+ Wed, 02 Feb 2022 06:27:50 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101
- Thunderbird/91.5.1
-Subject: Re: [PATCH v10 2/6] dt-bindings: gpio: logicvc: Add a compatible with
- major version only
-Content-Language: en-GB
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc:     devicetree@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
+References: <20220201120310.878267-1-maz@kernel.org> <20220201120310.878267-4-maz@kernel.org>
+In-Reply-To: <20220201120310.878267-4-maz@kernel.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 2 Feb 2022 15:27:39 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXbM8kvmv0XKP8=rYj-8k5cFt50VP69LeDNX5oHx2e9dw@mail.gmail.com>
+Message-ID: <CAMuHMdXbM8kvmv0XKP8=rYj-8k5cFt50VP69LeDNX5oHx2e9dw@mail.gmail.com>
+Subject: Re: [PATCH 03/12] irqchip/renesas-intc-gpio: Move PM device over to
+ irq domain
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:TI ETHERNET SWITCH DRIVER (CPSW)" 
+        <linux-omap@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>
-References: <20220120150024.646714-1-paul.kocialkowski@bootlin.com>
- <20220120150024.646714-3-paul.kocialkowski@bootlin.com>
- <CACRpkdbnEKeDNmFCuUCLaySs6AtD9MPtxV+9JDxKuXvTs9iMVQ@mail.gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <CACRpkdbnEKeDNmFCuUCLaySs6AtD9MPtxV+9JDxKuXvTs9iMVQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Emil Renner Berthing <kernel@esmil.dk>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2022-01-30 00:46, Linus Walleij wrote:
-> On Thu, Jan 20, 2022 at 4:00 PM Paul Kocialkowski
-> <paul.kocialkowski@bootlin.com> wrote:
-> 
->> There are lots of different versions of the logicvc block and it
->> makes little sense to list them all in compatibles since all versions
->> with the same major are found to be register-compatible.
-> 
-> The reason we try to be precise is because sometime, long after the driver
-> has been merged and maintained for a few years, a bug is discovered
-> in a specific version of the silicon.
-> 
-> What happens is that a fix is applied on all silicon whether it is needed
-> or not.
-> 
-> If you have the precise silicon compatible, you can avoid this and target
-> only a specific version.
+Hi Marc,
 
-Indeed, the better approach would be something like:
+On Tue, Feb 1, 2022 at 1:12 PM Marc Zyngier <maz@kernel.org> wrote:
+> Move the reference to the device over to the irq domain.
+>
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
 
-   compatible:
-     oneOf:
-       - items:
-           - enum:
-               - foo,bar-v1.0
-               - foo,bar,v1.1
-           - const: foo,bar-v1
-       - items:
-           - enum:
-               - foo,bar-v2.0
-           - const: foo,bar-v2
+Thanks for your patch!
 
-That way the DTs are future-proof, while drivers can still match on only 
-the less-specific strings until a need arises. Plus it avoids the 
-problem that if an existing OS that only understands "foo,bar-v1.0" is 
-given a new DT with only "foo,bar-v1" for v1.0 hardware it won't be able 
-to use the device, even though it's *functionally* capable of doing so.
+s/gpio/irqpin/ in the one-line summary?
 
-However, from skimming patch #5, it looks possible that none of these 
-changes are needed at all. If LOGICVC_IP_VERSION_REG tells you the exact 
-revision, and is always present (as the unconditional reading of it 
-implies), then the only reason for adding new compatibles would be if, 
-say, v5 has more clocks from v4 and you want the binding to enforce 
-that; otherwise, newer versions are literally compatible with the 
-currently-defined binding and therefore should continue to bind against 
-the existing string(s) to maximise forward- and backward-compatibility. 
-Sure, it's not the prettiest thing for a "generic" compatible to be 
-based on an oddly-specific version number that doesn't necessarily match 
-the actual software-discoverable version, but what's done is done and 
-that's the cost of ABI.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Cheers,
-Robin.
+Wake-up still works fine on R-Mobile A1 and SH-Mobile AG5, so
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-(also, nitpick for that part of patch #5 since I'm here: please include 
-linux/bitfield.h rather than reinventing FIELD_GET() locally)
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
