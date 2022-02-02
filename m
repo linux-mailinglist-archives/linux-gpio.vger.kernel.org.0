@@ -2,214 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 01C824A6FCE
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Feb 2022 12:19:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 728004A702E
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Feb 2022 12:42:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230299AbiBBLTv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 2 Feb 2022 06:19:51 -0500
-Received: from mga12.intel.com ([192.55.52.136]:1948 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230163AbiBBLTv (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 2 Feb 2022 06:19:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643800791; x=1675336791;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=SCEv/Wglia+T7mU/w1Yp9MF6QWS6lSICLKOjH2+nPqI=;
-  b=ddJmN/rwYeR9Rvlpgo8giJlrsCb7coU0OPn6Rg6EYk3DyLmCiXuPB9+6
-   WnB4zGutkotXgxo3iCcbBohRw7IzDAxUfCPn3YEMg1nfi2r90olJrVoXz
-   mkQFzrp4AV1vMdtLUqNUFUbbjGCBEbJG4VTb+lHvqIZcO6Grnh7fLF+nh
-   Ac8kybLei2k6eCByV7495Gs0Yae9m/BwtOZU6pxDqoIpuZkDjQnoemV7w
-   dqySuE2k5ElQotZibnLI1/ED3KxJjQlOuS2hQGC3w9SlmmoqCjz6irzCD
-   GO+QM9rDce2/hQ1mDydGuQOjK2vzJLJ+pNcuCVlKaUoV3PwQPVIks/ZG6
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10245"; a="227863392"
-X-IronPort-AV: E=Sophos;i="5.88,336,1635231600"; 
-   d="scan'208";a="227863392"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2022 03:19:51 -0800
-X-IronPort-AV: E=Sophos;i="5.88,336,1635231600"; 
-   d="scan'208";a="599524678"
-Received: from smile.fi.intel.com ([10.237.72.61])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Feb 2022 03:19:50 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nFDey-0003Zy-Iq;
-        Wed, 02 Feb 2022 13:18:48 +0200
-Date:   Wed, 2 Feb 2022 13:18:48 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpiolib: make struct comments into real kernel docs
-Message-ID: <YfpomMEgiTh8kjGJ@smile.fi.intel.com>
-References: <20220202104937.146827-1-brgl@bgdev.pl>
+        id S233698AbiBBLmQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 2 Feb 2022 06:42:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60064 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238004AbiBBLmP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Feb 2022 06:42:15 -0500
+Received: from mail-qv1-xf33.google.com (mail-qv1-xf33.google.com [IPv6:2607:f8b0:4864:20::f33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9A98C06173D
+        for <linux-gpio@vger.kernel.org>; Wed,  2 Feb 2022 03:42:15 -0800 (PST)
+Received: by mail-qv1-xf33.google.com with SMTP id i19so18629358qvx.12
+        for <linux-gpio@vger.kernel.org>; Wed, 02 Feb 2022 03:42:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EU7htQR9jiepwG7F9yRq3BzovxCC6pSdj6b35MC8l+A=;
+        b=IqLX5CE9uqzxyEXXLi6uiNxYHyUvzSGN67d48aE59kFd8JmjDPKLG18jwhhNQAYF2+
+         PpqCW783mCYVD4j1fBNk0d1KfV7Tzzn9AO1ljGMlRwy13XrLNtvRNy2ShEY0sn4/n9kK
+         jdr/KcYtZ+/gmbuzqqStOIrt8COlUetUtHeemhfojNZihI4B+8vCJELcjzvuRaBtNirq
+         JqsbZix7IO5xaraxCdqEb5+FkAo7h4oLxf6/6AcScy+v72Q3HjBEiDoD3rBOWjmOYhZK
+         FRMeLVJAF5R5C5ar9/eO/b4XkYcfKwBFz3APxdHcF/eZaLnnhLARN8UEX+VbMZb6m2O6
+         WPMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:sender:from:to:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=EU7htQR9jiepwG7F9yRq3BzovxCC6pSdj6b35MC8l+A=;
+        b=pymb57IUsFL4o+otYr2IEZFBVQg1nqBBJOyei0QF4lmpYTS5Qxoyll3FjZ1MDtM/mv
+         9YfV9ej6gJXBhbiLZXXJy58Y6n/EK4RJlva8RupbyTcD9YnnXJEheW2RPNTsLvGo+3Mp
+         JRJQzdVZHUO7dATx0B7WaCAJRnt+ayv0CSv//zs1aSY/3F/6IryG7vwpAXdKeWTaVRu2
+         7ppgO62apgS1DOa1KqmwiTBNM5CTs4Xzml7yqlZCOmPfWiFkcEC/+LrQI2MAPNydQaZY
+         OqgpH7kmWHpapSNCjTn0sbgrKtF8uDa+c0IZ7D92j3UQB991dL4bAmYHWpwopCd+Me5F
+         cP0w==
+X-Gm-Message-State: AOAM530kTf9BvH5R40wr6q29uXt6iFg0MUQAupUv6kAkRGUZEpWC9T6C
+        iQDD2oQ6oynK+62aR/Qinj/bWH+EEjU=
+X-Google-Smtp-Source: ABdhPJwSjJ0OMVyD+4TCIPwj1utvTxiVyxuErrVxjO9U0zRd8LthV0K+VzzzozeyUzDSZ21tDVFt8g==
+X-Received: by 2002:ad4:5745:: with SMTP id q5mr25528671qvx.55.1643802134220;
+        Wed, 02 Feb 2022 03:42:14 -0800 (PST)
+Received: from localhost.localdomain ([45.124.203.14])
+        by smtp.gmail.com with ESMTPSA id 17sm36629qkj.23.2022.02.02.03.42.12
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Feb 2022 03:42:13 -0800 (PST)
+Sender: "joel.stan@gmail.com" <joel.stan@gmail.com>
+From:   Joel Stanley <joel@jms.id.au>
+To:     linux-gpio@vger.kernel.org
+Subject: [libgpiod PATCH] core: Fix line_bulk_foreach_line invalid memory access
+Date:   Wed,  2 Feb 2022 22:12:04 +1030
+Message-Id: <20220202114204.31918-1-joel@jms.id.au>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220202104937.146827-1-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Feb 02, 2022 at 11:49:37AM +0100, Bartosz Golaszewski wrote:
-> We have several comments that start with '/**' but don't conform to the
-> kernel doc standard. Add proper detailed descriptions for the affected
-> definitions and move the docs from the forward declarations to the
-> struct definitions where applicable.
+Running libgpiod applications under valgrind results in the following
+warning:
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+==3006== Invalid read of size 8
+==3006==    at 0x10C867: line_request_values (core.c:711)
+==3006==    by 0x10CDA6: gpiod_line_request_bulk (core.c:849)
+==3006==    by 0x10AE27: main (gpioset.c:323)
+==3006==  Address 0x4a4d370 is 0 bytes after a block of size 16 alloc'd
+==3006==    at 0x483F790: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==3006==    by 0x10B884: gpiod_line_bulk_new (core.c:109)
+==3006==    by 0x10DBB0: gpiod_chip_get_lines (helpers.c:24)
+==3006==    by 0x10ADC3: main (gpioset.c:313)
 
-A few comments below.
+This is because the foreach loop reads the next value before checking
+that index is still in bounds.
 
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
-> ---
->  drivers/gpio/gpiolib.h        | 31 +++++++++++++++++++++++++++++++
->  include/linux/gpio/consumer.h | 35 ++++++++++++++++-------------------
->  2 files changed, 47 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-> index 30bc3f80f83e..0025701b7641 100644
-> --- a/drivers/gpio/gpiolib.h
-> +++ b/drivers/gpio/gpiolib.h
-> @@ -72,6 +72,20 @@ struct gpio_device {
->  /* gpio suffixes used for ACPI and device tree lookup */
->  static __maybe_unused const char * const gpio_suffixes[] = { "gpios", "gpio" };
->  
-> +/**
-> + * struct gpio_array - Opaque descriptor for a structure of GPIO array attributes
+Add a test to avoid reading past the end of the allocation.
 
-> + *
+This bug is not present a released version of libgpiod.
 
-I dunno we need these blank lines.
+Fixes: 2b02d7ae1aa6 ("treewide: rework struct gpiod_line_bulk")
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+---
+ lib/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> + * @desc:		Array of pointers to the GPIO descriptors
-> + * @size:		Number of elements in desc
-
-  in @desc
-
-or
-
-  in the array of the descriptor pointers
-
-> + * @chip:		Parent GPIO chip
-> + * @get_mask:		Get mask used in fastpath.
-> + * @set_mask:		Set mask used in fastpath.
-> + * @invert_mask:	Invert mask used in fastpath.
-
-Why some of the descriptions are with grammar period and some w/o?
-
-> + *
-> + * This structure is attached to struct gpiod_descs obtained from
-> + * gpiod_get_array() and can be passed back to get/set array functions in order
-> + * to activate fast processing path if applicable.
-> + */
->  struct gpio_array {
->  	struct gpio_desc	**desc;
->  	unsigned int		size;
-> @@ -96,6 +110,23 @@ int gpiod_set_array_value_complex(bool raw, bool can_sleep,
->  extern spinlock_t gpio_lock;
->  extern struct list_head gpio_devices;
->  
-> +
-> +/**
-> + * struct gpio_desc - Opaque descriptor for a GPIO
-> + *
-> + * @gdev:		Pointer to the parent GPIO device
-> + * @flags:		Binary descriptor flags
-> + * @label:		Name of the consumer
-> + * @name:		Line name
-> + * @hog:		Pointer to the device node that hogs this line (if any)
-> + * @debounce_period_us:	Debounce period in microseconds
-> + *
-> + * These are obtained using gpiod_get() and are preferable to the old
-> + * integer-based handles.
-> + *
-> + * Contrary to integers, a pointer to a gpio_desc is guaranteed to be valid
-
-&struct gpio_desc
-
-> + * until the GPIO is released.
-> + */
->  struct gpio_desc {
->  	struct gpio_device	*gdev;
->  	unsigned long		flags;
-> diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-> index 3ad67b4a72be..3ffb054fafbd 100644
-> --- a/include/linux/gpio/consumer.h
-> +++ b/include/linux/gpio/consumer.h
-> @@ -8,27 +8,16 @@
->  #include <linux/err.h>
->  
->  struct device;
-> -
-> -/**
-> - * Opaque descriptor for a GPIO. These are obtained using gpiod_get() and are
-> - * preferable to the old integer-based handles.
-> - *
-> - * Contrary to integers, a pointer to a gpio_desc is guaranteed to be valid
-> - * until the GPIO is released.
-> - */
->  struct gpio_desc;
-> -
-> -/**
-> - * Opaque descriptor for a structure of GPIO array attributes.  This structure
-> - * is attached to struct gpiod_descs obtained from gpiod_get_array() and can be
-> - * passed back to get/set array functions in order to activate fast processing
-> - * path if applicable.
-> - */
->  struct gpio_array;
->  
->  /**
-> - * Struct containing an array of descriptors that can be obtained using
-> - * gpiod_get_array().
-> + * struct gpio_descs - Struct containing an array of descriptors that can be
-> + *                     obtained using gpiod_get_array()
-> + *
-> + * @info:	Pointer to the opaque gpio_array structure
-> + * @ndescs:	Number of held descriptors
-> + * desc:	Array of pointers to GPIO descriptors
-
-Missed @?
-
->   */
->  struct gpio_descs {
->  	struct gpio_array *info;
-> @@ -43,8 +32,16 @@ struct gpio_descs {
->  #define GPIOD_FLAGS_BIT_NONEXCLUSIVE	BIT(4)
->  
->  /**
-> - * Optional flags that can be passed to one of gpiod_* to configure direction
-> - * and output value. These values cannot be OR'd.
-> + * enum gpiod_flags - Optional flags that can be passed to one of gpiod_* to
-> + *                    configure direction and output value. These values
-> + *                    cannot be OR'd.
-> + *
-> + * @GPIOD_ASIS:			Don't change the direction
-
-Don't change anything
-
-(Not only direction, also the output value. Some hardware allows to change
-output buffer value even if the line is configured as input).
-
-> + * @GPIOD_IN:			Set lines to input mode
-> + * @GPIOD_OUT_LOW:		Set lines to output and drive them low
-> + * @GPIOD_OUT_HIGH:		Set lines to output and drive them high
-> + * @GPIOD_OUT_LOW_OPEN_DRAIN:	Set lines to open-drain output and drive them low
-> + * @GPIOD_OUT_HIGH_OPEN_DRAIN:	Set lines to open-drain output and drive them high
->   */
->  enum gpiod_flags {
->  	GPIOD_ASIS	= 0,
-> -- 
-> 2.30.1
-> 
-
+diff --git a/lib/core.c b/lib/core.c
+index 6ef09baec0f5..4463a7014776 100644
+--- a/lib/core.c
++++ b/lib/core.c
+@@ -178,7 +178,8 @@ GPIOD_API void gpiod_line_bulk_foreach_line(struct gpiod_line_bulk *bulk,
+ #define line_bulk_foreach_line(bulk, line, index)			\
+ 	for ((index) = 0, (line) = (bulk)->lines[0];			\
+ 	     (index) < (bulk)->num_lines;				\
+-	     (index)++, (line) = (bulk)->lines[(index)])
++	     (index)++, 						\
++	     (line) = (index) < (bulk)->num_lines ? (bulk)->lines[(index)] : NULL)
+ 
+ GPIOD_API bool gpiod_is_gpiochip_device(const char *path)
+ {
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.34.1
 
