@@ -2,90 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2799F4A72E4
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Feb 2022 15:22:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D77034A72EE
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Feb 2022 15:25:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233711AbiBBOVt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 2 Feb 2022 09:21:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39966 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344862AbiBBOVs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Feb 2022 09:21:48 -0500
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3967EC061714;
-        Wed,  2 Feb 2022 06:21:48 -0800 (PST)
-Received: by mail-ed1-x534.google.com with SMTP id b13so42606887edn.0;
-        Wed, 02 Feb 2022 06:21:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=uZxG6ejcH+oTnDpDsfC5qB/qJgKr2fa+FUx9iDGet0A=;
-        b=bfAELRSTJH5KgdkiGqCQXeFRZeV2LwexqkR0eM0O4Y66Dm8Af6YSMpkfrkeJbbgKrh
-         elXrjOvtZSRPwO+6ZwJvl7ETD5q8XR4Q9Ikp+oo/4Y7XNhoCAJe3j1lBV8nMCeQzNr3W
-         1pMqoyyGFAOEWVmP2jlXKrnDNw06lPnlUY1rc/CFAK26iAtGMERgbSplC3LsHT5/b8m1
-         gfhhM95CP+QrC+deydWKmxp6MbZ0V6IfuKxySoud5sdriBK8c2n6xiD2JYm8CIndQTQa
-         SAmMAtwPbbsYhPa4cMxwRUoKSt+98tbMuIfn8+t5dG/rHRaTeCKMBr3+JD5Qvkw5pajX
-         3ZSA==
+        id S1344891AbiBBOZW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 2 Feb 2022 09:25:22 -0500
+Received: from mail-vk1-f176.google.com ([209.85.221.176]:33708 "EHLO
+        mail-vk1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233378AbiBBOZV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Feb 2022 09:25:21 -0500
+Received: by mail-vk1-f176.google.com with SMTP id 48so12753378vki.0;
+        Wed, 02 Feb 2022 06:25:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=uZxG6ejcH+oTnDpDsfC5qB/qJgKr2fa+FUx9iDGet0A=;
-        b=M3pZIxNViqkZWUBJ86Pag4Bv243z1uOBGI0VrEyvNptY4wYYKwnUSIC20m5r4ucvWv
-         UbB+Je0ojtgSpqMBkfTNweYD9o5iycY+eze+mJtnhTY0CK0afvyG3pffL+gD4uUu31o3
-         2EVtsFxqU7qiPrJWZxy/t5xfH1A+fL9pTTeBeoIpclt6211wFnXxdiYNSE5YkmXbl4Au
-         UbSRFrvEfhKcB8QGQ39/iRC/ym/nsMMqEVT2nNdWki1B0qxFPJPRYMQXEP/OCuP4CdUN
-         9MN8CvzR80RtRTEZgbM92ThaV3C1wwWydsNfs0r55sdUN2ZUDNPjOEj/HRZ6Gtikirwl
-         1dKQ==
-X-Gm-Message-State: AOAM531+SRAAwGGit+Cfp0CoDm0MHUfyG3zJXD7Qe67y4hQIeS/GVfdb
-        8UitufhTLoXv2bQBBtcDuqjl43soluBl67KKOlAmSDlmFzs=
-X-Google-Smtp-Source: ABdhPJy/jhevC/1abuSRWlcDmvSsGBSvixZwyaqJd+WaKS3f2CIiGz1EB0Y4pIvXD0WQzU2FZkv2oZRLQkjL09AJ+Zw=
-X-Received: by 2002:aa7:dd8f:: with SMTP id g15mr6382743edv.436.1643811706757;
- Wed, 02 Feb 2022 06:21:46 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=VHHkDQZTsE2xhNxSVITPsL9fvc1DhHDBALiEGJ5aodc=;
+        b=semfALvjA5GelZ7GgX4ueW4+fjdFs49V2c2sQE+yiYnhwSqyqZRrHx3eJRrFmEAswq
+         PIslQzeUVW+RFQt2fxXisIxRsKPhogZsfsLN6IgrpXGbrkByuM2W25ME6BtaUo9vjhNZ
+         QHumiSG5nQ6mzRl7rmLxKv497QkG+OzvWLqjZTSWKywfGW+r6zmL2o2atSEljBf+5pjz
+         X0CnhwH05B6rkqZPTPFOpi6vj8kBhf4+q1sutJDKIfhm11NEBUcn8Y3NgTJ8ChhLfYSY
+         /ppPKU5nJiwR45C2klRMUtk47X81HpO50mt9RW0XfWcFKccLI+G1Y5OKSN4+A//NEb+n
+         l7LA==
+X-Gm-Message-State: AOAM530ayXCmQxE9+H4929M1Cj7EVQ/Q5x0CMrtnEmdro4JWXHxb5KKL
+        xzwIjcWpi3Gw5Rjo3flpyDrddxousNSsKw==
+X-Google-Smtp-Source: ABdhPJx+IvKa+vH9VcvpP1lKOMLgPOrwNCFX20Bn+E1XI21/kEfhfkWP5RJf3zzm5fI2mOmJGB8RxA==
+X-Received: by 2002:a1f:90d4:: with SMTP id s203mr13066144vkd.20.1643811920637;
+        Wed, 02 Feb 2022 06:25:20 -0800 (PST)
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com. [209.85.222.50])
+        by smtp.gmail.com with ESMTPSA id f68sm5626210vke.55.2022.02.02.06.25.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Feb 2022 06:25:20 -0800 (PST)
+Received: by mail-ua1-f50.google.com with SMTP id 60so2353810uae.1;
+        Wed, 02 Feb 2022 06:25:20 -0800 (PST)
+X-Received: by 2002:ab0:6cf9:: with SMTP id l25mr12222950uai.122.1643811919950;
+ Wed, 02 Feb 2022 06:25:19 -0800 (PST)
 MIME-Version: 1.0
-References: <20220202125438.19345-1-j.neuschaefer@gmx.net>
-In-Reply-To: <20220202125438.19345-1-j.neuschaefer@gmx.net>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 2 Feb 2022 16:20:11 +0200
-Message-ID: <CAHp75VdtTzkXVY21WZje1EkqixOOxxA3M09NfqQanV0XSRiNjQ@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Fixing the compile-test warnings in pinctrl-npcm7xx
-To:     =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+References: <20220201120310.878267-1-maz@kernel.org> <20220201120310.878267-2-maz@kernel.org>
+In-Reply-To: <20220201120310.878267-2-maz@kernel.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 2 Feb 2022 15:25:09 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWaS9YnEELFhW4fdVj_Uo1D0R9sCWKnVDrPnLWN16NB1g@mail.gmail.com>
+Message-ID: <CAMuHMdWaS9YnEELFhW4fdVj_Uo1D0R9sCWKnVDrPnLWN16NB1g@mail.gmail.com>
+Subject: Re: [PATCH 01/12] genirq: Allow the PM device to originate from irq domain
+To:     Marc Zyngier <maz@kernel.org>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Joel Stanley <joel@jms.id.au>
+        "open list:TI ETHERNET SWITCH DRIVER (CPSW)" 
+        <linux-omap@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Emil Renner Berthing <kernel@esmil.dk>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Feb 2, 2022 at 2:54 PM Jonathan Neusch=C3=A4fer
-<j.neuschaefer@gmx.net> wrote:
+On Tue, Feb 1, 2022 at 1:15 PM Marc Zyngier <maz@kernel.org> wrote:
+> As a preparation to moving the reference to the device used for
+> runtime power management, add a new 'dev' field to the irqdomain
+> structure for that exact purpose.
 >
-> My "Nuvoton WPCM450 pinctrl and GPIO driver" patchset brought two
-> warnings[1] in the pinctrl-npcm7xx to light. Here's an attempt at fixing
-> them.
-
-With added the respective Fixes tag to each of them
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
-Thanks!
-
-> [1]: https://lore.kernel.org/lkml/202201292234.NpSNe4TD-lkp@intel.com/
+> The irq_chip_pm_{get,put}() helpers are made aware of the dual
+> location via a new private helper.
 >
-> Jonathan Neusch=C3=A4fer (2):
->   pinctrl: nuvoton: npcm7xx: Use %zd printk format for ARRAY_SIZE()
->   pinctrl: nuvoton: npcm7xx: Rename DS() macro to DSTR()
+> No functional change intended.
 >
->  drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c | 160 +++++++++++-----------
->  1 file changed, 80 insertions(+), 80 deletions(-)
->
-> --
-> 2.34.1
->
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
 
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
---=20
-With Best Regards,
-Andy Shevchenko
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
