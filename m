@@ -2,50 +2,49 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 464184A730A
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Feb 2022 15:28:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 884A34A7312
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Feb 2022 15:28:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232464AbiBBO1x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 2 Feb 2022 09:27:53 -0500
-Received: from mail-ua1-f45.google.com ([209.85.222.45]:42724 "EHLO
-        mail-ua1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232327AbiBBO1x (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Feb 2022 09:27:53 -0500
-Received: by mail-ua1-f45.google.com with SMTP id e17so19406186uad.9;
-        Wed, 02 Feb 2022 06:27:52 -0800 (PST)
+        id S1344948AbiBBO2o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 2 Feb 2022 09:28:44 -0500
+Received: from mail-ua1-f54.google.com ([209.85.222.54]:39776 "EHLO
+        mail-ua1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239109AbiBBO2o (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Feb 2022 09:28:44 -0500
+Received: by mail-ua1-f54.google.com with SMTP id p7so19435701uao.6;
+        Wed, 02 Feb 2022 06:28:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=tMuf6Mgi8WTV8TVhhqxvBDCExEnbdcrTWjjU3gY+Vog=;
-        b=BFVjDkvgyWEhYCTNyYDec9lwfKEVPeQt0ZfAvN9qMX60TJW/giU5pTMqUNacl0D0JQ
-         P/kUQprsydcRCsuYaHflsOE52/0CPu/niMr211xo7vlXygkHRYvsCaX6Xf3M2m6tWpGD
-         5y9JiKAznVcJepUTCiVs6KwdletFKVLn7YQwzYZ6yEnWU+nbYZ9gGhMADUxOhNY70Lmb
-         iTGZjtXl592Dvctg7tGA++hI2GhCvs+jX7PDclFjA4AR61IIjOMch8bNWpeCyilQkJ58
-         FN1coYlqIxRsJqy8NDhpjS1TjaWaqAtjxsiPfOIVWm9fWCY/3yzLoxYbLivOVpEifUPl
-         jb0Q==
-X-Gm-Message-State: AOAM533ZKzDnyhBa0OwSorqOAv/ifezzwUxLi5xReaBcGCiBjth35MrM
-        ngXAqk1VIJrupy+14wAhVnVugMyKkGl0IQ==
-X-Google-Smtp-Source: ABdhPJweIUJ2u0LpWZ+xuXmOPq3hAOa2td2QomfNUjIdQtiEJl65VvmkhEvUOYUz3KBekYegh6cZCw==
-X-Received: by 2002:a67:e1c3:: with SMTP id p3mr11372473vsl.31.1643812072309;
-        Wed, 02 Feb 2022 06:27:52 -0800 (PST)
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com. [209.85.222.43])
-        by smtp.gmail.com with ESMTPSA id q22sm3459500vsj.23.2022.02.02.06.27.50
+        bh=DQbN/IG7k7oQjSkAnXdbQ+TtLAJYx9/TKrsGBZwRqyY=;
+        b=DCNMFarRsSvnFzKpYbXc9DZw312hrM29QC6lb8KmHEFRltcO460WPtBncNCilee2tF
+         FYWVLaEugfufQ21QvFpH99Xk+XdBlAv9+7OnAcUtIzZqLWv5JnLyYi3GlZQd2rwIrZBG
+         0enOcORASSrAbQFtjCJwk/Ml/ceCbnuR0WQSF5lzqkx2fN0YfG23bD1WOsKHlQAhDCh8
+         MvYEEPMdEGmvc9QFaep0WgC9coUfrOZ1IxwPEN0ou7WX8tneZ3Pt0qH4DgjPpR6eAPux
+         DIHy8YEo4jOAlQVpW2terS+aQpskFqWND5w+GjQuUs3GE6Q5wWWz2AKtEnM0X6pdwuir
+         RVCQ==
+X-Gm-Message-State: AOAM530N15m0/4wHWbJHj0sOW168kBYR/fEqrZsDVY/Gdl9Hb8ap7bQM
+        pr8AD2v/0l5Zju+KZ/SXtp4iZ2LEiIL0Zg==
+X-Google-Smtp-Source: ABdhPJxpmmOITrW4JZ0N2uiuZleO3DWsTPcUVFXQhM0Q9ILvsflNW5ngoxahxwflKqc9dnGQuJEwLg==
+X-Received: by 2002:a67:cb19:: with SMTP id b25mr12059436vsl.8.1643812123175;
+        Wed, 02 Feb 2022 06:28:43 -0800 (PST)
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
+        by smtp.gmail.com with ESMTPSA id q69sm5678301vka.21.2022.02.02.06.28.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Feb 2022 06:27:51 -0800 (PST)
-Received: by mail-ua1-f43.google.com with SMTP id e17so19405997uad.9;
-        Wed, 02 Feb 2022 06:27:50 -0800 (PST)
-X-Received: by 2002:a67:c198:: with SMTP id h24mr12318471vsj.5.1643812070591;
- Wed, 02 Feb 2022 06:27:50 -0800 (PST)
+        Wed, 02 Feb 2022 06:28:42 -0800 (PST)
+Received: by mail-ua1-f49.google.com with SMTP id 60so2373130uae.1;
+        Wed, 02 Feb 2022 06:28:42 -0800 (PST)
+X-Received: by 2002:a67:b00e:: with SMTP id z14mr11549301vse.57.1643812121840;
+ Wed, 02 Feb 2022 06:28:41 -0800 (PST)
 MIME-Version: 1.0
-References: <20220201120310.878267-1-maz@kernel.org> <20220201120310.878267-4-maz@kernel.org>
-In-Reply-To: <20220201120310.878267-4-maz@kernel.org>
+References: <20220201120310.878267-1-maz@kernel.org> <20220201120310.878267-5-maz@kernel.org>
+In-Reply-To: <20220201120310.878267-5-maz@kernel.org>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 2 Feb 2022 15:27:39 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXbM8kvmv0XKP8=rYj-8k5cFt50VP69LeDNX5oHx2e9dw@mail.gmail.com>
-Message-ID: <CAMuHMdXbM8kvmv0XKP8=rYj-8k5cFt50VP69LeDNX5oHx2e9dw@mail.gmail.com>
-Subject: Re: [PATCH 03/12] irqchip/renesas-intc-gpio: Move PM device over to
- irq domain
+Date:   Wed, 2 Feb 2022 15:28:31 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdV91fXfTTK=Jchr-wmatY3kJjke=UkSRCBs42kq5GL43w@mail.gmail.com>
+Message-ID: <CAMuHMdV91fXfTTK=Jchr-wmatY3kJjke=UkSRCBs42kq5GL43w@mail.gmail.com>
+Subject: Re: [PATCH 04/12] irqchip/renesas-irqc: Move PM device over to irq domain
 To:     Marc Zyngier <maz@kernel.org>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
@@ -71,20 +70,14 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Marc,
-
-On Tue, Feb 1, 2022 at 1:12 PM Marc Zyngier <maz@kernel.org> wrote:
+On Tue, Feb 1, 2022 at 1:15 PM Marc Zyngier <maz@kernel.org> wrote:
 > Move the reference to the device over to the irq domain.
 >
 > Signed-off-by: Marc Zyngier <maz@kernel.org>
 
-Thanks for your patch!
-
-s/gpio/irqpin/ in the one-line summary?
-
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Wake-up still works fine on R-Mobile A1 and SH-Mobile AG5, so
+Wake-up still works fine on R-Mobile APE6 and R-Car M2-W, so
 Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
 Gr{oetje,eeting}s,
