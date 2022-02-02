@@ -2,151 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 797834A68D2
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Feb 2022 00:57:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CA594A6968
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Feb 2022 01:54:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243002AbiBAX5E (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Feb 2022 18:57:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43884 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230052AbiBAX5D (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Feb 2022 18:57:03 -0500
-Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D076C061714
-        for <linux-gpio@vger.kernel.org>; Tue,  1 Feb 2022 15:57:03 -0800 (PST)
-Received: by mail-yb1-xb36.google.com with SMTP id j2so42655773ybu.0
-        for <linux-gpio@vger.kernel.org>; Tue, 01 Feb 2022 15:57:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=HIrYku5aFARUbBbcgp5i8kFtNjI3jPS25XQjKlm2bkc=;
-        b=nfDmYX/o3/Z3c1znv6UB5SjAhPsH+2AJ74lNYzOOx8mGtplrqGCPFTYfbAnJMf7mb7
-         1pWWy/Wv3N7yPXMnQ8ZcqcCOtyATnu7MUnHfYjasIcM2vsJ/R1AvvM08c3BYYGxX94hy
-         h8oFxNzwk+QKkSlhQs+nNcvJk0VU/Cy+WIgYigxW0BmEHtzya8NtfShbNDxlaZViE/Uc
-         7m2F90fR6QIAFuK9DuTuxeygPiQtoDRpOE/okyoveuiMmF1L9W2O3Rd0akm9Y3arRxWw
-         y1vj6elV72nzBmtAdEMPmyoVdNVx+hH6BWMltwxW1cmPF0bhemx6FcZvrP/XAaLC9Po/
-         TXow==
+        id S231553AbiBBAyG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Feb 2022 19:54:06 -0500
+Received: from mail-oi1-f180.google.com ([209.85.167.180]:41477 "EHLO
+        mail-oi1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229994AbiBBAyG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Feb 2022 19:54:06 -0500
+Received: by mail-oi1-f180.google.com with SMTP id q186so36812488oih.8;
+        Tue, 01 Feb 2022 16:54:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=HIrYku5aFARUbBbcgp5i8kFtNjI3jPS25XQjKlm2bkc=;
-        b=20R3JVHIkMveI7VVtIWe/Avbua9GnZGAFo7+VjrWzcMwiqBWBwXjk8mC9VqfmfxeqI
-         9biSkrcbAetz8jvKnoQnEVUYajUDjon/VjGGzClqW9DXxX3AiCGNbNezU1/VUF6Ck6zb
-         80RN0glKNjgqDpTIii3SGBVEA4q22/VR0iLxWw57G5uqQpodVTFv/0WMH0oj2IJ10Trh
-         BpjM2J8s7ix7MG+dEWHSRqQe1tyC0xNnONYcztNHjXEyulb8fQbGy7zZPcqGfUO6lGFb
-         8pipNYDtvcbmZOEP4KpF4L0oYJmB+ir0VKWf03qGQB9VwGXrTgY59ChJU2I1yWnc6DCf
-         nWnw==
-X-Gm-Message-State: AOAM532FDzJRgfPdoUxm+Mm58mCf+m9ggfLdNSH7Gnol3pJdRqnxOwO4
-        WKIq0W1xuqmcbEvEJoR2xGr3gPg0jfOErFwe21x8Ww==
-X-Google-Smtp-Source: ABdhPJyUW3nhaZHHiJgw4N1wpJjmP+xwtRJfwGP3736e2qqeEPVFEJQ6c4AmotEXLnrzb7KkVkPEjK8jf0JROFhnDKY=
-X-Received: by 2002:a25:8c3:: with SMTP id 186mr37911468ybi.587.1643759822660;
- Tue, 01 Feb 2022 15:57:02 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jr3OiPevkuWKw1kfTnZXrjitNLfSQpL7aNzeoMhYRLM=;
+        b=WwA0KxbOXKbUdKT8oMy/vdJPdvgaPXdDLyERCS4jb6MqaImh18S5vgbUHM3dM7/Zxi
+         Y/OY9mJZSk/OWRlR3SxeijElf2oGmeGhv7pw7kbN/UkNJE1dL+WqG2UmMOW/5GtjN0C9
+         xEcqbnozYfqSjxUMoWhwnkbN3tIJklKWZD34S7jWfVRGe1xE+onza3wVdORyPEHlYUpL
+         48no8qfrw0+PA9S4SuS/8mAKqoerHNwbEcd8MHrvofwcZcU6KhpiZiqUB1gv7INGmP8F
+         UnxCZ2usknc/NCUWcdZ9Jk6/PycTPRILgIHF1S4pZ4BQJ4kUaNsvj9NpuUXVvgt7/Ei/
+         tP8g==
+X-Gm-Message-State: AOAM531XRaERfj/K5vRlmBf2Q1SCExVKhjk0Akr/PtsovkoVu5R4C8Nz
+        m3BQ3iJgjjIMPfPAZSSXOQ==
+X-Google-Smtp-Source: ABdhPJxs33mORGQ/nk9kC8PxG13SiBpfZLnh91us3e4V8rtbdnjB8OH17W6d3OSkLbIIpOz/7nFORg==
+X-Received: by 2002:a05:6808:e83:: with SMTP id k3mr3129454oil.215.1643763245921;
+        Tue, 01 Feb 2022 16:54:05 -0800 (PST)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id v78sm8788349oie.18.2022.02.01.16.54.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Feb 2022 16:54:04 -0800 (PST)
+Received: (nullmailer pid 1093132 invoked by uid 1000);
+        Wed, 02 Feb 2022 00:54:03 -0000
+Date:   Tue, 1 Feb 2022 18:54:03 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     devicetree@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        dri-devel@lists.freedesktop.org, Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v10 1/6] dt-bindings: mfd: logicvc: Add a compatible with
+ the major version only
+Message-ID: <YfnWK+rmHCwcJLL/@robh.at.kernel.org>
+References: <20220120150024.646714-1-paul.kocialkowski@bootlin.com>
+ <20220120150024.646714-2-paul.kocialkowski@bootlin.com>
 MIME-Version: 1.0
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 2 Feb 2022 00:56:51 +0100
-Message-ID: <CACRpkdanZHES7tKFdq6_VjL+1PVCUXHADS+q-KR-MJ3b8tjsEA@mail.gmail.com>
-Subject: [GIT PULL] pin control fixes for v5.17
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220120150024.646714-2-paul.kocialkowski@bootlin.com>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+On Thu, 20 Jan 2022 16:00:19 +0100, Paul Kocialkowski wrote:
+> There are lots of different versions of the logicvc block and it
+> makes little sense to list them all in compatibles since all versions
+> with the same major are found to be register-compatible.
+> 
+> Introduce a new compatible with the major version only.
+> 
+> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/xylon,logicvc.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-here is a set of pin control fixes for the v5.17 series.
-Most interesting and urgent is the Intel stuff affection
-Chromebooks and Laptops.
-
-The rest is business as usual.
-
-Please pull it in!
-
-Yours,
-Linus Walleij
-
-The following changes since commit e783362eb54cd99b2cac8b3a9aeac942e6f6ac07=
-:
-
-  Linux 5.17-rc1 (2022-01-23 10:12:53 +0200)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-tags/pinctrl-v5.17-2
-
-for you to fetch changes up to baf927a833ca2c6717795ac131079f485cb7a5dc:
-
-  pinctrl: microchip-sgpio: Fix support for regmap (2022-01-31 12:07:31 +01=
-00)
-
-----------------------------------------------------------------
-Pin control fixes for the v5.17 kernel cycle:
-
-- Fix up group name building on the Intel Thunderbay
-- Fix interrupt problems on the Intel Cherryview
-- Fix some pin data on the Sunxi H616
-- Fix up the CONFIG_PINCTRL_ST Kconfig sort order as noted during
-  the merge window
-- Fix an unexpected interrupt problem on the Intel Sunrisepoint
-- Fix a glitch when updating IRQ flags on all Intel pin controllers
-- Revert a Zynqmp patch to unify the pin naming, let's find some
-  better solution
-- Fix some error paths in the Broadcom BCM2835 driver
-- Fix a Kconfig problem pertaining to the BCM63XX drivers
-- Fix the regmap support in the Microchip SGPIO driver
-
-----------------------------------------------------------------
-Andre Przywara (1):
-      pinctrl: sunxi: Fix H616 I2S3 pin data
-
-Andy Shevchenko (2):
-      pinctrl: Place correctly CONFIG_PINCTRL_ST in the Makefile
-      pinctrl: intel: Fix a glitch when updating IRQ flags on a
-preconfigured line
-
-Florian Fainelli (1):
-      pinctrl: bcm2835: Fix a few error paths
-
-Gerhard Engleder (1):
-      pinctrl: zynqmp: Revert "Unify pin naming"
-
-Hans de Goede (1):
-      pinctrl: cherryview: Trigger hwirq0 for interrupt-lines without a map=
-ping
-
-Horatiu Vultur (1):
-      pinctrl: microchip-sgpio: Fix support for regmap
-
-Julian Braha (1):
-      pinctrl: bcm63xx: fix unmet dependency on REGMAP for GPIO_REGMAP
-
-Linus Walleij (1):
-      Merge tag 'intel-pinctrl-v5.17-4' of
-gitolite.kernel.org:pub/scm/linux/kernel/git/pinctrl/intel into fixes
-
-Rafa=C5=82 Mi=C5=82ecki (2):
-      pinctrl: thunderbay: comment process of building functions a bit
-      pinctrl: thunderbay: rework loops looking for groups names
-
-=C5=81ukasz Bartosik (1):
-      pinctrl: intel: fix unexpected interrupt
-
- drivers/pinctrl/Makefile                    |  2 +-
- drivers/pinctrl/bcm/Kconfig                 |  1 +
- drivers/pinctrl/bcm/pinctrl-bcm2835.c       | 23 +++++---
- drivers/pinctrl/intel/pinctrl-cherryview.c  |  5 +-
- drivers/pinctrl/intel/pinctrl-intel.c       | 64 +++++++++++---------
- drivers/pinctrl/pinctrl-microchip-sgpio.c   |  3 +-
- drivers/pinctrl/pinctrl-thunderbay.c        | 90 +++++++++++--------------=
-----
- drivers/pinctrl/pinctrl-zynqmp.c            | 10 ++--
- drivers/pinctrl/sunxi/pinctrl-sun50i-h616.c |  8 +--
- 9 files changed, 101 insertions(+), 105 deletions(-)
+Acked-by: Rob Herring <robh@kernel.org>
