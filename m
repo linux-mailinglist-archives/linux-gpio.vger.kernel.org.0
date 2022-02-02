@@ -2,137 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 010204A70DA
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Feb 2022 13:35:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D06214A70EA
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Feb 2022 13:40:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344159AbiBBMdq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 2 Feb 2022 07:33:46 -0500
-Received: from esa.microchip.iphmx.com ([68.232.154.123]:37984 "EHLO
-        esa.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230465AbiBBMdp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Feb 2022 07:33:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1643805226; x=1675341226;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=pYU5FQ/JJWkjarXsj92sSCMadMJ6TFecm/dnACqqyys=;
-  b=XJNBjWNWSZB9fQ/E0rpFfjmNrrp0ea9rbpaon2mTmMQu5guOcTpiYjY+
-   RxacYqUsOdAl+70DPikpvcW0VOQ/z5YM+xA4kI70B9TQfY7ZidJOgF2HN
-   8uc7Q/YlNoXa3SP68nW5LRjMyw5IqDXhaqWF5tlkc26r3wpAvRmu2De1h
-   mak22qW9nngDIoOmTVDZJQzeYlHood7G9wSSXc3NwyM97M4HJ50wrN9uK
-   Mz2RuA+mxQVgl6hAYcNUBsReP+ry7AXyNvb7Uzf5nqSxC+uODupv/j8ol
-   8coXc1cac7MxfTpVzBDjPUiwUiY+gZPsGsSKVQgg+VSQQY7z1+c/XcbWs
-   g==;
-IronPort-SDR: 7qsMJQHHrSrSYB0Ug6RqvefqkDO/1rpW2F8FImVYsrFCggq/PkQsFp8t6dqRd793Kkh+LWK/Kx
- qJXzVACrhS7xv/wVVLoS2LiyrKVuVh7XRkqovfvSC8NmWk9AZVkD7hgU8ORzs24uvg1+tCcRP0
- 3kgF7T7W3YW5ZI+F46sXem9DOtP+QJx0gOi3hhbzJa+P6kHf2loRnmb6sWeeDjwp6buaByh7dD
- Rm1M8H30CQxwbJU9Oo5HQCOgTRQQ81sfpKjgKI94BPJx1XCeA8loaeg6ZsYTTopbeOMsXxsHB8
- IiSzX6vH01VBzn4LwAK/KCL7
-X-IronPort-AV: E=Sophos;i="5.88,336,1635231600"; 
-   d="scan'208";a="147376453"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 02 Feb 2022 05:33:44 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.17; Wed, 2 Feb 2022 05:33:44 -0700
-Received: from wendy.microchip.com (10.10.115.15) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.2375.17 via Frontend
- Transport; Wed, 2 Feb 2022 05:33:39 -0700
-From:   <conor.dooley@microchip.com>
-To:     <u.kleine-koenig@pengutronix.de>
-CC:     <a.zummo@towertech.it>, <alexandre.belloni@bootlin.com>,
-        <aou@eecs.berkeley.edu>, <atishp@rivosinc.com>,
-        <bin.meng@windriver.com>, <brgl@bgdev.pl>,
-        <conor.dooley@microchip.com>, <daire.mcnamara@microchip.com>,
-        <devicetree@vger.kernel.org>, <geert@linux-m68k.org>,
-        <heiko@sntech.de>, <ivan.griffin@microchip.com>,
-        <jassisinghbrar@gmail.com>, <krzysztof.kozlowski@canonical.com>,
-        <lee.jones@linaro.org>, <lewis.hanly@microchip.com>,
-        <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pwm@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
-        <linux-rtc@vger.kernel.org>, <palmer@dabbelt.com>,
-        <paul.walmsley@sifive.com>, <robh+dt@kernel.org>,
-        <robh@kernel.org>, <thierry.reding@gmail.com>
-Subject: Re: [PATCH v5 06/12] dt-bindings: pwm: add microchip corepwm binding
-Date:   Wed, 2 Feb 2022 12:35:44 +0000
-Message-ID: <20220202123542.3721512-1-conor.dooley@microchip.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220201075824.aixrvkvmjde2ihxx@pengutronix.de>
-References: <20220201075824.aixrvkvmjde2ihxx@pengutronix.de>
+        id S238334AbiBBMkW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 2 Feb 2022 07:40:22 -0500
+Received: from mout.gmx.net ([212.227.17.21]:59757 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231748AbiBBMkV (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Wed, 2 Feb 2022 07:40:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1643805612;
+        bh=lZ4316Q44PluVsj1sPcy2CFLDYO7r+nhpKEFqWsIIjg=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=NdkqWDdn0NXzC/h0pU0+zBc2tw3R3Lai9pmWTF8lgCOr3eUGgnZDsZJ88V8z0/E4t
+         fFDfHWPUoEe/BLNkpf1YgfAR83ZxU9fpxilpfak2Kvgv1muIfs/kR5Mmy7UNKedCQ8
+         Yf82lDuZkvnHxmRUmMCgsJFxmxTp7YY4mDhhzdEU=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([5.146.194.160]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MMGRK-1my7mk0F4I-00JLCU; Wed, 02
+ Feb 2022 13:40:12 +0100
+Date:   Wed, 2 Feb 2022 13:40:10 +0100
+From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Joel Stanley <joel@jms.id.au>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>
+Subject: Re: [PATCH v5 0/9] Nuvoton WPCM450 pinctrl and GPIO driver
+Message-ID: <Yfp7qni4djRCr52u@latitude>
+References: <20220129115228.2257310-1-j.neuschaefer@gmx.net>
+ <CACRpkdYEigGHkoGfBg15tFXadgpXUAjDOnw7ePXhmvHJqPEJXw@mail.gmail.com>
+ <YfZkis8M81Ejpagq@latitude>
+ <CACPK8XdFXRQf3MpPh3z=EMAKtnQSHL+iwwMCVYc5dP9DfQEN+Q@mail.gmail.com>
+ <YfpyjDBH83FE7r4o@latitude>
+ <CAHp75Vdg8zFSHaTP_8jQua5QfRYbvZ4_rLdCtt3ks8YEibseTg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="R5woTQRwH04BjSJ1"
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vdg8zFSHaTP_8jQua5QfRYbvZ4_rLdCtt3ks8YEibseTg@mail.gmail.com>
+X-Provags-ID: V03:K1:manlM35z/hW/kYRc4Z+Fu1gQic/531v5Rk2b8zODaOSCQ/pEik9
+ 9OmFYjoMPaoibAtxV3rpuIo1t+FoURAzkDZfDn4YnR0G2ZZAiHFDCVwfe9RlujHs0lgSMVN
+ guJn3RP410fuecCTPK4ZYk18IaDuRcgvIciVGf07XOT7b8PiminOY2t5E36dZS0gWQ95UuS
+ 3q67h/iyI/UvyyZriOUxA==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:UeiIv49JUjY=:DRkoabxXjIY4rxCd709AjA
+ eCkHW91FMqYuvUm0vn4MnIIljx9nwYDCIHNqNU7KPbx6/h5jHw7ognyt4pZGal4FIb+QZ4fI9
+ FS3ZtFXnn6RlmlIVR5QkcsEqaPcxqravCn9H5j/kdaPHi1sThm9Pj3c6y8loGy04dEmEM3dkQ
+ 9OKZNv71pxxAqFCHp1zM6xL46ImCaFbcS8guI680/aOpx8qf7eWzqrDx/IJuuSD0VGFrlCs5E
+ KZ8lm6jVCG+60juJMUJNxHwHNQo6Z6wmwKezaC4y7r6ed5SdwROPYfNJxJvRanGrucVNw4qz1
+ HMKLW4j1ns0JYtsdC45s5G3ISWa7P3C/J8tnBf2cNRn10Mqbr5V4Vi4OBCmxxdMJpdpRUgVNW
+ GhsAdQ6cZG/0kjl3ZE8X6A0yMBBfFHjEkft0dbkwIP2Gx1A2bZfV2w6POpWtbFxSwRrjG/qFy
+ 6ULfZWugq7GXreMzaLoGDsRzFkOyBPfjYi4FjCJK8hUKH9PhTQNL5vWHEliyyxl6jEFMIdzUZ
+ WVp+5ikh278qipsoQnm06gSaGXFUf05poT8lTQev5romc1KwM4GtmgOYgEWkKxorqblHtj+az
+ yh8e0h9oT55Hog6fnILe3ew6qw57maEZ5jjsvK8pNSltAwhygcmNXlXwtck6y1Vk9gUkJOZ44
+ 96biw3PcpOBhv90C+OeInckVwAsgYoWR89DM6ECoGftHbIiSAJd0oRUOcgQ/NT2fXmRD8zCfA
+ C4qba5wUtNZ5ssK8+69G5ZpRzEnIu6O5gCCUI92yoSInzBEJaZ/8cOAYxtYdjilHgVl/KDJUg
+ dDELl7H4x3iaueYp9Qyp6fJRpCXnJMtxLoiC+B02cPG1ojz5RH0f3xayGfWH1qQStVyRmhGav
+ b8zcChswCJi8d3qNtrBjfCVZTwSZDUiufSRi24kBgyT5GDAu0LrfUdIpy90Ghtqfkv/DXhgOz
+ WWkjYvdsJtN4jq2h79xXolebIFeXHL6XogBg754r5unz1seB3BBF5MN2yYXo3Y74yzy8wwxiU
+ ppnNtGrDN14QbNisxUXOsIBrXMGTG6StbrtUUJf3BmM/xCjUPsqrVzCiIUKzrDu6AZ9QATkEe
+ jX/7V4Hq+q41Es=
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
->On 01/02/2022 07:58, Uwe Kleine-König wrote:
->> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
->> On Mon, Jan 31, 2022 at 11:47:21AM +0000, conor.dooley@microchip.com wrote:
->> From: Conor Dooley <conor.dooley@microchip.com>
->>
->> Add device tree bindings for the Microchip fpga fabric based "core" PWM
->> controller.
->>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->>
->> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
->> ---
->> .../bindings/pwm/microchip,corepwm.yaml       | 75 +++++++++++++++++++
 
-<snip>
+--R5woTQRwH04BjSJ1
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> +  microchip,sync-update:
->> +    description: |
->> +      In synchronous mode, all channels are updated at the beginning of the PWM period.
->> +      Asynchronous mode is relevant to applications such as LED control, where
->> +      synchronous updates are not required. Asynchronous mode lowers the area size,
->> +      reducing shadow register requirements. This can be set at run time, provided
->> +      SHADOW_REG_EN is asserted. SHADOW_REG_EN is set by the FPGA bitstream programmed
->> +      to the device.
->> +      Each bit corresponds to a PWM channel & represents whether synchronous mode is
->> +      possible for the PWM channel.
->> +
->> +    $ref: /schemas/types.yaml#/definitions/uint16
->> +    default: 0
->
->I'm not sure I understand this correctly. This is a soft-core and you
->can synthesize it either with or without the ability to do synchronous
->updates or not, right? All 16 channels share the same period length and
->in the simple implementation changing the duty cycle is done at once
->(maybe introducing a glitch) and in the more expensive implementation
->there is a register to implement both variants?
+On Wed, Feb 02, 2022 at 02:10:44PM +0200, Andy Shevchenko wrote:
+> On Wed, Feb 2, 2022 at 2:01 PM Jonathan Neusch=C3=A4fer
+> <j.neuschaefer@gmx.net> wrote:
+> > On Tue, Feb 01, 2022 at 11:42:11PM +0000, Joel Stanley wrote:
+> > > On Tue, 1 Feb 2022 at 13:05, Jonathan Neusch=C3=A4fer <j.neuschaefer@=
+gmx.net> wrote:
+>=20
+> ...
+>=20
+> > > I assume you're sending a v6 to fix some of the warnings?
+> >
+> > No, the warnings are fairly independent of this patchset, it's just that
+> > the adjacent pinctrl-npcm7xx driver started to be built by the bot, due
+> > to my Kconfig change. I'll fix them in a separate patchset.
+>=20
+> I guess you need to fix that first.
+>=20
+> Because now and then all CIs will complain to your patch and confuse peop=
+le.
 
-Correct. If the IP is instantiated with SHADOW_REG_ENx=1, both
-registers that control the duty cycle for channel x have a second
-"shadow reg" synthesised. At runtime a bit wide register exposed to
-APB can be used to toggle on/off synchronised mode for all channels
-it has been synthesised for.
+Hm, right.
 
-I will reword this description since it is not clear.
+I'll send the pinctrl-npcm7xx fixes, and then a version 6 of this
+patchset if necessary.
 
->> +  microchip,dac-mode:
->> +    description: |
->> +      Optional, per-channel Low Ripple DAC mode is possible on this IP core. It creates
->> +      a minimum period pulse train whose High/Low average is that of the chosen duty
->> +      cycle. This "DAC" will have far better bandwidth and ripple performance than the
->> +      standard PWM algorithm can achieve.
->> +      Each bit corresponds to a PWM channel & represents whether dac mode is enabled
->> +      that PWM channel.
->
->In the last sentence a "for" is missing?
 
-It is missing, thanks.
+Jonathan
 
->These two properties are not detectable in software?
+--R5woTQRwH04BjSJ1
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Unfortunately not. THe configuration for these options are only
-accessible in the fpga design. You make a good point however & they
-really should be visible to software. I'll suggest that for future
-revisions of this IP that both configurations are accessible over APB
+-----BEGIN PGP SIGNATURE-----
 
-Thanks,
-Conor.
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAmH6e4MACgkQCDBEmo7z
+X9vqjA//XOr8yfUq5cP1/TPoekmsBBV4OcpprXWKtONJX8zrJhuLbde1yIrOpoD2
+L91zOk8aZysJxABmHucetpGBBtvM/ddJbX4PV0B308hrmSQ2sOY4Y3ZDMTsyd1kr
+k2J6wna7RAC9AToOk7VGEg4XXbEu5FDFIdkcSBfa16sKIZU3MzlHhl2Z1Wwckf+Z
+duzmJSpaDlTQxaDPwTr5fN3QYJ9Q56EgPBXuPa83ZMsal1VBZf5MrzoDBbAveN9j
+Z+oeurb761NmtjT15ioLeug+Ym1v2Dr3fhjpoj8cdXkL2FJsIqV7S+Dxdqe6ApoL
+RKYA0yGdZglW4XjLIjudGU+T68u4slrvl+OUs99YA7pV+MhG40heSGP8PdEeDIpS
+XRNGboQV0mqgtIREoczo8Y3hJLBA3HfKL1jLUa9QXD1sNCTxiBp8ELnSfFY4xOtN
+JXvks9+4hRw8C4ML3SWLjgqJfnlrBYPHDZWe4pctVdYqL13hLdv6qIe3hzI7MHdk
+CfEhgf5KqSaJp3bz/YaGtIdmA8e7j3tIqt3VqmxsJEYH+i39VRywtM4dfuIxVA0U
+c+YSPU531ARyTmssDLNwzZpXjXtjEIwXf8OA0Fzfz3GHqkaqHXLdT82CRo8+XTKK
+IyDcNhp1R5oXdVfk7O6bhniQo3xN5H1xKYx6ijQoHlH9G0lkqDM=
+=nFA4
+-----END PGP SIGNATURE-----
+
+--R5woTQRwH04BjSJ1--
