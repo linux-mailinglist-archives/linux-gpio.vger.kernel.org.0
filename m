@@ -2,94 +2,186 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 690744A74EC
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Feb 2022 16:49:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 72E134A7629
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Feb 2022 17:47:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242872AbiBBPte (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 2 Feb 2022 10:49:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60518 "EHLO
+        id S1345993AbiBBQrb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 2 Feb 2022 11:47:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239003AbiBBPtd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Feb 2022 10:49:33 -0500
-Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FE0EC06173D
-        for <linux-gpio@vger.kernel.org>; Wed,  2 Feb 2022 07:49:33 -0800 (PST)
-Received: by mail-yb1-xb33.google.com with SMTP id k17so62325443ybk.6
-        for <linux-gpio@vger.kernel.org>; Wed, 02 Feb 2022 07:49:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/siAlN12aLkICP6/rrLm39IlMfBgQE7j1j4GTBXCe9o=;
-        b=gWjNQ8FVYVcHiCwRtEAS7NrkTAvIjJU/VrqAnes2yv01NsrE4rU3dpRu7fG4gVfjgU
-         /ldWfg/vwbb75BTcEVAcLJVjaZfofykrHQyaul9ew9uYl1kou+/3sWInfm6OO633wvB3
-         FeIGnPC/6msmeS/tBY0ftUubEMYtZfRzK1E1E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/siAlN12aLkICP6/rrLm39IlMfBgQE7j1j4GTBXCe9o=;
-        b=SNejhMJpo39nKFstmfj+QDSW+ltjZygPvwdSzd3kAf8uYUBkOtOZC9ixhvgGP2WPHZ
-         8WhyJ1e5QTxK+gim5P0t8+kWzDkJZ20GT4QHw0pdPOogXgVeGPppInr0T74TeWwrnEV6
-         oz5U0cYR+y+IikSwGebL7A/I36Qc31g7r4Qu/YAaLimaBWUt+M5MpW04wZQAwhJ10rYK
-         KdVllxHQvX+Ig/pKEG9ZBeAfKoMC6E9B/ymCor5rwNligCV3SiOMvUNTDkRLLoJSf8Od
-         T/mC7m0Hk8hWlEiphTX6FOqJm1j/mtQN7SBv1/qeGFjUnHyzU/Iyg4SHY1JjPTfsmOjj
-         BIfw==
-X-Gm-Message-State: AOAM532Emln9fvxatk81vWZAzRMqWJcOabx+MQd9N3QxJYc45KhnAk7i
-        8HcOYKCG3Fp67ZaKU3prpW1BbRBefKtWmut1Ih3G3g==
-X-Google-Smtp-Source: ABdhPJzOI+CAspMP7aHP0upHc/wxFpkGCHDf+XfXkFWd8wWK8Qi+Y/Kt+hJfo9SkDJmj5/uVRZvSOUFn0/NVB3IqdOw=
-X-Received: by 2002:a25:c709:: with SMTP id w9mr42995658ybe.296.1643816972414;
- Wed, 02 Feb 2022 07:49:32 -0800 (PST)
+        with ESMTP id S232448AbiBBQr3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Feb 2022 11:47:29 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28B56C061714;
+        Wed,  2 Feb 2022 08:47:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=6wN7Hkny+8K2qW71HdC4CGXNu9XZ2OwdgpzfkPahWuY=; b=PZ8XudiVZYfUG1QEBKsEGl6zJ/
+        LaHUXymjzEsrH5WX/nFmbS8CZSBvChYUXra1pnp00Y1D5MEDhgcC9zHfYLF4VOjd3yacjceuK3yH1
+        QjioW+L/wdP76MyR6OijJ2sNKlbpVga+hPgCZVpQN/h96Db54YKtooK8vwO/CDERLcAwgvp2b6NnO
+        mxzAvr+ksO/MAj+ViJdCN5eZjLpoM0hqwj6tZEFrtZnX3Jxau/1owWFRki9HM+9Q03o1Z+XmNRUr8
+        mhgN8tV8GgurI8Z90PqLooEmAdwtGYXEt8wddrg1s9Tb6yO47g9zz3OBXaDKn7tFq9dbCqNmRWZjv
+        v2xxy9yQ==;
+Received: from [2601:1c0:6280:3f0::aa0b]
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nFIn0-00FF2Z-47; Wed, 02 Feb 2022 16:47:26 +0000
+Message-ID: <1f16dc62-1b47-cf8a-6712-e0a407c83caa@infradead.org>
+Date:   Wed, 2 Feb 2022 08:47:20 -0800
 MIME-Version: 1.0
-References: <20220121060120.10683-1-guodong.liu@mediatek.com> <CACRpkdaL_cUj2rbQUSzVj+ViEuNWiQbsakChNkaj6FK+fE76FA@mail.gmail.com>
-In-Reply-To: <CACRpkdaL_cUj2rbQUSzVj+ViEuNWiQbsakChNkaj6FK+fE76FA@mail.gmail.com>
-From:   Chen-Yu Tsai <wenst@chromium.org>
-Date:   Wed, 2 Feb 2022 23:49:21 +0800
-Message-ID: <CAGXv+5E6bq-veUQ6bEPgKwUULpWvZPu9GZ9cGkDS3OKD5Z8KFQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] pinctrl: mediatek: Support pinctrl driver on mt8186
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Guodong Liu <guodong.liu@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Sean Wang <sean.wang@mediatek.com>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Project_Global_Chrome_Upstream_Group@mediatek.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH] gpiolib: make struct comments into real kernel docs
+Content-Language: en-US
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220202104937.146827-1-brgl@bgdev.pl>
+From:   Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20220202104937.146827-1-brgl@bgdev.pl>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
-
-On Sun, Jan 30, 2022 at 9:43 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Fri, Jan 21, 2022 at 7:01 AM Guodong Liu <guodong.liu@mediatek.com> wrote:
->
-> > changes since v1:
-> > - add default pinctrl config to consistent with other MTK pinctrl drivers
-> >
-> > Patch 1 add pinctrl file and binding document.
-> >
-> > Patch 2 add pinctrl chip driver on mt8186.
-> >
-> > Guodong Liu (2):
-> >   dt-bindings: pinctrl: mt8186: add pinctrl file and binding document
-> >   pinctrl: add pinctrl driver on mt8186
->
-> Looks good to me, just wanna loop this by Chen-Yu Tsai for a check that
-> it looks good to him too.
-
-I'm still on vacation, and even after that, I might not have the cycles to
-do an in depth review of the hardware bits this month.
-
-Since Angelo already gave an ack (which somehow was not added in v2), and
-AFAIK the driver does work downstream in ChromeOS, I wouldn't block it.
-
-However, there's an error in the DT binding that should be fixed sooner
-than later.
 
 
-Thanks
-ChenYu
+On 2/2/22 02:49, Bartosz Golaszewski wrote:
+> We have several comments that start with '/**' but don't conform to the
+> kernel doc standard. Add proper detailed descriptions for the affected
+> definitions and move the docs from the forward declarations to the
+> struct definitions where applicable.
+> 
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+> ---
+>  drivers/gpio/gpiolib.h        | 31 +++++++++++++++++++++++++++++++
+>  include/linux/gpio/consumer.h | 35 ++++++++++++++++-------------------
+>  2 files changed, 47 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+> index 30bc3f80f83e..0025701b7641 100644
+> --- a/drivers/gpio/gpiolib.h
+> +++ b/drivers/gpio/gpiolib.h
+> @@ -72,6 +72,20 @@ struct gpio_device {
+>  /* gpio suffixes used for ACPI and device tree lookup */
+>  static __maybe_unused const char * const gpio_suffixes[] = { "gpios", "gpio" };
+>  
+> +/**
+> + * struct gpio_array - Opaque descriptor for a structure of GPIO array attributes
+> + *
+> + * @desc:		Array of pointers to the GPIO descriptors
+> + * @size:		Number of elements in desc
+> + * @chip:		Parent GPIO chip
+> + * @get_mask:		Get mask used in fastpath.
+> + * @set_mask:		Set mask used in fastpath.
+> + * @invert_mask:	Invert mask used in fastpath.
+> + *
+> + * This structure is attached to struct gpiod_descs obtained from
+> + * gpiod_get_array() and can be passed back to get/set array functions in order
+> + * to activate fast processing path if applicable.
+> + */
+
+scripts/kernel-doc says:
+
+gpiolib.h:70: warning: Function parameter or member 'notifier' not described in 'gpio_device'
+gpiolib.h:70: warning: Function parameter or member 'pin_ranges' not described in 'gpio_device'
+2 warnings
+
+>  struct gpio_array {
+>  	struct gpio_desc	**desc;
+>  	unsigned int		size;
+> @@ -96,6 +110,23 @@ int gpiod_set_array_value_complex(bool raw, bool can_sleep,
+>  extern spinlock_t gpio_lock;
+>  extern struct list_head gpio_devices;
+>  
+> +
+> +/**
+> + * struct gpio_desc - Opaque descriptor for a GPIO
+> + *
+> + * @gdev:		Pointer to the parent GPIO device
+> + * @flags:		Binary descriptor flags
+> + * @label:		Name of the consumer
+> + * @name:		Line name
+> + * @hog:		Pointer to the device node that hogs this line (if any)
+> + * @debounce_period_us:	Debounce period in microseconds
+> + *
+> + * These are obtained using gpiod_get() and are preferable to the old
+> + * integer-based handles.
+> + *
+> + * Contrary to integers, a pointer to a gpio_desc is guaranteed to be valid
+> + * until the GPIO is released.
+> + */
+>  struct gpio_desc {
+>  	struct gpio_device	*gdev;
+>  	unsigned long		flags;
+> diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
+> index 3ad67b4a72be..3ffb054fafbd 100644
+> --- a/include/linux/gpio/consumer.h
+> +++ b/include/linux/gpio/consumer.h
+> @@ -8,27 +8,16 @@
+>  #include <linux/err.h>
+>  
+>  struct device;
+> -
+> -/**
+> - * Opaque descriptor for a GPIO. These are obtained using gpiod_get() and are
+> - * preferable to the old integer-based handles.
+> - *
+> - * Contrary to integers, a pointer to a gpio_desc is guaranteed to be valid
+> - * until the GPIO is released.
+> - */
+>  struct gpio_desc;
+> -
+> -/**
+> - * Opaque descriptor for a structure of GPIO array attributes.  This structure
+> - * is attached to struct gpiod_descs obtained from gpiod_get_array() and can be
+> - * passed back to get/set array functions in order to activate fast processing
+> - * path if applicable.
+> - */
+>  struct gpio_array;
+>  
+>  /**
+> - * Struct containing an array of descriptors that can be obtained using
+> - * gpiod_get_array().
+> + * struct gpio_descs - Struct containing an array of descriptors that can be
+> + *                     obtained using gpiod_get_array()
+> + *
+> + * @info:	Pointer to the opaque gpio_array structure
+> + * @ndescs:	Number of held descriptors
+> + * desc:	Array of pointers to GPIO descriptors
+
+consumer.h:26: warning: Function parameter or member 'desc' not described in 'gpio_descs'
+
+as Andy pointed out.
+Several of Andy's kernel-doc notation suggestions also look good.
+
+
+>   */
+>  struct gpio_descs {
+>  	struct gpio_array *info;
+> @@ -43,8 +32,16 @@ struct gpio_descs {
+>  #define GPIOD_FLAGS_BIT_NONEXCLUSIVE	BIT(4)
+>  
+>  /**
+> - * Optional flags that can be passed to one of gpiod_* to configure direction
+> - * and output value. These values cannot be OR'd.
+> + * enum gpiod_flags - Optional flags that can be passed to one of gpiod_* to
+> + *                    configure direction and output value. These values
+> + *                    cannot be OR'd.
+> + *
+> + * @GPIOD_ASIS:			Don't change the direction
+> + * @GPIOD_IN:			Set lines to input mode
+> + * @GPIOD_OUT_LOW:		Set lines to output and drive them low
+> + * @GPIOD_OUT_HIGH:		Set lines to output and drive them high
+> + * @GPIOD_OUT_LOW_OPEN_DRAIN:	Set lines to open-drain output and drive them low
+> + * @GPIOD_OUT_HIGH_OPEN_DRAIN:	Set lines to open-drain output and drive them high
+>   */
+>  enum gpiod_flags {
+>  	GPIOD_ASIS	= 0,
+
+-- 
+~Randy
