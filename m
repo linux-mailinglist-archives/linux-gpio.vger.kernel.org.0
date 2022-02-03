@@ -2,99 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C515B4A7D50
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Feb 2022 02:11:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F6344A7E99
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Feb 2022 05:22:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348672AbiBCBLF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 2 Feb 2022 20:11:05 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:40036 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1348666AbiBCBLF (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Wed, 2 Feb 2022 20:11:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-        Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-        bh=5hB4xZfLGfPF68sFnaphimiyN3Dvoyj649Ifdg6NzMk=; b=2650jDKWUISCHWTrw+2qSb29hf
-        Eg0kIWNamRCUEsMC3LfeWZNitulODz/nCXrDMPmXFPMUE72VH61hPSx5uwNVoOZnrOvRJe9UHfori
-        IRhH/NKpS6Y8uLmfet+KJgbH4rzTYuyCthmjEIni6imLGrzK8nnQnLlUntVfmlaQkEJ0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1nFQdR-0042dQ-Py; Thu, 03 Feb 2022 02:10:05 +0100
-Date:   Thu, 3 Feb 2022 02:10:05 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     nick.hawkins@hpe.com
-Cc:     verdun@hpe.com, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Corey Minyard <minyard@acm.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Russell King <linux@armlinux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        soc@kernel.org, Shawn Guo <shawnguo@kernel.org>,
-        Stanislav Jakubek <stano.jakubek@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Hao Fang <fanghao11@huawei.com>,
-        "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Wang Kefeng <wangkefeng.wang@huawei.com>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] HPE BMC GXP SUPPORT
-Message-ID: <YfsrbcgPb5de3Bvw@lunn.ch>
-References: <nick.hawkins@hpe.com>
- <20220202165315.18282-1-nick.hawkins@hpe.com>
+        id S241126AbiBCEWp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 2 Feb 2022 23:22:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35106 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233605AbiBCEWp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Feb 2022 23:22:45 -0500
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FAAAC061714
+        for <linux-gpio@vger.kernel.org>; Wed,  2 Feb 2022 20:22:45 -0800 (PST)
+Received: by mail-pf1-x42f.google.com with SMTP id c194so1142958pfb.12
+        for <linux-gpio@vger.kernel.org>; Wed, 02 Feb 2022 20:22:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eklVZby/+Hr8SSRgARkTvfHHPl42C69WPqA0+oyRXwo=;
+        b=NjBRJIHn8heIKmVaT/agJp3jPvoP5nGqyGseBAvVRrsJZ8X1kZji+nRNOEu7nur+IB
+         hyYpco65rwk/TnomGLQMpp//LIZgH7znaVinS3Ve2ZqBwBIOyqRHmU1VkXgX2/mENSx/
+         piD9k38124Is03H+HFMlw+vVJH5G4+Pqu5mGIDBW1f9T42UajaK1YlvO11aJIzuTkY25
+         Kk2iCIq6T95zxG99fMXr1SIPw6ydL5KyZPQDlaO8yiw5Sx0BKQmdlS0zkAlR0H+xwlA5
+         aViyV6MfUXt1DbzOU0suY71idpfv1P9XmCF4EP2J5iIwzZryIhDjdtw6GyWgDPlyTTka
+         Da+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=eklVZby/+Hr8SSRgARkTvfHHPl42C69WPqA0+oyRXwo=;
+        b=7o8GqVJb4aTTEVQJVp9Yf6BNIwfFAV7V1KqQzVY2rggdALa0bVga7QYjSZ3R4qy6Of
+         sLUJKNmXBHE6xkeiSYjHMSTPhPs4NruU24wnDFeqjHZc9KCQpazZEYBQjp8IV8iXe1dH
+         eCnNi1h8FV9zi/nf7ILQfZ/OxoF8l8bCE7njCW1E7Ih6Nk6ofZHC4Ad/ASqrZwq3QMAu
+         55+sDI8cVuF+5ab82DjSxipKRzHG6fAkGvmV5iTLonTmVFOhW40ERBrBJ80I9Day04Vk
+         FrgsSHS4crihSCyzCqxVkN4z6E2WyxB051ToMiUnlxdaSTkk0Rmf9NuG3bUkgOcJWq+Y
+         eg4g==
+X-Gm-Message-State: AOAM5316YXNqtZOINOuvTWHd3ZPxSOHCmhq5JNxQ5cWjQohs0NDx4vLI
+        NxgAJKJG3eVQ1nk87Wn0frc=
+X-Google-Smtp-Source: ABdhPJws6c1/XbS+JoLNRXnBNtysyD8ES0IdwkdFIP3tlP0c+ya6nqlxH0KsrpBAmo1D5md2gK3Vwg==
+X-Received: by 2002:a05:6a00:1345:: with SMTP id k5mr32682190pfu.37.1643862164393;
+        Wed, 02 Feb 2022 20:22:44 -0800 (PST)
+Received: from voyager.lan ([45.124.203.14])
+        by smtp.gmail.com with ESMTPSA id mp22sm7814137pjb.28.2022.02.02.20.22.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Feb 2022 20:22:43 -0800 (PST)
+Sender: "joel.stan@gmail.com" <joel.stan@gmail.com>
+From:   Joel Stanley <joel@jms.id.au>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
+Cc:     Andrew Jeffery <andrew@aj.id.au>, Zev Weiss <zweiss@equinix.com>,
+        openbmc@lists.ozlabs.org
+Subject: [libgpiod PATCH 0/7] tools: Add by-name support
+Date:   Thu,  3 Feb 2022 14:51:27 +1030
+Message-Id: <20220203042134.68425-1-joel@jms.id.au>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220202165315.18282-1-nick.hawkins@hpe.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
->  .../bindings/display/hpe,gxp-thumbnail.txt    |  21 +
->  .../devicetree/bindings/gpio/hpe,gxp-gpio.txt |  16 +
->  .../devicetree/bindings/i2c/hpe,gxp-i2c.txt   |  19 +
->  .../bindings/ipmi/hpegxp-kcs-bmc-cfg.txt      |  13 +
->  .../bindings/ipmi/hpegxp-kcs-bmc.txt          |  21 +
+This series introduces a command-line flag "--by-name" that means
+"line-specifier arguments should be interpreted as names.
 
-Hi Nick
+The patches implement the change for gpioset and gpioget tools. Once we
+have settled on an implementation for those tools it could be extended
+to other tools, such as gpiomon.
 
-In addiiton to the other feedback also given, for new bindings you
-should be using yaml, not txt. You then gain validation of the
-bindings.
+The test suite has been updated to cover the new option.
 
-	Andrew
+An initial discussion of the idea was presented here:
+
+ http://lore.kernel.org/all/20211201072902.127542-1-joel@jms.id.au
+
+Joel Stanley (7):
+  tools: Clean up scandir memory allocations
+  tools: Add line name to offset lookup helper
+  tools: Add value support to line name lookup
+  tools: gpioget: Add by-name support
+  tools: gpioset: Add by-name support
+  gpio-tools-test: Add gpioset --by-name tests
+  gpio-tools-test: Add gpioget --by-name tests
+
+ tools/gpio-tools-test.bats | 184 +++++++++++++++++++++++++++++++++++++
+ tools/gpioget.c            |  57 ++++++++----
+ tools/gpioset.c            |  68 ++++++++++----
+ tools/tools-common.c       |  76 ++++++++++++++-
+ tools/tools-common.h       |   4 +
+ 5 files changed, 352 insertions(+), 37 deletions(-)
+
+-- 
+2.34.1
 
