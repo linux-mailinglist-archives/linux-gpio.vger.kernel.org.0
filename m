@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 582DF4A7E9C
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Feb 2022 05:22:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FBA04A7E9D
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Feb 2022 05:22:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349274AbiBCEWz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 2 Feb 2022 23:22:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35156 "EHLO
+        id S1349285AbiBCEW6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 2 Feb 2022 23:22:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233605AbiBCEWy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Feb 2022 23:22:54 -0500
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD52CC061714
-        for <linux-gpio@vger.kernel.org>; Wed,  2 Feb 2022 20:22:54 -0800 (PST)
-Received: by mail-pj1-x102f.google.com with SMTP id my12-20020a17090b4c8c00b001b528ba1cd7so1693844pjb.1
-        for <linux-gpio@vger.kernel.org>; Wed, 02 Feb 2022 20:22:54 -0800 (PST)
+        with ESMTP id S233605AbiBCEW5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Feb 2022 23:22:57 -0500
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDE04C061714
+        for <linux-gpio@vger.kernel.org>; Wed,  2 Feb 2022 20:22:57 -0800 (PST)
+Received: by mail-pj1-x1031.google.com with SMTP id h20-20020a17090adb9400b001b518bf99ffso8866426pjv.1
+        for <linux-gpio@vger.kernel.org>; Wed, 02 Feb 2022 20:22:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=5PVlIDuR32Yssny9V5o6RCbIPPLetL5jRcPV3axjBDM=;
-        b=FadtJ/iFl9d1vXIsllvJHcQ+98hjYr/bfpo6nTZ7eZtoKfljaum6vBsyQAl/sgraaZ
-         6kzgx7Y1tN2gCRdM7x9yaqb8etk8fKN+g56y01l9hf5pGW6czQ3T4bPmWDprqPxl0vqg
-         Z37aH4Nm5L6Iy4cOUClrl8NFp8RzsaCAeiQUTHqPqtdXF/esXUADKYDbBzeYiQwXHj5b
-         vBICaihYReDmX0cJ3c5IW5bJUFS8dzDXSqYZ/TVYNxFRGXFpP8QLox6uaoDPsTo9qtBm
-         44uPxuL88TJVqxWFE/yP6T4F3zb6gvpgANWI4Wy8eAIXQDPtHgh0zsqNaIRVuFDYKkbR
-         QQLA==
+        bh=WtaAuNcUopoXBRdxvTZnjT3vtlEQbvUUGCW1xR+yS2o=;
+        b=B90XMvr0DtNnqk/V7XkGXlRd3comtBJfKavES2DBwMG/aB3Qknk6rO9oQ/mL4+d0o5
+         fQB1eM1XPApumU1/LEG+Q8V7UtwWp3aFCtwpd1+0xw/Zn3Tx1+cVtpzTccfnR/C/X7ZR
+         Z3bgO88LLIObp/Kon9vL1OkauKJ/sOUEYzrosSLXQU8TBiFoN1179meDBoyloQ5ELvE5
+         WJtq3mEWbRh5IuGC0552Jxq6SjxSN27RDcJ19EjBxWuKKWdz4qcMpwhaWlK/2mhXiiUC
+         WFIFqC//Zm460Nj2ZaSST/yU0WM0DGeqtvUg0NCjbXf9x6Q7WdgeJe4U5NU9TXMYJVVA
+         /YbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=5PVlIDuR32Yssny9V5o6RCbIPPLetL5jRcPV3axjBDM=;
-        b=6TTr0rba7E/N8TENQcHqsXGEP/JdKms+tFYrZBuSggGFC1Uz1LGoBqnq4yg66pA9Ad
-         b9Ky2VMVx/1BgTA5iBO3FpQa+UJZPnJnYBFau1oc8ZEO56o+e6b9pqgDHCMsYa7UoGpj
-         l8ylNExHNafVeF23O25VyetjsyeQgIVq9irGDD9MXcB+ZohDg0Ws/5n7jDVWNX4Z8so3
-         ydB6fiR5XF1LMQbRxkgwjPNGIW1hERe0xdOHPZkt2M8N8tUIKmcrUno3G3SWuBwYh4WV
-         xHWb73BrXHn7zNGTDH1S7sHBe9FhEalZ+NNLpt+pVNujbZlYsmiM5ZHfEwKmUxbjAvPe
-         aNYQ==
-X-Gm-Message-State: AOAM533PJLt5fkdHvhBHC69cngRNQO2Pmhey6OH0ZZGRa+VLlco2fVc+
-        aIM0NLQFp1AR5tnCNiHyYhE=
-X-Google-Smtp-Source: ABdhPJzDyzOntRgxfZGjzfpNTZ4f1rNfATMaJydTkCGP7iQ/Vwud2/C3WFRnBoKj99iiR9Ih3/bXSA==
-X-Received: by 2002:a17:90b:3803:: with SMTP id mq3mr11608899pjb.95.1643862174155;
-        Wed, 02 Feb 2022 20:22:54 -0800 (PST)
+        bh=WtaAuNcUopoXBRdxvTZnjT3vtlEQbvUUGCW1xR+yS2o=;
+        b=abP3+Fu41b5ZKd3evBF2XdQU5UuMXR1g4xjtavFxuUWpikl5v8yBb3z+ykKZwiO98V
+         qFaY6WAKBewwapqL3CNwAQv5vSuLVcv+A78DlseXsuHumD8mxlHr3BQxXRFGjJ00bYrc
+         okewVUpthS6PBVGK14i5AIxVF8FsYoDGtyezV1q1y3xYiMuORLdhLBXVbzm2crhe0/kG
+         eIOjfkuPXJZVbsYangr8yBELcThO0PgKlA7+NDGrXkmdWnrXSSG9p9bwmhRaZkFfUCko
+         iKS8SV3J5O+eYbeZTGdnkA1Cpylnco5lSKfZAki3r/MVyPK5/7WYTvPWuLYRCtN3o9m3
+         XrKQ==
+X-Gm-Message-State: AOAM533WLKvC0lazXBQ0QyPttHU2Yct3o3fZC/ASEdDEP68Aa6K3IlIR
+        TELFvk2pEtdtoYTeMGr/93c=
+X-Google-Smtp-Source: ABdhPJyokYw2y2eVbQCJXQygo7XRqXrFFte1IP83fHh69z7HweMZUNAD5mbq3Ga7SQWljoZYaPNpeA==
+X-Received: by 2002:a17:902:6942:: with SMTP id k2mr33125240plt.133.1643862177366;
+        Wed, 02 Feb 2022 20:22:57 -0800 (PST)
 Received: from voyager.lan ([45.124.203.14])
-        by smtp.gmail.com with ESMTPSA id mp22sm7814137pjb.28.2022.02.02.20.22.51
+        by smtp.gmail.com with ESMTPSA id mp22sm7814137pjb.28.2022.02.02.20.22.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Feb 2022 20:22:53 -0800 (PST)
+        Wed, 02 Feb 2022 20:22:56 -0800 (PST)
 Sender: "joel.stan@gmail.com" <joel.stan@gmail.com>
 From:   Joel Stanley <joel@jms.id.au>
 To:     Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
 Cc:     Andrew Jeffery <andrew@aj.id.au>, Zev Weiss <zweiss@equinix.com>,
         openbmc@lists.ozlabs.org
-Subject: [libgpiod PATCH 3/7] tools: Add value support to line name lookup
-Date:   Thu,  3 Feb 2022 14:51:30 +1030
-Message-Id: <20220203042134.68425-4-joel@jms.id.au>
+Subject: [libgpiod PATCH 4/7] tools: gpioget: Add by-name support
+Date:   Thu,  3 Feb 2022 14:51:31 +1030
+Message-Id: <20220203042134.68425-5-joel@jms.id.au>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220203042134.68425-1-joel@jms.id.au>
 References: <20220203042134.68425-1-joel@jms.id.au>
@@ -64,105 +64,135 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add support for pasring the values as well as the name in
-line_names_to_offsets.
+Allow users to get the values of gpios by passing the gpio name. The
+gpipchip is not specified, instead it is discovered using the same
+method as gpiofind.
+
+ $ gpioget --by-name switch-state
+ 1
+
+ $ gpioget --by-name led-fault led-identify led-attention
+ 1 0 1
 
 Signed-off-by: Joel Stanley <joel@jms.id.au>
 ---
- tools/tools-common.c | 51 ++++++++++++++++++++++++++++++++++++++++++--
- tools/tools-common.h |  4 +++-
- 2 files changed, 52 insertions(+), 3 deletions(-)
+ tools/gpioget.c | 57 +++++++++++++++++++++++++++++++++++--------------
+ 1 file changed, 41 insertions(+), 16 deletions(-)
 
-diff --git a/tools/tools-common.c b/tools/tools-common.c
-index 958933ed6d51..586577566790 100644
---- a/tools/tools-common.c
-+++ b/tools/tools-common.c
-@@ -204,15 +204,57 @@ struct gpiod_chip *chip_by_line_name(const char *name)
- 	return NULL;
- }
+diff --git a/tools/gpioget.c b/tools/gpioget.c
+index 51cecb6a18a9..9d2c82b0d64b 100644
+--- a/tools/gpioget.c
++++ b/tools/gpioget.c
+@@ -15,15 +15,18 @@ static const struct option longopts[] = {
+ 	{ "active-low",	no_argument,		NULL,	'l' },
+ 	{ "dir-as-is",	no_argument,		NULL,	'n' },
+ 	{ "bias",	required_argument,	NULL,	'B' },
++	{ "by-name",	no_argument,		NULL,	'N' },
+ 	{ GETOPT_NULL_LONGOPT },
+ };
  
-+char *split_line(const char *line_pair)
-+{
-+	char *name_end;
-+	size_t name_len;
-+	char *line_name;
-+
-+	name_end = strchr(line_pair, '=');
-+	if (!name_end)
-+		die("invalid name/value '%s'", line_pair);
-+
-+	name_len = name_end - line_pair;
-+
-+	if (name_len > 32)
-+		die("line name exceeds maximum length");
-+
-+	line_name = calloc(1, name_len + 1);
-+	strncpy(line_name, line_pair, name_len);
-+
-+	return line_name;
-+}
-+
- int line_names_to_offsets(struct gpiod_chip *chip, char **lines,
--			  unsigned int *offsets, int num_lines)
-+			  unsigned int *offsets,
-+			  int *values,
-+			  int num_lines)
+-static const char *const shortopts = "+hvlnB:";
++static const char *const shortopts = "+hvlnB:N";
+ 
+ static void print_help(void)
  {
- 	int i;
+ 	printf("Usage: %s [OPTIONS] <chip name/number> <offset 1> <offset 2> ...\n",
+ 	       get_progname());
++	printf("       %s [OPTIONS] -L <line name1> <line name2> ...\n",
++	       get_progname());
+ 	printf("\n");
+ 	printf("Read line value(s) from a GPIO chip\n");
+ 	printf("\n");
+@@ -34,6 +37,7 @@ static void print_help(void)
+ 	printf("  -n, --dir-as-is:\tdon't force-reconfigure line direction\n");
+ 	printf("  -B, --bias=[as-is|disable|pull-down|pull-up] (defaults to 'as-is'):\n");
+ 	printf("		set the line bias\n");
++	printf("  -N, --by-name:\tget line by name. All lines must be from the same gpiochip\n");
+ 	printf("\n");
+ 	print_bias_help();
+ }
+@@ -46,7 +50,8 @@ int main(int argc, char **argv)
+ 	unsigned int *offsets, i, num_lines;
+ 	struct gpiod_line_bulk *lines;
+ 	struct gpiod_chip *chip;
+-	char *device, *end;
++	bool by_name = false;
++	char *end;
  
- 	for (i = 0; i < num_lines; i++) {
--		const char *line_name = lines[i];
-+		char *line_name;
-+		int value;
- 		int offset;
+ 	for (;;) {
+ 		optc = getopt_long(argc, argv, shortopts, longopts, &opti);
+@@ -69,6 +74,9 @@ int main(int argc, char **argv)
+ 		case 'B':
+ 			flags |= bias_flags(optarg);
+ 			break;
++		case 'N':
++			by_name = true;
++			break;
+ 		case '?':
+ 			die("try %s --help", get_progname());
+ 		default:
+@@ -79,30 +87,47 @@ int main(int argc, char **argv)
+ 	argc -= optind;
+ 	argv += optind;
  
-+		if (values) {
-+			const char *line_pair = lines[i];
-+			char *name_end;
-+			int rv;
+-	if (argc < 1)
+-		die("gpiochip must be specified");
++	if (by_name) {
++		if (argc < 1)
++			die("at least one line name must be specified");
 +
-+			line_name = split_line(line_pair);
-+			name_end = strchr(line_pair, '=');
-+
-+			rv = sscanf(name_end, "=%d", &value);
-+			if (rv != 1)
-+				die("invalid offset<->value mapping: %s", line_pair);
-+
-+			if (value != 0 && value != 1)
-+				die("value must be 0 or 1: %s", line_pair);
-+		} else {
-+			line_name = lines[i];
-+		}
-+
- 		offset = gpiod_chip_find_line(chip, line_name);
++		/* line0 line1 ... lineN */
++		num_lines = argc;
  
- 		if (offset < 0) {
-@@ -222,6 +264,11 @@ int line_names_to_offsets(struct gpiod_chip *chip, char **lines,
- 		}
+-	if (argc < 2)
+-		die("at least one GPIO line offset must be specified");
++		chip = chip_by_line_name(argv[0]);
++		if (!chip)
++			die("unable to find gpiochip");
++	} else {
++		/* gpiochip offset0 offset1 ... offsetN */
++		if (argc < 1)
++			die("gpiochip must be specified");
  
- 		offsets[i] = offset;
+-	device = argv[0];
+-	num_lines = argc - 1;
++		if (argc < 2)
++			die("at least one GPIO line offset must be specified");
 +
-+		if (values) {
-+			values[i] = value;
-+			free(line_name);
++		chip = chip_open_lookup(argv[0]);
++		if (!chip)
++			die_perror("unable to open %s", argv[0]);
++
++		argv++;
++		num_lines = argc - 1;
++	}
+ 
+ 	values = malloc(sizeof(*values) * num_lines);
+ 	offsets = malloc(sizeof(*offsets) * num_lines);
+ 	if (!values || !offsets)
+ 		die("out of memory");
+ 
+-	for (i = 0; i < num_lines; i++) {
+-		offsets[i] = strtoul(argv[i + 1], &end, 10);
+-		if (*end != '\0' || offsets[i] > INT_MAX)
+-			die("invalid GPIO offset: %s", argv[i + 1]);
++	if (by_name) {
++		line_names_to_offsets(chip, argv, offsets, NULL, num_lines);
++	} else {
++		for (i = 0; i < num_lines; i++) {
++			offsets[i] = strtoul(argv[i], &end, 10);
++			if (*end != '\0' || offsets[i] > INT_MAX)
++				die("invalid GPIO offset: %s", argv[i]);
 +		}
  	}
  
- 	return 0;
-diff --git a/tools/tools-common.h b/tools/tools-common.h
-index 7affea436a60..723999011733 100644
---- a/tools/tools-common.h
-+++ b/tools/tools-common.h
-@@ -33,6 +33,8 @@ struct gpiod_chip *chip_open_by_name(const char *name);
- struct gpiod_chip *chip_open_lookup(const char *device);
- struct gpiod_chip *chip_by_line_name(const char *name);
- int line_names_to_offsets(struct gpiod_chip *chip, char **lines,
--			  unsigned int *offsets, int num_lines);
-+			  unsigned int *offsets, int *values,
-+			  int num_lines);
-+char *split_line(const char *line_pair);
- 
- #endif /* __GPIOD_TOOLS_COMMON_H__ */
+-	chip = chip_open_lookup(device);
+-	if (!chip)
+-		die_perror("unable to open %s", device);
+-
+ 	lines = gpiod_chip_get_lines(chip, offsets, num_lines);
+ 	if (!lines)
+ 		die_perror("unable to retrieve GPIO lines from chip");
 -- 
 2.34.1
 
