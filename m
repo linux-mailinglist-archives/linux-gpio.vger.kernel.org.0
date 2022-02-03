@@ -2,110 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CB4294A85F6
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Feb 2022 15:14:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D4764A8602
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Feb 2022 15:18:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350245AbiBCOOd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Feb 2022 09:14:33 -0500
-Received: from smtp-out1.suse.de ([195.135.220.28]:53144 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234727AbiBCOOb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Feb 2022 09:14:31 -0500
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 305722114D;
-        Thu,  3 Feb 2022 14:14:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1643897670; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=IsVlcPPz4fb5Gf2ImKOnD8UP/Sqe6RXNED24nJE5qKY=;
-        b=TdvsgBazf40G3Zr1OXu884xSANl5KtoMWSjvIFL1QtFI6DEIRomHKAvbkSPCY8f8jade6c
-        gtkp/jGWUimi84/2NsyRq93Cl/PIU8PIsmijCSLm7nidDZnlde4c1dxU8QCxiYoe8nnKci
-        icwsJBsgbD4JpDws/ubGrlApiz7G2E4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1643897670;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=IsVlcPPz4fb5Gf2ImKOnD8UP/Sqe6RXNED24nJE5qKY=;
-        b=fwkYbBPid4pC93NTSV6xWGdFvVUHzDurGFrnYL0GBEcvMzOIvcZoOcxSMwN3nzXk8fLfKb
-        /6KZpAwTIvHjfnAw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 706F313C0F;
-        Thu,  3 Feb 2022 14:14:29 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id 4mTgGUXj+2HsVQAAMHmgww
-        (envelope-from <jdelvare@suse.de>); Thu, 03 Feb 2022 14:14:29 +0000
-Date:   Thu, 3 Feb 2022 15:14:24 +0100
-From:   Jean Delvare <jdelvare@suse.de>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Wolfram Sang <wsa@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tan Jui Nee <jui.nee.tan@intel.com>,
-        Kate Hsuan <hpa@redhat.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Peter Tyser <ptyser@xes-inc.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Mark Gross <markgross@kernel.org>,
-        Henning Schild <henning.schild@siemens.com>
-Subject: Re: [PATCH v4 6/8] i2c: i801: convert to use common P2SB accessor
-Message-ID: <20220203151424.2a35c864@endymion>
-In-Reply-To: <20220131151346.45792-7-andriy.shevchenko@linux.intel.com>
-References: <20220131151346.45792-1-andriy.shevchenko@linux.intel.com>
-        <20220131151346.45792-7-andriy.shevchenko@linux.intel.com>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        id S242026AbiBCOSd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Feb 2022 09:18:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54800 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235184AbiBCOSd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Feb 2022 09:18:33 -0500
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACD75C061714;
+        Thu,  3 Feb 2022 06:18:32 -0800 (PST)
+Received: by mail-ej1-x631.google.com with SMTP id p15so9310021ejc.7;
+        Thu, 03 Feb 2022 06:18:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=dhJnZ8FiFenFf/QVcZDF5PExKtMBcbR901XeUZhtQpE=;
+        b=FSyeyUghSHrnm3Ukzc9OuvivZXPnQfVk2Lfi1hhAJ5wwsk2d5DBMSvSz6Uho7/7c+/
+         9SfCDCqkFqXXx2BW6DSA1Kaeh91bKeVXSnqGl5VywPWALVB3XsD6wBEiAlx1TiRgDkgD
+         NoY0LZ8YT/QLoArkyMPRSH0I9mWEvgCgFInoWEssiWzRsR9+L8qsNEfrlJYRUIT2UjEo
+         4OgR73RRfI4m8cvmQwWAIBmSKj5s1IrwPWBPm77lCGUks/l4ixqh8TLd69OI2NUpFJou
+         3z6KVhmzsP1hd6RO9sM+WABpCJd2TW6hojc2UlWD5Fjidm9FZ6MXllqrT2H3D+6//cZA
+         Igdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=dhJnZ8FiFenFf/QVcZDF5PExKtMBcbR901XeUZhtQpE=;
+        b=FJWWnXMVm1QnYRnt8ek/A2siPCz/nQm9Ol434qOvJn/u57R7U0bTI/nCEu4YAd7ZmM
+         oFl1QVRksuaV+YQVbxuF3skmqUfMa6WPoJjjBEBU3/O4GZBggcees+wuOvO7beH/WJTu
+         XC40FXBrI/mGAGbfyetrPNJYdXXAEKDdNVrhRiLazMvtZJ6ToeiVJEZyHlnZrO5TjCjP
+         Y9QTUOlZhU8S6q9Rf7ql+EyX+cAyFaUDzamWhGF3E6FZQKcCIH2ngnuwW0lRmH8CaWDU
+         oR8WvMcdCv1fC31aK76b+QjE9B4/P/HhkwRIpbrCTyqFlhnUIy0+9YtNsgDA1vKlFZgZ
+         mwtQ==
+X-Gm-Message-State: AOAM531NVh7srDlcnB52c+qKlPCkKn7HcgDEmg75Dz0GvXC7hRRvfiXM
+        rx2jjCUT9312XbMoxZuuaeBAB2P1c5PQOqEtwpsX5OTnHmQhcw==
+X-Google-Smtp-Source: ABdhPJwuIUg9TosbjJM4Qn4asT3/1NvGEHIVjromCf+JHFUQmLOIEe2LKK64aHHmj3b6N93AX17tBNoTR5JAjEAsAXo=
+X-Received: by 2002:a17:906:c14d:: with SMTP id dp13mr30033151ejc.132.1643897911125;
+ Thu, 03 Feb 2022 06:18:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20220203133736.246397-1-j.neuschaefer@gmx.net> <20220203133736.246397-2-j.neuschaefer@gmx.net>
+In-Reply-To: <20220203133736.246397-2-j.neuschaefer@gmx.net>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 3 Feb 2022 16:16:56 +0200
+Message-ID: <CAHp75VfrygdyjgQJ7iRnGL-CELCQ+6D30r5aWwitCTUJvGVf_g@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] pinctrl: nuvoton: npcm7xx: Use %zd printk format
+ for ARRAY_SIZE()
+To:     =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Joel Stanley <joel@jms.id.au>,
+        kernel test robot <lkp@intel.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andy,
+On Thu, Feb 3, 2022 at 3:37 PM Jonathan Neusch=C3=A4fer
+<j.neuschaefer@gmx.net> wrote:
+>
+> When compile-testing on 64-bit architectures, GCC complains about the
+> mismatch of types between the %d format specifier and value returned by
+> ARRAY_LENGTH(). Use %zd, which is correct everywhere.
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Fixes: 3b588e43ee5c7 ("pinctrl: nuvoton: add NPCM7xx pinctrl and GPIO dri=
+ver")
+> Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-On Mon, 31 Jan 2022 17:13:44 +0200, Andy Shevchenko wrote:
-> Since we have a common P2SB accessor in tree we may use it instead of
-> open coded variants.
-> 
-> Replace custom code by p2sb_bar() call.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Acked-by: Hans de Goede <hdegoede@redhat.com>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  drivers/i2c/busses/Kconfig        |  1 +
->  drivers/i2c/busses/i2c-i801.c     | 39 +++++++------------------------
->  drivers/platform/x86/intel/p2sb.c |  6 +++++
->  3 files changed, 16 insertions(+), 30 deletions(-)
-> (...)
+...
 
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
+> -       dev_dbg(npcm->dev, "group size: %d\n", ARRAY_SIZE(npcm7xx_groups)=
+);
+> +       dev_dbg(npcm->dev, "group size: %zd\n", ARRAY_SIZE(npcm7xx_groups=
+));
 
-And thank you for taking the time to write this neat P2SB API and to
-convert all the code that was doing the same so far.
+Dunno how it's slipped away, but the proper specifier is %zu. I guess
+that's what I also mentioned in reply to LKP's report.
 
--- 
-Jean Delvare
-SUSE L3 Support
+--=20
+With Best Regards,
+Andy Shevchenko
