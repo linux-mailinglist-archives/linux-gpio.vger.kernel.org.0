@@ -2,19 +2,19 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 18E814A7F91
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Feb 2022 08:04:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 061174A7F97
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Feb 2022 08:05:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238415AbiBCHE5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Feb 2022 02:04:57 -0500
-Received: from muru.com ([72.249.23.125]:45710 "EHLO muru.com"
+        id S243161AbiBCHFt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Feb 2022 02:05:49 -0500
+Received: from muru.com ([72.249.23.125]:45732 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229550AbiBCHE5 (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 3 Feb 2022 02:04:57 -0500
+        id S237239AbiBCHFt (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 3 Feb 2022 02:05:49 -0500
 Received: from localhost (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 436F580EE;
-        Thu,  3 Feb 2022 07:04:42 +0000 (UTC)
-Date:   Thu, 3 Feb 2022 09:04:55 +0200
+        by muru.com (Postfix) with ESMTPS id 5D4498150;
+        Thu,  3 Feb 2022 07:05:34 +0000 (UTC)
+Date:   Thu, 3 Feb 2022 09:05:47 +0200
 From:   Tony Lindgren <tony@atomide.com>
 To:     Marc Zyngier <maz@kernel.org>
 Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
@@ -33,29 +33,21 @@ Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Tomer Maimon <tmaimon77@gmail.com>,
         Tali Perry <tali.perry1@gmail.com>,
         Emil Renner Berthing <kernel@esmil.dk>
-Subject: Re: [PATCH 01/12] genirq: Allow the PM device to originate from irq
- domain
-Message-ID: <Yft+l6/JQlZM88rs@atomide.com>
+Subject: Re: [PATCH 07/12] gpio: omap: Move PM device over to irq domain
+Message-ID: <Yft+y2iWTpuq8nXF@atomide.com>
 References: <20220201120310.878267-1-maz@kernel.org>
- <20220201120310.878267-2-maz@kernel.org>
+ <20220201120310.878267-8-maz@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220201120310.878267-2-maz@kernel.org>
+In-Reply-To: <20220201120310.878267-8-maz@kernel.org>
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 * Marc Zyngier <maz@kernel.org> [220201 12:03]:
-> As a preparation to moving the reference to the device used for
-> runtime power management, add a new 'dev' field to the irqdomain
-> structure for that exact purpose.
-> 
-> The irq_chip_pm_{get,put}() helpers are made aware of the dual
-> location via a new private helper.
-> 
-> No functional change intended.
+> Move the reference to the device over to the irq domain.
 
-Works for me:
+PM still work for me:
 
 Tested-by: Tony Lindgren <tony@atomide.com>
