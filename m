@@ -2,75 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D31CA4A821B
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Feb 2022 11:11:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 45DA04A8521
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Feb 2022 14:25:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350015AbiBCKLP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Feb 2022 05:11:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55414 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233233AbiBCKLP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Feb 2022 05:11:15 -0500
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31674C061714
-        for <linux-gpio@vger.kernel.org>; Thu,  3 Feb 2022 02:11:15 -0800 (PST)
-Received: by mail-pj1-x102c.google.com with SMTP id h20-20020a17090adb9400b001b518bf99ffso9557435pjv.1
-        for <linux-gpio@vger.kernel.org>; Thu, 03 Feb 2022 02:11:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=CMzdAZWvSREUxL9gyi7ZDNRKXhnPhof45SdOgpKoP4Q=;
-        b=m1CDmviWaGF2xMiXa7LoRvP0R0VM1vbiS7NrXcZPvdSoVzTWu8xWUjF4R7ml2U5ZgP
-         920DA3SytYmU7gjos9kXUyGD8Tvo6aRW0tj9qbknWOzg7ATBSNIqYuYPNZtXtSyjt2Tj
-         if5X+YheafBldPmmskWRiV5lRdPQSEyTEPIgpfWNCYRMoCGCBnEK8cbw9poX6ouqO1YA
-         gQ5+cD7u5Bug4RmoLoxn4JHB8U2wQy7nF0pObj3RbFCE8L4z/co/i9vSep2r+tnMVpC4
-         ptI/krUrNdGFNz+8MW+FDNWqrXnmDSUg5tBaj7tUiZKc7FISsVPSVskvBXq+K4udSqBw
-         fdrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=CMzdAZWvSREUxL9gyi7ZDNRKXhnPhof45SdOgpKoP4Q=;
-        b=MaFFQ3qHVKyfvPLMWeoCdOvgwbRG8NfOAfLFbbbLLLJ+yatfaYVpg/aBimKIwISuh9
-         O7drg9sycsJciVwQqbZfH61iCekPaeYvtR//a1pwskBSnmGGE38AQ6oB5mBTj92H2jhc
-         KjyCr8F1FNAAyIZeIYiSv2+VJbGx8lO1E9+guQ8Lz0YpjgGySQ38T7+XLIqBTRFRe4tf
-         JjQ+4ENJo4sAkhPK0IB6wMkQhFoGv6w6k7NSIb0Gi6fMljBAAUoMtrj42MJDWOJsz7gQ
-         ud6rD1f9+ywCJcSeSfy0OYDtAIeBNlDAD6YHhTMDzwQqdBHpK/0P9LefNkS8TpyIHWUC
-         W2KQ==
-X-Gm-Message-State: AOAM533Ulgtl8oLjFDvMBTKPU3Z04uCnf64mt3S0QOUDjzabYYZuvurF
-        QQXkjnIXrjfoYxU49QUcAVCZ90fIPb/SODITs5o=
-X-Google-Smtp-Source: ABdhPJy/fmtNbMfqOW5RnWiIQ9+qI8ZNED9x6D/RFtCTAYBjgpjq/23kKMdmMELKqzi2Kxkl/6utRK3HtOqdF64YT1U=
-X-Received: by 2002:a17:902:bcc6:: with SMTP id o6mr35516414pls.116.1643883074760;
- Thu, 03 Feb 2022 02:11:14 -0800 (PST)
+        id S235110AbiBCNZL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Feb 2022 08:25:11 -0500
+Received: from mout.gmx.net ([212.227.15.19]:56873 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233666AbiBCNZK (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Thu, 3 Feb 2022 08:25:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1643894707;
+        bh=LjG7jU7LeCId0a06uLjWHVAGBesuo4KI9BTRCxVfE6U=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=KMfLbh+ulvcsbxsRLK+EEB3J9rwT+ZLGLCqdcoVhn2pwaTaTJ3cZdAbYnCNax5R6n
+         dk4zfZwe5R1ozZncRLNs95zJFwqVJfTF7Sa1h1MauStK1apuXhmlzrVgLpYK1/BW4J
+         wK8IP/kesm29x4aBF+Q6W/lXGXnPjv+TBqJDIVPE=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([185.66.193.41]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1McH5a-1mfBMd0lWG-00cfXP; Thu, 03
+ Feb 2022 14:25:07 +0100
+Date:   Thu, 3 Feb 2022 14:25:05 +0100
+From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH 0/2] Fixing the compile-test warnings in pinctrl-npcm7xx
+Message-ID: <YfvXsZYYA7+0U9P0@latitude>
+References: <20220202125438.19345-1-j.neuschaefer@gmx.net>
+ <CAHp75VdtTzkXVY21WZje1EkqixOOxxA3M09NfqQanV0XSRiNjQ@mail.gmail.com>
 MIME-Version: 1.0
-Received: by 2002:a05:6a10:e247:0:0:0:0 with HTTP; Thu, 3 Feb 2022 02:11:14
- -0800 (PST)
-Reply-To: lisahugh202@gmail.com
-From:   Ms Lisa Hugh <safi.kabore000@gmail.com>
-Date:   Thu, 3 Feb 2022 11:11:14 +0100
-Message-ID: <CAN7WVKNQyaW_7KTM==jqMWBVZkq0qHpKxFYjyq0FsK2A=g+b=Q@mail.gmail.com>
-Subject: FROM Ms Lisa Hugh.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="vVxDn9wXo9OMNmFd"
+Content-Disposition: inline
+In-Reply-To: <CAHp75VdtTzkXVY21WZje1EkqixOOxxA3M09NfqQanV0XSRiNjQ@mail.gmail.com>
+X-Provags-ID: V03:K1:zy6YfY08eWiqEpgvhZoQm2Ze8GMAUThz2WINg4DhcjOc5nJkVSc
+ XPYh7T9MwkBMaHQ+baW/A3cjsS1/jT2jQziMW7XLhlVNbSk+Wsprxz1I4DOdKVU/XU0yvjK
+ TpAWRtoiTk6bP3YRWIrW3f5xmaL6QYzPbCc57/5MMbPm9oblPk+KxCrGIj5jwpQb8969j3t
+ fyWCh1f9A7slSOaJEBBuQ==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:DjLqU1a2xqI=:+9M9LhJ2dQPKXgPYvPnnYU
+ i8zS3MJPD+ym7uk0O0L+7tAcYTTKVMU1v2jHeF8x7kx0EnX226y0BYgy2Sz54O6TBCAaZS9xN
+ HWxH9zUGtjqnUYZW+WuefI97/iKJSK4RK7L72a7OeZ5z/MTflSae6/apZ1JqoaKd7iuDmM+xk
+ gf1f4XKcf5zs8JljSrOHyyWMFCylGDMtmNxG1F9KdDs5YQBfUkD7q0PRkzVrGtpuMsLibDJfF
+ IQ1F+K6Ri623DqIYvlWwrjpCnuB8wrB5pXEAJlP+djCPU/aBi1L+XO1peWT5InhPJyB5EP8mY
+ VMqBKB8rYGDJY8YcKxRuNzSVu/2Zof1RGK3URntpO/q5mCo5XBqIjpftkig95cGc4ceGn0Cc2
+ QvpN3VyfPWMgsoOwg1N2OufI+2okuEs/OaXiMWv/du+Epf8kCAVFHlDMUv5ItXjVFBghdyjUM
+ H0r8FwetT474E0bMSiSLb4nfZyrywVyRjk8cdbrKz6E8JwyGaqTtaCAHmsZyRH6u1Hxe+yuas
+ TWcMPhnUvV/sKrGp2CdX+IhKP7MDgdq9PQHY4s8TFGXjE0id3uHvyN8i8XP3/QcZ49lmjNCqj
+ /AUuzqRKDl6sLNbv8Zwi+kQKbVJD/9HZhjLgbAFf3v4PBCzP+BrRhDOuwgfotmwTRwcYKG9LU
+ QN4UxYtZpDsdZHNUpjPA+3/36yMX2KZj4+spyw81Qkx2hY5K+GARCeHaW3UdFSSZ1h5nEnDmH
+ nPMFUovZSIHX99jXB+xJPlpvzRpSLpyANHHOmRdlQ2Fxwglm1NJECsOjuxiILm/WmlHXT4ww/
+ 822ysV5AUp++pDut0gxBOL7q6uBfsk6XTFBoDJKvK/vnnfa1u8FoaWo0WjzVSMieHeApl9uU4
+ Sdoq4hybjrjtIFuZgZ1ViRpn/mLmASYzEzFzqTm/kKqXHVHUGKNE9NyIlozmFTH0TH3TCnGRm
+ PPnHKWxtYeqjeFbM139HF8WNiz80krCT0Jqiwrs0398yKYyuvUSKie23qETpigEfcyRRDtxWh
+ pDMUsp1y1MMsxPhsdGqFKttVtGmBXkY9/hrWFYWhPpJXo4MsXQaD8a1z2DFPVgn2dY/I6HRCO
+ 5pboFfBiPZ6iOg=
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dear Friend,
 
-I am Ms Lisa Hugh accountant and files keeping by profession with the bank.
+--vVxDn9wXo9OMNmFd
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I need your co-operation for the  transferring of
-($4,500,000,00,U.S.DOLLARS)to your bank account for both of us
-benefit.
+On Wed, Feb 02, 2022 at 04:20:11PM +0200, Andy Shevchenko wrote:
+> On Wed, Feb 2, 2022 at 2:54 PM Jonathan Neusch=C3=A4fer
+> <j.neuschaefer@gmx.net> wrote:
+> >
+> > My "Nuvoton WPCM450 pinctrl and GPIO driver" patchset brought two
+> > warnings[1] in the pinctrl-npcm7xx to light. Here's an attempt at fixing
+> > them.
+>=20
+> With added the respective Fixes tag to each of them
 
-Please send the follow below,
+Good idea.
 
-1)AGE....
-2)TELEPHONE NUMBER,,,,,...
-3)COUNTRY.....
-4)OCCUPATION..
-....
-Thanks.
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Ms Lisa Hugh
+Thanks!
+
+Jonathan
+
+--vVxDn9wXo9OMNmFd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAmH7138ACgkQCDBEmo7z
+X9vH/Q//f2fVT/6Iiwn6RLsc45O7VUiNAl5MSYq/YqDxhijUR6iiBPMS9gzAp5MO
+ffZmfZ4lHje9815TXVc+k+IUN96DwJFM6oVg0xFbXpIMcspFNKor/Lz85Af+LtC+
+093x3zBZMj+k1vqCwJL7scwsO4hBmLHf3u8yKyJ/Xk58OhZ21DLEq6JCv+iB1WdF
+VJqYG7UChkucF1l5T7muw+mh7eEPQLhuvYvHxkXJgvb+otvItLNl6DMXkg+Cs/j0
+s6gu2LKSlUqGTD5VdOpMvXQQm/czpY35D3lX/Rj4/3b8j1zexmkawlfme0BKMMgQ
++yLhTwbyZE88zBtbLIEhyTuBiWWy9+Z+ugJw2bTYpw21FsJB0KS5sfiZwApNKw8R
+WDbEF39OKQG7eLUQ1cEOekv8cTVX9JEO7LBNIChCPqbZfyFwMVbBmKq845a844RG
+OMIrP3oT9xe3h9zF4YdRsuFgGpZh80DgbYxeEyCrcWyyDlmXVAb+OrzgJ5L8E/Xg
+UHeTD+GSXh5KA3jn4PPtm052YfKtp/LyXyKU0+AqpDJW8MGwhgTDjzgsp9swWtkK
+x5niOb0kN97LRYzHfvWOjnCopbtl4Ya3U/XK5uCZMsBBsSPDUAVo9u/UAXqvwdSX
+Ga37TZoB0XHjs9sMWSyFCC3kzNUgndlEC1+zhJDtGhr/QfsNZr8=
+=fheY
+-----END PGP SIGNATURE-----
+
+--vVxDn9wXo9OMNmFd--
