@@ -2,159 +2,250 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 277554A7FF6
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Feb 2022 08:42:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 723844A807B
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Feb 2022 09:37:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349443AbiBCHmN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Feb 2022 02:42:13 -0500
-Received: from smtp-relay-internal-1.canonical.com ([185.125.188.123]:50874
-        "EHLO smtp-relay-internal-1.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1349436AbiBCHmM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Feb 2022 02:42:12 -0500
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com [209.85.167.72])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 3E51040041
-        for <linux-gpio@vger.kernel.org>; Thu,  3 Feb 2022 07:42:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1643874131;
-        bh=69oC9K6bP5zXfYZ3RPqGsmz6Po3E4WX3hDMRIgEHu/M=;
-        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-         In-Reply-To:Content-Type;
-        b=aWw8O7kot+Xlph+PwsqCq3X4ckfyJIq5F+8uJRN/lAJtodSvbBk75Q7Xs9RgmpS51
-         /HmJTkTpujlL/Opvyl5gmByIy+64MhUt3BP5weSjtlpOaJwdsBm0Q1yt4MSBbIf90t
-         SyjaUw099stQLswmhWaxzT8VRjHrPAzwx4RpMeFcaobzd9f1PKMNEUKLZWYLYizWle
-         Kh1Xc2TgCR3suePo8/fl9rFlMDOoXDtAgaoHpnSlDj7x+85WyZSI3F9dOEp5q43OwJ
-         84W5510z+boTtWwaQeHHC1Q3mKsvEttKYP5IuPVLniIenD34RqxgmeziPeB1wPxB+R
-         T/LwP5q54kXtA==
-Received: by mail-lf1-f72.google.com with SMTP id c7-20020ac24147000000b0042ac92336d1so1102490lfi.2
-        for <linux-gpio@vger.kernel.org>; Wed, 02 Feb 2022 23:42:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=69oC9K6bP5zXfYZ3RPqGsmz6Po3E4WX3hDMRIgEHu/M=;
-        b=O8SAUi+eZtqxC579CywiYdpkEiHhZ+nLkbX+EQv9bTLuROCuViBmwZgOtBrdO9L8VS
-         BZXPxAdMizcdWa85WFhjuGzlOMYKcdueYCQ5GRkYmYrzyA2KZLJOIJ8RQSs7nl3OdngQ
-         MIFYHfCMLXmQc3DkRcec9X7Bv2cFjJwxYs+yh2OYfWW7B3gxdbmuHF2fXuIrNY+8A5lR
-         5sGxne6TkZnvrlKAUS+3Bq6R5eexJuX8GaOnhBWXxNLeVXOQc6F5myFja++vAdwhNj7k
-         rikh6uFY5CdCG8C/FeqCAoglVPFyTyf1F12ebcZ8/i8NgLiTDNa6ZKxaC4/WcwlVPoYH
-         kRTw==
-X-Gm-Message-State: AOAM530k1FI8GwxZzUmrxQs23nBiw4GTSbyDRmHCwUAvb2gwx+U2Cyx2
-        t5XVIJw/KrTnbDfNWC/NWMkcskYBRQalXcjHdA6noSjmdh8+aLlVF0FqpFzXhlaO/kHvzSV2HuY
-        Dc/7F4AzZ1DJ+yVtaiwtoZhIp83q+n5Xuwa7AqvM=
-X-Received: by 2002:a05:6000:10cf:: with SMTP id b15mr28156938wrx.70.1643874119535;
-        Wed, 02 Feb 2022 23:41:59 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwInkGYx0bCKYBNdkDDYX+ptQNyAD6vMUiS8CqzI/xYfseOfTNCURA5lpsX4JtSbcPIAvyzjw==
-X-Received: by 2002:a05:6000:10cf:: with SMTP id b15mr28156886wrx.70.1643874119363;
-        Wed, 02 Feb 2022 23:41:59 -0800 (PST)
-Received: from [192.168.0.80] (xdsl-188-155-168-84.adslplus.ch. [188.155.168.84])
-        by smtp.gmail.com with ESMTPSA id t18sm19832712wri.34.2022.02.02.23.41.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Feb 2022 23:41:58 -0800 (PST)
-Message-ID: <1d549a00-b9f5-d60f-2d5b-798e92139f86@canonical.com>
-Date:   Thu, 3 Feb 2022 08:41:56 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH] HPE BMC GXP SUPPORT
+        id S1349509AbiBCIhl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Feb 2022 03:37:41 -0500
+Received: from mx0a-00268f01.pphosted.com ([148.163.148.236]:10738 "EHLO
+        mx0a-00268f01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S235967AbiBCIhl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Feb 2022 03:37:41 -0500
+Received: from pps.filterd (m0165118.ppops.net [127.0.0.1])
+        by mx0a-00268f01.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 2138EFUF000982;
+        Thu, 3 Feb 2022 08:37:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=equinix.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pps202002;
+ bh=cWXwQkK9N3wAENC6xrEjab2bbsXa7OjgwybnQzYCRaU=;
+ b=KIv8Olrm2vcJ5XMP6StLfC2Zix82IeSbJ5W8VxTWJ/NJFRXaeZRN915ZYw8+GUIGSFQv
+ T7s40kPB5m0PnDV6WMFRMF19dGeRfhWqNh32u3kkt1HfAGkMHY+CA57CCIB41uWafRoB
+ pPTAXnlGz6QB6T5vcDPJUZ5ZjWJ1DMlCKzE8H6mQMrod1mZmIRL+M2NhgSRXdULxhQN5
+ BSn5JtuvZye0n5At8JOw75PipsB4kMhcK3+10ne4O1ipHlY3OJV+fGLGBP5OIkt2eyWP
+ fXER76nb4Z611bGppwmMHVlCrF0H3ifv+c81Ft8RoWSJe5lDjIsWaSQu/1KQgvd0PM+o Uw== 
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2105.outbound.protection.outlook.com [104.47.70.105])
+        by mx0a-00268f01.pphosted.com (PPS) with ESMTPS id 3e03hys56p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 03 Feb 2022 08:37:23 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=j+76ulzQBugMCEAvMahVYK9slkvZcPEiT87QccJE9rNeA9fdLQ2AOJCMkdlczd8RVOT++TEbiYsgoyPSGW8heIxpvFjVOldYykdmLhW8ZxCqlmZRqzHWydd1DFIPuyevPcaQr65QHRou4710BLUbO8I/03KZ1ZmAB/s1yItd16tzFFByoddKe2xElAxkU4FonJ2WwZygkXjNPgQwvGJA/idrmag5U/liAaYEjmwChuyaSXN1An/t78Q/JpxiDTlA8T0XZPp79bnEUuQm8bIwA/fwQPT+sOrkpLvqmK2Fk7zqNcekGM27utR2Kn/iTFoWtoUoCbG/WyX/3aXs2MYl+g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cWXwQkK9N3wAENC6xrEjab2bbsXa7OjgwybnQzYCRaU=;
+ b=Pf0dozbLNRg5L7C0HOCx1rbukPEJHWQboalZYFz9vUZJmKVeUOszOnHKTg9P+9+nnn+sq9NBKjOZOu5egg6N+FGIXsiuAJRszqvU9PrGCP2MrQdcBYgxG79ox9fryYdpz6sUWmFBooVmvZa+w6q8tmyKnzckG+Vfl1+XwA/fpVx3h0SHvM8PSZwqxSCd1aq7Ede/hGjz/EIPmFdjvxblT8WpjPOOkJ4ZEUNcxJhm13RMRq3an9k2IaMnWAfmk3hQDIwreiMdFWsEwSKpoZh1zUfS+PsSE+nNZcBalYjRKeo4b20kCA23bl47AUdop73NFjslUbG4j0ZqUcJCcyjfXQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from DM8PR04MB8007.namprd04.prod.outlook.com (2603:10b6:5:314::20)
+ by MW4PR04MB7188.namprd04.prod.outlook.com (2603:10b6:303:79::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4930.22; Thu, 3 Feb
+ 2022 08:37:20 +0000
+Received: from DM8PR04MB8007.namprd04.prod.outlook.com
+ ([fe80::1541:1248:d298:24d5]) by DM8PR04MB8007.namprd04.prod.outlook.com
+ ([fe80::1541:1248:d298:24d5%6]) with mapi id 15.20.4951.014; Thu, 3 Feb 2022
+ 08:37:20 +0000
+From:   Zev Weiss <zweiss@equinix.com>
+To:     Joel Stanley <joel@jms.id.au>
+CC:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
+Subject: Re: [libgpiod PATCH 3/7] tools: Add value support to line name lookup
+Thread-Topic: [libgpiod PATCH 3/7] tools: Add value support to line name
+ lookup
+Thread-Index: AQHYGNlBFUsG18Jps0S3Ec0rivTcpQ==
+Date:   Thu, 3 Feb 2022 08:37:19 +0000
+Message-ID: <20220203083719.GN5754@packtop>
+References: <20220203042134.68425-1-joel@jms.id.au>
+ <20220203042134.68425-4-joel@jms.id.au>
+In-Reply-To: <20220203042134.68425-4-joel@jms.id.au>
+Accept-Language: en-US
 Content-Language: en-US
-To:     nick.hawkins@hpe.com, verdun@hpe.com
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Corey Minyard <minyard@acm.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Russell King <linux@armlinux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        soc@kernel.org, Shawn Guo <shawnguo@kernel.org>,
-        Stanislav Jakubek <stano.jakubek@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Hao Fang <fanghao11@huawei.com>,
-        "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Wang Kefeng <wangkefeng.wang@huawei.com>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <nick.hawkins@hpe.com>
- <20220202165315.18282-1-nick.hawkins@hpe.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-In-Reply-To: <20220202165315.18282-1-nick.hawkins@hpe.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5adb7058-1a54-4abc-bd83-08d9e6f06460
+x-ms-traffictypediagnostic: MW4PR04MB7188:EE_
+x-microsoft-antispam-prvs: <MW4PR04MB7188C6FD021ED779F319A070C3289@MW4PR04MB7188.namprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1284;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: leRKoqsss/rEvqfTyADoAVW6u6WbzLtg9azKTjs6vxl5mCx3wJi0Gj8ox0q7AedMVwHAmralNjyIXhQNCJrNlBFfSYw0foqJUQCbSOLS/Hw28ukUKTjMK4amGb6+vpW+oAKHrh8Jw+e/vKyRBZqc3ohDsrkN1qsUMbcV+rIJNMM/AeUMlAqJALhSKNP0wjpSHwJwOXdI/ADdUnVLWjCbn/7C8vmgyEpz7vVO+5KqxPa079uL8e8mYYU/L01fjSV46bz26q1LcvAFobtBTphPmSiEXg04yGgQZRW4eKydShLauC8B3hHP61YggtLwQWGYCsmp0lrBVvcNRA3iAK9UzOZhoG6RTQzOk/yP5O7FjKWToho7jexCn/41PyO4uh/tvKXSLYQ89Jw9sSR9qC6M23tmKn/P67j/h5ZJBXjFzFoG+LnEHALGCeC+lQab7lWxLUKYTMDKehJgWT6jlGH7QOlDzUML85xmoX5Ey6a2Pvi0ksyG9zO3jOksrdwBjXP9eoLeqOacClSBwGRxH8tFBHp8XlYxVL9IlE0q4433CrbGnlmy3w07NsDCGWmIGmTnGlr4xl0r0oUfZF6veNmoObcHBSLAZlAZgQlw7GEgJOZzc1xriFphOfYqnnQ7XpYgOkkdCxuRAoP1/qg1I5hX2KMB0/CFfUPz/7Xcv1CL8iN5u29CiZvLoS9BuAV4nSmoRtfnMRf3grMTrW03LuN8/g==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR04MB8007.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(7916004)(366004)(2906002)(66556008)(66946007)(76116006)(6486002)(8936002)(66446008)(8676002)(66476007)(26005)(64756008)(33716001)(1076003)(71200400001)(186003)(4326008)(122000001)(33656002)(38070700005)(38100700002)(86362001)(508600001)(54906003)(5660300002)(83380400001)(6512007)(6506007)(9686003)(91956017)(6916009)(316002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?unH0i/+Nwd5Ol4dSc+NFJmexYSCoB3r923oYfQc/FOsls5C4dH+yUJI3BubZ?=
+ =?us-ascii?Q?JhhQTlqNMSOGZEvApQmu5szUWlHEZeJbhV80KSgKxOUbwGH+KcPR5uD9m0Xd?=
+ =?us-ascii?Q?bXhbTEDo1CmrXJGBlSPB1G49LrmjGZiYq746El265mmXhEeDX7zpIQnTT8dU?=
+ =?us-ascii?Q?ZaACn4Ub2GgIAXuPNxY4qjeptsEa5mJaf5ksN+lzgQn4ROHWJFPmY99Ku8L4?=
+ =?us-ascii?Q?P/l1YamK4ZWJpbw2/81iyEd6HvIvD4miz70NWSF/I+BorpZm1Hp7IinZOSL0?=
+ =?us-ascii?Q?+i4H3urmfl2Lxz23iikpMN8y2qUsA7eIZj7fFJ5dHjvr9Y2M8tRcd2kwbkeY?=
+ =?us-ascii?Q?oTY24pNEAqXz7iZ3bsrjJ12dGjZKj50vqiB5cqci/zSMEhBupIqN8c1wnnHE?=
+ =?us-ascii?Q?I3jbPlGtnoGI49bnOaOIf/HmaT1JKOuNl6tY2R+OPEizbA/J/hWt8AKLppui?=
+ =?us-ascii?Q?E5IMqTfwEiPOXjoFMvujN0GYj8L2XGXlac2ci9unYSIDTdVMk5CbF5gfeEqY?=
+ =?us-ascii?Q?at17WezYdU926xJ/RdGPtYQBdKX1GAvjbgRTUlWl9OqbmhUfQbTcCqZDml7r?=
+ =?us-ascii?Q?Ac3l4kCgC0ipDJtr71qOApWZeU8cDRwZmzbJnCUFpIokxkCLBN6oj4wqfTyR?=
+ =?us-ascii?Q?nVZ3q4W2jCRNPs7uXJxku2aEXXfiXQVosONLCIDqRu0PKEfiUDoVQZce3Gr+?=
+ =?us-ascii?Q?pO+AFmu8A9FQZAi9lNEcNr70Yz4iB2a6iV5xVoGYSRearqpZl9N+YWAe61db?=
+ =?us-ascii?Q?WnAuDnRrO7M7ZohTbc06PmMvmckpajjRAFvnSBDPmnzcx7JqqPHziQxozKwQ?=
+ =?us-ascii?Q?ZAtB/pL9D+FuaAQqcu5QOgvZJhgctHM1trVh3Gn15ejJo7Xu7b3FPDDVIsEU?=
+ =?us-ascii?Q?TZ3MT1R8hZOLIOlYzVLqc+h42m96dlgBDeO7oBqGgtUtoyrp8UBKh6kZFY1s?=
+ =?us-ascii?Q?7UTA9gpQNSGhIrI/KKX8QnG3UucHOMmbnICTERoYJLVWXjzuH4znrYq6chnl?=
+ =?us-ascii?Q?Ux7YJSNpKc9Q/H28Ew2JCm+ee3WCDMmtrsf07zP3KZcNKezu8wf+0IqDTmfu?=
+ =?us-ascii?Q?XJwIFBdNJdPl+CwF2dJPrKZQvnXZzS4LgaeQ2Tit1Oe0akIna9zuiR9d132w?=
+ =?us-ascii?Q?qtNRwhZpBJyZ44zeN2fWRzffr5/qUlnw5WGdUQ4PAZDK9FKe6zgNjvYiM3Rc?=
+ =?us-ascii?Q?CY40DwOtsXVEhgbwN0YIL1lye2fy9EN8bCrHk8TYHkJbpRRRt+NRfwnMU0zt?=
+ =?us-ascii?Q?akQzfDpAtW71HeYTBa0IWlkIKndUK5TyaxbyKIX2zKGNJ9Tn2jqne552NRCv?=
+ =?us-ascii?Q?uDdsD0tzzz92j7pCrcV8r8Qaao1P9yb/Lf68O0Ovesr3jPAFHFZwlMfSRCWC?=
+ =?us-ascii?Q?n8wfgVGWfInFqqYSBGkux/7zMudiuXQomYo8YawBT4N+/+Z5T9MxcgUen62u?=
+ =?us-ascii?Q?JCkrXrCVKYhw5g2Sv49LVU+HbgHxFp6Pj++VBSaWXQG7CKRaeJP0Zit37yQn?=
+ =?us-ascii?Q?qk1FhY15+cOE7SPshwxU8xW7Iilp9srgQ31sGjLnDyR6DuKhGegdgWIonjc7?=
+ =?us-ascii?Q?ygExHbVv9fzDU5P/VGfuiQzD+WEfssCov0e88PF58bnxpEKWVnun2u6UAc3E?=
+ =?us-ascii?Q?i9ocDg1rKSiem9vsnUwT+WU=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2A68CCD00501ED4D840A3AE0BDBB8B17@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: equinix.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR04MB8007.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5adb7058-1a54-4abc-bd83-08d9e6f06460
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Feb 2022 08:37:19.8674
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72adb271-2fc7-4afe-a5ee-9de6a59f6bfb
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: R0cnhiSgZn70EyE2Q8CjgfOGVNnif8r8Hgb1QyeTMbDHVvEwkT02JxE8cD2W4hJtf9ezLqqRf05Ewq3dhcjG6A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR04MB7188
+X-Proofpoint-ORIG-GUID: V5RmV9ers0LmfqgYuq9_CUhXp6eA72GP
+X-Proofpoint-GUID: V5RmV9ers0LmfqgYuq9_CUhXp6eA72GP
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.62.513
+ definitions=2022-02-03_02,2022-02-01_01,2021-12-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
+ malwarescore=0 suspectscore=0 impostorscore=0 mlxlogscore=999 mlxscore=0
+ priorityscore=1501 clxscore=1011 lowpriorityscore=0 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2201110000 definitions=main-2202030053
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 02/02/2022 17:52, nick.hawkins@hpe.com wrote:
-> From: Nick Hawkins <nick.hawkins@hpe.com>
-> 
-> GXP is the name of the HPE SoC.
-> This SoC is used to implement BMC features of HPE servers
-> (all ProLiant, Synergy, and many Apollo, and Superdome machines)
-> It does support many features including:
-> 	ARMv7 architecture, and it is based on a Cortex A9 core
-> 	Use an AXI bus to which
-> 		a memory controller is attached, as well as
->                  multiple SPI interfaces to connect boot flash,
->                  and ROM flash, a 10/100/1000 Mac engine which
->                  supports SGMII (2 ports) and RMII
-> 		Multiple I2C engines to drive connectivity with a host infrastructure
-> 		A video engine which support VGA and DP, as well as
->                  an hardware video encoder
-> 		Multiple PCIe ports
-> 		A PECI interface, and LPC eSPI
-> 		Multiple UART for debug purpose, and Virtual UART for host connectivity
-> 		A GPIO engine
-> This Patch Includes:
-> 	Documentation for device tree bindings
-> 	Device Tree Bindings
-> 	GXP Timer Support
-> 	GXP Architecture Support
-> 
+On Wed, Feb 02, 2022 at 08:21:30PM PST, Joel Stanley wrote:
+>Add support for pasring the values as well as the name in
 
-1. Please version your patchses and document the changes under ---.
+Nit: typo ("pasring")
 
-2. With your v1 I responded what has to be separate patch. This was
-totally ignored here, so no. You have to follow this.
+>line_names_to_offsets.
+>
+>Signed-off-by: Joel Stanley <joel@jms.id.au>
+>---
+> tools/tools-common.c | 51 ++++++++++++++++++++++++++++++++++++++++++--
+> tools/tools-common.h |  4 +++-
+> 2 files changed, 52 insertions(+), 3 deletions(-)
+>
+>diff --git a/tools/tools-common.c b/tools/tools-common.c
+>index 958933ed6d51..586577566790 100644
+>--- a/tools/tools-common.c
+>+++ b/tools/tools-common.c
+>@@ -204,15 +204,57 @@ struct gpiod_chip *chip_by_line_name(const char *nam=
+e)
+> 	return NULL;
+> }
+>
+>+char *split_line(const char *line_pair)
+>+{
+>+	char *name_end;
+>+	size_t name_len;
+>+	char *line_name;
+>+
+>+	name_end =3D strchr(line_pair, '=3D');
+>+	if (!name_end)
+>+		die("invalid name/value '%s'", line_pair);
+>+
+>+	name_len =3D name_end - line_pair;
+>+
+>+	if (name_len > 32)
+>+		die("line name exceeds maximum length");
 
-3. Please run checkpatch and be sure there are no warnings.
+For mult-line invocations it might be nice to give some feedback on
+which line name we errored out on here; perhaps
 
-4. Bindings in dtschema, not in text.
+  die("%s: line name exceeds maximum length", line_pair);
 
-Best regards,
-Krzysztof
+or move the check after the strncpy() below and use line_name if we want
+a slightly tidier message without the trailing "=3D<value>"?
 
-Best regards,
-Krzysztof
+>+
+>+	line_name =3D calloc(1, name_len + 1);
+>+	strncpy(line_name, line_pair, name_len);
+>+
+>+	return line_name;
+>+}
+>+
+> int line_names_to_offsets(struct gpiod_chip *chip, char **lines,
+>-			  unsigned int *offsets, int num_lines)
+>+			  unsigned int *offsets,
+>+			  int *values,
+>+			  int num_lines)
+> {
+> 	int i;
+>
+> 	for (i =3D 0; i < num_lines; i++) {
+>-		const char *line_name =3D lines[i];
+>+		char *line_name;
+>+		int value;
+> 		int offset;
+>
+>+		if (values) {
+>+			const char *line_pair =3D lines[i];
+>+			char *name_end;
+>+			int rv;
+>+
+>+			line_name =3D split_line(line_pair);
+>+			name_end =3D strchr(line_pair, '=3D');
+>+
+>+			rv =3D sscanf(name_end, "=3D%d", &value);
+>+			if (rv !=3D 1)
+>+				die("invalid offset<->value mapping: %s", line_pair);
+>+
+>+			if (value !=3D 0 && value !=3D 1)
+>+				die("value must be 0 or 1: %s", line_pair);
+>+		} else {
+>+			line_name =3D lines[i];
+>+		}
+>+
+> 		offset =3D gpiod_chip_find_line(chip, line_name);
+>
+> 		if (offset < 0) {
+>@@ -222,6 +264,11 @@ int line_names_to_offsets(struct gpiod_chip *chip, ch=
+ar **lines,
+> 		}
+>
+> 		offsets[i] =3D offset;
+>+
+>+		if (values) {
+>+			values[i] =3D value;
+>+			free(line_name);
+>+		}
+> 	}
+>
+> 	return 0;
+>diff --git a/tools/tools-common.h b/tools/tools-common.h
+>index 7affea436a60..723999011733 100644
+>--- a/tools/tools-common.h
+>+++ b/tools/tools-common.h
+>@@ -33,6 +33,8 @@ struct gpiod_chip *chip_open_by_name(const char *name);
+> struct gpiod_chip *chip_open_lookup(const char *device);
+> struct gpiod_chip *chip_by_line_name(const char *name);
+> int line_names_to_offsets(struct gpiod_chip *chip, char **lines,
+>-			  unsigned int *offsets, int num_lines);
+>+			  unsigned int *offsets, int *values,
+>+			  int num_lines);
+>+char *split_line(const char *line_pair);
+>
+> #endif /* __GPIOD_TOOLS_COMMON_H__ */
+>--=20
+>2.34.1
+>=
