@@ -2,138 +2,188 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C5134A86C2
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Feb 2022 15:41:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EADDA4A871C
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Feb 2022 15:56:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239223AbiBCOkf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Feb 2022 09:40:35 -0500
-Received: from mout.gmx.net ([212.227.15.19]:33733 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229558AbiBCOkc (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
-        Thu, 3 Feb 2022 09:40:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1643899223;
-        bh=rRjmFdAesvKhjyp7CmXgshmx7Slt/RMJF7feElgQOgg=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=XeDnwBrzzivc02u0dt61dSPYT0i3jk+vZPYNQWHHut7tdGgJhqA6dQFmklX3OojdY
-         BnWIHy5R6xzLcB4+2cTjbIDDbrt/hlf9JSUVhGqIbm/jX08ZTo0FQBkb02534/2jBW
-         xB81Kk9Rr34KFYfFw8s0ih0Lx/nRzsg046GgQDpw=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([185.66.193.41]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MacOW-1mdXe12BII-00c7Un; Thu, 03
- Feb 2022 15:40:23 +0100
-Date:   Thu, 3 Feb 2022 15:40:21 +0100
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Joel Stanley <joel@jms.id.au>,
-        kernel test robot <lkp@intel.com>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>
-Subject: Re: [PATCH v2 1/2] pinctrl: nuvoton: npcm7xx: Use %zd printk format
- for ARRAY_SIZE()
-Message-ID: <YfvpVVigOc4eEdR3@latitude>
-References: <20220203133736.246397-1-j.neuschaefer@gmx.net>
- <20220203133736.246397-2-j.neuschaefer@gmx.net>
- <CAHp75VfrygdyjgQJ7iRnGL-CELCQ+6D30r5aWwitCTUJvGVf_g@mail.gmail.com>
+        id S1351589AbiBCO4G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Feb 2022 09:56:06 -0500
+Received: from smtp-relay-internal-1.canonical.com ([185.125.188.123]:39456
+        "EHLO smtp-relay-internal-1.canonical.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1351577AbiBCO4B (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Feb 2022 09:56:01 -0500
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com [209.85.208.72])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 4BD554003F
+        for <linux-gpio@vger.kernel.org>; Thu,  3 Feb 2022 14:56:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1643900160;
+        bh=JKwlxtatWZQCVG4GF4BszucWwjVQTt2PxoebrxL5ciY=;
+        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+         In-Reply-To:Content-Type;
+        b=i6yA7t9Cv2ukmUXvHhtNRdUE9hNLWOnYQ2g7APjSZAMHCMKpeANi/B1ZtgoguxDA5
+         Nm8VGjt1PXrQCyAjvavzejgvqNwBlvEgSHGjKPyLksrXFul6IDWxivqgsLUUGcCUjS
+         fYm9h6Pyw0RXim93IOsKpnABcf1QYGK+V8qRcDxd11bioFzHas2El667YHdN3q+EGT
+         2qj40Z0/CY+7lpUpF8OMylyrNyz35bRpUel+rnHAY/Czwj0Tnr1Wlb+rKxCPcM4sIj
+         7RfT/OhKWfuiBotVjERE1wg8fEM53q7Hpi+txS+3Vpb2pmHIpb1VidkUD8X5eEaxz4
+         C9+xoRt97/5cg==
+Received: by mail-ed1-f72.google.com with SMTP id c23-20020a056402159700b00406aa42973eso1591154edv.2
+        for <linux-gpio@vger.kernel.org>; Thu, 03 Feb 2022 06:56:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=JKwlxtatWZQCVG4GF4BszucWwjVQTt2PxoebrxL5ciY=;
+        b=wGu/0CJSPlB7jfz3xjDNMrGX90LDdoEz2ajcT7E9CxWlvDJ/jQBBeR5iJM/VMCrpjM
+         jcvNmJLaeCzFb+/3j2UzOKuo8in1Nzeph77PerFV5S9/Q8pFCHmv1C4jGd8kMyNpmjOt
+         xsHAfKpYku8w2OC78ubh6f9Llc0ENP++UrYlXSWTuttld5rGYhZz0YdUtuRh/rtHXNP9
+         AQKYZXlDl3L4z8aFOBihkjBo44dXCiAU3Tx1xffO4mBClQps0iATGKh093zOaQLH7KTm
+         xxtaQSece979YGIb6idpeVWHaumKcqGyV0G3F3M8GW+ensnkiBSVbL4SZfW3pPqIBH3p
+         f1Aw==
+X-Gm-Message-State: AOAM532tS1KUr2z7DbetifLklqjUAfhxyd4z+7mWL7j9A7u03yzYBKOL
+        Erzx/TRfs2hSNW3jckb51wHS4tJZzTd6w/Z6L7MwWC3ZGbpWZbLB3qakkbO4A3HdVH+qo2tsPQT
+        FWhrVrvAiNJKQPYappYpfM/7HH3n5zcL7WjiC4kA=
+X-Received: by 2002:a17:907:c14:: with SMTP id ga20mr1992505ejc.243.1643900159540;
+        Thu, 03 Feb 2022 06:55:59 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxET41+skPJ0t2ws3cpvdAuE3SIGtoLLzPApxhNtKVWxdECIqy/nqXcAWE2tMCANk5h/+crhA==
+X-Received: by 2002:a17:907:c14:: with SMTP id ga20mr1992450ejc.243.1643900159293;
+        Thu, 03 Feb 2022 06:55:59 -0800 (PST)
+Received: from [192.168.0.81] (xdsl-188-155-168-84.adslplus.ch. [188.155.168.84])
+        by smtp.gmail.com with ESMTPSA id z19sm7573934eja.18.2022.02.03.06.55.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 03 Feb 2022 06:55:58 -0800 (PST)
+Message-ID: <e79133f2-f872-3ed6-4038-526e94e84909@canonical.com>
+Date:   Thu, 3 Feb 2022 15:55:56 +0100
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="eVcSzelghXg5He3N"
-Content-Disposition: inline
-In-Reply-To: <CAHp75VfrygdyjgQJ7iRnGL-CELCQ+6D30r5aWwitCTUJvGVf_g@mail.gmail.com>
-X-Provags-ID: V03:K1:4bBE4nsJxFwrk9zc0XZ0PREFwZZ1cGi0gqitsnTcJKy/+lrRauz
- b9vy3mLTWGwrHzedGDbuRRyQe5gy1LKRVIArrtG8YzQ/QmrKZxQtwNOlC5Iblk8TgrpjIyG
- 1ckR8eF5g39XIWw4Q4M8I/fyd2UjO2nN08NVZKQ4/V7HBmdVvlq5Pog3IYdhOVF6pSovm2v
- YxqT2SxvUiUxcAcl/gCrw==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+52ExvH9WdA=:afTqJsb4yJJzNZf4ZDGLbP
- RcAVcOHm3lvpx+0qhqnud/B0YwPmGlP5voOgryctjJShdF+TJYFH3hxbBTeH/4ZA2uSfZBELH
- nNnq1TTh1DKLtgGPaYP2hmX4B0T9/NjtbQ1BjsLrEAk16RioaoXILW+oNsdM6gmYARLIq8eP6
- YaTUKWTUueUaUBHdwyJglj8kmaMwtUwfZw3Pd3G+GoaWBqsmcqR0uiGFvE5WPc1LGDDGxNu6K
- 73CD0CgwtxxU7bgkhyESuHXVqWUQPL4EW2v0cryr0owqjdss64Z6u2FiSb8K27y7Lb8TzyPyo
- h/IDiqRXEAPEOt/FH1WeJ9SaBJgIkuee3LuCZN1FpfcDd87FDYdK7r142xOegNSORpAmrDkHh
- vYczgpVTFSDXRYgJ7Md1AKHkwtgNZmWd9iRLo4LdN05TKrY4W1t/HZVRJeRCLbirAQBfBczGM
- bTao48P8tl0cIEVAcHizfzNOjBQ8kOGcgx4A/JO3WpJaYY7Vy0A4vrxFuY4cmCg8gEn4L8XZx
- iSUk4wPUTiB3zyq3BCJ952hUHKmIEVorhnkzjM1nlev5//m9HfutCrt8oz4LwUtD/wb2GiOKj
- Od0jgoeEH1uW4gowDePceu7wxnekyysOEoId+cqs8wQuYtTyKELaCNg2yy7mkiDsOzctS1RDi
- TMzBHEqrLdIOGJHo5HK2dn9y1GFGW/31u2uB09gLmSAyNM+dcX/ReFKDI2I+5A7n/AfmgeVVF
- 8DYQDk513RSRubZyzaXai5L/9M+v1czQjPrL+1W5gLTBCbrWfe81VP33jSHvh3XyhynwoIqcI
- XLUJEHE5v8wlwDTzCwpYxozqvHB44h3953TP20enPX3g3aBwZ2FZ79BniuV+hIABiodmffnxx
- mlwQnn1w/8Pa2Db61pLhdhqWMiBuGqv1bNT5Zd88R0hDQ6Ec1UeUKDAuw+n7/+01eSeGT7XFD
- 6ADqTA2KOoZT3qZr091oeseG/g4+hK6/CoYOlKHemQKq8yEfbR2W1reRyaHGoYm+4zctVEMfo
- SrwatIdIhHJDcsKgFo+J+Lt7OmAZGVonmMSxxfOapRvtPLFqo7oSH2JPaqoL+88gOECWHL56q
- Vk67uhmqCccHPQ=
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH] HPE BMC GXP SUPPORT
+Content-Language: en-US
+To:     Rob Herring <robh+dt@kernel.org>, nick.hawkins@hpe.com
+Cc:     verdun@hpe.com, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Corey Minyard <minyard@acm.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Brown <broonie@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Russell King <linux@armlinux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        SoC Team <soc@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Stanislav Jakubek <stano.jakubek@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Hao Fang <fanghao11@huawei.com>,
+        "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Wang Kefeng <wangkefeng.wang@huawei.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        openipmi-developer@lists.sourceforge.net,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+References: <nick.hawkins@hpe.com>
+ <20220202165315.18282-1-nick.hawkins@hpe.com>
+ <CAL_Jsq+K2t5WYE056so1iZgZr7CBKvDEjAwnJVTyUFQcK-VFSA@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+In-Reply-To: <CAL_Jsq+K2t5WYE056so1iZgZr7CBKvDEjAwnJVTyUFQcK-VFSA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On 03/02/2022 15:29, Rob Herring wrote:
+> On Wed, Feb 2, 2022 at 10:55 AM <nick.hawkins@hpe.com> wrote:
+>>
+>> From: Nick Hawkins <nick.hawkins@hpe.com>
+>>
 
---eVcSzelghXg5He3N
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+(...)
 
-On Thu, Feb 03, 2022 at 04:16:56PM +0200, Andy Shevchenko wrote:
-> On Thu, Feb 3, 2022 at 3:37 PM Jonathan Neusch=C3=A4fer
-> <j.neuschaefer@gmx.net> wrote:
-> >
-> > When compile-testing on 64-bit architectures, GCC complains about the
-> > mismatch of types between the %d format specifier and value returned by
-> > ARRAY_LENGTH(). Use %zd, which is correct everywhere.
-> >
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Fixes: 3b588e43ee5c7 ("pinctrl: nuvoton: add NPCM7xx pinctrl and GPIO d=
-river")
-> > Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->=20
-> ...
->=20
-> > -       dev_dbg(npcm->dev, "group size: %d\n", ARRAY_SIZE(npcm7xx_group=
-s));
-> > +       dev_dbg(npcm->dev, "group size: %zd\n", ARRAY_SIZE(npcm7xx_grou=
-ps));
->=20
-> Dunno how it's slipped away, but the proper specifier is %zu.
+>> +
+>> +       vuart_a: vuart_a@80fd0200 {
+> 
+> serial@...
 
-Right, I should have noticed that.
+Maybe it does not look like, but this is actually a v2. Nick was asked
+to change the naming for the nodes already in v1. Unfortunately it did
+not happen, so we have vuart, spifi, vic and more.
 
-> I guess that's what I also mentioned in reply to LKP's report.
+It is a waste of reviewers' time to ask them to perform the same review
+twice or to ignore their comments.
 
-True,
+> 
+>> +               compatible = "hpe,gxp-vuart";
+>> +               reg = <0x80fd0200 0x100>;
+>> +               interrupts = <2>;
+>> +               interrupt-parent = <&vic1>;
+>> +               clock-frequency = <1846153>;
+>> +               reg-shift = <0>;
+>> +               status = "okay";
+>> +               serial-line = <3>;
+>> +               vuart_cfg = <&vuart_a_cfg>;
+>> +       };
 
->> Should be %zu
+(...)
+
+>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+>> index 294093d45a23..913f722a6b8d 100644
+>> --- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
+>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+>> @@ -514,7 +514,9 @@ patternProperties:
+>>    "^hoperun,.*":
+>>      description: Jiangsu HopeRun Software Co., Ltd.
+>>    "^hp,.*":
+>> -    description: Hewlett Packard
+>> +    description: Hewlett Packard Inc.
+> 
+> Why are you changing this one?
+
+I guess this is squashing of my patch:
+https://lore.kernel.org/all/20220127075229.10299-1-krzysztof.kozlowski@canonical.com/
+
+which is fine to me, but vendor changve should be a separate commit with
+its own explanation. Now it looks indeed weird.
+
+> 
+>> +  "^hpe,.*":
+> 
+> You used HPE elsewhere... Lowercase is preferred.
 
 
-Thanks,
-Jonathan
 
---eVcSzelghXg5He3N
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAmH76TMACgkQCDBEmo7z
-X9ut4A//aOQLQWn/GISMFzJ4/Pq/g4sc9jjB+rZZhAxaAYaJXKdOoIq++a00Ng0/
-MUq7qOV18RJQiA/KYLud7LOmRNsbQXGNzDo1Z4TcplE/MjJr2VsJe+OuXO3fzvNN
-oJmEtfn0k3cwbiAPTkF00izWfjMGHfou/0xRX+NDoJybCt9eVwj8SUUW8fPdhwTC
-smiOUgLo39wHTlvP6WQiLSHu1RP53qe5aiqL11ZCmeSHMzH/vlQcG0jhBb4/46AR
-rB1wnbMEFap3VoZtRs73al6Ze+wPdmdL6sUB4e8L+5d59LDi9ROe02DbamgMf0VB
-C+sDv3GsemHp62J/id20G8eFit9C/xSyjVmng7uHMxWt75issT62gIxrfK2P81q+
-1dTEH64apssen6L1w4NiPs0pxzKmQ3vzO5FhypsaqHv/Qgc+C/nEu7drwaJ4MtSs
-nXZR+QU2vSKBxR5GK3ezz4UIuZKU8ZOYVlryQPm+wX4MBDumeH41RPqdSX3U/OZf
-OmCnFxWxTOFxc2aMt1JnKSxqMMFqLtQ18EDrj0WlxMOiW+f2f4RmS4yNAOyU0h5J
-ToH0Undp8fPD3fCsIJhI+io7VR13Jq0pJVqG0XbnEd2ljRcL9fRLaGf1ggwT3Ork
-ZKST+SfL/krulH/yaPmmB4ty2/1mDvNgWMXlc1zbeNwWmNBjsQU=
-=r2Xy
------END PGP SIGNATURE-----
-
---eVcSzelghXg5He3N--
+Best regards,
+Krzysztof
