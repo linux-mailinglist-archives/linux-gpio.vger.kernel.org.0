@@ -2,92 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 009A64AAA32
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Feb 2022 17:39:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C4B564AACCB
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Feb 2022 22:59:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234880AbiBEQjs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 5 Feb 2022 11:39:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42360 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229446AbiBEQjs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Feb 2022 11:39:48 -0500
-Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F623C061348
-        for <linux-gpio@vger.kernel.org>; Sat,  5 Feb 2022 08:39:47 -0800 (PST)
-Received: by mail-yb1-xb2c.google.com with SMTP id 192so1821103ybd.10
-        for <linux-gpio@vger.kernel.org>; Sat, 05 Feb 2022 08:39:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7F+8USHFDE8IayAm+TB2xQEiUJldw7h6gDGNLYqTghg=;
-        b=INqO7QDQEdOAV5NoH9Y7AUOI2g2l/U2lGjIMvznW3n27VeK55yayt20t7PlVMrFhyK
-         bklzh35WXNqbTyrLEmtI7XFQSMiCLL7nqoJDedC5VCZLPtwe/KVdn8RbF70HkfRkB5c0
-         IDvJ0Q4NHYnqmC/6eip3l9Qb/odjZp3i5lOB5OxrnkEUZnp2x3zGbOw3Dobv1GAYqB9G
-         9fCpc6SAKByvug8bkSA3jBVLyHZDG79nwC7vTEFGNNIHYs+RW+X5NyUq5d39swBfdo2h
-         gG4TqD6rwEo53qmi0e7vo5GhZ3r3zm4w0gEwYLhgtrXpLyuPdsnegkNH5q+G0TpzIbpS
-         7imQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7F+8USHFDE8IayAm+TB2xQEiUJldw7h6gDGNLYqTghg=;
-        b=Gmptwg9dVlYerTznAXpDtbsocdpFMWRqHAlArQL6M5Zr8mfZtCAWeFTC4H863oIiY6
-         YwgyNWGdxY/a3i1NiWv2NiYl9dFtoflNNyBJz0jktA7QyQ6+QmutUqSJHzCkZLnlKAUL
-         0GHqmFEy+tnjTNLag0zUp5zxyCGoX6/KeAN83qnusbPai8AvhxLvPbKMMcD3EhjtV1Zo
-         mv6dvJQPHvBEpCHifVEi7Mwr5v4/87y6QwHX35VFqzJoVgWmabMPjv8FA1nOivBf+UBI
-         urvTwHmjmFoEVARhvmwfz9MMub4uvZIpzlo3oW8BZ0KEP0rCN4k2PX4ngQGcqoy7CNKw
-         WneQ==
-X-Gm-Message-State: AOAM531w+ug/Pppu+4GsZkzNMhyjGDN7TyoxxXKXKyKBqEtZ7bn3wc9J
-        p8qtguCX+9XB5Oz2w3N6LP4uehW8Aj5VDy+BNWLN2Q==
-X-Google-Smtp-Source: ABdhPJxatjV1lGXgcy/ZJt/lFciDDNKH16UbIV+scTjMNBRxuQkcfRgr07sLhM2ygYwNysEVT+WIb3RNxJMTLUUlyAA=
-X-Received: by 2002:a25:a2c6:: with SMTP id c6mr3855899ybn.322.1644079186562;
- Sat, 05 Feb 2022 08:39:46 -0800 (PST)
+        id S1380057AbiBEV7t (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 5 Feb 2022 16:59:49 -0500
+Received: from mailserv1.kapsi.fi ([91.232.154.157]:52992 "EHLO
+        mailserv1.kapsi.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240342AbiBEV7t (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Feb 2022 16:59:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=ext.kapsi.fi; s=20161220; h=Subject:Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=rdOCqJZjpyoibeF91hRhL7D6HyDrCn3lzEaCLVQLB8w=; b=W0qNCohL/fvHY7My+QGJ3hNyXu
+        Vl57W2FVEq8afDUaF5TGjEZ4AyBqHvyQ7/BIhAFV0P8ytx2aS8QxMjYMD8qzmKuKwUSK4S2Ita1Di
+        d9Ss4IJVLJIppI1kGSU+10uTn4r6Y0oCkeuExZMrKQ1N95AxvKWytH577z/dpQp+B7JyUkpwP6rZt
+        BOiklPFSW5RqB/VxBFQBuoKLiIAH0B5wvm905ptXEKH6eWV964rN8c9K0H9sK3pluXWyT78yPtHtk
+        sTbMAkdAK4bVJOkoxTheVvu83/RX2Sloplml2Y6t9pcjJZB9iuxcHJSl6FiLZwwa975bAkY8WR2o6
+        w5isCQpA==;
+Received: from 246-30-196-88.dyn.estpak.ee ([88.196.30.246]:49928 helo=localhost)
+        by mailserv1.kapsi.fi with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <maukka@ext.kapsi.fi>)
+        id 1nGT5n-0006cE-K8; Sat, 05 Feb 2022 23:59:40 +0200
+Received: by localhost (sSMTP sendmail emulation); Sat, 05 Feb 2022 23:59:38 +0200
+From:   Mauri Sandberg <maukka@ext.kapsi.fi>
+To:     bgolaszewski@baylibre.com, brgl@bgdev.pl
+Cc:     andy.shevchenko@gmail.com, geert+renesas@glider.be,
+        linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, drew@beagleboard.org,
+        Mauri Sandberg <maukka@ext.kapsi.fi>
+Date:   Sat,  5 Feb 2022 23:59:16 +0200
+Message-Id: <20220205215918.8924-1-maukka@ext.kapsi.fi>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20210325122832.119147-1-sandberg@mailfence.com>
+References: <20210325122832.119147-1-sandberg@mailfence.com>
 MIME-Version: 1.0
-References: <20220204130142.21727-1-Niklas.Cassel@wdc.com>
-In-Reply-To: <20220204130142.21727-1-Niklas.Cassel@wdc.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 5 Feb 2022 17:39:35 +0100
-Message-ID: <CACRpkdZX5Sd-bp1n5zmYv7biPuBoNMGW2+OQ9qUi3PKNeG-R=A@mail.gmail.com>
-Subject: Re: [PATCH] gpio: sifive: use the correct register to read output values
-To:     Niklas Cassel <niklas.cassel@wdc.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "damien.lemoal@opensource.wdc.com" <damien.lemoal@opensource.wdc.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-        lindbergh.monkeyblade.net
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 88.196.30.246
+X-SA-Exim-Mail-From: maukka@ext.kapsi.fi
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on mailserv1.kapsi.fi
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        TVD_RCVD_IP,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.2
+Subject: [RESEND v8 0/2] gpio: gpio-cascade: add generic GPIO cascade
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on mailserv1.kapsi.fi)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Feb 4, 2022 at 2:02 PM Niklas Cassel <Niklas.Cassel@wdc.com> wrote:
+Hello all,
 
-> From: Niklas Cassel <niklas.cassel@wdc.com>
+Hopefully I am reaching Bartosz with this too now. I may have used an
+outdated e-mail address earlier. Please kindly take these two pathces
+in consideration.
 
-Hi Niklas, long time no C!
+Thanks,
+Mauri
 
-> Setting the output of a GPIO to 1 using gpiod_set_value(), followed by
-> reading the same GPIO using gpiod_get_value(), will currently yield an
-> incorrect result.
->
-> This is because the SiFive GPIO device stores the output values in reg_set,
-> not reg_dat.
->
-> Supply the flag BGPIOF_READ_OUTPUT_REG_SET to bgpio_init() so that the
-> generic driver reads the correct register.
->
-> Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>
+Mauri Sandberg (2):
+  dt-bindings: gpio-cascade: add documentation
+  gpio: gpio-cascade: add generic GPIO cascade
 
-Looks like a straight-forward fix so:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+ .../bindings/gpio/gpio-cascade.yaml           | 103 +++++++++++++++
+ drivers/gpio/Kconfig                          |  15 +++
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-cascade.c                   | 117 ++++++++++++++++++
+ 4 files changed, 236 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-cascade.yaml
+ create mode 100644 drivers/gpio/gpio-cascade.c
 
-Yours,
-Linus Walleij
+
+base-commit: 0868ad385affa28cf15aebca3c38c5c51f79b286
+--
+2.25.1
