@@ -2,216 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DAB4D4AA8D3
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Feb 2022 13:48:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 61A024AA9C1
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Feb 2022 16:53:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379849AbiBEMsJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 5 Feb 2022 07:48:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44744 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379797AbiBEMsI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Feb 2022 07:48:08 -0500
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78561C061355
-        for <linux-gpio@vger.kernel.org>; Sat,  5 Feb 2022 04:48:07 -0800 (PST)
-Received: by mail-wm1-x335.google.com with SMTP id q198-20020a1ca7cf000000b0037bb52545c6so617428wme.1
-        for <linux-gpio@vger.kernel.org>; Sat, 05 Feb 2022 04:48:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=conchuod-ie.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=+LPvcJ2sd5T7CufgUritnA87r/Y5fUmsfeCEUXpPT6E=;
-        b=ef9uwCGIArsx4B0HtycPruLj7UAWV4CigNy4UIbrAY3TClE0iuhryFmiNJKx4dleOg
-         yyA8XqUKF5FM5R0ZmQ30vYByA8DSGJmY1TsX6/zSWJZFfk0llkoBeDYYfGosdLSfS1Qk
-         ehwqDZwKdRwafW/+lg86kz2XUanNm8jZ2g1Tq7SHg0v14EVQKAHRJo/skJ8OeVrzD+qe
-         INtz/+NvmVRRRwzbvAvsNRauN2oObdpKRtrpXXNHFSpmjS9UzLj2X4Y5eLvobCaKL1lB
-         pNd8r5wOZfbFPBEjDbWF5O1+0RDhRc7+e1YfuhSc0UOQQWl8ouLqrtx+n2EqpOuOXDST
-         UQ+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=+LPvcJ2sd5T7CufgUritnA87r/Y5fUmsfeCEUXpPT6E=;
-        b=DiJwDFaZpgPYP9+aM8NsPgmGq4G6FSQnTTefSWX/F2lphdVd73fHe++Fe/ECZFLFoQ
-         LzRUeAVUTtvAx7WPLUg9qpsUpDe8s1GqyLIkZWR7G2uIkBGsq+ObmrDiokQcBl7ZfU2Y
-         z+e6l7GGG1u/FAwtW4DSytfMhdQ/AO4aKqPqdexa4xEq4977Ww2DsBb6GYqOiPOxdzdO
-         eChnOREziPkKHM1szKdvhjxSpvvxaD122tXgtcs3fPJLsQJO2FXBkVPKv962qQgvtVjq
-         /RTGJn8HMpVt1ExjOZRXr9+0v5iwuYMVGVvaWKunOju+N7vNnfj2gIo20Vnt61kqu9Yo
-         VuNg==
-X-Gm-Message-State: AOAM531Dkd8EiLhd2nh6pawjMscxGh/QYRiyMTeFhcZRrskjUfdAPHo+
-        MMfs71KQyziqLcM+wdfPfr0vjA==
-X-Google-Smtp-Source: ABdhPJxpq/DFWpEEyQIsjuuaVvilLjogf6JlPr9dXqoGfRGP3jRw+knIrG8WTJYlwwMgH5tU0Wc1Vw==
-X-Received: by 2002:a05:600c:3217:: with SMTP id r23mr2998357wmp.159.1644065284763;
-        Sat, 05 Feb 2022 04:48:04 -0800 (PST)
-Received: from [192.168.2.116] ([109.78.72.167])
-        by smtp.gmail.com with ESMTPSA id m8sm4429538wrn.106.2022.02.05.04.48.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 05 Feb 2022 04:48:04 -0800 (PST)
-Message-ID: <c610ce52-e1ef-393c-0948-57a4c6f07d72@conchuod.ie>
-Date:   Sat, 5 Feb 2022 12:48:02 +0000
+        id S1380267AbiBEPxt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 5 Feb 2022 10:53:49 -0500
+Received: from mout.gmx.net ([212.227.15.15]:57835 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232649AbiBEPxs (ORCPT <rfc822;linux-gpio@vger.kernel.org>);
+        Sat, 5 Feb 2022 10:53:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1644076426;
+        bh=YfZya6X96vYqsQSbwTEIIDVkJz7pOxjH0XPmxKVtP4c=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=dPDgE1aSRR/41j+ZA9J8g1iYMK5bMtQ1poEPSCDWXD+EATucY/5J19EGjhjT3vq6V
+         BaWZ6UA3fyIu5zuPD8Wcsyb4cimV/imoLnI3Eg+tYzgEc4pBG0CTE/P6zGx5Q+2dEf
+         GfT7W+V8ZMNU2Ev7opyc7eAQ+ev6bEYfWuxb5nlw=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([87.78.182.239]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1N6bfw-1m8T5g2yCs-0184b5; Sat, 05
+ Feb 2022 16:53:46 +0100
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     linux-gpio@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Subject: [PATCH v3 0/2] Fixing the compile-test warnings in pinctrl-npcm7xx
+Date:   Sat,  5 Feb 2022 16:53:29 +0100
+Message-Id: <20220205155332.1308899-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.1
-Subject: Re: [PATCH v5 06/12] dt-bindings: pwm: add microchip corepwm binding
-Content-Language: en-US
-To:     Conor.Dooley@microchip.com, geert@linux-m68k.org,
-        u.kleine-koenig@pengutronix.de
-Cc:     a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        aou@eecs.berkeley.edu, atishp@rivosinc.com, bin.meng@windriver.com,
-        brgl@bgdev.pl, Daire.McNamara@microchip.com,
-        devicetree@vger.kernel.org, heiko@sntech.de,
-        Ivan.Griffin@microchip.com, jassisinghbrar@gmail.com,
-        krzysztof.kozlowski@canonical.com, lee.jones@linaro.org,
-        Lewis.Hanly@microchip.com, linus.walleij@linaro.org,
-        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-rtc@vger.kernel.org,
-        palmer@dabbelt.com, paul.walmsley@sifive.com, robh+dt@kernel.org,
-        robh@kernel.org, thierry.reding@gmail.com
-References: <20220201075824.aixrvkvmjde2ihxx@pengutronix.de>
- <20220202123542.3721512-1-conor.dooley@microchip.com>
- <CAMuHMdWrmuY7pwY8U0t9LumEvUTBEA06uV7hNyKFAPMQtE98_A@mail.gmail.com>
- <3862e358-901c-e848-71af-01eceed26f74@microchip.com>
- <CAMuHMdXvw9cNNzBhp-sSMTXxP2eALhB=fD78Wgx-kks7wr6oiQ@mail.gmail.com>
- <fa747594-a112-d313-5de3-2330bf5ddc8a@microchip.com>
-From:   Conor Dooley <mail@conchuod.ie>
-In-Reply-To: <fa747594-a112-d313-5de3-2330bf5ddc8a@microchip.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-        lindbergh.monkeyblade.net
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:sQIjNl+kSem/HXl/drlvCq2VP+JrSIjz9yMQmmGIa5ddgt5Tugh
+ 7J7S7ZBoQrBzAqH9Hn9f8P3lT2Cqcqo9JH02wF9iJLe937qv9A6UW3ngOItP7tSUVw3vIrx
+ 5lBDYgvbuSdUgoSpdMeX9cIKL2Ug4FAC/xDb2m2UMCoVShbPfLhu8khE26bLkWaOcEnJ2iy
+ aPNo3Z0iP7FXPuCrBDY0Q==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:om3+7VNlD0w=:T8T235ZzZHJ20wXBnlo5IH
+ kYK3rruw2X/XRMetbZ0oD3Eu+LIZSbmRi50E2OSOTiTTXipUuvjTqtNZoNd70AgDvCeW+AUNw
+ OCw/c4HG0nmgTZbjb1Mrel9RkoTpvBYz7DZJSAhxI6R/oykmhArxvkKtEGsRS62VGy252IjQh
+ xN/kyi3l6eKuCTbaU5Tsk7TZZfwy4YkzEQjJukxVnjRVn3JoC8PVVz3EeUfUj6++62TJ8CMxz
+ 6O+gsU2DxiuiHcqlVvAZLfPX+3DIz6Iol1l0PVb1Wy0msnjmkcASgjrbR6Vr1w/hcYVIqzTEJ
+ MVfEzdHpAVK78JmGk+Nq6orF60+NiTyZhljWohL3Q/vRi0COk+PcDO9v/mHg7tc47J7ICQjHs
+ v41AXXmB90ux8KR5oq4X/iQx+8f0GtJLeceKH4Rlx91HC/V21cSPB65RoLe9tES96lYLTUH7Y
+ ZqNuSxX5H5CLnD5ei35bgB5qWGybcxiYKs4U1h5eAwYJP8JxsEn2Qq5s4JFJXeI39nbkrjdw4
+ RpyWvnn9zHHQimdub/j7xEdkQ/akYQ2BX4FqrmtrfF3QMevOv9oDSmij2ND+yp0+j6Ef8vVLL
+ HMY0m9n+86R5GSRSrLLZJl+ZjBgqNSnOfAFjSYMmqLepbnjfznB/7I4OVEFAD891s9xN6lxSe
+ aIuFUfmQ6NtdpMaOn5j3dsSplC+vyaskD4J3r431SmFnloapdLMs9sMlnn240QEbWiT4Nh7OL
+ TmMhMzVIKdeHgl2wMM27WJBd3coPb4RD1rwN/rCPoDaAqz6/9GKM8RfAHh23pfqnfRizMBpu2
+ oqzU0gvmeSJRxurisSH8h8sGa1GxPkDkdQdZysy9uf3o/qj9xI1VjFPh06JVrOG14fgBCdE9s
+ oSqgWWQEkRRDBRpYC5JihIXAmxoiHbmgW5INRjyHwBPC3nGlrfcscIPE5sFKToFA/jDvs5XiG
+ 0K0MkLlRLul1L5matJvxNQ3F/nvKC10bhli+E+yyEngKHC98hD2P7Qo7Y9kn1k+GKcUga0PmE
+ CjjyaTn2A3gJqCq1zKI80AfQRBW2YIy0skRyPhv61K1m6WOjM2rIZbSch5sCeiIi0XNlQqMKi
+ swXe8A8yyKEb0o=
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Geert, Uwe,
+My "Nuvoton WPCM450 pinctrl and GPIO driver" patchset brought two
+warnings[1] in the pinctrl-npcm7xx to light.
 
-Hopefully the following does a better job of explaining the two parameters?
+[1]: https://lore.kernel.org/lkml/202201292234.NpSNe4TD-lkp@intel.com/
 
-Thanks,
-Conor.
+v3:
+- Changed to %du to %zu
 
-microchip,sync-update-mask:
-   description: |
-     Depending on how the IP is instantiated, there are two modes of
-     operation. In synchronous mode, all channels are updated at the
-     beginning of the PWM period, and in asynchronous mode updates
-     happen as the control registers are written. A 16 bit wide
-     "SHADOW_REG_EN" parameter of the IP core controls whether
-     synchronous mode is possible for each channel, and is set by the
-     bitstream programmed to the FPGA. If the IP core is instantiated
-     with SHADOW_REG_ENx=1, both registers that control the duty cycle
-     for channel x have a second "shadow"/buffer reg synthesised.
-     At runtime a bit wide register exposed to APB can be used to toggle
-     on/off synchronised mode for all channels it has been synthesised
-     for.
-     Each bit corresponds to a PWM channel & represents whether
-     synchronous mode is possible for that channel.
+v2:
+- "Fixes:" tags
 
-   $ref: /schemas/types.yaml#/definitions/uint32
-   default: 0
+Jonathan Neusch=C3=A4fer (2):
+  pinctrl: nuvoton: npcm7xx: Use %zu printk format for ARRAY_SIZE()
+  pinctrl: nuvoton: npcm7xx: Rename DS() macro to DSTR()
 
-microchip,dac-mode-mask:
-   description: |
-     Optional, per-channel Low Ripple DAC mode is possible on this IP
-     core. It creates a minimum period pulse train whose High/Low
-     average is that of the chosen duty cycle. This "DAC" will have far
-     better bandwidth and ripple performance than the standard PWM
-     algorithm can achieve. A 16 bit DAC_MODE module parameter of the IP
-     core, set at instantiation and by the bitstream programmed to the
-     FPGA, determines whether a given channel operates in regular PWM or
-     DAC mode.
-     Each bit corresponds to a PWM channel & represents whether DAC mode
-     is enabled for that channel.
+ drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c | 160 +++++++++++-----------
+ 1 file changed, 80 insertions(+), 80 deletions(-)
 
-   $ref: /schemas/types.yaml#/definitions/uint32
-   default: 0
+=2D-
+2.34.1
 
-On 02/02/2022 14:37, Conor.Dooley@microchip.com wrote:
-> On 02/02/2022 14:02, Geert Uytterhoeven wrote:
->> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
->> On Wed, Feb 2, 2022 at 2:46 PM <Conor.Dooley@microchip.com> wrote:
->>> On 02/02/2022 13:28, Geert Uytterhoeven wrote:
->>>> On Wed, Feb 2, 2022 at 1:33 PM <conor.dooley@microchip.com> wrote:
->>>>>> On 01/02/2022 07:58, Uwe Kleine-König wrote:
->>>>>>> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
->>>>>>> On Mon, Jan 31, 2022 at 11:47:21AM +0000, conor.dooley@microchip.com wrote:
->>>>>>> From: Conor Dooley <conor.dooley@microchip.com>
->>>>>>>
->>>>>>> Add device tree bindings for the Microchip fpga fabric based "core" PWM
->>>>>>> controller.
->>>>>>>
->>>>>>> Reviewed-by: Rob Herring <robh@kernel.org>
->>>>>>>
->>>>>>> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
->>>>>>> ---
->>>>>>> .../bindings/pwm/microchip,corepwm.yaml       | 75 +++++++++++++++++++
->>>>
->>>>>>> +  microchip,sync-update:
->>>>>>> +    description: |
->>>>>>> +      In synchronous mode, all channels are updated at the beginning of the PWM period.
->>>>>>> +      Asynchronous mode is relevant to applications such as LED control, where
->>>>>>> +      synchronous updates are not required. Asynchronous mode lowers the area size,
->>>>>>> +      reducing shadow register requirements. This can be set at run time, provided
->>>>>>> +      SHADOW_REG_EN is asserted. SHADOW_REG_EN is set by the FPGA bitstream programmed
->>>>>>> +      to the device.
->>>>>>> +      Each bit corresponds to a PWM channel & represents whether synchronous mode is
->>>>>>> +      possible for the PWM channel.
->>>>>>> +
->>>>>>> +    $ref: /schemas/types.yaml#/definitions/uint16
->>>>>>> +    default: 0
->>>>>>
->>>>>> I'm not sure I understand this correctly. This is a soft-core and you
->>>>>> can synthesize it either with or without the ability to do synchronous
->>>>>> updates or not, right? All 16 channels share the same period length and
->>>>>> in the simple implementation changing the duty cycle is done at once
->>>>>> (maybe introducing a glitch) and in the more expensive implementation
->>>>>> there is a register to implement both variants?
->>>>>
->>>>> Correct. If the IP is instantiated with SHADOW_REG_ENx=1, both
->>>>> registers that control the duty cycle for channel x have a second
->>>>> "shadow reg" synthesised. At runtime a bit wide register exposed to
->>>>> APB can be used to toggle on/off synchronised mode for all channels
->>>>> it has been synthesised for.
->>>>>
->>>>> I will reword this description since it is not clear.
->>>>
->>>> Shouldn't it use a different compatible value instead?
->>>> Differentiation by properties is not recommended, as it's easy to
->>>> miss a difference.
->>>
->>> Either you have something in mind that I've not thought of, or I've done
->>> a bad job of explaining again. The buffer/"shadow" registers are
->>> synthesised on a per channel basis, so any combination of the 16
->>> channels may have this capability. The same applies to the DAC mode, per
->>> channel there too.
->>
->> Oops, hadn't noticed this is per channel. Indeed, then a different
->> compatible value is futile.
->> So since "microchip,sync-update" is a bitmask, perhaps it should be
->> called "microchip,sync-update-mask"?
->> Same for "microchip,dac-mode" -> "microchip,dac-mode-mask"?
-> 
-> Adding -mask sounds good to me.
-> 
->> Also, using different integer sizes than uint32 is frowned upon, unless
->> there is a very good reason to do so. I can imagine a future version
->> would support more channels, and then uint16 becomes a limitation.
-> 
-> Sure, uint32 it is.
-> 
->> For both: Rob?
-> 
-> Both of these properties fall under the "DO attempt to make bindings
-> complete even if a driver doesn’t support some features" category, so I
-> am perfectly happy to change these properties to whatever is convention
-> (or ultimately drop them for the sake of the remainder of the series).
-> 
-> Thanks,
-> Conor.
-> 
