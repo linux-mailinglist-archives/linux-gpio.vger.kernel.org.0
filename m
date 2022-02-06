@@ -2,41 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 308824AB1D6
-	for <lists+linux-gpio@lfdr.de>; Sun,  6 Feb 2022 20:51:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B3F6C4AB2D3
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Feb 2022 00:59:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242126AbiBFTvZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 6 Feb 2022 14:51:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48318 "EHLO
+        id S242862AbiBFX7N (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 6 Feb 2022 18:59:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233917AbiBFTvY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 6 Feb 2022 14:51:24 -0500
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C9EE1C043184
-        for <linux-gpio@vger.kernel.org>; Sun,  6 Feb 2022 11:51:23 -0800 (PST)
-X-IronPort-AV: E=Sophos;i="5.88,348,1635174000"; 
-   d="scan'208";a="110327371"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 07 Feb 2022 04:46:20 +0900
-Received: from localhost.localdomain (unknown [10.226.92.17])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 2D35B40E9806;
-        Mon,  7 Feb 2022 04:46:18 +0900 (JST)
-From:   Biju Das <biju.das.jz@bp.renesas.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 2/2] pinctrl: renesas: rzg2l: Improve rzg2l_gpio_register()
-Date:   Sun,  6 Feb 2022 19:46:14 +0000
-Message-Id: <20220206194614.13209-2-biju.das.jz@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220206194614.13209-1-biju.das.jz@bp.renesas.com>
-References: <20220206194614.13209-1-biju.das.jz@bp.renesas.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        with ESMTP id S242736AbiBFX7L (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 6 Feb 2022 18:59:11 -0500
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9246CC06173B;
+        Sun,  6 Feb 2022 15:59:10 -0800 (PST)
+Received: by mail-pj1-f50.google.com with SMTP id v4so5223434pjh.2;
+        Sun, 06 Feb 2022 15:59:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PrfCsSbfGWIrOruxPw/p5CTYm+a4iMaGLX1NpoJ3bk8=;
+        b=mdgu/6CMoHUfdvyLU1MGf6HV6wFGgGBKMZIxixJ9YJD0QjehHFVNTEycclmwsAh+RL
+         JCUF5qhM5GuEYVDSA8XlltCGocQvayiPVGgAIbIg/qcP6X8+R5kV1HqGq/lw3S0skCq7
+         gOOvWAIDyJQ8/9oqS1NKSrXosbmcj9xgp0gqTT5qWIBv4yZknUtpeu3ppf0eQbYZO11g
+         EJFW0JXzVdoBHoJRWefrgHUQMRx7Jso3MPZRih//F4kc2G5K1R6T6ejmvMQbH7Oa6hoS
+         ebn0Z0ivOfCALtPy2+ZvK0xmD/d1Mz03+A2kDg8Qz5Eba2qMH/3vxxmAty5mhpyDFFgF
+         hiVA==
+X-Gm-Message-State: AOAM5338QKpeBxvJFm++Lvj6xUbjObc6+GJHOLPTPgknkQBFEXul125Z
+        vfA0fe1M07Vt7VvKCMpEHTt9vz07Ni3A2eM2R0MG+fcwdco=
+X-Google-Smtp-Source: ABdhPJy13y1mAC2XnhB8T6L+FzK0qauBeKmGBp9m5c0YTv70SqCFB5GBauOOr2I6FP2291j85qX0+S9+gCMWhVjjGy0=
+X-Received: by 2002:a17:902:a617:: with SMTP id u23mr2108993plq.48.1644191949843;
+ Sun, 06 Feb 2022 15:59:09 -0800 (PST)
+MIME-Version: 1.0
+References: <202202060827.9dExlwbc-lkp@intel.com> <20220206003735.GA94316@d6598ff186c2>
+In-Reply-To: <20220206003735.GA94316@d6598ff186c2>
+From:   Emil Renner Berthing <kernel@esmil.dk>
+Date:   Mon, 7 Feb 2022 00:58:58 +0100
+Message-ID: <CANBLGcyJDdej0y6XU-bSgW_W9YYtZF3nQWnD5vO8KXYweFHyVw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: starfive: fix semicolon.cocci warnings
+To:     kernel test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Huan Feng <huan.feng@starfivetech.com>,
+        Drew Fustini <drew@beagleboard.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -44,36 +59,22 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Update rzg2l_gpio_register() to use driver data for chip->names
-and check for gpio-range. This allows reusing the driver for
-SoC's with different port pin definitions(eg:- RZ/G2UL SoC has
-fewer ports compared to RZ/G2L and port pin definitions are
-different).
+On Sun, 6 Feb 2022 at 01:38, kernel test robot <lkp@intel.com> wrote:
+>
+> From: kernel test robot <lkp@intel.com>
+>
+> drivers/pinctrl/pinctrl-starfive.c:1029:2-3: Unneeded semicolon
+>
+>
+>  Remove unneeded semicolon.
+>
+> Generated by: scripts/coccinelle/misc/semicolon.cocci
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: kernel test robot <lkp@intel.com>
 
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
----
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Thanks. There is already a previous patch for this although it was
+sent before this code was in Linus' tree:
+https://lore.kernel.org/all/20211222073522.123656-1-yang.lee@linux.alibaba.com/
 
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index ccee9c9e2e22..cb805502fb0f 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -1090,12 +1090,12 @@ static int rzg2l_gpio_register(struct rzg2l_pinctrl *pctrl)
- 	}
- 
- 	if (of_args.args[0] != 0 || of_args.args[1] != 0 ||
--	    of_args.args[2] != ARRAY_SIZE(rzg2l_gpio_names)) {
-+	    of_args.args[2] != pctrl->data->n_port_pins) {
- 		dev_err(pctrl->dev, "gpio-ranges does not match selected SOC\n");
- 		return -EINVAL;
- 	}
- 
--	chip->names = rzg2l_gpio_names;
-+	chip->names = pctrl->data->port_pins;
- 	chip->request = rzg2l_gpio_request;
- 	chip->free = rzg2l_gpio_free;
- 	chip->get_direction = rzg2l_gpio_get_direction;
--- 
-2.17.1
-
+/Emil
