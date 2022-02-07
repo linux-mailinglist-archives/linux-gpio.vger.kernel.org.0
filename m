@@ -2,100 +2,174 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5824F4AC206
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Feb 2022 15:57:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B3A8E4AC61E
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Feb 2022 17:41:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244579AbiBGOz4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Feb 2022 09:55:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49628 "EHLO
+        id S1352719AbiBGQiZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Feb 2022 11:38:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1383589AbiBGOpM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Feb 2022 09:45:12 -0500
-X-Greylist: delayed 62 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 07 Feb 2022 06:45:12 PST
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17B2EC0401C2
-        for <linux-gpio@vger.kernel.org>; Mon,  7 Feb 2022 06:45:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1644245112; x=1675781112;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=p/duGNHsUm97N0VAdH1ZLjtrQxZmGiFTO5lsQ0azM+M=;
-  b=RSeNeYCMRiL7QLOoKvNvqa4jH4NVt/nXzH24uCyHTgnsn02zHeehKqnA
-   wBtR1v6TVI8DkK1ZIexIShX+zn6oUiz+Dre0ICnrFu7MtiOBtx5V31IVi
-   RFJnPaYrsOgRNrAVjFXGqQfzW/HlNbwLAK2uvDZYdpdvEu1TnAF5XwkIc
-   32hYoeqMibBn3ic+Z6dfeq9eQOphrlBULdoZVwaUelhcB9ZtaoXnQpxHR
-   S3z7RKvnNbGgZWamQwzB4XjiutQ9FR9NgInzY0hzSrUaB7SyWNmAdHcwK
-   GzM4m5lQ5gCYkDeuXC0xPyWYf6yN6xnORU/s4gE4SIydrchGJnb3lKwba
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10250"; a="248493479"
+        with ESMTP id S1344497AbiBGQY5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Feb 2022 11:24:57 -0500
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E9EFC0401CF;
+        Mon,  7 Feb 2022 08:24:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1644251097; x=1675787097;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ad3vvcjmo72FEXpL/WUH4Bm8CDxa6BTmpj9AaGDiqa0=;
+  b=J3iSpKVW7DzxiDw+IQz2aqqgPsfcuW4VYFzgWYfIOrdR7FyrLzl2RC23
+   YMIF1gsZ1+V996NUgaOO4Y2YAgO4mOVRFl9kqH3pi30yFoz9nvQPNp/9C
+   PqkMLSbitwBqQWLk0outJR/TOqB9IQB5pcvg1ySTqjaM8nIV7Y3X4SZdJ
+   wvNBy48/9ikVgwnXxtoyediYg/7CuWW54yNxL+XQb9t6WYDoXTsAEJykt
+   CDIAMEs3StiyfnVPfLx4dv6LAJBz66iU4taiLqjeqHYQNVRtze+EDNIYS
+   dg+v2WmGKPyE0i5W6Y5/Vp6Cyz3Pl3ZDkfKGvAtPdgc6YWyIr4aubW+rt
+   g==;
+IronPort-SDR: DLrFGEXvXjnqXj5ikuFvRRPbczwUI/BBckPswC9ZTFj2GxNwih7v1QF7aqa3RLY5RSvRhs7u/s
+ WLEY2PihOpmyPslvWW5+Z1dnlVz5w38I8WQ7AKxQGkm3gG9XKYTzbPsaCQ607t6+QbOmk4MEpR
+ N76iwFYhc5Z1U4gUeboc/ODDfnqhUyy6JYPBY2cDuec4/9dZNC0Z5UCAT+mkWcVl3izsaapdyb
+ v6obvMg9sAujHMR8WDc3x4Im4on/gFq93kRjeZOjQ9PCjf6OrdLBOhPRRJBJbK93Gb4qG3/3B9
+ 2Crg6uEJ2MJ2AvfHLFwtFsCg
 X-IronPort-AV: E=Sophos;i="5.88,350,1635231600"; 
-   d="scan'208";a="248493479"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2022 06:44:09 -0800
-X-IronPort-AV: E=Sophos;i="5.88,350,1635231600"; 
-   d="scan'208";a="700486892"
-Received: from smile.fi.intel.com ([10.237.72.61])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2022 06:44:07 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nH5ES-001w7G-L3;
-        Mon, 07 Feb 2022 16:43:08 +0200
-Date:   Mon, 7 Feb 2022 16:43:08 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v3 0/4] gpiolib: A fix and a few cleanups
-Message-ID: <YgEv/MIydfZlL1zQ@smile.fi.intel.com>
-References: <20220201152758.40391-1-andriy.shevchenko@linux.intel.com>
+   d="scan'208";a="152200109"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 07 Feb 2022 09:23:52 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.17; Mon, 7 Feb 2022 09:23:50 -0700
+Received: from wendy.microchip.com (10.10.115.15) by chn-vm-ex04.mchp-main.com
+ (10.10.85.152) with Microsoft SMTP Server id 15.1.2375.17 via Frontend
+ Transport; Mon, 7 Feb 2022 09:23:46 -0700
+From:   <conor.dooley@microchip.com>
+To:     <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <robh+dt@kernel.org>,
+        <jassisinghbrar@gmail.com>, <thierry.reding@gmail.com>,
+        <u.kleine-koenig@pengutronix.de>, <lee.jones@linaro.org>,
+        <a.zummo@towertech.it>, <alexandre.belloni@bootlin.com>,
+        <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
+        <aou@eecs.berkeley.edu>, <geert@linux-m68k.org>,
+        <krzysztof.kozlowski@canonical.com>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-i2c@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        <linux-rtc@vger.kernel.org>, <linux-riscv@lists.infradead.org>
+CC:     <bin.meng@windriver.com>, <heiko@sntech.de>,
+        <lewis.hanly@microchip.com>, <conor.dooley@microchip.com>,
+        <daire.mcnamara@microchip.com>, <ivan.griffin@microchip.com>,
+        <atishp@rivosinc.com>
+Subject: [PATCH v6 00/12] Update the Icicle Kit device tree
+Date:   Mon, 7 Feb 2022 16:26:26 +0000
+Message-ID: <20220207162637.1658677-1-conor.dooley@microchip.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220201152758.40391-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Feb 01, 2022 at 05:27:54PM +0200, Andy Shevchenko wrote:
-> Patch 1 is a fix for wrong error code to user space.
-> Patches 2-4 are small cleanups.
+From: Conor Dooley <conor.dooley@microchip.com>
 
-> Can be routed via my tree, or directly into GPIO, whatever maintainers
-> prefer.
+This series updates the Microchip Icicle Kit device tree by adding a
+host of peripherals, and some updates to the memory map. In addition,
+the device tree has been split into a third part, which contains "soft"
+peripherals that are in the fpga fabric.
 
-Bart, if the series is okay for you tell me which route to take?
+Several of the entries are for peripherals that have not get had their
+drivers upstreamed, so in those cases the dt bindings are included where
+appropriate in order to avoid the many "DT compatible string <x> appears
+un-documented" errors.
 
-> Changelog v3:
-> - joined two patches into a single fix (Bart)
-> - added Rb tag (Linus)
-> - renamed for_each_gpio_desc_with_flag() macro to be descriptive (Johan)
-> - added two new cleanups
-> 
-> Andy Shevchenko (4):
->   gpiolib: Never return internal error codes to user space
->   gpiolib: Introduce for_each_gpio_desc_with_flag() macro
->   gpiolib: Use short form of ternary operator in gpiod_get_index()
->   gpiolib: Simplify error path in gpiod_get_index() when requesting GPIO
-> 
->  drivers/gpio/gpiolib-cdev.c  |  6 +++---
->  drivers/gpio/gpiolib-of.c    | 10 ++++------
->  drivers/gpio/gpiolib-sysfs.c | 14 ++++----------
->  drivers/gpio/gpiolib.c       | 35 ++++++++++++++++-------------------
->  drivers/gpio/gpiolib.h       | 19 +++++++++++++++++++
->  5 files changed, 46 insertions(+), 38 deletions(-)
+Depends on mpfs clock driver binding (on clk/next) to provide 
+dt-bindings/clock/microchip,mpfs-clock.h for the device tree
+and on the other changes to the icicle/mpfs device tree from geert
+that are already in linux/riscv/for-next.
+
+Additionally, the interrupt-extended warnings on the plic/clint are 
+cleared by [1] & [2].
+
+[1] https://lore.kernel.org/linux-riscv/cover.1639744468.git.geert@linux-m68k.org/
+[2] https://lore.kernel.org/linux-riscv/cover.1639744106.git.geert@linux-m68k.org/
+
+Changes from v5:
+- reworded the descriptions in the pwm binding to (hopefully) add
+  clarity
+- added -mask to the custom properties and made them 32 bit
+- renamed the i2c binding to corei2c, since it is not mpfs specific
+- removed the child nodes of the system controller in example/dts &
+  will create them in the driver.
+  @Rob, I assume keeping them documented is the correct thing to do?
+- removed the dependancy on the clock binding from the examples
+- reformatted rtc interrupts as per Rob's suggestion
+
+Changes from v4:
+- dont include icicle_kit_defconfig, accidentally added in v3
+- drop prescaler from mpfs-rtc & calculate the value instead
+- use corei2c as a fallback device for mpfs-i2c
+- drop spi dt-binding (on spi-next)
+  commit 2da187304e556ac59cf2dacb323cc78ded988169
+- drop usb dt-binding (on usb-next)
+
+Changes from v3:
+- drop "mailbox: change mailbox-mpfs compatible string", already upstream:
+  commit f10b1fc0161cd99e ("mailbox: change mailbox-mpfs compatible string")
+- fix copy paste error in microchip,mpfs-mailbox dt-binding
+- remove whitespace in syscontroller dt entry
+
+Changes from v2:
+- dropped plic int header & corresponding defines in dts{,i}
+- use $ref to drmode in mpfs-musb binding
+- split changes to dts{,i} again: functional changes to existing
+  elements now are in a new patch
+- drop num-cs property in mpfs-spi binding
+- dont make the system controller a simple-mfd
+- move the separate bindings for rng/generic system services into the 
+  system controller binding
+- added an instance corei2c as i2c2 in the fabric dtsi
+- add version numbering to corepwm and corei2c compat string (-rtl-vN)
+
+Conor Dooley (12):
+  dt-bindings: soc/microchip: update syscontroller compatibles
+  dt-bindings: soc/microchip: add services as sub devs of sys ctrlr
+  dt-bindings: i2c: add bindings for microchip mpfs i2c
+  dt-bindings: rtc: add bindings for microchip mpfs rtc
+  dt-bindings: gpio: add bindings for microchip mpfs gpio
+  dt-bindings: pwm: add microchip corepwm binding
+  riscv: dts: microchip: use clk defines for icicle kit
+  riscv: dts: microchip: add fpga fabric section to icicle kit
+  riscv: dts: microchip: refactor icicle kit device tree
+  riscv: dts: microchip: update peripherals in icicle kit device tree
+  riscv: dts: microchip: add new peripherals to icicle kit device tree
+  MAINTAINERS: update riscv/microchip entry
+
+ .../bindings/gpio/microchip,mpfs-gpio.yaml    |  79 ++++++
+ .../bindings/i2c/microchip,corei2c.yaml       |  56 ++++
+ ...ilbox.yaml => microchip,mpfs-mailbox.yaml} |   6 +-
+ .../bindings/pwm/microchip,corepwm.yaml       |  79 ++++++
+ .../bindings/rtc/microchip,mfps-rtc.yaml      |  58 ++++
+ .../microchip,mpfs-sys-controller.yaml        |  66 +++++
+ ...icrochip,polarfire-soc-sys-controller.yaml |  35 ---
+ MAINTAINERS                                   |   2 +
+ .../dts/microchip/microchip-mpfs-fabric.dtsi  |  25 ++
+ .../microchip/microchip-mpfs-icicle-kit.dts   | 115 ++++++--
+ .../boot/dts/microchip/microchip-mpfs.dtsi    | 254 ++++++++++++++----
+ 11 files changed, 671 insertions(+), 104 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml
+ create mode 100644 Documentation/devicetree/bindings/i2c/microchip,corei2c.yaml
+ rename Documentation/devicetree/bindings/mailbox/{microchip,polarfire-soc-mailbox.yaml => microchip,mpfs-mailbox.yaml} (82%)
+ create mode 100644 Documentation/devicetree/bindings/pwm/microchip,corepwm.yaml
+ create mode 100644 Documentation/devicetree/bindings/rtc/microchip,mfps-rtc.yaml
+ create mode 100644 Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-sys-controller.yaml
+ delete mode 100644 Documentation/devicetree/bindings/soc/microchip/microchip,polarfire-soc-sys-controller.yaml
+ create mode 100644 arch/riscv/boot/dts/microchip/microchip-mpfs-fabric.dtsi
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.35.1
 
