@@ -2,103 +2,154 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E19E4AD65F
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Feb 2022 12:25:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 227914AD652
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Feb 2022 12:24:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357789AbiBHLYK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Feb 2022 06:24:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37172 "EHLO
+        id S1356131AbiBHLX5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Feb 2022 06:23:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356854AbiBHLJh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Feb 2022 06:09:37 -0500
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23EF7C03FECA
-        for <linux-gpio@vger.kernel.org>; Tue,  8 Feb 2022 03:09:36 -0800 (PST)
-Received: by mail-ed1-x530.google.com with SMTP id w14so36718891edd.10
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Feb 2022 03:09:36 -0800 (PST)
+        with ESMTP id S1356938AbiBHLNb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Feb 2022 06:13:31 -0500
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 423EEC03FEC0
+        for <linux-gpio@vger.kernel.org>; Tue,  8 Feb 2022 03:13:31 -0800 (PST)
+Received: by mail-ed1-x52f.google.com with SMTP id da4so14694026edb.4
+        for <linux-gpio@vger.kernel.org>; Tue, 08 Feb 2022 03:13:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=KQBVfVDlvCSrk6Sswzhkfx8sEJDxZvcBw31v7IjCtFQ=;
-        b=Zcfv+t1DGD3EB3HP5kz6zWh1pByYKpIDp3Q8enYRVXu63AQLAzCQugZ4SoXjF7MtVL
-         wPoRzOO0w7TcQorumE2LF1RehZcto52dZVQic+Oml3gV3bdUn5exQP5qlieY7VK772IB
-         899VBZDJodq3ijB1E4fvyfVsqH5Yv4Wvfw9r+FwTxvKuN0Gv9NsxgyWrCWSqhTgUcvlA
-         SsUtmMsqfSbJdRCSSPqUcEhsTh85nK2hsyj/xSZL1PKB+kbu1sc+t0jMHQvCn4lcflc5
-         LXdfZb+JZrjoX0m2iXKT7sAVVRTIwqpSlqCbqvYB+7glzzi2eSDHj+aHnj1g5e8Z9v1g
-         LvJg==
+        bh=3G2225l3e7AAW7cvW9DSbSKu70gKYyiFP+/P2AbU0GE=;
+        b=Xyf7gEeeFQZpkKXO8gzF2AgluqdrifnT/FgKVNNk/lOKTNzDZiaZpxWZkJBQ3wk8ue
+         hYn6eA9FXNG9IBGN9B+GjYUHQ8714SRdBNzbQJ82JTECIlg3js0Ids8PtzlFJlwQ8/No
+         KjSJpWys4J2GcMk8T8YisSEgyfTJXbUXne3m/y0TCeoQoimlXHHwP1M4P31cZ7kOgtbc
+         +zWBrbmshVSmfUyRDLeErcgLx7SVrFU5Zk0tjgRWRfH+3NXn/PL8N0Wfp1ujODljr+4m
+         cAdFJR6/y3QWMGHdJ/QVE6BBFoYdz9z3MzSn6nX0V+TefwaKjnvOZqYCVvi9JflBbb1S
+         qJ5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=KQBVfVDlvCSrk6Sswzhkfx8sEJDxZvcBw31v7IjCtFQ=;
-        b=tp/w1xGFkBW2krUX5vlxV/7o8kdEmr83IG9+sXZ9FWT0eTVeaaYOaWLQG5kRyb7IZm
-         Hfee2qtrCwAZv5TJKfUyHkV7VV0rwrTpMo41V2X+ihMsaU5LB3ufZfk73beZyQSFLOLv
-         3nIjCzkWWY5Rfc1ydc6/hZJKo7dqTUNKdQoSuAv/nQmRpJSkTqIm2wMuPI2mAQbfOu7R
-         d9kexxHIKWpcvW9XCeaN5NXPGlmzXDkY7OKFoHCUjUr/+e6+nuedGe7p7uI970vQaxGE
-         A4Z9UnaSAuZDildukHAim6WY59MYgwDLVfNyCNMAZ5NwcrqZakaODDhkJOwOl4SIb0kX
-         o65g==
-X-Gm-Message-State: AOAM530V1SL42XF6AooEc4Malag753G/4d428/AMdR6Y86FGxTu7OPTG
-        O8Oxi5iCpzZdsLJhgcIwh/oh6WtoRnemR7GCpiwpvQ==
-X-Google-Smtp-Source: ABdhPJzNCw/cioLcKrAYx5rbKSd05oiNHfv+p2Mg5ic+HSw2d1l/HVOQ3hTWmd+vsyuosiASrLQGqbIOMPkET3fjF+c=
-X-Received: by 2002:a05:6402:5189:: with SMTP id q9mr3959045edd.314.1644318575241;
- Tue, 08 Feb 2022 03:09:35 -0800 (PST)
+        bh=3G2225l3e7AAW7cvW9DSbSKu70gKYyiFP+/P2AbU0GE=;
+        b=51S95mS1OsZUwBHDNbhIOP8LfdZBqAo2Oor9I67DxZsnCoanV7rtgrxYLWmJfzFx+Y
+         wPKdziFtUhbIab6T2JVbeg2kgCnh0hfL2Fb1qi9o49hR+GAbcgLxrulkZvO5oCJP1t1C
+         B4K27fQ1iBCoZiKSU6Mlzr1P27pp6yTKQniWDhWijaQHIrFphP0YC3oGL7bs6ETb3ai9
+         ixxtun/bFuhnlVSqWiZk03SbINvsxJtbPcrSKKxh/EQWIXO3jd9CKZyOMmdeltdMZ4Uz
+         8OSq9NU1OSjQymRoejXY0kFzFtNFvJ5juFK2eBNoB6jnOWpDU14MrrDw0ELJYlQ60NtA
+         WF3Q==
+X-Gm-Message-State: AOAM530XjuAokyZmBJ55Dmt1N97xm8BXWT/UwFKKksus0tdkEFClrwTP
+        /ScKVMNSYHWglOhWeUkEmap7hfEPURX0SSsEZLx+cQ==
+X-Google-Smtp-Source: ABdhPJywJZL0jTPvvCbkGnYtFW82KoshEzkqB1HixUSDNK3JM1+qqwgc2BPOGxgMTLyu8AS04o5CLxS9fyGFvEJzrWk=
+X-Received: by 2002:aa7:db49:: with SMTP id n9mr3902542edt.100.1644318809786;
+ Tue, 08 Feb 2022 03:13:29 -0800 (PST)
 MIME-Version: 1.0
-References: <20220207162637.1658677-1-conor.dooley@microchip.com> <20220207162637.1658677-6-conor.dooley@microchip.com>
-In-Reply-To: <20220207162637.1658677-6-conor.dooley@microchip.com>
+References: <20220201120310.878267-1-maz@kernel.org>
+In-Reply-To: <20220201120310.878267-1-maz@kernel.org>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 8 Feb 2022 12:09:24 +0100
-Message-ID: <CAMRc=Mc0CYCgiGqQgmCQArv=1P0M5dxCw53H+KQ92d=yX=BY4Q@mail.gmail.com>
-Subject: Re: [PATCH v6 05/12] dt-bindings: gpio: add bindings for microchip
- mpfs gpio
-To:     conor.dooley@microchip.com
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>, aou@eecs.berkeley.edu,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
+Date:   Tue, 8 Feb 2022 12:13:19 +0100
+Message-ID: <CAMRc=Me=VTqTfa4=p3HOa4_NmE3W6h+YyPLZGKXZo6dqUoxWmg@mail.gmail.com>
+Subject: Re: [PATCH 00/12] genirq: Move irqchip runtime PM over to irq domain
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
-        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
-        <linux-rtc@vger.kernel.org>, linux-riscv@lists.infradead.org,
-        bin.meng@windriver.com, Heiko Stuebner <heiko@sntech.de>,
-        lewis.hanly@microchip.com, daire.mcnamara@microchip.com,
-        ivan.griffin@microchip.com, atishp@rivosinc.com,
-        Rob Herring <robh@kernel.org>,
-        Palmer Dabbelt <palmer@rivosinc.com>
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Emil Renner Berthing <kernel@esmil.dk>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Feb 7, 2022 at 5:24 PM <conor.dooley@microchip.com> wrote:
+On Tue, Feb 1, 2022 at 1:03 PM Marc Zyngier <maz@kernel.org> wrote:
 >
-> From: Conor Dooley <conor.dooley@microchip.com>
+> Our irq_chip data structure currently suffers from two problems:
 >
-> Add device tree bindings for the gpio controller on
-> the Microchip PolarFire SoC.
+> (1) the 'name' field is often dynamically populated with a reference
+>     to the underlying HW (DT node dame, for example)
 >
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
-> ---
+> (2) the 'parent_device' which is used to implement runtime PM is also
+>     dynamically populated
+>
+> (3) there is at least one instance of a subsystem messing with the
+>     internals of irq_chip structures (gpiochip_set_irq_hooks is
+>     what I know about)
+>
+> These things mean that although the primary use of irq_chip is to only
+> contain function pointers and other *static* information, the above
+> two fields result in these structures being copied in a number of
+> drivers. Eventually, it would be much better if the various drivers
+> would use irq_chip as an 'ops' data structure (potentially made
+> read-only), and keep the dynamic information somewhere more suitable.
+>
+> For (2) we already have the irqdomain structure that is designed to
+> deal with the context in which interrupts are used, and it makes sense
+> to move the 'parent_device' field over to this structure. This is what
+> this small series is doing, with some minor cleanup on the way.
+>
+> (1) and (3) will be dealt in separate series (and I don't have a good
+> solution for (3) yet).
+>
+> Thanks,
+>
+>         M.
+>
+> Marc Zyngier (12):
+>   genirq: Allow the PM device to originate from irq domain
+>   irqchip/gic: Move PM device over to irq domain
+>   irqchip/renesas-intc-gpio: Move PM device over to irq domain
+>   irqchip/renesas-irqc: Move PM device over to irq domain
+>   irqchip/imx-intmux: Move PM device over to irq domain
+>   gpio: mt7621: Kill parent_device usage
+>   gpio: omap: Move PM device over to irq domain
+>   gpio: rcar: Move PM device over to irq domain
+>   gpio: tpmx86: Move PM device over to irq domain
+>   pinctrl: npcm: Fix broken references to chip->parent_device
+>   pinctrl: starfive: Move PM device over to irq domain
+>   genirq: Kill irq_chip::parent_device
+>
+>  drivers/gpio/gpio-mt7621.c                |  1 -
+>  drivers/gpio/gpio-omap.c                  |  7 ++++---
+>  drivers/gpio/gpio-rcar.c                  |  2 +-
+>  drivers/gpio/gpio-tqmx86.c                |  3 ++-
+>  drivers/irqchip/irq-gic.c                 | 12 +++++------
+>  drivers/irqchip/irq-imx-intmux.c          |  8 +++-----
+>  drivers/irqchip/irq-renesas-intc-irqpin.c |  3 ++-
+>  drivers/irqchip/irq-renesas-irqc.c        |  3 ++-
+>  drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c | 25 +++++++++++------------
+>  drivers/pinctrl/pinctrl-starfive.c        |  3 ++-
+>  include/linux/irq.h                       |  2 --
+>  include/linux/irqdomain.h                 | 10 +++++++++
+>  kernel/irq/chip.c                         | 20 +++++++++++++-----
+>  13 files changed, 59 insertions(+), 40 deletions(-)
+>
+> --
+> 2.30.2
+>
 
-Looks good.
+The changes for GPIO are small so:
 
 Acked-by: Bartosz Golaszewski <brgl@bgdev.pl>
+
+You can take it through your tree and if there are any conflicts, I'll
+just ask for an immutable branch.
+
+Bart
