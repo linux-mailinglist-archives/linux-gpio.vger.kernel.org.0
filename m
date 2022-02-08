@@ -2,60 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 62A244AD65E
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Feb 2022 12:25:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D9854AD658
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Feb 2022 12:24:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357620AbiBHLYJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Feb 2022 06:24:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60346 "EHLO
+        id S1356404AbiBHLYF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Feb 2022 06:24:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356455AbiBHKsf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Feb 2022 05:48:35 -0500
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF79EC03FEC0
-        for <linux-gpio@vger.kernel.org>; Tue,  8 Feb 2022 02:48:34 -0800 (PST)
-Received: by mail-wr1-x42b.google.com with SMTP id s18so29924655wrv.7
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Feb 2022 02:48:34 -0800 (PST)
+        with ESMTP id S1356609AbiBHKwW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Feb 2022 05:52:22 -0500
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B5B3C03FEC0
+        for <linux-gpio@vger.kernel.org>; Tue,  8 Feb 2022 02:52:21 -0800 (PST)
+Received: by mail-wr1-x433.google.com with SMTP id m14so29876944wrg.12
+        for <linux-gpio@vger.kernel.org>; Tue, 08 Feb 2022 02:52:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=/2RBuPF7+jk2MYvMHxs5hnonCSVzKHGmgHGdw6RmjUw=;
-        b=sQFJBX4baIYK2pjY/ZO+xZa+qQkxXw9powlty3Jf1N0CfZeTZtd7HC8IhDGC7O5T/M
-         WmTxEq/8TUuucTHTbPwYT+90OuklOByN+vKWA5Sd6w4Z/m0lcocl8Z3pYDEMWteddmsp
-         9LIUSr8WUP+A+BTTOB/gbAdBTEcyWiXiAN0HG623DBAa7lKkwqDIzJ0RpvII1pkWB2id
-         qIe3+FPEfI5pH0Q2m+p3U64s7BPLvD3L0FljVq5q7BVcvlNUJv7VnbdDVvQU9/wwPon/
-         il3YnafTLqmoz1Y/Td7w6mK5akWQnjkpDhN4F62WY5+PEl1BOHXNTuZy7NannOhtxcck
-         1VJA==
+        bh=0CQbxMJOnjaEmQVk1Qu6z2PqUIU60bIvzU+hkaKUKTQ=;
+        b=kGidisdFa8k5KK04NQ4IRamFK7vfe6B3WMLvAD41oQPw3/IH+SfHs0iKzrH5OC46pY
+         ti7QBTiqNz26HVjpA3rV87mnrbbHRr+BbfySXRK1Qaa6KLOw19mfCHOm2bfqL4gQmdpG
+         hpEI8+p9eswcsULqpp6PlmkcjkB7xFoGQLJ4TCQjAgKSb0AL34/WXDuXqDwSQLScvf9+
+         BauGtZyaAsZkEuSTcS/7I++xv/n8rlUh2oK8sfsJbT0NefN5TOEOsUGTHCoR0ZJbUTVM
+         sLnBU8P0t5udrVaZ4cvICyBst6RC2vRYQ3hr2OO0l9b8s5XEiPl/dyS7RoXUqcKFgof4
+         29gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=/2RBuPF7+jk2MYvMHxs5hnonCSVzKHGmgHGdw6RmjUw=;
-        b=vCWiy6WKEvJVmeIBxdFlWvwXszpC5+NvKO9GgKcXkdiPfCj4QG6jS/IIE/QTiJ+bi3
-         GEeOpzn4Ri1la4xEqfAM5JpYdUc8b6ZOF2DMqNX9hhPy3dQbFBD2Hny+M9G6hcE3a9ep
-         gJTi+BiuoOs88bB3pjudgpuza9AIU1tqdfYiAtUZz/yZvGueQpAol92YKvYeCEesN3dA
-         CeUjlm6IKWmoD8p7tinuIQMnXYWX06/2mzN484Bc/iJTXbtnsi+MZ47Ceh6V+KzKaitr
-         NKJxlJZQiC48Rhcz35Sqn3oItJvGHfXNMWMo80P8t2yyubJnlqTRFObK2nGeuV1FNPwV
-         JBdg==
-X-Gm-Message-State: AOAM5319lC7v8CAuBUt1FCZP2eHb5wjwmX4MCsg691+Mbk1ZA7kn1Okd
-        eeW3r4LdEjv6oW/EZtT4C18GXA==
-X-Google-Smtp-Source: ABdhPJxDCxikA1SstIBbpMtLo5nW/gSC8VSlKDkxUudzUI8SMijILsbLQCeWnNnIFRCt/IY99rQ/NA==
-X-Received: by 2002:a5d:6c64:: with SMTP id r4mr3068321wrz.659.1644317313206;
-        Tue, 08 Feb 2022 02:48:33 -0800 (PST)
+        bh=0CQbxMJOnjaEmQVk1Qu6z2PqUIU60bIvzU+hkaKUKTQ=;
+        b=3XZHEh/3M0+I7OpSrLbUaVAcNVihIK8YFLhV+H2UT6wwKTS2TR2JFyZ9ROP9v+Wjfo
+         ncG64QhY8tNawG++rR8JCuEQcaPDwE/SspyZ1LDVUxyC7QT872TKcjiP7bm07g8RA/TV
+         v+ynEVAFf19RXibPcMxWLzzs9sH+zkdzrBz4FHk5bUQuQgJZiXEi1QtLkZuSr8t/HDop
+         V/4oqWc8LrQSbCtbuIvjN44/ltJTca03/ixrvUaKjbJHDvAyt61N/gYk2ljOSAwQUA6K
+         bNMykzwC8qsxoYwA3pXAPVD9euuC6tgYul7zqsVn4mlTqehmc3AWjkGrcojTuSYibblo
+         3VSg==
+X-Gm-Message-State: AOAM532YnUZErGPhe1wwOFlymIAcm9L0UZWhN25wuCiDrxsBwBl5CGj5
+        0GEbn+dfmoNC/rAy7KIF0NvdUw==
+X-Google-Smtp-Source: ABdhPJwPLmQDqrkrL676f5NwmaSEW/gSilbINWjyNpB+LZjHjwI7o4GZNs8CXtvJFZ2duVyATkIqzw==
+X-Received: by 2002:adf:da46:: with SMTP id r6mr3063168wrl.71.1644317539748;
+        Tue, 08 Feb 2022 02:52:19 -0800 (PST)
 Received: from debian-brgl.home ([2a01:cb1d:334:ac00:7d50:ff5:f5c1:e225])
-        by smtp.gmail.com with ESMTPSA id a13sm3971wmq.28.2022.02.08.02.48.32
+        by smtp.gmail.com with ESMTPSA id r2sm2496801wmq.0.2022.02.08.02.52.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Feb 2022 02:48:32 -0800 (PST)
+        Tue, 08 Feb 2022 02:52:19 -0800 (PST)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Randy Dunlap <rdunlap@infradead.org>,
+To:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v2] gpiolib: make struct comments into real kernel docs
-Date:   Tue,  8 Feb 2022 11:48:31 +0100
-Message-Id: <20220208104831.308722-1-brgl@bgdev.pl>
+Cc:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH] gpio: sim: fix hogs with custom chip labels
+Date:   Tue,  8 Feb 2022 11:52:18 +0100
+Message-Id: <20220208105218.316834-1-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -68,141 +67,61 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-We have several comments that start with '/**' but don't conform to the
-kernel doc standard. Add proper detailed descriptions for the affected
-definitions and move the docs from the forward declarations to the
-struct definitions where applicable.
+We always assign the default device name as the chip_label in hog
+structures which makes it impossible to assign hogs to chips. Let's
+first check if a custom label was set and then copy it instead of the
+default device name.
 
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Fixes: cb8c474e79be ("gpio: sim: new testing module")
 Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
-v1 -> v2:
-- described fields not yet documented
-- added missing '@'
-- made using periods consistent
-- fixed struct references
+ drivers/gpio/gpio-sim.c | 19 +++++++++++++++----
+ 1 file changed, 15 insertions(+), 4 deletions(-)
 
- drivers/gpio/gpiolib.h        | 34 ++++++++++++++++++++++++++++++++++
- include/linux/gpio/consumer.h | 35 ++++++++++++++++-------------------
- 2 files changed, 50 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-index 30bc3f80f83e..40723a179902 100644
---- a/drivers/gpio/gpiolib.h
-+++ b/drivers/gpio/gpiolib.h
-@@ -37,6 +37,9 @@
-  * or name of the IP component in a System on Chip.
-  * @data: per-instance data assigned by the driver
-  * @list: links gpio_device:s together for traversal
-+ * @notifier: used to notify subscribers about lines being requested, released
-+ *            or reconfigured
-+ * @pin_ranges: range of pins served by the GPIO driver
-  *
-  * This state container holds most of the runtime variable data
-  * for a GPIO device and can hold references and live on after the
-@@ -72,6 +75,20 @@ struct gpio_device {
- /* gpio suffixes used for ACPI and device tree lookup */
- static __maybe_unused const char * const gpio_suffixes[] = { "gpios", "gpio" };
+diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
+index 04b137eca8da..33df418ea8d1 100644
+--- a/drivers/gpio/gpio-sim.c
++++ b/drivers/gpio/gpio-sim.c
+@@ -570,6 +570,11 @@ static struct gpio_sim_bank *to_gpio_sim_bank(struct config_item *item)
+ 	return container_of(group, struct gpio_sim_bank, group);
+ }
  
-+/**
-+ * struct gpio_array - Opaque descriptor for a structure of GPIO array attributes
-+ *
-+ * @desc:		Array of pointers to the GPIO descriptors
-+ * @size:		Number of elements in desc
-+ * @chip:		Parent GPIO chip
-+ * @get_mask:		Get mask used in fastpath
-+ * @set_mask:		Set mask used in fastpath
-+ * @invert_mask:	Invert mask used in fastpath
-+ *
-+ * This structure is attached to struct gpiod_descs obtained from
-+ * gpiod_get_array() and can be passed back to get/set array functions in order
-+ * to activate fast processing path if applicable.
-+ */
- struct gpio_array {
- 	struct gpio_desc	**desc;
- 	unsigned int		size;
-@@ -96,6 +113,23 @@ int gpiod_set_array_value_complex(bool raw, bool can_sleep,
- extern spinlock_t gpio_lock;
- extern struct list_head gpio_devices;
- 
++static bool gpio_sim_bank_has_label(struct gpio_sim_bank *bank)
++{
++	return (bank->label && (strlen(bank->label) > 0));
++}
 +
-+/**
-+ * struct gpio_desc - Opaque descriptor for a GPIO
-+ *
-+ * @gdev:		Pointer to the parent GPIO device
-+ * @flags:		Binary descriptor flags
-+ * @label:		Name of the consumer
-+ * @name:		Line name
-+ * @hog:		Pointer to the device node that hogs this line (if any)
-+ * @debounce_period_us:	Debounce period in microseconds
-+ *
-+ * These are obtained using gpiod_get() and are preferable to the old
-+ * integer-based handles.
-+ *
-+ * Contrary to integers, a pointer to a &struct gpio_desc is guaranteed to be
-+ * valid until the GPIO is released.
-+ */
- struct gpio_desc {
- 	struct gpio_device	*gdev;
- 	unsigned long		flags;
-diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
-index 3ad67b4a72be..c3aa8b330e1c 100644
---- a/include/linux/gpio/consumer.h
-+++ b/include/linux/gpio/consumer.h
-@@ -8,27 +8,16 @@
- #include <linux/err.h>
+ static struct gpio_sim_device *
+ gpio_sim_bank_get_device(struct gpio_sim_bank *bank)
+ {
+@@ -770,9 +775,15 @@ static int gpio_sim_add_hogs(struct gpio_sim_device *dev)
+ 			 * point the device doesn't exist yet and so dev_name()
+ 			 * is not available.
+ 			 */
+-			hog->chip_label = kasprintf(GFP_KERNEL,
+-						    "gpio-sim.%u-%s", dev->id,
+-						    fwnode_get_name(bank->swnode));
++			if (gpio_sim_bank_has_label(bank))
++				hog->chip_label = kstrdup(bank->label,
++							  GFP_KERNEL);
++			else
++				hog->chip_label = kasprintf(GFP_KERNEL,
++							"gpio-sim.%u-%s",
++							dev->id,
++							fwnode_get_name(
++								bank->swnode));
+ 			if (!hog->chip_label) {
+ 				gpio_sim_remove_hogs(dev);
+ 				return -ENOMEM;
+@@ -816,7 +827,7 @@ gpio_sim_make_bank_swnode(struct gpio_sim_bank *bank,
  
- struct device;
--
--/**
-- * Opaque descriptor for a GPIO. These are obtained using gpiod_get() and are
-- * preferable to the old integer-based handles.
-- *
-- * Contrary to integers, a pointer to a gpio_desc is guaranteed to be valid
-- * until the GPIO is released.
-- */
- struct gpio_desc;
--
--/**
-- * Opaque descriptor for a structure of GPIO array attributes.  This structure
-- * is attached to struct gpiod_descs obtained from gpiod_get_array() and can be
-- * passed back to get/set array functions in order to activate fast processing
-- * path if applicable.
-- */
- struct gpio_array;
+ 	properties[prop_idx++] = PROPERTY_ENTRY_U32("ngpios", bank->num_lines);
  
- /**
-- * Struct containing an array of descriptors that can be obtained using
-- * gpiod_get_array().
-+ * struct gpio_descs - Struct containing an array of descriptors that can be
-+ *                     obtained using gpiod_get_array()
-+ *
-+ * @info:	Pointer to the opaque gpio_array structure
-+ * @ndescs:	Number of held descriptors
-+ * @desc:	Array of pointers to GPIO descriptors
-  */
- struct gpio_descs {
- 	struct gpio_array *info;
-@@ -43,8 +32,16 @@ struct gpio_descs {
- #define GPIOD_FLAGS_BIT_NONEXCLUSIVE	BIT(4)
+-	if (bank->label && (strlen(bank->label) > 0))
++	if (gpio_sim_bank_has_label(bank))
+ 		properties[prop_idx++] = PROPERTY_ENTRY_STRING("gpio-sim,label",
+ 							       bank->label);
  
- /**
-- * Optional flags that can be passed to one of gpiod_* to configure direction
-- * and output value. These values cannot be OR'd.
-+ * enum gpiod_flags - Optional flags that can be passed to one of gpiod_* to
-+ *                    configure direction and output value. These values
-+ *                    cannot be OR'd.
-+ *
-+ * @GPIOD_ASIS:			Don't change anything
-+ * @GPIOD_IN:			Set lines to input mode
-+ * @GPIOD_OUT_LOW:		Set lines to output and drive them low
-+ * @GPIOD_OUT_HIGH:		Set lines to output and drive them high
-+ * @GPIOD_OUT_LOW_OPEN_DRAIN:	Set lines to open-drain output and drive them low
-+ * @GPIOD_OUT_HIGH_OPEN_DRAIN:	Set lines to open-drain output and drive them high
-  */
- enum gpiod_flags {
- 	GPIOD_ASIS	= 0,
 -- 
-2.30.1
+2.25.1
 
