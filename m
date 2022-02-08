@@ -2,107 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CF8B84AD8A0
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Feb 2022 14:15:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E210B4AD9EB
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Feb 2022 14:32:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236415AbiBHNPa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Feb 2022 08:15:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56556 "EHLO
+        id S243969AbiBHNbl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Feb 2022 08:31:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357146AbiBHMce (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Feb 2022 07:32:34 -0500
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FDDDC03FECA
-        for <linux-gpio@vger.kernel.org>; Tue,  8 Feb 2022 04:32:32 -0800 (PST)
-Received: by mail-wr1-x429.google.com with SMTP id f17so30494505wrx.1
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Feb 2022 04:32:32 -0800 (PST)
+        with ESMTP id S1377975AbiBHNbA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Feb 2022 08:31:00 -0500
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B75FAC008632;
+        Tue,  8 Feb 2022 05:30:08 -0800 (PST)
+Received: by mail-ej1-x635.google.com with SMTP id s13so52195895ejy.3;
+        Tue, 08 Feb 2022 05:30:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=conchuod-ie.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:cc:from:in-reply-to:content-transfer-encoding;
-        bh=SBicExt4GJTldUNDteIIq7T7+TNr7gj099np1oZzyZ0=;
-        b=5H3MsgPIhqt39HG1qoEatzD0Vc2QJlQKfqrcrh67yioOodrsd6sq49SPYaA/6sd5Zt
-         TOy+pHA35I7ps67O93O29P57x0fxd2LOGb3w32L1+tKcxd39UzblOtVEy/igA0IFquTp
-         B9L6yj862CsH3lBhGxDWuzOSXwIkMdBXICIC6RRwev2VRYGuTbAjd9Hipev7lizyO92A
-         5G2pXnT9Tca5zRzi3NoFLZma5Vt0wOIExMGFk4ObG3UnLr4zedy+xPDsmOkOg+PupyAj
-         gPIOlUvzqYiDccI3Z66cS8rnCdQCTECCDNPGctqOAQXe6KLs4N5xzEta+q+pQjHN329W
-         34PQ==
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zn8j9RvF8sN37KxxL6wEwSYmGl957jUTVtDp4sYAYew=;
+        b=GNeIrOwpq1o9cmnL4aXmZbDPovCccFuZVp2HgvOAeqdz2H28ScjkM7nTfLEtv/FQIZ
+         tspj1jK84yz0jdp/ghc02iuDEWdR3aukOC2Ou08ignbMFR5/MqoSjAcQF+NGPSXiDTc9
+         9R9S+jfm7PM9WwNEYR+JGSTrZJcpuaepSKkqlA99WKZq1t30ZWOWv9Y4CBglag2oEVu7
+         jEfU2NYDE/f06qPYmcvIc/tJMsb55QIH06qaKXQAiTaKH3LkaEIq9xCNM1XbSHsPIWrJ
+         DR427Ys4ZHrBj+EkJKhDrr3V6p9tN2/UsWwKSid5SBZPzmHEqV9sgMsb629TKg4rUw3y
+         GN2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:cc:from:in-reply-to
-         :content-transfer-encoding;
-        bh=SBicExt4GJTldUNDteIIq7T7+TNr7gj099np1oZzyZ0=;
-        b=ZjUsLcdrEWHdHw3f8L+w43How6f2NRVGdoP5NjP0iOCHamCpjjAcCpaPLphVRfNOc0
-         8j/Er2MeHcZLCbiuUf8ZXF4bZqaf6BS28khyOZ/vWWlJiB2Ghc6ln4HeTh3DRzqSXi7+
-         IVCDAIOiG33SwbYvJ7SX5dQhTohA8azWRFYP182X8HMS1bAUmIWUH0pY7xCNuoPeMabK
-         +RKjSqKLxYS7A4gfuceYYFBrS1X3uFAgbFI/Cigm8TXEpi3SblWcAQCr4kDGBcVxLUeh
-         t8BqRXc8IMGHUk0q/8mOnItThlCel67I6wcIAJEfaHMQQ97kqIGgLWk0DJGe8O3a0HKR
-         YQKQ==
-X-Gm-Message-State: AOAM5321HRbG0Skq44d/hI9jf1NQOhJMdbdfTy8TCE6bhWbA7JhRQD9j
-        DH6IRzbRNZvJcRlg/hY+jCuZ35d6h6WLYtESo7E=
-X-Google-Smtp-Source: ABdhPJy3fWhX+fR9E4HyMnwmqx7EtColZdvMB80eL5FvssCvOs3KJLS4r509AHx9ak5lZBQdqv+rhQ==
-X-Received: by 2002:a05:6000:2c5:: with SMTP id o5mr3345728wry.130.1644323551043;
-        Tue, 08 Feb 2022 04:32:31 -0800 (PST)
-Received: from [192.168.2.116] ([109.78.72.167])
-        by smtp.gmail.com with ESMTPSA id v9sm1831062wrw.84.2022.02.08.04.32.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Feb 2022 04:32:29 -0800 (PST)
-Message-ID: <afb346dc-5119-fcf0-d95e-d7e4bd91f92f@conchuod.ie>
-Date:   Tue, 8 Feb 2022 12:32:27 +0000
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zn8j9RvF8sN37KxxL6wEwSYmGl957jUTVtDp4sYAYew=;
+        b=fEQrhFN5JqRvRlkMw+Yc6fvZ3M4MYdlXEHAGHMksGlhboSDdo582ZXQesC5SGvE6sk
+         7HJu004nJqj8DuKwCieICmDltiSZla49QNzTZvm1DiwuxLYuMsPhlBu6iZHmyIIEc5GS
+         TeyDySm8mEwhPOt5gj+3jzk0u6I624oNeWECfkrAr3J2KJ/ypSoNSiyNlFr+eZN4mZJt
+         shjJ0Ofs3eCbu3Bj6qk4npWc9IbxXIpoTazodD5A6wREepoHMVLxyGMCJbHDq8PksRMD
+         OtfcgraYdiPWDszqWWtOVBKDhkGOVgZnkrU1/1HB4plunRDnXghUl3uZXap8Chx7Jjus
+         iEKg==
+X-Gm-Message-State: AOAM531qFvFRF8yqE7A9WC29zRIHW+1e8N9z2y47uEh8/mm7/jd03W8A
+        j0GbgJ7w41ZHg8QsANZo1jMdYGEzBS6eywI2LWg=
+X-Google-Smtp-Source: ABdhPJwUqqSi96+UE8xWbPqPBedxmQQZyjz6mzdVGlsakiJaBzjT5+Uul5wvv6Z5WzgwE+zszvPH1wk6bNn/QbK0xZk=
+X-Received: by 2002:a17:907:2d92:: with SMTP id gt18mr3619855ejc.579.1644327007184;
+ Tue, 08 Feb 2022 05:30:07 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.1
-Subject: Re: [PATCH v6 03/12] dt-bindings: i2c: add bindings for microchip
- mpfs i2c
-Content-Language: en-US
-To:     Wolfram Sang <wsa@kernel.org>, conor.dooley@microchip.com
-References: <20220207162637.1658677-1-conor.dooley@microchip.com>
- <20220207162637.1658677-4-conor.dooley@microchip.com>
- <YgJfl5CmepRMb5He@ninjato>
-Cc:     paul.walmsley@sifive.com, linus.walleij@linaro.org, brgl@bgdev.pl,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        krzysztof.kozlowski@canonical.com, robh+dt@kernel.org,
-        aou@eecs.berkeley.edu, palmer@dabbelt.com,
-        linux-riscv@lists.infradead.org, lee.jones@linaro.org,
-        heiko@sntech.de, Palmer Dabbelt <palmer@rivosinc.com>,
-        Rob Herring <robh@kernel.org>, atishp@rivosinc.com,
-        ivan.griffin@microchip.com, daire.mcnamara@microchip.com,
-        linux-pwm@vger.kernel.org, bin.meng@windriver.com,
-        jassisinghbrar@gmail.com, u.kleine-koenig@pengutronix.de,
-        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        geert@linux-m68k.org, thierry.reding@gmail.com,
-        linux-rtc@vger.kernel.org, lewis.hanly@microchip.com
-From:   Conor Dooley <mail@conchuod.ie>
-In-Reply-To: <YgJfl5CmepRMb5He@ninjato>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+References: <20220201152758.40391-1-andriy.shevchenko@linux.intel.com>
+ <YgEv/MIydfZlL1zQ@smile.fi.intel.com> <CAMRc=MdrTuJiRhxPvhuos02eDc3eUS1fXNJr2xwCCG9C82tAVA@mail.gmail.com>
+In-Reply-To: <CAMRc=MdrTuJiRhxPvhuos02eDc3eUS1fXNJr2xwCCG9C82tAVA@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 8 Feb 2022 15:29:31 +0200
+Message-ID: <CAHp75VcKEjRE5qGAoMf07PG9+tMDP60W5DsFSpcYQmGVgLiu8g@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] gpiolib: A fix and a few cleanups
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 08/02/2022 12:18, Wolfram Sang wrote:
-> On Mon, Feb 07, 2022 at 04:26:29PM +0000, conor.dooley@microchip.com wrote:
->> From: Conor Dooley <conor.dooley@microchip.com>
->>
->> Add device tree bindings for the i2c controller on
->> the Microchip PolarFire SoC.
->>
->> Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
->> Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
-> 
-> Shall this go via DT (Rob) or I2C (me) or some riscv tree?
-If you could take it, that'd be great. Rob had said via subsystems was 
-his preference for the bindings in this series.
+On Tue, Feb 8, 2022 at 3:16 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> On Mon, Feb 7, 2022 at 3:44 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Tue, Feb 01, 2022 at 05:27:54PM +0200, Andy Shevchenko wrote:
+> > > Patch 1 is a fix for wrong error code to user space.
+> > > Patches 2-4 are small cleanups.
+> >
+> > > Can be routed via my tree, or directly into GPIO, whatever maintainers
+> > > prefer.
+> >
+> > Bart, if the series is okay for you tell me which route to take?
+>
+> Queued the first one for fixes and 2-4 for v5.18.
 
-Thanks,
-Conor.
+Thank you!
+
+-- 
+With Best Regards,
+Andy Shevchenko
