@@ -2,103 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 503674B00F4
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Feb 2022 00:08:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DCAE54B014C
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Feb 2022 00:32:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236983AbiBIXIi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Feb 2022 18:08:38 -0500
-Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:35734 "EHLO
+        id S229984AbiBIXb6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Feb 2022 18:31:58 -0500
+Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:56192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236886AbiBIXIh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Feb 2022 18:08:37 -0500
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44835C1038D3;
-        Wed,  9 Feb 2022 15:08:39 -0800 (PST)
-Received: by mail-ej1-x635.google.com with SMTP id u20so6857704ejx.3;
-        Wed, 09 Feb 2022 15:08:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=n4p8pNRxlbLuMm4Zivi3qzSEX1/XkIY61NA/5+SHRUE=;
-        b=GDYxvemGi17tsPt1GHWDoNRw66clseUB/uO4JIWKzcCvACwk7HeYNGUjzr9gF/r+34
-         eokR8lDNNgUFUow8mSzalfpAwEEKYT5s+6cJkAgS0WPHkXrLCayerlj9gqGZyRhbyJ9c
-         Kkh1Nn0F9k3ZSNs6JclkgcfF9VoezFI94Cbd47KKdbNc7x8LNwgLNUduDGO7MXYdPRNj
-         mgQaWn2dp5tfZiAMJ/4xDkI5OBEkHvWf76tsHA1n0JC98vRlE2ApQpW4XqQ9IWnxbYD7
-         Xfz8I4qO84SPDv3k6Ca8/xSEHdkVHG+oxupGQNyYW69y7h0swqc4vFeNQ1koDdkhkuIa
-         425A==
+        with ESMTP id S230475AbiBIXbL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Feb 2022 18:31:11 -0500
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D586E05ADC2;
+        Wed,  9 Feb 2022 15:31:07 -0800 (PST)
+Received: by mail-pf1-f175.google.com with SMTP id x15so4671634pfr.5;
+        Wed, 09 Feb 2022 15:31:07 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=n4p8pNRxlbLuMm4Zivi3qzSEX1/XkIY61NA/5+SHRUE=;
-        b=m8iJxXa3IfkYRYt8fTBHPY1gHbwDH4Ydp9ct0mqY30Ohbnv5RQzw2WFa4vcjwDk1EU
-         eQ/PP3InvFFJ0h6RlvTqypJ/WZjau2Uc1eImAmn8OJ0RBh+WYno+QRKN21R/cgZNeMBa
-         6+FVCjZnKy18QxkN0xYg4mmXLw0bFDNn+GskfSKUdlXw9pnLyGRVNbsIz88gzHWjqsXt
-         7W1WUbgsuluLV1CGC6CxpQ5Yo0iXFRTBS5LseNjVpeLXSW1szwCuv+c46SSlpsGd1Vwk
-         BCNNwCwnlO0O1MMnbL2WG8DbhJytnZvJFkLRTtzMH3HTCrMvRXFaGrOZ3C6JMvB8cT13
-         bhdA==
-X-Gm-Message-State: AOAM530s8okMCZTMPm1yNsCuAUEFsra4eliLooooLyJkQgHVIXKivnz/
-        FF2OGhZCA0mrgxPxi7Ro6Ms=
-X-Google-Smtp-Source: ABdhPJwIG5feFVw1N3Qa7gtwNXlORasD8MGuGnqIF/J4wiv9+LUWW4IWxnx659skrjQsuDPh5l3Lbg==
-X-Received: by 2002:a17:906:7812:: with SMTP id u18mr4078755ejm.335.1644448117785;
-        Wed, 09 Feb 2022 15:08:37 -0800 (PST)
-Received: from localhost (92.40.202.147.threembb.co.uk. [92.40.202.147])
-        by smtp.gmail.com with ESMTPSA id p1sm6136112edy.69.2022.02.09.15.08.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Feb 2022 15:08:37 -0800 (PST)
-From:   Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
-To:     paul@crapouillou.net, linus.walleij@linaro.org
-Cc:     linux-mips@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: ingenic: Fix regmap on X series SoCs
-Date:   Wed,  9 Feb 2022 23:04:54 +0000
-Message-Id: <20220209230452.19535-1-aidanmacdonald.0x0@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E6xycm4hmRCeCF2fAz0KCw4zeWL4PHOyrTUozMcCahg=;
+        b=daUDlzRSzeRmDEwY9mkz98eKlgDZcHKh1oa/CP8NP0GkjL7NNmO6ATklbHr0etgDEy
+         jAkD8zVdqEhaFN+mqgWtpKoedZAnI+nilNIG/gtknw0FSDgO/lwrBN4RQMLBuilHBLD3
+         iTeTlrHY+JmD468WivMV49jjsYRkwthVwi0w13nU01kYngsx8P8oMVY3l4WGxZJ4cqLg
+         4y0XQZbuNHts84vNXlXwabt7tcaBUh41Q/NfXxLuDyWxD5LvvA53eTFO0KqofnWwV4kq
+         /TGBTE+lnG/Q9LwHodVJHfEu6hH6MPdkK/KQbfIPWQB58fFBdRq4hoK34zCoFOWqj8QR
+         c2HA==
+X-Gm-Message-State: AOAM532cZf0LCTu83xcDssgMMCdilAYr0mvhR1QyfT34gQMy+rzOQ2uf
+        EF+XUoj+VagGF14cU8EYK2hhw65eCzOburdf+zD/1l2e
+X-Google-Smtp-Source: ABdhPJxZqhpWC2lwtdeFkToCcerNanbm+NA01wfUW90jqS8wOVU85ldbDkA3kOg6hERpzClJNyhZzpHahX3cMAC0zcE=
+X-Received: by 2002:a63:2a02:: with SMTP id q2mr3781413pgq.519.1644449466554;
+ Wed, 09 Feb 2022 15:31:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <20220209162607.1118325-1-maz@kernel.org> <20220209162607.1118325-11-maz@kernel.org>
+In-Reply-To: <20220209162607.1118325-11-maz@kernel.org>
+From:   Emil Renner Berthing <kernel@esmil.dk>
+Date:   Thu, 10 Feb 2022 00:30:55 +0100
+Message-ID: <CANBLGcwKeLn7Q1Ra8pCw=cXy=kJeEFRmBjOxjds10+k70LvzXA@mail.gmail.com>
+Subject: Re: [PATCH 10/10] pinctrl: starfive: Switch to dynamic chip name output
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The X series Ingenic SoCs have a shadow GPIO group which
-is at a higher offset than the other groups, and is used
-for all GPIO configuration. The regmap did not take this
-offset into account and set max_register too low. Writes
-to the shadow group registers were blocked, which made it
-impossible to change any pin configuration.
+On Wed, 9 Feb 2022 at 17:49, Marc Zyngier <maz@kernel.org> wrote:
+>
+> Instead of overloading the name field, use the relevant callback to
+> output the device name.
+>
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> ---
+>  drivers/pinctrl/pinctrl-starfive.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/pinctrl/pinctrl-starfive.c b/drivers/pinctrl/pinctrl-starfive.c
+> index 5be9866c2b3c..f29d9ccf858b 100644
+> --- a/drivers/pinctrl/pinctrl-starfive.c
+> +++ b/drivers/pinctrl/pinctrl-starfive.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/of.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/reset.h>
+> +#include <linux/seq_file.h>
+>  #include <linux/spinlock.h>
+>
+>  #include <linux/pinctrl/pinctrl.h>
+> @@ -1163,12 +1164,20 @@ static int starfive_irq_set_type(struct irq_data *d, unsigned int trigger)
+>         return 0;
+>  }
+>
+> +static void starfive_irq_print_chip(struct irq_data *d, struct seq_file *p)
+> +{
+> +       struct starfive_pinctrl *sfp = starfive_from_irq_data(d);
+> +
+> +       seq_printf(p, sfp->gc.label);
+> +}
+> +
+>  static struct irq_chip starfive_irq_chip = {
+>         .irq_ack = starfive_irq_ack,
+>         .irq_mask = starfive_irq_mask,
+>         .irq_mask_ack = starfive_irq_mask_ack,
+>         .irq_unmask = starfive_irq_unmask,
+>         .irq_set_type = starfive_irq_set_type,
+> +       .irq_print_chip = starfive_irq_print_chip,
+>         .flags = IRQCHIP_SET_TYPE_MASKED,
+>  };
 
-Fix this by pretending there are at least 8 chips on any
-'X' SoC for the purposes of calculating max_register. This
-ensures the shadow group is accessible.
+The parent interrupt doesn't show up in /proc/interrupts anyway, so if
+setting the name is considered abuse we can just drop the addition
+above and just delete the two lines below.
 
-Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
----
- drivers/pinctrl/pinctrl-ingenic.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+The gpio framework seems to fill in default handlers in the struct
+above, so unfortunately it can't yet be made const. Is this something
+you intend to fix in the future?
 
-diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
-index 2712f51eb238..9d2bccda50f1 100644
---- a/drivers/pinctrl/pinctrl-ingenic.c
-+++ b/drivers/pinctrl/pinctrl-ingenic.c
-@@ -4168,7 +4168,10 @@ static int __init ingenic_pinctrl_probe(struct platform_device *pdev)
- 		return PTR_ERR(base);
- 
- 	regmap_config = ingenic_pinctrl_regmap_config;
--	regmap_config.max_register = chip_info->num_chips * chip_info->reg_offset;
-+	if (chip_info->version >= ID_X1000)
-+		regmap_config.max_register = MIN(8, chip_info->num_chips) * chip_info->reg_offset;
-+	else
-+		regmap_config.max_register = chip_info->num_chips * chip_info->reg_offset;
- 
- 	jzpc->map = devm_regmap_init_mmio(dev, base, &regmap_config);
- 	if (IS_ERR(jzpc->map)) {
--- 
-2.34.1
-
+> @@ -1307,8 +1316,6 @@ static int starfive_probe(struct platform_device *pdev)
+>         sfp->gc.base = -1;
+>         sfp->gc.ngpio = NR_GPIOS;
+>
+> -       starfive_irq_chip.name = sfp->gc.label;
+> -
+>         sfp->gc.irq.chip = &starfive_irq_chip;
+>         sfp->gc.irq.parent_handler = starfive_gpio_irq_handler;
+>         sfp->gc.irq.num_parents = 1;
+> --
+> 2.30.2
+>
