@@ -2,92 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 683694AE3D4
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Feb 2022 23:24:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C6DD4AE70F
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Feb 2022 03:42:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1386435AbiBHWY3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Feb 2022 17:24:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47786 "EHLO
+        id S243777AbiBICli (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Feb 2022 21:41:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1386296AbiBHUDH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Feb 2022 15:03:07 -0500
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0FE4C0613CB
-        for <linux-gpio@vger.kernel.org>; Tue,  8 Feb 2022 12:03:06 -0800 (PST)
-Received: by mail-ej1-x62c.google.com with SMTP id d10so807462eje.10
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Feb 2022 12:03:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=daQexuy6DQc7MPsmCHfDvYZHufkU06yPXzbHQoTr0SQ=;
-        b=jCrYbdF4rEQ+2WTUUiD2P2k2mpREPStta3SEF0/wtjdjzpakjbV+sId71yHt7m7bzY
-         WfoGEiSeYbAbSUM18zqSk1x8NumxQt+Ksj/5eH+eoE+5ksJiUD3zN+fTKC4n3BwZSOoB
-         5Jk1pPgRQy0RKXSxaRHUNxvJgjX1maUD7d+f0DWyoo4uNqueyKTZmD0TLAgwcswbP4bl
-         slBvFTZcObtufr10mjpbfsEzTzNTGMIvsdzKjXY4DsTTf3Q1qKJxwXTdOwa/MFsFx+tL
-         qEZn0G279YvyxjA6o35ESCA22BjB9InVXGxXrP0pOImSDxfpDMzWn051uj6UjyI97Ry4
-         HI9Q==
+        with ESMTP id S244675AbiBICOQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Feb 2022 21:14:16 -0500
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8743C06157B;
+        Tue,  8 Feb 2022 18:14:15 -0800 (PST)
+Received: by mail-oi1-f174.google.com with SMTP id v67so1053489oie.9;
+        Tue, 08 Feb 2022 18:14:15 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=daQexuy6DQc7MPsmCHfDvYZHufkU06yPXzbHQoTr0SQ=;
-        b=CFlPl/IbHHiq4TCgqoYqwYP9P31aC4JE/NJ9DYg8VC3FB+7Kk4WvTd3gqX/tbbSKT2
-         o/in503F+ExluVNfLpYjSC24FnKPqaSSUuVQPc/7R/R0mgSIvcd8sYGnQbhNlXEV+AnP
-         n/+T1YAZcmd0cEg6GpE1CA9kvJATI0L3PMSypoQ34HgF3axjLT8QXgOz9HcB/h90Tzwv
-         kOqoQ/ffnvV93tIl1tUv3NSxTDC1TYiasrpuECRivfNLLStPbN3G7UJVtvU5NejJGlDO
-         gIWsZQb/iqcH32yR5FR5Bw9sgNpd4MNV59y3otddNnCKfSAaSgj3OGyS4za8KNYscz8I
-         ChCQ==
-X-Gm-Message-State: AOAM530ey0e6rXktBC9eeLhgOwoMSxRV0TA0gHC6k4rACbs+hayGUCnh
-        jGaTBuv+66L/60de+F6R8JIYlGVFI42g4GM8PIwTb8KLOhY=
-X-Google-Smtp-Source: ABdhPJwWYYoFNBQ4psTaza31vsFe4MpNNEqgDgUI5UrhEh8s1KnhaY1sbz8sdQfA++69dKrUc/IwvcnWyfANRG+46mE=
-X-Received: by 2002:a17:906:c14d:: with SMTP id dp13mr5077725ejc.132.1644350585045;
- Tue, 08 Feb 2022 12:03:05 -0800 (PST)
-MIME-Version: 1.0
-References: <20220208105218.316834-1-brgl@bgdev.pl>
-In-Reply-To: <20220208105218.316834-1-brgl@bgdev.pl>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 8 Feb 2022 22:02:28 +0200
-Message-ID: <CAHp75VcOTiAgHjPoKQP+VTGZ88Y5eh1uw6L11yGEkDyX8Rj9Tw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: sim: fix hogs with custom chip labels
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QlY7z6ucIH6IDIDbySWxzA4mcb/KENstANpgmuDi7Sw=;
+        b=kdLCwSEF84+UfA1rQuA29sbYcoJQDTHFDMm5c6TJBO0743PABa1gInSxPZx7EU6X6Q
+         aZUMrFc6BLdfJmL3M9knFo4GBPO2EoJaBURGGiKXD4SjFZJwqxEUs7G/+ijJhCMLeUoH
+         DUS6ERQLFggbCYztuM/Uxb2kJLut3pG3d0IEoZRLCrWxrMCQTPAHILROkvl1bwVQoJbE
+         Fy2z+4mrm45KZBKFwoYm2cgSmlbbSPRFM3aOIVm0KW9ZgcLRRMLRdCSmus0gCV798puQ
+         W9nM72QmQi+xOCXyQGLwjQhtHDlibPEkwHfqViD0ILcDZPvZWvm7Oxx78fyfUhVISyC4
+         YaWw==
+X-Gm-Message-State: AOAM533/Oe8uvPzXPFIgjx1g9KkQ1hZf17Q2uJYqopgoAissu+pjBoOc
+        5eYDlv1v9+Ky3Lmsd47Nyw==
+X-Google-Smtp-Source: ABdhPJx8VIWqIwXOvN/NC7/dT9hgNU1e17bYi6UbsWxi/VPrkW8Osj2X47/792oC6Qn0vHev4h1Czg==
+X-Received: by 2002:a05:6808:1188:: with SMTP id j8mr373617oil.195.1644372855013;
+        Tue, 08 Feb 2022 18:14:15 -0800 (PST)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id x16sm6203662ooa.6.2022.02.08.18.14.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Feb 2022 18:14:14 -0800 (PST)
+Received: (nullmailer pid 3467846 invoked by uid 1000);
+        Wed, 09 Feb 2022 02:14:13 -0000
+Date:   Tue, 8 Feb 2022 20:14:13 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Luca Weiss <luca@z3ntu.xyz>
+Cc:     devicetree@vger.kernel.org,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        phone-devel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        ~postmarketos/upstreaming@lists.sr.ht,
         Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        linux-gpio@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 08/15] dt-bindings: pinctrl: qcom: msm8953: allow
+ gpio-reserved-ranges
+Message-ID: <YgMjdZ2hH2t5JE93@robh.at.kernel.org>
+References: <20220112194118.178026-1-luca@z3ntu.xyz>
+ <20220112194118.178026-9-luca@z3ntu.xyz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220112194118.178026-9-luca@z3ntu.xyz>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Feb 8, 2022 at 8:34 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> We always assign the default device name as the chip_label in hog
-> structures which makes it impossible to assign hogs to chips. Let's
-> first check if a custom label was set and then copy it instead of the
-> default device name.
+On Wed, 12 Jan 2022 20:40:57 +0100, Luca Weiss wrote:
+> Allow the gpio-reserved-ranges property to be used in dts.
+> 
+> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+> Acked-by: Konrad Dybcio <konrad.dybcio@somainline.org>
+> ---
+>  .../devicetree/bindings/pinctrl/qcom,msm8953-pinctrl.yaml       | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
 
-...
-
-> +       return (bank->label && (strlen(bank->label) > 0));
-
-It can be simply
-
-  return bank->label && strlen(bank->label);
-
-Or even w/o strlen() call:
-
-  return bank->label && *bank->label; // or bank->label && bank->label[0]
-
-Either way the code LGTM,
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
--- 
-With Best Regards,
-Andy Shevchenko
+Acked-by: Rob Herring <robh@kernel.org>
