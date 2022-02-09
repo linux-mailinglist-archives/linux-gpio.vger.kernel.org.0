@@ -1,82 +1,81 @@
 Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C6DD4AE70F
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Feb 2022 03:42:26 +0100 (CET)
+Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
+	by mail.lfdr.de (Postfix) with ESMTP id 451D24AE795
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Feb 2022 04:11:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243777AbiBICli (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Feb 2022 21:41:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36762 "EHLO
+        id S1343890AbiBIDDh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Feb 2022 22:03:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244675AbiBICOQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Feb 2022 21:14:16 -0500
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8743C06157B;
-        Tue,  8 Feb 2022 18:14:15 -0800 (PST)
-Received: by mail-oi1-f174.google.com with SMTP id v67so1053489oie.9;
-        Tue, 08 Feb 2022 18:14:15 -0800 (PST)
+        with ESMTP id S1359864AbiBIC5A (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Feb 2022 21:57:00 -0500
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C135C0613CC;
+        Tue,  8 Feb 2022 18:56:59 -0800 (PST)
+Received: by mail-ot1-f45.google.com with SMTP id l43-20020a9d1cab000000b005aa50ff5869so654869ota.0;
+        Tue, 08 Feb 2022 18:56:59 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=QlY7z6ucIH6IDIDbySWxzA4mcb/KENstANpgmuDi7Sw=;
-        b=kdLCwSEF84+UfA1rQuA29sbYcoJQDTHFDMm5c6TJBO0743PABa1gInSxPZx7EU6X6Q
-         aZUMrFc6BLdfJmL3M9knFo4GBPO2EoJaBURGGiKXD4SjFZJwqxEUs7G/+ijJhCMLeUoH
-         DUS6ERQLFggbCYztuM/Uxb2kJLut3pG3d0IEoZRLCrWxrMCQTPAHILROkvl1bwVQoJbE
-         Fy2z+4mrm45KZBKFwoYm2cgSmlbbSPRFM3aOIVm0KW9ZgcLRRMLRdCSmus0gCV798puQ
-         W9nM72QmQi+xOCXyQGLwjQhtHDlibPEkwHfqViD0ILcDZPvZWvm7Oxx78fyfUhVISyC4
-         YaWw==
-X-Gm-Message-State: AOAM533/Oe8uvPzXPFIgjx1g9KkQ1hZf17Q2uJYqopgoAissu+pjBoOc
-        5eYDlv1v9+Ky3Lmsd47Nyw==
-X-Google-Smtp-Source: ABdhPJx8VIWqIwXOvN/NC7/dT9hgNU1e17bYi6UbsWxi/VPrkW8Osj2X47/792oC6Qn0vHev4h1Czg==
-X-Received: by 2002:a05:6808:1188:: with SMTP id j8mr373617oil.195.1644372855013;
-        Tue, 08 Feb 2022 18:14:15 -0800 (PST)
+        bh=k4jpU9UQFFFu7MujThREpoXMQUlWam3Hqib4UzltPs4=;
+        b=Rxa9oj8MolDHGLu2boLdHGRN8KUidAeKvJ9Jcnpe99oJhuqET3Ol3pZdyhTNp6DGUP
+         3YLD6VokIxKmo54VVXxGoec9udT4N57TwOlcpCrfo6yxNBi+ifBhGbbpN55YgmIj2uTv
+         HVMiqrRViihnce+GtZkzMbwkjv0VmPS9iLzy+VwQqPGq9fUctQr0zO2kD5y6B1z6hPsq
+         eLdU5PBQvGcYGagFwQv4dvX4FlFnztmD93vXV4utyV6WK0Estah9N7HSEiIdpyXlRryu
+         oOQJa0KJjIc8eqt1hvaxK14iKnqthOs9n4WG4VUf6dILa+x1oqfdaql/ZAFgorzpDC6a
+         wpXA==
+X-Gm-Message-State: AOAM533I0grf0DVZbKW7kz0Vees9aZ9gnlTu3cHIcipimBBo0E7PYCTm
+        ABU0R8LptJ/dwTRL8dcYnA==
+X-Google-Smtp-Source: ABdhPJyuEEHwaXQoQ4bZu/47mrhqhpTHJ9wxw/Lmz/yywPX8o8dqvkV8izjaX5Zlg+bO4bJkzKXEWQ==
+X-Received: by 2002:a05:6830:1b62:: with SMTP id d2mr148286ote.66.1644375418738;
+        Tue, 08 Feb 2022 18:56:58 -0800 (PST)
 Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id x16sm6203662ooa.6.2022.02.08.18.14.13
+        by smtp.gmail.com with ESMTPSA id x17sm6008663oop.1.2022.02.08.18.56.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Feb 2022 18:14:14 -0800 (PST)
-Received: (nullmailer pid 3467846 invoked by uid 1000);
-        Wed, 09 Feb 2022 02:14:13 -0000
-Date:   Tue, 8 Feb 2022 20:14:13 -0600
+        Tue, 08 Feb 2022 18:56:58 -0800 (PST)
+Received: (nullmailer pid 3530997 invoked by uid 1000);
+        Wed, 09 Feb 2022 02:56:57 -0000
+Date:   Tue, 8 Feb 2022 20:56:57 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Luca Weiss <luca@z3ntu.xyz>
-Cc:     devicetree@vger.kernel.org,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        phone-devel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 08/15] dt-bindings: pinctrl: qcom: msm8953: allow
- gpio-reserved-ranges
-Message-ID: <YgMjdZ2hH2t5JE93@robh.at.kernel.org>
-References: <20220112194118.178026-1-luca@z3ntu.xyz>
- <20220112194118.178026-9-luca@z3ntu.xyz>
+To:     Bhupesh Sharma <bhupesh.sharma@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+        bjorn.andersson@linaro.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Marc Zyngier <maz@kernel.org>, bhupesh.linux@gmail.com,
+        robh+dt@kernel.org, linus.walleij@linaro.org
+Subject: Re: [PATCH 1/4] dt-bindings: qcom,pdc: Add compatible for SM8150
+Message-ID: <YgMteWXliX4BInLw@robh.at.kernel.org>
+References: <20220119203133.467264-1-bhupesh.sharma@linaro.org>
+ <20220119203133.467264-2-bhupesh.sharma@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220112194118.178026-9-luca@z3ntu.xyz>
+In-Reply-To: <20220119203133.467264-2-bhupesh.sharma@linaro.org>
 X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 12 Jan 2022 20:40:57 +0100, Luca Weiss wrote:
-> Allow the gpio-reserved-ranges property to be used in dts.
+On Thu, 20 Jan 2022 02:01:30 +0530, Bhupesh Sharma wrote:
+> Add the compatible string for SM8150 SoC from Qualcomm.
 > 
-> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-> Acked-by: Konrad Dybcio <konrad.dybcio@somainline.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
 > ---
->  .../devicetree/bindings/pinctrl/qcom,msm8953-pinctrl.yaml       | 2 ++
->  1 file changed, 2 insertions(+)
+>  .../devicetree/bindings/interrupt-controller/qcom,pdc.txt        | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
 Acked-by: Rob Herring <robh@kernel.org>
