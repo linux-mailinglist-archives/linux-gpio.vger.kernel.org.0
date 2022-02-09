@@ -2,60 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 780E44AE7BD
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Feb 2022 04:13:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 81E054AE84B
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Feb 2022 05:08:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240138AbiBIDLe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Feb 2022 22:11:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36170 "EHLO
+        id S1346178AbiBIEID (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Feb 2022 23:08:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347357AbiBIDLR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Feb 2022 22:11:17 -0500
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37F01C043187;
-        Tue,  8 Feb 2022 19:11:01 -0800 (PST)
-Received: by mail-oo1-f41.google.com with SMTP id 189-20020a4a03c6000000b003179d7b30d8so1025716ooi.2;
-        Tue, 08 Feb 2022 19:11:01 -0800 (PST)
+        with ESMTP id S1347699AbiBIECm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Feb 2022 23:02:42 -0500
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91520C061578;
+        Tue,  8 Feb 2022 20:02:40 -0800 (PST)
+Received: by mail-oo1-f43.google.com with SMTP id o128-20020a4a4486000000b003181707ed40so1075784ooa.11;
+        Tue, 08 Feb 2022 20:02:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=4QLpY+NZl5728WnLEOfRJfXQ78UDzx/bgVTEF/QD8Cg=;
-        b=38n+esg7eG9z/UoI4ZCirTYHlpBR4jQg+BKRlEI8LPXMk782OsI7dHWhHvkojIY556
-         vl6r01heNWn4pzpFxMI27dDD95md2BdZ6PC0P/f1IMGPDuZUDforlO4QLbYvDcF8cDqW
-         +pjIFoc81zrGJya+fG/Xw4uwtigXGf4MxKJDbgTRletIeRQ4VQRLA7M2/rRWmD4FJbVT
-         5vlF9znvIGSHTncYoQkuTL7KkWm6aX0YOAoudqELN61DRCXYYQzIT2sg+yQtG2V0L78y
-         AyBftndbirJ707pdqFp7ep1XxAGPrI3RlYpCy/A78VoOqhtoiBHcSvHxDfdNBy1legoM
-         EUyQ==
-X-Gm-Message-State: AOAM5315A5TOjQv3pxDuPHdF5MKvr70JLacy+7oI5DmtWHanjdJ1bRbz
-        dz5lwcTdPFZK+WjeNVDQ9h9HVoRIdA==
-X-Google-Smtp-Source: ABdhPJw0JUU+jlnR9uiII9DzsJeXzBAVPMro9RR5JRMu/AqaBuPNJDbHCsFROHSxYk+l663r1YDeeQ==
-X-Received: by 2002:a05:6870:72c6:: with SMTP id o6mr115698oak.184.1644376260463;
-        Tue, 08 Feb 2022 19:11:00 -0800 (PST)
+        bh=SmAPXZKckaZ6dH+DTdhtKGAYyYnz21UexfWGc9HyiWI=;
+        b=5nU1U5ye37nhURhlOmTXyOgkcon1BE9ccAEWfQtc4U2upooTuXNHFETNf53C1d6Eoc
+         On4JUrDcc4uOeX5HkFsoFduQLKks2+/+CPirLq7LojTX1G0rew7oRZVMi+QZXFgyX+lD
+         b2OFBLzuDpBsUqn8IpdpBqVrqvFLwYEf0lWqafb+Cnbmca++hegR9sGSr/FNld/RWqmW
+         JqOfBl1nHtmAR0hOQnZTQ+q/Icw3lYT/6rwSR9GS53XWq9twxwdf4qI44OAIRpVHUX9v
+         ie9Ybk6wshWahan2PSGwx2V6o9HUe4uEHrqbTP2e5Y+sesNSxXVKfVSCsiltGeonctol
+         hU3g==
+X-Gm-Message-State: AOAM530D2vTTFBT7tLfeD5Jt2gMPHet8IloPoRKt20v0FkFjSS+59kOY
+        3vsOx3GPL1mjuOzOHrU6Wf03+V/Lgw==
+X-Google-Smtp-Source: ABdhPJyLhQb7fx1xvUdR+Mt6U6PJoLnqQKAOqE0ef2RvE0J8MScHsEiQ0aQ4u+IvDD3ryPh2KjRUnQ==
+X-Received: by 2002:a05:6870:ee0c:: with SMTP id ga12mr151021oab.343.1644379359888;
+        Tue, 08 Feb 2022 20:02:39 -0800 (PST)
 Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id b7sm6138986ooq.30.2022.02.08.19.10.59
+        by smtp.gmail.com with ESMTPSA id u5sm6310855ooo.46.2022.02.08.20.02.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Feb 2022 19:10:59 -0800 (PST)
-Received: (nullmailer pid 3553184 invoked by uid 1000);
-        Wed, 09 Feb 2022 03:10:58 -0000
-Date:   Tue, 8 Feb 2022 21:10:58 -0600
+        Tue, 08 Feb 2022 20:02:39 -0800 (PST)
+Received: (nullmailer pid 3629635 invoked by uid 1000);
+        Wed, 09 Feb 2022 04:02:38 -0000
+Date:   Tue, 8 Feb 2022 22:02:38 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Rayyan Ansari <rayyan@ansari.sh>
-Cc:     ~postmarketos/upstreaming@lists.sr.ht,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, phone-devel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: qcom,pmic-mpp: Document PM8226
- compatible
-Message-ID: <YgMwwi3M+C0OYwwi@robh.at.kernel.org>
-References: <20220124171538.18088-1-rayyan@ansari.sh>
+To:     Corentin Labbe <clabbe@baylibre.com>
+Cc:     brgl@bgdev.pl, conleylee@foxmail.com, linus.walleij@linaro.org,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: gpio: convert faraday,ftgpio01 to yaml
+Message-ID: <YgM83n5moACXZe7j@robh.at.kernel.org>
+References: <20220127123028.3992288-1-clabbe@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220124171538.18088-1-rayyan@ansari.sh>
+In-Reply-To: <20220127123028.3992288-1-clabbe@baylibre.com>
 X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
         HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
@@ -67,13 +62,130 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 24 Jan 2022 17:15:36 +0000, Rayyan Ansari wrote:
-> Document the Device Tree binding for PM8226 MPPs.
+On Thu, Jan 27, 2022 at 12:30:28PM +0000, Corentin Labbe wrote:
+> Converts gpio/faraday,ftgpio010.txt to yaml.
 > 
-> Signed-off-by: Rayyan Ansari <rayyan@ansari.sh>
+> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
 > ---
->  Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml | 1 +
->  1 file changed, 1 insertion(+)
 > 
+> This commit will cause arch/arm/boot/dts/moxart-uc7112lx.dts to fail DT validation,
+> but the GPIO driver need an interrupt so the current moxart DT is incomplete and the error is appropriate.
+> 
+>  .../bindings/gpio/faraday,ftgpio010.txt       | 27 ---------
+>  .../bindings/gpio/faraday,ftgpio010.yaml      | 59 +++++++++++++++++++
+>  2 files changed, 59 insertions(+), 27 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/gpio/faraday,ftgpio010.txt
+>  create mode 100644 Documentation/devicetree/bindings/gpio/faraday,ftgpio010.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/faraday,ftgpio010.txt b/Documentation/devicetree/bindings/gpio/faraday,ftgpio010.txt
+> deleted file mode 100644
+> index d04236558619..000000000000
+> --- a/Documentation/devicetree/bindings/gpio/faraday,ftgpio010.txt
+> +++ /dev/null
+> @@ -1,27 +0,0 @@
+> -Faraday Technology FTGPIO010 GPIO Controller
+> -
+> -Required properties:
+> -
+> -- compatible : Should be one of
+> -  "cortina,gemini-gpio", "faraday,ftgpio010"
+> -  "moxa,moxart-gpio", "faraday,ftgpio010"
+> -  "faraday,ftgpio010"
+> -- reg : Should contain registers location and length
+> -- interrupts : Should contain the interrupt line for the GPIO block
+> -- gpio-controller : marks this as a GPIO controller
+> -- #gpio-cells : Should be 2, see gpio/gpio.txt
+> -- interrupt-controller : marks this as an interrupt controller
+> -- #interrupt-cells : a standard two-cell interrupt flag, see
+> -  interrupt-controller/interrupts.txt
+> -
+> -Example:
+> -
+> -gpio@4d000000 {
+> -	compatible = "cortina,gemini-gpio", "faraday,ftgpio010";
+> -	reg = <0x4d000000 0x100>;
+> -	interrupts = <22 IRQ_TYPE_LEVEL_HIGH>;
+> -	gpio-controller;
+> -	#gpio-cells = <2>;
+> -	interrupt-controller;
+> -	#interrupt-cells = <2>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/gpio/faraday,ftgpio010.yaml b/Documentation/devicetree/bindings/gpio/faraday,ftgpio010.yaml
+> new file mode 100644
+> index 000000000000..dfd10b76c9d5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/faraday,ftgpio010.yaml
+> @@ -0,0 +1,59 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpio/faraday,ftgpio010.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Faraday Technology FTGPIO010 GPIO Controller
+> +
+> +maintainers:
+> +  - Linus Walleij <linus.walleij@linaro.org>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +          - const: "cortina,gemini-gpio"
+> +          - const: "faraday,ftgpio010"
+> +      - items:
+> +          - const: "moxa,moxart-gpio"
+> +          - const: "faraday,ftgpio010"
+> +      - const: "faraday,ftgpio010"
 
-Acked-by: Rob Herring <robh@kernel.org>
+Don't need quotes.
+
+> +  reg:
+> +    maxItems: 1
+
+blank line between DT properties
+
+With those fixes,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+> +  resets:
+> +    maxItems: 1
+> +  clocks:
+> +    maxItems: 1
+> +  interrupts:
+> +    maxItems: 1
+> +    description: Should contain the interrupt line for the GPIO block
+> +  gpio-controller: true
+> +  "#gpio-cells":
+> +    const: 2
+> +  interrupt-controller: true
+> +  "#interrupt-cells":
+> +    const: 2
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - "#gpio-cells"
+> +  - interrupt-controller
+> +  - "#interrupt-cells"
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    gpio@4d000000 {
+> +      compatible = "cortina,gemini-gpio", "faraday,ftgpio010";
+> +      reg = <0x4d000000 0x100>;
+> +      interrupts = <22 IRQ_TYPE_LEVEL_HIGH>;
+> +      gpio-controller;
+> +      #gpio-cells = <2>;
+> +      interrupt-controller;
+> +      #interrupt-cells = <2>;
+> +    };
+> -- 
+> 2.34.1
+> 
+> 
