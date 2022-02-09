@@ -2,79 +2,159 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 72C244AED89
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Feb 2022 10:04:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 47DEE4AF0B0
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Feb 2022 13:05:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229463AbiBIJEM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Feb 2022 04:04:12 -0500
-Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:56338 "EHLO
+        id S230196AbiBIMEC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Feb 2022 07:04:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229645AbiBIJEK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Feb 2022 04:04:10 -0500
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8DCFC1DF8CB
-        for <linux-gpio@vger.kernel.org>; Wed,  9 Feb 2022 01:04:04 -0800 (PST)
-Received: by mail-ed1-x52e.google.com with SMTP id ch26so3592716edb.12
-        for <linux-gpio@vger.kernel.org>; Wed, 09 Feb 2022 01:04:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4MJZRpDu7px3hzAL62uWvtStglik1kTMv6esLPZmHkQ=;
-        b=GAU2UQ/RY2pIX2GmuJ7MaIMU7gN67xhuckkp6l7CJoUXKE6KRXl8YpT7gq7hSd26/X
-         to2r8r5aGhIg525KpxEuFMeV0mVFrHZIe+1WLgYtKm5apOxZCVSedOtgUYiLIrVis5MO
-         s3haBaz2cUcKSs38t58gXcPz2fwbsgjD049wdiS2dIY1lBE8vISTsxEo/JlCPKflliaM
-         OXQbS3Suv4JGc2ehJ+epZDtxmTprkhTfdTJZQ/KreSIxu5PERMen4Szp0r9/BY0H7QHt
-         IpTPrvEw/sEhW2CiyPJflMT+dlNbz4TVWe+cmqUnbEiSiGXQfNhrtp9K774bWbIrdgs7
-         dxhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4MJZRpDu7px3hzAL62uWvtStglik1kTMv6esLPZmHkQ=;
-        b=UsKlNT+NsziFL2CpLHyxy9hyJo6UbUXUv5hbe6OOr/qqUiwsi9ijx4gQ5AOvehcv7Z
-         t+IXhscQ8Vt4a7XRR0hxZCLbjKV2ok6hzWW8suiTP4dfEwGK+jgOBnibIJ3KTOo0F0sa
-         z91AY5vvRAya0cZQN3N+XQpTZae16wrEpyzba+Sni+hTTuxNDk74x/gfbBXGVL1ejRq4
-         0PxoWRjRSDgGrFt1955T7uTFx2HUzTFbv8suufc4zMTTuid8jWG4V1Z5mvE5pYZv4HCY
-         VBqeOU+aH3tfn9lVrEleaCm9tZoPJgAfhMYki2Kyu976i98koY9O8nDRoOYmBfZc2wa8
-         WkJQ==
-X-Gm-Message-State: AOAM532LBxUYF5GeB0nhoz7SlKy3NJSqaEfLsb6+FZx2QoXtiH+W6THj
-        LkKwx/tiYgwlCnA2p4FMyhQ5VQsm0IRFvoyIdcMQXA==
-X-Google-Smtp-Source: ABdhPJyKoXmsTwTN4HrstgLy4ApxQgcwa+O8Y9wd29EmwhIN8g4C3xsnxpN75JPBscEQOgAoqsgIwR3g+uY4PfKIArI=
-X-Received: by 2002:aa7:c947:: with SMTP id h7mr1292056edt.447.1644397418840;
- Wed, 09 Feb 2022 01:03:38 -0800 (PST)
+        with ESMTP id S232262AbiBIMDc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Feb 2022 07:03:32 -0500
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C99BE016CFF;
+        Wed,  9 Feb 2022 03:31:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1644406268; x=1675942268;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=FXWN8R871gmjrjKcr6dQfeEJg1wb6st6UlaER4Vzc84=;
+  b=Z9o/ZXkjGTeLwHb+TAVeHtW8FO5YSRV0S0Fhr2gTmLf+vonW2eMhnxld
+   g/z8SdA8Ff35DH0K2FX+DAJ8nSt00e97oaC5ZVW+KPdvK082N4xvsz1kP
+   xEZiN11fefpFRVmcdLK4DwpiAMl8HbBebwIi8IIQDGJVaGFWZ+FyvSk6T
+   /eW1B+fkvnd6ijgC4hibYz56r63ItQua9vGYTUOa9MFvfzKeDNbbiD983
+   3pbT+mJaYPZcKodA1c6aYtCxvJVOX3Fto7Q10TGEWX8hGPdUJ7BITOTX5
+   6y4rRqVLXjWfz87tSf9Pjai99qOl9LGYyF7NRVFSnw9zT4Fc9zWsqhxIB
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10252"; a="273719026"
+X-IronPort-AV: E=Sophos;i="5.88,355,1635231600"; 
+   d="scan'208";a="273719026"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2022 03:31:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,355,1635231600"; 
+   d="scan'208";a="499939389"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga002.jf.intel.com with ESMTP; 09 Feb 2022 03:31:06 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 226BC509; Wed,  9 Feb 2022 13:31:21 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v1 1/3] gpiolib: sysfs: Move sysfs_emit() calls outside of the mutex lock
+Date:   Wed,  9 Feb 2022 13:31:15 +0200
+Message-Id: <20220209113117.25760-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20220209085258.1468649-1-clabbe@baylibre.com>
-In-Reply-To: <20220209085258.1468649-1-clabbe@baylibre.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 9 Feb 2022 10:03:28 +0100
-Message-ID: <CAMRc=MfFbU=QgTgcXFwOa7xVEZD7ugPjQ1uXXQqqKpGrUQY1JQ@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: gpio: convert faraday,ftgpio01 to yaml
-To:     Corentin Labbe <clabbe@baylibre.com>
-Cc:     krzysztof.kozlowski@canonical.com, linus.walleij@linaro.org,
-        robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Feb 9, 2022 at 9:53 AM Corentin Labbe <clabbe@baylibre.com> wrote:
->
-> Converts gpio/faraday,ftgpio010.txt to yaml.
->
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
-> ---
+In a few places we perform sysfs_emit() operations under mutex that
+do not require any locking. Move them outside of the mutex locks.
 
-Applied for next, thanks!
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/gpio/gpiolib-sysfs.c | 29 ++++++++++++++---------------
+ 1 file changed, 14 insertions(+), 15 deletions(-)
 
-Bart
+diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
+index 78ca7dee8b64..57d8ecab53b7 100644
+--- a/drivers/gpio/gpiolib-sysfs.c
++++ b/drivers/gpio/gpiolib-sysfs.c
+@@ -61,17 +61,16 @@ static ssize_t direction_show(struct device *dev,
+ {
+ 	struct gpiod_data *data = dev_get_drvdata(dev);
+ 	struct gpio_desc *desc = data->desc;
+-	ssize_t			status;
++	int value;
+ 
+ 	mutex_lock(&data->mutex);
+ 
+ 	gpiod_get_direction(desc);
+-	status = sysfs_emit(buf, "%s\n",
+-			    test_bit(FLAG_IS_OUT, &desc->flags) ? "out" : "in");
++	value = !!test_bit(FLAG_IS_OUT, &desc->flags);
+ 
+ 	mutex_unlock(&data->mutex);
+ 
+-	return status;
++	return sysfs_emit(buf, "%s\n", value ? "out" : "in");
+ }
+ 
+ static ssize_t direction_store(struct device *dev,
+@@ -108,12 +107,13 @@ static ssize_t value_show(struct device *dev,
+ 	mutex_lock(&data->mutex);
+ 
+ 	status = gpiod_get_value_cansleep(desc);
+-	if (status >= 0)
+-		status = sysfs_emit(buf, "%zd\n", status);
+ 
+ 	mutex_unlock(&data->mutex);
+ 
+-	return status;
++	if (status < 0)
++		return status;
++
++	return sysfs_emit(buf, "%zd\n", status);
+ }
+ 
+ static ssize_t value_store(struct device *dev,
+@@ -238,7 +238,6 @@ static ssize_t edge_show(struct device *dev,
+ 		struct device_attribute *attr, char *buf)
+ {
+ 	struct gpiod_data *data = dev_get_drvdata(dev);
+-	ssize_t	status = 0;
+ 	int i;
+ 
+ 	mutex_lock(&data->mutex);
+@@ -247,12 +246,13 @@ static ssize_t edge_show(struct device *dev,
+ 		if (data->irq_flags == trigger_types[i].flags)
+ 			break;
+ 	}
+-	if (i < ARRAY_SIZE(trigger_types))
+-		status = sysfs_emit(buf, "%s\n", trigger_types[i].name);
+ 
+ 	mutex_unlock(&data->mutex);
+ 
+-	return status;
++	if (i >= ARRAY_SIZE(trigger_types))
++		return 0;
++
++	return sysfs_emit(buf, "%s\n", trigger_types[i].name);
+ }
+ 
+ static ssize_t edge_store(struct device *dev,
+@@ -324,16 +324,15 @@ static ssize_t active_low_show(struct device *dev,
+ {
+ 	struct gpiod_data *data = dev_get_drvdata(dev);
+ 	struct gpio_desc *desc = data->desc;
+-	ssize_t			status;
++	int value;
+ 
+ 	mutex_lock(&data->mutex);
+ 
+-	status = sysfs_emit(buf, "%d\n",
+-			    !!test_bit(FLAG_ACTIVE_LOW, &desc->flags));
++	value = !!test_bit(FLAG_ACTIVE_LOW, &desc->flags);
+ 
+ 	mutex_unlock(&data->mutex);
+ 
+-	return status;
++	return sysfs_emit(buf, "%d\n", value);
+ }
+ 
+ static ssize_t active_low_store(struct device *dev,
+-- 
+2.34.1
+
