@@ -2,135 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E0CAC4B1917
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Feb 2022 00:11:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A0A84B1972
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Feb 2022 00:29:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345447AbiBJXKQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Feb 2022 18:10:16 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:59226 "EHLO
+        id S1345656AbiBJX3N (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Feb 2022 18:29:13 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:41608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238904AbiBJXKP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Feb 2022 18:10:15 -0500
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 740EDE31;
-        Thu, 10 Feb 2022 15:10:15 -0800 (PST)
-Received: by mail-ed1-x534.google.com with SMTP id b13so13745745edn.0;
-        Thu, 10 Feb 2022 15:10:15 -0800 (PST)
+        with ESMTP id S1345665AbiBJX3M (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Feb 2022 18:29:12 -0500
+Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DE93115A
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Feb 2022 15:29:13 -0800 (PST)
+Received: by mail-yb1-xb29.google.com with SMTP id x136so18260683ybe.11
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Feb 2022 15:29:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=4zd+d9NdEXjmSBG6eKyyZ32RF9eXdrBZvgQdiNkAdR4=;
-        b=JerGdJDRLq42TNluoDiDdyNEa5OPpLv5oClSPNriUX77iN4SVSpFrrCj8awES3byVZ
-         2hEJabfnFYY7ptl7M0jjxrmxJscJjkMV15GrCx0y8xw5KrBZ+vq80gW4uVItK2r3WlxK
-         X5jbpvzf31Xsq6M9tQ/KjGinbM0jA+y/SzxuDAdbSrrUb47JQP5TDiIKR10idscms+Fq
-         DNUrbm6iPhhQ/eIEktGPAv2iSPib/cmjz/ouIiOxUdWavH2Bzw5Yg0EMLS76DpofHavh
-         zCYmP8sgju1C0daSBk7jIl8mZINhLQlBSKmqjaPQixwVMlq9JlivNQ6QPCIGpBsj/b7R
-         E9lQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bDPR0AeTxe7a/e90UGeXdtJUMtsUmDzAKp7kmzt3Fms=;
+        b=FKaIO7ke31u0dDGXqL1B/WHPoYALQGp0PvwHenK3qpKZkhEARGZ2CBCaOreq7+A52o
+         WNb/xGV8X6HgeueQlNwV0LpoH7sNgkhQ+R3QUYl9Ka6YUaJh4eMzldyVHL5DKx8033Kr
+         UNAvyfa3pxaB/e8+gbIE2FP3G676NtRlw0V57AjN/whz1iftIy93HrL/6r4o4zXzzoaN
+         RTUV6DV7C/YQXQTQEPpA2chH51s0fdpd66ngY0LNAIeTgM06fNxtJQNsVJFakVDNuVq6
+         xpOgxOUd+XgcNZcpITZEI3UYsUv0SZgPUzzLIW8OzUYB2r79vyFFLj+7x/UVGppFbwTo
+         ijjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=4zd+d9NdEXjmSBG6eKyyZ32RF9eXdrBZvgQdiNkAdR4=;
-        b=7an6M1ozyB8FHSH8kHBqJnCz6A/N42eTizictQkWhW6tO62xu/jlyOcdg1eJLA5RJg
-         8FnhVKDq//ipk8YW400HypI3WZuJl1mN0ULuaoLKAvyN+jHkZynVaxx02TzKkmK7pYlf
-         qepfAUbgW5YJitostbAj/TwouQcG6cdUDrmeGREMaf3CJBbGnke6SovQkx0BJT6997Ku
-         jPZywYUK4deyFqU2f97ft6LMggcHZSXw3FiQUUaX9XZcJMug4Qx2HTUba8WICtEYLVHI
-         D6StjQ5G/dxuDoIwgKvFr6hzNKk8U8WZ4tW3CPLPiPCBByDMUNYyUjY9ln24ugAdtOnq
-         eWVg==
-X-Gm-Message-State: AOAM530INHaqL+eKWrjXSN2ymtGSX9OPnC7ihQ25abEUxvl+ZyOXfErV
-        TmIQsUHXyqAtfoP7MY08N3M=
-X-Google-Smtp-Source: ABdhPJzX7WEZ/93GNx4TcH64x4mdLF678GL6+j9Mynk3mAi5IzBr1N/UwQtqQ7WyHJfKSEpndcM+Pw==
-X-Received: by 2002:a05:6402:440a:: with SMTP id y10mr10569403eda.215.1644534614032;
-        Thu, 10 Feb 2022 15:10:14 -0800 (PST)
-Received: from localhost (92.40.202.152.threembb.co.uk. [92.40.202.152])
-        by smtp.gmail.com with ESMTPSA id h6sm2213164ede.50.2022.02.10.15.10.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Feb 2022 15:10:13 -0800 (PST)
-Date:   Thu, 10 Feb 2022 23:10:45 +0000
-From:   Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     linus.walleij@linaro.org, linux-mips@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: ingenic: Fix regmap on X series SoCs
-Message-ID: <YgWbdYDiVQyHkHiJ@localhost>
-References: <20220209230452.19535-1-aidanmacdonald.0x0@gmail.com>
- <DD537R.K2D13DXGNPGH@crapouillou.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bDPR0AeTxe7a/e90UGeXdtJUMtsUmDzAKp7kmzt3Fms=;
+        b=npK5VBWYSq6XuwEz5T4kiUwLJSeJM0YLc9QX64d/TCHXbF+cL9agYooAWMCwJ9fcgp
+         r0Qmm66NVm5cmF9/8yqvIc5gZdYmpGDexNF6ryvFThc6FdMxZS2XV+jqUYVGlNlrmQpr
+         CzNm4J2IXkysraHKTdsHGYfTPZt7+do8enBSvkyq12HdLG++PM9uzpG74Nt+YDDEyPw0
+         qjnNcLJTSnlmUcH3dcLzqa/aVEl+AwSihRwp7f1koQKNeMWkwUP23DkjxfbYXVs1Fy4A
+         R+nf7vOiOwcBT/nT3xspR/hwXehS1fb8t/T2+htGuiytzYVwYVKobRvUZN7jJPhYryMT
+         ZDhQ==
+X-Gm-Message-State: AOAM532BqNCHPhVByLa7kiDo1nSliCZEGLi4FeVPpohuUAzgrBwivT7v
+        f1plIJbtOapt2Bh0YfTb1cRi6rCgV6mvkKDV+/Lfjw==
+X-Google-Smtp-Source: ABdhPJxX/iYRi7hUiyZNbRc4Y+/bsvki6LAWWVC3W44vcjE/bJpz3qx3z2RTxOixioEtg7KiCBWpfMiZEnQ/hG7qSR4=
+X-Received: by 2002:a25:103:: with SMTP id 3mr9215973ybb.110.1644535752591;
+ Thu, 10 Feb 2022 15:29:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <DD537R.K2D13DXGNPGH@crapouillou.net>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <20220209162607.1118325-1-maz@kernel.org> <20220209162607.1118325-8-maz@kernel.org>
+In-Reply-To: <20220209162607.1118325-8-maz@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 11 Feb 2022 00:29:01 +0100
+Message-ID: <CACRpkdZOmdXb84OQVsXv-Bbi2dBCTQ=-nSrCcCy-tDUhvhQAtw@mail.gmail.com>
+Subject: Re: [PATCH 07/10] irqchip/versatile-fpga: Switch to dynamic chip name output
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Feb 10, 2022 at 11:03:13AM +0000, Paul Cercueil wrote:
-> Hi Aidan,
-> 
-> Le mer., févr. 9 2022 at 23:04:54 +0000, Aidan MacDonald 
-> <aidanmacdonald.0x0@gmail.com> a écrit :
-> > The X series Ingenic SoCs have a shadow GPIO group which
-> > is at a higher offset than the other groups, and is used
-> > for all GPIO configuration. The regmap did not take this
-> > offset into account and set max_register too low. Writes
-> > to the shadow group registers were blocked, which made it
-> > impossible to change any pin configuration.
-> > 
-> > Fix this by pretending there are at least 8 chips on any
-> > 'X' SoC for the purposes of calculating max_register. This
-> > ensures the shadow group is accessible.
-> 
-> I don't like your solution, it sounds very hacky. I think it would make 
-> more sense to use a dedicated x1000_pinctrl_regmap_config that would be 
-> used for the X1000 SoC. That would also allow you to express that there 
-> are no registers in the 0x400-0x700 range (through 
-> regmap_config.wr_table / .rd_table).
-> 
-> Cheers,
-> -Paul
-> 
+On Wed, Feb 9, 2022 at 5:26 PM Marc Zyngier <maz@kernel.org> wrote:
 
-That's fine, I'll put together a v2 patch using the approach you suggest.
-I think all the 'X' SoCs will require a similar regmap as they're using
-ingenic_gpio_shadow_* functions too, but I'll check their datasheets to
-be sure.
+> Move the name output to the relevant callback, which allows us
+> some nice cleanups (mostly owing to the fact that the driver is
+> now DT only.
+>
+> We also drop a random include directive from the ftintc010 driver.
+>
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
 
-> > Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
-> > ---
-> >  drivers/pinctrl/pinctrl-ingenic.c | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pinctrl/pinctrl-ingenic.c 
-> > b/drivers/pinctrl/pinctrl-ingenic.c
-> > index 2712f51eb238..9d2bccda50f1 100644
-> > --- a/drivers/pinctrl/pinctrl-ingenic.c
-> > +++ b/drivers/pinctrl/pinctrl-ingenic.c
-> > @@ -4168,7 +4168,10 @@ static int __init ingenic_pinctrl_probe(struct 
-> > platform_device *pdev)
-> >  		return PTR_ERR(base);
-> > 
-> >  	regmap_config = ingenic_pinctrl_regmap_config;
-> > -	regmap_config.max_register = chip_info->num_chips * 
-> > chip_info->reg_offset;
-> > +	if (chip_info->version >= ID_X1000)
-> > +		regmap_config.max_register = MIN(8, chip_info->num_chips) * 
-> > chip_info->reg_offset;
-> > +	else
-> > +		regmap_config.max_register = chip_info->num_chips * 
-> > chip_info->reg_offset;
-> > 
-> >  	jzpc->map = devm_regmap_init_mmio(dev, base, &regmap_config);
-> >  	if (IS_ERR(jzpc->map)) {
-> > --
-> > 2.34.1
-> > 
-> 
-> 
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+BTW nice cleanup.
+
+Yours,
+Linus Walleij
