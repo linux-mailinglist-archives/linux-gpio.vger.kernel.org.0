@@ -2,118 +2,188 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CDB944B0E35
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Feb 2022 14:15:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BF984B0EE1
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Feb 2022 14:32:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242047AbiBJNOR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Feb 2022 08:14:17 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:47062 "EHLO
+        id S242238AbiBJNc3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Feb 2022 08:32:29 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:58022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242046AbiBJNOP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Feb 2022 08:14:15 -0500
-Received: from mail-qv1-xf35.google.com (mail-qv1-xf35.google.com [IPv6:2607:f8b0:4864:20::f35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ACBD115A
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Feb 2022 05:14:16 -0800 (PST)
-Received: by mail-qv1-xf35.google.com with SMTP id p7so4855027qvk.11
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Feb 2022 05:14:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=uqnW/szZ8yMl69fSxYGMyrphrxanTs2JR1CLOUZb5zM=;
-        b=KShJlbJHbAl9loI8iynvAEQIMPYc002bkwj24615T+nnpTbXCABKyQbvp9hykiZ/w2
-         WCz49rBtNp4Sy8SHN2nzpsHgR9N5e8Rj0Lxwzc8LJEmkm248uqvHCNZZVKXEVzS+9IUT
-         DLJYyp9XJAdrrGNE191HFk+8BPwBh9rE9OFdi8LK6NgYji+1ygWZBEXO0XCBOb8PprPc
-         +ObYK6uIRS91ao8H3r4WLm8clFNIe+5ofxQXVIIOdgLLzYjapvJarbpRTBjixI1Cg/3G
-         /MAuozCLQ2bWnVA8LIXKp0adkVoZaO750eITaXpy5bC/Q/dTruvoMdeB7jSflLLv6LIN
-         U2mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=uqnW/szZ8yMl69fSxYGMyrphrxanTs2JR1CLOUZb5zM=;
-        b=B2hlFu1g+WjL2E8RfuxogUrxlwR3l+Vsp6t98KMieKuvQDaij3qcavZo26zY6cB+uu
-         ahsrvXprSf/ibk7BfAWGxJTzIIfYbveOST1M4qfz9Yddzn2vsyn8PTEJy30z7pmYYmHX
-         9r3ArNzuCjwWcV+MKQBRbKgWUwcESPfHsc0t6esYPQ2SkHa+YFZYz6AHR6v2BE1kHRhQ
-         vH2FqRnaHEK/cQNHI8bypYKg7u9S9nT+hkKea4CDA1+zFVMAcJN4ZHSqL8EMzpArEb1a
-         VHVtb/p5s4VP8wYamrvKCFnhGk1dDQTTsieb4WAOhuHV+8tZUjEaGJtTupcCSJWP1PyG
-         5Z0w==
-X-Gm-Message-State: AOAM5312N9sg2GEN6BoDSZKXQhLJFPJgrpMCcS9vAjmTVFHqiZWtN9vo
-        mTBAzFRqscujhp9qDInkwgaQLg==
-X-Google-Smtp-Source: ABdhPJwX48+RfVd9PNIxvmxM+Lm9nNjH5HsHrTT/zZU2MUbiGHSQODMEVBJbkr7/14XjQg60DJyvWw==
-X-Received: by 2002:a05:6214:5081:: with SMTP id kk1mr5009104qvb.112.1644498855283;
-        Thu, 10 Feb 2022 05:14:15 -0800 (PST)
-Received: from localhost.localdomain (modemcable134.222-177-173.mc.videotron.ca. [173.177.222.134])
-        by smtp.gmail.com with ESMTPSA id p15sm10969824qtk.56.2022.02.10.05.14.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Feb 2022 05:14:14 -0800 (PST)
-From:   Jonathan Marek <jonathan@marek.ca>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     dmitry.baryshkov@linaro.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
+        with ESMTP id S242222AbiBJNc3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Feb 2022 08:32:29 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AE2EBA9;
+        Thu, 10 Feb 2022 05:32:29 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C0AC761194;
+        Thu, 10 Feb 2022 13:32:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A6F9C004E1;
+        Thu, 10 Feb 2022 13:32:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1644499948;
+        bh=e16i0NQcHE3Ef3uFXui4Z0Jh2JFNzjru1c1HJrpZq6s=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=e9PCKcze+P0gC1iSIpN804La+BgcQKc5prjXGM8Hs8TvA1AM/ZPoDgrUPqgbzh3AG
+         zn9n6MndMGHpmBl2VedW58e6M/zM/FKZIkvGOavcXVeDqYvywHZ/xpa7QwCtO0nF4N
+         iA7JRoXId/l+pxzJx/essZjCkREGgUkZElhwsS6bZy7JoGTuylGNVnE5kb1APbotVL
+         BAzf/1PXl3ahE9RQuYdx5V5q3ijCpFwdaEkCTQVX5OaUTRyZbeDW6WBPYKxbsnBMol
+         +pCDswBffiSTWev6VirAxVs9Ppm4P4wMAP4wS8+r66lKqsgS8zs7KtujrAhwU92UrP
+         3QjlUrf/l2/UQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1nI9Yg-006udH-50; Thu, 10 Feb 2022 13:32:26 +0000
+Date:   Thu, 10 Feb 2022 13:32:25 +0000
+Message-ID: <87v8xm4zkm.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Emil Renner Berthing <kernel@esmil.dk>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org (open list:PIN CONTROL SUBSYSTEM),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 2/2] pinctrl: qcom: print egpio mode in debugfs
-Date:   Thu, 10 Feb 2022 08:12:09 -0500
-Message-Id: <20220210131210.24605-2-jonathan@marek.ca>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20220210131210.24605-1-jonathan@marek.ca>
-References: <20220210131210.24605-1-jonathan@marek.ca>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        kernel-team@android.com
+Subject: Re: [PATCH 10/10] pinctrl: starfive: Switch to dynamic chip name output
+In-Reply-To: <CANBLGcwwrqkYS2cxX5dYAaoWdj5pRp9c+qBDAMb3=0D5oBD+Zg@mail.gmail.com>
+References: <20220209162607.1118325-1-maz@kernel.org>
+        <20220209162607.1118325-11-maz@kernel.org>
+        <CANBLGcwKeLn7Q1Ra8pCw=cXy=kJeEFRmBjOxjds10+k70LvzXA@mail.gmail.com>
+        <87zgmz3xbf.wl-maz@kernel.org>
+        <CANBLGcwwrqkYS2cxX5dYAaoWdj5pRp9c+qBDAMb3=0D5oBD+Zg@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: kernel@esmil.dk, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, matthias.bgg@gmail.com, grygorii.strashko@ti.com, ssantosh@kernel.org, khilman@kernel.org, tony@atomide.com, tglx@linutronix.de, vz@mleia.com, andrew@lunn.ch, gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-When egpio_enable bit is cleared, the gpio is driven by SSC/LPASS TLMM and
-the APSS TLMM settings are ignored. Reflect that in the debugfs dump.
+On Thu, 10 Feb 2022 12:59:59 +0000,
+Emil Renner Berthing <kernel@esmil.dk> wrote:
+> 
+> On Thu, 10 Feb 2022 at 10:06, Marc Zyngier <maz@kernel.org> wrote:
+> > On Wed, 09 Feb 2022 23:30:55 +0000,
+> > Emil Renner Berthing <kernel@esmil.dk> wrote:
+> > >
+> > > On Wed, 9 Feb 2022 at 17:49, Marc Zyngier <maz@kernel.org> wrote:
+> > > >
+> > > > Instead of overloading the name field, use the relevant callback to
+> > > > output the device name.
+> > > >
+> > > > Signed-off-by: Marc Zyngier <maz@kernel.org>
+> > > > ---
+> > > >  drivers/pinctrl/pinctrl-starfive.c | 11 +++++++++--
+> > > >  1 file changed, 9 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/drivers/pinctrl/pinctrl-starfive.c b/drivers/pinctrl/pinctrl-starfive.c
+> > > > index 5be9866c2b3c..f29d9ccf858b 100644
+> > > > --- a/drivers/pinctrl/pinctrl-starfive.c
+> > > > +++ b/drivers/pinctrl/pinctrl-starfive.c
+> > > > @@ -15,6 +15,7 @@
+> > > >  #include <linux/of.h>
+> > > >  #include <linux/platform_device.h>
+> > > >  #include <linux/reset.h>
+> > > > +#include <linux/seq_file.h>
+> > > >  #include <linux/spinlock.h>
+> > > >
+> > > >  #include <linux/pinctrl/pinctrl.h>
+> > > > @@ -1163,12 +1164,20 @@ static int starfive_irq_set_type(struct irq_data *d, unsigned int trigger)
+> > > >         return 0;
+> > > >  }
+> > > >
+> > > > +static void starfive_irq_print_chip(struct irq_data *d, struct seq_file *p)
+> > > > +{
+> > > > +       struct starfive_pinctrl *sfp = starfive_from_irq_data(d);
+> > > > +
+> > > > +       seq_printf(p, sfp->gc.label);
+> > > > +}
+> > > > +
+> > > >  static struct irq_chip starfive_irq_chip = {
+> > > >         .irq_ack = starfive_irq_ack,
+> > > >         .irq_mask = starfive_irq_mask,
+> > > >         .irq_mask_ack = starfive_irq_mask_ack,
+> > > >         .irq_unmask = starfive_irq_unmask,
+> > > >         .irq_set_type = starfive_irq_set_type,
+> > > > +       .irq_print_chip = starfive_irq_print_chip,
+> > > >         .flags = IRQCHIP_SET_TYPE_MASKED,
+> > > >  };
+> > >
+> > > The parent interrupt doesn't show up in /proc/interrupts anyway, so if
+> > > setting the name is considered abuse we can just drop the addition
+> > > above and just delete the two lines below.
+> >
+> > Are you sure this never appears? Is there a another irqchip stacked on
+> > top of this one? Could you please dump /sys/kernel/debug/irq/irqs/XX,
+> > where XX is an interrupt number using one of these GPIO pins? Please
+> > run it without this patch, as I just noticed that debugfs blindly
+> > uses the name.
+> 
+> Yes, the old gpio driver this derives from used to set
+>     sfp->gc.irq.parent_handler = NULL
+> and then register its own irq handler, then the parent would show up
+> in /proc/interrupts. But after switching to letting the gpio framework
+> register the handler it stopped showing up.
 
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
----
- drivers/pinctrl/qcom/pinctrl-msm.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+But this patch does not deal with the parent interrupt. It deals with
+the irqchip that is used for the 'children interrupt'. Output
+interrupts for a chained handler are never shown, as they don't really
+make much sense on their own (you'd only see the sum of the input
+interrupts).
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index 780878dede9e0..27c19a206502d 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -615,6 +615,7 @@ static void msm_gpio_dbg_show_one(struct seq_file *s,
- 	int drive;
- 	int pull;
- 	int val;
-+	int egpio_enable;
- 	u32 ctl_reg, io_reg;
- 
- 	static const char * const pulls_keeper[] = {
-@@ -641,12 +642,20 @@ static void msm_gpio_dbg_show_one(struct seq_file *s,
- 	func = (ctl_reg >> g->mux_bit) & 7;
- 	drive = (ctl_reg >> g->drv_bit) & 7;
- 	pull = (ctl_reg >> g->pull_bit) & 3;
-+	egpio_enable = 0;
-+	if (pctrl->soc->egpio_func && ctl_reg & BIT(g->egpio_present))
-+		egpio_enable = !(ctl_reg & BIT(g->egpio_enable));
- 
- 	if (is_out)
- 		val = !!(io_reg & BIT(g->out_bit));
- 	else
- 		val = !!(io_reg & BIT(g->in_bit));
- 
-+	if (egpio_enable) {
-+		seq_printf(s, " %-8s: egpio\n", g->name);
-+		return;
-+	}
-+
- 	seq_printf(s, " %-8s: %-3s", g->name, is_out ? "out" : "in");
- 	seq_printf(s, " %-4s func%d", val ? "high" : "low", func);
- 	seq_printf(s, " %dmA", msm_regval_to_drive(drive));
+> 
+> root@visionfive~# cat /proc/interrupts
+>            CPU0       CPU1
+>   5:       5035       4907  RISC-V INTC   5 Edge      riscv-timer
+>   6:        960          0  SiFive PLIC   4 Edge      dw-mci
+>   7:       4384          0  SiFive PLIC   5 Edge      dw-mci
+>   8:        562          0  SiFive PLIC   6 Edge      eth0
+>  10:          1          0  SiFive PLIC   7 Edge      eth0
+>  11:          0          0  SiFive PLIC   2 Edge      dw_axi_dmac_platform
+>  15:       2690          0  SiFive PLIC  44 Edge      xhci-hcd:usb1
+>  17:          0          0  SiFive PLIC  43 Edge      104c0000.usb
+>  18:          0          0  SiFive PLIC   1 Edge      dw_axi_dmac_platform
+>  20:        234          0  SiFive PLIC  96 Edge      118b0000.i2c
+>  21:          0          0  SiFive PLIC  97 Edge      118c0000.i2c
+>  22:          7          0  SiFive PLIC  98 Edge      118d0000.trng
+>  28:          0          0  SiFive PLIC 101 Edge      sf_lcdc
+>  29:          0          0  SiFive PLIC 103 Edge      sf_vpp1
+>  30:          0          0  SiFive PLIC  70 Edge      12410000.spi
+>  31:        205          0  SiFive PLIC  73 Edge      ttyS0
+>  32:          0          0  SiFive PLIC  74 Edge      12450000.i2c
+>  33:          0          0  SiFive PLIC  80 Edge      12480000.watchdog
+>  34:         28          0  SiFive PLIC 122 Edge      124a0000.tmon
+>  37:          0          0  11910000.pinctrl  35 Edge      gpiomon
+                              ^^^^^^^^^^^^^^^^
+This is what this patch deals with. Going with your suggestion of
+dropping this output (or to hardcode it to something else) would be a
+userspace visible change, and we can't do that.
+
+Thanks,
+
+	M.
+
 -- 
-2.26.1
-
+Without deviation from the norm, progress is not possible.
