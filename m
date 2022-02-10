@@ -2,106 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B053C4B10C8
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Feb 2022 15:48:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 560724B12F3
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Feb 2022 17:37:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243134AbiBJOry (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Feb 2022 09:47:54 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:57954 "EHLO
+        id S244363AbiBJQhD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Feb 2022 11:37:03 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:47284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237792AbiBJOry (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Feb 2022 09:47:54 -0500
-Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8D00A1;
-        Thu, 10 Feb 2022 06:47:54 -0800 (PST)
-Received: by mail-oo1-f51.google.com with SMTP id 189-20020a4a03c6000000b003179d7b30d8so6643032ooi.2;
-        Thu, 10 Feb 2022 06:47:54 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
-         :message-id;
-        bh=8fxH81jreNlAG66dkkm12iasx5L3uqki8uR5z92L6jE=;
-        b=IcaeN86BBP6r3hcPjZf7jimED2wTzOYFUlvtL3nmcNAVpFZvdf6wuk4G4WIBTmeCBf
-         k3hMuf1LYAnlNisqGKXShiJcl1wTcRZKt72P5x+DyNmb3u0ab8Cr3O8/LgDXlxBRlxnJ
-         m9JEVDCo0761eP6fL5GiL3zE8hutecgCNljpnZ/vmrpSYFCIIc2c/D2kfWsEo+di+EXQ
-         mwAB+heow6unMhyn0abjLnlAxRkBLmwIpIswY/an5uDy8BCroHj3+7AjEpVCAylHXLVJ
-         ReBQ1JHvFdUeiH8unx6LKMeOUTYMkIt/8z1D8QOP3VxENlkHYZntmGYF2QsehmppejLL
-         xFcw==
-X-Gm-Message-State: AOAM530eUSJ8ccTRVPYUpPIIlPb9oPENLTa43/BvcL0dB2IZYBGxlC5L
-        xwEI/x3hi+Vlp3DSa+jYSx1P+iX7xA==
-X-Google-Smtp-Source: ABdhPJyAkIAnn1SjTWT3DVfZeP9xM7w/tc1EWhAce6OrhewoxIv9CXgMpmVC3NcjSxhSQcTlfxldQA==
-X-Received: by 2002:a05:6870:ea05:: with SMTP id g5mr904565oap.181.1644504474040;
-        Thu, 10 Feb 2022 06:47:54 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id b8sm7983446otk.36.2022.02.10.06.47.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Feb 2022 06:47:53 -0800 (PST)
-Received: (nullmailer pid 2624781 invoked by uid 1000);
-        Thu, 10 Feb 2022 14:47:52 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     Guodong Liu <guodong.liu@mediatek.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        linux-mediatek@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Project_Global_Chrome_Upstream_Group@mediatek.com,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-gpio@vger.kernel.org, Sean Wang <sean.wang@kernel.org>,
-        devicetree@vger.kernel.org
-In-Reply-To: <20220210062122.23974-2-guodong.liu@mediatek.com>
-References: <20220210062122.23974-1-guodong.liu@mediatek.com> <20220210062122.23974-2-guodong.liu@mediatek.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: pinctrl: mt8186: add pinctrl file and binding document
-Date:   Thu, 10 Feb 2022 08:47:52 -0600
-Message-Id: <1644504472.320340.2624780.nullmailer@robh.at.kernel.org>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+        with ESMTP id S244314AbiBJQhA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Feb 2022 11:37:00 -0500
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3221ABB4;
+        Thu, 10 Feb 2022 08:37:01 -0800 (PST)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: krisman)
+        with ESMTPSA id E765C1F466A9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1644511018;
+        bh=tmt/RUTO3WQQdc1xrkJt2F1mfYI1qJzuFPYRdC6aEGI=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=TrpH3D44v62W53owTLnERl6bRFcJUoOqSZFhzA9Z2NAZ04ntgsq5uuDzkRhShmCaP
+         x3CpQpx6sZXFSQvfM+V4/gxrbKbm6YKLWpNK+BgqdHVcmGqkwceRJjITJNfEH4YFWk
+         k5xhrMWx12pNnozBT4UE9Nps3G/hcSQA+xdCpltiFp7uIp1huXA65A3tZFtDSaTFPD
+         dMKTpCjqTcpl3VYOSuG6cUjz97gevFUQ3HGlb4WobN2TwlWXbutOmHJ1u2qDx6/iUI
+         rqQ7JA2n0InfGrSqjRJxvur/oboM3itQboY/8VpU/Pgyun8zZqRdNlUK1J0uyP8Fdx
+         +1jZd7q1i0sOg==
+From:   Gabriel Krisman Bertazi <krisman@collabora.com>
+To:     Shreeya Patel <shreeya.patel@collabora.com>, brgl@bgdev.pl
+Cc:     linus.walleij@linaro.org, andy.shevchenko@gmail.com,
+        bgolaszewski@baylibre.com, wsa@kernel.org, kernel@collabora.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org, lkp@intel.com
+Subject: Re: [PATCH v4] gpio: Return EPROBE_DEFER if gc->to_irq is NULL
+References: <20211116093833.245542-1-shreeya.patel@collabora.com>
+Date:   Thu, 10 Feb 2022 11:36:54 -0500
+In-Reply-To: <20211116093833.245542-1-shreeya.patel@collabora.com> (Shreeya
+        Patel's message of "Tue, 16 Nov 2021 15:08:33 +0530")
+Message-ID: <874k56znix.fsf@collabora.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 10 Feb 2022 14:21:20 +0800, Guodong Liu wrote:
-> 1. This patch adds pinctrl file for mt8186.
-> 2. This patch adds mt8186 compatible node in binding document.
-> 
-> Signed-off-by: Guodong Liu <guodong.liu@mediatek.com>
-> ---
->  .../bindings/pinctrl/pinctrl-mt8186.yaml      |  313 +++++
->  include/dt-bindings/pinctrl/mt8186-pinfunc.h  | 1174 +++++++++++++++++
->  2 files changed, 1487 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt8186.yaml
->  create mode 100644 include/dt-bindings/pinctrl/mt8186-pinfunc.h
-> 
+Shreeya Patel <shreeya.patel@collabora.com> writes:
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+> We are racing the registering of .to_irq when probing the
+> i2c driver. This results in random failure of touchscreen
+> devices.
+>
+> Following errors could be seen in dmesg logs when gc->to_irq is NULL
+>
+> [2.101857] i2c_hid i2c-FTS3528:00: HID over i2c has not been provided an Int IRQ
+> [2.101953] i2c_hid: probe of i2c-FTS3528:00 failed with error -22
+>
+> To avoid this situation, defer probing until to_irq is registered.
+>
+> This issue has been reported many times in past and people have been
+> using workarounds like changing the pinctrl_amd to built-in instead
+> of loading it as a module or by adding a softdep for pinctrl_amd into
+> the config file.
+>
+> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=209413
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Shreeya Patel <shreeya.patel@collabora.com>
 
-yamllint warnings/errors:
+Hi guys,
 
-dtschema/dtc warnings/errors:
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8186.yaml: properties:reg-names: {'description': 'Gpio base register names.\n', 'items': [{'const': 'iocfg0'}, {'const': 'iocfg_bm'}, {'const': 'iocfg_bl'}, {'const': 'iocfg_br'}, {'const': 'iocfg_lm'}, {'const': 'iocfg_rb'}, {'const': 'iocfg_tl'}, {'const': 'eint'}], 'maxItems': 8} should not be valid under {'required': ['maxItems']}
-	hint: "maxItems" is not needed with an "items" list
-	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8186.yaml: ignoring, error in schema: properties: reg-names
-Documentation/devicetree/bindings/pinctrl/pinctrl-mt8186.example.dt.yaml:0:0: /example-0/pinctrl@10005000: failed to match any schema with compatible: ['mediatek,mt8186-pinctrl']
+This seems to not have reached the Linus tree on 5.17.  If I'm not
+mistaken, it also hasn't reached linux-next as of today. Is there
+anything I'm missing here?
 
-doc reference errors (make refcheckdocs):
+This is required to prevent spurious probe crashes of devices like this
+FocalTech touchscreen, FT3528, when using pinctrl-amd. We've been
+carrying it downstream for quite a while.
 
-See https://patchwork.ozlabs.org/patch/1590838
+Thanks,
 
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit.
-
+-- 
+Gabriel Krisman Bertazi
