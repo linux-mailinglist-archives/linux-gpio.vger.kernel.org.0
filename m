@@ -2,60 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 80DC54B0239
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Feb 2022 02:28:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A24B4B0247
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Feb 2022 02:30:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232320AbiBJB2a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Feb 2022 20:28:30 -0500
-Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:56084 "EHLO
+        id S232166AbiBJB2s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Feb 2022 20:28:48 -0500
+Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:55158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232830AbiBJB2I (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Feb 2022 20:28:08 -0500
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B61420197;
-        Wed,  9 Feb 2022 17:28:11 -0800 (PST)
-Received: by mail-ot1-f50.google.com with SMTP id n6-20020a9d6f06000000b005a0750019a7so2778475otq.5;
-        Wed, 09 Feb 2022 17:28:11 -0800 (PST)
+        with ESMTP id S232445AbiBJB1y (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Feb 2022 20:27:54 -0500
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B51A220C4;
+        Wed,  9 Feb 2022 17:27:36 -0800 (PST)
+Received: by mail-oo1-f52.google.com with SMTP id t75-20020a4a3e4e000000b002e9c0821d78so4641674oot.4;
+        Wed, 09 Feb 2022 17:27:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=siet+Ao2TH7V5m6SftR2gVXEXyrYhoODYtbaQVg/nkg=;
-        b=YNRMeQ04hxyAt6Zpl5OzJOlbVqSXQBqZ0EHbAVqoApo9bi82CP5RXJqAYvlep8w58t
-         SS7AH9OvM+tj0fkIpmv/37FL+Bujqd/ymdtuF9UHtqK4oQSKUu0W5AnSltcsRjHDm52m
-         vDtf9QI+InPCKT4PTQ99IKjY5JryW1eERxUIJifrnHU2oi7sHBGnoXfq4BnEuWDTWB15
-         /7m1M28GKMX6pe3+/y8rht6k7B7Nc5X7nt6iOvQQ6Eo4UmO6I8SERUrI4omfYUvDXabW
-         CDlo2s+RtAwPuCZsJ7m0MZhvcjLCXSnfPbwJndWHtXjtSj+truIg2tGwX6E6cVnRicD9
-         BLQA==
-X-Gm-Message-State: AOAM533UxnDxg/9q66cuB4v5RoOUCRMrGZRCInh8uA0FmnBYLMXQUsvD
-        AfGkcc9kUobwU0nx4briy9cdnOT2Clfz
-X-Google-Smtp-Source: ABdhPJzmtB6J3X9Ywh+GW7FeYw449wZbfGox6Vdj/LQZjI2yjkhUTsq3PQRmfnSFWvpLXg81YeejXg==
-X-Received: by 2002:a05:6830:12cf:: with SMTP id a15mr2071431otq.262.1644453043789;
-        Wed, 09 Feb 2022 16:30:43 -0800 (PST)
+        bh=H+aB7MEEh65erIWPmlmykpbHBq+zpDiRSwvKXtfqf4Y=;
+        b=abkCCCcCKq90OeXGTknE6nE6FtDXuSfsvyMmpMHDxMWkrzP53gbBGwsAy5s/Or+pM5
+         uwiuLbl31hq8Xp/VOayW0pE/fjVGPoCnyt7WuER3VMqKTAN2RMA3nTz/g7bJ89ILQrfk
+         DxU49xeBEdIRh2tuN3k1VqxrzyBppFaDBhrZxAvVi1w8bAVKc0MQp80pSet9Jn+i8KHM
+         aZ9VdF7NbM0+XPKtKS61Csy3ZU3AhhlACLQyAVyEA3qsflRWBHTDkHJmg9GTpmwO0YLO
+         G1Orwsrmlwz+l22m+Zh0g5tluEc/mq6X7TPLkRTLEc3qqT/DmkMq1fQQg1OWP9Cu74l5
+         5JFQ==
+X-Gm-Message-State: AOAM532TnNUz3MRXopibyeBncXl4qMU5r0GiWGMxaph228TiA9caMCii
+        xbCV9PKQ51Hh8Tz31OJwmesW1YFxu0Ns
+X-Google-Smtp-Source: ABdhPJyEseR1JkYMfiGodATxo9VXU0oluRqUhwbN59lnCsGWCuMw6s3B1TsytqnRqXVGNm5eIiUTnw==
+X-Received: by 2002:a05:6808:168b:: with SMTP id bb11mr2221766oib.184.1644453108777;
+        Wed, 09 Feb 2022 16:31:48 -0800 (PST)
 Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id i1sm4402159ood.32.2022.02.09.16.30.42
+        by smtp.gmail.com with ESMTPSA id s3sm7743074ois.19.2022.02.09.16.31.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Feb 2022 16:30:43 -0800 (PST)
-Received: (nullmailer pid 1258215 invoked by uid 1000);
-        Thu, 10 Feb 2022 00:30:42 -0000
-Date:   Wed, 9 Feb 2022 18:30:42 -0600
+        Wed, 09 Feb 2022 16:31:47 -0800 (PST)
+Received: (nullmailer pid 1260233 invoked by uid 1000);
+        Thu, 10 Feb 2022 00:31:47 -0000
+Date:   Wed, 9 Feb 2022 18:31:47 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Colin Ian King <colin.i.king@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+To:     Chen-Yu Tsai <wenst@chromium.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Guodong Liu <guodong.liu@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-mediatek@lists.infradead.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        kernel-janitors@vger.kernel.org, Ray Jui <rjui@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, Scott Branden <sbranden@broadcom.com>
-Subject: Re: [PATCH] pinctl: doc: Fix spelling mistake "resisitors" ->
- "resistors"
-Message-ID: <YgRcspCc9UW2CRp3@robh.at.kernel.org>
-References: <20220202091551.580372-1-colin.i.king@gmail.com>
+        Tinghan Shen <tinghan.shen@mediatek.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: mt8195: fix bias-pull-{up,down}
+ checks
+Message-ID: <YgRc860w5Pj6RSlS@robh.at.kernel.org>
+References: <20220202153528.707185-1-wenst@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220202091551.580372-1-colin.i.king@gmail.com>
+In-Reply-To: <20220202153528.707185-1-wenst@chromium.org>
 X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
         HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
@@ -67,13 +68,24 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 02 Feb 2022 09:15:51 +0000, Colin Ian King wrote:
-> There is a spelling mistake in the documentation. Fix it.
+On Wed, 02 Feb 2022 23:35:28 +0800, Chen-Yu Tsai wrote:
+> When the constraints and description for bias-pull-{up,down} were added,
+> the constraints were not indented correctly, resulting in them being
+> parsed as part of the description. This effectively nullified their
+> purpose.
 > 
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> Move the constraints out of the description block, make each description
+> part of the same associative array as the enum its describing, and
+> reindent them correctly so they take effect.
+> 
+> Also add "type: boolean" to the list of valid values. This corresponds
+> to having bias-pull-{up,down} without any arguments.
+> 
+> Fixes: 91e7edceda96 ("dt-bindings: pinctrl: mt8195: change pull up/down description")
+> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
 > ---
->  .../devicetree/bindings/pinctrl/brcm,bcm11351-pinctrl.txt       | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  .../bindings/pinctrl/pinctrl-mt8195.yaml      | 30 ++++++++++---------
+>  1 file changed, 16 insertions(+), 14 deletions(-)
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
