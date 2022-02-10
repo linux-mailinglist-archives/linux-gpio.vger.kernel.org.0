@@ -2,125 +2,135 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 88E8C4B14CA
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Feb 2022 19:00:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E0CAC4B1917
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Feb 2022 00:11:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245475AbiBJSAT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Feb 2022 13:00:19 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:59244 "EHLO
+        id S1345447AbiBJXKQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Feb 2022 18:10:16 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:59226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245469AbiBJSAT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Feb 2022 13:00:19 -0500
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B20EA25C3
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Feb 2022 10:00:19 -0800 (PST)
-Received: by mail-ej1-x636.google.com with SMTP id fj5so14334062ejc.4
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Feb 2022 10:00:19 -0800 (PST)
+        with ESMTP id S238904AbiBJXKP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Feb 2022 18:10:15 -0500
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 740EDE31;
+        Thu, 10 Feb 2022 15:10:15 -0800 (PST)
+Received: by mail-ed1-x534.google.com with SMTP id b13so13745745edn.0;
+        Thu, 10 Feb 2022 15:10:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VyiRrCTCvD3kSlcteklEwF1Z7ulIFO497MFIShZC2EQ=;
-        b=lDJDV3gk7vJd8epZow77aLEhctdFJiMdWg4bPXyRqV+P8SCznLTjg9qaMrl4uBKi4W
-         FIa5xSqiTkfMTDDaQX3a6eOR3PULr05leKgBb7dtj1Z9aBTmqdnSEHwpCDlCePcizdIr
-         RL4deMl0WEaY0Jh1Ab9JXnycY4MaE3/yjJweZ3uE1EswISDRfgGvftKiIcyY4+H4cJmx
-         ksSJIN7XeO+LqnG802F/TkZsEYNXr+GmnNkQS0ZABy7zH5ImLkTkhCeBnSYlJHR3czCM
-         ubCKLT2cdNKaVcXthXtuVbskMddyIIhCb3KdDg7PxHdghxxP8+GQpQM+WnSRcdvK6IOK
-         wuSg==
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=4zd+d9NdEXjmSBG6eKyyZ32RF9eXdrBZvgQdiNkAdR4=;
+        b=JerGdJDRLq42TNluoDiDdyNEa5OPpLv5oClSPNriUX77iN4SVSpFrrCj8awES3byVZ
+         2hEJabfnFYY7ptl7M0jjxrmxJscJjkMV15GrCx0y8xw5KrBZ+vq80gW4uVItK2r3WlxK
+         X5jbpvzf31Xsq6M9tQ/KjGinbM0jA+y/SzxuDAdbSrrUb47JQP5TDiIKR10idscms+Fq
+         DNUrbm6iPhhQ/eIEktGPAv2iSPib/cmjz/ouIiOxUdWavH2Bzw5Yg0EMLS76DpofHavh
+         zCYmP8sgju1C0daSBk7jIl8mZINhLQlBSKmqjaPQixwVMlq9JlivNQ6QPCIGpBsj/b7R
+         E9lQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VyiRrCTCvD3kSlcteklEwF1Z7ulIFO497MFIShZC2EQ=;
-        b=wAUq3W8KSyrI8krU8TdPWwzomt9Sk5qdUoC1w3zNPGeJRGlfBenqRMNYB4z9E55VmE
-         YOs6Uhcbjx7GnS9Pudg5YZoujiRJ3yUqaGiwpzZktTTC95IjqRF3cn1NHhwe5eENg3P4
-         d+oDYoGqYoI5oxmxnMlxgyeBN+Nqajjj+XA6zKtb09tJrcENLUR7p4xK9P/v5Obyk7iE
-         yRooDW+dhR/+3F0/lqwHdCTnvYDtkNfNi9MC22SXSjzL/0J2NuD4qLZ/3RFYm2hkfi69
-         IZ10iENb9U+TKHwJ6bBBy/y4UfqiMPxMn+4iOwEEH5YYdaSoA+2JLQlEB5XGmOnH09iA
-         rYuw==
-X-Gm-Message-State: AOAM530qV1Iw/8rrgiOw3xbchxMlRVYZel7nAmDYj4MNygEla7NwW7n5
-        LswHan70s3l00c0iabmqMgfl345C5jw4jtskGqM+CA==
-X-Google-Smtp-Source: ABdhPJxJuyhh7OCTVxsg1XD+thnzuteOezciR0odv+RtncFHrFra5L3HMOaU0zxHkSa4CRu6l4IZA/I4m8Gi0BaaQrw=
-X-Received: by 2002:a17:906:7948:: with SMTP id l8mr7308424ejo.636.1644516018273;
- Thu, 10 Feb 2022 10:00:18 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=4zd+d9NdEXjmSBG6eKyyZ32RF9eXdrBZvgQdiNkAdR4=;
+        b=7an6M1ozyB8FHSH8kHBqJnCz6A/N42eTizictQkWhW6tO62xu/jlyOcdg1eJLA5RJg
+         8FnhVKDq//ipk8YW400HypI3WZuJl1mN0ULuaoLKAvyN+jHkZynVaxx02TzKkmK7pYlf
+         qepfAUbgW5YJitostbAj/TwouQcG6cdUDrmeGREMaf3CJBbGnke6SovQkx0BJT6997Ku
+         jPZywYUK4deyFqU2f97ft6LMggcHZSXw3FiQUUaX9XZcJMug4Qx2HTUba8WICtEYLVHI
+         D6StjQ5G/dxuDoIwgKvFr6hzNKk8U8WZ4tW3CPLPiPCBByDMUNYyUjY9ln24ugAdtOnq
+         eWVg==
+X-Gm-Message-State: AOAM530INHaqL+eKWrjXSN2ymtGSX9OPnC7ihQ25abEUxvl+ZyOXfErV
+        TmIQsUHXyqAtfoP7MY08N3M=
+X-Google-Smtp-Source: ABdhPJzX7WEZ/93GNx4TcH64x4mdLF678GL6+j9Mynk3mAi5IzBr1N/UwQtqQ7WyHJfKSEpndcM+Pw==
+X-Received: by 2002:a05:6402:440a:: with SMTP id y10mr10569403eda.215.1644534614032;
+        Thu, 10 Feb 2022 15:10:14 -0800 (PST)
+Received: from localhost (92.40.202.152.threembb.co.uk. [92.40.202.152])
+        by smtp.gmail.com with ESMTPSA id h6sm2213164ede.50.2022.02.10.15.10.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Feb 2022 15:10:13 -0800 (PST)
+Date:   Thu, 10 Feb 2022 23:10:45 +0000
+From:   Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     linus.walleij@linaro.org, linux-mips@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: ingenic: Fix regmap on X series SoCs
+Message-ID: <YgWbdYDiVQyHkHiJ@localhost>
+References: <20220209230452.19535-1-aidanmacdonald.0x0@gmail.com>
+ <DD537R.K2D13DXGNPGH@crapouillou.net>
 MIME-Version: 1.0
-References: <20211116093833.245542-1-shreeya.patel@collabora.com> <874k56znix.fsf@collabora.com>
-In-Reply-To: <874k56znix.fsf@collabora.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 10 Feb 2022 19:00:07 +0100
-Message-ID: <CAMRc=MdByxO3+hJruvUkULtXAaB7aWewTd=Wv0MbWyX2vykdjA@mail.gmail.com>
-Subject: Re: [PATCH v4] gpio: Return EPROBE_DEFER if gc->to_irq is NULL
-To:     Gabriel Krisman Bertazi <krisman@collabora.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Shreeya Patel <shreeya.patel@collabora.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        wsa@kernel.org, kernel@collabora.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        kbuild test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <DD537R.K2D13DXGNPGH@crapouillou.net>
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Feb 10, 2022 at 5:36 PM Gabriel Krisman Bertazi
-<krisman@collabora.com> wrote:
->
-> Shreeya Patel <shreeya.patel@collabora.com> writes:
->
-> > We are racing the registering of .to_irq when probing the
-> > i2c driver. This results in random failure of touchscreen
-> > devices.
-> >
-> > Following errors could be seen in dmesg logs when gc->to_irq is NULL
-> >
-> > [2.101857] i2c_hid i2c-FTS3528:00: HID over i2c has not been provided an Int IRQ
-> > [2.101953] i2c_hid: probe of i2c-FTS3528:00 failed with error -22
-> >
-> > To avoid this situation, defer probing until to_irq is registered.
-> >
-> > This issue has been reported many times in past and people have been
-> > using workarounds like changing the pinctrl_amd to built-in instead
-> > of loading it as a module or by adding a softdep for pinctrl_amd into
-> > the config file.
-> >
-> > BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=209413
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Reported-by: kernel test robot <lkp@intel.com>
-> > Signed-off-by: Shreeya Patel <shreeya.patel@collabora.com>
->
-> Hi guys,
->
-> This seems to not have reached the Linus tree on 5.17.  If I'm not
-> mistaken, it also hasn't reached linux-next as of today. Is there
-> anything I'm missing here?
->
-> This is required to prevent spurious probe crashes of devices like this
-> FocalTech touchscreen, FT3528, when using pinctrl-amd. We've been
-> carrying it downstream for quite a while.
->
-> Thanks,
->
-> --
-> Gabriel Krisman Bertazi
+On Thu, Feb 10, 2022 at 11:03:13AM +0000, Paul Cercueil wrote:
+> Hi Aidan,
+> 
+> Le mer., févr. 9 2022 at 23:04:54 +0000, Aidan MacDonald 
+> <aidanmacdonald.0x0@gmail.com> a écrit :
+> > The X series Ingenic SoCs have a shadow GPIO group which
+> > is at a higher offset than the other groups, and is used
+> > for all GPIO configuration. The regmap did not take this
+> > offset into account and set max_register too low. Writes
+> > to the shadow group registers were blocked, which made it
+> > impossible to change any pin configuration.
+> > 
+> > Fix this by pretending there are at least 8 chips on any
+> > 'X' SoC for the purposes of calculating max_register. This
+> > ensures the shadow group is accessible.
+> 
+> I don't like your solution, it sounds very hacky. I think it would make 
+> more sense to use a dedicated x1000_pinctrl_regmap_config that would be 
+> used for the X1000 SoC. That would also allow you to express that there 
+> are no registers in the 0x400-0x700 range (through 
+> regmap_config.wr_table / .rd_table).
+> 
+> Cheers,
+> -Paul
+> 
 
-Hi Gabriel!
+That's fine, I'll put together a v2 patch using the approach you suggest.
+I think all the 'X' SoCs will require a similar regmap as they're using
+ingenic_gpio_shadow_* functions too, but I'll check their datasheets to
+be sure.
 
-My email address changed in September, that's why I didn't see the
-email you sent in November to my old one.
-
-gpiod_to_irq() can be used in context other than driver probing, I'm
-worried existing users would not know how to handle it. Also: how come
-you can get the GPIO descriptor from the provider but its interrupts
-are not yet set up?
-
-Bart
+> > Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+> > ---
+> >  drivers/pinctrl/pinctrl-ingenic.c | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pinctrl/pinctrl-ingenic.c 
+> > b/drivers/pinctrl/pinctrl-ingenic.c
+> > index 2712f51eb238..9d2bccda50f1 100644
+> > --- a/drivers/pinctrl/pinctrl-ingenic.c
+> > +++ b/drivers/pinctrl/pinctrl-ingenic.c
+> > @@ -4168,7 +4168,10 @@ static int __init ingenic_pinctrl_probe(struct 
+> > platform_device *pdev)
+> >  		return PTR_ERR(base);
+> > 
+> >  	regmap_config = ingenic_pinctrl_regmap_config;
+> > -	regmap_config.max_register = chip_info->num_chips * 
+> > chip_info->reg_offset;
+> > +	if (chip_info->version >= ID_X1000)
+> > +		regmap_config.max_register = MIN(8, chip_info->num_chips) * 
+> > chip_info->reg_offset;
+> > +	else
+> > +		regmap_config.max_register = chip_info->num_chips * 
+> > chip_info->reg_offset;
+> > 
+> >  	jzpc->map = devm_regmap_init_mmio(dev, base, &regmap_config);
+> >  	if (IS_ERR(jzpc->map)) {
+> > --
+> > 2.34.1
+> > 
+> 
+> 
