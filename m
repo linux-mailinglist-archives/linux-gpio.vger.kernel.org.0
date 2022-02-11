@@ -2,66 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 06B5C4B1B24
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Feb 2022 02:22:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C4174B1B38
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Feb 2022 02:26:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346757AbiBKBVa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Feb 2022 20:21:30 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:37478 "EHLO
+        id S1346770AbiBKB0W (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Feb 2022 20:26:22 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:40076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238761AbiBKBV3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Feb 2022 20:21:29 -0500
-Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D80E02716
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Feb 2022 17:21:28 -0800 (PST)
-Received: by mail-yb1-xb2c.google.com with SMTP id bt13so20666699ybb.2
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Feb 2022 17:21:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=apbl1IBbPTd7mPNpWX7lJo6c6WmezPKP8rRQADu0iqI=;
-        b=Al9EYQ6UivIBEzJt+EXRPWQS4tQ+SZS7j9RAp0oHXZxyun1wJHq+IzElQLvKCTvlx+
-         QBg7KKMmxyv59N9pScYHlAEq8x3bjRI3h7T8UnGSTlkPgvUKGYFIJ/97N7e+4t6IG4hr
-         NUr+mc/t4DlsQamjGODM4GOesMED3y6G8pGjm9M8vi03iswVLNqmI1LCQCT8NHOSDF1m
-         D2Efq5FYVMAUWCONNrXorHlk3VOhxOr+M+nqRtaUpiiIzJUSqBCG31ONIb7a0D3HCXqg
-         wUQTiNi1kGcORkQGYyocKAElbLnegbHE0Os6F9IA/nq17CGhARVSu2cCgvmQuGsI+Cb9
-         W/Zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=apbl1IBbPTd7mPNpWX7lJo6c6WmezPKP8rRQADu0iqI=;
-        b=XNp2T6EqZvh+11e8ZYo7Glo1EAhKVeK+ZbPJc+zs0t2DImDwJk/bTOzPXlGX2u5+W0
-         WOXKRAFPx+zgOnpd9yFCNGfdrbDtKjmnaBMvhj/6W5GRPtuGQFa0QAozyG3DVfTe2G5T
-         +kiV1j+OVKIA6BXL0h+m+boEzJ8Lu4td7m5LzJ30DuL56Hhx9gvIup3cdcJ1LlOZSMQ4
-         kaC0f2JerQAVHssuxxhZAZgoZSK+DaV80m3NelrMF5Yc5LOZAhxcQaDZfv+u0bzki+wz
-         h5g9SDy7e/4pNtj55vcrufha5Ca3R/eJCAHfHND0a1K8KsJsIVxLPif8sLp3aEjZkLPL
-         7owQ==
-X-Gm-Message-State: AOAM533mYGO2Urlqd9wMCWDQfA+OXBlO6z3f/RHQRYqBrYWNp0DDVbxF
-        sui2jyCpLYv6dmK0ULbkU2/vIrd9pgrXsiSgJOEYxA==
-X-Google-Smtp-Source: ABdhPJzXkCGm7OG5XsU6NkyfdBiqjONEKooP872F/l4oHbI98KkoThhR0NUJt7FrNPPtYs39W5QwDbpuLA78r846f48=
-X-Received: by 2002:a81:4402:: with SMTP id r2mr10308216ywa.126.1644542488134;
- Thu, 10 Feb 2022 17:21:28 -0800 (PST)
+        with ESMTP id S1344042AbiBKB0V (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Feb 2022 20:26:21 -0500
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [46.235.227.227])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B80781120;
+        Thu, 10 Feb 2022 17:26:21 -0800 (PST)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: krisman)
+        with ESMTPSA id C08D71F469ED
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1644542780;
+        bh=x9xd9mW3dxu6WXXxYBXdKYFMuDvhWWT9wcjasq9vcU0=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=btM3SLYO20KSjlJdecdJBFp7bs8l9yvod527TSzWny/udp4o+vZQ0cewI15y72qU9
+         V0sBnk1rmuynSVuYSSjcaMSH8hkIcLdZkmFKh6WzS1H38a5xOU0xNoo2KYLYXkjK/v
+         TSdK0Lqmkzi4jPY5mUeOSNleXyvWQqAuZcoWKGbAysG/qsJ4ab/0532wMMJn8LcGMB
+         w17wLdrvL/Rg7RoEdGmzuUZrKDBy+jTC/7CRBP4rFAMoDgkSY25wf0gO4pI6fI9HX9
+         SfUlVU+AHVFknV2AvIXorzddhhr1AIiHNOACISCVI2yWZ87zGnydqOK20m63qbmovb
+         8T79jjpDG2lEg==
+From:   Gabriel Krisman Bertazi <krisman@collabora.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Shreeya Patel <shreeya.patel@collabora.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        wsa@kernel.org, kernel@collabora.com,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v4] gpio: Return EPROBE_DEFER if gc->to_irq is NULL
+Organization: Collabora
+References: <20211116093833.245542-1-shreeya.patel@collabora.com>
+        <874k56znix.fsf@collabora.com>
+        <CAMRc=MdByxO3+hJruvUkULtXAaB7aWewTd=Wv0MbWyX2vykdjA@mail.gmail.com>
+Date:   Thu, 10 Feb 2022 20:26:16 -0500
+In-Reply-To: <CAMRc=MdByxO3+hJruvUkULtXAaB7aWewTd=Wv0MbWyX2vykdjA@mail.gmail.com>
+        (Bartosz Golaszewski's message of "Thu, 10 Feb 2022 19:00:07 +0100")
+Message-ID: <87v8xmxkg7.fsf@collabora.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
 MIME-Version: 1.0
-References: <20220202091551.580372-1-colin.i.king@gmail.com>
-In-Reply-To: <20220202091551.580372-1-colin.i.king@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 11 Feb 2022 02:21:16 +0100
-Message-ID: <CACRpkdZUe65yuEBOctguBW4jUFt8U26Rsb_TwdFTdxKbKt58Og@mail.gmail.com>
-Subject: Re: [PATCH] pinctl: doc: Fix spelling mistake "resisitors" -> "resistors"
-To:     Colin Ian King <colin.i.king@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,13 +60,38 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Feb 2, 2022 at 10:15 AM Colin Ian King <colin.i.king@gmail.com> wrote:
+Bartosz Golaszewski <brgl@bgdev.pl> writes:
 
-> There is a spelling mistake in the documentation. Fix it.
->
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> My email address changed in September, that's why I didn't see the
+> email you sent in November to my old one.
 
-Patch applied.
+Hi Bart,
 
-Yours,
-Linus Walleij
+thanks for the prompt reply and sorry for the wrong email address.
+
+> gpiod_to_irq() can be used in context other than driver probing, I'm
+> worried existing users would not know how to handle it. Also: how come
+> you can get the GPIO descriptor from the provider but its interrupts
+> are not yet set up?
+
+I'm definitely some context here, as its been quite a while.
+Shreeya, feel free to pitch in. :)
+
+This is one of the races we saw in gpiochip_add_irqchip, depending on
+the probe order.  The gc is already visible while partially initialized,
+if pinctrl-amd hasn't been probed yet.  Another device being probed can
+hit an -ENXIO here if to_irq is yet uninitialized or enter .to_irq() and
+oops.  Shreeya's patch workarounds the first issue, but is not a
+solution for the second.
+
+There is another patch that has been flying around to address the Oops.
+
+https://lkml.org/lkml/2021/11/8/900
+
+She's been working on a proper solution for that one, which might
+actually address this too and replace the current patch.  Maybe you
+could help us get to a proper solution there?  I'm quite unfamiliar with
+this code myself :)
+
+-- 
+Gabriel Krisman Bertazi
