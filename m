@@ -2,112 +2,125 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 390974B295F
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Feb 2022 16:48:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 64F584B2C28
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Feb 2022 18:55:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349478AbiBKPsm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 11 Feb 2022 10:48:42 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:58414 "EHLO
+        id S1352401AbiBKRxq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 11 Feb 2022 12:53:46 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:44246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349442AbiBKPsl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Feb 2022 10:48:41 -0500
-Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D10131A8
-        for <linux-gpio@vger.kernel.org>; Fri, 11 Feb 2022 07:48:39 -0800 (PST)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:5d5d:ef67:a872:c0be])
-        by xavier.telenet-ops.be with bizsmtp
-        id troe260043ZSXJh01roemk; Fri, 11 Feb 2022 16:48:38 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1nIYA1-000MOb-R4; Fri, 11 Feb 2022 16:48:37 +0100
-Received: from geert by rox.of.borg with local (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1nIYA1-00GiJ7-5d; Fri, 11 Feb 2022 16:48:37 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [GIT PULL] pinctrl: renesas: Updates for v5.18
-Date:   Fri, 11 Feb 2022 16:48:35 +0100
-Message-Id: <cover.1644594347.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S1352400AbiBKRxp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Feb 2022 12:53:45 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80600CE9;
+        Fri, 11 Feb 2022 09:53:44 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1AC6361DA3;
+        Fri, 11 Feb 2022 17:53:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25105C340E9;
+        Fri, 11 Feb 2022 17:53:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1644602023;
+        bh=j9io4CjQGVmdKTFgkV+LOFNgAGw4pDMvV9VClqq4hNk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ImbAKQ08m0iW6t5yD2Mda3NMteEnVLoMuQgQ9UKKJBNvanJ3/fCwzKuSQpoxUEkQa
+         ktg9R1F0JLd6e+rr8mc7dTEn04rO2kXUN2uRdwMHVAJE3yMr43XizMt7NuK5G7VH+9
+         8GfrijmzRv8mfDxeW6/TihWh+owSsDtaaDV9sW328/dhe9p1Q/pfHcgL30pWCUn5eR
+         eyY68igzE9qcTQ7gkMtwDz5X0gIvSqFpdcYiDi2we5kkwIcat9jzx2tyMNniWMKx5P
+         kRi8O7OKyWyHl3FkQeV0DdLyBqT0EORI3+MFh3iAGR74ZkAWEOSPYaaDcesD4bdla2
+         vY29d+PAfi+/Q==
+Date:   Fri, 11 Feb 2022 18:53:38 +0100
+From:   Wolfram Sang <wsa@kernel.org>
+To:     conor.dooley@microchip.com
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
+        jassisinghbrar@gmail.com, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
+        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        paul.walmsley@sifive.com, palmer@dabbelt.com,
+        aou@eecs.berkeley.edu, geert@linux-m68k.org,
+        krzysztof.kozlowski@canonical.com, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        bin.meng@windriver.com, heiko@sntech.de, lewis.hanly@microchip.com,
+        daire.mcnamara@microchip.com, ivan.griffin@microchip.com,
+        atishp@rivosinc.com, Rob Herring <robh@kernel.org>,
+        Palmer Dabbelt <palmer@rivosinc.com>
+Subject: Re: [PATCH v6 03/12] dt-bindings: i2c: add bindings for microchip
+ mpfs i2c
+Message-ID: <YgaiorHf7/Za5vib@kunai>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>, conor.dooley@microchip.com,
+        linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
+        jassisinghbrar@gmail.com, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
+        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+        geert@linux-m68k.org, krzysztof.kozlowski@canonical.com,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-riscv@lists.infradead.org, bin.meng@windriver.com,
+        heiko@sntech.de, lewis.hanly@microchip.com,
+        daire.mcnamara@microchip.com, ivan.griffin@microchip.com,
+        atishp@rivosinc.com, Rob Herring <robh@kernel.org>,
+        Palmer Dabbelt <palmer@rivosinc.com>
+References: <20220207162637.1658677-1-conor.dooley@microchip.com>
+ <20220207162637.1658677-4-conor.dooley@microchip.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="jVl1itNwmbBofVyK"
+Content-Disposition: inline
+In-Reply-To: <20220207162637.1658677-4-conor.dooley@microchip.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-	Hi Linus,
 
-The following changes since commit e783362eb54cd99b2cac8b3a9aeac942e6f6ac07:
+--jVl1itNwmbBofVyK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-  Linux 5.17-rc1 (2022-01-23 10:12:53 +0200)
+On Mon, Feb 07, 2022 at 04:26:29PM +0000, conor.dooley@microchip.com wrote:
+> From: Conor Dooley <conor.dooley@microchip.com>
+>=20
+> Add device tree bindings for the i2c controller on
+> the Microchip PolarFire SoC.
+>=20
+> Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
 
-are available in the Git repository at:
+Applied to for-next, thanks!
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v5.18-tag1
 
-for you to fetch changes up to 2e08ab0427fe3e33a92a37cfe3b6db340ab7397f:
+--jVl1itNwmbBofVyK
+Content-Type: application/pgp-signature; name="signature.asc"
 
-  pinctrl: renesas: rzg2l: Improve rzg2l_gpio_register() (2022-02-08 09:54:44 +0100)
+-----BEGIN PGP SIGNATURE-----
 
-----------------------------------------------------------------
-pinctrl: renesas: Updates for v5.18
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmIGoqIACgkQFA3kzBSg
+KbY5zBAAky+SkyXA2LOT59kq0mn8oO/pzp+w/OnfTlN/Dn3GgC5ljGVYLc8MECQ/
+Q2KKs+hINDGYIlDYCWxrDTQqNtaK+j35bY4m5uXiWFZWA7p4kMkOeaHfRVrbyg6S
+b7XaVq7myEkDrO+Xfw2MGxyJTLksSq0o7Ql7g4mSZkPyDYNycT/JUTyb5ac+D/pD
+yN/GK6kgiUvWeYrRCueJCTzYzpgwEdGex0wVQaOXDGVwSPZbM/j9RlBrmw4IBEIH
+1gToRHIKoLmbVx+MvyRACu2aRXUXhS7nPg9Yuq3Ftfge4RWzYhlzIITdcpSs+U74
+iuQkSCkKr0J3DvMwDKURl4g1BiPsKODTgvvYp4Fkw1LUad4hNEPrnLbxgZP6HYB6
+svl6Jy9aQoqQx5UeH1WHIBeRqzJlCKrr4HOCwuC+HIQ9//sqwd9OEIah32F1B+AZ
+wl0VhHqHDBUOimTbhr5QrvrTNEn4U5f5+eLToJbaGKEcplkJXlOFQg3xqaYN8hdB
+o/MAbfRWOPDYm/nXM+gK6LbXxCmhEBWgsqOeiOuC13RBOdiLyRNhl/tH0wd+e24K
+IHvmbZwmDhaKQ7U6Al0aeCQDzwULEpRtIhqHR1c+z18q9tA33GDfg0ukH6URjaLa
+PnbVeIhZNqyNmsa4P0nbDSjxqVhzZPiiPyEmAA/t0cFAaad37CA=
+=9qL3
+-----END PGP SIGNATURE-----
 
-  - Add MOST (MediaLB I/F) pins on R-Car E3 and D3,
-  - Add support for the new RZ/V2L SoC,
-  - Miscellaneous fixes and improvements.
-
-Thanks for pulling!
-----------------------------------------------------------------
-Biju Das (3):
-      dt-bindings: pinctrl: renesas: Document RZ/V2L pinctrl
-      pinctrl: renesas: Kconfig: Select PINCTRL_RZG2L if RZ/V2L SoC is enabled
-      pinctrl: renesas: rzg2l: Improve rzg2l_gpio_register()
-
-Geert Uytterhoeven (6):
-      pinctrl: renesas: r8a7790: Remove INTC_IRQx_N
-      pinctrl: renesas: r8a7791: Remove INTC_IRQx_N
-      pinctrl: renesas: r8a779a0: Rename MOD_SEL2_* definitions
-      pinctrl: renesas: r8a7779: Restore pin function sort order
-      pinctrl: renesas: r8a7790: Restore pin function sort order
-      pinctrl: renesas: r8a77995: Restore pin group sort order
-
-Lad Prabhakar (1):
-      dt-bindings: pinctrl: renesas,rzg2l-pinctrl: Add description for power-source property
-
-Nikita Yushchenko (1):
-      pinctrl: renesas: r8a7799[05]: Add MediaLB pins
-
-Wolfram Sang (1):
-      pinctrl: renesas: rcar: Do not enforce GPIO if already muxed
-
- .../bindings/pinctrl/renesas,rzg2l-pinctrl.yaml    |  16 +++-
- drivers/pinctrl/renesas/Kconfig                    |   6 +-
- drivers/pinctrl/renesas/pfc-r8a7779.c              |   8 +-
- drivers/pinctrl/renesas/pfc-r8a7790.c              |  45 ++++------
- drivers/pinctrl/renesas/pfc-r8a7791.c              |  35 ++++----
- drivers/pinctrl/renesas/pfc-r8a77990.c             |  22 ++++-
- drivers/pinctrl/renesas/pfc-r8a77995.c             | 100 ++++++++++++---------
- drivers/pinctrl/renesas/pfc-r8a779a0.c             |  42 ++++-----
- drivers/pinctrl/renesas/pinctrl-rzg2l.c            |   4 +-
- drivers/pinctrl/renesas/pinctrl.c                  |   2 +-
- 10 files changed, 155 insertions(+), 125 deletions(-)
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+--jVl1itNwmbBofVyK--
