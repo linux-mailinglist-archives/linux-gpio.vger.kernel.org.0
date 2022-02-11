@@ -2,76 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 499924B2E2D
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Feb 2022 21:06:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 957B74B30B6
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Feb 2022 23:37:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353161AbiBKUFZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 11 Feb 2022 15:05:25 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:49830 "EHLO
+        id S240439AbiBKWgi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 11 Feb 2022 17:36:38 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:36876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353154AbiBKUFX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Feb 2022 15:05:23 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BA1BCE9;
-        Fri, 11 Feb 2022 12:05:22 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 06820B82C0C;
-        Fri, 11 Feb 2022 20:05:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C264BC340E9;
-        Fri, 11 Feb 2022 20:05:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644609919;
-        bh=jY8bt3oYToJuW4etmWntREKe5E9VFDAc1jTCuSQSAnE=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=V48qHYDkmCJvrW3yczLGB7W/yf7D2H3Z1e/uDPFvA+Akt5A4N4OzG6sCRvuD5r1lM
-         ea0PugHBXDU4UaHloMHyZmklPUzQP5w0DjKEq+JQl07MRP87h8dQRT9GamxodqnVvt
-         LVGIyYjAhc/ojtjMqyVdPmX1JVa/L6EpZ0ni2h9jNfXy9CA/3N4UHok+L2ABw8+Ijm
-         9jo6a4ky/y0lqU9YS7bNGdLavN5ICJhsHZ07+t2JoGUN54e2MoMReQ+INOsWDtNZZx
-         jzlomQB+hBvw4dIQtn83hdrmB5rtFIIrwAveIwlMAmTpSWHXWhLpED0OFrCb12efhd
-         oTjPzNzat3nGg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id AEE9EE5CF96;
-        Fri, 11 Feb 2022 20:05:19 +0000 (UTC)
-Subject: Re: [GIT PULL] gpio: fixes for v5.17-rc4
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20220211130801.280029-1-brgl@bgdev.pl>
-References: <20220211130801.280029-1-brgl@bgdev.pl>
-X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20220211130801.280029-1-brgl@bgdev.pl>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.17-rc4
-X-PR-Tracked-Commit-Id: c162ca0bcbfb39308c4dff4157e27c751af7032a
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 0b9df436192aae9f9705bfe42f6e618dd4773792
-Message-Id: <164460991970.1412.14895238067223319534.pr-tracker-bot@kernel.org>
-Date:   Fri, 11 Feb 2022 20:05:19 +0000
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S237194AbiBKWgi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Feb 2022 17:36:38 -0500
+Received: from mail-ot1-x32c.google.com (mail-ot1-x32c.google.com [IPv6:2607:f8b0:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84AA6D4E;
+        Fri, 11 Feb 2022 14:36:35 -0800 (PST)
+Received: by mail-ot1-x32c.google.com with SMTP id r18-20020a05683001d200b005ac516aa180so7070ota.6;
+        Fri, 11 Feb 2022 14:36:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WrQU9kPhTmMT0JRjFGnOOsQus5ycZcO8eaHkc9H/feM=;
+        b=jMgkG8SOtXPubi3dkZAAOA5uWohAGoFh5fwlc18aVLdpeQqoEwONp+sRhN/luGJeQf
+         ylbfLxnl4BUo4RuBiEDOEiTru3K9aMVoe/nEtFSpxjsfZwSqTNUXQwhkdt75URLdjBgW
+         X7SdrH7Ta+8hIXpU5+Ql/0YYw0O+RvLhegQv/jzK0JgTtP6iJ9WEmpB4Yo4o1h0nw35U
+         2kRVFXhZkLU7FClnHgvgY9Kn19AfQdZUZU/J8QQqaSmp5FdjYXDSlevlzvcJjoNtYxQr
+         eJtrcHieWSZZMalajbenSKec6V97OKF/GzS8iocps/YkQfi6Ff4qzoQEc2vTOuZdj0SM
+         S4yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WrQU9kPhTmMT0JRjFGnOOsQus5ycZcO8eaHkc9H/feM=;
+        b=RtvmN2UBKideNiaAOZ523TqZGWa+QkbRUhJiQkFDUxUUZVw+ZuowcfmD4a7ccQ7TU4
+         V71K9SiL0E4nlmts10YA4DojukXEFJk0b56X5imT2LHLG7wH2CY4C8IoteqzeBAtpK85
+         4fgGYyosVgI4yiDuHKSpSukY31egCA68GKy/ADhMLaq74kLSSb0HuHEsM9WilLqDkpW7
+         FP5XCJ80Aaq7uChhhpV9PWUV0rIitb05Xar4eEYqlw4AlKPxZc1hMisTiiUW4myiDHDV
+         58yfSsktF2t5khXaXHI3ynIDYex3butN/rL1Cjo3yQOWYQS+Sh5YF8vyAlZDnS5HDpNn
+         Am5Q==
+X-Gm-Message-State: AOAM530SFvd6Pn3/IvcIy+ZEfQV6O9KIZ3LiK1onENyUIC9gavlTUFqA
+        h6AU1ySzX3e/ppy7YpSEtGZdzSnP/TcnRbg4QVU=
+X-Google-Smtp-Source: ABdhPJyOhyYlzGFY9SbnMJlo6NVxz1wof4C0E0HUqAqA26wcjYkxPW1erEqe97d0n/2oKUEN1N0XjmaIVwiLs9bp84M=
+X-Received: by 2002:a05:6830:4422:: with SMTP id q34mr1370577otv.312.1644618994685;
+ Fri, 11 Feb 2022 14:36:34 -0800 (PST)
+MIME-Version: 1.0
+References: <20211217153555.9413-1-marcelo.jimenez@gmail.com> <CACRpkdbzk55pmK9XMwc470O8vJFUBQ6zs35shOYCFKr+YaOezw@mail.gmail.com>
+In-Reply-To: <CACRpkdbzk55pmK9XMwc470O8vJFUBQ6zs35shOYCFKr+YaOezw@mail.gmail.com>
+From:   Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date:   Fri, 11 Feb 2022 19:36:08 -0300
+Message-ID: <CACjc_5q247Yb8t8PfJcudVAPFYQcioREAE3zj8OtPR-Ug_x=tA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     stable <stable@vger.kernel.org>, regressions@lists.linux.dev,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Edmond Chung <edmondchung@google.com>,
+        Andrew Chant <achant@google.com>,
+        Will McVicker <willmcvicker@google.com>,
+        Sergio Tanzilli <tanzilli@acmesystems.it>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pull request you sent on Fri, 11 Feb 2022 14:08:01 +0100:
+On Thu, Feb 10, 2022 at 9:02 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Fri, Dec 17, 2021 at 4:36 PM Marcelo Roberto Jimenez
+> <marcelo.jimenez@gmail.com> wrote:
+>
+> > My system is ARM926EJ-S rev 5 (v5l) (AT91SAM9G25), the board is an ACME Systems Arietta.
+>
+> Which devicetree or boardfile in the upstream Linux kernel is this system
+> using?
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.17-rc4
+arch/arm/boot/dts/at91-ariettag25.dts
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/0b9df436192aae9f9705bfe42f6e618dd4773792
+But it is worth noting that the first lines in this file are:
+/*
+ * Device Tree file for Arietta G25
+ * This device tree is minimal, to activate more peripherals, see:
+ * http://dts.acmesystems.it/arietta/
+ */
 
-Thank you!
+And also that the URL in the comment above is old and now it should
+read: http://linux.tanzilli.com/
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+In any case, the upstream file should be enough to test the issue reported here.
+
+> Yours,
+> Linus Walleij
+
+Regards,
+Marcelo.
