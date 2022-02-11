@@ -2,73 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 017344B218E
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Feb 2022 10:20:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B9E6E4B21B7
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Feb 2022 10:25:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346106AbiBKJU0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 11 Feb 2022 04:20:26 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:33072 "EHLO
+        id S232287AbiBKJYG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 11 Feb 2022 04:24:06 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:39030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346668AbiBKJUX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Feb 2022 04:20:23 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71967337;
-        Fri, 11 Feb 2022 01:20:22 -0800 (PST)
+        with ESMTP id S229462AbiBKJYG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Feb 2022 04:24:06 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C107B81;
+        Fri, 11 Feb 2022 01:24:05 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 2CC05B82877;
-        Fri, 11 Feb 2022 09:20:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA115C340ED;
-        Fri, 11 Feb 2022 09:20:19 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 2ABD8B828BA;
+        Fri, 11 Feb 2022 09:24:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C215EC340E9;
+        Fri, 11 Feb 2022 09:24:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644571220;
-        bh=n75wa6NR9fx2urlJ3HKHsSkqoRez52riwHs8303NTZM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OJ8INf16qTwj2WVyT5UMDyjKBd9xwrfOZ3ZYv2pV+Duu7kNnfBA/tLMI0oyU6MJAw
-         1DXXbw4DU/pMYejMc1ImA3j1M8O1tro74D6g+6r0gsRFuexTwyBURnM16o8IfQ/I9x
-         77Q/rIO/uwAZcDjcoPZFnHYeoWWziUDorFvHSuf7JqmllIxCCbAT2oxE7XDTRjeP1y
-         xvsHSgJFf83Ji9caoaACPNBPyu65z3dIb55v74sN3/IorG8y28HlkNbSKBf2buCamC
-         NvBhnjHrXSgnXbGkVO70Wx4IJEZpUtLg7FCNMeirJA73jFx2Lo9DSRihuJ+z2vfFfg
-         YlYuTHMF5sPkQ==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=billy-the-mountain.misterjones.org)
+        s=k20201202; t=1644571442;
+        bh=LTholiIYCR8EzJtQHKwYUx7qncEDYk0rJjJf2Lp4PXA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=c7ZSkS5S2CRJXW3RMICmKMprBymDhysSYVju2LFNAKRIMEwUHcBnPIA9W9MHX8ubM
+         TCToLWdahXpgvPC4Qp/3hQTOuHBiao1iBplkGY7fXKYAQtot+tPoCY9XhcoXLuKUfn
+         2g6fSIEKtrGtI2Jko2XXHcHhblG0t4nLtYGW6X9SxvMjKZbEypN9rsA7PsWVraB/V6
+         zyH1ENo6tNh/f9Cl4GZO8NCxEC7UAzccTYdYu2/JlBKVrYfBdjIAvPu9m7w3OyBVDu
+         70B+PkBB6FAG7VLCT/uN5PiXN7+feuvH9XBA1fR5DWhD9CBALKI/4WIN/Alqcs7G5v
+         6wma57cRCQjdA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=hot-poop.lan)
         by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <maz@kernel.org>)
-        id 1nIS6D-0077gv-Ul; Fri, 11 Feb 2022 09:20:18 +0000
-Date:   Fri, 11 Feb 2022 09:20:17 +0000
-Message-ID: <87ee49lpym.wl-maz@kernel.org>
+        id 1nIS9o-0077l5-RS; Fri, 11 Feb 2022 09:24:00 +0000
 From:   Marc Zyngier <maz@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Emil Renner Berthing <kernel@esmil.dk>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        kernel-team@android.com
-Subject: Re: [PATCH 10/10] pinctrl: starfive: Switch to dynamic chip name output
-In-Reply-To: <CACRpkdbo4seF6t6iFgKhaTZ_PKMdCt+2gSmdCaM+vDeHGZfHcQ@mail.gmail.com>
-References: <20220209162607.1118325-1-maz@kernel.org>
-        <20220209162607.1118325-11-maz@kernel.org>
-        <CANBLGcwKeLn7Q1Ra8pCw=cXy=kJeEFRmBjOxjds10+k70LvzXA@mail.gmail.com>
-        <87zgmz3xbf.wl-maz@kernel.org>
-        <CACRpkdbo4seF6t6iFgKhaTZ_PKMdCt+2gSmdCaM+vDeHGZfHcQ@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc:     kernel-team@android.com, Emil Renner Berthing <kernel@esmil.dk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH] pinctrl: starfive: Use a static name for the GPIO irq_chip
+Date:   Fri, 11 Feb 2022 09:23:45 +0000
+Message-Id: <20220211092345.1093332-1-maz@kernel.org>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: linus.walleij@linaro.org, kernel@esmil.dk, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, brgl@bgdev.pl, matthias.bgg@gmail.com, grygorii.strashko@ti.com, ssantosh@kernel.org, khilman@kernel.org, tony@atomide.com, tglx@linutronix.de, vz@mleia.com, andrew@lunn.ch, gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com, kernel-team@android.com
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, kernel-team@android.com, kernel@esmil.dk, linus.walleij@linaro.org, brgl@bgdev.pl
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -81,51 +61,38 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 11 Feb 2022 00:15:25 +0000,
-Linus Walleij <linus.walleij@linaro.org> wrote:
-> 
-> On Thu, Feb 10, 2022 at 10:06 AM Marc Zyngier <maz@kernel.org> wrote:
-> > On Wed, 09 Feb 2022 23:30:55 +0000,
-> > Emil Renner Berthing <kernel@esmil.dk> wrote:
-> 
-> > > The gpio framework seems to fill in default handlers in the struct
-> > > above, so unfortunately it can't yet be made const. Is this something
-> > > you intend to fix in the future?
-> >
-> > This is next on my list of things to address. The whole 'let's copy a
-> > whole irqchip structure and hijack random pointers' should not have
-> > happened, and it certainly is going to be an interesting ride.
-> 
-> Sorry about that... Probably my bad idea. The only upside is that the
-> things that are ugly are centralized to one spot.
+Drop the device name used for the GPIO irq_chip and replace it
+with something static. The information is still available from
+debugfs and carried as part of the irqdomain.
 
-No worries. I should have kept an eye on that too and spotted it
-earlier. It is only when helping with the M1 GPIO driver that this was
-brought to my attention.
+Suggested-by: Emil Renner Berthing <kernel@esmil.dk>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+---
+ drivers/pinctrl/pinctrl-starfive.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-My current approach is to move each and every driver to using the
-existing helpers, and advertise to the core GPIO code that they don't
-need to be fiddled with a new irqchip flag. It is a rather simple
-change, but there are a lot of drivers (I have so far converted the
-Apple, Qualcomm and Tegra186 drivers, as this is the HW I have
-around), allowing their irq_chip structures to be made const and only
-used by reference.
-
-Once all drivers are converted (one day), we can drop the flag and the
-pointer swapping code.
-
-The alternative approach was to use a hierarchical irqchip provided by
-the GPIO code, but this proved difficult as it would need to know
-which methods to implement depending on the flow used. There are also
-only a handful of drivers using the hierarchical mode anyway, and we'd
-be stuck for all the other drivers.
-
-Anyway, I'll post something shortly with the stuff I have changed, and
-we can happily repaint that bike shed.
-
-Thanks,
-
-	M.
-
+diff --git a/drivers/pinctrl/pinctrl-starfive.c b/drivers/pinctrl/pinctrl-starfive.c
+index 0b912152a405..266da41a6162 100644
+--- a/drivers/pinctrl/pinctrl-starfive.c
++++ b/drivers/pinctrl/pinctrl-starfive.c
+@@ -1164,6 +1164,7 @@ static int starfive_irq_set_type(struct irq_data *d, unsigned int trigger)
+ }
+ 
+ static struct irq_chip starfive_irq_chip = {
++	.name = "StarFive GPIO",
+ 	.irq_ack = starfive_irq_ack,
+ 	.irq_mask = starfive_irq_mask,
+ 	.irq_mask_ack = starfive_irq_mask_ack,
+@@ -1308,7 +1309,6 @@ static int starfive_probe(struct platform_device *pdev)
+ 	sfp->gc.ngpio = NR_GPIOS;
+ 
+ 	starfive_irq_chip.parent_device = dev;
+-	starfive_irq_chip.name = sfp->gc.label;
+ 
+ 	sfp->gc.irq.chip = &starfive_irq_chip;
+ 	sfp->gc.irq.parent_handler = starfive_gpio_irq_handler;
 -- 
-Without deviation from the norm, progress is not possible.
+2.34.1
+
