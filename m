@@ -2,68 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E5D4E4B2093
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Feb 2022 09:50:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AEDEC4B2101
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Feb 2022 10:09:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348207AbiBKIuK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 11 Feb 2022 03:50:10 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:39796 "EHLO
+        id S1346344AbiBKJJn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 11 Feb 2022 04:09:43 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:53590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348217AbiBKIuH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Feb 2022 03:50:07 -0500
-X-Greylist: delayed 570 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 11 Feb 2022 00:50:05 PST
-Received: from mail.bizcall.pl (mail.bizcall.pl [192.71.213.112])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 702531026
-        for <linux-gpio@vger.kernel.org>; Fri, 11 Feb 2022 00:50:05 -0800 (PST)
-Received: by mail.bizcall.pl (Postfix, from userid 1001)
-        id D78CE40AF7; Fri, 11 Feb 2022 09:37:39 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=bizcall.pl; s=mail;
-        t=1644568834; bh=L7rZPDqncV/PGNK3vBL4eFyhOA8rMHMu3jCfxnl4mEc=;
-        h=Date:From:To:Subject:From;
-        b=J6u4INTNzpFZCnybyTVg6sXBUye3jQ9YDgz7lrOa/8LiiNIuZikF6Y/FqbfQHIPnC
-         ufhFOnaD2HrRBi1ObP4jG9Pyi0fv9GUYv6ETRRFNO2u8+90ybGyxHofCvWKw2EZMIt
-         mVP8ww0tZDvfCOeIRuA6lWVAgQy/egVdny7LP91GFoujbChZHWUKLnBotj0ysUyHq7
-         nLZyhHfrI+c3OOzlT7CofIwA0jXSU5xM5Gejky3aAL1PTJiGGO/MddNWojGc3E+K9X
-         F8q3W3fKknKqFYDBAgWB/DLT4zYs7Cx4r9yVH7vdGjs10eHJ+9oOs+yDFQ3db6xAZk
-         4aArIxSTS1J8Q==
-Received: by mail.bizcall.pl for <linux-gpio@vger.kernel.org>; Fri, 11 Feb 2022 08:36:48 GMT
-Message-ID: <20220211084500-0.1.u.237f.0.n9d5998rda@bizcall.pl>
-Date:   Fri, 11 Feb 2022 08:36:48 GMT
-From:   "Marek Onufrowicz" <marek.onufrowicz@bizcall.pl>
-To:     <linux-gpio@vger.kernel.org>
-Subject: Prezentacja
-X-Mailer: mail.bizcall.pl
-MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        with ESMTP id S1348387AbiBKJJl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Feb 2022 04:09:41 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FE64103F;
+        Fri, 11 Feb 2022 01:09:39 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DB2DE61451;
+        Fri, 11 Feb 2022 09:09:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C65DC340ED;
+        Fri, 11 Feb 2022 09:09:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1644570578;
+        bh=UIxfmZMcrj/zM/st9Omjlnyy7Spqhkm+fojS8BT6aWA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=RdXIQgF6aeR5pu8xgbezSfrrlzHgZdWmPoG5Hk6NgTsqnfuKqXQZZvV6DnrzwDCGC
+         mePYMDa7Jxc9fHcgqJWtl/wstQoryCtG9MV65ZWqwnu6vT2Uv9ASyrj+Se7WiDQtIM
+         d6MEl4KgUWIsnlbNTP4RvSgTTBXW5iP8OE7vzMauADe1YPhcGzlq9kWg2M01wYsJTU
+         A3RNu7mtS2jMq9VNSQaMoS/WF4nQBgy3kXz3s1mNcBHhOa6wwImQpVcZz9iwcgnbEC
+         8N9s0i8dhlTLKKWRzmizreplEns637r7ECB1jbbUCed4Qp3Pw8/fbeA+CWF66Rh5vj
+         L49TlAkbHBylg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=billy-the-mountain.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1nIRvr-0077Wg-Rs; Fri, 11 Feb 2022 09:09:36 +0000
+Date:   Fri, 11 Feb 2022 09:08:43 +0000
+Message-ID: <87fsoplqhw.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        kernel-team@android.com
+Subject: Re: [PATCH 03/10] irqchip/gic: Switch to dynamic chip name output
+In-Reply-To: <CACRpkdZkw1efC5viWwr_72V0K_E+txwxGLzwe=NJV3FEdnGinA@mail.gmail.com>
+References: <20220209162607.1118325-1-maz@kernel.org>
+        <20220209162607.1118325-4-maz@kernel.org>
+        <CACRpkdZkw1efC5viWwr_72V0K_E+txwxGLzwe=NJV3FEdnGinA@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: linus.walleij@linaro.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, brgl@bgdev.pl, matthias.bgg@gmail.com, grygorii.strashko@ti.com, ssantosh@kernel.org, khilman@kernel.org, tony@atomide.com, tglx@linutronix.de, vz@mleia.com, andrew@lunn.ch, gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com, kernel@esmil.dk, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dzie=C5=84 dobry!
+On Thu, 10 Feb 2022 23:38:49 +0000,
+Linus Walleij <linus.walleij@linaro.org> wrote:
+> 
+> On Wed, Feb 9, 2022 at 5:26 PM Marc Zyngier <maz@kernel.org> wrote:
+> 
+> > The last dynamic aspect of the GIC's irq_chip structure is the
+> > name that is associated to it.
+> >
+> > Move the output of that name to the relevant callback, which
+> > allows us to do a bit of cleanup and mark the structures const.
+> >
+> > Signed-off-by: Marc Zyngier <maz@kernel.org>
+> 
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> This naming was once introduced for the ARM PB11MPCore
+> that had two cascaded GICs (commit 58b8964990dc6)
+> so it became a pain to see which one
+> was being used in /proc/interrupts
+> arch/arm/boot/dts/arm-realview-pb11mp.dts
+> 
+> I see it is not appreciated to use /proc/interrupts for this
+> type of diagnostics. Ugh. I suppose people do it for the
+> same reason they keep using the GPIO sysfs, they like
+> it and they know it.
 
-Czy m=C3=B3g=C5=82bym przedstawi=C4=87 rozwi=C4=85zanie, kt=C3=B3re umo=C5=
-=BCliwia monitoring ka=C5=BCdego auta w czasie rzeczywistym w tym jego po=
-zycj=C4=99, zu=C5=BCycie paliwa i przebieg?
+It was sort of fair game to use /proc/interrupts to track these things
+when we only had that. These days, we have a whole interrupt debugging
+infrastructure that is able to track hierarchies, domains and other
+state. And it isn't like we're taking away the /proc/interrupts
+facility at all, we only indirecting the name output it when possible.
 
-Dodatkowo nasze narz=C4=99dzie minimalizuje koszty utrzymania samochod=C3=
-=B3w, skraca czas przejazd=C3=B3w, a tak=C5=BCe tworzenie planu tras czy =
-dostaw.
+There are also a number of advantages in keeping these data structures
+read-only when possible, in addition to the memory saving associated
+with only having a reference to the irq_chip structure.
 
-Z naszej wiedzy i do=C5=9Bwiadczenia korzysta ju=C5=BC ponad 49 tys. Klie=
-nt=C3=B3w. Monitorujemy 809 000 pojazd=C3=B3w na ca=C5=82ym =C5=9Bwiecie,=
- co jest nasz=C4=85 najlepsz=C4=85 wizyt=C3=B3wk=C4=85.
+Thanks,
 
-Bardzo prosz=C4=99 o e-maila zwrotnego, je=C5=9Bli mogliby=C5=9Bmy wsp=C3=
-=B3lnie om=C3=B3wi=C4=87 potencja=C5=82 wykorzystania takiego rozwi=C4=85=
-zania w Pa=C5=84stwa firmie.
+	M.
 
-
-Pozdrawiam,
-Marek Onufrowicz
+-- 
+Without deviation from the norm, progress is not possible.
