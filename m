@@ -2,61 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 614EC4B1A82
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Feb 2022 01:38:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B358D4B1A93
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Feb 2022 01:41:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346421AbiBKAiF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Feb 2022 19:38:05 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:33860 "EHLO
+        id S1346456AbiBKAkw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Feb 2022 19:40:52 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:35400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346420AbiBKAiE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Feb 2022 19:38:04 -0500
-Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 001085F88
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Feb 2022 16:38:04 -0800 (PST)
-Received: by mail-yb1-xb33.google.com with SMTP id bt13so20451220ybb.2
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Feb 2022 16:38:04 -0800 (PST)
+        with ESMTP id S1346447AbiBKAkv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Feb 2022 19:40:51 -0500
+Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B86095F88
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Feb 2022 16:40:51 -0800 (PST)
+Received: by mail-yb1-xb2b.google.com with SMTP id y6so20422303ybc.5
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Feb 2022 16:40:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=XMPnzVxfJj1VtWTKMGbAXwIHqAsV1gKtRJCewjERM4o=;
-        b=KMgLDpZeT1TiAZkobVZRBrLvYCitxb2nXD8+LrvXlEK6Ryd4AR1qebBV1HaGNu2AxT
-         hlSL8P8FvZ8fDGvXYFhNuA6q+xJM6DsbrnHPRTnc8Fxa1Cj6ShaV6Gi8/taglJubZgM7
-         BNPi9No+g/EEzxIUrxPW0FqcCer80iik4/Cp+c5eBjKXV5mXNPyW8koyDU+3DeXbvJHp
-         a008QsQlAAMA5en1KfYTmX4cxwxdS2J5bI62mn0/AaKM3LcZLH7yXn2ZiE7QZB3/ej/I
-         d8CTEii3KS5ft417PgFehcsnZewlKzq2fJNM7G8bdGUn+spm7ehuNcro3VW+zOW25yNn
-         28lA==
+        bh=xj9VW5UsbXXn8hrxLG8NlFrJm7PqJYONQi7gA5wp6vA=;
+        b=S3YRL01EFcf3k/rzt7U5WsmZrx14CvaQSXKsLCNTgwPTP7bILrBXAAnkFfsE89reFd
+         r78F5jKtlOsYR9cM54WPSNN5toQH8CVxbzReHQGZJwUT1yXCYwp54htU9B+4yMYjWvEO
+         MFxiOctNvyloeWvaHQrgNfBBrGPCl4Bh9hNmq8oXnhwpWuRmjqxmofEBQG7cnWmycu9N
+         WT/hfjVI6v+6l4sZC/EtaXdQ4dJ+TW2YfKpSAARfO1mhi+R79XR/7FvLmgjqc8GaBc9U
+         0PleGfR2FjgrEReBEjaaZQv7DNMT9hajy2jJz0DWx+WtZ3uZADEasb5VY3EZYHQyMpWU
+         fCeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=XMPnzVxfJj1VtWTKMGbAXwIHqAsV1gKtRJCewjERM4o=;
-        b=b0Ywb2halR43LORVLuTUE1dz8YSf11sDIkjAOzVdjj8rAaqAsxeJ+nf0cdW8w++gki
-         xMx3Zo8YYdEZR7pqEFTuLamE9Y4HmRdXsA//uChm7miOAAS+PVLxQvTEcfS63S3Qlzlz
-         r/ZT06y67YvBthiDB3rnKAvhFpLviYjUwQ1zak7Yqq3FDdcyOMVKkO4twJroiwhVDe6f
-         Qi7KX586XqBoxCiSdx+cNv6zmE5YCNECya8KLuPxCSP2A5tb/ZKDfTEbbAp4qcZHKy/x
-         /CLM0xfSvKxzapKdO+NT+k3x0pbXexykiPn+YXNWQoWsJQKeUO9+WJtUJsqE9hw2wLhC
-         a/ng==
-X-Gm-Message-State: AOAM530vWLACknR3GqrlCgt5+zrOG+G25YyWbT0S6L+/8hJ2z1YgEnct
-        tAvPD1qnmiVrV8yDQzoGj/RGbJaz9vLX8K9QF2xZ77+yo47oOQ==
-X-Google-Smtp-Source: ABdhPJxtLNtj+oHf1hWTBuWFp8z77OAm27bFXeZexh7vNq4cq9fNWD41AmYJQ48zxflbuwNpWT6w5W9TceuKoey2hhw=
-X-Received: by 2002:a81:b624:: with SMTP id u36mr10535176ywh.437.1644539883886;
- Thu, 10 Feb 2022 16:38:03 -0800 (PST)
+        bh=xj9VW5UsbXXn8hrxLG8NlFrJm7PqJYONQi7gA5wp6vA=;
+        b=uRUM9hI05JVD6L3QvrHdb/yORyQ3QUkxwFvlStEooeTx+4FBlsl8brsQN+Wu+PSaaj
+         eH7k3RPX1frrtRprbwqT3CvCiwaUJEUV7VADe8vbPl2BjOWsAF3ACDbAOOlkXEwLfyvN
+         gZJtJmIDE3IEs1OLy6BHQJeMhDM/wT6kgkMCEW/H63TJASQ8BtlvQKpvNi/T1NgA++gq
+         bBX6e8vkVGQixmqCr4aBKt4JiFVT9iWuIY2lWzcPiyqqnxwOcEQs6R9eJ5pfMOzuJF0B
+         FBwxRl0DiSt9iRWKtJ+jCqXWxseGVikwgL2kfUVwo6WhArw+LJ0o7TUwC0boSGyrcSh2
+         3vMQ==
+X-Gm-Message-State: AOAM533cmjkiGB+od155CD9lRZMQ9sI9a2Uoua0IRLhcARv+G5USBo7v
+        DgS/piQH7/mC4NtrUol1F/VXVVCR9984e388EB4rbw==
+X-Google-Smtp-Source: ABdhPJwhGEqaLnyuw1ENogT4CaBrGxXVjQrO53b0rIWvEMMgI6NBphqpM4BL5gL6Piw4VgURwf/zL0v6QyzNVYi2iyI=
+X-Received: by 2002:a81:9f12:: with SMTP id s18mr10328658ywn.448.1644540051033;
+ Thu, 10 Feb 2022 16:40:51 -0800 (PST)
 MIME-Version: 1.0
-References: <1643376903-18623-1-git-send-email-hayashi.kunihiko@socionext.com>
-In-Reply-To: <1643376903-18623-1-git-send-email-hayashi.kunihiko@socionext.com>
+References: <20220204153535.465827-1-horatiu.vultur@microchip.com> <20220204153535.465827-2-horatiu.vultur@microchip.com>
+In-Reply-To: <20220204153535.465827-2-horatiu.vultur@microchip.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 11 Feb 2022 01:37:52 +0100
-Message-ID: <CACRpkdbEBF0Q028GrRuKA2jB2R+Qx4m8eR_vScQqcAtcsDuPMQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] pinctrl: uniphier: Add some more pinmux settings
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Fri, 11 Feb 2022 01:40:40 +0100
+Message-ID: <CACRpkdYPWVVhkUejiOB+4qGO2SZ17aXp0Lm4Os+nkbTadCmH=w@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: pinctrl-microchip-sgpio: Fix example
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, lars.povlsen@microchip.com,
+        Steen.Hegelund@microchip.com, UNGLinuxDriver@microchip.com
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -64,20 +66,17 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jan 28, 2022 at 2:35 PM Kunihiko Hayashi
-<hayashi.kunihiko@socionext.com> wrote:
+On Fri, Feb 4, 2022 at 4:33 PM Horatiu Vultur
+<horatiu.vultur@microchip.com> wrote:
 
-> This series includes changes to audio I/O pinmux settings and addition
-> to USB device pinmux settings.
+> The blamed commit adds support for irq, but the reqisters for irq are
+> outside of the memory size. They are at address 0x108. Therefore update
+> the memory size to cover all the registers used by the device.
 >
-> - Divide audio I/O pinmux groups so that 1/2/4ch can be specified.
->   The audio I/O function is available for LD11, LD20, PXs2 and PXs3 SoCs.
->   In addition, add the missing pinmux settings for PXs2.
->
-> - Add USB device pinmux settings. The USB device function is available
->   for PXs2 and PXs3 SoCs.
+> Fixes: 01a9350bdd49fb ("dt-bindings: pinctrl: pinctrl-microchip-sgpio: Add irq support")
+> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
 
-This v2 patch set applied!
+This patch (1) applied to the pinctrl tree.
 
 Yours,
 Linus Walleij
