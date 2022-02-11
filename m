@@ -2,58 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 011A94B2225
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Feb 2022 10:39:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 77F814B22B7
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Feb 2022 11:04:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240150AbiBKJjW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 11 Feb 2022 04:39:22 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:57080 "EHLO
+        id S1348744AbiBKKD4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 11 Feb 2022 05:03:56 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:42098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229590AbiBKJjW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Feb 2022 04:39:22 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3A07F5B;
-        Fri, 11 Feb 2022 01:39:21 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8965A61F34;
-        Fri, 11 Feb 2022 09:39:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB456C340E9;
-        Fri, 11 Feb 2022 09:39:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644572361;
-        bh=YdvJVa1OctIgoaQy0xV0Ubxux8AGjVOaAA3jVzMYpfw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=dvTI61ByXBlwe3DsVnSXYdmQ/7HNLlnyeSQrEs+bVUIJdMVdoNKs7hKhiyl66k4/u
-         gpdffEPBAe/bPnpM8/SkBO35YWRiI4SNZkaTeD7sZf0ZJEc3Id4ZVd7e8oA9XiIEcI
-         Gejpcgwa4e/u6l4xuwd79tVEB/FOt7N8zNfaFQ5mD5A6ah/oeIhGgFeTSbWiyRqfFo
-         T0RAsNv8QASOeM2f4LxGcSaTMbQ2QNGVkT/n9aRpal8Y4JYtWUYosQYhKXeIZx0U/C
-         2OO8n97ZCQbz3F/at5n527rLDuvPZoqSxtA+mn1J74I4ntxkz+g8TyNO4oNaRvwcqC
-         ahwqjbOXVtRMw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=hot-poop.lan)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <maz@kernel.org>)
-        id 1nISOd-00784U-42; Fri, 11 Feb 2022 09:39:19 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Cc:     kernel-team@android.com, Thierry Reding <treding@nvidia.com>,
+        with ESMTP id S235417AbiBKKD4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Feb 2022 05:03:56 -0500
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D677DE6E;
+        Fri, 11 Feb 2022 02:03:54 -0800 (PST)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: shreeya)
+        with ESMTPSA id C68F61F46C0A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1644573833;
+        bh=EFWC4KDHDq8iIszJtQjvd2nEkpU5s9EQ1vyKADI1IXg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=MaCgPIWeVDpK6yQTs4fqczqKXoTBqfoRqIbHrFl36PoVAQ8KJtjxxb4Iw8RcuNw+m
+         RTiAIUzykLbjzQ++TSm38i9TJtJkJ1WkS2ltrq3jg5jR1vkisV4hgkQpIMO9b/0eTI
+         9YFlCUKxQMtUCydgiO28ZA6mi8qmzrxlJFFlOrSuoGyEKdTBSn/0yBZfxGgtqQo1YC
+         FxpOD11Y3MGlNZFvjn4g/Ovtrv5AMfJINjLZPeDm2o3sGA81pba6meEfYyi2iuaYvM
+         jlmqtsbke8p6QyADoqHyfs6UmGuXv0UDAVlDENQJL4DMVtmQO+kQQ8mnxBeWDSePXZ
+         GWHinXtxc3xHw==
+Subject: Re: [PATCH v4] gpio: Return EPROBE_DEFER if gc->to_irq is NULL
+To:     Gabriel Krisman Bertazi <krisman@collabora.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH] gpio: tegra186: Fix chip_data type confusion
-Date:   Fri, 11 Feb 2022 09:39:04 +0000
-Message-Id: <20220211093904.1112679-1-maz@kernel.org>
-X-Mailer: git-send-email 2.34.1
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        wsa@kernel.org, kernel@collabora.com,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        kbuild test robot <lkp@intel.com>
+References: <20211116093833.245542-1-shreeya.patel@collabora.com>
+ <874k56znix.fsf@collabora.com>
+ <CAMRc=MdByxO3+hJruvUkULtXAaB7aWewTd=Wv0MbWyX2vykdjA@mail.gmail.com>
+ <87v8xmxkg7.fsf@collabora.com>
+From:   Shreeya Patel <shreeya.patel@collabora.com>
+Message-ID: <fb31ea17-2ec2-4acf-94b8-03e850a4c256@collabora.com>
+Date:   Fri, 11 Feb 2022 15:33:44 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
+In-Reply-To: <87v8xmxkg7.fsf@collabora.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, kernel-team@android.com, treding@nvidia.com, linus.walleij@linaro.org, bgolaszewski@baylibre.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Language: en-US
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,76 +62,74 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The tegra186 GPIO driver makes the assumption that the pointer
-returned by irq_data_get_irq_chip_data() is a pointer to a
-tegra_gpio structure. Unfortunately, it is actually a pointer
-to the inner gpio_chip structure, as mandated by the gpiolib
-infrastructure. Nice try.
 
-The saving grace is that the gpio_chip is the first member of
-tegra_gpio, so the bug has gone undetected since... forever.
+On 11/02/22 6:56 am, Gabriel Krisman Bertazi wrote:
+> Bartosz Golaszewski <brgl@bgdev.pl> writes:
+>
+>> My email address changed in September, that's why I didn't see the
+>> email you sent in November to my old one.
+> Hi Bart,
+>
+> thanks for the prompt reply and sorry for the wrong email address.
+>
+>> gpiod_to_irq() can be used in context other than driver probing, I'm
+>> worried existing users would not know how to handle it. Also: how come
+>> you can get the GPIO descriptor from the provider but its interrupts
+>> are not yet set up?
+> I'm definitely some context here, as its been quite a while.
+> Shreeya, feel free to pitch in. :)
 
-Fix it by performing a container_of() on the pointer. This results
-in no additional code, and makes it possible to understand how
-the whole thing works.
 
-Fixes: 5b2b135a87fc ("gpio: Add Tegra186 support")
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Cc: Thierry Reding <treding@nvidia.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- drivers/gpio/gpio-tegra186.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+Existing users will probably receive -ENXIO in case to_irq is not
+set and wasn't intended to be set.
+We are trying to solve the race which happens frequently in cases
+where I2C is set as built-in and pinctrl-amd is set as module.
+There is no dependency between I2C and pinctrl-amd, while pinctrl-amd is
+still trying to set the gc irq members through gpiochip_add_irqchip, I2C
+calls gpiod_to_irq() which leads to returning -ENXIO since gc->to_irq is 
+still NULL
 
-diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
-index 34b36a8c035f..8d298beffd86 100644
---- a/drivers/gpio/gpio-tegra186.c
-+++ b/drivers/gpio/gpio-tegra186.c
-@@ -343,9 +343,12 @@ static int tegra186_gpio_of_xlate(struct gpio_chip *chip,
- 	return offset + pin;
- }
- 
-+#define to_tegra_gpio(x) container_of((x), struct tegra_gpio, gpio)
-+
- static void tegra186_irq_ack(struct irq_data *data)
- {
--	struct tegra_gpio *gpio = irq_data_get_irq_chip_data(data);
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
-+	struct tegra_gpio *gpio = to_tegra_gpio(gc);
- 	void __iomem *base;
- 
- 	base = tegra186_gpio_get_base(gpio, data->hwirq);
-@@ -357,7 +360,8 @@ static void tegra186_irq_ack(struct irq_data *data)
- 
- static void tegra186_irq_mask(struct irq_data *data)
- {
--	struct tegra_gpio *gpio = irq_data_get_irq_chip_data(data);
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
-+	struct tegra_gpio *gpio = to_tegra_gpio(gc);
- 	void __iomem *base;
- 	u32 value;
- 
-@@ -372,7 +376,8 @@ static void tegra186_irq_mask(struct irq_data *data)
- 
- static void tegra186_irq_unmask(struct irq_data *data)
- {
--	struct tegra_gpio *gpio = irq_data_get_irq_chip_data(data);
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
-+	struct tegra_gpio *gpio = to_tegra_gpio(gc);
- 	void __iomem *base;
- 	u32 value;
- 
-@@ -387,7 +392,8 @@ static void tegra186_irq_unmask(struct irq_data *data)
- 
- static int tegra186_irq_set_type(struct irq_data *data, unsigned int type)
- {
--	struct tegra_gpio *gpio = irq_data_get_irq_chip_data(data);
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
-+	struct tegra_gpio *gpio = to_tegra_gpio(gc);
- 	void __iomem *base;
- 	u32 value;
- 
--- 
-2.34.1
 
+There have also been cases where gc->to_irq is set successfully but 
+other members
+are yet to be initalized by gpiochip_add_irqchip like the domain 
+variable which is
+being used in .to_irq() and ultimately leads to a NULL pointer 
+dereference as Gabriel
+mentioned. I am working on a fix which would use mutex to not let gc irq 
+members
+be accessed until they all have been completely initialized.
+
+I2C calls gpiod_to_irq through the following stack trace
+
+kernel: Call Trace:
+kernel:  gpiod_to_irq.cold+0x49/0x8f
+kernel:  acpi_dev_gpio_irq_get_by+0x113/0x1f0
+kernel:  i2c_acpi_get_irq+0xc0/0xd0
+kernel:  i2c_device_probe+0x28a/0x2a0
+kernel:  really_probe+0xf2/0x460
+kernel:  driver_probe_device+0xe8/0x160
+
+and pinctrl-amd makes gc visible through gpiochip_add_data_with_key()
+
+
+Thanks,
+Shreeya Patel
+
+
+> This is one of the races we saw in gpiochip_add_irqchip, depending on
+> the probe order.  The gc is already visible while partially initialized,
+> if pinctrl-amd hasn't been probed yet.  Another device being probed can
+> hit an -ENXIO here if to_irq is yet uninitialized or enter .to_irq() and
+> oops.  Shreeya's patch workarounds the first issue, but is not a
+> solution for the second.
+>
+> There is another patch that has been flying around to address the Oops.
+>
+> https://lkml.org/lkml/2021/11/8/900
+>
+> She's been working on a proper solution for that one, which might
+> actually address this too and replace the current patch.  Maybe you
+> could help us get to a proper solution there?  I'm quite unfamiliar with
+> this code myself :)
+>
