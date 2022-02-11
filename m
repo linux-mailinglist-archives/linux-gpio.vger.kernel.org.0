@@ -2,45 +2,47 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AEDEC4B2101
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Feb 2022 10:09:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 017344B218E
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Feb 2022 10:20:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346344AbiBKJJn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 11 Feb 2022 04:09:43 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:53590 "EHLO
+        id S1346106AbiBKJU0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 11 Feb 2022 04:20:26 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:33072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348387AbiBKJJl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Feb 2022 04:09:41 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FE64103F;
-        Fri, 11 Feb 2022 01:09:39 -0800 (PST)
+        with ESMTP id S1346668AbiBKJUX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Feb 2022 04:20:23 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71967337;
+        Fri, 11 Feb 2022 01:20:22 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DB2DE61451;
-        Fri, 11 Feb 2022 09:09:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C65DC340ED;
-        Fri, 11 Feb 2022 09:09:38 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 2CC05B82877;
+        Fri, 11 Feb 2022 09:20:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA115C340ED;
+        Fri, 11 Feb 2022 09:20:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644570578;
-        bh=UIxfmZMcrj/zM/st9Omjlnyy7Spqhkm+fojS8BT6aWA=;
+        s=k20201202; t=1644571220;
+        bh=n75wa6NR9fx2urlJ3HKHsSkqoRez52riwHs8303NTZM=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=RdXIQgF6aeR5pu8xgbezSfrrlzHgZdWmPoG5Hk6NgTsqnfuKqXQZZvV6DnrzwDCGC
-         mePYMDa7Jxc9fHcgqJWtl/wstQoryCtG9MV65ZWqwnu6vT2Uv9ASyrj+Se7WiDQtIM
-         d6MEl4KgUWIsnlbNTP4RvSgTTBXW5iP8OE7vzMauADe1YPhcGzlq9kWg2M01wYsJTU
-         A3RNu7mtS2jMq9VNSQaMoS/WF4nQBgy3kXz3s1mNcBHhOa6wwImQpVcZz9iwcgnbEC
-         8N9s0i8dhlTLKKWRzmizreplEns637r7ECB1jbbUCed4Qp3Pw8/fbeA+CWF66Rh5vj
-         L49TlAkbHBylg==
+        b=OJ8INf16qTwj2WVyT5UMDyjKBd9xwrfOZ3ZYv2pV+Duu7kNnfBA/tLMI0oyU6MJAw
+         1DXXbw4DU/pMYejMc1ImA3j1M8O1tro74D6g+6r0gsRFuexTwyBURnM16o8IfQ/I9x
+         77Q/rIO/uwAZcDjcoPZFnHYeoWWziUDorFvHSuf7JqmllIxCCbAT2oxE7XDTRjeP1y
+         xvsHSgJFf83Ji9caoaACPNBPyu65z3dIb55v74sN3/IorG8y28HlkNbSKBf2buCamC
+         NvBhnjHrXSgnXbGkVO70Wx4IJEZpUtLg7FCNMeirJA73jFx2Lo9DSRihuJ+z2vfFfg
+         YlYuTHMF5sPkQ==
 Received: from sofa.misterjones.org ([185.219.108.64] helo=billy-the-mountain.misterjones.org)
         by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <maz@kernel.org>)
-        id 1nIRvr-0077Wg-Rs; Fri, 11 Feb 2022 09:09:36 +0000
-Date:   Fri, 11 Feb 2022 09:08:43 +0000
-Message-ID: <87fsoplqhw.wl-maz@kernel.org>
+        id 1nIS6D-0077gv-Ul; Fri, 11 Feb 2022 09:20:18 +0000
+Date:   Fri, 11 Feb 2022 09:20:17 +0000
+Message-ID: <87ee49lpym.wl-maz@kernel.org>
 From:   Marc Zyngier <maz@kernel.org>
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+Cc:     Emil Renner Berthing <kernel@esmil.dk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Matthias Brugger <matthias.bgg@gmail.com>,
         Grygorii Strashko <grygorii.strashko@ti.com>,
@@ -52,20 +54,21 @@ Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         Andrew Lunn <andrew@lunn.ch>,
         Gregory Clement <gregory.clement@bootlin.com>,
         Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Emil Renner Berthing <kernel@esmil.dk>,
         kernel-team@android.com
-Subject: Re: [PATCH 03/10] irqchip/gic: Switch to dynamic chip name output
-In-Reply-To: <CACRpkdZkw1efC5viWwr_72V0K_E+txwxGLzwe=NJV3FEdnGinA@mail.gmail.com>
+Subject: Re: [PATCH 10/10] pinctrl: starfive: Switch to dynamic chip name output
+In-Reply-To: <CACRpkdbo4seF6t6iFgKhaTZ_PKMdCt+2gSmdCaM+vDeHGZfHcQ@mail.gmail.com>
 References: <20220209162607.1118325-1-maz@kernel.org>
-        <20220209162607.1118325-4-maz@kernel.org>
-        <CACRpkdZkw1efC5viWwr_72V0K_E+txwxGLzwe=NJV3FEdnGinA@mail.gmail.com>
+        <20220209162607.1118325-11-maz@kernel.org>
+        <CANBLGcwKeLn7Q1Ra8pCw=cXy=kJeEFRmBjOxjds10+k70LvzXA@mail.gmail.com>
+        <87zgmz3xbf.wl-maz@kernel.org>
+        <CACRpkdbo4seF6t6iFgKhaTZ_PKMdCt+2gSmdCaM+vDeHGZfHcQ@mail.gmail.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
  FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
  (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
 Content-Type: text/plain; charset=US-ASCII
 X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: linus.walleij@linaro.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, brgl@bgdev.pl, matthias.bgg@gmail.com, grygorii.strashko@ti.com, ssantosh@kernel.org, khilman@kernel.org, tony@atomide.com, tglx@linutronix.de, vz@mleia.com, andrew@lunn.ch, gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com, kernel@esmil.dk, kernel-team@android.com
+X-SA-Exim-Rcpt-To: linus.walleij@linaro.org, kernel@esmil.dk, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, brgl@bgdev.pl, matthias.bgg@gmail.com, grygorii.strashko@ti.com, ssantosh@kernel.org, khilman@kernel.org, tony@atomide.com, tglx@linutronix.de, vz@mleia.com, andrew@lunn.ch, gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com, kernel-team@android.com
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -78,41 +81,47 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 10 Feb 2022 23:38:49 +0000,
+On Fri, 11 Feb 2022 00:15:25 +0000,
 Linus Walleij <linus.walleij@linaro.org> wrote:
 > 
-> On Wed, Feb 9, 2022 at 5:26 PM Marc Zyngier <maz@kernel.org> wrote:
+> On Thu, Feb 10, 2022 at 10:06 AM Marc Zyngier <maz@kernel.org> wrote:
+> > On Wed, 09 Feb 2022 23:30:55 +0000,
+> > Emil Renner Berthing <kernel@esmil.dk> wrote:
 > 
-> > The last dynamic aspect of the GIC's irq_chip structure is the
-> > name that is associated to it.
+> > > The gpio framework seems to fill in default handlers in the struct
+> > > above, so unfortunately it can't yet be made const. Is this something
+> > > you intend to fix in the future?
 > >
-> > Move the output of that name to the relevant callback, which
-> > allows us to do a bit of cleanup and mark the structures const.
-> >
-> > Signed-off-by: Marc Zyngier <maz@kernel.org>
+> > This is next on my list of things to address. The whole 'let's copy a
+> > whole irqchip structure and hijack random pointers' should not have
+> > happened, and it certainly is going to be an interesting ride.
 > 
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> 
-> This naming was once introduced for the ARM PB11MPCore
-> that had two cascaded GICs (commit 58b8964990dc6)
-> so it became a pain to see which one
-> was being used in /proc/interrupts
-> arch/arm/boot/dts/arm-realview-pb11mp.dts
-> 
-> I see it is not appreciated to use /proc/interrupts for this
-> type of diagnostics. Ugh. I suppose people do it for the
-> same reason they keep using the GPIO sysfs, they like
-> it and they know it.
+> Sorry about that... Probably my bad idea. The only upside is that the
+> things that are ugly are centralized to one spot.
 
-It was sort of fair game to use /proc/interrupts to track these things
-when we only had that. These days, we have a whole interrupt debugging
-infrastructure that is able to track hierarchies, domains and other
-state. And it isn't like we're taking away the /proc/interrupts
-facility at all, we only indirecting the name output it when possible.
+No worries. I should have kept an eye on that too and spotted it
+earlier. It is only when helping with the M1 GPIO driver that this was
+brought to my attention.
 
-There are also a number of advantages in keeping these data structures
-read-only when possible, in addition to the memory saving associated
-with only having a reference to the irq_chip structure.
+My current approach is to move each and every driver to using the
+existing helpers, and advertise to the core GPIO code that they don't
+need to be fiddled with a new irqchip flag. It is a rather simple
+change, but there are a lot of drivers (I have so far converted the
+Apple, Qualcomm and Tegra186 drivers, as this is the HW I have
+around), allowing their irq_chip structures to be made const and only
+used by reference.
+
+Once all drivers are converted (one day), we can drop the flag and the
+pointer swapping code.
+
+The alternative approach was to use a hierarchical irqchip provided by
+the GPIO code, but this proved difficult as it would need to know
+which methods to implement depending on the flow used. There are also
+only a handful of drivers using the hierarchical mode anyway, and we'd
+be stuck for all the other drivers.
+
+Anyway, I'll post something shortly with the stuff I have changed, and
+we can happily repaint that bike shed.
 
 Thanks,
 
