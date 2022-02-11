@@ -2,236 +2,174 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D87524B2847
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Feb 2022 15:50:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 65EF64B28A6
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Feb 2022 16:02:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351013AbiBKOt5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 11 Feb 2022 09:49:57 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:45718 "EHLO
+        id S1347642AbiBKPCg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 11 Feb 2022 10:02:36 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:54230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351009AbiBKOt5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Feb 2022 09:49:57 -0500
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E04D188
-        for <linux-gpio@vger.kernel.org>; Fri, 11 Feb 2022 06:49:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1644590996; x=1676126996;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=o5sVNexBbShcUIt9j7hauOCWdXlnjxCZGqfErOqXhaw=;
-  b=IrCZEZ9hEq5kxudgaRtsZU6xq+iYeZzJ5YhuM+S/RWZF6TwWuSvaHfdx
-   1ekZcxb4PxaypauDsRQ8ylMSNibeWKn/iCBM3XjeO8ZX9d+bMtnHdsDvx
-   mb093d35aOjMKwdq2srOH58AngxnWsJxmcTJ2vbNjbuzRvykX+F6GvAsL
-   P1AzA75nrzSNc+TZxP3Hq6/oXJ88p4K2s4/Yp2vJvG3FuqCIjIZDY73sR
-   4VYQNjNU0WGddhmvhcqJqxUcq2JiGIkrzUk7m2q2zXyFlz/wX5bz3X2qF
-   d5xPCaJVyZehy3uM2A5az5W1CRIjedqBt9ASfdgpbJj8pB0UDu2NZ5vhY
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10254"; a="229708697"
-X-IronPort-AV: E=Sophos;i="5.88,361,1635231600"; 
-   d="scan'208";a="229708697"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Feb 2022 06:49:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,361,1635231600"; 
-   d="scan'208";a="487920477"
-Received: from lkp-server01.sh.intel.com (HELO d95dc2dabeb1) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 11 Feb 2022 06:49:54 -0800
-Received: from kbuild by d95dc2dabeb1 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1nIXFB-0004hS-MV; Fri, 11 Feb 2022 14:49:53 +0000
-Date:   Fri, 11 Feb 2022 22:49:46 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD SUCCESS
- b8f79acc752e9895caffd89016c42bd926815d70
-Message-ID: <6206778a.Z4mMIDbF0cj+/a8F%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S1347074AbiBKPCg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Feb 2022 10:02:36 -0500
+Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ED3094
+        for <linux-gpio@vger.kernel.org>; Fri, 11 Feb 2022 07:02:34 -0800 (PST)
+Received: from relay5-d.mail.gandi.net (unknown [217.70.183.197])
+        by mslow1.mail.gandi.net (Postfix) with ESMTP id 1035AC6777
+        for <linux-gpio@vger.kernel.org>; Fri, 11 Feb 2022 14:54:50 +0000 (UTC)
+Received: (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by mail.gandi.net (Postfix) with ESMTPSA id E459C1C000C;
+        Fri, 11 Feb 2022 14:54:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1644591284;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/snWoyO1kCOhCBySz55Uo3NXloeQ7id88PKB2/aReeA=;
+        b=dfg7TkK0I/3exJfTOxYHVvr+fl22x+mJh10e7NYDZQrLuonafe07F0MGv4zTJwjUywdwFo
+        jszufveg/kUZOQseo7aSWH+ZDBcvBvoeUGIXooGkG9zRt7vZ4ZXkQXuyUEiJKBa3hL5v5z
+        VLjimiAl3xTxrobw3fTaaSlsB2FmK0aWuxFNKiErLGib6APgR2wqIuxyqMlNBE/CVJSVao
+        m5j1qNLRBIw+OhjrBFwakpt30YI4+kdgQ3oA9WZihYjswXyBWQznS97QrkPcL1aCexMaiY
+        RWHtH3TXANId8vXSxjIngtuLKGcITBqu8JEMrJhbgvQdBGniWJi2Q16d1PRMZg==
+Date:   Fri, 11 Feb 2022 15:54:42 +0100
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        devicetree@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v10 2/6] dt-bindings: gpio: logicvc: Add a compatible
+ with major version only
+Message-ID: <YgZ4sj1o4WzMPd0P@aptenodytes>
+References: <20220120150024.646714-1-paul.kocialkowski@bootlin.com>
+ <20220120150024.646714-3-paul.kocialkowski@bootlin.com>
+ <CACRpkdbnEKeDNmFCuUCLaySs6AtD9MPtxV+9JDxKuXvTs9iMVQ@mail.gmail.com>
+ <6f0e58dc-4b81-d819-13e3-9e0f79ba279c@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
-        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="fi4rh3UJ303yTdHr"
+Content-Disposition: inline
+In-Reply-To: <6f0e58dc-4b81-d819-13e3-9e0f79ba279c@arm.com>
+X-Spam-Status: No, score=-0.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_VALIDITY_RPBL,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: b8f79acc752e9895caffd89016c42bd926815d70  pinctl: doc: Fix spelling mistake "resisitors" -> "resistors"
 
-elapsed time: 727m
+--fi4rh3UJ303yTdHr
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-configs tested: 152
-configs skipped: 4
+Hi,
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+On Wed 02 Feb 22, 14:26, Robin Murphy wrote:
+> On 2022-01-30 00:46, Linus Walleij wrote:
+> > On Thu, Jan 20, 2022 at 4:00 PM Paul Kocialkowski
+> > <paul.kocialkowski@bootlin.com> wrote:
+> >=20
+> > > There are lots of different versions of the logicvc block and it
+> > > makes little sense to list them all in compatibles since all versions
+> > > with the same major are found to be register-compatible.
+> >=20
+> > The reason we try to be precise is because sometime, long after the dri=
+ver
+> > has been merged and maintained for a few years, a bug is discovered
+> > in a specific version of the silicon.
+> >=20
+> > What happens is that a fix is applied on all silicon whether it is need=
+ed
+> > or not.
+> >=20
+> > If you have the precise silicon compatible, you can avoid this and targ=
+et
+> > only a specific version.
+>=20
+> Indeed, the better approach would be something like:
+>=20
+>   compatible:
+>     oneOf:
+>       - items:
+>           - enum:
+>               - foo,bar-v1.0
+>               - foo,bar,v1.1
+>           - const: foo,bar-v1
+>       - items:
+>           - enum:
+>               - foo,bar-v2.0
+>           - const: foo,bar-v2
+>=20
+> That way the DTs are future-proof, while drivers can still match on only =
+the
+> less-specific strings until a need arises. Plus it avoids the problem that
+> if an existing OS that only understands "foo,bar-v1.0" is given a new DT
+> with only "foo,bar-v1" for v1.0 hardware it won't be able to use the devi=
+ce,
+> even though it's *functionally* capable of doing so.
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-i386                          randconfig-c001
-sparc                            allyesconfig
-arc                           tb10x_defconfig
-mips                       bmips_be_defconfig
-ia64                         bigsur_defconfig
-powerpc                 mpc834x_mds_defconfig
-m68k                             allyesconfig
-arm                       aspeed_g5_defconfig
-mips                        jmr3927_defconfig
-mips                  decstation_64_defconfig
-powerpc                     ep8248e_defconfig
-arc                            hsdk_defconfig
-m68k                         amcore_defconfig
-mips                        vocore2_defconfig
-nios2                            alldefconfig
-powerpc                      pasemi_defconfig
-sh                        sh7785lcr_defconfig
-sh                          lboxre2_defconfig
-openrisc                            defconfig
-sparc64                          alldefconfig
-powerpc                     mpc83xx_defconfig
-m68k                           sun3_defconfig
-sh                         ecovec24_defconfig
-arm                          simpad_defconfig
-m68k                          multi_defconfig
-xtensa                          iss_defconfig
-openrisc                 simple_smp_defconfig
-powerpc                         ps3_defconfig
-powerpc                      ep88xc_defconfig
-h8300                    h8300h-sim_defconfig
-arm                         at91_dt_defconfig
-mips                  maltasmvp_eva_defconfig
-arm                           stm32_defconfig
-sh                           se7343_defconfig
-sh                                  defconfig
-arm                           corgi_defconfig
-mips                     loongson1b_defconfig
-sh                           se7721_defconfig
-arm                     eseries_pxa_defconfig
-alpha                            alldefconfig
-mips                            gpr_defconfig
-nds32                             allnoconfig
-um                           x86_64_defconfig
-sh                        apsh4ad0a_defconfig
-arm                          iop32x_defconfig
-sh                             shx3_defconfig
-arm                          pxa910_defconfig
-riscv                    nommu_k210_defconfig
-h8300                     edosk2674_defconfig
-s390                             allmodconfig
-powerpc                      ppc40x_defconfig
-parisc                           alldefconfig
-m68k                          amiga_defconfig
-powerpc                      makalu_defconfig
-openrisc                         alldefconfig
-sh                           se7724_defconfig
-m68k                       m5275evb_defconfig
-arm                  randconfig-c002-20220211
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                               defconfig
-csky                                defconfig
-alpha                               defconfig
-nios2                            allyesconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                               defconfig
-i386                                defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-i386                          randconfig-a003
-i386                          randconfig-a001
-i386                          randconfig-a005
-x86_64                        randconfig-a011
-x86_64                        randconfig-a013
-x86_64                        randconfig-a015
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-arc                  randconfig-r043-20220211
-riscv                            allyesconfig
-riscv                    nommu_virt_defconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-x86_64                    rhel-8.3-kselftests
-um                             i386_defconfig
-x86_64                           allyesconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                          rhel-8.3-func
-x86_64                                  kexec
+Yes I understand that we need to keep compatibility with the already-defined
+compatible.
 
-clang tested configs:
-riscv                randconfig-c006-20220211
-x86_64                        randconfig-c007
-powerpc              randconfig-c003-20220211
-arm                  randconfig-c002-20220211
-i386                          randconfig-c001
-mips                 randconfig-c004-20220211
-powerpc                          allyesconfig
-mips                          malta_defconfig
-riscv                          rv32_defconfig
-arm                        mvebu_v5_defconfig
-powerpc                      katmai_defconfig
-powerpc                     mpc5200_defconfig
-powerpc                     akebono_defconfig
-mips                     loongson2k_defconfig
-mips                         tb0219_defconfig
-arm                         lpc32xx_defconfig
-arm                          pxa168_defconfig
-powerpc                   bluestone_defconfig
-mips                      pic32mzda_defconfig
-hexagon                             defconfig
-arm                         orion5x_defconfig
-x86_64                        randconfig-a005
-x86_64                        randconfig-a003
-x86_64                        randconfig-a001
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a011
-i386                          randconfig-a013
-i386                          randconfig-a015
-hexagon              randconfig-r045-20220211
-hexagon              randconfig-r041-20220211
-riscv                randconfig-r042-20220211
-s390                 randconfig-r044-20220211
+> However, from skimming patch #5, it looks possible that none of these
+> changes are needed at all. If LOGICVC_IP_VERSION_REG tells you the exact
+> revision, and is always present (as the unconditional reading of it
+> implies), then the only reason for adding new compatibles would be if, sa=
+y,
+> v5 has more clocks from v4 and you want the binding to enforce that;
+> otherwise, newer versions are literally compatible with the
+> currently-defined binding and therefore should continue to bind against t=
+he
+> existing string(s) to maximise forward- and backward-compatibility. Sure,
+> it's not the prettiest thing for a "generic" compatible to be based on an
+> oddly-specific version number that doesn't necessarily match the actual
+> software-discoverable version, but what's done is done and that's the cost
+> of ABI.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Indeed it's true that hardware quirks can be applied based on the precise
+version read from the register, so I don't think there is a need for overly
+precise compatibles.
+
+Since the device-tree binding is currently the same for all versions,
+I understand that it makes sense to keep a single compatible (the already
+defined one), so I guess I will make another iteration without introducing
+new compatibles. But I will probably update the binding document to reflect
+which versions are currently known to work with its current state.
+
+> (also, nitpick for that part of patch #5 since I'm here: please include
+> linux/bitfield.h rather than reinventing FIELD_GET() locally)
+
+Ah good to know thanks, first time hearing about those.
+
+Paul
+
+--=20
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
+--fi4rh3UJ303yTdHr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAmIGeLIACgkQ3cLmz3+f
+v9Fovwf9FazGyUpB/nAwH7VeTeXwajEB0NHvM9mlYAMba4/aI1h1YN7YzzP6bCm6
+xHVZg35DyCEzdwgDdrqhskFL94mRN43XIsu4a6tZhdJ38uqXAu91O/bjQDaNu4zM
+h37R+IAlna1D/+O9iiwQ/46t0mdI1kRmsgNcrMwG1ERdMQs7o2tZAupPuhHHioZk
+dPwBHCMAJkljVgzf80BgtFuNXglYHp8sunbv05NtodkFLZ/mAANkyRqq9IztJR3D
+Myu/D9/AZjU/57KFg3vuveYoMs3PJrPV0No5pgZX2HP0SJwVL9zmLj43L5K2POdK
+2LJbjDIKaSkNQ0iJE55P1Qzmqmb7Tg==
+=9Gbl
+-----END PGP SIGNATURE-----
+
+--fi4rh3UJ303yTdHr--
