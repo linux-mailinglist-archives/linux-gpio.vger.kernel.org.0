@@ -2,66 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DDC34B1AAA
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Feb 2022 01:46:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BF0C64B1AAF
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Feb 2022 01:49:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346504AbiBKAqP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Feb 2022 19:46:15 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:38294 "EHLO
+        id S1346512AbiBKAtD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Feb 2022 19:49:03 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:39438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346484AbiBKAqP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Feb 2022 19:46:15 -0500
-Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1C485F8E
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Feb 2022 16:46:14 -0800 (PST)
-Received: by mail-yb1-xb34.google.com with SMTP id e140so1183548ybh.9
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Feb 2022 16:46:14 -0800 (PST)
+        with ESMTP id S1346510AbiBKAtC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Feb 2022 19:49:02 -0500
+Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A021F5F86
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Feb 2022 16:49:02 -0800 (PST)
+Received: by mail-yb1-xb2b.google.com with SMTP id x136so18651139ybe.11
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Feb 2022 16:49:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Aqg2zYlKFhDU5R59omnns1h0zMhseRBVTVyLe6xPNAw=;
-        b=X0L8pqDQdxoPIp+SQ9ATds+ARsJ5XaRoakuQEEb9AFJOQkztFhYCnS4eoc+7WtnGKs
-         IsI/x2HthuAgMOz5p1lV5S0zHy571/uytyaHe9Es0b2tW60l4snqT95ZuJ+UA8SkdRfh
-         aWdY5u7olCieQnKYht1p5QG5ZQf0gfpf2YXRz6Hn26bbnAQ8XSniclLvAF8ru4GJg8ie
-         jY8OPuKSa+f2NFkdpfL7Qp+Bt2Vh53xHnARth/o1ESmN8uulrsmvf30hIXvcbA/e1lL2
-         R5hGHRrGYCrVsTi32PzHqttKWX6Jc1xa1FGkhTcFZxvZKx9tKO/rSiTm9a6waUuh7myC
-         RGIQ==
+        bh=x5ASnvfqgaXGa1AnxfauqQVN7reJhzYjP6FMYU2gN3A=;
+        b=b7kz9wVq/C+G6+5K1f/MU/dIQQu5/akRdzIRiXU41EGJ3zMEsUel1wKQaj2raZkZVN
+         4muu+NJrNZm8oAZ5s2q9iL323Z7LtX4IxvZE1OClOhHpmgNdjHpJ2Gx618LKy+eIqaiI
+         kdIYWUT5reL5dbyfOZs1RodOc3DVn1vGeht1byuKcQTEBEpCauLiAjQKYh/VYLLcJoir
+         U6zJ+BI7Rv5AyBZix361hNtxx1PkBReo1hnfJA+PacDsuPTjXq/SQNmLnZHhGcoMTHsk
+         2+jFZVcxSt1cRMBPjKsJxSPbHCkmbyFu9S6Xh6NEKOs7i4kYte42JQeOyb4ZZJD86Bl0
+         Xa3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Aqg2zYlKFhDU5R59omnns1h0zMhseRBVTVyLe6xPNAw=;
-        b=DmQwb6SW/rSEKv2AGbQt3xcUrVP/m1cV0dAS092QOMnqjH8tRyrPqVsqLlpgireRh8
-         +4l9bnuO2qy2Lnfc9JT/2oR25mrwMLIoD/9A6/wCQBfYUGsAQW1hT3ch1TdKTImu7KYJ
-         V7T2nppt3f49TtyW9kObhTU+/6aYmH41fwHHCgdiqxJUgPcUheksotBQaFxr/Wr/U5rx
-         Ga9X1uNwedcydyJHWuhpXxcV3pS//u7G52Qqg8eqhQ47ngbSBILrfppYIQVUE1UVisW9
-         imjip+8EE7kHqpG/SOUaKu4cGl39O42Z1dom4mjG4RSWB6tqIyuWLwqyYwqMdW9VTkht
-         sVOw==
-X-Gm-Message-State: AOAM5308odJpozVAYgOJ021npmZg7ipmTKrWjt5AYibfnuzlzetoYXXX
-        A+c+8kizKj/UdnLwdqE+iSV6qTera0Aq8vECijyZiw==
-X-Google-Smtp-Source: ABdhPJxPdUAdZzu441vtdOPhtVOnx5TxV2FVC7NtVsI9RRP7ptyI1elK0lctrq3IqH8VqzMTb+ldzwpyBRi01HARJ18=
-X-Received: by 2002:a81:4cc3:: with SMTP id z186mr10573147ywa.140.1644540373922;
- Thu, 10 Feb 2022 16:46:13 -0800 (PST)
+        bh=x5ASnvfqgaXGa1AnxfauqQVN7reJhzYjP6FMYU2gN3A=;
+        b=rDwv6DnRnDI2tX1Y2t0pH8yNjjXem3htsVhKqvY1PtchpWdLc4w/lHsFaGImM4cM+z
+         1Mw/EJtIQ0Q+w/1Y7njRlsUnZil3kTpq7x+xqjpcOi5Z0250v4+Des4ms6TRI+O4JBm1
+         u80hI/gaYGT7CgdffYvz8zODPsH1rfuKTku3IX2wN90a5coRYYZALSe0Cy1vCv3uNH3S
+         iW5D48/XQSMnlI4yOWd8b/9JXl9m/y0bVqHiu/Qjx/v+u58GQbTTX2F8PRK6ibLKWnIS
+         dcfmhOKODpLeClLmhimDJgvWS3TSX0pN/yk2ac1l4bsXYvsUuRU2gY6jQPnXw0wXf1WX
+         0zNg==
+X-Gm-Message-State: AOAM53259/DUXk8P4vPJ3UV9RmqH9SuSfOhbU2wi4vdXzP8Ec041IZUS
+        4FyVSMA5YRj1q8vaksklAh7VP8yIlCZWV1e48TbWskBufj1Msg==
+X-Google-Smtp-Source: ABdhPJw19CUmGvN/ONvuoT66xHQRkulinwuRfSdhIbQMM0kq7EVezQHrnn4foeeGOc8qpOoE9VXuwsiMwe/30ANnS1E=
+X-Received: by 2002:a81:9f12:: with SMTP id s18mr10353388ywn.448.1644540541938;
+ Thu, 10 Feb 2022 16:49:01 -0800 (PST)
 MIME-Version: 1.0
-References: <20220202153528.707185-1-wenst@chromium.org>
-In-Reply-To: <20220202153528.707185-1-wenst@chromium.org>
+References: <202202060827.9dExlwbc-lkp@intel.com> <20220206003735.GA94316@d6598ff186c2>
+In-Reply-To: <20220206003735.GA94316@d6598ff186c2>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 11 Feb 2022 01:46:03 +0100
-Message-ID: <CACRpkdaqKAU7_HWoCqjnbmCEc77FKJD9gUFR+ARbmQmR9zRZSg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: pinctrl: mt8195: fix bias-pull-{up,down} checks
-To:     Chen-Yu Tsai <wenst@chromium.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Guodong Liu <guodong.liu@mediatek.com>,
-        Tinghan Shen <tinghan.shen@mediatek.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Fri, 11 Feb 2022 01:48:50 +0100
+Message-ID: <CACRpkdbhHUwiuhxZiWxjoa3ST4=i5H9hg81Ly4Q1A=-WSxjeNg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: starfive: fix semicolon.cocci warnings
+To:     kernel test robot <lkp@intel.com>
+Cc:     Emil Renner Berthing <kernel@esmil.dk>, kbuild-all@lists.01.org,
+        linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Huan Feng <huan.feng@starfivetech.com>,
+        Drew Fustini <drew@beagleboard.org>, linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,24 +67,22 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Feb 2, 2022 at 4:35 PM Chen-Yu Tsai <wenst@chromium.org> wrote:
+On Sun, Feb 6, 2022 at 1:37 AM kernel test robot <lkp@intel.com> wrote:
 
-> When the constraints and description for bias-pull-{up,down} were added,
-> the constraints were not indented correctly, resulting in them being
-> parsed as part of the description. This effectively nullified their
-> purpose.
+> From: kernel test robot <lkp@intel.com>
 >
-> Move the constraints out of the description block, make each description
-> part of the same associative array as the enum its describing, and
-> reindent them correctly so they take effect.
+> drivers/pinctrl/pinctrl-starfive.c:1029:2-3: Unneeded semicolon
 >
-> Also add "type: boolean" to the list of valid values. This corresponds
-> to having bias-pull-{up,down} without any arguments.
 >
-> Fixes: 91e7edceda96 ("dt-bindings: pinctrl: mt8195: change pull up/down description")
-> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+>  Remove unneeded semicolon.
+>
+> Generated by: scripts/coccinelle/misc/semicolon.cocci
+>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: kernel test robot <lkp@intel.com>
 
-Patch applied!
+Applied this patch and added the alibaba reporters as
+Reported-by.
 
 Yours,
 Linus Walleij
