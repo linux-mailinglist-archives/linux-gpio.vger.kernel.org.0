@@ -2,174 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 65EF64B28A6
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Feb 2022 16:02:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 390974B295F
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Feb 2022 16:48:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347642AbiBKPCg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 11 Feb 2022 10:02:36 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:54230 "EHLO
+        id S1349478AbiBKPsm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 11 Feb 2022 10:48:42 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:58414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347074AbiBKPCg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Feb 2022 10:02:36 -0500
-Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ED3094
-        for <linux-gpio@vger.kernel.org>; Fri, 11 Feb 2022 07:02:34 -0800 (PST)
-Received: from relay5-d.mail.gandi.net (unknown [217.70.183.197])
-        by mslow1.mail.gandi.net (Postfix) with ESMTP id 1035AC6777
-        for <linux-gpio@vger.kernel.org>; Fri, 11 Feb 2022 14:54:50 +0000 (UTC)
-Received: (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPSA id E459C1C000C;
-        Fri, 11 Feb 2022 14:54:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1644591284;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/snWoyO1kCOhCBySz55Uo3NXloeQ7id88PKB2/aReeA=;
-        b=dfg7TkK0I/3exJfTOxYHVvr+fl22x+mJh10e7NYDZQrLuonafe07F0MGv4zTJwjUywdwFo
-        jszufveg/kUZOQseo7aSWH+ZDBcvBvoeUGIXooGkG9zRt7vZ4ZXkQXuyUEiJKBa3hL5v5z
-        VLjimiAl3xTxrobw3fTaaSlsB2FmK0aWuxFNKiErLGib6APgR2wqIuxyqMlNBE/CVJSVao
-        m5j1qNLRBIw+OhjrBFwakpt30YI4+kdgQ3oA9WZihYjswXyBWQznS97QrkPcL1aCexMaiY
-        RWHtH3TXANId8vXSxjIngtuLKGcITBqu8JEMrJhbgvQdBGniWJi2Q16d1PRMZg==
-Date:   Fri, 11 Feb 2022 15:54:42 +0100
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v10 2/6] dt-bindings: gpio: logicvc: Add a compatible
- with major version only
-Message-ID: <YgZ4sj1o4WzMPd0P@aptenodytes>
-References: <20220120150024.646714-1-paul.kocialkowski@bootlin.com>
- <20220120150024.646714-3-paul.kocialkowski@bootlin.com>
- <CACRpkdbnEKeDNmFCuUCLaySs6AtD9MPtxV+9JDxKuXvTs9iMVQ@mail.gmail.com>
- <6f0e58dc-4b81-d819-13e3-9e0f79ba279c@arm.com>
+        with ESMTP id S1349442AbiBKPsl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Feb 2022 10:48:41 -0500
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D10131A8
+        for <linux-gpio@vger.kernel.org>; Fri, 11 Feb 2022 07:48:39 -0800 (PST)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:5d5d:ef67:a872:c0be])
+        by xavier.telenet-ops.be with bizsmtp
+        id troe260043ZSXJh01roemk; Fri, 11 Feb 2022 16:48:38 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1nIYA1-000MOb-R4; Fri, 11 Feb 2022 16:48:37 +0100
+Received: from geert by rox.of.borg with local (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1nIYA1-00GiJ7-5d; Fri, 11 Feb 2022 16:48:37 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [GIT PULL] pinctrl: renesas: Updates for v5.18
+Date:   Fri, 11 Feb 2022 16:48:35 +0100
+Message-Id: <cover.1644594347.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="fi4rh3UJ303yTdHr"
-Content-Disposition: inline
-In-Reply-To: <6f0e58dc-4b81-d819-13e3-9e0f79ba279c@arm.com>
-X-Spam-Status: No, score=-0.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_VALIDITY_RPBL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+	Hi Linus,
 
---fi4rh3UJ303yTdHr
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The following changes since commit e783362eb54cd99b2cac8b3a9aeac942e6f6ac07:
 
-Hi,
+  Linux 5.17-rc1 (2022-01-23 10:12:53 +0200)
 
-On Wed 02 Feb 22, 14:26, Robin Murphy wrote:
-> On 2022-01-30 00:46, Linus Walleij wrote:
-> > On Thu, Jan 20, 2022 at 4:00 PM Paul Kocialkowski
-> > <paul.kocialkowski@bootlin.com> wrote:
-> >=20
-> > > There are lots of different versions of the logicvc block and it
-> > > makes little sense to list them all in compatibles since all versions
-> > > with the same major are found to be register-compatible.
-> >=20
-> > The reason we try to be precise is because sometime, long after the dri=
-ver
-> > has been merged and maintained for a few years, a bug is discovered
-> > in a specific version of the silicon.
-> >=20
-> > What happens is that a fix is applied on all silicon whether it is need=
-ed
-> > or not.
-> >=20
-> > If you have the precise silicon compatible, you can avoid this and targ=
-et
-> > only a specific version.
->=20
-> Indeed, the better approach would be something like:
->=20
->   compatible:
->     oneOf:
->       - items:
->           - enum:
->               - foo,bar-v1.0
->               - foo,bar,v1.1
->           - const: foo,bar-v1
->       - items:
->           - enum:
->               - foo,bar-v2.0
->           - const: foo,bar-v2
->=20
-> That way the DTs are future-proof, while drivers can still match on only =
-the
-> less-specific strings until a need arises. Plus it avoids the problem that
-> if an existing OS that only understands "foo,bar-v1.0" is given a new DT
-> with only "foo,bar-v1" for v1.0 hardware it won't be able to use the devi=
-ce,
-> even though it's *functionally* capable of doing so.
+are available in the Git repository at:
 
-Yes I understand that we need to keep compatibility with the already-defined
-compatible.
+  git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v5.18-tag1
 
-> However, from skimming patch #5, it looks possible that none of these
-> changes are needed at all. If LOGICVC_IP_VERSION_REG tells you the exact
-> revision, and is always present (as the unconditional reading of it
-> implies), then the only reason for adding new compatibles would be if, sa=
-y,
-> v5 has more clocks from v4 and you want the binding to enforce that;
-> otherwise, newer versions are literally compatible with the
-> currently-defined binding and therefore should continue to bind against t=
-he
-> existing string(s) to maximise forward- and backward-compatibility. Sure,
-> it's not the prettiest thing for a "generic" compatible to be based on an
-> oddly-specific version number that doesn't necessarily match the actual
-> software-discoverable version, but what's done is done and that's the cost
-> of ABI.
+for you to fetch changes up to 2e08ab0427fe3e33a92a37cfe3b6db340ab7397f:
 
-Indeed it's true that hardware quirks can be applied based on the precise
-version read from the register, so I don't think there is a need for overly
-precise compatibles.
+  pinctrl: renesas: rzg2l: Improve rzg2l_gpio_register() (2022-02-08 09:54:44 +0100)
 
-Since the device-tree binding is currently the same for all versions,
-I understand that it makes sense to keep a single compatible (the already
-defined one), so I guess I will make another iteration without introducing
-new compatibles. But I will probably update the binding document to reflect
-which versions are currently known to work with its current state.
+----------------------------------------------------------------
+pinctrl: renesas: Updates for v5.18
 
-> (also, nitpick for that part of patch #5 since I'm here: please include
-> linux/bitfield.h rather than reinventing FIELD_GET() locally)
+  - Add MOST (MediaLB I/F) pins on R-Car E3 and D3,
+  - Add support for the new RZ/V2L SoC,
+  - Miscellaneous fixes and improvements.
 
-Ah good to know thanks, first time hearing about those.
+Thanks for pulling!
+----------------------------------------------------------------
+Biju Das (3):
+      dt-bindings: pinctrl: renesas: Document RZ/V2L pinctrl
+      pinctrl: renesas: Kconfig: Select PINCTRL_RZG2L if RZ/V2L SoC is enabled
+      pinctrl: renesas: rzg2l: Improve rzg2l_gpio_register()
 
-Paul
+Geert Uytterhoeven (6):
+      pinctrl: renesas: r8a7790: Remove INTC_IRQx_N
+      pinctrl: renesas: r8a7791: Remove INTC_IRQx_N
+      pinctrl: renesas: r8a779a0: Rename MOD_SEL2_* definitions
+      pinctrl: renesas: r8a7779: Restore pin function sort order
+      pinctrl: renesas: r8a7790: Restore pin function sort order
+      pinctrl: renesas: r8a77995: Restore pin group sort order
 
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
+Lad Prabhakar (1):
+      dt-bindings: pinctrl: renesas,rzg2l-pinctrl: Add description for power-source property
 
---fi4rh3UJ303yTdHr
-Content-Type: application/pgp-signature; name="signature.asc"
+Nikita Yushchenko (1):
+      pinctrl: renesas: r8a7799[05]: Add MediaLB pins
 
------BEGIN PGP SIGNATURE-----
+Wolfram Sang (1):
+      pinctrl: renesas: rcar: Do not enforce GPIO if already muxed
 
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAmIGeLIACgkQ3cLmz3+f
-v9Fovwf9FazGyUpB/nAwH7VeTeXwajEB0NHvM9mlYAMba4/aI1h1YN7YzzP6bCm6
-xHVZg35DyCEzdwgDdrqhskFL94mRN43XIsu4a6tZhdJ38uqXAu91O/bjQDaNu4zM
-h37R+IAlna1D/+O9iiwQ/46t0mdI1kRmsgNcrMwG1ERdMQs7o2tZAupPuhHHioZk
-dPwBHCMAJkljVgzf80BgtFuNXglYHp8sunbv05NtodkFLZ/mAANkyRqq9IztJR3D
-Myu/D9/AZjU/57KFg3vuveYoMs3PJrPV0No5pgZX2HP0SJwVL9zmLj43L5K2POdK
-2LJbjDIKaSkNQ0iJE55P1Qzmqmb7Tg==
-=9Gbl
------END PGP SIGNATURE-----
+ .../bindings/pinctrl/renesas,rzg2l-pinctrl.yaml    |  16 +++-
+ drivers/pinctrl/renesas/Kconfig                    |   6 +-
+ drivers/pinctrl/renesas/pfc-r8a7779.c              |   8 +-
+ drivers/pinctrl/renesas/pfc-r8a7790.c              |  45 ++++------
+ drivers/pinctrl/renesas/pfc-r8a7791.c              |  35 ++++----
+ drivers/pinctrl/renesas/pfc-r8a77990.c             |  22 ++++-
+ drivers/pinctrl/renesas/pfc-r8a77995.c             | 100 ++++++++++++---------
+ drivers/pinctrl/renesas/pfc-r8a779a0.c             |  42 ++++-----
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c            |   4 +-
+ drivers/pinctrl/renesas/pinctrl.c                  |   2 +-
+ 10 files changed, 155 insertions(+), 125 deletions(-)
 
---fi4rh3UJ303yTdHr--
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
