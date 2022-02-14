@@ -2,55 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 057E64B4010
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Feb 2022 04:09:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AB184B42AD
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Feb 2022 08:19:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239856AbiBNDG6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 13 Feb 2022 22:06:58 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:47364 "EHLO
+        id S241285AbiBNHPt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Feb 2022 02:15:49 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:35308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239846AbiBNDG5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 13 Feb 2022 22:06:57 -0500
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51252C07;
-        Sun, 13 Feb 2022 19:06:49 -0800 (PST)
-X-UUID: ac4f92851c3e4300903f5b40ceba7183-20220214
-X-UUID: ac4f92851c3e4300903f5b40ceba7183-20220214
-Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw02.mediatek.com
-        (envelope-from <guodong.liu@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-        with ESMTP id 826894078; Mon, 14 Feb 2022 11:06:46 +0800
-Received: from mtkcas10.mediatek.inc (172.21.101.39) by
- mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.792.3;
- Mon, 14 Feb 2022 11:06:45 +0800
-Received: from localhost.localdomain (10.17.3.154) by mtkcas10.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 14 Feb 2022 11:06:43 +0800
-From:   Guodong Liu <guodong.liu@mediatek.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        with ESMTP id S241228AbiBNHPm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Feb 2022 02:15:42 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99B4A58E7C
+        for <linux-gpio@vger.kernel.org>; Sun, 13 Feb 2022 23:15:35 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nJVZ0-0006l6-Nq; Mon, 14 Feb 2022 08:14:22 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nJVYf-00GV12-4n; Mon, 14 Feb 2022 08:14:00 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nJVYd-002oWn-E1; Mon, 14 Feb 2022 08:13:59 +0100
+Date:   Mon, 14 Feb 2022 08:13:51 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Sergey Shtylyov <s.shtylyov@omp.ru>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Jiri Slaby <jirislaby@kernel.org>, linux-iio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>, alsa-devel@alsa-project.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-phy@lists.infradead.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-mtd@lists.infradead.org, linux-i2c@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Guenter Roeck <groeck@chromium.org>, linux-spi@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        openipmi-developer@lists.sourceforge.net,
+        Peter Korsgaard <peter@korsgaard.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        kvm@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-serial@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        Corey Minyard <minyard@acm.org>, linux-pm@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Mark Gross <markgross@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Mark Brown <broonie@kernel.org>,
+        linux-mediatek@lists.infradead.org,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>
-CC:     Sean Wang <sean.wang@mediatek.com>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <Project_Global_Chrome_Upstream_Group@mediatek.com>,
-        Guodong Liu <guodong.liu@mediatek.com>
-Subject: [PATCH v4 3/3] pinctrl: canonical rsel resistance selection property
-Date:   Mon, 14 Feb 2022 11:06:31 +0800
-Message-ID: <20220214030631.4969-4-guodong.liu@mediatek.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220214030631.4969-1-guodong.liu@mediatek.com>
-References: <20220214030631.4969-1-guodong.liu@mediatek.com>
+        Takashi Iwai <tiwai@suse.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Benson Leung <bleung@chromium.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Mun Yew Tham <mun.yew.tham@intel.com>,
+        Eric Auger <eric.auger@redhat.com>, netdev@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Cornelia Huck <cohuck@redhat.com>, linux-mmc@vger.kernel.org,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        linux-renesas-soc@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+        Brian Norris <computersforpeace@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v2 1/2] platform: make platform_get_irq_optional()
+ optional
+Message-ID: <20220214071351.pcvstrzkwqyrg536@pengutronix.de>
+References: <20220212201631.12648-1-s.shtylyov@omp.ru>
+ <20220212201631.12648-2-s.shtylyov@omp.ru>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-MTK:  N
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="r3c6abkz2rpak4yl"
+Content-Disposition: inline
+In-Reply-To: <20220212201631.12648-2-s.shtylyov@omp.ru>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -58,28 +107,69 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Change "mediatek,rsel_resistance_in_si_unit" to
-"mediatek,rsel-resistance-in-si-unit"
 
-Fixes: fb34a9ae383a ("pinctrl: mediatek: support rsel feature")
-Signed-off-by: Guodong Liu <guodong.liu@mediatek.com>
----
- drivers/pinctrl/mediatek/pinctrl-paris.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--r3c6abkz2rpak4yl
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-index d4e02c5d74a8..38c0f0c4cf95 100644
---- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-@@ -989,7 +989,7 @@ int mtk_paris_pinctrl_probe(struct platform_device *pdev,
- 	hw->nbase = hw->soc->nbase_names;
- 
- 	if (of_find_property(hw->dev->of_node,
--			     "mediatek,rsel_resistance_in_si_unit", NULL))
-+			     "mediatek,rsel-resistance-in-si-unit", NULL))
- 		hw->rsel_si_unit = true;
- 	else
- 		hw->rsel_si_unit = false;
--- 
-2.25.1
+On Sat, Feb 12, 2022 at 11:16:30PM +0300, Sergey Shtylyov wrote:
+> This patch is based on the former Andy Shevchenko's patch:
+>=20
+> https://lore.kernel.org/lkml/20210331144526.19439-1-andriy.shevchenko@lin=
+ux.intel.com/
+>=20
+> Currently platform_get_irq_optional() returns an error code even if IRQ
+> resource simply has not been found.  It prevents the callers from being
+> error code agnostic in their error handling:
+>=20
+> 	ret =3D platform_get_irq_optional(...);
+> 	if (ret < 0 && ret !=3D -ENXIO)
+> 		return ret; // respect deferred probe
+> 	if (ret > 0)
+> 		...we get an IRQ...
+>=20
+> All other *_optional() APIs seem to return 0 or NULL in case an optional
+> resource is not available.  Let's follow this good example, so that the
+> callers would look like:
+>=20
+> 	ret =3D platform_get_irq_optional(...);
+> 	if (ret < 0)
+> 		return ret;
+> 	if (ret > 0)
+> 		...we get an IRQ...
+>=20
+> Reported-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+> Signed-off-by: Sergey Shtylyov <s.shtylyov@omp.ru>
 
+While this patch is better than v1, I still don't like it for the
+reasons discussed for v1. (i.e. 0 isn't usable as a dummy value which I
+consider the real advantage for the other _get_optional() functions.)
+
+Apart from that, I think the subject is badly chosen. With "Make
+somefunc() optional" I would expect that you introduce a Kconfig symbol
+that results in the function not being available when disabled.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--r3c6abkz2rpak4yl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmIKASwACgkQwfwUeK3K
+7Ak1DAf/fgLBIz9p8Vx2hzG+I8aYoNMAmPLmUfMeIR1DWaBc26HTbyTBn6pFRiPZ
+rztM2uc+royoY44/mp4H89WkPzZ0/v3AlRkdqI8UBny0ZKRbNtMfzL6f7wyVik5C
+rxqc7EgXLRk2/0IxTohA6bwj7Vczei9NwYndm+QrxDHjmY5Dq95rdvxv9+8iaa9y
+gLQ2x91x4bybaKnKVe36f5JfLeMhS9kLuCx82Wi1yqPK4UQQ6R/+QEE0zGS8QNHP
+vMasmLHge9XqVx/c0SuPcLVZ/uRatkzzuqf1rY75peyQp4YpDDdkhkTws4kcVC22
+lVFz9FjvbtVS4nxvPxNwZAnvq9sPaQ==
+=UfDO
+-----END PGP SIGNATURE-----
+
+--r3c6abkz2rpak4yl--
