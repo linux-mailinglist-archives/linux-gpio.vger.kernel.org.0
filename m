@@ -2,159 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EFEC44B5294
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Feb 2022 15:02:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B1914B52A9
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Feb 2022 15:03:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354849AbiBNOCG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Feb 2022 09:02:06 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:41280 "EHLO
+        id S1354855AbiBNODO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Feb 2022 09:03:14 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:42524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354824AbiBNOCA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Feb 2022 09:02:00 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 555CF49F99
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Feb 2022 06:01:53 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nJbu2-0007Aw-Jd; Mon, 14 Feb 2022 15:00:30 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nJbu1-00GYgZ-R1; Mon, 14 Feb 2022 15:00:29 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1nJbu0-0038OM-4h; Mon, 14 Feb 2022 15:00:28 +0100
-Date:   Mon, 14 Feb 2022 15:00:27 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Andrew Lunn <andrew@lunn.ch>, Ulf Hansson <ulf.hansson@linaro.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>, kvm@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>, linux-iio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Amit Kucheria <amitk@kernel.org>, alsa-devel@alsa-project.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-mtd@lists.infradead.org, linux-i2c@vger.kernel.org,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        linux-phy@lists.infradead.org,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Lee Jones <lee.jones@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Peter Korsgaard <peter@korsgaard.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-        Joakim Zhang <qiangqing.zhang@nxp.com>,
-        Kamal Dasu <kdasu.kdev@gmail.com>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-serial@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Corey Minyard <minyard@acm.org>, linux-pm@vger.kernel.org,
-        John Garry <john.garry@huawei.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Mark Gross <markgross@kernel.org>, linux-gpio@vger.kernel.org,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Mark Brown <broonie@kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        Eric Auger <eric.auger@redhat.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        openipmi-developer@lists.sourceforge.net,
-        Jaroslav Kysela <perex@perex.cz>,
-        Benson Leung <bleung@chromium.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Sergey Shtylyov <s.shtylyov@omp.ru>,
-        Mun Yew Tham <mun.yew.tham@intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Cornelia Huck <cohuck@redhat.com>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        Richard Weinberger <richard@nod.at>,
-        Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Brian Norris <computersforpeace@gmail.com>,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] platform: make platform_get_irq_optional()
- optional
-Message-ID: <20220214140027.npw6ddrxklarb6wp@pengutronix.de>
-References: <20220212201631.12648-1-s.shtylyov@omp.ru>
- <20220212201631.12648-2-s.shtylyov@omp.ru>
- <20220214071351.pcvstrzkwqyrg536@pengutronix.de>
- <CAMuHMdWi8gno_FBbc=AwsdRtDJik8_bANjQrrRtUOOBRjFN=KA@mail.gmail.com>
+        with ESMTP id S1354852AbiBNODL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Feb 2022 09:03:11 -0500
+X-Greylist: delayed 87 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 14 Feb 2022 06:03:03 PST
+Received: from mx-relay86-hz1.antispameurope.com (mx-relay86-hz1.antispameurope.com [94.100.133.253])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CF63B66
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Feb 2022 06:03:02 -0800 (PST)
+Received: from smtp.eckelmann.de ([217.19.183.80]) by mx-relay86-hz1.antispameurope.com;
+ Mon, 14 Feb 2022 15:01:33 +0100
+Received: from EX-SRV1.eckelmann.group (2a00:1f08:4007:e030:172:18:30:60) by
+ EX-SRV1.eckelmann.group (2a00:1f08:4007:e030:172:18:30:60) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.18; Mon, 14 Feb 2022 15:01:29 +0100
+Received: from EX-SRV1.eckelmann.group ([fe80::250:56ff:fe8b:5e2f]) by
+ EX-SRV1.eckelmann.group ([fe80::250:56ff:fe8b:5e2f%6]) with mapi id
+ 15.01.2375.018; Mon, 14 Feb 2022 15:01:29 +0100
+From:   "Hummrich, Tobias" <T.Hummrich@eckelmann.de>
+To:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: [libgpiod 1.6.3] Do different lines have to be in the same scope?
+Thread-Topic: [libgpiod 1.6.3] Do different lines have to be in the same
+ scope?
+Thread-Index: AdghqA39NqUTG/NqRuudD2dz2dR7uA==
+Date:   Mon, 14 Feb 2022 14:01:29 +0000
+Message-ID: <17c74834c56e4345ac2611b92c301e2f@eckelmann.de>
+Accept-Language: de-DE, en-US
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [2a00:1f08:4007:e035:172:18:35:9]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mxy3a336cmbyaspi"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWi8gno_FBbc=AwsdRtDJik8_bANjQrrRtUOOBRjFN=KA@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-cloud-security-sender: t.hummrich@eckelmann.de
+X-cloud-security-recipient: linux-gpio@vger.kernel.org
+X-cloud-security-Virusscan: CLEAN
+X-cloud-security-disclaimer: This E-Mail was scanned by E-Mailservice on mx-relay86-hz1.antispameurope.com with CDE4E652F29
+X-cloud-security-connect: smtp.eckelmann.de[217.19.183.80], TLS=1, IP=217.19.183.80
+X-cloud-security-Digest: b5a9f79019816c93e272f26ef677bf4f
+X-cloud-security: scantime:1.871
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=eckelmann.de; h=from:to
+        :subject:date:message-id:content-type:content-transfer-encoding
+        :mime-version; s=hse1; bh=AiUDpK9W4J9TQ/LtTkFWSexufhQE7G7Q68dJH2
+        +QAwA=; b=Ln8FQ5VNgAG9zRxQWV1oAhy4GDVyyEIWxMrTFTtAEEDegicRhiTf1I
+        KgM4/C38+J+BV/6EOpxIX187uGFgj2YvazA+0tYG+xnp7xDbiTaotFCucOZkl7lc
+        FAszXcpygkHoWj8L2eYh5vAYs9nCbZiLTQDx2s8ufOphtmm/Z0Z0F83hxgnMBOs9
+        H4zi8ZzLoZPMqXT65U+Z5AWG0lDw0XNoSi3BCAQzyxiAhFEfKkDRxzuqyVutv815
+        QS/IUy19lcSDC/dOYSSSAc0IEuDl7N/9/g9s7URUsCkuYt3hL/l8GhSpDGiHD6WS
+        3GQxlVLqa+MoVJ+SVo/1+5CJljSgo3tw==
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi,
 
---mxy3a336cmbyaspi
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+last week I ported part of our gpio related code from sysfs to libgpiod. I =
+use the C++ bindings. I had some problems polling two different lines on di=
+fferent gpio chips and finally realized that all was OK if both lines were =
+defined in the same scope. Out of curiosity I'm asking: Is that really the =
+case in version 1.6.3 and was this intended?
 
-Hello Geert,
+The problem was this: When I declared lines locally in a method and called =
+this method to get the file descriptor, the file descriptor was the same fo=
+r both lines. Like:
 
-On Mon, Feb 14, 2022 at 10:01:14AM +0100, Geert Uytterhoeven wrote:
-> Also IMHO, the dummy value handling is a red herring.  Contrary to
-> optional clocks and resets, a missing optional interrupt does not
-> always mean there is nothing to do: in case of polling, something
-> else must definitely be done.=20
+int MyClass::getFiledescriptor(const std::string &linename)
+{
+    auto currentLine =3D gpiod::find_line(linename);
+    return currentLine.event_get_fd();
+}
 
-Note this is exactly why I don't like this change. I'd even go so far
-and claim that "a missing optional interrupt hardly ever means there is
-nothing to do".
+... returned 23 for both parameters "in1" and "in2" while gpioinfo told me =
+that these names where unique.
 
-> So even if request_irq() would accept a dummy interrupt zero and just
-> do nothing, it would give the false impression that that is all there
-> is to do, while an actual check for zero with polling code handling
-> may still need to be present, thus leading to more not less bugs.
+It is OK for me now, the two lines I'm polling are members of one class now=
+, it works as intended, and I'm fine with that. But still I wonder if I mis=
+understood something or just did it wrong.
 
-Yes, a dummy irq value will just not be possible.
+Is a new version of libgpiod published soon? Then this whole text may be ob=
+solete.
 
-Best regards
-Uwe
+Kind regards
+Tobias
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---mxy3a336cmbyaspi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmIKYHgACgkQwfwUeK3K
-7AkfUwf+PjHT71nPQKjE5hOrUJs08gV3dPyFE+Lky6h3jHjtzp+VwX3waHB3n4Iy
-r1fdR+06wiK9BWaTD2PdT8FdEYo9n0yQlTx+03PQXtLFnutK7QSb0fBMQs7sVAfa
-nxp4CK8a1wlf0mzj1zSaeiGm6BYTsoJxoblrZ8hWbpbiVfhF6Eo5zXr0toHMI0WF
-QOhqgWNpQjHlpU+2paIvbOnBpNxJaXj3cycd6036NHAFQvZN5xrDdqHa+By0jeU0
-bm8NmjRjwHCqvhBpRYUglt+KhyRYWWTC/83WFKviLwnPV7tnkh5ZhJE50aUUp1Lr
-hyNbZjQKG8NIOTLNKMgY4nM0uni8jg==
-=vr2/
------END PGP SIGNATURE-----
-
---mxy3a336cmbyaspi--
