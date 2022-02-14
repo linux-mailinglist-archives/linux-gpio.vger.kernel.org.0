@@ -2,37 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0719A4B499A
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Feb 2022 11:35:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F1CA4B4C1D
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Feb 2022 11:44:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244016AbiBNKcV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Feb 2022 05:32:21 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:39056 "EHLO
+        id S1348511AbiBNKhT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Feb 2022 05:37:19 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:49168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348982AbiBNKbO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Feb 2022 05:31:14 -0500
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D7D19DD78;
-        Mon, 14 Feb 2022 01:59:59 -0800 (PST)
+        with ESMTP id S1349454AbiBNKgb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Feb 2022 05:36:31 -0500
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [46.235.227.227])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6F96715B8;
+        Mon, 14 Feb 2022 02:02:48 -0800 (PST)
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: kholk11)
-        with ESMTPSA id 79FD21F43053
+        with ESMTPSA id 1E7051F43053
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1644832798;
-        bh=PmeiC/wYqvKXsD5lUE5EB7IB8YOl2pZWINM/lweU0uQ=;
+        s=mail; t=1644832956;
+        bh=EZtxgxaV8/I+n1d7kbiGccMyE4bZCHZgIhArtvVlxB4=;
         h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=huItp0jpBT5mIuS3V2qntF47BW1WYY6qF2Sphz5S5Es9/zaydd2GXERLPFT48Tg7I
-         fkYl24WNF0i/WY3JaQYCJ4SSLVD397Irnv1yVkV8sJRdWorZgZlGvWQ4JvmRgIy9AW
-         4qSFNoTZ+SW09YJaey4sO0UFk6hq1dZVLsm6Dd6QV3E/z+KHfZ0TLRiUb+9xA4V8oP
-         WSZZI6dCgNTb/OX7OQ275Y3ZmvM+Zt3BQYxwqkjQGpQBbxWMQmjJqRjtsdBGygbnRO
-         SdcBfHb106jhNlW++A9eGBwHtD0h0Ai93vVVfLmlQxpqs6wNuz0vPKnxnkoyO6nMHT
-         IGQakN7qdIYYA==
-Message-ID: <2dae87c6-c796-4687-0f21-86a0b36ae1ac@collabora.com>
-Date:   Mon, 14 Feb 2022 10:59:54 +0100
+        b=htFbV/VNcgY4e6NmjbTgWCT0U8vZZXgz2EkFHdw5T7VYpUSU/xek0vZEQ8ZV9UFQO
+         Qx3ahY8d7vxDW3H0k4fBsj1X070vtiA5LoDwnQN2JMeAr4j1v8S/wUkCopc4LTqkX8
+         c/ZKYxcnJLgjFbnF3R027FjtRqM5nhPH+SnY3ic7mN7X/BqlYsrJVLUQmrM31GIB0I
+         PYfrNvgMjWw4gmBmzwVBibGvDRRhWjA1EqE3dRYHEhoK2U9DDpKwKWtt+T3ifVqWIq
+         6g50M5CWKaxFaAwnMUe3CRfkFxGQ2v/BHquLmIwyODtbFc8X0I4nX0Bvizjx9biB6w
+         SGzfEywYKl8KQ==
+Message-ID: <c9ab3f7c-9b12-0c51-3de2-4abf42cdfb74@collabora.com>
+Date:   Mon, 14 Feb 2022 11:02:33 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.1
-Subject: Re: [PATCH v4 2/3] pinctrl: add pinctrl driver on mt8186
+Subject: Re: [PATCH v4 3/3] pinctrl: canonical rsel resistance selection
+ property
 Content-Language: en-US
 To:     Guodong Liu <guodong.liu@mediatek.com>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -44,10 +45,10 @@ Cc:     Sean Wang <sean.wang@mediatek.com>, linux-gpio@vger.kernel.org,
         linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
         Project_Global_Chrome_Upstream_Group@mediatek.com
 References: <20220214030631.4969-1-guodong.liu@mediatek.com>
- <20220214030631.4969-3-guodong.liu@mediatek.com>
+ <20220214030631.4969-4-guodong.liu@mediatek.com>
 From:   AngeloGioacchino Del Regno 
         <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20220214030631.4969-3-guodong.liu@mediatek.com>
+In-Reply-To: <20220214030631.4969-4-guodong.liu@mediatek.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -61,18 +62,34 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 Il 14/02/22 04:06, Guodong Liu ha scritto:
-> This commit includes pinctrl driver for mt8186.
+> Change "mediatek,rsel_resistance_in_si_unit" to
+> "mediatek,rsel-resistance-in-si-unit"
 > 
+> Fixes: fb34a9ae383a ("pinctrl: mediatek: support rsel feature")
 > Signed-off-by: Guodong Liu <guodong.liu@mediatek.com>
+
+A note for maintainers: luckily, this property hasn't been used in any device-tree
+yet, so we luckily (since naming convention was not compliant) don't have to worry
+about retro-compatibility for old DTs; so...
 
 Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
 > ---
->   drivers/pinctrl/mediatek/Kconfig              |    7 +
->   drivers/pinctrl/mediatek/Makefile             |    1 +
->   drivers/pinctrl/mediatek/pinctrl-mt8186.c     | 1311 ++++++++++
->   drivers/pinctrl/mediatek/pinctrl-mtk-mt8186.h | 2186 +++++++++++++++++
->   4 files changed, 3505 insertions(+)
->   create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt8186.c
->   create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt8186.h
+>   drivers/pinctrl/mediatek/pinctrl-paris.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
+> index d4e02c5d74a8..38c0f0c4cf95 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
+> @@ -989,7 +989,7 @@ int mtk_paris_pinctrl_probe(struct platform_device *pdev,
+>   	hw->nbase = hw->soc->nbase_names;
+>   
+>   	if (of_find_property(hw->dev->of_node,
+> -			     "mediatek,rsel_resistance_in_si_unit", NULL))
+> +			     "mediatek,rsel-resistance-in-si-unit", NULL))
+>   		hw->rsel_si_unit = true;
+>   	else
+>   		hw->rsel_si_unit = false;
+> 
+
