@@ -2,38 +2,37 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 256C44B4AD9
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Feb 2022 11:40:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0719A4B499A
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Feb 2022 11:35:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347255AbiBNKbr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Feb 2022 05:31:47 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:41292 "EHLO
+        id S244016AbiBNKcV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Feb 2022 05:32:21 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:39056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346380AbiBNKaP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Feb 2022 05:30:15 -0500
+        with ESMTP id S1348982AbiBNKbO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Feb 2022 05:31:14 -0500
 Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DED0370CC1;
-        Mon, 14 Feb 2022 01:59:02 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D7D19DD78;
+        Mon, 14 Feb 2022 01:59:59 -0800 (PST)
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: kholk11)
-        with ESMTPSA id 06CD51F43053
+        with ESMTPSA id 79FD21F43053
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1644832741;
-        bh=OaINPsaheT6XUF0+hFr141uKFbMlStd2byNaS6I2GKs=;
+        s=mail; t=1644832798;
+        bh=PmeiC/wYqvKXsD5lUE5EB7IB8YOl2pZWINM/lweU0uQ=;
         h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=fGemg3CLB1WP8e5KYjv0QDiN8sv7DuAdkLeRWz7Svak1RqzeSREYL4mIrBDLKFNAb
-         i2cRTKJ+Gsl0Pj6yAAo8qxpzXg6Ns+FtuXmeFkOINlU+b3WDFaiFxijoiHtts1W0Gn
-         uWqtFsbSGDqHe4VVhmjEgtxP+36lok5C8WKldI3eP3+GfKkddyCh9wxBIzZuqSb+Rv
-         hRgNp3dTgwu0Tgsma0i7nNkgNMfhwK+7LRB+9XWbcJSlzebKyS+YfUIoEehQZVgjb9
-         dlGDbTEeU9eeF/c6B6ZYYwdugaIaayKPqDdRn5tdOByWmUIE87AvmpiydgZko+gpak
-         70qs8d1QAkefg==
-Message-ID: <87db864e-fc74-189a-a665-bf51db8b5321@collabora.com>
-Date:   Mon, 14 Feb 2022 10:58:58 +0100
+        b=huItp0jpBT5mIuS3V2qntF47BW1WYY6qF2Sphz5S5Es9/zaydd2GXERLPFT48Tg7I
+         fkYl24WNF0i/WY3JaQYCJ4SSLVD397Irnv1yVkV8sJRdWorZgZlGvWQ4JvmRgIy9AW
+         4qSFNoTZ+SW09YJaey4sO0UFk6hq1dZVLsm6Dd6QV3E/z+KHfZ0TLRiUb+9xA4V8oP
+         WSZZI6dCgNTb/OX7OQ275Y3ZmvM+Zt3BQYxwqkjQGpQBbxWMQmjJqRjtsdBGygbnRO
+         SdcBfHb106jhNlW++A9eGBwHtD0h0Ai93vVVfLmlQxpqs6wNuz0vPKnxnkoyO6nMHT
+         IGQakN7qdIYYA==
+Message-ID: <2dae87c6-c796-4687-0f21-86a0b36ae1ac@collabora.com>
+Date:   Mon, 14 Feb 2022 10:59:54 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.1
-Subject: Re: [PATCH v4 1/3] dt-bindings: pinctrl: mt8186: add pinctrl file and
- binding document
+Subject: Re: [PATCH v4 2/3] pinctrl: add pinctrl driver on mt8186
 Content-Language: en-US
 To:     Guodong Liu <guodong.liu@mediatek.com>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -45,10 +44,10 @@ Cc:     Sean Wang <sean.wang@mediatek.com>, linux-gpio@vger.kernel.org,
         linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
         Project_Global_Chrome_Upstream_Group@mediatek.com
 References: <20220214030631.4969-1-guodong.liu@mediatek.com>
- <20220214030631.4969-2-guodong.liu@mediatek.com>
+ <20220214030631.4969-3-guodong.liu@mediatek.com>
 From:   AngeloGioacchino Del Regno 
         <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20220214030631.4969-2-guodong.liu@mediatek.com>
+In-Reply-To: <20220214030631.4969-3-guodong.liu@mediatek.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -62,54 +61,18 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 Il 14/02/22 04:06, Guodong Liu ha scritto:
-> 1. This patch adds pinctrl file for mt8186.
-> 2. This patch adds mt8186 compatible node in binding document.
+> This commit includes pinctrl driver for mt8186.
 > 
 > Signed-off-by: Guodong Liu <guodong.liu@mediatek.com>
+
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+
 > ---
->   .../bindings/pinctrl/pinctrl-mt8186.yaml      |  302 +++++
->   include/dt-bindings/pinctrl/mt8186-pinfunc.h  | 1174 +++++++++++++++++
->   2 files changed, 1476 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt8186.yaml
->   create mode 100644 include/dt-bindings/pinctrl/mt8186-pinfunc.h
+>   drivers/pinctrl/mediatek/Kconfig              |    7 +
+>   drivers/pinctrl/mediatek/Makefile             |    1 +
+>   drivers/pinctrl/mediatek/pinctrl-mt8186.c     | 1311 ++++++++++
+>   drivers/pinctrl/mediatek/pinctrl-mtk-mt8186.h | 2186 +++++++++++++++++
+>   4 files changed, 3505 insertions(+)
+>   create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt8186.c
+>   create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt8186.h
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8186.yaml b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8186.yaml
-> new file mode 100644
-> index 000000000000..582d131af4e3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8186.yaml
-
-...snip...
-
-> diff --git a/include/dt-bindings/pinctrl/mt8186-pinfunc.h b/include/dt-bindings/pinctrl/mt8186-pinfunc.h
-> new file mode 100644
-> index 000000000000..dcff86201a61
-> --- /dev/null
-> +++ b/include/dt-bindings/pinctrl/mt8186-pinfunc.h
-> @@ -0,0 +1,1174 @@
-> +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
-> +/*
-> + * Copyright (C) 2021 MediaTek Inc.
-> + * Author: Guodong Liu <Guodong.Liu@mediatek.com>
-> + *
-> + */
-> +
-
-Hello,
-I've just noticed that we have a typo here....
-
-You wrote "MT8168", but this should be "MT8186" instead; please fix it.
-
-P.S.: I'm sorry for not seeing that before!
-
-> +#ifndef __MT8168_PINFUNC_H
-> +#define __MT8168_PINFUNC_H
-> +
-
-..snip..
-
-> +
-> +#endif /* __MT8168-PINFUNC_H */
-
-Thank you,
-Angelo
