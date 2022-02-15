@@ -2,45 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E1E934B6339
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Feb 2022 07:02:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CD3DA4B6331
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Feb 2022 06:56:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232501AbiBOGCZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Feb 2022 01:02:25 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:46704 "EHLO
+        id S234263AbiBOF4l (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Feb 2022 00:56:41 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:56450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229924AbiBOGCY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Feb 2022 01:02:24 -0500
-X-Greylist: delayed 517 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 14 Feb 2022 22:02:15 PST
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [IPv6:2a01:37:3000::53df:4ef0:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38795B5637
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Feb 2022 22:02:15 -0800 (PST)
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 7E1572800B3C2;
-        Tue, 15 Feb 2022 06:53:36 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 6F6522EDAB4; Tue, 15 Feb 2022 06:53:36 +0100 (CET)
-Message-Id: <c399da9deab3ede9b0c4d4680d8ac508707aa8c3.1644903104.git.lukas@wunner.de>
-From:   Lukas Wunner <lukas@wunner.de>
-Date:   Tue, 15 Feb 2022 06:52:36 +0100
-Subject: [PATCH] pinctrl: bcm2835: Use bcm2835 gpio_chip label for bcm2711
+        with ESMTP id S230182AbiBOF4j (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Feb 2022 00:56:39 -0500
+Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D2064132C;
+        Mon, 14 Feb 2022 21:56:30 -0800 (PST)
+Received: by mail-qt1-x832.google.com with SMTP id l14so17611692qtp.7;
+        Mon, 14 Feb 2022 21:56:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=uPUj/2D0fnRRHEGsxfFw4uPYjIMmB8m7B7g+xVLuCTs=;
+        b=e7EkjOF9JnmPm2zvwdTKMlYivOB6v4VFpWSOnTeskfEh9TmfPrj9ow39Zv8UTTKTDD
+         GCALVJO2THsTZ9IRY73lRRhUJettrYNXO6G+v6eI7xNrz6nwh2hfeArS1DWLdU54W3r1
+         XqSl0wO9nM2J38wWwIORRLsAWma/NjrwNvmXU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=uPUj/2D0fnRRHEGsxfFw4uPYjIMmB8m7B7g+xVLuCTs=;
+        b=HcjgLb8AY/Ac1hwF5vbb+bjj0+y03s3EcStNpkJLJUwaoEEAyR29JhNv110l5/5KWe
+         7iZ7sqhoNAl4DyBuyLh3ekaEpTmh8ZUN9AmaJfsJxcgiMm74iwjN/LF63c/ciWC1kOEq
+         wbIGe9Z9GKImqGO9rMsUKBVfAhMD0oluYahZzoN4AF6pLW7gP7ikqD1UH684BfkLNB6n
+         GwkDam8jbXW07w9dhB/r+iQlDLKJmYRfcv7zCUHQZN+LOxJP/tx5Z17w7dPz2Fk8Vfcr
+         KlUmPZdgBoG7CjUWf2RmomnsfrLHKJGKpPILynY08JjZmgZYc20QfykPsmDcaymyuV4w
+         Tq0g==
+X-Gm-Message-State: AOAM5318075vXVHvyjESPXrxDpu+jZSxKD17z/JErlATvuC3epeeDUQ/
+        xzixCsMkIj75YfYebtduXoBXQHRBYR6GzJcTmfw=
+X-Google-Smtp-Source: ABdhPJxDiNItJktz4LNO+XrPyLIgW4R0iAfyKu+KkaTWOe+XGOJYyD101ljPiR6VxTVgla4El5GLg42q9jEpkrRZCeQ=
+X-Received: by 2002:ac8:7e91:: with SMTP id w17mr1635736qtj.678.1644904589150;
+ Mon, 14 Feb 2022 21:56:29 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        "Nicolas Saenz Julienne" <nsaenz@kernel.org>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Lino Sanfilippo <LinoSanfilippo@gmx.de>,
-        Philipp Rosenberger <p.rosenberger@kunbus.com>,
-        linux-rpi-kernel@lists.infradead.org
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+References: <20220129115228.2257310-1-j.neuschaefer@gmx.net>
+ <CACRpkdYEigGHkoGfBg15tFXadgpXUAjDOnw7ePXhmvHJqPEJXw@mail.gmail.com>
+ <YfZkis8M81Ejpagq@latitude> <CACPK8XdFXRQf3MpPh3z=EMAKtnQSHL+iwwMCVYc5dP9DfQEN+Q@mail.gmail.com>
+ <YfpyjDBH83FE7r4o@latitude> <CAHp75Vdg8zFSHaTP_8jQua5QfRYbvZ4_rLdCtt3ks8YEibseTg@mail.gmail.com>
+ <YgdyjUbb4lnrVHmJ@latitude>
+In-Reply-To: <YgdyjUbb4lnrVHmJ@latitude>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Tue, 15 Feb 2022 05:56:17 +0000
+Message-ID: <CACPK8Xe-t8Qso_AX+q08OxrgmUPbEayhnHXH5xiLr7M6rDxjuw@mail.gmail.com>
+Subject: Re: [PATCH v5 0/9] Nuvoton WPCM450 pinctrl and GPIO driver
+To:     =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -48,56 +78,41 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Commit b1d84a3d0a26 ("pinctrl: bcm2835: Add support for all GPIOs on
-BCM2711") used a different label for the bcm2711 gpio_chip vis-à-vis
-the bcm2835.
+On Mon, 14 Feb 2022 at 12:05, Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.n=
+et> wrote:
+>
+> On Wed, Feb 02, 2022 at 02:10:44PM +0200, Andy Shevchenko wrote:
+> > On Wed, Feb 2, 2022 at 2:01 PM Jonathan Neusch=C3=A4fer
+> > <j.neuschaefer@gmx.net> wrote:
+> > > On Tue, Feb 01, 2022 at 11:42:11PM +0000, Joel Stanley wrote:
+> > > > On Tue, 1 Feb 2022 at 13:05, Jonathan Neusch=C3=A4fer <j.neuschaefe=
+r@gmx.net> wrote:
+> >
+> > ...
+> >
+> > > > I assume you're sending a v6 to fix some of the warnings?
+> > >
+> > > No, the warnings are fairly independent of this patchset, it's just t=
+hat
+> > > the adjacent pinctrl-npcm7xx driver started to be built by the bot, d=
+ue
+> > > to my Kconfig change. I'll fix them in a separate patchset.
+> >
+> > I guess you need to fix that first.
+> >
+> > Because now and then all CIs will complain to your patch and confuse pe=
+ople.
+>
+> FWIW, Linus has applied the npcm7xx fixes to for-next in the pinctrl tree=
+,
+> which means that they are not blocking this patchset anymore, AFAICS.
 
-That breaks compatibility for GPIO_LOOKUP_IDX() and GPIO_HOG() clauses
-when porting from older Raspberry Pi Compute Modules to the CM4 or CM4S.
+I've applied the device tree changes, and I will send a pull request
+for v5.18 with those.
 
-The name change seems unwarranted given it's essentially the same
-hardware, so use the old name instead.
+I assume you want Linus to merge the pinctrl bindings and driver
+through his tree.
 
-For consistency, modify the pinctrl_desc and pinctrl_gpio_range names
-as well.  (It looks like they're only used by debugfs.)
+Cheers,
 
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>
----
- drivers/pinctrl/bcm/pinctrl-bcm2835.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-index 47e433e09c5c..41d0f32b9d66 100644
---- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-+++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-@@ -375,7 +375,7 @@ static const struct gpio_chip bcm2835_gpio_chip = {
- };
- 
- static const struct gpio_chip bcm2711_gpio_chip = {
--	.label = "pinctrl-bcm2711",
-+	.label = MODULE_NAME,
- 	.owner = THIS_MODULE,
- 	.request = gpiochip_generic_request,
- 	.free = gpiochip_generic_free,
-@@ -1134,7 +1134,7 @@ static const struct pinctrl_desc bcm2835_pinctrl_desc = {
- };
- 
- static const struct pinctrl_desc bcm2711_pinctrl_desc = {
--	.name = "pinctrl-bcm2711",
-+	.name = MODULE_NAME,
- 	.pins = bcm2835_gpio_pins,
- 	.npins = BCM2711_NUM_GPIOS,
- 	.pctlops = &bcm2835_pctl_ops,
-@@ -1149,7 +1149,7 @@ static const struct pinctrl_gpio_range bcm2835_pinctrl_gpio_range = {
- };
- 
- static const struct pinctrl_gpio_range bcm2711_pinctrl_gpio_range = {
--	.name = "pinctrl-bcm2711",
-+	.name = MODULE_NAME,
- 	.npins = BCM2711_NUM_GPIOS,
- };
- 
--- 
-2.34.1
-
+Joel
