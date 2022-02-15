@@ -2,101 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3215C4B78C1
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Feb 2022 21:52:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A34664B76CA
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Feb 2022 21:49:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234444AbiBORLK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Feb 2022 12:11:10 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:37282 "EHLO
+        id S236215AbiBOROS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Feb 2022 12:14:18 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:39984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242367AbiBORKp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Feb 2022 12:10:45 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFA7C11ADC7
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Feb 2022 09:10:35 -0800 (PST)
+        with ESMTP id S242316AbiBOROP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Feb 2022 12:14:15 -0500
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3D0B11ADD1;
+        Tue, 15 Feb 2022 09:14:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1644945036; x=1676481036;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=ZyynS0l+ukYV5gXihkO4OzTHuWFJnpGx/XF4C3oqYdA=;
-  b=a8ZjPDoIlY/2De2hjPhLcD/y2jRDUjheIRv7U7uPjn8FiQBLF3kvqkAb
-   F97P4XF/uPT8qKapi8PwKrGr0Nvf4CJhkAjtPkAid6UknmhzqKiUTHuLQ
-   4YCa3UJjRmEuemyJCznHfX9bCYnPJ5dPf7sO8BQD51IJBe3brX/cwe7ge
-   O4CMAiRT7mYAi6BARh1GdOuDP5It94J7o3xyj6Wq+SLmngseGCtimZEV2
-   xz7rbLXMrTrQmRLoe5KGiyicBnEc97aPDdCP5LrJ7bxOaUDoorPp+NnTB
-   QGHGdoj7u1Uwsn8W7I0IpTqViMyClb+mYvtVIio3cyczZLaED2hTs5/lx
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10259"; a="233940420"
+  t=1644945245; x=1676481245;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=LCApQiubLMYDIIz9b4/VMCuMNN4EWjcVcJag/HJNFrY=;
+  b=Jd9le88tjVnn10+EuE9RXK1BJv5Utl0X4o1cyx96gPPbZtLTbl1NyifN
+   phSPDs4DinvBDs8ckOBv1EhjemHll6c4IwTFT7jC0ZtQEhWdhD/Cqat15
+   w59jDFaVk/7cDS0ZlZdZE8ouhbiWjLGWOpgpD2itKNSHJ3DbKp06hUrlF
+   6XHvPxQCTxjm2AISsy7W7XiOQ87o/Eh8pTe9wiTt62e1HqVumT/41ZT1C
+   vu0GC/OvBWFWTjQ1hc/g1zln6xw52ocqmC8P4QutCksLRzxZbF8I63REp
+   KdB4CcT3h23nwW9ZpGF8OXTNxTLhMwCsZ3Xd3kVQKF4u2RGwMVUqCy2LN
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10259"; a="250344198"
 X-IronPort-AV: E=Sophos;i="5.88,371,1635231600"; 
-   d="scan'208";a="233940420"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2022 09:07:04 -0800
-X-ExtLoop1: 1
+   d="scan'208";a="250344198"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2022 09:08:38 -0800
 X-IronPort-AV: E=Sophos;i="5.88,371,1635231600"; 
-   d="scan'208";a="632895514"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga002.fm.intel.com with ESMTP; 15 Feb 2022 09:07:01 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 75780107; Tue, 15 Feb 2022 19:07:17 +0200 (EET)
-Date:   Tue, 15 Feb 2022 19:07:17 +0200
+   d="scan'208";a="636007518"
+Received: from smile.fi.intel.com ([10.237.72.59])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2022 09:08:37 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1nK1Ik-0050M2-A1;
+        Tue, 15 Feb 2022 19:07:42 +0200
+Date:   Tue, 15 Feb 2022 19:07:41 +0200
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linux pin control <linux-gpio@vger.kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [GIT PULL] intel-pinctrl for 5.17-5
-Message-ID: <YgvdxSwYkHfSuV8a@black.fi.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 1/4] pinctrl: tigerlake: Revert "Add Alder Lake-M ACPI
+ ID"
+Message-ID: <Ygvd3Z5k+e/8DqND@smile.fi.intel.com>
+References: <20220215152800.21104-1-andriy.shevchenko@linux.intel.com>
+ <YgvYeJSvwaCXzISF@lahna>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <YgvYeJSvwaCXzISF@lahna>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linux pin control  maintainers,
+On Tue, Feb 15, 2022 at 06:44:40PM +0200, Mika Westerberg wrote:
+> On Tue, Feb 15, 2022 at 05:27:57PM +0200, Andy Shevchenko wrote:
+> > It appears that last minute change moved ACPI ID of Alder Lake-M
+> > to the INTC1055, which is already in the driver.
+> > 
+> > This ID on the other hand will be used elsewhere.
+> > 
+> > This reverts commit 258435a1c8187f559549e515d2f77fa0b57bcd27.
+> > 
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-Single revert due to possibility of clashing with real hardware (in the nearest
-future) that uses ID for different pin layout. That's why for this cycle to avoid
-any potential issues or even damages of a brand new hardware.
+Thanks!
 
-Thanks,
+I have sent a PR to the Linus W. with this one patch.
 
-With Best Regards,
-Andy Shevchenko
-
-The following changes since commit 500c77eed0feabddd5b3afb48e32c204614a8eab:
-
-  pinctrl: zynqmp: Revert "Unify pin naming" (2022-01-28 16:52:04 +0200)
-
-are available in the Git repository at:
-
-  git@gitolite.kernel.org:pub/scm/linux/kernel/git/pinctrl/intel.git tags/intel-pinctrl-v5.17-5
-
-for you to fetch changes up to 6f66db29e2415cbe8759c48584f9cae19b3c2651:
-
-  pinctrl: tigerlake: Revert "Add Alder Lake-M ACPI ID" (2022-02-15 19:02:46 +0200)
-
-----------------------------------------------------------------
-intel-pinctrl for v5.17-5
-
-* Revert misplaced ID
-
-The following is an automated git shortlog grouped by driver:
-
-tigerlake:
- -  Revert "Add Alder Lake-M ACPI ID"
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      pinctrl: tigerlake: Revert "Add Alder Lake-M ACPI ID"
-
- drivers/pinctrl/intel/pinctrl-tigerlake.c | 1 -
- 1 file changed, 1 deletion(-)
+> Please mark this for stable too as discussed.
 
 -- 
 With Best Regards,
