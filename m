@@ -2,134 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A0EEB4B61F6
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Feb 2022 05:11:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E1E934B6339
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Feb 2022 07:02:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229779AbiBOELk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Feb 2022 23:11:40 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:42920 "EHLO
+        id S232501AbiBOGCZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Feb 2022 01:02:25 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:46704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230299AbiBOELj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Feb 2022 23:11:39 -0500
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89832B152C
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Feb 2022 20:11:30 -0800 (PST)
-Received: by mail-pj1-x102c.google.com with SMTP id v5-20020a17090a4ec500b001b8b702df57so1428531pjl.2
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Feb 2022 20:11:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=3krFpT4PyPtyGc8aRBW6AzK9084YG4fmlvn0MKOFnTg=;
-        b=QbrICrl2NESyaU9pLInGu9CQ9VEi7VBlJ5HkcB+xawaXT7ra+yuZ66zjAUb5hhzTFn
-         mqoNOWOXe+aVHY/p35ceS4eRAbrAqhtK4H+tC1mq4wX6YI17iKuh7wQ8EcmO4z7aqNes
-         K+7racGcMaThKo+bWThILPrQoTZdnpKPxHOQsBqpRRutEdMLlwTYAdT4l0I39NmYbqAx
-         jv+rbf1Rq1viGKGEbVJA6hyMv7XEte6Fgj7WXgXFS0Uhfn1cqLFhxnFhNYEuI7cvzfdo
-         erxD+NK8M/Oqd0E199khIAjjjhWc6qU5uKNTkKRbKby18zRlZA+NgQ/5uNiODFmGErO7
-         qs0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3krFpT4PyPtyGc8aRBW6AzK9084YG4fmlvn0MKOFnTg=;
-        b=HEH0mpDEaRgG0eQ/A4MxBQ4hzGP8EuVFKkKNo6koHUEaecy1UcjqJ8pyYkPhVV+RLJ
-         pNHexZvHg1XPLheeZxxBlyD6HRvJAgCgJn5R+v95Y1CW1dklJ9chqPkpsbRusFJbwaIR
-         J3v5l9NS0nkWyI4HXfj4y2UWZGyFrND4o/JvSMWPuhMdNSgA+PGuQaxqTij1zvm9SiJc
-         1bdxqOHPM6bma7CTNalBV0MpOzGg73RtXURcEuWgSaF/hRhkyLHVun28oCB9/i64S9Ze
-         HLCZGAsAJWEIn4DbTl+dNP+vwPJTJbXGHhl51SERiUCcb4P38QrSB3RjGfzB7lvzVKZo
-         2pLA==
-X-Gm-Message-State: AOAM533Ibvemc3/ixnAYC1L6EhyE1pDDtE74wvgBoOp+A64t3kAtiPUI
-        n4aIKcXNMI1ELALnrcFnYRflbLpq/EjAMA==
-X-Google-Smtp-Source: ABdhPJw2OfZiQZPGvsR1G1wiBHHz1ar3c+sOMKfHFDfMSz12ZO+wyWqWKaH/rZ6pdupg4UeOegjqvw==
-X-Received: by 2002:a17:90b:4f4b:b0:1ba:81fa:c6e3 with SMTP id pj11-20020a17090b4f4b00b001ba81fac6e3mr647424pjb.121.1644898289910;
-        Mon, 14 Feb 2022 20:11:29 -0800 (PST)
-Received: from sol (60-242-155-106.static.tpgi.com.au. [60.242.155.106])
-        by smtp.gmail.com with ESMTPSA id h25sm35300559pfn.208.2022.02.14.20.11.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Feb 2022 20:11:29 -0800 (PST)
-Date:   Tue, 15 Feb 2022 12:11:24 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     "Hummrich, Tobias" <T.Hummrich@eckelmann.de>
-Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [libgpiod 1.6.3] Do different lines have to be in the same scope?
-Message-ID: <20220215041124.GA15474@sol>
-References: <17c74834c56e4345ac2611b92c301e2f@eckelmann.de>
+        with ESMTP id S229924AbiBOGCY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Feb 2022 01:02:24 -0500
+X-Greylist: delayed 517 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 14 Feb 2022 22:02:15 PST
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [IPv6:2a01:37:3000::53df:4ef0:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38795B5637
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Feb 2022 22:02:15 -0800 (PST)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
+        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 7E1572800B3C2;
+        Tue, 15 Feb 2022 06:53:36 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 6F6522EDAB4; Tue, 15 Feb 2022 06:53:36 +0100 (CET)
+Message-Id: <c399da9deab3ede9b0c4d4680d8ac508707aa8c3.1644903104.git.lukas@wunner.de>
+From:   Lukas Wunner <lukas@wunner.de>
+Date:   Tue, 15 Feb 2022 06:52:36 +0100
+Subject: [PATCH] pinctrl: bcm2835: Use bcm2835 gpio_chip label for bcm2711
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <17c74834c56e4345ac2611b92c301e2f@eckelmann.de>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        "Nicolas Saenz Julienne" <nsaenz@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Lino Sanfilippo <LinoSanfilippo@gmx.de>,
+        Philipp Rosenberger <p.rosenberger@kunbus.com>,
+        linux-rpi-kernel@lists.infradead.org
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Feb 14, 2022 at 02:01:29PM +0000, Hummrich, Tobias wrote:
-> Hi,
-> 
-> last week I ported part of our gpio related code from sysfs to libgpiod. I use the C++ bindings. I had some problems polling two different lines on different gpio chips and finally realized that all was OK if both lines were defined in the same scope. Out of curiosity I'm asking: Is that really the case in version 1.6.3 and was this intended?
-> 
+Commit b1d84a3d0a26 ("pinctrl: bcm2835: Add support for all GPIOs on
+BCM2711") used a different label for the bcm2711 gpio_chip vis-à-vis
+the bcm2835.
 
-No.  I'm guessing you are doing something wrong, but I'd have to see
-real code to be sure.  Code > 1000 words.
+That breaks compatibility for GPIO_LOOKUP_IDX() and GPIO_HOG() clauses
+when porting from older Raspberry Pi Compute Modules to the CM4 or CM4S.
 
-As the lines are on different chips they need to be requested
-separately, they can't be combinied into a bulk request, but that is the
-only restriction.
+The name change seems unwarranted given it's essentially the same
+hardware, so use the old name instead.
 
-> The problem was this: When I declared lines locally in a method and called this method to get the file descriptor, the file descriptor was the same for both lines. Like:
-> 
-> int MyClass::getFiledescriptor(const std::string &linename)
-> {
->     auto currentLine = gpiod::find_line(linename);
->     return currentLine.event_get_fd();
-> }
-> 
-> ... returned 23 for both parameters "in1" and "in2" while gpioinfo told me that these names where unique.
+For consistency, modify the pinctrl_desc and pinctrl_gpio_range names
+as well.  (It looks like they're only used by debugfs.)
 
-I'm very surprised this works for you.  Note that find_line() and
-get_line() methods return an unrequested line object.  You need to
-request the line from the kernel using request() before calling
-event_get_fd() - and that should throw if you haven't, which makes
-me think your actual code is different or something very weird is
-going on here.
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>
+---
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Have a look at the gpiogetcxx and gpiomoncxx examples to see how a
-line is requested.
-
-What does gpioinfo show for those lines?
-Why do you need the fd, anyway?  Are you confusing it with the offset?
-And why poll when you can get edge events?
-
-Bart - the need to request lines is frequently misunderstood - Gasai Maple
-had a similar problem, thinking get_line() and set_direction_output()
-would be sufficient to set the line output value.
-Consider updating the documentation to highlight which methods require
-that the line is requested before they are usable - even if they do
-return an error or throw in that case.
-This also applies to v2.
-
-> 
-> It is OK for me now, the two lines I'm polling are members of one class now, it works as intended, and I'm fine with that. But still I wonder if I misunderstood something or just did it wrong.
-> 
-> Is a new version of libgpiod published soon? Then this whole text may be obsolete.
-> 
-
-Indeed, if I were you I would be looking at the libgpiod v2 branch[1]
-that will soon obsolete v1 and has a slightly different API.  e.g.
-gpiod::find_line() is gone as it is problematic - instead you need to
-call find_line() on the appropriate chip and it now returns the line
-offset.
-That is assuming you are on a reasonably recent kernel - libgpiod v2
-requires kernel v5.10 or later.
-
-Cheers,
-Kent.
-
-[1] https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/tree/?h=next/libgpiod-2.0
+diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+index 47e433e09c5c..41d0f32b9d66 100644
+--- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
++++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+@@ -375,7 +375,7 @@ static const struct gpio_chip bcm2835_gpio_chip = {
+ };
+ 
+ static const struct gpio_chip bcm2711_gpio_chip = {
+-	.label = "pinctrl-bcm2711",
++	.label = MODULE_NAME,
+ 	.owner = THIS_MODULE,
+ 	.request = gpiochip_generic_request,
+ 	.free = gpiochip_generic_free,
+@@ -1134,7 +1134,7 @@ static const struct pinctrl_desc bcm2835_pinctrl_desc = {
+ };
+ 
+ static const struct pinctrl_desc bcm2711_pinctrl_desc = {
+-	.name = "pinctrl-bcm2711",
++	.name = MODULE_NAME,
+ 	.pins = bcm2835_gpio_pins,
+ 	.npins = BCM2711_NUM_GPIOS,
+ 	.pctlops = &bcm2835_pctl_ops,
+@@ -1149,7 +1149,7 @@ static const struct pinctrl_gpio_range bcm2835_pinctrl_gpio_range = {
+ };
+ 
+ static const struct pinctrl_gpio_range bcm2711_pinctrl_gpio_range = {
+-	.name = "pinctrl-bcm2711",
++	.name = MODULE_NAME,
+ 	.npins = BCM2711_NUM_GPIOS,
+ };
+ 
+-- 
+2.34.1
 
