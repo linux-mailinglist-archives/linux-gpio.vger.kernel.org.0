@@ -2,117 +2,193 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB6494B65EB
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Feb 2022 09:21:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CB12D4B6BAB
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Feb 2022 13:06:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234244AbiBOIVV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Feb 2022 03:21:21 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:57870 "EHLO
+        id S237463AbiBOMGa convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Tue, 15 Feb 2022 07:06:30 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:45820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235373AbiBOIVS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Feb 2022 03:21:18 -0500
-Received: from EUR02-HE1-obe.outbound.protection.outlook.com (mail-eopbgr10059.outbound.protection.outlook.com [40.107.1.59])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBB639BBA9;
-        Tue, 15 Feb 2022 00:21:08 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WjtKhUsCIrIDZjjuAH2YEtAglJrh0fWmAYq7TmDJ59B0+jB8SHM97b2PHpydIJJ/jRWOsf0pJRtybOel5kThy2rB6NvkuMD2eDZ4KY/79TDN+x3fNRHbTIK5/1J/8MLscg+JVJFQhGdcEjl1YofxcNj/N3u8BCOA6qhvNowUP8Xg2d6s4pMz2oIAjEuRPfsO7XCFy0BNA614Pkw6zRAbD/C3iaWaPsiDCKj0Y81jp6NPK8SYpFJPGyVXSTHKjJI1/vImwpTEnP/cdGJrXnRgfFAZEE56dmccbMVWuvseLjldp1aF2ePjV80yofYaxyoo1305Nlux9q9mOH9jKTsZ6A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pAuQ+iaz4ygoKoC3iY0qHJsmmVTlst9+1+36zwvZovw=;
- b=jRhsZgpbEARWTtNPs1YvKbysdiX6+jp0Z5L962Bdlwc0mNG0BtaEQSgnoebNcYvGFXp/Q1MD2gJWZYkf0nasfuYW5dnSyv3/6VZFpOurFfGP0beIv1AU71p0GwlLZHfpFfug25v9g06FtgzKmqoKQzXooU7nEYODowydm3ekycd401qCtOr7HWBUDL/c7zO56aXG16Chb21hS8DbTuqusgrdP28GoP0kWfu33Ji4JhQr3iZ5+CDDJhgh5V+M0hHnfoeojNYtJlsWQdT/xN/EUlbLqHKWyt6uyY2ApjU1/scQhY3RX7oUdQOFlb+hcXrUwBwYtDauwM2bUYT9qtYmtQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pAuQ+iaz4ygoKoC3iY0qHJsmmVTlst9+1+36zwvZovw=;
- b=Pn4WQJY8aiiir+FYXSZ1zV3/LYHTZYHrHFuKcyn3QErMmzWcJvj907LSy9Lt1k0zuLTYa1loiLEcom0FgAAQG5LIitjwXuixMGwriFX0W59VF2oPcipeqEDc13L2OpPAAE5Ln8OErJxiYmvbccGhXl0e5h7hwWBkZOpHSwE00p0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
- by AM0PR04MB5940.eurprd04.prod.outlook.com (2603:10a6:208:117::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4975.18; Tue, 15 Feb
- 2022 08:21:04 +0000
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::448c:19d:ca9a:123e]) by DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::448c:19d:ca9a:123e%7]) with mapi id 15.20.4975.018; Tue, 15 Feb 2022
- 08:21:04 +0000
-From:   "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
-        stefan@agner.ch, robh+dt@kernel.org
-Cc:     kernel@pengutronix.de, linus.walleij@linaro.org, linux-imx@nxp.com,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Jacky Bai <ping.bai@nxp.com>, Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH 2/2] pinctrl: imx93: Add pinctrl driver support
-Date:   Tue, 15 Feb 2022 16:20:06 +0800
-Message-Id: <20220215082006.790843-2-peng.fan@oss.nxp.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220215082006.790843-1-peng.fan@oss.nxp.com>
-References: <20220215082006.790843-1-peng.fan@oss.nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2PR01CA0046.apcprd01.prod.exchangelabs.com
- (2603:1096:4:193::18) To DU0PR04MB9417.eurprd04.prod.outlook.com
- (2603:10a6:10:358::11)
+        with ESMTP id S234984AbiBOMG3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Feb 2022 07:06:29 -0500
+X-Greylist: delayed 312 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 15 Feb 2022 04:06:19 PST
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29B05D207A
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Feb 2022 04:06:18 -0800 (PST)
+Received: from [192.168.1.107] ([37.4.249.169]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MUGuZ-1njcUl2OKx-00RKFw; Tue, 15 Feb 2022 13:00:48 +0100
+Subject: Re: [PATCH] pinctrl: bcm2835: Use bcm2835 gpio_chip label for bcm2711
+To:     Lukas Wunner <lukas@wunner.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
+        Lino Sanfilippo <LinoSanfilippo@gmx.de>,
+        Philipp Rosenberger <p.rosenberger@kunbus.com>,
+        linux-rpi-kernel@lists.infradead.org
+References: <c399da9deab3ede9b0c4d4680d8ac508707aa8c3.1644903104.git.lukas@wunner.de>
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+Autocrypt: addr=stefan.wahren@i2se.com; keydata=
+ LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tClZlcnNpb246IEdudVBHIHYy
+ CgptUUlOQkZ0NmdCTUJFQUN1Yi9wQmV2SHhidkplZnlaRzMySklObW4yYnNFUFgyNVY2ZmVq
+ bXlZd21DR0tqRnRMCi9Eb1VNRVZIRHhDSjQ3Qk1YbzM0NGZIVjFDM0FudWRnTjFCZWhMb0J0
+ TEh4bW5lQ3pnSDNLY1B0V1c3cHRqNEcKdEp2OUNRRFp5MjdTS29FUHh5YUk4Q0YweWdSeEpj
+ NzJNOUk5d21zUFo1YlVIc0x1WVdNcVE3SmNSbVBzNkQ4ZwpCa2srOC95bmdFeU5FeHd4SnBS
+ MXlsajVianhXREh5WVF2dUo1THpaS3VPOUxCM2xYVnNjNGJxWEVqYzZWRnVaCkZDQ2svc3lp
+ by9ZaHNlOE4rUXN4N01RYWd6NHdLVWtRUWJmWGcxVnFrVG5BaXZYczQyVm5Ja211NWd6SXcv
+ MHQKUkp2NTBGUmhIaHhweUtBSThCOG5oTjhRdng3TVZrUGM1dkRmZDN1R1lXNDdKUGhWUUJj
+ VXdKd05rLzQ5RjllQQp2ZzJtdE1QRm5GT1JrV1VSdlArRzZGSmZtNitDdk92N1lmUDF1ZXdB
+ aTRsbitKTzFnK2dqVklXbC9XSnB5MG5UCmlwZGZlSDlkSGtnU2lmUXVuWWN1Y2lzTXlvUmJG
+ OTU1dENna0VZOUVNRWRZMXQ4aUdEaUNnWDZzNTBMSGJpM2sKNDUzdWFjcHhmUVhTYUF3UGtz
+ bDhNa0NPc3YyZUVyNElOQ0hZUUR5WmljbEJ1dUNnOEVOYlI2QUdWdFpTUGNRYgplbnpTektS
+ Wm9POUNhcUlEK2ZhdkxpQi9kaHptSEErOWJnSWhtWGZ2WFJMRFp6ZThwbzFkeXQzRTFzaFhp
+ ZGRaClBBOE51SlZ6RUl0MmxtSTZWOHBaRHBuMjIxcmZLaml2UlFpYW9zNTRUZ1pqak1ZSTdu
+ bko3ZTZ4endBUkFRQUIKdENCVGRHVm1ZVzRnVjJGb2NtVnVJRHgzWVdoeVpXNXpkRUJuYlhn
+ dWJtVjBQb2tDTndRVEFRZ0FJUVVDWElkYwo0Z0liQXdVTENRZ0hBZ1lWQ0FrS0N3SUVGZ0lE
+ QVFJZUFRSVhnQUFLQ1JDVWdld1BFWkR5MjFPVEQvOUdpWkxkCnRSWWNteVJKZ2x0aVFRekFp
+ UWRjSUQ3OGxHb1dwL3grci92Y1U2YjZqdVl1ZVR3Z1Iwclc3djdsMklSQnlEN24KSEp4YSt0
+ SVNvUVpCZ2hvbE1JZmI5TXRoR09KTENZNzdrL1FoQWhuMzJOR1prZWp3OXR6a3MvNDBtclpT
+ VVQ4NApaeWJzUVhyTE0vSFI2VElJL0RlUEIwbktEM0ppcHBzMlVIUUQ5cUQySWpFd1NRUGxI
+ akNPckVaaDQ1UFo3bTkrClo5M0x6aVRlc1dabFlRdUxpSndzNHJLcHRIVzFkL3dSZWxzaG1t
+ NlFxY0wybDRDL2U0MGVEQjlncTRkU1poOVgKUEVZbGxpeU5RaDdhMkxTZHVtRTFyK2NTd0lq
+ RS91ZHRSdmRPOWFLb0psT2JVSzVkTmpTUEg3d0tUYndkWGRZRApHUHdEaFhkNThOQXdyK1BY
+ QmxQajB0STFMQ3ErTEJ4ZUt6aFdYK0dWcTlEb2pWanlVREV4Rk5Ga1h1b0M3ZzhtClY5VDB0
+ ZUJpdVpSbm91WEt3VjJGcHRaT0hIN0JVRVd0a0t0aGgxZXRmT1dwaWdCemtVN2JQc2ZJWVQr
+ cnk5dGIKMW9KK3Y0MVBOYXFaRW1QVXBKeHZmek5UN3Ayd01lRDdaajlmMHJ1YlJQdExBSjJR
+ R2pyRkhzdVh3QU9xcHl6ZQoxOEVidHNZazBOMHp1SEVoY2orUEJJQmZoMFlJWWQ1MW9mNkdJ
+ aU95UjlxMFhYdHBsVUo3VDIvSDF1UXFrWGxwCitnVzRWa2lmc2NJckl1eWZueFpXMTJlSXZq
+ NnlicVdMN2FZS0dZbVQ2aUxDUGJIWXlZY2F5bDRFa0ZjckNGN0UKZTBXVC9zY1ZNaE8vNVgv
+ SGFOQTVIQngvcjUycGdMY3Y0aTlNeExRbVUzUmxabUZ1SUZkaGFISmxiaUE4YzNSbApabUZ1
+ TG5kaGFISmxia0JwTW5ObExtTnZiVDZKQWpnRUV3RUNBQ0lGQWx0NmdCTUNHd01HQ3drSUJ3
+ TUNCaFVJCkFna0tDd1FXQWdNQkFoNEJBaGVBQUFvSkVKU0I3QThSa1BMYmpic1AvamdqYVNz
+ NUh0bGtBSXZXUytGcm15N2MKaG5jT0F4TFRWL0Q2UkV3SU95R0poRkt3d29pck55UTJnOXZV
+ YTNZQ1lDZjFmSjh3RWhhS09COWQwTHBNUm5MNApkRVQ4ZDgyMzhFL3BLK0hxTktpSXNKaHM2
+ SnNLOFpnalZRR3JtbWZua0dyWisxdjBIQnV4ZGljZ0duUC9XdHVBClVsOGw2Mi9BTGJheXlq
+ KzYxQ2xyc0V0UklhcU82N0xJWXdQaVBEUkkrWGlNek5pR3pIRi8xUTZHUjAyUkg2YTMKRjg5
+ ejhhUHhjSGkxWnZDdDJ5a3o2VUVjaHpQMHI1Z3FGSisvTC9VcHU4ME1YaVk0djVlSWFCNTJn
+ VlBnaXlNQQpsTDJkRHMxbUladm5yUkxSWTJ0YjNtQVlOa1Y1QjVJRFQzcGtXeTZrS281T0Nn
+ SytZZFlPUjhGTloyb04ydDhPCnJLK1ZudGFLN01NU0tIbG1ZL3NPd3RSbEVoMU9CbXJjQ3dH
+ d21wLzA1R2tSNDZmL0lzaFJWZUZPUmF3K0dBcXQKUDIrQ0ZhMkNOQS9JSG5aTm95aWtsRHpQ
+ UUhVVUdzck5wcERyaFg5Sm1oQm1nMXYyeXdIMU5YdTFpRGZQMUJBdwpLZ29rdDVmNVVhUkY5
+ c0FBNTN2V0V2YlVVTjllZXNGR0x6UFdkSkdRNWhwZC9WSDVJUXk5U0JyaC93SWNla3E1Cm4w
+ a042cGJUSHhHRTUyU2kvTVZJa05UdURaM2FwbjJqbERaNHBPdHBCWEkydlAzYlBPK05pcUJa
+ anNVM3R4TGkKV2R2MkZqeXp6NlhMUndlV1JZVkw1SGE2TER0eG9yMnZ1NlVQMDdwOXh6MXhS
+ WmFPRFczb1lsSEZ6WXBhNFc1ZwpMSGIybEVrSXVVZlNjaWNHYmpqQXRDbFRkR1ZtWVc0Z1Yy
+ Rm9jbVZ1SUR4emRHVm1ZVzR1ZDJGb2NtVnVRR2x1CkxYUmxZMmd1WTI5dFBva0NOd1FUQVFn
+ QUlRVUNYSWRlaHdJYkF3VUxDUWdIQWdZVkNBa0tDd0lFRmdJREFRSWUKQVFJWGdBQUtDUkNV
+ Z2V3UEVaRHkyeUhURC85VUY3UWxEa0d4elE3QWFDSTZOOTVpUWY4LzFvU1VhRE51Mlk2SQpL
+ K0R6UXBiMVRiVE9yM1ZKd3dZOGEzT1d6NU5MU09MTVdlVnh0K29zTW1sUUlHdWJEM09EWko4
+ aXpQbEcvSnJOCnQ1elNkbU41SUE1ZjNlc1dXUVZLdmdoWkFnVERxZHB2K1pIVzJFbXhuQUox
+ dUxGWFhlUWQzVVpjQzVyMy9nL3YKU2FNbzl4ZWszSjVtTnVEbTcxbEVXc0FzL0JBY0ZjK3lu
+ TGh4d0JXQld3c3Z3UjhiSHRKNURPTVd2YUt1RHNrcApJR0ZVZS9LYjJCK2pyYXZRM1RuNnMv
+ SHFKTTBjZXhTSHo1cGUrMHNHdlArdDlKNzIzNEJGUXdlRkV4cmlleThVCkl4T3I0WEFiYWFi
+ U3J5WW5VL3pWSDlVMWkyQUlRWk1XSkFldkN2VmdRL1UrTmVSaFh1ZGU5WVVtRE1EbzJzQjIK
+ VkFGRUFxaUYyUVVIUEEybThhN0VPM3lmTDRyTWswaUh6TElLdmg2L3JIOFFDWThpM1h4VE5M
+ OWlDTHpCV3UvTgpPbkNBYlMremx2TFphaVNNaDVFZnV4VHR2NFBsVmRFamY2MlArWkhJRDE2
+ Z1VEd0VtYXpMQU1yeDY2NmpINWt1ClVDVFZ5bWJMMFR2Qis2TDZBUmw4QU55TTRBRG1rV2tw
+ eU0yMmtDdUlTWUFFZlFSM3VXWFo5WWd4YVBNcWJWK3cKQnJoSmc0SGFONkM2eFRxR3YzcjRC
+ MmFxYjc3L0NWb1JKMVo5Y3BIQ3dpT3pJYUFtdnl6UFU2TXhDRFhaOEZnWQpsVDR2MjNHNWlt
+ SlAyemdYNXMrRjZBQ1VKOVVRUEQwdVRmK0o5RGEycitza2gvc1dPbloreWNvSE5CUXZvY1pF
+ Ck5BSFFmN2tDRFFSYmVvQVRBUkFBMkhkMGZzRFZLNzJSTFNESGJ5ME9oZ0RjRGxWQk0yTSto
+ WVlwTzNmWDFyKysKc2hpcVBLQ0hWQXNRNWJ4ZTdIbUppbUhhNEtLWXMya3YvbWx0L0NhdUNK
+ Ly9wbWN5Y0JNN0d2d25Lem11WHp1QQpHbVZUWkM2V1I1TGtha0ZydEhPelZtc0VHcE52NVJj
+ OWw2SFlGcExrYlNrVmk1U1BRWkp5K0VNZ01DRmdqclpmClZGNnlvdHdFMWFmN0hOdE1oTlBh
+ TEROMW9VS0Y1aitSeVJnNWl3SnVDRGtuSGp3QlFWNHBndzIvNXZTOEE3WlEKdjJNYlcvVExF
+ eXBLWGlmNzhJaGdBelh0RTJYck0xbi9vNlpINzFvUkZGS096NDJsRmR6ZHJTWDBZc3FYZ0hD
+ WAo1Z0l0TGZxemoxcHNNYTlvMWVpTlRFbTFkVlFyVHFueXMwbDE4b2FsUk5zd1lsUW1uWUJ3
+ cHdDa2FUSExNSHdLCmZHQmJvNWRMUEVzaHRWb3dJNm5zZ3FMVHlRSG1xSFlxVVpZSXBpZ21t
+ QzNTd0JXWTFWNmZmVUVta3FwQUFDRW4KTDQvZ1Vnbjd5US81ZDBzZXFuQXEycFNCSE1VVW9D
+ Y1R6RVFVV1ZraUR2M1JrN2hURm1oVHNNcTc4eHYyWFJzWApNUjZ5UWhTVFBGWkNZRFVFeEVs
+ RXNTbzlGV0hXcjZ6SHlZY2M4cURMRnZHOUZQaG1RdVQyczlCbHg2Z0kzMjNHCm5FcTFsd1dQ
+ SlZ6UDRqUWtKS0lBWHdGcHYrVzhDV0xxekRXT3ZkbHJEYVRhVk1zY0ZUZUg1VzZVcHJsNjVq
+ cUYKUUdNcGNSR0NzOEdDVVcxM0gwSXlPdFF0d1dYQTRueStTTDgxcHZpQW1hU1hVOGxhS2FS
+ dTkxVk9WYUY5ZjRzQQpFUUVBQVlrQ0h3UVlBUUlBQ1FVQ1czcUFFd0liREFBS0NSQ1VnZXdQ
+ RVpEeTIrb1hELzljSEhSa0JaT2ZrbVNxCjE0U3Z4MDYyUHRVMEtWNDcwVFNucC9qV29ZSm5L
+ SXczRzBtWElSZ3J0SDJkUHdwSWdWanNZeVJTVk1LbVNwdDUKWnJEZjlOdFRiTldnazhWb0xl
+ WnpZRW8rSjNvUHFGclRNczNhWVl2N2U0K0pLNjk1WW5tUSttT0Q5bmlhOTE1dApyNUFaajk1
+ VWZTVGx5VW15aWMxZDhvdnNmMWZQN1hDVVZSRmNSamZOZkRGMW9ML3BEZ01QNUdaMk93YVRl
+ am15CkN1SGpNOElSMUNpYXZCcFlEbUJuVFlrN1B0aHk2YXRXdllsMGZ5L0NxYWpUS3N4Nytw
+ OXh6aXU4WmZWWCtpS0IKQ2MrSGUrRURFZEdJRGh2TlovSVFIZk9CMlBVWFdHUytzOUZOVHhy
+ L0E2bkxHWG5BOVk2dzkzaVBkWUl3eFM3SwpYTG9LSmVlMTBEamx6c1lzUmZsRk9XMFpPaVNp
+ aElDWGlRVjF1cU02dHpGRzlndFJjaXVzNVVBdGhXYU8xT3dVClNDUW1mQ09tNGZ2TUlKSUE5
+ cnh0b1M2T3FSUWNpRjNjcm1vMHJKQ3ROMmF3WmZnaThYRWlmN2Q2aGp2MEVLTTkKWFpvaUFa
+ WVpEKy9pTG01VGFLV042b0dJdGkwVmpKdjhaWk9aT2ZDYjZ2cUZJa0pXK2FPdTRvclRMRk16
+ MjhhbwpVM1F5V3BOQzhGRm1kWXNWdWE4czZnTjFOSWE2eTNxYS9aQjhiQS9pa3k1OUFFejRp
+ RElScmdVek1FZzhBazdUCmZtMUtpWWVpVHRCRENvMjVCdlhqYnFzeXhrUUQxbmtSbTZGQVZ6
+ RXVPUEllOEp1cVcyeEQ5aXhHWXZqVTVoa1IKZ0pwM2dQNWIrY25HM0xQcXF1UTJFNmdvS1VN
+ TEFia0NEUVJiZmw5REFSQUFzRExjYStMbFAydm5mdEVHaHBjQQpCR1ZOUUVGbkdQckNhdVU2
+ SGhOODA1V3RQVHRtc1JPdUp6cWdVVDBtcHFXSWZacTZzTXd5dkhLOVRzL0tIM0paClVWYlJD
+ M3oyaDNLZmhIL0RhZjk1cGQ2bVBjL2g5dkYvT3kzK2VUV2hnR25QNmNBNWtsUitmTzFXaEc4
+ VnJpWHYKck5lUkcyMHN6emplSG9jblNJY1Q1WHVaUjB1REhPaUd4T2l6MXNNUkZUR3h6R095
+ MTlSOXJ2dTYzdGlJM2Q3dgpnYzc1T0NBZGtlQi9TZUNFbGFSdzBUZjdMWmJQampzRjI2M0JZ
+ bk1mNGtrTkVLdnFXY1UyaWNNcCtxZXpqeW5CCnB2ZXVlMHJDVFFCWUFRbG9GQ1ZUR0hyV1dB
+ NkQ0VzVPMkFmSWRJYzF1MUpDWnAyZjVMV1ZvVUZUVklyUW5RUVUKU0hDaWZyOU1aeExUdFBK
+ ZFU1Mm9TUHczZGs0aExQOGlKSUx1dnYvYXZhakNzUVlIRXR3WXNiZUZaeGl1TGdscApBN1lj
+ Sk5ObXBnQ3BNRDR3VWh2bEN0QUtOQlFXeXIyOTc2OThFUVRuNDZlQmVVNkttMkNpaFhrZ3dD
+ eWY4ZXlLCkxFM3NYZXdhcTVrZ1pXdk5xNml1NXFZSVJCOXl3K2NYYzYwZE9aRE9scTkzWDVT
+ QVJZemFvZXBrSHo0cmtMa1AKUG8rdENIeUhRUHNHblBYYzlXVDgwREM5Tm5KR2R2VWx5NXJk
+ TUk0eHBaeWdlb2tqd293VlFsUFV1Y1M2TXluNwpmOHc4Y2dmQjdDMklBSWNEeDJwUC9IendY
+ dmtDT1FOQTdtVjFsTTA4bitnVmtUcnpweGlwNURicTRDSW9ZeDJNCkpaVDhiR1JINlhqY1VE
+ S2EwOVFoeVpzQUVRRUFBWWtFUkFRWUFRZ0FEd1VDVzM1ZlF3SWJBZ1VKQThKbkFBSXAKQ1JD
+ VWdld1BFWkR5MjhGZElBUVpBUWdBQmdVQ1czNWZRd0FLQ1JCVnhETFBjVk1NamNkc0QvMFJo
+ QXN1UVlPeQpyMTNCbDNOaFhrWUFaR3AyWkZER3VrZTdPU2tWOG9qT09UZFR5ei9jT1JHQ2J5
+ ZEQrRGd2cUZ5VmRuT1hLZ08wCmxKbUd3ckdlTGRnZ0F2aDBpaHJwNU8wWVVKOWJCU1htR01t
+ UVRZSC9BbUxUR2FkYnVqQ1dqNWZGVWtDeXd4aW0KSHV5MFBiMjRwelR2UzUwR1k1WStxSDBG
+ SE5haWdka2tpV04zcnVnN0haRXUvQ3lsUFpqT1h6K0QxUVBNckV4dwo3ZC9NS2FiVis5YU5i
+ UVlabGRJajk4UXd2VUYxS1N6YThqbFVJdnBoUnEyN0FUOGZER1lHUGZERU1nMmNCT2FlCkty
+ N29uUXM0YjdhV082aWZEbHhRVHB6c3pvK0FuODA3Tk1TdFZFRmYrczNBaFZEM2U3bmY4SkJh
+ dmJWckFlMGsKb20yNm96elBubnh6K2xxVlZ0dzZVazRYTUl6dGl4L0h3SFl3dUNuY1VYWndL
+ MEkzeUFKd2pZd29vck9DaEozUwpFVWJKUVB0R3NneFJERXhWQkZlNk5MUC82MnhQOU82dGFj
+ d09kYjBNbVAxYjM5cFJBVEM3YmdkMWxkVUxpNzVaCmxKckowL1NpVkVyb3FOWXk3OXRmbWdB
+ WjJVeFptczlTckV5Nm85UVNmc24xYVh2K01QTDlKYUNHbWtQNnpiTFEKTm5kajBKY2FRbmtD
+ MHZneWRPMUJtNk11OTZQOXVmbEtaY0FTNndtTE01SWRIT3lqTDg4d0h3anVjakFPQnRjdwpw
+ MG9HVG5WT25Sc05ZU084VzhZWi9LZGJ1Nzg1ZGF6TXFKMmlOakFEdUJiZG02TjRqNUVkTW5r
+ TG4wQklmUEpwCmRnbTR2bDJVcExqd1JHci9NM3dtbTVwdnMrNnVCN2hrL0ZKaUQvNGxsRU5Q
+ NGVNMWg3U200aitWcTZOMSt6VEIKSVhKQWViSXFhc0RwNXlaUzdYcnk0STM2bjg1WEVZZkcw
+ MWx0QXlob05WMkRPOFNJUlFwdWkydHErOVJQM1JLMQpKREJ4eEVKWTJFTzVKWjhNeGFQSFEw
+ RFQwNWxSRmpLMkFsaGRFSXRqTGpwSjNmVW05c3FMeE1XeHpQNlV6M2lpCjJ1YTR1bnJ0Nk9D
+ VHFRd2lqRi8zYlRXaXd2VkFBSG5NRlVpb1hzaEhhb2hWRGNWZm5lSU1mVjBiUUNYWWkzTnAK
+ WTB2MFp3Y2lGSCtnU0M3cUQ2WE51aHBWR1NMNElpbGlGeS9TemNhSkV6QUhlTERTaFpQMkNX
+ ZG5DNHZnbDM3dApocHg4aDU1WWhKbjZIU3VVelBnaGFLdFZCMmsrajdaZXlaK1NGeHA3SXVi
+ SEN3TEhsUWhUNzVSd1EzaUF4S242CjBxajUxY1lUbnF4ZFpYVzZmSDNQa3VNellVNUdwcVIv
+ MU9sNWMvd2ZJNmc2QW04eUtXLzBFVUx0K0tuNExGc1MKbTdZM201SDV2MTJVNkpCWXZWK3Ix
+ M2paaW9zNEVFREU5M0Q1c05IMk1JeVJ6Q0RxMXpkZHQ0WHV5S0ZqUEtXMQo5aWJaRGZGVjdL
+ dUNzdnVMMjNzQmMxc0NNb3ArRTFtVC9ReE9JQTZvRFQxTVFzdHdPVnVReURDdi9PdktTZ2Z6
+ CjhGWEdMNkFQY2xqQ3FqOEFKaHhReXN4ZG9pUVA4bS92dStialdHR3Z4dzVzMWxncGlSRFRS
+ VVBnY0pKTmFHWTIKVklEclpRaTROU2lOUTBOSWkrZGp1NGZOTW1DcFFxZzh0YkMzY0FhNnl3
+ bTZvUUIxU0JobURYMmUxMWdSbGx1SQpPblRHUEUwSFRvM2w3MmxoYmc9PQo9cVpNVgotLS0t
+ LUVORCBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCg==
+Message-ID: <c1e31ad4-3a65-9370-3a5c-ffde723a04aa@i2se.com>
+Date:   Tue, 15 Feb 2022 13:00:47 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c970f51b-0052-4e8d-9bf0-08d9f05c1bc6
-X-MS-TrafficTypeDiagnostic: AM0PR04MB5940:EE_
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-Microsoft-Antispam-PRVS: <AM0PR04MB594032BCDF3EC51164D6BDE6C9349@AM0PR04MB5940.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3826;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: bGIorEcoEsb4up7E6cwHLuTVsP+daFmLMhYfDOQ/p4pjcKd5fJt8dNnErn5qGtgGInEazlM0MsdUQcUBwiTduz8NUoC/ChlNDf08ae7+HNdi+0bIGEJKwQB+ijljOAYOAM2V46fhM8aY0zzd8A01cyH524spxncvkwgGGpN5C956p0e0OgilO8mR4nph4UtqiR8cf6f26JP3hfM+z0CbSJ28DsZefq0EwP34Qth0bIQykGc3HxoNbv1PN6Pr19kvjlFVG4csSjCifuOwLlaL1P1oaEQDNtkgUxDqU4ssL4yvLTBkCPKv40wzWiQJ1Gx46GBh8hhiEDdoq4xdY7L6edYGHPJx7MFaCWACZFdEmsLy8Nfxw4AePv0nUYE4xamSc34kJG7er3Bhq+cGK/g8MxgCIUWfWq9TT8ncTSfBBJIBhVoDJSI0n24+3FADxZ8ga5A0YRhWT7EWnnv9uELaKK0vjOfo1JNTwe7DUZzZiqSo7wveENvFEp88vuHJpqfBOHf9w9Y8/J0+InnVcZFXX0/RPpwItJrJ+Wtf9wo36O+25spO9i7+hbrNWIoxPv9JwmTxyHgCbp2n9mYyo3WnIhrlvaYS1vpGCgctl7dI1Rgvuz0dJ8PcTq7usGpUpPb+iWvtgyKrgXKeuID9Pj9SOKK6KiARRLePMQBGL+V1evslHd33l0euoJ4hz035+cGaAdgUpigk9wF0pjy/OqFgLA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(316002)(186003)(6486002)(26005)(54906003)(5660300002)(1076003)(508600001)(86362001)(30864003)(2616005)(2906002)(38100700002)(66946007)(66556008)(8936002)(66476007)(4326008)(7416002)(6512007)(52116002)(8676002)(6506007)(38350700002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?NYBXwEJqNTnCXleHbGQIJe1h+SW9zDZvQ71bnSyJ7ZSZqDmbhF0r/kCNfQS2?=
- =?us-ascii?Q?L30zD3+ItJJj1i6hADE+0nIEYqlzc5WGCQ3VvPSWGRd8pg9PApotVS32VGPV?=
- =?us-ascii?Q?dkBU8lTVBJ6Stg7GSG5zUSWkQbxNpTxC9mmtl8r1JTyxNbYfRovCvT2xXVnJ?=
- =?us-ascii?Q?LbDlQAA7fcRWAmLYxsVoRn8ellAgqogz7mH8RMmmA9YGn8v/mA14TUR3UFJz?=
- =?us-ascii?Q?GmXEn/EvNXjkbXmDNHbrUdP8yJKhdSgKfFCrdGeFVAEJDal8m9QjQwGDyxI1?=
- =?us-ascii?Q?q4uPcdDEGFycpdn7WZPtiGVxH+T00vBlIWzcZHkeJfx0h7bM7GS4mvYby65v?=
- =?us-ascii?Q?UlWAO1CVgeo0/tTF0I3SvXDRRqiNl4IdqS8YiMRjV5HhKpjVJhu4e3spS2/P?=
- =?us-ascii?Q?q0J4ykhHp3q7EXbjcxrLztQY2y75TQ48LYscEP7ymAjrajvK6TX69ahhKpzM?=
- =?us-ascii?Q?P6k7bXP7pheNxBKx9ruLlFqswh6JqEMIuixBAAv9wkkLbMAi9i7DkPelogVr?=
- =?us-ascii?Q?660CkM6L0uYz3Qu6CEO5uG95gdy+fOs7fE6bGum++vJS+0G4RpCGPOLm0/b+?=
- =?us-ascii?Q?t1eakq5+2GofpcRblSpaPQ3q5WO9StEZIg+uuXLDHn2VolVZrF4wBBRyUacO?=
- =?us-ascii?Q?I1TDMqNZq+200lKKyv0EXxfByZh8KvomCZXmIJaLE4kaPhzlWgxDbQC0SwrG?=
- =?us-ascii?Q?63AT6JxwjW1eyaYabJ30sb3bISxZHTDuYa/wA3IVO023W1cW5KfbM7TP/Ihf?=
- =?us-ascii?Q?qr3WomXj3KRhsuydnbkR3vm5w5QFfVPXGV0+OqJTLFaCxy9h+j4YiXcHNRHb?=
- =?us-ascii?Q?9f6S8L4uLn3m9bdxr+wKMcKkgjAdKt+epV69BFauMdMeJadJg94DVvt7UjAe?=
- =?us-ascii?Q?mn9Z0oumh14nxUPfjH7m1xX7DTm4rId4ZOXmd6zVZ2lcop55SAdCEjG07RwA?=
- =?us-ascii?Q?zzdEb7rVgrDswC07gq72w5DqWb2ZfbX1/ssqSPWeYLDwvcYpb3JvvAqA3xfE?=
- =?us-ascii?Q?n2/y+FUMGbjU0ZJVGxi9uQIsDNDCF2nVSK2y42pqhl0mCx8e53msJWaMrS1Z?=
- =?us-ascii?Q?2ycZYvRAeMw9YxCrpnGpz5pp8vHD6raBh09C48dfHl2sfyCVHpYZJ/IIfTtg?=
- =?us-ascii?Q?iOlLG1WDcCALKu8Q+Tc8LYLVvLUizD5fuXFxwyYRO0y+A/Zqs0rkL4bZfQB3?=
- =?us-ascii?Q?z7XtUFKdJ/VT6yIvAtLpWdeY9ZQG9J6hBySYBdnbUiZ0r0OrsINsENWSob5C?=
- =?us-ascii?Q?qx44saSiiXEN97gWZU3Ewt6jMC3qWC6Vx+BKrNvjd8k4GTV6hP7rKACUwtsd?=
- =?us-ascii?Q?5IPPZZ+Q+vR1pK0mZv/CKlavE6kjNELJU9ej8OBNNAplJFPQywddHKzoEuz8?=
- =?us-ascii?Q?rPyHXgn+eiWDtimZgmhdhIIczmBgGKRwactldViBU18pPUBb3c37OwmNKuIA?=
- =?us-ascii?Q?TqF0kr1cJ9pp9EFeWeWjAn0Z+F1JHjBtS0RGfW1Fkqk+i9nQ8SWh7R1f5e2t?=
- =?us-ascii?Q?WupoFHwxSHu4TM4kR5CV0GghOJGHA2/HeWTWeOBy9t0ZDw5R9H2A5676G+Nm?=
- =?us-ascii?Q?nWplkHvwj1geoN9qwyslGde6N1DOK9tga1LlxPdRo1VcMKec4vuT3q02DHSL?=
- =?us-ascii?Q?vJXyvAILUpMWDa7y4/6JjEM=3D?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c970f51b-0052-4e8d-9bf0-08d9f05c1bc6
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Feb 2022 08:21:04.6887
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SOtu6u8WLm/cuJGMSCZ+YoZxzimrHJB++dNQkRyvIePLKN28/QwLIz35/1EsWOXOHw1crJ41sRWEbB8ybAnHzQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5940
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UPPERCASE_50_75 autolearn=no autolearn_force=no
+In-Reply-To: <c399da9deab3ede9b0c4d4680d8ac508707aa8c3.1644903104.git.lukas@wunner.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-US
+X-Provags-ID: V03:K1:gXXUwvt2cs9fxgYEBt0fVk/0CEASN8sdd4qK+diWV5GLYkq0gGP
+ COcRp6ZVtDcmkFhZAldj1SLu/Icyc0WUWl5bXJyHToVvy/vYT7ukV8UP+CC+btp74cBksjG
+ uSw3WJ02pru666Ixmn47oviujRZv+xGYDavHbDFa9RFY4OZmdvLCiqOLWAtLAi9XaUUU18/
+ SBWOiokI15/wJAaH9hS/Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:T/G9AW97wRE=:K8tIpwJmoDnCsitnv+AqRz
+ 97dsKCGNTP1pD4Dh2ptacOvQEOQrLDw4ZNvQ9CRRRPp1mK/7hW4UL/0w4CwsPdDwP+Rrc/QTd
+ bPs9J4lnivePHSg8PmgPZTIGseD8NqVrcpjNsBnebQDPFTWzcNIn/Zw1iTG4M8cLtHO13EE7b
+ qtdkd3nIJoPNc0Dptqt6iDxdJeJHegDLpTlZzKot0MIRK2oLpN++oSzff+twt5pJSG6j8w9qZ
+ G+AQuI7miEQruD2ZOBzfrihRR+XMZVOI0Y/7mFzPctoRfauyORJ/s0vQZJagO8l6i5XJmY5As
+ f1q8ui5h1OPYkkqjxeJkDWn0mEbVY6w+y7yMTx9gcghNgF5zi5bMQAJpPSu4C7r0hEM4ciTIx
+ 5QCPNa45/az5XCk4LICM5SaHLHqD36rNxHb9XQ79M44bkYq49DLx0vUgerggFcUx/7tWfapPR
+ URLVLhQCJPapfRfGiRDDhFVXDoiCJ5RkpIoRAzGjyhvt/62wNvg8WArLyvkroYfTB04K00R0Z
+ MZDoIVi4kfvPw/ug5P1p4yhkQX8ccuF/cbd5Ou23YE0Qv6kyNXXxCe58br++rHJYykAYs/FpL
+ TcJxK2iNdIdfSIKMSWRRTUdGZvKo615JdP7+Kh+j4EvQ///usTORTFE1FP0lij9CRQbI2Prih
+ LzJgY/Pjg5woPB7Ixpy0wM22AY8Qw9CrSHAWTEh/a3i3PXwIh47aqeuyTOSSOlAAHuXsvRAjW
+ JSSsGO6xcmwxoOIK
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -120,327 +196,72 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Jacky Bai <ping.bai@nxp.com>
+Hi Lukas,
 
-Add i.MX93 pinctrl driver
+Am 15.02.22 um 06:52 schrieb Lukas Wunner:
+> Commit b1d84a3d0a26 ("pinctrl: bcm2835: Add support for all GPIOs on
+> BCM2711") used a different label for the bcm2711 gpio_chip vis-à-vis
+> the bcm2835.
+>
+> That breaks compatibility for GPIO_LOOKUP_IDX() and GPIO_HOG() clauses
+> when porting from older Raspberry Pi Compute Modules to the CM4 or CM4S.
 
-Signed-off-by: Jacky Bai <ping.bai@nxp.com>
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
- drivers/pinctrl/freescale/Kconfig         |   7 +
- drivers/pinctrl/freescale/Makefile        |   1 +
- drivers/pinctrl/freescale/pinctrl-imx93.c | 272 ++++++++++++++++++++++
- 3 files changed, 280 insertions(+)
- create mode 100644 drivers/pinctrl/freescale/pinctrl-imx93.c
+i've some questions:
 
-diff --git a/drivers/pinctrl/freescale/Kconfig b/drivers/pinctrl/freescale/Kconfig
-index 8bdafaf40b29..453dc47f4fa4 100644
---- a/drivers/pinctrl/freescale/Kconfig
-+++ b/drivers/pinctrl/freescale/Kconfig
-@@ -180,6 +180,13 @@ config PINCTRL_IMXRT1050
- 	help
- 	  Say Y here to enable the imxrt1050 pinctrl driver
- 
-+config PINCTRL_IMX93
-+	tristate "IMX93 pinctrl driver"
-+	depends on ARCH_MXC
-+	select PINCTRL_IMX
-+	help
-+	  Say Y here to enable the imx93 pinctrl driver
-+
- config PINCTRL_VF610
- 	bool "Freescale Vybrid VF610 pinctrl driver"
- 	depends on SOC_VF610
-diff --git a/drivers/pinctrl/freescale/Makefile b/drivers/pinctrl/freescale/Makefile
-index 565a0350bf09..9f5d1c090338 100644
---- a/drivers/pinctrl/freescale/Makefile
-+++ b/drivers/pinctrl/freescale/Makefile
-@@ -25,6 +25,7 @@ obj-$(CONFIG_PINCTRL_IMX8QM)	+= pinctrl-imx8qm.o
- obj-$(CONFIG_PINCTRL_IMX8QXP)	+= pinctrl-imx8qxp.o
- obj-$(CONFIG_PINCTRL_IMX8DXL)	+= pinctrl-imx8dxl.o
- obj-$(CONFIG_PINCTRL_IMX8ULP)	+= pinctrl-imx8ulp.o
-+obj-$(CONFIG_PINCTRL_IMX93)	+= pinctrl-imx93.o
- obj-$(CONFIG_PINCTRL_VF610)	+= pinctrl-vf610.o
- obj-$(CONFIG_PINCTRL_MXS)	+= pinctrl-mxs.o
- obj-$(CONFIG_PINCTRL_IMX23)	+= pinctrl-imx23.o
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx93.c b/drivers/pinctrl/freescale/pinctrl-imx93.c
-new file mode 100644
-index 000000000000..c0630f69e995
---- /dev/null
-+++ b/drivers/pinctrl/freescale/pinctrl-imx93.c
-@@ -0,0 +1,272 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2021 NXP
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/pinctrl/pinctrl.h>
-+
-+#include "pinctrl-imx.h"
-+
-+enum imx93_pads {
-+	IMX93_IOMUXC_DAP_TDI = 0,
-+	IMX93_IOMUXC_DAP_TMS_SWDIO = 1,
-+	IMX93_IOMUXC_DAP_TCLK_SWCLK = 2,
-+	IMX93_IOMUXC_DAP_TDO_TRACESWO = 3,
-+	IMX93_IOMUXC_GPIO_IO00 = 4,
-+	IMX93_IOMUXC_GPIO_IO01 = 5,
-+	IMX93_IOMUXC_GPIO_IO02 = 6,
-+	IMX93_IOMUXC_GPIO_IO03 = 7,
-+	IMX93_IOMUXC_GPIO_IO04 = 8,
-+	IMX93_IOMUXC_GPIO_IO05 = 9,
-+	IMX93_IOMUXC_GPIO_IO06 = 10,
-+	IMX93_IOMUXC_GPIO_IO07 = 11,
-+	IMX93_IOMUXC_GPIO_IO08 = 12,
-+	IMX93_IOMUXC_GPIO_IO09 = 13,
-+	IMX93_IOMUXC_GPIO_IO10 = 14,
-+	IMX93_IOMUXC_GPIO_IO11 = 15,
-+	IMX93_IOMUXC_GPIO_IO12 = 16,
-+	IMX93_IOMUXC_GPIO_IO13 = 17,
-+	IMX93_IOMUXC_GPIO_IO14 = 18,
-+	IMX93_IOMUXC_GPIO_IO15 = 19,
-+	IMX93_IOMUXC_GPIO_IO16 = 20,
-+	IMX93_IOMUXC_GPIO_IO17 = 21,
-+	IMX93_IOMUXC_GPIO_IO18 = 22,
-+	IMX93_IOMUXC_GPIO_IO19 = 23,
-+	IMX93_IOMUXC_GPIO_IO20 = 24,
-+	IMX93_IOMUXC_GPIO_IO21 = 25,
-+	IMX93_IOMUXC_GPIO_IO22 = 26,
-+	IMX93_IOMUXC_GPIO_IO23 = 27,
-+	IMX93_IOMUXC_GPIO_IO24 = 28,
-+	IMX93_IOMUXC_GPIO_IO25 = 29,
-+	IMX93_IOMUXC_GPIO_IO26 = 30,
-+	IMX93_IOMUXC_GPIO_IO27 = 31,
-+	IMX93_IOMUXC_GPIO_IO28 = 32,
-+	IMX93_IOMUXC_GPIO_IO29 = 33,
-+	IMX93_IOMUXC_CCM_CLKO1 = 34,
-+	IMX93_IOMUXC_CCM_CLKO2 = 35,
-+	IMX93_IOMUXC_CCM_CLKO3 = 36,
-+	IMX93_IOMUXC_CCM_CLKO4 = 37,
-+	IMX93_IOMUXC_ENET1_MDC = 38,
-+	IMX93_IOMUXC_ENET1_MDIO = 39,
-+	IMX93_IOMUXC_ENET1_TD3 = 40,
-+	IMX93_IOMUXC_ENET1_TD2 = 41,
-+	IMX93_IOMUXC_ENET1_TD1 = 42,
-+	IMX93_IOMUXC_ENET1_TD0 = 43,
-+	IMX93_IOMUXC_ENET1_TX_CTL = 44,
-+	IMX93_IOMUXC_ENET1_TXC = 45,
-+	IMX93_IOMUXC_ENET1_RX_CTL = 46,
-+	IMX93_IOMUXC_ENET1_RXC = 47,
-+	IMX93_IOMUXC_ENET1_RD0 = 48,
-+	IMX93_IOMUXC_ENET1_RD1 = 49,
-+	IMX93_IOMUXC_ENET1_RD2 = 50,
-+	IMX93_IOMUXC_ENET1_RD3 = 51,
-+	IMX93_IOMUXC_ENET2_MDC = 52,
-+	IMX93_IOMUXC_ENET2_MDIO = 53,
-+	IMX93_IOMUXC_ENET2_TD3 = 54,
-+	IMX93_IOMUXC_ENET2_TD2 = 55,
-+	IMX93_IOMUXC_ENET2_TD1 = 56,
-+	IMX93_IOMUXC_ENET2_TD0 = 57,
-+	IMX93_IOMUXC_ENET2_TX_CTL = 58,
-+	IMX93_IOMUXC_ENET2_TXC = 59,
-+	IMX93_IOMUXC_ENET2_RX_CTL = 60,
-+	IMX93_IOMUXC_ENET2_RXC = 61,
-+	IMX93_IOMUXC_ENET2_RD0 = 62,
-+	IMX93_IOMUXC_ENET2_RD1 = 63,
-+	IMX93_IOMUXC_ENET2_RD2 = 64,
-+	IMX93_IOMUXC_ENET2_RD3 = 65,
-+	IMX93_IOMUXC_SD1_CLK = 66,
-+	IMX93_IOMUXC_SD1_CMD = 67,
-+	IMX93_IOMUXC_SD1_DATA0 = 68,
-+	IMX93_IOMUXC_SD1_DATA1 = 69,
-+	IMX93_IOMUXC_SD1_DATA2 = 70,
-+	IMX93_IOMUXC_SD1_DATA3 = 71,
-+	IMX93_IOMUXC_SD1_DATA4 = 72,
-+	IMX93_IOMUXC_SD1_DATA5 = 73,
-+	IMX93_IOMUXC_SD1_DATA6 = 74,
-+	IMX93_IOMUXC_SD1_DATA7 = 75,
-+	IMX93_IOMUXC_SD1_STROBE = 76,
-+	IMX93_IOMUXC_SD2_VSELECT = 77,
-+	IMX93_IOMUXC_SD3_CLK = 78,
-+	IMX93_IOMUXC_SD3_CMD = 79,
-+	IMX93_IOMUXC_SD3_DATA0 = 80,
-+	IMX93_IOMUXC_SD3_DATA1 = 81,
-+	IMX93_IOMUXC_SD3_DATA2 = 82,
-+	IMX93_IOMUXC_SD3_DATA3 = 83,
-+	IMX93_IOMUXC_SD2_CD_B = 84,
-+	IMX93_IOMUXC_SD2_CLK = 85,
-+	IMX93_IOMUXC_SD2_CMD = 86,
-+	IMX93_IOMUXC_SD2_DATA0 = 87,
-+	IMX93_IOMUXC_SD2_DATA1 = 88,
-+	IMX93_IOMUXC_SD2_DATA2 = 89,
-+	IMX93_IOMUXC_SD2_DATA3 = 90,
-+	IMX93_IOMUXC_SD2_RESET_B = 91,
-+	IMX93_IOMUXC_I2C1_SCL = 92,
-+	IMX93_IOMUXC_I2C1_SDA = 93,
-+	IMX93_IOMUXC_I2C2_SCL = 94,
-+	IMX93_IOMUXC_I2C2_SDA = 95,
-+	IMX93_IOMUXC_UART1_RXD = 96,
-+	IMX93_IOMUXC_UART1_TXD = 97,
-+	IMX93_IOMUXC_UART2_RXD = 98,
-+	IMX93_IOMUXC_UART2_TXD = 99,
-+	IMX93_IOMUXC_PDM_CLK = 100,
-+	IMX93_IOMUXC_PDM_BIT_STREAM0 = 101,
-+	IMX93_IOMUXC_PDM_BIT_STREAM1 = 102,
-+	IMX93_IOMUXC_SAI1_TXFS = 103,
-+	IMX93_IOMUXC_SAI1_TXC = 104,
-+	IMX93_IOMUXC_SAI1_TXD0 = 105,
-+	IMX93_IOMUXC_SAI1_RXD0 = 106,
-+	IMX93_IOMUXC_WDOG_ANY  = 107,
-+};
-+
-+/* Pad names for the pinmux subsystem */
-+static const struct pinctrl_pin_desc imx93_pinctrl_pads[] = {
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_DAP_TDI),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_DAP_TMS_SWDIO),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_DAP_TCLK_SWCLK),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_DAP_TDO_TRACESWO),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_GPIO_IO00),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_GPIO_IO01),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_GPIO_IO02),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_GPIO_IO03),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_GPIO_IO04),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_GPIO_IO05),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_GPIO_IO06),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_GPIO_IO07),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_GPIO_IO08),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_GPIO_IO09),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_GPIO_IO10),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_GPIO_IO11),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_GPIO_IO12),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_GPIO_IO13),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_GPIO_IO14),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_GPIO_IO15),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_GPIO_IO16),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_GPIO_IO17),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_GPIO_IO18),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_GPIO_IO19),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_GPIO_IO20),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_GPIO_IO21),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_GPIO_IO22),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_GPIO_IO23),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_GPIO_IO24),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_GPIO_IO25),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_GPIO_IO26),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_GPIO_IO27),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_GPIO_IO28),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_GPIO_IO29),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_CCM_CLKO1),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_CCM_CLKO2),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_CCM_CLKO3),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_CCM_CLKO4),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_ENET1_MDC),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_ENET1_MDIO),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_ENET1_TD3),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_ENET1_TD2),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_ENET1_TD1),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_ENET1_TD0),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_ENET1_TX_CTL),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_ENET1_TXC),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_ENET1_RX_CTL),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_ENET1_RXC),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_ENET1_RD0),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_ENET1_RD1),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_ENET1_RD2),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_ENET1_RD3),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_ENET2_MDC),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_ENET2_MDIO),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_ENET2_TD3),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_ENET2_TD2),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_ENET2_TD1),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_ENET2_TD0),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_ENET2_TX_CTL),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_ENET2_TXC),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_ENET2_RX_CTL),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_ENET2_RXC),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_ENET2_RD0),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_ENET2_RD1),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_ENET2_RD2),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_ENET2_RD3),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_SD1_CLK),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_SD1_CMD),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_SD1_DATA0),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_SD1_DATA1),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_SD1_DATA2),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_SD1_DATA3),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_SD1_DATA4),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_SD1_DATA5),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_SD1_DATA6),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_SD1_DATA7),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_SD1_STROBE),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_SD2_VSELECT),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_SD3_CLK),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_SD3_CMD),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_SD3_DATA0),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_SD3_DATA1),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_SD3_DATA2),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_SD3_DATA3),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_SD2_CD_B),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_SD2_CLK),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_SD2_CMD),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_SD2_DATA0),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_SD2_DATA1),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_SD2_DATA2),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_SD2_DATA3),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_SD2_RESET_B),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_I2C1_SCL),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_I2C1_SDA),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_I2C2_SCL),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_I2C2_SDA),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_UART1_RXD),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_UART1_TXD),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_UART2_RXD),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_UART2_TXD),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_PDM_CLK),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_PDM_BIT_STREAM0),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_PDM_BIT_STREAM1),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_SAI1_TXFS),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_SAI1_TXC),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_SAI1_TXD0),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_SAI1_RXD0),
-+	IMX_PINCTRL_PIN(IMX93_IOMUXC_WDOG_ANY),
-+};
-+
-+static const struct imx_pinctrl_soc_info imx93_pinctrl_info = {
-+	.pins = imx93_pinctrl_pads,
-+	.npins = ARRAY_SIZE(imx93_pinctrl_pads),
-+	.gpr_compatible = "fsl,imx93-iomuxc-gpr",
-+};
-+
-+static const struct of_device_id imx93_pinctrl_of_match[] = {
-+	{ .compatible = "fsl,imx93-iomuxc", },
-+	{ /* sentinel */ }
-+};
-+
-+static int imx93_pinctrl_probe(struct platform_device *pdev)
-+{
-+	return imx_pinctrl_probe(pdev, &imx93_pinctrl_info);
-+}
-+
-+static struct platform_driver imx93_pinctrl_driver = {
-+	.driver = {
-+		.name = "imx93-pinctrl",
-+		.of_match_table = imx93_pinctrl_of_match,
-+		.suppress_bind_attrs = true,
-+	},
-+	.probe = imx93_pinctrl_probe,
-+};
-+
-+static int __init imx93_pinctrl_init(void)
-+{
-+	return platform_driver_register(&imx93_pinctrl_driver);
-+}
-+arch_initcall(imx93_pinctrl_init);
-+
-+MODULE_AUTHOR("Bai Ping <ping.bai@nxp.com>");
-+MODULE_DESCRIPTION("NXP i.MX93 pinctrl driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.25.1
+could you explain the breakage more in detail, is it kernel or user space?
+
+A little bit off topic, but what is this CM4S? Is it special version of
+the CM4? Can you provide a link or something?
+
+>
+> The name change seems unwarranted given it's essentially the same
+> hardware, so use the old name instead.
+
+I disagree at this point. The pinctrl of bcm2835 and bcm2711 are
+different. For example the bcm2835 has only 54 GPIOs while the bcm2711
+has 58.
+
+Best regards
+
+>
+> For consistency, modify the pinctrl_desc and pinctrl_gpio_range names
+> as well.  (It looks like they're only used by debugfs.)
+>
+> Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> Cc: Stefan Wahren <stefan.wahren@i2se.com>
+> ---
+>  drivers/pinctrl/bcm/pinctrl-bcm2835.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+> index 47e433e09c5c..41d0f32b9d66 100644
+> --- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+> +++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+> @@ -375,7 +375,7 @@ static const struct gpio_chip bcm2835_gpio_chip = {
+>  };
+>  
+>  static const struct gpio_chip bcm2711_gpio_chip = {
+> -	.label = "pinctrl-bcm2711",
+> +	.label = MODULE_NAME,
+>  	.owner = THIS_MODULE,
+>  	.request = gpiochip_generic_request,
+>  	.free = gpiochip_generic_free,
+> @@ -1134,7 +1134,7 @@ static const struct pinctrl_desc bcm2835_pinctrl_desc = {
+>  };
+>  
+>  static const struct pinctrl_desc bcm2711_pinctrl_desc = {
+> -	.name = "pinctrl-bcm2711",
+> +	.name = MODULE_NAME,
+>  	.pins = bcm2835_gpio_pins,
+>  	.npins = BCM2711_NUM_GPIOS,
+>  	.pctlops = &bcm2835_pctl_ops,
+> @@ -1149,7 +1149,7 @@ static const struct pinctrl_gpio_range bcm2835_pinctrl_gpio_range = {
+>  };
+>  
+>  static const struct pinctrl_gpio_range bcm2711_pinctrl_gpio_range = {
+> -	.name = "pinctrl-bcm2711",
+> +	.name = MODULE_NAME,
+>  	.npins = BCM2711_NUM_GPIOS,
+>  };
+>  
 
