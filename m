@@ -2,95 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9050F4B727D
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Feb 2022 17:42:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4932B4B7809
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Feb 2022 21:51:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240933AbiBOPoh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Feb 2022 10:44:37 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:43494 "EHLO
+        id S234403AbiBOQrG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Feb 2022 11:47:06 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:39652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240315AbiBOPoS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Feb 2022 10:44:18 -0500
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6AC6EA363;
-        Tue, 15 Feb 2022 07:38:31 -0800 (PST)
-Received: by mail-ej1-x634.google.com with SMTP id p9so22202235ejd.6;
-        Tue, 15 Feb 2022 07:38:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4c4uLg+6xK62uK/uIKxvl/o7vQn8X9pm3rRoIxcYStc=;
-        b=hVRSoNqL5G26KGJupiMcqpIIJ6KdnEX2br5Ah4u+93CBcx13OUAYoHcTpp+gHXlTtZ
-         Pwp+IBPNf5Asgg2RQmCkRE7/lkz9CKKIaLCfpfYqMWpxk+zR7r6YGKl1jaQg8OpEj7ro
-         Hc9uS0htjha3XdJfKpvdXvF4M4P54Z+y1ymAPxsTq68GdiD/1R9Gf8IU2fc37Hm5fs0W
-         QUK7wqnbwk6FMrL/Slbkr85sGi0OIrcPgmxui55rTRdDso9F9WrOGZvrUeOZWw5d5OrF
-         NvA0iYYv4uRWI9SxzRheHl6iNMzJ2Dl2G3KVOvBA+ltg9yN7vbN1az2T7ZDOtglfYidf
-         6Y0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4c4uLg+6xK62uK/uIKxvl/o7vQn8X9pm3rRoIxcYStc=;
-        b=E7cQR337+T/dwSlios1cXy/HrOEu6K8t4vw2qKRnGY4rnrRt+7avOyfnFSxPLVJ2fN
-         NqJ/PLopN/Ag9Ai6CHYoPVK/ZpTByytLsCFoUf2XpjngEgpbOCurD+IuhNptnnRWNCJu
-         u/wJdCzK4D84dlgmRtxobmtbOuf5pRDcLu+L9x7qM0BTpnbp+quz/Np3b+3zfbHnTC9Z
-         uEeTLE9WP0CncfWfvIj0DjGNbUf3eGuNyErA1E70+KgKuJ3STB49yhHf9Dp/TAjBnEMf
-         a0M15DoXqlJIXjaGCLLbB12UH5f/3gY/j3pisTo1izpw1k7EM50IT1CGrwQq8FfBrQHz
-         K/1A==
-X-Gm-Message-State: AOAM5302nncZOJ+DicpCfQ6VEB5iAmjaKDS3FxdVZrI3MGrkak842EIz
-        Twk/vPhoI8PDAG/MR+4zVASmFqNpi4lQUW0VU1o=
-X-Google-Smtp-Source: ABdhPJxQGBopSj3C6s+jqyN0nrwN12siEVw8h8G+/ijRyT5ogzTJ7KsTO9W46tWw5cDOyfkQckGvDJf4RDiA7ZGISGM=
-X-Received: by 2002:a17:906:99c5:: with SMTP id s5mr3466341ejn.497.1644939510133;
- Tue, 15 Feb 2022 07:38:30 -0800 (PST)
+        with ESMTP id S235228AbiBOQrF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Feb 2022 11:47:05 -0500
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35EAEBDE71;
+        Tue, 15 Feb 2022 08:46:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1644943615; x=1676479615;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=U9cLS970bwlyW17ctpm79Dm5QjC8dMWPZatYaS+V9SM=;
+  b=LT67/gCzFP+d0j5GALSpoymfzjiLht6Do3kAmv6iK1L3XpRWn2mZ3Q1t
+   blBYkOwjzMiS/SQB1nHj9U/sHEyIfRVN5esL0Mz53H43tHJk3IK24audp
+   inxCwbD4wkr9R1llQDN9e4IE+E/1JEEqKTanFbBabTdySGAkxnS5theMf
+   XJIHM0ssiv7MwHguImTQTkIY5Ejf5uNRPtAe8P9CzpyjCjf3LWeYyH7S3
+   pFap486XI+/82+S36y4riGDUokkXubB1R8EdduJ7kXHI3HinL+KiLcCAv
+   3iqgS8rWBKbU3hZhJB48tnxb+kVP8v+VrnUd35JMYPR0pmm6keRrEoOfH
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10258"; a="250133755"
+X-IronPort-AV: E=Sophos;i="5.88,371,1635231600"; 
+   d="scan'208";a="250133755"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2022 08:46:54 -0800
+X-IronPort-AV: E=Sophos;i="5.88,371,1635231600"; 
+   d="scan'208";a="570911110"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.162])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2022 08:46:52 -0800
+Received: by lahna (sSMTP sendmail emulation); Tue, 15 Feb 2022 18:44:40 +0200
+Date:   Tue, 15 Feb 2022 18:44:40 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 1/4] pinctrl: tigerlake: Revert "Add Alder Lake-M ACPI
+ ID"
+Message-ID: <YgvYeJSvwaCXzISF@lahna>
+References: <20220215152800.21104-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-References: <20220209162607.1118325-1-maz@kernel.org> <CACRpkdYfrAexUhFV6e86QW+GSc3hM=38VNucKLhPppJ2ZdQ7fA@mail.gmail.com>
-In-Reply-To: <CACRpkdYfrAexUhFV6e86QW+GSc3hM=38VNucKLhPppJ2ZdQ7fA@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 15 Feb 2022 17:37:01 +0200
-Message-ID: <CAHp75VdmKqViM5393w=frbX77te6X-VnMe5+VZwxY4PBw12Pdw@mail.gmail.com>
-Subject: Re: [PATCH 00/10] irqchip: Prevent drivers abusing irq_chip::name
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Marc Zyngier <maz@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220215152800.21104-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Feb 11, 2022 at 8:31 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Wed, Feb 9, 2022 at 5:26 PM Marc Zyngier <maz@kernel.org> wrote:
+On Tue, Feb 15, 2022 at 05:27:57PM +0200, Andy Shevchenko wrote:
+> It appears that last minute change moved ACPI ID of Alder Lake-M
+> to the INTC1055, which is already in the driver.
+> 
+> This ID on the other hand will be used elsewhere.
+> 
+> This reverts commit 258435a1c8187f559549e515d2f77fa0b57bcd27.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-...
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-> Since ... I am mostly
-> playing with a baby during the daytime
-
-A bit of a side topic, since I need to send a PR for fixes before my
-vacation starts tomorrow, should I Cc my PR to that Linus as well, so
-he can accept it?
-It will contain two one-liner ID patches to pin control Intel drivers
-and won't conflict with anything (as far as I am aware and know).
-
--- 
-With Best Regards,
-Andy Shevchenko
+Please mark this for stable too as discussed.
