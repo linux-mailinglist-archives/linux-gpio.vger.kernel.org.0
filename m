@@ -2,58 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E65054B5CD6
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Feb 2022 22:30:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F2A1B4B5EF0
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Feb 2022 01:19:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231295AbiBNV2S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Feb 2022 16:28:18 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:40804 "EHLO
+        id S232467AbiBOAT3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Feb 2022 19:19:29 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:33542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231282AbiBNV2Q (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Feb 2022 16:28:16 -0500
-Received: from mail-oo1-xc30.google.com (mail-oo1-xc30.google.com [IPv6:2607:f8b0:4864:20::c30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A81F9F94F2;
-        Mon, 14 Feb 2022 13:28:07 -0800 (PST)
-Received: by mail-oo1-xc30.google.com with SMTP id 189-20020a4a03c6000000b003179d7b30d8so20895858ooi.2;
-        Mon, 14 Feb 2022 13:28:07 -0800 (PST)
+        with ESMTP id S229877AbiBOAT2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Feb 2022 19:19:28 -0500
+Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F30C112D0B2;
+        Mon, 14 Feb 2022 16:19:15 -0800 (PST)
+Received: by mail-oi1-x236.google.com with SMTP id m10so19242160oie.2;
+        Mon, 14 Feb 2022 16:19:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=sender:message-id:date:mime-version:user-agent:content-language:to
-         :cc:references:from:subject:in-reply-to:content-transfer-encoding;
-        bh=UVh4M/vAC4Y3c5prvL+gptV0J4ANUwgwhkXrvFsW9IE=;
-        b=Thq2KM3BDYbNXLH87fz5kHDfaXJX+BJaRCdpaapSaJlbUv73lB36OY1+HlQ8Xa/tpX
-         YyBUK+GGqbuT4uCwMbOAClgO5ktQ9iuGsAPgFE3kHD2XE931fKkXpH6AocAZLojE0z8i
-         3MDvYSbGdvMNLJs+SylCoefSlIIUFPNFmh8ZU/y6HYT7nmygRZ9gbxZra77chRIY+X8N
-         dQkpxIT+ay5r6FP8EBO3Ekn0rxi1PlXMfN3JHDg96StDBUjICrbcXL09i8DabyrcNlr6
-         6XuZkl6HWJTosklR0ann2o6fcVRwZ3ubdtXougK5qTxXbb8iJnDlS4j0lg54pzEEgt/r
-         vP4A==
+        h=sender:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=vigjbAd4A51psNAPS184FB4plaCgqbr2pN1jkWgXy80=;
+        b=BNs7vkHtt9VLM1N4LlIcHHg6tYxHCnXi+3PPp+VcYQv6EuWMA1yOuj9qkwCcatxj+n
+         hNPEfn6HNkJP/ENMc4a1UMg/+ODyBqYNORpzKiaTi7DM0cmrEg9ZqmfuxtL0gY7rjimh
+         SzWIFoW3SqmhOt8M15vHR4PDA2jMDPsSW1xLdWYesnVzyJUJSGQTfVoUPIO9q537JU/B
+         s2ZmAIUXkByGKTUhRZt37xyF33bjwHmhohs4LeyDai0TO5slAGE3SEd8C8aFzmsjZG2y
+         FZH82jA0fxcKpOt4/5BPMy9cTRIqw9rhu22J1O3T+WDLsn7sDCjhja7VkUEj8S9yWeor
+         eU6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:sender:message-id:date:mime-version:user-agent
-         :content-language:to:cc:references:from:subject:in-reply-to
+         :subject:content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=UVh4M/vAC4Y3c5prvL+gptV0J4ANUwgwhkXrvFsW9IE=;
-        b=OXQom2VqB65Omvp4VqVASxvVapPsAFyXaP+jNdc5B4DOHJJqdpEm3zuvGd6gu7Is+6
-         XTq69RbRs2kui7prqMk2Nnq6iSvOosg3yrKp8y6UE+4Vz1TTui/p2V3bBDyog/C/9SwK
-         dacR3fBTfs9B+kOXkNz9XMOUQnap6NsljdWTykylQ2B1Hab7SdVN9sXecK1ljXMp7zFm
-         rBGiQdqw3R8m6cewAhQyrbRn9yT0HkNoWAV6oyT6hpRo4KePWlWnCv62QgliJ+lCrAo0
-         SFl2g2MtwVggQpA40w/jg7YHYfgKzHROsrBldCEy+WBBdXc/1wZzaRxpdo/gyG4h4xeY
-         pa2A==
-X-Gm-Message-State: AOAM531VkvJU38HOw2i11/KA4ia1iVnB0GRsnbJ59UeRkTqFzRpHs4Vn
-        RVIstnBYzmswYIdZdb3K32o=
-X-Google-Smtp-Source: ABdhPJyGiGOkga9Gpg9jYVgJpKPK3C+5vVOIkiVNaDQXIwVbAvhlL3lR7T0ukNQ03uqKS+IooqeV7g==
-X-Received: by 2002:a05:6870:1314:b0:d1:4902:c2ef with SMTP id 20-20020a056870131400b000d14902c2efmr265973oab.191.1644874086986;
-        Mon, 14 Feb 2022 13:28:06 -0800 (PST)
+        bh=vigjbAd4A51psNAPS184FB4plaCgqbr2pN1jkWgXy80=;
+        b=0fynV+RsSZbZhkahlNpA0xmq6XR4Gr6+HD4f3Srqdh5wb5oEr5JiujUEnRx+TGgr3D
+         XN/iNET9BkzYMYgwskrnznnCjOF/2BGZdmO6+eTXDvn4q91kaAFcAcrDmlZiLcHJar13
+         tSAmDR9yH+dvvhDOY/gMCn2o1Oz/54UCTgrt70hNErRXkRszrLVJav+zmwTrApF0e/io
+         roOABuyh7RlodkDJ/0XyyQwE7y6ttiU7ZBfgUC/zJzLygVgxUPnRJAVR905DiYCayO2q
+         DwI9VrOwtCfgvWQjYXT6wSSmiYe2NNutLJGROPY0g48LHT47WelsPQhWOwbd7aEVlvlw
+         ARtA==
+X-Gm-Message-State: AOAM533AuxiSpsnh8HdyoipP83z/kPaCQHP9LilSWkzJx9/gdNAb65CY
+        VuPjnHZC6VVOgNOy+bxCqI4=
+X-Google-Smtp-Source: ABdhPJzzgxjIDcgxtpTh/E0JDtu7NmujEJ/62Th5MttZipaYO9YEtFfqmBgsoZqx4B80pfwKFpUogg==
+X-Received: by 2002:a05:6808:1492:: with SMTP id e18mr668888oiw.110.1644884355222;
+        Mon, 14 Feb 2022 16:19:15 -0800 (PST)
 Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id r38sm3698740otv.72.2022.02.14.13.28.04
+        by smtp.gmail.com with ESMTPSA id 128sm12752919oor.15.2022.02.14.16.19.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Feb 2022 13:28:05 -0800 (PST)
+        Mon, 14 Feb 2022 16:19:14 -0800 (PST)
 Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <b27e5fcc-9968-4f73-d96c-bb710a77f10c@roeck-us.net>
-Date:   Mon, 14 Feb 2022 13:28:03 -0800
+Message-ID: <9516d8cf-864d-f7f0-bcc0-8cc329096824@roeck-us.net>
+Date:   Mon, 14 Feb 2022 16:19:12 -0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
+Subject: Re: [PATCH for 5.17] pinctrl-sunxi:
+ sunxi_pinctrl_gpio_direction_in/output: use correct offset
 Content-Language: en-US
 To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
 Cc:     linux-media@vger.kernel.org,
@@ -66,8 +69,6 @@ References: <20211206131648.1521868-1-hverkuil-cisco@xs4all.nl>
  <20220213204242.GA991833@roeck-us.net>
  <80ba7281-3d51-3ba6-fcfe-df13171743cc@xs4all.nl>
 From:   Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH for 5.17] pinctrl-sunxi:
- sunxi_pinctrl_gpio_direction_in/output: use correct offset
 In-Reply-To: <80ba7281-3d51-3ba6-fcfe-df13171743cc@xs4all.nl>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
@@ -120,13 +121,9 @@ On 2/14/22 00:44, Hans Verkuil wrote:
 > that hasn't been noticed before.
 > 
 
-Initial finding is that your second patch doesn't introduce the problem. it appears
-that it uncovers a problem that was hidden by commit 8df89a7cbc ("pinctrl-sunxi:
-don't call pinctrl_gpio_direction()"). If I revert both this patch and commit
-8df89a7cbc in linux-next, I also see the traceback. I do not see the traceback
-in v5.16. I do see the traceback in v5.17-rc4 after applying this patch.
-
-I am currently trying to bisect between v5.16 and v5.17-rc4.
+Turns out the real 'culprit' is commit 145988cff2a1 ("ARM: dts: sun8i: Adjust power
+key nodes") which introduces wakeup-source for orangepi-pc and with it the call to
+sunxi_pinctrl_irq_set_wake and the warning traceback.
 
 Guenter
 
