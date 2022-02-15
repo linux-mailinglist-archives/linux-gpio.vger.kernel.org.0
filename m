@@ -2,160 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C99D64B76FC
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Feb 2022 21:50:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F0844B7661
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Feb 2022 21:49:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242422AbiBORT1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Feb 2022 12:19:27 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:49048 "EHLO
+        id S242561AbiBORaH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Feb 2022 12:30:07 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:44028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238262AbiBORT0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Feb 2022 12:19:26 -0500
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBDCB1AF33;
-        Tue, 15 Feb 2022 09:19:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1644945545;
-        bh=FTRaQZEhcQHE3D6iMKxlWyuUw3TDc4VB3gHJh1I0RhM=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=FEvtmI8ovHWgdCHsVqY8UkXxveuRoUoaN2mnIeYRYWyCh5pH9ZDEGQ33Ea7LguYfI
-         2eM0MX57verzTfxdJLrkrqQ4iSSGbhlbwiY8Xgi/1vORd8ko9cooMDgvQIvh2M6WYW
-         +Lq1Vp6vnWzzDnidbYX6Li6TIS062BREM+z9cCGU=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([5.146.194.160]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MRmjw-1nhZyt2TT0-00TH5q; Tue, 15
- Feb 2022 18:19:05 +0100
-Date:   Tue, 15 Feb 2022 18:19:04 +0100
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Joel Stanley <joel@jms.id.au>
-Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        with ESMTP id S241647AbiBORaG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Feb 2022 12:30:06 -0500
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3600DDB84D
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Feb 2022 09:29:55 -0800 (PST)
+Received: by mail-wr1-x431.google.com with SMTP id i14so33287217wrc.10
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Feb 2022 09:29:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=ICO1ml37Huyez+etV+dT6D2+k0fK+dVgQX5aKLEtpWE=;
+        b=im6LJNHwlFAY9cu/QQdYtskumJ2IlnWWzqdt5Z9BVaTZVNb6jEK7vusRjOzoETzlLy
+         D8CRih2welvIHDPxp+CBf1zRAWFB46gczAOOyzgQoBImzsy1sUBHpK17HTxUymgTgY+4
+         k3OV3VwgNG34VgF+pPMAWCJ+0t3V1u9KfifiwaoSxom9ARUIvx/a2Mq54gahxgbpXCkM
+         xHHr1UsBoR0xMqLrL39HDlu+dvBcZQuK+Q0jSfIhSP2cacCDhNapx7cvb+CrUi3VYD7F
+         5w1bEqTDFVkfjQnDy6CGZEuG8TFGtZSsdrSsfrYE/OPXw2taYRSitUXrncwpTOU/rkyj
+         yUHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=ICO1ml37Huyez+etV+dT6D2+k0fK+dVgQX5aKLEtpWE=;
+        b=i2vm1J0Z3BZr8EY3BNAUK2G/JIgWTG4LUB+b5uZDlJnt1N6J6E68VNFUlcLHkNFFt+
+         5lWlRoOnS+b9OGMdgTX2pEIJqHEKAEBqPL6KfjQxoUPWnRCnIKhDOsRvHmzvtrIfvCnO
+         IBOMXpnjaklnrb1XDQaYCx5kE5AaidtztZU8cjWmXH+Yp7bBdZ91sAhsICLT7iX+9KCm
+         wg6uzU8MZSz4bvWxUqk4qQyw+bIJo+q/D2aEZpQ6NGFtSyY8smdoI7tFEZWiiziRBB+0
+         SqohFU49h96LuMknwdhRIfX58NYdFocEk9RnM7yZ4+tFw2VEseoO6UasR6hqF360lBzc
+         asKw==
+X-Gm-Message-State: AOAM532KK0TuTVK494ehTq8gQJBMAEiUQQqfmezQTuH7QcesyubZogwQ
+        YNSxdqGUA4KNR4LqaxS8ZCXLoA==
+X-Google-Smtp-Source: ABdhPJwOSH7G6HmOK9tUgixHAXjPC1RBzQXDR1s7T2yUWuUsnh1GJ/d+msUEl3DzoTdLHmv2ZT68gw==
+X-Received: by 2002:adf:e5cb:: with SMTP id a11mr17283wrn.255.1644946193787;
+        Tue, 15 Feb 2022 09:29:53 -0800 (PST)
+Received: from google.com (cpc155339-bagu17-2-0-cust87.1-3.cable.virginm.net. [86.27.177.88])
+        by smtp.gmail.com with ESMTPSA id f8sm13204075wmq.19.2022.02.15.09.29.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Feb 2022 09:29:53 -0800 (PST)
+Date:   Tue, 15 Feb 2022 17:29:51 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>
-Subject: Re: [PATCH v5 0/9] Nuvoton WPCM450 pinctrl and GPIO driver
-Message-ID: <Ygvf3COuzZ9bTXuy@latitude>
-References: <20220129115228.2257310-1-j.neuschaefer@gmx.net>
- <CACRpkdYEigGHkoGfBg15tFXadgpXUAjDOnw7ePXhmvHJqPEJXw@mail.gmail.com>
- <YfZkis8M81Ejpagq@latitude>
- <CACPK8XdFXRQf3MpPh3z=EMAKtnQSHL+iwwMCVYc5dP9DfQEN+Q@mail.gmail.com>
- <YfpyjDBH83FE7r4o@latitude>
- <CAHp75Vdg8zFSHaTP_8jQua5QfRYbvZ4_rLdCtt3ks8YEibseTg@mail.gmail.com>
- <YgdyjUbb4lnrVHmJ@latitude>
- <CACPK8Xe-t8Qso_AX+q08OxrgmUPbEayhnHXH5xiLr7M6rDxjuw@mail.gmail.com>
+        Tan Jui Nee <jui.nee.tan@intel.com>,
+        Kate Hsuan <hpa@redhat.com>,
+        Jonathan Yong <jonathan.yong@intel.com>,
+        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-gpio@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Peter Tyser <ptyser@xes-inc.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Mark Gross <markgross@kernel.org>,
+        Henning Schild <henning.schild@siemens.com>
+Subject: Re: [PATCH v4 5/8] mfd: lpc_ich: Add support for pinctrl in non-ACPI
+ system
+Message-ID: <YgvjDy1R06IC8FE5@google.com>
+References: <20220131151346.45792-1-andriy.shevchenko@linux.intel.com>
+ <20220131151346.45792-6-andriy.shevchenko@linux.intel.com>
+ <YgvaqBB8fNVWp1lN@google.com>
+ <YgveyspHVXCp2ul+@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="UHIAxUhFauf14s9F"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CACPK8Xe-t8Qso_AX+q08OxrgmUPbEayhnHXH5xiLr7M6rDxjuw@mail.gmail.com>
-X-Provags-ID: V03:K1:c1cqtZLz7Mg2BLdDxmXoFqJl53D7wRN7wbycXFZiU0+GIgC08IU
- 8CEMhMS0O8QjQ4TO8yCfgeM1QAyNJA4faQGEzXHAmCFeDquzpIwRsvHcD5F/LIHr7ofT4NF
- iH3LABJcrT6QqURzbtpYi21Vqd9GEZc8lcJCcBh8M5Gnl8Mto4FMRRAdYiyrtRKcwVRDOZf
- E4xpDfashLDaUm+T0HBbg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xB1RnmaMPC0=:9dGoAvV1W0XTvwGMz27dkn
- JRjiKQGBbeJRe1KdQxY3bGtt4Z0aXYBZGp3dt27nA5swetlfQg73eJYCKL1M+yo9kQNjlhIpl
- TcN1irGX8l043UlSzT5H5VjdmtPUdeVyafrH3+h8fJsqp2kcUcORrkH9ho3Uo2wcsy3qDX8qJ
- XA+w0j3e3ClpPdlzNG1G5h3F5W1FSeMTCxvSa3rHkTMwTLDYk48spCcB/7IadVVfzNZuyp2z+
- 7QzxA+2V4Dk9dzbSWFbGWIiCZBTz26WUpZ2ZRU87LgA6H39ExMw++vPO4ZVTkzNsplmduZFhj
- ut+cRgYom/UeQjIRUQO2mqvQA8upoxa2+NLh4D6ekp81P+NeXhmpQReIfNRIVOJL/duqWjYnX
- Gy9iNXqBvafWwh0N1vokOdpwQuqkI5TcFBH0/cRJx0NBGGnLTE2X06XOVacaIHgXQ9p2euIN0
- 9Vd1r1TMQI/CcyAIwuA/uFdN8GhmG75JkUPZk0Qz4jQFuv5wy3yzzKzGK3Lb24raXqmd3vLNy
- /p63aI7RFIFer+uWreAgBZhIljaZWDdhQ0+SMW3SztHhZJTG+FtjytMflrnXjVPDTVjxfXMyK
- LvnXdR4yJKDxTJa6w98OMwz8uko63xTOvI6li2DT2pPq0S1qWzqmxx7p7vVwA3NYrS9pY5YSF
- 9dR+UE/nYmVeAIYXbEmH4GmAspTusRQW9nz/lBvfRPouqgJ3Dhu+MHvEEsdvhaUzxQUgO+v1V
- KuZLfK9hLawh1EFjmzX+E1SHw88SyuxqrHoSMR1qk6QcwaT4zIs4kfpzxzufCZmOYGH3FR1AY
- M0801yvqfVLNVfW2jsh8u5e/QYJ/YPfnBleaiepBGOCkjvEeS7D6p+Iy/TM/4ZWGyNARSFD9F
- Z0b9NHlGYEuUOEzRJ0KlF0V0MWjiQ3WDZhBahteKFiK2d9CX2htaU7PF6qD47GNcE0+a0O5lc
- I5iDuTBbOo4L1x5SgaU7AVOy0AGqiMrCx5eObd5NXnD2zrlLFIRmfy+8Dot6u0xSUhhbPLHXH
- wiQTDdU0vQjaWzN9+F4zxgKoXzxsJM9OagakYvArSYcy9Nxli8E0p9R4h25UXK4uEeMOWGL4c
- uBdx7nTHAAYu70=
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <YgveyspHVXCp2ul+@smile.fi.intel.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue, 15 Feb 2022, Andy Shevchenko wrote:
 
---UHIAxUhFauf14s9F
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Tue, Feb 15, 2022 at 04:54:00PM +0000, Lee Jones wrote:
+> > On Mon, 31 Jan 2022, Andy Shevchenko wrote:
+> 
+> Thank you for the review, my answers below.
+> 
+> ...
+> 
+> > > +static struct resource apl_gpio_resources[APL_GPIO_NR_DEVICES][2] = {
+> > > +	[APL_GPIO_NORTH] = {
+> > > +		DEFINE_RES_MEM(APL_GPIO_NORTH_OFFSET, 0x1000),
+> > 
+> > Are these 0x1000's being over-written in lpc_ich_init_pinctrl()?
+> > 
+> > If so, why pre-initialise?
+> 
+> You mean to pre-initialize the offsets, but leave the length to be added
+> in the function? It can be done, but it feels inconsistent, since we would
+> have offsets and lengths in different places for the same thingy. That said,
+> I prefer current way for the sake of consistency.
 
-On Tue, Feb 15, 2022 at 05:56:17AM +0000, Joel Stanley wrote:
-> On Mon, 14 Feb 2022 at 12:05, Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx=
-=2Enet> wrote:
-> >
-> > On Wed, Feb 02, 2022 at 02:10:44PM +0200, Andy Shevchenko wrote:
-> > > On Wed, Feb 2, 2022 at 2:01 PM Jonathan Neusch=C3=A4fer
-> > > <j.neuschaefer@gmx.net> wrote:
-> > > > On Tue, Feb 01, 2022 at 11:42:11PM +0000, Joel Stanley wrote:
-> > > > > On Tue, 1 Feb 2022 at 13:05, Jonathan Neusch=C3=A4fer <j.neuschae=
-fer@gmx.net> wrote:
-> > >
-> > > ...
-> > >
-> > > > > I assume you're sending a v6 to fix some of the warnings?
-> > > >
-> > > > No, the warnings are fairly independent of this patchset, it's just=
- that
-> > > > the adjacent pinctrl-npcm7xx driver started to be built by the bot,=
- due
-> > > > to my Kconfig change. I'll fix them in a separate patchset.
-> > >
-> > > I guess you need to fix that first.
-> > >
-> > > Because now and then all CIs will complain to your patch and confuse =
-people.
-> >
-> > FWIW, Linus has applied the npcm7xx fixes to for-next in the pinctrl tr=
-ee,
-> > which means that they are not blocking this patchset anymore, AFAICS.
->=20
-> I've applied the device tree changes, and I will send a pull request
-> for v5.18 with those.
+Don't you over-write this entry entirely?
 
-Thanks!
+  for (i = 0; i < ARRAY_SIZE(apl_gpio_devices); i++) {
+        struct resource *mem = &apl_gpio_resources[i][0];
 
+        /* Fill MEM resource */
+        mem->start += base.start;
+        mem->end += base.start;
+        mem->flags = base.flags;
+  }
 
-> I assume you want Linus to merge the pinctrl bindings and driver
-> through his tree.
+Oh wait, you're just adding the base value to the offsets.
 
-Yes, that sounds alright.
+In which case that comment is also confusing!
 
-
-Jonathan
-
---UHIAxUhFauf14s9F
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAmIL4IgACgkQCDBEmo7z
-X9tgPg/9GbVJ8o9ImxZI9vUt8PXnJrwRertT1KoqTqsDH0QH7OV/DHkhwAcy/yqr
-wTOVb4U1JTAyfLDUkBBmWOBsM/qKxxzS98YHYbeQSKgUfHNgw1eHdbdizk2nkJoZ
-YlKICyy7iwVLDo9DEk3//vlV5FxEwzSpcWi0ezc1uTHK9UWRB0Y6UCrEIbfpWEy1
-twd2mvUi5T93F09L50diwPevgLFtDyoF+CfyyKwX1bwLrf5W0V9hDS1kGvLsZHc6
-fIy5e/ojgOBkU5nUU1lhagDtL0dw1GCLpRy7RlA3c2iJsQMtDx/8K/SDOxluKPJ0
-SJD/a7s/yX1ylEG9//H17URcD8aRfbegodOa2W2+U+kBUpIta2NzA5cdaEwbsT4R
-iTKasMt4FMeegas6Hn/+BT81Uv/2GnE1wZ90TWXBFZR+0MYLaL/LGU0vVOpkLVb0
-EMDppg9IS0evPiKe5yeaYRV0jF4LM5/TTRiWJ8sdvRlnmgISUl2n6X0xXwgLMiIi
-Wcv0NpUtOQd+BBQT8UFGf7cb1pSDKj/r8qWMBR0pUFSNghwcIttSoO09USMELKLm
-ZW5eKL3V5UBiowKK+a2A6cmrzXAILwk72onoHIulxXnAQIba9QwlLHofOzxNwHxG
-4mPpbjk8UMgbhqphCfIYFimIAIIDc9sAjsMc1zG4pAP/Z7vldOQ=
-=WIma
------END PGP SIGNATURE-----
-
---UHIAxUhFauf14s9F--
+-- 
+Lee Jones [李琼斯]
+Principal Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
