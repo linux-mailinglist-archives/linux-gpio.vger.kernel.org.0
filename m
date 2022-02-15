@@ -2,154 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E9614B7681
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Feb 2022 21:49:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A07924B75AC
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Feb 2022 21:48:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242618AbiBORmj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Feb 2022 12:42:39 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:58204 "EHLO
+        id S235948AbiBOT2o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Feb 2022 14:28:44 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:60496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237032AbiBORmj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Feb 2022 12:42:39 -0500
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07A7E8A31C
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Feb 2022 09:42:29 -0800 (PST)
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com [209.85.218.70])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id D7CC6405D9
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Feb 2022 17:42:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1644946947;
-        bh=SiDXwW19FJN8pW9aFNLOMTMKt2M32hD/m+v/+010wfI=;
-        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type;
-        b=aYs796KZF7Ua0SK9A8NX41zcogbAsg1G5VefBgGWu4c6D6/V1FkYxInjaDQBP4IhM
-         EoNtpyMsbrSncOTa4ElC6583iZvYDSZ43w9bM+7VuWrfIB6ZTIAzX5wBFONHum/aL1
-         kUKgnYy2m3eoIUfUdERdYLOcGzSB+PN4dobQJwuXrJLuXKITzTRTWxltqav0lHStnD
-         +seUe0gTvbJBFEKQaAj2g7+6V/zSoHN3wseIW0xpn4jsNvtB5zbbzF2iJ6+lab4Pcm
-         TEjErpghZpt8HWySOpkI2XP/cFWzb4hF7ccdjg4rXReX0h2ihYOGRFhYsh+lILrmw2
-         ++np5aBCpku6g==
-Received: by mail-ej1-f70.google.com with SMTP id hc39-20020a17090716a700b006ce88cf89dfso2748260ejc.10
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Feb 2022 09:42:27 -0800 (PST)
+        with ESMTP id S240560AbiBOT2m (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Feb 2022 14:28:42 -0500
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CB09AF1F9
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Feb 2022 11:28:32 -0800 (PST)
+Received: by mail-yb1-xb43.google.com with SMTP id c6so59352946ybk.3
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Feb 2022 11:28:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:sender:from:date:message-id:subject:to;
+        bh=vIF0HCtULT8/Hj4oEOKhM3wVM2dbK4vAQWbMA06NHEs=;
+        b=cGw+0zAzYgdSEm8/jB83LaKWv2AwaI9npCvBn4MaEElLoPyHt0PDJ4AHY75GS+NGuI
+         53jTQC2JiE9oCHDxkj9F/ReD8kzh6NdwPsYBuW6kk0ivAQOSMedx0s30A0QJwjK6kIUe
+         E1O471jP16O6KSy0GZfoJQG9/FsRi1NOwGg2NQW7R501kpSaOt20r6L3+VjRkD+yIQtA
+         OmLbz+Dsv1nZ2lvWTrqnNoh3vBHRv35MLYZ5+q1n5Q7lzqUfqwwirQoTPv3TeB3SL5vf
+         KFeGPk2oss44JMF0YBWtdwNd/DgSHmPyl/wslh9JEdbMXZy2qz22DKyBzT2U1MVUdxlV
+         ES9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=SiDXwW19FJN8pW9aFNLOMTMKt2M32hD/m+v/+010wfI=;
-        b=tHy4llajNxtR6hD+WXb3m/7DLEnrFafGwCHpt21sSXOJjIStNy21TI0iG+yx6X+UYz
-         afWt+LnwMf3auKY4Lxb2qFiYFmy69IwcSoyavm7TNGAEZ/1Lu3vzzxXdbuZoKyy4+T8Y
-         B3xjMatFUV2QIU08l+o3MvrgYH+flvT/QaEPAO5dRsRxgyB50Wdzfa9WkRvVt0KETz0P
-         bWCagyeR4XvSfTsy7IDMcOW++H0/nCOWLlM9R5/0l/mNJHkJkf6J0pZrx3gPjTHFs0yl
-         tIC+DgIB3S/s9bboivuLJFlCTAZfyUJ3YEwnYqQR9DHwCLNezrbFUC6byqIqwqmXvu0h
-         3o0w==
-X-Gm-Message-State: AOAM5334XCzbSlBWVWrjFkcGVRRDvcvFdee7UnpCV2YpAun+I5yPdTi/
-        1MFwYQYmrTjWet8tlm1FImLTma0Plx+Sxi0+c3MqW+iqeZf8VQKst/fDyMUY+Ugamca18Dru/x1
-        +S6tqyf0F9FvfaAIbtEXxQseV2AJ0wLhteemdyTE=
-X-Received: by 2002:a17:906:9750:: with SMTP id o16mr153936ejy.766.1644946947402;
-        Tue, 15 Feb 2022 09:42:27 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzLI/tC+CkdcaVGl9luIU4vkop2V0YQT2cTA8hb6YgaHTY7Nk9gE95CNESjuz9heDNDC0+BVg==
-X-Received: by 2002:a17:906:9750:: with SMTP id o16mr153918ejy.766.1644946947238;
-        Tue, 15 Feb 2022 09:42:27 -0800 (PST)
-Received: from localhost.localdomain (xdsl-188-155-168-84.adslplus.ch. [188.155.168.84])
-        by smtp.gmail.com with ESMTPSA id q8sm240797edd.10.2022.02.15.09.42.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Feb 2022 09:42:26 -0800 (PST)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
-        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
-Subject: [GIT PULL] pinctrl: samsung: pull for v5.18
-Date:   Tue, 15 Feb 2022 18:42:20 +0100
-Message-Id: <20220215174220.11054-1-krzysztof.kozlowski@canonical.com>
-X-Mailer: git-send-email 2.32.0
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to;
+        bh=vIF0HCtULT8/Hj4oEOKhM3wVM2dbK4vAQWbMA06NHEs=;
+        b=BJDqYUpXkO5uYhmaiTIkeXRMJltV93vzVdzdpIcFnRTKskFm66KMyGRUUaE+VXyoA/
+         YW5FgQ/TnrMyPYnuqbmh7Xx9VpQE4GqRhaOTCPevgkllmxmunqpudxJXjBaw/PWYoP3m
+         5KMZdp9krP7FB7uGKvZHr8vePSdX97daeUDj4V5WgkktcXQhMS9Jt4GoWSPsxT5YUAnj
+         uy9OMPmGhKR6WReZtA64SkDVIzug5XwxDPW0TTh9sSuocMpWKLQueMPKr8G3tOGQDmOT
+         Lpn2OgFoER1paIRxliYsdvYyTeNyvbZDbdRMDVm3USGGT27D9N9ke+o0AnTd4ww9vjdB
+         ikYA==
+X-Gm-Message-State: AOAM533xqUA/yjif6mekHhzzt+ul/sN4BoLeKFBc3sgTh11+bgb4yvVw
+        5aZ6q+H2o2neepHhBWDriqXdqyVcnSs5JCqQgAs=
+X-Google-Smtp-Source: ABdhPJwdyBbVwsfuEgoHheXtlOWCBCs3P3JJthH38ZXUBWV63WN7yxplFjdgjCqpSFETWgRKoqvRik3Vnh3qYt//S5g=
+X-Received: by 2002:a81:ae07:: with SMTP id m7mr368993ywh.269.1644953311381;
+ Tue, 15 Feb 2022 11:28:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Sender: iqbalfarrukh60@gmail.com
+Received: by 2002:a05:6918:718a:b0:a1:351c:4bc2 with HTTP; Tue, 15 Feb 2022
+ 11:28:31 -0800 (PST)
+From:   "Mr.Sal kavar" <salkavar2@gmail.com>
+Date:   Tue, 15 Feb 2022 20:28:31 +0100
+X-Google-Sender-Auth: lrDGu2X-wn5cLGvUJg6bYOL0nWs
+Message-ID: <CAL3Nt6hBYeCzeBjV_uiR=YHsj41oyHQXEOuv0QDjC9wHw=Oi+w@mail.gmail.com>
+Subject: Yours Faithful,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.4 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,LOTS_OF_MONEY,MILLION_HUNDRED,MONEY_FRAUD_8,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,
+        T_MONEY_PERCENT,T_SCC_BODY_TEXT_LINE,UNDISC_MONEY autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:b43 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [salkavar2[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [iqbalfarrukh60[at]gmail.com]
+        *  0.0 MILLION_HUNDRED BODY: Million "One to Nine" Hundred
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
+        *  0.0 LOTS_OF_MONEY Huge... sums of money
+        *  0.0 T_MONEY_PERCENT X% of a lot of money for you
+        *  1.6 MONEY_FRAUD_8 Lots of money and very many fraud phrases
+        *  2.9 UNDISC_MONEY Undisclosed recipients + money/fraud signs
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+I assume you and your family are in good health. I am the foreign
+operations Manager
 
-Parts of this pull was shared with ARM SoC guys (tags/samsung-dt-pinctrl-5.18):
-https://lore.kernel.org/lkml/20220129115352.13274-1-krzysztof.kozlowski@canonical.com/
+This being a wide world in which it can be difficult to make new
+acquaintances and because it is virtually impossible to know who is
+trustworthy and who can be believed, i have decided to repose
+confidence in you after much fasting and prayer. It is only because of
+this that I have decided to confide in you and to share with you this
+confidential business.
 
-This pull request is on top of it, in a fast-forward way, no rebases.
+overdue and unclaimed sum of $15.5m, (Fifteen Million Five Hundred
+Thousand Dollars Only) when the account holder suddenly passed on, he
+left no beneficiary who would be entitled to the receipt of this fund.
+For this reason, I have found it expedient to transfer this fund to a
+trustworthy individual with capacity to act as foreign business
+partner.
 
-You can pull this one alone, or tags/samsung-dt-pinctrl-5.18 +
-tags/samsung-pinctrl-5.18-2 together.
+Thus i humbly request your assistance to claim this fund. Upon the
+transfer of this fund in your account, you will take 45% as your share
+from the total fund, 10% will be shared to Charity Organizations in
+both country and 45% will be for me.
 
-Best regards,
-Krzysztof
-
-
-The following changes since commit e783362eb54cd99b2cac8b3a9aeac942e6f6ac07:
-
-  Linux 5.17-rc1 (2022-01-23 10:12:53 +0200)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/samsung.git tags/samsung-pinctrl-5.18-2
-
-for you to fetch changes up to 3652dc070bad335d6feb31402bb4ab1ad58d5cb6:
-
-  pinctrl: samsung: improve wake irq info on console (2022-02-01 09:13:30 +0100)
-
-----------------------------------------------------------------
-Samsung pinctrl drivers changes for v5.18
-
-1. Fix OF reference leak in pinctrl driver probe error path.
-2. Correct list of handlers for Exynos850 ALIVE and CMGP pin banks.
-3. Accept devicetrees with GPIO pin bank definitions named with a
-   "-gpio-bank" suffix.  This is necessary for later Samsung pinctrl
-   bindings dtschema.
-4. Convert Samsung pinctrl bindings to dtschema.
-5. Add support for Exynos850 and ExynosAutov9 wake-up interrupts.
-6. Add support for Tesla FSD SoC.
-
-----------------------------------------------------------------
-Alim Akhtar (2):
-      dt-bindings: pinctrl: samsung: Add compatible for Tesla FSD SoC
-      pinctrl: samsung: add FSD SoC specific data
-
-Krzysztof Kozlowski (5):
-      pinctrl: samsung: drop pin banks references on error paths
-      pinctrl: samsung: accept GPIO bank nodes with a suffix
-      dt-bindings: pinctrl: samsung: convert to dtschema
-      dt-bindings: pinctrl: samsung: describe Exynos850 and ExynosAutov9 wake-ups
-      pinctrl: samsung: add support for Exynos850 and ExynosAutov9 wake-ups
-
-Martin Jücker (1):
-      pinctrl: samsung: improve wake irq info on console
-
-Sam Protsenko (1):
-      pinctrl: samsung: Remove EINT handler for Exynos850 ALIVE and CMGP gpios
-
- .../pinctrl/samsung,pinctrl-gpio-bank.yaml         |  52 +++
- .../bindings/pinctrl/samsung,pinctrl-pins-cfg.yaml |  81 +++++
- .../pinctrl/samsung,pinctrl-wakeup-interrupt.yaml  | 106 ++++++
- .../bindings/pinctrl/samsung,pinctrl.yaml          | 393 +++++++++++++++++++++
- .../bindings/pinctrl/samsung-pinctrl.txt           | 383 --------------------
- MAINTAINERS                                        |   2 +-
- drivers/pinctrl/samsung/pinctrl-exynos-arm64.c     |  73 +++-
- drivers/pinctrl/samsung/pinctrl-exynos.c           |   7 +-
- drivers/pinctrl/samsung/pinctrl-samsung.c          |  89 ++++-
- drivers/pinctrl/samsung/pinctrl-samsung.h          |   1 +
- 10 files changed, 781 insertions(+), 406 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-gpio-bank.yaml
- create mode 100644 Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-pins-cfg.yaml
- create mode 100644 Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml
- create mode 100644 Documentation/devicetree/bindings/pinctrl/samsung,pinctrl.yaml
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
+Yours Faithful,
+Mr.Sal Kavar.
