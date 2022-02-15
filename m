@@ -2,119 +2,141 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A07924B75AC
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Feb 2022 21:48:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4088C4B7A0E
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Feb 2022 22:56:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235948AbiBOT2o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Feb 2022 14:28:44 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:60496 "EHLO
+        id S236404AbiBOV40 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Feb 2022 16:56:26 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:50562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240560AbiBOT2m (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Feb 2022 14:28:42 -0500
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CB09AF1F9
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Feb 2022 11:28:32 -0800 (PST)
-Received: by mail-yb1-xb43.google.com with SMTP id c6so59352946ybk.3
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Feb 2022 11:28:32 -0800 (PST)
+        with ESMTP id S235187AbiBOV4Z (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Feb 2022 16:56:25 -0500
+Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB64EB65D5
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Feb 2022 13:56:14 -0800 (PST)
+Received: by mail-yb1-xb33.google.com with SMTP id j2so415771ybu.0
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Feb 2022 13:56:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:sender:from:date:message-id:subject:to;
-        bh=vIF0HCtULT8/Hj4oEOKhM3wVM2dbK4vAQWbMA06NHEs=;
-        b=cGw+0zAzYgdSEm8/jB83LaKWv2AwaI9npCvBn4MaEElLoPyHt0PDJ4AHY75GS+NGuI
-         53jTQC2JiE9oCHDxkj9F/ReD8kzh6NdwPsYBuW6kk0ivAQOSMedx0s30A0QJwjK6kIUe
-         E1O471jP16O6KSy0GZfoJQG9/FsRi1NOwGg2NQW7R501kpSaOt20r6L3+VjRkD+yIQtA
-         OmLbz+Dsv1nZ2lvWTrqnNoh3vBHRv35MLYZ5+q1n5Q7lzqUfqwwirQoTPv3TeB3SL5vf
-         KFeGPk2oss44JMF0YBWtdwNd/DgSHmPyl/wslh9JEdbMXZy2qz22DKyBzT2U1MVUdxlV
-         ES9A==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EZ5q++YgykAGpmunP4misegIALHkWjqPtYqC2VXU0d0=;
+        b=EJtxPtg7dBta1ocWaVmXeFyVO/Fb3XKx+YPBWIpfdoG8+4qvhGacxIFYFnoRVa9ihX
+         48TG7nxBsmcmuQE75OzQjZInI0jpBDR78nEmbdu6u/Sxj4qmDpL9hbigkZrjgCCHEo2t
+         Dw6pFYQn/jWQu3DqqkFE8L9+/5vJQmAmY/K4SJZE0CbMp1xHthRZ8srcDLxnBELwWvYp
+         6HzczCqa3wRWxfxW/dMldH4MBzMGWaW23FWBO/HqUCJO2HFh1KMEG3sJ/iuSdjc5FScg
+         zL7Yd65Rj13CIDMQ0F/CESvlPi5/+XFBpvq3HV1ZBAHmiS5bnFTzUKu+Wu+a7HY1TzgA
+         PrmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to;
-        bh=vIF0HCtULT8/Hj4oEOKhM3wVM2dbK4vAQWbMA06NHEs=;
-        b=BJDqYUpXkO5uYhmaiTIkeXRMJltV93vzVdzdpIcFnRTKskFm66KMyGRUUaE+VXyoA/
-         YW5FgQ/TnrMyPYnuqbmh7Xx9VpQE4GqRhaOTCPevgkllmxmunqpudxJXjBaw/PWYoP3m
-         5KMZdp9krP7FB7uGKvZHr8vePSdX97daeUDj4V5WgkktcXQhMS9Jt4GoWSPsxT5YUAnj
-         uy9OMPmGhKR6WReZtA64SkDVIzug5XwxDPW0TTh9sSuocMpWKLQueMPKr8G3tOGQDmOT
-         Lpn2OgFoER1paIRxliYsdvYyTeNyvbZDbdRMDVm3USGGT27D9N9ke+o0AnTd4ww9vjdB
-         ikYA==
-X-Gm-Message-State: AOAM533xqUA/yjif6mekHhzzt+ul/sN4BoLeKFBc3sgTh11+bgb4yvVw
-        5aZ6q+H2o2neepHhBWDriqXdqyVcnSs5JCqQgAs=
-X-Google-Smtp-Source: ABdhPJwdyBbVwsfuEgoHheXtlOWCBCs3P3JJthH38ZXUBWV63WN7yxplFjdgjCqpSFETWgRKoqvRik3Vnh3qYt//S5g=
-X-Received: by 2002:a81:ae07:: with SMTP id m7mr368993ywh.269.1644953311381;
- Tue, 15 Feb 2022 11:28:31 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EZ5q++YgykAGpmunP4misegIALHkWjqPtYqC2VXU0d0=;
+        b=2Tm/PTJkRzJDfKhuaG5cdcA4auupHkpdM3dJkopbK1rldyk3dE+b6aQJdZ4tCbAeHc
+         kGVpBiZby1Qxh3UhYjAkhBMu3Bi63Eh98YP1SW5oSJ1B/PuKGa1sB0Ic7IJx5vxJUxWU
+         I85QTbs1zl5q8ZC1U9bHYQmvQ/wdJNjKrVfGmsJMLMHIsrC36ykbDF0KIjw+LlZOF5bM
+         iMFfqZ1L1ZWUzEUoPey9i3qdgiboDuBjOvFzS519LaKd0lwW20/qqyX3i4KFq8crNbYl
+         WY6kswVhLEh7R3c5uwwxNuD+qLRh4PfpecoLkZ/2+jWvCuGnV7xp3DqwoaEOwgqPUYEn
+         RUvQ==
+X-Gm-Message-State: AOAM531JLDIEjpS2uqTNcI7l6NIAAMSbosNgdAXCCaZaopKI827Z5Kza
+        yTe34ee3SD9rpeQay7dCuT5cZjbI5fEKuUwri0DZUg==
+X-Google-Smtp-Source: ABdhPJzG0B+DhMonvyx1eAizm9Pr/8IzyJW1KRh1R1rK2yw6uE2Ix/pSISU0TKx7BOD9f6MfvQqvqmB2Bqzfyfuor6U=
+X-Received: by 2002:a5b:f4b:: with SMTP id y11mr866089ybr.634.1644962173974;
+ Tue, 15 Feb 2022 13:56:13 -0800 (PST)
 MIME-Version: 1.0
-Sender: iqbalfarrukh60@gmail.com
-Received: by 2002:a05:6918:718a:b0:a1:351c:4bc2 with HTTP; Tue, 15 Feb 2022
- 11:28:31 -0800 (PST)
-From:   "Mr.Sal kavar" <salkavar2@gmail.com>
-Date:   Tue, 15 Feb 2022 20:28:31 +0100
-X-Google-Sender-Auth: lrDGu2X-wn5cLGvUJg6bYOL0nWs
-Message-ID: <CAL3Nt6hBYeCzeBjV_uiR=YHsj41oyHQXEOuv0QDjC9wHw=Oi+w@mail.gmail.com>
-Subject: Yours Faithful,
-To:     undisclosed-recipients:;
+References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
+ <CACRpkdbzk55pmK9XMwc470O8vJFUBQ6zs35shOYCFKr+YaOezw@mail.gmail.com>
+ <CACjc_5q247Yb8t8PfJcudVAPFYQcioREAE3zj8OtPR-Ug_x=tA@mail.gmail.com>
+ <CACRpkda=0=Hcyyote+AfwoLKPGak7RV6VFt6b0fMVWBe8veTwA@mail.gmail.com> <CACjc_5r7i3HJ466MtwR0iZD6jdVXEqq4km0Tn7XwRijGnsDz=Q@mail.gmail.com>
+In-Reply-To: <CACjc_5r7i3HJ466MtwR0iZD6jdVXEqq4km0Tn7XwRijGnsDz=Q@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 15 Feb 2022 22:56:01 +0100
+Message-ID: <CACRpkdZGVq19GZuOP1BwLB2-qxj1_=O9tHMVRvphvy3m6KbNig@mail.gmail.com>
+Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
+To:     Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Cc:     stable <stable@vger.kernel.org>, regressions@lists.linux.dev,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Edmond Chung <edmondchung@google.com>,
+        Andrew Chant <achant@google.com>,
+        Will McVicker <willmcvicker@google.com>,
+        Sergio Tanzilli <tanzilli@acmesystems.it>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=5.4 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,LOTS_OF_MONEY,MILLION_HUNDRED,MONEY_FRAUD_8,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,
-        T_MONEY_PERCENT,T_SCC_BODY_TEXT_LINE,UNDISC_MONEY autolearn=no
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:b43 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [salkavar2[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [iqbalfarrukh60[at]gmail.com]
-        *  0.0 MILLION_HUNDRED BODY: Million "One to Nine" Hundred
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
-        *  0.0 LOTS_OF_MONEY Huge... sums of money
-        *  0.0 T_MONEY_PERCENT X% of a lot of money for you
-        *  1.6 MONEY_FRAUD_8 Lots of money and very many fraud phrases
-        *  2.9 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-I assume you and your family are in good health. I am the foreign
-operations Manager
+On Mon, Feb 14, 2022 at 12:24 AM Marcelo Roberto Jimenez
+<marcelo.jimenez@gmail.com> wrote:
+> On Sat, Feb 12, 2022 at 1:55 PM Linus Walleij <linus.walleij@linaro.org> wrote:
 
-This being a wide world in which it can be difficult to make new
-acquaintances and because it is virtually impossible to know who is
-trustworthy and who can be believed, i have decided to repose
-confidence in you after much fasting and prayer. It is only because of
-this that I have decided to confide in you and to share with you this
-confidential business.
+> > I am curious about the usecases and how deeply you have built
+> > yourselves into this.
+>
+> I don't know if I understand what you mean, sorry.
 
-overdue and unclaimed sum of $15.5m, (Fifteen Million Five Hundred
-Thousand Dollars Only) when the account holder suddenly passed on, he
-left no beneficiary who would be entitled to the receipt of this fund.
-For this reason, I have found it expedient to transfer this fund to a
-trustworthy individual with capacity to act as foreign business
-partner.
+Why does the user need the sysfs ABI? What is it used for?
 
-Thus i humbly request your assistance to claim this fund. Upon the
-transfer of this fund in your account, you will take 45% as your share
-from the total fund, 10% will be shared to Charity Organizations in
-both country and 45% will be for me.
+I.e what is the actual use case?
 
-Yours Faithful,
-Mr.Sal Kavar.
+> > > In any case, the upstream file should be enough to test the issue reported here.
+> >
+> > The thing is that upstream isn't super happy that you have been
+> > making yourselves dependent on features that we are actively
+> > discouraging and then demanding that we support these features.
+>
+> Hum, demanding seems to be a strong word for what I am doing here.
+>
+> Deprecated should not mean broken. My point is: the API seems to be
+> currently broken. User space apps got broken, that's a fact. I even
+> took the time to bisect the kernel and show you which commit broke it.
+> So, no, I am not demanding. More like reporting and providing a
+> temporary solution to those with a similar problem.
+>
+> Maybe it is time to remove the API, but this is up to "upstream".
+> Leaving the API broken seems pointless and unproductive.
+>
+> Sorry for the "not super happiness of upstream", but maybe upstream
+> got me wrong.
+>
+> We are not "making ourselves dependent on features ...". The API was
+> there. We used it. Now it is deprecated, ok, we should move on. I got
+> the message.
+
+Ouch I deserved some slamming for this.
+
+I'm sorry if I came across as harsh :(
+
+I just don't know how to properly push for this.
+
+I have even pushed the option of the deprecated sysfs ABI
+behind the CONFIG_EXPERT option, which should mean that
+the kernel config has been made by someone who has checked
+the option "yes I am an expert I know what I am doing"
+yet failed to observe that this ABI is obsoleted since 5 years
+and hence failed to be an expert.
+
+Of course the ABI (not API really) needs to be fixed if we can find the
+problem. It's frustrating that fixing it seems to fix broken other
+features which are not deprecated, hence the annoyance on my
+part.
+
+> And I will also tell the dev team that they must use the GPIO char dev
+> and libgpiod from now on and must port everything to it. And we will
+> likely have another group of people who are not super happy, but
+> that's life... :)
+
+I'm happy to hear this!
+
+Yours,
+Linus Walleij
