@@ -2,148 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CDE8A4B8DE0
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Feb 2022 17:24:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 149054B9246
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Feb 2022 21:27:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233303AbiBPQYR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Feb 2022 11:24:17 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:39658 "EHLO
+        id S230397AbiBPU1z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Feb 2022 15:27:55 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:34254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233785AbiBPQYQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Feb 2022 11:24:16 -0500
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED5B722BDE5;
-        Wed, 16 Feb 2022 08:24:01 -0800 (PST)
-Received: by mail-wr1-x436.google.com with SMTP id q7so4302367wrc.13;
-        Wed, 16 Feb 2022 08:24:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=LTt4zeXioXEAgxKFKddjzAm61xpJtbPPtey6Dl+FS3k=;
-        b=ey0ZisKjo0VUrCt+QgQ5aTTg3uYAEHOkAAyA4ZLtfJrcpAvN4jE/WWE5R+2FjGyTOh
-         5WB+dEERzKJ9PP1AB7VnD5GC7LUwmDT6tXCoebohWVYfgR3UrxeJWcX/kn0Ucbx4pr19
-         kdB159p78FAC3id+SKA+RsB5WKJAY1VzqiLonURGM0ueXop6+0oR3Z9OVwULTWieRMht
-         aKpeB7r43tAVDF0fd9ZupN2rCSy7y+c9lrv42nZqWNOou1cU1FlhRon2OcknfJCiFl3m
-         hwf+1m1UeiOibaVpHQzlyWQ9Xl6Sj0tltYg4NROJxTp8yYHo3KxrBNeq8XJyO5K9uQIh
-         tKvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=LTt4zeXioXEAgxKFKddjzAm61xpJtbPPtey6Dl+FS3k=;
-        b=2kRHVtW/A67ugi+HuJ6HfaV7HYsZcrH4UFAslSzOjliWhsw4nAdzC/eaDPMj1haCzb
-         IP7N0BY0hDIHTdneni9yzE2KSP8cgVLo7sKzYwchZ9v/uTbZwPCwsg+Dm/CBlOaYk71v
-         +VaHMC7jxzGND/2Gjprk1kz/Gg83eK6k32CxujfW4LfoWvkBF88583fGCyZSpFsnpqpg
-         Y07zUHrndlpud+N5/z0KsoPbIvvegLEqUgNy4k+R3OV2oZh4h0YMq6YVzgf1EvRYThk2
-         zyZXSbdgcpQMSZkikhUDXWzlrC2BgWhhxeT+bHoN9uRu+p5+sQWD7oIPp+1GizOjchqo
-         H5Tw==
-X-Gm-Message-State: AOAM531woU6+Ma7ZC+MLDlF/sN7GoU3NQ0R8oXZKXDlCSRqOIg2FHnoD
-        bOh9BpI93JLit6TuJE5eGZo=
-X-Google-Smtp-Source: ABdhPJybP1sGjhuU7xFxJ/hdGk6c3ciueolCbzgSKOnfdRNTzSTOlyjrNfEHjVEgXBPH9+awuTPhkQ==
-X-Received: by 2002:a5d:4d0c:0:b0:1e3:364a:c95f with SMTP id z12-20020a5d4d0c000000b001e3364ac95fmr2979281wrt.115.1645028640578;
-        Wed, 16 Feb 2022 08:24:00 -0800 (PST)
-Received: from kista.localnet (cpe-86-58-32-107.static.triera.net. [86.58.32.107])
-        by smtp.gmail.com with ESMTPSA id f25sm18305054wml.16.2022.02.16.08.23.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Feb 2022 08:24:00 -0800 (PST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-sunxi@lists.linux.dev,
-        linux-gpio@vger.kernel.org, Samuel Holland <samuel@sholland.org>
-Cc:     linux-kernel@vger.kernel.org, Samuel Holland <samuel@sholland.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH] pinctrl: sunxi: Use unique lockdep classes for IRQs
-Date:   Wed, 16 Feb 2022 17:23:59 +0100
-Message-ID: <2091402.irdbgypaU6@kista>
-In-Reply-To: <20220216040037.22730-1-samuel@sholland.org>
-References: <20220216040037.22730-1-samuel@sholland.org>
+        with ESMTP id S230327AbiBPU1z (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Feb 2022 15:27:55 -0500
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAA7C4DF42;
+        Wed, 16 Feb 2022 12:27:41 -0800 (PST)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: shreeya)
+        with ESMTPSA id F065F1F453B9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1645043260;
+        bh=TcGzEzWhEGA7ZhG+nrdWLrKb2z0r4SS8tB5fiOXVUHg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Kw/y/Fdm06VoVfhWPkwb0xWxGzPUC4v6MXGP+uVaVoEGUhKWaXWM3YO54oQa6MP81
+         DgrrmCZMM5V/hcwyE5u1RmywR27r4GgAgDgbCE3FNlhYyCsO1lgc4YHYFcUze1egBa
+         QD47TmmBlkMLRuE2XVnZP4tTfL7lOg8tkU2PCFjf8FGk/Igzo4YOQU7+PQhg9dkl69
+         bVsRX6M/aUb1Tw9CkpvtNal5E+fCBRdxOt5DZv9yILX7VjLsl4twz8e8UZOuNzTNia
+         hktLVFh0pcc0vOdIDzJy0Vz7R28C9GkLS8loJrQiq6VCOB7rCKETSx5d60wa2aaGn9
+         t4QpytcPu5VfA==
+From:   Shreeya Patel <shreeya.patel@collabora.com>
+To:     linus.walleij@linaro.org, brgl@bgdev.pl, bgolaszewski@baylibre.com
+Cc:     krisman@collabora.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel@collabora.com,
+        Shreeya Patel <shreeya.patel@collabora.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH v5] gpio: Return EPROBE_DEFER if gc->to_irq is NULL
+Date:   Thu, 17 Feb 2022 01:56:55 +0530
+Message-Id: <20220216202655.194795-1-shreeya.patel@collabora.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Samuel,
+We are racing the registering of .to_irq when probing the
+i2c driver. This results in random failure of touchscreen
+devices.
 
-Dne sreda, 16. februar 2022 ob 05:00:36 CET je Samuel Holland napisal(a):
-> This driver, like several others, uses a chained IRQ for each GPIO bank,
-> and forwards .irq_set_wake to the GPIO bank's upstream IRQ. As a result,
-> a call to irq_set_irq_wake() needs to lock both the upstream and
-> downstream irq_desc's. Lockdep considers this to be a possible deadlock
-> when the irq_desc's share lockdep classes, which they do by default:
-> 
->  ============================================
->  WARNING: possible recursive locking detected
->  5.17.0-rc3-00394-gc849047c2473 #1 Not tainted
->  --------------------------------------------
->  init/307 is trying to acquire lock:
->  c2dfe27c (&irq_desc_lock_class){-.-.}-{2:2}, at: 
-__irq_get_desc_lock+0x58/0xa0
-> 
->  but task is already holding lock:
->  c3c0ac7c (&irq_desc_lock_class){-.-.}-{2:2}, at: 
-__irq_get_desc_lock+0x58/0xa0
-> 
->  other info that might help us debug this:
->   Possible unsafe locking scenario:
-> 
->         CPU0
->         ----
->    lock(&irq_desc_lock_class);
->    lock(&irq_desc_lock_class);
-> 
->   *** DEADLOCK ***
-> 
->   May be due to missing lock nesting notation
-> 
->  4 locks held by init/307:
->   #0: c1f29f18 (system_transition_mutex){+.+.}-{3:3}, at: 
-__do_sys_reboot+0x90/0x23c
->   #1: c20f7760 (&dev->mutex){....}-{3:3}, at: device_shutdown+0xf4/0x224
->   #2: c2e804d8 (&dev->mutex){....}-{3:3}, at: device_shutdown+0x104/0x224
->   #3: c3c0ac7c (&irq_desc_lock_class){-.-.}-{2:2}, at: 
-__irq_get_desc_lock+0x58/0xa0
-> 
->  stack backtrace:
->  CPU: 0 PID: 307 Comm: init Not tainted 5.17.0-rc3-00394-gc849047c2473 #1
->  Hardware name: Allwinner sun8i Family
->   unwind_backtrace from show_stack+0x10/0x14
->   show_stack from dump_stack_lvl+0x68/0x90
->   dump_stack_lvl from __lock_acquire+0x1680/0x31a0
->   __lock_acquire from lock_acquire+0x148/0x3dc
->   lock_acquire from _raw_spin_lock_irqsave+0x50/0x6c
->   _raw_spin_lock_irqsave from __irq_get_desc_lock+0x58/0xa0
->   __irq_get_desc_lock from irq_set_irq_wake+0x2c/0x19c
->   irq_set_irq_wake from irq_set_irq_wake+0x13c/0x19c
->     [tail call from sunxi_pinctrl_irq_set_wake]
->   irq_set_irq_wake from gpio_keys_suspend+0x80/0x1a4
->   gpio_keys_suspend from gpio_keys_shutdown+0x10/0x2c
->   gpio_keys_shutdown from device_shutdown+0x180/0x224
->   device_shutdown from __do_sys_reboot+0x134/0x23c
->   __do_sys_reboot from ret_fast_syscall+0x0/0x1c
-> 
-> However, this can never deadlock because the upstream and downstream
-> IRQs are never the same (nor do they even involve the same irqchip).
-> 
-> Silence this erroneous lockdep splat by applying what appears to be the
-> usual fix of moving the GPIO IRQs to separate lockdep classes.
-> 
-> Fixes: a59c99d9eaf9 ("pinctrl: sunxi: Forward calls to irq_set_irq_wake")
-> Reported-by: Guenter Roeck <linux@roeck-us.net>
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
+Following explains the race condition better.
 
-Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+[gpio driver] gpio driver registers gpio chip
+[gpio consumer] gpio is acquired
+[gpio consumer] gpiod_to_irq() fails with -ENXIO
+[gpio driver] gpio driver registers irqchip
+gpiod_to_irq works at this point, but -ENXIO is fatal
 
-Best regards,
-Jernej
+We could see the following errors in dmesg logs when gc->to_irq is NULL
 
+[2.101857] i2c_hid i2c-FTS3528:00: HID over i2c has not been provided an Int IRQ
+[2.101953] i2c_hid: probe of i2c-FTS3528:00 failed with error -22
+
+To avoid this situation, defer probing until to_irq is registered.
+Returning -EPROBE_DEFER would be the first step towards avoiding
+the failure of devices due to the race in registration of .to_irq.
+Final solution to this issue would be to avoid using gc irq members
+until they are fully initialized.
+
+This issue has been reported many times in past and people have been
+using workarounds like changing the pinctrl_amd to built-in instead
+of loading it as a module or by adding a softdep for pinctrl_amd into
+the config file.
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=209413
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Shreeya Patel <shreeya.patel@collabora.com>
+
+---
+Changes in v5
+  - Improve explanation in commit message and sending it to the correct
+email address.
+
+Changes in v4
+  - Remove blank line and make the first letter of the sentence
+capital.
+
+Changes in v3
+  - Fix the error reported by kernel test robot.
+
+Changes in v2
+  - Add a condition to check for irq chip to avoid bogus error.
+---
+ drivers/gpio/gpiolib.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 3859911b61e9..a3d14277f17c 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -3147,6 +3147,16 @@ int gpiod_to_irq(const struct gpio_desc *desc)
+ 
+ 		return retirq;
+ 	}
++#ifdef CONFIG_GPIOLIB_IRQCHIP
++	if (gc->irq.chip) {
++		/*
++		 * Avoid race condition with other code, which tries to lookup
++		 * an IRQ before the irqchip has been properly registered,
++		 * i.e. while gpiochip is still being brought up.
++		 */
++		return -EPROBE_DEFER;
++	}
++#endif
+ 	return -ENXIO;
+ }
+ EXPORT_SYMBOL_GPL(gpiod_to_irq);
+-- 
+2.30.2
 
