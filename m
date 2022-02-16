@@ -2,141 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4088C4B7A0E
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Feb 2022 22:56:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EC8814B7EA2
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Feb 2022 04:49:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236404AbiBOV40 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Feb 2022 16:56:26 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:50562 "EHLO
+        id S1344216AbiBPDVy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Feb 2022 22:21:54 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:48044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235187AbiBOV4Z (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Feb 2022 16:56:25 -0500
-Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB64EB65D5
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Feb 2022 13:56:14 -0800 (PST)
-Received: by mail-yb1-xb33.google.com with SMTP id j2so415771ybu.0
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Feb 2022 13:56:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EZ5q++YgykAGpmunP4misegIALHkWjqPtYqC2VXU0d0=;
-        b=EJtxPtg7dBta1ocWaVmXeFyVO/Fb3XKx+YPBWIpfdoG8+4qvhGacxIFYFnoRVa9ihX
-         48TG7nxBsmcmuQE75OzQjZInI0jpBDR78nEmbdu6u/Sxj4qmDpL9hbigkZrjgCCHEo2t
-         Dw6pFYQn/jWQu3DqqkFE8L9+/5vJQmAmY/K4SJZE0CbMp1xHthRZ8srcDLxnBELwWvYp
-         6HzczCqa3wRWxfxW/dMldH4MBzMGWaW23FWBO/HqUCJO2HFh1KMEG3sJ/iuSdjc5FScg
-         zL7Yd65Rj13CIDMQ0F/CESvlPi5/+XFBpvq3HV1ZBAHmiS5bnFTzUKu+Wu+a7HY1TzgA
-         PrmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EZ5q++YgykAGpmunP4misegIALHkWjqPtYqC2VXU0d0=;
-        b=2Tm/PTJkRzJDfKhuaG5cdcA4auupHkpdM3dJkopbK1rldyk3dE+b6aQJdZ4tCbAeHc
-         kGVpBiZby1Qxh3UhYjAkhBMu3Bi63Eh98YP1SW5oSJ1B/PuKGa1sB0Ic7IJx5vxJUxWU
-         I85QTbs1zl5q8ZC1U9bHYQmvQ/wdJNjKrVfGmsJMLMHIsrC36ykbDF0KIjw+LlZOF5bM
-         iMFfqZ1L1ZWUzEUoPey9i3qdgiboDuBjOvFzS519LaKd0lwW20/qqyX3i4KFq8crNbYl
-         WY6kswVhLEh7R3c5uwwxNuD+qLRh4PfpecoLkZ/2+jWvCuGnV7xp3DqwoaEOwgqPUYEn
-         RUvQ==
-X-Gm-Message-State: AOAM531JLDIEjpS2uqTNcI7l6NIAAMSbosNgdAXCCaZaopKI827Z5Kza
-        yTe34ee3SD9rpeQay7dCuT5cZjbI5fEKuUwri0DZUg==
-X-Google-Smtp-Source: ABdhPJzG0B+DhMonvyx1eAizm9Pr/8IzyJW1KRh1R1rK2yw6uE2Ix/pSISU0TKx7BOD9f6MfvQqvqmB2Bqzfyfuor6U=
-X-Received: by 2002:a5b:f4b:: with SMTP id y11mr866089ybr.634.1644962173974;
- Tue, 15 Feb 2022 13:56:13 -0800 (PST)
+        with ESMTP id S233625AbiBPDVw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Feb 2022 22:21:52 -0500
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BB411400F;
+        Tue, 15 Feb 2022 19:21:35 -0800 (PST)
+X-UUID: 3686b0aa786b4a78a5e0ac1dd57d9d1a-20220216
+X-UUID: 3686b0aa786b4a78a5e0ac1dd57d9d1a-20220216
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <guodong.liu@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1363640122; Wed, 16 Feb 2022 11:21:31 +0800
+Received: from mtkexhb01.mediatek.inc (172.21.101.102) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 16 Feb 2022 11:21:30 +0800
+Received: from mtkcas10.mediatek.inc (172.21.101.39) by mtkexhb01.mediatek.inc
+ (172.21.101.102) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 16 Feb
+ 2022 11:21:30 +0800
+Received: from localhost.localdomain (10.17.3.154) by mtkcas10.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 16 Feb 2022 11:21:29 +0800
+From:   Guodong Liu <guodong.liu@mediatek.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>
+CC:     Sean Wang <sean.wang@mediatek.com>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <Project_Global_Chrome_Upstream_Group@mediatek.com>,
+        Guodong Liu <guodong.liu@mediatek.com>
+Subject: [PATCH v5 0/3] pinctrl: mediatek: Support pinctrl driver on mt8186
+Date:   Wed, 16 Feb 2022 11:21:21 +0800
+Message-ID: <20220216032124.28067-1-guodong.liu@mediatek.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
- <CACRpkdbzk55pmK9XMwc470O8vJFUBQ6zs35shOYCFKr+YaOezw@mail.gmail.com>
- <CACjc_5q247Yb8t8PfJcudVAPFYQcioREAE3zj8OtPR-Ug_x=tA@mail.gmail.com>
- <CACRpkda=0=Hcyyote+AfwoLKPGak7RV6VFt6b0fMVWBe8veTwA@mail.gmail.com> <CACjc_5r7i3HJ466MtwR0iZD6jdVXEqq4km0Tn7XwRijGnsDz=Q@mail.gmail.com>
-In-Reply-To: <CACjc_5r7i3HJ466MtwR0iZD6jdVXEqq4km0Tn7XwRijGnsDz=Q@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 15 Feb 2022 22:56:01 +0100
-Message-ID: <CACRpkdZGVq19GZuOP1BwLB2-qxj1_=O9tHMVRvphvy3m6KbNig@mail.gmail.com>
-Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
-To:     Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
-Cc:     stable <stable@vger.kernel.org>, regressions@lists.linux.dev,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Edmond Chung <edmondchung@google.com>,
-        Andrew Chant <achant@google.com>,
-        Will McVicker <willmcvicker@google.com>,
-        Sergio Tanzilli <tanzilli@acmesystems.it>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-MTK:  N
+X-Spam-Status: No, score=-0.9 required=5.0 tests=BAYES_00,MAY_BE_FORGED,
+        SPF_HELO_NONE,T_SCC_BODY_TEXT_LINE,T_SPF_TEMPERROR,UNPARSEABLE_RELAY
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Feb 14, 2022 at 12:24 AM Marcelo Roberto Jimenez
-<marcelo.jimenez@gmail.com> wrote:
-> On Sat, Feb 12, 2022 at 1:55 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+changes since v4:
+- update mt8186 pull up RSEL type define value
+- update mt8186 pull up RSEL type si unit value(ohm)
+- update macro definition name
+- update mt8186 bias resistance selectio register description
 
-> > I am curious about the usecases and how deeply you have built
-> > yourselves into this.
->
-> I don't know if I understand what you mean, sorry.
+changes since v3:
+- remove generic descriptions for common properties
+- remove quotes
+- drop "."
+- drop "-" on description
+- move partial "bias-pull-up" description info to the example
+- don't break the code into two lines, maximux 84 columns is fine
+- add the required fixes tag
 
-Why does the user need the sysfs ABI? What is it used for?
+changes since v2:
+- update reg property
+- update reg-names property
+- sync rsel resistance selection property same as patch 3
+- repair constraints is not indented correctly for bias-pull-{up,down}
+- add "type: boolean" to the list of valid values. This corresponds to having bias-pull-{up,down} without any arguments.
+- add dual file license for file "mt8186-pinfunc.h"
+- add patch 3 to change "mediatek,rsel_resistance_in_si_unit" to "mediatek,rsel-resistance-in-si-unit"
 
-I.e what is the actual use case?
+changes since v1:
+- add default pinctrl config to consistent with other MTK pinctrl drivers
 
-> > > In any case, the upstream file should be enough to test the issue reported here.
-> >
-> > The thing is that upstream isn't super happy that you have been
-> > making yourselves dependent on features that we are actively
-> > discouraging and then demanding that we support these features.
->
-> Hum, demanding seems to be a strong word for what I am doing here.
->
-> Deprecated should not mean broken. My point is: the API seems to be
-> currently broken. User space apps got broken, that's a fact. I even
-> took the time to bisect the kernel and show you which commit broke it.
-> So, no, I am not demanding. More like reporting and providing a
-> temporary solution to those with a similar problem.
->
-> Maybe it is time to remove the API, but this is up to "upstream".
-> Leaving the API broken seems pointless and unproductive.
->
-> Sorry for the "not super happiness of upstream", but maybe upstream
-> got me wrong.
->
-> We are not "making ourselves dependent on features ...". The API was
-> there. We used it. Now it is deprecated, ok, we should move on. I got
-> the message.
+Patch 1 add pinctrl file and binding document.
 
-Ouch I deserved some slamming for this.
+Patch 2 add pinctrl chip driver on mt8186.
 
-I'm sorry if I came across as harsh :(
+Patch 3 canonical rsel resistance selection property.
 
-I just don't know how to properly push for this.
+Guodong Liu (3):
+  dt-bindings: pinctrl: mt8186: add pinctrl file and binding document
+  pinctrl: add pinctrl driver on mt8186
+  pinctrl: canonical rsel resistance selection property
 
-I have even pushed the option of the deprecated sysfs ABI
-behind the CONFIG_EXPERT option, which should mean that
-the kernel config has been made by someone who has checked
-the option "yes I am an expert I know what I am doing"
-yet failed to observe that this ABI is obsoleted since 5 years
-and hence failed to be an expert.
+ .../bindings/pinctrl/pinctrl-mt8186.yaml      |  297 +++
+ drivers/pinctrl/mediatek/Kconfig              |    7 +
+ drivers/pinctrl/mediatek/Makefile             |    1 +
+ drivers/pinctrl/mediatek/pinctrl-mt8186.c     | 1271 ++++++++++
+ drivers/pinctrl/mediatek/pinctrl-mtk-mt8186.h | 2186 +++++++++++++++++
+ drivers/pinctrl/mediatek/pinctrl-paris.c      |    2 +-
+ include/dt-bindings/pinctrl/mt8186-pinfunc.h  | 1174 +++++++++
+ 7 files changed, 4937 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt8186.yaml
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt8186.c
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt8186.h
+ create mode 100644 include/dt-bindings/pinctrl/mt8186-pinfunc.h
 
-Of course the ABI (not API really) needs to be fixed if we can find the
-problem. It's frustrating that fixing it seems to fix broken other
-features which are not deprecated, hence the annoyance on my
-part.
+-- 
+2.25.1
 
-> And I will also tell the dev team that they must use the GPIO char dev
-> and libgpiod from now on and must port everything to it. And we will
-> likely have another group of people who are not super happy, but
-> that's life... :)
-
-I'm happy to hear this!
-
-Yours,
-Linus Walleij
