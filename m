@@ -2,290 +2,148 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 69B284B8D71
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Feb 2022 17:11:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CDE8A4B8DE0
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Feb 2022 17:24:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236115AbiBPQK6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Feb 2022 11:10:58 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:48842 "EHLO
+        id S233303AbiBPQYR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Feb 2022 11:24:17 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:39658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236246AbiBPQKx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Feb 2022 11:10:53 -0500
-Received: from alexa-out-sd-01.qualcomm.com (alexa-out-sd-01.qualcomm.com [199.106.114.38])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 813392AB520;
-        Wed, 16 Feb 2022 08:10:41 -0800 (PST)
+        with ESMTP id S233785AbiBPQYQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Feb 2022 11:24:16 -0500
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED5B722BDE5;
+        Wed, 16 Feb 2022 08:24:01 -0800 (PST)
+Received: by mail-wr1-x436.google.com with SMTP id q7so4302367wrc.13;
+        Wed, 16 Feb 2022 08:24:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1645027841; x=1676563841;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=Ib5SmAKHpTplEuIM0dXiMmh+itfc+HJvdBcTnIJLNb8=;
-  b=geYLt21WFmd+lwBzxX6VvNoeF7YNSL3PoDb3jq4hA+HGtu2eaDb6l0EG
-   NBEdaIvYctRXIeQhTA7I9Cyq/6HqkOtgs/kAwJjOxdpJs9jK1g/nXF8Al
-   7gJ/F1VZDx1erxA0W0RdtF6rlNzmb9qacQ8JJNZP8ZOKi3hoUygE38rqg
-   4=;
-Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 16 Feb 2022 08:10:41 -0800
-X-QCInternal: smtphost
-Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
-  by ironmsg04-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2022 08:10:40 -0800
-Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
- nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.15; Wed, 16 Feb 2022 08:10:40 -0800
-Received: from hu-srivasam-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.922.19; Wed, 16 Feb 2022 08:10:34 -0800
-From:   Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
-To:     <agross@kernel.org>, <bjorn.andersson@linaro.org>,
-        <lgirdwood@gmail.com>, <broonie@kernel.org>, <robh+dt@kernel.org>,
-        <quic_plai@quicinc.com>, <bgoswami@codeaurora.org>,
-        <perex@perex.cz>, <tiwai@suse.com>,
-        <srinivas.kandagatla@linaro.org>, <rohitkr@codeaurora.org>,
-        <linux-arm-msm@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <swboyd@chromium.org>, <judyhsiao@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>
-CC:     Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>,
-        "Venkata Prasad Potturu" <quic_potturu@quicinc.com>
-Subject: [PATCH v7 6/7] pinctrl: qcom: Add SC7280 lpass pin configuration
-Date:   Wed, 16 Feb 2022 21:39:42 +0530
-Message-ID: <1645027783-15199-7-git-send-email-quic_srivasam@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1645027783-15199-1-git-send-email-quic_srivasam@quicinc.com>
-References: <1645027783-15199-1-git-send-email-quic_srivasam@quicinc.com>
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=LTt4zeXioXEAgxKFKddjzAm61xpJtbPPtey6Dl+FS3k=;
+        b=ey0ZisKjo0VUrCt+QgQ5aTTg3uYAEHOkAAyA4ZLtfJrcpAvN4jE/WWE5R+2FjGyTOh
+         5WB+dEERzKJ9PP1AB7VnD5GC7LUwmDT6tXCoebohWVYfgR3UrxeJWcX/kn0Ucbx4pr19
+         kdB159p78FAC3id+SKA+RsB5WKJAY1VzqiLonURGM0ueXop6+0oR3Z9OVwULTWieRMht
+         aKpeB7r43tAVDF0fd9ZupN2rCSy7y+c9lrv42nZqWNOou1cU1FlhRon2OcknfJCiFl3m
+         hwf+1m1UeiOibaVpHQzlyWQ9Xl6Sj0tltYg4NROJxTp8yYHo3KxrBNeq8XJyO5K9uQIh
+         tKvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=LTt4zeXioXEAgxKFKddjzAm61xpJtbPPtey6Dl+FS3k=;
+        b=2kRHVtW/A67ugi+HuJ6HfaV7HYsZcrH4UFAslSzOjliWhsw4nAdzC/eaDPMj1haCzb
+         IP7N0BY0hDIHTdneni9yzE2KSP8cgVLo7sKzYwchZ9v/uTbZwPCwsg+Dm/CBlOaYk71v
+         +VaHMC7jxzGND/2Gjprk1kz/Gg83eK6k32CxujfW4LfoWvkBF88583fGCyZSpFsnpqpg
+         Y07zUHrndlpud+N5/z0KsoPbIvvegLEqUgNy4k+R3OV2oZh4h0YMq6YVzgf1EvRYThk2
+         zyZXSbdgcpQMSZkikhUDXWzlrC2BgWhhxeT+bHoN9uRu+p5+sQWD7oIPp+1GizOjchqo
+         H5Tw==
+X-Gm-Message-State: AOAM531woU6+Ma7ZC+MLDlF/sN7GoU3NQ0R8oXZKXDlCSRqOIg2FHnoD
+        bOh9BpI93JLit6TuJE5eGZo=
+X-Google-Smtp-Source: ABdhPJybP1sGjhuU7xFxJ/hdGk6c3ciueolCbzgSKOnfdRNTzSTOlyjrNfEHjVEgXBPH9+awuTPhkQ==
+X-Received: by 2002:a5d:4d0c:0:b0:1e3:364a:c95f with SMTP id z12-20020a5d4d0c000000b001e3364ac95fmr2979281wrt.115.1645028640578;
+        Wed, 16 Feb 2022 08:24:00 -0800 (PST)
+Received: from kista.localnet (cpe-86-58-32-107.static.triera.net. [86.58.32.107])
+        by smtp.gmail.com with ESMTPSA id f25sm18305054wml.16.2022.02.16.08.23.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Feb 2022 08:24:00 -0800 (PST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-sunxi@lists.linux.dev,
+        linux-gpio@vger.kernel.org, Samuel Holland <samuel@sholland.org>
+Cc:     linux-kernel@vger.kernel.org, Samuel Holland <samuel@sholland.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH] pinctrl: sunxi: Use unique lockdep classes for IRQs
+Date:   Wed, 16 Feb 2022 17:23:59 +0100
+Message-ID: <2091402.irdbgypaU6@kista>
+In-Reply-To: <20220216040037.22730-1-samuel@sholland.org>
+References: <20220216040037.22730-1-samuel@sholland.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add pin control support for SC7280 LPASS LPI.
+Hi Samuel,
 
-Signed-off-by: Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
-Co-developed-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
-Signed-off-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
----
- drivers/pinctrl/qcom/Kconfig                    |   8 ++
- drivers/pinctrl/qcom/Makefile                   |   1 +
- drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c | 168 ++++++++++++++++++++++++
- 3 files changed, 177 insertions(+)
- create mode 100644 drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
+Dne sreda, 16. februar 2022 ob 05:00:36 CET je Samuel Holland napisal(a):
+> This driver, like several others, uses a chained IRQ for each GPIO bank,
+> and forwards .irq_set_wake to the GPIO bank's upstream IRQ. As a result,
+> a call to irq_set_irq_wake() needs to lock both the upstream and
+> downstream irq_desc's. Lockdep considers this to be a possible deadlock
+> when the irq_desc's share lockdep classes, which they do by default:
+> 
+>  ============================================
+>  WARNING: possible recursive locking detected
+>  5.17.0-rc3-00394-gc849047c2473 #1 Not tainted
+>  --------------------------------------------
+>  init/307 is trying to acquire lock:
+>  c2dfe27c (&irq_desc_lock_class){-.-.}-{2:2}, at: 
+__irq_get_desc_lock+0x58/0xa0
+> 
+>  but task is already holding lock:
+>  c3c0ac7c (&irq_desc_lock_class){-.-.}-{2:2}, at: 
+__irq_get_desc_lock+0x58/0xa0
+> 
+>  other info that might help us debug this:
+>   Possible unsafe locking scenario:
+> 
+>         CPU0
+>         ----
+>    lock(&irq_desc_lock_class);
+>    lock(&irq_desc_lock_class);
+> 
+>   *** DEADLOCK ***
+> 
+>   May be due to missing lock nesting notation
+> 
+>  4 locks held by init/307:
+>   #0: c1f29f18 (system_transition_mutex){+.+.}-{3:3}, at: 
+__do_sys_reboot+0x90/0x23c
+>   #1: c20f7760 (&dev->mutex){....}-{3:3}, at: device_shutdown+0xf4/0x224
+>   #2: c2e804d8 (&dev->mutex){....}-{3:3}, at: device_shutdown+0x104/0x224
+>   #3: c3c0ac7c (&irq_desc_lock_class){-.-.}-{2:2}, at: 
+__irq_get_desc_lock+0x58/0xa0
+> 
+>  stack backtrace:
+>  CPU: 0 PID: 307 Comm: init Not tainted 5.17.0-rc3-00394-gc849047c2473 #1
+>  Hardware name: Allwinner sun8i Family
+>   unwind_backtrace from show_stack+0x10/0x14
+>   show_stack from dump_stack_lvl+0x68/0x90
+>   dump_stack_lvl from __lock_acquire+0x1680/0x31a0
+>   __lock_acquire from lock_acquire+0x148/0x3dc
+>   lock_acquire from _raw_spin_lock_irqsave+0x50/0x6c
+>   _raw_spin_lock_irqsave from __irq_get_desc_lock+0x58/0xa0
+>   __irq_get_desc_lock from irq_set_irq_wake+0x2c/0x19c
+>   irq_set_irq_wake from irq_set_irq_wake+0x13c/0x19c
+>     [tail call from sunxi_pinctrl_irq_set_wake]
+>   irq_set_irq_wake from gpio_keys_suspend+0x80/0x1a4
+>   gpio_keys_suspend from gpio_keys_shutdown+0x10/0x2c
+>   gpio_keys_shutdown from device_shutdown+0x180/0x224
+>   device_shutdown from __do_sys_reboot+0x134/0x23c
+>   __do_sys_reboot from ret_fast_syscall+0x0/0x1c
+> 
+> However, this can never deadlock because the upstream and downstream
+> IRQs are never the same (nor do they even involve the same irqchip).
+> 
+> Silence this erroneous lockdep splat by applying what appears to be the
+> usual fix of moving the GPIO IRQs to separate lockdep classes.
+> 
+> Fixes: a59c99d9eaf9 ("pinctrl: sunxi: Forward calls to irq_set_irq_wake")
+> Reported-by: Guenter Roeck <linux@roeck-us.net>
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
 
-diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
-index c678737..0de6cc0 100644
---- a/drivers/pinctrl/qcom/Kconfig
-+++ b/drivers/pinctrl/qcom/Kconfig
-@@ -357,6 +357,14 @@ config PINCTRL_LPASS_LPI
- 	  Qualcomm Technologies Inc LPASS (Low Power Audio SubSystem) LPI
- 	  (Low Power Island) found on the Qualcomm Technologies Inc SoCs.
- 
-+config PINCTRL_SC7280_LPASS_LPI
-+	tristate "Qualcomm Technologies Inc SC7280 LPASS LPI pin controller driver"
-+	select PINCTRL_LPASS_LPI
-+	help
-+	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-+	  Qualcomm Technologies Inc LPASS (Low Power Audio SubSystem) LPI
-+	  (Low Power Island) found on the Qualcomm Technologies Inc SC7280 platform.
-+
- config PINCTRL_SM8250_LPASS_LPI
- 	tristate "Qualcomm Technologies Inc SM8250 LPASS LPI pin controller driver"
- 	select PINCTRL_LPASS_LPI
-diff --git a/drivers/pinctrl/qcom/Makefile b/drivers/pinctrl/qcom/Makefile
-index c10d14d2..a008ee0 100644
---- a/drivers/pinctrl/qcom/Makefile
-+++ b/drivers/pinctrl/qcom/Makefile
-@@ -41,4 +41,5 @@ obj-$(CONFIG_PINCTRL_SM8250) += pinctrl-sm8250.o
- obj-$(CONFIG_PINCTRL_SM8350) += pinctrl-sm8350.o
- obj-$(CONFIG_PINCTRL_SM8450) += pinctrl-sm8450.o
- obj-$(CONFIG_PINCTRL_LPASS_LPI) += pinctrl-lpass-lpi.o
-+obj-$(CONFIG_PINCTRL_SC7280_LPASS_LPI) += pinctrl-sc7280-lpass-lpi.o
- obj-$(CONFIG_PINCTRL_SM8250_LPASS_LPI) += pinctrl-sm8250-lpass-lpi.o
-diff --git a/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
-new file mode 100644
-index 0000000..c29d8af
---- /dev/null
-+++ b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
-@@ -0,0 +1,168 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2020-2021, The Linux Foundation. All rights reserved.
-+ * ALSA SoC platform-machine driver for QTi LPASS
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+
-+#include "pinctrl-lpass-lpi.h"
-+
-+enum lpass_lpi_functions {
-+	LPI_MUX_dmic1_clk,
-+	LPI_MUX_dmic1_data,
-+	LPI_MUX_dmic2_clk,
-+	LPI_MUX_dmic2_data,
-+	LPI_MUX_dmic3_clk,
-+	LPI_MUX_dmic3_data,
-+	LPI_MUX_i2s1_clk,
-+	LPI_MUX_i2s1_data,
-+	LPI_MUX_i2s1_ws,
-+	LPI_MUX_i2s2_clk,
-+	LPI_MUX_i2s2_data,
-+	LPI_MUX_i2s2_ws,
-+	LPI_MUX_qua_mi2s_data,
-+	LPI_MUX_qua_mi2s_sclk,
-+	LPI_MUX_qua_mi2s_ws,
-+	LPI_MUX_swr_rx_clk,
-+	LPI_MUX_swr_rx_data,
-+	LPI_MUX_swr_tx_clk,
-+	LPI_MUX_swr_tx_data,
-+	LPI_MUX_wsa_swr_clk,
-+	LPI_MUX_wsa_swr_data,
-+	LPI_MUX_gpio,
-+	LPI_MUX__,
-+};
-+
-+static int gpio0_pins[] = { 0 };
-+static int gpio1_pins[] = { 1 };
-+static int gpio2_pins[] = { 2 };
-+static int gpio3_pins[] = { 3 };
-+static int gpio4_pins[] = { 4 };
-+static int gpio5_pins[] = { 5 };
-+static int gpio6_pins[] = { 6 };
-+static int gpio7_pins[] = { 7 };
-+static int gpio8_pins[] = { 8 };
-+static int gpio9_pins[] = { 9 };
-+static int gpio10_pins[] = { 10 };
-+static int gpio11_pins[] = { 11 };
-+static int gpio12_pins[] = { 12 };
-+static int gpio13_pins[] = { 13 };
-+static int gpio14_pins[] = { 14 };
-+
-+/* sc7280 variant specific data */
-+static const struct pinctrl_pin_desc sc7280_lpi_pins[] = {
-+	PINCTRL_PIN(0, "gpio0"),
-+	PINCTRL_PIN(1, "gpio1"),
-+	PINCTRL_PIN(2, "gpio2"),
-+	PINCTRL_PIN(3, "gpio3"),
-+	PINCTRL_PIN(4, "gpio4"),
-+	PINCTRL_PIN(5, "gpio5"),
-+	PINCTRL_PIN(6, "gpio6"),
-+	PINCTRL_PIN(7, "gpio7"),
-+	PINCTRL_PIN(8, "gpio8"),
-+	PINCTRL_PIN(9, "gpio9"),
-+	PINCTRL_PIN(10, "gpio10"),
-+	PINCTRL_PIN(11, "gpio11"),
-+	PINCTRL_PIN(12, "gpio12"),
-+	PINCTRL_PIN(13, "gpio13"),
-+	PINCTRL_PIN(14, "gpio14"),
-+};
-+
-+static const char * const swr_tx_clk_groups[] = { "gpio0" };
-+static const char * const swr_tx_data_groups[] = { "gpio1", "gpio2", "gpio14" };
-+static const char * const swr_rx_clk_groups[] = { "gpio3" };
-+static const char * const swr_rx_data_groups[] = { "gpio4", "gpio5" };
-+static const char * const dmic1_clk_groups[] = { "gpio6" };
-+static const char * const dmic1_data_groups[] = { "gpio7" };
-+static const char * const dmic2_clk_groups[] = { "gpio8" };
-+static const char * const dmic2_data_groups[] = { "gpio9" };
-+static const char * const i2s2_clk_groups[] = { "gpio10" };
-+static const char * const i2s2_ws_groups[] = { "gpio11" };
-+static const char * const dmic3_clk_groups[] = { "gpio12" };
-+static const char * const dmic3_data_groups[] = { "gpio13" };
-+static const char * const qua_mi2s_sclk_groups[] = { "gpio0" };
-+static const char * const qua_mi2s_ws_groups[] = { "gpio1" };
-+static const char * const qua_mi2s_data_groups[] = { "gpio2", "gpio3", "gpio4" };
-+static const char * const i2s1_clk_groups[] = { "gpio6" };
-+static const char * const i2s1_ws_groups[] = { "gpio7" };
-+static const char * const i2s1_data_groups[] = { "gpio8", "gpio9" };
-+static const char * const wsa_swr_clk_groups[] = { "gpio10" };
-+static const char * const wsa_swr_data_groups[] = { "gpio11" };
-+static const char * const i2s2_data_groups[] = { "gpio12", "gpio13" };
-+
-+static const struct lpi_pingroup sc7280_groups[] = {
-+	LPI_PINGROUP(0, 0, swr_tx_clk, qua_mi2s_sclk, _, _),
-+	LPI_PINGROUP(1, 2, swr_tx_data, qua_mi2s_ws, _, _),
-+	LPI_PINGROUP(2, 4, swr_tx_data, qua_mi2s_data, _, _),
-+	LPI_PINGROUP(3, 8, swr_rx_clk, qua_mi2s_data, _, _),
-+	LPI_PINGROUP(4, 10, swr_rx_data, qua_mi2s_data, _, _),
-+	LPI_PINGROUP(5, 12, swr_rx_data, _, _, _),
-+	LPI_PINGROUP(6, LPI_NO_SLEW, dmic1_clk, i2s1_clk, _,  _),
-+	LPI_PINGROUP(7, LPI_NO_SLEW, dmic1_data, i2s1_ws, _, _),
-+	LPI_PINGROUP(8, LPI_NO_SLEW, dmic2_clk, i2s1_data, _, _),
-+	LPI_PINGROUP(9, LPI_NO_SLEW, dmic2_data, i2s1_data, _, _),
-+	LPI_PINGROUP(10, 16, i2s2_clk, wsa_swr_clk, _, _),
-+	LPI_PINGROUP(11, 18, i2s2_ws, wsa_swr_data, _, _),
-+	LPI_PINGROUP(12, LPI_NO_SLEW, dmic3_clk, i2s2_data, _, _),
-+	LPI_PINGROUP(13, LPI_NO_SLEW, dmic3_data, i2s2_data, _, _),
-+	LPI_PINGROUP(14, 6, swr_tx_data, _, _, _),
-+};
-+
-+static const struct lpi_function sc7280_functions[] = {
-+	LPI_FUNCTION(dmic1_clk),
-+	LPI_FUNCTION(dmic1_data),
-+	LPI_FUNCTION(dmic2_clk),
-+	LPI_FUNCTION(dmic2_data),
-+	LPI_FUNCTION(dmic3_clk),
-+	LPI_FUNCTION(dmic3_data),
-+	LPI_FUNCTION(i2s1_clk),
-+	LPI_FUNCTION(i2s1_data),
-+	LPI_FUNCTION(i2s1_ws),
-+	LPI_FUNCTION(i2s2_clk),
-+	LPI_FUNCTION(i2s2_data),
-+	LPI_FUNCTION(i2s2_ws),
-+	LPI_FUNCTION(qua_mi2s_data),
-+	LPI_FUNCTION(qua_mi2s_sclk),
-+	LPI_FUNCTION(qua_mi2s_ws),
-+	LPI_FUNCTION(swr_rx_clk),
-+	LPI_FUNCTION(swr_rx_data),
-+	LPI_FUNCTION(swr_tx_clk),
-+	LPI_FUNCTION(swr_tx_data),
-+	LPI_FUNCTION(wsa_swr_clk),
-+	LPI_FUNCTION(wsa_swr_data),
-+};
-+
-+static const struct lpi_pinctrl_variant_data sc7280_lpi_data = {
-+	.pins = sc7280_lpi_pins,
-+	.npins = ARRAY_SIZE(sc7280_lpi_pins),
-+	.groups = sc7280_groups,
-+	.ngroups = ARRAY_SIZE(sc7280_groups),
-+	.functions = sc7280_functions,
-+	.nfunctions = ARRAY_SIZE(sc7280_functions),
-+};
-+
-+static const struct of_device_id lpi_pinctrl_of_match[] = {
-+	{
-+	       .compatible = "qcom,sc7280-lpass-lpi-pinctrl",
-+	       .data = &sc7280_lpi_data,
-+	},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, lpi_pinctrl_of_match);
-+
-+static struct platform_driver lpi_pinctrl_driver = {
-+	.driver = {
-+		   .name = "qcom-sc7280-lpass-lpi-pinctrl",
-+		   .of_match_table = lpi_pinctrl_of_match,
-+	},
-+	.probe = lpi_pinctrl_probe,
-+	.remove = lpi_pinctrl_remove,
-+};
-+
-+module_platform_driver(lpi_pinctrl_driver);
-+MODULE_DESCRIPTION("QTI SC7280 LPI GPIO pin control driver");
-+MODULE_LICENSE("GPL");
--- 
-2.7.4
+Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+
+Best regards,
+Jernej
+
 
