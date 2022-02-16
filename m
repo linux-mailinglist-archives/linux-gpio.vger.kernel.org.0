@@ -2,142 +2,179 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EDA774B7EC5
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Feb 2022 04:50:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6195F4B7F10
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Feb 2022 05:01:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343651AbiBPD2y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Feb 2022 22:28:54 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:44702 "EHLO
+        id S240404AbiBPEAy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Feb 2022 23:00:54 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:33872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344279AbiBPD2x (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Feb 2022 22:28:53 -0500
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A5D5FFFA1;
-        Tue, 15 Feb 2022 19:28:39 -0800 (PST)
-X-UUID: 201295e279514706a3e543ef5dd251c7-20220216
-X-UUID: 201295e279514706a3e543ef5dd251c7-20220216
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <guodong.liu@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 1044364043; Wed, 16 Feb 2022 11:28:35 +0800
-Received: from mtkcas11.mediatek.inc (172.21.101.40) by
- mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.2.792.15; Wed, 16 Feb 2022 11:28:33 +0800
-Received: from mhfsdcap04 (10.17.3.154) by mtkcas11.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 16 Feb 2022 11:28:33 +0800
-Message-ID: <02f147135e6c1458caa10ed9027bf185beee2023.camel@mediatek.com>
-Subject: Re: [PATCH v4 1/3] dt-bindings: pinctrl: mt8186: add pinctrl file
- and binding document
-From:   Guodong Liu <guodong.liu@mediatek.com>
-To:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>
-CC:     Sean Wang <sean.wang@mediatek.com>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <Project_Global_Chrome_Upstream_Group@mediatek.com>
-Date:   Wed, 16 Feb 2022 11:28:33 +0800
-In-Reply-To: <87db864e-fc74-189a-a665-bf51db8b5321@collabora.com>
-References: <20220214030631.4969-1-guodong.liu@mediatek.com>
-         <20220214030631.4969-2-guodong.liu@mediatek.com>
-         <87db864e-fc74-189a-a665-bf51db8b5321@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+        with ESMTP id S245697AbiBPEAw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Feb 2022 23:00:52 -0500
+Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD0BCFFF86;
+        Tue, 15 Feb 2022 20:00:40 -0800 (PST)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id EE1325C009B;
+        Tue, 15 Feb 2022 23:00:39 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Tue, 15 Feb 2022 23:00:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        cc:cc:content-transfer-encoding:date:date:from:from:in-reply-to
+        :message-id:mime-version:reply-to:sender:subject:subject:to:to;
+         s=fm2; bh=SiszW+x9m/mJnfPkAgUXZG/Zve/dxDiJBwdKRTErKP4=; b=MXyzz
+        DEo/sDWN98koq85tTb650JjUXtvWONyaeELk7PU1O3zmRepAaQQBONI9QNv1iLKw
+        Lb6yc5piUfyB0a93/SD2Id+7rY4XCJTDK2UOWUYZJlvgaNHj97UzRh4UnZHOUw+J
+        fys5PSgUjls/zhh4SLsq6Hl0G4ExN1/VeV/lNRIT/DOYuROXhMhuAyxRih6M7rYC
+        5YkzOAj4xAg+8lPGbtH+lYCnMaamKEXtElxPng8hByr8vy9/zdK9yaayNskE7RJo
+        Htl+d0C0EMtcfApZDtPJYKlYOAusushP38bv/T5hRs7WPE6l8btB105VW41mBobP
+        C5hpx4yyDbV8uR49A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
+        :from:from:in-reply-to:message-id:mime-version:reply-to:sender
+        :subject:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender
+        :x-me-sender:x-sasl-enc; s=fm2; bh=SiszW+x9m/mJnfPkAgUXZG/Zve/dx
+        DiJBwdKRTErKP4=; b=nQ/JPulW8bYZaRjU93QoPy76Kr7ACTKazlcc0it4ab5tt
+        85LqfBALzoGR7DCFEwRaPsDBAppHQI6qaxq/7JUR26f+VWvludBbDDJc5BOfZbDF
+        4mQNsbgEsrxv3ZPNv++r3srbu/NW92GsPiRziMyEJKAZSzkil0omswpENtygOEMW
+        KWx5HBZx8qnsU1hHNUxjrxm4PJjm/EuwwFPsvBImL1oSXJ323MzHucYfWjXTb1qe
+        dRzc+ll8EmYjFgGmAgEFc6iNtjwb7fGdCydlZRX3LsdqIcJa0stu9Lk6L98PyMs+
+        m570ClmA3L89SWmUCJ2JGihiL/921vc2IzK7/WVJA==
+X-ME-Sender: <xms:5nYMYssshuikj44pspxWI8f18v7qvQzW6Poxl-3DUwFg2ktdZxlBsw>
+    <xme:5nYMYpeQeSoM60gmw_0WYF48ZlfqNOn6pdNd9FqOYzr12RYS9G2jlpwd0f8El7QVg
+    WEB7aUoIWmrJIwJ5w>
+X-ME-Received: <xmr:5nYMYnySPoI9exRkfGoHjg6_ktPnSYjm8jW2YhPwqWmPX7QWKQ7SBsYlByPewUdBOjRXAISPJruCQ_spV35qbxPqBkxuM0tpI3N4GHGviGpozUTFNGYmrhbXrKknpGZiKj09MA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrjeehgdeifecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepufgrmhhuvghlucfj
+    ohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecuggftrfgrth
+    htvghrnhepieetkefhheduudfgledtudefjeejfeegveehkeeufffhhfejkeehiefftdev
+    tdevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsh
+    grmhhuvghlsehshhholhhlrghnugdrohhrgh
+X-ME-Proxy: <xmx:5nYMYvMyc4MgbxgnV8n_yr_BXK7-4tyyeOF-VP1gf3l3KspEvhB_ww>
+    <xmx:5nYMYs_HGmZWmYzi2Gze56vi9maxRSHE7lH89M-gE7-JoARx6MJ4Fg>
+    <xmx:5nYMYnWppb4rNCPSpy5ssQWKmZEbKqfgHW-VrbgCeq2Bp1TZyqMG-A>
+    <xmx:53YMYpNu1NIQyA4TTJ6QOFxvXGQ2ac76zrnp4F8Cax86eaQu8rsFWw>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 15 Feb 2022 23:00:38 -0500 (EST)
+From:   Samuel Holland <samuel@sholland.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        linux-sunxi@lists.linux.dev, linux-gpio@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Samuel Holland <samuel@sholland.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH] pinctrl: sunxi: Use unique lockdep classes for IRQs
+Date:   Tue, 15 Feb 2022 22:00:36 -0600
+Message-Id: <20220216040037.22730-1-samuel@sholland.org>
+X-Mailer: git-send-email 2.33.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
------Original Message-----
-From: AngeloGioacchino Del Regno <
-angelogioacchino.delregno@collabora.com>
-To: Guodong Liu <guodong.liu@mediatek.com>, Linus Walleij <
-linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Matthias
-Brugger <matthias.bgg@gmail.com>, Sean Wang <sean.wang@kernel.org>
-Cc: Sean Wang <sean.wang@mediatek.com>, linux-gpio@vger.kernel.org, 
-devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, 
-Project_Global_Chrome_Upstream_Group@mediatek.com
-Subject: Re: [PATCH v4 1/3] dt-bindings: pinctrl: mt8186: add pinctrl
-file and binding document
-Date: Mon, 14 Feb 2022 10:58:58 +0100
+This driver, like several others, uses a chained IRQ for each GPIO bank,
+and forwards .irq_set_wake to the GPIO bank's upstream IRQ. As a result,
+a call to irq_set_irq_wake() needs to lock both the upstream and
+downstream irq_desc's. Lockdep considers this to be a possible deadlock
+when the irq_desc's share lockdep classes, which they do by default:
 
-Il 14/02/22 04:06, Guodong Liu ha scritto:
-> 1. This patch adds pinctrl file for mt8186.
-> 2. This patch adds mt8186 compatible node in binding document.
-> 
-> Signed-off-by: Guodong Liu <guodong.liu@mediatek.com>
-> ---
->   .../bindings/pinctrl/pinctrl-mt8186.yaml      |  302 +++++
->   include/dt-bindings/pinctrl/mt8186-pinfunc.h  | 1174
-> +++++++++++++++++
->   2 files changed, 1476 insertions(+)
->   create mode 100644
-> Documentation/devicetree/bindings/pinctrl/pinctrl-mt8186.yaml
->   create mode 100644 include/dt-bindings/pinctrl/mt8186-pinfunc.h
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-
-> mt8186.yaml b/Documentation/devicetree/bindings/pinctrl/pinctrl-
-> mt8186.yaml
-> new file mode 100644
-> index 000000000000..582d131af4e3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8186.yaml
+ ============================================
+ WARNING: possible recursive locking detected
+ 5.17.0-rc3-00394-gc849047c2473 #1 Not tainted
+ --------------------------------------------
+ init/307 is trying to acquire lock:
+ c2dfe27c (&irq_desc_lock_class){-.-.}-{2:2}, at: __irq_get_desc_lock+0x58/0xa0
 
-...snip...
+ but task is already holding lock:
+ c3c0ac7c (&irq_desc_lock_class){-.-.}-{2:2}, at: __irq_get_desc_lock+0x58/0xa0
 
-> diff --git a/include/dt-bindings/pinctrl/mt8186-pinfunc.h
-> b/include/dt-bindings/pinctrl/mt8186-pinfunc.h
-> new file mode 100644
-> index 000000000000..dcff86201a61
-> --- /dev/null
-> +++ b/include/dt-bindings/pinctrl/mt8186-pinfunc.h
-> @@ -0,0 +1,1174 @@
-> +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
-> +/*
-> + * Copyright (C) 2021 MediaTek Inc.
-> + * Author: Guodong Liu <Guodong.Liu@mediatek.com>
-> + *
-> + */
-> +
+ other info that might help us debug this:
+  Possible unsafe locking scenario:
 
-Hello,
-I've just noticed that we have a typo here....
+        CPU0
+        ----
+   lock(&irq_desc_lock_class);
+   lock(&irq_desc_lock_class);
 
-You wrote "MT8168", but this should be "MT8186" instead; please fix it.
+  *** DEADLOCK ***
 
-P.S.: I'm sorry for not seeing that before!
+  May be due to missing lock nesting notation
 
-> +#ifndef __MT8168_PINFUNC_H
-> +#define __MT8168_PINFUNC_H
-> +
+ 4 locks held by init/307:
+  #0: c1f29f18 (system_transition_mutex){+.+.}-{3:3}, at: __do_sys_reboot+0x90/0x23c
+  #1: c20f7760 (&dev->mutex){....}-{3:3}, at: device_shutdown+0xf4/0x224
+  #2: c2e804d8 (&dev->mutex){....}-{3:3}, at: device_shutdown+0x104/0x224
+  #3: c3c0ac7c (&irq_desc_lock_class){-.-.}-{2:2}, at: __irq_get_desc_lock+0x58/0xa0
 
-..snip..
+ stack backtrace:
+ CPU: 0 PID: 307 Comm: init Not tainted 5.17.0-rc3-00394-gc849047c2473 #1
+ Hardware name: Allwinner sun8i Family
+  unwind_backtrace from show_stack+0x10/0x14
+  show_stack from dump_stack_lvl+0x68/0x90
+  dump_stack_lvl from __lock_acquire+0x1680/0x31a0
+  __lock_acquire from lock_acquire+0x148/0x3dc
+  lock_acquire from _raw_spin_lock_irqsave+0x50/0x6c
+  _raw_spin_lock_irqsave from __irq_get_desc_lock+0x58/0xa0
+  __irq_get_desc_lock from irq_set_irq_wake+0x2c/0x19c
+  irq_set_irq_wake from irq_set_irq_wake+0x13c/0x19c
+    [tail call from sunxi_pinctrl_irq_set_wake]
+  irq_set_irq_wake from gpio_keys_suspend+0x80/0x1a4
+  gpio_keys_suspend from gpio_keys_shutdown+0x10/0x2c
+  gpio_keys_shutdown from device_shutdown+0x180/0x224
+  device_shutdown from __do_sys_reboot+0x134/0x23c
+  __do_sys_reboot from ret_fast_syscall+0x0/0x1c
 
-> +
-> +#endif /* __MT8168-PINFUNC_H */
+However, this can never deadlock because the upstream and downstream
+IRQs are never the same (nor do they even involve the same irqchip).
 
-Thank you,
-Angelo
+Silence this erroneous lockdep splat by applying what appears to be the
+usual fix of moving the GPIO IRQs to separate lockdep classes.
 
-Hello Angelo,
+Fixes: a59c99d9eaf9 ("pinctrl: sunxi: Forward calls to irq_set_irq_wake")
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+---
 
-we will update it for next version.
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Thanks
-Guodong
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+index 80d6750c74a6..9e6ed1175db3 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+@@ -36,6 +36,13 @@
+ #include "../core.h"
+ #include "pinctrl-sunxi.h"
+ 
++/*
++ * These lock classes tell lockdep that GPIO IRQs are in a different
++ * category than their parents, so it won't report false recursion.
++ */
++static struct lock_class_key sunxi_pinctrl_irq_lock_class;
++static struct lock_class_key sunxi_pinctrl_irq_request_class;
++
+ static struct irq_chip sunxi_pinctrl_edge_irq_chip;
+ static struct irq_chip sunxi_pinctrl_level_irq_chip;
+ 
+@@ -1555,6 +1562,8 @@ int sunxi_pinctrl_init_with_variant(struct platform_device *pdev,
+ 	for (i = 0; i < (pctl->desc->irq_banks * IRQ_PER_BANK); i++) {
+ 		int irqno = irq_create_mapping(pctl->domain, i);
+ 
++		irq_set_lockdep_class(irqno, &sunxi_pinctrl_irq_lock_class,
++				      &sunxi_pinctrl_irq_request_class);
+ 		irq_set_chip_and_handler(irqno, &sunxi_pinctrl_edge_irq_chip,
+ 					 handle_edge_irq);
+ 		irq_set_chip_data(irqno, pctl);
+-- 
+2.33.1
 
