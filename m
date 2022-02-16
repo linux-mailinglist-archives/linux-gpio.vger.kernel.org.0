@@ -2,154 +2,181 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BBFBA4B8C93
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Feb 2022 16:37:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D3264B8C97
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Feb 2022 16:38:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235521AbiBPPh6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Feb 2022 10:37:58 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:33132 "EHLO
+        id S235543AbiBPPiU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Feb 2022 10:38:20 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:34844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231593AbiBPPh5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Feb 2022 10:37:57 -0500
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam08on2121.outbound.protection.outlook.com [40.107.100.121])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4516A286B47;
-        Wed, 16 Feb 2022 07:37:45 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YAc/owjrhMms5/E2wy+EJt8BmF1Rkjy9BK4VYbDbcUXBmhlr4tFZ6OnhAB0qBQcuhi8jVdZXUKsvHeRi6qzEaZ1qL8ku/+Fqr2HSpq34dsc3/QBV3M/tvv8RZej89kVejZK5/+jdi32mi1Erb84oBpFD7RXdJwVqfEnGYRZ1S6HZ0ntKJuhw+7yPCgEYLdgqN8ufVvnRDZ3gvau+R1PEmMC7It5lOQgY13jddJGxRG6Jhhyk5K/dn/Qf1+1oB9CtpfT0oKlwj2yeHP9ZwdMNJsUu9mGeIZRtRo14tZ3BYXDHKo34kjUdaDY0dZKHUg91UnHfBadWtltgTj78RWUX2Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+dOXtPer5T0R1rp1EOFoHSkBVUbvQ8lj0CMbQf8D2Ak=;
- b=AXDdqC0uiobAxJ3a4NblKHvVYgHZoEOBVr2i/wiXp5OBHaR1G9tOulVqyTl7MIFV5TknJW1eNaZZBwajnmqQXAlt+sYAGk5KL6RzYXEzp40Y3xu6UeIAPkXyZgz8Vfbwzblxs3WRPw/czk7AMw0wcqUXdacfoLw3OC2karqkSpPQvaxKdZYBgAQCGiLJitS8kjTJxDkafdx1J7WldhK3yKa97d3weknziosFRqlXHPGK9iBNwJCDmGnOE5Uc0SCQX/ED/uwbzg2rbS5uT9iZ93t2cPieNbk7LcYkiNSpBw0xIfM7ujJkfimAzXfIIvSHeKERvEOzDt653R+QmYboyA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=in-advantage.com; dmarc=pass action=none
- header.from=in-advantage.com; dkim=pass header.d=in-advantage.com; arc=none
+        with ESMTP id S235551AbiBPPiT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Feb 2022 10:38:19 -0500
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 059F0291F84
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Feb 2022 07:38:06 -0800 (PST)
+Received: by mail-wr1-x435.google.com with SMTP id o24so4130641wro.3
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Feb 2022 07:38:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=inadvantage.onmicrosoft.com; s=selector2-inadvantage-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+dOXtPer5T0R1rp1EOFoHSkBVUbvQ8lj0CMbQf8D2Ak=;
- b=OYnGMQ2XHGNTiDwN7EmYYYOan2EXm7JB3jCv0A9hcYk46Y8v9Gp1H4iHGMh2uqYnGUox3JYWvUYhi9nwD41Fnmxc4qCD/bV2wQ3muti+4CAdfWAkzDean5dh5mBpAED8S7RTukJtAJn3ZAxdAJ83iURO8KKSkkLKslEdSeEGDM0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=in-advantage.com;
-Received: from MWHPR1001MB2351.namprd10.prod.outlook.com
- (2603:10b6:301:35::37) by CH2PR10MB4277.namprd10.prod.outlook.com
- (2603:10b6:610:7b::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4995.16; Wed, 16 Feb
- 2022 15:37:43 +0000
-Received: from MWHPR1001MB2351.namprd10.prod.outlook.com
- ([fe80::7c:dc80:7f24:67c5]) by MWHPR1001MB2351.namprd10.prod.outlook.com
- ([fe80::7c:dc80:7f24:67c5%6]) with mapi id 15.20.4975.012; Wed, 16 Feb 2022
- 15:37:43 +0000
-Date:   Wed, 16 Feb 2022 07:37:14 -0800
-From:   Colin Foster <colin.foster@in-advantage.com>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: ocelot: fix confops resource index
-Message-ID: <20220216153714.GA14638@MSI.localdomain>
-References: <20220216082020.981797-1-michael@walle.cc>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220216082020.981797-1-michael@walle.cc>
-X-ClientProxiedBy: MWHPR14CA0070.namprd14.prod.outlook.com
- (2603:10b6:300:81::32) To MWHPR1001MB2351.namprd10.prod.outlook.com
- (2603:10b6:301:35::37)
+        d=linaro.org; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=4D8vkLWPsB+L5NVGMdhKjexz7qk9u2esSIMnsRYj4yw=;
+        b=ZH3t3VjooA0WMKhqp/ZjVeXyOXGVqiAfn7O1tA87Uj+1ncONnemMgy3RuoMPrWErOn
+         I3aHn+NFoulMcZCMFNDCh5t6uuQF9Z/XWn98klHsiY32L45yb8tdKoR2526NEQ4eJ5Lk
+         xo7SD80kHm1YeAsh18wiPuwtaKUJjDoiXQmsO4tkwR87eCJAlPTX8X/RwY7ar7I4sfxu
+         3lVB42wzr5NDJW2X0mSYt31UjNAA83Rp4E2Fr4GpVBJA4YFvRKhVYNnLYJcDm6k1COae
+         HUBU59F0LDM+12oAqQWSGuASDICxU7uLIj79gyCgtJVXcG1qzwBHz8xrM8oqAaM3Fw0C
+         NI2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=4D8vkLWPsB+L5NVGMdhKjexz7qk9u2esSIMnsRYj4yw=;
+        b=sXdMfkW7kj6cs+/49HQ83Aoj18GPhwAO4OdCt2J6t+vSbTIF8DtqAukjX4AYO65qIB
+         it3r6m+W2YiS/VbJAU40Wzi0HD74OrBQXaQX0TdxbYzfiTW83LXVW+jVey39TM3vymhu
+         pO6kykxZ3q5iv/hFQT4iqe3pOUB9TPUAdLTzGLbm7G83InHmZ+yFs4dIVwKvCrgRg22w
+         VpnjsJ4+PGswti/PVL/FePAnhuAi66t2x9THch/u9tn1ueq420LUKXIoa/2DgZKg+rGy
+         4lEV9sEGmLQxmDlDR8wyaghNMBIXDvuaZDuUpEG/d4bjEeTj8UU7UVEb4uF4ZxT4Tsul
+         m09A==
+X-Gm-Message-State: AOAM533OxfU4KOser3o9Fi3nfNnm+TtLFf6FOyVb2Fq7yAMHTtXTqZYL
+        FaHGrNGXEl29KooGrW47Mpo2eA==
+X-Google-Smtp-Source: ABdhPJzwHrl5EQgylw3JeoAybMGg4Xtm2WpU9q/hqKvoLx1ryIPLVXKSfbFhx9NIFxZSg7OvNw7AjA==
+X-Received: by 2002:a05:6000:36b:b0:1e3:8a3b:add8 with SMTP id f11-20020a056000036b00b001e38a3badd8mr2675144wrf.283.1645025884614;
+        Wed, 16 Feb 2022 07:38:04 -0800 (PST)
+Received: from [192.168.86.34] (cpc90716-aztw32-2-0-cust825.18-1.cable.virginm.net. [86.26.103.58])
+        by smtp.googlemail.com with ESMTPSA id az2sm28127598wmb.2.2022.02.16.07.38.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Feb 2022 07:38:04 -0800 (PST)
+Message-ID: <09b00fe9-1770-1723-3c4c-6c494da87e8d@linaro.org>
+Date:   Wed, 16 Feb 2022 15:38:02 +0000
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 0a9f0b62-5668-44d1-051f-08d9f1624581
-X-MS-TrafficTypeDiagnostic: CH2PR10MB4277:EE_
-X-Microsoft-Antispam-PRVS: <CH2PR10MB4277F9891B441EE953073749A4359@CH2PR10MB4277.namprd10.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:639;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: OKHYmuMqtaYlmRTTEJz0/PVFkB270x3ez1jSPo6GqNYDl9iRUPGRL+tB32fn0WDFpv+JoKP62RfLYVVwB4I/ByNsbqLFanK+o5zr3BMRO29BpVqa2Lotc8iMUc1V998IO2LgQJEeeG4MpSiZh3fKzu5cLSzGHuhOArkOkMd9VuRN/Q/vWyQ9SQSTAWDBtGvGXZGCMLW/R2QSI9FzpsZIWd3dl4iiK02ttlS5wnjCwyycr5NC5YSiBpz0gXaWNVfs/WoIBNCf176O6GdhiokGSM147WGU5RceLYUcIvKoQ3W0MM+tC03kPBVzB5h+TKWC/VpIIz/+YZK2PHhQYYCr2S7ShfohhJuKie/f4PlQBh8Kw5Lfxnjph49gqbjltNjGuGnNkirDnTv9PZdrHtSQxbvkVVqk+9NAFy/Hd/xq11n5elQbfPrWXLlTHrvzoQL/swP3QLfbVTiY8n6RKh13vTo8AxUD74J6+AwU0pKZm4ntgo5QCG9cv1v8Oob9SIZ3n8m7UTJTAke5CdkNJv8Bt5eYRVvCit8E3ycD5qznLURAoGNB95WbFeq2CF97Pw8Xs3Rco+S7q42he/Oh1AYEXZgZA8oDOFX+Q6mMsxfVjyUpxmHe5MdW8S9OksxSDPIa/66ZcTraO8b+YbKdODACFHZZAuV3zpfuxlE8X1+ABb0RInjoNt6q81YL6bkQOXq1wyLHYFYP69CIxAYIzEw9/g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1001MB2351.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(376002)(396003)(366004)(136003)(42606007)(39830400003)(346002)(4326008)(83380400001)(66556008)(66476007)(8676002)(66946007)(86362001)(26005)(44832011)(6512007)(186003)(9686003)(1076003)(2906002)(8936002)(6506007)(6666004)(52116002)(33656002)(5660300002)(6916009)(38100700002)(38350700002)(6486002)(316002)(508600001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?+0A7zFdJrK7SGk7rtH+2QK1AgVsmu3uEhWEHNyvp+RU76Ji8lvj3/N1nmMam?=
- =?us-ascii?Q?juQM7slgAgg4Rw1F3IC49fVJo4qJWlryQndHA8/xy+O6g1JzSDBFzBqThbMB?=
- =?us-ascii?Q?PXr1KmopbSSRcIf6JWPbikqpzevH6lzN2FiV/CF/NuQl51Cnc7WiWRsTd9/F?=
- =?us-ascii?Q?ezB+hcQyGRqR7UpDlPzdueDk6P5YxMxGj7t6o/IgadSlpwh+uPHVd2kqqYYU?=
- =?us-ascii?Q?xqggNqiVbSU3DzKca5sFPt/nsTnwVzdO2vwVQZYlEKKT/c0mj/ZJfUlvFKSz?=
- =?us-ascii?Q?63pnf/uj/ZjJYdeo+ILIICSGbSHR2S6Hox6k9RanmQspHTj/rA8wFP5KA1xL?=
- =?us-ascii?Q?lRDQ+iUnIcH85HOFdElQhxkiOzfwj+Zk/O6HaouV6ppFLL6SpYv66spHXz/V?=
- =?us-ascii?Q?JNje8EBTAcSVIS7fueYh3CoOdSIy+sZ19SUl3SNQS+T+Ld1K3MWLPvVh271I?=
- =?us-ascii?Q?+d4yBDLCklo1G6SIPjnPsDYIs/uDyDI/ePt6MqkrFzqCRFfKVreyRTxwEMKG?=
- =?us-ascii?Q?bLsV3fd/2amLBx1SvKGZQ/YgHbyRHLu9xjKjsSwfDQIDFTbmHRwNl6HOen4o?=
- =?us-ascii?Q?C0d/3GaYQazhpOQMPE2dOB217s3nahu4UHnN7Vk0OSrJTW20rAzVQ1WwhXm8?=
- =?us-ascii?Q?Jd+xZ6lDz0xdF4mv27PueJHiD/jcFSifn1sSb/6mo2cwR5usxjrKGHXiw6kX?=
- =?us-ascii?Q?vGzmBGpwlPJe0FmXqAoUD2wnxSL5jK9UE+2JeavF3Zb7t6Ti9HMZEmtQ21L2?=
- =?us-ascii?Q?wMe/9rXSTuiOFDWRM/xvHWpBQiQGoVeYxQIvXkGKer+5tk5EEG4SXBivP5Oo?=
- =?us-ascii?Q?OyvlLNQZ0l1/HMGORoHWAeaUHrVXbrvsKzLPvN4oIwICaM0Beenr4B5zfeJz?=
- =?us-ascii?Q?MwCmniyGq9igb42XckiTSdBRKjf3IZZ+WuwtNq2Xy6hSYgd93EeRS9JzdJYx?=
- =?us-ascii?Q?/PNSwQ7Qf6SzqsUGreVcbUskTnfM+rfHGPr9NFLflhzKgmJ9plYRHIvffK2r?=
- =?us-ascii?Q?yW4F5G7C+1xQ1KyYWZKcPZcASuHBKP2c3jwwjTsp1qrIEqvI1TgUsDhfMDIN?=
- =?us-ascii?Q?/vWuF0mEKnY/7vC7W8vVW/3dEfa1W7mnY8XwmqX0nqB2bf9neVOw4xrrHQTg?=
- =?us-ascii?Q?Qi0ZcFGib6X/HKb0vxqZwWDPZo+ndtjXXC30RmMFw7RrOPRCOyFFYcZGjp5u?=
- =?us-ascii?Q?ke2AGpc+ZThRO4HMFkDYunX8wGeJk0x9VQNGbreFU8Ti76cYs2IqNn3u27F4?=
- =?us-ascii?Q?vBhLjtJvXAmNMH5nW9mJrdw6QfuL6jlVipbh2nteTHhob6Sqq/WbFB4h33dU?=
- =?us-ascii?Q?GI/LLgMepCT2ZcJBF7wnOyun/KbS0wcFrM213EBw/hyL6tevi3x+Z8jca3lf?=
- =?us-ascii?Q?vtkwhiPW/Im6eFQ41ips3a0w0SNWzoi5nDx43PLZ9XQIEW+BhL6xc8vKRKF6?=
- =?us-ascii?Q?qyZTqE5QCSCy7vvaPjeS1VMck8+g91dHH7W46gKkpQsiMIgtO7nsCfJSvld6?=
- =?us-ascii?Q?aI1LmbRQq6ovfGfzROsAFxfrJnx0ufbOo2S+fBMJVEk7RxfiK4YPKVzceDJu?=
- =?us-ascii?Q?+BLT6ISR5tPfPn9W3i0itg68jJWUemVjnEALvgRT8awgGR0lF81XGMizjEcr?=
- =?us-ascii?Q?jnjbf56irRuEVLWcLT09e7VUk3DHs0DEkBRbrWhxVYpVGr5Xi0sctFWispZp?=
- =?us-ascii?Q?p66yRQ=3D=3D?=
-X-OriginatorOrg: in-advantage.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0a9f0b62-5668-44d1-051f-08d9f1624581
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR1001MB2351.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Feb 2022 15:37:42.9495
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 48e842ca-fbd8-4633-a79d-0c955a7d3aae
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qJVSa4OCmopl+jRRyleeW+188trlY2Q0v67Vc5LUo3+mD3Jiv3lyZv8xzza5aQst4juLrEC5evJUL4f6a/KNOuf/EH9672svRczuchjGRU8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR10MB4277
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH v6 7/7] pinctrl: qcom: Update clock voting as optional
+Content-Language: en-US
+To:     Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>,
+        agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        broonie@kernel.org, robh+dt@kernel.org, quic_plai@quicinc.com,
+        bgoswami@codeaurora.org, perex@perex.cz, tiwai@suse.com,
+        rohitkr@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, swboyd@chromium.org,
+        judyhsiao@chromium.org, Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org
+Cc:     Venkata Prasad Potturu <quic_potturu@quicinc.com>
+References: <1644851994-22732-1-git-send-email-quic_srivasam@quicinc.com>
+ <1644851994-22732-8-git-send-email-quic_srivasam@quicinc.com>
+ <a209336a-9108-f1ac-ee6d-a838df115c6d@linaro.org>
+ <b663f63f-4a5a-3a2a-9be7-fa7258ce93c5@quicinc.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+In-Reply-To: <b663f63f-4a5a-3a2a-9be7-fa7258ce93c5@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Michael,
 
-On Wed, Feb 16, 2022 at 09:20:20AM +0100, Michael Walle wrote:
-> Prior to commit ad96111e658a ("pinctrl: ocelot: combine get resource and
-> ioremap into single call") the resource index was 1, now it is 0. But 0
-> is the base region for the pinctrl block. Fix it.
-> I noticed this because there was an error that the memory region was
-> ioremapped twice.
 
-My apologies... I missed this and didn't have access to hardware to
-test. Thanks for the fix.
+On 16/02/2022 14:41, Srinivasa Rao Mandadapu wrote:
+> 
+> On 2/16/2022 7:50 PM, Srinivas Kandagatla wrote:
+> Thanks for Your Time Srini!!!
+>>
+>> On 14/02/2022 15:19, Srinivasa Rao Mandadapu wrote:
+>>> Update bulk clock voting to optional voting as ADSP bypass platform 
+>>> doesn't
+>>> need macro and decodec clocks, these are maintained as power domains and
+>>> operated from lpass audio core cc.
+>>>
+>>> Signed-off-by: Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
+>>> Co-developed-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
+>>> Signed-off-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
+>>> ---
+>>>   drivers/pinctrl/qcom/pinctrl-lpass-lpi.c        | 16 +++++++++-------
+>>>   drivers/pinctrl/qcom/pinctrl-lpass-lpi.h        |  1 +
+>>>   drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c |  1 +
+>>>   3 files changed, 11 insertions(+), 7 deletions(-)
+>>>
+>>> diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c 
+>>> b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
+>>> index 8a82fd9..103f0a6c 100644
+>>> --- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
+>>> +++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
+>>> @@ -407,13 +407,15 @@ int lpi_pinctrl_probe(struct platform_device 
+>>> *pdev)
+>>>           return dev_err_probe(dev, PTR_ERR(pctrl->slew_base),
+>>>                        "Slew resource not provided\n");
+>>>   -    ret = devm_clk_bulk_get(dev, MAX_LPI_NUM_CLKS, pctrl->clks);
+>>> -    if (ret)
+>>> -        return dev_err_probe(dev, ret, "Can't get clocks\n");
+>>> -
+>>> -    ret = clk_bulk_prepare_enable(MAX_LPI_NUM_CLKS, pctrl->clks);
+>>> -    if (ret)
+>>> -        return dev_err_probe(dev, ret, "Can't enable clocks\n");
+>>> +    if (!data->is_clk_optional) {
+>>> +        ret = devm_clk_bulk_get(dev, MAX_LPI_NUM_CLKS, pctrl->clks);
+>>> +        if (ret)
+>>> +            return dev_err_probe(dev, ret, "Can't get clocks\n");
+>>> +
+>>> +        ret = clk_bulk_prepare_enable(MAX_LPI_NUM_CLKS, pctrl->clks);
+>>> +        if (ret)
+>>> +            return dev_err_probe(dev, ret, "Can't enable clocks\n");
+>>> +    }
+>>>         pctrl->desc.pctlops = &lpi_gpio_pinctrl_ops;
+>>>       pctrl->desc.pmxops = &lpi_gpio_pinmux_ops;
+>>> diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h 
+>>> b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
+>>> index a511d72..c1079bf 100644
+>>> --- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
+>>> +++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
+>>> @@ -77,6 +77,7 @@ struct lpi_pinctrl_variant_data {
+>>>       int ngroups;
+>>>       const struct lpi_function *functions;
+>>>       int nfunctions;
+>>> +    int is_clk_optional;
+>>>   };
+>>>     int lpi_pinctrl_probe(struct platform_device *pdev);
+>>> diff --git a/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c 
+>>> b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
+>>> index 5bf30d97..4277e31 100644
+>>> --- a/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
+>>> +++ b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
+>>> @@ -143,6 +143,7 @@ static const struct lpi_pinctrl_variant_data 
+>>> sc7280_lpi_data = {
+>>>       .ngroups = ARRAY_SIZE(sc7280_groups),
+>>>       .functions = sc7280_functions,
+>>>       .nfunctions = ARRAY_SIZE(sc7280_functions),
+>>> +    .is_clk_optional = 1,
+>>
+>> This is forcefully set assuming that sc7280 is always used in ADSP 
+>> bypass mode. Which is not correct.
+>>
+>> Can't you use devm_clk_bulk_get_optional instead?
+> 
+> Yes. Agreed. Initially used devm_clk_bulk_get_optional, but Bjorn 
+> suggested for conditional check instead of optional.
+> 
+> Again Shall we go for optional clock voting?
 
-Reviewed-by: Colin Foster <colin.foster@in-advantage.com>
+That means that the condition has to be dynamic based on the platform 
+using DSP or not. Which is impossible to deduce without some help from DT.
 
+I would prefer to stay with optional clock unless Bjorn has some strong 
+objection on not using int.
+
+--srini
 
 > 
-> Fixes: ad96111e658a ("pinctrl: ocelot: combine get resource and ioremap into single call")
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
->  drivers/pinctrl/pinctrl-ocelot.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pinctrl/pinctrl-ocelot.c b/drivers/pinctrl/pinctrl-ocelot.c
-> index 685c79e08d40..a859fbcb09af 100644
-> --- a/drivers/pinctrl/pinctrl-ocelot.c
-> +++ b/drivers/pinctrl/pinctrl-ocelot.c
-> @@ -1892,7 +1892,7 @@ static struct regmap *ocelot_pinctrl_create_pincfg(struct platform_device *pdev)
->  		.max_register = 32,
->  	};
->  
-> -	base = devm_platform_ioremap_resource(pdev, 0);
-> +	base = devm_platform_ioremap_resource(pdev, 1);
->  	if (IS_ERR(base)) {
->  		dev_dbg(&pdev->dev, "Failed to ioremap config registers (no extended pinconf)\n");
->  		return NULL;
-> -- 
-> 2.30.2
-> 
+>>
+>> --srini
+>>
+>>>   };
+>>>     static const struct of_device_id lpi_pinctrl_of_match[] = {
