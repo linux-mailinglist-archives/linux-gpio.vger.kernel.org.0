@@ -2,86 +2,145 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 21C454B854E
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Feb 2022 11:14:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DE56F4B86A8
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Feb 2022 12:31:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232706AbiBPKOn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Feb 2022 05:14:43 -0500
-Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:52544 "EHLO
+        id S231577AbiBPLb5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Feb 2022 06:31:57 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:37400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232464AbiBPKOm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Feb 2022 05:14:42 -0500
-X-Greylist: delayed 509 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 16 Feb 2022 02:14:30 PST
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F5EB2ABD2C
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Feb 2022 02:14:30 -0800 (PST)
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL TLS DV RSA Mixed SHA256 2020 CA-1" (verified OK))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 48FF030001184;
-        Wed, 16 Feb 2022 11:05:53 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 374FB2ECFF4; Wed, 16 Feb 2022 11:05:53 +0100 (CET)
-Date:   Wed, 16 Feb 2022 11:05:53 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Stefan Wahren <stefan.wahren@i2se.com>,
+        with ESMTP id S230235AbiBPLb4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Feb 2022 06:31:56 -0500
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E5ED2982B;
+        Wed, 16 Feb 2022 03:31:40 -0800 (PST)
+X-UUID: 24ccf40f78b9409db20afdcc46c412ce-20220216
+X-UUID: 24ccf40f78b9409db20afdcc46c412ce-20220216
+Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw01.mediatek.com
+        (envelope-from <tinghan.shen@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+        with ESMTP id 320886192; Wed, 16 Feb 2022 19:31:37 +0800
+Received: from mtkexhb02.mediatek.inc (172.21.101.103) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 16 Feb 2022 19:31:36 +0800
+Received: from mtkcas11.mediatek.inc (172.21.101.40) by mtkexhb02.mediatek.inc
+ (172.21.101.103) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 16 Feb
+ 2022 19:31:36 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas11.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 16 Feb 2022 19:31:36 +0800
+From:   Tinghan Shen <tinghan.shen@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
-        Lino Sanfilippo <LinoSanfilippo@gmx.de>,
-        Philipp Rosenberger <p.rosenberger@kunbus.com>,
-        linux-rpi-kernel@lists.infradead.org
-Subject: Re: [PATCH] pinctrl: bcm2835: Use bcm2835 gpio_chip label for bcm2711
-Message-ID: <20220216100553.GA4315@wunner.de>
-References: <c399da9deab3ede9b0c4d4680d8ac508707aa8c3.1644903104.git.lukas@wunner.de>
- <c1e31ad4-3a65-9370-3a5c-ffde723a04aa@i2se.com>
- <20220215144409.GA12830@wunner.de>
- <09a5a501-40d7-4dae-56c9-a3796fc95c4b@i2se.com>
- <2a5aad11-0ac6-943f-158a-585648b396be@gmail.com>
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        "Tinghan Shen" <tinghan.shen@mediatek.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sean Wang <sean.wang@mediatek.com>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <Project_Global_Chrome_Upstream_Group@mediatek.com>,
+        <ryder.lee@kernel.org>, <wenst@chromium.org>,
+        <chunfeng.yun@mediatek.com>
+Subject: [PATCH v11 0/3] Add basic SoC support for mediatek mt8195
+Date:   Wed, 16 Feb 2022 19:31:28 +0800
+Message-ID: <20220216113131.13145-1-tinghan.shen@mediatek.com>
+X-Mailer: git-send-email 2.15.GIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2a5aad11-0ac6-943f-158a-585648b396be@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-MTK:  N
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        T_SCC_BODY_TEXT_LINE,T_SPF_TEMPERROR,UNPARSEABLE_RELAY autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Feb 15, 2022 at 09:17:49AM -0800, Florian Fainelli wrote:
-> >>> Am 15.02.22 um 06:52 schrieb Lukas Wunner:
-> >>>> Commit b1d84a3d0a26 ("pinctrl: bcm2835: Add support for all GPIOs on
-> >>>> BCM2711") used a different label for the bcm2711 gpio_chip vis-à-vis
-> >>>> the bcm2835.
-[...]
-> I agree with Stefan here, besides changing the driver name now would
-> mean potentially breaking user-space since the driver name is visible in
-> a variety of places. Seems to me like this is too late, we should have
-> caught this during the introduction of 2711.
+This series adds basic SoC support for Mediatek's SoC MT8195.
 
-This isn't about the driver name but the gpio_chip label.
+---
+Changes in v11:
+  - rebase on 5.17-rc4
+Changes in v10:
+  - clean CC list
+Changes in v9:
+  - remove duplicated cpus dt-bindings patch in v8
+Changes in v8:
+  - v7 mediatek,spi-mtk-nor.yaml patch is applied in branch for-5.17 at 
+    kernel/git/broonie/spi.git
+  - v7 pinctrl-mt8195.yaml patch is applied in branch for-next at 
+    kernel/git/linusw/linux-pinctrl.git
+  - add cortex-a78 compatible to cpus dt-bindings
+  - add mediatek,drive-strength-adv property to pinctrl dt-bindings
+  - fix evb dts
+    - remove i2c nodes with disabled status from dts
+    - fix pin properties not match pinctrl dt-bindings
+    - remove unnecessary u3port*
+  - fix dtsi
+    - fix node format
+    - reorder oscillator* nodes 
+    - fix node name of cpu idle nodes
+    - remove clock-frequency property in the timer node
+    - reorder clock and clock names in usb nodes
+Changes in v7:
+  - refine title of spi-nor dt-bindings patch
+  - refine commit message of pinctrl dt-bindings patch
+  - update pinctrl-mt8195.yaml
+    - change property pattern from 'pins' to '^pins'
+    - update examples with new property in descriptions
+    - add new example
+  - drop '_' from node names of pinctrl subnodes in mt8195-evb.dts
+Changes in v6:
+  - rebase on 5.16-rc1
+  - add new clock name to spi-nor dt-bindings
+  - add "pins" property in pinctrl dt-bindings
+  - fix fails of dtbs_checks
+    - remove "arm,armv8" not matched in yaml from cpu compatile
+    - fix node name of xhci
+    - remvoe xhci upstreaming wakeup properties
+    - remove xhci unused properties address-cells and size-cells
+    - fix node name of ufs-phy 
+    - fix node name of spi-nor
+    - fix node name and sub-nodes of pinctrl
+    - fix mmc compatible
+Changes in v5:
+  - enable basic nodes in mt8195-evb.dts
+  - remove dedicated clock nodes
+  - add mmc2 node
+  - fix interrupt number of pinctrl node
+  - update clock nodes to apply internal fixes
+  - add dt-bindings for perficfg node
 
-The .name attribute of bcm2711_pinctrl_desc and bcm2711_pinctrl_gpio_range
-is only visible in debugfs, which doesn't count as user-space ABI.
+v4 thread:
+https://lore.kernel.org/all/20210922093303.23720-2-seiya.wang@mediatek.com/
+v3 thread:
+https://lore.kernel.org/all/20210601075350.31515-2-seiya.wang@mediatek.com/
+v2 thread:
+https://lore.kernel.org/all/20210319023427.16711-10-seiya.wang@mediatek.com/
+v1 thread:
+https://lore.kernel.org/all/20210316111443.3332-11-seiya.wang@mediatek.com/
+---
 
-The .label attribute of bcm2711_gpio_chip is indeed visible in sysfs
-and could in theory be used by udev rules, though I doubt it.
+Tinghan Shen (3):
+  dt-bindings: arm: mediatek: Add mt8195 pericfg compatible
+  dt-bindings: pinctrl: mt8195: Add mediatek,drive-strength-adv property
+  arm64: dts: Add mediatek SoC mt8195 and evaluation board
 
-It definitely was a mistake not to use the same label as pinctrl-bcm2835.
-Using a different label hinges on the notion that it's a different chip,
-and while that may apply for the 4B+ and CM4, the assumption falls apart
-with the CM4S which seeks to be a drop-in replacement for CM1/CM3,
-but really is not because of mistakes like this one.  We're likely
-not the only ones bitten by this, just the first to report.
+ .../arm/mediatek/mediatek,pericfg.yaml        |    1 +
+ .../bindings/pinctrl/pinctrl-mt8195.yaml      |   35 +
+ arch/arm64/boot/dts/mediatek/Makefile         |    1 +
+ arch/arm64/boot/dts/mediatek/mt8195-evb.dts   |  161 +++
+ arch/arm64/boot/dts/mediatek/mt8195.dtsi      | 1049 +++++++++++++++++
+ 5 files changed, 1247 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8195-evb.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8195.dtsi
 
-Thanks,
+-- 
+2.18.0
 
-Lukas
