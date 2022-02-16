@@ -2,32 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 525D64B7ED2
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Feb 2022 04:50:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EDA774B7EC5
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Feb 2022 04:50:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344234AbiBPDWC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Feb 2022 22:22:02 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:48298 "EHLO
+        id S1343651AbiBPD2y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Feb 2022 22:28:54 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:44702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233625AbiBPDV5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Feb 2022 22:21:57 -0500
+        with ESMTP id S1344279AbiBPD2x (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Feb 2022 22:28:53 -0500
 Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C6781403C;
-        Tue, 15 Feb 2022 19:21:40 -0800 (PST)
-X-UUID: e74d7d70a6ad49f0bd3bb2794269855d-20220216
-X-UUID: e74d7d70a6ad49f0bd3bb2794269855d-20220216
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A5D5FFFA1;
+        Tue, 15 Feb 2022 19:28:39 -0800 (PST)
+X-UUID: 201295e279514706a3e543ef5dd251c7-20220216
+X-UUID: 201295e279514706a3e543ef5dd251c7-20220216
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
         (envelope-from <guodong.liu@mediatek.com>)
         (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 1760845327; Wed, 16 Feb 2022 11:21:38 +0800
-Received: from mtkcas10.mediatek.inc (172.21.101.39) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 16 Feb 2022 11:21:37 +0800
-Received: from localhost.localdomain (10.17.3.154) by mtkcas10.mediatek.inc
+        with ESMTP id 1044364043; Wed, 16 Feb 2022 11:28:35 +0800
+Received: from mtkcas11.mediatek.inc (172.21.101.40) by
+ mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.2.792.15; Wed, 16 Feb 2022 11:28:33 +0800
+Received: from mhfsdcap04 (10.17.3.154) by mtkcas11.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 16 Feb 2022 11:21:36 +0800
+ Transport; Wed, 16 Feb 2022 11:28:33 +0800
+Message-ID: <02f147135e6c1458caa10ed9027bf185beee2023.camel@mediatek.com>
+Subject: Re: [PATCH v4 1/3] dt-bindings: pinctrl: mt8186: add pinctrl file
+ and binding document
 From:   Guodong Liu <guodong.liu@mediatek.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
+To:     AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
         Sean Wang <sean.wang@kernel.org>
@@ -36,17 +42,16 @@ CC:     Sean Wang <sean.wang@mediatek.com>, <linux-gpio@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>,
-        <Project_Global_Chrome_Upstream_Group@mediatek.com>,
-        Guodong Liu <guodong.liu@mediatek.com>
-Subject: [PATCH v5 3/3] pinctrl: canonical rsel resistance selection property
-Date:   Wed, 16 Feb 2022 11:21:24 +0800
-Message-ID: <20220216032124.28067-4-guodong.liu@mediatek.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220216032124.28067-1-guodong.liu@mediatek.com>
-References: <20220216032124.28067-1-guodong.liu@mediatek.com>
+        <Project_Global_Chrome_Upstream_Group@mediatek.com>
+Date:   Wed, 16 Feb 2022 11:28:33 +0800
+In-Reply-To: <87db864e-fc74-189a-a665-bf51db8b5321@collabora.com>
+References: <20220214030631.4969-1-guodong.liu@mediatek.com>
+         <20220214030631.4969-2-guodong.liu@mediatek.com>
+         <87db864e-fc74-189a-a665-bf51db8b5321@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-MTK:  N
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
         SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
@@ -57,27 +62,82 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Change "mediatek,rsel_resistance_in_si_unit" to "mediatek,rsel-resistance-in-si-unit"
+-----Original Message-----
+From: AngeloGioacchino Del Regno <
+angelogioacchino.delregno@collabora.com>
+To: Guodong Liu <guodong.liu@mediatek.com>, Linus Walleij <
+linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Matthias
+Brugger <matthias.bgg@gmail.com>, Sean Wang <sean.wang@kernel.org>
+Cc: Sean Wang <sean.wang@mediatek.com>, linux-gpio@vger.kernel.org, 
+devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, 
+Project_Global_Chrome_Upstream_Group@mediatek.com
+Subject: Re: [PATCH v4 1/3] dt-bindings: pinctrl: mt8186: add pinctrl
+file and binding document
+Date: Mon, 14 Feb 2022 10:58:58 +0100
 
-Fixes: fb34a9ae383a ("pinctrl: mediatek: support rsel feature")
-Signed-off-by: Guodong Liu <guodong.liu@mediatek.com>
----
- drivers/pinctrl/mediatek/pinctrl-paris.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Il 14/02/22 04:06, Guodong Liu ha scritto:
+> 1. This patch adds pinctrl file for mt8186.
+> 2. This patch adds mt8186 compatible node in binding document.
+> 
+> Signed-off-by: Guodong Liu <guodong.liu@mediatek.com>
+> ---
+>   .../bindings/pinctrl/pinctrl-mt8186.yaml      |  302 +++++
+>   include/dt-bindings/pinctrl/mt8186-pinfunc.h  | 1174
+> +++++++++++++++++
+>   2 files changed, 1476 insertions(+)
+>   create mode 100644
+> Documentation/devicetree/bindings/pinctrl/pinctrl-mt8186.yaml
+>   create mode 100644 include/dt-bindings/pinctrl/mt8186-pinfunc.h
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-
+> mt8186.yaml b/Documentation/devicetree/bindings/pinctrl/pinctrl-
+> mt8186.yaml
+> new file mode 100644
+> index 000000000000..582d131af4e3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8186.yaml
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-index d4e02c5d74a8..38c0f0c4cf95 100644
---- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-@@ -989,7 +989,7 @@ int mtk_paris_pinctrl_probe(struct platform_device *pdev,
- 	hw->nbase = hw->soc->nbase_names;
- 
- 	if (of_find_property(hw->dev->of_node,
--			     "mediatek,rsel_resistance_in_si_unit", NULL))
-+			     "mediatek,rsel-resistance-in-si-unit", NULL))
- 		hw->rsel_si_unit = true;
- 	else
- 		hw->rsel_si_unit = false;
--- 
-2.25.1
+...snip...
+
+> diff --git a/include/dt-bindings/pinctrl/mt8186-pinfunc.h
+> b/include/dt-bindings/pinctrl/mt8186-pinfunc.h
+> new file mode 100644
+> index 000000000000..dcff86201a61
+> --- /dev/null
+> +++ b/include/dt-bindings/pinctrl/mt8186-pinfunc.h
+> @@ -0,0 +1,1174 @@
+> +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
+> +/*
+> + * Copyright (C) 2021 MediaTek Inc.
+> + * Author: Guodong Liu <Guodong.Liu@mediatek.com>
+> + *
+> + */
+> +
+
+Hello,
+I've just noticed that we have a typo here....
+
+You wrote "MT8168", but this should be "MT8186" instead; please fix it.
+
+P.S.: I'm sorry for not seeing that before!
+
+> +#ifndef __MT8168_PINFUNC_H
+> +#define __MT8168_PINFUNC_H
+> +
+
+..snip..
+
+> +
+> +#endif /* __MT8168-PINFUNC_H */
+
+Thank you,
+Angelo
+
+Hello Angelo,
+
+we will update it for next version.
+
+Thanks
+Guodong
 
