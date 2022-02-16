@@ -2,159 +2,162 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 184B64B8B9F
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Feb 2022 15:40:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 86B974B8BA2
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Feb 2022 15:41:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235141AbiBPOk5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Feb 2022 09:40:57 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:45514 "EHLO
+        id S235145AbiBPOlr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Feb 2022 09:41:47 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:46316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229674AbiBPOk5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Feb 2022 09:40:57 -0500
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6325A2A64EB
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Feb 2022 06:40:44 -0800 (PST)
-Received: by mail-ed1-x52d.google.com with SMTP id z22so4304217edd.1
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Feb 2022 06:40:44 -0800 (PST)
+        with ESMTP id S229674AbiBPOlq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Feb 2022 09:41:46 -0500
+Received: from alexa-out.qualcomm.com (alexa-out.qualcomm.com [129.46.98.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC4072716B;
+        Wed, 16 Feb 2022 06:41:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jwCOPh0vRYc0rMMINwUc1NnDsZj7q4kEpI6uYr3S44w=;
-        b=ZxEdZA1qN1/D+uanHD1nOwRY1fjdnFNilLiq3Az4CxUoOImnImATPgyQJK5MLdNwVu
-         T820pMXYvYBR4unh3scc2DzLbJCnWi+Klwa8nKTsuFgobjtOuH1RmMyZ54oVKR0tWg37
-         3E1H6tNypf4SCf5jMu0PWDitey3D1xJovQWBgIstmxvEbtO2WmtXBvx/jYDLrruvHFXN
-         XRfDM1/Zs0x/fJzrkmuNYHaOTYq3AqBYFhiUNw1UIo0p5Ua6Nz0L0WY8yXRjSfp/vS/t
-         fwrCsP3HpVZKqdp7BDlP7A/Funrb4gdyMGEQlv9eJyezwn29MKErNtlNNnmbkQMARhQl
-         LNyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jwCOPh0vRYc0rMMINwUc1NnDsZj7q4kEpI6uYr3S44w=;
-        b=AT6mPtQRxABG/O2B0BkBQ1dZc/DOEVLRvYLcWU9beS7/lnY//UW8y2LhyRpvz312ZL
-         GGS2fhjYyEQQqkaBZUKb+JBwLkYtvYCi8a7XmbDwZSR53zjlytalIiLcd20JwZACfyWD
-         BduLrx+V7nAIJcSbaEZwJH5TvRE5DPczwbEIthuxYfoGcbDfIodaJHkEmeLRRKPhBg1Z
-         E+tdsR1JGEL+NnRbec7WgxYMREPN+0DDjUr63R9yD9flCPE9t4uqw8HvLEXgeKzeeokq
-         dLGB3Mj9TEk1J0UuwfvFu2tUsLPvrnhYVv0KVmSWCEao+V7e9wjDwRWXr0lW4nbI5Xbl
-         m1Nw==
-X-Gm-Message-State: AOAM531n8D2pLvcYv5+XEetXwpgh/hqb3ty8s6grms5OSdrE+tmaJon+
-        hicv8O34HPs27loNves0YXksAurmNNOaBy+GLUfGJA==
-X-Google-Smtp-Source: ABdhPJxkkCo2WKdfCWHk8mNzhrjwtKZpMi6oKRXESBDBJAJ5jIQfE8MBX1Wwhu/L4VqMuHCiMjQdEOrhBapf0MBbar0=
-X-Received: by 2002:a50:fc81:0:b0:408:4c2d:bf69 with SMTP id
- f1-20020a50fc81000000b004084c2dbf69mr3321789edq.229.1645022442889; Wed, 16
- Feb 2022 06:40:42 -0800 (PST)
+  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
+  t=1645022493; x=1676558493;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=NTr5l/kjPw/+EYpzQlgU6KSNc69rhpWj63Jfbws9zPY=;
+  b=DygwmQC5pIRj564kjAiDpm98tmPYtTZom6ML5reMZWeG8FuRiusPgxAF
+   EPlkKHkDFdQK0dVFha55gKMe9Fols0CyDYbGTJgkbOM10dNEtIn94DJkP
+   udonTevDXJawwfIshfypa2Wg7HN4yCfljwFSV3boIDG6gEaYfJPBilvOr
+   Y=;
+Received: from ironmsg09-lv.qualcomm.com ([10.47.202.153])
+  by alexa-out.qualcomm.com with ESMTP; 16 Feb 2022 06:41:31 -0800
+X-QCInternal: smtphost
+Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
+  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2022 06:41:30 -0800
+Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
+ nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.15; Wed, 16 Feb 2022 06:41:30 -0800
+Received: from [10.216.55.237] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.922.19; Wed, 16 Feb
+ 2022 06:41:24 -0800
+Subject: Re: [PATCH v6 7/7] pinctrl: qcom: Update clock voting as optional
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        <agross@kernel.org>, <bjorn.andersson@linaro.org>,
+        <lgirdwood@gmail.com>, <broonie@kernel.org>, <robh+dt@kernel.org>,
+        <quic_plai@quicinc.com>, <bgoswami@codeaurora.org>,
+        <perex@perex.cz>, <tiwai@suse.com>, <rohitkr@codeaurora.org>,
+        <linux-arm-msm@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <swboyd@chromium.org>, <judyhsiao@chromium.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>
+CC:     Venkata Prasad Potturu <quic_potturu@quicinc.com>
+References: <1644851994-22732-1-git-send-email-quic_srivasam@quicinc.com>
+ <1644851994-22732-8-git-send-email-quic_srivasam@quicinc.com>
+ <a209336a-9108-f1ac-ee6d-a838df115c6d@linaro.org>
+From:   Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
+Organization: Qualcomm
+Message-ID: <b663f63f-4a5a-3a2a-9be7-fa7258ce93c5@quicinc.com>
+Date:   Wed, 16 Feb 2022 20:11:21 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.14.0
 MIME-Version: 1.0
-References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
- <CACRpkdbzk55pmK9XMwc470O8vJFUBQ6zs35shOYCFKr+YaOezw@mail.gmail.com>
- <CACjc_5q247Yb8t8PfJcudVAPFYQcioREAE3zj8OtPR-Ug_x=tA@mail.gmail.com>
- <CACRpkda=0=Hcyyote+AfwoLKPGak7RV6VFt6b0fMVWBe8veTwA@mail.gmail.com>
- <CACjc_5r7i3HJ466MtwR0iZD6jdVXEqq4km0Tn7XwRijGnsDz=Q@mail.gmail.com> <CACRpkdZGVq19GZuOP1BwLB2-qxj1_=O9tHMVRvphvy3m6KbNig@mail.gmail.com>
-In-Reply-To: <CACRpkdZGVq19GZuOP1BwLB2-qxj1_=O9tHMVRvphvy3m6KbNig@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 16 Feb 2022 15:40:32 +0100
-Message-ID: <CAMRc=McPSFQFPP1nSTXj3snKWqQyzNgz0j_J5ooyUrhRFRMqJQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>,
-        stable <stable@vger.kernel.org>, regressions@lists.linux.dev,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Edmond Chung <edmondchung@google.com>,
-        Andrew Chant <achant@google.com>,
-        Will McVicker <willmcvicker@google.com>,
-        Sergio Tanzilli <tanzilli@acmesystems.it>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <a209336a-9108-f1ac-ee6d-a838df115c6d@linaro.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Feb 15, 2022 at 10:56 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Mon, Feb 14, 2022 at 12:24 AM Marcelo Roberto Jimenez
-> <marcelo.jimenez@gmail.com> wrote:
-> > On Sat, Feb 12, 2022 at 1:55 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> > > I am curious about the usecases and how deeply you have built
-> > > yourselves into this.
-> >
-> > I don't know if I understand what you mean, sorry.
->
-> Why does the user need the sysfs ABI? What is it used for?
->
-> I.e what is the actual use case?
->
-> > > > In any case, the upstream file should be enough to test the issue reported here.
-> > >
-> > > The thing is that upstream isn't super happy that you have been
-> > > making yourselves dependent on features that we are actively
-> > > discouraging and then demanding that we support these features.
-> >
-> > Hum, demanding seems to be a strong word for what I am doing here.
-> >
-> > Deprecated should not mean broken. My point is: the API seems to be
-> > currently broken. User space apps got broken, that's a fact. I even
-> > took the time to bisect the kernel and show you which commit broke it.
-> > So, no, I am not demanding. More like reporting and providing a
-> > temporary solution to those with a similar problem.
-> >
-> > Maybe it is time to remove the API, but this is up to "upstream".
-> > Leaving the API broken seems pointless and unproductive.
-> >
-> > Sorry for the "not super happiness of upstream", but maybe upstream
-> > got me wrong.
-> >
-> > We are not "making ourselves dependent on features ...". The API was
-> > there. We used it. Now it is deprecated, ok, we should move on. I got
-> > the message.
->
-> Ouch I deserved some slamming for this.
->
-> I'm sorry if I came across as harsh :(
->
-> I just don't know how to properly push for this.
->
-> I have even pushed the option of the deprecated sysfs ABI
-> behind the CONFIG_EXPERT option, which should mean that
-> the kernel config has been made by someone who has checked
-> the option "yes I am an expert I know what I am doing"
-> yet failed to observe that this ABI is obsoleted since 5 years
-> and hence failed to be an expert.
->
-> Of course the ABI (not API really) needs to be fixed if we can find the
-> problem. It's frustrating that fixing it seems to fix broken other
-> features which are not deprecated, hence the annoyance on my
-> part.
->
 
-I'm afraid we'll earn ourselves a good old LinusRant if we keep
-pushing the character device as a solution to the problem here.
-Marcelo is right after all: he used an existing user interface, the
-interface broke, it must be fixed.
-
-I would prefer to find a solution that fixes Marcelo's issue while
-keeping the offending patches in tree but it seems like the issue is
-more complicated and will require some rework of the sysfs interface.
-
-In which case unless there are objections I lean towards reverting the
-relevant commits.
-
-Bart
-
-> > And I will also tell the dev team that they must use the GPIO char dev
-> > and libgpiod from now on and must port everything to it. And we will
-> > likely have another group of people who are not super happy, but
-> > that's life... :)
+On 2/16/2022 7:50 PM, Srinivas Kandagatla wrote:
+Thanks for Your Time Srini!!!
 >
-> I'm happy to hear this!
+> On 14/02/2022 15:19, Srinivasa Rao Mandadapu wrote:
+>> Update bulk clock voting to optional voting as ADSP bypass platform 
+>> doesn't
+>> need macro and decodec clocks, these are maintained as power domains and
+>> operated from lpass audio core cc.
+>>
+>> Signed-off-by: Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
+>> Co-developed-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
+>> Signed-off-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
+>> ---
+>>   drivers/pinctrl/qcom/pinctrl-lpass-lpi.c        | 16 +++++++++-------
+>>   drivers/pinctrl/qcom/pinctrl-lpass-lpi.h        |  1 +
+>>   drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c |  1 +
+>>   3 files changed, 11 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c 
+>> b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
+>> index 8a82fd9..103f0a6c 100644
+>> --- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
+>> +++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
+>> @@ -407,13 +407,15 @@ int lpi_pinctrl_probe(struct platform_device 
+>> *pdev)
+>>           return dev_err_probe(dev, PTR_ERR(pctrl->slew_base),
+>>                        "Slew resource not provided\n");
+>>   -    ret = devm_clk_bulk_get(dev, MAX_LPI_NUM_CLKS, pctrl->clks);
+>> -    if (ret)
+>> -        return dev_err_probe(dev, ret, "Can't get clocks\n");
+>> -
+>> -    ret = clk_bulk_prepare_enable(MAX_LPI_NUM_CLKS, pctrl->clks);
+>> -    if (ret)
+>> -        return dev_err_probe(dev, ret, "Can't enable clocks\n");
+>> +    if (!data->is_clk_optional) {
+>> +        ret = devm_clk_bulk_get(dev, MAX_LPI_NUM_CLKS, pctrl->clks);
+>> +        if (ret)
+>> +            return dev_err_probe(dev, ret, "Can't get clocks\n");
+>> +
+>> +        ret = clk_bulk_prepare_enable(MAX_LPI_NUM_CLKS, pctrl->clks);
+>> +        if (ret)
+>> +            return dev_err_probe(dev, ret, "Can't enable clocks\n");
+>> +    }
+>>         pctrl->desc.pctlops = &lpi_gpio_pinctrl_ops;
+>>       pctrl->desc.pmxops = &lpi_gpio_pinmux_ops;
+>> diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h 
+>> b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
+>> index a511d72..c1079bf 100644
+>> --- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
+>> +++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
+>> @@ -77,6 +77,7 @@ struct lpi_pinctrl_variant_data {
+>>       int ngroups;
+>>       const struct lpi_function *functions;
+>>       int nfunctions;
+>> +    int is_clk_optional;
+>>   };
+>>     int lpi_pinctrl_probe(struct platform_device *pdev);
+>> diff --git a/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c 
+>> b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
+>> index 5bf30d97..4277e31 100644
+>> --- a/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
+>> +++ b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
+>> @@ -143,6 +143,7 @@ static const struct lpi_pinctrl_variant_data 
+>> sc7280_lpi_data = {
+>>       .ngroups = ARRAY_SIZE(sc7280_groups),
+>>       .functions = sc7280_functions,
+>>       .nfunctions = ARRAY_SIZE(sc7280_functions),
+>> +    .is_clk_optional = 1,
 >
-> Yours,
-> Linus Walleij
+> This is forcefully set assuming that sc7280 is always used in ADSP 
+> bypass mode. Which is not correct.
+>
+> Can't you use devm_clk_bulk_get_optional instead?
+
+Yes. Agreed. Initially used devm_clk_bulk_get_optional, but Bjorn 
+suggested for conditional check instead of optional.
+
+Again Shall we go for optional clock voting?
+
+>
+> --srini
+>
+>>   };
+>>     static const struct of_device_id lpi_pinctrl_of_match[] = {
