@@ -2,60 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 707214BBFC3
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Feb 2022 19:43:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C8F154BC30C
+	for <lists+linux-gpio@lfdr.de>; Sat, 19 Feb 2022 00:53:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239483AbiBRSna (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Feb 2022 13:43:30 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:54808 "EHLO
+        id S238418AbiBRXxg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Feb 2022 18:53:36 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:40068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239455AbiBRSnP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Feb 2022 13:43:15 -0500
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FEDD2A0D5C
-        for <linux-gpio@vger.kernel.org>; Fri, 18 Feb 2022 10:42:48 -0800 (PST)
-Received: by mail-ed1-x536.google.com with SMTP id w3so16979766edu.8
-        for <linux-gpio@vger.kernel.org>; Fri, 18 Feb 2022 10:42:48 -0800 (PST)
+        with ESMTP id S235407AbiBRXxg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Feb 2022 18:53:36 -0500
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 192C740A15
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Feb 2022 15:53:18 -0800 (PST)
+Received: by mail-pf1-x432.google.com with SMTP id x18so3566245pfh.5
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Feb 2022 15:53:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8Hu8lDHwm7E5XzqDgLfCXGXt1lM9AfLjGlpZVIJmWao=;
-        b=BHbV4GzRobEoqnX0Li//XYGxkLIQSll6/qWCgA7iPGOQdW3iqSb/LdpBZFm2oGtJo5
-         Jl5V29UzbdtfxX6oIw/Th1eW5oAvM2LQC3Fh0GioOxKPm2XCr40rEN2kVW0fRlB+sX4/
-         oJs2+iQkSub91wWPszVQEBHewICPWbbOB3slS+tWHqB4yKeuBDCIRGW9HsCR66QmNrgw
-         XCihpIHLXuSe6H4cZCI3by0XdacmJXJGhpdFFS+fbIwdwtYk8aMi/iNMRSbsHgLnDILL
-         VNMOWNYCyYNlL23cU7xoDQ6S+oEgGaCgjtGOFC2ZDOseu4LuTo+pIW+VbzOYeVdC0nbf
-         VH8Q==
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=xX4jIKWkuJvihfCJCYEb2n/GDnsjyttxYDlrX3H9B7g=;
+        b=Pwk4LQ+ZM+Vq2nnE98u2L8o2M7iC+ntgvTlWac3Vxygt7mzq44bj18dNIDfZvUvERK
+         v8oVad4qx/m3cvU6eecVKL80+cuHhFWysI23CPBIeKaIucsyEMqZ+2X+fCdC174+2CV/
+         +tzUBCFUN4TmgAo/0z5sSgMOG1XTUCQWzXricZkgftKZqP8PR+Ad0vntvwh98MrTPGos
+         Lj4Qef2xMVIEictrXjOBv5+n0Iz9bQJrWvAg2lqG9fIZjCwjvUR55lkVeXca9nfPAovh
+         cedN60LpEkV3CxnYprfdGaGpP3lS0G9YEGdJBZGDXXkqeqLQoCCEnOMA4jBlW5bYvC/C
+         Au2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8Hu8lDHwm7E5XzqDgLfCXGXt1lM9AfLjGlpZVIJmWao=;
-        b=Qtda83YAcTqfnvG8S2leMNr1INF5gygw+3ZKqM4ZY+uLlEo4KKHhNgu7aqMxrKE67V
-         Q3KaPI9KB9LGseJOfKB+jtF4+fiGJojbs4a50ad5yifcvjEHbyNgJw0qc2J8dMs+f6II
-         TgsLVeigZ8ELcfVX5kk2GCm4uPN+cF92gWk7GD7fZQ1A8arYHaoyiELnNacFEce9WxbL
-         soZZUq6Ql+ODhn4ZCYIRYv0VR+NWwNsZfcPX7LcnB2OyKHH6dFBtddGKPFjtz7/eu8gI
-         Vy5UP83oLWGOBs8VFVKvPQG6kpXQzJ+FgkP6eQ1J10fM0MKs7BzJzrotmnKihmT1y//x
-         L8MA==
-X-Gm-Message-State: AOAM530p7aTnvuMO3twF91Ozr0B4goTXhU811wYIU6hCUKgvbTWBvbwq
-        HSNHvAowSUdyZCkd+oA64f++6SoxfcpRQIjAwq6UzNPn0D8=
-X-Google-Smtp-Source: ABdhPJxCoArofCRQDdBkNlm8Q0FzFJvmb1XZaE5d4A7cgcfjLTDLGEbcmXt/qgXP11+CLdXOrR71wUMOCOTtnJeUZj0=
-X-Received: by 2002:aa7:d6c3:0:b0:40f:405a:fbf8 with SMTP id
- x3-20020aa7d6c3000000b0040f405afbf8mr9413346edr.447.1645209767216; Fri, 18
- Feb 2022 10:42:47 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xX4jIKWkuJvihfCJCYEb2n/GDnsjyttxYDlrX3H9B7g=;
+        b=SS0ZZw9C4lJoCNEL8AgfpbhOA6yLcBmC7AlA0k2cDGdzO0obRC501FPiB15owH/yw2
+         wcZGHrmK+BNIWdcfXuqmmUhj3xe2kLOWDPIMaqnB5lUB3pDLe3iyq3JoXwpVungvyXnJ
+         Ae0bp1y4VpIe7JN99fUwjLZEjfAIBgbFBsD1S9qUPAof0+DdYgFjiqTDdWcKfo5TUS2z
+         uekXoYcRUup4XwOYuKWRyfti8vDUQR6cadPx4i8XC3Dd85otXEYOyr3C4anoZPrjkY4M
+         icAoqYL2jQ64ezINXMHDir3i8Le7e3AO1GhAR9iqLT8T/LbxFHY8gEHGngpBX5Udh9h1
+         uoLQ==
+X-Gm-Message-State: AOAM531j0+cBfup+i5zJhSsMO3fIENaCD2HqWD+SuOAm+iJgYyWtyGv1
+        FibXzMDURje2Eo1aLuK/TjrxQ5AYb/jSSw==
+X-Google-Smtp-Source: ABdhPJzV2T6HttornkiALjrblC/pzJ69eCvDQ5jHKNsrcat6S09p0PnmBGGXqtZW+zpZ5Qme9OQxcg==
+X-Received: by 2002:a05:6a00:1d13:b0:4e1:7958:b59d with SMTP id a19-20020a056a001d1300b004e17958b59dmr9789360pfx.68.1645228396118;
+        Fri, 18 Feb 2022 15:53:16 -0800 (PST)
+Received: from sol (60-242-155-106.static.tpgi.com.au. [60.242.155.106])
+        by smtp.gmail.com with ESMTPSA id c14sm4042271pfm.169.2022.02.18.15.53.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Feb 2022 15:53:15 -0800 (PST)
+Date:   Sat, 19 Feb 2022 07:53:10 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     "Hummrich, Tobias" <T.Hummrich@eckelmann.de>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [libgpiod 1.6.3] Do different lines have to be in the same scope?
+Message-ID: <20220218235310.GA11452@sol>
+References: <17c74834c56e4345ac2611b92c301e2f@eckelmann.de>
+ <20220215041124.GA15474@sol>
+ <CAMRc=Mfg-h-QP=Dm7gTXfpTnitUZdyCyybp2mNuyhiUoyiWRjg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20220202114204.31918-1-joel@jms.id.au> <CAMRc=MdJX0H1i=UjvHS15+yi+LYgYEyw3puavCwL878gsQWivA@mail.gmail.com>
-In-Reply-To: <CAMRc=MdJX0H1i=UjvHS15+yi+LYgYEyw3puavCwL878gsQWivA@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 18 Feb 2022 19:42:36 +0100
-Message-ID: <CAMRc=McUht0K+=86VfV7Z8kOU+DMoaYbX65_CrA8WVVE9XhxvA@mail.gmail.com>
-Subject: Re: [libgpiod PATCH] core: Fix line_bulk_foreach_line invalid memory access
-To:     Joel Stanley <joel@jms.id.au>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=Mfg-h-QP=Dm7gTXfpTnitUZdyCyybp2mNuyhiUoyiWRjg@mail.gmail.com>
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -63,68 +71,96 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Feb 18, 2022 at 7:38 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> On Wed, Feb 2, 2022 at 12:42 PM Joel Stanley <joel@jms.id.au> wrote:
+On Fri, Feb 18, 2022 at 07:33:16PM +0100, Bartosz Golaszewski wrote:
+> On Tue, Feb 15, 2022 at 5:11 AM Kent Gibson <warthog618@gmail.com> wrote:
 > >
-> > Running libgpiod applications under valgrind results in the following
-> > warning:
+> > On Mon, Feb 14, 2022 at 02:01:29PM +0000, Hummrich, Tobias wrote:
+> > > Hi,
+> > >
+> > > last week I ported part of our gpio related code from sysfs to libgpiod. I use the C++ bindings. I had some problems polling two different lines on different gpio chips and finally realized that all was OK if both lines were defined in the same scope. Out of curiosity I'm asking: Is that really the case in version 1.6.3 and was this intended?
+> > >
 > >
-> > ==3006== Invalid read of size 8
-> > ==3006==    at 0x10C867: line_request_values (core.c:711)
-> > ==3006==    by 0x10CDA6: gpiod_line_request_bulk (core.c:849)
-> > ==3006==    by 0x10AE27: main (gpioset.c:323)
-> > ==3006==  Address 0x4a4d370 is 0 bytes after a block of size 16 alloc'd
-> > ==3006==    at 0x483F790: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-> > ==3006==    by 0x10B884: gpiod_line_bulk_new (core.c:109)
-> > ==3006==    by 0x10DBB0: gpiod_chip_get_lines (helpers.c:24)
-> > ==3006==    by 0x10ADC3: main (gpioset.c:313)
+> > No.  I'm guessing you are doing something wrong, but I'd have to see
+> > real code to be sure.  Code > 1000 words.
 > >
-> > This is because the foreach loop reads the next value before checking
-> > that index is still in bounds.
+> > As the lines are on different chips they need to be requested
+> > separately, they can't be combinied into a bulk request, but that is the
+> > only restriction.
 > >
-> > Add a test to avoid reading past the end of the allocation.
+> > > The problem was this: When I declared lines locally in a method and called this method to get the file descriptor, the file descriptor was the same for both lines. Like:
+> > >
+> > > int MyClass::getFiledescriptor(const std::string &linename)
+> > > {
+> > >     auto currentLine = gpiod::find_line(linename);
+> > >     return currentLine.event_get_fd();
+> > > }
+> > >
+> > > ... returned 23 for both parameters "in1" and "in2" while gpioinfo told me that these names where unique.
 > >
-> > This bug is not present a released version of libgpiod.
+> > I'm very surprised this works for you.  Note that find_line() and
+> > get_line() methods return an unrequested line object.  You need to
+> > request the line from the kernel using request() before calling
+> > event_get_fd() - and that should throw if you haven't, which makes
+> > me think your actual code is different or something very weird is
+> > going on here.
 > >
-> > Fixes: 2b02d7ae1aa6 ("treewide: rework struct gpiod_line_bulk")
-> > Signed-off-by: Joel Stanley <joel@jms.id.au>
-> > ---
-> >  lib/core.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > Have a look at the gpiogetcxx and gpiomoncxx examples to see how a
+> > line is requested.
 > >
-> > diff --git a/lib/core.c b/lib/core.c
-> > index 6ef09baec0f5..4463a7014776 100644
-> > --- a/lib/core.c
-> > +++ b/lib/core.c
-> > @@ -178,7 +178,8 @@ GPIOD_API void gpiod_line_bulk_foreach_line(struct gpiod_line_bulk *bulk,
-> >  #define line_bulk_foreach_line(bulk, line, index)                      \
-> >         for ((index) = 0, (line) = (bulk)->lines[0];                    \
-> >              (index) < (bulk)->num_lines;                               \
-> > -            (index)++, (line) = (bulk)->lines[(index)])
-> > +            (index)++,                                                 \
-> > +            (line) = (index) < (bulk)->num_lines ? (bulk)->lines[(index)] : NULL)
+> > What does gpioinfo show for those lines?
+> > Why do you need the fd, anyway?  Are you confusing it with the offset?
+> > And why poll when you can get edge events?
 > >
-> >  GPIOD_API bool gpiod_is_gpiochip_device(const char *path)
-> >  {
-> > --
-> > 2.34.1
+> > Bart - the need to request lines is frequently misunderstood - Gasai Maple
+> > had a similar problem, thinking get_line() and set_direction_output()
+> > would be sufficient to set the line output value.
+> > Consider updating the documentation to highlight which methods require
+> > that the line is requested before they are usable - even if they do
+> > return an error or throw in that case.
+> 
+> Make sense, thanks for the heads-up. Will do.
+> 
+> > This also applies to v2.
 > >
->
-> I'll skip this because this entire struct is going away in v2 and the
-> bug is not present in v1.6.x.
->
+> 
+> I don't think so - in v2 you can't do anything without the request
+> handle and you only get it when you call gpiod_chip_request_lines(). I
+> will add some code examples in a dedicated directory though like many
+> other projects do. Code > 1000 words. :)
+> 
+
+Yeah, my bad.  I was refering to the cxx bindings and eyeballing [1],
+but the v2 cxx binding patches haven't been applied there yet, have they?
+So that is still at v1, unlike my local branch that has the patches
+applied :-(.
+
+On that point, when you do merge patches into the libgpiod-2.0 branch
+could you not squash them into one revision?  I'm losing track of where
+we're at.  No problem with doing it just prior to release if you want to
+remove all the development cruft, but having the full history is helpful
+while things are unstable.
+
+Cheers,
+Kent.
+
 > Bart
-
-Ugh actually all three patches fix issues in the master branch that
-have never been nor will be released.
-
-I'm not sure if I made myself clear on that - the changes in the
-master branch are going away and the de facto new API is in
-next/libgpiod-2.0. I already pushed the other two so I'll leave them
-there but please take a look at the next branch so that you know how
-the upcoming API will work. That's also applicable to the patches
-adding the by-name option to the tools - I think it would be better to
-base them on that branch right away.
-
-Bart
+> 
+> > >
+> > > It is OK for me now, the two lines I'm polling are members of one class now, it works as intended, and I'm fine with that. But still I wonder if I misunderstood something or just did it wrong.
+> > >
+> > > Is a new version of libgpiod published soon? Then this whole text may be obsolete.
+> > >
+> >
+> > Indeed, if I were you I would be looking at the libgpiod v2 branch[1]
+> > that will soon obsolete v1 and has a slightly different API.  e.g.
+> > gpiod::find_line() is gone as it is problematic - instead you need to
+> > call find_line() on the appropriate chip and it now returns the line
+> > offset.
+> > That is assuming you are on a reasonably recent kernel - libgpiod v2
+> > requires kernel v5.10 or later.
+> >
+> > Cheers,
+> > Kent.
+> >
+> > [1] https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/tree/?h=next/libgpiod-2.0
+> >
