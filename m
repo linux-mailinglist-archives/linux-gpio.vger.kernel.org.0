@@ -2,69 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E29A24BAD03
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Feb 2022 00:04:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 363404BAFA1
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Feb 2022 03:25:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229664AbiBQXEH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Feb 2022 18:04:07 -0500
-Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:38234 "EHLO
+        id S231567AbiBRCXd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Feb 2022 21:23:33 -0500
+Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:34348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229461AbiBQXEH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Feb 2022 18:04:07 -0500
-Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7452925D25A;
-        Thu, 17 Feb 2022 15:03:47 -0800 (PST)
-Received: by mail-io1-f43.google.com with SMTP id m185so5538317iof.10;
-        Thu, 17 Feb 2022 15:03:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=a90pTChAYnDmwk/LBPu/23Ywkd3tKQPqdNOZmAKI93Q=;
-        b=5EUB1SVH01JRlVXqQGSZ9XyPf14cTKXidjQhvcs2W7Eltaze4J2eBgLrwtgr5jxyj5
-         hj2gRnZ6z9+Gx+MrNiajBCHsLCrGcuIhWxtLfyRrpdbpHu28TWMKfUt7jYJcYYrx1N2f
-         QQgf0GUy9+Hnsbn2rNAY+nyulFxgfp4VxDtD9PJC/QT4+M47amUXpphHcJwOpmjPc9er
-         RKucuY7mNz18lk/OqDjz9cxFLsFRrkV79Qbrahg0o3G04JmIi8nWKuc80uSudmfapREQ
-         i846t9sjfcNk3ujSwlL5TybNiVzv7MLUVb54CCQufYUY7LkrY8W/zbChOzf7qT8dYJMb
-         hERQ==
-X-Gm-Message-State: AOAM530RMvae5GjT9FRHccFp6QBITn36lVR9zOIOv7HK1WTPW3fTiIW1
-        kIP3fTsvGlFoV9KhMHqYyQ==
-X-Google-Smtp-Source: ABdhPJwBNOHhOTwNdVsdNbEO922dnDGVriqBho+EVOye2+ET06i6szcEIK8HwmqntGDDgPD3BpC68A==
-X-Received: by 2002:a05:6602:1652:b0:611:56a8:8aae with SMTP id y18-20020a056602165200b0061156a88aaemr3410597iow.101.1645139026697;
-        Thu, 17 Feb 2022 15:03:46 -0800 (PST)
-Received: from robh.at.kernel.org ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id w15sm268284iou.44.2022.02.17.15.03.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Feb 2022 15:03:45 -0800 (PST)
-Received: (nullmailer pid 3935833 invoked by uid 1000);
-        Thu, 17 Feb 2022 23:03:43 -0000
-Date:   Thu, 17 Feb 2022 17:03:43 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
-Cc:     tiwai@suse.com, rohitkr@codeaurora.org, broonie@kernel.org,
-        alsa-devel@alsa-project.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, robh+dt@kernel.org,
-        lgirdwood@gmail.com,
-        Venkata Prasad Potturu <quic_potturu@quicinc.com>,
+        with ESMTP id S231559AbiBRCXc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Feb 2022 21:23:32 -0500
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0684B632A;
+        Thu, 17 Feb 2022 18:23:12 -0800 (PST)
+X-UUID: 0f9ddc87c92c42ac95e8ab0eca6a7c45-20220218
+X-UUID: 0f9ddc87c92c42ac95e8ab0eca6a7c45-20220218
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <tinghan.shen@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1899599194; Fri, 18 Feb 2022 10:23:08 +0800
+Received: from mtkexhb02.mediatek.inc (172.21.101.103) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.792.3;
+ Fri, 18 Feb 2022 10:23:07 +0800
+Received: from mtkcas10.mediatek.inc (172.21.101.39) by mtkexhb02.mediatek.inc
+ (172.21.101.103) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Fri, 18 Feb
+ 2022 10:23:07 +0800
+Received: from mtksdccf07 (172.21.84.99) by mtkcas10.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 18 Feb 2022 10:23:07 +0800
+Message-ID: <b1146e977bbbda7bd74d9f4096ed16dc371e1e67.camel@mediatek.com>
+Subject: Re: [PATCH v11 0/3] Add basic SoC support for mediatek mt8195
+From:   Tinghan Shen <tinghan.shen@mediatek.com>
+To:     Macpaul Lin <macpaul.lin@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        quic_plai@quicinc.com, devicetree@vger.kernel.org,
-        srinivas.kandagatla@linaro.org, linux-kernel@vger.kernel.org,
-        bgoswami@codeaurora.org, judyhsiao@chromium.org,
-        linux-gpio@vger.kernel.org, perex@perex.cz, swboyd@chromium.org,
-        agross@kernel.org
-Subject: Re: [PATCH v6 1/7] dt-bindings: pinctrl: qcom: Update lpass lpi file
- name to SoC specific
-Message-ID: <Yg7UT5eZbmMF+SyN@robh.at.kernel.org>
-References: <1644851994-22732-1-git-send-email-quic_srivasam@quicinc.com>
- <1644851994-22732-2-git-send-email-quic_srivasam@quicinc.com>
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        "Bartosz Golaszewski" <bgolaszewski@baylibre.com>,
+        Sean Wang <Sean.Wang@mediatek.com>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        Project_Global_Chrome_Upstream_Group 
+        <Project_Global_Chrome_Upstream_Group@mediatek.com>,
+        "ryder.lee@kernel.org" <ryder.lee@kernel.org>,
+        "wenst@chromium.org" <wenst@chromium.org>,
+        "Chunfeng Yun =?UTF-8?Q?=28=E4=BA=91=E6=98=A5=E5=B3=B0=29?=" 
+        <Chunfeng.Yun@mediatek.com>, Fabien Parent <fparent@baylibre.com>,
+        "Bear Wang" <bear.wang@mediatek.com>,
+        Pablo Sun <pablo.sun@mediatek.com>
+Date:   Fri, 18 Feb 2022 10:23:07 +0800
+In-Reply-To: <e17592b2-5e02-44a6-5c21-ac599af5fce1@mediatek.com>
+References: <20220216113131.13145-1-tinghan.shen@mediatek.com>
+         <e17592b2-5e02-44a6-5c21-ac599af5fce1@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1644851994-22732-2-git-send-email-quic_srivasam@quicinc.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        T_SCC_BODY_TEXT_LINE,T_SPF_TEMPERROR,UNPARSEABLE_RELAY autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -72,25 +75,113 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 14 Feb 2022 20:49:48 +0530, Srinivasa Rao Mandadapu wrote:
-> Change generic lpass lpi pincotrol bindings file to SoC specific file,
-> to distinguish and accomadate other SoC specific dt bindings.
+Hi Macpaul,
+
+On Thu, 2022-02-17 at 14:24 +0800, Macpaul Lin wrote:
+> On 2/16/22 7:31 PM, Tinghan Shen wrote:
+> > This series adds basic SoC support for Mediatek's SoC MT8195.
+> > 
+> > ---
+> > Changes in v11:
+> >    - rebase on 5.17-rc4
+> > Changes in v10:
+> >    - clean CC list
+> > Changes in v9:
+> >    - remove duplicated cpus dt-bindings patch in v8
+> > Changes in v8:
+> >    - v7 mediatek,spi-mtk-nor.yaml patch is applied in branch for-5.17 at
+> >      kernel/git/broonie/spi.git
+> >    - v7 pinctrl-mt8195.yaml patch is applied in branch for-next at
+> >      kernel/git/linusw/linux-pinctrl.git
+> >    - add cortex-a78 compatible to cpus dt-bindings
+> >    - add mediatek,drive-strength-adv property to pinctrl dt-bindings
+> >    - fix evb dts
+> >      - remove i2c nodes with disabled status from dts
+> >      - fix pin properties not match pinctrl dt-bindings
+> >      - remove unnecessary u3port*
+> >    - fix dtsi
+> >      - fix node format
+> >      - reorder oscillator* nodes
+> >      - fix node name of cpu idle nodes
+> >      - remove clock-frequency property in the timer node
+> >      - reorder clock and clock names in usb nodes
+> > Changes in v7:
+> >    - refine title of spi-nor dt-bindings patch
+> >    - refine commit message of pinctrl dt-bindings patch
+> >    - update pinctrl-mt8195.yaml
+> >      - change property pattern from 'pins' to '^pins'
+> >      - update examples with new property in descriptions
+> >      - add new example
+> >    - drop '_' from node names of pinctrl subnodes in mt8195-evb.dts
+> > Changes in v6:
+> >    - rebase on 5.16-rc1
+> >    - add new clock name to spi-nor dt-bindings
+> >    - add "pins" property in pinctrl dt-bindings
+> >    - fix fails of dtbs_checks
+> >      - remove "arm,armv8" not matched in yaml from cpu compatile
+> >      - fix node name of xhci
+> >      - remvoe xhci upstreaming wakeup properties
+> >      - remove xhci unused properties address-cells and size-cells
+> >      - fix node name of ufs-phy
+> >      - fix node name of spi-nor
+> >      - fix node name and sub-nodes of pinctrl
+> >      - fix mmc compatible
+> > Changes in v5:
+> >    - enable basic nodes in mt8195-evb.dts
+> >    - remove dedicated clock nodes
+> >    - add mmc2 node
+> >    - fix interrupt number of pinctrl node
+> >    - update clock nodes to apply internal fixes
+> >    - add dt-bindings for perficfg node
+> > 
+> > v4 thread:
+> > 
+https://urldefense.com/v3/__https://lore.kernel.org/all/20210922093303.23720-2-seiya.wang@mediatek.com/__;!!CTRNKA9wMg0ARbw!xv2H7ZXYIUG7YY1R5OuFgbvDxyfaE6dkkD5H_PciKAZAb5jk-uThgSgItGuvt2d6gCs$
+> > v3 thread:
+> > 
+https://urldefense.com/v3/__https://lore.kernel.org/all/20210601075350.31515-2-seiya.wang@mediatek.com/__;!!CTRNKA9wMg0ARbw!xv2H7ZXYIUG7YY1R5OuFgbvDxyfaE6dkkD5H_PciKAZAb5jk-uThgSgItGuvgIQSNYo$
+> > v2 thread:
+> > 
+https://urldefense.com/v3/__https://lore.kernel.org/all/20210319023427.16711-10-seiya.wang@mediatek.com/__;!!CTRNKA9wMg0ARbw!xv2H7ZXYIUG7YY1R5OuFgbvDxyfaE6dkkD5H_PciKAZAb5jk-uThgSgItGuvBx50AeU$
+> > v1 thread:
+> > 
+https://urldefense.com/v3/__https://lore.kernel.org/all/20210316111443.3332-11-seiya.wang@mediatek.com/__;!!CTRNKA9wMg0ARbw!xv2H7ZXYIUG7YY1R5OuFgbvDxyfaE6dkkD5H_PciKAZAb5jk-uThgSgItGuvpH_NtEY$
+> > ---
+> > 
+> > Tinghan Shen (3):
+> >    dt-bindings: arm: mediatek: Add mt8195 pericfg compatible
+> >    dt-bindings: pinctrl: mt8195: Add mediatek,drive-strength-adv property
+> >    arm64: dts: Add mediatek SoC mt8195 and evaluation board
+> > 
+> >   .../arm/mediatek/mediatek,pericfg.yaml        |    1 +
+> >   .../bindings/pinctrl/pinctrl-mt8195.yaml      |   35 +
+> >   arch/arm64/boot/dts/mediatek/Makefile         |    1 +
+> >   arch/arm64/boot/dts/mediatek/mt8195-evb.dts   |  161 +++
+> >   arch/arm64/boot/dts/mediatek/mt8195.dtsi      | 1049 +++++++++++++++++
+> >   5 files changed, 1247 insertions(+)
+> >   create mode 100644 arch/arm64/boot/dts/mediatek/mt8195-evb.dts
+> >   create mode 100644 arch/arm64/boot/dts/mediatek/mt8195.dtsi
+> > 
 > 
-> Signed-off-by: Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
-> Co-developed-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
-> Signed-off-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
-> ---
->  .../bindings/pinctrl/qcom,lpass-lpi-pinctrl.yaml   | 133 ---------------------
->  .../pinctrl/qcom,sm8250-lpass-lpi-pinctrl.yaml     | 133 +++++++++++++++++++++
->  2 files changed, 133 insertions(+), 133 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,lpass-lpi-pinctrl.yaml
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm8250-lpass-lpi-pinctrl.yaml
+> Just trying to clarify something.
+> Dear Tinghan, is there any "lines of code" changed between v10 and v11  
+> due to the rebase? Is that you just updated the parent commit hash for  
+> rebasing this patchset to 5.17-rc4? I've just get confused if v10 and  
+> v11 are duplicated then should we need to review the patch again in detail?
 > 
+> Thanks.
+> Macpaul Lin
+
+Thanks for your review.
+
+There's no change introduced after rebase v10 to 5.17-rc4.
+
+v11 and v10 are the same.
 
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+Best regards,
+TingHan
 
-If a tag was not added on purpose, please state why and what changed.
+
+
 
