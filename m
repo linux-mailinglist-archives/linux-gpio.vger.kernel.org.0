@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 460224BBF9F
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Feb 2022 19:36:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 500764BBFA1
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Feb 2022 19:37:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232760AbiBRSgW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Feb 2022 13:36:22 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:34378 "EHLO
+        id S234606AbiBRSiF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Feb 2022 13:38:05 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:38850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239303AbiBRSgW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Feb 2022 13:36:22 -0500
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7479268365
-        for <linux-gpio@vger.kernel.org>; Fri, 18 Feb 2022 10:36:04 -0800 (PST)
-Received: by mail-ed1-x534.google.com with SMTP id q17so17013447edd.4
-        for <linux-gpio@vger.kernel.org>; Fri, 18 Feb 2022 10:36:04 -0800 (PST)
+        with ESMTP id S239306AbiBRSiE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Feb 2022 13:38:04 -0500
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0227F29C121
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Feb 2022 10:37:47 -0800 (PST)
+Received: by mail-ej1-x62f.google.com with SMTP id a23so17002128eju.3
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Feb 2022 10:37:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=SBuYtg+wc+/8fAJ0XvEeFcz7NuxQGO1oTcu3WliGN2A=;
-        b=0+Gq3za39e60Vdr2B7bpDwvXuhde1fx78TghC8ScbJ79icNjSwmlwSBV35U0S5Ml8Q
-         wxd756ceLTICaXTIqyPze9S+ljkWpBDMrMmALWH5sl4iNGM0I0AJTNL1yduCTOuHxC0L
-         UDND4AkK7V9+OzvxQ/piU52z7eJvrZ14NhPgv47qa3XyWomjDGdfnZuu66V24ZWMakWE
-         dNIps/LR8loLNXJ+fiKDdvgzIJBAoCCUpGZSBh4utjlAzp+FWH5AAClRom8wcj1qg2j6
-         m6kZLO2egR3fXwUFpLxRlZvn/sH2RiZQpcvOZu8UgOVo7wI6+T8CkmweOsNyPAUNajlQ
-         Nd8g==
+        bh=VS3DLwIltaVI6yY15QngxJkNPKgHA21C8sykmpSu8Yg=;
+        b=sVwGZrT8+tF35ApzSKlY9lQmt5F++fBi7Hn7A5Iqxt7dCLArSivOmuRH5sqjj7wY+8
+         54HxHKvicnMhyH26HnJRFz9b9Dx6UN98e6CE//HfUchAfg76p0ys+BI0PMOL4u/Ro+Yf
+         SRKRatcA+r2YEaeeUNDXtONKznZgc6S9FfOlW2zMMvEHTm9WQhlCPxEFKq7WSivESCnm
+         89BLGsaKDLPMvxiHo316SCA+8smmQI/U2T3R/5JL/+JE3X+MBHZ0EuNjGVEhSuBoaPTk
+         6HJjIvH6oFx2Zi1cgjGHBzq4rZoegY48ys/NdtttmzEC4aGUcnGwUUUyhVeBK6xfYIE5
+         PyYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=SBuYtg+wc+/8fAJ0XvEeFcz7NuxQGO1oTcu3WliGN2A=;
-        b=yQ8UJvcygftayFd006esTJPn2EjbvWjOg7+0o3hl6VBs16e16NcACDixGiACr65DLj
-         /kW6q6i0pfshxWWpkpRiX37o1QhPal4ydndTcI23s15hLhhhF0vhSlzj7BkYmh4SxsER
-         M4D+QH/X5tFDDA8NPLzQwvAKnzEycYTCwmtnbcCSqP1Wruka7biiwpeO2DXnhCH8WOsb
-         L+AzRltxk9SSNSVOWgBhe6b5ubuAq9Kdh+RxoSYhOoGUya3Q0ZDJrfUBfH9uRkXV9t7w
-         PtZIMexdo+egJAPx4Dd3RGFRUgsjCCX1cbjuBNhJQ3WNd+dqznNm1ORf94ByF60KoflO
-         W2Tw==
-X-Gm-Message-State: AOAM533agXe8seZqb0zryYlixHKpPsdK6SNjDvALTu0BMwnOjaEvz9tl
-        TtQd8D4bSska8ceCMn+RReUaTEGgA/qfw7DrKhY9RqF+ROQ=
-X-Google-Smtp-Source: ABdhPJwA10J9zxPphXOei9WF47VzEir28/qPCjK4NCcMKlM819wuQ8JWYkMyBEREajk+QHyPVM+f1+PV9ZNnoIa1u1c=
-X-Received: by 2002:a05:6402:5194:b0:409:97ec:3bdc with SMTP id
- q20-20020a056402519400b0040997ec3bdcmr9771402edd.314.1645209363475; Fri, 18
- Feb 2022 10:36:03 -0800 (PST)
+        bh=VS3DLwIltaVI6yY15QngxJkNPKgHA21C8sykmpSu8Yg=;
+        b=OKLkKRZpFmGEfD0PMUSkCUfE9SOjfHXcWTuV4y5nf0UeYV08CYgncuwMEsvtiMeTjF
+         ro1k6ef6uwYXgfcstFvILncOMyRnmI3AK7Iw/mHxPdAdZ2Yy6upiVHzoqWEPSNxM4s9Y
+         0qEn9kX60VKgyXZXQWcsyCvlNtpZN6ZHLpXWPdzaClalGWl/BJfVjtrfU0Cz30S3x78T
+         +UnTmsR2pFUbxaCV54NiX4akDiVKGjUpCnyRBK0+kYTxTHUJx7aAmQLf7TFdH5So7qxH
+         FI0ClqeeB5boUkpkSE5TyyUR3qSj19phi6MxQtIoaeO+xVEiRCsD5iI1NHGYGs8FdZTa
+         BIpA==
+X-Gm-Message-State: AOAM532ZVZ7fkOCXJCFXsqU3dvCDb1gzozIwyXpN4sxOj3eliH0VjPL5
+        ogZntnjG9WXhdsEeEpaReVhzgwu9YqwWHCbl4rHp6qmTzno=
+X-Google-Smtp-Source: ABdhPJzxcvvPlucl/Fu8qKmERSj5JeCnTWVpbUfUQ4JSicWYGNXhnq+0VYEMMpU3Z6uOtfEvniH9J2MYhlidVnNAPuI=
+X-Received: by 2002:a17:907:7618:b0:6cf:5756:26c4 with SMTP id
+ jx24-20020a170907761800b006cf575626c4mr7426725ejc.492.1645209465527; Fri, 18
+ Feb 2022 10:37:45 -0800 (PST)
 MIME-Version: 1.0
-References: <20220202123248.36955-1-joel@jms.id.au>
-In-Reply-To: <20220202123248.36955-1-joel@jms.id.au>
+References: <20220202120123.33727-1-joel@jms.id.au>
+In-Reply-To: <20220202120123.33727-1-joel@jms.id.au>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 18 Feb 2022 19:35:52 +0100
-Message-ID: <CAMRc=MeaJ4M6WuvB1Shfa5=y72WpKPWe5YYx_mu6tc9d9byCCA@mail.gmail.com>
-Subject: Re: [libgpiod PATCH] core: Fix gpiod_line_bulk_reset type
+Date:   Fri, 18 Feb 2022 19:37:34 +0100
+Message-ID: <CAMRc=Mev4oS3CDWhCrUdW3=fGwMuWPVJGo8TAwgDmFSeyBu-Bw@mail.gmail.com>
+Subject: Re: [libgpiod PATCH] gpioinfo: Clean up scandir allocations
 To:     Joel Stanley <joel@jms.id.au>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
@@ -63,33 +63,34 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Feb 2, 2022 at 1:33 PM Joel Stanley <joel@jms.id.au> wrote:
+On Wed, Feb 2, 2022 at 1:01 PM Joel Stanley <joel@jms.id.au> wrote:
 >
-> bulk->lines is an array of pointers, so it doesn't matter which pointer
-> type we specify to sizeof(). As it's a struct gpiod_line *, it would
-> make sense to use that.
+> ==3017== 176 (80 direct, 96 indirect) bytes in 1 blocks are definitely lost in loss record 2 of 2
+> ==3017==    at 0x483F6C7: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+> ==3017==    by 0x491CE92: ??? (in /lib/libc.so.6)
+> ==3017==    by 0x10AAAC: main (gpioinfo.c:215)
+>
+> The entires must be freed, and then the array itself.
 >
 > Signed-off-by: Joel Stanley <joel@jms.id.au>
 > ---
+>  tools/gpioinfo.c | 2 ++
+>  1 file changed, 2 insertions(+)
 >
-> Alternately, we could make this sizeof(*bulk->lines).
+> diff --git a/tools/gpioinfo.c b/tools/gpioinfo.c
+> index 3d8911176281..d50af45dbf35 100644
+> --- a/tools/gpioinfo.c
+> +++ b/tools/gpioinfo.c
+> @@ -231,7 +231,9 @@ int main(int argc, char **argv)
+>                         list_lines(chip);
 >
->  lib/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/lib/core.c b/lib/core.c
-> index 2e7ee4b5b896..6ef09baec0f5 100644
-> --- a/lib/core.c
-> +++ b/lib/core.c
-> @@ -117,7 +117,7 @@ GPIOD_API struct gpiod_line_bulk *gpiod_line_bulk_new(unsigned int max_lines)
->  GPIOD_API void gpiod_line_bulk_reset(struct gpiod_line_bulk *bulk)
->  {
->         bulk->num_lines = 0;
-> -       memset(bulk->lines, 0, bulk->max_lines * sizeof(struct line *));
-> +       memset(bulk->lines, 0, bulk->max_lines * sizeof(struct gpiod_line *));
->  }
->
->  GPIOD_API void gpiod_line_bulk_free(struct gpiod_line_bulk *bulk)
+>                         gpiod_chip_unref(chip);
+> +                       free(entries[i]);
+>                 }
+> +               free(entries);
+>         } else {
+>                 for (i = 0; i < argc; i++) {
+>                         chip = chip_open_lookup(argv[i]);
 > --
 > 2.34.1
 >
