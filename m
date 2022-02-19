@@ -2,125 +2,174 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 80E7D4BC50A
-	for <lists+linux-gpio@lfdr.de>; Sat, 19 Feb 2022 03:46:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 257534BC60C
+	for <lists+linux-gpio@lfdr.de>; Sat, 19 Feb 2022 07:40:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241187AbiBSCq5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Feb 2022 21:46:57 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:47762 "EHLO
+        id S240430AbiBSGkZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 19 Feb 2022 01:40:25 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:38506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241181AbiBSCq4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Feb 2022 21:46:56 -0500
-Received: from mail-oo1-xc2b.google.com (mail-oo1-xc2b.google.com [IPv6:2607:f8b0:4864:20::c2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAB5B25D6
-        for <linux-gpio@vger.kernel.org>; Fri, 18 Feb 2022 18:46:36 -0800 (PST)
-Received: by mail-oo1-xc2b.google.com with SMTP id k13-20020a4a948d000000b003172f2f6bdfso5870938ooi.1
-        for <linux-gpio@vger.kernel.org>; Fri, 18 Feb 2022 18:46:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:in-reply-to:references:from:user-agent:date:message-id
-         :subject:to:cc:content-transfer-encoding;
-        bh=DQm3dzVCY1FyK1nVTRS3Y8VEmZfIVCq9w/XynD1Yj4Q=;
-        b=PhWFIs+RJpcr112/Fdp4ospixnQKGstbiHUuquknUgzAbkRicCb5xc6wiV/c0B23wO
-         su1uhMIWVBnzciMlN37pXRteUNFruOlD8eWek/kU2o3rK3aND6Rli4kf0nZ0yoYzcezL
-         3fsYiVrV+KODKAj59h3YVuNk6nO0Egvk657TE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from
-         :user-agent:date:message-id:subject:to:cc:content-transfer-encoding;
-        bh=DQm3dzVCY1FyK1nVTRS3Y8VEmZfIVCq9w/XynD1Yj4Q=;
-        b=HE1kRi8j4T7n+Y21nB7IL0rxr9LqK50xbc3MWT6y7JB5mHcJO8l+3EI4HF4OoxCP5D
-         Ry2be7P6uW/DBEdlfCeL+gHt/sJQe+wccNPM0C6iRDNm8yuCdz6yl7t0TMaoMGVOtaVL
-         RYypDeXzHOeci2KzyyrSEhuRVX3CHDXHxqRTvHyXkl59ZILAgFRSJ7AYvtkY5Fq5HrJ5
-         YDoQ0u9I0z0CKbUF21QacfS7j5R9Ex+u54+VcMcfVJXei0by6ea6LGItknoMN3/eePuu
-         TICd12oB2XtzJGk5AyMEbAalVN2PDblIuFSBP81zNuK0O8doyjYLzT+L8/5wPTDUxr/D
-         nt3A==
-X-Gm-Message-State: AOAM531JQcm3jzhIwwoOWbfGPWeFHj3JwYuVw0B4RY2LH91wVaDXjCIu
-        tefB1VJY4Bne8CM1ZIXM3syuaMX6icnv+YEEOOWdtw==
-X-Google-Smtp-Source: ABdhPJzFvL6nErM3soIDJLjgaoUiL8QWvYjB63p3eOVAaiDWZwdZorNdm+S4sLm3ReMhkrjp8/WuExFuCR1PoiRprhU=
-X-Received: by 2002:a05:6870:5829:b0:c8:9f42:f919 with SMTP id
- r41-20020a056870582900b000c89f42f919mr4194397oap.54.1645238796075; Fri, 18
- Feb 2022 18:46:36 -0800 (PST)
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Fri, 18 Feb 2022 18:46:35 -0800
+        with ESMTP id S230412AbiBSGkZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 19 Feb 2022 01:40:25 -0500
+X-Greylist: delayed 465 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 18 Feb 2022 22:40:06 PST
+Received: from box.trvn.ru (box.trvn.ru [194.87.146.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3333619E72B;
+        Fri, 18 Feb 2022 22:40:06 -0800 (PST)
+Received: from authenticated-user (box.trvn.ru [194.87.146.52])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by box.trvn.ru (Postfix) with ESMTPSA id 749F3403DB;
+        Sat, 19 Feb 2022 11:32:15 +0500 (+05)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
+        t=1645252337; bh=i/Xc3rXnQ31VWvth9DwfVBUyC4C2QCHs5CrNABz1B+g=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=PvRkxicWdFiMqfWBz74nha0w4PHEwhZR6tF+ZDG/YTlzojHskGlrFlKuOZCPY38Hv
+         PO+bgGJg9jaFsh/YzW6ZCBvMKBRwUDYCPUmzxFUck0aFWgdnQHVwC0V7QSUEs0yXUs
+         q3W5YjWWXjtmxvTSCfdvWtdQAkzm7vCiardPMfmRY7k5QAZ8CHkgu6MRufc7h+9S60
+         aapOH3eKCgnbfw0KOS2wJlNcIwbw8+Aoso9wtFH8s39LrHawpb1Z09qDkGQu0deBXg
+         DZVh1cKyesH+Ql4Yry6HZqk/4LrdXYJqP7FE8DP4Cejj+rgguo/7vippcA16DMtYA4
+         dKgygWZpkdOGQ==
 MIME-Version: 1.0
-In-Reply-To: <09b00fe9-1770-1723-3c4c-6c494da87e8d@linaro.org>
-References: <1644851994-22732-1-git-send-email-quic_srivasam@quicinc.com>
- <1644851994-22732-8-git-send-email-quic_srivasam@quicinc.com>
- <a209336a-9108-f1ac-ee6d-a838df115c6d@linaro.org> <b663f63f-4a5a-3a2a-9be7-fa7258ce93c5@quicinc.com>
- <09b00fe9-1770-1723-3c4c-6c494da87e8d@linaro.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.10
-Date:   Fri, 18 Feb 2022 18:46:35 -0800
-Message-ID: <CAE-0n5009g2WwnTsmUeKs5jgrnrUf21SgEL1s65C3FL+HJefkQ@mail.gmail.com>
-Subject: Re: [PATCH v6 7/7] pinctrl: qcom: Update clock voting as optional
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>,
-        agross@kernel.org, alsa-devel@alsa-project.org,
-        bgoswami@codeaurora.org, bjorn.andersson@linaro.org,
-        broonie@kernel.org, devicetree@vger.kernel.org,
-        judyhsiao@chromium.org, lgirdwood@gmail.com,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, perex@perex.cz,
-        quic_plai@quicinc.com, robh+dt@kernel.org, rohitkr@codeaurora.org,
-        tiwai@suse.com
-Cc:     Venkata Prasad Potturu <quic_potturu@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Date:   Sat, 19 Feb 2022 11:32:15 +0500
+From:   Nikita Travkin <nikita@trvn.ru>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     linus.walleij@linaro.org, mturquette@baylibre.com,
+        bjorn.andersson@linaro.org, agross@kernel.org, tdas@codeaurora.org,
+        svarbanov@mm-sol.com, linux-arm-msm@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH 1/4] clk: qcom: clk-rcg2: Fail Duty-Cycle configuration if
+ MND divider is not enabled.
+In-Reply-To: <20220217223736.DFC2EC340E8@smtp.kernel.org>
+References: <20211209163720.106185-1-nikita@trvn.ru>
+ <20211209163720.106185-2-nikita@trvn.ru>
+ <20220108005209.5140EC36AEB@smtp.kernel.org>
+ <991533e0fddd6999c8a06a536ae57999@trvn.ru>
+ <20220110201452.2B3E4C36AE3@smtp.kernel.org>
+ <cc4241105bfd2249c1c309a4efa2e6aa@trvn.ru>
+ <20220217223736.DFC2EC340E8@smtp.kernel.org>
+Message-ID: <6c3d2f619b1e87ef21effc02bb6df1cb@trvn.ru>
+X-Sender: nikita@trvn.ru
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Quoting Srinivas Kandagatla (2022-02-16 07:38:02)
->
->
-> On 16/02/2022 14:41, Srinivasa Rao Mandadapu wrote:
-> >
-> > On 2/16/2022 7:50 PM, Srinivas Kandagatla wrote:
-> > Thanks for Your Time Srini!!!
-> >>
-> >> On 14/02/2022 15:19, Srinivasa Rao Mandadapu wrote:
-> >>> diff --git a/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
-> >>> b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
-> >>> index 5bf30d97..4277e31 100644
-> >>> --- a/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
-> >>> +++ b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
-> >>> @@ -143,6 +143,7 @@ static const struct lpi_pinctrl_variant_data
-> >>> sc7280_lpi_data =3D {
-> >>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .ngroups =3D ARRAY_SIZE(sc7280_groups)=
-,
-> >>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .functions =3D sc7280_functions,
-> >>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 .nfunctions =3D ARRAY_SIZE(sc7280_func=
-tions),
-> >>> +=C2=A0=C2=A0=C2=A0 .is_clk_optional =3D 1,
-> >>
-> >> This is forcefully set assuming that sc7280 is always used in ADSP
-> >> bypass mode. Which is not correct.
-> >>
-> >> Can't you use devm_clk_bulk_get_optional instead?
-> >
-> > Yes. Agreed. Initially used devm_clk_bulk_get_optional, but Bjorn
-> > suggested for conditional check instead of optional.
-> >
-> > Again Shall we go for optional clock voting?
->
-> That means that the condition has to be dynamic based on the platform
-> using DSP or not. Which is impossible to deduce without some help from DT=
-.
->
-> I would prefer to stay with optional clock unless Bjorn has some strong
-> objection on not using int.
+Hi,
 
-I think we need the combination of optional API and bool flag. My
-understanding is it's optional on sc7280, but not on the previous
-revision, so we want to be very strict on previous revision and less
-strict on sc7280. Hence the flag. Maybe we should change it to
-clk_required and then assume optional going forward. Then the callsite
-can use one or the other API?
+Stephen Boyd писал(а) 18.02.2022 03:37:
+> Quoting Nikita Travkin (2022-01-26 07:14:21)
+>> Stephen Boyd писал(а) 11.01.2022 01:14:
+>> > Quoting Nikita Travkin (2022-01-07 23:25:19)
+>> >> Hi,
+>> >>
+>> >> Stephen Boyd писал(а) 08.01.2022 05:52:
+>> >> > Quoting Nikita Travkin (2021-12-09 08:37:17)
+>> >> I'm adding this error here primarily to bring attention of the
+>> >> user (e.g. developer enabling some peripheral that needs
+>> >> duty cycle control) who might have to change their clock tree
+>> >> to make this control effective. So, assuming that if someone
+>> >> sets the duty cycle to 50% then they might set it to some other
+>> >> value later, it makes sense to fail the first call anyway.
+>> >>
+>> >> If you think there are some other possibilities for this call
+>> >> to happen specifically with 50% duty cycle (e.g. some
+>> >> preparations or cleanups in the clk subsystem or some drivers
+>> >> that I'm not aware of) then I can make an exemption in the check
+>> >> for that.
+>> >>
+>> >
+>> > I don't see anywhere in clk_set_duty_cycle() where it would bail out
+>> > early if the duty cycle was set to what it already is. The default for
+>> > these clks is 50%, so I worry that some driver may try to set the duty
+>> > cycle to 50% and then fail now. Either we need to check the duty cycle
+>> > in the core before calling down into the driver or we need to check it
+>> > here in the driver. Can you send a patch to check the current duty cycle
+>> > in the core before calling down into the clk ops?
+>>
+>> Hi, sorry for a rather delayed response,
+>> I spent a bit of time looking at how to make the clk core be
+>> careful with ineffective duty-cycle calls and I can't find a
+>> nice way to do this... My idea was something like this:
+>>
+>> static int clk_core_set_duty_cycle_nolock(struct clk_core *core,
+>>                                           struct clk_duty *duty)
+>> {       /* ... */
+>>
+>>         /* Update core->duty values */
+>>         clk_core_update_duty_cycle_nolock(core);
+>>
+>>         if ( /* duty doesn't match core->duty */ ) {
+>>                 ret = core->ops->set_duty_cycle(core->hw, duty);
+>>         /* ... */
+>> }
+>>
+>> However there seem to be drawbacks to any variant of the
+>> comparison that I could come up with:
+>>
+>> Naive one would be to do
+>>     if (duty->num != core->duty->num || duty->den != core->duty->den)
+>> but it won't correctly compare e.g. 1/2 and 10/20.
+>>
+>> Other idea was to do
+>>     if (duty->den / duty->num != core->duty->den / core->duty->num)
+>> but it will likely fail with very close values (e.g. 100/500 and 101/500)
+>>
+>> I briefly thought of some more sophisticated math but I don't
+>> like the idea of complicating this too far.
+>>
+>> I briefly grepped the kernel sources for duty-cycle related methods
+>> and I saw only one user of the clk_set_duty_cycle:
+>>     sound/soc/meson/axg-tdm-interface.c
+>> Notably it sets the cycle to 1/2 in some cases, though it seems to
+>> be tied to the drivers/clk/meson/sclk-div.c clock driver by being
+>> the blocks of the same SoC.
+> 
+> Indeed, so this patch is untested? I doubt the qcom driver is being used
+> with the one caller of clk_set_duty_cycle() in the kernel.
+> 
+
+While right now, to my knowledge, there is no users of the duty cycle
+control, I'm adding a generic driver that uses it in another series [1]
+with an intention to use it across multiple qcom based devices.
+
+While making it I spent quite a bit of time staring at the oscilloscope
+to figure out that I need changes from patch 4/4 of this series and I'd
+like to make this quirk a bit more obvious to others.
+
+[1] https://lore.kernel.org/linux-pwm/20220212162342.72646-1-nikita@trvn.ru/
+
+>>
+>> Thinking of it a bit more, I saw another approach to the problem
+>> I want to solve: Since I just want to make developers aware of the
+>> hardware quirk, maybe I don't need to fail the set but just put a
+>> WARN or even WARN_ONCE there? This way the behavior will be unchanged.
+>>
+> 
+> I don't like the idea of a WARN or a WARN_ONCE as most likely nobody is
+> going to read it or do anything about it. Returning an error should be
+> fine then. If the duty cycle call fails for 50% then that's something we
+> have to live with.
+
+I intend this WARN or error to be hit by a person bringing up something
+new, user should never see it. For example a possible story could be:
+
+- Backlight control is connected to the clock on device X
+- Developer adds (future) pwm-clk adapter and pwm-backlight to the DT
+- Backlight slider in UI doesn't work anyway. (don't think UIs show
+  errors here)
+- Developer troubleshoots the thing and either finds WARN in dmesg
+  or that the sysfs write errors out.
+
+In my experience, people bringing devices up pay a very close attention
+to dmesg so I think giving a WARN is fine, but I'm fine with whichever
+approach you prefer.
+
+Nikita
