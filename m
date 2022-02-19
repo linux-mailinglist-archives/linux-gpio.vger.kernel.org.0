@@ -2,174 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 257534BC60C
-	for <lists+linux-gpio@lfdr.de>; Sat, 19 Feb 2022 07:40:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D211F4BC9C5
+	for <lists+linux-gpio@lfdr.de>; Sat, 19 Feb 2022 19:20:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240430AbiBSGkZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 19 Feb 2022 01:40:25 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:38506 "EHLO
+        id S242767AbiBSSUw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 19 Feb 2022 13:20:52 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:47106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230412AbiBSGkZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 19 Feb 2022 01:40:25 -0500
-X-Greylist: delayed 465 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 18 Feb 2022 22:40:06 PST
-Received: from box.trvn.ru (box.trvn.ru [194.87.146.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3333619E72B;
-        Fri, 18 Feb 2022 22:40:06 -0800 (PST)
-Received: from authenticated-user (box.trvn.ru [194.87.146.52])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by box.trvn.ru (Postfix) with ESMTPSA id 749F3403DB;
-        Sat, 19 Feb 2022 11:32:15 +0500 (+05)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
-        t=1645252337; bh=i/Xc3rXnQ31VWvth9DwfVBUyC4C2QCHs5CrNABz1B+g=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=PvRkxicWdFiMqfWBz74nha0w4PHEwhZR6tF+ZDG/YTlzojHskGlrFlKuOZCPY38Hv
-         PO+bgGJg9jaFsh/YzW6ZCBvMKBRwUDYCPUmzxFUck0aFWgdnQHVwC0V7QSUEs0yXUs
-         q3W5YjWWXjtmxvTSCfdvWtdQAkzm7vCiardPMfmRY7k5QAZ8CHkgu6MRufc7h+9S60
-         aapOH3eKCgnbfw0KOS2wJlNcIwbw8+Aoso9wtFH8s39LrHawpb1Z09qDkGQu0deBXg
-         DZVh1cKyesH+Ql4Yry6HZqk/4LrdXYJqP7FE8DP4Cejj+rgguo/7vippcA16DMtYA4
-         dKgygWZpkdOGQ==
+        with ESMTP id S232963AbiBSSUv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 19 Feb 2022 13:20:51 -0500
+Received: from alexa-out.qualcomm.com (alexa-out.qualcomm.com [129.46.98.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A12F1107C7;
+        Sat, 19 Feb 2022 10:20:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
+  t=1645294832; x=1676830832;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=43FQQoiARr1oUUz161OUOBUs6C7jlfJSnj8zmZ358yI=;
+  b=uFRALQ/cDeAw4dbsRiKGohQr/rr4dB18wc12TSddB12GneDGvuLOskd8
+   IaFW3LObYRuhChxI6RT558HIYFpO9LRGukyVoaRRoKAOjlfo3XdgKUHAc
+   xgDCfE+AlR4aArP6iFgxhMLpF5Ni/G2IU7rOvkCGALtTbydG9woe6a1Bv
+   M=;
+Received: from ironmsg07-lv.qualcomm.com ([10.47.202.151])
+  by alexa-out.qualcomm.com with ESMTP; 19 Feb 2022 10:20:31 -0800
+X-QCInternal: smtphost
+Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
+  by ironmsg07-lv.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2022 10:20:30 -0800
+Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
+ nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.15; Sat, 19 Feb 2022 10:20:30 -0800
+Received: from [10.216.20.52] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.15; Sat, 19 Feb
+ 2022 10:20:23 -0800
+Message-ID: <5a6e307d-f8b0-50b6-f295-fdf6ccd20232@quicinc.com>
+Date:   Sat, 19 Feb 2022 23:50:19 +0530
 MIME-Version: 1.0
-Date:   Sat, 19 Feb 2022 11:32:15 +0500
-From:   Nikita Travkin <nikita@trvn.ru>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     linus.walleij@linaro.org, mturquette@baylibre.com,
-        bjorn.andersson@linaro.org, agross@kernel.org, tdas@codeaurora.org,
-        svarbanov@mm-sol.com, linux-arm-msm@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH 1/4] clk: qcom: clk-rcg2: Fail Duty-Cycle configuration if
- MND divider is not enabled.
-In-Reply-To: <20220217223736.DFC2EC340E8@smtp.kernel.org>
-References: <20211209163720.106185-1-nikita@trvn.ru>
- <20211209163720.106185-2-nikita@trvn.ru>
- <20220108005209.5140EC36AEB@smtp.kernel.org>
- <991533e0fddd6999c8a06a536ae57999@trvn.ru>
- <20220110201452.2B3E4C36AE3@smtp.kernel.org>
- <cc4241105bfd2249c1c309a4efa2e6aa@trvn.ru>
- <20220217223736.DFC2EC340E8@smtp.kernel.org>
-Message-ID: <6c3d2f619b1e87ef21effc02bb6df1cb@trvn.ru>
-X-Sender: nikita@trvn.ru
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH v6 3/7] pinctrl: qcom: Update macro name to LPI specific
+Content-Language: en-US
+To:     Stephen Boyd <swboyd@chromium.org>,
+        Linus Walleij <linus.walleij@linaro.org>, <agross@kernel.org>,
+        <alsa-devel@alsa-project.org>, <bgoswami@codeaurora.org>,
+        <bjorn.andersson@linaro.org>, <broonie@kernel.org>,
+        <devicetree@vger.kernel.org>, <judyhsiao@chromium.org>,
+        <lgirdwood@gmail.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <perex@perex.cz>, <quic_plai@quicinc.com>, <robh+dt@kernel.org>,
+        <rohitkr@codeaurora.org>, <srinivas.kandagatla@linaro.org>,
+        <tiwai@suse.com>
+CC:     Venkata Prasad Potturu <quic_potturu@quicinc.com>
+References: <1644851994-22732-1-git-send-email-quic_srivasam@quicinc.com>
+ <1644851994-22732-4-git-send-email-quic_srivasam@quicinc.com>
+ <CAE-0n527fs5rfPG1HonW_9ZTugANnWNYSs_0+wts+zDK=zcZjA@mail.gmail.com>
+From:   "Srinivasa Rao Mandadapu (Temp)" <quic_srivasam@quicinc.com>
+Organization: Qualcomm
+In-Reply-To: <CAE-0n527fs5rfPG1HonW_9ZTugANnWNYSs_0+wts+zDK=zcZjA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
 
-Stephen Boyd писал(а) 18.02.2022 03:37:
-> Quoting Nikita Travkin (2022-01-26 07:14:21)
->> Stephen Boyd писал(а) 11.01.2022 01:14:
->> > Quoting Nikita Travkin (2022-01-07 23:25:19)
->> >> Hi,
->> >>
->> >> Stephen Boyd писал(а) 08.01.2022 05:52:
->> >> > Quoting Nikita Travkin (2021-12-09 08:37:17)
->> >> I'm adding this error here primarily to bring attention of the
->> >> user (e.g. developer enabling some peripheral that needs
->> >> duty cycle control) who might have to change their clock tree
->> >> to make this control effective. So, assuming that if someone
->> >> sets the duty cycle to 50% then they might set it to some other
->> >> value later, it makes sense to fail the first call anyway.
->> >>
->> >> If you think there are some other possibilities for this call
->> >> to happen specifically with 50% duty cycle (e.g. some
->> >> preparations or cleanups in the clk subsystem or some drivers
->> >> that I'm not aware of) then I can make an exemption in the check
->> >> for that.
->> >>
->> >
->> > I don't see anywhere in clk_set_duty_cycle() where it would bail out
->> > early if the duty cycle was set to what it already is. The default for
->> > these clks is 50%, so I worry that some driver may try to set the duty
->> > cycle to 50% and then fail now. Either we need to check the duty cycle
->> > in the core before calling down into the driver or we need to check it
->> > here in the driver. Can you send a patch to check the current duty cycle
->> > in the core before calling down into the clk ops?
->>
->> Hi, sorry for a rather delayed response,
->> I spent a bit of time looking at how to make the clk core be
->> careful with ineffective duty-cycle calls and I can't find a
->> nice way to do this... My idea was something like this:
->>
->> static int clk_core_set_duty_cycle_nolock(struct clk_core *core,
->>                                           struct clk_duty *duty)
->> {       /* ... */
->>
->>         /* Update core->duty values */
->>         clk_core_update_duty_cycle_nolock(core);
->>
->>         if ( /* duty doesn't match core->duty */ ) {
->>                 ret = core->ops->set_duty_cycle(core->hw, duty);
->>         /* ... */
->> }
->>
->> However there seem to be drawbacks to any variant of the
->> comparison that I could come up with:
->>
->> Naive one would be to do
->>     if (duty->num != core->duty->num || duty->den != core->duty->den)
->> but it won't correctly compare e.g. 1/2 and 10/20.
->>
->> Other idea was to do
->>     if (duty->den / duty->num != core->duty->den / core->duty->num)
->> but it will likely fail with very close values (e.g. 100/500 and 101/500)
->>
->> I briefly thought of some more sophisticated math but I don't
->> like the idea of complicating this too far.
->>
->> I briefly grepped the kernel sources for duty-cycle related methods
->> and I saw only one user of the clk_set_duty_cycle:
->>     sound/soc/meson/axg-tdm-interface.c
->> Notably it sets the cycle to 1/2 in some cases, though it seems to
->> be tied to the drivers/clk/meson/sclk-div.c clock driver by being
->> the blocks of the same SoC.
-> 
-> Indeed, so this patch is untested? I doubt the qcom driver is being used
-> with the one caller of clk_set_duty_cycle() in the kernel.
-> 
-
-While right now, to my knowledge, there is no users of the duty cycle
-control, I'm adding a generic driver that uses it in another series [1]
-with an intention to use it across multiple qcom based devices.
-
-While making it I spent quite a bit of time staring at the oscilloscope
-to figure out that I need changes from patch 4/4 of this series and I'd
-like to make this quirk a bit more obvious to others.
-
-[1] https://lore.kernel.org/linux-pwm/20220212162342.72646-1-nikita@trvn.ru/
-
->>
->> Thinking of it a bit more, I saw another approach to the problem
->> I want to solve: Since I just want to make developers aware of the
->> hardware quirk, maybe I don't need to fail the set but just put a
->> WARN or even WARN_ONCE there? This way the behavior will be unchanged.
->>
-> 
-> I don't like the idea of a WARN or a WARN_ONCE as most likely nobody is
-> going to read it or do anything about it. Returning an error should be
-> fine then. If the duty cycle call fails for 50% then that's something we
-> have to live with.
-
-I intend this WARN or error to be hit by a person bringing up something
-new, user should never see it. For example a possible story could be:
-
-- Backlight control is connected to the clock on device X
-- Developer adds (future) pwm-clk adapter and pwm-backlight to the DT
-- Backlight slider in UI doesn't work anyway. (don't think UIs show
-  errors here)
-- Developer troubleshoots the thing and either finds WARN in dmesg
-  or that the sysfs write errors out.
-
-In my experience, people bringing devices up pay a very close attention
-to dmesg so I think giving a WARN is fine, but I'm fine with whichever
-approach you prefer.
-
-Nikita
+On 2/19/2022 8:06 AM, Stephen Boyd wrote:
+Thanks for Your time Stephen!!!
+> Quoting Srinivasa Rao Mandadapu (2022-02-14 07:19:50)
+>> Update NO_SLEW macro to LPI_NO_SLEW macro as this driver lpi specific.
+> Is this to avoid NO_SLEW somewhere else?
+The above comment addressed resent v7 patches.
+>
+>> Signed-off-by: Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
+>> Co-developed-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
+>> Signed-off-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
+>> ---
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
