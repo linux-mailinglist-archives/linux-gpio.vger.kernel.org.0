@@ -2,77 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0ED554BC9F4
-	for <lists+linux-gpio@lfdr.de>; Sat, 19 Feb 2022 19:37:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AFDB74BCFC8
+	for <lists+linux-gpio@lfdr.de>; Sun, 20 Feb 2022 17:24:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242869AbiBSSh0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 19 Feb 2022 13:37:26 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:49012 "EHLO
+        id S240910AbiBTQYf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 20 Feb 2022 11:24:35 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:54090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237333AbiBSShZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 19 Feb 2022 13:37:25 -0500
-Received: from alexa-out.qualcomm.com (alexa-out.qualcomm.com [129.46.98.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABF7341305;
-        Sat, 19 Feb 2022 10:37:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1645295825; x=1676831825;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=GhY3fDCHu53ziSnkTw5eFSyoPC2rhAzNSF2CnP6JEi4=;
-  b=I8v92+VeW5ypO7DaWL+jYPZ42M3jUP+4u3IQ1nUvPyZhjeVlWf76JONd
-   LJZ7hx+pBFVQQgdGkNZ6iSameez0OPYe+s7ymmAgsPJjqRAPXkWE1sS0A
-   fxSHW2Z2XrV1QkEdLpzBQh8qfRq1ClOzHyk6g69nX8EATbXl4UTny3dqd
-   w=;
-Received: from ironmsg-lv-alpha.qualcomm.com ([10.47.202.13])
-  by alexa-out.qualcomm.com with ESMTP; 19 Feb 2022 10:37:05 -0800
-X-QCInternal: smtphost
-Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
-  by ironmsg-lv-alpha.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Feb 2022 10:37:04 -0800
-Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
- nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.15; Sat, 19 Feb 2022 10:36:51 -0800
-Received: from [10.216.20.52] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.15; Sat, 19 Feb
- 2022 10:36:44 -0800
-Message-ID: <a3bb48ec-1174-ba2f-eca5-0fed78c55799@quicinc.com>
-Date:   Sun, 20 Feb 2022 00:06:41 +0530
+        with ESMTP id S239743AbiBTQYe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 20 Feb 2022 11:24:34 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5FD023466D
+        for <linux-gpio@vger.kernel.org>; Sun, 20 Feb 2022 08:24:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1645374252;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=d7oGhO9RyJk651w44fYWCTKKiFIXgihgwU/ZZMuQImo=;
+        b=hHzs+cS5l1QKzwRGrqxmzHSjA3zXDC+RKonnu0lZRq6ET1JxCtbA+QF3ruEyTRo6P/S+To
+        Tjbpa0VdLdL+xe+JTN65Nj2cJDgQV9PUs3AfV/d3miKP3go97o//5EIFnWHEGiSbRA4Z3a
+        NzD54S0r505isk77qtu4u5Jq48B2LB8=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-588-Eod6PhkiNhOzSwPnOOeUzg-1; Sun, 20 Feb 2022 11:24:09 -0500
+X-MC-Unique: Eod6PhkiNhOzSwPnOOeUzg-1
+Received: by mail-qv1-f70.google.com with SMTP id w14-20020a0cfc4e000000b0042c1ac91249so14522133qvp.4
+        for <linux-gpio@vger.kernel.org>; Sun, 20 Feb 2022 08:24:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=d7oGhO9RyJk651w44fYWCTKKiFIXgihgwU/ZZMuQImo=;
+        b=VSIhQkEDksNSr2Zu83e1e3/VWZKcC4mPkaoM712keyOzm/ejezSVlwidTQP9r+m0Cp
+         +RyD2hkG83tt4E2DZFtfXdHSkoMrhxsKAaPspYYId2Oc1OpqPrMepCemFDMqNleSBUKh
+         ljQ51FdCEieEngXI1W1y/RSGI5mSSvI3NVRyoLV+nRtSMzyMH8Zf9LbBBIvKmgHDFjSl
+         4LqP5OT1NgFb6GU2rRLyp46H7mFjnPLUt8z5qLhHcLSpYmUOMNjMnAvTqI3oOljMQLPa
+         2+7M8/E3Zxp4nIvaHv6lIJDYR82e50pjs3DUdhOXvJfFEXh2KqYANw0FzAtUZw3DPrHD
+         xDPg==
+X-Gm-Message-State: AOAM530bToWs/qYFJnLRQHs9aOoKncB4Xlt/sAJTObdL3QS9rsMOpiJe
+        bOzXXRnSCBfOLvjBsznxQbnbNjAnnq5cJQW3lXL9T/bsDMXTkbBhgqxm3FzhjWjglnwNwNIivNF
+        NEYgtOdI93s/At/9R1GNbmA==
+X-Received: by 2002:a0c:fc50:0:b0:431:3e78:f804 with SMTP id w16-20020a0cfc50000000b004313e78f804mr5799828qvp.5.1645374248865;
+        Sun, 20 Feb 2022 08:24:08 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyHutj+g27l213biSSVVZndnba7CvMojImSbm/9g8kjNOd1RFaH/9D5dybPfgy6nWfSam0jgA==
+X-Received: by 2002:a0c:fc50:0:b0:431:3e78:f804 with SMTP id w16-20020a0cfc50000000b004313e78f804mr5799814qvp.5.1645374248631;
+        Sun, 20 Feb 2022 08:24:08 -0800 (PST)
+Received: from localhost.localdomain.com (024-205-208-113.res.spectrum.com. [24.205.208.113])
+        by smtp.gmail.com with ESMTPSA id b14sm3221980qtk.44.2022.02.20.08.24.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 20 Feb 2022 08:24:08 -0800 (PST)
+From:   trix@redhat.com
+To:     agross@kernel.org, bjorn.andersson@linaro.org,
+        linus.walleij@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Tom Rix <trix@redhat.com>
+Subject: [PATCH] pinctrl: qcom: cleanup comments
+Date:   Sun, 20 Feb 2022 08:23:55 -0800
+Message-Id: <20220220162355.3594831-1-trix@redhat.com>
+X-Mailer: git-send-email 2.26.3
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH v6 7/7] pinctrl: qcom: Update clock voting as optional
-Content-Language: en-US
-To:     Stephen Boyd <swboyd@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        <agross@kernel.org>, <alsa-devel@alsa-project.org>,
-        <bgoswami@codeaurora.org>, <bjorn.andersson@linaro.org>,
-        <broonie@kernel.org>, <devicetree@vger.kernel.org>,
-        <judyhsiao@chromium.org>, <lgirdwood@gmail.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <perex@perex.cz>,
-        <quic_plai@quicinc.com>, <robh+dt@kernel.org>,
-        <rohitkr@codeaurora.org>, <tiwai@suse.com>
-CC:     Venkata Prasad Potturu <quic_potturu@quicinc.com>
-References: <1644851994-22732-1-git-send-email-quic_srivasam@quicinc.com>
- <1644851994-22732-8-git-send-email-quic_srivasam@quicinc.com>
- <a209336a-9108-f1ac-ee6d-a838df115c6d@linaro.org>
- <b663f63f-4a5a-3a2a-9be7-fa7258ce93c5@quicinc.com>
- <09b00fe9-1770-1723-3c4c-6c494da87e8d@linaro.org>
- <CAE-0n5009g2WwnTsmUeKs5jgrnrUf21SgEL1s65C3FL+HJefkQ@mail.gmail.com>
-From:   "Srinivasa Rao Mandadapu (Temp)" <quic_srivasam@quicinc.com>
-Organization: Qualcomm
-In-Reply-To: <CAE-0n5009g2WwnTsmUeKs5jgrnrUf21SgEL1s65C3FL+HJefkQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+X-Spam-Status: No, score=-0.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SORTED_RECIPS,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -80,43 +74,45 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+From: Tom Rix <trix@redhat.com>
 
-On 2/19/2022 8:16 AM, Stephen Boyd wrote:
-Thanks for Your time Stephen!!!
-> Quoting Srinivas Kandagatla (2022-02-16 07:38:02)
->>
->> On 16/02/2022 14:41, Srinivasa Rao Mandadapu wrote:
->>> On 2/16/2022 7:50 PM, Srinivas Kandagatla wrote:
->>> Thanks for Your Time Srini!!!
->>>> On 14/02/2022 15:19, Srinivasa Rao Mandadapu wrote:
->>>>> diff --git a/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
->>>>> b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
->>>>> index 5bf30d97..4277e31 100644
->>>>> --- a/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
->>>>> +++ b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
->>>>> @@ -143,6 +143,7 @@ static const struct lpi_pinctrl_variant_data
->>>>> sc7280_lpi_data = {
->>>>>        .ngroups = ARRAY_SIZE(sc7280_groups),
->>>>>        .functions = sc7280_functions,
->>>>>        .nfunctions = ARRAY_SIZE(sc7280_functions),
->>>>> +    .is_clk_optional = 1,
->>>> This is forcefully set assuming that sc7280 is always used in ADSP
->>>> bypass mode. Which is not correct.
->>>>
->>>> Can't you use devm_clk_bulk_get_optional instead?
->>> Yes. Agreed. Initially used devm_clk_bulk_get_optional, but Bjorn
->>> suggested for conditional check instead of optional.
->>>
->>> Again Shall we go for optional clock voting?
->> That means that the condition has to be dynamic based on the platform
->> using DSP or not. Which is impossible to deduce without some help from DT.
->>
->> I would prefer to stay with optional clock unless Bjorn has some strong
->> objection on not using int.
-> I think we need the combination of optional API and bool flag. My
-> understanding is it's optional on sc7280, but not on the previous
-> revision, so we want to be very strict on previous revision and less
-> strict on sc7280. Hence the flag. Maybe we should change it to
-> clk_required and then assume optional going forward. Then the callsite
-> can use one or the other API?
-Okay.Will change accordingly.
+Add leading space to spdx tag
+
+Replacements
+voilates to violates
+sepearte to separate
+
+Signed-off-by: Tom Rix <trix@redhat.com>
+---
+ drivers/pinctrl/qcom/pinctrl-sc8180x.c | 4 ++--
+ drivers/pinctrl/qcom/pinctrl-sm6125.c  | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pinctrl/qcom/pinctrl-sc8180x.c b/drivers/pinctrl/qcom/pinctrl-sc8180x.c
+index 0d9654b4ab60..6bec7f143134 100644
+--- a/drivers/pinctrl/qcom/pinctrl-sc8180x.c
++++ b/drivers/pinctrl/qcom/pinctrl-sc8180x.c
+@@ -1622,8 +1622,8 @@ static const struct msm_pinctrl_soc_data sc8180x_acpi_pinctrl = {
+ };
+ 
+ /*
+- * ACPI DSDT has one single memory resource for TLMM, which voilates the
+- * hardware layout of 3 sepearte tiles.  Let's split the memory resource into
++ * ACPI DSDT has one single memory resource for TLMM, which violates the
++ * hardware layout of 3 separate tiles.  Let's split the memory resource into
+  * 3 named ones, so that msm_pinctrl_probe() can map memory for ACPI in the
+  * same way as for DT probe.
+  */
+diff --git a/drivers/pinctrl/qcom/pinctrl-sm6125.c b/drivers/pinctrl/qcom/pinctrl-sm6125.c
+index 724fa5a34465..170d4ffbb919 100644
+--- a/drivers/pinctrl/qcom/pinctrl-sm6125.c
++++ b/drivers/pinctrl/qcom/pinctrl-sm6125.c
+@@ -1,4 +1,4 @@
+-//SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+ 
+ #include <linux/module.h>
+ #include <linux/of.h>
+-- 
+2.26.3
+
