@@ -2,117 +2,219 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AFDB74BCFC8
-	for <lists+linux-gpio@lfdr.de>; Sun, 20 Feb 2022 17:24:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 417CA4BD1DF
+	for <lists+linux-gpio@lfdr.de>; Sun, 20 Feb 2022 22:27:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240910AbiBTQYf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 20 Feb 2022 11:24:35 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:54090 "EHLO
+        id S245091AbiBTVW1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 20 Feb 2022 16:22:27 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:57988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239743AbiBTQYe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 20 Feb 2022 11:24:34 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5FD023466D
-        for <linux-gpio@vger.kernel.org>; Sun, 20 Feb 2022 08:24:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1645374252;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=d7oGhO9RyJk651w44fYWCTKKiFIXgihgwU/ZZMuQImo=;
-        b=hHzs+cS5l1QKzwRGrqxmzHSjA3zXDC+RKonnu0lZRq6ET1JxCtbA+QF3ruEyTRo6P/S+To
-        Tjbpa0VdLdL+xe+JTN65Nj2cJDgQV9PUs3AfV/d3miKP3go97o//5EIFnWHEGiSbRA4Z3a
-        NzD54S0r505isk77qtu4u5Jq48B2LB8=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-588-Eod6PhkiNhOzSwPnOOeUzg-1; Sun, 20 Feb 2022 11:24:09 -0500
-X-MC-Unique: Eod6PhkiNhOzSwPnOOeUzg-1
-Received: by mail-qv1-f70.google.com with SMTP id w14-20020a0cfc4e000000b0042c1ac91249so14522133qvp.4
-        for <linux-gpio@vger.kernel.org>; Sun, 20 Feb 2022 08:24:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=d7oGhO9RyJk651w44fYWCTKKiFIXgihgwU/ZZMuQImo=;
-        b=VSIhQkEDksNSr2Zu83e1e3/VWZKcC4mPkaoM712keyOzm/ejezSVlwidTQP9r+m0Cp
-         +RyD2hkG83tt4E2DZFtfXdHSkoMrhxsKAaPspYYId2Oc1OpqPrMepCemFDMqNleSBUKh
-         ljQ51FdCEieEngXI1W1y/RSGI5mSSvI3NVRyoLV+nRtSMzyMH8Zf9LbBBIvKmgHDFjSl
-         4LqP5OT1NgFb6GU2rRLyp46H7mFjnPLUt8z5qLhHcLSpYmUOMNjMnAvTqI3oOljMQLPa
-         2+7M8/E3Zxp4nIvaHv6lIJDYR82e50pjs3DUdhOXvJfFEXh2KqYANw0FzAtUZw3DPrHD
-         xDPg==
-X-Gm-Message-State: AOAM530bToWs/qYFJnLRQHs9aOoKncB4Xlt/sAJTObdL3QS9rsMOpiJe
-        bOzXXRnSCBfOLvjBsznxQbnbNjAnnq5cJQW3lXL9T/bsDMXTkbBhgqxm3FzhjWjglnwNwNIivNF
-        NEYgtOdI93s/At/9R1GNbmA==
-X-Received: by 2002:a0c:fc50:0:b0:431:3e78:f804 with SMTP id w16-20020a0cfc50000000b004313e78f804mr5799828qvp.5.1645374248865;
-        Sun, 20 Feb 2022 08:24:08 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyHutj+g27l213biSSVVZndnba7CvMojImSbm/9g8kjNOd1RFaH/9D5dybPfgy6nWfSam0jgA==
-X-Received: by 2002:a0c:fc50:0:b0:431:3e78:f804 with SMTP id w16-20020a0cfc50000000b004313e78f804mr5799814qvp.5.1645374248631;
-        Sun, 20 Feb 2022 08:24:08 -0800 (PST)
-Received: from localhost.localdomain.com (024-205-208-113.res.spectrum.com. [24.205.208.113])
-        by smtp.gmail.com with ESMTPSA id b14sm3221980qtk.44.2022.02.20.08.24.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 20 Feb 2022 08:24:08 -0800 (PST)
-From:   trix@redhat.com
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        linus.walleij@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Tom Rix <trix@redhat.com>
-Subject: [PATCH] pinctrl: qcom: cleanup comments
-Date:   Sun, 20 Feb 2022 08:23:55 -0800
-Message-Id: <20220220162355.3594831-1-trix@redhat.com>
-X-Mailer: git-send-email 2.26.3
+        with ESMTP id S245089AbiBTVWS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 20 Feb 2022 16:22:18 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 524691EEEF
+        for <linux-gpio@vger.kernel.org>; Sun, 20 Feb 2022 13:21:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1645392116; x=1676928116;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=eNAyWkmbkMKZx2ZPpw6/wky7j7kCgNTe0DpfGa0zAvA=;
+  b=Wp8gTSs7dOEviJp8K+POcD1fGLR4FiihdO2XyoYP7A2X/7ZKt0m/BL0v
+   b6ANcrzWLNQK5/mTRMebngw5B/elsTo2IKqfb1XIRbsWSO8UUuvrV/GZg
+   37AUHaDX6I6zzNOkYHIwKU+rPURb4KTJJ8TJyOsILbLH0IPi167HknibU
+   EIjtN/4GqoAgBoBoHw42h/5ymab6Pd8/voLh9l76rwggN7FTTtTm0G7C0
+   k39p7MzwlgsSLzHkFOj0Mb1ONXcK0/D8W76JPO6Uu38mDZD/gUtV+UX9o
+   SEFTMyB7lxiVJ6FnKtRddcUKWT1EDU7lus61qpIf+W1LJG9fPapMu54/r
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10264"; a="250222382"
+X-IronPort-AV: E=Sophos;i="5.88,384,1635231600"; 
+   d="scan'208";a="250222382"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2022 13:21:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,384,1635231600"; 
+   d="scan'208";a="547088192"
+Received: from lkp-server01.sh.intel.com (HELO da3212ac2f54) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 20 Feb 2022 13:21:53 -0800
+Received: from kbuild by da3212ac2f54 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1nLteS-0000ns-Dk; Sun, 20 Feb 2022 21:21:52 +0000
+Date:   Mon, 21 Feb 2022 05:21:27 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:fixes] BUILD SUCCESS
+ 486c2d15aa812d669bb27f8241aa5d5dafbac5b9
+Message-ID: <6212b0d7.+gR5hurPCaPYqtma%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-0.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SORTED_RECIPS,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git fixes
+branch HEAD: 486c2d15aa812d669bb27f8241aa5d5dafbac5b9  Merge tag 'intel-pinctrl-v5.17-5' of gitolite.kernel.org:pub/scm/linux/kernel/git/pinctrl/intel into fixes
 
-Add leading space to spdx tag
+elapsed time: 735m
 
-Replacements
-voilates to violates
-sepearte to separate
+configs tested: 136
+configs skipped: 3
 
-Signed-off-by: Tom Rix <trix@redhat.com>
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arm                                 defconfig
+arm                              allmodconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+mips                 randconfig-c004-20220220
+i386                          randconfig-c001
+sh                          landisk_defconfig
+powerpc                     redwood_defconfig
+arm                          badge4_defconfig
+arm                         lpc18xx_defconfig
+powerpc                     pq2fads_defconfig
+mips                             allyesconfig
+ia64                         bigsur_defconfig
+mips                      maltasmvp_defconfig
+xtensa                         virt_defconfig
+xtensa                    xip_kc705_defconfig
+mips                         db1xxx_defconfig
+arm                             rpc_defconfig
+powerpc                       eiger_defconfig
+xtensa                    smp_lx200_defconfig
+xtensa                          iss_defconfig
+powerpc                      ppc40x_defconfig
+sh                        edosk7760_defconfig
+powerpc                       ppc64_defconfig
+arm                       multi_v4t_defconfig
+powerpc                    klondike_defconfig
+m68k                        m5272c3_defconfig
+xtensa                              defconfig
+alpha                               defconfig
+powerpc                      pcm030_defconfig
+mips                       bmips_be_defconfig
+h8300                            alldefconfig
+powerpc                    sam440ep_defconfig
+powerpc                   motionpro_defconfig
+sh                             espt_defconfig
+powerpc                     tqm8555_defconfig
+sh                           se7343_defconfig
+sh                   rts7751r2dplus_defconfig
+arc                          axs101_defconfig
+powerpc64                        alldefconfig
+nios2                         10m50_defconfig
+arm                         lubbock_defconfig
+sh                         ecovec24_defconfig
+mips                           xway_defconfig
+mips                      loongson3_defconfig
+arm64                            alldefconfig
+powerpc                     rainier_defconfig
+sh                        dreamcast_defconfig
+sh                  sh7785lcr_32bit_defconfig
+mips                        vocore2_defconfig
+arm                            zeus_defconfig
+sh                          r7785rp_defconfig
+um                               alldefconfig
+um                           x86_64_defconfig
+sh                           se7751_defconfig
+sh                        sh7763rdp_defconfig
+powerpc                      bamboo_defconfig
+nds32                               defconfig
+powerpc                      ppc6xx_defconfig
+x86_64                        randconfig-c001
+arm                  randconfig-c002-20220220
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+csky                                defconfig
+alpha                            allyesconfig
+nios2                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+parisc64                            defconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+x86_64                        randconfig-a006
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                                  kexec
+
+clang tested configs:
+powerpc              randconfig-c003-20220220
+x86_64                        randconfig-c007
+arm                  randconfig-c002-20220220
+mips                 randconfig-c004-20220220
+i386                          randconfig-c001
+riscv                randconfig-c006-20220220
+powerpc                    mvme5100_defconfig
+powerpc                        fsp2_defconfig
+powerpc                 mpc836x_mds_defconfig
+powerpc                     kmeter1_defconfig
+powerpc                     mpc5200_defconfig
+powerpc                     kilauea_defconfig
+mips                        workpad_defconfig
+powerpc                   bluestone_defconfig
+x86_64                        randconfig-a005
+x86_64                        randconfig-a003
+x86_64                        randconfig-a001
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a011
+i386                          randconfig-a013
+i386                          randconfig-a015
+hexagon              randconfig-r045-20220220
+hexagon              randconfig-r041-20220220
+
 ---
- drivers/pinctrl/qcom/pinctrl-sc8180x.c | 4 ++--
- drivers/pinctrl/qcom/pinctrl-sm6125.c  | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pinctrl/qcom/pinctrl-sc8180x.c b/drivers/pinctrl/qcom/pinctrl-sc8180x.c
-index 0d9654b4ab60..6bec7f143134 100644
---- a/drivers/pinctrl/qcom/pinctrl-sc8180x.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sc8180x.c
-@@ -1622,8 +1622,8 @@ static const struct msm_pinctrl_soc_data sc8180x_acpi_pinctrl = {
- };
- 
- /*
-- * ACPI DSDT has one single memory resource for TLMM, which voilates the
-- * hardware layout of 3 sepearte tiles.  Let's split the memory resource into
-+ * ACPI DSDT has one single memory resource for TLMM, which violates the
-+ * hardware layout of 3 separate tiles.  Let's split the memory resource into
-  * 3 named ones, so that msm_pinctrl_probe() can map memory for ACPI in the
-  * same way as for DT probe.
-  */
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm6125.c b/drivers/pinctrl/qcom/pinctrl-sm6125.c
-index 724fa5a34465..170d4ffbb919 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm6125.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm6125.c
-@@ -1,4 +1,4 @@
--//SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
- 
- #include <linux/module.h>
- #include <linux/of.h>
--- 
-2.26.3
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
