@@ -2,58 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 417CA4BD1DF
+	by mail.lfdr.de (Postfix) with ESMTP id DE28C4BD1E1
 	for <lists+linux-gpio@lfdr.de>; Sun, 20 Feb 2022 22:27:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245091AbiBTVW1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 20 Feb 2022 16:22:27 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:57988 "EHLO
+        id S245108AbiBTVXS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 20 Feb 2022 16:23:18 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:34026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245089AbiBTVWS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 20 Feb 2022 16:22:18 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 524691EEEF
-        for <linux-gpio@vger.kernel.org>; Sun, 20 Feb 2022 13:21:56 -0800 (PST)
+        with ESMTP id S244225AbiBTVXR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 20 Feb 2022 16:23:17 -0500
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 187EE37A22
+        for <linux-gpio@vger.kernel.org>; Sun, 20 Feb 2022 13:22:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1645392116; x=1676928116;
+  t=1645392175; x=1676928175;
   h=date:from:to:cc:subject:message-id:mime-version:
    content-transfer-encoding;
-  bh=eNAyWkmbkMKZx2ZPpw6/wky7j7kCgNTe0DpfGa0zAvA=;
-  b=Wp8gTSs7dOEviJp8K+POcD1fGLR4FiihdO2XyoYP7A2X/7ZKt0m/BL0v
-   b6ANcrzWLNQK5/mTRMebngw5B/elsTo2IKqfb1XIRbsWSO8UUuvrV/GZg
-   37AUHaDX6I6zzNOkYHIwKU+rPURb4KTJJ8TJyOsILbLH0IPi167HknibU
-   EIjtN/4GqoAgBoBoHw42h/5ymab6Pd8/voLh9l76rwggN7FTTtTm0G7C0
-   k39p7MzwlgsSLzHkFOj0Mb1ONXcK0/D8W76JPO6Uu38mDZD/gUtV+UX9o
-   SEFTMyB7lxiVJ6FnKtRddcUKWT1EDU7lus61qpIf+W1LJG9fPapMu54/r
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10264"; a="250222382"
+  bh=BYLM6gxmIzWE32Or2Y/AxSO8W6B3UQdms6QETEHSPRo=;
+  b=OgwCZgiuOBOqRimUt/KB9ramcHofHRdswSK1fJ/VLWBPCzmg3/JcoObJ
+   qYjbQ6JpHjFT2sNdh4fXdjr1a0GoyRDV8xTvR8uI5kqh0CELnljf+9w+r
+   P+gAW6aCRxlKmfKSZuiCF3h25ClMHdp54HfzsGO3EHhb/ChpOiBNXEea2
+   6xyG/As+mnrpnyCEqumSijppI1KIFQjEVQ6nkMAZb6YUpazPstWleIdDM
+   nvOwRsan1NvvARsoL8GfWiTIgHKO05rhSZqbHOL7avrr5n2sE/ARWW6mX
+   1hJNxXp4/P2aUZ1/Brmrm05QrXRou3cByTa3Vwq3K7wN8l/wygk4nA8Cc
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10264"; a="231373539"
 X-IronPort-AV: E=Sophos;i="5.88,384,1635231600"; 
-   d="scan'208";a="250222382"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2022 13:21:54 -0800
+   d="scan'208";a="231373539"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2022 13:22:54 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,384,1635231600"; 
-   d="scan'208";a="547088192"
+   d="scan'208";a="490246195"
 Received: from lkp-server01.sh.intel.com (HELO da3212ac2f54) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 20 Feb 2022 13:21:53 -0800
+  by orsmga003.jf.intel.com with ESMTP; 20 Feb 2022 13:22:53 -0800
 Received: from kbuild by da3212ac2f54 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1nLteS-0000ns-Dk; Sun, 20 Feb 2022 21:21:52 +0000
-Date:   Mon, 21 Feb 2022 05:21:27 +0800
+        id 1nLtfQ-0000pB-L6; Sun, 20 Feb 2022 21:22:52 +0000
+Date:   Mon, 21 Feb 2022 05:22:03 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:fixes] BUILD SUCCESS
- 486c2d15aa812d669bb27f8241aa5d5dafbac5b9
-Message-ID: <6212b0d7.+gR5hurPCaPYqtma%lkp@intel.com>
+Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
+ c6f1b980aec10a6d413672d72e355afc9665c788
+Message-ID: <6212b0fb.8UAcT2bFJhRyOy9N%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,12 +61,12 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git fixes
-branch HEAD: 486c2d15aa812d669bb27f8241aa5d5dafbac5b9  Merge tag 'intel-pinctrl-v5.17-5' of gitolite.kernel.org:pub/scm/linux/kernel/git/pinctrl/intel into fixes
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: c6f1b980aec10a6d413672d72e355afc9665c788  Merge branch 'devel' into for-next
 
 elapsed time: 735m
 
-configs tested: 136
+configs tested: 142
 configs skipped: 3
 
 The following configs have been built successfully.
@@ -144,9 +144,9 @@ m68k                             allyesconfig
 nios2                               defconfig
 arc                              allyesconfig
 nds32                             allnoconfig
+nios2                            allyesconfig
 csky                                defconfig
 alpha                            allyesconfig
-nios2                            allyesconfig
 xtensa                           allyesconfig
 h8300                            allyesconfig
 arc                                 defconfig
@@ -170,6 +170,12 @@ powerpc                           allnoconfig
 x86_64                        randconfig-a004
 x86_64                        randconfig-a002
 x86_64                        randconfig-a006
+i386                          randconfig-a003
+i386                          randconfig-a005
+i386                          randconfig-a001
+arc                  randconfig-r043-20220220
+s390                 randconfig-r044-20220220
+riscv                randconfig-r042-20220220
 riscv                    nommu_k210_defconfig
 riscv                            allyesconfig
 riscv                    nommu_virt_defconfig
