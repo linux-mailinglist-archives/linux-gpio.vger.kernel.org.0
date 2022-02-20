@@ -2,71 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DE28C4BD1E1
+	by mail.lfdr.de (Postfix) with ESMTP id 8FD7F4BD1E0
 	for <lists+linux-gpio@lfdr.de>; Sun, 20 Feb 2022 22:27:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245108AbiBTVXS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S244550AbiBTVXS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Sun, 20 Feb 2022 16:23:18 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:34026 "EHLO
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:34086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244225AbiBTVXR (ORCPT
+        with ESMTP id S245090AbiBTVXR (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Sun, 20 Feb 2022 16:23:17 -0500
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 187EE37A22
-        for <linux-gpio@vger.kernel.org>; Sun, 20 Feb 2022 13:22:55 -0800 (PST)
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6303B377F9
+        for <linux-gpio@vger.kernel.org>; Sun, 20 Feb 2022 13:22:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1645392175; x=1676928175;
+  t=1645392176; x=1676928176;
   h=date:from:to:cc:subject:message-id:mime-version:
    content-transfer-encoding;
-  bh=BYLM6gxmIzWE32Or2Y/AxSO8W6B3UQdms6QETEHSPRo=;
-  b=OgwCZgiuOBOqRimUt/KB9ramcHofHRdswSK1fJ/VLWBPCzmg3/JcoObJ
-   qYjbQ6JpHjFT2sNdh4fXdjr1a0GoyRDV8xTvR8uI5kqh0CELnljf+9w+r
-   P+gAW6aCRxlKmfKSZuiCF3h25ClMHdp54HfzsGO3EHhb/ChpOiBNXEea2
-   6xyG/As+mnrpnyCEqumSijppI1KIFQjEVQ6nkMAZb6YUpazPstWleIdDM
-   nvOwRsan1NvvARsoL8GfWiTIgHKO05rhSZqbHOL7avrr5n2sE/ARWW6mX
-   1hJNxXp4/P2aUZ1/Brmrm05QrXRou3cByTa3Vwq3K7wN8l/wygk4nA8Cc
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10264"; a="231373539"
+  bh=/Dd3uYJpuIDzNEiCVtmIwD5bREnjOU/zMcB5VI3hBBE=;
+  b=Rnas5x8IE6tbkncrh1Q+RbOYtgY27YhmGx28RPjwrCk/ceR1ZSpmpWjb
+   blsoETdsyWo6z4G9g8bL+MTpcinkr99ABB986GIBklftXVNuEgb3Ya4B2
+   Eh4DNFx6R74wfxY/qtpBh5e9x+2A4cdswb9uoqjOygwH2Dmub14Gnevlo
+   BSJngLhDioWfJpjQxeTq/5BbxFJHk9ZmgD7fTkZ3TC8cDRGRzXuEeBm5t
+   fSlw0bdMwCc8X8t+KD4nRLOs8Sg+eW43FqXqeq/J8VTADzuYhq9l9bx36
+   sfywqnFCKk2NTtuEN5rQbUyQDHPsuh/gcbs1/I+vHOII4jOe9VxEKXIgZ
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10264"; a="238816073"
 X-IronPort-AV: E=Sophos;i="5.88,384,1635231600"; 
-   d="scan'208";a="231373539"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2022 13:22:54 -0800
+   d="scan'208";a="238816073"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2022 13:22:55 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,384,1635231600"; 
-   d="scan'208";a="490246195"
+   d="scan'208";a="606199406"
 Received: from lkp-server01.sh.intel.com (HELO da3212ac2f54) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 20 Feb 2022 13:22:53 -0800
+  by fmsmga004.fm.intel.com with ESMTP; 20 Feb 2022 13:22:53 -0800
 Received: from kbuild by da3212ac2f54 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1nLtfQ-0000pB-L6; Sun, 20 Feb 2022 21:22:52 +0000
-Date:   Mon, 21 Feb 2022 05:22:03 +0800
+        id 1nLtfQ-0000pw-Ty; Sun, 20 Feb 2022 21:22:52 +0000
+Date:   Mon, 21 Feb 2022 05:22:17 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
- c6f1b980aec10a6d413672d72e355afc9665c788
-Message-ID: <6212b0fb.8UAcT2bFJhRyOy9N%lkp@intel.com>
+Subject: [linusw-pinctrl:devel] BUILD SUCCESS
+ 4649b97042c3504e4ae442d1ef56dfe6d711a04d
+Message-ID: <6212b109.tIXPiSuEptIXSwJG%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
-        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: c6f1b980aec10a6d413672d72e355afc9665c788  Merge branch 'devel' into for-next
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: 4649b97042c3504e4ae442d1ef56dfe6d711a04d  pinctrl: sunxi: Use unique lockdep classes for IRQs
 
-elapsed time: 735m
+elapsed time: 736m
 
-configs tested: 142
+configs tested: 145
 configs skipped: 3
 
 The following configs have been built successfully.
@@ -80,6 +81,11 @@ arm64                               defconfig
 arm                              allyesconfig
 mips                 randconfig-c004-20220220
 i386                          randconfig-c001
+powerpc                          allmodconfig
+m68k                             allyesconfig
+powerpc                          allyesconfig
+m68k                             allmodconfig
+s390                             allmodconfig
 sh                          landisk_defconfig
 powerpc                     redwood_defconfig
 arm                          badge4_defconfig
@@ -138,9 +144,7 @@ arm                  randconfig-c002-20220220
 ia64                             allmodconfig
 ia64                                defconfig
 ia64                             allyesconfig
-m68k                             allmodconfig
 m68k                                defconfig
-m68k                             allyesconfig
 nios2                               defconfig
 arc                              allyesconfig
 nds32                             allnoconfig
@@ -153,26 +157,26 @@ arc                                 defconfig
 sh                               allmodconfig
 parisc                              defconfig
 s390                             allyesconfig
-s390                             allmodconfig
 parisc64                            defconfig
 parisc                           allyesconfig
 s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
 i386                                defconfig
 i386                   debian-10.3-kselftests
 i386                              debian-10.3
+i386                             allyesconfig
+sparc                               defconfig
+sparc                            allyesconfig
 mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
 powerpc                           allnoconfig
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
 x86_64                        randconfig-a006
+x86_64                        randconfig-a002
+x86_64                        randconfig-a004
 i386                          randconfig-a003
 i386                          randconfig-a005
 i386                          randconfig-a001
+x86_64                        randconfig-a011
+x86_64                        randconfig-a015
+x86_64                        randconfig-a013
 arc                  randconfig-r043-20220220
 s390                 randconfig-r044-20220220
 riscv                randconfig-r042-20220220
@@ -206,9 +210,9 @@ powerpc                     mpc5200_defconfig
 powerpc                     kilauea_defconfig
 mips                        workpad_defconfig
 powerpc                   bluestone_defconfig
-x86_64                        randconfig-a005
-x86_64                        randconfig-a003
 x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+x86_64                        randconfig-a005
 i386                          randconfig-a002
 i386                          randconfig-a006
 i386                          randconfig-a004
