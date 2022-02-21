@@ -2,64 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C6924BDE22
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Feb 2022 18:46:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6221B4BDE9D
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Feb 2022 18:47:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358995AbiBUNWe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Feb 2022 08:22:34 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:57644 "EHLO
+        id S1359265AbiBUNnV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Feb 2022 08:43:21 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:56108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358972AbiBUNWc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Feb 2022 08:22:32 -0500
-Received: from mail-vk1-xa33.google.com (mail-vk1-xa33.google.com [IPv6:2607:f8b0:4864:20::a33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 907772180F
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Feb 2022 05:22:07 -0800 (PST)
-Received: by mail-vk1-xa33.google.com with SMTP id j17so8256931vkd.12
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Feb 2022 05:22:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=94r73LrRNpO7YYFshzYM25uztFOXVTrm/QHuYFLiQ7w=;
-        b=mADrFrQ+ZaM0TTq14DVXo+gL51+p2NcBjrN5ntCAKNfmsIAoFYM5Vg05TATz1Ho3Mp
-         QntpqOZN3naiWGycPE6mYfwtwAPtneL7Rw/9nMeZB7wOOnN7+w2ZC1J+VfjucP6dvjgH
-         lTknf1/DqWRCd1lnEY8XJSo0sGGNKAN/Q2AhiiVd+kM3VozUxI+7uzBPycoXp1Vaqj8M
-         p4xbfkLFbWc6MBQeg7cIzVnUHjQm0cWUH2jqTe7+s4ph8qXwOHR43B1LSf5Ms39DYX6u
-         tw+yyEkJLsVPXxfaTvunyjyvU9BKx7n8SvP6JAiSZnaM93bNVM1/BrqWWs2xeZURVai0
-         iuLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=94r73LrRNpO7YYFshzYM25uztFOXVTrm/QHuYFLiQ7w=;
-        b=bi94csiFnk378NcGjU9hECU+LqIGXCnb3JGXlX1qEHu5cng6bCnmXZ4NCRiUvosb1a
-         lQ+cXUGN5MGi1UeqGhSh0Ona5ofxNM6AD6dtA6bHU89yt/ZN6e4m51Gt/wv9ZNGTW8YX
-         hIWLpRAlOKUfr2tr7JZ2QHTKotdqWyO31IvBGzDpOIyMGgi15k2zAMCmk+/Vksbgl0KL
-         2OnUGkgsVrAT8igvv4lbIN7MkDHjfZvkmEgaE42kbTNx+ERo4eeIp+q2Udp7HH3LTJ1t
-         QXrx7Qcdv4DRebOEURLgRIIOReMNL1dFTCh9XhoISl339EdSbQuEkiDDtp8erw+Z8cl2
-         KNHQ==
-X-Gm-Message-State: AOAM530Q2zJ4m4U1QKKA0q/WZiR4lV1/n5G0//hTX15VmZWMHQT7RfDk
-        /VPIhKSFzwcF7/AyZEqzha3pffR+go8kzPdayTI=
-X-Google-Smtp-Source: ABdhPJzY3uRVFinJaUL83lROLKmjYUZ+TZRkDI5fVeFEVDRnDD4++VfHZ1wYicaoN9REPkmsXvaggGijHkcU6zzfCJU=
-X-Received: by 2002:a05:6122:c9f:b0:330:e2ed:4786 with SMTP id
- ba31-20020a0561220c9f00b00330e2ed4786mr7735605vkb.29.1645449726641; Mon, 21
- Feb 2022 05:22:06 -0800 (PST)
+        with ESMTP id S1359406AbiBUNlQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Feb 2022 08:41:16 -0500
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB004220EE;
+        Mon, 21 Feb 2022 05:40:52 -0800 (PST)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: kholk11)
+        with ESMTPSA id A916B1F42EA1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1645450851;
+        bh=+dtEQGc+iAoSujb9RCXxGPyqsje87DXa4PQPFCuMHGw=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=HXQCaEvDnJ7NxZe5NCiOQDyf1NUsnPaRQugb3WnTrumacN8l7UzYd0Z7qgwuQCi/U
+         K39o8DEzFthVRDWbkZmBuUy7jwje8Sf20UjgI36pERPdJrJ7a2uJ+gpB3x6/VaLHJ0
+         HcnVCiu13CbeyZvR+Fc4UcHMmK+NKqITtiyMlYhNNkLvDiMZaw1pOjhrinAIiHdYzJ
+         gheHCJMAgj9NpiWTP/YtNzz2JZrgmL61GSvSPUJfar52RExnaEjHokOaXpj3qzwy1o
+         yBwDses2tMKGUrO5CdNEdA6WdiYQAKHH/RJDbxL8hBITdzdqAUzljuhRxJNvfB1Gtk
+         OLao6gKl341Ug==
+Message-ID: <211bd3ca-f786-b161-6f3d-dc6b8471ffc7@collabora.com>
+Date:   Mon, 21 Feb 2022 14:40:48 +0100
 MIME-Version: 1.0
-Received: by 2002:a59:d8cd:0:b0:28c:6bb4:8918 with HTTP; Mon, 21 Feb 2022
- 05:22:06 -0800 (PST)
-From:   Anders Pedersen <ousmanebarkissou@gmail.com>
-Date:   Mon, 21 Feb 2022 13:22:06 +0000
-Message-ID: <CAE0fZ3d1A2trQ_6K_TKOtuh1imki0Bk2BNv+2OWiPjRVVrO41A@mail.gmail.com>
-Subject: Hi
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.1
+Subject: Re: [PATCH 5/5] pinctrl: mediatek: common-v1: Commonize
+ spec_ies_smt_set callback
+Content-Language: en-US
+To:     Chen-Yu Tsai <wenst@chromium.org>
+Cc:     sean.wang@kernel.org, linus.walleij@linaro.org,
+        matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kernel@collabora.com
+References: <20220210141931.291712-1-angelogioacchino.delregno@collabora.com>
+ <20220210141931.291712-6-angelogioacchino.delregno@collabora.com>
+ <CAGXv+5H0OkMk=1MZH3jCFSZbauJmEcgFADfDXDPf2r1wrp8wCw@mail.gmail.com>
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <CAGXv+5H0OkMk=1MZH3jCFSZbauJmEcgFADfDXDPf2r1wrp8wCw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Greeting, I'm Anders Pedersen, from Norway. I want to know if this
-email is valid? Thanks.
+Il 21/02/22 10:58, Chen-Yu Tsai ha scritto:
+> On Thu, Feb 10, 2022 at 10:21 PM AngeloGioacchino Del Regno
+> <angelogioacchino.delregno@collabora.com> wrote:
+>>
+>> All of the MediaTek pinctrl drivers registering with pinctrl-mtk-common
+>> that are offering a .spec_ies_smt_set() callback are declaring their
+>> own function which is doing exactly the same on all drivers: calling
+>> mtk_pconf_spec_set_ies_smt_range() with their struct and a simple check.
+>>
+>> Commonize this callback by adding the ies and smt structure pointers
+>> to struct mtk_pinctrl_devdata and changing the callback signature to
+>> take it.
+>>
+>> Removing the callback and checking for the existence of the spec_smt
+>> and/or spec_ies data would allow us to staticize the function
+>> mtk_pconf_spec_set_ies_smt_range(), but this solution was avoided as
+>> to keep flexibility, as some SoCs may need to perform a very different
+>> operation compared to what this commonized function is doing.
+>>
+>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> 
+> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+
+Hi Chen-Yu,
+
+did you mean Reviewed-by? :-)
