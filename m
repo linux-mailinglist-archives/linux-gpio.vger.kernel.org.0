@@ -2,53 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 31EC04BD4BC
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Feb 2022 05:29:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC4EE4BD4C9
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Feb 2022 05:36:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343763AbiBUEYh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 20 Feb 2022 23:24:37 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:41960 "EHLO
+        id S1343529AbiBUEd6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 20 Feb 2022 23:33:58 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:35424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229379AbiBUEYh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 20 Feb 2022 23:24:37 -0500
-Received: from mail-yw1-x112b.google.com (mail-yw1-x112b.google.com [IPv6:2607:f8b0:4864:20::112b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9959B37BD1
-        for <linux-gpio@vger.kernel.org>; Sun, 20 Feb 2022 20:24:11 -0800 (PST)
-Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-2d6d0cb5da4so69865567b3.10
-        for <linux-gpio@vger.kernel.org>; Sun, 20 Feb 2022 20:24:11 -0800 (PST)
+        with ESMTP id S245695AbiBUEd4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 20 Feb 2022 23:33:56 -0500
+Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAE8231DD2
+        for <linux-gpio@vger.kernel.org>; Sun, 20 Feb 2022 20:33:33 -0800 (PST)
+Received: by mail-yb1-xb2a.google.com with SMTP id y6so31767575ybc.5
+        for <linux-gpio@vger.kernel.org>; Sun, 20 Feb 2022 20:33:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=6/DnNowH3r+bx2ltFVLOEYXPzes7apZHo8qc6tZmack=;
-        b=fuogfxbwZ/6ejxZgnJLHJjEabeg/rv6U1j6/+NVdkHF2h6fOz/7kaiooTto0bFrWvQ
-         C49ySfCJP0IPkPbSYdUy/0BOxppwbhbASyu3EX9qZHmuqU2vm4oLabP2+768NhJcGRb0
-         MIfk8uu7JooxnViFnBvk4Drqt9uhUnO/mZ04Y=
+        bh=pdVq/Bdju/XC3p7Tx9JRaqrYCFKoB7DXdAQOIXXijT4=;
+        b=naEhAVvrNt77acZbiRcdvLw9DUHG1yd9cyyOYNcTREEtbyqkSwJishzXaT+hboEl0f
+         pRAGC110oUcocsibxGhLWW22/wL6NFl0CN/DOPolL3EvpDgA5OlsH+Ibtjpdgc/92VwQ
+         yutTelFbAq4+BBhwkSH2b9dLMUqZtuzN+NwZo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=6/DnNowH3r+bx2ltFVLOEYXPzes7apZHo8qc6tZmack=;
-        b=pAz/VYRn+mQntIrj9l7Pvgk7R4uHavu7YPWu05dF86agNLK2zS/PrnMR+pzyzwvPst
-         Ir3MGIqw9tLiOAQcIpL8Fk3Fybn7C8G4cT27bwQx2dLwu8raL5d82YzwqlPelyp9DTgs
-         9rjB5QgFnsd+fY/3ghVEhA8BfG+gTpq98BzOivG5NxOHK75/KvwqcuFLU+p+mMFdS1vr
-         WKpvs85DZEpTVQAoet5UukZKTmK0sId6n+mw3IMkXKNjUrG9uHMB4Tc0RHNZlrYLIFFV
-         BDWFV+llaZFmvc9j5zhQ9JdH8WLzYJPOhdrj+fFt83rYmTiFiRD3Sc0IOPRe7ZhPk/3Q
-         HUhQ==
-X-Gm-Message-State: AOAM533GZamtsbWqfgfgGCQz4LwxjGacyONABFNgukT4Tmq5x7Klp3SG
-        lfnfoRiNfNpuXRzY17pxnwQy1ejWhrdrx12d4vIIjQ==
-X-Google-Smtp-Source: ABdhPJytZN/PK4m+XtCToX84qZfVUy9yfbPQVMa2AclViI286QsZGxFQJJ3+GhCYLXLRPIrAMIvQ+wG2ySoMQRrxFwg=
-X-Received: by 2002:a81:b044:0:b0:2d6:bd1f:5d8b with SMTP id
- x4-20020a81b044000000b002d6bd1f5d8bmr12913803ywk.27.1645417450796; Sun, 20
- Feb 2022 20:24:10 -0800 (PST)
+        bh=pdVq/Bdju/XC3p7Tx9JRaqrYCFKoB7DXdAQOIXXijT4=;
+        b=5WahZYLiFL3Mtp3+Axe0wblh6K8a0RGpdCzAfMR2demjIez29spC+Gqtgiv7kt55jA
+         QCJctp1ydF9+oMB5CNVU1Yfw4+E0FCO77YkBSSuvzuF+q0EhpspLaMrUMEcupuXSvplS
+         8re3XTGjyxVkPfHAukTEF9WIPedP/lhjuakC/x8MaXizIQWyphHBY+NGmGBQ4yHqvdvm
+         6uTi/tSA7wUKiawCtjQH5TdofxB3ieRTBCFL9xZBgZ7Fi7epM3ZWJ4bnBxaX/1O6Dxmj
+         8nKEXFonL0Prfor+Ynd2eV9SCGqhVsAq1P++gixaXk6SB7ZDKnTrXZekY1CKzIlvThtM
+         Dquw==
+X-Gm-Message-State: AOAM531CXWewXjDuKpXn0bwne1aRBBp106a3Qjbczc3LhB51pAmZ//BR
+        Jb6x1U/LLlFTFQBGbWWBwVV1rAIY4a/vxfea5NWOWA==
+X-Google-Smtp-Source: ABdhPJwYJZ5wFox2PhJi/05KzYq+SwjE0uRDqCM8m4JmRQqsV2jvXhBNYy4J1vCdqamz5hOFvoAJtCr6mI5+C8RlNaw=
+X-Received: by 2002:a25:a486:0:b0:61d:a523:acd0 with SMTP id
+ g6-20020a25a486000000b0061da523acd0mr16404502ybi.203.1645418013253; Sun, 20
+ Feb 2022 20:33:33 -0800 (PST)
 MIME-Version: 1.0
-References: <20220210141931.291712-1-angelogioacchino.delregno@collabora.com> <20220210141931.291712-2-angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20220210141931.291712-2-angelogioacchino.delregno@collabora.com>
+References: <20220210141931.291712-1-angelogioacchino.delregno@collabora.com> <20220210141931.291712-3-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20220210141931.291712-3-angelogioacchino.delregno@collabora.com>
 From:   Chen-Yu Tsai <wenst@chromium.org>
-Date:   Mon, 21 Feb 2022 12:23:59 +0800
-Message-ID: <CAGXv+5HDcKYcSfdVgVBcZm1uWzVuoUr9AZDQbugYxeRAGAxNtw@mail.gmail.com>
-Subject: Re: [PATCH 1/5] pinctrl: mediatek: paris: Unify probe function by
- using OF match data
+Date:   Mon, 21 Feb 2022 12:33:22 +0800
+Message-ID: <CAGXv+5Gmzu-w0Oi8dUv-a6v1=S8L5otgCfppbAXm1g+jMZFj8Q@mail.gmail.com>
+Subject: Re: [PATCH 2/5] pinctrl: mediatek: common-v1: Add common probe function
 To:     AngeloGioacchino Del Regno 
         <angelogioacchino.delregno@collabora.com>
 Cc:     sean.wang@kernel.org, linus.walleij@linaro.org,
@@ -58,7 +57,7 @@ Cc:     sean.wang@kernel.org, linus.walleij@linaro.org,
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,15 +68,39 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Thu, Feb 10, 2022 at 10:20 PM AngeloGioacchino Del Regno
 <angelogioacchino.delregno@collabora.com> wrote:
 >
-> All of the SoCs using Paris pinctrl are defining a custom probe
-> function that is simply calling mtk_paris_pinctrl_probe() passing
-> a pointer to the SoC specific mtk_pin_soc structure and nothing else.
->
-> Simplify the probe mechanism across all pinctrl drivers that are
-> using pinctrl-paris by passing the specific mtk_pin_soc as match
-> data and using function mtk_paris_pinctrl_probe as a common probe
-> function for all of them.
+> As a preparation to cleanup the probe mechanism of mediatek pinctrl
+> drivers that are using the v1 controller, add a common probe function
+> to this driver.
 >
 > Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
 Reviewed-by: Chen-Yu Tsai <wenst@chromium.org>
+
+but
+
+> ---
+>  drivers/pinctrl/mediatek/pinctrl-mtk-common.c | 11 +++++++++++
+>  drivers/pinctrl/mediatek/pinctrl-mtk-common.h |  2 ++
+>  2 files changed, 13 insertions(+)
+>
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
+> index 6f8dfa6ae5a0..007da39b68c9 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
+> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
+> @@ -1115,3 +1115,14 @@ int mtk_pctrl_init(struct platform_device *pdev,
+>         gpiochip_remove(pctl->chip);
+>         return ret;
+>  }
+> +
+> +int mtk_pctrl_common_probe(struct platform_device *pdev)
+> +{
+> +       struct device *dev = &pdev->dev;
+> +       const struct mtk_pinctrl_devdata *data = device_get_match_data(dev);
+> +
+> +       if (!data)
+> +               return -ENOENT;
+
+This is probably bikeshedding, but it seems most other drivers use -ENODEV
+or -EINVAL. -ENOENT is seldomly used in this context.
+
+ChenYu
