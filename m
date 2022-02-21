@@ -2,86 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A4874BDD83
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Feb 2022 18:45:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A7D164BE74D
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Feb 2022 19:03:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349670AbiBUPmX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Feb 2022 10:42:23 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:33208 "EHLO
+        id S1359191AbiBUPpF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Feb 2022 10:45:05 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:38606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233371AbiBUPmW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Feb 2022 10:42:22 -0500
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D2A1205C1
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Feb 2022 07:41:59 -0800 (PST)
-Received: by mail-ej1-x62f.google.com with SMTP id d10so34268728eje.10
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Feb 2022 07:41:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=s58ZsTLNOT0Dd0mKE0sFiswMZMFhAJe13K4woKQqIGw=;
-        b=GXVgVFxTpsOoQblnLn9vxlmT7vx1PulOSKfGJ8iKVh15nSFG8vksburGWaqS4+2NqL
-         K4dMrTYdWV/qovQweON4/DKu8oTzKhN7JqNDH817dn9a6/JnoApx93TspgmKtNHQDqUG
-         WJwbBT/j+ZDJ+hsvGKn5uFVgOpqZG/Doa6MlU0RkU6DNww1T3IMyMGYkXOEhmCkU9CNU
-         Z4Q+ETfa+hCK050EdTTKtUrSO11HXwkunTitOJtDZd/1ydOW1FniNP44mEEajUKkkbRP
-         NpTEdLGSUXUR80RKsHSaRZrRCMti1SYn9pCrttPjbisiG+I3QZx1ueIdS8JpBj7V3GU+
-         KNNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=s58ZsTLNOT0Dd0mKE0sFiswMZMFhAJe13K4woKQqIGw=;
-        b=0iYj6WMU29feP96CWfjzJNYyJldSNNqMZfKubjwbWY9uCCqQ2PNj6OOqt045m7FIUY
-         cHuUHbfRy5dzX4zI3HUu8WMVKIoG7hquanuTZiH3tYxtBCpJacaiOCrWlRhgw3AEDF+0
-         ZXPk9dMgL7qcWxP24RT2NBe9oDmiZsKRwjajZKFxL+T8BR8bzqnfq7/KunlEYk+N214w
-         ivmkMkqOCXlGdUaGBlSFDEct/dohFijJHronpynZ2qCfDcThn/C+QZHdEtYZBZwNq+bi
-         AnRmpRlSyBEB4F0NRynT5eGkKZNdaL2gfPcbObqoltsHtqf5Ohmj3aN4PwkLxIq9XWHk
-         P/ZQ==
-X-Gm-Message-State: AOAM532GBM7ZQjY59Bu/o4hcNcGMZR5fj9vT/U2XL1LvZjUr3Y7fLY+i
-        RuMjqaR798IEgzwa7My/YV2BkD0X3UYg7oYdALVCTg==
-X-Google-Smtp-Source: ABdhPJzTfySJNjd94IGN3YIRIOowow9fr0rj61tnKVrMiuWdkKH9XRa34A5LQXyioSrD0jJNbBiOi9n8lPwIpD1DqWk=
-X-Received: by 2002:a17:906:8606:b0:6d1:5031:86da with SMTP id
- o6-20020a170906860600b006d1503186damr5468631ejx.734.1645458118005; Mon, 21
- Feb 2022 07:41:58 -0800 (PST)
+        with ESMTP id S1379438AbiBUPoz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Feb 2022 10:44:55 -0500
+Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [IPv6:2a02:1800:110:4::f00:19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEABE22B28
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Feb 2022 07:43:53 -0800 (PST)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:49dc:a1b5:3fe0:3d2b])
+        by laurent.telenet-ops.be with bizsmtp
+        id xrjr2600P3YJRAw01rjrfY; Mon, 21 Feb 2022 16:43:52 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1nMAqt-001TTn-7I; Mon, 21 Feb 2022 16:43:51 +0100
+Received: from geert by rox.of.borg with local (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1nMAqs-006EhO-9q; Mon, 21 Feb 2022 16:43:50 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Cc:     LUU HOAI <hoai.luu.ub@renesas.com>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2 00/12] pinctrl: renesas: Add R-Car S4-8 support
+Date:   Mon, 21 Feb 2022 16:43:35 +0100
+Message-Id: <cover.1645457792.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20220221154002.654638-1-brgl@bgdev.pl>
-In-Reply-To: <20220221154002.654638-1-brgl@bgdev.pl>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 21 Feb 2022 16:41:47 +0100
-Message-ID: <CAMRc=MehaWcwBBAc7XAbM1CdybaXMz66s936+d2+PuOt6GzH+g@mail.gmail.com>
-Subject: Re: [libgpiod v2][PATCH 0/2] libgpiod v2: rewrite tests for the C library
-To:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Feb 21, 2022 at 4:40 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> This series contains a rework of the line_config interface and a bit patch
-> that replaces the old test suite for libgpiod v1 based on gpio-mockup with
-> a one covering around 95% of the libgpiod v2 code based on the upcoming
-> gpio-sim module.
->
-> v1 -> v2:
-> - drop applied patches
-> - improve documentation
-> - skip offsets that are overridden in line_config but not actually requested
->
-> Bartosz Golaszewski (2):
->   line-config: expose the override logic to users
->   tests: rewrite core C tests using libgpiosim
->
+	Hi all,
 
-Sorry for the noise, messed up the patch version here.
+This patch series adds pin control support for the Renesas R-Car S4-8
+Soc.  It is based on patches in the BSP by LUU HOAI, with many changes
+on top (see the individual patches).
 
-Bart
+Changes compared to v1[1]:
+  - Add Reviewed-by,
+  - Fix whitespace in Makefile,
+  - Remove GPIO and No-GPIO pins, pin function definitions, and
+    registers that can only be accessed from the Control Domain,
+  - Spin off clock and DTS patches into separate series,
+  - Drop RFC state and widen audience.
+
+Serial console and I2C have been tested on the Renesas Spider
+development board.
+
+Thanks for your comments!
+
+[1] "[PATCH/RFC 00/15] arm64: renesas: Add-R-Car S4-8 Pin control support"
+    https://lore.kernel.org/r/cover.1642599415.git.geert+renesas@glider.be
+
+Geert Uytterhoeven (11):
+  pinctrl: renesas: Add PORT_GP_CFG_19 macros
+  pinctrl: renesas: Initial R8A779F0 PFC support
+  pinctrl: renesas: r8a779f0: Add SCIF pins, groups, and functions
+  pinctrl: renesas: r8a779f0: Add I2C pins, groups, and functions
+  pinctrl: renesas: r8a779f0: Add HSCIF pins, groups, and functions
+  pinctrl: renesas: r8a779f0: Add INTC-EX pins, groups, and function
+  pinctrl: renesas: r8a779f0: Add MMC pins, groups, and function
+  pinctrl: renesas: r8a779f0: Add MSIOF pins, groups, and functions
+  pinctrl: renesas: r8a779f0: Add PCIe pins, groups, and function
+  pinctrl: renesas: r8a779f0: Add QSPI pins, groups, and functions
+  pinctrl: renesas: r8a779f0: Add Ethernet pins, groups, and functions
+
+LUU HOAI (1):
+  dt-bindings: pinctrl: renesas,pfc: Document r8a779f0 support
+
+ .../bindings/pinctrl/renesas,pfc.yaml         |    1 +
+ drivers/pinctrl/renesas/Kconfig               |    5 +
+ drivers/pinctrl/renesas/Makefile              |    1 +
+ drivers/pinctrl/renesas/core.c                |    6 +
+ drivers/pinctrl/renesas/pfc-r8a779f0.c        | 2126 +++++++++++++++++
+ drivers/pinctrl/renesas/sh_pfc.h              |    9 +-
+ 6 files changed, 2146 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/pinctrl/renesas/pfc-r8a779f0.c
+
+-- 
+2.25.1
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
