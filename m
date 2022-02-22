@@ -2,64 +2,49 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A93AA4BF489
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Feb 2022 10:19:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8ED554BF702
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Feb 2022 12:13:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230077AbiBVJT4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Feb 2022 04:19:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58142 "EHLO
+        id S230290AbiBVLMQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Feb 2022 06:12:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229808AbiBVJTy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Feb 2022 04:19:54 -0500
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25590149B96;
-        Tue, 22 Feb 2022 01:19:24 -0800 (PST)
-X-UUID: 951274d253d146568774f9b4553653be-20220222
-X-UUID: 951274d253d146568774f9b4553653be-20220222
-Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
-        (envelope-from <tinghan.shen@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
-        with ESMTP id 424485977; Tue, 22 Feb 2022 17:19:19 +0800
-Received: from mtkcas11.mediatek.inc (172.21.101.40) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 22 Feb 2022 17:18:05 +0800
-Received: from mtksdccf07 (172.21.84.99) by mtkcas11.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 22 Feb 2022 17:18:05 +0800
-Message-ID: <2d53a11e31a9b521fd18d78aafe42b94bfa74aec.camel@mediatek.com>
-Subject: Re: [PATCH v9 2/3] dt-bindings: pinctrl: mt8195: Add
- mediatek,drive-strength-adv property
-From:   Tinghan Shen <tinghan.shen@mediatek.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
+        with ESMTP id S229485AbiBVLMP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Feb 2022 06:12:15 -0500
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F41569CE5;
+        Tue, 22 Feb 2022 03:11:50 -0800 (PST)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: kholk11)
+        with ESMTPSA id 9BAB21F43807
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1645528309;
+        bh=SPtw+f0uHGh08y5gDzh4Xpm3f82+7RZ5orhUcUoZYGQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Q8d20dSILE8ww4QUrdFkHqSYnNYsuq2cRc0b/Ej7cJTuNW1x35LEMn4ilzCqA1s7d
+         Wb+puAdIWbkhmgsingHyjCFZfK+d4pMFANtEEE2+jdDKTm4P9fmWdYuIgjhhLovFY+
+         8VICeT1K1kEl58iyJJ3/OQLFLftxktUV9u70O9sQsr5kQa+pIxc0uUJA5d9ioYCYbz
+         ULJNq3jU2dLkfH9HRohBkB0H87jTrQydMIwV5n8X6Ntux0056ZvlK1VjJDonMIhgWx
+         snMfsBfwgm5mM9CagkAoZlXcQEa/9E40mOBCUqB1hMlv+w3VTMstU52CadZc+wtQam
+         UHLC0NmOQIwsg==
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+To:     sean.wang@kernel.org
+Cc:     linus.walleij@linaro.org, matthias.bgg@gmail.com,
+        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kernel@collabora.com, wenst@chromium.org,
         AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        David Matlack <dmatlack@google.com>,
-        Jing Zhang <jingzhangos@google.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "Sean Wang" <sean.wang@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <Project_Global_Chrome_Upstream_Group@mediatek.com>,
-        <ryder.lee@kernel.org>, <wenst@chromium.org>,
-        <chunfeng.yun@mediatek.com>
-Date:   Tue, 22 Feb 2022 17:18:05 +0800
-In-Reply-To: <CACRpkdZ194_7+mHauDPwMHG3TeGnp2ENdcSDjZnWny1X4YTT7w@mail.gmail.com>
-References: <20220112114724.1953-1-tinghan.shen@mediatek.com>
-         <20220112114724.1953-3-tinghan.shen@mediatek.com>
-         <18f7a647-6153-6d38-dff1-727b9592b01e@gmail.com>
-         <102ea6303dd16fdf9ec931d0a1845a93afe92545.camel@mediatek.com>
-         <CACRpkdZ194_7+mHauDPwMHG3TeGnp2ENdcSDjZnWny1X4YTT7w@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+        <angelogioacchino.delregno@collabora.com>
+Subject: [PATCH v2 0/5] MediaTek pinctrl drivers cleanups
+Date:   Tue, 22 Feb 2022 12:11:39 +0100
+Message-Id: <20220222111144.20796-1-angelogioacchino.delregno@collabora.com>
+X-Mailer: git-send-email 2.33.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        T_SCC_BODY_TEXT_LINE,T_SPF_TEMPERROR,UNPARSEABLE_RELAY autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,30 +52,45 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, 2022-01-30 at 01:38 +0100, Linus Walleij wrote:
-> On Tue, Jan 25, 2022 at 7:21 AM Tinghan Shen <tinghan.shen@mediatek.com> wrote:
-> 
-> > I want to send next version to update the CC list of this series, but I'm not sure
-> > whether this will break the conversation between you and Linus.
-> > 
-> > Is it ok to send next version? or waiting the response?
-> 
-> Send a new version, I'll apply the v10 version!
-> 
-> Yours,
-> Linus Walleij
+Hello!
+This series performs some cleanups to the MediaTek pinctrl drivers
+by commonizing some functions (reducing code duplication) hence also
+simplifying the probe mechanism by removing unnecessary per-driver
+probe functions.
 
-Hi Linus,
+This code was tested against multiple platforms.
 
-The new version is available.
+Changes in v2:
+- Patch 2/5: Changed -ENOENT to -ENODEV as per Chen-Yu's suggestion
+- Patch 4/5: Removed unnoticed wrong comment change (Chen-Yu)
 
+AngeloGioacchino Del Regno (5):
+  pinctrl: mediatek: paris: Unify probe function by using OF match data
+  pinctrl: mediatek: common-v1: Add common probe function
+  pinctrl: mediatek: common-v1: Use common probe function
+  pinctrl: mediatek: common-v1: Commonize spec_pupd callback
+  pinctrl: mediatek: common-v1: Commonize spec_ies_smt_set callback
 
-https://patchwork.kernel.org/project/linux-mediatek/patch/20220216113131.13145-3-tinghan.shen@mediatek.com/
+ drivers/pinctrl/mediatek/pinctrl-mt2701.c     | 40 ++++--------
+ drivers/pinctrl/mediatek/pinctrl-mt2712.c     | 44 +++----------
+ drivers/pinctrl/mediatek/pinctrl-mt6765.c     |  9 +--
+ drivers/pinctrl/mediatek/pinctrl-mt6779.c     |  9 +--
+ drivers/pinctrl/mediatek/pinctrl-mt6797.c     |  9 +--
+ drivers/pinctrl/mediatek/pinctrl-mt8127.c     | 39 +++---------
+ drivers/pinctrl/mediatek/pinctrl-mt8135.c     | 17 ++----
+ drivers/pinctrl/mediatek/pinctrl-mt8167.c     | 40 +++---------
+ drivers/pinctrl/mediatek/pinctrl-mt8173.c     | 29 +++------
+ drivers/pinctrl/mediatek/pinctrl-mt8183.c     |  9 +--
+ drivers/pinctrl/mediatek/pinctrl-mt8192.c     |  9 +--
+ drivers/pinctrl/mediatek/pinctrl-mt8195.c     |  9 +--
+ drivers/pinctrl/mediatek/pinctrl-mt8365.c     | 40 +++---------
+ drivers/pinctrl/mediatek/pinctrl-mt8516.c     | 40 +++---------
+ drivers/pinctrl/mediatek/pinctrl-mtk-common.c | 61 ++++++++++++++-----
+ drivers/pinctrl/mediatek/pinctrl-mtk-common.h | 33 +++++++---
+ drivers/pinctrl/mediatek/pinctrl-paris.c      |  9 ++-
+ drivers/pinctrl/mediatek/pinctrl-paris.h      |  3 +-
+ 18 files changed, 164 insertions(+), 285 deletions(-)
 
-v11 is rebased on 5.17-rc4 and it's the same as v10.
-
-
-Best regards,
-Tinghan
- 
+-- 
+2.33.1
 
