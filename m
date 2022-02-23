@@ -2,124 +2,161 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CF6E4C1653
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Feb 2022 16:16:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CBFB04C1793
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Feb 2022 16:46:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233057AbiBWPRS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Feb 2022 10:17:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53494 "EHLO
+        id S232440AbiBWPq7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Feb 2022 10:46:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236100AbiBWPRS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Feb 2022 10:17:18 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E66865F86
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Feb 2022 07:16:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1645629407;
+        with ESMTP id S233481AbiBWPq6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Feb 2022 10:46:58 -0500
+Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE806C087B;
+        Wed, 23 Feb 2022 07:46:28 -0800 (PST)
+Received: from relay6-d.mail.gandi.net (unknown [217.70.183.198])
+        by mslow1.mail.gandi.net (Postfix) with ESMTP id 64A0CC5DDA;
+        Wed, 23 Feb 2022 15:18:42 +0000 (UTC)
+Received: (Authenticated sender: alexandre.belloni@bootlin.com)
+        by mail.gandi.net (Postfix) with ESMTPSA id E89AAC000A;
+        Wed, 23 Feb 2022 15:18:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1645629516;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=wJMzfMZTbOFeZJxgtRO31BM9K4FI9BB8cDLrW2mcBXI=;
-        b=R6Etx88jkl+r+i9xgIE0Yu/cD6jUlDDIFDAl8tHklGq5/XjnnXSftIyV8hMMWvLirXdM0w
-        IT/nyW8BXidcQIEdEV2OK7I799peP7xrDW59yw5UB3k7rXvOaI6YERdHiHvti+dqrLvHj9
-        p95AAbfWhF6KNgIMjlBRB/uc3Q8oJ+A=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-591-v6HvLO7WMbCYmMYgYK_bsg-1; Wed, 23 Feb 2022 10:16:46 -0500
-X-MC-Unique: v6HvLO7WMbCYmMYgYK_bsg-1
-Received: by mail-ed1-f70.google.com with SMTP id b13-20020a056402278d00b0041311e02a9bso4542424ede.13
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Feb 2022 07:16:45 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=wJMzfMZTbOFeZJxgtRO31BM9K4FI9BB8cDLrW2mcBXI=;
-        b=uT3tchjBVNwYztKO1k/VD61FdhsqBGlXVMiP3zPDHftKIeZo7gWnd2R5s1+18Ex6wj
-         pQ0i3p1EQehehUPGq/f2FJPkUgDS0jeF4xXcB+DAJwII/YBXt5O1R1DhCXJXhpqDkYxz
-         l5rL/d0QnZKnMINV6puzta1/WN0XqjP/TWQSwoKLDsEOjGDq++ZY/INXgtRgpyYC9TC0
-         ptW7PwF7dpKgLEcUsdqUr1VZr7glxDncdByoGWCTo10QmWww/FpJ1DggXEhMrr2CBhY3
-         SWczD7YW4eCI4W8QXigVtJblzpmsZpxHQhy4TY5INSU2YjgVwVDwhJ+5d7hXl+mxDvjD
-         UcwA==
-X-Gm-Message-State: AOAM531M7za1HOpbOuSHsSMjaCXcoImYvpXF2cvSw36/ZI8kGOXg6U4f
-        qmFdecd956iYTMdDn0GkJmAYdwqxhFDmOk+c3bQm42DTEz5aeWA9wq1aTwlgQ7MJeFIRC+jhyXF
-        TEtykuZOE0oehjSup2b7+SQ==
-X-Received: by 2002:a05:6402:3553:b0:412:d0aa:e7b0 with SMTP id f19-20020a056402355300b00412d0aae7b0mr25149389edd.309.1645629404256;
-        Wed, 23 Feb 2022 07:16:44 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzweXAUj12cZ6J1TzYUyKUhASrpoYGkrNOcll4D9CTEJhD37i7G97LC8viYuUsa2g0VGRd8yw==
-X-Received: by 2002:a05:6402:3553:b0:412:d0aa:e7b0 with SMTP id f19-20020a056402355300b00412d0aae7b0mr25149373edd.309.1645629404116;
-        Wed, 23 Feb 2022 07:16:44 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
-        by smtp.gmail.com with ESMTPSA id 23sm7882404ejf.175.2022.02.23.07.16.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Feb 2022 07:16:43 -0800 (PST)
-Message-ID: <9cda0c14-8108-fb42-4464-36a2fde0ffda@redhat.com>
-Date:   Wed, 23 Feb 2022 16:16:42 +0100
+        bh=L8WJ1C1Tx3aKKa3O4w4oElLz8XE2ctzr9MgK1/YUoCU=;
+        b=oc+Jes6pQdZo1kzhSYkAkXsvE4s+RVTUPbPWDmF1a35hrX82st5TluCAV2C15w0eMkA6I5
+        nP4Q+Q12KrmS/7Sss8FFkJroL31r78SoKt2sw/bLzZGFDhtudEOtKMfhmDS+/0qjJ+B7yL
+        J2/IS+Z4W/TYryGG1X8Dz/Y49ypWY9CsE22lqqkz4jV2WVnpyPb9JDrEiHzzf2yyFa3jOd
+        R0ubzG96gMcXnRbrpvcpOyppNxeAFUVC0LPXkmZwmq0wqfUPITlJbx8HtOmcK+ntjSCVm5
+        lVxdfAzaWpUBonEOa73WxiVLJABsIPWjte8zqb/7KK1JEox5Lbi/c0jsv1EyAw==
+Date:   Wed, 23 Feb 2022 16:18:30 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Conor.Dooley@microchip.com
+Cc:     a.zummo@towertech.it, Lewis.Hanly@microchip.com,
+        Daire.McNamara@microchip.com, Ivan.Griffin@microchip.com,
+        atishp@rivosinc.com, palmer@rivosinc.com, robh@kernel.org,
+        linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
+        jassisinghbrar@gmail.com, thierry.reding@gmail.com,
+        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
+        paul.walmsley@sifive.com, palmer@dabbelt.com,
+        aou@eecs.berkeley.edu, geert@linux-m68k.org,
+        krzysztof.kozlowski@canonical.com, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v7 03/11] dt-bindings: rtc: add bindings for microchip
+ mpfs rtc
+Message-ID: <YhZQRqHib2+GR7Ma@piout.net>
+References: <20220214135840.168236-1-conor.dooley@microchip.com>
+ <20220214135840.168236-4-conor.dooley@microchip.com>
+ <5b0681a0-ff46-7eb4-3644-0d1173c1f0d4@microchip.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH 2/5] platform/x86: x86-android-tablets: Fix EBUSY error
- when requesting IOAPIC IRQs
-Content-Language: en-US
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <20220223133153.730337-1-hdegoede@redhat.com>
- <20220223133153.730337-3-hdegoede@redhat.com>
- <YhZLI40Vukgv+PPO@smile.fi.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <YhZLI40Vukgv+PPO@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5b0681a0-ff46-7eb4-3644-0d1173c1f0d4@microchip.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On 23/02/2022 07:41:27+0000, Conor.Dooley@microchip.com wrote:
+> Hi Alessandro, Alexandre,
+> If one of you could take a look at this, that'd be great.
 
-On 2/23/22 15:56, Andy Shevchenko wrote:
-> On Wed, Feb 23, 2022 at 02:31:50PM +0100, Hans de Goede wrote:
->> Sometimes IRQs used by GPIOs in direct-IRQ mode are already registered
->> because they are used as ACPI "Interrupt () {}" resource for one of the
->> many bogus I2C devices present in the broken DSDTs of Android x86 tablets.
->>
->> This is an issue if the existing (bogus) ACPI resource uses different
->> trigger settings then what is being requested, leading to an -EBUSY
->> error return of acpi_register_gsi().
->>
->> Fix this by calling acpi_unregister_gsi() first, so that
->> the acpi_register_gsi() is allowed to change the trigger settings.
->>
->> In cases where the GSI has not been registered yet
->> the acpi_unregister_gsi() is a no-op.
+I actually expected someone else to apply this, what is your plan?
+
+> Thanks,
+> Conor.
 > 
-> ...
+> On 14/02/2022 13:58, conor.dooley@microchip.com wrote:
+> > From: Conor Dooley <conor.dooley@microchip.com>
+> > 
+> > Add device tree bindings for the real time clock on
+> > the Microchip PolarFire SoC.
+> > 
+> > Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
+> > Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> > Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > ---
+> >   .../bindings/rtc/microchip,mfps-rtc.yaml      | 58 +++++++++++++++++++
+> >   1 file changed, 58 insertions(+)
+> >   create mode 100644 Documentation/devicetree/bindings/rtc/microchip,mfps-rtc.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/rtc/microchip,mfps-rtc.yaml b/Documentation/devicetree/bindings/rtc/microchip,mfps-rtc.yaml
+> > new file mode 100644
+> > index 000000000000..a2e984ea3553
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/rtc/microchip,mfps-rtc.yaml
+> > @@ -0,0 +1,58 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/rtc/microchip,mfps-rtc.yaml#
+> > +
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Microchip PolarFire Soc (MPFS) RTC Device Tree Bindings
+> > +
+> > +allOf:
+> > +  - $ref: rtc.yaml#
+> > +
+> > +maintainers:
+> > +  - Daire McNamara <daire.mcnamara@microchip.com>
+> > +  - Lewis Hanly <lewis.hanly@microchip.com>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - microchip,mpfs-rtc
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    items:
+> > +      - description: |
+> > +          RTC_WAKEUP interrupt
+> > +      - description: |
+> > +          RTC_MATCH, asserted when the content of the Alarm register is equal
+> > +          to that of the RTC's count register.
+> > +
+> > +  clocks:
+> > +    maxItems: 1
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: rtc
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +  - clocks
+> > +  - clock-names
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    rtc@20124000 {
+> > +        compatible = "microchip,mpfs-rtc";
+> > +        reg = <0x20124000 0x1000>;
+> > +        clocks = <&clkcfg 21>;
+> > +        clock-names = "rtc";
+> > +        interrupts = <80>, <81>;
+> > +    };
+> > +...
 > 
->>  	case X86_ACPI_IRQ_TYPE_APIC:
->> +		/*
->> +		 * The DSDT may already reference the GSI in a device skipped by
->> +		 * acpi_quirk_skip_i2c_client_enumeration(). Unregister the GSI
->> +		 * to avoid EBUSY errors in this case.
->> +		 */
->> +		acpi_unregister_gsi(data->index);
-> 
-> Perhaps a warning (or at least debug) message?
 
-The function returns void, so we cannot check if it did anything or not.
-
-Regards,
-
-Hans
-
+-- 
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
