@@ -2,17 +2,17 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 85FAB4C143A
+	by mail.lfdr.de (Postfix) with ESMTP id 3AA334C1439
 	for <lists+linux-gpio@lfdr.de>; Wed, 23 Feb 2022 14:32:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235189AbiBWNcm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Feb 2022 08:32:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57684 "EHLO
+        id S239155AbiBWNcl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Feb 2022 08:32:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239491AbiBWNck (ORCPT
+        with ESMTP id S235189AbiBWNck (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Feb 2022 08:32:40 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9E296AB460
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 92BC5AB454
         for <linux-gpio@vger.kernel.org>; Wed, 23 Feb 2022 05:32:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
         s=mimecast20190719; t=1645623132;
@@ -20,23 +20,23 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=yRCbM22renqYP7o3spvVr/K44KCHTnSuAYlIHartXBE=;
-        b=MmPBzUr3anUJV2/qpGG+NClhKNT/gLmmFvkck7JM8yzCqaqq0fQvucovVGXwNjfq/mT/Ye
-        FNncGZ4FzpJr4xl+6zV3clZzsD/2zVAQ1bphi4+q4v1UR17Jd72ptJ/sg7e5YOs4jU171L
-        ENavEmAillGd67EpwDmvTBseptxE3X4=
+        bh=ARmOV6UfVJ4llIeXOFo21Jm0uKYOJxAZfmOH8IuHdU8=;
+        b=cwdgr6WLJVY/wuHVxGxY8J3/t5gXowRWi/PSNe8ZR05RHB+35JFFMhOG8353e4iEXR0HRW
+        IurpsNim7Xrb7QriP2P24T4vHsPZnlskwibxiLGbs1br0Lr+G0Pug6spmLD1QThYONaZjI
+        k+2TXMdXRy1bfCfL3cEZj4+ihsgNu6k=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-486-xqxHnUP5P-SAFrCnWR2TFA-1; Wed, 23 Feb 2022 08:32:09 -0500
-X-MC-Unique: xqxHnUP5P-SAFrCnWR2TFA-1
+ us-mta-107-BKfVl1mtPf2xU8w5do8Gmw-1; Wed, 23 Feb 2022 08:32:11 -0500
+X-MC-Unique: BKfVl1mtPf2xU8w5do8Gmw-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 77832800422;
-        Wed, 23 Feb 2022 13:32:08 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 35462805742;
+        Wed, 23 Feb 2022 13:32:10 +0000 (UTC)
 Received: from localhost.localdomain (unknown [10.39.195.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 028D2832AF;
-        Wed, 23 Feb 2022 13:32:06 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C1120832A4;
+        Wed, 23 Feb 2022 13:32:08 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@kernel.org>,
@@ -44,9 +44,9 @@ To:     Mark Gross <markgross@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH 1/5] pinctrl: baytrail: Add pinconf group + function for the pmu_clk
-Date:   Wed, 23 Feb 2022 14:31:49 +0100
-Message-Id: <20220223133153.730337-2-hdegoede@redhat.com>
+Subject: [PATCH 2/5] platform/x86: x86-android-tablets: Fix EBUSY error when requesting IOAPIC IRQs
+Date:   Wed, 23 Feb 2022 14:31:50 +0100
+Message-Id: <20220223133153.730337-3-hdegoede@redhat.com>
 In-Reply-To: <20220223133153.730337-1-hdegoede@redhat.com>
 References: <20220223133153.730337-1-hdegoede@redhat.com>
 MIME-Version: 1.0
@@ -55,71 +55,49 @@ X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On the Lenovo Yoga Tablet 2 830 / 1050 / 1051 models the 32KHz PMU clk,
-which can be muxed externally to SUS pin 5 and/or 6 is used as a clock
-for the audio codec.
+Sometimes IRQs used by GPIOs in direct-IRQ mode are already registered
+because they are used as ACPI "Interrupt () {}" resource for one of the
+many bogus I2C devices present in the broken DSDTs of Android x86 tablets.
 
-On the 830 and 1050 models, with ship with Android as factory OS the
-pin-muxing for this is not setup by the BIOS.
+This is an issue if the existing (bogus) ACPI resource uses different
+trigger settings then what is being requested, leading to an -EBUSY
+error return of acpi_register_gsi().
 
-Add a pinconf group + function for the pmu_clk on SUS pin 5 and 6 to
-allow setting the pinmux up from within the x86-android-tablets
-platform code.
+Fix this by calling acpi_unregister_gsi() first, so that
+the acpi_register_gsi() is allowed to change the trigger settings.
+
+In cases where the GSI has not been registered yet
+the acpi_unregister_gsi() is a no-op.
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/pinctrl/intel/pinctrl-baytrail.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/platform/x86/x86-android-tablets.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
-index 7ae71152b480..fec888c1cd05 100644
---- a/drivers/pinctrl/intel/pinctrl-baytrail.c
-+++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
-@@ -444,6 +444,9 @@ static const unsigned int byt_sus_pcu_spi_pins[] = { 21 };
- static const unsigned int byt_sus_pcu_spi_mode_values[] = { 0 };
- static const unsigned int byt_sus_pcu_spi_gpio_mode_values[] = { 1 };
+diff --git a/drivers/platform/x86/x86-android-tablets.c b/drivers/platform/x86/x86-android-tablets.c
+index f280c82d5ba5..61e526e048c3 100644
+--- a/drivers/platform/x86/x86-android-tablets.c
++++ b/drivers/platform/x86/x86-android-tablets.c
+@@ -89,6 +89,12 @@ static int x86_acpi_irq_helper_get(const struct x86_acpi_irq_data *data)
  
-+static const unsigned int byt_sus_pmu_clk1_pins[] = { 5 };
-+static const unsigned int byt_sus_pmu_clk2_pins[] = { 6 };
-+
- static const struct intel_pingroup byt_sus_groups[] = {
- 	PIN_GROUP("usb_oc_grp", byt_sus_usb_over_current_pins, byt_sus_usb_over_current_mode_values),
- 	PIN_GROUP("usb_ulpi_grp", byt_sus_usb_ulpi_pins, byt_sus_usb_ulpi_mode_values),
-@@ -451,20 +454,26 @@ static const struct intel_pingroup byt_sus_groups[] = {
- 	PIN_GROUP("usb_oc_grp_gpio", byt_sus_usb_over_current_pins, byt_sus_usb_over_current_gpio_mode_values),
- 	PIN_GROUP("usb_ulpi_grp_gpio", byt_sus_usb_ulpi_pins, byt_sus_usb_ulpi_gpio_mode_values),
- 	PIN_GROUP("pcu_spi_grp_gpio", byt_sus_pcu_spi_pins, byt_sus_pcu_spi_gpio_mode_values),
-+	PIN_GROUP("pmu_clk1_grp", byt_sus_pmu_clk1_pins, 1),
-+	PIN_GROUP("pmu_clk2_grp", byt_sus_pmu_clk2_pins, 1),
- };
- 
- static const char * const byt_sus_usb_groups[] = {
- 	"usb_oc_grp", "usb_ulpi_grp",
- };
- static const char * const byt_sus_spi_groups[] = { "pcu_spi_grp" };
-+static const char * const byt_sus_pmu_clk_groups[] = {
-+	"pmu_clk1_grp", "pmu_clk2_grp" };
- static const char * const byt_sus_gpio_groups[] = {
- 	"usb_oc_grp_gpio", "usb_ulpi_grp_gpio", "pcu_spi_grp_gpio",
-+	"pmu_clk1_grp", "pmu_clk2_grp",
- };
- 
- static const struct intel_function byt_sus_functions[] = {
- 	FUNCTION("usb", byt_sus_usb_groups),
- 	FUNCTION("spi", byt_sus_spi_groups),
- 	FUNCTION("gpio", byt_sus_gpio_groups),
-+	FUNCTION("pmu_clk", byt_sus_pmu_clk_groups),
- };
- 
- static const struct intel_community byt_sus_communities[] = {
+ 	switch (data->type) {
+ 	case X86_ACPI_IRQ_TYPE_APIC:
++		/*
++		 * The DSDT may already reference the GSI in a device skipped by
++		 * acpi_quirk_skip_i2c_client_enumeration(). Unregister the GSI
++		 * to avoid EBUSY errors in this case.
++		 */
++		acpi_unregister_gsi(data->index);
+ 		irq = acpi_register_gsi(NULL, data->index, data->trigger, data->polarity);
+ 		if (irq < 0)
+ 			pr_err("error %d getting APIC IRQ %d\n", irq, data->index);
 -- 
 2.35.1
 
