@@ -2,90 +2,155 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 114324C03F6
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Feb 2022 22:39:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 809474C0C48
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Feb 2022 06:56:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235800AbiBVVkN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Feb 2022 16:40:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33840 "EHLO
+        id S235344AbiBWF40 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Feb 2022 00:56:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235766AbiBVVkM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Feb 2022 16:40:12 -0500
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 677DB139106;
-        Tue, 22 Feb 2022 13:39:46 -0800 (PST)
-Received: by mail-oi1-f176.google.com with SMTP id q5so16107767oij.6;
-        Tue, 22 Feb 2022 13:39:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=e2psfHnwZs5xWnyvc67xSSoWa8E4e5UoRm7fPOvRG2k=;
-        b=J5LoT6ypVfOemIi4NpchuGpJjYJB1piKyMQZsit8PbdadJFbRNMLVdgn5JaBZRKhNJ
-         yL+32IwQD9iNaa6ta3hxZoBm90J227tNBrB/4lOh+Kl2Gh5g7FjzYDjEdFhk3a1xe2SR
-         Ijn+QHCDbZoFTfeD6tCF/b/u0swpNWONMKWCt6LaWCgk4dPZ2RW9TdTdkon3v592aqnY
-         JOV7ty/KlMPFE21iuQNtCeTLTlXeEcT1TPGNS5qjwBPEB9CnruQiPKZaCCrz8bZsBHG7
-         8DqjLoiU0WRMWOgLhRBjT7itpkX1bXchaJ8yE3oJ3E37E7L0L4UEDvU6h/Xd85/pCu8z
-         QkRg==
-X-Gm-Message-State: AOAM533qpZ8qsq0loBdYlIE5PjofVC9f9weUFKJAVjF5MVyRRiYUFraH
-        gsHTNdcZcN8Hl49cNJHaoQ==
-X-Google-Smtp-Source: ABdhPJzrwJuwkbQEPG+nVIKFTN4wDkORO0vQxGqMkcJcmKTnAAfMQGUYwq+TDGVA6kTamSiXcfTrIw==
-X-Received: by 2002:a05:6808:202a:b0:2d4:df36:68a4 with SMTP id q42-20020a056808202a00b002d4df3668a4mr2997913oiw.16.1645565985765;
-        Tue, 22 Feb 2022 13:39:45 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id r36sm9663847oiw.40.2022.02.22.13.39.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Feb 2022 13:39:44 -0800 (PST)
-Received: (nullmailer pid 3634892 invoked by uid 1000);
-        Tue, 22 Feb 2022 21:39:43 -0000
-Date:   Tue, 22 Feb 2022 15:39:43 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     conor.dooley@microchip.com
-Cc:     linux-gpio@vger.kernel.org, atishp@rivosinc.com,
-        a.zummo@towertech.it, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, paul.walmsley@sifive.com, lee.jones@linaro.org,
-        u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
-        ivan.griffin@microchip.com, linus.walleij@linaro.org,
-        brgl@bgdev.pl, daire.mcnamara@microchip.com,
-        jassisinghbrar@gmail.com, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        aou@eecs.berkeley.edu, krzysztof.kozlowski@canonical.com,
-        palmer@dabbelt.com, geert@linux-m68k.org,
-        lewis.hanly@microchip.com, thierry.reding@gmail.com,
-        alexandre.belloni@bootlin.com
-Subject: Re: [PATCH v7 02/11] dt-bindings: soc/microchip: add info about
- services to mpfs sysctrl
-Message-ID: <YhVYH6vf+b9jKeB3@robh.at.kernel.org>
-References: <20220214135840.168236-1-conor.dooley@microchip.com>
- <20220214135840.168236-3-conor.dooley@microchip.com>
+        with ESMTP id S229720AbiBWF4Z (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Feb 2022 00:56:25 -0500
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AA444BFFC;
+        Tue, 22 Feb 2022 21:55:58 -0800 (PST)
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 21N5tnKU023605;
+        Tue, 22 Feb 2022 23:55:49 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1645595749;
+        bh=Fw4mHMZ1nbLm/dCziuiDCF8pUtNvwhJTIaN42xVkIDg=;
+        h=From:To:CC:Subject:Date;
+        b=QVLGWFigxG2eyWoiyze2aNW8OjT4csEYn+KkAwbVn0FklZpmE7mgQRxImJvqX0pcj
+         +lCEPB8FcLtEiOIxkiPn1fLB7WCqGaF8M8LU+DU4hqflfbIHYDS5s9bC6mFZEzwR7O
+         cgwGOh/BryRRIdzn2her90TCj2Sr6leYNYEC9d3U=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 21N5tnS2064282
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 22 Feb 2022 23:55:49 -0600
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14; Tue, 22
+ Feb 2022 23:55:49 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2308.14 via
+ Frontend Transport; Tue, 22 Feb 2022 23:55:48 -0600
+Received: from swubn03.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 21N5tjsY022920;
+        Tue, 22 Feb 2022 23:55:46 -0600
+From:   Aparna M <a-m1@ti.com>
+To:     <a-govindraju@ti.com>, <linus.walleij@linaro.org>,
+        <robh+dt@kernel.org>
+CC:     <praneeth@ti.com>, <grygorii.strashko@ti.com>,
+        <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <bgolaszewski@baylibre.com>, Aparna M <a-m1@ti.com>
+Subject: [PATCH v3] dt-bindings: gpio: Convert TI TPIC2810 GPIO Controller bindings to YAML
+Date:   Wed, 23 Feb 2022 11:25:36 +0530
+Message-ID: <20220223055536.20300-1-a-m1@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220214135840.168236-3-conor.dooley@microchip.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 14 Feb 2022 13:58:32 +0000, conor.dooley@microchip.com wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
-> 
-> The services actually provided by the system controller are not
-> documented so add some words about what the system controller can
-> actually do. Add a link to the oneline documentation with the specific
-> details of each individual service.
-> Also, drop the unneeded label from the example.
-> 
-> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
-> ---
->  .../soc/microchip/microchip,mpfs-sys-controller.yaml  | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
-> 
+Convert gpio-tpic2810 bindings to yaml format and remove outdated
+bindings in .txt format.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Aparna M <a-m1@ti.com>
+---
+
+v2 -> v3: Remove redundant description and make minor change in example.
+v1 -> v2: Fix indentation issues in code and commit message.
+
+ .../bindings/gpio/gpio-tpic2810.txt           | 16 -------
+ .../bindings/gpio/gpio-tpic2810.yaml          | 46 +++++++++++++++++++
+ 2 files changed, 46 insertions(+), 16 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-tpic2810.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-tpic2810.yaml
+
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-tpic2810.txt b/Documentation/devicetree/bindings/gpio/gpio-tpic2810.txt
+deleted file mode 100644
+index 1afc2de7a537..000000000000
+--- a/Documentation/devicetree/bindings/gpio/gpio-tpic2810.txt
++++ /dev/null
+@@ -1,16 +0,0 @@
+-TPIC2810 GPIO controller bindings
+-
+-Required properties:
+- - compatible		: Should be "ti,tpic2810".
+- - reg			: The I2C address of the device
+- - gpio-controller	: Marks the device node as a GPIO controller.
+- - #gpio-cells		: Should be two. For consumer use see gpio.txt.
+-
+-Example:
+-
+-	gpio@60 {
+-		compatible = "ti,tpic2810";
+-		reg = <0x60>;
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-	};
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-tpic2810.yaml b/Documentation/devicetree/bindings/gpio/gpio-tpic2810.yaml
+new file mode 100644
+index 000000000000..1375b82759a9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-tpic2810.yaml
+@@ -0,0 +1,46 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/gpio-tpic2810.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: TPIC2810 GPIO controller bindings
++
++maintainers:
++   - Aswath Govindraju <a-govindraju@ti.com>
++
++properties:
++  compatible:
++    enum:
++      - ti,tpic2810
++
++  reg:
++    maxItems: 1
++
++  gpio-controller: true
++
++  "#gpio-cells":
++    const: 2
++
++required:
++    - compatible
++    - reg
++    - gpio-controller
++    - "#gpio-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        gpio@60 {
++            compatible = "ti,tpic2810";
++            reg = <0x60>;
++            gpio-controller;
++            #gpio-cells = <2>;
++        };
++    };
+-- 
+2.17.1
+
