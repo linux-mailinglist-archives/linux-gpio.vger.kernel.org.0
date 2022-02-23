@@ -2,135 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 305044C0DD7
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Feb 2022 08:56:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F6834C0E1F
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Feb 2022 09:20:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238930AbiBWH5J (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Feb 2022 02:57:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55204 "EHLO
+        id S233355AbiBWIUy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Feb 2022 03:20:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238953AbiBWH5G (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Feb 2022 02:57:06 -0500
-Received: from alexa-out.qualcomm.com (alexa-out.qualcomm.com [129.46.98.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53EDF5F73;
-        Tue, 22 Feb 2022 23:56:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1645602993; x=1677138993;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=E08tgNQeQ9Ef3DLQks66FyP1PMu959mkmFifh3k8TxU=;
-  b=OlIXnnQQyg3g1jc1gqXQ8C9RGEFidIiSutc+nYLAPLjNhvbq6iSD7gWA
-   WJcR94jUKn3AFZaKh9l/+K9gLMU3knQcvastH/c4dT80Hm/asnyRn95px
-   0enyTFCPFeDdbDliOvKNIpORZjXruhDZbBXCAUMmTrmFNfGaZEfTzVcXI
-   Y=;
-Received: from ironmsg09-lv.qualcomm.com ([10.47.202.153])
-  by alexa-out.qualcomm.com with ESMTP; 22 Feb 2022 23:56:33 -0800
-X-QCInternal: smtphost
-Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
-  by ironmsg09-lv.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2022 23:56:32 -0800
-Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
- nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.15; Tue, 22 Feb 2022 23:56:31 -0800
-Received: from hu-srivasam-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.15; Tue, 22 Feb 2022 23:56:25 -0800
-From:   Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
-To:     <agross@kernel.org>, <bjorn.andersson@linaro.org>,
-        <lgirdwood@gmail.com>, <broonie@kernel.org>, <robh+dt@kernel.org>,
-        <quic_plai@quicinc.com>, <bgoswami@codeaurora.org>,
-        <perex@perex.cz>, <tiwai@suse.com>,
-        <srinivas.kandagatla@linaro.org>, <rohitkr@codeaurora.org>,
-        <linux-arm-msm@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <swboyd@chromium.org>, <judyhsiao@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>
-CC:     Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>,
-        "Venkata Prasad Potturu" <quic_potturu@quicinc.com>
-Subject: [PATCH v9 7/7] pinctrl: qcom: Update clock voting as optional
-Date:   Wed, 23 Feb 2022 13:25:32 +0530
-Message-ID: <1645602932-6659-8-git-send-email-quic_srivasam@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1645602932-6659-1-git-send-email-quic_srivasam@quicinc.com>
-References: <1645602932-6659-1-git-send-email-quic_srivasam@quicinc.com>
+        with ESMTP id S232535AbiBWIUy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Feb 2022 03:20:54 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AE463B019
+        for <linux-gpio@vger.kernel.org>; Wed, 23 Feb 2022 00:20:27 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nMmsn-0001hh-Uq; Wed, 23 Feb 2022 09:20:22 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nMmsm-000mFQ-1R; Wed, 23 Feb 2022 09:20:19 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nMmsk-004z5V-Gb; Wed, 23 Feb 2022 09:20:18 +0100
+Date:   Wed, 23 Feb 2022 09:20:18 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Cc:     conor.dooley@microchip.com, linus.walleij@linaro.org,
+        brgl@bgdev.pl, robh+dt@kernel.org, jassisinghbrar@gmail.com,
+        thierry.reding@gmail.com, lee.jones@linaro.org,
+        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        paul.walmsley@sifive.com, palmer@dabbelt.com,
+        aou@eecs.berkeley.edu, geert@linux-m68k.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        lewis.hanly@microchip.com, daire.mcnamara@microchip.com,
+        ivan.griffin@microchip.com, atishp@rivosinc.com,
+        Rob Herring <robh@kernel.org>,
+        Palmer Dabbelt <palmer@rivosinc.com>
+Subject: Re: [PATCH v7 05/11] dt-bindings: pwm: add microchip corepwm binding
+Message-ID: <20220223082018.degrftmxpk5uc6xn@pengutronix.de>
+References: <20220214135840.168236-1-conor.dooley@microchip.com>
+ <20220214135840.168236-6-conor.dooley@microchip.com>
+ <20220223062018.nbgidqxgh2soz625@pengutronix.de>
+ <65edc257-82ec-e100-7a44-5c510aba51ce@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="iwzv2cqxmtoj6ivg"
+Content-Disposition: inline
+In-Reply-To: <65edc257-82ec-e100-7a44-5c510aba51ce@canonical.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Update bulk clock voting to optional voting as ADSP bypass platform doesn't
-need macro and decodec clocks, these are maintained as power domains and
-operated from lpass audio core cc.
 
-Signed-off-by: Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
-Co-developed-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
-Signed-off-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
----
- drivers/pinctrl/qcom/pinctrl-lpass-lpi.c        | 12 +++++++++---
- drivers/pinctrl/qcom/pinctrl-lpass-lpi.h        |  1 +
- drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c |  1 +
- 3 files changed, 11 insertions(+), 3 deletions(-)
+--iwzv2cqxmtoj6ivg
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-index 1ab572f..c618b74 100644
---- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-+++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-@@ -407,9 +407,15 @@ int lpi_pinctrl_probe(struct platform_device *pdev)
- 		return dev_err_probe(dev, PTR_ERR(pctrl->slew_base),
- 				     "Slew resource not provided\n");
- 
--	ret = devm_clk_bulk_get(dev, MAX_LPI_NUM_CLKS, pctrl->clks);
--	if (ret)
--		return dev_err_probe(dev, ret, "Can't get clocks\n");
-+	if (data->is_clk_optional) {
-+		ret = devm_clk_bulk_get_optional(dev, MAX_LPI_NUM_CLKS, pctrl->clks);
-+		if (ret)
-+			return dev_err_probe(dev, ret, "Can't get clocks\n");
-+	} else {
-+		ret = devm_clk_bulk_get(dev, MAX_LPI_NUM_CLKS, pctrl->clks);
-+		if (ret)
-+			return dev_err_probe(dev, ret, "Can't get clocks\n");
-+	}
- 
- 	ret = clk_bulk_prepare_enable(MAX_LPI_NUM_CLKS, pctrl->clks);
- 	if (ret)
-diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
-index afbac2a..3bcede6 100644
---- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
-+++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
-@@ -77,6 +77,7 @@ struct lpi_pinctrl_variant_data {
- 	int ngroups;
- 	const struct lpi_function *functions;
- 	int nfunctions;
-+	int is_clk_optional;
- };
- 
- int lpi_pinctrl_probe(struct platform_device *pdev);
-diff --git a/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
-index d67ff25..304d8a2 100644
---- a/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
-@@ -142,6 +142,7 @@ static const struct lpi_pinctrl_variant_data sc7280_lpi_data = {
- 	.ngroups = ARRAY_SIZE(sc7280_groups),
- 	.functions = sc7280_functions,
- 	.nfunctions = ARRAY_SIZE(sc7280_functions),
-+	.is_clk_optional = 1,
- };
- 
- static const struct of_device_id lpi_pinctrl_of_match[] = {
--- 
-2.7.4
+On Wed, Feb 23, 2022 at 08:12:49AM +0100, Krzysztof Kozlowski wrote:
+> On 23/02/2022 07:20, Uwe Kleine-K=F6nig wrote:
+> > On Mon, Feb 14, 2022 at 01:58:35PM +0000, conor.dooley@microchip.com wr=
+ote:
+> >> From: Conor Dooley <conor.dooley@microchip.com>
+> >>
+> >> Add device tree bindings for the Microchip fpga fabric based "core" PWM
+> >> controller.
+> >>
+> >> Reviewed-by: Rob Herring <robh@kernel.org>
+> >> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> >> Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
+> >=20
+> > I like it:
+> >=20
+> > Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> >=20
+> > nitpick: Put your S-o-b last in the commit log. (This doesn't justify a
+> > resend IMHO)
+>=20
+> It should be the opposite - the first. First author signs the patch,
+> then comes review and finally an ack. Putting SoB at then suggests that
+> tags were accumulated before sending patch, out of mailing list.
 
+well, or in an earlier revision of this patch as is the case here. One
+of the ideas of S-o-b is that the order shows the flow of the patch
+states and if this patch ends in git with:
+
+	Referred-by: Rob Herring <robh@kernel.org>
+	Singed-off-by: Conor Dooley <conor.dooley@microchip.com>
+	Backed-by: Palmer Dabbelt <palmer@rivosinc.com>
+	Singed-off-by: Peter Maintainer <pm@example.com>
+
+I'd expect that Backed-by was added by Peter, not Conor.
+(Modified the tags on purpose to not interfere with b4's tag pickup, I
+guess you humans still get the point.)
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--iwzv2cqxmtoj6ivg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmIV7j8ACgkQwfwUeK3K
+7Aloogf+O25Xs80EkRbZcoT53Op4Qz+T2M0ldDqTk6fHIxcR3qzb7m74O1AGSR3K
+UfR9clLI5oaiJ77rpUJrj755Va3JCOlPiwB14+LakdvvjWlnf+z7h+DC892GcAaj
+ML4S91q/Y/ORSl0189iTfICN78MRMs6UWjVJWX3wV/HqeFQi3fSMNXTjQ8IC6LYe
+GWMVhC3eYpSFxsdqMDeAaEX6CChb0CwfAwMzWxrOt+6sFPfimaOMz4HgHpJsn1bf
+qTj64t9fgifBN41OJNqirl2R2mPxKn/McocqNmDFj+o1DyQ0ikT1sqGFTjnEN3fl
+I/W+Pfdxw50SJZHNxfcDTll9wibNTA==
+=Be78
+-----END PGP SIGNATURE-----
+
+--iwzv2cqxmtoj6ivg--
