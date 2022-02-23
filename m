@@ -2,125 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A6F2B4C0E52
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Feb 2022 09:35:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F12E4C0E89
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Feb 2022 09:53:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236250AbiBWIgD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Feb 2022 03:36:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44684 "EHLO
+        id S238840AbiBWIxn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Feb 2022 03:53:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235122AbiBWIgC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Feb 2022 03:36:02 -0500
-Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [IPv6:2a02:1800:120:4::f00:13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C8746AA5B
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Feb 2022 00:35:33 -0800 (PST)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:c0fe:4675:4cef:99a5])
-        by baptiste.telenet-ops.be with bizsmtp
-        id yYbX2600f4Plfy301YbXg0; Wed, 23 Feb 2022 09:35:31 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1nMn7T-001cqF-95; Wed, 23 Feb 2022 09:35:31 +0100
-Received: from geert by rox.of.borg with local (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1nMn7S-00B6hJ-FB; Wed, 23 Feb 2022 09:35:30 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] pinctrl: renesas: Remove unneeded #include <linux/gpio.h>
-Date:   Wed, 23 Feb 2022 09:35:29 +0100
-Message-Id: <578825d779b45af745cc7623c7f69d2ddeadac4b.1645605227.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S232440AbiBWIxn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Feb 2022 03:53:43 -0500
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7CBD65780;
+        Wed, 23 Feb 2022 00:53:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1645606396; x=1677142396;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Gf7fLnuz2/+PWrNrtqGk1PKFdI0hQYHsrfCkNF3N2OE=;
+  b=wfa74g05p79C6sjxL3xJ82DiO5q4vDUA2aprhaAcKbq0sipbcQXCuCJV
+   UDz7Xo4806bIa+1v5X9/tdXNYEaROAPRUZR+eXa1ePKaA1OAhubZpKYP1
+   purYunz0Zl500zH4BtKtISVV7cRteONTGkwwVO2JbFmg07PPSdVZXA0pf
+   4FGkpPbi0k0eEValV5eQDH+9khs4ZH2XnSMbHsdodl3G69hkH02q4PDji
+   J9Wj3A3JLktAqqQrDiXRyleiSpmFCVwbkl9PHMh1PmxYFyzpj+t2j0lnW
+   Q8dZXQDI5xIU3dQrtkaQI0OAX9ieIE8SVZC9OaL8lLLUV3hgFTMGwQu4+
+   A==;
+X-IronPort-AV: E=Sophos;i="5.88,390,1635231600"; 
+   d="scan'208";a="149703384"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 23 Feb 2022 01:53:14 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.17; Wed, 23 Feb 2022 01:53:14 -0700
+Received: from wendy.microchip.com (10.10.115.15) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.2375.17 via Frontend
+ Transport; Wed, 23 Feb 2022 01:53:09 -0700
+From:   <conor.dooley@microchip.com>
+To:     <u.kleine-koenig@pengutronix.de>,
+        <krzysztof.kozlowski@canonical.com>
+CC:     <a.zummo@towertech.it>, <alexandre.belloni@bootlin.com>,
+        <aou@eecs.berkeley.edu>, <atishp@rivosinc.com>, <brgl@bgdev.pl>,
+        <conor.dooley@microchip.com>, <daire.mcnamara@microchip.com>,
+        <devicetree@vger.kernel.org>, <geert@linux-m68k.org>,
+        <ivan.griffin@microchip.com>, <jassisinghbrar@gmail.com>,
+        <lee.jones@linaro.org>, <lewis.hanly@microchip.com>,
+        <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>, <linux-rtc@vger.kernel.org>,
+        <palmer@dabbelt.com>, <palmer@rivosinc.com>,
+        <paul.walmsley@sifive.com>, <robh+dt@kernel.org>,
+        <robh@kernel.org>, <thierry.reding@gmail.com>
+Subject: Re: [PATCH v7 05/11] dt-bindings: pwm: add microchip corepwm binding
+Date:   Wed, 23 Feb 2022 08:55:10 +0000
+Message-ID: <20220223085509.3664942-1-conor.dooley@microchip.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220223082018.degrftmxpk5uc6xn@pengutronix.de>
+References: <20220223082018.degrftmxpk5uc6xn@pengutronix.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,T_SCC_BODY_TEXT_LINE,
+        T_SPF_PERMERROR autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Linus reports some Renesas pin control sub-drivers are still including
-<linux/gpio.h> instead of <linux/gpio/driver.h>.  As these sub-drivers
-don't need either, the includes can just be removed.
+On 23/02/2022 08:20, Uwe Kleine-König wrote:
+> On Wed, Feb 23, 2022 at 08:12:49AM +0100, Krzysztof Kozlowski wrote:
+> > On 23/02/2022 07:20, Uwe Kleine-König wrote:
+> > > On Mon, Feb 14, 2022 at 01:58:35PM +0000, conor.dooley@microchip.com wrote:
+> > >> From: Conor Dooley <conor.dooley@microchip.com>
+> > >>
+> > >> Add device tree bindings for the Microchip fpga fabric based "core" PWM
+> > >> controller.
+> > >>
+> > >> Reviewed-by: Rob Herring <robh@kernel.org>
+> > >> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> > >> Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
+> > > 
+> > > I like it:
+> > > 
+> > > Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > > 
+> > > nitpick: Put your S-o-b last in the commit log. (This doesn't justify a
+> > > resend IMHO)
+> > 
+> > It should be the opposite - the first. First author signs the patch,
+> > then comes review and finally an ack. Putting SoB at then suggests that
+> > tags were accumulated before sending patch, out of mailing list.
+> 
+> well, or in an earlier revision of this patch as is the case here. One
+> of the ideas of S-o-b is that the order shows the flow of the patch
+> states and if this patch ends in git with:
+> 
+> 	Referred-by: Rob Herring <robh@kernel.org>
+> 	Singed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> 	Backed-by: Palmer Dabbelt <palmer@rivosinc.com>
+> 	Singed-off-by: Peter Maintainer <pm@example.com>
+> 
+> I'd expect that Backed-by was added by Peter, not Conor.
+> (Modified the tags on purpose to not interfere with b4's tag pickup, I
+> guess you humans still get the point.)
 
-Reported-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-To be queued in renesas-pinctrl-for-v5.18.
+I had put the acks after the S-o-B for patches I hadn't changed since the ack,
+but I think that may have been a misinterpretation of what was meant by Rob
+when he said tags should be in chronological order. Won't do it this way in
+the future.
 
- drivers/pinctrl/renesas/pfc-sh7203.c | 1 -
- drivers/pinctrl/renesas/pfc-sh7264.c | 1 -
- drivers/pinctrl/renesas/pfc-sh7269.c | 1 -
- drivers/pinctrl/renesas/pfc-sh7720.c | 1 -
- drivers/pinctrl/renesas/pfc-sh7722.c | 1 -
- 5 files changed, 5 deletions(-)
+If the remaining patch gets a maintainer ack, the order will be fine I guess
+since it'll be Palmer taking it anyway. If there's a v8, I will fix the order.
 
-diff --git a/drivers/pinctrl/renesas/pfc-sh7203.c b/drivers/pinctrl/renesas/pfc-sh7203.c
-index d4d889c9dc833d96..19735746b1bb2157 100644
---- a/drivers/pinctrl/renesas/pfc-sh7203.c
-+++ b/drivers/pinctrl/renesas/pfc-sh7203.c
-@@ -6,7 +6,6 @@
-  */
- 
- #include <linux/kernel.h>
--#include <linux/gpio.h>
- #include <cpu/sh7203.h>
- 
- #include "sh_pfc.h"
-diff --git a/drivers/pinctrl/renesas/pfc-sh7264.c b/drivers/pinctrl/renesas/pfc-sh7264.c
-index 1d13b244383332d3..30096925a70c5d88 100644
---- a/drivers/pinctrl/renesas/pfc-sh7264.c
-+++ b/drivers/pinctrl/renesas/pfc-sh7264.c
-@@ -6,7 +6,6 @@
-  */
- 
- #include <linux/kernel.h>
--#include <linux/gpio.h>
- #include <cpu/sh7264.h>
- 
- #include "sh_pfc.h"
-diff --git a/drivers/pinctrl/renesas/pfc-sh7269.c b/drivers/pinctrl/renesas/pfc-sh7269.c
-index fa92d50c65c465c7..f59f558d75ae253e 100644
---- a/drivers/pinctrl/renesas/pfc-sh7269.c
-+++ b/drivers/pinctrl/renesas/pfc-sh7269.c
-@@ -7,7 +7,6 @@
-  */
- 
- #include <linux/kernel.h>
--#include <linux/gpio.h>
- #include <cpu/sh7269.h>
- 
- #include "sh_pfc.h"
-diff --git a/drivers/pinctrl/renesas/pfc-sh7720.c b/drivers/pinctrl/renesas/pfc-sh7720.c
-index bcaed309e7d8287b..6eedcc5bbb4d6705 100644
---- a/drivers/pinctrl/renesas/pfc-sh7720.c
-+++ b/drivers/pinctrl/renesas/pfc-sh7720.c
-@@ -6,7 +6,6 @@
-  */
- 
- #include <linux/kernel.h>
--#include <linux/gpio.h>
- #include <cpu/sh7720.h>
- 
- #include "sh_pfc.h"
-diff --git a/drivers/pinctrl/renesas/pfc-sh7722.c b/drivers/pinctrl/renesas/pfc-sh7722.c
-index 8790d1624e5fdb1b..a5ceda5ebe76a941 100644
---- a/drivers/pinctrl/renesas/pfc-sh7722.c
-+++ b/drivers/pinctrl/renesas/pfc-sh7722.c
-@@ -1,7 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/init.h>
- #include <linux/kernel.h>
--#include <linux/gpio.h>
- #include <cpu/sh7722.h>
- 
- #include "sh_pfc.h"
--- 
-2.25.1
-
+Thanks,
+Conor
