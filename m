@@ -2,17 +2,17 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6014B4C143D
+	by mail.lfdr.de (Postfix) with ESMTP id AB71D4C143E
 	for <lists+linux-gpio@lfdr.de>; Wed, 23 Feb 2022 14:32:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239491AbiBWNcs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S240546AbiBWNcs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Wed, 23 Feb 2022 08:32:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57826 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240777AbiBWNcr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Feb 2022 08:32:47 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4C63BAB46A
+        with ESMTP id S240571AbiBWNcq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Feb 2022 08:32:46 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 38F9CAB469
         for <linux-gpio@vger.kernel.org>; Wed, 23 Feb 2022 05:32:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
         s=mimecast20190719; t=1645623138;
@@ -20,23 +20,23 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=lcHAx0fySkmpFOX8KdQnbBbN/+DzsbfCiRJwWgig4TE=;
-        b=F7xNplH1SsxAHtVii2jrRbKGtVArn7Qovr8EVvQM3GrcGBuksHKvu3aXHrOqULsyYKiLlR
-        +q9X9mhqnn5g+JBlOEbwA5x752dp9u4APKhSR7YjB5CTDRUHc+M/bBEOUD2CcUrOXjn55i
-        khpl2dUPzj7TfeGQYeCCEXtCa1pO+Zc=
+        bh=PAqqX72HBe86K7c5b94tydFPHMYguSDqrmVUhzmUyn0=;
+        b=ZqMYwI9/bl3vAQprPyqxMvHrwpIP46vpGGQbjKd4vila0q0yUOGwpHhm4E15camNW2cIpA
+        TjJbMS0AhJ30oeGfwyv68ZWVRg14B8y24U2gQuWnvVRhjGW76MzYFAsWJSVYSlGQt2EeD8
+        x9gkMvtGQbUNSwfdh4ZtwrGqoiGUbbk=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-258-KyRe8KxRMh2ApdtZE5hsDw-1; Wed, 23 Feb 2022 08:32:13 -0500
-X-MC-Unique: KyRe8KxRMh2ApdtZE5hsDw-1
+ us-mta-399-PPH4Ch_FOGyepQmScYgHqg-1; Wed, 23 Feb 2022 08:32:15 -0500
+X-MC-Unique: PPH4Ch_FOGyepQmScYgHqg-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 04D4818049CA;
-        Wed, 23 Feb 2022 13:32:12 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B10FE800422;
+        Wed, 23 Feb 2022 13:32:13 +0000 (UTC)
 Received: from localhost.localdomain (unknown [10.39.195.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 80E49832A4;
-        Wed, 23 Feb 2022 13:32:10 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4C355832B4;
+        Wed, 23 Feb 2022 13:32:12 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@kernel.org>,
@@ -44,9 +44,9 @@ To:     Mark Gross <markgross@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>
 Cc:     Hans de Goede <hdegoede@redhat.com>,
         platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH 3/5] platform/x86: x86-android-tablets: Add Lenovo Yoga Tablet 2 830 / 1050 data
-Date:   Wed, 23 Feb 2022 14:31:51 +0100
-Message-Id: <20220223133153.730337-4-hdegoede@redhat.com>
+Subject: [PATCH 4/5] platform/x86: x86-android-tablets: Workaround Lenovo Yoga Tablet 2 830/1050 poweroff hang
+Date:   Wed, 23 Feb 2022 14:31:52 +0100
+Message-Id: <20220223133153.730337-5-hdegoede@redhat.com>
 In-Reply-To: <20220223133153.730337-1-hdegoede@redhat.com>
 References: <20220223133153.730337-1-hdegoede@redhat.com>
 MIME-Version: 1.0
@@ -55,257 +55,89 @@ X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The Lenovo Yoga Tablet 2 series comes in 4 versions: 830F, 830L, 1050F and
-1050L. The F postfix indicates a wifi only version and the L postfix
-indicates a LTE version. The 830 models are 8" and the 1050 models are 10".
+These tablets' DSDT does not set acpi_gbl_reduced_hardware, so
+acpi_power_off gets used as pm_power_off handler. This causes "poweroff"
+on these tablets to hang hard. Requiring pressing the powerbutton for
+30 seconds *twice* followed by a normal 3 second press to recover.
 
-Despite there being 8" and 10" versions all models use the same mainboard,
-with an identical BIOS and thus identical DMI strings, so support for all
-4 models is added through a single DMI table entry.
-
-As all devices dealt with in the x86-android-tablets modules, these are
-x86 ACPI tablets which ships with Android x86 as factory OS.
-The mainboard's DSDT contain a bunch of I2C devices which are not actually
-there, causing various resource conflicts. Enumeration of these is skipped
-through the acpi_quirk_skip_i2c_client_enumeration().
-
-Add support for manually instantiating the I2C devices which are
-actually present on this tablet by adding the necessary device info to
-the x86-android-tablets module.
-
-This has been tested on a 830F and a 1050L tablet.
+Avoid this by overriding the global pm_power_off handler to do
+an EFI poweroff instead.
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
- drivers/platform/x86/x86-android-tablets.c | 184 +++++++++++++++++++++
- 1 file changed, 184 insertions(+)
+ drivers/platform/x86/x86-android-tablets.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
 diff --git a/drivers/platform/x86/x86-android-tablets.c b/drivers/platform/x86/x86-android-tablets.c
-index 61e526e048c3..89972723f546 100644
+index 89972723f546..c3d2b30dbe26 100644
 --- a/drivers/platform/x86/x86-android-tablets.c
 +++ b/drivers/platform/x86/x86-android-tablets.c
-@@ -22,8 +22,10 @@
- #include <linux/irqdomain.h>
- #include <linux/module.h>
- #include <linux/mod_devicetable.h>
-+#include <linux/platform_data/lp855x.h>
- #include <linux/platform_device.h>
- #include <linux/power/bq24190_charger.h>
-+#include <linux/rmi.h>
- #include <linux/serdev.h>
- #include <linux/string.h>
- /* For gpio_get_desc() which is EXPORT_SYMBOL_GPL() */
-@@ -182,6 +184,15 @@ static const char * const tusb1211_chg_det_psy[] = { "tusb1211-charger-detect" }
- static const char * const bq24190_psy[] = { "bq24190-charger" };
- static const char * const bq25890_psy[] = { "bq25890-charger" };
+@@ -12,6 +12,7 @@
  
-+static const struct property_entry fg_bq24190_supply_props[] = {
-+	PROPERTY_ENTRY_STRING_ARRAY("supplied-from", bq24190_psy),
-+	{ }
-+};
-+
-+static const struct software_node fg_bq24190_supply_node = {
-+	.properties = fg_bq24190_supply_props,
-+};
-+
- static const struct property_entry fg_bq25890_supply_props[] = {
- 	PROPERTY_ENTRY_STRING_ARRAY("supplied-from", bq25890_psy),
- 	{ }
-@@ -704,6 +715,165 @@ static const struct x86_dev_info lenovo_yogabook_x9x_info __initconst = {
- 	.i2c_client_count = ARRAY_SIZE(lenovo_yogabook_x9x_i2c_clients),
+ #include <linux/acpi.h>
+ #include <linux/dmi.h>
++#include <linux/efi.h>
+ #include <linux/gpio_keys.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/gpio/driver.h>
+@@ -24,6 +25,7 @@
+ #include <linux/mod_devicetable.h>
+ #include <linux/platform_data/lp855x.h>
+ #include <linux/platform_device.h>
++#include <linux/pm.h>
+ #include <linux/power/bq24190_charger.h>
+ #include <linux/rmi.h>
+ #include <linux/serdev.h>
+@@ -817,6 +819,7 @@ static struct x86_dev_info lenovo_yoga_tab2_830_1050_info __initdata = {
+ 	.modules = bq24190_modules,
+ 	.invalid_aei_gpiochip = "INT33FC:02",
+ 	.init = lenovo_yoga_tab2_830_1050_init,
++	.exit = lenovo_yoga_tab2_830_1050_exit,
  };
  
-+/* Lenovo Yoga Tablet 2 1050F/L's Android factory img has everything hardcoded */
-+static const struct property_entry lenovo_yoga_tab2_830_1050_bq24190_props[] = {
-+	PROPERTY_ENTRY_STRING_ARRAY("supplied-from", tusb1211_chg_det_psy),
-+	PROPERTY_ENTRY_REF("monitored-battery", &generic_lipo_hv_4v35_battery_node),
-+	PROPERTY_ENTRY_BOOL("omit-battery-class"),
-+	PROPERTY_ENTRY_BOOL("disable-reset"),
-+	{ }
-+};
-+
-+static const struct software_node lenovo_yoga_tab2_830_1050_bq24190_node = {
-+	.properties = lenovo_yoga_tab2_830_1050_bq24190_props,
-+};
-+
-+/* This gets filled by lenovo_yoga_tab2_830_1050_init() */
-+static struct rmi_device_platform_data lenovo_yoga_tab2_830_1050_rmi_pdata = { };
-+
-+static struct lp855x_platform_data lenovo_yoga_tab2_830_1050_lp8557_pdata = {
-+	.device_control = 0x86,
-+	.initial_brightness = 128,
-+};
-+
-+static const struct x86_i2c_client_info lenovo_yoga_tab2_830_1050_i2c_clients[] __initconst = {
-+	{
-+		/* bq24292i battery charger */
-+		.board_info = {
-+			.type = "bq24190",
-+			.addr = 0x6b,
-+			.dev_name = "bq24292i",
-+			.swnode = &lenovo_yoga_tab2_830_1050_bq24190_node,
-+			.platform_data = &bq24190_pdata,
-+		},
-+		.adapter_path = "\\_SB_.I2C1",
-+		.irq_data = {
-+			.type = X86_ACPI_IRQ_TYPE_GPIOINT,
-+			.chip = "INT33FC:02",
-+			.index = 2,
-+			.trigger = ACPI_EDGE_SENSITIVE,
-+			.polarity = ACPI_ACTIVE_HIGH,
-+		},
-+	}, {
-+		/* BQ27541 fuel-gauge */
-+		.board_info = {
-+			.type = "bq27541",
-+			.addr = 0x55,
-+			.dev_name = "bq27541",
-+			.swnode = &fg_bq24190_supply_node,
-+		},
-+		.adapter_path = "\\_SB_.I2C1",
-+	}, {
-+		/* Synaptics RMI touchscreen */
-+		.board_info = {
-+			.type = "rmi4_i2c",
-+			.addr = 0x38,
-+			.dev_name = "rmi4_i2c",
-+			.platform_data = &lenovo_yoga_tab2_830_1050_rmi_pdata,
-+		},
-+		.adapter_path = "\\_SB_.I2C6",
-+		.irq_data = {
-+			.type = X86_ACPI_IRQ_TYPE_APIC,
-+			.index = 0x45,
-+			.trigger = ACPI_EDGE_SENSITIVE,
-+			.polarity = ACPI_ACTIVE_HIGH,
-+		},
-+	}, {
-+		/* LP8557 Backlight controller */
-+		.board_info = {
-+			.type = "lp8557",
-+			.addr = 0x2c,
-+			.dev_name = "lp8557",
-+			.platform_data = &lenovo_yoga_tab2_830_1050_lp8557_pdata,
-+		},
-+		.adapter_path = "\\_SB_.I2C3",
-+	},
-+};
-+
-+static struct gpiod_lookup_table lenovo_yoga_tab2_830_1050_int3496_gpios = {
-+	.dev_id = "intel-int3496",
-+	.table = {
-+		GPIO_LOOKUP("INT33FC:02", 1, "mux", GPIO_ACTIVE_LOW),
-+		GPIO_LOOKUP("INT33FC:02", 24, "id", GPIO_ACTIVE_HIGH),
-+		{ }
-+	},
-+};
-+
-+static struct gpiod_lookup_table * const lenovo_yoga_tab2_830_1050_gpios[] = {
-+	&lenovo_yoga_tab2_830_1050_int3496_gpios,
-+	NULL
-+};
-+
-+static int __init lenovo_yoga_tab2_830_1050_init(void);
-+static void lenovo_yoga_tab2_830_1050_exit(void);
-+
-+static struct x86_dev_info lenovo_yoga_tab2_830_1050_info __initdata = {
-+	.i2c_client_info = lenovo_yoga_tab2_830_1050_i2c_clients,
-+	/* i2c_client_count gets set by lenovo_yoga_tab2_830_1050_init() */
-+	.pdev_info = int3496_pdevs,
-+	.pdev_count = ARRAY_SIZE(int3496_pdevs),
-+	.gpiod_lookup_tables = lenovo_yoga_tab2_830_1050_gpios,
-+	.bat_swnode = &generic_lipo_hv_4v35_battery_node,
-+	.modules = bq24190_modules,
-+	.invalid_aei_gpiochip = "INT33FC:02",
-+	.init = lenovo_yoga_tab2_830_1050_init,
-+};
-+
+ /*
+@@ -863,6 +866,18 @@ static int __init lenovo_yoga_tab2_830_1050_init_display(void)
+ 	return 0;
+ }
+ 
 +/*
-+ * The Lenovo Yoga Tablet 2 830 and 1050 (8" vs 10") versions use the same
-+ * mainboard, but they need some different treatment related to the display:
-+ * 1. The 830 uses a portrait LCD panel with a landscape touchscreen, requiring
-+ *    the touchscreen driver to adjust the touch-coords to match the LCD.
-+ * 2. Both use an TI LP8557 LED backlight controller. On the 1050 the LP8557's
-+ *    PWM input is connected to the PMIC's PWM output and everything works fine
-+ *    with the defaults programmed into the LP8557 by the BIOS.
-+ *    But on the 830 the LP8557's PWM input is connected to a PWM output coming
-+ *    from the LCD panel's controller. The Android code has a hack in the i915
-+ *    driver to write the non-standard DSI reg 0x9f with the desired backlight
-+ *    level to set the duty-cycle of the LCD's PWM output.
-+ *
-+ *    To avoid having to have a similar hack in the mainline kernel the LP8557
-+ *    entry in lenovo_yoga_tab2_830_1050_i2c_clients instead just programs the
-+ *    LP8557 to directly set the level, ignoring the PWM input. This means that
-+ *    the LP8557 i2c_client should only be instantiated on the 830.
++ * These tablet's DSDT does not set acpi_gbl_reduced_hardware, so acpi_power_off
++ * gets used as pm_power_off handler. This causes "poweroff" on these tablets
++ * to hang hard. Requiring pressing the powerbutton for 30 seconds *twice*
++ * followed by a normal 3 second press to recover. Avoid this by doing an EFI
++ * poweroff instead.
 + */
-+static int __init lenovo_yoga_tab2_830_1050_init_display(void)
++static void lenovo_yoga_tab2_830_1050_power_off(void)
 +{
-+	struct gpio_desc *gpiod;
-+	int ret;
-+
-+	/* Use PMIC GPIO 10 bootstrap pin to differentiate 830 vs 1050 */
-+	ret = x86_android_tablet_get_gpiod("gpio_crystalcove", 10, &gpiod);
-+	if (ret)
-+		return ret;
-+
-+	ret = gpiod_get_value_cansleep(gpiod);
-+	if (ret) {
-+		pr_info("detected Lenovo Yoga Tablet 2 1050F/L\n");
-+		lenovo_yoga_tab2_830_1050_info.i2c_client_count =
-+			ARRAY_SIZE(lenovo_yoga_tab2_830_1050_i2c_clients) - 1;
-+	} else {
-+		pr_info("detected Lenovo Yoga Tablet 2 830F/L\n");
-+		lenovo_yoga_tab2_830_1050_rmi_pdata.sensor_pdata.axis_align.swap_axes = true;
-+		lenovo_yoga_tab2_830_1050_rmi_pdata.sensor_pdata.axis_align.flip_y = true;
-+		lenovo_yoga_tab2_830_1050_info.i2c_client_count =
-+			ARRAY_SIZE(lenovo_yoga_tab2_830_1050_i2c_clients);
-+	}
-+
-+	return 0;
++	efi.reset_system(EFI_RESET_SHUTDOWN, EFI_SUCCESS, 0, NULL);
 +}
 +
-+static int __init lenovo_yoga_tab2_830_1050_init(void)
+ static int __init lenovo_yoga_tab2_830_1050_init(void)
+ {
+ 	int ret;
+@@ -871,9 +886,15 @@ static int __init lenovo_yoga_tab2_830_1050_init(void)
+ 	if (ret)
+ 		return ret;
+ 
++	pm_power_off = lenovo_yoga_tab2_830_1050_power_off;
+ 	return 0;
+ }
+ 
++static void lenovo_yoga_tab2_830_1050_exit(void)
 +{
-+	int ret;
-+
-+	ret = lenovo_yoga_tab2_830_1050_init_display();
-+	if (ret)
-+		return ret;
-+
-+	return 0;
++	pm_power_off = NULL; /* Just turn poweroff into halt on module unload */
 +}
 +
  /* Nextbook Ares 8 tablets have an Android factory img with everything hardcoded */
  static const char * const nextbook_ares8_accel_mount_matrix[] = {
  	"0", "-1", "0",
-@@ -948,6 +1118,20 @@ static const struct dmi_system_id x86_android_tablet_ids[] __initconst = {
- 		},
- 		.driver_data = (void *)&lenovo_yogabook_x9x_info,
- 	},
-+	{
-+		/*
-+		 * Lenovo Yoga Tablet 2 830F/L or 1050F/L (The 8" and 10"
-+		 * Lenovo Yoga Tablet 2 use the same mainboard)
-+		 */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Intel Corp."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "VALLEYVIEW C0 PLATFORM"),
-+			DMI_MATCH(DMI_BOARD_NAME, "BYT-T FFD8"),
-+			/* Partial match on beginning of BIOS version */
-+			DMI_MATCH(DMI_BIOS_VERSION, "BLADE_21"),
-+		},
-+		.driver_data = (void *)&lenovo_yoga_tab2_830_1050_info,
-+	},
- 	{
- 		/* Nextbook Ares 8 */
- 		.matches = {
 -- 
 2.35.1
 
