@@ -2,56 +2,44 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EC1BE4C1A30
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Feb 2022 18:48:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EE7344C1AB7
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Feb 2022 19:14:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243518AbiBWRsv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Feb 2022 12:48:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40622 "EHLO
+        id S243237AbiBWSOk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Feb 2022 13:14:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243524AbiBWRsu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Feb 2022 12:48:50 -0500
-Received: from mail-io1-xd2d.google.com (mail-io1-xd2d.google.com [IPv6:2607:f8b0:4864:20::d2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8621D62E0;
-        Wed, 23 Feb 2022 09:48:17 -0800 (PST)
-Received: by mail-io1-xd2d.google.com with SMTP id d19so14836621ioc.8;
-        Wed, 23 Feb 2022 09:48:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eKBwjSNATVWVksf5vYyDJmSVutEByHwPHr5mJXUV4XA=;
-        b=Hf1IP9xlPWhpt+MsH2DW/FYNl57mtNMp6NLqN8tLaq03hnPZ79MdCSnAXOgP33K/H4
-         EbG1SsJShFgfb0Zp5EV6O9IcT6QrW8oQWxgaz5gVUuV30p4r3VieD72Lr3mGJBCsM7Hf
-         swUwth93FbrW7ehcrWbcx5oxRIJiOLg3XH4+Fx6hpzSUTp6mT1Dz5StJgS0YDwUCZZxD
-         WeXHlZx8h2w9iBj3b/A6fbwo+s3i629qQrEbM9SOrPM02MQvr+K067mNYX3GAACaLauQ
-         4l8hCoDDarJ6y/Zm9r77Nxr1F5b5XrxU0tBs1Tyvx7YUs2Tf3EAlIXifTJwXCujNVP9X
-         JiKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eKBwjSNATVWVksf5vYyDJmSVutEByHwPHr5mJXUV4XA=;
-        b=OuWrMbe6owVbeQZ+HepvJy48QvGFRrYh6ibU6HztpWY2lpqpBqHJUH6/XKH6yElPjT
-         S018Pj1VoH9HzVj9xADU525yz/hiMndBWQ6RdoWQFZJWgWM5E/UMVl/P1BKstxwsKeqM
-         XQHggQCOBfTce9+ILmeOCoRO5fp2eXn0kMvEnMiw0IsH6RV1DVBD7HXMufSgVXxUdh7J
-         AbowaBNC8WdAwBLxTidlJ5x2NegMKLds2us63AaBiR2CVJn3gdFTGatWyc0v77czwN1R
-         H2HnR9JNUM5oS4fck8uH7WXMdel84C0BO7W9W40fvwwIsarGyzJUGqlMyNOwjYrhXH+I
-         Slrw==
-X-Gm-Message-State: AOAM532bQh3A6D/eqjySGTh0OOk3ElTd3p9BvoBXVrYpYf/oAtCi3GhO
-        hus4coozEYyJ3DXdtVAaGdWPbU6K/a07qfCL/WM=
-X-Google-Smtp-Source: ABdhPJw1QGF4dIOqwEyMjlrNSfRM/nBD5W5mlC/KkVQ4i73WQviit1rKbjjwGfVZKdBSx8DoP1ZUyosB8+1+D85BmrI=
-X-Received: by 2002:a5d:970d:0:b0:5f2:9242:d881 with SMTP id
- h13-20020a5d970d000000b005f29242d881mr401153iol.187.1645638497000; Wed, 23
- Feb 2022 09:48:17 -0800 (PST)
+        with ESMTP id S241030AbiBWSOk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Feb 2022 13:14:40 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 406CB48315;
+        Wed, 23 Feb 2022 10:14:12 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E0BFBB8212F;
+        Wed, 23 Feb 2022 18:14:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B95DC340E7;
+        Wed, 23 Feb 2022 18:14:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1645640049;
+        bh=Wxzunyx2l5y9CCTx4nOCZYPf3YEgpmzKbzTfonaFoKU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=cWls5NedytacTVIsmrOIUE3vd72wtl/GQAbopySZo28Qw+t3dBZxW21q358WS1WPU
+         ubsWSGp8yl8bYZCKRhoWRDLVsmLj/Ldhf4CePDJMZNCSSFTzyzbriOxkTps3HfIudw
+         VjfsWHd/FunR3t084E1Yk1iPcmL1bLFVQNhQEBMPIqgbmQkQinm3bTsS4NkCsG0bdx
+         YAvKlSqq8MA6DY2ZLvFYXj+LTMMVLXALkStw+k8txeIAi90gempgMtPi8P0Eps/q/C
+         0rOjTx2yH5VbID64xgs/gAAtJqNC9Gh1m8ah3g3cG1kXYKSD60zw740oeKlGZbVyz1
+         hBscF6tkx5FbQ==
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1nMw9O-009ynS-2h; Wed, 23 Feb 2022 18:14:07 +0000
 MIME-Version: 1.0
-References: <20220223154405.54912-1-maz@kernel.org> <20220223154405.54912-2-maz@kernel.org>
-In-Reply-To: <20220223154405.54912-2-maz@kernel.org>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Wed, 23 Feb 2022 10:48:06 -0700
-Message-ID: <CAOCk7NpJ5ui+uTKvKeShKmzeKpZkwqCDtyAd_bt2PJKGhE=Gww@mail.gmail.com>
-Subject: Re: [PATCH 1/5] gpio: Don't fiddle with irqchips marked as immutable
-To:     Marc Zyngier <maz@kernel.org>
+Date:   Wed, 23 Feb 2022 18:14:05 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 Cc:     lkml <linux-kernel@vger.kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
@@ -68,22 +56,44 @@ Cc:     lkml <linux-kernel@vger.kernel.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
         MSM <linux-arm-msm@vger.kernel.org>,
         Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Subject: Re: [PATCH 1/5] gpio: Don't fiddle with irqchips marked as immutable
+In-Reply-To: <CAOCk7NpJ5ui+uTKvKeShKmzeKpZkwqCDtyAd_bt2PJKGhE=Gww@mail.gmail.com>
+References: <20220223154405.54912-1-maz@kernel.org>
+ <20220223154405.54912-2-maz@kernel.org>
+ <CAOCk7NpJ5ui+uTKvKeShKmzeKpZkwqCDtyAd_bt2PJKGhE=Gww@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4.13
+Message-ID: <dfaecd99516ca3c6b994119e308c8579@kernel.org>
+X-Sender: maz@kernel.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: jeffrey.l.hugo@gmail.com, linux-kernel@vger.kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, thierry.reding@gmail.com, joey.gouly@arm.com, jonathanh@nvidia.com, marcan@marcan.st, sven@svenpeter.dev, alyssa@rosenzweig.io, bjorn.andersson@linaro.org, agross@kernel.org, tglx@linutronix.de, linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Feb 23, 2022 at 10:40 AM Marc Zyngier <maz@kernel.org> wrote:
->
-> In order to move away from gpiolib messing with the internals of
-> unsuspecting irqchips, add a flag by which irqchips advertise
-> that they are not to be messed with, and do solemnly swear that
-> they correctly call into the gpiolib helpers wueh required.
+On 2022-02-23 17:48, Jeffrey Hugo wrote:
+> On Wed, Feb 23, 2022 at 10:40 AM Marc Zyngier <maz@kernel.org> wrote:
+>> 
+>> In order to move away from gpiolib messing with the internals of
+>> unsuspecting irqchips, add a flag by which irqchips advertise
+>> that they are not to be messed with, and do solemnly swear that
+>> they correctly call into the gpiolib helpers wueh required.
+> 
+> "wueh"?  Should that be "when"?
 
-"wueh"?  Should that be "when"?
+Absolutely. There are more typos in this cover letter, and probably
+even more in the individual patches!
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
