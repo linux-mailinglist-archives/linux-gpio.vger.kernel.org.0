@@ -2,79 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E3F54C1D51
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Feb 2022 21:48:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DA00A4C1DC1
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Feb 2022 22:31:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238471AbiBWUsu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Feb 2022 15:48:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48592 "EHLO
+        id S242485AbiBWVcP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Feb 2022 16:32:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230007AbiBWUsu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Feb 2022 15:48:50 -0500
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CDEF48E53
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Feb 2022 12:48:19 -0800 (PST)
-Received: by mail-wr1-x42a.google.com with SMTP id d28so13828458wra.4
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Feb 2022 12:48:19 -0800 (PST)
+        with ESMTP id S242653AbiBWVcO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Feb 2022 16:32:14 -0500
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35C903C721
+        for <linux-gpio@vger.kernel.org>; Wed, 23 Feb 2022 13:31:45 -0800 (PST)
+Received: by mail-ej1-x62a.google.com with SMTP id a23so180762eju.3
+        for <linux-gpio@vger.kernel.org>; Wed, 23 Feb 2022 13:31:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=conchuod-ie.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=RRu2PqFxs+FPxxXA+v25zzkAp1fkNpteo8XX4VMDfsI=;
-        b=7XOoxRqb9Tv8kkCqMFJc5EqMLpdohXL6zjfTgOd7rLqoL9hjhjxLHgwcjThSa2r4uE
-         cfhJDDfaXveX9Ng8Vdd47vyy4E3dPrskszcIFjovCrel9HtE+pXh0eqkbxQe7YrVSNwG
-         lWNWlEEpEhvRrQZ94lu3Asx3ml1g1Dnuvl/S7WL2WiKfJkce+t1aep9NmikFKC++i2cp
-         Bs3zVs+sFui9Fd+TA3gD2EPgFBykwjmGMXnsgOXu8WAJdM488/vNt/kBPuHmu9TZWYA1
-         WB8Et2mwrkrO7nwEOThETi3qqzLMbHymoOesRTkLa62cCJNtfhpkK3u8hCixOa51wyKN
-         7yrQ==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z4ZVkt8qZMy2gYEg/eldrrEE9UadTptB/fCse20u77k=;
+        b=uH3iTz2QGOOXGOs7gP4GUWmAmCSbm7JwqXRf/KvtFUe2MV934uQIEoIMfozDrL5ffI
+         trMtsQ83jy0lfEhG5pRbtwCDZ9MRFRvNXLlAx8KIx7JlIU0C4uSOG2+dfonx4pBCMZc5
+         lCttbFooWLazs/0fKKgsXUpOI2xQxA6W88Zyb/Vlu1KxU+IXRnQtmiE1gk4negHvoB//
+         CLuSgzLmqazAqFFZnawz8ktkav2/oByCKPSNbfqx6/W5e3Lkmg+5Z0w/Hs9akdqYS5OW
+         SGNTWMWIQzdkDoiX3xmdCm2Vc/yiUYSRWYfP6I7nYvtSi5AsYULM0LBXA/yKyVubEDjQ
+         zZ+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=RRu2PqFxs+FPxxXA+v25zzkAp1fkNpteo8XX4VMDfsI=;
-        b=5sdLEMis3tdkXZbilGx6MSRi4NtVPGO/qosd2ABSMUDjsbv7bGoMIXJSj7i0mFybFU
-         LU9XerU9GwmMu2JL1Y7kcOwH7KySXsF2WHnHePwSrGOQlaPzr3FQq+KjLOqyTvS5yC2P
-         fwh4qxxstLGlyPM+3XoTADfvRVErpHZeyf8AePxS5Y9vXr42ZmoKS27wBdTMlNzPB4oS
-         0UlMH+tUzYpN+U/1RP8fP1Umyqt3ndbjLM79q41Iumcgup9BL30XRnVq61aVMrkq+tP0
-         XawBnKWg5cI0hXcuPWIo7bGINbIxmLJH4loLXZsxT4xOpCskRKjnlrkjP9jbv2+24cLM
-         7RsA==
-X-Gm-Message-State: AOAM530/BtmupxbmsXECQoQ1R2zBxmygFLSuIIq+gL5d3FO2BKEO/VzG
-        r9+46J2HyqyVU4exH/aOxVypgA==
-X-Google-Smtp-Source: ABdhPJwTSd3fwnBHNPVLAxW9AId4se4ijwGgW4cX5Yfawa3jAXMdmq++0LpZ4WASwNLU9EfbO/Xqmw==
-X-Received: by 2002:adf:e54e:0:b0:1ea:9746:16d5 with SMTP id z14-20020adfe54e000000b001ea974616d5mr1030363wrm.186.1645649297584;
-        Wed, 23 Feb 2022 12:48:17 -0800 (PST)
-Received: from [192.168.2.116] ([109.76.226.172])
-        by smtp.gmail.com with ESMTPSA id f7sm578561wrz.40.2022.02.23.12.48.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Feb 2022 12:48:17 -0800 (PST)
-Message-ID: <c94f9c0a-6dbe-c1f4-daff-e4d29f3ace02@conchuod.ie>
-Date:   Wed, 23 Feb 2022 20:48:16 +0000
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z4ZVkt8qZMy2gYEg/eldrrEE9UadTptB/fCse20u77k=;
+        b=QeKSCYgm3HL8ah+9t804cxYbglsPuu8Ykml6ubpgWQm8rUbeUOnVK4kKsBOVxyrw26
+         3GziEN98TJe497d0bG3OTXNlNoZU0ZKClBWQy3ZGafk8CtYB/lX2Vj/6pYBj1vso/3sw
+         iVCl4swfk65dCzaHODZzX2XrCD6JRHEEMC8oxJCMiwT0+dvnBJjW884tSNOhEp8SFKGW
+         QbziLl2gWvDStLahxfMZx7UGK+worYnUKsM0v+LIsRemX3l00F2r/hCPwcEkYO6NjlOB
+         YN4ol8GEJMlrNd2UQJ93O2yscoFCf+qtGQvFc87Ym+PiXSFW/GPWQT3p5dlqfASM4Cec
+         Xb6w==
+X-Gm-Message-State: AOAM531l66yQ691OOii6cI1kD5UKygN5AM+0giIBVLgPvpNdTCD9Isi2
+        Amrc6eFMPDGjqRI6VldO4GqhKiuv1XreDREHIu85udAVodU=
+X-Google-Smtp-Source: ABdhPJwGY42pBBzmTXzQxtK8kQ3OvjcZRZjenfG79d42ZtNsrmQbmI2eEfrJx7GQiFK4Ji4rSTRHC8jqjQ1/5CRtQ3s=
+X-Received: by 2002:a17:906:1393:b0:6ba:dfb1:4435 with SMTP id
+ f19-20020a170906139300b006badfb14435mr1282305ejc.736.1645651903755; Wed, 23
+ Feb 2022 13:31:43 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH v7 00/11] Update the Icicle Kit device tree
-Content-Language: en-US
-To:     palmer@dabbelt.com
-Cc:     lewis.hanly@microchip.com, daire.mcnamara@microchip.com,
-        ivan.griffin@microchip.com, atishp@rivosinc.com,
-        conor.dooley@microchip.com, linus.walleij@linaro.org,
-        brgl@bgdev.pl, robh+dt@kernel.org, jassisinghbrar@gmail.com,
-        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        lee.jones@linaro.org, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, paul.walmsley@sifive.com,
-        aou@eecs.berkeley.edu, geert@linux-m68k.org,
-        krzysztof.kozlowski@canonical.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-References: <20220214135840.168236-1-conor.dooley@microchip.com>
-From:   Conor Dooley <mail@conchuod.ie>
-In-Reply-To: <20220214135840.168236-1-conor.dooley@microchip.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20220216202655.194795-1-shreeya.patel@collabora.com>
+In-Reply-To: <20220216202655.194795-1-shreeya.patel@collabora.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 23 Feb 2022 22:31:33 +0100
+Message-ID: <CAMRc=MckPeT01V-iqXSk-eO4CYFD6aRP1yOaQXGUri5o2=tqZQ@mail.gmail.com>
+Subject: Re: [PATCH v5] gpio: Return EPROBE_DEFER if gc->to_irq is NULL
+To:     Shreeya Patel <shreeya.patel@collabora.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kernel@collabora.com, Andy Shevchenko <andy.shevchenko@gmail.com>,
+        kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -82,115 +69,86 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 14/02/2022 13:58, conor.dooley@microchip.com wrote:
-> From: Conor Dooley <conor.dooley@microchip.com>
-> 
-> This series updates the Microchip Icicle Kit device tree by adding a
-> host of peripherals, and some updates to the memory map. In addition,
-> the device tree has been split into a third part, which contains "soft"
-> peripherals that are in the fpga fabric.
-> 
-> Several of the entries are for peripherals that have not get had their
-> drivers upstreamed, so in those cases the dt bindings are included where
-> appropriate in order to avoid the many "DT compatible string <x> appears
-> un-documented" errors.
-> 
-> Depends on mpfs clock driver binding (on clk/next) to provide
-> dt-bindings/clock/microchip,mpfs-clock.h for the device tree
-> and on the other changes to the icicle/mpfs device tree from geert
-> that are already in linux/riscv/for-next.
-> 
-> Additionally, the interrupt-extended warnings on the plic/clint are
-> cleared by [1] & [2].
-> 
-> [1] https://lore.kernel.org/linux-riscv/cover.1639744468.git.geert@linux-m68k.org/
-> [2] https://lore.kernel.org/linux-riscv/cover.1639744106.git.geert@linux-m68k.org/
+On Wed, Feb 16, 2022 at 9:27 PM Shreeya Patel
+<shreeya.patel@collabora.com> wrote:
+>
+> We are racing the registering of .to_irq when probing the
+> i2c driver. This results in random failure of touchscreen
+> devices.
+>
+> Following explains the race condition better.
+>
+> [gpio driver] gpio driver registers gpio chip
+> [gpio consumer] gpio is acquired
+> [gpio consumer] gpiod_to_irq() fails with -ENXIO
+> [gpio driver] gpio driver registers irqchip
+> gpiod_to_irq works at this point, but -ENXIO is fatal
+>
+> We could see the following errors in dmesg logs when gc->to_irq is NULL
+>
+> [2.101857] i2c_hid i2c-FTS3528:00: HID over i2c has not been provided an Int IRQ
+> [2.101953] i2c_hid: probe of i2c-FTS3528:00 failed with error -22
+>
+> To avoid this situation, defer probing until to_irq is registered.
+> Returning -EPROBE_DEFER would be the first step towards avoiding
+> the failure of devices due to the race in registration of .to_irq.
+> Final solution to this issue would be to avoid using gc irq members
+> until they are fully initialized.
+>
+> This issue has been reported many times in past and people have been
+> using workarounds like changing the pinctrl_amd to built-in instead
+> of loading it as a module or by adding a softdep for pinctrl_amd into
+> the config file.
+>
+> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=209413
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Shreeya Patel <shreeya.patel@collabora.com>
+>
+> ---
+> Changes in v5
+>   - Improve explanation in commit message and sending it to the correct
+> email address.
+>
+> Changes in v4
+>   - Remove blank line and make the first letter of the sentence
+> capital.
+>
+> Changes in v3
+>   - Fix the error reported by kernel test robot.
+>
+> Changes in v2
+>   - Add a condition to check for irq chip to avoid bogus error.
+> ---
+>  drivers/gpio/gpiolib.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 3859911b61e9..a3d14277f17c 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -3147,6 +3147,16 @@ int gpiod_to_irq(const struct gpio_desc *desc)
+>
+>                 return retirq;
+>         }
+> +#ifdef CONFIG_GPIOLIB_IRQCHIP
+> +       if (gc->irq.chip) {
+> +               /*
+> +                * Avoid race condition with other code, which tries to lookup
+> +                * an IRQ before the irqchip has been properly registered,
+> +                * i.e. while gpiochip is still being brought up.
+> +                */
+> +               return -EPROBE_DEFER;
+> +       }
+> +#endif
+>         return -ENXIO;
+>  }
+>  EXPORT_SYMBOL_GPL(gpiod_to_irq);
+> --
+> 2.30.2
+>
 
-Hey Palmer,
+Queued for fixes, thanks!
 
-dt-bindings should be set now, so if you're still happy to take the 
-series via riscv, that'd be great. i2c, spi & usb patches ended going 
-via the sub-system trees (and have been dropped from the series), in 
-case those generate warnings for you.
-
-Thanks,
-Conor.
-> 
-> Changes from v6:
-> - Dropped i2c patch, as its in i2c-next
-> - Added ack on gpio, reviewed-by on rtc
-> - Dropped child nodes from sysctrl binding entirely, added a link to
->    the online documenation for the services the system controller can
->    provide
-> - Dropped the #pwm-cells and replaced with a ref, a la Krzysztof's
->    series
-> 
-> Changes from v5:
-> - reworded the descriptions in the pwm binding to (hopefully) add
->    clarity
-> - added -mask to the custom properties and made them 32 bit
-> - renamed the i2c binding to corei2c, since it is not mpfs specific
-> - removed the child nodes of the system controller in example/dts &
->    will create them in the driver.
->    @Rob, I assume keeping them documented is the correct thing to do?
-> - removed the dependancy on the clock binding from the examples
-> - reformatted rtc interrupts as per Rob's suggestion
-> 
-> Changes from v4:
-> - dont include icicle_kit_defconfig, accidentally added in v3
-> - drop prescaler from mpfs-rtc & calculate the value instead
-> - use corei2c as a fallback device for mpfs-i2c
-> - drop spi dt-binding (on spi-next)
->    commit 2da187304e556ac59cf2dacb323cc78ded988169
-> - drop usb dt-binding (on usb-next)
-> 
-> Changes from v3:
-> - drop "mailbox: change mailbox-mpfs compatible string", already upstream:
->    commit f10b1fc0161cd99e ("mailbox: change mailbox-mpfs compatible string")
-> - fix copy paste error in microchip,mpfs-mailbox dt-binding
-> - remove whitespace in syscontroller dt entry
-> 
-> Changes from v2:
-> - dropped plic int header & corresponding defines in dts{,i}
-> - use $ref to drmode in mpfs-musb binding
-> - split changes to dts{,i} again: functional changes to existing
->    elements now are in a new patch
-> - drop num-cs property in mpfs-spi binding
-> - dont make the system controller a simple-mfd
-> - move the separate bindings for rng/generic system services into the
->    system controller binding
-> - added an instance corei2c as i2c2 in the fabric dtsi
-> - add version numbering to corepwm and corei2c compat string (-rtl-vN)
-> 
-> Conor Dooley (11):
->    dt-bindings: soc/microchip: update syscontroller compatibles
->    dt-bindings: soc/microchip: add info about services to mpfs sysctrl
->    dt-bindings: rtc: add bindings for microchip mpfs rtc
->    dt-bindings: gpio: add bindings for microchip mpfs gpio
->    dt-bindings: pwm: add microchip corepwm binding
->    riscv: dts: microchip: use clk defines for icicle kit
->    riscv: dts: microchip: add fpga fabric section to icicle kit
->    riscv: dts: microchip: refactor icicle kit device tree
->    riscv: dts: microchip: update peripherals in icicle kit device tree
->    riscv: dts: microchip: add new peripherals to icicle kit device tree
->    MAINTAINERS: update riscv/microchip entry
-> 
->   .../bindings/gpio/microchip,mpfs-gpio.yaml    |  79 ++++++
->   ...ilbox.yaml => microchip,mpfs-mailbox.yaml} |   6 +-
->   .../bindings/pwm/microchip,corepwm.yaml       |  81 ++++++
->   .../bindings/rtc/microchip,mfps-rtc.yaml      |  58 ++++
->   .../microchip,mpfs-sys-controller.yaml        |  40 +++
->   ...icrochip,polarfire-soc-sys-controller.yaml |  35 ---
->   MAINTAINERS                                   |   2 +
->   .../dts/microchip/microchip-mpfs-fabric.dtsi  |  25 ++
->   .../microchip/microchip-mpfs-icicle-kit.dts   | 115 ++++++--
->   .../boot/dts/microchip/microchip-mpfs.dtsi    | 254 ++++++++++++++----
->   10 files changed, 591 insertions(+), 104 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml
->   rename Documentation/devicetree/bindings/mailbox/{microchip,polarfire-soc-mailbox.yaml => microchip,mpfs-mailbox.yaml} (82%)
->   create mode 100644 Documentation/devicetree/bindings/pwm/microchip,corepwm.yaml
->   create mode 100644 Documentation/devicetree/bindings/rtc/microchip,mfps-rtc.yaml
->   create mode 100644 Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-sys-controller.yaml
->   delete mode 100644 Documentation/devicetree/bindings/soc/microchip/microchip,polarfire-soc-sys-controller.yaml
->   create mode 100644 arch/riscv/boot/dts/microchip/microchip-mpfs-fabric.dtsi
-> 
+Bart
