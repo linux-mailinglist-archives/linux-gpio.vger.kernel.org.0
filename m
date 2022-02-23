@@ -2,160 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 579CB4C1778
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Feb 2022 16:45:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B2B724C182D
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Feb 2022 17:08:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242358AbiBWPpJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Feb 2022 10:45:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56854 "EHLO
+        id S242617AbiBWQJD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Feb 2022 11:09:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242326AbiBWPoz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Feb 2022 10:44:55 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B24EBF95A;
-        Wed, 23 Feb 2022 07:44:27 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 03B5BB820C8;
-        Wed, 23 Feb 2022 15:44:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D386C340FB;
-        Wed, 23 Feb 2022 15:44:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645631064;
-        bh=SUMHRwHLSBCKt6500XeBFRSfc+yTeQJg5D0JuhgT3GU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k8wnDyj1uHxERgKeK02phgsLUftdGXrbd5qFabvyCkSnnyt34BAjJbRuIqdEvkgdX
-         K/tcguWOd03meJ9EVPq7c0NWNEtMs97wkE6OLGdf97uHBBtM0SMjooXe6i3fWsth/G
-         eKe3a5ijx6qXxfUYEXiv0cX9ftXYW1BNQlSzlzEvqm4yMgv4Gz4MneOSA3fu618kWV
-         wjdvl07/4wrX0dLue6f0Y5FM0MjLApM8yFGDZ7PLMEd+IHuxzTbhy7is4K6hVuvX+s
-         c8q3rRbGRJzd43uU9ETelUvJ0dMA7cF3bGMaxfHMJSGfofqJcY1OMQAVe+PioGduK0
-         r7I2kx0psP9uA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=why.lan)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <maz@kernel.org>)
-        id 1nMtoU-009wgt-Kn; Wed, 23 Feb 2022 15:44:22 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Joey Gouly <joey.gouly@arm.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Hector Martin <marcan@marcan.st>,
-        Sven Peter <sven@svenpeter.dev>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, kernel-team@android.com
-Subject: [PATCH 5/5] gpio: tegra186: Make the irqchip immutable
-Date:   Wed, 23 Feb 2022 15:44:05 +0000
-Message-Id: <20220223154405.54912-6-maz@kernel.org>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220223154405.54912-1-maz@kernel.org>
-References: <20220223154405.54912-1-maz@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, thierry.reding@gmail.com, joey.gouly@arm.com, jonathanh@nvidia.com, marcan@marcan.st, sven@svenpeter.dev, alyssa@rosenzweig.io, bjorn.andersson@linaro.org, agross@kernel.org, tglx@linutronix.de, linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S242622AbiBWQJD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Feb 2022 11:09:03 -0500
+Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 791FCB7173;
+        Wed, 23 Feb 2022 08:08:35 -0800 (PST)
+Received: by mail-oo1-f54.google.com with SMTP id r15-20020a4ae5cf000000b002edba1d3349so22910776oov.3;
+        Wed, 23 Feb 2022 08:08:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
+         :message-id;
+        bh=D6TJA710dTkpMpQAgIRbYdjJreyXVwpZMn7+FiECLB8=;
+        b=LJp6s8TohwSRrfhSVrIbsOKdQ+2UFZsh4FeOLVGA0udJi9MNHMAaMOnzrfIWMgLRSG
+         lJqSg7G8OIVKUE0+BM+/rVvGYnaFNgSyqrOG8tE0W+M3hafHiZV9+ih3nhL67Lv8vjTv
+         SVX8ljIJ1uQjAv5nwBDAL+i1O0HRGiZaVU9jwZuekGBghdiRzGMy2olCIhyq5BNXpvYj
+         RdUbILMGeJtfZfP66cvW8IUx1A+ZNKtgapQTRTs9jd7DQAgKVZWD8PeC/g4BV6ktZk6v
+         XcpOEA9YI68vITQOq7WBXL7e49uK8ILBtabNRELiCccpTI2comRyy4PY9IP4H2nvfCV8
+         Nq3A==
+X-Gm-Message-State: AOAM532eS+7gXLOB3YP7RP7tBKkLZW+mWuxJVX9b0uDh2xZm4Vy3ZQOv
+        17ZcwxYBQ3lfrbZHtuKJ2g==
+X-Google-Smtp-Source: ABdhPJw1Juy0FEBcM/u6wy9jYduAITMCZEvKeQnVSvN7BpVcLK7vZ6qhrhU9tFOXJh0Hn+0oaxEDBQ==
+X-Received: by 2002:a05:6870:450d:b0:d3:973f:4189 with SMTP id e13-20020a056870450d00b000d3973f4189mr122409oao.95.1645632514806;
+        Wed, 23 Feb 2022 08:08:34 -0800 (PST)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id d1sm18326oos.10.2022.02.23.08.08.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Feb 2022 08:08:34 -0800 (PST)
+Received: (nullmailer pid 1021551 invoked by uid 1000);
+        Wed, 23 Feb 2022 16:08:31 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Aparna M <a-m1@ti.com>
+Cc:     grygorii.strashko@ti.com, bgolaszewski@baylibre.com,
+        a-govindraju@ti.com, praneeth@ti.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, linus.walleij@linaro.org,
+        linux-gpio@vger.kernel.org
+In-Reply-To: <20220223072308.31868-1-a-m1@ti.com>
+References: <20220223072308.31868-1-a-m1@ti.com>
+Subject: Re: [PATCH v4] dt-bindings: gpio: Convert TI TPIC2810 GPIO Controller bindings to YAML
+Date:   Wed, 23 Feb 2022 10:08:31 -0600
+Message-Id: <1645632511.483635.1021550.nullmailer@robh.at.kernel.org>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Prevent gpiolib from messing with the irqchip by advertising
-the irq_chip structure as immutable, making it const, and adding
-the various calls that gpiolib relies upon.
+On Wed, 23 Feb 2022 12:53:08 +0530, Aparna M wrote:
+> Convert gpio-tpic2810 bindings to yaml format and remove outdated
+> bindings in .txt format.
+> 
+> Signed-off-by: Aparna M <a-m1@ti.com>
+> ---
+> 
+> v3 -> v4: Add gpio-line-names property
+> v2 -> v3: Remove redundant descriptions and make minor change in example
+> v1 -> v2: Fix identation issues and update commit message
+> 
+>  .../bindings/gpio/gpio-tpic2810.txt           | 16 ------
+>  .../bindings/gpio/gpio-tpic2810.yaml          | 51 +++++++++++++++++++
+>  2 files changed, 51 insertions(+), 16 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-tpic2810.txt
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-tpic2810.yaml
+> 
 
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
- drivers/gpio/gpio-tegra186.c | 33 ++++++++++++++++++++++++---------
- 1 file changed, 24 insertions(+), 9 deletions(-)
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
-index 8d298beffd86..2455e1a2c451 100644
---- a/drivers/gpio/gpio-tegra186.c
-+++ b/drivers/gpio/gpio-tegra186.c
-@@ -80,7 +80,6 @@ struct tegra_gpio_soc {
- 
- struct tegra_gpio {
- 	struct gpio_chip gpio;
--	struct irq_chip intc;
- 	unsigned int num_irq;
- 	unsigned int *irq;
- 
-@@ -372,6 +371,8 @@ static void tegra186_irq_mask(struct irq_data *data)
- 	value = readl(base + TEGRA186_GPIO_ENABLE_CONFIG);
- 	value &= ~TEGRA186_GPIO_ENABLE_CONFIG_INTERRUPT;
- 	writel(value, base + TEGRA186_GPIO_ENABLE_CONFIG);
-+
-+	gpiochip_disable_irq(&gpio->gpio, data->hwirq);
- }
- 
- static void tegra186_irq_unmask(struct irq_data *data)
-@@ -385,6 +386,8 @@ static void tegra186_irq_unmask(struct irq_data *data)
- 	if (WARN_ON(base == NULL))
- 		return;
- 
-+	gpiochip_enable_irq(&gpio->gpio, data->hwirq);
-+
- 	value = readl(base + TEGRA186_GPIO_ENABLE_CONFIG);
- 	value |= TEGRA186_GPIO_ENABLE_CONFIG_INTERRUPT;
- 	writel(value, base + TEGRA186_GPIO_ENABLE_CONFIG);
-@@ -456,6 +459,25 @@ static int tegra186_irq_set_wake(struct irq_data *data, unsigned int on)
- 	return 0;
- }
- 
-+static void tegra186_irq_print_chip(struct irq_data *data, struct seq_file *p)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
-+
-+	seq_printf(p, dev_name(gc->parent));
-+}
-+
-+static const struct irq_chip tegra186_gpio_irq_chip = {
-+	.irq_request_resources	= gpiochip_irq_reqres,
-+	.irq_release_resources	= gpiochip_irq_relres,
-+	.irq_ack		= tegra186_irq_ack,
-+	.irq_mask		= tegra186_irq_mask,
-+	.irq_unmask		= tegra186_irq_unmask,
-+	.irq_set_type		= tegra186_irq_set_type,
-+	.irq_set_wake		= tegra186_irq_set_wake,
-+	.irq_print_chip		= tegra186_irq_print_chip,
-+	.flags			= IRQCHIP_IMMUTABLE,
-+};
-+
- static void tegra186_gpio_irq(struct irq_desc *desc)
- {
- 	struct tegra_gpio *gpio = irq_desc_get_handler_data(desc);
-@@ -760,15 +782,8 @@ static int tegra186_gpio_probe(struct platform_device *pdev)
- 	gpio->gpio.of_xlate = tegra186_gpio_of_xlate;
- #endif /* CONFIG_OF_GPIO */
- 
--	gpio->intc.name = dev_name(&pdev->dev);
--	gpio->intc.irq_ack = tegra186_irq_ack;
--	gpio->intc.irq_mask = tegra186_irq_mask;
--	gpio->intc.irq_unmask = tegra186_irq_unmask;
--	gpio->intc.irq_set_type = tegra186_irq_set_type;
--	gpio->intc.irq_set_wake = tegra186_irq_set_wake;
--
- 	irq = &gpio->gpio.irq;
--	irq->chip = &gpio->intc;
-+	irq->chip = (struct irq_chip *)&tegra186_gpio_irq_chip;
- 	irq->fwnode = of_node_to_fwnode(pdev->dev.of_node);
- 	irq->child_to_parent_hwirq = tegra186_gpio_child_to_parent_hwirq;
- 	irq->populate_parent_alloc_arg = tegra186_gpio_populate_parent_fwspec;
--- 
-2.30.2
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/gpio/gpio-tpic2810.yaml:10:4: [warning] wrong indentation: expected 2 but found 3 (indentation)
+./Documentation/devicetree/bindings/gpio/gpio-tpic2810.yaml:30:5: [warning] wrong indentation: expected 2 but found 4 (indentation)
+
+dtschema/dtc warnings/errors:
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/patch/1596522
+
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
 
