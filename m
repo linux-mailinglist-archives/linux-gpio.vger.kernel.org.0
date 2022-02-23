@@ -2,67 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A59E4C16FA
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Feb 2022 16:39:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1DFF14C1774
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Feb 2022 16:45:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242160AbiBWPjk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Feb 2022 10:39:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48584 "EHLO
+        id S242333AbiBWPo4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Feb 2022 10:44:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242154AbiBWPji (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Feb 2022 10:39:38 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB82FBBE3F;
-        Wed, 23 Feb 2022 07:39:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1645630750; x=1677166750;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Mug4g/zF6+N5TPVq60yJ26yIsPAIsToKNpF5qKDs3Oc=;
-  b=mGpQOTC3YUJdUkrrAsSBJrTMA+CX97ShtPCRWG4job1O5eVW1/lby3iO
-   EMtHyekSh1+PUcdzGOWzLFpO6A/5Qr6f+bmsfQYnVAXDlPmZ1CabOlF7/
-   GY9HblwfPVSismiZswibSlMOpj6dRG3/QiD3lIsz5fikphdYCknBsvIIr
-   +d/Zd+qGCnez9mz6zuI86w6Co22uKwc99Mik7MPlUxpcrrpRSZ/L3gOQy
-   iP7PEyn8HHtw8CwnynnmkIDwW6Na6fsrwXQ1FtKrUCY4KFR0GbcvbWap+
-   /P6E0WJCxtwbTwD5R5ber1LXudDEur8v5L8u58d/r9lqcGU/R1Nf1wzvh
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10266"; a="338427902"
-X-IronPort-AV: E=Sophos;i="5.88,391,1635231600"; 
-   d="scan'208";a="338427902"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2022 07:39:10 -0800
-X-IronPort-AV: E=Sophos;i="5.88,391,1635231600"; 
-   d="scan'208";a="683936700"
-Received: from smile.fi.intel.com ([10.237.72.59])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2022 07:39:08 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1nMtic-007Tga-9O;
-        Wed, 23 Feb 2022 17:38:18 +0200
-Date:   Wed, 23 Feb 2022 17:38:18 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 2/5] platform/x86: x86-android-tablets: Fix EBUSY error
- when requesting IOAPIC IRQs
-Message-ID: <YhZU6rDSYPG3pUbx@smile.fi.intel.com>
-References: <20220223133153.730337-1-hdegoede@redhat.com>
- <20220223133153.730337-3-hdegoede@redhat.com>
- <YhZLI40Vukgv+PPO@smile.fi.intel.com>
- <9cda0c14-8108-fb42-4464-36a2fde0ffda@redhat.com>
+        with ESMTP id S242318AbiBWPox (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Feb 2022 10:44:53 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95AFCBF970;
+        Wed, 23 Feb 2022 07:44:24 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 17EE36174C;
+        Wed, 23 Feb 2022 15:44:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 739EFC340E7;
+        Wed, 23 Feb 2022 15:44:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1645631063;
+        bh=PVgeRt4LHCp9CTieLVRpqy0rj4cCYLX/Dq99wsHMmPU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=tlZZm79gjjtiP8+zk3/zOOLSkEoC4f6peYZ6h0GfuWhfOU9WR19HvhIKFX9AfC36K
+         V69iwNnjpt56KnRRNZDoip11T58CLJZvHM8b3sMkw+ixcWjTFw8A3+GCvAKL7lPBgu
+         8V0KTwVLhkxlsyOMim11/HsU34l7bhs55snoAApFW1Et1mr4Ae7Pd6TlnifbBCgmOu
+         u7x7PQZM2kkUfABVRUTzGB75JZmPmoEBEvmLQeVH2HfI4M1Y1mlAAvJF09mCPig1sy
+         YSvpspIxbb6gKOBC/iCKFFyKQIkIOMsrfquTLNGptMvk7mtTxXJVLvkAJ6GDuR9mw4
+         UixT8ABNV0afg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.lan)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1nMtoT-009wgt-7P; Wed, 23 Feb 2022 15:44:21 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Joey Gouly <joey.gouly@arm.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Hector Martin <marcan@marcan.st>,
+        Sven Peter <sven@svenpeter.dev>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, kernel-team@android.com
+Subject: [PATCH 0/5] gpiolib: Handle immutable irq_chip structures
+Date:   Wed, 23 Feb 2022 15:44:00 +0000
+Message-Id: <20220223154405.54912-1-maz@kernel.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9cda0c14-8108-fb42-4464-36a2fde0ffda@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, thierry.reding@gmail.com, joey.gouly@arm.com, jonathanh@nvidia.com, marcan@marcan.st, sven@svenpeter.dev, alyssa@rosenzweig.io, bjorn.andersson@linaro.org, agross@kernel.org, tglx@linutronix.de, linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -70,29 +72,60 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Feb 23, 2022 at 04:16:42PM +0100, Hans de Goede wrote:
-> On 2/23/22 15:56, Andy Shevchenko wrote:
-> > On Wed, Feb 23, 2022 at 02:31:50PM +0100, Hans de Goede wrote:
+I recently realised that the gpiolib play ugly tricks on the
+unsuspecting irq_chip structures by patching the callbacks.
 
-...
+Not only this breaks when an irq_chip structure is made const (which
+really should be the default case), but it also forces this structure
+to be copied at nauseam for each instance of the GPIO block, which is
+a waste of memory.
 
-> >>  	case X86_ACPI_IRQ_TYPE_APIC:
-> >> +		/*
-> >> +		 * The DSDT may already reference the GSI in a device skipped by
-> >> +		 * acpi_quirk_skip_i2c_client_enumeration(). Unregister the GSI
-> >> +		 * to avoid EBUSY errors in this case.
-> >> +		 */
-> >> +		acpi_unregister_gsi(data->index);
-> > 
-> > Perhaps a warning (or at least debug) message?
-> 
-> The function returns void, so we cannot check if it did anything or not.
+My current approach is to add a new irq_chip flag (IRQCHIP_IMMUTABLE)
+which does what it says on the tin: don't you dare writing there.
+Gpiolib is further updated not to install its own callbacks, and it
+becomes the responsibility of the driver to call into the gpiolib when
+required. This is similar to what we do for other subsystems such as
+PCI-MSI.
 
-Another approach may be to try to register GSI and if fail, try unregister
-and register again?
+3 drivers are updated to this new model: M1, QC and Tegra, as I
+actively use them (though Tegra is hosed at the moment), keeping a
+single irq_chip structure, marking it const, and exposing the new
+flag.
+
+Nothing breaks, the volume of change is small, the memory usage goes
+down and we have fewer callbacks that can be used as attack vectors.
+
+Another approach was to let gpiolib provide its own irq_chip structure
+and stack it, but:
+- only a few drivers are hierarchy aware
+- the diversity of interrupt flows makes it impractical
+
+I'd welcome comments on the approach. If deemed acceptable, there are
+another 300+ drivers to update! Not to mention the documentation. I
+appreciate that this is a lot of potential changes, but the current
+situation is messy.
+
+Note that these patches are on top of irqchip-next, which contains
+more constifying work.
+
+	M.
+
+Marc Zyngier (5):
+  gpio: Don't fiddle with irqchips marked as immutable
+  gpio: Expose the gpiochip_irq_re[ql]res helpers
+  pinctrl: apple-gpio: Make the irqchip immutable
+  pinctrl: msmgpio: Make the irqchip immutable
+  gpio: tegra186: Make the irqchip immutable
+
+ drivers/gpio/gpio-tegra186.c         | 33 ++++++++++++-----
+ drivers/gpio/gpiolib.c               | 13 +++++--
+ drivers/pinctrl/pinctrl-apple-gpio.c | 30 +++++++++-------
+ drivers/pinctrl/qcom/pinctrl-msm.c   | 53 +++++++++++++++++-----------
+ include/linux/gpio/driver.h          |  4 +++
+ include/linux/irq.h                  |  2 ++
+ kernel/irq/debugfs.c                 |  1 +
+ 7 files changed, 91 insertions(+), 45 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.30.2
 
