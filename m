@@ -2,190 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F10094C311A
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Feb 2022 17:17:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C4524C31A0
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Feb 2022 17:39:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229498AbiBXQSK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 24 Feb 2022 11:18:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37316 "EHLO
+        id S230042AbiBXQjg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 24 Feb 2022 11:39:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229876AbiBXQSJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Feb 2022 11:18:09 -0500
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C07181B3A75;
-        Thu, 24 Feb 2022 08:17:35 -0800 (PST)
-Received: from mwalle01.kontron.local. (unknown [213.135.10.150])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 3811B223F6;
-        Thu, 24 Feb 2022 17:10:39 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1645719039;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=H2eMkw48G2IEnPpAZYbRz1ozQ55FXZI5S0Cuz1HtPj4=;
-        b=GCZJy+ixU/kQqEaic+jy/Y9fxRXjENytHV1qZM6uYGHjx5itI9KLWTyEPccFDlM99paT6j
-        bCO2xHKvPz1Qk3mrUit4WXtxgmqOmba5ZW0ezShWKfuIvH3I0ZhG/Tuf2crXzHRsqcF4Qi
-        hMNLtcxHAHNH5PMqv+NiTxdQVW9mdHc=
-From:   Michael Walle <michael@walle.cc>
-To:     Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     UNGLinuxDriver@microchip.com, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Colin Foster <colin.foster@in-advantage.com>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH v1 5/5] pinctrl: microchip-sgpio: wait until output is actually set
-Date:   Thu, 24 Feb 2022 17:10:21 +0100
-Message-Id: <20220224161021.2197263-6-michael@walle.cc>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220224161021.2197263-1-michael@walle.cc>
-References: <20220224161021.2197263-1-michael@walle.cc>
+        with ESMTP id S229654AbiBXQjf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Feb 2022 11:39:35 -0500
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83C8F14CCA3;
+        Thu, 24 Feb 2022 08:39:05 -0800 (PST)
+Received: by mail-ed1-x52c.google.com with SMTP id q17so3684553edd.4;
+        Thu, 24 Feb 2022 08:39:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8ww14R/0doMbb1GnnkQOuIVoZujutPBK0hfKVk+ApXY=;
+        b=BT7WEMy0rlnh82V+S8R5fT/DjCHh1QvgOhGph5OTDiiTsVhFskdqRaungLGpCGw5vk
+         iS0gSSf81Y8cCkqzcWFYC/lFfyQi0YS/Ude/pkXSYOrp7TqrtfcEQG7EOBYczW5WSe/I
+         JdV4ljZWsJZj+RquInApUvlaOl3RGG47yhK3XIkwO9b/d+IcvcyCqO+uxmRr2e4ep2ML
+         5PG4ZZdZFZO9ZbndOnm6DHwUbTJwNGodKfYteXQ6lJ/qSfiJMfXuMm2PCMt/2XSHc3q9
+         3Pw+L8cDv5VXqbHJCvcxq8ehEgx3mm0qudnH4Qj7LqJrvORB3xGAoq848aAivyf3xWGd
+         6ZZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8ww14R/0doMbb1GnnkQOuIVoZujutPBK0hfKVk+ApXY=;
+        b=Q+o7HgbUerLvuYF1w20Rw/CPOlLn4lNV9PiHNq5ZZWLLCFYr7ZkcOCvU0o9h6DrgCk
+         kOS60f7u5Ve5rAL3tLdZO6/qha8GcSvVgnwxp+pzBqDjvv6LrqJWvMPh4PQpPRlGr2+5
+         kMloSzOqx4KV8xipVQTwSkJhf0z27UDIS+kWtwak4vRcjHbPu9823ZEJ6Y1G0eQsPbLD
+         P36PQ8whfbwDKZPYovBnGlFQgONDvU+j3ijm+B+vKyhfMRfNUwKsJH8hL2u7BT6eUzt5
+         MhEA27jRWPqPF0HehRoWcsqfeCD8H7FT+A204h2at5h8eNFW9gyD7oq4i0+Wf3TeW9fW
+         J6aw==
+X-Gm-Message-State: AOAM532gErARLF7PTqLVGgr6B0SRl0N+z1ux6L2HjvnteRo73mDqSCm9
+        /BlRM2xkgwmC3KzO9y5XK0U=
+X-Google-Smtp-Source: ABdhPJwJoHH32eVYGJKm8Bcye+DcONzdjP7VEdHc1ObU8Z95hbpmJAqjIx539QkZIjEd/tLs2VJtKA==
+X-Received: by 2002:a05:6402:1435:b0:410:d2e1:e6dc with SMTP id c21-20020a056402143500b00410d2e1e6dcmr3160043edx.138.1645720743929;
+        Thu, 24 Feb 2022 08:39:03 -0800 (PST)
+Received: from orome ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id g15sm1775861edb.11.2022.02.24.08.39.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Feb 2022 08:39:02 -0800 (PST)
+Date:   Thu, 24 Feb 2022 17:39:00 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Prathamesh Shete <pshete@nvidia.com>
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        jonathanh@nvidia.com, linux-gpio@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        smangipudi@nvidia.com, Manish Bhardwaj <mbhardwaj@nvidia.com>
+Subject: Re: [PATCH] gpio: tegra186: add Tegra234 PMC compatible in GPIO
+ driver
+Message-ID: <Yhe0pCpfeCpyfPWg@orome>
+References: <20220224082409.12559-1-pshete@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="lsEbeFBk5FrbFEHX"
+Content-Disposition: inline
+In-Reply-To: <20220224082409.12559-1-pshete@nvidia.com>
+User-Agent: Mutt/2.2.1 (c8109e14) (2022-02-19)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Right now, when a gpio value is set, the actual hardware pin gets set
-asynchronously. When linux write the output register, it takes some time
-until it is actually propagated to the output shift registers. If that
-output port is connected to an I2C mux for example, the linux driver
-assumes the I2C bus is already switched although it is not.
 
-Fortunately, there is a single shot mode with a feedback: you can
-trigger the single shot and the hardware will clear that bit once it has
-finished the clocking and strobed the load signal of the shift
-registers. This can take a considerable amount of time though.
-Measuremens have shown that it takes up to a whole burst cycle gap which
-is about 50ms on the largest setting. Therefore, we have to mark the
-output bank as sleepable. To avoid unnecessary waiting, just trigger the
-single shot if the value was actually changed.
+--lsEbeFBk5FrbFEHX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Michael Walle <michael@walle.cc>
----
- drivers/pinctrl/pinctrl-microchip-sgpio.c | 58 ++++++++++++++++++++++-
- 1 file changed, 57 insertions(+), 1 deletion(-)
+On Thu, Feb 24, 2022 at 01:54:09PM +0530, Prathamesh Shete wrote:
+> From: Manish Bhardwaj <mbhardwaj@nvidia.com>
+>=20
+> Using this patch we are adding PMC compatible string for
+> Tegra234 in GPIO driver so the irq hierarchy can be set.
 
-diff --git a/drivers/pinctrl/pinctrl-microchip-sgpio.c b/drivers/pinctrl/pinctrl-microchip-sgpio.c
-index 3f3b8c482f3a..768b69929c99 100644
---- a/drivers/pinctrl/pinctrl-microchip-sgpio.c
-+++ b/drivers/pinctrl/pinctrl-microchip-sgpio.c
-@@ -69,6 +69,7 @@ struct sgpio_properties {
- #define SGPIO_OCELOT_BIT_SOURCE  GENMASK(23, 12)
- 
- #define SGPIO_SPARX5_AUTO_REPEAT BIT(6)
-+#define SGPIO_SPARX5_SINGLE_SHOT BIT(7)
- #define SGPIO_SPARX5_PORT_WIDTH  GENMASK(4, 3)
- #define SGPIO_SPARX5_CLK_FREQ    GENMASK(19, 8)
- #define SGPIO_SPARX5_BIT_SOURCE  GENMASK(23, 12)
-@@ -118,6 +119,8 @@ struct sgpio_priv {
- 	struct regmap *regs;
- 	const struct sgpio_properties *properties;
- 	spinlock_t lock;
-+	/* protects the config register and single shot mode */
-+	struct mutex poll_lock;
- };
- 
- struct sgpio_port_addr {
-@@ -225,12 +228,54 @@ static inline void sgpio_configure_clock(struct sgpio_priv *priv, u32 clkfrq)
- 	sgpio_clrsetbits(priv, REG_SIO_CLOCK, 0, clr, set);
- }
- 
-+static int sgpio_single_shot(struct sgpio_priv *priv)
-+{
-+	u32 addr = sgpio_get_addr(priv, REG_SIO_CONFIG, 0);
-+	int ret, ret2;
-+	u32 ctrl;
-+
-+	/* Only supported on SparX-5 for now. */
-+	if (priv->properties->arch != SGPIO_ARCH_SPARX5)
-+		return 0;
-+
-+	/*
-+	 * Trigger immediate burst. This only works when auto repeat is turned
-+	 * off. Otherwise, the single shot bit will never be cleared by the
-+	 * hardware. Measurements showed that an update might take as long as
-+	 * the burst gap. On a LAN9668 this is about 50ms for the largest
-+	 * setting.
-+	 * After the manual burst, reenable the auto repeat mode again.
-+	 */
-+	mutex_lock(&priv->poll_lock);
-+	ret = regmap_update_bits(priv->regs, addr,
-+				 SGPIO_SPARX5_SINGLE_SHOT | SGPIO_SPARX5_AUTO_REPEAT,
-+				 SGPIO_SPARX5_SINGLE_SHOT);
-+	if (ret)
-+		goto out;
-+
-+	ret = regmap_read_poll_timeout(priv->regs, addr, ctrl,
-+				       !(ctrl & SGPIO_SPARX5_SINGLE_SHOT),
-+				       100, 60000);
-+
-+	/* reenable auto repeat mode even if there was an error */
-+	ret2 = regmap_update_bits(priv->regs, addr,
-+				  SGPIO_SPARX5_AUTO_REPEAT,
-+				  SGPIO_SPARX5_AUTO_REPEAT);
-+out:
-+	mutex_unlock(&priv->poll_lock);
-+
-+	return ret ?: ret2;
-+}
-+
- static int sgpio_output_set(struct sgpio_priv *priv,
- 			    struct sgpio_port_addr *addr,
- 			    int value)
- {
- 	unsigned int bit = SGPIO_SRC_BITS * addr->bit;
-+	u32 reg = sgpio_get_addr(priv, REG_PORT_CONFIG, addr->port);
-+	bool changed;
- 	u32 clr, set;
-+	int ret;
- 
- 	switch (priv->properties->arch) {
- 	case SGPIO_ARCH_LUTON:
-@@ -249,7 +294,16 @@ static int sgpio_output_set(struct sgpio_priv *priv,
- 		return -EINVAL;
- 	}
- 
--	sgpio_clrsetbits(priv, REG_PORT_CONFIG, addr->port, clr, set);
-+	ret = regmap_update_bits_check(priv->regs, reg, clr | set, set,
-+				       &changed);
-+	if (ret)
-+		return ret;
-+
-+	if (changed) {
-+		ret = sgpio_single_shot(priv);
-+		if (ret)
-+			return ret;
-+	}
- 
- 	return 0;
- }
-@@ -788,6 +842,7 @@ static int microchip_sgpio_register_bank(struct device *dev,
- 	gc->of_gpio_n_cells     = 3;
- 	gc->base		= -1;
- 	gc->ngpio		= ngpios;
-+	gc->can_sleep		= !bank->is_input;
- 
- 	if (bank->is_input && priv->properties->flags & SGPIO_FLAGS_HAS_IRQ) {
- 		int irq = fwnode_irq_get(fwnode, 0);
-@@ -848,6 +903,7 @@ static int microchip_sgpio_probe(struct platform_device *pdev)
- 
- 	priv->dev = dev;
- 	spin_lock_init(&priv->lock);
-+	mutex_init(&priv->poll_lock);
- 
- 	reset = devm_reset_control_get_optional_shared(&pdev->dev, "switch");
- 	if (IS_ERR(reset))
--- 
-2.30.2
+s/irq/IRQ/, but otherwise looks good:
 
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--lsEbeFBk5FrbFEHX
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmIXtKQACgkQ3SOs138+
+s6F4Bg//bdcp/cCBhMmhRROLgl8W/gI7aGWofrewPJUM28kDVshWPUyxxzCm99Ly
++ebwJ2ILgqPSloqFOwPM7cQzzhEGupRzTWGp2/e9PWlQmBW2t7J0Ft8bmI25cyyB
+YBnK6OlkFij7lHnVsVj2ECbcyBtOL6oc8se/Q55twiPfQihY2hOZF3NoVmiPNcBt
+q7XJMUTqfvMDHPqduey9FDVSexlPm5GPGVw8WcojxCAuasYL2brNhkCUFO1714Dg
+UeUff2CSR/0Dr1SX37YbqcfhOZpMJS6xQMnrsStdC96LDn7DRvvRC1ljO3v/2w7x
+435QsTn2s84ynQQr7ACVFfkALwm3UNSvSIx4oubv0vsjx6bQ30FG4cTKqtvrMbzw
+hnWtEb8zsHtvQ9HdPzMSA/2LlZ9F+aFsaaoOF2ni0EOreSKX3rPVx5Q2mf7iyHnH
+KJdRAZFNisiHvf9PcFFN5omlbDx6AuTuzMFJAxYf43TsMeaoowkS4+LNFwiRrmN/
+08wq0xy8Gw6ig0n5sKNEhDcOPAnqBH6Mh8abWJKWP8dvXCEirVCpFxSACS+5sKEJ
+pU9JSQgvSUovlCw/AfuezB/35+VQ9yBASf0e+YWje9Pk4Qb2BGmlyjR60zkDUcYn
+KxewUtg5lqh1hajjfTFAncrIK9omiTkxW57Z7fFBbI/0QbAMaE4=
+=e1QQ
+-----END PGP SIGNATURE-----
+
+--lsEbeFBk5FrbFEHX--
