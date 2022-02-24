@@ -2,143 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 09C164C3236
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Feb 2022 17:53:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C0C2B4C3260
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Feb 2022 17:58:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230112AbiBXQwZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 24 Feb 2022 11:52:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54348 "EHLO
+        id S229606AbiBXQ5s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 24 Feb 2022 11:57:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229978AbiBXQwY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Feb 2022 11:52:24 -0500
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 709553586B;
-        Thu, 24 Feb 2022 08:51:46 -0800 (PST)
-Received: by mail-ej1-x62a.google.com with SMTP id qx21so5603428ejb.13;
-        Thu, 24 Feb 2022 08:51:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0BX8BM017uCOv9ckNj58aZrZbCd/kR/+hefTXMO9tPo=;
-        b=kiIocb6M3Uuv4xiRzAdVw033se264t+5e8SmYP5ibq1I4FYRMAbbkXLawlWwzOm54C
-         xHb9/0YbSlMUpw2Y6llCywFgYrAx7ZpZqQ+LatVEGnWWdWhVfJOQgo+QQSMiaB0nhH26
-         kpkq/SZK9dynlhtQuiHfpLZe9Mhcoq6diD0oyzZr+Eab5VLwELySFw3E0vHze+1GYjcg
-         a7cktJzM4p6B4R9ymuUjhoB5MBJsi2ax6GGP6CGvS9MpQvS2yOvXYqUupHSeCx/uSRcg
-         PBt4OTHJvYUrvjPylxPIa+CChh3DpYRgOwluNXETDaED4nhajMnp9x/THJUOxJfe+68g
-         DzYQ==
+        with ESMTP id S229971AbiBXQ5r (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Feb 2022 11:57:47 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 047D4E0E5
+        for <linux-gpio@vger.kernel.org>; Thu, 24 Feb 2022 08:57:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1645721835;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=TncsG7YXX5+yOaoX96UNZNhSvIR4PPKBKgvHMZmiEE8=;
+        b=eVQ0NZfCyYBjgXw3AI4uN7Tfu5edGN9VQyG6uegeD8BqHVa3VeBXnpELLaVi8YaOSGzJ5r
+        XyJAhG8GbfXyTY1vaHWj/nPghH8ft+YMFTyD75AVc7HO82VhlQgKU2Opt+6E9bhm500ba1
+        Pz7iplbhAy7gvW+pkOtlWT6+fOXHwZA=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-140-YOQjw-qXN4KGfgBJmhXCKQ-1; Thu, 24 Feb 2022 11:57:13 -0500
+X-MC-Unique: YOQjw-qXN4KGfgBJmhXCKQ-1
+Received: by mail-ed1-f69.google.com with SMTP id dy17-20020a05640231f100b00412897682b4so980345edb.18
+        for <linux-gpio@vger.kernel.org>; Thu, 24 Feb 2022 08:57:13 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0BX8BM017uCOv9ckNj58aZrZbCd/kR/+hefTXMO9tPo=;
-        b=q0d+qe+miDlHrQtrL3aAVTcYOPTh5r2IqEd5/F6rQOf3TMCfxCfQH1Fl0kLayU1sZk
-         6Yer7JpcT6ivvv7mgbek8wi63WwhW16JmZV6TSSaZRd/V9sFGCPu3uEPCkmIhVTghPzB
-         H9CP5rtCgfw8pdb70v9zbMqxyDLXVP9o6Czb3oIxHiI1DidN5kufSKxmD0lvjUdDpRve
-         LMg2QxfF7RQYOEx+RfS4J0VU+XYV51b0Gaes8Q+HRbsumzD68qmNWGz0YuX6HMyXAXsG
-         vMjcgQKxkcO00ukPPaGf1bWpWQIfv6DUUBZzYxbIFZGb1fC+Ea9RtMu/1ANfnwYtWA6p
-         UQ7g==
-X-Gm-Message-State: AOAM531+xG7c1bJwT1zAPYutuRRcATc/BrDYIbZ+OsSe+Yrx9qzbDRfN
-        DpdFEbjSrU443oifsv4aIuA=
-X-Google-Smtp-Source: ABdhPJyWV1zkvb8+mEvqp9ZSTYLeQknbMbcIBqw4G7wy2t0xWvm2gOYKTOxfOHmqMh5tXSGKmjzpjg==
-X-Received: by 2002:a17:906:af79:b0:6ce:61d3:7e9b with SMTP id os25-20020a170906af7900b006ce61d37e9bmr3085459ejb.191.1645721505223;
-        Thu, 24 Feb 2022 08:51:45 -0800 (PST)
-Received: from orome ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id j3sm1600520ejj.9.2022.02.24.08.51.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Feb 2022 08:51:44 -0800 (PST)
-Date:   Thu, 24 Feb 2022 17:51:41 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Joey Gouly <joey.gouly@arm.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Hector Martin <marcan@marcan.st>,
-        Sven Peter <sven@svenpeter.dev>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, kernel-team@android.com
-Subject: Re: [PATCH 1/5] gpio: Don't fiddle with irqchips marked as immutable
-Message-ID: <Yhe3neSJbAxRbt+Z@orome>
-References: <20220223154405.54912-1-maz@kernel.org>
- <20220223154405.54912-2-maz@kernel.org>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=TncsG7YXX5+yOaoX96UNZNhSvIR4PPKBKgvHMZmiEE8=;
+        b=gdHuf5KnKeSRTlwvYaUtNL3Fvak24xJ1kORvO8RvylmpbpAoWQM5vJjAff20ZBWbqj
+         c2UsdJyCj6qCEANrCvamved1icdd3AXkwjW+I7Ewd5LOBCj9bqu0HsGo/XiEfG9Y0t0a
+         yWOmrqoOQmeRQS0+a0vLy//U2HunivzpGW3sq/tyieLW2cl6/G66L3oZrIU2B4GpToeV
+         uabodTgTYScvjzYzXLk/nu3jG0YNN3uH+g5UhMhBmATQL6FfUZ8oyClef6MZEucQwcw5
+         1z3bMOFeHrrfsgqHhoyZAWhPH7pl75OJ0R+4U+YNPLRQhmGMLEEjclLUtEhFBFSmFaak
+         3dLw==
+X-Gm-Message-State: AOAM532v+1vIc9eH8vmo9ZZqRLBefmEkHPTtzNI5JIHeQvpR7xiNdekS
+        adlEsMuB1aAJh9Cy8dfmNSbPaum/KikkziYi2X4LYZq6ScN62B6yzrOCjDSqTFvn0ArzFkJX7RP
+        0b/rX/7B3gL4JUR3rz/4Spg==
+X-Received: by 2002:a05:6402:440b:b0:410:5fb4:7225 with SMTP id y11-20020a056402440b00b004105fb47225mr3107434eda.216.1645721832360;
+        Thu, 24 Feb 2022 08:57:12 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxkrMWqFPTudWVMfc/YBNuuU+WF5pQlz2tw8rgREzx5hKsdbogu3/XpRlu2sJBuVaHggsaszg==
+X-Received: by 2002:a05:6402:440b:b0:410:5fb4:7225 with SMTP id y11-20020a056402440b00b004105fb47225mr3107432eda.216.1645721832181;
+        Thu, 24 Feb 2022 08:57:12 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
+        by smtp.gmail.com with ESMTPSA id r22sm1653717ejo.48.2022.02.24.08.57.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Feb 2022 08:57:11 -0800 (PST)
+Message-ID: <0568e484-4ab2-5641-53ae-29ff48e952e6@redhat.com>
+Date:   Thu, 24 Feb 2022 17:57:11 +0100
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vbN/cyUZyiD0I2CK"
-Content-Disposition: inline
-In-Reply-To: <20220223154405.54912-2-maz@kernel.org>
-User-Agent: Mutt/2.2.1 (c8109e14) (2022-02-19)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [PATCH 4/5] platform/x86: x86-android-tablets: Workaround Lenovo
+ Yoga Tablet 2 830/1050 poweroff hang
+Content-Language: en-US
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <20220223133153.730337-1-hdegoede@redhat.com>
+ <20220223133153.730337-5-hdegoede@redhat.com>
+ <YhZLpmhobBjrOHDU@smile.fi.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <YhZLpmhobBjrOHDU@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi,
 
---vbN/cyUZyiD0I2CK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2/23/22 15:58, Andy Shevchenko wrote:
+> On Wed, Feb 23, 2022 at 02:31:52PM +0100, Hans de Goede wrote:
+>> These tablets' DSDT does not set acpi_gbl_reduced_hardware, so
+>> acpi_power_off gets used as pm_power_off handler. This causes "poweroff"
+>> on these tablets to hang hard. Requiring pressing the powerbutton for
+>> 30 seconds *twice* followed by a normal 3 second press to recover.
+>>
+>> Avoid this by overriding the global pm_power_off handler to do
+>> an EFI poweroff instead.
+> 
+> Oh, you eventually found the root cause (reduced HW bit)?
 
-On Wed, Feb 23, 2022 at 03:44:01PM +0000, Marc Zyngier wrote:
-> In order to move away from gpiolib messing with the internals of
-> unsuspecting irqchips, add a flag by which irqchips advertise
-> that they are not to be messed with, and do solemnly swear that
-> they correctly call into the gpiolib helpers wueh required.
->=20
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> ---
->  drivers/gpio/gpiolib.c | 7 ++++++-
->  include/linux/irq.h    | 2 ++
->  kernel/irq/debugfs.c   | 1 +
->  3 files changed, 9 insertions(+), 1 deletion(-)
+I'm not sure, it is possible that not setting the reduced HW bit
+is actually correct for this hw, but that does lead to using
+acpi_power_off which seems broken on this system.
 
-I kind of like this. The bit where the const cast is essentially guarded
-by an "immutable" flag is a bit funky, but it doesn't look like there is
-a good way to do it by making all references const without doing a huge
-all-at-once conversion.
+I've updated the commit message while merging this to reflect
+that using acpi_power_off is the problem, rather then not setting
+the reduced HW bit.
 
-I've always found it a bit irritating that irq_chip was somewhere
-between a container for chip-specific data and an "ops" structure. I
-think it'd be even nicer if this was split into an extra struct
-irq_chip_ops, which could then always be const and a struct irq_chip
-that contained primarily chip-specific data as well as a pointer to
-struct irq_chip_ops.
+Also note that the issue of reboot being the same as poweroff once
+the system has been rebooted at least once is still unresolved.
 
-But again, this seems fairly tricky to pull off given all the
-interdependencies and we can iterate on this in the future, so this
-seems like a good enough compromise:
+Regards,
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+Hans
 
---vbN/cyUZyiD0I2CK
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmIXt5oACgkQ3SOs138+
-s6Hsmg//ZlvIGlAISsBwoAWBpifpjvE4OPtPa2w5okmTJxjSFYwmu1dcqaGOQbqk
-PM58PdveLzwtzZUMy2BFNGtyE1cXPfDvIQlUP2QXjkpmpOH0nZvLbKLtbaOKPe5/
-k7ZT1snfCCPyCSkTt3ObyRr/vd09RHkcocvJ3BPX8qgcFs8RP+csLO4LbtPdN4Mp
-DTPbjaUqdqG2RvSuEtRrHenTZ6f+g+39LrwgfzRXztvQvFtNEmK+D/sZDENkTVtm
-+YIJBgiANbzhXtib+/9FaG3MJECmu6ZBNNSaZat91Ksn+TWDz/RYRdZSsEcposEx
-eH5P6Oas2DsQ8P8ny7jplcGV1nOGobRdQBRWnWHXKDGrsDBaVzdFjc4Z/rzoRshO
-a5kV7CL+T6Gu+xVWS81PBBcUcwFsIpn5QWe32g3g0cPuNJpsWYpM6lnbH+CrQcQR
-LTOMQiTe8hyf6vdhTbdMfb6I/i3JscSm23KJYgZD1Se1bYkzi6DbCf62W2ygqHgT
-yakOPdNcZP8KZKp85niKcUdG/ecW9HtTSBGSLDkyMUgBqg4Jr/2uC6C1h/ra3t/D
-HlMJDYR4rrx0kR6JDiHl4Be0AJPPo2YksA+YZzVYIOgv0dMLzk9JX0AXeSwo6xBT
-Byu+xRCU7+shobZGJlJOJXnRXw7XwLhg3pdOwotfppxKxXcUgzU=
-=JQTC
------END PGP SIGNATURE-----
-
---vbN/cyUZyiD0I2CK--
