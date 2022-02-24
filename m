@@ -2,134 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EBF6F4C31AE
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Feb 2022 17:41:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 022B04C31BD
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Feb 2022 17:44:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230034AbiBXQlU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 24 Feb 2022 11:41:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39668 "EHLO
+        id S230056AbiBXQnu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 24 Feb 2022 11:43:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229473AbiBXQlT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Feb 2022 11:41:19 -0500
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5E8626AED;
-        Thu, 24 Feb 2022 08:40:48 -0800 (PST)
-Received: by mail-ed1-x52d.google.com with SMTP id s24so3672378edr.5;
-        Thu, 24 Feb 2022 08:40:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qALsUfBRNZNy1q4MnFnN/Mg68ORU7TGkkXw7GkgCc1I=;
-        b=Ssjj3P1kELJ8G5JUikFQhi0FmjJbN5NEY1VUlZ/Va4BVNhkXvxOxH2PMKMAG0LTXJD
-         uOe8kD+hfDyom7n8ch4Ni8Qg57So73H2MfsXxUxUCmYOZbWEuG1BRlB2QS5qyZUvHRCi
-         a66Kml+ysys3+kH2Oft17MXzFK0J5qwFjIW8+b0lQ0DV1MgIu/0HQ49vAlo1UlDtWlHP
-         8fkCv9eaeLa2SeYkcoChzqFoDXp03jX7KgTYrSqs4qlf76BBghLgOL5nDop0b6u9Ht03
-         etRz+Neju6nQkwBHq5n7Q2tCHOOfi0g6UUdDyf1Ewld0RQJ27U/0BiYMKSKPqzn5/WZV
-         S1Pw==
+        with ESMTP id S230093AbiBXQnt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Feb 2022 11:43:49 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7B9D814076B
+        for <linux-gpio@vger.kernel.org>; Thu, 24 Feb 2022 08:43:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1645720998;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=IjkZhGzKSvbLhlEUtM24hRkXnGsRdzxiWu7wlvpAAFc=;
+        b=MfKW/98oO3ijLnYg/3dU3hXx021zmloJujgssXfNY0DeGpg5MWwgqkJEt/gkk+itlG5iL4
+        /n2md6D3Yax5s9OvvHpZnhd0uJk3h0pCFkLt7ClKfXBNJAJpwgOvCWkcYmWbv6r/ka0HVx
+        p6CHim67fZz2u8RuWljNqxPrNxEnoW0=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-438-3-e83xdpO7aMFbW98nSrLQ-1; Thu, 24 Feb 2022 11:43:17 -0500
+X-MC-Unique: 3-e83xdpO7aMFbW98nSrLQ-1
+Received: by mail-ed1-f71.google.com with SMTP id l24-20020a056402231800b00410f19a3103so982283eda.5
+        for <linux-gpio@vger.kernel.org>; Thu, 24 Feb 2022 08:43:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qALsUfBRNZNy1q4MnFnN/Mg68ORU7TGkkXw7GkgCc1I=;
-        b=NMWSZXZ4rK9/OaEUidXVWybmo/vRsFWapW2raiHDQsgrd2N8jUq/x7V7SLzfGO8Dm4
-         Ndjw9Qj2i+8IGOW78HtZHDev1oJ+9bp4kT0jNxKJc99LSEMNY6uCmJliY9AP7R3afFg3
-         FS/qPq4pOYNuun52Cq3J8g0D+dj+DMD3m09p3lqHeG2hKoQCzQ4K6LoYCrlED2mQXpKr
-         3KZtKCgv4fjTpVCG3eG/+fHPbRCGyjNB9nCL6oBpZXu0CSqOMkmiysoRLWs1jKqBY/0D
-         H40lSVkPmh0OilXT2sQwO/GDlCMiNQvCn+LnvzRW7hSxq/DS8c+aGlMpM+WUYSrqaPB3
-         kw2w==
-X-Gm-Message-State: AOAM532bPR3IH6JIeePq+FqgMdJnmvNupm12+5+pDItkZ8AhoST3wkl7
-        NeTktQyrqA6U6kgGluFBoxc=
-X-Google-Smtp-Source: ABdhPJyjBea5qD7kSqwqF+o5kzXVs8iZMyCe9mWUHCCP8R6Qw0DaiQ97szh10dh6UTSupoTJtGQJow==
-X-Received: by 2002:a05:6402:5cb:b0:410:82a0:5d76 with SMTP id n11-20020a05640205cb00b0041082a05d76mr3158717edx.130.1645720846536;
-        Thu, 24 Feb 2022 08:40:46 -0800 (PST)
-Received: from orome ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id v30sm1585123ejv.76.2022.02.24.08.40.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Feb 2022 08:40:45 -0800 (PST)
-Date:   Thu, 24 Feb 2022 17:40:43 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Joey Gouly <joey.gouly@arm.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Hector Martin <marcan@marcan.st>,
-        Sven Peter <sven@svenpeter.dev>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, kernel-team@android.com
-Subject: Re: [PATCH 0/5] gpiolib: Handle immutable irq_chip structures
-Message-ID: <Yhe1Cxdn8t3oVxMZ@orome>
-References: <20220223154405.54912-1-maz@kernel.org>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=IjkZhGzKSvbLhlEUtM24hRkXnGsRdzxiWu7wlvpAAFc=;
+        b=i62NB7f5Ew6tn/tJFcAsehSvAT0TaxDlSi+6kxFxAmJyIztKqjR83altX6O2A2t8rT
+         gLIZdnqg3z+mmEOH0X2EGZ8BJLIJrKv3euclUCmXfyRX5ppxdhFCBrtRH4HrcUr2tlaS
+         oEUDMju6eAj9cak9J5Q10k0DRKh46XR2blVIp8NW8/htltVKop4SY1Q+Nezlh2jkoY2C
+         ohw80Q/Ubck/EerckrfGxcNHdAxOpkNSGp1ofUrMUXeNDfi8oidWUL/HGxSBv0ukKGuF
+         zh2vIo4zRl+6/R0L9fNMz6CJw4Gzh3qKIVi00sFCglneo0afKCzX3r6fHcmOKLN/D7P1
+         dJPA==
+X-Gm-Message-State: AOAM533DwyLhHQgcZSWm8TF3gtB1FzBudvS70dyigX0sFw5z7qUMc1lz
+        iLA7m8S3jtDCNhUZloMn/SatjXJo5MPBNRy0BcRpECe50143l4dcnMAZeUhwXGi4d9KeVusJVmE
+        Ee5VicyAUL7KMsR2iW6bNvg==
+X-Received: by 2002:a17:906:646:b0:6ce:a6fb:2854 with SMTP id t6-20020a170906064600b006cea6fb2854mr2855756ejb.675.1645720995998;
+        Thu, 24 Feb 2022 08:43:15 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzdKBIqpxp81Whr2YWyGGKRxrr/oCgPvaWV3pnV7BAfebmTEUVfyQQUGHR8jgmPEk00PYll2Q==
+X-Received: by 2002:a17:906:646:b0:6ce:a6fb:2854 with SMTP id t6-20020a170906064600b006cea6fb2854mr2855749ejb.675.1645720995815;
+        Thu, 24 Feb 2022 08:43:15 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
+        by smtp.gmail.com with ESMTPSA id y22sm1597246ejm.225.2022.02.24.08.43.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Feb 2022 08:43:15 -0800 (PST)
+Message-ID: <298ee896-9bc4-9030-c2dd-21b6d541acb7@redhat.com>
+Date:   Thu, 24 Feb 2022 17:43:14 +0100
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="wDjQmXbwTP1gIXI+"
-Content-Disposition: inline
-In-Reply-To: <20220223154405.54912-1-maz@kernel.org>
-User-Agent: Mutt/2.2.1 (c8109e14) (2022-02-19)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [PATCH 0/5] pinctrl/baytrail platform/x86: SUS6 mux / Lenovo Yoga
+ Tablet 2 support
+Content-Language: en-US
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <20220223133153.730337-1-hdegoede@redhat.com>
+ <YhZK0VPc2tg6upYg@smile.fi.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <YhZK0VPc2tg6upYg@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi,
 
---wDjQmXbwTP1gIXI+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2/23/22 15:55, Andy Shevchenko wrote:
+> On Wed, Feb 23, 2022 at 02:31:48PM +0100, Hans de Goede wrote:
+>> Hi All,
+>>
+>> This series consists of 2 parts:
+>>
+>> Patch 1   : pinctrl: baytrail: Add pinconf group + function for the pmu_clk
+>> Patch 2-5 : platform/x86: x86-android-tablets: Add Lenovo Yoga Tab2 support
+>>
+>> Patch 5 has a runtime dependency on patch 1, but this is only  runtime and
+>> there are some other patches in flight to other subsystems which are also
+>> needed for the Lenovo Yoga Tab2 support.
+>>
+>> As such I believe that patch 1 can be merged independently through the
+>> pinctrl-intel tree and then I'll merge patches 2-5 through the pdx86 tree.
+>>
+>> The only reason for sending this out as a series is because patch 5
+>> uses the new pmu_clk pinconf added by patch 1.
+> 
+> You may route via PDx86 and provide an IB to me, thanks!
 
-On Wed, Feb 23, 2022 at 03:44:00PM +0000, Marc Zyngier wrote:
-> I recently realised that the gpiolib play ugly tricks on the
-> unsuspecting irq_chip structures by patching the callbacks.
->=20
-> Not only this breaks when an irq_chip structure is made const (which
-> really should be the default case), but it also forces this structure
-> to be copied at nauseam for each instance of the GPIO block, which is
-> a waste of memory.
->=20
-> My current approach is to add a new irq_chip flag (IRQCHIP_IMMUTABLE)
-> which does what it says on the tin: don't you dare writing there.
-> Gpiolib is further updated not to install its own callbacks, and it
-> becomes the responsibility of the driver to call into the gpiolib when
-> required. This is similar to what we do for other subsystems such as
-> PCI-MSI.
->=20
-> 3 drivers are updated to this new model: M1, QC and Tegra, as I
-> actively use them (though Tegra is hosed at the moment), keeping a
+Ok, I've just created an immutable-branch + signed tag for this,
+with your 2 small nitpicks fixed.
 
-Hosed in what way? Anything I can help with?
+I'll send you a pull-req for this right away.
 
-Thierry
+Regards,
 
---wDjQmXbwTP1gIXI+
-Content-Type: application/pgp-signature; name="signature.asc"
+Hans
 
------BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmIXtQoACgkQ3SOs138+
-s6GqbBAAhO4/JiZXWM3idaYCebTwochmkwPmAKDKubIQPPRSDMr23n5LKH7MR8QO
-I45Xq0AkDNOEjxx0qCWn+gJ+f8mTn5QfCrkOT74ysx4ifZtPs4ZTxC9IFuf1VZV4
-3S4Q4cv7GlCecPYs7P43Tj7EJwGp/oHFdAA87n4ESLf391p4xOMscXbu1KRVmJJm
-0HcOEsjKNzXk89JDS5UyuY+Vy9mIT/+yQsnNnI3LbZug3x6I/zeu2EZjCvI8mZY6
-d1GR96HuEEMkQULGYFQC/Ur/GE4ewF41LB8RLCmdb4pInXWjBakTKnKfuRJfLPbR
-BB9kLBquMmb9K/fmLBiH+CA5PwwYQbpBflUcERAO3bQ+drNzN+sbzM2bXret0KQH
-+jizLi6oTJmDZTiWIVXffqctZBgpJ+jX8WnSZH9BPsLl5tuX0J51vabLgknYcF+P
-TRN8srwKbHpza25UeDctjyvzb7esps/ssWf7Bpay8M2J9BiJ6/MwVJ6jtDMu+NDj
-nZnrUy1Mh/plKCNbPvWP/Xlwqno/1y0vYaX0g3Jd6m8b6v6SicgcezH6lx9JsPJE
-tCxZGyzesMspVlCxso2UIKkO+V63e5TWiEAZmlr1KhYoaJvOVy1DpuRo1ubQMLP2
-prAS4hGV6aFCSGqaQIyODIy1pploi3mjgVzGsV1dvbiriSy/co8=
-=i/AT
------END PGP SIGNATURE-----
+> 
+>> Regards,
+>>
+>> Hans
+>>
+>>
+>> Hans de Goede (5):
+>>   pinctrl: baytrail: Add pinconf group + function for the pmu_clk
+>>   platform/x86: x86-android-tablets: Fix EBUSY error when requesting
+>>     IOAPIC IRQs
+>>   platform/x86: x86-android-tablets: Add Lenovo Yoga Tablet 2 830 / 1050
+>>     data
+>>   platform/x86: x86-android-tablets: Workaround Lenovo Yoga Tablet 2
+>>     830/1050 poweroff hang
+>>   platform/x86: x86-android-tablets: Lenovo Yoga Tablet 2 830/1050 sound
+>>     support
+>>
+>>  drivers/pinctrl/intel/pinctrl-baytrail.c   |   9 +
+>>  drivers/platform/x86/x86-android-tablets.c | 280 +++++++++++++++++++++
+>>  2 files changed, 289 insertions(+)
+>>
+>> -- 
+>> 2.35.1
+>>
+> 
 
---wDjQmXbwTP1gIXI+--
