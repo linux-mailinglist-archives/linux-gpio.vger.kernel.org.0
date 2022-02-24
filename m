@@ -2,61 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E5644C2EA7
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Feb 2022 15:50:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0063C4C2EC9
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Feb 2022 15:59:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231309AbiBXOvB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 24 Feb 2022 09:51:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46708 "EHLO
+        id S235678AbiBXO7O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 24 Feb 2022 09:59:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229670AbiBXOvA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Feb 2022 09:51:00 -0500
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5806A222182
-        for <linux-gpio@vger.kernel.org>; Thu, 24 Feb 2022 06:50:30 -0800 (PST)
-Received: by mail-ej1-x636.google.com with SMTP id qx21so4823799ejb.13
-        for <linux-gpio@vger.kernel.org>; Thu, 24 Feb 2022 06:50:30 -0800 (PST)
+        with ESMTP id S235674AbiBXO7M (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Feb 2022 09:59:12 -0500
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E1E319E0B0;
+        Thu, 24 Feb 2022 06:58:41 -0800 (PST)
+Received: by mail-wm1-x335.google.com with SMTP id l1-20020a7bcf01000000b0037f881182a8so3654768wmg.2;
+        Thu, 24 Feb 2022 06:58:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yHQScCfPSxk1/2qgU1rzoQQDyNgB9x+6ryIxhq8g+cw=;
-        b=pwGBOUEAyJs9ZXumudOWjhbbY0HCOjePpUknR//4S/oTtBkW9k6aTVC1Eugs4DmXA1
-         gqVVu/0BGwBHz7/lGUE+gdoFkP/iuza2gWLGV9E42SjWLmK0BcT62DMRoavN67YQqGLq
-         nLmnfqApSvdrIFPKX2TkTvjbTSCsZcaasmPt65IqaBGq5r20t9mmhUStx0SduM8EsMrZ
-         jPmeETHr6hmSImnbmtiifneD015L6fThw+xHhWH9YhQnDVbTeM4gBfC2fmOc65cyiJfL
-         a7Hk+UkTC0wnm3G2lsUHA3hlHklThRgdI6ZGYwbe2tOXUHr3n5e2zBPUFMvHraCKOzu1
-         dJbA==
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=r+Ap09YkV/WFyV+S/aswBxVGWwiQEj8kB/0esliku3c=;
+        b=O2A+WqV+Ik/cjprvWHQqK1Y5StFgdqAKoF5ODyMioDcztFamCvdQ+isDJnfCVPDAYL
+         sCEPIAOs8YTwM3OTKLoIRV7dOryXNKQcYQJ9aVo+DPyAQLhpnK5JBopro9D8/j45GDQw
+         7uh+SGOEfoTHlClpT094Bo9cP3yt+4aSQ7w3dOsC8LzfcDbCBi9ll9F5ClOA0gQS1fdN
+         zqIGsKsELxaovJd+eTmDKboEge/QECYCkEyQyYPOzpxqafHeA/qYOf8ie76V7oJlrDeC
+         Ean6aOPaWqgNoG0hIlTlc+b7e7OhyjeKkUGAQ3c17Gna33ybE7MBqqUl6gwbxJx/m13R
+         pMgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yHQScCfPSxk1/2qgU1rzoQQDyNgB9x+6ryIxhq8g+cw=;
-        b=0B67nYEBNl9Qp1ub0U382awyviVIdYUpkmIk6XDrgs1H9jjlBBtJs2+LBUel1JD3p3
-         wTB5cpK2hBqLMQfc/F2dbup7PmFvH0DZA8UL5QSJRSGxxI6gHvCRyvgYjXRoJB0nxgY9
-         Ny+JqhWucdAnjp8zBfnqNReYIrXkTen9x8dnFU/bwgsvsMCcCMyXjJu6f764uuYQb3CX
-         hbf/omYknDVgZbaexnUI3NFDLkdN2Xj64ij4dqIIi6vEi1L1YaIseA1Gic0EBYaUV0lU
-         AEFdJ/vNqouqf4BXrMigizPzA0UqkqMG2MFKa9VsGBaOgJLU4yxcJIb1FobNYswiz3vC
-         ATog==
-X-Gm-Message-State: AOAM530PyT056+wJzICTW7FP0rh3dp/uTVGDyEcGoJPhcsXfXG135vb9
-        cX8mlVa8AyMhdZioBViiK2pC0+5BpC9RDrwjtF2usptqTsQ=
-X-Google-Smtp-Source: ABdhPJw8wYuOeFTGn4WR7KRWRicVGdEDcLQ/oUcZSALtTQYeG8F+K4jqbOwxBN/4fGfEd7ovtyPAle7GVExn2Ux1ShQ=
-X-Received: by 2002:a17:906:8606:b0:6d1:5031:86da with SMTP id
- o6-20020a170906860600b006d1503186damr2573603ejx.734.1645714228781; Thu, 24
- Feb 2022 06:50:28 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=r+Ap09YkV/WFyV+S/aswBxVGWwiQEj8kB/0esliku3c=;
+        b=E+4vyhtqRJOaywBxK0GMtFECEJuzT2058NGJVdiIeSJQC9f4jQGWOyaFF2YcpIAd57
+         8Ky0ZSqPtGtx/DabVIDt2rExc0zBArcjZFeB2MyLE1c28dHaDz1INmOWNFKKQk7ztKQR
+         FE79fOepkTvAvK7IOH68gv8D5EQ4KJNCgGS51h2jIy2YppIyrJ5/YsV1jyEW23Pg3Iu/
+         kzPHqZiXDZoOcZQZqU7FYZ4xMq5UWAINNnInVPQw3pCR7ubURGWI30HkuDf9DvrWp3xq
+         PoKiX7t26Vdg5ozkssk1yHk+2vZQkyNHvV6v/UBEdnf8KxBJfD5bchbAuuIP1SkgQwkz
+         TV8w==
+X-Gm-Message-State: AOAM533Wpnar7iMv5AJ2XW2A/ovsVtsvOiLL9lisYRuLfHmRZICFWoGk
+        +tC2Ya+s1Nc9IuHdzM82M+E=
+X-Google-Smtp-Source: ABdhPJzQNqxzFZj0lqn+nkgIo1mwE4Gk6B7ru14iFerK833ARMJ5Djcia7s0wlypzvgDrb1/2MaTGw==
+X-Received: by 2002:a05:600c:4f14:b0:353:32b7:b47 with SMTP id l20-20020a05600c4f1400b0035332b70b47mr12499441wmq.126.1645714720148;
+        Thu, 24 Feb 2022 06:58:40 -0800 (PST)
+Received: from localhost (92.40.203.111.threembb.co.uk. [92.40.203.111])
+        by smtp.gmail.com with ESMTPSA id p12sm2800962wmg.36.2022.02.24.06.58.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Feb 2022 06:58:39 -0800 (PST)
+From:   Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+To:     paul@crapouillou.net, linus.walleij@linaro.org
+Cc:     linux-mips@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] pinctrl: ingenic: Fix regmap on X series SoCs
+Date:   Thu, 24 Feb 2022 14:58:22 +0000
+Message-Id: <20220224145821.518835-1-aidanmacdonald.0x0@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20220202114204.31918-1-joel@jms.id.au> <CAMRc=MdJX0H1i=UjvHS15+yi+LYgYEyw3puavCwL878gsQWivA@mail.gmail.com>
- <CAMRc=McUht0K+=86VfV7Z8kOU+DMoaYbX65_CrA8WVVE9XhxvA@mail.gmail.com> <CACPK8XeN9Ym8wGVmZ15HprGb+UePY51tmcptC2o9zbUgTcP6HQ@mail.gmail.com>
-In-Reply-To: <CACPK8XeN9Ym8wGVmZ15HprGb+UePY51tmcptC2o9zbUgTcP6HQ@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 24 Feb 2022 15:50:18 +0100
-Message-ID: <CAMRc=McSdV9pxxyiHWeD-nr0VKcchEG7LnT=Z8f8f8pqd_USOQ@mail.gmail.com>
-Subject: Re: [libgpiod PATCH] core: Fix line_bulk_foreach_line invalid memory access
-To:     Joel Stanley <joel@jms.id.au>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -64,96 +67,211 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Feb 24, 2022 at 2:15 AM Joel Stanley <joel@jms.id.au> wrote:
->
-> On Fri, 18 Feb 2022 at 18:42, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> >
-> > On Fri, Feb 18, 2022 at 7:38 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > >
-> > > On Wed, Feb 2, 2022 at 12:42 PM Joel Stanley <joel@jms.id.au> wrote:
-> > > >
-> > > > Running libgpiod applications under valgrind results in the following
-> > > > warning:
-> > > >
-> > > > ==3006== Invalid read of size 8
-> > > > ==3006==    at 0x10C867: line_request_values (core.c:711)
-> > > > ==3006==    by 0x10CDA6: gpiod_line_request_bulk (core.c:849)
-> > > > ==3006==    by 0x10AE27: main (gpioset.c:323)
-> > > > ==3006==  Address 0x4a4d370 is 0 bytes after a block of size 16 alloc'd
-> > > > ==3006==    at 0x483F790: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-> > > > ==3006==    by 0x10B884: gpiod_line_bulk_new (core.c:109)
-> > > > ==3006==    by 0x10DBB0: gpiod_chip_get_lines (helpers.c:24)
-> > > > ==3006==    by 0x10ADC3: main (gpioset.c:313)
-> > > >
-> > > > This is because the foreach loop reads the next value before checking
-> > > > that index is still in bounds.
-> > > >
-> > > > Add a test to avoid reading past the end of the allocation.
-> > > >
-> > > > This bug is not present a released version of libgpiod.
-> > > >
-> > > > Fixes: 2b02d7ae1aa6 ("treewide: rework struct gpiod_line_bulk")
-> > > > Signed-off-by: Joel Stanley <joel@jms.id.au>
-> > > > ---
-> > > >  lib/core.c | 3 ++-
-> > > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/lib/core.c b/lib/core.c
-> > > > index 6ef09baec0f5..4463a7014776 100644
-> > > > --- a/lib/core.c
-> > > > +++ b/lib/core.c
-> > > > @@ -178,7 +178,8 @@ GPIOD_API void gpiod_line_bulk_foreach_line(struct gpiod_line_bulk *bulk,
-> > > >  #define line_bulk_foreach_line(bulk, line, index)                      \
-> > > >         for ((index) = 0, (line) = (bulk)->lines[0];                    \
-> > > >              (index) < (bulk)->num_lines;                               \
-> > > > -            (index)++, (line) = (bulk)->lines[(index)])
-> > > > +            (index)++,                                                 \
-> > > > +            (line) = (index) < (bulk)->num_lines ? (bulk)->lines[(index)] : NULL)
-> > > >
-> > > >  GPIOD_API bool gpiod_is_gpiochip_device(const char *path)
-> > > >  {
-> > > > --
-> > > > 2.34.1
-> > > >
-> > >
-> > > I'll skip this because this entire struct is going away in v2 and the
-> > > bug is not present in v1.6.x.
-> > >
-> > > Bart
-> >
-> > Ugh actually all three patches fix issues in the master branch that
-> > have never been nor will be released.
-> >
-> > I'm not sure if I made myself clear on that - the changes in the
-> > master branch are going away and the de facto new API is in
-> > next/libgpiod-2.0. I already pushed the other two so I'll leave them
-> > there but please take a look at the next branch so that you know how
-> > the upcoming API will work. That's also applicable to the patches
-> > adding the by-name option to the tools - I think it would be better to
-> > base them on that branch right away.
->
-> That's a bit frustrating.
->
+The X series Ingenic SoCs have a shadow GPIO group which is at a higher
+offset than the other groups, and is used for all GPIO configuration.
+The regmap did not take this offset into account and set max_register
+too low, so the regmap API blocked writes to the shadow group, which
+made the pinctrl driver unable to configure any pins.
 
-I know and I'm sorry. I admit that this is not the best time to try to
-get new features in.
+Fix this by adding regmap access tables to the chip info.
 
-> Perhaps you could make the master branch contain the code you're
-> working on (instead of next), if you plan on abandoning the current
-> code base?
+Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+---
+v1: https://lore.kernel.org/linux-mips/20220209230452.19535-1-aidanmacdonald.0x0@gmail.com/
 
-I can't just yet. I want to keep the codebase bisectable and only
-merge the new API into master once it's complete for the C, C++ and
-Python parts. The branch called next/libgpiod-2.0 contains the WIP
-changes but they are not complete yet. I just posted the test suite
-for C and plan on posting the complete C++ bindings soon.
+ drivers/pinctrl/pinctrl-ingenic.c | 53 ++++++++++++++++++++++++++++++-
+ 1 file changed, 52 insertions(+), 1 deletion(-)
 
-In fact - we discussed it with Kent and Linus and I expect to be able
-to release the v2 in around two months and merge the new API into
-master in a month.
+diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
+index 2712f51eb238..074c94edd90b 100644
+--- a/drivers/pinctrl/pinctrl-ingenic.c
++++ b/drivers/pinctrl/pinctrl-ingenic.c
+@@ -119,6 +119,9 @@ struct ingenic_chip_info {
+ 	unsigned int num_functions;
+ 
+ 	const u32 *pull_ups, *pull_downs;
++
++	unsigned int max_register;
++	const struct regmap_access_table* access_table;
+ };
+ 
+ struct ingenic_pinctrl {
+@@ -228,6 +231,7 @@ static const struct ingenic_chip_info jz4730_chip_info = {
+ 	.num_functions = ARRAY_SIZE(jz4730_functions),
+ 	.pull_ups = jz4730_pull_ups,
+ 	.pull_downs = jz4730_pull_downs,
++	.max_register = 4 * 0x30 - 4,
+ };
+ 
+ static const u32 jz4740_pull_ups[4] = {
+@@ -337,6 +341,7 @@ static const struct ingenic_chip_info jz4740_chip_info = {
+ 	.num_functions = ARRAY_SIZE(jz4740_functions),
+ 	.pull_ups = jz4740_pull_ups,
+ 	.pull_downs = jz4740_pull_downs,
++	.max_register = 4 * 0x100 - 4,
+ };
+ 
+ static int jz4725b_mmc0_1bit_pins[] = { 0x48, 0x49, 0x5c, };
+@@ -439,6 +444,7 @@ static const struct ingenic_chip_info jz4725b_chip_info = {
+ 	.num_functions = ARRAY_SIZE(jz4725b_functions),
+ 	.pull_ups = jz4740_pull_ups,
+ 	.pull_downs = jz4740_pull_downs,
++	.max_register = 4 * 0x100 - 4,
+ };
+ 
+ static const u32 jz4750_pull_ups[6] = {
+@@ -576,6 +582,7 @@ static const struct ingenic_chip_info jz4750_chip_info = {
+ 	.num_functions = ARRAY_SIZE(jz4750_functions),
+ 	.pull_ups = jz4750_pull_ups,
+ 	.pull_downs = jz4750_pull_downs,
++	.max_register = 6 * 0x100 - 4,
+ };
+ 
+ static const u32 jz4755_pull_ups[6] = {
+@@ -741,6 +748,7 @@ static const struct ingenic_chip_info jz4755_chip_info = {
+ 	.num_functions = ARRAY_SIZE(jz4755_functions),
+ 	.pull_ups = jz4755_pull_ups,
+ 	.pull_downs = jz4755_pull_downs,
++	.max_register = 6 * 0x100 - 4,
+ };
+ 
+ static const u32 jz4760_pull_ups[6] = {
+@@ -1089,6 +1097,7 @@ static const struct ingenic_chip_info jz4760_chip_info = {
+ 	.num_functions = ARRAY_SIZE(jz4760_functions),
+ 	.pull_ups = jz4760_pull_ups,
+ 	.pull_downs = jz4760_pull_downs,
++	.max_register = 6 * 0x100 - 4,
+ };
+ 
+ static const u32 jz4770_pull_ups[6] = {
+@@ -1429,6 +1438,7 @@ static const struct ingenic_chip_info jz4770_chip_info = {
+ 	.num_functions = ARRAY_SIZE(jz4770_functions),
+ 	.pull_ups = jz4770_pull_ups,
+ 	.pull_downs = jz4770_pull_downs,
++	.max_register = 6 * 0x100 - 4,
+ };
+ 
+ static const u32 jz4775_pull_ups[7] = {
+@@ -1702,6 +1712,7 @@ static const struct ingenic_chip_info jz4775_chip_info = {
+ 	.num_functions = ARRAY_SIZE(jz4775_functions),
+ 	.pull_ups = jz4775_pull_ups,
+ 	.pull_downs = jz4775_pull_downs,
++	.max_register = 7 * 0x100 - 4,
+ };
+ 
+ static const u32 jz4780_pull_ups[6] = {
+@@ -1966,6 +1977,7 @@ static const struct ingenic_chip_info jz4780_chip_info = {
+ 	.num_functions = ARRAY_SIZE(jz4780_functions),
+ 	.pull_ups = jz4780_pull_ups,
+ 	.pull_downs = jz4780_pull_downs,
++	.max_register = 6 * 0x100 - 4,
+ };
+ 
+ static const u32 x1000_pull_ups[4] = {
+@@ -2179,6 +2191,17 @@ static const struct function_desc x1000_functions[] = {
+ 	{ "mac", x1000_mac_groups, ARRAY_SIZE(x1000_mac_groups), },
+ };
+ 
++static const struct regmap_range x1000_access_ranges[] = {
++	regmap_reg_range(0x000, 0x400 - 4),
++	regmap_reg_range(0x700, 0x800 - 4),
++};
++
++/* shared with X1500 */
++static const struct regmap_access_table x1000_access_table = {
++	.yes_ranges = x1000_access_ranges,
++	.n_yes_ranges = ARRAY_SIZE(x1000_access_ranges),
++};
++
+ static const struct ingenic_chip_info x1000_chip_info = {
+ 	.num_chips = 4,
+ 	.reg_offset = 0x100,
+@@ -2189,6 +2212,7 @@ static const struct ingenic_chip_info x1000_chip_info = {
+ 	.num_functions = ARRAY_SIZE(x1000_functions),
+ 	.pull_ups = x1000_pull_ups,
+ 	.pull_downs = x1000_pull_downs,
++	.access_table = &x1000_access_table,
+ };
+ 
+ static int x1500_uart0_data_pins[] = { 0x4a, 0x4b, };
+@@ -2300,6 +2324,7 @@ static const struct ingenic_chip_info x1500_chip_info = {
+ 	.num_functions = ARRAY_SIZE(x1500_functions),
+ 	.pull_ups = x1000_pull_ups,
+ 	.pull_downs = x1000_pull_downs,
++	.access_table = &x1000_access_table,
+ };
+ 
+ static const u32 x1830_pull_ups[4] = {
+@@ -2506,6 +2531,16 @@ static const struct function_desc x1830_functions[] = {
+ 	{ "mac", x1830_mac_groups, ARRAY_SIZE(x1830_mac_groups), },
+ };
+ 
++static const struct regmap_range x1830_access_ranges[] = {
++	regmap_reg_range(0x0000, 0x4000 - 4),
++	regmap_reg_range(0x7000, 0x8000 - 4),
++};
++
++static const struct regmap_access_table x1830_access_table = {
++	.yes_ranges = x1830_access_ranges,
++	.n_yes_ranges = ARRAY_SIZE(x1830_access_ranges),
++};
++
+ static const struct ingenic_chip_info x1830_chip_info = {
+ 	.num_chips = 4,
+ 	.reg_offset = 0x1000,
+@@ -2516,6 +2551,7 @@ static const struct ingenic_chip_info x1830_chip_info = {
+ 	.num_functions = ARRAY_SIZE(x1830_functions),
+ 	.pull_ups = x1830_pull_ups,
+ 	.pull_downs = x1830_pull_downs,
++	.access_table = &x1830_access_table,
+ };
+ 
+ static const u32 x2000_pull_ups[5] = {
+@@ -2969,6 +3005,17 @@ static const struct function_desc x2000_functions[] = {
+ 	{ "otg", x2000_otg_groups, ARRAY_SIZE(x2000_otg_groups), },
+ };
+ 
++static const struct regmap_range x2000_access_ranges[] = {
++	regmap_reg_range(0x000, 0x500 - 4),
++	regmap_reg_range(0x700, 0x800 - 4),
++};
++
++/* shared with X2100 */
++static const struct regmap_access_table x2000_access_table = {
++	.yes_ranges = x2000_access_ranges,
++	.n_yes_ranges = ARRAY_SIZE(x2000_access_ranges),
++};
++
+ static const struct ingenic_chip_info x2000_chip_info = {
+ 	.num_chips = 5,
+ 	.reg_offset = 0x100,
+@@ -2979,6 +3026,7 @@ static const struct ingenic_chip_info x2000_chip_info = {
+ 	.num_functions = ARRAY_SIZE(x2000_functions),
+ 	.pull_ups = x2000_pull_ups,
+ 	.pull_downs = x2000_pull_downs,
++	.access_table = &x2000_access_table,
+ };
+ 
+ static const u32 x2100_pull_ups[5] = {
+@@ -3189,6 +3237,7 @@ static const struct ingenic_chip_info x2100_chip_info = {
+ 	.num_functions = ARRAY_SIZE(x2100_functions),
+ 	.pull_ups = x2100_pull_ups,
+ 	.pull_downs = x2100_pull_downs,
++	.access_table = &x2000_access_table,
+ };
+ 
+ static u32 ingenic_gpio_read_reg(struct ingenic_gpio_chip *jzgc, u8 reg)
+@@ -4168,7 +4217,9 @@ static int __init ingenic_pinctrl_probe(struct platform_device *pdev)
+ 		return PTR_ERR(base);
+ 
+ 	regmap_config = ingenic_pinctrl_regmap_config;
+-	regmap_config.max_register = chip_info->num_chips * chip_info->reg_offset;
++	regmap_config.rd_table = chip_info->access_table;
++	regmap_config.wr_table = chip_info->access_table;
++	regmap_config.max_register = chip_info->max_register;
+ 
+ 	jzpc->map = devm_regmap_init_mmio(dev, base, &regmap_config);
+ 	if (IS_ERR(jzpc->map)) {
+-- 
+2.34.1
 
-You can base your work on next/libgpiod-2.0 but could you just hold
-off the new features until after the new API is in master?
-
-Thank you for your understanding,
-Bart
