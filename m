@@ -2,153 +2,135 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DA00A4C1DC1
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Feb 2022 22:31:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4519E4C2129
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Feb 2022 02:43:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242485AbiBWVcP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Feb 2022 16:32:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60312 "EHLO
+        id S229715AbiBXBn2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Feb 2022 20:43:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242653AbiBWVcO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Feb 2022 16:32:14 -0500
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35C903C721
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Feb 2022 13:31:45 -0800 (PST)
-Received: by mail-ej1-x62a.google.com with SMTP id a23so180762eju.3
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Feb 2022 13:31:45 -0800 (PST)
+        with ESMTP id S229700AbiBXBn2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Feb 2022 20:43:28 -0500
+Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52B4861A07
+        for <linux-gpio@vger.kernel.org>; Wed, 23 Feb 2022 17:42:55 -0800 (PST)
+Received: by mail-qk1-x72d.google.com with SMTP id n185so655662qke.5
+        for <linux-gpio@vger.kernel.org>; Wed, 23 Feb 2022 17:42:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        d=jms.id.au; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Z4ZVkt8qZMy2gYEg/eldrrEE9UadTptB/fCse20u77k=;
-        b=uH3iTz2QGOOXGOs7gP4GUWmAmCSbm7JwqXRf/KvtFUe2MV934uQIEoIMfozDrL5ffI
-         trMtsQ83jy0lfEhG5pRbtwCDZ9MRFRvNXLlAx8KIx7JlIU0C4uSOG2+dfonx4pBCMZc5
-         lCttbFooWLazs/0fKKgsXUpOI2xQxA6W88Zyb/Vlu1KxU+IXRnQtmiE1gk4negHvoB//
-         CLuSgzLmqazAqFFZnawz8ktkav2/oByCKPSNbfqx6/W5e3Lkmg+5Z0w/Hs9akdqYS5OW
-         SGNTWMWIQzdkDoiX3xmdCm2Vc/yiUYSRWYfP6I7nYvtSi5AsYULM0LBXA/yKyVubEDjQ
-         zZ+g==
+        bh=Vx2Zk6+SWiLdSaoXgQipdaVqnvHH4v+4mNsECcKDgiw=;
+        b=WJ8avMMsby9jJ/c3Ni0a/WYvxexsEm+96dBq+9n04NXDClAvo9f/eRG/OtbcvFWLIr
+         dSy/DB7VE79t7I+K6NSdQscCltHlzyY6O7JFxUx/V4F2Uqt2XzHXSEJkjLRcxZ/MIWxb
+         4lqfi9QcrpAO3CRWg3uSqwYZdy5gn9dJbDZJk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Z4ZVkt8qZMy2gYEg/eldrrEE9UadTptB/fCse20u77k=;
-        b=QeKSCYgm3HL8ah+9t804cxYbglsPuu8Ykml6ubpgWQm8rUbeUOnVK4kKsBOVxyrw26
-         3GziEN98TJe497d0bG3OTXNlNoZU0ZKClBWQy3ZGafk8CtYB/lX2Vj/6pYBj1vso/3sw
-         iVCl4swfk65dCzaHODZzX2XrCD6JRHEEMC8oxJCMiwT0+dvnBJjW884tSNOhEp8SFKGW
-         QbziLl2gWvDStLahxfMZx7UGK+worYnUKsM0v+LIsRemX3l00F2r/hCPwcEkYO6NjlOB
-         YN4ol8GEJMlrNd2UQJ93O2yscoFCf+qtGQvFc87Ym+PiXSFW/GPWQT3p5dlqfASM4Cec
-         Xb6w==
-X-Gm-Message-State: AOAM531l66yQ691OOii6cI1kD5UKygN5AM+0giIBVLgPvpNdTCD9Isi2
-        Amrc6eFMPDGjqRI6VldO4GqhKiuv1XreDREHIu85udAVodU=
-X-Google-Smtp-Source: ABdhPJwGY42pBBzmTXzQxtK8kQ3OvjcZRZjenfG79d42ZtNsrmQbmI2eEfrJx7GQiFK4Ji4rSTRHC8jqjQ1/5CRtQ3s=
-X-Received: by 2002:a17:906:1393:b0:6ba:dfb1:4435 with SMTP id
- f19-20020a170906139300b006badfb14435mr1282305ejc.736.1645651903755; Wed, 23
- Feb 2022 13:31:43 -0800 (PST)
+        bh=Vx2Zk6+SWiLdSaoXgQipdaVqnvHH4v+4mNsECcKDgiw=;
+        b=ITysLF9qAID4LveqxLjlucRT77oja05j3LnfdNkLKtXK6KLxnXk9jZIuCT0MoV1FBx
+         s/0AZ7CF9QK8GYmoSWQ+pHxCA/OEQBBTneaupEQp2mjzrSthl1Cw0JNYxNJ/AvlcuvDa
+         DC4gd6l3NRO1UyfCiTNtHso1Juh603fFuBgtow1GqUw05MlRo0Pi6sbUIJuRhra2Yr/R
+         49uBlqHcKc+MtTzh7diXFS8hBtJgukuZ5Z1YcobJ6UyQ6iVnGJsAEQy4uU16FobciM/G
+         WA+n8tO1Znw9VIGrToksa6fkXc8mPmS0lB0AhHaJUHZqUoc2FsjqYAPJbCqdrqAkZMjA
+         d0EQ==
+X-Gm-Message-State: AOAM531mwPs5j4KNFJpUsl16f4oASSZSxRW24BsJLscMDnHy/OaxrHe5
+        HQEu7BFfAjEPid85JMX08spManliZwQUDa1tuFvmI83Y
+X-Google-Smtp-Source: ABdhPJyeNQv3IZFiTS6yCMfIoZSAbZuAJ6qWGzi/2h/5barSNgpaPvee/aqUujOpNhfp/i301QqVLWcrwI6xp2fc1mQ=
+X-Received: by 2002:ac8:5b82:0:b0:2cf:232d:b1f8 with SMTP id
+ a2-20020ac85b82000000b002cf232db1f8mr442431qta.58.1645665334114; Wed, 23 Feb
+ 2022 17:15:34 -0800 (PST)
 MIME-Version: 1.0
-References: <20220216202655.194795-1-shreeya.patel@collabora.com>
-In-Reply-To: <20220216202655.194795-1-shreeya.patel@collabora.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 23 Feb 2022 22:31:33 +0100
-Message-ID: <CAMRc=MckPeT01V-iqXSk-eO4CYFD6aRP1yOaQXGUri5o2=tqZQ@mail.gmail.com>
-Subject: Re: [PATCH v5] gpio: Return EPROBE_DEFER if gc->to_irq is NULL
-To:     Shreeya Patel <shreeya.patel@collabora.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel@collabora.com, Andy Shevchenko <andy.shevchenko@gmail.com>,
-        kernel test robot <lkp@intel.com>
+References: <20220202114204.31918-1-joel@jms.id.au> <CAMRc=MdJX0H1i=UjvHS15+yi+LYgYEyw3puavCwL878gsQWivA@mail.gmail.com>
+ <CAMRc=McUht0K+=86VfV7Z8kOU+DMoaYbX65_CrA8WVVE9XhxvA@mail.gmail.com>
+In-Reply-To: <CAMRc=McUht0K+=86VfV7Z8kOU+DMoaYbX65_CrA8WVVE9XhxvA@mail.gmail.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Thu, 24 Feb 2022 01:15:22 +0000
+Message-ID: <CACPK8XeN9Ym8wGVmZ15HprGb+UePY51tmcptC2o9zbUgTcP6HQ@mail.gmail.com>
+Subject: Re: [libgpiod PATCH] core: Fix line_bulk_foreach_line invalid memory access
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Feb 16, 2022 at 9:27 PM Shreeya Patel
-<shreeya.patel@collabora.com> wrote:
+On Fri, 18 Feb 2022 at 18:42, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 >
-> We are racing the registering of .to_irq when probing the
-> i2c driver. This results in random failure of touchscreen
-> devices.
+> On Fri, Feb 18, 2022 at 7:38 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> >
+> > On Wed, Feb 2, 2022 at 12:42 PM Joel Stanley <joel@jms.id.au> wrote:
+> > >
+> > > Running libgpiod applications under valgrind results in the following
+> > > warning:
+> > >
+> > > ==3006== Invalid read of size 8
+> > > ==3006==    at 0x10C867: line_request_values (core.c:711)
+> > > ==3006==    by 0x10CDA6: gpiod_line_request_bulk (core.c:849)
+> > > ==3006==    by 0x10AE27: main (gpioset.c:323)
+> > > ==3006==  Address 0x4a4d370 is 0 bytes after a block of size 16 alloc'd
+> > > ==3006==    at 0x483F790: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+> > > ==3006==    by 0x10B884: gpiod_line_bulk_new (core.c:109)
+> > > ==3006==    by 0x10DBB0: gpiod_chip_get_lines (helpers.c:24)
+> > > ==3006==    by 0x10ADC3: main (gpioset.c:313)
+> > >
+> > > This is because the foreach loop reads the next value before checking
+> > > that index is still in bounds.
+> > >
+> > > Add a test to avoid reading past the end of the allocation.
+> > >
+> > > This bug is not present a released version of libgpiod.
+> > >
+> > > Fixes: 2b02d7ae1aa6 ("treewide: rework struct gpiod_line_bulk")
+> > > Signed-off-by: Joel Stanley <joel@jms.id.au>
+> > > ---
+> > >  lib/core.c | 3 ++-
+> > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/lib/core.c b/lib/core.c
+> > > index 6ef09baec0f5..4463a7014776 100644
+> > > --- a/lib/core.c
+> > > +++ b/lib/core.c
+> > > @@ -178,7 +178,8 @@ GPIOD_API void gpiod_line_bulk_foreach_line(struct gpiod_line_bulk *bulk,
+> > >  #define line_bulk_foreach_line(bulk, line, index)                      \
+> > >         for ((index) = 0, (line) = (bulk)->lines[0];                    \
+> > >              (index) < (bulk)->num_lines;                               \
+> > > -            (index)++, (line) = (bulk)->lines[(index)])
+> > > +            (index)++,                                                 \
+> > > +            (line) = (index) < (bulk)->num_lines ? (bulk)->lines[(index)] : NULL)
+> > >
+> > >  GPIOD_API bool gpiod_is_gpiochip_device(const char *path)
+> > >  {
+> > > --
+> > > 2.34.1
+> > >
+> >
+> > I'll skip this because this entire struct is going away in v2 and the
+> > bug is not present in v1.6.x.
+> >
+> > Bart
 >
-> Following explains the race condition better.
+> Ugh actually all three patches fix issues in the master branch that
+> have never been nor will be released.
 >
-> [gpio driver] gpio driver registers gpio chip
-> [gpio consumer] gpio is acquired
-> [gpio consumer] gpiod_to_irq() fails with -ENXIO
-> [gpio driver] gpio driver registers irqchip
-> gpiod_to_irq works at this point, but -ENXIO is fatal
->
-> We could see the following errors in dmesg logs when gc->to_irq is NULL
->
-> [2.101857] i2c_hid i2c-FTS3528:00: HID over i2c has not been provided an Int IRQ
-> [2.101953] i2c_hid: probe of i2c-FTS3528:00 failed with error -22
->
-> To avoid this situation, defer probing until to_irq is registered.
-> Returning -EPROBE_DEFER would be the first step towards avoiding
-> the failure of devices due to the race in registration of .to_irq.
-> Final solution to this issue would be to avoid using gc irq members
-> until they are fully initialized.
->
-> This issue has been reported many times in past and people have been
-> using workarounds like changing the pinctrl_amd to built-in instead
-> of loading it as a module or by adding a softdep for pinctrl_amd into
-> the config file.
->
-> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=209413
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Shreeya Patel <shreeya.patel@collabora.com>
->
-> ---
-> Changes in v5
->   - Improve explanation in commit message and sending it to the correct
-> email address.
->
-> Changes in v4
->   - Remove blank line and make the first letter of the sentence
-> capital.
->
-> Changes in v3
->   - Fix the error reported by kernel test robot.
->
-> Changes in v2
->   - Add a condition to check for irq chip to avoid bogus error.
-> ---
->  drivers/gpio/gpiolib.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 3859911b61e9..a3d14277f17c 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -3147,6 +3147,16 @@ int gpiod_to_irq(const struct gpio_desc *desc)
->
->                 return retirq;
->         }
-> +#ifdef CONFIG_GPIOLIB_IRQCHIP
-> +       if (gc->irq.chip) {
-> +               /*
-> +                * Avoid race condition with other code, which tries to lookup
-> +                * an IRQ before the irqchip has been properly registered,
-> +                * i.e. while gpiochip is still being brought up.
-> +                */
-> +               return -EPROBE_DEFER;
-> +       }
-> +#endif
->         return -ENXIO;
->  }
->  EXPORT_SYMBOL_GPL(gpiod_to_irq);
-> --
-> 2.30.2
->
+> I'm not sure if I made myself clear on that - the changes in the
+> master branch are going away and the de facto new API is in
+> next/libgpiod-2.0. I already pushed the other two so I'll leave them
+> there but please take a look at the next branch so that you know how
+> the upcoming API will work. That's also applicable to the patches
+> adding the by-name option to the tools - I think it would be better to
+> base them on that branch right away.
 
-Queued for fixes, thanks!
+That's a bit frustrating.
 
-Bart
+Perhaps you could make the master branch contain the code you're
+working on (instead of next), if you plan on abandoning the current
+code base?
