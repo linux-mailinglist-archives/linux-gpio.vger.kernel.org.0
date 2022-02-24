@@ -2,143 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 970814C2311
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Feb 2022 05:37:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B0654C25E1
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Feb 2022 09:26:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229978AbiBXEgx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Feb 2022 23:36:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33098 "EHLO
+        id S231786AbiBXIZL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 24 Feb 2022 03:25:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229597AbiBXEgw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Feb 2022 23:36:52 -0500
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2085.outbound.protection.outlook.com [40.107.237.85])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E43BE234018;
-        Wed, 23 Feb 2022 20:36:22 -0800 (PST)
+        with ESMTP id S231760AbiBXIZK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Feb 2022 03:25:10 -0500
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2056.outbound.protection.outlook.com [40.107.236.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66CD326F4EC;
+        Thu, 24 Feb 2022 00:24:41 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iaRsni/1GcoyMpMJU6gm0MBYzznZj5QKYeesk+OdZ7IJmeNBX2uEQFqgdR8bIrlYlbgTcXrPQQCFWp3dsJ54I/clFH5MYEilbfQW+UxSdbBhHooFYge7fqxMLtAYkAz6t0D53y3fEXJ6qSjl7JvhTJMgPGPSeh0cO+n1gmie2UCc4vl6heVZlFWxwgAS6/ZliDb2z0PdLQAXUqV8thttxtYDY+nR01idRnI1lkB0GHsClW0lznLE6rcjjhZ+UGl+/zVGXbZyypHZ/C8PLbw0i8Yr76PDKY6yjKKfoeh+iYdFgNys4U6JKsykEy005HoGLPesk0OQz4ZxC1MEEZsWZg==
+ b=nl0Av4U1NIvOYgGef5FclIMAOAWapqxpS/Goxuw3OPKdoqtdkpAvfxluxqJ1yyhem+LLfhj+5W1z7Jf9Xg69ZId7pdLkHiCVcnBfgLrmdtiW/YXatt7ourqXi7SRPoaH3M9POk8I3XEHHOyhCMtXXTiVZJjpVUa6PtXm0nFl+aJDH7A3hjkBR3nbVt/R+w47Oc2jdHsSrqfPRTOz30LgXZgqJ3PDpQKrnlNmNaDuFDonA05duKscwF1jTvTWLlFoc7f/exJgaJsrt1XY4i9MNfAM9iwxlxw0AsYgV5/vWw/d4JrOXkZXxDEN4ExBFnUAlmoXWa3E19SpZunCCpPndA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=B/TsG39ipZGQYE+i3brsg2EuK9nBdqvOCuFZLHIBUjc=;
- b=G3NC0tn75uI1lKlpiJXAO5EZXBmGnlCS1fvcNbzjeW5OnzFhHfEE6N3QZw5H668XUFuWW7AfkvBHvR2wEXa+53rdAhua2ZApfdP2mbItoU/i5ZfuGtFB48aqVc6sSSSrkUF4bWxmCHoszfggvDLcdztCJ/mHGhetPlKvroDfzTVEy31J3JxQyBk4g0glMk5/xNO5Nz2OAoN3XVgPow4Gz/hmnGseeJ1Y+p6wqRZuCTirobSlD+09UgSzTsiY4TzuMJClbEGd5k2DPMywKYafpVnLUtprC3Ruxw0OzSq2vRt1tGQztnHiJT710PnXpat/6Wbv+LdSuvYbPWX2sDIfmw==
+ bh=Lc+WDFC/CpbhGUMZrhMYL7smDwyVZbUk2feF155k8K4=;
+ b=ShDNZPS3WproTH/Rg3W7+IKRcN+8floF1hIOJYHKneNAQXAgkathvY66jmKnbhXRz2ehy06XXln0F1Wvkju18EJ3N/K7/HuaBP55yKzMd3Sy4S92nBT5x0nEwMM8+cdor0bxZdQtfTOvhqq4zulxc70T7d9QrCXfNyiJT6OVof+2VPUF8o0Z3va9v9/pLIzQeiO5bx7/QYXTGAHQmMLbz2EB4rGGxRU3aPmQkCkOCAS5G38o5osmoA0EsKgOxnpD/MawjKyZeNMGhkr+9gT/O8iJj/K4MVQR8hY2ZY3z5K4Lm5lcRxqEhRDMzoMqpEkJOPrZdfLsiocEWKDIyFXxrA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.62.198) smtp.rcpttodomain=linaro.org smtp.mailfrom=xilinx.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=xilinx.com;
+ 12.22.5.234) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
  dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B/TsG39ipZGQYE+i3brsg2EuK9nBdqvOCuFZLHIBUjc=;
- b=pTZUWs32rBfdOpHlQ6UqUZcd3xEbxK/rPTPRPzXxKTY5wD/0N1hPE8dpq/9YrQ11QG8ZKmsQQ9donjqRAyXf6P9pqwHDNIwLZh6tfUPXOCBnrJHeXXT+91z6Pb3FQx11JissE0Rj+7ZRNqKZmLLiKDJu3Q9RSrPzHAs4WSQaYcU=
-Received: from SA0PR11CA0173.namprd11.prod.outlook.com (2603:10b6:806:1bb::28)
- by CH2PR02MB6613.namprd02.prod.outlook.com (2603:10b6:610:79::11) with
+ bh=Lc+WDFC/CpbhGUMZrhMYL7smDwyVZbUk2feF155k8K4=;
+ b=X0GVqYNLRsyQuDygb5HJSWAV34Pf1Kec4jt/IbXLF9FKk1rExKNYArrQXA4nldsWyjtoPWuje82FLswzgJiGA6hnhY030OzyyzUUFwa4tAzWlXiW13PFapmyhsSsVN2q3+Gv84xTuGwVp0k4knSUEVeWdUfp8TtiLsN3wamj9pIjiFo6KvWD2EuIShCx44y3POJZlnnhauUnvlRVg9MUOtXAfOlJ4UHrJJ1NGgw1yZ5OMvoxJRJ+uWmShhHtDnUxI88/2vxXVuRF+fMD+J6wE7xHdVzlFAGBY6ZI3vLOmXhJcGqc55STJpo3gTEPqHutmfDmeNFArGDeTYOYPPVAYA==
+Received: from DM5PR21CA0017.namprd21.prod.outlook.com (2603:10b6:3:ac::27) by
+ MWHPR1201MB2478.namprd12.prod.outlook.com (2603:10b6:300:e5::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4995.24; Thu, 24 Feb
- 2022 04:36:20 +0000
-Received: from SN1NAM02FT0064.eop-nam02.prod.protection.outlook.com
- (2603:10b6:806:1bb:cafe::4c) by SA0PR11CA0173.outlook.office365.com
- (2603:10b6:806:1bb::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5017.23 via Frontend
- Transport; Thu, 24 Feb 2022 04:36:20 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.62.198)
- smtp.mailfrom=xilinx.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.62.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.62.198; helo=xsj-pvapexch02.xlnx.xilinx.com;
-Received: from xsj-pvapexch02.xlnx.xilinx.com (149.199.62.198) by
- SN1NAM02FT0064.mail.protection.outlook.com (10.97.4.66) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5017.22 via Frontend Transport; Thu, 24 Feb 2022 04:36:20 +0000
-Received: from xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) by
- xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2176.14; Wed, 23 Feb 2022 20:36:17 -0800
-Received: from smtp.xilinx.com (172.19.127.96) by
- xsj-pvapexch02.xlnx.xilinx.com (172.19.86.41) with Microsoft SMTP Server id
- 15.1.2176.14 via Frontend Transport; Wed, 23 Feb 2022 20:36:17 -0800
-Envelope-to: git@xilinx.com,
- linus.walleij@linaro.org,
- linux-gpio@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Received: from [172.23.66.193] (port=35678 helo=xhdsneeli40u.xilinx.com)
-        by smtp.xilinx.com with esmtp (Exim 4.90)
-        (envelope-from <srinivas.neeli@xilinx.com>)
-        id 1nN5rU-0000M4-W1; Wed, 23 Feb 2022 20:36:17 -0800
-From:   Srinivas Neeli <srinivas.neeli@xilinx.com>
-To:     <linus.walleij@linaro.org>, <michal.simek@xilinx.com>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <shubhrajyoti.datta@xilinx.com>
-CC:     <git@xilinx.com>, <sgoud@xilinx.com>,
-        Srinivas Neeli <srinivas.neeli@xilinx.com>
-Subject: [PATCH] pinctrl: zynq: use module_platform_driver to simplify the code
-Date:   Thu, 24 Feb 2022 10:06:05 +0530
-Message-ID: <20220224043605.26157-1-srinivas.neeli@xilinx.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4995.16; Thu, 24 Feb
+ 2022 08:24:39 +0000
+Received: from DM6NAM11FT041.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:3:ac:cafe::16) by DM5PR21CA0017.outlook.office365.com
+ (2603:10b6:3:ac::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.9 via Frontend
+ Transport; Thu, 24 Feb 2022 08:24:39 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 12.22.5.234)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 12.22.5.234 as permitted sender) receiver=protection.outlook.com;
+ client-ip=12.22.5.234; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (12.22.5.234) by
+ DM6NAM11FT041.mail.protection.outlook.com (10.13.172.98) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.5017.22 via Frontend Transport; Thu, 24 Feb 2022 08:24:39 +0000
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by DRHQMAIL101.nvidia.com
+ (10.27.9.10) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Thu, 24 Feb
+ 2022 08:24:37 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail204.nvidia.com
+ (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.9; Thu, 24 Feb 2022
+ 00:24:18 -0800
+Received: from pshete-ubuntu.nvidia.com (10.127.8.9) by mail.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server id 15.2.986.9 via Frontend
+ Transport; Thu, 24 Feb 2022 00:24:15 -0800
+From:   Prathamesh Shete <pshete@nvidia.com>
+To:     <linus.walleij@linaro.org>, <bgolaszewski@baylibre.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <linux-gpio@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <pshete@nvidia.com>, <smangipudi@nvidia.com>,
+        Manish Bhardwaj <mbhardwaj@nvidia.com>
+Subject: [PATCH] gpio: tegra186: add Tegra234 PMC compatible in GPIO driver
+Date:   Thu, 24 Feb 2022 13:54:09 +0530
+Message-ID: <20220224082409.12559-1-pshete@nvidia.com>
 X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4fd542b0-a4b8-4be9-2617-08d9f74f348a
-X-MS-TrafficTypeDiagnostic: CH2PR02MB6613:EE_
-X-Microsoft-Antispam-PRVS: <CH2PR02MB66130D5B09FC0A651F24C1D7AF3D9@CH2PR02MB6613.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Office365-Filtering-Correlation-Id: e21943c7-eff8-4d26-6989-08d9f76f1987
+X-MS-TrafficTypeDiagnostic: MWHPR1201MB2478:EE_
+X-Microsoft-Antispam-PRVS: <MWHPR1201MB247897C07F37B7CF345D3305B73D9@MWHPR1201MB2478.namprd12.prod.outlook.com>
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: WxSqL4eDoKqB1mpmtSLeUxMhmFsyaqhaXfFXOYPOFHoaeOCQxf50vASChRpUCAKnoGv39cq7BGFbyslllGW7M9Iv8VJr2v3Hzgn5gyTlJRJ4YIG+Mu27XyrI/eIYODSqmsuWKPO08kE34GVV4H1kvWtCzPI6eWC8X56OeKB7uGk8uj8VQbP6vo3S+LkqBfuu6/fqd8hPQiuYkQu7ZCVqvtGHPKQVq9cyodvnOhzpxNZeMWGLKdiYSY6eSRVm/bEe0oqFI4nxuKyga6T4lDmecP0/xant8khG2mkXPmi0w2w6bhumxJYIgBI0z0thZzkmPIyLDgLk5a60Cs2siSk4ry+h78J46bUVW3cCtIBi23yhDCevKsQjt1UT1fN0rzmMy6yjDswqETfholo6P9PZxfNMYEvGps+tCh1YJF96GAGQuA+mXU/vTnb07cqTFN305ym1z+4FXL/V3fVPHkRw6AG4NjTnQsge8VvzjOrq4Dpc/j2E4/K3t4mtm1t3Y1DgHTcpXSs8WIH35wHpt5+p++1fdYkktdnHkut6usAP0zliAUzpi+WOed5f3pkWAh2bhRRgqyMuVd/UYp72ENUBr59bOprc7KKuwgzJ1WZnIloFWXjZiO5+Hi9ZpWv5fLAbBaoGkmU0N+LTbrqNdTe3IqA9YfVvMn4UutyIlUX3js+udaI50ykhSueLmYyhOU6v/6kxdCXliTbzuUHd6f9/zikiwWaVVOIYm9O6rDXSIGo=
-X-Forefront-Antispam-Report: CIP:149.199.62.198;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapexch02.xlnx.xilinx.com;PTR:unknown-62-198.xilinx.com;CAT:NONE;SFS:(13230001)(4636009)(46966006)(40470700004)(36840700001)(54906003)(6636002)(40460700003)(83380400001)(110136005)(36860700001)(47076005)(316002)(7636003)(9786002)(8676002)(1076003)(5660300002)(70586007)(426003)(336012)(6666004)(36756003)(4326008)(186003)(107886003)(26005)(7696005)(2616005)(508600001)(82310400004)(356005)(8936002)(44832011)(70206006)(4744005)(2906002)(102446001)(2101003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2022 04:36:20.4800
+X-Microsoft-Antispam-Message-Info: j8TOWvmoJtJz/Ol4vGO1qKKK5IjIdnjDskLbo+gB8xRuDktGlFH1vyyV6m3zCth8sSLElGWZux7VmFJyNvOrICXBVu6N9bm70jHw6M8/ik1uYJ8+MjkJitzDq1KsQOh288nHO8V6yxyhD6klzgkNs9GXJ5mgwcjPZE+q9u06b3AwWgvZ2JXrd7SrZVpvaXpfdM7H9qOq0c3Uw+K1W2vczt+jtr728suuN2pISut+XokscNR3P0zpx5Um858EWhSBRTcNvrJwV+WeAWHjLI5vnoqQ+/0T6c1RnEYWIcvOrEm1PAZ1fsl7XKZ2Gq6wly8mv4m/b2iBEL2lqKnJt+/pAVMCFx5qJuAuduP8yXIQqoLbefPK6eMY07iGJp/3wwCp6IlBpbACZ/2DwRClUeM+Uog0/ULLMHgTdfRZHwVyL2cMkKdVB4Mln6iCJrcy2nkXNo8UChWOD2QWbraX/7HeGzuiTJXHVcrU5PWNOVAMcKSWyL925Wwzh842MjzpL3rOzVQM5xnL1+y26FyZhRWrYtnpK037myDlY7qUUQ037/XbYqrwwOgEpH3krezbGJtlC9X/tKCzknqfUlSeuNp5SMFGiRNv+45NfibnZZbZuVdGS/HKBRJ8/NP7ogPF9TTWMhLbW27Be72sWEcxBBgB+RyonRPr16YQrhoZCAd98J2cUqEBhSYJNX2qBFnN2Um02tmdtw548hLrgJedn4/Xeg==
+X-Forefront-Antispam-Report: CIP:12.22.5.234;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:mail.nvidia.com;PTR:InfoNoRecords;CAT:NONE;SFS:(13230001)(4636009)(36840700001)(40470700004)(46966006)(70586007)(8676002)(82310400004)(7696005)(2906002)(356005)(70206006)(8936002)(81166007)(508600001)(6666004)(4326008)(4744005)(2616005)(107886003)(1076003)(86362001)(316002)(5660300002)(36860700001)(336012)(426003)(26005)(186003)(40460700003)(47076005)(110136005)(54906003)(36756003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Feb 2022 08:24:39.0121
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4fd542b0-a4b8-4be9-2617-08d9f74f348a
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.62.198];Helo=[xsj-pvapexch02.xlnx.xilinx.com]
-X-MS-Exchange-CrossTenant-AuthSource: SN1NAM02FT0064.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e21943c7-eff8-4d26-6989-08d9f76f1987
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[12.22.5.234];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT041.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6613
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR1201MB2478
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-module_platform_driver() makes the code simpler by eliminating
-boilerplate code.
+From: Manish Bhardwaj <mbhardwaj@nvidia.com>
 
-Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
+Using this patch we are adding PMC compatible string for
+Tegra234 in GPIO driver so the irq hierarchy can be set.
+
+Signed-off-by: Manish Bhardwaj <mbhardwaj@nvidia.com>
+Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
 ---
- drivers/pinctrl/pinctrl-zynq.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/gpio/gpio-tegra186.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pinctrl/pinctrl-zynq.c b/drivers/pinctrl/pinctrl-zynq.c
-index a96af8a76a7a..0e8de27d0de8 100644
---- a/drivers/pinctrl/pinctrl-zynq.c
-+++ b/drivers/pinctrl/pinctrl-zynq.c
-@@ -8,6 +8,7 @@
-  */
- #include <linux/io.h>
- #include <linux/mfd/syscon.h>
-+#include <linux/module.h>
- #include <linux/init.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
-@@ -1210,8 +1211,4 @@ static struct platform_driver zynq_pinctrl_driver = {
- 	.probe = zynq_pinctrl_probe,
+diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
+index d38980b9923a..c1e9dd8c78f8 100644
+--- a/drivers/gpio/gpio-tegra186.c
++++ b/drivers/gpio/gpio-tegra186.c
+@@ -563,6 +563,7 @@ static unsigned int tegra186_gpio_child_offset_to_irq(struct gpio_chip *chip,
+ static const struct of_device_id tegra186_pmc_of_match[] = {
+ 	{ .compatible = "nvidia,tegra186-pmc" },
+ 	{ .compatible = "nvidia,tegra194-pmc" },
++	{ .compatible = "nvidia,tegra234-pmc" },
+ 	{ /* sentinel */ }
  };
  
--static int __init zynq_pinctrl_init(void)
--{
--	return platform_driver_register(&zynq_pinctrl_driver);
--}
--arch_initcall(zynq_pinctrl_init);
-+module_platform_driver(zynq_pinctrl_driver);
 -- 
 2.17.1
 
