@@ -2,122 +2,143 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F15CC4C31DC
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Feb 2022 17:51:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 09C164C3236
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Feb 2022 17:53:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231153AbiBXQvF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 24 Feb 2022 11:51:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41546 "EHLO
+        id S230112AbiBXQwZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 24 Feb 2022 11:52:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231303AbiBXQuz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Feb 2022 11:50:55 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E1DB21C74FD
-        for <linux-gpio@vger.kernel.org>; Thu, 24 Feb 2022 08:50:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1645721400;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5d5v5g/KURDWe0uo4rDGLo8uToSqpP6+d3Aa5ejBoSQ=;
-        b=O8agahx7gBfNFvijOKmgclH37gj2MpgGVQVShW9IrGoTC+Eod9VTvG7zUqt/h/xhIBGEYb
-        5KX/yckLmOy/qWHAV3HvqzfUL/We18ZFpDwAIRCYawaZXIWWUdWhezNBiTmyTJSluLxy+g
-        s313h3+FqbLIYBj83OPOxdXjth3UKMc=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-397-r3fm2eBYOF2W5DXwlmzUDQ-1; Thu, 24 Feb 2022 11:49:56 -0500
-X-MC-Unique: r3fm2eBYOF2W5DXwlmzUDQ-1
-Received: by mail-ed1-f70.google.com with SMTP id m11-20020a056402430b00b00410678d119eso964114edc.21
-        for <linux-gpio@vger.kernel.org>; Thu, 24 Feb 2022 08:49:56 -0800 (PST)
+        with ESMTP id S229978AbiBXQwY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Feb 2022 11:52:24 -0500
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 709553586B;
+        Thu, 24 Feb 2022 08:51:46 -0800 (PST)
+Received: by mail-ej1-x62a.google.com with SMTP id qx21so5603428ejb.13;
+        Thu, 24 Feb 2022 08:51:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0BX8BM017uCOv9ckNj58aZrZbCd/kR/+hefTXMO9tPo=;
+        b=kiIocb6M3Uuv4xiRzAdVw033se264t+5e8SmYP5ibq1I4FYRMAbbkXLawlWwzOm54C
+         xHb9/0YbSlMUpw2Y6llCywFgYrAx7ZpZqQ+LatVEGnWWdWhVfJOQgo+QQSMiaB0nhH26
+         kpkq/SZK9dynlhtQuiHfpLZe9Mhcoq6diD0oyzZr+Eab5VLwELySFw3E0vHze+1GYjcg
+         a7cktJzM4p6B4R9ymuUjhoB5MBJsi2ax6GGP6CGvS9MpQvS2yOvXYqUupHSeCx/uSRcg
+         PBt4OTHJvYUrvjPylxPIa+CChh3DpYRgOwluNXETDaED4nhajMnp9x/THJUOxJfe+68g
+         DzYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=5d5v5g/KURDWe0uo4rDGLo8uToSqpP6+d3Aa5ejBoSQ=;
-        b=nJPL7BAMwfX/3b8+qwCOiaB3G5nXziWIchZ84ubb3ru34GaSxY0WEgZRzimqDsA7se
-         L82VMTVtogp895KAV5gPFfmg1jfthFsxfqmW7dZOLv7oTSOlzt2isKNrZWKnSpNLZVQF
-         FdOk84n/8JJIXb8jVQR1bDnPgm2yfKvrHcNJHUzFu1XKuGv9tRzq7wDQHcp4YqYCTSBC
-         kXaprI8A/p/1FpoMBOsE9zEcjiELCGZ+eYyLJal2G31wc8yy67h/XSR9efHJa9Y1HqLS
-         ica81mGA0JWq8CarT5pjThxmZLAI0QfopLGaKaHB10HD+YDd4UBry0wUNCutzOgslRv9
-         xl6w==
-X-Gm-Message-State: AOAM532a6/8jZ5BV7WQb1hWZn6OrE7BE88rymV30FcKVpq8hckOjfEBv
-        IsSiVh0cjJJzHPBxDrtde5TMsMU9hlnqpW90x/75CI9HA/irz6MHRQoP/yP+HFYIVhs+u4STbka
-        PkEkBR11zzCmIYC5FQNQyhA==
-X-Received: by 2002:a05:6402:2686:b0:412:d1cb:a6d8 with SMTP id w6-20020a056402268600b00412d1cba6d8mr3179182edd.280.1645721395635;
-        Thu, 24 Feb 2022 08:49:55 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyNAeM7yFukA4NuAEUTFYRdZ7RxfC7vPutD0j3WScBbyg5USbJ/ySiwnAhgD7kEpDtRKpx/Ug==
-X-Received: by 2002:a05:6402:2686:b0:412:d1cb:a6d8 with SMTP id w6-20020a056402268600b00412d1cba6d8mr3179166edd.280.1645721395484;
-        Thu, 24 Feb 2022 08:49:55 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
-        by smtp.gmail.com with ESMTPSA id b2sm1626913edr.44.2022.02.24.08.49.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Feb 2022 08:49:54 -0800 (PST)
-Message-ID: <85474eb8-8fe3-2aa7-5619-fd7ee98da498@redhat.com>
-Date:   Thu, 24 Feb 2022 17:49:54 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH 2/5] platform/x86: x86-android-tablets: Fix EBUSY error
- when requesting IOAPIC IRQs
-Content-Language: en-US
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0BX8BM017uCOv9ckNj58aZrZbCd/kR/+hefTXMO9tPo=;
+        b=q0d+qe+miDlHrQtrL3aAVTcYOPTh5r2IqEd5/F6rQOf3TMCfxCfQH1Fl0kLayU1sZk
+         6Yer7JpcT6ivvv7mgbek8wi63WwhW16JmZV6TSSaZRd/V9sFGCPu3uEPCkmIhVTghPzB
+         H9CP5rtCgfw8pdb70v9zbMqxyDLXVP9o6Czb3oIxHiI1DidN5kufSKxmD0lvjUdDpRve
+         LMg2QxfF7RQYOEx+RfS4J0VU+XYV51b0Gaes8Q+HRbsumzD68qmNWGz0YuX6HMyXAXsG
+         vMjcgQKxkcO00ukPPaGf1bWpWQIfv6DUUBZzYxbIFZGb1fC+Ea9RtMu/1ANfnwYtWA6p
+         UQ7g==
+X-Gm-Message-State: AOAM531+xG7c1bJwT1zAPYutuRRcATc/BrDYIbZ+OsSe+Yrx9qzbDRfN
+        DpdFEbjSrU443oifsv4aIuA=
+X-Google-Smtp-Source: ABdhPJyWV1zkvb8+mEvqp9ZSTYLeQknbMbcIBqw4G7wy2t0xWvm2gOYKTOxfOHmqMh5tXSGKmjzpjg==
+X-Received: by 2002:a17:906:af79:b0:6ce:61d3:7e9b with SMTP id os25-20020a170906af7900b006ce61d37e9bmr3085459ejb.191.1645721505223;
+        Thu, 24 Feb 2022 08:51:45 -0800 (PST)
+Received: from orome ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id j3sm1600520ejj.9.2022.02.24.08.51.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Feb 2022 08:51:44 -0800 (PST)
+Date:   Thu, 24 Feb 2022 17:51:41 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <20220223133153.730337-1-hdegoede@redhat.com>
- <20220223133153.730337-3-hdegoede@redhat.com>
- <YhZLI40Vukgv+PPO@smile.fi.intel.com>
- <9cda0c14-8108-fb42-4464-36a2fde0ffda@redhat.com>
- <YhZU6rDSYPG3pUbx@smile.fi.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <YhZU6rDSYPG3pUbx@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Joey Gouly <joey.gouly@arm.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Hector Martin <marcan@marcan.st>,
+        Sven Peter <sven@svenpeter.dev>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH 1/5] gpio: Don't fiddle with irqchips marked as immutable
+Message-ID: <Yhe3neSJbAxRbt+Z@orome>
+References: <20220223154405.54912-1-maz@kernel.org>
+ <20220223154405.54912-2-maz@kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="vbN/cyUZyiD0I2CK"
+Content-Disposition: inline
+In-Reply-To: <20220223154405.54912-2-maz@kernel.org>
+User-Agent: Mutt/2.2.1 (c8109e14) (2022-02-19)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
 
-On 2/23/22 16:38, Andy Shevchenko wrote:
-> On Wed, Feb 23, 2022 at 04:16:42PM +0100, Hans de Goede wrote:
->> On 2/23/22 15:56, Andy Shevchenko wrote:
->>> On Wed, Feb 23, 2022 at 02:31:50PM +0100, Hans de Goede wrote:
-> 
-> ...
-> 
->>>>  	case X86_ACPI_IRQ_TYPE_APIC:
->>>> +		/*
->>>> +		 * The DSDT may already reference the GSI in a device skipped by
->>>> +		 * acpi_quirk_skip_i2c_client_enumeration(). Unregister the GSI
->>>> +		 * to avoid EBUSY errors in this case.
->>>> +		 */
->>>> +		acpi_unregister_gsi(data->index);
->>>
->>> Perhaps a warning (or at least debug) message?
->>
->> The function returns void, so we cannot check if it did anything or not.
-> 
-> Another approach may be to try to register GSI and if fail, try unregister
-> and register again?
+--vbN/cyUZyiD0I2CK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Since we only run this on boards where it is specifically enabled and it
-thus has been tested to be safe I believe that that needlessly complicates
-things, so I'm just going to merge this as is.
+On Wed, Feb 23, 2022 at 03:44:01PM +0000, Marc Zyngier wrote:
+> In order to move away from gpiolib messing with the internals of
+> unsuspecting irqchips, add a flag by which irqchips advertise
+> that they are not to be messed with, and do solemnly swear that
+> they correctly call into the gpiolib helpers wueh required.
+>=20
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> ---
+>  drivers/gpio/gpiolib.c | 7 ++++++-
+>  include/linux/irq.h    | 2 ++
+>  kernel/irq/debugfs.c   | 1 +
+>  3 files changed, 9 insertions(+), 1 deletion(-)
 
-Regards,
+I kind of like this. The bit where the const cast is essentially guarded
+by an "immutable" flag is a bit funky, but it doesn't look like there is
+a good way to do it by making all references const without doing a huge
+all-at-once conversion.
 
-Hans
+I've always found it a bit irritating that irq_chip was somewhere
+between a container for chip-specific data and an "ops" structure. I
+think it'd be even nicer if this was split into an extra struct
+irq_chip_ops, which could then always be const and a struct irq_chip
+that contained primarily chip-specific data as well as a pointer to
+struct irq_chip_ops.
 
+But again, this seems fairly tricky to pull off given all the
+interdependencies and we can iterate on this in the future, so this
+seems like a good enough compromise:
+
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--vbN/cyUZyiD0I2CK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmIXt5oACgkQ3SOs138+
+s6Hsmg//ZlvIGlAISsBwoAWBpifpjvE4OPtPa2w5okmTJxjSFYwmu1dcqaGOQbqk
+PM58PdveLzwtzZUMy2BFNGtyE1cXPfDvIQlUP2QXjkpmpOH0nZvLbKLtbaOKPe5/
+k7ZT1snfCCPyCSkTt3ObyRr/vd09RHkcocvJ3BPX8qgcFs8RP+csLO4LbtPdN4Mp
+DTPbjaUqdqG2RvSuEtRrHenTZ6f+g+39LrwgfzRXztvQvFtNEmK+D/sZDENkTVtm
++YIJBgiANbzhXtib+/9FaG3MJECmu6ZBNNSaZat91Ksn+TWDz/RYRdZSsEcposEx
+eH5P6Oas2DsQ8P8ny7jplcGV1nOGobRdQBRWnWHXKDGrsDBaVzdFjc4Z/rzoRshO
+a5kV7CL+T6Gu+xVWS81PBBcUcwFsIpn5QWe32g3g0cPuNJpsWYpM6lnbH+CrQcQR
+LTOMQiTe8hyf6vdhTbdMfb6I/i3JscSm23KJYgZD1Se1bYkzi6DbCf62W2ygqHgT
+yakOPdNcZP8KZKp85niKcUdG/ecW9HtTSBGSLDkyMUgBqg4Jr/2uC6C1h/ra3t/D
+HlMJDYR4rrx0kR6JDiHl4Be0AJPPo2YksA+YZzVYIOgv0dMLzk9JX0AXeSwo6xBT
+Byu+xRCU7+shobZGJlJOJXnRXw7XwLhg3pdOwotfppxKxXcUgzU=
+=JQTC
+-----END PGP SIGNATURE-----
+
+--vbN/cyUZyiD0I2CK--
