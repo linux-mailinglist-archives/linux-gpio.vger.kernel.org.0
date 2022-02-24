@@ -2,63 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EF6234C333E
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Feb 2022 18:11:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D6874C33D4
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Feb 2022 18:36:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229587AbiBXRKr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 24 Feb 2022 12:10:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50720 "EHLO
+        id S232111AbiBXRg0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 24 Feb 2022 12:36:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229974AbiBXRKo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Feb 2022 12:10:44 -0500
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E970B208318;
-        Thu, 24 Feb 2022 09:10:14 -0800 (PST)
-Received: by mail-oi1-f176.google.com with SMTP id 12so3490788oix.12;
-        Thu, 24 Feb 2022 09:10:14 -0800 (PST)
+        with ESMTP id S232101AbiBXRg0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Feb 2022 12:36:26 -0500
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2D6E24FB90;
+        Thu, 24 Feb 2022 09:35:55 -0800 (PST)
+Received: by mail-oi1-f171.google.com with SMTP id z7so3704077oid.4;
+        Thu, 24 Feb 2022 09:35:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=fgEt++oBYASgr9TfRFFi+SD8GpomMen+OR/8J8QIuRk=;
-        b=aEtgsn3D2hw4ubfcvUO1S7T3MDR8VuyIdtRpCou6fY3Dz5IUx2ID51fZzT2EnZcZGx
-         zDcQi20F10WvUxTk6375EulMzoQYPk52i+AwGnauA7Lvznh/9udfqS02BDWzMiLoFuoO
-         NbEwBbgEh+SR07YBBmGales/f4A5p4nhMntfjbhhSuHSEYzPQh+P7Ug/Lpm49D4myMbE
-         53wVwmXmFmCs7RQq6s2RIHlJNe8Jq122j+hLLnDrYAP9W3+I99JoI+I0I5/17Og3TQtN
-         a4mwqoq+jShtXDbur/Fr/OhpepOopw+04JhaKaPCTCZJgddMDRQxkwyrANuUlo55Ko4C
-         o7HA==
-X-Gm-Message-State: AOAM532l5MZ8oN76lWCo6g+SFsk9NFROr/hYckN6bappMiQKTxQ+1WkL
-        elOKL3c0vm4dqLSEW1lMMg==
-X-Google-Smtp-Source: ABdhPJyRCb0IydycIC22RD0Zq8josaATMxmz1k/6Q12W3pmTQheLOuZTOB6+D1STwrh453Q5f2LV5w==
-X-Received: by 2002:a05:6870:670e:b0:ce:c0c9:65e with SMTP id gb14-20020a056870670e00b000cec0c9065emr6854697oab.176.1645722614234;
-        Thu, 24 Feb 2022 09:10:14 -0800 (PST)
+        bh=klEDg5xaLmwGMmDFj0Syyx96vH8dGFxc+1+/k1n87DE=;
+        b=hFGt2/eK/Ge+zQyOacPUHFiduM34rCcteQrsXlaHa/pWeoAR9uvzlPngv+FnCE+t0C
+         akkAo3GRZP5QxNVe/PEcw/kdLWTcgksqaME/Ix+6DU1WPO4Y3CY8C0C2/T1YMUfjt7ng
+         d1UDz4Ufmuyf7zb9EJcZD6bd7UDZXzAByuI2SNZrQOhw7+JeFEFszZ152mNeTBDQ228x
+         JiIfjXFDkqcslipkv7E1xkOVPs/HJ1ybIUx175rGl+VYmWHH5hQoCve/T5PKY9PBm6rV
+         PN+9YAIzNpB7zV1h0jgKCUG3W6U+2LZkJ3pLh6RtYUSZo55z9m2Lu70F2RHMPJy8Fc6V
+         jIKA==
+X-Gm-Message-State: AOAM532lxnHuI3gEbUWv/dpihhF2s/QwZIt/THatK/axa3EKEDZp3H89
+        xBZd0SRVQpaHORBu7k3nAKbYEetm7g==
+X-Google-Smtp-Source: ABdhPJyFqrMyj2l2hZtHUaFlCpOH25ENijWaXc+YSydXVPDRpl5CSq/kruMJI4YK3dMleFp0J7J52A==
+X-Received: by 2002:a05:6870:3:b0:d3:7b0c:ee0d with SMTP id a3-20020a056870000300b000d37b0cee0dmr6601430oaa.195.1645724155205;
+        Thu, 24 Feb 2022 09:35:55 -0800 (PST)
 Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id g3-20020a056870e1c300b000d0f502781esm65345oab.22.2022.02.24.09.10.12
+        by smtp.gmail.com with ESMTPSA id bl16-20020a056808309000b002d43b28a8bdsm26736oib.14.2022.02.24.09.35.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Feb 2022 09:10:12 -0800 (PST)
-Received: (nullmailer pid 3252581 invoked by uid 1000);
-        Thu, 24 Feb 2022 17:10:11 -0000
-Date:   Thu, 24 Feb 2022 11:10:11 -0600
+        Thu, 24 Feb 2022 09:35:54 -0800 (PST)
+Received: (nullmailer pid 3285581 invoked by uid 1000);
+        Thu, 24 Feb 2022 17:35:53 -0000
+Date:   Thu, 24 Feb 2022 11:35:53 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Guodong Liu <guodong.liu@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-        Sean Wang <sean.wang@mediatek.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Project_Global_Chrome_Upstream_Group@mediatek.com,
-        devicetree@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sean Wang <sean.wang@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/3] dt-bindings: pinctrl: mt8186: add pinctrl file
- and binding document
-Message-ID: <Yhe7876iV+P+z5JM@robh.at.kernel.org>
-References: <20220216032124.28067-1-guodong.liu@mediatek.com>
- <20220216032124.28067-2-guodong.liu@mediatek.com>
+To:     Aparna M <a-m1@ti.com>
+Cc:     bgolaszewski@baylibre.com, linus.walleij@linaro.org,
+        a-govindraju@ti.com, robh+dt@kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        grygorii.strashko@ti.com, praneeth@ti.com
+Subject: Re: [PATCH v5] dt-bindings: gpio: Convert TI TPIC2810 GPIO
+ Controller bindings to YAML
+Message-ID: <YhfB+c6zMiCjbE96@robh.at.kernel.org>
+References: <20220223174215.17838-1-a-m1@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220216032124.28067-2-guodong.liu@mediatek.com>
+In-Reply-To: <20220223174215.17838-1-a-m1@ti.com>
 X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
         HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
@@ -70,17 +64,23 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 16 Feb 2022 11:21:22 +0800, Guodong Liu wrote:
-> 1. This patch adds pinctrl file for mt8186.
-> 2. This patch adds mt8186 compatible node in binding document.
+On Wed, 23 Feb 2022 23:12:15 +0530, Aparna M wrote:
+> Convert gpio-tpic2810 bindings to yaml format and remove outdated
+> bindings in .txt format.
 > 
-> Signed-off-by: Guodong Liu <guodong.liu@mediatek.com>
+> Signed-off-by: Aparna M <a-m1@ti.com>
 > ---
->  .../bindings/pinctrl/pinctrl-mt8186.yaml      |  297 +++++
->  include/dt-bindings/pinctrl/mt8186-pinfunc.h  | 1174 +++++++++++++++++
->  2 files changed, 1471 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt8186.yaml
->  create mode 100644 include/dt-bindings/pinctrl/mt8186-pinfunc.h
+> 
+> v4 -> v5: Fix indentation issues
+> v3 -> v4: Add gpio-line-names property
+> v2 -> v3: Remove redundant descriptions and make minor change in example
+> v1 -> v2: Fix identation issues and update commit message
+> 
+>  .../bindings/gpio/gpio-tpic2810.txt           | 16 ------
+>  .../bindings/gpio/gpio-tpic2810.yaml          | 51 +++++++++++++++++++
+>  2 files changed, 51 insertions(+), 16 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-tpic2810.txt
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-tpic2810.yaml
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
