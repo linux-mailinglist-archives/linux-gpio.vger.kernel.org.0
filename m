@@ -2,81 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10A264C2855
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Feb 2022 10:43:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A4E304C2CD9
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Feb 2022 14:19:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232840AbiBXJnZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 24 Feb 2022 04:43:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35692 "EHLO
+        id S234710AbiBXNT7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 24 Feb 2022 08:19:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232839AbiBXJnY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Feb 2022 04:43:24 -0500
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6853A27DF1F
-        for <linux-gpio@vger.kernel.org>; Thu, 24 Feb 2022 01:42:54 -0800 (PST)
+        with ESMTP id S234583AbiBXNT6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Feb 2022 08:19:58 -0500
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D5C415F0AE;
+        Thu, 24 Feb 2022 05:19:28 -0800 (PST)
+Received: by mail-lj1-x232.google.com with SMTP id 29so2783300ljv.10;
+        Thu, 24 Feb 2022 05:19:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1645695774; x=1677231774;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=KXxfnsxQFIgyXErpGtiY7KH71rfyFFJ7BOtUpwzHCJc=;
-  b=Bsb+8ocuC66P7okFTdfhYBvr2PobzTYP16jA1aQCSMjwky9ApE1g3v+b
-   wpLueUsP8XvoWPLbpGaHt0fZTny7YA5mBAErMeZBd+4AXIgQbAsfNbsos
-   HNvRiE1fo1otlMFObdyqVfglP6L5qV4qXLcX21nYauMFnAyY82FS924KS
-   4ZL+lhenpD2j060JyBB8+ycigAV7BSvf9S7QHt6WtGKZADXFei0uO6InT
-   ZZFTWVoLDnTvzk56fJD1mUTdnUQtTB40IXa7jn/2vknPmNHILKkF237Yw
-   ZqDoaMB6wkSgG1s3RON3odVYrUe6Ag6A8CEhGb1ky7vEogNWGvPFBm5UD
-   g==;
-X-IronPort-AV: E=Sophos;i="5.88,393,1635199200"; 
-   d="scan'208";a="22288062"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 24 Feb 2022 10:42:52 +0100
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Thu, 24 Feb 2022 10:42:52 +0100
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Thu, 24 Feb 2022 10:42:52 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1645695772; x=1677231772;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=KXxfnsxQFIgyXErpGtiY7KH71rfyFFJ7BOtUpwzHCJc=;
-  b=Xz9yzHbuKaMF5QbnyAYf+XSIARRKXgrkeIKcnm6YxEn7M4A5yXm65kkP
-   SrBXVr2z6ui5i8gOgdo4sZF2QEDkfYfR8mGJ3Q8mWGirA7+WWWhpWwiDA
-   szJ+S/BC6maIY/lGXnttsKGcG3SThlTd1KVFymWiUaUv5aL3xNnrOZdzB
-   E/dKIVPKa+NxnfTmkydL3tO6XA0uSgmfuWZl9WvwCtnjhqoh9GEZKNkIc
-   2ghBuvumAJsy0gv58Y1utVceedRYjFsRAq/UIo/R8ddJVfvnz2H1bEDNs
-   7Ccsogimikb0sIxXMMcUGmfv6RIKwLiny21i3n6KIAuak0JjGPxFJ4d2/
-   A==;
-X-IronPort-AV: E=Sophos;i="5.88,393,1635199200"; 
-   d="scan'208";a="22288061"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 24 Feb 2022 10:42:52 +0100
-Received: from steina-w.tq-net.de (unknown [10.123.49.12])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 893E3280074;
-        Thu, 24 Feb 2022 10:42:51 +0100 (CET)
-From:   Alexander Stein <alexander.stein@ew.tq-group.com>
-To:     Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>
-Cc:     Alexander Stein <alexander.stein@ew.tq-group.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: [RFC PATCH 1/1] pinctrl: imx: Reduce printk message level for empty nodes
-Date:   Thu, 24 Feb 2022 10:42:43 +0100
-Message-Id: <20220224094243.1376965-1-alexander.stein@ew.tq-group.com>
-X-Mailer: git-send-email 2.25.1
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tqghmzvBgkIucPk30i/1RBMKSaH511u/5cafjui8mTA=;
+        b=iKFH/nCaBtENJTdm/3S9PPj+rKJPlWoG/Bdq+HV8ObixrJFQhS4z1MOzotSNJCI0nd
+         ptVocWqzyJjOOYzWBHrx1rrGloth2JPJn7sKGfp69htceG3vkWOOI7ADBxyQFYlDgN2z
+         NQsYce8GSPFvHIZR+DXTINmFU3dygBa1goHxH8XOUBFrPyJGVylrvRKUftxXzlFu2nmJ
+         9KTSYsAcAKaN4YUQJ/qIh2d9uViSMimGushKydp4n/EadtjRn6tXME9va1S3DH1Qc89F
+         q7FH1qy92/ox3nO1WFvK2bhM3H3EW+Yg6iSaY9gLDWfSa6AYQrGsS4Abm++y4xBxQ8gV
+         m9ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tqghmzvBgkIucPk30i/1RBMKSaH511u/5cafjui8mTA=;
+        b=gwT6VelWK9OHv+ySdNIE5CDMGZMAAn4d1g74cyW5IET5t3xJbkGvjFqmP9cVDw1L/o
+         r0cq3prYqjEJr9DAEEoFmP1zQGnFu7GosQFIGm2382VcRIr42CHF1Dq3580cxamLLa3u
+         m78SzAf/xk8r+sZRkoICmd2uLdEXKmzpjNKtPq0Z930nXYU2kB3bPFmUq1yTiO+CgX67
+         ppbCcVNsfC7TL9DAHzm8d1CpvBVPln62Mwn/zE4zkxbPofWmh/iY0XatDlDw+ZEAAgh5
+         gIYcntdAoJA6Xdh58w7/7faLSnfZjNC6Vl4QyOGzTey7usIMgo5ZxBY/8nIZ7R0T1ZeF
+         Z/Gg==
+X-Gm-Message-State: AOAM5320KgeaaUwMshNmEeXpjCBAexYFPyG0pthMG/RqYs+FulxguELh
+        uXrma7lfSbm0aGE4HluNctQ=
+X-Google-Smtp-Source: ABdhPJxOmmfqAiXnv6BDPZ68mjeGMsSCHie4qvts2pK3mFGPljn7a3XGoQ/aUJEYXFFRyqmHmevKDQ==
+X-Received: by 2002:a2e:99d6:0:b0:23a:925:6aa0 with SMTP id l22-20020a2e99d6000000b0023a09256aa0mr1896124ljj.110.1645708766930;
+        Thu, 24 Feb 2022 05:19:26 -0800 (PST)
+Received: from orome (p200300e41f0a6900000000000000043a.dip0.t-ipconnect.de. [2003:e4:1f0a:6900::43a])
+        by smtp.gmail.com with ESMTPSA id n3sm205819lfq.285.2022.02.24.05.19.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Feb 2022 05:19:25 -0800 (PST)
+Date:   Thu, 24 Feb 2022 14:19:23 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     conor.dooley@microchip.com
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
+        jassisinghbrar@gmail.com, u.kleine-koenig@pengutronix.de,
+        lee.jones@linaro.org, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, paul.walmsley@sifive.com,
+        palmer@dabbelt.com, aou@eecs.berkeley.edu, geert@linux-m68k.org,
+        krzysztof.kozlowski@canonical.com, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-riscv@lists.infradead.org, lewis.hanly@microchip.com,
+        daire.mcnamara@microchip.com, ivan.griffin@microchip.com,
+        atishp@rivosinc.com, Rob Herring <robh@kernel.org>,
+        Palmer Dabbelt <palmer@rivosinc.com>
+Subject: Re: [PATCH v7 05/11] dt-bindings: pwm: add microchip corepwm binding
+Message-ID: <YheF2xMOEtuDwG0U@orome>
+References: <20220214135840.168236-1-conor.dooley@microchip.com>
+ <20220214135840.168236-6-conor.dooley@microchip.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="0UAUmyEyisF1FZUK"
+Content-Disposition: inline
+In-Reply-To: <20220214135840.168236-6-conor.dooley@microchip.com>
+User-Agent: Mutt/2.2.1 (c8109e14) (2022-02-19)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -84,37 +82,49 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-iomuxc_snvs from imx6ull supports 2 boot mode and 10 tamper pins.
-Probably most users won't use them, causing this error message during boot:
-  no groups defined in /soc/bus@2200000/iomuxc-snvs@2290000
-This is actually not an error in this case, so reduce the level
-accordingly.
 
-Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
----
-This issue was raised during release test: Why is there an error if
-nothing is wrong?
-Memory only devices are enabled by default, which I agree, but this
-causes the mentioned error message unconditionally, unless some muxing is
-configured. I would argue that even a warning is not correct either,
-nothing is wrong here.
+--0UAUmyEyisF1FZUK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- drivers/pinctrl/freescale/pinctrl-imx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Mon, Feb 14, 2022 at 01:58:35PM +0000, conor.dooley@microchip.com wrote:
+> From: Conor Dooley <conor.dooley@microchip.com>
+>=20
+> Add device tree bindings for the Microchip fpga fabric based "core" PWM
+> controller.
+>=20
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
+> ---
+>  .../bindings/pwm/microchip,corepwm.yaml       | 81 +++++++++++++++++++
+>  1 file changed, 81 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/microchip,corep=
+wm.yaml
 
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
-index fa3cc0b80ede..3a7d2de10b13 100644
---- a/drivers/pinctrl/freescale/pinctrl-imx.c
-+++ b/drivers/pinctrl/freescale/pinctrl-imx.c
-@@ -661,7 +661,7 @@ static int imx_pinctrl_parse_functions(struct device_node *np,
- 	func->name = np->name;
- 	func->num_group_names = of_get_child_count(np);
- 	if (func->num_group_names == 0) {
--		dev_err(ipctl->dev, "no groups defined in %pOF\n", np);
-+		dev_info(ipctl->dev, "no groups defined in %pOF\n", np);
- 		return -EINVAL;
- 	}
- 
--- 
-2.25.1
+Fine with me to go through the RISC-V tree:
 
+Acked-by: Thierry Reding <thierry.reding@gmail.com>
+
+--0UAUmyEyisF1FZUK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmIXhdgACgkQ3SOs138+
+s6G99w//bjUK/d2MUDOjWCCN+SjvFVIkEqIcEl2BOJoazBkO95myY4zU0P1kEZ6J
+mhjKjqxDg/pa5ynS7Ok+UO0q3L967NngdXeYQaexGkM9CGvcFkL7LMpvQjF8kSzW
+tz2dB3xz/NFcy62y883siihherqZb92tL4F//7+yG31PlUiTlTsZD+eYPbELTDHf
+7WAmcfr37ROA1PHsaa+qbFGCVtOnJEUkh3YRvntQiFhLM6jP2Ng9MFMxbr0VQ8Dc
+GMyS+2SbZN18FBHq+/gyV8dEVD4GEI0KzwXnyCE8Gog6Rrm0ViE0DhIC0rvfNt92
+itZH1MJxItGlqukOE0rASVZScSsmwL5cBemlNKNVv2nW0ZBuXrcVARhiMP7A9mH3
+RDrh9ryJFcyZQV55ENCZbIoqlcF54agHJdwRjDq++VHi6+7CeQEdgqzHR52nJ28Q
++l45smPbNP6hejF0uJq+nnQ5CrmsfnjNb6CEVU48FTOFS+6SBWJiHx15a3+xQLKO
+HGGtNO7fncc3AGgbP97M8wWvGM5+cgEpKOkxLRHNu1DV676Reqo1wcagIgmjwYuQ
+e4IZPadbpRH61AVEXlo8fVnnGVGehoc8nDVs68WZa5Uq0hUqkjQhs6IBgMyxTUdo
+J3tjDezQfMxD0aigHvWyo8xWrSi0Xi89QHb6IKg+6OZgbnpb0EU=
+=wbm0
+-----END PGP SIGNATURE-----
+
+--0UAUmyEyisF1FZUK--
