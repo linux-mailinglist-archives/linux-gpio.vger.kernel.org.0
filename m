@@ -2,135 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4519E4C2129
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Feb 2022 02:43:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 59E734C222F
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Feb 2022 04:23:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229715AbiBXBn2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Feb 2022 20:43:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48578 "EHLO
+        id S229455AbiBXDQ7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Feb 2022 22:16:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229700AbiBXBn2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Feb 2022 20:43:28 -0500
-Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52B4861A07
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Feb 2022 17:42:55 -0800 (PST)
-Received: by mail-qk1-x72d.google.com with SMTP id n185so655662qke.5
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Feb 2022 17:42:55 -0800 (PST)
+        with ESMTP id S229437AbiBXDQ6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Feb 2022 22:16:58 -0500
+Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00997253BD4
+        for <linux-gpio@vger.kernel.org>; Wed, 23 Feb 2022 19:16:29 -0800 (PST)
+Received: by mail-yb1-xb2f.google.com with SMTP id w63so1224048ybe.10
+        for <linux-gpio@vger.kernel.org>; Wed, 23 Feb 2022 19:16:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Vx2Zk6+SWiLdSaoXgQipdaVqnvHH4v+4mNsECcKDgiw=;
-        b=WJ8avMMsby9jJ/c3Ni0a/WYvxexsEm+96dBq+9n04NXDClAvo9f/eRG/OtbcvFWLIr
-         dSy/DB7VE79t7I+K6NSdQscCltHlzyY6O7JFxUx/V4F2Uqt2XzHXSEJkjLRcxZ/MIWxb
-         4lqfi9QcrpAO3CRWg3uSqwYZdy5gn9dJbDZJk=
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=/rL+TycpMQLfB5P4Zn9xgGfUWg8yPCNTwrE46ZNldMM=;
+        b=gwcHn2rWFGLwhtN7hIprls0mTQLcPQLXBQ0itujYX5qZ+tD8/JQBS4qmijXae/E6jv
+         STef6TbYyPZUISzKzlCZ0jGGiKl28ZhS3IZcECR3r8DwYReJB7wvZlqz4sLemiDOrENe
+         t6xrd1OWV2gBclJNuaKxDxGxXoKxMlB/kbyLSsoY1nH2ygo3xKpSRptP0lkaomedtZmO
+         wMMECBibJcGwDoI4i+Wf5SySj8608H91ujQ3thcWMzRpenU1AgJOfTWkp+z8tocZtDgV
+         EW5eBfVG3uLpqAdXGiolix9QxDlS3kWsr8b8kqv4JnPmjrqRA6o2cMEMSSEeVE8CBk40
+         1/Lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Vx2Zk6+SWiLdSaoXgQipdaVqnvHH4v+4mNsECcKDgiw=;
-        b=ITysLF9qAID4LveqxLjlucRT77oja05j3LnfdNkLKtXK6KLxnXk9jZIuCT0MoV1FBx
-         s/0AZ7CF9QK8GYmoSWQ+pHxCA/OEQBBTneaupEQp2mjzrSthl1Cw0JNYxNJ/AvlcuvDa
-         DC4gd6l3NRO1UyfCiTNtHso1Juh603fFuBgtow1GqUw05MlRo0Pi6sbUIJuRhra2Yr/R
-         49uBlqHcKc+MtTzh7diXFS8hBtJgukuZ5Z1YcobJ6UyQ6iVnGJsAEQy4uU16FobciM/G
-         WA+n8tO1Znw9VIGrToksa6fkXc8mPmS0lB0AhHaJUHZqUoc2FsjqYAPJbCqdrqAkZMjA
-         d0EQ==
-X-Gm-Message-State: AOAM531mwPs5j4KNFJpUsl16f4oASSZSxRW24BsJLscMDnHy/OaxrHe5
-        HQEu7BFfAjEPid85JMX08spManliZwQUDa1tuFvmI83Y
-X-Google-Smtp-Source: ABdhPJyeNQv3IZFiTS6yCMfIoZSAbZuAJ6qWGzi/2h/5barSNgpaPvee/aqUujOpNhfp/i301QqVLWcrwI6xp2fc1mQ=
-X-Received: by 2002:ac8:5b82:0:b0:2cf:232d:b1f8 with SMTP id
- a2-20020ac85b82000000b002cf232db1f8mr442431qta.58.1645665334114; Wed, 23 Feb
- 2022 17:15:34 -0800 (PST)
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=/rL+TycpMQLfB5P4Zn9xgGfUWg8yPCNTwrE46ZNldMM=;
+        b=XIgKXRYMJeh6M3Z8b7LReVOCqaVJO8JXsuT0/9XKYdqDUosyPT9YYL5r1wYDgMCn3S
+         vJ5sgoKGaf4CY8iM9lWwCfMr3l8IsGNFWr8d1hQOymsyiM/USuktsaqgFZA5IxQTtwrZ
+         gx4QkL8kiL7xXa12J35zQHIlExBaq6c9Lr6oNXdoHiXyqAXBzwdhrDGsRML+4g/octr2
+         YCe9slkaBgkgI3pWhCfwlD4cz/Ef12BT+Tbbbv9G/Ul1UBtDXayLEP2AosW2f3XmLX5w
+         4JV2EBlmvqCCklFFbSLshfvp9RvHTnqZKSOYIFw5qBaJSlvmpPM9axe7iS0MbOCXgVfY
+         UO3A==
+X-Gm-Message-State: AOAM5313TW16VWtSz6xH0JggWhUaSKw8BsZgA8Y9UA80G4frR8WUOb52
+        jxvyBpaXUlG9jpujbLLY5cvdkPnRcE8Iz5t0jQU=
+X-Google-Smtp-Source: ABdhPJxAgVfPqpBzr/gDkjoJ2PGO17fP60xJk+cZ74Ys4jf8QfpLzBJ9uIa7AbSfCYC3moxtOzqmDhECOW16WMJwz7I=
+X-Received: by 2002:a25:d6c7:0:b0:623:312e:e8b4 with SMTP id
+ n190-20020a25d6c7000000b00623312ee8b4mr693650ybg.462.1645672589137; Wed, 23
+ Feb 2022 19:16:29 -0800 (PST)
 MIME-Version: 1.0
-References: <20220202114204.31918-1-joel@jms.id.au> <CAMRc=MdJX0H1i=UjvHS15+yi+LYgYEyw3puavCwL878gsQWivA@mail.gmail.com>
- <CAMRc=McUht0K+=86VfV7Z8kOU+DMoaYbX65_CrA8WVVE9XhxvA@mail.gmail.com>
-In-Reply-To: <CAMRc=McUht0K+=86VfV7Z8kOU+DMoaYbX65_CrA8WVVE9XhxvA@mail.gmail.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Thu, 24 Feb 2022 01:15:22 +0000
-Message-ID: <CACPK8XeN9Ym8wGVmZ15HprGb+UePY51tmcptC2o9zbUgTcP6HQ@mail.gmail.com>
-Subject: Re: [libgpiod PATCH] core: Fix line_bulk_foreach_line invalid memory access
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Received: by 2002:a05:7010:738a:b0:210:6fe6:62e1 with HTTP; Wed, 23 Feb 2022
+ 19:16:28 -0800 (PST)
+Reply-To: dravasmith27@gmail.com
+From:   Dr Ava Smith <gracebanneth@gmail.com>
+Date:   Wed, 23 Feb 2022 19:16:28 -0800
+Message-ID: <CABo=7A0upOA-4NbGO0LnXAawP9_Y0f891XDSSMv-d-z7J4rKBg@mail.gmail.com>
+Subject: GREETINGS FROM DR AVA SMITH
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+X-Spam-Status: Yes, score=5.0 required=5.0 tests=BAYES_20,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        SUBJ_ALL_CAPS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:b2f listed in]
+        [list.dnswl.org]
+        * -0.0 BAYES_20 BODY: Bayes spam probability is 5 to 20%
+        *      [score: 0.0599]
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [dravasmith27[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [gracebanneth[at]gmail.com]
+        *  0.5 SUBJ_ALL_CAPS Subject is all capitals
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.5 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 18 Feb 2022 at 18:42, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> On Fri, Feb 18, 2022 at 7:38 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> >
-> > On Wed, Feb 2, 2022 at 12:42 PM Joel Stanley <joel@jms.id.au> wrote:
-> > >
-> > > Running libgpiod applications under valgrind results in the following
-> > > warning:
-> > >
-> > > ==3006== Invalid read of size 8
-> > > ==3006==    at 0x10C867: line_request_values (core.c:711)
-> > > ==3006==    by 0x10CDA6: gpiod_line_request_bulk (core.c:849)
-> > > ==3006==    by 0x10AE27: main (gpioset.c:323)
-> > > ==3006==  Address 0x4a4d370 is 0 bytes after a block of size 16 alloc'd
-> > > ==3006==    at 0x483F790: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-> > > ==3006==    by 0x10B884: gpiod_line_bulk_new (core.c:109)
-> > > ==3006==    by 0x10DBB0: gpiod_chip_get_lines (helpers.c:24)
-> > > ==3006==    by 0x10ADC3: main (gpioset.c:313)
-> > >
-> > > This is because the foreach loop reads the next value before checking
-> > > that index is still in bounds.
-> > >
-> > > Add a test to avoid reading past the end of the allocation.
-> > >
-> > > This bug is not present a released version of libgpiod.
-> > >
-> > > Fixes: 2b02d7ae1aa6 ("treewide: rework struct gpiod_line_bulk")
-> > > Signed-off-by: Joel Stanley <joel@jms.id.au>
-> > > ---
-> > >  lib/core.c | 3 ++-
-> > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/lib/core.c b/lib/core.c
-> > > index 6ef09baec0f5..4463a7014776 100644
-> > > --- a/lib/core.c
-> > > +++ b/lib/core.c
-> > > @@ -178,7 +178,8 @@ GPIOD_API void gpiod_line_bulk_foreach_line(struct gpiod_line_bulk *bulk,
-> > >  #define line_bulk_foreach_line(bulk, line, index)                      \
-> > >         for ((index) = 0, (line) = (bulk)->lines[0];                    \
-> > >              (index) < (bulk)->num_lines;                               \
-> > > -            (index)++, (line) = (bulk)->lines[(index)])
-> > > +            (index)++,                                                 \
-> > > +            (line) = (index) < (bulk)->num_lines ? (bulk)->lines[(index)] : NULL)
-> > >
-> > >  GPIOD_API bool gpiod_is_gpiochip_device(const char *path)
-> > >  {
-> > > --
-> > > 2.34.1
-> > >
-> >
-> > I'll skip this because this entire struct is going away in v2 and the
-> > bug is not present in v1.6.x.
-> >
-> > Bart
->
-> Ugh actually all three patches fix issues in the master branch that
-> have never been nor will be released.
->
-> I'm not sure if I made myself clear on that - the changes in the
-> master branch are going away and the de facto new API is in
-> next/libgpiod-2.0. I already pushed the other two so I'll leave them
-> there but please take a look at the next branch so that you know how
-> the upcoming API will work. That's also applicable to the patches
-> adding the by-name option to the tools - I think it would be better to
-> base them on that branch right away.
-
-That's a bit frustrating.
-
-Perhaps you could make the master branch contain the code you're
-working on (instead of next), if you plan on abandoning the current
-code base?
+-- 
+Hello Dear,
+how are you today?hope you are fine
+My name is Dr Ava Smith ,Am an English and French nationalities.
+I will give you pictures and more details about me as soon as i hear from you
+Thanks
+Ava
