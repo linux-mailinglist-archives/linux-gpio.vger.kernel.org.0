@@ -2,104 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A66AA4C4FD6
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Feb 2022 21:42:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A56A34C5079
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Feb 2022 22:18:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236827AbiBYUmm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 25 Feb 2022 15:42:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48014 "EHLO
+        id S238233AbiBYVTG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 25 Feb 2022 16:19:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236790AbiBYUmk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Feb 2022 15:42:40 -0500
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33D732177CF
-        for <linux-gpio@vger.kernel.org>; Fri, 25 Feb 2022 12:42:07 -0800 (PST)
-Received: by mail-wr1-x42a.google.com with SMTP id r10so6198323wrp.3
-        for <linux-gpio@vger.kernel.org>; Fri, 25 Feb 2022 12:42:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CmSYa3kkJ/ViPa9xmpfA0cWei7k8n4ZCOH7gEssAD/I=;
-        b=EGk7/LDlXcRBEnL/ciXk8b6dZE+SwmeKuZyRM51k9wovsnq2pgZ2Q1eSm9WlPDgLju
-         cRN2w6KZVLyeXBYOar9Xz2aUxVaJxlqaMQzhi5usHRRoUlcvKQolgf8gC/pY8hgt9jag
-         JIedgUI6aIsL3t9JfHcYGiAyNyjxKZ4xgqzV+w8vF03ze8CJBfFvOYzoOVgOS3Ux2p4e
-         XB6KcgZqtVP4kZvOJy1dBrxiPMh92R/Z93Y0QUpAvKrGAAUbmauJLlK4IwkFA7XTfDV/
-         7KikjjM8axTlqCVf/idIwlunEUiJPtmJNpobcVK0znOnPgyKn9H2KP+zSrPPtOXeNZ1P
-         F3iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=CmSYa3kkJ/ViPa9xmpfA0cWei7k8n4ZCOH7gEssAD/I=;
-        b=LbOssaIGf2rkLlWgQETF3nG3xFkAssHlF0P2uFp6R8rm6r2f0OGKYkTrgkiq+pqOxS
-         /5ahY5h/eob1v9/5x2m+pK0xl0+PjRODsZYok1BLJG13dcXv4fCKoUaeS1L/1IWCl2VW
-         y6er0cpmg+aUPh6GFftUrLQ7qoYfwsbNhg5yeDPTx7cVnEPBLbEbLJ3pvwBtb5zpt+jZ
-         TZZxz51y905RMAGLG0E9TkOtLIPa4JzcqQ0aRDpvh2x8ngWg7xR+FVYSlS0PAt7QBC+u
-         mKwlzeVcj7hSC9Cnja07Z51znEFqhyXPswxluVQjN9OltARiuAC4M1Y4jNwV7JItJ2cM
-         QzCg==
-X-Gm-Message-State: AOAM532AsnolbTp85ZEKdZDn7Sp4ABsLc1ZOVXh3YhyJEq1G3bxM5VSC
-        3qCQqs2YmN2G7l64yK6Y+2r9bQ==
-X-Google-Smtp-Source: ABdhPJzR6KQ8n+yaCjgQutAdmLIinpHWmtD2vyqj+2z2MYnh4tl2xMFLcWengEbUfhc948/YVE7zug==
-X-Received: by 2002:a05:6000:8b:b0:1ee:1c9d:92a0 with SMTP id m11-20020a056000008b00b001ee1c9d92a0mr6352426wrx.677.1645821725706;
-        Fri, 25 Feb 2022 12:42:05 -0800 (PST)
-Received: from debian-brgl.home ([2a01:cb1d:334:ac00:7d50:ff5:f5c1:e225])
-        by smtp.gmail.com with ESMTPSA id o16-20020a05600c511000b0038141b4a4edsm960201wms.38.2022.02.25.12.42.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Feb 2022 12:42:05 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        with ESMTP id S238223AbiBYVTC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Feb 2022 16:19:02 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 490A71F0392;
+        Fri, 25 Feb 2022 13:18:28 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 05EBFB83398;
+        Fri, 25 Feb 2022 21:18:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A0231C340E7;
+        Fri, 25 Feb 2022 21:18:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1645823905;
+        bh=qXWus0h/EwOAjtC/+iTs+pItL27tspqFz1PxRtWbVVY=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=REmrqIirr66mAllpaLsZ3EK3XqSkGKyE3IbU4Kkig+PEHkTgohP+3XZ1qUGcZhPLG
+         WkA1+UqaHGQ9P9iutNwuiRvv/A29+wNCITaZ1sK4QACtGIwT33zBiQ03r7jWiCBSZ1
+         WIQ+tNXdsXeeRtSMZfk+1S2JNInNgn7tSNd1LXKIPxeNyWmTQC/KvmsFevNyjJTj1u
+         th1K+pZFPVhKuMrc9gdbnENiTnhlC1awMOyy04g1EUSVF7575198w4hTyywdJ73C8b
+         /zdWWc7g68EOJwD0Iae7yi3yAHYCQ2q0+b40FfBDp5oBNOBDZ5DLAqotbAQxu9En9B
+         LkGZS9egLTh3A==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8A98EE6D4BB;
+        Fri, 25 Feb 2022 21:18:25 +0000 (UTC)
+Subject: Re: [GIT PULL] gpio: fixes for v5.17-rc6
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20220225204202.53415-1-brgl@bgdev.pl>
+References: <20220225204202.53415-1-brgl@bgdev.pl>
+X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20220225204202.53415-1-brgl@bgdev.pl>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.17-rc6
+X-PR-Tracked-Commit-Id: ae42f9288846353982e2eab181fb41e7fd8bf60f
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 115ccd2278ccaa882000a20cb81a3649ef7dfe8b
+Message-Id: <164582390556.13587.15891944624488053567.pr-tracker-bot@kernel.org>
+Date:   Fri, 25 Feb 2022 21:18:25 +0000
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [GIT PULL] gpio: fixes for v5.17-rc6
-Date:   Fri, 25 Feb 2022 21:42:02 +0100
-Message-Id: <20220225204202.53415-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.30.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Linus,
+The pull request you sent on Fri, 25 Feb 2022 21:42:02 +0100:
 
-Please pull the following two fixes for the next release cycle.
+> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.17-rc6
 
-Best Regards,
-Bartosz Golaszewski
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/115ccd2278ccaa882000a20cb81a3649ef7dfe8b
 
-The following changes since commit 754e0b0e35608ed5206d6a67a791563c631cec07:
+Thank you!
 
-  Linux 5.17-rc4 (2022-02-13 12:13:30 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.17-rc6
-
-for you to fetch changes up to ae42f9288846353982e2eab181fb41e7fd8bf60f:
-
-  gpio: Return EPROBE_DEFER if gc->to_irq is NULL (2022-02-23 22:30:56 +0100)
-
-----------------------------------------------------------------
-gpio: fixes for v5.17-rc6
-
-- fix an bug generating spurious interrupts in gpio-rockchip
-- fix a race condition in gpiod_to_irq() called by GPIO consumers
-
-----------------------------------------------------------------
-Samuel Holland (1):
-      gpio: rockchip: Reset int_bothedge when changing trigger
-
-Shreeya Patel (1):
-      gpio: Return EPROBE_DEFER if gc->to_irq is NULL
-
- drivers/gpio/gpio-rockchip.c | 56 +++++++++++++++++++++++---------------------
- drivers/gpio/gpiolib.c       | 10 ++++++++
- 2 files changed, 39 insertions(+), 27 deletions(-)
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
