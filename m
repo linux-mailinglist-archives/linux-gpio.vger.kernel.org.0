@@ -2,177 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E8E614C4A0F
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Feb 2022 17:05:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 573BD4C4AEA
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Feb 2022 17:36:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237102AbiBYQFG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 25 Feb 2022 11:05:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34478 "EHLO
+        id S243077AbiBYQgj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 25 Feb 2022 11:36:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233876AbiBYQFF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Feb 2022 11:05:05 -0500
-Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACFA11A3617;
-        Fri, 25 Feb 2022 08:04:33 -0800 (PST)
-Received: by mail-oo1-f53.google.com with SMTP id j7-20020a4ad6c7000000b0031c690e4123so6735322oot.11;
-        Fri, 25 Feb 2022 08:04:33 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=62snw7bOF/0Xdj/1zQ7dCw19azD4vyQfzWzESw+fN1c=;
-        b=2Nv7sc9UosMZYZwLN/xUO3Z4j8H29qV1gigNW8JqIcCaLhyDjZhzxwOdWCpmoXXunG
-         Jg2Qv34CeTi2mPqlTH2bKBjmhYBCb1fR2P03b64d0ThauvmMS7so+GsOmv/skFAw6o9R
-         bYdRF3D8hoLBR6u81IXo7VkdHsrrDsNL3RrAr6LWhNlYAHo/rIQA9lTaaLUMjelu/oNR
-         9ODp7L5q5Q18kjkzrOB2njKd/5vcvt/oBefxq99eqjfRAfaWnN53LDdb6QEpA0Noy0TG
-         RVU3MVzlKhUZtOWR4sdO2qW6djVita0VA5v+g69o1EOQnOqN7kEhTfTI8DBvf+LqRjLN
-         PXPg==
-X-Gm-Message-State: AOAM53163sbRVJsplYE+oX9FDL+6VtJCRso4TBdnZ6n7Eemdx2q9/bvb
-        Qme7VEYv6YQac0abAT17KQ==
-X-Google-Smtp-Source: ABdhPJyCTntZfMAJhy9C7v8gnaenj+HNsX34XTMCJK82mHMST9OItKpfymK8bM0r0lWLPdgkfspdiQ==
-X-Received: by 2002:a4a:4589:0:b0:319:edf:10c7 with SMTP id y131-20020a4a4589000000b003190edf10c7mr2935651ooa.44.1645805072946;
-        Fri, 25 Feb 2022 08:04:32 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id c26-20020a056830349a00b005af30960c75sm1268657otu.38.2022.02.25.08.04.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Feb 2022 08:04:32 -0800 (PST)
-Received: (nullmailer pid 1008598 invoked by uid 1000);
-        Fri, 25 Feb 2022 16:04:30 -0000
-Date:   Fri, 25 Feb 2022 10:04:30 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
-        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
-        linux-imx@nxp.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: imx93: Add pinctrl binding
-Message-ID: <Yhj+DrSDF6VQWe6X@robh.at.kernel.org>
-References: <20220215082006.790843-1-peng.fan@oss.nxp.com>
+        with ESMTP id S243069AbiBYQgj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Feb 2022 11:36:39 -0500
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84A2022310F;
+        Fri, 25 Feb 2022 08:36:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1645806966; x=1677342966;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=IZnoVmPnir54K979MChGEoGFpJMdRJjovN5lCewDRbA=;
+  b=NmM6eDuiQVNgaHy0gIgCrc91HhVpHMouEdTKiqgv+a5pWy0YI+YYRUX3
+   exsY2W2AqGSlDQeWwQ8+nrgbiy59jDIurmHl2fAEK5WqW5o65LuXgDAn1
+   TzRP2e0fCfQbji5ggOEAcg/J/lFh8kTIkJKwYVKoFVMBr+L/Ud2PxUbFy
+   /LhtBamY5pzV02f3HS90KDseUIdVUIIBL4KXZZ5+qVgCiLkygBFnNAd/J
+   Znm6Kbf8Xmk54z9xykqJg33IXQez7jpkMS+IjuNsK1a457ZuxPXknVIw+
+   NbXgY1xp4PZ25RBhjdF5s7fxrLqaOugkj+BsELH2fFoJKmOUc01GGo0SX
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10268"; a="252724623"
+X-IronPort-AV: E=Sophos;i="5.90,136,1643702400"; 
+   d="scan'208";a="252724623"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2022 08:36:06 -0800
+X-IronPort-AV: E=Sophos;i="5.90,136,1643702400"; 
+   d="scan'208";a="509317892"
+Received: from smile.fi.intel.com ([10.237.72.59])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Feb 2022 08:36:03 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1nNdYo-008GPw-6W;
+        Fri, 25 Feb 2022 18:35:14 +0200
+Date:   Fri, 25 Feb 2022 18:35:13 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 4/5] platform/x86: x86-android-tablets: Workaround Lenovo
+ Yoga Tablet 2 830/1050 poweroff hang
+Message-ID: <YhkFQa82XVsu37xN@smile.fi.intel.com>
+References: <20220223133153.730337-1-hdegoede@redhat.com>
+ <20220223133153.730337-5-hdegoede@redhat.com>
+ <YhZLpmhobBjrOHDU@smile.fi.intel.com>
+ <0568e484-4ab2-5641-53ae-29ff48e952e6@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220215082006.790843-1-peng.fan@oss.nxp.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+In-Reply-To: <0568e484-4ab2-5641-53ae-29ff48e952e6@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Feb 15, 2022 at 04:20:05PM +0800, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
+On Thu, Feb 24, 2022 at 05:57:11PM +0100, Hans de Goede wrote:
+> Hi,
 > 
-> Add pinctrl binding doc for i.MX93
+> On 2/23/22 15:58, Andy Shevchenko wrote:
+> > On Wed, Feb 23, 2022 at 02:31:52PM +0100, Hans de Goede wrote:
+> >> These tablets' DSDT does not set acpi_gbl_reduced_hardware, so
+> >> acpi_power_off gets used as pm_power_off handler. This causes "poweroff"
+> >> on these tablets to hang hard. Requiring pressing the powerbutton for
+> >> 30 seconds *twice* followed by a normal 3 second press to recover.
+> >>
+> >> Avoid this by overriding the global pm_power_off handler to do
+> >> an EFI poweroff instead.
+> > 
+> > Oh, you eventually found the root cause (reduced HW bit)?
 > 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  .../bindings/pinctrl/fsl,imx93-pinctrl.yaml   | 85 +++++++++++++++++++
->  1 file changed, 85 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx93-pinctrl.yaml
+> I'm not sure, it is possible that not setting the reduced HW bit
+> is actually correct for this hw, but that does lead to using
+> acpi_power_off which seems broken on this system.
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx93-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/fsl,imx93-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..95c87ea4c5c8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx93-pinctrl.yaml
-> @@ -0,0 +1,85 @@
-> +# SPDX-License-Identifier: GPL-2.0
+> I've updated the commit message while merging this to reflect
+> that using acpi_power_off is the problem, rather then not setting
+> the reduced HW bit.
 
-Dual license. checkpatch will tell you this and which ones.
+Understood. Thanks!
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/fsl,imx93-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Freescale IMX93 IOMUX Controller
-> +
-> +maintainers:
-> +  - Peng Fan <peng.fan@nxp.com>
-> +
-> +description:
-> +  Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
-> +  for common binding part and usage.
-> +
-> +properties:
-> +  compatible:
-> +    const: fsl,imx93-iomuxc
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +# Client device subnode's properties
-> +patternProperties:
-> +  'grp$':
-> +    type: object
-> +    description:
-> +      Pinctrl node's client devices use subnodes for desired pin configuration.
-> +      Client device subnodes use below standard properties.
-> +
-> +    properties:
-> +      fsl,pins:
-> +        description:
-> +          each entry consists of 6 integers and represents the mux and config
-> +          setting for one pin. The first 5 integers <mux_reg conf_reg input_reg
-> +          mux_val input_val> are specified using a PIN_FUNC_ID macro, which can
-> +          be found in <arch/arm64/boot/dts/freescale/imx8mp-pinfunc.h>. The last
-> +          integer CONFIG is the pad setting value like pull-up on this pin. Please
-> +          refer to i.MX8M Plus Reference Manual for detailed CONFIG settings.
-> +        $ref: /schemas/types.yaml#/definitions/uint32-matrix
-> +        items:
-> +          items:
-> +            - description: |
-> +                "mux_reg" indicates the offset of mux register.
-> +            - description: |
-> +                "conf_reg" indicates the offset of pad configuration register.
-> +            - description: |
-> +                "input_reg" indicates the offset of select input register.
-> +            - description: |
-> +                "mux_val" indicates the mux value to be applied.
-> +            - description: |
-> +                "input_val" indicates the select input value to be applied.
-> +            - description: |
-> +                "pad_setting" indicates the pad configuration value to be applied.
-> +
-> +
-> +    required:
-> +      - fsl,pins
-> +
-> +    additionalProperties: false
-> +
-> +allOf:
-> +  - $ref: "pinctrl.yaml#"
+> Also note that the issue of reboot being the same as poweroff once
+> the system has been rebooted at least once is still unresolved.
 
-Move this above 'properties'
+-- 
+With Best Regards,
+Andy Shevchenko
 
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  # Pinmux controller node
-> +  - |
-> +    iomuxc: pinctrl@443c0000 {
-> +        compatible = "fsl,imx93-iomuxc";
-> +        reg = <0x30330000 0x10000>;
-> +
-> +        pinctrl_uart3: uart3grp {
-> +            fsl,pins =
-> +                <0x48 0x1f8 0x41c 0x1 0x0	0x49>,
-> +                <0x4c 0x1fc 0x418 0x1 0x0	0x49>;
-> +        };
-> +    };
-> +
-> +...
-> -- 
-> 2.25.1
-> 
-> 
+
