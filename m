@@ -2,225 +2,177 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F2F574C4850
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Feb 2022 16:08:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E8E614C4A0F
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Feb 2022 17:05:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240124AbiBYPIm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 25 Feb 2022 10:08:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51618 "EHLO
+        id S237102AbiBYQFG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 25 Feb 2022 11:05:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240103AbiBYPIl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Feb 2022 10:08:41 -0500
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 988C62D1C1
-        for <linux-gpio@vger.kernel.org>; Fri, 25 Feb 2022 07:08:07 -0800 (PST)
-Received: by mail-pj1-x102a.google.com with SMTP id iq13-20020a17090afb4d00b001bc4437df2cso5063444pjb.2
-        for <linux-gpio@vger.kernel.org>; Fri, 25 Feb 2022 07:08:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=or9R+iDqVJ+AjlfrJegvHW/IiibtBCU5k60SVmbitno=;
-        b=S9gA5t1ojHpVXnYx/92y6aQpxSpwn08fqOYKPDMsDlIcierO3vJTPOU5TrUEFG7HP0
-         UF9hO25gsJvXtaKAs6fmFfdUEAD5KdmijdgvFuwi6ltP97rJTvRZ5NJ9jlCIejf9oL2O
-         tYVFnR/MQSVuR7oBvh/wsKQRFtRrNLt5FJkMHnKjPXd0h2l1OpmS8oENhheN/79eCQJL
-         0M0Aee0yZqV1L5WOMoYsrIS+/Y1bRIL/5xVGE5SgLWjzgNc+74OrRcpmtZMYhWLsLkM6
-         w7QcJN/UPMKijJKKUwfCA9mikfSfY5YKckXcL5b46iR9qaYGf8KGYCJDBRJXBAJSNzqE
-         J4tg==
+        with ESMTP id S233876AbiBYQFF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Feb 2022 11:05:05 -0500
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACFA11A3617;
+        Fri, 25 Feb 2022 08:04:33 -0800 (PST)
+Received: by mail-oo1-f53.google.com with SMTP id j7-20020a4ad6c7000000b0031c690e4123so6735322oot.11;
+        Fri, 25 Feb 2022 08:04:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=or9R+iDqVJ+AjlfrJegvHW/IiibtBCU5k60SVmbitno=;
-        b=SbyBNTrLKwZaWFAXF2DmTlLEEIV10kn/i1FXbugT34ttT5Eb10Zng+1izK3miZ1nuk
-         j9gxpCaNhnZyjtwsL7GBsdWGeuxgPokreRmylubMOqZGRjLOgQE+88uuJnTkqrfLSOpT
-         OvyrsfwkRfkD+aLW7WMp+9Agcya9EAus1bA/1s++Tqrb8tk/84y4xmTfztEHJawWPbik
-         UpcKYjislH0E3r6vZCUzUpFz3IDW98fU3XE6HyYc9nLaFu/3NU4XxYgsBm2K8DSR63ge
-         vNFsEjDquMJ1ZeJKcNTnbJBhjAo73xqDFi71Y1k2wIfcyRuv2wHiQNmS+HluEeIE1k9C
-         oB/w==
-X-Gm-Message-State: AOAM532J3nMux5n6tcgcgyW94XZcm0I7YEoIeF0j/e0iJkUhy9ATTkEK
-        DHt2R/tE+gyoXnFf1DfRxTor4x1tZo9i1g==
-X-Google-Smtp-Source: ABdhPJxp7kZDYSDRdVcSf5FxSJPodI68/wzT2+dNz9mocRhEu95pQC2U4RSk4tkoDIWYVj9ml8EMDA==
-X-Received: by 2002:a17:902:e852:b0:150:1120:9857 with SMTP id t18-20020a170902e85200b0015011209857mr7908506plg.103.1645801686868;
-        Fri, 25 Feb 2022 07:08:06 -0800 (PST)
-Received: from sol (60-242-155-106.static.tpgi.com.au. [60.242.155.106])
-        by smtp.gmail.com with ESMTPSA id s42-20020a056a0017aa00b004df8133df4asm3964579pfg.179.2022.02.25.07.08.04
+        bh=62snw7bOF/0Xdj/1zQ7dCw19azD4vyQfzWzESw+fN1c=;
+        b=2Nv7sc9UosMZYZwLN/xUO3Z4j8H29qV1gigNW8JqIcCaLhyDjZhzxwOdWCpmoXXunG
+         Jg2Qv34CeTi2mPqlTH2bKBjmhYBCb1fR2P03b64d0ThauvmMS7so+GsOmv/skFAw6o9R
+         bYdRF3D8hoLBR6u81IXo7VkdHsrrDsNL3RrAr6LWhNlYAHo/rIQA9lTaaLUMjelu/oNR
+         9ODp7L5q5Q18kjkzrOB2njKd/5vcvt/oBefxq99eqjfRAfaWnN53LDdb6QEpA0Noy0TG
+         RVU3MVzlKhUZtOWR4sdO2qW6djVita0VA5v+g69o1EOQnOqN7kEhTfTI8DBvf+LqRjLN
+         PXPg==
+X-Gm-Message-State: AOAM53163sbRVJsplYE+oX9FDL+6VtJCRso4TBdnZ6n7Eemdx2q9/bvb
+        Qme7VEYv6YQac0abAT17KQ==
+X-Google-Smtp-Source: ABdhPJyCTntZfMAJhy9C7v8gnaenj+HNsX34XTMCJK82mHMST9OItKpfymK8bM0r0lWLPdgkfspdiQ==
+X-Received: by 2002:a4a:4589:0:b0:319:edf:10c7 with SMTP id y131-20020a4a4589000000b003190edf10c7mr2935651ooa.44.1645805072946;
+        Fri, 25 Feb 2022 08:04:32 -0800 (PST)
+Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.gmail.com with ESMTPSA id c26-20020a056830349a00b005af30960c75sm1268657otu.38.2022.02.25.08.04.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Feb 2022 07:08:06 -0800 (PST)
-Date:   Fri, 25 Feb 2022 23:08:01 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Joel Stanley <joel@jms.id.au>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [libgpiod PATCH] core: Fix line_bulk_foreach_line invalid memory
- access
-Message-ID: <20220225150801.GA179640@sol>
-References: <20220202114204.31918-1-joel@jms.id.au>
- <CAMRc=MdJX0H1i=UjvHS15+yi+LYgYEyw3puavCwL878gsQWivA@mail.gmail.com>
- <CAMRc=McUht0K+=86VfV7Z8kOU+DMoaYbX65_CrA8WVVE9XhxvA@mail.gmail.com>
- <CACPK8XeN9Ym8wGVmZ15HprGb+UePY51tmcptC2o9zbUgTcP6HQ@mail.gmail.com>
- <CAMRc=McSdV9pxxyiHWeD-nr0VKcchEG7LnT=Z8f8f8pqd_USOQ@mail.gmail.com>
+        Fri, 25 Feb 2022 08:04:32 -0800 (PST)
+Received: (nullmailer pid 1008598 invoked by uid 1000);
+        Fri, 25 Feb 2022 16:04:30 -0000
+Date:   Fri, 25 Feb 2022 10:04:30 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
+        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
+        linux-imx@nxp.com, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: imx93: Add pinctrl binding
+Message-ID: <Yhj+DrSDF6VQWe6X@robh.at.kernel.org>
+References: <20220215082006.790843-1-peng.fan@oss.nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMRc=McSdV9pxxyiHWeD-nr0VKcchEG7LnT=Z8f8f8pqd_USOQ@mail.gmail.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20220215082006.790843-1-peng.fan@oss.nxp.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Feb 24, 2022 at 03:50:18PM +0100, Bartosz Golaszewski wrote:
-> On Thu, Feb 24, 2022 at 2:15 AM Joel Stanley <joel@jms.id.au> wrote:
-> >
-> > On Fri, 18 Feb 2022 at 18:42, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > >
-> > > On Fri, Feb 18, 2022 at 7:38 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > > >
-> > > > On Wed, Feb 2, 2022 at 12:42 PM Joel Stanley <joel@jms.id.au> wrote:
-> > > > >
-> > > > > Running libgpiod applications under valgrind results in the following
-> > > > > warning:
-> > > > >
-> > > > > ==3006== Invalid read of size 8
-> > > > > ==3006==    at 0x10C867: line_request_values (core.c:711)
-> > > > > ==3006==    by 0x10CDA6: gpiod_line_request_bulk (core.c:849)
-> > > > > ==3006==    by 0x10AE27: main (gpioset.c:323)
-> > > > > ==3006==  Address 0x4a4d370 is 0 bytes after a block of size 16 alloc'd
-> > > > > ==3006==    at 0x483F790: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-> > > > > ==3006==    by 0x10B884: gpiod_line_bulk_new (core.c:109)
-> > > > > ==3006==    by 0x10DBB0: gpiod_chip_get_lines (helpers.c:24)
-> > > > > ==3006==    by 0x10ADC3: main (gpioset.c:313)
-> > > > >
-> > > > > This is because the foreach loop reads the next value before checking
-> > > > > that index is still in bounds.
-> > > > >
-> > > > > Add a test to avoid reading past the end of the allocation.
-> > > > >
-> > > > > This bug is not present a released version of libgpiod.
-> > > > >
-> > > > > Fixes: 2b02d7ae1aa6 ("treewide: rework struct gpiod_line_bulk")
-> > > > > Signed-off-by: Joel Stanley <joel@jms.id.au>
-> > > > > ---
-> > > > >  lib/core.c | 3 ++-
-> > > > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/lib/core.c b/lib/core.c
-> > > > > index 6ef09baec0f5..4463a7014776 100644
-> > > > > --- a/lib/core.c
-> > > > > +++ b/lib/core.c
-> > > > > @@ -178,7 +178,8 @@ GPIOD_API void gpiod_line_bulk_foreach_line(struct gpiod_line_bulk *bulk,
-> > > > >  #define line_bulk_foreach_line(bulk, line, index)                      \
-> > > > >         for ((index) = 0, (line) = (bulk)->lines[0];                    \
-> > > > >              (index) < (bulk)->num_lines;                               \
-> > > > > -            (index)++, (line) = (bulk)->lines[(index)])
-> > > > > +            (index)++,                                                 \
-> > > > > +            (line) = (index) < (bulk)->num_lines ? (bulk)->lines[(index)] : NULL)
-> > > > >
-> > > > >  GPIOD_API bool gpiod_is_gpiochip_device(const char *path)
-> > > > >  {
-> > > > > --
-> > > > > 2.34.1
-> > > > >
-> > > >
-> > > > I'll skip this because this entire struct is going away in v2 and the
-> > > > bug is not present in v1.6.x.
-> > > >
-> > > > Bart
-> > >
-> > > Ugh actually all three patches fix issues in the master branch that
-> > > have never been nor will be released.
-> > >
-> > > I'm not sure if I made myself clear on that - the changes in the
-> > > master branch are going away and the de facto new API is in
-> > > next/libgpiod-2.0. I already pushed the other two so I'll leave them
-> > > there but please take a look at the next branch so that you know how
-> > > the upcoming API will work. That's also applicable to the patches
-> > > adding the by-name option to the tools - I think it would be better to
-> > > base them on that branch right away.
-> >
-> > That's a bit frustrating.
-> >
+On Tue, Feb 15, 2022 at 04:20:05PM +0800, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> I know and I'm sorry. I admit that this is not the best time to try to
-> get new features in.
+> Add pinctrl binding doc for i.MX93
 > 
-> > Perhaps you could make the master branch contain the code you're
-> > working on (instead of next), if you plan on abandoning the current
-> > code base?
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  .../bindings/pinctrl/fsl,imx93-pinctrl.yaml   | 85 +++++++++++++++++++
+>  1 file changed, 85 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx93-pinctrl.yaml
 > 
-> I can't just yet. I want to keep the codebase bisectable and only
-> merge the new API into master once it's complete for the C, C++ and
-> Python parts. The branch called next/libgpiod-2.0 contains the WIP
-> changes but they are not complete yet. I just posted the test suite
-> for C and plan on posting the complete C++ bindings soon.
+> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx93-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/fsl,imx93-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..95c87ea4c5c8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx93-pinctrl.yaml
+> @@ -0,0 +1,85 @@
+> +# SPDX-License-Identifier: GPL-2.0
+
+Dual license. checkpatch will tell you this and which ones.
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/fsl,imx93-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Freescale IMX93 IOMUX Controller
+> +
+> +maintainers:
+> +  - Peng Fan <peng.fan@nxp.com>
+> +
+> +description:
+> +  Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
+> +  for common binding part and usage.
+> +
+> +properties:
+> +  compatible:
+> +    const: fsl,imx93-iomuxc
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +# Client device subnode's properties
+> +patternProperties:
+> +  'grp$':
+> +    type: object
+> +    description:
+> +      Pinctrl node's client devices use subnodes for desired pin configuration.
+> +      Client device subnodes use below standard properties.
+> +
+> +    properties:
+> +      fsl,pins:
+> +        description:
+> +          each entry consists of 6 integers and represents the mux and config
+> +          setting for one pin. The first 5 integers <mux_reg conf_reg input_reg
+> +          mux_val input_val> are specified using a PIN_FUNC_ID macro, which can
+> +          be found in <arch/arm64/boot/dts/freescale/imx8mp-pinfunc.h>. The last
+> +          integer CONFIG is the pad setting value like pull-up on this pin. Please
+> +          refer to i.MX8M Plus Reference Manual for detailed CONFIG settings.
+> +        $ref: /schemas/types.yaml#/definitions/uint32-matrix
+> +        items:
+> +          items:
+> +            - description: |
+> +                "mux_reg" indicates the offset of mux register.
+> +            - description: |
+> +                "conf_reg" indicates the offset of pad configuration register.
+> +            - description: |
+> +                "input_reg" indicates the offset of select input register.
+> +            - description: |
+> +                "mux_val" indicates the mux value to be applied.
+> +            - description: |
+> +                "input_val" indicates the select input value to be applied.
+> +            - description: |
+> +                "pad_setting" indicates the pad configuration value to be applied.
+> +
+> +
+> +    required:
+> +      - fsl,pins
+> +
+> +    additionalProperties: false
+> +
+> +allOf:
+> +  - $ref: "pinctrl.yaml#"
+
+Move this above 'properties'
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  # Pinmux controller node
+> +  - |
+> +    iomuxc: pinctrl@443c0000 {
+> +        compatible = "fsl,imx93-iomuxc";
+> +        reg = <0x30330000 0x10000>;
+> +
+> +        pinctrl_uart3: uart3grp {
+> +            fsl,pins =
+> +                <0x48 0x1f8 0x41c 0x1 0x0	0x49>,
+> +                <0x4c 0x1fc 0x418 0x1 0x0	0x49>;
+> +        };
+> +    };
+> +
+> +...
+> -- 
+> 2.25.1
 > 
-> In fact - we discussed it with Kent and Linus and I expect to be able
-> to release the v2 in around two months and merge the new API into
-> master in a month.
 > 
-> You can base your work on next/libgpiod-2.0 but could you just hold
-> off the new features until after the new API is in master?
-> 
-
-I'm thinking that we should be re-visting the tools as part of the
-switch to libgpiod v2, as a major version bump is our only opportunity
-to make sweeping changes.
-
-I have to admit I was not initially in favour of the by-name option, as
-it is hideously inefficient compared to the offset version.  What was 
-one or two ioctl calls could now be dozens, if not more.
-And the thought of that happening everytime a user wants to toggle a
-single line makes my skin crawl.
-
-However, in light of our recent discussions, I think we need it as an
-option.  But I would prefer to revise the tool command lines so lines
-can be identified by name or offset.  The named option should be the
-simplest, and so not require a --by-name flag.
-My current thinking is that the chip should become an optional arg,
-rather than a positional arg.
-So [-c <chip>] <line>...
-e.g.
-    gpioset GPIO17=active GPIO22=1
-or
-    gpioset -c gpiochip0 17=1 LED=off
-
-similarly get:
-
-    gpioget GPIO17 GPIO22
-or
-    gpioget -c gpiochip0 17 LED
-
-If the chip is not specified then the line identifier must be a name.
-If the chip is specified then the line identifier is interpreted as an
-offset if it parses as an int, else a name.
-Either way, if multiple lines are provided then they must be on the one
-chip.
-That all hinges on the assumption that line names are never simply
-stringified integers, or at least if they are then it matches the
-offset.  Is that viable?
-
-The sets should also accept a set of true/false variants, such as the
-on/off, active/inactive in the examples above.
-The gets should return active/inactive to make it clear they refer to
-logical values, not physical values.
-
-I am also wondering why the tools are separate, instead of being merged
-into a single tool.  Is there a reason for that?
-
-I've got a bunch of other minor changes that I've been trialing in my
-Rust library.  So I have a working prototype of the set --interactive
-that I had mentioned.  I scrapped the batch option - it doesn't
-add much that the interactive mode and a named pipe doesn't already give
-you.
-
-But I digress.  The main thing I want to achieve here is to determine
-where you want to go with the tools for v2, and what any contraints
-might be.  Then we can take it from there.
-
-Cheers,
-Kent.
