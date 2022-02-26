@@ -2,51 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 932284C5799
-	for <lists+linux-gpio@lfdr.de>; Sat, 26 Feb 2022 19:41:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 369EE4C579B
+	for <lists+linux-gpio@lfdr.de>; Sat, 26 Feb 2022 19:41:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231203AbiBZSlb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 26 Feb 2022 13:41:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33228 "EHLO
+        id S232710AbiBZSle (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 26 Feb 2022 13:41:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232686AbiBZSl2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 26 Feb 2022 13:41:28 -0500
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1AE71E64FA
-        for <linux-gpio@vger.kernel.org>; Sat, 26 Feb 2022 10:40:53 -0800 (PST)
-Received: by mail-pj1-x1035.google.com with SMTP id q8-20020a17090a178800b001bc299b8de1so7752234pja.1
-        for <linux-gpio@vger.kernel.org>; Sat, 26 Feb 2022 10:40:53 -0800 (PST)
+        with ESMTP id S232695AbiBZSld (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 26 Feb 2022 13:41:33 -0500
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F7101E64F9
+        for <linux-gpio@vger.kernel.org>; Sat, 26 Feb 2022 10:40:58 -0800 (PST)
+Received: by mail-pj1-x102a.google.com with SMTP id ge19-20020a17090b0e1300b001bcca16e2e7so6805681pjb.3
+        for <linux-gpio@vger.kernel.org>; Sat, 26 Feb 2022 10:40:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=lBZeyokkJ0filn5vP507j526QxesK3K0dUHppgPVykM=;
-        b=B1W8mjoXyaornrojdkdADhQLc4kLAuKLxYDdM68uwF885nNGCpbe10uz++85QniEDl
-         50P4etoquBx62Y1CLZBMMJuWkWok4ubBKN4+v+UmJUcagw5hj0oS8q5r/jXJBQmGWlKa
-         zUVz3NE4LoTA87+EpLZ3fPdqC049w0DmNurCmDbB7ZrTnrPZ8yzdKhg524BF11Dz0QpF
-         6tzoJ6xpI0wtZc6ovYa1sSp1UXWTAGRxDKzuQjQWucMFKyxBsI/F/fMLOYfBe6anHcUs
-         XWB1dAp/D+RL3mLHlh7pVlm44JqQjBYh8DKRsguRrNSR16CoXon8k421akGVa555mNi2
-         2Dfg==
+        bh=NhYp7rvNV+p3QtraK3mzi6k8+sTimZVZsYgYTKLgOjw=;
+        b=ktI7wjlrlnHVlR7gidgss4RFsubYBAMmdP1LjboWTcwBtemI2uUEBev1G0JAAWHJrU
+         gNvV5jaUhrlWBCeloQ8Wk6mFC8Ej9d7c1ejiXJHegJxc0J4W11egy3iFDUPOmtIB3jE0
+         FXGzchdtuRILbMXxoKmnxDTub6qmaq+mXno9sBbppD/LCZleUgnZ2nNaW0GHT6pVCzCn
+         UimUSDgRSQQcD7plCi78gRIo7cgbBKPYZa/WuHnpRNKLsOk5R9AQhcpESJIKBbRF3h9Q
+         fmsq73BqZMlXS5Jiimc08PyCaTPxEZ1ixvKZVpvwjkqO1DIRKqbUsvLP/rMtb67SJAPJ
+         X3KA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=lBZeyokkJ0filn5vP507j526QxesK3K0dUHppgPVykM=;
-        b=W5JZPmXWiPU2R7s+ogS7E3ghB9s2oXR9eiVrB6PotvWLsbahQItQAI1f0dVtUselM7
-         EsD3On3s0W6FaiIxMinnj4b/QoALo1WdG5OlLdiVNhe6r4/LUh9A3QY9CQeKmkmLHBA+
-         rzn97wBBbWRJ9tlq5L+I9WtwttriI9UYb1BlwvSYJs7p7onom9eYKGJDp3UklfgbVpps
-         4WZn+zgeJptu99/n03GWlBunqJ9FOKb+EnsIrSLOz5ioCpKvJZdILYx0sr87v7GNKYp2
-         L99UOC4OLbkuW2ELgfYIUOH2SjGYMR/4mXALDJRS0U4AATWKRAFV3ZmfRPJdCchQMD5W
-         yRqA==
-X-Gm-Message-State: AOAM530LnwcjWJiETa0XDQ18SEdq3vr6ah6lZWyGJ2KKTVMhIvCY6IuM
-        kpJdTfUTGh2I2H7Mxhd3PZqyug==
-X-Google-Smtp-Source: ABdhPJyFqtWQVGiH+rxcf0zDTLOf8QCZE7DBG08FbC3+bzWD/A2yAvBz+1Mv54Lo12yyE86WM5nT2g==
-X-Received: by 2002:a17:90a:e295:b0:1bd:2c02:7b48 with SMTP id d21-20020a17090ae29500b001bd2c027b48mr1396682pjz.215.1645900853280;
-        Sat, 26 Feb 2022 10:40:53 -0800 (PST)
+        bh=NhYp7rvNV+p3QtraK3mzi6k8+sTimZVZsYgYTKLgOjw=;
+        b=X82TJeXOqco6eY0LB9FpmZIQxUNALXvJypi7X9OeounvW+8DjBUs2SvcObXGUotiv8
+         pqwrtIx2pEaG8Tz12IumiBdnmW2HprYisg65zfbmVokUtUnxhsveaAmfvFhdCXiqs8Lu
+         27uO20zAoqiFnmDawb6l110/B9JbPAziRbhqxHlaO+BoNcgVW8juszPe4dN4s+ZOWhp8
+         4a4+i7J3iC+WUPUuz/PehX1fDBkRGAVH22xUOjQme5wlxXoteVe8lDBhhI0Y2nh6VE6Y
+         U324OaRUXgRhRDmUZkXti+lF120B2s1gl4cU2yWSTVt8CmJit2me0IYTCW8UMgnyh9fo
+         GnKw==
+X-Gm-Message-State: AOAM530dsZQqLBtiDyXTObP74zYofnnz8m6E9XVuqmSSB0O8h/OFxMk1
+        WMCJBQhup2SmIRs/8Gd79d1zkQ==
+X-Google-Smtp-Source: ABdhPJww4jzPYcubElE8G9u93oVs9BTdT1cirgioMPIGfdOeCIk//dvrTS0HnJCnk/dhH+SNFhf7Ww==
+X-Received: by 2002:a17:90b:1054:b0:1bb:fc13:73ab with SMTP id gq20-20020a17090b105400b001bbfc1373abmr8946775pjb.241.1645900857671;
+        Sat, 26 Feb 2022 10:40:57 -0800 (PST)
 Received: from localhost.localdomain ([223.179.136.225])
-        by smtp.gmail.com with ESMTPSA id b187-20020a621bc4000000b004f3c8f3b560sm7049319pfb.129.2022.02.26.10.40.49
+        by smtp.gmail.com with ESMTPSA id b187-20020a621bc4000000b004f3c8f3b560sm7049319pfb.129.2022.02.26.10.40.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Feb 2022 10:40:53 -0800 (PST)
+        Sat, 26 Feb 2022 10:40:57 -0800 (PST)
 From:   Bhupesh Sharma <bhupesh.sharma@linaro.org>
 To:     linux-arm-msm@vger.kernel.org
 Cc:     bhupesh.sharma@linaro.org, bhupesh.linux@gmail.com,
@@ -54,11 +54,10 @@ Cc:     bhupesh.sharma@linaro.org, bhupesh.linux@gmail.com,
         devicetree@vger.kernel.org, maz@kernel.org,
         quic_mkshah@quicinc.com, linux-gpio@vger.kernel.org,
         linus.walleij@linaro.org, robh+dt@kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 1/4] dt-bindings: qcom,pdc: Add compatible for SM8150
-Date:   Sun, 27 Feb 2022 00:10:25 +0530
-Message-Id: <20220226184028.111566-2-bhupesh.sharma@linaro.org>
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH v2 2/4] pinctrl: qcom: sm8150: Specify PDC map
+Date:   Sun, 27 Feb 2022 00:10:26 +0530
+Message-Id: <20220226184028.111566-3-bhupesh.sharma@linaro.org>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220226184028.111566-1-bhupesh.sharma@linaro.org>
 References: <20220226184028.111566-1-bhupesh.sharma@linaro.org>
@@ -74,29 +73,57 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add the compatible string for SM8150 SoC from Qualcomm.
+Specify the PDC mapping for SM8150, so that gpio interrupts are
+properly mapped to the wakeup IRQs of the PDC.
 
+Cc: Maulik Shah <quic_mkshah@quicinc.com>
 Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>
-Acked-by: Rob Herring <robh@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
 ---
- .../devicetree/bindings/interrupt-controller/qcom,pdc.txt        | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pinctrl/qcom/pinctrl-sm8150.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-index 98d89e53013d..bd3539644d3f 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-@@ -21,6 +21,7 @@ Properties:
- 		    - "qcom,sc7180-pdc": For SC7180
- 		    - "qcom,sc7280-pdc": For SC7280
- 		    - "qcom,sdm845-pdc": For SDM845
-+		    - "qcom,sdm8150-pdc": For SM8150
- 		    - "qcom,sdm8250-pdc": For SM8250
- 		    - "qcom,sdm8350-pdc": For SM8350
+diff --git a/drivers/pinctrl/qcom/pinctrl-sm8150.c b/drivers/pinctrl/qcom/pinctrl-sm8150.c
+index 7359bae68c69..1cc622694553 100644
+--- a/drivers/pinctrl/qcom/pinctrl-sm8150.c
++++ b/drivers/pinctrl/qcom/pinctrl-sm8150.c
+@@ -1500,6 +1500,25 @@ static const struct msm_pingroup sm8150_groups[] = {
+ 	[178] = SDC_QDSD_PINGROUP(sdc2_data, 0xB2000, 9, 0),
+ };
  
++static const struct msm_gpio_wakeirq_map sm8150_pdc_map[] = {
++	{ 3, 31 }, { 5, 32 }, { 8, 33 }, { 9, 34 }, { 10, 100 },
++	{ 12, 104 }, { 24, 37 }, { 26, 38 }, { 27, 41 }, { 28, 42 },
++	{ 30, 39 }, { 36, 43 }, { 37, 44 }, { 38, 30 }, { 39, 118 },
++	{ 39, 125 }, { 41, 47 }, { 42, 48 }, { 46, 50 }, { 47, 49 },
++	{ 48, 51 }, { 49, 53 }, { 50, 52 }, { 51, 116 }, { 51, 123 },
++	{ 53, 54 }, { 54, 55 }, { 55, 56 }, { 56, 57 }, { 58, 58 },
++	{ 60, 60 }, { 61, 61 }, { 68, 62 }, { 70, 63 }, { 76, 71 },
++	{ 77, 66 }, { 81, 64 }, { 83, 65 }, { 86, 67 }, { 87, 84 },
++	{ 88, 117 }, { 88, 124 }, { 90, 69 }, { 91, 70 }, { 93, 75 },
++	{ 95, 72 }, { 96, 73 }, { 97, 74 }, { 101, 40 }, { 103, 77 },
++	{ 104, 78 }, { 108, 79 }, { 112, 80 }, { 113, 81 }, { 114, 82 },
++	{ 117, 85 }, { 118, 101 }, { 119, 87 }, { 120, 88 }, { 121, 89 },
++	{ 122, 90 }, { 123, 91 }, { 124, 92 }, { 125, 93 }, { 129, 94 },
++	{ 132, 105 }, { 133, 83 }, { 134, 36 }, { 136, 97 }, { 142, 103 },
++	{ 144, 115 }, { 144, 122 }, { 147, 102 }, { 150, 107 },
++	{ 152, 108 }, { 153, 109 }
++};
++
+ static const struct msm_pinctrl_soc_data sm8150_pinctrl = {
+ 	.pins = sm8150_pins,
+ 	.npins = ARRAY_SIZE(sm8150_pins),
+@@ -1510,6 +1529,9 @@ static const struct msm_pinctrl_soc_data sm8150_pinctrl = {
+ 	.ngpios = 176,
+ 	.tiles = sm8150_tiles,
+ 	.ntiles = ARRAY_SIZE(sm8150_tiles),
++	.wakeirq_map = sm8150_pdc_map,
++	.nwakeirq_map = ARRAY_SIZE(sm8150_pdc_map),
++	.wakeirq_dual_edge_errata = true,
+ };
+ 
+ static int sm8150_pinctrl_probe(struct platform_device *pdev)
 -- 
 2.35.1
 
