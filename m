@@ -2,91 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 499F14C5812
-	for <lists+linux-gpio@lfdr.de>; Sat, 26 Feb 2022 21:47:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 14FD94C5828
+	for <lists+linux-gpio@lfdr.de>; Sat, 26 Feb 2022 21:57:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229619AbiBZUqt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 26 Feb 2022 15:46:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41394 "EHLO
+        id S229665AbiBZUy7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 26 Feb 2022 15:54:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229612AbiBZUqs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 26 Feb 2022 15:46:48 -0500
-Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC6A61B608C
-        for <linux-gpio@vger.kernel.org>; Sat, 26 Feb 2022 12:46:13 -0800 (PST)
-Received: by mail-lj1-x22c.google.com with SMTP id s25so12067243lji.5
-        for <linux-gpio@vger.kernel.org>; Sat, 26 Feb 2022 12:46:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fB+OZLfvgDpUQQF1878n43I7nv5zvL0CtIPizWamqPI=;
-        b=Z3WflidTytckb+SsTephLYiK2rrz+GYDHh3GUA/NrVWx9vZ8TWvxrUyveBpo08VxCD
-         4pEDl+vfA+tiXGhbR3rE6+C5++8MvgLHQvhJJbQA4ihkblg5MwncsZ+G899B1Ds5+mZY
-         qAu+YtOzp7xWoXF9Zw889iAvNe68+L8ar49I+FHNH0Dr0/PsCV+mekV7NdsWb7YFvc3Q
-         PynnJ5RZAZAfoM//Fo9ROvCP8+prIBZEWztfm4UL6ymNRogQT0DfwAhTRTH0EBmJzO7D
-         WK5jAKH0pJ6RT01O1b9967+aHfnIkIS1M4s5kUAzlhguGgHVvkY+z4qSXyN8Sy8KEHKz
-         rFNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fB+OZLfvgDpUQQF1878n43I7nv5zvL0CtIPizWamqPI=;
-        b=sY6uYMs7/+9F+kQCM+AkDDFrxTylZr28UcTwfhEnBmLihsvYukzH+UDeFB8zni7fRY
-         y+0Pd7iVyN9C55KDJHDGlKZxQoDOAyQHatEI1kLOZY0C7iiGRQeOTNDv2tVgZbvoarzC
-         7mxhqeZjsq1XFT7J/KUHPQxrmdADrIZ32SEeWBn0SwNXjahsz4/WlX2aLw3lU2YWSTwd
-         2p/CWGLP8P0GQ4c/GD9ZicgzPMZkLtA341RtByNuzv3mEjSLc2B5xeD5m0lMW7IPyeHX
-         ka9NyJZiOAcEKw9sXWRIyhlqBTJwzfoq9dLQv/+cnJI9UeUXlIG4ZBFLmIyI1qs1vIT2
-         0IkQ==
-X-Gm-Message-State: AOAM531u/b/i/AEl7dDvORV1DTpdPFXmdOkpAAxrDDDiyv5urfh3bCRx
-        4SvXK6XW5m/yhejjJY+9mxBv42jyg7KXvw==
-X-Google-Smtp-Source: ABdhPJzriKU5W9gi5cfzzUlON6ozJsbPkLYk0bzzJDUVyfj2FNe97YkfmDzmTTJnPU0zu54i1+xroA==
-X-Received: by 2002:a2e:9d46:0:b0:246:1605:7802 with SMTP id y6-20020a2e9d46000000b0024616057802mr9609463ljj.264.1645908372051;
-        Sat, 26 Feb 2022 12:46:12 -0800 (PST)
-Received: from umbar.lan ([37.153.55.125])
-        by smtp.gmail.com with ESMTPSA id a10-20020a05651c210a00b00245f4dc7282sm661802ljq.112.2022.02.26.12.46.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Feb 2022 12:46:11 -0800 (PST)
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: [PATCH] pinctrl: qcom-pmic-gpio: Add support for pm8450
-Date:   Sat, 26 Feb 2022 23:46:11 +0300
-Message-Id: <20220226204611.1824379-1-dmitry.baryshkov@linaro.org>
-X-Mailer: git-send-email 2.30.2
+        with ESMTP id S229642AbiBZUy7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 26 Feb 2022 15:54:59 -0500
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F5E223D034;
+        Sat, 26 Feb 2022 12:54:24 -0800 (PST)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id BE5422223E;
+        Sat, 26 Feb 2022 21:54:22 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1645908862;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=baGxETKr4EyF+PTNs4Sn3z1hVCPQByp//FE2CcA1b7g=;
+        b=D4VnMIECv6YoV/ao41odEWY547ULVDOeHgLD5tsPU9P/o/f9SDgfO0/vEHXMuzSUU33nWN
+        qVO+jqmpjIgPC/OcuPmQAKnVp8BjkcqNgOjjGttO+/Ce7HgMUnU1Hc/xQSpx0BdT/9eNmt
+        SXY2v2yzQS1/Ba0wKxp+UP4TtA/3QCI=
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Sat, 26 Feb 2022 21:54:22 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Colin Foster <colin.foster@in-advantage.com>
+Cc:     Horatiu Vultur <horatiu.vultur@microchip.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        UNGLinuxDriver@microchip.com, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 5/5] pinctrl: microchip-sgpio: wait until output is
+ actually set
+In-Reply-To: <20220225165446.GA4704@COLIN-DESKTOP1.localdomain>
+References: <20220224161021.2197263-1-michael@walle.cc>
+ <20220224161021.2197263-6-michael@walle.cc>
+ <20220225092427.jjilv3qo52crsmuw@soft-dev3-1.localhost>
+ <2f8a215c67269d639290515931d10b78@walle.cc>
+ <20220225165446.GA4704@COLIN-DESKTOP1.localdomain>
+User-Agent: Roundcube Webmail/1.4.12
+Message-ID: <5ab71056170ea00dc0d2ed8f7b9802db@walle.cc>
+X-Sender: michael@walle.cc
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-PM8450 provides 4 GPIOs. Add a compatible entry for this GPIO block.
+Hi Colin,
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
----
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 1 +
- 1 file changed, 1 insertion(+)
+Am 2022-02-25 17:54, schrieb Colin Foster:
+> On Fri, Feb 25, 2022 at 12:29:50PM +0100, Michael Walle wrote:
+>> 
+>> Could you also have a look at the other supported sgpio block,
+>> the ocelot and the luton? I don't have any register description
+>> of these.
+> 
+> The current supported Ocelot chips are the VSC7514 (link below) and the
+> VSC7513. Chapter 6 of this PDF links a second PDF, and you should be
+> able to find the Serial GPIO definitions in DEVCPU_GCB:SIO_CTRL on page
+> 79 of that PDF.
+> https://ww1.microchip.com/downloads/en/DeviceDoc/VMDS-10491.pdf
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-index f2eac3b05d67..4fbf8d3938ef 100644
---- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-@@ -1164,6 +1164,7 @@ static const struct of_device_id pmic_gpio_of_match[] = {
- 	{ .compatible = "qcom,pm8350-gpio", .data = (void *) 10 },
- 	{ .compatible = "qcom,pm8350b-gpio", .data = (void *) 8 },
- 	{ .compatible = "qcom,pm8350c-gpio", .data = (void *) 9 },
-+	{ .compatible = "qcom,pm8450-gpio", .data = (void *) 4 },
- 	{ .compatible = "qcom,pm8916-gpio", .data = (void *) 4 },
- 	{ .compatible = "qcom,pm8941-gpio", .data = (void *) 36 },
- 	/* pm8950 has 8 GPIOs with holes on 3 */
--- 
-2.30.2
+Thanks! I've just send a new version with support for these.
 
+> I'm working on support for the VSC7511/7512, so I can run a "does it
+> work" test, but I likely won't have a setup to test the corner
+> conditions this patch set is addressing with any confidence.
+
+You can time the register polling using ktime_get(), ktime_sub()
+and ktime_to_ns(). It should be in the magnitude of the burst gap.
+Which will give you at least some confidence. I did the testing
+with an oscilloscope and toggling gpios (but also did measure
+the timing with ktime_get()).
+
+-michael
