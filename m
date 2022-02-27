@@ -2,84 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D12EC4C5EC2
-	for <lists+linux-gpio@lfdr.de>; Sun, 27 Feb 2022 21:39:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F6C74C5F08
+	for <lists+linux-gpio@lfdr.de>; Sun, 27 Feb 2022 22:22:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231703AbiB0UjZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 27 Feb 2022 15:39:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37518 "EHLO
+        id S231481AbiB0VXP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 27 Feb 2022 16:23:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231949AbiB0UjQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 27 Feb 2022 15:39:16 -0500
-Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CB1E6E553
-        for <linux-gpio@vger.kernel.org>; Sun, 27 Feb 2022 12:38:29 -0800 (PST)
-Received: by mail-lj1-x22f.google.com with SMTP id v28so14714141ljv.9
-        for <linux-gpio@vger.kernel.org>; Sun, 27 Feb 2022 12:38:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=U9xhZwaxUuMiS2YT5xPkv6KeE3gRj8GLelmcYGjQjfc=;
-        b=HNhkInAoG//sp9xFN6zmJL6sLovoGy26g7FjBTKa/4kA94lIEccpn4y2F0GU0emrRb
-         M063ohN1Jr77irshWpKDEv2h3KFpcTzLhtfmyZeYrkz8yaq1l7yzAKmhtSemockShu2a
-         SE0jMAbWBb4HkSxF6fAH5LzIdGUhK8c/rspjw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=U9xhZwaxUuMiS2YT5xPkv6KeE3gRj8GLelmcYGjQjfc=;
-        b=XpitvGNwpK44vrTtE3YFxN9SE+rQhRe60yRCCZlvE/VJGPsn1vefnppVWM1purenSb
-         YQfStipmyL68qcHj66PbulHK876LvYYgM+gW8YQ4CQGle5EsozBNQmhSfYGi2nzjbUjk
-         RZLSOWnXESSqYuJWJe1JiS5mnbTd+woSe6SS3TIQFrvaIdhv3FhZ0qxBiixa6b+OHNEP
-         WBzg82vSarwJB7gbyZv7+zLuezSx7nm4+7gqrMKZ9LgcCONiHDJ5WNvMbO/YDv6gqUVH
-         ppqzBd6qwXkf3Be/Spsh+h010EjtlM/K9t5T0xy3RmcHPPdK3050WGjFy4xz57Q87VoN
-         jXPA==
-X-Gm-Message-State: AOAM530dkHRPcu6OuE8gZzTIDwAE6/ROvF+oTCYq6n85pxIgWr7NTYpK
-        r1I9Eezs3TgzYdE9qSbEytWRJqb3DR0WZbou4Rw=
-X-Google-Smtp-Source: ABdhPJwxNz4T7PP33BCfv5ddPu6Tm99BMghVuEpF1Hfa8mVaM7Maar2LKfamDC4APdOWzPUopNUDXQ==
-X-Received: by 2002:a05:651c:543:b0:246:3f05:369c with SMTP id q3-20020a05651c054300b002463f05369cmr12081906ljp.433.1645994307584;
-        Sun, 27 Feb 2022 12:38:27 -0800 (PST)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
-        by smtp.gmail.com with ESMTPSA id q28-20020ac25a1c000000b0044565c9edf4sm735098lfn.2.2022.02.27.12.38.26
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 27 Feb 2022 12:38:27 -0800 (PST)
-Received: by mail-lj1-f181.google.com with SMTP id e8so14774797ljj.2
-        for <linux-gpio@vger.kernel.org>; Sun, 27 Feb 2022 12:38:26 -0800 (PST)
-X-Received: by 2002:a2e:80c6:0:b0:246:3334:9778 with SMTP id
- r6-20020a2e80c6000000b0024633349778mr12342769ljg.443.1645994306221; Sun, 27
- Feb 2022 12:38:26 -0800 (PST)
-MIME-Version: 1.0
-References: <CACRpkdYM21hcH5d9rXyvjMPHQp429OZ1Zcy7uLU2tndoJcOmUQ@mail.gmail.com>
-In-Reply-To: <CACRpkdYM21hcH5d9rXyvjMPHQp429OZ1Zcy7uLU2tndoJcOmUQ@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 27 Feb 2022 12:38:10 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whg3eRY1nOJjHam+jORmVymU539CxhBUjp4=tGoFitotw@mail.gmail.com>
-Message-ID: <CAHk-=whg3eRY1nOJjHam+jORmVymU539CxhBUjp4=tGoFitotw@mail.gmail.com>
+        with ESMTP id S231419AbiB0VXO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 27 Feb 2022 16:23:14 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E03340E6F;
+        Sun, 27 Feb 2022 13:22:35 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 9C252B80CE0;
+        Sun, 27 Feb 2022 21:22:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3906DC340E9;
+        Sun, 27 Feb 2022 21:22:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1645996952;
+        bh=MTqYAS65HsJ3kfgzcFKfvXWHBRR1fRMHt7ruXMD1vto=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=namUD+Gbu1XHfdj3Dt9OPLtEkAikwIMZ7Q981JAvFNi0DUhOqXaCh0sQhlRx0cpnL
+         Utb4YgJqjHKFijFs77eLWkPt+g1rPpO6EXit6ZrHa8ia3CfgFfbAp21DSJWv3wVDEO
+         mSCEX6nk1EQKSsg2T8mUcAh9Fg4TLZkQvMERxpomkbsbUWNkXFmse42S9sc4ODfAeR
+         71uMcuiD4/3DDOCfA9P17PMbAPS49SdNS2GMX/EhhxyBLqJXozhTBDc69PcFef3bOO
+         0FF0xQkJh4bZHG8gPoUrbJ1NQYg65/BjMKsk1AZ2Of5ta8W4OhjskoF6XJkzOm6bCq
+         VqOFfOrDQCPcg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 23A9DE7BB08;
+        Sun, 27 Feb 2022 21:22:32 +0000 (UTC)
 Subject: Re: [GIT PULL] pin control fixes for the v5.17 series
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CACRpkdYM21hcH5d9rXyvjMPHQp429OZ1Zcy7uLU2tndoJcOmUQ@mail.gmail.com>
+References: <CACRpkdYM21hcH5d9rXyvjMPHQp429OZ1Zcy7uLU2tndoJcOmUQ@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CACRpkdYM21hcH5d9rXyvjMPHQp429OZ1Zcy7uLU2tndoJcOmUQ@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5-17-3
+X-PR-Tracked-Commit-Id: 486c2d15aa812d669bb27f8241aa5d5dafbac5b9
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 6676ba2a6df6864a6b7b11f20166026e2201b627
+Message-Id: <164599695213.31011.11563318777928459300.pr-tracker-bot@kernel.org>
+Date:   Sun, 27 Feb 2022 21:22:32 +0000
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Feb 26, 2022 at 5:11 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> some more pin control fixes that trickled in the last week or
-> two.
+The pull request you sent on Sun, 27 Feb 2022 02:11:27 +0100:
 
-Hmm. Am I confused because I thought I'd see a fix for the orangepi
-problem that Guenter has been reporting?
+> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5-17-3
 
-That problem has been pending for quite a while now.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/6676ba2a6df6864a6b7b11f20166026e2201b627
 
-               Linus
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
