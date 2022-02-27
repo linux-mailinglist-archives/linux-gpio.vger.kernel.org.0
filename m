@@ -2,246 +2,194 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AA8FB4C5A72
-	for <lists+linux-gpio@lfdr.de>; Sun, 27 Feb 2022 11:16:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5856D4C5B59
+	for <lists+linux-gpio@lfdr.de>; Sun, 27 Feb 2022 14:36:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229884AbiB0KRN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 27 Feb 2022 05:17:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35202 "EHLO
+        id S230453AbiB0NhN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 27 Feb 2022 08:37:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229919AbiB0KRJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 27 Feb 2022 05:17:09 -0500
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D4BC6BDCA
-        for <linux-gpio@vger.kernel.org>; Sun, 27 Feb 2022 02:16:32 -0800 (PST)
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com [209.85.208.70])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 78E513F33A
-        for <linux-gpio@vger.kernel.org>; Sun, 27 Feb 2022 10:16:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1645956990;
-        bh=kmoD7cJEJVkX+3PDX3ngx5DBAJIU55Xem09lH3DyvFU=;
-        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-         In-Reply-To:Content-Type;
-        b=aoKzJoNr1Es3Odo5u7zhJDU6gGIThkgoq/TpaK9S4yDlRvrMCPJYcx2CykkgJItHj
-         5owkTujBJ7ML9qFg7jlPuGdxhahip7l/iWY3OtgWqJSpJ8jmDXY21gmiuEYypb+inj
-         81nyhsmazPDsofZjisBvIBADqSIZDYHblHkbpL05dQQa5CUofEvfxOCOQ2VG6WIPnb
-         Tf/TfW/17kYtvrL3UjWIUGreGDbWvh85AXrBmn2/m6/tHrbb95Y6WYy56piUmXcWsW
-         whXPip/haTYenRVZLobVSLYQH00s3y3haU2qiVisM/Lqnyf+OgqIltbDNrj7It4Zk/
-         v10x1+qQnka5w==
-Received: by mail-ed1-f70.google.com with SMTP id f9-20020a0564021e8900b00412d0a6ef0dso4051415edf.11
-        for <linux-gpio@vger.kernel.org>; Sun, 27 Feb 2022 02:16:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=kmoD7cJEJVkX+3PDX3ngx5DBAJIU55Xem09lH3DyvFU=;
-        b=rJHpRFeBOMh/kO6efAwa07QhXO4DDRRm9KFbzwTiN/x1GJsp8DxJ47n5ITNwWr83/A
-         tI/9iek0b+G6r9A5js9wauFQIV71nIvBC8zAojfQljEkYu5yxIp6co/fG3rNKr4HLTn+
-         mVlFJkHZDsYDn6KPIWjgfxB/NvO0B1gyyvqzZMyQWO1fdE/86Ciq6vVhLFmpuSaEe7Fh
-         zQbWU4GoH9c0Y453w70SkOEUujfZ4FIPitLnU8qVNdtkP2sTskFemyqwzZjGq+xpoPTU
-         e5xetNtHTBTZzzjCMEouRABrwpwJRRiHn/5CrCyyi3E5+7ilrCLAxETWq5LtEXExOwwY
-         auKQ==
-X-Gm-Message-State: AOAM532zLdHtau8boWi1LgJYceoAdRXaS8xi5udXjyGu119iB+mfhhnJ
-        K5h3OOGoG9mEGdzKrWEUJSTidbzvsrSsoUFCdzs5R9DrleGE0MEfPDamuW1OPMd850aes09Nyhb
-        h7LOvVI5naZvtG4n7uL22uy3Xn7O2Xd0pzRgZfcw=
-X-Received: by 2002:a17:906:2bd7:b0:6ce:698b:7531 with SMTP id n23-20020a1709062bd700b006ce698b7531mr11343200ejg.146.1645956990007;
-        Sun, 27 Feb 2022 02:16:30 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwUjjBwCh37I+1mUMUa+xGZDH63kIDP8OnGMhJgFxCCnxP5nXkd2cFmHtKPy6Ey882opgZY+w==
-X-Received: by 2002:a17:906:2bd7:b0:6ce:698b:7531 with SMTP id n23-20020a1709062bd700b006ce698b7531mr11343191ejg.146.1645956989684;
-        Sun, 27 Feb 2022 02:16:29 -0800 (PST)
-Received: from [192.168.0.133] (xdsl-188-155-181-108.adslplus.ch. [188.155.181.108])
-        by smtp.gmail.com with ESMTPSA id e5-20020a170906374500b006d5825520a7sm3209628ejc.71.2022.02.27.02.16.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 27 Feb 2022 02:16:29 -0800 (PST)
-Message-ID: <94482135-71c2-f9a9-966c-4cd0b66a130b@canonical.com>
-Date:   Sun, 27 Feb 2022 11:16:28 +0100
+        with ESMTP id S230371AbiB0NhM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 27 Feb 2022 08:37:12 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E29086D4D4
+        for <linux-gpio@vger.kernel.org>; Sun, 27 Feb 2022 05:36:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1645968995; x=1677504995;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=0wQ69qCxFQY3ed1iUxNUzMa9pjgtXTQ57QdE2KK0Ruc=;
+  b=KFPLPm1VDR1ebrjkK3ldQ6qultZVUaJBygkHEGfz/RWOlU8uhQhMXtNA
+   RuP9g5r2wjE8qepMFfqHefWce2SgHAYXJIa7XcuNOulhpv1X3zO9A3S//
+   vobsJ90m6Vld6cEgN5G7hqjPA34ysanM0unWQGFi/8IuPdsEQlpQ3KE0c
+   OlQKuAsQLrpnfXAZmQkl+q9ToFbBqf7dGtMeKRnnxEP7KbeL94se/qEa8
+   7z3YC3FdJGB4JCf6SJoRG71mw2hQGx/W9zvvE3SZiOqDsAeMMKB/QkzSO
+   AjOIvVG3QWrTsHZYx069ksdXHPWDoSVcX6HtSk5roSTa5ngVVYFHr5XKt
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10270"; a="233355896"
+X-IronPort-AV: E=Sophos;i="5.90,141,1643702400"; 
+   d="scan'208";a="233355896"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2022 05:36:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,141,1643702400"; 
+   d="scan'208";a="534125207"
+Received: from lkp-server01.sh.intel.com (HELO 788b1cd46f0d) ([10.239.97.150])
+  by orsmga007.jf.intel.com with ESMTP; 27 Feb 2022 05:36:34 -0800
+Received: from kbuild by 788b1cd46f0d with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1nOJiz-0006X6-Jc; Sun, 27 Feb 2022 13:36:33 +0000
+Date:   Sun, 27 Feb 2022 21:36:05 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
+ 929229098efbc6dc64ac00b7f6c0e282bd73fd8a
+Message-ID: <621b7e45.Hrrg2iKuiLY1NWU1%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add sc8280xp TLMM binding
-Content-Language: en-US
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
-References: <20220225053257.2479279-1-bjorn.andersson@linaro.org>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-In-Reply-To: <20220225053257.2479279-1-bjorn.andersson@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 25/02/2022 06:32, Bjorn Andersson wrote:
-> The Qualcomm SC8280XP platform contains a single block of registers
-> for the TLMM block. This provides pinconf and pinmux for 228 GPIOs, 2
-> UFS_RESET pins and one SDC interface.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  .../pinctrl/qcom,sc8280xp-pinctrl.yaml        | 153 ++++++++++++++++++
->  1 file changed, 153 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sc8280xp-pinctrl.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sc8280xp-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sc8280xp-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..4199dfe992e0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sc8280xp-pinctrl.yaml
-> @@ -0,0 +1,153 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/qcom,sc8280xp-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Technologies, Inc. SC8280XP TLMM block
-> +
-> +maintainers:
-> +  - Bjorn Andersson <bjorn.andersson@linaro.org>
-> +
-> +description: |
-> +  This binding describes the Top Level Mode Multiplexer block found in the
-> +  SC8280XP platform.
-> +
-> +allOf:
-> +  - $ref: "pinctrl.yaml#"
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: 929229098efbc6dc64ac00b7f6c0e282bd73fd8a  Merge branch 'devel' into for-next
 
-This looks not needed. I see it was added in other QCOM schemas by
-https://lore.kernel.org/all/20211202063216.24439-1-zajec5@gmail.com/
-(+CC Rafał) but it is already part of qcom,tlmm-common.yaml. I think
-there is no need to include it twice.
+elapsed time: 723m
 
+configs tested: 111
+configs skipped: 3
 
-> +  - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,sc8280xp-tlmm
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts: true
-> +  interrupt-controller: true
-> +  '#interrupt-cells': true
-> +  gpio-controller: true
-> +  gpio-reserved-ranges: true
-> +  '#gpio-cells': true
-> +  gpio-ranges: true
-> +  wakeup-parent: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-I think you do not use it. The example does not have it so it should
-fail validation (dt_binding_check).
+gcc tested configs:
+arm                              allmodconfig
+arm                              allyesconfig
+arm                                 defconfig
+arm64                               defconfig
+arm64                            allyesconfig
+i386                          randconfig-c001
+um                             i386_defconfig
+mips                             allmodconfig
+riscv                            allmodconfig
+um                           x86_64_defconfig
+mips                             allyesconfig
+riscv                            allyesconfig
+sparc                            allyesconfig
+alpha                            allyesconfig
+arc                              allyesconfig
+nios2                            allyesconfig
+sh                           se7780_defconfig
+mips                           ci20_defconfig
+mips                  decstation_64_defconfig
+openrisc                 simple_smp_defconfig
+powerpc                      pcm030_defconfig
+sh                          landisk_defconfig
+m68k                        m5407c3_defconfig
+mips                         mpc30x_defconfig
+mips                      loongson3_defconfig
+mips                            gpr_defconfig
+arc                            hsdk_defconfig
+sh                          r7785rp_defconfig
+mips                     decstation_defconfig
+sparc64                             defconfig
+arm                  randconfig-c002-20220227
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                                defconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+csky                                defconfig
+alpha                               defconfig
+nds32                               defconfig
+arc                                 defconfig
+sh                               allmodconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+parisc                              defconfig
+parisc64                            defconfig
+s390                             allmodconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+i386                              debian-10.3
+i386                   debian-10.3-kselftests
+i386                                defconfig
+sparc                               defconfig
+nds32                             allnoconfig
+nios2                               defconfig
+powerpc                           allnoconfig
+powerpc                          allmodconfig
+powerpc                          allyesconfig
+i386                          randconfig-a003
+i386                          randconfig-a001
+i386                          randconfig-a005
+x86_64                        randconfig-a015
+x86_64                        randconfig-a013
+x86_64                        randconfig-a011
+i386                          randconfig-a014
+i386                          randconfig-a012
+i386                          randconfig-a016
+x86_64                        randconfig-a006
+x86_64                        randconfig-a002
+x86_64                        randconfig-a004
+arc                  randconfig-r043-20220227
+riscv                    nommu_k210_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                                  kexec
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                    rhel-8.3-kselftests
 
-> +
-> +additionalProperties: false
-> +
-> +patternProperties:
-> +  '-state$':
-> +    oneOf:
-> +      - $ref: "#/$defs/qcom-sc8280xp-tlmm-state"
-> +      - patternProperties:
-> +          ".*":
-> +            $ref: "#/$defs/qcom-sc8280xp-tlmm-state"
-> +
-> +'$defs':
-> +  qcom-sc8280xp-tlmm-state:
-> +    type: object
-> +    description:
-> +      Pinctrl node's client devices use subnodes for desired pin configuration.
-> +      Client device subnodes use below standard properties.
-> +    $ref: "qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state"
-> +
-> +    properties:
-> +      pins:
-> +        description:
-> +          List of gpio pins affected by the properties specified in this
-> +          subnode.
-> +        items:
-> +          oneOf:
-> +            - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-1][0-9]|22[0-7])$"
-> +            - enum: [ sdc2_clk, sdc2_cmd, sdc2_data, ufs_reset, ufs1_reset ]
-> +        minItems: 1
-> +        maxItems: 16
-> +
-> +      function:
-> +        description:
-> +          Specify the alternative function to be configured for the specified
-> +          pins.
-> +
-> +        enum: [ atest_char, atest_usb, audio_ref, cam_mclk, cci_async, cci_i2c,
-> +                cci_timer0, cci_timer1, cci_timer2, cci_timer3, cci_timer4,
-> +                cci_timer5, cci_timer6, cci_timer7, cci_timer8, cci_timer9,
-> +                cmu_rng, cri_trng, cri_trng0, cri_trng1, dbg_out, ddr_bist,
-> +                ddr_pxi0, ddr_pxi1, ddr_pxi2, ddr_pxi3, ddr_pxi4, ddr_pxi5,
-> +                ddr_pxi6, ddr_pxi7, dp2_hot, dp3_hot, edp0_lcd, edp1_lcd,
-> +                edp2_lcd, edp3_lcd, edp_hot, emac0_dll, emac0_mcg0, emac0_mcg1,
-> +                emac0_mcg2, emac0_mcg3, emac0_phy, emac0_ptp, emac1_dll0,
-> +                emac1_dll1, emac1_mcg0, emac1_mcg1, emac1_mcg2, emac1_mcg3,
-> +                emac1_phy, emac1_ptp, gcc_gp1, gcc_gp2, gcc_gp3, gcc_gp4,
-> +                gcc_gp5, gpio, hs1_mi2s, hs2_mi2s, hs3_mi2s, ibi_i3c,
-> +                jitter_bist, lpass_slimbus, mdp0_vsync0, mdp0_vsync1,
-> +                mdp0_vsync2, mdp0_vsync3, mdp0_vsync4, mdp0_vsync5,
-> +                mdp0_vsync6, mdp0_vsync7, mdp0_vsync8, mdp1_vsync0,
-> +                mdp1_vsync1, mdp1_vsync2, mdp1_vsync3, mdp1_vsync4,
-> +                mdp1_vsync5, mdp1_vsync6, mdp1_vsync7, mdp1_vsync8, mdp_vsync,
-> +                mi2s0_data0, mi2s0_data1, mi2s0_sck, mi2s0_ws, mi2s1_data0,
-> +                mi2s1_data1, mi2s1_sck, mi2s1_ws, mi2s2_data0, mi2s2_data1,
-> +                mi2s2_sck, mi2s2_ws, mi2s_mclk1, mi2s_mclk2, pcie2a_clkreq,
-> +                pcie2b_clkreq, pcie3a_clkreq, pcie3b_clkreq, pcie4_clkreq,
-> +                phase_flag, pll_bist, pll_clk, prng_rosc0, prng_rosc1,
-> +                prng_rosc2, prng_rosc3, qdss_cti, qdss_gpio, qspi, qspi_clk,
-> +                qspi_cs, qup0, qup1, qup2, qup3, qup4, qup5, qup6, qup7, qup8,
-> +                qup9, qup10, qup11, qup12, qup13, qup14, qup15, qup16, qup17,
-> +                qup18, qup19, qup20, qup21, qup22, qup23, rgmii_0, rgmii_1,
-> +                sd_write, sdc40, sdc42, sdc43, sdc4_clk, sdc4_cmd, tb_trig,
-> +                tgu, tsense_pwm1, tsense_pwm2, tsense_pwm3, tsense_pwm4,
-> +                usb0_dp, usb0_phy, usb0_sbrx, usb0_sbtx, usb0_usb4, usb1_dp,
-> +                usb1_phy, usb1_sbrx, usb1_sbtx, usb1_usb4, usb2phy_ac,
-> +                vsense_trigger ]
-> +
-> +      bias-disable: true
-> +      bias-pull-down: true
-> +      bias-pull-up: true
-> +      drive-strength: true
-> +      input-enable: true
-> +      output-high: true
-> +      output-low: true
-> +
-> +    required:
-> +      - pins
-> +      - function
-> +
-> +    additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +        #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +        pinctrl@3100000 {
-> +                compatible = "qcom,sc8280x-tlmm";
-> +                reg = <0x0f100000 0x300000>;
+clang tested configs:
+powerpc              randconfig-c003-20220227
+x86_64                        randconfig-c007
+arm                  randconfig-c002-20220227
+mips                 randconfig-c004-20220227
+s390                 randconfig-c005-20220227
+i386                          randconfig-c001
+riscv                randconfig-c006-20220227
+powerpc                 mpc8560_ads_defconfig
+powerpc                   microwatt_defconfig
+powerpc               mpc834x_itxgp_defconfig
+i386                             allyesconfig
+mips                        omega2p_defconfig
+arm                           sama7_defconfig
+arm                         s5pv210_defconfig
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a012
+x86_64                        randconfig-a016
+x86_64                        randconfig-a014
+i386                          randconfig-a011
+i386                          randconfig-a013
+i386                          randconfig-a015
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+x86_64                        randconfig-a005
+hexagon              randconfig-r045-20220227
+hexagon              randconfig-r041-20220227
+riscv                randconfig-r042-20220227
+s390                 randconfig-r044-20220227
 
-reg looks different than unit address.
-
-
-Best regards,
-Krzysztof
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
