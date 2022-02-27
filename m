@@ -2,58 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BD1654C58DD
-	for <lists+linux-gpio@lfdr.de>; Sun, 27 Feb 2022 02:11:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A82BB4C58E6
+	for <lists+linux-gpio@lfdr.de>; Sun, 27 Feb 2022 02:20:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229582AbiB0BMO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 26 Feb 2022 20:12:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59396 "EHLO
+        id S229625AbiB0BVE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 26 Feb 2022 20:21:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229578AbiB0BMO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 26 Feb 2022 20:12:14 -0500
-Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06433229496
-        for <linux-gpio@vger.kernel.org>; Sat, 26 Feb 2022 17:11:39 -0800 (PST)
-Received: by mail-yb1-xb35.google.com with SMTP id h4so3119783ybc.1
-        for <linux-gpio@vger.kernel.org>; Sat, 26 Feb 2022 17:11:38 -0800 (PST)
+        with ESMTP id S229624AbiB0BVE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 26 Feb 2022 20:21:04 -0500
+Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6242924EA36
+        for <linux-gpio@vger.kernel.org>; Sat, 26 Feb 2022 17:20:27 -0800 (PST)
+Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-2db569555d6so15754997b3.12
+        for <linux-gpio@vger.kernel.org>; Sat, 26 Feb 2022 17:20:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=5A0m1bN6aUhIMIsLQ8DmMr2K7rDr/v9MtDeLLhXW6As=;
-        b=pkWgcULyMIqrcvNgtJCNJBdIuGraEqRQy8lawxb/MeMtDXh7YqJq4N53zV3jgobs7R
-         lJQfB0SdqtFRUn6ACmJf1gbeGw6GfbpCL7/wnoVWuVkqw+NoOR8QJvp3ewWRBqT+RkRl
-         PZdo2ap/+mlS212h5HVP1UsXOD8JsOE2KCfponeIoOYShwkER9HG0BokejVZEC+s6Bug
-         iKClbP41Q18dGi++ykUO2LLePrZE6AdHGSz+zqK9EOOBnKWdghXq2zXpVyafNfPCMEC8
-         UMCQABtNj+epjCWFZBHiEUdzaBYXS270Z8OPJlQCd7nlHt0+o7xVHVxYt2MP69/VtZ79
-         WicA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=khBiOr8slJchZEaJlLVeLW0g6vac+i0W/8rPUGI50KI=;
+        b=jr8Bd8UekPaxn34A53MoB8zITCmTMQiWmxvdHZB8HA93muwdIl91Y/1PhALdhIN+3F
+         DmGIIAQfXIlBTdytlt48Byslm+rDWBc5gAED8iGGedfxKbV4aEHkd141bhrFi59IFF5a
+         tGuAOXzPeRAMgBzHWoVjOEH+Jq6V9pdr95giW9bs8u5ihkSW7wjF0NxXGMPV4aJnwakM
+         OEnRLesjvVxnu4yB8PpM+pb6jYd6EHEmD+zuJ8ZMEgfcaUSpAZN8JBNyF4VJfBkVRf2O
+         rRBrnXoamDqcSUiyIutTiulmO4FVQ87bzhJAI3Jk3gwzRl7carC8n+o+UYb9kCRylhuf
+         0Vkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=5A0m1bN6aUhIMIsLQ8DmMr2K7rDr/v9MtDeLLhXW6As=;
-        b=FYo/dIE7mkKrqQhp0YSVsYl11X4CODoEDQbYATrIbrmV/4Hwfd2A0qMpXifbZBgis7
-         Mkgl3n7/WyBo6fvmhl5JOsSq/5yDeklwW1IQCMHAc04MmnmXGFSfDBBqdXFV3UuEaG/N
-         pW+I/M61/5MomfhGUjTuTBpNHU6FNHUbWpIoxxvfPOb2wUicxSiXuRQpMRzBnDpO+Q0S
-         UFKgj3v/zaN1Ft/ww4T0y0Uf5gReMhmWV8Q05cd96TdWFBvLOQcqLtk+wLWg1j8dYhY1
-         YUETYpPCweRXoW8QXzY7tUBDO/eeL7bIhhH6RoTWNKnntesXU7vfYOG07zc6qpHtwoK/
-         C9Yg==
-X-Gm-Message-State: AOAM531qY5Eh9jyY3Z39ifpdwmILBVFI40xiHcfVBi7T0eso4jpKz4ef
-        U+OlLHaTLiuMXyYu2i/3Vyc6RrSSgIWGTuAS/U+/d1jggQq7hgtk
-X-Google-Smtp-Source: ABdhPJx6fFzZX60QgOiP2+ukdiVHdD4rV+h48XcCnCeVioSNPfrisfj88O5sTvqZf1tl8i+dFMYwvR3h9AHEuj9+Rzw=
-X-Received: by 2002:a25:aac3:0:b0:624:ab10:49dc with SMTP id
- t61-20020a25aac3000000b00624ab1049dcmr13631037ybi.291.1645924298247; Sat, 26
- Feb 2022 17:11:38 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=khBiOr8slJchZEaJlLVeLW0g6vac+i0W/8rPUGI50KI=;
+        b=njES+vJCFDBy8i+emL60VeWNEbctRZ52Dp0HVj72lK5JEWjd6hoTN1U88i/7k4R4Tq
+         klAhrlANDQoZn33hvzedpx2rh+r9r6NYRoKQy5kzEEHYKBRRdggtf0asnWxUTlgHvpNI
+         w0pdeW/hF476RHT7ddu/IkXMFtMYT4sXjNZm79mXKy0kc21H3xj1u3F/SGQaGltQythO
+         r464t6YOO91a651CcQRXbkcxqcVbXjpLkFe6UIFf2gtRt89IKJfUu4J1d8vM2OAQvN1E
+         5CWO3gGndvU6B89MZcgGXT/aE64L8DHml9noKP3OfzVJM+/1WCHYFoK/sVsqrQXcOWbY
+         BPjg==
+X-Gm-Message-State: AOAM531sgjbyL6/OwDJzj8aNGQ8XQVW2qQylCY5qAbYO7VL5NJk+dKW0
+        yNbWOCDTFLMnR/iIAf5iNvaT5FdAKS2XvS3M4rb1eufJpYJ3jg==
+X-Google-Smtp-Source: ABdhPJxKAi0RkwlkdkDuL2Y1yN1SIcFzFH1y6tOJPM7QZS6A81Kb1jQy2a4Pk+M/Awc1Dc2lwVDDdhQ3KmffpX0aa6M=
+X-Received: by 2002:a81:f92:0:b0:2d0:5383:7ca with SMTP id 140-20020a810f92000000b002d0538307camr14268843ywp.268.1645924826305;
+ Sat, 26 Feb 2022 17:20:26 -0800 (PST)
 MIME-Version: 1.0
+References: <cover.1645796337.git.geert+renesas@glider.be>
+In-Reply-To: <cover.1645796337.git.geert+renesas@glider.be>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 27 Feb 2022 02:11:27 +0100
-Message-ID: <CACRpkdYM21hcH5d9rXyvjMPHQp429OZ1Zcy7uLU2tndoJcOmUQ@mail.gmail.com>
-Subject: [GIT PULL] pin control fixes for the v5.17 series
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Date:   Sun, 27 Feb 2022 02:20:15 +0100
+Message-ID: <CACRpkdb20-39HygrvDe2b35DM+rGRQUpG2ELW=01XfZq=XpurQ@mail.gmail.com>
+Subject: Re: [GIT PULL] pinctrl: renesas: Updates for v5.18 (take two)
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,65 +63,20 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+On Fri, Feb 25, 2022 at 2:41 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-some more pin control fixes that trickled in the last week or
-two.
+> The following changes since commit 2e08ab0427fe3e33a92a37cfe3b6db340ab7397f:
+>
+>   pinctrl: renesas: rzg2l: Improve rzg2l_gpio_register() (2022-02-08 09:54:44 +0100)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v5.18-tag2
 
-Please pull it in, some details are in the signed tag!
+Thanks Geert,
+
+pulled in!
 
 Yours,
 Linus Walleij
-
-The following changes since commit dfd42facf1e4ada021b939b4e19c935dcdd55566:
-
-  Linux 5.17-rc3 (2022-02-06 12:20:50 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-tags/pinctrl-v5-17-3
-
-for you to fetch changes up to 486c2d15aa812d669bb27f8241aa5d5dafbac5b9:
-
-  Merge tag 'intel-pinctrl-v5.17-5' of
-gitolite.kernel.org:pub/scm/linux/kernel/git/pinctrl/intel into fixes
-(2022-02-19 02:03:58 +0100)
-
-----------------------------------------------------------------
-Pin control fixes for the v5.17 series:
-
-- Fix some drive strength and pull-up code in the K210 driver.
-
-- Add the Alder Lake-M ACPI ID so it starts to work properly.
-
-- Use a static name for the StarFive GPIO irq_chip, forestalling
-  an upcoming fixes series from Marc Zyngier.
-
-- Fix an ages old bug in the Tegra 186 driver where we were
-  indexing at random into struct and being lucky getting the
-  right member.
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      pinctrl: tigerlake: Revert "Add Alder Lake-M ACPI ID"
-
-Dan Carpenter (1):
-      pinctrl: fix loop in k210_pinconf_get_drive()
-
-Linus Walleij (1):
-      Merge tag 'intel-pinctrl-v5.17-5' of
-gitolite.kernel.org:pub/scm/linux/kernel/git/pinctrl/intel into fixes
-
-Marc Zyngier (2):
-      pinctrl: starfive: Use a static name for the GPIO irq_chip
-      gpio: tegra186: Fix chip_data type confusion
-
-Sean Anderson (1):
-      pinctrl: k210: Fix bias-pull-up
-
- drivers/gpio/gpio-tegra186.c              | 14 ++++++++++----
- drivers/pinctrl/intel/pinctrl-tigerlake.c |  1 -
- drivers/pinctrl/pinctrl-k210.c            |  4 ++--
- drivers/pinctrl/pinctrl-starfive.c        |  2 +-
- 4 files changed, 13 insertions(+), 8 deletions(-)
