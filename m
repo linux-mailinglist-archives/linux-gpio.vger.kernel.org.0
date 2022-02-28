@@ -2,133 +2,156 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9173E4C66C3
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Feb 2022 11:03:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C50F4C66EE
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Feb 2022 11:13:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231260AbiB1KET (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Feb 2022 05:04:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56388 "EHLO
+        id S234240AbiB1KOX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Feb 2022 05:14:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233158AbiB1KEO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Feb 2022 05:04:14 -0500
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2076.outbound.protection.outlook.com [40.107.223.76])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 726272D1C3;
-        Mon, 28 Feb 2022 02:03:36 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZMbpMndPQOE8PNdB5xHjLfJkEF0mSPc1Cl/rlyJ4dVKiTFb4q+4/QVLGoZmIIL/058CfjsA/bjOmSuCuTqw6H9DrtHCINN+51NkcOTcKdGPaZblXwCfovoFE483jWKNuH1R6FZLEjwypegq0f7RPjWKxKA8BjT/SteL44bbwqseQrfTou8To1h2RRt25R4PMU82SgT5dH+Rq2fuygiwtWXvqonXo9Ix5rNVxc0CthfM23gPzd3KkA6HvA9pnkZMiTBKuWrVZMWntOy+R4UB4wGoS1rDp099+zvcD4FpmJg2yy771JFJkdt8nWb/0hFVqyaJhQ9wRzQBvbrIguHVynA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=y/Uu9HUAr6DHKPpkxrTh+l3FmT1N3LSt0R7pkJ2mBLU=;
- b=GRtgMuo364MZanUxnmfvmn7FSpi1EwYSI4IbF9EqZxD9/JD3oDK8SIUGEJ0wEz5Dn3Wsg/rBXklXbWkTIU9SJJRuMOgS0oJBn4ybU55M/sT4K9sTtEi4ZOqnx5YlKb8+/tY2GjDFNc5q3W/R7yDJbmH2ivGmlIAD99oLc80s1WAsHvferij+Ni1xqbJOVDchrJm3DpFBUWbiUxb2KyJmXy9Gn2PTLFMU+GHUYGHP0EoJX8GyzQEkdAxfxX4/raAZrdKbnKiJgzY3M9mW8NvdhW+XIMusHQ13K+E9yKnsqIoYh4DSdbCFV8FcrUM6T4nOI0SQz4TGd4wXW/vEr3crUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 12.22.5.235) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y/Uu9HUAr6DHKPpkxrTh+l3FmT1N3LSt0R7pkJ2mBLU=;
- b=U8bsY5dNaaOK7l8nbhI+uO3doFfTaNnGpptMVvuT19T9u8jCmOirgTccdK0dOG3ih+q1cZhYFEIu0my6czOkrPpu+CeLPrr9y3aVFn7YfzQ2CD/ih3OgSeStZRAv4acDbM63lDRcx4FuUUioskNyPz/kWXzJHRqHK0l80PK0Ux9iSx94G14SzlSYf+UoGjkwZOBMzcoNs3VdFdkta9FhmnwDyICRfxNl8wJPm6wfprcqg6YraWnRapdkvN0jDs15tI97V27SIHFen7vPOTq+IkjgSu/WTDwWI2cNcJQw+V6ia/cHnbfzhC4yMPiL8/GCHiKGwdn9T5jSLso0J3b86Q==
-Received: from MW4PR04CA0091.namprd04.prod.outlook.com (2603:10b6:303:83::6)
- by BL1PR12MB5753.namprd12.prod.outlook.com (2603:10b6:208:390::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5017.21; Mon, 28 Feb
- 2022 10:03:34 +0000
-Received: from CO1NAM11FT022.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:83:cafe::d3) by MW4PR04CA0091.outlook.office365.com
- (2603:10b6:303:83::6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5017.21 via Frontend
- Transport; Mon, 28 Feb 2022 10:03:34 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 12.22.5.235)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 12.22.5.235 as permitted sender) receiver=protection.outlook.com;
- client-ip=12.22.5.235; helo=mail.nvidia.com;
-Received: from mail.nvidia.com (12.22.5.235) by
- CO1NAM11FT022.mail.protection.outlook.com (10.13.175.199) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.5017.22 via Frontend Transport; Mon, 28 Feb 2022 10:03:34 +0000
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Mon, 28 Feb
- 2022 10:03:34 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail204.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.9; Mon, 28 Feb 2022
- 02:03:32 -0800
-Received: from BUILDSERVER-IO-L4T.nvidia.com (10.127.8.14) by mail.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server id 15.2.986.9 via Frontend
- Transport; Mon, 28 Feb 2022 02:03:30 -0800
-From:   Akhil R <akhilrajeev@nvidia.com>
-To:     <linus.walleij@linaro.org>, <brgl@bgdev.pl>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <linux-gpio@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <akhilrajeev@nvidia.com>
-Subject: [PATCH] gpio: tegra186: Add IRQ per bank for Tegra241
-Date:   Mon, 28 Feb 2022 15:33:17 +0530
-Message-ID: <20220228100317.59885-1-akhilrajeev@nvidia.com>
-X-Mailer: git-send-email 2.17.1
+        with ESMTP id S232130AbiB1KOW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Feb 2022 05:14:22 -0500
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0308B3F88A;
+        Mon, 28 Feb 2022 02:13:44 -0800 (PST)
+Received: by mail-wm1-x335.google.com with SMTP id p4so5366448wmg.1;
+        Mon, 28 Feb 2022 02:13:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=iHjNxJBcliVXwUGTUuDrqJ48gN0ghqxi7GbNzI66nDg=;
+        b=B5yHEZ8nfvEze7BcpERA6IwTFyTFlXmEnHPj+qeY8Lr7ulvVFeEYomuTTmUnFkQZ4S
+         GbFdZ0I8BjI/gZ5NapYDLIPu/wShTItEkdLmz4MTEqBS0be7b2HpmiJgUaGNpftl6wdA
+         PLzQPyHLWR5q46ZkNawG0iDOUGMkCn1AjXA1GtHgRpGhzdu6ePw3dkcfTU4T/D7Yo0Pg
+         zbLoHBwJGXQtVjBqY6+oNS2i0XouHcl7q18ZdaMXDMyl9cVF35+SIHBeTd5N9kdHibfH
+         MgWz4ISkniTdGART+3Wxtjvs9S0G9QnFrEf8vD9qj6WsS9imSA87YlfPvSH4ts8trSy1
+         UcrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=iHjNxJBcliVXwUGTUuDrqJ48gN0ghqxi7GbNzI66nDg=;
+        b=HcFIVGHHZzbg9ZV9ffUGU2CRkVdphR8GhBrDH4EOpUHV0xgrm31/bjMAKa6MwGIlpU
+         Y29smiCHgDcfEaSeX01sIZqHh241w6OddqZofFkA+GWgIN9zcvl8Bq1X3q/JQu4GvR8h
+         VEYFXJfUMCXxsCX0DPittoaB91JTmxmx7dU2uiOb6vrf6816fMju4nWwMvgbg+W4t9kM
+         /+6kiHwX4oV2ML+Zhe9nM8qFWME73xzstyg23IQJZUcGMzlZlTH5NU1N7lL9ETJBTmOz
+         Wo+3Kj5IOnI3+ZcVhvVjONLp0Vs8GIMc/4iidCX59gIvdZSLaBsa20Uw3ezKW3UvbjQh
+         DL4w==
+X-Gm-Message-State: AOAM530tkdNop0CUlRXgc5ZnLdYdNNvl+GCYI3RWmrs9TenXnYz0JLel
+        QS3Q+Tr7yPpYrEbE7hdzCsBcekavizPPgA==
+X-Google-Smtp-Source: ABdhPJyGje3sKsCaHr2cgj08/7Go8LtXdFkBrvBDBbspnQWl1pFUFer6mzofM1fgi2HmJq6bZgkuNA==
+X-Received: by 2002:a05:600c:4e13:b0:37c:fd8e:28d7 with SMTP id b19-20020a05600c4e1300b0037cfd8e28d7mr13048794wmq.51.1646043222543;
+        Mon, 28 Feb 2022 02:13:42 -0800 (PST)
+Received: from [192.168.0.14] (static-63-182-85-188.ipcom.comunitel.net. [188.85.182.63])
+        by smtp.gmail.com with ESMTPSA id v14-20020a7bcb4e000000b0034492fa24c6sm10578772wmj.34.2022.02.28.02.13.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Feb 2022 02:13:42 -0800 (PST)
+Message-ID: <8a95a9fb-fede-b2e4-d616-e03c9e6778c8@gmail.com>
+Date:   Mon, 28 Feb 2022 11:13:40 +0100
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 7d414f05-81ac-4588-b07d-08d9faa194ea
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5753:EE_
-X-Microsoft-Antispam-PRVS: <BL1PR12MB5753ECF29FB09589D0DF5B38C0019@BL1PR12MB5753.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 9mGjv5dnRE1aVOlGUqC7roKXVAccq2tolFxEQS8RB/eygfviLHNM2UqCKZW+hAzDhqZnfrgZc+xbpB8mgZclBm4uy6w+262p5yjnZR2A40Vr2OTUqT6k2gs0ywTxXOD10X3KWuh8RVW8H+mN6ZI2PAToj0ln5LzEboSplDCPMiEKuK1NA25Y4EmFpdyiN8gGDJ0xc2bUghWSSvLUhmKoD5rYr4FJf+YgdQgSbfCR/Fe2gMu0muVB1T5SwJfxruJ0DjefTRoKi4Oy9vp7zJk537rXx4WhxX58/BsbQc/ih2uQwm8iyGII2/mqIEjixyCcggItdwrjAL0ZEoadjfRJBej7f24c413WlhZvsOCKFTGqM+tFUEAykvPUGiJmH/p7j6HV/P4c0EkQ8Qorg1HlzZKIt+m1WlarJLoRKeC42xDnyYrL15tAf3QudWWJzVIppvs6MfKCS2e5K8EbUOxsl7CbNq6nHjVv0Z2fTzpiMQt5lZ++znQmYpfBQxVvShPqhnqm/ZPiYoV9I4ecVxnILs4jnGrlzGdz1vfgyQiY6Acircc9lA5sRydmg7lcTRbM0I0i9RGvBbHWoEim06EVZ1/xLxlrpkQ29IiFIZb/GYNZZ/sIbw8fAWVSSsvJZx3AIwIbjdC7VXvcCVpJEGQNsAsYh9F2Vo+bH1646E2vAhH3/dqghrw2w/SwwtVPBq/VTb6V40fXBKm/FZY8613nbQ==
-X-Forefront-Antispam-Report: CIP:12.22.5.235;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:mail.nvidia.com;PTR:InfoNoRecords;CAT:NONE;SFS:(13230001)(4636009)(36840700001)(40470700004)(46966006)(107886003)(426003)(336012)(36756003)(2616005)(4744005)(82310400004)(26005)(2906002)(8936002)(4326008)(8676002)(70586007)(70206006)(47076005)(36860700001)(86362001)(186003)(316002)(5660300002)(1076003)(356005)(81166007)(40460700003)(7696005)(110136005)(15650500001)(83380400001)(508600001)(6666004)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2022 10:03:34.3629
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7d414f05-81ac-4588-b07d-08d9faa194ea
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[12.22.5.235];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT022.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5753
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH v11 2/3] dt-bindings: pinctrl: mt8195: Add
+ mediatek,drive-strength-adv property
+Content-Language: en-US
+To:     Tinghan Shen <tinghan.shen@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sean Wang <sean.wang@mediatek.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Project_Global_Chrome_Upstream_Group@mediatek.com,
+        ryder.lee@kernel.org, wenst@chromium.org, chunfeng.yun@mediatek.com
+References: <20220216113131.13145-1-tinghan.shen@mediatek.com>
+ <20220216113131.13145-3-tinghan.shen@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+In-Reply-To: <20220216113131.13145-3-tinghan.shen@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add the number of interrupts per bank for Tegra241 (Grace).
+Hi Linus,
 
-Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
----
- drivers/gpio/gpio-tegra186.c | 2 ++
- 1 file changed, 2 insertions(+)
+On 16/02/2022 12:31, Tinghan Shen wrote:
+> Extend driving support for I2C pins on SoC mt8195.
+> This property is already documented in mediatek,mt8183-pinctrl.yaml.
+> 
+> Signed-off-by: Tinghan Shen <tinghan.shen@mediatek.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
-index 8d298beffd86..031fe105b58e 100644
---- a/drivers/gpio/gpio-tegra186.c
-+++ b/drivers/gpio/gpio-tegra186.c
-@@ -1075,6 +1075,7 @@ static const struct tegra_gpio_soc tegra241_main_soc = {
- 	.ports = tegra241_main_ports,
- 	.name = "tegra241-gpio",
- 	.instance = 0,
-+	.num_irqs_per_bank = 8,
- };
- 
- #define TEGRA241_AON_GPIO_PORT(_name, _bank, _port, _pins)	\
-@@ -1095,6 +1096,7 @@ static const struct tegra_gpio_soc tegra241_aon_soc = {
- 	.ports = tegra241_aon_ports,
- 	.name = "tegra241-gpio-aon",
- 	.instance = 1,
-+	.num_irqs_per_bank = 8,
- };
- 
- static const struct of_device_id tegra186_gpio_of_match[] = {
--- 
-2.17.1
+Will you take this one through your tree or shall I take it. In the latter case 
+I'd need an Acked-by from you.
 
+Regards,
+Matthias
+
+> ---
+>   .../bindings/pinctrl/pinctrl-mt8195.yaml      | 35 +++++++++++++++++++
+>   1 file changed, 35 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml
+> index 8299662c2c09..c5b755514c46 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8195.yaml
+> @@ -98,6 +98,32 @@ patternProperties:
+>             drive-strength:
+>               enum: [2, 4, 6, 8, 10, 12, 14, 16]
+>   
+> +          mediatek,drive-strength-adv:
+> +            description: |
+> +              Describe the specific driving setup property.
+> +              For I2C pins, the existing generic driving setup can only support
+> +              2/4/6/8/10/12/14/16mA driving. But in specific driving setup, they
+> +              can support 0.125/0.25/0.5/1mA adjustment. If we enable specific
+> +              driving setup, the existing generic setup will be disabled.
+> +              The specific driving setup is controlled by E1E0EN.
+> +              When E1=0/E0=0, the strength is 0.125mA.
+> +              When E1=0/E0=1, the strength is 0.25mA.
+> +              When E1=1/E0=0, the strength is 0.5mA.
+> +              When E1=1/E0=1, the strength is 1mA.
+> +              EN is used to enable or disable the specific driving setup.
+> +              Valid arguments are described as below:
+> +              0: (E1, E0, EN) = (0, 0, 0)
+> +              1: (E1, E0, EN) = (0, 0, 1)
+> +              2: (E1, E0, EN) = (0, 1, 0)
+> +              3: (E1, E0, EN) = (0, 1, 1)
+> +              4: (E1, E0, EN) = (1, 0, 0)
+> +              5: (E1, E0, EN) = (1, 0, 1)
+> +              6: (E1, E0, EN) = (1, 1, 0)
+> +              7: (E1, E0, EN) = (1, 1, 1)
+> +              So the valid arguments are from 0 to 7.
+> +            $ref: /schemas/types.yaml#/definitions/uint32
+> +            enum: [0, 1, 2, 3, 4, 5, 6, 7]
+> +
+>             bias-pull-down:
+>               oneOf:
+>                 - type: boolean
+> @@ -270,4 +296,13 @@ examples:
+>             bias-pull-down;
+>           };
+>         };
+> +
+> +      i2c0-pins {
+> +        pins {
+> +          pinmux = <PINMUX_GPIO8__FUNC_SDA0>,
+> +                   <PINMUX_GPIO9__FUNC_SCL0>;
+> +          bias-disable;
+> +          mediatek,drive-strength-adv = <7>;
+> +        };
+> +      };
+>       };
