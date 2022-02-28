@@ -2,82 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C6ED44C702A
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Feb 2022 15:56:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 28D444C7033
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Feb 2022 15:59:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235501AbiB1O5d (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Feb 2022 09:57:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36732 "EHLO
+        id S234514AbiB1PAW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Feb 2022 10:00:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232561AbiB1O5c (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Feb 2022 09:57:32 -0500
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56EA17F6EB;
-        Mon, 28 Feb 2022 06:56:54 -0800 (PST)
-Received: by mail-ej1-x631.google.com with SMTP id dr20so598887ejc.6;
-        Mon, 28 Feb 2022 06:56:54 -0800 (PST)
+        with ESMTP id S234144AbiB1PAW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Feb 2022 10:00:22 -0500
+Received: from mail-ot1-x32b.google.com (mail-ot1-x32b.google.com [IPv6:2607:f8b0:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D3944C43C;
+        Mon, 28 Feb 2022 06:59:43 -0800 (PST)
+Received: by mail-ot1-x32b.google.com with SMTP id l25-20020a9d7a99000000b005af173a2875so9694055otn.2;
+        Mon, 28 Feb 2022 06:59:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cMUUaFr53vM+bHQN9bUKQbcGu2hmLlJ8vx029fVzu3s=;
-        b=NR36y4Q2atTSVf7gFgboX5vqzYRPo4dL9uOkQe1/yuVnPJ5A1rYmEq5yuA6B/UHV9u
-         6Z5q+4JhfUYGh4bTfCJ5C4FNBslgEDm2eC1dCOT8ARa+ngNLSG8YkV5vDR6OhE0hJoBI
-         07L5ZNS7H2IIeWDjsYlvHZUGJq1dnXnR6LyblIWxoBrNUgT0mI+gD7vi8Goo7CaQsbrM
-         kJm4wxTN0MXEvEIB1FA0XjeBFQ3P9EtVxwKBl7oZ2Cm5GUpyzQgyTaWs+0YDpPENM2J3
-         p/aPn+cVKFvdHxtt3HbYMTcRctoiHDtGx7VwI6yLxbEC95x4AeDnTb0ljoTuzn9KIkFN
-         STDw==
+        h=sender:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=nrB15hcA5QqFXQ6AIQVs9TqJCSIuEkAhji/LjC8Jbuc=;
+        b=Mu8/I9B0dLt8lFnjWb9eK7RJxKYalbmqbJYfau9aPs6qte4fAN21ioBig2Jxi4hciq
+         dh3xCYnliIOUwulexSTipoiPmX7u5QbAfICeJCFu+q3W3Ew/76twjWqBBYNC1Ctehcjh
+         mRiBbyaavKczWspBWWvt4WHCnH/B+lRwT1CZ0ihKztwE3bRunOFI3DT7VcJqxDUlZuv6
+         HjOOQ0pXdRviaYUpJ2ioEWCnb3gn226Gvm5GxYtWWEewRw3UXQnEm/UeGt+pkKPiXZNH
+         klpDecodNsIEX/4pNFVZLfxDizLHlLzr2tOTrFjFg0fddqegLm1XY/UDcPy67+YqSrGN
+         v3dA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cMUUaFr53vM+bHQN9bUKQbcGu2hmLlJ8vx029fVzu3s=;
-        b=fbc2TFm61BjLDyyZvAsV40xKlJLINreoQqpRLod55D4lK5xL87CjtlzrIg52esd60A
-         03mIupcjMxUhqixBLqxn3YGaT7A0oXgTTXbYSdTLdjc5F1Lz3rPQL126Olxs839ntCD2
-         gj7EeLXl8GqqDt7Ru8c/Ie2NYEDU7sd3n//D4gKXtCdb8Vmh2IUjpUDiXQ9MAS4++W4R
-         ZAhrtD4w3ysGnvIV7kt0AF4nurc3zKHtE/2a3KVAEQ/F6hQdqytz3kjtZNmZgCjo3vrJ
-         u52l88ur5MCXAE8wF3R1G8VzANxSM5dh+EML3tF4Pd38BWf++JUxclBeUveo5fPq5iX7
-         fwkw==
-X-Gm-Message-State: AOAM532dndWquMk7zeRri7kfTadh10ZBMo1IsTONJzLicArDlumUs7+G
-        e8xIqW2RYNAd2KMSUab2+3WG3XgkREnSeX+je84=
-X-Google-Smtp-Source: ABdhPJy8ekYCFQ22LFX2uOonLVbB+pSg/6+sh9tctiEU7McZq9LCAoxnoIjcj3wtwbSO79NJ6zBGF1vXuGb0X9Zo1Rs=
-X-Received: by 2002:a17:906:5950:b0:6b3:65b7:82d3 with SMTP id
- g16-20020a170906595000b006b365b782d3mr15125201ejr.636.1646060212791; Mon, 28
- Feb 2022 06:56:52 -0800 (PST)
+        h=x-gm-message-state:sender:message-id:date:mime-version:user-agent
+         :subject:content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=nrB15hcA5QqFXQ6AIQVs9TqJCSIuEkAhji/LjC8Jbuc=;
+        b=250H6XKzO1qgWRHMxHqa/QuBsslpdXX6fxOm9QnLZvbbgz30fsbiljpHwK9zAJfp0L
+         TgaDK8M77Isw7w1w2a9XbNkqrtwaiiGxM5ztClM3dHShtszIsd5DsdFX0ovSWJxZm83w
+         yjbnaGfRbjES/Iojx/0/eTn03cP7gOR+P9FlP9+vhVizPvRVgBuhig9IXEAhV8jVWWcm
+         a+iOvZKpQdQCGp9xbRhd45e6pIHByoWuSh7VKXPu+bmgA2NEDgDKEyZSsaAMtnXmQ8CB
+         /xQ5aORxr1fGFKEyBRJh14jTB2FIRv5Dqwhk//bEqvlyjABVv03FsKAlR/m5HK/OjX/L
+         6wkA==
+X-Gm-Message-State: AOAM531PJ/FJ9FWOfT9THxHJMfAAXKNskWjDNtynNVB39s6Ekt+eOjHt
+        UUCneQjt6Tt/6NP6FJOZU1I=
+X-Google-Smtp-Source: ABdhPJy8QrJN42tfMwLJ96IfizbtyKV6OXRV+FfNIfRT7RZQHfMESebe2/Y506hV/gDq6gZxoZC7fA==
+X-Received: by 2002:a9d:65d2:0:b0:5af:3e05:680b with SMTP id z18-20020a9d65d2000000b005af3e05680bmr9288630oth.68.1646060382586;
+        Mon, 28 Feb 2022 06:59:42 -0800 (PST)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id r9-20020a056870e8c900b000d7133a15b3sm2030745oan.20.2022.02.28.06.59.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Feb 2022 06:59:42 -0800 (PST)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <84401f5e-38a3-04b1-eac5-5ab1d0ab5e09@roeck-us.net>
+Date:   Mon, 28 Feb 2022 06:59:40 -0800
 MIME-Version: 1.0
-References: <20220228100317.59885-1-akhilrajeev@nvidia.com>
-In-Reply-To: <20220228100317.59885-1-akhilrajeev@nvidia.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 28 Feb 2022 16:55:31 +0200
-Message-ID: <CAHp75VdUb7cDJY8MNHVDmgtBqkAZ5CskyVsA=7v=q9b8Tm=wHg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: tegra186: Add IRQ per bank for Tegra241
-To:     Akhil R <akhilrajeev@nvidia.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [GIT PULL] pin control fixes for the v5.17 series
+Content-Language: en-US
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <CACRpkdYM21hcH5d9rXyvjMPHQp429OZ1Zcy7uLU2tndoJcOmUQ@mail.gmail.com>
+ <CAHk-=whg3eRY1nOJjHam+jORmVymU539CxhBUjp4=tGoFitotw@mail.gmail.com>
+ <CACRpkdbWkm1WDY30qoGLEQba+G2cDEhT+M8nCdJbcD=ZQiu6uw@mail.gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+In-Reply-To: <CACRpkdbWkm1WDY30qoGLEQba+G2cDEhT+M8nCdJbcD=ZQiu6uw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Feb 28, 2022 at 12:51 PM Akhil R <akhilrajeev@nvidia.com> wrote:
->
-> Add the number of interrupts per bank for Tegra241 (Grace).
+On 2/28/22 06:43, Linus Walleij wrote:
+> On Sun, Feb 27, 2022 at 9:38 PM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+>>
+>> On Sat, Feb 26, 2022 at 5:11 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>>>
+>>> some more pin control fixes that trickled in the last week or
+>>> two.
+>>
+>> Hmm. Am I confused because I thought I'd see a fix for the orangepi
+>> problem that Guenter has been reporting?
+>>
+>> That problem has been pending for quite a while now.
+> 
+> OK let's poke Hans, he usually fix things quickly so it must have been missed.
+> 
+> Hans did you see Guenthers remark here:
+> https://lore.kernel.org/linux-gpio/20220128172003.GA2666058@roeck-us.net/
+> 
+> Do you want to attempt patching it or shall I just revert the patch for now?
+> 
+> Yours,
+> Linus Walleij
 
-Is it a fix? Then add a Fixes tag, please. Otherwise, how did it work
-before? Elaborate that in the commit message to explain why it's not a
-fix.
+The fix has long since been submitted and is available in linux-next.
 
--- 
-With Best Regards,
-Andy Shevchenko
+ From my notes:
+
+Fix posted at
+https://patchwork.kernel.org/project/linux-media/patch/0f536cd8-01db-5d16-2cec-ec6d19409a49@xs4all.nl/
+and in linux-next as commit 3c5412cdec9f ("pinctrl-sunxi:
+sunxi_pinctrl_gpio_direction_in/output: use correct offset").
+The fix exposes a lockdep splat for which a fix is posted at
+https://lore.kernel.org/lkml/20220216040037.22730-1-samuel@sholland.org/
+This patch is available in linux-next as commit 4649b97042c3 ("pinctrl:
+sunxi: Use unique lockdep classes for IRQs").
+
+Guenter
