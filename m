@@ -2,35 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D93694C96C8
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Mar 2022 21:25:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 95D4D4C96C4
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Mar 2022 21:25:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238147AbiCAUY5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Mar 2022 15:24:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58214 "EHLO
+        id S238181AbiCAUY7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Mar 2022 15:24:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238661AbiCAUXn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Mar 2022 15:23:43 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3D7FA4195;
-        Tue,  1 Mar 2022 12:20:55 -0800 (PST)
+        with ESMTP id S238762AbiCAUXu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Mar 2022 15:23:50 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF29F41335;
+        Tue,  1 Mar 2022 12:21:10 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 366A5B81B0E;
-        Tue,  1 Mar 2022 20:20:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6DC2C340EF;
-        Tue,  1 Mar 2022 20:20:14 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1BF93609ED;
+        Tue,  1 Mar 2022 20:21:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75004C340EF;
+        Tue,  1 Mar 2022 20:21:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646166017;
-        bh=PkjgPIixe5ICMmLEPpIhMS9c1PB8nIr0J/ISNzW9sg0=;
+        s=k20201202; t=1646166067;
+        bh=LdBoeu9mj9shzPDjHJYW6XKN8aDkUhRaD9CdjahmhBI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d/AJk41MS3CfhsRXafIPlv2prJM/9RQsVnuK/F1vzuJP/bwTA8KJJsFrTqgHXGL9c
-         XFnKqa0fGRAzcbtdalq3D2Zdi4NjJru2A6R9NHkGhChISd1FsFgYZ7U6Q8tes0FYmY
-         C+RS+qkpODTnZKaqTcl1OV9UvLd9bqrwBHmVxSnawuIv15eJsfEv0+3w41mRuT9GZy
-         OJICJ/1PwgGorB313fDxqWKghqNOmQNvUs3vS99owGSsUpcCGl61w+6jEYw1ajzTkm
-         9l8q5nuzjeMnB+P19D7c2ki5qANMTdJQNfz460z03dO8vvTWkbfYdCOucjkO0I77/e
-         zuJl3IgD08/Ow==
+        b=T6KYSBOirt6sHywNyAPeaGF/29m5UiY1KamQze1BH7ChfTfgsBKo4NrmY10ch9UnJ
+         oRg6IQfti+dxmOFdrpbev/yXD92fwOwDk1jLoeAtzfkYVsZgDhkuk+vdM6Jna9RZ00
+         ZzGbyxrP91w+nhyP88+6vgEa9iPXGJPAW6upu81BRjKOAMxRcHTzP+9TVXX+ZOT7jr
+         vk48APQafbgnLlSweIyAaZ7aTglMIBERhTlHqndRzuH36ULCQEULz1SPc9/AcM9IGG
+         IS4vfMG4C7W2TSMdVYsWjG9mqs4CMqQhuz4Yx410rROrTVXKYvD5e37bay0ZCKYPK5
+         foHWYFBmh7TPA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Shreeya Patel <shreeya.patel@collabora.com>,
@@ -39,12 +39,12 @@ Cc:     Shreeya Patel <shreeya.patel@collabora.com>,
         kernel test robot <lkp@intel.com>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 05/11] gpio: Return EPROBE_DEFER if gc->to_irq is NULL
-Date:   Tue,  1 Mar 2022 15:19:38 -0500
-Message-Id: <20220301201951.19066-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 3/7] gpio: Return EPROBE_DEFER if gc->to_irq is NULL
+Date:   Tue,  1 Mar 2022 15:20:41 -0500
+Message-Id: <20220301202046.19220-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220301201951.19066-1-sashal@kernel.org>
-References: <20220301201951.19066-1-sashal@kernel.org>
+In-Reply-To: <20220301202046.19220-1-sashal@kernel.org>
+References: <20220301202046.19220-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -103,10 +103,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 10 insertions(+)
 
 diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index abdf448b11a3d..6d7eb6a7570e1 100644
+index 12472b84a71ca..b66e3f2ca1b1e 100644
 --- a/drivers/gpio/gpiolib.c
 +++ b/drivers/gpio/gpiolib.c
-@@ -3860,6 +3860,16 @@ int gpiod_to_irq(const struct gpio_desc *desc)
+@@ -3327,6 +3327,16 @@ int gpiod_to_irq(const struct gpio_desc *desc)
  
  		return retirq;
  	}
