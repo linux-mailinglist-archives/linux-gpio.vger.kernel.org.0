@@ -2,76 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 30B4E4C7DE0
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Feb 2022 23:56:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E39D4C7FF2
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Mar 2022 02:03:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230056AbiB1W5V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Feb 2022 17:57:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49356 "EHLO
+        id S230266AbiCABDl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Feb 2022 20:03:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229895AbiB1W5V (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Feb 2022 17:57:21 -0500
-Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CD7E120EA6
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Feb 2022 14:56:42 -0800 (PST)
-Received: by mail-yb1-xb33.google.com with SMTP id p19so23649571ybc.6
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Feb 2022 14:56:42 -0800 (PST)
+        with ESMTP id S231244AbiCABDj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Feb 2022 20:03:39 -0500
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE2307A99B
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Feb 2022 17:02:59 -0800 (PST)
+Received: by mail-lf1-x12f.google.com with SMTP id f37so24266433lfv.8
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Feb 2022 17:02:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=neP8Nk08fZpclwsy4oZDHP6Qg38rvK4l+dAouhgd4sY=;
-        b=LRyEMX8vXKbt/fERFVTPjB8HYpfUIVskN93/0MXNOpNpXsZ7NBe4+wJhej+G3pztcq
-         +xkSc1bZtWoYa4HKxqgX1ueGEGhKttCChS+blldve3KLgNcSGEqrNnewuRugiLKbrGY0
-         7I0q5irGNuwCqNil0J/2zEVvEr8CiniiTiWKhB2ugkGQlIz785PCb5lMhRpOBvpbwohn
-         QWn5+wZYHw3aCcyGmPbLTMRcNWc0uANZRYoYiciIUDpr7mc+jV903awc/I+ijQnOy3Oq
-         4fZGeBCMzCytvp5H/fAvi+/g1LXQlO7D344YeILd3nhOaPedoW5mJloExi3NMlig6m3b
-         uXJQ==
+        bh=Q8NmAcmdqU26V8OH3cYuAlO8sk2yRxtmZWE3w58gSKE=;
+        b=MKcB+oboBz5eIjBKGm5s3zVzKk8DOQZGjA7/z4rwsM0NpL91uMsgCG04CXKj6F1XIv
+         14Hlb2vQWsXVHInjCCAvtjKzoYQPTTDOCMCVO5I6hBp6i/LKTHKe2j5+XGPPwZKc5qUW
+         ezNp7Y8TrpCDsaoFABroafoi19z3NHRD2LkRs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=neP8Nk08fZpclwsy4oZDHP6Qg38rvK4l+dAouhgd4sY=;
-        b=4d17ucqlpgb90SEGtKyO+KnO4bjfekpa2H8JzrefzoN7IW2EGSIkv9n940Ndp9Zvpc
-         CQiV9LaLbbmaEPf1ZXqaSVyWfbagpdUASULr8siX9tzzpxZggVY1S68yq5r2kNW+szXy
-         +pBcuaMWdfGcGy5t6pTt7ofCC8vIcFPlTATlbqhfR9DRMu320pNLaef655Cc6yKo/c7l
-         5SCnhxVuRRWlkzVuNbaT6C0VQ1WwrLJ2LUZPt7y/NarF2lBX9h3jMRFStk7mtzLEyFa6
-         ZlNe+Ml48xzxsQHEcpjgIQmBMvb2df41/yq8/P+vZ/qw7iHHYC9phn7EL0Fh7a16DCw5
-         b9uw==
-X-Gm-Message-State: AOAM530WVLohM1KE5N5L1ji5/FyqUAWXomjl7thqYXat5rOBj+niCZOv
-        VwWH/wXz+i7QBvdbArYPYXD8L2Y/wUmBpxQRa/F/Iw==
-X-Google-Smtp-Source: ABdhPJzVgTm0+PRy615jIY/6yZdtDIUhPJ1indfObSm8nBBVySwVu1F1U2B/dZz0xuf0VkdPg3wKts+pYKTude9RJQs=
-X-Received: by 2002:a25:d74f:0:b0:628:1c15:79be with SMTP id
- o76-20020a25d74f000000b006281c1579bemr9482704ybg.514.1646089001439; Mon, 28
- Feb 2022 14:56:41 -0800 (PST)
+        bh=Q8NmAcmdqU26V8OH3cYuAlO8sk2yRxtmZWE3w58gSKE=;
+        b=vy8naBE00eoQJidhHHHvWlK3o+daM8HekHErcKFJh/y6himRidoGXZlfQt1+2tIvKN
+         nHpgpzheD/Lmvso110FSYuBThui0T60jkeNTwD0CcxG2ASTkWfm3+3ZBgNcVFdBYBeEU
+         LdV9RhoDCfCeZ1SpBWYEO8zK+uBi73Cf56oJawuzQs7C0uyYhqq0KLnsMpz6V7t+Iai8
+         cdDRq7pxkJWa1LEH1OniOV4oMzjbkHzJK9ubQNzWXwjmlcwEvnAaLdoseimMMpC8Sv6X
+         mNDduWwq68q24b7yhs9Tm+cK/PzAUPwiC2dxxpRa0oTn7SfbDpXVpefoBlNZicTPUGiq
+         O6Vg==
+X-Gm-Message-State: AOAM531OBoYkUxBQYX4Ynwp57I4CZqpQqvwwaDyiuYhp1EeLHfRYuEXx
+        FmzWN9HgAyCjD1Rp6r/mk0q1T0Rl3tkk3jAHDdg=
+X-Google-Smtp-Source: ABdhPJySoDoQMfh8y7k/zDpBR5skDkH3L+UzaOrl8DePfr5NkJFFGjjqtYB3JYGmJ2soHSXixfEXkQ==
+X-Received: by 2002:a05:6512:44b:b0:443:7f20:3baa with SMTP id y11-20020a056512044b00b004437f203baamr14284090lfk.248.1646096578100;
+        Mon, 28 Feb 2022 17:02:58 -0800 (PST)
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
+        by smtp.gmail.com with ESMTPSA id a21-20020a19f815000000b00444191b6c07sm1221918lff.80.2022.02.28.17.02.57
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Feb 2022 17:02:57 -0800 (PST)
+Received: by mail-lj1-f177.google.com with SMTP id 29so19749430ljv.10
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Feb 2022 17:02:57 -0800 (PST)
+X-Received: by 2002:a2e:924d:0:b0:246:370c:5618 with SMTP id
+ v13-20020a2e924d000000b00246370c5618mr15672702ljg.358.1646096577046; Mon, 28
+ Feb 2022 17:02:57 -0800 (PST)
 MIME-Version: 1.0
-References: <YhzC7nLsupHmXOo5@black.fi.intel.com>
-In-Reply-To: <YhzC7nLsupHmXOo5@black.fi.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 28 Feb 2022 23:56:29 +0100
-Message-ID: <CACRpkdaRnfVK1Rzc_Sdh9yk+A5bANixamtwmiwJXnAhqQFwvWA@mail.gmail.com>
-Subject: Re: [GIT PULL] intel-pinctrl for 5.18-1
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linux pin control <linux-gpio@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
+References: <CACRpkdYM21hcH5d9rXyvjMPHQp429OZ1Zcy7uLU2tndoJcOmUQ@mail.gmail.com>
+ <CAHk-=whg3eRY1nOJjHam+jORmVymU539CxhBUjp4=tGoFitotw@mail.gmail.com>
+ <CACRpkdbWkm1WDY30qoGLEQba+G2cDEhT+M8nCdJbcD=ZQiu6uw@mail.gmail.com>
+ <CAHk-=wjNdW6Tdei6+6OJy6jGqY=PCJ2TWFKpV+g0projUC1eag@mail.gmail.com> <CACRpkdY-8D8ZYy9VichQmJHTJCSskFs=e0qpbYssf7tED_9dLw@mail.gmail.com>
+In-Reply-To: <CACRpkdY-8D8ZYy9VichQmJHTJCSskFs=e0qpbYssf7tED_9dLw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 28 Feb 2022 17:02:40 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whcOPRHS-mWaCk3_anVPZheCbkE4E0dLWRD9YbiaTLAqA@mail.gmail.com>
+Message-ID: <CAHk-=whcOPRHS-mWaCk3_anVPZheCbkE4E0dLWRD9YbiaTLAqA@mail.gmail.com>
+Subject: Re: [GIT PULL] pin control fixes for the v5.17 series
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Feb 28, 2022 at 1:41 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Mon, Feb 28, 2022 at 2:50 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> I'll take these two:
+>
+> pinctrl-sunxi: sunxi_pinctrl_gpio_direction_in/output: use correct offset
+> pinctrl: sunxi: Use unique lockdep classes for IRQs
+>
+> and put them into fixes, that should nail it.
 
-> New Intel pin control drivers for v5.18-rc1. Cooked a few weeks in Linux Next,
-> no merge conflicts observed.
+Thanks. One down, two more of Guenter's reports to go. But iirc they
+both at least had fixes pending too.
 
-Pulled into my devel branch for v5.18, thanks!
+Let's hope they aren't in the wrong queue as well ;)
 
-Yours,
-Linus Walleij
+                Linus
