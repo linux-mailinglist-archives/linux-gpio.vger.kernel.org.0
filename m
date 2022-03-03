@@ -2,60 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C23A84CB9FD
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Mar 2022 10:18:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0218C4CB9FC
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Mar 2022 10:18:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231486AbiCCJTc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Mar 2022 04:19:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56226 "EHLO
+        id S229883AbiCCJT2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Mar 2022 04:19:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231426AbiCCJTc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Mar 2022 04:19:32 -0500
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B96116A5B3
+        with ESMTP id S229613AbiCCJT1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Mar 2022 04:19:27 -0500
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6D6C16A5B9
         for <linux-gpio@vger.kernel.org>; Thu,  3 Mar 2022 01:18:41 -0800 (PST)
-Received: by mail-wm1-x32f.google.com with SMTP id q7-20020a7bce87000000b00382255f4ca9so4410252wmj.2
+Received: by mail-wr1-x42f.google.com with SMTP id t11so6773381wrm.5
         for <linux-gpio@vger.kernel.org>; Thu, 03 Mar 2022 01:18:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ITx9AjfJdEfyLy3hP0YWlDwqOU8D9WDB00iySByBzA0=;
-        b=LirG44L3WMdKcGMT+QVHFlOAhIaspCIZ06c2AEt125JoROOOKsu6PUgsHYroV0Pu75
-         JKr+FX2JpHu6UuW3tAY+GjWN8bd3CTpC9FaYNWhGgVVSquQ3MOsHTRaD2sUqCW6+aMoP
-         /Qtb8Sqv8PcfQ9o0Z3NkJgdmSHYww+un5tMK0fKAMySJgSUEmuaEfPVKiUgBAy/iNlh2
-         u6GBxPtat8vR/C+gi3DGZ2effqilBH/Wlwbpeb6CmPVPxfM+9bAiB1iGRbZ8a/qXkxU9
-         VlIQc9dPNo0TjSXXqNrwWa8ZKOiXc6cfS2aV5TCsV14Eq8DSMenB0SX1BoZ/m6rz89Ed
-         rmVA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=cHFGVql2cQztIW02VjNTKPAftBFMWTKbdMY8muRP0mw=;
+        b=NIX9va84w10A9VeyiMRcuQqdsz4R5ho6ifJs2sc+wnNsxi57ShvOibzHk9MvLVJrE0
+         JI0X5kEAJ+mh4/zsAqbIA9s+KdfPd21fc0ZnytTO/iYCNLNJIhDyY33Hw8wXbImnVTKa
+         2ewqJ4lsJGGR1ah81klTcDM4Cnu3OaJQ/asO6gKTokON+rMvfIPIevcqvOLp9vWvDCaS
+         U5IQ8NnnJ3RKz4jlNgBxVXRf5hL+jcXrdd65LmQp8MVXb8PsNmSlqWFctWt8lxt1v3Kz
+         OVx3YRqcCefkDgTcJ/6Gltpo8TSKaPCtL4y2vjxRMNiDy3gfykFYUJQp02TKzsgzwlvc
+         n04g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ITx9AjfJdEfyLy3hP0YWlDwqOU8D9WDB00iySByBzA0=;
-        b=jOkk1Mt+Ic96Dr/0j3yfnFaYIciCKL4Ero3zG/arXf0/BOsLDlez6ALwVJk7jqIHhb
-         rjJUS/qF3lu0zWgnDmHRXf2Gj2zU9sAaIsPVnROQr1FJ5dVpPpUvj/nPYQRMnNrUChCS
-         PfObQTsA6qz9xaR+z72E3PT52+LIkN1JwehfCAPKN1GCDH9Z9oITeLlhYMKDwjlH4IuQ
-         iLM9wd5CY8pyJAYg5bRnXzO37xMHzPksDrdYNbAW2nmw9zMCMo/Ak/u+5Lapob/y9xtR
-         E4T9XRYAdN0QYGD86VZG4qki4leYL4lv3Hvb6mk/NKquGZWlfyXGpXDcJXepEqfNTh/0
-         xDMg==
-X-Gm-Message-State: AOAM532qJ5zSbsn2EXkkHJHlb8RETDmDjv621n6RhYXPOGluG1NV9mUi
-        tu/B8TMBXqPxfGCGei+cazZo6A==
-X-Google-Smtp-Source: ABdhPJzCmv6sV2Sp4+CyUzCmQIgfqJWPdG9BmrUMoSx2VGWHTn0GWAfX6kSuJPOvo73oolqaf6Vn3A==
-X-Received: by 2002:a05:600c:190d:b0:381:6ea1:8cc with SMTP id j13-20020a05600c190d00b003816ea108ccmr2988534wmq.118.1646299119822;
-        Thu, 03 Mar 2022 01:18:39 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=cHFGVql2cQztIW02VjNTKPAftBFMWTKbdMY8muRP0mw=;
+        b=a/405q3mQRy0SFv2tQfqYjqIS8hBvL0lDO9Jc4u/t2KQyVQiPi2SZ4ra15ByOmL3Z2
+         /aydu/U7pL8McvJSPif2dRSsLQyCbLMyMBQiU7rax8hhzoH99e6WahMfBXCI0hagmPA/
+         c4ssJHMzVolw2Kru+dMiG8S6BFfz3PCZDCe9vyEhjRGL/6Ipc+PMbIlabmP8AwgWDzko
+         3ZmLEpM4o7PLKFjuDjxuNkwspFobJGWro5IVTWjwybsDoR3vFe9xyYWchNTSsBdUdzxb
+         0FI735tT0vLNINFG2Kr82gutHiaX5pN3bDGi7LdazyB0Y3MZ6NkKwHZ/Xju3CMXnjWyv
+         W4nw==
+X-Gm-Message-State: AOAM531SmMtWYEBqD4Bod1WtwTqpJglerapOcAAxGe+/enDMrqYsg7XM
+        Nt8f7iqskjKxHguzmdW2p2iKUfZSuBASGw==
+X-Google-Smtp-Source: ABdhPJwIZQqzpOX372++QIMN5/G2FcpWnL5UBqszy9XTWuICFjyJXOrs4Ul/VlkORqyE4EFgaP/+gg==
+X-Received: by 2002:adf:e6cd:0:b0:1ef:db24:7ad1 with SMTP id y13-20020adfe6cd000000b001efdb247ad1mr12200258wrm.233.1646299120460;
+        Thu, 03 Mar 2022 01:18:40 -0800 (PST)
 Received: from debian-brgl.home ([2a01:cb1d:334:ac00:7d50:ff5:f5c1:e225])
-        by smtp.gmail.com with ESMTPSA id x13-20020adfec0d000000b001e31279cc38sm1527286wrn.11.2022.03.03.01.18.38
+        by smtp.gmail.com with ESMTPSA id x13-20020adfec0d000000b001e31279cc38sm1527286wrn.11.2022.03.03.01.18.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Mar 2022 01:18:39 -0800 (PST)
+        Thu, 03 Mar 2022 01:18:40 -0800 (PST)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [libgpiod v2][PATCH v3 0/3] libgpiod v2: rewrite tests for the C library
-Date:   Thu,  3 Mar 2022 10:18:33 +0100
-Message-Id: <20220303091836.168223-1-brgl@bgdev.pl>
+Subject: [libgpiod v2][PATCH v3 1/3] API: add an enum for line values
+Date:   Thu,  3 Mar 2022 10:18:34 +0100
+Message-Id: <20220303091836.168223-2-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.30.1
+In-Reply-To: <20220303091836.168223-1-brgl@bgdev.pl>
+References: <20220303091836.168223-1-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -67,72 +69,46 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This series contains a rework of the line_config interface and a bit patch
-that replaces the old test suite for libgpiod v1 based on gpio-mockup with
-a one covering around 95% of the libgpiod v2 code based on the upcoming
-gpio-sim module.
+In order to explicitly stress that line values as understood by libgpiod
+are logical values, expose a two-value enum with values called: ACTIVE
+and INACTIVE that should be used whenever referring to the state of GPIO
+lines.
 
-v1 -> v2:
-- drop applied patches
-- improve documentation
-- skip offsets that are overridden in line_config but not actually requested
+The value of INACTIVE is set to 0 while that of ACTIVE to 1 so that users
+can still use integers in C (where no scoped enums exist).
 
-v2 -> v3:
-- add a patch adding an enum for line values
-- rework the mechanism for retrieving overrides
-- add new "constructors" for line_config
-- incorporate part of Kent's points in the documentation
-- a bunch of improvements to tests as per Kent's reviews
+Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+---
+ include/gpiod.h | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-Bartosz Golaszewski (3):
-  API: add an enum for line values
-  line-config: expose the override logic to users
-  tests: rewrite core C tests using libgpiosim
-
- configure.ac                 |    8 +-
- include/gpiod.h              |  603 +++++++++++++------
- lib/line-config.c            |  871 ++++++++++++++++++---------
- tests/Makefile.am            |   24 +-
- tests/gpiod-test-helpers.c   |   49 ++
- tests/gpiod-test-helpers.h   |  139 +++++
- tests/gpiod-test-sim.c       |  308 ++++++++++
- tests/gpiod-test-sim.h       |   42 ++
- tests/gpiod-test.c           |  233 +-------
- tests/gpiod-test.h           |   83 +--
- tests/gpiosim/gpiosim.c      |    1 +
- tests/mockup/Makefile.am     |   11 -
- tests/mockup/gpio-mockup.c   |  496 ----------------
- tests/mockup/gpio-mockup.h   |   36 --
- tests/tests-chip.c           |  282 ++++-----
- tests/tests-edge-event.c     |  490 +++++++++++++++
- tests/tests-event.c          |  908 ----------------------------
- tests/tests-info-event.c     |  301 ++++++++++
- tests/tests-line-config.c    |  503 ++++++++++++++++
- tests/tests-line-info.c      |  318 ++++++++++
- tests/tests-line-request.c   |  526 ++++++++++++++++
- tests/tests-line.c           | 1091 ----------------------------------
- tests/tests-misc.c           |   80 ++-
- tests/tests-request-config.c |   90 +++
- tools/gpioget.c              |    6 +-
- tools/gpiomon.c              |    6 +-
- tools/gpioset.c              |    9 +-
- 27 files changed, 4017 insertions(+), 3497 deletions(-)
- create mode 100644 tests/gpiod-test-helpers.c
- create mode 100644 tests/gpiod-test-helpers.h
- create mode 100644 tests/gpiod-test-sim.c
- create mode 100644 tests/gpiod-test-sim.h
- delete mode 100644 tests/mockup/Makefile.am
- delete mode 100644 tests/mockup/gpio-mockup.c
- delete mode 100644 tests/mockup/gpio-mockup.h
- create mode 100644 tests/tests-edge-event.c
- delete mode 100644 tests/tests-event.c
- create mode 100644 tests/tests-info-event.c
- create mode 100644 tests/tests-line-config.c
- create mode 100644 tests/tests-line-info.c
- create mode 100644 tests/tests-line-request.c
- delete mode 100644 tests/tests-line.c
- create mode 100644 tests/tests-request-config.c
-
+diff --git a/include/gpiod.h b/include/gpiod.h
+index 074e395..34fdad6 100644
+--- a/include/gpiod.h
++++ b/include/gpiod.h
+@@ -185,12 +185,20 @@ gpiod_chip_request_lines(struct gpiod_chip *chip,
+ /**
+  * @}
+  *
+- * @defgroup line_settings Line settings
++ * @defgroup line_settings Line definitions
+  * @{
+  *
+- * These defines are used both by gpiod_line_info and gpiod_line_config.
++ * These defines are used across the API.
+  */
+ 
++/**
++ * @brief Logical line state.
++ */
++enum {
++	GPIOD_LINE_VALUE_INACTIVE = 0,
++	GPIOD_LINE_VALUE_ACTIVE = 1,
++};
++
+ /**
+  * @brief Direction settings.
+  */
 -- 
 2.30.1
 
