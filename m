@@ -2,152 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E29A4CB416
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Mar 2022 02:09:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 31F9A4CB696
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Mar 2022 06:52:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230413AbiCCAgw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 2 Mar 2022 19:36:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59812 "EHLO
+        id S229728AbiCCFwy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Mar 2022 00:52:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229664AbiCCAgw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Mar 2022 19:36:52 -0500
-X-Greylist: delayed 328 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 02 Mar 2022 16:36:05 PST
-Received: from wnew1-smtp.messagingengine.com (wnew1-smtp.messagingengine.com [64.147.123.26])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B6614667E;
-        Wed,  2 Mar 2022 16:36:05 -0800 (PST)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.west.internal (Postfix) with ESMTP id 2A8542B00248;
-        Wed,  2 Mar 2022 19:30:34 -0500 (EST)
-Received: from imap49 ([10.202.2.99])
-  by compute3.internal (MEProxy); Wed, 02 Mar 2022 19:30:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=cc
-        :cc:content-transfer-encoding:content-type:date:date:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to; s=fm2; bh=eiWLYfA4t1gGk/
-        mdor81f7EceQWpUlzsDTwnD33Z67w=; b=yQDCr14Q8vFd8Vhl2mpgM/1hWafyyc
-        ZnMCn0SfsF+PTDm74K1cEXva4K6RLAEPRM4ylBbgIYHO88HYJA3N3D8SpJFMaUYu
-        Ey4ZvPi9EAi3BlxWTcSCKL0R/dsPChEZ9UZkeTQbutnY8G3eMls+P59QIngpwwY5
-        TiTMprrDj2LRpXIyXntMIFT6spzAFRn+B56UoSoiDaFYCJ+ybkT2/7GtJGjfuQVk
-        +tjqFKihAfKNA5kLdWoJ4rVpWW5sDZF1PSYv3aS9Qj19Tz4d5aA79MhI1UDjQv7z
-        R+9DMFTStMw87Xhs7VY6o99jtEvh/FGwcOolOUAd7cbDr5FzBkoHeTpg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:date:date:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; bh=eiWLYfA4t1gGk/mdor81f7EceQWpUlzsDTwnD33Z6
-        7w=; b=EI7+GdstVl79yq9Fm3hvRTD1YZ66On6ZvCyB53SB/KQSa9RXa3DBnRbCb
-        PTei6GReqFjZ1/vOUq4R9aOzx1rr5XsGHiNRZtYr31ZkZwnwGmSomkFDW/60vxcr
-        BH/tVQixKpfHx+vwSob7ciWRp2AuACf7dl85tYxnXp/qt40xOg5bup2ZOWxjvhXb
-        UVJbPfRbKTgnZqTgqQKw5DSkC6qJHsfjOfZSy7Olt7aUaF3c7KQE0KaIQvyNPCYI
-        lConQVqasVzznECBA2PE4dE/0kRbz64BKUVBu4jzdzjpBcqiaVJBAO0kAD+QMd4Y
-        W/5KOkb1B+WAO9mLkjxTfC+8jGP6w==
-X-ME-Sender: <xms:KAwgYiXUVobGGbgnfnTqlkjK2bFjiR41JDSh9efIYb7Kr86RhKUoJQ>
-    <xme:KAwgYumtoyVlM_S-4LeNPryd2PF452B0XmPHD4G5OFe-P2ZvwnK2Cp1KpCWWTpVIo
-    JUAqi23R0jcmXlUWw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddruddthedgvdegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgfgsehtqhertderreejnecuhfhrohhmpedftehn
-    ughrvgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucggtf
-    frrghtthgvrhhnpeekheejieeigfefvdffheevveekfeejgffgvdeuueegjeeghfffhffg
-    ieelffdvfeenucffohhmrghinhepudekrdhithenucevlhhushhtvghrufhiiigvpedtne
-    curfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghu
-X-ME-Proxy: <xmx:KAwgYma6HG35WC5hESTOpwPiuqjPmuoeIo7ZXNUwlQL_Oo1HTjUQOA>
-    <xmx:KAwgYpVtntNyqwhaBKeH11g6GTYa_udNOtqrc4m6AQ4FARFF33PWeQ>
-    <xmx:KAwgYslKiOhNMqSehKqeVgwB8x53TCLR5MgrimauAeyTWb9y6fNGHw>
-    <xmx:KQwgYpgdrpzcgPjU1XtxQD_qfXwN0QMsqpgqF1xhU09yJYgyZbgT4T92eDo>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 8700FF6007E; Wed,  2 Mar 2022 19:30:32 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.5.0-alpha0-4778-g14fba9972e-fm-20220217.001-g14fba997
-Mime-Version: 1.0
-Message-Id: <a42db25f-33af-4232-9acd-815f7b116c71@www.fastmail.com>
-In-Reply-To: <20220302085432.GA11054@duo.ucw.cz>
-References: <20210921043936.468001-1-andrew@aj.id.au>
- <d2b85ad7-aef7-6088-03f5-cbd6e0bcab5d@kaod.org>
- <CACPK8Xdvns7PK9t1ZutAbkJqhb5eRcoWCDySQGsfbtLv+XMvqQ@mail.gmail.com>
- <20220302085432.GA11054@duo.ucw.cz>
-Date:   Thu, 03 Mar 2022 11:00:11 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Pavel Machek" <pavel@ucw.cz>, "Joel Stanley" <joel@jms.id.au>
-Cc:     "Linus Walleij" <linus.walleij@linaro.org>,
-        =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>,
-        linux-leds@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        "Andy Shevchenko" <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 0/2] leds: pca955x: Expose GPIOs for all pins
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S229726AbiCCFwy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Mar 2022 00:52:54 -0500
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E038163D76
+        for <linux-gpio@vger.kernel.org>; Wed,  2 Mar 2022 21:52:08 -0800 (PST)
+Received: by mail-wr1-x434.google.com with SMTP id t11so6064247wrm.5
+        for <linux-gpio@vger.kernel.org>; Wed, 02 Mar 2022 21:52:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=fUvJ1FGslA5WYPriiaq2+k+CtDHNYAOxNSXhjt3sp7E=;
+        b=QZr291mCokW7MzTSGdl2fadqzKN8rxrf/dmH1T2zr0agKMQqOJJtysLQqK+TTGnIBe
+         h7uXHXfm4Nwagul4Zr6B+gNJEEzdwZQQyONFk1lNMK3fIl5aZ2miKG6NhRvzeytDg3bF
+         Lv8Ty3692g+vj9NAt/rCHtAUPn7F4bqVr96ny7AT75P8QRNGu2ySJD7FT8/8BcL5NW9a
+         hvqhPG0sx8xlAQba+s9cysmEG/3pF/fPlzoVsTZm1iFep1odleHDX7jK+KxYlVFCAk1N
+         jBW7XpNHgq5hR/jgtiJ16H4Np+ADWJlq22CTSnRwLxmPDTEF/ztacm3O9ep6IgTgM5Lc
+         PC2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=fUvJ1FGslA5WYPriiaq2+k+CtDHNYAOxNSXhjt3sp7E=;
+        b=tSYQreo6UbJPIjpLHavKOPfpfwfuMb0UJmgzLF3j8gxTFqjAI9C1Rrimhwf1jcW5Tm
+         8xU7BY5ahqSki0KJ+6z3f3GHQ0xXSgeIoENgtBJJRaPU3Uh4IHym5CnyQUsR7p3FhaUJ
+         QA6xkI5g4N4clqr5kDef8aY/IlJIMy6jnw4VUWfubsOITPQyHlZ+AA5y5ULJKUNaBgXf
+         E4LF82NESVJji0bUT4CrolEGY8xsT13h3dCYOJsDOgGSVDax0+8ukperPp3hmSww3XRV
+         7lwlpx23haQyDyCqUawwG/geotqJ1OrWbKn2B5EH0tQv5a2DMwc7uwv/mV2AAvVBThVU
+         Z2wg==
+X-Gm-Message-State: AOAM532VebIkZM5CsFHs5oCA+nvDBnSe+n46WduauhbwAeHH/Su9LHYQ
+        V3lphjARUr1OqZrM0WhXoJA=
+X-Google-Smtp-Source: ABdhPJzKD6/TCvoRQhEUEmZxwgK3h/XwImRnSsHs96EOx80rEH13qgqPIiUbYiwxdBZnbxGlrCclbA==
+X-Received: by 2002:a05:6000:1847:b0:1e6:2783:b3e6 with SMTP id c7-20020a056000184700b001e62783b3e6mr25371263wri.163.1646286727005;
+        Wed, 02 Mar 2022 21:52:07 -0800 (PST)
+Received: from pevik (gw1.ms-free.net. [185.243.124.10])
+        by smtp.gmail.com with ESMTPSA id u23-20020a7bcb17000000b0037bdfa1665asm10299361wmj.18.2022.03.02.21.52.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Mar 2022 21:52:06 -0800 (PST)
+Date:   Thu, 3 Mar 2022 06:52:01 +0100
+From:   Petr Vorel <petr.vorel@gmail.com>
+To:     Weiguo Li <liwg06@foxmail.com>
+Cc:     andrew@aj.id.au, linux-gpio@vger.kernel.org,
+        linux-aspeed@lists.ozlabs.org
+Subject: Re: [PATCH] pinctrl: aspeed: fix null dereference in debug
+Message-ID: <YiBXgV4mVYiJ2MxQ@pevik>
+Reply-To: Petr Vorel <petr.vorel@gmail.com>
+References: <tencent_BBDF8D2C89ECC450F3349D6E46F8EAF87F0A@qq.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <tencent_BBDF8D2C89ECC450F3349D6E46F8EAF87F0A@qq.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Weiguo,
 
+LGTM.
+Reviewed-by: Petr Vorel <pvorel@suse.cz>
 
-On Wed, 2 Mar 2022, at 19:24, Pavel Machek wrote:
-> Hi!
->
->> > > Without these patches the driver limits the number of pins expose=
-d on
->> > > the gpiochip to the number of pins specified as GPIO in the devic=
-etree,
->> > > but doesn't map between the GPIO and pin number spaces. The resul=
-t is
->> > > that specifying offset or interleaved GPIOs in the devicetree giv=
-es
->> > > unexpected behaviour in userspace.
->> > >
->> > > By always exposing all pins as GPIOs the patches resolve the lack=
- of
->> > > mapping between GPIO offsets and pins on the package in the drive=
-r by
->> > > ensuring we always have a 1-to-1 mapping.
->> > >
->> > > The issue is primarily addressed by patch 1/2. Patch 2/2 makes it
->> > > possible to not expose any pins as LEDs (and therefore make them =
-all
->> > > accessible as GPIOs). This has a follow-on effect of allowing the=
- driver
->> > > to bind to a device instantiated at runtime without requiring a
->> > > description in the devicetree.
->> > >
->> > > I've tested the series under qemu to inspect the various interact=
-ions
->> > > between LEDs vs GPIOs as well as conflicting GPIO requests.
->>=20
->> > > Please review!
->> >
->> > This is simpler than the 'ngpio' business we had before.
->> >
->> > Reviewed-by: C=C3=A9dric Le Goater <clg@kaod.org>
->>=20
->> I saw that you recently merged some LED patches. I was wondering if
->> you could consider this series for v5.18. It still applies cleanly,
->> and we've been running it for a while now, so it's very well tested.
->
-> Thanks, applied. I must say this is really ninja-mutant driver, but I
-> see no better way.
->
-> +++ b/drivers/leds/leds-pca955x.c
-> @@ -429,7 +429,7 @@ pca955x_get_pdata(struct i2c_client *client, struc=
-t=20
-> pca955x_chipdef *chip)
->         int count;
->
-> This really should be unsigned. Care to fix/submit a patch?
-
-I'll send a fix.
-
-Andrew
+Kind regards,
+Petr
