@@ -2,40 +2,40 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BD6944CC66E
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Mar 2022 20:48:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BCF84CC68C
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Mar 2022 20:50:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231993AbiCCTtB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Mar 2022 14:49:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54836 "EHLO
+        id S232069AbiCCTv2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Mar 2022 14:51:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230395AbiCCTtB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Mar 2022 14:49:01 -0500
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC3A5193F0;
-        Thu,  3 Mar 2022 11:48:12 -0800 (PST)
-Received: by mail-oo1-f41.google.com with SMTP id d134-20020a4a528c000000b00319244f4b04so6981954oob.8;
-        Thu, 03 Mar 2022 11:48:12 -0800 (PST)
+        with ESMTP id S231815AbiCCTv1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Mar 2022 14:51:27 -0500
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FE051A2766;
+        Thu,  3 Mar 2022 11:50:41 -0800 (PST)
+Received: by mail-ot1-f42.google.com with SMTP id u17-20020a056830231100b005ad13358af9so5508502ote.11;
+        Thu, 03 Mar 2022 11:50:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=9yFbGp0EZ8ry89Lh1bMjpmj2K73JEWfQSj/2tdftbTg=;
-        b=xat+9QLI4xvVwbOo7NW0sbGf7fBokAJR5RmpiG1x3Mgl4pfqUmkLibIFj62R9U/aVP
-         5WDp/HhiAL/11y5oGlmqh5aP0mYHinbN5sFcvpkCTOEEsKy2NyzIpA4VjG8+FUc1Snzq
-         EEJxumGVWb7zbEdvxPO48P+5wqNwIzlYK+7p5Q2JaqBMYW12oKpx1TJEU6Q2bZUG+wTk
-         tIxMBcDO34/p3deLm9jksQAqcvApLej4XfQDJZMD/MsFB3SW4RJts9LfO9tDUxp4/JPO
-         ed+5BBPOnY2wko5TCVdJI3RJ+FsTsm+URR7rzxkyQz/rcpLnCnkN6kCLdrhMcrOfHmWm
-         e6vA==
-X-Gm-Message-State: AOAM532CHWkv4tcJumPJ1yNu17PTQ/tsePTstOApoinKf+h1V035evlg
-        FNuyxjYu0H/XhVtgptRw7i/pn2BKNQ==
-X-Google-Smtp-Source: ABdhPJyTGsyf+8qFhYYvUNW2ISTyF/8adw+l7DqOzzvPLIU9gt+qyaJ1gyJmKaUVl9jH6aWYPV40sw==
-X-Received: by 2002:a05:6870:b427:b0:d3:5044:db1b with SMTP id x39-20020a056870b42700b000d35044db1bmr5123974oap.2.1646336892232;
-        Thu, 03 Mar 2022 11:48:12 -0800 (PST)
+        bh=WhMaxl9TNUY7wmimyJIBPEvN19wmFM03Xz5lz5R1wLg=;
+        b=cby+1l5RDded3QZDCUgDLdBTfNimHJK3k3b/tgDG0jF/z1M60ExT2A2PjQvx6vmUJc
+         L/ZhC7bNyZ/fbWYaPgHzNl/ELl23olCvqMmB7jRJs+dh7zbKfw8QPBp9FazH1liRKGE3
+         6Bb/4FN0sgdjQy0k/30HaMT4by1EDiN24kdPpF9Me1I0uYJsdZl7ilY4NQ1+gBhs+PIM
+         PGra8voYzA9fMVvNYeZwglqYQl4tSUKJQerVV8AMtFRUFQW8xhQSxOe5wh5EbnPxQWfZ
+         +nQowAmPc6lViWmrFmYvBYLVJVJegkJ+Gw/F2OHexKr/7JmB7+ECrJWen18x6mfsES65
+         hfQA==
+X-Gm-Message-State: AOAM532SBs3+Fmve6fgIDkhdWDBdAZbUVr7VHv2h/RAHC/Jv22VMMzRC
+        5durE37Y2Wv2MHnoBUyevl/QOCltbg==
+X-Google-Smtp-Source: ABdhPJxNkjR26g3ZjckCD3XAvZYDK3jRzlipdtAmUPlc+MmhHO0P1uj50SZKAybUR7H9R9TVdomSGQ==
+X-Received: by 2002:a05:6830:920:b0:5af:ca85:67c4 with SMTP id v32-20020a056830092000b005afca8567c4mr18478108ott.363.1646337040861;
+        Thu, 03 Mar 2022 11:50:40 -0800 (PST)
 Received: from xps15.herring.priv (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.googlemail.com with ESMTPSA id w15-20020a9d70cf000000b005ad26785e7dsm1360906otj.57.2022.03.03.11.48.10
+        by smtp.googlemail.com with ESMTPSA id bm5-20020a056820188500b0031c42eb457csm1367350oob.43.2022.03.03.11.50.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Mar 2022 11:48:11 -0800 (PST)
+        Thu, 03 Mar 2022 11:50:40 -0800 (PST)
 From:   Rob Herring <robh@kernel.org>
 To:     Lee Jones <lee.jones@linaro.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
@@ -46,9 +46,9 @@ To:     Lee Jones <lee.jones@linaro.org>,
 Cc:     =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         alsa-devel@alsa-project.org, linux-gpio@vger.kernel.org
-Subject: [PATCH] dt-bindings: mfd: Fix pinctrl node name warnings
-Date:   Thu,  3 Mar 2022 13:47:37 -0600
-Message-Id: <20220303194737.2258809-1-robh@kernel.org>
+Subject: [PATCH v2] dt-bindings: mfd: Fix pinctrl node name warnings
+Date:   Thu,  3 Mar 2022 13:50:34 -0600
+Message-Id: <20220303195034.2261989-1-robh@kernel.org>
 X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -81,10 +81,13 @@ Fixes: c09acbc499e8 ("dt-bindings: pinctrl: use pinctrl.yaml")
 Cc: Rafał Miłecki <rafal@milecki.pl>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
+v2:
+ - Fix lochnagar-pinctrl nodename in example
+
  Documentation/devicetree/bindings/mfd/brcm,cru.yaml          | 4 ++--
- Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml  | 2 +-
+ Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml  | 4 ++--
  Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml | 3 ---
- 3 files changed, 3 insertions(+), 6 deletions(-)
+ 3 files changed, 4 insertions(+), 7 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/mfd/brcm,cru.yaml b/Documentation/devicetree/bindings/mfd/brcm,cru.yaml
 index be4a2df71c25..b85819fbb07c 100644
@@ -109,7 +112,7 @@ index be4a2df71c25..b85819fbb07c 100644
              reg = <0x1c0 0x24>;
              reg-names = "cru_gpio_control";
 diff --git a/Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml b/Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml
-index c00ad3e21c21..975a46f3c46f 100644
+index c00ad3e21c21..a04570335b76 100644
 --- a/Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml
 +++ b/Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml
 @@ -126,7 +126,7 @@ properties:
@@ -121,6 +124,15 @@ index c00ad3e21c21..975a46f3c46f 100644
      type: object
      $ref: /schemas/pinctrl/cirrus,lochnagar.yaml#
  
+@@ -293,7 +293,7 @@ examples:
+                 clock-frequency = <32768>;
+             };
+ 
+-            lochnagar-pinctrl {
++            pinctrl {
+                 compatible = "cirrus,lochnagar-pinctrl";
+ 
+                 gpio-controller;
 diff --git a/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml b/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml
 index c85f759ae5a3..8a90d8273767 100644
 --- a/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml
