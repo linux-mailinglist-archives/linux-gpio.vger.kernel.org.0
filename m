@@ -2,109 +2,139 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 585D74CC17E
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Mar 2022 16:37:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BD6944CC66E
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Mar 2022 20:48:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234488AbiCCPiI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Mar 2022 10:38:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46948 "EHLO
+        id S231993AbiCCTtB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Mar 2022 14:49:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234566AbiCCPh7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Mar 2022 10:37:59 -0500
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F193192E3E
-        for <linux-gpio@vger.kernel.org>; Thu,  3 Mar 2022 07:37:12 -0800 (PST)
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com [209.85.218.70])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id F36B53F043
-        for <linux-gpio@vger.kernel.org>; Thu,  3 Mar 2022 15:37:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1646321831;
-        bh=8DezQocHOANVzIXQp7GBe2DNdvF/29uXU4JAHaGAUrE=;
-        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-         In-Reply-To:Content-Type;
-        b=mKu5q2hkeuDMb8ll8yCUTTZM2EHGprUJ4Ph5lqOMmJL80i8dMZRAqhBplz1H0T5wz
-         XLl+c99Z9BYN+Hlod87DaLUeK5AB4Q3B35YRIpnYJmu3VWHhv7eKg63bTrO0hxwG6V
-         aXdLEdGagT5pwNUGvN9K2LVm8kjGd0du0eJQJjbkzmKVmcqvSN08WDwRFFewLoyh+d
-         gk9uo/Tx0M+Yz09BCy21PLHN4k4vjHrfyTq05erealPeMh10tVajN3rUUvchUzT/jz
-         61Pau2j/mvozZ6U1wm8SjMcRYnUcTCU+oIwgMxOW1LlASABBYCbqcQqDWgxzDqELG/
-         rwJSRIamyIZUA==
-Received: by mail-ej1-f70.google.com with SMTP id sa7-20020a170906eda700b006d1b130d65bso2908904ejb.13
-        for <linux-gpio@vger.kernel.org>; Thu, 03 Mar 2022 07:37:10 -0800 (PST)
+        with ESMTP id S230395AbiCCTtB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Mar 2022 14:49:01 -0500
+Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC3A5193F0;
+        Thu,  3 Mar 2022 11:48:12 -0800 (PST)
+Received: by mail-oo1-f41.google.com with SMTP id d134-20020a4a528c000000b00319244f4b04so6981954oob.8;
+        Thu, 03 Mar 2022 11:48:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=8DezQocHOANVzIXQp7GBe2DNdvF/29uXU4JAHaGAUrE=;
-        b=ubXdIBqWYlOncJrh5IBiL3qcL2vjp4lDvlUSmO5ySxkKBTsCcFTmx9SjlzQO1YBT2F
-         5lKbI/OQSocwkQCyGJK6eqcwThzLWiA/oZuAUCkhm/ikRX2HfOxMMi4Rrg4RojhtHQXG
-         2+gusDN/x/0LKFqYl6cWSP6vHD7vU6GQKjrUZTo41r8SFX+zKfO6m0XQQXE66yGgLCIA
-         XlY/byBRfNJ04+FGUwT/NEeJtMd70yYE4JBuBX+8bbv7jTsm0IeUeAtSzdUETIUIh7fA
-         KECHwNTquzW1xBrujqq6+fwFFxysTvaai15l+LXvz8jTpM8jIpvzLiBsTAaDiHWlwc3p
-         BzNQ==
-X-Gm-Message-State: AOAM5313+UYJCrJKPtFsm2a8ppyxteSmngY4orQ2QYsrBwJIuVLOt2VR
-        u9CiNUo+WYX/J6lsJYpORgKQzw7M5NJWMWhQ7/3RlU2mwmsYBvWFk9waUMgwo4xT5/jPQscvxKr
-        vN2STfNRbBDR++PEY5pDLHr0zo8uXflTb16RDafs=
-X-Received: by 2002:a05:6402:5150:b0:415:de72:5384 with SMTP id n16-20020a056402515000b00415de725384mr3251289edd.273.1646321830722;
-        Thu, 03 Mar 2022 07:37:10 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzuGas3Tunwgz5F3zcC5Firl26y2pjjUMIjqfXRcAT+U15otBYle/YgV3gbGaIkBzdsY2NVUA==
-X-Received: by 2002:a05:6402:5150:b0:415:de72:5384 with SMTP id n16-20020a056402515000b00415de725384mr3251268edd.273.1646321830509;
-        Thu, 03 Mar 2022 07:37:10 -0800 (PST)
-Received: from [192.168.0.137] (xdsl-188-155-181-108.adslplus.ch. [188.155.181.108])
-        by smtp.gmail.com with ESMTPSA id q10-20020aa7cc0a000000b0040f826f09fdsm958428edt.81.2022.03.03.07.37.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 03 Mar 2022 07:37:09 -0800 (PST)
-Message-ID: <58e10c95-902a-bdf3-15e6-616e4d2cda7f@canonical.com>
-Date:   Thu, 3 Mar 2022 16:37:09 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: Convert i.MX7D to json-schema
-Content-Language: en-US
-To:     Alexander Stein <alexander.stein@ew.tq-group.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
+        bh=9yFbGp0EZ8ry89Lh1bMjpmj2K73JEWfQSj/2tdftbTg=;
+        b=xat+9QLI4xvVwbOo7NW0sbGf7fBokAJR5RmpiG1x3Mgl4pfqUmkLibIFj62R9U/aVP
+         5WDp/HhiAL/11y5oGlmqh5aP0mYHinbN5sFcvpkCTOEEsKy2NyzIpA4VjG8+FUc1Snzq
+         EEJxumGVWb7zbEdvxPO48P+5wqNwIzlYK+7p5Q2JaqBMYW12oKpx1TJEU6Q2bZUG+wTk
+         tIxMBcDO34/p3deLm9jksQAqcvApLej4XfQDJZMD/MsFB3SW4RJts9LfO9tDUxp4/JPO
+         ed+5BBPOnY2wko5TCVdJI3RJ+FsTsm+URR7rzxkyQz/rcpLnCnkN6kCLdrhMcrOfHmWm
+         e6vA==
+X-Gm-Message-State: AOAM532CHWkv4tcJumPJ1yNu17PTQ/tsePTstOApoinKf+h1V035evlg
+        FNuyxjYu0H/XhVtgptRw7i/pn2BKNQ==
+X-Google-Smtp-Source: ABdhPJyTGsyf+8qFhYYvUNW2ISTyF/8adw+l7DqOzzvPLIU9gt+qyaJ1gyJmKaUVl9jH6aWYPV40sw==
+X-Received: by 2002:a05:6870:b427:b0:d3:5044:db1b with SMTP id x39-20020a056870b42700b000d35044db1bmr5123974oap.2.1646336892232;
+        Thu, 03 Mar 2022 11:48:12 -0800 (PST)
+Received: from xps15.herring.priv (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
+        by smtp.googlemail.com with ESMTPSA id w15-20020a9d70cf000000b005ad26785e7dsm1360906otj.57.2022.03.03.11.48.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Mar 2022 11:48:11 -0800 (PST)
+From:   Rob Herring <robh@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20220303150653.1903910-1-alexander.stein@ew.tq-group.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-In-Reply-To: <20220303150653.1903910-1-alexander.stein@ew.tq-group.com>
+        - <patches@opensource.cirrus.com>
+Cc:     =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-gpio@vger.kernel.org
+Subject: [PATCH] dt-bindings: mfd: Fix pinctrl node name warnings
+Date:   Thu,  3 Mar 2022 13:47:37 -0600
+Message-Id: <20220303194737.2258809-1-robh@kernel.org>
+X-Mailer: git-send-email 2.32.0
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 03/03/2022 16:06, Alexander Stein wrote:
-> Convert the i.MX7D pinctrl binding to DT schema format using json-schema
-> 
-> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-> ---
->  .../bindings/pinctrl/fsl,imx7d-pinctrl.txt    |  87 --------------
->  .../bindings/pinctrl/fsl,imx7d-pinctrl.yaml   | 113 ++++++++++++++++++
->  2 files changed, 113 insertions(+), 87 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.txt
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx7d-pinctrl.yaml
-> 
+The recent addition pinctrl.yaml in commit c09acbc499e8 ("dt-bindings:
+pinctrl: use pinctrl.yaml") resulted in some node name warnings:
 
+Documentation/devicetree/bindings/mfd/cirrus,lochnagar.example.dt.yaml: \
+ lochnagar-pinctrl: $nodename:0: 'lochnagar-pinctrl' does not match '^(pinctrl|pinmux)(@[0-9a-f]+)?$'
+Documentation/devicetree/bindings/mfd/cirrus,madera.example.dt.yaml: \
+ codec@1a: $nodename:0: 'codec@1a' does not match '^(pinctrl|pinmux)(@[0-9a-f]+)?$'
+Documentation/devicetree/bindings/mfd/brcm,cru.example.dt.yaml: \
+ pin-controller@1c0: $nodename:0: 'pin-controller@1c0' does not match '^(pinctrl|pinmux)(@[0-9a-f]+)?$'
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Fix the node names to the preferred 'pinctrl'. For cirrus,madera,
+nothing from pinctrl.yaml schema is used, so just drop the reference.
 
-Best regards,
-Krzysztof
+Fixes: c09acbc499e8 ("dt-bindings: pinctrl: use pinctrl.yaml")
+Cc: Rafał Miłecki <rafal@milecki.pl>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/mfd/brcm,cru.yaml          | 4 ++--
+ Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml  | 2 +-
+ Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml | 3 ---
+ 3 files changed, 3 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mfd/brcm,cru.yaml b/Documentation/devicetree/bindings/mfd/brcm,cru.yaml
+index be4a2df71c25..b85819fbb07c 100644
+--- a/Documentation/devicetree/bindings/mfd/brcm,cru.yaml
++++ b/Documentation/devicetree/bindings/mfd/brcm,cru.yaml
+@@ -39,7 +39,7 @@ patternProperties:
+   '^phy@[a-f0-9]+$':
+     $ref: ../phy/bcm-ns-usb2-phy.yaml
+ 
+-  '^pin-controller@[a-f0-9]+$':
++  '^pinctrl@[a-f0-9]+$':
+     $ref: ../pinctrl/brcm,ns-pinmux.yaml
+ 
+   '^syscon@[a-f0-9]+$':
+@@ -94,7 +94,7 @@ examples:
+             reg = <0x180 0x4>;
+         };
+ 
+-        pin-controller@1c0 {
++        pinctrl@1c0 {
+             compatible = "brcm,bcm4708-pinmux";
+             reg = <0x1c0 0x24>;
+             reg-names = "cru_gpio_control";
+diff --git a/Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml b/Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml
+index c00ad3e21c21..975a46f3c46f 100644
+--- a/Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml
++++ b/Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml
+@@ -126,7 +126,7 @@ properties:
+       clock-frequency:
+         const: 12288000
+ 
+-  lochnagar-pinctrl:
++  pinctrl:
+     type: object
+     $ref: /schemas/pinctrl/cirrus,lochnagar.yaml#
+ 
+diff --git a/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml b/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml
+index c85f759ae5a3..8a90d8273767 100644
+--- a/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml
+@@ -107,9 +107,6 @@ properties:
+ 
+     additionalProperties: false
+ 
+-allOf:
+-  - $ref: "pinctrl.yaml#"
+-
+ required:
+   - pinctrl-0
+   - pinctrl-names
+-- 
+2.32.0
+
