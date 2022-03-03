@@ -2,134 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 23FC04CBCE8
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Mar 2022 12:40:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 407294CBE0C
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Mar 2022 13:41:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229929AbiCCLlU convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 3 Mar 2022 06:41:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47086 "EHLO
+        id S230189AbiCCMmN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Mar 2022 07:42:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232404AbiCCLlU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Mar 2022 06:41:20 -0500
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83DA2DD97E
-        for <linux-gpio@vger.kernel.org>; Thu,  3 Mar 2022 03:40:33 -0800 (PST)
-Received: from ip5b412258.dynamic.kabel-deutschland.de ([91.65.34.88] helo=diego.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <heiko@sntech.de>)
-        id 1nPjos-0007nY-N4; Thu, 03 Mar 2022 12:40:30 +0100
-From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To:     Jianqun Xu <jay.xu@rock-chips.com>
-Cc:     linus.walleij@linaro.org, linux-rockchip@lists.infradead.org,
-        linux-gpio@vger.kernel.org, Jianqun Xu <jay.xu@rock-chips.com>
-Subject: Re: [PATCH 2/2] gpio: rockchip: get pinctrl node from 'gpio-ranges' property
-Date:   Thu, 03 Mar 2022 12:40:30 +0100
-Message-ID: <2004737.KQk8vJUODO@diego>
-In-Reply-To: <20220303062211.1378883-3-jay.xu@rock-chips.com>
-References: <20220303062211.1378883-1-jay.xu@rock-chips.com> <20220303062211.1378883-3-jay.xu@rock-chips.com>
+        with ESMTP id S232880AbiCCMmN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Mar 2022 07:42:13 -0500
+Received: from mail-io1-xd2f.google.com (mail-io1-xd2f.google.com [IPv6:2607:f8b0:4864:20::d2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D4F517AEF2
+        for <linux-gpio@vger.kernel.org>; Thu,  3 Mar 2022 04:41:25 -0800 (PST)
+Received: by mail-io1-xd2f.google.com with SMTP id 195so5676633iou.0
+        for <linux-gpio@vger.kernel.org>; Thu, 03 Mar 2022 04:41:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sartura-hr.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9r6ZfFAaOqyWk6kgbqfNam/C9zF89QVW36Fk2rUPv5I=;
+        b=kQhkTuAMW21wgujo+qf+haNIwEOnVhDpCk/w3OWQlXSzVdjQRskWRaTVo7FsF8VT5u
+         txDom55OgR+S/eB3OFU7NBpl9W5T+lTVu3RNM7ZfjTgEv/JUeQs5qNiy05rvjebeWFxm
+         4FLbgo0SlOdp2mj+/RbNeSMU8smBjdnAbg6XQoG48aVdv1t0kRHJCAo7ZC98EP2pXP2U
+         Cn4A8UP4n14Bp3pI/QrFZ4+ERCbPGcZBF77Llv79IVxB3iWoigXtdOXGlmnqHk5sWax0
+         LzDmwQJWnKT7+nBX07iBvnu+/cP4vb+zMGAnnw10w5U8uhgTVgRHrAQ+J6evTnhoIqGj
+         pAnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9r6ZfFAaOqyWk6kgbqfNam/C9zF89QVW36Fk2rUPv5I=;
+        b=pUqltgHXBUj6dVhADhTL3TFBkzr+fpxSR9sFugfnCJOoruow/HQNEsIQfo8zBHWrCY
+         rxtVfngy0qtdfwW7n3XS6CFl8np6KTByWAiBtE7/aAaRBZpwlnV0h+hQ9aQmPVn3/BpM
+         8mX58eSC/KO/ex3rkPeRbefGB6Dxy/jKT2SrF3B1HrGb32TiARQhhS3Az4Dl9cj54oLL
+         Swz+mVa5/Tqz5KPZoHnazwsVyFs8ndGRRaDUusEeD5otELPCfVultia3VEWEDnNBAdsM
+         2nC7xjlPpBz3AWC1Rty/QQrzK7p1qrE1fWrJMtw+dv7J3qa5VLJY4GZEHthT6dl2UJih
+         apiw==
+X-Gm-Message-State: AOAM5330d1UVWVYXGmRGu1zuNmk0wBXgAgN21fbhlakvYzhLQDjHZBbN
+        yLqlQR64kB7wbg1s3PtMJ2CiemJlf2qUPY8np65P0w==
+X-Google-Smtp-Source: ABdhPJzCT9ADPJDw76n+48DdfN1TK3J5QScqCaHw6cFVfo1ZTGglNXZMIpNjVlBaBGR7nOMXwQZmqtYkga5BDpnpC2o=
+X-Received: by 2002:a02:7f95:0:b0:314:2966:1d39 with SMTP id
+ r143-20020a027f95000000b0031429661d39mr29710005jac.317.1646311284120; Thu, 03
+ Mar 2022 04:41:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,T_SPF_HELO_TEMPERROR autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220131133049.77780-1-robert.marko@sartura.hr>
+ <20220131133049.77780-6-robert.marko@sartura.hr> <Yh8vJNc4D6rA68au@google.com>
+ <Yh/kFzNuvbwA2qeE@robh.at.kernel.org>
+In-Reply-To: <Yh/kFzNuvbwA2qeE@robh.at.kernel.org>
+From:   Robert Marko <robert.marko@sartura.hr>
+Date:   Thu, 3 Mar 2022 13:41:13 +0100
+Message-ID: <CA+HBbNHComN9kgFp1Xr4mdedwYjDMbSUkw+6_KAe8+O4hrtvKQ@mail.gmail.com>
+Subject: Re: [PATCH v10 5/6] dt-bindings: mfd: Add Delta TN48M CPLD drivers bindings
+To:     Rob Herring <robh@kernel.org>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>, brgl@bgdev.pl,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        skhan@linuxfoundation.org, Luka Perkov <luka.perkov@sartura.hr>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Jianqun,
+On Wed, Mar 2, 2022 at 10:39 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Wed, Mar 02, 2022 at 08:47:32AM +0000, Lee Jones wrote:
+> > On Mon, 31 Jan 2022, Robert Marko wrote:
+> >
+> > > Add binding documents for the Delta TN48M CPLD drivers.
+> > >
+> > > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+> >
+> > This is missing a DT review.
+>
+> How about this one[1]?
+>
+> Rob
+>
+> [1] https://lore.kernel.org/all/20210719225906.GA2769608@robh.at.kernel.org/
 
-Am Donnerstag, 3. März 2022, 07:22:11 CET schrieb Jianqun Xu:
-> The dt nodes for rockchip soc designes as
-> 
-> 	pinctrl: pinctrl {
-> 		gpio {
-> 			gpio-ranges = <&pinctrl xxx>;
-> 		};
-> 	};
-> 
-> Currently, we get the pinctrl dt node from parent of gpio, this patch
-> try to get pinctrl dt node from 'gpio-ranges' property.
-> 
-> After this patch, the dt nodes possible to be
-> 
-> 	gpio {
-> 		gpio-ranges = <&pinctrl xxx>;
-> 	};
-> 
-> 	pinctrl: pinctrl {
-> 
-> 	};
-> 
-> then the gpio driver could register as platform device itself, but not
-> populate from pinctrl driver.
+Hi Rob,
+Thanks for reaching out.
 
-The change looks interesting, as it would solve that long-standing
-design-issue I "created" back in 2013 ;-) .
+As you can see the bindings have evolved since v6,
+GPIO driver now only uses 2 distinct compatibles.
 
-Though you need to keep some things in mind:
+I am open to discussion in order to reach some kind of a consensus on
+this matter
+as the whole series is currently unfortunately stalled.
 
-(1) Such a change should be reflected in the devicetree binding
-    as it involves a different form of nodes and introduces.
-
-    Looking at the binding description, using gpio-ranges to map
-    to specific pinctrl pins really seems to be a valid use for this.
-
-
-(2) Keep things backwards compatible.
-    Old devicetrees should stay working with new kernel versions
-
-    A common pattern is to try the new approach and if that fails
-    try the "deprecated" method, which should be nicely doable
-    when looking at the code change below.
-
-
-Heiko
-
-> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
-> ---
->  drivers/gpio/gpio-rockchip.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
-> index 1da0324445cc..46c54dff92db 100644
-> --- a/drivers/gpio/gpio-rockchip.c
-> +++ b/drivers/gpio/gpio-rockchip.c
-> @@ -690,6 +690,9 @@ rockchip_gpio_find_bank(struct pinctrl_dev *pctldev, int id)
->  	int i, found = 0;
->  
->  	info = pinctrl_dev_get_drvdata(pctldev);
-> +	if (!info)
-> +		return NULL;
-> +
->  	bank = info->ctrl->pin_banks;
->  	for (i = 0; i < info->ctrl->nr_banks; i++, bank++) {
->  		if (bank->bank_num == id) {
-> @@ -705,15 +708,16 @@ static int rockchip_gpio_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
->  	struct device_node *np = dev->of_node;
-> -	struct device_node *pctlnp = of_get_parent(np);
-> +	struct device_node *pctlnp = NULL;
->  	struct pinctrl_dev *pctldev = NULL;
->  	struct rockchip_pin_bank *bank = NULL;
->  	struct rockchip_pin_output_deferred *cfg;
->  	static int gpio;
->  	int id, ret;
->  
-> -	if (!np || !pctlnp)
-> -		return -ENODEV;
-> +	pctlnp = of_parse_phandle(np, "gpio-ranges", 0);
-> +	if (!pctlnp)
-> +		pctlnp = of_get_parent(np);
->  
->  	pctldev = of_pinctrl_get(pctlnp);
->  	if (!pctldev)
-> 
-
-
-
-
+Regards,
+Robert
+-- 
+Robert Marko
+Staff Embedded Linux Engineer
+Sartura Ltd.
+Lendavska ulica 16a
+10000 Zagreb, Croatia
+Email: robert.marko@sartura.hr
+Web: www.sartura.hr
