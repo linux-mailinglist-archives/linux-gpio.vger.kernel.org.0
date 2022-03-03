@@ -2,162 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 50EAC4CCA00
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Mar 2022 00:24:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 339054CCA2C
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Mar 2022 00:41:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235796AbiCCXZC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Mar 2022 18:25:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37688 "EHLO
+        id S234368AbiCCXmJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Mar 2022 18:42:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229809AbiCCXZB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Mar 2022 18:25:01 -0500
-Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A36D2710D0;
-        Thu,  3 Mar 2022 15:24:15 -0800 (PST)
-Received: by mail-oo1-f50.google.com with SMTP id s203-20020a4a3bd4000000b003191c2dcbe8so7542359oos.9;
-        Thu, 03 Mar 2022 15:24:15 -0800 (PST)
+        with ESMTP id S231974AbiCCXmI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Mar 2022 18:42:08 -0500
+Received: from mail-yw1-x112f.google.com (mail-yw1-x112f.google.com [IPv6:2607:f8b0:4864:20::112f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43E681375B3
+        for <linux-gpio@vger.kernel.org>; Thu,  3 Mar 2022 15:41:22 -0800 (PST)
+Received: by mail-yw1-x112f.google.com with SMTP id 00721157ae682-2dc348dab52so39911107b3.6
+        for <linux-gpio@vger.kernel.org>; Thu, 03 Mar 2022 15:41:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=rSqQP18Wd5NjhlnE4AqOcj5HhSDR0at9tMDx/gdLLlo=;
+        b=yRmMVk1t4YVHVWSGbfOVyeRazJTFv7gUI8AQpl8PJ0Lc6YZ/2i11q5FFuGAp+h1W5d
+         da41qXCZKxNC5tC/aSkNNNRk1p1Hj9Rb54nxLmZs+jghB0FhkWq8uEAXaWDd4ecHLuEg
+         4zs54BYBdf6j2tG6Bk+TQW0yogAxZp1vQbdKcZ9HQiwev2x9ZpMOvXOEtJCv153M9d7e
+         fzwuxcSy7+ax7dmy8rJ7nxBKGdtSBTBut8aXsaVoRm8Ci19A/RjIb2vDBTaE4pHms68C
+         hgJPIu6dyqz9TSMbuwcS9Y1FId8Cu7QYJU3mNTBN2L6XjSPjV8fE2H1BNHHNkJdVv3/g
+         0sng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Vfm2jK+tU0YA9XVn2HUL++BRTsYSj8H0ghNLcRVI0aY=;
-        b=lF1M84G8Md/LQpNzWjJypf0LJm1j8AToDqmju4sbtk6VrdZ8lICzBDK3sD2OSB8Wsa
-         wnIWzSc8Doeun093xFHZ71pxqHpywVKk8jJImEj2kQZeBSpKXyDsHPWOufEXbKcyF2lQ
-         WpEH5ByIQmB+J1M6gI7coCB0qGG3WrzWrRgvOTzfGnxAQcNxthS4o8LCVeG9dpgzFcF3
-         m52fJ9nfQM4WjTt7vnOR+S7sewlKZk8g1FaJwFM5OaPMagt1QSHWfElp7A+H2pQc/Q2f
-         QlGle2OwYOHBVnrB9bT4ccyVIMV1Jgqg0WPKgKELBoH2WrJo9tkxxzMkOCtRLeXxRDFP
-         GSAA==
-X-Gm-Message-State: AOAM533JIrMLtZLlgy/TzRt8SzgOls6PWiaYSWsy9z6I2d87XvsCZZzu
-        D806gHQ/HYnejB0jOpFZquY56JEF9Q==
-X-Google-Smtp-Source: ABdhPJy/AfNGD3ko7bxz0ZgWRWoEoA/ewhRmp21gvsTgCpu1A+pig7QyPb5sbwgUIyO1QIXOWxOmYw==
-X-Received: by 2002:a05:6870:f286:b0:d7:84b:f1bf with SMTP id u6-20020a056870f28600b000d7084bf1bfmr6015116oap.179.1646349854971;
-        Thu, 03 Mar 2022 15:24:14 -0800 (PST)
-Received: from xps15.herring.priv (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.googlemail.com with ESMTPSA id l6-20020a056870d3c600b000d75713938csm1724128oag.7.2022.03.03.15.24.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Mar 2022 15:24:14 -0800 (PST)
-From:   Rob Herring <robh@kernel.org>
-To:     Lee Jones <lee.jones@linaro.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Richard Fitzgerald <rf@opensource.cirrus.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        - <patches@opensource.cirrus.com>
-Cc:     =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-gpio@vger.kernel.org
-Subject: [PATCH v3] dt-bindings: mfd: Fix pinctrl node name warnings
-Date:   Thu,  3 Mar 2022 17:23:49 -0600
-Message-Id: <20220303232350.2591143-1-robh@kernel.org>
-X-Mailer: git-send-email 2.32.0
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=rSqQP18Wd5NjhlnE4AqOcj5HhSDR0at9tMDx/gdLLlo=;
+        b=FDNoIvyJxTmW6zKxDhIhNdzQ1Bsr8awlpS/QwiEYO9LcfQiyVRIsmSUTUAmb7zsE8p
+         /bfvBB/EzJL4BjOk+0zexMqpdbQGeITBDOF1dlGkvLSKNjVvRk8anfz1GwVAc/5jb/HS
+         KJPY3K9t9WDq00EaZWspfYprz2ehgW0cBf7FqBr69AP/3drfzBpotkkdysvwBhvIgFxJ
+         9EcTsV2RPIh57c8Dd+IaQqGZFJpPE3JDJCj7v4wCefq3KJK4sCLvQOB5sivCVYLloUtY
+         OjVPDw7XWX/QFrP6NCxxgMIm6VEOK2BiOrIILXMcPVz7TGWT7PF3tfNMkER1St0VvLOa
+         rvrQ==
+X-Gm-Message-State: AOAM532IgGAX1bwc1pc4TfII2MSYMIXMSu/69x1Wrd1gCkRIsvzAxiGb
+        FT7T4ok3mmq1aN7WXWFyVvYBoVTXWJ28NJTqkdeMPA==
+X-Google-Smtp-Source: ABdhPJwtC1jhKWkPjadvpjvVogW8B+4VLWiojzRsvx+jKaozVAbWCq1Wrf4pA84QhGsjYIdSfK9xZ4qqGOZqWIuNV60=
+X-Received: by 2002:a81:1182:0:b0:2dc:4e58:da41 with SMTP id
+ 124-20020a811182000000b002dc4e58da41mr3555190ywr.268.1646350881491; Thu, 03
+ Mar 2022 15:41:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 4 Mar 2022 00:41:10 +0100
+Message-ID: <CACRpkda0eFMzvfCjtXYiRoe=Wa5XqacL1Lhy4mBBOo6pu_Wi5w@mail.gmail.com>
+Subject: [GIT PULL] late pin control fixes for v5.17
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Samuel Holland <samuel@sholland.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The recent addition pinctrl.yaml in commit c09acbc499e8 ("dt-bindings:
-pinctrl: use pinctrl.yaml") resulted in some node name warnings:
+Hi Linus,
 
-Documentation/devicetree/bindings/mfd/cirrus,lochnagar.example.dt.yaml: \
- lochnagar-pinctrl: $nodename:0: 'lochnagar-pinctrl' does not match '^(pinctrl|pinmux)(@[0-9a-f]+)?$'
-Documentation/devicetree/bindings/mfd/cirrus,madera.example.dt.yaml: \
- codec@1a: $nodename:0: 'codec@1a' does not match '^(pinctrl|pinmux)(@[0-9a-f]+)?$'
-Documentation/devicetree/bindings/mfd/brcm,cru.example.dt.yaml: \
- pin-controller@1c0: $nodename:0: 'pin-controller@1c0' does not match '^(pinctrl|pinmux)(@[0-9a-f]+)?$'
+as promised, here are the fixes for the issues seen by Guenther
+on the OrangePi, details in the signed tag.
 
-Fix the node names to the preferred 'pinctrl'. For cirrus,madera,
-nothing from pinctrl.yaml schema is used, so just drop the reference.
+Please pull it in!
 
-Fixes: c09acbc499e8 ("dt-bindings: pinctrl: use pinctrl.yaml")
-Cc: Rafał Miłecki <rafal@milecki.pl>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-v2:
- - Fix lochnagar-pinctrl nodename in example
-v3:
- - And fix lochnagar-pinctrl nodename in 'required'. Sigh...
----
- Documentation/devicetree/bindings/mfd/brcm,cru.yaml         | 4 ++--
- Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml | 6 +++---
- .../devicetree/bindings/pinctrl/cirrus,madera.yaml          | 3 ---
- 3 files changed, 5 insertions(+), 8 deletions(-)
+Yours,
+Linus Walleij
 
-diff --git a/Documentation/devicetree/bindings/mfd/brcm,cru.yaml b/Documentation/devicetree/bindings/mfd/brcm,cru.yaml
-index be4a2df71c25..b85819fbb07c 100644
---- a/Documentation/devicetree/bindings/mfd/brcm,cru.yaml
-+++ b/Documentation/devicetree/bindings/mfd/brcm,cru.yaml
-@@ -39,7 +39,7 @@ patternProperties:
-   '^phy@[a-f0-9]+$':
-     $ref: ../phy/bcm-ns-usb2-phy.yaml
- 
--  '^pin-controller@[a-f0-9]+$':
-+  '^pinctrl@[a-f0-9]+$':
-     $ref: ../pinctrl/brcm,ns-pinmux.yaml
- 
-   '^syscon@[a-f0-9]+$':
-@@ -94,7 +94,7 @@ examples:
-             reg = <0x180 0x4>;
-         };
- 
--        pin-controller@1c0 {
-+        pinctrl@1c0 {
-             compatible = "brcm,bcm4708-pinmux";
-             reg = <0x1c0 0x24>;
-             reg-names = "cru_gpio_control";
-diff --git a/Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml b/Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml
-index c00ad3e21c21..ad285cb480c9 100644
---- a/Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml
-+++ b/Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml
-@@ -126,7 +126,7 @@ properties:
-       clock-frequency:
-         const: 12288000
- 
--  lochnagar-pinctrl:
-+  pinctrl:
-     type: object
-     $ref: /schemas/pinctrl/cirrus,lochnagar.yaml#
- 
-@@ -255,7 +255,7 @@ required:
-   - reg
-   - reset-gpios
-   - lochnagar-clk
--  - lochnagar-pinctrl
-+  - pinctrl
- 
- additionalProperties: false
- 
-@@ -293,7 +293,7 @@ examples:
-                 clock-frequency = <32768>;
-             };
- 
--            lochnagar-pinctrl {
-+            pinctrl {
-                 compatible = "cirrus,lochnagar-pinctrl";
- 
-                 gpio-controller;
-diff --git a/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml b/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml
-index c85f759ae5a3..8a90d8273767 100644
---- a/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml
-@@ -107,9 +107,6 @@ properties:
- 
-     additionalProperties: false
- 
--allOf:
--  - $ref: "pinctrl.yaml#"
--
- required:
-   - pinctrl-0
-   - pinctrl-names
--- 
-2.32.0
+The following changes since commit 7e57714cd0ad2d5bb90e50b5096a0e671dec1ef3:
 
+  Linux 5.17-rc6 (2022-02-27 14:36:33 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+tags/pinctrl-v5.17-3
+
+for you to fetch changes up to bac129dbc6560dfeb634c03f0c08b78024e71915:
+
+  pinctrl: sunxi: Use unique lockdep classes for IRQs (2022-02-28
+23:53:19 +0100)
+
+----------------------------------------------------------------
+Pin control fixes for the v5.17 series
+
+These two fixes should fix the issues seen on the OrangePi,
+first we needed the correct offset when calling
+pinctrl_gpio_direction(), and fixing that made a lockdep
+issue explode in our face. Both now fixed.
+
+----------------------------------------------------------------
+Hans Verkuil (1):
+      pinctrl-sunxi: sunxi_pinctrl_gpio_direction_in/output: use correct offset
+
+Samuel Holland (1):
+      pinctrl: sunxi: Use unique lockdep classes for IRQs
+
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
