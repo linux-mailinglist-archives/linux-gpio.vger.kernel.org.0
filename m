@@ -2,62 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 921FD4CD465
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Mar 2022 13:41:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C9CE74CD470
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Mar 2022 13:46:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233463AbiCDMmm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Mar 2022 07:42:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40932 "EHLO
+        id S233405AbiCDMri (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Mar 2022 07:47:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233456AbiCDMml (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Mar 2022 07:42:41 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C2231B3A53;
-        Fri,  4 Mar 2022 04:41:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1646397714; x=1677933714;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4tToEW6BUY+JQKKIOnbayADvzQCRUYzF46ca/0eu8mY=;
-  b=VgBnHHwXfLeN64VPLO+Ht5OsmUsXKC7aWcMv44L0P9OzWH3/abatRjZ5
-   vMvMs5KipcN8m5Qn3gKClfIkZ267wXYli/CJxDUMlFP4tpNajnyBK097e
-   uooEF/804DqVGDAR9OrZ9A39H9SKghwl+t0I69giurHVDyh2d7V4cHuJs
-   zPbVJoT4qAYs3+jhOG+MN/J4PzinWuvQKcDm8XZ2bjWo+tr+l2UkPmIHt
-   sRIu7tcEpUibUa13zeInlkJTbRfiSt2CMv8Nv1H9PmTZ5K1ecOD+z0Cbc
-   25tvdJyWV+jvfYML3v6RZHa7RcjnXV8Wf4gTpC0+VXiDuLhF/P5g8889L
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10275"; a="340398127"
-X-IronPort-AV: E=Sophos;i="5.90,155,1643702400"; 
-   d="scan'208";a="340398127"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2022 04:41:54 -0800
-X-IronPort-AV: E=Sophos;i="5.90,155,1643702400"; 
-   d="scan'208";a="494318508"
-Received: from smile.fi.intel.com ([10.237.72.59])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2022 04:41:52 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nQ7F4-00BDfD-MH;
-        Fri, 04 Mar 2022 14:41:06 +0200
-Date:   Fri, 4 Mar 2022 14:41:06 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linus.walleij@linaro.org, colin.foster@in-advantage.com
-Subject: Re: [PATCH 2/2] pinctrl: ocelot: Fix interrupt parsing
-Message-ID: <YiII4mMembqLiX5D@smile.fi.intel.com>
-References: <20220303203716.3012703-1-horatiu.vultur@microchip.com>
- <20220303203716.3012703-3-horatiu.vultur@microchip.com>
- <YiIIxXemSB8LIq8L@smile.fi.intel.com>
+        with ESMTP id S232158AbiCDMrh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Mar 2022 07:47:37 -0500
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DC3D1A9492
+        for <linux-gpio@vger.kernel.org>; Fri,  4 Mar 2022 04:46:49 -0800 (PST)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 8D5AD22175;
+        Fri,  4 Mar 2022 13:46:44 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1646398005;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=u6sPMkv3ZNhl4qtSaMaJHc7cKJmVUWN5UINM3iz3B7o=;
+        b=dX9+GZoeWrG4v1wZuU11wssiDizM6RodH0n/ie1nbziaF0KVSaVJ42BwiJcfN7ISvZcHbN
+        BeeTGIFGu/DneXVIM/FQDVcCA3DffoufsjiweSwpSel9ImVf4Jes6cIyEtOl4wfcWOjGn+
+        Yq6EKfBSwkTE0Zoy2dByi6TRYSAb6P8=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YiIIxXemSB8LIq8L@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 04 Mar 2022 13:46:44 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        UNGLinuxDriver@microchip.com, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Colin Foster <colin.foster@in-advantage.com>
+Subject: Re: [PATCH v1 5/5] pinctrl: microchip-sgpio: wait until output is
+ actually set
+In-Reply-To: <20220304120911.i5rngplg5l6gnnyy@soft-dev3-1.localhost>
+References: <20220224161021.2197263-1-michael@walle.cc>
+ <20220224161021.2197263-6-michael@walle.cc>
+ <20220225092427.jjilv3qo52crsmuw@soft-dev3-1.localhost>
+ <2f8a215c67269d639290515931d10b78@walle.cc>
+ <20220304120911.i5rngplg5l6gnnyy@soft-dev3-1.localhost>
+User-Agent: Roundcube Webmail/1.4.12
+Message-ID: <40ccf0647d7ec0487f71f662eec80528@walle.cc>
+X-Sender: michael@walle.cc
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -65,24 +63,79 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Mar 04, 2022 at 02:40:38PM +0200, Andy Shevchenko wrote:
-> On Thu, Mar 03, 2022 at 09:37:16PM +0100, Horatiu Vultur wrote:
-> > In the blamed commit, it removes the duplicate of_node assignment in the
-> > driver. But the driver uses this before calling into of_gpio_dev_init to
-> > determine if it needs to assign an IRQ chip to the GPIO. The fixes
-> > consists in using of_node from dev.
+Hi Horatiu,
+
+Am 2022-03-04 13:09, schrieb Horatiu Vultur:
+> The 02/25/2022 12:29, Michael Walle wrote:
+>> EXTERNAL EMAIL: Do not click links or open attachments unless you know 
+>> the content is safe
+>> 
+>> Hi Horatiu,
+>> 
+>> Am 2022-02-25 10:24, schrieb Horatiu Vultur:
+>> > The 02/24/2022 17:10, Michael Walle wrote:
+>> > > Right now, when a gpio value is set, the actual hardware pin gets set
+>> > > asynchronously. When linux write the output register, it takes some
+>> > > time
+>> > > until it is actually propagated to the output shift registers. If that
+>> > > output port is connected to an I2C mux for example, the linux driver
+>> > > assumes the I2C bus is already switched although it is not.
+>> > >
+>> > > Fortunately, there is a single shot mode with a feedback: you can
+>> > > trigger the single shot and the hardware will clear that bit once it
+>> > > has
+>> > > finished the clocking and strobed the load signal of the shift
+>> > > registers. This can take a considerable amount of time though.
+>> > > Measuremens have shown that it takes up to a whole burst cycle gap
+>> > > which
+>> > > is about 50ms on the largest setting. Therefore, we have to mark the
+>> > > output bank as sleepable. To avoid unnecessary waiting, just trigger
+>> > > the
+>> > > single shot if the value was actually changed.
+>> >
+>> > I have tested this patch series on our lan9668 board and it worked
+>> > fine. Thanks!
+>> 
+>> Thanks for testing!
+>> 
+>> > I just have few questions:
+>> > 1. What about other boards/chips that have this sgpio, do they have
+>> > also
+>> >    the same issue? Because from what I recall on sparx5 they don't have
+>> >    this issue. I have seen it only on lan9668.
+>> 
+>> Unfortunatly, I don't have any knowledge what IP core is used in
+>> which SoC. I assumed the lan9668 used the same as the sparx5. If
+>> that is not the case, we need a new compatible. Do you know if it
+>> the same?
 > 
-> ...
+> From what I see, it is the same IP.
+
+Good to know.
+
+>> On the sparx5 are there any peripheral who you would actually
+>> notice that the timing is off?
 > 
-> > -	irq = irq_of_parse_and_map(gc->of_node, 0);
-> > +	irq = irq_of_parse_and_map(info->dev->of_node, 0);
-> 
-> Why platform_get_irq() can't be used?
+> There are some SFP connected, similar to lan966x. So I don't understand
+> why that issue is not seen there.
 
-Or actually _optional() variant of it?
+Is there an I2C mux, too? Or just the SFP signals connected to
+the SGPIO? What I was seeing is that during probing of the SFPs
+the SFPs EEPROM is read and when the I2C mux is controlled by the
+SGPIO it will switch too late - or even worse, in the middle of
+a transaction. I would speculate the timing isn't that critical
+with signals just connected directly to the SFP.
 
--- 
-With Best Regards,
-Andy Shevchenko
+In any case, I think it is pretty clear that it cannot work the
+way it is right now, no? See the very next paragraph...
 
+>> That being said, I'd assume all the serial gpio controller has
+>> this "flaw". Simply because a register write won't block until the
+>> value is shifted out to the shift register and actualy loaded by
+>> strobing the load signal. It just depends on your burst setting
+>> (even with bursts off, and clocking all the time) on how large
+>> the delay is. So you might or might not notice it on a board.
 
+.. here
+
+-michael
