@@ -2,122 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CD0DC4CDFE1
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Mar 2022 22:47:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DE5D4CE025
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Mar 2022 23:15:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229932AbiCDVsI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Mar 2022 16:48:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39564 "EHLO
+        id S229731AbiCDWQX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Mar 2022 17:16:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229468AbiCDVsI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Mar 2022 16:48:08 -0500
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5F0223BF08;
-        Fri,  4 Mar 2022 13:47:19 -0800 (PST)
-Received: by mail-oi1-f180.google.com with SMTP id x193so9236449oix.0;
-        Fri, 04 Mar 2022 13:47:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=v8uPxGmN/Yw0f1shToPT9W3nN9S4UgeJqSz8uMeBf4I=;
-        b=psL7IHCn2OUdBRMZa4p6frq4OmL/tZ6iCjhoatUShHA1nMUMhjVITSrhL8xiaXRH2d
-         O9SoJRN2Jo8dwtS0SBQtSK/UpDXfh249RyPxD158a1zp6xVR5LdWuZ1xH00mh39nrzOR
-         EnX3qFsg5aM+vKh1Wi3Qsx6stKgXH4+nBocasZJ3VKtj724lHBk2CGg9QpTMmQMRy9qJ
-         vs6Th18X3/dDiYFsSaprVlCTinGKdWeTSBiGHb4urLYFxWS1TZlh4dzOHUbwx9AdeTkX
-         HZvmEOQJcpWEKXLwElygqRq01LCnvBZzZsXSR2T3tuop7XcvriyPQaQG0NORPhKlgclk
-         chQA==
-X-Gm-Message-State: AOAM531H0nS/ai2nBPvA5wMdW1hYSN4bc0rj2ywxvUnDX4BvZjp2r1RS
-        lSToB4vhiNvUU85RMNB1tw==
-X-Google-Smtp-Source: ABdhPJxpB08C6ssiZ00fO8S7d2fJJ296KZSsPzCPeeZQCV9EpMtuahVBNRj7tp23f2267B6/2Gya/A==
-X-Received: by 2002:a05:6808:10d2:b0:2d9:a01a:4b9d with SMTP id s18-20020a05680810d200b002d9a01a4b9dmr357309ois.196.1646430439165;
-        Fri, 04 Mar 2022 13:47:19 -0800 (PST)
-Received: from robh.at.kernel.org (66-90-148-213.dyn.grandenetworks.net. [66.90.148.213])
-        by smtp.gmail.com with ESMTPSA id g12-20020a056870340c00b000d17b798ba9sm2924628oah.34.2022.03.04.13.47.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Mar 2022 13:47:17 -0800 (PST)
-Received: (nullmailer pid 472361 invoked by uid 1000);
-        Fri, 04 Mar 2022 21:47:16 -0000
-Date:   Fri, 4 Mar 2022 15:47:16 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Robert Marko <robert.marko@sartura.hr>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>, brgl@bgdev.pl,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        skhan@linuxfoundation.org, Luka Perkov <luka.perkov@sartura.hr>
-Subject: Re: [PATCH v10 5/6] dt-bindings: mfd: Add Delta TN48M CPLD drivers
- bindings
-Message-ID: <YiKI5LDWaxvlc9m5@robh.at.kernel.org>
-References: <20220131133049.77780-1-robert.marko@sartura.hr>
- <20220131133049.77780-6-robert.marko@sartura.hr>
- <Yh8vJNc4D6rA68au@google.com>
- <Yh/kFzNuvbwA2qeE@robh.at.kernel.org>
- <CA+HBbNHComN9kgFp1Xr4mdedwYjDMbSUkw+6_KAe8+O4hrtvKQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+HBbNHComN9kgFp1Xr4mdedwYjDMbSUkw+6_KAe8+O4hrtvKQ@mail.gmail.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+        with ESMTP id S229468AbiCDWQX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Mar 2022 17:16:23 -0500
+Received: from smtp-out3.electric.net (smtp-out3.electric.net [208.70.128.179])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9929DF47D1
+        for <linux-gpio@vger.kernel.org>; Fri,  4 Mar 2022 14:15:34 -0800 (PST)
+Received: from 1nQGCy-0002oo-VO by out3b.electric.net with emc1-ok (Exim 4.94.2)
+        (envelope-from <kris@embeddedTS.com>)
+        id 1nQGCz-0002s3-Vq; Fri, 04 Mar 2022 14:15:33 -0800
+Received: by emcmailer; Fri, 04 Mar 2022 14:15:33 -0800
+Received: from [66.210.251.27] (helo=mail.embeddedts.com)
+        by out3b.electric.net with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <kris@embeddedTS.com>)
+        id 1nQGCy-0002oo-VO; Fri, 04 Mar 2022 14:15:32 -0800
+Received: from tsdebian.ts-local.net (_gateway [192.168.0.64])
+        by mail.embeddedts.com (Postfix) with ESMTPSA id 017173A8F8;
+        Fri,  4 Mar 2022 15:15:31 -0700 (MST)
+From:   Kris Bahnsen <kris@embeddedTS.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Mark Featherston <mark@embeddedTS.com>,
+        Kris Bahnsen <kris@embeddedTS.com>
+Subject: [PATCH] gpio: ts4900: Do not set DAT and OE together
+Date:   Fri,  4 Mar 2022 14:15:17 -0800
+Message-Id: <20220304221517.30213-1-kris@embeddedTS.com>
+X-Mailer: git-send-email 2.11.0
+X-Outbound-IP: 66.210.251.27
+X-Env-From: kris@embeddedTS.com
+X-Proto: esmtps
+X-Revdns: wsip-66-210-251-27.ph.ph.cox.net
+X-HELO: mail.embeddedts.com
+X-TLS:  TLS1.2:ECDHE-RSA-AES256-GCM-SHA384:256
+X-Authenticated_ID: 
+X-Virus-Status: Scanned by VirusSMART (c)
+X-Virus-Status: Scanned by VirusSMART (b)
+X-FM-Delivery-Delay: 15749372,23518412
+X-PolicySMART: 13164782, 15749372, 26810492
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=embeddedTS.com; s=mailanyone20220121;h=Message-Id:Date:To:From; bh=8QQF6dKhkO+Z5X7/e+vXsxFm9xV9/q6QSNG67LdjZHs=;b=fODEx0ph/I0Bo9UrO6oHYrSzq7nqFvuhsC2DLPJLZRzQ+jhRuHD7OaGm9NrZgt9C1ihCBnqHWwiXNiGjZ/JQbEogu+ADftMAzT4L5W1A0AEHVpCQgxpx1ZMwUzEq8ELQZ5ihBMmpRROsVza1kHH9dvAno67zrapBtTn/fRKddWLRKzjVbVIQgmH4euVmFPVjW57KwTMS3k6YZ+wwqV9slbi3NW0LW3KQjkKP1n3ccsPoIrr4p80iYVu1KHrjNbnkkYTCiNRXUAqEdVHiZWH6UDjVTkdZwWxWpk2ssrRoj3qa6yGrsC3eRLQNmW/X0uJyJ70lxh4rOK/vGpCsl1tnjQ==;
+X-FM-Delivery-Delay: 15749372,23518412
+X-PolicySMART: 13164782, 15749372, 26810492
+X-FM-Delivery-Delay: 15749372,23518412
+X-PolicySMART: 13164782, 15749372, 26810492
+X-FM-Delivery-Delay: 15749372,23518412
+X-PolicySMART: 13164782, 15749372, 26810492
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 03, 2022 at 01:41:13PM +0100, Robert Marko wrote:
-> On Wed, Mar 2, 2022 at 10:39 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Wed, Mar 02, 2022 at 08:47:32AM +0000, Lee Jones wrote:
-> > > On Mon, 31 Jan 2022, Robert Marko wrote:
-> > >
-> > > > Add binding documents for the Delta TN48M CPLD drivers.
-> > > >
-> > > > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-> > >
-> > > This is missing a DT review.
-> >
-> > How about this one[1]?
-> >
-> > Rob
-> >
-> > [1] https://lore.kernel.org/all/20210719225906.GA2769608@robh.at.kernel.org/
-> 
-> Hi Rob,
-> Thanks for reaching out.
-> 
-> As you can see the bindings have evolved since v6,
-> GPIO driver now only uses 2 distinct compatibles.
+From: Mark Featherston <mark@embeddedTS.com>
 
-Fundamentally, it hasn't really changed.
+This works around an issue with the hardware where both OE and
+DAT are exposed in the same register. If both are updated
+simultaneously, the harware makes no guarantees that OE or DAT
+will actually change in any given order and may result in a
+glitch of a few ns on a GPIO pin when changing direction and value
+in a single write.
 
-There's 2 main issues. First, I don't see the need for any child nodes. 
-This would be sufficient:
+Setting direction to input now only affects OE bit. Setting
+direction to output updates DAT first, then OE.
 
-cpld@41 {
-    compatible = "delta,tn48m-cpld";
-    reg = <0x41>;
-    #reset-cells = <1>;
-    #gpio-cells = <2>;
-    gpio-controller;
-};
+Signed-off-by: Mark Featherston <mark@embeddedTS.com>
+Signed-off-by: Kris Bahnsen <kris@embeddedTS.com>
+---
+ drivers/gpio/gpio-ts4900.c | 25 ++++++++++++++++++++-----
+ 1 file changed, 20 insertions(+), 5 deletions(-)
 
-You only need child nodes if the sub-blocks have their own resources or 
-are widely reused in different configurations.
+diff --git a/drivers/gpio/gpio-ts4900.c b/drivers/gpio/gpio-ts4900.c
+index d885032cf814..fbabfca030c0 100644
+--- a/drivers/gpio/gpio-ts4900.c
++++ b/drivers/gpio/gpio-ts4900.c
+@@ -1,7 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * Digital I/O driver for Technologic Systems I2C FPGA Core
+  *
+- * Copyright (C) 2015 Technologic Systems
++ * Copyright (C) 2015-2018 Technologic Systems
+  * Copyright (C) 2016 Savoir-Faire Linux
+  *
+  * This program is free software; you can redistribute it and/or
+@@ -55,19 +56,33 @@ static int ts4900_gpio_direction_input(struct gpio_chip *chip,
+ {
+ 	struct ts4900_gpio_priv *priv = gpiochip_get_data(chip);
+ 
+-	/*
+-	 * This will clear the output enable bit, the other bits are
+-	 * dontcare when this is cleared
++	/* Only clear the OE bit here, requires a RMW. Prevents potential issue
++	 * with OE and data getting to the physical pin at different times.
+ 	 */
+-	return regmap_write(priv->regmap, offset, 0);
++	return regmap_update_bits(priv->regmap, offset, TS4900_GPIO_OE, 0);
+ }
+ 
+ static int ts4900_gpio_direction_output(struct gpio_chip *chip,
+ 					unsigned int offset, int value)
+ {
+ 	struct ts4900_gpio_priv *priv = gpiochip_get_data(chip);
++	unsigned int reg;
+ 	int ret;
+ 
++	/* If changing from an input to an output, we need to first set the
++	 * proper data bit to what is requested and then set OE bit. This
++	 * prevents a glitch that can occur on the IO line
++	 */
++	regmap_read(priv->regmap, offset, &reg);
++	if (!(reg & TS4900_GPIO_OE)) {
++		if (value)
++			reg = TS4900_GPIO_OUT;
++		else
++			reg &= ~TS4900_GPIO_OUT;
++
++		regmap_write(priv->regmap, offset, reg);
++	}
++
+ 	if (value)
+ 		ret = regmap_write(priv->regmap, offset, TS4900_GPIO_OE |
+ 							 TS4900_GPIO_OUT);
+-- 
+2.11.0
 
-The 2nd issue is whether GPIOs are even GPIOs at all. I don't recall 
-that Linus ever agreed.
-
-Both issues kind of boil down to is there even more that 1 variation of 
-this h/w where you have differing connections? AFAICT, Delta tn48m is a 
-pretty specific device and I would guess something implemented in a CPLD 
-is likely to change on every board design. At least that's my experience 
-with 'board level logic'.
-
-Rob
