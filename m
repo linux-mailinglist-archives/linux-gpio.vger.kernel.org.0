@@ -2,63 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CA6134CE3FF
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Mar 2022 10:40:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E678D4CE599
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Mar 2022 16:43:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230483AbiCEJlh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 5 Mar 2022 04:41:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59616 "EHLO
+        id S229608AbiCEPnv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 5 Mar 2022 10:43:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229853AbiCEJlg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Mar 2022 04:41:36 -0500
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6331B23EE45
-        for <linux-gpio@vger.kernel.org>; Sat,  5 Mar 2022 01:40:46 -0800 (PST)
-Received: by mail-pl1-x62a.google.com with SMTP id e13so9831002plh.3
-        for <linux-gpio@vger.kernel.org>; Sat, 05 Mar 2022 01:40:46 -0800 (PST)
+        with ESMTP id S229645AbiCEPnv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Mar 2022 10:43:51 -0500
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4525DE0E
+        for <linux-gpio@vger.kernel.org>; Sat,  5 Mar 2022 07:43:00 -0800 (PST)
+Received: by mail-wm1-x332.google.com with SMTP id q7-20020a7bce87000000b00382255f4ca9so8294139wmj.2
+        for <linux-gpio@vger.kernel.org>; Sat, 05 Mar 2022 07:43:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=XtUTnu/7w2LGChZ7i5FNvlnMnuo5AfPgEiQNsGN2QmM=;
-        b=jTeoPkGa3nSP56qAp8B8Ti+I9JJ9Vx0fGGvWAPa7CbiW/5e4RKEXpwZ87X2pOODpR6
-         oWFsBavqrwwhNUVyGVa9ZIq5nJ3X7eiWiH5XSjKnrS0pVs620Pd2OoSR2OMv42xLUXFZ
-         4RMwln/gc9ebz5G1vPo4FxuWDiDuao5IcggBbevJlTuAEL19qtCH/kbwHUFg+Z8FSDIO
-         uqqgkgX+xknaz2hSEZUvFbvRa/3kQDmbt5M+t9fn0DMWVHZpGuio5nqCgetKQYIuRMLM
-         cWOhgMtKCg6jbgMOOL6qBnQ8bjywfoAGvOSUfaNKLuDuNMMFThIqSPHjm5DaVhnCUvL4
-         ofLA==
+        bh=5knFVechqLRRoXBkQeiWnLlTmYCcvi5f90+imAg2cOY=;
+        b=6GIQsk7E60HvmrJlWOB81ghr8WfFAcCK+WRKuC0zMYbLUAyMbvPV3UGg/4t9Ex/Izw
+         j0J1Q1P1AgBIk1cRAD0yuuE4KPHIsoZZOPhdJLF7p+MH+eb3XMzhgYWdiaocbjGb+MPi
+         mTql/YSVVPTp8YJse7dT4MJH/H3lkmCbTFp5mGSLlemQlXdewTib1NRWfljatEvLBjBD
+         56ygfhUrASNeL59k33XDDaT0fozZKeizkB1kEK4YwnkI5eLQzmWWol2w29OwcUH0wM1j
+         Sb8aCjZ6N3XDpjvFP1qu6LASl0WNJ35/lkCCUvi/JhfpgbDdxGYdgutd/uuvDUX5jShU
+         m+bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=XtUTnu/7w2LGChZ7i5FNvlnMnuo5AfPgEiQNsGN2QmM=;
-        b=ABOUfVCLRptBYbe1Sxr8yeQ2nL9EbopPEL409ykD+XrZkKVz5FS8eD8x88KNcwX8M+
-         9lGCIwbNTMWORZcXkjsiOdsL+s0iN/+so6A61drRVSQ+AQb0cp+GqRBmNM1llR7nvarl
-         n6/8BoiXO7mWr56QyvvO5fJtNh2CaEwzx/QasEZNO1FPGz92D92OBHVak3t6VKY6Mupf
-         GF5oSuRbq6ibTW36MU2Qo2Q+6tSChBWat1enbMaZII2Aboo91CvazOW8Em/SE6fq9TZq
-         WGcD97DwnG3DLnOhlBPd63OM5u96WSgTgRhAv2m79B+p++iSXH+E9ibXJTaXARrX++o1
-         t/SA==
-X-Gm-Message-State: AOAM5306A9/f3vI6OQN4G1QfnS42Q5KUU4y9F/NkP0JJ4orw16gdyqAA
-        1xwJ0PoJYr9aFGe0N+GcTZF6aUPRFwwhMQ==
-X-Google-Smtp-Source: ABdhPJy/6OXUAEi/6GQQ4ejKLb9qCBSYY8EF/IoFlYeyCKupuG/dCfj0OlWQRMmEmLkzQ7ipqGZx1Q==
-X-Received: by 2002:a17:903:1208:b0:151:93fd:d868 with SMTP id l8-20020a170903120800b0015193fdd868mr2673797plh.121.1646473245404;
-        Sat, 05 Mar 2022 01:40:45 -0800 (PST)
-Received: from sol.home.arpa (60-242-155-106.static.tpgi.com.au. [60.242.155.106])
-        by smtp.gmail.com with ESMTPSA id k190-20020a633dc7000000b0037c921abb5bsm4173898pga.23.2022.03.05.01.40.43
+        bh=5knFVechqLRRoXBkQeiWnLlTmYCcvi5f90+imAg2cOY=;
+        b=UdorLGaUvnpL0qEGzNAPUyWe0N65HS3nLaCpmzh6ffoHC2Km//3Bo5FIjLuNqKjjun
+         r/pDAoSVjbmA2C1FvQfQ+CdHezjBb3N9kc+/BmrlpyjlhbbuUDjHolxrApLlUDziOhHP
+         s0OVxXIvQwQk1u8B3RNqOOl95iNg2bzR2pOJGZAEW79PMuuBphffy7HqBv0q9655pISb
+         bEOmd+rNqzPtac00ZzuBuvgkiaeikdh1X7nuiWI75r8hI7cLF58S7m92kxdTE7EatFGL
+         BB062eM6d+p5EnrJ3QIlSaU476C3VUmX3SdSGQCwpaWqcjW7/1rGHwfL07cu5JBJmSXE
+         tL1A==
+X-Gm-Message-State: AOAM531XbC40yzWsQE+rfunxmHgc4WG4AVSR/RPVFfMzzCZVaXciMN0A
+        dtuLcMfxpzCs8b3GW8HRqi5tDQ==
+X-Google-Smtp-Source: ABdhPJy+SNKXJeLTJy8POUvyAoiHW/OMNnPo+MkaECuSUorkrJ9qGUSpWqPl+BU0JFsdnVH8sPrg1w==
+X-Received: by 2002:a05:600c:651:b0:381:3d7b:40e0 with SMTP id p17-20020a05600c065100b003813d7b40e0mr12016162wmm.17.1646494978708;
+        Sat, 05 Mar 2022 07:42:58 -0800 (PST)
+Received: from debian-brgl.home ([2a01:cb1d:334:ac00:7d50:ff5:f5c1:e225])
+        by smtp.gmail.com with ESMTPSA id bk19-20020a0560001d9300b001a65e479d20sm6758970wrb.83.2022.03.05.07.42.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Mar 2022 01:40:44 -0800 (PST)
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-gpio@vger.kernel.org, brgl@bgdev.pl
-Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [libgpiod][PATCH] doc: add configuration to generate doxygen documentation on readthedocs.
-Date:   Sat,  5 Mar 2022 17:40:37 +0800
-Message-Id: <20220305094037.46361-1-warthog618@gmail.com>
-X-Mailer: git-send-email 2.35.1
+        Sat, 05 Mar 2022 07:42:58 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH] gpiolib: fix the size of the ngpios variable
+Date:   Sat,  5 Mar 2022 16:42:56 +0100
+Message-Id: <20220305154256.278394-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -66,176 +67,38 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Having the libgpiod documentation available online would be helpful, so
-add the configuration required to generate the existing doxygen C/C++
-documentation on readthedocs.
+The ngpio fields both in struct gpio_device as well as gpio_chip are
+16 bit unsigned integers. Let's not risk an overflow and use the correct
+size when reading the device property.
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
-
+Fixes: 9dbd1ab20509 ("gpiolib: check the 'ngpios' property in core gpiolib code")
+Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
 ---
+ drivers/gpio/gpiolib.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-This is intended to be a minimal change that can be applied to both
-master and v1.6.x and have zero impact on existing builds.
-It has been tested on RTD using the current v1.6.3 release[1].
-The approach used here is to replace any Sphinx documentation generated
-by RTD with the doxygen documentation.
-A subsequent patch for v2 can switch to using Breathe/Sphinx to include
-the documentation for the Python bindings as well.  And relocate the
-Sphinx configuration into the doc directory.
-
-Cheers,
-Kent.
-[1] https://libgpiod.readthedocs.io/en/latest/
-
- .readthedocs.yaml | 29 ++++++++++++++++++++
- sphinx/conf.py    | 70 +++++++++++++++++++++++++++++++++++++++++++++++
- sphinx/index.rst  | 24 ++++++++++++++++
- 3 files changed, 123 insertions(+)
- create mode 100644 .readthedocs.yaml
- create mode 100644 sphinx/conf.py
- create mode 100644 sphinx/index.rst
-
-diff --git a/.readthedocs.yaml b/.readthedocs.yaml
-new file mode 100644
-index 0000000..976496c
---- /dev/null
-+++ b/.readthedocs.yaml
-@@ -0,0 +1,29 @@
-+# SPDX-License-Identifier: LGPL-2.1-or-later
-+
-+#
-+# This file is part of libgpiod.
-+#
-+# Copyright (C) 2022 Bartosz Golaszewski <bartekgola@gmail.com>
-+#
-+# Read the Docs configuration file
-+# See https://docs.readthedocs.io/en/stable/config-file/v2.html for details
-+
-+version: 2
-+
-+build:
-+  os: ubuntu-20.04
-+  tools:
-+    python: "3.9"
-+  # doxygen is available by default, but just in case.
-+  # others are definitely missing.
-+  apt_packages:
-+      - autoconf
-+      - autoconf-archive
-+      - libtool
-+      - m4
-+      - doxygen
-+      - graphviz
-+
-+sphinx:
-+   configuration: sphinx/conf.py
-+
-diff --git a/sphinx/conf.py b/sphinx/conf.py
-new file mode 100644
-index 0000000..7022ff9
---- /dev/null
-+++ b/sphinx/conf.py
-@@ -0,0 +1,70 @@
-+# SPDX-License-Identifier: LGPL-2.1-or-later
-+
-+#
-+# This file is part of libgpiod.
-+#
-+# Copyright (C) 2022 Bartosz Golaszewski <bartekgola@gmail.com>
-+#
-+# Configuration file for the Sphinx documentation builder.
-+#
-+# This file only contains a selection of the most common options. For a full
-+# list see the documentation:
-+# https://www.sphinx-doc.org/en/master/usage/configuration.html
-+
-+import subprocess
-+
-+subprocess.run('cd .. ; ./autogen.sh ; make doc', shell=True)
-+
-+# -- Path setup --------------------------------------------------------------
-+
-+# If extensions (or modules to document with autodoc) are in another directory,
-+# add these directories to sys.path here. If the directory is relative to the
-+# documentation root, use os.path.abspath to make it absolute, like shown here.
-+#
-+# import os
-+# import sys
-+# sys.path.insert(0, os.path.abspath('.'))
-+
-+
-+# -- Project information -----------------------------------------------------
-+
-+project = 'libgpiod'
-+copyright = '2022, Bartosz Golaszewski'
-+author = 'Bartosz Golaszewski'
-+
-+# The full version, including alpha/beta/rc tags
-+release = subprocess.run(
-+            ['git', 'describe', '--dirty'],
-+            capture_output=True).stdout.decode().strip()
-+
-+# -- General configuration ---------------------------------------------------
-+
-+# Add any Sphinx extension module names here, as strings. They can be
-+# extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
-+# ones.
-+extensions = [
-+]
-+
-+# Add any paths that contain templates here, relative to this directory.
-+templates_path = []
-+
-+# List of patterns, relative to source directory, that match files and
-+# directories to ignore when looking for source files.
-+# This pattern also affects html_static_path and html_extra_path.
-+exclude_patterns = []
-+
-+
-+# -- Options for HTML output -------------------------------------------------
-+
-+# The theme to use for HTML and HTML Help pages.  See the documentation for
-+# a list of builtin themes.
-+#
-+html_theme = 'alabaster'
-+
-+# Add any paths that contain custom static files (such as style sheets) here,
-+# relative to this directory. They are copied after the builtin static files,
-+# so a file named "default.css" will overwrite the builtin "default.css".
-+html_static_path = []
-+
-+html_extra_path = ['../doc/html']
-+
-diff --git a/sphinx/index.rst b/sphinx/index.rst
-new file mode 100644
-index 0000000..e38fad7
---- /dev/null
-+++ b/sphinx/index.rst
-@@ -0,0 +1,24 @@
-+.. SPDX-License-Identifier: LGPL-2.1-or-later
-+
-+..
-+   This file is part of libgpiod.
-+
-+   Copyright (C) 2022 Bartosz Golaszewski <bartekgola@gmail.com>
-+
-+   libgpiod documentation master file.
-+
-+Welcome to libgpiod's documentation!
-+====================================
-+
-+.. toctree::
-+   :maxdepth: 2
-+   :caption: Contents:
-+
-+
-+
-+Indices and tables
-+==================
-+
-+* :ref:`genindex`
-+* :ref:`modindex`
-+* :ref:`search`
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index a3d14277f17c..147b86db16aa 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -607,7 +607,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+ 	int base = gc->base;
+ 	unsigned int i;
+ 	int ret = 0;
+-	u32 ngpios;
++	u16 ngpios;
+ 
+ 	if (gc->fwnode)
+ 		fwnode = gc->fwnode;
+@@ -665,7 +665,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+ 	 * of GPIO lines.
+ 	 */
+ 	if (gc->ngpio == 0) {
+-		ret = device_property_read_u32(&gdev->dev, "ngpios", &ngpios);
++		ret = device_property_read_u16(&gdev->dev, "ngpios", &ngpios);
+ 		if (ret == -ENODATA)
+ 			/*
+ 			 * -ENODATA means that there is no property found and
 -- 
-2.35.1
+2.30.1
 
