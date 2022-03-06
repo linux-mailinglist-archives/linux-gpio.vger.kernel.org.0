@@ -2,99 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BC8F4CED75
-	for <lists+linux-gpio@lfdr.de>; Sun,  6 Mar 2022 20:34:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C6D0F4CEE21
+	for <lists+linux-gpio@lfdr.de>; Sun,  6 Mar 2022 23:20:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234111AbiCFTfQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 6 Mar 2022 14:35:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50598 "EHLO
+        id S233563AbiCFWVB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 6 Mar 2022 17:21:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234104AbiCFTfP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 6 Mar 2022 14:35:15 -0500
-Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54F9952E66
-        for <linux-gpio@vger.kernel.org>; Sun,  6 Mar 2022 11:34:23 -0800 (PST)
-Received: by mail-wm1-x32a.google.com with SMTP id l10so4147994wmb.0
-        for <linux-gpio@vger.kernel.org>; Sun, 06 Mar 2022 11:34:23 -0800 (PST)
+        with ESMTP id S229844AbiCFWVB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 6 Mar 2022 17:21:01 -0500
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DAA712AB3;
+        Sun,  6 Mar 2022 14:20:08 -0800 (PST)
+Received: by mail-ej1-x629.google.com with SMTP id qx21so28141024ejb.13;
+        Sun, 06 Mar 2022 14:20:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kctIPCfRqdsb2edXEMQLEguqkionRTxKrybGQBlVoI4=;
-        b=fIlg/8QfUGxURZ7B9+jekhRDFK3u6LNTfY8NaQz0C7YqV/ucX9WbpsmJDUolpFKUYO
-         tWpMWWQvJ2WixKW+0QsE01UzgwjA/34CS8kV9+HcRRuTaJjr9siRGcWmxHvRe13a2d/t
-         WQ3NFu7roLHzJDa06xFsCEwT4YXaxrIOQkmVik8J5KNkYp8veqjntCtjEqieJSYcVcyy
-         KrVZrQP8QSRcspKweB5YMAQUELqWFIM6JPF/WnjPfVwXrA5mCKR6odGWbqR2xTiCeDAI
-         qIpRypCu0VvK1fXWH8Gla5lmbtcG5Jf6ofpi//EMDU0DilyFISc9lWQ1a1M30YWSNHtW
-         0ynQ==
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=t7cCKN/grIlDzxZe3323XIBV7lMKhMz1VElpS8eUsnk=;
+        b=IXP8154F0LChfJ4IOVDCrzDOaDuBPvscSbF688LBkwWMTDFANWLPQhGF/3GSGd4VUZ
+         AFwImp6teOFafDqbjS7u/7U8/PcMjFJC81so5oK71Akqs+jw80EK0ym8d5OCKXS6Tbrf
+         X7yRPAlgGaRcdAhZwm8V9mNtNcGOQJf76KmM+Fw5eKnVg/PnHeOsXDE6vCgRoDTew5Z4
+         5w6FqWq0KYM21mxMIm6QqDuTtJFHlytrc3lQqqJhV723y5d4SI7JuLZT4Dp929Rvv259
+         9hyk63uXbUs0zQ/0KWnAsrqrFHYMvtSmfzyuKBvemFTxRPsu7qC2b+nDUqLis7kuU2Kw
+         mvOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kctIPCfRqdsb2edXEMQLEguqkionRTxKrybGQBlVoI4=;
-        b=hOvuMjuU30uOE2vpue8bA6E0pCzGZTdzE/RCDJwZf7xR5xzRD/yJyddsu455d0fQ7v
-         MVMJlStCjXp9lMJ4B5ive8WHDojE8Pgs/d0v69157Nrn0CgfIelEg7psRrROCOyuEcN7
-         EbrW2+FM/7H8SQ7ptKSPZ5gSIXO0N4tMActGriK7u8g4I3A7ZYKDZZbb0n2x9vLEofTh
-         ldGT2FiuLSmWbKs98GY9x3Y/IWehc+GO4AyYkgZFIlcvAWrW4naunCuf/FFXhrrAF9kb
-         giW0uRWXXLp1+EKTloK0OhMDh84tXuOm0PEM2ot290qZyZ49Lj0KnUOLgWepjPbgnzMi
-         F/ww==
-X-Gm-Message-State: AOAM533s/cMRd8NnwicXdun8aV8PzzZx0ZEhJAeP6kgCrH6mUKvOI9dT
-        bsrtWEPtF+SjMhrm7UkOW/ZR/g==
-X-Google-Smtp-Source: ABdhPJy3ZWPvyAj8ZYSTVCDD15NxOKE+sXDJ4pyIYkcssnE4ZGnK5qe8IP83nkxbGr0rD/iMi8la6Q==
-X-Received: by 2002:a05:600c:4f8f:b0:383:d0b:3706 with SMTP id n15-20020a05600c4f8f00b003830d0b3706mr6598328wmq.117.1646595261854;
-        Sun, 06 Mar 2022 11:34:21 -0800 (PST)
-Received: from debian-brgl.home ([2a01:cb1d:334:ac00:7d50:ff5:f5c1:e225])
-        by smtp.gmail.com with ESMTPSA id l11-20020a5d674b000000b001f047c49e99sm9651621wrw.2.2022.03.06.11.34.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Mar 2022 11:34:21 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH] gpiolib: check for overflow when reading the 'ngpios' property
-Date:   Sun,  6 Mar 2022 20:34:20 +0100
-Message-Id: <20220306193420.99714-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.30.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=t7cCKN/grIlDzxZe3323XIBV7lMKhMz1VElpS8eUsnk=;
+        b=lz1+FgtuOE30r/NNU+j99pKQh5KupMlPjRV+k1yZcJxWq6d2DCxPag6XKy4GI1H1ru
+         UwyZNh9Pg+muuSXd8R4CcMTPTV5aCAF/05dkMIeuSZMqWSgO5ROoucVjy9vXBqMSdl3W
+         9dlTVQLcNzyd6+nI3B3UIpGuWNJjZZX4EFoaujOms1T0cj3k7rrvxmLZrqmSozs+23F/
+         QSNGwGm4/NE0zFNlrl6LNtmi/i9LRIPNRDfFcwPO51D+WUQwATzdv9lCDxQMp0l1YDLc
+         yKSX/l9Z0I4Qiab5log9zNjh7RlE299cUby2gaMZ5qlIn3prerLIyuBNcxFJtZZO7jhZ
+         O+NQ==
+X-Gm-Message-State: AOAM533k4/62hf7Ut7iRCR6b8LXdcNqkO+o53TpMaS5pJfxQ8FBnqwUx
+        pJxC4AhVdN7KeZebHQG2e5WM1jjuLEE2SLVtvso=
+X-Google-Smtp-Source: ABdhPJxPgVRkC/Yq5Uns3ZeTams1DgSElaulFcfNHjcAnYMB2quGz/MtwoImbZbPdf4zLI/TaaMvcA2rtV7TMqHHjTs=
+X-Received: by 2002:a17:907:628e:b0:6d9:c6fa:6168 with SMTP id
+ nd14-20020a170907628e00b006d9c6fa6168mr7182609ejc.132.1646605206814; Sun, 06
+ Mar 2022 14:20:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+References: <20220306193420.99714-1-brgl@bgdev.pl>
+In-Reply-To: <20220306193420.99714-1-brgl@bgdev.pl>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 7 Mar 2022 00:19:30 +0200
+Message-ID: <CAHp75Vfgsa5Ru5aA7Bx_mV--h-GFKSX9Uocf+njvh8Rc1yNTow@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: check for overflow when reading the 'ngpios' property
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The ngpio fields both in struct gpio_device as well as gpio_chip are
-16-bit unsigned integers. Let's not risk an overflow and check if the
-property value represented as a 32-bit unsigned integer is not greater
-than U16_MAX.
+On Mon, Mar 7, 2022 at 12:11 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> The ngpio fields both in struct gpio_device as well as gpio_chip are
+> 16-bit unsigned integers. Let's not risk an overflow and check if the
+> property value represented as a 32-bit unsigned integer is not greater
+> than U16_MAX.
 
-Fixes: 9dbd1ab20509 ("gpiolib: check the 'ngpios' property in core gpiolib code")
-Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
----
- drivers/gpio/gpiolib.c | 5 +++++
- 1 file changed, 5 insertions(+)
+...
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index a3d14277f17c..3c4f47b9ab57 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -677,6 +677,11 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 		else if (ret)
- 			goto err_free_descs;
- 
-+		if (ngpios > U16_MAX) {
-+			ret = EINVAL;
-+			goto err_free_descs;
-+		}
-+
- 		gc->ngpio = ngpios;
- 	}
- 
+> +               if (ngpios > U16_MAX) {
+> +                       ret = EINVAL;
+> +                       goto err_free_descs;
+> +               }
+
+I don't think it's a fatal error in this case. I would perhaps print a
+warning and simply use a masked (which is done implicitly by an
+assignment of the different type) value. Note, the above is buggy on
+the buggy DTs, where the upper part of the value is not used. After
+this patch you effectively make a regression on, yes, broken DTs.
+
 -- 
-2.30.1
-
+With Best Regards,
+Andy Shevchenko
