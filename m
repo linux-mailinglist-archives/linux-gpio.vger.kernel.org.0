@@ -2,58 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E1E364CF489
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Mar 2022 10:17:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 963A84CF4EB
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Mar 2022 10:23:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230519AbiCGJSR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Mar 2022 04:18:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41364 "EHLO
+        id S236585AbiCGJYN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Mar 2022 04:24:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236526AbiCGJSF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Mar 2022 04:18:05 -0500
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7B05652C1
-        for <linux-gpio@vger.kernel.org>; Mon,  7 Mar 2022 01:17:01 -0800 (PST)
-Received: by mail-ej1-x631.google.com with SMTP id qx21so30362559ejb.13
-        for <linux-gpio@vger.kernel.org>; Mon, 07 Mar 2022 01:17:01 -0800 (PST)
+        with ESMTP id S237453AbiCGJYF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Mar 2022 04:24:05 -0500
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D8385643B
+        for <linux-gpio@vger.kernel.org>; Mon,  7 Mar 2022 01:23:11 -0800 (PST)
+Received: by mail-ej1-x62e.google.com with SMTP id d10so30398685eje.10
+        for <linux-gpio@vger.kernel.org>; Mon, 07 Mar 2022 01:23:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=+LXL2TC6X1DpDoK/44EedbUlr2s/tHhZvhpP/SBncXE=;
-        b=mSMO9nkg8I0GQb2/CIl/R3Vx/bAKxmNII/u6qFO7mzqGhfwKWCA2s8sN0YY2F4mH1C
-         Yz6eyQkMtCQd8/JJXkSuvoL/tvAgY8sMQI4CHqnPuvL3poBJhfS579G/r4RnHbQ76QNZ
-         lPhhGLiRJqo1HVaHFmxOzUYPkJo9dbSO37a6yyloaig56jQHfhvqCqj44FsoRIYbmoER
-         +5kstxNgv6RDyfcyPccUO2d83zmpR53U2maah1w1SURsV/y2LoshYjostCs+UvQe2TyE
-         5GF6kDNw/eCfKrH+7G8NiXVerDDD1yt1iA0GuCvu3rBV4GQgtRckH5yCwN623Fk3oA8H
-         +0Sw==
+        bh=p1KsWS/Km5ymmHojsz3R4CV+vnmDjDKNNWFaUpjoaCY=;
+        b=IGry8qzl5s/aX2ZICuuGS12W9UPHlSBXHF213489EPYh++oHipDSdDvQAUwbhWcJ7d
+         iqA5gN1QP1hp3b2ZXsCkBfdSr04NJL3rZNawHI4YSqgbqJHzpMUR+S2t/RKeXCNjL5M2
+         vJ2wWQ5b+zQRuxdvXiXzXElWu2ZiaVg2BAC/JDJjmqtjug3pWuMZKyb//R5ynD9R3+xk
+         NMjQQdMLRnJjg2Swe7TUXcEdj8Ld0pHBxWeC7iZCwg78n3yPUVoby9ArbTxaQTZTHVTJ
+         HddXebm6hrGWxeQjWtYD91N9m8SlR8LnKC8Ti9ckQG8D/q6km7ovdYH0vQMNZaMkCaRm
+         aGtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+LXL2TC6X1DpDoK/44EedbUlr2s/tHhZvhpP/SBncXE=;
-        b=0R6YF6xfvMVB8/lenpYhy+mqMWorarm3LDh+D+ZmuoET/zpCnj1S18q679/sxMZtjR
-         RKRtxUFR3hOJRAW32VYnQdgfBX4gtn5eyCLU8gxNx6a2bax4ww3JJ5oynhaxLUd94Aeo
-         3kyG+WRd5Jaxj8zJvDzFyI3Ky0/qE1cqC30KvH6cmyY+3MrZ/Nf7UeRzIoTcb5NllJkB
-         RyKparRsQSN3T92e49KSKWJAPNoNYcAnGPlhikUY19xgCMy1WP/M0V+G9cyqsbob/kvN
-         y4bzeuErlYhMaHjTSeXpg+YuAppnWLydOD8KxsyQQglI7UgP7jODlrL2LQOZ+QYFCSgM
-         hNEg==
-X-Gm-Message-State: AOAM532fAJAFZNGVNi8ElWUL/OvXWP0bz8a7OF3PA59zarki1Sl36RlL
-        1pZVP67aZ5vBFhZQ+Ha2Z2h2SwPlewGyjwbJrmXMfqxzbq4=
-X-Google-Smtp-Source: ABdhPJzoyL7WBOsV/tEmCNgKP5xHqpRZ75jPk+ntbd+YVTSAShqClRBZ/T4vK1gAMoFrJTa5RFxKzEILPWMcvYTC4Cg=
+        bh=p1KsWS/Km5ymmHojsz3R4CV+vnmDjDKNNWFaUpjoaCY=;
+        b=qdZ75y1AXjuSNWsD3Ed3mZITp4oo6frPt70ObtF9zlwxusWhwxrWVjghv+EuJRlAFq
+         uny/Kk4v3oOFidqtkBPdf9/lN/AsHC//U556RU73Y0Ugbrv0mi/J0oJoeqk3NoU60niW
+         wqtfO/4Ftwn+zO7Ii7ev49gcYi4JKtS1w10xDSZQNGp4PkUhq2ji/sVpmRYaV338TEoU
+         CWqygap+rw3yEPkE6yQbWkxjF/loUMhSPug+8kSIRP9jeIEYQee8HG742SWMiaPztfWd
+         ib6AgYnToIXqx2dFQxm3o1tY0dwlVlM3xtEYaRJTOtoL4Ji4haVftOvMUwfqcZvm+QQz
+         tgJg==
+X-Gm-Message-State: AOAM532f7k6NR2NMn28yOSd19ZejOrdT+s3oer1rVYVGUeFlh2rx6rDY
+        jylF6raeTY8AB6O+Bs6XrmiOKMk/sZsW/BCCPpy1OQ==
+X-Google-Smtp-Source: ABdhPJxAemVcQjSXIoI905JfgF4cI1d95D553RgtN5XZhyqoHJTJej6DD7dwYYJPjyxcGl9UZbckjpy6b4OO7CzjjQM=
 X-Received: by 2002:a17:906:888e:b0:6da:ed04:5e40 with SMTP id
- ak14-20020a170906888e00b006daed045e40mr8625741ejc.286.1646644620232; Mon, 07
- Mar 2022 01:17:00 -0800 (PST)
+ ak14-20020a170906888e00b006daed045e40mr8642737ejc.286.1646644989659; Mon, 07
+ Mar 2022 01:23:09 -0800 (PST)
 MIME-Version: 1.0
-References: <20220305094037.46361-1-warthog618@gmail.com>
-In-Reply-To: <20220305094037.46361-1-warthog618@gmail.com>
+References: <20220303225525.29846-1-kris@embeddedTS.com>
+In-Reply-To: <20220303225525.29846-1-kris@embeddedTS.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 7 Mar 2022 10:16:49 +0100
-Message-ID: <CAMRc=MebW6P0qDi0DNckwVe2+LX3Bi84-HPZPGnAA-tvDiJ9Xg@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH] doc: add configuration to generate doxygen
- documentation on readthedocs.
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Date:   Mon, 7 Mar 2022 10:22:59 +0100
+Message-ID: <CAMRc=McesjKviO=5gK3GN+XukZfSr=um9W8+sqXw9GSFX0QTgw@mail.gmail.com>
+Subject: Re: [PATCH] drivers: Fix Links to Technologic Systems web resources
+To:     Kris Bahnsen <kris@embeddedts.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>, wg@grandegger.com,
+        mkl@pengutronix.de,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-can@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
@@ -64,183 +66,70 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Mar 5, 2022 at 10:40 AM Kent Gibson <warthog618@gmail.com> wrote:
+On Thu, Mar 3, 2022 at 11:57 PM Kris Bahnsen <kris@embeddedts.com> wrote:
 >
-> Having the libgpiod documentation available online would be helpful, so
-> add the configuration required to generate the existing doxygen C/C++
-> documentation on readthedocs.
+> Technologic Systems has rebranded as embeddedTS with the current
+> domain eventually going offline. Update web/doc URLs to correct
+> resource locations.
 >
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
->
+> Signed-off-by: Kris Bahnsen <kris@embeddedTS.com>
 > ---
+>  drivers/gpio/gpio-ts5500.c       | 4 ++--
+>  drivers/net/can/sja1000/Kconfig  | 2 +-
+>  drivers/net/can/sja1000/tscan1.c | 4 ++--
+>  3 files changed, 5 insertions(+), 5 deletions(-)
 >
-> This is intended to be a minimal change that can be applied to both
-> master and v1.6.x and have zero impact on existing builds.
-> It has been tested on RTD using the current v1.6.3 release[1].
-> The approach used here is to replace any Sphinx documentation generated
-> by RTD with the doxygen documentation.
-> A subsequent patch for v2 can switch to using Breathe/Sphinx to include
-> the documentation for the Python bindings as well.  And relocate the
-> Sphinx configuration into the doc directory.
->
-> Cheers,
-> Kent.
-> [1] https://libgpiod.readthedocs.io/en/latest/
->
->  .readthedocs.yaml | 29 ++++++++++++++++++++
->  sphinx/conf.py    | 70 +++++++++++++++++++++++++++++++++++++++++++++++
->  sphinx/index.rst  | 24 ++++++++++++++++
->  3 files changed, 123 insertions(+)
->  create mode 100644 .readthedocs.yaml
->  create mode 100644 sphinx/conf.py
->  create mode 100644 sphinx/index.rst
->
-> diff --git a/.readthedocs.yaml b/.readthedocs.yaml
-> new file mode 100644
-> index 0000000..976496c
-> --- /dev/null
-> +++ b/.readthedocs.yaml
-> @@ -0,0 +1,29 @@
-> +# SPDX-License-Identifier: LGPL-2.1-or-later
-> +
-> +#
-> +# This file is part of libgpiod.
-> +#
-> +# Copyright (C) 2022 Bartosz Golaszewski <bartekgola@gmail.com>
-> +#
-> +# Read the Docs configuration file
-> +# See https://docs.readthedocs.io/en/stable/config-file/v2.html for details
-> +
-> +version: 2
-> +
-> +build:
-> +  os: ubuntu-20.04
-> +  tools:
-> +    python: "3.9"
-> +  # doxygen is available by default, but just in case.
-> +  # others are definitely missing.
-> +  apt_packages:
-> +      - autoconf
-> +      - autoconf-archive
-> +      - libtool
-> +      - m4
-> +      - doxygen
-> +      - graphviz
-> +
-> +sphinx:
-> +   configuration: sphinx/conf.py
-> +
-> diff --git a/sphinx/conf.py b/sphinx/conf.py
-> new file mode 100644
-> index 0000000..7022ff9
-> --- /dev/null
-> +++ b/sphinx/conf.py
-> @@ -0,0 +1,70 @@
-> +# SPDX-License-Identifier: LGPL-2.1-or-later
-> +
-> +#
-> +# This file is part of libgpiod.
-> +#
-> +# Copyright (C) 2022 Bartosz Golaszewski <bartekgola@gmail.com>
-> +#
-> +# Configuration file for the Sphinx documentation builder.
-> +#
-> +# This file only contains a selection of the most common options. For a full
-> +# list see the documentation:
-> +# https://www.sphinx-doc.org/en/master/usage/configuration.html
-> +
-> +import subprocess
-> +
-> +subprocess.run('cd .. ; ./autogen.sh ; make doc', shell=True)
-> +
-> +# -- Path setup --------------------------------------------------------------
-> +
-> +# If extensions (or modules to document with autodoc) are in another directory,
-> +# add these directories to sys.path here. If the directory is relative to the
-> +# documentation root, use os.path.abspath to make it absolute, like shown here.
-> +#
-> +# import os
-> +# import sys
-> +# sys.path.insert(0, os.path.abspath('.'))
-> +
-> +
-> +# -- Project information -----------------------------------------------------
-> +
-> +project = 'libgpiod'
-> +copyright = '2022, Bartosz Golaszewski'
-> +author = 'Bartosz Golaszewski'
-> +
-> +# The full version, including alpha/beta/rc tags
-> +release = subprocess.run(
-> +            ['git', 'describe', '--dirty'],
-> +            capture_output=True).stdout.decode().strip()
-> +
-> +# -- General configuration ---------------------------------------------------
-> +
-> +# Add any Sphinx extension module names here, as strings. They can be
-> +# extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
-> +# ones.
-> +extensions = [
-> +]
-> +
-> +# Add any paths that contain templates here, relative to this directory.
-> +templates_path = []
-> +
-> +# List of patterns, relative to source directory, that match files and
-> +# directories to ignore when looking for source files.
-> +# This pattern also affects html_static_path and html_extra_path.
-> +exclude_patterns = []
-> +
-> +
-> +# -- Options for HTML output -------------------------------------------------
-> +
-> +# The theme to use for HTML and HTML Help pages.  See the documentation for
-> +# a list of builtin themes.
-> +#
-> +html_theme = 'alabaster'
-> +
-> +# Add any paths that contain custom static files (such as style sheets) here,
-> +# relative to this directory. They are copied after the builtin static files,
-> +# so a file named "default.css" will overwrite the builtin "default.css".
-> +html_static_path = []
-> +
-> +html_extra_path = ['../doc/html']
-> +
-> diff --git a/sphinx/index.rst b/sphinx/index.rst
-> new file mode 100644
-> index 0000000..e38fad7
-> --- /dev/null
-> +++ b/sphinx/index.rst
-> @@ -0,0 +1,24 @@
-> +.. SPDX-License-Identifier: LGPL-2.1-or-later
-> +
-> +..
-> +   This file is part of libgpiod.
-> +
-> +   Copyright (C) 2022 Bartosz Golaszewski <bartekgola@gmail.com>
+> diff --git a/drivers/gpio/gpio-ts5500.c b/drivers/gpio/gpio-ts5500.c
+> index b159e92a3612..8e03614c7a24 100644
+> --- a/drivers/gpio/gpio-ts5500.c
+> +++ b/drivers/gpio/gpio-ts5500.c
+> @@ -11,11 +11,11 @@
+>   * Actually, the following platforms have DIO support:
+>   *
+>   * TS-5500:
+> - *   Documentation: http://wiki.embeddedarm.com/wiki/TS-5500
+> + *   Documentation: https://docs.embeddedts.com/TS-5500
+>   *   Blocks: DIO1, DIO2 and LCD port.
+>   *
+>   * TS-5600:
+> - *   Documentation: http://wiki.embeddedarm.com/wiki/TS-5600
+> + *   Documentation: https://docs.embeddedts.com/TS-5600
+>   *   Blocks: LCD port (identical to TS-5500 LCD).
+>   */
 
-All looks good to me except that Copyright should be yours here, not mine. :)
+For GPIO
 
-Bart
+Acked-by: Bartosz Golaszewski <brgl@bgdev.pl>
 
-> +
-> +   libgpiod documentation master file.
-> +
-> +Welcome to libgpiod's documentation!
-> +====================================
-> +
-> +.. toctree::
-> +   :maxdepth: 2
-> +   :caption: Contents:
-> +
-> +
-> +
-> +Indices and tables
-> +==================
-> +
-> +* :ref:`genindex`
-> +* :ref:`modindex`
-> +* :ref:`search`
+>
+> diff --git a/drivers/net/can/sja1000/Kconfig b/drivers/net/can/sja1000/Kconfig
+> index 110071b26921..4b2f9cb17fc3 100644
+> --- a/drivers/net/can/sja1000/Kconfig
+> +++ b/drivers/net/can/sja1000/Kconfig
+> @@ -107,7 +107,7 @@ config CAN_TSCAN1
+>         depends on ISA
+>         help
+>           This driver is for Technologic Systems' TSCAN-1 PC104 boards.
+> -         http://www.embeddedarm.com/products/board-detail.php?product=TS-CAN1
+> +         https://www.embeddedts.com/products/TS-CAN1
+>           The driver supports multiple boards and automatically configures them:
+>           PLD IO base addresses are read from jumpers JP1 and JP2,
+>           IRQ numbers are read from jumpers JP4 and JP5,
+> diff --git a/drivers/net/can/sja1000/tscan1.c b/drivers/net/can/sja1000/tscan1.c
+> index 3dbba8d61afb..749002f21e27 100644
+> --- a/drivers/net/can/sja1000/tscan1.c
+> +++ b/drivers/net/can/sja1000/tscan1.c
+> @@ -7,8 +7,8 @@
+>
+>  /*
+>   * References:
+> - * - Getting started with TS-CAN1, Technologic Systems, Jun 2009
+> - *     http://www.embeddedarm.com/documentation/ts-can1-manual.pdf
+> + * - Getting started with TS-CAN1, Technologic Systems, Feb 2022
+> + *     https://docs.embeddedts.com/TS-CAN1
+>   */
+>
+>  #include <linux/init.h>
 > --
-> 2.35.1
+> 2.11.0
 >
