@@ -2,178 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B680F4CFBED
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Mar 2022 11:51:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C3C624CFC2D
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Mar 2022 12:02:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241088AbiCGKwV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Mar 2022 05:52:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48948 "EHLO
+        id S232135AbiCGLDm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Mar 2022 06:03:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236370AbiCGKv4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Mar 2022 05:51:56 -0500
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79A888A33A;
-        Mon,  7 Mar 2022 02:12:10 -0800 (PST)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1nRALX-0003xB-MY; Mon, 07 Mar 2022 11:12:07 +0100
-Message-ID: <28ebe79a-6e94-4b1b-c4e8-291e614327b0@leemhuis.info>
-Date:   Mon, 7 Mar 2022 11:12:06 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
-Content-Language: en-US
+        with ESMTP id S242158AbiCGLDI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Mar 2022 06:03:08 -0500
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEAF51EC6B;
+        Mon,  7 Mar 2022 02:24:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1646648698; x=1678184698;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=JP3i4k92HCF7w/7CAemouqXsnWuC4cbfniI4xZkkhGo=;
+  b=CErph2rl+gTbWxAlgoehvSjO03Q5vNuWpmCYCcshu1k7lpA/fnlSEqMh
+   nx0GiQxDpg66F3mh5RtrAkA0+rxvtLQB7d6z5G3MZy/zi3CmlX0yoZ1qo
+   bhhte5pNNsZSk4+oLDGgtPxl8ZaDIClaBs3haYYfwpMTbceIkcP45GQ2S
+   WFiRaIYeTMSEylHaAl2XBnEuuwLrbCNfv8sP71AKlIK/Q9YQgrcoEBuNf
+   zTiRjBWSHmnLgcH7rWo3a4yDFkLEOPjv6ST4IrolDI0VYsYCwwcqkC85+
+   Uy5kIR2A7ZEpwUnhCStQ2T+iD7m72AAELZbwLYLvhvaoitJNLIKzBlMRp
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10278"; a="254087439"
+X-IronPort-AV: E=Sophos;i="5.90,161,1643702400"; 
+   d="scan'208";a="254087439"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2022 02:24:42 -0800
+X-IronPort-AV: E=Sophos;i="5.90,161,1643702400"; 
+   d="scan'208";a="643194326"
+Received: from smile.fi.intel.com ([10.237.72.59])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2022 02:24:41 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1nRAWy-00ChxM-TK;
+        Mon, 07 Mar 2022 12:23:56 +0200
+Date:   Mon, 7 Mar 2022 12:23:56 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>,
-        stable <stable@vger.kernel.org>, regressions@lists.linux.dev,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Edmond Chung <edmondchung@google.com>,
-        Andrew Chant <achant@google.com>,
-        Will McVicker <willmcvicker@google.com>,
-        Sergio Tanzilli <tanzilli@acmesystems.it>
-References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
- <CACRpkdbzk55pmK9XMwc470O8vJFUBQ6zs35shOYCFKr+YaOezw@mail.gmail.com>
- <CACjc_5q247Yb8t8PfJcudVAPFYQcioREAE3zj8OtPR-Ug_x=tA@mail.gmail.com>
- <CACRpkda=0=Hcyyote+AfwoLKPGak7RV6VFt6b0fMVWBe8veTwA@mail.gmail.com>
- <CACjc_5r7i3HJ466MtwR0iZD6jdVXEqq4km0Tn7XwRijGnsDz=Q@mail.gmail.com>
- <CACRpkdZGVq19GZuOP1BwLB2-qxj1_=O9tHMVRvphvy3m6KbNig@mail.gmail.com>
- <CAMRc=McPSFQFPP1nSTXj3snKWqQyzNgz0j_J5ooyUrhRFRMqJQ@mail.gmail.com>
- <cadc5208-2eb1-beb1-4f6d-d07939072ca3@leemhuis.info>
- <CAMRc=MfbeOBim5mAMGghUYX_uvAKnCikEqftF-k4EZE6g48cNg@mail.gmail.com>
-From:   Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <CAMRc=MfbeOBim5mAMGghUYX_uvAKnCikEqftF-k4EZE6g48cNg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1646647930;3da3d2bc;
-X-HE-SMSGID: 1nRALX-0003xB-MY
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] gpiolib: check for overflow when reading the 'ngpios'
+ property
+Message-ID: <YiXdPLGR3EVryJyB@smile.fi.intel.com>
+References: <20220306193420.99714-1-brgl@bgdev.pl>
+ <CAHp75Vfgsa5Ru5aA7Bx_mV--h-GFKSX9Uocf+njvh8Rc1yNTow@mail.gmail.com>
+ <CAHp75Vd8Z-XmSE-JxM55rLAzMqFqm5D7B2HsQ+P_vdh==deOJQ@mail.gmail.com>
+ <YiXWBAlQ4GHiPkDg@smile.fi.intel.com>
+ <CAMRc=McRVSjiWxaDz0G5pWn7JxMXUV-b8VoUfvsLhc-iZSk4oQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=McRVSjiWxaDz0G5pWn7JxMXUV-b8VoUfvsLhc-iZSk4oQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 07.03.22 10:58, Bartosz Golaszewski wrote:
-> On Fri, Mar 4, 2022 at 8:13 AM Thorsten Leemhuis
-> <regressions@leemhuis.info> wrote:
->> On 16.02.22 15:40, Bartosz Golaszewski wrote:
->>> On Tue, Feb 15, 2022 at 10:56 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->>>>
->>>> On Mon, Feb 14, 2022 at 12:24 AM Marcelo Roberto Jimenez
->>>> <marcelo.jimenez@gmail.com> wrote:
->>>>> On Sat, Feb 12, 2022 at 1:55 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->>>>
->>>>>> I am curious about the usecases and how deeply you have built
->>>>>> yourselves into this.
->>>>>
->>>>> I don't know if I understand what you mean, sorry.
->>>>
->>>> Why does the user need the sysfs ABI? What is it used for?
->>>>
->>>> I.e what is the actual use case?
->>>>
->>>>>>> In any case, the upstream file should be enough to test the issue reported here.
->>>>>>
->>>>>> The thing is that upstream isn't super happy that you have been
->>>>>> making yourselves dependent on features that we are actively
->>>>>> discouraging and then demanding that we support these features.
->>>>>
->>>>> Hum, demanding seems to be a strong word for what I am doing here.
->>>>>
->>>>> Deprecated should not mean broken. My point is: the API seems to be
->>>>> currently broken. User space apps got broken, that's a fact. I even
->>>>> took the time to bisect the kernel and show you which commit broke it.
->>>>> So, no, I am not demanding. More like reporting and providing a
->>>>> temporary solution to those with a similar problem.
->>>>>
->>>>> Maybe it is time to remove the API, but this is up to "upstream".
->>>>> Leaving the API broken seems pointless and unproductive.
->>>>>
->>>>> Sorry for the "not super happiness of upstream", but maybe upstream
->>>>> got me wrong.
->>>>>
->>>>> We are not "making ourselves dependent on features ...". The API was
->>>>> there. We used it. Now it is deprecated, ok, we should move on. I got
->>>>> the message.
->>>>
->>>> Ouch I deserved some slamming for this.
->>>>
->>>> I'm sorry if I came across as harsh :(
->>>>
->>>> I just don't know how to properly push for this.
->>>>
->>>> I have even pushed the option of the deprecated sysfs ABI
->>>> behind the CONFIG_EXPERT option, which should mean that
->>>> the kernel config has been made by someone who has checked
->>>> the option "yes I am an expert I know what I am doing"
->>>> yet failed to observe that this ABI is obsoleted since 5 years
->>>> and hence failed to be an expert.
->>>>
->>>> Of course the ABI (not API really) needs to be fixed if we can find the
->>>> problem. It's frustrating that fixing it seems to fix broken other
->>>> features which are not deprecated, hence the annoyance on my
->>>> part.
->>>>
->>>
->>> I'm afraid we'll earn ourselves a good old LinusRant if we keep
->>> pushing the character device as a solution to the problem here.
->>> Marcelo is right after all: he used an existing user interface, the
->>> interface broke, it must be fixed.
->>>
->>> I would prefer to find a solution that fixes Marcelo's issue while
->>> keeping the offending patches in tree but it seems like the issue is
->>> more complicated and will require some rework of the sysfs interface.
->>>
->>> In which case unless there are objections I lean towards reverting the
->>> relevant commits.
->>
->> Sounds good to me, but that was two weeks ago and afaics nothing
->> happened since then. Or did the discussion continue somewhere else?
+On Mon, Mar 07, 2022 at 11:08:51AM +0100, Bartosz Golaszewski wrote:
+> On Mon, Mar 7, 2022 at 10:53 AM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Mon, Mar 07, 2022 at 12:23:03AM +0200, Andy Shevchenko wrote:
+> > > On Mon, Mar 7, 2022 at 12:19 AM Andy Shevchenko
+> > > <andy.shevchenko@gmail.com> wrote:
+> > > > On Mon, Mar 7, 2022 at 12:11 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+
+> > > > > The ngpio fields both in struct gpio_device as well as gpio_chip are
+> > > > > 16-bit unsigned integers. Let's not risk an overflow and check if the
+> > > > > property value represented as a 32-bit unsigned integer is not greater
+> > > > > than U16_MAX.
+> > > >
+> > > > ...
+> > > >
+> > > > > +               if (ngpios > U16_MAX) {
+> > > > > +                       ret = EINVAL;
+> > > > > +                       goto err_free_descs;
+> > > > > +               }
+> > > >
+> > > > I don't think it's a fatal error in this case. I would perhaps print a
+> > > > warning and simply use a masked (which is done implicitly by an
+> > > > assignment of the different type) value. Note, the above is buggy on
+> > > > the buggy DTs, where the upper part of the value is not used. After
+> > > > this patch you effectively make a regression on, yes, broken DTs.
+> > >
+> > > Like
+> > >
+> > >     if (ngpios > U16_MAX)
+> > >         chip_warn(gc, "line cnt %u is greater than supported; use
+> > > %u\n", ngpios, (u16)ngpio);
+> >
+> > Or to be on safer side move this after == 0 check as
+> >
+> >         if (gc->ngpio != ngpios)
+> >                 chip_warn(gc, "line cnt %u is greater than supported; use %u\n", ngpios, gc->ngpio);
+> >
 > 
-> Now queued for fixes, thanks for the reminder.
+> ngpios is not necessarily used so this check must be in the scope of
+> the device property read (inside the if (gc->ngpio == 0) { block).
 
-thx, and yw, that's what I'm here for ;-)
+Can be done as
 
-Sadly that commit didn't use 'Link:' tags pointing to the report (the
-start of this thread) using lore.kernel.org/r/, as explained in
-'Documentation/process/submitting-patches.rst' and
-'Documentation/process/5.Posting.rst'. I'd say that would have been
-really wise here if someone sooner or later needs to look into the
-backstory of the fix. And is also means that I have to tell my
-regression tracking bot about this issue manually now. :-/
+        if (gc->ngpio == 0) {
+		...
+	} else {
+		ngpios = gc->ngpio;
+	}
 
-#regzbot fixed-by: 86528d306d1826cfe59481001d63761ba793317a
+        if (gc->ngpio == 0) {
+		...
+	}
 
-But whatever, thx for taking care of this!
+	if (gc->ngpio != ngpios)
+		chip_warn(gc, "line cnt %u is greater than supported; use %u\n", ngpios, gc->ngpio);
 
-Have a nice week everyone!
+The point of this exercise is to avoid hard coded type of the variable in a
+few places, so if gc->ngpio and/or ngpios have changed type in the future,
+you don't need to change this code.
 
-Ciao, Thorsten
 
->>>>> And I will also tell the dev team that they must use the GPIO char dev
->>>>> and libgpiod from now on and must port everything to it. And we will
->>>>> likely have another group of people who are not super happy, but
->>>>> that's life... :)
->>>>
->>>> I'm happy to hear this!
->>
->> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->>
->> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
->> reports on my table. I can only look briefly into most of them and lack
->> knowledge about most of the areas they concern. I thus unfortunately
->> will sometimes get things wrong or miss something important. I hope
->> that's not the case here; if you think it is, don't hesitate to tell me
->> in a public reply, it's in everyone's interest to set the public record
->> straight.
->>
->> #regzbot poke
-> 
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
