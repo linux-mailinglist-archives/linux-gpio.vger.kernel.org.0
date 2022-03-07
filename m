@@ -2,115 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 553014D0402
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Mar 2022 17:23:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CCCBE4D0441
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Mar 2022 17:38:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244154AbiCGQYU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Mar 2022 11:24:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53766 "EHLO
+        id S235252AbiCGQj2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Mar 2022 11:39:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244160AbiCGQYS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Mar 2022 11:24:18 -0500
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17F605468E;
-        Mon,  7 Mar 2022 08:23:21 -0800 (PST)
-Received: by mail-ed1-x52e.google.com with SMTP id m21so15194211edc.0;
-        Mon, 07 Mar 2022 08:23:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lgB59yw3g0bu2ykbYWPoRlo9RUjg9qF+aAh9DDjOKHY=;
-        b=NO/HnPQdxIJbfmED45RumCUVwNi1TCt6YC2nvRaKY3ljyoLEF4oBonLnv73/A7IHGH
-         jgyLyMkoLOTlPti2IFJxxsPLNBuAMcp/8+IkC7214ztb3zoaDtpINMt+b7y5O6Y4U7Bn
-         8saDkQEhl2Dpm7qgWa6fB5v8lJX4N8eBRzQlkKzg8dvCu837emVGI6kfTN4gzo5EEX20
-         jm/U92Wv6X9gny+cnUjpGH5jOHwqTGGwhh1onLSABfGBWfUiMyG9urtqdema9ul1yDLX
-         fuIe7GRTeCBBYIHQPgbGOhtOBfb4u+dgAvzintK22mekbRVWk3i1QitCJn4U6lY+BD3z
-         9Law==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lgB59yw3g0bu2ykbYWPoRlo9RUjg9qF+aAh9DDjOKHY=;
-        b=BRwBx9OlftPiRNiccF12LqHTqWZh7nhMITy54iZdBna6doFkG6wL3vj7bGR+p9CKrZ
-         EvRDdrvgqmH3cDqlwj5wGa8C3skDhqrmr8l9MboeQ5o9LpfGy1EuhlbkXOt0s7RJy5nE
-         4CRWIHJxbVuqjUvT2zGJWCQh7f4NBfR/2iHup2RjE7J6xx7NhK1aganSVuogIJL/9aMP
-         4eXEDLMUf3jtlZq/MMXM/Hwczo27s1c0sR0LYNS8INyP91C5Z7TwN3bejZA2fYDWlWpV
-         vpc6jCzexfX3Sa72HgTVC/5j6Cq9+s9PBHKMR4EO0BlMuCW9ZYpceyJHyi9TJQKELylV
-         bi/w==
-X-Gm-Message-State: AOAM531b5qdMTQuqWnvyzW+g1rw8Cv6avp2b/UEuBA8e4x4i9mIxYV88
-        BkxxEcSChcp7o5yiVUpICGfmQR9iqnfNFahuOlPISu7qWUg=
-X-Google-Smtp-Source: ABdhPJwYMx49eAVmc3bE0GA6Yek3/Ga4xVbF9mzzuducnFpGjPSbzxJobnZcRaAx4n3G5B4sjUhwzhmjMxcq2+G3vH4=
-X-Received: by 2002:aa7:da93:0:b0:416:4aca:bef7 with SMTP id
- q19-20020aa7da93000000b004164acabef7mr4815740eds.296.1646670199967; Mon, 07
- Mar 2022 08:23:19 -0800 (PST)
+        with ESMTP id S234917AbiCGQj1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Mar 2022 11:39:27 -0500
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D88C113D;
+        Mon,  7 Mar 2022 08:38:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1646671113; x=1678207113;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=IfQ7fUZWr3XgnvGdQWUlNhHFxPBWxM6ZoBtW01GY8so=;
+  b=eV6DHvLlr+Bj0rNI4jrcbqscaXQaqIu55JAWUz5ud5WocS6xfGXld4WB
+   yedMyvGrHRDosCU1KHkwz30ThZYduFNvB8ykNnXAsrzSHHh/XDEAHx2jI
+   gaQOOjM7mswtvgUyXGtadIvRFQjH0cEBHs9ZIU8ZFV0J8sb2JvqSBGiyc
+   Z7S2Yx+oF1oQAo9PPnecD5cM+qJU8gUr2ZorysRvUKbSVU+jNTIRX2BSZ
+   hg9sk5rtW+2wqcMdlHzt/AlHTmV2M56X52guRwQYstp+qV7NGzuHb4R6q
+   3/St403RgZQoqAQn5BTu/LHbRSWO/08IAhYWKThA++Mnkn+dmZ75krE/3
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10279"; a="254377477"
+X-IronPort-AV: E=Sophos;i="5.90,162,1643702400"; 
+   d="scan'208";a="254377477"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Mar 2022 08:38:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,162,1643702400"; 
+   d="scan'208";a="546946690"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga007.fm.intel.com with ESMTP; 07 Mar 2022 08:38:24 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 6D7982AF; Mon,  7 Mar 2022 18:38:42 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] gpio: sim: Declare gpio_sim_hog_config_item_ops static
+Date:   Mon,  7 Mar 2022 18:38:40 +0200
+Message-Id: <20220307163840.64495-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20220307141955.28040-1-alifer.m@variscite.com>
-In-Reply-To: <20220307141955.28040-1-alifer.m@variscite.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 7 Mar 2022 18:22:02 +0200
-Message-ID: <CAHp75Vf=vQd5-PGPu3Pcx9bhKSfhdnYDOSOmZKQZQ+bxVkpmYg@mail.gmail.com>
-Subject: Re: [PATCH] driver: pca953x: avoid error message when resuming
-To:     Alifer Moraes <alifer.m@variscite.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, eran.m@variscite.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        pierluigi.p@variscite.com,
-        FrancescoFerraro <francesco.f@variscite.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 7, 2022 at 5:04 PM Alifer Moraes <alifer.m@variscite.com> wrote:
->
-> From: FrancescoFerraro <francesco.f@variscite.com>
->
-> Avoids the error messages "pca953x 1-0020: failed reading register"
-> when resuming from suspend using gpio-key attached to pca9534.
+Compiler is not happy:
 
-Thanks for your report and fix. My comments below.
+  warning: symbol 'gpio_sim_hog_config_item_ops' was not declared. Should it be static?
 
-First of all, how many of them do you get and why is it a problem?
+Fixes: cb8c474e79be ("gpio: sim: new testing module")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/gpio/gpio-sim.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-...
-
->         const struct pca953x_reg_config *regs;
-> +       int is_in_suspend;
-
-Usually we call it is_suspended or so, check existing code by `git
-grep ...`. And it can be boolean.
-
-...
-
->         ret = regmap_bulk_read(chip->regmap, regaddr, value, NBANK(chip));
->         if (ret < 0) {
-> -               dev_err(&chip->client->dev, "failed reading register\n");
-> +               if (!chip->is_in_suspend)
-> +                       dev_err(&chip->client->dev, "failed reading register\n");
-
-Hmm... Maybe we can simply move it to debug level?
-
->                 return ret;
->         }
-
-...
-
->         chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
->         if (chip == NULL)
->                 return -ENOMEM;
-
-> +       chip->is_in_suspend = 0;
-
-Redundant change.
-
+diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
+index 153fe79e1bf3..bb9bb595c1a8 100644
+--- a/drivers/gpio/gpio-sim.c
++++ b/drivers/gpio/gpio-sim.c
+@@ -1322,7 +1322,7 @@ static void gpio_sim_hog_config_item_release(struct config_item *item)
+ 	kfree(hog);
+ }
+ 
+-struct configfs_item_operations gpio_sim_hog_config_item_ops = {
++static struct configfs_item_operations gpio_sim_hog_config_item_ops = {
+ 	.release	= gpio_sim_hog_config_item_release,
+ };
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.34.1
+
