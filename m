@@ -2,63 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 963A84CF4EB
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Mar 2022 10:23:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9EECC4CF62F
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Mar 2022 10:33:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236585AbiCGJYN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Mar 2022 04:24:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33792 "EHLO
+        id S237283AbiCGJd4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Mar 2022 04:33:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237453AbiCGJYF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Mar 2022 04:24:05 -0500
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D8385643B
-        for <linux-gpio@vger.kernel.org>; Mon,  7 Mar 2022 01:23:11 -0800 (PST)
-Received: by mail-ej1-x62e.google.com with SMTP id d10so30398685eje.10
-        for <linux-gpio@vger.kernel.org>; Mon, 07 Mar 2022 01:23:11 -0800 (PST)
+        with ESMTP id S237756AbiCGJdK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Mar 2022 04:33:10 -0500
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B76806AA71
+        for <linux-gpio@vger.kernel.org>; Mon,  7 Mar 2022 01:30:08 -0800 (PST)
+Received: by mail-pg1-x52f.google.com with SMTP id 27so13047433pgk.10
+        for <linux-gpio@vger.kernel.org>; Mon, 07 Mar 2022 01:30:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=p1KsWS/Km5ymmHojsz3R4CV+vnmDjDKNNWFaUpjoaCY=;
-        b=IGry8qzl5s/aX2ZICuuGS12W9UPHlSBXHF213489EPYh++oHipDSdDvQAUwbhWcJ7d
-         iqA5gN1QP1hp3b2ZXsCkBfdSr04NJL3rZNawHI4YSqgbqJHzpMUR+S2t/RKeXCNjL5M2
-         vJ2wWQ5b+zQRuxdvXiXzXElWu2ZiaVg2BAC/JDJjmqtjug3pWuMZKyb//R5ynD9R3+xk
-         NMjQQdMLRnJjg2Swe7TUXcEdj8Ld0pHBxWeC7iZCwg78n3yPUVoby9ArbTxaQTZTHVTJ
-         HddXebm6hrGWxeQjWtYD91N9m8SlR8LnKC8Ti9ckQG8D/q6km7ovdYH0vQMNZaMkCaRm
-         aGtA==
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=jJy0kd532p2lW2WJ1Hn5hLy+vehNRzAKGzQJuLCrJVw=;
+        b=DeJ5lci47x4/nFLEQ1M+kqWm2iF8K8I5FyuItFN3+5juy3ahr8pa9xY/DX44A1XeDc
+         PK9n5REAN2yHuiJvxD3mru46ZO8b3Pwi8ueLYqYWjhWcY2wxpLRVqGDJihkuB4RIi8uK
+         ALEgfn/7X6ieSrLwWwdFC6rABLaDNow8KkQ+C1yGJ8a0J3f09HIgikQkyHFjyrTPZ4ov
+         t+4kppBSRShkpMYm5G9n69GWbHJBmBhqtNZA1GJJXnEk1M7k4ZbBHgCpTY5Z+gqXgf4d
+         sfB/UM/u7TCH3okJZd/+HmNygBzP5xTWLK5tf1DZy0hGp3yb9Sn5n7HHNPXqH/BmvBcC
+         W0Yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p1KsWS/Km5ymmHojsz3R4CV+vnmDjDKNNWFaUpjoaCY=;
-        b=qdZ75y1AXjuSNWsD3Ed3mZITp4oo6frPt70ObtF9zlwxusWhwxrWVjghv+EuJRlAFq
-         uny/Kk4v3oOFidqtkBPdf9/lN/AsHC//U556RU73Y0Ugbrv0mi/J0oJoeqk3NoU60niW
-         wqtfO/4Ftwn+zO7Ii7ev49gcYi4JKtS1w10xDSZQNGp4PkUhq2ji/sVpmRYaV338TEoU
-         CWqygap+rw3yEPkE6yQbWkxjF/loUMhSPug+8kSIRP9jeIEYQee8HG742SWMiaPztfWd
-         ib6AgYnToIXqx2dFQxm3o1tY0dwlVlM3xtEYaRJTOtoL4Ji4haVftOvMUwfqcZvm+QQz
-         tgJg==
-X-Gm-Message-State: AOAM532f7k6NR2NMn28yOSd19ZejOrdT+s3oer1rVYVGUeFlh2rx6rDY
-        jylF6raeTY8AB6O+Bs6XrmiOKMk/sZsW/BCCPpy1OQ==
-X-Google-Smtp-Source: ABdhPJxAemVcQjSXIoI905JfgF4cI1d95D553RgtN5XZhyqoHJTJej6DD7dwYYJPjyxcGl9UZbckjpy6b4OO7CzjjQM=
-X-Received: by 2002:a17:906:888e:b0:6da:ed04:5e40 with SMTP id
- ak14-20020a170906888e00b006daed045e40mr8642737ejc.286.1646644989659; Mon, 07
- Mar 2022 01:23:09 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=jJy0kd532p2lW2WJ1Hn5hLy+vehNRzAKGzQJuLCrJVw=;
+        b=B8M5vTLK7o+k0dqK6vwhsAeJ7YJMw+CHheWGIvLBxmYBhEUOyPYpcjdFOmtN2FGner
+         vTvlp1aM1N0pUMfDBNqY2oH1GKyu1sCTStnYOjYt2SB+CEGu95Ce9yPrmXnsuxgfst1y
+         LVsy9DFD1z/jcrz+DZTcq7aTQb1GNl/GlFz26NghRT3kflX6UYo8Po687O0iTi3c0R4e
+         oYOlyneuEEjSF69Hc4uEcTSXPBe9KdJKzuyNxFwrlj8PMaSD6zOloka5zxhUqg9iud2P
+         vWRVRxHujtw57QyH5sq3Xm5Q9HwFgvpB5jLPufcLJ+84ru+H8tyou4aoqVkP2sclBdAK
+         scAg==
+X-Gm-Message-State: AOAM532JgTH+eyzkVzmt9AUTEUAY0st6XGjAwMMNOUYUL3wkn72+ciwV
+        +1d00ly1lgQEk2ZiAJpXCePwkItOuLIMoQ==
+X-Google-Smtp-Source: ABdhPJwCeI/JE+up8K/7ch8TzWgXLKgLdPYs0IVpCYfr0+Jd0RLzryYkj5Zx4vq21WO16eSXzAvGAw==
+X-Received: by 2002:a63:191e:0:b0:37f:f33c:2d43 with SMTP id z30-20020a63191e000000b0037ff33c2d43mr8910291pgl.43.1646645407003;
+        Mon, 07 Mar 2022 01:30:07 -0800 (PST)
+Received: from sol (60-242-155-106.static.tpgi.com.au. [60.242.155.106])
+        by smtp.gmail.com with ESMTPSA id b9-20020a056a000cc900b004f3581ae086sm16185300pfv.16.2022.03.07.01.30.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Mar 2022 01:30:06 -0800 (PST)
+Date:   Mon, 7 Mar 2022 17:30:02 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [libgpiod][PATCH] doc: add configuration to generate doxygen
+ documentation on readthedocs.
+Message-ID: <20220307093002.GA45584@sol>
+References: <20220305094037.46361-1-warthog618@gmail.com>
+ <CAMRc=MebW6P0qDi0DNckwVe2+LX3Bi84-HPZPGnAA-tvDiJ9Xg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20220303225525.29846-1-kris@embeddedTS.com>
-In-Reply-To: <20220303225525.29846-1-kris@embeddedTS.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 7 Mar 2022 10:22:59 +0100
-Message-ID: <CAMRc=McesjKviO=5gK3GN+XukZfSr=um9W8+sqXw9GSFX0QTgw@mail.gmail.com>
-Subject: Re: [PATCH] drivers: Fix Links to Technologic Systems web resources
-To:     Kris Bahnsen <kris@embeddedts.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>, wg@grandegger.com,
-        mkl@pengutronix.de,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-can@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MebW6P0qDi0DNckwVe2+LX3Bi84-HPZPGnAA-tvDiJ9Xg@mail.gmail.com>
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -66,70 +70,33 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 3, 2022 at 11:57 PM Kris Bahnsen <kris@embeddedts.com> wrote:
->
-> Technologic Systems has rebranded as embeddedTS with the current
-> domain eventually going offline. Update web/doc URLs to correct
-> resource locations.
->
-> Signed-off-by: Kris Bahnsen <kris@embeddedTS.com>
-> ---
->  drivers/gpio/gpio-ts5500.c       | 4 ++--
->  drivers/net/can/sja1000/Kconfig  | 2 +-
->  drivers/net/can/sja1000/tscan1.c | 4 ++--
->  3 files changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-ts5500.c b/drivers/gpio/gpio-ts5500.c
-> index b159e92a3612..8e03614c7a24 100644
-> --- a/drivers/gpio/gpio-ts5500.c
-> +++ b/drivers/gpio/gpio-ts5500.c
-> @@ -11,11 +11,11 @@
->   * Actually, the following platforms have DIO support:
->   *
->   * TS-5500:
-> - *   Documentation: http://wiki.embeddedarm.com/wiki/TS-5500
-> + *   Documentation: https://docs.embeddedts.com/TS-5500
->   *   Blocks: DIO1, DIO2 and LCD port.
->   *
->   * TS-5600:
-> - *   Documentation: http://wiki.embeddedarm.com/wiki/TS-5600
-> + *   Documentation: https://docs.embeddedts.com/TS-5600
->   *   Blocks: LCD port (identical to TS-5500 LCD).
->   */
+On Mon, Mar 07, 2022 at 10:16:49AM +0100, Bartosz Golaszewski wrote:
+> On Sat, Mar 5, 2022 at 10:40 AM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> > Having the libgpiod documentation available online would be helpful, so
+> > add the configuration required to generate the existing doxygen C/C++
+> > documentation on readthedocs.
+> >
+> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> >
 
-For GPIO
+[snip]
 
-Acked-by: Bartosz Golaszewski <brgl@bgdev.pl>
+> > --- /dev/null
+> > +++ b/sphinx/index.rst
+> > @@ -0,0 +1,24 @@
+> > +.. SPDX-License-Identifier: LGPL-2.1-or-later
+> > +
+> > +..
+> > +   This file is part of libgpiod.
+> > +
+> > +   Copyright (C) 2022 Bartosz Golaszewski <bartekgola@gmail.com>
+> 
+> All looks good to me except that Copyright should be yours here, not mine. :)
+> 
 
->
-> diff --git a/drivers/net/can/sja1000/Kconfig b/drivers/net/can/sja1000/Kconfig
-> index 110071b26921..4b2f9cb17fc3 100644
-> --- a/drivers/net/can/sja1000/Kconfig
-> +++ b/drivers/net/can/sja1000/Kconfig
-> @@ -107,7 +107,7 @@ config CAN_TSCAN1
->         depends on ISA
->         help
->           This driver is for Technologic Systems' TSCAN-1 PC104 boards.
-> -         http://www.embeddedarm.com/products/board-detail.php?product=TS-CAN1
-> +         https://www.embeddedts.com/products/TS-CAN1
->           The driver supports multiple boards and automatically configures them:
->           PLD IO base addresses are read from jumpers JP1 and JP2,
->           IRQ numbers are read from jumpers JP4 and JP5,
-> diff --git a/drivers/net/can/sja1000/tscan1.c b/drivers/net/can/sja1000/tscan1.c
-> index 3dbba8d61afb..749002f21e27 100644
-> --- a/drivers/net/can/sja1000/tscan1.c
-> +++ b/drivers/net/can/sja1000/tscan1.c
-> @@ -7,8 +7,8 @@
->
->  /*
->   * References:
-> - * - Getting started with TS-CAN1, Technologic Systems, Jun 2009
-> - *     http://www.embeddedarm.com/documentation/ts-can1-manual.pdf
-> + * - Getting started with TS-CAN1, Technologic Systems, Feb 2022
-> + *     https://docs.embeddedts.com/TS-CAN1
->   */
->
->  #include <linux/init.h>
-> --
-> 2.11.0
->
+Seemed simpler to me to keep it under the one umbrella, so happy to
+transfer any and all copyrights to you.
+
+Cheers,
+Kent.
