@@ -2,67 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EECC4CF62F
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Mar 2022 10:33:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C339E4CF6C7
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Mar 2022 10:43:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237283AbiCGJd4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Mar 2022 04:33:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36424 "EHLO
+        id S237850AbiCGJmc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Mar 2022 04:42:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237756AbiCGJdK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Mar 2022 04:33:10 -0500
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B76806AA71
-        for <linux-gpio@vger.kernel.org>; Mon,  7 Mar 2022 01:30:08 -0800 (PST)
-Received: by mail-pg1-x52f.google.com with SMTP id 27so13047433pgk.10
-        for <linux-gpio@vger.kernel.org>; Mon, 07 Mar 2022 01:30:08 -0800 (PST)
+        with ESMTP id S238982AbiCGJjG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Mar 2022 04:39:06 -0500
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 414656FA20
+        for <linux-gpio@vger.kernel.org>; Mon,  7 Mar 2022 01:34:03 -0800 (PST)
+Received: by mail-ed1-x52d.google.com with SMTP id o1so17909786edc.3
+        for <linux-gpio@vger.kernel.org>; Mon, 07 Mar 2022 01:34:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=jJy0kd532p2lW2WJ1Hn5hLy+vehNRzAKGzQJuLCrJVw=;
-        b=DeJ5lci47x4/nFLEQ1M+kqWm2iF8K8I5FyuItFN3+5juy3ahr8pa9xY/DX44A1XeDc
-         PK9n5REAN2yHuiJvxD3mru46ZO8b3Pwi8ueLYqYWjhWcY2wxpLRVqGDJihkuB4RIi8uK
-         ALEgfn/7X6ieSrLwWwdFC6rABLaDNow8KkQ+C1yGJ8a0J3f09HIgikQkyHFjyrTPZ4ov
-         t+4kppBSRShkpMYm5G9n69GWbHJBmBhqtNZA1GJJXnEk1M7k4ZbBHgCpTY5Z+gqXgf4d
-         sfB/UM/u7TCH3okJZd/+HmNygBzP5xTWLK5tf1DZy0hGp3yb9Sn5n7HHNPXqH/BmvBcC
-         W0Yg==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=T4pAYxTpYPVm5BTKv0KTFLGCqSqO8rP0B5DSOXBwIIg=;
+        b=XOVQYs5hOi5/QArBQXFroja0peQ2uhcvbl0ymGXyBrZz7jqc1l1e7nq9dqLl4KBskz
+         HTpJYa4D4L4D1Ny38BmIdtiTGV5Rmzb47jmY6rHFEhK+3ZnqwtoEu9ZW8C7TiFq5YxRh
+         cMwQjrWZ0xMPEW1P9VbUQA3AE8fCATUhNhLkkSYTWpNN6Xq4gKLRlXMEzsyWqI4/1PdA
+         dV1tHE4mxBLY1iEoEbvoxZp8PUUJaUyUg6lhWpQ54LCW28Nh8a2rc8NNYuGLPvbOb7lY
+         qbZXa7rxKXLMvcpvlUlP1uVrSHXZPJTF96M8bpcSmKbW1XJa4362k2PaotiKn+weMN7F
+         xWGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jJy0kd532p2lW2WJ1Hn5hLy+vehNRzAKGzQJuLCrJVw=;
-        b=B8M5vTLK7o+k0dqK6vwhsAeJ7YJMw+CHheWGIvLBxmYBhEUOyPYpcjdFOmtN2FGner
-         vTvlp1aM1N0pUMfDBNqY2oH1GKyu1sCTStnYOjYt2SB+CEGu95Ce9yPrmXnsuxgfst1y
-         LVsy9DFD1z/jcrz+DZTcq7aTQb1GNl/GlFz26NghRT3kflX6UYo8Po687O0iTi3c0R4e
-         oYOlyneuEEjSF69Hc4uEcTSXPBe9KdJKzuyNxFwrlj8PMaSD6zOloka5zxhUqg9iud2P
-         vWRVRxHujtw57QyH5sq3Xm5Q9HwFgvpB5jLPufcLJ+84ru+H8tyou4aoqVkP2sclBdAK
-         scAg==
-X-Gm-Message-State: AOAM532JgTH+eyzkVzmt9AUTEUAY0st6XGjAwMMNOUYUL3wkn72+ciwV
-        +1d00ly1lgQEk2ZiAJpXCePwkItOuLIMoQ==
-X-Google-Smtp-Source: ABdhPJwCeI/JE+up8K/7ch8TzWgXLKgLdPYs0IVpCYfr0+Jd0RLzryYkj5Zx4vq21WO16eSXzAvGAw==
-X-Received: by 2002:a63:191e:0:b0:37f:f33c:2d43 with SMTP id z30-20020a63191e000000b0037ff33c2d43mr8910291pgl.43.1646645407003;
-        Mon, 07 Mar 2022 01:30:07 -0800 (PST)
-Received: from sol (60-242-155-106.static.tpgi.com.au. [60.242.155.106])
-        by smtp.gmail.com with ESMTPSA id b9-20020a056a000cc900b004f3581ae086sm16185300pfv.16.2022.03.07.01.30.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Mar 2022 01:30:06 -0800 (PST)
-Date:   Mon, 7 Mar 2022 17:30:02 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [libgpiod][PATCH] doc: add configuration to generate doxygen
- documentation on readthedocs.
-Message-ID: <20220307093002.GA45584@sol>
-References: <20220305094037.46361-1-warthog618@gmail.com>
- <CAMRc=MebW6P0qDi0DNckwVe2+LX3Bi84-HPZPGnAA-tvDiJ9Xg@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=T4pAYxTpYPVm5BTKv0KTFLGCqSqO8rP0B5DSOXBwIIg=;
+        b=wgTtZzuuaEmsVSwjtz+VXq//MCae5biAz8rE4zKdl8Xmd6zIi96EvtjSyCjHVW3E6F
+         ryexEu73a0VYsXH1Mce70terJKnbk1XROfJpM9tz2ANQaC1ZmHOXnPHHYgusFD61o2qh
+         903Y3hiX5vn62LkWQBO6GTM/f7vCd76Drs7zmiD4zDRO3FCxAKXy4u8XIy7cyK/upyhr
+         SLN66NQ9cMtu6qUWI3uHkyWjyG2TtzFkjVsjenHQYHBbgckC67+Z6pJtSu5T/g5mKTbg
+         pH8OWSX8pZieSM1rRaXOHvFDycC+16qzfJWs6LEuz1bFodrmOJtc75IhYSfGFFh/zj8i
+         ukkw==
+X-Gm-Message-State: AOAM531JhuMXu30SGMDQGWd9PZJtn8nFmxq2qzAHgYNqaYT27+/BinWf
+        k2yxjMXJk9y73TdNILRlX/qjgM/4cvP0DjJv3KSDbQ==
+X-Google-Smtp-Source: ABdhPJzs6obQQ+IS68pyTHcyaWrxMiTQtAkSpPqurNqsXqJhCMR3bBC/qScebmZHHGDDCuou6y5dsamkrWzHkgOr8oU=
+X-Received: by 2002:a05:6402:d0d:b0:416:1d69:f23b with SMTP id
+ eb13-20020a0564020d0d00b004161d69f23bmr10131225edb.141.1646645637315; Mon, 07
+ Mar 2022 01:33:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MebW6P0qDi0DNckwVe2+LX3Bi84-HPZPGnAA-tvDiJ9Xg@mail.gmail.com>
+References: <20220228153405.49981-1-akhilrajeev@nvidia.com>
+In-Reply-To: <20220228153405.49981-1-akhilrajeev@nvidia.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 7 Mar 2022 10:33:46 +0100
+Message-ID: <CAMRc=McbkMjg2Qku8XdC_GK3KPt_GFwi15PK4Yt-rRMKNs0rYw@mail.gmail.com>
+Subject: Re: [PATCH v2] gpio: tegra186: Add IRQ per bank for Tegra241
+To:     Akhil R <akhilrajeev@nvidia.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -70,33 +69,43 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 07, 2022 at 10:16:49AM +0100, Bartosz Golaszewski wrote:
-> On Sat, Mar 5, 2022 at 10:40 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > Having the libgpiod documentation available online would be helpful, so
-> > add the configuration required to generate the existing doxygen C/C++
-> > documentation on readthedocs.
-> >
-> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> >
+On Mon, Feb 28, 2022 at 4:34 PM Akhil R <akhilrajeev@nvidia.com> wrote:
+>
+> Add the number of interrupts per bank for Tegra241 (Grace) to
+> fix the probe failure.
+>
+> Fixes: d1056b771ddb ("gpio: tegra186: Add support for Tegra241")
+> Signed-off-by: Akhil R <akhilrajeev@nvidia.com>
+> ---
+> v1->v2: Add 'Fixes' tag in the commit message
+>
+>  drivers/gpio/gpio-tegra186.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
+> index 8d298beffd86..031fe105b58e 100644
+> --- a/drivers/gpio/gpio-tegra186.c
+> +++ b/drivers/gpio/gpio-tegra186.c
+> @@ -1075,6 +1075,7 @@ static const struct tegra_gpio_soc tegra241_main_soc = {
+>         .ports = tegra241_main_ports,
+>         .name = "tegra241-gpio",
+>         .instance = 0,
+> +       .num_irqs_per_bank = 8,
+>  };
+>
+>  #define TEGRA241_AON_GPIO_PORT(_name, _bank, _port, _pins)     \
+> @@ -1095,6 +1096,7 @@ static const struct tegra_gpio_soc tegra241_aon_soc = {
+>         .ports = tegra241_aon_ports,
+>         .name = "tegra241-gpio-aon",
+>         .instance = 1,
+> +       .num_irqs_per_bank = 8,
+>  };
+>
+>  static const struct of_device_id tegra186_gpio_of_match[] = {
+> --
+> 2.17.1
+>
 
-[snip]
+Queued for fixes, thanks!
 
-> > --- /dev/null
-> > +++ b/sphinx/index.rst
-> > @@ -0,0 +1,24 @@
-> > +.. SPDX-License-Identifier: LGPL-2.1-or-later
-> > +
-> > +..
-> > +   This file is part of libgpiod.
-> > +
-> > +   Copyright (C) 2022 Bartosz Golaszewski <bartekgola@gmail.com>
-> 
-> All looks good to me except that Copyright should be yours here, not mine. :)
-> 
-
-Seemed simpler to me to keep it under the one umbrella, so happy to
-transfer any and all copyrights to you.
-
-Cheers,
-Kent.
+Bart
