@@ -2,136 +2,172 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A4454D0731
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Mar 2022 20:05:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A637E4D07D4
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Mar 2022 20:40:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240468AbiCGTGP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Mar 2022 14:06:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41748 "EHLO
+        id S244937AbiCGTlo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Mar 2022 14:41:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233935AbiCGTGO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Mar 2022 14:06:14 -0500
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F3194ECD6;
-        Mon,  7 Mar 2022 11:05:18 -0800 (PST)
-Received: by mail-ed1-x533.google.com with SMTP id y12so1602553edc.13;
-        Mon, 07 Mar 2022 11:05:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iXQiyusXSHknsabSyew3dw1NkYbYI4nNb8+pTTi1PQI=;
-        b=A0Qm2gzVSL627z/YIsLeTA5SP5E7x2U5Pe29dKLwHmbPEL/WdOL2oAodAGHmZcZpjn
-         JKkq7YdVAzJz4/V5YePclrtVeqaRb3FlmEdYcDTmntzHNErOPkXMN6lHILSMfGmlkTh2
-         oaBQHovjcLuesxDDS5NBnseM7LWCnuzzVOgwWQlGkg9d+MVqS8IGM5vUOQiHEvcZW/6S
-         hqDRJTeuz1h8QjgvPbQm1SQa9XYrv/Q9JLwddI7kp+ynr3928GWZqis41b22wjvOruu8
-         64T3kDN3Q0m46Bwnm3Q4WjMZMAiV/oH7HpPpM9I2eig6JNcTKl9rT5QrRceZDpfzeh72
-         TKjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iXQiyusXSHknsabSyew3dw1NkYbYI4nNb8+pTTi1PQI=;
-        b=cx1n/wcT87A/D0FHnUrq+2YOr8cZzmsEZBu33IHAwQaZu8hlJxNaStbVO9VxOXZ05K
-         44TjaWxE0tuHQqAOM2/ukJVqUIPEWTrR26RSUfuGNvTsugHs/8K52COzB1ah4iiKnDEV
-         UxCvhx7HWhxjuLvljwVpLeFpXW/gnwB0qFsonSPiLAT5SqFSXkhyaiXjuwqanZhWq69X
-         2R0QoW5eu7TbCE97M2UeotrYSwdFjveQ1MkPbOETIx50D6bti5k3OkbyBszaBcWjvziV
-         oWsYV0vjuI4LrvsNAf/FD38gE6KCT6QVQXLxnjRX/ElwlF3/3a4zlzV90VJJsj4JHEGF
-         tmVQ==
-X-Gm-Message-State: AOAM531bFf4l0yesVT4uPWFALUuW1kPISymcERQOwUR1n5WDGAG4g4xH
-        J+oU0VgUrsZ6nVmyqKSSU6/FRy/uTLHfZoQy/Xs=
-X-Google-Smtp-Source: ABdhPJxy2ZUaE3jKuxMdHwPTygdRtYs5VUR/hF+JBH/n7tsdurRqjjrqMjRdNeaD2Y6s4TVmSih1gf2kzIRgo8jrXaw=
-X-Received: by 2002:aa7:da93:0:b0:416:4aca:bef7 with SMTP id
- q19-20020aa7da93000000b004164acabef7mr5481099eds.296.1646679916550; Mon, 07
- Mar 2022 11:05:16 -0800 (PST)
-MIME-Version: 1.0
-References: <20220131151346.45792-1-andriy.shevchenko@linux.intel.com>
- <20220131151346.45792-6-andriy.shevchenko@linux.intel.com> <20220307192138.10f5fc32@md1za8fc.ad001.siemens.net>
-In-Reply-To: <20220307192138.10f5fc32@md1za8fc.ad001.siemens.net>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 7 Mar 2022 21:03:58 +0200
-Message-ID: <CAHp75Vf71FB_=i2FSoGmPbWikHLq2YLCh_J=oQz7u50hyALm0g@mail.gmail.com>
-Subject: Re: [PATCH v4 5/8] mfd: lpc_ich: Add support for pinctrl in non-ACPI system
-To:     Henning Schild <henning.schild@siemens.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Wolfram Sang <wsa@kernel.org>, Jean Delvare <jdelvare@suse.de>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tan Jui Nee <jui.nee.tan@intel.com>,
-        Kate Hsuan <hpa@redhat.com>,
-        Jonathan Yong <jonathan.yong@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-edac@vger.kernel.org, linux-i2c <linux-i2c@vger.kernel.org>,
+        with ESMTP id S231883AbiCGTlo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Mar 2022 14:41:44 -0500
+Received: from smtp-out3.electric.net (smtp-out3.electric.net [208.70.128.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5347324F0D;
+        Mon,  7 Mar 2022 11:40:49 -0800 (PST)
+Received: from 1nRJDr-0004sP-UY by out3d.electric.net with emc1-ok (Exim 4.94.2)
+        (envelope-from <kris@embeddedTS.com>)
+        id 1nRJDs-0004vZ-V8; Mon, 07 Mar 2022 11:40:48 -0800
+Received: by emcmailer; Mon, 07 Mar 2022 11:40:48 -0800
+Received: from [66.210.251.27] (helo=mail.embeddedts.com)
+        by out3d.electric.net with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <kris@embeddedTS.com>)
+        id 1nRJDr-0004sP-UY; Mon, 07 Mar 2022 11:40:47 -0800
+Received: from tsdebian (_gateway [192.168.0.64])
+        by mail.embeddedts.com (Postfix) with ESMTPSA id B5B713D392;
+        Mon,  7 Mar 2022 12:40:46 -0700 (MST)
+Message-ID: <1646682026.7444.2.camel@embeddedTS.com>
+Subject: Re: [PATCH] gpio: ts4900: Do not set DAT and OE together
+From:   Kris Bahnsen <kris@embeddedTS.com>
+Reply-To: kris@embeddedTS.com
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Peter Tyser <ptyser@xes-inc.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Mark Gross <markgross@kernel.org>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mark Featherston <mark@embeddedts.com>
+Date:   Mon, 07 Mar 2022 11:40:26 -0800
+In-Reply-To: <CAMRc=MeHT4pX1ZRbOz0owDDec5rv+FE84rp464ugffbH5PuS5w@mail.gmail.com>
+References: <20220304221517.30213-1-kris@embeddedTS.com>
+         <CAMRc=MeHT4pX1ZRbOz0owDDec5rv+FE84rp464ugffbH5PuS5w@mail.gmail.com>
+Organization: embeddedTS
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Outbound-IP: 66.210.251.27
+X-Env-From: kris@embeddedTS.com
+X-Proto: esmtps
+X-Revdns: wsip-66-210-251-27.ph.ph.cox.net
+X-HELO: mail.embeddedts.com
+X-TLS:  TLS1.2:ECDHE-RSA-AES256-GCM-SHA384:256
+X-Authenticated_ID: 
+X-Virus-Status: Scanned by VirusSMART (c)
+X-Virus-Status: Scanned by VirusSMART (b)
+X-FM-Delivery-Delay: 15749372,23518412
+X-PolicySMART: 13164782, 15749372, 26810492
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=embeddedTS.com; s=mailanyone20220121;h=Mime-Version:References:In-Reply-To:Date:To:From:Message-ID; bh=zG3JQ1AtPaZKEqLY1Uf3Ei4t09ru1Q8ncGgjkOed1xA=;b=a5Nry+bDgsbHj8ZkLQ13zOHYJy9PlkqOyK3VzKPvp9GvbxkGqkF9M5XJochGRVa0POQuQsMm+g1i82Igi3c8XviHa04a/fwtTrfj4aNG0v8qX80fgarJGJ6IvXQJobGGmd+Syfh6j3dWUQsekOPthkpP9K5mgiO1anagP57VCpPPFsTTjhrLXWDDeur0cILn8gGtr3L6jpAHEkQ13p1CO/huVthOK1/G0UmM9QbhNfniiGHCUSBWJH/m0WS/uPZotODG8quSX6k1cbB6iG+kFflkTrRTN+1QyxLIRQ6UyiSgScxEFWFHGZolsXuvJqFr80ABuJ2E45MON7W9o9bLrg==;
+X-FM-Delivery-Delay: 15749372,23518412
+X-PolicySMART: 13164782, 15749372, 26810492
+X-FM-Delivery-Delay: 15749372,23518412
+X-PolicySMART: 13164782, 15749372, 26810492
+X-FM-Delivery-Delay: 15749372,23518412
+X-PolicySMART: 13164782, 15749372, 26810492
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 7, 2022 at 8:21 PM Henning Schild
-<henning.schild@siemens.com> wrote:
+On Mon, 2022-03-07 at 10:13 +0100, Bartosz Golaszewski wrote:
+> On Fri, Mar 4, 2022 at 11:15 PM Kris Bahnsen <kris@embeddedts.com> wrote:
+> > 
+> > From: Mark Featherston <mark@embeddedTS.com>
+> > 
+> > This works around an issue with the hardware where both OE and
+> > DAT are exposed in the same register. If both are updated
+> > simultaneously, the harware makes no guarantees that OE or DAT
+> > will actually change in any given order and may result in a
+> > glitch of a few ns on a GPIO pin when changing direction and value
+> > in a single write.
+> > 
+> > Setting direction to input now only affects OE bit. Setting
+> > direction to output updates DAT first, then OE.
+> > 
+> > Signed-off-by: Mark Featherston <mark@embeddedTS.com>
+> > Signed-off-by: Kris Bahnsen <kris@embeddedTS.com>
+> > ---
+> >  drivers/gpio/gpio-ts4900.c | 25 ++++++++++++++++++++-----
+> >  1 file changed, 20 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/gpio/gpio-ts4900.c b/drivers/gpio/gpio-ts4900.c
+> > index d885032cf814..fbabfca030c0 100644
+> > --- a/drivers/gpio/gpio-ts4900.c
+> > +++ b/drivers/gpio/gpio-ts4900.c
+> > @@ -1,7 +1,8 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> >  /*
+> >   * Digital I/O driver for Technologic Systems I2C FPGA Core
+> >   *
+> > - * Copyright (C) 2015 Technologic Systems
+> > + * Copyright (C) 2015-2018 Technologic Systems
+> >   * Copyright (C) 2016 Savoir-Faire Linux
+> >   *
+> >   * This program is free software; you can redistribute it and/or
+> > @@ -55,19 +56,33 @@ static int ts4900_gpio_direction_input(struct gpio_chip *chip,
+> >  {
+> >         struct ts4900_gpio_priv *priv = gpiochip_get_data(chip);
+> > 
+> > -       /*
+> > -        * This will clear the output enable bit, the other bits are
+> > -        * dontcare when this is cleared
+> > +       /* Only clear the OE bit here, requires a RMW. Prevents potential issue
+> > +        * with OE and data getting to the physical pin at different times.
+> >          */
+> > -       return regmap_write(priv->regmap, offset, 0);
+> > +       return regmap_update_bits(priv->regmap, offset, TS4900_GPIO_OE, 0);
+> >  }
+> > 
+> >  static int ts4900_gpio_direction_output(struct gpio_chip *chip,
+> >                                         unsigned int offset, int value)
+> >  {
+> >         struct ts4900_gpio_priv *priv = gpiochip_get_data(chip);
+> > +       unsigned int reg;
+> >         int ret;
+> > 
+> > +       /* If changing from an input to an output, we need to first set the
+> > +        * proper data bit to what is requested and then set OE bit. This
+> > +        * prevents a glitch that can occur on the IO line
+> > +        */
+> > +       regmap_read(priv->regmap, offset, &reg);
+> > +       if (!(reg & TS4900_GPIO_OE)) {
+> > +               if (value)
+> > +                       reg = TS4900_GPIO_OUT;
+> > +               else
+> > +                       reg &= ~TS4900_GPIO_OUT;
+> > +
+> > +               regmap_write(priv->regmap, offset, reg);
+> > +       }
+> > +
+> >         if (value)
+> >                 ret = regmap_write(priv->regmap, offset, TS4900_GPIO_OE |
+> >                                                          TS4900_GPIO_OUT);
+> > --
+> > 2.11.0
+> > 
+> 
+> This looks like a fix, can you add a Fixes tag?
+> 
+> Bart
+> 
 
-Please, do not top-post.
+Please excuse my ignorance (and email client issues) I am still learning the
+submission process. I'm not sure what kind of Fixes tag to add in this scenario.
 
-> Can this patch not be proposed separately? Maybe i am wrong but it
-> seems unrelated to the p2sb story.
+This GPIO issue has existed since the driver's inception. It is a quirk of
+hardware that has always existed on this platform. The driver was originally
+implemented by Savoir-faire Linux. We discovered the issue and have had it
+patched in our trees for years and wanted to push it upstream.
 
-The entire story happens to begin from this very change. The author
-(you may see that's not me) proposed the change a long time ago and
-AFAIU this is the requirement to have it upstreamed.
+There is no public discussion on it, it was found and patched. And, aside from
+the first commit of this driver, there is no commit that introduced any issue.
 
-> The whole p2sb base and size discovery is easy and switching the
-> simatic drivers is also. It is an interface change, where the old open
-> coding remains working.
->
-> But having to switch to GPIO in the same series is kind of weird. That
-> is a functional change which even might deserve its own cover letter. I
-> bet there are tons of out-of-tree modules which will stop working on
-> apl after that gets merged.
+Can you please advise what kind of Fixes tag is appropriate in this situation?
 
-Upstream rarely, if at all, cares about 3rd party modules. From the
-upstream point of view the thing (whatever the 3rd party module
-supports) wasn't working ("no driver" in upstream) and won't work
-(still "no driver" in upstream) after the change, so there may not be
-any regression.
+Additionally, if I do add a Fixes tag, would that warrant a v2 patch? Or would
+it just need to be an email response that includes it?
 
-> I still did not understand why apl is special and other boards do not
-> get their pinctrl brought up without ACPI/p2sb-visible.
-
-The platform is being heavily used by one of our departments in such
-configuration with firmwares that may not be fully compatible with
-UEFI.They want to support that along with the case when BIOS has no
-GPIO device being provided.
-
-> I have patches floating around, but still would be happy if we could do
-> one thing at a time.
-
-Either way any new changes must use a pin control driver and the
-previous work was accepted only on this basis.
-
-> Or maybe it is strongly coupled and I do not understand why.
-
-That's the initial requirement by our peer departament.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Kris
