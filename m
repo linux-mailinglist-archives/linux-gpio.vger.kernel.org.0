@@ -2,50 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E1AC84CFF0A
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Mar 2022 13:45:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A43BB4CFF18
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Mar 2022 13:48:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238313AbiCGMqF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Mar 2022 07:46:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59370 "EHLO
+        id S242511AbiCGMtS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Mar 2022 07:49:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242483AbiCGMqD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Mar 2022 07:46:03 -0500
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E56E44249E;
-        Mon,  7 Mar 2022 04:45:08 -0800 (PST)
-Received: from mwalle01.kontron.local. (unknown [213.135.10.150])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id C308A2223A;
-        Mon,  7 Mar 2022 13:45:06 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1646657107;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6sN0on+TklJLiMkk+8nKplqKWkNGHVbTBnp3A9FH6r0=;
-        b=V9GNDxz53Qy/kbVDQrLya7ZyUsj8qit4bW/2dpZNhwhl8ThqfQvk5HeErfeqB5zwl9H9L7
-        Zn3QGEnOIA2H9B8aVBU3hTcebp75B6aNj6t/9dZLT2wzvPjA/TtD0ub//nKM85mwglNL0z
-        mxvmUcNoSRbye3XnKid8Tx7ITD6lWdU=
-From:   Michael Walle <michael@walle.cc>
-To:     horatiu.vultur@microchip.com
-Cc:     andriy.shevchenko@linux.intel.com, colin.foster@in-advantage.com,
-        linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Michael Walle <michael@walle.cc>
-Subject: Re: [PATCH v2 1/2] pinctrl: ocelot: Fix the pincfg resource.
-Date:   Mon,  7 Mar 2022 13:45:01 +0100
-Message-Id: <20220307124501.3487932-1-michael@walle.cc>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220304144432.3397621-2-horatiu.vultur@microchip.com>
-References: <20220304144432.3397621-2-horatiu.vultur@microchip.com>
+        with ESMTP id S239588AbiCGMtS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Mar 2022 07:49:18 -0500
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 091713F89F
+        for <linux-gpio@vger.kernel.org>; Mon,  7 Mar 2022 04:48:23 -0800 (PST)
+Received: by mail-ej1-x630.google.com with SMTP id bg10so31697811ejb.4
+        for <linux-gpio@vger.kernel.org>; Mon, 07 Mar 2022 04:48:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5Dqjx6E61lpXMk4u4/xIAa8wjn4AVIxdHXjiXwxqPnE=;
+        b=SdVPlGT53aJQdIYTgsflP5IBJI2j/2pfOWDjUv+0cy7ZahiqUXpLr8OGAc7yUnnnnL
+         r+aeiHCwBGRUnkFpwmeRCASJE1W4/FcJc1WT0tX+7Lj1zcEVIvimgERYUdJ2S8xGFMSj
+         ADC0RzaNafdx+okSCla1a38AIqootHTq0qD0YNktSs2b6h0jEFTPCSug5H6XMv/bYZGF
+         IQ+6MtD8z27DEsu1KIYNmD7E6fuE2azlqG0dQRgT3LE95VSi6uLhL8bOrk3HGHTaR76/
+         DKkMhOwXnhOHJcsNG5te57SIjYxGBcHk9o2rFNrWOXl/ZbjkecSoLBgRC1wpAzhzdPk/
+         godQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5Dqjx6E61lpXMk4u4/xIAa8wjn4AVIxdHXjiXwxqPnE=;
+        b=Fw9RmQWG/7atEluPMQd/Rq3k+uuM7EOO9EHNa5Fx+bhOkDAwtyaJMTVa7j3MdAVcby
+         eqK/QdzYPBY9HIO3t+09/fcln8tWTK+skhcdgVCEKWc55woUJRgAyLujhzGE4COiHGx/
+         7TKWF/wTYoMAA87Yf2kjAhYpuq4Ayeab/fCfCnJ4Vq7uHNeJgdz4uu/5HogKcvbd/B8c
+         cbUlaxe4bP+24UhqkGZMw9GV/kIY1tpoLI3eKizNglV/3d4d33Y9FIiLIweEEkFxImqQ
+         GwlOxVI+EmCY+HQNXLBCeLdvriWuVkVlF9+EBagHlSmrM4AR6lfYOrv9Q8kbxiO+oPuV
+         qoJg==
+X-Gm-Message-State: AOAM531gSFukKg1GEE7PDqTS8SNamx4aXTgxQj13ZJyKDjikoK+IIauJ
+        pRX7usKXMon3nZ4hrvWpjJD5nwN5e9DGG6H1KIo08w==
+X-Google-Smtp-Source: ABdhPJxLwvDZ+ME60I2VzVPFk32bFDOeNbdGBUEmCmgh7TYDxQWH6OvPtYIQOR2tTVQyWwrvKL8kBusBWs7QEN4npQg=
+X-Received: by 2002:a17:907:728b:b0:6da:97db:b66d with SMTP id
+ dt11-20020a170907728b00b006da97dbb66dmr8844403ejc.636.1646657301501; Mon, 07
+ Mar 2022 04:48:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+References: <20220307115623.37492-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20220307115623.37492-1-andriy.shevchenko@linux.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 7 Mar 2022 13:48:10 +0100
+Message-ID: <CAMRc=Md3_W49Wq5-zaxdNzELW87OogEN5wW6XQnF9aMpZrRvBA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] gpiolib: acpi: Convert ACPI value of debounce to microseconds
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -53,19 +70,76 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> The pincfg resources are in the second memory resource. But the driver
-> still tries to access the first memory resource to get the pincfg. This
-> is wrong therefore fix to access the second memory resource.
-> 
-> Reviewed-by: Colin Foster <colin.foster@in-advantage.com>
-> Fixes: ad96111e658a95 ("pinctrl: ocelot: combine get resource and ioremap into single call")
-> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+On Mon, Mar 7, 2022 at 12:56 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> It appears that GPIO ACPI library uses ACPI debounce values directly.
+> However, the GPIO library APIs expect the debounce timeout to be in
+> microseconds.
+>
+> Convert ACPI value of debounce to microseconds.
+>
+> While at it, document this detail where it is appropriate.
+>
+> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=215664
+> Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> Fixes: 8dcb7a15a585 ("gpiolib: acpi: Take into account debounce settings")
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/gpio/gpiolib-acpi.c |  6 ++++--
+>  drivers/gpio/gpiolib.c      | 10 ++++++++++
+>  2 files changed, 14 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+> index c0f6a25c3279..a5495ad31c9c 100644
+> --- a/drivers/gpio/gpiolib-acpi.c
+> +++ b/drivers/gpio/gpiolib-acpi.c
+> @@ -307,7 +307,8 @@ static struct gpio_desc *acpi_request_own_gpiod(struct gpio_chip *chip,
+>         if (IS_ERR(desc))
+>                 return desc;
+>
+> -       ret = gpio_set_debounce_timeout(desc, agpio->debounce_timeout);
+> +       /* ACPI uses hundredths of milliseconds units */
+> +       ret = gpio_set_debounce_timeout(desc, agpio->debounce_timeout * 10);
+>         if (ret)
+>                 dev_warn(chip->parent,
+>                          "Failed to set debounce-timeout for pin 0x%04X, err %d\n",
+> @@ -1035,7 +1036,8 @@ int acpi_dev_gpio_irq_get_by(struct acpi_device *adev, const char *name, int ind
+>                         if (ret < 0)
+>                                 return ret;
+>
+> -                       ret = gpio_set_debounce_timeout(desc, info.debounce);
+> +                       /* ACPI uses hundredths of milliseconds units */
+> +                       ret = gpio_set_debounce_timeout(desc, info.debounce * 10);
+>                         if (ret)
+>                                 return ret;
+>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index f5e7443208d4..f956c533f218 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -2223,6 +2223,16 @@ static int gpio_set_bias(struct gpio_desc *desc)
+>         return gpio_set_config_with_argument_optional(desc, bias, arg);
+>  }
+>
+> +/**
+> + * gpio_set_debounce_timeout() - Set debounce timeout
+> + * @desc:      GPIO descriptor to set the debounce timeout
+> + * @debounce:  Debounce timeout in microseconds
+> + *
+> + * The function calls the certain GPIO driver to set debounce timeout
+> + * in the hardware.
+> + *
+> + * Returns 0 on success, or negative error code otherwise.
+> + */
+>  int gpio_set_debounce_timeout(struct gpio_desc *desc, unsigned int debounce)
+>  {
+>         return gpio_set_config_with_argument_optional(desc,
+> --
+> 2.34.1
+>
 
-There is already this patch pending, which does exactly
-the same:
-https://lore.kernel.org/linux-gpio/20220216082020.981797-1-michael@walle.cc/
+Do you have some more stuff coming up for fixes or do you want me to
+queue it directly?
 
-FWIW, there is also this one:
-https://lore.kernel.org/linux-gpio/20220216122727.1005041-1-michael@walle.cc/
-
--michael
+Bart
