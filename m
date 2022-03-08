@@ -2,123 +2,246 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D0EFD4D228E
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Mar 2022 21:27:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 81C524D23F4
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Mar 2022 23:11:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350180AbiCHU2I (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Mar 2022 15:28:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46622 "EHLO
+        id S244810AbiCHWKt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Mar 2022 17:10:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350218AbiCHU2G (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Mar 2022 15:28:06 -0500
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2234450E1D
-        for <linux-gpio@vger.kernel.org>; Tue,  8 Mar 2022 12:27:09 -0800 (PST)
-Received: by mail-ej1-x62f.google.com with SMTP id yy13so464102ejb.2
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Mar 2022 12:27:09 -0800 (PST)
+        with ESMTP id S242625AbiCHWKs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Mar 2022 17:10:48 -0500
+Received: from mail-oo1-xc29.google.com (mail-oo1-xc29.google.com [IPv6:2607:f8b0:4864:20::c29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38F5B340E7
+        for <linux-gpio@vger.kernel.org>; Tue,  8 Mar 2022 14:09:50 -0800 (PST)
+Received: by mail-oo1-xc29.google.com with SMTP id k13-20020a4a948d000000b003172f2f6bdfso714154ooi.1
+        for <linux-gpio@vger.kernel.org>; Tue, 08 Mar 2022 14:09:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MqFL3yPidhcRIP5MuD8StDXpj+aJvemm6z+OJvXoxJY=;
-        b=SCau3UZu5WA9EAsaAMCCAabZ3bpHHjKbf62DUQjGG/BEYFY+/hbaLKmW0DQDomwY+V
-         Aaa2/XL/fz6d16O8LSFxeP22X8upVASdgi/glGZX699GxxMRmoqEJhywwAXVh1DFjdrG
-         d6scvnSdOvH3wOE0lirllHmTYm4vCBCMZ29uD6RMHHSrNES9X+we0JMzwBmDFZ4BvKV+
-         vPQvXRfAkWghszojBYAyrB1/G+iNJ9HUvssUEfPaDWZl6JtYhn+KEoGJL9eQ/piS0714
-         9GOPEl9oG0ZTTJqo1AC0+l+Bu2rVbZrJQJIxmlmSNZToBBUBSv271Y+hgWvnXghxoXlE
-         vj1w==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ddW2fY9LvB2Nj22VUxUaG3e+eaf3kPwjMZ+2+JZW1rk=;
+        b=jCjC5sYk1VByjCwp98OgD3SvDExuzN5oAfh50l2iAOJ31vqosIicjs5JxltaheGmlL
+         cFuMzPmcVLnTJAN4Z88hnIslH87qZuZFvvUd4Pa+js6EBTn+4yCmC7FQu91UgXJSXWCf
+         2UQ5M45pSII8FacN1wn8W9RkUHYjo41T8Z8PXAsQHWxA8LZo2TaZv1FHr7P33vtvG1vS
+         8wB1yI1LXolpdOfds9JPX/qfEkGU+DeNHpeOkePv/UkmGIWXTHOohmt+krKIrkhymPI+
+         cob0nKKmAUPVLnzzf/X0J9vukEJ0nI3JjZRqiIgWAjVRhaXkkVZmfGlyY6drpAzqb/LT
+         H12Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MqFL3yPidhcRIP5MuD8StDXpj+aJvemm6z+OJvXoxJY=;
-        b=YQYjuk/JL58mbZir2GBc7GDy0bSzJ7/I/CjLfTqE+eGC2t4+oXT8O08GKfnrZXBFDY
-         tW8hrMyws+IdfFaAGB4XXkpR2O9H8IZLkMKT6/W+iboVnVFGKZaSjkWOp6kPCdVlfxVh
-         tDU61NSxIIXiVec4el3QKbJZqt+bfKBX9Uqukc/wDaGChyK0PN0BefnsXndum96BENnI
-         n5v6xukg9KLWFZli6NtQFAjoKWcW6+Ag1KOf7ozRyMfjmfGuIpwYwZDZx97nSP+Z0x/y
-         FechnRa8JE/v5JReQqU1xnal3icndVxYErrS+aMA5mrZ0KosR0ATmFd9nQsXejtCzB9J
-         EgKA==
-X-Gm-Message-State: AOAM531hJGqYr+C99NkigaVDrhzh9FYBgcpx8mJa5n/d1aQdokm838dL
-        hFPvCKoUlkvn63Ey3rLVkXeaZ3KmL5O3tzbkKKbIDA==
-X-Google-Smtp-Source: ABdhPJyoXcJh9DS25No2url5+4JTO5G9hJImU3MwScxRV3pHE1hPFAySl1mt2f2y+czFlPKrKk2iUMMQKQJLD1gP9Yc=
-X-Received: by 2002:a17:907:7f0d:b0:6d6:f910:5136 with SMTP id
- qf13-20020a1709077f0d00b006d6f9105136mr15498175ejc.736.1646771227614; Tue, 08
- Mar 2022 12:27:07 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ddW2fY9LvB2Nj22VUxUaG3e+eaf3kPwjMZ+2+JZW1rk=;
+        b=StX7wk2CanfzLvl5RzGkYv0g36R65KkR/BAiFYmrh1nxeFrGZJGjs6rPIolD21RgYg
+         GqSYgWwzjRiQ9dzUOno0dIELnfZ7e5y3YMOIYiC95zTfhltRzOhXMxodvegIkNzpXxhE
+         BnM9Hczeeaxw1uuW0TTEXHIgsgtDCPMkEBtU3/XDTHuglvdkW5nG6J6GkRaAVtOI1uQx
+         jaVZiTTwNv8KdnqM/uCqCmoqGVxo+R/RjD6RZ98d7Y9SKgxOpXFdfu94rRJEFMTyMqU0
+         y/0uL6+Nh8XQiBvVNbvychikR4HvPP5jgAEEVOE0FMPwvO0UTZHGvszLnOfU+wOyTKgK
+         O/yA==
+X-Gm-Message-State: AOAM533J+/r55BLBja2+wz/FtPaXbo2WAfCrR6QMS7MJsXn0qS4Qz2Rn
+        LlvQc7PYL3iBJ20qIURl/TXqGg==
+X-Google-Smtp-Source: ABdhPJyQF+fUUCO1OmFokSVxMnTpHlK6L3MD61JBsleRWaGh1MaN6NU0T+NY74s9fC1L25JX8IBAWw==
+X-Received: by 2002:a05:6870:a102:b0:d9:bcaf:7181 with SMTP id m2-20020a056870a10200b000d9bcaf7181mr3697672oae.8.1646777389536;
+        Tue, 08 Mar 2022 14:09:49 -0800 (PST)
+Received: from ripper.. ([2600:1700:a0:3dc8:205:1bff:fec0:b9b3])
+        by smtp.gmail.com with ESMTPSA id bx10-20020a0568081b0a00b002d70da1ac54sm71107oib.19.2022.03.08.14.09.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Mar 2022 14:09:48 -0800 (PST)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] dt-bindings: pinctrl: qcom: Add sc8280xp TLMM binding
+Date:   Tue,  8 Mar 2022 14:11:31 -0800
+Message-Id: <20220308221132.1423218-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.33.1
 MIME-Version: 1.0
-References: <20220308152233.493098-1-brgl@bgdev.pl> <20220308155458.GA72687@sol>
-In-Reply-To: <20220308155458.GA72687@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 8 Mar 2022 21:26:56 +0100
-Message-ID: <CAMRc=Mdck1HUZwVOad+FJ-Dc7t8jA0J7qpFwpWSN4x9_vB+7rQ@mail.gmail.com>
-Subject: Re: [PATCH] treewide: use size_t where applicable
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 8, 2022 at 4:55 PM Kent Gibson <warthog618@gmail.com> wrote:
->
-> On Tue, Mar 08, 2022 at 04:22:33PM +0100, Bartosz Golaszewski wrote:
-> > size_t is the unsigned integer type generally used whenever variables
-> > define sizes, ranges and numbers of elements. Use it throughout the
-> > C library wherever it makes sense.
-> >
-> > Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
-> > ---
-> >  include/gpiod.h      | 30 +++++++++++++++---------------
-> >  lib/chip.c           |  4 ++--
-> >  lib/edge-event.c     | 12 ++++++------
-> >  lib/internal.h       |  2 +-
-> >  lib/line-config.c    |  4 ++--
-> >  lib/line-request.c   | 10 +++++-----
-> >  lib/request-config.c | 12 ++++++------
-> >  tools/gpiodetect.c   |  2 +-
-> >  tools/gpioget.c      |  3 ++-
-> >  tools/gpioinfo.c     |  2 +-
-> >  tools/gpiomon.c      |  4 ++--
-> >  tools/gpioset.c      |  3 ++-
-> >  12 files changed, 45 insertions(+), 43 deletions(-)
-> >
-> > diff --git a/include/gpiod.h b/include/gpiod.h
-> > index 0512a8f..e6a4645 100644
->
-> [snip]
->
-> > diff --git a/tools/gpioget.c b/tools/gpioget.c
-> > index 112257c..28030fa 100644
-> > --- a/tools/gpioget.c
-> > +++ b/tools/gpioget.c
-> > @@ -44,12 +44,13 @@ int main(int argc, char **argv)
-> >       int direction = GPIOD_LINE_DIRECTION_INPUT;
-> >       int optc, opti, bias = 0, ret, *values;
-> >       struct gpiod_request_config *req_cfg;
-> > -     unsigned int *offsets, i, num_lines;
-> >       struct gpiod_line_request *request;
-> >       struct gpiod_line_config *line_cfg;
-> > +     unsigned int *offsets, i;
-> >       struct gpiod_chip *chip;
-> >       bool active_low = false;
-> >       char *device, *end;
-> > +     size_t num_lines;
-> >
->
-> Also makes sense for indicies into arrays, such as the i here and
-> elsewhere?
-> I'm guessing there is a lot of elsewhere.
->
+The Qualcomm SC8280XP platform contains a single block of registers
+for the TLMM block. This provides pinconf and pinmux for 228 GPIOs, 2
+UFS_RESET pins and one SDC interface.
 
-I'd leave it for now. In most cases there's no chance of exceeding the
-max value of unsigned int (size_t is unsigned long) and it's also an
-implementation detail that can be changed later. This patch mostly
-addresses the library interface.
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
 
-Bart
+Changes since v1:
+- Dropped $ref: pinctrl.yaml
+- Dropped reg-names from required list
+- Fixed spelling mistake in example
+
+ .../pinctrl/qcom,sc8280xp-pinctrl.yaml        | 151 ++++++++++++++++++
+ 1 file changed, 151 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sc8280xp-pinctrl.yaml
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sc8280xp-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sc8280xp-pinctrl.yaml
+new file mode 100644
+index 000000000000..87a381c9a19d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,sc8280xp-pinctrl.yaml
+@@ -0,0 +1,151 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/qcom,sc8280xp-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm Technologies, Inc. SC8280XP TLMM block
++
++maintainers:
++  - Bjorn Andersson <bjorn.andersson@linaro.org>
++
++description: |
++  This binding describes the Top Level Mode Multiplexer block found in the
++  SC8280XP platform.
++
++allOf:
++  - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
++
++properties:
++  compatible:
++    const: qcom,sc8280xp-tlmm
++
++  reg:
++    maxItems: 1
++
++  interrupts: true
++  interrupt-controller: true
++  '#interrupt-cells': true
++  gpio-controller: true
++  gpio-reserved-ranges: true
++  '#gpio-cells': true
++  gpio-ranges: true
++  wakeup-parent: true
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++patternProperties:
++  '-state$':
++    oneOf:
++      - $ref: "#/$defs/qcom-sc8280xp-tlmm-state"
++      - patternProperties:
++          ".*":
++            $ref: "#/$defs/qcom-sc8280xp-tlmm-state"
++
++'$defs':
++  qcom-sc8280xp-tlmm-state:
++    type: object
++    description:
++      Pinctrl node's client devices use subnodes for desired pin configuration.
++      Client device subnodes use below standard properties.
++    $ref: "qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state"
++
++    properties:
++      pins:
++        description:
++          List of gpio pins affected by the properties specified in this
++          subnode.
++        items:
++          oneOf:
++            - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-1][0-9]|22[0-7])$"
++            - enum: [ sdc2_clk, sdc2_cmd, sdc2_data, ufs_reset, ufs1_reset ]
++        minItems: 1
++        maxItems: 16
++
++      function:
++        description:
++          Specify the alternative function to be configured for the specified
++          pins.
++
++        enum: [ atest_char, atest_usb, audio_ref, cam_mclk, cci_async, cci_i2c,
++                cci_timer0, cci_timer1, cci_timer2, cci_timer3, cci_timer4,
++                cci_timer5, cci_timer6, cci_timer7, cci_timer8, cci_timer9,
++                cmu_rng, cri_trng, cri_trng0, cri_trng1, dbg_out, ddr_bist,
++                ddr_pxi0, ddr_pxi1, ddr_pxi2, ddr_pxi3, ddr_pxi4, ddr_pxi5,
++                ddr_pxi6, ddr_pxi7, dp2_hot, dp3_hot, edp0_lcd, edp1_lcd,
++                edp2_lcd, edp3_lcd, edp_hot, emac0_dll, emac0_mcg0, emac0_mcg1,
++                emac0_mcg2, emac0_mcg3, emac0_phy, emac0_ptp, emac1_dll0,
++                emac1_dll1, emac1_mcg0, emac1_mcg1, emac1_mcg2, emac1_mcg3,
++                emac1_phy, emac1_ptp, gcc_gp1, gcc_gp2, gcc_gp3, gcc_gp4,
++                gcc_gp5, gpio, hs1_mi2s, hs2_mi2s, hs3_mi2s, ibi_i3c,
++                jitter_bist, lpass_slimbus, mdp0_vsync0, mdp0_vsync1,
++                mdp0_vsync2, mdp0_vsync3, mdp0_vsync4, mdp0_vsync5,
++                mdp0_vsync6, mdp0_vsync7, mdp0_vsync8, mdp1_vsync0,
++                mdp1_vsync1, mdp1_vsync2, mdp1_vsync3, mdp1_vsync4,
++                mdp1_vsync5, mdp1_vsync6, mdp1_vsync7, mdp1_vsync8, mdp_vsync,
++                mi2s0_data0, mi2s0_data1, mi2s0_sck, mi2s0_ws, mi2s1_data0,
++                mi2s1_data1, mi2s1_sck, mi2s1_ws, mi2s2_data0, mi2s2_data1,
++                mi2s2_sck, mi2s2_ws, mi2s_mclk1, mi2s_mclk2, pcie2a_clkreq,
++                pcie2b_clkreq, pcie3a_clkreq, pcie3b_clkreq, pcie4_clkreq,
++                phase_flag, pll_bist, pll_clk, prng_rosc0, prng_rosc1,
++                prng_rosc2, prng_rosc3, qdss_cti, qdss_gpio, qspi, qspi_clk,
++                qspi_cs, qup0, qup1, qup2, qup3, qup4, qup5, qup6, qup7, qup8,
++                qup9, qup10, qup11, qup12, qup13, qup14, qup15, qup16, qup17,
++                qup18, qup19, qup20, qup21, qup22, qup23, rgmii_0, rgmii_1,
++                sd_write, sdc40, sdc42, sdc43, sdc4_clk, sdc4_cmd, tb_trig,
++                tgu, tsense_pwm1, tsense_pwm2, tsense_pwm3, tsense_pwm4,
++                usb0_dp, usb0_phy, usb0_sbrx, usb0_sbtx, usb0_usb4, usb1_dp,
++                usb1_phy, usb1_sbrx, usb1_sbtx, usb1_usb4, usb2phy_ac,
++                vsense_trigger ]
++
++      bias-disable: true
++      bias-pull-down: true
++      bias-pull-up: true
++      drive-strength: true
++      input-enable: true
++      output-high: true
++      output-low: true
++
++    required:
++      - pins
++      - function
++
++    additionalProperties: false
++
++examples:
++  - |
++        #include <dt-bindings/interrupt-controller/arm-gic.h>
++        pinctrl@f100000 {
++                compatible = "qcom,sc8280xp-tlmm";
++                reg = <0x0f100000 0x300000>;
++                interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
++                gpio-controller;
++                #gpio-cells = <2>;
++                interrupt-controller;
++                #interrupt-cells = <2>;
++                gpio-ranges = <&tlmm 0 0 230>;
++
++                gpio-wo-subnode-state {
++                        pins = "gpio1";
++                        function = "gpio";
++                };
++
++                uart-w-subnodes-state {
++                        rx {
++                                pins = "gpio4";
++                                function = "qup14";
++                                bias-pull-up;
++                        };
++
++                        tx {
++                                pins = "gpio5";
++                                function = "qup14";
++                                bias-disable;
++                        };
++                };
++        };
++...
+-- 
+2.33.1
+
