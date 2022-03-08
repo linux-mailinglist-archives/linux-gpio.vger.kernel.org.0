@@ -2,100 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 669534D10BE
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Mar 2022 08:12:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D3C824D122D
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Mar 2022 09:27:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344511AbiCHHNA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Mar 2022 02:13:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34802 "EHLO
+        id S234091AbiCHI2e (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Mar 2022 03:28:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344535AbiCHHM6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Mar 2022 02:12:58 -0500
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E0F53DA53;
-        Mon,  7 Mar 2022 23:12:01 -0800 (PST)
-Received: by mail-pl1-x632.google.com with SMTP id m2so10280976pll.0;
-        Mon, 07 Mar 2022 23:12:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id;
-        bh=dOUBo/Sc0yjq3ebr0wQH/B7bwQxh2odqELk9JgfPdwU=;
-        b=LB/94ADMeswaD5pO59KrBobz0IlCQSDS646x7RnJ62nnUQK86bDW7ludK6KDoJ6XrX
-         cMeCAN3HM4t0qrQJVGiQXUxRdcmybJTBeCXidCPvcfunKGOgmF5F8cuqaPH/EOx2kkBq
-         /zBGqOsaflp4f8jRT8yUHWRxJ880rzU0O+avb0doPFW01+/yJ7ZsZRDRyKQZsD3OESrO
-         NB9KpW6PpI41YRA9/fpWwRJhlNrX1FQJItUL/0X17435XAgZ7haBv4g0lKt71Js0TGBn
-         n2m5UkoAEkcPuu9CAfjtjwtQvWUk82oy9lqGuG2QzcjiDxDoCgXUHTWIBsXVSPSHMcDW
-         vAGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=dOUBo/Sc0yjq3ebr0wQH/B7bwQxh2odqELk9JgfPdwU=;
-        b=f20WmJYo1CE7R9TMwWoXe9FJWKkv/26xG6EZrkv2a79ZLdEr64cUJlQR700eSl8NBY
-         GQF/NSkTSa99IB57VFnMaiFHOJeboMbkifjNULbSiKXVwCH+0qLAdun6SrflDB9E6vcU
-         OnENIHFy3FkUY1VZYcBuK9hkO0SB+mk7d/LyiGNcXnxxu+lt25o70kMVoiyiaQB3OQES
-         do9I8VlUwJYpauvQgr0A9rkKD3nYEwLm1VzXij+cmAk6yqRbx8sETvx6xc4RwraIZ/+s
-         01PBKqHWb/knM5aS4iVGTAjWBhDNUS5qsFJaMoL0lkYh6Ip01C432bnJ5Jem10g0O8nv
-         WR0g==
-X-Gm-Message-State: AOAM530FD4P69pDzt3WfZK5u2V0WI7o1pP96nWcavgilJm/yccdqfVBN
-        JMFLfk0uRW5OUtxC6xierl0=
-X-Google-Smtp-Source: ABdhPJxouGfigEMrShjCATvfXIOp5b0R3izV6OiagBsPFTLCsXQKjyip+qEPFuUh0IY/PvKVe9WlCA==
-X-Received: by 2002:a17:90b:4f8f:b0:1bf:84ad:1fe6 with SMTP id qe15-20020a17090b4f8f00b001bf84ad1fe6mr3145309pjb.189.1646723520761;
-        Mon, 07 Mar 2022 23:12:00 -0800 (PST)
-Received: from localhost.localdomain ([159.226.95.43])
-        by smtp.googlemail.com with ESMTPSA id j7-20020a637a47000000b003803fbcc005sm5516633pgn.59.2022.03.07.23.11.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Mar 2022 23:12:00 -0800 (PST)
-From:   Miaoqian Lin <linmq006@gmail.com>
-To:     Sean Wang <sean.wang@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Hongzhou Yang <hongzhou.yang@mediatek.com>,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     linmq006@gmail.com
-Subject: [PATCH] pinctrl: mediatek: Fix missing of_node_put() in mtk_pctrl_init
-Date:   Tue,  8 Mar 2022 07:11:54 +0000
-Message-Id: <20220308071155.21114-1-linmq006@gmail.com>
-X-Mailer: git-send-email 2.17.1
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S238415AbiCHI2d (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Mar 2022 03:28:33 -0500
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B455E635B;
+        Tue,  8 Mar 2022 00:27:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1646728057; x=1678264057;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=7uv8Q1w8wsO9w5Wl3dOSyGo5iztKnC91d7tEWyKbVmo=;
+  b=a5sFEHSLp0ksCXl/lD/UuGGLhCMtQX4ItOsg0IYf7OW9iJxm+wvQRYny
+   /oQlNYmMNaVryI1w6wTDIa+AHWGhnD7K4hlyJsAUQoXYfNZmLUWZM/oUH
+   GPKQ8nwwKLCRZJiJSjMCncsKxF/EmCnjS2vLftSZ1Eofdm2v+xR8SBCMz
+   0VCwdWWTSepfyWAGGN7OfAt8uEU+cog869gYKtMmpJHJuqpoNR2e2CfGD
+   r573A4ZcEY7SeEijYFDw+D4cMMlpXrVgQQ15vKPvcNG25G6yaG9a0chEr
+   OMr44BvxrxJAtyw1CN2aP5qOVkSigzTth8Eu03bMOIsQRc3STeBLcwEZz
+   w==;
+X-IronPort-AV: E=Sophos;i="5.90,163,1643698800"; 
+   d="scan'208";a="148433672"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 08 Mar 2022 01:27:32 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.17; Tue, 8 Mar 2022 01:27:30 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.2375.17 via Frontend
+ Transport; Tue, 8 Mar 2022 01:27:30 -0700
+Date:   Tue, 8 Mar 2022 09:30:23 +0100
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     Michael Walle <michael@walle.cc>
+CC:     <andriy.shevchenko@linux.intel.com>,
+        <colin.foster@in-advantage.com>, <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] pinctrl: ocelot: Fix the pincfg resource.
+Message-ID: <20220308083023.frr7qz2xga2tas5r@soft-dev3-1.localhost>
+References: <20220304144432.3397621-2-horatiu.vultur@microchip.com>
+ <20220307124501.3487932-1-michael@walle.cc>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <20220307124501.3487932-1-michael@walle.cc>
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,T_SCC_BODY_TEXT_LINE,
+        T_SPF_PERMERROR autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The device_node pointer is returned by of_parse_phandle()  with refcount
-incremented. We should use of_node_put() on it when done.
+The 03/07/2022 13:45, Michael Walle wrote:
+> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> 
+> > The pincfg resources are in the second memory resource. But the driver
+> > still tries to access the first memory resource to get the pincfg. This
+> > is wrong therefore fix to access the second memory resource.
+> >
+> > Reviewed-by: Colin Foster <colin.foster@in-advantage.com>
+> > Fixes: ad96111e658a95 ("pinctrl: ocelot: combine get resource and ioremap into single call")
+> > Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> 
+> There is already this patch pending, which does exactly
+> the same:
+> https://lore.kernel.org/linux-gpio/20220216082020.981797-1-michael@walle.cc/
 
-Fixes: a6df410d420a ("pinctrl: mediatek: Add Pinctrl/GPIO driver for mt8135.")
-Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
----
- drivers/pinctrl/mediatek/pinctrl-mtk-common.c | 2 ++
- 1 file changed, 2 insertions(+)
+Sorry, I have missed your patch.
+Should I resend this series where I will drop this patch? What is the
+correct approach?
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-index 5f7c421ab6e7..334cb85855a9 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-@@ -1038,6 +1038,7 @@ int mtk_pctrl_init(struct platform_device *pdev,
- 	node = of_parse_phandle(np, "mediatek,pctl-regmap", 0);
- 	if (node) {
- 		pctl->regmap1 = syscon_node_to_regmap(node);
-+		of_node_put(node);
- 		if (IS_ERR(pctl->regmap1))
- 			return PTR_ERR(pctl->regmap1);
- 	} else if (regmap) {
-@@ -1051,6 +1052,7 @@ int mtk_pctrl_init(struct platform_device *pdev,
- 	node = of_parse_phandle(np, "mediatek,pctl-regmap", 1);
- 	if (node) {
- 		pctl->regmap2 = syscon_node_to_regmap(node);
-+		of_node_put(node);
- 		if (IS_ERR(pctl->regmap2))
- 			return PTR_ERR(pctl->regmap2);
- 	}
+> 
+> FWIW, there is also this one:
+> https://lore.kernel.org/linux-gpio/20220216122727.1005041-1-michael@walle.cc/
+> 
+> -michael
+
 -- 
-2.17.1
-
+/Horatiu
