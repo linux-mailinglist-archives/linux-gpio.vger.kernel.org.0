@@ -2,48 +2,48 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CBFB4D144E
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Mar 2022 11:10:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C9CB84D1453
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Mar 2022 11:10:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345609AbiCHKLC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Mar 2022 05:11:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40616 "EHLO
+        id S243358AbiCHKLF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Mar 2022 05:11:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235807AbiCHKLB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Mar 2022 05:11:01 -0500
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A335B22505
-        for <linux-gpio@vger.kernel.org>; Tue,  8 Mar 2022 02:10:05 -0800 (PST)
-Received: by mail-pg1-x535.google.com with SMTP id o8so16018700pgf.9
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Mar 2022 02:10:05 -0800 (PST)
+        with ESMTP id S1345646AbiCHKLD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Mar 2022 05:11:03 -0500
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C9F122505
+        for <linux-gpio@vger.kernel.org>; Tue,  8 Mar 2022 02:10:07 -0800 (PST)
+Received: by mail-pl1-x631.google.com with SMTP id s18so3381836plp.1
+        for <linux-gpio@vger.kernel.org>; Tue, 08 Mar 2022 02:10:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oNIVKpvm0s6LUmPZub3N1Ezg2lYCnjZhWgfroeSjFzY=;
-        b=GW16XTWJxnJ3xJoYKWf2LL1zStyTxkVf0OSEZ22LTyDCb2dMqecV85IUwfEk/m0M9h
-         LtLQkTaKSH3UP/vSgLNNEN5rwMTsf/1CXYjr3nMi+/Sq/zUm/wHJfgvLMntaw8JA242B
-         s2PRMi02fpuOlEDiJu6hgSKAsxWE8pjbkjbxY=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=5/KGSiDUR6Oh1qS3ls1eTa+dOJRLWEHzu5UF9HK4Si4=;
+        b=eDoPTw7FlfuMrMk7TZW4fd7c4dDPzW6nXHDmrXSbtsRK6vVG9dhIQ6WrXKOKLXV7aq
+         pz9p+6TzCc1cAGkq3MxA4HyZXLYlRrprzCIS02q3HivJhzYBshHAXuBmUwnDRmScWVih
+         7AG4tW3YbthMaljSEsRgDx70cRXDSte2hvmI4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oNIVKpvm0s6LUmPZub3N1Ezg2lYCnjZhWgfroeSjFzY=;
-        b=45CROBo9/2AIIEv6nsAWvXLE00mVFZZkMXXtRG0h4jxfzzGL62+usD8A2va33EH1bN
-         LWNFYBeVOu2IPDcA84WSi9G1yED1MpDa3DNoDfa6YivPYdaNGhWn0F5hCUl3sJK3iTD+
-         Z3iFBGawikKLBzrvPP3RBqWwBTo6Xo1485kogQw272dM4Q7tyfzFi2AmWfzMxAKisPKZ
-         BN6I+0lJidb6i2KzHfGgj7p22O1S9GyIDXKUE2TuoYIdnYyfV+phtlrTc0pEawlHWM1b
-         G8rlxDPu8VBuVNM9ofaupnvX6vSuqHMvxpMFOSdrK6DMBRpRxjgNXfeS2Zf8gv6r9H+g
-         a/lQ==
-X-Gm-Message-State: AOAM532svMa0KdA9a80ZMH5WKDwHuewqY+1U2ZTq+WZapVyw3ZsY68yn
-        BmpV6PhiEMWjo8I0GcOJtc0OFg==
-X-Google-Smtp-Source: ABdhPJztEHkxcH5xrdq032U7xg9J5hZyVp6igs1Tla6Wh1z2kfGqBekJR2Bc0KZMr/7ucD/i6KiSew==
-X-Received: by 2002:a05:6a00:1bcb:b0:4f7:1b5c:479 with SMTP id o11-20020a056a001bcb00b004f71b5c0479mr5961549pfw.5.1646734205085;
-        Tue, 08 Mar 2022 02:10:05 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=5/KGSiDUR6Oh1qS3ls1eTa+dOJRLWEHzu5UF9HK4Si4=;
+        b=xpl4jzGlQ7yaABgZ1d3Ce35gD61NKA2xxlZcX2j7iqOuVsv/QL9CQe803/vQ8UViSN
+         EUqSAHgVGaeg1M/WpSrKWZeExMheTf3JLDfgTHwEGLmfa3v3UtyXIrmBAcudftje4Nh9
+         EJu7+slr9RmnZ/aAe/60bAx4HP8fTqdv941XhYza/dCMpLVNQzph0ch2GNPCL+FDFWMJ
+         tD9nMaFmiTxNrkuU/2ss6eMP08mUeFTRqFVfk03XVq8lf0JYpTK5GFcRrsLK3HwQrs1H
+         ArSFqMvXcE856MxJnymzHP32v+O8Ymi+FqSbKOORLqR0mpj94MCYVEZM9raQMmjsUPAU
+         AUJA==
+X-Gm-Message-State: AOAM533LuIuTvud5UrU9Xn3b6Zf36I6dh79bxVQZu0uCNyamrKCjZSIE
+        qBLumjXNXO4laO3dtSE4L+M4Cw==
+X-Google-Smtp-Source: ABdhPJxDGvhKYqfJXVj5tcUF1DdM4k4BYagm/EBulkoRUtJ1T6TWbFFUrKL/Ekqds5KSkBCbsoWkLw==
+X-Received: by 2002:a17:90a:4289:b0:1bc:275b:8986 with SMTP id p9-20020a17090a428900b001bc275b8986mr3758766pjg.153.1646734207017;
+        Tue, 08 Mar 2022 02:10:07 -0800 (PST)
 Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:73f8:5e3f:6894:8f44])
-        by smtp.gmail.com with ESMTPSA id k19-20020a056a00135300b004f734327960sm1707553pfu.106.2022.03.08.02.10.03
+        by smtp.gmail.com with ESMTPSA id k19-20020a056a00135300b004f734327960sm1707553pfu.106.2022.03.08.02.10.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Mar 2022 02:10:04 -0800 (PST)
+        Tue, 08 Mar 2022 02:10:06 -0800 (PST)
 From:   Chen-Yu Tsai <wenst@chromium.org>
 To:     Sean Wang <sean.wang@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -53,10 +53,12 @@ Cc:     Chen-Yu Tsai <wenst@chromium.org>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         AngeloGioacchino Del Regno 
         <angelogioacchino.delregno@collabora.com>
-Subject: [PATCH v2 00/11] pinctrl: mediatek: Fixes and minor improvements
-Date:   Tue,  8 Mar 2022 18:09:45 +0800
-Message-Id: <20220308100956.2750295-1-wenst@chromium.org>
+Subject: [PATCH v2 01/11] pinctrl: pinconf-generic: Print arguments for bias-pull-*
+Date:   Tue,  8 Mar 2022 18:09:46 +0800
+Message-Id: <20220308100956.2750295-2-wenst@chromium.org>
 X-Mailer: git-send-email 2.35.1.616.g0bdcbb4464-goog
+In-Reply-To: <20220308100956.2750295-1-wenst@chromium.org>
+References: <20220308100956.2750295-1-wenst@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -69,82 +71,38 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi everyone,
+The bias-pull-* properties, or PIN_CONFIG_BIAS_PULL_* pin config
+parameters, accept optional arguments in ohms denoting the strength of
+the pin bias.
 
-Here are some fixes and minor improvements to generic pinconf and the
-Mediatek Paris pinctrl driver.
+Print these values out in debugfs as well.
 
-Changes since v1:
-- Correct PIN_CONFIG_BIAS_* read back for all cases
-- Add patch 7 that reworks switch/case logic to make the code in
-  mtk_pinconf_{get,set} cleaner
-- Handle case where PIN_CONFIG_DRIVE_STRENGTH_UA is not given and the
-  advanced mode needs to be disabled
-- Also make the vendor specific MTK_PIN_CONFIG_DRV_ADV config override
-  PIN_CONFIG_DRIVE_STRENGTH_UA (or lack of) if the former is present.
+Fixes: eec450713e5c ("pinctrl: pinconf-generic: Add flag to print arguments")
+Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Tested-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+---
+ drivers/pinctrl/pinconf-generic.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Patch 1 makes the generic pinconf library print out arguments for
-PIN_CONFIG_BIAS_PULL_* in debugfs.
-
-Patch 2 fixes bogus readback of PIN_CONFIG_BIAS_DISABLE being always
-present.
-
-Patch 3 fixes the type of the "argument" argument in mtk_pinconf_get().
-This was erroneously typed as an enum when it should have been u32.
-
-Patch 4 fixes the pingroup config state readback to actually do
-readback.
-
-Patch 5 drops an extra newline in the pinconf debugfs output.
-
-Patch 6 cleans up the debugfs output, skipping the custom hardware state
-output on the virtual GPIOs, which have no corresponding hardware.
-
-Patch 7 inverts the switch/case logic in mtk_pinconf_{get,set}() so the
-code has a default error code, breaks out on error, and has the indentation
-reduced.
-
-Patch 8 adds support for PIN_CONFIG_DRIVE_STRENGTH_UA (drive-strength-uA)
-to the Mediatek Paris pinctrl library. The goal is to replace the vendor
-specific "mtk,drive-strength-adv" property with the generic one.
-
-Patches 9 through 11 are from Angelo [1], rebased onto next-20220308.
-
-Later on we might want to deprecate "mtk,drive-strength-adv".
-
-Please have a look.
-
-
-Regards
-ChenYu
-
-[1] https://lore.kernel.org/linux-gpio/20220103101855.17350-1-angelogioacchino.delregno@collabora.com/
-
-AngeloGioacchino Del Regno (3):
-  pinctrl: mediatek: pinctrl-moore: Simplify with dev_err_probe()
-  pinctrl: mediatek: pinctrl-paris: Simplify with dev_err_probe()
-  pinctrl: mediatek: pinctrl-mtk-common: Simplify with dev_err_probe()
-
-Chen-Yu Tsai (8):
-  pinctrl: pinconf-generic: Print arguments for bias-pull-*
-  pinctrl: mediatek: paris: Fix PIN_CONFIG_BIAS_* readback
-  pinctrl: mediatek: paris: Fix "argument" argument type for
-    mtk_pinconf_get()
-  pinctrl: mediatek: paris: Fix pingroup pin config state readback
-  pinctrl: mediatek: paris: Drop extra newline in
-    mtk_pctrl_show_one_pin()
-  pinctrl: mediatek: paris: Skip custom extra pin config dump for
-    virtual GPIOs
-  pinctrl: mediatek: paris: Rework mtk_pinconf_{get,set} switch/case
-    logic
-  pinctrl: mediatek: paris: Support generic PIN_CONFIG_DRIVE_STRENGTH_UA
-
- drivers/pinctrl/mediatek/pinctrl-moore.c      |  25 +-
- drivers/pinctrl/mediatek/pinctrl-mtk-common.c |  25 +-
- drivers/pinctrl/mediatek/pinctrl-paris.c      | 290 +++++++++++-------
- drivers/pinctrl/pinconf-generic.c             |   6 +-
- 4 files changed, 200 insertions(+), 146 deletions(-)
-
+diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pinconf-generic.c
+index f8edcc88ac01..415d1df8f46a 100644
+--- a/drivers/pinctrl/pinconf-generic.c
++++ b/drivers/pinctrl/pinconf-generic.c
+@@ -30,10 +30,10 @@ static const struct pin_config_item conf_items[] = {
+ 	PCONFDUMP(PIN_CONFIG_BIAS_BUS_HOLD, "input bias bus hold", NULL, false),
+ 	PCONFDUMP(PIN_CONFIG_BIAS_DISABLE, "input bias disabled", NULL, false),
+ 	PCONFDUMP(PIN_CONFIG_BIAS_HIGH_IMPEDANCE, "input bias high impedance", NULL, false),
+-	PCONFDUMP(PIN_CONFIG_BIAS_PULL_DOWN, "input bias pull down", NULL, false),
++	PCONFDUMP(PIN_CONFIG_BIAS_PULL_DOWN, "input bias pull down", "ohms", true),
+ 	PCONFDUMP(PIN_CONFIG_BIAS_PULL_PIN_DEFAULT,
+-				"input bias pull to pin specific state", NULL, false),
+-	PCONFDUMP(PIN_CONFIG_BIAS_PULL_UP, "input bias pull up", NULL, false),
++				"input bias pull to pin specific state", "ohms", true),
++	PCONFDUMP(PIN_CONFIG_BIAS_PULL_UP, "input bias pull up", "ohms", true),
+ 	PCONFDUMP(PIN_CONFIG_DRIVE_OPEN_DRAIN, "output drive open drain", NULL, false),
+ 	PCONFDUMP(PIN_CONFIG_DRIVE_OPEN_SOURCE, "output drive open source", NULL, false),
+ 	PCONFDUMP(PIN_CONFIG_DRIVE_PUSH_PULL, "output drive push pull", NULL, false),
 -- 
 2.35.1.616.g0bdcbb4464-goog
 
