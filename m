@@ -2,159 +2,142 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CD124D1FD0
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Mar 2022 19:12:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 887004D1FF9
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Mar 2022 19:19:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233562AbiCHSNR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Mar 2022 13:13:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54670 "EHLO
+        id S1347024AbiCHSUH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Mar 2022 13:20:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349428AbiCHSMu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Mar 2022 13:12:50 -0500
-Received: from mail-ot1-x32a.google.com (mail-ot1-x32a.google.com [IPv6:2607:f8b0:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B7DA56C04
-        for <linux-gpio@vger.kernel.org>; Tue,  8 Mar 2022 10:11:53 -0800 (PST)
-Received: by mail-ot1-x32a.google.com with SMTP id z9-20020a05683020c900b005b22bf41872so6118700otq.13
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Mar 2022 10:11:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=eCjdrkWFXlI2z3fvVt8j+mPo6k+YDOLeGzfqyXA7qwI=;
-        b=Rt7ZP4DLJ8Wvx6/WSEzVQ+9M9PDDM1AMWmX47E+JoHJJLzlhu1GZ6UBtDpeWJlmCis
-         JElGAotsUYcn60aAgpObiD+qgQ7vWebEub1OIMH1Yt+WOhiFkZlu6nKcvXcA5xMQUexW
-         bQ75EJDkJdHW7EPeiKBCVxbEfvsLdMupm+RRCyoPAWndKIGFS20MAr5SaTQweE8fL7cK
-         rdpxJUO1sxQN4H0yp6pCT4pg+GMD92K7cunI9n1yfLMXAy+OwhlEJZrrPjc646j6VCHp
-         qPXIQ5zK4FLN3mOYJrBjLT4NVSHKN/ng/zOCIyHqQl0iQC0tDnQe6cAweP7FFc3p/ksz
-         Ioww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=eCjdrkWFXlI2z3fvVt8j+mPo6k+YDOLeGzfqyXA7qwI=;
-        b=Zex4WiHAPOwguXP1A/s110GtTzcxskQXUVgcLOdtJiGvdEFMrSf5n9UbaNMmq1TDOQ
-         kfikSZC0H/PJTdiB4Hp10mIyCL52anADI7nDJ4wz9oRlKxeqVjNQkPrGOVSMfM/gcYXT
-         IHvcOUHad/aUTQAUY9e28ovBVk37Ngj0en4ZzwzUu/2Du6C2oiBwlG9VYCpoU6hpZkgA
-         88CW9SFKEURY8PphApHCUz+XE5305JxUNqnh01iVVanw9n7hI2FNMauQGbA8NLjzp0k0
-         6drtUDLS4U6vTI40gaRl2zA+tgKNOENeLHUzkq1WqP5iTXxbgbKUUR1EpZMSqEnpyw6Y
-         a+wg==
-X-Gm-Message-State: AOAM5331IY0QUQio9ZyhYFXxtJFHi/b5m6IKfCSnxI/ae6LYqlVAL9yS
-        QLYL0I3aXqarVOUEby015SotdQ==
-X-Google-Smtp-Source: ABdhPJxvEGLL54Z+BCjwAaRSpUbf47FFGDFMMrjqGpR5+XILsKSYph+QmQPxjTwKOFmXTYhdaeb/wQ==
-X-Received: by 2002:a9d:4e99:0:b0:5b2:54f4:75e7 with SMTP id v25-20020a9d4e99000000b005b254f475e7mr1433951otk.94.1646763112445;
-        Tue, 08 Mar 2022 10:11:52 -0800 (PST)
-Received: from ripper ([2600:1700:a0:3dc8:205:1bff:fec0:b9b3])
-        by smtp.gmail.com with ESMTPSA id u7-20020a05687036c700b000da4bcdae42sm3072206oak.13.2022.03.08.10.11.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Mar 2022 10:11:52 -0800 (PST)
-Date:   Tue, 8 Mar 2022 10:13:35 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
-Cc:     agross@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
-        robh+dt@kernel.org, quic_plai@quicinc.com, bgoswami@codeaurora.org,
-        perex@perex.cz, tiwai@suse.com, srinivas.kandagatla@linaro.org,
-        rohitkr@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, swboyd@chromium.org,
-        judyhsiao@chromium.org, Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Venkata Prasad Potturu <quic_potturu@quicinc.com>
-Subject: Re: [PATCH v10 7/7] pinctrl: qcom: Update clock voting as optional
-Message-ID: <Yieczzo96xSaA7jp@ripper>
-References: <1646737394-4740-1-git-send-email-quic_srivasam@quicinc.com>
- <1646737394-4740-8-git-send-email-quic_srivasam@quicinc.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1646737394-4740-8-git-send-email-quic_srivasam@quicinc.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        with ESMTP id S239485AbiCHSUH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Mar 2022 13:20:07 -0500
+Received: from smtp-out3.electric.net (smtp-out3.electric.net [208.70.128.178])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FE033700A;
+        Tue,  8 Mar 2022 10:19:10 -0800 (PST)
+Received: from 1nReQO-000BTc-Tx by out3b.electric.net with emc1-ok (Exim 4.94.2)
+        (envelope-from <kris@embeddedTS.com>)
+        id 1nReQP-000BWq-Ui; Tue, 08 Mar 2022 10:19:09 -0800
+Received: by emcmailer; Tue, 08 Mar 2022 10:19:09 -0800
+Received: from [66.210.251.27] (helo=mail.embeddedts.com)
+        by out3b.electric.net with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <kris@embeddedTS.com>)
+        id 1nReQO-000BTc-Tx; Tue, 08 Mar 2022 10:19:08 -0800
+Received: from tsdebian.Massive (unknown [75.164.75.221])
+        by mail.embeddedts.com (Postfix) with ESMTPSA id 8B65E3ED7C;
+        Tue,  8 Mar 2022 11:19:07 -0700 (MST)
+From:   Kris Bahnsen <kris@embeddedTS.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Mark Featherston <mark@embeddedTS.com>,
+        Kris Bahnsen <kris@embeddedTS.com>
+Subject: [PATCH v2] gpio: ts4900: Do not set DAT and OE together
+Date:   Tue,  8 Mar 2022 10:18:47 -0800
+Message-Id: <20220308181847.3276-1-kris@embeddedTS.com>
+X-Mailer: git-send-email 2.11.0
+X-Outbound-IP: 66.210.251.27
+X-Env-From: kris@embeddedTS.com
+X-Proto: esmtps
+X-Revdns: wsip-66-210-251-27.ph.ph.cox.net
+X-HELO: mail.embeddedts.com
+X-TLS:  TLS1.2:ECDHE-RSA-AES256-GCM-SHA384:256
+X-Authenticated_ID: 
+X-Virus-Status: Scanned by VirusSMART (c)
+X-Virus-Status: Scanned by VirusSMART (b)
+X-FM-Delivery-Delay: 15749372,23518412
+X-PolicySMART: 13164782, 15749372, 26810492
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=embeddedTS.com; s=mailanyone20220121;h=Message-Id:Date:To:From; bh=N0dy6kEUIr+y8NTXo2YidNyYvMmDq2e/8v2xzNF9rqo=;b=Kjm18paC+Ml+ybk1X5KtljH52gXwoEU9JMML+juB/d6LTPUtNg59zwpVfZ2TOYufwRGYN4Py6lfkDA8NjOcWm+eMp771RjylEYt6DSW38/YGqmy1A6zyLM344PtXtkWxa+J4Y1jc18ELLCDxUF/infUNu36vrxQbpsr3SSxTce8c2E7/pANG5Tt33x7yZmRfUA/MpBIlKiNou2M8yp5MOwhSR0qevlIKSDbkat/Mls4OHHi1KOv63umc2ImeM2ha0UESOZB+DhuxTOiROJ8JVemeR9e8Qb9H4gY0CzpfZioTuqsLqEc2gsfvOj4gOJ0TmTWV3CdSurO0whsD1QVjTQ==;
+X-FM-Delivery-Delay: 15749372,23518412
+X-PolicySMART: 13164782, 15749372, 26810492
+X-FM-Delivery-Delay: 15749372,23518412
+X-PolicySMART: 13164782, 15749372, 26810492
+X-FM-Delivery-Delay: 15749372,23518412
+X-PolicySMART: 13164782, 15749372, 26810492
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue 08 Mar 03:03 PST 2022, Srinivasa Rao Mandadapu wrote:
+From: Mark Featherston <mark@embeddedTS.com>
 
-> Update bulk clock voting to optional voting as ADSP bypass platform doesn't
-> need macro and decodec clocks,
+This works around an issue with the hardware where both OE and
+DAT are exposed in the same register. If both are updated
+simultaneously, the harware makes no guarantees that OE or DAT
+will actually change in any given order and may result in a
+glitch of a few ns on a GPIO pin when changing direction and value
+in a single write.
 
-Even I am not sure what "ADSP bypass platform" means, so please express
-this better.
+Setting direction to input now only affects OE bit. Setting
+direction to output updates DAT first, then OE.
 
-Are they optional because sc7280 typically come with ADSP based audio,
-but it might not and if not then we shouldn't control those clocks?
+Fixes: 9c6686322d74 ("gpio: add Technologic I2C-FPGA gpio support")
 
-> these are maintained as power domains and
-> operated from lpass audio core cc.
-> 
+Signed-off-by: Mark Featherston <mark@embeddedTS.com>
+Signed-off-by: Kris Bahnsen <kris@embeddedTS.com>
+---
+V1 -> V2: Add Fixes tag
 
-So there are clocks, but they are exposed as power-domains? Or are you
-just trying to say that the LPASS LPI pinctrl block is always in a
-power-domain controlled by the audio clock-controller?
+ drivers/gpio/gpio-ts4900.c | 25 ++++++++++++++++++++-----
+ 1 file changed, 20 insertions(+), 5 deletions(-)
 
-Regards,
-Bjorn
+diff --git a/drivers/gpio/gpio-ts4900.c b/drivers/gpio/gpio-ts4900.c
+index d885032cf814..fbabfca030c0 100644
+--- a/drivers/gpio/gpio-ts4900.c
++++ b/drivers/gpio/gpio-ts4900.c
+@@ -1,7 +1,8 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * Digital I/O driver for Technologic Systems I2C FPGA Core
+  *
+- * Copyright (C) 2015 Technologic Systems
++ * Copyright (C) 2015-2018 Technologic Systems
+  * Copyright (C) 2016 Savoir-Faire Linux
+  *
+  * This program is free software; you can redistribute it and/or
+@@ -55,19 +56,33 @@ static int ts4900_gpio_direction_input(struct gpio_chip *chip,
+ {
+ 	struct ts4900_gpio_priv *priv = gpiochip_get_data(chip);
+ 
+-	/*
+-	 * This will clear the output enable bit, the other bits are
+-	 * dontcare when this is cleared
++	/* Only clear the OE bit here, requires a RMW. Prevents potential issue
++	 * with OE and data getting to the physical pin at different times.
+ 	 */
+-	return regmap_write(priv->regmap, offset, 0);
++	return regmap_update_bits(priv->regmap, offset, TS4900_GPIO_OE, 0);
+ }
+ 
+ static int ts4900_gpio_direction_output(struct gpio_chip *chip,
+ 					unsigned int offset, int value)
+ {
+ 	struct ts4900_gpio_priv *priv = gpiochip_get_data(chip);
++	unsigned int reg;
+ 	int ret;
+ 
++	/* If changing from an input to an output, we need to first set the
++	 * proper data bit to what is requested and then set OE bit. This
++	 * prevents a glitch that can occur on the IO line
++	 */
++	regmap_read(priv->regmap, offset, &reg);
++	if (!(reg & TS4900_GPIO_OE)) {
++		if (value)
++			reg = TS4900_GPIO_OUT;
++		else
++			reg &= ~TS4900_GPIO_OUT;
++
++		regmap_write(priv->regmap, offset, reg);
++	}
++
+ 	if (value)
+ 		ret = regmap_write(priv->regmap, offset, TS4900_GPIO_OE |
+ 							 TS4900_GPIO_OUT);
+-- 
+2.11.0
 
-> Signed-off-by: Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
-> Co-developed-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
-> Signed-off-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
-> ---
->  drivers/pinctrl/qcom/pinctrl-lpass-lpi.c        | 12 +++++++++---
->  drivers/pinctrl/qcom/pinctrl-lpass-lpi.h        |  1 +
->  drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c |  1 +
->  3 files changed, 11 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-> index 1ab572f..c618b74 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-> @@ -407,9 +407,15 @@ int lpi_pinctrl_probe(struct platform_device *pdev)
->  		return dev_err_probe(dev, PTR_ERR(pctrl->slew_base),
->  				     "Slew resource not provided\n");
->  
-> -	ret = devm_clk_bulk_get(dev, MAX_LPI_NUM_CLKS, pctrl->clks);
-> -	if (ret)
-> -		return dev_err_probe(dev, ret, "Can't get clocks\n");
-> +	if (data->is_clk_optional) {
-> +		ret = devm_clk_bulk_get_optional(dev, MAX_LPI_NUM_CLKS, pctrl->clks);
-> +		if (ret)
-> +			return dev_err_probe(dev, ret, "Can't get clocks\n");
-> +	} else {
-> +		ret = devm_clk_bulk_get(dev, MAX_LPI_NUM_CLKS, pctrl->clks);
-> +		if (ret)
-> +			return dev_err_probe(dev, ret, "Can't get clocks\n");
-> +	}
->  
->  	ret = clk_bulk_prepare_enable(MAX_LPI_NUM_CLKS, pctrl->clks);
->  	if (ret)
-> diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
-> index afbac2a..3bcede6 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
-> +++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
-> @@ -77,6 +77,7 @@ struct lpi_pinctrl_variant_data {
->  	int ngroups;
->  	const struct lpi_function *functions;
->  	int nfunctions;
-> +	int is_clk_optional;
->  };
->  
->  int lpi_pinctrl_probe(struct platform_device *pdev);
-> diff --git a/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
-> index d67ff25..304d8a2 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
-> @@ -142,6 +142,7 @@ static const struct lpi_pinctrl_variant_data sc7280_lpi_data = {
->  	.ngroups = ARRAY_SIZE(sc7280_groups),
->  	.functions = sc7280_functions,
->  	.nfunctions = ARRAY_SIZE(sc7280_functions),
-> +	.is_clk_optional = 1,
->  };
->  
->  static const struct of_device_id lpi_pinctrl_of_match[] = {
-> -- 
-> 2.7.4
-> 
