@@ -2,60 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BBE044D1464
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Mar 2022 11:11:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 935004D1469
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Mar 2022 11:11:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345720AbiCHKLW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Mar 2022 05:11:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41262 "EHLO
+        id S1345710AbiCHKL2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Mar 2022 05:11:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345702AbiCHKLT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Mar 2022 05:11:19 -0500
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC86C37A8C
-        for <linux-gpio@vger.kernel.org>; Tue,  8 Mar 2022 02:10:21 -0800 (PST)
-Received: by mail-pl1-x635.google.com with SMTP id p17so16604065plo.9
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Mar 2022 02:10:21 -0800 (PST)
+        with ESMTP id S1345693AbiCHKLW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Mar 2022 05:11:22 -0500
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FC043B3D4
+        for <linux-gpio@vger.kernel.org>; Tue,  8 Mar 2022 02:10:23 -0800 (PST)
+Received: by mail-pj1-x1033.google.com with SMTP id v4so16704891pjh.2
+        for <linux-gpio@vger.kernel.org>; Tue, 08 Mar 2022 02:10:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1HzDn1y9bF4mL2TwPHFzwmvmpvjVc5+8wRjfSvBXPFs=;
-        b=iX9EgdxUqNlM3gsr2/giz0GMRZ7bA8G6QFObBSKiSEpOkj2vpQRNOSg03hc6ae67fD
-         2W+QPLh/2foXuuGGfi1XOmJyciVx+XHCljWyFIZihandnYlSuaMNn7faS/Bw9rSZRuyG
-         yo0xpbSt3Y46GeTP+XGHuklHBz1XBxcsX5GE8=
+        bh=2QEmSIEQFxB2Wc84ArL948mjUQ6bp5HIyQKnBGn7bWA=;
+        b=e5hlsZ8M6FrXSm5O1f+PV6XxTqqhgfqU73P/IYJh4E0hSqqWGYVO0tRmckACGlOYw7
+         /UOEQpi/SLYAuvbg6741+WVuaxEb1MV6seNKX4C0R7k/xBIHIXhx+GyyjIUl/PxX9nq+
+         Gio7RkFHIVNjGn7Ma5LMRTdCDaTpZuUesPNVY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1HzDn1y9bF4mL2TwPHFzwmvmpvjVc5+8wRjfSvBXPFs=;
-        b=frY43Qw6KrSnY0eX9b4OawkMV7LshJn0e2s3uVMf+YZnmu7zNsx3y7deHB0XT+wTvm
-         /UmZWXztB7GePjzO+hT4V+4nN4uf5iboOTavILYGuIC7qU7KNYmk7ZEXegrHgNLsCJeM
-         xr5SQG7qoIDZ4O9k74fyJ0WG7qPRpNYbqj4xAaiCjPMeKvtJxQpGZaVOBmcBi2wWBR6p
-         CAcuaw70FevDslUqg9S7h7TuCe97E6iM0TJKhYtf9ulXVaFt15YtKgm3qyvFK5wMC9SU
-         FDSRAJtADB25YNoHTsSec3VlIm5IyHQe6u6Mu/hygADn9xDFO5lvpVAGrJBcr8Qg0nac
-         0K0Q==
-X-Gm-Message-State: AOAM532DRr5IAzIp3QWib7Lxyx2+IT+yNvWVuvEJNapLDaFG055iXhA4
-        /Zfmy7+Ukg0AQfpbDYML9+YNjFxxTmrIWg==
-X-Google-Smtp-Source: ABdhPJyMrd0GH2X+Hm3rLZPvZtvquwQZkf1dabtzsGZyJ4pmxvqJFooM2QYqDOrllOdyMj2FrLUjmQ==
-X-Received: by 2002:a17:90a:8987:b0:1be:dde1:c672 with SMTP id v7-20020a17090a898700b001bedde1c672mr3830895pjn.208.1646734220894;
-        Tue, 08 Mar 2022 02:10:20 -0800 (PST)
+        bh=2QEmSIEQFxB2Wc84ArL948mjUQ6bp5HIyQKnBGn7bWA=;
+        b=ZfwWcVjHzK/KkCqJQddV2qkdcy1ZuV9pHg39eH1WQtFy3rEZfhM71d2D9SnWQGseRc
+         OJaJNA2u/5+N4iAO74LuG3elHanwriAzk642F2NZ2wCzsORDPyBpy/mPPULmVxxXxpz8
+         LStv/umSK0sh42OO+kkquv9WCpqDQOP62SMU/yRl2KuO/HvNOHIzhFd922oNXiyE/2lH
+         nFyH/HjPgskudl2sCVdlutg/nCugE6lozM1NYxsHVjnntdQ8EdRl/ly0NbPSxULKoI18
+         4TVcxrt1q7s+QSkXhAKJZjVy9PCdTAnvFoA6JJUKYfS9aL/lkGmihpJtRdURa74DYzRD
+         2Fwg==
+X-Gm-Message-State: AOAM532ftNt70tPrdASiouro0mt1eVUrOwQ4y9iv7PQqKpU9Ehl02U9x
+        pBnZpPeccNOjkXNLprBjfeU1xA==
+X-Google-Smtp-Source: ABdhPJzUIGM7/aLnoqVgZbi6x5gKdbjCUJrwbdnqiMSuTVYjMyywx1haZYeF+oYRHLRbmkLV6lNEOg==
+X-Received: by 2002:a17:902:f785:b0:14d:d2b6:b7c with SMTP id q5-20020a170902f78500b0014dd2b60b7cmr16603240pln.68.1646734222911;
+        Tue, 08 Mar 2022 02:10:22 -0800 (PST)
 Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:73f8:5e3f:6894:8f44])
-        by smtp.gmail.com with ESMTPSA id k19-20020a056a00135300b004f734327960sm1707553pfu.106.2022.03.08.02.10.19
+        by smtp.gmail.com with ESMTPSA id k19-20020a056a00135300b004f734327960sm1707553pfu.106.2022.03.08.02.10.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Mar 2022 02:10:20 -0800 (PST)
+        Tue, 08 Mar 2022 02:10:22 -0800 (PST)
 From:   Chen-Yu Tsai <wenst@chromium.org>
 To:     Sean Wang <sean.wang@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Chen-Yu Tsai <wenst@chromium.org>,
+Cc:     AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
         linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-Subject: [PATCH v2 08/11] pinctrl: mediatek: paris: Support generic PIN_CONFIG_DRIVE_STRENGTH_UA
-Date:   Tue,  8 Mar 2022 18:09:53 +0800
-Message-Id: <20220308100956.2750295-9-wenst@chromium.org>
+        Chen-Yu Tsai <wenst@chromium.org>
+Subject: [PATCH v2 09/11] pinctrl: mediatek: pinctrl-moore: Simplify with dev_err_probe()
+Date:   Tue,  8 Mar 2022 18:09:54 +0800
+Message-Id: <20220308100956.2750295-10-wenst@chromium.org>
 X-Mailer: git-send-email 2.35.1.616.g0bdcbb4464-goog
 In-Reply-To: <20220308100956.2750295-1-wenst@chromium.org>
 References: <20220308100956.2750295-1-wenst@chromium.org>
@@ -71,166 +71,77 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Some of the MediaTek chips that utilize the Paris pinctrl driver library
-support a lower drive strength (<= 1mA) than the standard drive strength
-settings (2~16 mA) on certain pins. This was previously supported by the
-custom MTK_PIN_CONFIG_DRV_ADV parameter along with the
-"mediatek,drive-strength-adv" device tree property.
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-The drive strength values for this hardware are 125, 250, 500, and 1000 mA,
-and can be readily described by the existing "drive-strength-microamp"
-property, which then gets parsed by the generic pinconf library into the
-parameter PIN_CONFIG_DRIVE_STRENGTH_UA.
+Use the dev_err_probe() helper to simplify error handling during probe.
 
-Add support for PIN_CONFIG_DRIVE_STRENGTH_UA while keeping the old
-custom parameter around for backward compatibility.
-
+Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Reviewed-by: Chen-Yu Tsai <wenst@chromium.org>
 Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
 ---
- drivers/pinctrl/mediatek/pinctrl-paris.c | 99 ++++++++++++++++++++++++
- 1 file changed, 99 insertions(+)
+ drivers/pinctrl/mediatek/pinctrl-moore.c | 25 +++++++++---------------
+ 1 file changed, 9 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-index 1ea3f3c54ef3..25d999848c2a 100644
---- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-@@ -48,6 +48,53 @@ static const char * const mtk_gpio_functions[] = {
- 	"func12", "func13", "func14", "func15",
- };
- 
-+/*
-+ * This section supports converting to/from custom MTK_PIN_CONFIG_DRV_ADV
-+ * and standard PIN_CONFIG_DRIVE_STRENGTH_UA pin configs.
-+ *
-+ * The custom value encodes three hardware bits as follows:
-+ *
-+ *   |           Bits           |
-+ *   | 2 (E1) | 1 (E0) | 0 (EN) | drive strength (uA)
-+ *   ------------------------------------------------
-+ *   |    x   |    x   |    0   | disabled, use standard drive strength
-+ *   -------------------------------------
-+ *   |    0   |    0   |    1   |  125 uA
-+ *   |    0   |    1   |    1   |  250 uA
-+ *   |    1   |    0   |    1   |  500 uA
-+ *   |    1   |    1   |    1   | 1000 uA
-+ */
-+static const int mtk_drv_adv_uA[] = { 125, 250, 500, 1000 };
-+
-+static int mtk_drv_adv_to_uA(int val)
-+{
-+	/* This should never happen. */
-+	if (WARN_ON_ONCE(val < 0 || val > 7))
-+		return -EINVAL;
-+
-+	/* Bit 0 simply enables this hardware part */
-+	if (!(val & BIT(0)))
-+		return -EINVAL;
-+
-+	return mtk_drv_adv_uA[(val >> 1)];
-+}
-+
-+static int mtk_drv_uA_to_adv(int val)
-+{
-+	switch (val) {
-+	case 125:
-+		return 0x1;
-+	case 250:
-+		return 0x3;
-+	case 500:
-+		return 0x5;
-+	case 1000:
-+		return 0x7;
-+	}
-+
-+	return -EINVAL;
-+}
-+
- static int mtk_pinmux_gpio_request_enable(struct pinctrl_dev *pctldev,
- 					  struct pinctrl_gpio_range *range,
- 					  unsigned int pin)
-@@ -145,8 +192,35 @@ static int mtk_pinconf_get(struct pinctrl_dev *pctldev,
- 	case PIN_CONFIG_DRIVE_STRENGTH:
- 		if (!hw->soc->drive_get)
- 			break;
-+
-+		if (hw->soc->adv_drive_get) {
-+			err = hw->soc->adv_drive_get(hw, desc, &ret);
-+			if (!err) {
-+				err = mtk_drv_adv_to_uA(ret);
-+				if (err > 0) {
-+					/* PIN_CONFIG_DRIVE_STRENGTH_UA used */
-+					err = -EINVAL;
-+					break;
-+				}
-+			}
-+		}
-+
- 		err = hw->soc->drive_get(hw, desc, &ret);
- 		break;
-+	case PIN_CONFIG_DRIVE_STRENGTH_UA:
-+		if (!hw->soc->adv_drive_get)
-+			break;
-+
-+		err = hw->soc->adv_drive_get(hw, desc, &ret);
-+		if (err)
-+			break;
-+		err = mtk_drv_adv_to_uA(ret);
-+		if (err < 0)
-+			break;
-+
-+		ret = err;
-+		err = 0;
-+		break;
- 	case MTK_PIN_CONFIG_TDSEL:
- 	case MTK_PIN_CONFIG_RDSEL:
- 		reg = (param == MTK_PIN_CONFIG_TDSEL) ?
-@@ -252,6 +326,15 @@ static int mtk_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
- 			break;
- 		err = hw->soc->drive_set(hw, desc, arg);
- 		break;
-+	case PIN_CONFIG_DRIVE_STRENGTH_UA:
-+		if (!hw->soc->adv_drive_set)
-+			break;
-+
-+		err = mtk_drv_uA_to_adv(arg);
-+		if (err < 0)
-+			break;
-+		err = hw->soc->adv_drive_set(hw, desc, err);
-+		break;
- 	case MTK_PIN_CONFIG_TDSEL:
- 	case MTK_PIN_CONFIG_RDSEL:
- 		reg = (param == MTK_PIN_CONFIG_TDSEL) ?
-@@ -720,6 +803,8 @@ static int mtk_pconf_group_set(struct pinctrl_dev *pctldev, unsigned group,
+diff --git a/drivers/pinctrl/mediatek/pinctrl-moore.c b/drivers/pinctrl/mediatek/pinctrl-moore.c
+index 5bfaa84839c7..526faaebaf77 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-moore.c
++++ b/drivers/pinctrl/mediatek/pinctrl-moore.c
+@@ -605,6 +605,7 @@ static int mtk_build_functions(struct mtk_pinctrl *hw)
+ int mtk_moore_pinctrl_probe(struct platform_device *pdev,
+ 			    const struct mtk_pin_soc *soc)
  {
- 	struct mtk_pinctrl *hw = pinctrl_dev_get_drvdata(pctldev);
- 	struct mtk_pinctrl_group *grp = &hw->groups[group];
-+	bool drive_strength_uA_found = false;
-+	bool adv_drve_strength_found = false;
- 	int i, ret;
++	struct device *dev = &pdev->dev;
+ 	struct pinctrl_pin_desc *pins;
+ 	struct mtk_pinctrl *hw;
+ 	int err, i;
+@@ -616,11 +617,9 @@ int mtk_moore_pinctrl_probe(struct platform_device *pdev,
+ 	hw->soc = soc;
+ 	hw->dev = &pdev->dev;
  
- 	for (i = 0; i < num_configs; i++) {
-@@ -728,8 +813,22 @@ static int mtk_pconf_group_set(struct pinctrl_dev *pctldev, unsigned group,
- 				      pinconf_to_config_argument(configs[i]));
- 		if (ret < 0)
- 			return ret;
-+
-+		if (pinconf_to_config_param(configs[i]) == PIN_CONFIG_DRIVE_STRENGTH_UA)
-+			drive_strength_uA_found = true;
-+		if (pinconf_to_config_param(configs[i]) == MTK_PIN_CONFIG_DRV_ADV)
-+			adv_drve_strength_found = true;
- 	}
+-	if (!hw->soc->nbase_names) {
+-		dev_err(&pdev->dev,
++	if (!hw->soc->nbase_names)
++		return dev_err_probe(dev, -EINVAL,
+ 			"SoC should be assigned at least one register base\n");
+-		return -EINVAL;
+-	}
  
-+	/*
-+	 * Disable advanced drive strength mode if drive-strength-microamp
-+	 * is not set. However, mediatek,drive-strength-adv takes precedence
-+	 * as its value can explicitly request the mode be enabled or not.
-+	 */
-+	if (hw->soc->adv_drive_set && !drive_strength_uA_found &&
-+	    !adv_drve_strength_found)
-+		hw->soc->adv_drive_set(hw, &hw->soc->pins[grp->pin], 0);
-+
- 	return 0;
- }
+ 	hw->base = devm_kmalloc_array(&pdev->dev, hw->soc->nbase_names,
+ 				      sizeof(*hw->base), GFP_KERNEL);
+@@ -665,17 +664,13 @@ int mtk_moore_pinctrl_probe(struct platform_device *pdev,
+ 
+ 	/* Setup groups descriptions per SoC types */
+ 	err = mtk_build_groups(hw);
+-	if (err) {
+-		dev_err(&pdev->dev, "Failed to build groups\n");
+-		return err;
+-	}
++	if (err)
++		return dev_err_probe(dev, err, "Failed to build groups\n");
+ 
+ 	/* Setup functions descriptions per SoC types */
+ 	err = mtk_build_functions(hw);
+-	if (err) {
+-		dev_err(&pdev->dev, "Failed to build functions\n");
+-		return err;
+-	}
++	if (err)
++		return dev_err_probe(dev, err, "Failed to build functions\n");
+ 
+ 	/* For able to make pinctrl_claim_hogs, we must not enable pinctrl
+ 	 * until all groups and functions are being added one.
+@@ -691,10 +686,8 @@ int mtk_moore_pinctrl_probe(struct platform_device *pdev,
+ 
+ 	/* Build gpiochip should be after pinctrl_enable is done */
+ 	err = mtk_build_gpiochip(hw);
+-	if (err) {
+-		dev_err(&pdev->dev, "Failed to add gpio_chip\n");
+-		return err;
+-	}
++	if (err)
++		return dev_err_probe(dev, err, "Failed to add gpio_chip\n");
+ 
+ 	platform_set_drvdata(pdev, hw);
  
 -- 
 2.35.1.616.g0bdcbb4464-goog
