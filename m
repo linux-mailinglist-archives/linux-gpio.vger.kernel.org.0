@@ -2,348 +2,521 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C96754D1ACA
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Mar 2022 15:40:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B98B4D1B93
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Mar 2022 16:22:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347555AbiCHOlm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Mar 2022 09:41:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53110 "EHLO
+        id S234882AbiCHPXf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Mar 2022 10:23:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347649AbiCHOl1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Mar 2022 09:41:27 -0500
-Received: from EUR03-VE1-obe.outbound.protection.outlook.com (mail-eopbgr50052.outbound.protection.outlook.com [40.107.5.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 247AC3980C;
-        Tue,  8 Mar 2022 06:40:00 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fEw0+OfF4DWEb8NVbIp9GcldBGPcRbaI6hMLN2WP9kVxiaS1JtHEOuY3f2iiWwS8em70GMdLmmgareNmqUzC2GmMHPbOq1eA20VP+AOZbDB8fpEEb3JshEz2oYm7AUaR1qs/+00ZCSlrPY4Bgl3TQg0wL8u2I1DOQeQH/MjEg9uFzSCm+MGfeqwVG5CKyrdIcMyAS2xOcEmt650H1cwJorcWJOQEBPq5T1KADsrwUPXxeSXdbrBdMo9UfddlD7UJAcD3GrhN09Ju7RZdWOSf/CnUr8ZMiKRiz0qngfzNWtqQflcKzvLaLW5Pp81Rv6eehykrFuvkqNlSka0Z3zt/0g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GlXZ9F9nllO2eSTCJDiXZ87XsBE12rgR/ENal7Y1GK8=;
- b=bNYy2ZbNLFKcEPYy1Lvc+JzJpUQ949pRhvcPHVkHu9/Rhp41OIquM/5b/CK3n+d9L7ijA9PIXQoh2ovcv3kJuIM/oAVWbyLyvZa736lTcoCfo9FoJgyBTSSTUQZRXqYQZ1KZPnHT6m+3tUj9tsSy7nKZD8XGwErlEp5t0Jk8dUU6SJwv3pY3ps7WPgx410Hyk4R8hl5D7y3Ir8F5QcR8N23bD+R4CrCXhgTNyw+nudK0xxfcG73Y5n5lA2cvqP++LyzGvE3+sS2rzXAbJR1arZWTbb8IxV6A0zhKBkyjVJq/tnuohabJFcAJ+Kd9bOe59itxs5PxAVx5AQg19rsXYw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GlXZ9F9nllO2eSTCJDiXZ87XsBE12rgR/ENal7Y1GK8=;
- b=MWCHCwJ0zGJf62ckXRKY1grDrJFlyHAbqwGA5vwyP1mmL/Ar+r1BJl6Cn7NSwj/BPtmrVk4DhYnn9nVYorSR+0AlYtnOtm5AvXb8o1Qx94A7F+hcDCL64bKxf+1AVGHeCAZrQqfznPITNwSReL9q8tFzecwX2dDib2v/IGOw9dk=
-Received: from VI1PR04MB5136.eurprd04.prod.outlook.com (2603:10a6:803:55::19)
- by DU2PR04MB8808.eurprd04.prod.outlook.com (2603:10a6:10:2e3::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.14; Tue, 8 Mar
- 2022 14:39:57 +0000
-Received: from VI1PR04MB5136.eurprd04.prod.outlook.com
- ([fe80::ac0c:d5d:aaa9:36]) by VI1PR04MB5136.eurprd04.prod.outlook.com
- ([fe80::ac0c:d5d:aaa9:36%5]) with mapi id 15.20.5038.027; Tue, 8 Mar 2022
- 14:39:57 +0000
-From:   Vladimir Oltean <vladimir.oltean@nxp.com>
-To:     Colin Foster <colin.foster@in-advantage.com>
-CC:     "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Hector Martin <marcan@marcan.st>,
-        Angela Czubak <acz@semihalf.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
+        with ESMTP id S230263AbiCHPXf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Mar 2022 10:23:35 -0500
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAD52A1A0
+        for <linux-gpio@vger.kernel.org>; Tue,  8 Mar 2022 07:22:36 -0800 (PST)
+Received: by mail-wr1-x430.google.com with SMTP id x15so29068658wru.13
+        for <linux-gpio@vger.kernel.org>; Tue, 08 Mar 2022 07:22:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MFpHAgFXJR4UYkwxkQ1B/SJkrtRscew00y6ZsXzHRus=;
+        b=kZTPTXwDqxCVOnTDPqRHA9J2iVETH8NfPHBs3P5jEhCo5lkVgFJij1/c3Q3ZLXyDxQ
+         OFB6BNHFfjjMaFRie+FJjiVaNf3Y5jCKPM/m+rORAnB7Py9U/d6sLhJOqCczGFcjUm8J
+         Nm6JIE2Fwm8yP8Pt7yrt/I7aGFjdFfj5VNDUNGu+uyvijgP1S+gD8y21XKVebc+4S2n7
+         7ymz7qUy4bFqNmTG0ZmyPiMi/kqAFfLKAqxUGHx9le9v/gMQCQQ1K9phj655WySJxAqf
+         mfsWuL0cDqw7NtZLN4YX2lNUPxtV5+tcuKazbEZYYc1l/qu0rYz6XVt23ALhkLWL0XRi
+         vqSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MFpHAgFXJR4UYkwxkQ1B/SJkrtRscew00y6ZsXzHRus=;
+        b=QMR7shFFHougw2sxvom0NDYK4eEcrasf+1SJxcAk9oOd2PkhBVkYhModOg0hgiMZvv
+         K/z7HFLn0+ZCzS5Ik4MpiOa43zLESeqmliRc1D44uWlrd6P6yiORMtJn3qo0Ylt+SDck
+         XHlviH/OUXqoTfEQHMmzGOWZK5zKE730EhNtPw7XcLbt4w133Xk6vR0VTXomoJkC3D9B
+         ZWO2INGjGpW1IGMu2hKu/oy+oQb0lQrJSbiKv1MtmXK+iiSkKvgQn45UmSGJxmlccI6o
+         xt8lJZwSnLhbvvZHTZQSfh05XnWMsNRuJ2E8Tq8uaB2LcuEUiwlx5bOCZSC7NRx91fci
+         Xkhw==
+X-Gm-Message-State: AOAM5307Cy5AGsrOFknKiletFOIWWHb+oXzznUdE1Ca49xnpt26g3OWO
+        X8qwtG+/Uq5owsfa2/Qy/Yh6ACIzzJOGdw==
+X-Google-Smtp-Source: ABdhPJy067LetEbP0zJmCGQsCt8ZzWDDH7DhEZJN7ePa3v/twPGzygxYEocNzF5JSEZC9CbPR95S3g==
+X-Received: by 2002:a5d:6987:0:b0:1f0:16cb:db6b with SMTP id g7-20020a5d6987000000b001f016cbdb6bmr12976005wru.702.1646752955239;
+        Tue, 08 Mar 2022 07:22:35 -0800 (PST)
+Received: from debian-brgl.home ([2a01:cb1d:334:ac00:7d50:ff5:f5c1:e225])
+        by smtp.gmail.com with ESMTPSA id e6-20020a5d5006000000b0020374784350sm54959wrt.64.2022.03.08.07.22.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Mar 2022 07:22:34 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        "katie.morris@in-advantage.com" <katie.morris@in-advantage.com>
-Subject: Re: [RFC v7 net-next 00/13] add support for VSC7512 control over SPI
-Thread-Topic: [RFC v7 net-next 00/13] add support for VSC7512 control over SPI
-Thread-Index: AQHYMcjMMQklYDWG1EudSp8aw3YIC6y1kTAA
-Date:   Tue, 8 Mar 2022 14:39:57 +0000
-Message-ID: <20220308143956.jik5bvszvqmrukgb@skbuf>
-References: <20220307021208.2406741-1-colin.foster@in-advantage.com>
-In-Reply-To: <20220307021208.2406741-1-colin.foster@in-advantage.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7742f581-83f5-42ed-4ce1-08da01118472
-x-ms-traffictypediagnostic: DU2PR04MB8808:EE_
-x-microsoft-antispam-prvs: <DU2PR04MB88083DD16DDC58A8C82A6588E0099@DU2PR04MB8808.eurprd04.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 2J/IqW7epYfMHaPWMc2yWlEdZXLlxdkHP+WorFJhuhuA8rbQdOM2ErgU2oKPD5R/6ei8lod9ffBDTGsWdU1xAIpzqUHSpucj8ID/RhbUhRNaVGMfwRIuv51kQ6Oq71fqpdlDvXlQu7Clg00mjutIlyPsD70b6mMDhBHcOyuzhDdk0Di9vDaceMx+2TYYeyUtSPAu2JHgaLxKdIRDeWgjzz/zUx7R8B9wGqfqCk7qC3A3QB/WRmoVnV5Kp79i6LA7ESO14Wu/mK2xTQ1a30hrOsXpRXyybzppsuDztJgvF+gzbjw+wpLLKm0N6kHVMc+cKOxl8zOOBLa6gYtcbzaY1OB9EPOpKUBsIYNSdMFsX+7EZYZmydo73xtiUwLJkTRTNNUPltLxX+Donowhl4lYiSjcBP77hQd2XKsmp6X2br0RUf2Sp7breBIQ5M2KmuBJuQsNblFJbS2Riq+vfzAjWHrUhaNFhrCP/k+NX3Rir0YVWXcdWLU2HIEFk6xWRkfpufNZ7Vj6cm2B7aOMdMruizPrCMLovdYDtQ4nhIvbh2bk3tlt28Jbc1XfFYntn/kY79k9t3ehnae/ryP5d11WD2cP7ON5EEafD58ROWSSArabyvJZM5RHSeqDZqPpvFg2wzL5vbSWcjK0FNKgIC6qKcKpWC+kh50Uan4so3Gqb4fpWHaE1o9ipCWj+9iI8tS/FRYXYssZFjHNda51hY8VyA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB5136.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(7916004)(366004)(91956017)(2906002)(6506007)(6512007)(9686003)(66476007)(66446008)(64756008)(66556008)(76116006)(66946007)(6486002)(8676002)(4326008)(33716001)(498600001)(122000001)(71200400001)(38100700002)(86362001)(38070700005)(6916009)(54906003)(83380400001)(1076003)(186003)(44832011)(7416002)(5660300002)(26005)(8936002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?MLLpbUXJgS4RWyw3zsqWivbujG9TAVgjPi7QGiW52dOkn/YtxLQAZ7TAdBQc?=
- =?us-ascii?Q?zzj6ODtvrqIhlIdR0rVdI6//sRrwbBxdxNvD2JGPaZRhzUAb8Z0RaNbScYEe?=
- =?us-ascii?Q?qv3p7zi7+F6AEJ70yrqjOTS43YHilMY/XkJ2E7HjluWy/GWdTSU/nb/i4IKW?=
- =?us-ascii?Q?53G2em5acOVpmrnPD54SC/pstSDxJ6XDEwDSQWD02mcLqNd8HjNkF2wNuWVU?=
- =?us-ascii?Q?pT1p97S3CpILhIaveosjTLvGBjOUZWzLZ3p5+PvlNgZ9235aRLekp2HIwkXx?=
- =?us-ascii?Q?kyH7VKW3FD3h+Wg0qc28iDxe7gI+E1WxbEb5YZJdZWA/5yi1P/FJPUzzYVrr?=
- =?us-ascii?Q?QqJFxfz5zLv0DVp1nVzIOWuawrl2R3eDV/JNkGZai+kd2yQjDQqaxWgFOTlo?=
- =?us-ascii?Q?TcI0QwjcJeVOybbivdVPUs59MPINEoYU2QvWGFKSoMRrJFFHlcVwAR5tjgol?=
- =?us-ascii?Q?NTI3IrAKiQu8PlIj0hKeLmawI2RbDEAfsEXrKeyr1a0OvfibpTVR+PSRHkny?=
- =?us-ascii?Q?JtgFRWt03BKuegWUv2hA928q5k/Nz/xxI7DE83OOSXmSn0nMed0AfzZdDjtJ?=
- =?us-ascii?Q?/xOvQdOKg8H0K/x1ttMf7PDbIu6x0P4TwN0Op59S58HHM3k9FMs4juo0i2xs?=
- =?us-ascii?Q?uCItOrQlbx/mSl3qEAPqqatC2uyH3Og2MBljx9y6Kaq4q7h5LkVlKFyt7N98?=
- =?us-ascii?Q?4afDlAACEsmTrAP9CSj3tr1GCq4yNRQf2nLfhvU4E/XM+Hjt/Z+WsXBecUi+?=
- =?us-ascii?Q?o3UCsBSWU21z/KP4ZUkE/KebFaLsCEk3IRB7cre0+Cc9nUMFhO06TbnQhNRn?=
- =?us-ascii?Q?OQzsKYRH6b1WcV2ceOE2hdvl9w/e3wNFwfllmzN4VHrt3afp+apKcBO5zor6?=
- =?us-ascii?Q?kfYm+4hnjwzOIF/zHyv1d3/mnVYNztQOfhV9cxtZ74IibCVST5AgRt5nu+We?=
- =?us-ascii?Q?sgi5chHEs9dM4u5K3dW4Lup2pDhuelbVBGPi4rMdc03rxM9pduwmRx1IJSN9?=
- =?us-ascii?Q?ZFb/uEyF4xfev/s7AO7fQ74ftA4KpaeF9CqI3WD4R6nV+77wZBlHLbEUIFev?=
- =?us-ascii?Q?LazM8H6yfu2oWgKpJvL164lERVWMF55OHBfirPFHjNebZXksBR9hLwr0y9Zh?=
- =?us-ascii?Q?36KeCSEC/P0SHixigI4ZTD1Sp5CvmKFlWeg/FyRq0aJnTvNjsquTdnY3f792?=
- =?us-ascii?Q?VNmaTtG5xg2diJs2VJZ6Y6zBrO9QJlSyQvV7hv5jUxvFe0iA52McYmV+mLUs?=
- =?us-ascii?Q?Thz7ZYVOWWG/6+g+xetU2G4mgGyCMiSHVKfVqlzi9WI9aHaOAO4DdtpwKCYE?=
- =?us-ascii?Q?0c92sAnJm8h6H432mz8BNKDu2eJkAgQYPrF8qnNcOZaYjQlthX5iOcacvhsu?=
- =?us-ascii?Q?vXMvtlo76hCIUA4LKB+pcOORpk2gD2rKY62KH8jRsiyvvqgaHShvsp5WRoB8?=
- =?us-ascii?Q?3R6WZpO9YD/ZpC72vASig2yx82GGU/adA3x0jsNb13t3IQc9vt96eLd8+jrb?=
- =?us-ascii?Q?lcf6lREjEmXgd8UYXOuK6QJ5uin1roTJdV+EV0E+yNirHEKvcjsnLmQMKbpx?=
- =?us-ascii?Q?7Xh1Ncepa+iR+idur4PCZeN5NOZE+BDowY+68TwDgD8bTf7JgId/fyqvwg/o?=
- =?us-ascii?Q?qCiqx/ZMrAtpbV6rZYvHJQ8=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <7B334D65EBDC354496E36D8446CBD1C3@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH] treewide: use size_t where applicable
+Date:   Tue,  8 Mar 2022 16:22:33 +0100
+Message-Id: <20220308152233.493098-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB5136.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7742f581-83f5-42ed-4ce1-08da01118472
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Mar 2022 14:39:57.3407
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: uhfO6iDTrMmAf9HTS7joLCCHe/X0CTvIZqWuZYhhoFhhuADjjzNCnBuxsJAygw3oFd8uI65pGWIK1cyStziyvA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8808
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Mar 06, 2022 at 06:11:55PM -0800, Colin Foster wrote:
-> The patch set in general is to add support for the VSC7512, and
-> eventually the VSC7511, VSC7513 and VSC7514 devices controlled over
-> SPI. The driver is believed to be fully functional for the internal
-> phy ports (0-3)  on the VSC7512. It is not yet functional for SGMII,
-> QSGMII, and SerDes ports.
->=20
-> I have mentioned previously:
-> The hardware setup I'm using for development is a beaglebone black, with
-> jumpers from SPI0 to the microchip VSC7512 dev board. The microchip dev
-> board has been modified to not boot from flash, but wait for SPI. An
-> ethernet cable is connected from the beaglebone ethernet to port 0 of
-> the dev board.
->=20
-> The relevant sections of the device tree I'm using for the VSC7512 is
-> below. Notably the SGPIO LEDs follow link status and speed from network
-> triggers.
->=20
-> In order to make this work, I have modified the cpsw driver, and now the
-> cpsw_new driver, to allow for frames over 1500 bytes. Otherwise the
-> tagging protocol will not work between the beaglebone and the VSC7512. I
-> plan to eventually try to get those changes in mainline, but I don't
-> want to get distracted from my initial goal. I also had to change
-> bonecommon.dtsi to avoid using VLAN 0.
->=20
->=20
-> Of note: The Felix driver had the ability to register the internal MDIO
-> bus. I am no longer using that in the switch driver, it is now an
-> additional sub-device under the MFD.
->=20
-> I also made use of IORESOURCE_REG, which removed the "device_is_mfd"
-> requirement.
->=20
->=20
-> / {
-> 	vscleds {
-> 		compatible =3D "gpio-leds";
-> 		vscled@0 {
-> 			label =3D "port0led";
-> 			gpios =3D <&sgpio_out1 0 0 GPIO_ACTIVE_LOW>;
-> 			default-state =3D "off";
-> 			linux,default-trigger =3D "ocelot-miim0.2.auto-mii:00:link";
-> 		};
-> 		vscled@1 {
-> 			label =3D "port0led1";
-> 			gpios =3D <&sgpio_out1 0 1 GPIO_ACTIVE_LOW>;
-> 			default-state =3D "off";
-> 			linux,default-trigger =3D "ocelot-miim0.2.auto-mii:00:1Gbps";
-> 		};
-> [ ... ]
-> 		vscled@71 {
-> 			label =3D "port7led1";
-> 			gpios =3D <&sgpio_out1 7 1 GPIO_ACTIVE_LOW>;
-> 			default-state =3D "off";
-> 			linux,default-trigger =3D "ocelot-miim1-mii:07:1Gbps";
-> 		};
-> 	};
-> };
->=20
-> &spi0 {
-> 	#address-cells =3D <1>;
-> 	#size-cells =3D <0>;
-> 	status =3D "okay";
->=20
-> 	ocelot-chip@0 {
-> 		compatible =3D "mscc,vsc7512_mfd_spi";
-> 		spi-max-frequency =3D <2500000>;
-> 		reg =3D <0>;
->=20
-> 		ethernet-switch@0 {
+size_t is the unsigned integer type generally used whenever variables
+define sizes, ranges and numbers of elements. Use it throughout the
+C library wherever it makes sense.
 
-I'm not exactly clear on what exactly does the bus address (@0)
-represent here and in other (but not all) sub-nodes.
-dtc probably warns that there shouldn't be any unit address, since
-#address-cells and #size-cells are both 0 for ocelot-chip@0.
+Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+---
+ include/gpiod.h      | 30 +++++++++++++++---------------
+ lib/chip.c           |  4 ++--
+ lib/edge-event.c     | 12 ++++++------
+ lib/internal.h       |  2 +-
+ lib/line-config.c    |  4 ++--
+ lib/line-request.c   | 10 +++++-----
+ lib/request-config.c | 12 ++++++------
+ tools/gpiodetect.c   |  2 +-
+ tools/gpioget.c      |  3 ++-
+ tools/gpioinfo.c     |  2 +-
+ tools/gpiomon.c      |  4 ++--
+ tools/gpioset.c      |  3 ++-
+ 12 files changed, 45 insertions(+), 43 deletions(-)
 
-> 			compatible =3D "mscc,vsc7512-ext-switch";
-> 			ports {
-> 				#address-cells =3D <1>;
-> 				#size-cells =3D <0>;
->=20
-> 				port@0 {
-> 					reg =3D <0>;
-> 					label =3D "cpu";
-> 					status =3D "okay";
-> 					ethernet =3D <&mac_sw>;
-> 					phy-handle =3D <&sw_phy0>;
-> 					phy-mode =3D "internal";
-> 				};
->=20
-> 				port@1 {
-> 					reg =3D <1>;
-> 					label =3D "swp1";
-> 					status =3D "okay";
-> 					phy-handle =3D <&sw_phy1>;
-> 					phy-mode =3D "internal";
-> 				};
-> 			};
-> 		};
->=20
-> 		mdio0: mdio0@0 {
-> 			compatible =3D "mscc,ocelot-miim";
-> 			#address-cells =3D <1>;
-> 			#size-cells =3D <0>;
->=20
-> 			sw_phy0: ethernet-phy@0 {
-> 				reg =3D <0x0>;
-> 			};
->=20
-> 			sw_phy1: ethernet-phy@1 {
-> 				reg =3D <0x1>;
-> 			};
->=20
-> 			sw_phy2: ethernet-phy@2 {
-> 				reg =3D <0x2>;
-> 			};
->=20
-> 			sw_phy3: ethernet-phy@3 {
-> 				reg =3D <0x3>;
-> 			};
-> 		};
->=20
-> 		mdio1: mdio1@1 {
-> 			compatible =3D "mscc,ocelot-miim";
-> 			pinctrl-names =3D "default";
-> 			pinctrl-0 =3D <&miim1>;
-> 			#address-cells =3D <1>;
-> 			#size-cells =3D <0>;
->=20
-> 			sw_phy4: ethernet-phy@4 {
-> 				reg =3D <0x4>;
-> 			};
->=20
-> 			sw_phy5: ethernet-phy@5 {
-> 				reg =3D <0x5>;
-> 			};
->=20
-> 			sw_phy6: ethernet-phy@6 {
-> 				reg =3D <0x6>;
-> 			};
->=20
-> 			sw_phy7: ethernet-phy@7 {
-> 				reg =3D <0x7>;
-> 			};
->=20
-> 		};
->=20
-> 		gpio: pinctrl@0 {
-> 			compatible =3D "mscc,ocelot-pinctrl";
-> 			gpio-controller;
-> 			#gpio_cells =3D <2>;
-> 			gpio-ranges =3D <&gpio 0 0 22>;
->=20
-> 			led_shift_reg_pins: led-shift-reg-pins {
-> 				pins =3D "GPIO_0", "GPIO_1", "GPIO_2", "GPIO_3";
-> 				function =3D "sg0";
-> 			};
->=20
-> 			miim1: miim1 {
-> 				pins =3D "GPIO_14", "GPIO_15";
-> 				function =3D "miim";
-> 			};
-> 		};
->=20
-> 		sgpio: sgpio {
-> 			compatible =3D "mscc,ocelot-sgpio";
-> 			#address-cells =3D <1>;
-> 			#size-cells =3D <0>;
-> 			bus-frequency=3D<12500000>;
-> 			clocks =3D <&ocelot_clock>;
-> 			microchip,sgpio-port-ranges =3D <0 15>;
-> 			pinctrl-names =3D "default";
-> 			pinctrl-0 =3D <&led_shift_reg_pins>;
->=20
-> 			sgpio_in0: sgpio@0 {
-> 				compatible =3D "microchip,sparx5-sgpio-bank";
-> 				reg =3D <0>;
-> 				gpio-controller;
-> 				#gpio-cells =3D <3>;
-> 				ngpios =3D <64>;
-> 			};
->=20
-> 			sgpio_out1: sgpio@1 {
-> 				compatible =3D "microchip,sparx5-sgpio-bank";
-> 				reg =3D <1>;
-> 				gpio-controller;
-> 				#gpio-cells =3D <3>;
-> 				ngpios =3D <64>;
-> 			};
-> 		};
->=20
-> 		hsio: syscon {
-> 			compatible =3D "mscc,ocelot-hsio", "syscon", "simple-mfd";
->=20
-> 			serdes: serdes {
-> 				compatible =3D "mscc,vsc7514-serdes";
-> 				#phy-cells =3D <2>;
-> 			};
-> 		};
-> 	};
-> };
+diff --git a/include/gpiod.h b/include/gpiod.h
+index 0512a8f..e6a4645 100644
+--- a/include/gpiod.h
++++ b/include/gpiod.h
+@@ -9,6 +9,7 @@
+ #define __LIBGPIOD_GPIOD_H__
+ 
+ #include <stdbool.h>
++#include <stddef.h>
+ #include <stdint.h>
+ 
+ #ifdef __cplusplus
+@@ -99,7 +100,7 @@ const char *gpiod_chip_get_path(struct gpiod_chip *chip);
+  * @param chip GPIO chip object.
+  * @return Number of GPIO lines.
+  */
+-unsigned int gpiod_chip_get_num_lines(struct gpiod_chip *chip);
++size_t gpiod_chip_get_num_lines(struct gpiod_chip *chip);
+ 
+ /**
+  * @brief Get the current snapshot of information about the line at given
+@@ -940,7 +941,7 @@ gpiod_line_config_set_output_value_override(struct gpiod_line_config *config,
+  *               the previous argument.
+  */
+ void gpiod_line_config_set_output_values(struct gpiod_line_config *config,
+-					 unsigned int num_values,
++					 size_t num_values,
+ 					 const unsigned int *offsets,
+ 					 const int *values);
+ 
+@@ -1016,8 +1017,7 @@ enum {
+  * @param config Line config object.
+  * @return Number of individual overridden settings.
+  */
+-unsigned int
+-gpiod_line_config_get_num_overrides(struct gpiod_line_config *config);
++size_t gpiod_line_config_get_num_overrides(struct gpiod_line_config *config);
+ 
+ /**
+  * @brief Get the list of overridden offsets and the corresponding types of
+@@ -1090,7 +1090,7 @@ gpiod_request_config_get_consumer(struct gpiod_request_config *config);
+  *       accepted by the kernel (64 lines) are silently dropped.
+  */
+ void gpiod_request_config_set_offsets(struct gpiod_request_config *config,
+-				      unsigned int num_offsets,
++				      size_t num_offsets,
+ 				      const unsigned int *offsets);
+ 
+ /**
+@@ -1098,7 +1098,7 @@ void gpiod_request_config_set_offsets(struct gpiod_request_config *config,
+  * @param config Request config object.
+  * @return Number of line offsets in this request config.
+  */
+-unsigned int
++size_t
+ gpiod_request_config_get_num_offsets(struct gpiod_request_config *config);
+ 
+ /**
+@@ -1119,14 +1119,14 @@ void gpiod_request_config_get_offsets(struct gpiod_request_config *config,
+  */
+ void
+ gpiod_request_config_set_event_buffer_size(struct gpiod_request_config *config,
+-					   unsigned int event_buffer_size);
++					   size_t event_buffer_size);
+ 
+ /**
+  * @brief Get the edge event buffer size from this request config.
+  * @param config Request config object.
+  * @return Current edge event buffer size setting.
+  */
+-unsigned int
++size_t
+ gpiod_request_config_get_event_buffer_size(struct gpiod_request_config *config);
+ 
+ /**
+@@ -1149,7 +1149,7 @@ void gpiod_line_request_release(struct gpiod_line_request *request);
+  * @param request Line request object.
+  * @return Number of requested lines.
+  */
+-unsigned int gpiod_line_request_get_num_lines(struct gpiod_line_request *request);
++size_t gpiod_line_request_get_num_lines(struct gpiod_line_request *request);
+ 
+ /**
+  * @brief Get the hardware offsets of lines in this request.
+@@ -1179,7 +1179,7 @@ int gpiod_line_request_get_value(struct gpiod_line_request *request,
+  * @return 0 on success, -1 on failure.
+  */
+ int gpiod_line_request_get_values_subset(struct gpiod_line_request *request,
+-					 unsigned num_lines,
++					 size_t num_lines,
+ 					 const unsigned int *offsets,
+ 					 int *values);
+ 
+@@ -1216,7 +1216,7 @@ int gpiod_line_request_set_value(struct gpiod_line_request *request,
+  * @return 0 on success, -1 on failure.
+  */
+ int gpiod_line_request_set_values_subset(struct gpiod_line_request *request,
+-					 unsigned int num_lines,
++					 size_t num_lines,
+ 					 const unsigned int *offsets,
+ 					 const int *values);
+ 
+@@ -1272,7 +1272,7 @@ int gpiod_line_request_edge_event_wait(struct gpiod_line_request *request,
+  */
+ int gpiod_line_request_edge_event_read(struct gpiod_line_request *request,
+ 				       struct gpiod_edge_event_buffer *buffer,
+-				       unsigned int max_events);
++				       size_t max_events);
+ 
+ /**
+  * @}
+@@ -1361,7 +1361,7 @@ unsigned long gpiod_edge_event_get_line_seqno(struct gpiod_edge_event *event);
+  *       capacity is larger than 1024, it will be limited to 1024.
+  */
+ struct gpiod_edge_event_buffer *
+-gpiod_edge_event_buffer_new(unsigned int capacity);
++gpiod_edge_event_buffer_new(size_t capacity);
+ 
+ /**
+  * @brief Get the capacity (the max number of events that can be stored) of
+@@ -1369,7 +1369,7 @@ gpiod_edge_event_buffer_new(unsigned int capacity);
+  * @param buffer Edge event buffer.
+  * @return The capacity of the buffer.
+  */
+-unsigned int
++size_t
+ gpiod_edge_event_buffer_get_capacity(struct gpiod_edge_event_buffer *buffer);
+ 
+ /**
+@@ -1395,7 +1395,7 @@ gpiod_edge_event_buffer_get_event(struct gpiod_edge_event_buffer *buffer,
+  * @param buffer Edge event buffer.
+  * @return Number of events stored in this buffer.
+  */
+-unsigned int
++size_t
+ gpiod_edge_event_buffer_get_num_events(struct gpiod_edge_event_buffer *buffer);
+ 
+ /**
+diff --git a/lib/chip.c b/lib/chip.c
+index 74544f5..b881be1 100644
+--- a/lib/chip.c
++++ b/lib/chip.c
+@@ -15,7 +15,7 @@
+ 
+ struct gpiod_chip {
+ 	int fd;
+-	unsigned int num_lines;
++	size_t num_lines;
+ 	char name[32];
+ 	char label[32];
+ 	char *path;
+@@ -105,7 +105,7 @@ GPIOD_API const char *gpiod_chip_get_path(struct gpiod_chip *chip)
+ 	return chip->path;
+ }
+ 
+-GPIOD_API unsigned int gpiod_chip_get_num_lines(struct gpiod_chip *chip)
++GPIOD_API size_t gpiod_chip_get_num_lines(struct gpiod_chip *chip)
+ {
+ 	return chip->num_lines;
+ }
+diff --git a/lib/edge-event.c b/lib/edge-event.c
+index 69c0d96..8f993e8 100644
+--- a/lib/edge-event.c
++++ b/lib/edge-event.c
+@@ -21,8 +21,8 @@ struct gpiod_edge_event {
+ };
+ 
+ struct gpiod_edge_event_buffer {
+-	unsigned int capacity;
+-	unsigned int num_events;
++	size_t capacity;
++	size_t num_events;
+ 	struct gpiod_edge_event *events;
+ 	struct gpio_v2_line_event *event_data;
+ };
+@@ -79,7 +79,7 @@ gpiod_edge_event_get_line_seqno(struct gpiod_edge_event *event)
+ }
+ 
+ GPIOD_API struct gpiod_edge_event_buffer *
+-gpiod_edge_event_buffer_new(unsigned int capacity)
++gpiod_edge_event_buffer_new(size_t capacity)
+ {
+ 	struct gpiod_edge_event_buffer *buf;
+ 
+@@ -111,7 +111,7 @@ gpiod_edge_event_buffer_new(unsigned int capacity)
+ 	return buf;
+ }
+ 
+-GPIOD_API unsigned int
++GPIOD_API size_t
+ gpiod_edge_event_buffer_get_capacity(struct gpiod_edge_event_buffer *buffer)
+ {
+ 	return buffer->capacity;
+@@ -140,7 +140,7 @@ gpiod_edge_event_buffer_get_event(struct gpiod_edge_event_buffer *buffer,
+ 	return &buffer->events[index];
+ }
+ 
+-GPIOD_API unsigned int
++GPIOD_API size_t
+ gpiod_edge_event_buffer_get_num_events(struct gpiod_edge_event_buffer *buffer)
+ {
+ 	return buffer->num_events;
+@@ -148,7 +148,7 @@ gpiod_edge_event_buffer_get_num_events(struct gpiod_edge_event_buffer *buffer)
+ 
+ int gpiod_edge_event_buffer_read_fd(int fd,
+ 				    struct gpiod_edge_event_buffer *buffer,
+-				    unsigned int max_events)
++				    size_t max_events)
+ {
+ 	struct gpio_v2_line_event *curr;
+ 	struct gpiod_edge_event *event;
+diff --git a/lib/internal.h b/lib/internal.h
+index 32f36b5..9af2cda 100644
+--- a/lib/internal.h
++++ b/lib/internal.h
+@@ -29,7 +29,7 @@ int gpiod_line_config_to_kernel(struct gpiod_line_config *config,
+ struct gpiod_line_request *
+ gpiod_line_request_from_kernel(struct gpio_v2_line_request *reqbuf);
+ int gpiod_edge_event_buffer_read_fd(int fd, struct gpiod_edge_event_buffer *buffer,
+-				    unsigned int max_events);
++				    size_t max_events);
+ struct gpiod_info_event *
+ gpiod_info_event_from_kernel(struct gpio_v2_line_info_changed *evbuf);
+ struct gpiod_info_event *gpiod_info_event_read_fd(int fd);
+diff --git a/lib/line-config.c b/lib/line-config.c
+index b58603f..a4b4d7b 100644
+--- a/lib/line-config.c
++++ b/lib/line-config.c
+@@ -671,7 +671,7 @@ gpiod_line_config_set_output_value_override(struct gpiod_line_config *config,
+ 
+ GPIOD_API void
+ gpiod_line_config_set_output_values(struct gpiod_line_config *config,
+-				    unsigned int num_values,
++				    size_t num_values,
+ 				    const unsigned int *offsets,
+ 				    const int *values)
+ {
+@@ -746,7 +746,7 @@ static bool base_debounce_period_is_equal(struct base_config *base,
+ 	return true;
+ }
+ 
+-GPIOD_API unsigned int
++GPIOD_API size_t
+ gpiod_line_config_get_num_overrides(struct gpiod_line_config *config)
+ {
+ 	struct override_config *override;
+diff --git a/lib/line-request.c b/lib/line-request.c
+index 45e11e3..69e4e11 100644
+--- a/lib/line-request.c
++++ b/lib/line-request.c
+@@ -14,7 +14,7 @@
+ 
+ struct gpiod_line_request {
+ 	unsigned int offsets[GPIO_V2_LINES_MAX];
+-	unsigned int num_lines;
++	size_t num_lines;
+ 	int fd;
+ };
+ 
+@@ -45,7 +45,7 @@ GPIOD_API void gpiod_line_request_release(struct gpiod_line_request *request)
+ 	free(request);
+ }
+ 
+-GPIOD_API unsigned int
++GPIOD_API size_t
+ gpiod_line_request_get_num_lines(struct gpiod_line_request *request)
+ {
+ 	return request->num_lines;
+@@ -87,7 +87,7 @@ static int offset_to_bit(struct gpiod_line_request *request,
+ 
+ GPIOD_API int
+ gpiod_line_request_get_values_subset(struct gpiod_line_request *request,
+-				     unsigned num_lines,
++				     size_t num_lines,
+ 				     const unsigned int *offsets, int *values)
+ {
+ 	struct gpio_v2_line_values buf;
+@@ -140,7 +140,7 @@ GPIOD_API int gpiod_line_request_set_value(struct gpiod_line_request *request,
+ 
+ GPIOD_API int
+ gpiod_line_request_set_values_subset(struct gpiod_line_request *request,
+-				     unsigned int num_lines,
++				     size_t num_lines,
+ 				     const unsigned int *offsets,
+ 				     const int *values)
+ {
+@@ -210,7 +210,7 @@ gpiod_line_request_edge_event_wait(struct gpiod_line_request *request,
+ GPIOD_API int
+ gpiod_line_request_edge_event_read(struct gpiod_line_request *request,
+ 				   struct gpiod_edge_event_buffer *buffer,
+-				   unsigned int max_events)
++				   size_t max_events)
+ {
+ 	return gpiod_edge_event_buffer_read_fd(request->fd, buffer, max_events);
+ }
+diff --git a/lib/request-config.c b/lib/request-config.c
+index 3de1820..dd92062 100644
+--- a/lib/request-config.c
++++ b/lib/request-config.c
+@@ -13,8 +13,8 @@
+ struct gpiod_request_config {
+ 	char consumer[GPIO_MAX_NAME_SIZE];
+ 	unsigned int offsets[GPIO_V2_LINES_MAX];
+-	unsigned int num_offsets;
+-	unsigned int event_buffer_size;
++	size_t num_offsets;
++	size_t event_buffer_size;
+ };
+ 
+ GPIOD_API struct gpiod_request_config *gpiod_request_config_new(void)
+@@ -54,7 +54,7 @@ gpiod_request_config_get_consumer(struct gpiod_request_config *config)
+ 
+ GPIOD_API void
+ gpiod_request_config_set_offsets(struct gpiod_request_config *config,
+-				 unsigned int num_offsets,
++				 size_t num_offsets,
+ 				 const unsigned int *offsets)
+ {
+ 	unsigned int i;
+@@ -66,7 +66,7 @@ gpiod_request_config_set_offsets(struct gpiod_request_config *config,
+ 		config->offsets[i] = offsets[i];
+ }
+ 
+-GPIOD_API unsigned int
++GPIOD_API size_t
+ gpiod_request_config_get_num_offsets(struct gpiod_request_config *config)
+ {
+ 	return config->num_offsets;
+@@ -82,12 +82,12 @@ gpiod_request_config_get_offsets(struct gpiod_request_config *config,
+ 
+ GPIOD_API void
+ gpiod_request_config_set_event_buffer_size(struct gpiod_request_config *config,
+-					   unsigned int event_buffer_size)
++					   size_t event_buffer_size)
+ {
+ 	config->event_buffer_size = event_buffer_size;
+ }
+ 
+-GPIOD_API unsigned int
++GPIOD_API size_t
+ gpiod_request_config_get_event_buffer_size(struct gpiod_request_config *config)
+ {
+ 	return config->event_buffer_size;
+diff --git a/tools/gpiodetect.c b/tools/gpiodetect.c
+index 9047091..6ce3cb8 100644
+--- a/tools/gpiodetect.c
++++ b/tools/gpiodetect.c
+@@ -70,7 +70,7 @@ int main(int argc, char **argv)
+ 		if (!chip)
+ 			die_perror("unable to open %s", entries[i]->d_name);
+ 
+-		printf("%s [%s] (%u lines)\n",
++		printf("%s [%s] (%zu lines)\n",
+ 		       gpiod_chip_get_name(chip),
+ 		       gpiod_chip_get_label(chip),
+ 		       gpiod_chip_get_num_lines(chip));
+diff --git a/tools/gpioget.c b/tools/gpioget.c
+index 112257c..28030fa 100644
+--- a/tools/gpioget.c
++++ b/tools/gpioget.c
+@@ -44,12 +44,13 @@ int main(int argc, char **argv)
+ 	int direction = GPIOD_LINE_DIRECTION_INPUT;
+ 	int optc, opti, bias = 0, ret, *values;
+ 	struct gpiod_request_config *req_cfg;
+-	unsigned int *offsets, i, num_lines;
+ 	struct gpiod_line_request *request;
+ 	struct gpiod_line_config *line_cfg;
++	unsigned int *offsets, i;
+ 	struct gpiod_chip *chip;
+ 	bool active_low = false;
+ 	char *device, *end;
++	size_t num_lines;
+ 
+ 	for (;;) {
+ 		optc = getopt_long(argc, argv, shortopts, longopts, &opti);
+diff --git a/tools/gpioinfo.c b/tools/gpioinfo.c
+index 2c21474..7788468 100644
+--- a/tools/gpioinfo.c
++++ b/tools/gpioinfo.c
+@@ -130,7 +130,7 @@ static void list_lines(struct gpiod_chip *chip)
+ 	unsigned int i, offset;
+ 	int direction;
+ 
+-	printf("%s - %u lines:\n",
++	printf("%s - %zu lines:\n",
+ 	       gpiod_chip_get_name(chip), gpiod_chip_get_num_lines(chip));
+ 
+ 	for (offset = 0; offset < gpiod_chip_get_num_lines(chip); offset++) {
+diff --git a/tools/gpiomon.c b/tools/gpiomon.c
+index 31ea294..2ead5c6 100644
+--- a/tools/gpiomon.c
++++ b/tools/gpiomon.c
+@@ -154,15 +154,15 @@ static void handle_signal(int signum UNUSED)
+ 
+ int main(int argc, char **argv)
+ {
+-	unsigned int offsets[64], num_lines = 0, offset, events_wanted = 0,
+-		     events_done = 0;
+ 	bool watch_rising = false, watch_falling = false, active_low = false;
++	size_t num_lines = 0, events_wanted = 0, events_done = 0;
+ 	struct gpiod_edge_event_buffer *event_buffer;
+ 	int optc, opti, ret, i, edge, bias = 0;
+ 	uint64_t timeout = 10 * 1000000000LLU;
+ 	struct gpiod_request_config *req_cfg;
+ 	struct gpiod_line_request *request;
+ 	struct gpiod_line_config *line_cfg;
++	unsigned int offsets[64], offset;
+ 	struct gpiod_edge_event *event;
+ 	struct gpiod_chip *chip;
+ 	struct mon_ctx ctx;
+diff --git a/tools/gpioset.c b/tools/gpioset.c
+index c27525a..3b8e34b 100644
+--- a/tools/gpioset.c
++++ b/tools/gpioset.c
+@@ -192,13 +192,14 @@ int main(int argc, char **argv)
+ 	const struct mode_mapping *mode = &modes[MODE_EXIT];
+ 	int ret, optc, opti, bias = 0, drive = 0, *values;
+ 	struct gpiod_request_config *req_cfg;
+-	unsigned int *offsets, num_lines, i;
+ 	struct gpiod_line_request *request;
+ 	struct gpiod_line_config *line_cfg;
+ 	struct callback_data cbdata;
++	unsigned int *offsets, i;
+ 	struct gpiod_chip *chip;
+ 	bool active_low = false;
+ 	char *device, *end;
++	size_t num_lines;
+ 
+ 	memset(&cbdata, 0, sizeof(cbdata));
+ 
+-- 
+2.30.1
 
-The switch-related portion of this patch set looks good enough to me.
-I'll let somebody else with more knowledge provide feedback on the
-mfd/pinctrl/gpio/phylink/led integration aspects.=
