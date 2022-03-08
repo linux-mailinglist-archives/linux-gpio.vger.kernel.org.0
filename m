@@ -2,48 +2,48 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C9CB84D1453
+	by mail.lfdr.de (Postfix) with ESMTP id 7DE914D1452
 	for <lists+linux-gpio@lfdr.de>; Tue,  8 Mar 2022 11:10:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243358AbiCHKLF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Mar 2022 05:11:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40640 "EHLO
+        id S1345646AbiCHKLG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Mar 2022 05:11:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345646AbiCHKLD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Mar 2022 05:11:03 -0500
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C9F122505
-        for <linux-gpio@vger.kernel.org>; Tue,  8 Mar 2022 02:10:07 -0800 (PST)
-Received: by mail-pl1-x631.google.com with SMTP id s18so3381836plp.1
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Mar 2022 02:10:07 -0800 (PST)
+        with ESMTP id S1345665AbiCHKLF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Mar 2022 05:11:05 -0500
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8114D3298E
+        for <linux-gpio@vger.kernel.org>; Tue,  8 Mar 2022 02:10:09 -0800 (PST)
+Received: by mail-pl1-x62a.google.com with SMTP id m2so10635569pll.0
+        for <linux-gpio@vger.kernel.org>; Tue, 08 Mar 2022 02:10:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=5/KGSiDUR6Oh1qS3ls1eTa+dOJRLWEHzu5UF9HK4Si4=;
-        b=eDoPTw7FlfuMrMk7TZW4fd7c4dDPzW6nXHDmrXSbtsRK6vVG9dhIQ6WrXKOKLXV7aq
-         pz9p+6TzCc1cAGkq3MxA4HyZXLYlRrprzCIS02q3HivJhzYBshHAXuBmUwnDRmScWVih
-         7AG4tW3YbthMaljSEsRgDx70cRXDSte2hvmI4=
+        bh=noEqkBf5xzBolmnhdQPfwHD82qaYeiB8/RXOxn1DB2I=;
+        b=PsIwM301p+zkfVPLNMuBY2fgeZYi4j+IGcIxp8lP2wQofQwsTA/SANTTxjG0S8RTAK
+         Zz2rcqgxCgmmwveXGiLhoaqoV9LC4rAO+jCp0lqq4wCXA5PSkdUzbpTufzwn7Ap3iPbQ
+         jmIKa5JsZRMgNuNQeXZh1sXnjbhE/kmJF87vk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=5/KGSiDUR6Oh1qS3ls1eTa+dOJRLWEHzu5UF9HK4Si4=;
-        b=xpl4jzGlQ7yaABgZ1d3Ce35gD61NKA2xxlZcX2j7iqOuVsv/QL9CQe803/vQ8UViSN
-         EUqSAHgVGaeg1M/WpSrKWZeExMheTf3JLDfgTHwEGLmfa3v3UtyXIrmBAcudftje4Nh9
-         EJu7+slr9RmnZ/aAe/60bAx4HP8fTqdv941XhYza/dCMpLVNQzph0ch2GNPCL+FDFWMJ
-         tD9nMaFmiTxNrkuU/2ss6eMP08mUeFTRqFVfk03XVq8lf0JYpTK5GFcRrsLK3HwQrs1H
-         ArSFqMvXcE856MxJnymzHP32v+O8Ymi+FqSbKOORLqR0mpj94MCYVEZM9raQMmjsUPAU
-         AUJA==
-X-Gm-Message-State: AOAM533LuIuTvud5UrU9Xn3b6Zf36I6dh79bxVQZu0uCNyamrKCjZSIE
-        qBLumjXNXO4laO3dtSE4L+M4Cw==
-X-Google-Smtp-Source: ABdhPJxDGvhKYqfJXVj5tcUF1DdM4k4BYagm/EBulkoRUtJ1T6TWbFFUrKL/Ekqds5KSkBCbsoWkLw==
-X-Received: by 2002:a17:90a:4289:b0:1bc:275b:8986 with SMTP id p9-20020a17090a428900b001bc275b8986mr3758766pjg.153.1646734207017;
-        Tue, 08 Mar 2022 02:10:07 -0800 (PST)
+        bh=noEqkBf5xzBolmnhdQPfwHD82qaYeiB8/RXOxn1DB2I=;
+        b=Ffg3gbugG+fhT6/GwSNWbelFgT+tpiySlq65ATfwUaO6+4zdoINaI7VettKSerepMW
+         cFmBiFUvtEhs+1qhhsbKf83vLc0SfaGV15yWbtofw9XBnqyX+WnVY2hstbBrji2fe9SR
+         gCUKDK+EITdmbbOpVsUYSQzyiMc71Yz1F9SW1ZC5J14pjDd+coMnuNp77NyY/Pjv6IsM
+         U8XbYeXE4yd8N8eOnrca4XKaoBEP5i4QQVOaL7mE976f1Y4ZdVC92rSVE0uh6sNPDDaN
+         ak2uPjWsu+lUFSX75Rrcy079lIhVGfLPQEJrjmBcNbbfkgLm1MykzAbt2DEPMO0KUshP
+         3plQ==
+X-Gm-Message-State: AOAM530ObqFAUZs9z6TuxbowzOEXBAK7eg0R2wUPrtcq/jnk23+TLQeU
+        W8mXyHOKSaV95fzGgHrEZHU10A==
+X-Google-Smtp-Source: ABdhPJwMnsLSH0Ugh0kYJjqmbKgwtim8f6qXQsngF85UoO3kJmueeC/GVPnsmGoroD8ZfCxe30PFag==
+X-Received: by 2002:a17:903:2350:b0:151:e633:7479 with SMTP id c16-20020a170903235000b00151e6337479mr10346038plh.74.1646734208964;
+        Tue, 08 Mar 2022 02:10:08 -0800 (PST)
 Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:73f8:5e3f:6894:8f44])
-        by smtp.gmail.com with ESMTPSA id k19-20020a056a00135300b004f734327960sm1707553pfu.106.2022.03.08.02.10.05
+        by smtp.gmail.com with ESMTPSA id k19-20020a056a00135300b004f734327960sm1707553pfu.106.2022.03.08.02.10.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Mar 2022 02:10:06 -0800 (PST)
+        Tue, 08 Mar 2022 02:10:08 -0800 (PST)
 From:   Chen-Yu Tsai <wenst@chromium.org>
 To:     Sean Wang <sean.wang@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -53,9 +53,9 @@ Cc:     Chen-Yu Tsai <wenst@chromium.org>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         AngeloGioacchino Del Regno 
         <angelogioacchino.delregno@collabora.com>
-Subject: [PATCH v2 01/11] pinctrl: pinconf-generic: Print arguments for bias-pull-*
-Date:   Tue,  8 Mar 2022 18:09:46 +0800
-Message-Id: <20220308100956.2750295-2-wenst@chromium.org>
+Subject: [PATCH v2 02/11] pinctrl: mediatek: paris: Fix PIN_CONFIG_BIAS_* readback
+Date:   Tue,  8 Mar 2022 18:09:47 +0800
+Message-Id: <20220308100956.2750295-3-wenst@chromium.org>
 X-Mailer: git-send-email 2.35.1.616.g0bdcbb4464-goog
 In-Reply-To: <20220308100956.2750295-1-wenst@chromium.org>
 References: <20220308100956.2750295-1-wenst@chromium.org>
@@ -71,38 +71,50 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The bias-pull-* properties, or PIN_CONFIG_BIAS_PULL_* pin config
-parameters, accept optional arguments in ohms denoting the strength of
-the pin bias.
+When reading back pin bias settings, if the pin is not in the
+corresponding bias state, the function should return -EINVAL.
 
-Print these values out in debugfs as well.
+Fix this in the mediatek-paris pinctrl library so that the read back
+state is not littered with bogus a "input bias disabled" combined with
+"pull up" or "pull down" states.
 
-Fixes: eec450713e5c ("pinctrl: pinconf-generic: Add flag to print arguments")
+Fixes: 805250982bb5 ("pinctrl: mediatek: add pinctrl-paris that implements the vendor dt-bindings")
 Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Tested-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 ---
- drivers/pinctrl/pinconf-generic.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/pinctrl/mediatek/pinctrl-paris.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pinconf-generic.c
-index f8edcc88ac01..415d1df8f46a 100644
---- a/drivers/pinctrl/pinconf-generic.c
-+++ b/drivers/pinctrl/pinconf-generic.c
-@@ -30,10 +30,10 @@ static const struct pin_config_item conf_items[] = {
- 	PCONFDUMP(PIN_CONFIG_BIAS_BUS_HOLD, "input bias bus hold", NULL, false),
- 	PCONFDUMP(PIN_CONFIG_BIAS_DISABLE, "input bias disabled", NULL, false),
- 	PCONFDUMP(PIN_CONFIG_BIAS_HIGH_IMPEDANCE, "input bias high impedance", NULL, false),
--	PCONFDUMP(PIN_CONFIG_BIAS_PULL_DOWN, "input bias pull down", NULL, false),
-+	PCONFDUMP(PIN_CONFIG_BIAS_PULL_DOWN, "input bias pull down", "ohms", true),
- 	PCONFDUMP(PIN_CONFIG_BIAS_PULL_PIN_DEFAULT,
--				"input bias pull to pin specific state", NULL, false),
--	PCONFDUMP(PIN_CONFIG_BIAS_PULL_UP, "input bias pull up", NULL, false),
-+				"input bias pull to pin specific state", "ohms", true),
-+	PCONFDUMP(PIN_CONFIG_BIAS_PULL_UP, "input bias pull up", "ohms", true),
- 	PCONFDUMP(PIN_CONFIG_DRIVE_OPEN_DRAIN, "output drive open drain", NULL, false),
- 	PCONFDUMP(PIN_CONFIG_DRIVE_OPEN_SOURCE, "output drive open source", NULL, false),
- 	PCONFDUMP(PIN_CONFIG_DRIVE_PUSH_PULL, "output drive push pull", NULL, false),
+diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
+index f9f9110f2107..7037560ecda9 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-paris.c
++++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
+@@ -96,20 +96,16 @@ static int mtk_pinconf_get(struct pinctrl_dev *pctldev,
+ 			err = hw->soc->bias_get_combo(hw, desc, &pullup, &ret);
+ 			if (err)
+ 				goto out;
++			if (ret == MTK_PUPD_SET_R1R0_00)
++				ret = MTK_DISABLE;
+ 			if (param == PIN_CONFIG_BIAS_DISABLE) {
+-				if (ret == MTK_PUPD_SET_R1R0_00)
+-					ret = MTK_DISABLE;
++				if (ret != MTK_DISABLE)
++					err = -EINVAL;
+ 			} else if (param == PIN_CONFIG_BIAS_PULL_UP) {
+-				/* When desire to get pull-up value, return
+-				 *  error if current setting is pull-down
+-				 */
+-				if (!pullup)
++				if (!pullup || ret == MTK_DISABLE)
+ 					err = -EINVAL;
+ 			} else if (param == PIN_CONFIG_BIAS_PULL_DOWN) {
+-				/* When desire to get pull-down value, return
+-				 *  error if current setting is pull-up
+-				 */
+-				if (pullup)
++				if (pullup || ret == MTK_DISABLE)
+ 					err = -EINVAL;
+ 			}
+ 		} else {
 -- 
 2.35.1.616.g0bdcbb4464-goog
 
