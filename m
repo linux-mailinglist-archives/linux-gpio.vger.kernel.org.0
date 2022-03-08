@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 376A24D12AA
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Mar 2022 09:48:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F30E4D12E5
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Mar 2022 09:53:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345122AbiCHIts (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Mar 2022 03:49:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56186 "EHLO
+        id S242666AbiCHIy1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Mar 2022 03:54:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345137AbiCHIr4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Mar 2022 03:47:56 -0500
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B56A3FD83
-        for <linux-gpio@vger.kernel.org>; Tue,  8 Mar 2022 00:46:55 -0800 (PST)
-Received: by mail-ej1-x62c.google.com with SMTP id bg10so37586722ejb.4
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Mar 2022 00:46:55 -0800 (PST)
+        with ESMTP id S233283AbiCHIy1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Mar 2022 03:54:27 -0500
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0747C3B03E
+        for <linux-gpio@vger.kernel.org>; Tue,  8 Mar 2022 00:53:31 -0800 (PST)
+Received: by mail-ej1-x633.google.com with SMTP id bg10so37622140ejb.4
+        for <linux-gpio@vger.kernel.org>; Tue, 08 Mar 2022 00:53:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=YWDxW77171tKULic9PATZflHGAWN9agWbTs/Al0RNIA=;
-        b=yDq6cJj7scG6xMfY6mQBRZI2teHCxzKWxFahnkYD75apQHz+R+CrU3MTQ6xyW1c0UW
-         JM2b+S5Npi2BSgCR+6cTMscJ4fJKrQaMDWQcH7ijwSRS2Bt5UvmcWMqOK/NyyXnPmkQp
-         4HohBUjbccLAZubYdl0A9y9x/z7KFrLl6oBijkyfSp7IFSWfg8hRZc1Ut8VVgTbK1y8q
-         Pq0OULrEwQpV+7ivCIdE5aUvHQ+Dm1f7J5VYHOvkw4OAZtwR/hkX1B9jY1uC0cST7Mvm
-         jfQDMJwUwcj40vAoPr++9qB5Z6sp1LfMVI5MN1mGAa76lb76s40yOR/r/8XauNvsQBfK
-         8cNw==
+        bh=JTlpOTVV8rGjtjdIxTHzoUkSu2pKoTN1z/o1kSU7hIc=;
+        b=vMJAceYbOcASdFBR5FC6WwUsb2mKpFVRz20mcXglO3PXfa7b4Fqv9k1BOyfrkXa05V
+         uIP6poe0BNIxWwiUlq1ULYJygcdyvz32rBWhdBMLPx+jIlCHODdC0KPK4UCkJelSb/fn
+         XFoP2rD38+oSRS+icEVe8X2IIG/1sFlW9bFxJTAza94wEKOLCglndGQLvo8hz2TiiOWD
+         FkAo45KtRcyegcHMP7iq0DmbZKx6A/7fL6/TeLeSeAYE6MTHMuDzSFMI0tPgGyCH4upC
+         7eSt8r7OjLVFPxIke3tkdzwmJ//dvs2cH0aEJvy1PSzRjdUyJs0EyN9l8vYbfXV11Y+f
+         SrjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=YWDxW77171tKULic9PATZflHGAWN9agWbTs/Al0RNIA=;
-        b=365yDRfuF5XvXgJIVt0XMmhSAxyUEsmrvThPO0SAHNK/CyRFW8+KjM7xDDIlRxLQtD
-         mVkgh5inr1wYXPSB/o7pq3GvxIWfoh8BRPcS7qnt/UOuZSMOlj4XmYcDXu7lonL6yC5A
-         Jeroz9MkuF9mSEGjVRrzBZNzp8pKtCcQWuh/mlK5wxg2M0rzpQb9OBR7tTcrqaZWM2fq
-         /j+82daDOEwBDpp7zolRhcfszfPmbj0SQY1iPG6pkYgFCP87KR9JkTUekUBxEM7rEus/
-         3W+LNPDp/RwBNHgEem0xVTQHOwjyGJeXp4UHWWvivKoWlNDnSZFdvWPazzSwPaG7r3Na
-         xniQ==
-X-Gm-Message-State: AOAM5317RllEjPPC89J4kvBlIkturJAxCALI15ruT8BX/0qmLGny3ub7
-        HJ4SU0KqzC75N1N57dzDcNNbfJ7VgJGowiAYNWuE9g==
-X-Google-Smtp-Source: ABdhPJw2uMD2RB52Mu2RDi0WheUdgR/Sw7e1yql8YPmxsLsQoIY5nRZis9nQH5Ko1YfJ7Y6TG+EtlW8T6gqs6LEV6dI=
-X-Received: by 2002:a17:906:888e:b0:6da:ed04:5e40 with SMTP id
- ak14-20020a170906888e00b006daed045e40mr12736944ejc.286.1646729213855; Tue, 08
- Mar 2022 00:46:53 -0800 (PST)
+        bh=JTlpOTVV8rGjtjdIxTHzoUkSu2pKoTN1z/o1kSU7hIc=;
+        b=VGhaNW7Q0velAkspVeVesOBVoEb4utSmRHNt2A5IR8RVKMJrKfiXwN2Ug29EyHRoXc
+         hXeV+AjhlkAvue2XY8qMgnRr4OaY8gvlkQCqmyoO1OTJDBKhvRJGGkOhJQCAMSLdYKsJ
+         lPBbW3BtsO1m24Mcfqcw/4UmuVKQV1Rzovwsh1pD1ldwMmyUuMJKmjNYVc4gKKGuz2Fc
+         IKdvqGDZt8tbN/NXzPrsEekEcBoLIzbU8tU1jDX5KpjnYd383IE7ZLwjGdVzgu6fYZpg
+         LaQBakN2D7IN3WfboIk444XtIvFb4ewo23cyj7BvcTUV2HlEqdU2u8s2hx/vVLH+y5//
+         Tvng==
+X-Gm-Message-State: AOAM533ArzaTp236v1qkQMbvpiyNOC1CuGGEOxeCop/+B9+/ieL4Vx1M
+        OAX8MHNwEtekrpdbavEU8HHVOy9gUA1eAq8umPmhIw==
+X-Google-Smtp-Source: ABdhPJzeWkpXuLKUTYJLqdTnJlt2X9TfUMTDZYTPtvX83N2ySkknJLRJbehovdGyWLDIDC1hFY0TyYo8SwL8MXyhKRc=
+X-Received: by 2002:a17:907:728b:b0:6da:97db:b66d with SMTP id
+ dt11-20020a170907728b00b006da97dbb66dmr12176255ejc.636.1646729609637; Tue, 08
+ Mar 2022 00:53:29 -0800 (PST)
 MIME-Version: 1.0
-References: <20220307163840.64495-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20220307163840.64495-1-andriy.shevchenko@linux.intel.com>
+References: <20220307105414.17706-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20220307105414.17706-1-andriy.shevchenko@linux.intel.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 8 Mar 2022 09:46:43 +0100
-Message-ID: <CAMRc=Mf_gRcrc+AECb+Y5zLFdr-muKfxhFZr3+qkvLHB4ajndw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpio: sim: Declare gpio_sim_hog_config_item_ops static
+Date:   Tue, 8 Mar 2022 09:53:18 +0100
+Message-ID: <CAMRc=MdLdJwTAxOwbOdO_Q=eE-MHNJwNmayy6svZ1zfhenW12g@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] gpiolib: Use list_first_entry()/list_last_entry()
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
@@ -58,44 +58,57 @@ Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 7, 2022 at 5:38 PM Andy Shevchenko
+On Mon, Mar 7, 2022 at 11:54 AM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
 >
-> Compiler is not happy:
+> Use list_first_entry()/list_last_entry() instead of open coded variants.
 >
->   warning: symbol 'gpio_sim_hog_config_item_ops' was not declared. Should it be static?
->
-> Fixes: cb8c474e79be ("gpio: sim: new testing module")
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
->  drivers/gpio/gpio-sim.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/gpio/gpiolib.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 >
-> diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-> index 153fe79e1bf3..bb9bb595c1a8 100644
-> --- a/drivers/gpio/gpio-sim.c
-> +++ b/drivers/gpio/gpio-sim.c
-> @@ -1322,7 +1322,7 @@ static void gpio_sim_hog_config_item_release(struct config_item *item)
->         kfree(hog);
->  }
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 002bf4b1616b..f5e7443208d4 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -262,14 +262,14 @@ static int gpiodev_add_to_list(struct gpio_device *gdev)
+>                 return 0;
+>         }
 >
-> -struct configfs_item_operations gpio_sim_hog_config_item_ops = {
-> +static struct configfs_item_operations gpio_sim_hog_config_item_ops = {
->         .release        = gpio_sim_hog_config_item_release,
->  };
+> -       next = list_entry(gpio_devices.next, struct gpio_device, list);
+> +       next = list_first_entry(&gpio_devices, struct gpio_device, list);
+>         if (gdev->base + gdev->ngpio <= next->base) {
+>                 /* add before first entry */
+>                 list_add(&gdev->list, &gpio_devices);
+>                 return 0;
+>         }
 >
+> -       prev = list_entry(gpio_devices.prev, struct gpio_device, list);
+> +       prev = list_last_entry(&gpio_devices, struct gpio_device, list);
+>         if (prev->base + prev->ngpio <= gdev->base) {
+>                 /* add behind last entry */
+>                 list_add_tail(&gdev->list, &gpio_devices);
+> @@ -4426,7 +4426,7 @@ static void *gpiolib_seq_next(struct seq_file *s, void *v, loff_t *pos)
+>         if (list_is_last(&gdev->list, &gpio_devices))
+>                 ret = NULL;
+>         else
+> -               ret = list_entry(gdev->list.next, struct gpio_device, list);
+> +               ret = list_first_entry(&gdev->list, struct gpio_device, list);
+>         spin_unlock_irqrestore(&gpio_lock, flags);
+>
+>         s->private = "\n";
 > --
 > 2.34.1
 >
 
-Queued for fixes, thanks!
+Applied, thanks!
 
 Bart
