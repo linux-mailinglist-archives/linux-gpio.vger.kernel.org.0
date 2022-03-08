@@ -2,113 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F30E4D12E5
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Mar 2022 09:53:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 82CA34D1420
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Mar 2022 11:03:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242666AbiCHIy1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Mar 2022 03:54:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44836 "EHLO
+        id S240413AbiCHKEJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Mar 2022 05:04:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233283AbiCHIy1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Mar 2022 03:54:27 -0500
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0747C3B03E
-        for <linux-gpio@vger.kernel.org>; Tue,  8 Mar 2022 00:53:31 -0800 (PST)
-Received: by mail-ej1-x633.google.com with SMTP id bg10so37622140ejb.4
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Mar 2022 00:53:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JTlpOTVV8rGjtjdIxTHzoUkSu2pKoTN1z/o1kSU7hIc=;
-        b=vMJAceYbOcASdFBR5FC6WwUsb2mKpFVRz20mcXglO3PXfa7b4Fqv9k1BOyfrkXa05V
-         uIP6poe0BNIxWwiUlq1ULYJygcdyvz32rBWhdBMLPx+jIlCHODdC0KPK4UCkJelSb/fn
-         XFoP2rD38+oSRS+icEVe8X2IIG/1sFlW9bFxJTAza94wEKOLCglndGQLvo8hz2TiiOWD
-         FkAo45KtRcyegcHMP7iq0DmbZKx6A/7fL6/TeLeSeAYE6MTHMuDzSFMI0tPgGyCH4upC
-         7eSt8r7OjLVFPxIke3tkdzwmJ//dvs2cH0aEJvy1PSzRjdUyJs0EyN9l8vYbfXV11Y+f
-         SrjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JTlpOTVV8rGjtjdIxTHzoUkSu2pKoTN1z/o1kSU7hIc=;
-        b=VGhaNW7Q0velAkspVeVesOBVoEb4utSmRHNt2A5IR8RVKMJrKfiXwN2Ug29EyHRoXc
-         hXeV+AjhlkAvue2XY8qMgnRr4OaY8gvlkQCqmyoO1OTJDBKhvRJGGkOhJQCAMSLdYKsJ
-         lPBbW3BtsO1m24Mcfqcw/4UmuVKQV1Rzovwsh1pD1ldwMmyUuMJKmjNYVc4gKKGuz2Fc
-         IKdvqGDZt8tbN/NXzPrsEekEcBoLIzbU8tU1jDX5KpjnYd383IE7ZLwjGdVzgu6fYZpg
-         LaQBakN2D7IN3WfboIk444XtIvFb4ewo23cyj7BvcTUV2HlEqdU2u8s2hx/vVLH+y5//
-         Tvng==
-X-Gm-Message-State: AOAM533ArzaTp236v1qkQMbvpiyNOC1CuGGEOxeCop/+B9+/ieL4Vx1M
-        OAX8MHNwEtekrpdbavEU8HHVOy9gUA1eAq8umPmhIw==
-X-Google-Smtp-Source: ABdhPJzeWkpXuLKUTYJLqdTnJlt2X9TfUMTDZYTPtvX83N2ySkknJLRJbehovdGyWLDIDC1hFY0TyYo8SwL8MXyhKRc=
-X-Received: by 2002:a17:907:728b:b0:6da:97db:b66d with SMTP id
- dt11-20020a170907728b00b006da97dbb66dmr12176255ejc.636.1646729609637; Tue, 08
- Mar 2022 00:53:29 -0800 (PST)
+        with ESMTP id S233810AbiCHKEJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Mar 2022 05:04:09 -0500
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BD213A5F1;
+        Tue,  8 Mar 2022 02:03:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1646733793; x=1678269793;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=rtW+MFf0KlWKiIpC8eDfkdOzFdS5LxJYrRPmGTvHdMQ=;
+  b=OgumAsFVukEtA8MwQ7H7ruhduo8ROs+w5NHv44YXQLjMnhNTyVRZP9cC
+   N27eHBPQwAeR8MYRQWpV+ei0ZVlldV8bm2I3Icc76ft8otyRXFmWUhccl
+   54vGUgg0jCHy3FHr7UfGtRNbcpOjjtDS0ouoMgYSyTi+qSwGZBkdgEL2l
+   ehnKQNZ+LYJqkPXXlMkR+FEOCNPadD7qsnJwf4ukJ8R+QvK27nM/5zlQi
+   18MAzkrXAcX5jBhjYk7pzaNUJ/1OwKTbw24/y5jFDBuYh7w6hsyS3qJQ6
+   O27LfEbMdNg9RbTnulXUFhbiID+Mr53dbsLA2YpffsQzr8LWHFZ6aOFVY
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10279"; a="341078001"
+X-IronPort-AV: E=Sophos;i="5.90,164,1643702400"; 
+   d="scan'208";a="341078001"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2022 02:03:12 -0800
+X-IronPort-AV: E=Sophos;i="5.90,164,1643702400"; 
+   d="scan'208";a="577942049"
+Received: from smile.fi.intel.com ([10.237.72.59])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2022 02:03:11 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1nRWfj-00DHqA-EM;
+        Tue, 08 Mar 2022 12:02:27 +0200
+Date:   Tue, 8 Mar 2022 12:02:27 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpio: sim: fix a typo
+Message-ID: <Yicps+mb9xWrqch3@smile.fi.intel.com>
+References: <20220308084627.214720-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-References: <20220307105414.17706-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20220307105414.17706-1-andriy.shevchenko@linux.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 8 Mar 2022 09:53:18 +0100
-Message-ID: <CAMRc=MdLdJwTAxOwbOdO_Q=eE-MHNJwNmayy6svZ1zfhenW12g@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpiolib: Use list_first_entry()/list_last_entry()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220308084627.214720-1-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 7, 2022 at 11:54 AM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> Use list_first_entry()/list_last_entry() instead of open coded variants.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Tue, Mar 08, 2022 at 09:46:27AM +0100, Bartosz Golaszewski wrote:
+> Just noticed this when applying Andy's patch. s/childred/children/
+
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+> Fixes: cb8c474e79be ("gpio: sim: new testing module")
+> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
 > ---
->  drivers/gpio/gpiolib.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 002bf4b1616b..f5e7443208d4 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -262,14 +262,14 @@ static int gpiodev_add_to_list(struct gpio_device *gdev)
->                 return 0;
->         }
->
-> -       next = list_entry(gpio_devices.next, struct gpio_device, list);
-> +       next = list_first_entry(&gpio_devices, struct gpio_device, list);
->         if (gdev->base + gdev->ngpio <= next->base) {
->                 /* add before first entry */
->                 list_add(&gdev->list, &gpio_devices);
->                 return 0;
->         }
->
-> -       prev = list_entry(gpio_devices.prev, struct gpio_device, list);
-> +       prev = list_last_entry(&gpio_devices, struct gpio_device, list);
->         if (prev->base + prev->ngpio <= gdev->base) {
->                 /* add behind last entry */
->                 list_add_tail(&gdev->list, &gpio_devices);
-> @@ -4426,7 +4426,7 @@ static void *gpiolib_seq_next(struct seq_file *s, void *v, loff_t *pos)
->         if (list_is_last(&gdev->list, &gpio_devices))
->                 ret = NULL;
->         else
-> -               ret = list_entry(gdev->list.next, struct gpio_device, list);
-> +               ret = list_first_entry(&gdev->list, struct gpio_device, list);
->         spin_unlock_irqrestore(&gpio_lock, flags);
->
->         s->private = "\n";
-> --
-> 2.34.1
->
+>  drivers/gpio/gpio-sim.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
+> index bb9bb595c1a8..8e5d87984a48 100644
+> --- a/drivers/gpio/gpio-sim.c
+> +++ b/drivers/gpio/gpio-sim.c
+> @@ -547,7 +547,7 @@ struct gpio_sim_bank {
+>  	 *
+>  	 * So we need to store the pointer to the parent struct here. We can
+>  	 * dereference it anywhere we need with no checks and no locking as
+> -	 * it's guaranteed to survive the childred and protected by configfs
+> +	 * it's guaranteed to survive the children and protected by configfs
+>  	 * locks.
+>  	 *
+>  	 * Same for other structures.
+> -- 
+> 2.30.1
+> 
 
-Applied, thanks!
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Bart
+
