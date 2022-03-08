@@ -2,135 +2,233 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B3054D1592
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Mar 2022 12:04:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BFF384D19F7
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Mar 2022 15:05:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346215AbiCHLFX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Mar 2022 06:05:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35736 "EHLO
+        id S242533AbiCHOGt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Mar 2022 09:06:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346202AbiCHLFX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Mar 2022 06:05:23 -0500
-Received: from alexa-out-sd-02.qualcomm.com (alexa-out-sd-02.qualcomm.com [199.106.114.39])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F43844768;
-        Tue,  8 Mar 2022 03:04:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1646737459; x=1678273459;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=E08tgNQeQ9Ef3DLQks66FyP1PMu959mkmFifh3k8TxU=;
-  b=oVJ2y8pkjgBdEctN3J0s3rSeERTdnIGEhJgiPH6J/2wk+qwFUuWW8fD/
-   OKO6+CDZuqJQGg6ejrF/Uscmvc/TBW1t1VmIm7OEFDlKloGkEIiP1Ykip
-   456fY4Musw/lqLRDvDdqxu57XORerqexyKSu3P29y5/BAC8krYykILl0i
-   s=;
-Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 08 Mar 2022 03:04:18 -0800
-X-QCInternal: smtphost
-Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
-  by ironmsg-SD-alpha.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2022 03:04:18 -0800
-Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
- nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.15; Tue, 8 Mar 2022 03:04:18 -0800
-Received: from hu-srivasam-hyd.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.15; Tue, 8 Mar 2022 03:04:11 -0800
-From:   Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
-To:     <agross@kernel.org>, <bjorn.andersson@linaro.org>,
-        <lgirdwood@gmail.com>, <broonie@kernel.org>, <robh+dt@kernel.org>,
-        <quic_plai@quicinc.com>, <bgoswami@codeaurora.org>,
-        <perex@perex.cz>, <tiwai@suse.com>,
-        <srinivas.kandagatla@linaro.org>, <rohitkr@codeaurora.org>,
-        <linux-arm-msm@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <swboyd@chromium.org>, <judyhsiao@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>
-CC:     Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>,
-        "Venkata Prasad Potturu" <quic_potturu@quicinc.com>
-Subject: [PATCH v10 7/7] pinctrl: qcom: Update clock voting as optional
-Date:   Tue, 8 Mar 2022 16:33:14 +0530
-Message-ID: <1646737394-4740-8-git-send-email-quic_srivasam@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1646737394-4740-1-git-send-email-quic_srivasam@quicinc.com>
-References: <1646737394-4740-1-git-send-email-quic_srivasam@quicinc.com>
+        with ESMTP id S237273AbiCHOGs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Mar 2022 09:06:48 -0500
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 649CF49F87;
+        Tue,  8 Mar 2022 06:05:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1646748351; x=1678284351;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=BW0pan9iM+VaZ50WsGuo6fggdgTImD3g+H0n+3pO1Jo=;
+  b=T5djVU8NPSFJe/5koHSwC317JMEaVvlTmPNWfMVb3eB19lViUW8enqrj
+   ikfXyRi0I8aN5JY/XXXrQz9IRzPeDP2XqfDnZuqNngQ5Jz+hqQkDJ+Ifl
+   +XqedHPSxFWck6L3oqv7zPDp9hJZiRNUS4Lja8NNcPSjgIKaaqgpgt78m
+   bJJoFW1fUyNLUlHnw9p9RcNZV/msECNX5oyZXzFoSfK+IuaD9PUgOLxXb
+   d5QkhlfoMMYgsTxezeBFBtQOOt3O8PumQB/e5GRAdi344m6XZMEsAFFhS
+   s1La0ZykBIDq/i2hXPJXz4PhzGh5DBqYqf5MrzAOuKDWboHA1OmuRHboI
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10279"; a="234642024"
+X-IronPort-AV: E=Sophos;i="5.90,165,1643702400"; 
+   d="scan'208";a="234642024"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2022 06:05:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,165,1643702400"; 
+   d="scan'208";a="632237909"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by FMSMGA003.fm.intel.com with ESMTP; 08 Mar 2022 06:05:44 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id D1EE536A; Tue,  8 Mar 2022 16:06:02 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [PATCH v1 1/1] ACPI: docs: gpio-properties: Unify ASL style for GPIO examples
+Date:   Tue,  8 Mar 2022 16:05:59 +0200
+Message-Id: <20220308140559.46932-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
+        SPF_NONE,T_FILL_THIS_FORM_SHORT,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Update bulk clock voting to optional voting as ADSP bypass platform doesn't
-need macro and decodec clocks, these are maintained as power domains and
-operated from lpass audio core cc.
+GPIO examples of ASL in the board.rst, enumeration.rst and gpio-properties.rst
+are not unified. Unify them for better reader experience.
 
-Signed-off-by: Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
-Co-developed-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
-Signed-off-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/pinctrl/qcom/pinctrl-lpass-lpi.c        | 12 +++++++++---
- drivers/pinctrl/qcom/pinctrl-lpass-lpi.h        |  1 +
- drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c |  1 +
- 3 files changed, 11 insertions(+), 3 deletions(-)
+ Documentation/driver-api/gpio/board.rst       | 21 +++++++--------
+ .../firmware-guide/acpi/enumeration.rst       | 22 ++++------------
+ .../firmware-guide/acpi/gpio-properties.rst   | 26 ++++++++++---------
+ 3 files changed, 28 insertions(+), 41 deletions(-)
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-index 1ab572f..c618b74 100644
---- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-+++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-@@ -407,9 +407,15 @@ int lpi_pinctrl_probe(struct platform_device *pdev)
- 		return dev_err_probe(dev, PTR_ERR(pctrl->slew_base),
- 				     "Slew resource not provided\n");
+diff --git a/Documentation/driver-api/gpio/board.rst b/Documentation/driver-api/gpio/board.rst
+index 191fa867826a..4e3adf31c8d1 100644
+--- a/Documentation/driver-api/gpio/board.rst
++++ b/Documentation/driver-api/gpio/board.rst
+@@ -71,14 +71,14 @@ with the help of _DSD (Device Specific Data), introduced in ACPI 5.1::
  
--	ret = devm_clk_bulk_get(dev, MAX_LPI_NUM_CLKS, pctrl->clks);
--	if (ret)
--		return dev_err_probe(dev, ret, "Can't get clocks\n");
-+	if (data->is_clk_optional) {
-+		ret = devm_clk_bulk_get_optional(dev, MAX_LPI_NUM_CLKS, pctrl->clks);
-+		if (ret)
-+			return dev_err_probe(dev, ret, "Can't get clocks\n");
-+	} else {
-+		ret = devm_clk_bulk_get(dev, MAX_LPI_NUM_CLKS, pctrl->clks);
-+		if (ret)
-+			return dev_err_probe(dev, ret, "Can't get clocks\n");
+ 	Device (FOO) {
+ 		Name (_CRS, ResourceTemplate () {
+-			GpioIo (Exclusive, ..., IoRestrictionOutputOnly,
+-				"\\_SB.GPI0") {15} // red
+-			GpioIo (Exclusive, ..., IoRestrictionOutputOnly,
+-				"\\_SB.GPI0") {16} // green
+-			GpioIo (Exclusive, ..., IoRestrictionOutputOnly,
+-				"\\_SB.GPI0") {17} // blue
+-			GpioIo (Exclusive, ..., IoRestrictionOutputOnly,
+-				"\\_SB.GPI0") {1} // power
++			GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionOutputOnly,
++				"\\_SB.GPI0", 0, ResourceConsumer) { 15 } // red
++			GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionOutputOnly,
++				"\\_SB.GPI0", 0, ResourceConsumer) { 16 } // green
++			GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionOutputOnly,
++				"\\_SB.GPI0", 0, ResourceConsumer) { 17 } // blue
++			GpioIo (Exclusive, PullNone, 0, 0, IoRestrictionOutputOnly,
++				"\\_SB.GPI0", 0, ResourceConsumer) { 1 } // power
+ 		})
+ 
+ 		Name (_DSD, Package () {
+@@ -92,10 +92,7 @@ with the help of _DSD (Device Specific Data), introduced in ACPI 5.1::
+ 						^FOO, 2, 0, 1,
+ 					}
+ 				},
+-				Package () {
+-					"power-gpios",
+-					Package () {^FOO, 3, 0, 0},
+-				},
++				Package () { "power-gpios", Package () { ^FOO, 3, 0, 0 } },
+ 			}
+ 		})
+ 	}
+diff --git a/Documentation/firmware-guide/acpi/enumeration.rst b/Documentation/firmware-guide/acpi/enumeration.rst
+index 8c9e758f6e9b..6b62425ef9cd 100644
+--- a/Documentation/firmware-guide/acpi/enumeration.rst
++++ b/Documentation/firmware-guide/acpi/enumeration.rst
+@@ -333,26 +333,13 @@ For example::
+ 		{
+ 			Name (SBUF, ResourceTemplate()
+ 			{
+-				...
+ 				// Used to power on/off the device
+-				GpioIo (Exclusive, PullDefault, 0x0000, 0x0000,
+-					IoRestrictionOutputOnly, "\\_SB.PCI0.GPI0",
+-					0x00, ResourceConsumer,,)
+-				{
+-					// Pin List
+-					0x0055
+-				}
++				GpioIo (Exclusive, PullNone, 0, 0, IoRestrictionOutputOnly,
++					"\\_SB.PCI0.GPI0", 0, ResourceConsumer) { 85 }
+ 
+ 				// Interrupt for the device
+-				GpioInt (Edge, ActiveHigh, ExclusiveAndWake, PullNone,
+-					0x0000, "\\_SB.PCI0.GPI0", 0x00, ResourceConsumer,,)
+-				{
+-					// Pin list
+-					0x0058
+-				}
+-
+-				...
+-
++				GpioInt (Edge, ActiveHigh, ExclusiveAndWake, PullNone, 0,
++					 "\\_SB.PCI0.GPI0", 0, ResourceConsumer) { 88 }
+ 			}
+ 
+ 			Return (SBUF)
+@@ -369,6 +356,7 @@ For example::
+ 			}
+ 		})
+ 		...
 +	}
  
- 	ret = clk_bulk_prepare_enable(MAX_LPI_NUM_CLKS, pctrl->clks);
- 	if (ret)
-diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
-index afbac2a..3bcede6 100644
---- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
-+++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
-@@ -77,6 +77,7 @@ struct lpi_pinctrl_variant_data {
- 	int ngroups;
- 	const struct lpi_function *functions;
- 	int nfunctions;
-+	int is_clk_optional;
- };
+ These GPIO numbers are controller relative and path "\\_SB.PCI0.GPI0"
+ specifies the path to the controller. In order to use these GPIOs in Linux
+diff --git a/Documentation/firmware-guide/acpi/gpio-properties.rst b/Documentation/firmware-guide/acpi/gpio-properties.rst
+index df4b711053ee..eaec732cc77c 100644
+--- a/Documentation/firmware-guide/acpi/gpio-properties.rst
++++ b/Documentation/firmware-guide/acpi/gpio-properties.rst
+@@ -21,18 +21,18 @@ index, like the ASL example below shows::
+       Name (_CRS, ResourceTemplate ()
+       {
+           GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionOutputOnly,
+-                  "\\_SB.GPO0", 0, ResourceConsumer) {15}
++                  "\\_SB.GPO0", 0, ResourceConsumer) { 15 }
+           GpioIo (Exclusive, PullUp, 0, 0, IoRestrictionOutputOnly,
+-                  "\\_SB.GPO0", 0, ResourceConsumer) {27, 31}
++                  "\\_SB.GPO0", 0, ResourceConsumer) { 27, 31 }
+       })
  
- int lpi_pinctrl_probe(struct platform_device *pdev);
-diff --git a/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
-index d67ff25..304d8a2 100644
---- a/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
-@@ -142,6 +142,7 @@ static const struct lpi_pinctrl_variant_data sc7280_lpi_data = {
- 	.ngroups = ARRAY_SIZE(sc7280_groups),
- 	.functions = sc7280_functions,
- 	.nfunctions = ARRAY_SIZE(sc7280_functions),
-+	.is_clk_optional = 1,
- };
+       Name (_DSD, Package ()
+       {
+           ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+           Package ()
+-	  {
+-              Package () {"reset-gpios", Package() {^BTH, 1, 1, 0 }},
+-              Package () {"shutdown-gpios", Package() {^BTH, 0, 0, 0 }},
++          {
++              Package () { "reset-gpios", Package () { ^BTH, 1, 1, 0 } },
++              Package () { "shutdown-gpios", Package () { ^BTH, 0, 0, 0 } },
+           }
+       })
+   }
+@@ -123,17 +123,17 @@ Example::
+       // _DSD Hierarchical Properties Extension UUID
+       ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
+       Package () {
+-          Package () {"hog-gpio8", "G8PU"}
++          Package () { "hog-gpio8", "G8PU" }
+       }
+   })
  
- static const struct of_device_id lpi_pinctrl_of_match[] = {
+   Name (G8PU, Package () {
+       ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+       Package () {
+-          Package () {"gpio-hog", 1},
+-          Package () {"gpios", Package () {8, 0}},
+-          Package () {"output-high", 1},
+-          Package () {"line-name", "gpio8-pullup"},
++          Package () { "gpio-hog", 1 },
++          Package () { "gpios", Package () { 8, 0 } },
++          Package () { "output-high", 1 },
++          Package () { "line-name", "gpio8-pullup" },
+       }
+   })
+ 
+@@ -266,15 +266,17 @@ have a device like below::
+ 
+       Name (_CRS, ResourceTemplate () {
+           GpioIo (Exclusive, PullNone, 0, 0, IoRestrictionNone,
+-                  "\\_SB.GPO0", 0, ResourceConsumer) {15}
++                  "\\_SB.GPO0", 0, ResourceConsumer) { 15 }
+           GpioIo (Exclusive, PullNone, 0, 0, IoRestrictionNone,
+-                  "\\_SB.GPO0", 0, ResourceConsumer) {27}
++                  "\\_SB.GPO0", 0, ResourceConsumer) { 27 }
+       })
+   }
+ 
+ The driver might expect to get the right GPIO when it does::
+ 
+   desc = gpiod_get(dev, "reset", GPIOD_OUT_LOW);
++  if (IS_ERR(desc))
++	...error handling...
+ 
+ but since there is no way to know the mapping between "reset" and
+ the GpioIo() in _CRS desc will hold ERR_PTR(-ENOENT).
 -- 
-2.7.4
+2.34.1
 
