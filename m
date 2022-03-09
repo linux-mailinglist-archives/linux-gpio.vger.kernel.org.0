@@ -2,103 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C9AE4D3868
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Mar 2022 19:05:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 05AD04D3A8C
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Mar 2022 20:46:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236524AbiCISEe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Mar 2022 13:04:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55620 "EHLO
+        id S233517AbiCITqB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Mar 2022 14:46:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236572AbiCISEe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Mar 2022 13:04:34 -0500
-Received: from smtp-out3.electric.net (smtp-out3.electric.net [208.70.128.179])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE54B63F0;
-        Wed,  9 Mar 2022 10:03:33 -0800 (PST)
-Received: from 1nS0ep-00041V-UI by out3b.electric.net with emc1-ok (Exim 4.94.2)
-        (envelope-from <kris@embeddedTS.com>)
-        id 1nS0eq-000439-VD; Wed, 09 Mar 2022 10:03:32 -0800
-Received: by emcmailer; Wed, 09 Mar 2022 10:03:32 -0800
-Received: from [66.210.251.27] (helo=mail.embeddedts.com)
-        by out3b.electric.net with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <kris@embeddedTS.com>)
-        id 1nS0ep-00041V-UI; Wed, 09 Mar 2022 10:03:31 -0800
-Received: from tsdebian (unknown [75.164.75.221])
-        by mail.embeddedts.com (Postfix) with ESMTPSA id B4966E3C;
-        Wed,  9 Mar 2022 11:03:30 -0700 (MST)
-Message-ID: <1646848995.2231.2.camel@embeddedTS.com>
-Subject: Re: [PATCH v2] gpio: ts4900: Do not set DAT and OE together
-From:   Kris Bahnsen <kris@embeddedTS.com>
-Reply-To: kris@embeddedTS.com
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Featherston <mark@embeddedts.com>
-Date:   Wed, 09 Mar 2022 10:03:15 -0800
-In-Reply-To: <CAMRc=McuAB96JSKVeAPQLOgjGZkD5hOtYt=904Aw4t4aYVVKqg@mail.gmail.com>
-References: <20220308181847.3276-1-kris@embeddedTS.com>
-         <CAMRc=McuAB96JSKVeAPQLOgjGZkD5hOtYt=904Aw4t4aYVVKqg@mail.gmail.com>
-Organization: embeddedTS
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Outbound-IP: 66.210.251.27
-X-Env-From: kris@embeddedTS.com
-X-Proto: esmtps
-X-Revdns: wsip-66-210-251-27.ph.ph.cox.net
-X-HELO: mail.embeddedts.com
-X-TLS:  TLS1.2:ECDHE-RSA-AES256-GCM-SHA384:256
-X-Authenticated_ID: 
-X-Virus-Status: Scanned by VirusSMART (c)
-X-Virus-Status: Scanned by VirusSMART (b)
-X-FM-Delivery-Delay: 15749372,23518412
-X-PolicySMART: 13164782, 15749372, 26810492
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=embeddedTS.com; s=mailanyone20220121;h=Mime-Version:References:In-Reply-To:Date:To:From:Message-ID; bh=0LUNo57BRIswNUx1tYkZhqzyj6GufMslGG3HBmMGVGA=;b=heTgNilBp3VtXq6bnR91XF6e6cDE1pb+bbo9AavVuxBuDWYu5tX7XbBBUOD3e+OlXKhsWnaDYXRjdXmosXPYOFtKE31r1vJu0hWBIWcEV1bCNKSuuh5+hvwiZ9oJBDVE4Vcg7VDsLxOZqCQxysRXD0/xj/TmEq03pHr2zte1QMFSGJVYvYW8bZ8ftFTqB9uiAejtFL0CcYSb7J7yzF47RVLpSsH+TGIP0Ve5ek2QHbWguYfa+zRZFh080Ko9rNG2ByApd08WRA2q3z8r52teXGC6dDBRJ8eyjNmxDbhrP83sQ2L6RNHWllHrlk8f0wf03xHAsUVrA5CUuKPTlUs6IA==;
-X-FM-Delivery-Delay: 15749372,23518412
-X-PolicySMART: 13164782, 15749372, 26810492
-X-FM-Delivery-Delay: 15749372,23518412
-X-PolicySMART: 13164782, 15749372, 26810492
-X-FM-Delivery-Delay: 15749372,23518412
-X-PolicySMART: 13164782, 15749372, 26810492
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S238001AbiCITqB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Mar 2022 14:46:01 -0500
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B2ECB74
+        for <linux-gpio@vger.kernel.org>; Wed,  9 Mar 2022 11:45:00 -0800 (PST)
+Received: from localhost.localdomain ([37.4.249.169]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis)
+ id 1MwQKp-1oJrkE37qf-00sNtT; Wed, 09 Mar 2022 20:44:43 +0100
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>
+Cc:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Arnd Bergmann <arnd@arndb.de>,
+        Phil Elwell <phil@raspberrypi.com>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        Stefan Wahren <stefan.wahren@i2se.com>
+Subject: [PATCH RFC 0/2] gpiolib: of: Introduce hook for missing gpio-ranges
+Date:   Wed,  9 Mar 2022 20:43:44 +0100
+Message-Id: <1646855026-9132-1-git-send-email-stefan.wahren@i2se.com>
+X-Mailer: git-send-email 2.7.4
+X-Provags-ID: V03:K1:8Z2LArKHTLFerCSWr2QMCIYnjownib6pqhn0/2gF7LU3ZqtZ1zd
+ LVyg2rShFXcBXaG4E1ZmtJRktbEWchbUzuzgYWDt5gmKI4Yo5fIYmmkT2kGLddLvqut6P59
+ vVqrinGzdZNhBOqiTwvkoKUukM2Oi5w/wpP90QyeYPikAgZvRoT5xMzSt+VSMrp4Pm9lCwp
+ JgpL4qPTd3twp59TsLziQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:rWvp9cFklYk=:TCGlv5CHqsesb4S+W0QGwv
+ qHX1SEXZ0B6odHVJmd/s0cM+Obo5tPjWjRX4OUbYn1wFO0Y4ApouHPLYIoMgJTfKQGepaad7I
+ nKqmV5wgpsld19qIXIxAaq6njP5W343YditEuY1S85h2Dglb6jxlbxvYV6HEiyGAhYjhaOfwP
+ ZJSqQ6AKFwKwrPQYOlYpHA8oA6OczC7gitBSmXJVYhXL1CGfRBCN0jonSyK8SoCpwuvGdrkiB
+ qWTVfD7wh2yjAk2Y2p3PhAOCrtV9Lw4yTJA+n7qwD9eFDw9F0Bx4s/xe847Q5GuSyUuvWmI4/
+ sEMtpgGhh3ygIAelljYrnKGSGu9G842MTcTgiN98bbbO3UNHvgovw/Af4CzdYMpEtb2qWNKbX
+ 4xG7NJgmPBySmCAPrJwBX53nil14a7LMummoNlDVu8cE338mGY1KlA1+diJggobz7wkjfvYIc
+ YH3XfxkNiTyNjPqQmtuaKZ4wqOfgry8cIx+I3jffLMzWpB0WVGLc/a+Xcufkleqoh+7vfr3mD
+ ln0p+j/iIFJ7bj4WIvre7XDZebqtn5HjqnOSvTLEaeOyah6m/B2eNQ5Ay7YxChcxJtReIItfZ
+ tbxGCCaBH+LMI/yJ0exBnLhAnwoFKLiIzCIrjg8cfHOpLLniEEAIOD9ALOgMoWuTs2B0Wl69V
+ pfPA5T3oKXENzPnic5mT0jc7TammekgEUlKksRRwBKWZbsgLQB+eGwstRx2Pg93b93u0GjLfz
+ Z8StFCY59lYh8TSi
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_MSPIKE_H5,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 2022-03-09 at 09:32 +0100, Bartosz Golaszewski wrote:
-> On Tue, Mar 8, 2022 at 7:19 PM Kris Bahnsen <kris@embeddedts.com> wrote:
-> > 
-> > diff --git a/drivers/gpio/gpio-ts4900.c b/drivers/gpio/gpio-ts4900.c
-> > index d885032cf814..fbabfca030c0 100644
-> > --- a/drivers/gpio/gpio-ts4900.c
-> > +++ b/drivers/gpio/gpio-ts4900.c
-> > @@ -1,7 +1,8 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> 
-> This is not part of the fix, please send a separate patch that comes
-> after the fix adding the SPDX identifier.
-> 
-> >  /*
-> >   * Digital I/O driver for Technologic Systems I2C FPGA Core
-> >   *
-> > - * Copyright (C) 2015 Technologic Systems
-> > + * Copyright (C) 2015-2018 Technologic Systems
-> >   * Copyright (C) 2016 Savoir-Faire Linux
-> >   *
-> >   * This program is free software; you can redistribute it and/or
-> 
-> If you're adding the SPDX identifier, you can drop the license boilerplate here.
-> 
-> Bart
-> 
+This patch series tries to provide backward compatibility for DTB which
+lacks the gpio-ranges property.
 
-Thanks for the feedback. I'll get a v3 series out soon to address these.
+The commit ("pinctrl: msm: fix gpio-hog related boot issues") by Christian
+Lamparter already contains a fallback in case the gpio-ranges property
+is missing. But this approach doesn't work on BCM2835 with a gpio-hog
+defined for the SoC GPIOs.
 
-Kris
+Based Christian's on explanation i conclude that the fallback must happen
+during the gpiochip_add() call and not afterwards. So the approach is to
+call an optional hook, which can be implemented in the platform driver.
+
+This series has been tested on Raspberry Pi 3 B Plus.
+
+Stefan Wahren (2):
+  gpiolib: of: Introduce hook for missing gpio-ranges
+  pinctrl: bcm2835: implement hook for missing gpio-ranges
+
+ drivers/gpio/gpiolib-of.c             |  5 +++++
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c | 18 ++++++++++++++++++
+ include/linux/gpio/driver.h           | 12 ++++++++++++
+ 3 files changed, 35 insertions(+)
+
+-- 
+2.7.4
+
