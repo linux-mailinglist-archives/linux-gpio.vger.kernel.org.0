@@ -2,120 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CE3794D3A9D
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Mar 2022 20:50:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DBA84D3AD1
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Mar 2022 21:09:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236219AbiCITvL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Mar 2022 14:51:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38582 "EHLO
+        id S233485AbiCIUKQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Mar 2022 15:10:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234660AbiCITvK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Mar 2022 14:51:10 -0500
-Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C59B55BF
-        for <linux-gpio@vger.kernel.org>; Wed,  9 Mar 2022 11:50:10 -0800 (PST)
-Received: from localhost.localdomain ([37.4.249.169]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1MuDPf-1oHfsn2FEz-00uaod; Wed, 09 Mar 2022 20:44:44 +0100
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>
-Cc:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        Phil Elwell <phil@raspberrypi.com>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH RFC 2/2] pinctrl: bcm2835: implement hook for missing gpio-ranges
-Date:   Wed,  9 Mar 2022 20:43:46 +0100
-Message-Id: <1646855026-9132-3-git-send-email-stefan.wahren@i2se.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1646855026-9132-1-git-send-email-stefan.wahren@i2se.com>
-References: <1646855026-9132-1-git-send-email-stefan.wahren@i2se.com>
-X-Provags-ID: V03:K1:gD25VDJriO0WlPO9G1KIEXwcB2q62js2g/T5+gpDWM+vpuAtgJX
- 8gc4fsnQow22MKJ411B8VqfZ8qfx/epjNPdU2EhjeNnKoBL04UFvhM1+XEVN1qTkXrHHIlX
- SXGxqfKTny0zh4vETTwQJEYJwKsJ2bQne4Rkc8yZyXFPIHSDIW5hO7/Lpkzk0DGMyYdp/Dx
- gc+LdAHL0qBbFqJqoolKQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:VnTOY1DYj4E=:7hOSv9L7KCyduhHbDjKQXD
- p//UKeWlplBXepTZLFggFEKZJPA/srfZa7MYcRG5BxGyiC3mm4CCCrgff4kYIhFDVmUw3vN8/
- uqcGHnxdfVhLHqoQ5IldwGIQDvxl1ty9A+B13nesoRofyJRm/l4yy1ADizUGNTyE5VfQ7tVpY
- 46qFxs+dStrFZ52Mzm1mcyvKU1p6jyQ+fmlhLkEREiCPSA/3mT42pJAs3LWGCukfsdhNE2SVJ
- DdtTQ/LhNdLyenSQIumpv/1xvNbjL1+tBv2mkAm6wl6OruWmD0mKaQPiEWw4y5OBjxLREMxhA
- QLSfrGow7qBqdz+zcpy7N2NvZmzYlYjTIsYZaT+8PBLQUrvwvEYSUuR9yCh8wmdf/ayj3JcZa
- RY8VSToOqwfJumuKCgMxfGCVudp9/BNNah9smgJee9lU9STiHbwKpxLsDr0b6MuALDt7Otj1c
- CCqbdwv4NsCq4fqs8OIghsnBmlVHISmtvyaIY5G7z179124JSfYUDkOHbDx5h4v2VSEiCdJA1
- 7QEbbk7KRQgototq9ueqGEu5EIhOtif0mvbhUzGfZgBmTPEe9iFkck6x0JBtkUHrbowS4pMj1
- J0SOK1QEULfvnsS67i06NS7WCzQ0KBQUYi3Pz4R/qBNeEx47gSrNlCsyyVNAAPPxjYz9RabxR
- lG0HukaZ7Sdlese4kctKbiCPNfWG02Z217VDF+6Rxvg3xkC64b4GAu9PoiD6/JYmeLmtxV/kk
- 0j9Ne4oLO68KNXWG
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S233461AbiCIUKQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Mar 2022 15:10:16 -0500
+X-Greylist: delayed 452 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 09 Mar 2022 12:09:16 PST
+Received: from relay5.hostedemail.com (relay5.hostedemail.com [64.99.140.38])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4A279EB88
+        for <linux-gpio@vger.kernel.org>; Wed,  9 Mar 2022 12:09:16 -0800 (PST)
+Received: from omf14.hostedemail.com (a10.router.float.18 [10.200.18.1])
+        by unirelay10.hostedemail.com (Postfix) with ESMTP id B1D4221B6;
+        Wed,  9 Mar 2022 20:01:42 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf14.hostedemail.com (Postfix) with ESMTPA id 5B61D32;
+        Wed,  9 Mar 2022 20:01:17 +0000 (UTC)
+Message-ID: <400cf2fc8cbc3887a90f50709f40adc0662ec0f4.camel@perches.com>
+Subject: Re: [PATCH v2 05/11] pinctrl: mediatek: paris: Drop extra newline
+ in mtk_pctrl_show_one_pin()
+From:   Joe Perches <joe@perches.com>
+To:     Chen-Yu Tsai <wenst@chromium.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+Date:   Wed, 09 Mar 2022 12:01:39 -0800
+In-Reply-To: <20220308100956.2750295-6-wenst@chromium.org>
+References: <20220308100956.2750295-1-wenst@chromium.org>
+         <20220308100956.2750295-6-wenst@chromium.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.40.4-1ubuntu2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_MSPIKE_H4,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+        UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no
+        version=3.4.6
+X-Stat-Signature: itpi6u5eyed33jaieo59phaog6r153x8
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: 5B61D32
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX1+v5TW9d+3Dr2lvFismD/IYOx5icBwv8Xg=
+X-HE-Tag: 1646856077-760257
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The commit c8013355ead6 ("ARM: dts: gpio-ranges property is now required")
-fixed the GPIO probing issues caused by "pinctrl: bcm2835: Change init
-order for gpio hogs". This changed only the DTS files provided by the kernel
-tree. Unfortunately it isn't guaranteed that these files are shipped to
-all users.
+On Tue, 2022-03-08 at 18:09 +0800, Chen-Yu Tsai wrote:
+> The caller of mtk_pctrl_show_one_pin() is responsible for printing the
+> full line. mtk_pctrl_show_one_pin(), called through mtk_pctrl_dbg_show(),
+> should only produce a string containing the extra information the driver
+> wants included.
 
-So implement the necessary backward compatibility for BCM2835 and
-BCM2711 platform.
+Does this function have another caller?
 
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
----
- drivers/pinctrl/bcm/pinctrl-bcm2835.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+It looks as if this function doesn't need to be EXPORT_SYMBOL_GPL
+and could just be declared static in the file instead.
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-index 47e433e..dad4530 100644
---- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-+++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-@@ -358,6 +358,22 @@ static int bcm2835_gpio_direction_output(struct gpio_chip *chip,
- 	return 0;
- }
- 
-+static int bcm2835_of_gpio_ranges_fallback(struct gpio_chip *gc,
-+					   struct device_node *np)
-+{
-+	struct pinctrl_dev *pctldev = of_pinctrl_get(np);
-+
-+	of_node_put(np);
-+
-+	if (!pctldev)
-+		return 0;
-+
-+	gpiochip_add_pin_range(gc, pinctrl_dev_get_devname(pctldev), 0, 0,
-+			       gc->ngpio);
-+
-+	return 0;
-+}
-+
- static const struct gpio_chip bcm2835_gpio_chip = {
- 	.label = MODULE_NAME,
- 	.owner = THIS_MODULE,
-@@ -372,6 +388,7 @@ static const struct gpio_chip bcm2835_gpio_chip = {
- 	.base = -1,
- 	.ngpio = BCM2835_NUM_GPIOS,
- 	.can_sleep = false,
-+	.of_gpio_ranges_fallback = bcm2835_of_gpio_ranges_fallback,
- };
- 
- static const struct gpio_chip bcm2711_gpio_chip = {
-@@ -388,6 +405,7 @@ static const struct gpio_chip bcm2711_gpio_chip = {
- 	.base = -1,
- 	.ngpio = BCM2711_NUM_GPIOS,
- 	.can_sleep = false,
-+	.of_gpio_ranges_fallback = bcm2835_of_gpio_ranges_fallback,
- };
- 
- static void bcm2835_gpio_irq_handle_bank(struct bcm2835_pinctrl *pc,
--- 
-2.7.4
+btw: using %1d is mostly senseless as a control, but has some
+     documentary use as a value < 0 or >= 10 will be always be
+     fully emitted anyway.
+
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
+[]
+> @@ -634,14 +634,10 @@ ssize_t mtk_pctrl_show_one_pin(struct mtk_pinctrl *hw,
+>  			pullen,
+>  			pullup);
+>  
+> -	if (r1 != -1) {
+> -		len += scnprintf(buf + len, buf_len - len, " (%1d %1d)\n",
+> -			r1, r0);
+> -	} else if (rsel != -1) {
+> -		len += scnprintf(buf + len, buf_len - len, " (%1d)\n", rsel);
+> -	} else {
+> -		len += scnprintf(buf + len, buf_len - len, "\n");
+> -	}
+> +	if (r1 != -1)
+> +		len += scnprintf(buf + len, buf_len - len, " (%1d %1d)", r1, r0);
+> +	else if (rsel != -1)
+> +		len += scnprintf(buf + len, buf_len - len, " (%1d)", rsel);
+>  
+>  	return len;
+>  }
+
 
