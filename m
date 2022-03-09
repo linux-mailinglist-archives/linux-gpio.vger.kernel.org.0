@@ -2,83 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D0024D2D7F
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Mar 2022 11:55:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C9AE4D3868
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Mar 2022 19:05:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231665AbiCIKz2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Mar 2022 05:55:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41312 "EHLO
+        id S236524AbiCISEe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Mar 2022 13:04:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231778AbiCIKz0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Mar 2022 05:55:26 -0500
-Received: from mail-io1-xd35.google.com (mail-io1-xd35.google.com [IPv6:2607:f8b0:4864:20::d35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 953AA16DAEE
-        for <linux-gpio@vger.kernel.org>; Wed,  9 Mar 2022 02:54:27 -0800 (PST)
-Received: by mail-io1-xd35.google.com with SMTP id 195so2321347iou.0
-        for <linux-gpio@vger.kernel.org>; Wed, 09 Mar 2022 02:54:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
-        bh=KVhbYFHGqvjj7PkfcwFkYVqX+xBelABPf+oZxs3rLEk=;
-        b=meworydtJjubfNvlUFr/b0gPcaWgvXJlR23+KgnIc8V7k9XQD9HhMhE8CMw2vYmo1v
-         d8Y197tNDDJbOyP/NAIQS4YW7EVeFkfNxZMtLiL9d7cORDNziNdTUzx5cPPGf3tCa4xX
-         LySsciqVBukgBhA0R9vV92ulQleu8G0cXQFa9zm18pu/m7O59adS9ok0P74HY78XQPxp
-         5tStheIx0NZM08ta4KLAoIQ8PBRsCKbfMGMD1jpLdpXQTrYKQceNdnlZI+HUuSOiME7w
-         az9kSjqPI+7VtC4d9xqgfDWxtGSlsfoPteLGzW3k3udDRm+kO9xDOKSZzy5ES98AFp2b
-         9yAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to;
-        bh=KVhbYFHGqvjj7PkfcwFkYVqX+xBelABPf+oZxs3rLEk=;
-        b=SUEkTlB8z5NDUmx7wBAc+WXs+fFqHtqwq50HoQwzxGG8AmQb2lkCJW0kjY1Ud2js1G
-         Fi0bCqj1PP495m6gv14JXtPY5DcGpKYy409NSDQsoAQ+/l/AzwOgSFLIo6PoGjMF1qlR
-         ka2EV8vXo5JJV6y2Le+j4QFCzT4NjBgsIEt9Vjqn/pLwkZQKm78OghyrdFQx/oXkBVZt
-         Mo1aZtAvRNarDIMBByd2HmQQMoCOQ0NOmlVZ4fYOAuv0Sbj0m4QeEdhKj14gLb95sMUL
-         EbasTUxuUGT5BkwVCMfL3svp8lXIrWKe1fmLcINgzIYrvDcdgsUbXjWDW7+HJIEtG7Lh
-         TASw==
-X-Gm-Message-State: AOAM531Dq8ob0sxgyVbNoJs9ynUThmHGPiFneNAb86dNo5XuSo2wAeK/
-        ty3s2O9J0stttevx7pQE7D0+zhz9wniDKi/hcZg=
-X-Google-Smtp-Source: ABdhPJzdtJRbYQFiJbt053SX/8bn7QHr8S1ppLIHyRDeYb7cYZaekQn4I2oZN6X1XuzxaZNLCOqAAMa+tq1mCukSH4A=
-X-Received: by 2002:a05:6638:3014:b0:317:9daf:c42c with SMTP id
- r20-20020a056638301400b003179dafc42cmr18636420jak.10.1646823266784; Wed, 09
- Mar 2022 02:54:26 -0800 (PST)
-MIME-Version: 1.0
-Reply-To: issayacouba2021@gmail.com
-Sender: awa.bello66@gmail.com
-Received: by 2002:a92:c701:0:0:0:0:0 with HTTP; Wed, 9 Mar 2022 02:54:26 -0800 (PST)
-From:   issa <issayacouba2021@gmail.com>
-Date:   Wed, 9 Mar 2022 11:54:26 +0100
-X-Google-Sender-Auth: IXhLiK9_Gow6ujJb3ZsT48bI0L4
-Message-ID: <CAD9-ZkUUEMfm4yHTVimTi-dGhErsjoR_MT_YDmC2sJVwaYGCHg@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
+        with ESMTP id S236572AbiCISEe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Mar 2022 13:04:34 -0500
+Received: from smtp-out3.electric.net (smtp-out3.electric.net [208.70.128.179])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE54B63F0;
+        Wed,  9 Mar 2022 10:03:33 -0800 (PST)
+Received: from 1nS0ep-00041V-UI by out3b.electric.net with emc1-ok (Exim 4.94.2)
+        (envelope-from <kris@embeddedTS.com>)
+        id 1nS0eq-000439-VD; Wed, 09 Mar 2022 10:03:32 -0800
+Received: by emcmailer; Wed, 09 Mar 2022 10:03:32 -0800
+Received: from [66.210.251.27] (helo=mail.embeddedts.com)
+        by out3b.electric.net with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <kris@embeddedTS.com>)
+        id 1nS0ep-00041V-UI; Wed, 09 Mar 2022 10:03:31 -0800
+Received: from tsdebian (unknown [75.164.75.221])
+        by mail.embeddedts.com (Postfix) with ESMTPSA id B4966E3C;
+        Wed,  9 Mar 2022 11:03:30 -0700 (MST)
+Message-ID: <1646848995.2231.2.camel@embeddedTS.com>
+Subject: Re: [PATCH v2] gpio: ts4900: Do not set DAT and OE together
+From:   Kris Bahnsen <kris@embeddedTS.com>
+Reply-To: kris@embeddedTS.com
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mark Featherston <mark@embeddedts.com>
+Date:   Wed, 09 Mar 2022 10:03:15 -0800
+In-Reply-To: <CAMRc=McuAB96JSKVeAPQLOgjGZkD5hOtYt=904Aw4t4aYVVKqg@mail.gmail.com>
+References: <20220308181847.3276-1-kris@embeddedTS.com>
+         <CAMRc=McuAB96JSKVeAPQLOgjGZkD5hOtYt=904Aw4t4aYVVKqg@mail.gmail.com>
+Organization: embeddedTS
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=4.7 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO_END_DIGIT,HK_SCAM,LOTS_OF_MONEY,
-        MONEY_FREEMAIL_REPTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNDISC_MONEY autolearn=no autolearn_force=no
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Outbound-IP: 66.210.251.27
+X-Env-From: kris@embeddedTS.com
+X-Proto: esmtps
+X-Revdns: wsip-66-210-251-27.ph.ph.cox.net
+X-HELO: mail.embeddedts.com
+X-TLS:  TLS1.2:ECDHE-RSA-AES256-GCM-SHA384:256
+X-Authenticated_ID: 
+X-Virus-Status: Scanned by VirusSMART (c)
+X-Virus-Status: Scanned by VirusSMART (b)
+X-FM-Delivery-Delay: 15749372,23518412
+X-PolicySMART: 13164782, 15749372, 26810492
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=embeddedTS.com; s=mailanyone20220121;h=Mime-Version:References:In-Reply-To:Date:To:From:Message-ID; bh=0LUNo57BRIswNUx1tYkZhqzyj6GufMslGG3HBmMGVGA=;b=heTgNilBp3VtXq6bnR91XF6e6cDE1pb+bbo9AavVuxBuDWYu5tX7XbBBUOD3e+OlXKhsWnaDYXRjdXmosXPYOFtKE31r1vJu0hWBIWcEV1bCNKSuuh5+hvwiZ9oJBDVE4Vcg7VDsLxOZqCQxysRXD0/xj/TmEq03pHr2zte1QMFSGJVYvYW8bZ8ftFTqB9uiAejtFL0CcYSb7J7yzF47RVLpSsH+TGIP0Ve5ek2QHbWguYfa+zRZFh080Ko9rNG2ByApd08WRA2q3z8r52teXGC6dDBRJ8eyjNmxDbhrP83sQ2L6RNHWllHrlk8f0wf03xHAsUVrA5CUuKPTlUs6IA==;
+X-FM-Delivery-Delay: 15749372,23518412
+X-PolicySMART: 13164782, 15749372, 26810492
+X-FM-Delivery-Delay: 15749372,23518412
+X-PolicySMART: 13164782, 15749372, 26810492
+X-FM-Delivery-Delay: 15749372,23518412
+X-PolicySMART: 13164782, 15749372, 26810492
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
-X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dear Old Friend
-I'm happy to inform you about my success in getting those funds
-transferred under the co operation of a new partner from Paraguay.
-Presently I'm in Paraguay for investment projects with my own share of
-the total sum. Meanwhile, I didn't forget your past efforts and
-attempts to assist me in transferring those funds despite that you
-failed to assist me financially.
+On Wed, 2022-03-09 at 09:32 +0100, Bartosz Golaszewski wrote:
+> On Tue, Mar 8, 2022 at 7:19 PM Kris Bahnsen <kris@embeddedts.com> wrote:
+> > 
+> > diff --git a/drivers/gpio/gpio-ts4900.c b/drivers/gpio/gpio-ts4900.c
+> > index d885032cf814..fbabfca030c0 100644
+> > --- a/drivers/gpio/gpio-ts4900.c
+> > +++ b/drivers/gpio/gpio-ts4900.c
+> > @@ -1,7 +1,8 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> 
+> This is not part of the fix, please send a separate patch that comes
+> after the fix adding the SPDX identifier.
+> 
+> >  /*
+> >   * Digital I/O driver for Technologic Systems I2C FPGA Core
+> >   *
+> > - * Copyright (C) 2015 Technologic Systems
+> > + * Copyright (C) 2015-2018 Technologic Systems
+> >   * Copyright (C) 2016 Savoir-Faire Linux
+> >   *
+> >   * This program is free software; you can redistribute it and/or
+> 
+> If you're adding the SPDX identifier, you can drop the license boilerplate here.
+> 
+> Bart
+> 
 
-Now contacts my secretary his name is Mr. Issa Yacouba; and ask him to
-send you the total sum of $2, 000,000.00 U.S.D. which I kept for your
-compensation for all the past efforts and attempts to assist me in
-this matter.
+Thanks for the feedback. I'll get a v3 series out soon to address these.
 
-With best regard
-MR.RONNY ARMAND
+Kris
