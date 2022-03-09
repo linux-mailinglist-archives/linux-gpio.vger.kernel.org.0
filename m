@@ -2,69 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 808CF4D277E
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Mar 2022 05:07:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 52C8D4D2AB3
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Mar 2022 09:33:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230284AbiCIB0j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Mar 2022 20:26:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40202 "EHLO
+        id S231398AbiCIIdT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Mar 2022 03:33:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230100AbiCIB0j (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Mar 2022 20:26:39 -0500
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82DFC8B6E5
-        for <linux-gpio@vger.kernel.org>; Tue,  8 Mar 2022 17:25:31 -0800 (PST)
-Received: by mail-pg1-x52a.google.com with SMTP id o8so640326pgf.9
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Mar 2022 17:25:31 -0800 (PST)
+        with ESMTP id S229980AbiCIIdR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Mar 2022 03:33:17 -0500
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CD2D108543
+        for <linux-gpio@vger.kernel.org>; Wed,  9 Mar 2022 00:32:19 -0800 (PST)
+Received: by mail-ej1-x62c.google.com with SMTP id bi12so3284670ejb.3
+        for <linux-gpio@vger.kernel.org>; Wed, 09 Mar 2022 00:32:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=DTZE1GGOUc0Xe5TILzNdPovBOGas2PsoxFXqPJI+Jj0=;
-        b=ojc/DUmqKIdqpsAcz+SeC8FPpha6Dxy5tdar4XP+3ku46vQ7alATxkEexJnKwys54h
-         b2kSKP+sKFNwK5n1kWctmO/vR+405x3WSb3MO2+A6v2o4FfGqsHhmQQueyB/EtPcPDOj
-         +0y6/au89lDwfmX4vlxr2p5rKF4/Q1sLYsuEzULoJrmxcy6c/QECvkxhJ3St6KBM/Tyo
-         rNKmxA5A1uvlsixrYXg0G/FW4IfjS1/KAs7QC5X3meLAn7qpvTxEzT40UCRyc7XXooK6
-         bAAZCNoeQzx8EkFjOm4gIbSiYq5MLLyu/InjxNHTBarN9W8A0m6Ks33jHLWGD5y1Wwwv
-         8wvg==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CDxkaqcG0fJrANM2ceXT68Oc4mg/sa4Hyds9EWcVwMo=;
+        b=D0YZRm0Zo3pKm3j0CffjTpR2ewQvsGG4tcDtg18M0JRyuPCeDft7r4tvhbR092In3b
+         oIS+CgaA67qEALwDxDXpIKx83GA5bI9Wi1abRaRe9avmm2JETRWhI1ndc07ucekYfVWw
+         GxgIlU+9cApectUqWYiRgbM4HdeaN4fGuEBWuEBR94He4vDcQw0lJXt+yOOKKxSwwZFm
+         5ck+T2lP8eqANjjCcPteqUDDQgUhvGuxdAostHbB7DKBDQQgi3ML0fY9h1wleydLBw2Y
+         ixRAPcsV7Rx4JuGtrB7nj/RxLvHps3Mlh167NRnI6+v2023XvhV7yMRmxq008G+L73zr
+         vl0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=DTZE1GGOUc0Xe5TILzNdPovBOGas2PsoxFXqPJI+Jj0=;
-        b=oO+2UGqknrFNGFnaOOis0UxZspRHvnluvnI2y4gl4pH65t6/3GWjg37XQvNCE1G915
-         CMM0ejhKpLfIS0OwSTeAEj4V/QCe6Cw6/1wi1G6mwrhUsQzG0LVBNp9Jtndl7ahf9kUu
-         Siq5YhBcpmuTec0aGsM1NTdYAY8yuRcZx4/jPsvKJmSBB/a4E/4LrxkWoXgaTzFTtdnT
-         z2xIgn+qynqgoT2Op57vwclHkBiXkAlJhJ320jr5Y6qegp4ELJ8DPp13Cb7CFtVRaiqx
-         /L9BkVjE5g2JvqaNJQ6gnOENAGctDrDeV9bXCABo8nezR60qXvrl8ty1RVIeqa/3AN+k
-         yRLw==
-X-Gm-Message-State: AOAM532G+qJmOzJkgZg6cYUzztDBM0NS+edYmChXzXhlmKSRsSlHOTwn
-        /pODpi9iwSfJU9hObt7YkuE=
-X-Google-Smtp-Source: ABdhPJxB2t7e+LE4GUuKjlyT3U4GG7VApCl/3zrEinu6N7/eFu0scNYzQBlvgjuaUgXFRHxFrKiyJw==
-X-Received: by 2002:a63:d23:0:b0:364:f37b:947d with SMTP id c35-20020a630d23000000b00364f37b947dmr16666669pgl.263.1646789130849;
-        Tue, 08 Mar 2022 17:25:30 -0800 (PST)
-Received: from sol (60-242-155-106.static.tpgi.com.au. [60.242.155.106])
-        by smtp.gmail.com with ESMTPSA id q12-20020a17090a178c00b001bd036e11fdsm4150486pja.42.2022.03.08.17.25.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Mar 2022 17:25:30 -0800 (PST)
-Date:   Wed, 9 Mar 2022 09:25:25 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH] treewide: use size_t where applicable
-Message-ID: <20220309012525.GA28192@sol>
-References: <20220308152233.493098-1-brgl@bgdev.pl>
- <20220308155458.GA72687@sol>
- <CAMRc=Mdck1HUZwVOad+FJ-Dc7t8jA0J7qpFwpWSN4x9_vB+7rQ@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CDxkaqcG0fJrANM2ceXT68Oc4mg/sa4Hyds9EWcVwMo=;
+        b=NNC1tHJipovNoRa/jD3abwZ+0R8zpJbjainzhb5xBfVAX4y7I5Agyml4oreLdUeNC6
+         iYy04L8hzwJGymDN74JrDfENFei3K6Nfd7OvAkwSVduwd00cy8dcs9l+Q0wdxGh6wvMc
+         +7xKjVphBVN/zqCoVeYzVP86BWnrnxOFRzGc/CS/rNSNq+U8fJbktQckuIDQx/e5ZDt6
+         6PSWw4kSPIgouXbjjhIXLlumWXFCN24TGn9oxQujR/7x92dgZbQvWRSEUPwjn/oJFLC5
+         +LAuv9cPHGXV7ZS/igGwEhqB5metvZUjae1cyzvzhiyUD8ez/heiJwD6G1yaTc6dZZf9
+         n5nQ==
+X-Gm-Message-State: AOAM530FjCDxHwTXNrLx3StgS45jrJ5rJ79BVVtQPl4YNmgae4TeE5OX
+        DkfB+KEwHaMRq4WhWNe3AnLYUXptpmGr8JnpZdy6rw==
+X-Google-Smtp-Source: ABdhPJyiwZdXMCB+gl31EgY0K4uGx9NzfOVEzYdh1/gjJxUD6lAWqrvf9E7quDBoYLygHTpvMlC0AFyDQNcJ44dZc9o=
+X-Received: by 2002:a17:907:7f0d:b0:6d6:f910:5136 with SMTP id
+ qf13-20020a1709077f0d00b006d6f9105136mr17433293ejc.736.1646814737670; Wed, 09
+ Mar 2022 00:32:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=Mdck1HUZwVOad+FJ-Dc7t8jA0J7qpFwpWSN4x9_vB+7rQ@mail.gmail.com>
+References: <20220308181847.3276-1-kris@embeddedTS.com>
+In-Reply-To: <20220308181847.3276-1-kris@embeddedTS.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 9 Mar 2022 09:32:06 +0100
+Message-ID: <CAMRc=McuAB96JSKVeAPQLOgjGZkD5hOtYt=904Aw4t4aYVVKqg@mail.gmail.com>
+Subject: Re: [PATCH v2] gpio: ts4900: Do not set DAT and OE together
+To:     Kris Bahnsen <kris@embeddedts.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mark Featherston <mark@embeddedts.com>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -72,69 +66,91 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 08, 2022 at 09:26:56PM +0100, Bartosz Golaszewski wrote:
-> On Tue, Mar 8, 2022 at 4:55 PM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > On Tue, Mar 08, 2022 at 04:22:33PM +0100, Bartosz Golaszewski wrote:
-> > > size_t is the unsigned integer type generally used whenever variables
-> > > define sizes, ranges and numbers of elements. Use it throughout the
-> > > C library wherever it makes sense.
-> > >
-> > > Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
-> > > ---
-> > >  include/gpiod.h      | 30 +++++++++++++++---------------
-> > >  lib/chip.c           |  4 ++--
-> > >  lib/edge-event.c     | 12 ++++++------
-> > >  lib/internal.h       |  2 +-
-> > >  lib/line-config.c    |  4 ++--
-> > >  lib/line-request.c   | 10 +++++-----
-> > >  lib/request-config.c | 12 ++++++------
-> > >  tools/gpiodetect.c   |  2 +-
-> > >  tools/gpioget.c      |  3 ++-
-> > >  tools/gpioinfo.c     |  2 +-
-> > >  tools/gpiomon.c      |  4 ++--
-> > >  tools/gpioset.c      |  3 ++-
-> > >  12 files changed, 45 insertions(+), 43 deletions(-)
-> > >
-> > > diff --git a/include/gpiod.h b/include/gpiod.h
-> > > index 0512a8f..e6a4645 100644
-> >
-> > [snip]
-> >
-> > > diff --git a/tools/gpioget.c b/tools/gpioget.c
-> > > index 112257c..28030fa 100644
-> > > --- a/tools/gpioget.c
-> > > +++ b/tools/gpioget.c
-> > > @@ -44,12 +44,13 @@ int main(int argc, char **argv)
-> > >       int direction = GPIOD_LINE_DIRECTION_INPUT;
-> > >       int optc, opti, bias = 0, ret, *values;
-> > >       struct gpiod_request_config *req_cfg;
-> > > -     unsigned int *offsets, i, num_lines;
-> > >       struct gpiod_line_request *request;
-> > >       struct gpiod_line_config *line_cfg;
-> > > +     unsigned int *offsets, i;
-> > >       struct gpiod_chip *chip;
-> > >       bool active_low = false;
-> > >       char *device, *end;
-> > > +     size_t num_lines;
-> > >
-> >
-> > Also makes sense for indicies into arrays, such as the i here and
-> > elsewhere?
-> > I'm guessing there is a lot of elsewhere.
-> >
-> 
-> I'd leave it for now. In most cases there's no chance of exceeding the
-> max value of unsigned int (size_t is unsigned long) and it's also an
-> implementation detail that can be changed later. This patch mostly
-> addresses the library interface.
-> 
+On Tue, Mar 8, 2022 at 7:19 PM Kris Bahnsen <kris@embeddedts.com> wrote:
+>
+> From: Mark Featherston <mark@embeddedTS.com>
+>
+> This works around an issue with the hardware where both OE and
+> DAT are exposed in the same register. If both are updated
+> simultaneously, the harware makes no guarantees that OE or DAT
+> will actually change in any given order and may result in a
+> glitch of a few ns on a GPIO pin when changing direction and value
+> in a single write.
+>
+> Setting direction to input now only affects OE bit. Setting
+> direction to output updates DAT first, then OE.
+>
+> Fixes: 9c6686322d74 ("gpio: add Technologic I2C-FPGA gpio support")
+>
+> Signed-off-by: Mark Featherston <mark@embeddedTS.com>
+> Signed-off-by: Kris Bahnsen <kris@embeddedTS.com>
+> ---
+> V1 -> V2: Add Fixes tag
+>
+>  drivers/gpio/gpio-ts4900.c | 25 ++++++++++++++++++++-----
+>  1 file changed, 20 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-ts4900.c b/drivers/gpio/gpio-ts4900.c
+> index d885032cf814..fbabfca030c0 100644
+> --- a/drivers/gpio/gpio-ts4900.c
+> +++ b/drivers/gpio/gpio-ts4900.c
+> @@ -1,7 +1,8 @@
+> +// SPDX-License-Identifier: GPL-2.0
 
-The checkin comment says "throughout the C library wherever it makes sense",
-so reword that to limit the scope to the API, and we can pickup the rest
-later.
+This is not part of the fix, please send a separate patch that comes
+after the fix adding the SPDX identifier.
 
-And this is for the v2 branch, right?
+>  /*
+>   * Digital I/O driver for Technologic Systems I2C FPGA Core
+>   *
+> - * Copyright (C) 2015 Technologic Systems
+> + * Copyright (C) 2015-2018 Technologic Systems
+>   * Copyright (C) 2016 Savoir-Faire Linux
+>   *
+>   * This program is free software; you can redistribute it and/or
 
-Cheers,
-Kent.
+If you're adding the SPDX identifier, you can drop the license boilerplate here.
+
+Bart
+
+> @@ -55,19 +56,33 @@ static int ts4900_gpio_direction_input(struct gpio_chip *chip,
+>  {
+>         struct ts4900_gpio_priv *priv = gpiochip_get_data(chip);
+>
+> -       /*
+> -        * This will clear the output enable bit, the other bits are
+> -        * dontcare when this is cleared
+> +       /* Only clear the OE bit here, requires a RMW. Prevents potential issue
+> +        * with OE and data getting to the physical pin at different times.
+>          */
+> -       return regmap_write(priv->regmap, offset, 0);
+> +       return regmap_update_bits(priv->regmap, offset, TS4900_GPIO_OE, 0);
+>  }
+>
+>  static int ts4900_gpio_direction_output(struct gpio_chip *chip,
+>                                         unsigned int offset, int value)
+>  {
+>         struct ts4900_gpio_priv *priv = gpiochip_get_data(chip);
+> +       unsigned int reg;
+>         int ret;
+>
+> +       /* If changing from an input to an output, we need to first set the
+> +        * proper data bit to what is requested and then set OE bit. This
+> +        * prevents a glitch that can occur on the IO line
+> +        */
+> +       regmap_read(priv->regmap, offset, &reg);
+> +       if (!(reg & TS4900_GPIO_OE)) {
+> +               if (value)
+> +                       reg = TS4900_GPIO_OUT;
+> +               else
+> +                       reg &= ~TS4900_GPIO_OUT;
+> +
+> +               regmap_write(priv->regmap, offset, reg);
+> +       }
+> +
+>         if (value)
+>                 ret = regmap_write(priv->regmap, offset, TS4900_GPIO_OE |
+>                                                          TS4900_GPIO_OUT);
+> --
+> 2.11.0
+>
