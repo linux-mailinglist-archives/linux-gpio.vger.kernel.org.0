@@ -2,140 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6172E4D4679
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Mar 2022 13:08:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F7354D47F6
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Mar 2022 14:22:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235493AbiCJMIv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Mar 2022 07:08:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45244 "EHLO
+        id S242356AbiCJNXJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Mar 2022 08:23:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236088AbiCJMIs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Mar 2022 07:08:48 -0500
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50CBEE0AF0
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Mar 2022 04:07:47 -0800 (PST)
-Received: by mail-ej1-x62a.google.com with SMTP id bg10so11607955ejb.4
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Mar 2022 04:07:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yqnZcig/be+PF2hUda3ZyVexXIqRExOLgLqUfMRrRj0=;
-        b=aU0fRZ97Bv+K9YLWjSVjFA2fu29lenHxRUDmKmjyPUQ1hbtXHtSjqALKEMwpTMQe7b
-         oSybaWKGc2qjTXedXVmu22sWqM/Ra/nyrAPLIsAcKzmlifERYaG3e0c2cpgQXIEredMZ
-         cqWkaYd6vJE9To6Huxl5m1c+oETkXQFQjay3HwnjmB48MeYznkUvEqCCgn8l3nounloH
-         c5JIEXAcy3DOEwQ1J4PbfImoZXA2a32OnoeYenq+sdVo2ajPM0XwyfuxRTmu7gohXBTA
-         WBP+oE/uANJEcxhg0dr9VikStqzpohLJwCx3PCAGlSN2+XdhbmBB+GMfAgeYLpqXcZKn
-         WL9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yqnZcig/be+PF2hUda3ZyVexXIqRExOLgLqUfMRrRj0=;
-        b=MOoPADd3CGqiE22vuOesZ2XBAi4cuWO45/iKnG9CVadQ/nAoMEr0SjStCh2uM426lv
-         YUDYAiRgmtRx5GnIIcGbn1ByUXnixdOvqcrtd20EAcb3fyDCvQe+583bI3yKJay6oS4q
-         5UXEwSWMux4Q9OBIYa9ze8/mRD3cgswbSRvhEqKzh4sQCQKiJGs/nUuWXQX9J6/V5J6Q
-         c2KY1qGXTZCOxUVkoJgP8tA+QjDYlw06cyoCRy3u9CcYHT960Zyy7AvReXt9aevXvFrs
-         5lrP+wT/zpeL6bUrPsJYo8poSNJnlUwayCz7cTRdSn4j5socv6bZ1bZbvtgbXa8qjPqK
-         lydg==
-X-Gm-Message-State: AOAM531gQ0I8+Rk632zkxlc4LTsMALAV8C9JfiNLWv03VQ7KiIjv5Cnn
-        FplboUNmOZDYQp9OOAyOHdtZfOeft7GHOG5zYfg=
-X-Google-Smtp-Source: ABdhPJwN/lLYuJmsxz7o7B/CtBPXq9VKTLpeIkKGQs3KRsA7wuIDel3WQMnMElNVbUUrsEpuaAHMMJLpTScf5B9LVSU=
-X-Received: by 2002:a17:907:6e01:b0:6d0:562c:e389 with SMTP id
- sd1-20020a1709076e0100b006d0562ce389mr3950855ejc.497.1646914065777; Thu, 10
- Mar 2022 04:07:45 -0800 (PST)
+        with ESMTP id S242324AbiCJNXJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Mar 2022 08:23:09 -0500
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE68B14CCB2;
+        Thu, 10 Mar 2022 05:22:07 -0800 (PST)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: shreeya)
+        with ESMTPSA id 0D09E1F45740
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1646918526;
+        bh=uanO3uCvM0kUEStZhR0HWX90sA4g41WG3MvkZvUbD7c=;
+        h=From:To:Cc:Subject:Date:From;
+        b=BwTlFfIZp7CcDUCAqWBlT9ENkuN6NyPLReNgEnUCdpnvnjTjmYdV33OGFk1Fya8ce
+         NTbMSWtrDD4Ojm3b0WwXPo3kYwCAlWZzTzrqZWd6IpYR/NmLVsoepv4+lF+Umi43HR
+         p9A41adNenpcXZWUbAVIo2Etakx3is+ZTudzR1TnZuznyyyfDPAAIRBAkhhVl0NdKp
+         1eK+2oKq9a20hYVKg1Dgs/mfsz95PnO7fbQZOgFGmFFN8XW3KMfmSH3U0oDt85STyA
+         8+pJHWawPzy3LgWIT4DkjaTA7TbnaRaGJ/4fbAbVL4wdQUlrxJX+Iwnr6Uf0WsPfcK
+         3B/9ygpUYCluQ==
+From:   Shreeya Patel <shreeya.patel@collabora.com>
+To:     linus.walleij@linaro.org, brgl@bgdev.pl, krisman@collabora.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@collabora.com, andy.shevchenko@gmail.com,
+        Shreeya Patel <shreeya.patel@collabora.com>
+Subject: [PATCH] gpio: Restrict usage of gc irq members before initialization
+Date:   Thu, 10 Mar 2022 18:51:07 +0530
+Message-Id: <20220310132108.225387-1-shreeya.patel@collabora.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-References: <20220308032546.2169929-1-jay.xu@rock-chips.com> <20220308032546.2169929-4-jay.xu@rock-chips.com>
-In-Reply-To: <20220308032546.2169929-4-jay.xu@rock-chips.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 10 Mar 2022 14:07:09 +0200
-Message-ID: <CAHp75VfXQ2JH_Wawp-RHukNnazv4RQCNW0-29NB_Jcv9iV8Kwg@mail.gmail.com>
-Subject: Re: [PATCH 3/4] gpio: rockchip: allow rockchip-gpio driver works
- independs on pinctrl
-To:     Jianqun Xu <jay.xu@rock-chips.com>
-Cc:     =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tao Huang <huangtao@rock-chips.com>,
-        Kever Yang <kever.yang@rock-chips.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Mar 9, 2022 at 1:41 AM Jianqun Xu <jay.xu@rock-chips.com> wrote:
->
-> Currently, the rockchip_pin_bank is get from pinctrl, that binds the
-> gpio driver to the pinctrl driver.
->
-> rockchip-pinctrl
-> ->probe
->   ->register pinctrl
->     ->populate gpio platform
->     ...
->     ->rockchip-gpio probe
->       ->register gpio_chip
->
-> Once the pinctrl device registered, other devices may try to configure
-> pins througth pinctrl_bind_pins before probe, and if it is a gpio
+gc irq members are exposed before they could be completely
+initialized and this leads to race conditions.
 
-through
+One such issue was observed for the gc->irq.domain variable which
+was accessed through the I2C interface in gpiochip_to_irq() before
+it could be initialized by gpiochip_add_irqchip(). This resulted in
+Kernel NULL pointer dereference.
 
-> operation, that make a failure since gpio not ready.
->
-> Heiko has provide a output-defer-list to store settings between pinctrl
-> and gpio driver, once gpio register, the list will set activate.
->
-> With this patch, the gpio can register itself before or without pinctrl,
-> even if pinctrl driver used, we can make the gpio register before
-> pinctrl by another patch to rockchip pinctrl driver.
->
-> rockchip-pinctrl
-> ->probe
->   ->populate gpio platform
->     ->rockchip-gpio probe
->       ->register gpio_chip
->   ->register pinctrl
->
-> Since the pinctrl is registered last, other devices will do defer probe.
+To avoid such scenarios, restrict usage of gc irq members before
+they are completely initialized.
 
-will defer
+Signed-off-by: Shreeya Patel <shreeya.patel@collabora.com>
+---
 
-...
+Following is the NULL pointer dereference Oops for reference :-
 
-> +       gc->label = kasprintf(GFP_KERNEL, "gpio%d", bank->id);
+kernel: Call Trace:
+kernel:  gpiod_to_irq+0x53/0x70
+kernel:  acpi_dev_gpio_irq_get_by+0x113/0x1f0
+kernel:  i2c_acpi_get_irq+0xc0/0xd0
+kernel:  i2c_device_probe+0x28a/0x2a0
+kernel:  really_probe+0xf2/0x460
+kernel:  driver_probe_device+0xe8/0x160
+kernel:  ? driver_allows_async_probing+0x50/0x50
+kernel:  bus_for_each_drv+0x8f/0xd0
+kernel:  __device_attach_async_helper+0x9f/0xf0
+kernel:  async_run_entry_fn+0x2e/0x110
+kernel:  process_one_work+0x214/0x3e0
+kernel:  worker_thread+0x4d/0x3d0
+kernel:  ? process_one_work+0x3e0/0x3e0
+kernel:  kthread+0x133/0x150
+kernel:  ? kthread_associate_blkcg+0xc0/0xc0
+kernel:  ret_from_fork+0x22/0x30
+kernel: CR2: 0000000000000028
+kernel: ---[ end trace d0f5a7a0e0eb268f ]---
+kernel: RIP: 0010:gpiochip_to_irq+0x47/0xc0
 
-No NULL checks?
+ drivers/gpio/gpiolib.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-...
-
-> +       static int static_gpio_id;
-
->         id = of_alias_get_id(np, "gpio");
->         if (id < 0)
-> +               id = static_gpio_id++;
-
-You haven't stress tested that, have you?
-
-...
-
-> +       clk_prepare_enable(gpio->clk);
-
-Error check?
-
-...
-
-> +       printk("%s: probed %s\n", __func__, dev_name(dev));
-
-Why printk()?!
-
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index defb7c464b87..2c6f382ff159 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -90,6 +90,7 @@ static int gpiochip_irqchip_init_valid_mask(struct gpio_chip *gc);
+ static void gpiochip_irqchip_free_valid_mask(struct gpio_chip *gc);
+ 
+ static bool gpiolib_initialized;
++bool gc_irq_initialized;
+ 
+ static inline void desc_set_label(struct gpio_desc *d, const char *label)
+ {
+@@ -1593,6 +1594,8 @@ static int gpiochip_add_irqchip(struct gpio_chip *gc,
+ 
+ 	acpi_gpiochip_request_interrupts(gc);
+ 
++	gc_irq_initialized = true;
++
+ 	return 0;
+ }
+ 
+@@ -3138,7 +3141,7 @@ int gpiod_to_irq(const struct gpio_desc *desc)
+ 
+ 	gc = desc->gdev->chip;
+ 	offset = gpio_chip_hwgpio(desc);
+-	if (gc->to_irq) {
++	if (gc->to_irq && gc_irq_initialized) {
+ 		int retirq = gc->to_irq(gc, offset);
+ 
+ 		/* Zero means NO_IRQ */
 -- 
-With Best Regards,
-Andy Shevchenko
+2.30.2
+
