@@ -2,61 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EF0274D4C69
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Mar 2022 16:02:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A48D4D4C66
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Mar 2022 16:02:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244301AbiCJOzp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Mar 2022 09:55:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53386 "EHLO
+        id S243235AbiCJOzm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Mar 2022 09:55:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347324AbiCJOuo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Mar 2022 09:50:44 -0500
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5EBF190B41;
-        Thu, 10 Mar 2022 06:46:11 -0800 (PST)
-Received: by mail-ed1-x52c.google.com with SMTP id t1so7070879edc.3;
-        Thu, 10 Mar 2022 06:46:11 -0800 (PST)
+        with ESMTP id S1347930AbiCJOvc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Mar 2022 09:51:32 -0500
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2B8B193;
+        Thu, 10 Mar 2022 06:49:39 -0800 (PST)
+Received: by mail-ej1-x62d.google.com with SMTP id gb39so12584076ejc.1;
+        Thu, 10 Mar 2022 06:49:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=i/OcMJYeAJz76fpGpL1BhdswPSzuq4p72rQrJmplRqo=;
-        b=I/pSVESgWvRlX/daCIkweMDKc+r9MeMeWRXT8XKR8W1KKF5BxwAY/50ma1E+b7oLpv
-         Etf2mEUpXqHBZsaOEW6nJLugtcshs1jujWbmWWehWPJNCvh+qqIKen75iGiashWEWO5L
-         pEzOLnptXb3tCtrZpwEouBZeX9Plnvyu+MkjtVRPX0mDm0agtRhGbq+HMHfHyC4N2ofp
-         X/EfZDUjO2Xrvih0ns5ZHt+83blptPStWrFnzC5Z0kUhXkWHSHlM0HEbH/rbgwMikzIb
-         6hmoIjOCxG/HL0sOal4UeASD7HI2jLia0thANuhiG+rkn+0f3TE9LccFy5BbDNTJwrwC
-         spMg==
+        bh=eNVjl9qTHjv9OQ7hbwu1GBKuQO2O5pzbolI+xiOegY8=;
+        b=Txj7jN686DsD59G5Y+3M7504nOagG4PHsHO0Cf2XKJjpZvcCR/bM8ND4Y63//Gikr6
+         +JWKW3947FN1SzpZIipH9CmaM9BYShZHnbxbTS71KQUlLFggltHn4JhyY1xcKcTCOgAQ
+         pdSIFWIFs7nkHkaio4ti8ERhv/RDOETYJ5uK+WO0miVAUK4ry16es6SOYRwFIj1h3RlK
+         StUfVNDNge0cgtxyax/JYkKjKuicB1FEtaaQldnfIKxNQkOh3G381fXnM/TiXB39qH0T
+         xaa6kkJnoxk0okcWmIsvZN1SUTWIyVU4BOYWfaEHnTScEOTXSsYkEo6jJLOp5tYNnFhk
+         IKag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=i/OcMJYeAJz76fpGpL1BhdswPSzuq4p72rQrJmplRqo=;
-        b=H+/EwCTqBunFMEm0ybwwNcQM2jgJXoJvX1U8uIq8KRbqq1yQ/zwYaI1WkNIpG1DsZK
-         iIF2vVI5NSU2jLM+BnIlalQ0zEJiYusVk/tf0ZCKjItXEs7V+XgNNCCIU201BQvHF/CE
-         6O4877hrqxB4/WFUnwwx9ZsIJPAVQX+pBaZTWOtpbkyrVjtqhsLA9eaU+zWKFOCOABax
-         k2c1LufNRSuzPm3lgqK/9yRVfJu49w0z0Z1U17xUwwKdqtiXbTs663nRcx1+4zI0KGVg
-         6kLDPR9yyMq2jlMhvWBhepWZLc8jv4w2HyXQhJRgBxUxCDBtf2zu3X/rbbVxz3SFVjh3
-         hHPQ==
-X-Gm-Message-State: AOAM530lgKCFlD/LFrNvsGV8dkwO3vPUv0CUjfRwkUEutD5MtMh8Y5QE
-        +AzMEjk1zj4n4nm07n+gFCrQog6A+2VZ7WMIJ7g=
-X-Google-Smtp-Source: ABdhPJxi7WPo/ObF4ZQ39dkIM68JLY3zRmGdYSzrVMJ71w2IE9gIQuraxffPU92TGUtlaspbTcOVuF3difPVKovHVqI=
-X-Received: by 2002:a05:6402:d7:b0:413:673:ba2f with SMTP id
- i23-20020a05640200d700b004130673ba2fmr4621843edu.29.1646923570051; Thu, 10
- Mar 2022 06:46:10 -0800 (PST)
+        bh=eNVjl9qTHjv9OQ7hbwu1GBKuQO2O5pzbolI+xiOegY8=;
+        b=WSvN4MPF0lRFMH3YHIPVgZzHcWD33YkTH7LXuYz92zcMarUwmUTG/QcJS/ZXhWi79F
+         6g2uf90eFDOOsr1k5Q4+Do3ZqHtKGMhPw2iKkWtR2dWtael4uIwsYrSHKJ9FN42/Kgpn
+         qCukBiKA7dVeEI6GaqCQVY73KHcgkjciU/+SI+ZtEA0iYdhFjdcGTs3FjF0HWS/cbiAF
+         lDXMGxKDAL6wWdgOjk/k3DX/yITwnuChfk81P3SQ6ytlb5UN0VCQ6V48A0jbg0+UYVIh
+         1WvMF59e0oPPdGhBciFdR82/DWbLHX3eIby8xVE93b8CiAm/0DGTdkO2r8fkGP0g3ydC
+         +QIg==
+X-Gm-Message-State: AOAM5318qezp16CQN6NLxVWAYJTBaxHmhgAt9B6PjBFzrSojb4/CSjsl
+        9zfKxzvRkFCZ3WEwlBQV6JtPIT7t1lQxyI8ChYncdpPDuzY=
+X-Google-Smtp-Source: ABdhPJzoyHI+zS/vaRnHv+51EqVDRvenxlXuJ6/WLn8emPWQLYy8fZ0gYt6TEeXGA3BmERWuOOwbiZUuBMcqeTsRGlM=
+X-Received: by 2002:a17:907:7243:b0:6db:7521:afc7 with SMTP id
+ ds3-20020a170907724300b006db7521afc7mr4752051ejc.44.1646923778317; Thu, 10
+ Mar 2022 06:49:38 -0800 (PST)
 MIME-Version: 1.0
-References: <20220310132108.225387-1-shreeya.patel@collabora.com>
-In-Reply-To: <20220310132108.225387-1-shreeya.patel@collabora.com>
+References: <20220310011617.29660-1-kris@embeddedTS.com> <20220310011617.29660-2-kris@embeddedTS.com>
+In-Reply-To: <20220310011617.29660-2-kris@embeddedTS.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 10 Mar 2022 16:44:53 +0200
-Message-ID: <CAHp75VdGWxnxRzEhSknXHRZf1SX0x=pvca_CL0VinWNFcqCQwg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: Restrict usage of gc irq members before initialization
-To:     Shreeya Patel <shreeya.patel@collabora.com>
+Date:   Thu, 10 Mar 2022 16:48:22 +0200
+Message-ID: <CAHp75Vdu1r0S2ZCjH2mjToYZiwQTOiUAvY5v-T7f=u28tVuxcQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] gpio: ts4900: Do not set DAT and OE together
+To:     Kris Bahnsen <kris@embeddedts.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, krisman@collabora.com,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>
+        Mark Featherston <mark@embeddedts.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
@@ -68,56 +68,13 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 10, 2022 at 3:22 PM Shreeya Patel
-<shreeya.patel@collabora.com> wrote:
+On Thu, Mar 10, 2022 at 2:22 PM Kris Bahnsen <kris@embeddedts.com> wrote:
 >
-> gc irq members are exposed before they could be completely
-> initialized and this leads to race conditions.
->
-> One such issue was observed for the gc->irq.domain variable which
-> was accessed through the I2C interface in gpiochip_to_irq() before
-> it could be initialized by gpiochip_add_irqchip(). This resulted in
-> Kernel NULL pointer dereference.
->
-> To avoid such scenarios, restrict usage of gc irq members before
-> they are completely initialized.
+> From: Mark Featherston <mark@embeddedTS.com>
 
-Fixes tag?
+Same comments as per v2.
 
-...
 
-> +bool gc_irq_initialized;
-
-Non-static?
-
-Why is it global?
-
-...
-
-> @@ -1593,6 +1594,8 @@ static int gpiochip_add_irqchip(struct gpio_chip *gc,
->
->         acpi_gpiochip_request_interrupts(gc);
->
-> +       gc_irq_initialized = true;
-
-This is wrong. Imagine a system where you have more than one GPIO chip.
-
-...
-
-> -       if (gc->to_irq) {
-> +       if (gc->to_irq && gc_irq_initialized) {
->                 int retirq = gc->to_irq(gc, offset);
-
-Shouldn't it rather be something like
-
-  if (gc->to_irq) {
-    if (! ..._initialized)
-      return -EPROBE_DEFER;
-    ...
-  }
-
-?
-
---
+-- 
 With Best Regards,
 Andy Shevchenko
