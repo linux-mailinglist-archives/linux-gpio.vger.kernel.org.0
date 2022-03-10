@@ -2,63 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E0CB64D3EA6
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Mar 2022 02:17:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 43D534D3F78
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Mar 2022 04:00:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239104AbiCJBRn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Mar 2022 20:17:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53576 "EHLO
+        id S237368AbiCJDBx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Mar 2022 22:01:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238683AbiCJBRn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Mar 2022 20:17:43 -0500
-Received: from smtp-out3.electric.net (smtp-out3.electric.net [208.70.128.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D180F12222F;
-        Wed,  9 Mar 2022 17:16:43 -0800 (PST)
-Received: from 1nS7Pz-0006Tu-VQ by out3d.electric.net with emc1-ok (Exim 4.94.2)
-        (envelope-from <kris@embeddedTS.com>)
-        id 1nS7Q0-0006WB-VR; Wed, 09 Mar 2022 17:16:40 -0800
-Received: by emcmailer; Wed, 09 Mar 2022 17:16:40 -0800
-Received: from [66.210.251.27] (helo=mail.embeddedts.com)
-        by out3d.electric.net with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <kris@embeddedTS.com>)
-        id 1nS7Pz-0006Tu-VQ; Wed, 09 Mar 2022 17:16:39 -0800
-Received: from tsdebian.Massive (unknown [75.164.75.221])
-        by mail.embeddedts.com (Postfix) with ESMTPSA id F01CF1AB0;
-        Wed,  9 Mar 2022 18:16:38 -0700 (MST)
-From:   Kris Bahnsen <kris@embeddedTS.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Mark Featherston <mark@embeddedTS.com>,
-        Kris Bahnsen <kris@embeddedTS.com>
-Subject: [PATCH v3 2/2] gpio: ts4900: Use SPDX header
-Date:   Wed,  9 Mar 2022 17:16:17 -0800
-Message-Id: <20220310011617.29660-3-kris@embeddedTS.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20220310011617.29660-1-kris@embeddedTS.com>
-References: <20220310011617.29660-1-kris@embeddedTS.com>
-X-Outbound-IP: 66.210.251.27
-X-Env-From: kris@embeddedTS.com
-X-Proto: esmtps
-X-Revdns: wsip-66-210-251-27.ph.ph.cox.net
-X-HELO: mail.embeddedts.com
-X-TLS:  TLS1.2:ECDHE-RSA-AES256-GCM-SHA384:256
-X-Authenticated_ID: 
-X-Virus-Status: Scanned by VirusSMART (c)
-X-Virus-Status: Scanned by VirusSMART (b)
-X-FM-Delivery-Delay: 15749372,23518412
-X-PolicySMART: 13164782, 15749372, 26810492
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=embeddedTS.com; s=mailanyone20220121;h=References:In-Reply-To:Message-Id:Date:To:From; bh=cwEQ9Gjrxcgi44g6+bljgIEY7KxoaRU7Il3yzgGCDr4=;b=do+ABU/mk6GhupMnR2sA29Jdtivs2YpMbyNjIqWEw4sF9TCDYDjACsTbRgoVuEuGFfJIKdeX1z+rk9q3iRfNFVnm3s1meBXRvLVj/70dfRuE4KacwDh1hflLMXPC0M6ulZB7Q/IPlPC4iJyx/qH3qU3YF1/wF9EQvC7ZQ7LvM7xl4II/F43NdBh6acYIepBzl/03ijoiNZN/9b2LmdnKqrJJJiSHXvN2nm2UBfA+SCU5RusmFz7HBrRGjIgyvJn8fvUo6kUx1j9M82Z5l6HloJNfUQyQAiJ1jFzBPo+/sLKTbx7kKAkPMKTqsAl+/DX3lnXQ3MFI8RP4N4PQv8+1xw==;
-X-FM-Delivery-Delay: 15749372,23518412
-X-PolicySMART: 13164782, 15749372, 26810492
-X-FM-Delivery-Delay: 15749372,23518412
-X-PolicySMART: 13164782, 15749372, 26810492
-X-FM-Delivery-Delay: 15749372,23518412
-X-PolicySMART: 13164782, 15749372, 26810492
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        with ESMTP id S237526AbiCJDBt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Mar 2022 22:01:49 -0500
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [IPv6:2001:df5:b000:5::4])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86833124C2A
+        for <linux-gpio@vger.kernel.org>; Wed,  9 Mar 2022 19:00:46 -0800 (PST)
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id D042F2C0676;
+        Thu, 10 Mar 2022 03:00:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1646881243;
+        bh=ssg+WNeSXSjip5E5FzNx/K8I5KRUwLfchkkahr8WXcs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=JD6Pdck0+azTMqVM/ufEu0hk82MCZTtHpEo6FYlc17ctcHTEA6zw1UuuzyBwiazsk
+         302cjpuD1hFbJ/nwzLCdcR/qSruprhzcJQdiylHHoKoM1fPYoduvlR+RZORQAD3/kf
+         9hmDVytxncQ34s8KpGPTQ1LlBKxzEWtP/bAOB7Y8uLQ52AQn81HpffAPkdAHYWBwNQ
+         tKGJZLqGHs23HJaKui8iy4p7dSoDwQzWZqDGAQpr40u245cAynTbFnq8WbjsE4ws0q
+         AU3yUyOA/Dap6V4u589CBq9eBzfNv66CPtSkl0gXkal4y3gxR4Pje7nnTllQsEYYS1
+         OPT037Tp6aqCA==
+Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+        id <B622969db0000>; Thu, 10 Mar 2022 16:00:43 +1300
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
+        by pat.atlnz.lc (Postfix) with ESMTP id 92F2413EDD7;
+        Thu, 10 Mar 2022 16:00:43 +1300 (NZDT)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id A165A2A00D4; Thu, 10 Mar 2022 16:00:41 +1300 (NZDT)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     linus.walleij@linaro.org, robh+dt@kernel.org,
+        catalin.marinas@arm.com, will@kernel.org, andrew@lunn.ch,
+        gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com,
+        kostap@marvell.com, robert.marko@sartura.hr
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v1 0/4] arm64: mvebu: Support for Marvell 98DX2530 (and variants)
+Date:   Thu, 10 Mar 2022 16:00:35 +1300
+Message-Id: <20220310030039.2833808-1-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.35.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-SEG-SpamProfiler-Analysis: v=2.3 cv=Cfh2G4jl c=1 sm=1 tr=0 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=o8Y5sQTvuykA:10 a=jGREw9QuPlHGdXEqdN8A:9
+X-SEG-SpamProfiler-Score: 0
+x-atlnz-ls: pat
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -66,36 +64,39 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Remove boilerplate, use the SPDX license identifier.
+This series adds support for the Marvell 98DX2530 SoC which is the Contro=
+l and
+Management CPU integrated into the AlleyCat5/AlleyCat5X series of Marvell
+switches.
 
-Signed-off-by: Kris Bahnsen <kris@embeddedTS.com>
----
- drivers/gpio/gpio-ts4900.c | 10 +---------
- 1 file changed, 1 insertion(+), 9 deletions(-)
+The CPU core is an ARM Cortex-A55 with neon, simd and crypto extensions.
 
-diff --git a/drivers/gpio/gpio-ts4900.c b/drivers/gpio/gpio-ts4900.c
-index d918d2df4de2..69854fd2382a 100644
---- a/drivers/gpio/gpio-ts4900.c
-+++ b/drivers/gpio/gpio-ts4900.c
-@@ -1,17 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Digital I/O driver for Technologic Systems I2C FPGA Core
-  *
-  * Copyright (C) 2015, 2018 Technologic Systems
-  * Copyright (C) 2016 Savoir-Faire Linux
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-- * kind, whether expressed or implied; without even the implied warranty
-- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License version 2 for more details.
-  */
- 
- #include <linux/gpio/driver.h>
--- 
-2.11.0
+This is fairly similar to the Armada-3700 SoC so most of the required
+peripherals are already supported. This series adds a devicetree and pinc=
+trl
+driver for the SoC and the RD-AC5X-32G16HVG6HLG reference board.
+
+Chris Packham (4):
+  dt-bindings: pinctrl: mvebu: Document bindings for AC5
+  pinctrl: mvebu: pinctrl driver for 98DX2530 SoC
+  arm64: dts: marvell: Add Armada 98DX2530 SoC and RD-AC5X board
+  arm64: marvell: enable the 98DX2530 pinctrl driver
+
+ .../bindings/pinctrl/marvell,ac5-pinctrl.yaml |  73 +++
+ arch/arm64/Kconfig.platforms                  |   2 +
+ arch/arm64/boot/dts/marvell/Makefile          |   1 +
+ .../boot/dts/marvell/armada-98dx2530.dtsi     | 459 ++++++++++++++++++
+ arch/arm64/boot/dts/marvell/rd-ac5x.dts       |  27 ++
+ drivers/pinctrl/mvebu/Kconfig                 |   4 +
+ drivers/pinctrl/mvebu/Makefile                |   1 +
+ drivers/pinctrl/mvebu/pinctrl-ac5.c           | 226 +++++++++
+ 8 files changed, 793 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/marvell,ac5=
+-pinctrl.yaml
+ create mode 100644 arch/arm64/boot/dts/marvell/armada-98dx2530.dtsi
+ create mode 100644 arch/arm64/boot/dts/marvell/rd-ac5x.dts
+ create mode 100644 drivers/pinctrl/mvebu/pinctrl-ac5.c
+
+--=20
+2.35.1
 
