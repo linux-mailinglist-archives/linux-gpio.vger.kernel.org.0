@@ -2,122 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F7354D47F6
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Mar 2022 14:22:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DDDD4D487D
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Mar 2022 14:59:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242356AbiCJNXJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Mar 2022 08:23:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37920 "EHLO
+        id S242613AbiCJOAw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Mar 2022 09:00:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242324AbiCJNXJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Mar 2022 08:23:09 -0500
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE68B14CCB2;
-        Thu, 10 Mar 2022 05:22:07 -0800 (PST)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: shreeya)
-        with ESMTPSA id 0D09E1F45740
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1646918526;
-        bh=uanO3uCvM0kUEStZhR0HWX90sA4g41WG3MvkZvUbD7c=;
-        h=From:To:Cc:Subject:Date:From;
-        b=BwTlFfIZp7CcDUCAqWBlT9ENkuN6NyPLReNgEnUCdpnvnjTjmYdV33OGFk1Fya8ce
-         NTbMSWtrDD4Ojm3b0WwXPo3kYwCAlWZzTzrqZWd6IpYR/NmLVsoepv4+lF+Umi43HR
-         p9A41adNenpcXZWUbAVIo2Etakx3is+ZTudzR1TnZuznyyyfDPAAIRBAkhhVl0NdKp
-         1eK+2oKq9a20hYVKg1Dgs/mfsz95PnO7fbQZOgFGmFFN8XW3KMfmSH3U0oDt85STyA
-         8+pJHWawPzy3LgWIT4DkjaTA7TbnaRaGJ/4fbAbVL4wdQUlrxJX+Iwnr6Uf0WsPfcK
-         3B/9ygpUYCluQ==
-From:   Shreeya Patel <shreeya.patel@collabora.com>
-To:     linus.walleij@linaro.org, brgl@bgdev.pl, krisman@collabora.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com, andy.shevchenko@gmail.com,
-        Shreeya Patel <shreeya.patel@collabora.com>
-Subject: [PATCH] gpio: Restrict usage of gc irq members before initialization
-Date:   Thu, 10 Mar 2022 18:51:07 +0530
-Message-Id: <20220310132108.225387-1-shreeya.patel@collabora.com>
-X-Mailer: git-send-email 2.30.2
+        with ESMTP id S231335AbiCJOAw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Mar 2022 09:00:52 -0500
+Received: from vps0.lunn.ch (vps0.lunn.ch [185.16.172.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BC9B12D931;
+        Thu, 10 Mar 2022 05:59:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+        Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+        bh=sMXDG3iPLIAfzMIqiebQ+/yXHBBD9O0BpUAfr3dOufU=; b=CfEItpNecM2XkSGUyIthwIn1Lk
+        OG5b3HXdwEFmY4DrSaU5OnmPf0vUKIYpFDOA8IgM3iGib/nLh/1XQ1mNIexevmpqSZdulqGrFEYpg
+        bnC3rAFgnIDjN3RBkAo4ZSiah4bQp1DDKr1nXG89AhhdbYXHYCfcPSVe1aB6EfrzMoyY=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1nSJKF-00A8gb-OK; Thu, 10 Mar 2022 14:59:31 +0100
+Date:   Thu, 10 Mar 2022 14:59:31 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     linus.walleij@linaro.org, robh+dt@kernel.org,
+        catalin.marinas@arm.com, will@kernel.org,
+        gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com,
+        kostap@marvell.com, robert.marko@sartura.hr,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v1 2/4] pinctrl: mvebu: pinctrl driver for 98DX2530 SoC
+Message-ID: <YioEQ3g1LlqEv5BY@lunn.ch>
+References: <20220310030039.2833808-1-chris.packham@alliedtelesis.co.nz>
+ <20220310030039.2833808-3-chris.packham@alliedtelesis.co.nz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220310030039.2833808-3-chris.packham@alliedtelesis.co.nz>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
-        autolearn_force=no version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-gc irq members are exposed before they could be completely
-initialized and this leads to race conditions.
+On Thu, Mar 10, 2022 at 04:00:37PM +1300, Chris Packham wrote:
+> This pinctrl driver supports the 98DX25xx and 98DX35xx family of chips
+> from Marvell. It is based on the Marvell SDK with additions for various
+> (non-gpio) pin configurations based on the datasheet.
+> 
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 
-One such issue was observed for the gc->irq.domain variable which
-was accessed through the I2C interface in gpiochip_to_irq() before
-it could be initialized by gpiochip_add_irqchip(). This resulted in
-Kernel NULL pointer dereference.
+Hi Chris
 
-To avoid such scenarios, restrict usage of gc irq members before
-they are completely initialized.
+Past experience with pinctrl and gpio for mvebu is that developers get
+GPI and GPO pins wrong. Are there any pins which are not GPIO but only
+a subset, so only GPI or GPO?
 
-Signed-off-by: Shreeya Patel <shreeya.patel@collabora.com>
----
-
-Following is the NULL pointer dereference Oops for reference :-
-
-kernel: Call Trace:
-kernel:  gpiod_to_irq+0x53/0x70
-kernel:  acpi_dev_gpio_irq_get_by+0x113/0x1f0
-kernel:  i2c_acpi_get_irq+0xc0/0xd0
-kernel:  i2c_device_probe+0x28a/0x2a0
-kernel:  really_probe+0xf2/0x460
-kernel:  driver_probe_device+0xe8/0x160
-kernel:  ? driver_allows_async_probing+0x50/0x50
-kernel:  bus_for_each_drv+0x8f/0xd0
-kernel:  __device_attach_async_helper+0x9f/0xf0
-kernel:  async_run_entry_fn+0x2e/0x110
-kernel:  process_one_work+0x214/0x3e0
-kernel:  worker_thread+0x4d/0x3d0
-kernel:  ? process_one_work+0x3e0/0x3e0
-kernel:  kthread+0x133/0x150
-kernel:  ? kthread_associate_blkcg+0xc0/0xc0
-kernel:  ret_from_fork+0x22/0x30
-kernel: CR2: 0000000000000028
-kernel: ---[ end trace d0f5a7a0e0eb268f ]---
-kernel: RIP: 0010:gpiochip_to_irq+0x47/0xc0
-
- drivers/gpio/gpiolib.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index defb7c464b87..2c6f382ff159 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -90,6 +90,7 @@ static int gpiochip_irqchip_init_valid_mask(struct gpio_chip *gc);
- static void gpiochip_irqchip_free_valid_mask(struct gpio_chip *gc);
- 
- static bool gpiolib_initialized;
-+bool gc_irq_initialized;
- 
- static inline void desc_set_label(struct gpio_desc *d, const char *label)
- {
-@@ -1593,6 +1594,8 @@ static int gpiochip_add_irqchip(struct gpio_chip *gc,
- 
- 	acpi_gpiochip_request_interrupts(gc);
- 
-+	gc_irq_initialized = true;
-+
- 	return 0;
- }
- 
-@@ -3138,7 +3141,7 @@ int gpiod_to_irq(const struct gpio_desc *desc)
- 
- 	gc = desc->gdev->chip;
- 	offset = gpio_chip_hwgpio(desc);
--	if (gc->to_irq) {
-+	if (gc->to_irq && gc_irq_initialized) {
- 		int retirq = gc->to_irq(gc, offset);
- 
- 		/* Zero means NO_IRQ */
--- 
-2.30.2
-
+  Andrew
