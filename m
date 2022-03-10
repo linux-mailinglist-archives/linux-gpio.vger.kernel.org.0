@@ -2,115 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C2F264D4B8C
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Mar 2022 16:00:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 466A34D4B60
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Mar 2022 15:56:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242172AbiCJOZC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Mar 2022 09:25:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57426 "EHLO
+        id S243313AbiCJOVk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Mar 2022 09:21:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243442AbiCJOXz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Mar 2022 09:23:55 -0500
-X-Greylist: delayed 915 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 10 Mar 2022 06:21:25 PST
-Received: from sender4-op-o14.zoho.com (sender4-op-o14.zoho.com [136.143.188.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44976159EB7
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Mar 2022 06:21:25 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1646921160; cv=none; 
-        d=zohomail.com; s=zohoarc; 
-        b=JAWbezDEwOiY18A70xuWktJ5oYZN5dHlfmlKuHDC+Excdmh9ApbupSqyua7U4+AK3pWgBfrkMZmBcSVUGMyNeFdPU83ds+NVwrj07vVkBzySgHtI2lEv2SUZZhdEOx+UAqgM9SWpU6mpDIFzug/nkMGQybW+Bo6j7WEfPB37QOs=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-        t=1646921160; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:MIME-Version:Message-ID:Subject:To; 
-        bh=u3swPpqysGWFNENEPF0Wdt6WWV6wIShJl5mLUP72Uas=; 
-        b=DXxEnTM/aheLQOosxZa/jNFpwQBJDBnNL3BW6Muw+mtTePXrlzio3ebLFPO9Ykbqt6P6p5RSOAJDyuj/kl05nrYhUudoI7SE6b8D7CWiDOM63ZTMQhsvPMjtpua9ZVvNjpx6XXBXmZ670FX8YQRFnGMnZA0edpik4YJjyAqOgX8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-        dkim=pass  header.i=arinc9.com;
-        spf=pass  smtp.mailfrom=arinc.unal@arinc9.com;
-        dmarc=pass header.from=<arinc.unal@arinc9.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1646921160;
-        s=zmail; d=arinc9.com; i=arinc.unal@arinc9.com;
-        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding;
-        bh=u3swPpqysGWFNENEPF0Wdt6WWV6wIShJl5mLUP72Uas=;
-        b=XmLzZR1ESvJuCwxCPMZX7OGpG2pJP/TZEwaj8I5rUBP8s5MVFysXEmVdQE33Rebv
-        Sxc8/m62X3DZCKeUoosBPeR7cGoJgO/jr/bBdqAyEwOzhXrQHAIT2ifcGuIYIt3FRhn
-        NwOQQRZXHID3fw/mvOt3XlEi/NTC65cmwWeCibTg=
-Received: from arinc9-PC.localdomain (85.117.236.245 [85.117.236.245]) by mx.zohomail.com
-        with SMTPS id 1646921158148319.4132184940761; Thu, 10 Mar 2022 06:05:58 -0800 (PST)
-From:   =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, erkin.bozoglu@xeront.com
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Ar=C4=B1n=C3=A7=20=C3=9CNAL?= <arinc.unal@arinc9.com>
-Subject: [PATCH] dt-bindings: pinctrl: rt2880: add missing pin groups and functions
-Date:   Thu, 10 Mar 2022 17:05:42 +0300
-Message-Id: <20220310140542.7483-1-arinc.unal@arinc9.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S244517AbiCJOTh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Mar 2022 09:19:37 -0500
+Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FB5EC559B;
+        Thu, 10 Mar 2022 06:16:26 -0800 (PST)
+Received: by mail-qt1-x82a.google.com with SMTP id o22so4648505qta.8;
+        Thu, 10 Mar 2022 06:16:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=2L8OR5koUh2CDVJY7FcCTDkGe8HG516p7zFzZPDOUYA=;
+        b=NnkiLgsEZB4dZyt1H8ltHuaieq6L4WSw2AG364q8ofxQwnVhizrC3MKo+CTq4HeWqI
+         PPXTdUf7CrJBMWocGLjt5un9QvOPxFqYsFYY3QZvMiVizagUCufylO97Diz1mQqnt1t3
+         UINlKk30iYZrlU2kDThBq4FbK+Eb2wQj2DITIdW/5k9i8i/ODbzsAcjvYynPbZt+W8aD
+         H/sG4JBdYeYQX4YXAJUsP8UujuxmYHhYFLCY6R1lpZdB4lhc0ezu2bxoTYDCLX6BDRUm
+         go5/DhjyXe5gYUyB+faVrBVqPu6JFfGJt2v42p3/4VHjXcNvR+85IRGNVEQONve4zlzC
+         t+vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=2L8OR5koUh2CDVJY7FcCTDkGe8HG516p7zFzZPDOUYA=;
+        b=zYmJsX1G/dWzUn2EB7damWRj/08Bp4pYXYyMXhQniZV+60DJoKkRurFrFYqJJgvaD9
+         7+cQBgJqV9y1QWqzkiCWr+9Q2jmT7bhctj4arZhBcFDaIlFQ8/zA0fot6fw9zpWllG48
+         4xGOc6adZpxM9T1cUBEqwP1Us4rCjIiFrDPiDmiQaNKYJtWfJZzpD33Jji/q5jxyA6C/
+         4V5hmturRU7l+Fy3K13PwAy/tHTazRtixOJsgJ5qsWImCN+x7+dWE42xa2fIkFvP7mcT
+         YYacm8/0kRaOswjlNJZ4uT4AjLyjizZwzVkD6PEm78w9YSTkz49ny5TTWz/RPhZq3xNR
+         w6KA==
+X-Gm-Message-State: AOAM5310nahwiWsp+8NQhSSwFE9Bqv5J7g4LYT5TMbPk9ihmprLgfPTu
+        tb0z9kpsWA14mzts0XdQQdsLZLrKlR/gCtP0agI=
+X-Google-Smtp-Source: ABdhPJy0vcFKq3czcAkuCKChovxMM8akI73joMv8l5k6Zzq/zj/9f/Pyn2v7HMfvT8wBCVN4ICZVgzd3wKyaV7cJyn8=
+X-Received: by 2002:ac8:7f51:0:b0:2dd:dbca:1f40 with SMTP id
+ g17-20020ac87f51000000b002dddbca1f40mr3924359qtk.463.1646921784722; Thu, 10
+ Mar 2022 06:16:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+References: <20220310140542.7483-1-arinc.unal@arinc9.com>
+In-Reply-To: <20220310140542.7483-1-arinc.unal@arinc9.com>
+From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date:   Thu, 10 Mar 2022 15:16:13 +0100
+Message-ID: <CAMhs-H_+UXiYQdpE_WKAgEw0=1s5DA0ftQwD1w+W2vORQxFdKQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: rt2880: add missing pin groups and functions
+To:     =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, erkin.bozoglu@xeront.com,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add the missing pin groups:
-jtag, wdt
+On Thu, Mar 10, 2022 at 3:06 PM Ar=C4=B1n=C3=A7 =C3=9CNAL <arinc.unal@arinc=
+9.com> wrote:
+>
+> Add the missing pin groups:
+> jtag, wdt
+>
+> Add the missing functions:
+> i2s, jtag, pcie refclk, pcie rst, pcm, spdif2, spdif3, wdt refclk, wdt rs=
+t
+>
+> Sort pin groups and functions in alphabetical order. Fix a typo.
+>
+> Signed-off-by: Ar=C4=B1n=C3=A7 =C3=9CNAL <arinc.unal@arinc9.com>
+> ---
+> I didn't know the order to put the missing groups and functions so I sort=
+ed
+> them in alphabetical order, let me know if it's not ok.
+>
+> Ar=C4=B1n=C3=A7
+>
+> ---
+>  .../bindings/pinctrl/ralink,rt2880-pinmux.yaml        | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
 
-Add the missing functions:
-i2s, jtag, pcie refclk, pcie rst, pcm, spdif2, spdif3, wdt refclk, wdt rst
+Acked-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
 
-Sort pin groups and functions in alphabetical order. Fix a typo.
-
-Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
----
-I didn't know the order to put the missing groups and functions so I sorted
-them in alphabetical order, let me know if it's not ok.
-
-Arınç
-
----
- .../bindings/pinctrl/ralink,rt2880-pinmux.yaml        | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/ralink,rt2880-pinmux.yaml b/Documentation/devicetree/bindings/pinctrl/ralink,rt2880-pinmux.yaml
-index f0c52feb24d7..9de8b0c075e2 100644
---- a/Documentation/devicetree/bindings/pinctrl/ralink,rt2880-pinmux.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/ralink,rt2880-pinmux.yaml
-@@ -10,7 +10,7 @@ maintainers:
-   - Sergio Paracuellos <sergio.paracuellos@gmail.com>
- 
- description:
--  The rt2880 pinmux can only set the muxing of pin groups. muxing indiviual pins
-+  The rt2880 pinmux can only set the muxing of pin groups. Muxing indiviual pins
-   is not supported. There is no pinconf support.
- 
- properties:
-@@ -29,12 +29,13 @@ patternProperties:
-         properties:
-           groups:
-             description: Name of the pin group to use for the functions.
--            enum: [i2c, spi, uart1, uart2, uart3, rgmii1, rgmii2, mdio,
--                   pcie, sdhci]
-+            enum: [i2c, jtag, mdio, pcie, rgmii1, rgmii2, sdhci, spi,
-+                   uart1, uart2, uart3, wdt]
-           function:
-             description: The mux function to select
--            enum: [gpio, i2c, spi, uart1, uart2, uart3, rgmii1, rgmii2,
--                   mdio, nand1, nand2, sdhci]
-+            enum: [gpio, i2c, i2s, jtag, mdio, nand1, nand2, pcie refclk,
-+                   pcie rst, pcm, rgmii1, rgmii2, sdhci, spdif2, spdif3,
-+                   spi, uart1, uart2, uart3, wdt refclk, wdt rst]
- 
-         required:
-           - groups
--- 
-2.25.1
-
+Thanks,
+     Sergio Paracuellos
