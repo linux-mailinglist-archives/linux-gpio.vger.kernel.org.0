@@ -2,96 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AFAA24D4E11
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Mar 2022 17:07:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DA4B94D50B0
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Mar 2022 18:36:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232282AbiCJQIQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Mar 2022 11:08:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46398 "EHLO
+        id S232838AbiCJRha (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Mar 2022 12:37:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241161AbiCJQIA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Mar 2022 11:08:00 -0500
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89E4D186466;
-        Thu, 10 Mar 2022 08:06:58 -0800 (PST)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: kholk11)
-        with ESMTPSA id A441E1F40649
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1646928417;
-        bh=ZiS/SPnwQg61kBgd93FXFvniwS51SClGVI0Qf1ZMNxk=;
-        h=Date:Subject:To:References:From:In-Reply-To:From;
-        b=VFAI6Al10tnepVyxeGIIzzYWTeLv5ZQBIqdkRLEtxjcGAt2khOqoqObnB7LoK6+yz
-         N9YEyXhenA8DXI0VTQcbby7Si5uZpdZJNJJC8jBhV3V7bwSeNVGn5f0y95yQvmTn/G
-         CRhaEbydHUGeJVNZpo60qJ0OhDFG+4YCJBKECSdSmXUo2+v7Q/lO8xJSzZplnDgDnI
-         RCBXTLzrqMcVqq16Rltr1qS2Dnqov9qLLCllIRVSzzqVqRjPbDeBbA+ODnkFvScLOe
-         xSAr3zv6md0Zz9+YKjkBPgl7vaudM1LuTWqF4lDvDbJlPncEkvCI5S2zfSwHEIA+sK
-         T45amm6QPgw5A==
-Message-ID: <f6e2a491-d701-d05c-eb3b-2f8f5c080a16@collabora.com>
-Date:   Thu, 10 Mar 2022 17:06:54 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.1
-Subject: Re: [PATCH] pinctrl: mediatek: Fix missing of_node_put() in
- mtk_pctrl_init
-Content-Language: en-US
-To:     Miaoqian Lin <linmq006@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Hongzhou Yang <hongzhou.yang@mediatek.com>,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20220308071155.21114-1-linmq006@gmail.com>
-From:   AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20220308071155.21114-1-linmq006@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        with ESMTP id S238533AbiCJRh2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Mar 2022 12:37:28 -0500
+Received: from smtp-out3.electric.net (smtp-out3.electric.net [208.70.128.179])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3C5F18DA81;
+        Thu, 10 Mar 2022 09:36:27 -0800 (PST)
+Received: from 1nSMi8-0007OR-VX by out3d.electric.net with emc1-ok (Exim 4.94.2)
+        (envelope-from <kris@embeddedTS.com>)
+        id 1nSMiA-0007RW-TQ; Thu, 10 Mar 2022 09:36:26 -0800
+Received: by emcmailer; Thu, 10 Mar 2022 09:36:26 -0800
+Received: from [66.210.251.27] (helo=mail.embeddedts.com)
+        by out3d.electric.net with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <kris@embeddedTS.com>)
+        id 1nSMi8-0007OR-VX; Thu, 10 Mar 2022 09:36:24 -0800
+Received: from tsdebian (unknown [75.164.75.221])
+        by mail.embeddedts.com (Postfix) with ESMTPSA id 09C892F5C;
+        Thu, 10 Mar 2022 10:36:24 -0700 (MST)
+Message-ID: <1646933773.2804.1.camel@embeddedTS.com>
+Subject: Re: [PATCH v3 1/2] gpio: ts4900: Do not set DAT and OE together
+From:   Kris Bahnsen <kris@embeddedTS.com>
+Reply-To: kris@embeddedTS.com
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mark Featherston <mark@embeddedts.com>
+Date:   Thu, 10 Mar 2022 09:36:13 -0800
+In-Reply-To: <CAHp75Vdu1r0S2ZCjH2mjToYZiwQTOiUAvY5v-T7f=u28tVuxcQ@mail.gmail.com>
+References: <20220310011617.29660-1-kris@embeddedTS.com>
+         <20220310011617.29660-2-kris@embeddedTS.com>
+         <CAHp75Vdu1r0S2ZCjH2mjToYZiwQTOiUAvY5v-T7f=u28tVuxcQ@mail.gmail.com>
+Organization: embeddedTS
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Outbound-IP: 66.210.251.27
+X-Env-From: kris@embeddedTS.com
+X-Proto: esmtps
+X-Revdns: wsip-66-210-251-27.ph.ph.cox.net
+X-HELO: mail.embeddedts.com
+X-TLS:  TLS1.2:ECDHE-RSA-AES256-GCM-SHA384:256
+X-Authenticated_ID: 
+X-Virus-Status: Scanned by VirusSMART (c)
+X-Virus-Status: Scanned by VirusSMART (b)
+X-FM-Delivery-Delay: 15749372,23518412
+X-PolicySMART: 13164782, 15749372, 26810492
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=embeddedTS.com; s=mailanyone20220121;h=Mime-Version:References:In-Reply-To:Date:To:From:Message-ID; bh=1FAV9s0Divigxh+nUf89EO0OPgHVoo4GOAY0f7g9/+g=;b=cVMEJL4SBd2BYmBxpAnrk9srTZpa/0kDx6fP41R57+aiw+gtegXkiGKis1bK8DCMv32dJmxlv8SBLSaAIF0Euz3e132sfe3IBWh1B6a8pfwMwKWt8xugsz8LZh1eUvUliSbd50yaupMAB5BsG5ztkkqQz8fYspb2aWm7u75Myb/JnDtr9SEQ7R7hdXFCNn8uw1zxHvpMyA1pO0jqZNexTgpSWlEdOAhWIdFJrcAAB93deL0Yi9HHAfifxptqdDKNyDjZc3WARlXNuffRL2rwE/9xj8OveI+HDRxy7Wtii6BqvOqVr+pk7zWg/I4KUmiSP/3HawELuB8nOvbuESsbzw==;
+X-FM-Delivery-Delay: 15749372,23518412
+X-PolicySMART: 13164782, 15749372, 26810492
+X-FM-Delivery-Delay: 15749372,23518412
+X-PolicySMART: 13164782, 15749372, 26810492
+X-FM-Delivery-Delay: 15749372,23518412
+X-PolicySMART: 13164782, 15749372, 26810492
+X-FM-Delivery-Delay: 15749372,23518412
+X-PolicySMART: 13164782, 15749372, 26810492
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Il 08/03/22 08:11, Miaoqian Lin ha scritto:
-> The device_node pointer is returned by of_parse_phandle()  with refcount
-> incremented. We should use of_node_put() on it when done.
+On Thu, 2022-03-10 at 16:48 +0200, Andy Shevchenko wrote:
+> On Thu, Mar 10, 2022 at 2:22 PM Kris Bahnsen <kris@embeddedts.com> wrote:
+> > 
+> > From: Mark Featherston <mark@embeddedTS.com>
 > 
-> Fixes: a6df410d420a ("pinctrl: mediatek: Add Pinctrl/GPIO driver for mt8135.")
-> Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
-
-Thanks!
-
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-
-> ---
->   drivers/pinctrl/mediatek/pinctrl-mtk-common.c | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-> index 5f7c421ab6e7..334cb85855a9 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-> @@ -1038,6 +1038,7 @@ int mtk_pctrl_init(struct platform_device *pdev,
->   	node = of_parse_phandle(np, "mediatek,pctl-regmap", 0);
->   	if (node) {
->   		pctl->regmap1 = syscon_node_to_regmap(node);
-> +		of_node_put(node);
->   		if (IS_ERR(pctl->regmap1))
->   			return PTR_ERR(pctl->regmap1);
->   	} else if (regmap) {
-> @@ -1051,6 +1052,7 @@ int mtk_pctrl_init(struct platform_device *pdev,
->   	node = of_parse_phandle(np, "mediatek,pctl-regmap", 1);
->   	if (node) {
->   		pctl->regmap2 = syscon_node_to_regmap(node);
-> +		of_node_put(node);
->   		if (IS_ERR(pctl->regmap2))
->   			return PTR_ERR(pctl->regmap2);
->   	}
+> Same comments as per v2.
 > 
 
+Thanks, I'll get a v4 put together shortly to clean that up.
