@@ -2,61 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F4F44D431E
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Mar 2022 10:07:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B7A04D436C
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Mar 2022 10:24:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240649AbiCJJID (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Mar 2022 04:08:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45412 "EHLO
+        id S236025AbiCJJZd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Mar 2022 04:25:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240719AbiCJJH6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Mar 2022 04:07:58 -0500
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D04C7137768
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Mar 2022 01:06:57 -0800 (PST)
-Received: by mail-ej1-x62d.google.com with SMTP id gb39so10591760ejc.1
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Mar 2022 01:06:57 -0800 (PST)
+        with ESMTP id S240764AbiCJJZd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Mar 2022 04:25:33 -0500
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A7C313982A
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Mar 2022 01:24:32 -0800 (PST)
+Received: by mail-wm1-x332.google.com with SMTP id l1-20020a05600c4f0100b00389645443d2so2991643wmq.2
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Mar 2022 01:24:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=opuWC7CW/tv251p5ZaRVuqD3hhAUP7lnkXVZsuoANT8=;
-        b=U8IWFnXp3c1DjFEPD0zBgD/mAjFY4y1MmJmTQtALR+bEzPYK104Q9LLOsR08FXUlwv
-         MdIiwA+2BNGg6Uhfm56l/IEb0Xp9nE+sWUWn3sUsN+vKxA0dndOA9edwQJ6m+jY4+846
-         suUSG4AXLsgDjVtRebAJPab1kP6+EMKo5TnGEoHop/q/u2DckMDeRfuXkXTFeLbMSMXb
-         k3b4tGyDbR+P0o4n3a72vayhsoNQOnI46Dqzhcebvn99lLe2JCLKvVuU9WzvhaX1K4Ft
-         1aynUXZU4itAMzxkAWH8h75MtpKYsl7BUEsR62k0yJL4Cccj4a7Ui+bxG0YVS+Byfs5e
-         INiA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=elhFlIhG7DN982iz6keo3g4HAUnAWOEfbO01fAD1uDw=;
+        b=6ozYf+qB2ivp9woWRItEh348PoOrmWoQ2Mx9vAeiuSGOoEVv+TwRjHMmGG1Nf9kAmv
+         HDmAZSC09Y09IeqxOFS70n/osFAjJSwF5queU+sRUtPuSwTaOPH+36sJTWXdRIvKT8xl
+         nK7N7zGRU4KuWGwH8TAC5+9uEJtn5DNq829FDCZZ3utbF2mifyR4Pq/XPZxuz5YR5E/v
+         vve9r2bKyFMIepEI1yjldmYVWyW7RO4h4VJAVQbDMfXTj/FIv5xiZZVyAYC35WCYmpgZ
+         0f3PFrjcLqzRRLK9dBe1Y7ctjK9Z2IGHYf3ty5EsV76sj48ztatUykl6cPX+U7RaaSc0
+         T71Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=opuWC7CW/tv251p5ZaRVuqD3hhAUP7lnkXVZsuoANT8=;
-        b=f2H6SL65fLVv5wxrsL1Be/4XVovX3ZW/6NmaWxZu14q6j2OM3zVjOw1Il5qjWpcisp
-         Hy8qx2j/++tASHndJmis63fma2TQD/UkT3/hVrqgzGThBESfu9qngFNYwgCp7QHxqmZC
-         7gbPJIYICHnh9b/9iJRT8GXnJwB03HqyxJAc5lZDY1q58oXYfkroOmBPL/OBru7sDKMo
-         QWfgiV5z5Vx1x8ddkgEMyTBX8dn+t8xE+GZvNvBL7+KYLxHsZBYzkhBnAGgVqwp2lzTI
-         E9AFvGtZ4iqmXWN+wupzxrYkUM30JxO5Mwjnft+JxSaQB8G3c4IDr+5bm9AgVSzRqBEw
-         AAOg==
-X-Gm-Message-State: AOAM532/xV0aWCUhGaQi7broHANPrZ5wuPZedkUopH5QlEdt1P8uBJgC
-        ZGyTJSeepN8/t84VF1AWIQJynOEecu40gd8O/zY+xw==
-X-Google-Smtp-Source: ABdhPJztDbK+XFnIiOY8fGHFQMiD117FOmTN0qLqZTdbdWraqGbYiUKosJWnn5Bit7sFetZAr3L73DhdAYQ4ZRXma4w=
-X-Received: by 2002:a17:907:728b:b0:6da:97db:b66d with SMTP id
- dt11-20020a170907728b00b006da97dbb66dmr3277777ejc.636.1646903216312; Thu, 10
- Mar 2022 01:06:56 -0800 (PST)
-MIME-Version: 1.0
-References: <20220310011617.29660-1-kris@embeddedTS.com> <20220310011617.29660-2-kris@embeddedTS.com>
-In-Reply-To: <20220310011617.29660-2-kris@embeddedTS.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=elhFlIhG7DN982iz6keo3g4HAUnAWOEfbO01fAD1uDw=;
+        b=djZzGCc3sG4Nq20ZlsMn6PfLTQdJbmjmuR6qlXOZP3P7DDxnKJN/zVg5EifZtJv4bK
+         MX4naLbHbE2/Lx6MHABVhKFgXxVq2AI6Dpqcw/8rT39bGMYIa6e9sHVgSTM3/RBxCMEg
+         YFXFEVlFE3eMDKv0p+mlE1g2/hya7kl7tyMrhBrJUbFlxUGK0lZ/WFOHTDAhCZlKiiyg
+         G8AazxH+2xjdsR6jp66oBA92FS1/o4iJRh2WoXZsQ/pSrSv0bHF7fnMhJqu2ZhKixRrj
+         7vEfkpfmgIV5VUjTd+sPsadJuF0Wyi+cmRpvr2L8/oz2LlaUj9szVS00/KGKT2IbhSJh
+         KZaQ==
+X-Gm-Message-State: AOAM530oLlpS0TfRwEHTkhVhlU4QyccWnaLbrrTk9ulomLD6spXlsXmv
+        spBKu2af3eJNmZid/2ujypQIBw==
+X-Google-Smtp-Source: ABdhPJyfqtwU6IsmGEEmG3t8uuHHwVLPrExNRpW+iJWtGsWofdnsag5dMkgtVtsai1R/ZqGovGu37w==
+X-Received: by 2002:a05:600c:1c87:b0:389:9dda:af17 with SMTP id k7-20020a05600c1c8700b003899ddaaf17mr10871155wms.27.1646904270870;
+        Thu, 10 Mar 2022 01:24:30 -0800 (PST)
+Received: from debian-brgl.home ([2a01:cb1d:334:ac00:7d50:ff5:f5c1:e225])
+        by smtp.gmail.com with ESMTPSA id r2-20020a5d6942000000b001f0485057c4sm3820775wrw.74.2022.03.10.01.24.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Mar 2022 01:24:30 -0800 (PST)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 10 Mar 2022 10:06:45 +0100
-Message-ID: <CAMRc=MdTpv9RHWw6597rvZ+poXtQ4H2+x31-D1vQQXLJ8fwUJw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] gpio: ts4900: Do not set DAT and OE together
-To:     Kris Bahnsen <kris@embeddedts.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Featherston <mark@embeddedts.com>
-Content-Type: text/plain; charset="UTF-8"
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [GIT PULL] gpio: fixes for v5.17
+Date:   Thu, 10 Mar 2022 10:24:27 +0100
+Message-Id: <20220310092427.102296-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.30.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
@@ -66,83 +68,55 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 10, 2022 at 2:16 AM Kris Bahnsen <kris@embeddedts.com> wrote:
->
-> From: Mark Featherston <mark@embeddedTS.com>
->
-> This works around an issue with the hardware where both OE and
-> DAT are exposed in the same register. If both are updated
-> simultaneously, the harware makes no guarantees that OE or DAT
-> will actually change in any given order and may result in a
-> glitch of a few ns on a GPIO pin when changing direction and value
-> in a single write.
->
-> Setting direction to input now only affects OE bit. Setting
-> direction to output updates DAT first, then OE.
->
-> Fixes: 9c6686322d74 ("gpio: add Technologic I2C-FPGA gpio support")
->
-> Signed-off-by: Mark Featherston <mark@embeddedTS.com>
-> Signed-off-by: Kris Bahnsen <kris@embeddedTS.com>
-> ---
->  drivers/gpio/gpio-ts4900.c | 24 +++++++++++++++++++-----
->  1 file changed, 19 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-ts4900.c b/drivers/gpio/gpio-ts4900.c
-> index d885032cf814..d918d2df4de2 100644
-> --- a/drivers/gpio/gpio-ts4900.c
-> +++ b/drivers/gpio/gpio-ts4900.c
-> @@ -1,7 +1,7 @@
->  /*
->   * Digital I/O driver for Technologic Systems I2C FPGA Core
->   *
-> - * Copyright (C) 2015 Technologic Systems
-> + * Copyright (C) 2015, 2018 Technologic Systems
->   * Copyright (C) 2016 Savoir-Faire Linux
->   *
->   * This program is free software; you can redistribute it and/or
-> @@ -55,19 +55,33 @@ static int ts4900_gpio_direction_input(struct gpio_chip *chip,
->  {
->         struct ts4900_gpio_priv *priv = gpiochip_get_data(chip);
->
-> -       /*
-> -        * This will clear the output enable bit, the other bits are
-> -        * dontcare when this is cleared
-> +       /* Only clear the OE bit here, requires a RMW. Prevents potential issue
-> +        * with OE and data getting to the physical pin at different times.
->          */
-> -       return regmap_write(priv->regmap, offset, 0);
-> +       return regmap_update_bits(priv->regmap, offset, TS4900_GPIO_OE, 0);
->  }
->
->  static int ts4900_gpio_direction_output(struct gpio_chip *chip,
->                                         unsigned int offset, int value)
->  {
->         struct ts4900_gpio_priv *priv = gpiochip_get_data(chip);
-> +       unsigned int reg;
->         int ret;
->
-> +       /* If changing from an input to an output, we need to first set the
-> +        * proper data bit to what is requested and then set OE bit. This
-> +        * prevents a glitch that can occur on the IO line
-> +        */
-> +       regmap_read(priv->regmap, offset, &reg);
-> +       if (!(reg & TS4900_GPIO_OE)) {
-> +               if (value)
-> +                       reg = TS4900_GPIO_OUT;
-> +               else
-> +                       reg &= ~TS4900_GPIO_OUT;
-> +
-> +               regmap_write(priv->regmap, offset, reg);
-> +       }
-> +
->         if (value)
->                 ret = regmap_write(priv->regmap, offset, TS4900_GPIO_OE |
->                                                          TS4900_GPIO_OUT);
-> --
-> 2.11.0
->
+Linus,
 
-Applied for fixes, thanks!
+Please pull the following set of fixes from the GPIO subsystem. They come
+in quite late but there's nothing controversial and they're quite small.
 
-Bart
+Best Regards,
+Bartosz Golaszewski
+
+The following changes since commit ffb217a13a2eaf6d5bd974fc83036a53ca69f1e2:
+
+  Linux 5.17-rc7 (2022-03-06 14:28:31 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.17
+
+for you to fetch changes up to 55d01c98a88b346e217eaa931b32e7baea905c9a:
+
+  gpio: sim: fix a typo (2022-03-10 10:02:19 +0100)
+
+----------------------------------------------------------------
+gpio fixes for v5.17
+
+- fix a probe failure for Tegra241 GPIO controller in gpio-tegra186
+- revert changes that caused a regression in the sysfs user-space interface
+- correct the debounce time conversion in GPIO ACPI
+- statify a struct in gpio-sim and fix a typo
+- update registers in correct order (hardware quirk) in gpio-ts4900
+
+----------------------------------------------------------------
+Akhil R (1):
+      gpio: tegra186: Add IRQ per bank for Tegra241
+
+Andy Shevchenko (2):
+      gpiolib: acpi: Convert ACPI value of debounce to microseconds
+      gpio: sim: Declare gpio_sim_hog_config_item_ops static
+
+Bartosz Golaszewski (1):
+      gpio: sim: fix a typo
+
+Marcelo Roberto Jimenez (1):
+      gpio: Revert regression in sysfs-gpio (gpiolib.c)
+
+Mark Featherston (1):
+      gpio: ts4900: Do not set DAT and OE together
+
+ drivers/gpio/gpio-sim.c      |  4 ++--
+ drivers/gpio/gpio-tegra186.c |  2 ++
+ drivers/gpio/gpio-ts4900.c   | 24 +++++++++++++++++++-----
+ drivers/gpio/gpiolib-acpi.c  |  6 ++++--
+ drivers/gpio/gpiolib.c       | 20 ++++++++++----------
+ 5 files changed, 37 insertions(+), 19 deletions(-)
