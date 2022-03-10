@@ -2,114 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DD3F4D5557
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Mar 2022 00:27:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 115194D557D
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Mar 2022 00:33:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344086AbiCJX1J (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Mar 2022 18:27:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56272 "EHLO
+        id S1344812AbiCJXeq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Mar 2022 18:34:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239313AbiCJX1J (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Mar 2022 18:27:09 -0500
-Received: from vps0.lunn.ch (vps0.lunn.ch [185.16.172.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 434B519ABD5;
-        Thu, 10 Mar 2022 15:26:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-        Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-        bh=rvvIpi7k3bDAjHNxFs9qtFYxGVX6i80TlE7ph4fJVv4=; b=k3yo2LKfmw5mbr+a8qBF2YD9aS
-        UhS7OBBQ/wYCqavl/5XgGdyHCempe0UvcFDZtzwAtObmjcI2kXs1AQBQtSkUBgRuaCV3FVjv8LbhQ
-        2u3sngzQmidqiNlt4WHV9HJsWE3GvsL9S1fJAHQZ9zNKVQtL4mlB0zTsQmwbZN0ohWxU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1nSSAB-00ACP9-WC; Fri, 11 Mar 2022 00:25:44 +0100
-Date:   Fri, 11 Mar 2022 00:25:43 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
-        "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>,
-        "kostap@marvell.com" <kostap@marvell.com>,
-        "robert.marko@sartura.hr" <robert.marko@sartura.hr>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v1 3/4] arm64: dts: marvell: Add Armada 98DX2530 SoC and
- RD-AC5X board
-Message-ID: <YiqI9/Or4SL6NthP@lunn.ch>
-References: <20220310030039.2833808-1-chris.packham@alliedtelesis.co.nz>
- <20220310030039.2833808-4-chris.packham@alliedtelesis.co.nz>
- <YioKgjhEnqylB24M@lunn.ch>
- <b6128e83-3f97-e728-66f2-25507d0f7abe@alliedtelesis.co.nz>
+        with ESMTP id S1344799AbiCJXep (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Mar 2022 18:34:45 -0500
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B28EA1520D1;
+        Thu, 10 Mar 2022 15:33:43 -0800 (PST)
+Received: by mail-oo1-f49.google.com with SMTP id n5-20020a4a9545000000b0031d45a442feso8723427ooi.3;
+        Thu, 10 Mar 2022 15:33:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=mMcGjRsIiT+Ovsq+iXrTNfC/ZKe9wCeHYBkp/8KF7YE=;
+        b=CylYORRUoK6QKLA7X1QdCa43ij4opUcyid3YJrK52gClfpFjYCgKApKR/U1gBnIAKn
+         7YJSYpRfHYJyHv2reE80mpm8ufljgGub2NE/pMc5LfsrOrZwgK3SdcWYfC2TpAZtmiVO
+         NCNXLv0C8H9r+9tfLABIi9AtAbyMPYa03eu3VHR4kSkjtclq4XoUgPW9V03xEm03AqON
+         Y9o+INLn/ixo3q2dih2gX+dPesTBgdIojxerhifmXfXD2CPX+2F+ulaJur7lAX1LDiWR
+         S+YB3je7VpEy1yjDtXsV080pIhRubv658aqoRZxMBiKMk8TIGJRFxrgJA9QgMfxqBEfB
+         ujMg==
+X-Gm-Message-State: AOAM530c6kE7tZ+i7W2gL50Ccmh+VKRzRFkv1NLPLjaVMyV7523MxjHV
+        he3PTKaXh+3XvaAbS9Bejw==
+X-Google-Smtp-Source: ABdhPJwZL226YGWciO/E+md1fMIxHYJLbzCMP6BUz75y4bhrEx+2JfZJLfAOLzljUBBFQ4C0zfiYjg==
+X-Received: by 2002:a4a:d047:0:b0:321:1ab0:e461 with SMTP id x7-20020a4ad047000000b003211ab0e461mr3517317oor.20.1646955222961;
+        Thu, 10 Mar 2022 15:33:42 -0800 (PST)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id 4-20020a4ae1a4000000b003215cb3d53dsm1201015ooy.4.2022.03.10.15.33.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Mar 2022 15:33:42 -0800 (PST)
+Received: (nullmailer pid 2320068 invoked by uid 1000);
+        Thu, 10 Mar 2022 23:33:41 -0000
+Date:   Thu, 10 Mar 2022 17:33:41 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     =?utf-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+Cc:     linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, erkin.bozoglu@xeront.com
+Subject: Re: [PATCH] dt-bindings: pinctrl: rt2880: add missing pin groups and
+ functions
+Message-ID: <YiqK1SVqnYT5QAJA@robh.at.kernel.org>
+References: <20220310140542.7483-1-arinc.unal@arinc9.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <b6128e83-3f97-e728-66f2-25507d0f7abe@alliedtelesis.co.nz>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220310140542.7483-1-arinc.unal@arinc9.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> >> +	mvDma {
-> >> +		compatible = "marvell,mv_dma";
-> >> +		memory-region = <&prestera_rsvd>;
-> >> +		status = "okay";
-> >> +	};
-> > Is this different to the existing Marvell XOR engine?
+On Thu, 10 Mar 2022 17:05:42 +0300, Arınç ÜNAL wrote:
+> Add the missing pin groups:
+> jtag, wdt
 > 
-> Yes it has something to do with the DMA memory for the integrated L3 
-> switch. Because that driver doesn't exist I'll probably remove this node 
-> (and the other prestera node below) in v2.
-
-The compatible itself is not so great, since it made me think of the
-DMA engine in the SoC. So maybe when the driver is added, it could be
-something like prestera_dma?
-
-> >> +				sdhci0: sdhci@805c0000 {
-> >> +					compatible = "marvell,ac5-sdhci", "marvell,armada-ap806-sdhci";
-> > This additional compatible should be added to the existing binding
-> > document.
-> I'll see what differences there are with the ap806-sdhci. I might be 
-> able to remove it.
-
-It is actually good to have the additional compatible. You might not
-spot a difference now, but sometime in the future you do find a
-difference which you need to work around in the driver. Having the
-compatible in place means you can just change the driver and existing
-DT blobs, burnt into flash etc, don't need to change.
-
-> >
-> >> +			eth0: ethernet@20000 {
-> >> +				compatible = "marvell,armada-ac5-neta";
-> > So it is not compatible with plain nata?
+> Add the missing functions:
+> i2s, jtag, pcie refclk, pcie rst, pcm, spdif2, spdif3, wdt refclk, wdt rst
 > 
-> There is some odd muxing setup where the serdes are either SGMII or PCIe 
-> or can even be connected to the internal switch. Whether the Ethernet 
-> driver needs to care about it I'm not sure.
-
-Russell King probably knows more about this, but it sounds more like a
-comphy issues, not neta. The comphy connects the MAC to a SERDES, and
-that SERDES can be SGMII, PCIe or USB.
-
-> >> +		nand: nand@805b0000 {
-> >> +			compatible = "marvell,ac5-nand-controller";
-> > The current NAND driver does not work?
+> Sort pin groups and functions in alphabetical order. Fix a typo.
 > 
-> This is one of the things I can't test on the board I have (uses eMMC 
-> instead of NAND). Should I put "marvell,armada-8k-nand-controller" in as 
-> a placeholder or leave the node out entirely?
+> Signed-off-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+> ---
+> I didn't know the order to put the missing groups and functions so I sorted
+> them in alphabetical order, let me know if it's not ok.
+> 
+> Arınç
+> 
+> ---
+>  .../bindings/pinctrl/ralink,rt2880-pinmux.yaml        | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
+> 
 
-I would leave it out if you cannot test it.
-
-  Andrew
+Acked-by: Rob Herring <robh@kernel.org>
