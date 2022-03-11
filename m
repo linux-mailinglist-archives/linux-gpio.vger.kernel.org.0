@@ -2,248 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F9BE4D5CE1
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Mar 2022 09:00:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 237C84D5E38
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Mar 2022 10:18:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346973AbiCKIBH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 11 Mar 2022 03:01:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36546 "EHLO
+        id S1347312AbiCKJTf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 11 Mar 2022 04:19:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343918AbiCKIBG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Mar 2022 03:01:06 -0500
-Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E70B71B84DE
-        for <linux-gpio@vger.kernel.org>; Fri, 11 Mar 2022 00:00:01 -0800 (PST)
-Received: by mail-lj1-x236.google.com with SMTP id r22so11025406ljd.4
-        for <linux-gpio@vger.kernel.org>; Fri, 11 Mar 2022 00:00:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=H61304/5/aT6zo++RCxPy8xIpo0rtqBkReH7sc0wAzE=;
-        b=h5dAHKLnDA5s5TgYxQRR61i78Pt7G77hFIU5nu1TkkshOv5UTcUu5pHiA97t0OMmM/
-         KFOYCMSzYWh9PmKC0MtlXy1dAWxlPC5ypG+zrJTrBI7tbLTGshzjvOqf18FB+xLXEs6K
-         3LWNqZnuDRDE5FxInfTGzLOO6NCMnF8YolVleJDRAt6wM4i6UYXxiE+7hLDcUSkWur/q
-         Y7zIgZVaEa9s96eguO71Q6zZZ5CZ8EF2bpGi78b8f6plkWBLJkt/9z0eScly552vQvHQ
-         1HelRv2TDnxxfblGdhEw6hDP8Yeim147XA+5GEE/KKzgZSggKwiUs4UI8cHOi1un1+8v
-         5P6w==
+        with ESMTP id S1347326AbiCKJTf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Mar 2022 04:19:35 -0500
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C56A41B8BF1
+        for <linux-gpio@vger.kernel.org>; Fri, 11 Mar 2022 01:18:32 -0800 (PST)
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com [209.85.218.71])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 648E83F62D
+        for <linux-gpio@vger.kernel.org>; Fri, 11 Mar 2022 09:18:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1646990311;
+        bh=IxdbcL7k69aeR5PAgcBMvpQeQoS7r//O6hQJcwASqCA=;
+        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+         In-Reply-To:Content-Type;
+        b=I0eZDy0GtIpTQhJBGwD64Y6oyAfoa7V9AZ0pLo7RxS0gtvoixWXntX5Z0LNcADEbj
+         tvHL0pd+msZaLBSG1gpX8E6Zkj6IuDeaG5lEm4yer1rs4poEg23fDoIkntJ8sH52ys
+         EHfzRgEotj9MoOCC2X5dXlrMen9K5vvGkV9dKBPCf7tW4xKufIJs7hV7rKEY9BBHiw
+         XrJmKh89NjEO7MuSOBnyh3t+OJid7Ge8q9dmj34WEXWxhKRhVK7BCIZumc7Gwl2YX6
+         ZP/uqcPBmofMkU0vyq415OAOhhhQuX/ADXjStwHOEs7bkb4lRbKNHoRhHn6AciVFZa
+         ZY/Pyamsc8CTA==
+Received: by mail-ej1-f71.google.com with SMTP id gz16-20020a170907a05000b006db8b2baa10so2203393ejc.1
+        for <linux-gpio@vger.kernel.org>; Fri, 11 Mar 2022 01:18:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H61304/5/aT6zo++RCxPy8xIpo0rtqBkReH7sc0wAzE=;
-        b=5Go+irxkLXlA9tcm7FYgwGZEAVFiPS2rXBvQGhIgMgOIBOH5/7NPMLB2hFaa8Ypke8
-         SMj8oO4VFe8UMtkSmckxsP7qmCmpUhXkqzsrhHh4VZj98MrRI8PDfiXL5asKdDUWigeP
-         tFRmQAW5W/AeSBpo3yOpKqrIUIg0J+HNisaGM5Fs1pc+27yRWCorXnGi47YekztFdPG4
-         17gPBxIatnhTN0zAeLpZwrCM6yc5durKEuBHlbC91mDuvw6hNjqf14MYID5uPxcCcy8Q
-         eVTMWG3QXfUxQYqhIp9+XfNNwb1xhUFMJNVJA26Wd80P1yXA2xsyDqs/fahrw8zEDb6V
-         fwPw==
-X-Gm-Message-State: AOAM5319EDC04ufCZGjONNpcs39Kd+tGgWVbcdUYU2KgF6yHTm410OCT
-        sZ80dN57rjeYLsrbMVokn7GrXkLoM4qzBGReiY4r0Q==
-X-Google-Smtp-Source: ABdhPJxcwCfZeFWYSZ32b2nQjvwKVc2ZY4EDXoS35U8GTSd1gnKcH9gkwSMudZGRcPEkXsc1kxUSFuwWP8v7nXAC1rw=
-X-Received: by 2002:a05:651c:552:b0:249:1a87:a4a6 with SMTP id
- q18-20020a05651c055200b002491a87a4a6mr1967934ljp.516.1646985600099; Fri, 11
- Mar 2022 00:00:00 -0800 (PST)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=IxdbcL7k69aeR5PAgcBMvpQeQoS7r//O6hQJcwASqCA=;
+        b=cWTVefNo6eiAAbPm3ArL7b1a4QD3DaKoYqxiWC1/wTvjhBixgTgWUjzg7MF+g4oLmf
+         OMWmeItqY1nSFWaB5wDC+v0NDtBHdubrQFyDog9zPgntPhWxOKrxgmJY4iKHsmoU0yVw
+         jCpe1nSxDrQYIUk6iSL0XHpMHJFNPIMAGWYIdzrpcNqa135U3jBfEq7M21k1qnKNi8AK
+         AnivbZ0tWQJMt67ppfSAtd70evsraRWDweq/Rp+YVlqlu3osfNmrdh0yhRc8DOsLMhWW
+         1ZQazKfPEyLDySjhdt9WIheYx/u/yR8RMdghA8OqoLm3w9BnxLugdOfusH188I85rbd8
+         p4TQ==
+X-Gm-Message-State: AOAM532AfzKooxb7YvipdK7y7TwIKS/gS2Y6aB99MPUXT9fQ/rKahBSb
+        FgfkUJuIc1QQDwWqQRUYru2wS8u2k1JkgpibHFSS6OQimUMZPnQsCe+sVHmyL6epBOZDpIW+zJL
+        TVzXxsaALl/xcUK4gc4vUOsmzze5M2r0hLZzwJ4w=
+X-Received: by 2002:a05:6402:10d5:b0:408:f881:f0f3 with SMTP id p21-20020a05640210d500b00408f881f0f3mr7969312edu.112.1646990309093;
+        Fri, 11 Mar 2022 01:18:29 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxJx30zZcpXpgPnCtN4/x64kV31WgzQQ1W7CmqqYo9CyZbalXQfJsGU39fnHARIBZSBH2iX0Q==
+X-Received: by 2002:a05:6402:10d5:b0:408:f881:f0f3 with SMTP id p21-20020a05640210d500b00408f881f0f3mr7969298edu.112.1646990308915;
+        Fri, 11 Mar 2022 01:18:28 -0800 (PST)
+Received: from [192.168.0.148] (xdsl-188-155-174-239.adslplus.ch. [188.155.174.239])
+        by smtp.gmail.com with ESMTPSA id l9-20020a170906078900b006dac5f336f8sm2712366ejc.124.2022.03.11.01.18.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Mar 2022 01:18:28 -0800 (PST)
+Message-ID: <3f77c8c8-4bba-007b-fae9-5fb47f44719c@canonical.com>
+Date:   Fri, 11 Mar 2022 10:18:27 +0100
 MIME-Version: 1.0
-References: <mhng-bb42ad9f-5772-4749-97e1-9f6c511654f6@palmer-mbp2014> <e9287c9b-6ac7-dcb3-3b03-98bc83bbf119@microchip.com>
-In-Reply-To: <e9287c9b-6ac7-dcb3-3b03-98bc83bbf119@microchip.com>
-From:   Zong Li <zong.li@sifive.com>
-Date:   Fri, 11 Mar 2022 15:59:49 +0800
-Message-ID: <CANXhq0rPVKSF64Hwd9+jD3ut0y7VCE940V5do0Hn8=mnoX97yw@mail.gmail.com>
-Subject: Re: [PATCH v7 00/11] Update the Icicle Kit device tree
-To:     Conor Dooley <Conor.Dooley@microchip.com>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Stephen Boyd <sboyd@kernel.org>, Lewis.Hanly@microchip.com,
-        Daire.McNamara@microchip.com, Ivan.Griffin@microchip.com,
-        atishp@rivosinc.com, linus.walleij@linaro.org, brgl@bgdev.pl,
-        Rob Herring <robh+dt@kernel.org>, jassisinghbrar@gmail.com,
-        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        Lee Jones <lee.jones@linaro.org>, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        linux-gpio@vger.kernel.org,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-riscv <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH v1 1/3] dts: add Nuvoton sgpio feature
+Content-Language: en-US
+To:     jimliu2 <jim.t90615@gmail.com>, JJLIU0@nuvoton.com,
+        KWLIU@nuvoton.com, linus.walleij@linaro.org, brgl@bgdev.pl,
+        robh+dt@kernel.org, avifishman70@gmail.com, tmaimon77@gmail.com,
+        tali.perry1@gmail.com, venture@google.com, yuenn@google.com,
+        benjaminfair@google.com, CTCCHIEN@nuvoton.com
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
+References: <20220311060936.10663-1-JJLIU0@nuvoton.com>
+ <20220311060936.10663-2-JJLIU0@nuvoton.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+In-Reply-To: <20220311060936.10663-2-JJLIU0@nuvoton.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 10, 2022 at 3:35 PM <Conor.Dooley@microchip.com> wrote:
->
-> On 10/03/2022 07:07, Palmer Dabbelt wrote:
-> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> >
-> > On Wed, 23 Feb 2022 12:48:16 PST (-0800), mail@conchuod.ie wrote:
-> >> On 14/02/2022 13:58, conor.dooley@microchip.com wrote:
-> >>> From: Conor Dooley <conor.dooley@microchip.com>
-> >>>
-> >>> This series updates the Microchip Icicle Kit device tree by adding a
-> >>> host of peripherals, and some updates to the memory map. In addition,
-> >>> the device tree has been split into a third part, which contains "soft"
-> >>> peripherals that are in the fpga fabric.
-> >>>
-> >>> Several of the entries are for peripherals that have not get had their
-> >>> drivers upstreamed, so in those cases the dt bindings are included where
-> >>> appropriate in order to avoid the many "DT compatible string <x> appears
-> >>> un-documented" errors.
-> >>>
-> >>> Depends on mpfs clock driver binding (on clk/next) to provide
-> >>> dt-bindings/clock/microchip,mpfs-clock.h for the device tree
-> >>> and on the other changes to the icicle/mpfs device tree from geert
-> >>> that are already in linux/riscv/for-next.
-> >
-> > So that's causing this to not build, as I can't build without the
-> > header.  I went ahead and put these on top of that patch, resulting in
-> >
-> >     * 48e8641c2bf0 - (HEAD -> riscv-microchip, palmer/riscv-microchip) MAINTAINERS: update riscv/microchip entry (2 minutes ago) <Conor Dooley>
-> >     * 528a5b1f2556 - riscv: dts: microchip: add new peripherals to icicle kit device tree (2 minutes ago) <Conor Dooley>
-> >     * 5b28df37d311 - riscv: dts: microchip: update peripherals in icicle kit device tree (2 minutes ago) <Conor Dooley>
-> >     * c5094f371008 - riscv: dts: microchip: refactor icicle kit device tree (2 minutes ago) <Conor Dooley>
-> >     * 72560c6559b8 - riscv: dts: microchip: add fpga fabric section to icicle kit (2 minutes ago) <Conor Dooley>
-> >     * 6546f920868e - riscv: dts: microchip: use clk defines for icicle kit (2 minutes ago) <Conor Dooley>
-> >     * df77f7735786 - dt-bindings: pwm: add microchip corepwm binding (2 minutes ago) <Conor Dooley>
-> >     * 735806d8a68e - dt-bindings: gpio: add bindings for microchip mpfs gpio (2 minutes ago) <Conor Dooley>
-> >     * 4cbcc0d7b397 - dt-bindings: rtc: add bindings for microchip mpfs rtc (2 minutes ago) <Conor Dooley>
-> >     * b435a1728c9f - dt-bindings: soc/microchip: add info about services to mpfs sysctrl (2 minutes ago) <Conor Dooley>
-> >     * 213556235526 - dt-bindings: soc/microchip: update syscontroller compatibles (2 minutes ago) <Conor Dooley>
-> >     * 2145bb687e3f - (clk/clk-microchip) dt-bindings: clk: microchip: Add Microchip PolarFire host binding (6 weeks ago) <Daire McNamara>
-> >     * e783362eb54c - (tag: v5.17-rc1) Linux 5.17-rc1 (7 weeks ago) <Linus Torvalds>
-> >
-> > sboyd: IIRC it's OK to consider clk-microchip as a stable branch?  If
-> > not I can just wait until you send your PR to Linus and send this later
-> > in the merge window, no big deal on my end.
-> >
-> > I've put this on for-next.  If that's a problem let me know and I'll
-> > delay it.
-> Great, thanks! Probably worth mentioning that I've deleted the dma node
-> that Zong Li is modifying in his pdma patchset.
->
+On 11/03/2022 07:09, jimliu2 wrote:
+> add Nuvoton sgpio feature
+> 
+> Signed-off-by: jimliu2 <JJLIU0@nuvoton.com>
+> ---
+>  arch/arm/boot/dts/nuvoton-common-npcm7xx.dtsi | 30 +++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/nuvoton-common-npcm7xx.dtsi b/arch/arm/boot/dts/nuvoton-common-npcm7xx.dtsi
+> index 3696980a3da1..58f4b463c745 100644
+> --- a/arch/arm/boot/dts/nuvoton-common-npcm7xx.dtsi
+> +++ b/arch/arm/boot/dts/nuvoton-common-npcm7xx.dtsi
+> @@ -329,6 +329,36 @@
+>  				status = "disabled";
+>  			};
+>  
+> +			sgpio1: sgpio@101000 {
 
-I guess I could re-sent the next version based on top of for-next, or
-delay my patch set until the next tag. What is your perspective?
+Generic node name.
 
-> >
-> > Thanks!
-> >
-> >>>
-> >>> Additionally, the interrupt-extended warnings on the plic/clint are
-> >>> cleared by [1] & [2].
-> >>>
-> >>> [1] https://lore.kernel.org/linux-riscv/cover.1639744468.git.geert@linux-m68k.org/
-> >>> [2] https://lore.kernel.org/linux-riscv/cover.1639744106.git.geert@linux-m68k.org/
-> >>
-> >> Hey Palmer,
-> >>
-> >> dt-bindings should be set now, so if you're still happy to take the
-> >> series via riscv, that'd be great. i2c, spi & usb patches ended going
-> >> via the sub-system trees (and have been dropped from the series), in
-> >> case those generate warnings for you.
-> >
-> > Something went off the rails in email land and #0 and #2 didn't end up
-> > in my patch queue but the rest did.  Luckily enough made it through that
-> > it didn't get lost, and lore's pretty great so this sort of thing isn't
-> > that big of a deal these days.  That said, email is a bit of a black box
-> > so figured I'd give you a heads up.
->
-> Huh, interesting. I do check after sending that I can see the mails in my
-> other email's inbox & they're there. Guess good thing that I sent the follow up.
-> Thanks,
-> Conor.
->
-> >
-> >>
-> >> Thanks,
-> >> Conor.
-> >>>
-> >>> Changes from v6:
-> >>> - Dropped i2c patch, as its in i2c-next
-> >>> - Added ack on gpio, reviewed-by on rtc
-> >>> - Dropped child nodes from sysctrl binding entirely, added a link to
-> >>>    the online documenation for the services the system controller can
-> >>>    provide
-> >>> - Dropped the #pwm-cells and replaced with a ref, a la Krzysztof's
-> >>>    series
-> >>>
-> >>> Changes from v5:
-> >>> - reworded the descriptions in the pwm binding to (hopefully) add
-> >>>    clarity
-> >>> - added -mask to the custom properties and made them 32 bit
-> >>> - renamed the i2c binding to corei2c, since it is not mpfs specific
-> >>> - removed the child nodes of the system controller in example/dts &
-> >>>    will create them in the driver.
-> >>>    @Rob, I assume keeping them documented is the correct thing to do?
-> >>> - removed the dependancy on the clock binding from the examples
-> >>> - reformatted rtc interrupts as per Rob's suggestion
-> >>>
-> >>> Changes from v4:
-> >>> - dont include icicle_kit_defconfig, accidentally added in v3
-> >>> - drop prescaler from mpfs-rtc & calculate the value instead
-> >>> - use corei2c as a fallback device for mpfs-i2c
-> >>> - drop spi dt-binding (on spi-next)
-> >>>    commit 2da187304e556ac59cf2dacb323cc78ded988169
-> >>> - drop usb dt-binding (on usb-next)
-> >>>
-> >>> Changes from v3:
-> >>> - drop "mailbox: change mailbox-mpfs compatible string", already upstream:
-> >>>    commit f10b1fc0161cd99e ("mailbox: change mailbox-mpfs compatible string")
-> >>> - fix copy paste error in microchip,mpfs-mailbox dt-binding
-> >>> - remove whitespace in syscontroller dt entry
-> >>>
-> >>> Changes from v2:
-> >>> - dropped plic int header & corresponding defines in dts{,i}
-> >>> - use $ref to drmode in mpfs-musb binding
-> >>> - split changes to dts{,i} again: functional changes to existing
-> >>>    elements now are in a new patch
-> >>> - drop num-cs property in mpfs-spi binding
-> >>> - dont make the system controller a simple-mfd
-> >>> - move the separate bindings for rng/generic system services into the
-> >>>    system controller binding
-> >>> - added an instance corei2c as i2c2 in the fabric dtsi
-> >>> - add version numbering to corepwm and corei2c compat string (-rtl-vN)
-> >>>
-> >>> Conor Dooley (11):
-> >>>    dt-bindings: soc/microchip: update syscontroller compatibles
-> >>>    dt-bindings: soc/microchip: add info about services to mpfs sysctrl
-> >>>    dt-bindings: rtc: add bindings for microchip mpfs rtc
-> >>>    dt-bindings: gpio: add bindings for microchip mpfs gpio
-> >>>    dt-bindings: pwm: add microchip corepwm binding
-> >>>    riscv: dts: microchip: use clk defines for icicle kit
-> >>>    riscv: dts: microchip: add fpga fabric section to icicle kit
-> >>>    riscv: dts: microchip: refactor icicle kit device tree
-> >>>    riscv: dts: microchip: update peripherals in icicle kit device tree
-> >>>    riscv: dts: microchip: add new peripherals to icicle kit device tree
-> >>>    MAINTAINERS: update riscv/microchip entry
-> >>>
-> >>>   .../bindings/gpio/microchip,mpfs-gpio.yaml    |  79 ++++++
-> >>>   ...ilbox.yaml => microchip,mpfs-mailbox.yaml} |   6 +-
-> >>>   .../bindings/pwm/microchip,corepwm.yaml       |  81 ++++++
-> >>>   .../bindings/rtc/microchip,mfps-rtc.yaml      |  58 ++++
-> >>>   .../microchip,mpfs-sys-controller.yaml        |  40 +++
-> >>>   ...icrochip,polarfire-soc-sys-controller.yaml |  35 ---
-> >>>   MAINTAINERS                                   |   2 +
-> >>>   .../dts/microchip/microchip-mpfs-fabric.dtsi  |  25 ++
-> >>>   .../microchip/microchip-mpfs-icicle-kit.dts   | 115 ++++++--
-> >>>   .../boot/dts/microchip/microchip-mpfs.dtsi    | 254 ++++++++++++++----
-> >>>   10 files changed, 591 insertions(+), 104 deletions(-)
-> >>>   create mode 100644 Documentation/devicetree/bindings/gpio/microchip,mpfs-gpio.yaml
-> >>>   rename Documentation/devicetree/bindings/mailbox/{microchip,polarfire-soc-mailbox.yaml => microchip,mpfs-mailbox.yaml} (82%)
-> >>>   create mode 100644 Documentation/devicetree/bindings/pwm/microchip,corepwm.yaml
-> >>>   create mode 100644 Documentation/devicetree/bindings/rtc/microchip,mfps-rtc.yaml
-> >>>   create mode 100644 Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-sys-controller.yaml
-> >>>   delete mode 100644 Documentation/devicetree/bindings/soc/microchip/microchip,polarfire-soc-sys-controller.yaml
-> >>>   create mode 100644 arch/riscv/boot/dts/microchip/microchip-mpfs-fabric.dtsi
-> >>>
->
+> +				clocks = <&clk NPCM7XX_CLK_APB3>;
+> +				compatible = "nuvoton,npcm750-sgpio";
+> +				interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
+> +				gpio-controller;
+> +				#gpio-cells = <2>;
+> +				pinctrl-names = "default";
+> +				pinctrl-0 = <&iox1_pins>;
+> +				bus-frequency = <16000000>;
+> +				nin_gpios = <64>;
+> +				nout_gpios = <64>;
+> +				reg = <0x101000 0x200>;
+
+In each node first goes compatible, then reg.
+
+Best regards,
+Krzysztof
