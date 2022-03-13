@@ -2,105 +2,216 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 65A754D767F
-	for <lists+linux-gpio@lfdr.de>; Sun, 13 Mar 2022 16:46:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 762D94D7699
+	for <lists+linux-gpio@lfdr.de>; Sun, 13 Mar 2022 16:55:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234494AbiCMPr7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 13 Mar 2022 11:47:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56194 "EHLO
+        id S234709AbiCMP4U (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 13 Mar 2022 11:56:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231959AbiCMPr5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 13 Mar 2022 11:47:57 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [176.9.125.105])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94EE27DAA0;
-        Sun, 13 Mar 2022 08:46:49 -0700 (PDT)
-Received: from mwalle01.kontron.local. (unknown [213.135.10.150])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id E856C223EF;
-        Sun, 13 Mar 2022 16:46:47 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1647186408;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=r2oDBm7XwTIj1wUIwXGRbsRxYr/b/6msPs1FZKQZKzM=;
-        b=NLytNOe5zPssCpFGvLJFzkNfrDEfqfZhKATbQ3JFt/HU08irDB5TJkSE22YO+Bwsf0nAFG
-        6mitJHM+XFJKS9kOvtPiDwDxCRTe00tzGviospKIkafyP66UejntLY74u2UQHuiRkXltN1
-        79SueGK4P9qWiF1LiWTE++W4KsLGrGg=
-From:   Michael Walle <michael@walle.cc>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH RFC v1 2/2] pinctrl: ocelot: add optional shared reset
-Date:   Sun, 13 Mar 2022 16:46:40 +0100
-Message-Id: <20220313154640.63813-3-michael@walle.cc>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220313154640.63813-1-michael@walle.cc>
-References: <20220313154640.63813-1-michael@walle.cc>
+        with ESMTP id S231297AbiCMP4U (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 13 Mar 2022 11:56:20 -0400
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 482535F4D9;
+        Sun, 13 Mar 2022 08:55:12 -0700 (PDT)
+Received: by mail-ej1-f54.google.com with SMTP id yy13so29074316ejb.2;
+        Sun, 13 Mar 2022 08:55:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=Lppl2q49qeslrHl4lbbUkfz5RBuPxkaME3WqV+QucHI=;
+        b=Aze/xnfgdubpjIVvq27Obt8JzI+LFswuqU6lOMF44goINqDwvlCCJHbGHc8NDxJqo7
+         0DXza7DLeIpXDdyi4ptnlpjkQ7ZxjOWShq51HajKr6PfxxvU9hC3IgPz+52sghAE51jW
+         lT06Ffvb3cG40bXxWwQioodNE/2eXiIbQv4LGrHAtnDew5un0dGloElMpbD5opftArva
+         zAppTplDxzBEXNEAj7v85NqCu2nw09e3iN1fYs+ZkMvKCsgzKOkz80QBg1x3E1wPP75c
+         0x+la6BWl5lWancDodJSuXbsy6M8WeM+29Lkibz0XieYlDD1OSSR+JlO7fS3KlgYRXX5
+         Ynrw==
+X-Gm-Message-State: AOAM532So/U3bks1q7pCYqb5NYalySJj/3og2+3AKbsM4USIUMLGGo1g
+        t7pfy7lFdL3uxvvB4Ican4A=
+X-Google-Smtp-Source: ABdhPJzy6ExQ70F33nYsMreky8RZw37LDLJGudGbeTrCpk+Nihs/opiYugSPYk3GitqeOuJs+sHjYw==
+X-Received: by 2002:a17:907:7845:b0:6cd:f2f4:cf00 with SMTP id lb5-20020a170907784500b006cdf2f4cf00mr15345462ejc.388.1647186910621;
+        Sun, 13 Mar 2022 08:55:10 -0700 (PDT)
+Received: from [192.168.0.152] (xdsl-188-155-174-239.adslplus.ch. [188.155.174.239])
+        by smtp.googlemail.com with ESMTPSA id g13-20020a50bf4d000000b00410d407da2esm6507407edk.13.2022.03.13.08.55.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 13 Mar 2022 08:55:10 -0700 (PDT)
+Message-ID: <869d4fda-e943-1817-17cd-df7b323a1fef@kernel.org>
+Date:   Sun, 13 Mar 2022 16:55:08 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH v1 8/8] dt-bindings: pinctrl: convert ocelot-pinctrl to
+ YAML format
+Content-Language: en-US
+To:     Michael Walle <michael@walle.cc>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Quentin Schulz <quentin.schulz@bootlin.com>,
+        Antoine Tenart <atenart@kernel.org>,
+        Kavyasree Kotagiri <kavyasree.kotagiri@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        UNGLinuxDriver@microchip.com, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org
+References: <20220313152924.61931-1-michael@walle.cc>
+ <20220313152924.61931-9-michael@walle.cc>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+In-Reply-To: <20220313152924.61931-9-michael@walle.cc>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On the LAN9668 there is a shared reset line which affects GPIO, SGPIO
-and the switch core. Add support for this shared reset line.
+On 13/03/2022 16:29, Michael Walle wrote:
+> Convert the ocelot-pinctrl device tree binding to the new YAML format.
+> 
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
+>  .../bindings/pinctrl/mscc,ocelot-pinctrl.txt  | 42 ---------
+>  .../bindings/pinctrl/mscc,ocelot-pinctrl.yaml | 94 +++++++++++++++++++
+>  2 files changed, 94 insertions(+), 42 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/mscc,ocelot-pinctrl.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/mscc,ocelot-pinctrl.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/mscc,ocelot-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/mscc,ocelot-pinctrl.txt
+> deleted file mode 100644
+> index 5d84fd299ccf..000000000000
+> --- a/Documentation/devicetree/bindings/pinctrl/mscc,ocelot-pinctrl.txt
+> +++ /dev/null
+> @@ -1,42 +0,0 @@
+> -Microsemi Ocelot pin controller Device Tree Bindings
+> -----------------------------------------------------
+> -
+> -Required properties:
+> - - compatible		: Should be "mscc,ocelot-pinctrl",
+> -			  "mscc,jaguar2-pinctrl", "microchip,sparx5-pinctrl",
+> -			  "mscc,luton-pinctrl", "mscc,serval-pinctrl",
+> -			  "microchip,lan966x-pinctrl" or "mscc,servalt-pinctrl"
+> - - reg			: Address and length of the register set for the device
+> - - gpio-controller	: Indicates this device is a GPIO controller
+> - - #gpio-cells		: Must be 2.
+> -			  The first cell is the pin number and the
+> -			  second cell specifies GPIO flags, as defined in
+> -			  <dt-bindings/gpio/gpio.h>.
+> - - gpio-ranges		: Range of pins managed by the GPIO controller.
+> -
+> -
+> -The ocelot-pinctrl driver uses the generic pin multiplexing and generic pin
+> -configuration documented in pinctrl-bindings.txt.
+> -
+> -The following generic properties are supported:
+> - - function
+> - - pins
+> -
+> -Example:
+> -	gpio: pinctrl@71070034 {
+> -		compatible = "mscc,ocelot-pinctrl";
+> -		reg = <0x71070034 0x28>;
+> -		gpio-controller;
+> -		#gpio-cells = <2>;
+> -		gpio-ranges = <&gpio 0 0 22>;
+> -
+> -		uart_pins: uart-pins {
+> -				pins = "GPIO_6", "GPIO_7";
+> -				function = "uart";
+> -		};
+> -
+> -		uart2_pins: uart2-pins {
+> -				pins = "GPIO_12", "GPIO_13";
+> -				function = "uart2";
+> -		};
+> -	};
+> diff --git a/Documentation/devicetree/bindings/pinctrl/mscc,ocelot-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mscc,ocelot-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..40148aef4ecf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/mscc,ocelot-pinctrl.yaml
+> @@ -0,0 +1,94 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/mscc,ocelot-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Microsemi Ocelot pin controller Device Tree Bindings
 
-Signed-off-by: Michael Walle <michael@walle.cc>
----
- drivers/pinctrl/pinctrl-ocelot.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+s/Device Tree Bindings//
 
-diff --git a/drivers/pinctrl/pinctrl-ocelot.c b/drivers/pinctrl/pinctrl-ocelot.c
-index 35b213de1af8..d78716533393 100644
---- a/drivers/pinctrl/pinctrl-ocelot.c
-+++ b/drivers/pinctrl/pinctrl-ocelot.c
-@@ -19,6 +19,7 @@
- #include <linux/pinctrl/pinconf-generic.h>
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
-+#include <linux/reset.h>
- #include <linux/slab.h>
- 
- #include "core.h"
-@@ -1906,6 +1907,7 @@ static int ocelot_pinctrl_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct ocelot_pinctrl *info;
-+	struct reset_control *reset;
- 	struct regmap *pincfg;
- 	void __iomem *base;
- 	int ret;
-@@ -1921,6 +1923,13 @@ static int ocelot_pinctrl_probe(struct platform_device *pdev)
- 
- 	info->desc = (struct pinctrl_desc *)device_get_match_data(dev);
- 
-+	reset = devm_reset_control_get_optional_shared(dev, "switch");
-+	if (IS_ERR(reset)) {
-+		dev_err(dev, "Failed to get reset\n");
-+		return PTR_ERR(reset);
-+	}
-+	reset_control_reset(reset);
-+
- 	base = devm_ioremap_resource(dev,
- 			platform_get_resource(pdev, IORESOURCE_MEM, 0));
- 	if (IS_ERR(base))
--- 
-2.30.2
+> +
+> +maintainers:
+> +  - Alexandre Belloni <alexandre.belloni@bootlin.com>
+> +  - Lars Povlsen <lars.povlsen@microchip.com>
+> +
+> +allOf:
+> +  - $ref: "pinctrl.yaml#"
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - microchip,lan966x-pinctrl
+> +      - microchip,sparx5-pinctrl
+> +      - mscc,jaguar2-pinctrl
+> +      - mscc,luton-pinctrl
+> +      - mscc,ocelot-pinctrl
+> +      - mscc,serval-pinctrl
+> +      - mscc,servalt-pinctrl
+> +
+> +  reg: true
 
+maxItems
+
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +    const: 2
+> +
+> +  gpio-ranges: true
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +    description: The GPIO parent interrupt.
+
+Skip description, it's obvious.
+
+> +
+> +  interrupt-controller: true
+> +
+> +  "#interrupt-cells":
+> +    const: 2
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - gpio-controller
+> +  - '#gpio-cells'
+> +  - gpio-ranges
+
+Put "required:" after "patternProperties:".
+
+> +patternProperties:
+> +  '-pins$':
+> +    type: object
+> +    allOf:
+> +      - $ref: "pinmux-node.yaml"
+> +      - $ref: "pincfg-node.yaml"
+
+
+Best regards,
+Krzysztof
