@@ -2,114 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 453394D9ADE
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Mar 2022 13:10:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AE8C54D9AE5
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Mar 2022 13:12:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348152AbiCOMLR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Mar 2022 08:11:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50852 "EHLO
+        id S242574AbiCOMN2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Mar 2022 08:13:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348143AbiCOMLQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Mar 2022 08:11:16 -0400
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14F443BBD8
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Mar 2022 05:10:04 -0700 (PDT)
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com [209.85.218.69])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 9B4833F4C1
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Mar 2022 12:10:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1647346203;
-        bh=JrjI8ug5jiiOo2QQNMf6XXWRu9KsYWfIvga3TWL6z2s=;
-        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-         In-Reply-To:Content-Type;
-        b=E/YsfaS9VPu5v3Nzxzfpj8GDNlZJtiYRUzuNxx5kdmp+IttIP04ITnDivnrZk6Hmh
-         LMdASBmMS/vI4wruhc33NaaoODMIkor1pV0KMeVoWIRZUb3VPp0bWXh2TV7uFgG/Z3
-         WWcz0tkeoV7QzyP6UKw8EqU5kH//TXE6eGUj6UPyclKCOBTe7EZA9C5xCt/fDoNCaA
-         eWLM4c5ZQPTLMHLS4g/6lhfhXfIgSLieJEwb4fQWgXEWYO3ae4d+3I2G1lQC0PSaq9
-         4tTMx7CNuL/8Ks97MT2HTWF7RJAk+Qm7H1MR/Rx73UwiD1NJt78WZwrNEFwCDzbBxA
-         lPi76oM18LuAg==
-Received: by mail-ej1-f69.google.com with SMTP id hy9-20020a1709068a6900b006df68012720so391936ejc.14
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Mar 2022 05:10:03 -0700 (PDT)
+        with ESMTP id S241885AbiCOMN2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Mar 2022 08:13:28 -0400
+Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C92D3C4AB
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Mar 2022 05:12:16 -0700 (PDT)
+Received: by mail-pf1-x435.google.com with SMTP id l8so8846151pfu.1
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Mar 2022 05:12:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=HJrujGQBXk61RDGZpAorafl+LZ1A28PgG85F9sdvPfs=;
+        b=IrAH2moD07c5j1H1rZC14jStwPlOTAm10NLdsoHY6FrNLpHxUCLwiZD7+1ZMNDZ3yP
+         yOfJfR6zNggDd2VDbqTvP24bdnc77ZpKzqsqRBRmzZFAWwIH3TWPq89CLMRL5hmf0krt
+         GOshHT5+Y5LqybnrwV3nLbxcg8gTBnsebTuzrk4Fp6K3AQSzAfy2ULhIZp4LLO2KIKQm
+         oKMp3iCdMeYleJXLkA6kqm9fEE+baHWndohUqLocThrK2p0t3TB397B+Pg2O5XUcAHh7
+         iI2LNFy8EfHIk5vVMYgOtgcxPQMCaBRoeSabVOIGn7+9k2+vj0PDXMOfFi/H09bqnyLN
+         ow/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=JrjI8ug5jiiOo2QQNMf6XXWRu9KsYWfIvga3TWL6z2s=;
-        b=fGlmornWbpBUJDvKR+iM3w3wX5B895JRebYVhWsEi3WMpJ4YGLVRIoh7ReAyab1CbJ
-         AfmEFpfmHnBYeEuCxxPxwVa7/6eOe0g6dNdlEXiO5PFI9IYE7+qXu8zSI3jSyYrmgupJ
-         zPuw75Vf0ST9iB4qm9WCVMwA4x7nKHbTkyZf1iXM8TYX11mO9tgvzSwILBnbCKL6kJ6X
-         shl5m31b+AjDBBfzubfAVblTFIHqxgy79xBYF/2tzsRljUZc5hss3INYVsTvUL/vbPXG
-         HWDDdlMqIKtJW73PrOUM+SJBPD6O/WSUksbTtUoILiR7ovX4DM7iYJrgGOmLeK7B/zhw
-         tRSw==
-X-Gm-Message-State: AOAM532xQ7xa+DVERuONFR8yZjGvxxXGxlt+axqZjUcE0RnEx4HaWYyV
-        prJczQPRJJ2gFPik1ZEgHYlSHWREtLZeyPopNdBfU9wYw/KhpssNOOBQkWY3bcqH8pRPO415hP0
-        8c8TEMlJrIzRp5md11IQFXW5c5H5+sDTc7qjdnSI=
-X-Received: by 2002:a05:6402:510b:b0:416:9d56:20e with SMTP id m11-20020a056402510b00b004169d56020emr24577127edd.264.1647346203112;
-        Tue, 15 Mar 2022 05:10:03 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyL5oVu+KdSTtII+FGRbWbojzGhHAKapgId7kloA1Hmcl7rJtub2yFInIrcLAwN8qHmmj/C5g==
-X-Received: by 2002:a05:6402:510b:b0:416:9d56:20e with SMTP id m11-20020a056402510b00b004169d56020emr24577111edd.264.1647346202938;
-        Tue, 15 Mar 2022 05:10:02 -0700 (PDT)
-Received: from [192.168.0.155] (xdsl-188-155-174-239.adslplus.ch. [188.155.174.239])
-        by smtp.gmail.com with ESMTPSA id e22-20020a170906505600b006da7d71f25csm8018502ejk.41.2022.03.15.05.10.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Mar 2022 05:10:02 -0700 (PDT)
-Message-ID: <06c80c97-c026-885c-5e69-0466d17d5930@canonical.com>
-Date:   Tue, 15 Mar 2022 13:10:01 +0100
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=HJrujGQBXk61RDGZpAorafl+LZ1A28PgG85F9sdvPfs=;
+        b=z0zI3gCI46cWmTh9hPniW82lw8rg4UoEnDGgCsC7lcazUBL4YJi+AHeBE+KB2vzhkR
+         YRNbpvsLM+2SM48PQ0SXOc/RApUB+dWZyCERRu6Lpcaq45vnKLi/9ZoHPeFG9/DF3vCM
+         fGjf0BGCDHjZc7t4GmQ1W3ZWIWVWVzFmIyHNdy6ltrX376iqnwRRIOTXkMsgFdDjmete
+         8jUHxLGyxSTrUOSex0VbU8yYpyRzpTf74z0YFz5eXsNoVXwCghGkcEb308/4x7t/sghT
+         QxT8qSDuj6HmI++z/uouVWRdQBpAEVSBbjKjhB0baHRlmmT+bCGQBRhPxA1AL4JS0z27
+         ZOkQ==
+X-Gm-Message-State: AOAM532zBBjxZZsOSnxY0SBnas8gucCn4r8L99CI/DO1zq/DpN35JJXa
+        bGplti2Cb9vMgwzaCCjQr9E=
+X-Google-Smtp-Source: ABdhPJwxvVM8M36xXJwpid1Lu/BILKRRC3hQaK9wmvWjrzsZvDvVXGVZqY8q3cmPn28bNsY5me3NSQ==
+X-Received: by 2002:a63:8543:0:b0:380:3079:dffd with SMTP id u64-20020a638543000000b003803079dffdmr24247887pgd.106.1647346336015;
+        Tue, 15 Mar 2022 05:12:16 -0700 (PDT)
+Received: from sol ([124.148.64.37])
+        by smtp.gmail.com with ESMTPSA id 3-20020a17090a190300b001c61add3386sm2810227pjg.35.2022.03.15.05.12.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Mar 2022 05:12:15 -0700 (PDT)
+Date:   Tue, 15 Mar 2022 20:12:11 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [libgpiod v2][PATCH 2/3] core: split chip_info out of chip
+Message-ID: <20220315121211.GA174293@sol>
+References: <20220315053220.102934-1-warthog618@gmail.com>
+ <20220315053220.102934-3-warthog618@gmail.com>
+ <CAMRc=Mf9pAWiKeR2GH6PQX=bUOvWXoyWUP2aY+5grzqoAn6M8A@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH v2] pinctrl: qcom-pmic-gpio: Add support for pm8450
-Content-Language: en-US
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <20220315091106.613153-1-dmitry.baryshkov@linaro.org>
- <49d116ad-c853-8c15-83fb-ec4e418323ef@canonical.com>
- <f345e709-afb3-6078-3a3c-87cafd79cbee@linaro.org>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-In-Reply-To: <f345e709-afb3-6078-3a3c-87cafd79cbee@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=Mf9pAWiKeR2GH6PQX=bUOvWXoyWUP2aY+5grzqoAn6M8A@mail.gmail.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 15/03/2022 12:06, Dmitry Baryshkov wrote:
-> On 15/03/2022 13:33, Krzysztof Kozlowski wrote:
->> On 15/03/2022 10:11, Dmitry Baryshkov wrote:
->>> PM8450 provides 4 GPIOs. Add a compatible entry for this GPIO block.
->>>
->>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->>> ---
->>> Changes since v1:
->>>   - Added dt-bindings entry to the pinctrl/qcom,pmic-gpio.yaml
->>
->> This should be a separate patch.
+On Tue, Mar 15, 2022 at 12:59:55PM +0100, Bartosz Golaszewski wrote:
+> On Tue, Mar 15, 2022 at 6:32 AM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> > The core library should be minimalist, only performing the operations
+> > required, but gpiod_chip_open() always fetches the chip info,
+> > even though the majority of the time the chip will only be used to
+> > request a line, so the chip info is not required.
+> >
+> > Split the chip_info from the chip, in the same style as line_info, and
+> > update methods and tools appropriately.
+> >
+> > In the rare occasions that the user requires the chip info they can
+> > request it themselves using gpiod_chip_get_info(), as demonstrated
+> > in the tool changes.
+> >
+> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
 > 
-> Quoting Linus Wallej:
->  > I am fine with bindings being fixed in the same patch for this type
->  > of oneliners.
+> Ha! Interesting take. Makes sense. I queued this but tweaked a couple
+> things (some bad copy-paste and stray newlines).
 > 
-> So, I added it to the same patch.
 
-ok, then:
+I've been flip-flopping on this one, but wanted to float it as we're
+getting close to finalising the API.
+In some ways hiding the chip info is simpler, and gpiod_chip_open()
+already does a whole lot in gpiod_is_gpiochip_device(), so an extra
+ioctl call isn't going to make much difference...
+But it does reduce the gpiod_chip size a fair bit as well.
+As I said - flip-flopping.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-
-Best regards,
-Krzysztof
+Cheers,
+Kent.
