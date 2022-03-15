@@ -2,316 +2,149 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 493524D9EA7
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Mar 2022 16:27:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 11A034D9EC0
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Mar 2022 16:32:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349594AbiCOP2i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Mar 2022 11:28:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50050 "EHLO
+        id S237611AbiCOPde (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Mar 2022 11:33:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349590AbiCOP2h (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Mar 2022 11:28:37 -0400
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1A18E50B17;
-        Tue, 15 Mar 2022 08:27:24 -0700 (PDT)
-X-IronPort-AV: E=Sophos;i="5.90,183,1643641200"; 
-   d="scan'208";a="114498180"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 16 Mar 2022 00:27:24 +0900
-Received: from localhost.localdomain (unknown [10.226.92.209])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id CA4044008491;
-        Wed, 16 Mar 2022 00:27:22 +0900 (JST)
-From:   Biju Das <biju.das.jz@bp.renesas.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 2/2] pinctrl: renesas: rzg2l: Add RZ/G2UL support
-Date:   Tue, 15 Mar 2022 15:27:17 +0000
-Message-Id: <20220315152717.20045-2-biju.das.jz@bp.renesas.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220315152717.20045-1-biju.das.jz@bp.renesas.com>
-References: <20220315152717.20045-1-biju.das.jz@bp.renesas.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UPPERCASE_50_75 autolearn=no
-        autolearn_force=no version=3.4.6
+        with ESMTP id S236492AbiCOPdd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Mar 2022 11:33:33 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23FAF5373A
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Mar 2022 08:32:21 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id a8so42239916ejc.8
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Mar 2022 08:32:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WIbu0rPO1oEyVSZctnr9unTIMs3QGdYvEZIGw/Rg3/M=;
+        b=HW7L3aAEZpfJkkBKbcufU2ZBL+b2nHn0dDrxs5vR26Qi6wcZlPM8V3P9He2mTCDsQO
+         KRj0dLcVsqMvv7Ks8EhENQi9VzfbZFlP7hge5Rk7YTLYlWdrszJxcikMY8gRfXfjlwcp
+         AxcTUWtaCO3f8Ej5DZkJzqR2BPlHllGfAqzcS1scF3qGc+EUjEoO+kekfCS0/rGz9zkX
+         PENpa3IJsd9no9oV4krFC7LGcYdQg4FJ7Yix4uxCj+CzIX4RQaKbRyzkLLrVh1XWP4w5
+         uCEUDGut1JuLC0/ytPkNIg6DqIqReIosVZzoclxoBa7Ao1IKn2R6SHM/CGZdmY2o6ZLZ
+         EuFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WIbu0rPO1oEyVSZctnr9unTIMs3QGdYvEZIGw/Rg3/M=;
+        b=Fzo31epKuUMnsb0omoEaA5JTix21i4c5GdEjKOlDd4L2ijQ7AvuGESAWQaizP1O/U+
+         aC3cP7EPmUctP0lIyrTb/g7bo/vYZUDwk33j5IO6OZpc1LOr4pzvC6Yf2RrHpL37s0LQ
+         zVACdKRoNpv7OEpm47HNwXzLbVyFeXNAHezv8sCTQGqgUtyEl88hCuYoKE/g06KrldGu
+         R5DyGq1bc9eAbW9O2QJ/S4u5IgJopJB+o1x+qTbSlYkGxWg/l3F75WaB1hUQ6a31o4FR
+         K9iBPt8WRF5YRJ3YwasK7hgU1guwbwuuUq4klnh+3v5o8DtDsI6wPefOJCTgtk31/Ow/
+         Tufw==
+X-Gm-Message-State: AOAM532nmEuwg056chxzzdEPnsWsXrbJUs3dGHZ3nGC1w6QTUe9kbX0Y
+        eVLzUipPBOBlmr+k45piQIKRJhjUoyjGT252E8Pixg==
+X-Google-Smtp-Source: ABdhPJzPF76GqyUDd0qxghCloyB+ZKiQw/x2JzVMxKx4UnoTcArbLgDEl86pODyHYw8xGOUTMJcsMDvHaSa/YLQWDF4=
+X-Received: by 2002:a17:907:97d4:b0:6db:ab53:1fe3 with SMTP id
+ js20-20020a17090797d400b006dbab531fe3mr16562134ejc.492.1647358339569; Tue, 15
+ Mar 2022 08:32:19 -0700 (PDT)
+MIME-Version: 1.0
+References: <20211217153555.9413-1-marcelo.jimenez@gmail.com> <20220314155509.552218-1-michael@walle.cc>
+In-Reply-To: <20220314155509.552218-1-michael@walle.cc>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 15 Mar 2022 16:32:08 +0100
+Message-ID: <CAMRc=MfH00YJv07TaiZ5z1w4gzqP5_8z9bKFcNU1Z37AVih4hQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
+To:     Michael Walle <michael@walle.cc>
+Cc:     Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>,
+        Andrew Chant <achant@google.com>,
+        Edmond Chung <edmondchung@google.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        regressions@lists.linux.dev,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        stable <stable@vger.kernel.org>,
+        Sergio Tanzilli <tanzilli@acmesystems.it>,
+        Thierry Reding <treding@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Will McVicker <willmcvicker@google.com>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-RZ/G2UL SoC has fewer pins compared to RZ/G2L and the port pin
-definitions are different compared to RZ/G2L.
+On Mon, Mar 14, 2022 at 4:55 PM Michael Walle <michael@walle.cc> wrote:
+>
+> Hi,
+>
+> > Some GPIO lines have stopped working after the patch
+> > commit 2ab73c6d8323f ("gpio: Support GPIO controllers without pin-ranges")
+> >
+> > And this has supposedly been fixed in the following patches
+> > commit 89ad556b7f96a ("gpio: Avoid using pin ranges with !PINCTRL")
+> > commit 6dbbf84603961 ("gpiolib: Don't free if pin ranges are not defined")
+> >
+> > But an erratic behavior where some GPIO lines work while others do not work
+> > has been introduced.
+> >
+> > This patch reverts those changes so that the sysfs-gpio interface works
+> > properly again.
+> >
+> > Signed-off-by: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+>
+> This breaks the pinctrl-microchip-sgpio driver as far as I can see.
+>
+> I tried to debug it and this is what I have discovered so far:
+>  (1) the sgpio driver will use the gpio_stub_drv for its child nodes.
+>      Looks like a workaround, see [1].
+>  (2) these will have an empty gpio range
+>  (3) with the changes of this patch, pinctrl_gpio_request() will now
+>      be called and will fail with -EPROBE_DEFER.
+>
+> I'm not exactly sure what to do here. Saravana Kannan once suggested
+> to use devm_of_platform_populate() to probe the child nodes [2]. But
+> I haven't found any other driver doing that.
+>
 
-This patch adds a new compatible to take care of this differences
-by adding r9a07g043_data with r9a07g043_gpio_configs and
-rzg2l_dedicated_pins.common.
+TI AEMIF driver (drivers/memory/ti-aemif.c) does something like this:
 
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
-Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- drivers/pinctrl/renesas/Kconfig         |   5 +-
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 200 ++++++++++++++----------
- 2 files changed, 124 insertions(+), 81 deletions(-)
+406         if (np) {
+407                 for_each_available_child_of_node(np, child_np) {
+408                         ret = of_platform_populate(child_np, NULL,
+409                                                    dev_lookup, dev);
+410                         if (ret < 0) {
+411                                 of_node_put(child_np);
+412                                 goto error;
+413                         }
+414                 }
+415         } else if (pdata) {
+416                 for (i = 0; i < pdata->num_sub_devices; i++) {
+417                         pdata->sub_devices[i].dev.parent = dev;
+418                         ret =
+platform_device_register(&pdata->sub_devices[i]);
+419                         if (ret) {
+420                                 dev_warn(dev, "Error register sub
+device %s\n",
+421                                          pdata->sub_devices[i].name);
+422                         }
+423                 }
+424         }
 
-diff --git a/drivers/pinctrl/renesas/Kconfig b/drivers/pinctrl/renesas/Kconfig
-index c0c740e660b8..1fbf143712fc 100644
---- a/drivers/pinctrl/renesas/Kconfig
-+++ b/drivers/pinctrl/renesas/Kconfig
-@@ -37,6 +37,7 @@ config PINCTRL_RENESAS
- 	select PINCTRL_PFC_R8A77990 if ARCH_R8A77990
- 	select PINCTRL_PFC_R8A77995 if ARCH_R8A77995
- 	select PINCTRL_PFC_R8A779A0 if ARCH_R8A779A0
-+	select PINCTRL_RZG2L if ARCH_R9A07G043
- 	select PINCTRL_RZG2L if ARCH_R9A07G044
- 	select PINCTRL_RZG2L if ARCH_R9A07G054
- 	select PINCTRL_PFC_SH7203 if CPU_SUBTYPE_SH7203
-@@ -179,14 +180,14 @@ config PINCTRL_RZA2
- 	  This selects GPIO and pinctrl driver for Renesas RZ/A2 platforms.
- 
- config PINCTRL_RZG2L
--	bool "pin control support for RZ/{G2L,V2L}" if COMPILE_TEST
-+	bool "pin control support for RZ/{G2L,G2UL,V2L}" if COMPILE_TEST
- 	depends on OF
- 	select GPIOLIB
- 	select GENERIC_PINCTRL_GROUPS
- 	select GENERIC_PINMUX_FUNCTIONS
- 	select GENERIC_PINCONF
- 	help
--	  This selects GPIO and pinctrl driver for Renesas RZ/{G2L,V2L}
-+	  This selects GPIO and pinctrl driver for Renesas RZ/{G2L,G2UL,V2L}
- 	  platforms.
- 
- config PINCTRL_PFC_R8A77470
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index cb805502fb0f..0be9578bea4f 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -996,83 +996,112 @@ static const u32 rzg2l_gpio_configs[] = {
- 	RZG2L_GPIO_PORT_PACK(5, 0x40, RZG2L_MPXED_PIN_FUNCS),
- };
- 
--static  struct rzg2l_dedicated_configs rzg2l_dedicated_pins[] = {
--	{ "NMI", RZG2L_SINGLE_PIN_PACK(0x1, 0,
--	 (PIN_CFG_FILONOFF | PIN_CFG_FILNUM | PIN_CFG_FILCLKSEL)) },
--	{ "TMS/SWDIO", RZG2L_SINGLE_PIN_PACK(0x2, 0,
--	 (PIN_CFG_SR | PIN_CFG_IOLH_A | PIN_CFG_IEN)) },
--	{ "TDO", RZG2L_SINGLE_PIN_PACK(0x3, 0,
--	 (PIN_CFG_IOLH_A | PIN_CFG_SR | PIN_CFG_IEN)) },
--	{ "AUDIO_CLK1", RZG2L_SINGLE_PIN_PACK(0x4, 0, PIN_CFG_IEN) },
--	{ "AUDIO_CLK2", RZG2L_SINGLE_PIN_PACK(0x4, 1, PIN_CFG_IEN) },
--	{ "SD0_CLK", RZG2L_SINGLE_PIN_PACK(0x6, 0,
--	 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IO_VMC_SD0)) },
--	{ "SD0_CMD", RZG2L_SINGLE_PIN_PACK(0x6, 1,
--	 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_IO_VMC_SD0)) },
--	{ "SD0_RST#", RZG2L_SINGLE_PIN_PACK(0x6, 2,
--	 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IO_VMC_SD0)) },
--	{ "SD0_DATA0", RZG2L_SINGLE_PIN_PACK(0x7, 0,
--	 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_IO_VMC_SD0)) },
--	{ "SD0_DATA1", RZG2L_SINGLE_PIN_PACK(0x7, 1,
--	 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_IO_VMC_SD0)) },
--	{ "SD0_DATA2", RZG2L_SINGLE_PIN_PACK(0x7, 2,
--	 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_IO_VMC_SD0)) },
--	{ "SD0_DATA3", RZG2L_SINGLE_PIN_PACK(0x7, 3,
--	 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_IO_VMC_SD0)) },
--	{ "SD0_DATA4", RZG2L_SINGLE_PIN_PACK(0x7, 4,
--	 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_IO_VMC_SD0)) },
--	{ "SD0_DATA5", RZG2L_SINGLE_PIN_PACK(0x7, 5,
--	 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_IO_VMC_SD0)) },
--	{ "SD0_DATA6", RZG2L_SINGLE_PIN_PACK(0x7, 6,
--	 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_IO_VMC_SD0)) },
--	{ "SD0_DATA7", RZG2L_SINGLE_PIN_PACK(0x7, 7,
--	 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_IO_VMC_SD0)) },
--	{ "SD1_CLK", RZG2L_SINGLE_PIN_PACK(0x8, 0,
--	 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IO_VMC_SD1)) },
--	{ "SD1_CMD", RZG2L_SINGLE_PIN_PACK(0x8, 1,
--	 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_IO_VMC_SD1)) },
--	{ "SD1_DATA0", RZG2L_SINGLE_PIN_PACK(0x9, 0,
--	 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_IO_VMC_SD1)) },
--	{ "SD1_DATA1", RZG2L_SINGLE_PIN_PACK(0x9, 1,
--	 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_IO_VMC_SD1)) },
--	{ "SD1_DATA2", RZG2L_SINGLE_PIN_PACK(0x9, 2,
--	 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_IO_VMC_SD1)) },
--	{ "SD1_DATA3", RZG2L_SINGLE_PIN_PACK(0x9, 3,
--	 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_IO_VMC_SD1)) },
--	{ "QSPI0_SPCLK", RZG2L_SINGLE_PIN_PACK(0xa, 0,
--	 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IO_VMC_QSPI)) },
--	{ "QSPI0_IO0", RZG2L_SINGLE_PIN_PACK(0xa, 1,
--	 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IO_VMC_QSPI)) },
--	{ "QSPI0_IO1", RZG2L_SINGLE_PIN_PACK(0xa, 2,
--	 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IO_VMC_QSPI)) },
--	{ "QSPI0_IO2", RZG2L_SINGLE_PIN_PACK(0xa, 3,
--	 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IO_VMC_QSPI)) },
--	{ "QSPI0_IO3", RZG2L_SINGLE_PIN_PACK(0xa, 4,
--	 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IO_VMC_QSPI)) },
--	{ "QSPI0_SSL", RZG2L_SINGLE_PIN_PACK(0xa, 5,
--	 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IO_VMC_QSPI)) },
--	{ "QSPI1_SPCLK", RZG2L_SINGLE_PIN_PACK(0xb, 0,
--	 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IO_VMC_QSPI)) },
--	{ "QSPI1_IO0", RZG2L_SINGLE_PIN_PACK(0xb, 1,
--	 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IO_VMC_QSPI)) },
--	{ "QSPI1_IO1", RZG2L_SINGLE_PIN_PACK(0xb, 2,
--	 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IO_VMC_QSPI)) },
--	{ "QSPI1_IO2", RZG2L_SINGLE_PIN_PACK(0xb, 3,
--	 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IO_VMC_QSPI)) },
--	{ "QSPI1_IO3", RZG2L_SINGLE_PIN_PACK(0xb, 4,
--	 (PIN_CFG_IOLH_B | PIN_CFG_SR  | PIN_CFG_IO_VMC_QSPI)) },
--	{ "QSPI1_SSL", RZG2L_SINGLE_PIN_PACK(0xb, 5,
--	 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IO_VMC_QSPI)) },
--	{ "QSPI_RESET#", RZG2L_SINGLE_PIN_PACK(0xc, 0,
--	 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IO_VMC_QSPI)) },
--	{ "QSPI_WP#", RZG2L_SINGLE_PIN_PACK(0xc, 1,
--	 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IO_VMC_QSPI)) },
--	{ "QSPI_INT#", RZG2L_SINGLE_PIN_PACK(0xc, 2, (PIN_CFG_SR | PIN_CFG_IO_VMC_QSPI)) },
--	{ "WDTOVF_PERROUT#", RZG2L_SINGLE_PIN_PACK(0xd, 0, (PIN_CFG_IOLH_A | PIN_CFG_SR)) },
--	{ "RIIC0_SDA", RZG2L_SINGLE_PIN_PACK(0xe, 0, PIN_CFG_IEN) },
--	{ "RIIC0_SCL", RZG2L_SINGLE_PIN_PACK(0xe, 1, PIN_CFG_IEN) },
--	{ "RIIC1_SDA", RZG2L_SINGLE_PIN_PACK(0xe, 2, PIN_CFG_IEN) },
--	{ "RIIC1_SCL", RZG2L_SINGLE_PIN_PACK(0xe, 3, PIN_CFG_IEN) },
-+static const u32 r9a07g043_gpio_configs[] = {
-+	RZG2L_GPIO_PORT_PACK(4, 0x10, RZG2L_MPXED_PIN_FUNCS),
-+	RZG2L_GPIO_PORT_PACK(5, 0x11, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH0)),
-+	RZG2L_GPIO_PORT_PACK(4, 0x12, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH0)),
-+	RZG2L_GPIO_PORT_PACK(4, 0x13, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH0)),
-+	RZG2L_GPIO_PORT_PACK(6, 0x14, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH0)),
-+	RZG2L_GPIO_PORT_PACK(5, 0x15, RZG2L_MPXED_PIN_FUNCS),
-+	RZG2L_GPIO_PORT_PACK(5, 0x16, RZG2L_MPXED_PIN_FUNCS),
-+	RZG2L_GPIO_PORT_PACK(5, 0x17, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH1)),
-+	RZG2L_GPIO_PORT_PACK(5, 0x18, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH1)),
-+	RZG2L_GPIO_PORT_PACK(4, 0x19, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH1)),
-+	RZG2L_GPIO_PORT_PACK(5, 0x1a, RZG2L_MPXED_ETH_PIN_FUNCS(PIN_CFG_IO_VMC_ETH1)),
-+	RZG2L_GPIO_PORT_PACK(4, 0x1b, RZG2L_MPXED_PIN_FUNCS),
-+	RZG2L_GPIO_PORT_PACK(2, 0x1c, RZG2L_MPXED_PIN_FUNCS),
-+	RZG2L_GPIO_PORT_PACK(5, 0x1d, RZG2L_MPXED_PIN_FUNCS),
-+	RZG2L_GPIO_PORT_PACK(3, 0x1e, RZG2L_MPXED_PIN_FUNCS),
-+	RZG2L_GPIO_PORT_PACK(4, 0x1f, RZG2L_MPXED_PIN_FUNCS),
-+	RZG2L_GPIO_PORT_PACK(2, 0x20, RZG2L_MPXED_PIN_FUNCS),
-+	RZG2L_GPIO_PORT_PACK(4, 0x21, RZG2L_MPXED_PIN_FUNCS),
-+	RZG2L_GPIO_PORT_PACK(6, 0x22, RZG2L_MPXED_PIN_FUNCS),
-+};
-+
-+static struct {
-+	struct rzg2l_dedicated_configs common[36];
-+	struct rzg2l_dedicated_configs rzg2l_pins[6];
-+} rzg2l_dedicated_pins = {
-+	.common = {
-+		{ "NMI", RZG2L_SINGLE_PIN_PACK(0x1, 0,
-+		 (PIN_CFG_FILONOFF | PIN_CFG_FILNUM | PIN_CFG_FILCLKSEL)) },
-+		{ "TMS/SWDIO", RZG2L_SINGLE_PIN_PACK(0x2, 0,
-+		 (PIN_CFG_SR | PIN_CFG_IOLH_A | PIN_CFG_IEN)) },
-+		{ "TDO", RZG2L_SINGLE_PIN_PACK(0x3, 0,
-+		 (PIN_CFG_IOLH_A | PIN_CFG_SR | PIN_CFG_IEN)) },
-+		{ "AUDIO_CLK1", RZG2L_SINGLE_PIN_PACK(0x4, 0, PIN_CFG_IEN) },
-+		{ "AUDIO_CLK2", RZG2L_SINGLE_PIN_PACK(0x4, 1, PIN_CFG_IEN) },
-+		{ "SD0_CLK", RZG2L_SINGLE_PIN_PACK(0x6, 0,
-+		 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IO_VMC_SD0)) },
-+		{ "SD0_CMD", RZG2L_SINGLE_PIN_PACK(0x6, 1,
-+		 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_IO_VMC_SD0)) },
-+		{ "SD0_RST#", RZG2L_SINGLE_PIN_PACK(0x6, 2,
-+		 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IO_VMC_SD0)) },
-+		{ "SD0_DATA0", RZG2L_SINGLE_PIN_PACK(0x7, 0,
-+		 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_IO_VMC_SD0)) },
-+		{ "SD0_DATA1", RZG2L_SINGLE_PIN_PACK(0x7, 1,
-+		 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_IO_VMC_SD0)) },
-+		{ "SD0_DATA2", RZG2L_SINGLE_PIN_PACK(0x7, 2,
-+		 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_IO_VMC_SD0)) },
-+		{ "SD0_DATA3", RZG2L_SINGLE_PIN_PACK(0x7, 3,
-+		 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_IO_VMC_SD0)) },
-+		{ "SD0_DATA4", RZG2L_SINGLE_PIN_PACK(0x7, 4,
-+		 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_IO_VMC_SD0)) },
-+		{ "SD0_DATA5", RZG2L_SINGLE_PIN_PACK(0x7, 5,
-+		 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_IO_VMC_SD0)) },
-+		{ "SD0_DATA6", RZG2L_SINGLE_PIN_PACK(0x7, 6,
-+		 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_IO_VMC_SD0)) },
-+		{ "SD0_DATA7", RZG2L_SINGLE_PIN_PACK(0x7, 7,
-+		 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_IO_VMC_SD0)) },
-+		{ "SD1_CLK", RZG2L_SINGLE_PIN_PACK(0x8, 0,
-+		 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IO_VMC_SD1)) },
-+		{ "SD1_CMD", RZG2L_SINGLE_PIN_PACK(0x8, 1,
-+		 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_IO_VMC_SD1)) },
-+		{ "SD1_DATA0", RZG2L_SINGLE_PIN_PACK(0x9, 0,
-+		 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_IO_VMC_SD1)) },
-+		{ "SD1_DATA1", RZG2L_SINGLE_PIN_PACK(0x9, 1,
-+		 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_IO_VMC_SD1)) },
-+		{ "SD1_DATA2", RZG2L_SINGLE_PIN_PACK(0x9, 2,
-+		 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_IO_VMC_SD1)) },
-+		{ "SD1_DATA3", RZG2L_SINGLE_PIN_PACK(0x9, 3,
-+		 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IEN | PIN_CFG_IO_VMC_SD1)) },
-+		{ "QSPI0_SPCLK", RZG2L_SINGLE_PIN_PACK(0xa, 0,
-+		 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IO_VMC_QSPI)) },
-+		{ "QSPI0_IO0", RZG2L_SINGLE_PIN_PACK(0xa, 1,
-+		 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IO_VMC_QSPI)) },
-+		{ "QSPI0_IO1", RZG2L_SINGLE_PIN_PACK(0xa, 2,
-+		 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IO_VMC_QSPI)) },
-+		{ "QSPI0_IO2", RZG2L_SINGLE_PIN_PACK(0xa, 3,
-+		 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IO_VMC_QSPI)) },
-+		{ "QSPI0_IO3", RZG2L_SINGLE_PIN_PACK(0xa, 4,
-+		 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IO_VMC_QSPI)) },
-+		{ "QSPI0_SSL", RZG2L_SINGLE_PIN_PACK(0xa, 5,
-+		 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IO_VMC_QSPI)) },
-+		{ "QSPI_RESET#", RZG2L_SINGLE_PIN_PACK(0xc, 0,
-+		 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IO_VMC_QSPI)) },
-+		{ "QSPI_WP#", RZG2L_SINGLE_PIN_PACK(0xc, 1,
-+		 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IO_VMC_QSPI)) },
-+		{ "QSPI_INT#", RZG2L_SINGLE_PIN_PACK(0xc, 2, (PIN_CFG_SR | PIN_CFG_IO_VMC_QSPI)) },
-+		{ "WDTOVF_PERROUT#", RZG2L_SINGLE_PIN_PACK(0xd, 0, (PIN_CFG_IOLH_A | PIN_CFG_SR)) },
-+		{ "RIIC0_SDA", RZG2L_SINGLE_PIN_PACK(0xe, 0, PIN_CFG_IEN) },
-+		{ "RIIC0_SCL", RZG2L_SINGLE_PIN_PACK(0xe, 1, PIN_CFG_IEN) },
-+		{ "RIIC1_SDA", RZG2L_SINGLE_PIN_PACK(0xe, 2, PIN_CFG_IEN) },
-+		{ "RIIC1_SCL", RZG2L_SINGLE_PIN_PACK(0xe, 3, PIN_CFG_IEN) },
-+	},
-+	.rzg2l_pins = {
-+		{ "QSPI1_SPCLK", RZG2L_SINGLE_PIN_PACK(0xb, 0,
-+		 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IO_VMC_QSPI)) },
-+		{ "QSPI1_IO0", RZG2L_SINGLE_PIN_PACK(0xb, 1,
-+		 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IO_VMC_QSPI)) },
-+		{ "QSPI1_IO1", RZG2L_SINGLE_PIN_PACK(0xb, 2,
-+		 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IO_VMC_QSPI)) },
-+		{ "QSPI1_IO2", RZG2L_SINGLE_PIN_PACK(0xb, 3,
-+		 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IO_VMC_QSPI)) },
-+		{ "QSPI1_IO3", RZG2L_SINGLE_PIN_PACK(0xb, 4,
-+		 (PIN_CFG_IOLH_B | PIN_CFG_SR  | PIN_CFG_IO_VMC_QSPI)) },
-+		{ "QSPI1_SSL", RZG2L_SINGLE_PIN_PACK(0xb, 5,
-+		 (PIN_CFG_IOLH_B | PIN_CFG_SR | PIN_CFG_IO_VMC_QSPI)) },
-+	}
- };
- 
- static int rzg2l_gpio_register(struct rzg2l_pinctrl *pctrl)
-@@ -1250,15 +1279,28 @@ static int rzg2l_pinctrl_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static struct rzg2l_pinctrl_data r9a07g043_data = {
-+	.port_pins = rzg2l_gpio_names,
-+	.port_pin_configs = r9a07g043_gpio_configs,
-+	.dedicated_pins = rzg2l_dedicated_pins.common,
-+	.n_port_pins = ARRAY_SIZE(r9a07g043_gpio_configs) * RZG2L_PINS_PER_PORT,
-+	.n_dedicated_pins = ARRAY_SIZE(rzg2l_dedicated_pins.common),
-+};
-+
- static struct rzg2l_pinctrl_data r9a07g044_data = {
- 	.port_pins = rzg2l_gpio_names,
- 	.port_pin_configs = rzg2l_gpio_configs,
--	.dedicated_pins = rzg2l_dedicated_pins,
-+	.dedicated_pins = rzg2l_dedicated_pins.common,
- 	.n_port_pins = ARRAY_SIZE(rzg2l_gpio_names),
--	.n_dedicated_pins = ARRAY_SIZE(rzg2l_dedicated_pins),
-+	.n_dedicated_pins = ARRAY_SIZE(rzg2l_dedicated_pins.common) +
-+		ARRAY_SIZE(rzg2l_dedicated_pins.rzg2l_pins),
- };
- 
- static const struct of_device_id rzg2l_pinctrl_of_table[] = {
-+	{
-+		.compatible = "renesas,r9a07g043-pinctrl",
-+		.data = &r9a07g043_data,
-+	},
- 	{
- 		.compatible = "renesas,r9a07g044-pinctrl",
- 		.data = &r9a07g044_data,
--- 
-2.17.1
+A bunch of different devices (like NAND) get instantiated this way.
+Would this work?
 
+Bart
+
+> Also, I'm not sure if there are any other other driver which get
+> broken by this. I.e. ones falling into the gpio_stub_drv category.
+>
+> [1] https://lore.kernel.org/lkml/20210122193600.1415639-1-saravanak@google.com/
+> [2] https://lore.kernel.org/lkml/CAGETcx9PiX==mLxB9PO8Myyk6u2vhPVwTMsA5NkD-ywH5xhusw@mail.gmail.com/
+>
+> -michael
+>
+> NB. this patch doesn't contain a Fixes tag. Was this on purpose?
