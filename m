@@ -2,143 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0813B4D9C93
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Mar 2022 14:47:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B4AC4D9DB3
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Mar 2022 15:35:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234139AbiCONsL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Mar 2022 09:48:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55492 "EHLO
+        id S1349303AbiCOOf3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Mar 2022 10:35:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348845AbiCONsG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Mar 2022 09:48:06 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A87B52E68;
-        Tue, 15 Mar 2022 06:46:54 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id a8so41434475ejc.8;
-        Tue, 15 Mar 2022 06:46:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=52KupTNckoTiW8mqVp3XaNIUEo5xHI2O53gUBo/w4bY=;
-        b=QV37BBlCAFf8+y0GnPcl7xfC72mhwaTLyyn3UdPWnY/QgD3M6YXFlsTox+8Sr0aM50
-         YKF8p/nicNpsxb16CkJ/Rgj/ZcVBDmz552ZTRZXKVtJX6Y1+JNZ3VesqXLUsmrIifYPE
-         RCfaipaUkL8a4RODT7XzcMQRJVLZ8Om4tHUpKeiPf1spDLP0QX9u9gsHEKJfCzgurpIi
-         EpLmEG7ztqvdwNX3HtwZ/I8yrE+13OqzXC5dFqYJQpC+pPMYvbbfsNxDK1eJ/CEuJWUz
-         bn0vMJtpOL3Cwcp0E/e7RpYoG80dZwvmuKYthDYqVbVXiRDAdhaztY13RmCrX+HCk0Hf
-         V9zA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=52KupTNckoTiW8mqVp3XaNIUEo5xHI2O53gUBo/w4bY=;
-        b=203r7F0SJGSGpvNAj7PzgaiDnFKn+3YOdr92DNaq7JWrZVxCgflWTXh9gGMnq70zvw
-         tJGysimPzPIXfIfqvFAnO5GFAqwHiX2+liX7KbylJwmn2yKDxOGAo6WdsqOh/v2vl4n4
-         IkCWn/PpGCCMeMZfq1yJr+L09q2Usp2/KwRz8QcHcYnGG9kL7zUMSKevcbPwjPqtUn0M
-         AFrF2rX6LWsXRIVL4CZlO1Fq9mv05gYPABJvpmp8P5MR7guVF2tcs4nzO0xlwOuMHf+7
-         UvMvzdiot9icer8wbnbAiOZi7HthyN7aJJT4io+NrmjroRo68Zccxhob+guz/WTRLRxO
-         x9rw==
-X-Gm-Message-State: AOAM53037+Ep8I+Vv3Hv1HfEdwCwojj0fmh5l5czKdzPVM9RaCFD/vLC
-        9F2R12jYnq2VtHEE6nnHTCgqveAFsAJj64tVEJqV4poG3b8=
-X-Google-Smtp-Source: ABdhPJx74T1WC4KSLoavOvF2J087dYXRj2sBoADsQZx4rR3MZwKXVin3AJ8oFLeTGhdwdWC7AmRRqGC45z63osz7Blo=
-X-Received: by 2002:a17:907:e93:b0:6df:10b3:4fc0 with SMTP id
- ho19-20020a1709070e9300b006df10b34fc0mr1821009ejc.44.1647352012953; Tue, 15
- Mar 2022 06:46:52 -0700 (PDT)
+        with ESMTP id S1349180AbiCOOf1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Mar 2022 10:35:27 -0400
+Received: from vps0.lunn.ch (vps0.lunn.ch [185.16.172.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEC4314019;
+        Tue, 15 Mar 2022 07:34:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+        Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+        bh=eJsfs1ayMlkHRMVaZjiTJvsea1SB/3jhR8tU9VpMC4Q=; b=noTAN4Ep6VH8aqKxHHTygbvmc3
+        GAYZ0uSnZPDa80wL00A9Zed3nWWcHfqGIg9dZwNZK8THRjMmQEaGn/qaPmrGvepVa2eMBhZWPw+gk
+        CEKltoMLGKEa7cfbM0Qh4V6h0cdlEg5sjMhW/5xlJIyKMn/e6+g6WVJily/0hvNVFpos=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1nU8FH-00Aybj-Jz; Tue, 15 Mar 2022 15:33:55 +0100
+Date:   Tue, 15 Mar 2022 15:33:55 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Cc:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        huziji@marvell.com, ulf.hansson@linaro.org, robh+dt@kernel.org,
+        davem@davemloft.net, kuba@kernel.org, linus.walleij@linaro.org,
+        catalin.marinas@arm.com, will@kernel.org,
+        gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com,
+        adrian.hunter@intel.com, thomas.petazzoni@bootlin.com,
+        kostap@marvell.com, robert.marko@sartura.hr,
+        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 4/8] pinctrl: mvebu: pinctrl driver for 98DX2530 SoC
+Message-ID: <YjCj07kxGh8n45GE@lunn.ch>
+References: <20220314213143.2404162-1-chris.packham@alliedtelesis.co.nz>
+ <20220314213143.2404162-5-chris.packham@alliedtelesis.co.nz>
+ <04ed13f1-671f-7416-61d0-0bf452ae862e@canonical.com>
 MIME-Version: 1.0
-References: <20220315103813.84407-1-shreeya.patel@collabora.com>
- <CAHp75VdoN+iSu1GLnxWW9BtL-p9uF1sfAw3ZxkFWNpoo44+bZg@mail.gmail.com> <b22cea07-aa2e-f5b5-d5aa-071e1084f00b@collabora.com>
-In-Reply-To: <b22cea07-aa2e-f5b5-d5aa-071e1084f00b@collabora.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 15 Mar 2022 15:45:39 +0200
-Message-ID: <CAHp75VfsenJ64tTMdAG=CRFkwWjxf5hKpWWSa4hRxkF4ReQdHg@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: Restrict usage of gc irq members before initialization
-To:     Shreeya Patel <shreeya.patel@collabora.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, krisman@collabora.com,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <04ed13f1-671f-7416-61d0-0bf452ae862e@canonical.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 15, 2022 at 2:32 PM Shreeya Patel
-<shreeya.patel@collabora.com> wrote:
-> On 15/03/22 4:30 pm, Andy Shevchenko wrote:
-> > On Tue, Mar 15, 2022 at 12:38 PM Shreeya Patel
-> > <shreeya.patel@collabora.com> wrote:
-> >
-> > Thanks for the update, my comments below.
-> >
-> >> gc irq members are exposed before they could be completely
-> > gc --> GPIO chip
-> >
-> >> initialized and this leads to race conditions.
-> > Any example here. like ~3-4 lines of the Oops in question?
-> >
-> >> One such issue was observed for the gc->irq.domain variable which
-> >> was accessed through the I2C interface in gpiochip_to_irq() before
-> >> it could be initialized by gpiochip_add_irqchip(). This resulted in
-> >> Kernel NULL pointer dereference.
-> >>
-> >> To avoid such scenarios, restrict usage of gc irq members before
-> > gc --> GPIO chip
-> >
-> >> they are completely initialized.
-> > ...
-> >
-> >> +       /*
-> >> +        * Using barrier() here to prevent compiler from reordering
-> >> +        * gc->irq.gc_irq_initialized before initialization of above
-> >> +        * gc irq members.
-> >> +        */
-> >> +       barrier();
-> >> +
-> >> +       gc->irq.gc_irq_initialized = true;
-> > There are too many duplications. Why not simply call it 'initialized'?
-> >
-> >> -       if (gc->to_irq) {
-> >> +       if (gc->to_irq && gc->irq.gc_irq_initialized) {
-> > Why can't this check be added into gpiochip_to_irq() ?
-> >
-> >      if (!gc->irq.initialized)
-> >          return -ENXIO;
-> >
-> > ...
->
->
-> Because we don't want to return -ENXIO in case of race condition.
->
-> It should return -EPROBE_DEFER similar to how we are doing when gc->to_irq
-> is NULL.
+> > +static struct platform_driver ac5_pinctrl_driver = {
+> > +	.driver = {
+> > +		.name = "ac5-pinctrl",
+> > +		.of_match_table = of_match_ptr(ac5_pinctrl_of_match),
+> 
+> of_match_ptr() does not look correct for OF-only platform. This should
+> complain in W=1 compile tests on !OF config.
 
-> So in this case when both gc->to_irq = NULL and gc->irq.initialized = FALSE,
-> we will be returning -EPROBE_DEFER.
+The Marvell family of SoC which this embedded SoC borrows HW blocks
+from can boot using ACPI. I doubt anybody would boot this particularly
+SoC using ACPI, but the drivers Chris copied probably do build !OF for
+when ACPI is in us.
 
-This is not true. The return code relies on an IRQ chip which may be
-assigned (not NULL).
-
-> This will make sure that devices
-> like touchscreen
-> do not become fatal due to returning -ENXIO.
-
-So, then you need to move it to to_irq() and return there deferred
-probe with a good comment in the code.
-
-> >> +       bool gc_irq_initialized;
-> > Can you move it closer to .init_hw so it will be weakly grouped by
-> > logic similarities?
-> > Also see above.
->
-> Thanks for your comments, I'll make the necessary changes and send a v3.
-
--- 
-With Best Regards,
-Andy Shevchenko
+     Andrew
