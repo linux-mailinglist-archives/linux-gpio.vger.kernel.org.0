@@ -2,124 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 940BC4D97BA
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Mar 2022 10:35:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E0DE4D987B
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Mar 2022 11:13:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346645AbiCOJgZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Mar 2022 05:36:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57082 "EHLO
+        id S1346933AbiCOKOS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Mar 2022 06:14:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346222AbiCOJgZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Mar 2022 05:36:25 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3A3A39B8A;
-        Tue, 15 Mar 2022 02:35:12 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1C57F60AF4;
-        Tue, 15 Mar 2022 09:35:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BD33C340E8;
-        Tue, 15 Mar 2022 09:35:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1647336911;
-        bh=tc/AYlU5h+rIvqjL5oTMpd37Nh1Iiz2jAlGUG+y+Abg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=q7bQgqkRSdMHOm+/K3QDJHpE1nyNo7Ji1VCcUgPEggRZTuigZa2fouitaaOdiUlPl
-         2e4i6K72aVpXtZjFaDGOuPsB68Aa4JU25BusLuar/XS7B741AUbovWEXrcSEoVZKj1
-         ztK4enbfxZpuW/7OwLkzPTLPMJU95Mkd9NquoysZkFt9Uh/ldbvfhZ4q2ldXsp/tRH
-         qdL/5ZTffFR49LTTg/IgkvEVWesLOVu7Za7Rm7uIdemcseM/GEg20+LP+ocLJCVx2D
-         nGLOEKN+AHB4leKMND21ADdNjwWM+pdeOpB9+sq3AJbAcguseZCfjS5ozc1t9tdh6B
-         ISqclEZpOq0uw==
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <maz@kernel.org>)
-        id 1nU3a8-00EbLe-Tm; Tue, 15 Mar 2022 09:35:09 +0000
+        with ESMTP id S1346916AbiCOKOR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Mar 2022 06:14:17 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A491CDEB5;
+        Tue, 15 Mar 2022 03:13:05 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id dr20so39288904ejc.6;
+        Tue, 15 Mar 2022 03:13:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pJ4a52EFU+2U7vD9nmXwHNCP7eYdGu/W7wP1LyBYDtY=;
+        b=cnKxIuWSGk7xnetybBsS4AllQmhegUDXEtGAfBL9sBETaY387QPhrjERHGMmrfnNVq
+         hggvnpYJfifO0QlwANcDGq8B7hWogf/WUb2KZ+zPDJoiT2zDQz24OBDfkJi1qZ3gCf6z
+         Zu9Xyd32/Njuceng5fZjoX/tfJYnBfSM/BtFptC1a7cuo6T7oBa8T66kpWJmWtaiXtL0
+         kkzCshfuBmMYu988Unrz9foXvvDT466Q0zvSSY7jIIm6GXHtSwa6tMNjtUirH1eId44U
+         cSVEuooTC2tLHuLwqTXMiG0W5Q1844U9dF+G7kEPePC9uzdX0e+iIIstOW2MbX/a26p/
+         1QYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pJ4a52EFU+2U7vD9nmXwHNCP7eYdGu/W7wP1LyBYDtY=;
+        b=XOOYhZFZr7KvapW9M8ZSa5FgqpPKMjF9/BeH+D4nSFHMwETI5ctS/KdSUEAqQdZGqI
+         tILFnxjrDNdPAaQiA+XtLh/o/HnQpSCL1GgGr60AepSXNGhcjAp/+P9qyAs8HesMLsb/
+         F5lgmYa3QBaAJW0SfH5LFax4S9h95dbbNWtfzsBJMZIG4G15z5fNXEeMQHIL1JXSTahC
+         w5dUjX/IQ8CNajt7SCR9GPUPsVCcN8YqjcN5siTdp/lp30RRfCC3R48ZYrsBMLgcf5Wr
+         mvyLN/8O9LbyhlhRIfXwoBP2zrejDRl9n4DNF/bX6KNS6oin/mroBp/Kmbz9ogA+xlxu
+         FubQ==
+X-Gm-Message-State: AOAM530xXSHGzmdmsfOLwFuWRppxQJKPmyUHjUdgbeNw7vu95fY1h4a9
+        ySlpzP3AMT20MuTRaLgGFg4NaIkgMCleHRwDr3w=
+X-Google-Smtp-Source: ABdhPJysvL41Rndn/yfaFBTWshIJVj1+JDO+Wuwx3p5+4IxmhxfJN1FdbumvudNZrO1A0oJKNNXuw+8JzPsoM5oVasw=
+X-Received: by 2002:a17:906:4cc7:b0:6d0:7efb:49f with SMTP id
+ q7-20020a1709064cc700b006d07efb049fmr21528297ejt.639.1647339183972; Tue, 15
+ Mar 2022 03:13:03 -0700 (PDT)
 MIME-Version: 1.0
-Date:   Tue, 15 Mar 2022 09:35:08 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Joey Gouly <joey.gouly@arm.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Hector Martin <marcan@marcan.st>,
-        Sven Peter <sven@svenpeter.dev>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, kernel-team@android.com
-Subject: Re: [PATCH 0/5] gpiolib: Handle immutable irq_chip structures
-In-Reply-To: <CACRpkdbEDoPeu=TWmsJ_t-4+NtyiiSCXoj9rymspZt0nC+yrsQ@mail.gmail.com>
-References: <20220223154405.54912-1-maz@kernel.org>
- <CACRpkdbEDoPeu=TWmsJ_t-4+NtyiiSCXoj9rymspZt0nC+yrsQ@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.13
-Message-ID: <e39c68c6c8c99fec796461cde33f78df@kernel.org>
-X-Sender: maz@kernel.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: linus.walleij@linaro.org, linux-kernel@vger.kernel.org, brgl@bgdev.pl, thierry.reding@gmail.com, joey.gouly@arm.com, jonathanh@nvidia.com, marcan@marcan.st, sven@svenpeter.dev, alyssa@rosenzweig.io, bjorn.andersson@linaro.org, agross@kernel.org, tglx@linutronix.de, linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
-X-Spam-Status: No, score=-8.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <7640f9ac-88af-ace7-0bd4-990d852567dd@redhat.com>
+ <CACRpkdbDWrrDPK9=5NErtM81109qtTHyFcTON=zXtB2B86wAdA@mail.gmail.com>
+ <CAHp75Ve9s+hEjhWwdjbRJhEU-Efno_TyAUH+D7iRrE8enivvtg@mail.gmail.com> <aab9d25e-f6f9-b831-769b-ab95cd1bea74@redhat.com>
+In-Reply-To: <aab9d25e-f6f9-b831-769b-ab95cd1bea74@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 15 Mar 2022 12:11:50 +0200
+Message-ID: <CAHp75VcXRcvV61ZreVGBEAArhgfKv9nAPhjCTdMY6+nBw=5jrw@mail.gmail.com>
+Subject: Re: [GIT PULL] Immutable branch with 5.17-rc1 + "pinctrl: baytrail:
+ Add pinconf,group + function for the pmu_clk"
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2022-03-15 00:44, Linus Walleij wrote:
-> On Wed, Feb 23, 2022 at 4:44 PM Marc Zyngier <maz@kernel.org> wrote:
-> 
->> I recently realised that the gpiolib play ugly tricks on the
->> unsuspecting irq_chip structures by patching the callbacks.
-> 
-> Sorry about that...
+On Tue, Mar 15, 2022 at 11:18 AM Hans de Goede <hdegoede@redhat.com> wrote:
+> On 3/15/22 07:19, Andy Shevchenko wrote:
+> > On Tue, Mar 15, 2022 at 3:01 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+> >> On Thu, Feb 24, 2022 at 5:48 PM Hans de Goede <hdegoede@redhat.com> wrote:
 
-No worries. It probably did seem like a good idea at the
-time, and I have the benefit of hindsight here...
+> >>> As discussed here is a pull-req for an immutable branch with 5.17-rc1 +
+> >>> "pinctrl: baytrail: Add pinconf,group + function for the pmu_clk".
+> >>
+> >> I suppose this is for Andy possibly I already pulled the pulled tree.
+> >
+> > Nope, but it appears not necessary. We have nothing to update in my
+> > tree which is dependent on this PR.
+>
+> Ok, note this is already in the platform-drivers-x86 tree, since this
+> was a dep for another patch there. So I guess the single patch in the PR
+> will find its way upstream through the pdx86 tree then (which is fine).
 
-> 
->> My current approach is to add a new irq_chip flag (IRQCHIP_IMMUTABLE)
->> which does what it says on the tin: don't you dare writing there.
->> Gpiolib is further updated not to install its own callbacks, and it
->> becomes the responsibility of the driver to call into the gpiolib when
->> required. This is similar to what we do for other subsystems such as
->> PCI-MSI.
-> 
-> OK if there is a precedent it is usually wise to follow.
-> 
->> I'd welcome comments on the approach. If deemed acceptable, there are
->> another 300+ drivers to update! Not to mention the documentation. I
->> appreciate that this is a lot of potential changes, but the current
->> situation is messy.
-> 
-> I'm happy with this approach as long as the 300+ drivers get fixed
-> and the old way of doing it gets deleted.
+That is my expectation as well.
 
-Of course. Note that it will take some time before it actually happens.
-My current plan is to stick in a pr_warn() each time a driver
-following the old scheme gets registered, as a nudge for people to
-update their driver if they care about it.
-
-Regarding documentation, are you OK with me simply replacing the
-current code samples with the new approach? It will at least avoid
-giving people the wrong idea. I also want to write a brief migration
-guide that people willing to bump up their patch count can follow.
-
-I'll repost something once -rc1 is out.
-
-Thanks,
-
-         M.
 -- 
-Jazz is not dead. It just smells funny...
+With Best Regards,
+Andy Shevchenko
