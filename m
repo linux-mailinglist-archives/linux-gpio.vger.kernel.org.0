@@ -2,64 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 81BF94D9F00
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Mar 2022 16:45:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CECE34D9F2F
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Mar 2022 16:51:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347773AbiCOPqU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Mar 2022 11:46:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55908 "EHLO
+        id S1347956AbiCOPwE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Mar 2022 11:52:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236068AbiCOPqT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Mar 2022 11:46:19 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [176.9.125.105])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1669713D6D;
-        Tue, 15 Mar 2022 08:45:05 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id DBBD622247;
-        Tue, 15 Mar 2022 16:45:01 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1647359103;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JfosakXBgjInItGIDwOVGdxA4oBENc+T56qzt13SnWQ=;
-        b=MLev/5zo+b0bVDICdH2Lq4/tsy6sprEVzbSMhpsrBkAujkGf53LA3rMnV472fgX0dR/ag9
-        cHKUdVSJYnmCxo1ddz1rvSwoFNLqiNOf0VdBQs9DgSzcPZ73qJKe5AHRahgj3pmBVRjHwF
-        4JF8NFtrRd7YQHCKHj6//h5MU5F2Utg=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 15 Mar 2022 16:45:01 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Saravana Kannan <saravanak@google.com>
-Cc:     Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>,
-        Andrew Chant <achant@google.com>,
-        Edmond Chung <edmondchung@google.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
+        with ESMTP id S1349778AbiCOPwE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Mar 2022 11:52:04 -0400
+Received: from alexa-out-sd-02.qualcomm.com (alexa-out-sd-02.qualcomm.com [199.106.114.39])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18D154ECF7;
+        Tue, 15 Mar 2022 08:50:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
+  t=1647359452; x=1678895452;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=PtubDY9l+FgV9r9sh9AgXfRAdFUX29rrBNfVsa/aX5M=;
+  b=Df8Stc5eAIbBab+yhZFgGV4gx27Z0Hi22UbQaW/DN8OpCROFZfXCG5bR
+   vHrYBUzGGDHaFaST9sYcgeU9i1xtr6l1kEpL7EKzN6j/LRYNFYLQEVHRc
+   uwXaYEUm47VTRDtY4IrkLF5swgb1g7guIYNWVEa/0TAaa8XDsth3RU96B
+   w=;
+Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 15 Mar 2022 08:50:51 -0700
+X-QCInternal: smtphost
+Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
+  by ironmsg03-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2022 08:50:51 -0700
+Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
+ nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.15; Tue, 15 Mar 2022 08:50:31 -0700
+Received: from hu-srivasam-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.22; Tue, 15 Mar 2022 08:50:25 -0700
+From:   Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
+To:     <agross@kernel.org>, <bjorn.andersson@linaro.org>,
+        <lgirdwood@gmail.com>, <broonie@kernel.org>, <robh+dt@kernel.org>,
+        <quic_plai@quicinc.com>, <bgoswami@codeaurora.org>,
+        <perex@perex.cz>, <tiwai@suse.com>,
+        <srinivas.kandagatla@linaro.org>, <rohitkr@codeaurora.org>,
+        <linux-arm-msm@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <swboyd@chromium.org>, <judyhsiao@chromium.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        regressions@lists.linux.dev,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        stable <stable@vger.kernel.org>,
-        Sergio Tanzilli <tanzilli@acmesystems.it>,
-        Thierry Reding <treding@nvidia.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Will McVicker <willmcvicker@google.com>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>
-Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
-In-Reply-To: <CAMRc=MfH00YJv07TaiZ5z1w4gzqP5_8z9bKFcNU1Z37AVih4hQ@mail.gmail.com>
-References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
- <20220314155509.552218-1-michael@walle.cc>
- <CAMRc=MfH00YJv07TaiZ5z1w4gzqP5_8z9bKFcNU1Z37AVih4hQ@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.13
-Message-ID: <fe1ba600b2b30b4cba702d6aebdfda50@walle.cc>
-X-Sender: michael@walle.cc
+        <linux-gpio@vger.kernel.org>
+CC:     Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
+Subject: [PATCH v11 0/7] Add pin control support for lpass sc7280
+Date:   Tue, 15 Mar 2022 21:20:06 +0530
+Message-ID: <1647359413-31662-1-git-send-email-quic_srivasam@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
@@ -70,92 +67,86 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-[+ Saravana ]
+This patch series is to split lpass variant common pin control
+functions and SoC specific functions and to add lpass sc7280 pincontrol support.
+It also Adds dt-bindings for lpass sc7280 lpass lpi pincontrol.
 
-Am 2022-03-15 16:32, schrieb Bartosz Golaszewski:
-> On Mon, Mar 14, 2022 at 4:55 PM Michael Walle <michael@walle.cc> wrote:
->> > Some GPIO lines have stopped working after the patch
->> > commit 2ab73c6d8323f ("gpio: Support GPIO controllers without pin-ranges")
->> >
->> > And this has supposedly been fixed in the following patches
->> > commit 89ad556b7f96a ("gpio: Avoid using pin ranges with !PINCTRL")
->> > commit 6dbbf84603961 ("gpiolib: Don't free if pin ranges are not defined")
->> >
->> > But an erratic behavior where some GPIO lines work while others do not work
->> > has been introduced.
->> >
->> > This patch reverts those changes so that the sysfs-gpio interface works
->> > properly again.
->> >
->> > Signed-off-by: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
->> 
->> This breaks the pinctrl-microchip-sgpio driver as far as I can see.
->> 
->> I tried to debug it and this is what I have discovered so far:
->>  (1) the sgpio driver will use the gpio_stub_drv for its child nodes.
->>      Looks like a workaround, see [1].
->>  (2) these will have an empty gpio range
->>  (3) with the changes of this patch, pinctrl_gpio_request() will now
->>      be called and will fail with -EPROBE_DEFER.
->> 
->> I'm not exactly sure what to do here. Saravana Kannan once suggested
->> to use devm_of_platform_populate() to probe the child nodes [2]. But
->> I haven't found any other driver doing that.
+Changes Since V10:
+    -- Modify driver's custom functions with pin control framework generic functions.
+    -- Update sm8250 and sc7280 pin control depedency list in Kconfig.
+    -- Update commit description of few patches.
+Changes Since V9:
+    -- Add pinctrl groups macro to Kconfig.
+Changes Since V8:
+    -- Remove redundant headers included in v8.
+Changes Since V7:
+    -- Update optional clock voting with conditional check.
+    -- Add const to lpi_pinctrl_variant_data structure.
+    -- Update required headers and remove redundant.
+    -- Change EXPORT_SYMBOL to EXPORT_SYMBOL_GPL
+    -- Fix typo errors.
+Changes Since V6:
+    -- Update conditional clock voting to optional clock voting.
+    -- Update Kconfig depends on field with select.
+    -- Fix typo errors. 
+Changes Since V5:
+    -- Create new patch by updating macro name to lpi specific.
+    -- Create new patch by updating lpi pin group structure with core group_desc structure.
+    -- Fix typo errors.
+    -- Sort macros in the make file and configuration file.
+Changes Since V4:
+    -- Update commit message and description of the chip specific extraction patch.
+    -- Sort macros in kconfig and makefile.
+    -- Update optional clock voting to conditional clock voting.
+    -- Fix typo errors.
+    -- Move to quicinc domain email id's.
+Changes Since V3:
+    -- Update separate Kconfig fields for sm8250 and sc7280.
+    -- Update module license and description.
+    -- Move static variables to corresponding .c files from header file.
 
-Oh I meant gpio/pinctrl drivers.
+Changes Since V2:
+    -- Add new dt-bindings for sc7280 lpi driver.
+    -- Make clock voting change as separate patch.
+    -- Split existing pincontrol driver and make common functions 
+       as part of separate file.
+    -- Rename lpass pincontrol lpi dt-bindings to sm8250 specific dt-bindings
+		
+Changes Since V1:
+    -- Make lpi pinctrl variant data structure as constant
+    -- Add appropriate commit message
+    -- Change signedoff by sequence.
 
-> TI AEMIF driver (drivers/memory/ti-aemif.c) does something like this:
-> 
-> 406         if (np) {
-> 407                 for_each_available_child_of_node(np, child_np) {
-> 408                         ret = of_platform_populate(child_np, NULL,
-> 409                                                    dev_lookup, 
-> dev);
-> 410                         if (ret < 0) {
-> 411                                 of_node_put(child_np);
-> 412                                 goto error;
-> 413                         }
-> 414                 }
-> 415         } else if (pdata) {
-> 416                 for (i = 0; i < pdata->num_sub_devices; i++) {
-> 417                         pdata->sub_devices[i].dev.parent = dev;
-> 418                         ret =
-> platform_device_register(&pdata->sub_devices[i]);
-> 419                         if (ret) {
-> 420                                 dev_warn(dev, "Error register sub
-> device %s\n",
-> 421                                          
-> pdata->sub_devices[i].name);
-> 422                         }
-> 423                 }
-> 424         }
-> 
-> A bunch of different devices (like NAND) get instantiated this way.
-> Would this work?
+Srinivasa Rao Mandadapu (7):
+  dt-bindings: pinctrl: qcom: Update lpass lpi file name to SoC specific
+  dt-bindings: pinctrl: qcom: Add sc7280 lpass lpi pinctrl bindings
+  pinctrl: qcom: Update macro name to LPI specific
+  pinctrl: qcom: Update lpi pin group custiom functions with framework
+    generic functions
+  pinctrl: qcom: Extract chip specific LPASS LPI code
+  pinctrl: qcom: Add SC7280 lpass pin configuration
+  pinctrl: qcom: Update clock voting as optional
 
-I started to try this out, but then I was wondering if there weren't
-other gpio/pinctrl drivers with the same problem. And judging by the
-reports [1], I'd say there are. Then I wasn't sure if this is actually
-the correct fix here - or if that old workaround [2] doesn't work
-anymore because it might have that empty ranges "feature".
+Tested this on SM8250 MTP with WSA and WCD codecs.
+Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-To answer your question: I don't know. But I don't know if that is
-actually the correct way of fixing this either.
+ .../bindings/pinctrl/qcom,lpass-lpi-pinctrl.yaml   | 133 ---------
+ .../pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml     | 115 ++++++++
+ .../pinctrl/qcom,sm8250-lpass-lpi-pinctrl.yaml     | 133 +++++++++
+ drivers/pinctrl/qcom/Kconfig                       |  19 ++
+ drivers/pinctrl/qcom/Makefile                      |   2 +
+ drivers/pinctrl/qcom/pinctrl-lpass-lpi.c           | 309 +++------------------
+ drivers/pinctrl/qcom/pinctrl-lpass-lpi.h           |  86 ++++++
+ drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c    | 168 +++++++++++
+ drivers/pinctrl/qcom/pinctrl-sm8250-lpass-lpi.c    | 164 +++++++++++
+ 9 files changed, 731 insertions(+), 398 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,lpass-lpi-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm8250-lpass-lpi-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-sm8250-lpass-lpi.c
 
->> Also, I'm not sure if there are any other other driver which get
->> broken by this. I.e. ones falling into the gpio_stub_drv category.
->> 
->> [1] 
->> https://lore.kernel.org/lkml/20210122193600.1415639-1-saravanak@google.com/
->> [2] 
->> https://lore.kernel.org/lkml/CAGETcx9PiX==mLxB9PO8Myyk6u2vhPVwTMsA5NkD-ywH5xhusw@mail.gmail.com/
->> 
->> -michael
->> 
->> NB. this patch doesn't contain a Fixes tag. Was this on purpose?
+-- 
+2.7.4
 
--michael
-
-[1] https://lore.kernel.org/lkml/20220314192522.GA3031157@roeck-us.net/
-[2] 
-https://lore.kernel.org/lkml/20210122193600.1415639-1-saravanak@google.com/
