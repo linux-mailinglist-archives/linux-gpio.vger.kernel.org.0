@@ -2,61 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F9224D9AEE
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Mar 2022 13:15:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C0CEC4D9B17
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Mar 2022 13:24:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344714AbiCOMQr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Mar 2022 08:16:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60606 "EHLO
+        id S1347311AbiCOMZV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Mar 2022 08:25:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242335AbiCOMQq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Mar 2022 08:16:46 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E7624A3CD
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Mar 2022 05:15:34 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id t1so23707750edc.3
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Mar 2022 05:15:34 -0700 (PDT)
+        with ESMTP id S1348227AbiCOMZU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Mar 2022 08:25:20 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8C95639F
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Mar 2022 05:24:08 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id f8so19389507pfj.5
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Mar 2022 05:24:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=g7dT8+eLeMBdScpKAdYFo4FB8ECruoBV7neczdDCMug=;
-        b=QNKK21AT7b1UeK9ZIxdpufuTJqa/0hdnA0GK8B4i1pgnKOJcXRCM7zok6ggPSK2f5m
-         LoHeHttCMsPae/69vDLS+vTAyby+dnahjJYmhY06CWHJxqzBe3O81UvWl2YqHAwJAJmB
-         4JaJMYos3E2XTShuFbL2aJUe5v4DluwhcCePYrBSLqzcynKXJzAJc4surLLuYstDVvkX
-         Gc4oDpGlf1f9Bi8g5lfG1Od1r0k87eCpW547yiXfpXgFbIjdUetn2uBh8ZSEBnbJJ4aG
-         NTHebn83xNgnlNTHq9TbJF1Ldn3UE293Ws/38VoOi/g13wc7R2BL5HW3vb7rp10nao24
-         wd2Q==
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=auKpZpNCxF0BChftpn8vwIHdurX7g2q4P4NDFv6SI7c=;
+        b=T9NnNQ2klz9gj8qMN1jZZ2z9lgjQJKe4Eokini8XCi0TxK01VB8bCbI2LMp84QBRFM
+         rCsxaYPM9rZ8ReqdHXH0yS2NEkwhJOKr/XctA2gtCOgxgA++URxqwo/PjSsGwXWg4Sk5
+         u8p3RTaeI4CeqNtH20G9DtQeXYNlqpD/g9wsqlAFK/fLSXr3Ja5+9/sNMeTrUvzyzq4I
+         vLGxd+Tx+XOWVWY+11FnT0/lmUc0HO9tVP3LhRgGpYUttZYHJ+7O95ZtP5Pnp/yYWKo6
+         rTfh7PdWL7bzTDPVknu2iFfbI/rvPiXLGsGkD20kvULfRBZx7r4aswdHtx2UrL3MCAnp
+         JmGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=g7dT8+eLeMBdScpKAdYFo4FB8ECruoBV7neczdDCMug=;
-        b=zb5upCiC/b4Q1V8U74Pak/kSUWAQoPxfBg5qpNPvrfqxu2AbDSYDvPlUSXFpkVBEqo
-         zHkzy5tRIDkY3P+QCAF/uvMA/QdRw4N0Ea9VXoOpMvFU+Ynfoz3HU3vBD9UAwWkerq3O
-         ABNmzjGe8ek6YoajF33QePROAQry4SrIf8Gm4Jf9s1iWgiz+m+Bn2qT4efxZ98AzR3b7
-         H2ibXt3v/sNKh80vCBcdYizxeL1br/gnI+pekDQ39C7dxJSeG7TFFg8VLWqS4f8gYtyu
-         M1FOr+O1ekUFSNKhB8ZcpYIuskxXMI/4/N/0hZMotKVq8fnI0+UwZKFFpPMwvUWQWf1y
-         BFqg==
-X-Gm-Message-State: AOAM530M2M2Gi+WibUCqn52LIpIgh8JgjvDcSAjtIl2p72iQ7oDwo+9U
-        +tOObBnRuAhkjWW6FMqZLBltahwLXOqSnNwdH6oUmFb4unoPcA==
-X-Google-Smtp-Source: ABdhPJzdwgTMXIu5T/D3CBjtwNcf58xTjap/YC9kXdcywNO1DHrs/Pai9Yq3i5LU3YDHX45qsWpswWlHKLMD6pkQnn8=
-X-Received: by 2002:aa7:c55a:0:b0:418:681a:d65c with SMTP id
- s26-20020aa7c55a000000b00418681ad65cmr13959177edr.145.1647346532935; Tue, 15
- Mar 2022 05:15:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220315053220.102934-1-warthog618@gmail.com> <20220315053220.102934-3-warthog618@gmail.com>
- <CAMRc=Mf9pAWiKeR2GH6PQX=bUOvWXoyWUP2aY+5grzqoAn6M8A@mail.gmail.com> <20220315121211.GA174293@sol>
-In-Reply-To: <20220315121211.GA174293@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 15 Mar 2022 13:15:22 +0100
-Message-ID: <CAMRc=McvDy-pfv6Aj7bvTBp=G4VbXVMbP9JWL6FQmdzBf1rZVA@mail.gmail.com>
-Subject: Re: [libgpiod v2][PATCH 2/3] core: split chip_info out of chip
-To:     Kent Gibson <warthog618@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=auKpZpNCxF0BChftpn8vwIHdurX7g2q4P4NDFv6SI7c=;
+        b=CKDHA7N9qIC7Q2Ns77TNSl1s4oQ/3PlM9WsynYZwWc2bdRfRazppzakgtL+kQfzI/9
+         ApnzIySxi4Pvu+8xpDwGcfA7cWzKmyXX8VLE1oc6kkcijvdQz1tO4noHbCRNPXqaDBM7
+         NMFLkOLnEdSEONb3XRreXjQFPk3NJ1wyJeKobECRoAaY3X1UDDP6e1Bzg/fL99/JFyJ4
+         vot8y3lpcA5kCjKb7Gb+pNmbnW7JXW86M2wvkIN4Rd+gyFiZqBZgKpA+daggoh9eOIHG
+         xiiju/b3E53cgxjryrZPRnHcn3n2SAdUXYqdZ6qHWb9sIEBpNUC90IrzOFsx0UQFm1RG
+         euBw==
+X-Gm-Message-State: AOAM533rvkfw6c2mmWnTTXlqHSDV/ZH5pwI57d560LGWYMJTDklmRf7f
+        2sBhVo8R8DjiifZir8GMgSQ6GHBMyMnOLQ==
+X-Google-Smtp-Source: ABdhPJwAuVZRtNqHWUhr2OnwM99jdR81HHCXy9UqFmxxSCEY7Ebo+5+nQaAHRDJnsza4069cIynzRQ==
+X-Received: by 2002:a62:7b55:0:b0:4f6:adc7:c306 with SMTP id w82-20020a627b55000000b004f6adc7c306mr28450153pfc.29.1647347048217;
+        Tue, 15 Mar 2022 05:24:08 -0700 (PDT)
+Received: from sol ([124.148.64.37])
+        by smtp.gmail.com with ESMTPSA id w21-20020a056a0014d500b004f7261ad03esm24963917pfu.35.2022.03.15.05.24.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Mar 2022 05:24:07 -0700 (PDT)
+Date:   Tue, 15 Mar 2022 20:24:03 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [libgpiod v2][PATCH 3/3] line-info: rename infobuf to uinfo
+Message-ID: <20220315122403.GA174661@sol>
+References: <20220315053220.102934-1-warthog618@gmail.com>
+ <20220315053220.102934-4-warthog618@gmail.com>
+ <CAMRc=McOh6FwkzttD9b+bFf5X7EF_wT0oyeCcnRwcUprw8w6nw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=McOh6FwkzttD9b+bFf5X7EF_wT0oyeCcnRwcUprw8w6nw@mail.gmail.com>
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -64,38 +70,24 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 15, 2022 at 1:12 PM Kent Gibson <warthog618@gmail.com> wrote:
->
-> On Tue, Mar 15, 2022 at 12:59:55PM +0100, Bartosz Golaszewski wrote:
-> > On Tue, Mar 15, 2022 at 6:32 AM Kent Gibson <warthog618@gmail.com> wrote:
-> > >
-> > > The core library should be minimalist, only performing the operations
-> > > required, but gpiod_chip_open() always fetches the chip info,
-> > > even though the majority of the time the chip will only be used to
-> > > request a line, so the chip info is not required.
-> > >
-> > > Split the chip_info from the chip, in the same style as line_info, and
-> > > update methods and tools appropriately.
-> > >
-> > > In the rare occasions that the user requires the chip info they can
-> > > request it themselves using gpiod_chip_get_info(), as demonstrated
-> > > in the tool changes.
-> > >
-> > > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+On Tue, Mar 15, 2022 at 01:14:33PM +0100, Bartosz Golaszewski wrote:
+> On Tue, Mar 15, 2022 at 6:33 AM Kent Gibson <warthog618@gmail.com> wrote:
 > >
-> > Ha! Interesting take. Makes sense. I queued this but tweaked a couple
-> > things (some bad copy-paste and stray newlines).
+> > The infobuf variable in gpiod_line_info_from_kernel() refers to the
+> > uAPI version of the info, and the "buf" suffix doesn't really
+> > emphasise that, so rename it to uinfo.
 > >
->
-> I've been flip-flopping on this one, but wanted to float it as we're
-> getting close to finalising the API.
-> In some ways hiding the chip info is simpler, and gpiod_chip_open()
-> already does a whole lot in gpiod_is_gpiochip_device(), so an extra
-> ioctl call isn't going to make much difference...
-> But it does reduce the gpiod_chip size a fair bit as well.
-> As I said - flip-flopping.
->
+> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> > ---
+> 
+> I don't entirely disagree with infobuf not being the best name but
+> uinfo is even less so. The 'u' prefix doesn't mean anything on its
+> own. If anything I would think it has something to do with udev,
+> udisks, upower etc. Or "mili" like useconds. How about info_kernel?
+> kernel_info? uapi_info?
+> 
 
-No, it's good. I like to idea of limiting the responsiblities of each structure.
+uapi_info works for me.
 
-Bart
+Cheers,
+Kent.
