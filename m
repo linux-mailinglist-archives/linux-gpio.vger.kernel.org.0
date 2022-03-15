@@ -2,64 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ED9B54D9146
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Mar 2022 01:26:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1628B4D9174
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Mar 2022 01:28:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343720AbiCOA0b (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Mar 2022 20:26:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47488 "EHLO
+        id S1343822AbiCOA2W (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Mar 2022 20:28:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343707AbiCOA0a (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Mar 2022 20:26:30 -0400
-Received: from vps0.lunn.ch (vps0.lunn.ch [185.16.172.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A0F73D1C1;
-        Mon, 14 Mar 2022 17:25:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-        Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-        bh=ozPHgUI6vT/O8/+umNUMMuK5fsDW+kbR6FhqQ3vZGCI=; b=FYajyiOnM7RvDVBT3TB+5Lpd20
-        ngDEcpSoDpE80VKEcYM/f56jLA/8sOLT8jZRtpb6ZY8w1SfhY3sZcJeZX5yAS60n0KIICEliHgY0J
-        uCEpdeC1o4R1XyWNfQt3upEyvifRR1CXW4uMGpyuPocryzKZxc57TsMab60+N0SJccTA=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1nTuzu-00Aq8I-97; Tue, 15 Mar 2022 01:25:10 +0100
-Date:   Tue, 15 Mar 2022 01:25:10 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     huziji@marvell.com, ulf.hansson@linaro.org, robh+dt@kernel.org,
-        davem@davemloft.net, kuba@kernel.org, linus.walleij@linaro.org,
-        catalin.marinas@arm.com, will@kernel.org,
-        gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com,
-        adrian.hunter@intel.com, thomas.petazzoni@bootlin.com,
-        kostap@marvell.com, robert.marko@sartura.hr,
-        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 8/8] arm64: marvell: enable the 98DX2530 pinctrl driver
-Message-ID: <Yi/c5nVYYR8r/fFc@lunn.ch>
-References: <20220314213143.2404162-1-chris.packham@alliedtelesis.co.nz>
- <20220314213143.2404162-9-chris.packham@alliedtelesis.co.nz>
+        with ESMTP id S1343959AbiCOA2V (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Mar 2022 20:28:21 -0400
+Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35A6141F86
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Mar 2022 17:27:05 -0700 (PDT)
+Received: by mail-yb1-xb2f.google.com with SMTP id g26so34157919ybj.10
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Mar 2022 17:27:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=j6zq46rHunNi7v3K49xKmXhCI5sJtyCz6o2pZoTkjlQ=;
+        b=oBVypg+q31LLjPraa0FmLk8b8a/IQ+bLc4AdFUpwXa97vWDI/VwwPNA4ZMvUcIfQMk
+         VGMIIWcbjJBUpBG4KCnuasIOpbM/EjA/z6G4OW5lxUodjSiL2OCz0tdO9gZIkRvqfJ8d
+         ekLNpaWYEixyNMI/A+xW2xORsYFvSS4DqUPIc0ALOAVUgF3Aq7LcJhvDb7Q3by5kUKD+
+         /Ixvipr0jScwivBHQSbgkbhu3rjyJX0OdOynvGGWdHAb1L+SGiqPgUt4ECfzInKhOwAo
+         EJ3nPikmUrD7xaACVJwmTlhvRJ1kV+JYG2c5XEiLOeWnKY2OvjMd7DCjW4hfzZnHLHoD
+         Jnmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=j6zq46rHunNi7v3K49xKmXhCI5sJtyCz6o2pZoTkjlQ=;
+        b=Cczvgm8i/BefwTby3zsPW55/LlJYwpi8TLZDmB4jc3hijWslaHtf384j2f/FjUnfGK
+         Vtb3RNj/9Or++jEdN7U1J1dcQsAf/2hhH3LldZ14W1bEfhmGuJEXduUTPB8hKUFWL1+z
+         jZjlnjXVeLc3IPIT0uoJlRSc5g39nTrYyneY8f6Y8k9W6QhbsreNhTsUfW6y5X0eejvC
+         lbK3IUo8345ItJ3p/bsNfl+6WWB2ooqENHQk+52pdgBZHha1PX9PkyXCnhfVoMvzwGPC
+         MHUJ6AhZqvrVJDSi1Ac+Pt21IK2fiNciIol0P+pcJdOtgDrg7c6qNwvgOTIH2VtLste7
+         e6FQ==
+X-Gm-Message-State: AOAM530P0NS0tPLYHHuDJ65aOUR53IVpVTTesRA6fGzHXqQi0Wq/gDBb
+        NjjXJAJ+yMhMBW/EoP/uOPAFisw6GvXXePJJ4WVIug==
+X-Google-Smtp-Source: ABdhPJzhNSBMeH8Wbm5RieTMFPizoex0ebgYgfTJfbTlzcSn/yt9wuadfyo1A6KVLbJC4/hoy217PiYiNj5qfdUXwpY=
+X-Received: by 2002:a25:e710:0:b0:633:67d3:7264 with SMTP id
+ e16-20020a25e710000000b0063367d37264mr3458356ybh.291.1647304024460; Mon, 14
+ Mar 2022 17:27:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220314213143.2404162-9-chris.packham@alliedtelesis.co.nz>
+References: <20220216113131.13145-1-tinghan.shen@mediatek.com> <20220216113131.13145-3-tinghan.shen@mediatek.com>
+In-Reply-To: <20220216113131.13145-3-tinghan.shen@mediatek.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 15 Mar 2022 01:26:53 +0100
+Message-ID: <CACRpkdYP0RTfPDW3JSjpKHuOkGyVMG1Y0XAOidcespz+qN_7Hg@mail.gmail.com>
+Subject: Re: [PATCH v11 2/3] dt-bindings: pinctrl: mt8195: Add
+ mediatek,drive-strength-adv property
+To:     Tinghan Shen <tinghan.shen@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Project_Global_Chrome_Upstream_Group@mediatek.com,
+        ryder.lee@kernel.org, wenst@chromium.org, chunfeng.yun@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 15, 2022 at 10:31:43AM +1300, Chris Packham wrote:
-> This commit makes sure the drivers for the 98DX2530 pin controller is
-> enabled.
-> 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+On Wed, Feb 16, 2022 at 12:31 PM Tinghan Shen <tinghan.shen@mediatek.com> wrote:
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> Extend driving support for I2C pins on SoC mt8195.
+> This property is already documented in mediatek,mt8183-pinctrl.yaml.
+>
+> Signed-off-by: Tinghan Shen <tinghan.shen@mediatek.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-    Andrew
+This patch applied to the pinctrl tree for v5.18!
+
+Yours,
+Linus Walleij
