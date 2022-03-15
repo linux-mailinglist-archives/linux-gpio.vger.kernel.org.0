@@ -2,147 +2,278 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EACF44DA2BD
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Mar 2022 19:53:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A8B0F4DA328
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Mar 2022 20:15:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346389AbiCOSyx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Mar 2022 14:54:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39760 "EHLO
+        id S240804AbiCOTRK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Mar 2022 15:17:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351164AbiCOSyw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Mar 2022 14:54:52 -0400
+        with ESMTP id S230333AbiCOTRJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Mar 2022 15:17:09 -0400
 Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E4C52DD7B;
-        Tue, 15 Mar 2022 11:53:40 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2063B2BB07
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Mar 2022 12:15:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647370420; x=1678906420;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=m3cKAwOJqOsA7eAOkUV4eguAJkZnzQNcLpMZ96NtvPk=;
-  b=XMx5IBbe+W1MRVCJJN1smoN4sp/VP69GmCt/jPRTIYUAWzT7j1/Qmfyc
-   INiuPNHIrwp8MHzCuqi4njGQHQhmHcOsV6b9i2boaykQiybgpB4RdKTvA
-   JgcTK1ts34W5skmYrHJxjNC/Zng5qLfuBz0x00jWPDtP296ZClL5qHxEd
-   0ga4xZg9Fpv8iyvMSwaxEmodhA1pN1mTr6++3oNyd7Ma6yxWGBKXJCc42
-   02IDIWHNML7tnoiNIAl6SY2kA+u41f7aVtYEs+yaoC3keBZaIsFFE5uNX
-   4hJUKdNuCJJbgL7aGxq1VhYXOAtXUWP0SUzGdwzgC9ZgaJqYEsvpKuL+i
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10286"; a="319620075"
+  t=1647371757; x=1678907757;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=bwVGIppsGXlt6DJJWIXB7PRzxTKKWGbSYruyiY3/+ZY=;
+  b=jMcAlmBcU5SJMzIQIWrPGiu2f3zpJXqlCm02AFxYJ/tqEJmlLM3yzT91
+   hPVrtiGegIhb5N9SAns7ArGLxEZqY8goB9i3CNr6S49dx17IelQ0FeYTT
+   /eSSb7k7swBqIWCzYZ61UnJvE8Pf1kRopH+mEoCG8wwMyWuXQa105w5AX
+   T0TdR28jy2l57PvJvQ0CtCW/uS0VQB+hfIht13EyN6cIjOcPQWx8GJHA+
+   QGy7sJHJ3YcYRoMP1G4w72C/czH4KJk+31ONLGlr+aclnX1lEmxHMPU14
+   4qAEWPKJmevf0VRlUZUP99rf5QzgbJ3hMQJ0v51CJfnV5VCL/0UQPbz0p
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10286"; a="319624046"
 X-IronPort-AV: E=Sophos;i="5.90,184,1643702400"; 
-   d="scan'208";a="319620075"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2022 11:53:39 -0700
+   d="scan'208";a="319624046"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2022 12:15:56 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.90,184,1643702400"; 
-   d="scan'208";a="690312679"
+   d="scan'208";a="498155573"
 Received: from lkp-server02.sh.intel.com (HELO 89b41b6ae01c) ([10.239.97.151])
-  by fmsmga001.fm.intel.com with ESMTP; 15 Mar 2022 11:53:37 -0700
+  by orsmga003.jf.intel.com with ESMTP; 15 Mar 2022 12:15:51 -0700
 Received: from kbuild by 89b41b6ae01c with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1nUCIa-000BNG-Gw; Tue, 15 Mar 2022 18:53:36 +0000
-Date:   Wed, 16 Mar 2022 02:52:36 +0800
+        id 1nUCe7-000BP1-2Q; Tue, 15 Mar 2022 19:15:51 +0000
+Date:   Wed, 16 Mar 2022 03:15:13 +0800
 From:   kernel test robot <lkp@intel.com>
-To:     Shreeya Patel <shreeya.patel@collabora.com>,
-        linus.walleij@linaro.org, brgl@bgdev.pl, krisman@collabora.com,
-        andy.shevchenko@gmail.com
-Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@collabora.com, Shreeya Patel <shreeya.patel@collabora.com>
-Subject: Re: [PATCH v2] gpio: Restrict usage of gc irq members before
- initialization
-Message-ID: <202203160247.JiwK1pqP-lkp@intel.com>
-References: <20220315103813.84407-1-shreeya.patel@collabora.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:devel] BUILD SUCCESS
+ 89388f8730699c259f8090ec435fb43569efe4ac
+Message-ID: <6230e5c1.n2PyDceZFjTdfyH4%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220315103813.84407-1-shreeya.patel@collabora.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
+        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Shreeya,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: 89388f8730699c259f8090ec435fb43569efe4ac  pinctrl/rockchip: Add missing of_node_put() in rockchip_pinctrl_probe
 
-Thank you for the patch! Yet something to improve:
+Unverified Warning (likely false positive, please contact us if interested):
 
-[auto build test ERROR on linusw-gpio/for-next]
-[also build test ERROR on v5.17-rc8 next-20220315]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
+drivers/pinctrl/nuvoton/pinctrl-wpcm450.c:626:9: sparse: sparse: obsolete array initializer, use C99 syntax
 
-url:    https://github.com/0day-ci/linux/commits/Shreeya-Patel/gpio-Restrict-usage-of-gc-irq-members-before-initialization/20220315-183950
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git for-next
-config: arm-palmz72_defconfig (https://download.01.org/0day-ci/archive/20220316/202203160247.JiwK1pqP-lkp@intel.com/config)
-compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project a6b2f50fb47da3baeee10b1906da6e30ac5d26ec)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # install arm cross compiling tool for clang build
-        # apt-get install binutils-arm-linux-gnueabi
-        # https://github.com/0day-ci/linux/commit/9f566a088a6f5fcb8830b07020294835072d516c
-        git remote add linux-review https://github.com/0day-ci/linux
-        git fetch --no-tags linux-review Shreeya-Patel/gpio-Restrict-usage-of-gc-irq-members-before-initialization/20220315-183950
-        git checkout 9f566a088a6f5fcb8830b07020294835072d516c
-        # save the config file to linux build tree
-        mkdir build_dir
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash
+Warning ids grouped by kconfigs:
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
+gcc_recent_errors
+|-- alpha-allmodconfig
+|   `-- drivers-pinctrl-nuvoton-pinctrl-wpcm450.c:sparse:sparse:obsolete-array-initializer-use-C99-syntax
+|-- alpha-allyesconfig
+|   `-- drivers-pinctrl-nuvoton-pinctrl-wpcm450.c:sparse:sparse:obsolete-array-initializer-use-C99-syntax
+`-- arc-allmodconfig
+    `-- drivers-pinctrl-nuvoton-pinctrl-wpcm450.c:sparse:sparse:obsolete-array-initializer-use-C99-syntax
 
-All errors (new ones prefixed by >>):
+elapsed time: 732m
 
->> drivers/gpio/gpiolib.c:3068:24: error: no member named 'irq' in 'struct gpio_chip'
-           if (gc->to_irq && gc->irq.gc_irq_initialized) {
-                             ~~  ^
-   1 error generated.
+configs tested: 181
+configs skipped: 3
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-vim +3068 drivers/gpio/gpiolib.c
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                 randconfig-c001-20220314
+mips                 randconfig-c004-20220314
+powerpc              randconfig-c003-20220313
+i386                          randconfig-c001
+riscv                            allyesconfig
+um                             i386_defconfig
+mips                             allmodconfig
+um                           x86_64_defconfig
+mips                             allyesconfig
+h8300                            allyesconfig
+parisc                           allyesconfig
+sh                               allmodconfig
+xtensa                           allyesconfig
+powerpc                      pasemi_defconfig
+arm                       imx_v6_v7_defconfig
+x86_64                              defconfig
+xtensa                              defconfig
+arm                         nhk8815_defconfig
+powerpc                 mpc834x_itx_defconfig
+arm                     eseries_pxa_defconfig
+arm                      footbridge_defconfig
+mips                        vocore2_defconfig
+arm                             pxa_defconfig
+sh                             espt_defconfig
+powerpc64                        alldefconfig
+sh                         apsh4a3a_defconfig
+sh                           se7780_defconfig
+arc                         haps_hs_defconfig
+h8300                    h8300h-sim_defconfig
+s390                          debug_defconfig
+arm                         lubbock_defconfig
+powerpc                 canyonlands_defconfig
+xtensa                  cadence_csp_defconfig
+arc                          axs101_defconfig
+openrisc                  or1klitex_defconfig
+arm                            xcep_defconfig
+riscv             nommu_k210_sdcard_defconfig
+sh                            migor_defconfig
+powerpc                       ppc64_defconfig
+powerpc                 mpc85xx_cds_defconfig
+sh                           se7705_defconfig
+powerpc                      bamboo_defconfig
+csky                             alldefconfig
+parisc                generic-32bit_defconfig
+powerpc                 mpc837x_mds_defconfig
+powerpc                  storcenter_defconfig
+arm                         vf610m4_defconfig
+s390                       zfcpdump_defconfig
+sh                          r7780mp_defconfig
+powerpc                     tqm8548_defconfig
+um                               alldefconfig
+mips                           jazz_defconfig
+sh                   secureedge5410_defconfig
+arm                         axm55xx_defconfig
+powerpc                      pcm030_defconfig
+arm                        shmobile_defconfig
+arm                          pxa910_defconfig
+h8300                     edosk2674_defconfig
+m68k                         apollo_defconfig
+powerpc                      arches_defconfig
+arm                        spear6xx_defconfig
+m68k                        mvme147_defconfig
+sh                             shx3_defconfig
+parisc64                            defconfig
+sh                         microdev_defconfig
+sh                     sh7710voipgw_defconfig
+arm                           stm32_defconfig
+arm                            mps2_defconfig
+sh                          lboxre2_defconfig
+powerpc                mpc7448_hpc2_defconfig
+mips                  decstation_64_defconfig
+arm                  randconfig-c002-20220313
+arm                  randconfig-c002-20220314
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+arc                                 defconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                             allmodconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+i386                 randconfig-a003-20220314
+i386                 randconfig-a004-20220314
+i386                 randconfig-a001-20220314
+i386                 randconfig-a006-20220314
+i386                 randconfig-a002-20220314
+i386                 randconfig-a005-20220314
+x86_64               randconfig-a004-20220314
+x86_64               randconfig-a005-20220314
+x86_64               randconfig-a003-20220314
+x86_64               randconfig-a002-20220314
+x86_64               randconfig-a006-20220314
+x86_64               randconfig-a001-20220314
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+arc                  randconfig-r043-20220313
+riscv                randconfig-r042-20220313
+s390                 randconfig-r044-20220313
+arc                  randconfig-r043-20220314
+riscv                    nommu_k210_defconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                         rhel-8.3-kunit
+x86_64                                  kexec
 
-  3045	
-  3046	/**
-  3047	 * gpiod_to_irq() - return the IRQ corresponding to a GPIO
-  3048	 * @desc: gpio whose IRQ will be returned (already requested)
-  3049	 *
-  3050	 * Return the IRQ corresponding to the passed GPIO, or an error code in case of
-  3051	 * error.
-  3052	 */
-  3053	int gpiod_to_irq(const struct gpio_desc *desc)
-  3054	{
-  3055		struct gpio_chip *gc;
-  3056		int offset;
-  3057	
-  3058		/*
-  3059		 * Cannot VALIDATE_DESC() here as gpiod_to_irq() consumer semantics
-  3060		 * requires this function to not return zero on an invalid descriptor
-  3061		 * but rather a negative error number.
-  3062		 */
-  3063		if (!desc || IS_ERR(desc) || !desc->gdev || !desc->gdev->chip)
-  3064			return -EINVAL;
-  3065	
-  3066		gc = desc->gdev->chip;
-  3067		offset = gpio_chip_hwgpio(desc);
-> 3068		if (gc->to_irq && gc->irq.gc_irq_initialized) {
-  3069			int retirq = gc->to_irq(gc, offset);
-  3070	
-  3071			/* Zero means NO_IRQ */
-  3072			if (!retirq)
-  3073				return -ENXIO;
-  3074	
-  3075			return retirq;
-  3076		}
-  3077		return -ENXIO;
-  3078	}
-  3079	EXPORT_SYMBOL_GPL(gpiod_to_irq);
-  3080	
+clang tested configs:
+s390                 randconfig-c005-20220313
+arm                  randconfig-c002-20220313
+x86_64                        randconfig-c007
+powerpc              randconfig-c003-20220313
+riscv                randconfig-c006-20220313
+mips                 randconfig-c004-20220313
+i386                          randconfig-c001
+powerpc                       ebony_defconfig
+mips                      bmips_stb_defconfig
+arm                       cns3420vb_defconfig
+arm                      pxa255-idp_defconfig
+arm                        magician_defconfig
+mips                           mtx1_defconfig
+powerpc                          allyesconfig
+powerpc               mpc834x_itxgp_defconfig
+mips                     cu1000-neo_defconfig
+arm                           omap1_defconfig
+mips                          ath25_defconfig
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64               randconfig-a014-20220314
+x86_64               randconfig-a015-20220314
+x86_64               randconfig-a016-20220314
+x86_64               randconfig-a012-20220314
+x86_64               randconfig-a013-20220314
+x86_64               randconfig-a011-20220314
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a011
+i386                          randconfig-a013
+i386                          randconfig-a015
+i386                 randconfig-a013-20220314
+i386                 randconfig-a015-20220314
+i386                 randconfig-a014-20220314
+i386                 randconfig-a011-20220314
+i386                 randconfig-a016-20220314
+i386                 randconfig-a012-20220314
+hexagon              randconfig-r045-20220314
+hexagon              randconfig-r045-20220313
+riscv                randconfig-r042-20220314
+hexagon              randconfig-r041-20220313
+hexagon              randconfig-r041-20220314
+s390                 randconfig-r044-20220314
 
 ---
 0-DAY CI Kernel Test Service
