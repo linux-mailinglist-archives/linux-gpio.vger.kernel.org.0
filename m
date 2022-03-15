@@ -2,66 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F03D14D90C5
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Mar 2022 01:04:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EF9C4D90D0
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Mar 2022 01:06:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241025AbiCOAFL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Mar 2022 20:05:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55432 "EHLO
+        id S235153AbiCOAHK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Mar 2022 20:07:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230147AbiCOAFK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Mar 2022 20:05:10 -0400
-Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 078DD1B78E
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Mar 2022 17:04:00 -0700 (PDT)
-Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-2e2ca8d7812so122236197b3.13
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Mar 2022 17:03:59 -0700 (PDT)
+        with ESMTP id S238331AbiCOAHK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Mar 2022 20:07:10 -0400
+Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B96CD40A39
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Mar 2022 17:05:58 -0700 (PDT)
+Received: by mail-yb1-xb34.google.com with SMTP id o5so5263945ybe.2
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Mar 2022 17:05:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=uBOnam2LmZQW2iGFg9CBW+HsB6A0zqMq1JQjc15BdrY=;
-        b=kV6sjpLvuiLYILgw11J6c2F3cs2E6pglb4HQKqoJjPHloObdr+kX2o43qiXd6CwdhT
-         atjIXK8dhLnxY4cePB/3W/hhBeYuGv5EEV4Z033tXRgeIdTY7P3a1d4NYAC3YLxn0Oce
-         ePk6/3qZpAvFWaOgAtmBhd/m80vrd0QpJ8q1Xsiq4XvlVtzm6MmTRCII1wRbPk8jiLz/
-         K4PCHprLOCTacohkWJRrAJ81GB7I+eLOxaSDGMHw7GvGEA/gSOvMiFobg1V3m9sLmYaa
-         Ar/graUrTeugI7AMRIR7gA1w3G6lpcazu5UOWkGGaiaZi6im12ZaTHRhNc5KUOsMs+mM
-         2u0A==
+        bh=gXWwMBem/Gvm7YvqdViBU1+FSzXxlHD18ChkWQuSLzc=;
+        b=RBr9bZfefdG1+UXjqZGFiv+QI2dNG7CGF751rzo+2OezIEhtxBC35dbsq6UvTXmK9y
+         nFNNbB059LQrNEhFOEuxSbPaxFElArnwBhHogrrqcraQUlkplYuVcsBFc/u7utJf2q7V
+         C+kBepopEudIZI/ZkcNf+F493C1NXT/Q9zWyb/oa6kGmxgqk4m3sg+v9+4vCApdHfH5j
+         wBZR/hue5TGwyiHNK3W3haUsNYkzw/pB6LrWJViCYTBbrw9MJ/0o7GGucBxLP6iB5/nh
+         KpZw7GJS/Xvd0OYFbbF5ZazKJkAwt9hhw+rvSYykXhH/EJP3qZWrXS7Mhs+NuIoLWGf7
+         eHxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=uBOnam2LmZQW2iGFg9CBW+HsB6A0zqMq1JQjc15BdrY=;
-        b=NSRXzEbNm/2POQrKh0K/iQtb+DtAd1hasNVPnyDnGRzJUUJ16P8uq6mLUWaPkEZSU3
-         /bkNAYH60vxJFItGWAfzNnFQZKb+gGXtu4h6RsqH5cpKFyo//pYKmUEkdgJmvrZzI54G
-         6Z4Bs8V+O5M0VFr+syo1OVUbHN4QQavRVFBWF48zvLwr7gATQPapKrcZlDvWAlGeRK9T
-         YLJUUTQeGwhLboDzWt+DZA//IovDNJro7brYwhS/tQoqTDnsV6IgFdF4JJld1zWpQo9O
-         iP3P/iMmeToyFYz1RQNVEnrnOVbnYezwKTKxHn8sCgWY2IYDT/kXPcvnDgm93Y/7EGR7
-         joLQ==
-X-Gm-Message-State: AOAM533UZmD0JcZIuLu/KtsJZmPGmJTKlZl5tPe9iqBCJwLYqiJHSN9S
-        pZb5kQDjlZ4zz69K40+IW6teRhL9xV6Pjh0Y/dH0Ug==
-X-Google-Smtp-Source: ABdhPJwUmMNGA86iugQC3ZrPytxozSLtLfREZBKKlRlmfuMosXaH7HXHMVOD5CEtg7vcd65ZAWzHgWz+UrKe17kgzSA=
-X-Received: by 2002:a05:690c:9b:b0:2e4:da22:2a71 with SMTP id
- be27-20020a05690c009b00b002e4da222a71mr15687703ywb.126.1647302639271; Mon, 14
- Mar 2022 17:03:59 -0700 (PDT)
+        bh=gXWwMBem/Gvm7YvqdViBU1+FSzXxlHD18ChkWQuSLzc=;
+        b=7D1CkcqOhyuetYhqCXhoCWvSzi/uEtvyJrfSynU5mwWMChN7ADN0XBpBxaUDBtoTyM
+         YJm7kbz/y9QSPpzppeRcW6W2sFwtkIhCTYT8QQOjXhHu4AA8F8c0N4jnmmqoPXgEWYtA
+         MrIfffIQNECk6SE6Cxz22hX0qTqPoU6nt0ya2PKaGSBPewrpu5YohBTzg7o5PopYVySx
+         WoofP3QiEZJuph9Mpipa7mSGIvcz2V4IiKSadm/BQbhE9kWvXLNkE0mhpQwbuihFHR/b
+         HvSOm60lxM9OYb6JcCC9Xx0yNJFsssMnlBRV4A1EuVTGdERVh/OcO/eEl5gvDAl3c3XH
+         qyuA==
+X-Gm-Message-State: AOAM532ZnOQN0khHVgjdJD/+Qz2coVX3VIqM7PZyLJHApAmd7Nvw9Fvn
+        mxE1LYaHee2QQySwSkJx71zuj+AlxmdRBGcu4Ion9A==
+X-Google-Smtp-Source: ABdhPJyR5vpsWnXi5kvauaWPs9qrHGxCwPVuxAK2hkOuMFqHCrBxMD8EraqUreYUyYNO+WHit+h3KEw8BUOGUAVFz/c=
+X-Received: by 2002:a25:e710:0:b0:633:67d3:7264 with SMTP id
+ e16-20020a25e710000000b0063367d37264mr3387585ybh.291.1647302758045; Mon, 14
+ Mar 2022 17:05:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220228010103.2725893-1-peng.fan@oss.nxp.com> <20220228010103.2725893-2-peng.fan@oss.nxp.com>
-In-Reply-To: <20220228010103.2725893-2-peng.fan@oss.nxp.com>
+References: <20220216082020.981797-1-michael@walle.cc>
+In-Reply-To: <20220216082020.981797-1-michael@walle.cc>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 15 Mar 2022 01:03:48 +0100
-Message-ID: <CACRpkdZw9MG-6gphnJqi1R=9YHWffJstxjJHNHu=DrdHYCGsNA@mail.gmail.com>
-Subject: Re: [PATCH V2 2/2] pinctrl: imx93: Add pinctrl driver support
-To:     "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
-        stefan@agner.ch, robh+dt@kernel.org, kernel@pengutronix.de,
-        linux-imx@nxp.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Jacky Bai <ping.bai@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>
+Date:   Tue, 15 Mar 2022 01:05:46 +0100
+Message-ID: <CACRpkdaXACq6q0VE1bgqkCwKyVedvUpJw+80qnBGnJoX4+_FNg@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: ocelot: fix confops resource index
+To:     Michael Walle <michael@walle.cc>
+Cc:     Colin Foster <colin.foster@in-advantage.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,16 +65,18 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Feb 28, 2022 at 1:59 AM Peng Fan (OSS) <peng.fan@oss.nxp.com> wrote:
+On Wed, Feb 16, 2022 at 9:20 AM Michael Walle <michael@walle.cc> wrote:
 
-> From: Jacky Bai <ping.bai@nxp.com>
+> Prior to commit ad96111e658a ("pinctrl: ocelot: combine get resource and
+> ioremap into single call") the resource index was 1, now it is 0. But 0
+> is the base region for the pinctrl block. Fix it.
+> I noticed this because there was an error that the memory region was
+> ioremapped twice.
 >
-> Add i.MX93 pinctrl driver
->
-> Signed-off-by: Jacky Bai <ping.bai@nxp.com>
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> Fixes: ad96111e658a ("pinctrl: ocelot: combine get resource and ioremap into single call")
+> Signed-off-by: Michael Walle <michael@walle.cc>
 
-Patch applied.
+Patch applied!
 
 Yours,
 Linus Walleij
