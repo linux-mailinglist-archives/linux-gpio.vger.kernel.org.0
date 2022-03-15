@@ -2,58 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F38D4D93E3
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Mar 2022 06:32:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 916FE4D93E4
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Mar 2022 06:32:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241968AbiCOFdv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Mar 2022 01:33:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60572 "EHLO
+        id S236064AbiCOFd7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Mar 2022 01:33:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236064AbiCOFdu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Mar 2022 01:33:50 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 231B849268
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Mar 2022 22:32:39 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id lj8-20020a17090b344800b001bfaa46bca3so1351364pjb.2
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Mar 2022 22:32:39 -0700 (PDT)
+        with ESMTP id S242505AbiCOFd6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Mar 2022 01:33:58 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3F272BF9
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Mar 2022 22:32:46 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id 15-20020a17090a098f00b001bef0376d5cso1431923pjo.5
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Mar 2022 22:32:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gOPTBgWNpvBfAaMpoY1CxtXWRV6K7fxuVP0h3Ap862w=;
-        b=Kts4FIjnbXkTwMhIiQWJD/proRPLTpkVThbewTTl3vaQjdhzh2lax09T54FpjRLr7O
-         xAZ1P1Lbg5ZhWaRZMA2B5DU2wWA65d9AJznTi3/tdTohsccGvafzAKGRC4r4OwQhJtik
-         arRuSwzFpXGboesPxDlG1vf6xec8fcc1FuILf/a0HmRKvMw7Q0+42mXp2JbaQ+fXqx/E
-         Rdl5NiUKoaZAoVMNwcHT5C4ysiA/JMUlhFx8TKG0MEm5e5/zRi2NZ6LccWXCEPqi64ru
-         5Yiz7Ai19TgVpp4cQRXc/AvIj7k8LbeNDHkSMzyLx+i+tCCYQZOEgd4RTcwG6Dbqs1rV
-         R0CQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=igfc1SMJHpw1q6l2ONoR0vUiKjn+ncWR0wqDqW2ZfQ0=;
+        b=YACsgTVVdHBN5cLJwvGcRHnMJHl2k70bkTE51k42qUaABip/62hJoUVBxL5cz5xFXv
+         X9+TTDuUnchhGdmY8VuhqbwJwzExYEtZH6+2KBdDsjXhlpU4EdZ0b9XEzAftbNM2TPtU
+         23I0a2wE22hZOSvnly62MC2gOXnnZje9tYodPxtG7jfZwcyh+gC0DYNmtWY3JQgk7ey/
+         7JaXJy8h4Y1wqv74lh/7JIM5W7MArzwxMnvyI6SGn1QVhd1oW8P61ST4hXEreIoPh2nJ
+         xgw2eqgPVWKV7eyHeh3kl40o25b8FtksbJGLOPRB7Q5DxedikV9eM7F1t4xqyDpsk3ga
+         FHZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gOPTBgWNpvBfAaMpoY1CxtXWRV6K7fxuVP0h3Ap862w=;
-        b=TrHNIo8yQh98n7znNnmgca40yaoim6RCUVChuTym9WUPDX7VZkBSrzTaq4XekHvLgO
-         5HjBV/69KSj5uNTKPICQHEJlPxg2/V8mjgmdyryaDmCk5BBeYxbARyuRcLKnC98BAP4f
-         YhyL+v8EQNuS/+/+1uPdj14SINCezgIwmBOq6dPcQUd5B+pa4Kl3S6Dv8ZAWDFjyPQFF
-         Aj0bG7hep8TVhb49lYF5ClYDHLV8AxcgpHetIYFfG+zC+6sz4xr3YyB4EQ9HTEkeVIQj
-         TbAzPSHG1mQZnsWf3WWvEM1BFYtt6zk+YT4HI22GkFG44WnOuvju1IeZZhslxwHaus1z
-         IKhQ==
-X-Gm-Message-State: AOAM530uY34di2qnlSFkUYHYOOEFNIIw8cwccgHoXPVVCYJCrGWRVqnp
-        sbUKpWoWKmJ0tWH3U45eJULvT+ncSgWp5A==
-X-Google-Smtp-Source: ABdhPJyU43yO0Ug77gbEmx+oSbyMzxAwkTN2Nm/W0pC+o1UGYxeonaV+UCRc3JWcq6Gsk7+ZKBYyMA==
-X-Received: by 2002:a17:902:7784:b0:151:a83a:5402 with SMTP id o4-20020a170902778400b00151a83a5402mr19279036pll.21.1647322358237;
-        Mon, 14 Mar 2022 22:32:38 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=igfc1SMJHpw1q6l2ONoR0vUiKjn+ncWR0wqDqW2ZfQ0=;
+        b=e7QOIIAQN0GemtkR0Y8L+MjHdMlTx8kSbGCZGF5WAIWqP7w5Q0DJvi6ErcBZcutR73
+         JOY6loX8Enu9GgAD6Ig8MOdbAz0BofmdrjO94mJaSDawwB2t9b+M3xnZF4Xj4WW5FIRO
+         mlsxe/bq/YcqUFy15mF+5AE9JvNKRBRD9K0DtH0diuML1pj3weBURXVmuqo7hHS1o31w
+         4c3iJWLBIbJr/kznJuw18mCrGZlQYymd48HLnZFxZ4RA8PjIrQGOrK5tXV0EdOBPbHl1
+         MCpK4BqASY1IuEkIGeHkmnVaAVtIyq9BWKNOwx9SghdFYEZdX+9bELh+zL1rzkNAq8M7
+         Ti5w==
+X-Gm-Message-State: AOAM530scy17C/N29pg1MDptgZHn/kAWffrrPo+aqsp5rOAYVjK2kSm/
+        UChRfhioQL4jrKGzB9z8nivr46Q+fwbGww==
+X-Google-Smtp-Source: ABdhPJw0+6zBE1bM6bx0yxIoefVR1Z5NGF26FWPKUAmnk2/1bBA6xtcoEn924nEIvzajVs4W+XYTxw==
+X-Received: by 2002:a17:903:244c:b0:151:b4ad:9632 with SMTP id l12-20020a170903244c00b00151b4ad9632mr26592518pls.30.1647322365969;
+        Mon, 14 Mar 2022 22:32:45 -0700 (PDT)
 Received: from sol.home.arpa ([124.148.64.37])
-        by smtp.gmail.com with ESMTPSA id a22-20020a056a000c9600b004f7ba8b445asm8840631pfv.65.2022.03.14.22.32.35
+        by smtp.gmail.com with ESMTPSA id a22-20020a056a000c9600b004f7ba8b445asm8840631pfv.65.2022.03.14.22.32.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Mar 2022 22:32:37 -0700 (PDT)
+        Mon, 14 Mar 2022 22:32:45 -0700 (PDT)
 From:   Kent Gibson <warthog618@gmail.com>
 To:     linux-gpio@vger.kernel.org, brgl@bgdev.pl
 Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [libgpiod v2][PATCH 0/3] api tweaks
-Date:   Tue, 15 Mar 2022 13:32:17 +0800
-Message-Id: <20220315053220.102934-1-warthog618@gmail.com>
+Subject: [libgpiod v2][PATCH 1/3] core: rename gpiod_chip_info_event_wait and gpiod_chip_info_event_read
+Date:   Tue, 15 Mar 2022 13:32:18 +0800
+Message-Id: <20220315053220.102934-2-warthog618@gmail.com>
 X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220315053220.102934-1-warthog618@gmail.com>
+References: <20220315053220.102934-1-warthog618@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -66,63 +68,147 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This series builds on my recent doc tweaks series, picking up a few
-things I missed there.
+Another couple of functions that don't follow the
+gpiod_<object>_<action>_<object> pattern.
+So rename gpiod_chip_info_event_wait to gpiod_chip_wait_info_event
+and gpiod_chip_info_event_read to gpiod_chip_read_info_event.
 
-The first patch is another constistency renaming. This is the last
-one of these - this time I checked all the function names in gpiod.h
-to ensure all the functions follow the pattern.
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
+---
+ include/gpiod.h          |  4 ++--
+ lib/chip.c               |  4 ++--
+ tests/tests-info-event.c | 22 +++++++++++-----------
+ 3 files changed, 15 insertions(+), 15 deletions(-)
 
-The second is splitting chip_info out from chip.  This is probably
-something you looked at before and decided against, but it bugs
-me that the core library is doing more than it should here.
-
-The final one is a variable renaming for clarity.  You use a "buf"
-suffix to indicate the uAPI version of structs.  I find that confusing
-as to me buf implies an array of structs.  I used a "u" for uAPI
-prefix instead, though on reflection "k" for kernel might be more
-visually distinct.  There are other examples of this throughout the
-core - happy to do a respin including those - this one just fixes
-line-info.c to bring it into line with the corresponding chip-info.c
-introduced in the previous patch.
-
-As with all my v2 patches, happy for you to apply them, or not,
-in whatever way you find appropriate.
-
-Cheers,
-Kent.
-
-Kent Gibson (3):
-  core: rename gpiod_chip_info_event_wait and gpiod_chip_info_event_read
-  core: split chip_info out of chip
-  line-info: rename infobuf to uinfo
-
- include/gpiod.h            | 73 +++++++++++++++++++++++--------
- lib/Makefile.am            |  1 +
- lib/chip-info.c            | 72 ++++++++++++++++++++++++++++++
- lib/chip.c                 | 89 ++++++++++++++++----------------------
- lib/internal.h             |  2 +
- lib/line-info.c            | 38 ++++++++--------
- tests/Makefile.am          |  1 +
- tests/gpiod-test-helpers.h |  3 ++
- tests/tests-chip-info.c    | 54 +++++++++++++++++++++++
- tests/tests-chip.c         | 32 --------------
- tests/tests-info-event.c   | 22 +++++-----
- tools/gpiodetect.c         | 13 ++++--
- tools/gpiofind.c           |  8 +++-
- tools/gpioinfo.c           | 16 ++++---
- 14 files changed, 283 insertions(+), 141 deletions(-)
- create mode 100644 lib/chip-info.c
- create mode 100644 tests/tests-chip-info.c
-
-
-base-commit: 6e15b78d6e9c956c295c755aed793ffd963b1c53
-prerequisite-patch-id: 4c18b0ccbdc27f0478078c520fc831c6f8e99cae
-prerequisite-patch-id: 9813ae923bac1692f9558db3c09081c3d088ce78
-prerequisite-patch-id: ebd388a7c411a6b730f23a6995852e62c07fb369
-prerequisite-patch-id: bf291d6ac4300ed0ef6bf09eb187530098a7a338
-prerequisite-patch-id: 3af98e60123f5e4b1199a2e0fb06eb6e1cfda18f
-prerequisite-patch-id: 26c5fa12c404c09e78b9dfdf7fab5e3e7afcce4e
+diff --git a/include/gpiod.h b/include/gpiod.h
+index 2365630..956ee12 100644
+--- a/include/gpiod.h
++++ b/include/gpiod.h
+@@ -151,7 +151,7 @@ int gpiod_chip_get_fd(struct gpiod_chip *chip);
+  * @return 0 if wait timed out, -1 if an error occurred, 1 if an event is
+  *	   pending.
+  */
+-int gpiod_chip_info_event_wait(struct gpiod_chip *chip, uint64_t timeout_ns);
++int gpiod_chip_wait_info_event(struct gpiod_chip *chip, uint64_t timeout_ns);
+ 
+ /**
+  * @brief Read a single line status change event from the chip.
+@@ -160,7 +160,7 @@ int gpiod_chip_info_event_wait(struct gpiod_chip *chip, uint64_t timeout_ns);
+  *	   freed by the caller using ::gpiod_info_event_free.
+  * @note If no events are pending, this function will block.
+  */
+-struct gpiod_info_event *gpiod_chip_info_event_read(struct gpiod_chip *chip);
++struct gpiod_info_event *gpiod_chip_read_info_event(struct gpiod_chip *chip);
+ 
+ /**
+  * @brief Map a line's name to its offset within the chip.
+diff --git a/lib/chip.c b/lib/chip.c
+index b881be1..50d8312 100644
+--- a/lib/chip.c
++++ b/lib/chip.c
+@@ -164,14 +164,14 @@ GPIOD_API int gpiod_chip_get_fd(struct gpiod_chip *chip)
+ 	return chip->fd;
+ }
+ 
+-GPIOD_API int gpiod_chip_info_event_wait(struct gpiod_chip *chip,
++GPIOD_API int gpiod_chip_wait_info_event(struct gpiod_chip *chip,
+ 					 uint64_t timeout_ns)
+ {
+ 	return gpiod_poll_fd(chip->fd, timeout_ns);
+ }
+ 
+ GPIOD_API struct gpiod_info_event *
+-gpiod_chip_info_event_read(struct gpiod_chip *chip)
++gpiod_chip_read_info_event(struct gpiod_chip *chip)
+ {
+ 	return gpiod_info_event_read_fd(chip->fd);
+ }
+diff --git a/tests/tests-info-event.c b/tests/tests-info-event.c
+index 32ae690..0640d66 100644
+--- a/tests/tests-info-event.c
++++ b/tests/tests-info-event.c
+@@ -50,7 +50,7 @@ GPIOD_TEST_CASE(event_timeout)
+ 	g_assert_nonnull(info);
+ 	gpiod_test_return_if_failed();
+ 
+-	ret = gpiod_chip_info_event_wait(chip, 100000000);
++	ret = gpiod_chip_wait_info_event(chip, 100000000);
+ 	g_assert_cmpint(ret, ==, 0);
+ }
+ 
+@@ -130,11 +130,11 @@ GPIOD_TEST_CASE(request_reconfigure_release_events)
+ 			      request_reconfigure_release_line, &ctx);
+ 	g_thread_ref(thread);
+ 
+-	ret = gpiod_chip_info_event_wait(chip, 1000000000);
++	ret = gpiod_chip_wait_info_event(chip, 1000000000);
+ 	g_assert_cmpint(ret, >, 0);
+ 	gpiod_test_join_thread_and_return_if_failed(thread);
+ 
+-	request_event = gpiod_chip_info_event_read(chip);
++	request_event = gpiod_chip_read_info_event(chip);
+ 	g_assert_nonnull(request_event);
+ 	gpiod_test_join_thread_and_return_if_failed(thread);
+ 
+@@ -148,11 +148,11 @@ GPIOD_TEST_CASE(request_reconfigure_release_events)
+ 	g_assert_cmpint(gpiod_line_info_get_direction(request_info), ==,
+ 			GPIOD_LINE_DIRECTION_INPUT);
+ 
+-	ret = gpiod_chip_info_event_wait(chip, 1000000000);
++	ret = gpiod_chip_wait_info_event(chip, 1000000000);
+ 	g_assert_cmpint(ret, >, 0);
+ 	gpiod_test_join_thread_and_return_if_failed(thread);
+ 
+-	reconfigure_event = gpiod_chip_info_event_read(chip);
++	reconfigure_event = gpiod_chip_read_info_event(chip);
+ 	g_assert_nonnull(reconfigure_event);
+ 	gpiod_test_join_thread_and_return_if_failed(thread);
+ 
+@@ -166,11 +166,11 @@ GPIOD_TEST_CASE(request_reconfigure_release_events)
+ 	g_assert_cmpint(gpiod_line_info_get_direction(reconfigure_info), ==,
+ 			GPIOD_LINE_DIRECTION_OUTPUT);
+ 
+-	ret = gpiod_chip_info_event_wait(chip, 1000000000);
++	ret = gpiod_chip_wait_info_event(chip, 1000000000);
+ 	g_assert_cmpint(ret, >, 0);
+ 	gpiod_test_join_thread_and_return_if_failed(thread);
+ 
+-	release_event = gpiod_chip_info_event_read(chip);
++	release_event = gpiod_chip_read_info_event(chip);
+ 	g_assert_nonnull(release_event);
+ 	gpiod_test_join_thread_and_return_if_failed(thread);
+ 
+@@ -243,7 +243,7 @@ GPIOD_TEST_CASE(chip_fd_can_be_polled)
+ 	g_assert_cmpint(ret, >, 0);
+ 	gpiod_test_join_thread_and_return_if_failed(thread);
+ 
+-	event = gpiod_chip_info_event_read(chip);
++	event = gpiod_chip_read_info_event(chip);
+ 	g_assert_nonnull(event);
+ 	gpiod_test_join_thread_and_return_if_failed(thread);
+ 
+@@ -283,11 +283,11 @@ GPIOD_TEST_CASE(unwatch_and_check_that_no_events_are_generated)
+ 
+ 	request = gpiod_test_request_lines_or_fail(chip, req_cfg, line_cfg);
+ 
+-	ret = gpiod_chip_info_event_wait(chip, 100000000);
++	ret = gpiod_chip_wait_info_event(chip, 100000000);
+ 	g_assert_cmpint(ret, >, 0);
+ 	gpiod_test_return_if_failed();
+ 
+-	event = gpiod_chip_info_event_read(chip);
++	event = gpiod_chip_read_info_event(chip);
+ 	g_assert_nonnull(event);
+ 	gpiod_test_return_if_failed();
+ 
+@@ -298,6 +298,6 @@ GPIOD_TEST_CASE(unwatch_and_check_that_no_events_are_generated)
+ 	gpiod_line_request_release(request);
+ 	request = NULL;
+ 
+-	ret = gpiod_chip_info_event_wait(chip, 100000000);
++	ret = gpiod_chip_wait_info_event(chip, 100000000);
+ 	g_assert_cmpint(ret, ==, 0);
+ }
 -- 
 2.35.1
 
