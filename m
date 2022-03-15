@@ -2,110 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E9184D9738
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Mar 2022 10:11:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D3CD4D9778
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Mar 2022 10:18:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346415AbiCOJMW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Mar 2022 05:12:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59178 "EHLO
+        id S1346388AbiCOJTe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Mar 2022 05:19:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346411AbiCOJMU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Mar 2022 05:12:20 -0400
-Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86B694DF6E
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Mar 2022 02:11:09 -0700 (PDT)
-Received: by mail-lj1-x234.google.com with SMTP id y17so8406158ljd.12
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Mar 2022 02:11:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=lk6U/+kdSwHOiKBRnGMc9pM7ic307xb3l3S/1lYHgbk=;
-        b=HgA7bGMM2xe6/RgTPvCsAg+OJqmMEd+/9E5PtLGjVXvbVjN8Ig3IqT0OFl49IFBkJs
-         NzRl6oy0XTt82JxWDcu5OWPUzrfJB77fwx2O34fJUV2en9TNd8WYVjeQ/ktwa1sVTM94
-         SqRq0SDIpODgIdQk+i5XIjuqm37R3ly6B2UQczNvDV2gEop703/Z/6ChtlHcF763Qq3T
-         bGm5vmq3Mxl5UAp17+Wod1YWTSvZ8kyPrCuJ9quepWy5RQD7kZcWbJ4yWpvhKzFxfOE4
-         f/W044t2lZ5WXC++Qe8oFBXNrdeTbBfDVLOq0U+x1s6bgY/WkKw6ctywqT/uVvhxIZOc
-         FW8A==
+        with ESMTP id S1346505AbiCOJTd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Mar 2022 05:19:33 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AB73D12748
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Mar 2022 02:18:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1647335899;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MHO3i7cDL4QgzAYf1pciKR2WcoM9oO/OIWe2fzf8iIU=;
+        b=L1vpU0d4g7HnW0Suz1FzS1Qm3tVi0/S5Af8jiPlV3YDiwimjQGsRAVblZ3GXS139iEn8BY
+        EHhCSkRdMtksNgHsHAXpe48jqjG7C1q7I5T910/lQyhjx4fRNgAU3F02tHiMRzJ6lQgBy6
+        AN3+RD6N98rhYAMnWZDiQFvmQCwOFaE=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-517-7HkK-lTMNHWF7sfylEKXYw-1; Tue, 15 Mar 2022 05:18:17 -0400
+X-MC-Unique: 7HkK-lTMNHWF7sfylEKXYw-1
+Received: by mail-ej1-f70.google.com with SMTP id le4-20020a170907170400b006dab546bc40so9313449ejc.15
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Mar 2022 02:18:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=lk6U/+kdSwHOiKBRnGMc9pM7ic307xb3l3S/1lYHgbk=;
-        b=4qCaQgddP6fM6U7dwt/x5CYqnHoaevg19J1pT1EBgeHRsO+9An70OA6B/7B9+xn8Fo
-         UCOFdArJ9lNXkhQSRugmGIbyxVY0uIxZVxfgjHBeVcjGIcRsrOWKBSsXQLUOcqx02keC
-         2xJ1EFtGouLwYDfcWA8vped5tLcHYdlM1x4WqnWHY0WmmWmRz8aaP5UEenwxo+0CD5UU
-         pxjFNG0bWj46WOwAVqNwD3sJRVMboCcNlFcuvuHt58GeIaxt51Bd26I6qr+T7kUiFTC6
-         EFmimxQCRY7s8qhYsfB1OTvX1JcxlXeDxrs9FiTyWOknhszDfSxIjFQ206oHdi389pgV
-         wqtA==
-X-Gm-Message-State: AOAM530qZrUJKNtnnoAPHjLmY+mcPfsS7MzDEAN+jxAVHoulrmWyA0yb
-        OFg3eSUhX2d9oUOMvEwNMkf8dA==
-X-Google-Smtp-Source: ABdhPJwwPmzWCUOdsCyCpG4VT+IKr5U4nhJPLYcpo5RcCZ7MKFUcvUOPnV4GB/Tb5XUOOJ/v2XXwyg==
-X-Received: by 2002:a2e:9882:0:b0:246:2caf:1c85 with SMTP id b2-20020a2e9882000000b002462caf1c85mr16798341ljj.25.1647335467627;
-        Tue, 15 Mar 2022 02:11:07 -0700 (PDT)
-Received: from eriador.lan ([37.153.55.125])
-        by smtp.gmail.com with ESMTPSA id h10-20020a19700a000000b004481fbdf17fsm3604248lfc.28.2022.03.15.02.11.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Mar 2022 02:11:07 -0700 (PDT)
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: [PATCH v2] pinctrl: qcom-pmic-gpio: Add support for pm8450
-Date:   Tue, 15 Mar 2022 12:11:06 +0300
-Message-Id: <20220315091106.613153-1-dmitry.baryshkov@linaro.org>
-X-Mailer: git-send-email 2.35.1
+        bh=MHO3i7cDL4QgzAYf1pciKR2WcoM9oO/OIWe2fzf8iIU=;
+        b=5qXcJqg/TZG2Px0n7r78lNw/LS5jLOob4DpYpq4hjRy7B1LYnJUdXUHNLaVD4nKRCL
+         2SQcsL4LVR8CimcEAVPk25Lf+aU4+pHNC3isAnEu0hQUwr/pf+GW3bGYp2jRQtNypfaL
+         ZVZtQ62FlDK5bIX+3vAvm1zKXgA4jscDYY/ucNxdU42nPfwiJJWaoR2qlFhC4hKXS6OK
+         Nvqu0tr67myU555j8Uv3V3t4X/Zfjuuaq66EWRMR5AV57CC9ojQT1kU/gnyalBf1ud0U
+         IZqiPJG5k6NGaBOObZq7rqokowZMkvrA4QBsP/FZtH9m3+U6Gid3Ouw6GtZFyjJtGRLQ
+         NXCA==
+X-Gm-Message-State: AOAM533y9wBXy/ewx5BsMAHM1mW3l3J/Zo1XK3k9P1rMnCCCdha6vxai
+        4iUFOk7VSEGMrBYIAcQjjIr9A/xVNP7nPtbsOeConwmNsfIY58w3q9Cn21e372XppzH3CwUiZYT
+        RiOUzX6lh8FFbUsfqAkb/cA==
+X-Received: by 2002:a17:907:961b:b0:6d9:acb0:5403 with SMTP id gb27-20020a170907961b00b006d9acb05403mr21664815ejc.568.1647335896157;
+        Tue, 15 Mar 2022 02:18:16 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz4v41/A9xo5XXNPP80pes2Ha5409yxGlxlGhhRyWxa+fvDuDAIERk1zhjYVJLIhEsfb4YdzA==
+X-Received: by 2002:a17:907:961b:b0:6d9:acb0:5403 with SMTP id gb27-20020a170907961b00b006d9acb05403mr21664803ejc.568.1647335895929;
+        Tue, 15 Mar 2022 02:18:15 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:cdb2:2781:c55:5db0? (2001-1c00-0c1e-bf00-cdb2-2781-0c55-5db0.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:cdb2:2781:c55:5db0])
+        by smtp.gmail.com with ESMTPSA id uz4-20020a170907118400b006dab1ea6e3asm7828556ejb.51.2022.03.15.02.18.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 15 Mar 2022 02:18:15 -0700 (PDT)
+Message-ID: <aab9d25e-f6f9-b831-769b-ab95cd1bea74@redhat.com>
+Date:   Tue, 15 Mar 2022 10:18:15 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [GIT PULL] Immutable branch with 5.17-rc1 + "pinctrl: baytrail:
+ Add pinconf,group + function for the pmu_clk"
+Content-Language: en-US
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andy Shevchenko <andy@infradead.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <7640f9ac-88af-ace7-0bd4-990d852567dd@redhat.com>
+ <CACRpkdbDWrrDPK9=5NErtM81109qtTHyFcTON=zXtB2B86wAdA@mail.gmail.com>
+ <CAHp75Ve9s+hEjhWwdjbRJhEU-Efno_TyAUH+D7iRrE8enivvtg@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CAHp75Ve9s+hEjhWwdjbRJhEU-Efno_TyAUH+D7iRrE8enivvtg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-PM8450 provides 4 GPIOs. Add a compatible entry for this GPIO block.
+Hi,
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
----
-Changes since v1:
- - Added dt-bindings entry to the pinctrl/qcom,pmic-gpio.yaml
----
- Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml | 1 +
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c                      | 1 +
- 2 files changed, 2 insertions(+)
+On 3/15/22 07:19, Andy Shevchenko wrote:
+> On Tue, Mar 15, 2022 at 3:01 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>> On Thu, Feb 24, 2022 at 5:48 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>>
+>>> Hello Intel pinctrl maintainers,
+>>>
+>>> As discussed here is a pull-req for an immutable branch with 5.17-rc1 +
+>>> "pinctrl: baytrail: Add pinconf,group + function for the pmu_clk".
+>>
+>> I suppose this is for Andy possibly I already pulled the pulled tree.
+> 
+> Nope, but it appears not necessary. We have nothing to update in my
+> tree which is dependent on this PR.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
-index 9400b665a46f..fe2bcf0694d9 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
-@@ -36,6 +36,7 @@ properties:
-           - qcom,pm8350-gpio
-           - qcom,pm8350b-gpio
-           - qcom,pm8350c-gpio
-+          - qcom,pm8450-gpio
-           - qcom,pm8916-gpio
-           - qcom,pm8917-gpio
-           - qcom,pm8921-gpio
-diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-index f2eac3b05d67..4fbf8d3938ef 100644
---- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-@@ -1164,6 +1164,7 @@ static const struct of_device_id pmic_gpio_of_match[] = {
- 	{ .compatible = "qcom,pm8350-gpio", .data = (void *) 10 },
- 	{ .compatible = "qcom,pm8350b-gpio", .data = (void *) 8 },
- 	{ .compatible = "qcom,pm8350c-gpio", .data = (void *) 9 },
-+	{ .compatible = "qcom,pm8450-gpio", .data = (void *) 4 },
- 	{ .compatible = "qcom,pm8916-gpio", .data = (void *) 4 },
- 	{ .compatible = "qcom,pm8941-gpio", .data = (void *) 36 },
- 	/* pm8950 has 8 GPIOs with holes on 3 */
--- 
-2.35.1
+Ok, note this is already in the platform-drivers-x86 tree, since this
+was a dep for another patch there. So I guess the single patch in the PR
+will find its way upstream through the pdx86 tree then (which is fine).
+
+Regards,
+
+Hans
 
