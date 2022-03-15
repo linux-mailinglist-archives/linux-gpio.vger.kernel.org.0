@@ -2,61 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 787314D91C5
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Mar 2022 01:51:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EDDD64D91C9
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Mar 2022 01:53:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242829AbiCOAw2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Mar 2022 20:52:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43500 "EHLO
+        id S1343915AbiCOAyX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Mar 2022 20:54:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233120AbiCOAw1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Mar 2022 20:52:27 -0400
-Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FD66427DC
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Mar 2022 17:51:17 -0700 (PDT)
-Received: by mail-yb1-xb2a.google.com with SMTP id h126so34298780ybc.1
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Mar 2022 17:51:17 -0700 (PDT)
+        with ESMTP id S239060AbiCOAyW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Mar 2022 20:54:22 -0400
+Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C94365F0
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Mar 2022 17:53:11 -0700 (PDT)
+Received: by mail-yb1-xb2e.google.com with SMTP id u10so34225427ybd.9
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Mar 2022 17:53:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=p0UlhLg5UKZcX2aQVdSXvgppoO3cZOrtQ6eoO0oL/Q0=;
-        b=QUiGPPJzn7kEVNBbdRGZN7y1wEnZ8PE99wDVRUYPdG7npO00a1a5tmuWBvfD4CYcIY
-         0zY/Cj1/jMwmWfhNIUuJcoqQiaR/bJOC74zjK4OGSbmz3/DpS+qTv7gCvTK7yNSoT1Tt
-         vQRQ5BHHLORdPrO+a7cLptIZvGk96R6ebiS8UpPXhSWY1n9I4xesAORcmo9READeJDHW
-         IW0RZy8yeI2Mh6XeU8GHrWncZvU/65MBWKd3C+167ykIh1Qf9Bzy70QI4L1TnZCFV5ac
-         ZQK9DpAIRcp9bNsZ+PpY/oiRanLk9WLkFQea9uhasoQr4uMlDVl+ytiMloy6E9L+dA9J
-         GH/Q==
+        bh=Fhmr+vMVRJ+uJzK784G8d+opHR5kwCeLncvHCwhC7V8=;
+        b=kQy3v1QA+Hs7vM1GB/kac+JSnrZoyWtPEg1+IV8Y5ZzR4P3NU67VlLNHPZALJKuhXE
+         yW3O3AViZsihifLekuBWYILJr8muyHrcuEjrNU8m9KkwyCeyYqUR81deV8FOaWcS8cTZ
+         WW6YGyVJ7rfWfPVqczRP5R6tRz+JaAY6IFVg5G9wyV4Oro5sS3lp7yKkJ5oUVoQfpN6H
+         QfsECU9tHG9eLO3MCCuGxWHAyQXfNRLJixqZXTbc8W/QGK3vJIh1yZOfGoGbzt9GoxJw
+         y9Kn4eh0t3Hmk+/1fQVHMxLJVMmoRqQriR6mwqcs8l/lc/ZbiZQfrWVJEw8S7+clBPmO
+         t+SQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=p0UlhLg5UKZcX2aQVdSXvgppoO3cZOrtQ6eoO0oL/Q0=;
-        b=AJf7QXP+9NFQe9/JC3sa/wA50jcgSjz0yYYvP9US11gtEEMcw3sIXnhwEPI+w8S+ry
-         NIQwmGu91PJcy8utfQbvfBnjahBGTl3KI0LHi7ITvUeOn9xYDpR2cJOG0oL+VXLvyl22
-         RzlAd/kccH5/1kvjdC8vi+SVQ4hcwTVDAT+FDoj15KMCqQshKMfuPvOHSHrWkuILi34v
-         VNGv0cCgIKlWb1PlXLqI4DwGy1G9kofOfijXxWRgdvkXAHpwHyY4jDRtBh4q1Yh2hgky
-         6C9qfUJTbo3zSItijnxAT0qM9VsGiZl6PxmQ0//IV9oHgV351qicVfzDUbQ/0Xkbdefo
-         xraQ==
-X-Gm-Message-State: AOAM533YyoQ/aU0tkyZZ7eo2ujlmmUfHbJRcS2GNKzJJKxnQYwF2CrcC
-        Rv2dqbdLoC5PlSmRVVLsm8vCU6G329AtgZlf/xrB9g==
-X-Google-Smtp-Source: ABdhPJzWvSlEl+Nt8Y9+wYpryt91TF+QUhuMcfghjrafkVrwylfkmDpe2Ot72osvoz1Yng0YyEpiqOLFpGHghLqrox8=
-X-Received: by 2002:a25:2308:0:b0:628:9a66:7327 with SMTP id
- j8-20020a252308000000b006289a667327mr20333278ybj.626.1647305476388; Mon, 14
- Mar 2022 17:51:16 -0700 (PDT)
+        bh=Fhmr+vMVRJ+uJzK784G8d+opHR5kwCeLncvHCwhC7V8=;
+        b=zsugu5acR8mk2JDcuTV4vINogfeggzZ5KGf2BUPl4PsBRE2Np03AHWvxgcHFCe1ObU
+         t0pIx/bByrfXCYaQvqAnYKIENJUVUaz/BJqDSuRuv+zQyAf/znLSpm1VhlKtvt3AM0EL
+         qhokQB82TVsJvzeQehO5JLZfmjSwsMjVBS84+zyB66PfaHJd+0lwQaukSVwmdEiSl761
+         BM+BJTfU1TeRWfkLphx+aEWzabQ8tCK40Iz29mCR3UtH4/NSNhI/mpQWpMSKytCF9NX0
+         7bUcUhkm4C5i655GlaKN5DgHUIZPVOYezKjf+t1GKwmPkOybHgWX8CAsYZdUkgkjrC6A
+         x2Gw==
+X-Gm-Message-State: AOAM533CGuASh29XpcnDeOawADoiKKUksiMYZxjx/m3cyS4V/ByX/xKq
+        uPkiSCSEB0YyUj1+EocOIx6+yWShhiwmfBI1okACfjb/L40=
+X-Google-Smtp-Source: ABdhPJwCqTjafvoGJG9Th4BoFhDYkPdVcerSOYweDyROIMSGSLo3gJov/9/msaD1G7Cn68MaoDXEVdXa+pGi9DfXPSU=
+X-Received: by 2002:a05:6902:203:b0:628:7b6f:2845 with SMTP id
+ j3-20020a056902020300b006287b6f2845mr21201574ybs.533.1647305590607; Mon, 14
+ Mar 2022 17:53:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220304144432.3397621-2-horatiu.vultur@microchip.com>
- <20220307124501.3487932-1-michael@walle.cc> <20220308083023.frr7qz2xga2tas5r@soft-dev3-1.localhost>
- <691cc39a667d6284fa25bc47f6855152@walle.cc>
-In-Reply-To: <691cc39a667d6284fa25bc47f6855152@walle.cc>
+References: <20220304144432.3397621-1-horatiu.vultur@microchip.com> <20220304144432.3397621-3-horatiu.vultur@microchip.com>
+In-Reply-To: <20220304144432.3397621-3-horatiu.vultur@microchip.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 15 Mar 2022 01:51:05 +0100
-Message-ID: <CACRpkdYMV+-_MXyHi2LXgGMCo8a+fpFWcEPQRgE2k1oRi_aRMw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] pinctrl: ocelot: Fix the pincfg resource.
-To:     Michael Walle <michael@walle.cc>
-Cc:     Horatiu Vultur <horatiu.vultur@microchip.com>,
-        andriy.shevchenko@linux.intel.com, colin.foster@in-advantage.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 15 Mar 2022 01:52:59 +0100
+Message-ID: <CACRpkdaz0H0TPPF5npPfahSXgVCMEjU92YHOjxQz=bJGxd7A1Q@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] pinctrl: ocelot: Fix interrupt parsing
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        colin.foster@in-advantage.com, andriy.shevchenko@linux.intel.com
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -68,31 +65,18 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 8, 2022 at 9:32 AM Michael Walle <michael@walle.cc> wrote:
-> Am 2022-03-08 09:30, schrieb Horatiu Vultur:
-> > The 03/07/2022 13:45, Michael Walle wrote:
-> >> EXTERNAL EMAIL: Do not click links or open attachments unless you know
-> >> the content is safe
-> >>
-> >> > The pincfg resources are in the second memory resource. But the driver
-> >> > still tries to access the first memory resource to get the pincfg. This
-> >> > is wrong therefore fix to access the second memory resource.
-> >> >
-> >> > Reviewed-by: Colin Foster <colin.foster@in-advantage.com>
-> >> > Fixes: ad96111e658a95 ("pinctrl: ocelot: combine get resource and ioremap into single call")
-> >> > Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
-> >>
-> >> There is already this patch pending, which does exactly
-> >> the same:
-> >> https://lore.kernel.org/linux-gpio/20220216082020.981797-1-michael@walle.cc/
-> >
-> > Sorry, I have missed your patch.
-> > Should I resend this series where I will drop this patch? What is the
-> > correct approach?
->
-> Actually, I don't know. Maybe you don't need to do anything, Linus?
+On Fri, Mar 4, 2022 at 3:42 PM Horatiu Vultur
+<horatiu.vultur@microchip.com> wrote:
 
-I'll just apply 2/2 if applicable.
+> In the blamed commit, it removes the duplicate of_node assignment in the
+> driver. But the driver uses this before calling into of_gpio_dev_init to
+> determine if it needs to assign an IRQ chip to the GPIO. The fixes
+> consists in using the platform_get_irq_optional
+>
+> Fixes: 8a8d6bbe1d3bc7 ("pinctrl: Get rid of duplicate of_node assignment in the drivers")
+> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+
+Patch applied.
 
 Yours,
 Linus Walleij
