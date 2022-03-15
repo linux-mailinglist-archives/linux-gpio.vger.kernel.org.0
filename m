@@ -2,111 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D3CD4D9778
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Mar 2022 10:18:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 940BC4D97BA
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Mar 2022 10:35:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346388AbiCOJTe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Mar 2022 05:19:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44602 "EHLO
+        id S1346645AbiCOJgZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Mar 2022 05:36:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346505AbiCOJTd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Mar 2022 05:19:33 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AB73D12748
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Mar 2022 02:18:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1647335899;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MHO3i7cDL4QgzAYf1pciKR2WcoM9oO/OIWe2fzf8iIU=;
-        b=L1vpU0d4g7HnW0Suz1FzS1Qm3tVi0/S5Af8jiPlV3YDiwimjQGsRAVblZ3GXS139iEn8BY
-        EHhCSkRdMtksNgHsHAXpe48jqjG7C1q7I5T910/lQyhjx4fRNgAU3F02tHiMRzJ6lQgBy6
-        AN3+RD6N98rhYAMnWZDiQFvmQCwOFaE=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-517-7HkK-lTMNHWF7sfylEKXYw-1; Tue, 15 Mar 2022 05:18:17 -0400
-X-MC-Unique: 7HkK-lTMNHWF7sfylEKXYw-1
-Received: by mail-ej1-f70.google.com with SMTP id le4-20020a170907170400b006dab546bc40so9313449ejc.15
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Mar 2022 02:18:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=MHO3i7cDL4QgzAYf1pciKR2WcoM9oO/OIWe2fzf8iIU=;
-        b=5qXcJqg/TZG2Px0n7r78lNw/LS5jLOob4DpYpq4hjRy7B1LYnJUdXUHNLaVD4nKRCL
-         2SQcsL4LVR8CimcEAVPk25Lf+aU4+pHNC3isAnEu0hQUwr/pf+GW3bGYp2jRQtNypfaL
-         ZVZtQ62FlDK5bIX+3vAvm1zKXgA4jscDYY/ucNxdU42nPfwiJJWaoR2qlFhC4hKXS6OK
-         Nvqu0tr67myU555j8Uv3V3t4X/Zfjuuaq66EWRMR5AV57CC9ojQT1kU/gnyalBf1ud0U
-         IZqiPJG5k6NGaBOObZq7rqokowZMkvrA4QBsP/FZtH9m3+U6Gid3Ouw6GtZFyjJtGRLQ
-         NXCA==
-X-Gm-Message-State: AOAM533y9wBXy/ewx5BsMAHM1mW3l3J/Zo1XK3k9P1rMnCCCdha6vxai
-        4iUFOk7VSEGMrBYIAcQjjIr9A/xVNP7nPtbsOeConwmNsfIY58w3q9Cn21e372XppzH3CwUiZYT
-        RiOUzX6lh8FFbUsfqAkb/cA==
-X-Received: by 2002:a17:907:961b:b0:6d9:acb0:5403 with SMTP id gb27-20020a170907961b00b006d9acb05403mr21664815ejc.568.1647335896157;
-        Tue, 15 Mar 2022 02:18:16 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz4v41/A9xo5XXNPP80pes2Ha5409yxGlxlGhhRyWxa+fvDuDAIERk1zhjYVJLIhEsfb4YdzA==
-X-Received: by 2002:a17:907:961b:b0:6d9:acb0:5403 with SMTP id gb27-20020a170907961b00b006d9acb05403mr21664803ejc.568.1647335895929;
-        Tue, 15 Mar 2022 02:18:15 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:cdb2:2781:c55:5db0? (2001-1c00-0c1e-bf00-cdb2-2781-0c55-5db0.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:cdb2:2781:c55:5db0])
-        by smtp.gmail.com with ESMTPSA id uz4-20020a170907118400b006dab1ea6e3asm7828556ejb.51.2022.03.15.02.18.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Mar 2022 02:18:15 -0700 (PDT)
-Message-ID: <aab9d25e-f6f9-b831-769b-ab95cd1bea74@redhat.com>
-Date:   Tue, 15 Mar 2022 10:18:15 +0100
+        with ESMTP id S1346222AbiCOJgZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Mar 2022 05:36:25 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3A3A39B8A;
+        Tue, 15 Mar 2022 02:35:12 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1C57F60AF4;
+        Tue, 15 Mar 2022 09:35:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BD33C340E8;
+        Tue, 15 Mar 2022 09:35:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1647336911;
+        bh=tc/AYlU5h+rIvqjL5oTMpd37Nh1Iiz2jAlGUG+y+Abg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=q7bQgqkRSdMHOm+/K3QDJHpE1nyNo7Ji1VCcUgPEggRZTuigZa2fouitaaOdiUlPl
+         2e4i6K72aVpXtZjFaDGOuPsB68Aa4JU25BusLuar/XS7B741AUbovWEXrcSEoVZKj1
+         ztK4enbfxZpuW/7OwLkzPTLPMJU95Mkd9NquoysZkFt9Uh/ldbvfhZ4q2ldXsp/tRH
+         qdL/5ZTffFR49LTTg/IgkvEVWesLOVu7Za7Rm7uIdemcseM/GEg20+LP+ocLJCVx2D
+         nGLOEKN+AHB4leKMND21ADdNjwWM+pdeOpB9+sq3AJbAcguseZCfjS5ozc1t9tdh6B
+         ISqclEZpOq0uw==
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1nU3a8-00EbLe-Tm; Tue, 15 Mar 2022 09:35:09 +0000
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [GIT PULL] Immutable branch with 5.17-rc1 + "pinctrl: baytrail:
- Add pinconf,group + function for the pmu_clk"
-Content-Language: en-US
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andy@infradead.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-References: <7640f9ac-88af-ace7-0bd4-990d852567dd@redhat.com>
- <CACRpkdbDWrrDPK9=5NErtM81109qtTHyFcTON=zXtB2B86wAdA@mail.gmail.com>
- <CAHp75Ve9s+hEjhWwdjbRJhEU-Efno_TyAUH+D7iRrE8enivvtg@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAHp75Ve9s+hEjhWwdjbRJhEU-Efno_TyAUH+D7iRrE8enivvtg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Date:   Tue, 15 Mar 2022 09:35:08 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Joey Gouly <joey.gouly@arm.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Hector Martin <marcan@marcan.st>,
+        Sven Peter <sven@svenpeter.dev>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH 0/5] gpiolib: Handle immutable irq_chip structures
+In-Reply-To: <CACRpkdbEDoPeu=TWmsJ_t-4+NtyiiSCXoj9rymspZt0nC+yrsQ@mail.gmail.com>
+References: <20220223154405.54912-1-maz@kernel.org>
+ <CACRpkdbEDoPeu=TWmsJ_t-4+NtyiiSCXoj9rymspZt0nC+yrsQ@mail.gmail.com>
+User-Agent: Roundcube Webmail/1.4.13
+Message-ID: <e39c68c6c8c99fec796461cde33f78df@kernel.org>
+X-Sender: maz@kernel.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: linus.walleij@linaro.org, linux-kernel@vger.kernel.org, brgl@bgdev.pl, thierry.reding@gmail.com, joey.gouly@arm.com, jonathanh@nvidia.com, marcan@marcan.st, sven@svenpeter.dev, alyssa@rosenzweig.io, bjorn.andersson@linaro.org, agross@kernel.org, tglx@linutronix.de, linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-8.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
-
-On 3/15/22 07:19, Andy Shevchenko wrote:
-> On Tue, Mar 15, 2022 at 3:01 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->> On Thu, Feb 24, 2022 at 5:48 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->>> Hello Intel pinctrl maintainers,
->>>
->>> As discussed here is a pull-req for an immutable branch with 5.17-rc1 +
->>> "pinctrl: baytrail: Add pinconf,group + function for the pmu_clk".
->>
->> I suppose this is for Andy possibly I already pulled the pulled tree.
+On 2022-03-15 00:44, Linus Walleij wrote:
+> On Wed, Feb 23, 2022 at 4:44 PM Marc Zyngier <maz@kernel.org> wrote:
 > 
-> Nope, but it appears not necessary. We have nothing to update in my
-> tree which is dependent on this PR.
+>> I recently realised that the gpiolib play ugly tricks on the
+>> unsuspecting irq_chip structures by patching the callbacks.
+> 
+> Sorry about that...
 
-Ok, note this is already in the platform-drivers-x86 tree, since this
-was a dep for another patch there. So I guess the single patch in the PR
-will find its way upstream through the pdx86 tree then (which is fine).
+No worries. It probably did seem like a good idea at the
+time, and I have the benefit of hindsight here...
 
-Regards,
+> 
+>> My current approach is to add a new irq_chip flag (IRQCHIP_IMMUTABLE)
+>> which does what it says on the tin: don't you dare writing there.
+>> Gpiolib is further updated not to install its own callbacks, and it
+>> becomes the responsibility of the driver to call into the gpiolib when
+>> required. This is similar to what we do for other subsystems such as
+>> PCI-MSI.
+> 
+> OK if there is a precedent it is usually wise to follow.
+> 
+>> I'd welcome comments on the approach. If deemed acceptable, there are
+>> another 300+ drivers to update! Not to mention the documentation. I
+>> appreciate that this is a lot of potential changes, but the current
+>> situation is messy.
+> 
+> I'm happy with this approach as long as the 300+ drivers get fixed
+> and the old way of doing it gets deleted.
 
-Hans
+Of course. Note that it will take some time before it actually happens.
+My current plan is to stick in a pr_warn() each time a driver
+following the old scheme gets registered, as a nudge for people to
+update their driver if they care about it.
 
+Regarding documentation, are you OK with me simply replacing the
+current code samples with the new approach? It will at least avoid
+giving people the wrong idea. I also want to write a brief migration
+guide that people willing to bump up their patch count can follow.
+
+I'll repost something once -rc1 is out.
+
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
