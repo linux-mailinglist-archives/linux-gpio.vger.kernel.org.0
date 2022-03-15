@@ -2,118 +2,221 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C95D4D9DDC
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Mar 2022 15:40:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 45D014D9E18
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Mar 2022 15:51:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349348AbiCOOlA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Mar 2022 10:41:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60774 "EHLO
+        id S1349385AbiCOOwX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Mar 2022 10:52:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349338AbiCOOk6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Mar 2022 10:40:58 -0400
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 186A355756
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Mar 2022 07:39:46 -0700 (PDT)
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com [209.85.208.72])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id AC7673F62D
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Mar 2022 14:39:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1647355184;
-        bh=nPejALOuOdUqemhzHbmVuYnKHib7XI81pmDxKpjtzkE=;
-        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-         In-Reply-To:Content-Type;
-        b=rkDdnnlFJ0FO+LAUXa+FOkDrffM+fLbgroFnudIvicOhMcRUxnFZvfjetHYnQGJVj
-         4yq/y0f//+0yS9zF5SOrfKtN1oH8212rsv0W7pFfWK3wbyiR5Y5Gw6s+rFjL4BBeET
-         hPmj//utUXlAB72dRxRvjjgtI66xOLDtcS4uWpxMX1oQyAkpJILyaF3rentDpQopGS
-         8hY2jfynVIKeu0fK74RYvviaWHgL+6sDtkhHgELY0CT7OCWRQJ/SV+EyB0yy5Prpgb
-         Pj2M2Q5q4z3trB/zbHmKYNIj4a7spiWukRYHCPeoyju7l2RVfYQer0cfyOQwMdtRoc
-         Lw4NJ9yfHe+gQ==
-Received: by mail-ed1-f72.google.com with SMTP id r28-20020a50aadc000000b00418572a365bso5711842edc.0
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Mar 2022 07:39:44 -0700 (PDT)
+        with ESMTP id S1343923AbiCOOwW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Mar 2022 10:52:22 -0400
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BEC755752
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Mar 2022 07:51:08 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id g19so20070645pfc.9
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Mar 2022 07:51:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Ljm6n2Ech5IQZc/hkc3TJ+D/NPl3xnOkiEdzFLlwRhI=;
+        b=GA7Cg6//qD+sfLANdPJjfo1Fq/JfVDnhCtKqILN92N9poH53bDf+M90iZbcR/cm038
+         8rm4yaf9FF5Mx7UXCG8ZcI5dIThzOfAtYxo1QxWen/MB5a/6Lkg8L/q9PQpgJKQjAnWK
+         VZdOjnVt8qRemQ8J7pkAsg+Y9nPrEv5YlqRHzUuQU2qyz8ejjcGQqBfuEQSbf+xYxDjo
+         ssJx8bsHp/bxoVSAZ/U/96cPIjAG6+vrh/lK1vlXkmbvQVhEdoB/o/wE1N7w6i7BtiRl
+         bpZ/t/tKzRxsNhQ6S1WRAiQ9p25LL6VH6exIpVTRbeLl7LJCcLNDiaKxaP91eujRRBQD
+         69WA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=nPejALOuOdUqemhzHbmVuYnKHib7XI81pmDxKpjtzkE=;
-        b=Gbuhx8KQCtXHcZA1vCrZlvlkTl0Ev7dQQ5fpFQLkVlWlRCV4vWQsr2483Rky/C2EUT
-         LxsG1ruUG/by+y51o6d3U3X4AYSvfWhVxSTH6eFxv1D06H6Yaj6NecqyNZlMUCVNzldI
-         +8xQ2IbBU9vzm621rfXLa0Od6wDmp1dKENhKbyVHE6TaF5552+BJSB+kgndFET3orRZY
-         pg4DdcNPZ5WnEyGmkYOx6Chk6HxxdF6YJoD9e5g+A4sk418wzdeCpN+DbKrFB9AR7KR2
-         /gZEi/zXbgLp8B4ywCjMxg+i6kAuZk+muw9BRy7WdFLN5e3e7kcwwP0r5o5X2Ioi5v4M
-         baLA==
-X-Gm-Message-State: AOAM530VA0gTJL0IHrKGeYXD81IHpvkwzqkzpUx08wUjdEo0Zu1MPTXv
-        gw2LvLXIuh4xJ6g5oqFt5t5K2+FN9qAeei9G6eex/oLOEbecytuDo5yMg8240QaNc7pwmxlc7QH
-        su9hMq1Tbso1xeQHuP1nSbqC0Qq9H74QlMn8k2TQ=
-X-Received: by 2002:aa7:c34d:0:b0:418:c96a:cb58 with SMTP id j13-20020aa7c34d000000b00418c96acb58mr2257783edr.49.1647355182013;
-        Tue, 15 Mar 2022 07:39:42 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyigKXtRY+yKVzsglw5ybBL5p8Qv91o3EGBORJFXc7hNx9TUa56VJmCYe7gKusief6LkADMqA==
-X-Received: by 2002:aa7:c34d:0:b0:418:c96a:cb58 with SMTP id j13-20020aa7c34d000000b00418c96acb58mr2257769edr.49.1647355181845;
-        Tue, 15 Mar 2022 07:39:41 -0700 (PDT)
-Received: from [192.168.0.156] (xdsl-188-155-174-239.adslplus.ch. [188.155.174.239])
-        by smtp.googlemail.com with ESMTPSA id r23-20020aa7da17000000b00415a1431488sm9739991eds.4.2022.03.15.07.39.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Mar 2022 07:39:41 -0700 (PDT)
-Message-ID: <5d9d99d7-b4da-d794-0d2a-9739bb1f3d66@canonical.com>
-Date:   Tue, 15 Mar 2022 15:39:40 +0100
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Ljm6n2Ech5IQZc/hkc3TJ+D/NPl3xnOkiEdzFLlwRhI=;
+        b=vg8k1+rCjqQDE3UM/Z7cmmfm+Ff+L1U5Ro9F1Z89Z3i1nHkYd2DF13uAx+4i1KLmdB
+         RnXPIyTsgp1PFSIuRiCRkmWzxjurhEdjEz3jBeVHjF0+JXpYLX57xve2q83ndADg+WBk
+         JovSnlAYK5YCyxiHlDuMh2p2/+LdLCJ2Ytzko9j33Y2oYovjyLG19hxl5azQVgz236GK
+         IDkQHleV0UBXd6z54eytDpNkg7gaT80S8sjEk0nbrRDG9jP96fKcN1oO/pt4nCQ3JZkI
+         orJKbtJdWM2NnkRjpLq21sQh6HsW812v/CKN0Yvb9drYcEfOQ763cMGsx6kygYkBirmW
+         ZzEA==
+X-Gm-Message-State: AOAM533X+zQTdH7/R+HMCULFlmkkCxJeNaWeKRrridmrp5rGoe5S6vmQ
+        XvMNg+n3pT1WE2xgr10SGRdWqy3rwjuO1g==
+X-Google-Smtp-Source: ABdhPJzKPpva1K1jjkdKoA0aZzD8QqRwd+/1/3irKpeLWvRM3sQQkMuB09XybfUw561ZW1K39ln4Ww==
+X-Received: by 2002:a65:6a4a:0:b0:380:fd52:1677 with SMTP id o10-20020a656a4a000000b00380fd521677mr20783373pgu.597.1647355867688;
+        Tue, 15 Mar 2022 07:51:07 -0700 (PDT)
+Received: from sol ([124.148.64.37])
+        by smtp.gmail.com with ESMTPSA id r1-20020a17090a560100b001bf72b5af97sm3446337pjf.13.2022.03.15.07.51.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Mar 2022 07:51:06 -0700 (PDT)
+Date:   Tue, 15 Mar 2022 22:51:02 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: [libgpiod v2][PATCH 2/6] API: rename
+ gpiod_request_config_get_num_offsets to gpiod_request_config_get_num_lines
+ to match line_request pattern
+Message-ID: <20220315145102.GA216863@sol>
+References: <20220311073926.78636-1-warthog618@gmail.com>
+ <20220311073926.78636-3-warthog618@gmail.com>
+ <CAMRc=MfDmc86mK=8U_srVJg6fFvFy5hx+pnYmN8wS8rd4KWobQ@mail.gmail.com>
+ <20220315112305.GA170151@sol>
+ <CAMRc=MeUs_yLC_=rE4OPeoE0BDw=Zhpnwyb0vYgCFB99Y6wOpA@mail.gmail.com>
+ <20220315115923.GA173724@sol>
+ <CAMRc=MfN0UPz9heH43sU+Rgd+zy7KtmMaaa7yEZckFyEEG9gNQ@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH v2 4/8] pinctrl: mvebu: pinctrl driver for 98DX2530 SoC
-Content-Language: en-US
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        huziji@marvell.com, ulf.hansson@linaro.org, robh+dt@kernel.org,
-        davem@davemloft.net, kuba@kernel.org, linus.walleij@linaro.org,
-        catalin.marinas@arm.com, will@kernel.org,
-        gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com,
-        adrian.hunter@intel.com, thomas.petazzoni@bootlin.com,
-        kostap@marvell.com, robert.marko@sartura.hr,
-        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20220314213143.2404162-1-chris.packham@alliedtelesis.co.nz>
- <20220314213143.2404162-5-chris.packham@alliedtelesis.co.nz>
- <04ed13f1-671f-7416-61d0-0bf452ae862e@canonical.com>
- <YjCj07kxGh8n45GE@lunn.ch>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-In-Reply-To: <YjCj07kxGh8n45GE@lunn.ch>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MfN0UPz9heH43sU+Rgd+zy7KtmMaaa7yEZckFyEEG9gNQ@mail.gmail.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 15/03/2022 15:33, Andrew Lunn wrote:
->>> +static struct platform_driver ac5_pinctrl_driver = {
->>> +	.driver = {
->>> +		.name = "ac5-pinctrl",
->>> +		.of_match_table = of_match_ptr(ac5_pinctrl_of_match),
->>
->> of_match_ptr() does not look correct for OF-only platform. This should
->> complain in W=1 compile tests on !OF config.
+On Tue, Mar 15, 2022 at 02:43:28PM +0100, Bartosz Golaszewski wrote:
+> On Tue, Mar 15, 2022 at 12:59 PM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> > On Tue, Mar 15, 2022 at 12:39:56PM +0100, Bartosz Golaszewski wrote:
+> > > On Tue, Mar 15, 2022 at 12:23 PM Kent Gibson <warthog618@gmail.com> wrote:
+> > > >
+> > > > On Tue, Mar 15, 2022 at 11:52:21AM +0100, Bartosz Golaszewski wrote:
+> > > > > On Fri, Mar 11, 2022 at 8:40 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > > > > >
+> > > > > > Both gpiod_request_config and gpiod_line_request contain a number of
+> > > > > > lines, but the former has a get_num_offsets accessor, while the latter
+> > > > > > has get_num_lines.  Make them consistent by switching request_config to
+> > > > > > get_num_lines.
+> > > > > >
+> > > > > > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> > > > > > ---
+> > > > >
+> > > > > IMO this doesn't make much sense because we still have
+> > > > > gpiod_request_config_set_offsets(). So now you have set_offsets but
+> > > > > get_lines. At the time of preparing the request_config we're still
+> > > > > talking about offsets of lines to request, while once the request has
+> > > > > been made, we're talking about requested lines.
+> > > > >
+> > > >
+> > > > Oh FFS we are always talking about lines.  Whether you have requested
+> > > > them yet or not is irrelevant.  You WANT to request lines.
+> > > > If we had globally unique line names we wouldn't give a rats about the
+> > > > offset.
+> > > >
+> > > > And take another look - you have actually have get_offsets and
+> > > > get_num_lines functions.
+> > > >
+> > > > Offsets is just one of the attributes of the lines, and this approach
+> > > > still works if there is another fields of interest. e.g. values:
+> > > >
+> > > > int gpiod_line_request_set_values_subset(struct gpiod_line_request *request,
+> > > >                                          size_t num_lines,
+> > > >                                          const unsigned int *offsets,
+> > > >                                          const int *values);
+> > > >
+> > > > which you then complain about in patch 4 as I'm writing this.... <sigh>.
+> > > >
+> > > > You could equally argue that one should be num_values.
+> > > >
+> > > > While we are still preparing the configuration, we are preparing the
+> > > > config for LINES, not offsets.  Using num_lines is a reminder that you
+> > > > need to provide the offset for each line - the two are inextricably
+> > > > linked.  Using num_offsets could be taken to imply that
+> > > > gpiod_request_config_set_offsets() can be called multiple times to add
+> > > > offsets.
+> > > >
+> > > > > I would leave it as it is personally.
+> > > > >
+> > > >
+> > > > I know, I know :-|.
+> > > >
+> > > > Cheers,
+> > > > Kent.
+> > >
+> > > I didn't know I would see the whole extend of Kent's wrath after that
+> > > comment. :)
+> > >
+> >
+> > We're still way way off the full extent.
+> >
+> > Though "libgpiod v2 - the Wrath of Kent" does have a certain ring to it.
+> >
 > 
-> The Marvell family of SoC which this embedded SoC borrows HW blocks
-> from can boot using ACPI. I doubt anybody would boot this particularly
-> SoC using ACPI, but the drivers Chris copied probably do build !OF for
-> when ACPI is in us.
+> Love it, let's make it official. :)
+> 
 
-What I wanted to say - current setting should cause warnings. Therefore
-choose:
-1. For ACPI && !OF this should be still without of_match_ptr, to allow
-ACPI matching by OF (PRP0001).
-2. For !OF with of_match_ptr() (weird setup... how to match then?) the
-ac5_pinctrl_of_match should be marked as maybe unused.
+Maybe not - one of the good guys dies at the end of that one, as does
+the eponymous character :-(.
 
+> > > Anyway let me try to defend myself before I wave the white flag and
+> > > surrender as usual.
+> > >
+> > > We're setting VALUES so it's only normal to speak about NUMBER of VALUES.
+> > >
+> >
+> > But you are happy to call it num_offsets?  I'm confused.
+> >
+> 
+> Wat? No, the only num_offsets are present in get/set_offsets in request_config.
+> 
 
-Best regards,
-Krzysztof
+My bad - you were being abstract and on first reading I took it literally.
+
+My perspective is that you are setting the ATTRs on a NUMBER of OBJECTS,
+so looking at it with the scope of the config, not the individual function.
+
+But I see your point.
+
+> > > It's like when you have an array of of X that is an attribute of Y,
+> > > that array still carries a number of X and not Y.
+> > >
+> >
+> > I get that, but in this case the offset is identifier for line.
+> > The mapping is 1-1.
+> >
+> > > This is for patch 4 but this one has another problem. What if we
+> > > extend this structure to - besides offsets - accept string identifiers
+> > > for a request? Then we would want to use get_offsets and get_names (or
+> > > get_ids) and the corresponding get_num_offsets and get_num_names
+> > > accesors and in this case get_num_lines would become confusing.
+> > >
+> >
+> > Good luck with that - no matter how you name things.
+> > If you allow multiple identifiers then you have to deal with the
+> > overlap case.  Just don't go there.
+> > And what happens to gpiod_line_request_get_offsets where the size of
+> > the buffer is determined by gpiod_line_request_get_num_lines()?
+> >
+> 
+> The string identifiers would be translated to offsets at some point.
+> Here it would make sense to retrieve the number of lines ACTUALLY
+> requested and get their OFFSETS of which there are NUM_LINES.
+> 
+
+For the tool prototyping I've been doing I went with stringified id -> line,
+with the stringified id mapped to line depending on the other
+command line options, so it may be a name or an offset, depending.
+Behind the scenes the line is always (chip,offset).
+
+But that is really a higher level of abstraction that should be built
+over libgpiod core, not builtin to it.  Unless it were also added to the
+uAPI.
+
+> > Much simpler to stick to a single type of identifier for the request.
+> > Oh, and them the 1-1 mapping still holds, so you can still use num_lines.
+> > No multi-dimensional thinking.
+> >
+> 
+> I don't see a problem with current naming. You set offsets ->
+> num_offsets, values -> num_values. Also: unlike function names this is
+> not even part of ABI. We can even name it `n`, `nelem`, `num_elem`
+> everywhere for all I care.
+> 
+
+A generic might be the way to go for the (offset,value) pairs split over
+arrays case.
+
+Cheers,
+Kent.
