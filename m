@@ -2,58 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BEEC4DA7AC
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Mar 2022 03:05:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ED4A54DA7AD
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Mar 2022 03:05:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345533AbiCPCGO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Mar 2022 22:06:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40606 "EHLO
+        id S1349556AbiCPCGX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Mar 2022 22:06:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234143AbiCPCGO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Mar 2022 22:06:14 -0400
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63AD75E17B
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Mar 2022 19:05:01 -0700 (PDT)
-Received: by mail-pj1-x1036.google.com with SMTP id mv2-20020a17090b198200b001c65bae5744so102135pjb.5
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Mar 2022 19:05:01 -0700 (PDT)
+        with ESMTP id S234143AbiCPCGW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Mar 2022 22:06:22 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBC495E742
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Mar 2022 19:05:09 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id p17so638559plo.9
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Mar 2022 19:05:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EAbwW0iRgk2cWeylq6I8VH9mHzZdpcW9APCkJWtYYCg=;
-        b=XSevVr2yEUT/CzfQx++YdpBLyCWW+o6xYkuh7J7692FSSnP6udxCowoFTQVqu7drCb
-         lpNNxCw0xYD053nElviludmsybk0illFoR+Gv+sgIRLOr9amcz5nov6yr4iLu3NrhEVw
-         de3gb/SjCnSrTDvc7dltxfkk5fw1vEW20Ww2aupJOab2VN6rSmb7vo+ES1Tu+pT8c4EH
-         pOyNcrCWTOSwGqX/XlA+19PE0QABZhCj48jz5D1HjYpngJeEm+aB0i9uvJ9GEZ1JMExe
-         hGqCM4qeDko3KCXPLrqfah8COsI0sgaxkdh0oB7t1p4xYcXN3WSkoG7xCaN+6uZj6lgT
-         7P9A==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=shPogJ7f9IzUSYn9HOTijUz5bww6Va0UQ0xxdoTkiUc=;
+        b=eeNKYx5Jl/FCDqHfdnWG91eUHhiZYOg5T5cZzdYc7ah/KikYTLgo1qfeySg3M5ImCA
+         4ZKB9rYr6E6Y3U/ZAGEUkI274uoeqqobjHkO1q5JKvYJ/hQzy/kLFUUFwlrEnftnoImE
+         i1dTvIS0giqDvHss+5YaE3ISA29dQ6VigI9R/pzfUSdJvqRgi/tx2Av3ge/vLxBohGBe
+         baOOaWRC9XmMwSnFMn4mPEEKYb0M5+VdZLdnFPnOqrUFb/lCtrTt68pQKlVvPPLqyLKs
+         WbiqLB9MXE6LQ/UX1bSWJqUZZh3f6yXWPaTUd2YtrLgRih147IZvMhUe76rcRKtNLPKi
+         qabw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EAbwW0iRgk2cWeylq6I8VH9mHzZdpcW9APCkJWtYYCg=;
-        b=spKS/KYWOYTvj5b/H3ttuxnck0u4ddLWnkYnwYpE48zOpyWKpCpZ4Ez5Zv659DHmOs
-         d9VLUSyfNMO7qheN/vq6x60GS3z/I4DKMO6AdM98NcIJkvrFndwZ2ERsisKxTU2JMtOd
-         zfnek44K0PXswUy1PrK2+p68dNM0A/VwIDGGeiE4+Pp6p2g3I5zpgwuYkgrz8jU5Yhtd
-         gJ13dk5V4uXf0glsPx0/DhlBnB6s5VSwbTO/nu2Yg0+giMEfp7x1sR7Leeyk9gS/Pv3i
-         dPRMhTok+2Rr+iJoFa/GarmD1+z1bo0MtiXg55zl/yaYBj9b53Pmv3fceXUt23Bor177
-         7l9Q==
-X-Gm-Message-State: AOAM532K32AXS1UpsqBMfYn6XyUR2JCJzGCvnBqtNvKt3gf12C6RcnFW
-        vPAaNtXLbTqCcSHJ566Bf34mueD81lVlbw==
-X-Google-Smtp-Source: ABdhPJxa6oWnGejgJhDwr068U0MCdhlIoz1hwHoGK7gSWi7zTsN3t5KPX6WTuxvTIJUFkjBdCueDwQ==
-X-Received: by 2002:a17:902:e8c2:b0:151:cae6:46fa with SMTP id v2-20020a170902e8c200b00151cae646famr31127180plg.164.1647396300466;
-        Tue, 15 Mar 2022 19:05:00 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=shPogJ7f9IzUSYn9HOTijUz5bww6Va0UQ0xxdoTkiUc=;
+        b=pNmOW+sDg38WjEakWVY+36ohGP7ij5N5b7H+6ZgUsNouAyG4zRr0Ll7mu4q9d2FD1q
+         KzzkGhZkHMSmaJaSVU7KJvdLPkL8DESjbLrdw98ww/31sO1dowqxFxAZ1isoWmAUhGY3
+         GXE1yOiqMEmCnbxk4OFy+qVoBQofHjkxOLWWwV4Cy/Pa/s/uipmxKz4mCa/Gp26lZPbZ
+         SsUTAIb6DrqKR8jzDILR8gDDVPyH0YyHGbX388aHrm1bJ5i7gwIhHkOYazxcSgxYQeyb
+         sEAdQAmrmaUb+E3QNWqTXM7m0tQMQPuvWgPMs3PFjVcooFA5X2BUO7XYCp9ljl4KedNq
+         b9mQ==
+X-Gm-Message-State: AOAM531ybyC7k1cLVqwf6AdJl0V1yJ54uxBQ9EyDT4sBu4/vyerYooSA
+        V9uHgQ73B7FvfkooeYn3wfuKOOfWLZRS7Q==
+X-Google-Smtp-Source: ABdhPJyCPqRLVnvQKToPp4yh2MeHMIF1a/ggRS9R8ffcoViTNVghE+aGeGYtLy+ACdGRyBrcadvgeA==
+X-Received: by 2002:a17:90a:5802:b0:1b8:b737:a62b with SMTP id h2-20020a17090a580200b001b8b737a62bmr7790877pji.123.1647396308463;
+        Tue, 15 Mar 2022 19:05:08 -0700 (PDT)
 Received: from sol.home.arpa ([124.148.64.37])
-        by smtp.gmail.com with ESMTPSA id u5-20020a056a00158500b004f745148736sm436885pfk.179.2022.03.15.19.04.58
+        by smtp.gmail.com with ESMTPSA id u5-20020a056a00158500b004f745148736sm436885pfk.179.2022.03.15.19.05.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Mar 2022 19:04:59 -0700 (PDT)
+        Tue, 15 Mar 2022 19:05:08 -0700 (PDT)
 From:   Kent Gibson <warthog618@gmail.com>
 To:     linux-gpio@vger.kernel.org, brgl@bgdev.pl
 Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [libgpiod v2][PATCH 0/3] doc tweak corrections and renaming
-Date:   Wed, 16 Mar 2022 10:04:38 +0800
-Message-Id: <20220316020441.30001-1-warthog618@gmail.com>
+Subject: [libgpiod v2][PATCH 1/3] doc: API documentation tweaks corrections
+Date:   Wed, 16 Mar 2022 10:04:39 +0800
+Message-Id: <20220316020441.30001-2-warthog618@gmail.com>
 X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220316020441.30001-1-warthog618@gmail.com>
+References: <20220316020441.30001-1-warthog618@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -66,51 +68,108 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Another small series of patches following up on the two recent series.
+The corrections to the doc tweaks patch 6, allowing for the omission
+of patches 2 and 4.
 
-The first patch is the corrections for patch 6 of the original series,
-after omitting patches 2 and 4 and fixing conflicts and some other renaming.
-This brings the conflicted sections into line with the rest of the docs.
-There are also a few lines unrelated to the conflicts that differ between
-my tree and yours.  Not sure if you have issues with them and dropped them,
-or something else happened along the way.  I don't see anything terribly
-contraversial so I've kept them in here.
-And there is an unrelated indentation fix as well.
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
+---
+ include/gpiod.h | 37 ++++++++++++++++++++-----------------
+ 1 file changed, 20 insertions(+), 17 deletions(-)
 
-The second is using num_values more consistently.
-These may actually be more corrections for doc tweaks, that slipped
-through because they didn't conflict, and could be squashed into patch 1,
-but kept them separate just in case.  And there is a corresponding code
-rename as well, so it isn't purely documentation.
-
-The final one is completing the renaming of "buf" variables to a name
-more clearly indicating that they refer to uAPI types.
-And renaming the conversion functions to match.
-
-I think that is everything for the core for now.  Hopefully.
-
-Cheers,
-Kent.
-
-Kent Gibson (3):
-  doc: API documentation tweaks corrections
-  core: use num_values rather than num_lines when dealing with subsets
-    of values
-  core: rename uAPI related variables and functions to uapi.
-
- include/gpiod.h      | 51 +++++++++++++++++++++++---------------------
- lib/chip-info.c      |  2 +-
- lib/chip.c           | 24 ++++++++++-----------
- lib/info-event.c     | 18 ++++++++--------
- lib/internal.h       | 20 ++++++++---------
- lib/line-config.c    | 24 ++++++++++-----------
- lib/line-info.c      |  2 +-
- lib/line-request.c   | 50 +++++++++++++++++++++----------------------
- lib/request-config.c | 12 +++++------
- 9 files changed, 103 insertions(+), 100 deletions(-)
-
-
-base-commit: 9d5112d0448fb2436e926a36842ff5ca365303c3
+diff --git a/include/gpiod.h b/include/gpiod.h
+index 883c327..1f90be5 100644
+--- a/include/gpiod.h
++++ b/include/gpiod.h
+@@ -731,7 +731,7 @@ int gpiod_line_config_get_bias_default(struct gpiod_line_config *config);
+  *	   in a request.
+  */
+ int gpiod_line_config_get_bias_offset(struct gpiod_line_config *config,
+-			       unsigned int offset);
++				      unsigned int offset);
+ 
+ /**
+  * @brief Set the default drive setting.
+@@ -986,12 +986,13 @@ gpiod_line_config_set_output_value_override(struct gpiod_line_config *config,
+ 					    unsigned int offset, int value);
+ 
+ /**
+- * @brief Override the output values for multiple offsets.
++ * @brief Override the output values for multiple lines.
+  * @param config Line config object.
+- * @param num_values Number of offsets for which to override values.
+- * @param offsets Array of line offsets to override values for.
+- * @param values Array of output values associated with the offsets passed in
+- *               the previous argument.
++ * @param num_values Number of lines for which to override values.
++ * @param offsets Array of offsets identifying the lines for which to override
++ *		  values,  containing \p num_values entries.
++ * @param values Array of output values corresponding to the lines identified in
++ *		 \p offsets, also containing \p num_values entries.
+  */
+ void gpiod_line_config_set_output_values(struct gpiod_line_config *config,
+ 					 size_t num_values,
+@@ -1125,18 +1126,18 @@ void gpiod_request_config_set_consumer(struct gpiod_request_config *config,
+ 				       const char *consumer);
+ 
+ /**
+- * @brief Get the consumer string.
++ * @brief Get the consumer name configured in the request config.
+  * @param config Request config object.
+- * @return Current consumer string stored in this request config.
++ * @return Consumer name stored in the request config.
+  */
+ const char *
+ gpiod_request_config_get_consumer(struct gpiod_request_config *config);
+ 
+ /**
+- * @brief Set line offsets for this request.
++ * @brief Set the offsets of the lines to be requested.
+  * @param config Request config object.
+- * @param num_offsets Number of offsets.
+- * @param offsets Array of line offsets.
++ * @param num_offsets Number of offsets to set.
++ * @param offsets Array of offsets, containing \p num_offsets entries.
+  * @note If too many offsets were specified, the offsets above the limit
+  *       accepted by the kernel (64 lines) are silently dropped.
+  */
+@@ -1153,29 +1154,31 @@ size_t
+ gpiod_request_config_get_num_offsets(struct gpiod_request_config *config);
+ 
+ /**
+- * @brief Get the hardware offsets of lines in this request config.
++ * @brief Get the offsets of lines in the request config.
+  * @param config Request config object.
+- * @param offsets Array to store offsets. Must hold at least the number of
+- *                lines returned by ::gpiod_request_config_get_num_offsets.
++ * @param offsets Array to store offsets. Must be sized to hold the number of
++ *		  lines returned by ::gpiod_request_config_get_num_offsets.
+  */
+ void gpiod_request_config_get_offsets(struct gpiod_request_config *config,
+ 				      unsigned int *offsets);
+ 
+ /**
+- * @brief Set the size of the kernel event buffer.
++ * @brief Set the size of the kernel event buffer for the request.
+  * @param config Request config object.
+  * @param event_buffer_size New event buffer size.
+  * @note The kernel may adjust the value if it's too high. If set to 0, the
+  *       default value will be used.
++ * @note The kernel buffer is distinct from and independent of the user space
++ *	 buffer (::gpiod_edge_event_buffer_new).
+  */
+ void
+ gpiod_request_config_set_event_buffer_size(struct gpiod_request_config *config,
+ 					   size_t event_buffer_size);
+ 
+ /**
+- * @brief Get the edge event buffer size from this request config.
++ * @brief Get the edge event buffer size for the request config.
+  * @param config Request config object.
+- * @return Current edge event buffer size setting.
++ * @return Edge event buffer size setting from the request config.
+  */
+ size_t
+ gpiod_request_config_get_event_buffer_size(struct gpiod_request_config *config);
 -- 
 2.35.1
 
