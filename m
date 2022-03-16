@@ -2,47 +2,47 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 544864DB26C
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Mar 2022 15:16:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8571F4DB272
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Mar 2022 15:16:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356243AbiCPOQi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Mar 2022 10:16:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37482 "EHLO
+        id S1351593AbiCPOR5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Mar 2022 10:17:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356417AbiCPOQ2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Mar 2022 10:16:28 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2DC72F02D;
-        Wed, 16 Mar 2022 07:14:59 -0700 (PDT)
+        with ESMTP id S1356542AbiCPORl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Mar 2022 10:17:41 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA55268FB4;
+        Wed, 16 Mar 2022 07:16:26 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2C5DA61320;
-        Wed, 16 Mar 2022 14:14:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C664C36AE2;
-        Wed, 16 Mar 2022 14:14:54 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7CCD4B81B7A;
+        Wed, 16 Mar 2022 14:16:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16645C36AE7;
+        Wed, 16 Mar 2022 14:16:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1647440098;
-        bh=0+nSht7Z67S0VKd6er36t6ijahsshFOhvahd7uiARG8=;
+        s=k20201202; t=1647440184;
+        bh=VbClFb8E8n+NuJw1jA9OR6USLSRpUdXVOjjCep7n8FU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uiA01Q4PRq1GJbFKiN0eLcAQhoGUJkS0ryXpwQ82x6rgfAW7pklNJX7BX9hwyi9KV
-         DOgOkwJeqTnKmGOTSjXBM7OojGT2yRhsYw7EIwm940V9ICU2ibpjQ84qgZ5dzKtdli
-         tgSJ+nLIvtDnKgpgWsgAn0Vk0N7qL2YVaZqaow9yvtJz4idNZMH8bmoX0IdsuDO40L
-         T+k0MXf4PQI8caFU8ddMX92Ocp708g+RXQg7sn0MeiLw4UjzbJWYmhgRvJeznKR6s4
-         vnWVfEC63zGj6DuJWP1A2ZU6O5SOtOWrNqkgRhqAfhJh5+RCZKHbH1eOZplGy/EfSQ
-         yGxcFKyZbe+pw==
+        b=Sa31CCMeX/M+YWY2Outz5lC6HjNKG0ZZvTepotHa27wHd3NnQC3WEJYyc1Eu+dZSH
+         PVN0pyTahV8S6ht5Ro6vTrfOUQ1wYK0NsqCJhoh9D+nmgORjRa1IamSMNFTX2cbFmF
+         jBHwrtaFY5DsJv8iNqMC9ksmbLOmzVukKc6+P8PDXfDSKfvjOYEdeAXA4zZytF4idM
+         TTKZ+wxgaGxbgckR3YmeTLGxu/WB8t/yzSrRxkhqMEQyH8NlMj6VyoJ3GmgDhZtiGk
+         UsWyI1fazIOaN7OdwARVoDErR4SWCEvRO7I1IxMiCZ751xBctj2D5inyVmk9o52PtO
+         6ZLDx/YBio1FA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Sasha Levin <sashal@kernel.org>, linus.walleij@linaro.org,
         linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.16 11/13] gpio: Revert regression in sysfs-gpio (gpiolib.c)
-Date:   Wed, 16 Mar 2022 10:13:52 -0400
-Message-Id: <20220316141354.247750-11-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 11/13] gpio: Revert regression in sysfs-gpio (gpiolib.c)
+Date:   Wed, 16 Mar 2022 10:15:11 -0400
+Message-Id: <20220316141513.247965-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220316141354.247750-1-sashal@kernel.org>
-References: <20220316141354.247750-1-sashal@kernel.org>
+In-Reply-To: <20220316141513.247965-1-sashal@kernel.org>
+References: <20220316141513.247965-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -82,10 +82,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 10 deletions(-)
 
 diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index abfbf546d159..9b8ed72062d1 100644
+index d1b9b721218f..664d1afadf50 100644
 --- a/drivers/gpio/gpiolib.c
 +++ b/drivers/gpio/gpiolib.c
-@@ -1665,11 +1665,6 @@ static inline void gpiochip_irqchip_free_valid_mask(struct gpio_chip *gc)
+@@ -1660,11 +1660,6 @@ static inline void gpiochip_irqchip_free_valid_mask(struct gpio_chip *gc)
   */
  int gpiochip_generic_request(struct gpio_chip *gc, unsigned int offset)
  {
@@ -97,7 +97,7 @@ index abfbf546d159..9b8ed72062d1 100644
  	return pinctrl_gpio_request(gc->gpiodev->base + offset);
  }
  EXPORT_SYMBOL_GPL(gpiochip_generic_request);
-@@ -1681,11 +1676,6 @@ EXPORT_SYMBOL_GPL(gpiochip_generic_request);
+@@ -1676,11 +1671,6 @@ EXPORT_SYMBOL_GPL(gpiochip_generic_request);
   */
  void gpiochip_generic_free(struct gpio_chip *gc, unsigned int offset)
  {
