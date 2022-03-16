@@ -2,53 +2,49 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F380E4DACD8
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Mar 2022 09:50:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 026B44DAE8A
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Mar 2022 11:57:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354633AbiCPIvM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Mar 2022 04:51:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47922 "EHLO
+        id S236111AbiCPK6z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Mar 2022 06:58:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351817AbiCPIvI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Mar 2022 04:51:08 -0400
+        with ESMTP id S232037AbiCPK6y (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Mar 2022 06:58:54 -0400
 Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 456A764BED;
-        Wed, 16 Mar 2022 01:49:55 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E4044615D;
+        Wed, 16 Mar 2022 03:57:40 -0700 (PDT)
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: kholk11)
-        with ESMTPSA id 8E38B1F42733
+        with ESMTPSA id B85311F4454D
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1647420594;
-        bh=tB66TbykoyRuCQTUG/BUm2gTEb/zfXeS1QShvZrZ3cI=;
+        s=mail; t=1647428259;
+        bh=+B786kmjh9bVhF2dKutVQcJCHSHyfhNNrMNo6Cs2QQo=;
         h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=l2KY2+et+JM2EnehlF7yfh95/xSJPPuKCNqM/xv645c16tLUeTYamXldQSlTtLAvU
-         wYIN4rsjnhZzKivS5TxpaFSpUfVN/ZwxNzEU/Dx1ql2IECazOa08zyEiwvv01dnIw3
-         cXExk3h7CqAd+0QbodnNAVtNs5xcFZj0RjXBHE24RUIbVPE2oUqd62UuZ+3Ne9t2/g
-         PEW8xv3C+gKUNQqjm7Hsp1FcG+F4poCz7K+Xyfihb+juAya2nuoU5WQ9rUncH2iBsj
-         S2bRfbY9shy8YfLRGO/bGNUbr304a/Jo4KmDbcKRCFCcCWa2wwUQegz5CyI71bNEFs
-         70P5mzh/6xWTw==
-Message-ID: <6d599c20-0331-d19b-5d20-27a3d3e63533@collabora.com>
-Date:   Wed, 16 Mar 2022 09:49:51 +0100
+        b=Htic6mUCNGozdobaaT2ZH9DnFUpA3VUjw9aytlaQcKQMsh4mDtjvQ4L8arnYmHveS
+         k/QlQjTJS2giW6WpcAi7/mYPOlnQl+BuSG+HnUJVisxaGeicYRfoUmgiMX4yOZ1M1Z
+         f1Rag2nzFgD4tLZAjkIY3y0g8VlBZoXLMiX7t2LGQakwVVhZCO4ZHUpqVpKJlnwriN
+         rX+trRcxFmD/Q3n3ZQEzHKl/R0xNCbfEKKuYQr5MGGBKH20ULZ4nT5TD353J503tS9
+         Iguqwt8793ig+QEiV9BPHBt42E7Q3gscBku2eokd3b9o/61M/IpQbVDT0mYmW+uM9k
+         3TfRWAKlbtb4A==
+Message-ID: <a06003ae-2dcc-f5a4-3b5c-62db99d18950@collabora.com>
+Date:   Wed, 16 Mar 2022 11:57:36 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.1
-Subject: Re: [PATCH v1 0/4] dt-bindings: pinctrl: mt8192: Add missing wrapping
- node and properties
+Subject: Re: [PATCH v2 0/5] MediaTek pinctrl drivers cleanups
 Content-Language: en-US
-To:     =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= 
-        <nfraprado@collabora.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     kernel@collabora.com, Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
-References: <20220315211936.442708-1-nfraprado@collabora.com>
+To:     sean.wang@kernel.org
+Cc:     linus.walleij@linaro.org, matthias.bgg@gmail.com,
+        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kernel@collabora.com, wenst@chromium.org
+References: <20220222111144.20796-1-angelogioacchino.delregno@collabora.com>
 From:   AngeloGioacchino Del Regno 
         <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20220315211936.442708-1-nfraprado@collabora.com>
+In-Reply-To: <20220222111144.20796-1-angelogioacchino.delregno@collabora.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
         SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
@@ -59,40 +55,51 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Il 15/03/22 22:19, Nícolas F. R. A. Prado ha scritto:
+Il 22/02/22 12:11, AngeloGioacchino Del Regno ha scritto:
+> Hello!
+> This series performs some cleanups to the MediaTek pinctrl drivers
+> by commonizing some functions (reducing code duplication) hence also
+> simplifying the probe mechanism by removing unnecessary per-driver
+> probe functions.
 > 
-> This series adds the wrapping node for pinmux nodes that was missing in
-> the mt8192-pinctrl dt-binding as well as a couple other missing
-> properties.
+> This code was tested against multiple platforms.
 > 
+> Changes in v2:
+> - Patch 2/5: Changed -ENOENT to -ENODEV as per Chen-Yu's suggestion
+> - Patch 4/5: Removed unnoticed wrong comment change (Chen-Yu)
 > 
-> Nícolas F. R. A. Prado (4):
->    dt-bindings: pinctrl: mt8192: Add wrapping node for pin configurations
->    dt-bindings: pinctrl: mt8192: Add mediatek,drive-strength-adv property
->    dt-bindings: pinctrl: mt8192: Add mediatek,pull-up-adv property
->    dt-bindings: pinctrl: mt8192: Add gpio-line-names property
+> AngeloGioacchino Del Regno (5):
+>    pinctrl: mediatek: paris: Unify probe function by using OF match data
+>    pinctrl: mediatek: common-v1: Add common probe function
+>    pinctrl: mediatek: common-v1: Use common probe function
+>    pinctrl: mediatek: common-v1: Commonize spec_pupd callback
+>    pinctrl: mediatek: common-v1: Commonize spec_ies_smt_set callback
 > 
->   .../bindings/pinctrl/pinctrl-mt8192.yaml      | 155 +++++++++++-------
->   1 file changed, 98 insertions(+), 57 deletions(-)
+>   drivers/pinctrl/mediatek/pinctrl-mt2701.c     | 40 ++++--------
+>   drivers/pinctrl/mediatek/pinctrl-mt2712.c     | 44 +++----------
+>   drivers/pinctrl/mediatek/pinctrl-mt6765.c     |  9 +--
+>   drivers/pinctrl/mediatek/pinctrl-mt6779.c     |  9 +--
+>   drivers/pinctrl/mediatek/pinctrl-mt6797.c     |  9 +--
+>   drivers/pinctrl/mediatek/pinctrl-mt8127.c     | 39 +++---------
+>   drivers/pinctrl/mediatek/pinctrl-mt8135.c     | 17 ++----
+>   drivers/pinctrl/mediatek/pinctrl-mt8167.c     | 40 +++---------
+>   drivers/pinctrl/mediatek/pinctrl-mt8173.c     | 29 +++------
+>   drivers/pinctrl/mediatek/pinctrl-mt8183.c     |  9 +--
+>   drivers/pinctrl/mediatek/pinctrl-mt8192.c     |  9 +--
+>   drivers/pinctrl/mediatek/pinctrl-mt8195.c     |  9 +--
+>   drivers/pinctrl/mediatek/pinctrl-mt8365.c     | 40 +++---------
+>   drivers/pinctrl/mediatek/pinctrl-mt8516.c     | 40 +++---------
+>   drivers/pinctrl/mediatek/pinctrl-mtk-common.c | 61 ++++++++++++++-----
+>   drivers/pinctrl/mediatek/pinctrl-mtk-common.h | 33 +++++++---
+>   drivers/pinctrl/mediatek/pinctrl-paris.c      |  9 ++-
+>   drivers/pinctrl/mediatek/pinctrl-paris.h      |  3 +-
+>   18 files changed, 164 insertions(+), 285 deletions(-)
 > 
+
 
 Hello maintainers,
-adding context to this series.
 
-We are in the process of upstreaming mt8192-asurada device trees and during
-the cleanup process and internal peer-review of those, we have found and fixed
-those issues on the dt-bindings for pinctrl-mt8192 with this patch series.
-
-Before submitting the series that introduces the device-trees for those machines
-we need some more things in mt8192.dtsi, which are in the process of being
-upstreamed by MediaTek (currently at v3 [1] - that needs small changes, but we
-expect v4 to be finally ok).
-
-For this reason, we are submitting dt-bindings fixes now, as to have a ready
-ground before submitting the aforementioned device-trees (for which, we anyway
-need to wait a little, as just mentioned).
-
-[1]: https://lore.kernel.org/all/20220304130809.12924-1-allen-kh.cheng@mediatek.com/
+friendly ping for this series that already got a Reviewed-by tag on all patches :)
 
 Cheers,
 Angelo
