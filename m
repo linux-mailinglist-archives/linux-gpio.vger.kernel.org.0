@@ -2,80 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 228364DAA5F
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Mar 2022 07:08:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E91684DAADD
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Mar 2022 07:52:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353751AbiCPGI5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Mar 2022 02:08:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55844 "EHLO
+        id S244200AbiCPGxq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Mar 2022 02:53:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353722AbiCPGI4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Mar 2022 02:08:56 -0400
-Received: from alexa-out.qualcomm.com (alexa-out.qualcomm.com [129.46.98.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8030F60A9C;
-        Tue, 15 Mar 2022 23:07:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1647410864; x=1678946864;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=P8IfAWTDGVPmQKmJvYEfh7oWc7C4SlN2zWmkSg/4iVk=;
-  b=v/3WFfD1WfjelI8ObG0tefGTn19Grh/7MadTv3zfsq6/GGBzFLNSENWH
-   KGhTsbC7vZCNg08SwuBXXgtXdJghHH4cL4+sPv4/XPeRpMlzs3otD7xVA
-   I5/ZKK5wwHpo6TdCPWaC1UaJ0S7tjvwwYOMcCCZNhTY4RCTyTjQAqxk7p
-   U=;
-Received: from ironmsg-lv-alpha.qualcomm.com ([10.47.202.13])
-  by alexa-out.qualcomm.com with ESMTP; 15 Mar 2022 23:07:43 -0700
-X-QCInternal: smtphost
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by ironmsg-lv-alpha.qualcomm.com with ESMTP/TLS/AES256-SHA; 15 Mar 2022 23:07:41 -0700
-X-QCInternal: smtphost
-Received: from hu-rohiagar-hyd.qualcomm.com (HELO hu-sgudaval-hyd.qualcomm.com) ([10.213.106.138])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 16 Mar 2022 11:37:24 +0530
-Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 3970568)
-        id 702F04495; Wed, 16 Mar 2022 11:37:23 +0530 (+0530)
-From:   Rohit Agarwal <quic_rohiagar@quicinc.com>
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        linus.walleij@linaro.org, robh+dt@kernel.org, lgirdwood@gmail.com,
-        broonie@kernel.org, rnayak@codeaurora.org, collinsd@codeaurora.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        with ESMTP id S229757AbiCPGxp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Mar 2022 02:53:45 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09D625AED7
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Mar 2022 23:52:30 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nUNVs-0006dA-FP; Wed, 16 Mar 2022 07:52:04 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nUNVo-000zbf-Sq; Wed, 16 Mar 2022 07:51:59 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1nUNVm-009UG4-Qs; Wed, 16 Mar 2022 07:51:58 +0100
+Date:   Wed, 16 Mar 2022 07:51:55 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Palmer Dabbelt <palmer@dabbelt.com>
+Cc:     mail@conchuod.ie, sboyd@kernel.org, lewis.hanly@microchip.com,
+        daire.mcnamara@microchip.com, ivan.griffin@microchip.com,
+        Atish Patra <atishp@rivosinc.com>, conor.dooley@microchip.com,
+        linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
+        jassisinghbrar@gmail.com, thierry.reding@gmail.com,
+        lee.jones@linaro.org, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        aou@eecs.berkeley.edu, geert@linux-m68k.org,
+        krzysztof.kozlowski@canonical.com, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rohit Agarwal <quic_rohiagar@quicinc.com>
-Subject: [PATCH 6/6] pinctrl: qcom-pmic-gpio: Add support for pmx65
-Date:   Wed, 16 Mar 2022 11:37:17 +0530
-Message-Id: <1647410837-22537-7-git-send-email-quic_rohiagar@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1647410837-22537-1-git-send-email-quic_rohiagar@quicinc.com>
-References: <1647410837-22537-1-git-send-email-quic_rohiagar@quicinc.com>
-X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v7 00/11] Update the Icicle Kit device tree
+Message-ID: <20220316065155.tuuq2k4d5dczwtq2@pengutronix.de>
+References: <c94f9c0a-6dbe-c1f4-daff-e4d29f3ace02@conchuod.ie>
+ <mhng-bb42ad9f-5772-4749-97e1-9f6c511654f6@palmer-mbp2014>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="bkpwvtdvshkxkizn"
+Content-Disposition: inline
+In-Reply-To: <mhng-bb42ad9f-5772-4749-97e1-9f6c511654f6@palmer-mbp2014>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-PMX65 pmic support gpio controller so add compatible.
 
-Signed-off-by: Rohit Agarwal <quic_rohiagar@quicinc.com>
----
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 1 +
- 1 file changed, 1 insertion(+)
+--bkpwvtdvshkxkizn
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-index f2eac3b..5f19506 100644
---- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-@@ -1182,6 +1182,7 @@ static const struct of_device_id pmic_gpio_of_match[] = {
- 	{ .compatible = "qcom,pms405-gpio", .data = (void *) 12 },
- 	/* pmx55 has 11 GPIOs with holes on 3, 7, 10, 11 */
- 	{ .compatible = "qcom,pmx55-gpio", .data = (void *) 11 },
-+	{ .compatible = "qcom,pmx65-gpio", .data = (void *) 16 },
- 	{ },
- };
- 
--- 
-2.7.4
+On Wed, Mar 09, 2022 at 11:07:03PM -0800, Palmer Dabbelt wrote:
+> On Wed, 23 Feb 2022 12:48:16 PST (-0800), mail@conchuod.ie wrote:
+> > dt-bindings should be set now, so if you're still happy to take the
+> > series via riscv, that'd be great. i2c, spi & usb patches ended going
+> > via the sub-system trees (and have been dropped from the series), in
+> > case those generate warnings for you.
+>=20
+> Something went off the rails in email land and #0 and #2 didn't end up in=
+ my
+> patch queue but the rest did.  Luckily enough made it through that it did=
+n't
+> get lost, and lore's pretty great so this sort of thing isn't that big of=
+ a
+> deal these days.  That said, email is a bit of a black box so figured I'd
+> give you a heads up.
 
+One of the patches in next now is
+df77f7735786ece2fcd8875b036a511ffcadfab6. It would be great if you could
+fix your patch application setup to not mangle names. Here it's
+
+	Acked-by: Uwe Kleine-K=3DF6nig <u.kleine-koenig@pengutronix.de>
+
+where my =F6 was recorded as =3DF6. :-\
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--bkpwvtdvshkxkizn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmIxiQgACgkQwfwUeK3K
+7AnaOAf+KYzjoQhzMwQBCvuk5Nuy19InDXSbXr3hGJaP1HavbuLPFGVesC/ny0hy
+pYoeu3A8RpcK8VCbPnl3E8baLLrWlzzPEjbPzb0hrbGvu79Bkiire4nM9GmnCBKa
+uYWdxrbt8s4NRrvHmeqf3IAaXe3N2T98KWSjklHsqD10/S/QEBNphY6G9mcXi0Aj
+28imRZDsWhU2uTpe4UpbEXAq+GP3MzII3K3+gEtJmsRADPmkVcZlHVPzeABY9PWh
+TIEcWRwydEsaMDxUpl4tEv+lWTt3DpRp65cMC6ElJk7lWVIpIAQYLUYjhoQSIYsP
+XP549wvifCmIMBHY/C7IBeHUgwjl6w==
+=t8CP
+-----END PGP SIGNATURE-----
+
+--bkpwvtdvshkxkizn--
