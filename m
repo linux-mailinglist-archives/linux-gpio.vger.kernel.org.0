@@ -2,120 +2,175 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E6DC4DB39F
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Mar 2022 15:48:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AC7B4DB54E
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Mar 2022 16:50:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231273AbiCPOty (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Mar 2022 10:49:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34274 "EHLO
+        id S1350163AbiCPPt6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Mar 2022 11:49:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349582AbiCPOtx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Mar 2022 10:49:53 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8332422BFD;
-        Wed, 16 Mar 2022 07:48:39 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id bg10so4719049ejb.4;
-        Wed, 16 Mar 2022 07:48:39 -0700 (PDT)
+        with ESMTP id S1354614AbiCPPt5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Mar 2022 11:49:57 -0400
+Received: from alexa-out-sd-02.qualcomm.com (alexa-out-sd-02.qualcomm.com [199.106.114.39])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B95AF443F2;
+        Wed, 16 Mar 2022 08:48:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MU28qsctK5PVccJ1WrLZfX9pzKHKxkT7Hh1LuKa2sg8=;
-        b=oYGLiy/hunXG2D75J7dgg6ccgKAlxDTBHJWc2w9thvePgZOCpSFQ02J/Z1DDvze70U
-         M07qtMz9jgPckpvV4kCgxu1Pgr2Kr/pKLQX/dI9OxNjCHQmJjEEz8BId3TdNe9i1TtvJ
-         9vdt0fo77rejZd5la9VGlaGen7BKHyICYk7UbfRUtNySFXp6a+JHq6vpLVrt1wu4svIr
-         xVFwCuXCQrn/Kl2CRVAIPpZwa3MouPH1SnRl4Mzshrlk6BiHaGsjWnucQEy9Qixhtsm9
-         LDWrJjLvbZ6+OVIi+pU1xIvnO7zi+oAppY1jdkKBRx6Ytt06OM/1O0EF1534lZuc1Le2
-         XHuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MU28qsctK5PVccJ1WrLZfX9pzKHKxkT7Hh1LuKa2sg8=;
-        b=iA+7kS2ysN8+Z128SEVT8UP8sQO682AOIIHHGoC6xTvoRL7x6njIZwc6jOMWG6+zIZ
-         24Y8QUBIULuitgQ1wlvWIbhArCbarc+Q1mgl0grJy9lniZi/SyVMIkiWzVaGM+4uptN9
-         RkcZZvOUFseS33YTEg7HSQHpCP9yo0NstfXgeIVi0h1LY1kli0Ro6ng5gGNx+w2hhQkv
-         XkNixgm+Wmr0inG0J8CkfIbx1z7FqBC4SbkDP5zMlDYPvJ3vHLkyqVO8nMa4mdNstSY0
-         s269gE3BzF/SJKhOUB0zudoUALe7YUCDxskEowR8sEWFAI+t6IYcaUlUC2lhLslmxxRV
-         yoJQ==
-X-Gm-Message-State: AOAM5322pDj1aF/bWo4rMXNDHGxXWQ5iIQQAqUIf0J/16WSagoSE/VKP
-        UhBtkqMvl7UgqgpiqWwFy+mgYAt4RWfFkiXUFoc=
-X-Google-Smtp-Source: ABdhPJy/Ny8UY3V3+yIJkaQJt94C4ScuZfBq3+cneD49OBa3A7yawWEZCrCxtlo7/0BYgVPT/lQC8V9e77lniQQqEw4=
-X-Received: by 2002:a17:907:9703:b0:6da:6412:508a with SMTP id
- jg3-20020a170907970300b006da6412508amr275705ejc.77.1647442117741; Wed, 16 Mar
- 2022 07:48:37 -0700 (PDT)
+  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
+  t=1647445722; x=1678981722;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=GudUircLqgrKK4G/097tEeYgThr0aEszZyU2Auw0xeA=;
+  b=ityGNDl4HBMfCE/0y2EqpCrul/IG9pT7aV1c/2ZghdXAYA+R46AH1hLO
+   XiohseSgG05a2ML735pA7lYp0DzAo8rztOc1tZrp60xLoNax05cZmYsXN
+   +j22VthjV81d7XbeCQ9Oe066gsVkxhabEBbNyJgnQPX4uEB0yT1KD8BCN
+   o=;
+Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 16 Mar 2022 08:48:42 -0700
+X-QCInternal: smtphost
+Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
+  by ironmsg02-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2022 08:48:41 -0700
+Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
+ nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.22; Wed, 16 Mar 2022 08:48:40 -0700
+Received: from [10.216.40.72] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.22; Wed, 16 Mar
+ 2022 08:48:34 -0700
+Message-ID: <61fcca7d-983d-7f87-2ca2-e68dea7bc0b4@quicinc.com>
+Date:   Wed, 16 Mar 2022 21:18:31 +0530
 MIME-Version: 1.0
-References: <20220315173922.153389-1-paul@crapouillou.net>
-In-Reply-To: <20220315173922.153389-1-paul@crapouillou.net>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 16 Mar 2022 16:47:24 +0200
-Message-ID: <CAHp75Vfas=H7Vb+mJor-LWckUpE8QUdD8Yauq4mdG4OY+7dfMg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: ingenic: Garbage-collect code paths for SoCs
- disabled by config
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Linus Walleij <linus.walleij@linaro.org>, od@opendingux.net,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH v11 7/7] pinctrl: qcom: Update clock voting as optional
+Content-Language: en-US
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+CC:     <agross@kernel.org>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
+        <robh+dt@kernel.org>, <quic_plai@quicinc.com>,
+        <bgoswami@codeaurora.org>, <perex@perex.cz>, <tiwai@suse.com>,
+        <srinivas.kandagatla@linaro.org>, <rohitkr@codeaurora.org>,
+        <linux-arm-msm@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <swboyd@chromium.org>, <judyhsiao@chromium.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>,
+        Venkata Prasad Potturu <quic_potturu@quicinc.com>
+References: <1647359413-31662-1-git-send-email-quic_srivasam@quicinc.com>
+ <1647359413-31662-8-git-send-email-quic_srivasam@quicinc.com>
+ <YjDFcJOA8An58iTe@builder.lan>
+From:   Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
+Organization: Qualcomm
+In-Reply-To: <YjDFcJOA8An58iTe@builder.lan>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Mar 16, 2022 at 4:11 AM Paul Cercueil <paul@crapouillou.net> wrote:
+
+On 3/15/2022 10:27 PM, Bjorn Andersson wrote:
+Thanks for your time Bjorn!!!
+> On Tue 15 Mar 10:50 CDT 2022, Srinivasa Rao Mandadapu wrote:
 >
-> By being a bit smarter about how the SoC version checks are performed,
-> it is possible to have all the code paths that correspond to SoCs
-> disabled in the kernel config automatically marked as dead code by the
-> compiler, and therefore garbage-collected.
+>> Update bulk clock voting to optional voting as ADSP bypass platform doesn't
+>> need macro and decodec clocks, as these macro and dcodec GDSC switches are
+>> maintained as power domains and operated from lpass clock drivers.
+>>
+> Sorry for missing your reply on my question on the previous version, I
+> think this sounds reasonable.
+Okay. Thanks!!!
 >
-> With this patch, when compiling a kernel that only targets the JZ4760
-> for instance, the driver is now about 4.5 KiB smaller.
-
-...
-
-> +static const u32 enabled_socs =
-
-If you make it unsigned long, it would be easier to switch to bitmap
-APIs if needed in the future.
-
-> +       IS_ENABLED(CONFIG_MACH_JZ4730) << ID_JZ4730 |
-> +       IS_ENABLED(CONFIG_MACH_JZ4740) << ID_JZ4740 |
-> +       IS_ENABLED(CONFIG_MACH_JZ4725B) << ID_JZ4725B |
-> +       IS_ENABLED(CONFIG_MACH_JZ4750) << ID_JZ4750 |
-> +       IS_ENABLED(CONFIG_MACH_JZ4755) << ID_JZ4755 |
-> +       IS_ENABLED(CONFIG_MACH_JZ4760) << ID_JZ4760 |
-> +       IS_ENABLED(CONFIG_MACH_JZ4770) << ID_JZ4770 |
-> +       IS_ENABLED(CONFIG_MACH_JZ4775) << ID_JZ4775 |
-> +       IS_ENABLED(CONFIG_MACH_JZ4780) << ID_JZ4780 |
-> +       IS_ENABLED(CONFIG_MACH_X1000) << ID_X1000 |
-> +       IS_ENABLED(CONFIG_MACH_X1500) << ID_X1500 |
-> +       IS_ENABLED(CONFIG_MACH_X1830) << ID_X1830 |
-> +       IS_ENABLED(CONFIG_MACH_X2000) << ID_X2000 |
-> +       IS_ENABLED(CONFIG_MACH_X2100) << ID_X2100;
-
-...
-
-> +is_soc_or_above(const struct ingenic_pinctrl *jzpc, enum jz_version version)
-> +{
-> +       return (enabled_socs >> version) &&
-> +               (!(enabled_socs & GENMASK((unsigned int)version - 1, 0))
-
-Why casting? Why not use BIT()?
-
-But these two lines seem like a very interesting way to reinvent the test_bit().
-
-If I'm mistaken, this all version code needs a good comment.
-
-> +                || jzpc->info->version >= version);
-> +}
-
--- 
-With Best Regards,
-Andy Shevchenko
+>> Signed-off-by: Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
+>> Co-developed-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
+>> Signed-off-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
+>> ---
+>>   drivers/pinctrl/qcom/pinctrl-lpass-lpi.c        | 12 +++++++++---
+>>   drivers/pinctrl/qcom/pinctrl-lpass-lpi.h        |  1 +
+>>   drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c |  1 +
+>>   3 files changed, 11 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
+>> index 0216ca1..3fc473a 100644
+>> --- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
+>> +++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
+>> @@ -401,9 +401,15 @@ int lpi_pinctrl_probe(struct platform_device *pdev)
+>>   		return dev_err_probe(dev, PTR_ERR(pctrl->slew_base),
+>>   				     "Slew resource not provided\n");
+>>   
+>> -	ret = devm_clk_bulk_get(dev, MAX_LPI_NUM_CLKS, pctrl->clks);
+>> -	if (ret)
+>> -		return dev_err_probe(dev, ret, "Can't get clocks\n");
+>> +	if (data->is_clk_optional) {
+>> +		ret = devm_clk_bulk_get_optional(dev, MAX_LPI_NUM_CLKS, pctrl->clks);
+>> +		if (ret)
+>> +			return dev_err_probe(dev, ret, "Can't get clocks\n");
+> Dug into the clk_bulk_get() functions, and __clk_bulk_get() will print
+> an error telling you which clock it failed to get. So I don't think your
+> more generic error here doesn't add any value.
+>
+> Just return ret;
+Okay will change accordingly.
+>
+>> +	} else {
+>> +		ret = devm_clk_bulk_get(dev, MAX_LPI_NUM_CLKS, pctrl->clks);
+>> +		if (ret)
+>> +			return dev_err_probe(dev, ret, "Can't get clocks\n");
+>> +	}
+> Depending on your taste, you could do:
+>
+> 	if (data->is_clk_optional)
+> 		ret = devm_clk_bulk_get_optional();
+> 	else
+> 		ret = devm_clk_bulk_get();
+>
+> 	if (ret)
+> 		return ret;
+Okay. Will change accordingly.
+>>   
+>>   	ret = clk_bulk_prepare_enable(MAX_LPI_NUM_CLKS, pctrl->clks);
+>>   	if (ret)
+>> diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
+>> index afbac2a..3bcede6 100644
+>> --- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
+>> +++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.h
+>> @@ -77,6 +77,7 @@ struct lpi_pinctrl_variant_data {
+>>   	int ngroups;
+>>   	const struct lpi_function *functions;
+>>   	int nfunctions;
+>> +	int is_clk_optional;
+> bool here please.
+Okay. Will update.
+>
+>>   };
+>>   
+>>   int lpi_pinctrl_probe(struct platform_device *pdev);
+>> diff --git a/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
+>> index d67ff25..304d8a2 100644
+>> --- a/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
+>> +++ b/drivers/pinctrl/qcom/pinctrl-sc7280-lpass-lpi.c
+>> @@ -142,6 +142,7 @@ static const struct lpi_pinctrl_variant_data sc7280_lpi_data = {
+>>   	.ngroups = ARRAY_SIZE(sc7280_groups),
+>>   	.functions = sc7280_functions,
+>>   	.nfunctions = ARRAY_SIZE(sc7280_functions),
+>> +	.is_clk_optional = 1,
+> true
+Okay.
+>
+> Regards,
+> Bjorn
+>
+>>   };
+>>   
+>>   static const struct of_device_id lpi_pinctrl_of_match[] = {
+>> -- 
+>> 2.7.4
+>>
