@@ -2,73 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EDEF44DB55C
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Mar 2022 16:53:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C938D4DB595
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Mar 2022 17:06:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237471AbiCPPyZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Mar 2022 11:54:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39484 "EHLO
+        id S241099AbiCPQHg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Mar 2022 12:07:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240847AbiCPPyW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Mar 2022 11:54:22 -0400
-Received: from alexa-out-sd-01.qualcomm.com (alexa-out-sd-01.qualcomm.com [199.106.114.38])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D35D17E0D;
-        Wed, 16 Mar 2022 08:53:06 -0700 (PDT)
+        with ESMTP id S237911AbiCPQHf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Mar 2022 12:07:35 -0400
+Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E20E5AEF2
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Mar 2022 09:06:21 -0700 (PDT)
+Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-2e5827a76f4so28704857b3.6
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Mar 2022 09:06:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1647445987; x=1678981987;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ytX2SFvM53HE0N3pYke/nVlK3T7iEr7di47zL9BakSQ=;
-  b=ntSXzeCrFQlF+fNsrIQBnsllg3kABjFx14Wg3lqY9hom/5qFEefcQulu
-   q8hvcipD68+0UsLrCAF0SG7TLIZoVoD/zx249jdQtRHQjqPYuRcIgUfbO
-   K4uWtjpPBWJoSKlMlwbiE4a175BNx444QFAI7PbPkI0I/2Jcd9CC177Uy
-   E=;
-Received: from unknown (HELO ironmsg05-sd.qualcomm.com) ([10.53.140.145])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 16 Mar 2022 08:53:06 -0700
-X-QCInternal: smtphost
-Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
-  by ironmsg05-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Mar 2022 08:53:06 -0700
-Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
- nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.22; Wed, 16 Mar 2022 08:53:05 -0700
-Received: from [10.216.40.72] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.22; Wed, 16 Mar
- 2022 08:52:59 -0700
-Message-ID: <0b68bc4c-62e3-d40f-3114-0c6864c01f1a@quicinc.com>
-Date:   Wed, 16 Mar 2022 21:22:56 +0530
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2CjuLtiygIAsFw7UyXktfZ7WSDrm/cFs1oSdPGPEYzI=;
+        b=OspIU2BhBJZC2NaN5YDDr0A7x7A/09XpSt1tU7QY70aJC3u8VqmuEFWi207WmuMqaf
+         6qpmskYfqHgSRy8unq//2bYVJHWb1vxfSgdYNvH5fdCVUM/bf80mEhpqQECcrwvSAe2X
+         gUiEcmsspKe4vdCKv2esPk+89ax6t4uP8VqxBw6YQ8EbjI3/flkeivtAn/+fPGsQeqft
+         1ERvmYR9WPryF4CqwWcEvCUcFURjV9xgS2UbXOS3zdeCr4yVIaJtK98Xn9G19dBlqglb
+         OVZ8gc4OzjNw7apBrhjZ2eOWa5Z3gMehHZCmWycs4iKL6tJjD/HDMh4RKznV0irszz6l
+         cw8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2CjuLtiygIAsFw7UyXktfZ7WSDrm/cFs1oSdPGPEYzI=;
+        b=s7MbzdSfoBnkcgmICaWN1mwJ4LO4SPxGfwjXExNI2eJ1tzSp3nbI5SlSd26fgV7w2R
+         zjOzDD93Iflomip5VcLMxRreyqmWSstn2+7Nr80xo4ZNw68caCMC8yK3xwOffKcbBWEo
+         /VEjep9p3VhQ/JsGsHZq6rszvCvidTS3Gg6n7XSJJEY4M/Zzj3mXuEUnAGE0mY92tMGB
+         T/SXofTx9s5xgDcy6brDfGybCD4nHtH/hul97lhib4sFCNnQUbXAYGY/MY5xb+kGT/cr
+         mA93WaqB8Jlb5iiVOSNfipouLjIv+huS44GNzqYkqXTRVg8HTI6/2OoeV0sosvOZ0OzK
+         HgbQ==
+X-Gm-Message-State: AOAM531BwWCmSqglg3k2GoQxCHEInqa/mnSmOafGR23HsA/ugJiFYcrL
+        OQzc7upIOqhWYCgiUYF8pNRlQ8FWVF9QeYvMwQlQMQ==
+X-Google-Smtp-Source: ABdhPJygYdyJ2oD5MvUWxH7zac5rsixkpWaHXwVbW8sC0RtxEydpTGWI+yMWqIGchfBWGr94pp7UVI9eQAkP5mAQKVc=
+X-Received: by 2002:a81:9c47:0:b0:2db:9e18:6e75 with SMTP id
+ n7-20020a819c47000000b002db9e186e75mr778283ywa.437.1647446780804; Wed, 16 Mar
+ 2022 09:06:20 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH v11 4/7] pinctrl: qcom: Update lpi pin group custiom
- functions with framework generic functions
-Content-Language: en-US
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-CC:     <agross@kernel.org>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
-        <robh+dt@kernel.org>, <quic_plai@quicinc.com>,
-        <bgoswami@codeaurora.org>, <perex@perex.cz>, <tiwai@suse.com>,
-        <srinivas.kandagatla@linaro.org>, <rohitkr@codeaurora.org>,
-        <linux-arm-msm@vger.kernel.org>, <alsa-devel@alsa-project.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <swboyd@chromium.org>, <judyhsiao@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>,
-        Venkata Prasad Potturu <quic_potturu@quicinc.com>
-References: <1647359413-31662-1-git-send-email-quic_srivasam@quicinc.com>
- <1647359413-31662-5-git-send-email-quic_srivasam@quicinc.com>
- <YjDCs9AEJTJNIawj@builder.lan>
-From:   Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
-Organization: Qualcomm
-In-Reply-To: <YjDCs9AEJTJNIawj@builder.lan>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+References: <20220316141354.247750-1-sashal@kernel.org> <20220316141354.247750-11-sashal@kernel.org>
+In-Reply-To: <20220316141354.247750-11-sashal@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 16 Mar 2022 17:06:09 +0100
+Message-ID: <CACRpkdauQjYyouf-TeVuDeLQ6SPtXJpV9QGeC17BEBs5Y_Fr9w@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 5.16 11/13] gpio: Revert regression in sysfs-gpio (gpiolib.c)
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -77,199 +66,30 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Wed, Mar 16, 2022 at 3:14 PM Sasha Levin <sashal@kernel.org> wrote:
 
-On 3/15/2022 10:15 PM, Bjorn Andersson wrote:
-Thanks for your time Bjorn!!!
-> On Tue 15 Mar 10:50 CDT 2022, Srinivasa Rao Mandadapu wrote:
+> From: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
 >
->> Update custom pin group structure members with framework generic group_desc structure
->> and replace the driver's custom pinctrl_ops with framework provided generic pin control
->> group functions to avoid redundant code written in lpass lpi driver.
->>
->> Signed-off-by: Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>
->> Co-developed-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
->> Signed-off-by: Venkata Prasad Potturu <quic_potturu@quicinc.com>
->> ---
->>   drivers/pinctrl/qcom/Kconfig             |  1 +
->>   drivers/pinctrl/qcom/pinctrl-lpass-lpi.c | 98 +++++++++++++++-----------------
->>   2 files changed, 48 insertions(+), 51 deletions(-)
->>
->> diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
->> index ca6f68a..31c4aa6 100644
->> --- a/drivers/pinctrl/qcom/Kconfig
->> +++ b/drivers/pinctrl/qcom/Kconfig
->> @@ -351,6 +351,7 @@ config PINCTRL_LPASS_LPI
->>   	select PINMUX
->>   	select PINCONF
->>   	select GENERIC_PINCONF
->> +	select GENERIC_PINCTRL_GROUPS
->>   	depends on GPIOLIB
->>   	help
->>   	  This is the pinctrl, pinmux, pinconf and gpiolib driver for the
->> diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
->> index 3c15f80..5e27a38 100644
->> --- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
->> +++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
->> @@ -51,11 +51,11 @@
->>   
->>   #define LPI_PINGROUP(id, soff, f1, f2, f3, f4)		\
->>   	{						\
->> -		.name = "gpio" #id,			\
->> -		.pins = gpio##id##_pins,		\
->> +		.group.name = "gpio" #id,			\
->> +		.group.pins = gpio##id##_pins,		\
->>   		.pin = id,				\
->>   		.slew_offset = soff,			\
->> -		.npins = ARRAY_SIZE(gpio##id##_pins),	\
->> +		.group.num_pins = ARRAY_SIZE(gpio##id##_pins),	\
->>   		.funcs = (int[]){			\
->>   			LPI_MUX_gpio,			\
->>   			LPI_MUX_##f1,			\
->> @@ -67,9 +67,7 @@
->>   	}
->>   
->>   struct lpi_pingroup {
->> -	const char *name;
->> -	const unsigned int *pins;
->> -	unsigned int npins;
->> +	struct group_desc group;
->>   	unsigned int pin;
->>   	/* Bit offset in slew register for SoundWire pins only */
->>   	int slew_offset;
->> @@ -150,20 +148,20 @@ enum sm8250_lpi_functions {
->>   	LPI_MUX__,
->>   };
->>   
->> -static const unsigned int gpio0_pins[] = { 0 };
->> -static const unsigned int gpio1_pins[] = { 1 };
->> -static const unsigned int gpio2_pins[] = { 2 };
->> -static const unsigned int gpio3_pins[] = { 3 };
->> -static const unsigned int gpio4_pins[] = { 4 };
->> -static const unsigned int gpio5_pins[] = { 5 };
->> -static const unsigned int gpio6_pins[] = { 6 };
->> -static const unsigned int gpio7_pins[] = { 7 };
->> -static const unsigned int gpio8_pins[] = { 8 };
->> -static const unsigned int gpio9_pins[] = { 9 };
->> -static const unsigned int gpio10_pins[] = { 10 };
->> -static const unsigned int gpio11_pins[] = { 11 };
->> -static const unsigned int gpio12_pins[] = { 12 };
->> -static const unsigned int gpio13_pins[] = { 13 };
->> +static int gpio0_pins[] = { 0 };
->> +static int gpio1_pins[] = { 1 };
->> +static int gpio2_pins[] = { 2 };
->> +static int gpio3_pins[] = { 3 };
->> +static int gpio4_pins[] = { 4 };
->> +static int gpio5_pins[] = { 5 };
->> +static int gpio6_pins[] = { 6 };
->> +static int gpio7_pins[] = { 7 };
->> +static int gpio8_pins[] = { 8 };
->> +static int gpio9_pins[] = { 9 };
->> +static int gpio10_pins[] = { 10 };
->> +static int gpio11_pins[] = { 11 };
->> +static int gpio12_pins[] = { 12 };
->> +static int gpio13_pins[] = { 13 };
->>   static const char * const swr_tx_clk_groups[] = { "gpio0" };
->>   static const char * const swr_tx_data_groups[] = { "gpio1", "gpio2", "gpio5" };
->>   static const char * const swr_rx_clk_groups[] = { "gpio3" };
->> @@ -250,38 +248,10 @@ static int lpi_gpio_write(struct lpi_pinctrl *state, unsigned int pin,
->>   	return 0;
->>   }
->>   
->> -static int lpi_gpio_get_groups_count(struct pinctrl_dev *pctldev)
->> -{
->> -	struct lpi_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
->> -
->> -	return pctrl->data->ngroups;
->> -}
->> -
->> -static const char *lpi_gpio_get_group_name(struct pinctrl_dev *pctldev,
->> -					   unsigned int group)
->> -{
->> -	struct lpi_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
->> -
->> -	return pctrl->data->groups[group].name;
->> -}
->> -
->> -static int lpi_gpio_get_group_pins(struct pinctrl_dev *pctldev,
->> -				   unsigned int group,
->> -				   const unsigned int **pins,
->> -				   unsigned int *num_pins)
->> -{
->> -	struct lpi_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
->> -
->> -	*pins = pctrl->data->groups[group].pins;
->> -	*num_pins = pctrl->data->groups[group].npins;
->> -
->> -	return 0;
->> -}
->> -
->>   static const struct pinctrl_ops lpi_gpio_pinctrl_ops = {
->> -	.get_groups_count	= lpi_gpio_get_groups_count,
->> -	.get_group_name		= lpi_gpio_get_group_name,
->> -	.get_group_pins		= lpi_gpio_get_group_pins,
->> +	.get_groups_count	= pinctrl_generic_get_group_count,
->> +	.get_group_name		= pinctrl_generic_get_group_name,
->> +	.get_group_pins		= pinctrl_generic_get_group_pins,
->>   	.dt_node_to_map		= pinconf_generic_dt_node_to_map_group,
->>   	.dt_free_map		= pinctrl_utils_free_map,
->>   };
->> @@ -582,6 +552,28 @@ static const struct gpio_chip lpi_gpio_template = {
->>   	.dbg_show		= lpi_gpio_dbg_show,
->>   };
->>   
->> +static int lpi_build_pin_desc_groups(struct lpi_pinctrl *pctrl)
->> +{
->> +	struct group_desc *lpi_groups;
->> +	int i;
->> +
->> +	lpi_groups = devm_kcalloc(pctrl->dev, pctrl->data->npins,
->> +					 sizeof(*lpi_groups), GFP_KERNEL);
->> +	if (!lpi_groups)
->> +		return -ENOMEM;
->> +
->> +	for (i = 0; i < pctrl->data->npins; i++) {
->> +		const struct pinctrl_pin_desc *pin_info = pctrl->desc.pins + i;
->> +		struct group_desc *group = lpi_groups + i;
->> +
->> +		group->name = pin_info->name;
->> +		group->pins = (int *)&pin_info->number;
->> +		pinctrl_generic_add_group(pctrl->ctrl, group->name, group->pins, 1, NULL);
-> I've not used this generic interface before, but I believe you need to
-> pair your add with pinctrl_generic_remove_group(), both in error paths
-> and driver remove.
-Okay. Will add pinctrl_generic_remove_group() accordingly.
+> [ Upstream commit fc328a7d1fcce263db0b046917a66f3aa6e68719 ]
 >
-> Makes me wonder about the usefulness of this, as you will end up with
-> a bit more code than you remove and you have the additional heap
-> allocation. Feels like I'm missing something...
-Here Heap allocation can be avoided.  will do accordingly and re post.
+> Some GPIO lines have stopped working after the patch
+> commit 2ab73c6d8323f ("gpio: Support GPIO controllers without pin-ranges")
 >
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->>   static int lpi_pinctrl_probe(struct platform_device *pdev)
->>   {
->>   	const struct lpi_pinctrl_variant_data *data;
->> @@ -647,6 +639,10 @@ static int lpi_pinctrl_probe(struct platform_device *pdev)
->>   		goto err_pinctrl;
->>   	}
->>   
->> +	ret = lpi_build_pin_desc_groups(pctrl);
->> +	if (ret)
->> +		return ret;
-> A few lines up the code does error handling by goto err_pinctrl, you
-> should do the same.
-Okay. will update accordingly.
+> And this has supposedly been fixed in the following patches
+> commit 89ad556b7f96a ("gpio: Avoid using pin ranges with !PINCTRL")
+> commit 6dbbf84603961 ("gpiolib: Don't free if pin ranges are not defined")
 >
-> Regards,
-> Bjorn
+> But an erratic behavior where some GPIO lines work while others do not work
+> has been introduced.
 >
->> +
->>   	ret = devm_gpiochip_add_data(dev, &pctrl->chip, pctrl);
->>   	if (ret) {
->>   		dev_err(pctrl->dev, "can't add gpio chip\n");
->> -- 
->> 2.7.4
->>
+> This patch reverts those changes so that the sysfs-gpio interface works
+> properly again.
+>
+> Signed-off-by: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+
+I think you should not apply this for stable, because we will revert the revert.
+
+Yours,
+Linus Walleij
