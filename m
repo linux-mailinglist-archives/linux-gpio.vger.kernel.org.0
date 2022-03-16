@@ -2,52 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 026B44DAE8A
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Mar 2022 11:57:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BEC14DAF19
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Mar 2022 12:50:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236111AbiCPK6z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Mar 2022 06:58:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41884 "EHLO
+        id S1344880AbiCPLvQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Mar 2022 07:51:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232037AbiCPK6y (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Mar 2022 06:58:54 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E4044615D;
-        Wed, 16 Mar 2022 03:57:40 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: kholk11)
-        with ESMTPSA id B85311F4454D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1647428259;
-        bh=+B786kmjh9bVhF2dKutVQcJCHSHyfhNNrMNo6Cs2QQo=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=Htic6mUCNGozdobaaT2ZH9DnFUpA3VUjw9aytlaQcKQMsh4mDtjvQ4L8arnYmHveS
-         k/QlQjTJS2giW6WpcAi7/mYPOlnQl+BuSG+HnUJVisxaGeicYRfoUmgiMX4yOZ1M1Z
-         f1Rag2nzFgD4tLZAjkIY3y0g8VlBZoXLMiX7t2LGQakwVVhZCO4ZHUpqVpKJlnwriN
-         rX+trRcxFmD/Q3n3ZQEzHKl/R0xNCbfEKKuYQr5MGGBKH20ULZ4nT5TD353J503tS9
-         Iguqwt8793ig+QEiV9BPHBt42E7Q3gscBku2eokd3b9o/61M/IpQbVDT0mYmW+uM9k
-         3TfRWAKlbtb4A==
-Message-ID: <a06003ae-2dcc-f5a4-3b5c-62db99d18950@collabora.com>
-Date:   Wed, 16 Mar 2022 11:57:36 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.1
-Subject: Re: [PATCH v2 0/5] MediaTek pinctrl drivers cleanups
-Content-Language: en-US
-To:     sean.wang@kernel.org
-Cc:     linus.walleij@linaro.org, matthias.bgg@gmail.com,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernel@collabora.com, wenst@chromium.org
-References: <20220222111144.20796-1-angelogioacchino.delregno@collabora.com>
-From:   AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20220222111144.20796-1-angelogioacchino.delregno@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
+        with ESMTP id S239920AbiCPLvP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Mar 2022 07:51:15 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCC7C5C356;
+        Wed, 16 Mar 2022 04:50:00 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 685ADB81AB2;
+        Wed, 16 Mar 2022 11:49:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF20EC340E9;
+        Wed, 16 Mar 2022 11:49:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1647431398;
+        bh=Dy7fTBaxbV+Qx8X5DFZPL2kucR4BKaU/vcqCGalKej0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=azas4dOY1rvH2almcoYuEGlAsHKA4/zY9MfE8nf7nU0u9IXM4FO3yXLzmc1e+Bbcv
+         KfwRucbt30KeYxPGJiNRJqdIPwxTpk2OzZbaY2rOkvvQmLl5/krxOwwetqr4BzGTVO
+         8rsr0/0mxQ32mP6WRjw/KUk+ga+wCFn+Xsty4DHss8a7obYkndg92aX4kgOV5N9Tmf
+         PmIzk7Rp7UBe9vtidTXeA/f6LqtB8AmgW4jaqZSNpaJzDfd3DtmAidMjA0GVsgue5m
+         hsoNcRn3PcD+mGAvEy4POCGXJ5+GtWpq4mMGasl21FePnxOTtwBawNJsS8WBpE7Os5
+         2WjlziMgt8fiA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1nUSA7-00Ety2-LA; Wed, 16 Mar 2022 11:49:55 +0000
+Date:   Wed, 16 Mar 2022 11:49:55 +0000
+Message-ID: <878rtayv4s.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     huziji@marvell.com, ulf.hansson@linaro.org, robh+dt@kernel.org,
+        davem@davemloft.net, kuba@kernel.org, linus.walleij@linaro.org,
+        catalin.marinas@arm.com, will@kernel.org, andrew@lunn.ch,
+        gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com,
+        adrian.hunter@intel.com, thomas.petazzoni@bootlin.com,
+        kostap@marvell.com, robert.marko@sartura.hr,
+        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 7/8] arm64: dts: marvell: Add Armada 98DX2530 SoC and RD-AC5X board
+In-Reply-To: <20220314213143.2404162-8-chris.packham@alliedtelesis.co.nz>
+References: <20220314213143.2404162-1-chris.packham@alliedtelesis.co.nz>
+        <20220314213143.2404162-8-chris.packham@alliedtelesis.co.nz>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: chris.packham@alliedtelesis.co.nz, huziji@marvell.com, ulf.hansson@linaro.org, robh+dt@kernel.org, davem@davemloft.net, kuba@kernel.org, linus.walleij@linaro.org, catalin.marinas@arm.com, will@kernel.org, andrew@lunn.ch, gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com, adrian.hunter@intel.com, thomas.petazzoni@bootlin.com, kostap@marvell.com, robert.marko@sartura.hr, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-8.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -55,51 +72,143 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Il 22/02/22 12:11, AngeloGioacchino Del Regno ha scritto:
-> Hello!
-> This series performs some cleanups to the MediaTek pinctrl drivers
-> by commonizing some functions (reducing code duplication) hence also
-> simplifying the probe mechanism by removing unnecessary per-driver
-> probe functions.
+On Mon, 14 Mar 2022 21:31:42 +0000,
+Chris Packham <chris.packham@alliedtelesis.co.nz> wrote:
 > 
-> This code was tested against multiple platforms.
+> The 98DX2530 SoC is the Control and Management CPU integrated into
+> the Marvell 98DX25xx and 98DX35xx series of switch chip (internally
+> referred to as AlleyCat5 and AlleyCat5X).
 > 
-> Changes in v2:
-> - Patch 2/5: Changed -ENOENT to -ENODEV as per Chen-Yu's suggestion
-> - Patch 4/5: Removed unnoticed wrong comment change (Chen-Yu)
+> These files have been taken from the Marvell SDK and lightly cleaned
+> up with the License and copyright retained.
 > 
-> AngeloGioacchino Del Regno (5):
->    pinctrl: mediatek: paris: Unify probe function by using OF match data
->    pinctrl: mediatek: common-v1: Add common probe function
->    pinctrl: mediatek: common-v1: Use common probe function
->    pinctrl: mediatek: common-v1: Commonize spec_pupd callback
->    pinctrl: mediatek: common-v1: Commonize spec_ies_smt_set callback
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
 > 
->   drivers/pinctrl/mediatek/pinctrl-mt2701.c     | 40 ++++--------
->   drivers/pinctrl/mediatek/pinctrl-mt2712.c     | 44 +++----------
->   drivers/pinctrl/mediatek/pinctrl-mt6765.c     |  9 +--
->   drivers/pinctrl/mediatek/pinctrl-mt6779.c     |  9 +--
->   drivers/pinctrl/mediatek/pinctrl-mt6797.c     |  9 +--
->   drivers/pinctrl/mediatek/pinctrl-mt8127.c     | 39 +++---------
->   drivers/pinctrl/mediatek/pinctrl-mt8135.c     | 17 ++----
->   drivers/pinctrl/mediatek/pinctrl-mt8167.c     | 40 +++---------
->   drivers/pinctrl/mediatek/pinctrl-mt8173.c     | 29 +++------
->   drivers/pinctrl/mediatek/pinctrl-mt8183.c     |  9 +--
->   drivers/pinctrl/mediatek/pinctrl-mt8192.c     |  9 +--
->   drivers/pinctrl/mediatek/pinctrl-mt8195.c     |  9 +--
->   drivers/pinctrl/mediatek/pinctrl-mt8365.c     | 40 +++---------
->   drivers/pinctrl/mediatek/pinctrl-mt8516.c     | 40 +++---------
->   drivers/pinctrl/mediatek/pinctrl-mtk-common.c | 61 ++++++++++++++-----
->   drivers/pinctrl/mediatek/pinctrl-mtk-common.h | 33 +++++++---
->   drivers/pinctrl/mediatek/pinctrl-paris.c      |  9 ++-
->   drivers/pinctrl/mediatek/pinctrl-paris.h      |  3 +-
->   18 files changed, 164 insertions(+), 285 deletions(-)
+> Notes:
+>     The Marvell SDK has a number of new compatible strings. I've brought
+>     through some of the drivers or where possible used an in-tree
+>     alternative (e.g. there is SDK code for a ac5-gpio but the existing
+>     marvell,armada-8k-gpio seems to cover what is needed if you use an
+>     appropriate binding). I expect that there will a new series of patches
+>     when I get some different hardware (or additions to this series
+>     depending on if/when it lands).
+>     
+>     Changes in v2:
+>     - Make pinctrl a child node of a syscon node
+>     - Use marvell,armada-8k-gpio instead of orion-gpio
+>     - Remove nand peripheral. The Marvell SDK does have some changes for the
+>       ac5-nand-controller but I currently lack hardware with NAND fitted so
+>       I can't test it right now. I've therefore chosen to omit the node and
+>       not attempted to bring in the driver or binding.
+>     - Remove pcie peripheral. Again there are changes in the SDK and I have
+>       no way of testing them.
+>     - Remove prestera node.
+>     - Remove "marvell,ac5-ehci" compatible from USB node as
+>       "marvell,orion-ehci" is sufficient
+>     - Remove watchdog node. There is a buggy driver for the ac5 watchdog in
+>       the SDK but it needs some work so I've dropped the node for now.
 > 
+>  arch/arm64/boot/dts/marvell/Makefile          |   1 +
+>  .../boot/dts/marvell/armada-98dx2530.dtsi     | 343 ++++++++++++++++++
+>  arch/arm64/boot/dts/marvell/rd-ac5x.dts       |  62 ++++
+>  3 files changed, 406 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/marvell/armada-98dx2530.dtsi
+>  create mode 100644 arch/arm64/boot/dts/marvell/rd-ac5x.dts
+> 
+> diff --git a/arch/arm64/boot/dts/marvell/Makefile b/arch/arm64/boot/dts/marvell/Makefile
+> index 1c794cdcb8e6..3905dee558b4 100644
+> --- a/arch/arm64/boot/dts/marvell/Makefile
+> +++ b/arch/arm64/boot/dts/marvell/Makefile
+> @@ -24,3 +24,4 @@ dtb-$(CONFIG_ARCH_MVEBU) += cn9132-db.dtb
+>  dtb-$(CONFIG_ARCH_MVEBU) += cn9132-db-B.dtb
+>  dtb-$(CONFIG_ARCH_MVEBU) += cn9130-crb-A.dtb
+>  dtb-$(CONFIG_ARCH_MVEBU) += cn9130-crb-B.dtb
+> +dtb-$(CONFIG_ARCH_MVEBU) += rd-ac5x.dtb
+> diff --git a/arch/arm64/boot/dts/marvell/armada-98dx2530.dtsi b/arch/arm64/boot/dts/marvell/armada-98dx2530.dtsi
+> new file mode 100644
+> index 000000000000..ebe464b9ebd2
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/marvell/armada-98dx2530.dtsi
+> @@ -0,0 +1,343 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Device Tree For AC5.
+> + *
+> + * Copyright (C) 2021 Marvell
+> + *
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +/ {
+> +	model = "Marvell AC5 SoC";
+> +	compatible = "marvell,ac5", "marvell,armada3700";
 
+Are you sure about this compatibility with 3700? If so, why not reuse
+the existing file? But the rest of the file tends to show that the SoC
+is somehow different (the PPIs are all over the place -- someone got
+pointlessly creative here...). I'd really drop this string.
 
-Hello maintainers,
+> +	interrupt-parent = <&gic>;
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +		spiflash0 = &spiflash0;
+> +		gpio0 = &gpio0;
+> +		gpio1 = &gpio1;
+> +		ethernet0 = &eth0;
+> +		ethernet1 = &eth1;
+> +	};
+> +
+> +	psci {
+> +		compatible = "arm,psci-0.2";
+> +		method = "smc";
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>,
+> +				 <GIC_PPI 8 IRQ_TYPE_LEVEL_HIGH>,
+> +				 <GIC_PPI 10 IRQ_TYPE_LEVEL_HIGH>,
+> +				 <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>;
 
-friendly ping for this series that already got a Reviewed-by tag on all patches :)
+If you have an A55, you're missing an interrupt for the EL2 virtual
+timer.
 
-Cheers,
-Angelo
+> +		clock-frequency = <25000000>;
+
+Please drop this. The firmware should do the right thing, and if not,
+that's an opportunity to fix it.
+
+> +	};
+> +
+
+[...]
+
+> +	gic: interrupt-controller@80600000 {
+> +		compatible = "arm,gic-v3";
+> +		#interrupt-cells = <3>;
+> +		interrupt-controller;
+> +		/*#redistributor-regions = <1>;*/
+> +		redistributor-stride = <0x0 0x20000>;	// 128kB stride
+
+Please drop these two lines. They are totally pointless as they are
+only expressing the default values.
+
+> +		reg = <0x0 0x80600000 0x0 0x10000>, /* GICD */
+> +			  <0x0 0x80660000 0x0 0x40000>; /* GICR */
+> +		interrupts = <GIC_PPI 6 IRQ_TYPE_LEVEL_HIGH>;
+> +	};
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
