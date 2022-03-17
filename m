@@ -2,104 +2,186 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A0FA4DC28B
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Mar 2022 10:23:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E99B34DC32E
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Mar 2022 10:45:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231716AbiCQJYb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Mar 2022 05:24:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38046 "EHLO
+        id S232170AbiCQJqT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Mar 2022 05:46:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229480AbiCQJYa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Mar 2022 05:24:30 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63A3B126FA2;
-        Thu, 17 Mar 2022 02:23:12 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 329F8616B2;
-        Thu, 17 Mar 2022 09:23:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DAA4C340E9;
-        Thu, 17 Mar 2022 09:23:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1647508991;
-        bh=YGn+Z4H/YBaaOjmefJswWEOVJ5oKib0xXfG0EOkv2Jc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=iYQzPnAcGBuGMrTVfPcGOotEs/hPzXCfKWAs2Ouaqc2emPvt/bUdHsyFtBVcd1dIH
-         nqLbIEf82HgdEwolh4hcTsFVhbtBFaW5XyRsexkbQ5GIegJ3ns0jR9csnmUjeLP0Am
-         9Nw0JlAqMW9M+qAApGww2kScdzCHITvXoi+O2SqwoGqMbW6jPl+mZNG0BPIHVg1h/o
-         H9QZgVbwtteqAWsqOxoDsp3nXvki0RZ9WZsJbGK3MlZva00B7q5vPLavTOTFt5g3At
-         jh5Q7rk0hPRP6UqpM1NxwbbXo9fBAvR4b9XvFwagjXQpjyc5TTdBrwnZvPC2pIhNg8
-         rh77u/8BfP0zg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <maz@kernel.org>)
-        id 1nUmLd-00F8Bg-2X; Thu, 17 Mar 2022 09:23:09 +0000
-Date:   Thu, 17 Mar 2022 09:23:08 +0000
-Message-ID: <87wngtx79f.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        with ESMTP id S232169AbiCQJqR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Mar 2022 05:46:17 -0400
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAE731AAFC4;
+        Thu, 17 Mar 2022 02:45:00 -0700 (PDT)
+Received: by mail-wr1-f47.google.com with SMTP id b19so6480800wrh.11;
+        Thu, 17 Mar 2022 02:45:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=BIsej/fBX7RVeqwrLbFPG3V5lHvWvQ/MKBBud6g58/g=;
+        b=oEslTyV5i1Oye8JfUhEME+/QPVe8TOnbZSFr40/2Jam0pyB0eAi0Lz8fFQqV0u8z4+
+         2JnEwqWtk4SqV7zM76DmrmoJ+WVJZhAiAeYYTEfiRV6xjHuni7KtpiWJnNM4+38DhnV9
+         qwp/UfuAcNHgBLXka/a78L8nOaO6mCbOE1QaogLYYC9pkVerWZrsEXaaZrDMQTkgg5OQ
+         5yNxeSzep6pcPWhI3AbLQCbEwTjetuN90blgCm8VUvE7xL2jOuF1uaq5FOws9T1bwCMF
+         IZLt7aLAokT1W8ROmu81SpcCwvIehref5X99rhpVHfvBEOJQJ3NtY/HRT9V/Ay6dPW1r
+         U5vg==
+X-Gm-Message-State: AOAM5316MZfvFNYfJvz71JI+UcXPJC1x8i1BEhRk5VHiShXuZoFBrzER
+        F2HB8qoShEJGZgPgBPhbTzs=
+X-Google-Smtp-Source: ABdhPJwBx4IlPpEFAwjA2GiR5NIv9ipGvJkg0rcec13xACQMcGpnku47qtShu9Fnx+pV7uflhGu3Sw==
+X-Received: by 2002:adf:eb81:0:b0:1e3:2bf5:132 with SMTP id t1-20020adfeb81000000b001e32bf50132mr3266317wrn.246.1647510299158;
+        Thu, 17 Mar 2022 02:44:59 -0700 (PDT)
+Received: from [192.168.0.17] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
+        by smtp.googlemail.com with ESMTPSA id i74-20020adf90d0000000b0020373ba7beesm5273451wri.0.2022.03.17.02.44.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Mar 2022 02:44:58 -0700 (PDT)
+Message-ID: <971850ad-96af-2abb-f4bf-ba6188e2d732@kernel.org>
+Date:   Thu, 17 Mar 2022 10:44:57 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [RFC PATCH v4 1/5] dt-bindings: interrupt-controller: Add Renesas
+ RZ/G2L Interrupt Controller
+Content-Language: en-US
+To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         Prabhakar <prabhakar.csengg@gmail.com>,
         Biju Das <biju.das.jz@bp.renesas.com>
-Subject: Re: [RFC PATCH v4 0/5] Renesas RZ/G2L IRQC support
-In-Reply-To: <CAHp75Vc+uSNF4L0WCfCyadOqJ6szXS3Ct5BmEUbeQ_aKg1zjWg@mail.gmail.com>
 References: <20220317012404.8069-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-        <CAHp75Vc+uSNF4L0WCfCyadOqJ6szXS3Ct5BmEUbeQ_aKg1zjWg@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: andy.shevchenko@gmail.com, prabhakar.mahadev-lad.rj@bp.renesas.com, tglx@linutronix.de, robh+dt@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, geert+renesas@glider.be, p.zabel@pengutronix.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org, prabhakar.csengg@gmail.com, biju.das.jz@bp.renesas.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
-X-Spam-Status: No, score=-8.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+ <20220317012404.8069-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+In-Reply-To: <20220317012404.8069-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 17 Mar 2022 08:46:14 +0000,
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+On 17/03/2022 02:24, Lad Prabhakar wrote:
+> Add DT bindings for the Renesas RZ/G2L Interrupt Controller.
 > 
-> On Thu, Mar 17, 2022 at 5:43 AM Lad Prabhakar
-> <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> >
-> > Hi All,
-> >
-> > The RZ/G2L Interrupt Controller is a front-end for the GIC found on
-> > Renesas RZ/G2L SoC's with below pins:
-> > - IRQ sense select for 8 external interrupts, mapped to 8 GIC SPI interrupts
-> > - GPIO pins used as external interrupt input pins out of GPIOINT0-122 a
-> >   maximum of only 32 can be mapped to 32 GIC SPI interrupts,
-> > - NMI edge select.
-> >
-> What I want to know now is whether it is going to collide with Marc's
-> series about GPIO IRQ chip constification?
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+>  .../renesas,rzg2l-irqc.yaml                   | 131 ++++++++++++++++++
+>  1 file changed, 131 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rzg2l-irqc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,rzg2l-irqc.yaml b/Documentation/devicetree/bindings/interrupt-controller/renesas,rzg2l-irqc.yaml
+> new file mode 100644
+> index 000000000000..a14492ec9235
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rzg2l-irqc.yaml
+> @@ -0,0 +1,131 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/interrupt-controller/renesas,rzg2l-irqc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Renesas RZ/G2L (and alike SoC's) Interrupt Controller (IA55)
+> +
+> +maintainers:
+> +  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> +  - Geert Uytterhoeven <geert+renesas@glider.be>
+> +
+> +description: |
+> +  IA55 performs various interrupt controls including synchronization for the external
+> +  interrupts of NMI, IRQ, and GPIOINT and the interrupts of the built-in peripheral
+> +  interrupts output by each IP. And it notifies the interrupt to the GIC
+> +    - IRQ sense select for 8 external interrupts, mapped to 8 GIC SPI interrupts
+> +    - GPIO pins used as external interrupt input pins, mapped to 32 GIC SPI interrupts
+> +    - NMI edge select (NMI is not treated as NMI exception and supports fall edge and
+> +      stand-up edge detection interrupts)
+> +
+> +allOf:
+> +  - $ref: /schemas/interrupt-controller.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - renesas,r9a07g044-irqc    # RZ/G2L
+> +      - const: renesas,rzg2l-irqc
+> +
+> +  '#interrupt-cells':
+> +    const: 2
+> +
+> +  '#address-cells':
+> +    const: 0
+> +
+> +  interrupt-controller: true
+> +
+> +  reg:
+> +    maxItems: 1> +
+> +  interrupts:
+> +    maxItems: 41
+> +
+> +  clocks:
+> +    maxItems: 2
+> +
+> +  clock-names:
+> +    items:
+> +      - const: clk
+> +      - const: pclk
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - '#interrupt-cells'
+> +  - '#address-cells'
+> +  - interrupt-controller
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +  - power-domains
+> +  - resets
+> +
+> +additionalProperties: false
 
-Probably, but the current scheme will still be alive for some time
-(you'll need a couple of cycles to sort out all the drivers).
+This should be rather unevaluatedProperties and remove
+interrupt-controller:true from properties.
 
-Worse case, this can be fixed at merge time.
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/clock/r9a07g044-cpg.h>
+> +
+> +    irqc: interrupt-controller@110a0000 {
+> +            compatible = "renesas,r9a07g044-irqc", "renesas,rzg2l-irqc";
+> +            #interrupt-cells = <2>;
+> +            #address-cells = <0>;
+> +            interrupt-controller;
+> +            reg = <0x110a0000 0x10000>;
 
-	M.
+Put the reg after compatible in DTS code. The ordering of properties in
+bindings is a bit odd, but I wasn't following order by myself, so cannot
+complain. :)
 
--- 
-Without deviation from the norm, progress is not possible.
+
+
+Best regards,
+Krzysztof
