@@ -2,63 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2104F4DC4FF
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Mar 2022 12:44:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B54E84DC505
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Mar 2022 12:47:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233096AbiCQLpt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Mar 2022 07:45:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44504 "EHLO
+        id S233112AbiCQLtG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Mar 2022 07:49:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232301AbiCQLpt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Mar 2022 07:45:49 -0400
+        with ESMTP id S232301AbiCQLtF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Mar 2022 07:49:05 -0400
 Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B55B11435B;
-        Thu, 17 Mar 2022 04:44:32 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D5671D2050;
+        Thu, 17 Mar 2022 04:47:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1647517466;
-        bh=Yfa3ut3W4uYD/9bxmkIeZvM2xi6/JQhxv3O0dcLAJMQ=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=cCjsuL2+m1ibXNhseP7H5/dIZyZIa5AbYbSeTSWN/cWA1Bnl7MwTBu47daaGOQDaK
-         lMuNBcECsm9KVI5ttqRGwbaoDDJ6EQCLjCPEILVa3YFCt38o/13D6zyXuQZs5wqwTP
-         4DIbplXrOJZW34uh68SVqpCiDrBbTPGLWs6ZyWfo=
+        s=badeba3b8450; t=1647517664;
+        bh=ScbeAyyxitZpz1A58nWOz/GETmODM7KSYw1wdmS7/qo=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=CDWHssWzK47sKOlzoUdIautvZtz6kufj13W9LUBpDDB4eqrI8L255Qp1Vh6iyvVEb
+         5NwGoiq4kr0N8cd9InxsF6mX0iMAhH0rDqDt1fpcDWPPIqlQnDcsLxJM+PrJVtJsiq
+         7UbSMz9XqNhVQAIdi3mvnIR6X9KOTED4A5HaXss0=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([5.146.194.160]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MG9kM-1nKv3u2L88-00GX3W; Thu, 17
- Mar 2022 12:44:26 +0100
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     linux-gpio@vger.kernel.org
-Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        kernel test robot <lkp@intel.com>,
+Received: from longitude ([5.146.194.160]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mv2xO-1oLojQ1lnk-00qzH1; Thu, 17
+ Mar 2022 12:47:44 +0100
+Date:   Thu, 17 Mar 2022 12:47:43 +0100
+From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Cc:     linux-gpio@vger.kernel.org, kernel test robot <lkp@intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: nuvoton: wpcm450: select GENERIC_PINCTRL_GROUPS
-Date:   Thu, 17 Mar 2022 12:44:12 +0100
-Message-Id: <20220317114413.1418484-1-j.neuschaefer@gmx.net>
-X-Mailer: git-send-email 2.35.1
+Subject: Re: [PATCH] pinctrl: nuvoton: wpcm450: select GENERIC_PINCTRL_GROUPS
+Message-ID: <YjMf3xraXv5In6vP@latitude>
+References: <20220317114413.1418484-1-j.neuschaefer@gmx.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:WdpBpWF/JwLrd0AcAECvf7YahZE34xeKMfffvgDL4CsDOB4F4tm
- l5fJfDRjm3SdGgl21NqmpMuQn1n/lbDv4FB/EdRPy2wPb2tikoC1lyaqwJ6+6c9C3EGk3pv
- XNCKiQVuu2fAXB0JofhIYcdo/U3admMZ99eAI7Nj24fRTYFtd+WzTyRZH5QfGgJCWe8iVvk
- f4S2BkCgzAFOUgZWIY7pA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:SUiuo1HjD1w=:xEBAktKb5SkpPyOPbqNI0q
- MQ2X3vDHwXXXOLZNJ++V4ftz0UgHDq3A1G/++MedP7dL6ej0jnm/gfwKub1Ombi7GRgTqqBbT
- X7kFamBDnEZiMFwXS2CKNUeJru3TX6Zcs44bjxpJljIab1/CSGw1CXhA4nurzf2aQw1xg/Vcs
- CyBJcRPivMvGUMDvj+qCHBgHBtgbCu3UI8/ilrrhasjbwdXDu5UaEtV374FkPWS9HQiNILveY
- mUkPk/Jacu5eegJM0dggqqkfxgKel5hDS8iuVYHkRupAde3liVBQZIG6abY7X6E9xnZho+Fuc
- FymrhDh8y2Lf79QSjmM2HwRIO86xAm1iVuebjlcdnY/4tj6/IC7NHwkRAMzQCDParZbbrQRHM
- u13ZTQtkfs3j2aZuC5DyUqH76dV11TixYazzHPDhg4a59v+aP82r5wVzM1yaT4G2QFPh4Krk/
- SYFHM2GqqYjCagGy2pq1WvWLN+1YWmtewRF3NVZA7fw3N5SlSzavKHy7i3B9EsEnDvrZF0L+7
- ebWLOrGjx4jEt2hlF8LRRw5HHSaUmUmuHkv4synuG7tcUFMn+zALXw5Ipf6/c10XPbB12cnLY
- UF1qLROYxkuFUjZFcaiUqZ6hT4Bsq+AbWqZQffIMwZ0hwFhQfiUVWoHeRjGtYAFz0ACje4hTG
- ty765KgJg0UtCJFz7JzgmqLLgCWJ/SuaQLQx+ZYZ22zqq8ffbAL5RyU2XRC1yr8jgXviFomjQ
- Pz8ud5cRWUAiL2CCen/X/B3vi3k60iTUjHzw4zOEX6BRk3lIMmMh9GxX58+Uc69yptFRbqhzM
- iCtLQBkB2YjFSoE4cejpjjZXkMWcoFk0ARDuQXAi3KjE0LHnarAZW6B+SBiccLF4DdumDZg1D
- BxUPLdFl5jcSEpcV/hlyHt7cFmsXwuUyoaAg1DTqH2plnajRsAzLD7O/0inWM+p16mUbgsftr
- lFzm7NIS8II84n/nq0zuelS7iG1WQ+LTHG1uz2WnoyhMWpjA2ujd8/e41BlQdpm5gjYmZL2tl
- E5QCPjsXiDguep4LjSeOYL5xRbdttvIXAqU9zBAZ7jKg3w8wFrLs2hdwWtPj+xV/ieBihZv0l
- +N1aPHfMJf2erM=
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Gy9dBRxGwPjNPkdU"
+Content-Disposition: inline
+In-Reply-To: <20220317114413.1418484-1-j.neuschaefer@gmx.net>
+X-Provags-ID: V03:K1:yFRpWLHn6vGUewvUa9nCbY5STdTIWMyPIiKt0q/hjt4P5r7IrCd
+ B69otjohkzayTidPIg4bXg17JelizEMhWJeodQn5srxhqKWkbhQLpxPKB44UC1lNmVFZFst
+ z/7A2lK1qDHDx98LToBMiJZEq6lDlsZNLoHQL7Mo0Mwh7vBr9cJyyMcYQxrruWOf+SJlqWu
+ 44A7Mks5aFozbBYnipyLw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:jA4yzOIfJc4=:w4teZBIHhvU+cm/kz+TFBw
+ Y1iM3ahLUBsOPbwuq+wJw2aS6pFKWM1Bz3M4xJPyz4Qwjed/4mcQGrCpysG7uSTqluiREWpbn
+ pLfTpbXnOclHzoBpAIXAjvt1Yjh5wtBvAKKA7jRoJxlpBPYXFIh/OwQBe8UAw2yYUw3PZlhk0
+ 60A42+6xSU1MjMpiBStizHeHI7XfU+OnUvgAJ2gWh5AXLNlCDOy79GuC6lncuJ6vnTKTE5fl5
+ p8wUDaGIRYkuDrHg++q/lA438duoscBrh2J3iB5LWjyUwvZe9FmLNp5bn1htlX/SJvSHcApUn
+ Szqd5RYlWZX8/Qd+H21gTqmrCl8ifCarOWXgeZpTOasmZ3MxzsoPxPU6tedjmhX9Gs6yQ7ody
+ V49Ygj7aCZiMWryMmirEgoBXTfmSeaCqYcjzqPvGdGP3tUVgD/0EvMYJROwkZa5Vha/dh5oGn
+ qP59rnG/a36y96pD6a9pMgbQYDxUlYIjH1JMD8L4NC5Ge5gSxl2mpHb7Iu6EjWXRyoI7Wd5qA
+ KAUNtOzZOzqoxYCKS7XlQJr1bihhwp2OexnbFA4cYRUbacF08WI+E6Tep6TPttLtK0VPF1EBe
+ gTa8KXe6f5J5+A/5sOvCTX+qD1R6C1yhaBVTy5ZyWunVjRMoWsd/KTavWgXZ0pl7LbjcpompU
+ TcYl97umDvBKmMP+tX/DKevS84hM9RCTPzvcDrlM8j6amGlIuNbxyRxMqhbX3CKvasWmqYpzG
+ mwN0m/ATxuYI7Lt+8P1Je4Azcxftu2Y5llnWlSg7z9vHpBVuvUJZXgI4IRXZjVLH5IWVgW9gL
+ L/cNQ1yTnfDI967qQi+PaS8/BdrIk6GaFczNlBCly+jJM1JFRcGz+/KPE+UFB2a+rnBjhlhdM
+ 5eEOIiSE7lEF00K5n6MI27t71besNAjW80Kt7SWidPOTEz2OdBkZDGy2gls9V8aOrdgFy1SpQ
+ L3ZUcAhgdCEXzItmzyylQ9zha78dMRmtn8QfrnJCY7liZhAmeMmH+gVStJNKhUjgmZZjctHR/
+ MGmBwmkkUPpz1rSJXhUbA6sM56fDilFsF9aSQQmfSAUS6Tt0aN93cmWYClFKR2l81GrHtmdOd
+ FkrIrWzhxLQtNg=
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
@@ -69,30 +70,67 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-CONFIG_GENERIC_PINCTRL_GROUPS must be selected in order for
-struct group_desc to be defined in pinctrl/core.h.
 
-Add the missing select line to CONFIG_PINCTRL_WPCM450.
+--Gy9dBRxGwPjNPkdU
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
- drivers/pinctrl/nuvoton/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+On Thu, Mar 17, 2022 at 12:44:12PM +0100, Jonathan Neusch=C3=A4fer wrote:
+> CONFIG_GENERIC_PINCTRL_GROUPS must be selected in order for
+> struct group_desc to be defined in pinctrl/core.h.
+>=20
+> Add the missing select line to CONFIG_PINCTRL_WPCM450.
+>=20
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
 
-diff --git a/drivers/pinctrl/nuvoton/Kconfig b/drivers/pinctrl/nuvoton/Kco=
-nfig
-index 6a3c6f2a73f2d..b48d32912bef1 100644
-=2D-- a/drivers/pinctrl/nuvoton/Kconfig
-+++ b/drivers/pinctrl/nuvoton/Kconfig
-@@ -6,6 +6,7 @@ config PINCTRL_WPCM450
- 	select PINMUX
- 	select PINCONF
- 	select GENERIC_PINCONF
-+	select GENERIC_PINCTRL_GROUPS
- 	select GPIOLIB
- 	select GPIO_GENERIC
- 	select GPIOLIB_IRQCHIP
-=2D-
-2.35.1
+Ah well, I forgot
 
+	Fixes: a1d1e0e3d80a8 ("pinctrl: nuvoton: Add driver for WPCM450")
+
+which would be appropriate here.
+
+
+> ---
+>  drivers/pinctrl/nuvoton/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/pinctrl/nuvoton/Kconfig b/drivers/pinctrl/nuvoton/Kc=
+onfig
+> index 6a3c6f2a73f2d..b48d32912bef1 100644
+> --- a/drivers/pinctrl/nuvoton/Kconfig
+> +++ b/drivers/pinctrl/nuvoton/Kconfig
+> @@ -6,6 +6,7 @@ config PINCTRL_WPCM450
+>  	select PINMUX
+>  	select PINCONF
+>  	select GENERIC_PINCONF
+> +	select GENERIC_PINCTRL_GROUPS
+>  	select GPIOLIB
+>  	select GPIO_GENERIC
+>  	select GPIOLIB_IRQCHIP
+> --
+> 2.35.1
+>=20
+
+--Gy9dBRxGwPjNPkdU
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAmIzH74ACgkQCDBEmo7z
+X9tQZQ/+NikVIHk3lzAqOLO6DkBqMLn0rKX1tw4bokOJ+5f/lCoBEBiGhIGddOgd
+LpFDfvewGj65PkvdYkNN0WG93E1B2oc6uFZeKe8sQF4qGoXGEQHWHWSfDJWZjCp1
+NEIIRDsdnHc1bc/OWkMjfWs9Fc5A66ATqMUaWWqFlp6BMXuuJvlqif4dU/NvUitL
+5OhALWZeqMzqHdwmWdnZ5F0NhrSImjcApMfVdpS6UdT7ZVCqUBQvLUfq3wdxsuBa
+22waseqVHx+d1PZ1g+WVck6++62/C+DNgoZ2BtT2eUTk/ltC8tI7A4Srt7CoQBPC
+CXTFwFrQ9xw3yqBE+Go56vLzSh/NEVyDUIHkXAB0LhAYXbd3iB8cJmvQ8Tjs++Uz
+LHLRLAwCnMc/H3uRegVsB+o4sQrWxjVWLagz8w6WkshJ/4MT6lay0SBHVWruv1jh
+rx6wnjkHcIPSm+t13p+v8kMXYSLaNm/b2WCLtirn/cmOXCJMCDAGz1BwLeGcfM8z
+v7GPTCEgSoZknZjf1d+dgZf/p5psrRURo7bJF2g07lpNi2GGzbCftzhhsY6s0SEU
+26Zz893/mDriDFnEOZcRhz/VX7B2WY05aoc8og/Va407/eJLQNJmA/FPFyozfoV8
+MQDwV2oyknxqcVnPGF58MLzbXQ9oscqQYsbIs1vyCICheEtXGhM=
+=PTgZ
+-----END PGP SIGNATURE-----
+
+--Gy9dBRxGwPjNPkdU--
