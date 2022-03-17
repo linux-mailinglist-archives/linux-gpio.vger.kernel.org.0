@@ -2,172 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F109F4DC3DB
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Mar 2022 11:19:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 996194DC4CE
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Mar 2022 12:24:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232531AbiCQKUf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Mar 2022 06:20:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45622 "EHLO
+        id S231364AbiCQL0I (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Mar 2022 07:26:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229763AbiCQKUe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Mar 2022 06:20:34 -0400
-Received: from mail-io1-xd2e.google.com (mail-io1-xd2e.google.com [IPv6:2607:f8b0:4864:20::d2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE22AE29FF
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Mar 2022 03:19:17 -0700 (PDT)
-Received: by mail-io1-xd2e.google.com with SMTP id w7so5326938ioj.5
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Mar 2022 03:19:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura-hr.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=n6iauwsK21Ks+eaRsgF1KeKTsBm/xpjROn2Egsfn7rk=;
-        b=BtkGQvlL8IiX7Af3L9wZ73uGGfUoeWkZqZLD/lucGZokmkXOOy8OjDYxOLE4psUs9O
-         T1MtVaDxvBGzA3zrwBhgIGXnwvyftGG3IvQB/r6blP7uCGzhKoM7CinSpkVyi18E7lx6
-         PJO+fu8JJnL7VLKIO7ZzZdD9ZHmK0lcIAwfhmE2EoFbGLYfVAVMOHyJEjAoS4/OnCgSO
-         quL1+ycGUxzCrr9M3ZBiPsx3glvBTJDaL39xvFsTjZZxFJlrTL0L9BFLIwH3vblEbx2L
-         yHsqkAE+PAyUj24GdsV2gkmgOpnVwGUfpQGgrBPKxpMuQgp4KazHDnNupD5OAf1C4IdH
-         kumA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=n6iauwsK21Ks+eaRsgF1KeKTsBm/xpjROn2Egsfn7rk=;
-        b=dpe/YB14BAx6vEcKoLg+zamis5E185nXD3xqXSKGAxwz2/m2WwjG10LRTgGc/e+1Mf
-         XHPjbFUrj5TYsSikydPYwWdoJrjsL3mcTdzameAIC5+wrvhR9hrmNSitucLyUQFX1eXx
-         Da7ZHQvwz5VlEn86NxSySUvo6RQWflIjvdxWEfFz4CUHrfaJdvt78oGvvnYhVk0kYUcc
-         gPg1Dz3bp7AUYJmEJEskcF03nkKtMxjMhNNpMf2j9aczB9wJQi6KEhz0lQeICeYTHI48
-         +YzpN4vqeSm5ETskG2GsGrK1qJk48lx8gIWNo+u8cdPoOoagN+kQOVpwTwF5t7KwJcDI
-         pkQw==
-X-Gm-Message-State: AOAM5317M5waJYIY+3CjSbzji/qzK2v1vGTp9muynBU1GCGP9n0x+gIT
-        iolwgkTG4SLUoDaZuKohnSAvCeUM1shIDSgSb6G7zQ==
-X-Google-Smtp-Source: ABdhPJwQ2P9JinBva619F3p7zagggJVYhqCv0EesuF+pPCUxY163Xe5b0no+EBuFuKNrGdTuZaE7Z702loWBZ6Jd3bc=
-X-Received: by 2002:a02:6383:0:b0:314:d9da:13b2 with SMTP id
- j125-20020a026383000000b00314d9da13b2mr1598984jac.99.1647512357201; Thu, 17
- Mar 2022 03:19:17 -0700 (PDT)
+        with ESMTP id S229852AbiCQL0H (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Mar 2022 07:26:07 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7F0C1E3E08;
+        Thu, 17 Mar 2022 04:24:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1647516277;
+        bh=rz/kIL0ebTYiAvUOeOo0SqZ21Y/rMB/+G/lC/CVXaQo=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=Q6sIsGfiyqni72VWRmGARY9030nqerCMxTyZYypf7zOCJ2aoqz9MUCWmcZLLFClnp
+         qWfwv1tuBNtmlrHUNubSsGLrUZMy8U2fhAfev797vI6yRwPfxyJ+Jesig/CBWOMCfS
+         ksTFPWu8IIXBGgX2AUC/3qJ7M3gp9CBIzYDGXG/k=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([5.146.194.160]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mk0JM-1nxZTp1uqu-00kNsD; Thu, 17
+ Mar 2022 12:24:37 +0100
+Date:   Thu, 17 Mar 2022 12:24:35 +0100
+From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     Jialin Zhang <zhangjialin11@huawei.com>
+Cc:     j.neuschaefer@gmx.net, linus.walleij@linaro.org,
+        openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] pinctrl: nuvoton: Fix return value check in
+ wpcm450_gpio_register()
+Message-ID: <YjMac/pwFH5Z+Lxs@latitude>
+References: <20220317065851.495394-1-zhangjialin11@huawei.com>
 MIME-Version: 1.0
-References: <20220131133049.77780-1-robert.marko@sartura.hr>
- <20220131133049.77780-6-robert.marko@sartura.hr> <Yh8vJNc4D6rA68au@google.com>
- <Yh/kFzNuvbwA2qeE@robh.at.kernel.org> <CA+HBbNHComN9kgFp1Xr4mdedwYjDMbSUkw+6_KAe8+O4hrtvKQ@mail.gmail.com>
- <YiKI5LDWaxvlc9m5@robh.at.kernel.org>
-In-Reply-To: <YiKI5LDWaxvlc9m5@robh.at.kernel.org>
-From:   Robert Marko <robert.marko@sartura.hr>
-Date:   Thu, 17 Mar 2022 11:19:06 +0100
-Message-ID: <CA+HBbNG4KfoO8wyQghubjqVvL5ocyxqa+CKjqkn0iXfA9duY_w@mail.gmail.com>
-Subject: Re: [PATCH v10 5/6] dt-bindings: mfd: Add Delta TN48M CPLD drivers bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>, brgl@bgdev.pl,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        skhan@linuxfoundation.org, Luka Perkov <luka.perkov@sartura.hr>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gVWGy808rXGFxfpb"
+Content-Disposition: inline
+In-Reply-To: <20220317065851.495394-1-zhangjialin11@huawei.com>
+X-Provags-ID: V03:K1:3F1BaI76xUMu3QZtwU5ZFOFb2sBVwOzw0CAV5Hyo2V7xYEktmBw
+ gZR2rtZY1OnA73RRDWfv6qQI2A0SZj0aJ2Q251Ogm04ZWRWjzd+XgLm9YwuyROraf7JeKbN
+ fiSrUi4XYYc20D3HzXJtlubZ6RgxhjcDyqt1bTDggseLs7dhW+soMvdffLXmqpDLEdxiJ9p
+ kxHyBXB7Yy0z1l5ZBWksg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:NsN/WGv/mSs=:Cnc2bfkzOWHRjCU6R40qYH
+ G2zybI/25E0oeQdE+CKGHePm8GLjf6KLzuIo0hEAaN0to2A/OgqpTx3qlpgz3I9BHYfKC/loh
+ 1cNr86pyKNRTlDIkrLew5rIvK8NNZrj/LhHpMDyIwUfZd/8KhB7puCDozAwRze9dQr7QaRM50
+ 5q9gwdQl/REjRTzc14FrHuCz4co/n1SfW5w0NHCER/ANOkc0SD954x+8zeuC3RtDMdM2FmmR0
+ bj0uPG4OPD0mBICAsZ9ufaFpnUkZa3+MQR9wCXQuPsETzxH9Qlcy9jaUR2L7mSm6o3NL6YHqZ
+ IKTA9qvZSptBKyZX6K1P7aNV1+VI/kRVj72Lg0U0+GPmbpyredNhqctdCX7IdIBTB97eXOkXB
+ kx2QSynGjIP4+lyWYlh+lklHWzhpJ2a85k1knEh58gJemZfgxc6HVQuAPzlNmwTXoC2OG5OoO
+ G+B3waaapTwRQWjl4aRrJoNaz/gLVaXfR1jcdqbTIBpB9/nQUv5B9T1lV7y/qmL4U5tkiBQxT
+ CgxTtivrwchEl4WmBrsYWvhWrHz5cwpqLpB6+IQb5L2vh6F/xaPZx6cEzuFVW969xiyq19B2H
+ Ash+q63zfWAjHJxFJKyjXv4ijFNYHRG0g3Eo4g+cYTCbfd4LJprQ6P9/kv0+LOc9CF3Fzix5R
+ iM64LcsXdiMI/wAmgmhKVkamTpv1YhDtH2bXp5LGt2qHbgsEKJenWnyaUdbfgT+Eay13b37Fg
+ JLpRarf84ML/S6DzwOe8r11LAMDGeSKeNg3FKDPZwAK9gla+WMhf9gWMYEqbmJRsXnmGKAONO
+ fbXE3lvm0WGFhByZP4G30oefC+QRcDy6iyhUohGYT7XKafZlfctH6Ngp1Q6vlpMDSbJrAcSpq
+ caeeiranVbCn6BMAeEfiljKB9NZBtQFagdylmWU5AAg9NfqpW7Z8LuAvvwi9lWPNVYmMC7cfF
+ saoyMkVzsea1X/y4BGiDAz6aKLq9foVhslSCk9tA9VNQ8e8usEZBzQqm+LL8L3wdbmVTYYQiM
+ 4lj7uuKZB1+klbGZ5hotUFyR0P5UdHEL7/dn90po5MbUuKPXm5eekkNwgV0jzcOWYdmIsDOWO
+ Ux23WNuiEzRcig=
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Mar 4, 2022 at 10:47 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Thu, Mar 03, 2022 at 01:41:13PM +0100, Robert Marko wrote:
-> > On Wed, Mar 2, 2022 at 10:39 PM Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > On Wed, Mar 02, 2022 at 08:47:32AM +0000, Lee Jones wrote:
-> > > > On Mon, 31 Jan 2022, Robert Marko wrote:
-> > > >
-> > > > > Add binding documents for the Delta TN48M CPLD drivers.
-> > > > >
-> > > > > Signed-off-by: Robert Marko <robert.marko@sartura.hr>
-> > > >
-> > > > This is missing a DT review.
-> > >
-> > > How about this one[1]?
-> > >
-> > > Rob
-> > >
-> > > [1] https://lore.kernel.org/all/20210719225906.GA2769608@robh.at.kernel.org/
-> >
-> > Hi Rob,
-> > Thanks for reaching out.
-> >
-> > As you can see the bindings have evolved since v6,
-> > GPIO driver now only uses 2 distinct compatibles.
->
-> Fundamentally, it hasn't really changed.
->
-> There's 2 main issues. First, I don't see the need for any child nodes.
-> This would be sufficient:
->
-> cpld@41 {
->     compatible = "delta,tn48m-cpld";
->     reg = <0x41>;
->     #reset-cells = <1>;
->     #gpio-cells = <2>;
->     gpio-controller;
-> };
->
-> You only need child nodes if the sub-blocks have their own resources or
-> are widely reused in different configurations.
->
-> The 2nd issue is whether GPIOs are even GPIOs at all. I don't recall
-> that Linus ever agreed.
->
-> Both issues kind of boil down to is there even more that 1 variation of
-> this h/w where you have differing connections? AFAICT, Delta tn48m is a
-> pretty specific device and I would guess something implemented in a CPLD
-> is likely to change on every board design. At least that's my experience
-> with 'board level logic'.
 
-Hi Rob, sorry for the late reply.
+--gVWGy808rXGFxfpb
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Having one node was the route I went in v1, but that was rejected as
-it would mean
-having an MFD driver that just registers the sub-drivers.
-That is what the simple-mfd-i2c driver was designed to get rid of and
-inherit the regmap
-from the parent.
-For this to work, subnodes are required as we need to match on compatibles.
+On Thu, Mar 17, 2022 at 02:58:51PM +0800, Jialin Zhang wrote:
+> In case of error, the function devm_platform_ioremap_resource()
+> returns ERR_PTR() and never returns NULL. The NULL test in the
+> return value check should be replaced with IS_ERR().
 
-Using subnodes for GPIO-s also gets rid of hardcoding the register
-layout in the driver per board,
-as Delta chose to use a weird register layout in which the GPIO
-registers have completely random offsets.
-The layout is even weirder in the TN4810M which uses the same CPLD but
-expanded and is easily
-supportable in the same driver in the current form.
-My goal and the requirement from the community was to make the GPIO
-driver as simple as possible
-and extendable so that boards like TN4810M can be easily added.
+Right.
 
-Also, the Kontron SL28CPLD does pretty much the same in regards to DT
-as well as other things.
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/Documentation/devicetree/bindings/mfd/kontron,sl28cpld.yaml?h=v5.16.15
+>=20
+> Fixes: a1d1e0e3d80a ("pinctrl: nuvoton: Add driver for WPCM450")
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Jialin Zhang <zhangjialin11@huawei.com>
+> ---
+>  drivers/pinctrl/nuvoton/pinctrl-wpcm450.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c b/drivers/pinctrl/=
+nuvoton/pinctrl-wpcm450.c
+> index 661aa963e3fc..a71b684b9b44 100644
+> --- a/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c
+> +++ b/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c
+> @@ -1019,8 +1019,9 @@ static int wpcm450_gpio_register(struct platform_de=
+vice *pdev,
+>  	int ret;
+> =20
+>  	pctrl->gpio_base =3D devm_platform_ioremap_resource(pdev, 0);
+> -	if (!pctrl->gpio_base)
+> -		return dev_err_probe(dev, -ENOMEM, "Resource fail for GPIO controller\=
+n");
+> +	if (IS_ERR(pctrl->gpio_base))
+> +		return dev_err_probe(dev, PTR_ERR(pctrl->gpio_base),
+> +				     "Resource fail for GPIO controller\n");
+> =20
 
-It uses the same logic with different compatibles for GPIO to be able
-to inform the kernel of the certain
-bank capabilities.
-I mean, using one compatible would be possible by using a boolean
-property for example that tells you
-that its output capable as well.
-
-Regards,
-Robert
-
->
-> Rob
+Reviewed-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
 
 
+Thanks!
+Jonathan
 
--- 
-Robert Marko
-Staff Embedded Linux Engineer
-Sartura Ltd.
-Lendavska ulica 16a
-10000 Zagreb, Croatia
-Email: robert.marko@sartura.hr
-Web: www.sartura.hr
+--gVWGy808rXGFxfpb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAmIzGjkACgkQCDBEmo7z
+X9uHzg/8CgMmkm5zckLAtMOv/xJMr+xEhsotnEUf87aBvGKvjZhDzhYXXu3hlAIM
+LLwNRfVpKdqupE3Hh3asBW113EiNH/cymS9jbTyxS02b9wn3G0a2svAGdFgYKsmC
+MT/5RWgUpj5eJo2q5PfJMRSQqQW4LP4ZPQyNvBPCqS93IFAJpuBAe4uQKcp589Kk
+0ZrPrOaodBKPv3V0Bdrole4gCuq67mV/erYRWx3/9nl9326jPDr9pzPtO9E63QQP
+uXaX5yyNw8EqVcJXyi4AFKF7C8iELvRwRrZ+xR2oW9mb/LEUohjFx13OPiX9rtaU
+px/EkKMCVvfyVOhSULlsGxGTZE7f2qHFPJkkHNAg59FC8dWP0MxZkVoz7q1UCaOd
+zRXd51IwY3yH2fmdAjDT6/p3xjcPumYtzgy4LikxvSG3kbcbqLDB+5R2p/kXmHMj
+HVNTkyDEYExRUByqIgDX5A6zWy4nZU8OgmGCZuzveRnZP+QSDnft6vRchLhwRE1P
+JF7Gm/Lwzb6kWOus1bYlAv7HvUAjPLdd8KKAtt6Fm9dR6cwyh1HfNDr7tuhuSDLu
+irk7KhP99uYuK0as5kOGy4yQjZ503uoEYgtaGNzMlCilAjHpe8rR5+cf+v5S8EG1
+wgPjX8O+lwINQxwyNrUB2cJ/IdLiZrWCvrLwGuwweiews3uD7jI=
+=2Ou/
+-----END PGP SIGNATURE-----
+
+--gVWGy808rXGFxfpb--
