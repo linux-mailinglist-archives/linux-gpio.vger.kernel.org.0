@@ -2,64 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 48F274DC510
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Mar 2022 12:54:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B8804DC518
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Mar 2022 12:56:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233140AbiCQLzS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Mar 2022 07:55:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50674 "EHLO
+        id S233183AbiCQL5S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Mar 2022 07:57:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233061AbiCQLzR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Mar 2022 07:55:17 -0400
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.10])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 456A82628
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Mar 2022 04:54:01 -0700 (PDT)
-Received: from [192.168.1.107] ([37.4.249.169]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1N8nnU-1o99wN3H7O-015u9P; Thu, 17 Mar 2022 12:48:25 +0100
-Message-ID: <98561f61-55c7-afe1-2393-362376251e43@i2se.com>
-Date:   Thu, 17 Mar 2022 12:48:24 +0100
+        with ESMTP id S233152AbiCQL5L (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Mar 2022 07:57:11 -0400
+Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B37E1E5339;
+        Thu, 17 Mar 2022 04:55:55 -0700 (PDT)
+Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-2dbd8777564so55792467b3.0;
+        Thu, 17 Mar 2022 04:55:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=X1imX/kmpwhOvZYEuM6ilnAvljdguknxkeSADcDK5dg=;
+        b=UwpwJrpf8u261FdbY45NXED0y8WNbE0Kp+zJE6PkD3Hj2RJi9czoTRtcLAbFJTBemD
+         0x+PX4ZIjNeiHj6071ngWLX21LkCLDomztVYjMw/wq8lqwIeg0+0ZFBhCbfn8MbN3KQt
+         6L2kWRK5/MdbwuGIdjI7ifCUIGK8rKwHpAu3FBcuhpfuiASxaAWwoo2MFvkrVSm2qxyq
+         M+wAyJlCJUZ6CkATMv5XDq0CvBCgQEc4S+r3Y2YyTmr11iZlGQDv8jP8fxVqcued3gvT
+         RL+WR0ZW22rKqB9+bJEQyP2kDiSV2RWEDyXLl99Spymz2UNMOLa/5I5vTgYH7KIlYq4C
+         tkqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=X1imX/kmpwhOvZYEuM6ilnAvljdguknxkeSADcDK5dg=;
+        b=ajb9DIlmIWqrXClqXP9L9JlFoSEiKdtMYl1GVKOQM9+TQ+qU8gL1bnkkw4ZV2F7ZSG
+         yne5x557DFdmKbSt8N7+jen/eKOvs96f7h9PQHYAO9UHN0Dd0UsvP2d0ufxExeiTp6Bh
+         kEp5zdj6JWWEo39bpjAalGc4PnkdyXvA4G+X9c+2ot1eNTeDMKMjZEUSO3c7LiUT8VVI
+         BH5CjtFYfja4rU3Jn9lg5XiIImsl8xbNtBTmwGD0W0EOPFa0Jj9VY0lAwE3km1DGK1Fb
+         rcQLbD/qVBqDvDYF0g35EIBqbTSWisIMFxToxc5lGQxTjJQNxrouNSaFpy0Di+J3it6p
+         s+eA==
+X-Gm-Message-State: AOAM5312a0FMrdWDzZoloMb2Vyo4XSq3+rfUYw7XLS6V0mzffTSVPnJp
+        RunNGFBFjuo2tFChcGxwCK5lmmM+vNWKH6hC8jE=
+X-Google-Smtp-Source: ABdhPJza79A7llMZNNdliE4IS5hibyoV277veg5NMU/IHlBnK4jHf1oUNAbRWPkrZdr8EiyWovZYwD+ey3iSGLde4OE=
+X-Received: by 2002:a0d:c0c7:0:b0:2e5:bf19:2698 with SMTP id
+ b190-20020a0dc0c7000000b002e5bf192698mr2393516ywd.119.1647518154588; Thu, 17
+ Mar 2022 04:55:54 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH RFC 0/2] gpiolib: of: Introduce hook for missing
- gpio-ranges
-Content-Language: en-US
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        Phil Elwell <phil@raspberrypi.com>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
-References: <1646855026-9132-1-git-send-email-stefan.wahren@i2se.com>
- <CACRpkdYuxsYw99CZZK_GXp3V-mPiuL50CxgsE-=oRMApZf_bxA@mail.gmail.com>
- <15171d7e-f065-88b8-b3b3-dbeed75c5e6e@gmail.com>
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-In-Reply-To: <15171d7e-f065-88b8-b3b3-dbeed75c5e6e@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:6crirhUZkgId1pFdzwDw6P2j+0NhAIJpMOs4MNjRIZAMqTujGOa
- 0wJbCPx/O/DR/Nam7kTP1NK9OvuusRFbOEUxGn6lNZDhSv+DDB7ZxS7WctNal/kdVrdOUK0
- 7WMSCmLWQUOHe4fElE8ZUCWb3neVC+RnkEMSLjR/YYzyqRUFlP4w3xIzaDOrNDZfga+Qp0X
- jn8BXCaUnNFOR8e62YaFA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:9AkDhggv/Yw=:CEGKAd94sFFHqe0dnHo3dy
- hWl1ZDXmj35rFwgpCM5JjFaiAbZHiFcq+YSLZR1g2O+1rUHCZBBb2VGCrvSf3XKnYw+DTREaV
- cC30aF39YMb5Nxy2FgCgPvQ+WMa+JWvI9uFF8DTyC64v7C5sNi7ePPsAt3vN19BVPXUl+zp/5
- zgfKLh25dvAD0CTJVnQWoPEmXlryrtPdHrBZBHJua4v8TSL1GC6NHrbrGuYkHTQLeaTH7GUDL
- 7uVGvEX+Qa/Y9F3NfQSL4PLH2ir5xEl6cPW3FsrZk+QpghXs9ZVYnLesEzKCMo8TbiePScREE
- /o2ssaU1mD9AIu14pGl1sEbirV0EBNJheQQKw/Efh+40b3QSbffRI48JDgqPTwkm49Y07QToO
- YPe0QUwYmI6EkYB0pTsgAN4cfJIufFQneuA2bhzOtBnUl5pXdRT3xWTWUVQs1OTKfZBlMVsr6
- yfHxtstge3zN1k8Rtna2xrnEs4S+xiq+TFI4XMz0ZqP0hQNeNm0ACcSqTaRPTww0JZPfWHalK
- 1ffCwhZjSJuN/I2RQXGf2kGmdMwmQZoXFgsKx9tn7iTUy55oVPtdeVvOrahdMRYO8pz9gEvRp
- hhCzhIiyeu75nx2EqT+CcPSP3xPVkxYDfoMloCDTDhfS99ssiPGHI2+NdpBno7ne9nT3uFhn8
- Iu4qvfBfS/6F9iPhsqLMJ6R3EDPV8uB2c5GxDETyi2P2zwiREtjdN3yblHgOTwTdMLF6MLry0
- 2nHksexmkweAojDI
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+References: <20220317012404.8069-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20220317012404.8069-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <971850ad-96af-2abb-f4bf-ba6188e2d732@kernel.org>
+In-Reply-To: <971850ad-96af-2abb-f4bf-ba6188e2d732@kernel.org>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Thu, 17 Mar 2022 11:55:28 +0000
+Message-ID: <CA+V-a8t+=dVsofAT=Qk-v3hvJ7_zGNNLoj_EQK8hUGptnQROhQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v4 1/5] dt-bindings: interrupt-controller: Add Renesas
+ RZ/G2L Interrupt Controller
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,48 +79,122 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+Hi Krzysztof,
 
-Am 17.03.22 um 03:02 schrieb Florian Fainelli:
+Thank you for the review.
+
+On Thu, Mar 17, 2022 at 9:44 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 >
+> On 17/03/2022 02:24, Lad Prabhakar wrote:
+> > Add DT bindings for the Renesas RZ/G2L Interrupt Controller.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> >  .../renesas,rzg2l-irqc.yaml                   | 131 ++++++++++++++++++
+> >  1 file changed, 131 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rzg2l-irqc.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,rzg2l-irqc.yaml b/Documentation/devicetree/bindings/interrupt-controller/renesas,rzg2l-irqc.yaml
+> > new file mode 100644
+> > index 000000000000..a14492ec9235
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rzg2l-irqc.yaml
+> > @@ -0,0 +1,131 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/interrupt-controller/renesas,rzg2l-irqc.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Renesas RZ/G2L (and alike SoC's) Interrupt Controller (IA55)
+> > +
+> > +maintainers:
+> > +  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > +  - Geert Uytterhoeven <geert+renesas@glider.be>
+> > +
+> > +description: |
+> > +  IA55 performs various interrupt controls including synchronization for the external
+> > +  interrupts of NMI, IRQ, and GPIOINT and the interrupts of the built-in peripheral
+> > +  interrupts output by each IP. And it notifies the interrupt to the GIC
+> > +    - IRQ sense select for 8 external interrupts, mapped to 8 GIC SPI interrupts
+> > +    - GPIO pins used as external interrupt input pins, mapped to 32 GIC SPI interrupts
+> > +    - NMI edge select (NMI is not treated as NMI exception and supports fall edge and
+> > +      stand-up edge detection interrupts)
+> > +
+> > +allOf:
+> > +  - $ref: /schemas/interrupt-controller.yaml#
+> > +
+> > +properties:
+> > +  compatible:
+> > +    items:
+> > +      - enum:
+> > +          - renesas,r9a07g044-irqc    # RZ/G2L
+> > +      - const: renesas,rzg2l-irqc
+> > +
+> > +  '#interrupt-cells':
+> > +    const: 2
+> > +
+> > +  '#address-cells':
+> > +    const: 0
+> > +
+> > +  interrupt-controller: true
+> > +
+> > +  reg:
+> > +    maxItems: 1> +
+> > +  interrupts:
+> > +    maxItems: 41
+> > +
+> > +  clocks:
+> > +    maxItems: 2
+> > +
+> > +  clock-names:
+> > +    items:
+> > +      - const: clk
+> > +      - const: pclk
+> > +
+> > +  power-domains:
+> > +    maxItems: 1
+> > +
+> > +  resets:
+> > +    maxItems: 1
+> > +
+> > +required:
+> > +  - compatible
+> > +  - '#interrupt-cells'
+> > +  - '#address-cells'
+> > +  - interrupt-controller
+> > +  - reg
+> > +  - interrupts
+> > +  - clocks
+> > +  - clock-names
+> > +  - power-domains
+> > +  - resets
+> > +
+> > +additionalProperties: false
 >
-> On 3/16/2022 6:15 PM, Linus Walleij wrote:
->> On Wed, Mar 9, 2022 at 8:44 PM Stefan Wahren <stefan.wahren@i2se.com> 
->> wrote:
->>
->>> This patch series tries to provide backward compatibility for DTB which
->>> lacks the gpio-ranges property.
->>>
->>> The commit ("pinctrl: msm: fix gpio-hog related boot issues") by 
->>> Christian
->>> Lamparter already contains a fallback in case the gpio-ranges property
->>> is missing. But this approach doesn't work on BCM2835 with a gpio-hog
->>> defined for the SoC GPIOs.
->>>
->>> Based Christian's on explanation i conclude that the fallback must 
->>> happen
->>> during the gpiochip_add() call and not afterwards. So the approach 
->>> is to
->>> call an optional hook, which can be implemented in the platform driver.
->>>
->>> This series has been tested on Raspberry Pi 3 B Plus.
->>>
->>> Stefan Wahren (2):
->>>    gpiolib: of: Introduce hook for missing gpio-ranges
->>>    pinctrl: bcm2835: implement hook for missing gpio-ranges
->>
->> Looks good to me, is this something I should apply to the pinctrl
->> tree or should I wait for a non-RFC version?
+> This should be rather unevaluatedProperties and remove
+> interrupt-controller:true from properties.
 >
-> I would be inclined to slap a couple of different Fixes tag to each 
-> commit because breaking older DTBs should IMHO be considered a 
-> regression. So for the first patch I would add:
+Ok will do.
+
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +    #include <dt-bindings/clock/r9a07g044-cpg.h>
+> > +
+> > +    irqc: interrupt-controller@110a0000 {
+> > +            compatible = "renesas,r9a07g044-irqc", "renesas,rzg2l-irqc";
+> > +            #interrupt-cells = <2>;
+> > +            #address-cells = <0>;
+> > +            interrupt-controller;
+> > +            reg = <0x110a0000 0x10000>;
 >
-> Fixes: 2ab73c6d8323 ("gpio: Support GPIO controllers without pin-ranges")
+> Put the reg after compatible in DTS code. The ordering of properties in
+> bindings is a bit odd, but I wasn't following order by myself, so cannot
+> complain. :)
 >
-> and for the second patch:
->
-> Fixes: 266423e60ea1 ("pinctrl: bcm2835: Change init order for gpio hogs")
->
-> WDYT?
-so you consider backporting this "feature"?
+Ok will fix that in next version.
+
+Cheers,
+Prabhakar
