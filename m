@@ -2,49 +2,49 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2564F4DCD41
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Mar 2022 19:11:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 835DD4DCD60
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Mar 2022 19:15:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231758AbiCQSMc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Mar 2022 14:12:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57324 "EHLO
+        id S237445AbiCQSPQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Mar 2022 14:15:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234468AbiCQSMc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Mar 2022 14:12:32 -0400
+        with ESMTP id S237351AbiCQSPN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Mar 2022 14:15:13 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F460217C70;
-        Thu, 17 Mar 2022 11:11:13 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D020FA997B;
+        Thu, 17 Mar 2022 11:12:56 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1C262B81F38;
-        Thu, 17 Mar 2022 18:11:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82AA2C340E9;
-        Thu, 17 Mar 2022 18:11:07 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 1DBD4B81F3B;
+        Thu, 17 Mar 2022 18:12:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C89DC340F4;
+        Thu, 17 Mar 2022 18:12:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1647540670;
-        bh=XdgzuXN9aeiZfb9/RrTbmUugTKoTTSFNgHTlI0iJos8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=vLjaZJaxmo531Mi1n7H19XJu/GxO5162QeJ+FG/vMCecmulIudwOj8+3iCDM7DoMN
-         q0tbyyarTHDi2WBOlOc17afP30b27KMTQMECxxaWv0pOkVzqDCSf3KgxcIi9z3eaJH
-         KnI8iZBnnG/sR7sHpdY0c9aj+rlaqCjb+aYg3ZSBKkQF6VtKwX9prE6UaRuYBtIZ4I
-         5C47ZsXGaeJ0WLvBFCkwIlS0K9OJWKnhNUHmVNdnwKIXksy0ltCXIwXr6vRPMPFlMe
-         SzEGR8a6tnPSeH9iMqNOKZOvYMmr/nia1eGYzFZLOf0Aytdk3DArm8eaE4mphDaXfX
-         qV3YLz3aYwiMw==
+        s=k20201202; t=1647540773;
+        bh=2X7Eq+C9pGwXfOm9ORqlrOXo7BIy06tex/sRZsm1S90=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fLtFKP1R1TMRyMDRVllUCOxQYpNwiUTbsXBzmJszfKHMuIG4zOS+whKFqe4WmiPIT
+         pV7VPGONoBIeusM2EHyV82Y7x4yt6u+2mzuVZH+IyTXMhg2puPyXKwHA+/2jAZzkvj
+         13MGqPAhGEL/JrYMkJ+FMV4e93/sqxtoTuA9lDjMEdzFJBUzlZUwvOkKsZ0L88nA9n
+         R2GixiniD+UAZq9qUItMbnhB81PLq3u55KoqsIAzawrV6BOUHDOHSiffWLspfYr0Bf
+         2xy0SvENGftQKdenLjUrEHMdt6tjqqF3PK55rX/W+NobdAaaN9OZbXzO84M+QyobSg
+         FtzeDJ+5ihCuA==
 From:   Miguel Ojeda <ojeda@kernel.org>
 To:     Linus Torvalds <torvalds@linux-foundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
         Miguel Ojeda <ojeda@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, live-patching@vger.kernel.org
-Subject: [PATCH v5 00/20] Rust support
-Date:   Thu, 17 Mar 2022 19:09:48 +0100
-Message-Id: <20220317181032.15436-1-ojeda@kernel.org>
+        Wedson Almeida Filho <wedsonaf@google.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
+Subject: [PATCH v5 19/20] [RFC] drivers: gpio: PrimeCell PL061 in Rust
+Date:   Thu, 17 Mar 2022 19:10:07 +0100
+Message-Id: <20220317181032.15436-20-ojeda@kernel.org>
+In-Reply-To: <20220317181032.15436-1-ojeda@kernel.org>
+References: <20220317181032.15436-1-ojeda@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-8.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
@@ -56,516 +56,432 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Rust support
-
-This is the patch series (v5) to add support for Rust as a second
-language to the Linux kernel.
-
-If you are interested in following this effort, please join us in
-the mailing list at:
-
-    rust-for-linux@vger.kernel.org
-
-and take a look at the project itself at:
-
-    https://github.com/Rust-for-Linux
-
-As usual, special thanks go to ISRG (Internet Security Research
-Group) and Google for their financial support on this endeavor.
-
-Cheers,
-Miguel
-
---
-
-# Rust support
-
-This cover letter explains the major changes and updates done since
-the previous ones. For those, please see:
-
-    RFC: https://lore.kernel.org/lkml/20210414184604.23473-1-ojeda@kernel.org/
-    v1:  https://lore.kernel.org/lkml/20210704202756.29107-1-ojeda@kernel.org/
-    v2:  https://lore.kernel.org/lkml/20211206140313.5653-1-ojeda@kernel.org/
-    v3:  https://lore.kernel.org/lkml/20220117053349.6804-1-ojeda@kernel.org/
-    v4:  https://lore.kernel.org/lkml/20220212130410.6901-1-ojeda@kernel.org/
-
-
-## Infrastructure updates
-
-There have been several improvements to the overall Rust support:
-
-  - The toolchain and `alloc` have been upgraded to Rust 1.59.0.
-    This version stabilized `feature(global_asm)` as well as
-    the `-Csymbol-mangling-version=v0` flag.
-
-  - Added support for host programs written in Rust. This should
-    only be used in scenarios where Rust is required to be available.
-
-  - Target specification files are now generated on the fly based
-    on the kernel configuration, via a Rust script, instead of
-    having a few predefined files.
-
-    The content of the generated file has been simplified and,
-    for x86, all the options that can be specified through the
-    command-line have been moved to the architecture `Makefile`.
-
-    The goal is to reduce the content of the file as much as possible
-    for all architectures, and eventually, stop needing such a file.
-
-  - Added `HAVE_RUST` kernel option. This symbol should be selected
-    by an architecture if it supports Rust.
-
-  - Added documentation on `RUSTFLAGS*` and `KBUILD_RUST*` variables.
-
-  - Simplified tags and cross-references in the documentation.
-
-  - Other cleanups, fixes and improvements on the build system.
-
-
-## Abstractions and driver updates
-
-Some of the improvements to the abstractions and example drivers are:
-
-  - Added abstraction for the Hardware Random Number Generator.
-
-  - `%pA` rework in `vsprintf` following the review.
-
-  - The `sync` sample now shows how to use static mutexes and
-    conditional variables.
-
-  - Error codes can now be used without prefixing them with
-    `Error::`, which makes using them closer to C. For instance:
-
-        fn f(...) -> Result {
-            if ... {
-                return Err(EINVAL);
-            }
-            ...
-            Ok(())
-        }
-
-  - Added `CString` type for owned C strings.
-
-  - `miscdev` registration now holds an owned C string, which enables
-    scenarios when the device name is constructed at runtime.
-
-  - Added `Bool` trait meant to be used in type states to allow
-    boolean constraints in implementation blocks.
-
-  - Added `LockInfo` trait that lock "type states" must implement.
-    This allows the definition of additional writable type states.
-
-  - Simplification of the spin lock implementation by splitting
-    acquisition types. Type states are used to implement two versions
-    of the `Lock` trait: one which never modifies the interrupt state
-    and one that disables them (if they are enabled, then re-enables
-    on unlock).
-
-  - `Result::unwrap` can now be used in examples that are compiled,
-    linked and run.
-
-  - Merged `Formatter` and `Buffer` types.
-
-  - Added `IoMem::offset_ok` for runtime sizes.
-
-  - Other cleanups, fixes and improvements.
-
-
-## Patch series status
-
-The Rust support is still to be considered experimental. However,
-support is good enough that kernel developers can start working on the
-Rust abstractions for subsystems and write drivers and other modules.
-
-The current series has just arrived in `linux-next`, as usual.
-Similarly, the preview docs for this series can be seen at:
-
-    https://rust-for-linux.github.io/docs/kernel/
-
-As usual, please see the following link for the
-live list of unstable Rust features we are using:
-
-    https://github.com/Rust-for-Linux/linux/issues/2
-
-Note that this time the series depends on a patch queued in
-powerpc-next:
-
-    https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git/commit/?h=next&id=d4be60fe66b7380530868ceebe549f8eebccacc5
-
-
-## Acknowledgements
-
-The signatures in the main commits correspond to the people that
-wrote code that has ended up in them at the present time. For details
-on contributions to code and discussions, please see our repository:
-
-    https://github.com/Rust-for-Linux/linux
-
-However, we would like to give credit to everyone that has contributed
-in one way or another to the Rust for Linux project. Since the
-previous cover letter:
-
-  - Akira Yokosawa for a detailed review of the documentation and
-    suggesting several improvements.
-
-  - Petr Mladek and Rasmus Villemoes for their printing/formatting
-    review and suggestions.
-
-  - Russell King for his review of the Kconfig changes.
-
-  - Andy Shevchenko, Sergey Senozhatsky, John Paul Adrian Glaubitz
-    and David Laight for their reviews and feedback on the previous
-    round.
-
-  - bjorn3 for reviewing many PRs.
-
-  - As usual, bjorn3 and Gary Guo for all the input on Rust compiler
-    details and suggestions.
-
-  - Philip Li, Yujie Liu et al. for continuing their work on adding
-    Rust support to the Intel 0DAY/LKP kernel test robot. Also,
-    thanks to Nathan Chancellor and Nick Desaulniers for their input.
-
-  - Wei Liu for taking the time to answer questions from newcomers
-    in Zulip.
-
-  - Antoni Boucher (and his supporters) et al. for their ongoing
-    work on `rustc_codegen_gcc`.
-
-  - Philip Herrons (and his supporters Open Source Security and
-    Embecosm) et al. for their ongoing work on GCC Rust.
-
-  - Mats Larsen, Marc Poulhiès et al. for their ongoing work on
-    improving Rust support in Compiler Explorer.
-
-  - Many folks that have reported issues, tested the project,
-    helped spread the word, joined discussions and contributed in
-    other ways!
-
-Please see also the acknowledgements on the previous cover letters.
-
-Boqun Feng (1):
-  kallsyms: use the correct buffer size for symbols
-
-Gary Guo (2):
-  rust: add `build_error` crate
-  vsprintf: add new `%pA` format specifier
-
-Miguel Ojeda (13):
-  kallsyms: support "big" kernel symbols
-  kallsyms: increase maximum kernel symbol length to 512
-  rust: add C helpers
-  rust: add `compiler_builtins` crate
-  rust: add `alloc` crate
-  rust: add `macros` crate
-  rust: export generated symbols
-  scripts: add `generate_rust_analyzer.py`
-  scripts: decode_stacktrace: demangle Rust symbols
-  docs: add Rust documentation
-  Kbuild: add Rust support
-  samples: add Rust examples
-  MAINTAINERS: Rust
-
-Wedson Almeida Filho (4):
-  rust: add `kernel` crate's `sync` module
-  rust: add `kernel` crate
-  [RFC] drivers: gpio: PrimeCell PL061 in Rust
-  [RFC] drivers: android: Binder IPC in Rust
-
- .gitignore                                   |    5 +
- .rustfmt.toml                                |   12 +
- Documentation/doc-guide/kernel-doc.rst       |    3 +
- Documentation/index.rst                      |    1 +
- Documentation/kbuild/kbuild.rst              |   17 +
- Documentation/kbuild/makefiles.rst           |   50 +-
- Documentation/process/changes.rst            |   41 +
- Documentation/rust/arch-support.rst          |   34 +
- Documentation/rust/coding-guidelines.rst     |  214 ++
- Documentation/rust/general-information.rst   |   77 +
- Documentation/rust/index.rst                 |   20 +
- Documentation/rust/logo.svg                  |  357 ++
- Documentation/rust/quick-start.rst           |  230 ++
- MAINTAINERS                                  |   15 +
- Makefile                                     |  173 +-
- arch/Kconfig                                 |    6 +
- arch/arm/Kconfig                             |    1 +
- arch/arm64/Kconfig                           |    1 +
- arch/powerpc/Kconfig                         |    1 +
- arch/riscv/Kconfig                           |    1 +
- arch/riscv/Makefile                          |    5 +
- arch/x86/Kconfig                             |    1 +
- arch/x86/Makefile                            |   14 +
- drivers/android/Kconfig                      |    6 +
- drivers/android/Makefile                     |    2 +
- drivers/android/allocation.rs                |  266 ++
- drivers/android/context.rs                   |   80 +
- drivers/android/defs.rs                      |   99 +
- drivers/android/node.rs                      |  476 +++
- drivers/android/process.rs                   |  960 +++++
- drivers/android/range_alloc.rs               |  189 +
- drivers/android/rust_binder.rs               |  111 +
- drivers/android/thread.rs                    |  870 +++++
- drivers/android/transaction.rs               |  326 ++
- drivers/gpio/Kconfig                         |    8 +
- drivers/gpio/Makefile                        |    1 +
- drivers/gpio/gpio_pl061_rust.rs              |  370 ++
- include/linux/kallsyms.h                     |    2 +-
- include/linux/spinlock.h                     |   17 +-
- include/uapi/linux/android/binder.h          |   28 +-
- init/Kconfig                                 |   44 +-
- kernel/kallsyms.c                            |   26 +-
- kernel/livepatch/core.c                      |    4 +-
- lib/Kconfig.debug                            |  143 +
- lib/vsprintf.c                               |   13 +
- rust/.gitignore                              |    8 +
- rust/Makefile                                |  376 ++
- rust/alloc/README.md                         |   32 +
- rust/alloc/alloc.rs                          |  440 +++
- rust/alloc/borrow.rs                         |  498 +++
- rust/alloc/boxed.rs                          | 2008 +++++++++++
- rust/alloc/collections/mod.rs                |  156 +
- rust/alloc/fmt.rs                            |  601 ++++
- rust/alloc/lib.rs                            |  231 ++
- rust/alloc/macros.rs                         |  126 +
- rust/alloc/raw_vec.rs                        |  561 +++
- rust/alloc/slice.rs                          | 1279 +++++++
- rust/alloc/str.rs                            |  632 ++++
- rust/alloc/string.rs                         | 2862 +++++++++++++++
- rust/alloc/vec/drain.rs                      |  186 +
- rust/alloc/vec/drain_filter.rs               |  145 +
- rust/alloc/vec/into_iter.rs                  |  356 ++
- rust/alloc/vec/is_zero.rs                    |  106 +
- rust/alloc/vec/mod.rs                        | 3353 ++++++++++++++++++
- rust/alloc/vec/partial_eq.rs                 |   49 +
- rust/alloc/vec/set_len_on_drop.rs            |   30 +
- rust/alloc/vec/spec_extend.rs                |  174 +
- rust/bindgen_parameters                      |   13 +
- rust/build_error.rs                          |   29 +
- rust/compiler_builtins.rs                    |   57 +
- rust/exports.c                               |   20 +
- rust/helpers.c                               |  531 +++
- rust/kernel/allocator.rs                     |   65 +
- rust/kernel/amba.rs                          |  259 ++
- rust/kernel/bindings.rs                      |   47 +
- rust/kernel/bindings_helper.h                |   37 +
- rust/kernel/build_assert.rs                  |   80 +
- rust/kernel/c_types.rs                       |  119 +
- rust/kernel/chrdev.rs                        |  207 ++
- rust/kernel/clk.rs                           |   75 +
- rust/kernel/cred.rs                          |   73 +
- rust/kernel/device.rs                        |  554 +++
- rust/kernel/driver.rs                        |  440 +++
- rust/kernel/error.rs                         |  560 +++
- rust/kernel/file.rs                          |  873 +++++
- rust/kernel/gpio.rs                          |  478 +++
- rust/kernel/hwrng.rs                         |  242 ++
- rust/kernel/io_buffer.rs                     |  153 +
- rust/kernel/io_mem.rs                        |  237 ++
- rust/kernel/iov_iter.rs                      |   81 +
- rust/kernel/irq.rs                           |  409 +++
- rust/kernel/lib.rs                           |  260 ++
- rust/kernel/linked_list.rs                   |  247 ++
- rust/kernel/miscdev.rs                       |  291 ++
- rust/kernel/mm.rs                            |  149 +
- rust/kernel/module_param.rs                  |  498 +++
- rust/kernel/of.rs                            |   63 +
- rust/kernel/pages.rs                         |  144 +
- rust/kernel/platform.rs                      |  224 ++
- rust/kernel/power.rs                         |  118 +
- rust/kernel/prelude.rs                       |   36 +
- rust/kernel/print.rs                         |  414 +++
- rust/kernel/random.rs                        |   50 +
- rust/kernel/raw_list.rs                      |  361 ++
- rust/kernel/rbtree.rs                        |  562 +++
- rust/kernel/revocable.rs                     |  163 +
- rust/kernel/security.rs                      |   36 +
- rust/kernel/static_assert.rs                 |   39 +
- rust/kernel/std_vendor.rs                    |  150 +
- rust/kernel/str.rs                           |  592 ++++
- rust/kernel/sync/arc.rs                      |  500 +++
- rust/kernel/sync/condvar.rs                  |  138 +
- rust/kernel/sync/guard.rs                    |  166 +
- rust/kernel/sync/locked_by.rs                |  112 +
- rust/kernel/sync/mod.rs                      |  157 +
- rust/kernel/sync/mutex.rs                    |  114 +
- rust/kernel/sync/revocable_mutex.rs          |  184 +
- rust/kernel/sync/rwsem.rs                    |  149 +
- rust/kernel/sync/seqlock.rs                  |  202 ++
- rust/kernel/sync/spinlock.rs                 |  192 +
- rust/kernel/sysctl.rs                        |  199 ++
- rust/kernel/task.rs                          |  182 +
- rust/kernel/types.rs                         |  569 +++
- rust/kernel/user_ptr.rs                      |  175 +
- rust/macros/helpers.rs                       |   79 +
- rust/macros/lib.rs                           |   94 +
- rust/macros/module.rs                        |  631 ++++
- samples/Kconfig                              |    2 +
- samples/Makefile                             |    1 +
- samples/rust/Kconfig                         |  130 +
- samples/rust/Makefile                        |   15 +
- samples/rust/hostprogs/.gitignore            |    3 +
- samples/rust/hostprogs/Makefile              |    5 +
- samples/rust/hostprogs/a.rs                  |    7 +
- samples/rust/hostprogs/b.rs                  |    5 +
- samples/rust/hostprogs/single.rs             |   12 +
- samples/rust/rust_chrdev.rs                  |   50 +
- samples/rust/rust_minimal.rs                 |   35 +
- samples/rust/rust_miscdev.rs                 |  143 +
- samples/rust/rust_module_parameters.rs       |   69 +
- samples/rust/rust_platform.rs                |   22 +
- samples/rust/rust_print.rs                   |   54 +
- samples/rust/rust_random.rs                  |   60 +
- samples/rust/rust_semaphore.rs               |  171 +
- samples/rust/rust_semaphore_c.c              |  212 ++
- samples/rust/rust_stack_probing.rs           |   36 +
- samples/rust/rust_sync.rs                    |   93 +
- scripts/.gitignore                           |    1 +
- scripts/Kconfig.include                      |    6 +-
- scripts/Makefile                             |    3 +
- scripts/Makefile.build                       |   60 +
- scripts/Makefile.debug                       |   10 +
- scripts/Makefile.host                        |   34 +-
- scripts/Makefile.lib                         |   12 +
- scripts/Makefile.modfinal                    |    8 +-
- scripts/cc-version.sh                        |   12 +-
- scripts/decode_stacktrace.sh                 |   14 +
- scripts/generate_rust_analyzer.py            |  133 +
- scripts/generate_rust_target.rs              |  227 ++
- scripts/is_rust_module.sh                    |   13 +
- scripts/kallsyms.c                           |   40 +-
- scripts/kconfig/confdata.c                   |   75 +
- scripts/min-tool-version.sh                  |    6 +
- scripts/rust-is-available-bindgen-libclang.h |    2 +
- scripts/rust-is-available.sh                 |  158 +
- tools/include/linux/kallsyms.h               |    2 +-
- tools/lib/perf/include/perf/event.h          |    2 +-
- tools/lib/symbol/kallsyms.h                  |    2 +-
- 168 files changed, 35290 insertions(+), 63 deletions(-)
- create mode 100644 .rustfmt.toml
- create mode 100644 Documentation/rust/arch-support.rst
- create mode 100644 Documentation/rust/coding-guidelines.rst
- create mode 100644 Documentation/rust/general-information.rst
- create mode 100644 Documentation/rust/index.rst
- create mode 100644 Documentation/rust/logo.svg
- create mode 100644 Documentation/rust/quick-start.rst
- create mode 100644 drivers/android/allocation.rs
- create mode 100644 drivers/android/context.rs
- create mode 100644 drivers/android/defs.rs
- create mode 100644 drivers/android/node.rs
- create mode 100644 drivers/android/process.rs
- create mode 100644 drivers/android/range_alloc.rs
- create mode 100644 drivers/android/rust_binder.rs
- create mode 100644 drivers/android/thread.rs
- create mode 100644 drivers/android/transaction.rs
+From: Wedson Almeida Filho <wedsonaf@google.com>
+
+A port to Rust of the PrimeCell PL061 GPIO driver.
+
+This module is a work in progress and will be sent for review later
+on, as well as separately from the Rust support.
+
+However, it is included to show how an actual working module
+written in Rust may look like.
+
+Signed-off-by: Wedson Almeida Filho <wedsonaf@google.com>
+Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+---
+ drivers/gpio/Kconfig            |   8 +
+ drivers/gpio/Makefile           |   1 +
+ drivers/gpio/gpio_pl061_rust.rs | 370 ++++++++++++++++++++++++++++++++
+ 3 files changed, 379 insertions(+)
  create mode 100644 drivers/gpio/gpio_pl061_rust.rs
- create mode 100644 rust/.gitignore
- create mode 100644 rust/Makefile
- create mode 100644 rust/alloc/README.md
- create mode 100644 rust/alloc/alloc.rs
- create mode 100644 rust/alloc/borrow.rs
- create mode 100644 rust/alloc/boxed.rs
- create mode 100644 rust/alloc/collections/mod.rs
- create mode 100644 rust/alloc/fmt.rs
- create mode 100644 rust/alloc/lib.rs
- create mode 100644 rust/alloc/macros.rs
- create mode 100644 rust/alloc/raw_vec.rs
- create mode 100644 rust/alloc/slice.rs
- create mode 100644 rust/alloc/str.rs
- create mode 100644 rust/alloc/string.rs
- create mode 100644 rust/alloc/vec/drain.rs
- create mode 100644 rust/alloc/vec/drain_filter.rs
- create mode 100644 rust/alloc/vec/into_iter.rs
- create mode 100644 rust/alloc/vec/is_zero.rs
- create mode 100644 rust/alloc/vec/mod.rs
- create mode 100644 rust/alloc/vec/partial_eq.rs
- create mode 100644 rust/alloc/vec/set_len_on_drop.rs
- create mode 100644 rust/alloc/vec/spec_extend.rs
- create mode 100644 rust/bindgen_parameters
- create mode 100644 rust/build_error.rs
- create mode 100644 rust/compiler_builtins.rs
- create mode 100644 rust/exports.c
- create mode 100644 rust/helpers.c
- create mode 100644 rust/kernel/allocator.rs
- create mode 100644 rust/kernel/amba.rs
- create mode 100644 rust/kernel/bindings.rs
- create mode 100644 rust/kernel/bindings_helper.h
- create mode 100644 rust/kernel/build_assert.rs
- create mode 100644 rust/kernel/c_types.rs
- create mode 100644 rust/kernel/chrdev.rs
- create mode 100644 rust/kernel/clk.rs
- create mode 100644 rust/kernel/cred.rs
- create mode 100644 rust/kernel/device.rs
- create mode 100644 rust/kernel/driver.rs
- create mode 100644 rust/kernel/error.rs
- create mode 100644 rust/kernel/file.rs
- create mode 100644 rust/kernel/gpio.rs
- create mode 100644 rust/kernel/hwrng.rs
- create mode 100644 rust/kernel/io_buffer.rs
- create mode 100644 rust/kernel/io_mem.rs
- create mode 100644 rust/kernel/iov_iter.rs
- create mode 100644 rust/kernel/irq.rs
- create mode 100644 rust/kernel/lib.rs
- create mode 100644 rust/kernel/linked_list.rs
- create mode 100644 rust/kernel/miscdev.rs
- create mode 100644 rust/kernel/mm.rs
- create mode 100644 rust/kernel/module_param.rs
- create mode 100644 rust/kernel/of.rs
- create mode 100644 rust/kernel/pages.rs
- create mode 100644 rust/kernel/platform.rs
- create mode 100644 rust/kernel/power.rs
- create mode 100644 rust/kernel/prelude.rs
- create mode 100644 rust/kernel/print.rs
- create mode 100644 rust/kernel/random.rs
- create mode 100644 rust/kernel/raw_list.rs
- create mode 100644 rust/kernel/rbtree.rs
- create mode 100644 rust/kernel/revocable.rs
- create mode 100644 rust/kernel/security.rs
- create mode 100644 rust/kernel/static_assert.rs
- create mode 100644 rust/kernel/std_vendor.rs
- create mode 100644 rust/kernel/str.rs
- create mode 100644 rust/kernel/sync/arc.rs
- create mode 100644 rust/kernel/sync/condvar.rs
- create mode 100644 rust/kernel/sync/guard.rs
- create mode 100644 rust/kernel/sync/locked_by.rs
- create mode 100644 rust/kernel/sync/mod.rs
- create mode 100644 rust/kernel/sync/mutex.rs
- create mode 100644 rust/kernel/sync/revocable_mutex.rs
- create mode 100644 rust/kernel/sync/rwsem.rs
- create mode 100644 rust/kernel/sync/seqlock.rs
- create mode 100644 rust/kernel/sync/spinlock.rs
- create mode 100644 rust/kernel/sysctl.rs
- create mode 100644 rust/kernel/task.rs
- create mode 100644 rust/kernel/types.rs
- create mode 100644 rust/kernel/user_ptr.rs
- create mode 100644 rust/macros/helpers.rs
- create mode 100644 rust/macros/lib.rs
- create mode 100644 rust/macros/module.rs
- create mode 100644 samples/rust/Kconfig
- create mode 100644 samples/rust/Makefile
- create mode 100644 samples/rust/hostprogs/.gitignore
- create mode 100644 samples/rust/hostprogs/Makefile
- create mode 100644 samples/rust/hostprogs/a.rs
- create mode 100644 samples/rust/hostprogs/b.rs
- create mode 100644 samples/rust/hostprogs/single.rs
- create mode 100644 samples/rust/rust_chrdev.rs
- create mode 100644 samples/rust/rust_minimal.rs
- create mode 100644 samples/rust/rust_miscdev.rs
- create mode 100644 samples/rust/rust_module_parameters.rs
- create mode 100644 samples/rust/rust_platform.rs
- create mode 100644 samples/rust/rust_print.rs
- create mode 100644 samples/rust/rust_random.rs
- create mode 100644 samples/rust/rust_semaphore.rs
- create mode 100644 samples/rust/rust_semaphore_c.c
- create mode 100644 samples/rust/rust_stack_probing.rs
- create mode 100644 samples/rust/rust_sync.rs
- create mode 100755 scripts/generate_rust_analyzer.py
- create mode 100644 scripts/generate_rust_target.rs
- create mode 100755 scripts/is_rust_module.sh
- create mode 100644 scripts/rust-is-available-bindgen-libclang.h
- create mode 100755 scripts/rust-is-available.sh
 
-
-base-commit: 09688c0166e76ce2fb85e86b9d99be8b0084cdf9
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 1c211b4c63be..172295770c3d 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -471,6 +471,14 @@ config GPIO_PL061
+ 	help
+ 	  Say yes here to support the PrimeCell PL061 GPIO device.
+ 
++config GPIO_PL061_RUST
++	tristate "PrimeCell PL061 GPIO support written in Rust"
++	depends on ARM_AMBA && RUST
++	select IRQ_DOMAIN
++	select GPIOLIB_IRQCHIP
++	help
++	  Say yes here to support the PrimeCell PL061 GPIO device
++
+ config GPIO_PMIC_EIC_SPRD
+ 	tristate "Spreadtrum PMIC EIC support"
+ 	depends on MFD_SC27XX_PMIC || COMPILE_TEST
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index edbaa3cb343c..7dc334df9c3f 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -117,6 +117,7 @@ obj-$(CONFIG_GPIO_PCIE_IDIO_24)		+= gpio-pcie-idio-24.o
+ obj-$(CONFIG_GPIO_PCI_IDIO_16)		+= gpio-pci-idio-16.o
+ obj-$(CONFIG_GPIO_PISOSR)		+= gpio-pisosr.o
+ obj-$(CONFIG_GPIO_PL061)		+= gpio-pl061.o
++obj-$(CONFIG_GPIO_PL061_RUST)		+= gpio_pl061_rust.o
+ obj-$(CONFIG_GPIO_PMIC_EIC_SPRD)	+= gpio-pmic-eic-sprd.o
+ obj-$(CONFIG_GPIO_PXA)			+= gpio-pxa.o
+ obj-$(CONFIG_GPIO_RASPBERRYPI_EXP)	+= gpio-raspberrypi-exp.o
+diff --git a/drivers/gpio/gpio_pl061_rust.rs b/drivers/gpio/gpio_pl061_rust.rs
+new file mode 100644
+index 000000000000..e0a12d3b65c7
+--- /dev/null
++++ b/drivers/gpio/gpio_pl061_rust.rs
+@@ -0,0 +1,370 @@
++// SPDX-License-Identifier: GPL-2.0
++
++//! Driver for the ARM PrimeCell(tm) General Purpose Input/Output (PL061).
++//!
++//! Based on the C driver written by Baruch Siach <baruch@tkos.co.il>.
++
++use kernel::{
++    amba, bit, bits_iter, define_amba_id_table, device, gpio,
++    io_mem::IoMem,
++    irq::{self, ExtraResult, IrqData, LockedIrqData},
++    power,
++    prelude::*,
++    sync::{Ref, RefBorrow, SpinLock},
++};
++
++const GPIODIR: usize = 0x400;
++const GPIOIS: usize = 0x404;
++const GPIOIBE: usize = 0x408;
++const GPIOIEV: usize = 0x40C;
++const GPIOIE: usize = 0x410;
++const GPIOMIS: usize = 0x418;
++const GPIOIC: usize = 0x41C;
++const GPIO_SIZE: usize = 0x1000;
++
++const PL061_GPIO_NR: u16 = 8;
++
++#[derive(Default)]
++struct ContextSaveRegs {
++    gpio_data: u8,
++    gpio_dir: u8,
++    gpio_is: u8,
++    gpio_ibe: u8,
++    gpio_iev: u8,
++    gpio_ie: u8,
++}
++
++#[derive(Default)]
++struct PL061DataInner {
++    csave_regs: ContextSaveRegs,
++}
++
++struct PL061Data {
++    dev: device::Device,
++    inner: SpinLock<PL061DataInner>,
++}
++
++struct PL061Resources {
++    base: IoMem<GPIO_SIZE>,
++    parent_irq: u32,
++}
++
++type PL061Registrations = gpio::RegistrationWithIrqChip<PL061Device>;
++
++type DeviceData = device::Data<PL061Registrations, PL061Resources, PL061Data>;
++
++struct PL061Device;
++
++impl gpio::Chip for PL061Device {
++    type Data = Ref<DeviceData>;
++
++    kernel::declare_gpio_chip_operations!(
++        get_direction,
++        direction_input,
++        direction_output,
++        get,
++        set
++    );
++
++    fn get_direction(data: RefBorrow<'_, DeviceData>, offset: u32) -> Result<gpio::LineDirection> {
++        let pl061 = data.resources().ok_or(ENXIO)?;
++        Ok(if pl061.base.readb(GPIODIR) & bit(offset) != 0 {
++            gpio::LineDirection::Out
++        } else {
++            gpio::LineDirection::In
++        })
++    }
++
++    fn direction_input(data: RefBorrow<'_, DeviceData>, offset: u32) -> Result {
++        let _guard = data.inner.lock_irqdisable();
++        let pl061 = data.resources().ok_or(ENXIO)?;
++        let mut gpiodir = pl061.base.readb(GPIODIR);
++        gpiodir &= !bit(offset);
++        pl061.base.writeb(gpiodir, GPIODIR);
++        Ok(())
++    }
++
++    fn direction_output(data: RefBorrow<'_, DeviceData>, offset: u32, value: bool) -> Result {
++        let woffset = bit(offset + 2).into();
++        let _guard = data.inner.lock_irqdisable();
++        let pl061 = data.resources().ok_or(ENXIO)?;
++        pl061.base.try_writeb((value as u8) << offset, woffset)?;
++        let mut gpiodir = pl061.base.readb(GPIODIR);
++        gpiodir |= bit(offset);
++        pl061.base.writeb(gpiodir, GPIODIR);
++
++        // gpio value is set again, because pl061 doesn't allow to set value of a gpio pin before
++        // configuring it in OUT mode.
++        pl061.base.try_writeb((value as u8) << offset, woffset)?;
++        Ok(())
++    }
++
++    fn get(data: RefBorrow<'_, DeviceData>, offset: u32) -> Result<bool> {
++        let pl061 = data.resources().ok_or(ENXIO)?;
++        Ok(pl061.base.try_readb(bit(offset + 2).into())? != 0)
++    }
++
++    fn set(data: RefBorrow<'_, DeviceData>, offset: u32, value: bool) {
++        if let Some(pl061) = data.resources() {
++            let woffset = bit(offset + 2).into();
++            let _ = pl061.base.try_writeb((value as u8) << offset, woffset);
++        }
++    }
++}
++
++impl gpio::ChipWithIrqChip for PL061Device {
++    fn handle_irq_flow(
++        data: RefBorrow<'_, DeviceData>,
++        desc: &irq::Descriptor,
++        domain: &irq::Domain,
++    ) {
++        let chained = desc.enter_chained();
++
++        if let Some(pl061) = data.resources() {
++            let pending = pl061.base.readb(GPIOMIS);
++            for offset in bits_iter(pending) {
++                domain.generic_handle_chained(offset, &chained);
++            }
++        }
++    }
++}
++
++impl irq::Chip for PL061Device {
++    type Data = Ref<DeviceData>;
++
++    kernel::declare_irq_chip_operations!(set_type, set_wake);
++
++    fn set_type(
++        data: RefBorrow<'_, DeviceData>,
++        irq_data: &mut LockedIrqData,
++        trigger: u32,
++    ) -> Result<ExtraResult> {
++        let offset = irq_data.hwirq();
++        let bit = bit(offset);
++
++        if offset >= PL061_GPIO_NR.into() {
++            return Err(EINVAL);
++        }
++
++        if trigger & (irq::Type::LEVEL_HIGH | irq::Type::LEVEL_LOW) != 0
++            && trigger & (irq::Type::EDGE_RISING | irq::Type::EDGE_FALLING) != 0
++        {
++            dev_err!(
++                data.dev,
++                "trying to configure line {} for both level and edge detection, choose one!\n",
++                offset
++            );
++            return Err(EINVAL);
++        }
++
++        let _guard = data.inner.lock_irqdisable();
++        let pl061 = data.resources().ok_or(ENXIO)?;
++
++        let mut gpioiev = pl061.base.readb(GPIOIEV);
++        let mut gpiois = pl061.base.readb(GPIOIS);
++        let mut gpioibe = pl061.base.readb(GPIOIBE);
++
++        if trigger & (irq::Type::LEVEL_HIGH | irq::Type::LEVEL_LOW) != 0 {
++            let polarity = trigger & irq::Type::LEVEL_HIGH != 0;
++
++            // Disable edge detection.
++            gpioibe &= !bit;
++            // Enable level detection.
++            gpiois |= bit;
++            // Select polarity.
++            if polarity {
++                gpioiev |= bit;
++            } else {
++                gpioiev &= !bit;
++            }
++            irq_data.set_level_handler();
++            dev_dbg!(
++                data.dev,
++                "line {}: IRQ on {} level\n",
++                offset,
++                if polarity { "HIGH" } else { "LOW" }
++            );
++        } else if (trigger & irq::Type::EDGE_BOTH) == irq::Type::EDGE_BOTH {
++            // Disable level detection.
++            gpiois &= !bit;
++            // Select both edges, settings this makes GPIOEV be ignored.
++            gpioibe |= bit;
++            irq_data.set_edge_handler();
++            dev_dbg!(data.dev, "line {}: IRQ on both edges\n", offset);
++        } else if trigger & (irq::Type::EDGE_RISING | irq::Type::EDGE_FALLING) != 0 {
++            let rising = trigger & irq::Type::EDGE_RISING != 0;
++
++            // Disable level detection.
++            gpiois &= !bit;
++            // Clear detection on both edges.
++            gpioibe &= !bit;
++            // Select edge.
++            if rising {
++                gpioiev |= bit;
++            } else {
++                gpioiev &= !bit;
++            }
++            irq_data.set_edge_handler();
++            dev_dbg!(
++                data.dev,
++                "line {}: IRQ on {} edge\n",
++                offset,
++                if rising { "RISING" } else { "FALLING}" }
++            );
++        } else {
++            // No trigger: disable everything.
++            gpiois &= !bit;
++            gpioibe &= !bit;
++            gpioiev &= !bit;
++            irq_data.set_bad_handler();
++            dev_warn!(data.dev, "no trigger selected for line {}\n", offset);
++        }
++
++        pl061.base.writeb(gpiois, GPIOIS);
++        pl061.base.writeb(gpioibe, GPIOIBE);
++        pl061.base.writeb(gpioiev, GPIOIEV);
++
++        Ok(ExtraResult::None)
++    }
++
++    fn mask(data: RefBorrow<'_, DeviceData>, irq_data: &IrqData) {
++        let mask = bit(irq_data.hwirq() % irq::HwNumber::from(PL061_GPIO_NR));
++        let _guard = data.inner.lock();
++        if let Some(pl061) = data.resources() {
++            let gpioie = pl061.base.readb(GPIOIE) & !mask;
++            pl061.base.writeb(gpioie, GPIOIE);
++        }
++    }
++
++    fn unmask(data: RefBorrow<'_, DeviceData>, irq_data: &IrqData) {
++        let mask = bit(irq_data.hwirq() % irq::HwNumber::from(PL061_GPIO_NR));
++        let _guard = data.inner.lock();
++        if let Some(pl061) = data.resources() {
++            let gpioie = pl061.base.readb(GPIOIE) | mask;
++            pl061.base.writeb(gpioie, GPIOIE);
++        }
++    }
++
++    // This gets called from the edge IRQ handler to ACK the edge IRQ in the GPIOIC
++    // (interrupt-clear) register. For level IRQs this is not needed: these go away when the level
++    // signal goes away.
++    fn ack(data: RefBorrow<'_, DeviceData>, irq_data: &IrqData) {
++        let mask = bit(irq_data.hwirq() % irq::HwNumber::from(PL061_GPIO_NR));
++        let _guard = data.inner.lock();
++        if let Some(pl061) = data.resources() {
++            pl061.base.writeb(mask.into(), GPIOIC);
++        }
++    }
++
++    fn set_wake(data: RefBorrow<'_, DeviceData>, _irq_data: &IrqData, on: bool) -> Result {
++        let pl061 = data.resources().ok_or(ENXIO)?;
++        irq::set_wake(pl061.parent_irq, on)
++    }
++}
++
++impl amba::Driver for PL061Device {
++    type Data = Ref<DeviceData>;
++    type PowerOps = Self;
++
++    define_amba_id_table! {(), [
++        ({id: 0x00041061, mask: 0x000fffff}, None),
++    ]}
++
++    fn probe(dev: &mut amba::Device, _data: Option<&Self::IdInfo>) -> Result<Ref<DeviceData>> {
++        let res = dev.take_resource().ok_or(ENXIO)?;
++        let irq = dev.irq(0).ok_or(ENXIO)?;
++
++        let mut data = kernel::new_device_data!(
++            gpio::RegistrationWithIrqChip::new(),
++            PL061Resources {
++                // SAFETY: This device doesn't support DMA.
++                base: unsafe { IoMem::try_new(res)? },
++                parent_irq: irq,
++            },
++            PL061Data {
++                dev: device::Device::from_dev(dev),
++                // SAFETY: We call `spinlock_init` below.
++                inner: unsafe { SpinLock::new(PL061DataInner::default()) },
++            },
++            "PL061::Registrations"
++        )?;
++
++        // SAFETY: General part of the data is pinned when `data` is.
++        let gen_inner = unsafe { data.as_mut().map_unchecked_mut(|d| &mut (**d).inner) };
++        kernel::spinlock_init!(gen_inner, "PL061Data::inner");
++
++        let data = Ref::<DeviceData>::from(data);
++
++        data.resources().ok_or(ENXIO)?.base.writeb(0, GPIOIE); // disable irqs
++
++        data.registrations()
++            .ok_or(ENXIO)?
++            .as_pinned_mut()
++            .register::<Self>(PL061_GPIO_NR, None, dev, data.clone(), irq)?;
++
++        dev_info!(data.dev, "PL061 GPIO chip registered\n");
++
++        Ok(data)
++    }
++}
++
++impl power::Operations for PL061Device {
++    type Data = Ref<DeviceData>;
++
++    fn suspend(data: RefBorrow<'_, DeviceData>) -> Result {
++        let mut inner = data.inner.lock();
++        let pl061 = data.resources().ok_or(ENXIO)?;
++        inner.csave_regs.gpio_data = 0;
++        inner.csave_regs.gpio_dir = pl061.base.readb(GPIODIR);
++        inner.csave_regs.gpio_is = pl061.base.readb(GPIOIS);
++        inner.csave_regs.gpio_ibe = pl061.base.readb(GPIOIBE);
++        inner.csave_regs.gpio_iev = pl061.base.readb(GPIOIEV);
++        inner.csave_regs.gpio_ie = pl061.base.readb(GPIOIE);
++
++        for offset in 0..PL061_GPIO_NR {
++            if inner.csave_regs.gpio_dir & bit(offset) != 0 {
++                if let Ok(v) = <Self as gpio::Chip>::get(data, offset.into()) {
++                    inner.csave_regs.gpio_data |= (v as u8) << offset;
++                }
++            }
++        }
++
++        Ok(())
++    }
++
++    fn resume(data: RefBorrow<'_, DeviceData>) -> Result {
++        let inner = data.inner.lock();
++        let pl061 = data.resources().ok_or(ENXIO)?;
++
++        for offset in 0..PL061_GPIO_NR {
++            if inner.csave_regs.gpio_dir & bit(offset) != 0 {
++                let value = inner.csave_regs.gpio_data & bit(offset) != 0;
++                let _ = <Self as gpio::Chip>::direction_output(data, offset.into(), value);
++            } else {
++                let _ = <Self as gpio::Chip>::direction_input(data, offset.into());
++            }
++        }
++
++        pl061.base.writeb(inner.csave_regs.gpio_is, GPIOIS);
++        pl061.base.writeb(inner.csave_regs.gpio_ibe, GPIOIBE);
++        pl061.base.writeb(inner.csave_regs.gpio_iev, GPIOIEV);
++        pl061.base.writeb(inner.csave_regs.gpio_ie, GPIOIE);
++
++        Ok(())
++    }
++
++    fn freeze(data: RefBorrow<'_, DeviceData>) -> Result {
++        Self::suspend(data)
++    }
++
++    fn restore(data: RefBorrow<'_, DeviceData>) -> Result {
++        Self::resume(data)
++    }
++}
++
++module_amba_driver! {
++    type: PL061Device,
++    name: b"pl061_gpio",
++    author: b"Wedson Almeida Filho",
++    license: b"GPL v2",
++}
 -- 
 2.35.1
 
