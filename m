@@ -2,94 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FAB84DC01A
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Mar 2022 08:27:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1341C4DC179
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Mar 2022 09:39:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230219AbiCQH2A (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Mar 2022 03:28:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56238 "EHLO
+        id S231363AbiCQIkK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Mar 2022 04:40:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230214AbiCQH16 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Mar 2022 03:27:58 -0400
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F2B01C16DB
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Mar 2022 00:26:39 -0700 (PDT)
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id B96723F223
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Mar 2022 07:26:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1647501997;
-        bh=ghNz7R4BGfeSRpf4QcIYnWTSvV5jI5ENR9wPPc5DGEw=;
-        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-         In-Reply-To:Content-Type;
-        b=D6hMMPtho+Q1KIKx7adXE4EIZassueyz+XFtkeV6tc6Qnw0rJKR9iRWjGJdl8iWHg
-         N766DWkJYEFMbvAvnwokTW7pIH4dC5ffv3/YIqzOvgIDHMvXHRZSeUBL3Xdzgj0VKX
-         jzi/0elzfyVESukJOn0QQTA3mn6/d9mqHQL5rqSfYNNkNXBAfMBA52kqUCjDGkzgOv
-         GPU5qwQH47BATIai5PFJ3yL85POOWiavxeTQEQ/d6/MIxYtbvrJmxhdtHG4hzqPkaK
-         MiO3Kxp5hdn9o5TSJ7gHYQFGq9fq6k95EPC/0cDKFJCZhERu4zdVgSxuvnK2fkL2xr
-         jGMLE9jZgUwNg==
-Received: by mail-wr1-f69.google.com with SMTP id k20-20020adfc714000000b001e305cd1597so1245254wrg.19
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Mar 2022 00:26:37 -0700 (PDT)
+        with ESMTP id S229565AbiCQIkJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Mar 2022 04:40:09 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C66B126595;
+        Thu, 17 Mar 2022 01:38:52 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id ja24so3747063ejc.11;
+        Thu, 17 Mar 2022 01:38:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HxRIhMtIGNyuquPw1lmiPJQSJaGq9K+fhRuZGp4hFSw=;
+        b=ij5/WzoJfQisplvcvRzMcZbis0DL0CSs9Z2z8zmQXhHH03o0i7whAhVUcmSgaIIStE
+         ct0EAwRbaSVhJLVKDmxAXxkuuz1Wh4YZemlEbncEe3wT3mQMWbNEJR7ycMiS8GNNbTqU
+         i1QrKrRJnAHvbCsxkYo883M4xF9dSJjmlW4nrTn1/Nt4wczQ3TRvjnd+DCscDcIVmNlN
+         7/mtlso0lfs1R4v5sHuegjpbIj+25Wf1QdF77lP/kkA0jmjzVOwYXUiuIyJ6G/FH5vMd
+         Y1BH20uCcHYoycllNyAs1JB2y0ayf1wnGfuZAQqZZTMNg6eavsMz6xPeJlGCjX7TtqRj
+         nHAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=ghNz7R4BGfeSRpf4QcIYnWTSvV5jI5ENR9wPPc5DGEw=;
-        b=ZJKyEOFO+kLXM//A0LnJbqryAI03wpIReSvTA7GymUJ6rH/BA7IPwO6MuodhsShUtN
-         7+pQw0+mx2CzTtvpV4682zZ8Ctmnp1CL24X1lAMvYAHMvR6cAON4AcDhTH+MSTtEBZLI
-         fgu+YqXZsQ6I88ws6i7G7V3HbbtxnWkIDg6uklSX6xSfuyhtLCVvvedDaYppqHzPxEsy
-         burOEhGnmUDy+akp3rnB7E5kctVWO+/2/8GMEhn0/E3H+YkLOifIMdgGDMbCncXfSDuQ
-         Gy+6X1nwZapI5f7yJ/wWXmKOmdIWTh92nGMECmtUyHLGhRYS9rIvcGjVTx4xrjZ6iUkh
-         MuEQ==
-X-Gm-Message-State: AOAM532loj8tAdv8wfA3pZyaGpgvmrC0egxbHY0xGoUzqCCAsNcfPtuW
-        CQuJgQnOND8sVms8C/+etwzx1Qp+nkP1fOmSoGohIzCvqkGb5fZ3aHM/XR/aSDOonKV4gv2qpLl
-        8NQmw2h9oG6Mrs5gXc1+nuuyM9zlbSWAcnDj7Q7E=
-X-Received: by 2002:a5d:6182:0:b0:203:ecfb:6d5e with SMTP id j2-20020a5d6182000000b00203ecfb6d5emr826495wru.555.1647501997312;
-        Thu, 17 Mar 2022 00:26:37 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyXUvFXzXTNB1+s0MST5P6b3GxTO5cqxsPLl8NjBFb0wBvzAZuUPRWZ20My4isFC+iYaqWujw==
-X-Received: by 2002:a5d:6182:0:b0:203:ecfb:6d5e with SMTP id j2-20020a5d6182000000b00203ecfb6d5emr826481wru.555.1647501997039;
-        Thu, 17 Mar 2022 00:26:37 -0700 (PDT)
-Received: from [192.168.0.17] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.googlemail.com with ESMTPSA id k17-20020a05600c1c9100b00386bb6e9c50sm10966353wms.45.2022.03.17.00.26.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Mar 2022 00:26:36 -0700 (PDT)
-Message-ID: <4b1f4772-35f9-3e21-6429-b64c7427144a@canonical.com>
-Date:   Thu, 17 Mar 2022 08:26:35 +0100
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HxRIhMtIGNyuquPw1lmiPJQSJaGq9K+fhRuZGp4hFSw=;
+        b=JZZqxFB0x1Bt//FulWjEwRA9DrcSW5k2qa4b9OWxYN3j/BsoY5pMo9dq0TwbJcmgDY
+         0wMiLUUaEwyuSF1uNFuyQib6horqIWvHSmn6itagY5CsK2kzCC9XoitaY+1Cle+4LMvO
+         uj2u7usv6IdtOXzbMLe2yUk3PY2x2VxtZJ8AfmaJZ8vev1wcECdSG/xp0mZl2a1Pvd+M
+         kK66G+3GL/Ckf12j0Z3MRUbS+R93NVHyyHiARQXMOLJesq9mZ4ZHa32GNBx+Ax9/We31
+         I5RkC6RFiw7bki41qbi+z/iGAiDEqOXE2X4VY0N6qihftHOqoTl8PhDnxbWK4cnSNn07
+         Jx9Q==
+X-Gm-Message-State: AOAM530i7U9oQGkkdj6b4c7nGrrktkxUrdWBaFqVjjws6l325mceeZlM
+        SWJynwCNTzUKlEtB0XHB482ux+SuiCcVkV7DRRU=
+X-Google-Smtp-Source: ABdhPJzKY289Ymbui0103ayg4U18iS7VJLj7hCueAp3BfI5ctm34/W2tHc27SGZJA/vNwLVlKykI67UuFIdov9SsEBs=
+X-Received: by 2002:a17:907:7289:b0:6df:9746:e7c4 with SMTP id
+ dt9-20020a170907728900b006df9746e7c4mr1391329ejc.497.1647506330740; Thu, 17
+ Mar 2022 01:38:50 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH v2 1/8] dt-bindings: pinctrl: mvebu: Document bindings for
- AC5
-Content-Language: en-US
-To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
-        "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20220314213143.2404162-1-chris.packham@alliedtelesis.co.nz>
- <20220314213143.2404162-2-chris.packham@alliedtelesis.co.nz>
- <4e6df448-5562-8f50-6f46-91acb279bc1a@canonical.com>
- <7e73bba0-8b54-772c-2e94-8fca4e4e3294@alliedtelesis.co.nz>
- <cb0af80e-3e5a-fbd9-cd8b-7b252ebe33fe@canonical.com>
- <6d902e7d-b71f-9dcd-9175-cc706e3d60cc@alliedtelesis.co.nz>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-In-Reply-To: <6d902e7d-b71f-9dcd-9175-cc706e3d60cc@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-5.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
+ <20220314155509.552218-1-michael@walle.cc> <CAMRc=MfH00YJv07TaiZ5z1w4gzqP5_8z9bKFcNU1Z37AVih4hQ@mail.gmail.com>
+ <fe1ba600b2b30b4cba702d6aebdfda50@walle.cc>
+In-Reply-To: <fe1ba600b2b30b4cba702d6aebdfda50@walle.cc>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 17 Mar 2022 10:37:37 +0200
+Message-ID: <CAHp75VeoFQHAh6SbVu7fsXfziW+2RoFTWKA6jFhFswBbazzGAA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
+To:     Michael Walle <michael@walle.cc>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Saravana Kannan <saravanak@google.com>,
+        Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>,
+        Andrew Chant <achant@google.com>,
+        Edmond Chung <edmondchung@google.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        regressions@lists.linux.dev,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        stable <stable@vger.kernel.org>,
+        Sergio Tanzilli <tanzilli@acmesystems.it>,
+        Thierry Reding <treding@nvidia.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Will McVicker <willmcvicker@google.com>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -97,139 +82,27 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 16/03/2022 21:21, Chris Packham wrote:
-> 
-> On 16/03/22 21:16, Krzysztof Kozlowski wrote:
->> On 15/03/2022 22:12, Chris Packham wrote:
->>> (trimmed cc list to the arm, pinctrl and dt people)
->>>
->>> On 15/03/22 23:46, Krzysztof Kozlowski wrote:
->>>> On 14/03/2022 22:31, Chris Packham wrote:
->>>>> Add JSON schema for marvell,ac5-pinctrl present on the Marvell 98DX2530
->>>>> SoC.
->>>>>
->>>>> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
->>>>> ---
->>>>>
->>>>> Notes:
->>>>>       Changes in v2:
->>>>>       - Remove syscon and simple-mfd compatibles
->>>>>
->>>>>    .../bindings/pinctrl/marvell,ac5-pinctrl.yaml | 70 +++++++++++++++++++
->>>>>    1 file changed, 70 insertions(+)
->>>>>    create mode 100644 Documentation/devicetree/bindings/pinctrl/marvell,ac5-pinctrl.yaml
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/pinctrl/marvell,ac5-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/marvell,ac5-pinctrl.yaml
->>>>> new file mode 100644
->>>>> index 000000000000..65af1d5f5fe0
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/pinctrl/marvell,ac5-pinctrl.yaml
->>>>> @@ -0,0 +1,70 @@
->>>>> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
->>>>> +%YAML 1.2
->>>>> +---
->>>>> +$id: http://scanmail.trustwave.com/?c=20988&d=1pyx4kv4KTrTfE5fXNs54mLZmOgk87Uim6CXu-YC1w&u=http%3a%2f%2fdevicetree%2eorg%2fschemas%2fpinctrl%2fmarvell%2cac5-pinctrl%2eyaml%23
->>>>> +$schema: http://scanmail.trustwave.com/?c=20988&d=1pyx4kv4KTrTfE5fXNs54mLZmOgk87Uim6TAvbEE2Q&u=http%3a%2f%2fdevicetree%2eorg%2fmeta-schemas%2fcore%2eyaml%23
->>>>> +
->>>>> +title: Marvell AC5 pin controller
->>>>> +
->>>>> +maintainers:
->>>>> +  - Chris Packham <chris.packham@alliedtelesis.co.nz>
->>>>> +
->>>>> +description:
->>>>> +  Bindings for Marvell's AC5 memory-mapped pin controller.
->>>>> +
->>>>> +properties:
->>>>> +  compatible:
->>>>> +    const: marvell,ac5-pinctrl
->>>>> +
->>>>> +patternProperties:
->>>>> +  '-pins$':
->>>>> +    type: object
->>>>> +    $ref: pinmux-node.yaml#
->>>>> +
->>>>> +    properties:
->>>>> +      marvell,function:
->>>>> +        $ref: "/schemas/types.yaml#/definitions/string"
->>>>> +        description:
->>>>> +          Indicates the function to select.
->>>>> +        enum: [ gpio, i2c0, i2c1, nand, sdio, spi0, spi1, uart0, uart1, uart2, uart3 ]
->>>>> +
->>>>> +      marvell,pins:
->>>>> +        $ref: /schemas/types.yaml#/definitions/string-array
->>>>> +        description:
->>>>> +          Array of MPP pins to be used for the given function.
->>>>> +        minItems: 1
->>>>> +        items:
->>>>> +          enum: [ mpp0, mpp1, mpp2, mpp3, mpp4, mpp5, mpp6, mpp7, mpp8, mpp9,
->>>>> +                  mpp10, mpp11, mpp12, mpp13, mpp14, mpp15, mpp16, mpp17, mpp18, mpp19,
->>>>> +                  mpp20, mpp21, mpp22, mpp23, mpp24, mpp25, mpp26, mpp27, mpp28, mpp29,
->>>>> +                  mpp30, mpp31, mpp32, mpp33, mpp34, mpp35, mpp36, mpp37, mpp38, mpp39,
->>>>> +                  mpp40, mpp41, mpp42, mpp43, mpp44, mpp45 ]
->>>>> +
->>>>> +allOf:
->>>>> +  - $ref: "pinctrl.yaml#"
->>>>> +
->>>>> +required:
->>>>> +  - compatible
->>>>> +
->>>>> +additionalProperties: false
->>>>> +
->>>>> +examples:
->>>>> +  - |
->>>>> +    system-controller@80020100 {
->>>>> +      compatible = "syscon", "simple-mfd";
->>>>> +      reg = <0x80020000 0x20>;
->>>> This is unusual. Usually the pinctrl should be a device @80020100, not
->>>> child of syscon node. Why do you need it? In v1 you mentioned that
->>>> vendor sources do like this, but it's not correct to copy wrong DTS. :)
->>> The vendor dts has this
->>>
->>>           pinctrl0: pinctrl@80020100 {
->>>               compatible = "marvell,ac5-pinctrl",
->>>                        "syscon", "simple-mfd";
->>>               reg = <0 0x80020100 0 0x20>;
->>>               i2c_mpps: i2c-mpps {
->>>                   marvell,pins = "mpp26", "mpp27";
->>>                   marvell,function = "i2c0-opt";
->>>               };
->>>        };
->>>
->>> Rob pointed out that "syscon", "simple-mfd" don't belong. I went looking
->>> and found marvell,armada-7k-pinctrl which has the pinctrl as a child of
->>> a syscon node and what you see in v2 is the result.
->>>
->>> I probably went a bit too far off the deep end and should have just
->>> dropped the "syscon", "simple-mfd" compatibles. I even wrote that
->>> version but decided to add some gold plating before I submitted it.
->> More or less it is explained in
->> Documentation/devicetree/bindings/arm/marvell/cp110-system-controller.txt why
->> armada-7k uses it that way. The pinctrl is part of system registers
->> which apparently has to be shared with others (on shared SFR range).
->>
->> It depends on your case, your SFR ranges for pinctrl and other blocks.
->>
-> I can tell you that without a syscon node in the mix somewhere the 
-> driver will fail to load. And when I switch to 
-> mvebu_pinctrl_simple_mmio_probe() the driver loads but then kernel 
-> panics when something tries to use one of the pin functions.
-> 
-> So I think the syscon is needed. I just need to come up with a better 
-> justification than "because it's needed".
+On Thu, Mar 17, 2022 at 7:36 AM Michael Walle <michael@walle.cc> wrote:
+> Am 2022-03-15 16:32, schrieb Bartosz Golaszewski:
+> > On Mon, Mar 14, 2022 at 4:55 PM Michael Walle <michael@walle.cc> wrote:
 
-What do you mean "driver fails to load"? You control the driver, don't
-you? You wrote it? If you write a driver which is not compatible with
-bindings, it won't work obviously, so after changing bindings you need
-to revisit the driver.
+...
 
-There is no need for syscon because driver "fails to load". You need to
-fix your driver. Currently the driver code is definitely not a proper
-platform driver.
+> I started to try this out, but then I was wondering if there weren't
+> other gpio/pinctrl drivers with the same problem. And judging by the
+> reports [1], I'd say there are. Then I wasn't sure if this is actually
+> the correct fix here - or if that old workaround [2] doesn't work
+> anymore because it might have that empty ranges "feature".
+>
+> To answer your question: I don't know. But I don't know if that is
+> actually the correct way of fixing this either.
+>
+> >> Also, I'm not sure if there are any other other driver which get
+> >> broken by this. I.e. ones falling into the gpio_stub_drv category.
 
-Different question is whether something else requires here syscon
-because it accesses these registers but this requires knowledge of
-architecture and other components.
+I know that OF is a mess, but I want to understand why in ACPI we
+haven't experienced such an issue. Any pointers would be appreciated.
 
-
-Best regards,
-Krzysztof
+-- 
+With Best Regards,
+Andy Shevchenko
