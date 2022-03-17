@@ -2,98 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E3B594DBC1F
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Mar 2022 02:15:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A41A4DBC40
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Mar 2022 02:24:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237910AbiCQBQc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Mar 2022 21:16:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60402 "EHLO
+        id S238374AbiCQBZa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Mar 2022 21:25:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229939AbiCQBQb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Mar 2022 21:16:31 -0400
-Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C0891D31A
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Mar 2022 18:15:15 -0700 (PDT)
-Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-2e5827a76f4so42694917b3.6
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Mar 2022 18:15:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ttqf+Ak4UDk+aqmKJmqi9OHx4SLk4UXQ3k92bdd42JA=;
-        b=ppoDP5SylJ2cXoiBNY3vfQkqbWK2IJELRGrxE+wl9xSRfIKwTGE4/neozdE0Cm2ANa
-         RN8O3I6bGLILs57lzb9L1OXkrHDQYrocYBwk3ZKKdgA9zG0PN2vACgN0KYl7woCM2IIJ
-         bjsq7CzxPyXRLw8tlRa4dN5SdqCVhNZmvLbiX1x42b8GG3SDUtk6Z2h8IOSx1xj4I4Lh
-         rxSlsB1B8IoLsxsYQ39hEbfPURSPbJTb6vqkbU8stx3gFeSOJEhcyFd7DWXlF+IezjDr
-         USNYXI7P8ZE1iELugJWXtsST3OFrjKC7pw5XoNrDf7REoy70wU1FZ0nfFQWe1U6SLh1u
-         VWKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ttqf+Ak4UDk+aqmKJmqi9OHx4SLk4UXQ3k92bdd42JA=;
-        b=4HpGhwoILrrWoGX5LYzsnGS+vP3LhE8MBGr6PVsSVH0i+z3Qs7FyqgDm4KxWfhDWfa
-         fV8eZKIIG+EI+g91HMz+vRHI82EULFeLsNAsL+m4uPPDbD2gjUdbpVvBurYxBldg/Kr6
-         uiarlLs/mn2mE2n27YE0Mtt7QtC+0G7nVQDnHQlIYFD83w15K9Ng7aA8P/KYpbIoxroZ
-         Tc3e3QfmeFTVzVR2Is9ClkGU1U3q10pT7Uozs9aQEf+u8qtjQ2v0KPg/9peRS8KrJy9y
-         4I8MoZd/s94TKbMnmmWHpVn0NYVBD8wW2AsWj/ETWRBRO/CHDr3zXOnKJ9rKshbyf4w9
-         DCag==
-X-Gm-Message-State: AOAM532811hvoqdAnlxdtLsu3CNuV8cRDpS0C4RMDb0TdstVXecXAF60
-        mDE/4YvtorVnwtAwqqP3lZhczrFpX6lEeRLZDG+v0g==
-X-Google-Smtp-Source: ABdhPJyPaLapNfQSao0oiCb/+L4p2OuDLZBlYZ+H3ar1vc5etQtfVnFaclVwMPNGe315MYBEIfDh3Rj1VGhU4/0YrDA=
-X-Received: by 2002:a81:9c47:0:b0:2db:9e18:6e75 with SMTP id
- n7-20020a819c47000000b002db9e186e75mr3225846ywa.437.1647479714460; Wed, 16
- Mar 2022 18:15:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <1646855026-9132-1-git-send-email-stefan.wahren@i2se.com>
-In-Reply-To: <1646855026-9132-1-git-send-email-stefan.wahren@i2se.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 17 Mar 2022 02:15:03 +0100
-Message-ID: <CACRpkdYuxsYw99CZZK_GXp3V-mPiuL50CxgsE-=oRMApZf_bxA@mail.gmail.com>
-Subject: Re: [PATCH RFC 0/2] gpiolib: of: Introduce hook for missing gpio-ranges
-To:     Stefan Wahren <stefan.wahren@i2se.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        Phil Elwell <phil@raspberrypi.com>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S230262AbiCQBZ3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Mar 2022 21:25:29 -0400
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id ACCCB1DA59;
+        Wed, 16 Mar 2022 18:24:12 -0700 (PDT)
+X-IronPort-AV: E=Sophos;i="5.90,188,1643641200"; 
+   d="scan'208";a="114675277"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 17 Mar 2022 10:24:11 +0900
+Received: from localhost.localdomain (unknown [10.226.36.204])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id E730941A4262;
+        Thu, 17 Mar 2022 10:24:08 +0900 (JST)
+From:   Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [RFC PATCH v4 0/5] Renesas RZ/G2L IRQC support
+Date:   Thu, 17 Mar 2022 01:23:59 +0000
+Message-Id: <20220317012404.8069-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Mar 9, 2022 at 8:44 PM Stefan Wahren <stefan.wahren@i2se.com> wrote:
+Hi All,
 
-> This patch series tries to provide backward compatibility for DTB which
-> lacks the gpio-ranges property.
->
-> The commit ("pinctrl: msm: fix gpio-hog related boot issues") by Christian
-> Lamparter already contains a fallback in case the gpio-ranges property
-> is missing. But this approach doesn't work on BCM2835 with a gpio-hog
-> defined for the SoC GPIOs.
->
-> Based Christian's on explanation i conclude that the fallback must happen
-> during the gpiochip_add() call and not afterwards. So the approach is to
-> call an optional hook, which can be implemented in the platform driver.
->
-> This series has been tested on Raspberry Pi 3 B Plus.
->
-> Stefan Wahren (2):
->   gpiolib: of: Introduce hook for missing gpio-ranges
->   pinctrl: bcm2835: implement hook for missing gpio-ranges
+The RZ/G2L Interrupt Controller is a front-end for the GIC found on
+Renesas RZ/G2L SoC's with below pins:
+- IRQ sense select for 8 external interrupts, mapped to 8 GIC SPI interrupts
+- GPIO pins used as external interrupt input pins out of GPIOINT0-122 a
+  maximum of only 32 can be mapped to 32 GIC SPI interrupts,
+- NMI edge select.
 
-Looks good to me, is this something I should apply to the pinctrl
-tree or should I wait for a non-RFC version?
+                                                                _____________
+                                                                |    GIC     |
+                                                                |  ________  |
+                                         ____________           | |        | |
+NMI ------------------------------------>|          |  SPI0-479 | | GIC-600| |
+                _______                  |          |------------>|        | |
+                |      |                 |          |  PPI16-31 | |        | |
+                |      | IRQ0-IRQ7       |   IRQC   |------------>|        | |
+P0_P48_4 ------>| GPIO |---------------->|          |           | |________| |
+                |      |GPIOINT0-122     |          |           |            |
+                |      |---------------->| TINT0-31 |           |            |
+                |______|                 |__________|           |____________|
 
-Yours,
-Linus Walleij
+The proposed RFC patches adds hierarchical IRQ domain one in IRQC driver and other in
+pinctrl driver. Upon interrupt requests map the interrupt to GIC. Out of GPIOINT0-122
+only 32 can be mapped to GIC SPI, this mapping is handled by the pinctrl and IRQC driver.
+
+Cheers,
+Prabhakar
+
+Changes for v4:
+* Used locking while RMW
+* Now using interrupts property instead of interrupt-map
+* Patch series depends on [0]
+* Updated binding doc
+* Fixed comments pointed by Andy
+
+[0] https://patchwork.kernel.org/project/linux-renesas-soc/patch/
+20220316200633.28974-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
+
+Changes for v3:
+-> Re-structured the driver as a hierarchical irq domain instead of chained
+-> made use of IRQCHIP_* macros
+-> dropped locking
+-> Added support for IRQ0-7 interrupts
+-> Introduced 2 new patches for GPIOLIB
+-> Switched to using GPIOLIB for irqdomains in pinctrl
+
+RFC v3: https://patchwork.kernel.org/project/linux-renesas-soc/cover/
+20211110225808.16388-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
+
+RFC v2: https://patchwork.kernel.org/project/linux-renesas-soc/cover/
+20210921193028.13099-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
+
+RFC v1: https://patchwork.kernel.org/project/linux-renesas-soc/cover/
+20210803175109.1729-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
+
+
+Lad Prabhakar (5):
+  dt-bindings: interrupt-controller: Add Renesas RZ/G2L Interrupt
+    Controller
+  irqchip: Add RZ/G2L IA55 Interrupt Controller driver
+  gpio: gpiolib: Allow free() callback to be overridden
+  gpio: gpiolib: Add ngirq member to struct gpio_irq_chip
+  pinctrl: renesas: pinctrl-rzg2l: Add IRQ domain to handle GPIO
+    interrupt
+
+ .../renesas,rzg2l-irqc.yaml                   | 131 +++++
+ drivers/gpio/gpiolib.c                        |  13 +-
+ drivers/irqchip/Kconfig                       |   8 +
+ drivers/irqchip/Makefile                      |   1 +
+ drivers/irqchip/irq-renesas-rzg2l.c           | 462 ++++++++++++++++++
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c       | 205 ++++++++
+ include/linux/gpio/driver.h                   |   8 +
+ 7 files changed, 823 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,rzg2l-irqc.yaml
+ create mode 100644 drivers/irqchip/irq-renesas-rzg2l.c
+
+-- 
+2.17.1
+
