@@ -2,52 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 82FA44DE307
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Mar 2022 21:58:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B82A4DE394
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Mar 2022 22:32:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240937AbiCRU70 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Mar 2022 16:59:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57568 "EHLO
+        id S236545AbiCRVd3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Mar 2022 17:33:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240945AbiCRU7Y (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Mar 2022 16:59:24 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 355CD1AD96;
-        Fri, 18 Mar 2022 13:58:02 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A944660EEB;
-        Fri, 18 Mar 2022 20:58:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98C18C340E8;
-        Fri, 18 Mar 2022 20:57:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1647637081;
-        bh=3tZLC4OI4DmCNMJnIOo7RYTAi7LWN2qliV+IISVObGI=;
-        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=LGPaCodP8eS/7klwaU8q0zEpjY3D6qASKNddY0k53Fyi4Gg4tbqZ/blZgzLUpyGIX
-         CwSf3M3qU5kWxh3Kkw4ca1kZBPXA9mnE2oUsnUBlU/YDrWmSMZMOhP9o7425bLgDzD
-         melUxHZuxnujObAWSmMTQxD7FDLYAew3fjDEFrzfaBTMC0hZmcFB6TBHo+BoIJezjP
-         90KoSdfybx45J4mbhFvuhgcUzfTRlSZtaBf9t4hO1TeVV9InVynuswec84kPEVlCvi
-         zZ8LTkqYaW1e1LdblqeRFwqO3YlQxMMAq70GL5JayVgNa6UXgmjsWSe5ClN0kNFWB+
-         uq+W6RRir0nmQ==
-From:   Mark Brown <broonie@kernel.org>
-To:     collinsd@codeaurora.org, lgirdwood@gmail.com,
-        linus.walleij@linaro.org, agross@kernel.org, robh+dt@kernel.org,
-        rnayak@codeaurora.org, bjorn.andersson@linaro.org,
-        Rohit Agarwal <quic_rohiagar@quicinc.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org
-In-Reply-To: <1647410837-22537-1-git-send-email-quic_rohiagar@quicinc.com>
-References: <1647410837-22537-1-git-send-email-quic_rohiagar@quicinc.com>
-Subject: Re: (subset) [PATCH 0/6] Add Power Domains and Regulators in SDX65
-Message-Id: <164763707833.2336544.6847647511365676482.b4-ty@kernel.org>
-Date:   Fri, 18 Mar 2022 20:57:58 +0000
+        with ESMTP id S231609AbiCRVd2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Mar 2022 17:33:28 -0400
+Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1681524F2BA
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Mar 2022 14:32:09 -0700 (PDT)
+Received: by mail-yb1-xb31.google.com with SMTP id j2so18145830ybu.0
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Mar 2022 14:32:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hX7mSCLACQQ83yXLKQpM8kANhYRmQgnJug/EU8n3tjY=;
+        b=OcDxPQcDEMSYLNNtIlj4P2n9CzVwQ7zaJtV5MCV4CQ4iztJb2R+bcT+QfCK0F/Vt+e
+         U8reMSuv1Eme1a4sI7qcqec+UcGZxC+Z9xJe1uwMuE1+y1m01cLtjimJ7BpDEB99jhz/
+         okX+feBWBpYqRS7ECMdxEqlNvI3dCFrRiThWT6qv0/mJ5vIua/4Q1XS7adGroC9mU2Uh
+         8RBEkue7uoO8/wcaKjpjaGm304xDqOJD6tDJPuU7W0epwV44jzKJNRUriE/PCXsjeKUy
+         fTEBr6HlQ2lg0uhoNQM4bOWkMD56Y113lbWIVneUOxWIIGTOpN6t+eQxhZo2UoEv3HOC
+         0HiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hX7mSCLACQQ83yXLKQpM8kANhYRmQgnJug/EU8n3tjY=;
+        b=4LaFfyUpIG6+HhQGmgdHDbQmp2QX9f9YhcEDrmol7bNpZ67By9z5xUG8vPaoVtuxkw
+         qpmEk61bOG8hn0NDexuQ/ugG/AXPW87x24xkkxMcrDjrUCaTGY3WYFrGRkcXRlEkqmGl
+         EO3qJytR1T5Thi8IaGIZglHOzvpQA49UYWz1TN0+gImZYvzgertSozRu6Is24BsK9ma4
+         nfytGJbff4icJLuj1o5X1TgXY9e1QHSuBKMMZW92VcM7zwJmo7SsEjVS9CJLWk2Ilzsd
+         HOE9RlkUhob0ia+l0nwBWC8Snkvj3Ga4MbroCZ8d9jyNdFiy32416Cfrx6lze5agwkgv
+         75uw==
+X-Gm-Message-State: AOAM531btN75AwC5vIR03OfPDTMwL2WNqahJyIZACV4I5lWN7UBUWKgF
+        wbmvS4Y+wFRIYM2QovCy/8LMlfXGmt53tsrNSevhaVokj5Y=
+X-Google-Smtp-Source: ABdhPJz4CLE/RV8y0AobMf6pKoO0a+Id8c9VwB85wCQWINQ2r8Va5a18MT2Fq+Wc9ljgipqCBzMF2+xql6wrUFgKzjg=
+X-Received: by 2002:a5b:dc5:0:b0:624:f16d:7069 with SMTP id
+ t5-20020a5b0dc5000000b00624f16d7069mr11758231ybr.295.1647639128330; Fri, 18
+ Mar 2022 14:32:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-8.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+References: <20220318121233.7215-1-joey.gouly@arm.com>
+In-Reply-To: <20220318121233.7215-1-joey.gouly@arm.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 18 Mar 2022 22:31:57 +0100
+Message-ID: <CACRpkdZUbbXEp+w8QM-w7h677LWO-Q3zRNQdQRWhMHfubcCqGw@mail.gmail.com>
+Subject: Re: [PATCH -next v1] gpio: Properly document parent data union
+To:     Joey Gouly <joey.gouly@arm.com>
+Cc:     linux-gpio@vger.kernel.org, nd@arm.com, brgl@bgdev.pl,
+        maz@kernel.org, sfr@canb.auug.org.au
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -56,49 +65,19 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 16 Mar 2022 11:37:11 +0530, Rohit Agarwal wrote:
-> This series adds driver and dt-bindings related changes
-> in SDX65 to add power domains and regulators.
-> 
-> Thanks,
-> Rohit.
-> 
-> Rohit Agarwal (6):
->   regulator: dt-bindings: Add PMX65 compatibles
->   regulator: qcom-rpmh: Add support for SDX65
->   dt-bindings: power: Add rpm power domain bindings for SDX65
->   soc: qcom: rpmhpd: Add SDX65 power domains
->   dt-bindings: pinctrl: qcom-pmic-gpio: Add pmx65 support
->   pinctrl: qcom-pmic-gpio: Add support for pmx65
-> 
-> [...]
+On Fri, Mar 18, 2022 at 1:12 PM Joey Gouly <joey.gouly@arm.com> wrote:
 
-Applied to
+> Suppress a warning in the html docs by documenting these fields separately.
+>
+> Signed-off-by: Joey Gouly <joey.gouly@arm.com>
+> Link: https://lore.kernel.org/lkml/20211027220118.71a229ab@canb.auug.org.au/
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+Looks good to me!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Thanks!
-
-[1/6] regulator: dt-bindings: Add PMX65 compatibles
-      commit: e34855b99696433a26d86179552553c6c6fa69b8
-[2/6] regulator: qcom-rpmh: Add support for SDX65
-      commit: 5999f85ddeb436b4007878f251a30ccc8b9c638b
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+Yours,
+Linus Walleij
