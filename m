@@ -2,116 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 819C94DE129
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Mar 2022 19:38:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9203D4DE119
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Mar 2022 19:34:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238788AbiCRSj4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Mar 2022 14:39:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39248 "EHLO
+        id S240159AbiCRSdp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Mar 2022 14:33:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236304AbiCRSj4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Mar 2022 14:39:56 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D50591BE4CF
-        for <linux-gpio@vger.kernel.org>; Fri, 18 Mar 2022 11:38:36 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id dr20so18328543ejc.6
-        for <linux-gpio@vger.kernel.org>; Fri, 18 Mar 2022 11:38:36 -0700 (PDT)
+        with ESMTP id S240155AbiCRSdo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Mar 2022 14:33:44 -0400
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D342121504
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Mar 2022 11:32:16 -0700 (PDT)
+Received: by mail-lf1-x132.google.com with SMTP id l20so15365907lfg.12
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Mar 2022 11:32:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ZwBNxv31ujNSLTrPdhNM0458fsf06VpnyNFy23XaEkM=;
-        b=3HyLPt3AUi5oYad0n4/hc+3xmHTgicSDQtnED6a8HMjpRI7fS7w3PoqInaxxMs3fTt
-         6ymRR8UbBGNsXBe0UwK7sFigl+vWjptdZqYJBYGCI1ACOCyzjfa8Z9Pg9NFOw3mUvXff
-         pNvBk+DkP7v/MTX0pU9MQ2EeQHA+fdHfU9YH6p0uu25D23uUda0GBESVwJh3aEp0KJCs
-         xmnxDt/tpQU33XuOCIDDZ7g6gGzBhPaKokrXxLVyV+RBGnv7pnSIzKRe/dJFb1G/tFuU
-         uoVcSaSEnP+3zyLmpjKx3m65qWoDGPupfzgkAYvxHqoYd+wfCS6JUa6DVr0LhJY40rO4
-         AHxA==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wBLfX2LSEiNhJ8oDOcJh1B00fiK59ApOZekhfSkPFtY=;
+        b=VgZXaPqAaC3YW4N9oST8PmjWXw0TSZNWDVRh8fM9EjToU+Zs/ed98dGuNHb/i54YHp
+         AYZS5QAWDzP3m1ZAGhm9kZ/lei9v44xXn7DxGd1XRyak5cRbMtaIBXH9w8ldrNz+3B83
+         rir2bjRH/je3U8IBwnnIN+TvsEsyS5i2lN6a4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ZwBNxv31ujNSLTrPdhNM0458fsf06VpnyNFy23XaEkM=;
-        b=akzjs6zlcGcBhM2VYuFH63aB8paisvu7PdIzXy+puavklsHovq5G+QSma8Wkru1fm1
-         QnFQ/ek4MzTC+iEIWelzkgXqu35Qvahk63kK56vUaVqOBGOTo96qzR3Fm9CUvRH1wkeD
-         /qEAH1TDEOTIevoLvcbfHsMJp7em4coBc1lA4b6FY0+15KaxijUIRu5ym9JWhDz8cb//
-         Hwtr73QzUhX3ujgWjeFnDqcc5Z2syPXVxJa+R/rZBGGeQwuDwMWqHyVaBPEXMdjs1kS6
-         sJtqLKjQnaOzrM9nGIplwLr3+rHmnXGcsA7CaVdaix/JMRH2tlCNET+IZu27oDtE03ST
-         k4IQ==
-X-Gm-Message-State: AOAM533t9h/cn1diVOXrsetKLRplVTqOgnomR5pIDEF+wSmVs8hXxN1e
-        BLW25lIel4VTXXc5YaivJiLbtoNBm9nV/w==
-X-Google-Smtp-Source: ABdhPJynojliZCvGddFQNS0+a/KXK069NxTK7UrYbclBZMfvrCnqTqb4KctsfibHRAdKybm/4lpS1Q==
-X-Received: by 2002:a05:6402:278f:b0:416:a887:9853 with SMTP id b15-20020a056402278f00b00416a8879853mr10909101ede.44.1647628229756;
-        Fri, 18 Mar 2022 11:30:29 -0700 (PDT)
-Received: from otso.arnhem.chello.nl (a246182.upc-a.chello.nl. [62.163.246.182])
-        by smtp.gmail.com with ESMTPSA id y8-20020a50eb08000000b00418b114469csm4567551edp.52.2022.03.18.11.30.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Mar 2022 11:30:29 -0700 (PDT)
-From:   Luca Weiss <luca.weiss@fairphone.com>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-        Luca Weiss <luca.weiss@fairphone.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@somainline.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/6] pinctrl: qcom: sm6350: fix order of UFS & SDC pins
-Date:   Fri, 18 Mar 2022 19:30:02 +0100
-Message-Id: <20220318183004.858707-5-luca.weiss@fairphone.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220318183004.858707-1-luca.weiss@fairphone.com>
-References: <20220318183004.858707-1-luca.weiss@fairphone.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wBLfX2LSEiNhJ8oDOcJh1B00fiK59ApOZekhfSkPFtY=;
+        b=OhtcQCLowfkc2+dW15KRKI4z01flo7J3PhrxPVDif1J6yt0pWfy+96OGzBprw+r6QQ
+         SUIQE+LuRpLzSAkX+iM4ldVLb7zgjNgWPMam7+N5REf0jsI3zmqi2GCVKypwDYdg7zeN
+         bK2pDD92SgBKyr1c8HBWXL+NmyL8scDEo4/27BId7qpndkVuqhVGeVra3EWVABEO6JF/
+         KZbruTmKmXClI7gLoyNJz25F+y0dGBPI37RbVCpODlbqLY8ZFJeISSPX4GNTDLCIZKZ7
+         DeIdcRW4bbvmKQBQsPBySSpITvGZwAsc3JninrRYwHx9dXaHl3d+hLtQfuv0g/eNhEwO
+         IKzA==
+X-Gm-Message-State: AOAM532xI/GtFUEHG5yNkjo9p43eggUpgLQ6Q0wlVUZL/PosvjL023Nm
+        md/iVR9YAILLRX/oBTjADWPfrLE/2S1AjMvnP5U=
+X-Google-Smtp-Source: ABdhPJzar60+uBKWN38b0KaSZtfGQ+BidOZHcFFDB9m7qCuQ3M8iC5jf1RGvSVpePss+x3hvTyJl2Q==
+X-Received: by 2002:a19:7612:0:b0:448:307a:4bca with SMTP id c18-20020a197612000000b00448307a4bcamr6812140lff.361.1647628334152;
+        Fri, 18 Mar 2022 11:32:14 -0700 (PDT)
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com. [209.85.208.172])
+        by smtp.gmail.com with ESMTPSA id z9-20020a2e8e89000000b00237fb5d60desm1104065ljk.122.2022.03.18.11.32.11
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Mar 2022 11:32:11 -0700 (PDT)
+Received: by mail-lj1-f172.google.com with SMTP id s25so12378942lji.5
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Mar 2022 11:32:11 -0700 (PDT)
+X-Received: by 2002:a2e:9904:0:b0:247:ec95:fdee with SMTP id
+ v4-20020a2e9904000000b00247ec95fdeemr6818296lji.291.1647628330932; Fri, 18
+ Mar 2022 11:32:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220316213055.2351342-1-morbo@google.com> <YjL6K49CkH+YC4FQ@smile.fi.intel.com>
+ <CAKwvOdkjb3uR+kqjfdKL5gqA8R+00c5=3E7uGGW+mGZ3QRsjqg@mail.gmail.com>
+ <YjSROmYwwGhpsXMl@smile.fi.intel.com> <CAKwvOdkEjrPUL4HuO3UKaUZAzVw=XV1bEOSj6HR5R1WTUSSZ4w@mail.gmail.com>
+In-Reply-To: <CAKwvOdkEjrPUL4HuO3UKaUZAzVw=XV1bEOSj6HR5R1WTUSSZ4w@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 18 Mar 2022 11:31:54 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjKiemDQXKCGztokhw_A-8SnE+7Q9Queb-rXUTbHPNedA@mail.gmail.com>
+Message-ID: <CAHk-=wjKiemDQXKCGztokhw_A-8SnE+7Q9Queb-rXUTbHPNedA@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: acpi: use correct format characters
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bill Wendling <morbo@google.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Nathan Chancellor <nathan@kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        llvm@lists.linux.dev, Joe Perches <joe@perches.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-In other places the SDC and UFS pins have been swapped but this was
-missed in the PINCTRL_PIN definitions. Fix that.
+On Fri, Mar 18, 2022 at 11:01 AM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> Maybe we should reconsider our recommendations for signed types?
 
-Fixes: 7d74b55afd27 ("pinctrl: qcom: Add SM6350 pinctrl driver")
-Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
----
- drivers/pinctrl/qcom/pinctrl-sm6350.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+For 'hhx' is probably does make sense in some cases.
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm6350.c b/drivers/pinctrl/qcom/pinctrl-sm6350.c
-index 4d37b817b232..a91a86628f2f 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm6350.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm6350.c
-@@ -264,14 +264,14 @@ static const struct pinctrl_pin_desc sm6350_pins[] = {
- 	PINCTRL_PIN(153, "GPIO_153"),
- 	PINCTRL_PIN(154, "GPIO_154"),
- 	PINCTRL_PIN(155, "GPIO_155"),
--	PINCTRL_PIN(156, "SDC1_RCLK"),
--	PINCTRL_PIN(157, "SDC1_CLK"),
--	PINCTRL_PIN(158, "SDC1_CMD"),
--	PINCTRL_PIN(159, "SDC1_DATA"),
--	PINCTRL_PIN(160, "SDC2_CLK"),
--	PINCTRL_PIN(161, "SDC2_CMD"),
--	PINCTRL_PIN(162, "SDC2_DATA"),
--	PINCTRL_PIN(163, "UFS_RESET"),
-+	PINCTRL_PIN(156, "UFS_RESET"),
-+	PINCTRL_PIN(157, "SDC1_RCLK"),
-+	PINCTRL_PIN(158, "SDC1_CLK"),
-+	PINCTRL_PIN(159, "SDC1_CMD"),
-+	PINCTRL_PIN(160, "SDC1_DATA"),
-+	PINCTRL_PIN(161, "SDC2_CLK"),
-+	PINCTRL_PIN(162, "SDC2_CMD"),
-+	PINCTRL_PIN(163, "SDC2_DATA"),
- };
- 
- #define DECLARE_MSM_GPIO_PINS(pin) \
--- 
-2.35.1
+That said, for kernel work, if you work on byte values, I would
+seriously suggest not using 'char' at all, which has badly defined
+sign.
 
+And 'signed char' makes no sense either.
+
+So while 'hhx' makes sense in the general case, for kernel work I'd
+much rather see "don't use stupid types".
+
+So why not just use 'unsigned char' (or 'u8' if you think typing is boring).
+
+                 Linus
