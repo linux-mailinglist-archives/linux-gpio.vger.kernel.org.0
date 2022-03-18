@@ -2,60 +2,48 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C661D4DDC99
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Mar 2022 16:16:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C88454DE032
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Mar 2022 18:44:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237881AbiCRPRa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Mar 2022 11:17:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50844 "EHLO
+        id S239736AbiCRRpv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Mar 2022 13:45:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236931AbiCRPRa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Mar 2022 11:17:30 -0400
-Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E0253D494;
-        Fri, 18 Mar 2022 08:16:11 -0700 (PDT)
-Received: by mail-yb1-xb34.google.com with SMTP id t33so8786094ybt.12;
-        Fri, 18 Mar 2022 08:16:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=s7nTlpYa/I83xP+Stl6OjCxXKL7eS12QD0mo9SCq80Y=;
-        b=ou7Ya+Xj7TjLlCrlKkf3IPBywBvRPaOhRklCh3JoU/vaxf7ZUmUSEezXROjzWvWUJg
-         sBN00Po+jpzdZfnEr9tpaQh5GV5za+LNySiW0AiLqLNNxCKKfC+TRVZv/i8I2JcBuugP
-         Qbo7fpyC7K+dKEaDFZrg775asI15VLKp4thUVWNktijyehclRNP3Nq6yLkrSXRteYx1Y
-         hytYPOFS8amQe6p1S36M8J7dSynNu0F/IWWkLN8D3fv3c8WwG83UXxFc/6DEMWqh61CZ
-         2MUTXFZ/V2wr92D2auQXWWpqd7uQvffBQApDkooRRkE3ZyZaYJV435AXev1KZr6ROy6g
-         OS9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=s7nTlpYa/I83xP+Stl6OjCxXKL7eS12QD0mo9SCq80Y=;
-        b=t4PkjOVLzzKHeiWdVVu+hXt8bVe4r1Ob4RSTg5Y1M2LpMENWny0UWyY3BF/T2WSBrl
-         aEfFoX87pa/OXrNbeKp9VYumJjj+9mx1eBhO9i1tkUT4TBXFpQcnSGdpAqpMDxHa4wh+
-         TLTwffQSN0nWnC9Ntx0XbfDATOjNBgv8jHeJyefH41ln/rcF9Idaal4epchIuXN6BV5B
-         6x1iIwAJmVA8HC5TmGzpm0WLHy0m9Nnr65kxjNQGlZpCPal6I5pFhh/J59z8eMExcoqu
-         vj/ocvT5ofpgBCd4C0JRpqJlegUNj3kAphhylrhr9CsFlj783fv+0GNpEOck0WmWQbIg
-         nNCw==
-X-Gm-Message-State: AOAM530lv2bElhncBMCyzCemD8o9dokXP38D56p8VfRrfWVrr+iuU7Ap
-        yK3EaC0OIw8OwR4eeusctYd3fqvz3FcIgeplG2k=
-X-Google-Smtp-Source: ABdhPJx8+OpNK1Acqr4z0QdPBHbq8pZ3F43JT+ore+pRi0yUyWniMQWBCJMH79m2IwL1cV3OCVCjPIIxN5Owo+wugyk=
-X-Received: by 2002:a25:8812:0:b0:633:7bd8:16ff with SMTP id
- c18-20020a258812000000b006337bd816ffmr10358271ybl.645.1647616570656; Fri, 18
- Mar 2022 08:16:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220317012404.8069-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20220317012404.8069-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20220317012404.8069-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Fri, 18 Mar 2022 15:15:44 +0000
-Message-ID: <CA+V-a8ue5UKcXfNH0HDHvpDt=dc1UB1tT74yPeBgkFkQxx9mTA@mail.gmail.com>
-Subject: Re: [RFC PATCH v4 3/5] gpio: gpiolib: Allow free() callback to be overridden
-To:     Linus Walleij <linus.walleij@linaro.org>
+        with ESMTP id S238668AbiCRRpv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Mar 2022 13:45:51 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3E7E1FAA3E;
+        Fri, 18 Mar 2022 10:44:31 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 42F9BB824B1;
+        Fri, 18 Mar 2022 17:44:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE635C340E8;
+        Fri, 18 Mar 2022 17:44:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1647625469;
+        bh=Yel17+YGUIPsFPXXcsUfkRlEDGY7ldlZnUFhHc3cQPw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=sOKaWg8DMVhBONoscKdx8z/Nuue8RGTH0Yue+H5spIiJtuvaGZ6SoPBfHh4EPUd2M
+         WTr6kba6yQdG9bI1zT9ERS5pqHz419ctvoV0JLBb+HhFVRpayObI8EJWLlRqXdYRRd
+         sDkRA27zCjPxzEU7sOqf4nzMvd0M9MVWIg4ceDaWgaPPJDnIxmeLbGBh69OEbBc2/O
+         XEk0LkpNmuZ9LHCZCDe8AAVH3CT63gNe2NTpdvDZeB5IHLfmO9IMtarS7IyI3Ta25i
+         +ACWlfobCRAIBowxC1BuBFgAtSCIP+NiFv65xf2Y/+IfOHO4BA0X27VcVMU1WghWjN
+         OCbicGD50y9Yg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=why.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <maz@kernel.org>)
+        id 1nVGeI-00FVvX-H7; Fri, 18 Mar 2022 17:44:26 +0000
+Date:   Fri, 18 Mar 2022 17:44:25 +0000
+Message-ID: <87mthnxiiu.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
 Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
         Philipp Zabel <p.zabel@pengutronix.de>,
@@ -65,66 +53,72 @@ Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
         Biju Das <biju.das.jz@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Subject: Re: [RFC PATCH v4 2/5] irqchip: Add RZ/G2L IA55 Interrupt Controller driver
+In-Reply-To: <CA+V-a8uw9wwnA=_n+1MUtUhdwCdMFNb22HOq0R3yEeqsfTJLBQ@mail.gmail.com>
+References: <20220317012404.8069-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        <20220317012404.8069-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        <87pmmky2tw.wl-maz@kernel.org>
+        <CA+V-a8uw9wwnA=_n+1MUtUhdwCdMFNb22HOq0R3yEeqsfTJLBQ@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: prabhakar.csengg@gmail.com, prabhakar.mahadev-lad.rj@bp.renesas.com, tglx@linutronix.de, robh+dt@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, geert+renesas@glider.be, p.zabel@pengutronix.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org, biju.das.jz@bp.renesas.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-8.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+On Fri, 18 Mar 2022 14:59:41 +0000,
+"Lad, Prabhakar" <prabhakar.csengg@gmail.com> wrote:
+> 
+> Hi Marc,
+> 
+> Thank you for the review.
+> 
+> On Thu, Mar 17, 2022 at 4:13 PM Marc Zyngier <maz@kernel.org> wrote:
+> >
+> > On Thu, 17 Mar 2022 01:24:01 +0000,
+> > Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
+> > >
+> > > +static struct irq_chip irqc_chip = {
+> > > +     .name                   = "rzg2l-irqc",
+> > > +     .irq_eoi                = rzg2l_irqc_eoi,
+> > > +     .irq_mask               = irq_chip_mask_parent,
+> > > +     .irq_unmask             = irq_chip_unmask_parent,
+> > > +     .irq_disable            = rzg2l_irqc_irq_disable,
+> > > +     .irq_enable             = rzg2l_irqc_irq_enable,
+> >
+> > So this looks a bit odd. irq_mask only calls the parent and does nothing
+> > locally, while irq_disable does something locally and calls into the
+> > parent. If the parent is a GIC, this is turned into a mask (GIC has no
+> > notion of disabled).
+> >
+> My understanding for enable callback is one time call during irq setup
+> and for the disable callback it will be called during irq shutdown.
+> During enable/disable callback we config the required registers.
+> For mask callback this will be called when an interrupt occurs and for
+> unmask we want to re-enable the interrupt. Since there are no specific
+> registers to mask/unmask on RZ/G2L the callbacks point to
+> irq_chip_mask_parent/irq_chip_unmask_parent.
+> 
+> I could move all the code from enable/disable callbacks to mask/unmask
+> callbacks and drop setting irq_enable/irq_disable completely. Please
+> let me know what should be the correct approach.
 
-On Thu, Mar 17, 2022 at 1:24 AM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
->
-> Allow free() callback to be overridden from irq_domain_ops for
-> hierarchical chips.
->
-> This allows drivers to free any resources which are allocated during
-> populate_parent_alloc_arg().
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
->  drivers/gpio/gpiolib.c | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
->
-Sorry to ping early, this patch and 4/5 hasn't been reviewed at all in
-previous versions. So I wanted to get your feedback before I post an
-non -RFC version of the series.
+I'm OK with your current setup, but I just wanted to check that this
+was your understanding as well.
 
-Cheers,
-Prabhakar
+	M.
 
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index defb7c464b87..aede442f610d 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -1187,15 +1187,18 @@ static void gpiochip_hierarchy_setup_domain_ops(struct irq_domain_ops *ops)
->         ops->activate = gpiochip_irq_domain_activate;
->         ops->deactivate = gpiochip_irq_domain_deactivate;
->         ops->alloc = gpiochip_hierarchy_irq_domain_alloc;
-> -       ops->free = irq_domain_free_irqs_common;
->
->         /*
-> -        * We only allow overriding the translate() function for
-> +        * We only allow overriding the translate() and free() function for
->          * hierarchical chips, and this should only be done if the user
-> -        * really need something other than 1:1 translation.
-> +        * really need something other than 1:1 translation for translate()
-> +        * callback and free if user wants to free up any resources which
-> +        * were allocated during callbacks for example populate_parent_alloc_arg.
->          */
->         if (!ops->translate)
->                 ops->translate = gpiochip_hierarchy_irq_domain_translate;
-> +       if (!ops->free)
-> +               ops->free = irq_domain_free_irqs_common;
->  }
->
->  static int gpiochip_hierarchy_add_domain(struct gpio_chip *gc)
-> --
-> 2.17.1
->
+-- 
+Without deviation from the norm, progress is not possible.
