@@ -2,122 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ED6224DCECF
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Mar 2022 20:24:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CBCF4DD429
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Mar 2022 06:20:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235205AbiCQTZZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Mar 2022 15:25:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59660 "EHLO
+        id S230313AbiCRFVs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Mar 2022 01:21:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232122AbiCQTZY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Mar 2022 15:25:24 -0400
-Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B7CE1B754C
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Mar 2022 12:24:07 -0700 (PDT)
-Received: from [192.168.1.107] ([37.4.249.169]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MZCX1-1nZAz825Yn-00VBuG; Thu, 17 Mar 2022 20:23:43 +0100
-Message-ID: <f498afb0-dec9-c6fa-8469-896897f77d3f@i2se.com>
-Date:   Thu, 17 Mar 2022 20:23:42 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH RFC 0/2] gpiolib: of: Introduce hook for missing
- gpio-ranges
-Content-Language: en-US
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        Phil Elwell <phil@raspberrypi.com>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
-References: <1646855026-9132-1-git-send-email-stefan.wahren@i2se.com>
- <CACRpkdYuxsYw99CZZK_GXp3V-mPiuL50CxgsE-=oRMApZf_bxA@mail.gmail.com>
- <15171d7e-f065-88b8-b3b3-dbeed75c5e6e@gmail.com>
- <98561f61-55c7-afe1-2393-362376251e43@i2se.com>
- <55b5cb38-41ea-2efa-321f-952259b12082@gmail.com>
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-In-Reply-To: <55b5cb38-41ea-2efa-321f-952259b12082@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        with ESMTP id S230100AbiCRFVq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Mar 2022 01:21:46 -0400
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01olkn2065.outbound.protection.outlook.com [40.92.107.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10C2D1D761F
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Mar 2022 22:20:27 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Y31exmIHfwrbON10rNUfWqpQpS0qOsQNl8OFNFgG7B5voseVCBGOFTV8aMrqrzBO5Vb6ElBV9sz39FIe/Jgb1PsKms4ovbvAfi7SW4KboHK8m5+F8+Eg7YJyHrxgKKbXuNpkiGSvA6i/5/R4A9tEr9+VM/psKMFeqnOaC8NFKy3k99ZfyqezYeoDJgSL9zZdfeAN99BdPBvuxBGTCZgShCDht78vXlYWY2i+Voak54HmnO/CxR9sSsvtDz2IOG7EW3gsSiDLYOucpfJwIoQ7CMji7Giy4cyOl7ALWXyAXwTT98FEK1hgKGOg8h7WiEXK2+9PKGfUXiqJ/ZHbCSLluA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4nBvVN8BbhVtcZpsnDT08Xzh1tbkJqjtaGDWVsO5gvk=;
+ b=lro1oH6bdwOEuliQSuGblSoWCu0Jar6pLYA9AFTHYq5m78GodKId/A9Ftqms8Mvnla5osLFOXKm37uB1loVHtBoGCLvkU1/WQ6aJiAbvpDqKcop404mP1qWf5j1jTEbl3OGUMtpSjttWt8J69NrrTlvlcB0QCkxIHkUjhnNeI+O1uLyHnqk/rJPCbOANmIln0QJHcRN8sWiwOWG8YANdjitkZeFnAaClPuZT2w/trP5L8FoZJz0ZfArwoobhCvlINbNXrpwlTHquZI6+ot4kpOlJ7h+oV76Q//yAbi69eQuL1HcCXTcSkOmT9553E0RqKu8G0b52wBhb/hrDX0ws6Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4nBvVN8BbhVtcZpsnDT08Xzh1tbkJqjtaGDWVsO5gvk=;
+ b=UMUqdlaWUIJtCz5u0Rysri//qYrfAgGLaLZMbkcLkJq/qwoRsw5unrTpL5xLtP7Do3VNwyoXcuk3vQDQio7iik4v/MGZME2i9gZBZNqHzuF4hmYnWZ9MSuVqB4St+vDQHY6Gx7iUzotjrxv5UTJbYFux6oyuG3teOE1XlxUQIqDGR4OYX/tOLbAkN/VBBJPPAX6Urhrc2dHsMA1ki6CxTd6BLE3F9WALR+2SGzeAU+DKbE62ceIQfC6ZL0o83S/A938J8VdplZ1D4ZK/ZkDCYEJNLelztGYi0kGwyz4dhqWv52+cIcw2FN8MWvddoi+hxNcvBqPPCYc1wUk2i2+q2g==
+Received: from SG2PR02MB3194.apcprd02.prod.outlook.com (2603:1096:4:5e::19) by
+ KL1PR02MB4530.apcprd02.prod.outlook.com (2603:1096:820:41::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5081.18; Fri, 18 Mar 2022 05:20:22 +0000
+Received: from SG2PR02MB3194.apcprd02.prod.outlook.com
+ ([fe80::b48f:a03e:4435:cf63]) by SG2PR02MB3194.apcprd02.prod.outlook.com
+ ([fe80::b48f:a03e:4435:cf63%4]) with mapi id 15.20.5081.017; Fri, 18 Mar 2022
+ 05:20:22 +0000
+X-Mailer: PYRYI 16
+From:   "=?utf-8?Q?=E9=B8=A6=E4=B8=98=E8=A2=AD?=" <ynvnis@hotmail.com>
+To:     "=?utf-8?Q?linux-gpio?=" <linux-gpio@vger.kernel.org>
+Subject: =?utf-8?Q?*=E5=B9=B5_=E5=8F=91_=E8=9E=B5=E8=AF=B7V=EF=BC=9A130-8004=EF=BC=8964=EF=BC=931=E5=91=A8_2022-03-18linux-gpio?=
+Message-ID: <SG2PR02MB319444B2962CAD41EE8C6621DA139@SG2PR02MB3194.apcprd02.prod.outlook.com>
+Date:   Fri, 18 Mar 2022 13:19:59 +0800
+Content-Type: text/plain;
+        charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:13yTFphyyT+14cr+vl8SJAyudGw1hcT3Dv08ZOK5Vty38aS1qSD
- WnL34qAmegOhBM4Du/GWtjA/Tlf5eD8JvMiIfBh4XOUUppghI4mq1ePJ3s0iOAayTE1nspi
- 8O2wcJ2mPiL/F7XYPrtB9qq3ZqoLRTNu3du8ioMuIWkxABxd1m0eGfJolt5jX5fqp27rM3Z
- mZW+7An/yfSGqvWZ1UWsQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:zOLcmc5ZdYI=:vYFWZ8+6CueA5Wcxefi6sP
- F4tM3M5odP7hWfxa0I5mzDX9ZC2ifG57kooaGUzKWJzhPULN6yl6/MXJa9GBV76XQfBstaHxq
- oWOeAiRdJQ+PX+VI7yHknXJE4xV7sgvIgniReM9GOEEJu8KwwSVwLMXi3T7G9s1rrIeqr7jWR
- LB6BOtdwPYKLLT7VRyM06Nj5a+QCMhFOHJ2DrEKV8aULuN62yLK2x/xBNtnSW4clo6+PrBM8N
- Vekrq6G/GyzvNz+ozj1DRtKGrMHU34K7ahxqIsA5PU93Lx53oD4DDA/xZ1IYvg6SyPQrzy7bq
- OBvDItaqu24C4cvrnYhK/o7j/trKAeqXeofq5+zvn1XguNFmlNcLW8fWb+7tMhfIBTmuLEg10
- WnTo/T7z68ytNN+CbvCWsPQXdfbB2lQWoZBC5yzoWYQO+jmDuz+67AflR5Ll7wzHKtlKdKyWs
- 6eBAS7v7oNdiIf/mCSmdDvDHb58KzbGJqmxV65Cma175k+Gi2wFz0dsh0KChcoroNgcJthqbc
- X8JrUQ2astdWohD7PKT768ttwaBs7FPCeX6hewsSbvvFwcfAcyJQRqbRIv9BZ8HRk/oCkFNLE
- JzK47lvzUtn+S2q8KbBXoXaFmHe6613dVuVItu6FpZFe3Z5kEx0QhX1J+99u69BSxHa1D+xUt
- 8+H8ZXvNMTsUti/1DRkGGZmtrxzc0Cveo87IpGKOmI87TaJo9kyuxQVZ/8NqEQ9wXfP+MSjaF
- L6XUjDoUHgG9b3tt
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-TMN:  [eBcgFc9fCQ2DkRhi9zaxI0dDTjHcNiOT]
+X-ClientProxiedBy: HK2PR02CA0159.apcprd02.prod.outlook.com
+ (2603:1096:201:1f::19) To SG2PR02MB3194.apcprd02.prod.outlook.com
+ (2603:1096:4:5e::19)
+X-Microsoft-Original-Message-ID: <421a984bc1eccda013f2d5f50141b7d6@hotmail.com>
+Importance: high
+X-Priority: 1
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: b729ea68-75ca-4241-6701-08da089f001c
+X-MS-TrafficTypeDiagnostic: KL1PR02MB4530:EE_
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: xw7yp5aZJiu0Eh2DSd/2ky8aFPVMm/6N+/u9Ef9f7FlKJJGxbGXMoy8kKHOaTvz8zTdHSGvfKrqi2qvPQfl6UjdvqS8NH2lvVRlBIAvEsSsSwhIYvmgxApY2lolzDsiYqrFfRH5fj2Fcu/2LgFI9vS32hX775FL6o3FV6S56uiBVHQflSa0NUDMsnuRwBjEGYI/wkcrZ4dRb31+gseaSgmHfUcLW2IwdUlD3/hSxY2i/E52VXKpFg3yVtPBr5OtuXspmGYah0H9/ik70BOlMDRi1dNUX37+rLFcwec9cFNvG6gJTsQBqMuCfqEtPBcEiLOgWbZt93cAnMtBZjOVE6n4IbOnO9G5XwEgZXWLJX4T0e6gYxo3japggOUJVh6X6QEZvFURaSkpvcWDd/6g0uJ6XDjWtdLskFx9SoLXo968i77vZITTYSwEiH6qvtPj/gwIJu+nxJL3KdHFQaUT0BXf9MI5xU+VWklnAbSlqcNWLve9hAByA77kVrcdyu+iAhcynRZyEUJ9plQV7CIUqgSYzDHP+zUz7Yg+3PRUIHS+L9TvE8k7lE3SrhuAbunRcLPVEtgKoemc3quq4S4dRjw==
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?azZreGJIQi9IWXBsMGt3NjVFZ09qOXRWZkVmckFGVEhSbWcxdzhodkY2d2dt?=
+ =?utf-8?B?NTVESzBBY3ZsS2NWbjNKbG92c0hzMkVnVlgzRHgyRnBuR0VIanRnM2VzdXFB?=
+ =?utf-8?B?a1BqT3B2MWhOSENveGQxU3FpaGdDOXNZaGV3ckdLN0pTdEJqWHdiYmlUbWEy?=
+ =?utf-8?B?RjRqdk8vUEhNRngvMDdqVCtxa1VGay8xM0Z0ZEhva1E0Q2JFY1hvOHQwai9D?=
+ =?utf-8?B?TWwvYWpHOGN6NGxLYk4rVWhxZENvY0Vxb1F1bHp5ZzA0amJaaWdWMHo5ZlVz?=
+ =?utf-8?B?VmVlR0NNTkRvZnJwUnpOemJXUFlVemRTZDZ3dWQwY0NoQmI2Qld1UFVxejhR?=
+ =?utf-8?B?UVNLQkhDNU9OVHc1c1AxSXVjajliZEo1RVVZaU9ueTlaYXJrMEVNV1RNWWNz?=
+ =?utf-8?B?ajBBQzg4VFExQ255VzgwSHdjRFptV2FjTGpkV216NXpCUEpLM09MNWZnbWdh?=
+ =?utf-8?B?RnlVQ01TeVl2SWhxajh3WVVhS0VIWjBNNkYyZ01vSzRBWVBKeGhEUm5EREVF?=
+ =?utf-8?B?UURYcWt6NDRhNG1MSDJXWmNvVVF1ZUFJSi9Fcjdnam85Z2VqdFZtb3RkNDBZ?=
+ =?utf-8?B?dnRiNTNZa0NtT3dEdEliWmxzWVFTVDhseUdZTVhlNmw2bCtTa292eFZGRktE?=
+ =?utf-8?B?QlJudGdPUjdpbEl4NS93VHVieVpiSng3QVc5RXI1QmYvYTcwR0hLZ1J5WWNW?=
+ =?utf-8?B?KzdrRXprWGRzdnFxeWF1VzJDbDN1VGd1RUF3anJZOHM3cU54T0E3UXZZajRZ?=
+ =?utf-8?B?b1VidnRsNkE1cVFYWDRjeFdGRERRbWhYZUM5eXhKTUUwY3FhdkFYSUZlZnFB?=
+ =?utf-8?B?TUt4VzUwVkRWNjhiS051eUtrSmVhN0xRYXMyd2RZMHJudmUxSUpZYzgxVXhF?=
+ =?utf-8?B?dDY3UzR2SWExRy9TbTNueVpGYXhkckJRa1NiYWtiRk9IVDNsRVFscWFXMlhi?=
+ =?utf-8?B?bUZySkRQZGJVZ2EyeDNQeEk2bW42TVA2VjJKUk54VWwzOFBaa2xHQVZMWGlZ?=
+ =?utf-8?B?TnNVWlhVSTFhY00xelh4elJKZ2FvVXpRQitLOExpNHRrc2NUVDZrbDNMWmNy?=
+ =?utf-8?B?Q2FMZisvSlJqY2dRUmVsOE9tSUhxTXJhVEJDN0I5bTAxbElJRzFyZFB0WCtU?=
+ =?utf-8?B?dlBlY2FwYW1TUHhmQlB1TzJRRlJwK0lmUnpSL0FVbmgzVXRHTVVKZFladDJC?=
+ =?utf-8?B?K3MrWmRzSjRyVzU5eEFHa0RVWWRHU3BHTVpCNTI0TnpETURCWnJLbjhWY01u?=
+ =?utf-8?B?eXFTSHJxNFIxRzJYNmx3UXdHUUl3bmlCeGJFdjRZVy80ai8vbENPTXR3RXlV?=
+ =?utf-8?B?R2l0V1Nsd0J1TGRuZ0huaUpxaTNSZ1FGQmxTcEZnSnhtTFIrVnc3ZDZsOTlC?=
+ =?utf-8?B?NXpMWXFpVXlJakhPRGxybHU2SU0yUmZPRk84T2FjRlZiYjVqMnR3RDJZdnJt?=
+ =?utf-8?B?WEJvb3BRWkM0QmNoblp5a0x4enhmb2pmRE9jNnlsbis2dWdtdjhVM2dMM3JQ?=
+ =?utf-8?Q?rxMaySX8squYhRpMAlO8Bqnq+NU?=
+X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-20e34.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: b729ea68-75ca-4241-6701-08da089f001c
+X-MS-Exchange-CrossTenant-AuthSource: SG2PR02MB3194.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2022 05:20:22.6186
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR02MB4530
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
 
-Am 17.03.22 um 18:17 schrieb Florian Fainelli:
-> On 3/17/22 4:48 AM, Stefan Wahren wrote:
->> Hi,
->>
->> Am 17.03.22 um 03:02 schrieb Florian Fainelli:
->>>
->>> On 3/16/2022 6:15 PM, Linus Walleij wrote:
->>>> On Wed, Mar 9, 2022 at 8:44 PM Stefan Wahren <stefan.wahren@i2se.com>
->>>> wrote:
->>>>
->>>>> This patch series tries to provide backward compatibility for DTB which
->>>>> lacks the gpio-ranges property.
->>>>>
->>>>> The commit ("pinctrl: msm: fix gpio-hog related boot issues") by
->>>>> Christian
->>>>> Lamparter already contains a fallback in case the gpio-ranges property
->>>>> is missing. But this approach doesn't work on BCM2835 with a gpio-hog
->>>>> defined for the SoC GPIOs.
->>>>>
->>>>> Based Christian's on explanation i conclude that the fallback must
->>>>> happen
->>>>> during the gpiochip_add() call and not afterwards. So the approach
->>>>> is to
->>>>> call an optional hook, which can be implemented in the platform driver.
->>>>>
->>>>> This series has been tested on Raspberry Pi 3 B Plus.
->>>>>
->>>>> Stefan Wahren (2):
->>>>>     gpiolib: of: Introduce hook for missing gpio-ranges
->>>>>     pinctrl: bcm2835: implement hook for missing gpio-ranges
->>>> Looks good to me, is this something I should apply to the pinctrl
->>>> tree or should I wait for a non-RFC version?
->>> I would be inclined to slap a couple of different Fixes tag to each
->>> commit because breaking older DTBs should IMHO be considered a
->>> regression. So for the first patch I would add:
->>>
->>> Fixes: 2ab73c6d8323 ("gpio: Support GPIO controllers without pin-ranges")
->>>
->>> and for the second patch:
->>>
->>> Fixes: 266423e60ea1 ("pinctrl: bcm2835: Change init order for gpio hogs")
->>>
->>> WDYT?
->> so you consider backporting this "feature"?
-> Yes, I would consider your changes fixes actually. If I am the only one
-> deeply concerned about backwards compatibility I suppose I could
-> backport those into our tree.
-i'm fine with backporting, but i thought these must be single 
-independent patches.
+代幵 发…彯+-*请薇130-8004-6431刘 [%French(2,5)] W6r 
+
+
+
+linux-gpio过程语言
+
