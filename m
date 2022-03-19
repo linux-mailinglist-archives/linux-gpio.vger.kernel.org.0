@@ -2,135 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 581A44E18C4
-	for <lists+linux-gpio@lfdr.de>; Sat, 19 Mar 2022 22:57:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BF2DD4E18CD
+	for <lists+linux-gpio@lfdr.de>; Sat, 19 Mar 2022 23:22:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244274AbiCSV6o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 19 Mar 2022 17:58:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59370 "EHLO
+        id S242720AbiCSWYF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 19 Mar 2022 18:24:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244269AbiCSV6m (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 19 Mar 2022 17:58:42 -0400
-Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00DBB260C77
-        for <linux-gpio@vger.kernel.org>; Sat, 19 Mar 2022 14:57:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=k1; bh=ku5KNiHCiV1R0p
-        A7y/89CTCEj4KZhXTivGuAFWgThF0=; b=JU1DD4dE9bnjIgIH/6iguuy4CHVkMv
-        GDR/tEo2gU8H9/yx5kK3K+ZA7W/+ThN8YMmPHuk8wGFprWa0GAd7oy561tHry125
-        eynbMoCp+PwZteGJ0bCZFSgiVAK2y1V/fqYFxh9WDgFNUYAufduz8rjPeBZ6f/yo
-        EeP2r0FWQjj68=
-Received: (qmail 244854 invoked from network); 19 Mar 2022 22:57:17 +0100
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 19 Mar 2022 22:57:17 +0100
-X-UD-Smtp-Session: l3s3148p1@1aLBWJnapNwgAQnoAFEUAKkXZRZ8X9Wv
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     linux-renesas-soc@vger.kernel.org
-Cc:     linux-gpio@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        LUU HOAI <hoai.luu.ub@renesas.com>
-Subject: [PATCH 2/2] pinctrl: renesas: r8a77990: add drive-strength
-Date:   Sat, 19 Mar 2022 22:57:06 +0100
-Message-Id: <20220319215706.59519-3-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220319215706.59519-1-wsa+renesas@sang-engineering.com>
-References: <20220319215706.59519-1-wsa+renesas@sang-engineering.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+        with ESMTP id S237343AbiCSWYE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 19 Mar 2022 18:24:04 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1906F2335CE
+        for <linux-gpio@vger.kernel.org>; Sat, 19 Mar 2022 15:22:43 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-2dbda4f6331so98242427b3.11
+        for <linux-gpio@vger.kernel.org>; Sat, 19 Mar 2022 15:22:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=OkSdEnZDxkie6HpV+Cq3FfZcGdO9k6Q2dedvGrihz4k=;
+        b=kHBbs+54TQt8YvMHJ4P15RTiz6iMnXCDYI6xGPXQeLnigv02pyh3ovt9kgRJ1j2lLb
+         t4+AOulByIuiIQh70uHNxxuclxQ/kSABl46uzAYW0Iwf7WaycffXcHKeDQq4ZQeN2izO
+         98I8Fd89vVvic/c6V2SlbxEdUy0Q5/V0h0R7fCy3LMOjX8/QgE7sH4fxMcZ/BngDA4L7
+         syOqscHseotKX75Nl/04HrFQ9UXUZTUc9qBOPT93mEsz+vf+rIQd8Kb3sWVBwZDMgccf
+         TlCZJk7vUU623Vpff7hAprVly+y/6kpn8qfGsVhAJG6WBx4N5PBfYryxSAymDBy8gcyH
+         YT+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=OkSdEnZDxkie6HpV+Cq3FfZcGdO9k6Q2dedvGrihz4k=;
+        b=mcHCtC9G05UHA3eVhX41os491gC2KDPGBR08rSwzgq7zJDwcuiwP75J5X1d9JiEdp0
+         r3JtlDSBot/aveU0o+85TJRZ5Ho0qqTVfH5CtFNZCuVAwIe/OA8hWZi473LLjVFcFoCK
+         hOSTbt0R4ZqQUs5lUsXT89SI0NoTOe/lITR+PHYPqZOsaVJgfCQIOWo4u/rQMkhRAwj2
+         B1bYM27q0+P7slNV5YoEgyn3vTIIbfd8gkU42DFqDYHaw+N8JR/lwWbrmvPVT+CTyCWW
+         7oeGCrWs0lFuX9jrs093yD+IQ/pcJHMuSgL8RoihkyhiA7bkNA8po1fVY1OK3G29QRfR
+         Ontg==
+X-Gm-Message-State: AOAM532E5Q3HdL2NV7yjjmIMJzy3dtBGllWUTHZDancoVGS9+a6Fnjpk
+        9Txw7hyxPWzlxaaAU9eDpAz4TJZ7
+X-Google-Smtp-Source: ABdhPJwBJbOZ/XB3qdeuKan76xVvlKrJlJwjVdqavArroy0vYh8wzbTjEMoyDcySwnRgwhJGfVbTY7DWnQ==
+X-Received: from fawn.svl.corp.google.com ([2620:15c:2cd:202:f299:d506:bab:fff8])
+ (user=morbo job=sendgmr) by 2002:a25:d304:0:b0:633:64ce:99c6 with SMTP id
+ e4-20020a25d304000000b0063364ce99c6mr16652532ybf.433.1647728561817; Sat, 19
+ Mar 2022 15:22:41 -0700 (PDT)
+Date:   Sat, 19 Mar 2022 15:22:28 -0700
+In-Reply-To: <20220316213055.2351342-1-morbo@google.com>
+Message-Id: <20220319222228.4160598-1-morbo@google.com>
+Mime-Version: 1.0
+References: <20220316213055.2351342-1-morbo@google.com>
+X-Mailer: git-send-email 2.35.1.894.gb6a874cedc-goog
+Subject: [PATCH v2] gpiolib: acpi: use correct format characters
+From:   Bill Wendling <morbo@google.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Cc:     torvalds@linux-foundation.org, Bill Wendling <morbo@google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-According to HW documentation 2.20 onwards, drive-strength is introduced
-to r8a77990. Add it to the pinctrl driver.
+When compiling with -Wformat, clang emits the following warning:
 
-Signed-off-by: LUU HOAI <hoai.luu.ub@renesas.com>
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+drivers/gpio/gpiolib-acpi.c:393:4: warning: format specifies type
+'unsigned char' but the argument has type 'int' [-Wformat]
+                        pin);
+                        ^~~
+
+The types of these arguments are unconditionally defined, so this patch
+updates the format character to the correct ones casts to unsigned to
+retain the behavior or the "hh" modifier..
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/378
+Signed-off-by: Bill Wendling <morbo@google.com>
 ---
+v2 - Cast "pin" to retain the same width as the original.
+---
+ drivers/gpio/gpiolib-acpi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Original BSP commit: f479c5a4e5e5 ("pinctrl: renesas: r8a77990: Add driver-strength for R8A77990")
-
-However, this was incomplete and missed 6 pins of table 6D.6 which were
-on a separate page. Adding them simplifies PORT_GP updates a lot.
-However, a preparational patch is needed then which is patch 1 of this
-series.
-
- drivers/pinctrl/renesas/pfc-r8a77990.c | 38 ++++++++++++++++++++++++--
- 1 file changed, 36 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pinctrl/renesas/pfc-r8a77990.c b/drivers/pinctrl/renesas/pfc-r8a77990.c
-index f44c7da3ec16..cc825100f2fe 100644
---- a/drivers/pinctrl/renesas/pfc-r8a77990.c
-+++ b/drivers/pinctrl/renesas/pfc-r8a77990.c
-@@ -22,12 +22,12 @@
- 	PORT_GP_CFG_18(0, fn, sfx, CFG_FLAGS), \
- 	PORT_GP_CFG_23(1, fn, sfx, CFG_FLAGS), \
- 	PORT_GP_CFG_26(2, fn, sfx, CFG_FLAGS), \
--	PORT_GP_CFG_12(3, fn, sfx, CFG_FLAGS | SH_PFC_PIN_CFG_IO_VOLTAGE), \
-+	PORT_GP_CFG_12(3, fn, sfx, CFG_FLAGS | SH_PFC_PIN_CFG_IO_VOLTAGE | SH_PFC_PIN_CFG_DRIVE_STRENGTH), \
- 	PORT_GP_CFG_1(3, 12, fn, sfx, CFG_FLAGS), \
- 	PORT_GP_CFG_1(3, 13, fn, sfx, CFG_FLAGS), \
- 	PORT_GP_CFG_1(3, 14, fn, sfx, CFG_FLAGS), \
- 	PORT_GP_CFG_1(3, 15, fn, sfx, CFG_FLAGS), \
--	PORT_GP_CFG_11(4, fn, sfx, CFG_FLAGS | SH_PFC_PIN_CFG_IO_VOLTAGE), \
-+	PORT_GP_CFG_11(4, fn, sfx, CFG_FLAGS | SH_PFC_PIN_CFG_IO_VOLTAGE | SH_PFC_PIN_CFG_DRIVE_STRENGTH), \
- 	PORT_GP_CFG_20(5, fn, sfx, CFG_FLAGS), \
- 	PORT_GP_CFG_9(6, fn, sfx, CFG_FLAGS), \
- 	PORT_GP_CFG_1(6, 9, fn, sfx, SH_PFC_PIN_CFG_PULL_UP), \
-@@ -5104,6 +5104,39 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 	{ },
- };
+diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+index a5495ad31c9c..92dd9b8784f2 100644
+--- a/drivers/gpio/gpiolib-acpi.c
++++ b/drivers/gpio/gpiolib-acpi.c
+@@ -388,9 +388,9 @@ static acpi_status acpi_gpiochip_alloc_event(struct acpi_resource *ares,
  
-+static const struct pinmux_drive_reg pinmux_drive_regs[] = {
-+	{ PINMUX_DRIVE_REG("DRVCTRL8", 0xe6060320) {
-+		{ RCAR_GP_PIN(3,  0), 18, 2 },	/* SD0_CLK */
-+		{ RCAR_GP_PIN(3,  1), 15, 2 },	/* SD0_CMD */
-+		{ RCAR_GP_PIN(3,  2), 12, 2 },	/* SD0_DAT0 */
-+		{ RCAR_GP_PIN(3,  3),  9, 2 },	/* SD0_DAT1 */
-+		{ RCAR_GP_PIN(3,  4),  6, 2 },	/* SD0_DAT2 */
-+		{ RCAR_GP_PIN(3,  5),  3, 2 },	/* SD0_DAT3 */
-+		{ RCAR_GP_PIN(3,  6),  0, 2 },	/* SD1_CLK */
-+	} },
-+	{ PINMUX_DRIVE_REG("DRVCTRL9", 0xe6060324) {
-+		{ RCAR_GP_PIN(3,  7), 29, 2 },	/* SD1_CMD */
-+		{ RCAR_GP_PIN(3,  8), 26, 2 },	/* SD1_DAT0 */
-+		{ RCAR_GP_PIN(3,  9), 23, 2 },	/* SD1_DAT1 */
-+		{ RCAR_GP_PIN(3, 10), 20, 2 },	/* SD1_DAT2 */
-+		{ RCAR_GP_PIN(3, 11), 17, 2 },	/* SD1_DAT3 */
-+		{ RCAR_GP_PIN(4,  0), 14, 2 },	/* SD3_CLK */
-+		{ RCAR_GP_PIN(4,  1), 11, 2 },	/* SD3_CMD */
-+		{ RCAR_GP_PIN(4,  2),  8, 2 },	/* SD3_DAT0 */
-+		{ RCAR_GP_PIN(4,  3),  5, 2 },	/* SD3_DAT1 */
-+		{ RCAR_GP_PIN(4,  4),  2, 2 },	/* SD3_DAT2 */
-+	} },
-+	{ PINMUX_DRIVE_REG("DRVCTRL10", 0xe6060328) {
-+		{ RCAR_GP_PIN(4,  5), 29, 2 },	/* SD3_DAT3 */
-+		{ RCAR_GP_PIN(4,  6), 26, 2 },	/* SD3_DAT4 */
-+		{ RCAR_GP_PIN(4,  7), 23, 2 },	/* SD3_DAT5 */
-+		{ RCAR_GP_PIN(4,  8), 20, 2 },	/* SD3_DAT6 */
-+		{ RCAR_GP_PIN(4,  9), 17, 2 },	/* SD3_DAT7 */
-+		{ RCAR_GP_PIN(4, 10), 14, 2 },	/* SD3_DS */
-+	} },
-+	{ },
-+};
-+
- enum ioctrl_regs {
- 	POCCTRL0,
- 	TDSELCTRL,
-@@ -5387,6 +5420,7 @@ const struct sh_pfc_soc_info r8a77990_pinmux_info = {
- 		ARRAY_SIZE(pinmux_functions.automotive),
- 
- 	.cfg_regs = pinmux_config_regs,
-+	.drive_regs = pinmux_drive_regs,
- 	.bias_regs = pinmux_bias_regs,
- 	.ioctrl_regs = pinmux_ioctrl_regs,
- 
+ 	if (pin <= 255) {
+ 		char ev_name[5];
+-		sprintf(ev_name, "_%c%02hhX",
++		sprintf(ev_name, "_%c%02X",
+ 			agpio->triggering == ACPI_EDGE_SENSITIVE ? 'E' : 'L',
+-			pin);
++			(unsigned char)pin);
+ 		if (ACPI_SUCCESS(acpi_get_handle(handle, ev_name, &evt_handle)))
+ 			handler = acpi_gpio_irq_handler;
+ 	}
 -- 
-2.30.2
+2.35.1.894.gb6a874cedc-goog
 
