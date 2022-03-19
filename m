@@ -2,61 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8EC3A4E18E6
-	for <lists+linux-gpio@lfdr.de>; Sat, 19 Mar 2022 23:55:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FFCF4E1901
+	for <lists+linux-gpio@lfdr.de>; Sun, 20 Mar 2022 00:21:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244313AbiCSW40 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 19 Mar 2022 18:56:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50914 "EHLO
+        id S244388AbiCSXWx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 19 Mar 2022 19:22:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234512AbiCSW4Z (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 19 Mar 2022 18:56:25 -0400
-Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ECB312F164
-        for <linux-gpio@vger.kernel.org>; Sat, 19 Mar 2022 15:55:03 -0700 (PDT)
-Received: by mail-lj1-x229.google.com with SMTP id g24so14377765lja.7
-        for <linux-gpio@vger.kernel.org>; Sat, 19 Mar 2022 15:55:03 -0700 (PDT)
+        with ESMTP id S244387AbiCSXWw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 19 Mar 2022 19:22:52 -0400
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4315045074
+        for <linux-gpio@vger.kernel.org>; Sat, 19 Mar 2022 16:21:29 -0700 (PDT)
+Received: by mail-lf1-x131.google.com with SMTP id a26so1407358lfg.10
+        for <linux-gpio@vger.kernel.org>; Sat, 19 Mar 2022 16:21:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=2RcfPrB/V6uUl/QMOUTM8niNIWsvBXQJjvqEWbLTeEM=;
-        b=KFXZqangAD/YFTarQejH6BpymNsRw63gr0TokRCxZVPSQGhHCuRkX1gEKlnnSt3JXI
-         AJ18NWnU4U+DEIWZqAZWnrEOrWu/femC+tgbzZKWiHdJXmpM0TAyJZzVAdCucZoCKym2
-         Gx8C5V/POiGMWGGwUJvnHQF7WQzLZJCrhqA2A=
+        bh=rxIG59hWE7fTLM08POLwmSdeNPdfOcqzklKto3ZaqJc=;
+        b=XnkMxz93PO3rdLFMI2lfYthrx7Lhicsol4Os8Fj8YenRH3QMiQ9WWxjUZSSXfu1bCA
+         Zu4bWFkMfbjR+kCRc6DeIxpawOp55NhpZN2blZQ3VrbtvmdZrekC3NuWFiV+OFJG0yiT
+         KyGpY+qQqYk6OKrG/+Gvp83pCOZpDRi2uUqfM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2RcfPrB/V6uUl/QMOUTM8niNIWsvBXQJjvqEWbLTeEM=;
-        b=00s/hlJEWANomRQ9Bdaef6beWUnkpaec5Wg9WWloLL4f5Fp9qcL0njY3jahy5bHm+U
-         Hrhw9nOKRgJn7qClsRWxYImpQXgATQpMw1cHKIsz9V5rF8ywDKsS3GYP5O08xi3IprP1
-         5eQ5PBQnzL0XqUjOaCfD023iFiuzjpIOlHTGPwhkup2PeMNX0yLm+gy62SI8WOEPIeLe
-         aufXDBlxNbjAZCTXIwJfx70N6XSpvKQaSeqLSGhW4g8D2tiiM00BxxHd20NViaUfz1hw
-         Wdi4fI55nIRpaYwCeqYaSrmBMgrsJKegIDVF5W+nZXsvuTPAnxKXh5VJx26aAw4RnHM5
-         BSnw==
-X-Gm-Message-State: AOAM531me/kPg+WtEm0e0Bv5SxbITzy2Ukd3MdsyFd78CDYWWcLUbThM
-        ABgGe1C8h4dPf8nDsUwawd49DLIHMh6UcAI0fuY=
-X-Google-Smtp-Source: ABdhPJz42gCP5edPUQ4T4CaBZP2S0YFDML9T0hpAvJgnyTe1XM2vI6bUNeXh47IqWiTRU27yTMxJQg==
-X-Received: by 2002:a2e:b0fc:0:b0:249:7c8c:de41 with SMTP id h28-20020a2eb0fc000000b002497c8cde41mr2447399ljl.257.1647730501613;
-        Sat, 19 Mar 2022 15:55:01 -0700 (PDT)
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
-        by smtp.gmail.com with ESMTPSA id b15-20020ac2562f000000b004437f2667bfsm1394116lff.308.2022.03.19.15.55.00
+        bh=rxIG59hWE7fTLM08POLwmSdeNPdfOcqzklKto3ZaqJc=;
+        b=TEGw9VDN9ygxNEEG7wyDs2so6fiEpxJBYPJ9vj080I8prrq930bj55OeAHCbzAUqkD
+         QE2g9C3lQOOCGFwNxwtG8KLl/h9woeGZdiGkCQznasTvgytPiOr1lLhvVtDqHEBeKLQS
+         x4XJGyPveZJVpfxGoZNsWdoeX1Yvlx2UfF+76d5jVz1E+pr37IuCB87uqNj2AduhZXZz
+         ga51XmQPVkWqVZtd0iEOXzLr5mMA8IkK8PZVayJBMXybGd+n0YBuiu3xTXGy+hCPrkjo
+         VIZLMTMBKLO22LVE61J2koznnjSx4yI3qskQ+3xnykddIu8A7IQ1zvcv2LqBDzfbV21A
+         0l6Q==
+X-Gm-Message-State: AOAM530NRXzrzMtl6cAd4nJzXAY8FhAxm9MB3FD7qGGOkt+EgdTxo3yZ
+        SFag9aDNLH1qVhdICEai6klVHxeAaZoUUnrqDbA=
+X-Google-Smtp-Source: ABdhPJyaCH9WLQuzUjcjGhVqG4Roi/TPSOwpaRZQ/8g7mCSj8b3s+I9HF7nMM5vMe8aXeFU43huHSg==
+X-Received: by 2002:a05:6512:13a7:b0:447:3dac:7a03 with SMTP id p39-20020a05651213a700b004473dac7a03mr10535985lfa.362.1647732087297;
+        Sat, 19 Mar 2022 16:21:27 -0700 (PDT)
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
+        by smtp.gmail.com with ESMTPSA id o11-20020ac2434b000000b004478421baaesm1409957lfl.6.2022.03.19.16.21.25
         for <linux-gpio@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 19 Mar 2022 15:55:00 -0700 (PDT)
-Received: by mail-lf1-f41.google.com with SMTP id w7so19352892lfd.6
-        for <linux-gpio@vger.kernel.org>; Sat, 19 Mar 2022 15:55:00 -0700 (PDT)
-X-Received: by 2002:a05:6512:2294:b0:448:6c86:3c78 with SMTP id
- f20-20020a056512229400b004486c863c78mr9683258lfu.531.1647730500067; Sat, 19
- Mar 2022 15:55:00 -0700 (PDT)
+        Sat, 19 Mar 2022 16:21:25 -0700 (PDT)
+Received: by mail-lj1-f174.google.com with SMTP id bn33so15631543ljb.6
+        for <linux-gpio@vger.kernel.org>; Sat, 19 Mar 2022 16:21:25 -0700 (PDT)
+X-Received: by 2002:a2e:9b10:0:b0:247:f28c:ffd3 with SMTP id
+ u16-20020a2e9b10000000b00247f28cffd3mr10548961lji.152.1647732085458; Sat, 19
+ Mar 2022 16:21:25 -0700 (PDT)
 MIME-Version: 1.0
 References: <20220316213055.2351342-1-morbo@google.com> <20220319222228.4160598-1-morbo@google.com>
-In-Reply-To: <20220319222228.4160598-1-morbo@google.com>
+ <CAHk-=wh4B42bYZmGoY8=UsqHDuq_th2KN7TmXuTnhwyYWzQ5pg@mail.gmail.com>
+In-Reply-To: <CAHk-=wh4B42bYZmGoY8=UsqHDuq_th2KN7TmXuTnhwyYWzQ5pg@mail.gmail.com>
 From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sat, 19 Mar 2022 15:54:43 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wh4B42bYZmGoY8=UsqHDuq_th2KN7TmXuTnhwyYWzQ5pg@mail.gmail.com>
-Message-ID: <CAHk-=wh4B42bYZmGoY8=UsqHDuq_th2KN7TmXuTnhwyYWzQ5pg@mail.gmail.com>
+Date:   Sat, 19 Mar 2022 16:21:09 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgH3kbKcNwBO7os3BuU523Gd2aqdu0dVvf50bJbLKrLJg@mail.gmail.com>
+Message-ID: <CAHk-=wgH3kbKcNwBO7os3BuU523Gd2aqdu0dVvf50bJbLKrLJg@mail.gmail.com>
 Subject: Re: [PATCH v2] gpiolib: acpi: use correct format characters
 To:     Bill Wendling <morbo@google.com>
 Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
@@ -80,66 +81,84 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-So I think that clang warning is only annoying, not helpful, but:
-
-On Sat, Mar 19, 2022 at 3:22 PM Bill Wendling <morbo@google.com> wrote:
+On Sat, Mar 19, 2022 at 3:54 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
-> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-> index a5495ad31c9c..92dd9b8784f2 100644
-> --- a/drivers/gpio/gpiolib-acpi.c
-> +++ b/drivers/gpio/gpiolib-acpi.c
-> @@ -388,9 +388,9 @@ static acpi_status acpi_gpiochip_alloc_event(struct acpi_resource *ares,
->
->         if (pin <= 255) {
->                 char ev_name[5];
-> -               sprintf(ev_name, "_%c%02hhX",
-> +               sprintf(ev_name, "_%c%02X",
+> So warning that '%hhX' is paired with an 'int' is all just completely
+> mindless and wrong.
 
-This part I approve of.
+Sadly, I can see a different bogus warning reason why people would
+want to use '%02hhX'.
 
->                         agpio->triggering == ACPI_EDGE_SENSITIVE ? 'E' : 'L',
-> -                       pin);
-> +                       (unsigned char)pin);
+Again, the *sane* thing from a human perspective is to use '%02X. But
+if the compiler doesn't do any range analysis at all, it could decide
+that "Oh, that print format could need up to 8 bytes of space in the
+result". Using '%02hhX' would cut that down to two.
 
-But this cast seems pointless and wrong.
+And since we use
 
-Casts in general are bad, and should be avoided unless there's a real
-reason for them. And that reason doesn't seem to exist. We don't
-actually want to truncate the value of 'pin', and just a few lines
-earlier actually checked that it is in range.
+        char ev_name[5];
 
-And if 'pin' can't be negative - it comes from a 'u16' table
-dereference - but even if it could have been that would have been a
-different bug here anyway (and should have been fixed by tightening
-the check).
+and currently use "_%c%02hhX" as the format string, even a compiler
+that doesn't notice that "pin <= 255" test that guards this all will
+go "ok, that's at most 4 bytes and the final NUL termination, so it's
+fine".
 
-So the cast doesn't add anything - not for humans, and not for a
-compiler that could just optimize it away because it saw the range
-check.
+While a compiler - like gcc - that only sees that the original source
+of the 'pin' value is a 'unsigned short' array, and then doesn't take
+the "pin <= 255" into account, will warn like this:
 
-End result: just fix the pointless 'hh' in the print specifier. It
-doesn't add anything, and only causes problems. Anybody who uses '%02X
-to print a byte should only use it for byte values - and the code
-already does.
+    drivers/gpio/gpiolib-acpi.c: In function 'acpi_gpiochip_request_interrupt':
+    drivers/gpio/gpiolib-acpi.c:206:24: warning: '%02X' directive
+writing between 2 and 4 bytes into a region of size 3
+[-Wformat-overflow=]
+       sprintf(ev_name, "_%c%02X",
+                            ^~~~
+    drivers/gpio/gpiolib-acpi.c:206:20: note: directive argument in
+the range [0, 65535]
 
-Of course, the _reason_ for this all was a warning that was pointless
-to begin with, and should never have existed. Clang was not smart
-enough to take the range knowledge that it _could_ have taken into
-account, and instead wrote out a completely bogus warning.
+because gcc isn't being very good at that argument range analysis either.
 
-It's completely bogus not just because clang didn't do a sufficiently
-good job of range analysis - it's completely bogus because a 'varargs'
-function DOES NOT TAKE arguments of type 'char'.
+In other words, the original use of 'hhx' was bogus to begin with, and
+due to *another* compiler warning being bad, and we had that bad code
+being written back in 2016 to work around _that_ compiler warning
+(commit e40a3ae1f794: "gpio: acpi: work around false-positive
+-Wstring-overflow warning").
 
-So the *only* reason to use '%hhX' in the first place is that you
-*want* the sprintf() to actually limit the value to a byte for you
-(possibly because you have a signed char, know it will sign-extend to
-'int', and want to limit it back to 8 bits).
+Sadly, two different bad compiler warnings together does not make for
+one good one.
 
-If you *actually* had a 'unsigned char' to begin with, you'd be
-completely insane to use %hhX. It's just pointless.
+It just makes for even more pain.
 
-So warning that '%hhX' is paired with an 'int' is all just completely
-mindless and wrong.
+End result: I think the simplest and cleanest option is simply this:
 
-              Linus
+  --- a/drivers/gpio/gpiolib-acpi.c
+  +++ b/drivers/gpio/gpiolib-acpi.c
+  @@ -387,8 +387,8 @@ static acpi_status
+acpi_gpiochip_alloc_event(struct acpi_resource *ares,
+        pin = agpio->pin_table[0];
+
+        if (pin <= 255) {
+  -             char ev_name[5];
+  -             sprintf(ev_name, "_%c%02hhX",
+  +             char ev_name[8];
+  +             sprintf(ev_name, "_%c%02X",
+                        agpio->triggering == ACPI_EDGE_SENSITIVE ? 'E' : 'L',
+                        pin);
+                if (ACPI_SUCCESS(acpi_get_handle(handle, ev_name, &evt_handle)))
+
+which undoes that '%hhX' change for gcc, and replaces it with just
+using a slightly bigger stack allocation. It's not like a 5-byte
+allocation is in any way likely to have saved any actual stack, since
+all the other variables in that function are 'int' or bigger.
+
+False-positive compiler warnings really do make people write worse
+code, and that's a problem. But on a scale of bad code, I feel that
+extending the buffer trivially is better than adding a pointless cast
+that literally makes no sense.
+
+At least in this case the end result isn't unreadable or buggy. We've
+had several cases of bad compiler warnings that caused changes that
+were actually horrendously wrong.
+
+                  Linus
