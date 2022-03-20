@@ -2,143 +2,129 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 50B904E191D
-	for <lists+linux-gpio@lfdr.de>; Sun, 20 Mar 2022 01:18:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1640F4E1AC3
+	for <lists+linux-gpio@lfdr.de>; Sun, 20 Mar 2022 09:21:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238636AbiCTAUR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 19 Mar 2022 20:20:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44754 "EHLO
+        id S240809AbiCTIWX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 20 Mar 2022 04:22:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243187AbiCTAUQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 19 Mar 2022 20:20:16 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A065F13CE5;
-        Sat, 19 Mar 2022 17:18:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647735533; x=1679271533;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Y3N4exy6MfKBJE9UeXNOTUM3ieC3sG19mzFvjlL6lRs=;
-  b=k06Ca5xGwhFFs1n6oOtcawDetwxMv0C1z9g9sIrh/Ma4VfBQJiKXHrxE
-   FPs1bM/zZiKOvGG4knqPba9L9T08fTho6VqOq+cBLT5eIfVSq2K6uZZmi
-   aqtd82ByofNfXBSR6am3kNNdf4S5EXinnwIzZ+KXrPC1SyvBs7jXgvt5s
-   PU0YJRZzTWUbIA43q/eXvk0eLzzBoBNg8dprE6PQipkhhHmibg/BWrhW2
-   nySgMW9g8i7jHDLosM28ZYIFx98q5Pw3Xduiiir9rN4zgwuVlSlniwKR5
-   pLlu7LP5iAL+aVD0EpRS/b3oRmonmxuUdn5qxGEkPducVzG+oZhQGjKrt
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10291"; a="256157528"
-X-IronPort-AV: E=Sophos;i="5.90,195,1643702400"; 
-   d="scan'208";a="256157528"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2022 17:18:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,195,1643702400"; 
-   d="scan'208";a="648129507"
-Received: from lkp-server02.sh.intel.com (HELO 89b41b6ae01c) ([10.239.97.151])
-  by orsmga004.jf.intel.com with ESMTP; 19 Mar 2022 17:18:50 -0700
-Received: from kbuild by 89b41b6ae01c with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1nVjHV-000GOi-Ln; Sun, 20 Mar 2022 00:18:49 +0000
-Date:   Sun, 20 Mar 2022 08:18:08 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Wolfram Sang <wsa-dev@sang-engineering.com>,
-        linux-renesas-soc@vger.kernel.org
-Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
-        linux-gpio@vger.kernel.org,
-        Wolfram Sang <wsa-dev@sang-engineering.com>,
-        LUU HOAI <hoai.luu.ub@renesas.com>
-Subject: Re: [PATCH 2/2] pinctrl: renesas: r8a77990: add drive-strength
-Message-ID: <202203200832.RD8XJhU1-lkp@intel.com>
-References: <20220319215706.59519-3-wsa+renesas@sang-engineering.com>
+        with ESMTP id S240333AbiCTIWX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 20 Mar 2022 04:22:23 -0400
+Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B3764BFDA;
+        Sun, 20 Mar 2022 01:21:00 -0700 (PDT)
+Received: by mail-lj1-x22b.google.com with SMTP id q14so3034534ljc.12;
+        Sun, 20 Mar 2022 01:21:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=H5jqTsReHjJpHbnZQQczWjSuTqgW0vC/dZTYtBAjSnc=;
+        b=EPr3LbdzLYezPN2YQME62GNvv4acBq0u420N6LQEEBYBigFexkTSTeivHD2BFSoRKA
+         TBDYmIfSod8wh4bWAUOo7bxtCzbU5aRVZFpY4vI/6LK09LNyCXVxxzFDYRzqQ0KTjb4T
+         ZTgZbAex8YYSFEEbw3r0czvOmIdCcu4Wj5WH5zlMcDeYcpiZBiZu0oipMx7bsft7O46Z
+         fClGWrXcsyovrAHcRkHXrscHGTXt+kOzO73KeuxufoWt+GoGnOp4mwdlMMz0JwZuokc0
+         QYKg+tSYAzdoTQyF20bNaaDtlztEUkM95tG5tSkeR60z/yi7PxuNIVdBShLA6zd+gjSz
+         PPLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=H5jqTsReHjJpHbnZQQczWjSuTqgW0vC/dZTYtBAjSnc=;
+        b=ULxkanb4t5cwWSUFtaZQGLWH+6cCoWq9ded4+j0FTg/E+4QzgzT7L6HZIN4HLzEde2
+         4SouQk3U+GzsOu7d850Ta6rns8WT8HA9l6aOX2bz4kfmtFJ2Mrblqw0kYVWQVJRfdDKF
+         gv6sK5AKcbxrPwIsnXpO9wCG7cGjRlYbwdwFeMhgYipNX6sWmP8hjsH+ZzpdR18W+moS
+         T6T5m/VV78mRpQIlKM1TusCOFa9HzQrcs82xbkAhMet9bltwma2reAHWQKPr5bNJmwQg
+         IwB+BJjxTnG3xEJfbyJ99zKP82Q5sJDHrdYRrhMpoPZDvVynODoRwj9uLKziWCh/0ogt
+         ioeg==
+X-Gm-Message-State: AOAM5309ldlJU2xGAJlSvZbsIonNy0HKhQCFaIhW6uVtrZuzXtc8g2kG
+        0nOPQ8vE5WjljgPVijYYsUm9RcwEv/xdEQ==
+X-Google-Smtp-Source: ABdhPJyw/MvUqES6wCAvnMJzwx5rx3Rs/R3I4PaI3L3m2x9GWui8eCx2CTqr1K2n1TEwNhy4wu/DYw==
+X-Received: by 2002:a2e:2a45:0:b0:246:430d:805 with SMTP id q66-20020a2e2a45000000b00246430d0805mr11487117ljq.439.1647764457911;
+        Sun, 20 Mar 2022 01:20:57 -0700 (PDT)
+Received: from [192.168.1.103] ([178.176.78.200])
+        by smtp.gmail.com with ESMTPSA id v29-20020ac25b1d000000b00448ac0a2d88sm1501433lfn.47.2022.03.20.01.20.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 20 Mar 2022 01:20:57 -0700 (PDT)
+Subject: Re: [PATCH v2 7/8] ARM: dts: lan9662-pcb8291: fix pinctrl node name
+To:     Michael Walle <michael@walle.cc>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Quentin Schulz <quentin.schulz@bootlin.com>,
+        Antoine Tenart <atenart@kernel.org>,
+        Kavyasree Kotagiri <kavyasree.kotagiri@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        UNGLinuxDriver@microchip.com, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org
+References: <20220318202547.1650687-1-michael@walle.cc>
+ <20220318202547.1650687-8-michael@walle.cc>
+ <cf2a6d1a-bf98-e382-2623-e44e5979ca29@gmail.com>
+ <e7467fe3a8dae5f5af84d595a0c4ab16@walle.cc>
+From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Message-ID: <0e791aa5-4ff1-8348-04fb-508a53246de1@gmail.com>
+Date:   Sun, 20 Mar 2022 11:20:55 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220319215706.59519-3-wsa+renesas@sang-engineering.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-5.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <e7467fe3a8dae5f5af84d595a0c4ab16@walle.cc>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Wolfram,
+On 3/19/22 2:38 PM, Michael Walle wrote:
 
-I love your patch! Perhaps something to improve:
+[...]
+>>> The pinctrl device tree binding will be converted to YAML format. All
+>>> the pin nodes should end with "-pins". Fix them.
+>>
+>>    It does end with "pins" already, right?
+> 
+> It ends with "_pins". Please note the underscore.
 
-[auto build test WARNING on geert-renesas-drivers/renesas-pinctrl]
-[also build test WARNING on linusw-pinctrl/devel v5.17-rc8 next-20220318]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
+   Ah!
 
-url:    https://github.com/0day-ci/linux/commits/Wolfram-Sang/pinctrl-renesas-r8a77990-add-drive-strength/20220320-055908
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git renesas-pinctrl
-config: hexagon-randconfig-r041-20220320 (https://download.01.org/0day-ci/archive/20220320/202203200832.RD8XJhU1-lkp@intel.com/config)
-compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project 217f267efe3082438e698e2f08566b9df8c530fa)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/0day-ci/linux/commit/844a743267be6ab69209101129c05dcb9dfd7c19
-        git remote add linux-review https://github.com/0day-ci/linux
-        git fetch --no-tags linux-review Wolfram-Sang/pinctrl-renesas-r8a77990-add-drive-strength/20220320-055908
-        git checkout 844a743267be6ab69209101129c05dcb9dfd7c19
-        # save the config file to linux build tree
-        mkdir build_dir
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=hexagon SHELL=/bin/bash drivers/pinctrl/renesas/
+>>> Fixes: 290deaa10c50 ("ARM: dts: add DT for lan966 SoC and 2-port board pcb8291")
+>>> Signed-off-by: Michael Walle <michael@walle.cc>
+>>> ---
+>>>  arch/arm/boot/dts/lan966x-pcb8291.dts | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/lan966x-pcb8291.dts b/arch/arm/boot/dts/lan966x-pcb8291.dts
+>>> index 3281af90ac6d..3c7e3a7d6f14 100644
+>>> --- a/arch/arm/boot/dts/lan966x-pcb8291.dts
+>>> +++ b/arch/arm/boot/dts/lan966x-pcb8291.dts
+>>> @@ -35,7 +35,7 @@ fc3_b_pins: fcb3-spi-pins {
+>>>          function = "fc3_b";
+>>>      };
+>>>
+>>> -    can0_b_pins:  can0_b_pins {
+>>> +    can0_b_pins:  can0-b-pins {
+>>
+>>    Mhm, I can't even see what is changed here... :-/
+> 
+> The name of the node, s/_/-/
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
+   Indeed! I must have been blind then, sorry. :-)
 
-All warnings (new ones prefixed by >>):
+> -michael
 
->> drivers/pinctrl/renesas/pfc-r8a77990.c:5033:38: warning: unused variable 'pinmux_drive_regs' [-Wunused-const-variable]
-   static const struct pinmux_drive_reg pinmux_drive_regs[] = {
-                                        ^
-   1 warning generated.
-
-
-vim +/pinmux_drive_regs +5033 drivers/pinctrl/renesas/pfc-r8a77990.c
-
-  5032	
-> 5033	static const struct pinmux_drive_reg pinmux_drive_regs[] = {
-  5034		{ PINMUX_DRIVE_REG("DRVCTRL8", 0xe6060320) {
-  5035			{ RCAR_GP_PIN(3,  0), 18, 2 },	/* SD0_CLK */
-  5036			{ RCAR_GP_PIN(3,  1), 15, 2 },	/* SD0_CMD */
-  5037			{ RCAR_GP_PIN(3,  2), 12, 2 },	/* SD0_DAT0 */
-  5038			{ RCAR_GP_PIN(3,  3),  9, 2 },	/* SD0_DAT1 */
-  5039			{ RCAR_GP_PIN(3,  4),  6, 2 },	/* SD0_DAT2 */
-  5040			{ RCAR_GP_PIN(3,  5),  3, 2 },	/* SD0_DAT3 */
-  5041			{ RCAR_GP_PIN(3,  6),  0, 2 },	/* SD1_CLK */
-  5042		} },
-  5043		{ PINMUX_DRIVE_REG("DRVCTRL9", 0xe6060324) {
-  5044			{ RCAR_GP_PIN(3,  7), 29, 2 },	/* SD1_CMD */
-  5045			{ RCAR_GP_PIN(3,  8), 26, 2 },	/* SD1_DAT0 */
-  5046			{ RCAR_GP_PIN(3,  9), 23, 2 },	/* SD1_DAT1 */
-  5047			{ RCAR_GP_PIN(3, 10), 20, 2 },	/* SD1_DAT2 */
-  5048			{ RCAR_GP_PIN(3, 11), 17, 2 },	/* SD1_DAT3 */
-  5049			{ RCAR_GP_PIN(4,  0), 14, 2 },	/* SD3_CLK */
-  5050			{ RCAR_GP_PIN(4,  1), 11, 2 },	/* SD3_CMD */
-  5051			{ RCAR_GP_PIN(4,  2),  8, 2 },	/* SD3_DAT0 */
-  5052			{ RCAR_GP_PIN(4,  3),  5, 2 },	/* SD3_DAT1 */
-  5053			{ RCAR_GP_PIN(4,  4),  2, 2 },	/* SD3_DAT2 */
-  5054		} },
-  5055		{ PINMUX_DRIVE_REG("DRVCTRL10", 0xe6060328) {
-  5056			{ RCAR_GP_PIN(4,  5), 29, 2 },	/* SD3_DAT3 */
-  5057			{ RCAR_GP_PIN(4,  6), 26, 2 },	/* SD3_DAT4 */
-  5058			{ RCAR_GP_PIN(4,  7), 23, 2 },	/* SD3_DAT5 */
-  5059			{ RCAR_GP_PIN(4,  8), 20, 2 },	/* SD3_DAT6 */
-  5060			{ RCAR_GP_PIN(4,  9), 17, 2 },	/* SD3_DAT7 */
-  5061			{ RCAR_GP_PIN(4, 10), 14, 2 },	/* SD3_DS */
-  5062		} },
-  5063		{ },
-  5064	};
-  5065	
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+MBR, Sergey
