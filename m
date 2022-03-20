@@ -2,146 +2,201 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FC1D4E1ADA
-	for <lists+linux-gpio@lfdr.de>; Sun, 20 Mar 2022 10:25:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CED364E1B25
+	for <lists+linux-gpio@lfdr.de>; Sun, 20 Mar 2022 11:54:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243180AbiCTJ1P (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 20 Mar 2022 05:27:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53314 "EHLO
+        id S238099AbiCTK4I (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 20 Mar 2022 06:56:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243154AbiCTJ1M (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 20 Mar 2022 05:27:12 -0400
-Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BDD73F880
-        for <linux-gpio@vger.kernel.org>; Sun, 20 Mar 2022 02:25:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=k1; bh=S6Fe2zTRzKD2nz
-        loiVC1QadhIbbmzBX7TlaW9WkSIlA=; b=CMPTPluSycGlH1YcgJx612GWPI7/iM
-        tFXVsRiA+z8ifZeCYp8F6g6rYlZBmDec2y2T5crpq3e3rpmzIDFAinCxPAcjLLVl
-        2U21mC6K+2KJcJH8oKARPa45Eo/4YMenuJLTwp0XKOX3SJvmpTw9fD10ry65Pv3H
-        Sg5KdDHZcQEGo=
-Received: (qmail 413121 invoked from network); 20 Mar 2022 10:25:47 +0100
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 20 Mar 2022 10:25:47 +0100
-X-UD-Smtp-Session: l3s3148p1@ErH+9qLaArggAQnoAFbkANnMMFqLOUjD
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     linux-renesas-soc@vger.kernel.org
-Cc:     linux-gpio@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        LUU HOAI <hoai.luu.ub@renesas.com>
-Subject: [PATCH v2 2/2] pinctrl: renesas: r8a77990: add drive-strength
-Date:   Sun, 20 Mar 2022 10:25:42 +0100
-Message-Id: <20220320092542.2308-3-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220320092542.2308-1-wsa+renesas@sang-engineering.com>
-References: <20220320092542.2308-1-wsa+renesas@sang-engineering.com>
+        with ESMTP id S231442AbiCTK4H (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 20 Mar 2022 06:56:07 -0400
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90EA6419A4;
+        Sun, 20 Mar 2022 03:54:44 -0700 (PDT)
+Received: by mail-ed1-f41.google.com with SMTP id g20so14952437edw.6;
+        Sun, 20 Mar 2022 03:54:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=DoyDLcneBed/lxmrHnHYG/MOmh/NiMvZkZDcOvMscXc=;
+        b=gnc4bfrWBvpS5qFmT3uS9pkqTMi2Zfk8OKf57gAXSV1hCffjRbdLVUSmA8YYRJ5TFC
+         hmLFkJ90gqboXdQVxFc92lq7ppIW5XmCk8z0UAwTSDZGawSTepUcDh8VQMu+0P/Qc44j
+         OPx53De17oeq32H8MBOCanaQcR3pen8UjO7EL2EaKPZpWMv6hvsKe9CsAM8Tl1TrQVs8
+         AdrxhZQQsspTtZZMsHadDNZ2rRjaLAbAW1Wa8q8ln8cRqVAVQaWswIOEQkekoXDhZE48
+         VI9co/iasNr2cIVOxihGNV/Ob2F8A8whqUpZay4bKQaKzA5pqqbXPIk/z2E07dveantR
+         8Qhg==
+X-Gm-Message-State: AOAM531xJhR2rvJZw/kDiB2pcCeyMbqTA3TblttbqnlyKLWi3DDzZna7
+        qbR761jJLuntBrs7sSTqD3Q=
+X-Google-Smtp-Source: ABdhPJxRIf8p/xeRo0ISGGexM1bBEv6iPxznNuiPCRws8lrVQk+QCr+5/1RPN3EyO6HOz5GsSH1T7Q==
+X-Received: by 2002:a50:e081:0:b0:401:8823:c9a8 with SMTP id f1-20020a50e081000000b004018823c9a8mr18092848edl.401.1647773681899;
+        Sun, 20 Mar 2022 03:54:41 -0700 (PDT)
+Received: from [192.168.0.17] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
+        by smtp.googlemail.com with ESMTPSA id z22-20020a17090655d600b006d229436793sm5699993ejp.223.2022.03.20.03.54.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 20 Mar 2022 03:54:41 -0700 (PDT)
+Message-ID: <89f9b797-e4b8-139a-d9e6-ebe71779b943@kernel.org>
+Date:   Sun, 20 Mar 2022 11:54:39 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH v3 6/6] dt-bindings: pinctrl: convert ocelot-pinctrl to
+ YAML format
+Content-Language: en-US
+To:     Michael Walle <michael@walle.cc>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Quentin Schulz <quentin.schulz@bootlin.com>,
+        Antoine Tenart <atenart@kernel.org>,
+        Kavyasree Kotagiri <kavyasree.kotagiri@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        UNGLinuxDriver@microchip.com, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org
+References: <20220319204628.1759635-1-michael@walle.cc>
+ <20220319204628.1759635-7-michael@walle.cc>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+In-Reply-To: <20220319204628.1759635-7-michael@walle.cc>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-According to R-Car Gen3 HW documentation 2.20 onwards, drive-strength is
-introduced to r8a77990. It is also documented for r8a774c0. Add it to
-the pinctrl driver.
+On 19/03/2022 21:46, Michael Walle wrote:
+> Convert the ocelot-pinctrl device tree binding to the new YAML format.
+> 
+> Additionally to the original binding documentation, add interrupt
+> properties which are optional and already used on several SoCs like
+> SparX-5, Luton, Ocelot and LAN966x but were not documented before.
+> 
+> Also, on the sparx5 and the lan966x SoCs there are two items for the
+> reg property.
+> 
+> Signed-off-by: Michael Walle <michael@walle.cc>
+> ---
+>  .../bindings/pinctrl/mscc,ocelot-pinctrl.txt  |  42 -------
+>  .../bindings/pinctrl/mscc,ocelot-pinctrl.yaml | 108 ++++++++++++++++++
+>  2 files changed, 108 insertions(+), 42 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/mscc,ocelot-pinctrl.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/mscc,ocelot-pinctrl.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/mscc,ocelot-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/mscc,ocelot-pinctrl.txt
+> deleted file mode 100644
+> index 5d84fd299ccf..000000000000
+> --- a/Documentation/devicetree/bindings/pinctrl/mscc,ocelot-pinctrl.txt
+> +++ /dev/null
+> @@ -1,42 +0,0 @@
+> -Microsemi Ocelot pin controller Device Tree Bindings
+> -----------------------------------------------------
+> -
+> -Required properties:
+> - - compatible		: Should be "mscc,ocelot-pinctrl",
+> -			  "mscc,jaguar2-pinctrl", "microchip,sparx5-pinctrl",
+> -			  "mscc,luton-pinctrl", "mscc,serval-pinctrl",
+> -			  "microchip,lan966x-pinctrl" or "mscc,servalt-pinctrl"
+> - - reg			: Address and length of the register set for the device
+> - - gpio-controller	: Indicates this device is a GPIO controller
+> - - #gpio-cells		: Must be 2.
+> -			  The first cell is the pin number and the
+> -			  second cell specifies GPIO flags, as defined in
+> -			  <dt-bindings/gpio/gpio.h>.
+> - - gpio-ranges		: Range of pins managed by the GPIO controller.
+> -
+> -
+> -The ocelot-pinctrl driver uses the generic pin multiplexing and generic pin
+> -configuration documented in pinctrl-bindings.txt.
+> -
+> -The following generic properties are supported:
+> - - function
+> - - pins
+> -
+> -Example:
+> -	gpio: pinctrl@71070034 {
+> -		compatible = "mscc,ocelot-pinctrl";
+> -		reg = <0x71070034 0x28>;
+> -		gpio-controller;
+> -		#gpio-cells = <2>;
+> -		gpio-ranges = <&gpio 0 0 22>;
+> -
+> -		uart_pins: uart-pins {
+> -				pins = "GPIO_6", "GPIO_7";
+> -				function = "uart";
+> -		};
+> -
+> -		uart2_pins: uart2-pins {
+> -				pins = "GPIO_12", "GPIO_13";
+> -				function = "uart2";
+> -		};
+> -	};
+> diff --git a/Documentation/devicetree/bindings/pinctrl/mscc,ocelot-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mscc,ocelot-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..7149a6655623
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/mscc,ocelot-pinctrl.yaml
+> @@ -0,0 +1,108 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/mscc,ocelot-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Microsemi Ocelot pin controller
+> +
+> +maintainers:
+> +  - Alexandre Belloni <alexandre.belloni@bootlin.com>
+> +  - Lars Povlsen <lars.povlsen@microchip.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - microchip,lan966x-pinctrl
+> +      - microchip,sparx5-pinctrl
+> +      - mscc,jaguar2-pinctrl
+> +      - mscc,luton-pinctrl
+> +      - mscc,ocelot-pinctrl
+> +      - mscc,serval-pinctrl
+> +      - mscc,servalt-pinctrl
+> +
+> +  reg:
+> +    items:
+> +      - description: Base address
+> +      - description: Extended pin configuration registers
+> +    minItems: 1
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +    const: 2
+> +
+> +  gpio-ranges: true
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  interrupt-controller: true
+> +
+> +  "#interrupt-cells":
+> +    const: 2
 
-Signed-off-by: LUU HOAI <hoai.luu.ub@renesas.com>
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
-Changes since V1:
-* support RZ/G2E as well
+Thanks for the changes in other files, but I think you did not respond
+to my comments here. Can you address them?
 
-Original BSP commit: f479c5a4e5e5 ("pinctrl: renesas: r8a77990: Add driver-strength for R8A77990")
 
-However, this was incomplete and missed 6 pins of table 6D.6 which were
-on a separate page. Adding them simplifies PORT_GP updates a lot.
-However, a preparational patch is needed then which is patch 1 of this
-series.
-
- drivers/pinctrl/renesas/pfc-r8a77990.c | 39 ++++++++++++++++++++++++--
- 1 file changed, 37 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pinctrl/renesas/pfc-r8a77990.c b/drivers/pinctrl/renesas/pfc-r8a77990.c
-index f44c7da3ec16..bbd1cdada522 100644
---- a/drivers/pinctrl/renesas/pfc-r8a77990.c
-+++ b/drivers/pinctrl/renesas/pfc-r8a77990.c
-@@ -22,12 +22,12 @@
- 	PORT_GP_CFG_18(0, fn, sfx, CFG_FLAGS), \
- 	PORT_GP_CFG_23(1, fn, sfx, CFG_FLAGS), \
- 	PORT_GP_CFG_26(2, fn, sfx, CFG_FLAGS), \
--	PORT_GP_CFG_12(3, fn, sfx, CFG_FLAGS | SH_PFC_PIN_CFG_IO_VOLTAGE), \
-+	PORT_GP_CFG_12(3, fn, sfx, CFG_FLAGS | SH_PFC_PIN_CFG_IO_VOLTAGE | SH_PFC_PIN_CFG_DRIVE_STRENGTH), \
- 	PORT_GP_CFG_1(3, 12, fn, sfx, CFG_FLAGS), \
- 	PORT_GP_CFG_1(3, 13, fn, sfx, CFG_FLAGS), \
- 	PORT_GP_CFG_1(3, 14, fn, sfx, CFG_FLAGS), \
- 	PORT_GP_CFG_1(3, 15, fn, sfx, CFG_FLAGS), \
--	PORT_GP_CFG_11(4, fn, sfx, CFG_FLAGS | SH_PFC_PIN_CFG_IO_VOLTAGE), \
-+	PORT_GP_CFG_11(4, fn, sfx, CFG_FLAGS | SH_PFC_PIN_CFG_IO_VOLTAGE | SH_PFC_PIN_CFG_DRIVE_STRENGTH), \
- 	PORT_GP_CFG_20(5, fn, sfx, CFG_FLAGS), \
- 	PORT_GP_CFG_9(6, fn, sfx, CFG_FLAGS), \
- 	PORT_GP_CFG_1(6, 9, fn, sfx, SH_PFC_PIN_CFG_PULL_UP), \
-@@ -5104,6 +5104,39 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 	{ },
- };
- 
-+static const struct pinmux_drive_reg pinmux_drive_regs[] = {
-+	{ PINMUX_DRIVE_REG("DRVCTRL8", 0xe6060320) {
-+		{ RCAR_GP_PIN(3,  0), 18, 2 },	/* SD0_CLK */
-+		{ RCAR_GP_PIN(3,  1), 15, 2 },	/* SD0_CMD */
-+		{ RCAR_GP_PIN(3,  2), 12, 2 },	/* SD0_DAT0 */
-+		{ RCAR_GP_PIN(3,  3),  9, 2 },	/* SD0_DAT1 */
-+		{ RCAR_GP_PIN(3,  4),  6, 2 },	/* SD0_DAT2 */
-+		{ RCAR_GP_PIN(3,  5),  3, 2 },	/* SD0_DAT3 */
-+		{ RCAR_GP_PIN(3,  6),  0, 2 },	/* SD1_CLK */
-+	} },
-+	{ PINMUX_DRIVE_REG("DRVCTRL9", 0xe6060324) {
-+		{ RCAR_GP_PIN(3,  7), 29, 2 },	/* SD1_CMD */
-+		{ RCAR_GP_PIN(3,  8), 26, 2 },	/* SD1_DAT0 */
-+		{ RCAR_GP_PIN(3,  9), 23, 2 },	/* SD1_DAT1 */
-+		{ RCAR_GP_PIN(3, 10), 20, 2 },	/* SD1_DAT2 */
-+		{ RCAR_GP_PIN(3, 11), 17, 2 },	/* SD1_DAT3 */
-+		{ RCAR_GP_PIN(4,  0), 14, 2 },	/* SD3_CLK */
-+		{ RCAR_GP_PIN(4,  1), 11, 2 },	/* SD3_CMD */
-+		{ RCAR_GP_PIN(4,  2),  8, 2 },	/* SD3_DAT0 */
-+		{ RCAR_GP_PIN(4,  3),  5, 2 },	/* SD3_DAT1 */
-+		{ RCAR_GP_PIN(4,  4),  2, 2 },	/* SD3_DAT2 */
-+	} },
-+	{ PINMUX_DRIVE_REG("DRVCTRL10", 0xe6060328) {
-+		{ RCAR_GP_PIN(4,  5), 29, 2 },	/* SD3_DAT3 */
-+		{ RCAR_GP_PIN(4,  6), 26, 2 },	/* SD3_DAT4 */
-+		{ RCAR_GP_PIN(4,  7), 23, 2 },	/* SD3_DAT5 */
-+		{ RCAR_GP_PIN(4,  8), 20, 2 },	/* SD3_DAT6 */
-+		{ RCAR_GP_PIN(4,  9), 17, 2 },	/* SD3_DAT7 */
-+		{ RCAR_GP_PIN(4, 10), 14, 2 },	/* SD3_DS */
-+	} },
-+	{ },
-+};
-+
- enum ioctrl_regs {
- 	POCCTRL0,
- 	TDSELCTRL,
-@@ -5361,6 +5394,7 @@ const struct sh_pfc_soc_info r8a774c0_pinmux_info = {
- 	.nr_functions = ARRAY_SIZE(pinmux_functions.common),
- 
- 	.cfg_regs = pinmux_config_regs,
-+	.drive_regs = pinmux_drive_regs,
- 	.bias_regs = pinmux_bias_regs,
- 	.ioctrl_regs = pinmux_ioctrl_regs,
- 
-@@ -5387,6 +5421,7 @@ const struct sh_pfc_soc_info r8a77990_pinmux_info = {
- 		ARRAY_SIZE(pinmux_functions.automotive),
- 
- 	.cfg_regs = pinmux_config_regs,
-+	.drive_regs = pinmux_drive_regs,
- 	.bias_regs = pinmux_bias_regs,
- 	.ioctrl_regs = pinmux_ioctrl_regs,
- 
--- 
-2.30.2
-
+Best regards,
+Krzysztof
