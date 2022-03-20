@@ -2,129 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1640F4E1AC3
-	for <lists+linux-gpio@lfdr.de>; Sun, 20 Mar 2022 09:21:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A087C4E1AD3
+	for <lists+linux-gpio@lfdr.de>; Sun, 20 Mar 2022 10:24:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240809AbiCTIWX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 20 Mar 2022 04:22:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35520 "EHLO
+        id S243116AbiCTJZm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 20 Mar 2022 05:25:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240333AbiCTIWX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 20 Mar 2022 04:22:23 -0400
-Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B3764BFDA;
-        Sun, 20 Mar 2022 01:21:00 -0700 (PDT)
-Received: by mail-lj1-x22b.google.com with SMTP id q14so3034534ljc.12;
-        Sun, 20 Mar 2022 01:21:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=H5jqTsReHjJpHbnZQQczWjSuTqgW0vC/dZTYtBAjSnc=;
-        b=EPr3LbdzLYezPN2YQME62GNvv4acBq0u420N6LQEEBYBigFexkTSTeivHD2BFSoRKA
-         TBDYmIfSod8wh4bWAUOo7bxtCzbU5aRVZFpY4vI/6LK09LNyCXVxxzFDYRzqQ0KTjb4T
-         ZTgZbAex8YYSFEEbw3r0czvOmIdCcu4Wj5WH5zlMcDeYcpiZBiZu0oipMx7bsft7O46Z
-         fClGWrXcsyovrAHcRkHXrscHGTXt+kOzO73KeuxufoWt+GoGnOp4mwdlMMz0JwZuokc0
-         QYKg+tSYAzdoTQyF20bNaaDtlztEUkM95tG5tSkeR60z/yi7PxuNIVdBShLA6zd+gjSz
-         PPLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=H5jqTsReHjJpHbnZQQczWjSuTqgW0vC/dZTYtBAjSnc=;
-        b=ULxkanb4t5cwWSUFtaZQGLWH+6cCoWq9ded4+j0FTg/E+4QzgzT7L6HZIN4HLzEde2
-         4SouQk3U+GzsOu7d850Ta6rns8WT8HA9l6aOX2bz4kfmtFJ2Mrblqw0kYVWQVJRfdDKF
-         gv6sK5AKcbxrPwIsnXpO9wCG7cGjRlYbwdwFeMhgYipNX6sWmP8hjsH+ZzpdR18W+moS
-         T6T5m/VV78mRpQIlKM1TusCOFa9HzQrcs82xbkAhMet9bltwma2reAHWQKPr5bNJmwQg
-         IwB+BJjxTnG3xEJfbyJ99zKP82Q5sJDHrdYRrhMpoPZDvVynODoRwj9uLKziWCh/0ogt
-         ioeg==
-X-Gm-Message-State: AOAM5309ldlJU2xGAJlSvZbsIonNy0HKhQCFaIhW6uVtrZuzXtc8g2kG
-        0nOPQ8vE5WjljgPVijYYsUm9RcwEv/xdEQ==
-X-Google-Smtp-Source: ABdhPJyw/MvUqES6wCAvnMJzwx5rx3Rs/R3I4PaI3L3m2x9GWui8eCx2CTqr1K2n1TEwNhy4wu/DYw==
-X-Received: by 2002:a2e:2a45:0:b0:246:430d:805 with SMTP id q66-20020a2e2a45000000b00246430d0805mr11487117ljq.439.1647764457911;
-        Sun, 20 Mar 2022 01:20:57 -0700 (PDT)
-Received: from [192.168.1.103] ([178.176.78.200])
-        by smtp.gmail.com with ESMTPSA id v29-20020ac25b1d000000b00448ac0a2d88sm1501433lfn.47.2022.03.20.01.20.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 20 Mar 2022 01:20:57 -0700 (PDT)
-Subject: Re: [PATCH v2 7/8] ARM: dts: lan9662-pcb8291: fix pinctrl node name
-To:     Michael Walle <michael@walle.cc>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Quentin Schulz <quentin.schulz@bootlin.com>,
-        Antoine Tenart <atenart@kernel.org>,
-        Kavyasree Kotagiri <kavyasree.kotagiri@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        UNGLinuxDriver@microchip.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org
-References: <20220318202547.1650687-1-michael@walle.cc>
- <20220318202547.1650687-8-michael@walle.cc>
- <cf2a6d1a-bf98-e382-2623-e44e5979ca29@gmail.com>
- <e7467fe3a8dae5f5af84d595a0c4ab16@walle.cc>
-From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Message-ID: <0e791aa5-4ff1-8348-04fb-508a53246de1@gmail.com>
-Date:   Sun, 20 Mar 2022 11:20:55 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        with ESMTP id S243096AbiCTJZk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 20 Mar 2022 05:25:40 -0400
+Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A1472FE75
+        for <linux-gpio@vger.kernel.org>; Sun, 20 Mar 2022 02:24:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=k1; bh=DPFdoQCQmmhj9TUQ4Pre53eqE/f1
+        FELjCE0PsZqk8LA=; b=t1X6KZ97L2zE6vEei/vcsQNAljIACR/1cEd/0i387rRg
+        REFwPJyTKLCtK4ZrtLNygW1/m0kgVEkJXwx4c0tSFkdJPgHHXJl/qvFD/obobrCa
+        7lhc6PjtOohBFAxYZNBvkvUccB0Qip3g2iREtfuoA031G+xBvX9eI7KURqS3LPE=
+Received: (qmail 411040 invoked from network); 20 Mar 2022 10:17:32 +0100
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 20 Mar 2022 10:17:32 +0100
+X-UD-Smtp-Session: l3s3148p1@yLtH2aLa/LcgAQnoAFbkANnMMFqLOUjD
+Date:   Sun, 20 Mar 2022 10:17:28 +0100
+From:   Wolfram Sang <wsa-dev@sang-engineering.com>
+To:     kernel test robot <lkp@intel.com>
+Cc:     linux-renesas-soc@vger.kernel.org, llvm@lists.linux.dev,
+        kbuild-all@lists.01.org, linux-gpio@vger.kernel.org,
+        LUU HOAI <hoai.luu.ub@renesas.com>
+Subject: Re: [PATCH 2/2] pinctrl: renesas: r8a77990: add drive-strength
+Message-ID: <YjbxKGNwkyjdUF9Z@ninjato>
+Mail-Followup-To: Wolfram Sang <wsa-dev@sang-engineering.com>,
+        kernel test robot <lkp@intel.com>,
+        linux-renesas-soc@vger.kernel.org, llvm@lists.linux.dev,
+        kbuild-all@lists.01.org, linux-gpio@vger.kernel.org,
+        LUU HOAI <hoai.luu.ub@renesas.com>
+References: <20220319215706.59519-3-wsa+renesas@sang-engineering.com>
+ <202203200832.RD8XJhU1-lkp@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <e7467fe3a8dae5f5af84d595a0c4ab16@walle.cc>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="wRCmqLVtDslRCPnB"
+Content-Disposition: inline
+In-Reply-To: <202203200832.RD8XJhU1-lkp@intel.com>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 3/19/22 2:38 PM, Michael Walle wrote:
 
-[...]
->>> The pinctrl device tree binding will be converted to YAML format. All
->>> the pin nodes should end with "-pins". Fix them.
->>
->>    It does end with "pins" already, right?
-> 
-> It ends with "_pins". Please note the underscore.
+--wRCmqLVtDslRCPnB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-   Ah!
 
->>> Fixes: 290deaa10c50 ("ARM: dts: add DT for lan966 SoC and 2-port board pcb8291")
->>> Signed-off-by: Michael Walle <michael@walle.cc>
->>> ---
->>>  arch/arm/boot/dts/lan966x-pcb8291.dts | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/arch/arm/boot/dts/lan966x-pcb8291.dts b/arch/arm/boot/dts/lan966x-pcb8291.dts
->>> index 3281af90ac6d..3c7e3a7d6f14 100644
->>> --- a/arch/arm/boot/dts/lan966x-pcb8291.dts
->>> +++ b/arch/arm/boot/dts/lan966x-pcb8291.dts
->>> @@ -35,7 +35,7 @@ fc3_b_pins: fcb3-spi-pins {
->>>          function = "fc3_b";
->>>      };
->>>
->>> -    can0_b_pins:  can0_b_pins {
->>> +    can0_b_pins:  can0-b-pins {
->>
->>    Mhm, I can't even see what is changed here... :-/
-> 
-> The name of the node, s/_/-/
+> >> drivers/pinctrl/renesas/pfc-r8a77990.c:5033:38: warning: unused variable 'pinmux_drive_regs' [-Wunused-const-variable]
+>    static const struct pinmux_drive_reg pinmux_drive_regs[] = {
 
-   Indeed! I must have been blind then, sorry. :-)
+Right, G2E has drive_regs as well. Will update!
 
-> -michael
 
-MBR, Sergey
+--wRCmqLVtDslRCPnB
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmI28SQACgkQFA3kzBSg
+KbZZaw/9EE+MPCH3hN5mCBQBGHAFrXTUyvS7r9eJDjBxuCz9LI/XFxd23ObdDk3O
+Srl5/SgGt9TkmDdeyKZwkPCP8Z7qaQd+rTIreeWa7k5QYALB7zRptmXs58zYBWPq
+44/+Ss9HrdpD61UwPSSRpGHNO9Hk5B7UkrG+Z05ZIdpZWBjQbQgQHiBDDoIM1njP
+IafMVBPK9Uui/gKA68REjkHW2SG8gs3Pp7l+1JJ+B1csX78gxDgJzfWq6dTMOHci
+1jYb+8W7ssQs2MLsa4Ou+UBCtFM+k7ptLwAA7yqwbyOBxL6fZhfI7rW60K0P8pyG
+0FYTRfga04DwBh9/aeZ9wODD2mtdojoeMbyMu7K1fK/4QZRWzg1e5n5hyPxtUGOv
+dVXQPDy0Kf1WuxX+t2ugE+kaZB7wvGTsVv8ELGu9Qy/pd0UbVzXgfC4nKN8Kv7MR
+i40PZLdJc+TysUG76JruQcZPbk3qrbx+VconcXDJdQgb1fhlT4Zs4ZgNZuo1b7ws
+z0/OHiULN9PH492RGyBVRpNoVbU0dfTDGuylq2LCL8xwD9fSnSwjQo0AXTtEOA3F
+1LUvrgj6K8JE+Di7iCKb7/i0ecZDoiZLfA9/RDCl/PfbHNHnwDrhJ5SC/DbMkBtE
+qRGND+D4ft5eh5Cf8jfv5P+Fm4boE9OIcdsO3RdraH3Wp9OaVXE=
+=14dA
+-----END PGP SIGNATURE-----
+
+--wRCmqLVtDslRCPnB--
