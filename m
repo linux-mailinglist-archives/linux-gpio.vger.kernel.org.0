@@ -2,147 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AF02B4E2F9A
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Mar 2022 19:05:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BE0A04E2FC8
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Mar 2022 19:17:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241367AbiCUSGg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Mar 2022 14:06:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60778 "EHLO
+        id S1352006AbiCUSSv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Mar 2022 14:18:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351978AbiCUSGd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Mar 2022 14:06:33 -0400
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC2D5154055
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Mar 2022 11:05:07 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id g19so16135951pfc.9
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Mar 2022 11:05:07 -0700 (PDT)
+        with ESMTP id S1352001AbiCUSSv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Mar 2022 14:18:51 -0400
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD09F187BA1
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Mar 2022 11:17:24 -0700 (PDT)
+Received: by mail-wr1-x42c.google.com with SMTP id h23so21247253wrb.8
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Mar 2022 11:17:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VSE/zjzMF4GUAODi9hUWbSKALcdRpi7FbYvoQ5n/zHE=;
-        b=fcyAfSP5auLlxa8uxnRYod/EMf7JE1qAALckx8tRF9JKQppHhU9QysjLogLKyxYU6a
-         2R0dvGNpSM3MjBR8fOWEDbotvhLJ42Pxjh1OR471p6ss5wu8DTreSiar/deSJfqS5Bz0
-         ZJrDvhsTfX+rv0DePsGh8eO9zBQS5Q1E1B9m1Dl2X5V7XOPM9zbO8xspgoNJrJraHldJ
-         0/lC1CNncq0xlOpMy1ldeuil3tJ8rYv0pzU/bwMTuDCOBr8j27BAiw2yTlVByaNLzcAH
-         MBY/ZTGVla0e3oHRwwiI3404xKCORRZ7UC0HAgiiacCLYjqVGDFCnIPNgeysH1TGdgfN
-         R6lg==
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=+pwimOLhdySYosVSTAlKiZ2BY6HFod5o98mRqS7IOnA=;
+        b=XC3+YTNVYe/QHusCy5gsdXqPd/SzTnoFPEzbezbK6AE/L/1ThIY5lAbEDF2jd1MxX8
+         O3h4BKqL3wGeYha92xt9Lz0DtQGUwehTU5N7QTgsyAoQSla/ZnTJvRbSiV01KQNvHW/x
+         jI7/iBqHXRZSsnpsE2soFl8CEy4tvFtI+mtZRnW1AbNu1wQ2imGuuba4eCyKsDXYeGyb
+         o8WPBpRjNHv202W308Ekh44ICRzfPl3nA4yh+pw4uVVjMB9Hef2oy+500NtvjtlADcIA
+         SwAZDkTKQM8TI9Q3/bnS2FihKc1+Thy45D/XsZTpTEZylj19GjbASvx+7UWbn7YHGf67
+         L2bQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VSE/zjzMF4GUAODi9hUWbSKALcdRpi7FbYvoQ5n/zHE=;
-        b=fp/fCf3J9Pw2gznVt8RlKSyO8bX3yCcpvJ8QRR1g7CJyUY+ZCKuDO9yB1L5VtFP/hP
-         mZPajaoM3TDOgzNXVAqvhurw5LiJyvGF8agjWgA6niRWnBGWyMFV7UERPD8syxYWABhf
-         bmcCXy0QQQQUl/zlP4NJHa8t9izvx97rwulDv4DAn9Pt21boOSvzAnw0T7xDNoxjJatv
-         mtf1F2udV6tT7RkmcTeZ/IvBD/ILeM37b/isxzk2WdWSngloH0hRbhvlAZj5Av2hfLrP
-         XR+gN5K0tDNelP8g231Xqw8VFutnQdsYovphuQyYhouJ1DefllwlKhUvTwkdXOBnKolR
-         b1fg==
-X-Gm-Message-State: AOAM533nCFpM8YXepX4KQe5UEKfC94s+FbTvQNAF55JhAUS8Gql5TZfO
-        yoYSp9VfihRRM9+T1Ik1Hd548bSVl7paGEFW0BYt
-X-Google-Smtp-Source: ABdhPJxhYv/ZbgyMx8y9NX4YnmX8FOmzPsTIfGrBazZdrmJADnDkiyJf7MEXQnfVPRrCwcTuhFqiH2ta2wyZE1ZbcL4=
-X-Received: by 2002:a63:1613:0:b0:382:2a7f:5ca1 with SMTP id
- w19-20020a631613000000b003822a7f5ca1mr13980696pgl.151.1647885906868; Mon, 21
- Mar 2022 11:05:06 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=+pwimOLhdySYosVSTAlKiZ2BY6HFod5o98mRqS7IOnA=;
+        b=8Pwn8t2VZKSyiDtnFEaUKHrl6RjwAbVIbgflZwXC8MpHkSy5e2PX7ZIhtjxSMUYY1t
+         c90/aP74lQ4FY9aJo2hFrhMVFVe3zbWP5p/RjmzqtAVGUojRbRacWUBZgkOZvvxvVjBt
+         GpiM0YhID8mm4rbkxqKI6hnxamHR3MOebSTCEfu6U75hSnG9axiHkGLWu+VXxpFUuvu7
+         UoTd9iIjaAd5OHfDxT+qNu+EteIrg84lHyx+YNTInL23IGBiA5Utg+JfYbgPk2VsDowW
+         5Lm/eEx1vuhiVog4bv6pVbTm03fXTRvPOpzeL+rms+Kyb3qw2KaXOeE3nJ2LM0Qd4DQ9
+         3wOg==
+X-Gm-Message-State: AOAM530GvyVjPvOX5hu+JABang0my0ho3O4FkeY1exyZXAbmSZGfVAiO
+        9qUhBZXV+4wxmxw+efCcoGcZ7eavW5TuQ1ji
+X-Google-Smtp-Source: ABdhPJyFfEAhCc01DP5nHkIYJc51jNux+OOldK1sRMy0w0tPy4B9cPTIY+3XU7Tw7V+eoY6jUqOtBg==
+X-Received: by 2002:adf:e7cd:0:b0:204:ba2:b106 with SMTP id e13-20020adfe7cd000000b002040ba2b106mr6490767wrn.679.1647886643276;
+        Mon, 21 Mar 2022 11:17:23 -0700 (PDT)
+Received: from [192.168.1.31] ([90.61.176.186])
+        by smtp.gmail.com with ESMTPSA id 14-20020a056000154e00b00203f8adde0csm10380669wry.32.2022.03.21.11.17.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Mar 2022 11:17:22 -0700 (PDT)
+Message-ID: <c490e63a-8fcb-f802-2f24-7cb8a7f36818@gmail.com>
+Date:   Mon, 21 Mar 2022 19:17:24 +0100
 MIME-Version: 1.0
-References: <20220316213055.2351342-1-morbo@google.com> <20220319222228.4160598-1-morbo@google.com>
- <CAHk-=wh4B42bYZmGoY8=UsqHDuq_th2KN7TmXuTnhwyYWzQ5pg@mail.gmail.com>
-In-Reply-To: <CAHk-=wh4B42bYZmGoY8=UsqHDuq_th2KN7TmXuTnhwyYWzQ5pg@mail.gmail.com>
-From:   Bill Wendling <morbo@google.com>
-Date:   Mon, 21 Mar 2022 11:04:55 -0700
-Message-ID: <CAGG=3QWPAF4wtb93LJiv5Hz1pM+dvwM1+NNG8cr7813k-gpUTA@mail.gmail.com>
-Subject: Re: [PATCH v2] gpiolib: acpi: use correct format characters
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: gpiod: Set pullup for Input Line
+Content-Language: fr
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        Kent Gibson <warthog618@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <97da941f-39da-4ded-0138-d1e71c4d3ecc@gmail.com>
+ <CAHp75VcXxSxtvEdHxenAWoP31WnkoyDJ6WfDwPDEKDhT3AtUmg@mail.gmail.com>
+ <8200d976-2b32-1215-e46c-0bb2837392b7@gmail.com>
+ <CAHp75VcOHCE13oA4m43yAp5e2w=e6uOQhRNneonja6F+XhXmbA@mail.gmail.com>
+From:   Hans Kurscheidt <lve0200@gmail.com>
+In-Reply-To: <CAHp75VcOHCE13oA4m43yAp5e2w=e6uOQhRNneonja6F+XhXmbA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Mar 19, 2022 at 3:55 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> So I think that clang warning is only annoying, not helpful, but:
->
-> On Sat, Mar 19, 2022 at 3:22 PM Bill Wendling <morbo@google.com> wrote:
-> >
-> > diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-> > index a5495ad31c9c..92dd9b8784f2 100644
-> > --- a/drivers/gpio/gpiolib-acpi.c
-> > +++ b/drivers/gpio/gpiolib-acpi.c
-> > @@ -388,9 +388,9 @@ static acpi_status acpi_gpiochip_alloc_event(struct acpi_resource *ares,
-> >
-> >         if (pin <= 255) {
-> >                 char ev_name[5];
-> > -               sprintf(ev_name, "_%c%02hhX",
-> > +               sprintf(ev_name, "_%c%02X",
->
-> This part I approve of.
->
-> >                         agpio->triggering == ACPI_EDGE_SENSITIVE ? 'E' : 'L',
-> > -                       pin);
-> > +                       (unsigned char)pin);
->
-> But this cast seems pointless and wrong.
->
-You're right. I was trying to ensure that the patch didn't change
-behavior. But the cast achieves nothing. Thanks!
 
--bw
+Am 21.03.2022 um 18:33 schrieb Andy Shevchenko:
+> On Mon, Mar 21, 2022 at 7:27 PM Hans Kurscheidt <lve0200@gmail.com> wrote:
+>> Hi thanks, that makes hope.
+> First of all, please do not top-post.
+>
+>> Unfortunately apt-get gpiod on my OrangePi Armbian board gives me
+>> version 1.2, while the dev is already at 1.6. I probably have to build
+>> it from source.
+>>
+>> Keeping fingers crossed .
+> I don't remember the details of old versions of libgpiod (Bart? Kent?)
+> I think it was available even there.
+>
+>> Am 21.03.2022 um 17:26 schrieb Andy Shevchenko:
+>>> On Mon, Mar 21, 2022 at 1:30 PM Hans Kurscheidt <lve0200@gmail.com> wrote:
+>>>> Despite deep searching, I cannot find any information, if gpiod allow
+>>>> specifying pull-ups to input lines and how to do/handle it.
+>>> Have you followed this code from libgpiod?
+>>> https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/tree/tools/gpioset.c#n44
+> I don't think that the Bias option is in 1.2.3, because help is mute about it
 
-> Casts in general are bad, and should be avoided unless there's a real
-> reason for them. And that reason doesn't seem to exist. We don't
-> actually want to truncate the value of 'pin', and just a few lines
-> earlier actually checked that it is in range.
->
-> And if 'pin' can't be negative - it comes from a 'u16' table
-> dereference - but even if it could have been that would have been a
-> different bug here anyway (and should have been fixed by tightening
-> the check).
->
-> So the cast doesn't add anything - not for humans, and not for a
-> compiler that could just optimize it away because it saw the range
-> check.
->
-> End result: just fix the pointless 'hh' in the print specifier. It
-> doesn't add anything, and only causes problems. Anybody who uses '%02X
-> to print a byte should only use it for byte values - and the code
-> already does.
->
-> Of course, the _reason_ for this all was a warning that was pointless
-> to begin with, and should never have existed. Clang was not smart
-> enough to take the range knowledge that it _could_ have taken into
-> account, and instead wrote out a completely bogus warning.
->
-> It's completely bogus not just because clang didn't do a sufficiently
-> good job of range analysis - it's completely bogus because a 'varargs'
-> function DOES NOT TAKE arguments of type 'char'.
->
-> So the *only* reason to use '%hhX' in the first place is that you
-> *want* the sprintf() to actually limit the value to a byte for you
-> (possibly because you have a signed char, know it will sign-extend to
-> 'int', and want to limit it back to 8 bits).
->
-> If you *actually* had a 'unsigned char' to begin with, you'd be
-> completely insane to use %hhX. It's just pointless.
->
-> So warning that '%hhX' is paired with an 'int' is all just completely
-> mindless and wrong.
->
->               Linus
+>   Trying to build it from source, doesn't work for me. I get:
+hk@orangepizeroplus:~/libgpiod$ ./autogen.sh --enable-tools=yes 
+--prefix=/usr/bin
+autoreconf: Entering directory `.'
+autoreconf: configure.ac: not using Gettext
+autoreconf: running: aclocal --force -I m4
+aclocal: warning: couldn't open directory 'm4': No such file or directory
+autoreconf: configure.ac: tracing
+autoreconf: configure.ac: creating directory autostuff
+autoreconf: configure.ac: not using Libtool
+autoreconf: running: /usr/bin/autoconf --force
+configure.ac:163: error: possibly undefined macro: AC_LIBTOOL_CXX
+       If this token and others are legitimate, please use m4_pattern_allow.
+       See the Autoconf documentation.
+configure.ac:165: error: Unexpanded AX_ macro found. Please install GNU 
+autoconf-archive.
+configure.ac:179: error: Unexpanded AX_ macro found. Please install GNU 
+autoconf-archive.
+autoreconf: /usr/bin/autoconf failed with exit status: 1
+hk@orangepizeroplus:~/libgpiod$
+
+
+??
+
+RGDS
+
+
