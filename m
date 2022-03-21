@@ -2,100 +2,153 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 065594E280B
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Mar 2022 14:48:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A3A9D4E282E
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Mar 2022 14:52:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245352AbiCUNtc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Mar 2022 09:49:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50108 "EHLO
+        id S1348195AbiCUNxw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Mar 2022 09:53:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238525AbiCUNtb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Mar 2022 09:49:31 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C31E19C
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Mar 2022 06:48:02 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id r13so5731638wrr.9
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Mar 2022 06:48:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language
-         :references:to:from:in-reply-to:content-transfer-encoding;
-        bh=K6gn7K/oDvR2tMKBsIH3O1Fiq3uY0RKT+jEpr8NQMR0=;
-        b=Uf7AQRiID/O85t2ET1RLAMeeiXwxn2g5xC/XmmWavfxxmXbxhx1ebDnb3g0Cty7RY4
-         rqZCxs3MWhtiI0kFuiyiRMTAzA7qIdXx8Ef1+r6lJNOC8L0OkmOkJqO42xpJnI4dtCYh
-         IcIXoBuwrqbYw5+ICN8+hC6gZE2hy6WKE/Eo3MYywAnf5Cb0qCSMqzOxhAl5SUXY+SJY
-         ECWMouW9UN7dXpTcMRUfFiNu09DN/H0W7OZsOz3BqIAPUHyZXbzzQ1hvKb1xUTC07gzB
-         jpHnj6SOi9OdNzLe7L3w/olsLzBwiSR9tCsSG98L8yfsQqYRaJ6SED1OvjTIiq2lfpbD
-         fONw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:references:to:from:in-reply-to
-         :content-transfer-encoding;
-        bh=K6gn7K/oDvR2tMKBsIH3O1Fiq3uY0RKT+jEpr8NQMR0=;
-        b=fisGFtS9Ry6T14/xjfazZLvlPX0sN6oSs2cQJDkJTkBVuazicxA0u7n7x/ammmkQxi
-         UOpdRt6ghs0H/68QkokAxeUO8t5vaX+CYGi4bf3JEm1Pq/MhAOKvp50g0qpVAFzDtOA4
-         JkxdPm3FtxusvUyaaY3IiYHAi+VypBEaaojQ2/JHQwyJ6G5Pe162YKjGWuRF1dABisTJ
-         Lx6OPmA0IFF8rzFkd3U09q/aPEU5LHZ3lFXzu/l6FM6hK4X/UEDUaPeLb/upwj9aWwMk
-         gzdjDs/w8utszxXCNUQCn5PK4vGe9IESpiUyVHhsaudHk4NiQQ0/miQfq6YvHWK52bQo
-         rPuw==
-X-Gm-Message-State: AOAM531MYDDxQ9KXm/7894yxTyBcga2kd9eiZcfb/ztelqjqbMGyyLX5
-        GyNXfJDApmhzWEp0Z/ZMOV6WKBvvPqIm/g==
-X-Google-Smtp-Source: ABdhPJxhxfEo15EtzdFQW0R6euYF25knp8uRrTt0XvJbBaYSBkdzViYC1+7G6FA/M21xYKnjtgCALg==
-X-Received: by 2002:adf:b645:0:b0:1e3:bab:7594 with SMTP id i5-20020adfb645000000b001e30bab7594mr18565196wre.346.1647870480924;
-        Mon, 21 Mar 2022 06:48:00 -0700 (PDT)
-Received: from [192.168.1.31] ([90.61.176.186])
-        by smtp.gmail.com with ESMTPSA id 189-20020a1c02c6000000b0038c57df82aasm14295248wmc.20.2022.03.21.06.48.00
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Mar 2022 06:48:00 -0700 (PDT)
-Message-ID: <33b30df9-3763-7ced-88f9-3b6e32ae236b@gmail.com>
-Date:   Mon, 21 Mar 2022 14:48:02 +0100
+        with ESMTP id S1348168AbiCUNxr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Mar 2022 09:53:47 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C10EF15DA95;
+        Mon, 21 Mar 2022 06:52:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1647870735; x=1679406735;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=z8aewv7UAAbDhfYqkIWekrC7Fv3E1m/ILqiu4BxD2mM=;
+  b=X/yFZ4JuN01BOFdj57J+6Gq7QykOjAv/nMwxH+afJboNC51tLCt+yFIV
+   QVzFb5Kaa3d8LPLrC4aROJXoHFkBd5tIRO4QtOSIw3zTJq9E1RZIPEmUG
+   Ve9gobHMICjgpDucRROS9CJWAa8RfWM2gG+igU2S1LLDVgZz33H2KqxFt
+   4EsyFThY2uQBFfB8CfusuPvxgbZA+xQvsbkgEnaHc4OkPDwTvrllwuJBt
+   rqLS8grE6eRLjkbTgM3QAM+NfdZHqQbtiL0rSbQG0i52n21g2LZupqZEs
+   5FH8c/I3D4KxELaoXWRbSFPWrACWUFJ/q1zDms5LGc+EjdpaV4JoG9H5S
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10292"; a="257504962"
+X-IronPort-AV: E=Sophos;i="5.90,198,1643702400"; 
+   d="scan'208";a="257504962"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2022 06:52:15 -0700
+X-IronPort-AV: E=Sophos;i="5.90,198,1643702400"; 
+   d="scan'208";a="543232520"
+Received: from smile.fi.intel.com ([10.237.72.59])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2022 06:52:14 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1nWIRd-003vDy-0Y;
+        Mon, 21 Mar 2022 15:51:37 +0200
+Date:   Mon, 21 Mar 2022 15:51:36 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v7 1/1] gpio: add sloppy logic analyzer using polling
+Message-ID: <YjiC6Lg5k5gK/BfP@smile.fi.intel.com>
+References: <20220317085019.3987-1-wsa+renesas@sang-engineering.com>
+ <20220317085019.3987-2-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: gpiod: Set pullup for Input Line
-Content-Language: fr
-References: <ab3240e5-df61-cff4-ebba-f6a7e5d99f52@gmail.com>
-To:     linux-gpio@vger.kernel.org
-From:   Hans Kurscheidt <lve0200@gmail.com>
-In-Reply-To: <ab3240e5-df61-cff4-ebba-f6a7e5d99f52@gmail.com>
-X-Forwarded-Message-Id: <ab3240e5-df61-cff4-ebba-f6a7e5d99f52@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220317085019.3987-2-wsa+renesas@sang-engineering.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-3.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Thu, Mar 17, 2022 at 09:50:19AM +0100, Wolfram Sang wrote:
+> This is a sloppy logic analyzer using GPIOs. It comes with a script to
+> isolate a CPU for polling. While this is definitely not a production
+> level analyzer, it can be a helpful first view when remote debugging.
+> Read the documentation for details.
 
-Hi Alex,
+...
 
-sure, device trees are eventually overwritten w/ new kernels or "as is" 
-on a new device. Hence my application won't work on a new 
-installation/board, because it needs certain GPIO input pins w/pull ups. 
-DTBs need to be disassembled and re-compiled, which is not for the 
-average user to install & run an application!
+> +	for (i = 0; i < priv->trig_len; i+= 2) {
 
-RGDS
+Missed space.
 
-hk
+> +		do {
+> +			ret = gpio_la_get_array(priv->descs, &state);
+> +			if (ret)
+> +				goto out;
+> +
+> +			ndelay(delay);
+> +		} while ((state & priv->trig_data[i]) != priv->trig_data[i + 1]);
+> +	}
+
+...
+
+> +static int fops_buf_size_set(void *data, u64 val)
+> +{
+> +	struct gpio_la_poll_priv *priv = data;
+
+> +	int ret = 0;
+
+Instead of this assignment and other related things, can we do the following?
+
+> +	void *p;
+> +
+> +	if (!val)
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&priv->lock);
+> +
+> +	vfree(priv->blob.data);
+
+	priv->blob.data = NULL;
+	priv->blob.size = 0;
+
+> +	p = vzalloc(val);
+> +	if (!p) {
+> +		val = 0;
+> +		ret = -ENOMEM;
+> +	}
+
+	p = vzalloc(val);
+	if (!p)
+		return -ENOMEM;
+
+> +	priv->blob.data = p;
+> +	priv->blob.size = val;
+> +
+> +	mutex_unlock(&priv->lock);
+> +	return ret;
+> +}
+> +DEFINE_DEBUGFS_ATTRIBUTE(fops_buf_size, fops_buf_size_get, fops_buf_size_set, "%llu\n");
+
+> +	priv->trig_data = buf;
+> +	priv->trig_len = count;
+> +
+> +	return count;
+> +}
+> +
+> +static const struct file_operations fops_trigger = {
+> +	.owner = THIS_MODULE,
+> +	.open = trigger_open,
+> +	.write = trigger_write,
+> +	.llseek = no_llseek,
+> +	.release = single_release,
+> +};
+
+Can it be wrapped by DEFINE_SHOW_ATTRIBUTE()?
+
+...
+
+> +	dev_info(dev, "initialized");
+
+Not sure how this one would be helpful.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-Am 21.03.2022 um 14:34 schrieb Alexander Dahl:
-> Hello Hans,
->
-> Am Mon, Mar 21, 2022 at 11:43:45AM +0100 schrieb Hans Kurscheidt:
->> Despite deep searching, I cannot find any information, if gpiod allow
->> specifying pull-ups to input lines and how to do/handle it.
-> This is usually something described in device tree. Or do you have a
-> use case for changing it at runtime?
->
-> Greets
-> Alex
->
