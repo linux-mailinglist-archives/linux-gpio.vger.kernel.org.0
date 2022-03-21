@@ -2,155 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C66D4E2A98
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Mar 2022 15:28:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E58EB4E2B13
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Mar 2022 15:43:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240185AbiCUO3E (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Mar 2022 10:29:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59464 "EHLO
+        id S236605AbiCUOo3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Mar 2022 10:44:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349290AbiCUO1y (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Mar 2022 10:27:54 -0400
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 520E5313
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Mar 2022 07:21:59 -0700 (PDT)
-Received: by mail-ed1-x531.google.com with SMTP id u26so2461132eda.12
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Mar 2022 07:21:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair;
-        h=mime-version:content-transfer-encoding:date:message-id:cc:subject
-         :from:to:references:in-reply-to;
-        bh=wqQ731hjmzYwePMzj+DNt4zNoUy/RV/H/tR/xZClBEc=;
-        b=a7Rj6AcABHT78i9TWBgkQWPokagDU0jBGQ8LsSbBRRv/OI/4rMl/1lju5JlyvS+tKB
-         IuOqDYxcyotfBCrs3bvIdzLsazH1bv1ZEmVlUQGa01tFitcvq362wqqPjcwvMHU7Adyr
-         LKkIWbPU5R+35AO/6VOvWccjhxctlXSXVTUvF9VuG2KG6LZQSYI9F5O6OHG7RmNdiQsC
-         bUXm1f5BMaOcPQIoXlbmwPYJhJEIUd8GGJfSKJ0o7MumrzXVWEi6/qIwGoJ7Pq6eiTMO
-         Eppsl4kulnTjm3XxgvwUK4oVT+R3wYUCPwo0/7uQkZWeF7evkxcElK0yCJUwT40bNalq
-         gn9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:content-transfer-encoding:date
-         :message-id:cc:subject:from:to:references:in-reply-to;
-        bh=wqQ731hjmzYwePMzj+DNt4zNoUy/RV/H/tR/xZClBEc=;
-        b=332J6YvEfRlIlW36ee1Xd62/+2yLNk48idWFXR8J70234u0Iu9thcxh7o5E5yi4Lzk
-         VymA3/hXdZJMsQuFXUVlAqgsdQpZMDZsUO3XSk4g+AOXKyh4HKo1oD3Bb7N5Zz5i2Yhj
-         3IlxB/V7QMo35vwT4Vkgr2DYG4FQQfOX4h1/lktZh3aOpv3Viu8Mjtrh2TDGSices9lL
-         0G1zw9xUeBW6kXPpaL2hRg1g/7pdMY+Hwb+HYBrxBI2hyS34WXEWH1McCDc+k/1l5L3q
-         C2LHS5ehAMkjWSNEs9E7I9MRHrNvfIvJIwaTm1aqePlPPC3YJ9XrXWLRwsD1JyBLWv88
-         7rUg==
-X-Gm-Message-State: AOAM531INA/uAXHY/KJNqcTckrELcz7QicPojyU3hAgiYJKGEwho8M84
-        93QgGe7rKu2DHRmWulAf4Xqv+g==
-X-Google-Smtp-Source: ABdhPJyJQVu0Cr0w5giMNOtom9UMGLM/PCPym5H/QrHqy+QJ5fE7S8CUPrlQk3ekr9KXq9nUVZImUA==
-X-Received: by 2002:a05:6402:d2:b0:413:2e50:d6fd with SMTP id i18-20020a05640200d200b004132e50d6fdmr23158510edu.171.1647872517856;
-        Mon, 21 Mar 2022 07:21:57 -0700 (PDT)
-Received: from localhost (a246182.upc-a.chello.nl. [62.163.246.182])
-        by smtp.gmail.com with ESMTPSA id bn14-20020a170906c0ce00b006c5ef0494besm6945946ejb.86.2022.03.21.07.21.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Mar 2022 07:21:57 -0700 (PDT)
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Mon, 21 Mar 2022 15:21:56 +0100
-Message-Id: <CIPM1ZGMNRPK.36O4MO2RGWRV8@otso>
-Cc:     <linux-arm-msm@vger.kernel.org>,
-        <~postmarketos/upstreaming@lists.sr.ht>,
-        <phone-devel@vger.kernel.org>, "Andy Gross" <agross@kernel.org>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "AngeloGioacchino Del Regno" 
-        <angelogioacchino.delregno@somainline.org>,
-        "Konrad Dybcio" <konrad.dybcio@somainline.org>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/6] pinctrl: qcom: sm6350: fix order of UFS & SDC
- pins
-From:   "Luca Weiss" <luca.weiss@fairphone.com>
-To:     "Bjorn Andersson" <bjorn.andersson@linaro.org>
-References: <20220321133318.99406-1-luca.weiss@fairphone.com>
- <20220321133318.99406-5-luca.weiss@fairphone.com>
- <YjiIZBbPN7pAUl1q@builder.lan>
-In-Reply-To: <YjiIZBbPN7pAUl1q@builder.lan>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S1349528AbiCUOo2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Mar 2022 10:44:28 -0400
+Received: from mail.thorsis.com (mail.thorsis.com [92.198.35.195])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 62B9825E0
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Mar 2022 07:43:02 -0700 (PDT)
+Date:   Mon, 21 Mar 2022 15:42:56 +0100
+From:   Alexander Dahl <ada@thorsis.com>
+To:     Hans Kurscheidt <lve0200@gmail.com>
+Cc:     linux-gpio@vger.kernel.org
+Subject: Re: gpiod: Set pullup for Input Line
+Message-ID: <YjiO8CScFFVjiy1/@ada.ifak-system.com>
+Mail-Followup-To: Hans Kurscheidt <lve0200@gmail.com>,
+        linux-gpio@vger.kernel.org
+References: <Yjh+1DbmLoKGtIE8@ada.ifak-system.com>
+ <33b30df9-3763-7ced-88f9-3b6e32ae236b@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <33b30df9-3763-7ced-88f9-3b6e32ae236b@gmail.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Bjorn,
+Hei hei,
 
-On Mon Mar 21, 2022 at 3:15 PM CET, Bjorn Andersson wrote:
-> On Mon 21 Mar 08:33 CDT 2022, Luca Weiss wrote:
->
-> > In other places the SDC and UFS pins have been swapped but this was
-> > missed in the PINCTRL_PIN definitions. Fix that.
-> >=20
-> > Fixes: 7d74b55afd27 ("pinctrl: qcom: Add SM6350 pinctrl driver")
-> > Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
->
-> Your proposed change looks good, but when I look at 7d74b55afd27 it
-> already has these entries in the correct order.
->
-> Can you please confirm that this is still applicable. Or help me see
-> what I am missing.
+Am Mon, Mar 21, 2022 at 02:48:02PM +0100 schrieb Hans Kurscheidt:
+> sure, device trees are eventually overwritten w/ new kernels or "as is" on a
+> new device. 
 
-There are 3 times where number and description should match.
-For this UFS pin on sm6350 only 2/3 match.
-2x the number is 156, 1x it's 163
+You would need a board specific dts or dt overlay anyways.  Just compile
+that again with you new kernel.  For a new board, you need to make a
+new dts anyways, I don't see the problem here.
 
-$ grep -i ufs_reset drivers/pinctrl/qcom/pinctrl-sm6350.c
-        PINCTRL_PIN(163, "UFS_RESET"),
-static const unsigned int ufs_reset_pins[] =3D { 156 };
-        [156] =3D UFS_RESET(ufs_reset, 0xae000),
+> Hence my application won't work on a new installation/board,
+> because it needs certain GPIO input pins w/pull ups. 
 
-Does that help?
+Well, and those pullups need to be in SoC, and can not be external?
 
-Regards
-Luca
+> DTBs need to be
+> disassembled and re-compiled, which is not for the average user to install &
+> run an application!
 
+Why disassemble dtb, just go with the dts and compile that.
 
->
-> Regards,
-> Bjorn
->
-> > ---
-> > Changes in v2:
-> > - nothing
-> >=20
-> >  drivers/pinctrl/qcom/pinctrl-sm6350.c | 16 ++++++++--------
-> >  1 file changed, 8 insertions(+), 8 deletions(-)
-> >=20
-> > diff --git a/drivers/pinctrl/qcom/pinctrl-sm6350.c b/drivers/pinctrl/qc=
-om/pinctrl-sm6350.c
-> > index 4d37b817b232..a91a86628f2f 100644
-> > --- a/drivers/pinctrl/qcom/pinctrl-sm6350.c
-> > +++ b/drivers/pinctrl/qcom/pinctrl-sm6350.c
-> > @@ -264,14 +264,14 @@ static const struct pinctrl_pin_desc sm6350_pins[=
-] =3D {
-> >  	PINCTRL_PIN(153, "GPIO_153"),
-> >  	PINCTRL_PIN(154, "GPIO_154"),
-> >  	PINCTRL_PIN(155, "GPIO_155"),
-> > -	PINCTRL_PIN(156, "SDC1_RCLK"),
-> > -	PINCTRL_PIN(157, "SDC1_CLK"),
-> > -	PINCTRL_PIN(158, "SDC1_CMD"),
-> > -	PINCTRL_PIN(159, "SDC1_DATA"),
-> > -	PINCTRL_PIN(160, "SDC2_CLK"),
-> > -	PINCTRL_PIN(161, "SDC2_CMD"),
-> > -	PINCTRL_PIN(162, "SDC2_DATA"),
-> > -	PINCTRL_PIN(163, "UFS_RESET"),
-> > +	PINCTRL_PIN(156, "UFS_RESET"),
-> > +	PINCTRL_PIN(157, "SDC1_RCLK"),
-> > +	PINCTRL_PIN(158, "SDC1_CLK"),
-> > +	PINCTRL_PIN(159, "SDC1_CMD"),
-> > +	PINCTRL_PIN(160, "SDC1_DATA"),
-> > +	PINCTRL_PIN(161, "SDC2_CLK"),
-> > +	PINCTRL_PIN(162, "SDC2_CMD"),
-> > +	PINCTRL_PIN(163, "SDC2_DATA"),
-> >  };
-> > =20
-> >  #define DECLARE_MSM_GPIO_PINS(pin) \
-> > --=20
-> > 2.35.1
-> >=20
+For easier handling in your application and across different boards,
+you might want to checkout gpio line names.  We successfully used that
+to let the same application work with different boards (even with
+SoCs of different vendors), without the need to modify the app at all
+if the hardware changes.  That is much more convenient than putting
+pin numbers and knowledge about each and every possible board into the
+application.
+
+HTH & Greets
+Alex
 
