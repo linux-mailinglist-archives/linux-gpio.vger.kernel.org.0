@@ -2,127 +2,132 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BE0A04E2FC8
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Mar 2022 19:17:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 81EC64E2FCD
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Mar 2022 19:21:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352006AbiCUSSv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Mar 2022 14:18:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45174 "EHLO
+        id S1349012AbiCUSWX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Mar 2022 14:22:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352001AbiCUSSv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Mar 2022 14:18:51 -0400
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD09F187BA1
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Mar 2022 11:17:24 -0700 (PDT)
-Received: by mail-wr1-x42c.google.com with SMTP id h23so21247253wrb.8
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Mar 2022 11:17:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=+pwimOLhdySYosVSTAlKiZ2BY6HFod5o98mRqS7IOnA=;
-        b=XC3+YTNVYe/QHusCy5gsdXqPd/SzTnoFPEzbezbK6AE/L/1ThIY5lAbEDF2jd1MxX8
-         O3h4BKqL3wGeYha92xt9Lz0DtQGUwehTU5N7QTgsyAoQSla/ZnTJvRbSiV01KQNvHW/x
-         jI7/iBqHXRZSsnpsE2soFl8CEy4tvFtI+mtZRnW1AbNu1wQ2imGuuba4eCyKsDXYeGyb
-         o8WPBpRjNHv202W308Ekh44ICRzfPl3nA4yh+pw4uVVjMB9Hef2oy+500NtvjtlADcIA
-         SwAZDkTKQM8TI9Q3/bnS2FihKc1+Thy45D/XsZTpTEZylj19GjbASvx+7UWbn7YHGf67
-         L2bQ==
+        with ESMTP id S231928AbiCUSWX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Mar 2022 14:22:23 -0400
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2E1351588;
+        Mon, 21 Mar 2022 11:20:57 -0700 (PDT)
+Received: by mail-oi1-f182.google.com with SMTP id ay7so17097718oib.8;
+        Mon, 21 Mar 2022 11:20:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=+pwimOLhdySYosVSTAlKiZ2BY6HFod5o98mRqS7IOnA=;
-        b=8Pwn8t2VZKSyiDtnFEaUKHrl6RjwAbVIbgflZwXC8MpHkSy5e2PX7ZIhtjxSMUYY1t
-         c90/aP74lQ4FY9aJo2hFrhMVFVe3zbWP5p/RjmzqtAVGUojRbRacWUBZgkOZvvxvVjBt
-         GpiM0YhID8mm4rbkxqKI6hnxamHR3MOebSTCEfu6U75hSnG9axiHkGLWu+VXxpFUuvu7
-         UoTd9iIjaAd5OHfDxT+qNu+EteIrg84lHyx+YNTInL23IGBiA5Utg+JfYbgPk2VsDowW
-         5Lm/eEx1vuhiVog4bv6pVbTm03fXTRvPOpzeL+rms+Kyb3qw2KaXOeE3nJ2LM0Qd4DQ9
-         3wOg==
-X-Gm-Message-State: AOAM530GvyVjPvOX5hu+JABang0my0ho3O4FkeY1exyZXAbmSZGfVAiO
-        9qUhBZXV+4wxmxw+efCcoGcZ7eavW5TuQ1ji
-X-Google-Smtp-Source: ABdhPJyFfEAhCc01DP5nHkIYJc51jNux+OOldK1sRMy0w0tPy4B9cPTIY+3XU7Tw7V+eoY6jUqOtBg==
-X-Received: by 2002:adf:e7cd:0:b0:204:ba2:b106 with SMTP id e13-20020adfe7cd000000b002040ba2b106mr6490767wrn.679.1647886643276;
-        Mon, 21 Mar 2022 11:17:23 -0700 (PDT)
-Received: from [192.168.1.31] ([90.61.176.186])
-        by smtp.gmail.com with ESMTPSA id 14-20020a056000154e00b00203f8adde0csm10380669wry.32.2022.03.21.11.17.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Mar 2022 11:17:22 -0700 (PDT)
-Message-ID: <c490e63a-8fcb-f802-2f24-7cb8a7f36818@gmail.com>
-Date:   Mon, 21 Mar 2022 19:17:24 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: gpiod: Set pullup for Input Line
-Content-Language: fr
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TKTgpiFScEcEezkU3gQxHSkOyC+O5+goNNUME43jkTA=;
+        b=mlHQhCK72BiLlsOLNKQlAknfeMNH470iyAXu8fndwo4LKY158f0PFokIn2KTrQ2J2l
+         zqj6To33nFrIdqA67CqpIv/uq3s5lcmewgo88FYavJv98mXU23fKw9lnnI3kCG4amPkz
+         TdRzUc3dq14lu2ZlrOUs6X5aNBRe+9OM04rEQtITz9fH8Zzi4U2Oes/T5igfDnBdLvmR
+         QaX44JgFMDm/BCdK86HV3tXqqlIbMFQpwbtKMdBOGQK/50Ivi2pX85fVKtz2fzRXdjEq
+         k5+AEn8ERixu41d8YbWxIf7d5jH2SrAR9Y/ZV6PzRoUrerVdteaTxipjHCBSSwHndhpx
+         Qf4w==
+X-Gm-Message-State: AOAM530hzFAsTYCJDcHtJrefMzIJGM2VCQ2omLN7SCvA0kqx/SzH+tQj
+        NZFfQpXHMLfRkMoRAtiBInn1Ff1jUA==
+X-Google-Smtp-Source: ABdhPJz4u1VvPuu/H0ZraoubwxBmduE156pa3q5rXdZ5rQ0O3JYIct5izC5OOF2g+Pbu5a/2L7SHNQ==
+X-Received: by 2002:a05:6808:228f:b0:2ec:c59c:71e9 with SMTP id bo15-20020a056808228f00b002ecc59c71e9mr213176oib.153.1647886857089;
+        Mon, 21 Mar 2022 11:20:57 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id e4-20020a056808148400b002d9be41b179sm8154424oiw.50.2022.03.21.11.20.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Mar 2022 11:20:55 -0700 (PDT)
+Received: (nullmailer pid 315279 invoked by uid 1000);
+        Mon, 21 Mar 2022 18:20:54 -0000
+Date:   Mon, 21 Mar 2022 13:20:54 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kent Gibson <warthog618@gmail.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-References: <97da941f-39da-4ded-0138-d1e71c4d3ecc@gmail.com>
- <CAHp75VcXxSxtvEdHxenAWoP31WnkoyDJ6WfDwPDEKDhT3AtUmg@mail.gmail.com>
- <8200d976-2b32-1215-e46c-0bb2837392b7@gmail.com>
- <CAHp75VcOHCE13oA4m43yAp5e2w=e6uOQhRNneonja6F+XhXmbA@mail.gmail.com>
-From:   Hans Kurscheidt <lve0200@gmail.com>
-In-Reply-To: <CAHp75VcOHCE13oA4m43yAp5e2w=e6uOQhRNneonja6F+XhXmbA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH] dt-bindings: gpio: add common consumer GPIO lines
+Message-ID: <YjjCBiiPUvepSqlP@robh.at.kernel.org>
+References: <20220315083723.97822-1-krzysztof.kozlowski@canonical.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220315083723.97822-1-krzysztof.kozlowski@canonical.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue, Mar 15, 2022 at 09:37:23AM +0100, Krzysztof Kozlowski wrote:
+> Typical GPIO lines like enable, powerdown, reset or wakeup are not
+> documented as common, which leads to new variations of these (e.g.
+> pwdn-gpios).  Add a common schema which serves also as a documentation
+> for preferred naming.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+> ---
+>  .../bindings/gpio/gpio-consumer-common.yaml   | 36 +++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-consumer-common.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-consumer-common.yaml b/Documentation/devicetree/bindings/gpio/gpio-consumer-common.yaml
+> new file mode 100644
+> index 000000000000..098dc913f9e5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-consumer-common.yaml
+> @@ -0,0 +1,36 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpio/gpio-consumer-common.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Common GPIO lines
+> +
+> +maintainers:
+> +  - Bartosz Golaszewski <brgl@bgdev.pl>
+> +  - Linus Walleij <linus.walleij@linaro.org>
+> +
+> +# do not select this schema for GPIO hogs
+> +select:
+> +  properties:
+> +    gpio-hog: false
 
-Am 21.03.2022 um 18:33 schrieb Andy Shevchenko:
-> On Mon, Mar 21, 2022 at 7:27 PM Hans Kurscheidt <lve0200@gmail.com> wrote:
->> Hi thanks, that makes hope.
-> First of all, please do not top-post.
->
->> Unfortunately apt-get gpiod on my OrangePi Armbian board gives me
->> version 1.2, while the dev is already at 1.6. I probably have to build
->> it from source.
->>
->> Keeping fingers crossed .
-> I don't remember the details of old versions of libgpiod (Bart? Kent?)
-> I think it was available even there.
->
->> Am 21.03.2022 um 17:26 schrieb Andy Shevchenko:
->>> On Mon, Mar 21, 2022 at 1:30 PM Hans Kurscheidt <lve0200@gmail.com> wrote:
->>>> Despite deep searching, I cannot find any information, if gpiod allow
->>>> specifying pull-ups to input lines and how to do/handle it.
->>> Have you followed this code from libgpiod?
->>> https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/tree/tools/gpioset.c#n44
-> I don't think that the Bias option is in 1.2.3, because help is mute about it
+'select: true' should be sufficient here.
 
->   Trying to build it from source, doesn't work for me. I get:
-hk@orangepizeroplus:~/libgpiod$ ./autogen.sh --enable-tools=yes 
---prefix=/usr/bin
-autoreconf: Entering directory `.'
-autoreconf: configure.ac: not using Gettext
-autoreconf: running: aclocal --force -I m4
-aclocal: warning: couldn't open directory 'm4': No such file or directory
-autoreconf: configure.ac: tracing
-autoreconf: configure.ac: creating directory autostuff
-autoreconf: configure.ac: not using Libtool
-autoreconf: running: /usr/bin/autoconf --force
-configure.ac:163: error: possibly undefined macro: AC_LIBTOOL_CXX
-       If this token and others are legitimate, please use m4_pattern_allow.
-       See the Autoconf documentation.
-configure.ac:165: error: Unexpanded AX_ macro found. Please install GNU 
-autoconf-archive.
-configure.ac:179: error: Unexpanded AX_ macro found. Please install GNU 
-autoconf-archive.
-autoreconf: /usr/bin/autoconf failed with exit status: 1
-hk@orangepizeroplus:~/libgpiod$
+> +
+> +properties:
+> +  enable-gpios:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
 
+Perhaps some sort of description on these.
 
-??
+I think these are always a single line, so 'maxItems: 1'.
 
-RGDS
-
-
+> +
+> +  reset-gpios:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +
+> +  powerdown-gpios:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +
+> +  pwdn-gpios:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    description: Use powerdown-gpios
+> +    deprecated: true
+> +
+> +  wakeup-gpios:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +
+> +additionalProperties: true
+> -- 
+> 2.32.0
+> 
+> 
