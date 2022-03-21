@@ -2,66 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E69DD4E2E3B
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Mar 2022 17:40:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F11A4E2E45
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Mar 2022 17:42:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351312AbiCUQlj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Mar 2022 12:41:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38052 "EHLO
+        id S1346336AbiCUQnt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Mar 2022 12:43:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237331AbiCUQlj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Mar 2022 12:41:39 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8136A5F259;
-        Mon, 21 Mar 2022 09:40:12 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id d10so30974435eje.10;
-        Mon, 21 Mar 2022 09:40:12 -0700 (PDT)
+        with ESMTP id S1344532AbiCUQns (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Mar 2022 12:43:48 -0400
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 516A8160149;
+        Mon, 21 Mar 2022 09:42:23 -0700 (PDT)
+Received: by mail-ed1-x535.google.com with SMTP id h13so18582193ede.5;
+        Mon, 21 Mar 2022 09:42:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=EJtLOy1z9qbTwrw3Odhnv9M+mtBkKVnNxZm6T651y2Q=;
-        b=JVDIFxZhuOHeEVexVd7T/hSG4JJGfSXpKlQR/ylBx3yWAjVJYEfPItWO8ljpF3SXyK
-         kxElOTx1KaFQuoERVOWLkF4AIAGfY2CqpmWMz82BdUET9PVmL2RlKqkCv+zRIe2EryPA
-         tjnTmY9UUibI1pF/rlunvzkCvkgRbAVnnRb13kguTQnkdlT4i7F9G0ND9/kYYbyeqz/L
-         vXctdMmUYxXFocGHomYINVhoQEUcNt7WvGjR1lhEnXabSL2ct4ttKaBXiSbP/1KhqEmd
-         F0lJTOmz1BZeJuRd/MHvUxJfkkxt8nKXEtPXNLJxrcd34Yyj/tCqf0qgPcxYzgqz0Vqo
-         kS7Q==
+        bh=3mkHbSPd6I9+pLUf+5v33zhbkXtwBKoba4Y44U/ghK4=;
+        b=a0Ai9C62qgIb1RVT86zt38NbWnJNQRqkMjoCrmrXiZwPXFeTe6Ht+hsmJNS7tewJna
+         scGc491WOFvu5S/IIHi4EV2J8ir37IrE0XDvJwohLd/8WfBWEd5s6DmUbAPP+3B1RINW
+         xNuBwtWlj5XkWv3j75+yuzlwruE1gIyH1CkzACIp1XUmrAPj+Cb1/nE1HsauqLI8rnj+
+         89GDlqR5aPnr0oJ5osM7/RxBlr80YoR4+wvK42G3kRK4hVtZquBOiWHDPBvb7w6BIBjE
+         gEUEPKQvLvmanz0lMW03/xnda1BRRRzZyi6MsPXnbJ4X2CLWm/jO9eI3ZWeIiow/NIUV
+         +yOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=EJtLOy1z9qbTwrw3Odhnv9M+mtBkKVnNxZm6T651y2Q=;
-        b=LjldzHyIthHOCwxyMHwb83wD/uCCkifxkUYd5Fxv8QneLLP12HtOs2V97NPA7kBBmZ
-         kkukIoMwgPAntXf3TfUHrlQo3Pw2AVsShSQXMnzBvTP/kQy5ZaHnPbI28H/IXvpRGbay
-         EAeVM/3JXK6HOKsNdTz2G/UMmyMTgg/tUkPAmJTKI8hxZZ+/3SfH/CdxvoKqoJVnKP3p
-         4mF8bgFkSuHag/JWGBWK7StTJ5WGZ5ODf9w3r3Cz7bFB1x6mr6a2vAfIUuaaJNS6hDi6
-         H/0SWF5AZjhOf0bRlueGXG4z+aCMcGmOmTOdxXiXSaU1/W5xFti3XYn36aA/3t0nBZIv
-         cdPg==
-X-Gm-Message-State: AOAM533i4638Lp1opecOyKXqYOfjHVYNOMn11EWfNxtA1bGR6IM436LA
-        Op7etaNevAwKfH2WURgWkL2WMKpXjXZZVN6bSD8=
-X-Google-Smtp-Source: ABdhPJx0/vREgiXqKTqUQ4+7St5r1LVPAwbRsGJP8mIxaSQcjKrEYSltuiOJGLsg2j99Lus5dg+jzHabi5US69p6aVg=
-X-Received: by 2002:a17:906:4cc7:b0:6d0:7efb:49f with SMTP id
- q7-20020a1709064cc700b006d07efb049fmr21578550ejt.639.1647880811015; Mon, 21
- Mar 2022 09:40:11 -0700 (PDT)
+        bh=3mkHbSPd6I9+pLUf+5v33zhbkXtwBKoba4Y44U/ghK4=;
+        b=5IrMJ2URjhFynzQskU/BafLGsfkbkmbyUh3CjvOSpvyOYDjaEASv1RYBo+gi5UgP5V
+         GetKqNpauGjXOLz1hai2sU1bRRqaHbwYc5n3AmBJvZ4pMxsylyRD2w0VO+5usuYDVhej
+         ja4VidT6lXkinaHqu8wE2wEGtHxvcJC6+Nuxw21c1pIE8o5NjSoF4Fdk5tuk/5zXnOfk
+         phBK5R2WPsvgDsz5vEj1pn7vr+696rbhLAR/H7++HTr6q4ij3TgbaPfr6PjBoQbi3Mu6
+         DQm7uZ4VZhuKLhy1UVHUgFNa8Io/k8t/YscbHa9P+JGUitRnbV6knLlM1KzU29F5f29A
+         Q3Rw==
+X-Gm-Message-State: AOAM531AYMGxV6DBxA+gJxUGGH9ejj6t2Pjr62cepMGzGKIFwnUICWVf
+        Sqm18hOjk7ukq7zgpJ7BqrgtN/BSIoZ0nboMckc=
+X-Google-Smtp-Source: ABdhPJy6kGu1C15zOwE86ppG4LYIi0tngDeWHbiK2qe/U/8MkbskwiXnxOOq4nCBaUHg8BTEe8Ml6R4CDSJRdAm4d5I=
+X-Received: by 2002:aa7:c30f:0:b0:419:2af:4845 with SMTP id
+ l15-20020aa7c30f000000b0041902af4845mr20065302edq.296.1647880941751; Mon, 21
+ Mar 2022 09:42:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220321042142.69239-1-frank@zago.net> <20220321042142.69239-2-frank@zago.net>
-In-Reply-To: <20220321042142.69239-2-frank@zago.net>
+References: <1647849919-8778-1-git-send-email-haibo.chen@nxp.com>
+In-Reply-To: <1647849919-8778-1-git-send-email-haibo.chen@nxp.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 21 Mar 2022 18:39:00 +0200
-Message-ID: <CAHp75VcyNDNfYyUvSk4kToLiLCVDWo5-Rz_1_fRtR7i8ZjGr7g@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] mfd: ch341: add core driver for the WCH CH341 in
- I2C/GPIO mode
-To:     frank zago <frank@zago.net>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Wolfram Sang <wsa@kernel.org>, Johan Hovold <johan@kernel.org>,
-        USB <linux-usb@vger.kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+Date:   Mon, 21 Mar 2022 18:41:11 +0200
+Message-ID: <CAHp75Veqswa9nuiRbuGE013EQ7d+-DWAiYqQG2o7p3=EDYk4pQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: Add gpio alias support
+To:     BOUGH CHEN <haibo.chen@nxp.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
@@ -73,149 +68,20 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 21, 2022 at 11:17 AM frank zago <frank@zago.net> wrote:
+On Mon, Mar 21, 2022 at 11:22 AM <haibo.chen@nxp.com> wrote:
 >
-> The CH341 is a multifunction chip, presenting 3 different USB PID. One
-> of these functions is for I2C/SPI/GPIO. This new set of drivers will
-> manage I2C and GPIO.
+> From: Haibo Chen <haibo.chen@nxp.com>
+>
+> This patch allow setting gpio device id via device tree alias.
 
-...
+allows
 
-> +The driver doesn't support detection of I2C device present on the
+But read the Submitting Patches document about imperative mode.
 
-devices
+Moreover, this commit message is quite bad. Please, read [1] for
+making your commit messages meaningful and useful.
 
-> +bus. Apparently when a device is not present at a given address, the
-> +CH341 will return an extra byte of data, but the driver doesn't
-> +support that. This may be addressed in the future.
-
-...
-
->     spear-pcie-gadget
->     uacce
->     xilinx_sdfec
-> +   ch341
-
-Seems you broke the order.
-
-...
-
-> +config MFD_CH341
-
-> +       tristate "WinChipHead CH341 in I2C/SPI/GPIO mode"
-
-(1)
-
-> +       depends on USB
-> +       help
-> +         If you say yes to this option, support for the CH341 series
-> +         of chips, running in I2C/SPI/GPIO mode will be included.
-
-"chips running" (no comma needed)
-
-> +         The chip's SPI mode is not supported.
-
-Maybe no need to include SPI in the (1) along with dropping this line?
-
-> +         This driver can also be built as a module.  If so, the
-> +         module will be called ch341-core.
-
-...
-
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/slab.h>
-
-(2)
-
-> +#include <linux/mfd/core.h>
-
-> +
-> +#include <linux/mfd/ch341.h>
-
-Moving these two to (2) ?
-
-...
-
-> +       dev = kzalloc(sizeof(*dev), GFP_KERNEL);
-
-devm_kzalloc() ?
-
-> +       if (!dev)
-> +               return -ENOMEM;
-
-...
-
-> +       rc = mfd_add_hotplug_devices(&iface->dev, ch341_devs,
-> +                                    ARRAY_SIZE(ch341_devs));
-
-> +       if (rc) {
-
-> +               dev_err(&iface->dev, "Failed to add mfd devices to core.");
-> +               goto free_dev;
-
-return dev_err_probe(...); ?
-
-> +       }
-
-...
-
-> +       usb_set_intfdata(dev->iface, NULL);
-
-This has been done by device driver core  for the past 10+ years.
-
-...
-
-> +static const struct usb_device_id ch341_usb_table[] = {
-> +       { USB_DEVICE(0x1a86, 0x5512) },
-> +       { }
-> +};
-
-> +
-
-Redundant blank line.
-
-> +MODULE_DEVICE_TABLE(usb, ch341_usb_table);
-> +
-> +static struct usb_driver ch341_usb_driver = {
-> +       .name       = "ch341-mfd",
-> +       .id_table   = ch341_usb_table,
-> +       .probe      = ch341_usb_probe,
-
-> +       .disconnect = ch341_usb_disconnect
-
-Keep a comma to avoid unneeded churn in the future.
-
-> +};
-
-> +
-
-Redundant blank line.
-
-> +module_usb_driver(ch341_usb_driver);
-
-
-> +/*
-> + * Definitions for CH341 MFD driver
-> + */
-
-One line?
-
-...
-
-> +#include <linux/usb.h>
-
-No users of this header. Use forward declarations.
-
-> +#include <linux/mutex.h>
-
-Missed types.h.
-
-...
-
-> +#define DEFAULT_TIMEOUT 1000   /* 1s USB requests timeout */
-
-Use proper suffix, i.e. _MS.
+[1]: https://cbea.ms/git-commit/
 
 -- 
 With Best Regards,
