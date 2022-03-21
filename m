@@ -2,65 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D7C9D4E1B56
-	for <lists+linux-gpio@lfdr.de>; Sun, 20 Mar 2022 12:43:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 372B04E1F84
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Mar 2022 05:31:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244795AbiCTLop (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 20 Mar 2022 07:44:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55964 "EHLO
+        id S245401AbiCUEcb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Mar 2022 00:32:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232223AbiCTLop (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 20 Mar 2022 07:44:45 -0400
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 050C922291;
-        Sun, 20 Mar 2022 04:43:22 -0700 (PDT)
-Received: by mail-ej1-f48.google.com with SMTP id o10so6173772ejd.1;
-        Sun, 20 Mar 2022 04:43:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=MdRORuO5rA49EY4CNBNxdiWNF+N36fghP5BMIssSxRw=;
-        b=OScCUigDeR8Q97aybc1JM6Fa86j2z5WUtd4dNbrX6IEVD+ZsCV+KsJV6thmIxXSFlN
-         lk8JdLBchuU8TE4pB2Fc4rXvQY+gHS6CkuUCp5ncvJ1eeREq8asTc+vuP0noyjGwr+rn
-         znz0u0UbryHm3dxZC5IvGmF5DP1cEaVaJLKTQZ1bDjk3F3kdauhokZCFpqcjxaXhaZY7
-         Etzjop2tFWo8KuNP+ebm9MXBrVB2yuNqKjdZbkg07se5mQUMTdoHSJiSSrCm7H+kREub
-         XsjhGONSy7QDrkWNFk3Hx0oy9N6Ry+aA3YRvf6790VzgmqbymrqmiIaIMeaELo5KgKhU
-         Xjcg==
-X-Gm-Message-State: AOAM530xBWRuDbWfpeEyethTQPA0WFt+OiHKNGsHNz+Kty1iSOspNOrx
-        SbdE0W8IgnbJmNnpMZ+xiXM=
-X-Google-Smtp-Source: ABdhPJxZ/unqku39jnaG6CRZB+TRKVxT61WyxhQ3KXHNkbK58qYss9hxrYmX/p3w9LUCv0eiRlPcRg==
-X-Received: by 2002:a17:907:60d3:b0:6db:8b59:1564 with SMTP id hv19-20020a17090760d300b006db8b591564mr16494132ejc.228.1647776600471;
-        Sun, 20 Mar 2022 04:43:20 -0700 (PDT)
-Received: from [192.168.0.17] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.googlemail.com with ESMTPSA id i2-20020a1709067a4200b006db720b1231sm5914265ejo.2.2022.03.20.04.43.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 20 Mar 2022 04:43:19 -0700 (PDT)
-Message-ID: <a79087bb-516d-be29-1139-20c0c4126fb1@kernel.org>
-Date:   Sun, 20 Mar 2022 12:43:18 +0100
+        with ESMTP id S241992AbiCUEc3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Mar 2022 00:32:29 -0400
+Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B20F22FFFC;
+        Sun, 20 Mar 2022 21:31:02 -0700 (PDT)
+Received: from relay2-d.mail.gandi.net (unknown [IPv6:2001:4b98:dc4:8::222])
+        by mslow1.mail.gandi.net (Postfix) with ESMTP id E5511C445D;
+        Mon, 21 Mar 2022 04:21:55 +0000 (UTC)
+Received: (Authenticated sender: frank@zago.net)
+        by mail.gandi.net (Postfix) with ESMTPSA id CA1E740004;
+        Mon, 21 Mar 2022 04:21:45 +0000 (UTC)
+From:   frank zago <frank@zago.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Wolfram Sang <wsa@kernel.org>, Johan Hovold <johan@kernel.org>,
+        linux-usb@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        frank zago <frank@zago.net>
+Subject: [PATCH v4 0/3] WCH CH341 GPIO and SPI support
+Date:   Sun, 20 Mar 2022 23:21:39 -0500
+Message-Id: <20220321042142.69239-1-frank@zago.net>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH 5/6] dt-bindings: pinctrl: qcom-pmic-gpio: Add pmx65
- support
-Content-Language: en-US
-To:     Rohit Agarwal <quic_rohiagar@quicinc.com>, agross@kernel.org,
-        bjorn.andersson@linaro.org, linus.walleij@linaro.org,
-        robh+dt@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
-        rnayak@codeaurora.org, collinsd@codeaurora.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1647410837-22537-1-git-send-email-quic_rohiagar@quicinc.com>
- <1647410837-22537-6-git-send-email-quic_rohiagar@quicinc.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-In-Reply-To: <1647410837-22537-6-git-send-email-quic_rohiagar@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,18 +44,54 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 16/03/2022 07:07, Rohit Agarwal wrote:
-> Add support for the PMX65 GPIO support to the Qualcomm PMIC GPIO
-> binding.
-> 
-> Signed-off-by: Rohit Agarwal <quic_rohiagar@quicinc.com>
-> ---
->  Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+The CH341 is a multifunction chip, presenting 3 different USB PID. One
+of these functions is for I2C/SPI/GPIO. This new set of drivers will
+manage I2C and GPIO.
 
 
-Best regards,
-Krzysztof
+Changes from v3:
+  - really converted to an MFD driver. Driver is now split into 3
+    modules (MFD+I2C+GPIO).
+  - minor code cleanups
+
+Changes from v2:
+  - bug fixes
+  - more robust USB enumeration
+  - Changed to an MFD driver as suggested
+
+During testing I found that i2c handles hot removal, but not gpio. The
+gpio subsystem will complain with 'REMOVING GPIOCHIP WITH GPIOS STILL
+REQUESTED', but it's a gpiolib issue.
+
+Changes from v1:
+  - Removed double Signed-off-by
+  - Move Kconfig into the same directory as the driver
+
+
+frank zago (3):
+  mfd: ch341: add core driver for the WCH CH341 in I2C/GPIO mode
+  gpio: ch341: add MFD cell driver for the CH341
+  i2c: ch341: add MFD cell driver CH341 for I2C
+
+ Documentation/misc-devices/ch341.rst | 114 ++++++++
+ Documentation/misc-devices/index.rst |   1 +
+ MAINTAINERS                          |   9 +
+ drivers/gpio/Kconfig                 |  10 +
+ drivers/gpio/Makefile                |   1 +
+ drivers/gpio/gpio-ch341.c            | 421 +++++++++++++++++++++++++++
+ drivers/i2c/busses/Kconfig           |  10 +
+ drivers/i2c/busses/Makefile          |   1 +
+ drivers/i2c/busses/i2c-ch341.c       | 325 +++++++++++++++++++++
+ drivers/mfd/Kconfig                  |  12 +
+ drivers/mfd/Makefile                 |   1 +
+ drivers/mfd/ch341-core.c             | 109 +++++++
+ include/linux/mfd/ch341.h            |  25 ++
+ 13 files changed, 1039 insertions(+)
+ create mode 100644 Documentation/misc-devices/ch341.rst
+ create mode 100644 drivers/gpio/gpio-ch341.c
+ create mode 100644 drivers/i2c/busses/i2c-ch341.c
+ create mode 100644 drivers/mfd/ch341-core.c
+ create mode 100644 include/linux/mfd/ch341.h
+
+--
+2.32.0
