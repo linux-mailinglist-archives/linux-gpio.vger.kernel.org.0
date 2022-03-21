@@ -2,132 +2,150 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 81EC64E2FCD
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Mar 2022 19:21:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 125334E2FD2
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Mar 2022 19:21:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349012AbiCUSWX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Mar 2022 14:22:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55724 "EHLO
+        id S1352060AbiCUSWo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Mar 2022 14:22:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231928AbiCUSWX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Mar 2022 14:22:23 -0400
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2E1351588;
-        Mon, 21 Mar 2022 11:20:57 -0700 (PDT)
-Received: by mail-oi1-f182.google.com with SMTP id ay7so17097718oib.8;
-        Mon, 21 Mar 2022 11:20:57 -0700 (PDT)
+        with ESMTP id S1352065AbiCUSWn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Mar 2022 14:22:43 -0400
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B938C515A7
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Mar 2022 11:21:17 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id p5so10081773pfo.5
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Mar 2022 11:21:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=Sm/juE8+xSUUK90U2RQ72ESjmLwKXME/MraZTkiKSI0=;
+        b=IwUzAnusW9TCbhvFqNeTt22rSupF/YfqYZcFPOxktUsIoEiCBdKAfs6Jy4UkfD7x99
+         1brRTLgByedLwtuGvW20xNosismdYVwQ5j6varCeg9dpKWN/681UKfGHZvdSpoTp2u8R
+         ZMsBTm5NKE0dy9cVk91ufhl3R+bFGuskwk+/ukC9FAA+xSy6pjaBuysnPLST0ptVgXdF
+         MoU11e6Ff/Xlgf0zAcL5p3M531ZX3474sLdCjsxAOnV+RW5ywJLU7smlQevW29jr2OHB
+         xpkcVnNhoDWhpkh0NXkJBpBnecRxbcPSo+BM9G+QquEuv6srX5qa32QZqRPr3HsdXBal
+         UnuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TKTgpiFScEcEezkU3gQxHSkOyC+O5+goNNUME43jkTA=;
-        b=mlHQhCK72BiLlsOLNKQlAknfeMNH470iyAXu8fndwo4LKY158f0PFokIn2KTrQ2J2l
-         zqj6To33nFrIdqA67CqpIv/uq3s5lcmewgo88FYavJv98mXU23fKw9lnnI3kCG4amPkz
-         TdRzUc3dq14lu2ZlrOUs6X5aNBRe+9OM04rEQtITz9fH8Zzi4U2Oes/T5igfDnBdLvmR
-         QaX44JgFMDm/BCdK86HV3tXqqlIbMFQpwbtKMdBOGQK/50Ivi2pX85fVKtz2fzRXdjEq
-         k5+AEn8ERixu41d8YbWxIf7d5jH2SrAR9Y/ZV6PzRoUrerVdteaTxipjHCBSSwHndhpx
-         Qf4w==
-X-Gm-Message-State: AOAM530hzFAsTYCJDcHtJrefMzIJGM2VCQ2omLN7SCvA0kqx/SzH+tQj
-        NZFfQpXHMLfRkMoRAtiBInn1Ff1jUA==
-X-Google-Smtp-Source: ABdhPJz4u1VvPuu/H0ZraoubwxBmduE156pa3q5rXdZ5rQ0O3JYIct5izC5OOF2g+Pbu5a/2L7SHNQ==
-X-Received: by 2002:a05:6808:228f:b0:2ec:c59c:71e9 with SMTP id bo15-20020a056808228f00b002ecc59c71e9mr213176oib.153.1647886857089;
-        Mon, 21 Mar 2022 11:20:57 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id e4-20020a056808148400b002d9be41b179sm8154424oiw.50.2022.03.21.11.20.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Mar 2022 11:20:55 -0700 (PDT)
-Received: (nullmailer pid 315279 invoked by uid 1000);
-        Mon, 21 Mar 2022 18:20:54 -0000
-Date:   Mon, 21 Mar 2022 13:20:54 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH] dt-bindings: gpio: add common consumer GPIO lines
-Message-ID: <YjjCBiiPUvepSqlP@robh.at.kernel.org>
-References: <20220315083723.97822-1-krzysztof.kozlowski@canonical.com>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=Sm/juE8+xSUUK90U2RQ72ESjmLwKXME/MraZTkiKSI0=;
+        b=et+5ce4bKLAIN3AL9U67JhRYK5KAAIWR7qxExNWOsIjqAJ0WUcu+kfwVObLLyjcoBR
+         idlzMwAW+Fmdzv56TwhX0SYdScIdf7p5uPbeSB4jZgJ4D8zV8LItpjUglqA0sW9rkVv2
+         CJ5Stj/UMCOSA8pftijMcCPMsRHsr3puDTqn5lLF0OfhLEk13tJw+2m+0tk9sqFHYwnc
+         Zh2fz8VtfYCt8J0NF8TQzh6Qxvh7Fe7T1COPfREnDcHwA86iE4VwlcATHW+F2re5HU0U
+         Rxc5o34J+NUskcEvN3s41OPHUKgrM5eVpJbUPpDgwkBpfvZChwHNCaxcSPZzf/6U5uPx
+         AHnw==
+X-Gm-Message-State: AOAM531HNq/qbWtOH08L6BdiBcZO9fi0RuHmKqVTaliS9tQe89C1N0r2
+        QWozLGvB9/kc0f8dbpaALYc=
+X-Google-Smtp-Source: ABdhPJyCOwksGYxZ8X4e2sWE5uLlGWudWVby/n8D6Mu1TFr1jxgS8Cxsp1hYTtgMhE3Xtm0PBx+92g==
+X-Received: by 2002:a05:6a00:cd2:b0:4fa:abfe:e0eb with SMTP id b18-20020a056a000cd200b004faabfee0ebmr3261801pfv.66.1647886877119;
+        Mon, 21 Mar 2022 11:21:17 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id o65-20020a17090a0a4700b001bef5cffea7sm439735pjo.0.2022.03.21.11.21.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Mar 2022 11:21:16 -0700 (PDT)
+Message-ID: <78dc59cb-cf83-3649-f3d4-a03f3edcb9cf@gmail.com>
+Date:   Mon, 21 Mar 2022 11:21:07 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220315083723.97822-1-krzysztof.kozlowski@canonical.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH RFC 0/2] gpiolib: of: Introduce hook for missing
+ gpio-ranges
+Content-Language: en-US
+To:     Stefan Wahren <stefan.wahren@i2se.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Arnd Bergmann <arnd@arndb.de>,
+        Phil Elwell <phil@raspberrypi.com>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+References: <1646855026-9132-1-git-send-email-stefan.wahren@i2se.com>
+ <CACRpkdYuxsYw99CZZK_GXp3V-mPiuL50CxgsE-=oRMApZf_bxA@mail.gmail.com>
+ <15171d7e-f065-88b8-b3b3-dbeed75c5e6e@gmail.com>
+ <98561f61-55c7-afe1-2393-362376251e43@i2se.com>
+ <55b5cb38-41ea-2efa-321f-952259b12082@gmail.com>
+ <f498afb0-dec9-c6fa-8469-896897f77d3f@i2se.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+In-Reply-To: <f498afb0-dec9-c6fa-8469-896897f77d3f@i2se.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 15, 2022 at 09:37:23AM +0100, Krzysztof Kozlowski wrote:
-> Typical GPIO lines like enable, powerdown, reset or wakeup are not
-> documented as common, which leads to new variations of these (e.g.
-> pwdn-gpios).  Add a common schema which serves also as a documentation
-> for preferred naming.
+On 3/17/22 12:23, Stefan Wahren wrote:
+> Hi,
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-> ---
->  .../bindings/gpio/gpio-consumer-common.yaml   | 36 +++++++++++++++++++
->  1 file changed, 36 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-consumer-common.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-consumer-common.yaml b/Documentation/devicetree/bindings/gpio/gpio-consumer-common.yaml
-> new file mode 100644
-> index 000000000000..098dc913f9e5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-consumer-common.yaml
-> @@ -0,0 +1,36 @@
-> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/gpio-consumer-common.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Common GPIO lines
-> +
-> +maintainers:
-> +  - Bartosz Golaszewski <brgl@bgdev.pl>
-> +  - Linus Walleij <linus.walleij@linaro.org>
-> +
-> +# do not select this schema for GPIO hogs
-> +select:
-> +  properties:
-> +    gpio-hog: false
+> Am 17.03.22 um 18:17 schrieb Florian Fainelli:
+>> On 3/17/22 4:48 AM, Stefan Wahren wrote:
+>>> Hi,
+>>>
+>>> Am 17.03.22 um 03:02 schrieb Florian Fainelli:
+>>>>
+>>>> On 3/16/2022 6:15 PM, Linus Walleij wrote:
+>>>>> On Wed, Mar 9, 2022 at 8:44 PM Stefan Wahren <stefan.wahren@i2se.com>
+>>>>> wrote:
+>>>>>
+>>>>>> This patch series tries to provide backward compatibility for DTB 
+>>>>>> which
+>>>>>> lacks the gpio-ranges property.
+>>>>>>
+>>>>>> The commit ("pinctrl: msm: fix gpio-hog related boot issues") by
+>>>>>> Christian
+>>>>>> Lamparter already contains a fallback in case the gpio-ranges 
+>>>>>> property
+>>>>>> is missing. But this approach doesn't work on BCM2835 with a gpio-hog
+>>>>>> defined for the SoC GPIOs.
+>>>>>>
+>>>>>> Based Christian's on explanation i conclude that the fallback must
+>>>>>> happen
+>>>>>> during the gpiochip_add() call and not afterwards. So the approach
+>>>>>> is to
+>>>>>> call an optional hook, which can be implemented in the platform 
+>>>>>> driver.
+>>>>>>
+>>>>>> This series has been tested on Raspberry Pi 3 B Plus.
+>>>>>>
+>>>>>> Stefan Wahren (2):
+>>>>>>     gpiolib: of: Introduce hook for missing gpio-ranges
+>>>>>>     pinctrl: bcm2835: implement hook for missing gpio-ranges
+>>>>> Looks good to me, is this something I should apply to the pinctrl
+>>>>> tree or should I wait for a non-RFC version?
+>>>> I would be inclined to slap a couple of different Fixes tag to each
+>>>> commit because breaking older DTBs should IMHO be considered a
+>>>> regression. So for the first patch I would add:
+>>>>
+>>>> Fixes: 2ab73c6d8323 ("gpio: Support GPIO controllers without 
+>>>> pin-ranges")
+>>>>
+>>>> and for the second patch:
+>>>>
+>>>> Fixes: 266423e60ea1 ("pinctrl: bcm2835: Change init order for gpio 
+>>>> hogs")
+>>>>
+>>>> WDYT?
+>>> so you consider backporting this "feature"?
+>> Yes, I would consider your changes fixes actually. If I am the only one
+>> deeply concerned about backwards compatibility I suppose I could
+>> backport those into our tree.
+> i'm fine with backporting, but i thought these must be single 
+> independent patches.
 
-'select: true' should be sufficient here.
-
-> +
-> +properties:
-> +  enable-gpios:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-
-Perhaps some sort of description on these.
-
-I think these are always a single line, so 'maxItems: 1'.
-
-> +
-> +  reset-gpios:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +
-> +  powerdown-gpios:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +
-> +  pwdn-gpios:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +    description: Use powerdown-gpios
-> +    deprecated: true
-> +
-> +  wakeup-gpios:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +
-> +additionalProperties: true
-> -- 
-> 2.32.0
-> 
-> 
+Linus, how are we proceeding with these changes? Any hope to include 
+them for 5.18?
+-- 
+Florian
