@@ -2,112 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 521A04E4271
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Mar 2022 16:00:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 89DDC4E42F9
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Mar 2022 16:28:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234447AbiCVPBl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Mar 2022 11:01:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59742 "EHLO
+        id S235768AbiCVPaD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Mar 2022 11:30:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234293AbiCVPBk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Mar 2022 11:01:40 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE55F21261;
-        Tue, 22 Mar 2022 08:00:12 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id o10so18037534ejd.1;
-        Tue, 22 Mar 2022 08:00:12 -0700 (PDT)
+        with ESMTP id S235741AbiCVP36 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Mar 2022 11:29:58 -0400
+Received: from mail-vs1-xe2a.google.com (mail-vs1-xe2a.google.com [IPv6:2607:f8b0:4864:20::e2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BC27888EE
+        for <linux-gpio@vger.kernel.org>; Tue, 22 Mar 2022 08:28:29 -0700 (PDT)
+Received: by mail-vs1-xe2a.google.com with SMTP id s18so3501521vsr.1
+        for <linux-gpio@vger.kernel.org>; Tue, 22 Mar 2022 08:28:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YhviSAwIOjDzR1pqsOvpQJHGJWDCBzWFuU7RfFuBx0s=;
-        b=c9uPSeUFlfwX4VnQPHCJ9oSLDBor7yewdIOCVdR+P3j+W1KYCIWj15Z9stH99ctXUz
-         /SvmObLwMq24Z3an/yek7eVoyVXO++9eMhdE8T6JtaVQhb0H1ZFYMskiNX3HM9+rzjcf
-         1Kun1durU38YIadTfqioojbXvDibEmpyenwxc7L8fA5BQg855mEPOTabLhCtclsLpGzW
-         7AUi1TD4KeqPfccj0VP6vecMQJ5lHuAdVjgeTB7l9LnMkcoQoBgnunQSIZqdo4STB62v
-         k4QtQhogwRo5cVAJBhycV5PZ1iS5l6pQb5h7li2loFCjl03cebIlXPgQhp0CP/FLIjNm
-         EzMA==
+        h=mime-version:reply-to:sender:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=vg3N2LY7BsNanytRrRXO2JlRbowmQE2NHo8nrxSG5uY=;
+        b=d1ncNmVo0Ikkam3ACdvn1MSYizT8lA0vlBZjpPpC4DyzbTgG06ZWPaLjuTwNdYWXtt
+         wiPMGPdYvu3E6GPXx7P+WeywNpC1vN5SH1DFsGhLY2HOcn8aO1SnDGAojL2lAaa1C39j
+         miYj9xmqnLapG8oSua83GMVpi+IWzfFmY+0I1lclI/IvTTknhWlAxJNAwZY3O5h5BePl
+         ttJzZOw41gjqz7Gt/LOdVI+tHr6gFJ6R95PfM0OpN9azjmkT6ttigoRx9shv36mO3pxW
+         uS9J32YKUHejpZzGG2I38+Cvak/3PNQX3t3sQy5HxLYvAsAzPHCR4oE/X+GxoMStd6FT
+         ncyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YhviSAwIOjDzR1pqsOvpQJHGJWDCBzWFuU7RfFuBx0s=;
-        b=SLimKgAOzHcH87HmxS3RXu2dObMcnFbjo9fan9dPdv2u4b8CSB6GttrszG0cqXDqj5
-         RWaYEJd/HmILP7bhupL+/cHVgtnC+N7GUZKA0+yWk/zTqJ30CjS6hM0lc7HwrhdkZdzT
-         BLeyI8quRlyxXuHkaiNqKBhRS8s2/1ZpXyHk5wfYcpWGKL4GfrbnDxG3uzt+3ZoNZ7ix
-         MIqipd8gxLcAeFQJTkE1l8Xo8ryJP693u5xfOUoTs91O5A/1vjjIMcjOqoxzoDawnZlr
-         ALLA3B3Zpxnra/49/LgylqvWYiLv1/TyWYu1LzjXBndOerQH+PiUxaOEE/fFT48MYQuN
-         jnZQ==
-X-Gm-Message-State: AOAM533Av6Ekvk7na+u3CPqPAmoX2tkeaxVXWLuIP37bv/ykEYlLKpG/
-        VT1cFnjySWC2pR7ol9jw/Ig7QdfQLF5u6LQYPOc=
-X-Google-Smtp-Source: ABdhPJyBqK8CWpqnB9cefn5/xns9b1gRQMPRstpn/ic6+aoexanuW6ErOMtcz2f3Tsfx0eljmfeuak3BYUw44rnJO8E=
-X-Received: by 2002:a17:906:4cc7:b0:6d0:7efb:49f with SMTP id
- q7-20020a1709064cc700b006d07efb049fmr26100969ejt.639.1647961211065; Tue, 22
- Mar 2022 08:00:11 -0700 (PDT)
+        h=x-gm-message-state:mime-version:reply-to:sender:from:date
+         :message-id:subject:to:content-transfer-encoding;
+        bh=vg3N2LY7BsNanytRrRXO2JlRbowmQE2NHo8nrxSG5uY=;
+        b=O8fU3ra8SLKfu2Hz3EuqoxtuAvTiaWHgIfYR2agiC7MYYxDkA/AvXj2KEYxhv2iaf3
+         GAEU/bRJLbtIIOB9slYsmkdradVzt4Jp6e0LSZ6nKY9rjQjHi7hY2krnZeu4Nqp1GYFi
+         JJCM78M3UFM9mfvH62F3Hu/l6lfxQCfeKy2iv0uqeGEWiN0Lev9ifQPwyawZn7H5p0fk
+         4M29JBA/90725tiYUnG14KpxFPudpxp8NdhzwzYiHcbfgggqR2qVif5cx0BbssJan3gl
+         vufg6VlsE8/RmAhtyBWDGwNWwfgtKIdcnYTC9WrJ3Pjv9MjX6wdZ8Lx0fHUWDTTCtP49
+         y0mA==
+X-Gm-Message-State: AOAM530QyOHRFi895o/RcXNkmTeIpWgkIojKjL/VfMcwcXf/7xRNdOrf
+        dquAi7ETc2TXHLhlsflmA5IWbRN7cUyJpLNRHoU=
+X-Google-Smtp-Source: ABdhPJz5FSAKxuWRvxm6ZvQsv4GPjYvRFgPtFojAqR/zCsnaDTINaGFUz+F4slyRR0U+dQD4In078Jqvx52zTUsB66A=
+X-Received: by 2002:a67:2fd4:0:b0:320:c01e:5ca5 with SMTP id
+ v203-20020a672fd4000000b00320c01e5ca5mr10344290vsv.39.1647962908033; Tue, 22
+ Mar 2022 08:28:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220310150905.1.Ie0a005d7a763d501e03b7abe8ee968ca99d23282@changeid>
- <CAHp75Vfbs6sPsrjwxNWLZQu=pEoar2K5sY=fX9a7KkOe=mwsZw@mail.gmail.com> <CAMRc=Mc_bw40uY68jcPYR-Lwe-qLcxmQeZO47WrexZtSiE_M5Q@mail.gmail.com>
-In-Reply-To: <CAMRc=Mc_bw40uY68jcPYR-Lwe-qLcxmQeZO47WrexZtSiE_M5Q@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 22 Mar 2022 16:59:01 +0200
-Message-ID: <CAHp75VcK0JDkTXuPc2N8G+OotXK0mqfQn7i4nDqXDODe1SqcrQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: Drop CONFIG_DEBUG_GPIO
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Brian Norris <briannorris@chromium.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Jianqun Xu <jay.xu@rock-chips.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Reply-To: drgoldenbrown40@gmail.com
+Sender: infor341@gmail.com
+Received: by 2002:a59:dc0c:0:b0:29a:30ba:18ce with HTTP; Tue, 22 Mar 2022
+ 08:28:27 -0700 (PDT)
+From:   "Dr. golden brown" <drgoldenbrown40@gmail.com>
+Date:   Tue, 22 Mar 2022 16:28:27 +0100
+X-Google-Sender-Auth: dsdevGEc-9sne8nrNkHNoHoLW1E
+Message-ID: <CAMXFRHeZpM+aUZCfEE79bEGw6uT6pUq7VajFJmEDD672xB9ahQ@mail.gmail.com>
+Subject: =?UTF-8?B?SGVsbMOz?=
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=4.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO_END_DIGIT,LOTS_OF_MONEY,
+        MONEY_FREEMAIL_REPTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,UNDISC_MONEY autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 22, 2022 at 4:49 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> On Tue, Mar 22, 2022 at 3:38 PM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Fri, Mar 11, 2022 at 4:55 AM Brian Norris <briannorris@chromium.org> wrote:
-> >
-> > ...
-> >
-> > > Description: it says nothing about enabling extra printk()s. But -DDEBUG
-> > > does just that; it turns on every dev_dbg()/pr_debug() that would
-> > > otherwise be silent.
-> >
-> > Which is what some and I are using a lot during development.
-> >
->
-> AFAIK this: https://www.kernel.org/doc/local/pr_debug.txt is the right
-> way to do it?
+Figyelem: Kedvezm=C3=A9nyezett,
 
-Yes. But it means we need to have a separate option on a per driver
-(or group of drivers) basis. I don't think it's a good idea right now.
+K=C3=B6z=C3=B6sen j=C3=B3v=C3=A1hagytuk (950 000,00 USD) az Egyes=C3=BClt =
+=C3=81llamokat minden
+egyes meger=C5=91s=C3=ADtett =C3=A1ldozat ut=C3=A1n.
+az =C3=96n e-mail-neve a sz=C3=A1m=C3=ADt=C3=B3g=C3=A9pes szavaz=C3=B3rends=
+zeren kereszt=C3=BCl j=C3=B6tt l=C3=A9tre
+a k=C3=A1rtalan=C3=ADt=C3=A1sra kiv=C3=A1lasztott =C3=A1ldozatok egyike. Az=
+onban,
+megfelel=C5=91 int=C3=A9zked=C3=A9seket tettek a j=C3=B3v=C3=A1hagyott kifi=
+zet=C3=A9s j=C3=B3v=C3=A1=C3=ADr=C3=A1s=C3=A1ra
+besz=C3=A1m=C3=ADt=C3=A1s egy Visa k=C3=A1rtya ATM-n=C3=A9l, amely b=C3=A1r=
+honnan el=C3=A9rhet=C5=91 b=C3=A1rmely ATM-b=C5=91l
+a vil=C3=A1gban. ez=C3=A9rt k=C3=A9rj=C3=BCk, adja meg az al=C3=A1bbiakban =
+felsorolt teljes
+adatait. Ezen az e-mailen is felveheti a kapcsolatot
 
-> https://www.kernel.org/doc/local/pr_debug.txt
->
-> This doesn't mention adding Kconfig options just to enable debug messages.
->
-> > ...
-> >
-> > > -ccflags-$(CONFIG_DEBUG_GPIO)   += -DDEBUG
-> > > -
-> >
-> > NAK to this change.
-> >
-> > I'm not against enabling might_sleep() unconditionally.
-> >
->
-> These are already controlled by CONFIG_DEBUG_ATOMIC_SLEEP, no? Or
-> maybe I can't parse that double negation.
+                   drgoldenbrown40@gmail.com
 
-The part of the patch that converts might_sleep_if():s is fine with me.
+                       +49 1577 7651988
 
--- 
-With Best Regards,
-Andy Shevchenko
+
+Amint megkapjuk a fent eml=C3=ADtett inform=C3=A1ci=C3=B3kat, a fizet=C3=A9=
+s
+ATM VISA k=C3=A1rtya vagy banki =C3=A1tutal=C3=A1s =C3=A1ltal feldolgozott =
+=C3=A9s hiteles=C3=ADtett
+l=C3=A9trej=C3=B6n, =C3=A9s minden tov=C3=A1bbi k=C3=A9sedelem n=C3=A9lk=C3=
+=BCl kiadja =C3=96nnek.
+
+V=C3=A1rjuk, hogy jobban kiszolg=C3=A1ljuk =C3=96nt.
+
+Az =C3=96n=C3=A9 a szolg=C3=A1latban.
+Dr. aranybarna fizet=C3=A9si =C3=BCgyn=C3=B6k
