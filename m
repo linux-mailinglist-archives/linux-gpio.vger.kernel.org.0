@@ -2,103 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F5144E3B1F
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Mar 2022 09:47:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AD6F34E3B2E
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Mar 2022 09:51:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231401AbiCVIsQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Mar 2022 04:48:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47436 "EHLO
+        id S231371AbiCVIxL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Mar 2022 04:53:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231920AbiCVIr5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Mar 2022 04:47:57 -0400
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A68F4B87F
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Mar 2022 01:46:30 -0700 (PDT)
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 6825341FA1
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Mar 2022 08:46:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1647938789;
-        bh=Ns6x5qMhMdYQ14F/6CRmR+MC5tPxoh9wJPntlRcRYM8=;
-        h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-         In-Reply-To:Content-Type;
-        b=n056Sl5XuOgmMqUCyViD66hFvB8v9w30oMpkz+GXpKIs2oSCnHtaWQPTi6N0MZx6M
-         D96U7tq5/9zDpDgdghQ2e/G+siTzGKfgQckzRSYAiv64fbKh0DEGwO3AsGXw9uokg3
-         wvGYLVwFMEqXEuWLCLtFVaTggWVU2TT6NZUG1KHZHjWfFLvB8gNAgodGaL5251IHBb
-         M9gOAidjd9XP5Tgq9OTGruBviF7Pic1j+gcAgyKt1oMDMSXGyINdSa1xK4iCDXnXCP
-         avy1icfRs1MwcLi6cKow0K5+G1596vSc/wooTRanz9f4cipKL2AvsXXEnNbFQIJ0mW
-         sC+ajbk4zqSaA==
-Received: by mail-wm1-f71.google.com with SMTP id m35-20020a05600c3b2300b0038c90ef2dceso733502wms.4
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Mar 2022 01:46:29 -0700 (PDT)
+        with ESMTP id S230196AbiCVIxJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Mar 2022 04:53:09 -0400
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43A087DAB0
+        for <linux-gpio@vger.kernel.org>; Tue, 22 Mar 2022 01:51:42 -0700 (PDT)
+Received: by mail-ej1-x62d.google.com with SMTP id bi12so34747014ejb.3
+        for <linux-gpio@vger.kernel.org>; Tue, 22 Mar 2022 01:51:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sE0fB4m4xmfE8B6aoLFVCQYFw7VHEfXcYRfZu22Novc=;
+        b=j8BDZjIbXW1XV1n4LCH/Mqxk66x3oAl0iSlDYEwtmeVKiPx89p+r+yUVjyOGgJVr/z
+         t1YSrlUlGtRi+XurP3v5fNoj73AcJd4u/OhVZq//JlnygltgNF/MgMugBBP/Q6DBPzHP
+         Am+AKL+Zx4TU5lvshCk9EhusT7VLKo+x1zuwbDz03NR5F6YukhWoatq+BHJztH4KtRNt
+         ZnsViMEXbOnFfugRRTk/xLYOI0bhKx2oKUt/myLsOaWQIzUxXVG+i8ZQNpqgTflYF9Uu
+         isEiPr6+2nGiWOWL2GRirMrLBfrWplmm044jHKxogbHigqRIzM+YjQR2WJyBcDtdXoOl
+         ZwGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:from:to:cc:references:in-reply-to
-         :content-transfer-encoding;
-        bh=Ns6x5qMhMdYQ14F/6CRmR+MC5tPxoh9wJPntlRcRYM8=;
-        b=pCqhbh9Sbujnlh9jN3KraKLAKEwbfZWLhxXa/G2FwZx7I040AyIspfcbslUEY4hTQa
-         K9uj4u8dFlRAt2CTmbjpyeUv5amE/2qdEf7PpYpLQifk7O5beXKnmEVAQ8zfWGNH1u9L
-         RLOtVgkFq2vESOtdypyZ9r78kyWMHJDMDaC/qAkBYqpqTxgN48pgr6V6WNj2DOB1wqJD
-         CLgBNwo0Tl6PG1Q8dhWazDmBPcgB0ygFuiPQhIsvXYTI6yVcS+Av8yNagFCt0FAjaCqR
-         VmjVP0NhEGnFDPPGLG9r8wV5W590aQcZU8/qfs4zyXqJWUd8+L/V2YPdRl8/3crthjR4
-         ewiw==
-X-Gm-Message-State: AOAM533Iqfji1m099mJUJI/48WHvK5mRmcAJVj2aKqcL+E/hSyZ47hog
-        JfB5s0Ns4p/r1Vnpl/xRflZm7B8CuRT3tlxOu+2WTsOSDYVd3Vvkd04/MU2gZbYCJtrqIsR+xn/
-        76LhOqbb/Ox2TLj/azv5tZgNx1GfPBetyrq3bt38=
-X-Received: by 2002:a5d:47a7:0:b0:203:d1b4:8f6 with SMTP id 7-20020a5d47a7000000b00203d1b408f6mr22185070wrb.36.1647938788906;
-        Tue, 22 Mar 2022 01:46:28 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyhYewicFouwHmI7LoZatc4e5+uyx8QH11LnUERCGbNVF6UFm3eYkF8CEUxLw1D82wG8LV7FA==
-X-Received: by 2002:a5d:47a7:0:b0:203:d1b4:8f6 with SMTP id 7-20020a5d47a7000000b00203d1b408f6mr22185047wrb.36.1647938788647;
-        Tue, 22 Mar 2022 01:46:28 -0700 (PDT)
-Received: from [192.168.0.17] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id p21-20020a05600c359500b0038ca92f175csm2416313wmq.32.2022.03.22.01.46.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Mar 2022 01:46:27 -0700 (PDT)
-Message-ID: <13878c88-487b-2546-0af8-3031fdc8e308@canonical.com>
-Date:   Tue, 22 Mar 2022 09:46:26 +0100
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sE0fB4m4xmfE8B6aoLFVCQYFw7VHEfXcYRfZu22Novc=;
+        b=gQiNx5LVXaWChrFIS3CwMMk4mTndY0fh5johTIYLE3AuCixiWtIQfhbfEcKoVC9kBw
+         MI2haC6IuBt5WwcA5PiPIYQB8RQsxejlPXK7NdaYBF+sIlEPQPpYj/Ev/C1vU94HmRMc
+         wyEyXA9y0BqGG3w60nbFDajC+h7oYe64OjwbkepwBx5UHslCPRkCsCqgNeAhSTyJVIx2
+         5ZiO78sDixy8hJSfrvuHVi4v82cj5BfoLMS5u2ROe5ll9Qw/Ovnycmhq1EQ6bcjuYP9M
+         V2XJ44Cs6HcAbbsWrV/XXjSV2pfU46mqJQdc606RzqyVcHrsLSs0iTI5hqMPTWD6EZGj
+         yF2A==
+X-Gm-Message-State: AOAM531KpHLA8bh9Qd5vp16JXnPqIzEv0jfKA3mnMRN3l7fnmVCjLPxf
+        Jp5SGTzWKvVfYpGpeuB5ktrLqilFp2SFbrPCBcr9LdMgYQM=
+X-Google-Smtp-Source: ABdhPJxK01BEKI2WyCxYGwQmPkzVLoURfj/52EQggpmXxY1xdiIryTWHCbQPwh2cE+G3H1Ng9GeuBsa+4qcBW0omT5U=
+X-Received: by 2002:a17:906:4cc7:b0:6d0:7efb:49f with SMTP id
+ q7-20020a1709064cc700b006d07efb049fmr24486276ejt.639.1647939100731; Tue, 22
+ Mar 2022 01:51:40 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH 2/2] dt-bindings: clock: drop useless consumer example
-Content-Language: en-US
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
-To:     Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Cc:     Jesse Taube <mr.bossman075@gmail.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+References: <97da941f-39da-4ded-0138-d1e71c4d3ecc@gmail.com>
+ <CAHp75VcXxSxtvEdHxenAWoP31WnkoyDJ6WfDwPDEKDhT3AtUmg@mail.gmail.com>
+ <8200d976-2b32-1215-e46c-0bb2837392b7@gmail.com> <CAHp75VcOHCE13oA4m43yAp5e2w=e6uOQhRNneonja6F+XhXmbA@mail.gmail.com>
+ <20220322005911.GA6650@sol> <1a7fd31a-221e-7b23-b95f-d71e440b3ff0@gmail.com> <154df196-d9d2-63dc-b5e4-b314933db4b2@gmail.com>
+In-Reply-To: <154df196-d9d2-63dc-b5e4-b314933db4b2@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 22 Mar 2022 10:50:30 +0200
+Message-ID: <CAHp75Vf_H8cD839CgmkH=9Z5_Gf_y15+=N+B-0jDU6xTuQnGAQ@mail.gmail.com>
+Subject: Re: gpiod: Set pullup for Input Line
+To:     Hans Kurscheidt <lve0200@gmail.com>
+Cc:     Kent Gibson <warthog618@gmail.com>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Alexander Shiyan <shc_work@mail.ru>,
-        Steffen Trumtrar <s.trumtrar@pengutronix.de>,
-        "A.s. Dong" <aisheng.dong@nxp.com>,
-        Giulio Benetti <giulio.benetti@benettiengineering.com>,
-        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Ioana Ciornei <ioana.ciornei@nxp.com>
-References: <20220316130858.93455-1-krzysztof.kozlowski@canonical.com>
- <20220316130858.93455-2-krzysztof.kozlowski@canonical.com>
- <YjjCpQ9vwFoEmFFi@robh.at.kernel.org>
- <ca6c4fe5-93c5-9ad4-0c9f-86ec3213d44e@gmail.com>
- <a8290aa4-8a2c-68c3-bc55-82abcd27385e@canonical.com>
-In-Reply-To: <a8290aa4-8a2c-68c3-bc55-82abcd27385e@canonical.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -106,43 +69,25 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 22/03/2022 09:45, Krzysztof Kozlowski wrote:
-> On 22/03/2022 02:45, Jesse Taube wrote:
->>
->>
->> On 3/21/22 14:23, Rob Herring wrote:
->>> On Wed, Mar 16, 2022 at 02:08:58PM +0100, Krzysztof Kozlowski wrote:
->>>> Consumer examples in the bindings of resource providers are trivial,
->>>> useless and duplication of code.  Remove the example code for consumer
->>>>
->>>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
->>>> ---
->>>>   .../bindings/clock/bitmain,bm1880-clk.yaml           | 12 ------------
->>>>   .../devicetree/bindings/clock/idt,versaclock5.yaml   |  7 -------
->>>>   .../devicetree/bindings/clock/imx1-clock.yaml        |  9 ---------
->>>>   .../devicetree/bindings/clock/imx21-clock.yaml       |  9 ---------
->>>>   .../devicetree/bindings/clock/imx23-clock.yaml       |  9 ---------
->>>>   .../devicetree/bindings/clock/imx25-clock.yaml       |  8 --------
->>>>   .../devicetree/bindings/clock/imx27-clock.yaml       |  9 ---------
->>>>   .../devicetree/bindings/clock/imx28-clock.yaml       |  9 ---------
->>>>   .../devicetree/bindings/clock/imx31-clock.yaml       |  8 --------
->>>>   .../devicetree/bindings/clock/imx35-clock.yaml       |  8 --------
->>>>   .../devicetree/bindings/clock/imx7ulp-pcc-clock.yaml | 11 -----------
->>>>   .../devicetree/bindings/clock/imx7ulp-scg-clock.yaml | 11 -----------
->>>>   .../devicetree/bindings/clock/imx8qxp-lpcg.yaml      | 11 -----------
->>>>   .../devicetree/bindings/clock/imxrt1050-clock.yaml   |  8 --------
->>>>   .../bindings/clock/nvidia,tegra124-car.yaml          |  7 -------
->>>>   .../bindings/clock/nvidia,tegra20-car.yaml           |  7 -------
->>>>   16 files changed, 143 deletions(-)
->>>
->>> Doesn't apply to my tree (no imxrt1050-clock.yaml), so
->> merge against linux-next I can submit another patch if needed.
->>> Acked-by: Rob Herring <robh@kernel.org>
-> 
-> Let me send it after the merge window - all dependencies should be there.
+On Tue, Mar 22, 2022 at 10:39 AM Hans Kurscheidt <lve0200@gmail.com> wrote:
+> Am 22.03.2022 um 09:36 schrieb Hans Kurscheidt:
+> > Am 22.03.2022 um 01:59 schrieb Kent Gibson:
 
-Optionally this could be picked up by Stephen/Michael (clock).
+...
 
+> > Still 1 more question. I understand the sense of a Pull-up in Input
+> > mode, but reading the code, I see that the Bias option exists as well
+> > for gpioset (Output). What is the sense of this, and what does it do?
 
-Best regards,
-Krzysztof
+I guess we started providing OPEN SOURCE / DRAIN in libgpiod v2.0
+(Bart or Kent may correct me), but you should get an idea why it may
+be useful.
+
+On top of that, the pin can be reconfigured from input to output and
+vice versa at run-time. So, keeping a bias setting will allow not to
+think about it when pin direction is switched, although I agree this
+may not be a clean case to use.
+
+-- 
+With Best Regards,
+Andy Shevchenko
