@@ -2,104 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A71F4E424A
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Mar 2022 15:49:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 521A04E4271
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Mar 2022 16:00:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233337AbiCVOvY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Mar 2022 10:51:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48764 "EHLO
+        id S234447AbiCVPBl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Mar 2022 11:01:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232793AbiCVOvW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Mar 2022 10:51:22 -0400
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B43FD85652
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Mar 2022 07:49:54 -0700 (PDT)
-Received: by mail-ed1-x52e.google.com with SMTP id x34so20793715ede.8
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Mar 2022 07:49:54 -0700 (PDT)
+        with ESMTP id S234293AbiCVPBk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Mar 2022 11:01:40 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE55F21261;
+        Tue, 22 Mar 2022 08:00:12 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id o10so18037534ejd.1;
+        Tue, 22 Mar 2022 08:00:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=prkQt9RpM+7l5K2UvqCUpCZSH7p5IrHg8A49ArllTqM=;
-        b=lIeumwJyNYL0NOt/DuMtMmgKBNMr82iwJ8IAhqxLzwR660AQywfKwy1ayNtVTWFoVQ
-         afWCOxIcf24q2ksOyLXVCbHE32/V1la3704hf92xopAAWre7Q/F/0yK8Y7DK8oxwSVTp
-         Wmc6te0Q9bZpWlgzuhr0qWcTEkNrZcBnLhY0V+fOH0PqxKOaQ8HS3jZ9x36IBiYoW0dL
-         q2gu8Mcw6TJpn4F5A4HQ7L7F2ZWaFrKRp0Vhvv/CuFdxfIQQUTHNEUfzb94aYD3aoHoR
-         ik0zDQ5uItlFLcF8HW4nYP6DMbnCJJ0cAh+ag06+53WbeiZgzEaPSQ6EaEhjYrwn/rHA
-         IkwQ==
+        bh=YhviSAwIOjDzR1pqsOvpQJHGJWDCBzWFuU7RfFuBx0s=;
+        b=c9uPSeUFlfwX4VnQPHCJ9oSLDBor7yewdIOCVdR+P3j+W1KYCIWj15Z9stH99ctXUz
+         /SvmObLwMq24Z3an/yek7eVoyVXO++9eMhdE8T6JtaVQhb0H1ZFYMskiNX3HM9+rzjcf
+         1Kun1durU38YIadTfqioojbXvDibEmpyenwxc7L8fA5BQg855mEPOTabLhCtclsLpGzW
+         7AUi1TD4KeqPfccj0VP6vecMQJ5lHuAdVjgeTB7l9LnMkcoQoBgnunQSIZqdo4STB62v
+         k4QtQhogwRo5cVAJBhycV5PZ1iS5l6pQb5h7li2loFCjl03cebIlXPgQhp0CP/FLIjNm
+         EzMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=prkQt9RpM+7l5K2UvqCUpCZSH7p5IrHg8A49ArllTqM=;
-        b=kIazej5FQWwgbQKaPN7j+xfMWJc1aFKIZlm5abTtsTf5v2CvMxgXjCENRvbuSty/JJ
-         1MNxMxWVlniHaYNnCe27NdGlYrY6mW4g3RzKSS6OTfKystBPbtEi9/qm6psRVW6ydo18
-         y3ALcWmHhKvM8m5qdfyesInv6HGzIhjzw1lCwaqrElupo0DDAVzfQkIOVLpMzL/OOMOh
-         C0leMMW+6Ju0y4PIOEb92kCSl0VqFD6hRzEbZxSe/gAQPYUr6Zw7AqCQ65bQFts83wCf
-         wDcnuQYsK+7ppnMuL4rFKWVMJ1MjRszhzh1sMz+TyhLEyt/abxnTP6L1/G4uMQ6kh8/U
-         eyWA==
-X-Gm-Message-State: AOAM530B80SfAkWMfkbxBSZGjShBWBJHQB4T7uvgp/UQ/hhDmnjDG1Wx
-        D99Q7isTvYUKZVv9gB0NLmEHcFeskQuM0DqLgtbhSQ==
-X-Google-Smtp-Source: ABdhPJySdp9qGr1NlLDPTr1KX1DOtrvc698fyZvizwq73G1HriVNPck+onkZwHbLqv6fbdrxfxCdUEGTrdCPpMlhpas=
-X-Received: by 2002:a50:c00f:0:b0:418:d6b8:7f9a with SMTP id
- r15-20020a50c00f000000b00418d6b87f9amr29454855edb.141.1647960593251; Tue, 22
- Mar 2022 07:49:53 -0700 (PDT)
+        bh=YhviSAwIOjDzR1pqsOvpQJHGJWDCBzWFuU7RfFuBx0s=;
+        b=SLimKgAOzHcH87HmxS3RXu2dObMcnFbjo9fan9dPdv2u4b8CSB6GttrszG0cqXDqj5
+         RWaYEJd/HmILP7bhupL+/cHVgtnC+N7GUZKA0+yWk/zTqJ30CjS6hM0lc7HwrhdkZdzT
+         BLeyI8quRlyxXuHkaiNqKBhRS8s2/1ZpXyHk5wfYcpWGKL4GfrbnDxG3uzt+3ZoNZ7ix
+         MIqipd8gxLcAeFQJTkE1l8Xo8ryJP693u5xfOUoTs91O5A/1vjjIMcjOqoxzoDawnZlr
+         ALLA3B3Zpxnra/49/LgylqvWYiLv1/TyWYu1LzjXBndOerQH+PiUxaOEE/fFT48MYQuN
+         jnZQ==
+X-Gm-Message-State: AOAM533Av6Ekvk7na+u3CPqPAmoX2tkeaxVXWLuIP37bv/ykEYlLKpG/
+        VT1cFnjySWC2pR7ol9jw/Ig7QdfQLF5u6LQYPOc=
+X-Google-Smtp-Source: ABdhPJyBqK8CWpqnB9cefn5/xns9b1gRQMPRstpn/ic6+aoexanuW6ErOMtcz2f3Tsfx0eljmfeuak3BYUw44rnJO8E=
+X-Received: by 2002:a17:906:4cc7:b0:6d0:7efb:49f with SMTP id
+ q7-20020a1709064cc700b006d07efb049fmr26100969ejt.639.1647961211065; Tue, 22
+ Mar 2022 08:00:11 -0700 (PDT)
 MIME-Version: 1.0
 References: <20220310150905.1.Ie0a005d7a763d501e03b7abe8ee968ca99d23282@changeid>
- <CAHp75Vfbs6sPsrjwxNWLZQu=pEoar2K5sY=fX9a7KkOe=mwsZw@mail.gmail.com>
-In-Reply-To: <CAHp75Vfbs6sPsrjwxNWLZQu=pEoar2K5sY=fX9a7KkOe=mwsZw@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 22 Mar 2022 15:49:42 +0100
-Message-ID: <CAMRc=Mc_bw40uY68jcPYR-Lwe-qLcxmQeZO47WrexZtSiE_M5Q@mail.gmail.com>
+ <CAHp75Vfbs6sPsrjwxNWLZQu=pEoar2K5sY=fX9a7KkOe=mwsZw@mail.gmail.com> <CAMRc=Mc_bw40uY68jcPYR-Lwe-qLcxmQeZO47WrexZtSiE_M5Q@mail.gmail.com>
+In-Reply-To: <CAMRc=Mc_bw40uY68jcPYR-Lwe-qLcxmQeZO47WrexZtSiE_M5Q@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 22 Mar 2022 16:59:01 +0200
+Message-ID: <CAHp75VcK0JDkTXuPc2N8G+OotXK0mqfQn7i4nDqXDODe1SqcrQ@mail.gmail.com>
 Subject: Re: [PATCH] gpio: Drop CONFIG_DEBUG_GPIO
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Brian Norris <briannorris@chromium.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Jianqun Xu <jay.xu@rock-chips.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 22, 2022 at 3:38 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
+On Tue, Mar 22, 2022 at 4:49 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> On Tue, Mar 22, 2022 at 3:38 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Fri, Mar 11, 2022 at 4:55 AM Brian Norris <briannorris@chromium.org> wrote:
+> >
+> > ...
+> >
+> > > Description: it says nothing about enabling extra printk()s. But -DDEBUG
+> > > does just that; it turns on every dev_dbg()/pr_debug() that would
+> > > otherwise be silent.
+> >
+> > Which is what some and I are using a lot during development.
+> >
 >
-> On Fri, Mar 11, 2022 at 4:55 AM Brian Norris <briannorris@chromium.org> wrote:
->
-> ...
->
-> > Description: it says nothing about enabling extra printk()s. But -DDEBUG
-> > does just that; it turns on every dev_dbg()/pr_debug() that would
-> > otherwise be silent.
->
-> Which is what some and I are using a lot during development.
->
+> AFAIK this: https://www.kernel.org/doc/local/pr_debug.txt is the right
+> way to do it?
 
-AFAIK this: https://www.kernel.org/doc/local/pr_debug.txt is the right
-way to do it?
+Yes. But it means we need to have a separate option on a per driver
+(or group of drivers) basis. I don't think it's a good idea right now.
 
-https://www.kernel.org/doc/local/pr_debug.txt
-
-This doesn't mention adding Kconfig options just to enable debug messages.
-
-> ...
+> https://www.kernel.org/doc/local/pr_debug.txt
 >
-> > -ccflags-$(CONFIG_DEBUG_GPIO)   += -DDEBUG
-> > -
+> This doesn't mention adding Kconfig options just to enable debug messages.
 >
-> NAK to this change.
+> > ...
+> >
+> > > -ccflags-$(CONFIG_DEBUG_GPIO)   += -DDEBUG
+> > > -
+> >
+> > NAK to this change.
+> >
+> > I'm not against enabling might_sleep() unconditionally.
+> >
 >
-> I'm not against enabling might_sleep() unconditionally.
->
+> These are already controlled by CONFIG_DEBUG_ATOMIC_SLEEP, no? Or
+> maybe I can't parse that double negation.
 
-These are already controlled by CONFIG_DEBUG_ATOMIC_SLEEP, no? Or
-maybe I can't parse that double negation.
+The part of the patch that converts might_sleep_if():s is fine with me.
 
-Bart
+-- 
+With Best Regards,
+Andy Shevchenko
