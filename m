@@ -2,145 +2,141 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 935034E43F8
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Mar 2022 17:12:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BA284E4438
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Mar 2022 17:31:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238962AbiCVQNh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Mar 2022 12:13:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40244 "EHLO
+        id S239101AbiCVQcp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Mar 2022 12:32:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235213AbiCVQNh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Mar 2022 12:13:37 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACA9131DFC
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Mar 2022 09:12:09 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id w8so15845536pll.10
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Mar 2022 09:12:09 -0700 (PDT)
+        with ESMTP id S231499AbiCVQcn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Mar 2022 12:32:43 -0400
+Received: from mail-oi1-x233.google.com (mail-oi1-x233.google.com [IPv6:2607:f8b0:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D2995AA7D
+        for <linux-gpio@vger.kernel.org>; Tue, 22 Mar 2022 09:31:16 -0700 (PDT)
+Received: by mail-oi1-x233.google.com with SMTP id o64so20020865oib.7
+        for <linux-gpio@vger.kernel.org>; Tue, 22 Mar 2022 09:31:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=B+sIl3bT1eNG0Oly9nCOu+5aB9xJz/hdmqRXf8J2ja4=;
-        b=B7tWLjDXHUGG4tjf0FqJrFjaJQwITsf4lWnd4ZgvPHXtu1fCJW5Ag4jUgDsKtr/a/j
-         Hj2FufnB4KOL05Nw1xTVpKbT2x/Aq8RZKS1ZTsv4KFm1vW08Ifxt6gN+21HB5fYNvgTL
-         6fiBZ+ETy9KaYe0kiBzi+KCeWWWhqeocUlPKMitJ/QMgblpyeLQzq9lIY5PC53Nc6rNR
-         bSfmgf77oGP3VD/vDwtNAbXqSLlm5w9yrC/8IFORXXx4slm0KNolaIt8AjePUmKSz6mH
-         GKp+5wLzwYDGFxmkpsHgcjw/nfjMEnJVd4sphqC3+b3eGTWczukS0N8cvSRZMDKdUPFl
-         JjHA==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eBGT6TfuG+TZ+ZknHNg2pzCXwjZzFignFMWF792nkMU=;
+        b=V52T7qwzsIvRbgpCNl3fIP5TRDzI3a91Wett8pNHrPfFGakgZ7XZN7Hw91Lqeyuesk
+         hhc4kahwZfQYFQN0QLQswwmFOuS84OuI8YnBgVfZF14lR2qK8VPcTAlZpNWsGjPqmLFf
+         Ed9Ld1LqkdV3iXhM0j9XLIjDugCdVX/M7BA3g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=B+sIl3bT1eNG0Oly9nCOu+5aB9xJz/hdmqRXf8J2ja4=;
-        b=ZBTQW9az22I43IUOoyEscWfYWrjqUiJ7H2Sl6dvJAJvZId7bCxkMm3nOXAvsetpIbc
-         zHYvEgFeizjNqntYdyXkJT/5YHr3K1sYUZCnr358KQhffG6KYEuURja6lMy+UDaGe3Vm
-         ZJ8Ty62rm5SnKRedfyI3b3aM6OZi6MttoxzRu13w2Gzqn3Z/9IXYqb6fx/rHPScsufBa
-         O3YXwPWTC9nvpvBSXbPyWnLiAJy4L0g6dp8/FRW3qPJvSc6OSBPAV8ceUDCPjfeza+tl
-         k5fSXoUJBGLqpPL1Heq+7t3dCRZ6AIfiKSdqS9wt+ogt4fo1Qz83e/jIRH/9hH+NNTuf
-         eczg==
-X-Gm-Message-State: AOAM531n4beDFUG9ag1j7docqsc023W+auC2HCg+xVaibjvJ4s6xuIve
-        4wyDsCiaw1OA0ceX9wWDcoYnFFXU8r0WpQ==
-X-Google-Smtp-Source: ABdhPJww6oceU34adw8jMc+Q0nWXrSg8eN/05wzcKpwwyui0rvhKGepgvXZjSuwdI7MFtr8um6U+6g==
-X-Received: by 2002:a17:903:40cf:b0:154:6a5f:95c5 with SMTP id t15-20020a17090340cf00b001546a5f95c5mr8571842pld.100.1647965529119;
-        Tue, 22 Mar 2022 09:12:09 -0700 (PDT)
-Received: from sol ([124.148.64.37])
-        by smtp.gmail.com with ESMTPSA id o17-20020a056a0015d100b004fab5b95699sm3882832pfu.71.2022.03.22.09.12.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Mar 2022 09:12:08 -0700 (PDT)
-Date:   Wed, 23 Mar 2022 00:12:04 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Hans Kurscheidt <lve0200@gmail.com>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: gpiod: Set pullup for Input Line
-Message-ID: <20220322161204.GC131091@sol>
-References: <97da941f-39da-4ded-0138-d1e71c4d3ecc@gmail.com>
- <CAHp75VcXxSxtvEdHxenAWoP31WnkoyDJ6WfDwPDEKDhT3AtUmg@mail.gmail.com>
- <8200d976-2b32-1215-e46c-0bb2837392b7@gmail.com>
- <CAHp75VcOHCE13oA4m43yAp5e2w=e6uOQhRNneonja6F+XhXmbA@mail.gmail.com>
- <20220322005911.GA6650@sol>
- <1a7fd31a-221e-7b23-b95f-d71e440b3ff0@gmail.com>
- <154df196-d9d2-63dc-b5e4-b314933db4b2@gmail.com>
- <CAHp75Vf_H8cD839CgmkH=9Z5_Gf_y15+=N+B-0jDU6xTuQnGAQ@mail.gmail.com>
- <2884d1a0-4e4e-142f-0d3d-02d5e5e46466@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eBGT6TfuG+TZ+ZknHNg2pzCXwjZzFignFMWF792nkMU=;
+        b=5m4echHZqEq1DjjCPuRISmYVL9J8IHA8HX9c9AlArdf+4FzlVnaHZMCNghQDvzDpQL
+         dHfE0kaqq7G/JSZlm4m6ChbgHhDEP2RRw0Y77LZQPRSjABmOH3UKBSrsDw5TjHN+qzw1
+         wz8ECnE1zwlzxpjznJi7tu7cpbRM8uBiXn+8Ek5UoiOfhkamMeIMSpC283qJyqtkK0gD
+         BM/0lXxPS6KScwB6J3QKmHSnIwPB0bPXlrRioFy4waN62d824cOflqOzRn2Gi/dKiTwH
+         CLxNarbzrROtj8yp6QKwuHm199US6eXpA+Sj2Iqtji0Mm+S9hkJBxSkQTuSO1HP+IphB
+         w+rg==
+X-Gm-Message-State: AOAM532pbPkXzG7q1p1lIjpWv+jPcdD3sU2J8EY/q+yfXZQZg2GZa937
+        9WPK2MW250+taL+J4nTgw9wEmA3hvZQShA==
+X-Google-Smtp-Source: ABdhPJwQONz3p6gfW8HSdKYDZJB/X9+JlfpUh8od3Cuy9w7UY5knwVgPjd/7gpm4Cu8rXBpxNULeqw==
+X-Received: by 2002:aca:6208:0:b0:2da:5058:346e with SMTP id w8-20020aca6208000000b002da5058346emr2555256oib.77.1647966675028;
+        Tue, 22 Mar 2022 09:31:15 -0700 (PDT)
+Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com. [209.85.160.52])
+        by smtp.gmail.com with ESMTPSA id e17-20020a9d5611000000b005cb562a5545sm5422499oti.57.2022.03.22.09.31.12
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Mar 2022 09:31:13 -0700 (PDT)
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-de2cb87f6aso2205131fac.10
+        for <linux-gpio@vger.kernel.org>; Tue, 22 Mar 2022 09:31:12 -0700 (PDT)
+X-Received: by 2002:a05:6870:c142:b0:dd:d5a3:767c with SMTP id
+ g2-20020a056870c14200b000ddd5a3767cmr2047151oad.291.1647966672210; Tue, 22
+ Mar 2022 09:31:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2884d1a0-4e4e-142f-0d3d-02d5e5e46466@gmail.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <20220310150905.1.Ie0a005d7a763d501e03b7abe8ee968ca99d23282@changeid>
+ <CAHp75Vfbs6sPsrjwxNWLZQu=pEoar2K5sY=fX9a7KkOe=mwsZw@mail.gmail.com>
+ <CAMRc=Mc_bw40uY68jcPYR-Lwe-qLcxmQeZO47WrexZtSiE_M5Q@mail.gmail.com> <CAHp75VcK0JDkTXuPc2N8G+OotXK0mqfQn7i4nDqXDODe1SqcrQ@mail.gmail.com>
+In-Reply-To: <CAHp75VcK0JDkTXuPc2N8G+OotXK0mqfQn7i4nDqXDODe1SqcrQ@mail.gmail.com>
+From:   Brian Norris <briannorris@chromium.org>
+Date:   Tue, 22 Mar 2022 09:31:01 -0700
+X-Gmail-Original-Message-ID: <CA+ASDXPncB=edDfXqkmWMqToQSt85UkAMzoApgyQATROoR1x9g@mail.gmail.com>
+Message-ID: <CA+ASDXPncB=edDfXqkmWMqToQSt85UkAMzoApgyQATROoR1x9g@mail.gmail.com>
+Subject: Re: [PATCH] gpio: Drop CONFIG_DEBUG_GPIO
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Jianqun Xu <jay.xu@rock-chips.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 22, 2022 at 10:39:00AM +0100, Hans Kurscheidt wrote:
-> 
-> Am 22.03.2022 um 09:50 schrieb Andy Shevchenko:
-> > On Tue, Mar 22, 2022 at 10:39 AM Hans Kurscheidt <lve0200@gmail.com> wrote:
-> > > Am 22.03.2022 um 09:36 schrieb Hans Kurscheidt:
-> > > > Am 22.03.2022 um 01:59 schrieb Kent Gibson:
-> > ...
-> > 
-> > > > Still 1 more question. I understand the sense of a Pull-up in Input
-> > > > mode, but reading the code, I see that the Bias option exists as well
-> > > > for gpioset (Output). What is the sense of this, and what does it do?
-> > I guess we started providing OPEN SOURCE / DRAIN in libgpiod v2.0
-> > (Bart or Kent may correct me), but you should get an idea why it may
-> > be useful.
-> > 
-> > On top of that, the pin can be reconfigured from input to output and
-> > vice versa at run-time. So, keeping a bias setting will allow not to
-> > think about it when pin direction is switched, although I agree this
-> > may not be a clean case to use.
-> 
-> Hi Andy,
-> 
-> Open Source/Drain is completely different from Pull_UP/DOWN! Open
-> source/drain defines, which active element (transistor) is attached to the
-> line, while pull_up/down defines, which passive element (resistor) is
-> attached to the line. In some sense one could say, what pull_up/down is for
-> input, open drain/source is the corresponding thing for output, but they are
-> realized by different means. IMHO, "bias" (pull-up/down) should be an option
-> for gpioget, while "drive" makes only sense for gpioset, because I
-> understand them as mutually excluding, but may be, I'm overseeing something.
-> 
+On Tue, Mar 22, 2022 at 8:00 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Tue, Mar 22, 2022 at 4:49 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > On Tue, Mar 22, 2022 at 3:38 PM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> > > On Fri, Mar 11, 2022 at 4:55 AM Brian Norris <briannorris@chromium.org> wrote:
+> > >
+> > > ...
+> > >
+> > > > Description: it says nothing about enabling extra printk()s. But -DDEBUG
+> > > > does just that; it turns on every dev_dbg()/pr_debug() that would
+> > > > otherwise be silent.
+> > >
+> > > Which is what some and I are using a lot during development.
 
-You understand that with open drain/source there is one state where the
-line is not driven by the chip, but goes high impedance and is driven
-by the external circuit?  
-And the bias can be considered to be part of the external circuit?
-If so, not sure what your issue is here.  You agree that drive and bias are
-totally independent, but take issue at being able to set them
-independently in gpioset?  What am I missing?
+Well, we could fix that part by updating the documentation, so users
+know what they're getting themselves into.
 
-And there IS a bias option for gpioget - as it makes sense there as
-well.  And gpiomon as well.
+I'm also curious: does dynamic debug not suit you?
+https://www.kernel.org/doc/html/v4.19/admin-guide/dynamic-debug-howto.html
+TBH, I never remember its syntax, and it seems very easy to get wrong,
+so I often throw in #define's myself, if I want it foolproof. But I'm
+curious others thoughts too.
 
-> Unfortunately, this leads me to yet another question: Bias defines "as-is"
-> and "pull-up/down" as options. Just to be sure, that would imply that one
-> has to set the bias option to pull_up/down for the first call to gpioget and
-> that subsequent readings from the input pin should/can run w/out the bias
-> option, hence "as-is", or do you recommend to have the bias option specified
-> for each read from the pin?
-> 
+> > AFAIK this: https://www.kernel.org/doc/local/pr_debug.txt is the right
+> > way to do it?
+>
+> Yes. But it means we need to have a separate option on a per driver
+> (or group of drivers) basis. I don't think it's a good idea right now.
 
-The "as-is" is an unfortunate side-effect of bias being a late addition
-to the API, though it could be argued that it is useful in its own
-right, as Andy mentioned.
-Its main purpose is for backwards compatibility and is the default for that
-reason.
+I'm not sure I understand this thought; isn't this the opposite of
+what you're arguing above? (That drivers/gpio/ deserves its own
+Kconfig option for enabling (non-dynamic) debug prints?)
 
-If you need a bias then set it as needed.  I would use options consistently,
-not have different options on subsequent calls.
+> > https://www.kernel.org/doc/local/pr_debug.txt
+> >
+> > This doesn't mention adding Kconfig options just to enable debug messages.
+> >
+> > > ...
+> > >
+> > > > -ccflags-$(CONFIG_DEBUG_GPIO)   += -DDEBUG
+> > > > -
+> > >
+> > > NAK to this change.
+> > >
+> > > I'm not against enabling might_sleep() unconditionally.
+> > >
+> >
+> > These are already controlled by CONFIG_DEBUG_ATOMIC_SLEEP, no? Or
+> > maybe I can't parse that double negation.
+>
+> The part of the patch that converts might_sleep_if():s is fine with me.
 
-I would also recommend using edge events, such as those provided by
-gpiomon, rather than polling with gpioget, but that depends on the complexity
-of your use case.
+I'm fine with that approach (keep CONFIG_DEBUG_GPIO *only* as a
+print-verbosity/DDEBUG control), even if I think it's a bit odd. My
+main point in the patch is differentiating debug checks (that I want;
+that are silent-by-default; that have their own Kconfig knobs) from
+debug prints (that are noisy by default; that I don't want). So if you
+convince Bartosz and/or Linus, you can get an Ack from me for a
+partial revert.
 
-Cheers,
-Kent.
+Regards,
+Brian
