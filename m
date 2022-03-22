@@ -2,104 +2,150 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 89DDC4E42F9
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Mar 2022 16:28:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AE1EA4E43F1
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Mar 2022 17:11:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235768AbiCVPaD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Mar 2022 11:30:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34884 "EHLO
+        id S236333AbiCVQMm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Mar 2022 12:12:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235741AbiCVP36 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Mar 2022 11:29:58 -0400
-Received: from mail-vs1-xe2a.google.com (mail-vs1-xe2a.google.com [IPv6:2607:f8b0:4864:20::e2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BC27888EE
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Mar 2022 08:28:29 -0700 (PDT)
-Received: by mail-vs1-xe2a.google.com with SMTP id s18so3501521vsr.1
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Mar 2022 08:28:29 -0700 (PDT)
+        with ESMTP id S236170AbiCVQMl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Mar 2022 12:12:41 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94A0F27B3E
+        for <linux-gpio@vger.kernel.org>; Tue, 22 Mar 2022 09:11:13 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id t14so12960791pgr.3
+        for <linux-gpio@vger.kernel.org>; Tue, 22 Mar 2022 09:11:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=vg3N2LY7BsNanytRrRXO2JlRbowmQE2NHo8nrxSG5uY=;
-        b=d1ncNmVo0Ikkam3ACdvn1MSYizT8lA0vlBZjpPpC4DyzbTgG06ZWPaLjuTwNdYWXtt
-         wiPMGPdYvu3E6GPXx7P+WeywNpC1vN5SH1DFsGhLY2HOcn8aO1SnDGAojL2lAaa1C39j
-         miYj9xmqnLapG8oSua83GMVpi+IWzfFmY+0I1lclI/IvTTknhWlAxJNAwZY3O5h5BePl
-         ttJzZOw41gjqz7Gt/LOdVI+tHr6gFJ6R95PfM0OpN9azjmkT6ttigoRx9shv36mO3pxW
-         uS9J32YKUHejpZzGG2I38+Cvak/3PNQX3t3sQy5HxLYvAsAzPHCR4oE/X+GxoMStd6FT
-         ncyQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9mXdnBFEPJ1fVmT5SuLBGohX4k+paislcwxvRwLQfYQ=;
+        b=ZKkk1Nc8mGL5CJVgv0pcrYyRImciyYLzWxdmV+y/iQIoVMlKb7nRM3epqPOmjuZNko
+         WJZawOr4/sa01ihHc+WdrNSUd7RgxHzoDB0lpWUHz1nYD2ypffnD/Og8Cbza42sWmvYc
+         FqLna1JLH4coqk6ztb50Ebu/Pzx0Sf9oSYQMIp0oleOdulTiG9Pidu0nAR9RyV3gk6CC
+         ukEVTbJmaSjoFRyNFax/O6GSEj2bb4UP01f2JuI94qX+lOhIEmLj9Kfxdekgfy960U9B
+         UT6aDApyWucZswnb+8o/3Mw8RRpYZfxhOlFmC0xXIXWt5fNtzqHUFW6JrUaX5L3cOyZ0
+         7fnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=vg3N2LY7BsNanytRrRXO2JlRbowmQE2NHo8nrxSG5uY=;
-        b=O8fU3ra8SLKfu2Hz3EuqoxtuAvTiaWHgIfYR2agiC7MYYxDkA/AvXj2KEYxhv2iaf3
-         GAEU/bRJLbtIIOB9slYsmkdradVzt4Jp6e0LSZ6nKY9rjQjHi7hY2krnZeu4Nqp1GYFi
-         JJCM78M3UFM9mfvH62F3Hu/l6lfxQCfeKy2iv0uqeGEWiN0Lev9ifQPwyawZn7H5p0fk
-         4M29JBA/90725tiYUnG14KpxFPudpxp8NdhzwzYiHcbfgggqR2qVif5cx0BbssJan3gl
-         vufg6VlsE8/RmAhtyBWDGwNWwfgtKIdcnYTC9WrJ3Pjv9MjX6wdZ8Lx0fHUWDTTCtP49
-         y0mA==
-X-Gm-Message-State: AOAM530QyOHRFi895o/RcXNkmTeIpWgkIojKjL/VfMcwcXf/7xRNdOrf
-        dquAi7ETc2TXHLhlsflmA5IWbRN7cUyJpLNRHoU=
-X-Google-Smtp-Source: ABdhPJz5FSAKxuWRvxm6ZvQsv4GPjYvRFgPtFojAqR/zCsnaDTINaGFUz+F4slyRR0U+dQD4In078Jqvx52zTUsB66A=
-X-Received: by 2002:a67:2fd4:0:b0:320:c01e:5ca5 with SMTP id
- v203-20020a672fd4000000b00320c01e5ca5mr10344290vsv.39.1647962908033; Tue, 22
- Mar 2022 08:28:28 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9mXdnBFEPJ1fVmT5SuLBGohX4k+paislcwxvRwLQfYQ=;
+        b=dLh7owk6+eL8kRbsZZxM2d901XlT3nOurX6sbqTjxTUpqLksgU/ULTo3eUjH+rtylC
+         dqHY1NAD1CLB98/MwujtLlXCX3rApTZN4CwX8LyNSpNpb9Xe+PLzulp/MJXPkXvZ/tel
+         n8sf+KJGhHq4ZhTGNR9qR6M8aFcEq5KGbzMDzpn3R4i2fELWlkpa8anOS5Hpl1EHMYNr
+         YNVEC+Q7QJ+Ro1xsgTO0MSJgisVigMpW6Liwi33uapPn/5Yl82BpuOPgr4EBaDHWISTz
+         7h7XRiq5299f1z5K0DSRqc59c2ZiRxSmP995rXm2GVj5+0weEnhFhCV0Vz5mBVH/QT7E
+         DPYw==
+X-Gm-Message-State: AOAM5302Ydo/ZqAz32LYoJR/QxPQ8ZXNAegDf4M7qvo3IPYN83bA2X1r
+        iU7nIhF55tCDAUIoTSMqVTkFl3hu5TUJ8g==
+X-Google-Smtp-Source: ABdhPJx6AJzqzrlx/J10suJKXk8yo4Dg89/6dhi3uzl1LUwTMSXVWQuP2DWyAyqrxmjSqG35BHRiCA==
+X-Received: by 2002:a63:f40e:0:b0:380:6a04:4335 with SMTP id g14-20020a63f40e000000b003806a044335mr22448128pgi.523.1647965472874;
+        Tue, 22 Mar 2022 09:11:12 -0700 (PDT)
+Received: from sol ([124.148.64.37])
+        by smtp.gmail.com with ESMTPSA id q17-20020aa79831000000b004f769d0c323sm24879095pfl.100.2022.03.22.09.11.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Mar 2022 09:11:12 -0700 (PDT)
+Date:   Wed, 23 Mar 2022 00:11:07 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Hans Kurscheidt <lve0200@gmail.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: gpiod: Set pullup for Input Line
+Message-ID: <20220322161107.GA131091@sol>
+References: <97da941f-39da-4ded-0138-d1e71c4d3ecc@gmail.com>
+ <CAHp75VcXxSxtvEdHxenAWoP31WnkoyDJ6WfDwPDEKDhT3AtUmg@mail.gmail.com>
+ <8200d976-2b32-1215-e46c-0bb2837392b7@gmail.com>
+ <CAHp75VcOHCE13oA4m43yAp5e2w=e6uOQhRNneonja6F+XhXmbA@mail.gmail.com>
+ <20220322005911.GA6650@sol>
+ <1a7fd31a-221e-7b23-b95f-d71e440b3ff0@gmail.com>
 MIME-Version: 1.0
-Reply-To: drgoldenbrown40@gmail.com
-Sender: infor341@gmail.com
-Received: by 2002:a59:dc0c:0:b0:29a:30ba:18ce with HTTP; Tue, 22 Mar 2022
- 08:28:27 -0700 (PDT)
-From:   "Dr. golden brown" <drgoldenbrown40@gmail.com>
-Date:   Tue, 22 Mar 2022 16:28:27 +0100
-X-Google-Sender-Auth: dsdevGEc-9sne8nrNkHNoHoLW1E
-Message-ID: <CAMXFRHeZpM+aUZCfEE79bEGw6uT6pUq7VajFJmEDD672xB9ahQ@mail.gmail.com>
-Subject: =?UTF-8?B?SGVsbMOz?=
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=4.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1a7fd31a-221e-7b23-b95f-d71e440b3ff0@gmail.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO_END_DIGIT,LOTS_OF_MONEY,
-        MONEY_FREEMAIL_REPTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNDISC_MONEY autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Level: ****
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Figyelem: Kedvezm=C3=A9nyezett,
+On Tue, Mar 22, 2022 at 09:36:29AM +0100, Hans Kurscheidt wrote:
+> 
+> Am 22.03.2022 um 01:59 schrieb Kent Gibson:
+> > On Mon, Mar 21, 2022 at 07:33:28PM +0200, Andy Shevchenko wrote:
+> > > On Mon, Mar 21, 2022 at 7:27 PM Hans Kurscheidt<lve0200@gmail.com>  wrote:
+> > > > Hi thanks, that makes hope.
+> > > First of all, please do not top-post.
+> > > 
+> > > > Unfortunately apt-get gpiod on my OrangePi Armbian board gives me
+> > > > version 1.2, while the dev is already at 1.6. I probably have to build
+> > > > it from source.
+> > > > 
+> > > > Keeping fingers crossed .
+> > > I don't remember the details of old versions of libgpiod (Bart? Kent?)
+> > > I think it was available even there.
+> > > 
+> > Bias support was added in libgpiod v1.5.
+> > It wasn't even exposed in the uAPI prior to that - it wasn't added until
+> > kernel v5.5.
+> > 
+> > In this case building the latest stable, 1.6.3, is the way to go.
+> > 
+> > Cheers,
+> > Kent.
+> > 
+> > > > Am 21.03.2022 um 17:26 schrieb Andy Shevchenko:
+> > > > > On Mon, Mar 21, 2022 at 1:30 PM Hans Kurscheidt<lve0200@gmail.com>  wrote:
+> > > > > > Despite deep searching, I cannot find any information, if gpiod allow
+> > > > > > specifying pull-ups to input lines and how to do/handle it.
+> > > > > Have you followed this code from libgpiod?
+> > > > > https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/tree/tools/gpioset.c#n44
+> > > 
+> > > -- 
+> > > With Best Regards,
+> > > Andy Shevchenko
+> 
+> Thank-you Kent!
+> 
+> Still 1 more question. I understand the sense of a Pull-up in Input mode,
+> but reading the code, I see that the Bias option exists as well for gpioset
+> (Output). What is the sense of this, and what does it do?
+> 
 
-K=C3=B6z=C3=B6sen j=C3=B3v=C3=A1hagytuk (950 000,00 USD) az Egyes=C3=BClt =
-=C3=81llamokat minden
-egyes meger=C5=91s=C3=ADtett =C3=A1ldozat ut=C3=A1n.
-az =C3=96n e-mail-neve a sz=C3=A1m=C3=ADt=C3=B3g=C3=A9pes szavaz=C3=B3rends=
-zeren kereszt=C3=BCl j=C3=B6tt l=C3=A9tre
-a k=C3=A1rtalan=C3=ADt=C3=A1sra kiv=C3=A1lasztott =C3=A1ldozatok egyike. Az=
-onban,
-megfelel=C5=91 int=C3=A9zked=C3=A9seket tettek a j=C3=B3v=C3=A1hagyott kifi=
-zet=C3=A9s j=C3=B3v=C3=A1=C3=ADr=C3=A1s=C3=A1ra
-besz=C3=A1m=C3=ADt=C3=A1s egy Visa k=C3=A1rtya ATM-n=C3=A9l, amely b=C3=A1r=
-honnan el=C3=A9rhet=C5=91 b=C3=A1rmely ATM-b=C5=91l
-a vil=C3=A1gban. ez=C3=A9rt k=C3=A9rj=C3=BCk, adja meg az al=C3=A1bbiakban =
-felsorolt teljes
-adatait. Ezen az e-mailen is felveheti a kapcsolatot
+As answered by Andy, drive and bias are orthogonal so gpioset supports
+setting them independently.  Obviously setting bias with push-pull
+doesn't make much sense, but the case it is there for is combining open
+drain/source with a pull for when the line is not being driven.
+Granted that such a pull would usually be provided externally, but the
+option is there in case it isn't.
 
-                   drgoldenbrown40@gmail.com
+> WRT. building it, it wasn't that straight forward, as in the description. On
+> the Armbian/Debian buster Kernel 5.10.60-sunxi64 #21.08.1 I had to create an
+> M4 dir, install GNU-archives and install libtools in addition to succeed
+> building it. Then doxygen and help2man were still missing.
+> 
 
-                       +49 1577 7651988
+I defer to Bart on build issues, but you shouldn't need to create the
+m4 directory - you should install m4.
+In fact all these packages:
+  apt_packages:
+      - autoconf
+      - autoconf-archive
+      - libtool
+      - m4
+      - doxygen
+      - graphviz
 
+That list is drawn from a recent patch I submitted to build the documentation
+on a readthedocs Ubuntu VM, but it is probably the same or very similar
+for Armbian.
+That is in addition to build-essential, but I assume you already have that.
 
-Amint megkapjuk a fent eml=C3=ADtett inform=C3=A1ci=C3=B3kat, a fizet=C3=A9=
-s
-ATM VISA k=C3=A1rtya vagy banki =C3=A1tutal=C3=A1s =C3=A1ltal feldolgozott =
-=C3=A9s hiteles=C3=ADtett
-l=C3=A9trej=C3=B6n, =C3=A9s minden tov=C3=A1bbi k=C3=A9sedelem n=C3=A9lk=C3=
-=BCl kiadja =C3=96nnek.
-
-V=C3=A1rjuk, hogy jobban kiszolg=C3=A1ljuk =C3=96nt.
-
-Az =C3=96n=C3=A9 a szolg=C3=A1latban.
-Dr. aranybarna fizet=C3=A9si =C3=BCgyn=C3=B6k
+Cheers,
+Kent.
