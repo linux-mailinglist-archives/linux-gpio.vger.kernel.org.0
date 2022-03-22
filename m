@@ -2,82 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C51BD4E3F37
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Mar 2022 14:13:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D70604E3F3F
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Mar 2022 14:14:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234291AbiCVNPS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Mar 2022 09:15:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47476 "EHLO
+        id S234903AbiCVNPz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Mar 2022 09:15:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232654AbiCVNPR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Mar 2022 09:15:17 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 272757646
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Mar 2022 06:13:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1647954830; x=1679490830;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=VPWC4oABIQ4t3RxfHSkbr/M1Zm78XLd816Yer36MHEw=;
-  b=MVwjRkahS69B46nEFxBIVB/+Bb0OTsMKqtnH6YsQB51fNRyXgyioC4Yh
-   hVbqod+2mSVcOoL2FKWxu50YviJkNj+iqMSTivFZAokDX++Z5EjxjD2fy
-   B0nkaMsuPzYeRT0cFDyWjNDTujVdRkgnXp/0er0Z6QEo+vHL7Z4VGvZv6
-   QVEQLAAqpm/93U3mzvRy6cPlEu9EXdAGRQD7Ff68yi/FyHkZRIooCrCG2
-   seJE702dUITtcLPWYTiJlfjcHH67vXrCuk5qW+Bi91Gy+GvCOfcibvjn7
-   wxd/M8FImVW+nZGpoc6RV2w31OSndN52RyWPo4fATZf7UotqK2YRMTi1w
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10293"; a="257530348"
-X-IronPort-AV: E=Sophos;i="5.90,201,1643702400"; 
-   d="scan'208";a="257530348"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2022 06:13:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,201,1643702400"; 
-   d="scan'208";a="648981102"
-Received: from lkp-server02.sh.intel.com (HELO 89b41b6ae01c) ([10.239.97.151])
-  by orsmga004.jf.intel.com with ESMTP; 22 Mar 2022 06:13:48 -0700
-Received: from kbuild by 89b41b6ae01c with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1nWeKZ-000Ipq-Lw; Tue, 22 Mar 2022 13:13:47 +0000
-Date:   Tue, 22 Mar 2022 21:13:11 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-Cc:     kbuild-all@lists.01.org, linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Chen-Yu Tsai <wenst@chromium.org>
-Subject: [linusw-pinctrl:for-next 76/78]
- drivers/pinctrl/mediatek/pinctrl-mtk-common.c:171:2-3: Unneeded semicolon
-Message-ID: <202203222145.UcCrXHfm-lkp@intel.com>
+        with ESMTP id S234414AbiCVNPy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Mar 2022 09:15:54 -0400
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C56D1B7EF;
+        Tue, 22 Mar 2022 06:14:26 -0700 (PDT)
+Received: by mail-qk1-f175.google.com with SMTP id 1so13913848qke.1;
+        Tue, 22 Mar 2022 06:14:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=I/adiEo/XzFIdraw7is3qX+sC2P5eNMbIwRzU4EJr7s=;
+        b=aYkL91Otmu5jRTqRCXIGkXR+FNRa4pWrJ5xN5BsmMHtMRHBmqBbeZ98qlg8Q9b7T80
+         l2WUnE2z6DT7rPm21cv9xgrT+rv2jNk+KjY5RqFIeSL5EM7qlH3ZzexiSqAsQxdKneF4
+         tJBUbOsROV1ujWy1p/+XTL2a/3WAG6V7/kM2CE1gmXxtJ8i/L4JCmq0f2G8jlTeUDT1X
+         OV0cFHA5e1qm4IOxT/Sm2XSWQSiSNpJA0YqmiL2KT4q1l7JU0s/943FhWqPFIYA3J+/B
+         s2BxneX5nc/6yX0yfG0zA2BfCiUZ827CoVkONyORh0cttzuElOELa7Gf/dg84OzWg/Dz
+         Ua5Q==
+X-Gm-Message-State: AOAM531PqY+laTLUBjPZeWX6+YbY6d52Xl/L0Od6nY1ioYigBeb1RLyG
+        PDX/NMBgizeQryeHzH9jwYmKRJBANsbB9A==
+X-Google-Smtp-Source: ABdhPJy5MKI3Itee0xd+7KFQZqSHPa2fEFOfkId03Xu1EgI9okxq/n+PzlDdrsEnte+581Jxzx4VNQ==
+X-Received: by 2002:a05:620a:440d:b0:67b:489a:616f with SMTP id v13-20020a05620a440d00b0067b489a616fmr14983782qkp.639.1647954865268;
+        Tue, 22 Mar 2022 06:14:25 -0700 (PDT)
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com. [209.85.128.173])
+        by smtp.gmail.com with ESMTPSA id z6-20020ae9c106000000b0067d3b9ef387sm8836885qki.28.2022.03.22.06.14.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Mar 2022 06:14:25 -0700 (PDT)
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-2e5e9025c20so106880687b3.7;
+        Tue, 22 Mar 2022 06:14:24 -0700 (PDT)
+X-Received: by 2002:a81:618b:0:b0:2db:d952:8a39 with SMTP id
+ v133-20020a81618b000000b002dbd9528a39mr29453478ywb.132.1647954864581; Tue, 22
+ Mar 2022 06:14:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <20220310150905.1.Ie0a005d7a763d501e03b7abe8ee968ca99d23282@changeid>
+ <CAMRc=McbY6vK_M9fP7Hzg8LE9ANOZKN49hmBFn92YFH+2ToM8w@mail.gmail.com>
+ <CACRpkdb-W10YAQff_dTUL7B-DH01Z9nn7cE71Zv5xjALtDGQ1g@mail.gmail.com> <CA+ASDXOOzECbCBoehKjmFjLTtsssk9AH1NabA=FSRvoVWp8KMQ@mail.gmail.com>
+In-Reply-To: <CA+ASDXOOzECbCBoehKjmFjLTtsssk9AH1NabA=FSRvoVWp8KMQ@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 22 Mar 2022 14:14:13 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUANNFNt6yuTEcadkdVhKHDmVAVofWOfFpW-r2wkL=vdQ@mail.gmail.com>
+Message-ID: <CAMuHMdUANNFNt6yuTEcadkdVhKHDmVAVofWOfFpW-r2wkL=vdQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: Drop CONFIG_DEBUG_GPIO
+To:     Brian Norris <briannorris@chromium.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Jianqun Xu <jay.xu@rock-chips.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-head:   4d3a82e4ec28e7956db55487eeb480407a002c37
-commit: 156f721704b5c9e8fae02270f606f09d710ff27e [76/78] pinctrl: mediatek: common-v1: Commonize spec_ies_smt_set callback
-config: openrisc-randconfig-c023-20220320 (https://download.01.org/0day-ci/archive/20220322/202203222145.UcCrXHfm-lkp@intel.com/config)
-compiler: or1k-linux-gcc (GCC) 11.2.0
+Hi Brian,
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
+On Tue, Mar 15, 2022 at 1:19 AM Brian Norris <briannorris@chromium.org> wrote:
+> On Mon, Mar 14, 2022 at 3:23 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> > On Mon, Mar 14, 2022 at 4:00 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > > I like it. It's true we don't see many of those DEBUG constructs
+> > > anymore nowadays and overhead for might_sleep() and WARN_ON() is
+> > > negligible.
+> >
+> > I agree.  I have something similar for pinctrl, maybe that needs to
+> > go too.
+>
+> Huh, yeah, CONFIG_DEBUG_PINCTRL does look awfully similar, and I just
+> didn't notice because we don't happen to have it enabled for Chromium
+> kernels. We happen to have CONFIG_DEBUG_GPIO enabled though, and the
+> "new" rockchip-gpio log messages triggered me :)
+>
+> I guess one difference is that CONFIG_DEBUG_PINCTRL is almost
+> exclusively (aside from some renesas drivers?) about extra logging and
+> less about interesting checks that one might want to enable in more
+> general settings. So it's a clearer call to make that people generally
+> want it disabled.
 
+For the Renesas pinctrl drivers, it enables sanity checks on the pin
+control tables, which you definitely do not want in your production
+kernel.
 
-cocci warnings: (new ones prefixed by >>)
->> drivers/pinctrl/mediatek/pinctrl-mtk-common.c:171:2-3: Unneeded semicolon
+Gr{oetje,eeting}s,
 
-Please review and possibly fold the followup patch.
+                        Geert
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
