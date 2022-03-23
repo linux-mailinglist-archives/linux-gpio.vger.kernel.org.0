@@ -2,65 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 814764E54F1
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Mar 2022 16:12:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 869D04E5684
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Mar 2022 17:32:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245054AbiCWPNd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Mar 2022 11:13:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45646 "EHLO
+        id S238865AbiCWQeF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Mar 2022 12:34:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234324AbiCWPNc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Mar 2022 11:13:32 -0400
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E57476C1F4
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Mar 2022 08:12:02 -0700 (PDT)
-Received: by mail-ej1-x636.google.com with SMTP id qa43so3428751ejc.12
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Mar 2022 08:12:02 -0700 (PDT)
+        with ESMTP id S238836AbiCWQeF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Mar 2022 12:34:05 -0400
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1743A7CDC1
+        for <linux-gpio@vger.kernel.org>; Wed, 23 Mar 2022 09:32:35 -0700 (PDT)
+Received: by mail-wr1-x42a.google.com with SMTP id t11so2908961wrm.5
+        for <linux-gpio@vger.kernel.org>; Wed, 23 Mar 2022 09:32:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=K2Q8fm4v433hvdazdR8jN4FCBBlXzJ6xVhdcBHY1Ydo=;
-        b=s5DhlRgRd4bwJiFPDdkp1/YtgRn/fKyGuAKjuLkzAzggu77QQqyjPsvgsJTeQwnQfs
-         l8Lnn4y7mWQxcyVQ+BUtrWjazQOXGSv71+vT2xv/r5uFTIHkh1OYl+vJGCc9kK2Jy06v
-         sUsb7U4y9d5wINvjcgGwtUpMy1HBAgeynPcG8Mq6Pc+1X2YTdeSk9QUaGxmbS2CV0nQF
-         zkttM4C7FOrP3vtn0276xQZNG2Bl9Y13lHFw9Ck6dwJDjinYjg3Fqv+lVAbEi2y32IQk
-         hgsl+RQDj8GO6NDfdP2jcQOJG/4HS509Nv7DXrcAS69k/tlarbg90E7lOKnSQx39FOXq
-         Iskw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=trCEH0bE6PaumD9lKzsz88cLWqI4Gc48zVWYeF+JLGE=;
+        b=715G9aBMEgb/RuG3lm8ue1+D8YN6vxqXPzx2SVIgyire1F2RO8mwWraOJZEnLgLLME
+         u5gmeTjoQA7ruESrpCjhYAtljoKGFODubsFiQXk1ieJqt6EZgv/1ZsUus1KSxaiLz3F/
+         dNynSwomfjeZyMeTd/GzU2Bl9Z+M16eSRphbjnkl+QJWB09oPh7h7/Li6ZPTOe3SKkej
+         /cRtQ5/sxe9nbI0ZKkat2GWiSqtvNyE2BzDkG/h55YUBnd0sBy8sEDpzimoqRHoKlNWk
+         5tpaGDWvWq3jYVhyvNhcSMgcQLJ6UG5IjQVENV56JS+vI5VAhLcCa34vl1fgEU0cKtlh
+         2czQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=K2Q8fm4v433hvdazdR8jN4FCBBlXzJ6xVhdcBHY1Ydo=;
-        b=6bQ4LtHp7n3lII5/ei/rZMj7DyfmtxA//esG4eC4yvJtPc7eA5zpNV6JPpXuCSieUb
-         flQ8qIqi4fG8q6v1FaxtDEIYsBZ5A1JMCnUUlvG7AyheKHn7JTl0rcBE2tLJyV2p4/wV
-         SyhJ8p8rR5Kqu+RFCO+R2ESSQoqdH65hIMLpjRGvew21IN8UzfpMggv6JIPNdOLV8aA1
-         TCdRAspoTHFoSeuA0gty3HZtTZqMqO+2CDJ/A2tEIjzQjGn5zZp2zlLDJ+MDeMGCxuNL
-         UNHkcZO0J3duPK0wRGZ0Dqvqio5rJfB9+zR6tXMZ9UioNvv5O5MBIr9q/04566lXZFA5
-         tEJA==
-X-Gm-Message-State: AOAM531FfSLxmN9yPKxeI737gmIj04vDpxgnXWvdOEV8Ylian7SyThT1
-        pN/bKzgkycLWkNGnzPDZCIGmiCmfxYQjxqbNSplztw==
-X-Google-Smtp-Source: ABdhPJxeaiW/2Nuu0LmwqYAhq4CFoYD+F9n8CUiqvlujyxlnKZ+teAIFzGHsCIxMG3XSmC0v6PP9gBwqTzFwjAS57Tc=
-X-Received: by 2002:a17:907:6d0b:b0:6df:e54c:ad1d with SMTP id
- sa11-20020a1709076d0b00b006dfe54cad1dmr478779ejc.734.1648048321418; Wed, 23
- Mar 2022 08:12:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220310150905.1.Ie0a005d7a763d501e03b7abe8ee968ca99d23282@changeid>
- <CAHp75Vfbs6sPsrjwxNWLZQu=pEoar2K5sY=fX9a7KkOe=mwsZw@mail.gmail.com>
- <CAMRc=Mc_bw40uY68jcPYR-Lwe-qLcxmQeZO47WrexZtSiE_M5Q@mail.gmail.com>
- <CAHp75VcK0JDkTXuPc2N8G+OotXK0mqfQn7i4nDqXDODe1SqcrQ@mail.gmail.com> <CA+ASDXPncB=edDfXqkmWMqToQSt85UkAMzoApgyQATROoR1x9g@mail.gmail.com>
-In-Reply-To: <CA+ASDXPncB=edDfXqkmWMqToQSt85UkAMzoApgyQATROoR1x9g@mail.gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=trCEH0bE6PaumD9lKzsz88cLWqI4Gc48zVWYeF+JLGE=;
+        b=5Fxv4uhmYghPjQ1u993a3kYby7Nn7rXEDmTwsFrncn2hl89IASDhCpkEyPMqgfu1o2
+         cjFD/B/aEnTJrM4mbyCCv3RRZVDSnW+r7n1/1WuLpfFiF2WrVQQaARMT+9eeDZr6XlZG
+         1YBxrYCoCG6hAUQrKwWwBDYbpEEjlu3a5D0dA/TNcnARHpNG1cRPOb0gLSu6cheAzekG
+         SbeHuBv09jFhn15MsabtxoPx80BM0l2IDT6UvzdxLazYHRhLD5YrD/YxN57vzIhbyJV/
+         tgctDhEQHQTEpJ4s88QtxCJBr5jTOKP6+G8Xlj1PKV5NOlKhpcR+eyHOtm3W4gNgEYKz
+         JcAA==
+X-Gm-Message-State: AOAM531vhDJypyUc6me17wWmtVKSOAqICRS+IIqWGs6hKNXXlas/3rWF
+        wduqd2Rn8AYozbd7uk8CFu8V2A==
+X-Google-Smtp-Source: ABdhPJyQBA7RWxogEUW+4vbMCMwX77BkU0ZFJ808H936v0jDTJt8PagQZ8ycbymm/Ptx/ELaxKS4UQ==
+X-Received: by 2002:adf:f5c4:0:b0:205:2836:f1e5 with SMTP id k4-20020adff5c4000000b002052836f1e5mr579608wrp.519.1648053153629;
+        Wed, 23 Mar 2022 09:32:33 -0700 (PDT)
+Received: from debian-brgl.home ([2a01:cb1d:334:ac00:7d50:ff5:f5c1:e225])
+        by smtp.gmail.com with ESMTPSA id w7-20020a1cf607000000b00389a5390180sm274635wmc.25.2022.03.23.09.32.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Mar 2022 09:32:33 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 23 Mar 2022 16:11:50 +0100
-Message-ID: <CAMRc=Me++Z8DscUqPa6X0a+s6hoO5DR+WLDgDFjUxKZ2cDTVwQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: Drop CONFIG_DEBUG_GPIO
-To:     Brian Norris <briannorris@chromium.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Jianqun Xu <jay.xu@rock-chips.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [GIT PULL] gpio: updates for v5.18
+Date:   Wed, 23 Mar 2022 17:32:30 +0100
+Message-Id: <20220323163230.691802-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.30.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
@@ -70,74 +68,102 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 22, 2022 at 5:31 PM Brian Norris <briannorris@chromium.org> wrote:
->
-> On Tue, Mar 22, 2022 at 8:00 AM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Tue, Mar 22, 2022 at 4:49 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > > On Tue, Mar 22, 2022 at 3:38 PM Andy Shevchenko
-> > > <andy.shevchenko@gmail.com> wrote:
-> > > > On Fri, Mar 11, 2022 at 4:55 AM Brian Norris <briannorris@chromium.org> wrote:
-> > > >
-> > > > ...
-> > > >
-> > > > > Description: it says nothing about enabling extra printk()s. But -DDEBUG
-> > > > > does just that; it turns on every dev_dbg()/pr_debug() that would
-> > > > > otherwise be silent.
-> > > >
-> > > > Which is what some and I are using a lot during development.
->
-> Well, we could fix that part by updating the documentation, so users
-> know what they're getting themselves into.
->
-> I'm also curious: does dynamic debug not suit you?
-> https://www.kernel.org/doc/html/v4.19/admin-guide/dynamic-debug-howto.html
-> TBH, I never remember its syntax, and it seems very easy to get wrong,
-> so I often throw in #define's myself, if I want it foolproof. But I'm
-> curious others thoughts too.
->
-> > > AFAIK this: https://www.kernel.org/doc/local/pr_debug.txt is the right
-> > > way to do it?
-> >
-> > Yes. But it means we need to have a separate option on a per driver
-> > (or group of drivers) basis. I don't think it's a good idea right now.
->
-> I'm not sure I understand this thought; isn't this the opposite of
-> what you're arguing above? (That drivers/gpio/ deserves its own
-> Kconfig option for enabling (non-dynamic) debug prints?)
->
-> > > https://www.kernel.org/doc/local/pr_debug.txt
-> > >
-> > > This doesn't mention adding Kconfig options just to enable debug messages.
-> > >
-> > > > ...
-> > > >
-> > > > > -ccflags-$(CONFIG_DEBUG_GPIO)   += -DDEBUG
-> > > > > -
-> > > >
-> > > > NAK to this change.
-> > > >
-> > > > I'm not against enabling might_sleep() unconditionally.
-> > > >
-> > >
-> > > These are already controlled by CONFIG_DEBUG_ATOMIC_SLEEP, no? Or
-> > > maybe I can't parse that double negation.
-> >
-> > The part of the patch that converts might_sleep_if():s is fine with me.
->
-> I'm fine with that approach (keep CONFIG_DEBUG_GPIO *only* as a
-> print-verbosity/DDEBUG control), even if I think it's a bit odd. My
-> main point in the patch is differentiating debug checks (that I want;
-> that are silent-by-default; that have their own Kconfig knobs) from
-> debug prints (that are noisy by default; that I don't want). So if you
-> convince Bartosz and/or Linus, you can get an Ack from me for a
-> partial revert.
->
-> Regards,
-> Brian
+Linus,
 
-I'm about to send my PR for v5.18 so I'll remove this one from my
-for-next branch as it's not urgent. Let's discuss it during the next
-cycle.
+There are relatively few updates for the next release cycle. We have a single
+new driver and some minor changes in drivers, more work on limiting the usage
+of of_node in drivers and DT updates.
 
-Bart
+Please pull,
+Bartosz Golaszewski
+
+The following changes since commit e783362eb54cd99b2cac8b3a9aeac942e6f6ac07:
+
+  Linux 5.17-rc1 (2022-01-23 10:12:53 +0200)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v5.18
+
+for you to fetch changes up to 87ba5badc541a79bab2fa3243ee0008c0880c64a:
+
+  gpio: ts4900: Use SPDX header (2022-03-10 10:05:39 +0100)
+
+----------------------------------------------------------------
+gpio updates for v5.18-rc1
+
+- new driver: gpio-en7523
+- dt-bindings: convertion of faraday,ftgpio010 to YAML, new compatible string
+  in gpio-vf610 and a bugfix in an example
+- gpiolib core: several improvements and some code shrink
+- documentation: convert all public docs into kerneldoc format
+- set IRQ bus token in gpio-crystalcove (addresses a debugfs issue)
+- add a missing return value check for kstrdup() in gpio-merrifield
+- allow gpio-tps68470 to be built as module
+- more work on limiting usage of of_node in GPIO drivers
+- several sysfs interface improvements
+- use SDPX in gpio-ts4900
+
+----------------------------------------------------------------
+Andy Shevchenko (9):
+      gpio: altera-a10sr: Switch to use fwnode instead of of_node
+      gpio: tegra: Get rid of duplicate of_node assignment
+      gpiolib: Introduce for_each_gpio_desc_with_flag() macro
+      gpiolib: Use short form of ternary operator in gpiod_get_index()
+      gpiolib: Simplify error path in gpiod_get_index() when requesting GPIO
+      gpiolib: sysfs: Move sysfs_emit() calls outside of the mutex lock
+      gpiolib: sysfs: Move kstrtox() calls outside of the mutex lock
+      gpiolib: sysfs: Simplify edge handling in the code
+      gpiolib: Use list_first_entry()/list_last_entry()
+
+Bartosz Golaszewski (2):
+      gpiolib: make struct comments into real kernel docs
+      Merge tag 'intel-gpio-v5.18-1' of gitolite.kernel.org:pub/scm/linux/kernel/git/andy/linux-gpio-intel into gpio/for-next
+
+Corentin Labbe (1):
+      dt-bindings: gpio: convert faraday,ftgpio01 to yaml
+
+Hans de Goede (2):
+      gpio: crystalcove: Set IRQ domain bus token to DOMAIN_BUS_WIRED
+      gpio: tps68470: Allow building as module
+
+John Crispin (2):
+      dt-bindings: arm: airoha: Add binding for Airoha GPIO controller
+      gpio: Add support for Airoha EN7523 GPIO controller
+
+Kris Bahnsen (1):
+      gpio: ts4900: Use SPDX header
+
+Marcel Ziswiler (1):
+      dt-bindings: gpio: fix gpio-hog example
+
+Peng Fan (1):
+      dt-bindings: gpio: gpio-vf610: Add imx93 compatible string
+
+Xiaoke Wang (1):
+      gpio: merrifield: check the return value of devm_kstrdup()
+
+ .../bindings/gpio/airoha,en7523-gpio.yaml          |  66 ++++++++++
+ .../devicetree/bindings/gpio/faraday,ftgpio010.txt |  27 ----
+ .../bindings/gpio/faraday,ftgpio010.yaml           |  65 ++++++++++
+ .../devicetree/bindings/gpio/gpio-vf610.yaml       |   4 +-
+ Documentation/devicetree/bindings/gpio/gpio.txt    |   2 +-
+ drivers/gpio/Kconfig                               |  16 ++-
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-altera-a10sr.c                   |   3 +-
+ drivers/gpio/gpio-crystalcove.c                    |   9 +-
+ drivers/gpio/gpio-en7523.c                         | 137 +++++++++++++++++++++
+ drivers/gpio/gpio-merrifield.c                     |   3 +
+ drivers/gpio/gpio-tegra.c                          |   1 -
+ drivers/gpio/gpio-tps68470.c                       |   5 +-
+ drivers/gpio/gpio-ts4900.c                         |  10 +-
+ drivers/gpio/gpiolib-of.c                          |  10 +-
+ drivers/gpio/gpiolib-sysfs.c                       | 100 ++++++---------
+ drivers/gpio/gpiolib.c                             |  41 +++---
+ drivers/gpio/gpiolib.h                             |  41 ++++++
+ include/linux/gpio/consumer.h                      |  35 +++---
+ 19 files changed, 422 insertions(+), 154 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/airoha,en7523-gpio.yaml
+ delete mode 100644 Documentation/devicetree/bindings/gpio/faraday,ftgpio010.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/faraday,ftgpio010.yaml
+ create mode 100644 drivers/gpio/gpio-en7523.c
