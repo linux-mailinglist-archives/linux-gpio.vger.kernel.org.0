@@ -2,63 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 228034E57E7
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Mar 2022 18:54:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6518A4E5871
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Mar 2022 19:34:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229846AbiCWRzn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Mar 2022 13:55:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44248 "EHLO
+        id S240118AbiCWSgC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Mar 2022 14:36:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343816AbiCWRzl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Mar 2022 13:55:41 -0400
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E291B7FC;
-        Wed, 23 Mar 2022 10:54:11 -0700 (PDT)
-Received: by mail-oi1-f182.google.com with SMTP id r8so2413539oib.5;
-        Wed, 23 Mar 2022 10:54:11 -0700 (PDT)
+        with ESMTP id S230296AbiCWSgB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Mar 2022 14:36:01 -0400
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 712E462A20;
+        Wed, 23 Mar 2022 11:34:25 -0700 (PDT)
+Received: by mail-oi1-f177.google.com with SMTP id v75so2544219oie.1;
+        Wed, 23 Mar 2022 11:34:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=f60LFDjbAJWv9CVysPuREcwz6J+aCagFE8UqkVqcmgk=;
-        b=dsZ4zI4k6dtFej10v+TI/KlFX+b3VGHM65HQCco1h+50o6XUcfgvyYoPO4KnwJKhws
-         bwl4XnCcF6RPBIhsZF+rkbYmodkL1Ife2gjGJw6ZD+6s79zj5YilZTJ5qzwBjmF9ONYu
-         rWtwC8YyaWg/QPL8sl3r7GSVowP0iRh/wQHZQ7HCioA5Vl7Q5POzb2d2ZTaO9S+LpQx6
-         yGUsITTkmKbPWn4puoSDoXBxeQUJI0Ln1/xdKzUpAd7YvabpSXzH9J3shkYTXRZLTD1A
-         VVcWWnirvi1/AnLmICYxZ2Wbp0nwQRQScw81K2Jps5QeMvpfPjWDUsXD20fbuLqlU5WD
-         6LGQ==
-X-Gm-Message-State: AOAM530qmdJ2ZuXioLBz0QDgWGEALhApq1gUf06NT/75drUl9MIEfD3x
-        W0i/pdJaihrrIE+jvmz8+w==
-X-Google-Smtp-Source: ABdhPJzigUdbgXJf2LVDBFHy1cfNLOZrkjkx0JqLhUAV+A4gntNmxSVXno8+yULDhGNE6h3ICcf3Dg==
-X-Received: by 2002:a05:6808:171a:b0:2ef:87cf:1916 with SMTP id bc26-20020a056808171a00b002ef87cf1916mr634046oib.299.1648058050920;
-        Wed, 23 Mar 2022 10:54:10 -0700 (PDT)
+        bh=41lt9wO4XOxtae4ixgjybXOjCGsLCMvP6pxSnzHlc2U=;
+        b=gKrSccSMjlQahHEhAJQyLxCSddSS9QtxoJ8D/ODeXScYU4ya3IZg31WbOJIm93LkGR
+         CR8B+VwE3UHDENCYoUzM6In+nzjnzMObDRbchxmSnXeXou8efvbK56xD33UG4awkBmJi
+         UIurc+mzuaJhV4b7bV2TLpr/Bs4H1bdOLgqrV6NvtdmrIEI6tFu7FbUpWEDXVdB7dObu
+         jek5jpZLq0HvPoDxex8hp9Lw5HGN//3PlQ11O+ItSLHwe1+vii97jc01ANkjj5K4tg9H
+         BCIhyivR/DanNCApVyRultoSqy+uwiUmBad5nIdO8xPNbV3i5xUpKcZ8b9aIsYWWZVe7
+         zT1A==
+X-Gm-Message-State: AOAM533HPxIxE6OjzgpOpWDYWMzxai7Dpw6R3bIAfuvCnfb6XvnsLGvN
+        oJl9zraN/BLTIcZD4PPmew==
+X-Google-Smtp-Source: ABdhPJzEHUUE48Om5qA2PfSnOF4hpP7NVTqs6dal5024vnutRjT370DO2aHoDKzq8MOGAbO5mihgeQ==
+X-Received: by 2002:a05:6808:118d:b0:2cc:ef90:3812 with SMTP id j13-20020a056808118d00b002ccef903812mr5383988oil.48.1648060464775;
+        Wed, 23 Mar 2022 11:34:24 -0700 (PDT)
 Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id p4-20020a056870a54400b000da07609a6dsm245974oal.22.2022.03.23.10.54.09
+        by smtp.gmail.com with ESMTPSA id s82-20020acadb55000000b002d9ce64bea0sm263151oig.48.2022.03.23.11.34.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Mar 2022 10:54:10 -0700 (PDT)
-Received: (nullmailer pid 160979 invoked by uid 1000);
-        Wed, 23 Mar 2022 17:54:09 -0000
-Date:   Wed, 23 Mar 2022 12:54:09 -0500
+        Wed, 23 Mar 2022 11:34:23 -0700 (PDT)
+Received: (nullmailer pid 221555 invoked by uid 1000);
+        Wed, 23 Mar 2022 18:34:22 -0000
+Date:   Wed, 23 Mar 2022 13:34:22 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        devicetree@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH RFC v1 1/2] dt-bindings: pinctrl: ocelot: add reset
- property
-Message-ID: <YjtewWq71NqThh+K@robh.at.kernel.org>
-References: <20220313154640.63813-1-michael@walle.cc>
- <20220313154640.63813-2-michael@walle.cc>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
+        "huziji@marvell.com" <huziji@marvell.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
+        "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>,
+        "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
+        "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>,
+        "kostap@marvell.com" <kostap@marvell.com>,
+        "robert.marko@sartura.hr" <robert.marko@sartura.hr>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 1/8] dt-bindings: pinctrl: mvebu: Document bindings
+ for AC5
+Message-ID: <YjtoLkeyYsT6Fih5@robh.at.kernel.org>
+References: <20220314213143.2404162-1-chris.packham@alliedtelesis.co.nz>
+ <20220314213143.2404162-2-chris.packham@alliedtelesis.co.nz>
+ <Yi/Y0iynQbIOo8C0@lunn.ch>
+ <16fa529e-b1ca-11d0-f068-628c7f25a7fa@alliedtelesis.co.nz>
+ <Yi/dhK0NXg9g6J9T@lunn.ch>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220313154640.63813-2-michael@walle.cc>
+In-Reply-To: <Yi/dhK0NXg9g6J9T@lunn.ch>
 X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
         HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
@@ -70,15 +85,24 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, 13 Mar 2022 16:46:39 +0100, Michael Walle wrote:
-> On the LAN966x SoC the GPIO controller will be resetted together with
-> the SGPIO and the switch core. Add a phandle to register the shared
-> reset line.
+On Tue, Mar 15, 2022 at 01:27:48AM +0100, Andrew Lunn wrote:
+> > I think it can. I vaguely remember seeing conditional clauses based on 
+> > compatible strings in other yaml bindings.
+> > 
+> > I started a new binding document because I expected adding significant 
+> > additions to the existing .txt files would be rejected. If I get some 
+> > cycles I could look at converting the existing docs from txt to yaml.
+> > 
+> > I'm not sure that there will be much in the way of a common 
+> > mvebu-pinctrl.yaml as you'd end up repeating most of the common stuff to 
+> > make things conditional anyway.
 > 
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
->  .../devicetree/bindings/pinctrl/mscc,ocelot-pinctrl.yaml  | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
+> We should wait for Rob to comment. But is suspect you are right, there
+> will not be much savings.
 
-Acked-by: Rob Herring <robh@kernel.org>
+It's always a judgement call of amount of if/then schema vs. duplicating 
+the common parts. If it's the function/pin parts that vary, then that's 
+probably best as separate schema for each case. Otherwise, I'm not sure 
+without seeing something.
+
+Rob
