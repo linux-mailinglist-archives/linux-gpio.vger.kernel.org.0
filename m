@@ -2,168 +2,156 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 869D04E5684
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Mar 2022 17:32:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C0124E56D5
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Mar 2022 17:47:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238865AbiCWQeF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Mar 2022 12:34:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54776 "EHLO
+        id S245513AbiCWQsi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Mar 2022 12:48:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238836AbiCWQeF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Mar 2022 12:34:05 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1743A7CDC1
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Mar 2022 09:32:35 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id t11so2908961wrm.5
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Mar 2022 09:32:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=trCEH0bE6PaumD9lKzsz88cLWqI4Gc48zVWYeF+JLGE=;
-        b=715G9aBMEgb/RuG3lm8ue1+D8YN6vxqXPzx2SVIgyire1F2RO8mwWraOJZEnLgLLME
-         u5gmeTjoQA7ruESrpCjhYAtljoKGFODubsFiQXk1ieJqt6EZgv/1ZsUus1KSxaiLz3F/
-         dNynSwomfjeZyMeTd/GzU2Bl9Z+M16eSRphbjnkl+QJWB09oPh7h7/Li6ZPTOe3SKkej
-         /cRtQ5/sxe9nbI0ZKkat2GWiSqtvNyE2BzDkG/h55YUBnd0sBy8sEDpzimoqRHoKlNWk
-         5tpaGDWvWq3jYVhyvNhcSMgcQLJ6UG5IjQVENV56JS+vI5VAhLcCa34vl1fgEU0cKtlh
-         2czQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=trCEH0bE6PaumD9lKzsz88cLWqI4Gc48zVWYeF+JLGE=;
-        b=5Fxv4uhmYghPjQ1u993a3kYby7Nn7rXEDmTwsFrncn2hl89IASDhCpkEyPMqgfu1o2
-         cjFD/B/aEnTJrM4mbyCCv3RRZVDSnW+r7n1/1WuLpfFiF2WrVQQaARMT+9eeDZr6XlZG
-         1YBxrYCoCG6hAUQrKwWwBDYbpEEjlu3a5D0dA/TNcnARHpNG1cRPOb0gLSu6cheAzekG
-         SbeHuBv09jFhn15MsabtxoPx80BM0l2IDT6UvzdxLazYHRhLD5YrD/YxN57vzIhbyJV/
-         tgctDhEQHQTEpJ4s88QtxCJBr5jTOKP6+G8Xlj1PKV5NOlKhpcR+eyHOtm3W4gNgEYKz
-         JcAA==
-X-Gm-Message-State: AOAM531vhDJypyUc6me17wWmtVKSOAqICRS+IIqWGs6hKNXXlas/3rWF
-        wduqd2Rn8AYozbd7uk8CFu8V2A==
-X-Google-Smtp-Source: ABdhPJyQBA7RWxogEUW+4vbMCMwX77BkU0ZFJ808H936v0jDTJt8PagQZ8ycbymm/Ptx/ELaxKS4UQ==
-X-Received: by 2002:adf:f5c4:0:b0:205:2836:f1e5 with SMTP id k4-20020adff5c4000000b002052836f1e5mr579608wrp.519.1648053153629;
-        Wed, 23 Mar 2022 09:32:33 -0700 (PDT)
-Received: from debian-brgl.home ([2a01:cb1d:334:ac00:7d50:ff5:f5c1:e225])
-        by smtp.gmail.com with ESMTPSA id w7-20020a1cf607000000b00389a5390180sm274635wmc.25.2022.03.23.09.32.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Mar 2022 09:32:33 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [GIT PULL] gpio: updates for v5.18
-Date:   Wed, 23 Mar 2022 17:32:30 +0100
-Message-Id: <20220323163230.691802-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.30.1
+        with ESMTP id S245522AbiCWQse (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Mar 2022 12:48:34 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD37310FFE
+        for <linux-gpio@vger.kernel.org>; Wed, 23 Mar 2022 09:47:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1648054016;
+        bh=clK8dTzbJPPhyCG2hwx0uFJXKSPZ468mOiSqHyTswjQ=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=aQpT9bOWiGDVcSn5N+ubNzX3YOZ9yF5/5YwnVePhVpUzPDKBgQugqRXAv0Ns+Fm2+
+         RbhYi+7f2B+X3Qo3QHuVZjao2idCiJKsdQJNtP1SjHli+zsQxQGdxPQmywF1RPxuKq
+         Vabi4LSck/H5C3y6l41L/fsBJgnFgajDnhdBCo1M=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([5.146.194.160]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MSc1B-1ndLYX1Nnt-00SwzJ; Wed, 23
+ Mar 2022 17:46:56 +0100
+Date:   Wed, 23 Mar 2022 17:46:55 +0100
+From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     kernel test robot <lkp@intel.com>,
+        Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        linux-gpio@vger.kernel.org
+Subject: Re: [linusw-pinctrl:for-next] BUILD REGRESSION
+ 0c3c8458428ab471178a0d155222eaa62083d033
+Message-ID: <YjtO/0zlcYPdFR59@latitude>
+References: <623b33fa.pb2pVWdVg3WqlK6+%lkp@intel.com>
+ <CACRpkdb2hifdLLtquEMqty2hBzr8ap_HxZVNRq5GY5ed3kR3YA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="bZnMrCvGAi+ivXfQ"
+Content-Disposition: inline
+In-Reply-To: <CACRpkdb2hifdLLtquEMqty2hBzr8ap_HxZVNRq5GY5ed3kR3YA@mail.gmail.com>
+X-Provags-ID: V03:K1:IR5t3LsBS+PKHiSYCIC3wQSUEuAy3HuOcSkjQKldp+MhM88su64
+ BojirzY+mamOWxlx8i2V1DYgbJiNKXWJJ1zqajwuQ4owm/LT6oIKSO7rhSrVcMkSgdZjvpH
+ K8OxvOkWjGNt/pCInVXlkogT1yIpnnF5nOurynObWkXSitPsJoLTJ5vz6MM+1s0CcVBuUyw
+ TiYEt6tSwrGeusVyzpBsQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:B03S244B63g=:2o4682KG14m4wp+MTWYo7V
+ bYnblCgga/8czY+TUNlrZrXS7tePLLdPKfWt7wBNLuhmBUEK0g3LBDT/pkAU1XhWokPQa07Cg
+ 3QcMr6usXEHkEKRm3ptP8toNWTebO8kWzErp42KlnPwQ2RdfGu/52OUsgl7DhI9nFGi6QMm7+
+ BOHsmtpt0cW8duQHtZoxQotZClyYGU8kpVjgCsZv0LXTR09te42OVZoU1TAkCfenZyZXaTxrX
+ ryd4mJXdE6QvOAzj6OJbdhto6uEA2gPkG6fwaHuS5+K4TEoDMHPmFxEWP9+dOyfGmjE3FCHbf
+ Z8ehGvi4OBGWlvmIFZeHzbE+B9SOWMYssGM8iUBHe0p/iaLKD7N1OLrX2uloF9YuTaLoOSNvJ
+ 9QOZQ5+p7y5eeL+cW9BtNPXunwUafKsnzMxSGYdlTmXZfVZJNu24/DUkRzZm7bVZXB+/aVW7E
+ jccB/UKU0a3HT3scjxdcSImxvhvjzLU2ur4Ld3Bp2hyTakSGRVgAfbPVpqwcFhPwmKCRPrd2T
+ x+eXaHHTzpGkxiMrIzCeyYnhKvkxL/8zrXJbDaqahhIEfIVhfyMgaHHapuKqDcuwmXmLhz91x
+ X9mV5RKXjOWAiL3dRIFmuLmuQxGhFDIUGgfgn+V5jMIiqZAITWQIE6ln2mKNLPjecJnizIq5t
+ C+MDMq2WN0MUiuKhfYA2xc2MLtHaq6c+wKxxl8Bak3Xkg9Zjp9g614jfTP8eVvlMMy2aS4DZw
+ E8F5rQb3qkktegYflLqARM5wKhnRuXMtTdBye/zKAb0mNHRlDVnWfrzSXAgxPOJkc9fKB1Cv9
+ E7S5kDYo9bfPq+nZV8peUdWolSc0ngnxbTGQAzX/WDcBUVtTcfHxoRgs57bbqEHyyG615TEaI
+ /LqucAQ+sbUys7+S2CmaUIF3txzyP2NXm/3iyszXApQ7xpSavc03qal2V4i03zMsv/k8Nq7Yo
+ rfF4BmP5eNxHtc5mPDe7tO91LLUHyRPd15Yozl/U3QgZmWarwACXkWJs4G9K73hYSjF7UE8Sf
+ LzaEEBGF4x4VaHPEVN+gMignKy3KEkdW1/wg3zMBANVsnsW8oofhAvbnpbYnsV5dS54geOrQL
+ AOe30yidQ9C6JY=
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Linus,
 
-There are relatively few updates for the next release cycle. We have a single
-new driver and some minor changes in drivers, more work on limiting the usage
-of of_node in drivers and DT updates.
+--bZnMrCvGAi+ivXfQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Please pull,
-Bartosz Golaszewski
+On Wed, Mar 23, 2022 at 04:05:02PM +0100, Linus Walleij wrote:
+> Hi Jonathan,
+>=20
+> this driver just keeps creating new sparse warnings, I try to fix them
+> but I wonder
+> if new warnings will result everytime I fix something?
 
-The following changes since commit e783362eb54cd99b2cac8b3a9aeac942e6f6ac07:
+Hm, sorry about the chaos.
 
-  Linux 5.17-rc1 (2022-01-23 10:12:53 +0200)
+> Do you think you could run sparse over the drivers in some way and check
+> what else needs to be fixed?
 
-are available in the Git repository at:
+I ran "make C=3D1" on drivers/pinctrl/nuvoton now, and only noticed the
+same array initializer syntax warning as in pinctrl-wpcm450, in pinctrl-npc=
+m7xx.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v5.18
+>=20
+> Yours,
+> Linus Walleij
+>=20
+> On Wed, Mar 23, 2022 at 3:52 PM kernel test robot <lkp@intel.com> wrote:
+> >
+> > tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/lin=
+ux-pinctrl.git for-next
+> > branch HEAD: 0c3c8458428ab471178a0d155222eaa62083d033  pinctrl: nuvoton=
+: Fix sparse warning
+> >
+> > Error/Warning reports:
+> >
+> > https://lore.kernel.org/linux-gpio/202203222145.UcCrXHfm-lkp@intel.com
+> >
+> > Unverified Error/Warning (likely false positive, please contact us if i=
+nterested):
+> >
+> > drivers/pinctrl/nuvoton/pinctrl-wpcm450.c:470:26: error: array type has=
+ incomplete element type 'struct group_desc'
+> > drivers/pinctrl/nuvoton/pinctrl-wpcm450.c:470:40: error: array has inco=
+mplete element type 'struct group_desc'
+> > drivers/pinctrl/nuvoton/pinctrl-wpcm450.c:824:56: warning: parameter 's=
+elector' set but not used [-Wunused-but-set-parameter]
+> > drivers/pinctrl/nuvoton/pinctrl-wpcm450.c:888:48: warning: parameter 'g=
+roup' set but not used [-Wunused-but-set-parameter]
 
-for you to fetch changes up to 87ba5badc541a79bab2fa3243ee0008c0880c64a:
+This bunch was fixed with my patch "pinctrl: nuvoton: wpcm450: select
+GENERIC_PINCTRL_GROUPS". There are also two more fixes sent by Jialin
+Zhang and Dan Carpenter over the past week.
 
-  gpio: ts4900: Use SPDX header (2022-03-10 10:05:39 +0100)
+> > include/linux/build_bug.h:16:51: error: bit-field '<anonymous>' width n=
+ot an integer constant
 
-----------------------------------------------------------------
-gpio updates for v5.18-rc1
+Unsure about this one.
 
-- new driver: gpio-en7523
-- dt-bindings: convertion of faraday,ftgpio010 to YAML, new compatible string
-  in gpio-vf610 and a bugfix in an example
-- gpiolib core: several improvements and some code shrink
-- documentation: convert all public docs into kerneldoc format
-- set IRQ bus token in gpio-crystalcove (addresses a debugfs issue)
-- add a missing return value check for kstrdup() in gpio-merrifield
-- allow gpio-tps68470 to be built as module
-- more work on limiting usage of of_node in GPIO drivers
-- several sysfs interface improvements
-- use SDPX in gpio-ts4900
 
-----------------------------------------------------------------
-Andy Shevchenko (9):
-      gpio: altera-a10sr: Switch to use fwnode instead of of_node
-      gpio: tegra: Get rid of duplicate of_node assignment
-      gpiolib: Introduce for_each_gpio_desc_with_flag() macro
-      gpiolib: Use short form of ternary operator in gpiod_get_index()
-      gpiolib: Simplify error path in gpiod_get_index() when requesting GPIO
-      gpiolib: sysfs: Move sysfs_emit() calls outside of the mutex lock
-      gpiolib: sysfs: Move kstrtox() calls outside of the mutex lock
-      gpiolib: sysfs: Simplify edge handling in the code
-      gpiolib: Use list_first_entry()/list_last_entry()
+Best regards,
+Jonathan
 
-Bartosz Golaszewski (2):
-      gpiolib: make struct comments into real kernel docs
-      Merge tag 'intel-gpio-v5.18-1' of gitolite.kernel.org:pub/scm/linux/kernel/git/andy/linux-gpio-intel into gpio/for-next
+--bZnMrCvGAi+ivXfQ
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Corentin Labbe (1):
-      dt-bindings: gpio: convert faraday,ftgpio01 to yaml
+-----BEGIN PGP SIGNATURE-----
 
-Hans de Goede (2):
-      gpio: crystalcove: Set IRQ domain bus token to DOMAIN_BUS_WIRED
-      gpio: tps68470: Allow building as module
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAmI7Tt0ACgkQCDBEmo7z
+X9tg0A//W4EvYxIBMzKdla1AFd3Mhazxujobj8dN6cQ6D/+CIObrBtjjymLlNAhR
+IPKbJD3FI5UQ8PaRLV8wrwJKPsW0hnntl/BQbhaRaGGYaNeFAKgeX3avkNBG31zT
+ZGLmF+ytU7VRoEeo0a7uzXXVkAGKqimFBR08UayELOFmAlqPbUmAYBcvx2NjtgMU
+5CAZYnm25/tA5hrTnqWqIP7DhaCaEVdEqj1BMgjc9ZGhRIxkfIyYpUUXtBwfSDC5
+tnyNHEYOq8dxAiXUe/rxRcHb8BEsndKSEb4UY/Kr3it6eSDEBXh5Y3UqiquLr9mL
+R/hL34zshtNb3wHfeJDf+e4anl1hgJTiIZ8zw/DD4gQ084Lrx/1anwj1HPQ52wTh
+1lEkMRqT+QU95taepB36bKLYq3Teuzu6kQ2hNXYBBQQUOoCel9dts7bDnswWyfd/
+TJ1DNjlEpLad8xbB2avGaNH0obRYBvavSXQz/Uo2+DqxP1pxv9WKs8WWlQlEGLq1
+82u4J/hVpbDr4XOY9kqrckPtVP9OBwDqIPMn/Vs04kQ0s1Uztxs+9Lpcz7JDzcnH
+6za4u7iOHq6Gon03Rkr/8H6R/Znrzd22nZvzi8ESC2gvieiiqapqaqODnrtJSOyk
+bTufbP1hZiKywvv3tinsIo77Fl35zVW1ZfyqCGd9gNxqubbjppQ=
+=l0h3
+-----END PGP SIGNATURE-----
 
-John Crispin (2):
-      dt-bindings: arm: airoha: Add binding for Airoha GPIO controller
-      gpio: Add support for Airoha EN7523 GPIO controller
-
-Kris Bahnsen (1):
-      gpio: ts4900: Use SPDX header
-
-Marcel Ziswiler (1):
-      dt-bindings: gpio: fix gpio-hog example
-
-Peng Fan (1):
-      dt-bindings: gpio: gpio-vf610: Add imx93 compatible string
-
-Xiaoke Wang (1):
-      gpio: merrifield: check the return value of devm_kstrdup()
-
- .../bindings/gpio/airoha,en7523-gpio.yaml          |  66 ++++++++++
- .../devicetree/bindings/gpio/faraday,ftgpio010.txt |  27 ----
- .../bindings/gpio/faraday,ftgpio010.yaml           |  65 ++++++++++
- .../devicetree/bindings/gpio/gpio-vf610.yaml       |   4 +-
- Documentation/devicetree/bindings/gpio/gpio.txt    |   2 +-
- drivers/gpio/Kconfig                               |  16 ++-
- drivers/gpio/Makefile                              |   1 +
- drivers/gpio/gpio-altera-a10sr.c                   |   3 +-
- drivers/gpio/gpio-crystalcove.c                    |   9 +-
- drivers/gpio/gpio-en7523.c                         | 137 +++++++++++++++++++++
- drivers/gpio/gpio-merrifield.c                     |   3 +
- drivers/gpio/gpio-tegra.c                          |   1 -
- drivers/gpio/gpio-tps68470.c                       |   5 +-
- drivers/gpio/gpio-ts4900.c                         |  10 +-
- drivers/gpio/gpiolib-of.c                          |  10 +-
- drivers/gpio/gpiolib-sysfs.c                       | 100 ++++++---------
- drivers/gpio/gpiolib.c                             |  41 +++---
- drivers/gpio/gpiolib.h                             |  41 ++++++
- include/linux/gpio/consumer.h                      |  35 +++---
- 19 files changed, 422 insertions(+), 154 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/airoha,en7523-gpio.yaml
- delete mode 100644 Documentation/devicetree/bindings/gpio/faraday,ftgpio010.txt
- create mode 100644 Documentation/devicetree/bindings/gpio/faraday,ftgpio010.yaml
- create mode 100644 drivers/gpio/gpio-en7523.c
+--bZnMrCvGAi+ivXfQ--
