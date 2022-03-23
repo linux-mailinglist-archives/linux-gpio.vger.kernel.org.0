@@ -2,71 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2167F4E58C8
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Mar 2022 19:54:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A51C4E5A03
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Mar 2022 21:44:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343917AbiCWSzk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Mar 2022 14:55:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34306 "EHLO
+        id S1344691AbiCWUqE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Mar 2022 16:46:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240229AbiCWSzj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Mar 2022 14:55:39 -0400
-Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3AEC74B2F;
-        Wed, 23 Mar 2022 11:54:08 -0700 (PDT)
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-d39f741ba0so2617723fac.13;
-        Wed, 23 Mar 2022 11:54:08 -0700 (PDT)
+        with ESMTP id S1344228AbiCWUqE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Mar 2022 16:46:04 -0400
+Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32A0410FE0
+        for <linux-gpio@vger.kernel.org>; Wed, 23 Mar 2022 13:44:34 -0700 (PDT)
+Received: by mail-yb1-xb2a.google.com with SMTP id t11so4904215ybi.6
+        for <linux-gpio@vger.kernel.org>; Wed, 23 Mar 2022 13:44:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Qrk6r9glyK9xF4CKtMgGQNnRspxyzNOiodD1+Os1QjY=;
+        b=QLVocad0NWOVxzNN1cy/5Y+/WAMd3y+BrUQBFyy9oyoeuQX84gYTvEWgwJvsvyIJ5D
+         eJhDhFBSHzh6vh6xr/TCN6QKqd9hz90VhLezr6Wn7uzQQXw5u6Lei2MOSLukwMoHdRd5
+         8ggBfGMJQn+zAP2Y57w3jRnN+0GSUxJJZHK2DQ5705fFeS/mmfCcB3iXX2PKJiHpSyzv
+         uWBw2F+l5zbtbFTr2rWF9eC33TXYNyNwfS8j9vEb2WB3B/MlFI0PHbxVJ8700K2AoUGI
+         81ZQGsZVQ+NzcUrweXGs5ekkJc7p7DNUYgEt3p07hXVM1VsWSZ459q7+6eDrQ/FRIifU
+         YL8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=cWHIqUb2GLClWkPw5kQ250/Lh0uWw4ugg2e9CkpD9ng=;
-        b=8PllPUMdvyabJGo+gc/9yNEkLiGzcDVv/gZIeiFey8LrpiIMWSnpuUC1c4U+gVbpag
-         FxNEvI1jsk/o/n99W39O7RaINLMGZw/VCkAh2eB3m/yHDZuXwucOFAPM1+1aQEXo3nNu
-         JlhJPTjTqEpa70gtp24jLFVNc8Prpg3YyOLidF78XBoepxYWrMZwC7vxIKRo+YMXlhH4
-         oxtbBojbhF6NvVjyyGz1K82aGgoUsTAcrhrVlQIcnIOZz261K51MEFy2nnHzUh4hXeWk
-         2bq6zePacb4ctofnaXb7DrGulfDMfgxZqoNT6uN51Yu9yi5eckv5Eh22wgD2KkD09kQh
-         d/SQ==
-X-Gm-Message-State: AOAM533ls5OK8G/xTjJBZrWHXVr4rl2x7oYDgHxX/SChsZxonTWCoCXU
-        4CopKpUiazQgA9DWWcMgdA==
-X-Google-Smtp-Source: ABdhPJwb31fwcGvR7p9nqoczWVgSbjevAuJ03XKtuwAPPvfJWOWi+SoELyx+qTikU4J6+3nz2lWBqA==
-X-Received: by 2002:a05:6871:5cf:b0:de:3ca3:26a0 with SMTP id v15-20020a05687105cf00b000de3ca326a0mr704806oan.136.1648061648208;
-        Wed, 23 Mar 2022 11:54:08 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id x6-20020a9d6d86000000b005cdb017ddcfsm333780otp.41.2022.03.23.11.54.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Mar 2022 11:54:07 -0700 (PDT)
-Received: (nullmailer pid 252266 invoked by uid 1000);
-        Wed, 23 Mar 2022 18:54:06 -0000
-Date:   Wed, 23 Mar 2022 13:54:06 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     =?iso-8859-1?Q?N=EDcolas_F=2E_R=2E_A=2E?= Prado 
-        <nfraprado@collabora.com>
-Cc:     devicetree@vger.kernel.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-        kernel@collabora.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v1 4/4] dt-bindings: pinctrl: mt8192: Add gpio-line-names
- property
-Message-ID: <YjtszlCtzG+XCzBj@robh.at.kernel.org>
-References: <20220315211936.442708-1-nfraprado@collabora.com>
- <20220315211936.442708-5-nfraprado@collabora.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Qrk6r9glyK9xF4CKtMgGQNnRspxyzNOiodD1+Os1QjY=;
+        b=qvGSqTMxnTHp3Aa47O9LNHMDGswU5vwziJYvhvTWcng9Hp+RXax/NMMlF9IQGNLcPR
+         D0I2UG1G87nx1lx1w5im44ExlSNQya035gBe8qj/uGGNUbwiUhWpXbMYYMxbB0vT54SI
+         T1MDHpJhQIpFbFZoDFcwt4voWQFbLRsxA6uZSqMOeXyniCvZfNYnz5sDT12G49cOA5M9
+         jaLEUfG56rYpGLvQ/JEdJcQONSLdF/SK7A48u56JCZPZcZBkBjwl60WK9argaOvnVyE+
+         IxKfQsqNdw/z5QhD3gl+lI8bw35ITZSacOpTnTjTJR7F6bMeK+QwM8gtRrTY3m5OeFSE
+         PqLA==
+X-Gm-Message-State: AOAM532Yj5Jq1M+L5jTPbrC/0HVm30Xd2L21jyL+PCAnIVDnmh+ndFn+
+        KFRCAgtP/OdlX0AWNaCZs66Tr00tPqVFxP6giQhWsTkSHag=
+X-Google-Smtp-Source: ABdhPJwxVZQNQM3ne9IIOOS3d2mczZlQmDlPD2L0W1UhsjRIYTP9Tq2F54UvnNDaHZhQ8pa/XK8DJwHsgRnFKOiL3dk=
+X-Received: by 2002:a25:f406:0:b0:628:c29b:5c39 with SMTP id
+ q6-20020a25f406000000b00628c29b5c39mr1868489ybd.369.1648068273416; Wed, 23
+ Mar 2022 13:44:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220315211936.442708-5-nfraprado@collabora.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+References: <20220310150905.1.Ie0a005d7a763d501e03b7abe8ee968ca99d23282@changeid>
+ <CAHp75Vfbs6sPsrjwxNWLZQu=pEoar2K5sY=fX9a7KkOe=mwsZw@mail.gmail.com>
+ <CAMRc=Mc_bw40uY68jcPYR-Lwe-qLcxmQeZO47WrexZtSiE_M5Q@mail.gmail.com>
+ <CAHp75VcK0JDkTXuPc2N8G+OotXK0mqfQn7i4nDqXDODe1SqcrQ@mail.gmail.com> <CA+ASDXPncB=edDfXqkmWMqToQSt85UkAMzoApgyQATROoR1x9g@mail.gmail.com>
+In-Reply-To: <CA+ASDXPncB=edDfXqkmWMqToQSt85UkAMzoApgyQATROoR1x9g@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 23 Mar 2022 21:44:21 +0100
+Message-ID: <CACRpkdZjSr_-EoZughRLaa83w-0Djj2hM=rqNe4RENudG4eizA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: Drop CONFIG_DEBUG_GPIO
+To:     Brian Norris <briannorris@chromium.org>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Jianqun Xu <jay.xu@rock-chips.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -74,16 +71,37 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 15 Mar 2022 17:19:36 -0400, Nícolas F. R. A. Prado wrote:
-> Add the gpio-line-names optional property to the pinctrl-mt8192 binding
-> to prevent dt_binding_check warnings when it is present in the pinctrl
-> node in the Devicetree.
-> 
-> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
-> ---
-> 
->  Documentation/devicetree/bindings/pinctrl/pinctrl-mt8192.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
+On Tue, Mar 22, 2022 at 5:31 PM Brian Norris <briannorris@chromium.org> wrote:
 
-Acked-by: Rob Herring <robh@kernel.org>
+> I'm also curious: does dynamic debug not suit you?
+> https://www.kernel.org/doc/html/v4.19/admin-guide/dynamic-debug-howto.html
+> TBH, I never remember its syntax, and it seems very easy to get wrong,
+> so I often throw in #define's myself, if I want it foolproof. But I'm
+> curious others thoughts too.
+
+Dynamic debug almost always assume that the system comes up so you
+can go in and enable it manually. What about problems during boot. Or
+if the system doesn't even get to userspace?
+
+GPIO and pin control can be critical system resources and the
+platform may not boot completely or mount root as a result of some
+problem you're debugging.
+
+True, there are ways to pass arguments also on the command line
+argument when the kernel boots.
+
+Figuring out how the command line should
+look to enable -DDEBUG at boot time on say drivers/pinctrl/intel/* is
+a pretty horrific
+exercise. Add to that using the boot loader interactively to type that
+long argument in for every reboot.
+
+In all such scenarios what people do is go into the Makefile
+and add -DDEBUG to the CFLAGS as a hack instead, because it
+is faster and persistent.
+
+Adding that as an option in KConfig achieves the same thing, just
+easier than hacking the Makefile.
+
+Yours,
+Linus Walleij
