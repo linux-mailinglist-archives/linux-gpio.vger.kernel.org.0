@@ -2,130 +2,238 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AC134E547F
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Mar 2022 15:46:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 84A054E5497
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Mar 2022 15:52:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244875AbiCWOrm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Mar 2022 10:47:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56680 "EHLO
+        id S237776AbiCWOyE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Mar 2022 10:54:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231514AbiCWOrm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Mar 2022 10:47:42 -0400
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A826506FD
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Mar 2022 07:46:12 -0700 (PDT)
-Received: by mail-wr1-x431.google.com with SMTP id d7so2461808wrb.7
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Mar 2022 07:46:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=osLyPR/OysO0/n11H7AyANhO10/CTJLTc9ULyTX82oc=;
-        b=cZaXEPpaknkOxaMXvhQ/HgoGQQU3YKPajtONR43xfSdCDY5mvCG32dpUXAP33seVEl
-         8OQt1m76wmS6muVA1bUZgRX7CYPa81owPkhrk1JN3JJncVVzoJ3cyuwt1UTA+SDxmey+
-         WTqvzy3ih5pu4sfTv70YVhN7Bb4aVO7vgCL4G5X+1TX/MUreaM/8g1gM4fUuLYzxOuEB
-         mA6gW2VhEHSQ1fN1mbUWmirYp9sVNGx64gLIy5Z3WmDPFxvN/ed3jkl6dRZQQuqAuOp+
-         5ALQyjz5TFBOMZfrqoye9rXuhCf2tIx0g73qNocysYPw9WZSCFQprDGeszbnJ0+24PeW
-         OEkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=osLyPR/OysO0/n11H7AyANhO10/CTJLTc9ULyTX82oc=;
-        b=nk2LQ5+9SnIyTc7bOLfDUg+SZLspTP9BKitG4LGcbog8tC5faBfZL2v+QRWjbbixB0
-         JWg+d0YuXkA3kdxW1UXm9rjFkdoXIZClhyjR56j+PSmSQGERxd89WBKmUxtSB11XcyzA
-         Z8LXog1SZ1vfmN7W61RulLTWmn0GoGF7s8LuEBiTJmXNGj4MuxN9s3mB+mippseKdGl2
-         /3erPV7mJ6m8p9IWopyBTEKVfgQ7O4iFgvhJYtTMjLrW4F7jSYyEJbnvHdGOZLehdNar
-         u4S9VmncD7bHjIOk2/+CHO6azWbbZelP9uufunyrJ1gaQILLVTIVtXlgM2WaOVZjPYau
-         ugSQ==
-X-Gm-Message-State: AOAM5332/IOp1o6poHwUqhhA/NOcV+Vo78vKxVySm/CtfAbVoAb1F7u0
-        tUXbBKTno4g3nvbUAaFzvsUxtw==
-X-Google-Smtp-Source: ABdhPJwTcfLiKGZ11ta0GNYR4Mm2J9YZsnvUd4S4bvVfvkGomvEYYHwOhL03vKx+NQVzEU+Tkz2XiQ==
-X-Received: by 2002:adf:9794:0:b0:203:e074:1497 with SMTP id s20-20020adf9794000000b00203e0741497mr127921wrb.75.1648046770723;
-        Wed, 23 Mar 2022 07:46:10 -0700 (PDT)
-Received: from google.com (cpc155339-bagu17-2-0-cust87.1-3.cable.virginm.net. [86.27.177.88])
-        by smtp.gmail.com with ESMTPSA id n23-20020a05600c3b9700b0038b7c4c0803sm4213009wms.30.2022.03.23.07.46.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Mar 2022 07:46:10 -0700 (PDT)
-Date:   Wed, 23 Mar 2022 14:46:07 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Richard Fitzgerald <rf@opensource.cirrus.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        - <patches@opensource.cirrus.com>,
-        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v3] dt-bindings: mfd: Fix pinctrl node name warnings
-Message-ID: <YjsyryNcGm9ku/kF@google.com>
-References: <20220303232350.2591143-1-robh@kernel.org>
- <Yjl6fP2Bylv6ud8W@google.com>
- <CAL_Jsq+5GkEaE9sf5HJMaNQLkZUB_q2Qyv2rzADVD7if1MNvqg@mail.gmail.com>
+        with ESMTP id S235513AbiCWOyD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Mar 2022 10:54:03 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2E4E8118B
+        for <linux-gpio@vger.kernel.org>; Wed, 23 Mar 2022 07:52:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1648047153; x=1679583153;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=dz0C6iw8Fl6MmxGUdTpnv6X52U6SlnNFoKhZNvqQ2sk=;
+  b=bikmxHqr0r/5hPml6kanmmBJVEho2YUs9d4RwixWTNLQG9XjlSIC3Yez
+   k2I8nr2RJcKUZ2KfcvQdJP2q5eKojaWmCiS7r0UdDr8jdRfqmjxj5FuS8
+   VI3bJLi9xw5CDAOJ9BjG6ynZ2l3YJJV/C7rTFVDtQIIzRj3iD8cy22lEC
+   dBURvf0vuR/0SR2nCS57O4Ntk/vFR2zv8UsdVIozHTVpa3oJLBkrviFSO
+   iDG+wb9/7f5hyEqNLZXe7CorqJSYbFJSnbhgkuzPJZlZat/qaiSlGlGeR
+   d8IyCBYFiEgLVjNFy16YCK+Um0jwVqJy6bIitBXgc+CUvesL608tTSSGe
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10295"; a="238730772"
+X-IronPort-AV: E=Sophos;i="5.90,204,1643702400"; 
+   d="scan'208";a="238730772"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2022 07:52:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,204,1643702400"; 
+   d="scan'208";a="601321372"
+Received: from lkp-server02.sh.intel.com (HELO 89b41b6ae01c) ([10.239.97.151])
+  by fmsmga008.fm.intel.com with ESMTP; 23 Mar 2022 07:52:32 -0700
+Received: from kbuild by 89b41b6ae01c with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1nX2Lf-000K9T-U8; Wed, 23 Mar 2022 14:52:31 +0000
+Date:   Wed, 23 Mar 2022 22:51:38 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:for-next] BUILD REGRESSION
+ 0c3c8458428ab471178a0d155222eaa62083d033
+Message-ID: <623b33fa.pb2pVWdVg3WqlK6+%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL_Jsq+5GkEaE9sf5HJMaNQLkZUB_q2Qyv2rzADVD7if1MNvqg@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 23 Mar 2022, Rob Herring wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: 0c3c8458428ab471178a0d155222eaa62083d033  pinctrl: nuvoton: Fix sparse warning
 
-> On Tue, Mar 22, 2022 at 2:28 AM Lee Jones <lee.jones@linaro.org> wrote:
-> >
-> > On Thu, 03 Mar 2022, Rob Herring wrote:
-> >
-> > > The recent addition pinctrl.yaml in commit c09acbc499e8 ("dt-bindings:
-> > > pinctrl: use pinctrl.yaml") resulted in some node name warnings:
-> > >
-> > > Documentation/devicetree/bindings/mfd/cirrus,lochnagar.example.dt.yaml: \
-> > >  lochnagar-pinctrl: $nodename:0: 'lochnagar-pinctrl' does not match '^(pinctrl|pinmux)(@[0-9a-f]+)?$'
-> > > Documentation/devicetree/bindings/mfd/cirrus,madera.example.dt.yaml: \
-> > >  codec@1a: $nodename:0: 'codec@1a' does not match '^(pinctrl|pinmux)(@[0-9a-f]+)?$'
-> > > Documentation/devicetree/bindings/mfd/brcm,cru.example.dt.yaml: \
-> > >  pin-controller@1c0: $nodename:0: 'pin-controller@1c0' does not match '^(pinctrl|pinmux)(@[0-9a-f]+)?$'
-> > >
-> > > Fix the node names to the preferred 'pinctrl'. For cirrus,madera,
-> > > nothing from pinctrl.yaml schema is used, so just drop the reference.
-> > >
-> > > Fixes: c09acbc499e8 ("dt-bindings: pinctrl: use pinctrl.yaml")
-> > > Cc: Rafał Miłecki <rafal@milecki.pl>
-> > > Signed-off-by: Rob Herring <robh@kernel.org>
-> > > ---
-> > > v2:
-> > >  - Fix lochnagar-pinctrl nodename in example
-> > > v3:
-> > >  - And fix lochnagar-pinctrl nodename in 'required'. Sigh...
-> > > ---
-> > >  Documentation/devicetree/bindings/mfd/brcm,cru.yaml         | 4 ++--
-> > >  Documentation/devicetree/bindings/mfd/cirrus,lochnagar.yaml | 6 +++---
-> > >  .../devicetree/bindings/pinctrl/cirrus,madera.yaml          | 3 ---
-> > >  3 files changed, 5 insertions(+), 8 deletions(-)
-> >
-> > Requires rebase.  Doesn't presently apply.
-> 
-> It's already in 5.17.
+Error/Warning reports:
 
-Oh, I see what's happened.
+https://lore.kernel.org/linux-gpio/202203222145.UcCrXHfm-lkp@intel.com
 
-I provided my Ack on v2 *after* this was posted.
+Unverified Error/Warning (likely false positive, please contact us if interested):
 
-Makes sense, thanks.
+drivers/pinctrl/nuvoton/pinctrl-wpcm450.c:470:26: error: array type has incomplete element type 'struct group_desc'
+drivers/pinctrl/nuvoton/pinctrl-wpcm450.c:470:40: error: array has incomplete element type 'struct group_desc'
+drivers/pinctrl/nuvoton/pinctrl-wpcm450.c:824:56: warning: parameter 'selector' set but not used [-Wunused-but-set-parameter]
+drivers/pinctrl/nuvoton/pinctrl-wpcm450.c:888:48: warning: parameter 'group' set but not used [-Wunused-but-set-parameter]
+include/linux/build_bug.h:16:51: error: bit-field '<anonymous>' width not an integer constant
+
+Error/Warning ids grouped by kconfigs:
+
+gcc_recent_errors
+|-- microblaze-randconfig-c024-20220323
+|   `-- drivers-pinctrl-mediatek-pinctrl-mtk-common.c:Unneeded-semicolon
+`-- parisc-randconfig-r006-20220323
+    |-- drivers-pinctrl-nuvoton-pinctrl-wpcm450.c:error:array-type-has-incomplete-element-type-struct-group_desc
+    |-- drivers-pinctrl-nuvoton-pinctrl-wpcm450.c:warning:parameter-group-set-but-not-used
+    |-- drivers-pinctrl-nuvoton-pinctrl-wpcm450.c:warning:parameter-selector-set-but-not-used
+    `-- include-linux-build_bug.h:error:bit-field-anonymous-width-not-an-integer-constant
+
+clang_recent_errors
+`-- hexagon-buildonly-randconfig-r005-20220323
+    `-- drivers-pinctrl-nuvoton-pinctrl-wpcm450.c:error:array-has-incomplete-element-type-struct-group_desc
+
+elapsed time: 729m
+
+configs tested: 131
+configs skipped: 4
+
+gcc tested configs:
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+i386                          randconfig-c001
+mips                 randconfig-c004-20220323
+arm                         axm55xx_defconfig
+xtensa                    xip_kc705_defconfig
+powerpc                    sam440ep_defconfig
+mips                           jazz_defconfig
+powerpc                      pasemi_defconfig
+arm                           h3600_defconfig
+sh                   sh7770_generic_defconfig
+sh                            hp6xx_defconfig
+arm                       omap2plus_defconfig
+alpha                               defconfig
+powerpc                     tqm8548_defconfig
+ia64                             alldefconfig
+sh                      rts7751r2d1_defconfig
+sh                             sh03_defconfig
+m68k                        mvme16x_defconfig
+arm                            xcep_defconfig
+s390                             allmodconfig
+sh                          rsk7264_defconfig
+arm                          simpad_defconfig
+arm                           h5000_defconfig
+nios2                         3c120_defconfig
+sh                             espt_defconfig
+powerpc                     pq2fads_defconfig
+arm                         assabet_defconfig
+um                               alldefconfig
+ia64                         bigsur_defconfig
+mips                         db1xxx_defconfig
+parisc                generic-32bit_defconfig
+sh                          rsk7203_defconfig
+alpha                            alldefconfig
+mips                      fuloong2e_defconfig
+powerpc                        warp_defconfig
+m68k                        mvme147_defconfig
+sh                         ecovec24_defconfig
+arm                             rpc_defconfig
+riscv                               defconfig
+sh                  sh7785lcr_32bit_defconfig
+arm                  randconfig-c002-20220323
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nds32                             allnoconfig
+nios2                               defconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+csky                                defconfig
+nds32                               defconfig
+nios2                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc64                            defconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+i386                              debian-10.3
+i386                   debian-10.3-kselftests
+i386                                defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+i386                          randconfig-a003
+i386                          randconfig-a001
+i386                          randconfig-a005
+x86_64                        randconfig-a013
+x86_64                        randconfig-a011
+x86_64                        randconfig-a015
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+arc                  randconfig-r043-20220323
+riscv                randconfig-r042-20220323
+s390                 randconfig-r044-20220323
+riscv                    nommu_k210_defconfig
+riscv                            allyesconfig
+riscv                    nommu_virt_defconfig
+riscv                             allnoconfig
+riscv                            allmodconfig
+riscv                          rv32_defconfig
+x86_64                    rhel-8.3-kselftests
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                         rhel-8.3-kunit
+x86_64                                  kexec
+
+clang tested configs:
+x86_64                        randconfig-c007
+mips                 randconfig-c004-20220323
+arm                  randconfig-c002-20220323
+powerpc              randconfig-c003-20220323
+riscv                randconfig-c006-20220323
+i386                          randconfig-c001
+arm                    vt8500_v6_v7_defconfig
+arm                       imx_v4_v5_defconfig
+powerpc                     ksi8560_defconfig
+powerpc                    mvme5100_defconfig
+arm                              alldefconfig
+powerpc                     kilauea_defconfig
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a011
+i386                          randconfig-a013
+i386                          randconfig-a015
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+x86_64                        randconfig-a005
+hexagon              randconfig-r041-20220323
+hexagon              randconfig-r045-20220323
 
 -- 
-Lee Jones [李琼斯]
-Principal Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+0-DAY CI Kernel Test Service
+https://01.org/lkp
