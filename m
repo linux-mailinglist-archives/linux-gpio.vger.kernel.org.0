@@ -2,112 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E18424E62F5
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Mar 2022 13:10:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4AB4F4E6348
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Mar 2022 13:26:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232385AbiCXML6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 24 Mar 2022 08:11:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34948 "EHLO
+        id S1347661AbiCXMZt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 24 Mar 2022 08:25:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229848AbiCXML6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Mar 2022 08:11:58 -0400
-Received: from aposti.net (aposti.net [89.234.176.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 676FBA8884;
-        Thu, 24 Mar 2022 05:10:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1648123824; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ncLgYxkYoQriXSXIVKrIBujezisB1bmyL200+xh6duc=;
-        b=M8gBb5/GBMzGIK98oxRzs+ggFRKhZy5iFMXJNqb01wjMke/kBfvB6s2NaeqElnLVIU+3+k
-        RuHKHlDrprC+JXj0gZgoAKmalC4SAAmQZa+uPUIcT8z+zOaAaLncdk30eHwLZpnACbA8nx
-        nkrVoBu8uFd89iGgbMNv5GXI8tnZVu8=
-Date:   Thu, 24 Mar 2022 12:10:15 +0000
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH] pinctrl: Ingenic: Add missing UART2 group C for X1000/E
-To:     Yunian Yang <reimu@sudomaker.com>
-Cc:     linux-mips@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-Id: <3H099R.GNKMFWXCJG5U1@crapouillou.net>
-In-Reply-To: <ea710c27-00e9-065c-77a3-78e3c5f73ed3@sudomaker.com>
-References: <ea710c27-00e9-065c-77a3-78e3c5f73ed3@sudomaker.com>
+        with ESMTP id S236126AbiCXMZs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Mar 2022 08:25:48 -0400
+Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C9067C155
+        for <linux-gpio@vger.kernel.org>; Thu, 24 Mar 2022 05:24:15 -0700 (PDT)
+Received: by mail-oi1-x236.google.com with SMTP id o64so4699858oib.7
+        for <linux-gpio@vger.kernel.org>; Thu, 24 Mar 2022 05:24:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=WDPX0+3GMlf6QJlR+ewe/Ogxr+oTRBt5Zt4FhKaxj2E=;
+        b=slsIM+02eON3vkvBU5snLTTy6X05KNjNLFO23kfcaqzwJk6o2OemvfwWUtXgr3EYeW
+         vvz7w9oCB2vWi6KhbksERa8zbbE9SssEW7KzEE4U97bjMQKcqYtdrRchrrOZqL8xAOwJ
+         ni6iALOyZlKWmt9lj5Af9s5yr5VUQvjWnk6LJTNyvWicZTPxXswHJIhKgA7wIIoz8CzL
+         Uu2e7d7ULvLgqr71qf2qVV+9JRNROLnfAZRh93AtVqFyOYsNuK9Y6RdTFpwWDJdfYkps
+         GRIRpMM0jGaBOUXvC4RPrShIU5mwVQPwz2qvH84FlhQARe3w6YgLLuNExsDl9WA9sgmd
+         Tsag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=WDPX0+3GMlf6QJlR+ewe/Ogxr+oTRBt5Zt4FhKaxj2E=;
+        b=xGnTbM+AShMVDDM9/F7vBsHdL7JNpNCFNHeJraE9EQyB/fVFP7TaLgHdg44Ipqf5fb
+         1qZrltmeuZYcIePT7A1PeuavpDM67qTUpPlqBDVFmANcLPvp5BOHOuXxLgMDp5fE1dn0
+         MmsMdLkTyBxQ3kywtuH+nUx5UfQKmbD8X253Hi0lZvTtVKpMhnIdKrISxPc1Ig8i5Jgs
+         JCD35SZz368kLhczmmaUcR1mvjrl2YikTRn4NNP/wIg0766WkHmSO76q2uo3pJRhFqyF
+         uA7BWh3zbByxKIbjgoyfpYHtEpF7Ergdxc54I+Kju+nnn210G/O5YFwJ+nDelpTjWy2O
+         jyHA==
+X-Gm-Message-State: AOAM5328vjQRrETSnE1LA0WXnyfBdqdpzp76+0EwzANpaPw5GxQ1BT16
+        v05e0H1t1E6aKbDYCiJR9SqDpw==
+X-Google-Smtp-Source: ABdhPJxFC30LckdJgrfBJ4HLWRxwSgGQLgzu1DyMb/xfn/cVcj96ffS5bhy/z6vtp9khRXkMmYLZkQ==
+X-Received: by 2002:a05:6808:18a4:b0:2da:5b12:840a with SMTP id bi36-20020a05680818a400b002da5b12840amr7135895oib.241.1648124654388;
+        Thu, 24 Mar 2022 05:24:14 -0700 (PDT)
+Received: from ripper ([2600:1700:a0:3dc8:205:1bff:fec0:b9b3])
+        by smtp.gmail.com with ESMTPSA id s41-20020a05683043a900b005cdb244c9c3sm803803otv.47.2022.03.24.05.24.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Mar 2022 05:24:13 -0700 (PDT)
+Date:   Thu, 24 Mar 2022 05:25:36 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Bhupesh Sharma <bhupesh.sharma@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, bhupesh.linux@gmail.com,
+        agross@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, maz@kernel.org,
+        quic_mkshah@quicinc.com, linux-gpio@vger.kernel.org,
+        linus.walleij@linaro.org, robh+dt@kernel.org,
+        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 3/4] arm64: dts: qcom: sm8150: Add pdc interrupt
+ controller node
+Message-ID: <YjxjQNAjWBwpiTgE@ripper>
+References: <20220226184028.111566-1-bhupesh.sharma@linaro.org>
+ <20220226184028.111566-4-bhupesh.sharma@linaro.org>
+ <YjC8bfY2U1WyV8FY@builder.lan>
+ <CAH=2NtzHfqiFi8NKqQ=m24buzVsMT392ObOQ6ahT5BXB=fv6Hw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAH=2NtzHfqiFi8NKqQ=m24buzVsMT392ObOQ6ahT5BXB=fv6Hw@mail.gmail.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Yunian,
+On Wed 16 Mar 22:51 PDT 2022, Bhupesh Sharma wrote:
 
-Le jeu., mars 24 2022 at 20:04:41 +0800, Yunian Yang=20
-<reimu@sudomaker.com> a =E9crit :
-> X1000/E has a third UART2 pin group selection, which uses the TDI(G2)=20
-> as RX
-> and TDO(G1) as TX. This configuration is becoming increasingly=20
-> popular in
-> newer core boards, such as the Halley2 v4.1. This is done by enabling
-> function 1 of a "virtual pin" PC31. See section 19.3.3 of the X1000
-> Programming Manual for details.
->=20
-> Signed-off-by: Yunian Yang <reimu@sudomaker.com>
-> ---
->  drivers/pinctrl/pinctrl-ingenic.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pinctrl/pinctrl-ingenic.c=20
-> b/drivers/pinctrl/pinctrl-ingenic.c
-> index 2712f51eb238..29709059d62b 100644
-> --- a/drivers/pinctrl/pinctrl-ingenic.c
-> +++ b/drivers/pinctrl/pinctrl-ingenic.c
-> @@ -1982,6 +1982,7 @@ static int x1000_uart1_data_a_pins[] =3D { 0x04,=20
-> 0x05, };
->  static int x1000_uart1_data_d_pins[] =3D { 0x62, 0x63, };
->  static int x1000_uart1_hwflow_pins[] =3D { 0x64, 0x65, };
->  static int x1000_uart2_data_a_pins[] =3D { 0x02, 0x03, };
-> +static int x1000_uart2_data_c_pins[] =3D { 0x5f, 0x5f, };
+> Hi Bjorn,
+> 
+> Thanks for your review.
+> 
+> On Tue, 15 Mar 2022 at 21:48, Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+> >
+> > On Sat 26 Feb 12:40 CST 2022, Bhupesh Sharma wrote:
+> >
+> > > Add pdc interrupt controller for sm8150.
+> > >
+> > > Cc: Maulik Shah <quic_mkshah@quicinc.com>
+> > > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > > Cc: Vinod Koul <vkoul@kernel.org>
+> > > Cc: Rob Herring <robh@kernel.org>
+> > > Signed-off-by: Bhupesh Sharma <bhupesh.sharma@linaro.org>
+> > > ---
+> > >  arch/arm64/boot/dts/qcom/sm8150.dtsi | 10 ++++++++++
+> > >  1 file changed, 10 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> > > index 6012322a5984..aaeacd379460 100644
+> > > --- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> > > +++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
+> > > @@ -1626,6 +1626,16 @@ system-cache-controller@9200000 {
+> > >                       interrupts = <GIC_SPI 582 IRQ_TYPE_LEVEL_HIGH>;
+> > >               };
+> > >
+> > > +             pdc: interrupt-controller@b220000 {
+> > > +                     compatible = "qcom,sm8150-pdc", "qcom,pdc";
+> > > +                     reg = <0 0x0b220000 0 0x400>;
+> > > +                     qcom,pdc-ranges = <0 480 94>, <94 609 31>,
+> > > +                                       <125 63 1>;
+> >
+> > When I look at the platform documentation I get the impression that this
+> > should be: <0 480 94>, <94 609 32>;
+> >
+> > Can you confirm that the last signal is correctly described?
+> 
+> Yes, I confirmed by double checking the entries in downstream 'pdc-sm8150.c'.
+> The pdc pins in the 2nd range start from 94 and end at 124, so a total
+> of 31 entries, but both 94 and 124 pins included.
+> 
+> Or, am I missing something?
+> 
 
-One should be enough.
+Thanks for double checking, let's follow the downstream kernel.
+I will merge the patch as you proposed it.
 
-Looks fine otherwise.
+Thanks,
+Bjorn
 
-Cheers,
--Paul
-
->  static int x1000_uart2_data_d_pins[] =3D { 0x65, 0x64, };
->  static int x1000_sfc_data_pins[] =3D { 0x1d, 0x1c, 0x1e, 0x1f, };
->  static int x1000_sfc_clk_pins[] =3D { 0x1a, };
-> @@ -2058,6 +2059,7 @@ static const struct group_desc x1000_groups[] =3D=20
-> {
->         INGENIC_PIN_GROUP("uart1-data-d", x1000_uart1_data_d, 1),
->         INGENIC_PIN_GROUP("uart1-hwflow", x1000_uart1_hwflow, 1),
->         INGENIC_PIN_GROUP("uart2-data-a", x1000_uart2_data_a, 2),
-> +       INGENIC_PIN_GROUP("uart2-data-c", x1000_uart2_data_c, 1),
->         INGENIC_PIN_GROUP("uart2-data-d", x1000_uart2_data_d, 0),
->         INGENIC_PIN_GROUP("sfc-data", x1000_sfc_data, 1),
->         INGENIC_PIN_GROUP("sfc-clk", x1000_sfc_clk, 1),
-> @@ -2115,7 +2117,7 @@ static const char *x1000_uart0_groups[] =3D {=20
-> "uart0-data", "uart0-hwflow", };
->  static const char *x1000_uart1_groups[] =3D {
->         "uart1-data-a", "uart1-data-d", "uart1-hwflow",
->  };
-> -static const char *x1000_uart2_groups[] =3D { "uart2-data-a",=20
-> "uart2-data-d", };
-> +static const char *x1000_uart2_groups[] =3D { "uart2-data-a",=20
-> "uart2-data-c", "uart2-data-d", };
->  static const char *x1000_sfc_groups[] =3D { "sfc-data", "sfc-clk",=20
-> "sfc-ce", };
->  static const char *x1000_ssi_groups[] =3D {
->         "ssi-dt-a-22", "ssi-dt-a-29", "ssi-dt-d",
-> --
-> 2.30.2
-
-
+> Thanks,
+> Bhupesh
+> 
+> > > +                     #interrupt-cells = <2>;
+> > > +                     interrupt-parent = <&intc>;
+> > > +                     interrupt-controller;
+> > > +             };
+> > > +
+> > >               ufs_mem_hc: ufshc@1d84000 {
+> > >                       compatible = "qcom,sm8150-ufshc", "qcom,ufshc",
+> > >                                    "jedec,ufs-2.0";
+> > > --
+> > > 2.35.1
+> > >
