@@ -2,137 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A31794E6436
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Mar 2022 14:38:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 47A554E64A2
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Mar 2022 15:04:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350475AbiCXNjm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 24 Mar 2022 09:39:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60840 "EHLO
+        id S1348557AbiCXOGT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 24 Mar 2022 10:06:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350468AbiCXNjl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Mar 2022 09:39:41 -0400
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D1922CE31
-        for <linux-gpio@vger.kernel.org>; Thu, 24 Mar 2022 06:38:08 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id m22so4775814pja.0
-        for <linux-gpio@vger.kernel.org>; Thu, 24 Mar 2022 06:38:08 -0700 (PDT)
+        with ESMTP id S231871AbiCXOGT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Mar 2022 10:06:19 -0400
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 384DE6C1D1
+        for <linux-gpio@vger.kernel.org>; Thu, 24 Mar 2022 07:04:47 -0700 (PDT)
+Received: by mail-pg1-x52a.google.com with SMTP id t13so2679437pgn.8
+        for <linux-gpio@vger.kernel.org>; Thu, 24 Mar 2022 07:04:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sudomaker-com.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=/sQV5rp+cw1wax1iRP0Va+YLBH7FLeLa8L9B5UtJM84=;
-        b=5C0v6M5Hca9omePnMbOPDpTfrC6UCYwPeyi8waSFJfu9um0WM6EYF/qIWVeK5AbbLF
-         wkZzp6EmIYdKs5gMZh1XNk47iQlsQ6zX5fntXSaFGB8DcHmIx28bwOtiRIuo5dC4+pqQ
-         l1W9DFCo7FFvwRLZi7jKhXI4YAfO3K/rFp6K+jWPQeuU5KTwWssrdLJ+V3kdXBJZAoim
-         cc/p4GjzFLFfwizcm5LzYkDpkcYWYpJkWiOJ4WhVkuC5hAN8JFYhzW4GeAXvSoH/BcU3
-         QJoDIXAw/8cfSVpOhVPSCP7VrjWofUsuatyWBjvKceUeGgf2sg/0iCbAnXGJ1Dj+KCU7
-         oNzQ==
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=hTxCgye7BS+8xhu8iC9h1EV20LT2IK2RAWcPZdTP0io=;
+        b=FI7XE2BGWrpMJOyU/lfCWwTQTD1api9lFOrUZELWBlmGm8W8L6yv5dzjVjBxBHVWlp
+         YICouvYizXXadySE0m+cEoOTP0Vt5xQsTSsjSEJXU288Hu2tPUoGvzWWtgiuqsVAD1SG
+         FXEKRZ4uqcf20h3qSep1ZI+xcwMQTqzo/F/+TFMdNOaWpuhrYsCRANtj/LBWd+KHl+DA
+         Xy3NVvrUW7uTWXWmC58YGC9iTB4QQ5VPySAf7P3VyW0NUyL3Id0rUsvdul37EBxc3Tmm
+         9LDU9G1PEb8MwaI7Gyvu1gwP/QxyffYfSf4SzPVoYeoWheLTPafUT5UNp2gHu/+JdTgu
+         r9jA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=/sQV5rp+cw1wax1iRP0Va+YLBH7FLeLa8L9B5UtJM84=;
-        b=BjvmSISioRv0KBk7sTaMx2BDak1itjI5qXaMGRDUgzRqXHcXFOowauDLphuPmQUofL
-         uoTVVQdtWWI560eDGQtzAdVd+BJ0jyK4L7FBvYn2KVMvBM0qXxNfBFRlmEoQue2lrBU8
-         gjUWPyr2Z3m4tzy0iF78uXeiclEbJCUv5nZQJ9kuJD3mSL9w8baHkkEkcoS6XLkpwHPc
-         ZQmgunnH6oFaaVLfkOy2jCgN/hhEGEdrD07Y124Q/Hh7cEaMdu+8lKG5CzyIhbC0gngI
-         yRHodRiFyvo2EB2wUviHeOZzK0BYm02BpyvMdkg9l6OCjH7nbniG28AIr+bW42eI7PDy
-         7WaQ==
-X-Gm-Message-State: AOAM530l4MGzgR1JRO9g0ZaGBq/jyMls2f1cg25qjUtiiHfEsM2TTQO7
-        PpaN/SZ7HRk0HSajB2lO9aaAFw==
-X-Google-Smtp-Source: ABdhPJz1XaJS5LG/TJcD0dYQ+F6zCb5Vf3z0cQhZ4l5Rv2149Mor9j9sUR8PwJik08KZjzFrZAQAWQ==
-X-Received: by 2002:a17:902:7888:b0:148:adf2:9725 with SMTP id q8-20020a170902788800b00148adf29725mr5824851pll.136.1648129088094;
-        Thu, 24 Mar 2022 06:38:08 -0700 (PDT)
-Received: from [172.16.24.11] ([91.219.212.226])
-        by smtp.gmail.com with ESMTPSA id x2-20020a63aa42000000b0038265eb2495sm2765064pgo.88.2022.03.24.06.38.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Mar 2022 06:38:07 -0700 (PDT)
-Message-ID: <5c1f03d1-f72a-bc6b-92b4-927898aa3b2d@sudomaker.com>
-Date:   Thu, 24 Mar 2022 21:39:03 +0800
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=hTxCgye7BS+8xhu8iC9h1EV20LT2IK2RAWcPZdTP0io=;
+        b=DwMyCy/evUtxOJ7Pjgh6oja1WgsijfxUtx6gtrYgd0MzUoQwYXcP8++J4+vAhEVb2c
+         0wiqMjLoBdFgVpsCXfJEHOVbciVEtxS5KMU5t6Tj6hQL/KhX42nmr70ioNAVnIGrY5H5
+         qh/h0mfJRCaDsyVn9MR0cxihQj0dLy8NX5iP70qbg140CejalcJLLeThmNVdvAHxZv8M
+         l9316opYMlOyDVdmuvAPmQSXQdzRtRdwwH1hPq97ccmqF5Fe/wdwLrSqt7RaBeT8gUMj
+         bJuOkfXewTWfekDwyerSrhkS9DUJUp+ag3BE8yAurKcoGSW1uMRTLJgbQXca5gEH3T0S
+         Kokw==
+X-Gm-Message-State: AOAM53193odKVjDQixumKN0X6wROVisYM6pSjQA8MCD2qYdFKFuVIYEt
+        62dz3/nbgewOxQplugqGo6P6fetrxVZU9e4rr1E=
+X-Google-Smtp-Source: ABdhPJx5eiYbxHz/G+NSfbHWdEZcfPfReF9vQnSr/DwRkbfo42yJFpT4MrHjMevn2neT+Latsv7OmELRe2g6rJtPAOU=
+X-Received: by 2002:a65:5882:0:b0:380:f8dc:912b with SMTP id
+ d2-20020a655882000000b00380f8dc912bmr4200801pgu.217.1648130686336; Thu, 24
+ Mar 2022 07:04:46 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH] pinctrl: Ingenic: Add missing UART2 group C for X1000/E
-Content-Language: en-US
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     linux-mips@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <ea710c27-00e9-065c-77a3-78e3c5f73ed3@sudomaker.com>
- <3H099R.GNKMFWXCJG5U1@crapouillou.net>
-From:   Yunian Yang <reimu@sudomaker.com>
-In-Reply-To: <3H099R.GNKMFWXCJG5U1@crapouillou.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+Received: by 2002:a05:6a10:a850:0:0:0:0 with HTTP; Thu, 24 Mar 2022 07:04:45
+ -0700 (PDT)
+Reply-To: wijh555@gmail.com
+From:   "Mrs. Rose Godwin" <rosegodwin1999@gmail.com>
+Date:   Thu, 24 Mar 2022 07:04:45 -0700
+Message-ID: <CAL6LAtqC0N30xj5acT_JveaO7swpwZwjSD_C-mu4vrkEnux_1A@mail.gmail.com>
+Subject: Good Day,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,
+        T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no autolearn_force=no
         version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:52a listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.4999]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [rosegodwin1999[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [wijh555[at]gmail.com]
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [rosegodwin1999[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.8 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Paul,
+-- 
+Greetings,
+I'm Mrs. Rose Godwin, how are you doing hope you are in good health,
+the Board director try to reach you on phone several times Meanwhile,
+your number was not connecting. before he ask me to send you an email
+to hear from you if you are fine. hoping to hear from you soonest.
 
-Thank you for pointing this out. I sent the refined patch.
+Thanks
+Mrs. Rose Godwin,
 
-On 3/24/22 20:10, Paul Cercueil wrote:
-> Hi Yunian,
-> 
-> Le jeu., mars 24 2022 at 20:04:41 +0800, Yunian Yang <reimu@sudomaker.com> a écrit :
->> X1000/E has a third UART2 pin group selection, which uses the TDI(G2) as RX
->> and TDO(G1) as TX. This configuration is becoming increasingly popular in
->> newer core boards, such as the Halley2 v4.1. This is done by enabling
->> function 1 of a "virtual pin" PC31. See section 19.3.3 of the X1000
->> Programming Manual for details.
->>
->> Signed-off-by: Yunian Yang <reimu@sudomaker.com>
->> ---
->>  drivers/pinctrl/pinctrl-ingenic.c | 4 +++-
->>  1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
->> index 2712f51eb238..29709059d62b 100644
->> --- a/drivers/pinctrl/pinctrl-ingenic.c
->> +++ b/drivers/pinctrl/pinctrl-ingenic.c
->> @@ -1982,6 +1982,7 @@ static int x1000_uart1_data_a_pins[] = { 0x04, 0x05, };
->>  static int x1000_uart1_data_d_pins[] = { 0x62, 0x63, };
->>  static int x1000_uart1_hwflow_pins[] = { 0x64, 0x65, };
->>  static int x1000_uart2_data_a_pins[] = { 0x02, 0x03, };
->> +static int x1000_uart2_data_c_pins[] = { 0x5f, 0x5f, };
-> 
-> One should be enough.
-> 
-> Looks fine otherwise.
-> 
-> Cheers,
-> -Paul
-> 
->>  static int x1000_uart2_data_d_pins[] = { 0x65, 0x64, };
->>  static int x1000_sfc_data_pins[] = { 0x1d, 0x1c, 0x1e, 0x1f, };
->>  static int x1000_sfc_clk_pins[] = { 0x1a, };
->> @@ -2058,6 +2059,7 @@ static const struct group_desc x1000_groups[] = {
->>         INGENIC_PIN_GROUP("uart1-data-d", x1000_uart1_data_d, 1),
->>         INGENIC_PIN_GROUP("uart1-hwflow", x1000_uart1_hwflow, 1),
->>         INGENIC_PIN_GROUP("uart2-data-a", x1000_uart2_data_a, 2),
->> +       INGENIC_PIN_GROUP("uart2-data-c", x1000_uart2_data_c, 1),
->>         INGENIC_PIN_GROUP("uart2-data-d", x1000_uart2_data_d, 0),
->>         INGENIC_PIN_GROUP("sfc-data", x1000_sfc_data, 1),
->>         INGENIC_PIN_GROUP("sfc-clk", x1000_sfc_clk, 1),
->> @@ -2115,7 +2117,7 @@ static const char *x1000_uart0_groups[] = { "uart0-data", "uart0-hwflow", };
->>  static const char *x1000_uart1_groups[] = {
->>         "uart1-data-a", "uart1-data-d", "uart1-hwflow",
->>  };
->> -static const char *x1000_uart2_groups[] = { "uart2-data-a", "uart2-data-d", };
->> +static const char *x1000_uart2_groups[] = { "uart2-data-a", "uart2-data-c", "uart2-data-d", };
->>  static const char *x1000_sfc_groups[] = { "sfc-data", "sfc-clk", "sfc-ce", };
->>  static const char *x1000_ssi_groups[] = {
->>         "ssi-dt-a-22", "ssi-dt-a-29", "ssi-dt-d",
->> -- 
->> 2.30.2
-> 
-> 
-
+Sincerely
+Dr. Irene Lam.
