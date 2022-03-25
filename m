@@ -2,61 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 50D664E7C9C
-	for <lists+linux-gpio@lfdr.de>; Sat, 26 Mar 2022 01:21:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C42F64E7B37
+	for <lists+linux-gpio@lfdr.de>; Sat, 26 Mar 2022 01:20:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231991AbiCYUR1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 25 Mar 2022 16:17:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58640 "EHLO
+        id S233243AbiCYVIf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 25 Mar 2022 17:08:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231978AbiCYUR0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Mar 2022 16:17:26 -0400
-Received: from mail-yw1-x1132.google.com (mail-yw1-x1132.google.com [IPv6:2607:f8b0:4864:20::1132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD9EBB54
-        for <linux-gpio@vger.kernel.org>; Fri, 25 Mar 2022 13:15:51 -0700 (PDT)
-Received: by mail-yw1-x1132.google.com with SMTP id 00721157ae682-2e6650cde1bso94012777b3.12
-        for <linux-gpio@vger.kernel.org>; Fri, 25 Mar 2022 13:15:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vtp7+nDUHbkUKPJ586tHhPQHIGkVxn40OpnwYxUR31I=;
-        b=etfZ2To2AkmbDwdMb4CemT9IGY7lkeRqGgVivTwjfOQJoN9U9bZ5skarGYOO2Oq8I0
-         W85wxZ8MPSLmLidAYZCd3XG0GDfGOSJKpINCippQRZGUf7Nv9cZTqf84DSWa+YPREmgF
-         jJqjj7mlo2YiKvw3yAeMF21Nuy5X7hyehxeuuPotXyAenAXf0nNM4RHRLc8YQTULVjPA
-         FqvoJtQBRtjgVLv8zsO/m3D+DMyKzHyOdMJjXEHhIrWlkoWzla+aDSLA07y0aDgRaEER
-         CNMkNERYLMkcuoRK5l4y2xUCEszmqCFGPSwPFGBQV9Ds1A1YLeewOIjQAM+4kGkM0z4M
-         IPBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vtp7+nDUHbkUKPJ586tHhPQHIGkVxn40OpnwYxUR31I=;
-        b=Is+w92o+JaJgY9F+KVEwAHPjHasSYwFpip6wEVru2U8NkbINQpaFn4oH6Q8fG+cj80
-         88p2SBGLeUONdX/bqbEHaIQ9w1BLMtJM3d8vHeUBYEyKcNb/CIxbqeQlGnW+vOe1HiEN
-         ZdwEoi3buCilor5a0ochPmFxZvuuJwd750Cnv85QzFsgvymLNXjxkI2mBy3TYbmwTN9G
-         Jh3oNhdPSlLm7okzOhC7pr3d3w/akXZAk1QPFGhS09yTC0pDfCJlsXXTAFzWPme+YhOK
-         6jWrkocNj4Y6nDOyZgZpT5AetOXKrZETbpZ1J51xRDS/axZvJ+Ba9fHBTLf1lUW7xhtI
-         wDcA==
-X-Gm-Message-State: AOAM531TZp6NaaW9CdndRyptQBZj+v7ht3w1sRslHokzleITRBklrvXW
-        Dh5Ohyv2bCg7n4jHmeqsHBPGyyjxi8mP5V1Az20ruOSuthU=
-X-Google-Smtp-Source: ABdhPJx9wqjoJz3ZPG5WcmFuaeeOXO7mos5GYyBTpymriLoOeZj41vkwrTWS/8NtQ2pgHGEGQWw5VikpO324lYovgig=
-X-Received: by 2002:a81:1182:0:b0:2dc:4e58:da41 with SMTP id
- 124-20020a811182000000b002dc4e58da41mr12592447ywr.268.1648239351038; Fri, 25
- Mar 2022 13:15:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220325074450.3228840-1-zhengbin13@huawei.com>
-In-Reply-To: <20220325074450.3228840-1-zhengbin13@huawei.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 25 Mar 2022 21:15:39 +0100
-Message-ID: <CACRpkdYHKq+aSHzm6wG3ETwob69gmmjFT5UV7EXL0rDxe4ZQ=Q@mail.gmail.com>
-Subject: Re: [PATCH -next] pinctrl: nuvoton: wpcm450: Fix build error without OF
-To:     Zheng Bin <zhengbin13@huawei.com>
-Cc:     j.neuschaefer@gmx.net, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tangyizhou@huawei.com
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        with ESMTP id S233237AbiCYVIe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Mar 2022 17:08:34 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2887A1EC60E;
+        Fri, 25 Mar 2022 14:07:00 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id CDB7BB829E7;
+        Fri, 25 Mar 2022 21:06:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 850E2C004DD;
+        Fri, 25 Mar 2022 21:06:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1648242417;
+        bh=/gzkPSO1hMYGhjETfIaRh7tvmL2QyHGKMO2BKZfT+Nk=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=H1sjVNvnQPpxzvM3AesxNvMOk3/qB3JBd/Gqzwai6ZHuYJRw4chH6Jhv4b8bf+QBx
+         aHMBZJnxV3eVuSjn0QkFtVrkE3divIZ/v3VE6HaqX9ZDF7H6b5zTODheQ/BbNGe6ln
+         fYZgp2/aSFYxicajGb2kYBSNBWdtzR4s0VtoAc9yPFCC/uXf1HyUoDvNpEBHP2GNRF
+         Y8kxUrAJ437MAK5qU1OFqkB9xK/LF/dahI7WGlL3foxLpvukD742UTRgQMxnz06yej
+         e9CyMoaNUa8KPrvMpqvtf93zZypKuxQ2kt/+Zx3z+4hoWMf+QyEwr8nn1qqqmuhS8d
+         kbFzER1oyge+w==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 718EEE6BBCA;
+        Fri, 25 Mar 2022 21:06:57 +0000 (UTC)
+Subject: Re: [GIT PULL] gpio: updates for v5.18
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20220323163230.691802-1-brgl@bgdev.pl>
+References: <20220323163230.691802-1-brgl@bgdev.pl>
+X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20220323163230.691802-1-brgl@bgdev.pl>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v5.18
+X-PR-Tracked-Commit-Id: 87ba5badc541a79bab2fa3243ee0008c0880c64a
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: ebcb577aee1448fd60904fc4126cbf7ec012bd0b
+Message-Id: <164824241746.8431.10429637770703695319.pr-tracker-bot@kernel.org>
+Date:   Fri, 25 Mar 2022 21:06:57 +0000
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -65,20 +63,15 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Mar 25, 2022 at 8:30 AM Zheng Bin <zhengbin13@huawei.com> wrote:
+The pull request you sent on Wed, 23 Mar 2022 17:32:30 +0100:
 
-> If OF is not set, bulding fails:
->
-> drivers/pinctrl/nuvoton/pinctrl-wpcm450.o: In function `wpcm450_dt_node_to_map':
-> pinctrl-wpcm450.c:(.text+0x404): undefined reference to `pinconf_generic_dt_node_to_map'
->
-> Make PINCTRL_WPCM450 depends on OF to fix this.
->
-> Fixes: a1d1e0e3d80a ("pinctrl: nuvoton: Add driver for WPCM450")
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Zheng Bin <zhengbin13@huawei.com>
+> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v5.18
 
-Patch applied, thanks for fixing this so quickly Zheng!
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/ebcb577aee1448fd60904fc4126cbf7ec012bd0b
 
-Yours,
-Linus Walleij
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
