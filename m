@@ -2,107 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 05FEA4E7FE5
-	for <lists+linux-gpio@lfdr.de>; Sat, 26 Mar 2022 09:05:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C2554E8016
+	for <lists+linux-gpio@lfdr.de>; Sat, 26 Mar 2022 09:47:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230426AbiCZIHZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 26 Mar 2022 04:07:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39802 "EHLO
+        id S229869AbiCZItY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 26 Mar 2022 04:49:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229846AbiCZIHY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 26 Mar 2022 04:07:24 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D46A4F4E;
-        Sat, 26 Mar 2022 01:05:47 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 36038B8006F;
-        Sat, 26 Mar 2022 08:05:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF05AC340ED;
-        Sat, 26 Mar 2022 08:05:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648281944;
-        bh=HsH9JnvulbBf0WXim3uFrjhndeqnIMfv1wnDQkhH5mo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Bpnp/B8Yezt0CyovfGLN4RkAMLBCFzSV+ZXOI7d4hp/JzsCi+wjUqi59gJX9mNSVy
-         4cE3le70v/+f+TBLo/2FirYchWh5iTjdoaWZbl3n6iOpeOrtDhLwOofeq9vh83tfiG
-         8RTMPufFl1zMQoZwGvD4GQWz793yPIxysdRcQIiNsHVG2zhoSYn7mPF84N/KIV2coK
-         N3PLdoIG6z8OUThajYxo36nVw2lokmzLW91zF3xM53UyyQPxs5YjnW84n31zk+Wppj
-         EBULYm4DaSKhtx/W6gVO4oqzpuSxoQIKiIn11tJMi8U3oOGxDhb3vdeXs/ucZ5wuWI
-         9316OXqxu8Q3w==
-Received: by mail-pf1-f174.google.com with SMTP id h19so7404059pfv.1;
-        Sat, 26 Mar 2022 01:05:44 -0700 (PDT)
-X-Gm-Message-State: AOAM5301FD2unf4lFV1wjEkkQ9wbBSPsJmWDNnfhFcqxqbzh4XcsPl4o
-        PqQMhI7SC4kQvMmMJ5TD57V+haDIpnJNmaBAaNM=
-X-Google-Smtp-Source: ABdhPJzznmPTvbsWhZ7Dh/8yAaoqMZq4XOuBRCg9BNfg7mWf00GX6DmojizMHLqhRj5wKTk1g4qJIWgQaKVnLlaJu3Y=
-X-Received: by 2002:a65:63d9:0:b0:374:6b38:c6b3 with SMTP id
- n25-20020a6563d9000000b003746b38c6b3mr2607672pgv.195.1648281944317; Sat, 26
- Mar 2022 01:05:44 -0700 (PDT)
+        with ESMTP id S229491AbiCZItY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 26 Mar 2022 04:49:24 -0400
+X-Greylist: delayed 372 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 26 Mar 2022 01:47:47 PDT
+Received: from mxout03.lancloud.ru (mxout03.lancloud.ru [45.84.86.113])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 629064B413
+        for <linux-gpio@vger.kernel.org>; Sat, 26 Mar 2022 01:47:47 -0700 (PDT)
+Received: from LanCloud
+DKIM-Filter: OpenDKIM Filter v2.11.0 mxout03.lancloud.ru DA04E20A8247
+Received: from LanCloud
+Received: from LanCloud
+Received: from LanCloud
+Subject: Re: [PATCH v1 5/5] pinctrl: armada-37xx: Replace custom code by
+ gpiochip_count() call
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Fabien Dessenne <fabien.dessenne@foss.st.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+CC:     Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        "Martin Blumenstingl" <martin.blumenstingl@googlemail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+References: <20220325200338.54270-1-andriy.shevchenko@linux.intel.com>
+ <20220325200338.54270-5-andriy.shevchenko@linux.intel.com>
+From:   Sergey Shtylyov <s.shtylyov@omp.ru>
+Organization: Open Mobile Platform
+Message-ID: <3415996d-e8b5-2416-fb66-e65779a9b507@omp.ru>
+Date:   Sat, 26 Mar 2022 11:41:31 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-References: <20220315083723.97822-1-krzysztof.kozlowski@canonical.com> <CACRpkdZATQubzrzqq2b4VY+W3Pb9RfzOGRiF+34YhEqpSKyUZg@mail.gmail.com>
-In-Reply-To: <CACRpkdZATQubzrzqq2b4VY+W3Pb9RfzOGRiF+34YhEqpSKyUZg@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Sat, 26 Mar 2022 09:05:33 +0100
-X-Gmail-Original-Message-ID: <CAJKOXPdyDeCozev=AqSnS-E0Cvc6BjXysV70vm0eaSnwN6eB3w@mail.gmail.com>
-Message-ID: <CAJKOXPdyDeCozev=AqSnS-E0Cvc6BjXysV70vm0eaSnwN6eB3w@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: gpio: add common consumer GPIO lines
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20220325200338.54270-5-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [192.168.11.198]
+X-ClientProxiedBy: LFEXT01.lancloud.ru (fd00:f066::141) To
+ LFEX1907.lancloud.ru (fd00:f066::207)
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, 26 Mar 2022 at 01:28, Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Tue, Mar 15, 2022 at 9:37 AM Krzysztof Kozlowski
-> <krzysztof.kozlowski@canonical.com> wrote:
->
-> > Typical GPIO lines like enable, powerdown, reset or wakeup are not
-> > documented as common, which leads to new variations of these (e.g.
-> > pwdn-gpios).  Add a common schema which serves also as a documentation
-> > for preferred naming.
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
->
-> I like the idea!
->
-> > +  enable-gpios:
-> > +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> > +
-> > +  reset-gpios:
-> > +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> > +
-> > +  powerdown-gpios:
-> > +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> > +
-> > +  pwdn-gpios:
-> > +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> > +    description: Use powerdown-gpios
-> > +    deprecated: true
-> > +
-> > +  wakeup-gpios:
-> > +    $ref: /schemas/types.yaml#/definitions/phandle-array
->
-> I would underscore either on each one or in a global description:
-> that lines on components that indicate they are active low
-> such as RESETN, RESET* etc MUST have the flag in the
-> second cell set to GPIO_ACTIVE_LOW.
+Hello!
 
-Sure, I'll add it.
+On 3/25/22 11:03 PM, Andy Shevchenko wrote:
 
-Best regards,
-Krzysztof
+> Since we have generic function to count GPIO controller nodes
+> under given device, there is no need to open code it. Replace
+> custom code by gpiochip_count() call.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 24 +++++++++------------
+>  1 file changed, 10 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+> index 08cad14042e2..ba94125f6566 100644
+> --- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+> +++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+> @@ -728,22 +728,18 @@ static int armada_37xx_irqchip_register(struct platform_device *pdev,
+>  	struct gpio_irq_chip *girq = &gc->irq;
+>  	struct device *dev = &pdev->dev;
+>  	struct device_node *np;
+> -	int ret = -ENODEV, i, nr_irq_parent;
+> +	unsigned int nr_child_nodes, i;
+> +	int ret;
+>  
+>  	/* Check if we have at least one gpio-controller child node */
+> -	for_each_child_of_node(dev->of_node, np) {
+> -		if (of_property_read_bool(np, "gpio-controller")) {
+> -			ret = 0;
+> -			break;
+> -		}
+> -	}
+> -	if (ret)
+> -		return dev_err_probe(dev, ret, "no gpio-controller child node\n");
+> +	nr_child_nodes = gpiochip_count(dev);
+> +	if (!nr_child_nodes)
+> +		return dev_err_probe(dev, -ENODEV, "no gpio-controller child node\n");
+>  
+> -	nr_irq_parent = of_irq_count(np);
+>  	spin_lock_init(&info->irq_lock);
+>  
+> -	if (!nr_irq_parent) {
+> +	nr_child_nodes = of_irq_count(np);
+
+   Mhm, 'np' is no longer assigned to at this point...
+
+> +	if (!nr_child_nodes) {
+>  		dev_err(dev, "invalid or no IRQ\n");
+>  		return 0;
+>  	}
+[...]
+
+MBR, Sergey
