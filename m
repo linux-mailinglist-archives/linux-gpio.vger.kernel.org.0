@@ -2,121 +2,143 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C2554E8016
-	for <lists+linux-gpio@lfdr.de>; Sat, 26 Mar 2022 09:47:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 908CB4E8175
+	for <lists+linux-gpio@lfdr.de>; Sat, 26 Mar 2022 15:43:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229869AbiCZItY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 26 Mar 2022 04:49:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41168 "EHLO
+        id S232594AbiCZOo6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 26 Mar 2022 10:44:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229491AbiCZItY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 26 Mar 2022 04:49:24 -0400
-X-Greylist: delayed 372 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 26 Mar 2022 01:47:47 PDT
-Received: from mxout03.lancloud.ru (mxout03.lancloud.ru [45.84.86.113])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 629064B413
-        for <linux-gpio@vger.kernel.org>; Sat, 26 Mar 2022 01:47:47 -0700 (PDT)
-Received: from LanCloud
-DKIM-Filter: OpenDKIM Filter v2.11.0 mxout03.lancloud.ru DA04E20A8247
-Received: from LanCloud
-Received: from LanCloud
-Received: from LanCloud
-Subject: Re: [PATCH v1 5/5] pinctrl: armada-37xx: Replace custom code by
- gpiochip_count() call
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Fabien Dessenne <fabien.dessenne@foss.st.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-CC:     Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        "Martin Blumenstingl" <martin.blumenstingl@googlemail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-References: <20220325200338.54270-1-andriy.shevchenko@linux.intel.com>
- <20220325200338.54270-5-andriy.shevchenko@linux.intel.com>
-From:   Sergey Shtylyov <s.shtylyov@omp.ru>
-Organization: Open Mobile Platform
-Message-ID: <3415996d-e8b5-2416-fb66-e65779a9b507@omp.ru>
-Date:   Sat, 26 Mar 2022 11:41:31 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        with ESMTP id S231485AbiCZOo6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 26 Mar 2022 10:44:58 -0400
+Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 028AC208244;
+        Sat, 26 Mar 2022 07:43:21 -0700 (PDT)
+Received: by mail-qt1-x829.google.com with SMTP id 10so8792262qtz.11;
+        Sat, 26 Mar 2022 07:43:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4EjMh1BXc6L+8+2yCB/wSo589PUQ7VAWNTCQaSkJ5DQ=;
+        b=bX5hy0vhjxCbMhu+7P8AdpCsHwvPtkAzjWp8oIILb7PvQEqQPvSkMEtE8wD/zI+b4O
+         A1iLDSA6UOIia18J1ieodiovWaDGODX2GAmQ03CXwXeBvvVIzteKT79vqPh1bBzg5Ov8
+         1YeVjJgC+UlAujDFCZi/pcIqjXhKnbdFXi5V5ojTesq7e+tVoxZQXtTrPo6bzdprd0vh
+         0J6fco6DGwJU7HGK5Ll5duDmf3vyzmPGSbla+z5IQ9HSUs8IqBCwY4CYWV36fcevaecN
+         osbk0AMuA1eD9384huE9v64oB9jQDCGnctVakdgcHBnNVsj2O2hbDll3VrobpLyoLY/O
+         MZgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4EjMh1BXc6L+8+2yCB/wSo589PUQ7VAWNTCQaSkJ5DQ=;
+        b=ohUaS0XhB0gl7XMxzthdv/T9ycGIqDUKS5H7WRHkBjKcAxyOszLQ4QDZ7+UMiXdDe9
+         xGvN8YAImvYqSijfyjmjJ7nguRxieaFJPBKMMNAYda8tpZDVuZ5RX7B7s3VFQbrhLYfR
+         GISUBNBdL0PKP1IH7oAnrAj9q6XhaeMpq/D92tSin/Y0UiJJRDlF821eBrPgoOEcKaty
+         KC9NN9sdxM1tYwWU2Vilc6ndN8lqM12tP1B5qh6dExFHrcy5PBhemUolKjie9vbnIcEP
+         xeF2lme8/fJcbrijURxMchaL1kZWe1LRkrzyXjVWmiOC0MehrvmfXEB2zs8TUpYEG56N
+         sCrw==
+X-Gm-Message-State: AOAM532kVXEJAqE+odD1LBC8bndw7eHahXwFYzaFUy5Tu7iM9QHZHaPw
+        GRO9qIL3HP6Zaj2tSDLw1jM=
+X-Google-Smtp-Source: ABdhPJxlSMIB6q5kWqyaMQn/pan1GzoHN8bORyLMAqLixcIUaE8/0GbyYu4Eju9FJ1kveap/pQmo3Q==
+X-Received: by 2002:a05:622a:155:b0:2e1:cc60:8947 with SMTP id v21-20020a05622a015500b002e1cc608947mr13974558qtw.243.1648305800092;
+        Sat, 26 Mar 2022 07:43:20 -0700 (PDT)
+Received: from jesse-desktop.jtp-bos.lab (146-115-144-188.s4282.c3-0.nwt-cbr1.sbo-nwt.ma.cable.rcncustomer.com. [146.115.144.188])
+        by smtp.gmail.com with ESMTPSA id 70-20020a370649000000b0067b4cd8ffbasm4908918qkg.60.2022.03.26.07.43.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 26 Mar 2022 07:43:18 -0700 (PDT)
+From:   Jesse Taube <mr.bossman075@gmail.com>
+X-Google-Original-From: Jesse Taube <Mr.Bossman075@gmail.com>
+To:     linux-imx@nxp.com
+Cc:     robh+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, aisheng.dong@nxp.com, stefan@agner.ch,
+        linus.walleij@linaro.org, daniel.lezcano@linaro.org,
+        tglx@linutronix.de, arnd@arndb.de, olof@lixom.net, soc@kernel.org,
+        linux@armlinux.org.uk, abel.vesa@nxp.com, dev@lynxeye.de,
+        marcel.ziswiler@toradex.com, tharvey@gateworks.com,
+        leoyang.li@nxp.com, sebastian.reichel@collabora.com,
+        cniedermaier@dh-electronics.com, Mr.Bossman075@gmail.com,
+        clin@suse.com, giulio.benetti@benettiengineering.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH v1 00/12] Add support for the i.MXRT1170-evk
+Date:   Sat, 26 Mar 2022 10:43:01 -0400
+Message-Id: <20220326144313.673549-1-Mr.Bossman075@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-In-Reply-To: <20220325200338.54270-5-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [192.168.11.198]
-X-ClientProxiedBy: LFEXT01.lancloud.ru (fd00:f066::141) To
- LFEX1907.lancloud.ru (fd00:f066::207)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello!
+This patch continues support for the imxrt series now with the imxrt1170
 
-On 3/25/22 11:03 PM, Andy Shevchenko wrote:
+This patch contains:
+- Update to imxrt_defconfig
+- Devicetree
+- Clock driver
+- Pinctrl driver
+- New pll
 
-> Since we have generic function to count GPIO controller nodes
-> under given device, there is no need to open code it. Replace
-> custom code by gpiochip_count() call.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 24 +++++++++------------
->  1 file changed, 10 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-> index 08cad14042e2..ba94125f6566 100644
-> --- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-> +++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-> @@ -728,22 +728,18 @@ static int armada_37xx_irqchip_register(struct platform_device *pdev,
->  	struct gpio_irq_chip *girq = &gc->irq;
->  	struct device *dev = &pdev->dev;
->  	struct device_node *np;
-> -	int ret = -ENODEV, i, nr_irq_parent;
-> +	unsigned int nr_child_nodes, i;
-> +	int ret;
->  
->  	/* Check if we have at least one gpio-controller child node */
-> -	for_each_child_of_node(dev->of_node, np) {
-> -		if (of_property_read_bool(np, "gpio-controller")) {
-> -			ret = 0;
-> -			break;
-> -		}
-> -	}
-> -	if (ret)
-> -		return dev_err_probe(dev, ret, "no gpio-controller child node\n");
-> +	nr_child_nodes = gpiochip_count(dev);
-> +	if (!nr_child_nodes)
-> +		return dev_err_probe(dev, -ENODEV, "no gpio-controller child node\n");
->  
-> -	nr_irq_parent = of_irq_count(np);
->  	spin_lock_init(&info->irq_lock);
->  
-> -	if (!nr_irq_parent) {
-> +	nr_child_nodes = of_irq_count(np);
+This patch also updates some documentation for both imxrt1170 an 1050.
 
-   Mhm, 'np' is no longer assigned to at this point...
+The i.MXRT1170 has a vast array of fetures includeing two cores. 2 Ethernet, 2 USB phy, and a 2d gpu.
 
-> +	if (!nr_child_nodes) {
->  		dev_err(dev, "invalid or no IRQ\n");
->  		return 0;
->  	}
-[...]
+It also is fetured in a new google coral board
+https://coral.ai/products/dev-board-micro
+Not affiliated unfortunaly.
 
-MBR, Sergey
+Jesse Taube (12):
+  dt-bindings: arm: imx: Add i.MXRT compatible Documentation
+  dt-bindings: timer: gpt: Add i.MXRT compatible Documentation
+  dt-bindings: pinctrl: add i.MXRT1170 pinctrl Documentation
+  dt-bindings: clock: imx: Add documentation for i.MXRT1170 clock
+  ARM: mach-imx: Add support for i.MXRT1170
+  ARM: clk: imx: Update pllv3 to support i.MXRT1170
+  dt-bindings: imx: Add clock binding for i.MXRT1170
+  clk: imx: Add initial support for i.MXRT1170 clock driver
+  pinctrl: freescale: Add i.MXRT1170 pinctrl driver support
+  ARM: dts: imxrt1170-pinfunc: Add pinctrl binding header
+  ARM: dts: imx: Add i.MXRT1170-EVK support
+  ARM: imxrt_defconfig: Add i.MXRT1170
+
+ .../devicetree/bindings/arm/fsl.yaml          |   12 +
+ .../bindings/clock/imxrt1170-clock.yaml       |   59 +
+ .../bindings/pinctrl/fsl,imxrt1170.yaml       |   77 +
+ .../devicetree/bindings/timer/fsl,imxgpt.yaml |    2 +
+ arch/arm/boot/dts/Makefile                    |    3 +-
+ arch/arm/boot/dts/imxrt1170-evk.dts           |  126 ++
+ arch/arm/boot/dts/imxrt1170-pinfunc.h         | 1561 +++++++++++++++++
+ arch/arm/boot/dts/imxrt1170.dtsi              |  278 +++
+ arch/arm/configs/imxrt_defconfig              |   26 +
+ arch/arm/mach-imx/mach-imxrt.c                |    1 +
+ drivers/clk/imx/Kconfig                       |    7 +
+ drivers/clk/imx/Makefile                      |    1 +
+ drivers/clk/imx/clk-imxrt1170.c               |  391 +++++
+ drivers/clk/imx/clk-pllv3.c                   |   57 +-
+ drivers/clk/imx/clk.h                         |    4 +
+ drivers/pinctrl/freescale/Kconfig             |    7 +
+ drivers/pinctrl/freescale/Makefile            |    1 +
+ drivers/pinctrl/freescale/pinctrl-imxrt1170.c |  349 ++++
+ include/dt-bindings/clock/imxrt1170-clock.h   |  282 +++
+ 19 files changed, 3241 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/imxrt1170-clock.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imxrt1170.yaml
+ create mode 100644 arch/arm/boot/dts/imxrt1170-evk.dts
+ create mode 100644 arch/arm/boot/dts/imxrt1170-pinfunc.h
+ create mode 100644 arch/arm/boot/dts/imxrt1170.dtsi
+ create mode 100644 drivers/clk/imx/clk-imxrt1170.c
+ create mode 100644 drivers/pinctrl/freescale/pinctrl-imxrt1170.c
+ create mode 100644 include/dt-bindings/clock/imxrt1170-clock.h
+
+-- 
+2.34.1
+
