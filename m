@@ -2,97 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D08144E83CA
-	for <lists+linux-gpio@lfdr.de>; Sat, 26 Mar 2022 20:29:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A65174E83E5
+	for <lists+linux-gpio@lfdr.de>; Sat, 26 Mar 2022 20:45:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234727AbiCZTar (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 26 Mar 2022 15:30:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50076 "EHLO
+        id S234849AbiCZTqf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 26 Mar 2022 15:46:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234725AbiCZTap (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 26 Mar 2022 15:30:45 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC42B329BB;
-        Sat, 26 Mar 2022 12:29:08 -0700 (PDT)
-Received: from mwalle01.kontron.local. (unknown [213.135.10.150])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 56B56223EA;
-        Sat, 26 Mar 2022 20:29:03 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1648322943;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=U94WA8eKsXInUB3TJN954cA6WVXXv7tn5AqxFp37h28=;
-        b=QqCCw5dN3veUi4VkeuGsKoMGWWqqi/ZcU/7WgYJhTKFNzAPpICY4OKUiGAjK7qaG1u60Y6
-        hovy2Dr6kjLBX3N3Aytn5TXNANT+WGEl5sxhDxY20bmgiSL89tvdjLx8mETbRADOWrifUO
-        z8Diao0MF1bQ1bV/HsF/KXPLvfkM+yk=
-From:   Michael Walle <michael@walle.cc>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH v1 2/2] pinctrl: ocelot: add clock monitor option for LAN966x
-Date:   Sat, 26 Mar 2022 20:28:48 +0100
-Message-Id: <20220326192848.2944519-2-michael@walle.cc>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220326192848.2944519-1-michael@walle.cc>
-References: <20220326192848.2944519-1-michael@walle.cc>
+        with ESMTP id S234839AbiCZTqd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 26 Mar 2022 15:46:33 -0400
+Received: from relay.hostedemail.com (relay.hostedemail.com [64.99.140.27])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FCC61DB3C5
+        for <linux-gpio@vger.kernel.org>; Sat, 26 Mar 2022 12:44:55 -0700 (PDT)
+Received: from omf04.hostedemail.com (a10.router.float.18 [10.200.18.1])
+        by unirelay13.hostedemail.com (Postfix) with ESMTP id 76D8560704;
+        Sat, 26 Mar 2022 19:44:51 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf04.hostedemail.com (Postfix) with ESMTPA id 4C2E220023;
+        Sat, 26 Mar 2022 19:44:26 +0000 (UTC)
+Message-ID: <0441a5ec999492a8b03df0e6f649b19483006cbc.camel@perches.com>
+Subject: Re: [PATCH 02/22] s3c: Replace comments with C99 initializers
+From:   Joe Perches <joe@perches.com>
+To:     Benjamin =?ISO-8859-1?Q?St=FCrz?= <benni@stuerz.xyz>,
+        andrew@lunn.ch
+Cc:     sebastian.hesselbarth@gmail.com, gregory.clement@bootlin.com,
+        linux@armlinux.org.uk, linux@simtec.co.uk, krzk@kernel.org,
+        alim.akhtar@samsung.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+        robert.moore@intel.com, rafael.j.wysocki@intel.com,
+        lenb@kernel.org, 3chas3@gmail.com, laforge@gnumonks.org,
+        arnd@arndb.de, gregkh@linuxfoundation.org, mchehab@kernel.org,
+        tony.luck@intel.com, james.morse@arm.com, rric@kernel.org,
+        linus.walleij@linaro.org, brgl@bgdev.pl,
+        mike.marciniszyn@cornelisnetworks.com,
+        dennis.dalessandro@cornelisnetworks.com, jgg@ziepe.ca,
+        pali@kernel.org, dmitry.torokhov@gmail.com, isdn@linux-pingi.de,
+        benh@kernel.crashing.org, fbarrat@linux.ibm.com, ajd@linux.ibm.com,
+        davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
+        nico@fluxnic.net, loic.poulain@linaro.org, kvalo@kernel.org,
+        pkshih@realtek.com, bhelgaas@google.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-acpi@vger.kernel.org, devel@acpica.org,
+        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
+        linux-edac@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-input@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-media@vger.kernel.org,
+        wcn36xx@lists.infradead.org, linux-wireless@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Date:   Sat, 26 Mar 2022 12:44:26 -0700
+In-Reply-To: <20220326165909.506926-2-benni@stuerz.xyz>
+References: <20220326165909.506926-1-benni@stuerz.xyz>
+         <20220326165909.506926-2-benni@stuerz.xyz>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.40.4-1ubuntu2 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=unavailable
+        autolearn_force=no version=3.4.6
+X-Stat-Signature: jsxopsrhtxuohu8717ojjus8n6gpgk4w
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: 4C2E220023
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Session-ID: U2FsdGVkX1+VHn75rxbHh4YHseFz2reFKFdl2HpQTKg=
+X-HE-Tag: 1648323866-369401
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The SoC supports a debug clock output of its internal clocks. Depending
-on the clk_sel input (GPIO_31) clk_mon (GPIO_30) will output either
-cpu_clk/64 or sys_clk/64. This is very useful for debugging and is
-missing in the pinmux table. Add it.
+On Sat, 2022-03-26 at 17:58 +0100, Benjamin Stürz wrote:
+> This replaces comments with C99's designated
+> initializers because the kernel supports them now.
+[]
+> diff --git a/arch/arm/mach-s3c/bast-irq.c b/arch/arm/mach-s3c/bast-irq.c
+[]
+> @@ -29,22 +29,22 @@
+>   * the irq is not implemented
+>  */
+>  static const unsigned char bast_pc104_irqmasks[] = {
+> -	0,   /* 0 */
+> -	0,   /* 1 */
+> -	0,   /* 2 */
+> -	1,   /* 3 */
+> -	0,   /* 4 */
+> -	2,   /* 5 */
+> -	0,   /* 6 */
+> -	4,   /* 7 */
+> -	0,   /* 8 */
+> -	0,   /* 9 */
+> -	8,   /* 10 */
+> -	0,   /* 11 */
+> -	0,   /* 12 */
+> -	0,   /* 13 */
+> -	0,   /* 14 */
+> -	0,   /* 15 */
+> +	[0]  = 0,
+> +	[1]  = 0,
+> +	[2]  = 0,
+> +	[3]  = 1,
+> +	[4]  = 0,
+> +	[5]  = 2,
+> +	[6]  = 0,
+> +	[7]  = 4,
+> +	[8]  = 0,
+> +	[9]  = 0,
+> +	[10] = 8,
+> +	[11] = 0,
+> +	[12] = 0,
+> +	[13] = 0,
+> +	[14] = 0,
+> +	[15] = 0,
+>  };
 
-Signed-off-by: Michael Walle <michael@walle.cc>
----
- drivers/pinctrl/pinctrl-ocelot.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+I don't find this better than the initial array.
 
-diff --git a/drivers/pinctrl/pinctrl-ocelot.c b/drivers/pinctrl/pinctrl-ocelot.c
-index 3f998a8fad8b..b25eb04e4e1d 100644
---- a/drivers/pinctrl/pinctrl-ocelot.c
-+++ b/drivers/pinctrl/pinctrl-ocelot.c
-@@ -61,6 +61,7 @@ enum {
- 	FUNC_CAN0_a,
- 	FUNC_CAN0_b,
- 	FUNC_CAN1,
-+	FUNC_CLKMON,
- 	FUNC_NONE,
- 	FUNC_FC0_a,
- 	FUNC_FC0_b,
-@@ -186,6 +187,7 @@ static const char *const ocelot_function_names[] = {
- 	[FUNC_CAN0_a]		= "can0_a",
- 	[FUNC_CAN0_b]		= "can0_b",
- 	[FUNC_CAN1]		= "can1",
-+	[FUNC_CLKMON]		= "clkmon",
- 	[FUNC_NONE]		= "none",
- 	[FUNC_FC0_a]		= "fc0_a",
- 	[FUNC_FC0_b]		= "fc0_b",
-@@ -983,8 +985,8 @@ LAN966X_P(26,   GPIO,   FC0_b, IB_TRG_a,   USB_S_c, OB_TRG_a,   CAN0_a,    SFP_S
- LAN966X_P(27,   GPIO,    NONE,     NONE,      NONE, OB_TRG_a,   CAN0_a,     PWM_a,        R);
- LAN966X_P(28,   GPIO,  MIIM_a,     NONE,      NONE, OB_TRG_a, IRQ_OUT_c,   SFP_SD,        R);
- LAN966X_P(29,   GPIO,  MIIM_a,     NONE,      NONE, OB_TRG_a,     NONE,      NONE,        R);
--LAN966X_P(30,   GPIO,   FC3_c,     CAN1,      NONE,   OB_TRG,   RECO_b,      NONE,        R);
--LAN966X_P(31,   GPIO,   FC3_c,     CAN1,      NONE,   OB_TRG,   RECO_b,      NONE,        R);
-+LAN966X_P(30,   GPIO,   FC3_c,     CAN1,    CLKMON,   OB_TRG,   RECO_b,      NONE,        R);
-+LAN966X_P(31,   GPIO,   FC3_c,     CAN1,    CLKMON,   OB_TRG,   RECO_b,      NONE,        R);
- LAN966X_P(32,   GPIO,   FC3_c,     NONE,   SGPIO_a,     NONE,  MIIM_Sa,      NONE,        R);
- LAN966X_P(33,   GPIO,   FC1_b,     NONE,   SGPIO_a,     NONE,  MIIM_Sa,    MIIM_b,        R);
- LAN966X_P(34,   GPIO,   FC1_b,     NONE,   SGPIO_a,     NONE,  MIIM_Sa,    MIIM_b,        R);
--- 
-2.30.2
+>  
+>  static const unsigned char bast_pc104_irqs[] = { 3, 5, 7, 10 };
+
+For the same reason this array is just an array
+without the specified indexing.
+
 
