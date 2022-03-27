@@ -2,119 +2,367 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ABCF34E87C2
-	for <lists+linux-gpio@lfdr.de>; Sun, 27 Mar 2022 14:46:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0B284E8811
+	for <lists+linux-gpio@lfdr.de>; Sun, 27 Mar 2022 16:26:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230482AbiC0Mrw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 27 Mar 2022 08:47:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45378 "EHLO
+        id S233995AbiC0O1o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 27 Mar 2022 10:27:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232193AbiC0Mrv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 27 Mar 2022 08:47:51 -0400
-Received: from stuerz.xyz (unknown [45.77.206.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65554433B5;
-        Sun, 27 Mar 2022 05:46:12 -0700 (PDT)
-Received: by stuerz.xyz (Postfix, from userid 114)
-        id 3C409FBBC6; Sun, 27 Mar 2022 12:46:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=stuerz.xyz; s=mail;
-        t=1648385171; bh=G70xCP6D8WSn+bAqlXu192tXuBsjh/gv9sAawqfU9NY=;
-        h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
-        b=XW7jQ0JjvkbBwWYcDnJe2nlVcVuRIXoXRSxf3PNWwPKilsznYeHIMaHkGHbpF6CPi
-         nqty3MnXTqG+wOEmI6ELfBW3t6Ot8AvrXhUDwqW1UwZJf6kiQJniSr9SnP78twlnv0
-         ZUgcLapZcbEI4qbn8OxvPWktNikL6Kc+Etx6Bphh9afk/Hjw9xpphYQkktP6pYTs4U
-         LH6YzQsfUm6Srdnzw7PCZmDV1KvBPkO+9qnzYPwcN+LOHDfP1TScrzVJPWp75MbJFA
-         PLeKhwC+Gp8yjNM/5t52esOjGU9lpx0aWVyem4iFCEGjhJnePoGwI4TGCoWVDXFMVG
-         IaZqNMJ7zdbtQ==
-Received: from [IPV6:2a02:8109:a100:1a48:ff0:ef2f:d4da:17d8] (unknown [IPv6:2a02:8109:a100:1a48:ff0:ef2f:d4da:17d8])
-        by stuerz.xyz (Postfix) with ESMTPSA id 2060CFBBBC;
-        Sun, 27 Mar 2022 12:46:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=stuerz.xyz; s=mail;
-        t=1648385168; bh=G70xCP6D8WSn+bAqlXu192tXuBsjh/gv9sAawqfU9NY=;
-        h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
-        b=vBbH8cJYXUrIhSgvFCWqsIlouOaWa0Ob/IwOKcnk6W9EsrhxCv3d9ruHzL3uCcOyT
-         isUVW1tcpcwMZ4y6KY5ZxcD9C88CnxszLWDsiAskZjdJ53DER27M6zK0oaEhWWieSL
-         Juy7xWTEZPuLwOj9cO6+/7dR2PqcKQxjkt2MABFO0zPwNEsjU2mafYbXnQPlZ2I0cL
-         2ZDQJwWjnuzEx4AHGvLxNgfwyXB0lIDpMXfYtHANjMklviMBw30yLOvmuMA/WBhhwQ
-         lTIOL/KwWHU60GJWJ06zwdDByMnoxCjLnfIwK3SRtaOMOkXk/Hr5rtRBTGuebT4pdB
-         MUwu53koBYhbA==
-Message-ID: <8f9271b6-0381-70a9-f0c2-595b2235866a@stuerz.xyz>
-Date:   Sun, 27 Mar 2022 14:46:00 +0200
+        with ESMTP id S233947AbiC0O1n (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 27 Mar 2022 10:27:43 -0400
+Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A756713DDD
+        for <linux-gpio@vger.kernel.org>; Sun, 27 Mar 2022 07:26:04 -0700 (PDT)
+Received: by mail-pg1-x52c.google.com with SMTP id o8so10278161pgf.9
+        for <linux-gpio@vger.kernel.org>; Sun, 27 Mar 2022 07:26:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5bm/6n1QSCINAlTMO/xix5WdbcFoXeamCwvcHy92gEQ=;
+        b=Gl5zJoIkQcQ3CB2rXQF7NtPYhq+6ObybUtqB7erAdx0rP/dCvBoCkHwmj1TaCrD3GM
+         4UXx8QQSyw6NDUfLlxv5yk85IaoL92xiTMWvZl/1neXOJSFyzliV8HCnhk/00xDgUMIT
+         xSmdbtFG4IxAJGChWjBjM3eDcsKngGF53HYsz0gFHPMqjzE7lJJ4rMPkPn7eHJScGOBt
+         TGuAXIfV/gCBT67/+NN1piUsAcRI7HI1+IUqxf3GabiURlnK2fa56oJbxh3GN7LlDspl
+         LKc6n0ngBq2+rCCN+EsRsoexBZdVr2SCME25u7fEV8SxDnomc90Ls6M3GyTWJrQhygCo
+         C/pA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5bm/6n1QSCINAlTMO/xix5WdbcFoXeamCwvcHy92gEQ=;
+        b=cgZ+GipHUNgYHPNzKCv9x1XMMlSgn1jiGQynW7mGpDLEZfpObLbqTD7IpBgMLQkeMG
+         cpjCn3ML+KvJ1/66bftYI/C+KP6W/lUmwEosLxpLagvzjdVkhAUb3CBpRgD504YbWxdd
+         /O0AE9/pw6RsSbmRz1RW4jBgb8ESnUiVDJ2EPhfEFMxYeOBdC9LtJOD76ihR+NcTZuD6
+         9Dvs6bHdFHvkuiMA6nrQbHhME7HmBHTUAlX9Pl132Lvx7nX6xSj3Q5LK7c9KJA8iTK/l
+         M0Y0xFXsQbzknAbMpPL54Z7P6LMTAF3AY0tFu0UuRClus/yzekbGRuTjV8F+MowgHAfJ
+         nTRg==
+X-Gm-Message-State: AOAM533kznmYMhUmy2N/+dlGYkgIgr0QPc3NQbEvbvbAkNnBl3gAZceS
+        ov4718cW4LEPHXiJxItnd6rsCT+PR74=
+X-Google-Smtp-Source: ABdhPJypYaw+zZMP4CoWA2VAlamW5zLA2xS5yirEnhk8LN3ifvq4cRY2MbhJuXh3JMX+t4Trm8cxew==
+X-Received: by 2002:a62:8647:0:b0:4fa:dff3:4614 with SMTP id x68-20020a628647000000b004fadff34614mr19196704pfd.5.1648391163711;
+        Sun, 27 Mar 2022 07:26:03 -0700 (PDT)
+Received: from sol.home.arpa ([118.209.204.33])
+        by smtp.gmail.com with ESMTPSA id j6-20020a17090a588600b001c699d77503sm11073269pji.2.2022.03.27.07.26.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Mar 2022 07:26:03 -0700 (PDT)
+From:   Kent Gibson <warthog618@gmail.com>
+To:     linux-gpio@vger.kernel.org, brgl@bgdev.pl
+Cc:     Kent Gibson <warthog618@gmail.com>
+Subject: [libgpiod v2][PATCH] core: make line values unsigned
+Date:   Sun, 27 Mar 2022 22:25:53 +0800
+Message-Id: <20220327142553.217535-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: [PATCH 00/22] Replace comments with C99 initializers
-Content-Language: en-US
-To:     =?UTF-8?Q?Benjamin_St=c3=bcrz?= <benni@stuerz.xyz>
-References: <20220326165909.506926-1-benni@stuerz.xyz>
-Cc:     sebastian.hesselbarth@gmail.com, gregory.clement@bootlin.com,
-        linux@armlinux.org.uk, linux@simtec.co.uk, krzk@kernel.org,
-        alim.akhtar@samsung.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-        robert.moore@intel.com, rafael.j.wysocki@intel.com,
-        lenb@kernel.org, 3chas3@gmail.com, laforge@gnumonks.org,
-        arnd@arndb.de, gregkh@linuxfoundation.org, mchehab@kernel.org,
-        tony.luck@intel.com, james.morse@arm.com, rric@kernel.org,
-        linus.walleij@linaro.org, brgl@bgdev.pl,
-        mike.marciniszyn@cornelisnetworks.com,
-        dennis.dalessandro@cornelisnetworks.com, jgg@ziepe.ca,
-        pali@kernel.org, dmitry.torokhov@gmail.com, isdn@linux-pingi.de,
-        benh@kernel.crashing.org, fbarrat@linux.ibm.com, ajd@linux.ibm.com,
-        davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
-        nico@fluxnic.net, loic.poulain@linaro.org, kvalo@kernel.org,
-        pkshih@realtek.com, bhelgaas@google.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-acpi@vger.kernel.org, devel@acpica.org,
-        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-input@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-media@vger.kernel.org,
-        wcn36xx@lists.infradead.org, linux-wireless@vger.kernel.org,
-        linux-pci@vger.kernel.org
-From:   =?UTF-8?Q?Benjamin_St=c3=bcrz?= <benni@stuerz.xyz>
-In-Reply-To: <20220326165909.506926-1-benni@stuerz.xyz>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=1.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FROM_SUSPICIOUS_NTLD,
-        PDS_OTHER_BAD_TLD,RDNS_DYNAMIC,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: *
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch series replaces comments with C99's designated initializers
-in a few places. It also adds some enum initializers. This is my first
-time contributing to the Linux kernel, therefore I'm probably doing a
-lot of things the wrong way. I'm sorry for that.
+Line values are either 0 or 1, so remove the possibility of a value
+being negative by changing the type from int to unsigned int, similar
+to offsets.
 
-I've gotten a few emails so far stating that this patch series is
-unnecessary. Yes, in fact this patch series is not necessary by itself,
-but it could help me understand how the whole process works and maybe I
-could help somewhere, where help is actually needed.
+The exception is the value returned by gpiod_line_request_get_value()
+which uses a negative value to indicate an error, as is common practice.
 
-This patch itself is a no-op.
-
-Signed-off-by: Benjamin Stürz <benni@stuerz.xyz>
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
 ---
- .gitignore | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/gpiod.h            | 17 +++++++++--------
+ lib/line-config.c          |  6 +++---
+ lib/line-request.c         | 14 +++++++-------
+ tests/tests-line-config.c  |  8 ++++----
+ tests/tests-line-request.c | 21 ++++++++++-----------
+ tools/gpioget.c            |  4 ++--
+ tools/gpioset.c            |  4 ++--
+ 7 files changed, 37 insertions(+), 37 deletions(-)
 
-diff --git a/.gitignore b/.gitignore
-index 7afd412dadd2..706f667261eb 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -20,7 +20,7 @@
- *.dtb
- *.dtbo
- *.dtb.S
--*.dwo
-+*.dwo
- *.elf
- *.gcno
- *.gz
+diff --git a/include/gpiod.h b/include/gpiod.h
+index c605da8..456c2b8 100644
+--- a/include/gpiod.h
++++ b/include/gpiod.h
+@@ -973,7 +973,7 @@ int gpiod_line_config_get_event_clock_offset(struct gpiod_line_config *config,
+  */
+ void
+ gpiod_line_config_set_output_value_default(struct gpiod_line_config *config,
+-					   int value);
++					   unsigned int value);
+ 
+ /**
+  * @brief Override the output value for a line.
+@@ -983,7 +983,8 @@ gpiod_line_config_set_output_value_default(struct gpiod_line_config *config,
+  */
+ void
+ gpiod_line_config_set_output_value_override(struct gpiod_line_config *config,
+-					    unsigned int offset, int value);
++					    unsigned int offset,
++					    unsigned int value);
+ 
+ /**
+  * @brief Override the output values for multiple lines.
+@@ -997,7 +998,7 @@ gpiod_line_config_set_output_value_override(struct gpiod_line_config *config,
+ void gpiod_line_config_set_output_values(struct gpiod_line_config *config,
+ 					 size_t num_values,
+ 					 const unsigned int *offsets,
+-					 const int *values);
++					 const unsigned int *values);
+ 
+ /**
+  * @brief Clear the output value override for a line.
+@@ -1237,7 +1238,7 @@ int gpiod_line_request_get_value(struct gpiod_line_request *request,
+ int gpiod_line_request_get_values_subset(struct gpiod_line_request *request,
+ 					 size_t num_values,
+ 					 const unsigned int *offsets,
+-					 int *values);
++					 unsigned int *values);
+ 
+ /**
+  * @brief Get the values of all requested lines.
+@@ -1251,7 +1252,7 @@ int gpiod_line_request_get_values_subset(struct gpiod_line_request *request,
+  * @return 0 on success, -1 on failure.
+  */
+ int gpiod_line_request_get_values(struct gpiod_line_request *request,
+-				  int *values);
++				  unsigned int *values);
+ 
+ /**
+  * @brief Set the value of a single requested line.
+@@ -1260,7 +1261,7 @@ int gpiod_line_request_get_values(struct gpiod_line_request *request,
+  * @param value Value to set.
+  */
+ int gpiod_line_request_set_value(struct gpiod_line_request *request,
+-				 unsigned int offset, int value);
++				 unsigned int offset, unsigned int value);
+ 
+ /**
+  * @brief Set the values of a subset of requested lines.
+@@ -1277,7 +1278,7 @@ int gpiod_line_request_set_value(struct gpiod_line_request *request,
+ int gpiod_line_request_set_values_subset(struct gpiod_line_request *request,
+ 					 size_t num_values,
+ 					 const unsigned int *offsets,
+-					 const int *values);
++					 const unsigned int *values);
+ 
+ /**
+  * @brief Set the values of all lines associated with a request.
+@@ -1290,7 +1291,7 @@ int gpiod_line_request_set_values_subset(struct gpiod_line_request *request,
+  *		 ::gpiod_line_request_get_offsets.
+  */
+ int gpiod_line_request_set_values(struct gpiod_line_request *request,
+-				  const int *values);
++				  const unsigned int *values);
+ 
+ /**
+  * @brief Update the configuration of lines associated with a line request.
+diff --git a/lib/line-config.c b/lib/line-config.c
+index f9cd6ac..cb9f316 100644
+--- a/lib/line-config.c
++++ b/lib/line-config.c
+@@ -648,14 +648,14 @@ gpiod_line_config_get_event_clock_offset(struct gpiod_line_config *config,
+ 
+ GPIOD_API void
+ gpiod_line_config_set_output_value_default(struct gpiod_line_config *config,
+-					   int value)
++					   unsigned int value)
+ {
+ 	config->defaults.value = value;
+ }
+ 
+ GPIOD_API void
+ gpiod_line_config_set_output_value_override(struct gpiod_line_config *config,
+-					  unsigned int offset, int value)
++					  unsigned int offset, unsigned int value)
+ {
+ 	struct override_config *override;
+ 
+@@ -671,7 +671,7 @@ GPIOD_API void
+ gpiod_line_config_set_output_values(struct gpiod_line_config *config,
+ 				    size_t num_values,
+ 				    const unsigned int *offsets,
+-				    const int *values)
++				    const unsigned int *values)
+ {
+ 	size_t i;
+ 
+diff --git a/lib/line-request.c b/lib/line-request.c
+index 33f7f67..d578a9e 100644
+--- a/lib/line-request.c
++++ b/lib/line-request.c
+@@ -60,8 +60,7 @@ gpiod_line_request_get_offsets(struct gpiod_line_request *request,
+ GPIOD_API int gpiod_line_request_get_value(struct gpiod_line_request *request,
+ 					   unsigned int offset)
+ {
+-	unsigned int ret;
+-	int val;
++	unsigned int ret, val;
+ 
+ 	ret = gpiod_line_request_get_values_subset(request, 1, &offset, &val);
+ 	if (ret)
+@@ -86,7 +85,8 @@ static int offset_to_bit(struct gpiod_line_request *request,
+ GPIOD_API int
+ gpiod_line_request_get_values_subset(struct gpiod_line_request *request,
+ 				     size_t num_values,
+-				     const unsigned int *offsets, int *values)
++				     const unsigned int *offsets,
++				     unsigned int *values)
+ {
+ 	struct gpio_v2_line_values uapi_values;
+ 	uint64_t mask = 0, bits = 0;
+@@ -123,14 +123,14 @@ gpiod_line_request_get_values_subset(struct gpiod_line_request *request,
+ }
+ 
+ GPIOD_API int gpiod_line_request_get_values(struct gpiod_line_request *request,
+-					    int *values)
++					    unsigned int *values)
+ {
+ 	return gpiod_line_request_get_values_subset(request, request->num_lines,
+ 						    request->offsets, values);
+ }
+ 
+ GPIOD_API int gpiod_line_request_set_value(struct gpiod_line_request *request,
+-					   unsigned int offset, int value)
++					   unsigned int offset, unsigned int value)
+ {
+ 	return gpiod_line_request_set_values_subset(request, 1,
+ 						    &offset, &value);
+@@ -140,7 +140,7 @@ GPIOD_API int
+ gpiod_line_request_set_values_subset(struct gpiod_line_request *request,
+ 				     size_t num_values,
+ 				     const unsigned int *offsets,
+-				     const int *values)
++				     const unsigned int *values)
+ {
+ 	struct gpio_v2_line_values uapi_values;
+ 	uint64_t mask = 0, bits = 0;
+@@ -166,7 +166,7 @@ gpiod_line_request_set_values_subset(struct gpiod_line_request *request,
+ }
+ 
+ GPIOD_API int gpiod_line_request_set_values(struct gpiod_line_request *request,
+-					    const int *values)
++					    const unsigned int *values)
+ {
+ 	return gpiod_line_request_set_values_subset(request, request->num_lines,
+ 						    request->offsets, values);
+diff --git a/tests/tests-line-config.c b/tests/tests-line-config.c
+index 9ad8f17..9981a5f 100644
+--- a/tests/tests-line-config.c
++++ b/tests/tests-line-config.c
+@@ -300,10 +300,10 @@ GPIOD_TEST_CASE(set_and_clear_output_value_override)
+ GPIOD_TEST_CASE(set_multiple_output_values)
+ {
+ 	static const guint offsets[] = { 3, 4, 5, 6 };
+-	static const gint values[] = { GPIOD_LINE_VALUE_ACTIVE,
+-				       GPIOD_LINE_VALUE_INACTIVE,
+-				       GPIOD_LINE_VALUE_ACTIVE,
+-				       GPIOD_LINE_VALUE_INACTIVE };
++	static const guint values[] = { GPIOD_LINE_VALUE_ACTIVE,
++					GPIOD_LINE_VALUE_INACTIVE,
++					GPIOD_LINE_VALUE_ACTIVE,
++					GPIOD_LINE_VALUE_INACTIVE };
+ 
+ 	g_autoptr(struct_gpiod_line_config) config = NULL;
+ 	guint overridden_offsets[4], i;
+diff --git a/tests/tests-line-request.c b/tests/tests-line-request.c
+index 8ef391d..531e466 100644
+--- a/tests/tests-line-request.c
++++ b/tests/tests-line-request.c
+@@ -200,8 +200,8 @@ GPIOD_TEST_CASE(read_all_values)
+ 	g_autoptr(struct_gpiod_request_config) req_cfg = NULL;
+ 	g_autoptr(struct_gpiod_line_config) line_cfg = NULL;
+ 	g_autoptr(struct_gpiod_line_request) request = NULL;
+-	gint ret, values[5];
+-	guint i;
++	gint ret;
++	guint i, values[5];
+ 
+ 	chip = gpiod_test_open_chip_or_fail(g_gpiosim_chip_get_dev_path(sim));
+ 	req_cfg = gpiod_test_create_request_config_or_fail();
+@@ -259,11 +259,11 @@ GPIOD_TEST_CASE(request_multiple_values_but_read_one)
+ GPIOD_TEST_CASE(set_all_values)
+ {
+ 	static const guint offsets[] = { 0, 2, 4, 5, 6 };
+-	static const gint values[] = { GPIOD_LINE_VALUE_ACTIVE,
+-				       GPIOD_LINE_VALUE_INACTIVE,
+-				       GPIOD_LINE_VALUE_ACTIVE,
+-				       GPIOD_LINE_VALUE_ACTIVE,
+-				       GPIOD_LINE_VALUE_ACTIVE };
++	static const guint values[] = { GPIOD_LINE_VALUE_ACTIVE,
++					GPIOD_LINE_VALUE_INACTIVE,
++					GPIOD_LINE_VALUE_ACTIVE,
++					GPIOD_LINE_VALUE_ACTIVE,
++					GPIOD_LINE_VALUE_ACTIVE };
+ 
+ 	g_autoptr(GPIOSimChip) sim = g_gpiosim_chip_new("num-lines", 8, NULL);
+ 	g_autoptr(struct_gpiod_chip) chip = NULL;
+@@ -440,8 +440,8 @@ GPIOD_TEST_CASE(reconfigure_lines)
+ 	g_autoptr(struct_gpiod_request_config) req_cfg = NULL;
+ 	g_autoptr(struct_gpiod_line_config) line_cfg = NULL;
+ 	g_autoptr(struct_gpiod_line_request) request = NULL;
+-	gint values[4], ret;
+-	guint i;
++	gint ret;
++	guint values[4], i;
+ 
+ 	chip = gpiod_test_open_chip_or_fail(g_gpiosim_chip_get_dev_path(sim));
+ 	req_cfg = gpiod_test_create_request_config_or_fail();
+@@ -487,8 +487,7 @@ GPIOD_TEST_CASE(request_lines_with_unordered_offsets)
+ 	g_autoptr(struct_gpiod_request_config) req_cfg = NULL;
+ 	g_autoptr(struct_gpiod_line_config) line_cfg = NULL;
+ 	g_autoptr(struct_gpiod_line_request) request = NULL;
+-	guint cfg_offsets[4];
+-	gint values[4];
++	guint cfg_offsets[4], values[4];
+ 
+ 	chip = gpiod_test_open_chip_or_fail(g_gpiosim_chip_get_dev_path(sim));
+ 	req_cfg = gpiod_test_create_request_config_or_fail();
+diff --git a/tools/gpioget.c b/tools/gpioget.c
+index ae80271..2cf5eae 100644
+--- a/tools/gpioget.c
++++ b/tools/gpioget.c
+@@ -42,13 +42,13 @@ static void print_help(void)
+ int main(int argc, char **argv)
+ {
+ 	int direction = GPIOD_LINE_DIRECTION_INPUT;
+-	int optc, opti, bias = 0, ret, *values;
++	int optc, opti, bias = 0, ret;
+ 	struct gpiod_request_config *req_cfg;
+ 	struct gpiod_line_request *request;
+ 	struct gpiod_line_config *line_cfg;
+ 	struct gpiod_chip *chip;
+ 	bool active_low = false;
+-	unsigned int *offsets;
++	unsigned int *offsets, *values;
+ 	size_t i, num_lines;
+ 	char *device, *end;
+ 
+diff --git a/tools/gpioset.c b/tools/gpioset.c
+index 576b87d..1c11470 100644
+--- a/tools/gpioset.c
++++ b/tools/gpioset.c
+@@ -190,14 +190,14 @@ static int parse_drive(const char *option)
+ int main(int argc, char **argv)
+ {
+ 	const struct mode_mapping *mode = &modes[MODE_EXIT];
+-	int ret, optc, opti, bias = 0, drive = 0, *values;
++	int ret, optc, opti, bias = 0, drive = 0;
+ 	struct gpiod_request_config *req_cfg;
+ 	struct gpiod_line_request *request;
+ 	struct gpiod_line_config *line_cfg;
+ 	struct callback_data cbdata;
+ 	struct gpiod_chip *chip;
+ 	bool active_low = false;
+-	unsigned int *offsets;
++	unsigned int *offsets, *values;
+ 	size_t i, num_lines;
+ 	char *device, *end;
+ 
 -- 
 2.35.1
+
