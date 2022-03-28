@@ -2,96 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 410914E97B9
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Mar 2022 15:14:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 929E34E97CB
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Mar 2022 15:17:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243007AbiC1NQL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Mar 2022 09:16:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48460 "EHLO
+        id S243038AbiC1NSp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Mar 2022 09:18:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243015AbiC1NQK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Mar 2022 09:16:10 -0400
-Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0D251F610
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Mar 2022 06:14:29 -0700 (PDT)
-Received: by mail-yb1-xb33.google.com with SMTP id v35so25898089ybi.10
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Mar 2022 06:14:29 -0700 (PDT)
+        with ESMTP id S243196AbiC1NS1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Mar 2022 09:18:27 -0400
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 886352F025
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Mar 2022 06:16:46 -0700 (PDT)
+Received: by mail-wm1-x32a.google.com with SMTP id p189so8373805wmp.3
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Mar 2022 06:16:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=upE3SDU3C7PmeiFHIHw5TJWEmI++MEjL3taGlr4esD0=;
-        b=EfZv6Bq8GrxdsUN0ohm2KNMCUo5KMF5yi14/mzkINXkalQGBmEbg5JnshyBfFMwYEi
-         L0bRXIflaiMXmklQuDXjTbOQ8VVwmJ6RBp2b24Po26k/l0O3ZpHv+ejllmFxJVnuUzUI
-         lndDpXOlYS+7zcXZFG/mjgzvFX3wOdek+LgXZ20NI8aMIUztkQacHCQDLPyBdrbTfjvm
-         HqjQEbyJoGqeEvKI/nRjWCLaG2b6S289WkZL7OIHIzjUVF2eb9Z3Kcx6+BRxb6bGgaII
-         LEc/9VwrqJIbpg171Sd+Z7jfdIVILS3gDjWcd8LeECY+XO9A8THOyIvQCnm10fXhIJ+3
-         gPfw==
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:to:content-language:from
+         :subject:content-transfer-encoding;
+        bh=YEHTIWjTQ0331Tg9AtE8on90yfJl8mObaYXVJHasooI=;
+        b=K51bkn0wpD5I4gm6mS3D2DBmVyluGwjbmiuElnIZOwk7MiuvP0zilr7S5obHwb3fs6
+         MXzuVrsI+ssu+a0O5y5RAhB+kgDmuOE5Xv8b59kbIASwPsEw9nvvbdjsA5iFm0rpOLqQ
+         XsNHrFsfJgzOGUOtinxcx5Nau7D0zNp3QWjznq67Bv5bpDIIqn9WkFemj38sj1pp5y0e
+         w8MFZgEoE4O0Hq4qqMUrNk1wObDn16m7/dkah51RGQ3eAPfnEmXECMahJMjWJgoBCpvz
+         fEZaWuLHtHLFO933XeRMQHEcXoWOzPxZw1U5U3quLUtkA7PO10VpGyzEyqW58EJArpC+
+         mlOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=upE3SDU3C7PmeiFHIHw5TJWEmI++MEjL3taGlr4esD0=;
-        b=4xR9U9D3z1aozHQw3DftzET0C9EApsqTzAKGASkyMTJu2v1jDOuz0ZlcvzB41z3bvc
-         4Ahq7/gwrlVJHjh8Y82KtcS+2+RI1J6AAellXnL27myWu4M5uM3ljSAtX0fmRUWpVYsV
-         C9Xp2e60oFVuBcM2MZGInr6s0wnIcQ8dT4pKnpXj8trezuj2coiJ7ZxgZN4gl95SOJQ5
-         9hH8duvUB+jw9xsxcLcAru5sA3+Kv4cqJgaaabrmPY6V9tJdhrTUHvw6ZXIfVt04ETNs
-         Y0SLBaEmxsSPAha0gkemVwMwTW/ZhbAEHOsdASNhnYtm+tjdF2HRtqntvsxCsaGJN8fC
-         pCnQ==
-X-Gm-Message-State: AOAM531oYiLVmibpq8eXzgwT7Plyrv6+XiS5ZBNPNN+qIMYX4t6YRJNT
-        jtPnP6EhTXXPnWmx0KdFNbAafN8PpRnRADhN5K2uCw==
-X-Google-Smtp-Source: ABdhPJwNqWgS6omUR48daj1YAMojuzfje+uKRUJNG5FJfnkTUr8jft6B+QSyKWFojDCzCMz8v9pllzOTRFMprgvq+A4=
-X-Received: by 2002:a25:d088:0:b0:633:b902:2d29 with SMTP id
- h130-20020a25d088000000b00633b9022d29mr22281939ybg.626.1648473268863; Mon, 28
- Mar 2022 06:14:28 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:to
+         :content-language:from:subject:content-transfer-encoding;
+        bh=YEHTIWjTQ0331Tg9AtE8on90yfJl8mObaYXVJHasooI=;
+        b=fCAXSR7MDoSy6WP5mVHF1kb9yTi6+ILLUJKMqghG3otYzR0JVghL5qIv4h8KWd/s/M
+         PHGaZhEWxa1xUbpJWJSeQnj5KtnChum2o8IstVky4Gb5vZMAK0O8WYASRQs+JI4TPJnN
+         a2FYwos5/wdzN4Q3ZK8MVsf5bQa9/nRV7XT6Tzmm9LVxz7NizoabYVcZLcJ2kfPrTG90
+         WnosvsUSA7/EQRt0D/X+n/GOPVNfLt1vkSBSjNifkgLC3hcd4VwJI14uMlX6CZMXUoP6
+         c9TeWj3rJJ7gHK51rUM3OO8rq9a6C6jjTqqCA815VgKppB3kO9ayEuupTz3k7c/75txs
+         M2Uw==
+X-Gm-Message-State: AOAM533qarOHMDU5R0q0gB2kI3lhRPj7gzvLhjjsIMOswBOSyvy7HOrx
+        ZMEb+defPMFqu2X7hkvHNjcH/PEhR9FYQA==
+X-Google-Smtp-Source: ABdhPJzbL+ZJ+qAWZQZbBefrvjktsTP+qXkjicvU3Y60Nrym90U8Uil9NnkZjXnenMWQGp/aJu0qrg==
+X-Received: by 2002:a7b:c24d:0:b0:38c:68a4:eb4b with SMTP id b13-20020a7bc24d000000b0038c68a4eb4bmr35347407wmj.108.1648473405113;
+        Mon, 28 Mar 2022 06:16:45 -0700 (PDT)
+Received: from [192.168.1.31] ([90.61.176.186])
+        by smtp.gmail.com with ESMTPSA id q6-20020adffec6000000b00205b60faeeesm5865280wrs.24.2022.03.28.06.16.44
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Mar 2022 06:16:44 -0700 (PDT)
+Message-ID: <d7f8e55e-1db8-a471-9414-5aac831432a8@gmail.com>
+Date:   Mon, 28 Mar 2022 15:16:48 +0200
 MIME-Version: 1.0
-References: <20220311043015.4027-1-pshete@nvidia.com> <YjsTCRdc3yCLZkVY@orome>
-In-Reply-To: <YjsTCRdc3yCLZkVY@orome>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 28 Mar 2022 15:14:17 +0200
-Message-ID: <CACRpkdY2E+8quTVVkCqoph-h6Ye+hEb+z+D5+2g=ArmfLpGR1A@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: tegra: Set SFIO mode to Mux Register
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Prathamesh Shete <pshete@nvidia.com>, jonathanh@nvidia.com,
-        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, smangipudi@nvidia.com,
-        EJ Hsu <ejh@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+To:     linux-gpio@vger.kernel.org
+Content-Language: fr
+From:   Hans Kurscheidt <lve0200@gmail.com>
+Subject: gpiomon: Question about mode
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Mar 23, 2022 at 1:31 PM Thierry Reding <thierry.reding@gmail.com> wrote:
+Hi,
 
-> So this is basically what tegra_pinctrl_gpio_disable_free() does. I'm
-> wondering if we need to do both, though. Are ->gpio_disable_free() and
-> ->set_mux() always called in tandem? I suspect they are not because
-> otherwise this wouldn't be needed.
->
-> On the other hand, if ->set_mux() can be called in a code path without
-> ->gpio_disable_free() then this may be necessary to get the pin out of
-> SF mode. But that doesn't necessarily mean that the reverse is true.
-> If it isn't possible for ->gpio_disable_free() to be called in a code
-> path that doesn't have ->set_mux() then this patch would make the former
-> implementation redundant.
->
-> That said, upon inspecting the pinmux core, I don't see a 1:1
-> correlation between the two, so this seems fine.
+what would be the right mode for gpiomon call from
 
-Yups that's how it works. .gpio_*() callbacks are just a shortcut
-for enabling/disabling pins into GPIO mode, some drivers
-don't even use it and rely on users to set
-up the pin mux with explicit muxing instead. So these APIs
-are orthogonal.
+a shellscript executed as root from systemd at system start
 
-I'll wait for a version of the patch with your explicit reviewed-by
-though.
+waiting on a Pin w/ pullup for invoking shutdown upon falling edge.
 
-Yours,
-Linus Walleij
+
+Lots of interupts, Signals and other GPIO ongoing from other user APPs & 
+threads in multi-user state.
+
+RGDS
+
+hk
+
+
