@@ -2,96 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E3C964E8B66
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Mar 2022 03:00:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 095424E8B96
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Mar 2022 03:29:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237201AbiC1BCc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 27 Mar 2022 21:02:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51044 "EHLO
+        id S235177AbiC1BbX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 27 Mar 2022 21:31:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237190AbiC1BCb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 27 Mar 2022 21:02:31 -0400
-Received: from proxmox1.postmarketos.org (proxmox1.postmarketos.org [213.239.216.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AC2424ECDC;
-        Sun, 27 Mar 2022 18:00:50 -0700 (PDT)
-Received: from localhost.localdomain (cpc78119-cwma10-2-0-cust590.7-3.cable.virginm.net [81.96.50.79])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by proxmox1.postmarketos.org (Postfix) with ESMTPSA id 627B4140197;
-        Mon, 28 Mar 2022 00:50:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=postmarketos.org;
-        s=donut; t=1648428630;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=EGfRjZnta91pDqb00FS0IyJHpRVsoSTogbe12bpoSb4=;
-        b=X2zG46B5pNwGoT2nQfsdZaf9YtNrhXf8GJcEiWdevtF2Cm6PHVN0aslA0XeQHeQsnXffpP
-        4zkZbszn7nISfJH8uRfhYZzXd0xZvY/eliL/ukQjDWcLR7igIDsWkSD0QOynje6lLG/y0n
-        yp2Q+GNFhUsOWbUasS1mqbuZYZfeYUM=
-From:   Caleb Connolly <kc@postmarketos.org>
-To:     Caleb Connolly <kc@postmarketos.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        with ESMTP id S231126AbiC1BbX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 27 Mar 2022 21:31:23 -0400
+X-Greylist: delayed 64 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 27 Mar 2022 18:29:43 PDT
+Received: from mx.socionext.com (mx.socionext.com [202.248.49.38])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B81F115A09
+        for <linux-gpio@vger.kernel.org>; Sun, 27 Mar 2022 18:29:43 -0700 (PDT)
+Received: from unknown (HELO iyokan2-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 28 Mar 2022 10:28:38 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by iyokan2-ex.css.socionext.com (Postfix) with ESMTP id 53BAB2058B50;
+        Mon, 28 Mar 2022 10:28:38 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Mon, 28 Mar 2022 10:28:38 +0900
+Received: from plum.e01.socionext.com (unknown [10.212.243.119])
+        by kinkan2.css.socionext.com (Postfix) with ESMTP id E9EF6B62B7;
+        Mon, 28 Mar 2022 10:28:37 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Cc:     ~postmarketos/upstreaming@lists.sr.ht, martijn@brixit.nl,
-        Arnaud Ferraris <arnaud.ferraris@collabora.com>
-Subject: [PATCH 4/4] arm64: dts: rockchip: rk3399: add an input enable pinconf
-Date:   Mon, 28 Mar 2022 01:50:05 +0100
-Message-Id: <20220328005005.72492-5-kc@postmarketos.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220328005005.72492-1-kc@postmarketos.org>
-References: <20220328005005.72492-1-kc@postmarketos.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        linux-kernel@vger.kernel.org,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH] dt-bindings: gpio: uniphier: Add hogs parsing
+Date:   Mon, 28 Mar 2022 10:28:36 +0900
+Message-Id: <1648430916-21988-1-git-send-email-hayashi.kunihiko@socionext.com>
+X-Mailer: git-send-email 2.7.4
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add a pinconf to configure pins as input-enable.
+Allow parsing GPIO controller children nodes with GPIO hogs to fix the
+following warning:
 
-Signed-off-by: Caleb Connolly <kc@postmarketos.org>
+  uniphier-ld11-ref.dtb: gpio@55000000: 'xirq0-hog' does not match any of the regexes: 'pinctrl-[0-9]+'
+      From schema: Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
+
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ .../devicetree/bindings/gpio/socionext,uniphier-gpio.yaml  | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 080457a68e3c..9b111bd89f0a 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -2188,6 +2188,22 @@ pcfg_output_low: pcfg-output-low {
- 			output-low;
- 		};
+diff --git a/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml b/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
+index bcafa494ed7a..b6f5963a2ae6 100644
+--- a/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
++++ b/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
+@@ -52,6 +52,13 @@ properties:
+       <child-interrupt-base parent-interrupt-base length> triplets.
+     $ref: /schemas/types.yaml#/definitions/uint32-matrix
  
-+		pcfg_input_enable: pcfg-input-enable {
-+			input-enable;
-+		};
++patternProperties:
++  "^(.+-hog(-[0-9]+)?)$":
++    type: object
 +
-+		pcfg_input_pull_up: pcfg-input-pull-up {
-+			input-enable;
-+			bias-pull-up;
-+			drive-strength = <2>;
-+		};
++    required:
++      - gpio-hog
 +
-+		pcfg_input_pull_down: pcfg-input-pull-down {
-+			input-enable;
-+			bias-pull-down;
-+			drive-strength = <2>;
-+		};
-+
- 		clock {
- 			clk_32k: clk-32k {
- 				rockchip,pins = <0 RK_PA0 2 &pcfg_pull_none>;
+ required:
+   - compatible
+   - reg
 -- 
-2.35.1
+2.25.1
 
