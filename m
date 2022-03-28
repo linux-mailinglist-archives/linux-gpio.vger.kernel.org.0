@@ -2,69 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D6674E9F8B
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Mar 2022 21:12:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FA704E9FA1
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Mar 2022 21:17:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245504AbiC1TNq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Mar 2022 15:13:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57962 "EHLO
+        id S245628AbiC1TRX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Mar 2022 15:17:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245492AbiC1TNm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Mar 2022 15:13:42 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68F0866C83
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Mar 2022 12:12:00 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id dr20so30660721ejc.6
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Mar 2022 12:12:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jG3Rt4P3Raf9WSo1WvvLrHkpUajHf7ot05DbpWV2Eb0=;
-        b=PZXl6pFWIqhq+IGkvc2dvo1z28ViM0/IcQ4ra0LmbQRG+i3q7bJIKzhEv80XtXXLUZ
-         waKmqllEWW4P/SrOXG8yhqE5IICerx62efk1JSCHfpiKs9M0/QM9dNIClCclyNZJanlN
-         TZxflkCPUVClCsVlNjmTsqPXnB2f4kUt2KCVXGToBybPB04HISvbSsq+UPvv+XpZkzbO
-         whfwwhTEOqTOQebiJmWZWGOeOHWu734U2dHqQHsqubey4vfizUddn+ynpeCpeEn24N5b
-         B27SV1lynfnOmxFHMiqlmSB0bG9iX3Xx3lZ0RiEhINPXLJ8cfTZsoWfnosBwhV0fNVit
-         VWQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=jG3Rt4P3Raf9WSo1WvvLrHkpUajHf7ot05DbpWV2Eb0=;
-        b=2m/zbOXnoyncTWmZRRUmDLQvv5DzE3ACG68ryk1Rr6uT0S2JyQ0WJwjvmkk/MGy/GW
-         Mxw/D0QG3pjAEfu11coYvjTMJq7JerlEXnbIpGmOvvrXtLZK7ctv9NNhS91rj3vss822
-         9oepP/piGvRvU5o0Of8bj4Qj9MY362c1U3fhEAPfhPejmZwJygdMs0UTVm0sQDQ3OsgM
-         T2It60Dj1/xaCCPbRhytPARISmJFsFuZXEOPQmDwkdPjyQ8cvdKX+07YZlgXecmhYVXI
-         Phph08AfjUyca2E1DN8mxS4mRQ9usK7sqENUGvyeqSJlu+CboVlYd7CbQdc3aVX4WeYT
-         t7Hw==
-X-Gm-Message-State: AOAM533h9l8kAn/SzyNZbLB5KCGheJB4FvnHUPrkApUYfmiItDVFmY7V
-        jZPbuFkXJ2PnSf3pTHOhu6kL0g==
-X-Google-Smtp-Source: ABdhPJwFwLiR9+MtMZeMy5VDtsZaqzeSjHEJIe4h1TwW5hRcMHYc4oopQ5oF00JoT/EEnuMkQdrKVg==
-X-Received: by 2002:a17:907:60d6:b0:6df:a099:e26e with SMTP id hv22-20020a17090760d600b006dfa099e26emr29699586ejc.34.1648494718902;
-        Mon, 28 Mar 2022 12:11:58 -0700 (PDT)
-Received: from localhost.localdomain (xdsl-188-155-201-27.adslplus.ch. [188.155.201.27])
-        by smtp.gmail.com with ESMTPSA id gn3-20020a1709070d0300b006e1036666bfsm2166989ejc.223.2022.03.28.12.11.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Mar 2022 12:11:58 -0700 (PDT)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Keerthy <j-keerthy@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH] dt-bindings: gpio: davinci: list contents of GPIO hogs
-Date:   Mon, 28 Mar 2022 21:11:53 +0200
-Message-Id: <20220328191153.171241-1-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.32.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        with ESMTP id S245624AbiC1TRW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Mar 2022 15:17:22 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86E5B4C7BC;
+        Mon, 28 Mar 2022 12:15:41 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2574B6127C;
+        Mon, 28 Mar 2022 19:15:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 813BFC340F0;
+        Mon, 28 Mar 2022 19:15:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1648494940;
+        bh=fUykuyt+ci5j6L5MrTv+Hviy4KF45ZasIQ6f/i78xPg=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=lwd2A3BD6RnkclFQb+uH6wpciMq8TUlUld0rZytB7n9f4fFoL9MdYHHfmMhO5m6Gu
+         JPS0fsCL1hURTZAfgMtL6/MJ9NeyTeiiYmuNH/XX8wvJIYNX++40Jn6X14FcFmkfKT
+         EQI97NtwUBZ8iRmYA2KZOIm6B9HsgCfienXUDZ7zKWq4fvQg3TVjKK5Yl50+8uedTg
+         mtP6N84/Gtn9/8IDIxnhinLjvBj1Vc72YVK/Die4ba2e3EimKDXwAWQZEWwOv11JRs
+         HDcnmMJsuRbmV/iK3ilmVnhF3f1ERwz+7JYY3dJ/m7GxFJUoHM7yf11SF18jZezUkd
+         sj3O7YqDV5xqQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 6D8E0E7BB0B;
+        Mon, 28 Mar 2022 19:15:40 +0000 (UTC)
+Subject: Re: [GIT PULL] pin control bulk changes for v5.18
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CACRpkdZ_Jr3OzfoOpSSsAJMy1Oe_=zD861jouDzCVD-BQ6yZMg@mail.gmail.com>
+References: <CACRpkdZ_Jr3OzfoOpSSsAJMy1Oe_=zD861jouDzCVD-BQ6yZMg@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CACRpkdZ_Jr3OzfoOpSSsAJMy1Oe_=zD861jouDzCVD-BQ6yZMg@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5.18-1
+X-PR-Tracked-Commit-Id: 4a6d01495a167762de1691eb51e0413954db20eb
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: ff61bc81b3feebcef4d0431a92e2e40e8d4fe8b3
+Message-Id: <164849494043.24728.12971269557915471221.pr-tracker-bot@kernel.org>
+Date:   Mon, 28 Mar 2022 19:15:40 +0000
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -72,41 +61,15 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The hogs children should list allowed properties, otherwise any property
-would be accepted.  Simplify also GPIO hog node name pattern.
+The pull request you sent on Mon, 28 Mar 2022 15:08:42 +0200:
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- .../devicetree/bindings/gpio/gpio-davinci.yaml        | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5.18-1
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.yaml b/Documentation/devicetree/bindings/gpio/gpio-davinci.yaml
-index f32e09ef937c..e5b91c65dcb0 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-davinci.yaml
-+++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.yaml
-@@ -76,12 +76,21 @@ properties:
-     const: 2
- 
- patternProperties:
--  "^(.+-hog(-[0-9]+)?)$":
-+  "^.+-hog(-[0-9]+)?$":
-     type: object
-+    properties:
-+      gpio-hog: true
-+      gpios: true
-+      input: true
-+      output-high: true
-+      output-low: true
-+      line-name: true
- 
-     required:
-       - gpio-hog
- 
-+    additionalProperties: false
-+
- required:
-   - compatible
-   - reg
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/ff61bc81b3feebcef4d0431a92e2e40e8d4fe8b3
+
+Thank you!
+
 -- 
-2.32.0
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
