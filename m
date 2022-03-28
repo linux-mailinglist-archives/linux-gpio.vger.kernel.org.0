@@ -2,179 +2,198 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AA8D64E948E
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Mar 2022 13:29:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27F9D4E9549
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Mar 2022 13:39:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241323AbiC1Lag (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Mar 2022 07:30:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44466 "EHLO
+        id S241835AbiC1LlN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Mar 2022 07:41:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241298AbiC1L3o (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Mar 2022 07:29:44 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9E49DF68;
-        Mon, 28 Mar 2022 04:23:57 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 30111611D7;
-        Mon, 28 Mar 2022 11:23:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F339C340ED;
-        Mon, 28 Mar 2022 11:23:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648466632;
-        bh=HsY3DRjCKJW8f2PgxoHQHpP1seqO9d0yvMdx77Gtv/o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OU6x7WnsQphFlY4lZ3nbB0ZsiwAxavCA+hItLXp5zQxkxlE+TJq5WTD4mPnkZVu1S
-         kniqSiV6a1DzA37e10pLqcVmeSe70pLeG6QgydDeHMWnhpdP8p3AhjyuoNlgZUoxeU
-         YNEC0ummmC794UY5N1GOGT6U5VynzuZDvhD+rWTsSp29VDvzqELpQieHkpBuk4lSqZ
-         NwIb5xdPfvFb+7SzPZcppKUIFPdvVzfS+v4997fMu+d9JVjJXMidI4v3HM75OQdPPz
-         HeqdANqzpnPRrddW1kIm1au1IutiyB98gbZ1u6/Ea9NCW0xptXpyeWse7GaDibaRmq
-         cO3q+Lh+DBdfA==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marc Zyngier <maz@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-        Sasha Levin <sashal@kernel.org>, avifishman70@gmail.com,
-        tmaimon77@gmail.com, tali.perry1@gmail.com,
-        linus.walleij@linaro.org, openbmc@lists.ozlabs.org,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 03/16] pinctrl: npcm: Fix broken references to chip->parent_device
-Date:   Mon, 28 Mar 2022 07:23:32 -0400
-Message-Id: <20220328112345.1556601-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220328112345.1556601-1-sashal@kernel.org>
-References: <20220328112345.1556601-1-sashal@kernel.org>
+        with ESMTP id S243688AbiC1Lgr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Mar 2022 07:36:47 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A91C61AD85;
+        Mon, 28 Mar 2022 04:28:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1648466928; x=1680002928;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=/jknjSpLX3mZ3CtFwnlyAgjjlnxVVCt9rxwjRusRsWQ=;
+  b=T4hhyUOrMHsN53zmf7AmiG5RllLjCvgd+rCDJg8TUa+AKXGxiNPmjQes
+   EJaaarROIKE5bAUY68Fep6TkoK7pPodYDyo6fW7Sz5fC3DFjlXu13Fsrj
+   ow0LTUI11W4nKAtRxw/76Kn/5VFyPhQ/L6UDT7/9WuE8doPeOjT8JLDO+
+   d+xwlFM6tk1srCW0xEsgkAGAHE1eB1qkBxQhfoWezbxk/BU+Fl3ix/wce
+   N6hIzH5/AMOt93ZCzLqJcZxgoilT0do60+dAF/LycppOA0yxhKUclzTi4
+   9nuQ/vxpY1nywpMokrJ9duJVCVR3By33jk8e/OPlCdMLWvIxfugDG3dPZ
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10299"; a="238907856"
+X-IronPort-AV: E=Sophos;i="5.90,217,1643702400"; 
+   d="scan'208";a="238907856"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2022 04:28:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,217,1643702400"; 
+   d="scan'208";a="649026662"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga002.fm.intel.com with ESMTP; 28 Mar 2022 04:28:35 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id DD2BA18E; Mon, 28 Mar 2022 14:28:56 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v1 1/1] gpiolib: Get rid of redundant 'else' (part 2)
+Date:   Mon, 28 Mar 2022 14:28:56 +0300
+Message-Id: <20220328112856.404-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+In the snippets like the following
 
-[ Upstream commit f7e53e2255808ca3abcc8f38d18ad0823425e771 ]
+	if (...)
+		return / goto / break / continue ...;
+	else
+		...
 
-The npcm driver has a bunch of references to the irq_chip parent_device
-field, but never sets it.
+the 'else' is redundant. Get rid of it by using switch-case pattern.
+Note that the pattern seems more usual for IOCTL handlers.
 
-Fix it by fishing that reference from somewhere else, but it is
-obvious that these debug statements were never used. Also remove
-an unused field in a local data structure.
-
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Acked-by: Bartosz Golaszewski <brgl@bgdev.pl>
-Link: https://lore.kernel.org/r/20220201120310.878267-11-maz@kernel.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c | 25 +++++++++++------------
- 1 file changed, 12 insertions(+), 13 deletions(-)
+ drivers/gpio/gpiolib-cdev.c | 66 ++++++++++++++++++++-----------------
+ 1 file changed, 35 insertions(+), 31 deletions(-)
 
-diff --git a/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c b/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
-index 17f909d8b63a..e7dc97e099f2 100644
---- a/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
-+++ b/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
-@@ -78,7 +78,6 @@ struct npcm7xx_gpio {
- 	struct gpio_chip	gc;
- 	int			irqbase;
- 	int			irq;
--	void			*priv;
- 	struct irq_chip		irq_chip;
- 	u32			pinctrl_id;
- 	int (*direction_input)(struct gpio_chip *chip, unsigned offset);
-@@ -226,7 +225,7 @@ static void npcmgpio_irq_handler(struct irq_desc *desc)
- 	chained_irq_enter(chip, desc);
- 	sts = ioread32(bank->base + NPCM7XX_GP_N_EVST);
- 	en  = ioread32(bank->base + NPCM7XX_GP_N_EVEN);
--	dev_dbg(chip->parent_device, "==> got irq sts %.8x %.8x\n", sts,
-+	dev_dbg(bank->gc.parent, "==> got irq sts %.8x %.8x\n", sts,
- 		en);
+diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+index ffa0256cad5a..c2900b1be69d 100644
+--- a/drivers/gpio/gpiolib-cdev.c
++++ b/drivers/gpio/gpiolib-cdev.c
+@@ -197,16 +197,15 @@ static long linehandle_ioctl(struct file *file, unsigned int cmd,
+ 	void __user *ip = (void __user *)arg;
+ 	struct gpiohandle_data ghd;
+ 	DECLARE_BITMAP(vals, GPIOHANDLES_MAX);
+-	int i;
++	unsigned int i;
++	int ret;
  
- 	sts &= en;
-@@ -241,33 +240,33 @@ static int npcmgpio_set_irq_type(struct irq_data *d, unsigned int type)
- 		gpiochip_get_data(irq_data_get_irq_chip_data(d));
- 	unsigned int gpio = BIT(d->hwirq);
+-	if (cmd == GPIOHANDLE_GET_LINE_VALUES_IOCTL) {
+-		/* NOTE: It's ok to read values of output lines. */
+-		int ret = gpiod_get_array_value_complex(false,
+-							true,
+-							lh->num_descs,
+-							lh->descs,
+-							NULL,
+-							vals);
++	switch (cmd) {
++	case GPIOHANDLE_GET_LINE_VALUES_IOCTL:
++		/* NOTE: It's okay to read values of output lines */
++		ret = gpiod_get_array_value_complex(false, true,
++						    lh->num_descs, lh->descs,
++						    NULL, vals);
+ 		if (ret)
+ 			return ret;
  
--	dev_dbg(d->chip->parent_device, "setirqtype: %u.%u = %u\n", gpio,
-+	dev_dbg(bank->gc.parent, "setirqtype: %u.%u = %u\n", gpio,
- 		d->irq, type);
- 	switch (type) {
- 	case IRQ_TYPE_EDGE_RISING:
--		dev_dbg(d->chip->parent_device, "edge.rising\n");
-+		dev_dbg(bank->gc.parent, "edge.rising\n");
- 		npcm_gpio_clr(&bank->gc, bank->base + NPCM7XX_GP_N_EVBE, gpio);
- 		npcm_gpio_clr(&bank->gc, bank->base + NPCM7XX_GP_N_POL, gpio);
- 		break;
- 	case IRQ_TYPE_EDGE_FALLING:
--		dev_dbg(d->chip->parent_device, "edge.falling\n");
-+		dev_dbg(bank->gc.parent, "edge.falling\n");
- 		npcm_gpio_clr(&bank->gc, bank->base + NPCM7XX_GP_N_EVBE, gpio);
- 		npcm_gpio_set(&bank->gc, bank->base + NPCM7XX_GP_N_POL, gpio);
- 		break;
- 	case IRQ_TYPE_EDGE_BOTH:
--		dev_dbg(d->chip->parent_device, "edge.both\n");
-+		dev_dbg(bank->gc.parent, "edge.both\n");
- 		npcm_gpio_set(&bank->gc, bank->base + NPCM7XX_GP_N_EVBE, gpio);
- 		break;
- 	case IRQ_TYPE_LEVEL_LOW:
--		dev_dbg(d->chip->parent_device, "level.low\n");
-+		dev_dbg(bank->gc.parent, "level.low\n");
- 		npcm_gpio_set(&bank->gc, bank->base + NPCM7XX_GP_N_POL, gpio);
- 		break;
- 	case IRQ_TYPE_LEVEL_HIGH:
--		dev_dbg(d->chip->parent_device, "level.high\n");
-+		dev_dbg(bank->gc.parent, "level.high\n");
- 		npcm_gpio_clr(&bank->gc, bank->base + NPCM7XX_GP_N_POL, gpio);
- 		break;
- 	default:
--		dev_dbg(d->chip->parent_device, "invalid irq type\n");
-+		dev_dbg(bank->gc.parent, "invalid irq type\n");
- 		return -EINVAL;
+@@ -218,7 +217,7 @@ static long linehandle_ioctl(struct file *file, unsigned int cmd,
+ 			return -EFAULT;
+ 
+ 		return 0;
+-	} else if (cmd == GPIOHANDLE_SET_LINE_VALUES_IOCTL) {
++	case GPIOHANDLE_SET_LINE_VALUES_IOCTL:
+ 		/*
+ 		 * All line descriptors were created at once with the same
+ 		 * flags so just check if the first one is really output.
+@@ -240,10 +239,11 @@ static long linehandle_ioctl(struct file *file, unsigned int cmd,
+ 						     lh->descs,
+ 						     NULL,
+ 						     vals);
+-	} else if (cmd == GPIOHANDLE_SET_CONFIG_IOCTL) {
++	case GPIOHANDLE_SET_CONFIG_IOCTL:
+ 		return linehandle_set_config(lh, ip);
++	default:
++		return -EINVAL;
  	}
- 
-@@ -289,7 +288,7 @@ static void npcmgpio_irq_ack(struct irq_data *d)
- 		gpiochip_get_data(irq_data_get_irq_chip_data(d));
- 	unsigned int gpio = d->hwirq;
- 
--	dev_dbg(d->chip->parent_device, "irq_ack: %u.%u\n", gpio, d->irq);
-+	dev_dbg(bank->gc.parent, "irq_ack: %u.%u\n", gpio, d->irq);
- 	iowrite32(BIT(gpio), bank->base + NPCM7XX_GP_N_EVST);
+-	return -EINVAL;
  }
  
-@@ -301,7 +300,7 @@ static void npcmgpio_irq_mask(struct irq_data *d)
- 	unsigned int gpio = d->hwirq;
+ #ifdef CONFIG_COMPAT
+@@ -1188,14 +1188,16 @@ static long linereq_ioctl(struct file *file, unsigned int cmd,
+ 	struct linereq *lr = file->private_data;
+ 	void __user *ip = (void __user *)arg;
  
- 	/* Clear events */
--	dev_dbg(d->chip->parent_device, "irq_mask: %u.%u\n", gpio, d->irq);
-+	dev_dbg(bank->gc.parent, "irq_mask: %u.%u\n", gpio, d->irq);
- 	iowrite32(BIT(gpio), bank->base + NPCM7XX_GP_N_EVENC);
+-	if (cmd == GPIO_V2_LINE_GET_VALUES_IOCTL)
++	switch (cmd) {
++	case GPIO_V2_LINE_GET_VALUES_IOCTL:
+ 		return linereq_get_values(lr, ip);
+-	else if (cmd == GPIO_V2_LINE_SET_VALUES_IOCTL)
++	case GPIO_V2_LINE_SET_VALUES_IOCTL:
+ 		return linereq_set_values(lr, ip);
+-	else if (cmd == GPIO_V2_LINE_SET_CONFIG_IOCTL)
++	case GPIO_V2_LINE_SET_CONFIG_IOCTL:
+ 		return linereq_set_config(lr, ip);
+-
+-	return -EINVAL;
++	default:
++		return -EINVAL;
++	}
  }
  
-@@ -313,7 +312,7 @@ static void npcmgpio_irq_unmask(struct irq_data *d)
- 	unsigned int gpio = d->hwirq;
+ #ifdef CONFIG_COMPAT
+@@ -2113,28 +2115,30 @@ static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ 		return -ENODEV;
  
- 	/* Enable events */
--	dev_dbg(d->chip->parent_device, "irq_unmask: %u.%u\n", gpio, d->irq);
-+	dev_dbg(bank->gc.parent, "irq_unmask: %u.%u\n", gpio, d->irq);
- 	iowrite32(BIT(gpio), bank->base + NPCM7XX_GP_N_EVENS);
+ 	/* Fill in the struct and pass to userspace */
+-	if (cmd == GPIO_GET_CHIPINFO_IOCTL) {
++	switch (cmd) {
++	case GPIO_GET_CHIPINFO_IOCTL:
+ 		return chipinfo_get(cdev, ip);
+ #ifdef CONFIG_GPIO_CDEV_V1
+-	} else if (cmd == GPIO_GET_LINEHANDLE_IOCTL) {
++	case GPIO_GET_LINEHANDLE_IOCTL:
+ 		return linehandle_create(gdev, ip);
+-	} else if (cmd == GPIO_GET_LINEEVENT_IOCTL) {
++	case GPIO_GET_LINEEVENT_IOCTL:
+ 		return lineevent_create(gdev, ip);
+-	} else if (cmd == GPIO_GET_LINEINFO_IOCTL ||
+-		   cmd == GPIO_GET_LINEINFO_WATCH_IOCTL) {
+-		return lineinfo_get_v1(cdev, ip,
+-				       cmd == GPIO_GET_LINEINFO_WATCH_IOCTL);
++	case GPIO_GET_LINEINFO_IOCTL:
++		return lineinfo_get_v1(cdev, ip, false);
++	case GPIO_GET_LINEINFO_WATCH_IOCTL:
++		return lineinfo_get_v1(cdev, ip, true);
+ #endif /* CONFIG_GPIO_CDEV_V1 */
+-	} else if (cmd == GPIO_V2_GET_LINEINFO_IOCTL ||
+-		   cmd == GPIO_V2_GET_LINEINFO_WATCH_IOCTL) {
+-		return lineinfo_get(cdev, ip,
+-				    cmd == GPIO_V2_GET_LINEINFO_WATCH_IOCTL);
+-	} else if (cmd == GPIO_V2_GET_LINE_IOCTL) {
++	case GPIO_V2_GET_LINEINFO_IOCTL:
++		return lineinfo_get(cdev, ip, false);
++	case GPIO_V2_GET_LINEINFO_WATCH_IOCTL:
++		return lineinfo_get(cdev, ip, true);
++	case GPIO_V2_GET_LINE_IOCTL:
+ 		return linereq_create(gdev, ip);
+-	} else if (cmd == GPIO_GET_LINEINFO_UNWATCH_IOCTL) {
++	case GPIO_GET_LINEINFO_UNWATCH_IOCTL:
+ 		return lineinfo_unwatch(cdev, ip);
++	default:
++		return -EINVAL;
+ 	}
+-	return -EINVAL;
  }
  
-@@ -323,7 +322,7 @@ static unsigned int npcmgpio_irq_startup(struct irq_data *d)
- 	unsigned int gpio = d->hwirq;
- 
- 	/* active-high, input, clear interrupt, enable interrupt */
--	dev_dbg(d->chip->parent_device, "startup: %u.%u\n", gpio, d->irq);
-+	dev_dbg(gc->parent, "startup: %u.%u\n", gpio, d->irq);
- 	npcmgpio_direction_input(gc, gpio);
- 	npcmgpio_irq_ack(d);
- 	npcmgpio_irq_unmask(d);
+ #ifdef CONFIG_COMPAT
 -- 
-2.34.1
+2.35.1
 
