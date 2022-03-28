@@ -2,169 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 945634EA2B3
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Mar 2022 00:16:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C7E54EA2EF
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Mar 2022 00:31:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229511AbiC1WN4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Mar 2022 18:13:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37728 "EHLO
+        id S229914AbiC1WTG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Mar 2022 18:19:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229596AbiC1WNt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Mar 2022 18:13:49 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 258C7147516;
-        Mon, 28 Mar 2022 15:03:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1648505000;
-        bh=ikNTAPZNKF24qy3SSeVLpOY649ZPWA/t8khPYr08wEQ=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=awmlpNlzCwoLr6l0zmrsuN88doab8x7a+/BUsGAUmPf1be3v7tQoSV6IjOusgoNWb
-         jFgQbFO1QW9eF1K6Ea7aYWKQxQ/F+8LprR0p+9SyRjp5ZCzWjI88YWKu112o51BiOI
-         yZ105yLC/xU+VyTkjlHkDa2KsM//rqRDgjhIkXHg=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([37.201.215.112]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MHGCo-1nm8ML34HQ-00DHd7; Mon, 28
- Mar 2022 23:38:17 +0200
-Date:   Mon, 28 Mar 2022 23:38:17 +0200
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
+        with ESMTP id S229925AbiC1WS7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Mar 2022 18:18:59 -0400
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE03026E768
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Mar 2022 15:15:39 -0700 (PDT)
+Received: by mail-ed1-x52b.google.com with SMTP id y10so18565972edv.7
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Mar 2022 15:15:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=c2rDBwbFTkCmCH7rcNPRABM5zIBAnbo13PAPu8ohgmY=;
+        b=DwcVfIsIcOJ0GPiMwt6DG2p9BfDbKkf2M226tZ9hZhd2YuGqT/e5r1qpmeRjV7Klsn
+         OQ2O9FGbsbrgWSfP7XnjPBbTHJVIhNT8xAsLHsK39wlF85wIalCk6RRHolEsoHmLPQov
+         VHDrPq0sOWmKJ+QtijvvzMghFDu+wNtyKfwYI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=c2rDBwbFTkCmCH7rcNPRABM5zIBAnbo13PAPu8ohgmY=;
+        b=y9xA7jp1UrZZE0e9R9CSqDwZSNHoEwzlVqDGff3ZFq0J/ET1cEqHDraC1wShVJfPBI
+         6OiIRcHiDLJCM3t+xvS9+p9wBorzmYI5e5eFIa+ShgSaJUxGSD4NbZam4FDvkzQ5vtBx
+         6Zps9hm8ambxcD8lj+2N3U1nIUrDk6COuL5iDUkLYopcbTxZR+0O7FL07CXXACZed/IK
+         bzI+Xj1h4k3MTvI2x9EjEaHFkopH4Q2rXzP1sjr7xYlv7s6tNL/J87/YU4bdYp6VLaxB
+         fqJVUp2BLdB3kAUonN2ZzeQRsFVMzSKRipc0wBlI8bm0+7UQE1/4k0NJBRB4dKcKemnF
+         aEcA==
+X-Gm-Message-State: AOAM531hhCSP+W9p0Ww1ERXjhP3RqtnGmDngYyh4FAvpY4krJzMR7fCV
+        7F+bWHWwKxeIRhVB4jw/xWUjeXlWdDplaKWMa34=
+X-Google-Smtp-Source: ABdhPJwQZZYPvBLAGdNeYLSYtt3JjnJ9nKicPorwlB1a5Qs5xDL+D0cd03n3L0jvJ7CJY+Vg1L5k1g==
+X-Received: by 2002:a05:6512:3a83:b0:44a:b79:6988 with SMTP id q3-20020a0565123a8300b0044a0b796988mr20730921lfu.595.1648503710648;
+        Mon, 28 Mar 2022 14:41:50 -0700 (PDT)
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com. [209.85.208.173])
+        by smtp.gmail.com with ESMTPSA id t27-20020a2e8e7b000000b00247f32b572asm1838999ljk.19.2022.03.28.14.41.49
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Mar 2022 14:41:50 -0700 (PDT)
+Received: by mail-lj1-f173.google.com with SMTP id 17so21016520ljw.8
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Mar 2022 14:41:49 -0700 (PDT)
+X-Received: by 2002:a2e:9794:0:b0:249:8488:7dbd with SMTP id
+ y20-20020a2e9794000000b0024984887dbdmr22077785lji.176.1648503709507; Mon, 28
+ Mar 2022 14:41:49 -0700 (PDT)
+MIME-Version: 1.0
+References: <CACRpkdZ_Jr3OzfoOpSSsAJMy1Oe_=zD861jouDzCVD-BQ6yZMg@mail.gmail.com>
+ <CAHk-=whzqAB6kfHUcX2uhfPnNiWJRq=UmeA1TbgGi3XA+57j3w@mail.gmail.com> <YkIqyb6lhn5uU2jb@latitude>
+In-Reply-To: <YkIqyb6lhn5uU2jb@latitude>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 28 Mar 2022 14:41:33 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjxvNGEUUN5fj203KJL8qXK3jv359Ketc-HJMJU9wN6KA@mail.gmail.com>
+Message-ID: <CAHk-=wjxvNGEUUN5fj203KJL8qXK3jv359Ketc-HJMJU9wN6KA@mail.gmail.com>
+Subject: Re: [GIT PULL] pin control bulk changes for v5.18
+To:     =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Kees Cook <keescook@chromium.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [GIT PULL] pin control bulk changes for v5.18
-Message-ID: <YkIqyb6lhn5uU2jb@latitude>
-References: <CACRpkdZ_Jr3OzfoOpSSsAJMy1Oe_=zD861jouDzCVD-BQ6yZMg@mail.gmail.com>
- <CAHk-=whzqAB6kfHUcX2uhfPnNiWJRq=UmeA1TbgGi3XA+57j3w@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="yvrgZB0uozz8tcri"
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whzqAB6kfHUcX2uhfPnNiWJRq=UmeA1TbgGi3XA+57j3w@mail.gmail.com>
-X-Provags-ID: V03:K1:s4cTLq9e1kTz4rvikF7Mq9oKq7PlgRHhoQuBCNZQG2qEFBxDq3H
- RPEvTaIiJE1LzBT6NQkWXxZ2bupQWHQ6IgOiVIJNfulsVQFw89Jdi/ua5CWLmGZNhjnJS6D
- SLnx6k5/nZsGTJnBiBhgExiEo70kG09pPIC+F9dQAIXNBPSoEzc6Ks8JLAW9i7SyoUFBMX/
- vWNIaRARIUaceOm+cHh+Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ZxojnKK9JrI=:Z3jdjLqop7T4GlcejOYxrl
- kQHr9D3kLBByyuOh8m7SAupZqtOpj83u1EcBTlr+Z3RjPyfQksAOab0u1iN1RUkccUJ2Avl9o
- 9zLFBxV9hA3Q/69S+EKDoEyPpH+H6a4JhcDkvIi+CbHbWc2iRoEs1JjTRgn7aQKrOBcffkI7h
- Djb5JoBGk13Z6UOov8BqTn+u6A59g5reEORPQ2kHE5qW6ZNA2MBRLIPVWohT/9ai8Kv2G+jq/
- kivEHzhkb+1JdDMFc200asvUejRtycc0oHNh8XPzlE9U1/TnHcpK/D5ntnBGfkLOIaP4JGsCH
- bSBr2mwNRqfztfMqiwl7lOLLwKNuy/9Yryf3GuX43080v5berTY1puwCbtQWcuZV6rAJhxnoD
- PMa6Jyefzcyzkk3wMf1gBJkx8KWUthMO596VQBA7G+aGWhTqLyRKAXHktqnQAa8K4sR0QBd9Z
- lvMbNu2aTX+stXuoYfvuPAnTXxJOLH+M/Tb2ABO/8AMRFs3iirc3DCLpstf+/ELZjsacUVrqr
- Pts2ZiJsxuTKnWtI6XunlztqCa1yxOXeo6sFwDVljzjavvpshHrF9Pr+n5BaW47/ieKWwhYdS
- RyVNDVSG3UhAW0fNsDqYbG71FREm+qqB1uyP7nbErpOnwZheNExIEUdsHygTlvvtfp+/0BTYW
- 7OngohlV8Cb86n43GbZqyjgtlOm0s+yv6KoiDoOSbpTsA9lR1pLrF0Ze/k5mF9fyqpHdVDqba
- HeCa30Nq8vPSREt+DdTDDs5o5ZVzV0z64Hd5u2mGz2oKYo7pz/kWPWcTCELNsKGkWLNJwm3Fw
- MzVCtJ/q5fN6ruUP1J+LXWggwX5o2/DkKIYDL41uyGPKWQCnqVyFu1LS9aZ4Se8Wq2uIS/hGF
- IIQyiGWlAumCTqTsGH1NTDJygYCwhy/6n4yT0Xy2w2FkAtzezePSMh91Rrq7sjdlSp6EiPbGv
- v9G22VJ5LIJcXjCOUjI78nPwV0NnIQKv9L+QuwqDAioeyB5HJQDNVegYcZpLbHIhE4nWKCQU7
- ik/OXZYJFH4RsomRjIcWbofsxtZwe+C8yf1C249BM0Aslbk3+FVEiABdKR9v38VFDQDRPP6aZ
- 34/Ta0dc5hE8uE=
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
---yvrgZB0uozz8tcri
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Mon, Mar 28, 2022 at 12:11:49PM -0700, Linus Torvalds wrote:
-> On Mon, Mar 28, 2022 at 6:08 AM Linus Walleij <linus.walleij@linaro.org> =
-wrote:
-> >
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-> > tags/pinctrl-v5.18-1
->=20
-> Hmm.
->=20
-> This clashes badly with the fact that we in the meantime have enabled
-> -Warray-bounds, and I got
->=20
->   drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c: In function =E2=80=98npcmgpi=
-o_irq_handler=E2=80=99:
->   ./include/linux/find.h:40:23: error: array subscript =E2=80=98long unsi=
-gned
-> int[0]=E2=80=99 is partly outside array bounds of =E2=80=98u32[1]=E2=80=
-=99 {aka =E2=80=98unsigned
-> int[1]=E2=80=99} [-Werror=3Darray-bounds]
->      40 |                 val =3D *addr & GENMASK(size - 1, offset);
->         |                       ^~~~~
->   drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c:219:13: note: while
-> referencing =E2=80=98sts=E2=80=99
->     219 |         u32 sts, en, bit;
->         |             ^~~
->=20
-> as a result.
->=20
-> Was this not in linux-next?
-
-It was =E2=80=94 but when it was noticed, the fix went through the IRQ tree=
-, on
-top of a refactoring that happened there (the switch to generic_handle_doma=
-in_irq):
-
-https://lore.kernel.org/lkml/164751044707.389.16417510835118111853.tip-bot2=
-@tip-bot2/
-
-So=E2=80=A6 the issue should resolve itself when the IRQ tree is pulled.
-
-> Or was the array bounds checking not there?
->=20
-> Anyway, that cast to "const void *"
->=20
->      for_each_set_bit(bit, (const void *)&sts,
->=20
-> in that driver is completely wrong.
+On Mon, Mar 28, 2022 at 2:38 PM Jonathan Neusch=C3=A4fer
+<j.neuschaefer@gmx.net> wrote:
 >
-> The bit operations are defined in arrays of 'unsigned long', and you
-> can't just cast the issue away, because the end result is not the same
-> on a big-endian machine.
->=20
-> I fixed it up in the merge, but what really confuses me (apart from
-> the apparent lack of testing in linux-next) is that I don't actually
-> see what made this happen now, and not before. Maybe that's why it
-> didn't show up in linux-next: it's some odd gcc heisenbug.
->=20
-> Because there seems to be no actual changes to that driver that would
-> explain why I get the warning now, but not before the pull.
+> It was =E2=80=94 but when it was noticed, the fix went through the IRQ tr=
+ee, on
+> top of a refactoring that happened there (the switch to generic_handle_do=
+main_irq):
+>
+> https://lore.kernel.org/lkml/164751044707.389.16417510835118111853.tip-bo=
+t2@tip-bot2/
 
-When I added the pinctrl-wpcm450 driver, I changed the pinctrl/nuvoton/
-directory to obj-y and exposed the pinctrl-npcm7xx to CI bot testing.
-The bug existed, untouched, since the driver was added a few years ago.
+Ok, that ends up at least being identical to what I did, so thats' good.
 
+> When I added the pinctrl-wpcm450 driver, I changed the pinctrl/nuvoton/
+> directory to obj-y and exposed the pinctrl-npcm7xx to CI bot testing.
+> The bug existed, untouched, since the driver was added a few years ago.
 
-Jonathan
+Ahh. Good. So not a heisenbug, just happened to be hidden before.
 
---yvrgZB0uozz8tcri
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks for clarifying,
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAmJCKqgACgkQCDBEmo7z
-X9tAfRAA0Lwv6e2tpRvOKaLo/Ou9kPLpQCasdBSh/IgzKFoVlMsZmfGNbBZqU/bv
-dy6/AoTuVnwXRAJt7QM9MPd1N8ekXnMT0VMZOh+4hhBLhN8lAsB2fNaFCcjTNeA/
-IxgTx1zqzdpjgQq7vWzX3om1graLj9OV4E59sD4Dl9/jeXP5ESz71yaq4WEYFW25
-nxPnj6OxXhlS5CEkOVIUUO7mGzlv6a8+rtcU7tjXeNmZ1QlLZ/jhaOEo0tbPn2Gv
-AmDDscAS8olaFCHdcMWAP+YFbFD6sjWBzkBuCETk2CX3YnJuITMQsjjyUvEva/Hm
-aAgOQf+bZBRgcVnS1hI+RH1zpq5ahrNtXbAbMrGqSbMMaI/6VyPdsJyf3LXA6/id
-bp6zNuwSGber0yU2YFGtvNFKx7e5tBGuckNebu/E/VFQAwwB0jwSpK/pifWt3p3i
-LVbcOcauLddSQqUlejjs/buMOrSt+lWzhIY0m1ZuC6xqyCm1/LJz2LwoLMAfw0gi
-IEj93h+SzT5X+zeNuNojxCVaxuEa+DJdTTrA58ztzI5f8Hwy7D2Hq4JmrAQiJM+z
-v44tGk+W9ye8ONaQ2lL02oFDHgfic1QN0uJzflU7bpFY9EEqsGWps9GweMeYr7LD
-HIJrALebsg5geI0gKyAAf6gwWgF/GREiqF45IxuK5fdrc4enmRI=
-=gFUj
------END PGP SIGNATURE-----
-
---yvrgZB0uozz8tcri--
+                 Linus
