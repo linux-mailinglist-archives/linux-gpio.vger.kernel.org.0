@@ -2,35 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6355E4E93B6
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Mar 2022 13:23:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86F5E4E93FA
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Mar 2022 13:24:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237719AbiC1LYo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Mar 2022 07:24:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59994 "EHLO
+        id S240858AbiC1LZv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Mar 2022 07:25:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241205AbiC1LXW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Mar 2022 07:23:22 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4C4A58812;
-        Mon, 28 Mar 2022 04:20:23 -0700 (PDT)
+        with ESMTP id S241704AbiC1LYH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Mar 2022 07:24:07 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4603555BF5;
+        Mon, 28 Mar 2022 04:21:43 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B07C66115A;
-        Mon, 28 Mar 2022 11:20:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0391C34110;
-        Mon, 28 Mar 2022 11:20:20 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A2F2E611D6;
+        Mon, 28 Mar 2022 11:21:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B07ADC340ED;
+        Mon, 28 Mar 2022 11:21:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648466422;
+        s=k20201202; t=1648466502;
         bh=GtXm7TP4FiF7Hh17CXHOhSXHFwXsRaUDFmn/WhLxqg0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k3ICO+WNoa5yijS2fSjs0ArYy2OCgkRbKKJFFcNE6P9MqBjJzids26ouXDz6FCEvg
-         HOUYx6HkrTjzwiNgUpOFAj9YPPJ+DTSMw4zhfO6KjRSw+IGWOvIxULUwtb1QXSRgi9
-         wly/ouONedlBzDjIk0dzMawP/8L2Qn7syKc2xIUxsfLyBqfqj33pSkq2l1SG6CN8Th
-         pIgh2D/FD4gHNDUbvY2zORlSQvdY1SydfEG4MowF8KKsp+qAiirJO8Ce7ldHGTGgpl
-         cJc0fRjVmyDwav68Y2xeoZ1LEc5o879Cy8jQCpgE83qrjbtDqO2cVnf1LgHUUSH9A/
-         W4YRwu2bq0mNA==
+        b=DrmtbnbMb5Xgms2FaDfWdFLka+hv8VOJoGsDbiVQ3oIjyPz8kA+eP65vS3rWle9tU
+         378FNHMjR+yoHEDtzFrxeD8D8f9XTvpmNxwO1F31Ti5uUysh1T7moMcGnHASElIFyV
+         jexNZWeXx/j2aPch4tOU7ivl3eKbNjgzg9YOsulrEFwoiLcjb22JMlgpNFa/tDHXHx
+         J/5MTU3jk4BW+7G7VmeM2lTgtMydEehdaEyHvGiyXHyou1LCr2pENQOphrLyKZUqB8
+         NQu2uiOiOdlTQJRihuTnzp1oNbtqVuwocDzyBMT/QO15j/B8oHJ5eNSJiRrxjI6H86
+         tz2XoNls6LuBw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Marc Zyngier <maz@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
@@ -38,12 +38,12 @@ Cc:     Marc Zyngier <maz@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
         tmaimon77@gmail.com, tali.perry1@gmail.com,
         linus.walleij@linaro.org, openbmc@lists.ozlabs.org,
         linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.16 06/35] pinctrl: npcm: Fix broken references to chip->parent_device
-Date:   Mon, 28 Mar 2022 07:19:42 -0400
-Message-Id: <20220328112011.1555169-6-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 05/29] pinctrl: npcm: Fix broken references to chip->parent_device
+Date:   Mon, 28 Mar 2022 07:21:07 -0400
+Message-Id: <20220328112132.1555683-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220328112011.1555169-1-sashal@kernel.org>
-References: <20220328112011.1555169-1-sashal@kernel.org>
+In-Reply-To: <20220328112132.1555683-1-sashal@kernel.org>
+References: <20220328112132.1555683-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
