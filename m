@@ -2,97 +2,148 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 16D6D4E9168
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Mar 2022 11:34:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A6214E9183
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Mar 2022 11:37:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231820AbiC1Jfi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Mar 2022 05:35:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60896 "EHLO
+        id S239873AbiC1JjT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Mar 2022 05:39:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232922AbiC1Jfi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Mar 2022 05:35:38 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E07C0DFAE;
-        Mon, 28 Mar 2022 02:33:57 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 763D060F04;
-        Mon, 28 Mar 2022 09:33:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE0B4C004DD;
-        Mon, 28 Mar 2022 09:33:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648460036;
-        bh=vyhorH3ReopEjyyeOaqNXz1F+fuDMA3PtzKea0coFV8=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=N7gslZiAbUk2K0itCjecfsI/RWbD921JgzGNP2Kjob9tlNWKxpcv0XxXJfPNZin/w
-         A0IR7YQPjfgzcF8nfIw2Qp9ZjcFTNb7LTztL9AYoQlq+D0DFSUCrNS2qiH6JPnE1fC
-         d1KCYuVMQdA55JmSSOhMn38gdsnsuJiIvXS7xjuBjd+D58bh2S8/2S5hzqSNDwuMtF
-         wL6A4k/3MHLny+7jUG8f45x9h9oK0icdinMC+NM7pK2YaZF62B/PFs4TG4m+pXcVBe
-         gM+xB7pqzFL7oswhmEfyYWWLVgaR1DNvn0CsMhOvyHk4QEK83ayzd9+XQz5ZI40AA0
-         C+vN55O6TsHMw==
-From:   Kalle Valo <kvalo@kernel.org>
-To:     Benjamin =?utf-8?Q?St=C3=BCrz?= <benni@stuerz.xyz>
-Cc:     sebastian.hesselbarth@gmail.com, gregory.clement@bootlin.com,
-        linux@armlinux.org.uk, linux@simtec.co.uk, krzk@kernel.org,
-        alim.akhtar@samsung.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-        robert.moore@intel.com, rafael.j.wysocki@intel.com,
-        lenb@kernel.org, 3chas3@gmail.com, laforge@gnumonks.org,
-        arnd@arndb.de, gregkh@linuxfoundation.org, mchehab@kernel.org,
-        tony.luck@intel.com, james.morse@arm.com, rric@kernel.org,
-        linus.walleij@linaro.org, brgl@bgdev.pl,
-        mike.marciniszyn@cornelisnetworks.com,
-        dennis.dalessandro@cornelisnetworks.com, jgg@ziepe.ca,
-        pali@kernel.org, dmitry.torokhov@gmail.com, isdn@linux-pingi.de,
-        benh@kernel.crashing.org, fbarrat@linux.ibm.com, ajd@linux.ibm.com,
-        davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
-        nico@fluxnic.net, loic.poulain@linaro.org, pkshih@realtek.com,
-        bhelgaas@google.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-acpi@vger.kernel.org,
-        devel@acpica.org, linux-atm-general@lists.sourceforge.net,
-        netdev@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-input@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-media@vger.kernel.org, wcn36xx@lists.infradead.org,
-        linux-wireless@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 00/22] Replace comments with C99 initializers
-References: <20220326165909.506926-1-benni@stuerz.xyz>
-        <8f9271b6-0381-70a9-f0c2-595b2235866a@stuerz.xyz>
-Date:   Mon, 28 Mar 2022 12:33:42 +0300
-In-Reply-To: <8f9271b6-0381-70a9-f0c2-595b2235866a@stuerz.xyz> ("Benjamin
-        \=\?utf-8\?Q\?St\=C3\=BCrz\=22's\?\= message of "Sun, 27 Mar 2022 14:46:00 +0200")
-Message-ID: <87fsn2zaix.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        with ESMTP id S234405AbiC1JjS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Mar 2022 05:39:18 -0400
+Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D61F7541A8
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Mar 2022 02:37:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=k1; bh=LE7raKislCZZkXpLroZs2BIDbLhu
+        zFOoOiX4Xsm/vFc=; b=Oa/AVQQZxo59EXMkSKt745EdgGRQcy55ANXgYVA+K+7+
+        gvKw+Yxir2ugT1vMk6zhw1DAy2MB8AvT7r7dg1hkMKtbCYHg49N97mzJ0v9YieQY
+        +WDtacUu9gnA8SuNNa1fVgaiZ8LnHTgY4nhcLEJeRJYrMV5Lw4YhJ8OIFSEVoNI=
+Received: (qmail 1305304 invoked from network); 28 Mar 2022 11:37:33 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 28 Mar 2022 11:37:33 +0200
+X-UD-Smtp-Session: l3s3148p1@pfDOD0TbpNUgAQnoAEkIAFmtuepKDVA5
+Date:   Mon, 28 Mar 2022 11:37:32 +0200
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v7 1/1] gpio: add sloppy logic analyzer using polling
+Message-ID: <YkGB3AgME/OZAdoG@ninjato>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+References: <20220317085019.3987-1-wsa+renesas@sang-engineering.com>
+ <20220317085019.3987-2-wsa+renesas@sang-engineering.com>
+ <YjiC6Lg5k5gK/BfP@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="inDyF/t2z9scnhMV"
+Content-Disposition: inline
+In-Reply-To: <YjiC6Lg5k5gK/BfP@smile.fi.intel.com>
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Benjamin St=C3=BCrz <benni@stuerz.xyz> writes:
 
-> This patch series replaces comments with C99's designated initializers
-> in a few places. It also adds some enum initializers. This is my first
-> time contributing to the Linux kernel, therefore I'm probably doing a
-> lot of things the wrong way. I'm sorry for that.
+--inDyF/t2z9scnhMV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Just a small tip: If you are new, start with something small and learn
-from that. Don't do a controversial big patchset spanning multiple
-subsystems, that's the hard way to learn things. First submit one patch
-at a time to one subsystem and gain understanding of the process that
-way.
+Hi Andy,
 
---=20
-https://patchwork.kernel.org/project/linux-wireless/list/
+> > +	for (i =3D 0; i < priv->trig_len; i+=3D 2) {
+>=20
+> Missed space.
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
-hes
+Yes.
+
+> > +static int fops_buf_size_set(void *data, u64 val)
+> > +{
+> > +	struct gpio_la_poll_priv *priv =3D data;
+>=20
+> > +	int ret =3D 0;
+>=20
+> Instead of this assignment and other related things, can we do the follow=
+ing?
+>=20
+> > +	void *p;
+> > +
+> > +	if (!val)
+> > +		return -EINVAL;
+> > +
+> > +	mutex_lock(&priv->lock);
+> > +
+> > +	vfree(priv->blob.data);
+>=20
+> 	priv->blob.data =3D NULL;
+> 	priv->blob.size =3D 0;
+>=20
+> > +	p =3D vzalloc(val);
+> > +	if (!p) {
+> > +		val =3D 0;
+> > +		ret =3D -ENOMEM;
+> > +	}
+>=20
+> 	p =3D vzalloc(val);
+> 	if (!p)
+> 		return -ENOMEM;
+>=20
+> > +	priv->blob.data =3D p;
+> > +	priv->blob.size =3D val;
+
+I don't like assigning 'priv' memebers twice, so I'd like to keep it as
+is.
+
+> > +static const struct file_operations fops_trigger =3D {
+> > +	.owner =3D THIS_MODULE,
+> > +	.open =3D trigger_open,
+> > +	.write =3D trigger_write,
+> > +	.llseek =3D no_llseek,
+> > +	.release =3D single_release,
+> > +};
+>=20
+> Can it be wrapped by DEFINE_SHOW_ATTRIBUTE()?
+
+I don't see a way. Do you?
+
+> > +	dev_info(dev, "initialized");
+>=20
+> Not sure how this one would be helpful.
+
+Then please check my comments on your previous reviews.
+
+All the best,
+
+   Wolfram
+
+
+--inDyF/t2z9scnhMV
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmJBgdwACgkQFA3kzBSg
+KbYyZBAAnxhHF2fEwbRxNWZSbs6cieerGxqMW3ujNQ61Y0c4z3zjENN2DGF7nz8C
+iyHg20CYpZE+j/aPRV0v9CK4PjWSn6Au4UM+0SNKUtLwQRl+pQ/iJFQHc4opHlOD
+Ri4Balpx5AwcpiSxiTPY2RlpNipoWseC4npofbNLrLOVQrVkuO21Fc0oHlgy1yXp
+m34X0XRm2g37kyOgRsl2PxW5qVRNeuns4m8aXX3CFT/QApxH4GDXFOZ+MGJhCN5B
+WxdvxdPDgITRjgUR1xUtKp1adZaD+nM2sPrqdZt9cQZi5GMPUJLInnx6KQbqMQZ/
+wwPJu8YWiPhyK3M6wvSxFIBFwdrkWD5Igl4VpV3MnECzoFLQ4WZYsJeyMezvA9dp
+4zZwbvuJqs7GImS9gr9PTuMU9niKPqKOIiN+GsawvQdceu/++cLue/Z8yDn6wvYa
+WNuI2A3JQQib3ZlksuQ45boGaPrzpV2Oh9nwLhKuP+IOGPPU2e4rsC55WE0y5Eg5
+ngP5hp7L+1/FPAn4XrSnTtxs9gh0hsvYAa4FM5ErrDhuiph3Kbzu2d5Jwjv1PTdS
+nVPnboyMhb3HPd5sD2Sz5n6bFERktycMTcTuKD/+C/1gbbLw1iYP6GX7c8uJMAWM
+4bllfRcoHft54irxD8KSuDJAOnIbeaJji+h8Knmtf5V2Ctrwc+c=
+=wf1u
+-----END PGP SIGNATURE-----
+
+--inDyF/t2z9scnhMV--
