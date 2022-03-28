@@ -2,113 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B8B3D4E968E
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Mar 2022 14:27:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1DF584E969B
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Mar 2022 14:31:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237692AbiC1M30 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Mar 2022 08:29:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55666 "EHLO
+        id S242595AbiC1MdQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Mar 2022 08:33:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232800AbiC1M3Z (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Mar 2022 08:29:25 -0400
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C05244D605;
-        Mon, 28 Mar 2022 05:27:44 -0700 (PDT)
-Received: by mail-wr1-x431.google.com with SMTP id j18so20132587wrd.6;
-        Mon, 28 Mar 2022 05:27:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=JbGAok762R8eBf1hqPVfuq1fu8O4b6lICrVhcAOXnnY=;
-        b=eDh8olkgVMK3UTpO18awHgIc3Ed1jsfRMZAreLXkhBIlEA7DeVZ1QaLXRVgqazyhZG
-         Y6kvkvxAUwxy8MKoK65O2iq8YCwLPmqQ+3l5aOa3tWqqdnxJMSxGg7IGW65JFrEycRlR
-         es6W82+/BH70jMdcVTDB/o778CCgAQvrwY1jEFzkPry8R0yfOl0n9lgD717vx/XyluUB
-         nNFbpYcQS01CHq0N5yK3ivzIodKMnvg1qxWeSt+865nFs/tES+bXuTGtT/fqcF42IXnV
-         FZNgTEakz22bqP1JaQFIPFL4D+l/1CEZbON+UfbNprd1gMoMmdmJTtvPtfYc+Nli8a7u
-         v39g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=JbGAok762R8eBf1hqPVfuq1fu8O4b6lICrVhcAOXnnY=;
-        b=i3Acjqw0AC278lwSytd6C25cuzGgPfa5zlUP7lut1MLwLVeWoKmUmrQs5H+T0aOykv
-         POnqH2TEhyw/znW8teWwKSe6W198/LS2sLCCY+g8YHzazx1NNrKOneWZygXpVNnD3Db4
-         kcyJV43biR5Op5a1JRhBoa5VkexS0w4TgsEhOVMzPzVhy3ifGhDKcjfKGkHQjoWym7N3
-         LCoshf1Q19lxoE/kWNnxQdVGetY6FzCPN8FFA9wv2eemxrUG4OM59MBdpnqF3cqGWE1M
-         pvERvyk1eS/UFHYh1aWvRX91W/5Qks+6O9zy5GMpy5WidC1ikc37Bp+XRWdFXLV+cn5p
-         /kqw==
-X-Gm-Message-State: AOAM533+D/1kQverk5XPDpjRhR4FGb0ewgPu3uAL7v1oCzsE2GaS645h
-        Va9C1P7WYMiq8Nri62lrHKc=
-X-Google-Smtp-Source: ABdhPJyJhWj9ZIEO6fsrHVxsB2RCiBoanzZrq0bKdtFkggensDubXGrxlX1xOnXys9deFbRpSsu4Rw==
-X-Received: by 2002:adf:eec1:0:b0:1e3:1e0a:72f0 with SMTP id a1-20020adfeec1000000b001e31e0a72f0mr23809347wrp.524.1648470463325;
-        Mon, 28 Mar 2022 05:27:43 -0700 (PDT)
-Received: from [192.168.0.32] ([137.101.87.65])
-        by smtp.gmail.com with ESMTPSA id m13-20020a05600c3b0d00b0038cda9f92fasm10725613wms.0.2022.03.28.05.27.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Mar 2022 05:27:42 -0700 (PDT)
-Message-ID: <a48706db-cdc9-2a1d-0abb-08dd961c17e9@gmail.com>
-Date:   Mon, 28 Mar 2022 14:27:41 +0200
+        with ESMTP id S242545AbiC1MdF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Mar 2022 08:33:05 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13BD135AA1;
+        Mon, 28 Mar 2022 05:31:25 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id BC688B80DFE;
+        Mon, 28 Mar 2022 12:31:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A869FC340EC;
+        Mon, 28 Mar 2022 12:31:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1648470682;
+        bh=fLGdb7dSfAqcoc7SmA0DtwuG5S8J1UMKX6NM0JYvlbE=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=vR3sm0Sym9PNeV1iKQGwMQbPO6yRDwohIBCSBdBAAXuDDO0SWpja6OgX6EnOvgTmq
+         TjnzAmmgRqAI7VMMqH2O7CUJ6XEWGQoPVF1AN2lYHSalQOuTT+xH3TeXiapzkBoDDY
+         tTzTYQ5GBWa2GALcTzd9hSykzmqjjHuEIfoQNXYeYukvQqZVWjJgo1IrRVnWgagObl
+         g/dwjiafO/fytUgqLw8IWTrjQWjo/zqFAaNAJAQ8gjKtytzwyaZGjuidRKQhih/yde
+         bDhRRLmxOXxLsSy40enpsfgnUm8nwGiwmrDs+aoLJB2mBmG7Pk8oHcDE3szRC3iHWp
+         ESPsCuNOlpy8A==
+From:   Kalle Valo <kvalo@kernel.org>
+To:     Benjamin =?utf-8?Q?St=C3=BCrz?= <benni@stuerz.xyz>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-acpi@vger.kernel.org, devel@acpica.org,
+        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
+        linux-edac@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-input@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-media@vger.kernel.org,
+        wcn36xx@lists.infradead.org, linux-wireless@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 00/22] Replace comments with C99 initializers
+References: <20220326165909.506926-1-benni@stuerz.xyz>
+        <8f9271b6-0381-70a9-f0c2-595b2235866a@stuerz.xyz>
+        <87fsn2zaix.fsf@kernel.org>
+        <cc104272-d79a-41e1-f4de-cb78fb073991@stuerz.xyz>
+Date:   Mon, 28 Mar 2022 15:31:14 +0300
+In-Reply-To: <cc104272-d79a-41e1-f4de-cb78fb073991@stuerz.xyz> ("Benjamin
+        \=\?utf-8\?Q\?St\=C3\=BCrz\=22's\?\= message of "Mon, 28 Mar 2022 13:51:42 +0200")
+Message-ID: <87bkxqz2b1.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH v11 1/3] dt-bindings: arm: mediatek: Add mt8195 pericfg
- compatible
-Content-Language: en-US
-To:     Tinghan Shen <tinghan.shen@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Sean Wang <sean.wang@mediatek.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Project_Global_Chrome_Upstream_Group@mediatek.com,
-        ryder.lee@kernel.org, wenst@chromium.org, chunfeng.yun@mediatek.com
-References: <20220216113131.13145-1-tinghan.shen@mediatek.com>
- <20220216113131.13145-2-tinghan.shen@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-In-Reply-To: <20220216113131.13145-2-tinghan.shen@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Benjamin St=C3=BCrz <benni@stuerz.xyz> writes:
 
+> On 28.03.22 11:33, Kalle Valo wrote:
+>> Benjamin St=C3=BCrz <benni@stuerz.xyz> writes:
+>>=20
+>>> This patch series replaces comments with C99's designated initializers
+>>> in a few places. It also adds some enum initializers. This is my first
+>>> time contributing to the Linux kernel, therefore I'm probably doing a
+>>> lot of things the wrong way. I'm sorry for that.
+>>=20
+>> Just a small tip: If you are new, start with something small and learn
+>> from that. Don't do a controversial big patchset spanning multiple
+>> subsystems, that's the hard way to learn things. First submit one patch
+>> at a time to one subsystem and gain understanding of the process that
+>> way.
+>
+> I actually thought this would be such simple thing.
 
-On 16/02/2022 12:31, Tinghan Shen wrote:
-> Add mt8195 pericfg compatible to binding document.
-> 
-> Signed-off-by: Tinghan Shen <tinghan.shen@mediatek.com>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Acked-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+If there are 22 patches and a dozen different subsystems it's far from
+simple, as you noticed from your replies :)
 
-Applied, thanks!
+> Do you know of any good thing where to start? I already looked into
+> drivers/staging/*/TODO and didn't found something for me personally.
 
-> ---
->   .../devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml       | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml
-> index 8723dfe34bab..611f666f359d 100644
-> --- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml
-> +++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,pericfg.yaml
-> @@ -26,6 +26,7 @@ properties:
->                 - mediatek,mt8135-pericfg
->                 - mediatek,mt8173-pericfg
->                 - mediatek,mt8183-pericfg
-> +              - mediatek,mt8195-pericfg
->                 - mediatek,mt8516-pericfg
->             - const: syscon
->         - items:
+I work in wireless and one my annoyance is use of BUG_ON() in wireless
+drivers. There just isn't a good reason to crash the whole system when
+there's a bug in a wireless driver or firmware. You can get list like
+this:
+
+git grep BUG_ON drivers/net/wireless/ | grep -v BUILD_BUG_ON
+
+It might not be always trivial to fix BUG_ON() usage, so it would be a
+good challenge as well. See the wiki link below how to submit wireless
+patches. But just send a one patch first, don't work for several hours
+and then submit a big set of patches.
+
+We also might have a todo list somewhere in the wiki, but don't know how
+to up-to-date it is.
+
+> Should I drop this patchset and start with something different?=20
+
+Like Mauro suggested, splitting the patchset per subsystem is a very
+good idea. And first try out with one subsystem, and after seeing how it
+goes (if they are accepted or rejected), decide if you send more patches
+to other subsystems.
+
+> If yes, what would the proper way to drop it? Just announcing, that
+> this is going nowhere in a separate patch?
+
+Replying to Mauro's email and telling your intentions is a good way to
+inform everyone.
+
+--=20
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
+hes
