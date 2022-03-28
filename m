@@ -2,174 +2,247 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E5CA4E9670
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Mar 2022 14:21:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBBA24E9689
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Mar 2022 14:27:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242395AbiC1MXB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Mar 2022 08:23:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41542 "EHLO
+        id S236974AbiC1M2p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Mar 2022 08:28:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242392AbiC1MWy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Mar 2022 08:22:54 -0400
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1C9B34CD74
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Mar 2022 05:21:12 -0700 (PDT)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-8-vkuU1pGbNXCyrAVN_KskHQ-1; Mon, 28 Mar 2022 13:21:10 +0100
-X-MC-Unique: vkuU1pGbNXCyrAVN_KskHQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
- Server (TLS) id 15.0.1497.32; Mon, 28 Mar 2022 13:21:04 +0100
-Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
- AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
- 15.00.1497.033; Mon, 28 Mar 2022 13:21:04 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Kalle Valo' <kvalo@kernel.org>,
-        Larry Finger <Larry.Finger@lwfinger.net>
-CC:     =?utf-8?B?QmVuamFtaW4gU3TDvHJ6?= <benni@stuerz.xyz>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>,
-        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "linux@simtec.co.uk" <linux@simtec.co.uk>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "robert.moore@intel.com" <robert.moore@intel.com>,
-        "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "3chas3@gmail.com" <3chas3@gmail.com>,
-        "laforge@gnumonks.org" <laforge@gnumonks.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "rric@kernel.org" <rric@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "brgl@bgdev.pl" <brgl@bgdev.pl>,
-        "mike.marciniszyn@cornelisnetworks.com" 
-        <mike.marciniszyn@cornelisnetworks.com>,
-        "dennis.dalessandro@cornelisnetworks.com" 
-        <dennis.dalessandro@cornelisnetworks.com>,
-        "jgg@ziepe.ca" <jgg@ziepe.ca>, "pali@kernel.org" <pali@kernel.org>,
-        "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        "isdn@linux-pingi.de" <isdn@linux-pingi.de>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "fbarrat@linux.ibm.com" <fbarrat@linux.ibm.com>,
-        "ajd@linux.ibm.com" <ajd@linux.ibm.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "nico@fluxnic.net" <nico@fluxnic.net>,
-        "loic.poulain@linaro.org" <loic.poulain@linaro.org>,
-        "pkshih@realtek.com" <pkshih@realtek.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "devel@acpica.org" <devel@acpica.org>,
-        "linux-atm-general@lists.sourceforge.net" 
-        <linux-atm-general@lists.sourceforge.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "wcn36xx@lists.infradead.org" <wcn36xx@lists.infradead.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: RE: [PATCH 21/22] rtw89: Replace comments with C99 initializers
-Thread-Topic: [PATCH 21/22] rtw89: Replace comments with C99 initializers
-Thread-Index: AQHYQoY88SRtyCmm7EOK7E4AJyEA9qzUtsLg
-Date:   Mon, 28 Mar 2022 12:21:04 +0000
-Message-ID: <6082d343f18a40229df83e3102e7dc38@AcuMS.aculab.com>
-References: <20220326165909.506926-1-benni@stuerz.xyz>
-        <20220326165909.506926-21-benni@stuerz.xyz>
-        <f7bb9164-2f66-8985-5771-5f31ee5740b7@lwfinger.net>
- <87k0cezarl.fsf@kernel.org>
-In-Reply-To: <87k0cezarl.fsf@kernel.org>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        with ESMTP id S232800AbiC1M2o (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Mar 2022 08:28:44 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C58C4D601;
+        Mon, 28 Mar 2022 05:27:03 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id a1so20130351wrh.10;
+        Mon, 28 Mar 2022 05:27:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:content-language:to:cc
+         :references:from:subject:in-reply-to:content-transfer-encoding;
+        bh=YHmfb4C20ZoeF4fGdGnIMRNg2Ab4fGRbukJuULGv0VE=;
+        b=Rn2VRIKKTMYH0yGjj6/JzkBq5XY4ktF6G/tZP1Vqjt6I0q0eAq5zdkcOPGTV9SAv2I
+         ZuppgbjsbGpU6wLhW1u8/uBgrLU17DSTimYg/Ob86znS9Hy4ahBKHDajdGAXW3e0wREY
+         E8GtjAOpl4zW9zQgcKdqHf6nsBqPe4bX5a+hPYnyoGrXzzcNLuSgXU9KECgx6viPKz4+
+         s/CY4/qZ8rXUTk8JEPQMex4aKwruAlQi6DJUlkVKlDIlc7JN6WmSlHbL7b5ofvkbbZZv
+         jbulstqHaloI0xLK2Yc1/xdKW6ucP9IOxmYs4S6OYPZBVEwYC7dshIo+B6tem7pnV5bQ
+         NWZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent
+         :content-language:to:cc:references:from:subject:in-reply-to
+         :content-transfer-encoding;
+        bh=YHmfb4C20ZoeF4fGdGnIMRNg2Ab4fGRbukJuULGv0VE=;
+        b=jr2btJuxdTR35+9rVtdLGA537V+m7VOp9ODeCveGbi0T+HCcqG9cjRK7/KO8uhUD7b
+         EwQqcAabm/QdUv3z7BWtFPEKSfxgSeFEhVI7pvezI734xnapfkDkCQTWhAsbNxE7idw8
+         TvCP+6iIw5LHaEvbgTb3UkNcI+h36MqJGInpjaJ/JAZnV1IzSKElrgNCft+2BQ7t7NJq
+         XgKLuFP/rJOkY7Jjdx58XLKj5wsm2vpx89FmHjF6in+B4dr1E/MAX0+uKeE+Q9lsVske
+         +ENB6Jq9dgk5/Zyk0G1i4reHXfaiwCCxgFbl2GQjiLQorfI9fm0Luj6x/bdtVNiSZFE0
+         AqOA==
+X-Gm-Message-State: AOAM532ArTRb6vou/9V7gGvitXlwzLMK5o7erI2DryosEAx/K5Hl7pT6
+        O+7oHeii81L5nGQ7RSunQOI=
+X-Google-Smtp-Source: ABdhPJyiHrWJXyMDhrMDjDB4l+tCjNQM71rNdhpB3Zd65zAJs+JwqjnbI8s1k+iMfKs1ojBAj+zBeA==
+X-Received: by 2002:adf:f2c6:0:b0:203:f0ba:424c with SMTP id d6-20020adff2c6000000b00203f0ba424cmr22901124wrp.663.1648470422115;
+        Mon, 28 Mar 2022 05:27:02 -0700 (PDT)
+Received: from [192.168.0.32] ([137.101.87.65])
+        by smtp.gmail.com with ESMTPSA id c4-20020a056000184400b0020584c40778sm12946276wri.103.2022.03.28.05.27.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Mar 2022 05:27:01 -0700 (PDT)
+Message-ID: <cf16ed58-6e75-cd9f-38ab-540d62ff03b5@gmail.com>
+Date:   Mon, 28 Mar 2022 14:26:59 +0200
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
 Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+To:     Tinghan Shen <tinghan.shen@mediatek.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Chaotian Jing <chaotian.jing@mediatek.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Project_Global_Chrome_Upstream_Group@mediatek.com,
+        ryder.lee@kernel.org, wenst@chromium.org,
+        chunfeng.yun@mediatek.com, Seiya Wang <seiya.wang@mediatek.com>
+References: <20220216113131.13145-1-tinghan.shen@mediatek.com>
+ <20220216113131.13145-4-tinghan.shen@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v11 3/3] arm64: dts: Add mediatek SoC mt8195 and
+ evaluation board
+In-Reply-To: <20220216113131.13145-4-tinghan.shen@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-RnJvbTogS2FsbGUgVmFsbw0KPiBTZW50OiAyOCBNYXJjaCAyMDIyIDEwOjI5DQo+IA0KPiBMYXJy
-eSBGaW5nZXIgPExhcnJ5LkZpbmdlckBsd2Zpbmdlci5uZXQ+IHdyaXRlczoNCj4gDQo+ID4gT24g
-My8yNi8yMiAxMTo1OSwgQmVuamFtaW4gU3TDvHJ6IHdyb3RlOg0KPiA+PiBUaGlzIHJlcGxhY2Vz
-IGNvbW1lbnRzIHdpdGggQzk5J3MgZGVzaWduYXRlZA0KPiA+PiBpbml0aWFsaXplcnMgYmVjYXVz
-ZSB0aGUga2VybmVsIHN1cHBvcnRzIHRoZW0gbm93Lg0KPiA+Pg0KPiA+PiBTaWduZWQtb2ZmLWJ5
-OiBCZW5qYW1pbiBTdMO8cnogPGJlbm5pQHN0dWVyei54eXo+DQo+ID4+IC0tLQ0KPiA+PiAgIGRy
-aXZlcnMvbmV0L3dpcmVsZXNzL3JlYWx0ZWsvcnR3ODkvY29leC5jIHwgNDAgKysrKysrKysrKyst
-LS0tLS0tLS0tLS0NCj4gPj4gICAxIGZpbGUgY2hhbmdlZCwgMjAgaW5zZXJ0aW9ucygrKSwgMjAg
-ZGVsZXRpb25zKC0pDQo+ID4+DQo+ID4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL25ldC93aXJlbGVz
-cy9yZWFsdGVrL3J0dzg5L2NvZXguYyBiL2RyaXZlcnMvbmV0L3dpcmVsZXNzL3JlYWx0ZWsvcnR3
-ODkvY29leC5jDQo+ID4+IGluZGV4IDY4NDU4Mzk1NTUxMS4uM2M4M2EwYmZiMTIwIDEwMDY0NA0K
-PiA+PiAtLS0gYS9kcml2ZXJzL25ldC93aXJlbGVzcy9yZWFsdGVrL3J0dzg5L2NvZXguYw0KPiA+
-PiArKysgYi9kcml2ZXJzL25ldC93aXJlbGVzcy9yZWFsdGVrL3J0dzg5L2NvZXguYw0KPiA+PiBA
-QCAtOTcsMjYgKzk3LDI2IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcnR3ODlfYnRjX2ZidGNfc2xv
-dCBzX2RlZltdID0gew0KPiA+PiAgIH07DQo+ID4+ICAgICBzdGF0aWMgY29uc3QgdTMyIGN4dGJs
-W10gPSB7DQo+ID4+IC0JMHhmZmZmZmZmZiwgLyogMCAqLw0KPiA+PiAtCTB4YWFhYWFhYWEsIC8q
-IDEgKi8NCj4gPj4gLQkweDU1NTU1NTU1LCAvKiAyICovDQo+ID4+IC0JMHg2NjU1NTU1NSwgLyog
-MyAqLw0KPiA+PiAtCTB4NjY1NTY2NTUsIC8qIDQgKi8NCj4gPj4gLQkweDVhNWE1YTVhLCAvKiA1
-ICovDQo+ID4+IC0JMHg1YTVhNWFhYSwgLyogNiAqLw0KPiA+PiAtCTB4YWE1YTVhNWEsIC8qIDcg
-Ki8NCj4gPj4gLQkweDZhNWE1YTVhLCAvKiA4ICovDQo+ID4+IC0JMHg2YTVhNWFhYSwgLyogOSAq
-Lw0KPiA+PiAtCTB4NmE1YTZhNWEsIC8qIDEwICovDQo+ID4+IC0JMHg2YTVhNmFhYSwgLyogMTEg
-Ki8NCj4gPj4gLQkweDZhZmE1YWZhLCAvKiAxMiAqLw0KPiA+PiAtCTB4YWFhYTVhYWEsIC8qIDEz
-ICovDQo+ID4+IC0JMHhhYWZmZmZhYSwgLyogMTQgKi8NCj4gPj4gLQkweGFhNTU1NWFhLCAvKiAx
-NSAqLw0KPiA+PiAtCTB4ZmFmYWZhZmEsIC8qIDE2ICovDQo+ID4+IC0JMHhmZmZmZGRmZiwgLyog
-MTcgKi8NCj4gPj4gLQkweGRhZmZkYWZmLCAvKiAxOCAqLw0KPiA+PiAtCTB4ZmFmYWRhZmEgIC8q
-IDE5ICovDQo+ID4+ICsJWzBdICA9IDB4ZmZmZmZmZmYsDQo+ID4+ICsJWzFdICA9IDB4YWFhYWFh
-YWEsDQo+ID4+ICsJWzJdICA9IDB4NTU1NTU1NTUsDQo+ID4+ICsJWzNdICA9IDB4NjY1NTU1NTUs
-DQo+ID4+ICsJWzRdICA9IDB4NjY1NTY2NTUsDQo+ID4+ICsJWzVdICA9IDB4NWE1YTVhNWEsDQo+
-ID4+ICsJWzZdICA9IDB4NWE1YTVhYWEsDQo+ID4+ICsJWzddICA9IDB4YWE1YTVhNWEsDQo+ID4+
-ICsJWzhdICA9IDB4NmE1YTVhNWEsDQo+ID4+ICsJWzldICA9IDB4NmE1YTVhYWEsDQo+ID4+ICsJ
-WzEwXSA9IDB4NmE1YTZhNWEsDQo+ID4+ICsJWzExXSA9IDB4NmE1YTZhYWEsDQo+ID4+ICsJWzEy
-XSA9IDB4NmFmYTVhZmEsDQo+ID4+ICsJWzEzXSA9IDB4YWFhYTVhYWEsDQo+ID4+ICsJWzE0XSA9
-IDB4YWFmZmZmYWEsDQo+ID4+ICsJWzE1XSA9IDB4YWE1NTU1YWEsDQo+ID4+ICsJWzE2XSA9IDB4
-ZmFmYWZhZmEsDQo+ID4+ICsJWzE3XSA9IDB4ZmZmZmRkZmYsDQo+ID4+ICsJWzE4XSA9IDB4ZGFm
-ZmRhZmYsDQo+ID4+ICsJWzE5XSA9IDB4ZmFmYWRhZmENCj4gPj4gICB9Ow0KPiA+PiAgICAgc3Ry
-dWN0IHJ0dzg5X2J0Y19idGZfdGx2IHsNCj4gPg0KPiA+DQo+ID4gSXMgdGhpcyBjaGFuZ2UgcmVh
-bGx5IG5lY2Vzc2FyeT8gWWVzLCB0aGUgZW50cmllcyBtdXN0IGJlIG9yZGVyZWQ7DQo+ID4gaG93
-ZXZlciwgdGhlIGNvbW1lbnQgY2FycmllcyB0aGF0IGluZm9ybWF0aW9uIGF0IHZlcnkgZmV3IGV4
-dHJhDQo+ID4gY2hhcmFjdGVycy4gVG8gbWUsIHRoaXMgcGF0Y2ggbG9va3MgbGlrZSB1bm5lZWRl
-ZCBzb3VyY2UgY2h1cm4uDQo+IA0KPiBPbmUgc21hbGwgYmVuZWZpdCBJIHNlZSBpcyB0byBhdm9p
-ZCB0aGUgY29tbWVudCBpbmRleCBiZWluZyB3cm9uZyBhbmQNCj4gdGhlcmUgd291bGQgYmUgbm8g
-d2F5IHRvIGNhdGNoIHRoYXQuIEJ1dCBvdGhlcndpc2UgSSBkb24ndCBoYXZlIGFueQ0KPiBvcGlu
-aW9uIGFib3V0IHRoaXMuDQoNCklmIHRoZSBbbm5dIGFyZSB3cm9uZyB0aGUgZWZmZWN0IGlzIHBy
-b2JhYmx5IHdvcnNlLg0KWW91IHJlYWxseSBkb24ndCB3YW50IGEgZ2FwIQ0KDQpEb2Vzbid0IHNl
-ZW0gd29ydGggdXNpbmcgQzk5IGluaXRpYWxpc2VycyB1bmxlc3MgdGhleSBhcmUNCiNkZWZpbmVz
-IG9yIGVudW0gdmFsdWVzLg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2Vz
-aWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVL
-DQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
 
+
+On 16/02/2022 12:31, Tinghan Shen wrote:
+> Add basic chip support for mediatek mt8195.
+> 
+> Signed-off-by: Seiya Wang <seiya.wang@mediatek.com>
+> Signed-off-by: Tinghan Shen <tinghan.shen@mediatek.com>
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> ---
+>   arch/arm64/boot/dts/mediatek/Makefile       |    1 +
+>   arch/arm64/boot/dts/mediatek/mt8195-evb.dts |  161 +++
+>   arch/arm64/boot/dts/mediatek/mt8195.dtsi    | 1049 +++++++++++++++++++
+>   3 files changed, 1211 insertions(+)
+>   create mode 100644 arch/arm64/boot/dts/mediatek/mt8195-evb.dts
+>   create mode 100644 arch/arm64/boot/dts/mediatek/mt8195.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
+> index 8c1e18032f9f..5da29e7223e4 100644
+> --- a/arch/arm64/boot/dts/mediatek/Makefile
+> +++ b/arch/arm64/boot/dts/mediatek/Makefile
+> @@ -38,4 +38,5 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt8183-kukui-krane-sku0.dtb
+>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt8183-kukui-krane-sku176.dtb
+>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt8183-pumpkin.dtb
+>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt8192-evb.dtb
+> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt8195-evb.dtb
+>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt8516-pumpkin.dtb
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8195-evb.dts b/arch/arm64/boot/dts/mediatek/mt8195-evb.dts
+> new file mode 100644
+> index 000000000000..51633d91d984
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/mediatek/mt8195-evb.dts
+> @@ -0,0 +1,161 @@
+[...]
+> +
+> +&u2port0 {
+> +	status = "okay";
+> +};
+> +
+> +&u2port1 {
+> +	status = "okay";
+> +};
+> +
+> +&u3phy0 {
+> +	status="okay";
+> +};
+> +
+> +&u3phy1 {
+> +	status="okay";
+> +};
+> +
+
+So we enable phys for xhci but not the device. Are we missing anything to enable 
+them on the EVB?
+
+> +&uart0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart0_pin>;
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8195.dtsi b/arch/arm64/boot/dts/mediatek/mt8195.dtsi
+> new file mode 100644
+> index 000000000000..a363e82f6988
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/mediatek/mt8195.dtsi
+> @@ -0,0 +1,1049 @@
+[...]
+> +
+> +	clk32k: oscillator-32k {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <32768>;
+> +		clock-output-names = "clk32k";
+
+I suppose the 32KHz oscillator is really present on the board also not used by 
+any device (up to now?).
+
+[...]
+> +
+> +	soc {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		compatible = "simple-bus";
+> +		ranges;
+> +
+[...]
+> +
+> +		pwrap: pwrap@10024000 {
+> +			compatible = "mediatek,mt8195-pwrap", "syscon";
+> +			reg = <0 0x10024000 0 0x1000>;
+> +			reg-names = "pwrap";
+> +			interrupts = <GIC_SPI 243 IRQ_TYPE_LEVEL_HIGH 0>;
+> +			clocks = <&infracfg_ao CLK_INFRA_AO_PMIC_AP>,
+> +				 <&infracfg_ao CLK_INFRA_AO_PMIC_TMR>;
+> +			clock-names = "spi", "wrap";
+
+Binding mandates resets but not present here. It also mandates two register 
+regions, but only one is given here.
+
+> +			assigned-clocks = <&topckgen CLK_TOP_PWRAP_ULPOSC>;
+> +			assigned-clock-parents = <&topckgen CLK_TOP_ULPOSC1_D10>;
+> +		};
+> +
+> +		scp_adsp: clock-controller@10720000 {
+> +			compatible = "mediatek,mt8195-scp_adsp";
+> +			reg = <0 0x10720000 0 0x1000>;
+> +			#clock-cells = <1>;
+> +		};
+> +
+
+[...]
+
+> +
+> +		mmc0: mmc@11230000 {
+> +			compatible = "mediatek,mt8195-mmc",
+> +				     "mediatek,mt8183-mmc";
+> +			reg = <0 0x11230000 0 0x10000>,
+> +			      <0 0x11f50000 0 0x1000>;
+
+Seems to be an oversight when adding support for mt8183-mmc support to the 
+driver. The binding description is missing the optional host top register base. 
+Chaotian can you please help to fix this in the binding description.
+
+> +			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH 0>;
+> +			clocks = <&topckgen CLK_TOP_MSDC50_0>,
+> +				 <&infracfg_ao CLK_INFRA_AO_MSDC0>,
+> +				 <&infracfg_ao CLK_INFRA_AO_MSDC0_SRC>;
+> +			clock-names = "source", "hclk", "source_cg";
+> +			status = "disabled";
+> +		};
+> +
+[...]
+> +
+> +		xhci3: usb@112b0000 {
+> +			compatible = "mediatek,mt8195-xhci",
+> +				     "mediatek,mtk-xhci";
+> +			reg = <0 0x112b0000 0 0x1000>,
+> +			      <0 0x112b3e00 0 0x0100>;
+> +			reg-names = "mac", "ippc";
+> +			interrupts = <GIC_SPI 536 IRQ_TYPE_LEVEL_HIGH 0>;
+> +			phys = <&u2port3 PHY_TYPE_USB2>;
+> +			assigned-clocks = <&topckgen CLK_TOP_USB_TOP_3P>,
+> +					  <&topckgen CLK_TOP_SSUSB_XHCI_3P>;
+> +			assigned-clock-parents = <&topckgen CLK_TOP_UNIVPLL_D5_D4>,
+> +						 <&topckgen CLK_TOP_UNIVPLL_D5_D4>;
+> +			clocks = <&pericfg_ao CLK_PERI_AO_SSUSB_3P_BUS>,
+> +				 <&topckgen CLK_TOP_SSUSB_P3_REF>,
+> +				 <&pericfg_ao CLK_PERI_AO_SSUSB_3P_XHCI>;
+> +			clock-names = "sys_ck", "ref_ck", "xhci_ck";
+> +			/* This controller is connected with a BT device.
+> +			 * Disable usb2 lpm to prevent konwn issues.
+> +			 */
+> +			usb2-lpm-disable;
+
+My understanding is, that this depends on the board and not the SoC. Which means 
+usb2-lpm-disable should go into any board that has a BT device connected to the 
+xhci device (I don't see any active xhci node in mt8195-evb so far).
+
+Regards,
+Matthias
