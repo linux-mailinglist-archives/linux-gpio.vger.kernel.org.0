@@ -2,79 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 095424E8B96
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Mar 2022 03:29:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B1144E8CA4
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Mar 2022 05:34:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235177AbiC1BbX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 27 Mar 2022 21:31:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42752 "EHLO
+        id S237836AbiC1DgW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 27 Mar 2022 23:36:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231126AbiC1BbX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 27 Mar 2022 21:31:23 -0400
-X-Greylist: delayed 64 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 27 Mar 2022 18:29:43 PDT
-Received: from mx.socionext.com (mx.socionext.com [202.248.49.38])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B81F115A09
-        for <linux-gpio@vger.kernel.org>; Sun, 27 Mar 2022 18:29:43 -0700 (PDT)
-Received: from unknown (HELO iyokan2-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 28 Mar 2022 10:28:38 +0900
-Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
-        by iyokan2-ex.css.socionext.com (Postfix) with ESMTP id 53BAB2058B50;
-        Mon, 28 Mar 2022 10:28:38 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Mon, 28 Mar 2022 10:28:38 +0900
-Received: from plum.e01.socionext.com (unknown [10.212.243.119])
-        by kinkan2.css.socionext.com (Postfix) with ESMTP id E9EF6B62B7;
-        Mon, 28 Mar 2022 10:28:37 +0900 (JST)
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH] dt-bindings: gpio: uniphier: Add hogs parsing
-Date:   Mon, 28 Mar 2022 10:28:36 +0900
-Message-Id: <1648430916-21988-1-git-send-email-hayashi.kunihiko@socionext.com>
-X-Mailer: git-send-email 2.7.4
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        with ESMTP id S230218AbiC1DgV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 27 Mar 2022 23:36:21 -0400
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6AAADFA2;
+        Sun, 27 Mar 2022 20:34:37 -0700 (PDT)
+X-UUID: 51dadd8ee35d4b25ada0d76fd284df98-20220328
+X-UUID: 51dadd8ee35d4b25ada0d76fd284df98-20220328
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <miles.chen@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 1984873051; Mon, 28 Mar 2022 11:34:32 +0800
+Received: from mtkexhb01.mediatek.inc (172.21.101.102) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 28 Mar 2022 11:34:31 +0800
+Received: from mtkcas11.mediatek.inc (172.21.101.40) by mtkexhb01.mediatek.inc
+ (172.21.101.102) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 28 Mar
+ 2022 11:34:31 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas11.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 28 Mar 2022 11:34:31 +0800
+From:   Miles Chen <miles.chen@mediatek.com>
+To:     <fparent@baylibre.com>
+CC:     <linus.walleij@linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <matthias.bgg@gmail.com>,
+        <sean.wang@kernel.org>, <zhiyong.tao@mediatek.com>
+Subject: Re: [PATCH] pinctrl: mediatek: mt8195: enable driver on mtk platforms
+Date:   Mon, 28 Mar 2022 11:34:31 +0800
+Message-ID: <20220328033431.22149-1-miles.chen@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20220327160813.2978637-1-fparent@baylibre.com>
+References: <20220327160813.2978637-1-fparent@baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-MTK:  N
+X-Spam-Status: No, score=0.6 required=5.0 tests=BAYES_00,SORTED_RECIPS,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Allow parsing GPIO controller children nodes with GPIO hogs to fix the
-following warning:
+> Set the pinctrl driver as built-in by default if
+> ARM64 and ARCH_MEDIATEK are enabled.
+> 
+> Fixes: 6cf5e9ef362a ("pinctrl: add pinctrl driver on mt8195")
+> Signed-off-by: Fabien Parent <fparent@baylibre.com>
 
-  uniphier-ld11-ref.dtb: gpio@55000000: 'xirq0-hog' does not match any of the regexes: 'pinctrl-[0-9]+'
-      From schema: Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
-
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
- .../devicetree/bindings/gpio/socionext,uniphier-gpio.yaml  | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml b/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
-index bcafa494ed7a..b6f5963a2ae6 100644
---- a/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
-+++ b/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
-@@ -52,6 +52,13 @@ properties:
-       <child-interrupt-base parent-interrupt-base length> triplets.
-     $ref: /schemas/types.yaml#/definitions/uint32-matrix
- 
-+patternProperties:
-+  "^(.+-hog(-[0-9]+)?)$":
-+    type: object
-+
-+    required:
-+      - gpio-hog
-+
- required:
-   - compatible
-   - reg
--- 
-2.25.1
-
+Reviewed-by: Miles Chen <miles.chen@mediatek.com> 
