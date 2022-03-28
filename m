@@ -2,138 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 28CD34E8EC1
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Mar 2022 09:12:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BAA714E8F17
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Mar 2022 09:35:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236695AbiC1HOB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Mar 2022 03:14:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41046 "EHLO
+        id S238848AbiC1HhU convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Mon, 28 Mar 2022 03:37:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbiC1HOB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Mar 2022 03:14:01 -0400
-Received: from router.aksignal.cz (router.aksignal.cz [62.44.4.214])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 190B452B1E
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Mar 2022 00:12:20 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by router.aksignal.cz (Postfix) with ESMTP id 6275C453DD;
-        Mon, 28 Mar 2022 09:12:17 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at router.aksignal.cz
-Received: from router.aksignal.cz ([127.0.0.1])
-        by localhost (router.aksignal.cz [127.0.0.1]) (amavisd-new, port 10026)
-        with LMTP id N0uakXN2AbiN; Mon, 28 Mar 2022 09:12:16 +0200 (CEST)
-Received: from [172.25.161.48] (unknown [83.240.30.185])
-        (Authenticated sender: jiri.prchal@aksignal.cz)
-        by router.aksignal.cz (Postfix) with ESMTPSA id 8D25F453DA;
-        Mon, 28 Mar 2022 09:12:16 +0200 (CEST)
-Message-ID: <1d43c967-e3c9-21a8-3040-2db54ba85bdf@aksignal.cz>
-Date:   Mon, 28 Mar 2022 09:12:16 +0200
+        with ESMTP id S238843AbiC1HhT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Mar 2022 03:37:19 -0400
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAA2F51E5B;
+        Mon, 28 Mar 2022 00:35:38 -0700 (PDT)
+Received: by mail-qv1-f41.google.com with SMTP id b17so1566277qvf.12;
+        Mon, 28 Mar 2022 00:35:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=NSmS9k73z1IP3D2QdHYwh4TDW9fTJmU9UMoo6xsufQI=;
+        b=acfAYp2ABR1gjv+B5A6ocgOn4nsKn1gDGOGBIPK/n/joHLigwfGyWK/wkD7lqsjuLg
+         EgrY8JyXT/a8Td3oSgP6Vt05Vsd7nc3TxeSybqhrwUz4R2SnPVEZECwQJbODVQVYNYyc
+         Xg3Rynz44u6FBUoMfgEA22Bl6FtmI08H3IaeuyBqllTk1haPQNOSdA/4aGAcHO/syCFX
+         Kb0zU5fIEQtnpT6hAsbIe+xoj9VvpT+aM/aNUp678J2zjXxcK4fBxuruhm4Rul79fBei
+         AgvPDPEbIVZGZisGyRry6btbDljNyzbYIdvFJbpDHGeR3FGSSqo93mAVkFYYnbMKF+J0
+         kowQ==
+X-Gm-Message-State: AOAM531EKenaGCIjUCYy4KyURRamXVxvODdCCtPN3fohEjEgXw0NyP1j
+        MY+BvnOk857+mAaRkmaI1OQs9RZH3FtZJg==
+X-Google-Smtp-Source: ABdhPJx9HCSlrOfCy1RX0tHlKOQi7AonJNJPNbcRkXBbYAxLHj+oH8V7T0d4vs8/bxWyDQ/6aPlndg==
+X-Received: by 2002:a05:6214:2a49:b0:441:69b0:84c7 with SMTP id jf9-20020a0562142a4900b0044169b084c7mr19452797qvb.122.1648452937649;
+        Mon, 28 Mar 2022 00:35:37 -0700 (PDT)
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com. [209.85.219.175])
+        by smtp.gmail.com with ESMTPSA id x6-20020a376306000000b0067b32a8568esm7815817qkb.101.2022.03.28.00.35.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Mar 2022 00:35:37 -0700 (PDT)
+Received: by mail-yb1-f175.google.com with SMTP id g9so22079449ybf.1;
+        Mon, 28 Mar 2022 00:35:36 -0700 (PDT)
+X-Received: by 2002:a05:6902:101:b0:633:ccde:cfca with SMTP id
+ o1-20020a056902010100b00633ccdecfcamr20853450ybh.207.1648452936744; Mon, 28
+ Mar 2022 00:35:36 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [libgpiod] bug: pull-up does not work
-Content-Language: en-US
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     linux-gpio@vger.kernel.org, brgl@bgdev.pl,
-        andy.shevchenko@gmail.com
-References: <62b30818-92fa-e44c-c9dd-fd8cc49a6e6a@aksignal.cz>
- <20220325145742.GA46960@sol>
- <48129be0-f29d-96ae-cec3-2b4a2ee10aa8@aksignal.cz>
- <20220325160146.GA49114@sol>
-From:   =?UTF-8?B?SmnFmcOtIFByY2hhbA==?= <jiri.prchal@aksignal.cz>
-In-Reply-To: <20220325160146.GA49114@sol>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220325200338.54270-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20220325200338.54270-1-andriy.shevchenko@linux.intel.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 28 Mar 2022 09:35:25 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXJo=XWNLKpFFe65fx-c7oPXmydvXxiPzGicNaxYthGbg@mail.gmail.com>
+Message-ID: <CAMuHMdXJo=XWNLKpFFe65fx-c7oPXmydvXxiPzGicNaxYthGbg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/5] gpiolib: Introduce gpiochip_count() helper
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Fabien Dessenne <fabien.dessenne@foss.st.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Andy,
 
+On Fri, Mar 25, 2022 at 9:04 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+> The gpiochip_count() helper iterates over the device child nodes that have
+> the "gpio-controller" property set. It returns the number of such nodes
+> under given device.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-On 25. 03. 22 17:01, Kent Gibson wrote:
-> On Fri, Mar 25, 2022 at 04:13:11PM +0100, Jiří Prchal wrote:
->>
->>
->> On 25. 03. 22 15:57, Kent Gibson wrote:
->>> On Fri, Mar 25, 2022 at 11:02:07AM +0100, Jiří Prchal wrote:
->>>> Hi,
->>>> since in debian is 1.6.2 and pull-up doesn't work so I cloned git, branch
->>>> next/libgpiod-2.0 and compiled libgpiod and tools, but no luck, same result.
->>>>
->>>
->>> You mean it doesn't work for you on your platform.
->>>
->>> The libgpiod-2.0 branch is a work in progress and should not be considered
->>> the place to go to find solutions to problems with v1.6.
->>> Not that I'm saying that the v2 branch doesn't work, I'm actually pretty
->>> sure it does, but its purpose is to switch to the latest kernel uAPI, not
->>> to provide fixes, should they be needed, for v1.6.
->> Just thought api v1 doesn't support pull-ups so tried v2.
-> 
-> v1 does support bias since Linux v5.5, and libgpiod added support in v1.5.
-> 
->>>
->>>> ~# uname -r
->>>> 5.17.0-rc7_cpm9g25
->>>>
->>>> floating pins should go with pull-up/down
->>>> ~# gpioget -B pull-up 3 6 8 10 12 14 16 18 20
->>>> 0 0 0 0 0 0 0 0
->>>> ~# gpioget -B pull-up 3 6 8 10 12 14 16 18 20
->>>> 1 1 0 0 0 0 0 0
->>>> ~# gpioget -B pull-up 3 6 8 10 12 14 16 18 20
->>>> 0 1 0 1 0 0 0 0
->>>>
->>>> ~# gpioget -v
->>>> gpioget (libgpiod) v2.0-devel
->>>>
->>>> Whats wrong with it?
->>>
->>> You forgot to mention which of those pins are floating.
->> All of them.
->>> Or what gpiochip3 is and whether it supports biasing.
->> AT91SAM9G25, hw supports pull-ups.
->>>
->>> So does your chip support pull-up/down?
->>> The kernel can only enable it if the hardware and pinctrl driver supports it.
->> Is there possibility that pinctrl doesn't support it? I think other gpios
->> used in kernel are with pull-up.
->> Example:
->> pinctrl@fffff400 {
->> 	1wire {
->> 		pinctrl_1wire: 1wire-0 {
->> 			atmel,pins = <AT91_PIOC 0 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>; /* PC0
->> PIO, pull-up */
->> 		};
->> 	};
->> };
->>
-> 
-> Pinctrl and device tree are outside my area, but my understanding is
-> that setting via DT is a separate interface, so while it may be
-> supported by DT it may not be via the gpiolib interface.
-> But I will defer to anyone else on that.
-> (CCing in Andy since I'm pretty sure he would know)
-> 
-> Not sure which pinctrl is relevant for your case.
-> pinctrl-at91 doesn't appear to support setting the pull-up via the gpiolib
-> interface, but pinctrl-at91-pio4 does, so my guess would be you are using
-> the pinctrl-at91.
-pinctrl-at91-pio4 didn't help, syminfo says "for Atmel PIO4 controller 
-available on sama5d2 SoC" but my is sam9g25.
-How can I find out if it supports gpiolib?
-> 
-> But again, this is outside my area so you would need to confirm that
-> yourself or get feedback from someone else.
-> If you determine that you are using a pinctrl that supports setting
-> bias via gpiolib then we'll have to do some more digging.
-> 
-> Cheers,
-> Kent.
-> 
-Thanks
-Jiri
+Thanks for your patch!
+
+> --- a/include/linux/gpio/driver.h
+> +++ b/include/linux/gpio/driver.h
+> @@ -750,4 +751,17 @@ static inline void gpiochip_unlock_as_irq(struct gpio_chip *gc,
+>  }
+>  #endif /* CONFIG_GPIOLIB */
+>
+> +static inline unsigned int gpiochip_count(struct device *dev)
+> +{
+> +       struct fwnode_handle *child;
+> +       unsigned int count = 0;
+> +
+> +       device_for_each_child_node(dev, child) {
+> +               if (device_property_read_bool(child, "gpio-controller"))
+
+error: passing argument 1 of ‘device_property_read_bool’ from
+incompatible pointer type [-Werror=incompatible-pointer-types]
+
+So I'm afraid I cannot test patch 3/5 yet ;-)
+
+> +                       count++;
+> +       }
+> +
+> +       return count;
+> +}
+> +
+>  #endif /* __LINUX_GPIO_DRIVER_H */
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
