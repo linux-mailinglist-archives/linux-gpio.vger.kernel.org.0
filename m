@@ -2,54 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DD6DB4E98AB
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Mar 2022 15:50:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E13794E9A57
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Mar 2022 17:06:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243443AbiC1Nvl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Mar 2022 09:51:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59900 "EHLO
+        id S244249AbiC1PIB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Mar 2022 11:08:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231748AbiC1Nvk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Mar 2022 09:51:40 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [46.235.227.227])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEAC72E9D5;
-        Mon, 28 Mar 2022 06:49:59 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: kholk11)
-        with ESMTPSA id 1E9201F42944
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1648475398;
-        bh=hg3oHnVb2aNV/xfm3ZfDnsU2X0UESM8DZiscH969YFw=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=b1hpgtnTbLEuojlhgucjiRgpuCGUCcBscK8sB6vhysmpHx/yRSVWKMNT8uPJi5jck
-         gtW0HASATGgqyIoqf3+HohoMt6eTVjcYS8Vrrm6e6mbgoY/qPsf8a+B+rp1GT6CkSC
-         lXLdC/+CLoTsWRMTIPmpmXxIQEdZRd2LLxokH6BfMK8mUXfIr15LYPZUZDKCA+8rIE
-         bOkwTRYoNzpvMWKa28q68TAaMj/W3JNOin6gxMEeQixOEmYAYxC862PN6QIP1qB4+y
-         ja2IgOpipC8DVDIhWGtenATqCID0++s3l9zuJZC8bbqMKgwXa0QiT4qNRXIPHbyq01
-         3VGbjpz1//b6w==
-Message-ID: <e0264594-7f53-f7b8-349a-e75a0b6706c7@collabora.com>
-Date:   Mon, 28 Mar 2022 15:49:55 +0200
+        with ESMTP id S244187AbiC1PHu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Mar 2022 11:07:50 -0400
+Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56F6D4DF67
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Mar 2022 08:06:09 -0700 (PDT)
+Received: by mail-yb1-xb30.google.com with SMTP id x20so26398461ybi.5
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Mar 2022 08:06:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=M/wRiyThS5X8/D2KX8GPji/87UrigbGUnnN2Y5aIQZk=;
+        b=yV5Sdnq4Kjd2UWp/LZ5lwEEIERJNIr6KcM46CNCVWFvx5wlzaJKddNK3VRi9pv7R2o
+         hWLbRfqsYLG0O6BNwadNXFRL0YPv+6GRHkR0IzKLPhfmrUR2KryNXljHadxnyCDBIKfG
+         KF3hEMCHNIbTbUadbfHl44Bxavmpj4Yv1hA3CuM83B2CxsfvMWvxfFESE+lhkcc2sl81
+         sVn2fmUkIK1jSq6CSafEfGsW+woSpsvXDMkS8B+IG38HEM9XFKMRr8RrXUF/P0GXJxbn
+         0RCKTCb0nMdQINyuCCC1bFgIRbmReMA7sVoFZOdeeWwD8F4hNP9k17WhtrZi3ge5CPd4
+         ikkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=M/wRiyThS5X8/D2KX8GPji/87UrigbGUnnN2Y5aIQZk=;
+        b=xaAR0ASsPuYWD3MxMTGpr1AVXhObjGYSiQSRKvZKn3Rub46VMDmL4dJdgnZxZMPZAd
+         qT7dTuXcXPWTAnQ0DbwNY8AI6CkbH39MvgtMaB9VDZGFv4o35+85GvhH7e2Sa0cG0GWT
+         9/V/JwkgOOngdJPU8tJ0bHGOMKuo80OI0WUoe+kH0+HMedpBn5O7YYYX/jXpD1FdB75T
+         bNlVddfL3uQw3WaXm6pAQQG8GHX8usDKWkmFkdO/LkP4TwzuVB36xvesivosqOEXzYm+
+         u+y6GrxZ3msMLp0O71dFz5R3WyP2hqZ22js7ST0m+eJLB0kpUGd08aJppqBDR4j7jUUH
+         8sRA==
+X-Gm-Message-State: AOAM531Au+C1XOWuOxz4bhXqQ+Z7JMirgIKcQWhKeBNdOAyuYfyUoBWR
+        hFoZc0CBBlGxV9b6hoPgux1AuO5pAwtXclFfN5/s+A==
+X-Google-Smtp-Source: ABdhPJyBvWP4T/nWYSh2/FjJMHmzkTwu66lNSkHUz/fBNP/OZSAqAsPGed14FjOgCZ7TguMcw0Nj5dmdm+VJ9v0F0CI=
+X-Received: by 2002:a25:ab64:0:b0:633:6d02:ebc8 with SMTP id
+ u91-20020a25ab64000000b006336d02ebc8mr23196123ybi.492.1648479968482; Mon, 28
+ Mar 2022 08:06:08 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH] pinctrl: mediatek: mt8195: enable driver on mtk platforms
-Content-Language: en-US
-To:     Fabien Parent <fparent@baylibre.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Zhiyong Tao <zhiyong.tao@mediatek.com>
-Cc:     linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20220327160813.2978637-1-fparent@baylibre.com>
-From:   AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20220327160813.2978637-1-fparent@baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20220321042142.69239-1-frank@zago.net> <20220321042142.69239-3-frank@zago.net>
+In-Reply-To: <20220321042142.69239-3-frank@zago.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 28 Mar 2022 17:05:57 +0200
+Message-ID: <CACRpkdaOHHkJnvB=RQ8dLXGxT_h5mGgy5Np87QVMcPzegNi2oQ@mail.gmail.com>
+Subject: Re: [PATCH v4 2/3] gpio: ch341: add MFD cell driver for the CH341
+To:     frank zago <frank@zago.net>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Wolfram Sang <wsa@kernel.org>, Johan Hovold <johan@kernel.org>,
+        linux-usb@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -57,14 +69,37 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Il 27/03/22 18:08, Fabien Parent ha scritto:
-> Set the pinctrl driver as built-in by default if
-> ARM64 and ARCH_MEDIATEK are enabled.
-> 
-> Fixes: 6cf5e9ef362a ("pinctrl: add pinctrl driver on mt8195")
-> Signed-off-by: Fabien Parent <fparent@baylibre.com>
-> Reviewed-by: Miles Chen <miles.chen@mediatek.com>
+Hi Frank,
 
-Since this is boot-critical....
+thanks for your patch!
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+I see you already got a bunch of homework from Andy, I will do a more
+thorough review on the next iteration, just a few things:
+
+On Mon, Mar 21, 2022 at 5:21 AM frank zago <frank@zago.net> wrote:
+
+> The GPIO interface offers 16 GPIOs. 6 are read/write, and 10 are
+> read-only.
+>
+> Signed-off-by: frank zago <frank@zago.net>
+(...)
+> +config GPIO_CH341
+> +       tristate "CH341 USB adapter in GPIO/I2C/SPI mode"
+> +       depends on MFD_CH341
+
+I would add
+default MFD_CD341
+
+This way it gets selected automatically if the MFD module gets
+selected. (I suspect you should do the same with the I2C module).
+
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/gpio.h>
+
+Use <linux/gpio/driver.h>
+
+Yours,
+Linus Walleij
