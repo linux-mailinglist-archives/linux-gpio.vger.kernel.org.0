@@ -2,111 +2,179 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 152154E92C5
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Mar 2022 12:50:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15E4E4E9334
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Mar 2022 13:19:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240368AbiC1KwH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Mar 2022 06:52:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41170 "EHLO
+        id S240632AbiC1LUz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Mar 2022 07:20:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240367AbiC1KwG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Mar 2022 06:52:06 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08CB14198A;
-        Mon, 28 Mar 2022 03:50:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1648464625; x=1680000625;
-  h=date:from:to:subject:message-id:references:mime-version:
-   in-reply-to;
-  bh=NMKlDRrWVU3oduK1nKD+bbA3te2Pbh9SaIncM+0rnMk=;
-  b=nA7TPX/fgWLjfmgN4fW0uXEL3ZaUO4T0mB+7Ffa/eK2PNBdSwZNeCOmm
-   +6/Ywgv8QwmJzgA54GEIeS2tDb23LI27huhG1/xxeKrhMzFo0G2YqXQzL
-   Wa1HincZmoGitMLB+DCrUKVVJUNuHhQbzPBmTebrzkNKOzgntzfFhZjS1
-   w59Vy6Gj5Y13g1i8VOMefvudUkvcHlPeyJ8YM4yGbMfsgYVKZ0ugE9nAQ
-   nvPCL82DLHSzhW2UVCeYt3RJt2UW0WOUCNzZrXuyiEm9zM/sY7swyQTgC
-   FT31xGyZQs33tEZKcWhLGlfUSxgVNgEmKOS4RgzYp2UNeynQykLxmwQtH
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10299"; a="238901754"
-X-IronPort-AV: E=Sophos;i="5.90,217,1643702400"; 
-   d="scan'208";a="238901754"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2022 03:50:24 -0700
-X-IronPort-AV: E=Sophos;i="5.90,217,1643702400"; 
-   d="scan'208";a="520962489"
-Received: from smile.fi.intel.com ([10.237.72.59])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2022 03:50:23 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nYmwX-0083s4-9E;
-        Mon, 28 Mar 2022 13:49:49 +0300
-Date:   Mon, 28 Mar 2022 13:49:48 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v7 1/1] gpio: add sloppy logic analyzer using polling
-Message-ID: <YkGSzCykWvPXX89O@smile.fi.intel.com>
-References: <20220317085019.3987-1-wsa+renesas@sang-engineering.com>
- <20220317085019.3987-2-wsa+renesas@sang-engineering.com>
- <YjiC6Lg5k5gK/BfP@smile.fi.intel.com>
- <YkGB3AgME/OZAdoG@ninjato>
+        with ESMTP id S230475AbiC1LU2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Mar 2022 07:20:28 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEB0B55770;
+        Mon, 28 Mar 2022 04:18:45 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8EA9861163;
+        Mon, 28 Mar 2022 11:18:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4844C34110;
+        Mon, 28 Mar 2022 11:18:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1648466324;
+        bh=GtXm7TP4FiF7Hh17CXHOhSXHFwXsRaUDFmn/WhLxqg0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=lJomRRnNLOsTXo4+e+vfyikmvm3kVJ7qRaOK4ql4IOF0x7ny9gMi4Kz3t26oID6Im
+         XD/mYjgiBlWgRowJqtHja3t0rjJvoQESJbZI9WTU0isPHXbeFw4hSCYOCZzYPVVLk4
+         TPNH1oA2BI5UegfAK1jv3gmt9BcQHZVH0tP5tvQuHKMyP/F95Hj33bwaYLXQ+GbEKY
+         4bRDKoTUB2xU6uOLcKWB7j1zxjQkmXPRKnZieBPAl7NuYJa0LddXHcmHzgtqhww9t6
+         UkGf95QdrbhECoJu9wsQ/Nx9vNt7f/FsuMuJANBvs3zltXD0A6pwL+i2WYwEO6eo0e
+         H6bTV1IVzPnKg==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Marc Zyngier <maz@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+        Sasha Levin <sashal@kernel.org>, avifishman70@gmail.com,
+        tmaimon77@gmail.com, tali.perry1@gmail.com,
+        linus.walleij@linaro.org, openbmc@lists.ozlabs.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.17 07/43] pinctrl: npcm: Fix broken references to chip->parent_device
+Date:   Mon, 28 Mar 2022 07:17:51 -0400
+Message-Id: <20220328111828.1554086-7-sashal@kernel.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20220328111828.1554086-1-sashal@kernel.org>
+References: <20220328111828.1554086-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YkGB3AgME/OZAdoG@ninjato>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 28, 2022 at 11:37:32AM +0200, Wolfram Sang wrote:
+From: Marc Zyngier <maz@kernel.org>
 
-> > > +	mutex_lock(&priv->lock);
-> > > +
-> > > +	vfree(priv->blob.data);
-> > 
-> > 	priv->blob.data = NULL;
-> > 	priv->blob.size = 0;
-> > 
-> > > +	p = vzalloc(val);
-> > > +	if (!p) {
-> > > +		val = 0;
-> > > +		ret = -ENOMEM;
-> > > +	}
-> > 
-> > 	p = vzalloc(val);
-> > 	if (!p)
-> > 		return -ENOMEM;
-> > 
-> > > +	priv->blob.data = p;
-> > > +	priv->blob.size = val;
-> 
-> I don't like assigning 'priv' memebers twice, so I'd like to keep it as
-> is.
+[ Upstream commit f7e53e2255808ca3abcc8f38d18ad0823425e771 ]
 
-But this will give better understanding of the steps the code performs, no?
-(Because this function basically contains two steps at once. I assume it's
- done this way due to absence of vrealloc(), right?)
+The npcm driver has a bunch of references to the irq_chip parent_device
+field, but never sets it.
 
-But we have kvrealloc(). Can it be used here?
+Fix it by fishing that reference from somewhere else, but it is
+obvious that these debug statements were never used. Also remove
+an unused field in a local data structure.
 
-...
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Acked-by: Bartosz Golaszewski <brgl@bgdev.pl>
+Link: https://lore.kernel.org/r/20220201120310.878267-11-maz@kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c | 25 +++++++++++------------
+ 1 file changed, 12 insertions(+), 13 deletions(-)
 
-> > Can it be wrapped by DEFINE_SHOW_ATTRIBUTE()?
-> 
-> I don't see a way. Do you?
-
-Me neither. I mixed this up with (not upstreamed yet) DEFINE_STORE_ATTRIBUTE.
-
+diff --git a/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c b/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
+index 4d81908d6725..ba536fd4d674 100644
+--- a/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
++++ b/drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c
+@@ -78,7 +78,6 @@ struct npcm7xx_gpio {
+ 	struct gpio_chip	gc;
+ 	int			irqbase;
+ 	int			irq;
+-	void			*priv;
+ 	struct irq_chip		irq_chip;
+ 	u32			pinctrl_id;
+ 	int (*direction_input)(struct gpio_chip *chip, unsigned offset);
+@@ -226,7 +225,7 @@ static void npcmgpio_irq_handler(struct irq_desc *desc)
+ 	chained_irq_enter(chip, desc);
+ 	sts = ioread32(bank->base + NPCM7XX_GP_N_EVST);
+ 	en  = ioread32(bank->base + NPCM7XX_GP_N_EVEN);
+-	dev_dbg(chip->parent_device, "==> got irq sts %.8x %.8x\n", sts,
++	dev_dbg(bank->gc.parent, "==> got irq sts %.8x %.8x\n", sts,
+ 		en);
+ 
+ 	sts &= en;
+@@ -241,33 +240,33 @@ static int npcmgpio_set_irq_type(struct irq_data *d, unsigned int type)
+ 		gpiochip_get_data(irq_data_get_irq_chip_data(d));
+ 	unsigned int gpio = BIT(d->hwirq);
+ 
+-	dev_dbg(d->chip->parent_device, "setirqtype: %u.%u = %u\n", gpio,
++	dev_dbg(bank->gc.parent, "setirqtype: %u.%u = %u\n", gpio,
+ 		d->irq, type);
+ 	switch (type) {
+ 	case IRQ_TYPE_EDGE_RISING:
+-		dev_dbg(d->chip->parent_device, "edge.rising\n");
++		dev_dbg(bank->gc.parent, "edge.rising\n");
+ 		npcm_gpio_clr(&bank->gc, bank->base + NPCM7XX_GP_N_EVBE, gpio);
+ 		npcm_gpio_clr(&bank->gc, bank->base + NPCM7XX_GP_N_POL, gpio);
+ 		break;
+ 	case IRQ_TYPE_EDGE_FALLING:
+-		dev_dbg(d->chip->parent_device, "edge.falling\n");
++		dev_dbg(bank->gc.parent, "edge.falling\n");
+ 		npcm_gpio_clr(&bank->gc, bank->base + NPCM7XX_GP_N_EVBE, gpio);
+ 		npcm_gpio_set(&bank->gc, bank->base + NPCM7XX_GP_N_POL, gpio);
+ 		break;
+ 	case IRQ_TYPE_EDGE_BOTH:
+-		dev_dbg(d->chip->parent_device, "edge.both\n");
++		dev_dbg(bank->gc.parent, "edge.both\n");
+ 		npcm_gpio_set(&bank->gc, bank->base + NPCM7XX_GP_N_EVBE, gpio);
+ 		break;
+ 	case IRQ_TYPE_LEVEL_LOW:
+-		dev_dbg(d->chip->parent_device, "level.low\n");
++		dev_dbg(bank->gc.parent, "level.low\n");
+ 		npcm_gpio_set(&bank->gc, bank->base + NPCM7XX_GP_N_POL, gpio);
+ 		break;
+ 	case IRQ_TYPE_LEVEL_HIGH:
+-		dev_dbg(d->chip->parent_device, "level.high\n");
++		dev_dbg(bank->gc.parent, "level.high\n");
+ 		npcm_gpio_clr(&bank->gc, bank->base + NPCM7XX_GP_N_POL, gpio);
+ 		break;
+ 	default:
+-		dev_dbg(d->chip->parent_device, "invalid irq type\n");
++		dev_dbg(bank->gc.parent, "invalid irq type\n");
+ 		return -EINVAL;
+ 	}
+ 
+@@ -289,7 +288,7 @@ static void npcmgpio_irq_ack(struct irq_data *d)
+ 		gpiochip_get_data(irq_data_get_irq_chip_data(d));
+ 	unsigned int gpio = d->hwirq;
+ 
+-	dev_dbg(d->chip->parent_device, "irq_ack: %u.%u\n", gpio, d->irq);
++	dev_dbg(bank->gc.parent, "irq_ack: %u.%u\n", gpio, d->irq);
+ 	iowrite32(BIT(gpio), bank->base + NPCM7XX_GP_N_EVST);
+ }
+ 
+@@ -301,7 +300,7 @@ static void npcmgpio_irq_mask(struct irq_data *d)
+ 	unsigned int gpio = d->hwirq;
+ 
+ 	/* Clear events */
+-	dev_dbg(d->chip->parent_device, "irq_mask: %u.%u\n", gpio, d->irq);
++	dev_dbg(bank->gc.parent, "irq_mask: %u.%u\n", gpio, d->irq);
+ 	iowrite32(BIT(gpio), bank->base + NPCM7XX_GP_N_EVENC);
+ }
+ 
+@@ -313,7 +312,7 @@ static void npcmgpio_irq_unmask(struct irq_data *d)
+ 	unsigned int gpio = d->hwirq;
+ 
+ 	/* Enable events */
+-	dev_dbg(d->chip->parent_device, "irq_unmask: %u.%u\n", gpio, d->irq);
++	dev_dbg(bank->gc.parent, "irq_unmask: %u.%u\n", gpio, d->irq);
+ 	iowrite32(BIT(gpio), bank->base + NPCM7XX_GP_N_EVENS);
+ }
+ 
+@@ -323,7 +322,7 @@ static unsigned int npcmgpio_irq_startup(struct irq_data *d)
+ 	unsigned int gpio = d->hwirq;
+ 
+ 	/* active-high, input, clear interrupt, enable interrupt */
+-	dev_dbg(d->chip->parent_device, "startup: %u.%u\n", gpio, d->irq);
++	dev_dbg(gc->parent, "startup: %u.%u\n", gpio, d->irq);
+ 	npcmgpio_direction_input(gc, gpio);
+ 	npcmgpio_irq_ack(d);
+ 	npcmgpio_irq_unmask(d);
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.34.1
 
