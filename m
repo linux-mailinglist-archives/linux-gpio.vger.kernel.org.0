@@ -2,120 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 72FC44E9F60
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Mar 2022 21:04:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF40F4E9F8E
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Mar 2022 21:12:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242057AbiC1TGe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Mar 2022 15:06:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37468 "EHLO
+        id S245502AbiC1TNx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Mar 2022 15:13:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239931AbiC1TGe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Mar 2022 15:06:34 -0400
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C26026566
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Mar 2022 12:04:52 -0700 (PDT)
-Received: by mail-wm1-x335.google.com with SMTP id 125-20020a1c0283000000b0038d043aac51so129737wmc.0
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Mar 2022 12:04:52 -0700 (PDT)
+        with ESMTP id S245519AbiC1TNw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Mar 2022 15:13:52 -0400
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F273866F8A
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Mar 2022 12:12:09 -0700 (PDT)
+Received: by mail-lf1-x12d.google.com with SMTP id t25so26449951lfg.7
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Mar 2022 12:12:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=ZWOM0ViJyiVUZfrXv5W9VV5JgeOyviOZAZVjLWPXwZw=;
-        b=nAI7p2HJfjHpqntcTQReQgjnoKjDA+zCAAzqZMEJ9LPBhGkBOiW5kXBW86fkHdopjc
-         iZuSo+sC5BK1W5NpVq3mkEOykmq5R5bvInuo1SBT92TipqVku/EG6Xc0HMmJ26gugbZY
-         YLtoQWhxrK/mYffFLtgrP+KePTrFHNYpSm/ZA18icWGzOCuj3gTjf8zDl8pO2JFWGC6L
-         Cpqg5K6XrLwiNa/RbNBabfrqrySwz6gzaXrIYmGWWYaaifG6/p0OloPl6d93hWyI0BMs
-         2PXxKamXx8tDBzX/X7giQs6bcHY/2YStHO+vN96BSuBkzfFFmozZV6R+UQG3DTvZKh5A
-         5KlA==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=z0hyCXgiwng5/9t6+pFesUyv1jubPkOVcRWMPxjuqVk=;
+        b=CYAJDipb2kfpHEC0ajYWVsuxHklphuLeT0OAwYQXQ5dbnDOPs6iszc4RweoqSMIy07
+         chQ0e15UhHy3z3M8TlDW0c74g3t+miH/0tWmu53PP8HZ2nEbd2CpalJHxLG3HPEDYhEs
+         KQtZm/A2FJK0JM3nKRt/PMDS2hMPW+DTmg7Sc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=ZWOM0ViJyiVUZfrXv5W9VV5JgeOyviOZAZVjLWPXwZw=;
-        b=U866HoP0pyhP8CalysRpZP87laDxYePcSGxLSv694WH5q3LTwCVMRE6/y6I8BJ421Y
-         1s8zErmAXQsyvXWCSedPneCwnRgYaDGM7BgZBHdBz+qBGfcjlVU+GbtLRAvoGgw4hMtx
-         xQkDZNw/DaqoWW2L1B2oQLZikmpgeCizgmYmbp43RS2DXZOSz9rzZAafZSeO/8ULLNFI
-         hu6Q9AYgC+2ca6/zgdW27aZTi52ftHY3gxW+5/t/aiP36KY3531yU2vGrkaMeTeJKmdh
-         ezlgfQfSLraxzGMYpXMmiZ7sg4tDWbYc4TzpZhU5cqbEm1B4ltPHRNtmcezKZEVcobMN
-         lRbQ==
-X-Gm-Message-State: AOAM530CWf47esrOnv6BCXg8ewUQW1uP8Wt3lZZFY+QcfAYlpRQHBoKF
-        vtJZGM5Ek9pOnIp1Qg6Sa/DyQQ==
-X-Google-Smtp-Source: ABdhPJyI8bbkl32W0f/Fs3gwfDAYhpU9jfBTsBbXSGzduC32W7r6dq+GpfB1T0yZpFALl2pYjBkf3A==
-X-Received: by 2002:a05:600c:a0b:b0:389:dd65:66f1 with SMTP id z11-20020a05600c0a0b00b00389dd6566f1mr843831wmp.95.1648494290725;
-        Mon, 28 Mar 2022 12:04:50 -0700 (PDT)
-Received: from [192.168.0.162] (xdsl-188-155-201-27.adslplus.ch. [188.155.201.27])
-        by smtp.gmail.com with ESMTPSA id t9-20020a05600c198900b0038cb8b38f9fsm273855wmq.21.2022.03.28.12.04.49
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=z0hyCXgiwng5/9t6+pFesUyv1jubPkOVcRWMPxjuqVk=;
+        b=ws+bOuQgN94nh3INZKJpqt3Rti9oiJndeGwmo0am0kX2IOMeeJB/u1uVJLRJK/oBMi
+         FKV+vo6G1iaF+dLC/vaOqlzCLj8t5LYBTpbvrjVLo4T7heDvVbintAd5TjHcoEvIppps
+         nNSr4L0Czh1xo0tBUhJRUmId3YjFmng5AzFnS421x5zRIiWxU+YOsJefMmKRg/HxCi1J
+         Y7ucf7/YLX3ltPc4fSNSMpy6ZYyaFjX+HIIA2sPQBt+uP/1WRDc5zrAVWi1vz6E5HcJy
+         0oUlkrQNCrhq4lS952QUDWUS4hVm2mBOSVPRijy6bn7KeIlk/pgaD2Ex8Bw8Hqv0jxRo
+         FYhA==
+X-Gm-Message-State: AOAM53048XTEvT1ZzJXytKJx5HZjcnRnUBLB87zlf0PFlXp0mY+bqJvr
+        AzNoLrfmuZmtrUS03d10H7soRzkZsgXcET1xJb0=
+X-Google-Smtp-Source: ABdhPJzIwzDuuCz62MoaXctwncGaIjEXRBlJMYRQUquxpeBMViwbWOHbGQcFnmZ74LEC7lspwGLJLQ==
+X-Received: by 2002:a05:6512:108e:b0:44a:7147:984a with SMTP id j14-20020a056512108e00b0044a7147984amr15702365lfg.220.1648494727395;
+        Mon, 28 Mar 2022 12:12:07 -0700 (PDT)
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
+        by smtp.gmail.com with ESMTPSA id m7-20020a2e97c7000000b0024985bf1e25sm1806937ljj.132.2022.03.28.12.12.06
+        for <linux-gpio@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Mar 2022 12:04:49 -0700 (PDT)
-Message-ID: <9f7355de-8154-7ff2-ce29-c89ccfb89cab@linaro.org>
-Date:   Mon, 28 Mar 2022 21:04:48 +0200
+        Mon, 28 Mar 2022 12:12:06 -0700 (PDT)
+Received: by mail-lf1-f46.google.com with SMTP id z12so12663632lfu.10
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Mar 2022 12:12:06 -0700 (PDT)
+X-Received: by 2002:a05:6512:3d8f:b0:44a:2c65:8323 with SMTP id
+ k15-20020a0565123d8f00b0044a2c658323mr21124202lfv.52.1648494725528; Mon, 28
+ Mar 2022 12:12:05 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH] dt-bindings: gpio: uniphier: Add hogs parsing
-Content-Language: en-US
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <1648430916-21988-1-git-send-email-hayashi.kunihiko@socionext.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <1648430916-21988-1-git-send-email-hayashi.kunihiko@socionext.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <CACRpkdZ_Jr3OzfoOpSSsAJMy1Oe_=zD861jouDzCVD-BQ6yZMg@mail.gmail.com>
+In-Reply-To: <CACRpkdZ_Jr3OzfoOpSSsAJMy1Oe_=zD861jouDzCVD-BQ6yZMg@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 28 Mar 2022 12:11:49 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whzqAB6kfHUcX2uhfPnNiWJRq=UmeA1TbgGi3XA+57j3w@mail.gmail.com>
+Message-ID: <CAHk-=whzqAB6kfHUcX2uhfPnNiWJRq=UmeA1TbgGi3XA+57j3w@mail.gmail.com>
+Subject: Re: [GIT PULL] pin control bulk changes for v5.18
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 28/03/2022 03:28, Kunihiko Hayashi wrote:
-> Allow parsing GPIO controller children nodes with GPIO hogs to fix the
-> following warning:
-> 
->   uniphier-ld11-ref.dtb: gpio@55000000: 'xirq0-hog' does not match any of the regexes: 'pinctrl-[0-9]+'
->       From schema: Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
-> 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> ---
->  .../devicetree/bindings/gpio/socionext,uniphier-gpio.yaml  | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml b/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
-> index bcafa494ed7a..b6f5963a2ae6 100644
-> --- a/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
-> @@ -52,6 +52,13 @@ properties:
->        <child-interrupt-base parent-interrupt-base length> triplets.
->      $ref: /schemas/types.yaml#/definitions/uint32-matrix
->  
-> +patternProperties:
-> +  "^(.+-hog(-[0-9]+)?)$":
+On Mon, Mar 28, 2022 at 6:08 AM Linus Walleij <linus.walleij@linaro.org> wr=
+ote:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+> tags/pinctrl-v5.18-1
 
-The outer () are not needed.
+Hmm.
 
-> +    type: object
+This clashes badly with the fact that we in the meantime have enabled
+-Warray-bounds, and I got
 
-You need also properties. See for example:
-Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+  drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c: In function =E2=80=98npcmgpio_=
+irq_handler=E2=80=99:
+  ./include/linux/find.h:40:23: error: array subscript =E2=80=98long unsign=
+ed
+int[0]=E2=80=99 is partly outside array bounds of =E2=80=98u32[1]=E2=80=99 =
+{aka =E2=80=98unsigned
+int[1]=E2=80=99} [-Werror=3Darray-bounds]
+     40 |                 val =3D *addr & GENMASK(size - 1, offset);
+        |                       ^~~~~
+  drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c:219:13: note: while
+referencing =E2=80=98sts=E2=80=99
+    219 |         u32 sts, en, bit;
+        |             ^~~
 
-> +
-> +    required:
-> +      - gpio-hog
-> +
->  required:
->    - compatible
->    - reg
+as a result.
 
+Was this not in linux-next?
 
-Best regards,
-Krzysztof
+Or was the array bounds checking not there?
+
+Anyway, that cast to "const void *"
+
+     for_each_set_bit(bit, (const void *)&sts,
+
+in that driver is completely wrong.
+
+The bit operations are defined in arrays of 'unsigned long', and you
+can't just cast the issue away, because the end result is not the same
+on a big-endian machine.
+
+I fixed it up in the merge, but what really confuses me (apart from
+the apparent lack of testing in linux-next) is that I don't actually
+see what made this happen now, and not before. Maybe that's why it
+didn't show up in linux-next: it's some odd gcc heisenbug.
+
+Because there seems to be no actual changes to that driver that would
+explain why I get the warning now, but not before the pull.
+
+There *was* a change from
+
+-       dev_dbg(bank->gc.parent, "...
++       dev_dbg(chip->parent_device, }...
+
+in that function, but nothing else I notice.
+
+VERY funky.
+
+Kees, any idea?
+
+                   Linus
