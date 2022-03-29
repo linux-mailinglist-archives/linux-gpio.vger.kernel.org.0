@@ -2,48 +2,49 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 88B624EAB53
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Mar 2022 12:34:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99D5A4EABBC
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Mar 2022 12:56:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235184AbiC2Kge (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Mar 2022 06:36:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34176 "EHLO
+        id S233340AbiC2K6Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Mar 2022 06:58:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235197AbiC2Kg0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Mar 2022 06:36:26 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58A442CCAB;
-        Tue, 29 Mar 2022 03:34:43 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9057CB80CC7;
-        Tue, 29 Mar 2022 10:34:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B56F7C340F2;
-        Tue, 29 Mar 2022 10:34:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1648550080;
-        bh=40vaXYujECRPq759yjf622O1qcpWEybCd8NmkHOSJaU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=snHq0s20x5wvipHdOhtp0coIZowOd8cxckpZcwBPooemfF0a58YAJa//9IVURfyOL
-         FZE4qLb3hmMYbG7ZUky2YM7R9ZVTd/64eIV7uVms2jgtW3pOxJL6GmrwxM6TMo/s46
-         +jy2ghow4EEOxzTY22OEXdPECL/oYjqEau3o2Toc=
-Date:   Tue, 29 Mar 2022 12:34:37 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     QintaoShen <unSimple1993@163.com>
-Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, yanaijie@huawei.com,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] pinctrl: ralink: rt2880: Check for return value of
- devm_kcalloc()
-Message-ID: <YkLgvcHMKwxoOyP1@kroah.com>
-References: <1648540212-9790-1-git-send-email-unSimple1993@163.com>
+        with ESMTP id S235439AbiC2K6Y (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Mar 2022 06:58:24 -0400
+Received: from mx.socionext.com (mx.socionext.com [202.248.49.38])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4E9051DA7C;
+        Tue, 29 Mar 2022 03:56:39 -0700 (PDT)
+Received: from unknown (HELO iyokan2-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 29 Mar 2022 19:56:38 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by iyokan2-ex.css.socionext.com (Postfix) with ESMTP id 9A3C42058B50;
+        Tue, 29 Mar 2022 19:56:38 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Tue, 29 Mar 2022 19:56:38 +0900
+Received: from [10.212.183.172] (unknown [10.212.183.172])
+        by kinkan2.css.socionext.com (Postfix) with ESMTP id 90509B62B7;
+        Tue, 29 Mar 2022 19:56:37 +0900 (JST)
+Subject: Re: [PATCH] dt-bindings: gpio: uniphier: Add hogs parsing
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <1648430916-21988-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <9f7355de-8154-7ff2-ce29-c89ccfb89cab@linaro.org>
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Message-ID: <81864a56-f48b-a41a-614b-16128f3850a9@socionext.com>
+Date:   Tue, 29 Mar 2022 19:56:37 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1648540212-9790-1-git-send-email-unSimple1993@163.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+In-Reply-To: <9f7355de-8154-7ff2-ce29-c89ccfb89cab@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -52,57 +53,50 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Mar 29, 2022 at 03:50:12PM +0800, QintaoShen wrote:
-> The memory allocation function devm_kcalloc() may return NULL pointer,
-> so it is better to add a check for 'p->func[i]->pins' to avoid possible
-> NULL pointer dereference.
+Hi Krzysztof,
+
+On 2022/03/29 4:04, Krzysztof Kozlowski wrote:
+> On 28/03/2022 03:28, Kunihiko Hayashi wrote:
+>> Allow parsing GPIO controller children nodes with GPIO hogs to fix the
+>> following warning:
+>>
+>>    uniphier-ld11-ref.dtb: gpio@55000000: 'xirq0-hog' does not match any of
+>> the regexes: 'pinctrl-[0-9]+'
+>>        From schema:
+>> Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
+>>
+>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+>> ---
+>>   .../devicetree/bindings/gpio/socionext,uniphier-gpio.yaml  | 7 +++++++
+>>   1 file changed, 7 insertions(+)
+>>
+>> diff --git
+>> a/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
+>> b/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
+>> index bcafa494ed7a..b6f5963a2ae6 100644
+>> --- a/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
+>> +++ b/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
+>> @@ -52,6 +52,13 @@ properties:
+>>         <child-interrupt-base parent-interrupt-base length> triplets.
+>>       $ref: /schemas/types.yaml#/definitions/uint32-matrix
+>>
+>> +patternProperties:
+>> +  "^(.+-hog(-[0-9]+)?)$":
 > 
-> Signed-off-by: QintaoShen <unSimple1993@163.com>
-> ---
->  drivers/pinctrl/ralink/pinctrl-rt2880.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> The outer () are not needed.
+
+Surely, the "()" can be removed.
+
+>> +    type: object
 > 
-> diff --git a/drivers/pinctrl/ralink/pinctrl-rt2880.c b/drivers/pinctrl/ralink/pinctrl-rt2880.c
-> index 96fc06d..308610e 100644
-> --- a/drivers/pinctrl/ralink/pinctrl-rt2880.c
-> +++ b/drivers/pinctrl/ralink/pinctrl-rt2880.c
-> @@ -266,6 +266,10 @@ static int rt2880_pinmux_pins(struct rt2880_priv *p)
->  						p->func[i]->pin_count,
->  						sizeof(int),
->  						GFP_KERNEL);
-> +        
-> +        if (!p->func[i]->pins)
-> +            continue;
-> +
->  		for (j = 0; j < p->func[i]->pin_count; j++)
->  			p->func[i]->pins[j] = p->func[i]->pin_first + j;
->  
-> -- 
-> 2.7.4
-> 
+> You need also properties. See for example:
+> Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
 
+I see. I should list the valid properties in patternProperties.
+I'll add it.
 
-Hi,
+Thank you,
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
-
-You are receiving this message because of the following common error(s)
-as indicated below:
-
-- Your patch contains warnings and/or errors noticed by the
-  scripts/checkpatch.pl tool.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
+---
+Best Regards
+Kunihiko Hayashi
