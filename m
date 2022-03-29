@@ -2,190 +2,257 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1989B4EAABE
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Mar 2022 11:49:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE84D4EAB1E
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Mar 2022 12:18:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233341AbiC2Jun (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Mar 2022 05:50:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36326 "EHLO
+        id S235067AbiC2KTu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Mar 2022 06:19:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234843AbiC2Jum (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Mar 2022 05:50:42 -0400
-Received: from andre.telenet-ops.be (andre.telenet-ops.be [IPv6:2a02:1800:120:4::f00:15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DBE4985BF
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Mar 2022 02:48:59 -0700 (PDT)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:d553:ff0a:6830:6bde])
-        by andre.telenet-ops.be with bizsmtp
-        id C9ox2700K49QC44019oxtP; Tue, 29 Mar 2022 11:48:57 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1nZ8TA-007EoM-Qm; Tue, 29 Mar 2022 11:48:56 +0200
-Received: from geert by rox.of.borg with local (Exim 4.93)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1nZ8TA-00CCDk-7E; Tue, 29 Mar 2022 11:48:56 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 2/2] pinctrl: renesas: r8a77995: Add QSPI and RPC pins, groups, and functions
-Date:   Tue, 29 Mar 2022 11:48:51 +0200
-Message-Id: <19a3bccd0ec830846578a38b4c80dccb195109a0.1648547080.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1648547080.git.geert+renesas@glider.be>
-References: <cover.1648547080.git.geert+renesas@glider.be>
+        with ESMTP id S235068AbiC2KTp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Mar 2022 06:19:45 -0400
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 758BE23EC73;
+        Tue, 29 Mar 2022 03:17:56 -0700 (PDT)
+X-UUID: 38bee88dd45f4697a2316eb31b09bafe-20220329
+X-UUID: 38bee88dd45f4697a2316eb31b09bafe-20220329
+Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw02.mediatek.com
+        (envelope-from <tinghan.shen@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+        with ESMTP id 1410312814; Tue, 29 Mar 2022 18:17:49 +0800
+Received: from mtkcas11.mediatek.inc (172.21.101.40) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.792.3;
+ Tue, 29 Mar 2022 18:17:48 +0800
+Received: from mtksdccf07 (172.21.84.99) by mtkcas11.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 29 Mar 2022 18:17:47 +0800
+Message-ID: <7283dd6732ae8c188c6f12183a977fb980cc8617.camel@mediatek.com>
+Subject: Re: [PATCH v11 3/3] arm64: dts: Add mediatek SoC mt8195 and
+ evaluation board
+From:   Tinghan Shen <tinghan.shen@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        "Chaotian Jing" <chaotian.jing@mediatek.com>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <Project_Global_Chrome_Upstream_Group@mediatek.com>,
+        <ryder.lee@kernel.org>, <wenst@chromium.org>,
+        <chunfeng.yun@mediatek.com>, Seiya Wang <seiya.wang@mediatek.com>
+Date:   Tue, 29 Mar 2022 18:17:47 +0800
+In-Reply-To: <cf16ed58-6e75-cd9f-38ab-540d62ff03b5@gmail.com>
+References: <20220216113131.13145-1-tinghan.shen@mediatek.com>
+         <20220216113131.13145-4-tinghan.shen@mediatek.com>
+         <cf16ed58-6e75-cd9f-38ab-540d62ff03b5@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,RDNS_NONE,
+        SPF_HELO_NONE,T_SCC_BODY_TEXT_LINE,T_SPF_TEMPERROR,UNPARSEABLE_RELAY
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add pins, groups, and functions for the SPI Multi I/O Bus Controller
-(RPC-IF) to the R8A77995 PFC driver.  They are to be used when a QSPI
-Flash, Octal-SPI Flash, or HyperFlash is connected.
+Hi Matthias,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/pinctrl/renesas/pfc-r8a77995.c | 98 ++++++++++++++++++++++++++
- 1 file changed, 98 insertions(+)
+Thanks for your comment.
 
-diff --git a/drivers/pinctrl/renesas/pfc-r8a77995.c b/drivers/pinctrl/renesas/pfc-r8a77995.c
-index 445c903a121acedd..0cdf70dd9dea3c9c 100644
---- a/drivers/pinctrl/renesas/pfc-r8a77995.c
-+++ b/drivers/pinctrl/renesas/pfc-r8a77995.c
-@@ -1682,6 +1682,68 @@ static const unsigned int pwm3_c_mux[] = {
- 	PWM3_C_MARK,
- };
- 
-+/* - QSPI0 ------------------------------------------------------------------ */
-+static const unsigned int qspi0_ctrl_pins[] = {
-+	/* QSPI0_SPCLK, QSPI0_SSL */
-+	RCAR_GP_PIN(6, 0), RCAR_GP_PIN(6, 5),
-+};
-+static const unsigned int qspi0_ctrl_mux[] = {
-+	QSPI0_SPCLK_MARK, QSPI0_SSL_MARK,
-+};
-+/* - QSPI1 ------------------------------------------------------------------ */
-+static const unsigned int qspi1_ctrl_pins[] = {
-+	/* QSPI1_SPCLK, QSPI1_SSL */
-+	RCAR_GP_PIN(6, 6), RCAR_GP_PIN(6, 11),
-+};
-+static const unsigned int qspi1_ctrl_mux[] = {
-+	QSPI1_SPCLK_MARK, QSPI1_SSL_MARK,
-+};
-+
-+/* - RPC -------------------------------------------------------------------- */
-+static const unsigned int rpc_clk_pins[] = {
-+	/* Octal-SPI flash: C/SCLK */
-+	/* HyperFlash: CK, CK# */
-+	RCAR_GP_PIN(6, 0), RCAR_GP_PIN(6, 6),
-+};
-+static const unsigned int rpc_clk_mux[] = {
-+	QSPI0_SPCLK_MARK, QSPI1_SPCLK_MARK,
-+};
-+static const unsigned int rpc_ctrl_pins[] = {
-+	/* Octal-SPI flash: S#/CS, DQS */
-+	/* HyperFlash: CS#, RDS */
-+	RCAR_GP_PIN(6, 5), RCAR_GP_PIN(6, 11),
-+};
-+static const unsigned int rpc_ctrl_mux[] = {
-+	QSPI0_SSL_MARK, QSPI1_SSL_MARK,
-+};
-+static const unsigned int rpc_data_pins[] = {
-+	/* DQ[0:7] */
-+	RCAR_GP_PIN(6, 1), RCAR_GP_PIN(6, 2),
-+	RCAR_GP_PIN(6, 3), RCAR_GP_PIN(6, 4),
-+	RCAR_GP_PIN(6, 7), RCAR_GP_PIN(6, 8),
-+	RCAR_GP_PIN(6, 9), RCAR_GP_PIN(6, 10),
-+};
-+static const unsigned int rpc_data_mux[] = {
-+	QSPI0_MOSI_IO0_MARK, QSPI0_MISO_IO1_MARK,
-+	QSPI0_IO2_MARK, QSPI0_IO3_MARK,
-+	QSPI1_MOSI_IO0_MARK, QSPI1_MISO_IO1_MARK,
-+	QSPI1_IO2_MARK, QSPI1_IO3_MARK,
-+};
-+static const unsigned int rpc_reset_pins[] = {
-+	/* RPC_RESET# */
-+	RCAR_GP_PIN(6, 12),
-+};
-+static const unsigned int rpc_reset_mux[] = {
-+	RPC_RESET_N_MARK,
-+};
-+static const unsigned int rpc_int_pins[] = {
-+	/* RPC_INT# */
-+	RCAR_GP_PIN(6, 13),
-+};
-+static const unsigned int rpc_int_mux[] = {
-+	RPC_INT_N_MARK,
-+};
-+
- /* - SCIF0 ------------------------------------------------------------------ */
- static const unsigned int scif0_data_a_pins[] = {
- 	/* RX, TX */
-@@ -2085,6 +2147,18 @@ static const struct sh_pfc_pin_group pinmux_groups[] = {
- 	SH_PFC_PIN_GROUP(pwm3_a),
- 	SH_PFC_PIN_GROUP(pwm3_b),
- 	SH_PFC_PIN_GROUP(pwm3_c),
-+	SH_PFC_PIN_GROUP(qspi0_ctrl),
-+	SH_PFC_PIN_GROUP_SUBSET(qspi0_data2, rpc_data, 0, 2),
-+	SH_PFC_PIN_GROUP_SUBSET(qspi0_data4, rpc_data, 0, 4),
-+	SH_PFC_PIN_GROUP(qspi1_ctrl),
-+	SH_PFC_PIN_GROUP_SUBSET(qspi1_data2, rpc_data, 4, 2),
-+	SH_PFC_PIN_GROUP_SUBSET(qspi1_data4, rpc_data, 4, 4),
-+	BUS_DATA_PIN_GROUP(rpc_clk, 1),
-+	BUS_DATA_PIN_GROUP(rpc_clk, 2),
-+	SH_PFC_PIN_GROUP(rpc_ctrl),
-+	SH_PFC_PIN_GROUP(rpc_data),
-+	SH_PFC_PIN_GROUP(rpc_reset),
-+	SH_PFC_PIN_GROUP(rpc_int),
- 	SH_PFC_PIN_GROUP(scif0_data_a),
- 	SH_PFC_PIN_GROUP(scif0_clk_a),
- 	SH_PFC_PIN_GROUP(scif0_data_b),
-@@ -2277,6 +2351,27 @@ static const char * const pwm3_groups[] = {
- 	"pwm3_c",
- };
- 
-+static const char * const qspi0_groups[] = {
-+	"qspi0_ctrl",
-+	"qspi0_data2",
-+	"qspi0_data4",
-+};
-+
-+static const char * const qspi1_groups[] = {
-+	"qspi1_ctrl",
-+	"qspi1_data2",
-+	"qspi1_data4",
-+};
-+
-+static const char * const rpc_groups[] = {
-+	"rpc_clk1",
-+	"rpc_clk2",
-+	"rpc_ctrl",
-+	"rpc_data",
-+	"rpc_reset",
-+	"rpc_int",
-+};
-+
- static const char * const scif0_groups[] = {
- 	"scif0_data_a",
- 	"scif0_clk_a",
-@@ -2373,6 +2468,9 @@ static const struct sh_pfc_function pinmux_functions[] = {
- 	SH_PFC_FUNCTION(pwm1),
- 	SH_PFC_FUNCTION(pwm2),
- 	SH_PFC_FUNCTION(pwm3),
-+	SH_PFC_FUNCTION(qspi0),
-+	SH_PFC_FUNCTION(qspi1),
-+	SH_PFC_FUNCTION(rpc),
- 	SH_PFC_FUNCTION(scif0),
- 	SH_PFC_FUNCTION(scif1),
- 	SH_PFC_FUNCTION(scif2),
--- 
-2.25.1
+On Mon, 2022-03-28 at 14:26 +0200, Matthias Brugger wrote:
+> 
+> On 16/02/2022 12:31, Tinghan Shen wrote:
+> > Add basic chip support for mediatek mt8195.
+> > 
+> > Signed-off-by: Seiya Wang <seiya.wang@mediatek.com>
+> > Signed-off-by: Tinghan Shen <tinghan.shen@mediatek.com>
+> > Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> > ---
+> >   arch/arm64/boot/dts/mediatek/Makefile       |    1 +
+> >   arch/arm64/boot/dts/mediatek/mt8195-evb.dts |  161 +++
+> >   arch/arm64/boot/dts/mediatek/mt8195.dtsi    | 1049 +++++++++++++++++++
+> >   3 files changed, 1211 insertions(+)
+> >   create mode 100644 arch/arm64/boot/dts/mediatek/mt8195-evb.dts
+> >   create mode 100644 arch/arm64/boot/dts/mediatek/mt8195.dtsi
+> > 
+> > diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
+> > index 8c1e18032f9f..5da29e7223e4 100644
+> > --- a/arch/arm64/boot/dts/mediatek/Makefile
+> > +++ b/arch/arm64/boot/dts/mediatek/Makefile
+> > @@ -38,4 +38,5 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt8183-kukui-krane-sku0.dtb
+> >   dtb-$(CONFIG_ARCH_MEDIATEK) += mt8183-kukui-krane-sku176.dtb
+> >   dtb-$(CONFIG_ARCH_MEDIATEK) += mt8183-pumpkin.dtb
+> >   dtb-$(CONFIG_ARCH_MEDIATEK) += mt8192-evb.dtb
+> > +dtb-$(CONFIG_ARCH_MEDIATEK) += mt8195-evb.dtb
+> >   dtb-$(CONFIG_ARCH_MEDIATEK) += mt8516-pumpkin.dtb
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt8195-evb.dts b/arch/arm64/boot/dts/mediatek/mt8195-
+> > evb.dts
+> > new file mode 100644
+> > index 000000000000..51633d91d984
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/mediatek/mt8195-evb.dts
+> > @@ -0,0 +1,161 @@
+> 
+> [...]
+> > +
+> > +&u2port0 {
+> > +	status = "okay";
+> > +};
+> > +
+> > +&u2port1 {
+> > +	status = "okay";
+> > +};
+> > +
+> > +&u3phy0 {
+> > +	status="okay";
+> > +};
+> > +
+> > +&u3phy1 {
+> > +	status="okay";
+> > +};
+> > +
+> 
+> So we enable phys for xhci but not the device. Are we missing anything to enable 
+> them on the EVB?
+
+after discussed with usb expert, we think that we're missing the xhci nodes.
+I'll add xhci nodes at next version.
+
+> 
+> > +&uart0 {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&uart0_pin>;
+> > +	status = "okay";
+> > +};
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt8195.dtsi b/arch/arm64/boot/dts/mediatek/mt8195.dtsi
+> > new file mode 100644
+> > index 000000000000..a363e82f6988
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/mediatek/mt8195.dtsi
+> > @@ -0,0 +1,1049 @@
+> 
+> [...]
+> > +
+> > +	clk32k: oscillator-32k {
+> > +		compatible = "fixed-clock";
+> > +		#clock-cells = <0>;
+> > +		clock-frequency = <32768>;
+> > +		clock-output-names = "clk32k";
+> 
+> I suppose the 32KHz oscillator is really present on the board also not used by 
+> any device (up to now?).
+
+Yes. 32KHz clock is still available on MT8195.
+Some modules can choose 32K as clock source depending on requirements.
+
+> 
+> [...]
+> > +
+> > +	soc {
+> > +		#address-cells = <2>;
+> > +		#size-cells = <2>;
+> > +		compatible = "simple-bus";
+> > +		ranges;
+> > +
+> 
+> [...]
+> > +
+> > +		pwrap: pwrap@10024000 {
+> > +			compatible = "mediatek,mt8195-pwrap", "syscon";
+> > +			reg = <0 0x10024000 0 0x1000>;
+> > +			reg-names = "pwrap";
+> > +			interrupts = <GIC_SPI 243 IRQ_TYPE_LEVEL_HIGH 0>;
+> > +			clocks = <&infracfg_ao CLK_INFRA_AO_PMIC_AP>,
+> > +				 <&infracfg_ao CLK_INFRA_AO_PMIC_TMR>;
+> > +			clock-names = "spi", "wrap";
+> 
+> Binding mandates resets but not present here. It also mandates two register 
+> regions, but only one is given here.
+
+After discussed with pwrap experts, the pwrap binding is out-of-date for mt8195.
+They will send a patch to fix pwrap binding.
+
+> 
+> > +			assigned-clocks = <&topckgen CLK_TOP_PWRAP_ULPOSC>;
+> > +			assigned-clock-parents = <&topckgen CLK_TOP_ULPOSC1_D10>;
+> > +		};
+> > +
+> > +		scp_adsp: clock-controller@10720000 {
+> > +			compatible = "mediatek,mt8195-scp_adsp";
+> > +			reg = <0 0x10720000 0 0x1000>;
+> > +			#clock-cells = <1>;
+> > +		};
+> > +
+> 
+> [...]
+> 
+> > +
+> > +		mmc0: mmc@11230000 {
+> > +			compatible = "mediatek,mt8195-mmc",
+> > +				     "mediatek,mt8183-mmc";
+> > +			reg = <0 0x11230000 0 0x10000>,
+> > +			      <0 0x11f50000 0 0x1000>;
+> 
+> Seems to be an oversight when adding support for mt8183-mmc support to the 
+> driver. The binding description is missing the optional host top register base. 
+> Chaotian can you please help to fix this in the binding description.
+
+Ok. I'll fix it at next version.
+
+> 
+> > +			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH 0>;
+> > +			clocks = <&topckgen CLK_TOP_MSDC50_0>,
+> > +				 <&infracfg_ao CLK_INFRA_AO_MSDC0>,
+> > +				 <&infracfg_ao CLK_INFRA_AO_MSDC0_SRC>;
+> > +			clock-names = "source", "hclk", "source_cg";
+> > +			status = "disabled";
+> > +		};
+> > +
+> 
+> [...]
+> > +
+> > +		xhci3: usb@112b0000 {
+> > +			compatible = "mediatek,mt8195-xhci",
+> > +				     "mediatek,mtk-xhci";
+> > +			reg = <0 0x112b0000 0 0x1000>,
+> > +			      <0 0x112b3e00 0 0x0100>;
+> > +			reg-names = "mac", "ippc";
+> > +			interrupts = <GIC_SPI 536 IRQ_TYPE_LEVEL_HIGH 0>;
+> > +			phys = <&u2port3 PHY_TYPE_USB2>;
+> > +			assigned-clocks = <&topckgen CLK_TOP_USB_TOP_3P>,
+> > +					  <&topckgen CLK_TOP_SSUSB_XHCI_3P>;
+> > +			assigned-clock-parents = <&topckgen CLK_TOP_UNIVPLL_D5_D4>,
+> > +						 <&topckgen CLK_TOP_UNIVPLL_D5_D4>;
+> > +			clocks = <&pericfg_ao CLK_PERI_AO_SSUSB_3P_BUS>,
+> > +				 <&topckgen CLK_TOP_SSUSB_P3_REF>,
+> > +				 <&pericfg_ao CLK_PERI_AO_SSUSB_3P_XHCI>;
+> > +			clock-names = "sys_ck", "ref_ck", "xhci_ck";
+> > +			/* This controller is connected with a BT device.
+> > +			 * Disable usb2 lpm to prevent konwn issues.
+> > +			 */
+> > +			usb2-lpm-disable;
+> 
+> My understanding is, that this depends on the board and not the SoC. Which means 
+> usb2-lpm-disable should go into any board that has a BT device connected to the 
+> xhci device (I don't see any active xhci node in mt8195-evb so far).
+
+Ok. I'll move this property to evb board in a xhci node.
+
+Best regards,
+TingHan
+
+> 
+> Regards,
+> Matthias
 
