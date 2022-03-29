@@ -2,186 +2,171 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F34514EAD28
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Mar 2022 14:30:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82FB34EAE37
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Mar 2022 15:16:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236316AbiC2Mci (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Mar 2022 08:32:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46886 "EHLO
+        id S234875AbiC2NSd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Mar 2022 09:18:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236244AbiC2Mch (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Mar 2022 08:32:37 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 044CD5F8C5
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Mar 2022 05:30:53 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id bg10so34806533ejb.4
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Mar 2022 05:30:52 -0700 (PDT)
+        with ESMTP id S234581AbiC2NSd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Mar 2022 09:18:33 -0400
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C588A639B;
+        Tue, 29 Mar 2022 06:16:47 -0700 (PDT)
+Received: by mail-pg1-x531.google.com with SMTP id z128so14781290pgz.2;
+        Tue, 29 Mar 2022 06:16:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=nRQGNy0JNeG8yPE1QXXWKqsK/KgT2iVgd9NOSAmnpao=;
-        b=rghn0NZ7veo+c7F9TgovwmfTphDZN1nzJMzcXj5lds+VNPPlWVx4s9Km9UFuESnj9C
-         0j6zPwG/Xf6D92JpGQDO2SsY514Cc3dispUkIKCGzRnO4C9HS7T9TWQ6L1NWItI9HoVR
-         Wk/smMInsq69ioZO8yNZDu546rixqBUH1Q7RKjgyI+USlKpBx73H+Jxrz2inmb2EkToU
-         H2vf7Sa/pckmLcWFoAxiMBDzr7UgHBsB2Q8hra4/Kl5ny0G8cLhgWaE+yEkyTutDGHt1
-         d/7ehdh+gvbKH2tMg6SF+fI/PRBhqZLpgBB/Oz9YxV+MxEClGvdSUz2pl20OT0F+Mpvd
-         d2oQ==
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:from:in-reply-to:content-transfer-encoding;
+        bh=w3815+MGXaDijvWMYtqcYwozP7wYjHgBU5ZGj2ffCo4=;
+        b=fCJ6lzlVxTfVgqckkBqb1S/nzl583ie/5M/JHaHBfoHc7by/n3+u6k/2uLuhJLX9kz
+         LoYV8tw4CbW3gC0Mtsb8bSIqTaVWZ2lmdR91CGnXpYlysrL7q5o+W+kCLKV7hVIQxfSN
+         4u45i720kDEBKzlXLZJ68/DJGmNfR9cYax+DosToVi7LFXoeW+otnOZ7lOul7yUgC/El
+         DN56g8OmHth+8F6zsnpr+a0+GE5msp7tQiw6r2HaFCn3WA4Jq/NxiL5M7AXP8DfHgtIT
+         oMLZpUOd6JUoBNj858rV7JFL5xcuLF4oaUhW1rXbl4BpjHGZ1V3+Gq35LgxMDpe2x4di
+         Ei3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=nRQGNy0JNeG8yPE1QXXWKqsK/KgT2iVgd9NOSAmnpao=;
-        b=iX2fHKMAmpNqUpodvJnM219tkbmL2d2QIJJ3fVd7bkBlPoL5RqbyF4k4ZTAHY0GmWp
-         glCwk80jTpWw7qI4VxqAIyo7j+C3CuRnV5tuB+NKhzlIUERy1C7ytFHhy+GixL1TDUQ5
-         SrmIN9rXoiUGeSAl0Z+EaaCKdD7ZGrz9Mh71ekLmk53X1D81G5bf1OkYYLohlmENhISD
-         D8qZSURBPz428JpH0rbki39BiD191LffVZxBMHSPasPjF+WbxUK5Wm8Ou9GNC5xBvcwM
-         B/LoCkwX94QcDxQddvElSPaqyksQHU9mcci9fKa6i1xumglMPr3bfxfJXXPYcxkG0cNt
-         NFhQ==
-X-Gm-Message-State: AOAM533MlytpMBKbQS40NcRPGGOwP7t7ik/8Tr00Ppy3Dt6vxMxQcMfs
-        OG2cAcYTx7MHHjmN5TyTHLEspv+57tciYfIcE6PJ9g==
-X-Google-Smtp-Source: ABdhPJyPZNX8y3gOGfSZgg3AGAll74j9kjPNXJs0DTpnrEh1/wBVEgROdTkgglF1+DGDwH7nabIubcnQbpp8LiNpfow=
-X-Received: by 2002:a17:907:d2a:b0:6e0:963c:97d9 with SMTP id
- gn42-20020a1709070d2a00b006e0963c97d9mr28430774ejc.736.1648557051475; Tue, 29
- Mar 2022 05:30:51 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=w3815+MGXaDijvWMYtqcYwozP7wYjHgBU5ZGj2ffCo4=;
+        b=LiyMGyFokLzHc/sAMSqEyzJ+q04K2ezByfTQuIfbwxLc+j0qM3ByeFHTl04tYoQigG
+         7mZMe9OKIjt0F4F/g/818e1gTMmGfaktTg/Hs9cR7oj29RD0/cTii6stAEeEHoidXmy3
+         3Ad0nBes7FJ3tMNDbOEAiaDaq0TR4f6Bxxr1siQJqNnJAJpCSguTLQTL9ezlr4ryUsfz
+         zAd3HFERMddZ6fzr1ivKq+XTy+IAUYELTsE/TVzg8Buu7y6TSgtfbM4m/UOK32RcX7lP
+         aAXj18wmjsxlw+LZkEsMbDgG59+tN6KNWnD4FJjKZWDUK986O1V8GvVsazPqrT6H0xHr
+         itAQ==
+X-Gm-Message-State: AOAM532HVkcqYRRWH4VvzWZn0ij5wHGzgFYYXmCIuvVtM/fJEmRzomZk
+        MJnoY9T3wHLQZJ/pNSHArzo=
+X-Google-Smtp-Source: ABdhPJwj/kTm0nl1gtMSWtdIMVETbuj+vIm8n6hboEbzzsDKKNVmImwLB0nynmcYk2YzKzlK7Q4Q6Q==
+X-Received: by 2002:a05:6a00:2408:b0:4f7:a8cb:9b63 with SMTP id z8-20020a056a00240800b004f7a8cb9b63mr27846870pfh.33.1648559807221;
+        Tue, 29 Mar 2022 06:16:47 -0700 (PDT)
+Received: from [192.168.43.80] (subs02-180-214-232-29.three.co.id. [180.214.232.29])
+        by smtp.gmail.com with ESMTPSA id j16-20020a63e750000000b00373598b8cbfsm15932192pgk.74.2022.03.29.06.16.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Mar 2022 06:16:46 -0700 (PDT)
+Message-ID: <db81d120-039d-f49f-9a48-c91e96777a61@gmail.com>
+Date:   Tue, 29 Mar 2022 20:16:42 +0700
 MIME-Version: 1.0
-References: <20220326165909.506926-1-benni@stuerz.xyz> <20220326165909.506926-9-benni@stuerz.xyz>
-In-Reply-To: <20220326165909.506926-9-benni@stuerz.xyz>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 29 Mar 2022 14:30:40 +0200
-Message-ID: <CAMRc=Md5qTnP1ZYak4f3hyqmaOR6jT_KL=rNr5cwAOcZ22yXfg@mail.gmail.com>
-Subject: Re: [PATCH 09/22] gpio-winbond: Use C99 initializers
-To:     =?UTF-8?Q?Benjamin_St=C3=BCrz?= <benni@stuerz.xyz>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Russell King <linux@armlinux.org.uk>, linux@simtec.co.uk,
-        Krzysztof Kozlowski <krzk@kernel.org>, alim.akhtar@samsung.com,
-        Thomas Gleixner <tglx@linutronix.de>, mingo@redhat.com,
-        Borislav Petkov <bp@alien8.de>, dave.hansen@linux.intel.com,
-        hpa@zytor.com, robert.moore@intel.com,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, lenb@kernel.org,
-        3chas3@gmail.com, laforge@gnumonks.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        mike.marciniszyn@cornelisnetworks.com,
-        dennis.dalessandro@cornelisnetworks.com, jgg@ziepe.ca,
-        pali@kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        isdn@linux-pingi.de,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        fbarrat@linux.ibm.com, ajd@linux.ibm.com,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, nico@fluxnic.net,
-        loic.poulain@linaro.org, kvalo@kernel.org, pkshih@realtek.com,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-samsung-soc@vger.kernel.org, linux-ia64@vger.kernel.org,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        devel@acpica.org, linux-atm-general@lists.sourceforge.net,
-        netdev <netdev@vger.kernel.org>, linux-edac@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-rdma@vger.kernel.org,
-        Linux Input <linux-input@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        wcn36xx@lists.infradead.org, linux-wireless@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH v5 01/11] Documentation: Add HTE subsystem guide
+Content-Language: en-US
+To:     Dipen Patel <dipenp@nvidia.com>, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, smangipudi@nvidia.com,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, warthog618@gmail.com,
+        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+        robh+dt@kernel.org
+References: <20220329054521.14420-1-dipenp@nvidia.com>
+ <20220329054521.14420-2-dipenp@nvidia.com>
+From:   Bagas Sanjaya <bagasdotme@gmail.com>
+In-Reply-To: <20220329054521.14420-2-dipenp@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Mar 26, 2022 at 6:00 PM Benjamin St=C3=BCrz <benni@stuerz.xyz> wrot=
-e:
->
-> This replaces comments with C99's designated
-> initializers because the kernel supports them now.
->
-> Signed-off-by: Benjamin St=C3=BCrz <benni@stuerz.xyz>
-> ---
->  drivers/gpio/gpio-winbond.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-winbond.c b/drivers/gpio/gpio-winbond.c
-> index 7f8f5b02e31d..0b637fdb407c 100644
-> --- a/drivers/gpio/gpio-winbond.c
-> +++ b/drivers/gpio/gpio-winbond.c
-> @@ -249,7 +249,7 @@ struct winbond_gpio_info {
->  };
->
->  static const struct winbond_gpio_info winbond_gpio_infos[6] =3D {
-> -       { /* 0 */
-> +       [0] =3D {
->                 .dev =3D WB_SIO_DEV_GPIO12,
->                 .enablereg =3D WB_SIO_GPIO12_REG_ENABLE,
->                 .enablebit =3D WB_SIO_GPIO12_ENABLE_1,
-> @@ -266,7 +266,7 @@ static const struct winbond_gpio_info winbond_gpio_in=
-fos[6] =3D {
->                         .warnonly =3D true
->                 }
->         },
-> -       { /* 1 */
-> +       [1] =3D {
->                 .dev =3D WB_SIO_DEV_GPIO12,
->                 .enablereg =3D WB_SIO_GPIO12_REG_ENABLE,
->                 .enablebit =3D WB_SIO_GPIO12_ENABLE_2,
-> @@ -277,7 +277,7 @@ static const struct winbond_gpio_info winbond_gpio_in=
-fos[6] =3D {
->                 .datareg =3D WB_SIO_GPIO12_REG_DATA2
->                 /* special conflict handling so doesn't use conflict data=
- */
->         },
-> -       { /* 2 */
-> +       [2] =3D {
->                 .dev =3D WB_SIO_DEV_GPIO34,
->                 .enablereg =3D WB_SIO_GPIO34_REG_ENABLE,
->                 .enablebit =3D WB_SIO_GPIO34_ENABLE_3,
-> @@ -294,7 +294,7 @@ static const struct winbond_gpio_info winbond_gpio_in=
-fos[6] =3D {
->                         .warnonly =3D true
->                 }
->         },
-> -       { /* 3 */
-> +       [3] =3D {
->                 .dev =3D WB_SIO_DEV_GPIO34,
->                 .enablereg =3D WB_SIO_GPIO34_REG_ENABLE,
->                 .enablebit =3D WB_SIO_GPIO34_ENABLE_4,
-> @@ -311,7 +311,7 @@ static const struct winbond_gpio_info winbond_gpio_in=
-fos[6] =3D {
->                         .warnonly =3D true
->                 }
->         },
-> -       { /* 4 */
-> +       [4] =3D {
->                 .dev =3D WB_SIO_DEV_WDGPIO56,
->                 .enablereg =3D WB_SIO_WDGPIO56_REG_ENABLE,
->                 .enablebit =3D WB_SIO_WDGPIO56_ENABLE_5,
-> @@ -328,7 +328,7 @@ static const struct winbond_gpio_info winbond_gpio_in=
-fos[6] =3D {
->                         .warnonly =3D true
->                 }
->         },
-> -       { /* 5 */
-> +       [5] =3D {
->                 .dev =3D WB_SIO_DEV_WDGPIO56,
->                 .enablereg =3D WB_SIO_WDGPIO56_REG_ENABLE,
->                 .enablebit =3D WB_SIO_WDGPIO56_ENABLE_6,
-> --
-> 2.35.1
->
+On 29/03/22 12.45, Dipen Patel wrote:
+> +============================================
+> +The Linux Hardware Timestamping Engine (HTE)
+> +============================================
+> +
+> +:Author: Dipen Patel
+> +
 
-Acked-by: Bartosz Golaszewski <brgl@bgdev.pl>
+Please learn how to convey semantics with rst format, see further comments
+below.
+
+> +This document describes the API that can be used by hardware timestamping
+> +engine provider and consumer drivers that want to use the hardware timestamping
+> +engine (HTE) framework. Both consumers and providers must include
+> +#include <linux/hte.h>.
+> +
+
+Maybe it's better to write as `... providers must ``#include <linux/hte.h>```.
+
+> +The HTE framework APIs for the providers
+> +----------------------------------------
+> +
+> +.. kernel-doc:: drivers/hte/hte.c
+> +   :functions: devm_hte_register_chip hte_push_ts_ns
+> +
+> +The HTE framework APIs for the consumers
+> +----------------------------------------
+> +
+> +.. kernel-doc:: drivers/hte/hte.c
+> +   :functions: devm_of_hte_request_ts_ns hte_req_ts_by_linedata_ns hte_release_ts hte_enable_ts hte_disable_ts hte_get_clk_src_info
+> +
+> +The HTE framework public structures
+> +-----------------------------------
+> +.. kernel-doc:: include/linux/hte.h
+> +
+> +More on the HTE timestamp data
+> +------------------------------
+> +The struct hte_ts_data is used to pass timestamp details between the consumers
+> +and the providers. It expresses timestamp data in nanoseconds in u64 data
+> +type. For now all the HTE APIs using struct hte_ts_data require tsc to be in
+> +nanoseconds. An example of the typical hte_ts_data data life cycle, for the
+> +GPIO line is as follows::
+> +
+
+When we talk about name terms found in actual code (like keywords or variable
+names), it is customary to enclose them inside inline code (for example,
+``struct what`` or ``u64 what``).
+
+> + - Monitors GPIO line change.
+> + - Detects the state change on GPIO line.
+> + - Converts timestamps in nanoseconds and stores it in tsc.
+> + - Stores GPIO raw level in raw_level variable if the provider has that
+> + hardware capability.
+> + - Pushes this hte_ts_data object to HTE subsystem.
+> + - HTE subsystem increments seq counter and invokes consumer provided callback.
+> + Based on callback return value, the HTE core invokes secondary callback in
+> + the thread context.
+> +
+> +HTE subsystem debugfs attributes
+> +--------------------------------
+> +HTE subsystem creates debugfs attributes at ``/sys/kernel/debug/hte/``.
+> +It also creates line/signal-related debugfs attributes at
+> +``/sys/kernel/debug/hte/<provider>/<label or line id>/``.
+> +
+> +`ts_requested`
+> +		The total number of entities requested from the given provider,
+> +		where entity is specified by the provider and could represent
+> +		lines, GPIO, chip signals, buses etc...
+> +                The attribute will be available at
+> +		``/sys/kernel/debug/hte/<provider>/``.
+> +
+> +		Read-only value
+> +
+> +`total_ts`
+> +		The total number of entities supported by the provider.
+> +                The attribute will be available at
+> +		``/sys/kernel/debug/hte/<provider>/``.
+> +
+> +		Read-only value
+> +
+> +`dropped_timestamps`
+> +		The dropped timestamps for a given line.
+> +                The attribute will be available at
+> +		``/sys/kernel/debug/hte/<provider>/<label or line id>/``.
+> +
+> +		Read-only value
+
+Since all these debugfs variables are read-only, we can say "Note that all
+these values are read-only".
+
+-- 
+An old man doll... just what I always wanted! - Clara
