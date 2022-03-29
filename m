@@ -2,298 +2,196 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A601D4EAF2A
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Mar 2022 16:24:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ECBDC4EAF89
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Mar 2022 16:46:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237086AbiC2OZq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Mar 2022 10:25:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60052 "EHLO
+        id S238210AbiC2OsX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Mar 2022 10:48:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233602AbiC2OZp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Mar 2022 10:25:45 -0400
-Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A2FB3615D;
-        Tue, 29 Mar 2022 07:24:02 -0700 (PDT)
-Received: by mail-wm1-x32b.google.com with SMTP id r64so10428066wmr.4;
-        Tue, 29 Mar 2022 07:24:02 -0700 (PDT)
+        with ESMTP id S238105AbiC2Or5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Mar 2022 10:47:57 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC8D95577D
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Mar 2022 07:46:14 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id w7so13412915pfu.11
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Mar 2022 07:46:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=8+ESXIDQ43In4w2S+9YeNSeR3/Wbpimnmf/TCBFJHtU=;
-        b=bnbL9zL9uAaVNPPUVQrRWFkhCEwdSoAHStj9cvpMFVn05rCjNQ3yo1RwuMDZH69YXQ
-         KSuDqcX/Bs8AfobwtB9AEGV7KR7adTk/XW3SPFDBc9GdAjJvsWSM+nT3gzgYdMKQpq7Q
-         Iyxu4g8xG6O4OcIFThN7eRYoezcBFvXBzvdm4hgdeJRI7dNti6hU2mGm70fU3hfNEA3O
-         nH1dR+PUyjoopAC1D1SAb6PbBuybeCOamrXP0hv6+SClfoKHPwoTLL9E93pQoLVNDOZ3
-         +pW7Xb6PLewsLfmiwicv0kBwGIODPKtgLzBBrAd9vSW9XFIX4msK7OcmtTrcnQvbsRCv
-         4LOg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Aj17CMSNype516/PZARiTVB42Wh/czlJ9UkMrTGPzTU=;
+        b=cGEK7vD2q8BUsyS0Td8otRbbcE+OAJfxjw3Eun/jhc21X+5XofmgF2+oJWrshbwZhj
+         mGC15YliRnpQ35qTaNXigoV/D23ZKP1vyhijj2yOk3SNRA8ssoye58j1KJPS4cCeB3/3
+         LDIlXE/gj+L5MzRQ5WKk5DgSk9iIFA0QYqr+kRmApxaKYMWqAQ7BjMH7+4q6427ingum
+         4iBZJ/naPOx8ZnDBq27OO5ec5rrYeSo2x1/YKwJbjZMDXw34yKjHULYFQcXQbXGH5lQM
+         zjCcOmv1ZG7LypN6CJBeUjrIvk6gHSqEsuUQUsphK3zbW9BaCj65OqDo4qpK9QMlprGG
+         PLTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=8+ESXIDQ43In4w2S+9YeNSeR3/Wbpimnmf/TCBFJHtU=;
-        b=oXoKoKVRSbnysdEIU6dXOUTi3wjIHTp8/JiOEGGcXX9wKugqjsW4ThuaO0eGiRbXlH
-         pbWgvXqHfugLNRl5OvEPnv0tVcommhldrplX9OMg52DaS8xr/LH4z5R1dZqPPjant0kR
-         F9aguLnDFg24bTlvy4ZRcD8CsJUOgd8ScKgBRliqVSpxgAVqVh12k5gIIIxgjSAvqeCt
-         lAMqMU6RN4uW0HEUO4KWAFXr++/07/+l7gD5NsD9dip9bHyxVS1r2N3+K0AqZevzxbeU
-         UofFEAPEi+es18BRJ134FV939hP9DeKqxt5C75P8JrENmnUdYLwgUyn3+jnfzfiTDY2T
-         mLvg==
-X-Gm-Message-State: AOAM530oUaSthTjzsUGWSUVVGMP+UQ3AvIniddwkVxfF8bEiQSSqTrBl
-        I4BYaoqbConstVLI9OXUsWk=
-X-Google-Smtp-Source: ABdhPJyGnGcNdx4fw1ne8yj9sknMRD4sCgvBzbStS3HWG8F/ys9fmwQ6Jqxh4VRZLUXUf/zyg27Xnw==
-X-Received: by 2002:a05:600c:4fc4:b0:38c:d622:f445 with SMTP id o4-20020a05600c4fc400b0038cd622f445mr7355060wmq.73.1648563840690;
-        Tue, 29 Mar 2022 07:24:00 -0700 (PDT)
-Received: from [192.168.1.145] ([207.188.167.132])
-        by smtp.gmail.com with ESMTPSA id i1-20020a1c5401000000b0038caef28acbsm2354922wmb.47.2022.03.29.07.23.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Mar 2022 07:24:00 -0700 (PDT)
-Message-ID: <3a93babf-7217-da88-11b4-9e3b9e9730f2@gmail.com>
-Date:   Tue, 29 Mar 2022 16:23:58 +0200
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Aj17CMSNype516/PZARiTVB42Wh/czlJ9UkMrTGPzTU=;
+        b=eBFZCyuSsopIy10iutiyqpMZr8Nk0Gb0BSbobEzdhlwUnUUfoEuOSfwz2TakpqVtLb
+         XilhZV9Cg7VietWWFcNat0EUw0gDtwuDs2l1QdlmrYpk59AMumRaKD2buo28/676FDrM
+         SVn8eSSFfl4e8hZM4h2LKngZfPUqxPKDYHE/JiULSKzvgP/XJotvinM9VYabkcZasuMp
+         KnW/eh+73l5975BjyTrWzeHXPq/YWzFj+Po31vw7V6ocJSlU4GhRfe6V9QAYh9w9lf3c
+         e/NL6vs77I4tj/5fsU++7aHoV2/WkWBkhG82QwMUdPgqoJRruNc9joDFDXVszNlAVc+b
+         1cgg==
+X-Gm-Message-State: AOAM530S8SGZfBJjUsMHV+dskLhNkp2vEmkKjfAmABN/PWgn39aUNv+d
+        dK0uwYikUk2YSS3kZ780qtJbxOVjfDdD9A==
+X-Google-Smtp-Source: ABdhPJyPdC3z5eXXsMD+2jAI4PglmXPsmgB2sSv6tGpZi8tcg0hCW0qGEBNU4AWpxutvBkTDvLT1KA==
+X-Received: by 2002:a63:5907:0:b0:382:2f93:5467 with SMTP id n7-20020a635907000000b003822f935467mr2205250pgb.460.1648565173994;
+        Tue, 29 Mar 2022 07:46:13 -0700 (PDT)
+Received: from sol ([118.209.204.33])
+        by smtp.gmail.com with ESMTPSA id c63-20020a624e42000000b004fa9ee41b7bsm19468555pfb.217.2022.03.29.07.46.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Mar 2022 07:46:13 -0700 (PDT)
+Date:   Tue, 29 Mar 2022 22:46:09 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Hans Kurscheidt <lve0200@gmail.com>
+Cc:     linux-gpio@vger.kernel.org
+Subject: Re: Edit/gpiomon: Question about mode
+Message-ID: <20220329144609.GA377439@sol>
+References: <d7f8e55e-1db8-a471-9414-5aac831432a8@gmail.com>
+ <c02dbd80-5971-7319-17ad-acba33c10da6@gmail.com>
+ <20220329033840.GA14149@sol>
+ <425f4895-81a9-719a-be74-4c67f9c35b92@gmail.com>
+ <20220329083823.GA94201@sol>
+ <3d6f8156-fcf0-21cf-c9bc-6543d982e89a@gmail.com>
+ <20220329085108.GA114462@sol>
+ <71eccedc-5bc1-e4f3-06c8-87b1127e1261@gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH v11 3/3] arm64: dts: Add mediatek SoC mt8195 and
- evaluation board
-Content-Language: en-US
-To:     Tinghan Shen <tinghan.shen@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Chaotian Jing <chaotian.jing@mediatek.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Project_Global_Chrome_Upstream_Group@mediatek.com,
-        ryder.lee@kernel.org, wenst@chromium.org,
-        chunfeng.yun@mediatek.com, Seiya Wang <seiya.wang@mediatek.com>
-References: <20220216113131.13145-1-tinghan.shen@mediatek.com>
- <20220216113131.13145-4-tinghan.shen@mediatek.com>
- <cf16ed58-6e75-cd9f-38ab-540d62ff03b5@gmail.com>
- <7283dd6732ae8c188c6f12183a977fb980cc8617.camel@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-In-Reply-To: <7283dd6732ae8c188c6f12183a977fb980cc8617.camel@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <71eccedc-5bc1-e4f3-06c8-87b1127e1261@gmail.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-
-On 29/03/2022 12:17, Tinghan Shen wrote:
-> Hi Matthias,
+On Tue, Mar 29, 2022 at 03:37:25PM +0200, Hans Kurscheidt wrote:
 > 
-> Thanks for your comment.
+> Am 29.03.2022 um 10:51 schrieb Kent Gibson:
+> > On Tue, Mar 29, 2022 at 10:43:19AM +0200, Hans Kurscheidt wrote:
+> > > Am 29.03.2022 um 10:38 schrieb Kent Gibson:
+> > > > On Tue, Mar 29, 2022 at 10:07:57AM +0200, Hans Kurscheidt wrote:
+> > > > > Am 29.03.2022 um 05:38 schrieb Kent Gibson:
+> > > > > > On Mon, Mar 28, 2022 at 07:13:13PM +0200, Hans Kurscheidt wrote:
+> > > > > > > Am 28.03.2022 um 15:16 schrieb Hans Kurscheidt:
+> > > > > > > > Hi,
+> > > > > > > > 
+> > > > > > > > what would be the right mode for gpiomon call from
+> > > > > > > > 
+> > > > > > > > a shellscript executed as root from systemd at system start
+> > > > > > > > 
+> > > > > > > > waiting on a Pin w/ pullup for invoking shutdown upon rising* edge.
+> > > > > > > > *changed
+> > > > > > > > 
+> > > > > > > > 
+> > > > > > > > Lots of interupts, Signals and other GPIO ongoing from other user APPs &
+> > > > > > > > threads in multi-user state.
+> > > > > > > 2b more precise: I wired a GPIO Pin to GND.
+> > > > > > > 
+> > > > > > > Upon the cmd: sudo gpiomon -r -n1 <chip> <offset>
+> > > > > > > 
+> > > > > > > the program exits immediately with 1 event, although there was never a
+> > > > > > > rising edge due to the fix wire to GND. Is this a feature or a bug, and is
+> > > > > > > it reproducible?
+> > > > > > > 
+> > > > > > Not a feature and not reproducible for me on a Raspberry Pi4 with the
+> > > > > > setup you describe, so probably a bug specific to your hardware platform,
+> > > > > > whatever that may be.
+> > > > > > 
+> > > > > > If it is 100% reproduceable for you, and assuming it is an initialisation
+> > > > > > issue so you only get the one spurious event, how about using -n2 as a
+> > > > > > workaround ;-)?
+> > > > > > 
+> > > > > > Cheers,
+> > > > > > Kent.
+> > > > > It appears 2b reproduceable 100% on my OrangePi zero+ (Allwinner H5) and
+> > > > > using -n2 does the trick, but isn't gpiod not supposed to work on all
+> > > > > commercial HW platforms and related kernels, rather then only on RPI??
+> > > > > 
+> > > > gpiod will work on any platform with a supporting kernel.
+> > > > How well depends on the underlying hardware and driver.
+> > > > The RPi4 was merely a counter-example demonstrating that your issue is
+> > > > not universal, using hardware I happen to have readily available.
+> > > > 
+> > > > Cheers,
+> > > > Kent.
+> > > So if I understand you right, gpiod works on sort of a logical level, while
+> > > the HW dependend part depends of the kernel driver implementation of the
+> > > specific HW?
+> > > 
+> > > 
+> > libgpiod is a userspace library and tools to access GPIO lines via the
+> > Linux GPIO character device.  The actual interfacing to the hardware is
+> > performed by the kernel and appropriate drivers for your hardware.
+> > As your problem does not exhibit on other hardware, the root cause
+> > of your problem probably lies in the driver for your hardware, not in
+> > libgpiod nor the gpiolib subsystem of the kernel.
+> > 
+> > But you would need to debug it further to be sure.
+> > 
+> > Cheers,
+> > Kent.
 > 
-> On Mon, 2022-03-28 at 14:26 +0200, Matthias Brugger wrote:
->>
->> On 16/02/2022 12:31, Tinghan Shen wrote:
->>> Add basic chip support for mediatek mt8195.
->>>
->>> Signed-off-by: Seiya Wang <seiya.wang@mediatek.com>
->>> Signed-off-by: Tinghan Shen <tinghan.shen@mediatek.com>
->>> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
->>> ---
->>>    arch/arm64/boot/dts/mediatek/Makefile       |    1 +
->>>    arch/arm64/boot/dts/mediatek/mt8195-evb.dts |  161 +++
->>>    arch/arm64/boot/dts/mediatek/mt8195.dtsi    | 1049 +++++++++++++++++++
->>>    3 files changed, 1211 insertions(+)
->>>    create mode 100644 arch/arm64/boot/dts/mediatek/mt8195-evb.dts
->>>    create mode 100644 arch/arm64/boot/dts/mediatek/mt8195.dtsi
->>>
->>> diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
->>> index 8c1e18032f9f..5da29e7223e4 100644
->>> --- a/arch/arm64/boot/dts/mediatek/Makefile
->>> +++ b/arch/arm64/boot/dts/mediatek/Makefile
->>> @@ -38,4 +38,5 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt8183-kukui-krane-sku0.dtb
->>>    dtb-$(CONFIG_ARCH_MEDIATEK) += mt8183-kukui-krane-sku176.dtb
->>>    dtb-$(CONFIG_ARCH_MEDIATEK) += mt8183-pumpkin.dtb
->>>    dtb-$(CONFIG_ARCH_MEDIATEK) += mt8192-evb.dtb
->>> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt8195-evb.dtb
->>>    dtb-$(CONFIG_ARCH_MEDIATEK) += mt8516-pumpkin.dtb
->>> diff --git a/arch/arm64/boot/dts/mediatek/mt8195-evb.dts b/arch/arm64/boot/dts/mediatek/mt8195-
->>> evb.dts
->>> new file mode 100644
->>> index 000000000000..51633d91d984
->>> --- /dev/null
->>> +++ b/arch/arm64/boot/dts/mediatek/mt8195-evb.dts
->>> @@ -0,0 +1,161 @@
->>
->> [...]
->>> +
->>> +&u2port0 {
->>> +	status = "okay";
->>> +};
->>> +
->>> +&u2port1 {
->>> +	status = "okay";
->>> +};
->>> +
->>> +&u3phy0 {
->>> +	status="okay";
->>> +};
->>> +
->>> +&u3phy1 {
->>> +	status="okay";
->>> +};
->>> +
->>
->> So we enable phys for xhci but not the device. Are we missing anything to enable
->> them on the EVB?
+> I raised a bug report at tha Armbian forum:
 > 
-> after discussed with usb expert, we think that we're missing the xhci nodes.
-> I'll add xhci nodes at next version.
+> https://forum.armbian.com/topic/20166-opi-zero-h5-gpiodmon-generates-spurious-interrupts-upon-invocation/
 > 
->>
->>> +&uart0 {
->>> +	pinctrl-names = "default";
->>> +	pinctrl-0 = <&uart0_pin>;
->>> +	status = "okay";
->>> +};
->>> diff --git a/arch/arm64/boot/dts/mediatek/mt8195.dtsi b/arch/arm64/boot/dts/mediatek/mt8195.dtsi
->>> new file mode 100644
->>> index 000000000000..a363e82f6988
->>> --- /dev/null
->>> +++ b/arch/arm64/boot/dts/mediatek/mt8195.dtsi
->>> @@ -0,0 +1,1049 @@
->>
->> [...]
->>> +
->>> +	clk32k: oscillator-32k {
->>> +		compatible = "fixed-clock";
->>> +		#clock-cells = <0>;
->>> +		clock-frequency = <32768>;
->>> +		clock-output-names = "clk32k";
->>
->> I suppose the 32KHz oscillator is really present on the board also not used by
->> any device (up to now?).
 > 
-> Yes. 32KHz clock is still available on MT8195.
-> Some modules can choose 32K as clock source depending on requirements.
+> I made some trial to understand if it is reproduceable, but I have
+> difficulties defining, when it happens. After RESET there is no spurious
+> event. The spurious event appears to happen, when the line was moved:
+> 
+> Could you please make another trial on your RPI w/ the following sequence:
+> 
+> RESET, gpiomon -r -n1 -Bpull-up <chip><line>  => No event,  -> pull line up
+> /down, => event (as expected), gpiomon -r -n1 -Bpull-up <chip><line> =>
+> false event
 > 
 
-Thanks for the confirmation.
+Not sure what this is intending to prove, as the hardware is different,
+or is that the point?
 
->>
->> [...]
->>> +
->>> +	soc {
->>> +		#address-cells = <2>;
->>> +		#size-cells = <2>;
->>> +		compatible = "simple-bus";
->>> +		ranges;
->>> +
->>
->> [...]
->>> +
->>> +		pwrap: pwrap@10024000 {
->>> +			compatible = "mediatek,mt8195-pwrap", "syscon";
->>> +			reg = <0 0x10024000 0 0x1000>;
->>> +			reg-names = "pwrap";
->>> +			interrupts = <GIC_SPI 243 IRQ_TYPE_LEVEL_HIGH 0>;
->>> +			clocks = <&infracfg_ao CLK_INFRA_AO_PMIC_AP>,
->>> +				 <&infracfg_ao CLK_INFRA_AO_PMIC_TMR>;
->>> +			clock-names = "spi", "wrap";
->>
->> Binding mandates resets but not present here. It also mandates two register
->> regions, but only one is given here.
-> 
-> After discussed with pwrap experts, the pwrap binding is out-of-date for mt8195.
-> They will send a patch to fix pwrap binding.
-> 
+That is with the line initially pulled down externally, right?
+I get an event when I disconnect the external pull-down - allowing the
+internal pull-up to pull the line high and trigger the event.
 
-If possible can you add the patch fixing the pwrap binding in this series, then 
-I don't have to search for the dependencies in my inbox. That would be of great 
-help.
+I don't get the false event that you are seeing subsequently, even when
+the line has been externally pulled up before being pulled down again
+and gpiomon run again.
 
->>
->>> +			assigned-clocks = <&topckgen CLK_TOP_PWRAP_ULPOSC>;
->>> +			assigned-clock-parents = <&topckgen CLK_TOP_ULPOSC1_D10>;
->>> +		};
->>> +
->>> +		scp_adsp: clock-controller@10720000 {
->>> +			compatible = "mediatek,mt8195-scp_adsp";
->>> +			reg = <0 0x10720000 0 0x1000>;
->>> +			#clock-cells = <1>;
->>> +		};
->>> +
->>
->> [...]
->>
->>> +
->>> +		mmc0: mmc@11230000 {
->>> +			compatible = "mediatek,mt8195-mmc",
->>> +				     "mediatek,mt8183-mmc";
->>> +			reg = <0 0x11230000 0 0x10000>,
->>> +			      <0 0x11f50000 0 0x1000>;
->>
->> Seems to be an oversight when adding support for mt8183-mmc support to the
->> driver. The binding description is missing the optional host top register base.
->> Chaotian can you please help to fix this in the binding description.
-> 
-> Ok. I'll fix it at next version.
-> 
+i.e. I see
+ - line externally pulled down
+ - power cycle RESET
+ - gpiomon -r -n1 -Bpull-up <chip><line>  => No event
+ - disconnect pull-down => event (RISING edge)
+ - pull line up (or not - optional due to internal pull-up)
+ - pull line down again
+ - gpiomon -r -n1 -Bpull-up <chip><line> => No event
 
-I'm not sure what you mean. I suppose the way forward is to fix the binding 
-description, correct?
+And I don't get continuous events if the line is left pulled up - I only
+get the one.
+Do you get those continuous events with out the -n1, or only when
+calling gpiomon -n1 again?
+Either way it looks like you've got something odd going on with the
+interrupts on your hardware.
 
-Thanks,
-Matthias
+Cheers,
+Kent.
 
->>
->>> +			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH 0>;
->>> +			clocks = <&topckgen CLK_TOP_MSDC50_0>,
->>> +				 <&infracfg_ao CLK_INFRA_AO_MSDC0>,
->>> +				 <&infracfg_ao CLK_INFRA_AO_MSDC0_SRC>;
->>> +			clock-names = "source", "hclk", "source_cg";
->>> +			status = "disabled";
->>> +		};
->>> +
->>
->> [...]
->>> +
->>> +		xhci3: usb@112b0000 {
->>> +			compatible = "mediatek,mt8195-xhci",
->>> +				     "mediatek,mtk-xhci";
->>> +			reg = <0 0x112b0000 0 0x1000>,
->>> +			      <0 0x112b3e00 0 0x0100>;
->>> +			reg-names = "mac", "ippc";
->>> +			interrupts = <GIC_SPI 536 IRQ_TYPE_LEVEL_HIGH 0>;
->>> +			phys = <&u2port3 PHY_TYPE_USB2>;
->>> +			assigned-clocks = <&topckgen CLK_TOP_USB_TOP_3P>,
->>> +					  <&topckgen CLK_TOP_SSUSB_XHCI_3P>;
->>> +			assigned-clock-parents = <&topckgen CLK_TOP_UNIVPLL_D5_D4>,
->>> +						 <&topckgen CLK_TOP_UNIVPLL_D5_D4>;
->>> +			clocks = <&pericfg_ao CLK_PERI_AO_SSUSB_3P_BUS>,
->>> +				 <&topckgen CLK_TOP_SSUSB_P3_REF>,
->>> +				 <&pericfg_ao CLK_PERI_AO_SSUSB_3P_XHCI>;
->>> +			clock-names = "sys_ck", "ref_ck", "xhci_ck";
->>> +			/* This controller is connected with a BT device.
->>> +			 * Disable usb2 lpm to prevent konwn issues.
->>> +			 */
->>> +			usb2-lpm-disable;
->>
->> My understanding is, that this depends on the board and not the SoC. Which means
->> usb2-lpm-disable should go into any board that has a BT device connected to the
->> xhci device (I don't see any active xhci node in mt8195-evb so far).
-> 
-> Ok. I'll move this property to evb board in a xhci node.
-> 
-> Best regards,
-> TingHan
-> 
->>
->> Regards,
->> Matthias
-> 
+> There might be an issue w/ pending interrupts, when the line is bouncing
+> when pulled up/down. The 2nd gpiodmon cmd might catch one of the pending
+> interrupts. (Just an idea). This would hint to an initialisation problem,
+> that pending line states are not preempted, before the int is attached.
+
