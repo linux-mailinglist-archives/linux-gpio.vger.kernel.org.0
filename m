@@ -2,101 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 99D5A4EABBC
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Mar 2022 12:56:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0ECBC4EAC09
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Mar 2022 13:14:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233340AbiC2K6Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Mar 2022 06:58:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54574 "EHLO
+        id S234426AbiC2LQc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Mar 2022 07:16:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235439AbiC2K6Y (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Mar 2022 06:58:24 -0400
-Received: from mx.socionext.com (mx.socionext.com [202.248.49.38])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4E9051DA7C;
-        Tue, 29 Mar 2022 03:56:39 -0700 (PDT)
-Received: from unknown (HELO iyokan2-ex.css.socionext.com) ([172.31.9.54])
-  by mx.socionext.com with ESMTP; 29 Mar 2022 19:56:38 +0900
-Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
-        by iyokan2-ex.css.socionext.com (Postfix) with ESMTP id 9A3C42058B50;
-        Tue, 29 Mar 2022 19:56:38 +0900 (JST)
-Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Tue, 29 Mar 2022 19:56:38 +0900
-Received: from [10.212.183.172] (unknown [10.212.183.172])
-        by kinkan2.css.socionext.com (Postfix) with ESMTP id 90509B62B7;
-        Tue, 29 Mar 2022 19:56:37 +0900 (JST)
-Subject: Re: [PATCH] dt-bindings: gpio: uniphier: Add hogs parsing
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        with ESMTP id S235584AbiC2LQ3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Mar 2022 07:16:29 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A491149F16;
+        Tue, 29 Mar 2022 04:14:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1648552486; x=1680088486;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WW7g88rQ37IyUYcFgRuJ0tHqtRy6l/Sd1url/SgYtxc=;
+  b=K+wygYLWZFOk+RJ11U9Z66aBwtbB1O1TCCLpz6oIBcqvN975juAj3U/m
+   Ja3JYd2C2oilh/sRqJGuCVf0Wsi21+BUwxmeuFsqb3cbxRUI6ZckoA2td
+   XDVSEu8lmLaUaKsBbuV02WgmgS+nXmCOVdi/zdx/q0f01oAnlmxFrYYtx
+   ZEGSqTxsS2mp0mefMr23c8nMm8/MoNlUd5g6LMNmtemRhz1lXl3dU1l/j
+   Kx6K6yGHPjeaoTrl2JOmV+nHZZSgeo7lLRV2iaqH5hUQ6ombPsd3EQRsb
+   syvZRt6HxDdu4avxgM2ncQQp5u6jl6FdqnEvNG6kKCQA/tcQstIJ/JZoQ
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10300"; a="322408088"
+X-IronPort-AV: E=Sophos;i="5.90,220,1643702400"; 
+   d="scan'208";a="322408088"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2022 04:14:46 -0700
+X-IronPort-AV: E=Sophos;i="5.90,220,1643702400"; 
+   d="scan'208";a="787559197"
+Received: from smile.fi.intel.com ([10.237.72.59])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2022 04:14:41 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1nZ9nb-008hp9-9H;
+        Tue, 29 Mar 2022 14:14:07 +0300
+Date:   Tue, 29 Mar 2022 14:14:07 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Fabien DESSENNE <fabien.dessenne@foss.st.com>
+Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <1648430916-21988-1-git-send-email-hayashi.kunihiko@socionext.com>
- <9f7355de-8154-7ff2-ce29-c89ccfb89cab@linaro.org>
-From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Message-ID: <81864a56-f48b-a41a-614b-16128f3850a9@socionext.com>
-Date:   Tue, 29 Mar 2022 19:56:37 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH v1 2/5] pinctrl: stm32: Replace custom code by
+ gpiochip_count() call
+Message-ID: <YkLp//IFvgohHycw@smile.fi.intel.com>
+References: <20220325200338.54270-1-andriy.shevchenko@linux.intel.com>
+ <20220325200338.54270-2-andriy.shevchenko@linux.intel.com>
+ <44057328-2454-4f4d-cc90-b0ca35ba1e5a@foss.st.com>
 MIME-Version: 1.0
-In-Reply-To: <9f7355de-8154-7ff2-ce29-c89ccfb89cab@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <44057328-2454-4f4d-cc90-b0ca35ba1e5a@foss.st.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Krzysztof,
+On Tue, Mar 29, 2022 at 09:59:32AM +0200, Fabien DESSENNE wrote:
+> On 25/03/2022 21:03, Andy Shevchenko wrote:
 
-On 2022/03/29 4:04, Krzysztof Kozlowski wrote:
-> On 28/03/2022 03:28, Kunihiko Hayashi wrote:
->> Allow parsing GPIO controller children nodes with GPIO hogs to fix the
->> following warning:
->>
->>    uniphier-ld11-ref.dtb: gpio@55000000: 'xirq0-hog' does not match any of
->> the regexes: 'pinctrl-[0-9]+'
->>        From schema:
->> Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
->>
->> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
->> ---
->>   .../devicetree/bindings/gpio/socionext,uniphier-gpio.yaml  | 7 +++++++
->>   1 file changed, 7 insertions(+)
->>
->> diff --git
->> a/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
->> b/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
->> index bcafa494ed7a..b6f5963a2ae6 100644
->> --- a/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
->> +++ b/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
->> @@ -52,6 +52,13 @@ properties:
->>         <child-interrupt-base parent-interrupt-base length> triplets.
->>       $ref: /schemas/types.yaml#/definitions/uint32-matrix
->>
->> +patternProperties:
->> +  "^(.+-hog(-[0-9]+)?)$":
+Thanks for review, my answers below.
+
+> > -	for_each_available_child_of_node(np, child)
 > 
-> The outer () are not needed.
+> Here we look for "available" child, while the new generic helper
+> gpiochip_count() looks for any child, available or not.
+> Would it be possible to hav gpiochip_count() looking for available child as
+> well?
 
-Surely, the "()" can be removed.
+It's done already that way. The fwnode loop is done against available children.
 
->> +    type: object
-> 
-> You need also properties. See for example:
-> Documentation/devicetree/bindings/gpio/fsl-imx-gpio.yaml
+> It looks like there is '_available_' version of
+> 'device_for_each_child_node', maybe this shall be added too.
 
-I see. I should list the valid properties in patternProperties.
-I'll add it.
+No need.
 
-Thank you,
+-- 
+With Best Regards,
+Andy Shevchenko
 
----
-Best Regards
-Kunihiko Hayashi
+
