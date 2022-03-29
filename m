@@ -2,96 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 82D424EB1A7
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Mar 2022 18:16:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 726304EB1E6
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Mar 2022 18:39:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236648AbiC2QRh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Mar 2022 12:17:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48968 "EHLO
+        id S239689AbiC2Qko (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Mar 2022 12:40:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237751AbiC2QRg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Mar 2022 12:17:36 -0400
-Received: from mail-yw1-x1134.google.com (mail-yw1-x1134.google.com [IPv6:2607:f8b0:4864:20::1134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BFA318DAA2
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Mar 2022 09:15:53 -0700 (PDT)
-Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-2e6ceb45174so149418677b3.8
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Mar 2022 09:15:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Oj3LhvxsfdYjQAWu5HO23F+mCaTs2lII7o9YCixwaWA=;
-        b=HzfngFMEXBXvCHnMwHp+dggcV6DxbJLeam8plzIQRFsLo9S8NRl2yE0rRBc+s7bZHs
-         uTuWhQxg2BiiyheB9Fy5Vu4inqHVui22DvH2XtzGr+c67FgBmkqwrxtYHTKgxZdJyp2l
-         IRagftbVPIQ9BYDyD8DMZmgHiMZ0Pm4LvxqG278mF/8O3gRhBQr0Pndfa2LLe16kV/fi
-         AfOLuoGwfHkmh9F/rG/UByTselg/AElU2FIZu+THWfecvvuE51wZwVB5quPoGlBl8i4Q
-         89Vy+N1Vnny1/xeqxJNXWM3JeQjHtClhjyfzEXKFOHD5CGS7+FRRShDS9CD8GLVCRlhw
-         uquA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Oj3LhvxsfdYjQAWu5HO23F+mCaTs2lII7o9YCixwaWA=;
-        b=GpY2hhavaoSsAcBkj7OE7xunQ+kj4KQUibPI+ahdA4jxwxX5Rr5Ot7dkp15uXjoDc3
-         PxThrT3F21FeJnPAoGWd1Ac1tbyrff3cLBZcURd3qj6tmX0ipfMfFU5poDESS8doEzgO
-         TYPPSOflGaycja34aDHGkZotNFAz/mrV1gsQUHbTlKJi71u9v3DJTUssjRc0TSyPeFr7
-         whixsDPM3vL+O0rVrFEVFTzZeEx8Wl5xO4OK0YgOVM9DO1iOtiulXJjlda9wDQbHeCfZ
-         W/RBNo4hGoIDpQmCZYI/bsVYAweE/EB9B9GgG0CUC7NUioExJJICdRb17hWSXOZBnXSF
-         6yJg==
-X-Gm-Message-State: AOAM5300jfgCVs71NVQ7XOUPfK35ZXFxB564kmK63jJtBcJc/938J2zY
-        w2r63kaEktSG3N6U/TQUw/A+QKNU2gi0V48+Td5ucg==
-X-Google-Smtp-Source: ABdhPJziFrWCXAZoa8A7mDFKLwjo2AZ2hD2pL04hRMq789vu2P5kiu/LrgWGFGSC2CHKoJ53fSDXa/PSZhxZLwSLEIo=
-X-Received: by 2002:a81:d542:0:b0:2e5:c060:a0ac with SMTP id
- l2-20020a81d542000000b002e5c060a0acmr31389155ywj.118.1648570552012; Tue, 29
- Mar 2022 09:15:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <CACRpkdZ_Jr3OzfoOpSSsAJMy1Oe_=zD861jouDzCVD-BQ6yZMg@mail.gmail.com>
- <CAHk-=whzqAB6kfHUcX2uhfPnNiWJRq=UmeA1TbgGi3XA+57j3w@mail.gmail.com>
- <YkIqyb6lhn5uU2jb@latitude> <CAHk-=wjxvNGEUUN5fj203KJL8qXK3jv359Ketc-HJMJU9wN6KA@mail.gmail.com>
-In-Reply-To: <CAHk-=wjxvNGEUUN5fj203KJL8qXK3jv359Ketc-HJMJU9wN6KA@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 29 Mar 2022 18:15:40 +0200
-Message-ID: <CACRpkdZxme+YYfXzq3T0hKdZA3JF86jPeiH=tzmK-p+3L2ZyJw@mail.gmail.com>
-Subject: Re: [GIT PULL] pin control bulk changes for v5.18
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+        with ESMTP id S234114AbiC2Qkm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Mar 2022 12:40:42 -0400
+Received: from smtp-out3.electric.net (smtp-out3.electric.net [208.70.128.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 227E1BF01F;
+        Tue, 29 Mar 2022 09:38:59 -0700 (PDT)
+Received: from 1nZEru-0004Rr-Vx by out3b.electric.net with emc1-ok (Exim 4.94.2)
+        (envelope-from <kris@embeddedTS.com>)
+        id 1nZErw-0004Vp-V0; Tue, 29 Mar 2022 09:38:56 -0700
+Received: by emcmailer; Tue, 29 Mar 2022 09:38:56 -0700
+Received: from [66.210.251.27] (helo=mail.embeddedts.com)
+        by out3b.electric.net with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <kris@embeddedTS.com>)
+        id 1nZEru-0004Rr-Vx; Tue, 29 Mar 2022 09:38:54 -0700
+Received: from tsdebian (unknown [75.164.75.221])
+        by mail.embeddedts.com (Postfix) with ESMTPSA id 2B89219E96;
+        Tue, 29 Mar 2022 09:38:54 -0700 (MST)
+Message-ID: <1648571918.2364.1.camel@embeddedTS.com>
+Subject: Re: [PATCH] drivers: Fix Links to Technologic Systems web resources
+From:   Kris Bahnsen <kris@embeddedTS.com>
+Reply-To: kris@embeddedTS.com
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Marc Kleine-Budde <mkl@pengutronix.de>
+Cc:     Linus Walleij <linus.walleij@linaro.org>, wg@grandegger.com,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-can@vger.kernel.org
+Date:   Tue, 29 Mar 2022 09:38:38 -0700
+In-Reply-To: <CAMRc=MdZm1HU3vZcYK=cStmCE6+tQ6R4-ya5t3ZRovf0RZHJQQ@mail.gmail.com>
+References: <20220303225525.29846-1-kris@embeddedTS.com>
+         <CAMRc=McesjKviO=5gK3GN+XukZfSr=um9W8+sqXw9GSFX0QTgw@mail.gmail.com>
+         <1648489760.3393.6.camel@embeddedTS.com>
+         <20220328175857.dvmvh5knabc6sq3x@pengutronix.de>
+         <CAMRc=MdZm1HU3vZcYK=cStmCE6+tQ6R4-ya5t3ZRovf0RZHJQQ@mail.gmail.com>
+Organization: embeddedTS
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Mailer: Evolution 3.22.6-1+deb9u2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Outbound-IP: 66.210.251.27
+X-Env-From: kris@embeddedTS.com
+X-Proto: esmtps
+X-Revdns: wsip-66-210-251-27.ph.ph.cox.net
+X-HELO: mail.embeddedts.com
+X-TLS:  TLS1.2:ECDHE-RSA-AES256-GCM-SHA384:256
+X-Authenticated_ID: 
+X-Virus-Status: Scanned by VirusSMART (c)
+X-Virus-Status: Scanned by VirusSMART (b)
+X-FM-Delivery-Delay: 15749372,23518412
+X-PolicySMART: 13164782, 15749372, 26810492
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=embeddedTS.com; s=mailanyone20220121;h=Mime-Version:References:In-Reply-To:Date:To:From:Message-ID; bh=R5FWcDFV1//6o1fZx2FXeDZPUb1MDiE+Q32sF2zL76w=;b=bUIrVpm99KX9/zh6Nmr3jutGAMA+7vvp4ghqal8KKdnbNwECcn/sD0MreaFL3N2YFUA4ZDjbHuIMIdt7UI0qm/7OKYwK78z6VO0AN9Gfp3UaXpuLg6f/lcy3gVYileLDN84uL406Hy7+8GdKE01ypf+Dnmw5aiyADL05CfqgJuxdzg9evCY8QkAXnKn1CJ++ZnKGZZeMxxdivByjXMXROWwmwYizY8L+fjvM+Kt12rCLPb61MTYmHERvF4EgV81tu2VvmRQspw6p2NHZZr5C5lNfAPosQPE7d6Ab7I+lFVIdk93n5wAAJpltoVAnuQhim0g5yU3B14Nj14MepQzTrw==;
+X-FM-Delivery-Delay: 15749372,23518412
+X-PolicySMART: 13164782, 15749372, 26810492
+X-FM-Delivery-Delay: 15749372,23518412
+X-PolicySMART: 13164782, 15749372, 26810492
+X-FM-Delivery-Delay: 15749372,23518412
+X-PolicySMART: 13164782, 15749372, 26810492
+X-FM-Delivery-Delay: 15749372,23518412
+X-PolicySMART: 13164782, 15749372, 26810492
+X-FM-Delivery-Delay: 15749372,23518412
+X-PolicySMART: 13164782, 15749372, 26810492
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 28, 2022 at 11:41 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
-> On Mon, Mar 28, 2022 at 2:38 PM Jonathan Neusch=C3=A4fer
-> <j.neuschaefer@gmx.net> wrote:
-> >
-> > It was =E2=80=94 but when it was noticed, the fix went through the IRQ =
-tree, on
-> > top of a refactoring that happened there (the switch to generic_handle_=
-domain_irq):
-> >
-> > https://lore.kernel.org/lkml/164751044707.389.16417510835118111853.tip-=
-bot2@tip-bot2/
->
-> Ok, that ends up at least being identical to what I did, so thats' good.
+On Tue, 2022-03-29 at 15:18 +0200, Bartosz Golaszewski wrote:
+> On Mon, Mar 28, 2022 at 7:58 PM Marc Kleine-Budde <mkl@pengutronix.de> wrote:
+> > 
+> > I'm taking the CAN part. I think it's best to repost the GPIO part as a
+> > separate patch.
+> > 
+> 
+> Yes please, and for the future: if possible separate such changes into
+> patches aimed at different maintainers.
+> 
+> Bart
+> 
 
-Ah thanks for hashing this out both of you, I got a bit sweaty there since =
-I
-spent the first week in the merge window trying to hash out issues in this
-driver.
+Understood. Thank you for the information.
 
-I suppose there will be a different interesting merge conflict with the IRQ
-tree now but the solution should be obvious I hope.
-
-Yours,
-Linus Walleij
+Kris
