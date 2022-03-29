@@ -2,71 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 052794EA922
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Mar 2022 10:24:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 05DEE4EA974
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Mar 2022 10:38:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233900AbiC2I0I (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Mar 2022 04:26:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46384 "EHLO
+        id S232323AbiC2IkR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Mar 2022 04:40:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233867AbiC2IZ7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Mar 2022 04:25:59 -0400
-Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B05511F89C2
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Mar 2022 01:24:14 -0700 (PDT)
-Received: by mail-wr1-x429.google.com with SMTP id j18so23617635wrd.6
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Mar 2022 01:24:14 -0700 (PDT)
+        with ESMTP id S232670AbiC2IkQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Mar 2022 04:40:16 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A53802124D
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Mar 2022 01:38:28 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id gb19so16714442pjb.1
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Mar 2022 01:38:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
-        h=references:user-agent:from:to:cc:subject:date:in-reply-to
-         :message-id:mime-version;
-        bh=4q7utA2N5uBdT/Hk7/7TmYG0IOBace6qzAeWlAkbf9o=;
-        b=1CpE15dMw2nEkW4YYCMic9aIKN2w3BNoDfSIkhBuAqCEEzczO2Y6fdOfXW+XelLTAQ
-         A7SdjqBc4nxPzuMKdFd6vSMl88516biNL7AhFjZIpwaFRyBqAegNsblBNLlF/Rjmh4+k
-         TjeLLdIUxio9O2iohXtFhvi2sTzYoZTU6HfRyUHmk+sYvImqH+oMggNAoVV0R7FsUE44
-         npiH/sfKMS/F5I7QcO6RvJiM538xhyb6SEVfA2GHJVOyK/cb293haK2W8D5xbuOtBYiD
-         gCOn3lZgrE2no/rDri5oQCiz8jZuyRFRL+lRphFsdaAp1WczDBU4ecRlplWu+7Eh+wiE
-         lFlA==
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=pEsNUjcDU07D0Qh+05HmnDoXqtZUuIo8j9GRqsZ+HaQ=;
+        b=L0k4PSEE4vwbw006U2fod87E6bkzTVgD8pa9Q3lMfFm5OJawKmt9aaZVObLB798DFq
+         XlfK7VXBqw6pFi79kjnqzrD8jVtWOLjqoDUU3uQgeJK0qA6+zPT9q0pqN6xSk9V/19yL
+         R3V7QFI7uyITKnuq+uaG5TuGmYw9Iljn10nSOs0mYkui5lBrpatE+LYgCY+3++46wLu2
+         QF8x9/tOT2RDT6n+uPB7vF15Sk81EDj6wpnwp8PUCxXy4JyvYW4T14BNFG3FdLEabQ/m
+         V9IDEwqIvg0PMUs10FEcYa+t7YisR8tbOWgFHjdAmdQFz17Uk4W5gdzaOZM3bIoGm+XO
+         32Gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject:date
-         :in-reply-to:message-id:mime-version;
-        bh=4q7utA2N5uBdT/Hk7/7TmYG0IOBace6qzAeWlAkbf9o=;
-        b=uoinNgskaKB25M9p+lCBHedqwq3jLD5Io5DH8iGTmpXCS+X34PNakggcNP8GFLLQWd
-         QG2jH/jlZwfqVuyN2n90N5+Cxn5WPsTF9ys2f/VN59UYExDlyIByJu5Qa32RWzYj+fZP
-         43J8j/ute4Ip97M/Jh0pYYEdybAMERk7QZdFFBRPKuFoykD+Xl4SC1O/PpHLgCLrcZml
-         qZ1Ws2k1gpzwWoQc+SB8PU+G62mH5TKZDEcy+v94lnIARX2YeDxPbbGHdWeo+TvQvKd+
-         irN9lt1/FqqmpchDF59j9CZB8w+oIxDgefRxKHA8WI0vFKHNq2e9BJQFPpd42fS7xww9
-         0ymg==
-X-Gm-Message-State: AOAM531xFBt6BC5qGiWj7Xef5Yad0+0UZZm4UOxTUDG1SFCEi7M/1FhX
-        qDFzioBIssdtYFOylLlcYMW2/A==
-X-Google-Smtp-Source: ABdhPJzKxD/KLU6iWPF6ZxbUV+9xxFwOzMdCAGFHX4ig6YXgf4XhA3i6zqnXEY8LtnifQ8Zuyx/LWQ==
-X-Received: by 2002:a05:6000:1568:b0:1f0:250a:d3ef with SMTP id 8-20020a056000156800b001f0250ad3efmr7916035wrz.402.1648542253218;
-        Tue, 29 Mar 2022 01:24:13 -0700 (PDT)
-Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id l20-20020a05600c1d1400b0038cba2f88c0sm2000306wms.26.2022.03.29.01.24.11
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=pEsNUjcDU07D0Qh+05HmnDoXqtZUuIo8j9GRqsZ+HaQ=;
+        b=vMx1mkuYLy7BpGlmIslQBHct7xWRSChCI3LlIrRZNQH/C8Su41Sgm30BDDOp1iUtVV
+         al1OXwlMJhT8Ogwgi0VtVUDVnM4LttNRtvi8RVmq7BQYkbtUCZ1nNaHi2Lt4N6JNlCpq
+         ocSX7sYPPSMFGvVOmnNbuVXFzkieVJRyWzF1+koKtqZ4W238iIFzXkMdzCw68EMwHMGd
+         AMgDkDBWCQKINkYbmrMVNi/FJIHdwDB76yy4tSqSd0JzyBsVfs3MPNDoKz/S554X3BIx
+         2lLKncOgW2W30jChBsOW/DCAm0/zS1FESnbZPfRLRsIFZJDYa6Oygh5f/JSYFfXaAEtY
+         Xz6g==
+X-Gm-Message-State: AOAM531JJ8ichXx1YJVTExOoS25dkPgVxlcpyG90p8hX/T0uqm4sdOqN
+        bciIeRUsUX+cQvSVCGC6Tck=
+X-Google-Smtp-Source: ABdhPJxdmROw909JY8bhBP8mJ4CrUyW+6CTkWOLfJG48weXiMkFXY0saZ44vuqWPbQZf2XPfteK7Cw==
+X-Received: by 2002:a17:90a:3e0e:b0:1c7:ca0e:a11 with SMTP id j14-20020a17090a3e0e00b001c7ca0e0a11mr3441589pjc.19.1648543108165;
+        Tue, 29 Mar 2022 01:38:28 -0700 (PDT)
+Received: from sol ([118.209.204.33])
+        by smtp.gmail.com with ESMTPSA id r11-20020a17090b050b00b001c741fd4890sm1939383pjz.9.2022.03.29.01.38.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Mar 2022 01:24:12 -0700 (PDT)
-References: <20220329060821.15251-1-qianggui.song@amlogic.com>
-User-agent: mu4e 1.6.10; emacs 27.1
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Qianggui Song <qianggui.song@amlogic.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org
-Cc:     kernel test robot <lkp@intel.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: meson: fix unused variable warning
-Date:   Tue, 29 Mar 2022 10:21:42 +0200
-In-reply-to: <20220329060821.15251-1-qianggui.song@amlogic.com>
-Message-ID: <1j8rstjhec.fsf@starbuckisacylon.baylibre.com>
+        Tue, 29 Mar 2022 01:38:27 -0700 (PDT)
+Date:   Tue, 29 Mar 2022 16:38:23 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Hans Kurscheidt <lve0200@gmail.com>
+Cc:     linux-gpio@vger.kernel.org
+Subject: Re: Edit/gpiomon: Question about mode
+Message-ID: <20220329083823.GA94201@sol>
+References: <d7f8e55e-1db8-a471-9414-5aac831432a8@gmail.com>
+ <c02dbd80-5971-7319-17ad-acba33c10da6@gmail.com>
+ <20220329033840.GA14149@sol>
+ <425f4895-81a9-719a-be74-4c67f9c35b92@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <425f4895-81a9-719a-be74-4c67f9c35b92@gmail.com>
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -74,46 +71,51 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue, Mar 29, 2022 at 10:07:57AM +0200, Hans Kurscheidt wrote:
+> 
+> Am 29.03.2022 um 05:38 schrieb Kent Gibson:
+> > On Mon, Mar 28, 2022 at 07:13:13PM +0200, Hans Kurscheidt wrote:
+> > > Am 28.03.2022 um 15:16 schrieb Hans Kurscheidt:
+> > > > Hi,
+> > > > 
+> > > > what would be the right mode for gpiomon call from
+> > > > 
+> > > > a shellscript executed as root from systemd at system start
+> > > > 
+> > > > waiting on a Pin w/ pullup for invoking shutdown upon rising* edge.
+> > > > *changed
+> > > > 
+> > > > 
+> > > > Lots of interupts, Signals and other GPIO ongoing from other user APPs &
+> > > > threads in multi-user state.
+> > > 2b more precise: I wired a GPIO Pin to GND.
+> > > 
+> > > Upon the cmd: sudo gpiomon -r -n1 <chip> <offset>
+> > > 
+> > > the program exits immediately with 1 event, although there was never a
+> > > rising edge due to the fix wire to GND. Is this a feature or a bug, and is
+> > > it reproducible?
+> > > 
+> > Not a feature and not reproducible for me on a Raspberry Pi4 with the
+> > setup you describe, so probably a bug specific to your hardware platform,
+> > whatever that may be.
+> > 
+> > If it is 100% reproduceable for you, and assuming it is an initialisation
+> > issue so you only get the one spurious event, how about using -n2 as a
+> > workaround ;-)?
+> > 
+> > Cheers,
+> > Kent.
+> 
+> It appears 2b reproduceable 100% on my OrangePi zero+ (Allwinner H5) and
+> using -n2 does the trick, but isn't gpiod not supposed to work on all
+> commercial HW platforms and related kernels, rather then only on RPI??
+> 
 
-On Tue 29 Mar 2022 at 14:08, Qianggui Song <qianggui.song@amlogic.com> wrote:
+gpiod will work on any platform with a supporting kernel.
+How well depends on the underlying hardware and driver.
+The RPi4 was merely a counter-example demonstrating that your issue is
+not universal, using hardware I happen to have readily available.
 
-> The kernel test robot reported a warning as below:
->>> drivers/pinctrl/meson/pinctrl-meson-s4.c:178:27: warning: unused variable 'tdm_sclk1_c_pins' [-Wunused-const-variable]
->    static const unsigned int tdm_sclk1_c_pins[]            = { GPIOC_3 };
->
-> Fix it by adding missing description about this pins
->
-> Fixes: 775214d389c2 ("pinctrl: meson: add pinctrl driver support for Meson-S4 Soc")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Qianggui Song <qianggui.song@amlogic.com>
-> ---
->  drivers/pinctrl/meson/pinctrl-meson-s4.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/pinctrl/meson/pinctrl-meson-s4.c b/drivers/pinctrl/meson/pinctrl-meson-s4.c
-> index 3c7358f53302..067c6749c849 100644
-> --- a/drivers/pinctrl/meson/pinctrl-meson-s4.c
-> +++ b/drivers/pinctrl/meson/pinctrl-meson-s4.c
-> @@ -575,6 +575,7 @@ static struct meson_pmx_group meson_s4_periphs_groups[] = {
->  	GROUP(tdm_d2_c,			4),
->  	GROUP(tdm_d3_c,			4),
->  	GROUP(tdm_fs1_c,		4),
-> +	GROUP(tdm_sclk1_c,		4),
->  	GROUP(mclk_1_c,			4),
->  	GROUP(tdm_d4_c,			4),
->  	GROUP(tdm_d5_c,			4),
-> @@ -937,6 +938,7 @@ static const char * const iso7816_groups[] = {
->  
->  static const char * const tdm_groups[] = {
->  	"tdm_d2_c", "tdm_d3_c", "tdm_fs1_c", "tdm_d4_c", "tdm_d5_c",
-> +	"tdm_sclk1_c",
-
-Thanks for fixing this.
-Could you please try to keep this list somehow ordered a bit ?
-Here you are adding a new line in the middle with single entry ... it
-looks weird. 
-
->  	"tdm_fs1_d", "tdm_d4_d", "tdm_d3_d", "tdm_d2_d", "tdm_sclk1_d",
->  	"tdm_sclk1_h", "tdm_fs1_h", "tdm_d2_h", "tdm_d3_h", "tdm_d4_h",
->  	"tdm_d1", "tdm_d0", "tdm_fs0", "tdm_sclk0", "tdm_fs2", "tdm_sclk2",
-
+Cheers,
+Kent.
