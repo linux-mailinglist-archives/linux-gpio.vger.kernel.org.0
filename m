@@ -2,92 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AE714EB050
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Mar 2022 17:27:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1E384EB07C
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Mar 2022 17:29:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237317AbiC2P2u (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Mar 2022 11:28:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50488 "EHLO
+        id S238598AbiC2PbB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Mar 2022 11:31:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233601AbiC2P2u (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Mar 2022 11:28:50 -0400
-Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F317E1271;
-        Tue, 29 Mar 2022 08:27:07 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:281:8300:35::5f6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id EDBAC732;
-        Tue, 29 Mar 2022 15:27:06 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net EDBAC732
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-        t=1648567627; bh=J4BwUFEnERHD+GXWZTxjovQvtNqH+5sYie0SgwCqXpk=;
-        h=From:To:Subject:In-Reply-To:References:Date:From;
-        b=W1k6RhGshgO420otQc6BSAwtuJAMUaHZ616+tM0WyzUJd5CAQvaLB2JaBTXbDIs8K
-         Dhz1TobDSQhos4+TFz2cD4rhdW2VE27WkDEqq/FBCIhPjqWGPoZQ9w3lGy+V/9nyeN
-         sTlSxFxfSLzYskogQfuYd5vTyn3bSFAN7EXKxBb4jRFq2G5IuZ2UlqLBGcZ7+kns0c
-         DMVzd+8p6fYQLKe24gjotWXGSvAXgWhWvQXXtsWWgUB0B+oReA0jURqFnr8jFUwTzm
-         cK+BeIcUBVPe2OWlnWNXOyaxRK3kUXjbSr/3Y6DhWUuygMO0iec1mwCwKaNvldCc6F
-         JPdfv1ZApDjsQ==
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Bagas Sanjaya <bagasdotme@gmail.com>,
-        Dipen Patel <dipenp@nvidia.com>, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, smangipudi@nvidia.com,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, warthog618@gmail.com,
-        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
-        robh+dt@kernel.org
-Subject: Re: [PATCH v5 01/11] Documentation: Add HTE subsystem guide
-In-Reply-To: <db81d120-039d-f49f-9a48-c91e96777a61@gmail.com>
-References: <20220329054521.14420-1-dipenp@nvidia.com>
- <20220329054521.14420-2-dipenp@nvidia.com>
- <db81d120-039d-f49f-9a48-c91e96777a61@gmail.com>
-Date:   Tue, 29 Mar 2022 09:27:06 -0600
-Message-ID: <875ynw7p9x.fsf@meer.lwn.net>
+        with ESMTP id S238006AbiC2Pa7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Mar 2022 11:30:59 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF5B7F65F2;
+        Tue, 29 Mar 2022 08:29:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1648567755; x=1680103755;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=FC47RstAGsOQXwOhpbxieb6YpNOjPD5V6VOVXNT0rL8=;
+  b=IAqbGJkDQ//NUJaoq4GFCpz+aCHMlnlPF8+yO1tTQZneH9dq1rCwwcRE
+   4SPvCh6sIiKMF/u6Xttn3qP43jXlU7GletKtrz8GQoWAKlKIoaitxfaav
+   DhrnHGRJS+QFw9jYaXcG4vFkEVRU1QUpZ4RViMox+zam52O6MKmATxKFw
+   BbuYtkocQoVtVCqbhH9RcSnwzta7nSJfV4M2cSUPXJ8rPZ9/2b8SsIO5L
+   60m9F6b8sxvyKnLd7AI610rmYZAyEOXhgH6NRCcNHBBB2Ebkg9dHrmKGs
+   IHhCVw6Qyz1OxnU/CUvZpGeeCqaIKJ29t5LV/HGcnvZl0qRHjZRl5eceu
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10301"; a="259462980"
+X-IronPort-AV: E=Sophos;i="5.90,220,1643702400"; 
+   d="scan'208";a="259462980"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2022 08:29:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,220,1643702400"; 
+   d="scan'208";a="639362645"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by FMSMGA003.fm.intel.com with ESMTP; 29 Mar 2022 08:29:07 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id EB10A120; Tue, 29 Mar 2022 18:29:28 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Qianggui Song <qianggui.song@amlogic.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Fabien Dessenne <fabien.dessenne@foss.st.com>,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        openbmc@lists.ozlabs.org, linux-renesas-soc@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v2 00/13] gpiolib: Two new helpers and way toward fwnode
+Date:   Tue, 29 Mar 2022 18:29:13 +0300
+Message-Id: <20220329152926.50958-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Bagas Sanjaya <bagasdotme@gmail.com> writes:
+This is a spin-off of the previous work of switching GPIO library
+to use fwnode instead of of_node. Here we introduce a couple of
+a new macro helpers, which allows to switch some of the drivers
+to use fwnode and partially fwnode APIs.
 
-> On 29/03/22 12.45, Dipen Patel wrote:
->> +============================================
->> +The Linux Hardware Timestamping Engine (HTE)
->> +============================================
->> +
->> +:Author: Dipen Patel
->> +
->
-> Please learn how to convey semantics with rst format, see further comments
-> below.
+Bart, Linus, I can take it thru my tree with an immutable branch if
+it's the way you prefer, otherwise please suggest on how to proceed.
 
-That is the Sphinx "field list" syntax; it's pretty heavily used
-throughout the kernel documentation and doesn't seem to merit that sort
-of response...?
+Changelog v2:
+- properly based, so kbuild bot may test it (LKP)
+- fixed typo in the macro (Geert)
+- split to two macro helpers and rename the gpiochip_count()
+- tagged one of stm32 and one of meson patches (Fabien, Neil)
+- unified previously standalone armada patch
+- due to above rewrote the armada patch from v1 completely (Sergey)
+- added a lot of a new patches
+- compile tested all of them on x86
 
-[...]
+Andy Shevchenko (13):
+  gpiolib: Introduce for_each_gpiochip_node() loop helper
+  gpiolib: Introduce gpiochip_node_count() helper
+  pinctrl: stm32: Replace custom code by gpiochip_node_count() call
+  pinctrl: stm32: Switch to use for_each_gpiochip_node() helper
+  pinctrl: samsung: Switch to use for_each_gpiochip_node() helper
+  pinctrl: renesas: rza1: Replace custom code by gpiochip_node_count()
+    call
+  pinctrl: renesas: rza1: Switch to use for_each_gpiochip_node() helper
+  pinctrl: npcm7xx: Switch to use for_each_gpiochip_node() helper
+  pinctrl: meson: Rename REG_* to MREG_*
+  pinctrl: meson: Enable COMPILE_TEST
+  pinctrl: meson: Replace custom code by gpiochip_node_count() call
+  pinctrl: armada-37xx: Switch to use fwnode instead of of_node
+  pinctrl: armada-37xx: Reuse GPIO fwnode in
+    armada_37xx_irqchip_register()
 
->> +The struct hte_ts_data is used to pass timestamp details between the consumers
->> +and the providers. It expresses timestamp data in nanoseconds in u64 data
->> +type. For now all the HTE APIs using struct hte_ts_data require tsc to be in
->> +nanoseconds. An example of the typical hte_ts_data data life cycle, for the
->> +GPIO line is as follows::
->> +
->
-> When we talk about name terms found in actual code (like keywords or variable
-> names), it is customary to enclose them inside inline code (for example,
-> ``struct what`` or ``u64 what``).
+ drivers/pinctrl/meson/Kconfig               |   2 +-
+ drivers/pinctrl/meson/pinctrl-meson.c       |  52 ++++----
+ drivers/pinctrl/meson/pinctrl-meson.h       |  24 ++--
+ drivers/pinctrl/mvebu/pinctrl-armada-37xx.c |  34 ++---
+ drivers/pinctrl/nuvoton/pinctrl-npcm7xx.c   | 141 +++++++++-----------
+ drivers/pinctrl/renesas/pinctrl-rza1.c      |  39 ++----
+ drivers/pinctrl/samsung/pinctrl-samsung.c   |  30 ++---
+ drivers/pinctrl/samsung/pinctrl-samsung.h   |   2 +-
+ drivers/pinctrl/stm32/pinctrl-stm32.c       |  80 +++++------
+ include/linux/gpio/driver.h                 |  19 ++-
+ 10 files changed, 187 insertions(+), 236 deletions(-)
 
-It's also customary to minimize markup.  In the case of "struct
-whatever" the markup is actively harmful since it interferes with the
-automatic recognition and cross-referencing of the type.
+-- 
+2.35.1
 
-jon
