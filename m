@@ -2,162 +2,186 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 728534EAD22
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Mar 2022 14:29:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F34514EAD28
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Mar 2022 14:30:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236295AbiC2MbI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Mar 2022 08:31:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40090 "EHLO
+        id S236316AbiC2Mci (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Mar 2022 08:32:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233739AbiC2MbH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Mar 2022 08:31:07 -0400
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DEB751E5D
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Mar 2022 05:29:24 -0700 (PDT)
-Received: by mail-wr1-x42b.google.com with SMTP id i4so5741584wrb.5
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Mar 2022 05:29:24 -0700 (PDT)
+        with ESMTP id S236244AbiC2Mch (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Mar 2022 08:32:37 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 044CD5F8C5
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Mar 2022 05:30:53 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id bg10so34806533ejb.4
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Mar 2022 05:30:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:organization:in-reply-to
-         :content-transfer-encoding;
-        bh=JWAxhkpD2i8UZ8j248lkUJk4oN/7cNs/WUDnK2ILLuA=;
-        b=GXvbOt7cHYG+zEcO53/N0pAGW4E6Xl+/x6z8j5FHdbaoRxQOml+aT8B7lfjtZDLDui
-         A/AoLBLJRQq07raSX00sgQ2CsnEcSVC84nB88L8RHknLhGnBmoSHcYDjTY3WRgStgsgG
-         7J3Q5gETTjx0A6/QY1WSynU7lnhuDecPZcXuP5MXNu0h847ctq1I0oqN1+tua6wWIw71
-         0trbdunuN57IRr4bDy7d6h5MqwDacimQr8DiODsFuAN1AtPJet0vWJbzHqCb7k7SdcmJ
-         DvUvwp03o2m/oD1pGx+YU65rt+A7TpHp0yiKvac1jsO9r9b9mb5Xf1tf4VZFMfVlrDd6
-         df2w==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=nRQGNy0JNeG8yPE1QXXWKqsK/KgT2iVgd9NOSAmnpao=;
+        b=rghn0NZ7veo+c7F9TgovwmfTphDZN1nzJMzcXj5lds+VNPPlWVx4s9Km9UFuESnj9C
+         0j6zPwG/Xf6D92JpGQDO2SsY514Cc3dispUkIKCGzRnO4C9HS7T9TWQ6L1NWItI9HoVR
+         Wk/smMInsq69ioZO8yNZDu546rixqBUH1Q7RKjgyI+USlKpBx73H+Jxrz2inmb2EkToU
+         H2vf7Sa/pckmLcWFoAxiMBDzr7UgHBsB2Q8hra4/Kl5ny0G8cLhgWaE+yEkyTutDGHt1
+         d/7ehdh+gvbKH2tMg6SF+fI/PRBhqZLpgBB/Oz9YxV+MxEClGvdSUz2pl20OT0F+Mpvd
+         d2oQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:organization:in-reply-to
-         :content-transfer-encoding;
-        bh=JWAxhkpD2i8UZ8j248lkUJk4oN/7cNs/WUDnK2ILLuA=;
-        b=Ax7sbcxgJHuAkFO+GcW//3nnxtvfSigFvAYaqrdiLnb/AtPovOvhksT+uu34ie8ojL
-         lwg1TaURsdWQxhnrulifS/t8x6F9unKKWOPAqjL2YvYKBdc67eF9OeniTUmcAMRVrlDF
-         cWi0A4ZP3YgIhhTPo2UyrBdif8c8rAE6T+U3FTIxIu3VSmjNe/5fD9jlL+WSsQOx1tnA
-         QZXDAIqjooPkXzi9sNm+oLgKNC0SSS7OeaCPxvBqaWukmNPj92Tvtn1sUG6rdMWiCCT+
-         XUJbDUGkMbX61vhnjGnCaDJlTuYbQOxg6IpkdiIfaM4L/TY5AyIZyXN4h6ESlkEzpf73
-         DBag==
-X-Gm-Message-State: AOAM5313KKzP6L/7EaDw5/hOLVTUoBr2O9K63WNSpFwB6SqCm49BLDuc
-        iD0jj/O4PORncp+i3pKCBVON4Q==
-X-Google-Smtp-Source: ABdhPJxkcUlDSsFDn76pfiNwEFTu8HNkSQvKzGIgeEr33H8pn3eGua5djb1jxK+d7MFlXjOAHbcZlw==
-X-Received: by 2002:a05:6000:508:b0:1e4:a027:d147 with SMTP id a8-20020a056000050800b001e4a027d147mr30848053wrf.315.1648556962971;
-        Tue, 29 Mar 2022 05:29:22 -0700 (PDT)
-Received: from ?IPV6:2001:861:44c0:66c0:a663:978b:3ffb:7dc3? ([2001:861:44c0:66c0:a663:978b:3ffb:7dc3])
-        by smtp.gmail.com with ESMTPSA id k40-20020a05600c1ca800b0038c6c8b7fa8sm2195017wms.25.2022.03.29.05.29.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Mar 2022 05:29:22 -0700 (PDT)
-Message-ID: <3697fe0f-7b6b-764f-8cdb-d925c0944fb0@baylibre.com>
-Date:   Tue, 29 Mar 2022 14:29:21 +0200
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=nRQGNy0JNeG8yPE1QXXWKqsK/KgT2iVgd9NOSAmnpao=;
+        b=iX2fHKMAmpNqUpodvJnM219tkbmL2d2QIJJ3fVd7bkBlPoL5RqbyF4k4ZTAHY0GmWp
+         glCwk80jTpWw7qI4VxqAIyo7j+C3CuRnV5tuB+NKhzlIUERy1C7ytFHhy+GixL1TDUQ5
+         SrmIN9rXoiUGeSAl0Z+EaaCKdD7ZGrz9Mh71ekLmk53X1D81G5bf1OkYYLohlmENhISD
+         D8qZSURBPz428JpH0rbki39BiD191LffVZxBMHSPasPjF+WbxUK5Wm8Ou9GNC5xBvcwM
+         B/LoCkwX94QcDxQddvElSPaqyksQHU9mcci9fKa6i1xumglMPr3bfxfJXXPYcxkG0cNt
+         NFhQ==
+X-Gm-Message-State: AOAM533MlytpMBKbQS40NcRPGGOwP7t7ik/8Tr00Ppy3Dt6vxMxQcMfs
+        OG2cAcYTx7MHHjmN5TyTHLEspv+57tciYfIcE6PJ9g==
+X-Google-Smtp-Source: ABdhPJyPZNX8y3gOGfSZgg3AGAll74j9kjPNXJs0DTpnrEh1/wBVEgROdTkgglF1+DGDwH7nabIubcnQbpp8LiNpfow=
+X-Received: by 2002:a17:907:d2a:b0:6e0:963c:97d9 with SMTP id
+ gn42-20020a1709070d2a00b006e0963c97d9mr28430774ejc.736.1648557051475; Tue, 29
+ Mar 2022 05:30:51 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH v1 4/5] pinctrl: meson: Replace custom code by
- gpiochip_count() call
-Content-Language: en-US
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Fabien Dessenne <fabien.dessenne@foss.st.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Cc:     Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
+References: <20220326165909.506926-1-benni@stuerz.xyz> <20220326165909.506926-9-benni@stuerz.xyz>
+In-Reply-To: <20220326165909.506926-9-benni@stuerz.xyz>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 29 Mar 2022 14:30:40 +0200
+Message-ID: <CAMRc=Md5qTnP1ZYak4f3hyqmaOR6jT_KL=rNr5cwAOcZ22yXfg@mail.gmail.com>
+Subject: Re: [PATCH 09/22] gpio-winbond: Use C99 initializers
+To:     =?UTF-8?Q?Benjamin_St=C3=BCrz?= <benni@stuerz.xyz>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
         Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-References: <20220325200338.54270-1-andriy.shevchenko@linux.intel.com>
- <20220325200338.54270-4-andriy.shevchenko@linux.intel.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Organization: Baylibre
-In-Reply-To: <20220325200338.54270-4-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Russell King <linux@armlinux.org.uk>, linux@simtec.co.uk,
+        Krzysztof Kozlowski <krzk@kernel.org>, alim.akhtar@samsung.com,
+        Thomas Gleixner <tglx@linutronix.de>, mingo@redhat.com,
+        Borislav Petkov <bp@alien8.de>, dave.hansen@linux.intel.com,
+        hpa@zytor.com, robert.moore@intel.com,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, lenb@kernel.org,
+        3chas3@gmail.com, laforge@gnumonks.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        mike.marciniszyn@cornelisnetworks.com,
+        dennis.dalessandro@cornelisnetworks.com, jgg@ziepe.ca,
+        pali@kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        isdn@linux-pingi.de,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        fbarrat@linux.ibm.com, ajd@linux.ibm.com,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, nico@fluxnic.net,
+        loic.poulain@linaro.org, kvalo@kernel.org, pkshih@realtek.com,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-samsung-soc@vger.kernel.org, linux-ia64@vger.kernel.org,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        devel@acpica.org, linux-atm-general@lists.sourceforge.net,
+        netdev <netdev@vger.kernel.org>, linux-edac@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-rdma@vger.kernel.org,
+        Linux Input <linux-input@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        wcn36xx@lists.infradead.org, linux-wireless@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 25/03/2022 21:03, Andy Shevchenko wrote:
-> Since we have generic function to count GPIO controller nodes
-> under given device, there is no need to open code it. Replace
-> custom code by gpiochip_count() call.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Sat, Mar 26, 2022 at 6:00 PM Benjamin St=C3=BCrz <benni@stuerz.xyz> wrot=
+e:
+>
+> This replaces comments with C99's designated
+> initializers because the kernel supports them now.
+>
+> Signed-off-by: Benjamin St=C3=BCrz <benni@stuerz.xyz>
 > ---
->   drivers/pinctrl/meson/pinctrl-meson.c | 28 ++++++++++++---------------
->   1 file changed, 12 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
-> index 49851444a6e3..7db70d4e214a 100644
-> --- a/drivers/pinctrl/meson/pinctrl-meson.c
-> +++ b/drivers/pinctrl/meson/pinctrl-meson.c
-> @@ -49,6 +49,7 @@
->   #include <linux/pinctrl/pinctrl.h>
->   #include <linux/pinctrl/pinmux.h>
->   #include <linux/platform_device.h>
-> +#include <linux/property.h>
->   #include <linux/regmap.h>
->   #include <linux/seq_file.h>
->   
-> @@ -662,27 +663,22 @@ static struct regmap *meson_map_resource(struct meson_pinctrl *pc,
->   	return devm_regmap_init_mmio(pc->dev, base, &meson_regmap_config);
->   }
->   
-> -static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc,
-> -				  struct device_node *node)
-> +static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc)
->   {
-> -	struct device_node *np, *gpio_np = NULL;
-> +	struct device_node *gpio_np;
-> +	unsigned int chips;
->   
-> -	for_each_child_of_node(node, np) {
-> -		if (!of_find_property(np, "gpio-controller", NULL))
-> -			continue;
-> -		if (gpio_np) {
-> -			dev_err(pc->dev, "multiple gpio nodes\n");
-> -			of_node_put(np);
-> -			return -EINVAL;
-> -		}
-> -		gpio_np = np;
-> -	}
-> -
-> -	if (!gpio_np) {
-> +	chips = gpiochip_count(pc->dev);
-> +	if (!chips) {
->   		dev_err(pc->dev, "no gpio node found\n");
->   		return -EINVAL;
->   	}
-> +	if (chips > 1) {
-> +		dev_err(pc->dev, "multiple gpio nodes\n");
-> +		return -EINVAL;
-> +	}
->   
-> +	gpio_np = to_of_node(device_get_named_child_node(pc->dev, "gpio-controller"));
->   	pc->of_node = gpio_np;
->   
->   	pc->reg_mux = meson_map_resource(pc, gpio_np, "mux");
-> @@ -751,7 +747,7 @@ int meson_pinctrl_probe(struct platform_device *pdev)
->   	pc->dev = dev;
->   	pc->data = (struct meson_pinctrl_data *) of_device_get_match_data(dev);
->   
-> -	ret = meson_pinctrl_parse_dt(pc, dev->of_node);
-> +	ret = meson_pinctrl_parse_dt(pc);
->   	if (ret)
->   		return ret;
->   
+>  drivers/gpio/gpio-winbond.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-winbond.c b/drivers/gpio/gpio-winbond.c
+> index 7f8f5b02e31d..0b637fdb407c 100644
+> --- a/drivers/gpio/gpio-winbond.c
+> +++ b/drivers/gpio/gpio-winbond.c
+> @@ -249,7 +249,7 @@ struct winbond_gpio_info {
+>  };
+>
+>  static const struct winbond_gpio_info winbond_gpio_infos[6] =3D {
+> -       { /* 0 */
+> +       [0] =3D {
+>                 .dev =3D WB_SIO_DEV_GPIO12,
+>                 .enablereg =3D WB_SIO_GPIO12_REG_ENABLE,
+>                 .enablebit =3D WB_SIO_GPIO12_ENABLE_1,
+> @@ -266,7 +266,7 @@ static const struct winbond_gpio_info winbond_gpio_in=
+fos[6] =3D {
+>                         .warnonly =3D true
+>                 }
+>         },
+> -       { /* 1 */
+> +       [1] =3D {
+>                 .dev =3D WB_SIO_DEV_GPIO12,
+>                 .enablereg =3D WB_SIO_GPIO12_REG_ENABLE,
+>                 .enablebit =3D WB_SIO_GPIO12_ENABLE_2,
+> @@ -277,7 +277,7 @@ static const struct winbond_gpio_info winbond_gpio_in=
+fos[6] =3D {
+>                 .datareg =3D WB_SIO_GPIO12_REG_DATA2
+>                 /* special conflict handling so doesn't use conflict data=
+ */
+>         },
+> -       { /* 2 */
+> +       [2] =3D {
+>                 .dev =3D WB_SIO_DEV_GPIO34,
+>                 .enablereg =3D WB_SIO_GPIO34_REG_ENABLE,
+>                 .enablebit =3D WB_SIO_GPIO34_ENABLE_3,
+> @@ -294,7 +294,7 @@ static const struct winbond_gpio_info winbond_gpio_in=
+fos[6] =3D {
+>                         .warnonly =3D true
+>                 }
+>         },
+> -       { /* 3 */
+> +       [3] =3D {
+>                 .dev =3D WB_SIO_DEV_GPIO34,
+>                 .enablereg =3D WB_SIO_GPIO34_REG_ENABLE,
+>                 .enablebit =3D WB_SIO_GPIO34_ENABLE_4,
+> @@ -311,7 +311,7 @@ static const struct winbond_gpio_info winbond_gpio_in=
+fos[6] =3D {
+>                         .warnonly =3D true
+>                 }
+>         },
+> -       { /* 4 */
+> +       [4] =3D {
+>                 .dev =3D WB_SIO_DEV_WDGPIO56,
+>                 .enablereg =3D WB_SIO_WDGPIO56_REG_ENABLE,
+>                 .enablebit =3D WB_SIO_WDGPIO56_ENABLE_5,
+> @@ -328,7 +328,7 @@ static const struct winbond_gpio_info winbond_gpio_in=
+fos[6] =3D {
+>                         .warnonly =3D true
+>                 }
+>         },
+> -       { /* 5 */
+> +       [5] =3D {
+>                 .dev =3D WB_SIO_DEV_WDGPIO56,
+>                 .enablereg =3D WB_SIO_WDGPIO56_REG_ENABLE,
+>                 .enablebit =3D WB_SIO_WDGPIO56_ENABLE_6,
+> --
+> 2.35.1
+>
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Acked-by: Bartosz Golaszewski <brgl@bgdev.pl>
