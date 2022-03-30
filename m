@@ -2,54 +2,47 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D3A94EBE60
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Mar 2022 12:08:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 590EF4EBFE0
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Mar 2022 13:35:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243483AbiC3KKf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Mar 2022 06:10:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50780 "EHLO
+        id S1343683AbiC3Lha (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Mar 2022 07:37:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239182AbiC3KKe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Mar 2022 06:10:34 -0400
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A366154062;
-        Wed, 30 Mar 2022 03:08:49 -0700 (PDT)
-Received: by mail-oi1-f169.google.com with SMTP id w127so21570785oig.10;
-        Wed, 30 Mar 2022 03:08:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xxF35tmxxnkPH4ZK5NEAQj60FJRzpVvnSJO5oaHeufw=;
-        b=bXL1LDJiE/6ieyVsC90DLDVyC8H1dKobB4kHzTlDE9Z2547r/IDGGYH8DiJWkVUBCT
-         pcE0oGhb4L3WhvncB8ozlqungtkvBf5GVYwEpQ6SX2DfMxrwp4rf4rFJf7JrCmg0saQr
-         N5EbzB/Q8YEcgJJAhP9TvJd6pjohubjrImmANwNIc6jF24Td6iBKumJfDLugJ5m18XYW
-         zFwfC8S6P9sxJ/wRI2EemqttjWVcdNBGJR/7M4S83h5tJ4vIL6SgkSS9ks43kwRP4fQ2
-         Jo5gHaJK0POdLwt1JSqdkc86Cb9CwGN/qZjTGYWzZ2DjgTPms//ZXQWRYXt4Var6TG1Y
-         D+8w==
-X-Gm-Message-State: AOAM530mMYtjo8iU5txLYS28mh4DSIAH/CRL2AH3Fc0v/tte+wMVZGH6
-        ClGDDcdv8kOcVw41F/R8oCdrFL6vGp6TSQ==
-X-Google-Smtp-Source: ABdhPJymrMim6GuwgG9rkn34Y1quZ1IiNIC4NOmV1OZ5Z5iCKb5JvPXw5xtEE+GYbr53q5P+yRUSMA==
-X-Received: by 2002:a05:6808:f07:b0:2da:4916:578e with SMTP id m7-20020a0568080f0700b002da4916578emr1377280oiw.271.1648634928459;
-        Wed, 30 Mar 2022 03:08:48 -0700 (PDT)
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com. [209.85.210.42])
-        by smtp.gmail.com with ESMTPSA id u23-20020a056870d59700b000de821ba7cbsm9454429oao.15.2022.03.30.03.08.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Mar 2022 03:08:48 -0700 (PDT)
-Received: by mail-ot1-f42.google.com with SMTP id i11-20020a9d4a8b000000b005cda3b9754aso14578539otf.12;
-        Wed, 30 Mar 2022 03:08:48 -0700 (PDT)
-X-Received: by 2002:a0d:ccd6:0:b0:2e7:98e2:a5a2 with SMTP id
- o205-20020a0dccd6000000b002e798e2a5a2mr28100571ywd.479.1648634538529; Wed, 30
- Mar 2022 03:02:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220329152926.50958-1-andriy.shevchenko@linux.intel.com> <20220329152926.50958-3-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20220329152926.50958-3-andriy.shevchenko@linux.intel.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 30 Mar 2022 12:02:07 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWFENTrXsYq3PKRFBqUL570-pPMG43Vct62=U9cyyF0yQ@mail.gmail.com>
-Message-ID: <CAMuHMdWFENTrXsYq3PKRFBqUL570-pPMG43Vct62=U9cyyF0yQ@mail.gmail.com>
-Subject: Re: [PATCH v2 02/13] gpiolib: Introduce gpiochip_node_count() helper
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        with ESMTP id S235330AbiC3Lh3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Mar 2022 07:37:29 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95F7A1E3765;
+        Wed, 30 Mar 2022 04:35:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1648640144; x=1680176144;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WvB6mJ9ryWwQ7CmVODZdOzNBEGHGFiTgCdDbkTsS7Js=;
+  b=EK5Al7l7Is0w9/DsuO0AHaj2snZxjbegcrQo0Gb0Y+0Y82rRnFe2v9fO
+   Lc7W3xk1rYt6IlpujbgfWrQDHoPHsqDLk3/BAuU89G4GGNCNQlRkTLDCg
+   N6y7919zdcYKJ4AtA+Qwj+VJ8X7VbAZBQjdctza6yIxuXYcjAqWullst2
+   PFukbBUXkQ/EnW/lov6M1s+WgcOcxOG2JDudUUs5mZIFqqsc24fRq03Uh
+   JfJChFbX/Sw9hZMoBecvYscLEOFJH0sEium/gr2lhtJll7mtPXV8LdrEX
+   hI9Oq9cTWiJiCuDBBqokRsSGWngapDaz8JakFJ300f2WisKRbkNnylcEN
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10301"; a="247018452"
+X-IronPort-AV: E=Sophos;i="5.90,222,1643702400"; 
+   d="scan'208";a="247018452"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2022 04:35:44 -0700
+X-IronPort-AV: E=Sophos;i="5.90,222,1643702400"; 
+   d="scan'208";a="519649292"
+Received: from smile.fi.intel.com ([10.237.72.59])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2022 04:35:35 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1nZWbM-009N8T-Sw;
+        Wed, 30 Mar 2022 14:35:00 +0300
+Date:   Wed, 30 Mar 2022 14:35:00 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
 Cc:     Qianggui Song <qianggui.song@amlogic.com>,
         Krzysztof Kozlowski <krzk@kernel.org>,
         Fabien Dessenne <fabien.dessenne@foss.st.com>,
@@ -83,63 +76,51 @@ Cc:     Qianggui Song <qianggui.song@amlogic.com>,
         Alexandre Torgue <alexandre.torgue@foss.st.com>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Philipp Zabel <p.zabel@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Subject: Re: [PATCH v2 02/13] gpiolib: Introduce gpiochip_node_count() helper
+Message-ID: <YkRAZP+uTi6VUcDG@smile.fi.intel.com>
+References: <20220329152926.50958-1-andriy.shevchenko@linux.intel.com>
+ <20220329152926.50958-3-andriy.shevchenko@linux.intel.com>
+ <CAMuHMdWFENTrXsYq3PKRFBqUL570-pPMG43Vct62=U9cyyF0yQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWFENTrXsYq3PKRFBqUL570-pPMG43Vct62=U9cyyF0yQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andy,
+On Wed, Mar 30, 2022 at 12:02:07PM +0200, Geert Uytterhoeven wrote:
+> On Tue, Mar 29, 2022 at 5:29 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
 
-On Tue, Mar 29, 2022 at 5:29 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> The gpiochip_node_count() helper iterates over the device child nodes that
-> have the "gpio-controller" property set. It returns the number of such nodes
-> under a given device.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+...
 
-Thanks for your patch!
+> > +       unsigned int count;
+> 
+> Preinitialize to zero?
 
-> --- a/include/linux/gpio/driver.h
-> +++ b/include/linux/gpio/driver.h
-> @@ -755,4 +755,16 @@ static inline void gpiochip_unlock_as_irq(struct gpio_chip *gc,
->         device_for_each_child_node(dev, child)                                  \
->                 if (!fwnode_property_present(child, "gpio-controller")) {} else
->
-> +static inline unsigned int gpiochip_node_count(struct device *dev)
-> +{
-> +       struct fwnode_handle *child;
-> +       unsigned int count;
+Whatever for what consensus will be achieved. Initially I have that way,
+then I changed.
 
-Preinitialize to zero?
+> > +       count = 0;
+> > +       for_each_gpiochip_node(dev, child)
+> > +               count++;
+> 
+> Regardless:
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-> +
-> +       count = 0;
-> +       for_each_gpiochip_node(dev, child)
-> +               count++;
-> +
-> +       return count;
-> +}
-> +
->  #endif /* __LINUX_GPIO_DRIVER_H */
+Thanks!
 
-Regardless:
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Gr{oetje,eeting}s,
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
