@@ -2,57 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 604CA4EC7C3
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Mar 2022 17:07:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B1C14EC81B
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Mar 2022 17:22:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347883AbiC3PId (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Mar 2022 11:08:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54676 "EHLO
+        id S1348125AbiC3PYM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Mar 2022 11:24:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347829AbiC3PIU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Mar 2022 11:08:20 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89EE899ED3;
-        Wed, 30 Mar 2022 08:06:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1648652794; x=1680188794;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=PgsgGzrSvF1z4wh9ANmYA9oN2iOOjlIiDmLw90JAtHw=;
-  b=l193jesOEZJEHwuR3nY/C7u1QGN/t2bPvnCfqQahKU+Ey1tIOolf+j/p
-   Q2LQoNNepRZDrz/89Hajd0+tU9emMvX6IWGkzzsYf9mIHCYo62gzdOQ3E
-   3nIVviP/1704hn67N1Wir31Ci8JYMjiHygpVNpyj6II6FY63lVjX8EWeB
-   gA7IrHhynb1seeZ/jFJ3fXPv8+6EB6H3nHsVMvyxwaOqRFlFVLrRFYEmO
-   T6VoRbzqi+pEzYvmLaFds0t3D8opNiYLhAgJ88jOJYLCK2upE1xKsp1AU
-   fEvONaWjkn4gEWEAPLT2brNNId8gFoYo/Bzs+0LD9jgi5ty4IOltntZUg
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10302"; a="240161581"
-X-IronPort-AV: E=Sophos;i="5.90,222,1643702400"; 
-   d="scan'208";a="240161581"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2022 08:06:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,222,1643702400"; 
-   d="scan'208";a="653864413"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga004.jf.intel.com with ESMTP; 30 Mar 2022 08:06:00 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 95812144; Wed, 30 Mar 2022 18:06:21 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v2 1/1] gpiolib: Get rid of redundant 'else'
-Date:   Wed, 30 Mar 2022 18:06:20 +0300
-Message-Id: <20220330150620.2490-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
+        with ESMTP id S243242AbiC3PYL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Mar 2022 11:24:11 -0400
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81565192371
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Mar 2022 08:22:24 -0700 (PDT)
+Received: by mail-wm1-x333.google.com with SMTP id k124-20020a1ca182000000b0038c9cf6e2a6so206964wme.0
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Mar 2022 08:22:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:organization:in-reply-to
+         :content-transfer-encoding;
+        bh=VsktZd1lrpgrX+V/L1u1pkl3lthFyT18R1StRVOqeME=;
+        b=BDBQTdTSUt24gLYrTuCs4gNhSDd1O1k0+jDSX4hWVEL3W35F5nbZjZ6EqJkh/9u0En
+         erGGuiv2FmAgVkcHi3VHqY60MlgY9g8+jqhXktkdqhLkJlVMaGZhOJyBjUe3L/1I82Ir
+         Ob5u3nAXtykeHInVc7gS8LV7ZCpdCIwQtC5JvG+lHvtkLf+hSTiJMi4N9X9O/5hl+NnC
+         megWRTGELbcngkgNBzf9ZN0TE5dxEAtG8ySyHl9SWDbvG3MwcHB/dIloYWBD+IqWSWLT
+         W8Gu5aWG9ktI2GAUpgQY8fZsYV7fj+mxmarBzBgzTQ8ToduTMTrGAhhDySSzxO536S9N
+         x58w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:organization:in-reply-to
+         :content-transfer-encoding;
+        bh=VsktZd1lrpgrX+V/L1u1pkl3lthFyT18R1StRVOqeME=;
+        b=hKLhOqERcumpzinDYCVLwAoNWsr3oI+09QGQ7k0urx2H1Yu6eQj7l93246bLux0/vq
+         t83lX4nZxlg2rpMyOrG4zEI7USf3P3rqc5HGVT3tCRIlMC3iENpELcIGMd9M1UuQUtHs
+         EWL3gcXRDG5b9H07+cxfnbm97Lk0O1D9s039qr/W7prVOAEWdVcTu+mej5rDXtMrHpQ/
+         jsYNQnsNmXN6XlMzLF9f30kczBIJWuUTA4n73ugKv7ev2SMI+ToMwiq8ZmqYkV6DAfYL
+         0b5RQEHBdBfoU7YszBg3WkzGMMmbYhvWDPWndRVx/shj8fbLCDH0fDEqO90S/INxpn/T
+         SaXg==
+X-Gm-Message-State: AOAM5304w8a1tV7eMJfLDQgacT/nxZmE037Bc56Fe96xSEr2ExGeNf1Y
+        Z54gMfEKj+U1dtLJQbbqvzplwg==
+X-Google-Smtp-Source: ABdhPJzQnHg7FADFhfDN5WNwL6d7L/J0cN4GJJs3uwA9AeUV9+yD7d8e2R/SvmrTa8scE2MOsp2T/A==
+X-Received: by 2002:a1c:f607:0:b0:381:1db:d767 with SMTP id w7-20020a1cf607000000b0038101dbd767mr4793481wmc.165.1648653742795;
+        Wed, 30 Mar 2022 08:22:22 -0700 (PDT)
+Received: from ?IPV6:2001:861:44c0:66c0:e47f:3cdb:5811:cee8? ([2001:861:44c0:66c0:e47f:3cdb:5811:cee8])
+        by smtp.gmail.com with ESMTPSA id c5-20020a5d63c5000000b002040822b680sm25478862wrw.81.2022.03.30.08.22.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Mar 2022 08:22:22 -0700 (PDT)
+Message-ID: <357c0ae6-7910-dfe5-eefa-1a7820e7e46b@baylibre.com>
+Date:   Wed, 30 Mar 2022 17:22:20 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH v3 09/13] pinctrl: meson: Rename REG_* to MESON_REG_*
+Content-Language: en-US
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Qianggui Song <qianggui.song@amlogic.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Fabien Dessenne <fabien.dessenne@foss.st.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        openbmc@lists.ozlabs.org, linux-renesas-soc@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+References: <20220330145030.1562-1-andriy.shevchenko@linux.intel.com>
+ <20220330145030.1562-10-andriy.shevchenko@linux.intel.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Organization: Baylibre
+In-Reply-To: <20220330145030.1562-10-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -60,183 +103,164 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-In the snippets like the following
+On 30/03/2022 16:50, Andy Shevchenko wrote:
+> Rename REG_* to MESON_REG_* as a prerequisite for enabling COMPILE_TEST.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>   drivers/pinctrl/meson/pinctrl-meson.c | 24 ++++++++++++------------
+>   drivers/pinctrl/meson/pinctrl-meson.h | 24 ++++++++++++------------
+>   2 files changed, 24 insertions(+), 24 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
+> index 49851444a6e3..5b46a0979db7 100644
+> --- a/drivers/pinctrl/meson/pinctrl-meson.c
+> +++ b/drivers/pinctrl/meson/pinctrl-meson.c
+> @@ -218,13 +218,13 @@ static int meson_pinconf_set_output(struct meson_pinctrl *pc,
+>   				    unsigned int pin,
+>   				    bool out)
+>   {
+> -	return meson_pinconf_set_gpio_bit(pc, pin, REG_DIR, !out);
+> +	return meson_pinconf_set_gpio_bit(pc, pin, MESON_REG_DIR, !out);
+>   }
+>   
+>   static int meson_pinconf_get_output(struct meson_pinctrl *pc,
+>   				    unsigned int pin)
+>   {
+> -	int ret = meson_pinconf_get_gpio_bit(pc, pin, REG_DIR);
+> +	int ret = meson_pinconf_get_gpio_bit(pc, pin, MESON_REG_DIR);
+>   
+>   	if (ret < 0)
+>   		return ret;
+> @@ -236,13 +236,13 @@ static int meson_pinconf_set_drive(struct meson_pinctrl *pc,
+>   				   unsigned int pin,
+>   				   bool high)
+>   {
+> -	return meson_pinconf_set_gpio_bit(pc, pin, REG_OUT, high);
+> +	return meson_pinconf_set_gpio_bit(pc, pin, MESON_REG_OUT, high);
+>   }
+>   
+>   static int meson_pinconf_get_drive(struct meson_pinctrl *pc,
+>   				   unsigned int pin)
+>   {
+> -	return meson_pinconf_get_gpio_bit(pc, pin, REG_OUT);
+> +	return meson_pinconf_get_gpio_bit(pc, pin, MESON_REG_OUT);
+>   }
+>   
+>   static int meson_pinconf_set_output_drive(struct meson_pinctrl *pc,
+> @@ -269,7 +269,7 @@ static int meson_pinconf_disable_bias(struct meson_pinctrl *pc,
+>   	if (ret)
+>   		return ret;
+>   
+> -	meson_calc_reg_and_bit(bank, pin, REG_PULLEN, &reg, &bit);
+> +	meson_calc_reg_and_bit(bank, pin, MESON_REG_PULLEN, &reg, &bit);
+>   	ret = regmap_update_bits(pc->reg_pullen, reg, BIT(bit), 0);
+>   	if (ret)
+>   		return ret;
+> @@ -288,7 +288,7 @@ static int meson_pinconf_enable_bias(struct meson_pinctrl *pc, unsigned int pin,
+>   	if (ret)
+>   		return ret;
+>   
+> -	meson_calc_reg_and_bit(bank, pin, REG_PULL, &reg, &bit);
+> +	meson_calc_reg_and_bit(bank, pin, MESON_REG_PULL, &reg, &bit);
+>   	if (pull_up)
+>   		val = BIT(bit);
+>   
+> @@ -296,7 +296,7 @@ static int meson_pinconf_enable_bias(struct meson_pinctrl *pc, unsigned int pin,
+>   	if (ret)
+>   		return ret;
+>   
+> -	meson_calc_reg_and_bit(bank, pin, REG_PULLEN, &reg, &bit);
+> +	meson_calc_reg_and_bit(bank, pin, MESON_REG_PULLEN, &reg, &bit);
+>   	ret = regmap_update_bits(pc->reg_pullen, reg, BIT(bit),	BIT(bit));
+>   	if (ret)
+>   		return ret;
+> @@ -321,7 +321,7 @@ static int meson_pinconf_set_drive_strength(struct meson_pinctrl *pc,
+>   	if (ret)
+>   		return ret;
+>   
+> -	meson_calc_reg_and_bit(bank, pin, REG_DS, &reg, &bit);
+> +	meson_calc_reg_and_bit(bank, pin, MESON_REG_DS, &reg, &bit);
+>   
+>   	if (drive_strength_ua <= 500) {
+>   		ds_val = MESON_PINCONF_DRV_500UA;
+> @@ -407,7 +407,7 @@ static int meson_pinconf_get_pull(struct meson_pinctrl *pc, unsigned int pin)
+>   	if (ret)
+>   		return ret;
+>   
+> -	meson_calc_reg_and_bit(bank, pin, REG_PULLEN, &reg, &bit);
+> +	meson_calc_reg_and_bit(bank, pin, MESON_REG_PULLEN, &reg, &bit);
+>   
+>   	ret = regmap_read(pc->reg_pullen, reg, &val);
+>   	if (ret)
+> @@ -416,7 +416,7 @@ static int meson_pinconf_get_pull(struct meson_pinctrl *pc, unsigned int pin)
+>   	if (!(val & BIT(bit))) {
+>   		conf = PIN_CONFIG_BIAS_DISABLE;
+>   	} else {
+> -		meson_calc_reg_and_bit(bank, pin, REG_PULL, &reg, &bit);
+> +		meson_calc_reg_and_bit(bank, pin, MESON_REG_PULL, &reg, &bit);
+>   
+>   		ret = regmap_read(pc->reg_pull, reg, &val);
+>   		if (ret)
+> @@ -447,7 +447,7 @@ static int meson_pinconf_get_drive_strength(struct meson_pinctrl *pc,
+>   	if (ret)
+>   		return ret;
+>   
+> -	meson_calc_reg_and_bit(bank, pin, REG_DS, &reg, &bit);
+> +	meson_calc_reg_and_bit(bank, pin, MESON_REG_DS, &reg, &bit);
+>   
+>   	ret = regmap_read(pc->reg_ds, reg, &val);
+>   	if (ret)
+> @@ -595,7 +595,7 @@ static int meson_gpio_get(struct gpio_chip *chip, unsigned gpio)
+>   	if (ret)
+>   		return ret;
+>   
+> -	meson_calc_reg_and_bit(bank, gpio, REG_IN, &reg, &bit);
+> +	meson_calc_reg_and_bit(bank, gpio, MESON_REG_IN, &reg, &bit);
+>   	regmap_read(pc->reg_gpio, reg, &val);
+>   
+>   	return !!(val & BIT(bit));
+> diff --git a/drivers/pinctrl/meson/pinctrl-meson.h b/drivers/pinctrl/meson/pinctrl-meson.h
+> index ff5372e0a475..fa042cd6a7ff 100644
+> --- a/drivers/pinctrl/meson/pinctrl-meson.h
+> +++ b/drivers/pinctrl/meson/pinctrl-meson.h
+> @@ -63,12 +63,12 @@ struct meson_reg_desc {
+>    * enum meson_reg_type - type of registers encoded in @meson_reg_desc
+>    */
+>   enum meson_reg_type {
+> -	REG_PULLEN,
+> -	REG_PULL,
+> -	REG_DIR,
+> -	REG_OUT,
+> -	REG_IN,
+> -	REG_DS,
+> +	MESON_REG_PULLEN,
+> +	MESON_REG_PULL,
+> +	MESON_REG_DIR,
+> +	MESON_REG_OUT,
+> +	MESON_REG_IN,
+> +	MESON_REG_DS,
+>   	NUM_REG,
+>   };
+>   
+> @@ -150,12 +150,12 @@ struct meson_pinctrl {
+>   		.irq_first	= fi,					\
+>   		.irq_last	= li,					\
+>   		.regs = {						\
+> -			[REG_PULLEN]	= { per, peb },			\
+> -			[REG_PULL]	= { pr, pb },			\
+> -			[REG_DIR]	= { dr, db },			\
+> -			[REG_OUT]	= { or, ob },			\
+> -			[REG_IN]	= { ir, ib },			\
+> -			[REG_DS]	= { dsr, dsb },			\
+> +			[MESON_REG_PULLEN]	= { per, peb },		\
+> +			[MESON_REG_PULL]	= { pr, pb },		\
+> +			[MESON_REG_DIR]		= { dr, db },		\
+> +			[MESON_REG_OUT]		= { or, ob },		\
+> +			[MESON_REG_IN]		= { ir, ib },		\
+> +			[MESON_REG_DS]		= { dsr, dsb },		\
+>   		},							\
+>   	 }
+>   
 
-	if (...)
-		return / goto / break / continue ...;
-	else
-		...
-
-the 'else' is redundant. Get rid of it. In case of IOCTLs use
-switch-case pattern that seems the usual in such cases.
-
-While at it, clarify necessity of else in gpiod_direction_output()
-by attaching else if to the closing curly brace on a previous line.
-
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-v2: unified with 'part 1' of the change
- drivers/gpio/gpiolib-cdev.c | 66 ++++++++++++++++++++-----------------
- drivers/gpio/gpiolib.c      | 12 +++----
- 2 files changed, 40 insertions(+), 38 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index ffa0256cad5a..c2900b1be69d 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -197,16 +197,15 @@ static long linehandle_ioctl(struct file *file, unsigned int cmd,
- 	void __user *ip = (void __user *)arg;
- 	struct gpiohandle_data ghd;
- 	DECLARE_BITMAP(vals, GPIOHANDLES_MAX);
--	int i;
-+	unsigned int i;
-+	int ret;
- 
--	if (cmd == GPIOHANDLE_GET_LINE_VALUES_IOCTL) {
--		/* NOTE: It's ok to read values of output lines. */
--		int ret = gpiod_get_array_value_complex(false,
--							true,
--							lh->num_descs,
--							lh->descs,
--							NULL,
--							vals);
-+	switch (cmd) {
-+	case GPIOHANDLE_GET_LINE_VALUES_IOCTL:
-+		/* NOTE: It's okay to read values of output lines */
-+		ret = gpiod_get_array_value_complex(false, true,
-+						    lh->num_descs, lh->descs,
-+						    NULL, vals);
- 		if (ret)
- 			return ret;
- 
-@@ -218,7 +217,7 @@ static long linehandle_ioctl(struct file *file, unsigned int cmd,
- 			return -EFAULT;
- 
- 		return 0;
--	} else if (cmd == GPIOHANDLE_SET_LINE_VALUES_IOCTL) {
-+	case GPIOHANDLE_SET_LINE_VALUES_IOCTL:
- 		/*
- 		 * All line descriptors were created at once with the same
- 		 * flags so just check if the first one is really output.
-@@ -240,10 +239,11 @@ static long linehandle_ioctl(struct file *file, unsigned int cmd,
- 						     lh->descs,
- 						     NULL,
- 						     vals);
--	} else if (cmd == GPIOHANDLE_SET_CONFIG_IOCTL) {
-+	case GPIOHANDLE_SET_CONFIG_IOCTL:
- 		return linehandle_set_config(lh, ip);
-+	default:
-+		return -EINVAL;
- 	}
--	return -EINVAL;
- }
- 
- #ifdef CONFIG_COMPAT
-@@ -1188,14 +1188,16 @@ static long linereq_ioctl(struct file *file, unsigned int cmd,
- 	struct linereq *lr = file->private_data;
- 	void __user *ip = (void __user *)arg;
- 
--	if (cmd == GPIO_V2_LINE_GET_VALUES_IOCTL)
-+	switch (cmd) {
-+	case GPIO_V2_LINE_GET_VALUES_IOCTL:
- 		return linereq_get_values(lr, ip);
--	else if (cmd == GPIO_V2_LINE_SET_VALUES_IOCTL)
-+	case GPIO_V2_LINE_SET_VALUES_IOCTL:
- 		return linereq_set_values(lr, ip);
--	else if (cmd == GPIO_V2_LINE_SET_CONFIG_IOCTL)
-+	case GPIO_V2_LINE_SET_CONFIG_IOCTL:
- 		return linereq_set_config(lr, ip);
--
--	return -EINVAL;
-+	default:
-+		return -EINVAL;
-+	}
- }
- 
- #ifdef CONFIG_COMPAT
-@@ -2113,28 +2115,30 @@ static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 		return -ENODEV;
- 
- 	/* Fill in the struct and pass to userspace */
--	if (cmd == GPIO_GET_CHIPINFO_IOCTL) {
-+	switch (cmd) {
-+	case GPIO_GET_CHIPINFO_IOCTL:
- 		return chipinfo_get(cdev, ip);
- #ifdef CONFIG_GPIO_CDEV_V1
--	} else if (cmd == GPIO_GET_LINEHANDLE_IOCTL) {
-+	case GPIO_GET_LINEHANDLE_IOCTL:
- 		return linehandle_create(gdev, ip);
--	} else if (cmd == GPIO_GET_LINEEVENT_IOCTL) {
-+	case GPIO_GET_LINEEVENT_IOCTL:
- 		return lineevent_create(gdev, ip);
--	} else if (cmd == GPIO_GET_LINEINFO_IOCTL ||
--		   cmd == GPIO_GET_LINEINFO_WATCH_IOCTL) {
--		return lineinfo_get_v1(cdev, ip,
--				       cmd == GPIO_GET_LINEINFO_WATCH_IOCTL);
-+	case GPIO_GET_LINEINFO_IOCTL:
-+		return lineinfo_get_v1(cdev, ip, false);
-+	case GPIO_GET_LINEINFO_WATCH_IOCTL:
-+		return lineinfo_get_v1(cdev, ip, true);
- #endif /* CONFIG_GPIO_CDEV_V1 */
--	} else if (cmd == GPIO_V2_GET_LINEINFO_IOCTL ||
--		   cmd == GPIO_V2_GET_LINEINFO_WATCH_IOCTL) {
--		return lineinfo_get(cdev, ip,
--				    cmd == GPIO_V2_GET_LINEINFO_WATCH_IOCTL);
--	} else if (cmd == GPIO_V2_GET_LINE_IOCTL) {
-+	case GPIO_V2_GET_LINEINFO_IOCTL:
-+		return lineinfo_get(cdev, ip, false);
-+	case GPIO_V2_GET_LINEINFO_WATCH_IOCTL:
-+		return lineinfo_get(cdev, ip, true);
-+	case GPIO_V2_GET_LINE_IOCTL:
- 		return linereq_create(gdev, ip);
--	} else if (cmd == GPIO_GET_LINEINFO_UNWATCH_IOCTL) {
-+	case GPIO_GET_LINEINFO_UNWATCH_IOCTL:
- 		return lineinfo_unwatch(cdev, ip);
-+	default:
-+		return -EINVAL;
- 	}
--	return -EINVAL;
- }
- 
- #ifdef CONFIG_COMPAT
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 062d127d9a0d..04636ebf4cd8 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -189,9 +189,8 @@ static int gpiochip_find_base(int ngpio)
- 		/* found a free space? */
- 		if (gdev->base + gdev->ngpio <= base)
- 			break;
--		else
--			/* nope, check the space right before the chip */
--			base = gdev->base - ngpio;
-+		/* nope, check the space right before the chip */
-+		base = gdev->base - ngpio;
- 	}
- 
- 	if (gpio_is_valid(base)) {
-@@ -2397,8 +2396,7 @@ int gpiod_direction_output(struct gpio_desc *desc, int value)
- 			ret = gpiod_direction_input(desc);
- 			goto set_output_flag;
- 		}
--	}
--	else if (test_bit(FLAG_OPEN_SOURCE, &desc->flags)) {
-+	} else if (test_bit(FLAG_OPEN_SOURCE, &desc->flags)) {
- 		ret = gpio_set_config(desc, PIN_CONFIG_DRIVE_OPEN_SOURCE);
- 		if (!ret)
- 			goto set_output_value;
-@@ -2555,9 +2553,9 @@ static int gpiod_get_raw_value_commit(const struct gpio_desc *desc)
- static int gpio_chip_get_multiple(struct gpio_chip *gc,
- 				  unsigned long *mask, unsigned long *bits)
- {
--	if (gc->get_multiple) {
-+	if (gc->get_multiple)
- 		return gc->get_multiple(gc, mask, bits);
--	} else if (gc->get) {
-+	if (gc->get) {
- 		int i, value;
- 
- 		for_each_set_bit(i, mask, gc->ngpio) {
--- 
-2.35.1
-
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
