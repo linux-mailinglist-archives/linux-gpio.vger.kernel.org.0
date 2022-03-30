@@ -2,47 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 18D754EC414
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Mar 2022 14:30:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7159C4EC450
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Mar 2022 14:37:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239670AbiC3Mb7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Mar 2022 08:31:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40108 "EHLO
+        id S245752AbiC3MjH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Mar 2022 08:39:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344509AbiC3Mbh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Mar 2022 08:31:37 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF9585B3D0;
-        Wed, 30 Mar 2022 05:17:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1648642639; x=1680178639;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=degjoFghFkob5qL3ehvoGOpozoU5J2XRIt2L6L1iub0=;
-  b=Okt9Oqm+LDLdGXc/frHGOpysiYDcWjPX6TSDTb0sm+U+8pbb0EPbpKnH
-   E84IkigOgB32vk6LO8/eoOeQYL8NYjmYdGoPGgzGQJQBMpmZ5ELJvVl5V
-   rrFxOJwTn2nQL5uzglEgjFfrf0wp0Gx63hlIxlYHLPFCXiQTVBQf0vR+B
-   8rtKaC46TFy/T2RysdOnna/u0kslAKlXet9PmDUXmhyHhpT8mJapGXtj1
-   ASTGWiPe597Dc/uOFFt5pMDf5jcy0CH+0qh4raa/UgLBzPThojks7ZhgF
-   sIt4OU1J8lD5w8ZHQcC+4cBiik/RlZyvQUnhbR3KT6O7iSDYwpOPORZvB
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10301"; a="345964900"
-X-IronPort-AV: E=Sophos;i="5.90,222,1643702400"; 
-   d="scan'208";a="345964900"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2022 05:17:19 -0700
-X-IronPort-AV: E=Sophos;i="5.90,222,1643702400"; 
-   d="scan'208";a="565512740"
-Received: from smile.fi.intel.com ([10.237.72.59])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2022 05:17:10 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.95)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1nZXFc-009OGn-0z;
-        Wed, 30 Mar 2022 15:16:36 +0300
-Date:   Wed, 30 Mar 2022 15:16:35 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
+        with ESMTP id S1345594AbiC3Mh5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Mar 2022 08:37:57 -0400
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C645AB6E4B;
+        Wed, 30 Mar 2022 05:28:41 -0700 (PDT)
+Received: by mail-vs1-f43.google.com with SMTP id i186so22350332vsc.9;
+        Wed, 30 Mar 2022 05:28:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UOWc2z4o6DC6pqDz0yydlogP1ndPfXTDpB2t/FafZMU=;
+        b=teXZgOOf7AgSgKM9Tnt3dscj6JJd3X1J2xFFSVDyx/tjbECD5FKHt0v1JgfhM+cOKT
+         qSBg1Mr4dIOyuLRj+4qD6AAdQ5VRTiNS/WgnByOqfK7NwucXePaCQEASQcIlG+CzCPhd
+         a8zXyY7RiPxEH4k1ToTob7wczNacaU4tEX+vI8/nAA5a2LdRmFVFRrgaLrVBqC1yrkFr
+         JgGT6CtP4bBHo3b3QRz0tkwNmxDNtBxqOGjXaFODZCmAwH14x5C2a2jDYSVeayQaoOkU
+         X0g6RB54QaSllhIn8Dgwcynhu7TkroAzqhaq3OFZmU65nBqePo/7kYqgwKJbRCYVG0Z9
+         4Pyw==
+X-Gm-Message-State: AOAM533LRUt37XV0/wn9y+4tV1phpzCgTBy0jEJhCm32RAl9iGaHRNnH
+        BsckO8D66c39f9gsZCB4u9Ng/6vKGZYSsA==
+X-Google-Smtp-Source: ABdhPJybvOcCU6phUffPJYqI6FXSp7eEtLE0QS7MGUZmZpWAJajQt03aKDxv2jwerNt1AGwU/6G/+Q==
+X-Received: by 2002:a05:6102:3c85:b0:325:b017:ae6d with SMTP id c5-20020a0561023c8500b00325b017ae6dmr10322125vsv.5.1648643320764;
+        Wed, 30 Mar 2022 05:28:40 -0700 (PDT)
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
+        by smtp.gmail.com with ESMTPSA id z13-20020a67db0d000000b0031bd1ad83c5sm1804925vsj.21.2022.03.30.05.28.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Mar 2022 05:28:40 -0700 (PDT)
+Received: by mail-ua1-f49.google.com with SMTP id o10so322945uar.0;
+        Wed, 30 Mar 2022 05:28:40 -0700 (PDT)
+X-Received: by 2002:a25:9e89:0:b0:63c:ad37:a5de with SMTP id
+ p9-20020a259e89000000b0063cad37a5demr17071596ybq.342.1648642915183; Wed, 30
+ Mar 2022 05:21:55 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220329152926.50958-1-andriy.shevchenko@linux.intel.com>
+ <20220329152926.50958-8-andriy.shevchenko@linux.intel.com>
+ <CAMuHMdWs+OuxV0cO=XGYvOOJ0Mctwu6fKV5HnkdRBXNKkLE3uQ@mail.gmail.com> <YkRKI6W4vR/aCr8c@smile.fi.intel.com>
+In-Reply-To: <YkRKI6W4vR/aCr8c@smile.fi.intel.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 30 Mar 2022 14:21:43 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWiL+R=9NSgpxo+9e+_8jj9zm4nGwcfejap5z3XdYYtwA@mail.gmail.com>
+Message-ID: <CAMuHMdWiL+R=9NSgpxo+9e+_8jj9zm4nGwcfejap5z3XdYYtwA@mail.gmail.com>
+Subject: Re: [PATCH v2 07/13] pinctrl: renesas: rza1: Switch to use
+ for_each_gpiochip_node() helper
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Qianggui Song <qianggui.song@amlogic.com>,
         Krzysztof Kozlowski <krzk@kernel.org>,
         Fabien Dessenne <fabien.dessenne@foss.st.com>,
@@ -76,64 +86,58 @@ Cc:     Qianggui Song <qianggui.song@amlogic.com>,
         Alexandre Torgue <alexandre.torgue@foss.st.com>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v2 07/13] pinctrl: renesas: rza1: Switch to use
- for_each_gpiochip_node() helper
-Message-ID: <YkRKI6W4vR/aCr8c@smile.fi.intel.com>
-References: <20220329152926.50958-1-andriy.shevchenko@linux.intel.com>
- <20220329152926.50958-8-andriy.shevchenko@linux.intel.com>
- <CAMuHMdWs+OuxV0cO=XGYvOOJ0Mctwu6fKV5HnkdRBXNKkLE3uQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWs+OuxV0cO=XGYvOOJ0Mctwu6fKV5HnkdRBXNKkLE3uQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Mar 30, 2022 at 12:00:27PM +0200, Geert Uytterhoeven wrote:
-> On Tue, Mar 29, 2022 at 5:29 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
+Hi Andy,
 
-...
+On Wed, Mar 30, 2022 at 2:17 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+> On Wed, Mar 30, 2022 at 12:00:27PM +0200, Geert Uytterhoeven wrote:
+> > On Tue, Mar 29, 2022 at 5:29 PM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+>
+> ...
+>
+> > > +       struct fwnode_reference_args of_args;
+> >
+> > fw_args?
+>
+> Perhaps just args as other drivers do?
 
-> > +       struct fwnode_reference_args of_args;
-> 
-> fw_args?
+Fine for me.
 
-Perhaps just args as other drivers do?
+> > > -       chip->label     = devm_kasprintf(rza1_pctl->dev, GFP_KERNEL, "%pOFn",
+> > > -                                        np);
+> > > +       chip->label     = devm_kasprintf(rza1_pctl->dev, GFP_KERNEL, "%pfw", fwnode);
+> >
+> > This changes the label from e.g. "/soc/pinctrl@fcfe3000/gpio-11" to "gpio-11".
+>
+> Hmm... It seems other way around, i.e. it changes from the name to full name.
 
-...
+Oops, sorry about that.
+(I accidentally included the change from testing "%pfwP" ;-)
 
-> > -       chip->label     = devm_kasprintf(rza1_pctl->dev, GFP_KERNEL, "%pOFn",
-> > -                                        np);
-> > +       chip->label     = devm_kasprintf(rza1_pctl->dev, GFP_KERNEL, "%pfw", fwnode);
-> 
-> This changes the label from e.g. "/soc/pinctrl@fcfe3000/gpio-11" to "gpio-11".
+>
+> > %pfwP?
+>
+> But conclusion here is correct. Good catch!
 
-Hmm... It seems other way around, i.e. it changes from the name to full name.
+Gr{oetje,eeting}s,
 
-> %pfwP?
+                        Geert
 
-But conclusion here is correct. Good catch!
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-...
-
-> With the above fixed:
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Thanks for review and testing!
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
