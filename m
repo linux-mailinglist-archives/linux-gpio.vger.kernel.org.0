@@ -2,104 +2,284 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B17BE4EBB69
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Mar 2022 09:04:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52E994EBCBE
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Mar 2022 10:30:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243596AbiC3HGi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Mar 2022 03:06:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44208 "EHLO
+        id S244340AbiC3IcT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Mar 2022 04:32:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243430AbiC3HGh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Mar 2022 03:06:37 -0400
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8F2BE3899
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Mar 2022 00:04:51 -0700 (PDT)
-Received: by mail-ed1-x52b.google.com with SMTP id y10so23245629edv.7
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Mar 2022 00:04:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=PxRWqm3rnpFLGrWU5JqDAPNolxFCPocPImxQoA5xqOc=;
-        b=O1QpS3M8gBG8es3mcBM6JlyFWmfyi+XsiLthiu82vHSqL+/CACsmDsKasu4AiaSeSG
-         TikQdM1udFooOOoQpH9elhb9hg6JEtCT2yDpGYWtoVOTjduHZrtgrIidONthTvV5LW6a
-         61m259KGZr0SI4xr3H6Es/pX0WEzlAAoFZLLlvjC/h7ZL0UlXKp+FjI/Sx89ylkRNEdZ
-         6XGtmAVHiO9c4V+qXE6VmsD+SEzT7MZVxVAmkz4dKpnFSwKFRR0x6mk5lN41/gSDrCi1
-         7/D9hHLs5CxAbQV5DzK/QL9RJLEDlmZQ/LYBzZ2Wze0/AYuEi91rcWobS3ZNrAifrmyk
-         iBeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=PxRWqm3rnpFLGrWU5JqDAPNolxFCPocPImxQoA5xqOc=;
-        b=LcLBz9xnXYdypaNrwi2mn/KXIBi49+GU73Tn3sfFQDfKJXPC6mkLkGLZ19wB8N04oh
-         9CjocGwenHM5LSFzMGiNXlOLbTCmG7X1MyBPsvOvrCZnT1RFvRxjia3UPkYuPdj+GS/B
-         iTHNj4agslW1brW/rRtwZ1MhAvXyDUBhqds79phkfYg5C8X345UUskPDb2z7cgrtzAbp
-         daCbNx1YqIDDBZOD1t4kcMhwvEUsHf7WNWFpRhF94LGNbXNDaSbPcMg5Xy+1qI589Jie
-         FN7jqMyOZ2Bfy3nIbc5yIADbUfMVXibPSFzgKLvPMj576H6Li1XrU07JmZ1CDuwXc0Xl
-         Y8VQ==
-X-Gm-Message-State: AOAM5312cE+tsh3O6lgFOyKj+vOP49I3FsOEBDrYX50K1J8RPCv4+Z1w
-        tLdU+8pQH+b1710PFOSF0MTp7g==
-X-Google-Smtp-Source: ABdhPJwIXfShLJZQUrVg5NGV9VAbyRRwy3qoOYtRWClHR3idou8IMC8yKvq2rn4dWNEp/IWpHxXayw==
-X-Received: by 2002:a05:6402:2318:b0:413:7645:fa51 with SMTP id l24-20020a056402231800b004137645fa51mr9199019eda.201.1648623890308;
-        Wed, 30 Mar 2022 00:04:50 -0700 (PDT)
-Received: from [192.168.0.162] (xdsl-188-155-201-27.adslplus.ch. [188.155.201.27])
-        by smtp.gmail.com with ESMTPSA id u26-20020a05640207da00b00419a14928e5sm7395555edy.28.2022.03.30.00.04.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Mar 2022 00:04:49 -0700 (PDT)
-Message-ID: <32c99412-3b65-c52b-8417-efae9245ffb8@linaro.org>
-Date:   Wed, 30 Mar 2022 09:04:48 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH v2] dt-bindings: gpio: uniphier: Add hogs parsing
-Content-Language: en-US
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
+        with ESMTP id S232801AbiC3IcS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Mar 2022 04:32:18 -0400
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAEB513DCE;
+        Wed, 30 Mar 2022 01:30:28 -0700 (PDT)
+X-UUID: 3fc2d005e730464eaf95e31b6ad3d0f3-20220330
+X-UUID: 3fc2d005e730464eaf95e31b6ad3d0f3-20220330
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw02.mediatek.com
+        (envelope-from <tinghan.shen@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 455442732; Wed, 30 Mar 2022 16:30:22 +0800
+Received: from mtkcas11.mediatek.inc (172.21.101.40) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Wed, 30 Mar 2022 16:30:21 +0800
+Received: from mtksdccf07 (172.21.84.99) by mtkcas11.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Wed, 30 Mar 2022 16:30:21 +0800
+Message-ID: <cd681c6d07b2b751213d1d0789b3e6f361add5cd.camel@mediatek.com>
+Subject: Re: [PATCH v11 3/3] arm64: dts: Add mediatek SoC mt8195 and
+ evaluation board
+From:   Tinghan Shen <tinghan.shen@mediatek.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <1648617423-8739-1-git-send-email-hayashi.kunihiko@socionext.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <1648617423-8739-1-git-send-email-hayashi.kunihiko@socionext.com>
-Content-Type: text/plain; charset=UTF-8
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        "Chaotian Jing" <chaotian.jing@mediatek.com>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <Project_Global_Chrome_Upstream_Group@mediatek.com>,
+        <ryder.lee@kernel.org>, <wenst@chromium.org>,
+        <chunfeng.yun@mediatek.com>, Seiya Wang <seiya.wang@mediatek.com>
+Date:   Wed, 30 Mar 2022 16:30:21 +0800
+In-Reply-To: <3a93babf-7217-da88-11b4-9e3b9e9730f2@gmail.com>
+References: <20220216113131.13145-1-tinghan.shen@mediatek.com>
+         <20220216113131.13145-4-tinghan.shen@mediatek.com>
+         <cf16ed58-6e75-cd9f-38ab-540d62ff03b5@gmail.com>
+         <7283dd6732ae8c188c6f12183a977fb980cc8617.camel@mediatek.com>
+         <3a93babf-7217-da88-11b4-9e3b9e9730f2@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-MTK:  N
+X-Spam-Status: No, score=-0.9 required=5.0 tests=BAYES_00,MAY_BE_FORGED,
+        SPF_HELO_NONE,T_SCC_BODY_TEXT_LINE,T_SPF_TEMPERROR,UNPARSEABLE_RELAY
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 30/03/2022 07:17, Kunihiko Hayashi wrote:
-> Allow parsing GPIO controller children nodes with GPIO hogs to fix the
-> following warning:
+On Tue, 2022-03-29 at 16:23 +0200, Matthias Brugger wrote:
 > 
->   uniphier-ld11-ref.dtb: gpio@55000000: 'xirq0-hog' does not match any of the regexes: 'pinctrl-[0-9]+'
->       From schema: Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
+> On 29/03/2022 12:17, Tinghan Shen wrote:
+> > Hi Matthias,
+> > 
+> > Thanks for your comment.
+> > 
+> > On Mon, 2022-03-28 at 14:26 +0200, Matthias Brugger wrote:
+> > > 
+> > > On 16/02/2022 12:31, Tinghan Shen wrote:
+> > > > Add basic chip support for mediatek mt8195.
+> > > > 
+> > > > Signed-off-by: Seiya Wang <seiya.wang@mediatek.com>
+> > > > Signed-off-by: Tinghan Shen <tinghan.shen@mediatek.com>
+> > > > Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> > > > ---
+> > > >    arch/arm64/boot/dts/mediatek/Makefile       |    1 +
+> > > >    arch/arm64/boot/dts/mediatek/mt8195-evb.dts |  161 +++
+> > > >    arch/arm64/boot/dts/mediatek/mt8195.dtsi    | 1049 +++++++++++++++++++
+> > > >    3 files changed, 1211 insertions(+)
+> > > >    create mode 100644 arch/arm64/boot/dts/mediatek/mt8195-evb.dts
+> > > >    create mode 100644 arch/arm64/boot/dts/mediatek/mt8195.dtsi
+> > > > 
+> > > > diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
+> > > > index 8c1e18032f9f..5da29e7223e4 100644
+> > > > --- a/arch/arm64/boot/dts/mediatek/Makefile
+> > > > +++ b/arch/arm64/boot/dts/mediatek/Makefile
+> > > > @@ -38,4 +38,5 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt8183-kukui-krane-sku0.dtb
+> > > >    dtb-$(CONFIG_ARCH_MEDIATEK) += mt8183-kukui-krane-sku176.dtb
+> > > >    dtb-$(CONFIG_ARCH_MEDIATEK) += mt8183-pumpkin.dtb
+> > > >    dtb-$(CONFIG_ARCH_MEDIATEK) += mt8192-evb.dtb
+> > > > +dtb-$(CONFIG_ARCH_MEDIATEK) += mt8195-evb.dtb
+> > > >    dtb-$(CONFIG_ARCH_MEDIATEK) += mt8516-pumpkin.dtb
+> > > > diff --git a/arch/arm64/boot/dts/mediatek/mt8195-evb.dts
+> > > > b/arch/arm64/boot/dts/mediatek/mt8195-
+> > > > evb.dts
+> > > > new file mode 100644
+> > > > index 000000000000..51633d91d984
+> > > > --- /dev/null
+> > > > +++ b/arch/arm64/boot/dts/mediatek/mt8195-evb.dts
+> > > > @@ -0,0 +1,161 @@
+> > > 
+> > > [...]
+> > > > +
+> > > > +&u2port0 {
+> > > > +	status = "okay";
+> > > > +};
+> > > > +
+> > > > +&u2port1 {
+> > > > +	status = "okay";
+> > > > +};
+> > > > +
+> > > > +&u3phy0 {
+> > > > +	status="okay";
+> > > > +};
+> > > > +
+> > > > +&u3phy1 {
+> > > > +	status="okay";
+> > > > +};
+> > > > +
+> > > 
+> > > So we enable phys for xhci but not the device. Are we missing anything to enable
+> > > them on the EVB?
+> > 
+> > after discussed with usb expert, we think that we're missing the xhci nodes.
+> > I'll add xhci nodes at next version.
+> > 
+> > > 
+> > > > +&uart0 {
+> > > > +	pinctrl-names = "default";
+> > > > +	pinctrl-0 = <&uart0_pin>;
+> > > > +	status = "okay";
+> > > > +};
+> > > > diff --git a/arch/arm64/boot/dts/mediatek/mt8195.dtsi
+> > > > b/arch/arm64/boot/dts/mediatek/mt8195.dtsi
+> > > > new file mode 100644
+> > > > index 000000000000..a363e82f6988
+> > > > --- /dev/null
+> > > > +++ b/arch/arm64/boot/dts/mediatek/mt8195.dtsi
+> > > > @@ -0,0 +1,1049 @@
+> > > 
+> > > [...]
+> > > > +
+> > > > +	clk32k: oscillator-32k {
+> > > > +		compatible = "fixed-clock";
+> > > > +		#clock-cells = <0>;
+> > > > +		clock-frequency = <32768>;
+> > > > +		clock-output-names = "clk32k";
+> > > 
+> > > I suppose the 32KHz oscillator is really present on the board also not used by
+> > > any device (up to now?).
+> > 
+> > Yes. 32KHz clock is still available on MT8195.
+> > Some modules can choose 32K as clock source depending on requirements.
+> > 
 > 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> ---
+> Thanks for the confirmation.
 > 
-> Changes since v1:
-> - Remove outer brackets from a pattern string
-> - Add valid properties to patternProperties
-> - Add gpios to "required:"
+> > > 
+> > > [...]
+> > > > +
+> > > > +	soc {
+> > > > +		#address-cells = <2>;
+> > > > +		#size-cells = <2>;
+> > > > +		compatible = "simple-bus";
+> > > > +		ranges;
+> > > > +
+> > > 
+> > > [...]
+> > > > +
+> > > > +		pwrap: pwrap@10024000 {
+> > > > +			compatible = "mediatek,mt8195-pwrap", "syscon";
+> > > > +			reg = <0 0x10024000 0 0x1000>;
+> > > > +			reg-names = "pwrap";
+> > > > +			interrupts = <GIC_SPI 243 IRQ_TYPE_LEVEL_HIGH 0>;
+> > > > +			clocks = <&infracfg_ao CLK_INFRA_AO_PMIC_AP>,
+> > > > +				 <&infracfg_ao CLK_INFRA_AO_PMIC_TMR>;
+> > > > +			clock-names = "spi", "wrap";
+> > > 
+> > > Binding mandates resets but not present here. It also mandates two register
+> > > regions, but only one is given here.
+> > 
+> > After discussed with pwrap experts, the pwrap binding is out-of-date for mt8195.
+> > They will send a patch to fix pwrap binding.
+> > 
 > 
->  .../bindings/gpio/socionext,uniphier-gpio.yaml  | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
+> If possible can you add the patch fixing the pwrap binding in this series, then 
+> I don't have to search for the dependencies in my inbox. That would be of great 
+> help.
 
-
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
+No problem. I'll add it to this series when the patch is ready.
 
 Best regards,
-Krzysztof
+Tinghan
+
+> 
+> > > 
+> > > > +			assigned-clocks = <&topckgen CLK_TOP_PWRAP_ULPOSC>;
+> > > > +			assigned-clock-parents = <&topckgen CLK_TOP_ULPOSC1_D10>;
+> > > > +		};
+> > > > +
+> > > > +		scp_adsp: clock-controller@10720000 {
+> > > > +			compatible = "mediatek,mt8195-scp_adsp";
+> > > > +			reg = <0 0x10720000 0 0x1000>;
+> > > > +			#clock-cells = <1>;
+> > > > +		};
+> > > > +
+> > > 
+> > > [...]
+> > > 
+> > > > +
+> > > > +		mmc0: mmc@11230000 {
+> > > > +			compatible = "mediatek,mt8195-mmc",
+> > > > +				     "mediatek,mt8183-mmc";
+> > > > +			reg = <0 0x11230000 0 0x10000>,
+> > > > +			      <0 0x11f50000 0 0x1000>;
+> > > 
+> > > Seems to be an oversight when adding support for mt8183-mmc support to the
+> > > driver. The binding description is missing the optional host top register base.
+> > > Chaotian can you please help to fix this in the binding description.
+> > 
+> > Ok. I'll fix it at next version.
+> > 
+> 
+> I'm not sure what you mean. I suppose the way forward is to fix the binding 
+> description, correct?
+> 
+> Thanks,
+> Matthias
+> 
+> > > 
+> > > > +			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH 0>;
+> > > > +			clocks = <&topckgen CLK_TOP_MSDC50_0>,
+> > > > +				 <&infracfg_ao CLK_INFRA_AO_MSDC0>,
+> > > > +				 <&infracfg_ao CLK_INFRA_AO_MSDC0_SRC>;
+> > > > +			clock-names = "source", "hclk", "source_cg";
+> > > > +			status = "disabled";
+> > > > +		};
+> > > > +
+> > > 
+> > > [...]
+> > > > +
+> > > > +		xhci3: usb@112b0000 {
+> > > > +			compatible = "mediatek,mt8195-xhci",
+> > > > +				     "mediatek,mtk-xhci";
+> > > > +			reg = <0 0x112b0000 0 0x1000>,
+> > > > +			      <0 0x112b3e00 0 0x0100>;
+> > > > +			reg-names = "mac", "ippc";
+> > > > +			interrupts = <GIC_SPI 536 IRQ_TYPE_LEVEL_HIGH 0>;
+> > > > +			phys = <&u2port3 PHY_TYPE_USB2>;
+> > > > +			assigned-clocks = <&topckgen CLK_TOP_USB_TOP_3P>,
+> > > > +					  <&topckgen CLK_TOP_SSUSB_XHCI_3P>;
+> > > > +			assigned-clock-parents = <&topckgen CLK_TOP_UNIVPLL_D5_D4>,
+> > > > +						 <&topckgen CLK_TOP_UNIVPLL_D5_D4>;
+> > > > +			clocks = <&pericfg_ao CLK_PERI_AO_SSUSB_3P_BUS>,
+> > > > +				 <&topckgen CLK_TOP_SSUSB_P3_REF>,
+> > > > +				 <&pericfg_ao CLK_PERI_AO_SSUSB_3P_XHCI>;
+> > > > +			clock-names = "sys_ck", "ref_ck", "xhci_ck";
+> > > > +			/* This controller is connected with a BT device.
+> > > > +			 * Disable usb2 lpm to prevent konwn issues.
+> > > > +			 */
+> > > > +			usb2-lpm-disable;
+> > > 
+> > > My understanding is, that this depends on the board and not the SoC. Which means
+> > > usb2-lpm-disable should go into any board that has a BT device connected to the
+> > > xhci device (I don't see any active xhci node in mt8195-evb so far).
+> > 
+> > Ok. I'll move this property to evb board in a xhci node.
+> > 
+> > Best regards,
+> > TingHan
+> > 
+> > > 
+> > > Regards,
+> > > Matthias
+
