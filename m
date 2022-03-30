@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E9CF4EBE39
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Mar 2022 12:01:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D3A94EBE60
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Mar 2022 12:08:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239530AbiC3KCz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Mar 2022 06:02:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55314 "EHLO
+        id S243483AbiC3KKf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Mar 2022 06:10:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238630AbiC3KCy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Mar 2022 06:02:54 -0400
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D77ABAB9E;
-        Wed, 30 Mar 2022 03:01:10 -0700 (PDT)
-Received: by mail-qt1-f178.google.com with SMTP id t19so17607294qtc.4;
-        Wed, 30 Mar 2022 03:01:10 -0700 (PDT)
+        with ESMTP id S239182AbiC3KKe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Mar 2022 06:10:34 -0400
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A366154062;
+        Wed, 30 Mar 2022 03:08:49 -0700 (PDT)
+Received: by mail-oi1-f169.google.com with SMTP id w127so21570785oig.10;
+        Wed, 30 Mar 2022 03:08:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=eWVEyP8xb0gTFVWSPikhwxNAnBSVX8r5lpCe0its8eQ=;
-        b=XBDxFUybSvvC1Okm5OVt9T10EOLnylyF9AIL+6sVVbVgcKiwFNiNc8HlYQpfCYM3Xg
-         OeMR9Hh7WZFiY4U8Zb9QJTCpzAidLpSYQGe5/oP+xwGePLI+ZMcXh5iIpJk6lIElMXlg
-         AEuMhs0X5NSui6VETZ1fjnmlFcxHPsgsgF2YvAPqFwB8jisJZvOH4WyIY34Peew7u08y
-         DCUi/hBu5LT96833QqdHPmD/8i7txHPPvqar/1/QotUijT/MrnPuk8HGkaR6UFbjT6zs
-         N9lHMjaElE7B2Lsm4117xKqrnhLW0rXh6ilafI/yuV60wwcsWZlNqQZhzJmfxYSH/BfD
-         5cnA==
-X-Gm-Message-State: AOAM531CKSlhy83d2UeOkpcPD5d63IYJ7MFtJCYHT1K9Vf5DyY3r6NEx
-        T2AzeSdYH8BDE6HboJE3td7gfdiR1hVaEw==
-X-Google-Smtp-Source: ABdhPJyggRKEAKdza6eL+xsqfl3Lbe2LC+bU1LHjQKBDxw9ljm7XGvdQnctaM7WhblVR7NEv7uhMAw==
-X-Received: by 2002:a05:622a:48e:b0:2e0:706f:1d4 with SMTP id p14-20020a05622a048e00b002e0706f01d4mr31845297qtx.326.1648634468538;
-        Wed, 30 Mar 2022 03:01:08 -0700 (PDT)
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com. [209.85.128.179])
-        by smtp.gmail.com with ESMTPSA id s13-20020a05620a0bcd00b0067afe7dd3ffsm11279652qki.49.2022.03.30.03.01.06
+        bh=xxF35tmxxnkPH4ZK5NEAQj60FJRzpVvnSJO5oaHeufw=;
+        b=bXL1LDJiE/6ieyVsC90DLDVyC8H1dKobB4kHzTlDE9Z2547r/IDGGYH8DiJWkVUBCT
+         pcE0oGhb4L3WhvncB8ozlqungtkvBf5GVYwEpQ6SX2DfMxrwp4rf4rFJf7JrCmg0saQr
+         N5EbzB/Q8YEcgJJAhP9TvJd6pjohubjrImmANwNIc6jF24Td6iBKumJfDLugJ5m18XYW
+         zFwfC8S6P9sxJ/wRI2EemqttjWVcdNBGJR/7M4S83h5tJ4vIL6SgkSS9ks43kwRP4fQ2
+         Jo5gHaJK0POdLwt1JSqdkc86Cb9CwGN/qZjTGYWzZ2DjgTPms//ZXQWRYXt4Var6TG1Y
+         D+8w==
+X-Gm-Message-State: AOAM530mMYtjo8iU5txLYS28mh4DSIAH/CRL2AH3Fc0v/tte+wMVZGH6
+        ClGDDcdv8kOcVw41F/R8oCdrFL6vGp6TSQ==
+X-Google-Smtp-Source: ABdhPJymrMim6GuwgG9rkn34Y1quZ1IiNIC4NOmV1OZ5Z5iCKb5JvPXw5xtEE+GYbr53q5P+yRUSMA==
+X-Received: by 2002:a05:6808:f07:b0:2da:4916:578e with SMTP id m7-20020a0568080f0700b002da4916578emr1377280oiw.271.1648634928459;
+        Wed, 30 Mar 2022 03:08:48 -0700 (PDT)
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com. [209.85.210.42])
+        by smtp.gmail.com with ESMTPSA id u23-20020a056870d59700b000de821ba7cbsm9454429oao.15.2022.03.30.03.08.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Mar 2022 03:01:07 -0700 (PDT)
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-2e5757b57caso212260577b3.4;
-        Wed, 30 Mar 2022 03:01:06 -0700 (PDT)
-X-Received: by 2002:a25:aa0e:0:b0:633:7c3b:94a0 with SMTP id
- s14-20020a25aa0e000000b006337c3b94a0mr33028380ybi.546.1648634466403; Wed, 30
- Mar 2022 03:01:06 -0700 (PDT)
+        Wed, 30 Mar 2022 03:08:48 -0700 (PDT)
+Received: by mail-ot1-f42.google.com with SMTP id i11-20020a9d4a8b000000b005cda3b9754aso14578539otf.12;
+        Wed, 30 Mar 2022 03:08:48 -0700 (PDT)
+X-Received: by 2002:a0d:ccd6:0:b0:2e7:98e2:a5a2 with SMTP id
+ o205-20020a0dccd6000000b002e798e2a5a2mr28100571ywd.479.1648634538529; Wed, 30
+ Mar 2022 03:02:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220329152926.50958-1-andriy.shevchenko@linux.intel.com> <20220329152926.50958-2-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20220329152926.50958-2-andriy.shevchenko@linux.intel.com>
+References: <20220329152926.50958-1-andriy.shevchenko@linux.intel.com> <20220329152926.50958-3-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20220329152926.50958-3-andriy.shevchenko@linux.intel.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 30 Mar 2022 12:00:55 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXhiLi8YxxG0f9hBfBkwds3LAdJNSOBSR9FYE4_z=RvcA@mail.gmail.com>
-Message-ID: <CAMuHMdXhiLi8YxxG0f9hBfBkwds3LAdJNSOBSR9FYE4_z=RvcA@mail.gmail.com>
-Subject: Re: [PATCH v2 01/13] gpiolib: Introduce for_each_gpiochip_node() loop helper
+Date:   Wed, 30 Mar 2022 12:02:07 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWFENTrXsYq3PKRFBqUL570-pPMG43Vct62=U9cyyF0yQ@mail.gmail.com>
+Message-ID: <CAMuHMdWFENTrXsYq3PKRFBqUL570-pPMG43Vct62=U9cyyF0yQ@mail.gmail.com>
+Subject: Re: [PATCH v2 02/13] gpiolib: Introduce gpiochip_node_count() helper
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Qianggui Song <qianggui.song@amlogic.com>,
         Krzysztof Kozlowski <krzk@kernel.org>,
@@ -86,22 +86,50 @@ Cc:     Qianggui Song <qianggui.song@amlogic.com>,
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Andy,
+
 On Tue, Mar 29, 2022 at 5:29 PM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
-> Introduce for_each_gpiochip_node() loop helper which iterates over
-> the GPIO controller child nodes of a given device.
+> The gpiochip_node_count() helper iterates over the device child nodes that
+> have the "gpio-controller" property set. It returns the number of such nodes
+> under a given device.
 >
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
+Thanks for your patch!
+
+> --- a/include/linux/gpio/driver.h
+> +++ b/include/linux/gpio/driver.h
+> @@ -755,4 +755,16 @@ static inline void gpiochip_unlock_as_irq(struct gpio_chip *gc,
+>         device_for_each_child_node(dev, child)                                  \
+>                 if (!fwnode_property_present(child, "gpio-controller")) {} else
+>
+> +static inline unsigned int gpiochip_node_count(struct device *dev)
+> +{
+> +       struct fwnode_handle *child;
+> +       unsigned int count;
+
+Preinitialize to zero?
+
+> +
+> +       count = 0;
+> +       for_each_gpiochip_node(dev, child)
+> +               count++;
+> +
+> +       return count;
+> +}
+> +
+>  #endif /* __LINUX_GPIO_DRIVER_H */
+
+Regardless:
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
