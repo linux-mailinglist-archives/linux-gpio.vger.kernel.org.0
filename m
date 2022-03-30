@@ -2,94 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B579A4EC7A4
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Mar 2022 16:59:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 400E84EC7AB
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Mar 2022 17:01:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347720AbiC3PAs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Mar 2022 11:00:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57388 "EHLO
+        id S1347815AbiC3PDf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Mar 2022 11:03:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347697AbiC3PAm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Mar 2022 11:00:42 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0EA260F0;
-        Wed, 30 Mar 2022 07:58:57 -0700 (PDT)
+        with ESMTP id S1347826AbiC3PDE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Mar 2022 11:03:04 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A74A61FCE3;
+        Wed, 30 Mar 2022 08:01:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1648652337; x=1680188337;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=SpYrts1YeZWLv9clP3yHemnD63N6o2d9vX+0nOBBfO0=;
-  b=QtQKeH4w8EnxHtH98TLgra/oWk1enc0PG7QJEdsppPAWSXh33IRzBWv3
-   7eO9DpxrjB90N70ZpZ3xofdfXGkndoNrpnUHPjzHUZGAYeuth2Xj/r2sh
-   dpBf6vmWwZrlR9qCOl9JetvmimKo9ft6Hdhv/LPMoG1P8FDjTI6RT3KvT
-   x9QQ+0aKkQGjT8ktSKcLak9gmtgwp43xcCldsjZrcwifnNDq1SKq5cWMJ
-   4gubo/kzOFshOzt2DNg00+MZI9Sg16kiII92Xme2WrYl2gdNMEhgv+P+1
-   1uV8Bou70Cu7KojNZiIZF9Ik2c84qd+Nz9J2LVqmuAbNpQUmirAp71bcx
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10301"; a="247064042"
+  t=1648652479; x=1680188479;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=YXbpZaJqhuCQp74NS4nN+yF5HwzcDtttnsG/ebBknnQ=;
+  b=PMErXi7sCfBQ3KvFJyeoNJCQ4S1206fU1ZGH6NdOFUG9LBW3uChIkJjl
+   6C/kppKKeXepFS0vZmNaIe1K+c/ci8ID/jH4bSBew0ZASztfjgiy4qsry
+   8Tb5dWKF8R6DFjgEKbBHKXjlOFmtL1sZuAl3Ghv4nJWDEPzilw/Njclnq
+   ImlzmtpQ5JivnuV+Q9Pl2DUE6iuuwbC4jRLilBQBOzMBqWvhg0LYsGhiJ
+   +2ZqBHz/elHBKgYH7LmbdEAFfWixPi8Lm1qvkSY3da/yREzwxKM41VUB0
+   Bvzjn53QBCAK6KaJzcctCojBJAViv5F01KhWT+++EjEV7ca8EcbNz2yCA
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10301"; a="239493572"
 X-IronPort-AV: E=Sophos;i="5.90,222,1643702400"; 
-   d="scan'208";a="247064042"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2022 07:58:56 -0700
-X-ExtLoop1: 1
+   d="scan'208";a="239493572"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2022 08:01:19 -0700
 X-IronPort-AV: E=Sophos;i="5.90,222,1643702400"; 
-   d="scan'208";a="519707735"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga002.jf.intel.com with ESMTP; 30 Mar 2022 07:58:54 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id C017B1C3; Wed, 30 Mar 2022 17:59:15 +0300 (EEST)
+   d="scan'208";a="586029475"
+Received: from smile.fi.intel.com ([10.237.72.59])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2022 08:01:17 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.95)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1nZZoS-009StT-OO;
+        Wed, 30 Mar 2022 18:00:44 +0300
+Date:   Wed, 30 Mar 2022 18:00:44 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v1 3/3] gpiolib: Move error message out of a spinlock
-Date:   Wed, 30 Mar 2022 17:59:10 +0300
-Message-Id: <20220330145910.1946-3-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220330145910.1946-1-andriy.shevchenko@linux.intel.com>
-References: <20220330145910.1946-1-andriy.shevchenko@linux.intel.com>
+To:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH v1 1/1] gpiolib: Get rid of redundant 'else' (part 2)
+Message-ID: <YkRwnJE511c6aK0y@smile.fi.intel.com>
+References: <20220328112856.404-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220328112856.404-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-An error path is a slow path, no need to block other CPUs
-when printing error messages.
+On Mon, Mar 28, 2022 at 02:28:56PM +0300, Andy Shevchenko wrote:
+> In the snippets like the following
+> 
+> 	if (...)
+> 		return / goto / break / continue ...;
+> 	else
+> 		...
+> 
+> the 'else' is redundant. Get rid of it by using switch-case pattern.
+> Note that the pattern seems more usual for IOCTL handlers.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpiolib.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+It appears that part 1 (as per subject) was never submitted before.
+So, I unify them in v2 of this patch.
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index f956c533f218..062d127d9a0d 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -289,7 +289,6 @@ static int gpiodev_add_to_list(struct gpio_device *gdev)
- 		}
- 	}
- 
--	dev_err(&gdev->dev, "GPIO integer space overlap, cannot add chip\n");
- 	return -EBUSY;
- }
- 
-@@ -724,6 +723,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	ret = gpiodev_add_to_list(gdev);
- 	if (ret) {
- 		spin_unlock_irqrestore(&gpio_lock, flags);
-+		chip_err(gc, "GPIO integer space overlap, cannot add chip\n");
- 		goto err_free_label;
- 	}
- 
 -- 
-2.35.1
+With Best Regards,
+Andy Shevchenko
+
 
