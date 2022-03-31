@@ -2,62 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F3CE4ED13A
-	for <lists+linux-gpio@lfdr.de>; Thu, 31 Mar 2022 03:13:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A8104ED1F3
+	for <lists+linux-gpio@lfdr.de>; Thu, 31 Mar 2022 04:55:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352377AbiCaBOu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Mar 2022 21:14:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39254 "EHLO
+        id S229835AbiCaC5M (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Mar 2022 22:57:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352335AbiCaBOY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Mar 2022 21:14:24 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C99CB6661C
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Mar 2022 18:12:37 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id y6so19500506plg.2
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Mar 2022 18:12:37 -0700 (PDT)
+        with ESMTP id S229480AbiCaC5L (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Mar 2022 22:57:11 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B98A711BE7E
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Mar 2022 19:55:16 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id m18so17312494plx.3
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Mar 2022 19:55:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=NVLhKDY5NVzC+PQtKfgyX0Lx7D2H4nIz7XR+RS3dwz4=;
-        b=fwpyD+87B6ffq736RIc9xqkMFk9F28PE+xTna7mfdK8kv6wsqUTCJMj1vfBSMJQ9Xl
-         SCyOWOKgq3hy/8aIEDIsSYqdmolCL8mCo07/kHtCr8AuLUKxnQJCpevr1LFDn6+7KSC/
-         6dQSkcp09Arzp3gMr2u8Mv6jxquv1jhwb/inBx1fGF+K7g75Bt4JjwCwJ/O2nTJcTqbw
-         xJMpLwtY3ttOb0MFyZZu5NMaBUWpTQpNh4vLfl1R2mIs9rhyRvDe8SUGkMj6ql8kX/bV
-         2QSrkY+dobGetB2x5XNgLXmsY0Lmu44gE7lrwOyCH86Ek97qx2C32M6eituTNPSDVfLz
-         EQZA==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=a7pOFdpgi4pkphQxhSULDsX9mt+t7xz2KkFov/WBcMQ=;
+        b=VQ1DK295sBnAQ+WMfHPA5ONfFVPazSiUZVtFrRXhNZzTFLRiJzEOdrbcP1+3etKR32
+         1fAgFIZZQtOD3JqXFv8shryRh3JNnlscWbcMAZ/f2gDwGcCJ06F39CPy+tqToCmtm1Jq
+         WAta5GpKsNIWHTBpvDi/czXMYSsB8hp8xkKG1rkdx1qEOs8bzOmgCGNbMjXBWhOiCCHn
+         ZrdPfv4Xlei5Y2HtnzTGnzFGHUZhmkOweaPBRDiDzxPBJa+8h/8yJC8cKQ1dxQ7sute1
+         ddUQrwegzBAyLznkkko6eo1Xfjn6EGFe3QrBon4/tp1nDcyk+MSOLSWBG052nYNBI6UB
+         W1Qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=NVLhKDY5NVzC+PQtKfgyX0Lx7D2H4nIz7XR+RS3dwz4=;
-        b=l7mIEgY/uNOBW9/uqNbdZtYUf+R/ZfF7LD6n5mAu3lid9ak1kl0wKUmzcSFnLQPXIA
-         B6fB+x5QJJLijr3PnCP1rWL4vnt3+JEdkUJxiu4K5eaBjVRMDgOPsU53SByUWcp7Ik60
-         N/mPrbwCXfx6KlRWueAwGygq3q/o+3U5jN9akuBW2OPq9Wogg81TgN/2Imvwo9nfmDQc
-         axA4GuVn4OMt7FbabPx+FX6In2UzWkI2KTdyLRPLAGlRetS/JIQjli8hCmU1+Y1ojxuZ
-         0Tr+decvJRlRVLjria2VKMjp/cpE9R8TEgHTMXwlEYB/mB4TpJ3RkgXxqvrqhfD3avoK
-         FHOQ==
-X-Gm-Message-State: AOAM530kfIY64tEVqV/92i7a04kfubWgXJMNysCsHkp3Fu6LqD9g653m
-        rXzEzOC8ED1tAxMTFn2p1jcHObtwJ7XWew==
-X-Google-Smtp-Source: ABdhPJySulKFxtpAsoxAiQUy4/QdNWjA4QAC4NSeLFUFC0Qf3cEbA8O1qjN7tXJBWDCwGXYpScIluA==
-X-Received: by 2002:a17:90a:e7d2:b0:1c7:b410:ccfc with SMTP id kb18-20020a17090ae7d200b001c7b410ccfcmr2886900pjb.209.1648689157024;
-        Wed, 30 Mar 2022 18:12:37 -0700 (PDT)
-Received: from sol.home.arpa ([118.209.204.33])
-        by smtp.gmail.com with ESMTPSA id e6-20020a63aa06000000b00380c8bed5a6sm21232176pgf.46.2022.03.30.18.12.34
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=a7pOFdpgi4pkphQxhSULDsX9mt+t7xz2KkFov/WBcMQ=;
+        b=BGhWOKZuFHMmszBn5SDym3AgucIcbkh5UN5sCq0dLzuK27YYjw1lHOgDTSMwoPZit4
+         yeEuRRC4P/KID9F159TX39MSidF4xglTDljJPqnoRmB5gY6IILUqdyW4YVugFKqVy67j
+         K0ZtiJo+85S8G8d9Vl1jQwUjCxAaVYLONvZdjKI81F4cQtTg3DgOriv58PbHyxnp+dps
+         ZmzSr5hJnciKh7jgOalirMCnSA5hh6sIRfAzI2d/bDHxf7Iw1bYilZVrJxTXD0howjkS
+         kQ6zrrZGUfIcEEqTDwW+/I0aqCsXOZGnb4caNh1AYlRMd1Hz7NAU72TBWbNrUhA+PSt7
+         1wSg==
+X-Gm-Message-State: AOAM533LHDJIAfd3h+bfjVwlMCGFznPaTpEJsyMk2fsiNS03Q+ME6k7Y
+        MuCikPArYQ2/T8urM5lZvgXdgoY48xaNmg==
+X-Google-Smtp-Source: ABdhPJwEllNNUt2RW6S//NokB7KiMQ4d/pNp+fzsDUy22UIhM83SNYuo0iWIGN5BZilEjGNj2ENJZQ==
+X-Received: by 2002:a17:90a:8d08:b0:1c6:5ada:9920 with SMTP id c8-20020a17090a8d0800b001c65ada9920mr3546416pjo.126.1648695128951;
+        Wed, 30 Mar 2022 19:52:08 -0700 (PDT)
+Received: from sol ([118.209.204.33])
+        by smtp.gmail.com with ESMTPSA id f15-20020a056a0022cf00b004fb32b9e000sm17914260pfj.1.2022.03.30.19.52.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Mar 2022 18:12:36 -0700 (PDT)
+        Wed, 30 Mar 2022 19:52:08 -0700 (PDT)
+Date:   Thu, 31 Mar 2022 10:52:03 +0800
 From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-gpio@vger.kernel.org, brgl@bgdev.pl
-Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [libgpiod v2][PATCH 4/4] tools: minimize object lifetimes
-Date:   Thu, 31 Mar 2022 09:11:41 +0800
-Message-Id: <20220331011141.53489-5-warthog618@gmail.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220331011141.53489-1-warthog618@gmail.com>
-References: <20220331011141.53489-1-warthog618@gmail.com>
+To:     linux-gpio@vger.kernel.org, brgl@bgdev.pl,
+        andriy.shevchenko@linux.intel.com, thomas.petazzoni@bootlin.com
+Cc:     linus.walleij@linaro.org
+Subject: gpiolib: why does gpio_set_bias() suppress ENOTSUPP?
+Message-ID: <20220331025203.GA53907@sol>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
         FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
@@ -68,117 +66,59 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The tools double as examples of API usage, so keep object lifetimes to a
-minimum to highlight where transient objects are no longer required and
-may be discarded.
+Hi all,
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
- tools/gpioget.c | 16 ++++++++++------
- tools/gpiomon.c |  7 ++++---
- tools/gpioset.c |  9 +++++----
- 3 files changed, 19 insertions(+), 13 deletions(-)
+It has recently come to my attention that the setting of bias by the
+cdev uAPI is a best effort operation that quietly succeeds if bias is
+not supported by the hardware. That strikes me as being a bug.
+It seems I was aware of this when adding bias to the uAPI and intended
+to fix it, as shown in the comments of v4 of the corrsponding patch
+series[1]:
 
-diff --git a/tools/gpioget.c b/tools/gpioget.c
-index f4c5d46..f789198 100644
---- a/tools/gpioget.c
-+++ b/tools/gpioget.c
-@@ -92,8 +92,7 @@ int main(int argc, char **argv)
- 	num_lines = argc - 1;
- 
- 	offsets = calloc(num_lines, sizeof(*offsets));
--	values = calloc(num_lines, sizeof(*values));
--	if (!offsets || ! values)
-+	if (!offsets)
- 		die("out of memory");
- 
- 	for (i = 0; i < num_lines; i++) {
-@@ -124,11 +123,20 @@ int main(int argc, char **argv)
- 
- 	gpiod_request_config_set_consumer(req_cfg, "gpioget");
- 	gpiod_request_config_set_offsets(req_cfg, num_lines, offsets);
-+	free(offsets);
- 
- 	request = gpiod_request_lines(path, req_cfg, line_cfg);
- 	if (!request)
- 		die_perror("unable to request lines");
- 
-+	free(path);
-+	gpiod_request_config_free(req_cfg);
-+	gpiod_line_config_free(line_cfg);
-+
-+	values = calloc(num_lines, sizeof(*values));
-+	if (!values)
-+		die("out of memory");
-+
- 	ret = gpiod_line_request_get_values(request, values);
- 	if (ret)
- 		die_perror("unable to read GPIO line values");
-@@ -141,10 +149,6 @@ int main(int argc, char **argv)
- 	printf("\n");
- 
- 	gpiod_line_request_release(request);
--	gpiod_request_config_free(req_cfg);
--	gpiod_line_config_free(line_cfg);
--	free(path);
--	free(offsets);
- 	free(values);
- 
- 	return EXIT_SUCCESS;
-diff --git a/tools/gpiomon.c b/tools/gpiomon.c
-index e461458..34de2b2 100644
---- a/tools/gpiomon.c
-+++ b/tools/gpiomon.c
-@@ -274,6 +274,10 @@ int main(int argc, char **argv)
- 	if (!request)
- 		die_perror("unable to request lines");
- 
-+	free(path);
-+	gpiod_request_config_free(req_cfg);
-+	gpiod_line_config_free(line_cfg);
-+
- 	event_buffer = gpiod_edge_event_buffer_new(EVENT_BUF_SIZE);
- 	if (!event_buffer)
- 		die_perror("unable to allocate the line event buffer");
-@@ -311,9 +315,6 @@ int main(int argc, char **argv)
- done:
- 	gpiod_edge_event_buffer_free(event_buffer);
- 	gpiod_line_request_release(request);
--	gpiod_request_config_free(req_cfg);
--	gpiod_line_config_free(line_cfg);
--	free(path);
- 
- 	return EXIT_SUCCESS;
- }
-diff --git a/tools/gpioset.c b/tools/gpioset.c
-index 7497eab..f28f8b6 100644
---- a/tools/gpioset.c
-+++ b/tools/gpioset.c
-@@ -312,19 +312,20 @@ int main(int argc, char **argv)
- 
- 	gpiod_request_config_set_consumer(req_cfg, "gpioset");
- 	gpiod_request_config_set_offsets(req_cfg, num_lines, offsets);
-+	free(offsets);
- 
- 	request = gpiod_request_lines(path, req_cfg, line_cfg);
- 	if (!request)
- 		die_perror("unable to request lines");
- 
-+	free(path);
-+	gpiod_request_config_free(req_cfg);
-+	gpiod_line_config_free(line_cfg);
-+
- 	if (mode->callback)
- 		mode->callback(&cbdata);
- 
- 	gpiod_line_request_release(request);
--	gpiod_request_config_free(req_cfg);
--	gpiod_line_config_free(line_cfg);
--	free(path);
--	free(offsets);
- 
- 	return EXIT_SUCCESS;
- }
--- 
-2.35.1
+> > The setting of bias is performed by gpio_set_bias, which is hooked into
+> > gpiod_direction_input and gpiod_direction_output.  It extends the setting
+> > of bias that was already present in gpiod_direction_input.
+> > In keeping with the existing behaviour, the bias is set on a best-effort
+> > basis - no error is returned to the user if an error is returned by the
+> > pinctrl driver.  Returning an error makes sense to me, particularly for
+> > the uAPI, but that conflicts with the existing gpiod_direction_input
+> > behaviour. So leave as best-effort, change gpiod_direction_input
+> > behaviour, or restructure to support both behaviours?
 
+> Thomas: is there any reason not to check the return value of these
+> calls for errors other than -EOPNOTSUPP?
+
+that being my comment, and Bart's followup question to Thomas.
+
+That went unanswered AFAICT and the issue subsequently fell through the
+cracks.
+
+I would like to fix the uAPI such that if the hardware does not support
+the requested configuration, or if it can't be emulated in the kernel,
+that fact is returned to userspace - bias being the sole counter example
+as far as I am aware.
+
+The simplest fix involves changing gpio_set_bias() to call gpio_set_config()
+rather than gpio_set_config_with_argument_optional(), but as mentioned in
+my comment above, that would impact any existing users of
+gpiod_direction_input() that assume the best-effort behaviour.
+I haven't been able to find any such usage, but that could just be proof
+that I'm not looking in the right place.
+Any input on that front would be greatly appreciated.
+
+Also, fixing this as mentioned could be considered an uAPI ABI change.
+Is this a bug, so that is ok, or do I need to consider adding a strict
+mode flag or somesuch to the API?
+
+Bart, I'm also hoping to extend the gpiosim to optionally not support
+bias in gc->set_config() to test this case.
+Any suggstions on a configfs interface extension to do that?
+
+My apologies for the verbage rather than proffering a patch, but the
+different paths have vastly different costs, and the simplest solution
+has the potential to introduce breakage.
+
+Cheers,
+Kent.
+
+[1] https://www.spinics.net/lists/linux-gpio/msg43579.html
