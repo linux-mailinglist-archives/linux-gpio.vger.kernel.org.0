@@ -2,101 +2,160 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 31CCC4EF76A
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Apr 2022 18:03:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DECDE4EF766
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Apr 2022 18:03:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242767AbiDAP5C (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Apr 2022 11:57:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57236 "EHLO
+        id S1345997AbiDAP4v (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Apr 2022 11:56:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352878AbiDAPUM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Apr 2022 11:20:12 -0400
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87E121D833C;
-        Fri,  1 Apr 2022 08:02:39 -0700 (PDT)
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-        by mx0a-001ae601.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 231CJbL4008410;
-        Fri, 1 Apr 2022 10:02:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=PdYyuppgFyyHYAEkB/pCVaPIbFP1vk2s7gMdjvDUBi4=;
- b=f5Y3eL2wKH9irysVBEy3+mjnCENUWDETwnm1up4R1WbiMHyCEfXoCAt7cSQ6173TADjD
- mDGf01jJnd6Bc7PjHkq4b46O/5GXYPBCVO9xjsbdiyHlhV3CosrNcaJOBoe4B8uD8OzX
- GAzncZec1Pv6uIFqjgOGXLGfHDlyjMcIEBsLwdckEoH85qs/1mncCAZErEXlCj9e6sIg
- ZKIaOwYXwgQ8Nzr5Oytg9IsCKI0viJFi7SwBNOYrANUfA2WXkYFuHlmd8MuAl4EuAbbs
- 4HJ500afQQmrPUHkWD/9V4VnSRDzSXKuG5i/9p4h+ZuVb7vXFLUS+lMLsLxU9/SzfEt4 3g== 
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-        by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3f2081jg3u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 01 Apr 2022 10:02:18 -0500
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Fri, 1 Apr
- 2022 16:02:16 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.2375.24 via Frontend
- Transport; Fri, 1 Apr 2022 16:02:16 +0100
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id B32C211D1;
-        Fri,  1 Apr 2022 15:02:16 +0000 (UTC)
-Date:   Fri, 1 Apr 2022 15:02:16 +0000
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Yunfei Dong <yunfei.dong@mediatek.com>,
-        - <patches@opensource.cirrus.com>, <linux-media@vger.kernel.org>,
-        <alsa-devel@alsa-project.org>, <linux-gpio@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH] dt-bindings: Fix 'enum' lists with duplicate entries
-Message-ID: <20220401150216.GK38351@ediswmail.ad.cirrus.com>
-References: <20220401141247.2993925-1-robh@kernel.org>
+        with ESMTP id S1356830AbiDAPh7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Apr 2022 11:37:59 -0400
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E7401FE55E
+        for <linux-gpio@vger.kernel.org>; Fri,  1 Apr 2022 08:12:00 -0700 (PDT)
+Received: by mail-ej1-x634.google.com with SMTP id yy13so6552420ejb.2
+        for <linux-gpio@vger.kernel.org>; Fri, 01 Apr 2022 08:12:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=bK5zN02piKxWIk/6UMJiGgRQ3Uln4tKl+u+3PJjeJ9U=;
+        b=PwOjW5VXNmA6ij5Ch2hbqeW4H0bcrVSkLBzXuMazW+XksQN7k4QMIgDB6sqj/oCgtH
+         75OctHwFONeWYEXAekLgTKRRvPmLiQwqxNBfXmQXoIF8nHo197g1p0jCbCzey+BdRRUz
+         Bjdr7LHTn7e1R7dk6z1JmrCiRH+vGfvnISC7Gqeu1KpvWVAF+WodZHsC46Cd17YoBZDO
+         Yrz1izCJyDs0eTwe8Pl0GlquegxPbDhx+UG4es9QAGsKjaAUmgiRJKuCTn3eWUOhJ1zA
+         cHj0HlZtiv8eJmaI2TWNfALpSSR7HtX5jffZCdybyGq6E5UFxr9MplficuH58Xv4IZDE
+         n4dQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=bK5zN02piKxWIk/6UMJiGgRQ3Uln4tKl+u+3PJjeJ9U=;
+        b=Wx2BJj0xoRtSz6CfNQqdKyRy4qa+MmxWJKPLOrqdyJJNij4PXw1ASV24WNWRGvjXP/
+         QAgQfqm/VOwLSFv+EMtH7sAZggzZb/6uaqNJ5DcJgZ5Yuh7S+//PqXOf8lIvJ+hMJRjR
+         yhJdtUshd5C+2TC7OwMmjmg1iwKJ/C2S5OhJYPaXqn68sMjOoSzvE1+Hv3g9ylsaaph5
+         cfGpeoGt0q7O4frF5mykilR0RVErCIjzeb5NBDZYV3VGy5uFAdkHvEunDYkKQhSdVr8J
+         3QbZc1mFsGQfhg6c1nCJfuAvyBHLA7RY5ysHdpPDq9y/PrVyaQGYTpogUFKNqmzKSQPB
+         B2uA==
+X-Gm-Message-State: AOAM533G7JB7mSAJEvky8hywep7Ndj/6LhOlk43wzOi501Nxpf9mm02L
+        314bK+7ZJR3zPdbkzsLjQCVVjepiIz5Du0zb
+X-Google-Smtp-Source: ABdhPJwHJI71DQg3Z7PxDw693WJbmBUCgHeXgg4AbrZI3L/uv740/kFBf4B4GQhWCdHKEhkuwlLA7A==
+X-Received: by 2002:a17:907:6d19:b0:6db:89c8:52e3 with SMTP id sa25-20020a1709076d1900b006db89c852e3mr238932ejc.754.1648825918964;
+        Fri, 01 Apr 2022 08:11:58 -0700 (PDT)
+Received: from [192.168.0.170] (xdsl-188-155-201-27.adslplus.ch. [188.155.201.27])
+        by smtp.gmail.com with ESMTPSA id e11-20020a50becb000000b0041b64129200sm1352312edk.50.2022.04.01.08.11.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 Apr 2022 08:11:58 -0700 (PDT)
+Message-ID: <b035194e-c27f-ca23-cdb9-8d0dc38f6e5e@linaro.org>
+Date:   Fri, 1 Apr 2022 17:11:57 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20220401141247.2993925-1-robh@kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-ORIG-GUID: foSJCjKXTi2Rwva_dqLI1GjRicTPaoII
-X-Proofpoint-GUID: foSJCjKXTi2Rwva_dqLI1GjRicTPaoII
-X-Proofpoint-Spam-Reason: safe
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH v3] dt-bindings: gpio: add common consumer GPIO lines
+Content-Language: en-US
+To:     Rob Herring <robh@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        devicetree@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+References: <20220401072714.106403-1-krzysztof.kozlowski@linaro.org>
+ <1648818806.914066.2864970.nullmailer@robh.at.kernel.org>
+ <2d124d53-1f36-5315-3877-af8f8ad5f824@linaro.org>
+ <CAL_JsqJxZZVpregyGK93oKd6KMfhGXVjNYWYhoUZiPJXjELTxQ@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <CAL_JsqJxZZVpregyGK93oKd6KMfhGXVjNYWYhoUZiPJXjELTxQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Apr 01, 2022 at 09:12:47AM -0500, Rob Herring wrote:
-> There's no reason to list the same value twice in an 'enum'. Fix all the
-> occurrences in the tree. A meta-schema change will catch future ones.
+On 01/04/2022 17:01, Rob Herring wrote:
+> On Fri, Apr 1, 2022 at 8:27 AM Krzysztof Kozlowski
+> <krzysztof.kozlowski@linaro.org> wrote:
+>>
+>> On 01/04/2022 15:13, Rob Herring wrote:
+>>> On Fri, 01 Apr 2022 09:27:14 +0200, Krzysztof Kozlowski wrote:
+>>>> Typical GPIO lines like enable, powerdown, reset or wakeup are not
+>>>> documented as common, which leads to new variations of these (e.g.
+>>>> pwdn-gpios).  Add a common schema which serves also as a documentation
+>>>> for preferred naming.
+>>>>
+>>>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>>>>
+>>>> ---
+>>>>
+>>>> Changes since v2:
+>>>> 1. Correct email.
+>>>>
+>>>> Changes since v1:
+>>>> 1. Select-true, add maxItems and description for each entry (Rob).
+>>>> 2. Mention ACTIVE_LOW in bindings description (Linus).
+>>>> 3. Add allOf for pwrseq reset-gpios case.
+>>>>
+>>>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>>>> ---
+>>>>  .../bindings/gpio/gpio-consumer-common.yaml   | 64 +++++++++++++++++++
+>>>>  1 file changed, 64 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-consumer-common.yaml
+>>>>
+>>>
+>>> My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+>>> on your patch (DT_CHECKER_FLAGS is new in v5.13):
+>>>
+>>> yamllint warnings/errors:
+>>>
+>>> dtschema/dtc warnings/errors:
+>>> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/richtek,rt4801-regulator.example.dt.yaml: rt4801@73: enable-gpios: [[4294967295, 2, 0], [4294967295, 3, 0]] is too long
+>>>       From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/gpio/gpio-consumer-common.yaml
+>>>
+>>
+>> Hi Rob,
+>>
+>> With v1, you proposed to use maxItems for all these standard gpios, but
+>> as we see here there are two exceptions:
+>> 1. pwrseq might have up to 32 reset-gpios,
+>> 2. richtek,rt4801 uses up to 2 enable-gpios.
 > 
-> Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Jonathan Hunter <jonathanh@nvidia.com>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: Charles Keepax <ckeepax@opensource.cirrus.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Sebastian Reichel <sre@kernel.org>
-> Cc: Tony Lindgren <tony@atomide.com>
-> Cc: Yunfei Dong <yunfei.dong@mediatek.com>
-> Cc: - <patches@opensource.cirrus.com>
-> Cc: linux-media@vger.kernel.org
-> Cc: alsa-devel@alsa-project.org
-> Cc: linux-gpio@vger.kernel.org
-> Cc: linux-pm@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
+> There's always an outlier...
+> 
+>> One way is to add exceptions in gpio-consumer-common.yaml, like I did
+>> for reset-gpios and pwrseq. However this scales poor if more of such
+>> usages appear.
+> 
+> I'd reject any new cases, but even just 2 I don't really like.
 
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+The richtek,rt4801 enable-gpios are for controlling two separate
+regulators, so it should have been under regulator subnodes/children.
+Some other regulators follow this pattern, so only this one is done that
+way.
 
-Thanks,
-Charles
+That driver could be converted to enable-gpios per regulator, so if you
+are sure about rejection of new cases, how about keeping current
+exceptions in allOf:if?
+
+> 
+>> Maybe let's drop the maxItems for all of them?
+> 
+> Let's just drop it at least for now (though it seems we can keep it
+> for powerdown-gpios).
+> 
+> A possible solution here may be adding 'maxItems: 1' automatically to
+> schemas if not specified. I've been thinking of doing this on standard
+> unit properties. That's another case of
+> 99% of cases are a single entry with a few outliers.
+> 
+
+
+Best regards,
+Krzysztof
