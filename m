@@ -2,168 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 845674EE914
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Apr 2022 09:27:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B2F974EEA2D
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Apr 2022 11:14:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343870AbiDAH3P (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Apr 2022 03:29:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47088 "EHLO
+        id S1344399AbiDAJQZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Apr 2022 05:16:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343864AbiDAH3M (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Apr 2022 03:29:12 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9739225D5CC
-        for <linux-gpio@vger.kernel.org>; Fri,  1 Apr 2022 00:27:23 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id bg10so4010780ejb.4
-        for <linux-gpio@vger.kernel.org>; Fri, 01 Apr 2022 00:27:23 -0700 (PDT)
+        with ESMTP id S243987AbiDAJQY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Apr 2022 05:16:24 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EBF362106;
+        Fri,  1 Apr 2022 02:14:34 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id p15so4510019ejc.7;
+        Fri, 01 Apr 2022 02:14:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=O+A1T3BDaFyKGF1/nLA+83q2cwMWkojLwLtnjt6Im0g=;
-        b=j+eVewyktWt9RZpMGZVqLlXxN6rOBQc59O6iqd9c+QDB3iZ6LVLc9U7ye4CPrjiOKE
-         y5grcvba/Fl1jmVsDg7QiQTET1Qm9Eq3B5C6l4os5HQyM6nx7B5mEIOLhCbsJZgUGT2e
-         Ef4JUPXjrBqmwwHVmTBe8y5ZukQnZL7ppjH/DMwD11Gn3I1WNX8gVSursmKKIBGOXnJL
-         Pk6dGcSC2/ehn3wvD7U2zI1D87O4tmdo64+fp7crso7ce697kNCS+0RIf4iB8UfYI0DB
-         IM3Fb+EbP+KjN71iEFNeP1UtTG5pSa+ysnTL+IHIRFL8vU0XszrfjEBwRwzj6keQVw1f
-         hI1g==
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OsrH6lo/DuV4Px4EXvnPoTR1hR5ZaTVHAh03QaHrq6A=;
+        b=JmWHvJBisgImhvOyUD8tzZMza46HKn1xukfz2TVuVZcwQiW9r9bWuZyTHbZLLjJ7YL
+         X7BQgSpD2BU67vo8E0YuDzJiVY3X8CerJ7uQqa8FIEfl8GMq1q7RgFDVX4ai82UeSHBA
+         4tut4Lm5wrlvMi5icLLJpU/0bXRjZFaesEVK9O6S5oseWYrhc2zW4yH8AzF5AJz7xHfP
+         vei6msMEn0JTcdKwSKeEs/fDy2Pho8f/JBbBurn86M97KSq3LGE6wFvoXcsMqqgTIHvi
+         p36K9x3StE7pLaRVB4BA3VHheIcxA8UUmz0nn9FoszQvo4dpAWHyEt85XpscOyqKY1ol
+         OVrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=O+A1T3BDaFyKGF1/nLA+83q2cwMWkojLwLtnjt6Im0g=;
-        b=7JEQOWqH2/LUAP68qSWIorX+1juqlFhbeooCIvbcr6iI/hrjH3bqgnKI6Tx7pSMBxF
-         6NXbHoH5Ix80JR6cOyju5meTpksKMj5ORcHBwuUTGazbm4RcqQX+3FWVgPkJwnidFHI7
-         kf4N9OOg+m94DVi3b5Ucdvm7FAm56ZUNmnojlQYwFR3arEX18gz7JXDJmXatbL/8bOYR
-         iOvbypFL5NAhjyhkG7pPIDpVygEbBCNhFtr+/VvGMuwyIAaAr0056tEqTxpxy2TRz+Hs
-         GE+X/fVKUmACmSx6L6oSLrfJNKjdbp3QxoZQzebUH2fylNiVbvZ/UMNbVDjG3r5oohQ/
-         lP1A==
-X-Gm-Message-State: AOAM533/ueJqe4gSHno4cLkOaxX2MwIW3O1k0kYCKztMiq2q55XqCV+O
-        DpwazYrqp5HV7vNWoqB1Y2aR5Q==
-X-Google-Smtp-Source: ABdhPJzp8YxEfUN85bEPan9Rtud03kSOf0voG7Rc8WffBmwyRVz87PjBiiRTp9YcR+PZgRpvKWcWiA==
-X-Received: by 2002:a17:907:7f94:b0:6da:64ec:fabc with SMTP id qk20-20020a1709077f9400b006da64ecfabcmr8199091ejc.717.1648798041987;
-        Fri, 01 Apr 2022 00:27:21 -0700 (PDT)
-Received: from localhost.localdomain (xdsl-188-155-201-27.adslplus.ch. [188.155.201.27])
-        by smtp.gmail.com with ESMTPSA id r1-20020a170906550100b006e116636338sm713485ejp.2.2022.04.01.00.27.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Apr 2022 00:27:21 -0700 (PDT)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v3] dt-bindings: gpio: add common consumer GPIO lines
-Date:   Fri,  1 Apr 2022 09:27:14 +0200
-Message-Id: <20220401072714.106403-1-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.32.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OsrH6lo/DuV4Px4EXvnPoTR1hR5ZaTVHAh03QaHrq6A=;
+        b=VIr47Pm78nEj5/WRcB91tco+w25ByDcQOaDc+71IV/4MwlBWC2friBCmB5guvpcH8v
+         /TeuiSkn+WYgk+Nr1JExW03n+zzo9f3XNaTNt6d3qXeogj4pbNsQc2+MK8fo4J1/DuPy
+         7s2ojNceBnHXuSEsE6M1BevdBO+RU0E9cmjFFJaSBix9cUFAHdvz54eWwb1aTxeZcGaF
+         PHJuHIKj3dismTaw6q1RzKiIqAARtRkpUesayTPZYbpsbWLtb5YjWbHxLq2aEdhr/Fqy
+         P1xDpDMXU2qbcgOWbahXo/N8MTZI5Nrl0LDyIwtH7nGReWBsvCm4alpuPrmglInfsSCD
+         stew==
+X-Gm-Message-State: AOAM530pfk8KgzUmG/BUm0OEpWXpK/wxLd6A6KQr/lnB6BC85xAhycYq
+        Jlv/AXBRHgKKVugMv33JG4OMZehnI/ezvcSUc+I=
+X-Google-Smtp-Source: ABdhPJyTnf43naj3nJDmc6O7XIWY7gMqZWU+WWhlCaIeW80QNYOMdTnt+kvt5LZoJvx6LXwsuS005Jw0OlQBDMx+QOo=
+X-Received: by 2002:a17:907:160b:b0:6e1:116e:7a59 with SMTP id
+ hb11-20020a170907160b00b006e1116e7a59mr8365081ejc.579.1648804472914; Fri, 01
+ Apr 2022 02:14:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1648540212-9790-1-git-send-email-unSimple1993@163.com>
+ <CAHp75VdwLPkzE9AHkXg=+vsagh4SGam40vz8uRdSRUpr6Cyv7A@mail.gmail.com> <2e3426e0.2d71.17fe315bdb6.Coremail.unsimple1993@163.com>
+In-Reply-To: <2e3426e0.2d71.17fe315bdb6.Coremail.unsimple1993@163.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 1 Apr 2022 12:13:27 +0300
+Message-ID: <CAHp75Vcs+HG-e=BHhgWP6Ndh5nZWXXnqhZ2jfN33Fs0qu5U_Bw@mail.gmail.com>
+Subject: Re: Re: [PATCH v1] pinctrl: ralink: rt2880: Check for return value of devm_kcalloc()
+To:     unSimple <unsimple1993@163.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Yan <yanaijie@huawei.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Typical GPIO lines like enable, powerdown, reset or wakeup are not
-documented as common, which leads to new variations of these (e.g.
-pwdn-gpios).  Add a common schema which serves also as a documentation
-for preferred naming.
+On Fri, Apr 1, 2022 at 6:06 AM unSimple <unsimple1993@163.com> wrote:
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>
+> The main consideration of the 'continue' in the patch is that those statements are inner a loop.
+>
+> The next allocation may be successful so I think it is better to use 'continue' here.
 
----
+Please, do not top-post!
 
-Changes since v2:
-1. Correct email.
+What you explained is logical from APIs point of view, what I was
+asking is about functional point of view.
+Why do you think the skipping iteration is fine?
 
-Changes since v1:
-1. Select-true, add maxItems and description for each entry (Rob).
-2. Mention ACTIVE_LOW in bindings description (Linus).
-3. Add allOf for pwrseq reset-gpios case.
+You need to explain this in the code/commit message.
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- .../bindings/gpio/gpio-consumer-common.yaml   | 64 +++++++++++++++++++
- 1 file changed, 64 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-consumer-common.yaml
+> At 2022-03-29 19:45:50, "Andy Shevchenko" <andy.shevchenko@gmail.com> wrote:
+> >On Tue, Mar 29, 2022 at 11:36 AM QintaoShen <unSimple1993@163.com> wrote:
+> >>
+> >> The memory allocation function devm_kcalloc() may return NULL pointer,
+> >
+> >may --> might
+> >
+> >> so it is better to add a check for 'p->func[i]->pins' to avoid possible
+> >> NULL pointer dereference.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-consumer-common.yaml b/Documentation/devicetree/bindings/gpio/gpio-consumer-common.yaml
-new file mode 100644
-index 000000000000..40d0be31e200
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-consumer-common.yaml
-@@ -0,0 +1,64 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/gpio-consumer-common.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Common GPIO lines
-+
-+maintainers:
-+  - Bartosz Golaszewski <brgl@bgdev.pl>
-+  - Linus Walleij <linus.walleij@linaro.org>
-+
-+description:
-+  Pay attention to using proper GPIO flag (e.g. GPIO_ACTIVE_LOW) for the GPIOs
-+  using inverted signal (e.g. RESETN).
-+
-+select: true
-+
-+properties:
-+  enable-gpios:
-+    maxItems: 1
-+    description:
-+      GPIO connected to the enable control pin.
-+
-+  reset-gpios:
-+    description:
-+      GPIO (or GPIOs for power sequence) connected to the device reset pin
-+      (e.g. RESET or RESETN).
-+
-+  powerdown-gpios:
-+    maxItems: 1
-+    description:
-+      GPIO connected to the power down pin (hardware power down or power cut,
-+      e.g. PD or PWDN).
-+
-+  pwdn-gpios:
-+    maxItems: 1
-+    description: Use powerdown-gpios
-+    deprecated: true
-+
-+  wakeup-gpios:
-+    maxItems: 1
-+    description:
-+      GPIO connected to the pin waking up the device from suspend or other
-+      power-saving modes.
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - mmc-pwrseq-simple
-+    then:
-+      properties:
-+        reset-gpios:
-+          minItems: 1
-+          maxItems: 32
-+    else:
-+      properties:
-+        reset-gpios:
-+          maxItems: 1
-+
-+additionalProperties: true
+...
+
+> >> @@ -266,6 +266,10 @@ static int rt2880_pinmux_pins(struct rt2880_priv *p)
+> >>                                                 p->func[i]->pin_count,
+> >>                                                 sizeof(int),
+> >>                                                 GFP_KERNEL);
+> >
+> >> +
+> >
+> >Stray change. Also it seems it has trailing space character(s).
+> >
+> >> +        if (!p->func[i]->pins)
+> >
+> >> +            continue;
+> >
+> >Why is 'continue' the proper choice here? No clarification is given in
+> >the commit message.
+> >
+> >>                 for (j = 0; j < p->func[i]->pin_count; j++)
+> >>                         p->func[i]->pins[j] = p->func[i]->pin_first + j;
+
 -- 
-2.32.0
-
+With Best Regards,
+Andy Shevchenko
