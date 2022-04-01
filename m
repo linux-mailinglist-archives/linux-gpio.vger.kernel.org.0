@@ -2,214 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 97C1E4EF781
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Apr 2022 18:03:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 352534EF811
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Apr 2022 18:37:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345097AbiDAQER (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Apr 2022 12:04:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44932 "EHLO
+        id S1349319AbiDAQjE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Apr 2022 12:39:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241829AbiDAP5Y (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Apr 2022 11:57:24 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [46.235.227.227])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74F8929341C;
-        Fri,  1 Apr 2022 08:28:15 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: sre)
-        with ESMTPSA id CD6A51F47CE7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1648826893;
-        bh=0+Qy6DqL3DzylnNPp1BpGcwg8sHoEzTpg9tt+67cetk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oaadmmE9l2jBobRHcuF+5apmP/oV1M+yQTgaQXh/490G5z2SvOZp7QLQgtzJgg9LJ
-         kSSRoR/nvZ9CwLp45EzhG+gsEx3koHVUSuHt1JW59/t+bmT8pXUVS2QmnY9xmsUTpC
-         X1WV89JttUN6+Th3tQeeGyVC1YwWsXUAEy4E+P0Xan4XfKtfPr4ZtwGN333euh6WrD
-         N3loL42J+dcFCtia8Qc/ofLuqb3G3buKPaL9WdfbuFavNDoIIMZDK0K3IoFi0LcBXI
-         AskMmI0jNnVIhTdrzAIT7CJxNibpnxmJUqkKLyDRo57zBD7XpsP3QwbD56h1ddTp85
-         QH8WLFv/Q71Kg==
-Received: by mercury (Postfix, from userid 1000)
-        id 2CCD61060582; Fri,  1 Apr 2022 17:28:11 +0200 (CEST)
-Date:   Fri, 1 Apr 2022 17:28:11 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Yunfei Dong <yunfei.dong@mediatek.com>,
-        - <patches@opensource.cirrus.com>, linux-media@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-gpio@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Fix 'enum' lists with duplicate entries
-Message-ID: <20220401152811.uv3wm55byrmk4gqc@mercury.elektranox.org>
-References: <20220401141247.2993925-1-robh@kernel.org>
+        with ESMTP id S1351478AbiDAQip (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Apr 2022 12:38:45 -0400
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EE3A1A7777;
+        Fri,  1 Apr 2022 09:20:32 -0700 (PDT)
+Received: by mail-qt1-f175.google.com with SMTP id z19so2590553qtw.2;
+        Fri, 01 Apr 2022 09:20:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=X5d+yPwzSM9+owQOJ5sOv+pSJIX+gkFsbvEmvaE4ypI=;
+        b=v5BZnMQ7oOSRGvUioFtMFUiMtRAdscYHOxwPZRlRlnoRGiWOnLpqik1Ze+0p3C4dU5
+         /KX7KfH27VwKNFZUZp+cL5qne6LBwxF3bhtBYs7fUjK0aLu1ZSgi0pCYy4V6ttJmn3Z/
+         rw657EvOa4dMtoKSem6qhiP87MLmGFdwypYd2zB0W2J1TrSAH5QEWryqbn7TlLPUOgUi
+         4NVM7UsmND1zPGO+pbxONL5VXJI0sEufg/gmv/vv/7lE36WwBhQuWxK5ALcyoKrmYqZ5
+         /ryaEEAb2WUaFimjjYVSvVCFv/brWXPkW5GkyhzleU4QQX2PKIpUA81hJyo9xp6BV63p
+         FG4Q==
+X-Gm-Message-State: AOAM5336vXSy9oA7alyMN0bRvoHQNOi4FA/PDDNpdTNk8ppnGssuZBKa
+        uaxYRkhiuow/Ysk12FMpSvRlpHPNmUI9Vg==
+X-Google-Smtp-Source: ABdhPJzUrD8QZovRqkx6HMOM1PXkKdpAj43T9L3MG6R/PRlY4RdYnIFA2q20AhfNJ49U25Q15dTjSA==
+X-Received: by 2002:a05:622a:1b86:b0:2e2:1e80:ed52 with SMTP id bp6-20020a05622a1b8600b002e21e80ed52mr9155433qtb.95.1648830031216;
+        Fri, 01 Apr 2022 09:20:31 -0700 (PDT)
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com. [209.85.128.179])
+        by smtp.gmail.com with ESMTPSA id r17-20020a05620a299100b00680b43004bfsm1819368qkp.45.2022.04.01.09.20.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 Apr 2022 09:20:31 -0700 (PDT)
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-2e68c95e0f9so39414717b3.0;
+        Fri, 01 Apr 2022 09:20:30 -0700 (PDT)
+X-Received: by 2002:a81:24d6:0:b0:2e5:b253:f9fc with SMTP id
+ k205-20020a8124d6000000b002e5b253f9fcmr10995277ywk.438.1648830030588; Fri, 01
+ Apr 2022 09:20:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="gjfd7i3tbgmmz62e"
-Content-Disposition: inline
-In-Reply-To: <20220401141247.2993925-1-robh@kernel.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220320092542.2308-1-wsa+renesas@sang-engineering.com> <20220320092542.2308-2-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20220320092542.2308-2-wsa+renesas@sang-engineering.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 1 Apr 2022 18:20:19 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXBPEkS=PXcuxFsrTNBHc=vpg=fWfsmQSLOEhJY0QzoXg@mail.gmail.com>
+Message-ID: <CAMuHMdXBPEkS=PXcuxFsrTNBHc=vpg=fWfsmQSLOEhJY0QzoXg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] pinctrl: renesas: allow up to 10 fields for drive_regs
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Mon, Mar 21, 2022 at 12:41 AM Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
+> Needed to support E3 and G2E drive regs.
+>
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
---gjfd7i3tbgmmz62e
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-pinctrl-for-v5.19.
 
-Hi,
+Gr{oetje,eeting}s,
 
-On Fri, Apr 01, 2022 at 09:12:47AM -0500, Rob Herring wrote:
-> There's no reason to list the same value twice in an 'enum'. Fix all the
-> occurrences in the tree. A meta-schema change will catch future ones.
->=20
-> Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Jonathan Hunter <jonathanh@nvidia.com>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: Charles Keepax <ckeepax@opensource.cirrus.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Sebastian Reichel <sre@kernel.org>
-> Cc: Tony Lindgren <tony@atomide.com>
-> Cc: Yunfei Dong <yunfei.dong@mediatek.com>
-> Cc: - <patches@opensource.cirrus.com>
-> Cc: linux-media@vger.kernel.org
-> Cc: alsa-devel@alsa-project.org
-> Cc: linux-gpio@vger.kernel.org
-> Cc: linux-pm@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
+                        Geert
 
-Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
--- Sebastian
-
-> There's also one other occurrence in snps,dwmac.yaml I didn't fix as=20
-> there's a patch[1] for it which prompted this patch.
->=20
-> Rob
->=20
-> [1] https://lore.kernel.org/r/20220401030847epcms1p8cf7a8e1d8cd7d325dacf3=
-0f78da36328@epcms1p8
->=20
->  .../bindings/arm/tegra/nvidia,tegra20-pmc.yaml        |  1 -
->  Documentation/devicetree/bindings/bus/ti-sysc.yaml    |  1 -
->  .../bindings/media/mediatek,vcodec-encoder.yaml       |  1 -
->  .../devicetree/bindings/pinctrl/cirrus,madera.yaml    | 11 +++++------
->  .../devicetree/bindings/power/supply/bq2415x.yaml     |  1 -
->  5 files changed, 5 insertions(+), 10 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-p=
-mc.yaml b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.ya=
-ml
-> index 0afec83cc723..564ae6aaccf7 100644
-> --- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.yaml
-> +++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.yaml
-> @@ -13,7 +13,6 @@ maintainers:
->  properties:
->    compatible:
->      enum:
-> -      - nvidia,tegra20-pmc
->        - nvidia,tegra20-pmc
->        - nvidia,tegra30-pmc
->        - nvidia,tegra114-pmc
-> diff --git a/Documentation/devicetree/bindings/bus/ti-sysc.yaml b/Documen=
-tation/devicetree/bindings/bus/ti-sysc.yaml
-> index bd40213302da..fced4082b047 100644
-> --- a/Documentation/devicetree/bindings/bus/ti-sysc.yaml
-> +++ b/Documentation/devicetree/bindings/bus/ti-sysc.yaml
-> @@ -34,7 +34,6 @@ properties:
->      oneOf:
->        - items:
->            - enum:
-> -              - ti,sysc-omap2
->                - ti,sysc-omap2
->                - ti,sysc-omap4
->                - ti,sysc-omap4-simple
-> diff --git a/Documentation/devicetree/bindings/media/mediatek,vcodec-enco=
-der.yaml b/Documentation/devicetree/bindings/media/mediatek,vcodec-encoder.=
-yaml
-> index e7b65a91c92c..df7df06c378f 100644
-> --- a/Documentation/devicetree/bindings/media/mediatek,vcodec-encoder.yaml
-> +++ b/Documentation/devicetree/bindings/media/mediatek,vcodec-encoder.yaml
-> @@ -106,7 +106,6 @@ allOf:
->            enum:
->              - mediatek,mt8173-vcodec-enc
->              - mediatek,mt8192-vcodec-enc
-> -            - mediatek,mt8173-vcodec-enc
-> =20
->      then:
->        properties:
-> diff --git a/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml=
- b/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml
-> index 8a90d8273767..6bd42e43cdab 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml
-> @@ -48,13 +48,12 @@ properties:
->                Name of one pin group to configure.
->              enum: [ aif1, aif2, aif3, aif4, mif1, mif2, mif3, pdmspk1,
->                      pdmspk2, dmic4, dmic5, dmic6, gpio1, gpio2, gpio3,
-> -                    gpio4, gpio5, gpio6, gpio7, gpio7, gpio8, gpio9,
-> +                    gpio4, gpio5, gpio6, gpio7, gpio8, gpio9,
->                      gpio10, gpio11, gpio12, gpio13, gpio14, gpio15,
-> -                    gpio16, gpio17, gpio17, gpio18, gpio19, gpio20,
-> -                    gpio21, gpio22, gpio23, gpio24, gpio25, gpio26,
-> -                    gpio27, gpio27, gpio28, gpio29, gpio30, gpio31,
-> -                    gpio32, gpio33, gpio34, gpio35, gpio36, gpio37,
-> -                    gpio37, gpio38, gpio39 ]
-> +                    gpio16, gpio17, gpio18, gpio19, gpio20, gpio21,
-> +                    gpio22, gpio23, gpio24, gpio25, gpio26, gpio27,
-> +                    gpio28, gpio29, gpio30, gpio31, gpio32, gpio33,
-> +                    gpio34, gpio35, gpio36, gpio37, gpio38, gpio39 ]
-> =20
->            function:
->              description:
-> diff --git a/Documentation/devicetree/bindings/power/supply/bq2415x.yaml =
-b/Documentation/devicetree/bindings/power/supply/bq2415x.yaml
-> index f8461f06e6f4..118cf484cc69 100644
-> --- a/Documentation/devicetree/bindings/power/supply/bq2415x.yaml
-> +++ b/Documentation/devicetree/bindings/power/supply/bq2415x.yaml
-> @@ -16,7 +16,6 @@ allOf:
->  properties:
->    compatible:
->      enum:
-> -      - ti,bq24150
->        - ti,bq24150
->        - ti,bq24150a
->        - ti,bq24151
-> --=20
-> 2.32.0
->=20
-
---gjfd7i3tbgmmz62e
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmJHGggACgkQ2O7X88g7
-+po2uA/+OS0hkCudE7TWE85KDv5+/Qb+6/JFLz20iy0f8rQr3U1VOufXZccdMBmV
-lPY7v8Tzl+P3F2tHUdy1A6MSRvSrfxGQi32YeaSR/jNylRY7Lpmm73psjokmXsX/
-FZZMXB7SvHvSLPqIdfKfs9sxuWjeZqw/YsYTDXHvubTSX5LkDuxx1p9KYYoTtZ5y
-jDDUYqCdc1j8+z6u302ErkzZLLxowhYXlfy5I0D3I9VlVA42X6+gVT6j108fgLMw
-ARg8mB8LrTwigl+qpW4E91pH0IOwwVbyIoUAJOUEQlj2qsAxfxAvNOaAbT5KbRZS
-Tj+4TqPQYM+srE8e4dqKCQHB5GQFqHlgFa4r4ATqaqCddL04Zvl1MhaVqoXIuGL/
-NH28aDPnRib2ZR7JkbAQ77NyLnBFtfEbJ7EU58YeTkD+QWJ41Xj9OzH4oEDdurCx
-ggml7FuQj4LaC4uy4cR2MDyHlsrg2wS24+R9rFeXc47HchTboXS14r+a5fOLetpp
-BydxRULRfek5NWLZZGaWLzZZmWwGgG3/hNeNFXDPazkECoHC6HtfpNGX5XAuR3dx
-/PUycmAYpb2KfL3gVZksITrrAZ2qc3tGJgn//rsmCHcouG1w5Kf9NlvRsCzCUAAY
-gbTebdGk0p0ilzuOB4jo1QTy5xJgR6pUMzCWXigh4jkRzJU2pYI=
-=3CSB
------END PGP SIGNATURE-----
-
---gjfd7i3tbgmmz62e--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
