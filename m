@@ -2,61 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0625F4EE57C
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Apr 2022 02:44:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8269A4EE637
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Apr 2022 04:45:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242670AbiDAAp4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 31 Mar 2022 20:45:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51520 "EHLO
+        id S244179AbiDACpq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 31 Mar 2022 22:45:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230257AbiDAApz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 31 Mar 2022 20:45:55 -0400
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3E2319322A;
-        Thu, 31 Mar 2022 17:44:06 -0700 (PDT)
-Received: by mail-oi1-f171.google.com with SMTP id q129so1298836oif.4;
-        Thu, 31 Mar 2022 17:44:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RGQN36fupBzgDgpYYq41OYqPsrM7TxMOo2nnd7qf6a8=;
-        b=p8qdyAlGldL8eXf2rGLIzU8pK9tPo67FS9Xg4IUR59I0fs0m6+q+skHM4JKmrLKK2+
-         U4TOzgIkpZBh88b6NV/NYMzfZnjLW6o4Jrph2zhkUUF4MqM+2btD6lfrSwLTU8tdE41A
-         F3izoTIyQR5g2wWDvteZF/lrEpgxzZkQUcLblvGpd54BndBfJS5JHeRTh6+R94qdxLu3
-         5oiBEzAJP8terz3LaXjm735mcUybKYw8dQtxTpZ/5ny94rcLmGayb36A+v6mOluVSPef
-         4waMRLCWEiI/YOBz6bZAYkD73ezgJ+bTKHNHepS7lVLvHBWS7etefX4uxhjYIqKTMWzO
-         hxtQ==
-X-Gm-Message-State: AOAM532ysKTeNJoWWcXeqnmJagTo3KZPlOdM9BRkbBGRcpXTrWjPQhA5
-        Y0QprwHlhibA+Bqu1EByTA==
-X-Google-Smtp-Source: ABdhPJwpD21u4oW/SUSDwMY8sZQu20PgRsvBTHW6LOzRdj1Z6666xBC0UEDvpdjX2iqcai1oRF1siw==
-X-Received: by 2002:aca:905:0:b0:2ee:f62a:e08e with SMTP id 5-20020aca0905000000b002eef62ae08emr3656953oij.54.1648773846080;
-        Thu, 31 Mar 2022 17:44:06 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id m24-20020a9d73d8000000b005c942e2281dsm500962otk.76.2022.03.31.17.44.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Mar 2022 17:44:05 -0700 (PDT)
-Received: (nullmailer pid 1804134 invoked by uid 1000);
-        Fri, 01 Apr 2022 00:44:04 -0000
-Date:   Thu, 31 Mar 2022 19:44:04 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, Keerthy <j-keerthy@ti.com>,
+        with ESMTP id S231317AbiDACpo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 31 Mar 2022 22:45:44 -0400
+Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89537141D98;
+        Thu, 31 Mar 2022 19:43:55 -0700 (PDT)
+Received: from relay1-d.mail.gandi.net (unknown [IPv6:2001:4b98:dc4:8::221])
+        by mslow1.mail.gandi.net (Postfix) with ESMTP id DB075C791A;
+        Fri,  1 Apr 2022 02:33:43 +0000 (UTC)
+Received: (Authenticated sender: frank@zago.net)
+        by mail.gandi.net (Postfix) with ESMTPSA id 6E6BD240003;
+        Fri,  1 Apr 2022 02:33:18 +0000 (UTC)
+From:   frank zago <frank@zago.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Wolfram Sang <wsa@kernel.org>, Johan Hovold <johan@kernel.org>,
+        linux-usb@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: gpio: davinci: list contents of GPIO hogs
-Message-ID: <YkZK1OzF5Wq2bDma@robh.at.kernel.org>
-References: <20220328191153.171241-1-krzysztof.kozlowski@linaro.org>
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        frank zago <frank@zago.net>
+Subject: [PATCH v5 0/3] WCH CH341 GPIO and SPI support
+Date:   Thu, 31 Mar 2022 21:33:03 -0500
+Message-Id: <20220401023306.79532-1-frank@zago.net>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220328191153.171241-1-krzysztof.kozlowski@linaro.org>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -64,49 +44,52 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 28, 2022 at 09:11:53PM +0200, Krzysztof Kozlowski wrote:
-> The hogs children should list allowed properties, otherwise any property
-> would be accepted.  Simplify also GPIO hog node name pattern.
+The CH341 is a multifunction chip, presenting 3 different USB PID. One
+of these functions is for I2C/SPI/GPIO. This new set of drivers will
+manage I2C and GPIO.
 
-Only if 'gpio-hog' is missing, because the gpio-hog.yaml schema will 
-check every node with that property.
+Changes from v4:
+I should have addressed all the comments: rework of the GPIO interrupt
+handling code to be more modern, changes in Kconfig wording, some code
+cleanup.
+Driver was tested again with up to 4 of these devices. No
+error seen.
 
-Hogs are allowed on any GPIO controller, but I don't think we to 
-duplicate what's here on every schema.
+Changes from v3:
+  - really converted to an MFD driver. Driver is now split into 3
+    modules (MFD+I2C+GPIO).
+  - minor code cleanups
 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  .../devicetree/bindings/gpio/gpio-davinci.yaml        | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.yaml b/Documentation/devicetree/bindings/gpio/gpio-davinci.yaml
-> index f32e09ef937c..e5b91c65dcb0 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-davinci.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.yaml
-> @@ -76,12 +76,21 @@ properties:
->      const: 2
->  
->  patternProperties:
-> -  "^(.+-hog(-[0-9]+)?)$":
-> +  "^.+-hog(-[0-9]+)?$":
->      type: object
-> +    properties:
-> +      gpio-hog: true
-> +      gpios: true
-> +      input: true
-> +      output-high: true
-> +      output-low: true
-> +      line-name: true
->  
->      required:
->        - gpio-hog
->  
-> +    additionalProperties: false
-> +
->  required:
->    - compatible
->    - reg
-> -- 
-> 2.32.0
-> 
-> 
+Changes from v2:
+  - bug fixes
+  - more robust USB enumeration
+  - Changed to an MFD driver as suggested
+
+
+frank zago (3):
+  mfd: ch341: add core driver for the WCH CH341 in I2C/SPI/GPIO mode
+  gpio: ch341: add GPIO MFD cell driver for the CH341
+  i2c: ch341: add I2C MFD cell driver for the CH341
+
+ Documentation/misc-devices/ch341.rst | 114 ++++++++
+ Documentation/misc-devices/index.rst |   1 +
+ MAINTAINERS                          |   9 +
+ drivers/gpio/Kconfig                 |  10 +
+ drivers/gpio/Makefile                |   1 +
+ drivers/gpio/gpio-ch341.c            | 383 +++++++++++++++++++++++++++
+ drivers/i2c/busses/Kconfig           |  10 +
+ drivers/i2c/busses/Makefile          |   1 +
+ drivers/i2c/busses/i2c-ch341.c       | 331 +++++++++++++++++++++++
+ drivers/mfd/Kconfig                  |  10 +
+ drivers/mfd/Makefile                 |   1 +
+ drivers/mfd/ch341-core.c             | 105 ++++++++
+ include/linux/mfd/ch341.h            |  26 ++
+ 13 files changed, 1002 insertions(+)
+ create mode 100644 Documentation/misc-devices/ch341.rst
+ create mode 100644 drivers/gpio/gpio-ch341.c
+ create mode 100644 drivers/i2c/busses/i2c-ch341.c
+ create mode 100644 drivers/mfd/ch341-core.c
+ create mode 100644 include/linux/mfd/ch341.h
+
+--
+2.32.0
