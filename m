@@ -2,223 +2,200 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B9E024EE40E
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Apr 2022 00:31:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BE274EE503
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Apr 2022 02:09:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242483AbiCaWd1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 31 Mar 2022 18:33:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45018 "EHLO
+        id S229897AbiDAAKe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 31 Mar 2022 20:10:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242474AbiCaWd1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 31 Mar 2022 18:33:27 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7AF01B48C4;
-        Thu, 31 Mar 2022 15:31:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1648765896; x=1680301896;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Du3Yko/lSEUNo3cG46eNYy30enIR53P83TYGdnVfgUA=;
-  b=HKd4UU9y1LjL0Bns9kRctC070rfo9IhWnVpdykRv+Q5a3JTfEVZpMufG
-   oQeZxRZhRuA1lqQf1TwgKLIeinQ+LkAeAar3ktLJg71c6xsgd22sCMvyz
-   72di3+bU72r9rP7KDTUeE2g+fkGNHdPjPjh07ssLgKolwJz2dm32+/VIN
-   Fl4ANweGk4H8mT8GXNhXrtPJgoBwBRx2NUVOqM+yturJ0QSIM+CjLdBYJ
-   oQUcYgn1BcHl2nDv1HlHntF2lGUAkCcxOtekVjfSFY77HEL4uaB5g+EH5
-   TqBD5pAAJBPhI+6TSKOMaFJazJPGRqcm8KjlGFnNp64B9caScFhZV3m3u
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10303"; a="240570017"
-X-IronPort-AV: E=Sophos;i="5.90,225,1643702400"; 
-   d="scan'208";a="240570017"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2022 15:31:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,225,1643702400"; 
-   d="scan'208";a="841487322"
-Received: from lkp-server02.sh.intel.com (HELO 3231c491b0e2) ([10.239.97.151])
-  by fmsmga005.fm.intel.com with ESMTP; 31 Mar 2022 15:31:29 -0700
-Received: from kbuild by 3231c491b0e2 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1na3KC-0000i0-J5;
-        Thu, 31 Mar 2022 22:31:28 +0000
-Date:   Fri, 1 Apr 2022 06:31:10 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Qianggui Song <qianggui.song@amlogic.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Fabien Dessenne <fabien.dessenne@foss.st.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        openbmc@lists.ozlabs.org, linux-renesas-soc@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>
-Subject: Re: [PATCH v3 05/13] pinctrl: samsung: Switch to use
- for_each_gpiochip_node() helper
-Message-ID: <202204010610.Wk5CAkQ7-lkp@intel.com>
-References: <20220330145030.1562-6-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S243255AbiDAAKd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 31 Mar 2022 20:10:33 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1E2164BF4
+        for <linux-gpio@vger.kernel.org>; Thu, 31 Mar 2022 17:08:44 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id h19so1115705pfv.1
+        for <linux-gpio@vger.kernel.org>; Thu, 31 Mar 2022 17:08:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=OBZZLn5rRGe0pzd1QMdEBKJCjf3qzIdBCJovCTKbpPg=;
+        b=qX39Y+SQ55BF+STouWCfBttHBarCDHlj6wCm6sfDGAAMaxAPDeSscAl7rqCCPDFvKP
+         y+WukPr9Vbh+SR0nKJbA+e63MevvanIachHNPXQbisQGzfjOYL8LITsOZ4Hbe7pXf+G1
+         uu23dhsjOgm6eGfsYcUs/7JiuA5x53C5kP9xZLXyYPS5xrADYRuUkM4w6AI26rLo7IQu
+         qiL8F/4oeHPb04c4H6hbiax1SRbxmlsk6553PTzCfkKqjGMnJ6dfk+Ua8vLvyxtfZ+4C
+         7CRdVzm0ab4LI3gfTgL9gmuzc+4LQGPnQq5tQiYMF7X1mi9h38/l66r/tickR8MyqlDL
+         ZIRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OBZZLn5rRGe0pzd1QMdEBKJCjf3qzIdBCJovCTKbpPg=;
+        b=V1Hxz32uBouKuwCncbSGNWoK1ncDIg4P/Rv8PNhyF9JE4M0evojeB/UjpgUxSD9QPV
+         De8x0msHBfzg0sfuwGx8te+qmzKDmTj1c0Uxtk8d9rd1Mc4hFwjVXEcTX+fxT9VoFO7A
+         r6UK+tkyHrTFOs83yEA4RWXqQuRzdJtWRfTel2l8UyUTLo9AvmgwehhszbwQTHtZKGba
+         yvUC6ZpvN2rUXCQ6eybwsbZURLDIEaRJbs7tEga4j+N6VEGd0QYmMbmdFOhdUK3m4G8h
+         DXZ+HQsn0X7AFmsUwPZU96YL5+S1atf+R6yue+g8VydyICRqlA2aRs0fkek3yNuQNnua
+         bnhg==
+X-Gm-Message-State: AOAM530Ooeo+RtvszCbUQhJ+/InkVU91mkr5oqzOCz9xCSyYbCxyqDGL
+        sCqvbA8uEa5+ydEJWPQN3lQ=
+X-Google-Smtp-Source: ABdhPJwm8vTLUG8IwL+Q8+z6rFTnx92bbxIQfGT5qgXPP5PXeGv/HIvW9tC/0u2mbt2g2sZvq7FGYw==
+X-Received: by 2002:a05:6a00:cd2:b0:4fa:a4f6:74b8 with SMTP id b18-20020a056a000cd200b004faa4f674b8mr41984027pfv.19.1648771723897;
+        Thu, 31 Mar 2022 17:08:43 -0700 (PDT)
+Received: from sol ([118.209.204.33])
+        by smtp.gmail.com with ESMTPSA id d10-20020a056a0024ca00b004fd90388a86sm625315pfv.173.2022.03.31.17.08.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Mar 2022 17:08:43 -0700 (PDT)
+Date:   Fri, 1 Apr 2022 08:08:37 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org,
+        brgl@bgdev.pl, thomas.petazzoni@bootlin.com,
+        linus.walleij@linaro.org
+Subject: Re: gpiolib: why does gpio_set_bias() suppress ENOTSUPP?
+Message-ID: <20220401000837.GA4938@sol>
+References: <20220331025203.GA53907@sol>
+ <YkWyU8seDqyDL532@smile.fi.intel.com>
+ <20220331141524.GA93836@sol>
+ <YkXiq995Xb+1Quq8@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220330145030.1562-6-andriy.shevchenko@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <YkXiq995Xb+1Quq8@smile.fi.intel.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andy,
+On Thu, Mar 31, 2022 at 08:19:39PM +0300, Andy Shevchenko wrote:
+> On Thu, Mar 31, 2022 at 10:15:24PM +0800, Kent Gibson wrote:
+> > On Thu, Mar 31, 2022 at 04:53:23PM +0300, Andy Shevchenko wrote:
+> > > On Thu, Mar 31, 2022 at 10:52:03AM +0800, Kent Gibson wrote:
+> > > > It has recently come to my attention that the setting of bias by the
+> > > > cdev uAPI is a best effort operation that quietly succeeds if bias is
+> > > > not supported by the hardware. That strikes me as being a bug.
+> > > > It seems I was aware of this when adding bias to the uAPI and intended
+> > > > to fix it, as shown in the comments of v4 of the corrsponding patch
+> > > > series[1]:
+> > > 
+> > > > > > The setting of bias is performed by gpio_set_bias, which is hooked into
+> > > > > > gpiod_direction_input and gpiod_direction_output.  It extends the setting
+> > > > > > of bias that was already present in gpiod_direction_input.
+> > > > > > In keeping with the existing behaviour, the bias is set on a best-effort
+> > > > > > basis - no error is returned to the user if an error is returned by the
+> > > > > > pinctrl driver.  Returning an error makes sense to me, particularly for
+> > > > > > the uAPI, but that conflicts with the existing gpiod_direction_input
+> > > > > > behaviour. So leave as best-effort, change gpiod_direction_input
+> > > > > > behaviour, or restructure to support both behaviours?
+> > > > 
+> > > > > Thomas: is there any reason not to check the return value of these
+> > > > > calls for errors other than -EOPNOTSUPP?
+> > > > 
+> > > > that being my comment, and Bart's followup question to Thomas.
+> > > > 
+> > > > That went unanswered AFAICT and the issue subsequently fell through the
+> > > > cracks.
+> > > 
+> > > My understanding that all constraints we have in kernel is due to
+> > > in-kernel use and possible (non-critical) issues.
+> > > 
+> > > For example, driver can set only selected values of bias. What to do when
+> > > the given value is not supported by hardware?
+> > > 
+> > > Followup question: Why do you think your choice is any better than another
+> > > one?
+> > > 
+> > 
+> > I'm probably missing your point here.
+> > 
+> > What makes gpiolib best placed to decide that bias not being supported
+> > by hardware is non-critical?  Why not just propagate the ENOTSUPP to the
+> > caller and let them decide?
+> 
+> First of all, ENOTSUPP may not be sent to user, it's wrong error code.
+> The returning any other error code make behaviour for the _very same_
+> GPIO line _different_ when it being configured in kernel (via firmware)
+> and user space. That's unacceptable. So, it means we have to have
+> synchronized behaviour, means either error in both case or ignoring it.
+> The latter one is current state of affairs, the former might break the
+> cases where driver and firmware are not synchronized well.
+> 
 
-I love your patch! Yet something to improve:
+First of all, I was referring to in-kernel users of gpiolib, so gpiolib
+would propagate ENOTSUPP.  You will note I said "caller", not "user"
+to try to emphasise that point.
+cdev, being the caller here, would translate the ENOTSUPP to EOPNOTSUPP
+for user space consumption.
 
-[auto build test ERROR on a67ba3cf9551f8c92d5ec9d7eae1aadbb9127b57]
+But back to the point...
+Are you saying that user space should not be given an error if bias is
+not supported as it was already decided by gpiolib that the kernel
+driver wouldn't be given one?
+That makes no sense to me, so I'm probably missing something.
+Can you clarify?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/gpiolib-Two-new-helpers-and-way-toward-fwnode/20220330-225341
-base:   a67ba3cf9551f8c92d5ec9d7eae1aadbb9127b57
-config: arm-randconfig-c002-20220331 (https://download.01.org/0day-ci/archive/20220401/202204010610.Wk5CAkQ7-lkp@intel.com/config)
-compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project 881350a92d821d4f8e4fa648443ed1d17e251188)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # install arm cross compiling tool for clang build
-        # apt-get install binutils-arm-linux-gnueabi
-        # https://github.com/intel-lab-lkp/linux/commit/3539d23dd289ca77a85d66fe8721e4febfc50ea4
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Andy-Shevchenko/gpiolib-Two-new-helpers-and-way-toward-fwnode/20220330-225341
-        git checkout 3539d23dd289ca77a85d66fe8721e4febfc50ea4
-        # save the config file to linux build tree
-        mkdir build_dir
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash
+What I read from your answer is "that's the way it is".
+I get that, but was after why.
+I don't see dropping errors as a way to get anything in sync.
+Quite the opposite - it ensures we can never tell if they are.
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
+If the original problem was that there are two possible causes for
+ENOTSUPP, and one of them is critical and one is not, then the solution
+should be to split the functionality into separate calls, not just drop
+the error from the "non-critical" one.  Again, gpiolib has no business
+in that criticality decision, IMHO. And again when I say gpiolib here
+I mean the core - gpiolib.c.
 
-All errors (new ones prefixed by >>):
+Cheers,
+Kent.
 
->> drivers/pinctrl/samsung/pinctrl-exynos.c:310:50: error: no member named 'of_node' in 'struct samsung_pin_bank'; did you mean 'fwnode'?
-                   bank->irq_domain = irq_domain_add_linear(bank->of_node,
-                                                                  ^~~~~~~
-                                                                  fwnode
-   drivers/pinctrl/samsung/pinctrl-samsung.h:168:24: note: 'fwnode' declared here
-           struct fwnode_handle *fwnode;
-                                 ^
-   drivers/pinctrl/samsung/pinctrl-exynos.c:568:50: error: no member named 'of_node' in 'struct samsung_pin_bank'; did you mean 'fwnode'?
-                   bank->irq_domain = irq_domain_add_linear(bank->of_node,
-                                                                  ^~~~~~~
-                                                                  fwnode
-   drivers/pinctrl/samsung/pinctrl-samsung.h:168:24: note: 'fwnode' declared here
-           struct fwnode_handle *fwnode;
-                                 ^
-   drivers/pinctrl/samsung/pinctrl-exynos.c:576:31: error: no member named 'of_node' in 'struct samsung_pin_bank'; did you mean 'fwnode'?
-                   if (!of_find_property(bank->of_node, "interrupts", NULL)) {
-                                               ^~~~~~~
-                                               fwnode
-   drivers/pinctrl/samsung/pinctrl-samsung.h:168:24: note: 'fwnode' declared here
-           struct fwnode_handle *fwnode;
-                                 ^
-   drivers/pinctrl/samsung/pinctrl-exynos.c:591:37: error: no member named 'of_node' in 'struct samsung_pin_bank'; did you mean 'fwnode'?
-                           irq = irq_of_parse_and_map(bank->of_node, idx);
-                                                            ^~~~~~~
-                                                            fwnode
-   drivers/pinctrl/samsung/pinctrl-samsung.h:168:24: note: 'fwnode' declared here
-           struct fwnode_handle *fwnode;
-                                 ^
-   4 errors generated.
-
-
-vim +310 drivers/pinctrl/samsung/pinctrl-exynos.c
-
-7ccbc60cd9c293 drivers/pinctrl/pinctrl-exynos.c         Tomasz Figa      2013-05-22  273  
-43b169db184184 drivers/pinctrl/pinctrl-exynos.c         Thomas Abraham   2012-09-07  274  /*
-43b169db184184 drivers/pinctrl/pinctrl-exynos.c         Thomas Abraham   2012-09-07  275   * exynos_eint_gpio_init() - setup handling of external gpio interrupts.
-43b169db184184 drivers/pinctrl/pinctrl-exynos.c         Thomas Abraham   2012-09-07  276   * @d: driver data of samsung pinctrl driver.
-43b169db184184 drivers/pinctrl/pinctrl-exynos.c         Thomas Abraham   2012-09-07  277   */
-85745c870a757c drivers/pinctrl/samsung/pinctrl-exynos.c Marek Szyprowski 2020-07-20  278  __init int exynos_eint_gpio_init(struct samsung_pinctrl_drv_data *d)
-43b169db184184 drivers/pinctrl/pinctrl-exynos.c         Thomas Abraham   2012-09-07  279  {
-595be7268a8573 drivers/pinctrl/pinctrl-exynos.c         Tomasz Figa      2012-10-11  280  	struct samsung_pin_bank *bank;
-43b169db184184 drivers/pinctrl/pinctrl-exynos.c         Thomas Abraham   2012-09-07  281  	struct device *dev = d->dev;
-7ccbc60cd9c293 drivers/pinctrl/pinctrl-exynos.c         Tomasz Figa      2013-05-22  282  	int ret;
-7ccbc60cd9c293 drivers/pinctrl/pinctrl-exynos.c         Tomasz Figa      2013-05-22  283  	int i;
-43b169db184184 drivers/pinctrl/pinctrl-exynos.c         Thomas Abraham   2012-09-07  284  
-43b169db184184 drivers/pinctrl/pinctrl-exynos.c         Thomas Abraham   2012-09-07  285  	if (!d->irq) {
-43b169db184184 drivers/pinctrl/pinctrl-exynos.c         Thomas Abraham   2012-09-07  286  		dev_err(dev, "irq number not available\n");
-43b169db184184 drivers/pinctrl/pinctrl-exynos.c         Thomas Abraham   2012-09-07  287  		return -EINVAL;
-43b169db184184 drivers/pinctrl/pinctrl-exynos.c         Thomas Abraham   2012-09-07  288  	}
-43b169db184184 drivers/pinctrl/pinctrl-exynos.c         Thomas Abraham   2012-09-07  289  
-43b169db184184 drivers/pinctrl/pinctrl-exynos.c         Thomas Abraham   2012-09-07  290  	ret = devm_request_irq(dev, d->irq, exynos_eint_gpio_irq,
-43b169db184184 drivers/pinctrl/pinctrl-exynos.c         Thomas Abraham   2012-09-07  291  					0, dev_name(dev), d);
-43b169db184184 drivers/pinctrl/pinctrl-exynos.c         Thomas Abraham   2012-09-07  292  	if (ret) {
-43b169db184184 drivers/pinctrl/pinctrl-exynos.c         Thomas Abraham   2012-09-07  293  		dev_err(dev, "irq request failed\n");
-43b169db184184 drivers/pinctrl/pinctrl-exynos.c         Thomas Abraham   2012-09-07  294  		return -ENXIO;
-43b169db184184 drivers/pinctrl/pinctrl-exynos.c         Thomas Abraham   2012-09-07  295  	}
-43b169db184184 drivers/pinctrl/pinctrl-exynos.c         Thomas Abraham   2012-09-07  296  
-1bf00d7a6dbff0 drivers/pinctrl/samsung/pinctrl-exynos.c Tomasz Figa      2014-09-23  297  	bank = d->pin_banks;
-1bf00d7a6dbff0 drivers/pinctrl/samsung/pinctrl-exynos.c Tomasz Figa      2014-09-23  298  	for (i = 0; i < d->nr_banks; ++i, ++bank) {
-595be7268a8573 drivers/pinctrl/pinctrl-exynos.c         Tomasz Figa      2012-10-11  299  		if (bank->eint_type != EINT_TYPE_GPIO)
-595be7268a8573 drivers/pinctrl/pinctrl-exynos.c         Tomasz Figa      2012-10-11  300  			continue;
-85745c870a757c drivers/pinctrl/samsung/pinctrl-exynos.c Marek Szyprowski 2020-07-20  301  
-85745c870a757c drivers/pinctrl/samsung/pinctrl-exynos.c Marek Szyprowski 2020-07-20  302  		bank->irq_chip = devm_kmemdup(dev, &exynos_gpio_irq_chip,
-85745c870a757c drivers/pinctrl/samsung/pinctrl-exynos.c Marek Szyprowski 2020-07-20  303  					   sizeof(*bank->irq_chip), GFP_KERNEL);
-85745c870a757c drivers/pinctrl/samsung/pinctrl-exynos.c Marek Szyprowski 2020-07-20  304  		if (!bank->irq_chip) {
-85745c870a757c drivers/pinctrl/samsung/pinctrl-exynos.c Marek Szyprowski 2020-07-20  305  			ret = -ENOMEM;
-85745c870a757c drivers/pinctrl/samsung/pinctrl-exynos.c Marek Szyprowski 2020-07-20  306  			goto err_domains;
-85745c870a757c drivers/pinctrl/samsung/pinctrl-exynos.c Marek Szyprowski 2020-07-20  307  		}
-85745c870a757c drivers/pinctrl/samsung/pinctrl-exynos.c Marek Szyprowski 2020-07-20  308  		bank->irq_chip->chip.name = bank->name;
-85745c870a757c drivers/pinctrl/samsung/pinctrl-exynos.c Marek Szyprowski 2020-07-20  309  
-595be7268a8573 drivers/pinctrl/pinctrl-exynos.c         Tomasz Figa      2012-10-11 @310  		bank->irq_domain = irq_domain_add_linear(bank->of_node,
-6f5e41bd8fc6d3 drivers/pinctrl/samsung/pinctrl-exynos.c Abhilash Kesavan 2014-10-09  311  				bank->nr_pins, &exynos_eint_irqd_ops, bank);
-595be7268a8573 drivers/pinctrl/pinctrl-exynos.c         Tomasz Figa      2012-10-11  312  		if (!bank->irq_domain) {
-595be7268a8573 drivers/pinctrl/pinctrl-exynos.c         Tomasz Figa      2012-10-11  313  			dev_err(dev, "gpio irq domain add failed\n");
-7ccbc60cd9c293 drivers/pinctrl/pinctrl-exynos.c         Tomasz Figa      2013-05-22  314  			ret = -ENXIO;
-7ccbc60cd9c293 drivers/pinctrl/pinctrl-exynos.c         Tomasz Figa      2013-05-22  315  			goto err_domains;
-7ccbc60cd9c293 drivers/pinctrl/pinctrl-exynos.c         Tomasz Figa      2013-05-22  316  		}
-7ccbc60cd9c293 drivers/pinctrl/pinctrl-exynos.c         Tomasz Figa      2013-05-22  317  
-7ccbc60cd9c293 drivers/pinctrl/pinctrl-exynos.c         Tomasz Figa      2013-05-22  318  		bank->soc_priv = devm_kzalloc(d->dev,
-7ccbc60cd9c293 drivers/pinctrl/pinctrl-exynos.c         Tomasz Figa      2013-05-22  319  			sizeof(struct exynos_eint_gpio_save), GFP_KERNEL);
-7ccbc60cd9c293 drivers/pinctrl/pinctrl-exynos.c         Tomasz Figa      2013-05-22  320  		if (!bank->soc_priv) {
-7ccbc60cd9c293 drivers/pinctrl/pinctrl-exynos.c         Tomasz Figa      2013-05-22  321  			irq_domain_remove(bank->irq_domain);
-7ccbc60cd9c293 drivers/pinctrl/pinctrl-exynos.c         Tomasz Figa      2013-05-22  322  			ret = -ENOMEM;
-7ccbc60cd9c293 drivers/pinctrl/pinctrl-exynos.c         Tomasz Figa      2013-05-22  323  			goto err_domains;
-43b169db184184 drivers/pinctrl/pinctrl-exynos.c         Thomas Abraham   2012-09-07  324  		}
-0d3d30db936359 drivers/pinctrl/samsung/pinctrl-exynos.c Abhilash Kesavan 2014-10-09  325  
-595be7268a8573 drivers/pinctrl/pinctrl-exynos.c         Tomasz Figa      2012-10-11  326  	}
-43b169db184184 drivers/pinctrl/pinctrl-exynos.c         Thomas Abraham   2012-09-07  327  
-43b169db184184 drivers/pinctrl/pinctrl-exynos.c         Thomas Abraham   2012-09-07  328  	return 0;
-7ccbc60cd9c293 drivers/pinctrl/pinctrl-exynos.c         Tomasz Figa      2013-05-22  329  
-7ccbc60cd9c293 drivers/pinctrl/pinctrl-exynos.c         Tomasz Figa      2013-05-22  330  err_domains:
-7ccbc60cd9c293 drivers/pinctrl/pinctrl-exynos.c         Tomasz Figa      2013-05-22  331  	for (--i, --bank; i >= 0; --i, --bank) {
-7ccbc60cd9c293 drivers/pinctrl/pinctrl-exynos.c         Tomasz Figa      2013-05-22  332  		if (bank->eint_type != EINT_TYPE_GPIO)
-7ccbc60cd9c293 drivers/pinctrl/pinctrl-exynos.c         Tomasz Figa      2013-05-22  333  			continue;
-7ccbc60cd9c293 drivers/pinctrl/pinctrl-exynos.c         Tomasz Figa      2013-05-22  334  		irq_domain_remove(bank->irq_domain);
-7ccbc60cd9c293 drivers/pinctrl/pinctrl-exynos.c         Tomasz Figa      2013-05-22  335  	}
-7ccbc60cd9c293 drivers/pinctrl/pinctrl-exynos.c         Tomasz Figa      2013-05-22  336  
-7ccbc60cd9c293 drivers/pinctrl/pinctrl-exynos.c         Tomasz Figa      2013-05-22  337  	return ret;
-43b169db184184 drivers/pinctrl/pinctrl-exynos.c         Thomas Abraham   2012-09-07  338  }
-43b169db184184 drivers/pinctrl/pinctrl-exynos.c         Thomas Abraham   2012-09-07  339  
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+> > Is it because setting bias is piggy-backed onto
+> > gpiod_direction_input() rather than being separate, so then you can't
+> > tell whether it is input or bias that is not supported?
+> > 
+> > Anyway, if that interface is required for internal use then there is no
+> > option but to refactor gpiod_direction_input() and provide an alternate
+> > interface so that cdev can determine if bias is supported or not.
+> 
+> > > > I would like to fix the uAPI such that if the hardware does not support
+> > > > the requested configuration, or if it can't be emulated in the kernel,
+> > > > that fact is returned to userspace - bias being the sole counter example
+> > > > as far as I am aware.
+> > > > 
+> > > > The simplest fix involves changing gpio_set_bias() to call gpio_set_config()
+> > > > rather than gpio_set_config_with_argument_optional(), but as mentioned in
+> > > > my comment above, that would impact any existing users of
+> > > > gpiod_direction_input() that assume the best-effort behaviour.
+> > > 
+> > > Exactly, best effort is to supply it to the driver and <s>pray</s> hope for
+> > > the best form the hardware driver.
+> > > 
+> > > > I haven't been able to find any such usage, but that could just be proof
+> > > > that I'm not looking in the right place.
+> > > > Any input on that front would be greatly appreciated.
+> > > > 
+> > > > Also, fixing this as mentioned could be considered an uAPI ABI change.
+> > > > Is this a bug, so that is ok, or do I need to consider adding a strict
+> > > > mode flag or somesuch to the API?
+> > > > 
+> > > > Bart, I'm also hoping to extend the gpiosim to optionally not support
+> > > > bias in gc->set_config() to test this case.
+> > > > Any suggstions on a configfs interface extension to do that?
+> > > > 
+> > > > My apologies for the verbage rather than proffering a patch, but the
+> > > > different paths have vastly different costs, and the simplest solution
+> > > > has the potential to introduce breakage.
+> > > 
+> > > > [1] https://www.spinics.net/lists/linux-gpio/msg43579.html
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
