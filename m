@@ -2,133 +2,237 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D182F4EEBAB
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Apr 2022 12:38:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DAA794EEBA2
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Apr 2022 12:38:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344193AbiDAKia (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Apr 2022 06:38:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43688 "EHLO
+        id S236943AbiDAKjx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Apr 2022 06:39:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344926AbiDAKiB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Apr 2022 06:38:01 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBD48266B73;
-        Fri,  1 Apr 2022 03:36:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1648809373; x=1680345373;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=KXLXc+19o0UubT6TkmoiDgHQv9YpGm9hY5Ydb16Dc5c=;
-  b=HZLmkNe2E7wysGeItjXWetp7ySJTGL4jrw+fbNAqXA6NOUcF4BlR7M/K
-   BVtRT7RIlP4nOv/yXkUKiYdGTxD4mmAkJi2EEB+SsXwbH8gjFdB7NDf2m
-   to3A+bbW9+54bB6wH7kNTempuICsfafTAmE2ysRHcFB1fHak1MGAJFj9m
-   hSajX73MSkejMmkq3BN7olqdt3YYLnd+FeSpGcwsxhcnUTW+6CfclsrAN
-   RZNo+dKeRls4doTgcrk3b0VBgf8uNjBfRGF4+4OiM+byccFC5AeBX2zf5
-   g6YRVGzWV0CRFBRTpHGQ9SwOieFykuuKQzfnUi0YaC0lbxgvf9PH+tJnw
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10303"; a="259804876"
-X-IronPort-AV: E=Sophos;i="5.90,227,1643702400"; 
-   d="scan'208";a="259804876"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Apr 2022 03:36:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,227,1643702400"; 
-   d="scan'208";a="521295008"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga002.jf.intel.com with ESMTP; 01 Apr 2022 03:35:53 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 3BFD26C0; Fri,  1 Apr 2022 13:36:06 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Qianggui Song <qianggui.song@amlogic.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Fabien Dessenne <fabien.dessenne@foss.st.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        openbmc@lists.ozlabs.org, linux-renesas-soc@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v4 13/13] pinctrl: armada-37xx: Reuse GPIO fwnode in armada_37xx_irqchip_register()
-Date:   Fri,  1 Apr 2022 13:36:04 +0300
-Message-Id: <20220401103604.8705-14-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220401103604.8705-1-andriy.shevchenko@linux.intel.com>
-References: <20220401103604.8705-1-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S1344795AbiDAKjl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Apr 2022 06:39:41 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 65CEB27383E
+        for <linux-gpio@vger.kernel.org>; Fri,  1 Apr 2022 03:37:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1648809423;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+e04MHXKz94DY1KD9WiyeJfS3wZp3ZxoeCoDh0+766c=;
+        b=PpFEtgjbMxhCN/IlQMQRufq/J8HegzfSRlrQBjGABSO/HF/4uyxRqrdIfha8dxjVstyTgS
+        XdObj6sPgWsCHS93OpCUEuAt+zN4ut1xRFUNVLKU1kit0hwAcIyok/E+xBf51T84jO30S1
+        7tpS+9B2HtIOeue7Dd6LEl4m9uGJ+N4=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-206-ws4jFMAKMTePIY0aOr7VnA-1; Fri, 01 Apr 2022 06:37:00 -0400
+X-MC-Unique: ws4jFMAKMTePIY0aOr7VnA-1
+Received: by mail-ed1-f72.google.com with SMTP id i22-20020a508716000000b0041908045af3so1299629edb.3
+        for <linux-gpio@vger.kernel.org>; Fri, 01 Apr 2022 03:37:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=+e04MHXKz94DY1KD9WiyeJfS3wZp3ZxoeCoDh0+766c=;
+        b=3FknMcEqupa9uJaiJGG6CIvk80lZDdihv0ErwvhWPWzOmXFvB/ZqRR5+9RHDz68Fwb
+         cuOnpxQ0FeOiU2DWpW1rPffxKR2Y0u10ShAWCH+nLQFeGE025dssgCkeamT2UcVMan89
+         TER1dEOuAyDxgLjoPPJZkEO6J+elKN8rtTKpDPLA3nXn3Mg0snXHv5Lyl8uggjf9jzyS
+         hsfYz8phWl8v8DVChWcx6v2p5e0EEJoPBfzOJFPD3j5lYPF96SuAB3nufLCmNs1fenPt
+         r0F1AsEJt/u4zLUZwtZVnx9WyHSFgU9xXs4hq+Kd/rAW5fNf32r0DMpUGFCIPd0gAncM
+         V10g==
+X-Gm-Message-State: AOAM532heqXBVRf6r8lD4TuXDPLJUTya0tHbVELGTJb0mOnKsNV3wDl/
+        LRK9jm6U+IuN786U+Pgpijs4Yo3wDSpDiIbzK4qvgGs7um3dvYYw2kj/ICnUt4n7hxiJDqLikvn
+        GS6c4WM4PtXczPySNOSo2Mg==
+X-Received: by 2002:a05:6402:5186:b0:419:49af:428f with SMTP id q6-20020a056402518600b0041949af428fmr20631305edd.177.1648809419107;
+        Fri, 01 Apr 2022 03:36:59 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzxndwBzVCU2HTcw/aQHcmAbjH/RynQzZjHO1UpIM8kf7f5Ef5mcVaM9g99qrEIk6xTTmzYoA==
+X-Received: by 2002:a05:6402:5186:b0:419:49af:428f with SMTP id q6-20020a056402518600b0041949af428fmr20631285edd.177.1648809418769;
+        Fri, 01 Apr 2022 03:36:58 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1? (2001-1c00-0c1e-bf00-1db8-22d3-1bc9-8ca1.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:1db8:22d3:1bc9:8ca1])
+        by smtp.gmail.com with ESMTPSA id u25-20020a170906b11900b006e08588afedsm865347ejy.132.2022.04.01.03.36.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 Apr 2022 03:36:58 -0700 (PDT)
+Message-ID: <49e5857d-1438-cd5d-b4f2-b374f01e2596@redhat.com>
+Date:   Fri, 1 Apr 2022 12:36:57 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: gpiolib: why does gpio_set_bias() suppress ENOTSUPP?
+Content-Language: en-US
+To:     Kent Gibson <warthog618@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, brgl@bgdev.pl,
+        thomas.petazzoni@bootlin.com, linus.walleij@linaro.org
+References: <20220331025203.GA53907@sol> <YkWyU8seDqyDL532@smile.fi.intel.com>
+ <20220331141524.GA93836@sol>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <20220331141524.GA93836@sol>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Since we have fwnode of the first found GPIO controller assigned to the
-struct gpio_chip, we may reuse it in the armada_37xx_irqchip_register().
+Hi Kent,
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 16 +++-------------
- 1 file changed, 3 insertions(+), 13 deletions(-)
+On 3/31/22 16:15, Kent Gibson wrote:
+> On Thu, Mar 31, 2022 at 04:53:23PM +0300, Andy Shevchenko wrote:
+>> On Thu, Mar 31, 2022 at 10:52:03AM +0800, Kent Gibson wrote:
+>>> Hi all,
+>>
+>> +Cc: Hans
+>>
+>>> It has recently come to my attention that the setting of bias by the
+>>> cdev uAPI is a best effort operation that quietly succeeds if bias is
+>>> not supported by the hardware. That strikes me as being a bug.
+>>> It seems I was aware of this when adding bias to the uAPI and intended
+>>> to fix it, as shown in the comments of v4 of the corrsponding patch
+>>> series[1]:
+>>
+>>>>> The setting of bias is performed by gpio_set_bias, which is hooked into
+>>>>> gpiod_direction_input and gpiod_direction_output.  It extends the setting
+>>>>> of bias that was already present in gpiod_direction_input.
+>>>>> In keeping with the existing behaviour, the bias is set on a best-effort
+>>>>> basis - no error is returned to the user if an error is returned by the
+>>>>> pinctrl driver.  Returning an error makes sense to me, particularly for
+>>>>> the uAPI, but that conflicts with the existing gpiod_direction_input
+>>>>> behaviour. So leave as best-effort, change gpiod_direction_input
+>>>>> behaviour, or restructure to support both behaviours?
+>>>
+>>>> Thomas: is there any reason not to check the return value of these
+>>>> calls for errors other than -EOPNOTSUPP?
+>>>
+>>> that being my comment, and Bart's followup question to Thomas.
+>>>
+>>> That went unanswered AFAICT and the issue subsequently fell through the
+>>> cracks.
+>>
+>> My understanding that all constraints we have in kernel is due to
+>> in-kernel use and possible (non-critical) issues.
+>>
+>> For example, driver can set only selected values of bias. What to do when
+>> the given value is not supported by hardware?
+>>
+>> Followup question: Why do you think your choice is any better than another
+>> one?
+>>
+> 
+> I'm probably missing your point here.
+> 
+> What makes gpiolib best placed to decide that bias not being supported
+> by hardware is non-critical?  Why not just propagate the ENOTSUPP to the
+> caller and let them decide?
+> 
+> Is it because setting bias is piggy-backed onto
+> gpiod_direction_input() rather than being separate, so then you can't
+> tell whether it is input or bias that is not supported?
 
-diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-index 1fef8a38f574..c0384661ea48 100644
---- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-@@ -727,23 +727,13 @@ static int armada_37xx_irqchip_register(struct platform_device *pdev,
- 	struct gpio_chip *gc = &info->gpio_chip;
- 	struct irq_chip *irqchip = &info->irq_chip;
- 	struct gpio_irq_chip *girq = &gc->irq;
-+	struct device_node *np = to_of_node(gc->fwnode);
- 	struct device *dev = &pdev->dev;
--	struct device_node *np;
--	int ret = -ENODEV, i, nr_irq_parent;
--
--	/* Check if we have at least one gpio-controller child node */
--	for_each_child_of_node(dev->of_node, np) {
--		if (of_property_read_bool(np, "gpio-controller")) {
--			ret = 0;
--			break;
--		}
--	}
--	if (ret)
--		return dev_err_probe(dev, ret, "no gpio-controller child node\n");
-+	unsigned int i, nr_irq_parent;
- 
--	nr_irq_parent = of_irq_count(np);
- 	spin_lock_init(&info->irq_lock);
- 
-+	nr_irq_parent = of_irq_count(np);
- 	if (!nr_irq_parent) {
- 		dev_err(dev, "invalid or no IRQ\n");
- 		return 0;
--- 
-2.35.1
+Right, gpiod_direction_input() check if there is a bias described for
+the pin in the firmware description of the pin (devicetree or ACPI) and
+those might contain a bias setting even if the pinctrl/gpio chip is not
+capable of it (and instead it is actually e.g. applied by external
+resistors on the PCB).
+
+The idea behind this is to make things just work for most
+drivers using/consuming GPIOS without the drivers needing to know
+about the firmware description details.
+
+To make sure this actually just works and does not cause drivers
+to see unexpected (and usually not a problem) errors the ENOTSUPP
+error from the set bias call is not propagated from
+gpiod_direction_input().
+
+
+> Anyway, if that interface is required for internal use then there is no
+> option but to refactor gpiod_direction_input() and provide an alternate
+> interface so that cdev can determine if bias is supported or not.
+
+I'm not very familiar with the cdev userspace API, but I think
+that that is correct.
+
+Assuming the cdev userspace API has separate set-direction and set-bias
+calls then I would expect the set-direction calls to work as the in
+kernel one does, so try to apply any bias from the firmware pin
+description, but ignore ENOTSUPP errors.
+
+Although I guess in most (all probably even?) cases since we just
+get a GPIO-chip + hw-index there is no firmware pin-description in
+the cdev uapi case.
+
+Where as explicit set_bias calls should indeed probably not ignore
+the ENOTSUPP error.
+
+I do wonder though if such a change would not consider
+breakage of existing userspace, esp. on popular boards like
+the raspberry pi where there is a lot of existing code
+poking the GPIOs from userspace.
+
+As long as you don't actually change the function prototype
+of gpiod_direction_input() making changes for this should be
+fine. You can rename the original function to something else
+and give it an extra flag, or split it in 2 functions or some
+such + use a wrapper with the old name. But having to modify
+all callers for this would be bad IMHO.
+
+Regards,
+
+Hans
+
+
+
+
+
+
+
+> 
+> Cheers,
+> Kent.
+> 
+>>> I would like to fix the uAPI such that if the hardware does not support
+>>> the requested configuration, or if it can't be emulated in the kernel,
+>>> that fact is returned to userspace - bias being the sole counter example
+>>> as far as I am aware.
+>>>
+>>> The simplest fix involves changing gpio_set_bias() to call gpio_set_config()
+>>> rather than gpio_set_config_with_argument_optional(), but as mentioned in
+>>> my comment above, that would impact any existing users of
+>>> gpiod_direction_input() that assume the best-effort behaviour.
+>>
+>> Exactly, best effort is to supply it to the driver and <s>pray</s> hope for
+>> the best form the hardware driver.
+>>
+>>> I haven't been able to find any such usage, but that could just be proof
+>>> that I'm not looking in the right place.
+>>> Any input on that front would be greatly appreciated.
+>>>
+>>> Also, fixing this as mentioned could be considered an uAPI ABI change.
+>>> Is this a bug, so that is ok, or do I need to consider adding a strict
+>>> mode flag or somesuch to the API?
+>>>
+>>> Bart, I'm also hoping to extend the gpiosim to optionally not support
+>>> bias in gc->set_config() to test this case.
+>>> Any suggstions on a configfs interface extension to do that?
+>>>
+>>> My apologies for the verbage rather than proffering a patch, but the
+>>> different paths have vastly different costs, and the simplest solution
+>>> has the potential to introduce breakage.
+>>
+>>> [1] https://www.spinics.net/lists/linux-gpio/msg43579.html
+>>
+>> -- 
+>> With Best Regards,
+>> Andy Shevchenko
+>>
+>>
+> 
 
