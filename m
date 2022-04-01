@@ -2,108 +2,176 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 541274EEEBB
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Apr 2022 16:00:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FA434EEF0B
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Apr 2022 16:12:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346638AbiDAOCO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Apr 2022 10:02:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60942 "EHLO
+        id S1346748AbiDAOOj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Apr 2022 10:14:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346626AbiDAOCM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Apr 2022 10:02:12 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFEA45C65A
-        for <linux-gpio@vger.kernel.org>; Fri,  1 Apr 2022 07:00:22 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id a1so4372075wrh.10
-        for <linux-gpio@vger.kernel.org>; Fri, 01 Apr 2022 07:00:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=81peZBmLl1P8MoxcBKe75OzMzjaOe8BW5vGSNP3oTXE=;
-        b=Hdh90bsQfQulbfzNnj8rBKM2RkpMeOff3GwqzbmItaBJlvpZWpIN4aoVoScFoR68au
-         DY7xCCwSduhD8QEdLwhChipugpkXwCQe5b9LgascBxXen/2w3UZqKkqvEMLVWCeJvnbf
-         19THXr24xyg9RT2QWUDyOiz7xXwTgUlyQzPNLVnlCnRO6YPKt7jzfSai5SpkQE1WyNbn
-         BjRag587ypYj8P4ltLpckaVeCO9TTTyJGcpYoOQV7vqCxld2ZIoXpfj/9GkzJBfKi899
-         qegJgNs2sQApu2KDACf3wkMACwWvLSvZp/Is0A8g/CGzFA9RRteTkNs/9+1l7QZmcqDO
-         LSiA==
+        with ESMTP id S1346742AbiDAOOi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Apr 2022 10:14:38 -0400
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6634619B07A;
+        Fri,  1 Apr 2022 07:12:49 -0700 (PDT)
+Received: by mail-oi1-f178.google.com with SMTP id e4so2945876oif.2;
+        Fri, 01 Apr 2022 07:12:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=81peZBmLl1P8MoxcBKe75OzMzjaOe8BW5vGSNP3oTXE=;
-        b=TUt8uy2emGaoW1w5E/tBSZf7yilX8NQyq1mFMbIFx+FZo/dykXmIQQGs/erfr3p5T5
-         sV23ZvY0am8lHj//b8htvyrPM8pBs38eWNnaeZmJS5oLfj9N7L+5MbtoxjMr/hxgdzqi
-         EZ9vVQcCGPs0p30bl5cgcX0zNVEqd4yNki9qHWJz362/Hwo04N5sVjGB2Lf1KlO1hZ9+
-         lgOjLBUPys3dZX1D1MrFIg4TcJGUxhxv1qtzZbkhUpvSY1XnA96uoyWJHdYWSwfI1clB
-         MYFTpZx6wJhyWHDJnOCGiVbnShSyQRkkt2osxJaueV5bbjVNqWsAI+2DJrqn9oT1o0B8
-         3F2g==
-X-Gm-Message-State: AOAM531a8b6JHvvkX2P4rFJtF1JPoi5DCWt1jB+RUnzcVgzoC8s/tO47
-        55QFb13xsfdXkxL43CHXW0eGiA==
-X-Google-Smtp-Source: ABdhPJyCu9IMphhIOyUvpdqAUVDOPHIsymxVBgBJ9ednqPNXmoIk17Kb4I6XSEUVbLRpacJ5viDp0A==
-X-Received: by 2002:a05:6000:22a:b0:203:f7f8:e006 with SMTP id l10-20020a056000022a00b00203f7f8e006mr7866808wrz.175.1648821621323;
-        Fri, 01 Apr 2022 07:00:21 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:e6f2:bb17:31a5:c2ca])
-        by smtp.gmail.com with ESMTPSA id o11-20020adf9d4b000000b001f0077ea337sm2197824wre.22.2022.04.01.07.00.20
+        bh=jow2eA+MI6HdTKLrJxjfgwwcafk9Rc4cTIw/I0CdChY=;
+        b=dXdgFdlvIHyz3WTU36xfgFAcqof98XisB+wBhig27gWnEfiStbggNfPHnt4vKgcLrr
+         ht4aMa/6+brmlYZXA4Ju5+4Aq5OXSP/7flzEjgdFU5xF43Di0THakXV0twJl28zwOGEv
+         iGXXC/P4jGlhGc5BnWAaB2xbxCWHPZbLtUFwmgt73TplpZKZ+O13D/kuPuBAFAYR+EEg
+         jP3G8JzoLEn2loH2F/1oovAZRyxPBpp/qlNPX711BXTVkC5nPYD2gA63zmnT96aAm/0I
+         0SeXcQszIC24ByKN8b8YgxI5QfyshWOcniiv6pFnpgKTyGuO/M4gaJf7f2m/x2aXaDN0
+         gM2w==
+X-Gm-Message-State: AOAM530TRgoCD5crNIJf61IVuITVUKQVflBu1GedNo8PN4HqvYe2aa9K
+        C3y8T6GNIT7y0YOMSE0FYQ==
+X-Google-Smtp-Source: ABdhPJwOZ6ZR8VxrolMyYpaGXgl8mDv6WoiaUUXqkNSXOh4+MeSeNSLAbSpT7zsDvb7yXs+2T2nw9A==
+X-Received: by 2002:aca:e004:0:b0:2da:850a:966d with SMTP id x4-20020acae004000000b002da850a966dmr4748771oig.61.1648822368657;
+        Fri, 01 Apr 2022 07:12:48 -0700 (PDT)
+Received: from xps15.. (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.googlemail.com with ESMTPSA id n128-20020a4a4086000000b0032118eda64bsm1029758ooa.38.2022.04.01.07.12.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Apr 2022 07:00:20 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Fri, 01 Apr 2022 07:12:48 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [GIT PULL] gpio: fixes for v5.18-rc1
-Date:   Fri,  1 Apr 2022 16:00:16 +0200
-Message-Id: <20220401140016.831088-1-brgl@bgdev.pl>
+        Sebastian Reichel <sre@kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Yunfei Dong <yunfei.dong@mediatek.com>,
+        - <patches@opensource.cirrus.com>, linux-media@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-gpio@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: [PATCH] dt-bindings: Fix 'enum' lists with duplicate entries
+Date:   Fri,  1 Apr 2022 09:12:47 -0500
+Message-Id: <20220401141247.2993925-1-robh@kernel.org>
 X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Linus,
+There's no reason to list the same value twice in an 'enum'. Fix all the
+occurrences in the tree. A meta-schema change will catch future ones.
 
-Please pull the following documentation and comment fixes for the
-upcoming rc.
+Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Cc: Jonathan Hunter <jonathanh@nvidia.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Sebastian Reichel <sre@kernel.org>
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Yunfei Dong <yunfei.dong@mediatek.com>
+Cc: - <patches@opensource.cirrus.com>
+Cc: linux-media@vger.kernel.org
+Cc: alsa-devel@alsa-project.org
+Cc: linux-gpio@vger.kernel.org
+Cc: linux-pm@vger.kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+There's also one other occurrence in snps,dwmac.yaml I didn't fix as 
+there's a patch[1] for it which prompted this patch.
 
-Best regards,
-Bartosz Golaszewski
+Rob
 
-The following changes since commit f443e374ae131c168a065ea1748feac6b2e76613:
+[1] https://lore.kernel.org/r/20220401030847epcms1p8cf7a8e1d8cd7d325dacf30f78da36328@epcms1p8
 
-  Linux 5.17 (2022-03-20 13:14:17 -0700)
+ .../bindings/arm/tegra/nvidia,tegra20-pmc.yaml        |  1 -
+ Documentation/devicetree/bindings/bus/ti-sysc.yaml    |  1 -
+ .../bindings/media/mediatek,vcodec-encoder.yaml       |  1 -
+ .../devicetree/bindings/pinctrl/cirrus,madera.yaml    | 11 +++++------
+ .../devicetree/bindings/power/supply/bq2415x.yaml     |  1 -
+ 5 files changed, 5 insertions(+), 10 deletions(-)
 
-are available in the Git repository at:
+diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.yaml b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.yaml
+index 0afec83cc723..564ae6aaccf7 100644
+--- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.yaml
++++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.yaml
+@@ -13,7 +13,6 @@ maintainers:
+ properties:
+   compatible:
+     enum:
+-      - nvidia,tegra20-pmc
+       - nvidia,tegra20-pmc
+       - nvidia,tegra30-pmc
+       - nvidia,tegra114-pmc
+diff --git a/Documentation/devicetree/bindings/bus/ti-sysc.yaml b/Documentation/devicetree/bindings/bus/ti-sysc.yaml
+index bd40213302da..fced4082b047 100644
+--- a/Documentation/devicetree/bindings/bus/ti-sysc.yaml
++++ b/Documentation/devicetree/bindings/bus/ti-sysc.yaml
+@@ -34,7 +34,6 @@ properties:
+     oneOf:
+       - items:
+           - enum:
+-              - ti,sysc-omap2
+               - ti,sysc-omap2
+               - ti,sysc-omap4
+               - ti,sysc-omap4-simple
+diff --git a/Documentation/devicetree/bindings/media/mediatek,vcodec-encoder.yaml b/Documentation/devicetree/bindings/media/mediatek,vcodec-encoder.yaml
+index e7b65a91c92c..df7df06c378f 100644
+--- a/Documentation/devicetree/bindings/media/mediatek,vcodec-encoder.yaml
++++ b/Documentation/devicetree/bindings/media/mediatek,vcodec-encoder.yaml
+@@ -106,7 +106,6 @@ allOf:
+           enum:
+             - mediatek,mt8173-vcodec-enc
+             - mediatek,mt8192-vcodec-enc
+-            - mediatek,mt8173-vcodec-enc
+ 
+     then:
+       properties:
+diff --git a/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml b/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml
+index 8a90d8273767..6bd42e43cdab 100644
+--- a/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml
+@@ -48,13 +48,12 @@ properties:
+               Name of one pin group to configure.
+             enum: [ aif1, aif2, aif3, aif4, mif1, mif2, mif3, pdmspk1,
+                     pdmspk2, dmic4, dmic5, dmic6, gpio1, gpio2, gpio3,
+-                    gpio4, gpio5, gpio6, gpio7, gpio7, gpio8, gpio9,
++                    gpio4, gpio5, gpio6, gpio7, gpio8, gpio9,
+                     gpio10, gpio11, gpio12, gpio13, gpio14, gpio15,
+-                    gpio16, gpio17, gpio17, gpio18, gpio19, gpio20,
+-                    gpio21, gpio22, gpio23, gpio24, gpio25, gpio26,
+-                    gpio27, gpio27, gpio28, gpio29, gpio30, gpio31,
+-                    gpio32, gpio33, gpio34, gpio35, gpio36, gpio37,
+-                    gpio37, gpio38, gpio39 ]
++                    gpio16, gpio17, gpio18, gpio19, gpio20, gpio21,
++                    gpio22, gpio23, gpio24, gpio25, gpio26, gpio27,
++                    gpio28, gpio29, gpio30, gpio31, gpio32, gpio33,
++                    gpio34, gpio35, gpio36, gpio37, gpio38, gpio39 ]
+ 
+           function:
+             description:
+diff --git a/Documentation/devicetree/bindings/power/supply/bq2415x.yaml b/Documentation/devicetree/bindings/power/supply/bq2415x.yaml
+index f8461f06e6f4..118cf484cc69 100644
+--- a/Documentation/devicetree/bindings/power/supply/bq2415x.yaml
++++ b/Documentation/devicetree/bindings/power/supply/bq2415x.yaml
+@@ -16,7 +16,6 @@ allOf:
+ properties:
+   compatible:
+     enum:
+-      - ti,bq24150
+       - ti,bq24150
+       - ti,bq24150a
+       - ti,bq24151
+-- 
+2.32.0
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v5.18-rc1
-
-for you to fetch changes up to 24f71ae5447e661813228677d343208d624fc141:
-
-  gpio: ts5500: Fix Links to Technologic Systems web resources (2022-03-31 16:44:57 +0200)
-
-----------------------------------------------------------------
-gpio fixes for v5.18-rc1
-
-- grammar and formatting fixes in comments for gpio-ts4900
-- correct links in gpio-ts5500
-- fix a warning in doc generation for the core GPIO documentation
-
-----------------------------------------------------------------
-Joey Gouly (1):
-      gpio: Properly document parent data union
-
-Kris Bahnsen (2):
-      gpio: ts4900: Fix comment formatting and grammar
-      gpio: ts5500: Fix Links to Technologic Systems web resources
-
- drivers/gpio/gpio-ts4900.c  | 12 +++++++-----
- drivers/gpio/gpio-ts5500.c  |  4 ++--
- include/linux/gpio/driver.h | 13 ++++++++-----
- 3 files changed, 17 insertions(+), 12 deletions(-)
