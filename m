@@ -2,58 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 38AB44EEDE8
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Apr 2022 15:13:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 404064EEE13
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Apr 2022 15:27:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346250AbiDANPU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 1 Apr 2022 09:15:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45792 "EHLO
+        id S1346319AbiDAN2u (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 1 Apr 2022 09:28:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241686AbiDANPT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Apr 2022 09:15:19 -0400
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BB483EA9D;
-        Fri,  1 Apr 2022 06:13:30 -0700 (PDT)
-Received: by mail-oi1-f177.google.com with SMTP id b188so2722518oia.13;
-        Fri, 01 Apr 2022 06:13:30 -0700 (PDT)
+        with ESMTP id S1346315AbiDAN2t (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 1 Apr 2022 09:28:49 -0400
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F9F127D568
+        for <linux-gpio@vger.kernel.org>; Fri,  1 Apr 2022 06:26:59 -0700 (PDT)
+Received: by mail-ed1-x52e.google.com with SMTP id c62so2964210edf.5
+        for <linux-gpio@vger.kernel.org>; Fri, 01 Apr 2022 06:26:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=c4TFc6dDVfP+m4iaxd5LBsYoboaZaz5jrosk4mseQdE=;
+        b=lG7pTGAZGsHxCcg5A13YHpatqaUnMFUbaMtlRGFYlz0lXnAV88MKbEtoejMV0rBK4w
+         NbuZ2Yu/syq3ed4iW50Dg+RiND1xfDpCxzFXu6XBIv1OmHU03i4MTqrffwsr8KrMedT+
+         ouYf822NV1/7OEtCROnBTixdBbCoNVDTfvU6nbQ4ylo0Tm0AwBSGYHWw0R7W6Npf9JUc
+         gDMBtPhjrcrYNYnEQAMM07AK5Yti6Q33h/TwsUG3KdQIOJonH7AU5nUREtw/4Zs5XhMy
+         zfEtFJr9rgxRJCyDZ3/S/N/StRefXZ3wDE0otyJQNOO9L/ZvclfaRQ3yLF32pmVmpCF2
+         PCjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject:date
-         :message-id;
-        bh=Dt6DUcWZe68wNzFOcmf1w5pbg157v95Sfa3KdIbLtuY=;
-        b=ygOs0ijOlu9kSRz6xLgL2o974GzCt2H6RZXZM+SrE1kgXmwzlRoosKtRS4k16XRY4Y
-         IBflj+MZOAsUk+CuLbKNoeuMk/uCldAQgT0ARtcn5N/l6/9WezAacs//wB11c0+ctEso
-         tlmw4qk6gxEHbzZ8apRmQjRESTz4o7PtXAYuuE/ngoeuD23sQzrnxFw5EDebjDDvpdPU
-         lfN5sEhGNmpy7mAnbDUadLqqt7/JAOdrUz9FTVTX1Mi6P2ceAWHJoF1QebNdfip9YPVr
-         7NPkFPxNsB7mo7MIqR1EbHkYuN9CHRORhdKcwPTjzPJsI3R9xlpjGErrQgkb3Bdikg+B
-         x3Bw==
-X-Gm-Message-State: AOAM530mLzKRgZ1btgoSco0haNcq4G7/CR/F1RO5oomg6gl3TaWJuYJJ
-        p6aoInN5y9oYroWAG8m2rg==
-X-Google-Smtp-Source: ABdhPJx0RcNvDjmuubFatcz4ZzB3jxBfl9sx/UlLM31HKdGp5LJoSd3+/HrnySHLnCdBMlFeh+WiWA==
-X-Received: by 2002:aca:1303:0:b0:2ec:cae7:acc4 with SMTP id e3-20020aca1303000000b002eccae7acc4mr4664170oii.179.1648818809222;
-        Fri, 01 Apr 2022 06:13:29 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id r19-20020acaa813000000b002ed02ca6a3fsm981706oie.1.2022.04.01.06.13.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Apr 2022 06:13:27 -0700 (PDT)
-Received: (nullmailer pid 2864971 invoked by uid 1000);
-        Fri, 01 Apr 2022 13:13:26 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=c4TFc6dDVfP+m4iaxd5LBsYoboaZaz5jrosk4mseQdE=;
+        b=DFPQXrCh87xeCKlrQRcBs5HXcSD8xZ+dljyFeAUBQizJcUZTTI96MxfIV9OF3AxzAI
+         4OFz7QaruiA8IZwKqJVIPHJYskb8aa0tCi4lfOhDmAA+Jh8frrGsFgWT5qH7F3E5aH4S
+         7BHG/rB/RZerQeVYpNFvItV+MNYbMWD1wnVSbwCFr0MBziIIEq1vvfFv1FnH1Z++F/ZP
+         p8t8SU4lC8nj128qZDPZ34tr4XfOwi36ZLK72KVQRTfIy62r9gz0bd5A1eGsThLdetfL
+         pHA2RNgZEu0qjqt4ZeSXIAQXsGAmw5XBJ0uO0LO07rkr5TXwLGuDXQYcPkvX5qsrESP5
+         WvzQ==
+X-Gm-Message-State: AOAM533K4fcD+c5X2HQXYqaZKjWMY33C4DpazRKboB1t6Zb7HeJEO3Pl
+        CqcV23A4ulyubsF2+dzaRV42jQ==
+X-Google-Smtp-Source: ABdhPJwPnRe412GU5cNhV8IFmhcwunmgYfOQEGuTVvdzU6Wke5/MXjP/9qUdVZxVnQzP1JUfGr8WIw==
+X-Received: by 2002:aa7:c704:0:b0:418:ee8f:3fd0 with SMTP id i4-20020aa7c704000000b00418ee8f3fd0mr21000866edq.248.1648819618182;
+        Fri, 01 Apr 2022 06:26:58 -0700 (PDT)
+Received: from [192.168.0.170] (xdsl-188-155-201-27.adslplus.ch. [188.155.201.27])
+        by smtp.gmail.com with ESMTPSA id qb10-20020a1709077e8a00b006dfedd50ce3sm1020409ejc.143.2022.04.01.06.26.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 Apr 2022 06:26:57 -0700 (PDT)
+Message-ID: <2d124d53-1f36-5315-3877-af8f8ad5f824@linaro.org>
+Date:   Fri, 1 Apr 2022 15:26:56 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH v3] dt-bindings: gpio: add common consumer GPIO lines
+Content-Language: en-US
+To:     Rob Herring <robh@kernel.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzk+dt@kernel.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>
-In-Reply-To: <20220401072714.106403-1-krzysztof.kozlowski@linaro.org>
 References: <20220401072714.106403-1-krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v3] dt-bindings: gpio: add common consumer GPIO lines
-Date:   Fri, 01 Apr 2022 08:13:26 -0500
-Message-Id: <1648818806.914066.2864970.nullmailer@robh.at.kernel.org>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+ <1648818806.914066.2864970.nullmailer@robh.at.kernel.org>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <1648818806.914066.2864970.nullmailer@robh.at.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,52 +77,54 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 01 Apr 2022 09:27:14 +0200, Krzysztof Kozlowski wrote:
-> Typical GPIO lines like enable, powerdown, reset or wakeup are not
-> documented as common, which leads to new variations of these (e.g.
-> pwdn-gpios).  Add a common schema which serves also as a documentation
-> for preferred naming.
+On 01/04/2022 15:13, Rob Herring wrote:
+> On Fri, 01 Apr 2022 09:27:14 +0200, Krzysztof Kozlowski wrote:
+>> Typical GPIO lines like enable, powerdown, reset or wakeup are not
+>> documented as common, which leads to new variations of these (e.g.
+>> pwdn-gpios).  Add a common schema which serves also as a documentation
+>> for preferred naming.
+>>
+>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>>
+>> ---
+>>
+>> Changes since v2:
+>> 1. Correct email.
+>>
+>> Changes since v1:
+>> 1. Select-true, add maxItems and description for each entry (Rob).
+>> 2. Mention ACTIVE_LOW in bindings description (Linus).
+>> 3. Add allOf for pwrseq reset-gpios case.
+>>
+>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>> ---
+>>  .../bindings/gpio/gpio-consumer-common.yaml   | 64 +++++++++++++++++++
+>>  1 file changed, 64 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-consumer-common.yaml
+>>
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+> on your patch (DT_CHECKER_FLAGS is new in v5.13):
 > 
-> ---
+> yamllint warnings/errors:
 > 
-> Changes since v2:
-> 1. Correct email.
-> 
-> Changes since v1:
-> 1. Select-true, add maxItems and description for each entry (Rob).
-> 2. Mention ACTIVE_LOW in bindings description (Linus).
-> 3. Add allOf for pwrseq reset-gpios case.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  .../bindings/gpio/gpio-consumer-common.yaml   | 64 +++++++++++++++++++
->  1 file changed, 64 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-consumer-common.yaml
+> dtschema/dtc warnings/errors:
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/richtek,rt4801-regulator.example.dt.yaml: rt4801@73: enable-gpios: [[4294967295, 2, 0], [4294967295, 3, 0]] is too long
+> 	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/gpio/gpio-consumer-common.yaml
 > 
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+Hi Rob,
 
-yamllint warnings/errors:
+With v1, you proposed to use maxItems for all these standard gpios, but
+as we see here there are two exceptions:
+1. pwrseq might have up to 32 reset-gpios,
+2. richtek,rt4801 uses up to 2 enable-gpios.
 
-dtschema/dtc warnings/errors:
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/regulator/richtek,rt4801-regulator.example.dt.yaml: rt4801@73: enable-gpios: [[4294967295, 2, 0], [4294967295, 3, 0]] is too long
-	From schema: /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/gpio/gpio-consumer-common.yaml
+One way is to add exceptions in gpio-consumer-common.yaml, like I did
+for reset-gpios and pwrseq. However this scales poor if more of such
+usages appear.
 
-doc reference errors (make refcheckdocs):
+Maybe let's drop the maxItems for all of them?
 
-See https://patchwork.ozlabs.org/patch/
-
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit.
-
+Best regards,
+Krzysztof
