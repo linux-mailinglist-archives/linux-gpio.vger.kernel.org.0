@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E20D4F019E
-	for <lists+linux-gpio@lfdr.de>; Sat,  2 Apr 2022 14:47:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2C944F01D9
+	for <lists+linux-gpio@lfdr.de>; Sat,  2 Apr 2022 15:00:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354095AbiDBMtg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 2 Apr 2022 08:49:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45318 "EHLO
+        id S1354854AbiDBNCD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 2 Apr 2022 09:02:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344635AbiDBMtg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 2 Apr 2022 08:49:36 -0400
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F0A13AA69
-        for <linux-gpio@vger.kernel.org>; Sat,  2 Apr 2022 05:47:43 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id g22so5914362edz.2
-        for <linux-gpio@vger.kernel.org>; Sat, 02 Apr 2022 05:47:43 -0700 (PDT)
+        with ESMTP id S1354858AbiDBNCB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 2 Apr 2022 09:02:01 -0400
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4CE613F32
+        for <linux-gpio@vger.kernel.org>; Sat,  2 Apr 2022 06:00:09 -0700 (PDT)
+Received: by mail-ej1-x62d.google.com with SMTP id p15so11070676ejc.7
+        for <linux-gpio@vger.kernel.org>; Sat, 02 Apr 2022 06:00:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=vkpbdzVpQAl3jTBafv6YVoKedWIYTHsfB1sNM0JAekw=;
-        b=R4gjFvTi+8P+940w4HfE86Um9ZRzYoXLHuLyHXLoiZqtDPgj7Jcxdj+C7at1JGG5Qe
-         Sf/yQaw+CsbkX9SZ0R4m2MPdbHt3oLPYWBi/RD4s7b9yeZ2OfrJkWOLmGKJC2qxbivaF
-         pL/9sWMvVVnnRfcSHzEaHTsPj5HHRBBaHBQ9Og8NNHlQH7giWq/Wv8ba09JMIXActfJk
-         63SSkVSVNThv789TTjpS7oVMcVrxiMrHdxaMxCmWijUlIr0PsR72LkgXo/f+tON0jBDo
-         g3MfD1PkVZtGrlrVKYkOlg7N73adCPieo3NMgYQOMqf6/tt5K+dX7Ydjh9ahHbsh6KpF
-         JrEA==
+        bh=rVzenFHyyouE9ybR7xonTcc9JqXUEe9RfUST4jEx9Yw=;
+        b=FUUn4gqKPOwlPJlcsrbGF8r9bEddRbGNTdRuPDKY5InH5Dkg3Y9x1HuTZ/KwMtr1jT
+         /3W6HinGaKsTyn0f2OMl6o0JvxoH63/RubiVndcuxWyEvo2RkVK4xpYTm1KKh0g84Y5V
+         3pnf0p7l6fiW+1iu3gHBd3DFyuJkFMkIBrtGbLzkVju9gqQALuQQf4zYXMPWjFhBUUpQ
+         UaH/dMWAxoEYe+VEUwpsmTct4NrJA/zg7+xH2chOJSrj7p8pALSswWge+ZpoHqZWiWqq
+         x+qQVEpkpUCi8HG1x5iVbk6HaCUxEgLPUOqDPw0bwS6DLzrL3T73ehTssJN1drIAQuaN
+         D3qQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vkpbdzVpQAl3jTBafv6YVoKedWIYTHsfB1sNM0JAekw=;
-        b=JroJGg8UuXZHc33XwSwSo7c0wmmz8ia4H0hVCEN/cdWlFJULLiGc4JA4O64/jx75BX
-         aXvUeu5W6u79k7Dkdm86kA/S+KYgAY8DsFQItg65yXWDFJ1ntx3Ls3Jxctop5fLtA2/j
-         SoYbOa829rrD8kEm2IZx0cyP2AZ5LsDGL+Afz2OlMLbs6DrqlP6x+29vJT1eg5KRlPv8
-         fKt6LkJ1vaPwboh8TucUGAEDQ7mA1KexU8k2hSHmgxKdw7g8DCQr6tZiVhmcOmim1KMB
-         cfp2LzhnJTVEccZO1rjswvJ4/ZcxLRr2bR26eQepmlVD1bGvR9MWaEAb3nJQbby2U0yn
-         yl4w==
-X-Gm-Message-State: AOAM530mczGOS2S/P/SPgNdCd2pGYU09OGdHP6KpTVaKHbLAKQr+H1mm
-        6afU/AaGRH76vVXpjg0z8uHhUMU8/SY7+qr5AM/kh5Evj6nT5Q==
-X-Google-Smtp-Source: ABdhPJzfzK6rR1Dl2jdDtHsjXkgw0B4Ar9sPd+9E7bsJOUPVsObVK4OMRB3pTK5dqScqulsUdGt4Jx3npoqW0+pKRqU=
-X-Received: by 2002:a05:6402:1259:b0:418:e674:5718 with SMTP id
- l25-20020a056402125900b00418e6745718mr25313564edw.69.1648903661882; Sat, 02
- Apr 2022 05:47:41 -0700 (PDT)
+        bh=rVzenFHyyouE9ybR7xonTcc9JqXUEe9RfUST4jEx9Yw=;
+        b=cUad7v3u6SahMxFoViVCokrteZi0x904tEoxO1nVVvv+Hn+76IzqVwL+kH+Fj7Jnd3
+         oos0pCRlOKDnRD5fgksR2BkYIbR0Dk/cJJutcpEk/yJQ7UCNUe001LvOVdUULWZ3x6m7
+         d65omkS8vUMxEwcf4oAn6SHmhcxZTPCBtuJsLTkTRfWA4o9WyCzwBEfxTzWl1Q77+rhC
+         HoXHUeL7x8j1pZmDfwmVPJZYJnsMMb1rSeBSXvYyf++GhMoquaPIt8bMjJGRq7I565fr
+         4VRmL+Fz7a5bL9oQFWc9jiY4XBp+dC0o2/4WGU8FqSO56IblJCavDxgdcNFZcKFH0Pvh
+         jDvg==
+X-Gm-Message-State: AOAM530nYuza8rNdx5lg5Qz9K1ETmKOSdKcxQTCyV9taVxh2sw7PsxMu
+        XEK2v19Mvp/LscrdtBu9ODnbHELAB45ifnULeQEdPQXtAMHq0w==
+X-Google-Smtp-Source: ABdhPJx+51+zOH1+fwrwq9r8TmK2HBsJXVGngtUUrzLe3tcH1DTK9GESQ2HlzdUsseeElxoxeLUmiYZn7N43BHr70L8=
+X-Received: by 2002:a17:906:d554:b0:6df:a6f8:799a with SMTP id
+ cr20-20020a170906d55400b006dfa6f8799amr3749405ejc.492.1648904408475; Sat, 02
+ Apr 2022 06:00:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220331011141.53489-1-warthog618@gmail.com>
-In-Reply-To: <20220331011141.53489-1-warthog618@gmail.com>
+References: <20220327142553.217535-1-warthog618@gmail.com>
+In-Reply-To: <20220327142553.217535-1-warthog618@gmail.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Sat, 2 Apr 2022 14:47:31 +0200
-Message-ID: <CAMRc=MfqgEozMGR-24O=Eeoo+v2QYc8n_NHPb0A7GYDL_1bL=Q@mail.gmail.com>
-Subject: Re: [libgpiod v2][PATCH 0/4] core: add gpiod_request_lines
+Date:   Sat, 2 Apr 2022 14:59:57 +0200
+Message-ID: <CAMRc=MdkHdvSgWzydOJTBfsutsd_Rbp8FK5aLnkQB7JGkCFTDg@mail.gmail.com>
+Subject: Re: [libgpiod v2][PATCH] core: make line values unsigned
 To:     Kent Gibson <warthog618@gmail.com>
 Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
@@ -63,70 +63,25 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Mar 31, 2022 at 3:12 AM Kent Gibson <warthog618@gmail.com> wrote:
+On Sun, Mar 27, 2022 at 4:26 PM Kent Gibson <warthog618@gmail.com> wrote:
 >
-> In my review of the CXX bindings I suggested a top-level version of
-> Chip.request_lines(), and possibly a C API version as well, so here
-> is the C version, plus a couple of semi-related tweaks I made along
-> the way.
+> Line values are either 0 or 1, so remove the possibility of a value
+> being negative by changing the type from int to unsigned int, similar
+> to offsets.
 >
-> The first patch adds the gpiod_request_lines().
-> Patch 3 migrates the appropriate tools.
-> Patch 4 minimizes the lifetimes of objects in the tools as I've
-> previously seen confusion over how long lived objects need to be.
-> Patch 2 is just a rename cos "inexistent" looks weird to me.
-> Strictly speaking it is fine, but unless there is a problem with
-> using "nonexistent" I would go with the latter.
+> The exception is the value returned by gpiod_line_request_get_value()
+> which uses a negative value to indicate an error, as is common practice.
 >
-> This series may be require my unsigned values patch.
->
-> Cheers,
-> Kent.
->
-> Kent Gibson (4):
->   core: add gpiod_request_lines
->   tools: rename inexistent to nonexistent
->   tools: migrate to gpiod_request_lines
->   tools: minimize object lifetimes
->
->  include/gpiod.h            | 15 ++++++++
->  lib/line-request.c         | 17 +++++++++
->  tests/tests-line-request.c | 73 ++++++++++++++++++++++++++++++++++++++
->  tools/gpio-tools-test.bats |  4 +--
->  tools/gpiodetect.c         |  2 +-
->  tools/gpiofind.c           |  2 +-
->  tools/gpioget.c            | 25 +++++++------
->  tools/gpioinfo.c           |  4 +--
->  tools/gpiomon.c            | 16 ++++-----
->  tools/gpioset.c            | 18 +++++-----
->  tools/tools-common.c       | 50 ++++++++++----------------
->  tools/tools-common.h       |  5 +--
->  12 files changed, 164 insertions(+), 67 deletions(-)
->
-> --
-> 2.35.1
->
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> ---
 
-Ugh, I didn't respond under the C++ review in time before you spent
-time on this. :/
-
-I don't agree with this change. For C API I think the intention for v2
-was to avoid having all kinds of high-level helpers and limit the
-number of functions to only those that are necessary to fully leverage
-the kernel uAPI and this one isn't necessary. I think we discussed it
-multiple times and agreed that the C library needs to be minimal this
-time.
-
-For C++ and Python the issue is irrelevant because you can do:
-
-auto request = gpiod::Chip("/dev/gpiochip0").request_lines(req_cfg, line_cfg);
-
-or
-
-request = gpiod.Chip("/dev/gpiochip0").request_lines(req_cfg, line_cfg)
-
-respectively and achieve the same result while still using a one-liner.
-
-Unless there's a *really* good reason to do this, it's a NAK from my side.
+I don't see value in this. We now have an enum to represent the
+logical states in the C API and enum's type in C is int. This change
+would make it inconsistent with all other line properties for which we
+use ints and represent their values with enumerations. If anything -
+we shouldn't accept any value other than 0 and 1 but just like we do
+with other properties in gpiod_line_config - when we fall-back to a
+sane default for invalid values - we'd just use INACTIVE for 0 and
+ACTIVE for everything else.
 
 Bart
