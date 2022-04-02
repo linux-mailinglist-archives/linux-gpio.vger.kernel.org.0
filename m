@@ -2,126 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E8164F0133
-	for <lists+linux-gpio@lfdr.de>; Sat,  2 Apr 2022 13:41:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E20D4F019E
+	for <lists+linux-gpio@lfdr.de>; Sat,  2 Apr 2022 14:47:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241317AbiDBLlu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 2 Apr 2022 07:41:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59412 "EHLO
+        id S1354095AbiDBMtg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 2 Apr 2022 08:49:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240921AbiDBLlu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 2 Apr 2022 07:41:50 -0400
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A0398CDAF
-        for <linux-gpio@vger.kernel.org>; Sat,  2 Apr 2022 04:39:58 -0700 (PDT)
-Received: by mail-wm1-x330.google.com with SMTP id p189so3150109wmp.3
-        for <linux-gpio@vger.kernel.org>; Sat, 02 Apr 2022 04:39:58 -0700 (PDT)
+        with ESMTP id S1344635AbiDBMtg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 2 Apr 2022 08:49:36 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F0A13AA69
+        for <linux-gpio@vger.kernel.org>; Sat,  2 Apr 2022 05:47:43 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id g22so5914362edz.2
+        for <linux-gpio@vger.kernel.org>; Sat, 02 Apr 2022 05:47:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=awaGy3AgEjkVWY5viWVsdcdecgWlX4P5wwqKYqVk47A=;
-        b=OCcipaDDf9yd6e+SAB1jG2Pu61JoysxDu7Xh5IkBfEfV05Id7giu2MWVGfJbIVxAS1
-         Th2jEi6XkBu2cMKGD4NsXCEKll//buTp90ViuTWQz2PwHFxNXRnDs/fbiZRJx8H2El1a
-         bnI/bcRXXX+qnUIpXHuQkuqHi4a92Afi1tt5Q4NaWcdG8fPkjWX9+tMImm4tOgk9rEfJ
-         1PPmJDDVxDUCB4m++M4Wjqdk3FmQNoDIwG+hBcjX5HwMwm8bqdDMVFbKBqXN1wDxhAco
-         zrl7Ye1RcfFnVg1LYOosi4oSQK536Tzr6AwePFy50YA0V10RNJ2lsGlU0TzaTGDPdh4M
-         kAVw==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vkpbdzVpQAl3jTBafv6YVoKedWIYTHsfB1sNM0JAekw=;
+        b=R4gjFvTi+8P+940w4HfE86Um9ZRzYoXLHuLyHXLoiZqtDPgj7Jcxdj+C7at1JGG5Qe
+         Sf/yQaw+CsbkX9SZ0R4m2MPdbHt3oLPYWBi/RD4s7b9yeZ2OfrJkWOLmGKJC2qxbivaF
+         pL/9sWMvVVnnRfcSHzEaHTsPj5HHRBBaHBQ9Og8NNHlQH7giWq/Wv8ba09JMIXActfJk
+         63SSkVSVNThv789TTjpS7oVMcVrxiMrHdxaMxCmWijUlIr0PsR72LkgXo/f+tON0jBDo
+         g3MfD1PkVZtGrlrVKYkOlg7N73adCPieo3NMgYQOMqf6/tt5K+dX7Ydjh9ahHbsh6KpF
+         JrEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=awaGy3AgEjkVWY5viWVsdcdecgWlX4P5wwqKYqVk47A=;
-        b=LhzLXMP+rQo5wavjlgUktNvIZch7DucrCdDScbfdHzBU72TNmnZFd5QEsE/TcvZ3T/
-         kYkmbAGcBgWJYMp9JtL36JzZFOR0qo2yNDU4WFm1XXF9K3pczPBZtJjIUWdJxsPQ5NY0
-         /kiPXu3Um4DE6JrpLAHnwVnyawDODAVmiBzvlCMCuobqyIdi9QMiyqd9WqlDv8MIX7Dc
-         57+FcV0qnFlNREON1eveLlip7zl7KeRxXZsD2pQ3j5zz9BglFQoQ15ia0sA2ktRGHohu
-         LXJDmMRebVrMVC4n2HzdDxIDAG+F3YL+X+UDiuyE8q6PEqXh64Rpu1VkYAhUKp4AepRH
-         22Bw==
-X-Gm-Message-State: AOAM530/4yFutVsL0gpJJzcOYTJhwUJvm4cRZDrUAsJJCx1Cw14VkmhS
-        xFz5UAQHJK+vtMlgDrNjHvArAg==
-X-Google-Smtp-Source: ABdhPJxgPwxQ3TFzbEw3GEzSFdVxepamnd3EAiTRzIuDXOYZeDHeEn98CWlqmTuyc43WWvkuoedIEw==
-X-Received: by 2002:a7b:cd01:0:b0:38c:9142:2006 with SMTP id f1-20020a7bcd01000000b0038c91422006mr12362990wmj.4.1648899596890;
-        Sat, 02 Apr 2022 04:39:56 -0700 (PDT)
-Received: from [192.168.0.171] (xdsl-188-155-201-27.adslplus.ch. [188.155.201.27])
-        by smtp.gmail.com with ESMTPSA id o9-20020a1c4d09000000b0038ca75056e2sm16692104wmh.45.2022.04.02.04.39.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 02 Apr 2022 04:39:56 -0700 (PDT)
-Message-ID: <6d1353c4-7ecc-c65f-73c0-5f856b72d25e@linaro.org>
-Date:   Sat, 2 Apr 2022 13:39:55 +0200
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vkpbdzVpQAl3jTBafv6YVoKedWIYTHsfB1sNM0JAekw=;
+        b=JroJGg8UuXZHc33XwSwSo7c0wmmz8ia4H0hVCEN/cdWlFJULLiGc4JA4O64/jx75BX
+         aXvUeu5W6u79k7Dkdm86kA/S+KYgAY8DsFQItg65yXWDFJ1ntx3Ls3Jxctop5fLtA2/j
+         SoYbOa829rrD8kEm2IZx0cyP2AZ5LsDGL+Afz2OlMLbs6DrqlP6x+29vJT1eg5KRlPv8
+         fKt6LkJ1vaPwboh8TucUGAEDQ7mA1KexU8k2hSHmgxKdw7g8DCQr6tZiVhmcOmim1KMB
+         cfp2LzhnJTVEccZO1rjswvJ4/ZcxLRr2bR26eQepmlVD1bGvR9MWaEAb3nJQbby2U0yn
+         yl4w==
+X-Gm-Message-State: AOAM530mczGOS2S/P/SPgNdCd2pGYU09OGdHP6KpTVaKHbLAKQr+H1mm
+        6afU/AaGRH76vVXpjg0z8uHhUMU8/SY7+qr5AM/kh5Evj6nT5Q==
+X-Google-Smtp-Source: ABdhPJzfzK6rR1Dl2jdDtHsjXkgw0B4Ar9sPd+9E7bsJOUPVsObVK4OMRB3pTK5dqScqulsUdGt4Jx3npoqW0+pKRqU=
+X-Received: by 2002:a05:6402:1259:b0:418:e674:5718 with SMTP id
+ l25-20020a056402125900b00418e6745718mr25313564edw.69.1648903661882; Sat, 02
+ Apr 2022 05:47:41 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH] dt-bindings: Fix 'enum' lists with duplicate entries
-Content-Language: en-US
-To:     Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Yunfei Dong <yunfei.dong@mediatek.com>,
-        - <patches@opensource.cirrus.com>, linux-media@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-gpio@vger.kernel.org,
-        linux-pm@vger.kernel.org
-References: <20220401141247.2993925-1-robh@kernel.org>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220401141247.2993925-1-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+References: <20220331011141.53489-1-warthog618@gmail.com>
+In-Reply-To: <20220331011141.53489-1-warthog618@gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Sat, 2 Apr 2022 14:47:31 +0200
+Message-ID: <CAMRc=MfqgEozMGR-24O=Eeoo+v2QYc8n_NHPb0A7GYDL_1bL=Q@mail.gmail.com>
+Subject: Re: [libgpiod v2][PATCH 0/4] core: add gpiod_request_lines
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 01/04/2022 16:12, Rob Herring wrote:
-> There's no reason to list the same value twice in an 'enum'. Fix all the
-> occurrences in the tree. A meta-schema change will catch future ones.
-> 
-> Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Jonathan Hunter <jonathanh@nvidia.com>
-> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-> Cc: Charles Keepax <ckeepax@opensource.cirrus.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Sebastian Reichel <sre@kernel.org>
-> Cc: Tony Lindgren <tony@atomide.com>
-> Cc: Yunfei Dong <yunfei.dong@mediatek.com>
-> Cc: - <patches@opensource.cirrus.com>
-> Cc: linux-media@vger.kernel.org
-> Cc: alsa-devel@alsa-project.org
-> Cc: linux-gpio@vger.kernel.org
-> Cc: linux-pm@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> There's also one other occurrence in snps,dwmac.yaml I didn't fix as 
-> there's a patch[1] for it which prompted this patch.
-> 
-> Rob
-> 
-> [1] https://lore.kernel.org/r/20220401030847epcms1p8cf7a8e1d8cd7d325dacf30f78da36328@epcms1p8
-> 
->  .../bindings/arm/tegra/nvidia,tegra20-pmc.yaml        |  1 -
->  Documentation/devicetree/bindings/bus/ti-sysc.yaml    |  1 -
->  .../bindings/media/mediatek,vcodec-encoder.yaml       |  1 -
->  .../devicetree/bindings/pinctrl/cirrus,madera.yaml    | 11 +++++------
->  .../devicetree/bindings/power/supply/bq2415x.yaml     |  1 -
->  5 files changed, 5 insertions(+), 10 deletions(-)
-> 
+On Thu, Mar 31, 2022 at 3:12 AM Kent Gibson <warthog618@gmail.com> wrote:
+>
+> In my review of the CXX bindings I suggested a top-level version of
+> Chip.request_lines(), and possibly a C API version as well, so here
+> is the C version, plus a couple of semi-related tweaks I made along
+> the way.
+>
+> The first patch adds the gpiod_request_lines().
+> Patch 3 migrates the appropriate tools.
+> Patch 4 minimizes the lifetimes of objects in the tools as I've
+> previously seen confusion over how long lived objects need to be.
+> Patch 2 is just a rename cos "inexistent" looks weird to me.
+> Strictly speaking it is fine, but unless there is a problem with
+> using "nonexistent" I would go with the latter.
+>
+> This series may be require my unsigned values patch.
+>
+> Cheers,
+> Kent.
+>
+> Kent Gibson (4):
+>   core: add gpiod_request_lines
+>   tools: rename inexistent to nonexistent
+>   tools: migrate to gpiod_request_lines
+>   tools: minimize object lifetimes
+>
+>  include/gpiod.h            | 15 ++++++++
+>  lib/line-request.c         | 17 +++++++++
+>  tests/tests-line-request.c | 73 ++++++++++++++++++++++++++++++++++++++
+>  tools/gpio-tools-test.bats |  4 +--
+>  tools/gpiodetect.c         |  2 +-
+>  tools/gpiofind.c           |  2 +-
+>  tools/gpioget.c            | 25 +++++++------
+>  tools/gpioinfo.c           |  4 +--
+>  tools/gpiomon.c            | 16 ++++-----
+>  tools/gpioset.c            | 18 +++++-----
+>  tools/tools-common.c       | 50 ++++++++++----------------
+>  tools/tools-common.h       |  5 +--
+>  12 files changed, 164 insertions(+), 67 deletions(-)
+>
+> --
+> 2.35.1
+>
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Ugh, I didn't respond under the C++ review in time before you spent
+time on this. :/
 
+I don't agree with this change. For C API I think the intention for v2
+was to avoid having all kinds of high-level helpers and limit the
+number of functions to only those that are necessary to fully leverage
+the kernel uAPI and this one isn't necessary. I think we discussed it
+multiple times and agreed that the C library needs to be minimal this
+time.
 
-Best regards,
-Krzysztof
+For C++ and Python the issue is irrelevant because you can do:
+
+auto request = gpiod::Chip("/dev/gpiochip0").request_lines(req_cfg, line_cfg);
+
+or
+
+request = gpiod.Chip("/dev/gpiochip0").request_lines(req_cfg, line_cfg)
+
+respectively and achieve the same result while still using a one-liner.
+
+Unless there's a *really* good reason to do this, it's a NAK from my side.
+
+Bart
