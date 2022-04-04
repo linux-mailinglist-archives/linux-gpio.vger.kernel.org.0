@@ -2,126 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 98E8C4F135A
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Apr 2022 12:53:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 090154F13FB
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Apr 2022 13:45:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358384AbiDDKy6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Apr 2022 06:54:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57626 "EHLO
+        id S1376397AbiDDLrs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Apr 2022 07:47:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245571AbiDDKy6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Apr 2022 06:54:58 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00BE63CFDF
-        for <linux-gpio@vger.kernel.org>; Mon,  4 Apr 2022 03:52:57 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id r13so19026856ejd.5
-        for <linux-gpio@vger.kernel.org>; Mon, 04 Apr 2022 03:52:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UU25dnRU14B6WimB3QqwV09JX+ckGmT5YECsCF3qKAA=;
-        b=ZHbTS027b+JkcCxCf+aPTD/DnJBJL8idlGYbvHFIydDwSCbz+4J0UGF4KtoVviMFIR
-         aMsPXouXrkXvRBCHGadwcnAUUrnKNILyJTLz2DnRgtdjW/myiqcjfzkF/4so514kO7oh
-         QTM8kK63JiDUv+I5zGxbKlpo+vMI+JWT/WWZNwVI4QgVEvwrdAf7OaScwJ5rQlAAlZG2
-         DGOtppnxMxWdpOE98q0sQgesPmespqcl2ZFcFNJG1pNN+6NnPnjqwoUAPDjm8vdw/+xe
-         PsZzKPT8um3ibadBnaLj7oWs/er3PenNwqZ5wwSbCvwlknLTeL6GypXQq5o1KhC4Jpif
-         KvCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UU25dnRU14B6WimB3QqwV09JX+ckGmT5YECsCF3qKAA=;
-        b=7W4g0lHMHFOz9Wr40e/+vqxryoVRdHH0MxNNW4Qw+1B4NJm2Cq58Dq3+h7N2NXXygD
-         z1EYoq0YFf6X8HDz7P/m4QExl3eGQxgM48L5jmFpY5LijfdOsCAUcksp0T5zkY/7iEFC
-         jkeki+yCzV62Tw71v3Aj2wqrUhifpKts9Qy794/wsy2NlHlB0fx8tuINBPpEyhMdtd6I
-         gFHT4UMcwzGYCpU0NmTUkupOeL3XaU9C80K07CGja+bhJ1tk01qM7GYHVqRki3wIzc/B
-         BNTolM3g466AKH6QaMlZrBeNJM1rMAGRubsJx6/4X219c33oPGmj6EoUeSLP4kxHTyWy
-         AonA==
-X-Gm-Message-State: AOAM533quuthxMfGg8cag2sAIAXv6T1ue19WPdMbm4IW/lsXyB75w2T2
-        RNLnWTxCGJQLKe0hK4d5F+BsG2ZU6QStl4KkC5EBTw==
-X-Google-Smtp-Source: ABdhPJwX7lcdcK7gjr603btAwQzth7/SiHB6MZTl0D6kuiN2IjDBOiSWTV9ZJfAzRTs118XNaiG3dC/1cWH0nzRBV/I=
-X-Received: by 2002:a17:906:d554:b0:6df:a6f8:799a with SMTP id
- cr20-20020a170906d55400b006dfa6f8799amr10108411ejc.492.1649069576577; Mon, 04
- Apr 2022 03:52:56 -0700 (PDT)
+        with ESMTP id S244573AbiDDLrs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Apr 2022 07:47:48 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [176.9.125.105])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D6823D1E6;
+        Mon,  4 Apr 2022 04:45:52 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id E5044221D4;
+        Mon,  4 Apr 2022 13:45:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1649072750;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=olPWV55vqiqcUXf75GJNHulGOLkPkqJnzu3GxeZEKiI=;
+        b=PNF1yQgRx0y1yrjIIX3Hxs+eOfZlzub69g8Nw9V2OM2QPYmqQ7Bn5pwXnML6z2JEgY3b9e
+        wx6XwTCwKoxVzCKYKsER9kjASDxGRpnC/NP9Iyi+irnP71UkfZRPbCGrtgcgb7+gNHpsX6
+        VIemPBOe55Y9etjOgGpW3iSY2fQt+tk=
 MIME-Version: 1.0
-References: <1648617423-8739-1-git-send-email-hayashi.kunihiko@socionext.com>
-In-Reply-To: <1648617423-8739-1-git-send-email-hayashi.kunihiko@socionext.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 4 Apr 2022 12:52:46 +0200
-Message-ID: <CAMRc=Mde0ShYiH8e24Y-qKHrhqAfLjDcLgAZ7-VmC5xGQVBwNg@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: gpio: uniphier: Add hogs parsing
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 04 Apr 2022 13:45:48 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Quentin Schulz <quentin.schulz@bootlin.com>,
+        Antoine Tenart <atenart@kernel.org>,
+        Kavyasree Kotagiri <kavyasree.kotagiri@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        UNGLinuxDriver@microchip.com, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org
+Subject: Re: [PATCH v3 0/6] pinctrl: ocelot: convert to YAML format
+In-Reply-To: <20220319204628.1759635-1-michael@walle.cc>
+References: <20220319204628.1759635-1-michael@walle.cc>
+User-Agent: Roundcube Webmail/1.4.13
+Message-ID: <41197a2523caf2a0b7b4835e9c911540@walle.cc>
+X-Sender: michael@walle.cc
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Mar 30, 2022 at 7:17 AM Kunihiko Hayashi
-<hayashi.kunihiko@socionext.com> wrote:
->
-> Allow parsing GPIO controller children nodes with GPIO hogs to fix the
-> following warning:
->
->   uniphier-ld11-ref.dtb: gpio@55000000: 'xirq0-hog' does not match any of the regexes: 'pinctrl-[0-9]+'
->       From schema: Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
->
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> ---
->
-> Changes since v1:
-> - Remove outer brackets from a pattern string
-> - Add valid properties to patternProperties
-> - Add gpios to "required:"
->
->  .../bindings/gpio/socionext,uniphier-gpio.yaml  | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml b/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
-> index bcafa494ed7a..228fa27ffdc3 100644
-> --- a/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
-> @@ -52,6 +52,23 @@ properties:
->        <child-interrupt-base parent-interrupt-base length> triplets.
->      $ref: /schemas/types.yaml#/definitions/uint32-matrix
->
-> +patternProperties:
-> +  "^.+-hog(-[0-9]+)?$":
-> +    type: object
-> +    properties:
-> +      gpio-hog: true
-> +      gpios: true
-> +      input: true
-> +      output-high: true
-> +      output-low: true
-> +      line-name: true
-> +
-> +    required:
-> +      - gpio-hog
-> +      - gpios
-> +
-> +    additionalProperties: false
-> +
->  required:
->    - compatible
->    - reg
-> --
-> 2.25.1
->
+Am 2022-03-19 21:46, schrieb Michael Walle:
+> Convert the pinctrl ocelot binding to the new YAML format. Pin
+> configuration nodes should have a "-pins" postfix. But unfortunately,
+> there are many device trees which don't follow this. First rename
+> all these nodes and then convert the binding to the YAML format so
+> that the validation will pass.
+> 
+> Because there were no maintainers before and there is none in
+> MAINTAINERS I added Alexandre Belloni and Lars Povlsen, juding by
+> the commits - to the binding as maintainers. Please tell me if you
+> disagree.
 
-Applied, thanks!
+Linus, can this go through your pinctrl tree because there is this
+series which depends on it:
+https://lore.kernel.org/linux-gpio/20220313154640.63813-1-michael@walle.cc/
 
-Bart
+-michael
