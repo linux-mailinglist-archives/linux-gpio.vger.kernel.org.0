@@ -2,65 +2,44 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D9B724F150D
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Apr 2022 14:42:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 515134F186D
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Apr 2022 17:30:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346786AbiDDMo0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Apr 2022 08:44:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52366 "EHLO
+        id S1378305AbiDDPbz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Apr 2022 11:31:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234421AbiDDMoZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Apr 2022 08:44:25 -0400
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FF822F3AE
-        for <linux-gpio@vger.kernel.org>; Mon,  4 Apr 2022 05:42:29 -0700 (PDT)
-Received: by mail-ed1-x533.google.com with SMTP id b15so10918651edn.4
-        for <linux-gpio@vger.kernel.org>; Mon, 04 Apr 2022 05:42:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nl6r7LGHaO+uoAYd02qNw0V8XDaaumC9JI4DzOpeCmw=;
-        b=y6nuVDeQJW9M+TB8Dpy1aNI3rKg2P8ub6PasWlkwMajLqQMJowEg7E4KuCfjCKjrsu
-         AFi/KDn2Pl2Buq1VfppSz4Ic2fdzB4VDinzNScOuIHoQusTxZb/3Hu3YmgkVUreMOrQb
-         xWphGbbApJZuDyyft7u25jRUxr3QkG3/9vGrwpt3o+tQDreN9y22gbf2EjBn49xPVYdy
-         BWBhmY6sNg72VloW5boU0YhB/NWndiTg2THaFDKDAB4HPdl45wJfjxD85cP1AIfNUUkT
-         RFVrychZVk1o9goTxqB8AHSxGd5wlgZQRm9G5p8ZjlI0HhNrEgvTCLHXvPtDUPL5gF3W
-         2TgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nl6r7LGHaO+uoAYd02qNw0V8XDaaumC9JI4DzOpeCmw=;
-        b=JgiKkg/P/b3cqCNUj9+Un/uJ0rCdEcc81ez/ss1wbQuTkYGRedTfaKCD8DtYXL0ONi
-         TNVdbOHzfTtsSxtccZayqDUi7lTYYiDSlZrrv5OU41+o2mcekzQYLp5q5SjAyLDJf4QL
-         XUgfmaTSRoPrfKqbwQVDnknXg4fbS1q1uuB/tgob8WD3NGeJYGIBFhjvWFFOOu2uTTK4
-         XuIzrnVzOqW9OtbVkzoR8c2G0IiAHn8BdzZFdBOPWRS3nb3sT6WCMu+IMJJErqZGK2as
-         hAIH5PTuFB9+cb5cTHCZg1P5ArwiAb6POvgCIchRv7zY56EiTQwd1Tt/UGGU2ivIU/0K
-         Arrg==
-X-Gm-Message-State: AOAM531cSBAmqfIogZNeqWi74sYLPgIxA0AQCzd1wG+5W1BOIzAH9XPz
-        brtvY016KeNPl59oLqtY35rjzQTF/O2n2NABeuCmeZ4k1frcoA==
-X-Google-Smtp-Source: ABdhPJx4ZhPNkg5OWfoTVWIYEuzQyZdcH7mO3QNwP4gZmzoLaFDDMbwIIOOMxo2lPoga59FIHWana+chk7U+MPLE8TA=
-X-Received: by 2002:a05:6402:d4c:b0:410:a415:fd95 with SMTP id
- ec12-20020a0564020d4c00b00410a415fd95mr32484194edb.288.1649076147978; Mon, 04
- Apr 2022 05:42:27 -0700 (PDT)
+        with ESMTP id S1378343AbiDDPbx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Apr 2022 11:31:53 -0400
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3927B25C4E
+        for <linux-gpio@vger.kernel.org>; Mon,  4 Apr 2022 08:29:55 -0700 (PDT)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:6d4d:d9ec:3c70:7c2c])
+        by xavier.telenet-ops.be with bizsmtp
+        id EfVr2700m40M8zK01fVr8A; Mon, 04 Apr 2022 17:29:53 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1nbOeN-008Mgx-EB; Mon, 04 Apr 2022 17:29:51 +0200
+Received: from geert by rox.of.borg with local (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1nbOeM-00CdSt-Rt; Mon, 04 Apr 2022 17:29:50 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2 0/2] gpio: rcar: Add-R-Car S4-8 GPIO support
+Date:   Mon,  4 Apr 2022 17:29:47 +0200
+Message-Id: <cover.1649085875.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20220321133241.121367-1-shreeya.patel@collabora.com>
-In-Reply-To: <20220321133241.121367-1-shreeya.patel@collabora.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 4 Apr 2022 14:42:17 +0200
-Message-ID: <CAMRc=MeZOBjZHnp7UosGuZVQfO0dBL_=cxT400suGfG-rH=_Aw@mail.gmail.com>
-Subject: Re: [PATCH v3] gpio: Restrict usage of GPIO chip irq members before initialization
-To:     Shreeya Patel <shreeya.patel@collabora.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel@collabora.com, alvaro.soliverez@collabora.com
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -69,109 +48,37 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Mar 21, 2022 at 2:33 PM Shreeya Patel
-<shreeya.patel@collabora.com> wrote:
->
-> GPIO chip irq members are exposed before they could be completely
-> initialized and this leads to race conditions.
->
-> One such issue was observed for the gc->irq.domain variable which
-> was accessed through the I2C interface in gpiochip_to_irq() before
-> it could be initialized by gpiochip_add_irqchip(). This resulted in
-> Kernel NULL pointer dereference.
->
-> Following are the logs for reference :-
->
-> kernel: Call Trace:
-> kernel:  gpiod_to_irq+0x53/0x70
-> kernel:  acpi_dev_gpio_irq_get_by+0x113/0x1f0
-> kernel:  i2c_acpi_get_irq+0xc0/0xd0
-> kernel:  i2c_device_probe+0x28a/0x2a0
-> kernel:  really_probe+0xf2/0x460
-> kernel: RIP: 0010:gpiochip_to_irq+0x47/0xc0
->
-> To avoid such scenarios, restrict usage of GPIO chip irq members before
-> they are completely initialized.
->
-> Signed-off-by: Shreeya Patel <shreeya.patel@collabora.com>
-> ---
->
-> Changes in v3
->   - Move the gc->irq.initialized check inside gpiochip_to_irq().
->   - Rename gc to GPIO chip.
->   - Add barrier() to avoid compiler reordering.
->
-> Changes in v2
->   - Make gc_irq_initialized flag a member of gpio_irq_chip structure.
->   - Make use of barrier() to avoid reordering of flag initialization
-> before other gc irq members are initialized.
->
->
->  drivers/gpio/gpiolib.c      | 19 +++++++++++++++++++
->  include/linux/gpio/driver.h |  9 +++++++++
->  2 files changed, 28 insertions(+)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index defb7c464b87..4ff68f48b87f 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -1404,6 +1404,16 @@ static int gpiochip_to_irq(struct gpio_chip *gc, unsigned int offset)
->  {
->         struct irq_domain *domain = gc->irq.domain;
->
-> +#ifdef CONFIG_GPIOLIB_IRQCHIP
-> +       /*
-> +        * Avoid race condition with other code, which tries to lookup
-> +        * an IRQ before the irqchip has been properly registered,
-> +        * i.e. while gpiochip is still being brought up.
-> +        */
-> +       if (!gc->irq.initialized)
-> +               return -EPROBE_DEFER;
-> +#endif
-> +
->         if (!gpiochip_irqchip_irq_valid(gc, offset))
->                 return -ENXIO;
->
-> @@ -1593,6 +1603,15 @@ static int gpiochip_add_irqchip(struct gpio_chip *gc,
->
->         acpi_gpiochip_request_interrupts(gc);
->
-> +       /*
-> +        * Using barrier() here to prevent compiler from reordering
-> +        * gc->irq.initialized before initialization of above
-> +        * GPIO chip irq members.
-> +        */
-> +       barrier();
-> +
-> +       gc->irq.initialized = true;
-> +
->         return 0;
->  }
->
-> diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-> index b0728c8ad90c..f8996b46f430 100644
-> --- a/include/linux/gpio/driver.h
-> +++ b/include/linux/gpio/driver.h
-> @@ -218,6 +218,15 @@ struct gpio_irq_chip {
->          */
->         bool per_parent_data;
->
-> +       /**
-> +        * @initialized:
-> +        *
-> +        * Flag to track GPIO chip irq member's initialization.
-> +        * This flag will make sure GPIO chip irq members are not used
-> +        * before they are initialized.
-> +        */
-> +       bool initialized;
-> +
->         /**
->          * @init_hw: optional routine to initialize hardware before
->          * an IRQ chip will be added. This is quite useful when
-> --
-> 2.30.2
->
+	Hi Linus, Bartosz,
 
-I queued it for fixes, let's backport it to stable.
+This patch series adds support for the Renesas R-Car S4-8 Soc to the
+R-Car GPIO DT bindings and driver.  It has been tested with i2c-gpio,
+by reading the contents from the I2C EEPROMs on the Spider development
+board.
 
-Bart
+Changes compared to v1:
+  - Drop RFC,
+  - Split series in DT bindings+driver and DTS series.
+
+Thanks!
+
+Geert Uytterhoeven (2):
+  dt-bindings: gpio: renesas,rcar-gpio: Add r8a779f0 support
+  gpio: rcar: Add R-Car Gen4 support
+
+ .../devicetree/bindings/gpio/renesas,rcar-gpio.yaml        | 5 +++++
+ drivers/gpio/gpio-rcar.c                                   | 7 +++++--
+ 2 files changed, 10 insertions(+), 2 deletions(-)
+
+-- 
+2.25.1
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
