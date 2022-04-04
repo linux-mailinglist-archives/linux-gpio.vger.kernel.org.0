@@ -2,105 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 589704F12F2
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Apr 2022 12:17:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98E8C4F135A
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Apr 2022 12:53:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356788AbiDDKTo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 4 Apr 2022 06:19:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37596 "EHLO
+        id S1358384AbiDDKy6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 4 Apr 2022 06:54:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356847AbiDDKTo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Apr 2022 06:19:44 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A1D23C717
-        for <linux-gpio@vger.kernel.org>; Mon,  4 Apr 2022 03:17:46 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id bq8so18789951ejb.10
-        for <linux-gpio@vger.kernel.org>; Mon, 04 Apr 2022 03:17:46 -0700 (PDT)
+        with ESMTP id S245571AbiDDKy6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 4 Apr 2022 06:54:58 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00BE63CFDF
+        for <linux-gpio@vger.kernel.org>; Mon,  4 Apr 2022 03:52:57 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id r13so19026856ejd.5
+        for <linux-gpio@vger.kernel.org>; Mon, 04 Apr 2022 03:52:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=QGXVTY0pIhU9zIY0EgjRbIoSDHId5uN/nqKqsXeyBP0=;
-        b=EsEOLR5RqedEzhnjwBgFZArAza7hXTOzGf4SWLYn/DM8qPhtdvaUtCxb48+T5a4WG1
-         wUv9dBusiJLqwKPwlKlvBzStjtViR6yL1s5DzFlXQ3hBiDr6PCGOtjggWDZMmQ9ekJbG
-         itr7f+bQ5YoK5iCcqTyhEW2OO9dRBpC2IAsD+bsMQB9IgB42e2aMzba3HkB8OgbPlqFm
-         lpRK3XfCpU0u5zSnYj0g2VMTgV0edj3EbahLaLuYHugk8FWPHJUbYydn+Q6QFAZrVEui
-         pQ5ggM9SsC7KOJpi8Cs0ikP/fBY0OODoQuFNOPGyDXQe7jYljYhYuJ++9w4RjOunISzH
-         b7GA==
+        bh=UU25dnRU14B6WimB3QqwV09JX+ckGmT5YECsCF3qKAA=;
+        b=ZHbTS027b+JkcCxCf+aPTD/DnJBJL8idlGYbvHFIydDwSCbz+4J0UGF4KtoVviMFIR
+         aMsPXouXrkXvRBCHGadwcnAUUrnKNILyJTLz2DnRgtdjW/myiqcjfzkF/4so514kO7oh
+         QTM8kK63JiDUv+I5zGxbKlpo+vMI+JWT/WWZNwVI4QgVEvwrdAf7OaScwJ5rQlAAlZG2
+         DGOtppnxMxWdpOE98q0sQgesPmespqcl2ZFcFNJG1pNN+6NnPnjqwoUAPDjm8vdw/+xe
+         PsZzKPT8um3ibadBnaLj7oWs/er3PenNwqZ5wwSbCvwlknLTeL6GypXQq5o1KhC4Jpif
+         KvCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=QGXVTY0pIhU9zIY0EgjRbIoSDHId5uN/nqKqsXeyBP0=;
-        b=bizQolLHJjomU45nCBVpn197Jx+IuN4bjYEEyo1UW9dawFz45W4RJoLIGvrCc8I7CP
-         weAwcrX5Jr1b7kLNCC4OpxnBtecpScDJEiDDZRTMsOVL7LCw2qqX+P6YHoLeWt4SKkNp
-         u0IRRBHR5u2C/47ZSNCm5ruQak6OTR3ZFdBRe5Ix/hQ2BGBJLuB41JllYSIja44deRXV
-         B9jiAwzxSKEfGEXgZ+he7FDJZ2i/Rqa/gC+QvXeo9FA6BMG/ts1L/kvOYsQHIg6iUS+h
-         5TD6eViFtfB3wmztM+8BHVspCZgaXdaE2cxsXMIMe/iiBdRO5acNj+Rt9npGVEPNhF6m
-         YE6A==
-X-Gm-Message-State: AOAM533jU/T9pLSpzeZClKPuzVqzgKvZXCmrAdaJI/KU2H3IzAEaqAf9
-        J9ad9gRwQkkYpTyMJITaIAa0IxdOyUJoobvqaME=
-X-Google-Smtp-Source: ABdhPJyqcFzH7a97PjpcdWjeMkHnqH9qN+dhS52sVbNrXh/dFKU5NHNmZ7d0uLJatgaHIslqXR8IZNtCPBQCtDoB1C0=
-X-Received: by 2002:a17:907:9703:b0:6da:6412:508a with SMTP id
- jg3-20020a170907970300b006da6412508amr10103256ejc.77.1649067465005; Mon, 04
- Apr 2022 03:17:45 -0700 (PDT)
+        bh=UU25dnRU14B6WimB3QqwV09JX+ckGmT5YECsCF3qKAA=;
+        b=7W4g0lHMHFOz9Wr40e/+vqxryoVRdHH0MxNNW4Qw+1B4NJm2Cq58Dq3+h7N2NXXygD
+         z1EYoq0YFf6X8HDz7P/m4QExl3eGQxgM48L5jmFpY5LijfdOsCAUcksp0T5zkY/7iEFC
+         jkeki+yCzV62Tw71v3Aj2wqrUhifpKts9Qy794/wsy2NlHlB0fx8tuINBPpEyhMdtd6I
+         gFHT4UMcwzGYCpU0NmTUkupOeL3XaU9C80K07CGja+bhJ1tk01qM7GYHVqRki3wIzc/B
+         BNTolM3g466AKH6QaMlZrBeNJM1rMAGRubsJx6/4X219c33oPGmj6EoUeSLP4kxHTyWy
+         AonA==
+X-Gm-Message-State: AOAM533quuthxMfGg8cag2sAIAXv6T1ue19WPdMbm4IW/lsXyB75w2T2
+        RNLnWTxCGJQLKe0hK4d5F+BsG2ZU6QStl4KkC5EBTw==
+X-Google-Smtp-Source: ABdhPJwX7lcdcK7gjr603btAwQzth7/SiHB6MZTl0D6kuiN2IjDBOiSWTV9ZJfAzRTs118XNaiG3dC/1cWH0nzRBV/I=
+X-Received: by 2002:a17:906:d554:b0:6df:a6f8:799a with SMTP id
+ cr20-20020a170906d55400b006dfa6f8799amr10108411ejc.492.1649069576577; Mon, 04
+ Apr 2022 03:52:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220331025203.GA53907@sol> <YkWyU8seDqyDL532@smile.fi.intel.com>
- <20220331141524.GA93836@sol> <49e5857d-1438-cd5d-b4f2-b374f01e2596@redhat.com>
- <20220402014510.GA7939@sol> <90f7d9eb-935b-3803-1531-65bd20418bc3@redhat.com>
- <CAHp75VcuM2qZjZCkcZ01u=KSqyudMJTB8meORpZ0hxA4_PFg8A@mail.gmail.com> <20220404100602.GC24083@sol>
-In-Reply-To: <20220404100602.GC24083@sol>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 4 Apr 2022 13:16:41 +0300
-Message-ID: <CAHp75VdYp5FZyEd_DxvY8wU8nzf6OWRrKwd6-1t-tZh+zc8eJg@mail.gmail.com>
-Subject: Re: gpiolib: why does gpio_set_bias() suppress ENOTSUPP?
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+References: <1648617423-8739-1-git-send-email-hayashi.kunihiko@socionext.com>
+In-Reply-To: <1648617423-8739-1-git-send-email-hayashi.kunihiko@socionext.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 4 Apr 2022 12:52:46 +0200
+Message-ID: <CAMRc=Mde0ShYiH8e24Y-qKHrhqAfLjDcLgAZ7-VmC5xGQVBwNg@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: gpio: uniphier: Add hogs parsing
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Linus Walleij <linus.walleij@linaro.org>
+        devicetree <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Apr 4, 2022 at 1:06 PM Kent Gibson <warthog618@gmail.com> wrote:
-> On Mon, Apr 04, 2022 at 12:23:18PM +0300, Andy Shevchenko wrote:
-> > On Sun, Apr 3, 2022 at 6:34 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> > > On 4/2/22 03:45, Kent Gibson wrote:
-> > > > On Fri, Apr 01, 2022 at 12:36:57PM +0200, Hans de Goede wrote:
-
-...
-
-> > > > Probably best to extend the uAPI to add a strict mode and leave
-> > > > existing usage unchanged.
-> > >
-> > > Agreed, adding a strict mode to the uAPI seems best.
-> > >
-> > > And if you do it this way, you should probably also make
-> > > the kernel log (using a ratelimited log function) why (e.g.
-> > > bias setting not supported)  the call is failing since errno is
-> > > not going to tell the user enough here I think.
-> >
-> > ...which reminds me this one: https://lwn.net/Articles/657341/
-> >
+On Wed, Mar 30, 2022 at 7:17 AM Kunihiko Hayashi
+<hayashi.kunihiko@socionext.com> wrote:
 >
-> In this case I'd be more inclined to return a sanitised config along
-> with the error code.  So the user gets "the config you requested isn't
-> doable, but this one is". They could even repeat the request with the
-> sanitised config, though I'm not sure if that would provide any benefit
-> compared to just not requesting strict in the first place.
+> Allow parsing GPIO controller children nodes with GPIO hogs to fix the
+> following warning:
+>
+>   uniphier-ld11-ref.dtb: gpio@55000000: 'xirq0-hog' does not match any of the regexes: 'pinctrl-[0-9]+'
+>       From schema: Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
+>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> ---
+>
+> Changes since v1:
+> - Remove outer brackets from a pattern string
+> - Add valid properties to patternProperties
+> - Add gpios to "required:"
+>
+>  .../bindings/gpio/socionext,uniphier-gpio.yaml  | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml b/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
+> index bcafa494ed7a..228fa27ffdc3 100644
+> --- a/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/socionext,uniphier-gpio.yaml
+> @@ -52,6 +52,23 @@ properties:
+>        <child-interrupt-base parent-interrupt-base length> triplets.
+>      $ref: /schemas/types.yaml#/definitions/uint32-matrix
+>
+> +patternProperties:
+> +  "^.+-hog(-[0-9]+)?$":
+> +    type: object
+> +    properties:
+> +      gpio-hog: true
+> +      gpios: true
+> +      input: true
+> +      output-high: true
+> +      output-low: true
+> +      line-name: true
+> +
+> +    required:
+> +      - gpio-hog
+> +      - gpios
+> +
+> +    additionalProperties: false
+> +
+>  required:
+>    - compatible
+>    - reg
+> --
+> 2.25.1
+>
 
-Yeah, being "too smart" sometimes becomes an evil result.
+Applied, thanks!
 
--- 
-With Best Regards,
-Andy Shevchenko
+Bart
